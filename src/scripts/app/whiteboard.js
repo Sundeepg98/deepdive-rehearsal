@@ -10,50 +10,76 @@ var wbSteps=[
   {c:'The backstop for orphans &mdash; and its one guard.', a:'A <b>reconciler</b> sweeps S3 for keys with no DB row &rarr; delete &mdash; but only past a grace window / <b>PENDING</b> marker, so it never touches an in-flight upload.'},
   {c:'How a redelivered event avoids double work.', a:'At-least-once delivery &rarr; a <b>processed-marker</b> (conditional put on the content hash). A replay sees it and no-ops &mdash; the effect is idempotent.'}
 ];
-var wblist=document.getElementById('wblist'),wbcount=document.getElementById('wbcount');
-var wbverdict=document.getElementById('wbverdict');
-function updCount(){
-  var got=wblist.querySelectorAll('li.got').length,
-      miss=wblist.querySelectorAll('li.missed').length,
-      total=wbSteps.length,graded=got+miss;
-  wbcount.textContent=got+' recalled \u00b7 '+miss+' missed \u00b7 '+(total-graded)+' left';
-  if(graded<total){wbverdict.style.display='none';return;}
-  wbverdict.style.display='block';
-  if(miss===0){
-    wbverdict.className='wb-verdict ok';
-    wbverdict.innerHTML='<b>All nine cold.</b> You can rebuild this system on a whiteboard from memory \u2014 the design round is yours to lose, not to pass.';
-  }else{
-    wbverdict.className='wb-verdict warn';
-    wbverdict.innerHTML='<b>'+got+' / '+total+' recalled.</b> '+miss+' still soft \u2014 drill just those until they\u2019re automatic.<button id="wbrerun" type="button">Reset the '+miss+' miss'+(miss>1?'es':'')+'</button>';
-    document.getElementById('wbrerun').onclick=wbRerun;
+const wblist = document.getElementById('wblist');
+const wbcount = document.getElementById('wbcount');
+const wbverdict = document.getElementById('wbverdict');
+
+/* Update the "X recalled / Y missed / Z left" line; once every cue is graded,
+   show the verdict (all-recalled, or a prompt to reset the missed ones). */
+function updCount() {
+  const recalled = wblist.querySelectorAll('li.got').length;
+  const missed = wblist.querySelectorAll('li.missed').length;
+  const total = wbSteps.length;
+  const graded = recalled + missed;
+  wbcount.textContent = recalled + ' recalled \u00b7 ' + missed + ' missed \u00b7 ' + (total - graded) + ' left';
+  if (graded < total) { wbverdict.style.display = 'none'; return; }
+  wbverdict.style.display = 'block';
+  if (missed === 0) {
+    wbverdict.className = 'wb-verdict ok';
+    wbverdict.innerHTML = '<b>All nine cold.</b> You can rebuild this system on a whiteboard from memory \u2014 the design round is yours to lose, not to pass.';
+  } else {
+    wbverdict.className = 'wb-verdict warn';
+    wbverdict.innerHTML = '<b>' + recalled + ' / ' + total + ' recalled.</b> ' + missed + ' still soft \u2014 drill just those until they\u2019re automatic.<button id="wbrerun" type="button">Reset the ' + missed + ' miss' + (missed > 1 ? 'es' : '') + '</button>';
+    document.getElementById('wbrerun').onclick = wbRerun;
   }
 }
-function wbReset(li){
-  li.classList.remove('got','missed');
-  li.querySelector('.wb-ans').classList.remove('show');
-  var r=li.querySelector('.wb-rev');r.disabled=false;r.textContent='Reveal';
-  li.querySelector('.wb-got').disabled=true;
-  li.querySelector('.wb-miss').disabled=true;
+/* Reset one cue back to its un-revealed, ungraded state. */
+function wbReset(item) {
+  item.classList.remove('got', 'missed');
+  item.querySelector('.wb-ans').classList.remove('show');
+  const revealBtn = item.querySelector('.wb-rev');
+  revealBtn.disabled = false;
+  revealBtn.textContent = 'Reveal';
+  item.querySelector('.wb-got').disabled = true;
+  item.querySelector('.wb-miss').disabled = true;
 }
-function wbRerun(){
-  var m=wblist.querySelectorAll('li.missed');
-  for(var i=0;i<m.length;i++)wbReset(m[i]);
+
+/* Reset just the missed cues and scroll to the first one still to recall. */
+function wbRerun() {
+  const missedItems = wblist.querySelectorAll('li.missed');
+  for (let i = 0; i < missedItems.length; i++) wbReset(missedItems[i]);
   updCount();
-  var first=wblist.querySelector('li:not(.got)');
-  if(first)first.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth',block:'center'});
+  const firstUngraded = wblist.querySelector('li:not(.got)');
+  if (firstUngraded) {
+    firstUngraded.scrollIntoView({
+      behavior: matchMedia('(prefers-reduced-motion:reduce)').matches ? 'auto' : 'smooth',
+      block: 'center'
+    });
+  }
 }
-wbSteps.forEach(function(s,i){
-  var li=document.createElement('li');
-  li.innerHTML='<div class="wb-cue"><span class="num"></span><span class="wb-ct">'+s.c+'</span></div>'+
-    '<div class="wb-ans">'+s.a+'</div>'+
-    '<div class="wb-act"><button class="wb-rev" type="button">Reveal</button>'+
-    '<button class="wb-got" type="button" disabled>Drew it</button>'+
+
+/* Build one <li> per cue: a prompt, the hidden answer, and reveal/got/missed
+   buttons. Reveal exposes the answer and enables the two self-grade buttons. */
+wbSteps.forEach(function (step, i) {
+  const item = document.createElement('li');
+  item.innerHTML = '<div class="wb-cue"><span class="num"></span><span class="wb-ct">' + step.c + '</span></div>' +
+    '<div class="wb-ans">' + step.a + '</div>' +
+    '<div class="wb-act"><button class="wb-rev" type="button">Reveal</button>' +
+    '<button class="wb-got" type="button" disabled>Drew it</button>' +
     '<button class="wb-miss" type="button" disabled>Missed</button></div>';
-  var ans=li.querySelector('.wb-ans'),rev=li.querySelector('.wb-rev'),
-      got=li.querySelector('.wb-got'),miss=li.querySelector('.wb-miss');
-  rev.onclick=function(){ans.classList.add('show');rev.disabled=true;rev.textContent='Revealed';got.disabled=false;miss.disabled=false;};
-  got.onclick=function(){li.classList.add('got');li.classList.remove('missed');updCount();};
-  miss.onclick=function(){li.classList.add('missed');li.classList.remove('got');updCount();};
-  wblist.appendChild(li);
+  const answer = item.querySelector('.wb-ans');
+  const revealBtn = item.querySelector('.wb-rev');
+  const gotBtn = item.querySelector('.wb-got');
+  const missBtn = item.querySelector('.wb-miss');
+  revealBtn.onclick = function () {
+    answer.classList.add('show');
+    revealBtn.disabled = true;
+    revealBtn.textContent = 'Revealed';
+    gotBtn.disabled = false;
+    missBtn.disabled = false;
+  };
+  gotBtn.onclick = function () { item.classList.add('got'); item.classList.remove('missed'); updCount(); };
+  missBtn.onclick = function () { item.classList.add('missed'); item.classList.remove('got'); updCount(); };
+  wblist.appendChild(item);
 });
 updCount();

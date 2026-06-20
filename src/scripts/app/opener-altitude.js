@@ -1,8 +1,16 @@
 /* ============ OPENER / ALTITUDE ============ */
-var opCards=document.querySelectorAll('#open .op');
-for(var oc=0;oc<opCards.length;oc++){
-  (function(op){
-    var a=op.querySelector('.op-a'),r=op.querySelector('.op-rev');
-    r.onclick=function(){a.classList.add('show');r.disabled=true;r.textContent='Revealed';};
-  })(opCards[oc]);
+/* The #open pane holds a set of ".op" opener cards. Each card carries a hidden
+   answer (.op-a) and a "reveal" button (.op-rev); clicking reveal shows the
+   answer and disables the button so it can't be toggled back. */
+const openerCards = document.querySelectorAll('#open .op');
+for (let i = 0; i < openerCards.length; i++) {
+  (function (card) {
+    const answer = card.querySelector('.op-a');
+    const revealBtn = card.querySelector('.op-rev');
+    revealBtn.onclick = function () {
+      answer.classList.add('show');
+      revealBtn.disabled = true;
+      revealBtn.textContent = 'Revealed';
+    };
+  })(openerCards[i]);
 }

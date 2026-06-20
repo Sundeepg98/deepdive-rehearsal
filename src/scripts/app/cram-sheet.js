@@ -1,26 +1,110 @@
 /* ============ CRAM SHEET ============ */
-var cramov=document.getElementById('cramov'), cramEscBound=false;
-function openCram(){
-  ovShow(cramov); cramov.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden';
-  if(!cramEscBound){document.addEventListener('keydown',function(e){
-    if(!cramov.classList.contains('open'))return;
-    if(e.key.toLowerCase()==='p'){e.preventDefault();document.body.classList.remove('print-session');try{window.print();}catch(_){}}
-  });cramEscBound=true;}
+/* Show/hide wiring for several overlays (cram sheet, game plan, scope-first,
+   keyboard shortcuts) plus the light/dark theme toggle and the print buttons.
+   Each open/close pair calls the shared ovShow/ovHide (defined in
+   mock-run/logic.js) and toggles aria-hidden + the body scroll-lock. */
+
+var cramov = document.getElementById('cramov'); /* SHARED: the keyboard handler in numbers-nalsd.js reads this to see if the cram overlay is open */
+let cramKeyBound = false;
+
+function openCram() {
+  ovShow(cramov);
+  cramov.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+  /* bind the "p = print" shortcut once, the first time the sheet opens */
+  if (!cramKeyBound) {
+    document.addEventListener('keydown', function (event) {
+      if (!cramov.classList.contains('open')) return;
+      if (event.key.toLowerCase() === 'p') {
+        event.preventDefault();
+        document.body.classList.remove('print-session');
+        try { window.print(); } catch (_) {}
+      }
+    });
+    cramKeyBound = true;
+  }
 }
-function closeCram(){ovHide(cramov); cramov.setAttribute('aria-hidden','true'); document.body.style.overflow='';}
-document.getElementById('cramopen').onclick=openCram;
-document.getElementById('cramx').onclick=closeCram;
+function closeCram() {
+  ovHide(cramov);
+  cramov.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
+document.getElementById('cramopen').onclick = openCram;
+document.getElementById('cramx').onclick = closeCram;
 
-function openPlan(){var pv=document.getElementById('planov');ovShow(pv);pv.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';}
-function closePlan(){var pv=document.getElementById('planov');ovHide(pv);pv.setAttribute('aria-hidden','true');document.body.style.overflow='';}
+function openPlan() {
+  const planOverlay = document.getElementById('planov');
+  ovShow(planOverlay);
+  planOverlay.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+}
+function closePlan() {
+  const planOverlay = document.getElementById('planov');
+  ovHide(planOverlay);
+  planOverlay.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
 
-function openScope(){var sv=document.getElementById('scopeov');ovShow(sv);sv.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';}
-function closeScope(){var sv=document.getElementById('scopeov');ovHide(sv);sv.setAttribute('aria-hidden','true');document.body.style.overflow='';}
-function openKeys(){var kv=document.getElementById('keyov');ovShow(kv);kv.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';}
-function closeKeys(){var kv=document.getElementById('keyov');ovHide(kv);kv.setAttribute('aria-hidden','true');document.body.style.overflow='';}
-document.getElementById('planopen').onclick=openPlan;document.getElementById('scopeopen').onclick=openScope;document.getElementById('scopex').onclick=closeScope;document.getElementById('keyopen').onclick=openKeys;document.getElementById('keyx').onclick=closeKeys;
-document.getElementById('planx').onclick=closePlan;
+function openScope() {
+  const scopeOverlay = document.getElementById('scopeov');
+  ovShow(scopeOverlay);
+  scopeOverlay.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+}
+function closeScope() {
+  const scopeOverlay = document.getElementById('scopeov');
+  ovHide(scopeOverlay);
+  scopeOverlay.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
 
-(function(){var html=document.documentElement,btn=document.getElementById('themetog');function paint(){var d=html.dataset.theme==='dark';if(btn){btn.setAttribute('aria-pressed',d?'true':'false');var st=btn.querySelector('.tt-state');if(st)st.textContent=d?'on':'off';}var _tc=document.querySelector('meta[name="theme-color"]');if(_tc)_tc.setAttribute('content',d?'#15141A':'#FAF9F5');}paint();if(btn)btn.onclick=function(){html.dataset.theme=html.dataset.theme==='dark'?'light':'dark';paint();};})();
-document.getElementById('cramprint').onclick=function(){document.body.classList.remove('print-session');try{window.print();}catch(e){}};
-window.addEventListener('afterprint',function(){document.body.classList.remove('print-session');});
+function openKeys() {
+  const keyOverlay = document.getElementById('keyov');
+  ovShow(keyOverlay);
+  keyOverlay.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+}
+function closeKeys() {
+  const keyOverlay = document.getElementById('keyov');
+  ovHide(keyOverlay);
+  keyOverlay.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
+document.getElementById('planopen').onclick = openPlan;
+document.getElementById('scopeopen').onclick = openScope;
+document.getElementById('scopex').onclick = closeScope;
+document.getElementById('keyopen').onclick = openKeys;
+document.getElementById('keyx').onclick = closeKeys;
+document.getElementById('planx').onclick = closePlan;
+
+/* light/dark theme toggle: syncThemeButton() reflects the current data-theme
+   onto the toggle's pressed state, its on/off label, and the theme-color meta. */
+(function () {
+  const docEl = document.documentElement;
+  const toggleBtn = document.getElementById('themetog');
+  function syncThemeButton() {
+    const isDark = docEl.dataset.theme === 'dark';
+    if (toggleBtn) {
+      toggleBtn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+      const stateLabel = toggleBtn.querySelector('.tt-state');
+      if (stateLabel) stateLabel.textContent = isDark ? 'on' : 'off';
+    }
+    const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+    if (themeColorMeta) themeColorMeta.setAttribute('content', isDark ? '#15141A' : '#FAF9F5');
+  }
+  syncThemeButton();
+  if (toggleBtn) {
+    toggleBtn.onclick = function () {
+      docEl.dataset.theme = docEl.dataset.theme === 'dark' ? 'light' : 'dark';
+      syncThemeButton();
+    };
+  }
+})();
+
+document.getElementById('cramprint').onclick = function () {
+  document.body.classList.remove('print-session');
+  try { window.print(); } catch (e) {}
+};
+window.addEventListener('afterprint', function () {
+  document.body.classList.remove('print-session');
+});

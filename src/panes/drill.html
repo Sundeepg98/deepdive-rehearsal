@@ -1,0 +1,21 @@
+<div class="pane" id="drill">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div class="modetog" id="modetog">
+        <button type="button" class="on" data-m="study">Study</button>
+        <button type="button" data-m="mock">Mock round</button>
+        <button type="button" data-m="quick">Quick 5</button>
+      </div>
+      <div class="timer" id="timer" role="timer" aria-live="polite" aria-label="Mock round time remaining" style="display:none">22:00</div>
+    </div>
+    <div class="tierrow"><span class="tierlab">Focus by level</span><div class="modetog" id="tiertog"><button class="on" data-tier="all" type="button">All 20</button><button data-tier="SDE2" type="button">SDE2</button><button data-tier="SDE3" type="button">SDE3</button><button data-tier="Staff" type="button">Staff</button></div></div>
+    <div class="tiernote" id="tiernote"><b>All four levels, mixed</b> &mdash; the way a real loop actually comes at you.</div>
+    <div class="dbar"><i id="dfill"></i></div>
+    <div class="score">
+      <div class="pill g"><div class="v" id="sGot">0</div><div class="l">Solid</div></div>
+      <div class="pill s"><div class="v" id="sShk">0</div><div class="l">Revisit</div></div>
+      <div class="pill left"><div class="v" id="sLeft">0</div><div class="l">Left</div></div>
+    </div>
+    <div class="revset" id="revset" style="display:none"><button type="button" id="revdrill" class="revset-b">&#8635; Drill my <b id="revn">0</b> flagged <span id="revw">probes</span></button><span class="revset-h">your Revisit pile across this session &middot; clears as you nail them</span></div>
+    <div id="dwrap"></div>
+    <div class="dnav-wrap"><div class="dnav-h">Your drill set <span class="sub">tap a probe to jump &middot; flagged ones are marked</span></div><div class="dnav" id="dnav"></div></div>
+  </div>

@@ -1,0 +1,27 @@
+<div class="pane on" id="walk">
+    <div class="dots" id="wdots"></div>
+    <div class="card" id="wcard"></div>
+    <div class="nav">
+      <button type="button" id="wprev">&larr; Prev</button>
+      <span class="ctr" id="wctr"></span>
+      <button type="button" id="wnext">Next &rarr;</button>
+    </div>
+    <details class="model">
+      <summary>What a complete answer sounds like <span class="sub">model script &middot; the full arc, not just the opener</span></summary>
+      <div class="mbody">
+        <div class="mbeat"><span class="ml">Frame it before diving</span>"Before I trace it &mdash; I'll assume single region, files up to ~500&nbsp;MB, and that downstream consumers need the result within a few seconds. Stop me if any of that's off."</div>
+        <div class="mbeat"><span class="ml">Headline in one breath</span>"At a high level: the object lands in S3, that fires a trigger, I hash and validate it <b>while it streams</b>, write the metadata transactionally, then fan it out to the processors &mdash; built so memory stays flat no matter the file size."</div>
+        <div class="mbeat"><span class="ml">Walk the path</span>"Concretely &mdash; the upload completes to S3 and emits an event. My handler opens a read stream and forks it through a <b>PassThrough</b>: one branch computes the SHA&#8209;256, the other feeds the processor, so I never buffer the whole file or read it twice. Once I have the hash and size, I write the row &mdash; key, hash, status &mdash; to the metadata DB."</div>
+        <div class="mbeat"><span class="ml">Name the risk yourself</span>"The thing I'd flag without being asked is the <b>dual&#8209;write</b>: the object is already in S3, but if the DB write fails I've got an orphan. The compensating delete covers the common case, but the real backstop is a <b>reconciler</b> that sweeps S3 for keys with no committed row. I wouldn't claim the delete alone is safe."</div>
+        <div class="mbeat"><span class="ml">Name the trade-off line</span>"For dispatch I'd run a Lambda per object at this volume &mdash; the simplest thing that works. The moment I need retries, ordering, or a DLQ, I'd put <b>SQS</b> in front and make the processors consumers. That's the line I'd move on, and I'd say so before they ask."</div>
+        <div class="mbeat"><span class="ml">Be honest about the ceiling</span>"This holds to low thousands of objects a minute. Past that the metadata DB is the bottleneck &mdash; I'd shard by tenant or key&#8209;prefix and move fully onto SQS&#8209;fronted consumers. I'd call that out as the next redesign rather than pretend it scales forever."</div>
+        <div class="mq">Interviewer: "What if two uploads race on the same key?"</div>
+        <div class="mbeat ans"><span class="ml">Absorb the follow-up</span>"S3 is last&#8209;writer&#8209;wins on the object, so the bytes are fine &mdash; but my metadata could interleave. I'd make the DB write <b>idempotent on the key</b> with a conditional put, so the second writer updates cleanly or no&#8209;ops. And if ordering genuinely matters to the business, that's one more reason to move to a queue with a per&#8209;key partition."</div>
+      </div>
+    </details>
+
+    <div class="arc-wrap">
+      <div class="arc-h">The whole flow <span class="sub">tap any step to jump</span></div>
+      <div class="arc-grid" id="warc"></div>
+    </div>
+  </div>

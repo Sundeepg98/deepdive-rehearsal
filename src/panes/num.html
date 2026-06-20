@@ -1,0 +1,17 @@
+<div class="pane" id="num">
+    <div class="numlead">The estimation an interviewer makes you do at the whiteboard. State your assumptions and the <b>ceilings fall out of the arithmetic</b> — adjust any input and the math recomputes.</div>
+    <div class="card">
+      <div class="num-h">Assumptions</div>
+      <div class="ninp">
+        <label>Objects / day<input id="n_obj" type="number" value="10000000" min="0"></label>
+        <label>Avg size (MB)<input id="n_size" type="number" value="2" min="0" step="0.1"></label>
+        <label>Processing (sec)<input id="n_proc" type="number" value="2" min="0" step="0.1"></label>
+        <label>Peak : average<input id="n_peak" type="number" value="10" min="1"></label>
+      </div>
+    </div>
+    <div class="card" style="margin-top:13px">
+      <div class="num-h">What falls out</div>
+      <div id="nout"></div>
+    </div>
+    <div class="num-tell">The number you say isn't the point — the <b>ceiling</b> it reveals is. Concurrency past 1,000 says &lsquo;buffer through SQS&rsquo;; connections past the pool say &lsquo;RDS Proxy.&rsquo;</div>
+  </div>

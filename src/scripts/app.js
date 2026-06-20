@@ -1,0 +1,11 @@
+<!--@build:include scripts/app/walkthrough.js-->
+<!--@build:include scripts/app/drill.js-->
+<!--@build:include scripts/app/whiteboard.js-->
+<!--@build:include scripts/app/opener-altitude.js-->
+<!--@build:include scripts/app/mock-run.js-->
+<!--@build:include scripts/app/mixed-fire.js-->
+<!--@build:include scripts/app/cram-sheet.js-->
+<!--@build:include scripts/app/session-progress.js-->
+<!--@build:include scripts/app/system-map.js-->
+<!--@build:include scripts/app/model-answers.js-->
+<!--@build:include scripts/app/numbers-nalsd.js-->

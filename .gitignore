@@ -1,0 +1,8 @@
+# build/runtime cruft — the deliverable itself IS committed (ready to open)
+__pycache__/
+*.pyc
+node_modules/
+*.tar.gz
+*.zip
+.DS_Store
+/tmp/

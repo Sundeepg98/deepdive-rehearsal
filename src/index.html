@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#FAF9F5">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CiAgPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTMiIGZpbGw9IiM1MzRBQjciLz4KICA8ZyBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iNiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBmaWxsPSIjZmZmZmZmIj4KICAgIDxwYXRoIGQ9Ik0xMyAzMiBIMjkiIGZpbGw9Im5vbmUiLz4KICAgIDxwYXRoIGQ9Ik0yOSAzMiBMNTAgMTkiIGZpbGw9Im5vbmUiLz4KICAgIDxwYXRoIGQ9Ik0yOSAzMiBMNTAgNDUiIGZpbGw9Im5vbmUiLz4KICAgIDxjaXJjbGUgY3g9IjI5IiBjeT0iMzIiIHI9IjYiIHN0cm9rZT0ibm9uZSIvPgogICAgPGNpcmNsZSBjeD0iNTAiIGN5PSIxOSIgcj0iNC41IiBzdHJva2U9Im5vbmUiLz4KICAgIDxjaXJjbGUgY3g9IjUwIiBjeT0iNDUiIHI9IjQuNSIgc3Ryb2tlPSJub25lIi8+CiAgPC9nPgo8L3N2Zz4K">
+<link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAACd0lEQVR4nLSWTUzTYBjHn3bdYOyLEWOiSFcQ2PyAgxqNickSNXHi8PNgDB9qBie9mJh4MHoxJsTEcPKgUQNEYvTCAc00JJAZD56MQXF2Q2UbEy+ObZQlMth8oE1pGhkra3+n7Wnf/79937f/96Hy+TysEI1w/uHIZCgVnZpbWhKKitDpCJqx1Dfajrc6aIeZLxL5ZeDNq8jAEzabzYEa6PXkxS6Xx0sLBkMvfwz2h0BtLnW7vKcZMvJz7sVgGDTg+UD490xG17yjgw0mQQNwIQkAKsRqos6D4lQ8Ng+ageJUJrMIJbNzt919uBp/BEbjX7/MinUUp0ANbtzaazIvS+07sNnXNiq9REJp2KvKenoP8uqIrdKwq6lKesPG34AkofVM7fm2BkPZ6lOmUwsTnxMqGGAeXLnWVEMLeYA7Mh7jvk+mx0amZXcqNjAadZ0+11FPDUEIlTCbetA7Pr3GbizK4JB7y8mztVu3mXAGzGZ9hUkYNc8tPutjR/yxAmPlBlar3n2k2lixWrfaDMdaaP55y8uNYv19YObpwyBaQkHkBrfv7mfqLIXHoOj9nk8T4wkoArmB3rD+xiUIcf7XhzjX4pf+315vbd6zCQNdrEinSMq7sV99j4LpdBYUGfyXUha5KAMpSrepYgOeAh+aNOw2bgArUXHiFHOho1EaFcnZha52lcIul4Phoamr3QHpgVhpl4ddqWma+PP35vUPHCfspVRSpbCTce/OR/HAkV1SxwAXVra2ImSD0waageIkU2cFzUBxEhs8iio+WhSAstikkg7GgsceaED7ZSe2wELz+/Z1tP/xNxWb306f0+N1YJwQWrfv/wAAAP//5rQlCgAAAAZJREFUAwB+nw6XOyVoZQAAAABJRU5ErkJggg==">
+<link rel="apple-touch-icon" href="data:image/png;base64,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">
+<meta name="application-name" content="Deep Rehearsal">
+<meta name="apple-mobile-web-app-title" content="Deep Rehearsal">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Content Pipeline — Deep Rehearsal</title>
+<style><!--@build:include styles.css--></style>
+<script><!--@build:include scripts/boot.js--></script>
+</head>
+<body>
+<div class="rail" aria-hidden="true"><div class="fill" id="rail"></div></div>
+<div class="app"><aside class="sidebar"><div class="side-id">
+  <span class="badge">Deep rehearsal</span><span class="locator">Topic 1 of 8 &middot; ingestion layer</span>
+  <div class="hdr">
+    <h1>Content Pipeline</h1>
+    <div class="sub"><b>Mechanics</b> &rarr; <b>graded follow-up chains</b> &rarr; <b>whiteboard</b> &rarr; <b>zoom out</b> to where this sits in the whole system, and the pivots an interviewer rides into the next topic.</div>
+    <div class="kbd-hint">Keyboard: <kbd>&larr;</kbd><kbd>&rarr;</kbd> steps &middot; <kbd>Space</kbd> reveal/push &middot; <kbd>1</kbd>/<kbd>2</kbd> grade &middot; <kbd>Q</kbd>&ndash;<kbd>O</kbd> tabs</div>
+  </div>
+
+  <button class="tools-fab" id="toolsfab" type="button">Tools</button></div><div class="tools-bd" id="toolsbd" aria-hidden="true"></div><div class="mockbar"><button class="mockbtn" id="mockopen" type="button"><span class="mb-ic">&#9654;</span><span class="mb-lbl">Mock run &mdash; the full round, on the clock</span></button><button class="inttog" id="inttog" type="button" aria-pressed="false"><span class="inttog-dot"></span><span class="inttog-lbl">Interviewer cuts in mid-answer &mdash; <b>off</b></span></button><button class="crambtn" id="cramopen" type="button"><span class="mb-tx"><span class="mb-t">One-page cram sheet</span><span class="mb-d"> &mdash; everything that matters, on a card</span></span></button><button class="crambtn" id="sessopen" type="button"><span class="mb-tx"><span class="mb-t">Session progress</span><span class="mb-d"> &mdash; where you&rsquo;re weak, what to drill next</span></span></button><button class="crambtn" id="mixopen" type="button"><span class="mb-tx"><span class="mb-t">Mixed fire</span><span class="mb-d"> &mdash; probes &amp; curveballs in random order</span></span></button><button class="crambtn" id="planopen" type="button"><span class="mb-tx"><span class="mb-t">Game plan</span><span class="mb-d"> &mdash; how to rehearse with this over a week</span></span></button><button class="crambtn" id="scopeopen" type="button"><span class="mb-tx"><span class="mb-t">Scope it first</span><span class="mb-d"> &mdash; the clarifying questions before you design</span></span></button><button class="crambtn kbd-only" id="keyopen" type="button"><span class="mb-tx"><span class="mb-t">Keyboard shortcuts</span><span class="mb-d"> &mdash; jump views, drive it by key</span></span></button><button class="crambtn cram-tog" id="themetog" type="button" aria-pressed="false"><span class="mb-ic">&#9789;</span>Dark mode &mdash; <b class="tt-state">off</b></button></div>
+
+  <div class="seg" role="group" aria-label="Rehearsal sections">
+    <button type="button" class="on" data-tab="walk"><span>Walkthrough</span><span class="n">MECHANICS</span></button>
+    <button type="button" data-tab="drill"><span>Probe Drill</span><span class="n">GRADED</span></button>
+    <button type="button" data-tab="wb"><span>Whiteboard</span><span class="n">RECONSTRUCT</span></button>
+    <button type="button" data-tab="sys"><span>System Map</span><span class="n">ZOOM OUT</span></button>
+    <button type="button" data-tab="trade"><span>Trade-offs</span><span class="n">DECISIONS</span></button>
+    <button type="button" data-tab="model"><span>Model Answers</span><span class="n">SCRIPTS</span></button>
+    <button type="button" data-tab="num"><span>Numbers</span><span class="n">ESTIMATE</span></button>
+    <button type="button" data-tab="rf"><span>Red Flags</span><span class="n">ANTI-PATTERNS</span></button>
+    <button type="button" data-tab="open"><span>30-Second</span><span class="n">OPEN &amp; CLOSE</span></button>
+  </div>
+
+  </aside><main class="stage" role="main"><div class="stage-head" id="stagehead"></div><details class="mcomp"><summary class="mcomp-sum"><span class="mcomp-eyebrow">Companion</span><span class="mcomp-cue">coaching for this view</span><span class="mcomp-chev" aria-hidden="true">&#9662;</span></summary><div class="mcomp-body"><div class="mcomp-block"><div class="cmp-h">This view</div><div class="cmp-view" id="mCmpView">Walkthrough</div><p class="cmp-note" id="mCmpNote">The dispatch flow, one step at a time &mdash; the mechanics you narrate before anyone cuts in.</p></div><div class="mcomp-block"><div class="cmp-h">The move here</div><p class="cmp-move" id="mCmpMove">Say the fork out loud &mdash; &ldquo;one read, two sinks.&rdquo; That single-read line is what they remember.</p></div><div class="mcomp-block"><div class="cmp-h">The spine of a strong answer</div><ul class="cmp-spine"><li><span class="cmp-dot"></span><span>A frozen strategy map keeps dispatch <b>O(1)</b> &mdash; never a switch statement.</span></li><li><span class="cmp-dot"></span><span>One <b>PassThrough</b> fork hashes <i>and</i> uploads on a single read of the file.</span></li><li><span class="cmp-dot"></span><span>At-least-once delivery <b>+</b> idempotent work <b>=</b> exactly-once effect.</span></li><li><span class="cmp-dot"></span><span>Name the ceiling before you hit it &mdash; Lambda gives way to <b>SQS</b> past ~1,000/s.</span></li></ul></div></div></details><!--@build:include panes/walk.html-->
+
+  <!--@build:include panes/drill.html-->
+
+  <!--@build:include panes/wb.html-->
+
+  <!--@build:include panes/sys.html-->
+
+  <!--@build:include panes/trade.html-->
+
+  <!--@build:include panes/model.html-->
+
+  <!--@build:include panes/num.html-->
+
+  <!--@build:include panes/rf.html-->
+
+  <!--@build:include panes/open.html-->
+</main>
+  <aside class="companion" aria-label="Rehearsal companion">
+    <div class="cmp-inner">
+      <div class="cmp-block cmp-top">
+        <div class="cmp-eyebrow">You&rsquo;re rehearsing</div>
+        <div class="cmp-topic">Content Pipeline</div>
+        <p class="cmp-thesis">A file-processing service, taken apart the way an interviewer actually scores it &mdash; beat by beat, with the follow-ups they ask.</p>
+      </div>
+      <div class="cmp-block">
+        <div class="cmp-h">This view</div>
+        <div class="cmp-view" id="cmpView">Walkthrough</div>
+        <p class="cmp-note" id="cmpNote">The dispatch flow, one step at a time &mdash; the mechanics you narrate before anyone cuts in.</p>
+      </div>
+      <div class="cmp-block">
+        <div class="cmp-h">The move here</div>
+        <p class="cmp-move" id="cmpMove">Say the fork out loud &mdash; &ldquo;one read, two sinks.&rdquo; That single-read line is what they remember.</p>
+      </div>
+      <div class="cmp-block">
+        <div class="cmp-h">The spine of a strong answer</div>
+        <ul class="cmp-spine">
+          <li><span class="cmp-dot"></span><span>A frozen strategy map keeps dispatch <b>O(1)</b> &mdash; never a switch statement.</span></li>
+          <li><span class="cmp-dot"></span><span>One <b>PassThrough</b> fork hashes <i>and</i> uploads on a single read of the file.</span></li>
+          <li><span class="cmp-dot"></span><span>At-least-once delivery <b>+</b> idempotent work <b>=</b> exactly-once effect.</span></li>
+          <li><span class="cmp-dot"></span><span>Name the ceiling before you hit it &mdash; Lambda gives way to <b>SQS</b> past ~1,000/s.</span></li>
+        </ul>
+      </div>
+      <div class="cmp-block">
+        <div class="cmp-h">Drive it</div>
+        <p class="cmp-drive">Press <kbd class="cmp-kbd">?</kbd> for every shortcut. Open <b>Tools</b> for a timed mock run, or to see where you&rsquo;re still weak.</p>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<!--@build:include overlays/mock-run.html-->
+
+<!--@build:include overlays/mixed-fire.html-->
+
+<!--@build:include overlays/cram.html-->
+
+<!--@build:include overlays/session.html-->
+
+<div id="sessreport"></div>
+
+<!--@build:include overlays/keyboard.html-->
+  <!--@build:include overlays/scope.html-->
+<!--@build:include overlays/gameplan.html-->
+
+
+<script><!--@build:include scripts/app.js--></script>
+</body>
+</html>

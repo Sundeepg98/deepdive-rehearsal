@@ -1,0 +1,31 @@
+<div class="pane" id="wb">
+    <div class="card">
+      <div class="step-k">Reconstruct from blank</div>
+      <div class="step-t">What you draw, in order</div>
+      <div class="step-sub">For each cue, draw it from memory first &mdash; then reveal to check. Produce all nine cold and you can run this system on a whiteboard.</div>
+      <div class="wb-count" id="wbcount">0 recalled &middot; 0 missed &middot; 9 left</div>
+      <ol class="wb" id="wblist"></ol>
+      <div class="wb-verdict" id="wbverdict"></div>
+      <div class="wb-foot"><b>The one people forget:</b> step 7. Two stores, no shared transaction — if you don't volunteer the compensating S3 delete, the interviewer knows you've only read about this, not shipped it.</div>
+    </div>
+    <details class="disc">
+      <summary>The assembled diagram &mdash; what you draw on the board</summary>
+      <div class="body">
+        <div class="dgm">
+          <div class="dgm-node"><div class="dgm-t">operator &rarr; S3 bucket</div><div class="dgm-s">the upload lands as an object</div></div>
+          <div class="dgm-conn"><span class="dgm-v">&#9660;</span><span class="dgm-lbl">S3 <code>ObjectCreated</code> event</span></div>
+          <div class="dgm-node"><div class="dgm-t"><code>processUpload(key, bucket)</code></div><div class="dgm-s">Lambda / handler entry</div></div>
+          <div class="dgm-conn"><span class="dgm-v">&#9660;</span><span class="dgm-lbl"><code>extname</code> &rarr; strategies map &middot; O(1)</span></div>
+          <div class="dgm-node"><div class="dgm-t">format handler</div><div class="dgm-s">jpg &middot; mp4 &middot; ttf &middot; bin &mdash; unknown ext &rarr; <i>skip</i></div></div>
+          <div class="dgm-conn"><span class="dgm-v">&#9660;</span><span class="dgm-lbl"><code>readStream</code></span></div>
+          <div class="dgm-node dgm-fork"><div class="dgm-t">PassThrough &middot; <span class="dgm-em">one read</span></div><div class="dgm-branches"><span class="dgm-br">&rarr; hash</span><span class="dgm-br">&rarr; s3.upload</span></div><div class="dgm-s"><code>Promise.all</code> &mdash; forked, single read</div></div>
+          <div class="dgm-conn"><span class="dgm-v">&#9660;</span><span class="dgm-lbl">persist across two stores</span></div>
+          <div class="dgm-stores"><div class="dgm-node dgm-store"><div class="dgm-t">DB record</div><div class="dgm-s">catalog row</div></div><div class="dgm-link">&harr;</div><div class="dgm-node dgm-store"><div class="dgm-t">S3 blob</div><div class="dgm-s">object bytes</div></div></div>
+          <div class="dgm-note">no shared transaction &rarr; track keys + <b>compensating-delete</b> on rollback</div>
+          <div class="dgm-conn dgm-up"><span class="dgm-v">&#9650;</span><span class="dgm-lbl">backstops the two stores</span></div>
+          <div class="dgm-node dgm-recon"><div class="dgm-t">reconciler</div><div class="dgm-s">sweeps orphans past a grace window / <b>PENDING</b> marker &mdash; never touches an in-flight upload</div></div>
+          <div class="dgm-foot">redelivered event &rarr; <b>processed-marker</b> (conditional put) &rarr; replay no-ops &middot; idempotent</div>
+        </div>
+      </div>
+    </details>
+  </div>

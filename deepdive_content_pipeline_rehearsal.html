@@ -2529,16 +2529,36 @@ var modelAnswers=[
        {l:"THE TELL",c:"close",t:"The level signal is naming limits as <i>knowing trades</i>, not confessions: \u201CI shipped X aware of the seam I\u2019d cut to Y, and here\u2019s what triggers it.\u201D A design\u2019s maturity is measured by how precisely you can state its own limits \u2014 vague handwaving right there is the actual tell the interviewer is listening for."}
      ] }
 ];
-var mai=0, modelBody=document.getElementById('modelBody'), mselBtns=document.querySelectorAll('.msel button');
-function renderModel(){
-  var m=modelAnswers[mai];
-  var h='<div class="mscript-h">'+m.opener+'</div><div class="mscript-sub">'+m.sub+'</div>';
-  for(var i=0;i<m.beats.length;i++){ var bt=m.beats[i];
-    h+='<div class="mbeat"><div class="mbeat-l l-'+bt.c+'">'+bt.l+'</div><div class="mbeat-t">'+bt.t+'</div></div>'; }
-  modelBody.innerHTML=h;
-  for(var k=0;k<mselBtns.length;k++) mselBtns[k].classList.toggle('on',k===mai);
+let currentAnswer = 0;
+const modelBody = document.getElementById('modelBody');
+const selectorBtns = document.querySelectorAll('.msel button');
+
+/* Render the model answer at index `currentAnswer` into #modelBody: an opener
+   line, a sub-line, then one ".mbeat" row per beat (each beat carries a colour
+   class `c`, a label `l`, and body text `t`). Also flags the active selector. */
+function renderModel() {
+  const ans = modelAnswers[currentAnswer];
+  let html = '<div class="mscript-h">' + ans.opener + '</div>' +
+             '<div class="mscript-sub">' + ans.sub + '</div>';
+  for (let i = 0; i < ans.beats.length; i++) {
+    const beat = ans.beats[i];
+    html += '<div class="mbeat"><div class="mbeat-l l-' + beat.c + '">' + beat.l +
+            '</div><div class="mbeat-t">' + beat.t + '</div></div>';
+  }
+  modelBody.innerHTML = html;
+  for (let k = 0; k < selectorBtns.length; k++) {
+    selectorBtns[k].classList.toggle('on', k === currentAnswer);
+  }
 }
-for(var mb=0;mb<mselBtns.length;mb++){ mselBtns[mb].onclick=function(){ mai=+this.getAttribute('data-i'); renderModel(); }; }
+
+/* Each selector button switches the visible answer (its data-i is the index). */
+for (let i = 0; i < selectorBtns.length; i++) {
+  selectorBtns[i].onclick = function () {
+    currentAnswer = +this.getAttribute('data-i');
+    renderModel();
+  };
+}
+
 renderModel();
 
 /* ============ NUMBERS / NALSD ============ */

@@ -89,7 +89,7 @@ function buildSessReport() {
   html += '<div class="sr-foot">Generated from this session &middot; Content Pipeline deep-rehearsal trainer. Re-run the weak areas above tomorrow.</div>';
   document.getElementById('sessreport').innerHTML = html;
 }
-/* Serialize this session into a compact, shareable "CPR1." code string —
+/* Serialize this session into a compact, shareable "CPR1." code string &mdash;
    date, then drill / whiteboard / mock / mixed-fire tallies. Mirrors decodeSession. */
 function encodeSession() {
   const stats = sessStats(), now = new Date(), pad = function (x) { return x < 10 ? '0' + x : '' + x; };
@@ -174,7 +174,7 @@ function renderCompare() {
 }
 /* Render the whole overlay body: the "do this next" card, a stat card per
    surface (drill / whiteboard / mock / mixed fire), the carry-across-days code
-   widget, and the Save-PDF / Clear actions — then wire every button. */
+   widget, and the Save-PDF / Clear actions &mdash; then wire every button. */
 function renderSession() {
   const stats = sessStats();
   const dTot = stats.dTot, dDone = stats.dDone, dGot = stats.dGot, dShk = stats.dShk, dLeft = stats.dLeft, revisit = stats.revisit, wbGot = stats.wbGot, wbMiss = stats.wbMiss, missed = stats.missed, wbTot = stats.wbTot, wbDone = stats.wbDone, mScore = stats.mScore, mTime = stats.mTime, mRuns = stats.mRuns, mInt = stats.mInt;

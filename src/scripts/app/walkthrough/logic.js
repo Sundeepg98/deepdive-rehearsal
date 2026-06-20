@@ -1,4 +1,4 @@
-var wi = 0; /* SHARED: current step index — the keyboard handler in numbers-nalsd.js drives this too */
+var wi = 0; /* SHARED: current step index &mdash; the keyboard handler in numbers-nalsd.js drives this too */
 const walkCard = document.getElementById('wcard');
 const dotsRow = document.getElementById('wdots');
 const counterEl = document.getElementById('wctr');

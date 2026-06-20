@@ -1,6 +1,6 @@
 <div class="pane" id="trade">
     <div class="ledger">
-      <div class="lead">The design decisions an interviewer drills — each with the <b>axis</b> that picks a side. Saying the switch condition out loud is the senior move; defending one option as universally right isn't.</div>
+      <div class="lead">The design decisions an interviewer drills &mdash; each with the <b>axis</b> that picks a side. Saying the switch condition out loud is the senior move; defending one option as universally right isn't.</div>
 
       <div class="dec">
         <div class="dec-q">Lambda per object <span class="vs">vs</span> SQS + worker pool</div>
@@ -11,7 +11,7 @@
 
       <div class="dec">
         <div class="dec-q">Hash during upload <span class="vs">vs</span> hash after store</div>
-        <div class="opt"><span class="opt-n">During (fork)</span><div class="opt-w"><span class="pw">pick when</span>files are large, or you just want <b>one disk read</b> — i.e. almost always.</div></div>
+        <div class="opt"><span class="opt-n">During (fork)</span><div class="opt-w"><span class="pw">pick when</span>files are large, or you just want <b>one disk read</b> &mdash; i.e. almost always.</div></div>
         <div class="opt"><span class="opt-n">After / two-pass</span><div class="opt-w"><span class="pw">pick when</span>the file is tiny, or an API needs the <b>digest before</b> you can store it.</div></div>
         <div class="dec-tell">The <b>PassThrough fork</b> is the only path that survives a 500&nbsp;MB object.</div>
       </div>
@@ -20,7 +20,7 @@
         <div class="dec-q">SQLite bundle <span class="vs">vs</span> JSON <span class="vs">vs</span> pg_dump</div>
         <div class="opt"><span class="opt-n">SQLite</span><div class="opt-w"><span class="pw">pick when</span>you need <b>real FKs</b> and binary at <b>1:1</b> size in one portable file.</div></div>
         <div class="opt"><span class="opt-n">JSON</span><div class="opt-w"><span class="pw">pick when</span>data is small, human-readable, with <b>no</b> binary or relations.</div></div>
-        <div class="opt"><span class="opt-n">pg_dump</span><div class="opt-w"><span class="pw">pick when</span>same engine both ends and you want exact fidelity — but it's <b>not portable</b>.</div></div>
+        <div class="opt"><span class="opt-n">pg_dump</span><div class="opt-w"><span class="pw">pick when</span>same engine both ends and you want exact fidelity &mdash; but it's <b>not portable</b>.</div></div>
         <div class="dec-tell">JSON base64-bloats binary <b>~33%</b> and loses referential integrity.</div>
       </div>
 
@@ -28,14 +28,14 @@
         <div class="dec-q">Single PUT <span class="vs">vs</span> multipart upload</div>
         <div class="opt"><span class="opt-n">Single PUT</span><div class="opt-w"><span class="pw">pick when</span>objects are <b>small</b> (&lt;100&nbsp;MB) and the network is reliable.</div></div>
         <div class="opt"><span class="opt-n">Multipart</span><div class="opt-w"><span class="pw">pick when</span>large objects, flaky networks, or you want <b>per-part retry</b> and resumability.</div></div>
-        <div class="dec-tell">Multipart resumes <b>per part</b> — pair it with a lifecycle rule to abort orphans.</div>
+        <div class="dec-tell">Multipart resumes <b>per part</b> &mdash; pair it with a lifecycle rule to abort orphans.</div>
       </div>
 
       <div class="dec">
         <div class="dec-q">Compensating delete <span class="vs">vs</span> reconciler <span class="vs">vs</span> distributed txn</div>
         <div class="opt"><span class="opt-n">Compensating delete</span><div class="opt-w"><span class="pw">pick when</span>cheap cleanup of the <b>common</b> failure, in the request path.</div></div>
         <div class="opt"><span class="opt-n">Reconciler</span><div class="opt-w"><span class="pw">pick when</span>you need a <b>durable backstop</b> that eventually catches every orphan.</div></div>
-        <div class="opt"><span class="opt-n">Distributed txn</span><div class="opt-w"><span class="pw">pick when</span>you truly need <b>cross-store atomicity</b> — rarely worth 2PC / saga cost across S3 + DB.</div></div>
+        <div class="opt"><span class="opt-n">Distributed txn</span><div class="opt-w"><span class="pw">pick when</span>you truly need <b>cross-store atomicity</b> &mdash; rarely worth 2PC / saga cost across S3 + DB.</div></div>
         <div class="dec-tell">Run delete <b>and</b> reconciler; reach for 2PC only when atomicity is non-negotiable.</div>
       </div>
 
@@ -48,8 +48,8 @@
 
       <div class="dec">
         <div class="dec-q">Reconciler backstop <span class="vs">vs</span> transactional outbox</div>
-        <div class="opt"><span class="opt-n">Reconciler (heal)</span><div class="opt-w"><span class="pw">pick when</span>the two stores <b>can't share a transaction</b>, a brief orphan window is tolerable, and fewer moving parts wins — dual-write, then sweep orphans on a grace window.</div></div>
-        <div class="opt"><span class="opt-n">Outbox (prevent)</span><div class="opt-w"><span class="pw">pick when</span>correctness must be <b>airtight</b> and you can anchor on one DB transaction — commit the row + an event atomically, and a relay does the S3 work with retries off <b>one commit point</b>.</div></div>
+        <div class="opt"><span class="opt-n">Reconciler (heal)</span><div class="opt-w"><span class="pw">pick when</span>the two stores <b>can't share a transaction</b>, a brief orphan window is tolerable, and fewer moving parts wins &mdash; dual-write, then sweep orphans on a grace window.</div></div>
+        <div class="opt"><span class="opt-n">Outbox (prevent)</span><div class="opt-w"><span class="pw">pick when</span>correctness must be <b>airtight</b> and you can anchor on one DB transaction &mdash; commit the row + an event atomically, and a relay does the S3 work with retries off <b>one commit point</b>.</div></div>
         <div class="dec-tell">The outbox needs a DB transaction to anchor on; the reconciler is the honest backstop for when the stores genuinely can't share one.</div>
       </div>
     </div>

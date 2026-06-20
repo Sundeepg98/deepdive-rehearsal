@@ -81,7 +81,7 @@ document.addEventListener('keydown', function (event) {
 });
 /* Modal focus management: dialogs are aria-modal, so trap Tab inside the open
    overlay and restore focus to the trigger when it closes. The overlay set is
-   derived from the DOM — every [role=dialog][aria-modal] is auto-covered, so a
+   derived from the DOM &mdash; every [role=dialog][aria-modal] is auto-covered, so a
    newly added overlay can never be forgotten (the old keyov/mixov bug class). */
 (function () {
   const overlays = Array.prototype.slice.call(document.querySelectorAll('[role="dialog"][aria-modal="true"]'));
@@ -169,15 +169,15 @@ document.addEventListener('keydown', function (event) {
 /* ===== v77: stage header sync ===== */
 (function(){
   var cmpNotes={
-    walk:['Walkthrough','The dispatch flow, one step at a time — the mechanics you narrate before anyone cuts in.','Say the fork out loud — “one read, two sinks.” That single-read line is what they remember.'],
-    drill:['Probe Drill','Twenty graded follow-ups — the ones that separate a passing SDE2 from a Staff signal.','Commit to an answer before you reveal — saying it beats reading it. That’s the rep.'],
-    wb:['Whiteboard','Rebuild the whole pipeline from memory — nine cues, nothing in front of you.','Draw the boxes from memory first, then check — recall is the test, not recognition.'],
-    sys:['System Map','Zoom out to the six stages — and the exact points an interviewer pivots.','Lead with the flow, not the boxes — “upload lands, dispatch routes, sinks fan out.”'],
-    trade:['Trade-offs','The decisions they drill — each with the switch condition that picks a side.','Always say “pick when” — name the condition that flips the choice, not just the options.'],
-    model:['Model Answers','Full spoken scripts — the beats, in order, the way you’d actually say them.','Steal the frame, not the words — headline first, then the one risk you’d name.'],
-    num:['Numbers','Back-of-envelope the load — and know which number trips which ceiling.','Lead with the peak, not the average — ~1,157/s is the number that sets the ceiling.'],
-    rf:['Red Flags','What sinks the round — the anti-patterns, and what to say instead.','Name what the interviewer hears, not just the mistake — that’s the senior tell.'],
-    open:['30-Second','The opener and the close — matched to the altitude the question is asked at.','Match the altitude — open at the contract, not the code, and land on the one risk.']
+    walk:['Walkthrough','The dispatch flow, one step at a time \u2014 the mechanics you narrate before anyone cuts in.','Say the fork out loud \u2014 \u201Cone read, two sinks.\u201D That single-read line is what they remember.'],
+    drill:['Probe Drill','Twenty graded follow-ups \u2014 the ones that separate a passing SDE2 from a Staff signal.','Commit to an answer before you reveal \u2014 saying it beats reading it. That\u2019s the rep.'],
+    wb:['Whiteboard','Rebuild the whole pipeline from memory \u2014 nine cues, nothing in front of you.','Draw the boxes from memory first, then check \u2014 recall is the test, not recognition.'],
+    sys:['System Map','Zoom out to the six stages \u2014 and the exact points an interviewer pivots.','Lead with the flow, not the boxes \u2014 \u201Cupload lands, dispatch routes, sinks fan out.\u201D'],
+    trade:['Trade-offs','The decisions they drill \u2014 each with the switch condition that picks a side.','Always say \u201Cpick when\u201D \u2014 name the condition that flips the choice, not just the options.'],
+    model:['Model Answers','Full spoken scripts \u2014 the beats, in order, the way you\u2019d actually say them.','Steal the frame, not the words \u2014 headline first, then the one risk you\u2019d name.'],
+    num:['Numbers','Back-of-envelope the load \u2014 and know which number trips which ceiling.','Lead with the peak, not the average \u2014 ~1,157/s is the number that sets the ceiling.'],
+    rf:['Red Flags','What sinks the round \u2014 the anti-patterns, and what to say instead.','Name what the interviewer hears, not just the mistake \u2014 that\u2019s the senior tell.'],
+    open:['30-Second','The opener and the close \u2014 matched to the altitude the question is asked at.','Match the altitude \u2014 open at the contract, not the code, and land on the one risk.']
   };
   /* Mirror the active tab's label into the stage header and the desktop +
      mobile "companion" panels (view name, note, and pivot move from cmpNotes). */
@@ -208,7 +208,7 @@ document.addEventListener('keydown', function (event) {
   upd();
 })();
 
-/* v80: mobile nav strip — fade the scroll edges and keep the active view in view */
+/* v80: mobile nav strip &mdash; fade the scroll edges and keep the active view in view */
 (function () {
   const strip = document.querySelector('.sidebar .seg');
   if (!strip) return;

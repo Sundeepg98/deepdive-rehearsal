@@ -12,7 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>Content Pipeline — Deep Rehearsal</title>
+<title>Content Pipeline &mdash; Deep Rehearsal</title>
 <style>
   :root{
     --mono:ui-monospace,"SFMono-Regular",Menlo,"Cascadia Mono","Segoe UI Mono",Consolas,"Liberation Mono",monospace;
@@ -585,7 +585,7 @@
     *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}
   }
 
-/* ============ DARK THEME (scoped — light mode untouched) ============ */
+/* ============ DARK THEME (scoped - light mode untouched) ============ */
 html[data-theme="dark"]{
   --bg:#15141A; --card:#211F29;
    --surf:linear-gradient(180deg,#282532 0%,#1E1C26 100%);
@@ -728,7 +728,7 @@ html[data-theme="dark"] .mb-irev,html[data-theme="dark"] .mb-irev:disabled{backg
 @media(prefers-reduced-motion:reduce){ .pane.on,.sidebar{animation:none} }
 
 /* ===== v77: stage context header ===== */
-/* v85: section masthead — gradient accent rule + baseline hairline for clear header→content structure, tighter type rhythm (applies to all 9 panes) */
+/* v85: section masthead - gradient accent rule + baseline hairline for clear header->content structure, tighter type rhythm (applies to all 9 panes) */
 .stage-head{position:relative;max-width:830px;margin:0 auto 20px;padding:2px 0 14px 18px;border-bottom:1px solid var(--bd)}
 .stage-head::before{content:"";position:absolute;left:0;top:3px;bottom:14px;width:3px;border-radius:2px;background:linear-gradient(180deg,var(--acc),var(--acc2))}
 .stage-head .sh-kick{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1.7px;color:var(--acc);text-transform:uppercase;line-height:1.4}
@@ -744,9 +744,9 @@ html[data-theme="dark"]{--grid:rgba(170,157,245,.05);--canvas:radial-gradient(13
 .stage{background-color:var(--bg);background-image:radial-gradient(circle,var(--grid) 1px,transparent 1px),var(--canvas);background-size:23px 23px,100% 100%;background-repeat:repeat,no-repeat}
 /* v80: mobile nav strip edge-fade affordance (signals the hidden views) */
 @media(max-width:919px){.sidebar .seg{-webkit-mask-image:linear-gradient(to right,transparent 0,#000 var(--fl,0px),#000 calc(100% - var(--fr,0px)),transparent 100%);mask-image:linear-gradient(to right,transparent 0,#000 var(--fl,0px),#000 calc(100% - var(--fr,0px)),transparent 100%);}}
-/* v84: ground the desktop work surface — top-anchor the content so the section header
+/* v84: ground the desktop work surface - top-anchor the content so the section header
    sits at a STABLE vertical position across panes (no jump on tab-switch) and its accent
-   rule lines up with the content column’s left edge. (v81 flex-centering shrank short
+   rule lines up with the content column's left edge. (v81 flex-centering shrank short
    headers to content-width and floated them to centre, misaligned from the cards.) */
 @media(min-width:920px){.stage{padding-top:46px;display:flex;flex-direction:column;justify-content:safe center}.stage>.stage-head,.stage>.pane{width:100%;max-width:830px;margin-left:auto;margin-right:auto}}
 /* v83: tools-sheet backdrop moved off body::after to a real element in .sidebar
@@ -760,7 +760,7 @@ html[data-theme="dark"]{--grid:rgba(170,157,245,.05);--canvas:radial-gradient(13
 .revset-b:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
 .revset-b b{font-weight:800}
 .revset-h{font-size:12px;color:var(--mut);font-style:italic}
-/* desktop hover polish (v92) — all gated @media(hover:hover) so mobile tap never sticks */
+/* desktop hover polish (v92) - all gated @media(hover:hover) so mobile tap never sticks */
 @media(hover:hover){
 .seg button{transition:background-color .14s ease,color .14s ease}
 .mb-rev,.wb-rev,.wb-got{transition:filter .12s ease}
@@ -786,7 +786,7 @@ html[data-theme="dark"]{scrollbar-color:rgba(150,140,225,.4) transparent}
 html[data-theme="dark"] ::-webkit-scrollbar-thumb{background:rgba(150,140,225,.32);border-radius:9px;border:3px solid transparent;background-clip:padding-box}
 html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover{background:rgba(150,140,225,.52)}
 ::-webkit-scrollbar-corner{background:transparent}
-/* overlay entrance (v94): backdrop fade + panel slide-up&scale — reduced-motion-safe (global rule makes it instant) */
+/* overlay entrance (v94): backdrop fade + panel slide-up&scale - reduced-motion-safe (global rule makes it instant) */
 @keyframes ovbg{from{opacity:0}to{opacity:1}}
 @keyframes ovpan{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:none}}
 .mock-ov.open,.cram-ov.open{animation:ovbg .2s ease}
@@ -815,7 +815,7 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover{background:rgba(150,140,
 #keybody kbd.ks-mini{min-width:18px;height:18px;font-size:10px;padding:0 4px}
 .ks-note{margin-top:12px;font-size:11.5px;line-height:1.55;color:var(--mut2)}
 .ks-foot{margin-top:16px;padding-top:13px;border-top:1px solid var(--bd);font-size:11.5px;line-height:1.55;color:var(--mut)}
-/* v101: desktop companion rail — fills the working area with live rehearsal context, so content is framed, not floating */
+/* v101: desktop companion rail - fills the working area with live rehearsal context, so content is framed, not floating */
 .companion{display:none}
 @media(min-width:1280px){
   .stage{justify-content:flex-start}
@@ -839,9 +839,9 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover{background:rgba(150,140,
   .cmp-drive b{color:var(--ink);font-weight:700}
   .cmp-kbd{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;font-family:inherit;font-size:11px;font-weight:700;color:var(--ink);background:var(--card);border:1px solid var(--bd);border-bottom-width:2px;border-radius:5px;vertical-align:middle}
 }
-/* v102: surface depth — crafted gradient surfaces + soft lift across content cards */
+/* v102: surface depth - crafted gradient surfaces + soft lift across content cards */
 .dec,.rf,.op,.model{background:var(--surf);box-shadow:var(--surf-sh)}
-/* v105: walkthrough "whole flow" map — the full 9-step arc, clickable, fills the short pane */
+/* v105: walkthrough "whole flow" map - the full 9-step arc, clickable, fills the short pane */
 .arc-wrap{margin-top:24px}
 .arc-h{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin-bottom:12px;display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
 .arc-h .sub{font-size:10.5px;font-weight:600;letter-spacing:.01em;text-transform:none;color:var(--mut2)}
@@ -854,7 +854,7 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover{background:rgba(150,140,
 .arc-step.done .arc-n{background:transparent;color:var(--acc);box-shadow:inset 0 0 0 1.5px var(--acc)}
 @media(hover:hover){.arc-step:hover{border-color:var(--acc);transform:translateY(-1px)}}
 @media(max-width:560px){.arc-grid{grid-template-columns:repeat(2,1fr)}}
-/* v106: drill probe-navigator — jump to any probe, flagged ones marked; fills the drill's void */
+/* v106: drill probe-navigator - jump to any probe, flagged ones marked; fills the drill's void */
 .dnav-wrap{margin-top:22px}
 .dnav-h{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin-bottom:12px;display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
 .dnav-h .sub{font-size:10.5px;font-weight:600;letter-spacing:.01em;text-transform:none;color:var(--mut2)}
@@ -869,7 +869,7 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover{background:rgba(150,140,
 @media(hover:hover){.dn-step:hover{border-color:var(--acc);transform:translateY(-1px)}}
 @media(max-width:560px){.dnav{grid-template-columns:repeat(2,1fr)}}
 .cmp-move{font-size:12.5px;line-height:1.5;color:var(--ink);font-weight:500;margin:0;border-left:2px solid var(--acc);padding-left:12px}
-/* v108: mobile/tablet companion — surfaces the rail's coaching wherever the rail is hidden (<1280) */
+/* v108: mobile/tablet companion - surfaces the rail's coaching wherever the rail is hidden (<1280) */
 .mcomp{display:block;width:100%;max-width:830px;margin:0 auto 24px;border:1px solid var(--bd);border-radius:14px;background:var(--panel);box-shadow:var(--surf-sh);overflow:hidden}
 .mcomp-sum{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:13px 16px;-webkit-user-select:none;user-select:none}
 .mcomp-sum::-webkit-details-marker{display:none}
@@ -890,10 +890,10 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover{background:rgba(150,140,
 .mcomp[open] .mcomp-body{animation:mcompReveal .2s ease}
 /* v110 micro-polish: controls are actions, not selectable text (fixes long-press text-select on tiles/buttons) */
 button,summary{-webkit-user-select:none;user-select:none}
-/* v111 micro-polish: drop the default mobile tap-flash (the gray box doesn’t match the rounded controls); every control already has custom feedback — selection state, result change, or a press-state. The tool-opener rows only get a (delayed) overlay, so give them an in-place press. */
+/* v111 micro-polish: drop the default mobile tap-flash (the gray box doesn't match the rounded controls); every control already has custom feedback - selection state, result change, or a press-state. The tool-opener rows only get a (delayed) overlay, so give them an in-place press. */
 .crambtn:active{transform:translateY(1px)}
 *{-webkit-tap-highlight-color:transparent}
-/* current-stage emphasis — system map (restored; v119 sweep removed these but .cur IS applied via st.cur) */
+/* current-stage emphasis - system map (restored; v119 sweep removed these but .cur IS applied via st.cur) */
 .stg.cur .dot{background:var(--acc);border-color:var(--acc);color:#fff;box-shadow:0 0 0 5px var(--accbg)}
 .stg.cur .nm{color:var(--accink)}
 .stg.cur .here{display:inline-block;font-size:9px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:#fff;background:var(--acc);border-radius:5px;padding:2px 7px;margin-left:8px;vertical-align:middle}
@@ -990,7 +990,7 @@ html[data-theme="dark"] .wb-verdict.warn b,html[data-theme="dark"] .wb-verdict.w
       <div class="wb-count" id="wbcount">0 recalled &middot; 0 missed &middot; 9 left</div>
       <ol class="wb" id="wblist"></ol>
       <div class="wb-verdict" id="wbverdict"></div>
-      <div class="wb-foot"><b>The one people forget:</b> step 7. Two stores, no shared transaction — if you don't volunteer the compensating S3 delete, the interviewer knows you've only read about this, not shipped it.</div>
+      <div class="wb-foot"><b>The one people forget:</b> step 7. Two stores, no shared transaction &mdash; if you don't volunteer the compensating S3 delete, the interviewer knows you've only read about this, not shipped it.</div>
     </div>
     <details class="disc">
       <summary>The assembled diagram &mdash; what you draw on the board</summary>
@@ -1017,19 +1017,19 @@ html[data-theme="dark"] .wb-verdict.warn b,html[data-theme="dark"] .wb-verdict.w
   <div class="pane" id="sys">
     <div class="card">
       <div class="step-t">Where this pipeline lives</div>
-      <div class="sm-intro">The content pipeline is the <b>ingestion layer</b>. Knowing the stages on either side of it — and being able to walk the whole chain — is what turns a component answer into a system answer.</div>
+      <div class="sm-intro">The content pipeline is the <b>ingestion layer</b>. Knowing the stages on either side of it &mdash; and being able to walk the whole chain &mdash; is what turns a component answer into a system answer.</div>
       <div class="chain" id="chain"></div>
     </div>
     <div class="card" style="margin-top:14px">
       <div class="piv-k">Interviewer pivot points</div>
-      <div class="piv-sub">The questions that bridge out of this topic. Each one leads into another deep-dive — tap to see the connecting answer.</div>
+      <div class="piv-sub">The questions that bridge out of this topic. Each one leads into another deep-dive &mdash; tap to see the connecting answer.</div>
       <div id="pivots"></div>
     </div>
   </div>
 
   <div class="pane" id="trade">
     <div class="ledger">
-      <div class="lead">The design decisions an interviewer drills — each with the <b>axis</b> that picks a side. Saying the switch condition out loud is the senior move; defending one option as universally right isn't.</div>
+      <div class="lead">The design decisions an interviewer drills &mdash; each with the <b>axis</b> that picks a side. Saying the switch condition out loud is the senior move; defending one option as universally right isn't.</div>
 
       <div class="dec">
         <div class="dec-q">Lambda per object <span class="vs">vs</span> SQS + worker pool</div>
@@ -1040,7 +1040,7 @@ html[data-theme="dark"] .wb-verdict.warn b,html[data-theme="dark"] .wb-verdict.w
 
       <div class="dec">
         <div class="dec-q">Hash during upload <span class="vs">vs</span> hash after store</div>
-        <div class="opt"><span class="opt-n">During (fork)</span><div class="opt-w"><span class="pw">pick when</span>files are large, or you just want <b>one disk read</b> — i.e. almost always.</div></div>
+        <div class="opt"><span class="opt-n">During (fork)</span><div class="opt-w"><span class="pw">pick when</span>files are large, or you just want <b>one disk read</b> &mdash; i.e. almost always.</div></div>
         <div class="opt"><span class="opt-n">After / two-pass</span><div class="opt-w"><span class="pw">pick when</span>the file is tiny, or an API needs the <b>digest before</b> you can store it.</div></div>
         <div class="dec-tell">The <b>PassThrough fork</b> is the only path that survives a 500&nbsp;MB object.</div>
       </div>
@@ -1049,7 +1049,7 @@ html[data-theme="dark"] .wb-verdict.warn b,html[data-theme="dark"] .wb-verdict.w
         <div class="dec-q">SQLite bundle <span class="vs">vs</span> JSON <span class="vs">vs</span> pg_dump</div>
         <div class="opt"><span class="opt-n">SQLite</span><div class="opt-w"><span class="pw">pick when</span>you need <b>real FKs</b> and binary at <b>1:1</b> size in one portable file.</div></div>
         <div class="opt"><span class="opt-n">JSON</span><div class="opt-w"><span class="pw">pick when</span>data is small, human-readable, with <b>no</b> binary or relations.</div></div>
-        <div class="opt"><span class="opt-n">pg_dump</span><div class="opt-w"><span class="pw">pick when</span>same engine both ends and you want exact fidelity — but it's <b>not portable</b>.</div></div>
+        <div class="opt"><span class="opt-n">pg_dump</span><div class="opt-w"><span class="pw">pick when</span>same engine both ends and you want exact fidelity &mdash; but it's <b>not portable</b>.</div></div>
         <div class="dec-tell">JSON base64-bloats binary <b>~33%</b> and loses referential integrity.</div>
       </div>
 
@@ -1057,14 +1057,14 @@ html[data-theme="dark"] .wb-verdict.warn b,html[data-theme="dark"] .wb-verdict.w
         <div class="dec-q">Single PUT <span class="vs">vs</span> multipart upload</div>
         <div class="opt"><span class="opt-n">Single PUT</span><div class="opt-w"><span class="pw">pick when</span>objects are <b>small</b> (&lt;100&nbsp;MB) and the network is reliable.</div></div>
         <div class="opt"><span class="opt-n">Multipart</span><div class="opt-w"><span class="pw">pick when</span>large objects, flaky networks, or you want <b>per-part retry</b> and resumability.</div></div>
-        <div class="dec-tell">Multipart resumes <b>per part</b> — pair it with a lifecycle rule to abort orphans.</div>
+        <div class="dec-tell">Multipart resumes <b>per part</b> &mdash; pair it with a lifecycle rule to abort orphans.</div>
       </div>
 
       <div class="dec">
         <div class="dec-q">Compensating delete <span class="vs">vs</span> reconciler <span class="vs">vs</span> distributed txn</div>
         <div class="opt"><span class="opt-n">Compensating delete</span><div class="opt-w"><span class="pw">pick when</span>cheap cleanup of the <b>common</b> failure, in the request path.</div></div>
         <div class="opt"><span class="opt-n">Reconciler</span><div class="opt-w"><span class="pw">pick when</span>you need a <b>durable backstop</b> that eventually catches every orphan.</div></div>
-        <div class="opt"><span class="opt-n">Distributed txn</span><div class="opt-w"><span class="pw">pick when</span>you truly need <b>cross-store atomicity</b> — rarely worth 2PC / saga cost across S3 + DB.</div></div>
+        <div class="opt"><span class="opt-n">Distributed txn</span><div class="opt-w"><span class="pw">pick when</span>you truly need <b>cross-store atomicity</b> &mdash; rarely worth 2PC / saga cost across S3 + DB.</div></div>
         <div class="dec-tell">Run delete <b>and</b> reconciler; reach for 2PC only when atomicity is non-negotiable.</div>
       </div>
 
@@ -1077,8 +1077,8 @@ html[data-theme="dark"] .wb-verdict.warn b,html[data-theme="dark"] .wb-verdict.w
 
       <div class="dec">
         <div class="dec-q">Reconciler backstop <span class="vs">vs</span> transactional outbox</div>
-        <div class="opt"><span class="opt-n">Reconciler (heal)</span><div class="opt-w"><span class="pw">pick when</span>the two stores <b>can't share a transaction</b>, a brief orphan window is tolerable, and fewer moving parts wins — dual-write, then sweep orphans on a grace window.</div></div>
-        <div class="opt"><span class="opt-n">Outbox (prevent)</span><div class="opt-w"><span class="pw">pick when</span>correctness must be <b>airtight</b> and you can anchor on one DB transaction — commit the row + an event atomically, and a relay does the S3 work with retries off <b>one commit point</b>.</div></div>
+        <div class="opt"><span class="opt-n">Reconciler (heal)</span><div class="opt-w"><span class="pw">pick when</span>the two stores <b>can't share a transaction</b>, a brief orphan window is tolerable, and fewer moving parts wins &mdash; dual-write, then sweep orphans on a grace window.</div></div>
+        <div class="opt"><span class="opt-n">Outbox (prevent)</span><div class="opt-w"><span class="pw">pick when</span>correctness must be <b>airtight</b> and you can anchor on one DB transaction &mdash; commit the row + an event atomically, and a relay does the S3 work with retries off <b>one commit point</b>.</div></div>
         <div class="dec-tell">The outbox needs a DB transaction to anchor on; the reconciler is the honest backstop for when the stores genuinely can't share one.</div>
       </div>
     </div>
@@ -1100,7 +1100,7 @@ html[data-theme="dark"] .wb-verdict.warn b,html[data-theme="dark"] .wb-verdict.w
   </div>
 
   <div class="pane" id="num">
-    <div class="numlead">The estimation an interviewer makes you do at the whiteboard. State your assumptions and the <b>ceilings fall out of the arithmetic</b> — adjust any input and the math recomputes.</div>
+    <div class="numlead">The estimation an interviewer makes you do at the whiteboard. State your assumptions and the <b>ceilings fall out of the arithmetic</b> &mdash; adjust any input and the math recomputes.</div>
     <div class="card">
       <div class="num-h">Assumptions</div>
       <div class="ninp">
@@ -1114,15 +1114,15 @@ html[data-theme="dark"] .wb-verdict.warn b,html[data-theme="dark"] .wb-verdict.w
       <div class="num-h">What falls out</div>
       <div id="nout"></div>
     </div>
-    <div class="num-tell">The number you say isn't the point — the <b>ceiling</b> it reveals is. Concurrency past 1,000 says &lsquo;buffer through SQS&rsquo;; connections past the pool say &lsquo;RDS Proxy.&rsquo;</div>
+    <div class="num-tell">The number you say isn't the point &mdash; the <b>ceiling</b> it reveals is. Concurrency past 1,000 says &lsquo;buffer through SQS&rsquo;; connections past the pool say &lsquo;RDS Proxy.&rsquo;</div>
   </div>
 
   <div class="pane" id="rf">
-    <div class="rflead">The moves that quietly tank a candidate on this topic. Each one is something a weaker answer actually says — what the interviewer hears, and the line that flips it.</div>
+    <div class="rflead">The moves that quietly tank a candidate on this topic. Each one is something a weaker answer actually says &mdash; what the interviewer hears, and the line that flips it.</div>
 
     <div class="rf">
       <div class="rf-bad"><span class="rf-x">&#10007;</span><span class="rf-t"><b>&ldquo;I'd query all the rows, then write them to the CSV.&rdquo;</b></span></div>
-      <div class="rf-tell">The driver buffers the <b>entire result set</b> in memory before your code runs — OOM at a million rows. The interviewer hears <i>&ldquo;never run this at scale.&rdquo;</i></div>
+      <div class="rf-tell">The driver buffers the <b>entire result set</b> in memory before your code runs &mdash; OOM at a million rows. The interviewer hears <i>&ldquo;never run this at scale.&rdquo;</i></div>
       <div class="rf-fix"><span class="rf-c">&rarr;</span><span class="rf-t">Server-side cursor, 100 rows at a time, piped with backpressure &mdash; <b>constant memory</b> at any row count.</span></div>
     </div>
 
@@ -1516,16 +1516,16 @@ var steps = [
   { k:"Step 1 / 9", t:"Strategy dispatch",
     flow:'<span class="fb n">processUpload(key,bucket)</span><span class="arr">&rarr;</span><span class="fb n">extname(key)</span><span class="arr">&rarr;</span><span class="fb p">strategies[ext]</span><span class="arr">&rarr;</span><span class="fb t">handler</span><span class="arr">/</span><span class="fb a">skip</span>',
     ins:'A frozen object literal, not a switch. Lookup is <b>O(1)</b>; every handler shares one <code>(key,bucket) &rarr; Result</code> contract, so the dispatcher\'s cyclomatic complexity stays <b>1</b> forever.',
-    deep:'The <code>Result</code> shape is normalized — image, video, font all return <code>{thumbnailKey, metadata, status}</code> — so the caller\'s PATCH-status logic is format-agnostic. Adding <code>.webp</code> is one map entry and zero caller changes.' },
+    deep:'The <code>Result</code> shape is normalized &mdash; image, video, font all return <code>{thumbnailKey, metadata, status}</code> &mdash; so the caller\'s PATCH-status logic is format-agnostic. Adding <code>.webp</code> is one map entry and zero caller changes.' },
   { k:"Step 2 / 9", t:"Single-read fork",
     flow:'<span class="fb n">createReadStream</span><span class="arr">&rarr;</span><span class="fb p">PassThrough</span><span class="arr">&rarr;</span><span class="fb t">hash.update</span><span class="arr">+</span><span class="fb r">s3.upload</span><span class="arr">&rarr;</span><span class="fb n">Promise.all</span>',
-    ins:'One disk read, forked two ways. Buffer is <code>highWaterMark</code> (16&nbsp;KB) — never the file. When S3 lags, <code>write()</code> returns <b>false</b> and the source <b>pauses</b>, so RAM is flat at 500&nbsp;MB or 5&nbsp;GB.',
+    ins:'One disk read, forked two ways. Buffer is <code>highWaterMark</code> (16&nbsp;KB) &mdash; never the file. When S3 lags, <code>write()</code> returns <b>false</b> and the source <b>pauses</b>, so RAM is flat at 500&nbsp;MB or 5&nbsp;GB.',
     code:'<span class="k">const</span> pass = <span class="k">new</span> PassThrough();\n<span class="k">const</span> hash = createHash(<span class="s">\'sha256\'</span>);\npass.on(<span class="s">\'data\'</span>, c => hash.update(c));      <span class="c">// consumer 1 (CPU)</span>\n<span class="k">const</span> up = s3.upload({ Bucket, Key, <span class="hl">Body: pass</span> }); <span class="c">// consumer 2 (net)</span>\ncreateReadStream(path).<span class="hl">pipe(pass)</span>;           <span class="c">// ONE disk read</span>\n<span class="k">await</span> up.promise();                        <span class="c">// pipe() handles backpressure</span>\n<span class="k">const</span> digest = hash.digest(<span class="s">\'hex\'</span>);',
     cap:'<code>pipe()</code> wires the pause/resume; the <code>data</code>-event hash rides the same buffer. Two consumers, one read.' },
   { k:"Step 3 / 9", t:"Cursor export",
     flow:'<span class="fb p">QueryStream(batch 100)</span><span class="arr">&rarr;</span><span class="fb n">csv-stringify</span><span class="arr">&rarr;</span><span class="fb t">res</span>',
-    ins:'<code>DECLARE CURSOR</code>, 100 rows at a time, piped to the socket. A full TCP window backpressures the transform, which backpressures the cursor — Postgres fetches only as fast as the client drains. <b>Constant memory</b> at 1K or 10M rows.',
-    deep:'Without the cursor, the pg driver buffers the <b>entire</b> result set in JS before your code runs — that\'s the OOM. The cursor turns one giant allocation into a stream of 100-row pages the GC reclaims between batches.' },
+    ins:'<code>DECLARE CURSOR</code>, 100 rows at a time, piped to the socket. A full TCP window backpressures the transform, which backpressures the cursor &mdash; Postgres fetches only as fast as the client drains. <b>Constant memory</b> at 1K or 10M rows.',
+    deep:'Without the cursor, the pg driver buffers the <b>entire</b> result set in JS before your code runs &mdash; that\'s the OOM. The cursor turns one giant allocation into a stream of 100-row pages the GC reclaims between batches.' },
   { k:"Step 4 / 9", t:"Import conflict ladder",
     flow:'<span class="fb n">row</span><span class="arr">&rarr;</span><span class="fb t">id+co? REUSE</span><span class="arr">&rarr;</span><span class="fb a">name+ver? REMAP</span><span class="arr">&rarr;</span><span class="fb r">id taken? REGEN</span><span class="arr">&rarr;</span><span class="fb t">else INSERT</span>',
     ins:'Strict precedence. Checking <code>name+version</code> <b>before</b> id-collision means a re-import <b>de-dupes</b> (REMAP) instead of forking a new uuid (REGEN). Every REMAP/REGEN records <code>oldId&rarr;newId</code>, then rewrites child FKs before insert.',
@@ -1533,29 +1533,29 @@ var steps = [
     cap:'<code>name+version</code> is checked before id-collision &mdash; that ordering is what makes a re-import REMAP instead of fork.' },
   { k:"Step 5 / 9", t:"Hash + multipart",
     flow:'<span class="fb t">sha256 streaming</span><span class="arr">&middot;</span><span class="fb n">&lt;5MB Put</span><span class="arr">/</span><span class="fb r">&ge;5MB multipart</span>',
-    ins:'The digest is content-deterministic, so the <b>key is the hash</b> — identical bytes converge on one object (dedup). A failed multipart leaves orphan parts; an S3 lifecycle rule aborts incomplete uploads.',
-    deep:'Multipart also gives retry-per-part and parallel upload: a 500&nbsp;MB blob goes as 100&times;5&nbsp;MB parts, and a transient failure retries one part — not the whole object.' },
+    ins:'The digest is content-deterministic, so the <b>key is the hash</b> &mdash; identical bytes converge on one object (dedup). A failed multipart leaves orphan parts; an S3 lifecycle rule aborts incomplete uploads.',
+    deep:'Multipart also gives retry-per-part and parallel upload: a 500&nbsp;MB blob goes as 100&times;5&nbsp;MB parts, and a transient failure retries one part &mdash; not the whole object.' },
   { k:"Step 6 / 9", t:"S3 event routing",
     flow:'<span class="fb n">ObjectCreated</span><span class="arr">&rarr;</span><span class="fb p">prefix &rarr; Lambda</span><span class="arr">&rarr;</span><span class="fb n">per-record</span><span class="arr">&rarr;</span><span class="fb t">PROCESSED</span><span class="arr">/</span><span class="fb r">ERROR</span>',
-    ins:'Uploads push work; nothing polls. Delivery is <b>at-least-once</b> &rarr; processing must be idempotent (hash key). And prefixes can\'t overlap — you can\'t later split <code>uploads/</code> into <code>uploads/images/</code>.',
-    deep:'The handler decodes the key first — S3 URL-encodes spaces as <code>+</code>. Skip that and <code>"my file.bin"</code> becomes <code>"my+file.bin"</code>, the DB lookup misses, and you get a silent no-match bug.' },
+    ins:'Uploads push work; nothing polls. Delivery is <b>at-least-once</b> &rarr; processing must be idempotent (hash key). And prefixes can\'t overlap &mdash; you can\'t later split <code>uploads/</code> into <code>uploads/images/</code>.',
+    deep:'The handler decodes the key first &mdash; S3 URL-encodes spaces as <code>+</code>. Skip that and <code>"my file.bin"</code> becomes <code>"my+file.bin"</code>, the DB lookup misses, and you get a silent no-match bug.' },
   { k:"Step 7 / 9", t:"Reconciler sweep",
     flow:'<span class="fb n">scheduled sweep</span><span class="arr">&rarr;</span><span class="fb p">list S3 keys</span><span class="arr">&rarr;</span><span class="fb a">no DB row?</span><span class="arr">&rarr;</span><span class="fb t">past grace?</span><span class="arr">&rarr;</span><span class="fb r">delete orphan</span>',
-    ins:'The dual-write\'s real backstop. A scheduled job lists S3, finds keys with <b>no DB row</b>, and deletes the orphans — but only those past a grace window (or without a PENDING marker), so it <b>never touches an in-flight upload</b>.',
+    ins:'The dual-write\'s real backstop. A scheduled job lists S3, finds keys with <b>no DB row</b>, and deletes the orphans &mdash; but only those past a grace window (or without a PENDING marker), so it <b>never touches an in-flight upload</b>.',
     code:'<span class="k">const</span> GRACE = 3600e3;                  <span class="c">// 1h &gt; write</span>\n<span class="k">for await</span> (<span class="k">const</span> o <span class="k">of</span> listKeys(bucket)) {\n  <span class="k">if</span> (fresh(o, GRACE)) <span class="k">continue</span>; <span class="c">// in-flight</span>\n  <span class="k">const</span> row = <span class="k">await</span> db.findByKey(o.Key);\n  <span class="k">if</span> (!row) <span class="k">await</span> s3.<span class="hl">deleteObject</span>(o.Key); <span class="c">// orphan</span>\n}',
     cap:'The grace window (or a PENDING marker) is the one line that stops the reconciler deleting in-flight uploads.' },
   { k:"Step 8 / 9", t:"Idempotent processing",
     flow:'<span class="fb n">event (&ge;1&times;)</span><span class="arr">&rarr;</span><span class="fb p">conditional put marker</span><span class="arr">&rarr;</span><span class="fb a">exists? skip</span><span class="arr">/</span><span class="fb t">else process</span>',
     ins:'S3 delivery is <b>at-least-once</b>, so the same event can arrive twice. A conditional put on a content-hash marker is a check-and-set: the first delivery wins and processes; a redelivery sees the marker and <b>no-ops</b>. The effect is idempotent even though delivery isn\'t.',
     code:'<span class="k">const</span> marker = <span class="s">"processed#"</span> + hash; <span class="c">// dedup key</span>\n<span class="k">try</span> {\n  <span class="k">await</span> ddb.<span class="hl">put</span>({ Item: { pk: marker },\n    ConditionExpression: <span class="s">"attribute_not_exists(pk)"</span> });\n} <span class="k">catch</span> (e) {\n  <span class="k">if</span> (e.name === <span class="s">"ConditionalCheckFailed..."</span>) <span class="k">return</span>; <span class="c">// done</span>\n  <span class="k">throw</span> e;\n}\n<span class="k">await</span> process(object); <span class="c">// once per event</span>',
-    cap:'The conditional put <i>is</i> the lock — first writer wins the key; redeliveries fail the condition and skip.' },
+    cap:'The conditional put <i>is</i> the lock &mdash; first writer wins the key; redeliveries fail the condition and skip.' },
   { k:"Step 9 / 9", t:"Observability hooks",
     flow:'<span class="fb n">each stage</span><span class="arr">&rarr;</span><span class="fb p">emit 4 signals</span><span class="arr">&rarr;</span><span class="fb t">page on SLA breach</span><span class="arr">/</span><span class="fb a">log the rest</span>',
-    ins:'You can\'t operate what you can\'t see. Every stage emits the <b>four signals</b> that localize an incident — queue depth, p99 latency, error/DLQ rate, reconciler orphan count — and you <b>page only on what users feel</b> (SLA breach, DLQ growth), logging the self-healing rest.',
+    ins:'You can\'t operate what you can\'t see. Every stage emits the <b>four signals</b> that localize an incident &mdash; queue depth, p99 latency, error/DLQ rate, reconciler orphan count &mdash; and you <b>page only on what users feel</b> (SLA breach, DLQ growth), logging the self-healing rest.',
     code:'metrics.<span class="hl">gauge</span>(<span class="s">"queue.depth"</span>, <span class="k">await</span> queue.size());\nmetrics.<span class="hl">histogram</span>(<span class="s">"process.latency_ms"</span>, elapsed); <span class="c">// p99</span>\nmetrics.<span class="hl">count</span>(<span class="s">"process.error"</span>, err ? 1 : 0);\nmetrics.<span class="hl">gauge</span>(<span class="s">"reconciler.orphans"</span>, orphanCount);\n<span class="c">// page on: dlq.depth &gt; 0 sustained, or event.age &gt; SLA</span>',
     cap:'Alarm on symptoms users feel; transient spikes that self-heal via retry are log-only, or you drown in false pages.' }
 ];
-var wi = 0; /* SHARED: current step index — the keyboard handler in numbers-nalsd.js drives this too */
+var wi = 0; /* SHARED: current step index &mdash; the keyboard handler in numbers-nalsd.js drives this too */
 const walkCard = document.getElementById('wcard');
 const dotsRow = document.getElementById('wdots');
 const counterEl = document.getElementById('wctr');
@@ -1620,32 +1620,32 @@ var cards=[
     q:"Export a 1,000,000-row CSV without OOM. How?",
     a:"Server-side cursor (<code>pg-query-stream</code>, batch 100) piped to the response. Backpressure throttles the cursor to the client\'s drain rate, so memory is <b>constant</b> regardless of row count.",
     f:[
-      { q:"What sets the batch size — why 100, not 1 or 100,000?",
+      { q:"What sets the batch size &mdash; why 100, not 1 or 100,000?",
         a:"It\'s fetch granularity, not the memory ceiling. <b>batch=1</b> is a round-trip per row (crawls); <b>batch=100,000</b> holds a huge fetch buffer in RAM and stalls in bursts. 100 amortizes round-trips while staying tiny." },
       { q:"The client is on slow 3G and stops reading mid-download. What is your server doing right now?",
         a:"TCP window fills &rarr; <code>res.write()</code> returns false &rarr; transform stops &rarr; cursor stops &rarr; Postgres holds the cursor <b>open and idle</b>, pinning a connection. A slow-reader can exhaust the pool (slowloris). Fix: statement timeout, or stream to S3 + presigned URL." }
     ],
-    senior:"Saying memory is constant <b>because of backpressure</b> — not just \"I\'d stream it\" — is the senior tell. Bonus for naming the held-cursor connection risk before being asked." },
+    senior:"Saying memory is constant <b>because of backpressure</b> &mdash; not just \"I\'d stream it\" &mdash; is the senior tell. Bonus for naming the held-cursor connection risk before being asked." },
   { tier:'SDE3', signal:'Cross-store consistency',
     q:"Import writes to Postgres AND S3. The DB write fails. What happens?",
-    a:"<b>Dual-write hole:</b> the DB transaction rolls back, but the S3 objects don\'t — they\'re orphaned. Fix: track every created key, delete them in the <code>catch</code>.",
+    a:"<b>Dual-write hole:</b> the DB transaction rolls back, but the S3 objects don\'t &mdash; they\'re orphaned. Fix: track every created key, delete them in the <code>catch</code>.",
     f:[
-      { q:"Your compensating delete <i>also</i> fails — S3 is throttling. Now what?",
+      { q:"Your compensating delete <i>also</i> fails &mdash; S3 is throttling. Now what?",
         a:"Don\'t block the user request on best-effort cleanup. Record orphan keys to a durable cleanup queue and retry async with backoff. The real backstop is a <b>reconciler</b> sweeping S3 keys with no DB row." },
       { q:"Make the whole import idempotent so a retry is always safe.",
         a:"Content-hash keys (same bytes = same key &rarr; re-upload is a no-op), a DB <b>upsert</b> on a deterministic key, and the ladder\'s <code>name+version</code> REMAP to block duplicate logical rows. A retried import <b>converges</b>." },
       { q:"Is there a way to make the two writes atomic instead of reconciling after the fact?",
         a:"Yes &mdash; the <b>transactional outbox</b>, and reaching for it is the senior move because it kills the race instead of healing it. The DB write and an <b>outbox-event</b> row commit in <b>one transaction</b> &mdash; either both land or neither does, so there&rsquo;s never a window where Postgres and S3 disagree. A separate <b>relay</b> reads the outbox and does the S3 work with <b>retries</b>, marking each event done. You&rsquo;ve collapsed a two-store dual-write into a <b>single atomic commit point</b> plus an idempotent relay. The catch: it needs a transactional store to anchor on &mdash; when the two stores genuinely can&rsquo;t share a transaction, the reconciler is the honest backstop. So I&rsquo;d frame it as <b>outbox to prevent, reconciler to heal</b>, and name which one the constraints allow." }
     ],
-    senior:"Volunteering the <b>reconciler as the real backstop</b> — not just the catch-block delete — shows you\'ve operated this in production, not only designed it on a whiteboard." },
+    senior:"Volunteering the <b>reconciler as the real backstop</b> &mdash; not just the catch-block delete &mdash; shows you\'ve operated this in production, not only designed it on a whiteboard." },
   { tier:'SDE2', signal:'I/O &amp; concurrency reasoning',
     q:"Why hash the file <i>while</i> uploading instead of after it\'s stored?",
     a:"A <code>PassThrough</code> forks <b>one</b> read into hash + upload. Hashing after = 2&times; disk reads; buffering-then-both = the whole file in RAM. The fork is the only option that survives a 500&nbsp;MB package.",
     f:[
-      { q:"Some S3 APIs want Content-MD5 / length up front — but you don\'t know the hash until the stream ends. Tension?",
-        a:"That\'s why <b>multipart</b> exists — no total length or whole-object hash needed up front; parts stream and S3 assembles. If an API truly needs the digest first, you must buffer or two-pass — the precise trade you\'re avoiding." },
+      { q:"Some S3 APIs want Content-MD5 / length up front &mdash; but you don\'t know the hash until the stream ends. Tension?",
+        a:"That\'s why <b>multipart</b> exists &mdash; no total length or whole-object hash needed up front; parts stream and S3 assembles. If an API truly needs the digest first, you must buffer or two-pass &mdash; the precise trade you\'re avoiding." },
       { q:"Two uploads of identical bytes race and compute the same key. What happens?",
-        a:"On S3, last-write-wins on the same key — harmless, since content is identical. The contention point is the <b>DB dedup row</b>: <code>ON CONFLICT</code> on the hash so both converge to one row." }
+        a:"On S3, last-write-wins on the same key &mdash; harmless, since content is identical. The contention point is the <b>DB dedup row</b>: <code>ON CONFLICT</code> on the hash so both converge to one row." }
     ],
     senior:"Surfacing the <b>Content-MD5 tension yourself</b>, before being asked, signals you know exactly where the streaming abstraction leaks." },
   { tier:'Staff', signal:'Architecture trade-offs &amp; scaling ceilings',
@@ -1657,129 +1657,129 @@ var cards=[
       { q:"10,000 objects land in one second. What breaks first, and what\'s your ceiling?",
         a:"<b>Lambda concurrency</b> throttles first &rarr; events retry / DLQ. Then the <b>DB pool</b> and <b>S3 PUT rate per prefix</b> saturate. Ceilings: concurrency (RDS Proxy / queue), connections, per-prefix rate (spread keys). At firehose scale, buffer through SQS/Kinesis." }
     ],
-    senior:"Giving the <b>switch condition</b> — the exact threshold where you\'d move to SQS — instead of defending one choice is the senior move. Naming concrete ceilings seals it." },
+    senior:"Giving the <b>switch condition</b> &mdash; the exact threshold where you\'d move to SQS &mdash; instead of defending one choice is the senior move. Naming concrete ceilings seals it." },
   { tier:'SDE2', signal:'Data modeling &amp; idempotent import',
     q:"Why ship the export as a SQLite bundle instead of JSON?",
-    a:"SQLite keeps <b>real foreign keys</b> and stores BLOBs at <b>1:1</b> size. JSON base64-bloats binary ~33% and loses referential integrity — you\'d rebuild the graph by hand on import.",
+    a:"SQLite keeps <b>real foreign keys</b> and stores BLOBs at <b>1:1</b> size. JSON base64-bloats binary ~33% and loses referential integrity &mdash; you\'d rebuild the graph by hand on import.",
     f:[
       { q:"On import, ids collide with existing rows. Your algorithm?",
-        a:"The 4-tier ladder: <code>id+company</code> REUSE, <code>name+version</code> REMAP, <code>id-taken</code> REGEN, else INSERT — record <code>oldId&rarr;newId</code> and rewrite child FKs before insert." },
+        a:"The 4-tier ladder: <code>id+company</code> REUSE, <code>name+version</code> REMAP, <code>id-taken</code> REGEN, else INSERT &mdash; record <code>oldId&rarr;newId</code> and rewrite child FKs before insert." },
       { q:"Why check name+version BEFORE the id-collision rule?",
         a:"So a re-import <b>de-dupes</b> (REMAP to existing) instead of forking a new uuid (REGEN). Swap the order and every re-import silently <b>doubles</b> your data." }
     ],
-    senior:"Explaining <b>why</b> name+version is checked first — the de-dupe-vs-fork consequence — is what separates \"I wrote an importer\" from \"I designed one.\"" },
+    senior:"Explaining <b>why</b> name+version is checked first &mdash; the de-dupe-vs-fork consequence &mdash; is what separates \"I wrote an importer\" from \"I designed one.\"" },
   { tier:'Staff', signal:'Irreversible-decision foresight',
     q:"You set the S3 trigger prefix to <code>uploads/</code>. What\'s the future risk?",
-    a:"S3 notifications <b>forbid overlapping prefixes</b>, so you can\'t later split <code>uploads/</code> into <code>uploads/images/</code> without reconfiguring everything. One-way door — design the taxonomy before the first trigger ships.",
+    a:"S3 notifications <b>forbid overlapping prefixes</b>, so you can\'t later split <code>uploads/</code> into <code>uploads/images/</code> without reconfiguring everything. One-way door &mdash; design the taxonomy before the first trigger ships.",
     f:[
       { q:"You\'re forced to add per-type routing later anyway. How, without re-architecting?",
-        a:"Move routing out of <b>S3 config</b> (rigid) into <b>code</b>: one trigger on <code>uploads/</code>, dispatch inside the Lambda by key sub-prefix or metadata — or fan out (Lambda &rarr; an SQS queue per type). Flexibility lives in code, not the bucket." }
+        a:"Move routing out of <b>S3 config</b> (rigid) into <b>code</b>: one trigger on <code>uploads/</code>, dispatch inside the Lambda by key sub-prefix or metadata &mdash; or fan out (Lambda &rarr; an SQS queue per type). Flexibility lives in code, not the bucket." }
     ],
-    senior:"Calling it a <b>one-way door</b> and pre-deciding the taxonomy shows you reason about <b>irreversibility</b> — a staff-level instinct most candidates skip." },
+    senior:"Calling it a <b>one-way door</b> and pre-deciding the taxonomy shows you reason about <b>irreversibility</b> &mdash; a staff-level instinct most candidates skip." },
   { tier:'EXTEND', signal:'Design adaptability',
     q:"Product wants live video <i>transcoding</i> added (not just thumbnails). How does your pipeline change?",
-    a:"Transcoding is long-running and CPU/GPU-heavy — it doesn\'t belong on Lambda (15-min cap, no GPU). Keep the <b>strategy-dispatch pattern</b>: add a video handler, but instead of processing inline it <b>enqueues a job</b> to ECS / MediaConvert. The S3 event still triggers; the handler fans out and the status flow gains a PROCESSING &rarr; TRANSCODED state.",
+    a:"Transcoding is long-running and CPU/GPU-heavy &mdash; it doesn\'t belong on Lambda (15-min cap, no GPU). Keep the <b>strategy-dispatch pattern</b>: add a video handler, but instead of processing inline it <b>enqueues a job</b> to ECS / MediaConvert. The S3 event still triggers; the handler fans out and the status flow gains a PROCESSING &rarr; TRANSCODED state.",
     f:[
       { q:"Now a live-preview feature needs that content processed in under 2 seconds. What changes?",
-        a:"The async S3-event path is eventual — too slow. Add a <b>synchronous fast-path</b>: small previews process inline in the request and skip the queue; heavy/bulk stays async. Two-tier by interactivity. Cache by content hash so repeat previews are instant." },
+        a:"The async S3-event path is eventual &mdash; too slow. Add a <b>synchronous fast-path</b>: small previews process inline in the request and skip the queue; heavy/bulk stays async. Two-tier by interactivity. Cache by content hash so repeat previews are instant." },
       { q:"How do you keep ONE codebase serving both the fast sync path and the heavy async path?",
-        a:"The dispatch map stays the single entry point; the handler branches on a <b>size/mode flag</b> — inline for small+interactive, enqueue for large+bulk. Same contract, same handlers; only the execution venue differs. The strategy pattern earning its keep." }
+        a:"The dispatch map stays the single entry point; the handler branches on a <b>size/mode flag</b> &mdash; inline for small+interactive, enqueue for large+bulk. Same contract, same handlers; only the execution venue differs. The strategy pattern earning its keep." }
     ],
-    senior:"Extending the design <b>along its grain</b> — preserving the dispatch pattern while moving heavy work to the right compute, rather than bolting on a parallel system — plus naming the sync/async two-tier split, is the senior instinct." },
+    senior:"Extending the design <b>along its grain</b> &mdash; preserving the dispatch pattern while moving heavy work to the right compute, rather than bolting on a parallel system &mdash; plus naming the sync/async two-tier split, is the senior instinct." },
   { tier:'SDE3', signal:'Security boundary &amp; least-privilege',
     q:"A client\'s upload credential leaks. What can an attacker do, and how do you shrink the blast radius?",
-    a:"A broad credential reads the whole bucket and overwrites anything. Shrink it with a <b>presigned URL</b> scoped to one key + a short TTL (minutes) — a leaked URL is then one upload, not the bucket. The processing role is separate and read-only on the upload prefix.",
+    a:"A broad credential reads the whole bucket and overwrites anything. Shrink it with a <b>presigned URL</b> scoped to one key + a short TTL (minutes) &mdash; a leaked URL is then one upload, not the bucket. The processing role is separate and read-only on the upload prefix.",
     f:[
       { q:"A presigned URL still lets anyone holding it upload until it expires. Tighten it further.",
-        a:"Bake conditions into the policy: <code>Content-Length-Range</code> caps size, <code>Content-Type</code> pins the format, a per-user key prefix isolates tenants. The URL becomes a <b>single-purpose token</b> — one file, one size, one type, one place." },
+        a:"Bake conditions into the policy: <code>Content-Length-Range</code> caps size, <code>Content-Type</code> pins the format, a per-user key prefix isolates tenants. The URL becomes a <b>single-purpose token</b> &mdash; one file, one size, one type, one place." },
       { q:"A malicious upload (zip bomb, polyglot) reaches a processor. Stop it taking down the fleet.",
         a:"Validate before processing, not at upload: cap decompressed size, check magic bytes against the claimed type, and run processing in an <b>isolated, resource-capped sandbox</b> (separate function/container with memory + time limits) so one bad object can\'t take the fleet down." }
     ],
-    senior:"Turning a credential into a <b>single-purpose token</b> with size/type/prefix conditions — and sandboxing untrusted input — is the containment instinct senior interviewers probe for." },
+    senior:"Turning a credential into a <b>single-purpose token</b> with size/type/prefix conditions &mdash; and sandboxing untrusted input &mdash; is the containment instinct senior interviewers probe for." },
   { tier:'SDE3', signal:'Observability &amp; operability',
     q:"It\'s 3 AM, the pipeline is \'slow,\' and you have no logs in front of you. What four signals do you wish you\'d instrumented?",
     a:"<b>Queue depth / event age</b> (is work piling up?), <b>processing latency p99</b> (are jobs individually slow?), <b>error + DLQ rate</b> (are things failing?), and <b>reconciler orphan count</b> (is the dual-write leaking?). Those four localize almost any incident to a stage.",
     f:[
       { q:"Queue depth is climbing but error rate is flat. What does that tell you?",
-        a:"Not failures — <b>throughput</b>. Consumers can\'t keep up with arrival rate: either a downstream dependency slowed (raising per-job latency) or concurrency is throttled. You scale consumers or fix the slow dependency — chasing errors finds nothing." },
+        a:"Not failures &mdash; <b>throughput</b>. Consumers can\'t keep up with arrival rate: either a downstream dependency slowed (raising per-job latency) or concurrency is throttled. You scale consumers or fix the slow dependency &mdash; chasing errors finds nothing." },
       { q:"What\'s the one thing you page a human for, versus just log?",
-        a:"Page on <b>sustained DLQ growth</b> or <b>event age past SLA</b> — those mean work is silently not getting done. Transient spikes that self-heal via retry are log-only; paging on them is alert fatigue. Alert on <i>symptoms users feel</i>, not every internal hiccup." }
+        a:"Page on <b>sustained DLQ growth</b> or <b>event age past SLA</b> &mdash; those mean work is silently not getting done. Transient spikes that self-heal via retry are log-only; paging on them is alert fatigue. Alert on <i>symptoms users feel</i>, not every internal hiccup." }
     ],
     senior:"Choosing the <b>four signals that localize an incident</b> and splitting page-worthy (SLA breach, DLQ growth) from log-only (self-healing retries) shows you\'ve carried a pager, not just shipped features." },
   { tier:'Staff', signal:'The exactly-once illusion',
     q:"A processor pulls a message, does the work, then crashes <i>before</i> deleting it. It redelivers. How do you avoid doing the work twice?",
-    a:"You can\'t buy exactly-once <b>delivery</b> — you engineer idempotent <b>effects</b>. Make the write a no-op on replay: a <b>processed-marker</b> (conditional put on the content/message key) the handler checks-and-sets first, so the second delivery sees \'already done\' and acks without re-running.",
+    a:"You can\'t buy exactly-once <b>delivery</b> &mdash; you engineer idempotent <b>effects</b>. Make the write a no-op on replay: a <b>processed-marker</b> (conditional put on the content/message key) the handler checks-and-sets first, so the second delivery sees \'already done\' and acks without re-running.",
     f:[
-      { q:"The side effect can\'t be made idempotent — it charges a card / sends an email. Now what?",
-        a:"Put it behind an <b>idempotency key</b> the downstream honors (Stripe-style): same key, same charge, executed once. If the downstream can\'t dedupe, use a <b>transactional outbox</b> — record intent atomically with the state change, then a relay delivers with dedup downstream." },
+      { q:"The side effect can\'t be made idempotent &mdash; it charges a card / sends an email. Now what?",
+        a:"Put it behind an <b>idempotency key</b> the downstream honors (Stripe-style): same key, same charge, executed once. If the downstream can\'t dedupe, use a <b>transactional outbox</b> &mdash; record intent atomically with the state change, then a relay delivers with dedup downstream." },
       { q:"Where do you store the marker so the check and the work don\'t themselves race?",
-        a:"They must commit <b>atomically</b> or the check is a TOCTOU bug. Either the marker lives in the same DB transaction as the write (one commit), or the conditional put <i>is</i> the lock — first writer wins the key, losers back off. The marker can never be a separate best-effort call." },
+        a:"They must commit <b>atomically</b> or the check is a TOCTOU bug. Either the marker lives in the same DB transaction as the write (one commit), or the conditional put <i>is</i> the lock &mdash; first writer wins the key, losers back off. The marker can never be a separate best-effort call." },
       { q:"The marker table grows forever &mdash; one row per message ever processed. You want to expire old markers, but won&rsquo;t that let a late redelivery slip through and double-process?",
         a:"Yes &mdash; and that&rsquo;s the real tradeoff, not a detail. I TTL the markers to a window <b>longer than the maximum redelivery horizon</b> &mdash; the queue&rsquo;s retention plus its visibility-timeout ceiling &mdash; so anything that could still redeliver still finds its marker. Past that horizon a redelivery is effectively impossible, so expiring is safe. For effects that are <b>catastrophic to repeat</b> &mdash; a charge &mdash; I don&rsquo;t TTL at all: keep the key permanently, and if storage is the worry, age cold keys into a cheaper tier or a bloom filter for the &lsquo;definitely seen&rsquo; check. The point: marker retention is a <b>correctness</b> parameter, not a cleanup job &mdash; you size it against the redelivery window, never shorter." }
     ],
-    senior:"Naming that exactly-once <b>delivery</b> is impossible and you build idempotent <b>effects</b> instead — plus the atomic check-and-set so the marker doesn\'t itself race — is the distributed-systems maturity Staff rounds dig for." },
+    senior:"Naming that exactly-once <b>delivery</b> is impossible and you build idempotent <b>effects</b> instead &mdash; plus the atomic check-and-set so the marker doesn\'t itself race &mdash; is the distributed-systems maturity Staff rounds dig for." },
   { tier:'SDE3', signal:'Large-object transfer mechanics',
     q:"A 500&nbsp;MB upload fails at 80% over flaky mobile. Does the user restart from zero?",
     a:"Not with <b>multipart upload</b>: the file is split into parts (e.g. 8&nbsp;MB), each uploaded and ack\'d independently, so a failed part retries alone. The client resumes by re-sending only the missing parts; S3 assembles on <code>CompleteMultipartUpload</code>.",
     f:[
       { q:"The upload is abandoned at 80% and never completed. What\'s in your bucket, and what does it cost?",
-        a:"Uncompleted multipart uploads leave <b>orphaned parts</b> — they consume storage but don\'t show in normal listings, so it\'s a silent bill. Fix: an <b>S3 lifecycle rule</b> to abort incomplete multipart uploads after N days. A classic cost leak." },
-      { q:"Does your S3 trigger fire per part or once — and why does it matter?",
-        a:"Once — <code>s3:ObjectCreated:CompleteMultipartUpload</code> fires on assembly, not per part, so the handler sees one complete object, not 60 fragments. Subscribe to the complete event or you\'ll process partial garbage." }
+        a:"Uncompleted multipart uploads leave <b>orphaned parts</b> &mdash; they consume storage but don\'t show in normal listings, so it\'s a silent bill. Fix: an <b>S3 lifecycle rule</b> to abort incomplete multipart uploads after N days. A classic cost leak." },
+      { q:"Does your S3 trigger fire per part or once &mdash; and why does it matter?",
+        a:"Once &mdash; <code>s3:ObjectCreated:CompleteMultipartUpload</code> fires on assembly, not per part, so the handler sees one complete object, not 60 fragments. Subscribe to the complete event or you\'ll process partial garbage." }
     ],
-    senior:"Knowing multipart resumes <b>per part</b>, that abandoned uploads silently bill via orphaned parts (lifecycle rule to abort), and that the trigger fires once on completion — these specifics separate \'used S3\' from \'operated S3 at scale.\'" },
+    senior:"Knowing multipart resumes <b>per part</b>, that abandoned uploads silently bill via orphaned parts (lifecycle rule to abort), and that the trigger fires once on completion &mdash; these specifics separate \'used S3\' from \'operated S3 at scale.\'" },
   { tier:'Staff', signal:'Reconciler correctness under concurrency',
-    q:"Your reconciler deletes S3 keys with no DB row. An upload is <i>in flight</i> — object written, row not yet committed. Walk me through the bug and the fix.",
-    a:"<b>Race:</b> the reconciler sees an object with no row and deletes a perfectly good in-flight upload. First fix is a <b>grace period</b> — only reconcile objects older than, say, an hour (longer than any legitimate write window), so in-flight uploads are never eligible.",
+    q:"Your reconciler deletes S3 keys with no DB row. An upload is <i>in flight</i> &mdash; object written, row not yet committed. Walk me through the bug and the fix.",
+    a:"<b>Race:</b> the reconciler sees an object with no row and deletes a perfectly good in-flight upload. First fix is a <b>grace period</b> &mdash; only reconcile objects older than, say, an hour (longer than any legitimate write window), so in-flight uploads are never eligible.",
     f:[
       { q:"A grace period is a guess. Make the reconciler correct, not just probably-correct.",
-        a:"Make intent explicit: write a <b>pending marker</b> (a PENDING row, or an object tag) <i>before</i> the upload, flip to COMMITTED after. The reconciler deletes only objects with <b>no marker at all</b> — never a PENDING one. Correctness stops depending on a timing guess." },
+        a:"Make intent explicit: write a <b>pending marker</b> (a PENDING row, or an object tag) <i>before</i> the upload, flip to COMMITTED after. The reconciler deletes only objects with <b>no marker at all</b> &mdash; never a PENDING one. Correctness stops depending on a timing guess." },
       { q:"The reconciler itself races a writer: reads \'no row,\' writer commits, reconciler deletes. Still broken?",
-        a:"Yes — a TOCTOU window. Close it with a <b>conditional delete</b> that re-checks for the row inside the delete, or have the writer claim the key first (PENDING) so the reconciler acts on an unambiguous marker, not a snapshot it may have read stale." },
+        a:"Yes &mdash; a TOCTOU window. Close it with a <b>conditional delete</b> that re-checks for the row inside the delete, or have the writer claim the key first (PENDING) so the reconciler acts on an unambiguous marker, not a snapshot it may have read stale." },
       { q:"To spread load, your reconciler checks &lsquo;is there a row?&rsquo; against a <b>read replica</b>. What goes wrong?",
         a:"It deletes live data. A replica lags the primary, so &lsquo;no row&rsquo; can mean &lsquo;the row committed but hasn&rsquo;t replicated yet&rsquo; &mdash; the reconciler reads stale, sees an orphan that isn&rsquo;t one, and deletes an object whose record exists on the primary. The fix: the <i>delete decision</i> must read from the <b>primary</b>, or a read guaranteed to reflect committed writes &mdash; never a lagging replica. It can list candidate keys off a replica for cheapness, but it has to confirm against authoritative state before deleting. The rule worth saying out loud: a <b>destructive action can never be driven by an eventually-consistent read</b>." }
     ],
-    senior:"Spotting that the naive reconciler <b>deletes in-flight uploads</b>, rejecting the grace-period guess for an explicit <b>PENDING marker</b>, then closing the reconciler\'s own TOCTOU window — that layered correctness reasoning is the Staff-level depth this whole pipeline is built to probe." },
+    senior:"Spotting that the naive reconciler <b>deletes in-flight uploads</b>, rejecting the grace-period guess for an explicit <b>PENDING marker</b>, then closing the reconciler\'s own TOCTOU window &mdash; that layered correctness reasoning is the Staff-level depth this whole pipeline is built to probe." },
   { tier:'SDE3', signal:'Cost modeling & the hidden bill',
-    q:"This pipeline processes 10M files a day. Where does the AWS bill actually go — and what's the line item that surprises people?",
-    a:"Not compute — <b>S3 requests and data transfer</b>. At 10M/day, PUTs alone run ~$50/day ($0.005 per 1K); GETs on every read, plus cross-AZ transfer when compute and bucket disagree on region, dwarf the Lambda-seconds. The surprise line is <b>NAT Gateway data processing</b> — a VPC Lambda reaching S3 without a gateway endpoint pays per-GB on top.",
+    q:"This pipeline processes 10M files a day. Where does the AWS bill actually go &mdash; and what's the line item that surprises people?",
+    a:"Not compute &mdash; <b>S3 requests and data transfer</b>. At 10M/day, PUTs alone run ~$50/day ($0.005 per 1K); GETs on every read, plus cross-AZ transfer when compute and bucket disagree on region, dwarf the Lambda-seconds. The surprise line is <b>NAT Gateway data processing</b> &mdash; a VPC Lambda reaching S3 without a gateway endpoint pays per-GB on top.",
     f:[
       { q:"Halve the cost without dropping a file. First move?",
-        a:"An <b>S3 gateway VPC endpoint</b> — it's free, and it removes NAT and transfer charges for bucket traffic entirely. Then batch small files so you issue fewer PUTs, and add lifecycle rules to tier cold objects to S3-IA / Glacier. Compute is rarely the lever." },
-      { q:"Lambda vs Fargate for this — when does the cost curve flip?",
-        a:"Lambda wins for <b>spiky, short, sub-second</b> work — you pay nothing idle. It flips to Fargate / ECS when invocations run long or go <b>sustained and high-volume</b>: past roughly one continuous vCPU of steady load, always-on Fargate beats per-ms Lambda. Duration × frequency is the deciding product." }
+        a:"An <b>S3 gateway VPC endpoint</b> &mdash; it's free, and it removes NAT and transfer charges for bucket traffic entirely. Then batch small files so you issue fewer PUTs, and add lifecycle rules to tier cold objects to S3-IA / Glacier. Compute is rarely the lever." },
+      { q:"Lambda vs Fargate for this &mdash; when does the cost curve flip?",
+        a:"Lambda wins for <b>spiky, short, sub-second</b> work &mdash; you pay nothing idle. It flips to Fargate / ECS when invocations run long or go <b>sustained and high-volume</b>: past roughly one continuous vCPU of steady load, always-on Fargate beats per-ms Lambda. Duration &times; frequency is the deciding product." }
     ],
-    senior:"Naming <b>requests and transfer</b> — not compute — as the real bill, and reaching for a <b>gateway endpoint</b> before micro-optimizing code, shows you've read an actual AWS invoice. Knowing the Lambda→Fargate flip point seals it." },
+    senior:"Naming <b>requests and transfer</b> &mdash; not compute &mdash; as the real bill, and reaching for a <b>gateway endpoint</b> before micro-optimizing code, shows you've read an actual AWS invoice. Knowing the Lambda&rarr;Fargate flip point seals it." },
   { tier:'SDE3', signal:'Format & schema evolution',
     q:"Your export is a CSV other teams' importers consume. You need to add a column. How do you ship it without breaking them?",
-    a:"<b>Append-only, never reorder.</b> Add the new column at the <b>end</b>, optional with a sane default — positional importers keep working, header-based ones pick it up. Breakage comes from <b>inserting or renaming</b> columns, which shifts every downstream index.",
+    a:"<b>Append-only, never reorder.</b> Add the new column at the <b>end</b>, optional with a sane default &mdash; positional importers keep working, header-based ones pick it up. Breakage comes from <b>inserting or renaming</b> columns, which shifts every downstream index.",
     f:[
       { q:"An old importer must keep running for a year, but new consumers need a nested structure CSV can't express. Now what?",
-        a:"<b>Version the format — don't mutate one.</b> Emit a <code>v2</code> (JSON / Parquet) alongside the frozen <code>v1</code> CSV; a <b>version field or path</b> selects the reader. Expand-then-contract: dual-publish, migrate consumers, retire v1 once its usage hits zero." },
+        a:"<b>Version the format &mdash; don't mutate one.</b> Emit a <code>v2</code> (JSON / Parquet) alongside the frozen <code>v1</code> CSV; a <b>version field or path</b> selects the reader. Expand-then-contract: dual-publish, migrate consumers, retire v1 once its usage hits zero." },
       { q:"How do you know when it's actually safe to retire v1?",
-        a:"You don't guess — you <b>instrument it</b>. Emit a metric per format version on read, or track last-access per consumer. Retire v1 only after its read count has been zero for a full cycle. Schema retirement is a data-driven call, not a calendar one." }
+        a:"You don't guess &mdash; you <b>instrument it</b>. Emit a metric per format version on read, or track last-access per consumer. Retire v1 only after its read count has been zero for a full cycle. Schema retirement is a data-driven call, not a calendar one." }
     ],
-    senior:"Separating a <b>backward-compatible append</b> from a breaking reorder, escalating to <b>versioned formats with expand / contract</b> instead of mutating in place, and gating retirement on <b>measured usage</b> — that's how schema changes ship safely in production." },
+    senior:"Separating a <b>backward-compatible append</b> from a breaking reorder, escalating to <b>versioned formats with expand / contract</b> instead of mutating in place, and gating retirement on <b>measured usage</b> &mdash; that's how schema changes ship safely in production." },
   { tier:'Staff', signal:'Backpressure through a forked stream',
-    q:"In the handler, one read forks to hash and S3 upload. Hashing is instant; the upload is slow. What happens to the pipe — and to memory?",
-    a:"The fork runs at the speed of its <b>slowest consumer</b>. The <code>PassThrough</code> feeding S3 fills to its <code>highWaterMark</code>, stops draining, and that backpressure propagates <b>back through the tee</b> to the source read — so the fast hash branch is throttled to the upload's pace. Memory stays bounded at the buffer size; unread chunks do <b>not</b> pile up.",
+    q:"In the handler, one read forks to hash and S3 upload. Hashing is instant; the upload is slow. What happens to the pipe &mdash; and to memory?",
+    a:"The fork runs at the speed of its <b>slowest consumer</b>. The <code>PassThrough</code> feeding S3 fills to its <code>highWaterMark</code>, stops draining, and that backpressure propagates <b>back through the tee</b> to the source read &mdash; so the fast hash branch is throttled to the upload's pace. Memory stays bounded at the buffer size; unread chunks do <b>not</b> pile up.",
     f:[
       { q:"Someone 'fixes' the slowness by unpiping S3 and pushing chunks to it in a manual loop. What did they just break?",
-        a:"They <b>defeated backpressure</b>. A manual <code>.write()</code> that ignores the <b>false</b> return value buffers unboundedly — the slow branch silently accumulates the whole file in RAM. The return-value contract <i>is</i> the flow control; bypassing it is how streaming OOMs come back." },
+        a:"They <b>defeated backpressure</b>. A manual <code>.write()</code> that ignores the <b>false</b> return value buffers unboundedly &mdash; the slow branch silently accumulates the whole file in RAM. The return-value contract <i>is</i> the flow control; bypassing it is how streaming OOMs come back." },
       { q:"Two branches, very different speeds. One shared highWaterMark, or different ones?",
-        a:"Independent buffers, tuned per branch. The slow S3 branch may want a <b>larger</b> highWaterMark to keep the pipe full across network jitter; the instant hash branch needs almost none. One global value either starves the network branch or wastes RAM on the fast one — match the buffer to each consumer's latency." }
+        a:"Independent buffers, tuned per branch. The slow S3 branch may want a <b>larger</b> highWaterMark to keep the pipe full across network jitter; the instant hash branch needs almost none. One global value either starves the network branch or wastes RAM on the fast one &mdash; match the buffer to each consumer's latency." }
     ],
-    senior:"Explaining that a fork runs at its <b>slowest consumer</b> and that backpressure propagates <i>back through the tee</i> to throttle the fast branch — then catching that a manual <code>.write()</code> defeats the flow-control contract — is the stream-internals depth most candidates only hand-wave." },
+    senior:"Explaining that a fork runs at its <b>slowest consumer</b> and that backpressure propagates <i>back through the tee</i> to throttle the fast branch &mdash; then catching that a manual <code>.write()</code> defeats the flow-control contract &mdash; is the stream-internals depth most candidates only hand-wave." },
   { tier:'Staff', signal:'Data deletion &amp; the right to be forgotten',
-    q:"A user invokes their right to be forgotten — purge everything tied to their content. Walk me through it across this pipeline.",
-    a:"<b>Deletion is its own pipeline, not a single DELETE.</b> It spans the dual store — the S3 object <i>and</i> the catalog row — so it carries the same orphan risk as the dual-write, handled the same way: a tombstone, a tracked compensating delete, the reconciler as backstop. The hard part is everything <i>downstream</i> of the primary stores — replicas, caches, search indexes, and the genuinely hard one, <b>backups</b>, which you cannot surgically edit.",
+    q:"A user invokes their right to be forgotten &mdash; purge everything tied to their content. Walk me through it across this pipeline.",
+    a:"<b>Deletion is its own pipeline, not a single DELETE.</b> It spans the dual store &mdash; the S3 object <i>and</i> the catalog row &mdash; so it carries the same orphan risk as the dual-write, handled the same way: a tombstone, a tracked compensating delete, the reconciler as backstop. The hard part is everything <i>downstream</i> of the primary stores &mdash; replicas, caches, search indexes, and the genuinely hard one, <b>backups</b>, which you cannot surgically edit.",
     f:[
       { q:"You cannot DELETE a row out of an immutable backup. So how is the user actually 'forgotten'?",
-        a:"<b>Crypto-shredding.</b> Encrypt each user's content under a per-user key; deletion drops the key, so the backed-up ciphertext is unrecoverable without ever touching the backup. The honest alternative is a bounded <b>retention window</b> — backups age out in N days, so you commit to 'gone from live systems now, gone from backups within N days.' Both are defensible; claiming you surgically delete from a backup is not." },
-      { q:"Your reconciler deletes S3 keys with no DB row. Deletion removes the row first — does the reconciler fight you, or quietly do your job?",
-        a:"That is exactly why deletion cannot lean on a side effect. I make it explicit: a <b>tombstone</b> the reconciler reads, so a deleted object is a coordinated state, not an accidental orphan it happens to clean up. A compliance guarantee resting on reconciler timing is how you fail an audit — the deletion path owns the delete end to end and emits a <b>proof-of-deletion</b> record." }
+        a:"<b>Crypto-shredding.</b> Encrypt each user's content under a per-user key; deletion drops the key, so the backed-up ciphertext is unrecoverable without ever touching the backup. The honest alternative is a bounded <b>retention window</b> &mdash; backups age out in N days, so you commit to 'gone from live systems now, gone from backups within N days.' Both are defensible; claiming you surgically delete from a backup is not." },
+      { q:"Your reconciler deletes S3 keys with no DB row. Deletion removes the row first &mdash; does the reconciler fight you, or quietly do your job?",
+        a:"That is exactly why deletion cannot lean on a side effect. I make it explicit: a <b>tombstone</b> the reconciler reads, so a deleted object is a coordinated state, not an accidental orphan it happens to clean up. A compliance guarantee resting on reconciler timing is how you fail an audit &mdash; the deletion path owns the delete end to end and emits a <b>proof-of-deletion</b> record." }
     ],
-    senior:"The level signal is treating deletion with the <b>same rigor as the write path</b> — dual-delete with compensation, an explicit tombstone the reconciler honors, an auditable proof record — plus an honest answer for backups (crypto-shred or retention) rather than hand-waving. Most candidates say 'delete the row' and miss that deletion is a pipeline, that backups are the hard part, and that a compliance promise cannot rest on a reconciler's timing." },
+    senior:"The level signal is treating deletion with the <b>same rigor as the write path</b> &mdash; dual-delete with compensation, an explicit tombstone the reconciler honors, an auditable proof record &mdash; plus an honest answer for backups (crypto-shred or retention) rather than hand-waving. Most candidates say 'delete the row' and miss that deletion is a pipeline, that backups are the hard part, and that a compliance promise cannot rest on a reconciler's timing." },
   { tier:'SDE3', signal:'Multi-tenant fairness',
     q:"A shared pipeline serves many tenants, and one just queued ten million files in a single burst. Every other tenant&rsquo;s work is now stuck behind it. How do you stop one tenant from starving the others?",
     a:"The root cause is a <b>single shared FIFO</b> &mdash; a FIFO is never fair under burst, so one tenant&rsquo;s flood owns the queue. The fix is <b>fair scheduling</b>, not a bigger queue: partition the work by a <b>tenant key</b> and have workers dequeue <b>round-robin (or weighted) across tenants</b> so no one backlog blocks another, plus a <b>per-tenant rate limit</b> &mdash; a token bucket per tenant &mdash; that throttles any single tenant to a fair share and buffers the excess instead of letting it block. Fairness is a <i>scheduling</i> property you build in, not something a FIFO hands you.",
@@ -1802,22 +1802,22 @@ var cards=[
     senior:"The tell is knowing a rolling deploy means old and new run <i>concurrently</i>, so changes must be backward- and forward-compatible &mdash; expand, migrate, contract, never big-bang &mdash; and being honest that <b>rolling back code is not rolling back data</b>. Juniors say &lsquo;canary then ramp&rsquo;; seniors design the change so both versions coexist safely and so a bad write is <i>findable and reversible</i>, because the data is the part you can&rsquo;t just redeploy." }
 ];
 var speakLines=[
- "Open with the headline: <b>'I'd stream it with a server-side cursor so memory stays constant'</b> — then the backpressure, then flag the slow-reader connection risk.",
- "Lead with the failure: <b>'The risk here is a dual-write — the DB rolls back but S3 doesn't'</b> — then the compensating delete, then the reconciler as the real backstop.",
- "State the constraint first: <b>'I hash during the upload because reading twice or buffering won't survive 500MB'</b> — then describe the PassThrough fork.",
- "Don't defend a choice — give the rule: <b>'Lambda-per-object for this volume; I'd move to SQS the moment I need retries, a DLQ, or ordering.'</b>",
- "Anchor on the why: <b>'SQLite over JSON because I need real foreign keys and 1:1 BLOBs'</b> — bring out the conflict ladder only if pushed.",
- "Name the shape out loud: <b>'This is a one-way door — overlapping prefixes are forbidden, so I'd settle the taxonomy up front.'</b>",
- "Frame it as extending along the grain: <b>'I keep the dispatch pattern and move transcoding to ECS / MediaConvert'</b> — then the sync/async two-tier.",
- "Frame the blast radius first: <b>'a leaked broad credential reads the whole bucket'</b> — then scope it down: presigned URL, one key, short TTL, size/type conditions. Sandbox untrusted input.",
- "Answer in four signals, not prose: <b>'queue depth, p99 latency, DLQ rate, reconciler orphan count'</b> — then split page-worthy (SLA breach) from log-only (self-healing retries).",
- "Reframe the premise out loud: <b>'exactly-once delivery is impossible — I build idempotent effects'</b> — then the check-and-set marker, committed atomically with the work.",
- "Lead with the mechanism: <b>'multipart resumes per part, so they re-upload only what failed'</b> — then the orphaned-parts bill leak and the lifecycle abort rule.",
- "Name the bug out loud: <b>'the naive reconciler deletes in-flight uploads'</b> — reject the grace-period guess, use an explicit PENDING marker, then close the TOCTOU window.",
- "Redirect from compute to the real bill: <b>'at this scale it's S3 requests and transfer, not Lambda-seconds'</b> — then the free gateway endpoint, then the Lambda-to-Fargate flip point.",
- "Lead with the compat rule: <b>'append at the end, optional with a default — never reorder or rename'</b> — then versioned formats, expand-then-contract, retired on measured usage.",
- "Say what governs the fork: <b>'it runs at the slowest consumer — backpressure propagates back and throttles the fast branch'</b> — then that a manual .write() ignoring the false return is how OOM creeps back.",
- "Reframe it as a pipeline, not a DELETE: <b>'forgetting a user spans both stores, plus replicas, caches, and backups'</b> — dual-delete with a tombstone the reconciler honors, then the honest backups answer: crypto-shred the per-user key, or commit to a retention window.",
+ "Open with the headline: <b>'I'd stream it with a server-side cursor so memory stays constant'</b> &mdash; then the backpressure, then flag the slow-reader connection risk.",
+ "Lead with the failure: <b>'The risk here is a dual-write &mdash; the DB rolls back but S3 doesn't'</b> &mdash; then the compensating delete, then the reconciler as the real backstop.",
+ "State the constraint first: <b>'I hash during the upload because reading twice or buffering won't survive 500MB'</b> &mdash; then describe the PassThrough fork.",
+ "Don't defend a choice &mdash; give the rule: <b>'Lambda-per-object for this volume; I'd move to SQS the moment I need retries, a DLQ, or ordering.'</b>",
+ "Anchor on the why: <b>'SQLite over JSON because I need real foreign keys and 1:1 BLOBs'</b> &mdash; bring out the conflict ladder only if pushed.",
+ "Name the shape out loud: <b>'This is a one-way door &mdash; overlapping prefixes are forbidden, so I'd settle the taxonomy up front.'</b>",
+ "Frame it as extending along the grain: <b>'I keep the dispatch pattern and move transcoding to ECS / MediaConvert'</b> &mdash; then the sync/async two-tier.",
+ "Frame the blast radius first: <b>'a leaked broad credential reads the whole bucket'</b> &mdash; then scope it down: presigned URL, one key, short TTL, size/type conditions. Sandbox untrusted input.",
+ "Answer in four signals, not prose: <b>'queue depth, p99 latency, DLQ rate, reconciler orphan count'</b> &mdash; then split page-worthy (SLA breach) from log-only (self-healing retries).",
+ "Reframe the premise out loud: <b>'exactly-once delivery is impossible &mdash; I build idempotent effects'</b> &mdash; then the check-and-set marker, committed atomically with the work.",
+ "Lead with the mechanism: <b>'multipart resumes per part, so they re-upload only what failed'</b> &mdash; then the orphaned-parts bill leak and the lifecycle abort rule.",
+ "Name the bug out loud: <b>'the naive reconciler deletes in-flight uploads'</b> &mdash; reject the grace-period guess, use an explicit PENDING marker, then close the TOCTOU window.",
+ "Redirect from compute to the real bill: <b>'at this scale it's S3 requests and transfer, not Lambda-seconds'</b> &mdash; then the free gateway endpoint, then the Lambda-to-Fargate flip point.",
+ "Lead with the compat rule: <b>'append at the end, optional with a default &mdash; never reorder or rename'</b> &mdash; then versioned formats, expand-then-contract, retired on measured usage.",
+ "Say what governs the fork: <b>'it runs at the slowest consumer &mdash; backpressure propagates back and throttles the fast branch'</b> &mdash; then that a manual .write() ignoring the false return is how OOM creeps back.",
+ "Reframe it as a pipeline, not a DELETE: <b>'forgetting a user spans both stores, plus replicas, caches, and backups'</b> &mdash; dual-delete with a tombstone the reconciler honors, then the honest backups answer: crypto-shred the per-user key, or commit to a retention window.",
  "Lead with the diagnosis, not the fix: <b>&lsquo;a single shared FIFO is never fair under burst.&rsquo;</b> Then the fix in one breath &mdash; partition by tenant key, round-robin across tenants, rate-limit each &mdash; and land on the line that scores: fairness is a scheduling discipline in the consumer, not a bigger queue.",
  "Refuse the premise first: <b>&lsquo;down is not broken.&rsquo;</b> Then bound it &mdash; the fleet runs on last-reconciled state, changes are delayed not lost &mdash; name the one exception that hurts (a time-critical push to a device that needs a fresh config), and treat the recovery backlog as its own problem. Scoping the damage, instead of catastrophizing, is the senior move.",
  "Refuse the happy path first: the bugs live in redelivery, partial failure, and concurrency, so that&rsquo;s where the tests aim. Layer it &mdash; unit on the pure logic, integration on the full upload-to-record path, and a contract test on the strategy map so it can&rsquo;t silently drift. Then the test that earns confidence: fire the <b>same event N times concurrently</b> and assert exactly one record &mdash; the one most teams skip and the one at-least-once eventually breaks. Add fault injection, kill the worker mid-handler and assert the retry converges clean, and run the reconciler against live writes. Honest close: you can&rsquo;t test exactly-once into existence, so you test idempotency and convergence and assert invariants for the rest.",
@@ -1857,7 +1857,7 @@ function renderNav() {
   }
 })();
 /* Repaint the whole drill view: counters, progress bar, nav, and either the
-   current card or — once past the last card — the debrief/verdict screen. */
+   current card or &mdash; once past the last card &mdash; the debrief/verdict screen. */
 function renderD() {
   sGot.textContent = got; sGot.parentNode.classList.toggle('z', got === 0);
   sShk.textContent = shk; sShk.parentNode.classList.toggle('z', shk === 0);
@@ -1936,14 +1936,14 @@ function renderDebrief() {
       '<div class="nm">' + entry.signal + '</div><div class="tr"><span class="tier ' + tierClass[entry.tier] + '">' + entry.tier + '</span></div></div>';
   }
   let verdict;
-  if (pct >= 80) verdict = 'You\'re carrying the signals a senior loop grades on. The shaky ones are polish, not gaps — re-run those threads until the <b>senior-signal line</b> comes out unprompted.';
-  else if (pct >= 50) verdict = 'Solid core, real gaps. The signals you marked <b>Revisit</b> are exactly what an interviewer probes to separate levels — drill those threads to the last layer before the real round.';
-  else verdict = 'You know the happy path; the depth isn\'t there yet. Work the <b>Walkthrough</b> + <b>See the code</b>, then re-run — the follow-up chains are where this round is won or lost.';
+  if (pct >= 80) verdict = 'You\'re carrying the signals a senior loop grades on. The shaky ones are polish, not gaps &mdash; re-run those threads until the <b>senior-signal line</b> comes out unprompted.';
+  else if (pct >= 50) verdict = 'Solid core, real gaps. The signals you marked <b>Revisit</b> are exactly what an interviewer probes to separate levels &mdash; drill those threads to the last layer before the real round.';
+  else verdict = 'You know the happy path; the depth isn\'t there yet. Work the <b>Walkthrough</b> + <b>See the code</b>, then re-run &mdash; the follow-up chains are where this round is won or lost.';
   const weakBtn = shk > 0 ? '<button type="button" id="dweak" class="btn-sec">Drill my ' + shk + ' Revisit ' + (shk === 1 ? 'probe' : 'probes') + ' \u2192</button>' : '';
   dwrap.innerHTML = '<div class="card debrief"><div class="big">' + (mode === 'quick' ? 'Quick 5 debrief' : 'Interviewer debrief') + '</div>' +
     '<div class="sumline">' + got + ' solid &middot; ' + shk + ' to revisit &middot; ' + pct + '% ' + (mode === 'quick' ? 'of a quick 5' : 'signal coverage') + '</div>' +
     rows + '<div class="verdict">' + verdict + '</div>' + weakBtn +
-    '<button type="button" id="drestart">' + (mode === 'quick' ? 'Another quick 5 →' : 'Run the full round again') + '</button></div>';
+    '<button type="button" id="drestart">' + (mode === 'quick' ? 'Another quick 5 &rarr;' : 'Run the full round again') + '</button></div>';
   if (shk > 0) { document.getElementById('dweak').onclick = drillWeak; }
   document.getElementById('drestart').onclick = function () { setMode(mode); };
 }
@@ -2064,10 +2064,10 @@ function renderVerdict() {
       '<div class="nm">' + entry.signal + '</div><div class="tr"><span class="tier ' + tierClass[entry.tier] + '">' + entry.tier + '</span></div></div>';
   }
   let note;
-  if (rec.c === 'sh') note = 'Depth held under the Staff / EXTEND probes — that\'s exactly what tips a packet from Hire to <b>Strong Hire</b>.';
+  if (rec.c === 'sh') note = 'Depth held under the Staff / EXTEND probes &mdash; that\'s exactly what tips a packet from Hire to <b>Strong Hire</b>.';
   else if (rec.c === 'h') note = 'Strong coverage. To reach Strong Hire, the <b>Staff-tier</b> threads have to be solid, not just attempted.';
-  else if (rec.c === 'lh') note = 'Enough signal for a phone screen, not an onsite. The gap is <b>depth</b> — drill the multi-layer threads to the end.';
-  else note = 'Below bar — the happy path isn\'t enough. Work Walkthrough + See-the-code, then run the round again.';
+  else if (rec.c === 'lh') note = 'Enough signal for a phone screen, not an onsite. The gap is <b>depth</b> &mdash; drill the multi-layer threads to the end.';
+  else note = 'Below bar &mdash; the happy path isn\'t enough. Work Walkthrough + See-the-code, then run the round again.';
   let used = 22 * 60 - mockLeft;
   if (used < 0) used = 0;
   dwrap.innerHTML = '<div class="card debrief"><div class="rec ' + rec.c + '"><div class="lvl">' + rec.t + '</div>' +
@@ -2203,67 +2203,67 @@ for (let i = 0; i < openerCards.length; i++) {
 
 /* ============ MOCK RUN ============ */
 var mockBeats=[
- { tag:"FRAME", cue:"“Design the content pipeline — start wherever you like.”",
+ { tag:"FRAME", cue:"&ldquo;Design the content pipeline &mdash; start wherever you like.&rdquo;",
    task:"Frame the scope in one line, then give your one-sentence version.",
-   model:"<b>Frame:</b> operators push files to S3; the system processes, stores, and catalogs them, and serves bulk export / import. <b>One-liner:</b> an event-driven ingestion pipeline — an S3 upload fires a Lambda that routes each file by type to a streaming handler that hashes, stores, and records it, with a reconciler for partial failures.",
+   model:"<b>Frame:</b> operators push files to S3; the system processes, stores, and catalogs them, and serves bulk export / import. <b>One-liner:</b> an event-driven ingestion pipeline &mdash; an S3 upload fires a Lambda that routes each file by type to a streaming handler that hashes, stores, and records it, with a reconciler for partial failures.",
    int:{q:"Before you go on &mdash; why event-driven at all? Why not just do the work inside the upload request?",a:"It decouples upload latency from processing &mdash; the PUT returns the moment S3 has the bytes, and the pipeline scales on its own clock. Doing it inline ties the user&rsquo;s request to the slowest handler and welds two failure domains together. The trade I&rsquo;d name out loud: you inherit eventual consistency and surface processing errors out-of-band, not in the response."},int2:{q:"OK, event-driven. But a user uploads and immediately wants to see the result &mdash; your async pipeline hasn&rsquo;t run yet. What do they see?",a:"A first-class <b>processing state</b>: the upload returns instantly, the record reads <code>PROCESSING</code>, and the UI polls or subscribes for the terminal state. I never block the upload on the work, but I make the in-flight state visible so they&rsquo;re not staring at a missing file. If they need the result <i>now</i>, that&rsquo;s the argument for a synchronous fast-path on small inputs &mdash; two tiers by interactivity."} },
- { tag:"STRUCTURE", cue:"“Walk me through it.”",
-   task:"Talk the whole flow, entry to backstop — no code, just the spine.",
-   model:"Entry handler → extension routes through an <b>O(1) strategy map</b> → each handler streams the file once, forking that read to hash + S3 upload → record in the DB. Export streams via a server-side cursor at <b>constant memory</b>; import runs the REUSE / REMAP / REGEN / INSERT ladder with an oldId→newId FK remap. The dual-write has no shared transaction → compensate on failure, with a <b>reconciler</b> backstop. Replays are idempotent via a processed-marker.",
+ { tag:"STRUCTURE", cue:"&ldquo;Walk me through it.&rdquo;",
+   task:"Talk the whole flow, entry to backstop &mdash; no code, just the spine.",
+   model:"Entry handler &rarr; extension routes through an <b>O(1) strategy map</b> &rarr; each handler streams the file once, forking that read to hash + S3 upload &rarr; record in the DB. Export streams via a server-side cursor at <b>constant memory</b>; import runs the REUSE / REMAP / REGEN / INSERT ladder with an oldId&rarr;newId FK remap. The dual-write has no shared transaction &rarr; compensate on failure, with a <b>reconciler</b> backstop. Replays are idempotent via a processed-marker.",
    int:{q:"A type you&rsquo;ve never seen lands &mdash; someone uploads a <b>.heic</b>. What happens?",a:"The extension misses the strategy map and hits the default branch: a logged <b>skip</b>, a no-op, never a throw that poisons the batch. Adding support is one map entry plus a handler &mdash; the dispatcher never changes. That&rsquo;s the whole reason it&rsquo;s a map and not a switch: open for extension, closed for modification."} },
- { tag:"SCALE", cue:"“10,000 objects land in one second. What breaks first?”",
-   task:"Name the first ceiling, then the fix — don’t hand-wave ‘it scales.’",
-   model:"<b>Lambda concurrency</b> throttles first → events retry / DLQ. Then the <b>DB pool</b> and the <b>S3 PUT-per-prefix</b> rate. Fixes: RDS Proxy or a queue for concurrency, spread key prefixes for PUT rate. At firehose scale, buffer through SQS / Kinesis and drain at a controlled rate.",
+ { tag:"SCALE", cue:"&ldquo;10,000 objects land in one second. What breaks first?&rdquo;",
+   task:"Name the first ceiling, then the fix &mdash; don&rsquo;t hand-wave &lsquo;it scales.&rsquo;",
+   model:"<b>Lambda concurrency</b> throttles first &rarr; events retry / DLQ. Then the <b>DB pool</b> and the <b>S3 PUT-per-prefix</b> rate. Fixes: RDS Proxy or a queue for concurrency, spread key prefixes for PUT rate. At firehose scale, buffer through SQS / Kinesis and drain at a controlled rate.",
    int:{q:"You said Lambda. At ~1,150 invocations a second, what saturates <i>first</i> &mdash; be specific.",a:"Lambda&rsquo;s account concurrency ceiling &mdash; default ~1,000 &mdash; throttles before anything else, so events retry and spill to the DLQ. Behind it the DB connection pool goes next (hence RDS Proxy), then S3&rsquo;s per-prefix PUT rate. Name the order: concurrency, connections, prefix throughput &mdash; and put SQS in front so a burst queues instead of throttling."},int2:{q:"You put SQS in front. Now the queue is two million messages deep and climbing. What&rsquo;s actually wrong, and what do you do?",a:"A growing queue means arrival rate is beating processing rate. First I split the cause: a <b>poison message</b> stalling a consumer, or genuine under-provisioning? Poison &rarr; the DLQ and redrive isolate it. Throughput &rarr; scale consumers and check downstream, because the real floor is usually the DB or a third-party call, not the consumer. A queue is a shock absorber, not a fix &mdash; a permanently growing one means the floor is set too low."} },
- { tag:"FAILURE", cue:"“The DB write fails after S3 already succeeded. Now what?”",
+ { tag:"FAILURE", cue:"&ldquo;The DB write fails after S3 already succeeded. Now what?&rdquo;",
    task:"Walk the failure path, then the guarantee that makes a retry safe.",
-   model:"<b>Dual-write hole:</b> the object is orphaned. Track written keys, compensating-delete in the catch. If cleanup also fails, queue it for async retry — the durable backstop is a <b>reconciler</b> sweeping keys with no DB row, guarded by a <b>PENDING marker</b> so it never deletes an in-flight upload.",
+   model:"<b>Dual-write hole:</b> the object is orphaned. Track written keys, compensating-delete in the catch. If cleanup also fails, queue it for async retry &mdash; the durable backstop is a <b>reconciler</b> sweeping keys with no DB row, guarded by a <b>PENDING marker</b> so it never deletes an in-flight upload.",
    int:{q:"Your compensating delete fails too &mdash; the catch block itself throws. Now what?",a:"Then compensation was never the guarantee &mdash; it&rsquo;s best-effort. The durable backstop is the <b>reconciler</b>: it sweeps S3 for keys with no DB row and removes them, past a grace window so it never touches an in-flight upload. The failed delete just becomes one more orphan the sweep catches &mdash; that&rsquo;s why I volunteer it: the happy-path cleanup is the optimization, the sweep is the contract."},int2:{q:"Your reconciler is about to delete an object that a slow, still-in-flight upload will write a DB row for. You&rsquo;d be corrupting a valid upload. How do you stop that?",a:"That&rsquo;s the entire reason for the <b>grace window</b> and the <b>PENDING marker</b>. The sweep only deletes keys older than the window with no DB row <i>and</i> no marker &mdash; an in-flight upload writes PENDING first, so the sweep skips it. The window has to exceed the slowest legitimate upload. And I&rsquo;d run the sweep <b>dry-run first</b>, alarming on what it <i>would</i> delete, before it&rsquo;s ever allowed to delete for real."} },
- { tag:"CURVEBALL", theme:"Exactly-once", cue:"“Guarantee exactly-once processing.”",
+ { tag:"CURVEBALL", theme:"Exactly-once", cue:"&ldquo;Guarantee exactly-once processing.&rdquo;",
    task:"Reframe the premise out loud, then give the real mechanism.",
-   model:"Exactly-once <i>delivery</i> doesn’t exist — S3 and queues are at-least-once. I build idempotent <b>effects</b>: a content-hash key or a processed-marker (a conditional put) the handler checks first, committed atomically with the work. A redelivered event no-ops.",
+   model:"Exactly-once <i>delivery</i> doesn&rsquo;t exist &mdash; S3 and queues are at-least-once. I build idempotent <b>effects</b>: a content-hash key or a processed-marker (a conditional put) the handler checks first, committed atomically with the work. A redelivered event no-ops.",
    int:{q:"Fine, idempotent effects. But two workers race on the same new file at the same instant &mdash; both check the marker, both see nothing. Then what?",a:"The check-and-write has to be <b>atomic</b>, not two steps. The processed-marker is a conditional put / unique-key insert &mdash; the first writer wins, the second&rsquo;s conditional fails and it no-ops. If I checked, then wrote, separately, the race you describe double-processes; the atomicity of the marker is exactly what closes it."} },
- { tag:"CLOSE", cue:"“Sum it up — and what would you watch in prod?”",
-   task:"Two-sentence close, then the one metric you’d alarm on.",
-   model:"It’s a streaming, event-driven pipeline that stays constant-memory at any scale and self-heals partial failures through compensation plus a reconciler. In prod I’d watch the <b>reconciler’s orphan count</b> — a rising trend means the compensation path is failing silently, the early warning for the whole dual-write design.",
+ { tag:"CLOSE", cue:"&ldquo;Sum it up &mdash; and what would you watch in prod?&rdquo;",
+   task:"Two-sentence close, then the one metric you&rsquo;d alarm on.",
+   model:"It&rsquo;s a streaming, event-driven pipeline that stays constant-memory at any scale and self-heals partial failures through compensation plus a reconciler. In prod I&rsquo;d watch the <b>reconciler&rsquo;s orphan count</b> &mdash; a rising trend means the compensation path is failing silently, the early warning for the whole dual-write design.",
    int:{q:"You&rsquo;ve got a week, not a month. Cut one thing you described to ship &mdash; what goes?",a:"The reconciler comes out first &mdash; I keep the compensating delete, alarm hard on any write that misses its catch, accept a small <i>monitored</i> orphan risk, and add the sweep next sprint. What I would <i>not</i> cut is the idempotent marker or the single-read streaming &mdash; those are load-bearing for correctness and memory, not nice-to-haves. Knowing which is which is the answer."} }
 ];
 var mockCurveIdx=0; for(var _ci=0;_ci<mockBeats.length;_ci++){ if(mockBeats[_ci].tag==="CURVEBALL") mockCurveIdx=_ci; }
 var curveballPool=[ mockBeats[mockCurveIdx],
-  { tag:"CURVEBALL", theme:"Security", cue:"“A user uploads a file crafted to crash your image library &mdash; or a zip bomb. How do you keep one bad upload from taking down the pipeline?”",
+  { tag:"CURVEBALL", theme:"Security", cue:"&ldquo;A user uploads a file crafted to crash your image library &mdash; or a zip bomb. How do you keep one bad upload from taking down the pipeline?&rdquo;",
     task:"Name the defenses in layers, then the one that contains an input that slips through.",
     model:"Layered. The <b>strategy map is already an allowlist</b> &mdash; an unrecognized type skips, never executes. I cap object size at the gateway, validate type by <b>content, not extension</b>, and never run uploaded bytes &mdash; handlers parse, they don&rsquo;t exec. The processor runs <b>sandboxed with least-privilege IAM</b>, so a library exploit can&rsquo;t reach anything around it.",
     int:{q:"A file that&rsquo;s <i>valid</i> by every check still hangs your library forever &mdash; CPU pinned, the worker stuck. Now what?",a:"That&rsquo;s a <b>poison message</b>, and the containment is a hard <b>per-job timeout and resource cap</b> &mdash; the job fails fast instead of pinning the lane, the event redelivers, and after N attempts the <b>DLQ</b> isolates it so it stops cycling. One pathological input degrades one message, never the pipeline. The timeout is the contract; validation just lowers how often you hit it."} },
-  { tag:"CURVEBALL", theme:"Cost", cue:"“Finance says this pipeline&rsquo;s AWS bill doubled last month. Where&rsquo;s the money, and how do you cut it?”",
+  { tag:"CURVEBALL", theme:"Cost", cue:"&ldquo;Finance says this pipeline&rsquo;s AWS bill doubled last month. Where&rsquo;s the money, and how do you cut it?&rdquo;",
     task:"Profile before optimizing, then name the single biggest lever.",
     model:"First I&rsquo;d <b>profile, not guess</b> &mdash; Cost Explorer broken out by service. The usual drivers here: <b>Lambda invocations</b> (one per object adds up fast), <b>S3 requests and storage</b>, and <b>data transfer</b>. Levers: lifecycle cold objects to cheaper tiers or Glacier, right-size Lambda memory &mdash; and the big one, at high volume <b>per-object Lambda is the expensive choice</b>; batching through SQS amortizes the fixed invocation overhead.",
     int:{q:"Give me the single biggest lever &mdash; and why it&rsquo;s counterintuitive.",a:"<b>Batch the processing.</b> The per-object, one-Lambda-per-file design that&rsquo;s so clean at low volume is exactly what&rsquo;s costly at firehose scale &mdash; you pay fixed invocation and connection-setup overhead millions of times over. Buffering through SQS or Kinesis and draining in batches spreads that overhead across many files at once. It&rsquo;s the same switch condition as scaling: the elegant low-volume design and the cheap high-volume design are <i>different designs</i>, and naming where they diverge is the point."} },
-  { tag:"CURVEBALL", theme:"Backfill", cue:"“You shipped a new thumbnail size. Now you need to reprocess all 10 million existing objects. How?”",
+  { tag:"CURVEBALL", theme:"Backfill", cue:"&ldquo;You shipped a new thumbnail size. Now you need to reprocess all 10 million existing objects. How?&rdquo;",
     task:"Reprocess at scale without melting live traffic &mdash; and say why retry is safe.",
     model:"A <b>backfill job</b> that enumerates existing keys and re-enqueues them through the <i>same</i> pipeline &mdash; I don&rsquo;t write a second one. Two musts: <b>rate-limit</b> the backfill so it can&rsquo;t starve live ingestion, and lean on the work already being <b>idempotent</b> &mdash; re-processing a file is a no-op-or-overwrite, so a retry, or an overlap with a live upload, can&rsquo;t corrupt anything.",
     int:{q:"The backfill is now fighting live uploads for Lambda concurrency and the DB pool, and live traffic is slowing. How do you isolate them?",a:"<b>Separate the lanes.</b> The backfill gets its own queue with <b>reserved, capped concurrency</b>, so it can never take more than its slice and live ingestion keeps its headroom. I run it low-priority, drain slowly, and watch the live <b>freshness SLO</b> &mdash; if it dips, the backfill throttles further. The principle: a bulk job and interactive traffic must never share an unbounded resource pool &mdash; partition the concurrency so one can&rsquo;t starve the other."} },
-  { tag:"CURVEBALL", theme:"Ordering", cue:"“These files must be processed in the order they were uploaded &mdash; but S3 events don&rsquo;t guarantee order. How?”",
+  { tag:"CURVEBALL", theme:"Ordering", cue:"&ldquo;These files must be processed in the order they were uploaded &mdash; but S3 events don&rsquo;t guarantee order. How?&rdquo;",
     task:"Reconcile unordered delivery with an ordering need &mdash; and question whether you need it.",
     model:"First I&rsquo;d <b>challenge the requirement</b> &mdash; true global ordering is expensive, and usually you only need <b>per-key or per-tenant</b> order. If it&rsquo;s real: S3 &rarr; <b>SQS FIFO</b> with a message group per ordering key serializes within a key while staying parallel across keys. Or stamp a <b>sequence number at upload</b> and let the processor order by it, rejecting stale writes. I wouldn&rsquo;t serialize the whole pipeline for a need that&rsquo;s narrower than it first sounds.",
     int:{q:"FIFO caps throughput per message group, and your one hot key needs both strict order <i>and</i> high volume. Now what?",a:"That&rsquo;s a real tension &mdash; strict order and high parallelism on a single key fight each other. I&rsquo;d push on whether per-event order is truly needed or just <b>eventual correctness</b>: a <b>version number with last-writer-wins</b> gives convergence without serializing, so events process in parallel and the highest version wins. If order is genuinely non-negotiable, that hot key is a throughput ceiling you design around &mdash; shard it if the semantics allow, or accept the FIFO group&rsquo;s rate as the limit. Saying out loud that you can&rsquo;t have both is the senior move."} },
-  { tag:"CURVEBALL", theme:"Multi-region", cue:"“This runs in one region. The business now needs it to survive a full region outage with near-zero data loss. What changes?”",
+  { tag:"CURVEBALL", theme:"Multi-region", cue:"&ldquo;This runs in one region. The business now needs it to survive a full region outage with near-zero data loss. What changes?&rdquo;",
     task:"Name what goes cross-region, the consistency you can actually promise, and the honest RPO.",
     model:"Both stores replicate cross-region: <b>S3 Cross-Region Replication</b> for the blobs, and the catalog moves to a multi-region database &mdash; a promoted read-replica for active-passive, or <b>global tables / Aurora Global</b> for active-active. Uploads process in whichever region they land in; replication carries <i>both</i> the object and its row to the standby, so it stays warm. The <b>reconciler runs per region</b>, scoped to that region&rsquo;s own writes so the two don&rsquo;t fight over replicated keys. Failover is a routing flip to the already-warm standby.",
     int:{q:"Near-zero data loss across regions &mdash; can you actually guarantee zero RPO?",a:"No, and saying so is the senior move. <b>Replication is asynchronous</b>, so the honest RPO is the replication lag &mdash; seconds, not zero. True zero-RPO needs <b>synchronous cross-region writes</b>, and that latency is usually a worse deal than the few seconds of exposure. So I name the number I can hit (single-digit-second RPO), the consistency model (<b>eventual</b> across regions, with last-writer-wins on conflicts for active-active), and let the business decide if that window is acceptable &mdash; rather than pretending a distributed system can be both consistent and partition-tolerant for free."} },
-  { tag:"CURVEBALL", theme:"Silent failure", cue:"“An operator swears they uploaded a file two hours ago, but it never landed in the catalog &mdash; and no error ever reached them. Walk me through finding out why.”",
+  { tag:"CURVEBALL", theme:"Silent failure", cue:"&ldquo;An operator swears they uploaded a file two hours ago, but it never landed in the catalog &mdash; and no error ever reached them. Walk me through finding out why.&rdquo;",
     task:"Trace one item&rsquo;s journey and name where you&rsquo;d look, in order &mdash; plus the silent-failure suspects.",
     model:"The failure is silent, so I trace a single key through every stage rather than stare at dashboards &mdash; the object key <i>is</i> my correlation id. <b>One:</b> did the <b>S3 event</b> even fire? Confirm the object is in the bucket and ObjectCreated was emitted &mdash; if the prefix/suffix filter didn&rsquo;t match, no event was ever sent. <b>Two:</b> did the <b>consumer run?</b> Grep the logs for that key &mdash; nothing means it was never picked up. <b>Three:</b> did it <b>skip silently?</b> An unknown extension hits the strategy-map default and is dropped on purpose &mdash; the single most common cause of &lsquo;no error, no result.&rsquo; <b>Four:</b> is it in the <b>DLQ?</b> It errored, retried, and parked &mdash; a real error that never surfaced to the operator. <b>Five:</b> is it an <b>orphan?</b> The S3 upload succeeded but the row write didn&rsquo;t &mdash; object present, catalog row absent, reconciler hasn&rsquo;t swept yet. Five suspects, one key, checked in order.",
     int:{q:"There&rsquo;s nothing in your logs at all for that key. Now what?",a:"Then the event never reached my code, so I stop grepping handler logs &mdash; the problem is <i>upstream</i> of everything I own. Either the <b>S3 notification isn&rsquo;t configured</b> on that bucket/prefix, the operator uploaded to the <b>wrong bucket or prefix</b>, or the ObjectCreated <b>filter excluded</b> the key. &lsquo;No logs anywhere&rsquo; is itself the signal &mdash; it points past my processing tier to the event wiring, so I verify the bucket they actually used and its notification config instead of hunting for a bug in code that never ran."} },
-  { tag:"CURVEBALL", theme:"Deploy under load", cue:"“There&rsquo;s a bug in the parsing logic and you need to ship the fix now &mdash; but there are fifty thousand messages in flight and more landing every second. Roll it out without dropping or double-processing a single one.”",
+  { tag:"CURVEBALL", theme:"Deploy under load", cue:"&ldquo;There&rsquo;s a bug in the parsing logic and you need to ship the fix now &mdash; but there are fifty thousand messages in flight and more landing every second. Roll it out without dropping or double-processing a single one.&rdquo;",
     task:"Name what makes the rollout safe, and the one property the pipeline already needs for it to work.",
     model:"The deploy is safe for the same reason the pipeline is reliable: the work lives in a <b>durable queue</b>, not in the workers &mdash; so I can replace workers without losing a message. It&rsquo;s a <b>rolling deploy</b>: stand up new-version workers, then <b>drain</b> the old ones (stop pulling, let in-flight messages finish, then terminate), so nothing is dropped mid-process. The property that makes it <i>actually</i> safe is <b>idempotency</b> &mdash; during the cutover both versions run for a moment and a message can be redelivered across it, so the processed-marker (a conditional put) is what stops a double-process. And I <b>canary</b> it: roll to a small slice of workers first, watch error rate and DLQ depth, then roll forward or back. Rollback is safe by that same idempotency &mdash; re-running a message is harmless.",
     int:{q:"You rolled out, and the new version is erroring on messages the <i>old</i> path enqueued. Now what?",a:"That&rsquo;s a <b>backward-compatibility break</b> &mdash; the new code can&rsquo;t parse the shape the old code wrote, and the queue is full of old-shape messages. Roll the workers back immediately; nothing&rsquo;s lost because the queue held everything. Then make the change <b>additive</b>: the new code has to handle <i>both</i> shapes &mdash; a version field or tolerant parsing &mdash; deploy that, and only drop the old-shape path once no old messages remain. The lesson is that a consumer deploy <i>is</i> a contract change, and contracts stay backward-compatible because the queue still holds messages written before the deploy."} }
 ];
 var mockFrameIdx=0; for(var _fi=0;_fi<mockBeats.length;_fi++){ if(mockBeats[_fi].tag==="FRAME") mockFrameIdx=_fi; }
 var framePool=[ mockBeats[mockFrameIdx].cue,
-  "“Users upload files; we process them, store them, and serve bulk import and export. Design the backend.”",
-  "“Walk me through the architecture behind file upload, processing, and bulk data transfer.”",
-  "“Design an ingestion pipeline — uploads come in, get processed by type, stored, and cataloged.”"
+  "&ldquo;Users upload files; we process them, store them, and serve bulk import and export. Design the backend.&rdquo;",
+  "&ldquo;Walk me through the architecture behind file upload, processing, and bulk data transfer.&rdquo;",
+  "&ldquo;Design an ingestion pipeline &mdash; uploads come in, get processed by type, stored, and cataloged.&rdquo;"
 ];
 var mockBeat=0, mockSec=0, mockClock=null, mockEscBound=false, mockLastScore=null, mockLastTime=null, mockRuns=0, mockInterrupt=false, mockIntSet={}, mockLastInt=0;
 var mockov=document.getElementById('mockov'),
@@ -2508,7 +2508,7 @@ function renderMockBeat() {
     '<div class="mb-model"><div class="mb-ml">Model answer</div>' + beat.model + '</div>' +
     (fire ? '<div class="mb-int" id="mbint"><div class="mb-int-h">&#128308;&nbsp; The interviewer cuts in</div><div class="mb-int-q">' + beat.int.q + '</div><button class="mb-irev" id="mbirev" type="button">Reveal a strong reply</button><div class="mb-int-a" id="mbinta"><div class="mb-int-al">A strong reply hits</div>' + beat.int.a + '</div>' + (beat.int2 ? '<div class="mb-int2" id="mbint2"><div class="mb-int-h2">&#128308;&nbsp; And they push again</div><div class="mb-int-q">' + beat.int2.q + '</div><button class="mb-irev" id="mbirev2" type="button">Reveal a strong reply</button><div class="mb-int-a" id="mbinta2"><div class="mb-int-al">A strong reply hits</div>' + beat.int2.a + '</div></div>' : '') + '</div>' : '') +
     '<div class="mb-act"><button class="mb-rev" id="mbrev" type="button">Reveal model</button>' +
-    '<button class="mb-next" id="mbnext" type="button">' + (last ? 'Finish' : 'Next beat →') + '</button></div>' +
+    '<button class="mb-next" id="mbnext" type="button">' + (last ? 'Finish' : 'Next beat &rarr;') + '</button></div>' +
     '<div class="mb-keys">Space reveal &middot; &rarr; or Enter next &middot; Esc close</div>';
   document.getElementById('mbrev').onclick = function () {
     mockbody.querySelector('.mb-model').classList.add('show');
@@ -2542,7 +2542,7 @@ function renderMockEnd() {
   mockLastInt = mockInterrupt ? Object.keys(mockIntSet).length : 0;
   const t = mockFmt(mockSec);
   let html = '<div class="mb-end"><div class="mb-end-h">Round complete</div>' +
-    '<div class="mb-end-t">You ran the full arc in <span class="mb-end-time">' + t + '</span>. A real design round is 35–45 min — this is the spine you expand into it.</div>' +
+    '<div class="mb-end-t">You ran the full arc in <span class="mb-end-time">' + t + '</span>. A real design round is 35&ndash;45 min &mdash; this is the spine you expand into it.</div>' +
     '<div class="mb-end-cv">Curveball this run: <b>' + mockBeats[mockCurveIdx].theme + '</b>. ' + curveballPool.length + ' rotate in &mdash; run again for a different one.</div>' +
     (mockInterrupt && Object.keys(mockIntSet).length ? '<div class="mb-end-int">Cut off on <b>' + Object.keys(mockIntSet).length + '</b> of ' + mockBeats.length + ' beats &mdash; the version that counts.</div>' : '') +
     '<div class="mb-score-q">How many of the six did you deliver cleanly, out loud?</div><div class="mb-score" id="mbscore">';
@@ -2559,9 +2559,9 @@ function renderMockEnd() {
       const score = parseInt(this.getAttribute('data-s'), 10), verdictEl = document.getElementById('mbverdict');
       mockLastScore = score;
       verdictEl.classList.add('show');
-      if (score >= 6) { verdictEl.style.background = 'var(--tealbg)'; verdictEl.style.color = '#0a5240'; verdictEl.innerHTML = '<b>Six for six.</b> You can carry the whole round end to end — now do it faster and under interruption.'; }
-      else if (score >= 4) { verdictEl.style.background = 'var(--accbg)'; verdictEl.style.color = 'var(--accink)'; verdictEl.innerHTML = '<b>' + score + ' / 6.</b> The spine holds. Re-run and target the two that wobbled until they’re automatic.'; }
-      else { verdictEl.style.background = 'var(--amberbg)'; verdictEl.style.color = '#5e3c0a'; verdictEl.innerHTML = '<b>' + score + ' / 6.</b> The arc isn’t solid yet — drill the weak beats in their own tabs, then run it again.'; }
+      if (score >= 6) { verdictEl.style.background = 'var(--tealbg)'; verdictEl.style.color = '#0a5240'; verdictEl.innerHTML = '<b>Six for six.</b> You can carry the whole round end to end &mdash; now do it faster and under interruption.'; }
+      else if (score >= 4) { verdictEl.style.background = 'var(--accbg)'; verdictEl.style.color = 'var(--accink)'; verdictEl.innerHTML = '<b>' + score + ' / 6.</b> The spine holds. Re-run and target the two that wobbled until they&rsquo;re automatic.'; }
+      else { verdictEl.style.background = 'var(--amberbg)'; verdictEl.style.color = '#5e3c0a'; verdictEl.innerHTML = '<b>' + score + ' / 6.</b> The arc isn&rsquo;t solid yet &mdash; drill the weak beats in their own tabs, then run it again.'; }
     };
   }
   document.getElementById('mbagain').onclick = openMock;
@@ -2773,7 +2773,7 @@ function buildSessReport() {
   html += '<div class="sr-foot">Generated from this session &middot; Content Pipeline deep-rehearsal trainer. Re-run the weak areas above tomorrow.</div>';
   document.getElementById('sessreport').innerHTML = html;
 }
-/* Serialize this session into a compact, shareable "CPR1." code string —
+/* Serialize this session into a compact, shareable "CPR1." code string &mdash;
    date, then drill / whiteboard / mock / mixed-fire tallies. Mirrors decodeSession. */
 function encodeSession() {
   const stats = sessStats(), now = new Date(), pad = function (x) { return x < 10 ? '0' + x : '' + x; };
@@ -2858,7 +2858,7 @@ function renderCompare() {
 }
 /* Render the whole overlay body: the "do this next" card, a stat card per
    surface (drill / whiteboard / mock / mixed fire), the carry-across-days code
-   widget, and the Save-PDF / Clear actions — then wire every button. */
+   widget, and the Save-PDF / Clear actions &mdash; then wire every button. */
 function renderSession() {
   const stats = sessStats();
   const dTot = stats.dTot, dDone = stats.dDone, dGot = stats.dGot, dShk = stats.dShk, dLeft = stats.dLeft, revisit = stats.revisit, wbGot = stats.wbGot, wbMiss = stats.wbMiss, missed = stats.missed, wbTot = stats.wbTot, wbDone = stats.wbDone, mScore = stats.mScore, mTime = stats.mTime, mRuns = stats.mRuns, mInt = stats.mInt;
@@ -2977,20 +2977,20 @@ for (let i = 0; i < stages.length; i++) {
   chain.appendChild(stageEl);
 }
 var pivots=[
-  { q:"The content is processed — now it must be tamper-proof on the device", chip:"\u2192 Signing (17)",
+  { q:"The content is processed &mdash; now it must be tamper-proof on the device", chip:"\u2192 Signing (17)",
     a:"The pipeline\'s output feeds the <b>signing</b> stage: the processed package hash goes to the HSM, which returns a signature stamped into the header. Devices verify it and reject unsigned packages. The pipeline produces the artifact; signing makes it trustable." },
-  { q:"Tenants see different content — how is that access isolated?", chip:"\u2192 Authz (18)",
-    a:"Every pipeline read/write is <b>tenant-scoped</b>: the JWT tenant claim becomes a query predicate, so processing and exports only ever touch one tenant\'s objects. Visibility and signing keys are provisioned per company — that\'s the authz topic." },
-  { q:"Per-device attributes drive what gets rendered — where do they live?", chip:"\u2192 EAV (21)",
-    a:"Custom per-device values come from the <b>EAV</b> store (definition + override, resolved by COALESCE). Those values are what the desired-state templates interpolate before hashing — the pipeline and reconciler both read them." },
+  { q:"Tenants see different content &mdash; how is that access isolated?", chip:"\u2192 Authz (18)",
+    a:"Every pipeline read/write is <b>tenant-scoped</b>: the JWT tenant claim becomes a query predicate, so processing and exports only ever touch one tenant\'s objects. Visibility and signing keys are provisioned per company &mdash; that\'s the authz topic." },
+  { q:"Per-device attributes drive what gets rendered &mdash; where do they live?", chip:"\u2192 EAV (21)",
+    a:"Custom per-device values come from the <b>EAV</b> store (definition + override, resolved by COALESCE). Those values are what the desired-state templates interpolate before hashing &mdash; the pipeline and reconciler both read them." },
   { q:"How does a device know it has the right content, and that it applied it?", chip:"\u2192 Desired-state (22)",
     a:"That\'s the <b>three-hash model</b>: desired (what it should have) vs deployed (what we sent) vs reported (what the device confirms). The pipeline\'s output hash becomes part of the desired hash; the reconciler closes the loop." },
-  { q:"A 10,000-row import finishes — how do operators find out?", chip:"\u2192 Notifications (20)",
+  { q:"A 10,000-row import finishes &mdash; how do operators find out?", chip:"\u2192 Notifications (20)",
     a:"Completion fans out through the <b>dual-channel notification</b> system: an in-app row (polled) plus an optional email (SES, per-tenant sender). Decoupled, so a failed email never blocks the import\'s success path." },
-  { q:"All this runs on AWS — how is the infrastructure itself locked down?", chip:"\u2192 AWS hardening (19)",
-    a:"The pipeline\'s blast radius is an AWS-security problem: the processor runs on a <b>least-privilege execution role</b> — read one bucket prefix, write one table, nothing else — the bucket has <b>Block Public Access</b> on with <b>SSE</b> at rest, and traffic to S3 and the DB rides <b>VPC endpoints</b> so it never touches the public internet. Uploads arrive through presigned URLs scoped to one key with a short TTL. That whole hardening posture is its own topic." },
-  { q:"All this infra — S3, Lambda, the queue, the IAM roles — how is it defined and deployed repeatably?", chip:"\u2192 IaC (23)",
-    a:"Declaratively, as <b>infrastructure as code</b> — Terraform or CDK — so the bucket, functions, roles, and event wiring are versioned and reproducible instead of click-ops. And there\'s a clean parallel worth naming: <b>IaC drift detection is to infrastructure what the reconciler is to data</b> — both compare a declared desired state against reality and converge it. Drawing that symmetry is a senior move." }
+  { q:"All this runs on AWS &mdash; how is the infrastructure itself locked down?", chip:"\u2192 AWS hardening (19)",
+    a:"The pipeline\'s blast radius is an AWS-security problem: the processor runs on a <b>least-privilege execution role</b> &mdash; read one bucket prefix, write one table, nothing else &mdash; the bucket has <b>Block Public Access</b> on with <b>SSE</b> at rest, and traffic to S3 and the DB rides <b>VPC endpoints</b> so it never touches the public internet. Uploads arrive through presigned URLs scoped to one key with a short TTL. That whole hardening posture is its own topic." },
+  { q:"All this infra &mdash; S3, Lambda, the queue, the IAM roles &mdash; how is it defined and deployed repeatably?", chip:"\u2192 IaC (23)",
+    a:"Declaratively, as <b>infrastructure as code</b> &mdash; Terraform or CDK &mdash; so the bucket, functions, roles, and event wiring are versioned and reproducible instead of click-ops. And there\'s a clean parallel worth naming: <b>IaC drift detection is to infrastructure what the reconciler is to data</b> &mdash; both compare a declared desired state against reality and converge it. Drawing that symmetry is a senior move." }
 ];
 /* render the pivot cards: one collapsible <details> per cross-topic link */
 const pivEl = document.getElementById('pivots');
@@ -3215,7 +3215,7 @@ document.addEventListener('keydown', function (event) {
 });
 /* Modal focus management: dialogs are aria-modal, so trap Tab inside the open
    overlay and restore focus to the trigger when it closes. The overlay set is
-   derived from the DOM — every [role=dialog][aria-modal] is auto-covered, so a
+   derived from the DOM &mdash; every [role=dialog][aria-modal] is auto-covered, so a
    newly added overlay can never be forgotten (the old keyov/mixov bug class). */
 (function () {
   const overlays = Array.prototype.slice.call(document.querySelectorAll('[role="dialog"][aria-modal="true"]'));
@@ -3303,15 +3303,15 @@ document.addEventListener('keydown', function (event) {
 /* ===== v77: stage header sync ===== */
 (function(){
   var cmpNotes={
-    walk:['Walkthrough','The dispatch flow, one step at a time — the mechanics you narrate before anyone cuts in.','Say the fork out loud — “one read, two sinks.” That single-read line is what they remember.'],
-    drill:['Probe Drill','Twenty graded follow-ups — the ones that separate a passing SDE2 from a Staff signal.','Commit to an answer before you reveal — saying it beats reading it. That’s the rep.'],
-    wb:['Whiteboard','Rebuild the whole pipeline from memory — nine cues, nothing in front of you.','Draw the boxes from memory first, then check — recall is the test, not recognition.'],
-    sys:['System Map','Zoom out to the six stages — and the exact points an interviewer pivots.','Lead with the flow, not the boxes — “upload lands, dispatch routes, sinks fan out.”'],
-    trade:['Trade-offs','The decisions they drill — each with the switch condition that picks a side.','Always say “pick when” — name the condition that flips the choice, not just the options.'],
-    model:['Model Answers','Full spoken scripts — the beats, in order, the way you’d actually say them.','Steal the frame, not the words — headline first, then the one risk you’d name.'],
-    num:['Numbers','Back-of-envelope the load — and know which number trips which ceiling.','Lead with the peak, not the average — ~1,157/s is the number that sets the ceiling.'],
-    rf:['Red Flags','What sinks the round — the anti-patterns, and what to say instead.','Name what the interviewer hears, not just the mistake — that’s the senior tell.'],
-    open:['30-Second','The opener and the close — matched to the altitude the question is asked at.','Match the altitude — open at the contract, not the code, and land on the one risk.']
+    walk:['Walkthrough','The dispatch flow, one step at a time \u2014 the mechanics you narrate before anyone cuts in.','Say the fork out loud \u2014 \u201Cone read, two sinks.\u201D That single-read line is what they remember.'],
+    drill:['Probe Drill','Twenty graded follow-ups \u2014 the ones that separate a passing SDE2 from a Staff signal.','Commit to an answer before you reveal \u2014 saying it beats reading it. That\u2019s the rep.'],
+    wb:['Whiteboard','Rebuild the whole pipeline from memory \u2014 nine cues, nothing in front of you.','Draw the boxes from memory first, then check \u2014 recall is the test, not recognition.'],
+    sys:['System Map','Zoom out to the six stages \u2014 and the exact points an interviewer pivots.','Lead with the flow, not the boxes \u2014 \u201Cupload lands, dispatch routes, sinks fan out.\u201D'],
+    trade:['Trade-offs','The decisions they drill \u2014 each with the switch condition that picks a side.','Always say \u201Cpick when\u201D \u2014 name the condition that flips the choice, not just the options.'],
+    model:['Model Answers','Full spoken scripts \u2014 the beats, in order, the way you\u2019d actually say them.','Steal the frame, not the words \u2014 headline first, then the one risk you\u2019d name.'],
+    num:['Numbers','Back-of-envelope the load \u2014 and know which number trips which ceiling.','Lead with the peak, not the average \u2014 ~1,157/s is the number that sets the ceiling.'],
+    rf:['Red Flags','What sinks the round \u2014 the anti-patterns, and what to say instead.','Name what the interviewer hears, not just the mistake \u2014 that\u2019s the senior tell.'],
+    open:['30-Second','The opener and the close \u2014 matched to the altitude the question is asked at.','Match the altitude \u2014 open at the contract, not the code, and land on the one risk.']
   };
   /* Mirror the active tab's label into the stage header and the desktop +
      mobile "companion" panels (view name, note, and pivot move from cmpNotes). */
@@ -3342,7 +3342,7 @@ document.addEventListener('keydown', function (event) {
   upd();
 })();
 
-/* v80: mobile nav strip — fade the scroll edges and keep the active view in view */
+/* v80: mobile nav strip &mdash; fade the scroll edges and keep the active view in view */
 (function () {
   const strip = document.querySelector('.sidebar .seg');
   if (!strip) return;

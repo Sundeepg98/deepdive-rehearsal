@@ -1,9 +1,9 @@
 <div class="pane" id="rf">
-    <div class="rflead">The moves that quietly tank a candidate on this topic. Each one is something a weaker answer actually says — what the interviewer hears, and the line that flips it.</div>
+    <div class="rflead">The moves that quietly tank a candidate on this topic. Each one is something a weaker answer actually says &mdash; what the interviewer hears, and the line that flips it.</div>
 
     <div class="rf">
       <div class="rf-bad"><span class="rf-x">&#10007;</span><span class="rf-t"><b>&ldquo;I'd query all the rows, then write them to the CSV.&rdquo;</b></span></div>
-      <div class="rf-tell">The driver buffers the <b>entire result set</b> in memory before your code runs — OOM at a million rows. The interviewer hears <i>&ldquo;never run this at scale.&rdquo;</i></div>
+      <div class="rf-tell">The driver buffers the <b>entire result set</b> in memory before your code runs &mdash; OOM at a million rows. The interviewer hears <i>&ldquo;never run this at scale.&rdquo;</i></div>
       <div class="rf-fix"><span class="rf-c">&rarr;</span><span class="rf-t">Server-side cursor, 100 rows at a time, piped with backpressure &mdash; <b>constant memory</b> at any row count.</span></div>
     </div>
 

@@ -32,7 +32,7 @@ function renderNav() {
   }
 })();
 /* Repaint the whole drill view: counters, progress bar, nav, and either the
-   current card or — once past the last card — the debrief/verdict screen. */
+   current card or &mdash; once past the last card &mdash; the debrief/verdict screen. */
 function renderD() {
   sGot.textContent = got; sGot.parentNode.classList.toggle('z', got === 0);
   sShk.textContent = shk; sShk.parentNode.classList.toggle('z', shk === 0);
@@ -111,14 +111,14 @@ function renderDebrief() {
       '<div class="nm">' + entry.signal + '</div><div class="tr"><span class="tier ' + tierClass[entry.tier] + '">' + entry.tier + '</span></div></div>';
   }
   let verdict;
-  if (pct >= 80) verdict = 'You\'re carrying the signals a senior loop grades on. The shaky ones are polish, not gaps — re-run those threads until the <b>senior-signal line</b> comes out unprompted.';
-  else if (pct >= 50) verdict = 'Solid core, real gaps. The signals you marked <b>Revisit</b> are exactly what an interviewer probes to separate levels — drill those threads to the last layer before the real round.';
-  else verdict = 'You know the happy path; the depth isn\'t there yet. Work the <b>Walkthrough</b> + <b>See the code</b>, then re-run — the follow-up chains are where this round is won or lost.';
+  if (pct >= 80) verdict = 'You\'re carrying the signals a senior loop grades on. The shaky ones are polish, not gaps &mdash; re-run those threads until the <b>senior-signal line</b> comes out unprompted.';
+  else if (pct >= 50) verdict = 'Solid core, real gaps. The signals you marked <b>Revisit</b> are exactly what an interviewer probes to separate levels &mdash; drill those threads to the last layer before the real round.';
+  else verdict = 'You know the happy path; the depth isn\'t there yet. Work the <b>Walkthrough</b> + <b>See the code</b>, then re-run &mdash; the follow-up chains are where this round is won or lost.';
   const weakBtn = shk > 0 ? '<button type="button" id="dweak" class="btn-sec">Drill my ' + shk + ' Revisit ' + (shk === 1 ? 'probe' : 'probes') + ' \u2192</button>' : '';
   dwrap.innerHTML = '<div class="card debrief"><div class="big">' + (mode === 'quick' ? 'Quick 5 debrief' : 'Interviewer debrief') + '</div>' +
     '<div class="sumline">' + got + ' solid &middot; ' + shk + ' to revisit &middot; ' + pct + '% ' + (mode === 'quick' ? 'of a quick 5' : 'signal coverage') + '</div>' +
     rows + '<div class="verdict">' + verdict + '</div>' + weakBtn +
-    '<button type="button" id="drestart">' + (mode === 'quick' ? 'Another quick 5 →' : 'Run the full round again') + '</button></div>';
+    '<button type="button" id="drestart">' + (mode === 'quick' ? 'Another quick 5 &rarr;' : 'Run the full round again') + '</button></div>';
   if (shk > 0) { document.getElementById('dweak').onclick = drillWeak; }
   document.getElementById('drestart').onclick = function () { setMode(mode); };
 }
@@ -239,10 +239,10 @@ function renderVerdict() {
       '<div class="nm">' + entry.signal + '</div><div class="tr"><span class="tier ' + tierClass[entry.tier] + '">' + entry.tier + '</span></div></div>';
   }
   let note;
-  if (rec.c === 'sh') note = 'Depth held under the Staff / EXTEND probes — that\'s exactly what tips a packet from Hire to <b>Strong Hire</b>.';
+  if (rec.c === 'sh') note = 'Depth held under the Staff / EXTEND probes &mdash; that\'s exactly what tips a packet from Hire to <b>Strong Hire</b>.';
   else if (rec.c === 'h') note = 'Strong coverage. To reach Strong Hire, the <b>Staff-tier</b> threads have to be solid, not just attempted.';
-  else if (rec.c === 'lh') note = 'Enough signal for a phone screen, not an onsite. The gap is <b>depth</b> — drill the multi-layer threads to the end.';
-  else note = 'Below bar — the happy path isn\'t enough. Work Walkthrough + See-the-code, then run the round again.';
+  else if (rec.c === 'lh') note = 'Enough signal for a phone screen, not an onsite. The gap is <b>depth</b> &mdash; drill the multi-layer threads to the end.';
+  else note = 'Below bar &mdash; the happy path isn\'t enough. Work Walkthrough + See-the-code, then run the round again.';
   let used = 22 * 60 - mockLeft;
   if (used < 0) used = 0;
   dwrap.innerHTML = '<div class="card debrief"><div class="rec ' + rec.c + '"><div class="lvl">' + rec.t + '</div>' +

@@ -84,3 +84,47 @@ honest, grep-able stylesheet rather than misleading partials.
 
 Editing now lands in a small, named file; the shipped artifact is regenerated,
 byte-identical, by `python3 build.py`.
+
+## Encoding standard and the gate (the invariant that replaces per-edit vigilance)
+
+The same glyph used to be written three ways across the tree -- raw UTF-8 bytes,
+`\u` escapes, and HTML entities -- with nothing enforcing a choice. That made every
+edit carry a silent-corruption risk (a hyphen typed in place of an em-dash is
+visually identical and slips past review), so each change needed a manual character
+census. A census on every edit is a symptom of a missing invariant, not a workflow.
+
+The fix is one enforced invariant: **source is ASCII-only.** No byte > 0x7F in any
+`src/**/*.{js,css,html}` file. Glyphs are written as:
+
+- **HTML entities** (`&mdash;`, `&rarr;`, ...) in markup contexts -- `.html` files and
+  JS strings assigned to `innerHTML`. The browser decodes them; a typo renders as
+  visible literal text (loud failure).
+- **`\u` escapes** (`\u2014`, ...) in JS plain-text sinks -- `.textContent`, `.value`.
+  The JS parser decodes them before assignment; a malformed escape is a parse error
+  (loud failure).
+- **never** as raw bytes -- the only representation that fails *silently*. Forbidden
+  and machine-checked.
+
+There is no single literal that works everywhere, because `innerHTML` and
+`textContent` decode differently -- so the representation is context-dictated, but
+both allowed forms are ASCII and both fail loudly. The enforced, global part is
+"ASCII-only".
+
+`tools/normalize_to_ascii.py` did the one-time migration (258 raw chars across 17
+files, deterministically -- not by hand). `make check` enforces it from then on,
+running five checks and blocking on any failure:
+
+| check | enforces |
+|---|---|
+| `ascii_guard` | source is ASCII-only |
+| `syntax_check` | every editable module parses (`node --check`; build-include aggregators skipped) |
+| `build_integrity` | build resolves, rebuilt deliverable matches, 9 panes + 7 overlays present |
+| `render` | panes/overlays render, no JS/reference errors, no horizontal overflow |
+| `entity_leak` | no HTML entity reaches visible text (catches the `textContent` trap) |
+
+The browser checks skip cleanly when Playwright/Chrome are absent, so `make check` is
+CI-safe. This is not theoretical: on its first run the gate caught a real defect --
+the `cmpNotes` coaching strings were entitized by the migration but are consumed via
+`textContent`, so `&mdash;` would have shown up literally. They were switched to `\u`
+escapes and the gate went green. Tooling finds the exceptions that per-edit vigilance
+misses.

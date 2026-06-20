@@ -159,7 +159,7 @@ function renderMockBeat() {
     '<div class="mb-model"><div class="mb-ml">Model answer</div>' + beat.model + '</div>' +
     (fire ? '<div class="mb-int" id="mbint"><div class="mb-int-h">&#128308;&nbsp; The interviewer cuts in</div><div class="mb-int-q">' + beat.int.q + '</div><button class="mb-irev" id="mbirev" type="button">Reveal a strong reply</button><div class="mb-int-a" id="mbinta"><div class="mb-int-al">A strong reply hits</div>' + beat.int.a + '</div>' + (beat.int2 ? '<div class="mb-int2" id="mbint2"><div class="mb-int-h2">&#128308;&nbsp; And they push again</div><div class="mb-int-q">' + beat.int2.q + '</div><button class="mb-irev" id="mbirev2" type="button">Reveal a strong reply</button><div class="mb-int-a" id="mbinta2"><div class="mb-int-al">A strong reply hits</div>' + beat.int2.a + '</div></div>' : '') + '</div>' : '') +
     '<div class="mb-act"><button class="mb-rev" id="mbrev" type="button">Reveal model</button>' +
-    '<button class="mb-next" id="mbnext" type="button">' + (last ? 'Finish' : 'Next beat →') + '</button></div>' +
+    '<button class="mb-next" id="mbnext" type="button">' + (last ? 'Finish' : 'Next beat &rarr;') + '</button></div>' +
     '<div class="mb-keys">Space reveal &middot; &rarr; or Enter next &middot; Esc close</div>';
   document.getElementById('mbrev').onclick = function () {
     mockbody.querySelector('.mb-model').classList.add('show');
@@ -193,7 +193,7 @@ function renderMockEnd() {
   mockLastInt = mockInterrupt ? Object.keys(mockIntSet).length : 0;
   const t = mockFmt(mockSec);
   let html = '<div class="mb-end"><div class="mb-end-h">Round complete</div>' +
-    '<div class="mb-end-t">You ran the full arc in <span class="mb-end-time">' + t + '</span>. A real design round is 35–45 min — this is the spine you expand into it.</div>' +
+    '<div class="mb-end-t">You ran the full arc in <span class="mb-end-time">' + t + '</span>. A real design round is 35&ndash;45 min &mdash; this is the spine you expand into it.</div>' +
     '<div class="mb-end-cv">Curveball this run: <b>' + mockBeats[mockCurveIdx].theme + '</b>. ' + curveballPool.length + ' rotate in &mdash; run again for a different one.</div>' +
     (mockInterrupt && Object.keys(mockIntSet).length ? '<div class="mb-end-int">Cut off on <b>' + Object.keys(mockIntSet).length + '</b> of ' + mockBeats.length + ' beats &mdash; the version that counts.</div>' : '') +
     '<div class="mb-score-q">How many of the six did you deliver cleanly, out loud?</div><div class="mb-score" id="mbscore">';
@@ -210,9 +210,9 @@ function renderMockEnd() {
       const score = parseInt(this.getAttribute('data-s'), 10), verdictEl = document.getElementById('mbverdict');
       mockLastScore = score;
       verdictEl.classList.add('show');
-      if (score >= 6) { verdictEl.style.background = 'var(--tealbg)'; verdictEl.style.color = '#0a5240'; verdictEl.innerHTML = '<b>Six for six.</b> You can carry the whole round end to end — now do it faster and under interruption.'; }
-      else if (score >= 4) { verdictEl.style.background = 'var(--accbg)'; verdictEl.style.color = 'var(--accink)'; verdictEl.innerHTML = '<b>' + score + ' / 6.</b> The spine holds. Re-run and target the two that wobbled until they’re automatic.'; }
-      else { verdictEl.style.background = 'var(--amberbg)'; verdictEl.style.color = '#5e3c0a'; verdictEl.innerHTML = '<b>' + score + ' / 6.</b> The arc isn’t solid yet — drill the weak beats in their own tabs, then run it again.'; }
+      if (score >= 6) { verdictEl.style.background = 'var(--tealbg)'; verdictEl.style.color = '#0a5240'; verdictEl.innerHTML = '<b>Six for six.</b> You can carry the whole round end to end &mdash; now do it faster and under interruption.'; }
+      else if (score >= 4) { verdictEl.style.background = 'var(--accbg)'; verdictEl.style.color = 'var(--accink)'; verdictEl.innerHTML = '<b>' + score + ' / 6.</b> The spine holds. Re-run and target the two that wobbled until they&rsquo;re automatic.'; }
+      else { verdictEl.style.background = 'var(--amberbg)'; verdictEl.style.color = '#5e3c0a'; verdictEl.innerHTML = '<b>' + score + ' / 6.</b> The arc isn&rsquo;t solid yet &mdash; drill the weak beats in their own tabs, then run it again.'; }
     };
   }
   document.getElementById('mbagain').onclick = openMock;

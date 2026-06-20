@@ -2570,15 +2570,16 @@ var stages=[
   { n:'Deployment', d:'push to devices in maintenance windows, batched' },
   { n:'Device fetch + report', d:'device pulls, applies, reports reported_hash' }
 ];
-var chain=document.getElementById('chain');
-for(var c2=0;c2<stages.length;c2++){
-  var st=stages[c2];
-  var el=document.createElement('div');
-  el.className='stg'+(st.cur?' cur':'');
-  el.innerHTML='<div class="ln"></div><div class="dot">'+(c2+1)+'</div>'+
-    '<div class="body"><div class="nm">'+st.n+(st.cur?'<span class="here">you are here</span>':'')+'</div>'+
-    '<div class="ds">'+st.d+'</div></div>';
-  chain.appendChild(el);
+/* render the stage chain: one numbered ".stg" row per stage, current one flagged */
+const chain = document.getElementById('chain');
+for (let i = 0; i < stages.length; i++) {
+  const stage = stages[i];
+  const stageEl = document.createElement('div');
+  stageEl.className = 'stg' + (stage.cur ? ' cur' : '');
+  stageEl.innerHTML = '<div class="ln"></div><div class="dot">' + (i + 1) + '</div>' +
+    '<div class="body"><div class="nm">' + stage.n + (stage.cur ? '<span class="here">you are here</span>' : '') + '</div>' +
+    '<div class="ds">' + stage.d + '</div></div>';
+  chain.appendChild(stageEl);
 }
 var pivots=[
   { q:"The content is processed — now it must be tamper-proof on the device", chip:"\u2192 Signing (17)",
@@ -2596,14 +2597,15 @@ var pivots=[
   { q:"All this infra — S3, Lambda, the queue, the IAM roles — how is it defined and deployed repeatably?", chip:"\u2192 IaC (23)",
     a:"Declaratively, as <b>infrastructure as code</b> — Terraform or CDK — so the bucket, functions, roles, and event wiring are versioned and reproducible instead of click-ops. And there\'s a clean parallel worth naming: <b>IaC drift detection is to infrastructure what the reconciler is to data</b> — both compare a declared desired state against reality and converge it. Drawing that symmetry is a senior move." }
 ];
-var pivEl=document.getElementById('pivots');
-for(var p2=0;p2<pivots.length;p2++){
-  var pv=pivots[p2];
-  var d=document.createElement('details');
-  d.className='piv';
-  d.innerHTML='<summary><span class="pq">'+pv.q+'</span><span class="chip">'+pv.chip+'</span></summary>'+
-    '<div class="pa">'+pv.a+'</div>';
-  pivEl.appendChild(d);
+/* render the pivot cards: one collapsible <details> per cross-topic link */
+const pivEl = document.getElementById('pivots');
+for (let i = 0; i < pivots.length; i++) {
+  const pivot = pivots[i];
+  const detailsEl = document.createElement('details');
+  detailsEl.className = 'piv';
+  detailsEl.innerHTML = '<summary><span class="pq">' + pivot.q + '</span><span class="chip">' + pivot.chip + '</span></summary>' +
+    '<div class="pa">' + pivot.a + '</div>';
+  pivEl.appendChild(detailsEl);
 }
 
 /* ============ MODEL ANSWERS ============ */

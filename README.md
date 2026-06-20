@@ -113,6 +113,21 @@ python3 build.py                 # → deepdive_content_pipeline_rehearsal.html
 python3 build.py out.html        # → a custom path
 ```
 
+## Development
+
+```
+make build        # assemble src/ -> the deliverable
+make check        # dependency-free integrity check (rebuild + verify, no browser)
+make test-render  # functional browser test (needs: npm i playwright && npx playwright install chromium)
+```
+
+`make check` rebuilds the source and asserts the output is **byte-identical to
+the committed deliverable** (so source and shipped file never drift), that no
+include markers are left unresolved, and that the 9 panes + 7 overlays are
+present. `make test-render` loads the built file in a real browser and confirms
+every pane switches, every overlay exists, and there are no JS errors or
+horizontal overflow.
+
 ## Design notes
 
 - **Standalone & offline is a hard constraint.** Fonts/icons are inlined; no

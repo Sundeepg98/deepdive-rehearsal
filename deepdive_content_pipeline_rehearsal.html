@@ -2764,14 +2764,28 @@ for (let i = 0; i < selectorBtns.length; i++) {
 renderModel();
 
 /* ============ NUMBERS / NALSD ============ */
-function fmtN(x){ if(!isFinite(x))x=0; return Math.round(x).toLocaleString('en-US'); }
-function fmtTB(tb){ if(!isFinite(tb))tb=0; if(tb>=1000)return (tb/1000).toFixed(tb>=10000?0:1)+' PB'; if(tb>=10)return tb.toFixed(0)+' TB'; return tb.toFixed(2)+' TB'; }
-function nval(id){ var v=+document.getElementById(id).value; return isFinite(v)&&v>0?v:0; }
-function calcNumbers(){
-  var perDay=nval('n_obj'), sizeMB=nval('n_size'), procS=nval('n_proc'), peakR=nval('n_peak');
-  var avg=perDay/86400, peak=avg*peakR, conc=peak*procS, conn=conc;
-  var stDay=perDay*sizeMB/1e6, stYr=stDay*365, puts=perDay, putCost=puts/1000*0.005;
-  var rows=[
+/* Format an integer with thousands separators (NaN-safe). */
+function fmtN(x) { if (!isFinite(x)) x = 0; return Math.round(x).toLocaleString('en-US'); }
+
+/* Format a terabyte quantity, scaling up to PB and trimming precision as it grows. */
+function fmtTB(tb) {
+  if (!isFinite(tb)) tb = 0;
+  if (tb >= 1000) return (tb / 1000).toFixed(tb >= 10000 ? 0 : 1) + ' PB';
+  if (tb >= 10) return tb.toFixed(0) + ' TB';
+  return tb.toFixed(2) + ' TB';
+}
+
+/* Read a positive number from an input by id, defaulting to 0. */
+function nval(id) { const v = +document.getElementById(id).value; return isFinite(v) && v > 0 ? v : 0; }
+
+/* Back-of-envelope capacity model: derive throughput, concurrency, connection,
+   storage and cost figures from the four inputs, flagging the rows that breach
+   a known ceiling (Lambda's 1,000 default, a ~100-connection Postgres pool). */
+function calcNumbers() {
+  const perDay = nval('n_obj'), sizeMB = nval('n_size'), procS = nval('n_proc'), peakR = nval('n_peak');
+  const avg = perDay / 86400, peak = avg * peakR, conc = peak * procS, conn = conc;
+  const stDay = perDay * sizeMB / 1e6, stYr = stDay * 365, puts = perDay, putCost = puts / 1000 * 0.005;
+  const rows=[
     {k:'Average throughput', v:fmtN(avg),u:'/s', n:'objects/day \u00F7 86,400 seconds', over:false},
     {k:'Peak throughput', v:fmtN(peak),u:'/s', n:'average \u00D7 '+fmtN(peakR)+' peak ratio', over:false},
     {k:'Lambda concurrency at peak', v:fmtN(conc),u:'', n:conc>1000?'exceeds the 1,000 default \u2014 RDS Proxy, or buffer through SQS':'peak/s \u00D7 processing time \u2014 within the 1,000 default', over:conc>1000},
@@ -2779,97 +2793,141 @@ function calcNumbers(){
     {k:'Storage written / day', v:fmtTB(stDay).split(' ')[0],u:fmtTB(stDay).split(' ')[1], n:fmtTB(stYr)+' per year of raw objects', over:false},
     {k:'S3 PUTs / day', v:fmtN(puts),u:'', n:'\u2248 $'+putCost.toFixed(2)+'/day in PUT requests alone', over:false}
   ];
-  var h='';
-  for(var i=0;i<rows.length;i++){ var r=rows[i];
-    h+='<div class="nrow'+(r.over?' over':'')+'"><div class="nrow-k">'+r.k+'</div><div class="nrow-v">'+r.v+'<span class="nv-u">'+(r.u||'')+'</span></div><div class="nrow-n">'+r.n+'</div></div>'; }
-  document.getElementById('nout').innerHTML=h;
+  let html = '';
+  for (let i = 0; i < rows.length; i++) {
+    const row = rows[i];
+    html += '<div class="nrow' + (row.over ? ' over' : '') + '"><div class="nrow-k">' + row.k + '</div><div class="nrow-v">' + row.v + '<span class="nv-u">' + (row.u || '') + '</span></div><div class="nrow-n">' + row.n + '</div></div>';
+  }
+  document.getElementById('nout').innerHTML = html;
 }
-['n_obj','n_size','n_proc','n_peak'].forEach(function(id){ document.getElementById(id).addEventListener('input',calcNumbers); });
+['n_obj', 'n_size', 'n_proc', 'n_peak'].forEach(function (id) { document.getElementById(id).addEventListener('input', calcNumbers); });
 calcNumbers();
 
 /* ============ TABS + RAIL + KEYBOARD ============ */
-var segBtns=document.querySelectorAll('.seg button'),panes=document.querySelectorAll('.pane');
-var railEl=document.getElementById('rail');
-var railPos={walk:25,drill:50,wb:75,sys:100};
-var current='walk';
-function switchTab(t){
-  for(var k=0;k<segBtns.length;k++)segBtns[k].classList.toggle('on',segBtns[k].getAttribute('data-tab')===t);
-  for(var p=0;p<panes.length;p++)panes[p].classList.toggle('on',panes[p].id===t);
-  railEl.style.width=railPos[t]+'%'; current=t;
+/* ============ TABS + RAIL + KEYBOARD ============ */
+const segBtns = document.querySelectorAll('.seg button');
+const panes = document.querySelectorAll('.pane');
+const railEl = document.getElementById('rail');
+const railPos = { walk: 25, drill: 50, wb: 75, sys: 100 };
+var current = 'walk';
+/* Activate a pane: toggle the segmented-control buttons and the panes, slide the
+   progress rail to this tab's mark, and record it as the current pane. */
+function switchTab(t) {
+  for (let i = 0; i < segBtns.length; i++) segBtns[i].classList.toggle('on', segBtns[i].getAttribute('data-tab') === t);
+  for (let i = 0; i < panes.length; i++) panes[i].classList.toggle('on', panes[i].id === t);
+  railEl.style.width = railPos[t] + '%';
+  current = t;
 }
-for(var b=0;b<segBtns.length;b++){ segBtns[b].onclick=function(){switchTab(this.getAttribute('data-tab'));}; }
-document.addEventListener('keydown',function(e){
-  var tag=(e.target.tagName||'').toLowerCase();
-  if(tag==='input'||tag==='textarea')return;
-  if(mockov.classList.contains('open')||cramov.classList.contains('open')||sessov.classList.contains('open')||document.getElementById('mixov').classList.contains('open')||document.getElementById('planov').classList.contains('open')||document.getElementById('scopeov').classList.contains('open')||document.getElementById('keyov').classList.contains('open'))return;
-  if(e.key==='?'){e.preventDefault();openKeys();return;}
-  var key=e.key.toLowerCase();
-  var tabKeys={q:'walk',w:'drill',e:'wb',r:'sys',t:'trade',y:'model',u:'num',i:'rf',o:'open'};
-  if(tabKeys[key]){switchTab(tabKeys[key]);return;}
-  if(current==='walk'){
-    if(e.key==='ArrowLeft'&&wi>0){wi--;renderW();}
-    if(e.key==='ArrowRight'&&wi<steps.length-1){wi++;renderW();}
-  } else if(current==='drill'){
-    var adv=document.getElementById('adv');
-    if((e.key===' '||e.key==='Enter')&&adv){e.preventDefault();adv.click();}
-    if(key==='1'){var jg=document.getElementById('jg');if(jg)jg.click();}
-    if(key==='2'){var js=document.getElementById('js');if(js)js.click();}
+for (let i = 0; i < segBtns.length; i++) {
+  segBtns[i].onclick = function () { switchTab(this.getAttribute('data-tab')); };
+}
+/* Global keyboard shortcuts. Ignored while typing in a field, and suppressed
+   whenever any overlay is open (the overlay's own handlers take over). */
+document.addEventListener('keydown', function (event) {
+  const activeTag = (event.target.tagName || '').toLowerCase();
+  if (activeTag === 'input' || activeTag === 'textarea') return;
+  if (mockov.classList.contains('open') || cramov.classList.contains('open') || sessov.classList.contains('open') || document.getElementById('mixov').classList.contains('open') || document.getElementById('planov').classList.contains('open') || document.getElementById('scopeov').classList.contains('open') || document.getElementById('keyov').classList.contains('open')) return;
+  if (event.key === '?') { event.preventDefault(); openKeys(); return; }
+  const key = event.key.toLowerCase();
+  /* q..o jump straight to a pane (the QWERTY row mirrors the tab order) */
+  const tabKeys = { q: 'walk', w: 'drill', e: 'wb', r: 'sys', t: 'trade', y: 'model', u: 'num', i: 'rf', o: 'open' };
+  if (tabKeys[key]) { switchTab(tabKeys[key]); return; }
+  if (current === 'walk') {
+    /* arrows step through the walkthrough */
+    if (event.key === 'ArrowLeft' && wi > 0) { wi--; renderW(); }
+    if (event.key === 'ArrowRight' && wi < steps.length - 1) { wi++; renderW(); }
+  } else if (current === 'drill') {
+    /* space/enter advances; 1 and 2 self-grade the current card */
+    const advBtn = document.getElementById('adv');
+    if ((event.key === ' ' || event.key === 'Enter') && advBtn) { event.preventDefault(); advBtn.click(); }
+    if (key === '1') { const jgBtn = document.getElementById('jg'); if (jgBtn) jgBtn.click(); }
+    if (key === '2') { const jsBtn = document.getElementById('js'); if (jsBtn) jsBtn.click(); }
   }
 });
-/* modal focus management — dialogs are aria-modal, so trap & restore focus */
-(function(){
-  /* overlay registry derived from the DOM: every [role=dialog][aria-modal] is auto-covered by the focus trap + global Escape, so a new overlay can't be forgotten (root cause of the keyov/mixov bugs) */
-  var ovs=Array.prototype.slice.call(document.querySelectorAll('[role="dialog"][aria-modal="true"]'));
-  var ovReturn=null;
-  function focusables(ov){
-    var nodes=ov.querySelectorAll('button,[href],input,textarea,select,[tabindex]:not([tabindex="-1"])');
-    return Array.prototype.filter.call(nodes,function(el){return !el.disabled&&el.offsetParent!==null;});
+/* Modal focus management: dialogs are aria-modal, so trap Tab inside the open
+   overlay and restore focus to the trigger when it closes. The overlay set is
+   derived from the DOM — every [role=dialog][aria-modal] is auto-covered, so a
+   newly added overlay can never be forgotten (the old keyov/mixov bug class). */
+(function () {
+  const overlays = Array.prototype.slice.call(document.querySelectorAll('[role="dialog"][aria-modal="true"]'));
+  let returnFocusTo = null;
+  /* the tabbable, visible elements inside an overlay */
+  function getFocusable(overlay) {
+    const nodes = overlay.querySelectorAll('button,[href],input,textarea,select,[tabindex]:not([tabindex="-1"])');
+    return Array.prototype.filter.call(nodes, function (el) { return !el.disabled && el.offsetParent !== null; });
   }
-  function curOv(){for(var i=0;i<ovs.length;i++)if(ovs[i].classList.contains('open'))return ovs[i];return null;}
-  ovs.forEach(function(ov){
-    ov.__open=ov.classList.contains('open');
-    new MutationObserver(function(){
-      var now=ov.classList.contains('open');
-      if(now&&!ov.__open){ov.__open=true;ovReturn=document.activeElement;setTimeout(function(){var f=focusables(ov);if(f.length)f[0].focus();},0);}
-      else if(!now&&ov.__open){ov.__open=false;if(ovReturn&&ovReturn.focus){try{ovReturn.focus();}catch(e){}}ovReturn=null;}
-    }).observe(ov,{attributes:true,attributeFilter:['class']});
+  /* whichever overlay is currently open, or null */
+  function openOverlay() { for (let i = 0; i < overlays.length; i++) if (overlays[i].classList.contains('open')) return overlays[i]; return null; }
+  /* watch each overlay's class: on open, remember the trigger and move focus in; on close, restore it */
+  overlays.forEach(function (overlay) {
+    overlay.__open = overlay.classList.contains('open');
+    new MutationObserver(function () {
+      const isOpen = overlay.classList.contains('open');
+      if (isOpen && !overlay.__open) {
+        overlay.__open = true;
+        returnFocusTo = document.activeElement;
+        setTimeout(function () { const focusable = getFocusable(overlay); if (focusable.length) focusable[0].focus(); }, 0);
+      } else if (!isOpen && overlay.__open) {
+        overlay.__open = false;
+        if (returnFocusTo && returnFocusTo.focus) { try { returnFocusTo.focus(); } catch (e) {} }
+        returnFocusTo = null;
+      }
+    }).observe(overlay, { attributes: true, attributeFilter: ['class'] });
   });
-  document.addEventListener('keydown',function(e){
-    if(e.key!=='Tab')return;
-    var ov=curOv();if(!ov)return;
-    var f=focusables(ov);if(!f.length){e.preventDefault();return;}
-    var first=f[0],last=f[f.length-1],a=document.activeElement;
-    if(!ov.contains(a)){e.preventDefault();first.focus();return;}
-    if(e.shiftKey&&a===first){e.preventDefault();last.focus();}
-    else if(!e.shiftKey&&a===last){e.preventDefault();first.focus();}
-  },true);
-  /* unified Escape: close whichever overlay is open via its own close button (covers all overlays; correct per-overlay cleanup) */
-  document.addEventListener('keydown',function(e){if(e.key!=='Escape')return;var ov=curOv();if(!ov)return;var x=ov.querySelector('.mock-x,.cram-x');if(x)x.click();});
+  /* Tab / Shift-Tab cycle within the open overlay */
+  document.addEventListener('keydown', function (event) {
+    if (event.key !== 'Tab') return;
+    const overlay = openOverlay();
+    if (!overlay) return;
+    const focusable = getFocusable(overlay);
+    if (!focusable.length) { event.preventDefault(); return; }
+    const first = focusable[0], last = focusable[focusable.length - 1], active = document.activeElement;
+    if (!overlay.contains(active)) { event.preventDefault(); first.focus(); return; }
+    if (event.shiftKey && active === first) { event.preventDefault(); last.focus(); }
+    else if (!event.shiftKey && active === last) { event.preventDefault(); first.focus(); }
+  }, true);
+  /* unified Escape: close whichever overlay is open via its own close button */
+  document.addEventListener('keydown', function (event) {
+    if (event.key !== 'Escape') return;
+    const overlay = openOverlay();
+    if (!overlay) return;
+    const closeBtn = overlay.querySelector('.mock-x,.cram-x');
+    if (closeBtn) closeBtn.click();
+  });
 })();
 
 /* ===== shell: mobile tools sheet (v75) ===== */
-(function(){
-  var fab=document.getElementById('toolsfab');
-  var mb=document.querySelector('.mockbar');
-  if(fab){fab.addEventListener('click',function(e){e.stopPropagation();document.body.classList.toggle('tools-open');});}
-  document.addEventListener('click',function(e){
-    if(!document.body.classList.contains('tools-open'))return;
-    if(mb&&mb.contains(e.target))return;
-    if(fab&&fab.contains(e.target))return;
+/* The floating "tools" button toggles the mock-bar sheet on mobile; a click
+   outside it (or on any sheet button other than the toggles) closes it. */
+(function () {
+  const toolsFab = document.getElementById('toolsfab');
+  const mockbar = document.querySelector('.mockbar');
+  if (toolsFab) {
+    toolsFab.addEventListener('click', function (event) { event.stopPropagation(); document.body.classList.toggle('tools-open'); });
+  }
+  document.addEventListener('click', function (event) {
+    if (!document.body.classList.contains('tools-open')) return;
+    if (mockbar && mockbar.contains(event.target)) return;
+    if (toolsFab && toolsFab.contains(event.target)) return;
     document.body.classList.remove('tools-open');
   });
-  if(mb){mb.addEventListener('click',function(e){
-    var btn=e.target.closest&&e.target.closest('button');if(!btn)return;
-    if(btn.id==='inttog'||btn.id==='themetog')return;
-    document.body.classList.remove('tools-open');
-  });}
+  if (mockbar) {
+    mockbar.addEventListener('click', function (event) {
+      const btn = event.target.closest && event.target.closest('button');
+      if (!btn) return;
+      if (btn.id === 'inttog' || btn.id === 'themetog') return;
+      document.body.classList.remove('tools-open');
+    });
+  }
 })();
 
 
 /* ===== v76: reset scroll to top on view switch ===== */
-(function(){
-  var nav=document.querySelectorAll('.sidebar .seg button');
-  for(var i=0;i<nav.length;i++){ nav[i].addEventListener('click',function(){ window.scrollTo(0,0); }); }
+(function () {
+  const navButtons = document.querySelectorAll('.sidebar .seg button');
+  for (let i = 0; i < navButtons.length; i++) {
+    navButtons[i].addEventListener('click', function () { window.scrollTo(0, 0); });
+  }
 })();
 
 
@@ -2886,42 +2944,62 @@ document.addEventListener('keydown',function(e){
     rf:['Red Flags','What sinks the round — the anti-patterns, and what to say instead.','Name what the interviewer hears, not just the mistake — that’s the senior tell.'],
     open:['30-Second','The opener and the close — matched to the altitude the question is asked at.','Match the altitude — open at the contract, not the code, and land on the one risk.']
   };
-  function upd(){
-    var b=document.querySelector('.sidebar .seg button.on'),sh=document.getElementById('stagehead');
-    if(!b||!sh)return;
-    var nm=b.querySelector('span:not(.n)'),kk=b.querySelector('.n');
-    sh.textContent='';
-    var k=document.createElement('div');k.className='sh-kick';k.textContent=kk?kk.textContent:'';
-    var n=document.createElement('div');n.className='sh-name';n.textContent=nm?nm.textContent:'';
-    sh.appendChild(k);sh.appendChild(n);
-    sh.classList.remove('headin');void sh.offsetWidth;sh.classList.add('headin');
-    var _tb=b.getAttribute('data-tab'),_cv=document.getElementById('cmpView'),_cn=document.getElementById('cmpNote');var _cm=document.getElementById('cmpMove'),_mv=document.getElementById('mCmpView'),_mn=document.getElementById('mCmpNote'),_mm=document.getElementById('mCmpMove');if(cmpNotes[_tb]){if(_cv)_cv.textContent=cmpNotes[_tb][0];if(_cn)_cn.textContent=cmpNotes[_tb][1];if(_cm)_cm.textContent=cmpNotes[_tb][2];if(_mv)_mv.textContent=cmpNotes[_tb][0];if(_mn)_mn.textContent=cmpNotes[_tb][1];if(_mm)_mm.textContent=cmpNotes[_tb][2];}
+  /* Mirror the active tab's label into the stage header and the desktop +
+     mobile "companion" panels (view name, note, and pivot move from cmpNotes). */
+  function upd() {
+    const activeBtn = document.querySelector('.sidebar .seg button.on');
+    const stageHead = document.getElementById('stagehead');
+    if (!activeBtn || !stageHead) return;
+    const nameSpan = activeBtn.querySelector('span:not(.n)'), kickSpan = activeBtn.querySelector('.n');
+    stageHead.textContent = '';
+    const kickEl = document.createElement('div'); kickEl.className = 'sh-kick'; kickEl.textContent = kickSpan ? kickSpan.textContent : '';
+    const nameEl = document.createElement('div'); nameEl.className = 'sh-name'; nameEl.textContent = nameSpan ? nameSpan.textContent : '';
+    stageHead.appendChild(kickEl); stageHead.appendChild(nameEl);
+    stageHead.classList.remove('headin'); void stageHead.offsetWidth; stageHead.classList.add('headin');
+    const tab = activeBtn.getAttribute('data-tab');
+    const deskView = document.getElementById('cmpView'), deskNote = document.getElementById('cmpNote'), deskMove = document.getElementById('cmpMove');
+    const mobileView = document.getElementById('mCmpView'), mobileNote = document.getElementById('mCmpNote'), mobileMove = document.getElementById('mCmpMove');
+    if (cmpNotes[tab]) {
+      if (deskView) deskView.textContent = cmpNotes[tab][0];
+      if (deskNote) deskNote.textContent = cmpNotes[tab][1];
+      if (deskMove) deskMove.textContent = cmpNotes[tab][2];
+      if (mobileView) mobileView.textContent = cmpNotes[tab][0];
+      if (mobileNote) mobileNote.textContent = cmpNotes[tab][1];
+      if (mobileMove) mobileMove.textContent = cmpNotes[tab][2];
+    }
   }
-  var nav=document.querySelectorAll('.sidebar .seg button');
-  for(var i=0;i<nav.length;i++)nav[i].addEventListener('click',function(){upd();});
+  const navButtons = document.querySelectorAll('.sidebar .seg button');
+  for (let i = 0; i < navButtons.length; i++) navButtons[i].addEventListener('click', function () { upd(); });
   upd();
 })();
 
-/* v80: mobile nav strip fade + keep active view in view */
-(function(){
- var strip=document.querySelector('.sidebar .seg'); if(!strip)return;
- function fades(){
-  var sl=strip.scrollLeft>4, sr=strip.scrollLeft+strip.clientWidth<strip.scrollWidth-4;
-  strip.style.setProperty('--fl', sl?'24px':'0px');
-  strip.style.setProperty('--fr', sr?'24px':'0px');
- }
- function ensureVis(){
-  if(!window.matchMedia('(max-width:919px)').matches)return;
-  var btn=strip.querySelector('button.on'); if(!btn)return;
-  var s=strip.getBoundingClientRect(), b=btn.getBoundingClientRect();
-  if(b.left<s.left+10||b.right>s.right-10){ btn.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth',inline:'center',block:'nearest'}); }
- }
- strip.addEventListener('scroll',fades,{passive:true});
- window.addEventListener('resize',function(){fades();});
- var btns=strip.querySelectorAll('button');
- for(var i=0;i<btns.length;i++)btns[i].addEventListener('click',function(){ setTimeout(function(){fades();ensureVis();},30); });
- if(document.fonts&&document.fonts.ready){document.fonts.ready.then(fades);}
- fades();
+/* v80: mobile nav strip — fade the scroll edges and keep the active view in view */
+(function () {
+  const strip = document.querySelector('.sidebar .seg');
+  if (!strip) return;
+  /* show a fade hint on whichever edge still has strip to scroll toward */
+  function updateFades() {
+    const scrolledLeft = strip.scrollLeft > 4;
+    const scrolledRight = strip.scrollLeft + strip.clientWidth < strip.scrollWidth - 4;
+    strip.style.setProperty('--fl', scrolledLeft ? '24px' : '0px');
+    strip.style.setProperty('--fr', scrolledRight ? '24px' : '0px');
+  }
+  /* on mobile, scroll the active button back into view if it's clipped */
+  function ensureActiveVisible() {
+    if (!window.matchMedia('(max-width:919px)').matches) return;
+    const activeBtn = strip.querySelector('button.on');
+    if (!activeBtn) return;
+    const stripRect = strip.getBoundingClientRect(), btnRect = activeBtn.getBoundingClientRect();
+    if (btnRect.left < stripRect.left + 10 || btnRect.right > stripRect.right - 10) {
+      activeBtn.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion:reduce)').matches ? 'auto' : 'smooth', inline: 'center', block: 'nearest' });
+    }
+  }
+  strip.addEventListener('scroll', updateFades, { passive: true });
+  window.addEventListener('resize', function () { updateFades(); });
+  const buttons = strip.querySelectorAll('button');
+  for (let i = 0; i < buttons.length; i++) buttons[i].addEventListener('click', function () { setTimeout(function () { updateFades(); ensureActiveVisible(); }, 30); });
+  if (document.fonts && document.fonts.ready) { document.fonts.ready.then(updateFades); }
+  updateFades();
 })();
 
 </script>

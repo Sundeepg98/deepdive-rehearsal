@@ -10,6 +10,8 @@
     --teal:#0F6E56; --tealbg:#E7F2EE; --red:#A32D2D; --redbg:#F8EDEC; --amber:#9A5B0B; --amberbg:#FBF1E3;
     --indigo:#4338CA; --indigobg:#ECEBFB;
     --code:#2A2740; --codeink:#E7E4F5;
+    /* system-map theme-flip tokens (inherit across the shadow boundary) */
+    --sm-line:#E0DBD1; --sm-dot-bg:#F0ECE4; --sm-card-bg:#FCFBF9; --sm-pa-fg:#4a463f; --sm-here-fg:#fff;
   }
   *{margin:0;padding:0;box-sizing:border-box}
   html{scroll-behavior:smooth}
@@ -478,32 +480,10 @@
   .inttog[aria-pressed="true"] .inttog-dot{background:var(--amber)}
   .inttog[aria-pressed="true"] .inttog-dot::after{left:15px}
   .inttog b{font-weight:800}
-  /* system map */
-  .sm-intro{font-size:12.5px;color:var(--mut);margin-bottom:18px}
-  .chain{position:relative;padding-left:8px}
-  .stg{position:relative;display:flex;gap:14px;padding:0 0 18px 0}
-  .stg:last-child{padding-bottom:0}
-  .stg .ln{position:absolute;left:13px;top:28px;bottom:-2px;width:2px;background:#E0DBD1}
-  .stg:last-child .ln{display:none}
-  .stg .dot{flex:none;width:28px;height:28px;border-radius:50%;background:#F0ECE4;border:2px solid #D6D0C5;display:flex;align-items:center;justify-content:center;font:700 11px ui-monospace,monospace;color:var(--mut2);z-index:1}
-  .stg .body{padding-top:2px}
-  .stg .nm{font-size:14px;font-weight:680}
-  .stg .ds{font-size:12px;color:var(--mut);margin-top:1px}
   
   
   
 
-  .pivots{margin-top:6px}
-  .piv-k{font-size:11px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--acc);margin-bottom:4px}
-  .piv-sub{font-size:12px;color:var(--mut);margin-bottom:14px}
-  .piv{border:1px solid var(--bd);border-radius:11px;margin-bottom:9px;overflow:hidden;background:#FCFBF9}
-  .piv summary{list-style:none;cursor:pointer;padding:13px 15px;display:flex;align-items:flex-start;gap:11px}
-  .piv summary::-webkit-details-marker{display:none}
-  .piv .pq{font-size:13px;font-weight:600;color:var(--ink);line-height:1.4}
-  .piv .chip{flex:none;font-size:9.5px;font-weight:800;letter-spacing:.3px;color:var(--indigo);background:var(--indigobg);border:1px solid #cfc7f0;border-radius:6px;padding:3px 8px;white-space:nowrap;margin-top:1px;margin-left:auto}
-  .piv .pa{padding:0 15px 14px 41px;font-size:12px;color:#4a463f}
-  .piv .pa b{color:var(--accink)}
-  .piv[open] summary .pq::after{content:" \2014 bridge:";color:var(--mut2);font-weight:700}
 
   .step-sub{font-size:12.5px;color:var(--mut);margin-bottom:6px}
   .wb-count{font-family:var(--mono);font-size:11px;font-weight:800;color:var(--acc);letter-spacing:.3px;margin-bottom:14px}
@@ -581,10 +561,11 @@ html[data-theme="dark"]{
   --teal:#4FCDAB; --tealbg:#143028; --red:#F08A8A; --redbg:#3A2020;
   --amber:#E5A24A; --amberbg:#352712; --indigo:#9D93F0; --indigobg:#24223C;
   --code:#15131D; --codeink:#E7E4F5;
+  --sm-line:#3A3642; --sm-dot-bg:#2A2730; --sm-card-bg:#262430; --sm-pa-fg:#C7C2BA; --sm-here-fg:#1A1622;
 }
 html[data-theme="dark"] body{background:var(--bg)}
 /* near-white card surfaces -> dark card */
-html[data-theme="dark"] details.disc,html[data-theme="dark"] .piv,html[data-theme="dark"] .ss-card,html[data-theme="dark"] .thread,html[data-theme="dark"] .ss-carry,html[data-theme="dark"] .cs-30,html[data-theme="dark"] .op-hooks,html[data-theme="dark"] .fb.n,html[data-theme="dark"] .ins{background:#262430}
+html[data-theme="dark"] details.disc,html[data-theme="dark"] .ss-card,html[data-theme="dark"] .thread,html[data-theme="dark"] .ss-carry,html[data-theme="dark"] .cs-30,html[data-theme="dark"] .op-hooks,html[data-theme="dark"] .fb.n,html[data-theme="dark"] .ins{background:#262430}
 /* light purple tints -> dark purple */
 html[data-theme="dark"] .ans,html[data-theme="dark"] .verdict,html[data-theme="dark"] .wb-foot,html[data-theme="dark"] .op-foot,html[data-theme="dark"] .fu .fa{background:#2A2540}
 /* inline code variants */
@@ -593,10 +574,9 @@ html[data-theme="dark"] .cram-body code{background:#2C2740}
 /* curveball badge (peach) -> dark amber */
 html[data-theme="dark"] .mxb-curve{background:#3A2814}
 /* warm/gray surfaces */
-html[data-theme="dark"] .stg .dot,html[data-theme="dark"] .mq,html[data-theme="dark"] .modetog{background:#2A2730}
+html[data-theme="dark"] .mq,html[data-theme="dark"] .modetog{background:#2A2730}
 html[data-theme="dark"] .kbd-hint kbd{background:#2E2A35;border-color:#46424E}
 html[data-theme="dark"] .rail,html[data-theme="dark"] .dbar{background:#211F28}
-html[data-theme="dark"] .stg .ln{background:#3A3642}
 html[data-theme="dark"] .dots i{background:#44404C}
 html[data-theme="dark"] .debrief .btn-sec:hover{background:#1A3A30}
 html[data-theme="dark"] .inttog-dot{background:#56525E}
@@ -610,7 +590,6 @@ html[data-theme="dark"] .sr-stat{color:#D8D4CC}
 html[data-theme="dark"] .verdict,html[data-theme="dark"] .ans,html[data-theme="dark"] .fu .fa{color:#DAD6CE}
 html[data-theme="dark"] .judge button{background:#262430}
 html[data-theme="dark"] .fu .fa b{color:#E8BC78}
-html[data-theme="dark"] .piv .pa{color:#C7C2BA}
 html[data-theme="dark"] .wb-verdict.ok{color:#5FD3B0}
 html[data-theme="dark"] #wbrerun{background:#262430}
 html[data-theme="dark"] .fb.n{color:#DAD6CE}
@@ -751,8 +730,6 @@ html[data-theme="dark"]{--grid:rgba(170,157,245,.05);--canvas:radial-gradient(13
 .mb-rev,.wb-rev,.wb-got{transition:filter .12s ease}
 .seg button:hover:not(.on){background:rgba(109,95,214,.13)}
 .modetog button:hover:not(.on){color:var(--ink);background:rgba(109,95,214,.1)}
-.piv{transition:border-color .15s ease,box-shadow .15s ease}
-.piv:hover{border-color:var(--acc);box-shadow:0 5px 16px -8px rgba(83,74,183,.32)}
 details.disc summary:hover,details.model>summary:hover{background:rgba(109,95,214,.06)}
 .push:hover:not(.more){box-shadow:0 9px 26px rgba(83,74,183,.42),inset 0 1px 0 rgba(255,255,255,.14);transform:translateY(-1px)}
 .push.more:hover{box-shadow:0 9px 26px rgba(176,108,20,.42),inset 0 1px 0 rgba(255,255,255,.14);transform:translateY(-1px)}
@@ -878,11 +855,6 @@ button,summary{-webkit-user-select:none;user-select:none}
 /* v111 micro-polish: drop the default mobile tap-flash (the gray box doesn't match the rounded controls); every control already has custom feedback - selection state, result change, or a press-state. The tool-opener rows only get a (delayed) overlay, so give them an in-place press. */
 .crambtn:active{transform:translateY(1px)}
 *{-webkit-tap-highlight-color:transparent}
-/* current-stage emphasis - system map (restored; v119 sweep removed these but .cur IS applied via st.cur) */
-.stg.cur .dot{background:var(--acc);border-color:var(--acc);color:#fff;box-shadow:0 0 0 5px var(--accbg)}
-.stg.cur .nm{color:var(--accink)}
-.stg.cur .here{display:inline-block;font-size:9px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:#fff;background:var(--acc);border-radius:5px;padding:2px 7px;margin-left:8px;vertical-align:middle}
-html[data-theme="dark"] .stg.cur .here{color:#1A1622}
 /* whiteboard verdict warn-state (restored; v119 sweep removed these but .warn IS applied via className "wb-verdict warn") */
 .wb-verdict.warn{background:var(--amberbg);color:#5e3c0a;border-left:3px solid var(--amber)}
 .wb-verdict.warn b{color:#5e3c0a}

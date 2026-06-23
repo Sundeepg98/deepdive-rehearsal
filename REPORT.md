@@ -128,3 +128,61 @@ the `cmpNotes` coaching strings were entitized by the migration but are consumed
 `textContent`, so `&mdash;` would have shown up literally. They were switched to `\u`
 escapes and the gate went green. Tooling finds the exceptions that per-edit vigilance
 misses.
+
+## Web components: pilot conversion (the sys pane)
+
+Goal: encapsulate each pane/overlay as a custom element with its own shadow DOM,
+so DOM, styles, and state are scoped instead of living in one global scope over a
+flat document. This is a migration of the app's model, not a refactor, so it is
+done incrementally from a proven pilot -- exactly like the source split
+(`refactor-pilot` -> `refactor-full`).
+
+The first pilot is the **system map** (`<deep-system-map>`), chosen because it is
+genuinely isolated: it owns its data and reaches for nothing global. After the
+conversion the only thing in the light DOM is `<deep-system-map>` inside the
+`#sys` pane host; its markup, styles, and data all live in the shadow root. Gate
+green; a direct check confirms 6 stages + 7 pivots render in the shadow, the theme
+tokens flip through the boundary, and nothing leaks to the light DOM.
+
+### The reusable recipe (per pane/overlay)
+
+1. **Move markup + data + render logic into the element class**; build the shadow
+   root once in `connectedCallback` and `innerHTML` the content into it. Data
+   strings stay entity-encoded (they are innerHTML'd, so the ASCII standard holds).
+2. **Move the pane's CSS into a `<style>` in the shadow.** Global CSS cannot reach
+   into a shadow root, so any reused base class (here `.card`, `.step-t`) is carried
+   in too. (Rollout optimization: once every pane is a component, the shared base
+   rules move to one constructable stylesheet adopted by all shadows via
+   `adoptedStyleSheets`, removing that duplication.)
+3. **Theme through the boundary with CSS custom properties.** var()-based colors
+   (`--acc`, `--surf`, `--mut`, ...) inherit into the shadow for free. Hardcoded
+   colors that flip light/dark must be tokenized -- the sys pane needed five
+   (`--sm-line`, `--sm-dot-bg`, `--sm-card-bg`, `--sm-pa-fg`, `--sm-here-fg`),
+   defined on `:root` and `html[data-theme="dark"]`. No `:host-context` (no Firefox
+   support); inherited custom properties work everywhere.
+4. **Keep the `<div class="pane" id="X">` host in the light DOM** so `switchTab` and
+   the build-integrity pane check keep working; the custom element sits inside.
+5. **Remove the moved rules from `styles.css`** so the CSS is moved, not duplicated.
+6. The **entity-leak gate now descends into shadow roots**, so componentized panes
+   stay covered.
+
+### The real cost is the shared-state coupling, not the DOM/CSS
+
+The pilot was deliberately an isolated pane; most are not. The audit mapped the
+coupling the rollout must untangle, because shadow DOM severs these global
+reach-throughs and each must become an explicit public API (a method or event) on
+the element:
+
+- **`session-progress`** (the progress-report overlay) reads the **whiteboard's**
+  `wblist` DOM node, its `wbSteps` data, and calls `wbReset` / `wbRerun` /
+  `updCount`; it also reads the **drill** (`results` / `got` / `shk`, `drillWeak`)
+  and **mixed-fire** (`mixLog` / `mxRes` / `mxGot` / `mxShk`) internals.
+- **`mixed-fire`** reads the **trade-offs** pane via `getTrades`.
+- **`numbers-nalsd`** defines the global nav (`switchTab` / `current`) the keyboard
+  handler and `session-progress` call.
+
+Rollout order: the isolated/presentational panes first (sys done; red-flags,
+opener, model-answers convert mechanically), then the coupled panes (whiteboard,
+drill, mock-run, mixed-fire, session-progress) where the public-API seam is designed
+first, then the overlays (open/close wiring is their seam). Each conversion lands
+gate-green before the next.

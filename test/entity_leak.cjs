@@ -1,8 +1,9 @@
 // GUARD: no HTML entity leaks into visible text.
 // The ASCII normalization turns raw glyphs into entities, which is correct ONLY
 // for strings that are innerHTML'd. If a data string is consumed via textContent
-// instead, "&mdash;" would show up literally. This drives every dynamic surface
-// and asserts no text node (outside <script>/<style>) contains a literal
+// instead, "&mdash;" would show up literally. This drives every dynamic surface,
+// descends into shadow roots (so web-componentized panes are covered too), and
+// asserts no text node (outside <style>/<script>) contains a literal
 // &name; / &#nnn; pattern.
 const { chromium } = require('playwright');
 (async () => {
@@ -18,30 +19,29 @@ const { chromium } = require('playwright');
   for (const [open, close] of [['#mockopen', '#mockx'], ['#mixopen', '#mixx'], ['#sessopen', '#sessx']]) {
     try { await pg.click(open); await pg.waitForTimeout(120); await pg.click(close); await pg.waitForTimeout(60); } catch (e) {}
   }
-  // Walk visible/DOM text nodes, excluding <script>/<style>, and flag entity literals.
   const leaks = await pg.evaluate(() => {
     const rx = /&(?:[a-zA-Z]+|#\d+);/;
-    const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
-      acceptNode(n) {
-        for (let e = n.parentElement; e; e = e.parentElement) {
-          const t = e.tagName;
-          if (t === 'SCRIPT' || t === 'STYLE') return NodeFilter.FILTER_REJECT;
-        }
-        return NodeFilter.FILTER_ACCEPT;
-      }
-    });
     const hits = [];
-    let n;
-    while ((n = w.nextNode())) {
-      const m = n.nodeValue.match(rx);
-      if (m) hits.push(m[0] + '  in: ' + n.nodeValue.trim().slice(0, 70));
+    function walk(node) {
+      for (const c of node.childNodes) {
+        if (c.nodeType === 3) {
+          const m = c.nodeValue.match(rx);
+          if (m) hits.push(m[0] + '  in: ' + c.nodeValue.trim().slice(0, 70));
+        } else if (c.nodeType === 1) {
+          const t = c.tagName;
+          if (t === 'SCRIPT' || t === 'STYLE') continue;
+          if (c.shadowRoot) walk(c.shadowRoot);
+          walk(c);
+        }
+      }
     }
+    walk(document.body);
     return hits;
   });
   await b.close();
   if (errs.length) { console.log('ENTITY LEAK: FAIL (page errors)\n  ' + errs.join('\n  ')); process.exit(1); }
   if (leaks.length) {
-    console.log('ENTITY LEAK: FAIL  (%d entity literal(s) in visible text)', leaks.length);
+    console.log('ENTITY LEAK: FAIL  (' + leaks.length + ' entity literal(s) in visible text)');
     leaks.slice(0, 20).forEach(h => console.log('  ' + h));
     process.exit(1);
   }

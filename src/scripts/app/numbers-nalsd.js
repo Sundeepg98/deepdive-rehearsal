@@ -68,9 +68,12 @@ document.addEventListener('keydown', function (event) {
   const tabKeys = { q: 'walk', w: 'drill', e: 'wb', r: 'sys', t: 'trade', y: 'model', u: 'num', i: 'rf', o: 'open' };
   if (tabKeys[key]) { switchTab(tabKeys[key]); return; }
   if (current === 'walk') {
-    /* arrows step through the walkthrough */
-    if (event.key === 'ArrowLeft' && wi > 0) { wi--; renderW(); }
-    if (event.key === 'ArrowRight' && wi < steps.length - 1) { wi++; renderW(); }
+    /* arrows step through the walkthrough (bounds handled inside prev/next) */
+    const w = document.querySelector('#walk deep-walkthrough');
+    if (w) {
+      if (event.key === 'ArrowLeft') w.prev();
+      if (event.key === 'ArrowRight') w.next();
+    }
   } else if (current === 'drill') {
     /* space/enter advances; 1 and 2 self-grade the current card */
     const advBtn = document.getElementById('adv');

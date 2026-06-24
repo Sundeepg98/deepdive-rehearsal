@@ -26,7 +26,7 @@
     --indigo:#4338CA; --indigobg:#ECEBFB;
     --code:#2A2740; --codeink:#E7E4F5;
     /* system-map theme-flip tokens (inherit across the shadow boundary) */
-    --sm-line:#E0DBD1; --sm-dot-bg:#F0ECE4; --sm-card-bg:#FCFBF9; --sm-pa-fg:#4a463f; --sm-here-fg:#fff; --sm-cur-dot-bg:var(--acc); --op-hooks-bg:#FBFAF7; --op-foot-bg:#F1EEFB; --op-foot-fg:#46423b; --disc-bg:#FCFBF9; --disc-body-fg:#4a463f; --wb-foot-bg:#F1EEFB; --wb-foot-fg:#46423b; --wb-li-bd:#EFEAE1; --wb-ok-fg:#0a5240; --wb-ok-b-fg:#0a5240; --wb-warn-fg:#5e3c0a; --opt-n-bd:#dcd6f5; --dec-tell-b-fg:#0a5240;
+    --sm-line:#E0DBD1; --sm-dot-bg:#F0ECE4; --sm-card-bg:#FCFBF9; --sm-pa-fg:#4a463f; --sm-here-fg:#fff; --sm-cur-dot-bg:var(--acc); --op-hooks-bg:#FBFAF7; --op-foot-bg:#F1EEFB; --op-foot-fg:#46423b; --disc-bg:#FCFBF9; --disc-body-fg:#4a463f; --wb-foot-bg:#F1EEFB; --wb-foot-fg:#46423b; --wb-li-bd:#EFEAE1; --wb-ok-fg:#0a5240; --wb-ok-b-fg:#0a5240; --wb-warn-fg:#5e3c0a; --opt-n-bd:#dcd6f5; --dec-tell-b-fg:#0a5240; --fb-n-bg:#F7F4EE; --fb-n-fg:#3a372f; --fb-t-fg:#0a5240; --fb-r-fg:#7e2020; --fb-a-fg:#6a3f08; --ins-bg:#F5F2EC; --ins-fg:#46423b; --mq-bg:#F0ECE4; --dots-i-bg:#DCD7CD; --dots-on-bg:var(--acc); --dots-done-bg:var(--acc2); --codecap-fg:#4a463f; --code-inline-bg:#F0EDE6;
   }
   *{margin:0;padding:0;box-sizing:border-box}
   html{scroll-behavior:smooth}
@@ -60,41 +60,12 @@
 
   .card{background:var(--surf);border:1px solid var(--bd);border-radius:14px;padding:22px;box-shadow:var(--card-sh)}
 
-  .dots{display:flex;gap:6px;justify-content:center;margin:0 0 16px}
-  .dots i{width:8px;height:8px;border-radius:50%;background:#DCD7CD;transition:.2s}
-  .dots i.on{background:var(--acc);transform:scale(1.3)}
-  .dots i.done{background:var(--acc2);opacity:.45}
 
   .step-k{font-family:var(--mono);font-size:11px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--acc)}
   .step-t{font-size:19px;font-weight:720;margin:3px 0 5px;letter-spacing:-.2px}
-  .flow{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin:8px 0 4px}
-  .fb{font:650 11.5px ui-monospace,Menlo,monospace;padding:7px 11px;border-radius:8px;border:1.5px solid;white-space:nowrap}
-  .fb.p{background:var(--accbg);border-color:var(--acc);color:var(--accink)}
-  .fb.t{background:var(--tealbg);border-color:var(--teal);color:#0a5240}
-  .fb.r{background:var(--redbg);border-color:var(--red);color:#7e2020}
-  .fb.a{background:var(--amberbg);border-color:var(--amber);color:#6a3f08}
-  .fb.n{background:#F7F4EE;border-color:#C9C3B8;color:#3a372f}
-  .arr{color:var(--mut2);font-weight:800;font-size:14px}
-  .ins{margin-top:14px;font-size:12.5px;color:#46423b;background:#F5F2EC;border-left:3px solid var(--acc);border-radius:8px;padding:12px 14px}
-  .ins b{color:var(--accink)}
-  code{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;background:#F0EDE6;padding:1px 5px;border-radius:4px;color:var(--accink)}
+  code{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;background:var(--code-inline-bg);padding:1px 5px;border-radius:4px;color:var(--accink)}
 
-  details.disc{margin-top:11px;border:1px solid var(--bd);border-radius:9px;overflow:hidden;background:var(--disc-bg)}
-  details.disc summary{cursor:pointer;font:700 11.5px -apple-system,sans-serif;color:var(--acc);padding:10px 14px;list-style:none;display:flex;align-items:center;gap:7px}
-  details.disc summary::-webkit-details-marker{display:none}
-  details.disc summary::before{content:"\25B8";transition:.2s;font-size:10px}
-  details.disc[open] summary::before{transform:rotate(90deg)}
-  details.disc summary:hover{background:rgba(109,95,214,.06)}
-  details.disc .body{padding:0 14px 13px;font-size:12px;color:var(--disc-body-fg)}
-  pre.code{margin:2px 14px 13px;background:var(--code);border-radius:9px;padding:13px 15px;overflow-x:auto;font-family:ui-monospace,Menlo,monospace;font-size:11px;line-height:1.65;color:var(--codeink)}
-  pre.code .c{color:#9b95c9} pre.code .k{color:#C9A2F0} pre.code .s{color:#9DD9B6} pre.code .hl{color:#FFD479}
-  .codecap{font-size:11px;color:#4a463f;margin:0 14px 13px;padding-left:11px;border-left:3px solid var(--acc)}
 
-  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:16px}
-  .nav button{border:1.5px solid var(--bd);background:var(--card);color:var(--ink);font:650 13px -apple-system,sans-serif;padding:9px 18px;border-radius:10px;cursor:pointer;transition:.15s}
-  .nav button:hover:not(:disabled){border-color:var(--acc);color:var(--acc)}
-  .nav button:disabled{opacity:.32;cursor:default}
-  .nav .ctr{font-family:var(--mono);font-size:12px;color:var(--mut2);font-weight:700}
 
   .dbar{height:6px;background:#ECE8E0;border-radius:6px;overflow:hidden;margin-bottom:14px}
   .dbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--acc),var(--acc2));transition:width .3s ease}
@@ -162,18 +133,6 @@
   .opt-w b{color:var(--accink)}
 
   /* model answer */
-  details.model{margin-top:16px;background:var(--card);border:1px solid var(--bd);border-left:4px solid var(--acc);border-radius:11px;overflow:hidden}
-  details.model>summary{cursor:pointer;list-style:none;padding:14px 16px;font:800 13px -apple-system,sans-serif;color:var(--accink);display:flex;align-items:baseline;gap:9px;user-select:none}
-  details.model>summary::-webkit-details-marker{display:none}
-  details.model>summary::before{content:"\25B8";color:var(--acc);transition:transform .2s;font-size:11px;flex:none}
-  details.model[open]>summary::before{transform:rotate(90deg)}
-  details.model>summary .sub{font-weight:600;color:var(--mut);font-size:11px;letter-spacing:.3px}
-  .mbody{padding:3px 17px 18px;border-top:1px solid var(--bd)}
-  .mbeat{margin:13px 0;font-size:13.5px;line-height:1.62;color:var(--ink)}
-  .mbeat .ml{display:block;font-size:10px;font-weight:800;letter-spacing:.9px;text-transform:uppercase;color:var(--acc);margin-bottom:4px}
-  .mbeat b{color:var(--accink)}
-  .mq{margin:17px 0 0;padding:11px 13px;background:#F0ECE4;border-radius:9px;font-size:13px;color:var(--mut);font-style:italic}
-  .mbeat.ans{background:var(--accbg);border-radius:9px;padding:11px 14px;margin-top:7px}
 
   /* a11y + polish */
   a:focus-visible, button:focus-visible, summary:focus-visible{outline:2.5px solid var(--acc);outline-offset:2px;border-radius:8px}
@@ -207,8 +166,6 @@
   .rec .tu{font-size:12px;color:var(--mut2);margin-top:9px;font-weight:700}
 
   /* model answers tab */
-  .mbeat{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--bd)}
-  .mbeat:last-child{border-bottom:0;padding-bottom:2px}
 
   /* numbers / nalsd */
   .numlead{font-size:15px;line-height:1.5;color:var(--ink);margin:2px 2px 16px}
@@ -464,23 +421,21 @@ html[data-theme="dark"]{
   --teal:#4FCDAB; --tealbg:#143028; --red:#F08A8A; --redbg:#3A2020;
   --amber:#E5A24A; --amberbg:#352712; --indigo:#9D93F0; --indigobg:#24223C;
   --code:#15131D; --codeink:#E7E4F5;
-  --sm-line:#3A3642; --sm-dot-bg:#2A2730; --sm-card-bg:#262430; --sm-pa-fg:#C7C2BA; --sm-here-fg:#1A1622; --sm-cur-dot-bg:#2A2730; --op-hooks-bg:#262430; --op-foot-bg:#2A2540; --op-foot-fg:#BAB4AA; --disc-bg:#262430; --disc-body-fg:#B2ACA2; --wb-foot-bg:#2A2540; --wb-foot-fg:#BAB4AA; --wb-li-bd:#322E3A; --wb-ok-fg:#5FD3B0; --wb-ok-b-fg:#8FE0C8; --wb-warn-fg:#E8BC78; --opt-n-bd:#3A3552; --dec-tell-b-fg:#8FE0C8;
+  --sm-line:#3A3642; --sm-dot-bg:#2A2730; --sm-card-bg:#262430; --sm-pa-fg:#C7C2BA; --sm-here-fg:#1A1622; --sm-cur-dot-bg:#2A2730; --op-hooks-bg:#262430; --op-foot-bg:#2A2540; --op-foot-fg:#BAB4AA; --disc-bg:#262430; --disc-body-fg:#B2ACA2; --wb-foot-bg:#2A2540; --wb-foot-fg:#BAB4AA; --wb-li-bd:#322E3A; --wb-ok-fg:#5FD3B0; --wb-ok-b-fg:#8FE0C8; --wb-warn-fg:#E8BC78; --opt-n-bd:#3A3552; --dec-tell-b-fg:#8FE0C8; --fb-n-bg:#262430; --fb-n-fg:#DAD6CE; --fb-t-fg:#8FE0C8; --fb-r-fg:#F0A0A0; --fb-a-fg:#E8BC78; --ins-bg:#262430; --ins-fg:#BAB4AA; --mq-bg:#2A2730; --dots-i-bg:#44404C; --dots-on-bg:var(--dots-i-bg); --dots-done-bg:var(--dots-i-bg); --codecap-fg:#B2ACA2; --code-inline-bg:#2A2833;
 }
 html[data-theme="dark"] body{background:var(--bg)}
 /* near-white card surfaces -> dark card */
-html[data-theme="dark"] .ss-card,html[data-theme="dark"] .thread,html[data-theme="dark"] .ss-carry,html[data-theme="dark"] .cs-30,html[data-theme="dark"] .fb.n,html[data-theme="dark"] .ins{background:#262430}
+html[data-theme="dark"] .ss-card,html[data-theme="dark"] .thread,html[data-theme="dark"] .ss-carry,html[data-theme="dark"] .cs-30{background:#262430}
 /* light purple tints -> dark purple */
 html[data-theme="dark"] .ans,html[data-theme="dark"] .verdict,html[data-theme="dark"] .fu .fa{background:#2A2540}
 /* inline code variants */
-html[data-theme="dark"] code{background:#2A2833}
 html[data-theme="dark"] .cram-body code{background:#2C2740}
 /* curveball badge (peach) -> dark amber */
 html[data-theme="dark"] .mxb-curve{background:#3A2814}
 /* warm/gray surfaces */
-html[data-theme="dark"] .mq,html[data-theme="dark"] .modetog{background:#2A2730}
+html[data-theme="dark"] .modetog{background:#2A2730}
 html[data-theme="dark"] .kbd-hint kbd{background:#2E2A35;border-color:#46424E}
 html[data-theme="dark"] .rail,html[data-theme="dark"] .dbar{background:#211F28}
-html[data-theme="dark"] .dots i{background:#44404C}
 html[data-theme="dark"] .debrief .btn-sec:hover{background:#1A3A30}
 html[data-theme="dark"] .inttog-dot{background:#56525E}
 /* light borders -> dark */
@@ -494,16 +449,13 @@ html[data-theme="dark"] .verdict,html[data-theme="dark"] .ans,html[data-theme="d
 html[data-theme="dark"] .judge button{background:#262430}
 html[data-theme="dark"] .fu .fa b{color:#E8BC78}
 html[data-theme="dark"] #wbrerun{background:#262430}
-html[data-theme="dark"] .fb.n{color:#DAD6CE}
 html[data-theme="dark"] .senior{color:#7FD9BE}
-html[data-theme="dark"] .senior b,html[data-theme="dark"] .debrief .btn-sec,html[data-theme="dark"] .fb.t,html[data-theme="dark"] .num-tell b{color:#8FE0C8}
+html[data-theme="dark"] .senior b,html[data-theme="dark"] .debrief .btn-sec,html[data-theme="dark"] .num-tell b{color:#8FE0C8}
 html[data-theme="dark"] .speak{color:#CABFFB}
-html[data-theme="dark"] .fb.r,html[data-theme="dark"] .rec.nh .lvl,html[data-theme="dark"] .mb-int-q{color:#F0A0A0}
+html[data-theme="dark"] .rec.nh .lvl,html[data-theme="dark"] .mb-int-q{color:#F0A0A0}
 
-html[data-theme="dark"] .ins{color:#BAB4AA}
 html[data-theme="dark"] .sr-list{color:#C8C4BC}
-html[data-theme="dark"] .rec.lh .lvl,html[data-theme="dark"] .fb.a{color:#E8BC78}
-html[data-theme="dark"] .codecap{color:#B2ACA2}
+html[data-theme="dark"] .rec.lh .lvl{color:#E8BC78}
 /* mid accents -> brighter on dark */
 html[data-theme="dark"] .mxb-trade{color:#B6ADE8}
 /* tab bar container + active-tab contrast */
@@ -632,7 +584,6 @@ html[data-theme="dark"]{--grid:rgba(170,157,245,.05);--canvas:radial-gradient(13
 .mb-rev,.wb-rev,.wb-got{transition:filter .12s ease}
 .seg button:hover:not(.on){background:rgba(109,95,214,.13)}
 .modetog button:hover:not(.on){color:var(--ink);background:rgba(109,95,214,.1)}
-details.model>summary:hover{background:rgba(109,95,214,.06)}
 .push:hover:not(.more){box-shadow:0 9px 26px rgba(83,74,183,.42),inset 0 1px 0 rgba(255,255,255,.14);transform:translateY(-1px)}
 .push.more:hover{box-shadow:0 9px 26px rgba(176,108,20,.42),inset 0 1px 0 rgba(255,255,255,.14);transform:translateY(-1px)}
 .mb-rev:hover,.ss-cmpbtn:hover,.wb-rev:hover,.wb-got:hover,.wb-miss:hover{filter:brightness(.96)}
@@ -704,18 +655,7 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover{background:rgba(150,140,
   .cmp-kbd{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;font-family:inherit;font-size:11px;font-weight:700;color:var(--ink);background:var(--card);border:1px solid var(--bd);border-bottom-width:2px;border-radius:5px;vertical-align:middle}
 }
 /* v102: surface depth - crafted gradient surfaces + soft lift across content cards */
-.model{background:var(--surf);box-shadow:var(--surf-sh)}
 /* v105: walkthrough "whole flow" map - the full 9-step arc, clickable, fills the short pane */
-.arc-wrap{margin-top:24px}
-.arc-h{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin-bottom:12px;display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
-.arc-h .sub{font-size:10.5px;font-weight:600;letter-spacing:.01em;text-transform:none;color:var(--mut2)}
-.arc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
-.arc-step{display:flex;align-items:center;gap:10px;text-align:left;padding:11px 13px;border-radius:11px;border:1px solid var(--bd);background:var(--surf);box-shadow:var(--surf-sh);cursor:pointer;transition:.14s;font-family:inherit}
-.arc-n{flex:none;width:23px;height:23px;border-radius:7px;display:grid;place-items:center;font:700 11px -apple-system,sans-serif;background:var(--accbg);color:var(--accink);transition:.14s}
-.arc-t{font-size:12px;font-weight:600;color:var(--ink);line-height:1.25}
-.arc-step.on{border-color:var(--acc);background:var(--accbg);box-shadow:0 0 0 1px var(--acc),var(--surf-sh)}
-.arc-step.on .arc-n{background:var(--acc);color:#fff}
-.arc-step.done .arc-n{background:transparent;color:var(--acc);box-shadow:inset 0 0 0 1.5px var(--acc)}
 @media(hover:hover){.arc-step:hover{border-color:var(--acc);transform:translateY(-1px)}}
 @media(max-width:560px){.arc-grid{grid-template-columns:repeat(2,1fr)}}
 /* v106: drill probe-navigator - jump to any probe, flagged ones marked; fills the drill's void */
@@ -747,7 +687,7 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover{background:rgba(150,140,
 .mcomp-block+.mcomp-block{border-top:1px solid var(--bd)}
 @media(min-width:1280px){.mcomp{display:none}}
 /* v109 micro-polish: press feedback on the newest interactive elements + a soft companion reveal */
-.arc-step:active,.dn-step:active{background:var(--accbg)}
+.dn-step:active{background:var(--accbg)}
 @media(hover:hover){.mcomp-sum:hover{background:var(--accbg)}}
 .mcomp-sum:active{background:var(--accbg)}
 @keyframes mcompReveal{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
@@ -787,32 +727,9 @@ button,summary{-webkit-user-select:none;user-select:none}
   </div>
 
   </aside><main class="stage" role="main"><div class="stage-head" id="stagehead"></div><details class="mcomp"><summary class="mcomp-sum"><span class="mcomp-eyebrow">Companion</span><span class="mcomp-cue">coaching for this view</span><span class="mcomp-chev" aria-hidden="true">&#9662;</span></summary><div class="mcomp-body"><div class="mcomp-block"><div class="cmp-h">This view</div><div class="cmp-view" id="mCmpView">Walkthrough</div><p class="cmp-note" id="mCmpNote">The dispatch flow, one step at a time &mdash; the mechanics you narrate before anyone cuts in.</p></div><div class="mcomp-block"><div class="cmp-h">The move here</div><p class="cmp-move" id="mCmpMove">Say the fork out loud &mdash; &ldquo;one read, two sinks.&rdquo; That single-read line is what they remember.</p></div><div class="mcomp-block"><div class="cmp-h">The spine of a strong answer</div><ul class="cmp-spine"><li><span class="cmp-dot"></span><span>A frozen strategy map keeps dispatch <b>O(1)</b> &mdash; never a switch statement.</span></li><li><span class="cmp-dot"></span><span>One <b>PassThrough</b> fork hashes <i>and</i> uploads on a single read of the file.</span></li><li><span class="cmp-dot"></span><span>At-least-once delivery <b>+</b> idempotent work <b>=</b> exactly-once effect.</span></li><li><span class="cmp-dot"></span><span>Name the ceiling before you hit it &mdash; Lambda gives way to <b>SQS</b> past ~1,000/s.</span></li></ul></div></div></details><div class="pane on" id="walk">
-    <div class="dots" id="wdots"></div>
-    <div class="card" id="wcard"></div>
-    <div class="nav">
-      <button type="button" id="wprev">&larr; Prev</button>
-      <span class="ctr" id="wctr"></span>
-      <button type="button" id="wnext">Next &rarr;</button>
-    </div>
-    <details class="model">
-      <summary>What a complete answer sounds like <span class="sub">model script &middot; the full arc, not just the opener</span></summary>
-      <div class="mbody">
-        <div class="mbeat"><span class="ml">Frame it before diving</span>"Before I trace it &mdash; I'll assume single region, files up to ~500&nbsp;MB, and that downstream consumers need the result within a few seconds. Stop me if any of that's off."</div>
-        <div class="mbeat"><span class="ml">Headline in one breath</span>"At a high level: the object lands in S3, that fires a trigger, I hash and validate it <b>while it streams</b>, write the metadata transactionally, then fan it out to the processors &mdash; built so memory stays flat no matter the file size."</div>
-        <div class="mbeat"><span class="ml">Walk the path</span>"Concretely &mdash; the upload completes to S3 and emits an event. My handler opens a read stream and forks it through a <b>PassThrough</b>: one branch computes the SHA&#8209;256, the other feeds the processor, so I never buffer the whole file or read it twice. Once I have the hash and size, I write the row &mdash; key, hash, status &mdash; to the metadata DB."</div>
-        <div class="mbeat"><span class="ml">Name the risk yourself</span>"The thing I'd flag without being asked is the <b>dual&#8209;write</b>: the object is already in S3, but if the DB write fails I've got an orphan. The compensating delete covers the common case, but the real backstop is a <b>reconciler</b> that sweeps S3 for keys with no committed row. I wouldn't claim the delete alone is safe."</div>
-        <div class="mbeat"><span class="ml">Name the trade-off line</span>"For dispatch I'd run a Lambda per object at this volume &mdash; the simplest thing that works. The moment I need retries, ordering, or a DLQ, I'd put <b>SQS</b> in front and make the processors consumers. That's the line I'd move on, and I'd say so before they ask."</div>
-        <div class="mbeat"><span class="ml">Be honest about the ceiling</span>"This holds to low thousands of objects a minute. Past that the metadata DB is the bottleneck &mdash; I'd shard by tenant or key&#8209;prefix and move fully onto SQS&#8209;fronted consumers. I'd call that out as the next redesign rather than pretend it scales forever."</div>
-        <div class="mq">Interviewer: "What if two uploads race on the same key?"</div>
-        <div class="mbeat ans"><span class="ml">Absorb the follow-up</span>"S3 is last&#8209;writer&#8209;wins on the object, so the bytes are fine &mdash; but my metadata could interleave. I'd make the DB write <b>idempotent on the key</b> with a conditional put, so the second writer updates cleanly or no&#8209;ops. And if ordering genuinely matters to the business, that's one more reason to move to a queue with a per&#8209;key partition."</div>
-      </div>
-    </details>
-
-    <div class="arc-wrap">
-      <div class="arc-h">The whole flow <span class="sub">tap any step to jump</span></div>
-      <div class="arc-grid" id="warc"></div>
-    </div>
+    <deep-walkthrough></deep-walkthrough>
   </div>
+
 
   <div class="pane" id="drill">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
@@ -1171,6 +1088,7 @@ button,summary{-webkit-user-select:none;user-select:none}
 var BASE_SHEET = new CSSStyleSheet();
 BASE_SHEET.replaceSync(`
 *{margin:0;padding:0;box-sizing:border-box}
+code{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;background:var(--code-inline-bg);padding:1px 5px;border-radius:4px;color:var(--accink)}
 :host{display:block;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 .card{background:var(--surf);border:1px solid var(--bd);border-radius:14px;padding:22px;box-shadow:var(--card-sh)}
 .step-k{font-family:var(--mono);font-size:11px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--acc)}
@@ -1416,64 +1334,148 @@ var steps = [
     code:'metrics.<span class="hl">gauge</span>(<span class="s">"queue.depth"</span>, <span class="k">await</span> queue.size());\nmetrics.<span class="hl">histogram</span>(<span class="s">"process.latency_ms"</span>, elapsed); <span class="c">// p99</span>\nmetrics.<span class="hl">count</span>(<span class="s">"process.error"</span>, err ? 1 : 0);\nmetrics.<span class="hl">gauge</span>(<span class="s">"reconciler.orphans"</span>, orphanCount);\n<span class="c">// page on: dlq.depth &gt; 0 sustained, or event.age &gt; SLA</span>',
     cap:'Alarm on symptoms users feel; transient spikes that self-heal via retry are log-only, or you drown in false pages.' }
 ];
-var wi = 0; /* SHARED: current step index &mdash; the keyboard handler in numbers-nalsd.js drives this too */
-const walkCard = document.getElementById('wcard');
-const dotsRow = document.getElementById('wdots');
-const counterEl = document.getElementById('wctr');
-const prevBtn = document.getElementById('wprev');
-const nextBtn = document.getElementById('wnext');
+/* ============ WALKTHROUGH (web component) ============
+   Nine-step guided trace: dots + a rendered step card + prev/next + the arc
+   jump-rail + a static model-script disclosure. Shadow-DOM custom element
+   adopting BASE_SHEET; reads the step data from the global `steps` (steps.js,
+   included just before this). Coupled to numbers-nalsd, whose keyboard handler
+   drove wi/renderW directly; it now calls prev()/next() (each bounds-checks
+   internally). The flow chips (.fb/.flow/.arr), .ins, .arc-*, pre.code/.codecap,
+   details.model and .mq are pane-exclusive and move here; .mbeat and
+   details.disc are shared and were also copied into the model / whiteboard
+   shadows, so they leave styles.css. Ten dark overrides become flip tokens. */
+var WALK_STYLE = `
+.dots{display:flex;gap:6px;justify-content:center;margin:0 0 16px}
+.dots i{width:8px;height:8px;border-radius:50%;background:var(--dots-i-bg);transition:.2s}
+.dots i.on{background:var(--dots-on-bg);transform:scale(1.3)}
+.dots i.done{background:var(--dots-done-bg);opacity:.45}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin:8px 0 4px}
+.fb{font:650 11.5px ui-monospace,Menlo,monospace;padding:7px 11px;border-radius:8px;border:1.5px solid;white-space:nowrap}
+.fb.p{background:var(--accbg);border-color:var(--acc);color:var(--accink)}
+.fb.t{background:var(--tealbg);border-color:var(--teal);color:var(--fb-t-fg)}
+.fb.r{background:var(--redbg);border-color:var(--red);color:var(--fb-r-fg)}
+.fb.a{background:var(--amberbg);border-color:var(--amber);color:var(--fb-a-fg)}
+.fb.n{background:var(--fb-n-bg);border-color:#C9C3B8;color:var(--fb-n-fg)}
+.arr{color:var(--mut2);font-weight:800;font-size:14px}
+.ins{margin-top:14px;font-size:12.5px;color:var(--ins-fg);background:var(--ins-bg);border-left:3px solid var(--acc);border-radius:8px;padding:12px 14px}
+.ins b{color:var(--accink)}
+pre.code{margin:2px 14px 13px;background:var(--code);border-radius:9px;padding:13px 15px;overflow-x:auto;font-family:ui-monospace,Menlo,monospace;font-size:11px;line-height:1.65;color:var(--codeink)}
+pre.code .c{color:#9b95c9} pre.code .k{color:#C9A2F0} pre.code .s{color:#9DD9B6} pre.code .hl{color:#FFD479}
+.codecap{font-size:11px;color:var(--codecap-fg);margin:0 14px 13px;padding-left:11px;border-left:3px solid var(--acc)}
+.nav{display:flex;justify-content:space-between;align-items:center;margin-top:16px}
+.nav button{border:1.5px solid var(--bd);background:var(--card);color:var(--ink);font:650 13px -apple-system,sans-serif;padding:9px 18px;border-radius:10px;cursor:pointer;transition:.15s}
+.nav button:hover:not(:disabled){border-color:var(--acc);color:var(--acc)}
+.nav button:disabled{opacity:.32;cursor:default}
+.nav .ctr{font-family:var(--mono);font-size:12px;color:var(--mut2);font-weight:700}
+details.disc{margin-top:11px;border:1px solid var(--bd);border-radius:9px;overflow:hidden;background:var(--disc-bg)}
+details.disc summary{cursor:pointer;font:700 11.5px -apple-system,sans-serif;color:var(--acc);padding:10px 14px;list-style:none;display:flex;align-items:center;gap:7px}
+details.disc summary::-webkit-details-marker{display:none}
+details.disc summary::before{content:"\\25B8";transition:.2s;font-size:10px}
+details.disc[open] summary::before{transform:rotate(90deg)}
+details.disc summary:hover{background:rgba(109,95,214,.06)}
+details.disc .body{padding:0 14px 13px;font-size:12px;color:var(--disc-body-fg)}
+details.model{margin-top:16px;background:var(--card);box-shadow:var(--surf-sh);border:1px solid var(--bd);border-left:4px solid var(--acc);border-radius:11px;overflow:hidden}
+details.model>summary{cursor:pointer;list-style:none;padding:14px 16px;font:800 13px -apple-system,sans-serif;color:var(--accink);display:flex;align-items:baseline;gap:9px;user-select:none}
+details.model>summary::-webkit-details-marker{display:none}
+details.model>summary::before{content:"\\25B8";color:var(--acc);transition:transform .2s;font-size:11px;flex:none}
+details.model[open]>summary::before{transform:rotate(90deg)}
+details.model>summary .sub{font-weight:600;color:var(--mut);font-size:11px;letter-spacing:.3px}
+details.model>summary:hover{background:rgba(109,95,214,.06)}
+.mbody{padding:3px 17px 18px;border-top:1px solid var(--bd)}
+.mbeat{margin:13px 0;font-size:13.5px;line-height:1.62;color:var(--ink)}
+.mbeat{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--bd)}
+.mbeat:last-child{border-bottom:0;padding-bottom:2px}
+.mbeat .ml{display:block;font-size:10px;font-weight:800;letter-spacing:.9px;text-transform:uppercase;color:var(--acc);margin-bottom:4px}
+.mbeat b{color:var(--accink)}
+.mq{margin:17px 0 0;padding:11px 13px;background:var(--mq-bg);border-radius:9px;font-size:13px;color:var(--mut);font-style:italic}
+.mbeat.ans{background:var(--accbg);border-radius:9px;padding:11px 14px;margin-top:7px}
+.arc-wrap{margin-top:24px}
+.arc-h{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin-bottom:12px;display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
+.arc-h .sub{font-size:10.5px;font-weight:600;letter-spacing:.01em;text-transform:none;color:var(--mut2)}
+.arc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.arc-step{display:flex;align-items:center;gap:10px;text-align:left;padding:11px 13px;border-radius:11px;border:1px solid var(--bd);background:var(--surf);box-shadow:var(--surf-sh);cursor:pointer;transition:.14s;font-family:inherit}
+.arc-n{flex:none;width:23px;height:23px;border-radius:7px;display:grid;place-items:center;font:700 11px -apple-system,sans-serif;background:var(--accbg);color:var(--accink);transition:.14s}
+.arc-t{font-size:12px;font-weight:600;color:var(--ink);line-height:1.25}
+.arc-step.on{border-color:var(--acc);background:var(--accbg);box-shadow:0 0 0 1px var(--acc),var(--surf-sh)}
+.arc-step.on .arc-n{background:var(--acc);color:#fff}
+.arc-step.done .arc-n{background:transparent;color:var(--acc);box-shadow:inset 0 0 0 1.5px var(--acc)}
+.arc-step:active{background:var(--accbg)}
+`;
+var WALK_HTML = `<div class="dots" id="wdots"></div>
+    <div class="card" id="wcard"></div>
+    <div class="nav">
+      <button type="button" id="wprev">&larr; Prev</button>
+      <span class="ctr" id="wctr"></span>
+      <button type="button" id="wnext">Next &rarr;</button>
+    </div>
+    <details class="model">
+      <summary>What a complete answer sounds like <span class="sub">model script &middot; the full arc, not just the opener</span></summary>
+      <div class="mbody">
+        <div class="mbeat"><span class="ml">Frame it before diving</span>"Before I trace it &mdash; I'll assume single region, files up to ~500&nbsp;MB, and that downstream consumers need the result within a few seconds. Stop me if any of that's off."</div>
+        <div class="mbeat"><span class="ml">Headline in one breath</span>"At a high level: the object lands in S3, that fires a trigger, I hash and validate it <b>while it streams</b>, write the metadata transactionally, then fan it out to the processors &mdash; built so memory stays flat no matter the file size."</div>
+        <div class="mbeat"><span class="ml">Walk the path</span>"Concretely &mdash; the upload completes to S3 and emits an event. My handler opens a read stream and forks it through a <b>PassThrough</b>: one branch computes the SHA&#8209;256, the other feeds the processor, so I never buffer the whole file or read it twice. Once I have the hash and size, I write the row &mdash; key, hash, status &mdash; to the metadata DB."</div>
+        <div class="mbeat"><span class="ml">Name the risk yourself</span>"The thing I'd flag without being asked is the <b>dual&#8209;write</b>: the object is already in S3, but if the DB write fails I've got an orphan. The compensating delete covers the common case, but the real backstop is a <b>reconciler</b> that sweeps S3 for keys with no committed row. I wouldn't claim the delete alone is safe."</div>
+        <div class="mbeat"><span class="ml">Name the trade-off line</span>"For dispatch I'd run a Lambda per object at this volume &mdash; the simplest thing that works. The moment I need retries, ordering, or a DLQ, I'd put <b>SQS</b> in front and make the processors consumers. That's the line I'd move on, and I'd say so before they ask."</div>
+        <div class="mbeat"><span class="ml">Be honest about the ceiling</span>"This holds to low thousands of objects a minute. Past that the metadata DB is the bottleneck &mdash; I'd shard by tenant or key&#8209;prefix and move fully onto SQS&#8209;fronted consumers. I'd call that out as the next redesign rather than pretend it scales forever."</div>
+        <div class="mq">Interviewer: "What if two uploads race on the same key?"</div>
+        <div class="mbeat ans"><span class="ml">Absorb the follow-up</span>"S3 is last&#8209;writer&#8209;wins on the object, so the bytes are fine &mdash; but my metadata could interleave. I'd make the DB write <b>idempotent on the key</b> with a conditional put, so the second writer updates cleanly or no&#8209;ops. And if ordering genuinely matters to the business, that's one more reason to move to a queue with a per&#8209;key partition."</div>
+      </div>
+    </details>
 
-/* one small progress dot per walkthrough step */
-for (let i = 0; i < steps.length; i++) {
-  dotsRow.appendChild(document.createElement('i'));
-}
+    <div class="arc-wrap">
+      <div class="arc-h">The whole flow <span class="sub">tap any step to jump</span></div>
+      <div class="arc-grid" id="warc"></div>
+    </div>`;
 
-/* the "arc" rail: one jump-button per step that leaps straight to it */
-const arcRow = document.getElementById('warc');
-for (let i = 0; i < steps.length; i++) {
-  (function (stepIdx) {
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'arc-step';
-    btn.innerHTML = '<span class="arc-n">' + (stepIdx + 1) + '</span>' +
-                    '<span class="arc-t">' + steps[stepIdx].t + '</span>';
-    btn.onclick = function () { wi = stepIdx; renderW(); };
-    arcRow.appendChild(btn);
-  })(i);
-}
-
-/* Render the current step into #wcard, then sync the dots, the arc rail, the
-   "N of M" counter, and the prev/next button disabled states. */
-function renderW() {
-  const step = steps[wi];
-  let html = '<div class="step-k">' + step.k + '</div><div class="step-t">' + step.t + '</div>' +
-    '<div class="flow">' + step.flow + '</div><div class="ins">' + step.ins + '</div>';
-  if (step.deep) {
-    html += '<details class="disc"><summary>Go deeper</summary><div class="body">' + step.deep + '</div></details>';
-  }
-  if (step.code) {
-    html += '<details class="disc"><summary>See the code</summary><pre class="code">' + step.code + '</pre><div class="codecap">' + step.cap + '</div></details>';
-  }
-  walkCard.innerHTML = html;
-
-  const dots = dotsRow.children;
-  for (let i = 0; i < dots.length; i++) {
-    dots[i].className = i < wi ? 'done' : (i === wi ? 'on' : '');
-  }
-  if (arcRow) {
-    const arcSteps = arcRow.children;
-    for (let i = 0; i < arcSteps.length; i++) {
-      arcSteps[i].className = 'arc-step' + (i < wi ? ' done' : (i === wi ? ' on' : ''));
+class DeepWalkthrough extends HTMLElement {
+  connectedCallback() {
+    if (this._built) return;
+    this._built = true;
+    this._wi = 0;
+    const root = this.attachShadow({ mode: 'open' });
+    root.adoptedStyleSheets = [BASE_SHEET];
+    root.innerHTML = '<style>' + WALK_STYLE + '</style>' + WALK_HTML;
+    this._card = root.getElementById('wcard');
+    this._dots = root.getElementById('wdots');
+    this._ctr = root.getElementById('wctr');
+    this._prev = root.getElementById('wprev');
+    this._next = root.getElementById('wnext');
+    this._arc = root.getElementById('warc');
+    const self = this;
+    for (let i = 0; i < steps.length; i++) { this._dots.appendChild(document.createElement('i')); }
+    for (let i = 0; i < steps.length; i++) {
+      (function (stepIdx) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'arc-step';
+        btn.innerHTML = '<span class="arc-n">' + (stepIdx + 1) + '</span><span class="arc-t">' + steps[stepIdx].t + '</span>';
+        btn.onclick = function () { self._wi = stepIdx; self._renderW(); };
+        self._arc.appendChild(btn);
+      })(i);
     }
+    this._prev.onclick = function () { self.prev(); };
+    this._next.onclick = function () { self.next(); };
+    this._renderW();
   }
-  counterEl.textContent = (wi + 1) + ' of ' + steps.length;
-  prevBtn.disabled = wi === 0;
-  nextBtn.disabled = wi === steps.length - 1;
+  _renderW() {
+    const step = steps[this._wi];
+    let html = '<div class="step-k">' + step.k + '</div><div class="step-t">' + step.t + '</div>' +
+      '<div class="flow">' + step.flow + '</div><div class="ins">' + step.ins + '</div>';
+    if (step.deep) { html += '<details class="disc"><summary>Go deeper</summary><div class="body">' + step.deep + '</div></details>'; }
+    if (step.code) { html += '<details class="disc"><summary>See the code</summary><pre class="code">' + step.code + '</pre><div class="codecap">' + step.cap + '</div></details>'; }
+    this._card.innerHTML = html;
+    const dots = this._dots.children;
+    for (let i = 0; i < dots.length; i++) { dots[i].className = i < this._wi ? 'done' : (i === this._wi ? 'on' : ''); }
+    const arcSteps = this._arc.children;
+    for (let i = 0; i < arcSteps.length; i++) { arcSteps[i].className = 'arc-step' + (i < this._wi ? ' done' : (i === this._wi ? ' on' : '')); }
+    this._ctr.textContent = (this._wi + 1) + ' of ' + steps.length;
+    this._prev.disabled = this._wi === 0;
+    this._next.disabled = this._wi === steps.length - 1;
+  }
+  prev() { if (this._wi > 0) { this._wi--; this._renderW(); } }
+  next() { if (this._wi < steps.length - 1) { this._wi++; this._renderW(); } }
 }
-
-prevBtn.onclick = function () { if (wi > 0) { wi--; renderW(); } };
-nextBtn.onclick = function () { if (wi < steps.length - 1) { wi++; renderW(); } };
-renderW();
+customElements.define('deep-walkthrough', DeepWalkthrough);
 
 /* ============ DRILL ============ */
 var cards=[
@@ -3364,9 +3366,12 @@ document.addEventListener('keydown', function (event) {
   const tabKeys = { q: 'walk', w: 'drill', e: 'wb', r: 'sys', t: 'trade', y: 'model', u: 'num', i: 'rf', o: 'open' };
   if (tabKeys[key]) { switchTab(tabKeys[key]); return; }
   if (current === 'walk') {
-    /* arrows step through the walkthrough */
-    if (event.key === 'ArrowLeft' && wi > 0) { wi--; renderW(); }
-    if (event.key === 'ArrowRight' && wi < steps.length - 1) { wi++; renderW(); }
+    /* arrows step through the walkthrough (bounds handled inside prev/next) */
+    const w = document.querySelector('#walk deep-walkthrough');
+    if (w) {
+      if (event.key === 'ArrowLeft') w.prev();
+      if (event.key === 'ArrowRight') w.next();
+    }
   } else if (current === 'drill') {
     /* space/enter advances; 1 and 2 self-grade the current card */
     const advBtn = document.getElementById('adv');

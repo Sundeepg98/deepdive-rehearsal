@@ -22,19 +22,17 @@ function mxCurve(cb) {
 /* Mixed-fire state: the assembled question pool, cursor, tallies, and the
    per-item log shared with the session-progress overlay. */
 var mxPool = [], mxIdx = 0, mxGot = 0, mxShk = 0, mxRes = [], mixLog = [];
-/* Scrape the Trade-offs pane into mixed-fire items (each decision becomes a
-   "name the switch condition" prompt that reveals the options + the tell). */
+/* Turn the Trade-offs pane's decisions into mixed-fire items (each becomes a
+   "name the switch condition" prompt revealing the options + the tell). The
+   decision DOM now lives inside <deep-trade-offs>, so we ask it via getDecisions()
+   instead of scraping #trade directly. */
 function getTrades() {
-  const decisions = document.querySelectorAll('#trade .dec');
+  const el = document.querySelector('#trade deep-trade-offs');
+  const decisions = el ? el.getDecisions() : [];
   const out = [];
   for (let i = 0; i < decisions.length; i++) {
-    const dec = decisions[i];
-    const decQ = dec.querySelector('.dec-q').innerHTML;
-    const opts = dec.querySelectorAll('.opt');
-    let optsHtml = '';
-    for (let o = 0; o < opts.length; o++) optsHtml += opts[o].outerHTML;
-    const tell = dec.querySelector('.dec-tell').innerHTML;
-    out.push({ kind: 'Trade-off', badge: 'mxb-trade', label: 'Name the switch condition', prompt: 'Defend the call &mdash; <b>' + decQ + '</b>. When would you reach for each side?', reveal: '<div class="mx-opts">' + optsHtml + '</div><div class="senior"><div class="sl">The switch condition to name out loud</div>' + tell + '</div>' });
+    const d = decisions[i];
+    out.push({ kind: 'Trade-off', badge: 'mxb-trade', label: 'Name the switch condition', prompt: 'Defend the call &mdash; <b>' + d.q + '</b>. When would you reach for each side?', reveal: '<div class="mx-opts">' + d.optsHtml + '</div><div class="senior"><div class="sl">The switch condition to name out loud</div>' + d.tell + '</div>' });
   }
   return out;
 }

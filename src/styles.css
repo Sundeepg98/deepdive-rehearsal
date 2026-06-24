@@ -11,7 +11,7 @@
     --indigo:#4338CA; --indigobg:#ECEBFB;
     --code:#2A2740; --codeink:#E7E4F5;
     /* system-map theme-flip tokens (inherit across the shadow boundary) */
-    --sm-line:#E0DBD1; --sm-dot-bg:#F0ECE4; --sm-card-bg:#FCFBF9; --sm-pa-fg:#4a463f; --sm-here-fg:#fff; --sm-cur-dot-bg:var(--acc); --op-hooks-bg:#FBFAF7; --op-foot-bg:#F1EEFB; --op-foot-fg:#46423b; --disc-bg:#FCFBF9; --disc-body-fg:#4a463f; --wb-foot-bg:#F1EEFB; --wb-foot-fg:#46423b; --wb-li-bd:#EFEAE1; --wb-ok-fg:#0a5240; --wb-ok-b-fg:#0a5240; --wb-warn-fg:#5e3c0a;
+    --sm-line:#E0DBD1; --sm-dot-bg:#F0ECE4; --sm-card-bg:#FCFBF9; --sm-pa-fg:#4a463f; --sm-here-fg:#fff; --sm-cur-dot-bg:var(--acc); --op-hooks-bg:#FBFAF7; --op-foot-bg:#F1EEFB; --op-foot-fg:#46423b; --disc-bg:#FCFBF9; --disc-body-fg:#4a463f; --wb-foot-bg:#F1EEFB; --wb-foot-fg:#46423b; --wb-li-bd:#EFEAE1; --wb-ok-fg:#0a5240; --wb-ok-b-fg:#0a5240; --wb-warn-fg:#5e3c0a; --opt-n-bd:#dcd6f5; --dec-tell-b-fg:#0a5240;
   }
   *{margin:0;padding:0;box-sizing:border-box}
   html{scroll-behavior:smooth}
@@ -133,19 +133,11 @@
   .debrief button{margin-top:18px;display:block;width:100%;border:1.5px solid var(--acc);background:#fff;color:var(--acc);font:700 13px -apple-system,sans-serif;padding:12px;border-radius:10px;cursor:pointer}
 
   /* trade-off ledger */
-  .ledger .lead{font-size:15px;line-height:1.5;color:var(--ink);margin:2px 2px 16px}
-  .ledger .lead b{color:var(--accink)}
-  .dec{background:var(--card);border:1px solid var(--bd);border-radius:13px;padding:15px 17px;margin-bottom:13px;border-top:3px solid var(--acc)}
-  .dec-q{font-size:14.5px;font-weight:800;color:var(--ink);letter-spacing:-.2px;margin-bottom:9px;line-height:1.4}
-  .dec-q .vs{color:var(--mut2);font-weight:700;font-size:11.5px;padding:0 3px}
   .opt{margin:11px 0}
-  .opt-n{display:inline-block;font:800 10.5px -apple-system,sans-serif;letter-spacing:.3px;color:var(--accink);background:var(--accbg);border:1px solid #dcd6f5;border-radius:6px;padding:4px 9px;margin-bottom:5px}
+  .opt-n{display:inline-block;font:800 10.5px -apple-system,sans-serif;letter-spacing:.3px;color:var(--accink);background:var(--accbg);border:1px solid var(--opt-n-bd);border-radius:6px;padding:4px 9px;margin-bottom:5px}
   .opt-w{font-size:12.8px;line-height:1.57;color:var(--ink)}
   .opt-w .pw{font-weight:800;color:var(--mut2);text-transform:uppercase;font-size:9.5px;letter-spacing:.5px;margin-right:6px}
   .opt-w b{color:var(--accink)}
-  .dec-tell{margin-top:12px;padding-top:11px;border-top:1px dashed var(--bd);font-size:12px;color:var(--teal);font-weight:700;line-height:1.5}
-  .dec-tell::before{content:"\2605";font-size:11px;margin-right:7px}
-  .dec-tell b{color:#0a5240}
 
   /* model answer */
   details.model{margin-top:16px;background:var(--card);border:1px solid var(--bd);border-left:4px solid var(--acc);border-radius:11px;overflow:hidden}
@@ -450,7 +442,7 @@ html[data-theme="dark"]{
   --teal:#4FCDAB; --tealbg:#143028; --red:#F08A8A; --redbg:#3A2020;
   --amber:#E5A24A; --amberbg:#352712; --indigo:#9D93F0; --indigobg:#24223C;
   --code:#15131D; --codeink:#E7E4F5;
-  --sm-line:#3A3642; --sm-dot-bg:#2A2730; --sm-card-bg:#262430; --sm-pa-fg:#C7C2BA; --sm-here-fg:#1A1622; --sm-cur-dot-bg:#2A2730; --op-hooks-bg:#262430; --op-foot-bg:#2A2540; --op-foot-fg:#BAB4AA; --disc-bg:#262430; --disc-body-fg:#B2ACA2; --wb-foot-bg:#2A2540; --wb-foot-fg:#BAB4AA; --wb-li-bd:#322E3A; --wb-ok-fg:#5FD3B0; --wb-ok-b-fg:#8FE0C8; --wb-warn-fg:#E8BC78;
+  --sm-line:#3A3642; --sm-dot-bg:#2A2730; --sm-card-bg:#262430; --sm-pa-fg:#C7C2BA; --sm-here-fg:#1A1622; --sm-cur-dot-bg:#2A2730; --op-hooks-bg:#262430; --op-foot-bg:#2A2540; --op-foot-fg:#BAB4AA; --disc-bg:#262430; --disc-body-fg:#B2ACA2; --wb-foot-bg:#2A2540; --wb-foot-fg:#BAB4AA; --wb-li-bd:#322E3A; --wb-ok-fg:#5FD3B0; --wb-ok-b-fg:#8FE0C8; --wb-warn-fg:#E8BC78; --opt-n-bd:#3A3552; --dec-tell-b-fg:#8FE0C8;
 }
 html[data-theme="dark"] body{background:var(--bg)}
 /* near-white card surfaces -> dark card */
@@ -470,7 +462,7 @@ html[data-theme="dark"] .dots i{background:#44404C}
 html[data-theme="dark"] .debrief .btn-sec:hover{background:#1A3A30}
 html[data-theme="dark"] .inttog-dot{background:#56525E}
 /* light borders -> dark */
-html[data-theme="dark"] .opt-n,html[data-theme="dark"] .ss-code,html[data-theme="dark"] .ninp input,html[data-theme="dark"] .mb-end-cv{border-color:#3A3552}
+html[data-theme="dark"] .ss-code,html[data-theme="dark"] .ninp input,html[data-theme="dark"] .mb-end-cv{border-color:#3A3552}
 html[data-theme="dark"] .tier.t2,html[data-theme="dark"] .senior{border-color:#2E5A4A}
 html[data-theme="dark"] .sigrow{border-bottom-color:#322E3A}
 html[data-theme="dark"] .sr-sec{border-bottom-color:#322E3A}
@@ -482,7 +474,7 @@ html[data-theme="dark"] .fu .fa b{color:#E8BC78}
 html[data-theme="dark"] #wbrerun{background:#262430}
 html[data-theme="dark"] .fb.n{color:#DAD6CE}
 html[data-theme="dark"] .senior{color:#7FD9BE}
-html[data-theme="dark"] .senior b,html[data-theme="dark"] .debrief .btn-sec,html[data-theme="dark"] .fb.t,html[data-theme="dark"] .dec-tell b,html[data-theme="dark"] .num-tell b{color:#8FE0C8}
+html[data-theme="dark"] .senior b,html[data-theme="dark"] .debrief .btn-sec,html[data-theme="dark"] .fb.t,html[data-theme="dark"] .num-tell b{color:#8FE0C8}
 html[data-theme="dark"] .speak{color:#CABFFB}
 html[data-theme="dark"] .fb.r,html[data-theme="dark"] .rec.nh .lvl,html[data-theme="dark"] .mb-int-q{color:#F0A0A0}
 
@@ -690,7 +682,7 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover{background:rgba(150,140,
   .cmp-kbd{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;font-family:inherit;font-size:11px;font-weight:700;color:var(--ink);background:var(--card);border:1px solid var(--bd);border-bottom-width:2px;border-radius:5px;vertical-align:middle}
 }
 /* v102: surface depth - crafted gradient surfaces + soft lift across content cards */
-.dec,.model{background:var(--surf);box-shadow:var(--surf-sh)}
+.model{background:var(--surf);box-shadow:var(--surf-sh)}
 /* v105: walkthrough "whole flow" map - the full 9-step arc, clickable, fills the short pane */
 .arc-wrap{margin-top:24px}
 .arc-h{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin-bottom:12px;display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}

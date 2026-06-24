@@ -1,3 +1,6 @@
+/* The whiteboard custom element exposes resetAll() / rerunMissed() / getStats();
+   session-progress reaches it through this helper rather than the old wb globals. */
+function wbEl() { return document.querySelector('#wb deep-whiteboard'); }
 /* ============ SESSION PROGRESS ============ */
 var sessov = document.getElementById('sessov'), sessbody = document.getElementById('sessbody');
 /* Open/close the session-progress overlay (re-rendered fresh on every open). */
@@ -16,9 +19,8 @@ function closeSession() {
    whiteboard cues, mock-run records, and mixed-fire state. */
 function clearSession() {
   setMode('study');
-  const items = wblist.querySelectorAll('li');
-  for (let i = 0; i < items.length; i++) wbReset(items[i]);
-  updCount();
+  const wb = wbEl();
+  if (wb) wb.resetAll();
   mockLastScore = null; mockLastTime = null; mockRuns = 0;
   mixLog = []; mxRes = []; mxGot = 0; mxShk = 0;
 }
@@ -41,18 +43,18 @@ function pickRec(revisit, missed, mScore, dDone, dTot, wbDone, mRuns, mixWeak) {
 function sessStats() {
   const dTot = cards.length, dDone = results.length, dGot = got, dShk = shk, dLeft = dTot - dDone;
   const revisit = results.filter(function (r) { return !r.ok; }).map(function (r) { return r.signal; });
-  const wbItems = wblist ? wblist.querySelectorAll('li') : [];
+  const wbStats = wbEl() ? wbEl().getStats() : { total: 0, items: [] };
   let wbGot = 0, wbMiss = 0;
   const missed = [];
-  for (let i = 0; i < wbItems.length; i++) {
-    if (wbItems[i].classList.contains('got')) wbGot++;
-    else if (wbItems[i].classList.contains('missed')) {
+  for (let i = 0; i < wbStats.items.length; i++) {
+    if (wbStats.items[i].got) wbGot++;
+    else if (wbStats.items[i].missed) {
       wbMiss++;
-      const cue = (wbSteps[i] && wbSteps[i].c) || ('Step ' + (i + 1));
+      const cue = wbStats.items[i].cue || ('Step ' + (i + 1));
       missed.push(cue.split('&mdash;')[0].replace(/[.\s]+$/, ''));
     }
   }
-  const wbTot = wbSteps.length, wbDone = wbGot + wbMiss;
+  const wbTot = wbStats.total, wbDone = wbGot + wbMiss;
   const mixTot = mixLog.length;
   let mixGot = 0;
   const mixLatest = {};
@@ -225,7 +227,7 @@ function renderSession() {
     closeSession();
     if (rec.tab === '__mock__') { openMock(); return; }
     if (rec.tab === '__mix__') { openMix(); return; }
-    if (rec.tab) { switchTab(rec.tab); if (rec.weak) drillWeak(); else if (rec.wbreset) wbRerun(); }
+    if (rec.tab) { switchTab(rec.tab); if (rec.weak) drillWeak(); else if (rec.wbreset) { const w = wbEl(); if (w) w.rerunMissed(); } }
   };
   /* Clear is two-tap (arm, then confirm) so progress can't be wiped by accident. */
   const clr = document.getElementById('ssclear');

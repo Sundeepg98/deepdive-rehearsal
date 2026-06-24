@@ -8,7 +8,7 @@
    flip between light and dark, so this sheet needs no dark-mode variants. */
 var BASE_SHEET = new CSSStyleSheet();
 BASE_SHEET.replaceSync(`
-*{box-sizing:border-box}
+*{margin:0;padding:0;box-sizing:border-box}
 :host{display:block;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 .card{background:var(--surf);border:1px solid var(--bd);border-radius:14px;padding:22px;box-shadow:var(--card-sh)}
 .step-k{font-family:var(--mono);font-size:11px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--acc)}

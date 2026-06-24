@@ -1,44 +1,86 @@
-/* ============ NUMBERS / NALSD ============ */
-/* Format an integer with thousands separators (NaN-safe). */
-function fmtN(x) { if (!isFinite(x)) x = 0; return Math.round(x).toLocaleString('en-US'); }
-
-/* Format a terabyte quantity, scaling up to PB and trimming precision as it grows. */
-function fmtTB(tb) {
-  if (!isFinite(tb)) tb = 0;
-  if (tb >= 1000) return (tb / 1000).toFixed(tb >= 10000 ? 0 : 1) + ' PB';
-  if (tb >= 10) return tb.toFixed(0) + ' TB';
-  return tb.toFixed(2) + ' TB';
-}
-
-/* Read a positive number from an input by id, defaulting to 0. */
-function nval(id) { const v = +document.getElementById(id).value; return isFinite(v) && v > 0 ? v : 0; }
-
-/* Back-of-envelope capacity model: derive throughput, concurrency, connection,
-   storage and cost figures from the four inputs, flagging the rows that breach
-   a known ceiling (Lambda's 1,000 default, a ~100-connection Postgres pool). */
-function calcNumbers() {
-  const perDay = nval('n_obj'), sizeMB = nval('n_size'), procS = nval('n_proc'), peakR = nval('n_peak');
-  const avg = perDay / 86400, peak = avg * peakR, conc = peak * procS, conn = conc;
-  const stDay = perDay * sizeMB / 1e6, stYr = stDay * 365, puts = perDay, putCost = puts / 1000 * 0.005;
-  const rows=[
-    {k:'Average throughput', v:fmtN(avg),u:'/s', n:'objects/day \u00F7 86,400 seconds', over:false},
-    {k:'Peak throughput', v:fmtN(peak),u:'/s', n:'average \u00D7 '+fmtN(peakR)+' peak ratio', over:false},
-    {k:'Lambda concurrency at peak', v:fmtN(conc),u:'', n:conc>1000?'exceeds the 1,000 default \u2014 RDS Proxy, or buffer through SQS':'peak/s \u00D7 processing time \u2014 within the 1,000 default', over:conc>1000},
-    {k:'DB connections at peak', v:fmtN(conn),u:'', n:conn>100?'far past a Postgres pool (~100) \u2014 needs RDS Proxy or a queue':'\u2248 one connection per invocation \u2014 a pool can hold this', over:conn>100},
-    {k:'Storage written / day', v:fmtTB(stDay).split(' ')[0],u:fmtTB(stDay).split(' ')[1], n:fmtTB(stYr)+' per year of raw objects', over:false},
-    {k:'S3 PUTs / day', v:fmtN(puts),u:'', n:'\u2248 $'+putCost.toFixed(2)+'/day in PUT requests alone', over:false}
-  ];
-  let html = '';
-  for (let i = 0; i < rows.length; i++) {
-    const row = rows[i];
-    html += '<div class="nrow' + (row.over ? ' over' : '') + '"><div class="nrow-k">' + row.k + '</div><div class="nrow-v">' + row.v + '<span class="nv-u">' + (row.u || '') + '</span></div><div class="nrow-n">' + row.n + '</div></div>';
+/* ============ NUMBERS / NALSD pane ============ */
+/* The back-of-envelope capacity calculator: four assumptions in, derived
+   throughput / concurrency / connection / storage / cost figures out, each row
+   flagged when it breaches a known ceiling (Lambda's 1,000 default, a ~100-conn
+   Postgres pool). A self-contained shadow component; the tab / rail / keyboard
+   nav that used to share this file stays global below. */
+var NUM_STYLE = `.numlead{font-size:15px;line-height:1.5;color:var(--ink);margin:2px 2px 16px}
+.numlead b{color:var(--accink)}
+.num-h{font:800 10px -apple-system,sans-serif;letter-spacing:.5px;text-transform:uppercase;color:var(--mut2);margin-bottom:11px}
+.ninp{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ninp label{display:flex;flex-direction:column;gap:5px;font:700 11px -apple-system,sans-serif;color:var(--mut)}
+.ninp input{font:700 15px ui-monospace,Menlo,monospace;color:var(--accink);background:var(--accbg);border:1px solid var(--ninp-bd);border-radius:8px;padding:9px 10px;width:100%;-moz-appearance:textfield}
+.ninp input::-webkit-outer-spin-button,.ninp input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.ninp input:focus{outline:2px solid var(--acc2);outline-offset:0;border-color:var(--acc2)}
+.nrow{display:grid;grid-template-columns:1fr auto;grid-template-areas:"k v" "n n";gap:2px 10px;padding:11px 0;border-bottom:1px solid var(--bd)}
+.nrow:last-child{border-bottom:0}
+.nrow-k{grid-area:k;font-size:13px;font-weight:700;color:var(--ink);align-self:center}
+.nrow-v{grid-area:v;font:800 17px ui-monospace,Menlo,monospace;color:var(--acc);align-self:center;white-space:nowrap}
+.nrow-n{grid-area:n;font-size:11.5px;color:var(--mut2);line-height:1.45}
+.nrow.over .nrow-v{color:var(--red)}
+.nrow.over .nrow-n{color:var(--red);font-weight:600}
+.num-tell{margin-top:13px;font-size:12px;color:var(--teal);font-weight:700;line-height:1.55;padding:12px 14px;background:var(--tealbg);border-radius:10px}
+.num-tell b{color:var(--dec-tell-b-fg)}
+.nv-u{display:inline-block;width:30px;text-align:left;padding-left:8px;box-sizing:border-box;font-size:13px;font-weight:600;color:var(--mut)}`;
+var NUM_HTML = `<div class="numlead">The estimation an interviewer makes you do at the whiteboard. State your assumptions and the <b>ceilings fall out of the arithmetic</b> &mdash; adjust any input and the math recomputes.</div>
+    <div class="card">
+      <div class="num-h">Assumptions</div>
+      <div class="ninp">
+        <label>Objects / day<input id="n_obj" type="number" value="10000000" min="0"></label>
+        <label>Avg size (MB)<input id="n_size" type="number" value="2" min="0" step="0.1"></label>
+        <label>Processing (sec)<input id="n_proc" type="number" value="2" min="0" step="0.1"></label>
+        <label>Peak : average<input id="n_peak" type="number" value="10" min="1"></label>
+      </div>
+    </div>
+    <div class="card" style="margin-top:13px">
+      <div class="num-h">What falls out</div>
+      <div id="nout"></div>
+    </div>
+    <div class="num-tell">The number you say isn't the point &mdash; the <b>ceiling</b> it reveals is. Concurrency past 1,000 says &lsquo;buffer through SQS&rsquo;; connections past the pool say &lsquo;RDS Proxy.&rsquo;</div>`;
+class DeepNumbers extends HTMLElement {
+  connectedCallback() {
+    if (this._built) return; this._built = true;
+    const root = this.attachShadow({ mode: 'open' });
+    root.adoptedStyleSheets = [BASE_SHEET];
+    root.innerHTML = '<style>' + NUM_STYLE + '</style>' + NUM_HTML;
+    this._root = root;
+    this._out = root.getElementById('nout');
+    const self = this;
+    ['n_obj', 'n_size', 'n_proc', 'n_peak'].forEach(function (id) {
+      root.getElementById(id).addEventListener('input', function () { self._calc(); });
+    });
+    this._calc();
   }
-  document.getElementById('nout').innerHTML = html;
+  _fmtN(x) { if (!isFinite(x)) x = 0; return Math.round(x).toLocaleString('en-US'); }
+  _fmtTB(tb) {
+    if (!isFinite(tb)) tb = 0;
+    if (tb >= 1000) return (tb / 1000).toFixed(tb >= 10000 ? 0 : 1) + ' PB';
+    if (tb >= 10) return tb.toFixed(0) + ' TB';
+    return tb.toFixed(2) + ' TB';
+  }
+  _nval(id) { const v = +this._root.getElementById(id).value; return isFinite(v) && v > 0 ? v : 0; }
+  _calc() {
+    const perDay = this._nval('n_obj'), sizeMB = this._nval('n_size'), procS = this._nval('n_proc'), peakR = this._nval('n_peak');
+    const avg = perDay / 86400, peak = avg * peakR, conc = peak * procS, conn = conc;
+    const stDay = perDay * sizeMB / 1e6, stYr = stDay * 365, puts = perDay, putCost = puts / 1000 * 0.005;
+    const rows = [
+      { k: 'Average throughput', v: this._fmtN(avg), u: '/s', n: 'objects/day \u00F7 86,400 seconds', over: false },
+      { k: 'Peak throughput', v: this._fmtN(peak), u: '/s', n: 'average \u00D7 ' + this._fmtN(peakR) + ' peak ratio', over: false },
+      { k: 'Lambda concurrency at peak', v: this._fmtN(conc), u: '', n: conc > 1000 ? 'exceeds the 1,000 default \u2014 RDS Proxy, or buffer through SQS' : 'peak/s \u00D7 processing time \u2014 within the 1,000 default', over: conc > 1000 },
+      { k: 'DB connections at peak', v: this._fmtN(conn), u: '', n: conn > 100 ? 'far past a Postgres pool (~100) \u2014 needs RDS Proxy or a queue' : '\u2248 one connection per invocation \u2014 a pool can hold this', over: conn > 100 },
+      { k: 'Storage written / day', v: this._fmtTB(stDay).split(' ')[0], u: this._fmtTB(stDay).split(' ')[1], n: this._fmtTB(stYr) + ' per year of raw objects', over: false },
+      { k: 'S3 PUTs / day', v: this._fmtN(puts), u: '', n: '\u2248 $' + putCost.toFixed(2) + '/day in PUT requests alone', over: false }
+    ];
+    let html = '';
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i];
+      html += '<div class="nrow' + (row.over ? ' over' : '') + '"><div class="nrow-k">' + row.k + '</div><div class="nrow-v">' + row.v + '<span class="nv-u">' + (row.u || '') + '</span></div><div class="nrow-n">' + row.n + '</div></div>';
+    }
+    this._out.innerHTML = html;
+  }
 }
-['n_obj', 'n_size', 'n_proc', 'n_peak'].forEach(function (id) { document.getElementById(id).addEventListener('input', calcNumbers); });
-calcNumbers();
+customElements.define('deep-numbers', DeepNumbers);
 
-/* ============ TABS + RAIL + KEYBOARD ============ */
 /* ============ TABS + RAIL + KEYBOARD ============ */
 const segBtns = document.querySelectorAll('.seg button');
 const panes = document.querySelectorAll('.pane');
@@ -75,11 +117,16 @@ document.addEventListener('keydown', function (event) {
       if (event.key === 'ArrowRight') w.next();
     }
   } else if (current === 'drill') {
-    /* space/enter advances; 1 and 2 self-grade the current card */
-    const advBtn = document.getElementById('adv');
-    if ((event.key === ' ' || event.key === 'Enter') && advBtn) { event.preventDefault(); advBtn.click(); }
-    if (key === '1') { const jgBtn = document.getElementById('jg'); if (jgBtn) jgBtn.click(); }
-    if (key === '2') { const jsBtn = document.getElementById('js'); if (jsBtn) jsBtn.click(); }
+    /* space/enter advances; 1 and 2 self-grade -- the controls live in the
+       drill's shadow now, so reach through it rather than the document */
+    const dd = document.querySelector('#drill deep-drill');
+    if (dd) {
+      const r = dd.shadowRoot;
+      const advBtn = r.getElementById('adv');
+      if ((event.key === ' ' || event.key === 'Enter') && advBtn) { event.preventDefault(); advBtn.click(); }
+      if (key === '1') { const jgBtn = r.getElementById('jg'); if (jgBtn) jgBtn.click(); }
+      if (key === '2') { const jsBtn = r.getElementById('js'); if (jsBtn) jsBtn.click(); }
+    }
   }
 });
 /* Modal focus management: dialogs are aria-modal, so trap Tab inside the open

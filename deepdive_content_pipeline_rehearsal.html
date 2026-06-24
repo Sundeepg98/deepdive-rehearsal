@@ -60,38 +60,16 @@
 
   .card{background:var(--surf);border:1px solid var(--bd);border-radius:14px;padding:22px;box-shadow:var(--card-sh)}
 
-
   .step-k{font-family:var(--mono);font-size:11px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--acc)}
   .step-t{font-size:19px;font-weight:720;margin:3px 0 5px;letter-spacing:-.2px}
   code{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;background:var(--code-inline-bg);padding:1px 5px;border-radius:4px;color:var(--accink)}
 
-
-
-  .dbar{height:6px;background:#ECE8E0;border-radius:6px;overflow:hidden;margin-bottom:14px}
-  .dbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--acc),var(--acc2));transition:width .3s ease}
   .score{display:flex;gap:9px;margin-bottom:14px}
-  .pill{flex:1;text-align:center;border:1px solid var(--bd);border-radius:11px;padding:9px;background:var(--card)}
-  .pill .v{font-size:20px;font-weight:760;line-height:1}
-  .pill .l{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--mut2);margin-top:3px}
-  .pill.g .v{color:var(--teal)} .pill.s .v{color:var(--amber)} .pill.left .v{color:var(--acc)}
 
-  .tier{display:inline-block;font-size:9.5px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;padding:3px 8px;border-radius:5px;border:1px solid;white-space:nowrap}
-  .tier.t2{color:var(--teal);background:var(--tealbg);border-color:#bfe0d4}
-  .tier.t3{color:var(--accink);background:var(--accbg);border-color:#cfc7f0}
-  .tier.tS{color:var(--red);background:var(--redbg);border-color:#e8c5c0}
-  .tier.tX{color:#fff;background:var(--indigo);border-color:var(--indigo)}
-  .sigtag{font-size:10px;color:var(--mut2);font-weight:700;margin-top:5px;letter-spacing:.2px}
-  .sigtag b{color:var(--acc)}
-
-  .thread{border:1.5px solid var(--bd);border-radius:13px;padding:18px;background:linear-gradient(180deg,#fff,#FBFAFF)}
-  .qrow{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:4px}
-  .qk{font-family:var(--mono);font-size:10px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--acc)}
   .qq{font-size:15.5px;font-weight:680;color:var(--ink);line-height:1.45}
   .ans{font-size:13px;color:#3c3830;margin-top:13px;padding:13px 15px;background:#F4F1FB;border-left:3px solid var(--acc);border-radius:8px;animation:pop .22s ease}
   .ans b{color:var(--accink)}
   .dnr{animation:pop .24s ease}
-  .cbump{animation:cbump .34s ease}
-  @keyframes cbump{0%{transform:scale(1)}28%{transform:scale(1.18)}100%{transform:scale(1)}}
   .fu{margin-top:13px;animation:pop .24s ease}
   .fu .lab{font-size:10px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:var(--amber);display:flex;align-items:center;gap:6px;margin-bottom:6px}
   .fu .lab::before{content:"\21B3";font-size:14px}
@@ -115,12 +93,6 @@
 
   .debrief .big{font-size:23px;font-weight:760;text-align:center;margin-bottom:4px}
   .debrief .sumline{text-align:center;color:var(--mut);font-size:13px;margin-bottom:18px}
-  .sigrow{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid #EFEAE1}
-  .sigrow:last-of-type{border-bottom:0}
-  .sigrow .mk{flex:none;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff}
-  .sigrow.ok .mk{background:var(--teal)} .sigrow.no .mk{background:var(--amber)}
-  .sigrow .nm{font-size:13px;font-weight:650}
-  .sigrow .tr{margin-left:auto}
   .verdict{margin-top:18px;font-size:13px;color:#3c3830;background:#F4F1FB;border-left:3px solid var(--acc);border-radius:9px;padding:14px 16px}
   .verdict b{color:var(--accink)}
   .debrief button{margin-top:18px;display:block;width:100%;border:1.5px solid var(--acc);background:#fff;color:var(--acc);font:700 13px -apple-system,sans-serif;padding:12px;border-radius:10px;cursor:pointer}
@@ -142,21 +114,7 @@
   .debrief .btn-sec:hover{background:#dcefe6}
 
   /* mock round */
-  .modetog{display:inline-flex;gap:4px;background:#F0ECE4;border:1px solid var(--bd);border-radius:9px;padding:4px}
-.tierrow{display:flex;align-items:center;gap:9px;margin:2px 0 16px;flex-wrap:wrap}
-.tierlab{font:700 9.5px -apple-system,sans-serif;letter-spacing:.5px;text-transform:uppercase;color:var(--mut2)}
-.tiernote{font:italic 12px/1.55 -apple-system,sans-serif;color:var(--mut);margin:-6px 0 18px;max-width:62ch}
-.tiernote b{color:var(--acc);font-style:normal;font-weight:750}
-  .modetog button{border:0;background:transparent;color:var(--mut);font:700 12px -apple-system,sans-serif;padding:13px 14px;border-radius:7px;cursor:pointer;transition:.15s}
-  .modetog button.on{background:var(--card);color:var(--acc);font-weight:780;box-shadow:0 0 0 1px rgba(83,74,183,.32),0 4px 12px rgba(83,74,183,.22)}
-.modetog button:not(.on):hover{background:rgba(83,74,183,.07);color:var(--ink)}
-  .timer{font:800 15px ui-monospace,Menlo,monospace;color:var(--acc);background:var(--accbg);border:1px solid #cfc7f0;border-radius:8px;padding:6px 13px}
-  .timer.low{color:var(--red);background:var(--redbg);border-color:#e8c5c0;animation:pulse .9s infinite}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
-  .speak{margin-top:11px;font-size:12.5px;color:#3a2e86;background:var(--accbg);border:1px solid #cfc7f0;border-radius:9px;padding:12px 14px;animation:pop .24s ease}
-  .speak .sl{font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--acc);display:flex;align-items:center;gap:6px;margin-bottom:5px}
-  .speak .sl::before{content:"\1F5E3"}
-  .speak b{color:var(--accink)}
   .rec{text-align:center;margin-bottom:4px}
   .rec .lvl{display:inline-block;font-size:21px;font-weight:800;letter-spacing:-.3px;padding:9px 22px;border-radius:11px;border:2px solid}
   .rec.sh .lvl{color:#0a5240;background:var(--tealbg);border-color:var(--teal)}
@@ -168,25 +126,6 @@
   /* model answers tab */
 
   /* numbers / nalsd */
-  .numlead{font-size:15px;line-height:1.5;color:var(--ink);margin:2px 2px 16px}
-  .numlead b{color:var(--accink)}
-  .num-h{font:800 10px -apple-system,sans-serif;letter-spacing:.5px;text-transform:uppercase;color:var(--mut2);margin-bottom:11px}
-  .ninp{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .ninp label{display:flex;flex-direction:column;gap:5px;font:700 11px -apple-system,sans-serif;color:var(--mut)}
-  .ninp input{font:700 15px ui-monospace,Menlo,monospace;color:var(--accink);background:var(--accbg);border:1px solid #d8d2f3;border-radius:8px;padding:9px 10px;width:100%;-moz-appearance:textfield}
-  .ninp input::-webkit-outer-spin-button,.ninp input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
-  .ninp input:focus{outline:2px solid var(--acc2);outline-offset:0;border-color:var(--acc2)}
-  .nrow{display:grid;grid-template-columns:1fr auto;grid-template-areas:"k v" "n n";gap:2px 10px;padding:11px 0;border-bottom:1px solid var(--bd)}
-  .nrow:last-child{border-bottom:0}
-  .nrow-k{grid-area:k;font-size:13px;font-weight:700;color:var(--ink);align-self:center}
-  .nrow-v{grid-area:v;font:800 17px ui-monospace,Menlo,monospace;color:var(--acc);align-self:center;white-space:nowrap}
-  .nrow-n{grid-area:n;font-size:11.5px;color:var(--mut2);line-height:1.45}
-  .nrow.over .nrow-v{color:var(--red)}
-  .nrow.over .nrow-n{color:var(--red);font-weight:600}
-  .num-tell{margin-top:13px;font-size:12px;color:var(--teal);font-weight:700;line-height:1.55;padding:12px 14px;background:var(--tealbg);border-radius:10px}
-  .num-tell b{color:#0a5240}
-
-
 
   /* mock run */
   .mockbar{display:flex;flex-direction:column;gap:8px;margin:0 0 16px}
@@ -379,7 +318,6 @@
   
   
 
-
   .step-sub{font-size:12.5px;color:var(--mut);margin-bottom:6px}
 
   #sessreport{display:none}
@@ -425,7 +363,7 @@ html[data-theme="dark"]{
 }
 html[data-theme="dark"] body{background:var(--bg)}
 /* near-white card surfaces -> dark card */
-html[data-theme="dark"] .ss-card,html[data-theme="dark"] .thread,html[data-theme="dark"] .ss-carry,html[data-theme="dark"] .cs-30{background:#262430}
+html[data-theme="dark"] .ss-card,html[data-theme="dark"] .ss-carry,html[data-theme="dark"] .cs-30{background:#262430}
 /* light purple tints -> dark purple */
 html[data-theme="dark"] .ans,html[data-theme="dark"] .verdict,html[data-theme="dark"] .fu .fa{background:#2A2540}
 /* inline code variants */
@@ -433,15 +371,13 @@ html[data-theme="dark"] .cram-body code{background:#2C2740}
 /* curveball badge (peach) -> dark amber */
 html[data-theme="dark"] .mxb-curve{background:#3A2814}
 /* warm/gray surfaces */
-html[data-theme="dark"] .modetog{background:#2A2730}
 html[data-theme="dark"] .kbd-hint kbd{background:#2E2A35;border-color:#46424E}
-html[data-theme="dark"] .rail,html[data-theme="dark"] .dbar{background:#211F28}
+html[data-theme="dark"] .rail{background:#211F28}
 html[data-theme="dark"] .debrief .btn-sec:hover{background:#1A3A30}
 html[data-theme="dark"] .inttog-dot{background:#56525E}
 /* light borders -> dark */
 html[data-theme="dark"] .ss-code,html[data-theme="dark"] .mb-end-cv{border-color:#3A3552}
-html[data-theme="dark"] .tier.t2,html[data-theme="dark"] .senior{border-color:#2E5A4A}
-html[data-theme="dark"] .sigrow{border-bottom-color:#322E3A}
+html[data-theme="dark"] .senior{border-color:#2E5A4A}
 html[data-theme="dark"] .sr-sec{border-bottom-color:#322E3A}
 /* dark text colors -> light variants */
 html[data-theme="dark"] .sr-stat{color:#D8D4CC}
@@ -451,7 +387,6 @@ html[data-theme="dark"] .fu .fa b{color:#E8BC78}
 html[data-theme="dark"] #wbrerun{background:#262430}
 html[data-theme="dark"] .senior{color:#7FD9BE}
 html[data-theme="dark"] .senior b,html[data-theme="dark"] .debrief .btn-sec{color:#8FE0C8}
-html[data-theme="dark"] .speak{color:#CABFFB}
 html[data-theme="dark"] .rec.nh .lvl,html[data-theme="dark"] .mb-int-q{color:#F0A0A0}
 
 html[data-theme="dark"] .sr-list{color:#C8C4BC}
@@ -461,8 +396,6 @@ html[data-theme="dark"] .mxb-trade{color:#B6ADE8}
 /* tab bar container + active-tab contrast */
 html[data-theme="dark"] .seg{background:#18161E}
 html[data-theme="dark"] .seg button:not(.on):hover{background:rgba(170,157,245,.13);color:var(--ink)}
-html[data-theme="dark"] .modetog{border-color:#37333F}
-html[data-theme="dark"] .modetog button:not(.on):hover{background:rgba(170,157,245,.13);color:var(--ink)}
 /* accent-bg buttons need dark text on light accent */
 html[data-theme="dark"] .mockbtn{color:#1A1622}
 html[data-theme="dark"] .badge{color:#1A1622}
@@ -571,19 +504,11 @@ html[data-theme="dark"]{--grid:rgba(170,157,245,.05);--canvas:radial-gradient(13
    so it shares the sheet stacking context and sits BELOW it (mobile tap-through fix) */
 .tools-bd{display:none}
 /* v82: persistent flagged-set re-drill chip */
-.revset{display:flex;align-items:center;gap:11px;flex-wrap:wrap;margin:2px 0 18px}
-.revset-b{font:650 13px -apple-system,system-ui,sans-serif;color:var(--accink);background:var(--accbg);border:1px solid var(--acc);border-radius:8px;padding:7px 13px;cursor:pointer;transition:background .13s,color .13s,transform .04s;display:inline-flex;align-items:center;gap:6px}
-.revset-b:hover{background:var(--acc);color:var(--bg)}
-.revset-b:active{transform:translateY(1px)}
-.revset-b:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
-.revset-b b{font-weight:800}
-.revset-h{font-size:12px;color:var(--mut);font-style:italic}
 /* desktop hover polish (v92) - all gated @media(hover:hover) so mobile tap never sticks */
 @media(hover:hover){
 .seg button{transition:background-color .14s ease,color .14s ease}
 .mb-rev,.wb-rev,.wb-got{transition:filter .12s ease}
 .seg button:hover:not(.on){background:rgba(109,95,214,.13)}
-.modetog button:hover:not(.on){color:var(--ink);background:rgba(109,95,214,.1)}
 .push:hover:not(.more){box-shadow:0 9px 26px rgba(83,74,183,.42),inset 0 1px 0 rgba(255,255,255,.14);transform:translateY(-1px)}
 .push.more:hover{box-shadow:0 9px 26px rgba(176,108,20,.42),inset 0 1px 0 rgba(255,255,255,.14);transform:translateY(-1px)}
 .mb-rev:hover,.ss-cmpbtn:hover,.wb-rev:hover,.wb-got:hover,.wb-miss:hover{filter:brightness(.96)}
@@ -658,20 +583,6 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover{background:rgba(150,140,
 /* v105: walkthrough "whole flow" map - the full 9-step arc, clickable, fills the short pane */
 @media(hover:hover){.arc-step:hover{border-color:var(--acc);transform:translateY(-1px)}}
 @media(max-width:560px){.arc-grid{grid-template-columns:repeat(2,1fr)}}
-/* v106: drill probe-navigator - jump to any probe, flagged ones marked; fills the drill's void */
-.dnav-wrap{margin-top:22px}
-.dnav-h{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin-bottom:12px;display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
-.dnav-h .sub{font-size:10.5px;font-weight:600;letter-spacing:.01em;text-transform:none;color:var(--mut2)}
-.dnav{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.dn-step{display:flex;align-items:center;gap:9px;text-align:left;padding:9px 11px;border-radius:10px;border:1px solid var(--bd);background:var(--surf);box-shadow:var(--surf-sh);cursor:pointer;transition:.14s;font-family:inherit;min-width:0}
-.dn-n{flex:none;width:21px;height:21px;border-radius:6px;display:grid;place-items:center;font:700 10.5px -apple-system,sans-serif;background:var(--accbg);color:var(--accink);transition:.14s}
-.dn-t{font-size:11.5px;font-weight:600;color:var(--ink);line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.dn-step.on{border-color:var(--acc);background:var(--accbg);box-shadow:0 0 0 1px var(--acc),var(--surf-sh)}
-.dn-step.on .dn-n{background:var(--acc);color:#fff}
-.dn-step.flag{border-color:var(--amber)}
-.dn-step.flag .dn-n{background:var(--amber);color:#fff}
-@media(hover:hover){.dn-step:hover{border-color:var(--acc);transform:translateY(-1px)}}
-@media(max-width:560px){.dnav{grid-template-columns:repeat(2,1fr)}}
 .cmp-move{font-size:12.5px;line-height:1.5;color:var(--ink);font-weight:500;margin:0;border-left:2px solid var(--acc);padding-left:12px}
 /* v108: mobile/tablet companion - surfaces the rail's coaching wherever the rail is hidden (<1280) */
 .mcomp{display:block;width:100%;max-width:830px;margin:0 auto 24px;border:1px solid var(--bd);border-radius:14px;background:var(--panel);box-shadow:var(--surf-sh);overflow:hidden}
@@ -687,7 +598,6 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover{background:rgba(150,140,
 .mcomp-block+.mcomp-block{border-top:1px solid var(--bd)}
 @media(min-width:1280px){.mcomp{display:none}}
 /* v109 micro-polish: press feedback on the newest interactive elements + a soft companion reveal */
-.dn-step:active{background:var(--accbg)}
 @media(hover:hover){.mcomp-sum:hover{background:var(--accbg)}}
 .mcomp-sum:active{background:var(--accbg)}
 @keyframes mcompReveal{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
@@ -697,8 +607,6 @@ button,summary{-webkit-user-select:none;user-select:none}
 /* v111 micro-polish: drop the default mobile tap-flash (the gray box doesn't match the rounded controls); every control already has custom feedback - selection state, result change, or a press-state. The tool-opener rows only get a (delayed) overlay, so give them an in-place press. */
 .crambtn:active{transform:translateY(1px)}
 *{-webkit-tap-highlight-color:transparent}
-.nv-u{display:inline-block;width:30px;text-align:left;padding-left:8px;box-sizing:border-box;font-size:13px;font-weight:600;color:var(--mut)}
-.pill.z .v{color:var(--mut)}
 </style>
 <script>try{var _dk=matchMedia('(prefers-color-scheme:dark)').matches;document.documentElement.dataset.theme=_dk?'dark':'light';var _tc=document.querySelector('meta[name="theme-color"]');if(_tc)_tc.setAttribute('content',_dk?'#15141A':'#FAF9F5');}catch(e){}</script>
 </head>

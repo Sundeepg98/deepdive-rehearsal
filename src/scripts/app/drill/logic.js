@@ -4,6 +4,10 @@
    the working set). Stats reach session-progress via getStats(). */
 var DRILL_TIER_CLASS = { SDE2: 't2', SDE3: 't3', Staff: 'tS', EXTEND: 'tX' };
 var DRILL_TIER_NOTES={all:'<b>All four levels, mixed</b> &mdash; the way a real loop actually comes at you.',SDE2:'<b>Fundamentals under pressure</b> &mdash; memory model, I/O, idempotent writes. The bar is &ldquo;this won&rsquo;t fall over&rdquo;: show the mechanics cleanly.',SDE3:'<b>Depth &amp; trade-offs</b> &mdash; consistency, schema evolution, the hidden bill. The bar is &ldquo;it depends, here&rsquo;s the switch&rdquo;: never a one-size answer.',Staff:'<b>Systems judgment</b> &mdash; irreversibility, blast radius, the exactly-once illusion. The bar is &ldquo;I see the failure mode before it ships&rdquo;: name what breaks and name the backstop.'};
+/* The full, immutable card / speak banks. cards / speakLines (above, in
+   cards.js / speak-lines.js) are the reassignable WORKING set; these keep the
+   originals. SHARED: mixed-fire.js reads _allCards to assemble its probe set. */
+var _allCards = cards, _allSpeak = speakLines;
 var DRILL_HTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
       <div class="modetog" id="modetog">
         <button type="button" class="on" data-m="study">Study</button>
@@ -125,11 +129,21 @@ var DRILL_STYLE = `@keyframes pop{from{opacity:0;transform:translateY(7px) scale
 .dn-step.flag .dn-n{background:var(--amber);color:#fff}
 .dn-step:active{background:var(--accbg)}`;
 
+/* Fisher-Yates shuffle of [0..count). SHARED: mixed-fire.js calls it too,
+   so it stays a module-level global rather than a component method. */
+function dShuffle(count) {
+  const arr = [];
+  for (let i = 0; i < count; i++) arr.push(i);
+  for (let i = count - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+  }
+  return arr;
+}
 class DeepDrill extends HTMLElement {
   connectedCallback() {
     if (this._built) return; this._built = true;
     this.mode = 'study'; this.tierFilter = 'all'; this.timerId = null; this.mockLeft = 0;
-    this._allCards = cards; this._allSpeak = speakLines;
     this.di = 0; this.got = 0; this.shk = 0; this.results = [];
     this.revisit = {}; this.revisitMode = false;
     const root = this.attachShadow({ mode: 'open' });
@@ -160,7 +174,7 @@ class DeepDrill extends HTMLElement {
     if (!nav) return;
     let html = '';
     for (let k = 0; k < cards.length; k++) {
-      const card = cards[k], originalIdx = this._allCards.indexOf(card), flagged = this.revisit[originalIdx];
+      const card = cards[k], originalIdx = _allCards.indexOf(card), flagged = this.revisit[originalIdx];
       html += '<button type="button" class="dn-step' + (k === this.di ? ' on' : '') + (flagged ? ' flag' : '') + '" data-i="' + k + '"><span class="dn-n">' + (k + 1) + '</span><span class="dn-t">' + card.signal + '</span></button>';
     }
     nav.innerHTML = html;
@@ -218,7 +232,7 @@ class DeepDrill extends HTMLElement {
   judge(ok) {
     const card = cards[this.di];
     if (ok) this.got++; else this.shk++;
-    const originalIdx = this._allCards.indexOf(card);
+    const originalIdx = _allCards.indexOf(card);
     if (originalIdx > -1) { if (ok) { delete this.revisit[originalIdx]; } else { this.revisit[originalIdx] = true; } }
     this.results.push({ signal: card.signal, tier: card.tier, ok: ok, card: card, speak: speakLines[this.di] });
     this.di++;
@@ -262,8 +276,8 @@ class DeepDrill extends HTMLElement {
     for (let key in this.revisit) { if (this.revisit.hasOwnProperty(key)) indices.push(+key); }
     if (!indices.length) return;
     indices.sort(function (a, b) { return a - b; });
-    cards = indices.map(function (i) { return self._allCards[i]; });
-    speakLines = indices.map(function (i) { return self._allSpeak[i]; });
+    cards = indices.map(function (i) { return _allCards[i]; });
+    speakLines = indices.map(function (i) { return _allSpeak[i]; });
     this.di = 0; this.got = 0; this.shk = 0; this.results = []; this.revisitMode = true;
     this.stopTimer();
     this.renderD();
@@ -297,19 +311,10 @@ class DeepDrill extends HTMLElement {
     }, 1000);
   }
   stopTimer() { if (this.timerId) { clearInterval(this.timerId); this.timerId = null; } this._timerEl.style.display = 'none'; }
-  dShuffle(count) {
-    const arr = [];
-    for (let i = 0; i < count; i++) arr.push(i);
-    for (let i = count - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      const tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
-    }
-    return arr;
-  }
   basePoolIdx() {
     const indices = [];
-    for (let i = 0; i < this._allCards.length; i++) {
-      if (this.tierFilter === 'all' || this._allCards[i].tier === this.tierFilter) indices.push(i);
+    for (let i = 0; i < _allCards.length; i++) {
+      if (this.tierFilter === 'all' || _allCards[i].tier === this.tierFilter) indices.push(i);
     }
     return indices;
   }
@@ -318,12 +323,12 @@ class DeepDrill extends HTMLElement {
     this.mode = m;
     const base = this.basePoolIdx();
     if (m === 'quick') {
-      const quickIdx = this.dShuffle(base.length).slice(0, 5).map(function (i) { return base[i]; });
-      cards = quickIdx.map(function (i) { return self._allCards[i]; });
-      speakLines = quickIdx.map(function (i) { return self._allSpeak[i]; });
+      const quickIdx = dShuffle(base.length).slice(0, 5).map(function (i) { return base[i]; });
+      cards = quickIdx.map(function (i) { return _allCards[i]; });
+      speakLines = quickIdx.map(function (i) { return _allSpeak[i]; });
     } else {
-      cards = base.map(function (i) { return self._allCards[i]; });
-      speakLines = base.map(function (i) { return self._allSpeak[i]; });
+      cards = base.map(function (i) { return _allCards[i]; });
+      speakLines = base.map(function (i) { return _allSpeak[i]; });
     }
     this.di = 0; this.got = 0; this.shk = 0; this.results = []; this.revisitMode = false;
     const modeBtns = this._modetog.children;

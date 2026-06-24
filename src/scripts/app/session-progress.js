@@ -17,8 +17,9 @@ function closeSession() {
 }
 /* Reset every tracked surface to a clean slate: drill (back to study mode),
    whiteboard cues, mock-run records, and mixed-fire state. */
+function drillEl() { return document.querySelector('#drill deep-drill'); }
 function clearSession() {
-  setMode('study');
+  const d = drillEl(); if (d) d.reset();
   const wb = wbEl();
   if (wb) wb.resetAll();
   mockLastScore = null; mockLastTime = null; mockRuns = 0;
@@ -41,8 +42,9 @@ function pickRec(revisit, missed, mScore, dDone, dTot, wbDone, mRuns, mixWeak) {
 /* Gather a full snapshot of progress across all four surfaces (drill,
    whiteboard, mock, mixed fire) into one flat stats object. */
 function sessStats() {
-  const dTot = cards.length, dDone = results.length, dGot = got, dShk = shk, dLeft = dTot - dDone;
-  const revisit = results.filter(function (r) { return !r.ok; }).map(function (r) { return r.signal; });
+  const ds = drillEl() ? drillEl().getStats() : { dTot: 0, dDone: 0, dGot: 0, dShk: 0, revisit: [] };
+  const dTot = ds.dTot, dDone = ds.dDone, dGot = ds.dGot, dShk = ds.dShk, dLeft = dTot - dDone;
+  const revisit = ds.revisit;
   const wbStats = wbEl() ? wbEl().getStats() : { total: 0, items: [] };
   let wbGot = 0, wbMiss = 0;
   const missed = [];
@@ -227,7 +229,7 @@ function renderSession() {
     closeSession();
     if (rec.tab === '__mock__') { openMock(); return; }
     if (rec.tab === '__mix__') { openMix(); return; }
-    if (rec.tab) { switchTab(rec.tab); if (rec.weak) drillWeak(); else if (rec.wbreset) { const w = wbEl(); if (w) w.rerunMissed(); } }
+    if (rec.tab) { switchTab(rec.tab); if (rec.weak) { const dr = drillEl(); if (dr) dr.weak(); } else if (rec.wbreset) { const w = wbEl(); if (w) w.rerunMissed(); } }
   };
   /* Clear is two-tap (arm, then confirm) so progress can't be wiped by accident. */
   const clr = document.getElementById('ssclear');

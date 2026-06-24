@@ -34,11 +34,7 @@ var SYS_PIVOTS = [
 ];
 
 var SYS_STYLE = `
-*{box-sizing:border-box}
-:host{display:block;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
-.card{background:var(--surf);border:1px solid var(--bd);border-radius:14px;padding:22px;box-shadow:var(--card-sh)}
 .card + .card{margin-top:14px}
-.step-t{font-family:var(--display);font-size:19px;font-weight:720;margin:3px 0 5px;letter-spacing:-.2px}
 .sm-intro{font-size:12.5px;color:var(--mut);margin-bottom:18px}
 .chain{position:relative;padding-left:8px}
 .stg{position:relative;display:flex;gap:14px;padding:0 0 18px 0}
@@ -71,6 +67,7 @@ class DeepSystemMap extends HTMLElement {
     if (this._built) return;
     this._built = true;
     const root = this.attachShadow({ mode: 'open' });
+    root.adoptedStyleSheets = [BASE_SHEET];
     const chain = SYS_STAGES.map(function (s, i) {
       return '<div class="stg' + (s.cur ? ' cur' : '') + '">' +
         '<div class="ln"></div><div class="dot">' + (i + 1) + '</div>' +

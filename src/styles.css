@@ -251,21 +251,6 @@
   .num-tell{margin-top:13px;font-size:12px;color:var(--teal);font-weight:700;line-height:1.55;padding:12px 14px;background:var(--tealbg);border-radius:10px}
   .num-tell b{color:#0a5240}
 
-  /* red flags / anti-patterns */
-  .rflead{font-size:15px;line-height:1.5;color:var(--ink);margin:2px 2px 16px}
-  .rflead b{color:var(--accink)}
-  .rf{background:var(--card);border:1px solid var(--bd);border-radius:13px;padding:14px 16px;margin-bottom:12px;border-left:3px solid var(--red)}
-  .rf-bad{display:flex;gap:9px;align-items:flex-start;font-size:13.5px;line-height:1.5}
-  .rf-x{flex:none;color:var(--red);font:800 13px -apple-system,sans-serif;line-height:1.55}
-  .rf-bad .rf-t b{color:var(--red);font-weight:700}
-  .rf-note{color:var(--mut2);font-weight:600;font-style:italic;font-size:11.5px}
-  .rf-tell{font-size:12.5px;color:var(--mut);line-height:1.55;margin:8px 0 10px;padding-left:22px}
-  .rf-tell b{color:var(--ink);font-weight:700}
-  .rf-tell i{color:var(--amber);font-style:italic;font-weight:600}
-  .rf-fix{display:flex;gap:9px;align-items:flex-start;font-size:12.8px;line-height:1.55;padding-top:10px;border-top:1px dashed var(--bd)}
-  .rf-c{flex:none;color:var(--teal);font-weight:800;line-height:1.5}
-  .rf-fix .rf-t{color:var(--ink)}
-  .rf-fix .rf-t b{color:var(--teal);font-weight:700}
 
   /* opener / altitude */
   .op-lead{font-size:15px;line-height:1.5;color:var(--ink);margin:2px 0 17px}
@@ -802,7 +787,7 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover{background:rgba(150,140,
   .cmp-kbd{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;font-family:inherit;font-size:11px;font-weight:700;color:var(--ink);background:var(--card);border:1px solid var(--bd);border-bottom-width:2px;border-radius:5px;vertical-align:middle}
 }
 /* v102: surface depth - crafted gradient surfaces + soft lift across content cards */
-.dec,.rf,.op,.model{background:var(--surf);box-shadow:var(--surf-sh)}
+.dec,.op,.model{background:var(--surf);box-shadow:var(--surf-sh)}
 /* v105: walkthrough "whole flow" map - the full 9-step arc, clickable, fills the short pane */
 .arc-wrap{margin-top:24px}
 .arc-h{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin-bottom:12px;display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}

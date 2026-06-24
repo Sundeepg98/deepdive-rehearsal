@@ -1,3 +1,5 @@
+<!--@build:include scripts/app/base-styles.js-->
+<!--@build:include scripts/app/red-flags.js-->
 <!--@build:include scripts/app/walkthrough.js-->
 <!--@build:include scripts/app/drill.js-->
 <!--@build:include scripts/app/whiteboard.js-->

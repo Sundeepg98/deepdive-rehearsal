@@ -186,3 +186,33 @@ opener, model-answers convert mechanically), then the coupled panes (whiteboard,
 drill, mock-run, mixed-fire, session-progress) where the public-API seam is designed
 first, then the overlays (open/close wiring is their seam). Each conversion lands
 gate-green before the next.
+
+## Web components: the visual-regression gate (why "gate-green" was not enough)
+
+The structural checks (stage/pivot counts, theme tokens flipping, no light-DOM
+leak) all passed for the sys pilot -- but they did not prove the pane LOOKED the
+same. A pixel diff of the pane, rendered from the pre-conversion build vs the
+converted build in both themes, found three real regressions the structural checks
+missed:
+
+1. **Display font dropped at the shadow boundary.** The global rule
+   `.step-t,...{font-family:var(--display)}` (Space Grotesk) does not cross into a
+   shadow root, so the card heading fell back to the system font. Fix: carry the
+   rule into the component.
+2. **The `*{box-sizing:border-box}` reset does not cross the boundary.** Inside the
+   shadow, elements reverted to `content-box`, so the stage dot's 2px border added
+   width and shifted every stage's text 4px to the right. Fix: add the reset to the
+   shadow styles. (This moved the most pixels.)
+3. **A dark-mode specificity quirk.** In the original the current-stage dot loses
+   its accent fill in dark mode, because `html[data-theme="dark"] .stg .dot` (0,3,1)
+   outranks `.stg.cur .dot` (0,3,0). The shadow has no such ancestor rule, so the
+   dot filled solid accent. A conversion must change nothing, so the quirk was
+   reproduced exactly via a flip token (`--sm-cur-dot-bg`) rather than silently
+   "fixed" -- worth fixing on its own, separately, if desired.
+
+After the fixes the pane is pixel-identical in both themes (0 differing pixels).
+The lesson: a structural gate cannot prove visual fidelity. Every pane conversion
+now lands a pixel diff (old build vs new build, light and dark) and must reach zero
+before commit. The two foundational rules every shadow needs --
+`*{box-sizing:border-box}` and the `var(--display)` heading rule -- plus tokenized
+dark-flips are the core of the per-pane recipe.

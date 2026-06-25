@@ -2,7 +2,7 @@
    session-progress reaches it through this helper rather than the old wb globals. */
 function wbEl() { return document.querySelector('#wb deep-whiteboard'); }
 /* ============ SESSION PROGRESS ============ */
-var sessov = document.getElementById('sessov'), sessbody = document.getElementById('sessbody');
+var sessov = document.getElementById('sessov'), sessbody = null, sessRoot = null;
 /* Open/close the session-progress overlay (re-rendered fresh on every open). */
 function openSession() {
   renderSession();
@@ -147,7 +147,7 @@ function trendRow(label, series, upGood) {
 /* Render the Compare panel: one prior code -> a delta table; multiple -> a trend
    view with sparklines. Each metric only shows when both sides have the data. */
 function renderCompare() {
-  const pasteEl = document.getElementById('sspaste'), outEl = document.getElementById('sscmpout');
+  const pasteEl = sessRoot.getElementById('sspaste'), outEl = sessRoot.getElementById('sscmpout');
   if (!pasteEl || !outEl) return;
   const priors = parseCodes(pasteEl.value);
   if (!priors.length) { outEl.innerHTML = '<div class="cmp-err">No session code found &mdash; paste one or more full <code>CPR1&hellip;</code> lines from past sessions.</div>'; return; }
@@ -224,7 +224,7 @@ function renderSession() {
 
   /* "do this next" button: close, then jump to the relevant tab/overlay (and
      pre-load the weak-spot drill or whiteboard reset where the rec asks for it). */
-  const go = document.getElementById('ssgo');
+  const go = sessRoot.getElementById('ssgo');
   if (go) go.onclick = function () {
     closeSession();
     if (rec.tab === '__mock__') { openMock(); return; }
@@ -232,7 +232,7 @@ function renderSession() {
     if (rec.tab) { switchTab(rec.tab); if (rec.weak) { const dr = drillEl(); if (dr) dr.weak(); } else if (rec.wbreset) { const w = wbEl(); if (w) w.rerunMissed(); } }
   };
   /* Clear is two-tap (arm, then confirm) so progress can't be wiped by accident. */
-  const clr = document.getElementById('ssclear');
+  const clr = sessRoot.getElementById('ssclear');
   let clrArmed = false;
   if (clr) clr.onclick = function () {
     if (!clrArmed) { clrArmed = true; clr.classList.add('arm'); clr.textContent = 'Tap again \u2014 this wipes all progress'; return; }
@@ -240,12 +240,12 @@ function renderSession() {
     renderSession();
   };
   /* Save-as-PDF: build the printable report, flag the body for print CSS, print. */
-  const prn = document.getElementById('ssprint');
+  const prn = sessRoot.getElementById('ssprint');
   if (prn) prn.onclick = function () { buildSessReport(); document.body.classList.add('print-session'); try { window.print(); } catch (_) {} };
   /* Copy the session code (execCommand with a clipboard-API fallback). */
-  const cp = document.getElementById('sscopy');
+  const cp = sessRoot.getElementById('sscopy');
   if (cp) cp.onclick = function () {
-    const f = document.getElementById('sscode');
+    const f = sessRoot.getElementById('sscode');
     if (!f) return;
     f.focus();
     f.select();
@@ -257,10 +257,10 @@ function renderSession() {
     b.textContent = ok ? 'Copied' : 'Press \u2318C';
     setTimeout(function () { b.textContent = 'Copy'; }, 1500);
   };
-  const cmb = document.getElementById('sscmpbtn');
+  const cmb = sessRoot.getElementById('sscmpbtn');
   if (cmb) cmb.onclick = renderCompare;
   /* Cmd/Ctrl-Enter in the paste box also triggers Compare. */
-  const pst = document.getElementById('sspaste');
+  const pst = sessRoot.getElementById('sspaste');
   if (pst) pst.onkeydown = function (e) { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); renderCompare(); } };
 }
 /* Wire the overlay open/close triggers. */
@@ -275,3 +275,83 @@ if (inttogEl) inttogEl.onclick = function () {
   this.querySelector('.inttog-lbl').innerHTML = 'Interviewer cuts in mid-answer &mdash; <b>' + (mockInterrupt ? 'on' : 'off') + '</b>';
   mockIntSet = mockInterrupt ? pickInterrupts() : {};
 };
+
+
+/* ===== SESSION PROGRESS as a shadow component =====
+   The body moves into this shadow; the existing render functions target the
+   shadow body via the reassigned `sessbody` global and look up their rendered
+   controls through `sessRoot` (ShadowRoot.getElementById, the drill pattern).
+   The frame + open/close + the light print container (#sessreport) stay light. */
+var SESS_STYLE = `.sess-body{padding:18px 20px 24px}
+.ss-rec{border-radius:12px;padding:14px 16px;margin:0 0 15px;border:1.5px solid}
+.ss-rk{font:800 9.5px -apple-system,sans-serif;letter-spacing:.7px;text-transform:uppercase;margin:0 0 6px}
+.ss-rt{font-size:13.5px;line-height:1.5;font-weight:600}
+.ss-rt b{font-weight:800}
+.ss-go{margin-top:12px;border:none;border-radius:9px;padding:9px 15px;font:700 12px -apple-system,sans-serif;cursor:pointer;color:var(--ss-go-fg);background:var(--acc)}
+.ss-go:hover{background:var(--accink)}
+.ss-card{border:1px solid var(--bd);border-radius:11px;padding:12px 14px;margin:0 0 10px;background:var(--ss-card-bg)}
+.ss-h{font:750 12.5px -apple-system,sans-serif;color:var(--ink);margin:0 0 6px;display:flex;align-items:center;gap:8px}
+.ss-dot{width:8px;height:8px;border-radius:50%;flex:none}
+.ss-stat{font-size:12.3px;color:var(--mut);line-height:1.5}
+.ss-g{color:var(--teal);font-weight:750}
+.ss-s{color:var(--amber);font-weight:750}
+.ss-list{margin:8px 0 0;padding:8px 11px;background:var(--accbg);border-radius:8px;font-size:11.5px;line-height:1.6;color:var(--accink)}
+.ss-list b{font-weight:750}
+.ss-none{color:var(--mut2);font-style:italic}
+.ss-clear{width:100%;margin-top:6px;border:1px dashed var(--bd);background:transparent;color:var(--mut2);font:600 11.5px -apple-system,sans-serif;padding:10px 13px;border-radius:9px;cursor:pointer;transition:.13s}
+.ss-print{width:100%;margin-top:8px;border:1px solid var(--acc);background:var(--accbg);color:var(--accink);font:700 12.5px -apple-system,sans-serif;padding:11px 13px;border-radius:9px;cursor:pointer;transition:.13s}
+.ss-print:hover{background:var(--acc);color:#fff}
+.ss-carry{margin-top:14px;padding:13px;border:1px solid var(--bd);border-radius:11px;background:var(--ss-carry-bg)}
+.ss-carry-h{font:800 10px -apple-system,sans-serif;letter-spacing:.5px;text-transform:uppercase;color:var(--mut2);margin-bottom:9px}
+.ss-code-row,.ss-cmp-row{display:flex;gap:7px}
+.ss-code-row{margin-bottom:8px}
+.ss-code{flex:1;min-width:0;font:600 11px ui-monospace,Menlo,monospace;color:var(--accink);background:var(--accbg);border:1px solid var(--ss-code-bd);border-radius:7px;padding:8px 9px}
+.ss-copy,.ss-cmpbtn{flex:none;border:1px solid var(--acc);background:var(--ss-btn-bg);color:var(--acc);font:700 11px -apple-system,sans-serif;padding:8px 12px;border-radius:7px;cursor:pointer;transition:.13s}
+.ss-copy:active,.ss-cmpbtn:active{background:var(--accbg)}
+.ss-paste{flex:1;min-width:0;font:500 11px ui-monospace,Menlo,monospace;color:var(--ink);background:var(--ss-btn-bg);border:1px solid var(--bd);border-radius:7px;padding:8px 9px;resize:none;line-height:1.45}
+.cmp-head{font:800 10px -apple-system,sans-serif;letter-spacing:.5px;text-transform:uppercase;color:var(--mut2);margin:13px 0 4px}
+.cmp-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-top:1px solid var(--bd)}
+.cmp-lbl{flex:1;font-size:12.5px;color:var(--ink)}
+.cmp-val{font-size:12.5px;color:var(--mut)}
+.cmp-d{font:800 11.5px -apple-system,sans-serif;min-width:38px;text-align:right}
+.cmp-err{font-size:12px;color:var(--red);background:var(--redbg);border:1px solid #e8c5c0;border-radius:7px;padding:9px 11px;margin-top:11px;line-height:1.5}
+.ss-cmp-row{align-items:flex-start}
+.tr-row{padding:8px 0;border-top:1px solid var(--bd)}
+.tr-top{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.tr-lbl{font-size:12.5px;color:var(--ink);font-weight:600}
+.tr-bot{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-top:4px}
+.tr-spark{flex:1;min-width:0;font:600 18px ui-monospace,Menlo,monospace;letter-spacing:1px;line-height:1;white-space:nowrap;overflow:hidden}
+.tr-val{flex:none;font-size:12px;color:var(--mut)}
+.ss-clear:hover{border-color:var(--mut);color:var(--mut)}
+.ss-clear.arm{border-style:solid;border-color:var(--red);background:var(--redbg);color:var(--red);font-weight:800}
+.cmp-inner{padding:34px 26px 40px;display:flex;flex-direction:column}
+.cmp-block{padding:24px 0}
+.cmp-block.cmp-top{padding-top:0}
+.cmp-block+.cmp-block{border-top:1px solid var(--bd)}
+.cmp-eyebrow{font-size:10px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--acc)}
+.cmp-topic{font-family:var(--display);font-size:22px;font-weight:600;line-height:1.08;letter-spacing:-.012em;color:var(--ink);margin-top:9px}
+.cmp-thesis{margin:12px 0 0;font-size:12.5px;line-height:1.6;color:var(--mut2)}
+.cmp-h{font-size:9.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);margin:0 0 10px}
+.cmp-view{font-size:14.5px;font-weight:750;color:var(--ink);margin-bottom:6px}
+.cmp-note{margin:0;font-size:12.5px;line-height:1.6;color:var(--mut2)}
+.cmp-spine{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.cmp-spine li{display:flex;gap:11px;font-size:12.5px;line-height:1.5;color:var(--ink)}
+.cmp-dot{flex:none;width:6px;height:6px;border-radius:50%;background:var(--acc);margin-top:6px;box-shadow:0 0 0 3px var(--accbg)}
+.cmp-spine b{color:var(--accink);font-weight:750}
+.cmp-spine i{font-style:italic}
+.cmp-drive{margin:0;font-size:12px;line-height:1.65;color:var(--mut2)}
+.cmp-drive b{color:var(--ink);font-weight:700}
+.cmp-kbd{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;font-family:inherit;font-size:11px;font-weight:700;color:var(--ink);background:var(--card);border:1px solid var(--bd);border-bottom-width:2px;border-radius:5px;vertical-align:middle}
+.cmp-move{font-size:12.5px;line-height:1.5;color:var(--ink);font-weight:500;margin:0;border-left:2px solid var(--acc);padding-left:12px}`;
+class DeepSession extends HTMLElement {
+  connectedCallback() {
+    if (this._built) return;
+    this._built = true;
+    const root = this.attachShadow({ mode: 'open' });
+    root.adoptedStyleSheets = [BASE_SHEET];
+    root.innerHTML = '<style>' + SESS_STYLE + '</style><div class="sess-body" id="sessbody"></div>';
+    sessbody = root.getElementById('sessbody');
+    sessRoot = root;
+  }
+}
+customElements.define('deep-session', DeepSession);

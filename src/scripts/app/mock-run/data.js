@@ -63,5 +63,5 @@ var framePool=[ mockBeats[mockFrameIdx].cue,
 ];
 var mockBeat=0, mockSec=0, mockClock=null, mockEscBound=false, mockLastScore=null, mockLastTime=null, mockRuns=0, mockInterrupt=false, mockIntSet={}, mockLastInt=0;
 var mockov=document.getElementById('mockov'),
-    mockbody=document.getElementById('mockbody'),
+    mockbody=null, mockRoot=null,
     mockclockEl=document.getElementById('mockclock');

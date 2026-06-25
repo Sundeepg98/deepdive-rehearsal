@@ -160,28 +160,28 @@ function renderMockBeat() {
     '<div class="mb-act"><button class="mb-rev" id="mbrev" type="button">Reveal model</button>' +
     '<button class="mb-next" id="mbnext" type="button">' + (last ? 'Finish' : 'Next beat &rarr;') + '</button></div>' +
     '<div class="mb-keys">Space reveal &middot; &rarr; or Enter next &middot; Esc close</div>';
-  document.getElementById('mbrev').onclick = function () {
+  mockRoot.getElementById('mbrev').onclick = function () {
     mockbody.querySelector('.mb-model').classList.add('show');
     this.disabled = true;
     this.textContent = 'Revealed';
-    if (fire) { document.getElementById('mbint').classList.add('show'); }
+    if (fire) { mockRoot.getElementById('mbint').classList.add('show'); }
   };
   if (fire) {
-    document.getElementById('mbirev').onclick = function () {
-      document.getElementById('mbinta').classList.add('show');
+    mockRoot.getElementById('mbirev').onclick = function () {
+      mockRoot.getElementById('mbinta').classList.add('show');
       this.disabled = true;
       this.textContent = 'Revealed';
-      const nested2 = document.getElementById('mbint2');
+      const nested2 = mockRoot.getElementById('mbint2');
       if (nested2) nested2.classList.add('show');
     };
-    const reveal2Btn = document.getElementById('mbirev2');
+    const reveal2Btn = mockRoot.getElementById('mbirev2');
     if (reveal2Btn) reveal2Btn.onclick = function () {
-      document.getElementById('mbinta2').classList.add('show');
+      mockRoot.getElementById('mbinta2').classList.add('show');
       this.disabled = true;
       this.textContent = 'Revealed';
     };
   }
-  document.getElementById('mbnext').onclick = function () { mockBeat++; renderMockBeat(); };
+  mockRoot.getElementById('mbnext').onclick = function () { mockBeat++; renderMockBeat(); };
 }
 /* Mock-run end screen: stop the clock, record run stats, show time + which
    curveball and interruptions fired, then a 0-6 self-score that paints a verdict. */
@@ -199,14 +199,14 @@ function renderMockEnd() {
   for (let i = 0; i <= 6; i++) html += '<button type="button" data-s="' + i + '">' + i + '</button>';
   html += '</div><div class="mb-verdict" id="mbverdict"></div><div class="mb-again"><button class="pri" id="mbagain" type="button">Run again</button><button id="mbclose2" type="button">Close</button></div></div>';
   mockbody.innerHTML = html;
-  const scoreBtns = document.getElementById('mbscore');
+  const scoreBtns = mockRoot.getElementById('mbscore');
   for (let k = 0; k < scoreBtns.children.length; k++) {
     scoreBtns.children[k].onclick = function () {
       for (let j = 0; j < scoreBtns.children.length; j++) { scoreBtns.children[j].style.background = ''; scoreBtns.children[j].style.borderColor = ''; scoreBtns.children[j].style.color = ''; }
       this.style.background = 'var(--accbg)';
       this.style.borderColor = 'var(--acc)';
       this.style.color = 'var(--acc)';
-      const score = parseInt(this.getAttribute('data-s'), 10), verdictEl = document.getElementById('mbverdict');
+      const score = parseInt(this.getAttribute('data-s'), 10), verdictEl = mockRoot.getElementById('mbverdict');
       mockLastScore = score;
       verdictEl.classList.add('show');
       if (score >= 6) { verdictEl.style.background = 'var(--tealbg)'; verdictEl.style.color = '#0a5240'; verdictEl.innerHTML = '<b>Six for six.</b> You can carry the whole round end to end &mdash; now do it faster and under interruption.'; }
@@ -214,8 +214,8 @@ function renderMockEnd() {
       else { verdictEl.style.background = 'var(--amberbg)'; verdictEl.style.color = '#5e3c0a'; verdictEl.innerHTML = '<b>' + score + ' / 6.</b> The arc isn&rsquo;t solid yet &mdash; drill the weak beats in their own tabs, then run it again.'; }
     };
   }
-  document.getElementById('mbagain').onclick = openMock;
-  document.getElementById('mbclose2').onclick = closeMock;
+  mockRoot.getElementById('mbagain').onclick = openMock;
+  mockRoot.getElementById('mbclose2').onclick = closeMock;
 }
 /* Wire the mock-run overlay open/close triggers. */
 document.getElementById('mockopen').onclick = openMock;

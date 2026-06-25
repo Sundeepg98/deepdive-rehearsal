@@ -50,18 +50,18 @@ function openMock() {
       /* space reveals the next available answer button, in priority order */
       if (event.key === ' ') {
         event.preventDefault();
-        const revealBtn = document.getElementById('mbrev');
+        const revealBtn = mockRoot.getElementById('mbrev');
         if (revealBtn && !revealBtn.disabled) { revealBtn.click(); return; }
-        const interruptBtn = document.getElementById('mbirev');
+        const interruptBtn = mockRoot.getElementById('mbirev');
         if (interruptBtn && !interruptBtn.disabled) { interruptBtn.click(); return; }
-        const interruptBtn2 = document.getElementById('mbirev2');
+        const interruptBtn2 = mockRoot.getElementById('mbirev2');
         if (interruptBtn2 && !interruptBtn2.disabled) interruptBtn2.click();
         return;
       }
       /* enter / right-arrow advances to the next beat */
       if (event.key === 'Enter' || event.key === 'ArrowRight') {
         event.preventDefault();
-        const nextBtn = document.getElementById('mbnext');
+        const nextBtn = mockRoot.getElementById('mbnext');
         if (nextBtn) nextBtn.click();
       }
     });
@@ -76,3 +76,73 @@ function closeMock() {
   document.body.style.overflow = '';
   if (mockClock) { clearInterval(mockClock); mockClock = null; }
 }
+
+/* ===== MOCK RUN as a shadow component =====
+   The body moves into this shadow; renderMockBeat/renderMockEnd (in mixed-fire.js)
+   and openMock's keyboard shortcuts target it via the mockbody global / mockRoot.
+   The frame, clock, open/close, and the shared ovShow/ovHide stay light. */
+var MOCK_STYLE = `.mock-body{padding:19px 18px 22px}
+.mb-prog{font:800 11px -apple-system,sans-serif;letter-spacing:.6px;color:var(--mut2)}
+.mb-tag{display:inline-block;margin-left:9px;font-size:10px;font-weight:800;letter-spacing:.6px;color:var(--acc);background:var(--accbg);border-radius:5px;padding:2px 9px;vertical-align:middle}
+.mb-cue{font-size:16.5px;font-weight:700;color:var(--ink);line-height:1.42;margin:13px 0 0}
+.mb-task{font-size:13px;color:var(--mut);line-height:1.55;margin:10px 0 0;font-style:italic}
+.mb-task b{color:var(--accink);font-style:normal}
+.mb-model{display:none;margin:16px 0 0;padding:14px 15px;background:var(--accbg);border-radius:11px;font-size:13.5px;color:var(--ink);line-height:1.62}
+.mb-model.show{display:block}
+.mb-model b{color:var(--accink);font-weight:700}
+.mb-model code{font-size:11px}
+.mb-ml{font:800 10px -apple-system,sans-serif;letter-spacing:.6px;color:var(--acc);text-transform:uppercase;margin-bottom:7px}
+.mb-act{display:flex;gap:9px;align-items:center;margin:17px 0 0}
+.mb-keys{margin-top:13px;font-size:10.5px;color:var(--mut2);text-align:center;letter-spacing:.2px}
+.mb-rev,.mb-next{font:700 12.5px -apple-system,sans-serif;padding:9px 16px;border-radius:9px;cursor:pointer;transition:.12s}
+.mb-rev{border:1px solid #cfc7f0;background:var(--accbg);color:var(--accink)}
+.mb-rev:disabled{opacity:.5;cursor:default}
+.mb-next{border:0;background:var(--acc);color:var(--mb-next-fg);margin-left:auto}
+.mb-next:hover{background:var(--accink)}
+.mb-end{text-align:center;padding:6px 2px}
+.mb-end-h{font:800 19px -apple-system,sans-serif;color:var(--accink)}
+.mb-end-t{font-size:13.5px;color:var(--mut);margin:9px auto 0;max-width:420px;line-height:1.56}
+.mb-end-time{font-weight:800;color:var(--acc);font-family:ui-monospace,Menlo,monospace}
+.mb-score-q{font-size:13px;color:var(--ink);font-weight:600;margin:19px 0 11px}
+.mb-score{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.mb-score button{width:38px;height:38px;border-radius:9px;border:1px solid var(--bd);background:var(--card);color:var(--ink);font:800 14px ui-monospace,monospace;cursor:pointer;transition:.12s}
+.mb-score button:hover{border-color:var(--acc);color:var(--acc)}
+.mb-verdict{display:none;margin:15px auto 0;max-width:430px;padding:12px 15px;border-radius:10px;font-size:13px;line-height:1.55}
+.mb-verdict.show{display:block}
+.mb-verdict b{font-weight:700}
+.mb-again{display:flex;gap:9px;justify-content:center;margin-top:19px}
+.mb-again button{font:700 12px -apple-system,sans-serif;padding:9px 17px;border-radius:9px;cursor:pointer;border:1px solid var(--bd);background:var(--card);color:var(--mut);transition:.12s}
+.mb-again button:hover{border-color:var(--acc);color:var(--acc)}
+.mb-again .pri{border:0;background:var(--acc);color:#fff}
+.mb-again .pri:hover{background:var(--accink);color:#fff}
+.mb-end-int{margin-top:11px;font-size:12px;line-height:1.5;color:var(--amber);background:var(--amberbg);border:1px solid #e6c89a;border-radius:9px;padding:9px 12px}
+.mb-end-cv{margin-top:11px;font-size:12px;line-height:1.5;color:var(--accink);background:var(--accbg);border:1px solid var(--mb-cv-bd);border-radius:9px;padding:9px 12px}
+.mb-end-int b{font-weight:800}
+.mb-int{display:none;margin:14px 0 0;padding:13px 15px;background:var(--redbg);border:1px solid #e8c5c0;border-left:3px solid var(--red);border-radius:11px}
+.mb-int.show{display:block;animation:pop .24s ease}
+.mb-int-h{font:800 10px -apple-system,sans-serif;letter-spacing:.5px;color:var(--red);text-transform:uppercase;margin-bottom:7px}
+.mb-int-q{font-size:14px;font-weight:700;color:var(--mb-intq-fg);line-height:1.46}
+.mb-irev{margin-top:11px;border:1px solid var(--mb-irev-bd);background:var(--mb-irev-bg);color:var(--red);font:700 11.5px -apple-system,sans-serif;padding:7px 13px;border-radius:8px;cursor:pointer;transition:.12s}
+.mb-irev:hover{background:var(--red);color:#fff;border-color:var(--red)}
+.mb-irev:disabled{opacity:.5;cursor:default;background:var(--mb-irev-bg);color:var(--red)}
+.mb-int-a{display:none;margin-top:12px;padding-top:11px;border-top:1px dashed #e3bdb8;font-size:13px;color:var(--ink);line-height:1.6}
+.mb-int2{display:none;margin-top:13px;padding-top:13px;border-top:1px solid #e8c5c0}
+.mb-int2.show{display:block;animation:pop .24s ease}
+.mb-int-h2{font:800 10px -apple-system,sans-serif;letter-spacing:.5px;color:var(--red);text-transform:uppercase;margin-bottom:7px}
+.mb-int-a.show{display:block}
+.mb-int-al{font:800 9.5px -apple-system,sans-serif;letter-spacing:.5px;color:var(--teal);text-transform:uppercase;margin-bottom:6px}
+.mb-rev{transition:filter .12s ease}
+.mb-rev:hover{filter:brightness(.96)}
+.mb-rev:active,.mb-next:active,.mb-again:active,.pri:active{transform:translateY(1px);filter:brightness(.96)}`;
+class DeepMockRun extends HTMLElement {
+  connectedCallback() {
+    if (this._built) return;
+    this._built = true;
+    const root = this.attachShadow({ mode: 'open' });
+    root.adoptedStyleSheets = [BASE_SHEET];
+    root.innerHTML = '<style>' + MOCK_STYLE + '</style><div class="mock-body" id="mockbody"></div>';
+    mockbody = root.getElementById('mockbody');
+    mockRoot = root;
+  }
+}
+customElements.define('deep-mock-run', DeepMockRun);

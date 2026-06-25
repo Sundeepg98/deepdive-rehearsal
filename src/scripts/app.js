@@ -1,4 +1,5 @@
 <!--@build:include scripts/app/base-styles.js-->
+<!--@build:include scripts/app/content-sheet.js-->
 <!--@build:include scripts/app/red-flags.js-->
 <!--@build:include scripts/app/trade-offs.js-->
 <!--@build:include scripts/app/walkthrough.js-->
@@ -9,6 +10,7 @@
 <!--@build:include scripts/app/mixed-fire.js-->
 <!--@build:include scripts/app/cram-sheet.js-->
 <!--@build:include scripts/app/keyboard-overlay.js-->
+<!--@build:include scripts/app/scope-overlay.js-->
 <!--@build:include scripts/app/session-progress.js-->
 <!--@build:include scripts/app/system-map.js-->
 <!--@build:include scripts/app/model-answers.js-->

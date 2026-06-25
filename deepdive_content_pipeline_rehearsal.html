@@ -822,42 +822,11 @@ button,summary{-webkit-user-select:none;user-select:none}
       <div class="cram-title">Scope it first &middot; the questions before the design</div>
     </div>
     <div class="cram-body" id="scopebody">
-      <div class="cs-one"><span class="cs-one-l">The first signal</span>Before you draw anything, scope it. The first thing the interviewer reads is whether you solution blindly or pin down the problem. Ask the questions whose answers would <b>change your design</b> &mdash; not cosmetic ones. Here are the ones that fork this architecture, and what each answer flips.</div>
-      <div class="cs-sec">
-        <div class="cs-st">What we&rsquo;re ingesting</div>
-        <div class="cs-ha"><span class="cs-ha-l">File types &amp; formats?</span> &mdash; a few known types means a <b>static strategy map</b>; arbitrary user uploads means <b>pluggable handlers</b> and a hard &lsquo;unknown type&rsquo; policy.</div>
-        <div class="cs-ha"><span class="cs-ha-l">Size &mdash; KB configs or GB media?</span> &mdash; the single biggest fork. Small &rarr; simple buffered handlers; large &rarr; <b>streaming, multipart</b>, transcode off the hot path.</div>
-        <div class="cs-ha"><span class="cs-ha-l">Processing &mdash; light or heavy?</span> &mdash; hash and parse are CPU-light, fine inline; transcode or ML is heavy &rarr; <b>async to a worker pool</b>, never inside the Lambda.</div>
-      </div>
-      <div class="cs-sec">
-        <div class="cs-st">Scale</div>
-        <div class="cs-ha"><span class="cs-ha-l">Objects per day, and peak-to-average?</span> &mdash; this sets the ceilings; it&rsquo;s exactly what the <b>Numbers</b> tab plugs in. Peak/s &times; processing time is your concurrency.</div>
-        <div class="cs-ha"><span class="cs-ha-l">Bursty or steady?</span> &mdash; bursty means you need a <b>queue to absorb spikes</b>; steady may not.</div>
-      </div>
-      <div class="cs-sec">
-        <div class="cs-st">Who consumes the output</div>
-        <div class="cs-ha"><span class="cs-ha-l">Sync API, or poll / subscribe?</span> &mdash; flips whether you owe a <b>status API or webhooks</b>, or just a record.</div>
-        <div class="cs-ha"><span class="cs-ha-l">Latency &mdash; minutes fine, or someone waiting?</span> &mdash; sets the whole <b>sync vs async</b> posture.</div>
-      </div>
-      <div class="cs-sec">
-        <div class="cs-st">Correctness &amp; durability &mdash; the senior questions</div>
-        <div class="cs-ha"><span class="cs-ha-l">Same upload processed twice &mdash; catastrophic or just wasteful?</span> &mdash; sets the <b>idempotency bar</b>.</div>
-        <div class="cs-ha"><span class="cs-ha-l">Can we ever drop an upload?</span> &mdash; <b>at-least-once and a durable queue</b>, or best-effort.</div>
-        <div class="cs-ha"><span class="cs-ha-l">Retention, deletion, compliance?</span> &mdash; decides whether you need <b>provenance and tombstones</b> from day one.</div>
-      </div>
-      <div class="cs-sec">
-        <div class="cs-st">Bound it &mdash; what you&rsquo;re NOT doing</div>
-        <div class="cs-ha"><span class="cs-ha-l">Designing the upload path, or does the object already land in storage?</span> &mdash; bounds where the design even starts.</div>
-        <div class="cs-dim">Then say what&rsquo;s out of scope &mdash; auth, the client UI, billing. Naming non-goals stops you sprawling and shows you scope on purpose.</div>
-      </div>
-      <div class="cs-sec">
-        <div class="cs-st">Cosmetic vs forking &mdash; hear the difference</div>
-        <div class="cs-trap"><div class="cs-bad">&lsquo;What language should I use?&rsquo;</div><div class="cs-arr2">vs</div><div class="cs-fix">&lsquo;KB configs or GB media?&rsquo;</div></div>
-      </div>
-      <div class="cs-sec"><div class="cs-one"><span class="cs-one-l">The tell</span>Juniors ask nothing and start drawing, or ask cosmetic questions. Seniors ask the 3&ndash;4 whose answers <b>fork the architecture</b> &mdash; size, sync vs async, the idempotency bar, in and out of scope &mdash; then <b>state their assumptions out loud</b> and design against them. Asking &lsquo;what&rsquo;s the peak-to-average ratio&rsquo; and then actually <i>using</i> it at the whiteboard is the signal.</div></div>
+      <deep-scope></deep-scope>
     </div>
   </div>
 </div>
+
 <div class="mock-ov" id="planov" role="dialog" aria-modal="true" aria-label="Game plan" aria-hidden="true">
   <div class="mock-panel">
     <div class="mock-top">
@@ -928,6 +897,40 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;background:var(--
 .step-t{font-size:19px;font-weight:720;margin:3px 0 5px;letter-spacing:-.2px}
 .step-sub{font-size:12.5px;color:var(--mut);margin-bottom:6px}
 .step-t,.dec-q,.num-h,.debrief .big,.mscript-h,.rec .lvl,.sr-h,.cs-ha-l,.side-id h1,.stage-head .sh-name{font-family:var(--display)}
+`);
+
+/* ===== shared content stylesheet: the .cs-* "scope / game-plan / cram" family =====
+   These three overlays share one content vocabulary (.cs-one / .cs-sec / .cs-ha / ...).
+   Defined ONCE as a constructable stylesheet and adopted (alongside BASE_SHEET) by
+   each of <deep-scope>, <deep-gameplan>, <deep-cram>, so the shared rules live in a
+   single place rather than being copied into every shadow root. The generic `b` rule
+   replaces the light-DOM `.cram-body b` frame rule, which cannot cross the shadow
+   boundary. Every color is a theme token, so it flips light/dark with no variants. */
+var CS_SHEET = new CSSStyleSheet();
+CS_SHEET.replaceSync(`
+.cs-one{background:var(--accbg);border-radius:11px;padding:13px 15px;font-size:13px;line-height:1.55;color:var(--ink)}
+.cs-one b{color:var(--accink);font-weight:700}
+.cs-one-l{display:block;font:800 9.5px -apple-system,sans-serif;letter-spacing:.7px;text-transform:uppercase;color:var(--acc);margin-bottom:5px}
+.cs-sec{margin-top:17px}
+.cs-st{font:800 10.5px -apple-system,sans-serif;letter-spacing:.7px;text-transform:uppercase;color:var(--acc);border-bottom:1.5px solid var(--accbg);padding-bottom:4px;margin-bottom:9px}
+.cs-spine{margin:0;padding-left:19px}
+.cs-spine li{font-size:12.2px;line-height:1.5;margin-bottom:5px;color:var(--ink)}
+.cs-dec{font-size:12.2px;line-height:1.5;margin-bottom:6px;color:var(--ink)}
+.cs-dec b{color:var(--accink)}
+.cs-arr{color:var(--mut2);font-weight:800;margin:0 5px}
+.cs-num{font-size:12.2px;line-height:1.5;margin-bottom:5px;color:var(--ink)}
+.cs-ha{font-size:12px;line-height:1.5;margin-bottom:6px;color:var(--ink)}
+.cs-ha-l{color:var(--acc);font-weight:800}
+.cs-num b{color:var(--ink);font-weight:700}
+.cs-dim{color:var(--mut2);font-size:11.5px;margin-top:7px}
+.cs-trap{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:baseline;margin-bottom:6px}
+.cs-bad{text-align:right;color:var(--red);font-size:11.7px;line-height:1.4}
+.cs-arr2{color:var(--mut2);font-weight:800}
+.cs-fix{text-align:left;color:var(--teal);font-weight:600;font-size:11.7px;line-height:1.4}
+.cs-tells{margin:0;padding-left:19px}
+.cs-tells li{font-size:12.2px;line-height:1.5;margin-bottom:5px;color:var(--ink)}
+.cs-30{background:#FBFAF7;border:1px solid var(--bd);border-radius:10px;padding:12px 14px;font-size:12.3px;line-height:1.58;color:var(--ink)}
+b{color:var(--accink);font-weight:700}
 `);
 
 /* ============ RED FLAGS (web component) ============
@@ -2768,6 +2771,53 @@ class DeepKeyboard extends HTMLElement {
   }
 }
 customElements.define('deep-keyboard', DeepKeyboard);
+
+/* ============ SCOPE-IT-FIRST OVERLAY (web component) ============
+   Static content, encapsulated. Frame (.mock-ov/.mock-panel/.mock-top/close/.cram-body)
+   + open-close wiring (cram-sheet.js openScope -> ovShow) stay light-DOM; only the
+   content moves into this shadow, styled by BASE_SHEET + the shared CS_SHEET. */
+class DeepScope extends HTMLElement {
+  connectedCallback() {
+    if (this._built) return;
+    this._built = true;
+    const root = this.attachShadow({ mode: 'open' });
+    root.adoptedStyleSheets = [BASE_SHEET, CS_SHEET];
+    root.innerHTML = `<div class="cs-one"><span class="cs-one-l">The first signal</span>Before you draw anything, scope it. The first thing the interviewer reads is whether you solution blindly or pin down the problem. Ask the questions whose answers would <b>change your design</b> &mdash; not cosmetic ones. Here are the ones that fork this architecture, and what each answer flips.</div>
+      <div class="cs-sec">
+        <div class="cs-st">What we&rsquo;re ingesting</div>
+        <div class="cs-ha"><span class="cs-ha-l">File types &amp; formats?</span> &mdash; a few known types means a <b>static strategy map</b>; arbitrary user uploads means <b>pluggable handlers</b> and a hard &lsquo;unknown type&rsquo; policy.</div>
+        <div class="cs-ha"><span class="cs-ha-l">Size &mdash; KB configs or GB media?</span> &mdash; the single biggest fork. Small &rarr; simple buffered handlers; large &rarr; <b>streaming, multipart</b>, transcode off the hot path.</div>
+        <div class="cs-ha"><span class="cs-ha-l">Processing &mdash; light or heavy?</span> &mdash; hash and parse are CPU-light, fine inline; transcode or ML is heavy &rarr; <b>async to a worker pool</b>, never inside the Lambda.</div>
+      </div>
+      <div class="cs-sec">
+        <div class="cs-st">Scale</div>
+        <div class="cs-ha"><span class="cs-ha-l">Objects per day, and peak-to-average?</span> &mdash; this sets the ceilings; it&rsquo;s exactly what the <b>Numbers</b> tab plugs in. Peak/s &times; processing time is your concurrency.</div>
+        <div class="cs-ha"><span class="cs-ha-l">Bursty or steady?</span> &mdash; bursty means you need a <b>queue to absorb spikes</b>; steady may not.</div>
+      </div>
+      <div class="cs-sec">
+        <div class="cs-st">Who consumes the output</div>
+        <div class="cs-ha"><span class="cs-ha-l">Sync API, or poll / subscribe?</span> &mdash; flips whether you owe a <b>status API or webhooks</b>, or just a record.</div>
+        <div class="cs-ha"><span class="cs-ha-l">Latency &mdash; minutes fine, or someone waiting?</span> &mdash; sets the whole <b>sync vs async</b> posture.</div>
+      </div>
+      <div class="cs-sec">
+        <div class="cs-st">Correctness &amp; durability &mdash; the senior questions</div>
+        <div class="cs-ha"><span class="cs-ha-l">Same upload processed twice &mdash; catastrophic or just wasteful?</span> &mdash; sets the <b>idempotency bar</b>.</div>
+        <div class="cs-ha"><span class="cs-ha-l">Can we ever drop an upload?</span> &mdash; <b>at-least-once and a durable queue</b>, or best-effort.</div>
+        <div class="cs-ha"><span class="cs-ha-l">Retention, deletion, compliance?</span> &mdash; decides whether you need <b>provenance and tombstones</b> from day one.</div>
+      </div>
+      <div class="cs-sec">
+        <div class="cs-st">Bound it &mdash; what you&rsquo;re NOT doing</div>
+        <div class="cs-ha"><span class="cs-ha-l">Designing the upload path, or does the object already land in storage?</span> &mdash; bounds where the design even starts.</div>
+        <div class="cs-dim">Then say what&rsquo;s out of scope &mdash; auth, the client UI, billing. Naming non-goals stops you sprawling and shows you scope on purpose.</div>
+      </div>
+      <div class="cs-sec">
+        <div class="cs-st">Cosmetic vs forking &mdash; hear the difference</div>
+        <div class="cs-trap"><div class="cs-bad">&lsquo;What language should I use?&rsquo;</div><div class="cs-arr2">vs</div><div class="cs-fix">&lsquo;KB configs or GB media?&rsquo;</div></div>
+      </div>
+      <div class="cs-sec"><div class="cs-one"><span class="cs-one-l">The tell</span>Juniors ask nothing and start drawing, or ask cosmetic questions. Seniors ask the 3&ndash;4 whose answers <b>fork the architecture</b> &mdash; size, sync vs async, the idempotency bar, in and out of scope &mdash; then <b>state their assumptions out loud</b> and design against them. Asking &lsquo;what&rsquo;s the peak-to-average ratio&rsquo; and then actually <i>using</i> it at the whiteboard is the signal.</div></div>`;
+  }
+}
+customElements.define('deep-scope', DeepScope);
 
 /* The whiteboard custom element exposes resetAll() / rerunMissed() / getStats();
    session-progress reaches it through this helper rather than the old wb globals. */

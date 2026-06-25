@@ -20,7 +20,6 @@
   .rail{position:sticky;top:0;height:4px;background:#ECE8E0;z-index:50}
   .rail .fill{height:100%;width:25%;background:linear-gradient(90deg,var(--acc),var(--acc2));transition:width .35s ease}
 
-  
   .badge{display:inline-block;font-size:10px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:#fff;background:linear-gradient(135deg,var(--acc),var(--acc2));padding:4px 11px;border-radius:6px;margin-bottom:11px}
   .locator{display:inline-block;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.2px;text-transform:uppercase;color:var(--acc);background:var(--accbg);border:1px solid #cfc7f0;border-radius:6px;padding:3px 9px;margin:0 0 11px 7px}
   .hdr{border-left:5px solid var(--acc);padding:5px 0 7px 17px;margin-bottom:18px}
@@ -42,24 +41,11 @@
   .pane.on{display:block;animation:fade .28s ease}
   @keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
   @keyframes pop{from{opacity:0;transform:translateY(7px) scale(.99)}to{opacity:1;transform:none}}
-
-  .card{background:var(--surf);border:1px solid var(--bd);border-radius:14px;padding:22px;box-shadow:var(--card-sh)}
-
-  .step-k{font-family:var(--mono);font-size:11px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--acc)}
-  .step-t{font-size:19px;font-weight:720;margin:3px 0 5px;letter-spacing:-.2px}
   code{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;background:var(--code-inline-bg);padding:1px 5px;border-radius:4px;color:var(--accink)}
-
-  .score{display:flex;gap:9px;margin-bottom:14px}
 
   .dnr{animation:pop .24s ease}
 
   .crambtn:active{transform:translateY(1px);filter:brightness(.96)}
-
-  .debrief .big{font-size:23px;font-weight:760;text-align:center;margin-bottom:4px}
-  .debrief .sumline{text-align:center;color:var(--mut);font-size:13px;margin-bottom:18px}
-  .verdict{margin-top:18px;font-size:13px;color:#3c3830;background:#F4F1FB;border-left:3px solid var(--acc);border-radius:9px;padding:14px 16px}
-  .verdict b{color:var(--accink)}
-  .debrief button{margin-top:18px;display:block;width:100%;border:1.5px solid var(--acc);background:#fff;color:var(--acc);font:700 13px -apple-system,sans-serif;padding:12px;border-radius:10px;cursor:pointer}
 
   /* trade-off ledger */
 
@@ -69,18 +55,9 @@
   a:focus-visible, button:focus-visible, summary:focus-visible{outline:2.5px solid var(--acc);outline-offset:2px;border-radius:8px}
   .seg button:focus-visible{outline-offset:-2px}
   @media (prefers-reduced-motion: reduce){*{animation:none!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
-  .debrief .btn-sec{margin-top:14px;display:block;width:100%;border:1.5px solid var(--teal);background:var(--tealbg);color:#0a5240;font:700 13px -apple-system,sans-serif;padding:12px;border-radius:10px;cursor:pointer;transition:.12s}
-  .debrief .btn-sec:hover{background:#dcefe6}
 
   /* mock round */
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
-  .rec{text-align:center;margin-bottom:4px}
-  .rec .lvl{display:inline-block;font-size:21px;font-weight:800;letter-spacing:-.3px;padding:9px 22px;border-radius:11px;border:2px solid}
-  .rec.sh .lvl{color:#0a5240;background:var(--tealbg);border-color:var(--teal)}
-  .rec.h .lvl{color:var(--accink);background:var(--accbg);border-color:var(--acc)}
-  .rec.lh .lvl{color:#6a3f08;background:var(--amberbg);border-color:var(--amber)}
-  .rec.nh .lvl{color:#7e2020;background:var(--redbg);border-color:var(--red)}
-  .rec .tu{font-size:12px;color:var(--mut2);margin-top:9px;font-weight:700}
 
   /* model answers tab */
 
@@ -111,7 +88,6 @@
   .mock-title{flex:1;font:800 12px -apple-system,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:var(--accink)}
   .mock-clock{flex:none;font:800 16px ui-monospace,Menlo,monospace;color:var(--acc);background:var(--accbg);border-radius:8px;padding:4px 12px}
 
-
   /* cram sheet */
   .cram-ov{display:none;position:fixed;inset:0;z-index:1000;background:rgba(28,26,22,.55);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);padding:18px;overflow-y:auto}
   .cram-ov.open{display:block}
@@ -132,11 +108,6 @@
   .inttog[aria-pressed="true"] .inttog-dot{background:var(--amber)}
   .inttog[aria-pressed="true"] .inttog-dot::after{left:15px}
   .inttog b{font-weight:800}
-  
-  
-  
-
-  .step-sub{font-size:12.5px;color:var(--mut);margin-bottom:6px}
 
   #sessreport{display:none}
   .sr-head{border-bottom:2px solid var(--ink);padding-bottom:10px;margin-bottom:16px}
@@ -179,27 +150,19 @@ html[data-theme="dark"]{
   --sm-line:#3A3642; --sm-dot-bg:#2A2730; --sm-card-bg:#262430; --sm-pa-fg:#C7C2BA; --sm-here-fg:#1A1622; --sm-cur-dot-bg:#2A2730; --op-hooks-bg:#262430; --op-foot-bg:#2A2540; --op-foot-fg:#BAB4AA; --disc-bg:#262430; --disc-body-fg:#B2ACA2; --wb-foot-bg:#2A2540; --wb-foot-fg:#BAB4AA; --wb-li-bd:#322E3A; --wb-ok-fg:#5FD3B0; --wb-ok-b-fg:#8FE0C8; --wb-warn-fg:#E8BC78; --opt-n-bd:#3A3552; --dec-tell-b-fg:#8FE0C8; --fb-n-bg:#262430; --fb-n-fg:#DAD6CE; --fb-t-fg:#8FE0C8; --fb-r-fg:#F0A0A0; --fb-a-fg:#E8BC78; --ins-bg:#262430; --ins-fg:#BAB4AA; --mq-bg:#2A2730; --dots-i-bg:#44404C; --dots-on-bg:var(--dots-i-bg); --dots-done-bg:var(--dots-i-bg); --thread-bg:#262430; --ans-bg:#2A2540; --fa-bg:#2A2540; --ans-fg:#DAD6CE; --fa-b-fg:#E8BC78; --senior-bd:#2E5A4A; --senior-fg:#7FD9BE; --speak-fg:#CABFFB; --push-fg:#1A1622; --judge-btn-bg:#262430; --modetog-bg:#2A2730; --modetog-bd:#37333F; --modetog-hover-bg:rgba(170,157,245,.13); --dbar-bg:#211F28; --btnsec-hover-bg:#1A3A30; --sigrow-bd:#322E3A; --codecap-fg:#B2ACA2; --code-inline-bg:#2A2833; --ninp-bd:#3A3552;--cs30-bg:#262430;--cram-code-bg:#2C2740;--ss-card-bg:#262430;--ss-carry-bg:#262430;--ss-code-bd:#3A3552;--ss-go-fg:#1A1622;--ss-btn-bg:#262430;--mxb-curve-bg:#3A2814;--mxb-trade-fg:#B6ADE8;--mb-next-fg:#1A1622;--mb-cv-bd:#3A3552;--mb-intq-fg:#F0A0A0;--mb-irev-bg:#262430;--mb-irev-bd:#5A3A38;
 }
 html[data-theme="dark"] body{background:var(--bg)}
-/* near-white card surfaces -> dark card */
-/* light purple tints -> dark purple */
-html[data-theme="dark"] .verdict{background:#2A2540}
 /* inline code variants */
 /* curveball badge (peach) -> dark amber */
 /* warm/gray surfaces */
 html[data-theme="dark"] .kbd-hint kbd{background:#2E2A35;border-color:#46424E}
 html[data-theme="dark"] .rail{background:#211F28}
-html[data-theme="dark"] .debrief .btn-sec:hover{background:#1A3A30}
 html[data-theme="dark"] .inttog-dot{background:#56525E}
 /* light borders -> dark */
 html[data-theme="dark"] .sr-sec{border-bottom-color:#322E3A}
 /* dark text colors -> light variants */
 html[data-theme="dark"] .sr-stat{color:#D8D4CC}
-html[data-theme="dark"] .verdict{color:#DAD6CE}
 html[data-theme="dark"] #wbrerun{background:#262430}
-html[data-theme="dark"] .debrief .btn-sec{color:#8FE0C8}
-html[data-theme="dark"] .rec.nh .lvl{color:#F0A0A0}
 
 html[data-theme="dark"] .sr-list{color:#C8C4BC}
-html[data-theme="dark"] .rec.lh .lvl{color:#E8BC78}
 /* mid accents -> brighter on dark */
 /* tab bar container + active-tab contrast */
 html[data-theme="dark"] .seg{background:#18161E}
@@ -214,9 +177,8 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
 /* overlay white-bg buttons/inputs -> dark surface */
   /* dark elevation: deep ambient shadow + hairline light edge-ring lifts floating surfaces off the near-black bg */
   html[data-theme="dark"] .mock-panel,html[data-theme="dark"] .cram-panel{box-shadow:0 24px 70px rgba(0,0,0,.66),0 0 0 1px rgba(255,255,255,.08)}
-  html[data-theme="dark"] .card{box-shadow:var(--card-sh)}
 
-@media (max-width:600px){.kbd-hint,.mb-keys{display:none}}
+@media (max-width:600px){.kbd-hint{display:none}}
 
 /* ============ COMPOSED APP SHELL (v75) ============ */
 .app{display:flex;align-items:stretch;min-height:100vh;width:100%}
@@ -292,7 +254,7 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
 <!--@build:include fonts.css-->
 :root{--display:'Space Grotesk',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
 /* v78: distinctive display face on titles only (body + mono coords unchanged) */
-.side-id h1,.stage-head .sh-name,.step-t,.dec-q,.num-h,.debrief .big,.mscript-h,.rec .lvl,.sr-h{font-family:var(--display)}
+.side-id h1,.stage-head .sh-name,.sr-h{font-family:var(--display)}
 /* v79: engineering-canvas dot grid on the work surface (stage) */
 :root{--grid:rgba(83,74,183,.05);--canvas:radial-gradient(130% 90% at 50% -25%,#FDFCFA 0%,#FAF9F5 42%,#F5F2EB 100%)}
 html[data-theme="dark"]{--grid:rgba(170,157,245,.05);--canvas:radial-gradient(130% 90% at 50% -25%,#19181F 0%,#15141A 42%,#121118 100%)}
@@ -349,8 +311,6 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover{background:rgba(150,140,
 }
 /* v102: surface depth - crafted gradient surfaces + soft lift across content cards */
 /* v105: walkthrough "whole flow" map - the full 9-step arc, clickable, fills the short pane */
-@media(hover:hover){.arc-step:hover{border-color:var(--acc);transform:translateY(-1px)}}
-@media(max-width:560px){.arc-grid{grid-template-columns:repeat(2,1fr)}}
 /* v108: mobile/tablet companion - surfaces the rail's coaching wherever the rail is hidden (<1280) */
 .mcomp{display:block;width:100%;max-width:830px;margin:0 auto 24px;border:1px solid var(--bd);border-radius:14px;background:var(--panel);box-shadow:var(--surf-sh);overflow:hidden}
 .mcomp-sum{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:13px 16px;-webkit-user-select:none;user-select:none}

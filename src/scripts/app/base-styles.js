@@ -11,8 +11,10 @@ BASE_SHEET.replaceSync(`
 *{margin:0;padding:0;box-sizing:border-box}
 code{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;background:var(--code-inline-bg);padding:1px 5px;border-radius:4px;color:var(--accink)}
 :host{display:block;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
-.card{background:var(--surf);border:1px solid var(--bd);border-radius:14px;padding:22px;box-shadow:var(--card-sh)}
-.step-k{font-family:var(--mono);font-size:11px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--acc)}
+.card{position:relative;background:var(--surf);border:1px solid var(--bd);border-radius:14px;padding:22px;box-shadow:var(--card-sh)}
+.card::before{content:"";position:absolute;left:14px;right:14px;top:0;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--acc),var(--acc2));opacity:.42}
+.step-k{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--acc)}
+.step-k::before{content:"";width:14px;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--acc),var(--acc2))}
 .step-t{font-size:19px;font-weight:720;margin:3px 0 5px;letter-spacing:-.2px}
 .step-sub{font-size:12.5px;color:var(--mut);margin-bottom:6px}
 .step-t,.dec-q,.num-h,.debrief .big,.mscript-h,.rec .lvl,.sr-h,.cs-ha-l,.side-id h1,.stage-head .sh-name{font-family:var(--display)}

@@ -4,7 +4,9 @@
    each of <deep-scope>, <deep-gameplan>, <deep-cram>, so the shared rules live in a
    single place rather than being copied into every shadow root. The generic `b` rule
    replaces the light-DOM `.cram-body b` frame rule, which cannot cross the shadow
-   boundary. Every color is a theme token, so it flips light/dark with no variants. */
+   boundary; `b.cs-ha-l` replicates that frame rule out-ranking the .cs-ha-l label
+   color (a <b class=cs-ha-l> renders accink, not acc, in the original cascade).
+   Every color is a theme token, so it flips light/dark with no variants. */
 var CS_SHEET = new CSSStyleSheet();
 CS_SHEET.replaceSync(`
 .cs-one{background:var(--accbg);border-radius:11px;padding:13px 15px;font-size:13px;line-height:1.55;color:var(--ink)}
@@ -28,6 +30,7 @@ CS_SHEET.replaceSync(`
 .cs-fix{text-align:left;color:var(--teal);font-weight:600;font-size:11.7px;line-height:1.4}
 .cs-tells{margin:0;padding-left:19px}
 .cs-tells li{font-size:12.2px;line-height:1.5;margin-bottom:5px;color:var(--ink)}
-.cs-30{background:#FBFAF7;border:1px solid var(--bd);border-radius:10px;padding:12px 14px;font-size:12.3px;line-height:1.58;color:var(--ink)}
+.cs-30{background:var(--cs30-bg);border:1px solid var(--bd);border-radius:10px;padding:12px 14px;font-size:12.3px;line-height:1.58;color:var(--ink)}
 b{color:var(--accink);font-weight:700}
+b.cs-ha-l{color:var(--accink);font-weight:700}
 `);

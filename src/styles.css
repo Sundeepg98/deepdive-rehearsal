@@ -334,3 +334,39 @@ button,summary{-webkit-user-select:none;user-select:none}
 /* v111 micro-polish: drop the default mobile tap-flash (the gray box doesn't match the rounded controls); every control already has custom feedback - selection state, result change, or a press-state. The tool-opener rows only get a (delayed) overlay, so give them an in-place press. */
 .crambtn:active{transform:translateY(1px)}
 *{-webkit-tap-highlight-color:transparent}
+
+/* ============ v112: companion content styles ============
+   The .cmp-* inner styles previously lived only inside the <deep-session>
+   shadow stylesheet, so the desktop companion rail (.companion) and the
+   mobile companion (.mcomp), which both live in the LIGHT DOM, rendered as
+   unstyled raw text. They belong here (light-DOM styling = styles.css).
+   Ported + elevated: a connecting "spine" thread through the bullet beads,
+   a tinted callout for the key move, and a masthead-matching accent. All
+   colours use existing theme tokens, so light + dark are covered. */
+.cmp-inner{padding:34px 26px 40px;display:flex;flex-direction:column}
+.cmp-block{padding:24px 0}
+.cmp-block.cmp-top{padding-top:0}
+.cmp-block+.cmp-block{border-top:1px solid var(--bd)}
+.cmp-eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:10px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--acc)}
+.cmp-eyebrow::before{content:"";width:16px;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--acc),var(--acc2))}
+.cmp-topic{font-family:var(--display);font-size:22px;font-weight:600;line-height:1.08;letter-spacing:-.012em;color:var(--ink);margin-top:11px}
+.cmp-thesis{margin:12px 0 0;font-size:12.5px;line-height:1.6;color:var(--mut2)}
+.cmp-h{font-size:9.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);margin:0 0 10px}
+.cmp-view{font-size:14.5px;font-weight:750;color:var(--ink);margin-bottom:6px}
+.cmp-note{margin:0;font-size:12.5px;line-height:1.6;color:var(--mut2)}
+.cmp-spine{position:relative;list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.cmp-spine::before{content:"";position:absolute;left:2px;top:9px;bottom:9px;width:1.5px;border-radius:2px;background:linear-gradient(180deg,var(--acc),var(--acc2));opacity:.28}
+.cmp-spine li{position:relative;display:flex;gap:11px;font-size:12.5px;line-height:1.5;color:var(--ink)}
+.cmp-dot{position:relative;z-index:1;flex:none;width:6px;height:6px;border-radius:50%;background:var(--acc);margin-top:6px;box-shadow:0 0 0 3px var(--accbg)}
+.cmp-spine b{color:var(--accink);font-weight:750}
+.cmp-spine i{font-style:italic}
+.cmp-drive{margin:0;font-size:12px;line-height:1.65;color:var(--mut2)}
+.cmp-drive b{color:var(--ink);font-weight:700}
+.cmp-kbd{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;font-family:inherit;font-size:11px;font-weight:700;color:var(--ink);background:var(--card);border:1px solid var(--bd);border-bottom-width:2px;border-radius:5px;vertical-align:middle}
+.cmp-move{font-size:12.5px;line-height:1.55;color:var(--ink);font-weight:500;margin:0;border-left:2px solid var(--acc);background:var(--accbg);padding:11px 13px;border-radius:0 10px 10px 0}
+/* desktop rail: give the inner column a top accent so it reads as a framed panel, matching the stage masthead */
+@media(min-width:1280px){
+  .companion{box-shadow:-9px 0 22px -16px rgba(0,0,0,.12)}
+  .cmp-inner{position:relative}
+  .cmp-inner::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,var(--acc),var(--acc2));opacity:.55}
+}

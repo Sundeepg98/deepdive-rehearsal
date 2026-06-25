@@ -325,26 +325,7 @@ var SESS_STYLE = `.sess-body{padding:18px 20px 24px}
 .tr-spark{flex:1;min-width:0;font:600 18px ui-monospace,Menlo,monospace;letter-spacing:1px;line-height:1;white-space:nowrap;overflow:hidden}
 .tr-val{flex:none;font-size:12px;color:var(--mut)}
 .ss-clear:hover{border-color:var(--mut);color:var(--mut)}
-.ss-clear.arm{border-style:solid;border-color:var(--red);background:var(--redbg);color:var(--red);font-weight:800}
-.cmp-inner{padding:34px 26px 40px;display:flex;flex-direction:column}
-.cmp-block{padding:24px 0}
-.cmp-block.cmp-top{padding-top:0}
-.cmp-block+.cmp-block{border-top:1px solid var(--bd)}
-.cmp-eyebrow{font-size:10px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--acc)}
-.cmp-topic{font-family:var(--display);font-size:22px;font-weight:600;line-height:1.08;letter-spacing:-.012em;color:var(--ink);margin-top:9px}
-.cmp-thesis{margin:12px 0 0;font-size:12.5px;line-height:1.6;color:var(--mut2)}
-.cmp-h{font-size:9.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);margin:0 0 10px}
-.cmp-view{font-size:14.5px;font-weight:750;color:var(--ink);margin-bottom:6px}
-.cmp-note{margin:0;font-size:12.5px;line-height:1.6;color:var(--mut2)}
-.cmp-spine{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
-.cmp-spine li{display:flex;gap:11px;font-size:12.5px;line-height:1.5;color:var(--ink)}
-.cmp-dot{flex:none;width:6px;height:6px;border-radius:50%;background:var(--acc);margin-top:6px;box-shadow:0 0 0 3px var(--accbg)}
-.cmp-spine b{color:var(--accink);font-weight:750}
-.cmp-spine i{font-style:italic}
-.cmp-drive{margin:0;font-size:12px;line-height:1.65;color:var(--mut2)}
-.cmp-drive b{color:var(--ink);font-weight:700}
-.cmp-kbd{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;font-family:inherit;font-size:11px;font-weight:700;color:var(--ink);background:var(--card);border:1px solid var(--bd);border-bottom-width:2px;border-radius:5px;vertical-align:middle}
-.cmp-move{font-size:12.5px;line-height:1.5;color:var(--ink);font-weight:500;margin:0;border-left:2px solid var(--acc);padding-left:12px}`;
+.ss-clear.arm{border-style:solid;border-color:var(--red);background:var(--redbg);color:var(--red);font-weight:800}`;
 class DeepSession extends HTMLElement {
   connectedCallback() {
     if (this._built) return;

@@ -226,7 +226,7 @@ document.getElementById('mockx').onclick = closeMock;
    The body moves into this shadow; renderMix/renderMixEnd target it via the
    mixBody global and look up their rendered controls through mixRoot. The frame,
    open/close, and the mock-run render below (still light) stay as they are. */
-var MIX_STYLE = `.mock-body{padding:19px 18px 22px}
+var MIX_STYLE = `
 .mx-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px;gap:10px}
 .mx-prog{font:700 12px -apple-system,sans-serif;color:var(--mut2);letter-spacing:.3px}
 .mx-kind{font:800 10.5px -apple-system,sans-serif;letter-spacing:.5px;text-transform:uppercase;padding:5px 11px;border-radius:20px;white-space:nowrap}
@@ -258,7 +258,7 @@ class DeepMixedFire extends HTMLElement {
     if (this._built) return;
     this._built = true;
     const root = this.attachShadow({ mode: 'open' });
-    root.adoptedStyleSheets = [BASE_SHEET, OPT_SHEET, ANS_SHEET];
+    root.adoptedStyleSheets = [BASE_SHEET, OPT_SHEET, ANS_SHEET, MOCK_SHEET];
     root.innerHTML = '<style>' + MIX_STYLE + '</style><div class="mock-body" id="mixbody"></div>';
     mixBody = root.getElementById('mixbody');
     mixRoot = root;

@@ -81,7 +81,7 @@ function closeMock() {
    The body moves into this shadow; renderMockBeat/renderMockEnd (in mixed-fire.js)
    and openMock's keyboard shortcuts target it via the mockbody global / mockRoot.
    The frame, clock, open/close, and the shared ovShow/ovHide stay light. */
-var MOCK_STYLE = `.mock-body{padding:19px 18px 22px}
+var MOCK_STYLE = `
 .mb-prog{font:800 11px -apple-system,sans-serif;letter-spacing:.6px;color:var(--mut2)}
 .mb-tag{display:inline-block;margin-left:9px;font-size:10px;font-weight:800;letter-spacing:.6px;color:var(--acc);background:var(--accbg);border-radius:5px;padding:2px 9px;vertical-align:middle}
 .mb-cue{font-size:16.5px;font-weight:700;color:var(--ink);line-height:1.42;margin:13px 0 0}
@@ -139,7 +139,7 @@ class DeepMockRun extends HTMLElement {
     if (this._built) return;
     this._built = true;
     const root = this.attachShadow({ mode: 'open' });
-    root.adoptedStyleSheets = [BASE_SHEET];
+    root.adoptedStyleSheets = [BASE_SHEET, MOCK_SHEET];
     root.innerHTML = '<style>' + MOCK_STYLE + '</style><div class="mock-body" id="mockbody"></div>';
     mockbody = root.getElementById('mockbody');
     mockRoot = root;

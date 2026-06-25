@@ -604,7 +604,9 @@ b.cs-ha-l{color:var(--accink);font-weight:700}
 
    OPT_SHEET -- the .opt trade-option family: <deep-trade-offs> + <deep-mixed-fire>.
    ANS_SHEET -- the question / answer / follow-up / senior / push / judge family,
-                rendered by both <deep-drill> and <deep-mixed-fire>. */
+                rendered by both <deep-drill> and <deep-mixed-fire>.
+   MOCK_SHEET -- the .mock-body shadow-body container, shared by the two beat-runner
+                shadows <deep-mock-run> (mockbody) and <deep-mixed-fire> (mixbody). */
 var OPT_SHEET = new CSSStyleSheet();
 OPT_SHEET.replaceSync(`
 .opt{margin:11px 0}
@@ -640,6 +642,11 @@ ANS_SHEET.replaceSync(`
 .judge .shk{border-color:var(--amber);color:var(--amber)} .judge .shk:hover{background:var(--amberbg)}
 .judge .hint{font-size:9px;font-weight:700}
 .got:active,.shk:active{transform:translateY(1px);filter:brightness(.96)}
+`);
+
+var MOCK_SHEET = new CSSStyleSheet();
+MOCK_SHEET.replaceSync(`
+.mock-body{padding:19px 18px 22px}
 `);
 
 /* ============ RED FLAGS (web component) ============
@@ -2060,7 +2067,7 @@ function closeMock() {
    The body moves into this shadow; renderMockBeat/renderMockEnd (in mixed-fire.js)
    and openMock's keyboard shortcuts target it via the mockbody global / mockRoot.
    The frame, clock, open/close, and the shared ovShow/ovHide stay light. */
-var MOCK_STYLE = `.mock-body{padding:19px 18px 22px}
+var MOCK_STYLE = `
 .mb-prog{font:800 11px -apple-system,sans-serif;letter-spacing:.6px;color:var(--mut2)}
 .mb-tag{display:inline-block;margin-left:9px;font-size:10px;font-weight:800;letter-spacing:.6px;color:var(--acc);background:var(--accbg);border-radius:5px;padding:2px 9px;vertical-align:middle}
 .mb-cue{font-size:16.5px;font-weight:700;color:var(--ink);line-height:1.42;margin:13px 0 0}
@@ -2118,7 +2125,7 @@ class DeepMockRun extends HTMLElement {
     if (this._built) return;
     this._built = true;
     const root = this.attachShadow({ mode: 'open' });
-    root.adoptedStyleSheets = [BASE_SHEET];
+    root.adoptedStyleSheets = [BASE_SHEET, MOCK_SHEET];
     root.innerHTML = '<style>' + MOCK_STYLE + '</style><div class="mock-body" id="mockbody"></div>';
     mockbody = root.getElementById('mockbody');
     mockRoot = root;
@@ -2354,7 +2361,7 @@ document.getElementById('mockx').onclick = closeMock;
    The body moves into this shadow; renderMix/renderMixEnd target it via the
    mixBody global and look up their rendered controls through mixRoot. The frame,
    open/close, and the mock-run render below (still light) stay as they are. */
-var MIX_STYLE = `.mock-body{padding:19px 18px 22px}
+var MIX_STYLE = `
 .mx-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px;gap:10px}
 .mx-prog{font:700 12px -apple-system,sans-serif;color:var(--mut2);letter-spacing:.3px}
 .mx-kind{font:800 10.5px -apple-system,sans-serif;letter-spacing:.5px;text-transform:uppercase;padding:5px 11px;border-radius:20px;white-space:nowrap}
@@ -2386,7 +2393,7 @@ class DeepMixedFire extends HTMLElement {
     if (this._built) return;
     this._built = true;
     const root = this.attachShadow({ mode: 'open' });
-    root.adoptedStyleSheets = [BASE_SHEET, OPT_SHEET, ANS_SHEET];
+    root.adoptedStyleSheets = [BASE_SHEET, OPT_SHEET, ANS_SHEET, MOCK_SHEET];
     root.innerHTML = '<style>' + MIX_STYLE + '</style><div class="mock-body" id="mixbody"></div>';
     mixBody = root.getElementById('mixbody');
     mixRoot = root;

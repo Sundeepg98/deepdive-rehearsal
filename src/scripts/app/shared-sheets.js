@@ -9,7 +9,9 @@
 
    OPT_SHEET -- the .opt trade-option family: <deep-trade-offs> + <deep-mixed-fire>.
    ANS_SHEET -- the question / answer / follow-up / senior / push / judge family,
-                rendered by both <deep-drill> and <deep-mixed-fire>. */
+                rendered by both <deep-drill> and <deep-mixed-fire>.
+   MOCK_SHEET -- the .mock-body shadow-body container, shared by the two beat-runner
+                shadows <deep-mock-run> (mockbody) and <deep-mixed-fire> (mixbody). */
 var OPT_SHEET = new CSSStyleSheet();
 OPT_SHEET.replaceSync(`
 .opt{margin:11px 0}
@@ -45,4 +47,9 @@ ANS_SHEET.replaceSync(`
 .judge .shk{border-color:var(--amber);color:var(--amber)} .judge .shk:hover{background:var(--amberbg)}
 .judge .hint{font-size:9px;font-weight:700}
 .got:active,.shk:active{transform:translateY(1px);filter:brightness(.96)}
+`);
+
+var MOCK_SHEET = new CSSStyleSheet();
+MOCK_SHEET.replaceSync(`
+.mock-body{padding:19px 18px 22px}
 `);

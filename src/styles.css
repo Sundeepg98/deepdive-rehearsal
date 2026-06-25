@@ -53,7 +53,7 @@
 
   .dnr{animation:pop .24s ease}
 
-  .btn-sec:active,.mb-rev:active,.mb-next:active,.crambtn:active,.got:active,.shk:active,.wb-rev:active,.wb-got:active,.wb-miss:active,.mb-again:active,.pri:active,.ss-go:active{transform:translateY(1px);filter:brightness(.96)}
+  .crambtn:active{transform:translateY(1px);filter:brightness(.96)}
 
   .debrief .big{font-size:23px;font-weight:760;text-align:center;margin-bottom:4px}
   .debrief .sumline{text-align:center;color:var(--mut);font-size:13px;margin-bottom:18px}
@@ -311,9 +311,7 @@ html[data-theme="dark"]{--grid:rgba(170,157,245,.05);--canvas:radial-gradient(13
 /* desktop hover polish (v92) - all gated @media(hover:hover) so mobile tap never sticks */
 @media(hover:hover){
 .seg button{transition:background-color .14s ease,color .14s ease}
-.mb-rev,.wb-rev,.wb-got{transition:filter .12s ease}
 .seg button:hover:not(.on){background:rgba(109,95,214,.13)}
-.mb-rev:hover,.ss-cmpbtn:hover,.wb-rev:hover,.wb-got:hover,.wb-miss:hover{filter:brightness(.96)}
 }
 /* desktop chrome polish (v93): themed text-selection + thin themed scrollbars (mouse/trackpad surfaces) */
 ::selection{background:#DCD7F5;color:#241C5C}

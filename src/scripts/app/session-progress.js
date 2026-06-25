@@ -308,6 +308,8 @@ var SESS_STYLE = `.sess-body{padding:18px 20px 24px}
 .ss-code{flex:1;min-width:0;font:600 11px ui-monospace,Menlo,monospace;color:var(--accink);background:var(--accbg);border:1px solid var(--ss-code-bd);border-radius:7px;padding:8px 9px}
 .ss-copy,.ss-cmpbtn{flex:none;border:1px solid var(--acc);background:var(--ss-btn-bg);color:var(--acc);font:700 11px -apple-system,sans-serif;padding:8px 12px;border-radius:7px;cursor:pointer;transition:.13s}
 .ss-copy:active,.ss-cmpbtn:active{background:var(--accbg)}
+.ss-cmpbtn:hover{filter:brightness(.96)}
+.ss-go:active{transform:translateY(1px);filter:brightness(.96)}
 .ss-paste{flex:1;min-width:0;font:500 11px ui-monospace,Menlo,monospace;color:var(--ink);background:var(--ss-btn-bg);border:1px solid var(--bd);border-radius:7px;padding:8px 9px;resize:none;line-height:1.45}
 .cmp-head{font:800 10px -apple-system,sans-serif;letter-spacing:.5px;text-transform:uppercase;color:var(--mut2);margin:13px 0 4px}
 .cmp-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-top:1px solid var(--bd)}

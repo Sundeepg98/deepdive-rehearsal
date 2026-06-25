@@ -26,7 +26,7 @@
     --indigo:#4338CA; --indigobg:#ECEBFB;
     --code:#2A2740; --codeink:#E7E4F5;
     /* system-map theme-flip tokens (inherit across the shadow boundary) */
-    --sm-line:#E0DBD1; --sm-dot-bg:#F0ECE4; --sm-card-bg:#FCFBF9; --sm-pa-fg:#4a463f; --sm-here-fg:#fff; --sm-cur-dot-bg:var(--acc); --op-hooks-bg:#FBFAF7; --op-foot-bg:#F1EEFB; --op-foot-fg:#46423b; --disc-bg:#FCFBF9; --disc-body-fg:#4a463f; --wb-foot-bg:#F1EEFB; --wb-foot-fg:#46423b; --wb-li-bd:#EFEAE1; --wb-ok-fg:#0a5240; --wb-ok-b-fg:#0a5240; --wb-warn-fg:#5e3c0a; --opt-n-bd:#dcd6f5; --dec-tell-b-fg:#0a5240; --fb-n-bg:#F7F4EE; --fb-n-fg:#3a372f; --fb-t-fg:#0a5240; --fb-r-fg:#7e2020; --fb-a-fg:#6a3f08; --ins-bg:#F5F2EC; --ins-fg:#46423b; --mq-bg:#F0ECE4; --dots-i-bg:#DCD7CD; --dots-on-bg:var(--acc); --dots-done-bg:var(--acc2); --thread-bg:linear-gradient(180deg,#fff,#FBFAFF); --ans-bg:#F4F1FB; --fa-bg:#FBF6EE; --ans-fg:#3c3830; --fa-b-fg:#7a4708; --senior-bd:#bfe0d4; --senior-fg:#0c4f3d; --speak-fg:#3a2e86; --push-fg:#fff; --judge-btn-bg:#fff; --modetog-bg:#F0ECE4; --modetog-bd:var(--bd); --modetog-hover-bg:rgba(109,95,214,.1); --dbar-bg:#ECE8E0; --btnsec-hover-bg:#dcefe6; --sigrow-bd:#EFEAE1; --codecap-fg:#4a463f; --code-inline-bg:#F0EDE6; --ninp-bd:#d8d2f3;--cs30-bg:#FBFAF7;--cram-code-bg:#F1EFFB;--ss-card-bg:#FCFBF8;--ss-carry-bg:#fbfaf7;--ss-code-bd:#d8d3f2;--ss-go-fg:#fff;--ss-btn-bg:#fff;
+    --sm-line:#E0DBD1; --sm-dot-bg:#F0ECE4; --sm-card-bg:#FCFBF9; --sm-pa-fg:#4a463f; --sm-here-fg:#fff; --sm-cur-dot-bg:var(--acc); --op-hooks-bg:#FBFAF7; --op-foot-bg:#F1EEFB; --op-foot-fg:#46423b; --disc-bg:#FCFBF9; --disc-body-fg:#4a463f; --wb-foot-bg:#F1EEFB; --wb-foot-fg:#46423b; --wb-li-bd:#EFEAE1; --wb-ok-fg:#0a5240; --wb-ok-b-fg:#0a5240; --wb-warn-fg:#5e3c0a; --opt-n-bd:#dcd6f5; --dec-tell-b-fg:#0a5240; --fb-n-bg:#F7F4EE; --fb-n-fg:#3a372f; --fb-t-fg:#0a5240; --fb-r-fg:#7e2020; --fb-a-fg:#6a3f08; --ins-bg:#F5F2EC; --ins-fg:#46423b; --mq-bg:#F0ECE4; --dots-i-bg:#DCD7CD; --dots-on-bg:var(--acc); --dots-done-bg:var(--acc2); --thread-bg:linear-gradient(180deg,#fff,#FBFAFF); --ans-bg:#F4F1FB; --fa-bg:#FBF6EE; --ans-fg:#3c3830; --fa-b-fg:#7a4708; --senior-bd:#bfe0d4; --senior-fg:#0c4f3d; --speak-fg:#3a2e86; --push-fg:#fff; --judge-btn-bg:#fff; --modetog-bg:#F0ECE4; --modetog-bd:var(--bd); --modetog-hover-bg:rgba(109,95,214,.1); --dbar-bg:#ECE8E0; --btnsec-hover-bg:#dcefe6; --sigrow-bd:#EFEAE1; --codecap-fg:#4a463f; --code-inline-bg:#F0EDE6; --ninp-bd:#d8d2f3;--cs30-bg:#FBFAF7;--cram-code-bg:#F1EFFB;--ss-card-bg:#FCFBF8;--ss-carry-bg:#fbfaf7;--ss-code-bd:#d8d3f2;--ss-go-fg:#fff;--ss-btn-bg:#fff;--mxb-curve-bg:#FBEDE4;--mxb-trade-fg:var(--teal);
   }
   *{margin:0;padding:0;box-sizing:border-box}
   html{scroll-behavior:smooth}
@@ -66,30 +66,9 @@
 
   .score{display:flex;gap:9px;margin-bottom:14px}
 
-  .qq{font-size:15.5px;font-weight:680;color:var(--ink);line-height:1.45}
-  .ans{font-size:13px;color:#3c3830;margin-top:13px;padding:13px 15px;background:#F4F1FB;border-left:3px solid var(--acc);border-radius:8px;animation:pop .22s ease}
-  .ans b{color:var(--accink)}
   .dnr{animation:pop .24s ease}
-  .fu{margin-top:13px;animation:pop .24s ease}
-  .fu .lab{font-size:10px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:var(--amber);display:flex;align-items:center;gap:6px;margin-bottom:6px}
-  .fu .lab::before{content:"\21B3";font-size:14px}
-  .fu .fq{font-size:14px;font-weight:650;color:var(--ink);line-height:1.45}
-  .fu .fa{font-size:12.5px;color:#3c3830;margin-top:9px;padding:11px 14px;background:#FBF6EE;border-left:3px solid var(--amber);border-radius:8px}
-  .fu .fa b{color:#7a4708}
-  .senior{margin-top:14px;font-size:12.5px;color:#0c4f3d;background:var(--tealbg);border:1px solid #bfe0d4;border-radius:9px;padding:12px 14px;animation:pop .24s ease}
-  .senior .sl{font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--teal);display:flex;align-items:center;gap:6px;margin-bottom:5px}
-  .senior .sl::before{content:"\2605"}
-  .senior b{color:#0a5240}
 
-  .push{margin-top:15px;width:100%;border:0;color:#fff;font:700 13px -apple-system,sans-serif;padding:13px;border-radius:11px;cursor:pointer;transition:.12s;background:linear-gradient(135deg,var(--acc),var(--acc2));box-shadow:0 5px 15px rgba(83,74,183,.27),inset 0 1px 0 rgba(255,255,255,.14)}
-  .push.more{background:linear-gradient(135deg,var(--amber),#b9740f);box-shadow:0 5px 15px rgba(176,108,20,.30),inset 0 1px 0 rgba(255,255,255,.16)}
-  .push:active{transform:translateY(1px);box-shadow:0 2px 7px rgba(30,28,24,.18),inset 0 1px 0 rgba(255,255,255,.10)}
   .btn-sec:active,.mb-rev:active,.mb-next:active,.crambtn:active,.got:active,.shk:active,.wb-rev:active,.wb-got:active,.wb-miss:active,.mb-again:active,.pri:active,.ss-go:active{transform:translateY(1px);filter:brightness(.96)}
-  .judge{display:flex;gap:10px;margin-top:15px}
-  .judge button{flex:1;border:1.5px solid;background:#fff;font:700 13px -apple-system,sans-serif;padding:12px;border-radius:11px;cursor:pointer;transition:.12s}
-  .judge .got{border-color:var(--teal);color:var(--teal)} .judge .got:hover{background:var(--tealbg)}
-  .judge .shk{border-color:var(--amber);color:var(--amber)} .judge .shk:hover{background:var(--amberbg)}
-  .judge .hint{font-size:9px;font-weight:700}
 
   .debrief .big{font-size:23px;font-weight:760;text-align:center;margin-bottom:4px}
   .debrief .sumline{text-align:center;color:var(--mut);font-size:13px;margin-bottom:18px}
@@ -98,11 +77,6 @@
   .debrief button{margin-top:18px;display:block;width:100%;border:1.5px solid var(--acc);background:#fff;color:var(--acc);font:700 13px -apple-system,sans-serif;padding:12px;border-radius:10px;cursor:pointer}
 
   /* trade-off ledger */
-  .opt{margin:11px 0}
-  .opt-n{display:inline-block;font:800 10.5px -apple-system,sans-serif;letter-spacing:.3px;color:var(--accink);background:var(--accbg);border:1px solid var(--opt-n-bd);border-radius:6px;padding:4px 9px;margin-bottom:5px}
-  .opt-w{font-size:12.8px;line-height:1.57;color:var(--ink)}
-  .opt-w .pw{font-weight:800;color:var(--mut2);text-transform:uppercase;font-size:9.5px;letter-spacing:.5px;margin-right:6px}
-  .opt-w b{color:var(--accink)}
 
   /* model answer */
 
@@ -152,31 +126,6 @@
   .mock-title{flex:1;font:800 12px -apple-system,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:var(--accink)}
   .mock-clock{flex:none;font:800 16px ui-monospace,Menlo,monospace;color:var(--acc);background:var(--accbg);border-radius:8px;padding:4px 12px}
   .mock-body{padding:19px 18px 22px}
-  .mx-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px;gap:10px}
-  .mx-prog{font:700 12px -apple-system,sans-serif;color:var(--mut2);letter-spacing:.3px}
-  .mx-kind{font:800 10.5px -apple-system,sans-serif;letter-spacing:.5px;text-transform:uppercase;padding:5px 11px;border-radius:20px;white-space:nowrap}
-  .mxb-probe{background:var(--accbg);color:var(--accink)}
-  .mxb-curve{background:#FBEDE4;color:var(--amber)}
-  .mxb-trade{background:var(--tealbg);color:var(--teal)}
-  .mx-label{font:700 14px -apple-system,sans-serif;color:var(--ink);margin-bottom:9px}
-  .mx-task{display:block;margin-top:9px;font:600 13.5px -apple-system,sans-serif;font-style:italic;color:var(--mut)}
-  .mx-end{text-align:center;padding:8px 4px}
-  .mx-end-h{font:800 17px -apple-system,sans-serif;color:var(--ink);margin-bottom:4px}
-  .mx-end-pct{font:800 40px -apple-system,sans-serif;color:var(--acc);line-height:1;margin:8px 0}
-  .mx-end-v{font:600 14px -apple-system,sans-serif;color:var(--mut);margin:0 auto 16px;line-height:1.5;max-width:300px}
-  .mx-bd{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 16px;margin-bottom:18px;font:600 13px -apple-system,sans-serif;color:var(--mut)}
-  .mx-bd b{color:var(--ink);font-weight:800}
-  .mx-end-list{text-align:left;margin-bottom:18px}
-  .mx-erow{display:flex;align-items:center;gap:9px;padding:7px 2px;border-bottom:1px solid var(--bd)}
-  .mx-edot{flex:none;width:9px;height:9px;border-radius:50%}
-  .mx-edot.ok{background:var(--teal)}
-  .mx-edot.no{background:var(--amber)}
-  .mx-ek{flex:none;font:800 9.5px -apple-system,sans-serif;text-transform:uppercase;letter-spacing:.4px;color:var(--mut2);width:74px}
-  .mx-el{font:600 13px -apple-system,sans-serif;color:var(--ink)}
-  .mx-end-btns{display:flex;flex-direction:column;gap:9px}
-  .mx-end-btns button{margin-top:0}
-  .mxghost{width:100%;font:750 13px -apple-system,sans-serif;padding:12px 14px;border-radius:11px;background:transparent;color:var(--acc);border:1.5px solid var(--bd);cursor:pointer;transition:.15s}
-  .mxghost:hover{border-color:var(--acc);background:var(--accbg)}
 
   .mb-prog{font:800 11px -apple-system,sans-serif;letter-spacing:.6px;color:var(--mut2)}
   .mb-tag{display:inline-block;margin-left:9px;font-size:10px;font-weight:800;letter-spacing:.6px;color:var(--acc);background:var(--accbg);border-radius:5px;padding:2px 9px;vertical-align:middle}
@@ -292,15 +241,14 @@ html[data-theme="dark"]{
   --teal:#4FCDAB; --tealbg:#143028; --red:#F08A8A; --redbg:#3A2020;
   --amber:#E5A24A; --amberbg:#352712; --indigo:#9D93F0; --indigobg:#24223C;
   --code:#15131D; --codeink:#E7E4F5;
-  --sm-line:#3A3642; --sm-dot-bg:#2A2730; --sm-card-bg:#262430; --sm-pa-fg:#C7C2BA; --sm-here-fg:#1A1622; --sm-cur-dot-bg:#2A2730; --op-hooks-bg:#262430; --op-foot-bg:#2A2540; --op-foot-fg:#BAB4AA; --disc-bg:#262430; --disc-body-fg:#B2ACA2; --wb-foot-bg:#2A2540; --wb-foot-fg:#BAB4AA; --wb-li-bd:#322E3A; --wb-ok-fg:#5FD3B0; --wb-ok-b-fg:#8FE0C8; --wb-warn-fg:#E8BC78; --opt-n-bd:#3A3552; --dec-tell-b-fg:#8FE0C8; --fb-n-bg:#262430; --fb-n-fg:#DAD6CE; --fb-t-fg:#8FE0C8; --fb-r-fg:#F0A0A0; --fb-a-fg:#E8BC78; --ins-bg:#262430; --ins-fg:#BAB4AA; --mq-bg:#2A2730; --dots-i-bg:#44404C; --dots-on-bg:var(--dots-i-bg); --dots-done-bg:var(--dots-i-bg); --thread-bg:#262430; --ans-bg:#2A2540; --fa-bg:#2A2540; --ans-fg:#DAD6CE; --fa-b-fg:#E8BC78; --senior-bd:#2E5A4A; --senior-fg:#7FD9BE; --speak-fg:#CABFFB; --push-fg:#1A1622; --judge-btn-bg:#262430; --modetog-bg:#2A2730; --modetog-bd:#37333F; --modetog-hover-bg:rgba(170,157,245,.13); --dbar-bg:#211F28; --btnsec-hover-bg:#1A3A30; --sigrow-bd:#322E3A; --codecap-fg:#B2ACA2; --code-inline-bg:#2A2833; --ninp-bd:#3A3552;--cs30-bg:#262430;--cram-code-bg:#2C2740;--ss-card-bg:#262430;--ss-carry-bg:#262430;--ss-code-bd:#3A3552;--ss-go-fg:#1A1622;--ss-btn-bg:#262430;
+  --sm-line:#3A3642; --sm-dot-bg:#2A2730; --sm-card-bg:#262430; --sm-pa-fg:#C7C2BA; --sm-here-fg:#1A1622; --sm-cur-dot-bg:#2A2730; --op-hooks-bg:#262430; --op-foot-bg:#2A2540; --op-foot-fg:#BAB4AA; --disc-bg:#262430; --disc-body-fg:#B2ACA2; --wb-foot-bg:#2A2540; --wb-foot-fg:#BAB4AA; --wb-li-bd:#322E3A; --wb-ok-fg:#5FD3B0; --wb-ok-b-fg:#8FE0C8; --wb-warn-fg:#E8BC78; --opt-n-bd:#3A3552; --dec-tell-b-fg:#8FE0C8; --fb-n-bg:#262430; --fb-n-fg:#DAD6CE; --fb-t-fg:#8FE0C8; --fb-r-fg:#F0A0A0; --fb-a-fg:#E8BC78; --ins-bg:#262430; --ins-fg:#BAB4AA; --mq-bg:#2A2730; --dots-i-bg:#44404C; --dots-on-bg:var(--dots-i-bg); --dots-done-bg:var(--dots-i-bg); --thread-bg:#262430; --ans-bg:#2A2540; --fa-bg:#2A2540; --ans-fg:#DAD6CE; --fa-b-fg:#E8BC78; --senior-bd:#2E5A4A; --senior-fg:#7FD9BE; --speak-fg:#CABFFB; --push-fg:#1A1622; --judge-btn-bg:#262430; --modetog-bg:#2A2730; --modetog-bd:#37333F; --modetog-hover-bg:rgba(170,157,245,.13); --dbar-bg:#211F28; --btnsec-hover-bg:#1A3A30; --sigrow-bd:#322E3A; --codecap-fg:#B2ACA2; --code-inline-bg:#2A2833; --ninp-bd:#3A3552;--cs30-bg:#262430;--cram-code-bg:#2C2740;--ss-card-bg:#262430;--ss-carry-bg:#262430;--ss-code-bd:#3A3552;--ss-go-fg:#1A1622;--ss-btn-bg:#262430;--mxb-curve-bg:#3A2814;--mxb-trade-fg:#B6ADE8;
 }
 html[data-theme="dark"] body{background:var(--bg)}
 /* near-white card surfaces -> dark card */
 /* light purple tints -> dark purple */
-html[data-theme="dark"] .ans,html[data-theme="dark"] .verdict,html[data-theme="dark"] .fu .fa{background:#2A2540}
+html[data-theme="dark"] .verdict{background:#2A2540}
 /* inline code variants */
 /* curveball badge (peach) -> dark amber */
-html[data-theme="dark"] .mxb-curve{background:#3A2814}
 /* warm/gray surfaces */
 html[data-theme="dark"] .kbd-hint kbd{background:#2E2A35;border-color:#46424E}
 html[data-theme="dark"] .rail{background:#211F28}
@@ -308,29 +256,23 @@ html[data-theme="dark"] .debrief .btn-sec:hover{background:#1A3A30}
 html[data-theme="dark"] .inttog-dot{background:#56525E}
 /* light borders -> dark */
 html[data-theme="dark"] .mb-end-cv{border-color:#3A3552}
-html[data-theme="dark"] .senior{border-color:#2E5A4A}
 html[data-theme="dark"] .sr-sec{border-bottom-color:#322E3A}
 /* dark text colors -> light variants */
 html[data-theme="dark"] .sr-stat{color:#D8D4CC}
-html[data-theme="dark"] .verdict,html[data-theme="dark"] .ans,html[data-theme="dark"] .fu .fa{color:#DAD6CE}
-html[data-theme="dark"] .judge button{background:#262430}
-html[data-theme="dark"] .fu .fa b{color:#E8BC78}
+html[data-theme="dark"] .verdict{color:#DAD6CE}
 html[data-theme="dark"] #wbrerun{background:#262430}
-html[data-theme="dark"] .senior{color:#7FD9BE}
-html[data-theme="dark"] .senior b,html[data-theme="dark"] .debrief .btn-sec{color:#8FE0C8}
+html[data-theme="dark"] .debrief .btn-sec{color:#8FE0C8}
 html[data-theme="dark"] .rec.nh .lvl,html[data-theme="dark"] .mb-int-q{color:#F0A0A0}
 
 html[data-theme="dark"] .sr-list{color:#C8C4BC}
 html[data-theme="dark"] .rec.lh .lvl{color:#E8BC78}
 /* mid accents -> brighter on dark */
-html[data-theme="dark"] .mxb-trade{color:#B6ADE8}
 /* tab bar container + active-tab contrast */
 html[data-theme="dark"] .seg{background:#18161E}
 html[data-theme="dark"] .seg button:not(.on):hover{background:rgba(170,157,245,.13);color:var(--ink)}
 /* accent-bg buttons need dark text on light accent */
 html[data-theme="dark"] .mockbtn{color:#1A1622}
 html[data-theme="dark"] .badge{color:#1A1622}
-html[data-theme="dark"] .push{color:#1A1622}
 /* kbd hint chips text */
 html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
 
@@ -439,10 +381,7 @@ html[data-theme="dark"]{--grid:rgba(170,157,245,.05);--canvas:radial-gradient(13
 .seg button{transition:background-color .14s ease,color .14s ease}
 .mb-rev,.wb-rev,.wb-got{transition:filter .12s ease}
 .seg button:hover:not(.on){background:rgba(109,95,214,.13)}
-.push:hover:not(.more){box-shadow:0 9px 26px rgba(83,74,183,.42),inset 0 1px 0 rgba(255,255,255,.14);transform:translateY(-1px)}
-.push.more:hover{box-shadow:0 9px 26px rgba(176,108,20,.42),inset 0 1px 0 rgba(255,255,255,.14);transform:translateY(-1px)}
 .mb-rev:hover,.ss-cmpbtn:hover,.wb-rev:hover,.wb-got:hover,.wb-miss:hover{filter:brightness(.96)}
-.push:active:not(.more),.push.more:active{transform:translateY(1px);box-shadow:0 2px 7px rgba(30,28,24,.18),inset 0 1px 0 rgba(255,255,255,.1)}
 }
 /* desktop chrome polish (v93): themed text-selection + thin themed scrollbars (mouse/trackpad surfaces) */
 ::selection{background:#DCD7F5;color:#241C5C}
@@ -624,7 +563,7 @@ button,summary{-webkit-user-select:none;user-select:none}
       <button class="mock-x" id="mixx" type="button" aria-label="Close mixed fire">&times;</button>
       <div class="mock-title">Mixed fire</div>
     </div>
-    <div class="mock-body" id="mixbody"></div>
+    <deep-mixed-fire></deep-mixed-fire>
   </div>
 </div>
 
@@ -2191,6 +2130,7 @@ function closeMock() {
   if (mockClock) { clearInterval(mockClock); mockClock = null; }
 }
 /* ============ MIXED FIRE ============ */
+var mixBody = null, mixRoot = null;
 /* Wrap a probe card as a mixed-fire item: question + every follow-up + the
    senior-signal line, all revealed together. */
 function mxProbe(c) {
@@ -2261,19 +2201,19 @@ function closeMix() {
 /* Render the current mixed-fire item: badge + label + prompt, with a Reveal
    button that exposes the answer and the Handled-it / Shaky self-grade pair. */
 function renderMix() {
-  const body = document.getElementById('mixbody');
+  const body = mixBody;
   if (mxIdx >= mxPool.length) { renderMixEnd(); return; }
   const item = mxPool[mxIdx];
   body.innerHTML = '<div class="mx-top"><span class="mx-prog">Question ' + (mxIdx + 1) + ' / ' + mxPool.length + '</span><span class="mx-kind ' + item.badge + '">' + item.kind + '</span></div><div class="mx-label">' + item.label + '</div><div class="qq">' + item.prompt + '</div><div id="mxrev"></div><button class="push" id="mxshow" type="button">Reveal a strong answer</button>';
-  document.getElementById('mxshow').onclick = function () {
-    document.getElementById('mxrev').innerHTML = item.reveal;
+  mixRoot.getElementById('mxshow').onclick = function () {
+    mixRoot.getElementById('mxrev').innerHTML = item.reveal;
     this.style.display = 'none';
     const judgeRow = document.createElement('div');
     judgeRow.className = 'judge';
     judgeRow.innerHTML = '<button class="got" id="mxg" type="button">&#10003; Handled it <span class="hint">[1]</span></button><button class="shk" id="mxs" type="button">&#126; Shaky <span class="hint">[2]</span></button>';
     body.appendChild(judgeRow);
-    document.getElementById('mxg').onclick = function () { mxJudge(true); };
-    document.getElementById('mxs').onclick = function () { mxJudge(false); };
+    mixRoot.getElementById('mxg').onclick = function () { mxJudge(true); };
+    mixRoot.getElementById('mxs').onclick = function () { mxJudge(false); };
   };
 }
 /* Grade the current mixed-fire item and advance (logs to mxRes + mixLog). */
@@ -2287,7 +2227,7 @@ function mxJudge(ok) {
 /* End screen: overall %, a verdict, a per-category breakdown (probes /
    curveballs / trade-offs), the item list, and retry / re-run buttons. */
 function renderMixEnd() {
-  const body = document.getElementById('mixbody');
+  const body = mixBody;
   const pct = Math.round(mxGot / mxPool.length * 100);
   const verdict = pct >= 80 ? 'Sharp &mdash; you switched registers cleanly.' : pct >= 50 ? 'Solid. A couple of the gear-changes caught you off guard.' : 'The jumps between question types are the work &mdash; run it again.';
   const byKind = { Probe: [0, 0], Curve: [0, 0], Trade: [0, 0] };
@@ -2304,8 +2244,8 @@ function renderMixEnd() {
   const retry = shakyCount ? '<button class="push" id="mxretry" type="button">Retry the ' + shakyCount + ' you fumbled</button>' : '';
   const again = shakyCount ? '<button class="mxghost" id="mxre" type="button">Run a fresh mixed set</button>' : '<button class="push" id="mxre" type="button">Run another mixed set</button>';
   body.innerHTML = '<div class="mx-end"><div class="mx-end-h">Mixed fire &mdash; ' + mxGot + ' / ' + mxPool.length + ' handled</div><div class="mx-end-pct">' + pct + '%</div><div class="mx-end-v">' + verdict + '</div><div class="mx-bd">' + scoreBadge('Probes', byKind.Probe) + scoreBadge('Curveballs', byKind.Curve) + scoreBadge('Trade-offs', byKind.Trade) + '</div><div class="mx-end-list">' + rows + '</div><div class="mx-end-btns">' + retry + again + '</div></div>';
-  document.getElementById('mxre').onclick = openMix;
-  const rt = document.getElementById('mxretry');
+  mixRoot.getElementById('mxre').onclick = openMix;
+  const rt = mixRoot.getElementById('mxretry');
   if (rt) rt.onclick = retryShaky;
 }
 /* Re-run only the items graded Shaky this round, reshuffled. */
@@ -2411,6 +2351,80 @@ function renderMockEnd() {
 /* Wire the mock-run overlay open/close triggers. */
 document.getElementById('mockopen').onclick = openMock;
 document.getElementById('mockx').onclick = closeMock;
+
+
+/* ===== MIXED FIRE as a shadow component =====
+   The body moves into this shadow; renderMix/renderMixEnd target it via the
+   mixBody global and look up their rendered controls through mixRoot. The frame,
+   open/close, and the mock-run render below (still light) stay as they are. */
+var MIX_STYLE = `.mock-body{padding:19px 18px 22px}
+.mx-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px;gap:10px}
+.mx-prog{font:700 12px -apple-system,sans-serif;color:var(--mut2);letter-spacing:.3px}
+.mx-kind{font:800 10.5px -apple-system,sans-serif;letter-spacing:.5px;text-transform:uppercase;padding:5px 11px;border-radius:20px;white-space:nowrap}
+.mxb-probe{background:var(--accbg);color:var(--accink)}
+.mxb-curve{background:var(--mxb-curve-bg);color:var(--amber)}
+.mxb-trade{background:var(--tealbg);color:var(--mxb-trade-fg)}
+.mx-label{font:700 14px -apple-system,sans-serif;color:var(--ink);margin-bottom:9px}
+.mx-task{display:block;margin-top:9px;font:600 13.5px -apple-system,sans-serif;font-style:italic;color:var(--mut)}
+.mx-end{text-align:center;padding:8px 4px}
+.mx-end-h{font:800 17px -apple-system,sans-serif;color:var(--ink);margin-bottom:4px}
+.mx-end-pct{font:800 40px -apple-system,sans-serif;color:var(--acc);line-height:1;margin:8px 0}
+.mx-end-v{font:600 14px -apple-system,sans-serif;color:var(--mut);margin:0 auto 16px;line-height:1.5;max-width:300px}
+.mx-bd{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 16px;margin-bottom:18px;font:600 13px -apple-system,sans-serif;color:var(--mut)}
+.mx-bd b{color:var(--ink);font-weight:800}
+.mx-end-list{text-align:left;margin-bottom:18px}
+.mx-erow{display:flex;align-items:center;gap:9px;padding:7px 2px;border-bottom:1px solid var(--bd)}
+.mx-edot{flex:none;width:9px;height:9px;border-radius:50%}
+.mx-edot.ok{background:var(--teal)}
+.mx-edot.no{background:var(--amber)}
+.mx-ek{flex:none;font:800 9.5px -apple-system,sans-serif;text-transform:uppercase;letter-spacing:.4px;color:var(--mut2);width:74px}
+.mx-el{font:600 13px -apple-system,sans-serif;color:var(--ink)}
+.mx-end-btns{display:flex;flex-direction:column;gap:9px}
+.mx-end-btns button{margin-top:0}
+.mxghost{width:100%;font:750 13px -apple-system,sans-serif;padding:12px 14px;border-radius:11px;background:transparent;color:var(--acc);border:1.5px solid var(--bd);cursor:pointer;transition:.15s}
+.mxghost:hover{border-color:var(--acc);background:var(--accbg)}
+.qq{font-size:15.5px;font-weight:680;color:var(--ink);line-height:1.45}
+.ans{font-size:13px;color:var(--ans-fg);margin-top:13px;padding:13px 15px;background:var(--ans-bg);border-left:3px solid var(--acc);border-radius:8px;animation:pop .22s ease}
+.ans b{color:var(--accink)}
+.fu{margin-top:13px;animation:pop .24s ease}
+.fu .lab{font-size:10px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:var(--amber);display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.fu .lab::before{content:"\\21B3";font-size:14px}
+.fu .fq{font-size:14px;font-weight:650;color:var(--ink);line-height:1.45}
+.fu .fa{font-size:12.5px;color:var(--ans-fg);margin-top:9px;padding:11px 14px;background:var(--fa-bg);border-left:3px solid var(--amber);border-radius:8px}
+.fu .fa b{color:var(--fa-b-fg)}
+.senior{margin-top:14px;font-size:12.5px;color:var(--senior-fg);background:var(--tealbg);border:1px solid var(--senior-bd);border-radius:9px;padding:12px 14px;animation:pop .24s ease}
+.senior .sl{font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--teal);display:flex;align-items:center;gap:6px;margin-bottom:5px}
+.senior .sl::before{content:"\\2605"}
+.senior b{color:var(--fb-t-fg)}
+.push{margin-top:15px;width:100%;border:0;color:var(--push-fg);font:700 13px -apple-system,sans-serif;padding:13px;border-radius:11px;cursor:pointer;transition:.12s;background:linear-gradient(135deg,var(--acc),var(--acc2));box-shadow:0 5px 15px rgba(83,74,183,.27),inset 0 1px 0 rgba(255,255,255,.14)}
+.push.more{background:linear-gradient(135deg,var(--amber),#b9740f);box-shadow:0 5px 15px rgba(176,108,20,.30),inset 0 1px 0 rgba(255,255,255,.16)}
+.push:active{transform:translateY(1px);box-shadow:0 2px 7px rgba(30,28,24,.18),inset 0 1px 0 rgba(255,255,255,.10)}
+.judge{display:flex;gap:10px;margin-top:15px}
+.judge button{flex:1;border:1.5px solid;background:var(--judge-btn-bg);font:700 13px -apple-system,sans-serif;padding:12px;border-radius:11px;cursor:pointer;transition:.12s}
+.judge .got{border-color:var(--teal);color:var(--teal)} .judge .got:hover{background:var(--tealbg)}
+.judge .shk{border-color:var(--amber);color:var(--amber)} .judge .shk:hover{background:var(--amberbg)}
+.judge .hint{font-size:9px;font-weight:700}
+.push:hover:not(.more){box-shadow:0 9px 26px rgba(83,74,183,.42),inset 0 1px 0 rgba(255,255,255,.14);transform:translateY(-1px)}
+.push.more:hover{box-shadow:0 9px 26px rgba(176,108,20,.42),inset 0 1px 0 rgba(255,255,255,.14);transform:translateY(-1px)}
+.push:active:not(.more),.push.more:active{transform:translateY(1px);box-shadow:0 2px 7px rgba(30,28,24,.18),inset 0 1px 0 rgba(255,255,255,.1)}
+.opt{margin:11px 0}
+.opt-n{display:inline-block;font:800 10.5px -apple-system,sans-serif;letter-spacing:.3px;color:var(--accink);background:var(--accbg);border:1px solid var(--opt-n-bd);border-radius:6px;padding:4px 9px;margin-bottom:5px}
+.opt-w{font-size:12.8px;line-height:1.57;color:var(--ink)}
+.opt-w .pw{font-weight:800;color:var(--mut2);text-transform:uppercase;font-size:9.5px;letter-spacing:.5px;margin-right:6px}
+.opt-w b{color:var(--accink)}
+.got:active,.shk:active{transform:translateY(1px);filter:brightness(.96)}`;
+class DeepMixedFire extends HTMLElement {
+  connectedCallback() {
+    if (this._built) return;
+    this._built = true;
+    const root = this.attachShadow({ mode: 'open' });
+    root.adoptedStyleSheets = [BASE_SHEET];
+    root.innerHTML = '<style>' + MIX_STYLE + '</style><div class="mock-body" id="mixbody"></div>';
+    mixBody = root.getElementById('mixbody');
+    mixRoot = root;
+  }
+}
+customElements.define('deep-mixed-fire', DeepMixedFire);
 
 /* ============ CRAM SHEET ============ */
 /* Show/hide wiring for several overlays (cram sheet, game plan, scope-first,

@@ -59,7 +59,6 @@ var DRILL_STYLE = `@keyframes pop{from{opacity:0;transform:translateY(7px) scale
 .thread{border:1.5px solid var(--bd);border-radius:13px;padding:18px;background:var(--thread-bg)}
 .qrow{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:4px}
 .qk{font-family:var(--mono);font-size:10px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--acc)}
-.qq{font-size:15.5px;font-weight:680;color:var(--ink);line-height:1.45}
 .sigtag{font-size:10px;color:var(--mut2);font-weight:700;margin-top:5px;letter-spacing:.2px}
 .sigtag b{color:var(--acc)}
 .tier{display:inline-block;font-size:9.5px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;padding:3px 8px;border-radius:5px;border:1px solid;white-space:nowrap}
@@ -67,33 +66,10 @@ var DRILL_STYLE = `@keyframes pop{from{opacity:0;transform:translateY(7px) scale
 .tier.t3{color:var(--accink);background:var(--accbg);border-color:#cfc7f0}
 .tier.tS{color:var(--red);background:var(--redbg);border-color:#e8c5c0}
 .tier.tX{color:#fff;background:var(--indigo);border-color:var(--indigo)}
-.ans{font-size:13px;color:var(--ans-fg);margin-top:13px;padding:13px 15px;background:var(--ans-bg);border-left:3px solid var(--acc);border-radius:8px;animation:pop .22s ease}
-.ans b{color:var(--accink)}
-.fu{margin-top:13px;animation:pop .24s ease}
-.fu .lab{font-size:10px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:var(--amber);display:flex;align-items:center;gap:6px;margin-bottom:6px}
-.fu .lab::before{content:"\\21B3";font-size:14px}
-.fu .fq{font-size:14px;font-weight:650;color:var(--ink);line-height:1.45}
-.fu .fa{font-size:12.5px;color:var(--ans-fg);margin-top:9px;padding:11px 14px;background:var(--fa-bg);border-left:3px solid var(--amber);border-radius:8px}
-.fu .fa b{color:var(--fa-b-fg)}
-.senior{margin-top:14px;font-size:12.5px;color:var(--senior-fg);background:var(--tealbg);border:1px solid var(--senior-bd);border-radius:9px;padding:12px 14px;animation:pop .24s ease}
-.senior .sl{font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--teal);display:flex;align-items:center;gap:6px;margin-bottom:5px}
-.senior .sl::before{content:"\\2605"}
-.senior b{color:var(--fb-t-fg)}
 .speak{margin-top:11px;font-size:12.5px;color:var(--speak-fg);background:var(--accbg);border:1px solid #cfc7f0;border-radius:9px;padding:12px 14px;animation:pop .24s ease}
 .speak .sl{font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--acc);display:flex;align-items:center;gap:6px;margin-bottom:5px}
 .speak .sl::before{content:"\\1F5E3"}
 .speak b{color:var(--accink)}
-.push{margin-top:15px;width:100%;border:0;color:var(--push-fg);font:700 13px -apple-system,sans-serif;padding:13px;border-radius:11px;cursor:pointer;transition:.12s;background:linear-gradient(135deg,var(--acc),var(--acc2));box-shadow:0 5px 15px rgba(83,74,183,.27),inset 0 1px 0 rgba(255,255,255,.14)}
-.push.more{background:linear-gradient(135deg,var(--amber),#b9740f);box-shadow:0 5px 15px rgba(176,108,20,.30),inset 0 1px 0 rgba(255,255,255,.16)}
-.push:hover:not(.more){box-shadow:0 9px 26px rgba(83,74,183,.42),inset 0 1px 0 rgba(255,255,255,.14);transform:translateY(-1px)}
-.push.more:hover{box-shadow:0 9px 26px rgba(176,108,20,.42),inset 0 1px 0 rgba(255,255,255,.14);transform:translateY(-1px)}
-.push:active:not(.more),.push.more:active{transform:translateY(1px);box-shadow:0 2px 7px rgba(30,28,24,.18),inset 0 1px 0 rgba(255,255,255,.1)}
-.judge{display:flex;gap:10px;margin-top:15px}
-.judge button{flex:1;border:1.5px solid;background:var(--judge-btn-bg);font:700 13px -apple-system,sans-serif;padding:12px;border-radius:11px;cursor:pointer;transition:.12s}
-.judge .got{border-color:var(--teal);color:var(--teal)} .judge .got:hover{background:var(--tealbg)}
-.judge .shk{border-color:var(--amber);color:var(--amber)} .judge .shk:hover{background:var(--amberbg)}
-.judge .hint{font-size:9px;font-weight:700}
-.got:active,.shk:active{transform:translateY(1px);filter:brightness(.96)}
 .debrief .big{font-size:23px;font-weight:760;text-align:center;margin-bottom:4px}
 .debrief .sumline{text-align:center;color:var(--mut);font-size:13px;margin-bottom:18px}
 .sigrow{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid var(--sigrow-bd)}
@@ -147,7 +123,7 @@ class DeepDrill extends HTMLElement {
     this.di = 0; this.got = 0; this.shk = 0; this.results = [];
     this.revisit = {}; this.revisitMode = false;
     const root = this.attachShadow({ mode: 'open' });
-    root.adoptedStyleSheets = [BASE_SHEET];
+    root.adoptedStyleSheets = [BASE_SHEET, ANS_SHEET];
     root.innerHTML = '<style>' + DRILL_STYLE + '</style>' + DRILL_HTML;
     this._root = root;
     this._dwrap = root.getElementById('dwrap'); this._dfill = root.getElementById('dfill');

@@ -6,9 +6,9 @@
    drove wi/renderW directly; it now calls prev()/next() (each bounds-checks
    internally). The flow chips (.fb/.flow/.arr), .ins, .arc-*, pre.code/.codecap,
    details.model and .mq are pane-exclusive and stay here. The base .mbeat row
-   rules are shared with model-answers and live in MBEAT_SHEET (shared-sheets.js,
-   adopted here); the details.disc disclosure family is shared with whiteboard.
-   Ten dark overrides become flip tokens. */
+   rules are shared with model-answers and live in MBEAT_SHEET; the details.disc
+   disclosure family is shared with whiteboard and lives in DISC_SHEET -- both
+   adopted here (shared-sheets.js). Ten dark overrides become flip tokens. */
 var WALK_STYLE = `
 .dots{display:flex;gap:6px;justify-content:center;margin:0 0 16px}
 .dots i{width:8px;height:8px;border-radius:50%;background:var(--dots-i-bg);transition:.2s}
@@ -32,13 +32,6 @@ pre.code .c{color:#9b95c9} pre.code .k{color:#C9A2F0} pre.code .s{color:#9DD9B6}
 .nav button:hover:not(:disabled){border-color:var(--acc);color:var(--acc)}
 .nav button:disabled{opacity:.32;cursor:default}
 .nav .ctr{font-family:var(--mono);font-size:12px;color:var(--mut2);font-weight:700}
-details.disc{margin-top:11px;border:1px solid var(--bd);border-radius:9px;overflow:hidden;background:var(--disc-bg)}
-details.disc summary{cursor:pointer;font:700 11.5px -apple-system,sans-serif;color:var(--acc);padding:10px 14px;list-style:none;display:flex;align-items:center;gap:7px}
-details.disc summary::-webkit-details-marker{display:none}
-details.disc summary::before{content:"\\25B8";transition:.2s;font-size:10px}
-details.disc[open] summary::before{transform:rotate(90deg)}
-details.disc summary:hover{background:rgba(109,95,214,.06)}
-details.disc .body{padding:0 14px 13px;font-size:12px;color:var(--disc-body-fg)}
 details.model{margin-top:16px;background:var(--card);box-shadow:var(--surf-sh);border:1px solid var(--bd);border-left:4px solid var(--acc);border-radius:11px;overflow:hidden}
 details.model>summary{cursor:pointer;list-style:none;padding:14px 16px;font:800 13px -apple-system,sans-serif;color:var(--accink);display:flex;align-items:baseline;gap:9px;user-select:none}
 details.model>summary::-webkit-details-marker{display:none}
@@ -94,7 +87,7 @@ class DeepWalkthrough extends HTMLElement {
     this._built = true;
     this._wi = 0;
     const root = this.attachShadow({ mode: 'open' });
-    root.adoptedStyleSheets = [BASE_SHEET, MBEAT_SHEET];
+    root.adoptedStyleSheets = [BASE_SHEET, MBEAT_SHEET, DISC_SHEET];
     root.innerHTML = '<style>' + WALK_STYLE + '</style>' + WALK_HTML;
     this._card = root.getElementById('wcard');
     this._dots = root.getElementById('wdots');

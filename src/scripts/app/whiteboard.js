@@ -9,7 +9,9 @@
    Eight colors had html[data-theme=dark] overrides (disc bg/body, wb-foot bg/fg,
    wb li border, verdict ok / ok-bold / warn); each is a flip token, since
    ancestor selectors cannot cross the shadow boundary. The diagram (.dgm-*) uses
-   only auto-flipping tokens. #wbrerun and the disc/diagram styles move here too. */
+   only auto-flipping tokens. #wbrerun and the diagram (.dgm-*) styles live in
+   WB_STYLE; the details.disc disclosure family, shared with the walkthrough,
+   lives once in DISC_SHEET (shared-sheets.js), adopted alongside BASE_SHEET. */
 var WB_STEPS = [
   {c:'Entry box &mdash; the handler signature and what fires it.', a:'<code>processUpload(key, bucket)</code> &mdash; the Lambda / API handler, triggered by the S3 <b>ObjectCreated</b> event.'},
   {c:'Routing &mdash; how a file type picks its handler.', a:'<code>extname(key)</code> &rarr; the <code>strategies</code> map (jpg, mp4, ttf, bin, zip&hellip;). An <b>O(1) lookup</b>, never a switch.'},
@@ -22,13 +24,6 @@ var WB_STEPS = [
   {c:'How a redelivered event avoids double work.', a:'At-least-once delivery &rarr; a <b>processed-marker</b> (conditional put on the content hash). A replay sees it and no-ops &mdash; the effect is idempotent.'}
 ];
 var WB_STYLE = `
-details.disc{margin-top:11px;border:1px solid var(--bd);border-radius:9px;overflow:hidden;background:var(--disc-bg)}
-details.disc summary{cursor:pointer;font:700 11.5px -apple-system,sans-serif;color:var(--acc);padding:10px 14px;list-style:none;display:flex;align-items:center;gap:7px}
-details.disc summary::-webkit-details-marker{display:none}
-details.disc summary::before{content:"\\25B8";transition:.2s;font-size:10px}
-details.disc[open] summary::before{transform:rotate(90deg)}
-details.disc summary:hover{background:rgba(109,95,214,.06)}
-details.disc .body{padding:0 14px 13px;font-size:12px;color:var(--disc-body-fg)}
 .dgm{display:flex;flex-direction:column;align-items:center;gap:0;padding:4px 0 6px}
 .dgm-node{background:var(--accbg);border:1.5px solid var(--acc2);border-radius:9px;padding:8px 14px;text-align:center;max-width:290px;width:100%;box-sizing:border-box}
 .dgm-t{font:700 12.5px -apple-system,sans-serif;color:var(--accink);line-height:1.3}
@@ -123,7 +118,7 @@ class DeepWhiteboard extends HTMLElement {
     if (this._built) return;
     this._built = true;
     const root = this.attachShadow({ mode: 'open' });
-    root.adoptedStyleSheets = [BASE_SHEET];
+    root.adoptedStyleSheets = [BASE_SHEET, DISC_SHEET];
     root.innerHTML = '<style>' + WB_STYLE + '</style>' + WB_HTML;
     this._list = root.getElementById('wblist');
     this._count = root.getElementById('wbcount');

@@ -13,7 +13,9 @@
    MOCK_SHEET -- the .mock-body shadow-body container, shared by the two beat-runner
                 shadows <deep-mock-run> (mockbody) and <deep-mixed-fire> (mixbody).
    MBEAT_SHEET -- the base .mbeat "beat row" rules (the two-column beat layout),
-                shared by <deep-model-answers> and <deep-walkthrough>. */
+                shared by <deep-model-answers> and <deep-walkthrough>.
+   DISC_SHEET -- the details.disc disclosure-widget family (the collapsible
+                "go deeper / see the code" boxes): <deep-walkthrough> + <deep-whiteboard>. */
 var OPT_SHEET = new CSSStyleSheet();
 OPT_SHEET.replaceSync(`
 .opt{margin:11px 0}
@@ -62,4 +64,15 @@ MBEAT_SHEET.replaceSync(`
 .mbeat{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--bd)}
 .mbeat:last-child{border-bottom:0;padding-bottom:2px}
 .mbeat b{color:var(--accink)}
+`);
+
+var DISC_SHEET = new CSSStyleSheet();
+DISC_SHEET.replaceSync(`
+details.disc{margin-top:11px;border:1px solid var(--bd);border-radius:9px;overflow:hidden;background:var(--disc-bg)}
+details.disc summary{cursor:pointer;font:700 11.5px -apple-system,sans-serif;color:var(--acc);padding:10px 14px;list-style:none;display:flex;align-items:center;gap:7px}
+details.disc summary::-webkit-details-marker{display:none}
+details.disc summary::before{content:"\\25B8";transition:.2s;font-size:10px}
+details.disc[open] summary::before{transform:rotate(90deg)}
+details.disc summary:hover{background:rgba(109,95,214,.06)}
+details.disc .body{padding:0 14px 13px;font-size:12px;color:var(--disc-body-fg)}
 `);

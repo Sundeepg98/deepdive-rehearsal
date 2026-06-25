@@ -608,7 +608,9 @@ b.cs-ha-l{color:var(--accink);font-weight:700}
    MOCK_SHEET -- the .mock-body shadow-body container, shared by the two beat-runner
                 shadows <deep-mock-run> (mockbody) and <deep-mixed-fire> (mixbody).
    MBEAT_SHEET -- the base .mbeat "beat row" rules (the two-column beat layout),
-                shared by <deep-model-answers> and <deep-walkthrough>. */
+                shared by <deep-model-answers> and <deep-walkthrough>.
+   DISC_SHEET -- the details.disc disclosure-widget family (the collapsible
+                "go deeper / see the code" boxes): <deep-walkthrough> + <deep-whiteboard>. */
 var OPT_SHEET = new CSSStyleSheet();
 OPT_SHEET.replaceSync(`
 .opt{margin:11px 0}
@@ -657,6 +659,17 @@ MBEAT_SHEET.replaceSync(`
 .mbeat{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--bd)}
 .mbeat:last-child{border-bottom:0;padding-bottom:2px}
 .mbeat b{color:var(--accink)}
+`);
+
+var DISC_SHEET = new CSSStyleSheet();
+DISC_SHEET.replaceSync(`
+details.disc{margin-top:11px;border:1px solid var(--bd);border-radius:9px;overflow:hidden;background:var(--disc-bg)}
+details.disc summary{cursor:pointer;font:700 11.5px -apple-system,sans-serif;color:var(--acc);padding:10px 14px;list-style:none;display:flex;align-items:center;gap:7px}
+details.disc summary::-webkit-details-marker{display:none}
+details.disc summary::before{content:"\\25B8";transition:.2s;font-size:10px}
+details.disc[open] summary::before{transform:rotate(90deg)}
+details.disc summary:hover{background:rgba(109,95,214,.06)}
+details.disc .body{padding:0 14px 13px;font-size:12px;color:var(--disc-body-fg)}
 `);
 
 /* ============ RED FLAGS (web component) ============
@@ -898,9 +911,9 @@ var steps = [
    drove wi/renderW directly; it now calls prev()/next() (each bounds-checks
    internally). The flow chips (.fb/.flow/.arr), .ins, .arc-*, pre.code/.codecap,
    details.model and .mq are pane-exclusive and stay here. The base .mbeat row
-   rules are shared with model-answers and live in MBEAT_SHEET (shared-sheets.js,
-   adopted here); the details.disc disclosure family is shared with whiteboard.
-   Ten dark overrides become flip tokens. */
+   rules are shared with model-answers and live in MBEAT_SHEET; the details.disc
+   disclosure family is shared with whiteboard and lives in DISC_SHEET -- both
+   adopted here (shared-sheets.js). Ten dark overrides become flip tokens. */
 var WALK_STYLE = `
 .dots{display:flex;gap:6px;justify-content:center;margin:0 0 16px}
 .dots i{width:8px;height:8px;border-radius:50%;background:var(--dots-i-bg);transition:.2s}
@@ -924,13 +937,6 @@ pre.code .c{color:#9b95c9} pre.code .k{color:#C9A2F0} pre.code .s{color:#9DD9B6}
 .nav button:hover:not(:disabled){border-color:var(--acc);color:var(--acc)}
 .nav button:disabled{opacity:.32;cursor:default}
 .nav .ctr{font-family:var(--mono);font-size:12px;color:var(--mut2);font-weight:700}
-details.disc{margin-top:11px;border:1px solid var(--bd);border-radius:9px;overflow:hidden;background:var(--disc-bg)}
-details.disc summary{cursor:pointer;font:700 11.5px -apple-system,sans-serif;color:var(--acc);padding:10px 14px;list-style:none;display:flex;align-items:center;gap:7px}
-details.disc summary::-webkit-details-marker{display:none}
-details.disc summary::before{content:"\\25B8";transition:.2s;font-size:10px}
-details.disc[open] summary::before{transform:rotate(90deg)}
-details.disc summary:hover{background:rgba(109,95,214,.06)}
-details.disc .body{padding:0 14px 13px;font-size:12px;color:var(--disc-body-fg)}
 details.model{margin-top:16px;background:var(--card);box-shadow:var(--surf-sh);border:1px solid var(--bd);border-left:4px solid var(--acc);border-radius:11px;overflow:hidden}
 details.model>summary{cursor:pointer;list-style:none;padding:14px 16px;font:800 13px -apple-system,sans-serif;color:var(--accink);display:flex;align-items:baseline;gap:9px;user-select:none}
 details.model>summary::-webkit-details-marker{display:none}
@@ -986,7 +992,7 @@ class DeepWalkthrough extends HTMLElement {
     this._built = true;
     this._wi = 0;
     const root = this.attachShadow({ mode: 'open' });
-    root.adoptedStyleSheets = [BASE_SHEET, MBEAT_SHEET];
+    root.adoptedStyleSheets = [BASE_SHEET, MBEAT_SHEET, DISC_SHEET];
     root.innerHTML = '<style>' + WALK_STYLE + '</style>' + WALK_HTML;
     this._card = root.getElementById('wcard');
     this._dots = root.getElementById('wdots');
@@ -1612,7 +1618,9 @@ customElements.define('deep-drill', DeepDrill);
    Eight colors had html[data-theme=dark] overrides (disc bg/body, wb-foot bg/fg,
    wb li border, verdict ok / ok-bold / warn); each is a flip token, since
    ancestor selectors cannot cross the shadow boundary. The diagram (.dgm-*) uses
-   only auto-flipping tokens. #wbrerun and the disc/diagram styles move here too. */
+   only auto-flipping tokens. #wbrerun and the diagram (.dgm-*) styles live in
+   WB_STYLE; the details.disc disclosure family, shared with the walkthrough,
+   lives once in DISC_SHEET (shared-sheets.js), adopted alongside BASE_SHEET. */
 var WB_STEPS = [
   {c:'Entry box &mdash; the handler signature and what fires it.', a:'<code>processUpload(key, bucket)</code> &mdash; the Lambda / API handler, triggered by the S3 <b>ObjectCreated</b> event.'},
   {c:'Routing &mdash; how a file type picks its handler.', a:'<code>extname(key)</code> &rarr; the <code>strategies</code> map (jpg, mp4, ttf, bin, zip&hellip;). An <b>O(1) lookup</b>, never a switch.'},
@@ -1625,13 +1633,6 @@ var WB_STEPS = [
   {c:'How a redelivered event avoids double work.', a:'At-least-once delivery &rarr; a <b>processed-marker</b> (conditional put on the content hash). A replay sees it and no-ops &mdash; the effect is idempotent.'}
 ];
 var WB_STYLE = `
-details.disc{margin-top:11px;border:1px solid var(--bd);border-radius:9px;overflow:hidden;background:var(--disc-bg)}
-details.disc summary{cursor:pointer;font:700 11.5px -apple-system,sans-serif;color:var(--acc);padding:10px 14px;list-style:none;display:flex;align-items:center;gap:7px}
-details.disc summary::-webkit-details-marker{display:none}
-details.disc summary::before{content:"\\25B8";transition:.2s;font-size:10px}
-details.disc[open] summary::before{transform:rotate(90deg)}
-details.disc summary:hover{background:rgba(109,95,214,.06)}
-details.disc .body{padding:0 14px 13px;font-size:12px;color:var(--disc-body-fg)}
 .dgm{display:flex;flex-direction:column;align-items:center;gap:0;padding:4px 0 6px}
 .dgm-node{background:var(--accbg);border:1.5px solid var(--acc2);border-radius:9px;padding:8px 14px;text-align:center;max-width:290px;width:100%;box-sizing:border-box}
 .dgm-t{font:700 12.5px -apple-system,sans-serif;color:var(--accink);line-height:1.3}
@@ -1726,7 +1727,7 @@ class DeepWhiteboard extends HTMLElement {
     if (this._built) return;
     this._built = true;
     const root = this.attachShadow({ mode: 'open' });
-    root.adoptedStyleSheets = [BASE_SHEET];
+    root.adoptedStyleSheets = [BASE_SHEET, DISC_SHEET];
     root.innerHTML = '<style>' + WB_STYLE + '</style>' + WB_HTML;
     this._list = root.getElementById('wblist');
     this._count = root.getElementById('wbcount');

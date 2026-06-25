@@ -5,9 +5,10 @@
    included just before this). Coupled to numbers-nalsd, whose keyboard handler
    drove wi/renderW directly; it now calls prev()/next() (each bounds-checks
    internally). The flow chips (.fb/.flow/.arr), .ins, .arc-*, pre.code/.codecap,
-   details.model and .mq are pane-exclusive and move here; .mbeat and
-   details.disc are shared and were also copied into the model / whiteboard
-   shadows, so they leave styles.css. Ten dark overrides become flip tokens. */
+   details.model and .mq are pane-exclusive and stay here. The base .mbeat row
+   rules are shared with model-answers and live in MBEAT_SHEET (shared-sheets.js,
+   adopted here); the details.disc disclosure family is shared with whiteboard.
+   Ten dark overrides become flip tokens. */
 var WALK_STYLE = `
 .dots{display:flex;gap:6px;justify-content:center;margin:0 0 16px}
 .dots i{width:8px;height:8px;border-radius:50%;background:var(--dots-i-bg);transition:.2s}
@@ -46,11 +47,7 @@ details.model[open]>summary::before{transform:rotate(90deg)}
 details.model>summary .sub{font-weight:600;color:var(--mut);font-size:11px;letter-spacing:.3px}
 details.model>summary:hover{background:rgba(109,95,214,.06)}
 .mbody{padding:3px 17px 18px;border-top:1px solid var(--bd)}
-.mbeat{margin:13px 0;font-size:13.5px;line-height:1.62;color:var(--ink)}
-.mbeat{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--bd)}
-.mbeat:last-child{border-bottom:0;padding-bottom:2px}
 .mbeat .ml{display:block;font-size:10px;font-weight:800;letter-spacing:.9px;text-transform:uppercase;color:var(--acc);margin-bottom:4px}
-.mbeat b{color:var(--accink)}
 .mq{margin:17px 0 0;padding:11px 13px;background:var(--mq-bg);border-radius:9px;font-size:13px;color:var(--mut);font-style:italic}
 .mbeat.ans{background:var(--accbg);border-radius:9px;padding:11px 14px;margin-top:7px}
 .arc-wrap{margin-top:24px}
@@ -97,7 +94,7 @@ class DeepWalkthrough extends HTMLElement {
     this._built = true;
     this._wi = 0;
     const root = this.attachShadow({ mode: 'open' });
-    root.adoptedStyleSheets = [BASE_SHEET];
+    root.adoptedStyleSheets = [BASE_SHEET, MBEAT_SHEET];
     root.innerHTML = '<style>' + WALK_STYLE + '</style>' + WALK_HTML;
     this._card = root.getElementById('wcard');
     this._dots = root.getElementById('wdots');

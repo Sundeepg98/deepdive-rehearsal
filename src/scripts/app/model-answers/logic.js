@@ -2,9 +2,10 @@
    The #model pane: a selector strip (.msel) and a #modelBody card that
    renderModel() fills from the global modelAnswers data (defined in answers.js,
    included just before this file). Encapsulated in a shadow root adopting
-   BASE_SHEET; the render + selector handlers query the shadow. .mbeat is shared
-   with the walkthrough -- the base .mbeat rules are copied into the shadow and
-   kept in styles.css for the walkthrough. All colors are existing theme tokens. */
+   BASE_SHEET; the render + selector handlers query the shadow. The base .mbeat row
+   rules are shared with the walkthrough, so they live once in MBEAT_SHEET
+   (shared-sheets.js), adopted here alongside BASE_SHEET; the .mbeat-l / .mbeat-t
+   variants stay pane-local. All colors are existing theme tokens. */
 var MODEL_STYLE = `
 .msel{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-bottom:14px}
 .msel button{flex:1 1 auto;min-width:150px;border:1px solid var(--bd);background:var(--card);color:var(--mut);font:700 12px -apple-system,sans-serif;padding:9px 10px;border-radius:9px;cursor:pointer;transition:.15s}
@@ -13,10 +14,6 @@ var MODEL_STYLE = `
 @media(max-width:560px){.msel{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .mscript-h{font-size:16px;font-weight:800;color:var(--ink);letter-spacing:-.3px;margin-bottom:4px}
 .mscript-sub{font-size:12.5px;color:var(--mut);line-height:1.5;margin-bottom:6px;padding-bottom:13px;border-bottom:2px solid var(--accbg)}
-.mbeat{margin:13px 0;font-size:13.5px;line-height:1.62;color:var(--ink)}
-.mbeat{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--bd)}
-.mbeat:last-child{border-bottom:0;padding-bottom:2px}
-.mbeat b{color:var(--accink)}
 .mbeat-l{flex:none;width:76px;font:800 9.5px -apple-system,sans-serif;letter-spacing:.4px;text-transform:uppercase;padding-top:3px;line-height:1.35}
 .mbeat-t{flex:1;font-size:13px;line-height:1.62;color:var(--ink)}
 .mbeat-t b{color:var(--accink)}
@@ -38,7 +35,7 @@ class DeepModelAnswers extends HTMLElement {
     if (this._built) return;
     this._built = true;
     const root = this.attachShadow({ mode: 'open' });
-    root.adoptedStyleSheets = [BASE_SHEET];
+    root.adoptedStyleSheets = [BASE_SHEET, MBEAT_SHEET];
     root.innerHTML = '<style>' + MODEL_STYLE + '</style>' + MODEL_HTML;
     const modelBody = root.querySelector('#modelBody');
     const selectorBtns = root.querySelectorAll('.msel button');

@@ -11,7 +11,9 @@
    ANS_SHEET -- the question / answer / follow-up / senior / push / judge family,
                 rendered by both <deep-drill> and <deep-mixed-fire>.
    MOCK_SHEET -- the .mock-body shadow-body container, shared by the two beat-runner
-                shadows <deep-mock-run> (mockbody) and <deep-mixed-fire> (mixbody). */
+                shadows <deep-mock-run> (mockbody) and <deep-mixed-fire> (mixbody).
+   MBEAT_SHEET -- the base .mbeat "beat row" rules (the two-column beat layout),
+                shared by <deep-model-answers> and <deep-walkthrough>. */
 var OPT_SHEET = new CSSStyleSheet();
 OPT_SHEET.replaceSync(`
 .opt{margin:11px 0}
@@ -52,4 +54,12 @@ ANS_SHEET.replaceSync(`
 var MOCK_SHEET = new CSSStyleSheet();
 MOCK_SHEET.replaceSync(`
 .mock-body{padding:19px 18px 22px}
+`);
+
+var MBEAT_SHEET = new CSSStyleSheet();
+MBEAT_SHEET.replaceSync(`
+.mbeat{margin:13px 0;font-size:13.5px;line-height:1.62;color:var(--ink)}
+.mbeat{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--bd)}
+.mbeat:last-child{border-bottom:0;padding-bottom:2px}
+.mbeat b{color:var(--accink)}
 `);

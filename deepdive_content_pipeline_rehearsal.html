@@ -593,6 +593,25 @@ b{color:var(--accink);font-weight:700}
 b.cs-ha-l{color:var(--accink);font-weight:700}
 `);
 
+/* ===== shared pane stylesheets: class families rendered by more than one component =====
+   A few interactive panes share a content vocabulary. Rather than copy the identical
+   rules into each shadow root's inline <style>, every shared family is defined ONCE
+   here as a constructable stylesheet and adopted (alongside BASE_SHEET) by exactly the
+   components that render it -- the same pattern as CS_SHEET in content-sheet.js. Each
+   sheet's rules were verified byte-identical across the components before being lifted
+   here, so consolidation changes nothing visually. Every colour is a theme token, so
+   light/dark needs no variants.
+
+   OPT_SHEET -- the .opt trade-option family: <deep-trade-offs> + <deep-mixed-fire>. */
+var OPT_SHEET = new CSSStyleSheet();
+OPT_SHEET.replaceSync(`
+.opt{margin:11px 0}
+.opt-n{display:inline-block;font:800 10.5px -apple-system,sans-serif;letter-spacing:.3px;color:var(--accink);background:var(--accbg);border:1px solid var(--opt-n-bd);border-radius:6px;padding:4px 9px;margin-bottom:5px}
+.opt-w{font-size:12.8px;line-height:1.57;color:var(--ink)}
+.opt-w .pw{font-weight:800;color:var(--mut2);text-transform:uppercase;font-size:9.5px;letter-spacing:.5px;margin-right:6px}
+.opt-w b{color:var(--accink)}
+`);
+
 /* ============ RED FLAGS (web component) ============
    Static presentational pane, now encapsulated. No data or logic: the markup is
    rendered into the shadow root, styled by the shared BASE_SHEET plus the
@@ -685,10 +704,9 @@ customElements.define('deep-red-flags', DeepRedFlags);
    Shadow-DOM custom element adopting BASE_SHEET. Coupled to mixed-fire, which
    used to scrape '#trade .dec' directly; that DOM now lives in the shadow, so
    the element exposes getDecisions() -> [{q, optsHtml, tell}] and mixed-fire
-   delegates to it. The .opt family is rendered by BOTH this pane and the
-   mixed-fire overlay (which injects the scraped .opt HTML into the light DOM),
-   so those rules stay in styles.css and are copied here; .dec/.dec-q/.dec-tell
-   are pane-exclusive and move here. Two dark overrides become flip tokens
+   delegates to it. The .opt trade-option family is shared with mixed-fire, so it
+   lives once in OPT_SHEET (shared-sheets.js), adopted by both; .dec/.dec-q/.dec-tell
+   are pane-exclusive and live in TRADE_STYLE. Two dark overrides become flip tokens
    (--opt-n-bd, shared with the overlay; --dec-tell-b-fg, exclusive). */
 var TRADE_STYLE = `
 .ledger .lead{font-size:15px;line-height:1.5;color:var(--ink);margin:2px 2px 16px}
@@ -696,11 +714,6 @@ var TRADE_STYLE = `
 .dec{background:var(--surf);box-shadow:var(--surf-sh);border:1px solid var(--bd);border-radius:13px;padding:15px 17px;margin-bottom:13px;border-top:3px solid var(--acc)}
 .dec-q{font-size:14.5px;font-weight:800;color:var(--ink);letter-spacing:-.2px;margin-bottom:9px;line-height:1.4}
 .dec-q .vs{color:var(--mut2);font-weight:700;font-size:11.5px;padding:0 3px}
-.opt{margin:11px 0}
-.opt-n{display:inline-block;font:800 10.5px -apple-system,sans-serif;letter-spacing:.3px;color:var(--accink);background:var(--accbg);border:1px solid var(--opt-n-bd);border-radius:6px;padding:4px 9px;margin-bottom:5px}
-.opt-w{font-size:12.8px;line-height:1.57;color:var(--ink)}
-.opt-w .pw{font-weight:800;color:var(--mut2);text-transform:uppercase;font-size:9.5px;letter-spacing:.5px;margin-right:6px}
-.opt-w b{color:var(--accink)}
 .dec-tell{margin-top:12px;padding-top:11px;border-top:1px dashed var(--bd);font-size:12px;color:var(--teal);font-weight:700;line-height:1.5}
 .dec-tell::before{content:"\\2605";font-size:11px;margin-right:7px}
 .dec-tell b{color:var(--dec-tell-b-fg)}
@@ -765,7 +778,7 @@ class DeepTradeOffs extends HTMLElement {
     if (this._built) return;
     this._built = true;
     const root = this.attachShadow({ mode: 'open' });
-    root.adoptedStyleSheets = [BASE_SHEET];
+    root.adoptedStyleSheets = [BASE_SHEET, OPT_SHEET];
     root.innerHTML = '<style>' + TRADE_STYLE + '</style>' + TRADE_HTML;
     this._root = root;
   }
@@ -2385,18 +2398,13 @@ var MIX_STYLE = `.mock-body{padding:19px 18px 22px}
 .push:hover:not(.more){box-shadow:0 9px 26px rgba(83,74,183,.42),inset 0 1px 0 rgba(255,255,255,.14);transform:translateY(-1px)}
 .push.more:hover{box-shadow:0 9px 26px rgba(176,108,20,.42),inset 0 1px 0 rgba(255,255,255,.14);transform:translateY(-1px)}
 .push:active:not(.more),.push.more:active{transform:translateY(1px);box-shadow:0 2px 7px rgba(30,28,24,.18),inset 0 1px 0 rgba(255,255,255,.1)}
-.opt{margin:11px 0}
-.opt-n{display:inline-block;font:800 10.5px -apple-system,sans-serif;letter-spacing:.3px;color:var(--accink);background:var(--accbg);border:1px solid var(--opt-n-bd);border-radius:6px;padding:4px 9px;margin-bottom:5px}
-.opt-w{font-size:12.8px;line-height:1.57;color:var(--ink)}
-.opt-w .pw{font-weight:800;color:var(--mut2);text-transform:uppercase;font-size:9.5px;letter-spacing:.5px;margin-right:6px}
-.opt-w b{color:var(--accink)}
 .got:active,.shk:active{transform:translateY(1px);filter:brightness(.96)}`;
 class DeepMixedFire extends HTMLElement {
   connectedCallback() {
     if (this._built) return;
     this._built = true;
     const root = this.attachShadow({ mode: 'open' });
-    root.adoptedStyleSheets = [BASE_SHEET];
+    root.adoptedStyleSheets = [BASE_SHEET, OPT_SHEET];
     root.innerHTML = '<style>' + MIX_STYLE + '</style><div class="mock-body" id="mixbody"></div>';
     mixBody = root.getElementById('mixbody');
     mixRoot = root;

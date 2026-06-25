@@ -276,18 +276,13 @@ var MIX_STYLE = `.mock-body{padding:19px 18px 22px}
 .push:hover:not(.more){box-shadow:0 9px 26px rgba(83,74,183,.42),inset 0 1px 0 rgba(255,255,255,.14);transform:translateY(-1px)}
 .push.more:hover{box-shadow:0 9px 26px rgba(176,108,20,.42),inset 0 1px 0 rgba(255,255,255,.14);transform:translateY(-1px)}
 .push:active:not(.more),.push.more:active{transform:translateY(1px);box-shadow:0 2px 7px rgba(30,28,24,.18),inset 0 1px 0 rgba(255,255,255,.1)}
-.opt{margin:11px 0}
-.opt-n{display:inline-block;font:800 10.5px -apple-system,sans-serif;letter-spacing:.3px;color:var(--accink);background:var(--accbg);border:1px solid var(--opt-n-bd);border-radius:6px;padding:4px 9px;margin-bottom:5px}
-.opt-w{font-size:12.8px;line-height:1.57;color:var(--ink)}
-.opt-w .pw{font-weight:800;color:var(--mut2);text-transform:uppercase;font-size:9.5px;letter-spacing:.5px;margin-right:6px}
-.opt-w b{color:var(--accink)}
 .got:active,.shk:active{transform:translateY(1px);filter:brightness(.96)}`;
 class DeepMixedFire extends HTMLElement {
   connectedCallback() {
     if (this._built) return;
     this._built = true;
     const root = this.attachShadow({ mode: 'open' });
-    root.adoptedStyleSheets = [BASE_SHEET];
+    root.adoptedStyleSheets = [BASE_SHEET, OPT_SHEET];
     root.innerHTML = '<style>' + MIX_STYLE + '</style><div class="mock-body" id="mixbody"></div>';
     mixBody = root.getElementById('mixbody');
     mixRoot = root;

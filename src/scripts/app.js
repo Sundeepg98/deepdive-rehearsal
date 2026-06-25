@@ -1,5 +1,6 @@
 <!--@build:include scripts/app/base-styles.js-->
 <!--@build:include scripts/app/content-sheet.js-->
+<!--@build:include scripts/app/shared-sheets.js-->
 <!--@build:include scripts/app/red-flags.js-->
 <!--@build:include scripts/app/trade-offs.js-->
 <!--@build:include scripts/app/walkthrough.js-->

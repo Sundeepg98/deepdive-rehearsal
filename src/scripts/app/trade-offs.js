@@ -3,10 +3,9 @@
    Shadow-DOM custom element adopting BASE_SHEET. Coupled to mixed-fire, which
    used to scrape '#trade .dec' directly; that DOM now lives in the shadow, so
    the element exposes getDecisions() -> [{q, optsHtml, tell}] and mixed-fire
-   delegates to it. The .opt family is rendered by BOTH this pane and the
-   mixed-fire overlay (which injects the scraped .opt HTML into the light DOM),
-   so those rules stay in styles.css and are copied here; .dec/.dec-q/.dec-tell
-   are pane-exclusive and move here. Two dark overrides become flip tokens
+   delegates to it. The .opt trade-option family is shared with mixed-fire, so it
+   lives once in OPT_SHEET (shared-sheets.js), adopted by both; .dec/.dec-q/.dec-tell
+   are pane-exclusive and live in TRADE_STYLE. Two dark overrides become flip tokens
    (--opt-n-bd, shared with the overlay; --dec-tell-b-fg, exclusive). */
 var TRADE_STYLE = `
 .ledger .lead{font-size:15px;line-height:1.5;color:var(--ink);margin:2px 2px 16px}
@@ -14,11 +13,6 @@ var TRADE_STYLE = `
 .dec{background:var(--surf);box-shadow:var(--surf-sh);border:1px solid var(--bd);border-radius:13px;padding:15px 17px;margin-bottom:13px;border-top:3px solid var(--acc)}
 .dec-q{font-size:14.5px;font-weight:800;color:var(--ink);letter-spacing:-.2px;margin-bottom:9px;line-height:1.4}
 .dec-q .vs{color:var(--mut2);font-weight:700;font-size:11.5px;padding:0 3px}
-.opt{margin:11px 0}
-.opt-n{display:inline-block;font:800 10.5px -apple-system,sans-serif;letter-spacing:.3px;color:var(--accink);background:var(--accbg);border:1px solid var(--opt-n-bd);border-radius:6px;padding:4px 9px;margin-bottom:5px}
-.opt-w{font-size:12.8px;line-height:1.57;color:var(--ink)}
-.opt-w .pw{font-weight:800;color:var(--mut2);text-transform:uppercase;font-size:9.5px;letter-spacing:.5px;margin-right:6px}
-.opt-w b{color:var(--accink)}
 .dec-tell{margin-top:12px;padding-top:11px;border-top:1px dashed var(--bd);font-size:12px;color:var(--teal);font-weight:700;line-height:1.5}
 .dec-tell::before{content:"\\2605";font-size:11px;margin-right:7px}
 .dec-tell b{color:var(--dec-tell-b-fg)}
@@ -83,7 +77,7 @@ class DeepTradeOffs extends HTMLElement {
     if (this._built) return;
     this._built = true;
     const root = this.attachShadow({ mode: 'open' });
-    root.adoptedStyleSheets = [BASE_SHEET];
+    root.adoptedStyleSheets = [BASE_SHEET, OPT_SHEET];
     root.innerHTML = '<style>' + TRADE_STYLE + '</style>' + TRADE_HTML;
     this._root = root;
   }

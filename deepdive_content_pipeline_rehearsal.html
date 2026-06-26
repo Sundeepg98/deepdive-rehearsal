@@ -13,7 +13,11 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>Content Pipeline &mdash; Deep Rehearsal</title>
-<style>
+<style>/* === @property declarations === */
+@property --accent-hue{syntax:"<angle>";initial-value:250deg;inherits:true}
+@property --glow-opacity{syntax:"<number>";initial-value:0.06;inherits:true}
+
+
   :root{
     --mono:ui-monospace,"SFMono-Regular",Menlo,"Cascadia Mono","Segoe UI Mono",Consolas,"Liberation Mono",monospace;
     --acc:#534AB7; --acc2:#6D5FD6; --accbg:#EFEDFA; --accink:#3A2E86; --side:#F1EDE4;
@@ -21,6 +25,18 @@
    --surf:linear-gradient(180deg,#ffffff 0%,#F8F5EF 100%);
    --card-sh:0 1px 2.5px rgba(40,34,28,.05),0 7px 16px -7px rgba(40,34,28,.10),0 22px 48px -26px rgba(40,34,28,.16);
    --surf-sh:0 1px 2px rgba(40,34,28,.05),0 4px 10px -5px rgba(40,34,28,.09);
+   --glow:0 0 0 1px rgba(83,74,183,.06),0 1px 2px rgba(40,34,28,.04),0 8px 20px -6px rgba(40,34,28,.10),0 24px 56px -24px rgba(40,34,28,.18);
+    --mix-surf:color-mix(in oklab,var(--bg) 92%,var(--acc));
+    --acc-p3:color(display-p3 0.32 0.29 0.72);
+    --acc2-p3:color(display-p3 0.43 0.37 0.84);
+    --mix-surf-2:color-mix(in oklab,var(--bg) 85%,var(--acc));
+    --ease-out:cubic-bezier(.22,.61,.36,1);
+    --ease-spring:cubic-bezier(.34,1.56,.64,1);
+   --glow-hover:0 0 0 1px rgba(83,74,183,.10),0 2px 4px rgba(40,34,28,.05),0 12px 28px -8px rgba(40,34,28,.14),0 32px 72px -24px rgba(40,34,28,.22);
+   --chip-sh:0 1px 2px rgba(83,74,183,.08),0 2px 6px -2px rgba(83,74,183,.12);
+    --dot-glow:0 0 0 3px rgba(83,74,183,.12);
+    --nav-glow:inset 3px 0 0 var(--acc),0 4px 14px -4px rgba(83,74,183,.18);
+    --ring:0 0 0 3px rgba(83,74,183,.15);
    --panel:linear-gradient(180deg,#F4F1EA 0%,#ECE8DE 100%); --bd:#E8E4DC; --ink:#2A2823; --mut:#6B6862; --mut2:#67615A;
     --teal:#0F6E56; --tealbg:#E7F2EE; --red:#A32D2D; --redbg:#F8EDEC; --amber:#9A5B0B; --amberbg:#FBF1E3;
     --indigo:#4338CA; --indigobg:#ECEBFB;
@@ -29,13 +45,28 @@
     --sm-line:#E0DBD1; --sm-dot-bg:#F0ECE4; --sm-card-bg:#FCFBF9; --sm-pa-fg:#4a463f; --sm-here-fg:#fff; --sm-cur-dot-bg:var(--acc); --op-hooks-bg:#FBFAF7; --op-foot-bg:#F1EEFB; --op-foot-fg:#46423b; --disc-bg:#FCFBF9; --disc-body-fg:#4a463f; --wb-foot-bg:#F1EEFB; --wb-foot-fg:#46423b; --wb-li-bd:#EFEAE1; --wb-ok-fg:#0a5240; --wb-ok-b-fg:#0a5240; --wb-warn-fg:#5e3c0a; --opt-n-bd:#dcd6f5; --dec-tell-b-fg:#0a5240; --fb-n-bg:#F7F4EE; --fb-n-fg:#3a372f; --fb-t-fg:#0a5240; --fb-r-fg:#7e2020; --fb-a-fg:#6a3f08; --ins-bg:#F5F2EC; --ins-fg:#46423b; --mq-bg:#F0ECE4; --dots-i-bg:#DCD7CD; --dots-on-bg:var(--acc); --dots-done-bg:var(--acc2); --thread-bg:linear-gradient(180deg,#fff,#FBFAFF); --ans-bg:#F4F1FB; --fa-bg:#FBF6EE; --ans-fg:#3c3830; --fa-b-fg:#7a4708; --senior-bd:#bfe0d4; --senior-fg:#0c4f3d; --speak-fg:#3a2e86; --push-fg:#fff; --judge-btn-bg:#fff; --modetog-bg:#F0ECE4; --modetog-bd:var(--bd); --modetog-hover-bg:rgba(109,95,214,.1); --dbar-bg:#ECE8E0; --btnsec-hover-bg:#dcefe6; --sigrow-bd:#EFEAE1; --codecap-fg:#4a463f; --code-inline-bg:#F0EDE6; --ninp-bd:#d8d2f3;--cs30-bg:#FBFAF7;--cram-code-bg:#F1EFFB;--ss-card-bg:#FCFBF8;--ss-carry-bg:#fbfaf7;--ss-code-bd:#d8d3f2;--ss-go-fg:#fff;--ss-btn-bg:#fff;--mxb-curve-bg:#FBEDE4;--mxb-trade-fg:var(--teal);--mb-next-fg:#fff;--mb-cv-bd:#d6d2f3;--mb-intq-fg:#7d2222;--mb-irev-bg:#fff;--mb-irev-bd:#e0b9b4;
   }
   *{margin:0;padding:0;box-sizing:border-box}
+  ::selection{background:rgba(83,74,183,.12);color:var(--accink)}
+  ::-moz-selection{background:rgba(83,74,183,.12);color:var(--accink)}
+  ::target-text{background:rgba(83,74,183,.12);color:var(--accink)}
   html{scroll-behavior:smooth}
-  body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased;padding:0 0 70px}
+  ::-webkit-scrollbar{width:8px;height:8px}
+  ::-webkit-scrollbar-track{background:transparent}
+  ::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--bd),#D8D2C8);border-radius:4px;border:2px solid transparent;background-clip:padding-box}
+  ::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,var(--acc),var(--acc2));border-radius:4px;border:2px solid transparent;background-clip:padding-box}
+  ::-webkit-scrollbar-corner{background:transparent}
+  :root{accent-color:var(--acc)}
+  input[type="checkbox"],input[type="radio"]{accent-color:var(--acc)}
+  body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased;padding:0 0 70px;opacity:0;animation:bodyIn .5s cubic-bezier(.22,.61,.36,1) .1s forwards}
+  @keyframes bodyIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 
   .rail{position:sticky;top:0;height:4px;background:#ECE8E0;z-index:50}
-  .rail .fill{height:100%;width:25%;background:linear-gradient(90deg,var(--acc),var(--acc2));transition:width .35s ease}
+  .rail .fill{height:100%;width:25%;background:linear-gradient(90deg,var(--acc),var(--acc2) 70%,#8B7FE8);transition:width .45s cubic-bezier(.22,.61,.36,1);position:relative;box-shadow:0 0 12px rgba(83,74,183,.3)}
+.rail .fill::after{content:"";position:absolute;right:0;top:-2px;bottom:-2px;width:3px;border-radius:2px;background:#fff;box-shadow:0 0 8px 2px rgba(255,255,255,.6),0 0 20px 4px rgba(139,127,232,.4),0 0 40px 6px rgba(83,74,183,.2);animation:pulseGlow 2.5s ease-in-out infinite}
 
-  .badge{display:inline-block;font-size:10px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:#fff;background:linear-gradient(135deg,var(--acc),var(--acc2));padding:4px 11px;border-radius:6px;margin-bottom:11px}
+  .badge{display:inline-block;font-size:10px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:#fff;background:linear-gradient(135deg,var(--acc) 0%,var(--acc2) 60%,#8B7FE8 100%);padding:5px 13px;border-radius:8px;margin-bottom:11px;box-shadow:var(--chip-sh),0 0 20px -4px rgba(83,74,183,.2);position:relative;overflow:hidden}
+.badge::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,transparent 40%,rgba(255,255,255,.15) 50%,transparent 60%);animation:shimmer 4s ease-in-out infinite}
+@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+@keyframes pulseGlow{0%,100%{opacity:.7}50%{opacity:1}}
   .locator{display:inline-block;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.2px;text-transform:uppercase;color:var(--acc);background:var(--accbg);border:1px solid #cfc7f0;border-radius:6px;padding:3px 9px;margin:0 0 11px 7px}
   .hdr{border-left:5px solid var(--acc);padding:5px 0 7px 17px;margin-bottom:18px}
   .hdr h1{font-size:clamp(25px,7.2vw,30px);font-weight:820;letter-spacing:-.7px;line-height:1.06}
@@ -96,7 +127,7 @@
 .crambtn:not(.cram-tog):hover::after{opacity:1;color:var(--acc);transform:translateX(3px)}
   .mock-ov{display:none;position:fixed;inset:0;z-index:1000;background:rgba(28,26,22,.55);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);padding:18px;overflow-y:auto}
   .mock-ov.open{display:flex;align-items:flex-start;justify-content:center}
-  .mock-panel{background:var(--bg);width:100%;max-width:560px;border-radius:16px;box-shadow:0 4px 14px -4px rgba(0,0,0,.16),0 28px 64px -18px rgba(0,0,0,.34);margin:auto;overflow:hidden}
+  .mock-panel{background:linear-gradient(180deg,rgba(250,249,245,.97),rgba(248,245,239,.97));width:100%;max-width:560px;border-radius:18px;box-shadow:0 4px 14px -4px rgba(0,0,0,.16),0 28px 64px -18px rgba(0,0,0,.34),0 0 60px -20px rgba(83,74,183,.1);margin:auto;overflow:hidden;border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(24px) saturate(1.3);-webkit-backdrop-filter:blur(24px) saturate(1.3)}
   .mock-top{display:flex;align-items:center;gap:12px;padding:13px 18px;border-bottom:1px solid var(--bd);background:var(--card)}
   .mock-x{flex:none;width:30px;height:30px;border-radius:8px;border:1px solid var(--bd);background:var(--card);color:var(--mut);font-size:18px;line-height:1;cursor:pointer;transition:.12s}
   .mock-x:hover{border-color:var(--red);color:var(--red)}
@@ -106,7 +137,7 @@
   /* cram sheet */
   .cram-ov{display:none;position:fixed;inset:0;z-index:1000;background:rgba(28,26,22,.55);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);padding:18px;overflow-y:auto}
   .cram-ov.open{display:block}
-  .cram-panel{background:var(--bg);width:100%;max-width:600px;border-radius:16px;box-shadow:0 4px 14px -4px rgba(0,0,0,.16),0 28px 64px -18px rgba(0,0,0,.34);margin:0 auto;overflow:hidden}
+  .cram-panel{background:linear-gradient(180deg,rgba(250,249,245,.97),rgba(248,245,239,.97));width:100%;max-width:600px;border-radius:18px;box-shadow:0 4px 14px -4px rgba(0,0,0,.16),0 28px 64px -18px rgba(0,0,0,.34),0 0 60px -20px rgba(83,74,183,.1);margin:0 auto;overflow:hidden;border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(24px) saturate(1.3);-webkit-backdrop-filter:blur(24px) saturate(1.3)}
   .cram-top{display:flex;align-items:center;gap:12px;padding:13px 18px;border-bottom:1px solid var(--bd);background:var(--card);position:sticky;top:0;z-index:2}
   .cram-title{flex:1;font:800 12px -apple-system,sans-serif;letter-spacing:.5px;text-transform:uppercase;color:var(--accink)}
   .cram-print{flex:none;font:700 11.5px -apple-system,sans-serif;padding:6px 14px;border-radius:8px;border:1px solid #cfc7f0;background:var(--accbg);color:var(--accink);cursor:pointer;transition:.12s}
@@ -136,9 +167,9 @@
   .sr-stat{font-size:13px;color:#2c2c2c;line-height:1.5}
   .sr-list{font-size:12.5px;color:#454545;line-height:1.55;margin-top:5px}
   .sr-foot{font-size:11px;color:var(--mut);margin-top:18px;font-style:italic}
-  @media print {
+  @media print {@page{margin:1.5cm}
     body{background:#fff !important}
-    .app, .mock-ov, .rail{display:none !important}
+    .app, .mock-ov, .rail, .badge, .rail .fill::after{display:none !important}
     body:not(.print-session) .cram-ov{display:block !important;position:static !important;background:#fff !important;padding:0 !important;backdrop-filter:none !important;-webkit-backdrop-filter:none !important;overflow:visible !important}
     .cram-panel{box-shadow:none !important;max-width:none !important;border-radius:0 !important;margin:0 !important}
     .cram-top{display:none !important}
@@ -165,6 +196,8 @@ html[data-theme="dark"]{
   --sm-line:#3A3642; --sm-dot-bg:#2A2730; --sm-card-bg:#262430; --sm-pa-fg:#C7C2BA; --sm-here-fg:#1A1622; --sm-cur-dot-bg:#2A2730; --op-hooks-bg:#262430; --op-foot-bg:#2A2540; --op-foot-fg:#BAB4AA; --disc-bg:#262430; --disc-body-fg:#B2ACA2; --wb-foot-bg:#2A2540; --wb-foot-fg:#BAB4AA; --wb-li-bd:#322E3A; --wb-ok-fg:#5FD3B0; --wb-ok-b-fg:#8FE0C8; --wb-warn-fg:#E8BC78; --opt-n-bd:#3A3552; --dec-tell-b-fg:#8FE0C8; --fb-n-bg:#262430; --fb-n-fg:#DAD6CE; --fb-t-fg:#8FE0C8; --fb-r-fg:#F0A0A0; --fb-a-fg:#E8BC78; --ins-bg:#262430; --ins-fg:#BAB4AA; --mq-bg:#2A2730; --dots-i-bg:#44404C; --dots-on-bg:var(--dots-i-bg); --dots-done-bg:var(--dots-i-bg); --thread-bg:#262430; --ans-bg:#2A2540; --fa-bg:#2A2540; --ans-fg:#DAD6CE; --fa-b-fg:#E8BC78; --senior-bd:#2E5A4A; --senior-fg:#7FD9BE; --speak-fg:#CABFFB; --push-fg:#1A1622; --judge-btn-bg:#262430; --modetog-bg:#2A2730; --modetog-bd:#37333F; --modetog-hover-bg:rgba(170,157,245,.13); --dbar-bg:#211F28; --btnsec-hover-bg:#1A3A30; --sigrow-bd:#322E3A; --codecap-fg:#B2ACA2; --code-inline-bg:#2A2833; --ninp-bd:#3A3552;--cs30-bg:#262430;--cram-code-bg:#2C2740;--ss-card-bg:#262430;--ss-carry-bg:#262430;--ss-code-bd:#3A3552;--ss-go-fg:#1A1622;--ss-btn-bg:#262430;--mxb-curve-bg:#3A2814;--mxb-trade-fg:#B6ADE8;--mb-next-fg:#1A1622;--mb-cv-bd:#3A3552;--mb-intq-fg:#F0A0A0;--mb-irev-bg:#262430;--mb-irev-bd:#5A3A38;
 }
 html[data-theme="dark"] body{background:var(--bg)}
+html[data-theme="dark"] ::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#3A3642,#2E2A38)}
+html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,var(--acc2),var(--acc))}
 /* inline code variants */
 /* curveball badge (peach) -> dark amber */
 /* warm/gray surfaces */
@@ -191,7 +224,7 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
 /* overlay primary buttons: dark text on light accent */
 /* overlay white-bg buttons/inputs -> dark surface */
   /* dark elevation: deep ambient shadow + hairline light edge-ring lifts floating surfaces off the near-black bg */
-  html[data-theme="dark"] .mock-panel,html[data-theme="dark"] .cram-panel{box-shadow:0 24px 70px rgba(0,0,0,.66),0 0 0 1px rgba(255,255,255,.08)}
+  html[data-theme="dark"] .mock-panel,html[data-theme="dark"] .cram-panel{background:linear-gradient(180deg,rgba(21,20,26,.95),rgba(18,17,24,.95));box-shadow:0 24px 70px rgba(0,0,0,.66),0 0 0 1px rgba(255,255,255,.08),0 0 60px -20px rgba(170,157,245,.12);border:1px solid rgba(255,255,255,.06)}
 
 @media (max-width:600px){.kbd-hint{display:none}}
 
@@ -212,7 +245,12 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
 .sidebar .seg button.on .n{color:var(--acc)}
 .sidebar .mockbar{order:2;margin-top:auto;padding-top:14px;border-top:1px solid var(--bd);gap:7px}
 .sidebar .mockbar .mb-d{display:none}
-.stage{flex:1;min-width:0;padding:32px clamp(20px,4vw,52px) 70px;overflow-x:hidden}
+.stage{flex:1;min-width:0;padding:32px clamp(20px,4vw,52px) 70px;overflow-x:hidden;position:relative;content-visibility:auto;contain-intrinsic-size:0 500px;perspective:1200px}
+.stage::before{content:"";position:absolute;top:-20%;left:-10%;width:70%;height:70%;background:radial-gradient(ellipse at 30% 20%,rgba(83,74,183,.1) 0%,rgba(109,95,214,.06) 40%,transparent 70%);animation:meshA 25s ease-in-out infinite;pointer-events:none;z-index:0;will-change:transform}
+.stage::after{content:"";position:absolute;bottom:-15%;right:-10%;width:60%;height:60%;background:radial-gradient(ellipse at 70% 80%,rgba(139,127,232,.08) 0%,rgba(83,74,183,.05) 50%,transparent 70%);animation:meshB 20s ease-in-out infinite -8s;pointer-events:none;z-index:0;will-change:transform}
+@keyframes meshA{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(8%,-5%) scale(1.08)}66%{transform:translate(-4%,6%) scale(.95)}}
+@keyframes meshB{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(-6%,4%) scale(1.05)}66%{transform:translate(5%,-3%) scale(.97)}}
+.stage .pane{position:relative;z-index:1}
 .stage .pane{max-width:830px;margin:0 auto}
 .rail{display:none}
 .tools-fab{display:none}
@@ -240,16 +278,38 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
 
 /* ============ v76 POLISH ============ */
 /* view-swap: fade + slide-up (overrides the bare fade) */
-.pane.on{animation:panein .26s cubic-bezier(.22,.61,.36,1)}
-@keyframes panein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.pane.on{animation:panein .35s cubic-bezier(.22,.61,.36,1)}
+.pane.on .card{animation:cardStagger .4s cubic-bezier(.22,.61,.36,1) .05s both}
+.pane.on .card:nth-child(2){animation-delay:.1s}
+.pane.on .card:nth-child(3){animation-delay:.15s}
+.pane.on .card:nth-child(4){animation-delay:.2s}
+.pane.on .card:nth-child(5){animation-delay:.25s}
+@keyframes panein{from{opacity:0;transform:translateY(10px);filter:blur(2px)}
+html[data-theme="dark"] .pane.on{animation-name:paneinDark}
+@keyframes paneinDark{from{opacity:0;transform:translateY(10px);filter:blur(2px)}to{opacity:1;transform:none;filter:blur(0)}}to{opacity:1;transform:none;filter:blur(0)}}
+@keyframes cardStagger{from{opacity:0;transform:translateY(12px) scale(.995)}to{opacity:1;transform:none}}
+@keyframes headIn{from{opacity:0;transform:translateX(-8px)}
+.dots i.on{animation:dotActivePulse 2s ease-in-out infinite}
+@keyframes dotActivePulse{0%,100%{box-shadow:var(--dot-glow)}50%{box-shadow:0 0 0 3px rgba(83,74,183,.12),0 0 12px 2px rgba(83,74,183,.2)}}to{opacity:1;transform:none}}
 /* one-time rail entrance (opacity only -> sticky-safe) */
-.sidebar{animation:railin .45s ease}
-@keyframes railin{from{opacity:0}to{opacity:1}}
+.sidebar{animation:railin .45s cubic-bezier(.22,.61,.36,1)}
+@keyframes railin{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:none}}
+.sidebar .seg button{animation:navItemIn .4s cubic-bezier(.22,.61,.36,1) both}
+.sidebar .seg button:nth-child(1){animation-delay:.05s}
+.sidebar .seg button:nth-child(2){animation-delay:.08s}
+.sidebar .seg button:nth-child(3){animation-delay:.11s}
+.sidebar .seg button:nth-child(4){animation-delay:.14s}
+.sidebar .seg button:nth-child(5){animation-delay:.17s}
+.sidebar .seg button:nth-child(6){animation-delay:.2s}
+.sidebar .seg button:nth-child(7){animation-delay:.23s}
+.sidebar .seg button:nth-child(8){animation-delay:.26s}
+.sidebar .seg button:nth-child(9){animation-delay:.29s}
+@keyframes navItemIn{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:none}}
 /* focus-visible rings (keyboard a11y) */
 .sidebar .seg button:focus-visible,.mockbar button:focus-visible,.tools-fab:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
 /* desktop: depth + tighten so the full rail fits */
 @media(min-width:920px){
-  .sidebar{box-shadow:9px 0 22px -14px rgba(0,0,0,.12);gap:14px}
+  .sidebar{box-shadow:12px 0 32px -16px rgba(0,0,0,.14),inset -1px 0 0 rgba(255,255,255,.5);gap:14px;background:linear-gradient(180deg,rgba(244,241,234,.92),rgba(236,232,222,.92));backdrop-filter:blur(20px) saturate(1.2);-webkit-backdrop-filter:blur(20px) saturate(1.2)}
   .sidebar .seg button.on{box-shadow:inset 3px 0 0 var(--acc),0 3px 10px -2px rgba(83,74,183,.14)}
   .sidebar .mockbar{gap:6px;padding-top:12px}
 }
@@ -273,6 +333,9 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
 /* v79: engineering-canvas dot grid on the work surface (stage) */
 :root{--grid:rgba(83,74,183,.05);--canvas:radial-gradient(130% 90% at 50% -25%,#FDFCFA 0%,#FAF9F5 42%,#F5F2EB 100%)}
 html[data-theme="dark"]{--grid:rgba(170,157,245,.05);--canvas:radial-gradient(130% 90% at 50% -25%,#19181F 0%,#15141A 42%,#121118 100%)}
+html[data-theme="dark"] .stage::before{background:radial-gradient(ellipse at 30% 20%,rgba(170,157,245,.12) 0%,rgba(184,171,248,.06) 40%,transparent 70%)}
+html[data-theme="dark"] .stage::after{background:radial-gradient(ellipse at 70% 80%,rgba(139,127,232,.08) 0%,rgba(170,157,245,.04) 50%,transparent 70%)}
+html[data-theme="dark"] .sidebar{background:linear-gradient(180deg,rgba(30,28,38,.92),rgba(24,23,32,.92))}
 .stage{background-color:var(--bg);background-image:radial-gradient(circle,var(--grid) 1px,transparent 1px),var(--canvas);background-size:23px 23px,100% 100%;background-repeat:repeat,no-repeat}
 /* v80: mobile nav strip edge-fade affordance (signals the hidden views) */
 @media(max-width:919px){.sidebar .seg{-webkit-mask-image:linear-gradient(to right,transparent 0,#000 var(--fl,0px),#000 calc(100% - var(--fr,0px)),transparent 100%);mask-image:linear-gradient(to right,transparent 0,#000 var(--fl,0px),#000 calc(100% - var(--fr,0px)),transparent 100%);}}
@@ -305,7 +368,16 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover{background:rgba(150,140,
 /* overlay entrance (v94): backdrop fade + panel slide-up&scale - reduced-motion-safe (global rule makes it instant) */
 @keyframes ovbg{from{opacity:0}to{opacity:1}}
 @keyframes ovpan{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:none}}
+/* View Transitions API */
+@supports (view-transition-name:none){
+::view-transition-old(root){animation:vtOut .25s cubic-bezier(.22,.61,.36,1)}
+::view-transition-new(root){animation:vtIn .25s cubic-bezier(.22,.61,.36,1)}
+@keyframes vtOut{from{opacity:1}to{opacity:0;transform:translateY(-8px)}}
+@keyframes vtIn{from{opacity:0;transform:translateY(8px)}to{opacity:1}}
+}
 .mock-ov.open,.cram-ov.open{animation:ovbg .2s ease}
+.mock-ov.open .mock-panel,.cram-ov.open .cram-panel{animation:panelIn .35s cubic-bezier(.22,.61,.36,1)}
+@keyframes panelIn{from{opacity:0;transform:translateY(20px) scale(.97)}to{opacity:1;transform:none}}
 .mock-ov.open .mock-panel,.cram-ov.open .cram-panel{animation:ovpan .3s cubic-bezier(.22,.61,.36,1)}
 /* overlay EXIT (v95): backdrop fade-out + panel sink&scale-out, held with forwards until JS sets display:none */
 @keyframes ovbgout{from{opacity:1}to{opacity:0}}
@@ -322,7 +394,11 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover{background:rgba(150,140,
 .companion{display:none}
 @media(min-width:1280px){
   .stage{justify-content:flex-start}
-  .companion{display:block;flex:none;width:290px;position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--panel);border-left:1px solid var(--bd)}
+  .companion{display:block;flex:none;width:290px;position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--panel);border-left:1px solid var(--bd);box-shadow:inset 8px 0 24px -12px rgba(83,74,183,.08)}
+  .companion .topic-item{position:relative;overflow:hidden;border-radius:8px;transition:box-shadow .2s ease,background .2s ease}
+  .companion .topic-item:hover{box-shadow:0 0 16px -4px rgba(83,74,183,.15);background:rgba(83,74,183,.04)}
+  .companion .topic-item::before{content:"";position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,var(--acc),var(--acc2));opacity:0;transition:opacity .2s ease}
+  .companion .topic-item:hover::before{opacity:1}
 }
 /* v102: surface depth - crafted gradient surfaces + soft lift across content cards */
 /* v105: walkthrough "whole flow" map - the full 9-step arc, clickable, fills the short pane */
@@ -349,8 +425,33 @@ button,summary{-webkit-user-select:none;user-select:none}
 /* v111 micro-polish: drop the default mobile tap-flash (the gray box doesn't match the rounded controls); every control already has custom feedback - selection state, result change, or a press-state. The tool-opener rows only get a (delayed) overlay, so give them an in-place press. */
 .crambtn:active{transform:translateY(1px)}
 *{-webkit-tap-highlight-color:transparent}
+
+/* === Subgrid support === */
+@supports (grid-template-columns:subgrid){.arc-grid{grid-template-columns:subgrid}}
+@container (max-width:500px){.card{padding:18px;border-radius:12px}.seg button{padding:8px 2px;font-size:9.5px}}
+@container (max-width:380px){.card{padding:14px}}
+
+/* === Accessibility === */
+@media(prefers-contrast:more){.card,.dec,.rf,.piv,.thread{border-width:2px}.seg button.on{outline:2px solid var(--acc);outline-offset:2px}}
+@media(prefers-reduced-transparency:reduce){.mock-panel,.cram-panel,.sidebar{backdrop-filter:none!important}}
+@media(forced-colors:active){.card,.dec,.rf,.piv,.thread{border:2px solid CanvasText!important;background:Canvas!important;color:CanvasText!important}.badge{background:Highlight!important;color:HighlightText!important}}
 </style>
-<script>try{var _dk=matchMedia('(prefers-color-scheme:dark)').matches;document.documentElement.dataset.theme=_dk?'dark':'light';var _tc=document.querySelector('meta[name="theme-color"]');if(_tc)_tc.setAttribute('content',_dk?'#15141A':'#FAF9F5');}catch(e){}</script>
+<script>/* ============ BOOT ============
+   Theme initialization: runs before any render. Sets the data-theme attribute
+   and meta theme-color based on system preference, then watches for changes. */
+(function(){
+  var mql=matchMedia('(prefers-color-scheme:dark)');
+  function setTheme(dark){
+    document.documentElement.dataset.theme=dark?'dark':'light';
+    var tc=document.querySelector('meta[name="theme-color"]');
+    if(tc)tc.setAttribute('content',dark?'#15141A':'#FAF9F5');
+    // Set color-scheme for native form controls
+    document.documentElement.style.colorScheme=dark?'dark':'light';
+  }
+  setTheme(mql.matches);
+  // Live theme switching without page reload
+  if(mql.addEventListener)mql.addEventListener('change',function(e){setTheme(e.matches)});
+})();</script>
 </head>
 <body>
 <div class="rail" aria-hidden="true"><div class="fill" id="rail"></div></div>
@@ -549,7 +650,10 @@ BASE_SHEET.replaceSync(`
 *{margin:0;padding:0;box-sizing:border-box}
 code{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;background:var(--code-inline-bg);padding:1px 5px;border-radius:4px;color:var(--accink)}
 :host{display:block;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
-.card{background:var(--surf);border:1px solid var(--bd);border-radius:14px;padding:22px;box-shadow:var(--card-sh)}
+.card{background:var(--surf);border:1px solid var(--bd);border-radius:16px;padding:24px;box-shadow:var(--glow);transition:box-shadow .3s ease,transform .3s ease;position:relative;overflow:hidden;transform-style:preserve-3d}
+.card::before{content:"";position:absolute;top:50%;left:50%;width:400px;height:400px;background:radial-gradient(circle,rgba(83,74,183,.08) 0%,transparent 60%);transform:translate(-50%,-50%);opacity:0;transition:opacity .4s ease;pointer-events:none;z-index:0}
+.card:hover::before{opacity:1}
+.card:hover{box-shadow:var(--glow-hover),0 0 40px -12px rgba(83,74,183,.15);transform:translateY(-2px) rotateX(1deg) rotateY(-.5deg)}
 .step-k{font-family:var(--mono);font-size:11px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--acc)}
 .step-t{font-size:19px;font-weight:720;margin:3px 0 5px;letter-spacing:-.2px}
 .step-sub{font-size:12.5px;color:var(--mut);margin-bottom:6px}
@@ -771,7 +875,9 @@ customElements.define('deep-red-flags', DeepRedFlags);
 var TRADE_STYLE = `
 .ledger .lead{font-size:15px;line-height:1.5;color:var(--ink);margin:2px 2px 16px}
 .ledger .lead b{color:var(--accink)}
-.dec{background:var(--surf);box-shadow:var(--surf-sh);border:1px solid var(--bd);border-radius:13px;padding:15px 17px;margin-bottom:13px;border-top:3px solid var(--acc)}
+.dec{background:var(--surf);box-shadow:var(--surf-sh);border:1px solid var(--bd);border-radius:13px;padding:15px 17px;margin-bottom:13px;border-top:3px solid var(--acc);position:relative;overflow:hidden}
+.dec::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,transparent 40%,rgba(255,255,255,.12) 50%,transparent 60%);background-size:200% 200%;animation:shineSweep 5s ease-in-out infinite;pointer-events:none}
+@keyframes shineSweep{0%{background-position:200% 200%}100%{background-position:-200% -200%}}
 .dec-q{font-size:14.5px;font-weight:800;color:var(--ink);letter-spacing:-.2px;margin-bottom:9px;line-height:1.4}
 .dec-q .vs{color:var(--mut2);font-weight:700;font-size:11.5px;padding:0 3px}
 .dec-tell{margin-top:12px;padding-top:11px;border-top:1px dashed var(--bd);font-size:12px;color:var(--teal);font-weight:700;line-height:1.5}
@@ -929,7 +1035,7 @@ var WALK_STYLE = `
 .arr{color:var(--mut2);font-weight:800;font-size:14px}
 .ins{margin-top:14px;font-size:12.5px;color:var(--ins-fg);background:var(--ins-bg);border-left:3px solid var(--acc);border-radius:8px;padding:12px 14px}
 .ins b{color:var(--accink)}
-pre.code{margin:2px 14px 13px;background:var(--code);border-radius:9px;padding:13px 15px;overflow-x:auto;font-family:ui-monospace,Menlo,monospace;font-size:11px;line-height:1.65;color:var(--codeink)}
+pre.code{margin:2px 14px 13px;background:linear-gradient(180deg,rgba(42,39,64,.98) 0%,rgba(36,33,58,.98) 100%),var(--code);border-radius:9px;padding:13px 15px;overflow-x:auto;font-family:ui-monospace,Menlo,monospace;font-size:11px;line-height:1.65;color:var(--codeink);position:relative;border-top:3px solid var(--acc);box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 4px 12px -4px rgba(0,0,0,.3)}
 pre.code .c{color:#9b95c9} pre.code .k{color:#C9A2F0} pre.code .s{color:#9DD9B6} pre.code .hl{color:#FFD479}
 .codecap{font-size:11px;color:var(--codecap-fg);margin:0 14px 13px;padding-left:11px;border-left:3px solid var(--acc)}
 .nav{display:flex;justify-content:space-between;align-items:center;margin-top:16px}
@@ -1605,6 +1711,7 @@ class DeepDrill extends HTMLElement {
   getStats() { return { dTot: cards.length, dDone: this.results.length, dGot: this.got, dShk: this.shk, revisit: this.results.filter(function (r) { return !r.ok; }).map(function (r) { return r.signal; }) }; }
   reset() { this.setMode('study'); }
   weak() { return this.drillWeak(); }
+  disconnectedCallback() { this.stopTimer(); }
 }
 customElements.define('deep-drill', DeepDrill);
 
@@ -1989,7 +2096,7 @@ var framePool=[ mockBeats[mockFrameIdx].cue,
   "&ldquo;Walk me through the architecture behind file upload, processing, and bulk data transfer.&rdquo;",
   "&ldquo;Design an ingestion pipeline &mdash; uploads come in, get processed by type, stored, and cataloged.&rdquo;"
 ];
-var mockBeat=0, mockSec=0, mockClock=null, mockEscBound=false, mockLastScore=null, mockLastTime=null, mockRuns=0, mockInterrupt=false, mockIntSet={}, mockLastInt=0;
+var mockBeat=0, mockSec=0, mockClock=null, mockStartMs=0, mockKeyCtrl=null, mockLastScore=null, mockLastTime=null, mockRuns=0, mockInterrupt=false, mockIntSet={}, mockLastInt=0;
 var mockov=document.getElementById('mockov'),
     mockbody=null, mockRoot=null,
     mockclockEl=document.getElementById('mockclock');
@@ -2022,10 +2129,12 @@ function ovHide(overlay) {
 }
 
 /* Open the mock-interview overlay: reset the clock/beat, randomly pick this
-   run's curveball + frame cue + interrupt set, start the 1s timer, bind the
-   space/enter shortcuts once, then render the first beat. */
+   run's curveball + frame cue + interrupt set, start the timer, bind the
+   space/enter shortcuts ( AbortController for clean removal ), then render
+   the first beat. Timer uses performance.now() + requestAnimationFrame for
+   drift-free timing across a 22-minute mock run. */
 function openMock() {
-  if (mockClock) { clearInterval(mockClock); mockClock = null; }
+  closeMockClock();
   mockBeat = 0;
   mockSec = 0;
   mockclockEl.textContent = '0:00';
@@ -2035,41 +2144,47 @@ function openMock() {
   ovShow(mockov);
   mockov.setAttribute('aria-hidden', 'false');
   document.body.style.overflow = 'hidden';
-  mockClock = setInterval(function () {
-    mockSec++;
-    mockclockEl.textContent = mockFmt(mockSec);
-  }, 1000);
-  if (!mockEscBound) {
-    document.addEventListener('keydown', function (event) {
-      if (!mockov.classList.contains('open')) return;
-      /* space reveals the next available answer button, in priority order */
-      if (event.key === ' ') {
-        event.preventDefault();
-        const revealBtn = mockRoot.getElementById('mbrev');
-        if (revealBtn && !revealBtn.disabled) { revealBtn.click(); return; }
-        const interruptBtn = mockRoot.getElementById('mbirev');
-        if (interruptBtn && !interruptBtn.disabled) { interruptBtn.click(); return; }
-        const interruptBtn2 = mockRoot.getElementById('mbirev2');
-        if (interruptBtn2 && !interruptBtn2.disabled) interruptBtn2.click();
-        return;
-      }
-      /* enter / right-arrow advances to the next beat */
-      if (event.key === 'Enter' || event.key === 'ArrowRight') {
-        event.preventDefault();
-        const nextBtn = mockRoot.getElementById('mbnext');
-        if (nextBtn) nextBtn.click();
-      }
-    });
-    mockEscBound = true;
+  /* Drift-free timer: record start timestamp, then each frame compute elapsed */
+  mockStartMs = performance.now();
+  function tickMock() {
+    if (!mockov.classList.contains('open')) return;
+    var elapsed = Math.floor((performance.now() - mockStartMs) / 1000);
+    if (elapsed !== mockSec) { mockSec = elapsed; mockclockEl.textContent = mockFmt(mockSec); }
+    mockClock = requestAnimationFrame(tickMock);
   }
+  mockClock = requestAnimationFrame(tickMock);
+  /* Bind keyboard shortcuts with AbortController so they can be cleanly removed */
+  if (!mockKeyCtrl) mockKeyCtrl = new AbortController();
+  document.addEventListener('keydown', function (event) {
+    if (!mockov.classList.contains('open')) return;
+    if (event.key === ' ') {
+      event.preventDefault();
+      var revealBtn = mockRoot.getElementById('mbrev');
+      if (revealBtn && !revealBtn.disabled) { revealBtn.click(); return; }
+      var interruptBtn = mockRoot.getElementById('mbirev');
+      if (interruptBtn && !interruptBtn.disabled) { interruptBtn.click(); return; }
+      var interruptBtn2 = mockRoot.getElementById('mbirev2');
+      if (interruptBtn2 && !interruptBtn2.disabled) interruptBtn2.click();
+      return;
+    }
+    if (event.key === 'Enter' || event.key === 'ArrowRight') {
+      event.preventDefault();
+      var nextBtn = mockRoot.getElementById('mbnext');
+      if (nextBtn) nextBtn.click();
+    }
+  }, { signal: mockKeyCtrl.signal });
   renderMockBeat();
 }
 
+function closeMockClock() {
+  if (mockClock) { cancelAnimationFrame(mockClock); mockClock = null; }
+}
 function closeMock() {
   ovHide(mockov);
   mockov.setAttribute('aria-hidden', 'true');
   document.body.style.overflow = '';
-  if (mockClock) { clearInterval(mockClock); mockClock = null; }
+  closeMockClock();
+  if (mockKeyCtrl) { mockKeyCtrl.abort(); mockKeyCtrl = null; }
 }
 
 /* ===== MOCK RUN as a shadow component =====
@@ -2698,9 +2813,16 @@ class DeepCram extends HTMLElement {
   connectedCallback() {
     if (this._built) return;
     this._built = true;
+    const self = this;
     const root = this.attachShadow({ mode: 'open' });
     root.adoptedStyleSheets = [BASE_SHEET, CS_SHEET];
-    root.innerHTML = '<style>:host code{font-size:10.5px;background:var(--cram-code-bg);border-radius:4px;padding:1px 5px;font-family:ui-monospace,Menlo,monospace;color:var(--accink)}</style>' + `<div class="cs-one"><span class="cs-one-l">The one-liner</span>Event-driven ingestion: S3 &rarr; Lambda &rarr; route by type &rarr; streaming handler (<b>hash + store + record</b>) &rarr; reconciler for partial failures.</div>
+    /* Lazy-render: defer the heaviest DOM in the app until the overlay is visible.
+       Reduces initial page weight and improves tab-switch responsiveness. */
+    var rendered = false;
+    function renderNow() {
+      if (rendered) return;
+      rendered = true;
+      root.innerHTML = '<style>:host code{font-size:10.5px;background:var(--cram-code-bg);border-radius:4px;padding:1px 5px;font-family:ui-monospace,Menlo,monospace;color:var(--accink)}</style>' + `<div class="cs-one"><span class="cs-one-l">The one-liner</span>Event-driven ingestion: S3 &rarr; Lambda &rarr; route by type &rarr; streaming handler (<b>hash + store + record</b>) &rarr; reconciler for partial failures.</div>
       <div class="cs-sec">
         <div class="cs-st">The spine &mdash; what you draw</div>
         <ol class="cs-spine">
@@ -2754,15 +2876,26 @@ class DeepCram extends HTMLElement {
         <div class="cs-ha"><b class="cs-ha-l">Operate</b> &mdash; four signals: queue depth &middot; latency p99 &middot; error rate &middot; <b>orphan count</b> (the correctness canary); alert on <b>SLO burn</b>, not single blips.</div>
         <div class="cs-ha"><b class="cs-ha-l">Security</b> &mdash; the strategy map <b>is the allowlist</b>; validate by content not extension; sandbox the processor; a <b>per-job timeout</b> contains a poison input.</div>
         <div class="cs-ha"><b class="cs-ha-l">Cost</b> &mdash; at firehose scale <b>per-object Lambda is the expensive choice</b> &rarr; batch through SQS; lifecycle cold objects to Glacier.</div>
-        <div class="cs-ha"><b class="cs-ha-l">Ordering</b> &mdash; S3 events aren&rsquo;t ordered &rarr; <b>SQS FIFO per key</b> or a sequence number; first challenge whether you need <i>global</i> order.</div>
-        <div class="cs-ha"><b class="cs-ha-l">Backfill</b> &mdash; reprocess through the <b>same pipeline</b>, rate-limited, with <b>reserved concurrency</b> so it can&rsquo;t starve live traffic; safe because idempotent.</div>
+        <div class="cs-ha"><b class="cs-ha-l">Ordering</b> &mdash; S3 events aren't ordered &rarr; <b>SQS FIFO per key</b> or a sequence number; first challenge whether you need <i>global</i> order.</div>
+        <div class="cs-ha"><b class="cs-ha-l">Backfill</b> &mdash; reprocess through the <b>same pipeline</b>, rate-limited, with <b>reserved concurrency</b> so it can't starve live traffic; safe because idempotent.</div>
         <div class="cs-ha"><b class="cs-ha-l">Cut scope</b> &mdash; MVP is S3&rarr;Lambda&rarr;handler&rarr;row; defer DLQ / multipart / reconciler; <b>never cut</b> idempotency or the strategy-map seam.</div>
       </div>
       <div class="cs-sec">
         <div class="cs-st">If they say &ldquo;quickly&rdquo; &mdash; the 30 seconds</div>
         <div class="cs-30">Operators push to S3 &rarr; the processor routes by type through an O(1) map &rarr; each handler streams once, forking the read to hash + upload, so memory stays flat. Two stores, no shared txn &rarr; track keys, compensate, reconciler backstop. At-least-once &rarr; a processed-marker makes replays no-op.</div>
       </div>`;
+    }
+    /* Render immediately if already visible; otherwise use IntersectionObserver */
+    if (self.offsetParent !== null) { renderNow(); }
+    else {
+      var io = new IntersectionObserver(function (entries) {
+        if (entries[0].isIntersecting) { renderNow(); io.disconnect(); }
+      }, { rootMargin: '200px' });
+      io.observe(self);
+      self._io = io;
+    }
   }
+  disconnectedCallback() { if (this._io) { this._io.disconnect(); this._io = null; } }
 }
 customElements.define('deep-cram', DeepCram);
 

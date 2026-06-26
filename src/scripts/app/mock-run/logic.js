@@ -27,10 +27,12 @@ function ovHide(overlay) {
 }
 
 /* Open the mock-interview overlay: reset the clock/beat, randomly pick this
-   run's curveball + frame cue + interrupt set, start the 1s timer, bind the
-   space/enter shortcuts once, then render the first beat. */
+   run's curveball + frame cue + interrupt set, start the timer, bind the
+   space/enter shortcuts ( AbortController for clean removal ), then render
+   the first beat. Timer uses performance.now() + requestAnimationFrame for
+   drift-free timing across a 22-minute mock run. */
 function openMock() {
-  if (mockClock) { clearInterval(mockClock); mockClock = null; }
+  closeMockClock();
   mockBeat = 0;
   mockSec = 0;
   mockclockEl.textContent = '0:00';
@@ -40,41 +42,47 @@ function openMock() {
   ovShow(mockov);
   mockov.setAttribute('aria-hidden', 'false');
   document.body.style.overflow = 'hidden';
-  mockClock = setInterval(function () {
-    mockSec++;
-    mockclockEl.textContent = mockFmt(mockSec);
-  }, 1000);
-  if (!mockEscBound) {
-    document.addEventListener('keydown', function (event) {
-      if (!mockov.classList.contains('open')) return;
-      /* space reveals the next available answer button, in priority order */
-      if (event.key === ' ') {
-        event.preventDefault();
-        const revealBtn = mockRoot.getElementById('mbrev');
-        if (revealBtn && !revealBtn.disabled) { revealBtn.click(); return; }
-        const interruptBtn = mockRoot.getElementById('mbirev');
-        if (interruptBtn && !interruptBtn.disabled) { interruptBtn.click(); return; }
-        const interruptBtn2 = mockRoot.getElementById('mbirev2');
-        if (interruptBtn2 && !interruptBtn2.disabled) interruptBtn2.click();
-        return;
-      }
-      /* enter / right-arrow advances to the next beat */
-      if (event.key === 'Enter' || event.key === 'ArrowRight') {
-        event.preventDefault();
-        const nextBtn = mockRoot.getElementById('mbnext');
-        if (nextBtn) nextBtn.click();
-      }
-    });
-    mockEscBound = true;
+  /* Drift-free timer: record start timestamp, then each frame compute elapsed */
+  mockStartMs = performance.now();
+  function tickMock() {
+    if (!mockov.classList.contains('open')) return;
+    var elapsed = Math.floor((performance.now() - mockStartMs) / 1000);
+    if (elapsed !== mockSec) { mockSec = elapsed; mockclockEl.textContent = mockFmt(mockSec); }
+    mockClock = requestAnimationFrame(tickMock);
   }
+  mockClock = requestAnimationFrame(tickMock);
+  /* Bind keyboard shortcuts with AbortController so they can be cleanly removed */
+  if (!mockKeyCtrl) mockKeyCtrl = new AbortController();
+  document.addEventListener('keydown', function (event) {
+    if (!mockov.classList.contains('open')) return;
+    if (event.key === ' ') {
+      event.preventDefault();
+      var revealBtn = mockRoot.getElementById('mbrev');
+      if (revealBtn && !revealBtn.disabled) { revealBtn.click(); return; }
+      var interruptBtn = mockRoot.getElementById('mbirev');
+      if (interruptBtn && !interruptBtn.disabled) { interruptBtn.click(); return; }
+      var interruptBtn2 = mockRoot.getElementById('mbirev2');
+      if (interruptBtn2 && !interruptBtn2.disabled) interruptBtn2.click();
+      return;
+    }
+    if (event.key === 'Enter' || event.key === 'ArrowRight') {
+      event.preventDefault();
+      var nextBtn = mockRoot.getElementById('mbnext');
+      if (nextBtn) nextBtn.click();
+    }
+  }, { signal: mockKeyCtrl.signal });
   renderMockBeat();
 }
 
+function closeMockClock() {
+  if (mockClock) { cancelAnimationFrame(mockClock); mockClock = null; }
+}
 function closeMock() {
   ovHide(mockov);
   mockov.setAttribute('aria-hidden', 'true');
   document.body.style.overflow = '';
-  if (mockClock) { clearInterval(mockClock); mockClock = null; }
+  closeMockClock();
+  if (mockKeyCtrl) { mockKeyCtrl.abort(); mockKeyCtrl = null; }
 }
 
 /* ===== MOCK RUN as a shadow component =====

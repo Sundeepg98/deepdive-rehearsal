@@ -9,9 +9,16 @@ class DeepCram extends HTMLElement {
   connectedCallback() {
     if (this._built) return;
     this._built = true;
+    const self = this;
     const root = this.attachShadow({ mode: 'open' });
     root.adoptedStyleSheets = [BASE_SHEET, CS_SHEET];
-    root.innerHTML = '<style>:host code{font-size:10.5px;background:var(--cram-code-bg);border-radius:4px;padding:1px 5px;font-family:ui-monospace,Menlo,monospace;color:var(--accink)}</style>' + `<div class="cs-one"><span class="cs-one-l">The one-liner</span>Event-driven ingestion: S3 &rarr; Lambda &rarr; route by type &rarr; streaming handler (<b>hash + store + record</b>) &rarr; reconciler for partial failures.</div>
+    /* Lazy-render: defer the heaviest DOM in the app until the overlay is visible.
+       Reduces initial page weight and improves tab-switch responsiveness. */
+    var rendered = false;
+    function renderNow() {
+      if (rendered) return;
+      rendered = true;
+      root.innerHTML = '<style>:host code{font-size:10.5px;background:var(--cram-code-bg);border-radius:4px;padding:1px 5px;font-family:ui-monospace,Menlo,monospace;color:var(--accink)}</style>' + `<div class="cs-one"><span class="cs-one-l">The one-liner</span>Event-driven ingestion: S3 &rarr; Lambda &rarr; route by type &rarr; streaming handler (<b>hash + store + record</b>) &rarr; reconciler for partial failures.</div>
       <div class="cs-sec">
         <div class="cs-st">The spine &mdash; what you draw</div>
         <ol class="cs-spine">
@@ -65,14 +72,25 @@ class DeepCram extends HTMLElement {
         <div class="cs-ha"><b class="cs-ha-l">Operate</b> &mdash; four signals: queue depth &middot; latency p99 &middot; error rate &middot; <b>orphan count</b> (the correctness canary); alert on <b>SLO burn</b>, not single blips.</div>
         <div class="cs-ha"><b class="cs-ha-l">Security</b> &mdash; the strategy map <b>is the allowlist</b>; validate by content not extension; sandbox the processor; a <b>per-job timeout</b> contains a poison input.</div>
         <div class="cs-ha"><b class="cs-ha-l">Cost</b> &mdash; at firehose scale <b>per-object Lambda is the expensive choice</b> &rarr; batch through SQS; lifecycle cold objects to Glacier.</div>
-        <div class="cs-ha"><b class="cs-ha-l">Ordering</b> &mdash; S3 events aren&rsquo;t ordered &rarr; <b>SQS FIFO per key</b> or a sequence number; first challenge whether you need <i>global</i> order.</div>
-        <div class="cs-ha"><b class="cs-ha-l">Backfill</b> &mdash; reprocess through the <b>same pipeline</b>, rate-limited, with <b>reserved concurrency</b> so it can&rsquo;t starve live traffic; safe because idempotent.</div>
+        <div class="cs-ha"><b class="cs-ha-l">Ordering</b> &mdash; S3 events aren't ordered &rarr; <b>SQS FIFO per key</b> or a sequence number; first challenge whether you need <i>global</i> order.</div>
+        <div class="cs-ha"><b class="cs-ha-l">Backfill</b> &mdash; reprocess through the <b>same pipeline</b>, rate-limited, with <b>reserved concurrency</b> so it can't starve live traffic; safe because idempotent.</div>
         <div class="cs-ha"><b class="cs-ha-l">Cut scope</b> &mdash; MVP is S3&rarr;Lambda&rarr;handler&rarr;row; defer DLQ / multipart / reconciler; <b>never cut</b> idempotency or the strategy-map seam.</div>
       </div>
       <div class="cs-sec">
         <div class="cs-st">If they say &ldquo;quickly&rdquo; &mdash; the 30 seconds</div>
         <div class="cs-30">Operators push to S3 &rarr; the processor routes by type through an O(1) map &rarr; each handler streams once, forking the read to hash + upload, so memory stays flat. Two stores, no shared txn &rarr; track keys, compensate, reconciler backstop. At-least-once &rarr; a processed-marker makes replays no-op.</div>
       </div>`;
+    }
+    /* Render immediately if already visible; otherwise use IntersectionObserver */
+    if (self.offsetParent !== null) { renderNow(); }
+    else {
+      var io = new IntersectionObserver(function (entries) {
+        if (entries[0].isIntersecting) { renderNow(); io.disconnect(); }
+      }, { rootMargin: '200px' });
+      io.observe(self);
+      self._io = io;
+    }
   }
+  disconnectedCallback() { if (this._io) { this._io.disconnect(); this._io = null; } }
 }
 customElements.define('deep-cram', DeepCram);

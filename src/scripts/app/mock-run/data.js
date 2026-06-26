@@ -61,7 +61,7 @@ var framePool=[ mockBeats[mockFrameIdx].cue,
   "&ldquo;Walk me through the architecture behind file upload, processing, and bulk data transfer.&rdquo;",
   "&ldquo;Design an ingestion pipeline &mdash; uploads come in, get processed by type, stored, and cataloged.&rdquo;"
 ];
-var mockBeat=0, mockSec=0, mockClock=null, mockEscBound=false, mockLastScore=null, mockLastTime=null, mockRuns=0, mockInterrupt=false, mockIntSet={}, mockLastInt=0;
+var mockBeat=0, mockSec=0, mockClock=null, mockStartMs=0, mockKeyCtrl=null, mockLastScore=null, mockLastTime=null, mockRuns=0, mockInterrupt=false, mockIntSet={}, mockLastInt=0;
 var mockov=document.getElementById('mockov'),
     mockbody=null, mockRoot=null,
     mockclockEl=document.getElementById('mockclock');

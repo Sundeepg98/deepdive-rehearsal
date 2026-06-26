@@ -10,7 +10,9 @@
 var TRADE_STYLE = `
 .ledger .lead{font-size:15px;line-height:1.5;color:var(--ink);margin:2px 2px 16px}
 .ledger .lead b{color:var(--accink)}
-.dec{background:var(--surf);box-shadow:var(--surf-sh);border:1px solid var(--bd);border-radius:13px;padding:15px 17px;margin-bottom:13px;border-top:3px solid var(--acc)}
+.dec{background:var(--surf);box-shadow:var(--surf-sh);border:1px solid var(--bd);border-radius:13px;padding:15px 17px;margin-bottom:13px;border-top:3px solid var(--acc);position:relative;overflow:hidden}
+.dec::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,transparent 40%,rgba(255,255,255,.12) 50%,transparent 60%);background-size:200% 200%;animation:shineSweep 5s ease-in-out infinite;pointer-events:none}
+@keyframes shineSweep{0%{background-position:200% 200%}100%{background-position:-200% -200%}}
 .dec-q{font-size:14.5px;font-weight:800;color:var(--ink);letter-spacing:-.2px;margin-bottom:9px;line-height:1.4}
 .dec-q .vs{color:var(--mut2);font-weight:700;font-size:11.5px;padding:0 3px}
 .dec-tell{margin-top:12px;padding-top:11px;border-top:1px dashed var(--bd);font-size:12px;color:var(--teal);font-weight:700;line-height:1.5}

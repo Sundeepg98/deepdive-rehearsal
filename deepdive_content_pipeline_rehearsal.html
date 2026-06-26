@@ -73,7 +73,6 @@
 @supports (background-clip:text) or (-webkit-background-clip:text){
   .hdr h1{background:linear-gradient(135deg,var(--acc),var(--acc2),#9B8FD4,var(--acc));background-size:300% 300%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:headingShift 6s ease-in-out infinite}
   @keyframes headingShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}}
-.stage{perspective:1200px;position:relative;overflow:hidden;flex:1;padding:0 24px 40px}
   .hdr .sub{font-size:13px;color:var(--mut);margin-top:6px;max-width:620px}
 .sub b{color:var(--ink);font-weight:700}
   .kbd-hint{font-size:11px;color:var(--mut2);margin-top:9px}
@@ -270,8 +269,7 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
 .stage .pane.on::before{content:"";position:absolute;top:-10px;left:50%;transform:translateX(-50%);width:200px;height:2px;background:linear-gradient(90deg,transparent,var(--acc),transparent);border-radius:1px;opacity:.3;animation:paneGlow 3s ease-in-out infinite}
 @keyframes paneGlow{0%,100%{opacity:.2;width:180px}50%{opacity:.4;width:240px}}
   /* Floating ambient particles in the stage */
-  .stage .particle{position:absolute;width:3px;height:3px;border-radius:50%;background:rgba(83,74,183,.15);pointer-events:none;z-index:0;animation:particleFloat 20s linear infinite}
-  @keyframes particleFloat{0%{transform:translateY(100vh) translateX(0);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateY(-100px) translateX(50px);opacity:0}}
+
 .rail{display:none}
 .tools-fab{display:none}
 @media(max-width:919px){
@@ -476,34 +474,8 @@ button,summary{-webkit-user-select:none;user-select:none}
 @media(prefers-reduced-transparency:reduce){.mock-panel,.cram-panel,.sidebar{backdrop-filter:none!important}}
 @media(forced-colors:active){.card,.dec,.rf,.piv,.thread{border:2px solid CanvasText!important;background:Canvas!important;color:CanvasText!important}.badge{background:Highlight!important;color:HighlightText!important}}
 </style>
-<script>/* ============ BOOT ============
-   Theme initialization: runs before any render. Sets the data-theme attribute
-   and meta theme-color based on system preference, then watches for changes. */
-(function(){
-  var mql=matchMedia('(prefers-color-scheme:dark)');
-  function setTheme(dark){
-    document.documentElement.dataset.theme=dark?'dark':'light';
-    var tc=document.querySelector('meta[name="theme-color"]');
-    if(tc)tc.setAttribute('content',dark?'#15141A':'#FAF9F5');
-    // Set color-scheme for native form controls
-    document.documentElement.style.colorScheme=dark?'dark':'light';
-  }
-  setTheme(mql.matches);
-  // Live theme switching without page reload
-  if(mql.addEventListener)mql.addEventListener('change',function(e){setTheme(e.matches)});
-  // Ambient floating particles — subtle background dust motes for a premium feel
-  var stage=document.querySelector('.stage');
-  if(stage){
-    for(var i=0;i<6;i++){
-      var p=document.createElement('div');
-      p.className='particle';
-      p.style.left=(10+i*15)+'%';
-      p.style.animationDelay=(i*3.5)+'s';
-      p.style.animationDuration=(15+Math.random()*10)+'s';
-      stage.appendChild(p);
-    }
-  }
-})();</script>
+<script>try{var _dk=matchMedia('(prefers-color-scheme:dark)').matches;document.documentElement.dataset.theme=_dk?'dark':'light';var _tc=document.querySelector('meta[name="theme-color"]');if(_tc)_tc.setAttribute('content',_dk?'#15141A':'#FAF9F5');}catch(e){}
+</script>
 </head>
 <body>
 <div class="rail" aria-hidden="true"><div class="fill" id="rail"></div></div>

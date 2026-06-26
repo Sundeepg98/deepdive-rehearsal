@@ -116,7 +116,7 @@
 .crambtn:not(.cram-tog):hover::after{opacity:1;color:var(--acc);transform:translateX(3px)}
   .mock-ov{display:none;position:fixed;inset:0;z-index:1000;background:rgba(28,26,22,.55);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);padding:18px;overflow-y:auto}
   .mock-ov.open{display:flex;align-items:flex-start;justify-content:center}
-  .mock-panel{background:linear-gradient(180deg,rgba(250,249,245,.97),rgba(248,245,239,.97));width:100%;max-width:560px;border-radius:18px;box-shadow:0 4px 14px -4px rgba(0,0,0,.16),0 28px 64px -18px rgba(0,0,0,.34),0 0 60px -20px rgba(83,74,183,.1);margin:auto;overflow:hidden;border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(24px) saturate(1.3);-webkit-backdrop-filter:blur(24px) saturate(1.3)}
+  .mock-panel{background:linear-gradient(180deg,rgba(250,249,245,.97),rgba(248,245,239,.97));width:100%;max-width:560px;border-radius:18px;box-shadow:0 4px 14px -4px rgba(0,0,0,.16),0 28px 64px -18px rgba(0,0,0,.34),0 0 60px -20px rgba(83,74,183,.1);margin:auto;overflow:hidden;border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(24px) saturate(1.3);-webkit-backdrop-filter:blur(24px) saturate(1.3);display:flex;flex-direction:column;max-height:calc(100vh - 36px)}
   .mock-top{display:flex;align-items:center;gap:12px;padding:13px 18px;border-bottom:1px solid var(--bd);background:var(--card)}
   .mock-x{flex:none;width:30px;height:30px;border-radius:8px;border:1px solid var(--bd);background:var(--card);color:var(--mut);font-size:18px;line-height:1;cursor:pointer;transition:.12s}
   .mock-x:hover{border-color:var(--red);color:var(--red)}
@@ -126,12 +126,12 @@
   /* cram sheet */
   .cram-ov{display:none;position:fixed;inset:0;z-index:1000;background:rgba(28,26,22,.55);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);padding:18px;overflow-y:auto}
   .cram-ov.open{display:block}
-  .cram-panel{background:linear-gradient(180deg,rgba(250,249,245,.97),rgba(248,245,239,.97));width:100%;max-width:600px;border-radius:18px;box-shadow:0 4px 14px -4px rgba(0,0,0,.16),0 28px 64px -18px rgba(0,0,0,.34),0 0 60px -20px rgba(83,74,183,.1);margin:0 auto;overflow:hidden;border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(24px) saturate(1.3);-webkit-backdrop-filter:blur(24px) saturate(1.3)}
+  .cram-panel{background:linear-gradient(180deg,rgba(250,249,245,.97),rgba(248,245,239,.97));width:100%;max-width:600px;border-radius:18px;box-shadow:0 4px 14px -4px rgba(0,0,0,.16),0 28px 64px -18px rgba(0,0,0,.34),0 0 60px -20px rgba(83,74,183,.1);margin:0 auto;overflow:hidden;border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(24px) saturate(1.3);-webkit-backdrop-filter:blur(24px) saturate(1.3);display:flex;flex-direction:column;max-height:calc(100vh - 36px)}
   .cram-top{display:flex;align-items:center;gap:12px;padding:13px 18px;border-bottom:1px solid var(--bd);background:var(--card);position:sticky;top:0;z-index:2}
   .cram-title{flex:1;font:800 12px -apple-system,sans-serif;letter-spacing:.5px;text-transform:uppercase;color:var(--accink)}
   .cram-print{flex:none;font:700 11.5px -apple-system,sans-serif;padding:6px 14px;border-radius:8px;border:1px solid #cfc7f0;background:var(--accbg);color:var(--accink);cursor:pointer;transition:.12s}
   .cram-print:hover{background:var(--acc);color:#fff;border-color:var(--acc)}
-  .cram-body{padding:18px 20px 24px}
+  .cram-body{padding:18px 20px 24px;overflow-y:auto;max-height:calc(100vh - 80px)}
 
   /* session progress */
   /* mock interruptions */
@@ -414,6 +414,27 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover{background:rgba(150,140,
 .mcomp-sum:active{background:var(--accbg)}
 @keyframes mcompReveal{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
 .mcomp[open] .mcomp-body{animation:mcompReveal .2s ease}
+
+/* === Companion panel (light DOM) - styles were missing, only existed in shadow DOM === */
+.cmp-inner{padding:34px 26px 40px;display:flex;flex-direction:column}
+.cmp-block{padding:24px 0}
+.cmp-block.cmp-top{padding-top:0}
+.cmp-block+.cmp-block{border-top:1px solid var(--bd)}
+.cmp-eyebrow{font-size:10px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--acc)}
+.cmp-topic{font-family:var(--display);font-size:22px;font-weight:600;line-height:1.08;letter-spacing:-.012em;color:var(--ink);margin-top:9px}
+.cmp-thesis{margin:12px 0 0;font-size:12.5px;line-height:1.6;color:var(--mut2)}
+.cmp-h{font-size:9.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);margin:0 0 10px}
+.cmp-view{font-size:14.5px;font-weight:750;color:var(--ink);margin-bottom:6px}
+.cmp-note{margin:0;font-size:12.5px;line-height:1.6;color:var(--mut2)}
+.cmp-spine{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.cmp-spine li{display:flex;gap:11px;font-size:12.5px;line-height:1.5;color:var(--ink)}
+.cmp-dot{flex:none;width:6px;height:6px;border-radius:50%;background:var(--acc);margin-top:6px;box-shadow:0 0 0 3px var(--accbg)}
+.cmp-spine b{color:var(--accink);font-weight:750}
+.cmp-spine i{font-style:italic}
+.cmp-drive{margin:0;font-size:12px;line-height:1.65;color:var(--mut2)}
+.cmp-drive b{color:var(--ink);font-weight:700}
+.cmp-kbd{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;font-family:inherit;font-size:11px;font-weight:700;color:var(--ink);background:var(--card);border:1px solid var(--bd);border-bottom-width:2px;border-radius:5px;vertical-align:middle}
+.cmp-move{font-size:12.5px;line-height:1.5;color:var(--ink);font-weight:500;margin:0;border-left:2px solid var(--acc);padding-left:12px}
 /* v110 micro-polish: controls are actions, not selectable text (fixes long-press text-select on tiles/buttons) */
 button,summary{-webkit-user-select:none;user-select:none}
 /* v111 micro-polish: drop the default mobile tap-flash (the gray box doesn't match the rounded controls); every control already has custom feedback - selection state, result change, or a press-state. The tool-opener rows only get a (delayed) overlay, so give them an in-place press. */

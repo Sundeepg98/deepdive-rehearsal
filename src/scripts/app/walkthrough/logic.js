@@ -55,8 +55,10 @@ details.model>summary:hover{background:rgba(109,95,214,.06)}
 .arc-step::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,transparent 40%,rgba(83,74,183,.06) 50%,transparent 60%);background-size:250% 250%;opacity:0;transition:opacity .3s ease}
 .arc-step:hover::before{opacity:1;animation:stepShine 3s ease-in-out infinite}
 @keyframes stepShine{0%{background-position:250% 250%}100%{background-position:-250% -250%}}
-.arc-step:hover{transform:translateY(-3px) scale(1.01);box-shadow:var(--glow-hover),0 8px 24px -8px rgba(83,74,183,.15);border-color:rgba(83,74,183,.25);background:var(--mix-surf)}
+.arc-step:hover{transform:translateY(-3px) scale(1.01) rotateX(2deg);box-shadow:var(--glow-hover),0 8px 24px -8px rgba(83,74,183,.15);border-color:rgba(83,74,183,.25);background:var(--mix-surf)}
 .arc-step:active{transform:translateY(-1px) scale(.99)}
+.arc-step:nth-child(3n+1):hover{transform:translateY(-3px) scale(1.01) rotateX(2deg) rotateY(-1deg)}
+.arc-step:nth-child(3n+2):hover{transform:translateY(-3px) scale(1.01) rotateX(2deg) rotateY(1deg)}
 .arc-n{flex:none;width:23px;height:23px;border-radius:7px;display:grid;place-items:center;font:700 11px -apple-system,sans-serif;background:var(--accbg);color:var(--accink);transition:.14s}
 .arc-t{font-size:12px;font-weight:600;color:var(--ink);line-height:1.25}
 .arc-step.on{border-color:var(--acc);background:var(--accbg);box-shadow:0 0 0 1px var(--acc),var(--surf-sh)}

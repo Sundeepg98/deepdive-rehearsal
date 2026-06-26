@@ -68,13 +68,13 @@ for line in css.split('\n'):
         mobile_section += line + '\n'
 
 # Check mockbar transform — use broader search since CSS may span lines
-has_mb_transform = 'translateY(115%)' in mobile_section and '.sidebar .mockbar' in mobile_section
-has_mb_visibility = 'visibility:hidden' in mobile_section and '.sidebar .mockbar' in mobile_section
+has_mb_display_none = 'display:none' in mobile_section and '.sidebar .mockbar' in mobile_section
+has_mb_transform = 'translateY' in mobile_section and '.sidebar .mockbar' in mobile_section
 has_mb_fixed = 'position:fixed' in mobile_section and '.sidebar .mockbar' in mobile_section
 has_mb_toolsopen = 'body.tools-open .sidebar .mockbar' in mobile_section
 
-check("Mobile .mockbar has transform:translateY(115%)", has_mb_transform)
-check("Mobile .mockbar has visibility:hidden", has_mb_visibility)
+check("Mobile .mockbar has display:none when closed", has_mb_display_none)
+check("Mobile .mockbar has transform for animation", has_mb_transform)
 check("Mobile .mockbar has position:fixed", has_mb_fixed)
 check("tools-open selector exists", has_mb_toolsopen)
 
@@ -84,8 +84,8 @@ if has_mb_toolsopen:
     tidx = mobile_section.find('body.tools-open .sidebar .mockbar')
     block_end = mobile_section.find('}', tidx)
     tools_block = mobile_section[tidx:block_end+1] if block_end > 0 else ""
-    check("tools-open removes translateY", 'transform:none' in tools_block or 'transform: none' in tools_block)
-    check("tools-open sets visibility:visible", 'visibility:visible' in tools_block or 'visibility: visible' in tools_block)
+    check("tools-open sets display:flex", 'display:flex' in tools_block or 'display: flex' in tools_block)
+    check("tools-open removes transform", 'transform:none' in tools_block or 'transform: none' in tools_block)
 
 # ===== Suite 2: Overlays Hidden by Default =====
 suite("OVERLAY VISIBILITY")

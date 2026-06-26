@@ -360,4 +360,8 @@ class DeepDrill extends HTMLElement {
     this.setMode(this.mode);
   }
   getStats() { return { dTot: cards.length, dDone: this.results.length, dGot: this.got, dShk: this.shk, revisit: this.results.filter(function (r) { return !r.ok; }).map(function (r) { return r.signal; }) }; }
-  reset() { this.setMode('study'); 
+  reset() { this.setMode('study'); }
+  weak() { return this.drillWeak(); }
+  disconnectedCallback() { this.stopTimer(); }
+}
+customElements.define('deep-drill', DeepDrill); 

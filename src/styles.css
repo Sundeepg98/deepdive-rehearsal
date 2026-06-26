@@ -114,23 +114,23 @@
 .cram-tog .tt-state{color:var(--acc);font-weight:800}
   .crambtn:hover{border-color:var(--acc);background:var(--accbg)}
 .crambtn:not(.cram-tog):hover::after{opacity:1;color:var(--acc);transform:translateX(3px)}
-  .mock-ov{display:none;position:fixed;inset:0;z-index:1000;background:rgba(28,26,22,.55);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);padding:18px;overflow-y:auto}
+  .mock-ov{display:none;position:fixed;inset:0;z-index:1000;background:rgba(28,26,22,.45);backdrop-filter:blur(8px) saturate(1.2);-webkit-backdrop-filter:blur(8px) saturate(1.2);padding:18px;overflow-y:auto}
   .mock-ov.open{display:flex;align-items:flex-start;justify-content:center}
-  .mock-panel{background:linear-gradient(180deg,rgba(250,249,245,.97),rgba(248,245,239,.97));width:100%;max-width:560px;border-radius:18px;box-shadow:0 4px 14px -4px rgba(0,0,0,.16),0 28px 64px -18px rgba(0,0,0,.34),0 0 60px -20px rgba(83,74,183,.1);margin:auto;overflow:hidden;border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(24px) saturate(1.3);-webkit-backdrop-filter:blur(24px) saturate(1.3);display:flex;flex-direction:column;max-height:calc(100vh - 36px)}
-  .mock-top{display:flex;align-items:center;gap:12px;padding:13px 18px;border-bottom:1px solid var(--bd);background:var(--card)}
-  .mock-x{flex:none;width:30px;height:30px;border-radius:8px;border:1px solid var(--bd);background:var(--card);color:var(--mut);font-size:18px;line-height:1;cursor:pointer;transition:.12s}
-  .mock-x:hover{border-color:var(--red);color:var(--red)}
+  .mock-panel{background:linear-gradient(180deg,rgba(250,249,245,.97),rgba(248,245,239,.97));width:100%;max-width:560px;border-radius:18px;box-shadow:0 8px 32px -8px rgba(83,74,183,.2),0 28px 64px -18px rgba(0,0,0,.34),0 0 80px -20px rgba(83,74,183,.15);margin:auto;overflow:hidden;border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(24px) saturate(1.3);-webkit-backdrop-filter:blur(24px) saturate(1.3);display:flex;flex-direction:column;max-height:calc(100vh - 36px);transform-origin:center top}
+  .mock-top{display:flex;align-items:center;gap:12px;padding:13px 18px;border-bottom:1px solid var(--bd);background:var(--card);position:sticky;top:0;z-index:2}
+  .mock-x{flex:none;width:32px;height:32px;border-radius:9px;border:1px solid var(--bd);background:var(--card);color:var(--mut);font-size:18px;line-height:1;cursor:pointer;transition:transform .15s cubic-bezier(.34,1.56,.64,1),background .2s ease,color .2s ease,border-color .2s ease,box-shadow .2s ease;display:flex;align-items:center;justify-content:center}
+  .mock-x:hover{border-color:var(--red);color:var(--red);background:var(--redbg);transform:scale(1.1) rotate(90deg);box-shadow:0 0 0 3px rgba(239,68,68,.1)}
   .mock-title{flex:1;font:800 12px -apple-system,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:var(--accink)}
   .mock-clock{flex:none;font:800 16px ui-monospace,Menlo,monospace;color:var(--acc);background:var(--accbg);border-radius:8px;padding:4px 12px}
 
   /* cram sheet */
-  .cram-ov{display:none;position:fixed;inset:0;z-index:1000;background:rgba(28,26,22,.55);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);padding:18px;overflow-y:auto}
+  .cram-ov{display:none;position:fixed;inset:0;z-index:1000;background:rgba(28,26,22,.45);backdrop-filter:blur(8px) saturate(1.2);-webkit-backdrop-filter:blur(8px) saturate(1.2);padding:18px;overflow-y:auto}
   .cram-ov.open{display:block}
-  .cram-panel{background:linear-gradient(180deg,rgba(250,249,245,.97),rgba(248,245,239,.97));width:100%;max-width:600px;border-radius:18px;box-shadow:0 4px 14px -4px rgba(0,0,0,.16),0 28px 64px -18px rgba(0,0,0,.34),0 0 60px -20px rgba(83,74,183,.1);margin:0 auto;overflow:hidden;border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(24px) saturate(1.3);-webkit-backdrop-filter:blur(24px) saturate(1.3);display:flex;flex-direction:column;max-height:calc(100vh - 36px)}
+  .cram-panel{background:linear-gradient(180deg,rgba(250,249,245,.97),rgba(248,245,239,.97));width:100%;max-width:600px;border-radius:18px;box-shadow:0 8px 32px -8px rgba(83,74,183,.2),0 28px 64px -18px rgba(0,0,0,.34),0 0 80px -20px rgba(83,74,183,.15);margin:0 auto;overflow:hidden;border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(24px) saturate(1.3);-webkit-backdrop-filter:blur(24px) saturate(1.3);display:flex;flex-direction:column;max-height:calc(100vh - 36px);transform-origin:center top}
   .cram-top{display:flex;align-items:center;gap:12px;padding:13px 18px;border-bottom:1px solid var(--bd);background:var(--card);position:sticky;top:0;z-index:2}
   .cram-title{flex:1;font:800 12px -apple-system,sans-serif;letter-spacing:.5px;text-transform:uppercase;color:var(--accink)}
-  .cram-print{flex:none;font:700 11.5px -apple-system,sans-serif;padding:6px 14px;border-radius:8px;border:1px solid #cfc7f0;background:var(--accbg);color:var(--accink);cursor:pointer;transition:.12s}
-  .cram-print:hover{background:var(--acc);color:#fff;border-color:var(--acc)}
+  .cram-print{flex:none;font:700 11.5px -apple-system,sans-serif;padding:6px 14px;border-radius:8px;border:1px solid #cfc7f0;background:var(--accbg);color:var(--accink);cursor:pointer;transition:transform .15s ease,background .2s ease,color .2s ease,border-color .2s ease,box-shadow .2s ease}
+  .cram-print:hover{background:var(--acc);color:#fff;border-color:var(--acc);transform:translateY(-1px);box-shadow:0 4px 12px -3px rgba(83,74,183,.2)}
   .cram-body{padding:18px 20px 24px;overflow-y:auto;max-height:calc(100vh - 80px)}
 
   /* session progress */
@@ -360,7 +360,7 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb{background:rgba(150,140,225,.3
 html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover{background:rgba(150,140,225,.52)}
 ::-webkit-scrollbar-corner{background:transparent}
 /* overlay entrance (v94): backdrop fade + panel slide-up&scale - reduced-motion-safe (global rule makes it instant) */
-@keyframes ovbg{from{opacity:0}to{opacity:1}}
+@keyframes ovbg{from{opacity:0;backdrop-filter:blur(0px)}to{opacity:1;backdrop-filter:blur(8px)}}
 @keyframes ovpan{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:none}}
 /* View Transitions API */
 @supports (view-transition-name:none){
@@ -371,13 +371,13 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover{background:rgba(150,140,
 }
 .mock-ov.open,.cram-ov.open{animation:ovbg .2s ease}
 .mock-ov.open .mock-panel,.cram-ov.open .cram-panel{animation:panelIn .35s cubic-bezier(.22,.61,.36,1)}
-@keyframes panelIn{from{opacity:0;transform:translateY(20px) scale(.97)}to{opacity:1;transform:none}}
-.mock-ov.open .mock-panel,.cram-ov.open .cram-panel{animation:ovpan .3s cubic-bezier(.22,.61,.36,1)}
+@keyframes panelIn{from{opacity:0;transform:translateY(28px) scale(.96) translateZ(-30px)}to{opacity:1;transform:none translateZ(0)}}
+.mock-ov.open .mock-panel,.cram-ov.open .cram-panel{animation:panelIn .4s cubic-bezier(.22,.61,.36,1)}
 /* overlay EXIT (v95): backdrop fade-out + panel sink&scale-out, held with forwards until JS sets display:none */
 @keyframes ovbgout{from{opacity:1}to{opacity:0}}
-@keyframes ovpanout{from{opacity:1;transform:none}to{opacity:0;transform:translateY(8px) scale(.985)}}
-.mock-ov.open.closing,.cram-ov.open.closing{animation:ovbgout .2s ease forwards}
-.mock-ov.open.closing .mock-panel,.cram-ov.open.closing .cram-panel{animation:ovpanout .2s ease forwards}
+@keyframes ovpanout{from{opacity:1;transform:none}to{opacity:0;transform:translateY(12px) scale(.98) translateZ(-20px)}}
+.mock-ov.open.closing,.cram-ov.open.closing{animation:ovbgout .25s ease forwards}
+.mock-ov.open.closing .mock-panel,.cram-ov.open.closing .cram-panel{animation:ovpanout .28s cubic-bezier(.55,0,1,.45) forwards}
 /* v98: masthead fades in sync with the pane on switch (smooths switch + turns the centering's vertical shift into a fade, not a snap) */
 @keyframes headin{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
 .stage-head.headin{animation:headin .26s cubic-bezier(.22,.61,.36,1)}

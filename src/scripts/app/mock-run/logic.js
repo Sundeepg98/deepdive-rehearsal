@@ -148,7 +148,7 @@ class DeepMockRun extends HTMLElement {
     this._built = true;
     const root = this.attachShadow({ mode: 'open' });
     root.adoptedStyleSheets = [BASE_SHEET, MOCK_SHEET];
-    root.innerHTML = '<style>' + MOCK_STYLE + '</style><div class="mock-body" id="mockbody"></div>';
+    root.innerHTML = '<style>' + MOCK_STYLE + '</style><div style="display:flex;flex-direction:column;height:100%"><div class="mock-body" id="mockbody" style="overflow-y:auto;flex:1;min-height:0;padding:18px 20px 24px"></div></div>';
     mockbody = root.getElementById('mockbody');
     mockRoot = root;
   }

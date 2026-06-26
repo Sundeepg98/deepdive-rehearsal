@@ -259,7 +259,7 @@ class DeepMixedFire extends HTMLElement {
     this._built = true;
     const root = this.attachShadow({ mode: 'open' });
     root.adoptedStyleSheets = [BASE_SHEET, OPT_SHEET, ANS_SHEET, MOCK_SHEET];
-    root.innerHTML = '<style>' + MIX_STYLE + '</style><div class="mock-body" id="mixbody"></div>';
+    root.innerHTML = '<style>' + MIX_STYLE + '</style><div style="display:flex;flex-direction:column;height:100%"><div class="mock-body" id="mixbody" style="overflow-y:auto;flex:1;min-height:0;padding:18px 20px 24px"></div></div>';
     mixBody = root.getElementById('mixbody');
     mixRoot = root;
   }

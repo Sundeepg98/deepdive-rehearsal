@@ -11,11 +11,12 @@
    adopted here (shared-sheets.js). Ten dark overrides become flip tokens. */
 var WALK_STYLE = `
 .dots{display:flex;gap:6px;justify-content:center;margin:0 0 16px}
-.dots i{width:8px;height:8px;border-radius:50%;background:var(--dots-i-bg);transition:.2s}
+.dots i{width:8px;height:8px;border-radius:50%;background:var(--dots-i-bg);transition:transform .35s cubic-bezier(.34,1.56,.64,1),background .25s ease,opacity .25s ease}
 .dots i.on{background:var(--dots-on-bg);transform:scale(1.3)}
 .dots i.done{background:var(--dots-done-bg);opacity:.45}
 .flow{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin:8px 0 4px}
-.fb{font:650 11.5px ui-monospace,Menlo,monospace;padding:7px 11px;border-radius:8px;border:1.5px solid;white-space:nowrap}
+.fb{font:650 11.5px ui-monospace,Menlo,monospace;padding:7px 11px;border-radius:8px;border:1.5px solid;white-space:nowrap;transition:transform .15s ease,box-shadow .15s ease;cursor:default}
+.fb:hover{transform:translateY(-1px) scale(1.02);box-shadow:0 4px 12px -3px rgba(83,74,183,.15)}
 .fb.p{background:var(--accbg);border-color:var(--acc);color:var(--accink)}
 .fb.t{background:var(--tealbg);border-color:var(--teal);color:var(--fb-t-fg)}
 .fb.r{background:var(--redbg);border-color:var(--red);color:var(--fb-r-fg)}
@@ -28,7 +29,9 @@ pre.code{margin:2px 14px 13px;background:linear-gradient(180deg,rgba(42,39,64,.9
 pre.code .c{color:#9b95c9} pre.code .k{color:#C9A2F0} pre.code .s{color:#9DD9B6} pre.code .hl{color:#FFD479}
 .codecap{font-size:11px;color:var(--codecap-fg);margin:0 14px 13px;padding-left:11px;border-left:3px solid var(--acc)}
 .nav{display:flex;justify-content:space-between;align-items:center;margin-top:16px}
-.nav button{border:1.5px solid var(--bd);background:var(--card);color:var(--ink);font:650 13px -apple-system,sans-serif;padding:9px 18px;border-radius:10px;cursor:pointer;transition:.15s}
+.nav button{border:1.5px solid var(--bd);background:var(--card);color:var(--ink);font:650 13px -apple-system,sans-serif;padding:9px 18px;border-radius:10px;cursor:pointer;transition:border-color .2s ease,color .2s ease,transform .12s ease,box-shadow .2s ease}
+.nav button:hover:not(:disabled){border-color:var(--acc);color:var(--acc);box-shadow:0 4px 12px -4px rgba(83,74,183,.15);transform:translateY(-1px)}
+.nav button:active:not(:disabled){transform:translateY(0) scale(.98)}
 .nav button:hover:not(:disabled){border-color:var(--acc);color:var(--acc)}
 .nav button:disabled{opacity:.32;cursor:default}
 .nav .ctr{font-family:var(--mono);font-size:12px;color:var(--mut2);font-weight:700}
@@ -48,7 +51,8 @@ details.model>summary:hover{background:rgba(109,95,214,.06)}
 .arc-h{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin-bottom:12px;display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
 .arc-h .sub{font-size:10.5px;font-weight:600;letter-spacing:.01em;text-transform:none;color:var(--mut2)}
 .arc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
-.arc-step{display:flex;align-items:center;gap:10px;text-align:left;padding:11px 13px;border-radius:11px;border:1px solid var(--bd);background:var(--surf);box-shadow:var(--surf-sh);cursor:pointer;transition:.14s;font-family:inherit}
+.arc-step{display:flex;align-items:center;gap:10px;text-align:left;padding:11px 13px;border-radius:11px;border:1px solid var(--bd);background:var(--surf);box-shadow:var(--surf-sh);cursor:pointer;transition:transform .18s cubic-bezier(.22,.61,.36,1),box-shadow .18s ease,border-color .18s ease,background .18s ease;font-family:inherit;position:relative;overflow:hidden}
+.arc-step:hover{transform:translateY(-2px);box-shadow:var(--glow-hover),0 6px 20px -8px rgba(83,74,183,.12);border-color:rgba(83,74,183,.2)}
 .arc-n{flex:none;width:23px;height:23px;border-radius:7px;display:grid;place-items:center;font:700 11px -apple-system,sans-serif;background:var(--accbg);color:var(--accink);transition:.14s}
 .arc-t{font-size:12px;font-weight:600;color:var(--ink);line-height:1.25}
 .arc-step.on{border-color:var(--acc);background:var(--accbg);box-shadow:0 0 0 1px var(--acc),var(--surf-sh)}
@@ -110,6 +114,7 @@ class DeepWalkthrough extends HTMLElement {
     }
     this._prev.onclick = function () { self.prev(); };
     this._next.onclick = function () { self.next(); };
+    initCardSpotlight(root);
     this._renderW();
   }
   _renderW() {

@@ -69,7 +69,7 @@
 .seg button:not(.on):hover{background:rgba(83,74,183,.07);color:var(--ink)}
 
   .pane{display:none}
-  .pane.on{display:block;animation:fade .28s ease}
+  .pane.on{display:block;animation:fade .35s var(--ease-out)}
   @keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
   @keyframes pop{from{opacity:0;transform:translateY(7px) scale(.99)}to{opacity:1;transform:none}}
   code{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;background:var(--code-inline-bg);padding:1px 5px;border-radius:4px;color:var(--accink)}
@@ -89,6 +89,7 @@
 
   /* mock round */
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+@keyframes btnShimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
 
   /* model answers tab */
 
@@ -96,11 +97,14 @@
 
   /* mock run */
   .mockbar{display:flex;flex-direction:column;gap:8px;margin:0 0 16px}
-  .mockbtn{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;font:750 13.5px -apple-system,sans-serif;letter-spacing:.2px;padding:14px 16px;border-radius:13px;border:0;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;cursor:pointer;transition:.16s;box-shadow:0 6px 18px rgba(83,74,183,.30),inset 0 1px 0 rgba(255,255,255,.14)}
+  .mockbtn{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;font:750 13.5px -apple-system,sans-serif;letter-spacing:.2px;padding:14px 16px;border-radius:13px;border:0;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;cursor:pointer;transition:transform .2s cubic-bezier(.22,.61,.36,1),box-shadow .25s ease;box-shadow:0 6px 18px rgba(83,74,183,.30),inset 0 1px 0 rgba(255,255,255,.14);position:relative;overflow:hidden}
+.mockbtn::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);transform:translateX(-100%);transition:none}
+.mockbtn:hover::after{animation:btnShimmer .6s ease}
 .mockbtn .mb-ic{font-size:12px;flex:none;line-height:1}
   .mockbtn:hover{box-shadow:0 9px 26px rgba(83,74,183,.42),inset 0 1px 0 rgba(255,255,255,.14);transform:translateY(-1px)}
   .mockbtn:active{transform:translateY(0);box-shadow:0 3px 10px rgba(83,74,183,.24),inset 0 1px 0 rgba(255,255,255,.12)}
-  .crambtn{display:flex;align-items:center;gap:11px;width:100%;text-align:left;font-size:12.5px;padding:12px 15px;border-radius:11px;border:1px solid var(--bd);background:var(--surf);box-shadow:var(--surf-sh);cursor:pointer;transition:.14s}
+  .crambtn{display:flex;align-items:center;gap:11px;width:100%;text-align:left;font-size:12.5px;padding:12px 15px;border-radius:11px;border:1px solid var(--bd);background:var(--surf);box-shadow:var(--surf-sh);cursor:pointer;transition:transform .18s cubic-bezier(.22,.61,.36,1),box-shadow .2s ease,border-color .2s ease,background .2s ease}
+.crambtn:hover{transform:translateY(-2px);box-shadow:var(--glow-hover),0 6px 20px -6px rgba(83,74,183,.1)}
 .crambtn:not(.cram-tog)::after{content:"\203A";margin-left:auto;font:400 19px -apple-system,sans-serif;color:var(--mut);opacity:.5;transition:.14s;flex:none;padding-left:6px}
 .mb-tx{flex:1;min-width:0;line-height:1.4}
 .mb-t{font-weight:700;color:var(--ink);letter-spacing:.1px}
@@ -133,8 +137,9 @@
   /* mock interruptions */
   .inttog{width:100%;display:flex;align-items:center;gap:10px;font:600 11.5px -apple-system,sans-serif;color:var(--mut);background:transparent;border:1px dashed var(--bd);border-radius:9px;padding:12px 13px;cursor:pointer;transition:.13s;text-align:left}
   .inttog:hover{border-color:var(--acc);color:var(--ink)}
-  .inttog-dot{width:30px;height:17px;border-radius:9px;background:#D8D2C8;position:relative;flex:none;transition:.16s}
-  .inttog-dot::after{content:"";position:absolute;top:2px;left:2px;width:13px;height:13px;border-radius:50%;background:#fff;transition:.16s;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+  .inttog-dot{width:30px;height:17px;border-radius:9px;background:#D8D2C8;position:relative;flex:none;transition:background .25s cubic-bezier(.22,.61,.36,1),box-shadow .25s ease}
+.inttog:hover .inttog-dot{box-shadow:0 0 8px rgba(83,74,183,.15)}
+  .inttog-dot::after{content:"";position:absolute;top:2px;left:2px;width:13px;height:13px;border-radius:50%;background:#fff;transition:left .25s cubic-bezier(.34,1.56,.64,1),transform .25s cubic-bezier(.34,1.56,.64,1);box-shadow:0 1px 2px rgba(0,0,0,.2)}
   .inttog[aria-pressed="true"]{border-style:solid;border-color:#e0b48a;background:var(--amberbg);color:var(--amber)}
   .inttog[aria-pressed="true"] .inttog-dot{background:var(--amber)}
   .inttog[aria-pressed="true"] .inttog-dot::after{left:15px}
@@ -221,11 +226,15 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
 .side-id h1{font-size:20px;letter-spacing:-.4px;line-height:1.12}
 .side-id .sub,.side-id .kbd-hint{display:none}
 .sidebar .seg{order:1;display:flex;flex-direction:column;gap:3px;background:none;border:none;border-radius:0;padding:0;margin:0;grid-template-columns:none}
-.sidebar .seg button{display:flex;flex-direction:column;align-items:flex-start;gap:1px;width:100%;text-align:left;padding:8px 11px;border:1px solid transparent;border-radius:10px;background:none;cursor:pointer;transition:background .14s ease,box-shadow .14s ease}
+.sidebar .seg button{display:flex;flex-direction:column;align-items:flex-start;gap:1px;width:100%;text-align:left;padding:8px 11px;border:1px solid transparent;border-radius:10px;background:none;cursor:pointer;transition:background .2s ease,box-shadow .2s ease,transform .18s cubic-bezier(.22,.61,.36,1),border-color .2s ease;position:relative;overflow:hidden}
+.sidebar .seg button::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--acc),var(--acc2));border-radius:0 2px 2px 0;opacity:0;transition:opacity .2s ease}
+.sidebar .seg button:not(.on):hover{background:rgba(125,110,210,.10);transform:translateX(2px)}
+.sidebar .seg button:not(.on):hover::before{opacity:.4}
 .sidebar .seg button>span:first-child{font-size:13.5px;font-weight:660;color:var(--ink)}
 .sidebar .seg button .n{font-size:9px;font-weight:700;letter-spacing:.5px;color:var(--mut2)}
 .sidebar .seg button:not(.on):hover{background:rgba(125,110,210,.10)}
-.sidebar .seg button.on{background:var(--accbg);box-shadow:inset 3px 0 0 var(--acc)}
+.sidebar .seg button.on{background:var(--accbg);box-shadow:inset 3px 0 0 var(--acc),0 4px 14px -6px rgba(83,74,183,.12)}
+.sidebar .seg button.on::before{opacity:1}
 .sidebar .seg button.on>span:first-child{color:var(--accink)}
 .sidebar .seg button.on .n{color:var(--acc)}
 .sidebar .mockbar{order:2;margin-top:auto;padding-top:14px;border-top:1px solid var(--bd);gap:7px}

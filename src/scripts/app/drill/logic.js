@@ -42,9 +42,12 @@ var DRILL_STYLE = `@keyframes pop{from{opacity:0;transform:translateY(7px) scale
 .timer{font:800 15px ui-monospace,Menlo,monospace;color:var(--acc);background:var(--accbg);border:1px solid #cfc7f0;border-radius:8px;padding:6px 13px}
 .timer.low{color:var(--red);background:var(--redbg);border-color:#e8c5c0;animation:pulse .9s infinite}
 .dbar{height:6px;background:var(--dbar-bg);border-radius:6px;overflow:hidden;margin-bottom:14px}
-.dbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--acc),var(--acc2));transition:width .3s ease}
+.dbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--acc),var(--acc2));transition:width .4s cubic-bezier(.22,.61,.36,1);position:relative;overflow:hidden}
+.dbar i::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);animation:barShimmer 2s ease-in-out infinite}
+@keyframes barShimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
 .score{display:flex;gap:9px;margin-bottom:14px}
-.pill{flex:1;text-align:center;border:1px solid var(--bd);border-radius:11px;padding:9px;background:var(--card)}
+.pill{flex:1;text-align:center;border:1px solid var(--bd);border-radius:11px;padding:9px;background:var(--card);transition:box-shadow .25s ease,transform .2s ease}
+.pill:hover{box-shadow:0 4px 14px -4px rgba(83,74,183,.1);transform:translateY(-1px)}
 .pill .v{font-size:20px;font-weight:760;line-height:1}
 .pill .l{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--mut2);margin-top:3px}
 .pill.g .v{color:var(--teal)} .pill.s .v{color:var(--amber)} .pill.left .v{color:var(--acc)}
@@ -96,7 +99,8 @@ var DRILL_STYLE = `@keyframes pop{from{opacity:0;transform:translateY(7px) scale
 .dnav-h{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin-bottom:12px;display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
 .dnav-h .sub{font-size:10.5px;font-weight:600;letter-spacing:.01em;text-transform:none;color:var(--mut2)}
 .dnav{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.dn-step{display:flex;align-items:center;gap:9px;text-align:left;padding:9px 11px;border-radius:10px;border:1px solid var(--bd);background:var(--surf);box-shadow:var(--surf-sh);cursor:pointer;transition:.14s;font-family:inherit;min-width:0}
+.dn-step{display:flex;align-items:center;gap:9px;text-align:left;padding:9px 11px;border-radius:10px;border:1px solid var(--bd);background:var(--surf);box-shadow:var(--surf-sh);cursor:pointer;transition:transform .18s cubic-bezier(.22,.61,.36,1),box-shadow .2s ease,border-color .2s ease,background .2s ease;font-family:inherit;min-width:0;position:relative;overflow:hidden}
+.dn-step:hover{transform:translateY(-2px);box-shadow:0 6px 18px -6px rgba(83,74,183,.12);border-color:rgba(83,74,183,.2)}
 .dn-n{flex:none;width:21px;height:21px;border-radius:6px;display:grid;place-items:center;font:700 10.5px -apple-system,sans-serif;background:var(--accbg);color:var(--accink);transition:.14s}
 .dn-t{font-size:11.5px;font-weight:600;color:var(--ink);line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .dn-step.on{border-color:var(--acc);background:var(--accbg);box-shadow:0 0 0 1px var(--acc),var(--surf-sh)}
@@ -143,6 +147,7 @@ class DeepDrill extends HTMLElement {
     }
     const rev = root.getElementById('revdrill');
     if (rev) rev.onclick = function () { self.drillRevset(); };
+    initCardSpotlight(root);
     this.setMode('study');
   }
   renderNav() {
@@ -355,8 +360,4 @@ class DeepDrill extends HTMLElement {
     this.setMode(this.mode);
   }
   getStats() { return { dTot: cards.length, dDone: this.results.length, dGot: this.got, dShk: this.shk, revisit: this.results.filter(function (r) { return !r.ok; }).map(function (r) { return r.signal; }) }; }
-  reset() { this.setMode('study'); }
-  weak() { return this.drillWeak(); }
-  disconnectedCallback() { this.stopTimer(); }
-}
-customElements.define('deep-drill', DeepDrill);
+  reset() { this.setMode('study'); 

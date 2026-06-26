@@ -50,7 +50,8 @@ var WB_STYLE = `
 .wb li{counter-increment:wb;display:block;padding:14px 0;border-bottom:1px solid var(--wb-li-bd)}
 .wb li:last-child{border-bottom:0}
 .wb-cue{display:flex;gap:13px;align-items:flex-start}
-.wb li .num{flex:none;width:27px;height:27px;border-radius:50%;border:1.5px solid var(--acc);color:var(--acc);font:700 12px ui-monospace,monospace;display:flex;align-items:center;justify-content:center;transition:.15s}
+.wb li .num{flex:none;width:27px;height:27px;border-radius:50%;border:1.5px solid var(--acc);color:var(--acc);font:700 12px ui-monospace,monospace;display:flex;align-items:center;justify-content:center;transition:transform .25s cubic-bezier(.34,1.56,.64,1),box-shadow .25s ease,background .2s ease}
+.wb li:hover .num{transform:scale(1.1);box-shadow:0 0 0 3px rgba(83,74,183,.1)}
 .wb li .num::before{content:counter(wb)}
 .wb-ct{font-size:13.5px;color:var(--ink);font-weight:600;padding-top:3px;line-height:1.5}
 .wb-ans{display:none;margin:9px 0 0 40px;padding:10px 13px;background:var(--accbg);border-radius:8px;font-size:12.7px;color:var(--ink);line-height:1.56}
@@ -58,12 +59,13 @@ var WB_STYLE = `
 .wb-ans code{font-size:11px}
 .wb-ans b{color:var(--accink)}
 .wb-act{display:flex;gap:8px;margin:10px 0 0 40px}
-.wb-rev,.wb-got,.wb-miss{font:700 11.5px -apple-system,sans-serif;padding:6px 13px;border-radius:7px;border:1px solid var(--bd);background:var(--card);color:var(--mut);cursor:pointer;transition:.12s}
+.wb-rev,.wb-got,.wb-miss{font:700 11.5px -apple-system,sans-serif;padding:6px 13px;border-radius:7px;border:1px solid var(--bd);background:var(--card);color:var(--mut);cursor:pointer;transition:transform .15s ease,box-shadow .2s ease,border-color .15s ease,background .15s ease}
+.wb-rev:not(:disabled):hover,.wb-got:not(:disabled):hover,.wb-miss:not(:disabled):hover{transform:translateY(-1px);box-shadow:0 3px 10px -3px rgba(83,74,183,.12)}
 .wb-rev{color:var(--accink);border-color:#cfc7f0;background:var(--accbg)}
 .wb-rev:disabled{opacity:.5;cursor:default}
 .wb-got:not(:disabled):hover{border-color:var(--teal);color:var(--teal)}
 .wb-miss:not(:disabled):hover{border-color:var(--red);color:var(--red)}
-.wb-rev:not(:disabled):hover,.wb-got:not(:disabled):hover,.wb-miss:not(:disabled):hover{filter:brightness(.96)}
+
 .wb-rev:not(:disabled):active,.wb-got:not(:disabled):active,.wb-miss:not(:disabled):active{transform:translateY(1px);filter:brightness(.96)}
 .wb-got:disabled,.wb-miss:disabled{opacity:.4;cursor:default}
 .wb li.got .num{background:var(--acc);color:#fff;border-color:var(--acc)}
@@ -146,6 +148,7 @@ class DeepWhiteboard extends HTMLElement {
       missBtn.onclick = function () { item.classList.add('missed'); item.classList.remove('got'); self._updCount(); };
       self._list.appendChild(item);
     });
+    initCardSpotlight(root);
     this._updCount();
   }
   _updCount() {

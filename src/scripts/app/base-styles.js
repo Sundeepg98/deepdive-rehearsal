@@ -11,12 +11,26 @@ BASE_SHEET.replaceSync(`
 *{margin:0;padding:0;box-sizing:border-box}
 code{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;background:var(--code-inline-bg);padding:1px 5px;border-radius:4px;color:var(--accink)}
 :host{display:block;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
-.card{background:var(--surf);border:1px solid var(--bd);border-radius:16px;padding:24px;box-shadow:var(--glow);transition:box-shadow .3s ease,transform .3s ease;position:relative;overflow:hidden;transform-style:preserve-3d}
-.card::before{content:"";position:absolute;top:50%;left:50%;width:400px;height:400px;background:radial-gradient(circle,rgba(83,74,183,.08) 0%,transparent 60%);transform:translate(-50%,-50%);opacity:0;transition:opacity .4s ease;pointer-events:none;z-index:0}
+.card{background:var(--surf);border:1px solid var(--bd);border-radius:16px;padding:24px;box-shadow:var(--glow);transition:box-shadow .35s cubic-bezier(.22,.61,.36,1),transform .35s cubic-bezier(.22,.61,.36,1),border-color .25s ease;position:relative;overflow:hidden;transform-style:preserve-3d;will-change:transform}
+.card::before{content:"";position:absolute;top:var(--mouse-y,50%);left:var(--mouse-x,50%);width:500px;height:500px;background:radial-gradient(circle,rgba(83,74,183,.1) 0%,rgba(83,74,183,.04) 30%,transparent 65%);transform:translate(-50%,-50%);opacity:0;transition:opacity .5s ease;pointer-events:none;z-index:0}
 .card:hover::before{opacity:1}
-.card:hover{box-shadow:var(--glow-hover),0 0 40px -12px rgba(83,74,183,.15);transform:translateY(-2px) rotateX(1deg) rotateY(-.5deg)}
+.card:hover{box-shadow:var(--glow-hover),0 0 50px -10px rgba(83,74,183,.12);transform:translateY(-3px) rotateX(1.5deg) rotateY(-.8deg);border-color:rgba(83,74,183,.25)}
 .step-k{font-family:var(--mono);font-size:11px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--acc)}
 .step-t{font-size:19px;font-weight:720;margin:3px 0 5px;letter-spacing:-.2px}
 .step-sub{font-size:12.5px;color:var(--mut);margin-bottom:6px}
 .step-t,.dec-q,.num-h,.debrief .big,.mscript-h,.rec .lvl,.sr-h,.cs-ha-l,.side-id h1,.stage-head .sh-name{font-family:var(--display)}
+::selection{background:var(--acc);color:#fff}
 `);
+
+/* Shared mouse-tracking utility: updates --mouse-x and --mouse-y CSS custom
+   properties on .card elements so the radial-gradient spotlight follows the
+   cursor. Call once per shadow root that contains cards. */
+function initCardSpotlight(root) {
+  root.addEventListener('mousemove', function (e) {
+    var card = e.target.closest('.card');
+    if (!card) return;
+    var rect = card.getBoundingClientRect();
+    card.style.setProperty('--mouse-x', ((e.clientX - rect.left) / rect.width * 100) + '%');
+    card.style.setProperty('--mouse-y', ((e.clientY - rect.top) / rect.height * 100) + '%');
+  });
+}

@@ -152,7 +152,7 @@
   .sr-stat{font-size:13px;color:#2c2c2c;line-height:1.5}
   .sr-list{font-size:12.5px;color:#454545;line-height:1.55;margin-top:5px}
   .sr-foot{font-size:11px;color:var(--mut);margin-top:18px;font-style:italic}
-  @media print {
+  @media print {@page{margin:1.5cm}
     body{background:#fff !important}
     .app, .mock-ov, .rail{display:none !important}
     body:not(.print-session) .cram-ov{display:block !important;position:static !important;background:#fff !important;padding:0 !important;backdrop-filter:none !important;-webkit-backdrop-filter:none !important;overflow:visible !important}
@@ -269,9 +269,13 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
 .pane.on .card:nth-child(3){animation-delay:.15s}
 .pane.on .card:nth-child(4){animation-delay:.2s}
 .pane.on .card:nth-child(5){animation-delay:.25s}
-@keyframes panein{from{opacity:0;transform:translateY(10px);filter:blur(2px)}to{opacity:1;transform:none;filter:blur(0)}}
+@keyframes panein{from{opacity:0;transform:translateY(10px);filter:blur(2px)}
+html[data-theme="dark"] .pane.on{animation-name:paneinDark}
+@keyframes paneinDark{from{opacity:0;transform:translateY(10px);filter:blur(2px)}to{opacity:1;transform:none;filter:blur(0)}}to{opacity:1;transform:none;filter:blur(0)}}
 @keyframes cardStagger{from{opacity:0;transform:translateY(12px) scale(.995)}to{opacity:1;transform:none}}
-@keyframes headIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
+@keyframes headIn{from{opacity:0;transform:translateX(-8px)}
+.dots i.on{animation:dotActivePulse 2s ease-in-out infinite}
+@keyframes dotActivePulse{0%,100%{box-shadow:var(--dot-glow)}50%{box-shadow:0 0 0 3px rgba(83,74,183,.12),0 0 12px 2px rgba(83,74,183,.2)}}to{opacity:1;transform:none}}
 /* one-time rail entrance (opacity only -> sticky-safe) */
 .sidebar{animation:railin .45s cubic-bezier(.22,.61,.36,1)}
 @keyframes railin{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:none}}

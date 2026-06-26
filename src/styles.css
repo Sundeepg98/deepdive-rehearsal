@@ -117,7 +117,7 @@
 .crambtn:not(.cram-tog):hover::after{opacity:1;color:var(--acc);transform:translateX(3px)}
   .mock-ov{display:none;position:fixed;inset:0;z-index:1000;background:rgba(28,26,22,.45);backdrop-filter:blur(8px) saturate(1.2);-webkit-backdrop-filter:blur(8px) saturate(1.2);padding:18px;overflow:hidden}
   .mock-ov.open{display:flex;align-items:flex-start;justify-content:center;overflow:hidden}
-  .mock-panel{background:linear-gradient(180deg,rgba(250,249,245,.97),rgba(248,245,239,.97));width:100%;max-width:560px;border-radius:18px;box-shadow:0 8px 32px -8px rgba(83,74,183,.2),0 28px 64px -18px rgba(0,0,0,.34),0 0 80px -20px rgba(83,74,183,.15);margin:auto;overflow:hidden;border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(24px) saturate(1.3);-webkit-backdrop-filter:blur(24px) saturate(1.3);display:flex;flex-direction:column;max-height:calc(100vh - 36px);transform-origin:center top}
+  .mock-panel{background:linear-gradient(180deg,rgba(250,249,245,.97),rgba(248,245,239,.97));width:100%;max-width:560px;border-radius:18px;box-shadow:0 8px 32px -8px rgba(83,74,183,.2),0 28px 64px -18px rgba(0,0,0,.34),0 0 80px -20px rgba(83,74,183,.15);margin:18px auto 0;overflow:hidden;border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(24px) saturate(1.3);-webkit-backdrop-filter:blur(24px) saturate(1.3);display:flex;flex-direction:column;max-height:calc(100vh - 36px);transform-origin:center top}
   .mock-top{display:flex;align-items:center;gap:12px;padding:13px 18px;border-bottom:1px solid var(--bd);background:var(--card);position:sticky;top:0;z-index:2}
   .mock-x{flex:none;width:32px;height:32px;border-radius:9px;border:1px solid var(--bd);background:var(--card);color:var(--mut);font-size:18px;line-height:1;cursor:pointer;transition:transform .15s cubic-bezier(.34,1.56,.64,1),background .2s ease,color .2s ease,border-color .2s ease,box-shadow .2s ease;display:flex;align-items:center;justify-content:center}
   .mock-x:hover{border-color:var(--red);color:var(--red);background:var(--redbg);transform:scale(1.1) rotate(90deg);box-shadow:0 0 0 3px rgba(239,68,68,.1)}
@@ -282,13 +282,13 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
 .pane.on .card:nth-child(3){animation-delay:.15s}
 .pane.on .card:nth-child(4){animation-delay:.2s}
 .pane.on .card:nth-child(5){animation-delay:.25s}
-@keyframes panein{from{opacity:0;transform:translateY(10px);filter:blur(2px)}
+@keyframes panein{from{opacity:0;transform:translateY(10px);filter:blur(2px)}to{opacity:1;transform:none;filter:blur(0)}}
 html[data-theme="dark"] .pane.on{animation-name:paneinDark}
-@keyframes paneinDark{from{opacity:0;transform:translateY(10px);filter:blur(2px)}to{opacity:1;transform:none;filter:blur(0)}}to{opacity:1;transform:none;filter:blur(0)}}
+@keyframes paneinDark{from{opacity:0;transform:translateY(10px);filter:blur(2px)}to{opacity:1;transform:none;filter:blur(0)}}
 @keyframes cardStagger{from{opacity:0;transform:translateY(12px) scale(.995)}to{opacity:1;transform:none}}
-@keyframes headIn{from{opacity:0;transform:translateX(-8px)}
+@keyframes headIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
 .dots i.on{animation:dotActivePulse 2s ease-in-out infinite}
-@keyframes dotActivePulse{0%,100%{box-shadow:var(--dot-glow)}50%{box-shadow:0 0 0 3px rgba(83,74,183,.12),0 0 12px 2px rgba(83,74,183,.2)}}to{opacity:1;transform:none}}
+@keyframes dotActivePulse{0%,100%{box-shadow:var(--dot-glow)}50%{box-shadow:0 0 0 3px rgba(83,74,183,.12),0 0 12px 2px rgba(83,74,183,.2)}}
 /* one-time rail entrance (opacity only -> sticky-safe) */
 .sidebar{animation:railin .45s cubic-bezier(.22,.61,.36,1)}
 @keyframes railin{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:none}}
@@ -374,7 +374,6 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover{background:rgba(150,140,
 @keyframes vtIn{from{opacity:0;transform:translateY(8px)}to{opacity:1}}
 }
 .mock-ov.open,.cram-ov.open{animation:ovbg .2s ease}
-.mock-ov.open .mock-panel,.cram-ov.open .cram-panel{animation:panelIn .35s cubic-bezier(.22,.61,.36,1)}
 @keyframes panelIn{from{opacity:0;transform:translateY(28px) scale(.96) translateZ(-30px)}to{opacity:1;transform:none translateZ(0)}}
 .mock-ov.open .mock-panel,.cram-ov.open .cram-panel{animation:panelIn .4s cubic-bezier(.22,.61,.36,1)}
 /* overlay EXIT (v95): backdrop fade-out + panel sink&scale-out, held with forwards until JS sets display:none */

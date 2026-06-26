@@ -62,6 +62,12 @@ def main():
     if result.returncode != 0:
         errors.append("File integrity check failed")
 
+    # 5. Run visual regression
+    print("\n5. Running visual regression tests...")
+    result = subprocess.run([sys.executable, 'test/visual_regression.py'], cwd=base)
+    if result.returncode != 0:
+        errors.append("Visual regression tests failed")
+
     # Summary
     print(f"\n{'='*40}")
     if errors:

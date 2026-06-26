@@ -44,7 +44,8 @@ ANS_SHEET.replaceSync(`
 .push::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,transparent 30%,rgba(255,255,255,.1) 50%,transparent 70%);opacity:0;transition:opacity .3s ease}
 .push:hover::after{opacity:1}
 .push.more{background:linear-gradient(135deg,var(--amber),#b9740f);box-shadow:0 5px 15px rgba(176,108,20,.30),inset 0 1px 0 rgba(255,255,255,.16)}
-.push:hover:not(.more){box-shadow:0 10px 28px rgba(83,74,183,.45),inset 0 1px 0 rgba(255,255,255,.14);transform:translateY(-2px);filter:brightness(1.05)}
+.push:hover:not(.more){box-shadow:0 10px 28px rgba(83,74,183,.45),inset 0 1px 0 rgba(255,255,255,.14),0 0 40px -10px rgba(83,74,183,.2);transform:translateY(-2px);filter:brightness(1.05);animation:pushGlow 2s ease-in-out infinite}
+@keyframes pushGlow{0%,100%{box-shadow:0 10px 28px rgba(83,74,183,.45),inset 0 1px 0 rgba(255,255,255,.14),0 0 40px -10px rgba(83,74,183,.15)}50%{box-shadow:0 10px 28px rgba(83,74,183,.5),inset 0 1px 0 rgba(255,255,255,.14),0 0 60px -10px rgba(83,74,183,.25)}}
 .push.more:hover{box-shadow:0 10px 28px rgba(176,108,20,.45),inset 0 1px 0 rgba(255,255,255,.14);transform:translateY(-2px);filter:brightness(1.05)}
 .push:active:not(.more),.push.more:active{transform:translateY(1px) scale(.99);box-shadow:0 2px 7px rgba(30,28,24,.18),inset 0 1px 0 rgba(255,255,255,.1);filter:brightness(.97)}
 .judge{display:flex;gap:10px;margin-top:15px}

@@ -105,6 +105,7 @@
   /* mock round */
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
 @keyframes btnShimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+@keyframes activePulse{0%,100%{box-shadow:0 0 8px rgba(83,74,183,.4);transform:translateY(-50%) scale(1)}50%{box-shadow:0 0 16px rgba(83,74,183,.7);transform:translateY(-50%) scale(1.2)}}
 
   /* model answers tab */
 
@@ -248,8 +249,9 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
 .sidebar .seg button>span:first-child{font-size:13.5px;font-weight:660;color:var(--ink)}
 .sidebar .seg button .n{font-size:9px;font-weight:700;letter-spacing:.5px;color:var(--mut2)}
 .sidebar .seg button:not(.on):hover{background:rgba(125,110,210,.10)}
-.sidebar .seg button.on{background:var(--accbg);box-shadow:inset 3px 0 0 var(--acc),0 4px 14px -6px rgba(83,74,183,.12)}
+.sidebar .seg button.on{background:var(--accbg);box-shadow:inset 3px 0 0 var(--acc),0 4px 14px -6px rgba(83,74,183,.12);position:relative}
 .sidebar .seg button.on::before{opacity:1}
+.sidebar .seg button.on::after{content:"";position:absolute;right:8px;top:50%;transform:translateY(-50%);width:6px;height:6px;border-radius:50%;background:var(--acc);box-shadow:0 0 8px rgba(83,74,183,.4);animation:activePulse 2s ease-in-out infinite}
 .sidebar .seg button.on>span:first-child{color:var(--accink)}
 .sidebar .seg button.on .n{color:var(--acc)}
 .sidebar .mockbar{order:2;margin-top:auto;padding-top:14px;border-top:1px solid var(--bd);gap:7px}
@@ -261,6 +263,8 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
 @keyframes meshB{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(-6%,4%) scale(1.05)}66%{transform:translate(5%,-3%) scale(.97)}}
 .stage .pane{position:relative;z-index:1}
 .stage .pane{max-width:830px;margin:0 auto}
+.stage .pane.on::before{content:"";position:absolute;top:-10px;left:50%;transform:translateX(-50%);width:200px;height:2px;background:linear-gradient(90deg,transparent,var(--acc),transparent);border-radius:1px;opacity:.3;animation:paneGlow 3s ease-in-out infinite}
+@keyframes paneGlow{0%,100%{opacity:.2;width:180px}50%{opacity:.4;width:240px}}
 .rail{display:none}
 .tools-fab{display:none}
 @media(max-width:919px){
@@ -787,7 +791,8 @@ ANS_SHEET.replaceSync(`
 .push::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,transparent 30%,rgba(255,255,255,.1) 50%,transparent 70%);opacity:0;transition:opacity .3s ease}
 .push:hover::after{opacity:1}
 .push.more{background:linear-gradient(135deg,var(--amber),#b9740f);box-shadow:0 5px 15px rgba(176,108,20,.30),inset 0 1px 0 rgba(255,255,255,.16)}
-.push:hover:not(.more){box-shadow:0 10px 28px rgba(83,74,183,.45),inset 0 1px 0 rgba(255,255,255,.14);transform:translateY(-2px);filter:brightness(1.05)}
+.push:hover:not(.more){box-shadow:0 10px 28px rgba(83,74,183,.45),inset 0 1px 0 rgba(255,255,255,.14),0 0 40px -10px rgba(83,74,183,.2);transform:translateY(-2px);filter:brightness(1.05);animation:pushGlow 2s ease-in-out infinite}
+@keyframes pushGlow{0%,100%{box-shadow:0 10px 28px rgba(83,74,183,.45),inset 0 1px 0 rgba(255,255,255,.14),0 0 40px -10px rgba(83,74,183,.15)}50%{box-shadow:0 10px 28px rgba(83,74,183,.5),inset 0 1px 0 rgba(255,255,255,.14),0 0 60px -10px rgba(83,74,183,.25)}}
 .push.more:hover{box-shadow:0 10px 28px rgba(176,108,20,.45),inset 0 1px 0 rgba(255,255,255,.14);transform:translateY(-2px);filter:brightness(1.05)}
 .push:active:not(.more),.push.more:active{transform:translateY(1px) scale(.99);box-shadow:0 2px 7px rgba(30,28,24,.18),inset 0 1px 0 rgba(255,255,255,.1);filter:brightness(.97)}
 .judge{display:flex;gap:10px;margin-top:15px}

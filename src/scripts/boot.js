@@ -13,4 +13,16 @@
   setTheme(mql.matches);
   // Live theme switching without page reload
   if(mql.addEventListener)mql.addEventListener('change',function(e){setTheme(e.matches)});
+  // Ambient floating particles — subtle background dust motes for a premium feel
+  var stage=document.querySelector('.stage');
+  if(stage){
+    for(var i=0;i<6;i++){
+      var p=document.createElement('div');
+      p.className='particle';
+      p.style.left=(10+i*15)+'%';
+      p.style.animationDelay=(i*3.5)+'s';
+      p.style.animationDuration=(15+Math.random()*10)+'s';
+      stage.appendChild(p);
+    }
+  }
 })();

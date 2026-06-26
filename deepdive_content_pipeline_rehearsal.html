@@ -249,9 +249,9 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
 .sidebar .seg button>span:first-child{font-size:13.5px;font-weight:660;color:var(--ink)}
 .sidebar .seg button .n{font-size:9px;font-weight:700;letter-spacing:.5px;color:var(--mut2)}
 .sidebar .seg button:not(.on):hover{background:rgba(125,110,210,.10)}
-.sidebar .seg button.on{background:var(--accbg);box-shadow:inset 3px 0 0 var(--acc),0 4px 14px -6px rgba(83,74,183,.12);position:relative}
+.sidebar .seg button.on{background:var(--accbg);box-shadow:inset 3px 0 0 var(--acc),0 4px 14px -6px rgba(83,74,183,.12);position:relative;padding-right:28px}
 .sidebar .seg button.on::before{opacity:1}
-.sidebar .seg button.on::after{content:"";position:absolute;right:8px;top:50%;transform:translateY(-50%);width:6px;height:6px;border-radius:50%;background:var(--acc);box-shadow:0 0 8px rgba(83,74,183,.4);animation:activePulse 2s ease-in-out infinite}
+.sidebar .seg button.on::after{content:"";position:absolute;right:12px;top:50%;transform:translateY(-50%);width:6px;height:6px;border-radius:50%;background:var(--acc);box-shadow:0 0 8px rgba(83,74,183,.4);animation:activePulse 2s ease-in-out infinite}
 .sidebar .seg button.on>span:first-child{color:var(--accink)}
 .sidebar .seg button.on .n{color:var(--acc)}
 .sidebar .mockbar{order:2;margin-top:auto;padding-top:14px;border-top:1px solid var(--bd);gap:7px}
@@ -274,7 +274,7 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
   .side-id .badge{display:none}
   .side-id .hdr{order:0;flex:1 1 auto;margin:0}
   .side-id h1{font-size:18px}
-  .side-id .locator{order:2;flex-basis:100%;margin:0}
+  .side-id .locator{order:2;flex-basis:100%;margin:4px 0 0;font-size:11px;padding:4px 10px;border-radius:7px;display:inline-block;width:auto}
   .tools-fab{order:1;display:inline-flex;align-items:center;gap:6px;flex:none;font-size:12px;font-weight:700;letter-spacing:.3px;color:var(--acc);background:var(--accbg);border:1px solid var(--bd);border-radius:9px;padding:11px 15px;cursor:pointer}
   .sidebar .seg{order:1;position:sticky;top:0;z-index:25;flex-direction:row;overflow-x:auto;gap:6px;background:var(--bg);border-bottom:1px solid var(--bd);padding:8px 12px;-webkit-overflow-scrolling:touch}
   .sidebar .seg button{flex:none;width:auto;white-space:nowrap;align-items:center;padding:11px 14px;border-radius:8px}
@@ -323,7 +323,7 @@ html[data-theme="dark"] .pane.on{animation-name:paneinDark}
 /* desktop: depth + tighten so the full rail fits */
 @media(min-width:920px){
   .sidebar{box-shadow:12px 0 32px -16px rgba(0,0,0,.14),inset -1px 0 0 rgba(255,255,255,.5);gap:14px;background:linear-gradient(180deg,rgba(244,241,234,.92),rgba(236,232,222,.92));backdrop-filter:blur(20px) saturate(1.2);-webkit-backdrop-filter:blur(20px) saturate(1.2)}
-  .sidebar .seg button.on{box-shadow:inset 3px 0 0 var(--acc),0 3px 10px -2px rgba(83,74,183,.14)}
+  .sidebar .seg button.on{box-shadow:inset 3px 0 0 var(--acc),0 3px 10px -2px rgba(83,74,183,.14);padding-right:28px}
   .sidebar .mockbar{gap:6px;padding-top:12px}
 }
 /* mobile: grabber handle on the tools sheet */

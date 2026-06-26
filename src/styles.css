@@ -131,7 +131,7 @@
   .cram-title{flex:1;font:800 12px -apple-system,sans-serif;letter-spacing:.5px;text-transform:uppercase;color:var(--accink)}
   .cram-print{flex:none;font:700 11.5px -apple-system,sans-serif;padding:6px 14px;border-radius:8px;border:1px solid #cfc7f0;background:var(--accbg);color:var(--accink);cursor:pointer;transition:transform .15s ease,background .2s ease,color .2s ease,border-color .2s ease,box-shadow .2s ease}
   .cram-print:hover{background:var(--acc);color:#fff;border-color:var(--acc);transform:translateY(-1px);box-shadow:0 4px 12px -3px rgba(83,74,183,.2)}
-  .cram-body{padding:18px 20px 24px;overflow-y:auto;max-height:calc(100vh - 80px)}
+  .cram-body{padding:18px 20px 24px;overflow-y:auto;flex:1;min-height:0}
 
   /* session progress */
   /* mock interruptions */

@@ -282,7 +282,7 @@ if (inttogEl) inttogEl.onclick = function () {
    shadow body via the reassigned `sessbody` global and look up their rendered
    controls through `sessRoot` (ShadowRoot.getElementById, the drill pattern).
    The frame + open/close + the light print container (#sessreport) stay light. */
-var SESS_STYLE = `.sess-body{padding:18px 20px 24px}
+var SESS_STYLE = `.sess-body{padding:18px 20px 24px;overflow-y:auto;flex:1;min-height:0}
 .ss-rec{border-radius:12px;padding:14px 16px;margin:0 0 15px;border:1.5px solid}
 .ss-rk{font:800 9.5px -apple-system,sans-serif;letter-spacing:.7px;text-transform:uppercase;margin:0 0 6px}
 .ss-rt{font-size:13.5px;line-height:1.5;font-weight:600}
@@ -351,7 +351,7 @@ class DeepSession extends HTMLElement {
     this._built = true;
     const root = this.attachShadow({ mode: 'open' });
     root.adoptedStyleSheets = [BASE_SHEET];
-    root.innerHTML = '<style>' + SESS_STYLE + '</style><div class="sess-body" id="sessbody"></div>';
+    root.innerHTML = '<style>' + SESS_STYLE + '</style><div style="display:flex;flex-direction:column;height:100%"><div class="sess-body" id="sessbody"></div></div>';
     sessbody = root.getElementById('sessbody');
     sessRoot = root;
   }

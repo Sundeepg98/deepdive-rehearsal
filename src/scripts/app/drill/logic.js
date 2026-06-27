@@ -91,13 +91,13 @@ var DRILL_STYLE = `@keyframes pop{from{opacity:0;transform:translateY(7px) scale
 .debrief .btn-sec:active{transform:translateY(1px) scale(.98)}
 .debrief .btn-sec:hover{background:var(--btnsec-hover-bg)}
 .btn-sec:active{transform:translateY(1px);filter:brightness(.96)}
-.rec{text-align:center;margin-bottom:4px}
-.rec .lvl{display:inline-block;font-size:21px;font-weight:800;letter-spacing:-.3px;padding:9px 22px;border-radius:11px;border:2px solid}
-.rec.sh .lvl{color:#0a5240;background:var(--tealbg);border-color:var(--teal)}
-.rec.h .lvl{color:var(--accink);background:var(--accbg);border-color:var(--acc)}
-.rec.lh .lvl{color:var(--fb-a-fg);background:var(--amberbg);border-color:var(--amber)}
-.rec.nh .lvl{color:var(--fb-r-fg);background:var(--redbg);border-color:var(--red)}
-.rec .tu{font-size:12px;color:var(--mut2);margin-top:9px;font-weight:700}
+.rec{text-align:center;margin-bottom:6px}
+.rec .lvl{display:inline-block;font-size:21px;font-weight:800;letter-spacing:-.3px;padding:10px 24px;border-radius:12px;border:2px solid;box-shadow:0 2px 8px -2px rgba(83,74,183,.1);transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .25s ease}
+.rec.sh .lvl{color:#0a5240;background:linear-gradient(135deg,var(--tealbg) 0%,rgba(10,133,100,.08) 100%);border-color:var(--teal);box-shadow:0 2px 8px -2px rgba(10,133,100,.15)}
+.rec.h .lvl{color:var(--accink);background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.06) 100%);border-color:var(--acc);box-shadow:0 2px 8px -2px rgba(83,74,183,.15)}
+.rec.lh .lvl{color:var(--fb-a-fg);background:linear-gradient(135deg,var(--amberbg) 0%,rgba(176,108,20,.06) 100%);border-color:var(--amber);box-shadow:0 2px 8px -2px rgba(176,108,20,.15)}
+.rec.nh .lvl{color:var(--fb-r-fg);background:linear-gradient(135deg,var(--redbg) 0%,rgba(239,68,68,.06) 100%);border-color:var(--red);box-shadow:0 2px 8px -2px rgba(239,68,68,.15)}
+.rec .tu{font-size:12px;color:var(--mut2);margin-top:10px;font-weight:700}
 .cbump{animation:cbump .34s ease}
 .dnav-wrap{margin-top:22px}
 .dnav-h{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin-bottom:12px;display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}

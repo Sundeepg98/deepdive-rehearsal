@@ -25,9 +25,9 @@ var WB_STEPS = [
 ];
 var WB_STYLE = `
 .dgm{display:flex;flex-direction:column;align-items:center;gap:0;padding:4px 0 6px}
-.dgm-node{background:var(--accbg);border:1.5px solid var(--acc2);border-radius:9px;padding:8px 14px;text-align:center;max-width:290px;width:100%;box-sizing:border-box}
+.dgm-node{background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.06) 100%);border:1.5px solid var(--acc2);border-radius:9px;padding:10px 12px;text-align:center;min-width:90px;box-shadow:0 2px 8px -2px rgba(83,74,183,.1);transition:transform .2s ease,box-shadow .2s ease}r-radius:9px;padding:8px 14px;text-align:center;max-width:290px;width:100%;box-sizing:border-box}
 .dgm-t{font:700 12.5px -apple-system,sans-serif;color:var(--accink);line-height:1.3;text-shadow:0 0 8px rgba(83,74,183,.08)}
-.dgm-t code{font-family:'Courier New',monospace;font-size:11px;color:var(--accink);background:none;padding:0}
+.dgm-t code{font-family:ui-monospace,Menlo,monospace;font-size:11px;color:var(--accink);background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.04) 100%);padding:1px 5px;border-radius:3px;border:1px solid rgba(83,74,183,.08)}(--accink);background:none;padding:0}
 .dgm-s{font-size:10.5px;color:var(--mut);margin-top:2px;line-height:1.4}
 .dgm-s code{font-family:'Courier New',monospace;font-size:10px;color:var(--mut);background:none;padding:0}
 .dgm-conn{display:flex;flex-direction:column;align-items:center;padding:3px 0}
@@ -36,7 +36,7 @@ var WB_STYLE = `
 .dgm-lbl code{font-family:'Courier New',monospace;font-size:9.5px;color:var(--mut);background:none;padding:0}
 .dgm-up .dgm-v{color:var(--teal)}
 .dgm-fork .dgm-branches{display:flex;justify-content:center;gap:10px;margin:5px 0 2px}
-.dgm-br{font:700 10.5px 'Courier New',monospace;color:var(--acc);background:var(--card);border:1px solid var(--acc2);border-radius:6px;padding:2px 8px}
+.dgm-br{font:700 10.5px ui-monospace,monospace;color:var(--acc);background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.06) 100%);border-radius:4px;padding:2px 6px;border:1px solid rgba(83,74,183,.1)}kground:var(--card);border:1px solid var(--acc2);border-radius:6px;padding:2px 8px}
 .dgm-em{color:var(--teal);font-weight:800}
 .dgm-stores{display:flex;align-items:stretch;justify-content:center;gap:6px;width:100%;max-width:290px}
 .dgm-store{max-width:140px}

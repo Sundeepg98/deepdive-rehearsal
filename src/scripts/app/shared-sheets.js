@@ -28,13 +28,13 @@ OPT_SHEET.replaceSync(`
 
 var ANS_SHEET = new CSSStyleSheet();
 ANS_SHEET.replaceSync(`
-.qq{font-size:15.5px;font-weight:680;color:var(--ink);line-height:1.45;letter-spacing:-.01em}
+.qq{font-size:15.5px;font-weight:680;color:var(--ink);line-height:1.45;letter-spacing:-.01em}t:1.45;letter-spacing:-.01em}
 .ans{font-size:13px;color:var(--ans-fg);margin-top:14px;padding:14px 17px;background:linear-gradient(135deg,var(--ans-bg) 0%,rgba(83,74,183,.03) 100%);border-left:3px solid var(--acc);border-radius:9px;animation:pop .22s ease;box-shadow:0 1px 4px -2px rgba(83,74,183,.06);line-height:1.6}
 .ans b{color:var(--accink);font-weight:700}
 .fu{margin-top:14px;animation:pop .24s ease}
 .fu .lab{font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--amber);display:flex;align-items:center;gap:7px;margin-bottom:7px}
 .fu .lab::before{content:"\\21B3";font-size:14px}
-.fu .fq{font-size:14px;font-weight:650;color:var(--ink);line-height:1.45}
+.fu .fq{font-size:14px;font-weight:650;color:var(--ink);line-height:1.45;letter-spacing:-.01em}1.45}
 .fu .fa{font-size:12.5px;color:var(--ans-fg);margin-top:10px;padding:12px 16px;background:linear-gradient(135deg,var(--fa-bg) 0%,rgba(176,108,20,.03) 100%);border-left:3px solid var(--amber);border-radius:9px;line-height:1.6}
 .fu .fa b{color:var(--fa-b-fg);font-weight:700}
 .senior{margin-top:15px;font-size:12.5px;color:var(--senior-fg);background:linear-gradient(135deg,var(--tealbg) 0%,rgba(10,133,100,.04) 100%);border:1px solid var(--senior-bd);border-radius:10px;padding:13px 16px;animation:pop .24s ease;box-shadow:0 1px 4px -2px rgba(10,133,100,.06)}
@@ -51,8 +51,8 @@ ANS_SHEET.replaceSync(`
 .push:active:not(.more),.push.more:active{transform:translateY(1px) scale(.99);box-shadow:0 2px 7px rgba(30,28,24,.18),inset 0 1px 0 rgba(255,255,255,.1);filter:brightness(.97)}
 .judge{display:flex;gap:10px;margin-top:15px}
 .judge button{flex:1;border:1.5px solid;background:var(--judge-btn-bg);font:700 13px -apple-system,sans-serif;padding:12px;border-radius:11px;cursor:pointer;transition:transform .15s cubic-bezier(.22,.61,.36,1),box-shadow .2s ease,background .15s ease}
-.judge .got{border-color:var(--teal);color:var(--teal)} .judge .got:hover{background:var(--tealbg);box-shadow:0 4px 14px -4px rgba(10,133,100,.25);transform:translateY(-1px)}
-.judge .shk{border-color:var(--amber);color:var(--amber)} .judge .shk:hover{background:var(--amberbg);box-shadow:0 4px 14px -4px rgba(176,108,20,.25);transform:translateY(-1px)}
+.judge .got{border-color:var(--teal);color:var(--teal);background:linear-gradient(135deg,var(--tealbg) 0%,rgba(10,133,100,.04) 100%)} .judge .got:hover{background:var(--tealbg);box-shadow:0 4px 14px -4px rgba(10,133,100,.25);transform:translateY(-1px)}
+.judge .shk{border-color:var(--amber);color:var(--amber);background:linear-gradient(135deg,var(--amberbg) 0%,rgba(176,108,20,.04) 100%)} .judge .shk:hover{background:var(--amberbg);box-shadow:0 4px 14px -4px rgba(176,108,20,.25);transform:translateY(-1px)}
 .judge .hint{font-size:9px;font-weight:700}
 .got:active,.shk:active{transform:translateY(1px) scale(.98);filter:brightness(.96)}
 `);
@@ -65,7 +65,7 @@ MOCK_SHEET.replaceSync(`
 var MBEAT_SHEET = new CSSStyleSheet();
 MBEAT_SHEET.replaceSync(`
 .mbeat{margin:13px 0;font-size:13.5px;line-height:1.62;color:var(--ink);background:linear-gradient(135deg,transparent 0%,rgba(83,74,183,.015) 100%);border-radius:8px;padding:10px 12px;transition:background .2s ease,padding .2s ease}
-.mbeat{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--bd)}
+.mbeat{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--bd);transition:padding .2s ease,background .2s ease} var(--bd)}
 .mbeat:last-child{border-bottom:0;padding-bottom:2px}
 .mbeat b{color:var(--accink)}
 `);

@@ -38,7 +38,7 @@ var DRILL_STYLE = `@keyframes pop{from{opacity:0;transform:translateY(7px) scale
 .tierrow{display:flex;align-items:center;gap:9px;margin:2px 0 16px;flex-wrap:wrap}
 .tierlab{font:700 9.5px -apple-system,sans-serif;letter-spacing:.5px;text-transform:uppercase;color:var(--mut2)}
 .tiernote{font:italic 12px/1.55 -apple-system,sans-serif;color:var(--mut);margin:-6px 0 18px;background:linear-gradient(135deg,rgba(83,74,183,.02) 0%,transparent 100%);border-left:2px solid var(--bd);padding:8px 12px;border-radius:0 6px 6px 0}px;max-width:62ch}
-.tiernote b{color:var(--acc);font-style:normal;font-weight:750}
+.tiernote b{color:var(--acc);font-style:normal;font-weight:750;text-shadow:0 0 8px rgba(83,74,183,.1)}
 .timer{font:800 15px ui-monospace,Menlo,monospace;color:var(--acc);background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.06) 100%);border:1.5px solid var(--bd);border-radius:8px;padding:6px 12px;box-shadow:0 2px 8px -2px rgba(83,74,183,.12);text-shadow:0 0 8px rgba(83,74,183,.1)}bg);border:1px solid #cfc7f0;border-radius:8px;padding:6px 13px}
 .timer.low{color:var(--red);background:var(--redbg);border-color:#e8c5c0;animation:pulse .9s infinite}
 .dbar{height:7px;background:var(--dbar-bg);border-radius:7px;overflow:hidden;margin-bottom:16px;box-shadow:inset 0 1px 2px rgba(0,0,0,.06)}
@@ -55,7 +55,7 @@ var DRILL_STYLE = `@keyframes pop{from{opacity:0;transform:translateY(7px) scale
 .pill.z .v{color:var(--mut)} .pill.z{opacity:.7}
 .revset{display:flex;align-items:center;gap:11px;flex-wrap:wrap;margin:2px 0 18px}
 .revset-b{font:650 13px -apple-system,system-ui,sans-serif;color:var(--accink);background:var(--accbg);border:1px solid var(--acc);border-radius:8px;padding:7px 13px;cursor:pointer;transition:background .13s,color .13s,transform .04s;display:inline-flex;align-items:center;gap:6px}
-.revset-b:hover{background:var(--acc);color:var(--bg)}
+.revset-b:hover{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;transform:translateY(-1px);box-shadow:0 4px 12px -3px rgba(83,74,183,.2)}
 .revset-b:active{transform:translateY(1px)}
 .revset-b:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
 .revset-b b{font-weight:800}
@@ -64,24 +64,24 @@ var DRILL_STYLE = `@keyframes pop{from{opacity:0;transform:translateY(7px) scale
 .thread:hover{box-shadow:var(--surf-sh),0 0 30px -8px rgba(83,74,183,.06)}
 .qrow{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:4px}
 .qk{font-family:var(--mono);font-size:10px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--acc)}
-.sigtag{font-size:10px;color:var(--mut2);font-weight:700;margin-top:5px;letter-spacing:.2px}
+.sigtag{font-size:10px;color:var(--mut2);font-weight:700;margin-top:4px;background:linear-gradient(135deg,rgba(83,74,183,.02) 0%,transparent 100%);padding:2px 8px;border-radius:4px;display:inline-block}5px;letter-spacing:.2px}
 .sigtag b{color:var(--acc)}
 .tier{display:inline-block;font-size:9.5px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;padding:3px 8px;border-radius:5px;border:1px solid;white-space:nowrap}
-.tier.t2{color:var(--teal);background:var(--tealbg);border-color:var(--senior-bd)}
-.tier.t3{color:var(--accink);background:var(--accbg);border-color:#cfc7f0}
-.tier.tS{color:var(--red);background:var(--redbg);border-color:#e8c5c0}
-.tier.tX{color:#fff;background:var(--indigo);border-color:var(--indigo)}
+.tier.t2{color:var(--teal);background:linear-gradient(135deg,var(--tealbg) 0%,rgba(10,133,100,.06) 100%);border-color:var(--teal);box-shadow:0 1px 4px -2px rgba(10,133,100,.1)}--senior-bd)}
+.tier.t3{color:var(--accink);background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.06) 100%);border-color:var(--acc);box-shadow:0 1px 4px -2px rgba(83,74,183,.1)}c7f0}
+.tier.tS{color:var(--red);background:linear-gradient(135deg,var(--redbg) 0%,rgba(239,68,68,.06) 100%);border-color:var(--red);box-shadow:0 1px 4px -2px rgba(239,68,68,.1)}0}
+.tier.tX{color:#fff;background:linear-gradient(135deg,var(--indigo),#7B6FE8);border-color:var(--indigo);box-shadow:0 1px 4px -2px rgba(83,74,183,.15)}o)}
 .speak{margin-top:11px;font-size:12.5px;color:var(--speak-fg);background:var(--accbg);border:1px solid #cfc7f0;border-radius:9px;padding:12px 14px;animation:pop .24s ease}
 .speak .sl{font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--acc);display:flex;align-items:center;gap:6px;margin-bottom:5px}
 .speak .sl::before{content:"\\1F5E3"}
 .speak b{color:var(--accink)}
-.debrief .big{font-size:23px;font-weight:760;text-align:center;margin-bottom:4px}
-.debrief .sumline{text-align:center;color:var(--mut);font-size:13px;margin-bottom:18px}
+.debrief .big{font-size:23px;font-weight:760;text-align:center;margin-bottom:16px;text-shadow:0 2px 16px rgba(83,74,183,.08)}om:4px}
+.debrief .sumline{text-align:center;color:var(--mut);font-size:13px;margin-bottom:14px;background:linear-gradient(135deg,rgba(83,74,183,.02) 0%,transparent 100%);padding:8px 12px;border-radius:8px}tom:18px}
 .sigrow{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid var(--bd);transition:padding .2s ease,background .2s ease}var(--sigrow-bd)}
 .sigrow:last-of-type{border-bottom:0}
 .sigrow .mk{flex:none;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;box-shadow:0 2px 6px -2px rgba(83,74,183,.15);transition:transform .2s ease}er;justify-content:center;font-size:13px;font-weight:800;color:#fff}
-.sigrow.ok .mk{background:var(--teal)} .sigrow.no .mk{background:var(--amber)}
-.sigrow .nm{font-size:13px;font-weight:650}
+.sigrow.ok .mk{background:linear-gradient(135deg,var(--teal),#2dd4a8)} .sigrow.no .mk{background:linear-gradient(135deg,var(--amber),#d4902a)}
+.sigrow .nm{font-size:13px;font-weight:650;transition:color .2s ease}
 .sigrow .tr{margin-left:auto}
 .verdict{margin-top:18px;font-size:13px;color:var(--ans-fg);background:linear-gradient(135deg,var(--ans-bg) 0%,rgba(83,74,183,.03) 100%);border-left:3px solid var(--acc);border-radius:9px;padding:14px 16px}
 .verdict b{color:var(--accink)}
@@ -97,7 +97,7 @@ var DRILL_STYLE = `@keyframes pop{from{opacity:0;transform:translateY(7px) scale
 .rec.h .lvl{color:var(--accink);background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.06) 100%);border-color:var(--acc);box-shadow:0 2px 8px -2px rgba(83,74,183,.15)}
 .rec.lh .lvl{color:var(--fb-a-fg);background:linear-gradient(135deg,var(--amberbg) 0%,rgba(176,108,20,.06) 100%);border-color:var(--amber);box-shadow:0 2px 8px -2px rgba(176,108,20,.15)}
 .rec.nh .lvl{color:var(--fb-r-fg);background:linear-gradient(135deg,var(--redbg) 0%,rgba(239,68,68,.06) 100%);border-color:var(--red);box-shadow:0 2px 8px -2px rgba(239,68,68,.15)}
-.rec .tu{font-size:12px;color:var(--mut2);margin-top:10px;font-weight:700}
+.rec .tu{font-size:12px;color:var(--mut2);margin-top:10px;font-weight:700;letter-spacing:.3px}:700}
 .cbump{animation:cbump .34s ease}
 .dnav-wrap{margin-top:22px}
 .dnav-h{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin-bottom:12px;display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}

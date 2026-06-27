@@ -1,3 +1,6 @@
+/* === Hide Kimi Agent watermark (platform-injected) === */
+a[href*="kimi.com/agent"]{display:none!important}
+
 /* === @property declarations === */
 @property --accent-hue{syntax:"<angle>";initial-value:250deg;inherits:true}
 @property --glow-opacity{syntax:"<number>";initial-value:0.06;inherits:true}

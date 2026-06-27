@@ -395,11 +395,12 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover{background:rgba(150,140,
 .companion{display:none}
 @media(min-width:1280px){
   .stage{justify-content:flex-start}
-  .companion{display:block;flex:none;width:290px;position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--panel);border-left:1px solid var(--bd);box-shadow:inset 8px 0 24px -12px rgba(83,74,183,.08)}
+  .companion{display:flex;flex-direction:column;flex:none;width:290px;position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--panel);border-left:1px solid var(--bd);box-shadow:inset 8px 0 24px -12px rgba(83,74,183,.08)}
   .companion .topic-item{position:relative;overflow:hidden;border-radius:8px;transition:box-shadow .2s ease,background .2s ease}
   .companion .topic-item:hover{box-shadow:0 0 16px -4px rgba(83,74,183,.15);background:rgba(83,74,183,.04)}
   .companion .topic-item::before{content:"";position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,var(--acc),var(--acc2));opacity:0;transition:opacity .2s ease}
   .companion .topic-item:hover::before{opacity:1}
+  .cmp-inner{flex:1;min-height:0;overflow-y:auto;padding:34px 26px 40px;display:flex;flex-direction:column}
 }
 /* v102: surface depth - crafted gradient surfaces + soft lift across content cards */
 /* v105: walkthrough "whole flow" map - the full 9-step arc, clickable, fills the short pane */
@@ -423,7 +424,6 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover{background:rgba(150,140,
 .mcomp[open] .mcomp-body{animation:mcompReveal .2s ease}
 
 /* === Companion panel (light DOM) - styles were missing, only existed in shadow DOM === */
-.cmp-inner{padding:34px 26px 40px;display:flex;flex-direction:column}
 .cmp-block{padding:24px 0}
 .cmp-block.cmp-top{padding-top:0}
 .cmp-block+.cmp-block{border-top:1px solid var(--bd)}

@@ -329,6 +329,7 @@ var SESS_STYLE = `.sess-body{padding:18px 20px 24px;overflow-y:auto;flex:1;min-h
 .tr-lbl{font-size:12.5px;color:var(--ink);font-weight:600}
 .tr-bot{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-top:4px}
 .tr-spark{flex:1;min-width:0;font:600 18px ui-monospace,Menlo,monospace;letter-spacing:1px;line-height:1;white-space:nowrap;overflow:hidden;text-shadow:0 0 8px rgba(83,74,183,.15)}
+.tr-row:hover .tr-spark{text-shadow:0 0 12px rgba(83,74,183,.25)}
 .tr-val{flex:none;font-size:12px;color:var(--mut)}
 .ss-clear:hover{border-color:var(--mut);color:var(--mut)}
 .ss-clear.arm{border-style:solid;border-color:var(--red);background:linear-gradient(135deg,var(--redbg) 0%,rgba(239,68,68,.04) 100%);color:var(--red);font-weight:800}

@@ -9,7 +9,7 @@ var RF_STYLE = `
 .rf{background:linear-gradient(135deg,var(--surf) 0%,rgba(239,68,68,.03) 100%);box-shadow:var(--surf-sh);border:1px solid var(--bd);border-radius:14px;padding:15px 18px;margin-bottom:13px;border-left:3px solid var(--red);transition:box-shadow .25s ease,transform .2s ease,border-color .2s ease}
 .rf:hover{box-shadow:var(--surf-sh),0 4px 18px -6px rgba(239,68,68,.1);transform:translateY(-1px);border-color:rgba(239,68,68,.2)}
 .rf-bad{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;line-height:1.5}
-.rf-x{flex:none;color:var(--red);font:800 14px -apple-system,sans-serif;line-height:1.55}
+.rf-x{flex:none;color:var(--red);font:800 14px -apple-system,sans-serif;line-height:1.55;width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--redbg) 0%,rgba(239,68,68,.1) 100%);display:flex;align-items:center;justify-content:center;border:1.5px solid var(--red)}
 .rf-bad .rf-t b{color:var(--red);font-weight:700}
 .rf-note{color:var(--mut2);font-weight:600;font-style:italic;font-size:11.5px}
 .rf-tell{font-size:12.5px;color:var(--mut);line-height:1.55;margin:9px 0 11px;padding-left:24px}

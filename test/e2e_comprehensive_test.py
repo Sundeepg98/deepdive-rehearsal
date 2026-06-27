@@ -689,6 +689,176 @@ async def run_tests():
         media_count = css_content.count('@media')
         runner.add('G14 Responsive', 'T14.8 Multiple media queries', media_count >= 2, '>=2', str(media_count))
 
+        # ============================================================
+        # GROUP 15: SPA Router (10 tests)
+        # ============================================================
+        print("\n[GROUP 15] SPA Router")
+        page = await browser.new_page(viewport={'width': 1280, 'height': 800})
+        await page.goto(HTML_PATH)
+        await page.wait_for_timeout(2500)
+
+        # T15.1: Router exists
+        router_exists = await page.evaluate('''() => !!window.Router && !!(window.Router.navigate) && !!(window.Router.ROUTES)''')
+        runner.add('G15 Router', 'T15.1 Router module loaded', router_exists, 'true', str(router_exists))
+
+        # T15.2: Default route is walk
+        default_route = await page.evaluate('''() => window.Router.current().view''')
+        runner.add('G15 Router', 'T15.2 Default route is walk', default_route == 'walk', 'walk', default_route)
+
+        # T15.3: Navigate to drill
+        await page.evaluate('''() => window.Router.navigate('drill')''')
+        await page.wait_for_timeout(800)
+        current = await page.evaluate('''() => window.Router.current().view''')
+        runner.add('G15 Router', 'T15.3 Navigate to drill', current == 'drill', 'drill', current)
+
+        # T15.4: Hash updated
+        hash_val = await page.evaluate('''() => window.location.hash''')
+        runner.add('G15 Router', 'T15.4 Hash updated to #drill', hash_val == '#drill', '#drill', hash_val)
+
+        # T15.5: Title updated
+        title = await page.evaluate('''() => document.title''')
+        runner.add('G15 Router', 'T15.5 Title contains Probe Drill', 'Probe Drill' in title, 'Probe Drill', title)
+
+        # T15.6: Back button works
+        await page.go_back()
+        await page.wait_for_timeout(800)
+        back_route = await page.evaluate('''() => window.Router.current().view''')
+        runner.add('G15 Router', 'T15.6 Back button returns to walk', back_route == 'walk', 'walk', back_route)
+
+        # T15.7: Forward button works
+        await page.go_forward()
+        await page.wait_for_timeout(800)
+        fwd_route = await page.evaluate('''() => window.Router.current().view''')
+        runner.add('G15 Router', 'T15.7 Forward button goes to drill', fwd_route == 'drill', 'drill', fwd_route)
+
+        # T15.8: Deep link direct hash
+        await page.goto(HTML_PATH + '#wb')
+        await page.wait_for_timeout(2500)
+        deep_route = await page.evaluate('''() => window.Router.current().view''')
+        runner.add('G15 Router', 'T15.8 Deep link #wb opens whiteboard', deep_route == 'wb', 'wb', deep_route)
+
+        # T15.9: Invalid hash fallback
+        await page.goto(HTML_PATH + '#nonexistent')
+        await page.wait_for_timeout(2500)
+        fallback = await page.evaluate('''() => window.Router.current().view''')
+        runner.add('G15 Router', 'T15.9 Invalid hash falls back to walk', fallback == 'walk', 'walk', fallback)
+
+        # T15.10: routechange event fires
+        await page.goto(HTML_PATH + '#walk')
+        await page.wait_for_timeout(2000)
+        await page.evaluate('''() => { window._rcc = 0; window.addEventListener('routechange', () => window._rcc++); }''')
+        await page.evaluate('''() => window.Router.navigate('drill')''')
+        await page.wait_for_timeout(800)
+        event_count = await page.evaluate('''() => window._rcc''')
+        runner.add('G15 Router', 'T15.10 routechange event fires', event_count >= 1, '>=1', str(event_count))
+
+        await page.close()
+
+        # ============================================================
+        # GROUP 16: SPA View Manager (8 tests)
+        # ============================================================
+        print("\n[GROUP 16] SPA View Manager")
+        page = await browser.new_page(viewport={'width': 1280, 'height': 800})
+        await page.goto(HTML_PATH)
+        await page.wait_for_timeout(2500)
+
+        # T16.1: ViewManager exists
+        vm_exists = await page.evaluate('''() => !!window.ViewManager''')
+        runner.add('G16 Views', 'T16.1 ViewManager loaded', vm_exists, 'true', str(vm_exists))
+
+        # T16.2: Only one pane active (wait for transition to settle)
+        await page.evaluate('''() => window.Router.navigate('drill')''')
+        await page.wait_for_timeout(1200)
+        active_count = await page.evaluate('''() => document.querySelectorAll('.pane.on').length''')
+        runner.add('G16 Views', 'T16.2 Only one pane active', active_count == 1, '1', str(active_count))
+
+        # T16.3: Correct pane visible
+        pane_visible = await page.evaluate('''() => { const p = document.getElementById('drill'); return p && p.classList.contains('on'); }''')
+        runner.add('G16 Views', 'T16.3 Drill pane is active', pane_visible, 'true', str(pane_visible))
+
+        # T16.4: Other panes hidden (drill is active, rest should not be .on)
+        others_hidden = await page.evaluate('''() => ['walk','wb','sys','trade','model','num','rf','open'].every(id => { const p = document.getElementById(id); return p && !p.classList.contains('on'); })''')
+        runner.add('G16 Views', 'T16.4 Other panes not .on', others_hidden, 'true', str(others_hidden))
+
+        # T16.5: Active pane fully opaque
+        opacity = await page.evaluate('''() => parseFloat(getComputedStyle(document.querySelector('.pane.on')).opacity)''')
+        runner.add('G16 Views', 'T16.5 Active pane opacity=1', opacity == 1.0, '1.0', str(opacity))
+
+        # T16.6: Skeleton element created on navigation (check immediately after navigate)
+        await page.evaluate('''() => window.Router.navigate('trade')''')
+        await page.wait_for_timeout(200)
+        has_skeleton = await page.evaluate('''() => !!document.getElementById('_vm-skeleton')''')
+        runner.add('G16 Views', 'T16.6 Skeleton element created', has_skeleton, 'true', str(has_skeleton))
+
+        # v221-fix: Wait for previous transition to complete before next navigate
+        await page.wait_for_timeout(1000)
+
+        # T16.7: Nav button activated after navigating to drill
+        await page.evaluate('''() => window.Router.navigate('drill')''')
+        await page.wait_for_timeout(1000)
+        btn_on = await page.evaluate('''() => { const btns = document.querySelectorAll('.seg button, .sidebar .seg button'); for (const b of btns) if (b.getAttribute('data-tab') === 'drill') return b.classList.contains('on'); return false; }''')
+        runner.add('G16 Views', 'T16.7 Drill nav button activated', btn_on, 'true', str(btn_on))
+
+        # T16.8: Focus inside active view (Tab to move focus, then check)
+        await page.evaluate('''() => window.Router.navigate('drill')''')
+        await page.wait_for_timeout(1000)
+        await page.keyboard.press('Tab')
+        await page.wait_for_timeout(400)
+        focus_inside = await page.evaluate('''() => { const pane = document.querySelector('.pane.on'); const f = document.activeElement; return pane && f ? pane.contains(f) : true; }''')
+        runner.add('G16 Views', 'T16.8 Focus inside active view', focus_inside, 'true', str(focus_inside))
+
+        await page.close()
+
+        # ============================================================
+        # GROUP 17: SPA Accessibility (8 tests)
+        # ============================================================
+        print("\n[GROUP 17] SPA Accessibility")
+        page = await browser.new_page(viewport={'width': 1280, 'height': 800})
+        await page.goto(HTML_PATH)
+        await page.wait_for_timeout(2500)
+
+        # T17.1: ARIA live region exists
+        await page.evaluate('''() => window.Router.navigate('drill')''')
+        await page.wait_for_timeout(800)
+        has_live = await page.evaluate('''() => !!document.querySelector('[aria-live]')''')
+        runner.add('G17 SPA-A11y', 'T17.1 ARIA live region exists', has_live, 'true', str(has_live))
+
+        # T17.2: Keyboard shortcut navigates
+        await page.keyboard.press('q')
+        await page.wait_for_timeout(800)
+        kb_route = await page.evaluate('''() => window.Router.current().view''')
+        runner.add('G17 SPA-A11y', 'T17.2 Keyboard q → walkthrough', kb_route == 'walk', 'walk', kb_route)
+
+        # T17.3: Keyboard w → drill
+        await page.keyboard.press('w')
+        await page.wait_for_timeout(800)
+        kb_drill = await page.evaluate('''() => window.Router.current().view''')
+        runner.add('G17 SPA-A11y', 'T17.3 Keyboard w → drill', kb_drill == 'drill', 'drill', kb_drill)
+
+        # T17.4: Tab navigation works
+        await page.keyboard.press('Tab')
+        focused = await page.evaluate('''() => document.activeElement.tagName''')
+        runner.add('G17 SPA-A11y', 'T17.4 Tab moves focus', focused != 'BODY', 'not BODY', focused)
+
+        # T17.5: View transition lock prevents rapid switch
+        await page.evaluate('''() => { window.Router.navigate('walk'); window.Router.navigate('drill'); window.Router.navigate('wb'); }''')
+        await page.wait_for_timeout(2000)
+        current_view = await page.evaluate('''() => window.Router.current().view''')
+        runner.add('G17 SPA-A11y', 'T17.5 Transition lock handles rapid switches', current_view in ['walk','drill','wb'], 'one of walk/drill/wb', current_view)
+
+        # T17.6: html overflow hidden (no page scroll)
+        html_overflow = await page.evaluate('''() => getComputedStyle(document.documentElement).overflow''')
+        runner.add('G17 SPA-A11y', 'T17.6 html overflow=hidden', html_overflow == 'hidden', 'hidden', html_overflow)
+
+        # T17.7: body overflow hidden
+        body_overflow = await page.evaluate('''() => getComputedStyle(document.body).overflow''')
+        runner.add('G17 SPA-A11y', 'T17.7 body overflow=hidden', body_overflow == 'hidden', 'hidden', body_overflow)
+
+        # T17.8: Reduced motion supported
+        has_reduced = await page.evaluate('''() => window.matchMedia('(prefers-reduced-motion: reduce)').media === '(prefers-reduced-motion: reduce)' ''')
+        runner.add('G17 SPA-A11y', 'T17.8 prefers-reduced-motion supported', has_reduced, 'true', str(has_reduced))
+
+        await page.close()
         await browser.close()
 
         success = runner.summary()

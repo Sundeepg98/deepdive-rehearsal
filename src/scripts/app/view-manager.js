@@ -223,6 +223,14 @@
     var incomingPane = document.getElementById(viewId);
     if (!incomingPane) { isTransitioning = false; return; }
 
+    // v221-fix: On first navigation, clear any existing .on from HTML initial state
+    if (!currentView) {
+      var allPanes = document.querySelectorAll('.pane.on');
+      for (var pi = 0; pi < allPanes.length; pi++) {
+        if (allPanes[pi].id !== viewId) allPanes[pi].classList.remove('on');
+      }
+    }
+
     // 1. Before leave — save state
     if (currentView) saveViewState(currentView);
     saveFocus();

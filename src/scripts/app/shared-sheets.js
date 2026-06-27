@@ -32,13 +32,13 @@ ANS_SHEET.replaceSync(`
 .ans{font-size:13px;color:var(--ans-fg);margin-top:14px;padding:14px 17px;background:linear-gradient(135deg,var(--ans-bg) 0%,rgba(83,74,183,.03) 100%);border-left:3px solid var(--acc);border-radius:9px;animation:pop .22s ease;box-shadow:0 1px 4px -2px rgba(83,74,183,.06);line-height:1.6}
 .ans b{color:var(--accink);font-weight:700;text-shadow:0 0 8px rgba(83,74,183,.08)}
 .fu{margin-top:14px;animation:pop .24s ease}
-.fu .lab{font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--amber);display:flex;align-items:center;gap:7px;margin-bottom:7px}
+.fu .lab{font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--amber);display:flex;align-items:center;gap:7px;margin-bottom:7px;transition:color .2s ease}
 .fu .lab::before{content:"\\21B3";font-size:14px}
 .fu .fq{font-size:14px;font-weight:650;background:linear-gradient(90deg,var(--ink),var(--accink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.45;letter-spacing:-.01em}
 .fu .fa{font-size:12.5px;color:var(--ans-fg);margin-top:10px;padding:12px 16px;background:linear-gradient(135deg,var(--fa-bg) 0%,rgba(176,108,20,.03) 100%);border-left:3px solid var(--amber);border-radius:9px;line-height:1.6}
 .fu .fa b{color:var(--fa-b-fg);font-weight:700;text-shadow:0 0 8px rgba(176,108,20,.08)}
 .senior{margin-top:15px;font-size:12.5px;color:var(--senior-fg);background:linear-gradient(135deg,var(--tealbg) 0%,rgba(10,133,100,.04) 100%);border:1px solid var(--senior-bd);border-radius:10px;padding:13px 16px;animation:pop .24s ease;box-shadow:0 1px 4px -2px rgba(10,133,100,.06)}
-.senior .sl{font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--teal);display:flex;align-items:center;gap:7px;margin-bottom:5px}
+.senior .sl{font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--teal);display:flex;align-items:center;gap:7px;margin-bottom:5px;transition:color .2s ease}
 .senior .sl::before{content:"\\2605"}
 .senior b{color:var(--fb-t-fg);font-weight:700;text-shadow:0 0 8px rgba(10,133,100,.1)}
 .push{margin-top:15px;width:100%;border:0;color:var(--push-fg);font:700 13px -apple-system,sans-serif;padding:13px;border-radius:11px;cursor:pointer;transition:transform .18s cubic-bezier(.22,.61,.36,1),box-shadow .25s ease,filter .2s ease;background:linear-gradient(135deg,var(--acc),var(--acc2));box-shadow:0 5px 15px rgba(83,74,183,.27),inset 0 1px 0 rgba(255,255,255,.14);position:relative;overflow:hidden}
@@ -49,7 +49,7 @@ ANS_SHEET.replaceSync(`
 @keyframes pushGlow{0%,100%{box-shadow:0 10px 28px rgba(83,74,183,.45),inset 0 1px 0 rgba(255,255,255,.14),0 0 40px -10px rgba(83,74,183,.15)}50%{box-shadow:0 10px 28px rgba(83,74,183,.5),inset 0 1px 0 rgba(255,255,255,.14),0 0 60px -10px rgba(83,74,183,.25)}}
 .push.more:hover{box-shadow:0 10px 28px rgba(176,108,20,.45),inset 0 1px 0 rgba(255,255,255,.14);transform:translateY(-2px);filter:brightness(1.05)}
 .push:active:not(.more),.push.more:active{transform:translateY(1px) scale(.99);box-shadow:0 2px 7px rgba(30,28,24,.18),inset 0 1px 0 rgba(255,255,255,.1);filter:brightness(.97)}
-.judge{display:flex;gap:10px;margin-top:15px}
+.judge{display:flex;gap:10px;margin-top:15px;background:linear-gradient(180deg,transparent 0%,rgba(83,74,183,.01) 100%);transition:box-shadow .25s ease,transform .2s ease}
 .judge button{flex:1;border:1.5px solid;background:var(--judge-btn-bg);font:700 13px -apple-system,sans-serif;padding:12px;border-radius:11px;cursor:pointer;transition:transform .15s cubic-bezier(.22,.61,.36,1),box-shadow .2s ease,background .15s ease}
 .judge .got{border-color:var(--teal);color:var(--teal);background:linear-gradient(135deg,var(--tealbg) 0%,rgba(10,133,100,.04) 100%)} .judge .got:hover{background:var(--tealbg);box-shadow:0 4px 14px -4px rgba(10,133,100,.25);transform:translateY(-1px)}
 .judge .shk{border-color:var(--amber);color:var(--amber);background:linear-gradient(135deg,var(--amberbg) 0%,rgba(176,108,20,.04) 100%)} .judge .shk:hover{background:var(--amberbg);box-shadow:0 4px 14px -4px rgba(176,108,20,.25);transform:translateY(-1px)}
@@ -79,6 +79,6 @@ details.disc summary{cursor:pointer;font:700 12px -apple-system,sans-serif;color
 details.disc summary::-webkit-details-marker{display:none}
 details.disc summary::before{content:"\\25B8";transition:transform .25s cubic-bezier(.34,1.56,.64,1);font-size:11px;display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:5px;background:var(--accbg)}
 details.disc[open] summary::before{transform:rotate(90deg)}
-details.disc summary:hover{background:rgba(109,95,214,.07);padding-left:17px}
-details.disc .body{padding:2px 16px 14px;font-size:12.5px;color:var(--disc-body-fg);line-height:1.6}
+details.disc summary:hover{background:rgba(109,95,214,.07);padding-left:17px;transition:background .2s ease}
+details.disc .body{padding:2px 16px 14px;font-size:12.5px;color:var(--disc-body-fg);line-height:1.6;transition:color .2s ease}
 `);

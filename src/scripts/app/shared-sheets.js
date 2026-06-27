@@ -71,11 +71,12 @@ MBEAT_SHEET.replaceSync(`
 
 var DISC_SHEET = new CSSStyleSheet();
 DISC_SHEET.replaceSync(`
-details.disc{margin-top:11px;border:1px solid var(--bd);border-radius:9px;overflow:hidden;background:var(--disc-bg)}
-details.disc summary{cursor:pointer;font:700 11.5px -apple-system,sans-serif;color:var(--acc);padding:10px 14px;list-style:none;display:flex;align-items:center;gap:7px}
+details.disc{margin-top:12px;border:1px solid var(--bd);border-radius:10px;overflow:hidden;background:linear-gradient(135deg,var(--disc-bg) 0%,rgba(83,74,183,.02) 100%);transition:box-shadow .25s ease,border-color .2s ease}
+details.disc[open]{border-color:rgba(83,74,183,.2);box-shadow:0 0 0 1px rgba(83,74,183,.06),var(--surf-sh)}
+details.disc summary{cursor:pointer;font:700 12px -apple-system,sans-serif;color:var(--acc);padding:11px 15px;list-style:none;display:flex;align-items:center;gap:8px;transition:background .18s ease,padding .2s ease}
 details.disc summary::-webkit-details-marker{display:none}
-details.disc summary::before{content:"\\25B8";transition:.2s;font-size:10px}
+details.disc summary::before{content:"\\25B8";transition:transform .25s cubic-bezier(.34,1.56,.64,1);font-size:11px;display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:5px;background:var(--accbg)}
 details.disc[open] summary::before{transform:rotate(90deg)}
-details.disc summary:hover{background:rgba(109,95,214,.06)}
-details.disc .body{padding:0 14px 13px;font-size:12px;color:var(--disc-body-fg)}
+details.disc summary:hover{background:rgba(109,95,214,.07);padding-left:17px}
+details.disc .body{padding:2px 16px 14px;font-size:12.5px;color:var(--disc-body-fg);line-height:1.6}
 `);

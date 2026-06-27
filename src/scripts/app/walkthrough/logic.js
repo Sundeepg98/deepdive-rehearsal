@@ -24,7 +24,7 @@ var WALK_STYLE = `
 .fb.r{background:linear-gradient(135deg,var(--redbg) 0%,rgba(239,68,68,.06) 100%);border-color:var(--red);color:var(--red);box-shadow:0 0 0 1px rgba(239,68,68,.1),0 2px 8px -2px rgba(239,68,68,.15)}fb-r-fg)}
 .fb.a{background:linear-gradient(135deg,var(--amberbg) 0%,rgba(176,108,20,.06) 100%);border-color:var(--amber);color:var(--amber);box-shadow:0 0 0 1px rgba(176,108,20,.1),0 2px 8px -2px rgba(176,108,20,.15)}r(--fb-a-fg)}
 .fb.n{background:linear-gradient(135deg,var(--fb-n-bg) 0%,rgba(201,195,184,.1) 100%);border-color:#C9C3B8;color:var(--fb-n-fg);transition:transform .15s ease}b-n-fg)}
-.arr{color:var(--acc);font-weight:800;font-size:14px;opacity:.5;transition:opacity .2s ease,transform .2s ease}
+.arr{color:var(--acc);font-weight:800;text-shadow:0 0 8px rgba(83,74,183,.1);font-size:14px;opacity:.5;transition:opacity .2s ease,transform .2s ease}
 .ins{margin-top:14px;font-size:12.5px;color:var(--ins-fg);background:linear-gradient(135deg,var(--ins-bg) 0%,rgba(83,74,183,.03) 100%);border-left:3px solid var(--acc);border-radius:9px;padding:13px 16px;line-height:1.6;box-shadow:0 1px 4px -2px rgba(83,74,183,.08);animation:insIn .35s ease .05s backwards}
 @keyframes insIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)}}
 .ins b{color:var(--accink)}
@@ -36,7 +36,7 @@ pre.code .c{color:#9b95c9} pre.code .k{color:#C9A2F0} pre.code .s{color:#9DD9B6}
 .nav button:hover:not(:disabled){border-color:var(--acc);color:var(--acc);background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.04) 100%);box-shadow:0 4px 14px -4px rgba(83,74,183,.18);transform:translateY(-2px)}
 .nav button:active:not(:disabled){transform:translateY(0) scale(.98);box-shadow:0 2px 6px -2px rgba(83,74,183,.12)}
 .nav button:disabled{opacity:.32;cursor:default}
-.nav .ctr{font-family:var(--mono);font-size:12px;color:var(--acc);font-weight:700;background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.04) 100%);padding:4px 10px;border-radius:6px;border:1px solid var(--bd)}
+.nav .ctr{font-family:var(--mono);font-size:12px;color:var(--acc);font-weight:700;text-shadow:0 0 8px rgba(83,74,183,.08);background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.04) 100%);padding:4px 10px;border-radius:6px;border:1px solid var(--bd)}
 details.model{margin-top:18px;background:linear-gradient(135deg,var(--card) 0%,rgba(83,74,183,.02) 100%);box-shadow:var(--surf-sh);border:1px solid var(--bd);border-left:4px solid var(--acc);border-radius:12px;overflow:hidden;transition:box-shadow .25s ease}
 details.model[open]{box-shadow:0 0 0 1px rgba(83,74,183,.08),var(--surf-sh)}
 details.model>summary{cursor:pointer;list-style:none;padding:15px 18px;font:800 13.5px -apple-system,sans-serif;color:var(--accink);display:flex;align-items:baseline;gap:10px;user-select:none;transition:background .18s ease,padding .2s ease}
@@ -52,7 +52,7 @@ details.model>summary:hover{background:rgba(109,95,214,.07);padding-left:20px}
 .mbeat.ans:last-child{padding-bottom:11px}/* the answer box keeps its own padding; the shared .mbeat:last-child reduction (now in MBEAT_SHEET, so it cascades after this inline rule at equal specificity) is meant only for plain beats */
 .arc-wrap{margin-top:24px}
 .arc-h{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin-bottom:12px;display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
-.arc-h .sub{font-size:10.5px;font-weight:600;letter-spacing:.01em;text-transform:none;color:var(--mut2)}
+.arc-h .sub{font-size:10.5px;font-weight:600;letter-spacing:.01em;text-transform:none;color:var(--mut2);transition:color .2s ease}
 .arc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;position:relative}
 .arc-grid::before{content:"";position:absolute;top:23px;left:8%;right:8%;height:2px;background:linear-gradient(90deg,transparent 0%,var(--acc) 20%,var(--acc2) 50%,var(--acc) 80%,transparent 100%);opacity:.15;border-radius:1px;z-index:0;animation:flowLine 3s ease-in-out infinite}
 @keyframes flowLine{0%,100%{opacity:.1;background-size:200% 100%;background-position:0% 0}50%{opacity:.2;background-size:200% 100%;background-position:100% 0}}

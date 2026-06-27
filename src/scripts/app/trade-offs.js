@@ -18,7 +18,7 @@ var TRADE_STYLE = `
 .dec-q .vs{color:var(--mut2);font-weight:700;font-size:11.5px;padding:0 4px}
 .dec-tell{margin-top:14px;padding-top:12px;border-top:1px dashed var(--bd);font-size:12px;color:var(--teal);font-weight:700;line-height:1.55}
 .dec-tell::before{content:"\\2605";font-size:12px;margin-right:8px}
-.dec-tell b{color:var(--dec-tell-b-fg);font-weight:700}
+.dec-tell b{color:var(--dec-tell-b-fg);font-weight:700;text-shadow:0 0 6px rgba(83,74,183,.06)}
 `;
 var TRADE_HTML = `<div class="ledger">
       <div class="lead">The design decisions an interviewer drills &mdash; each with the <b>axis</b> that picks a side. Saying the switch condition out loud is the senior move; defending one option as universally right isn't.</div>

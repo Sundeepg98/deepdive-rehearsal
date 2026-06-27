@@ -18,7 +18,7 @@ var MODEL_STYLE = `
 .mscript-sub{font-size:12.5px;color:var(--mut);line-height:1.55;margin-bottom:8px;padding-bottom:14px;border-bottom:2px solid var(--accbg)}
 .mbeat-l{flex:none;width:76px;font:800 9.5px -apple-system,sans-serif;letter-spacing:.4px;text-transform:uppercase;padding-top:4px;line-height:1.35;color:var(--acc)}
 .mbeat-t{flex:1;font-size:13px;line-height:1.62;color:var(--ink)}
-.mbeat-t b{color:var(--accink);font-weight:700}
+.mbeat-t b{color:var(--accink);font-weight:700;text-shadow:0 0 8px rgba(83,74,183,.08)}
 `;
 var MODEL_HTML = `<div class="msel">
       <button type="button" data-i="0" class="on">Make it reliable</button>

@@ -5,7 +5,7 @@
    Postgres pool). A self-contained shadow component; the tab / rail / keyboard
    nav that used to share this file stays global below. */
 var NUM_STYLE = `.numlead{font-size:15px;line-height:1.5;color:var(--ink);margin:2px 2px 18px}
-.numlead b{color:var(--accink);font-weight:700}
+.numlead b{color:var(--accink);font-weight:700;text-shadow:0 0 8px rgba(83,74,183,.08)}
 .num-h{font:800 10px -apple-system,sans-serif;letter-spacing:.8px;text-transform:uppercase;color:var(--acc);margin-bottom:12px;background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.04) 100%);padding:6px 12px;border-radius:6px;display:inline-block}
 .ninp{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .ninp label{display:flex;flex-direction:column;gap:6px;font:700 11px -apple-system,sans-serif;color:var(--mut);letter-spacing:.2px}
@@ -26,8 +26,8 @@ var NUM_STYLE = `.numlead{font-size:15px;line-height:1.5;color:var(--ink);margin
 .num-tell{margin-top:15px;font-size:12px;color:var(--teal);font-weight:700;line-height:1.55;padding:14px 17px;background:linear-gradient(135deg,var(--tealbg) 0%,rgba(10,133,100,.04) 100%);border-radius:11px;box-shadow:0 1px 6px -2px rgba(10,133,100,.08)}
 .nprog{height:5px;background:var(--dbar-bg);border-radius:5px;overflow:hidden;margin:12px 0}
 .nprog i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));border-radius:5px;transition:width .5s cubic-bezier(.22,.61,.36,1)}
-.num-tell b{color:var(--dec-tell-b-fg);font-weight:700}
-.nv-u{display:inline-block;width:30px;text-align:left;padding-left:8px;box-sizing:border-box;font-size:13px;font-weight:600;color:var(--mut)}`;
+.num-tell b{color:var(--dec-tell-b-fg);font-weight:700;text-shadow:0 0 6px rgba(83,74,183,.06)}
+.nv-u{display:inline-block;width:30px;text-align:left;padding-left:8px;box-sizing:border-box;font-size:13px;font-weight:600;color:var(--mut);transition:color .2s ease}`;
 var NUM_HTML = `<div class="numlead">The estimation an interviewer makes you do at the whiteboard. State your assumptions and the <b>ceilings fall out of the arithmetic</b> &mdash; adjust any input and the math recomputes.</div>
     <div class="card">
       <div class="num-h">Assumptions</div>

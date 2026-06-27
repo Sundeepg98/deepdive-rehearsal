@@ -19,6 +19,7 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;background:linear
 .card:hover::before{opacity:1}
 .card:hover::after{opacity:1}
 .card:hover{box-shadow:var(--glow-hover),0 0 50px -10px rgba(83,74,183,.12);transform:translateY(-3px) rotateX(1.5deg) rotateY(-.8deg);border-color:rgba(83,74,183,.25)}
+.card:active{transform:translateY(-1px) scale(.995);transition:all .1s ease}
 .step-k{font-family:var(--mono);font-size:11px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;background:linear-gradient(90deg,var(--acc),var(--acc2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-shadow:0 0 12px rgba(83,74,183,.08)}
 .step-t{font-size:19px;font-weight:720;margin:3px 0 5px;letter-spacing:-.2px;background:linear-gradient(90deg,var(--ink),var(--accink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .step-sub{font-size:12.5px;color:var(--mut);margin-bottom:6px;transition:color .2s ease}

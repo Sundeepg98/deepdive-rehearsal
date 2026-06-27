@@ -159,6 +159,17 @@ button:focus-visible,.dn-step:focus-visible,.pill:focus-visible{outline:2px soli
 .sidebar .seg button:not(.on):hover{transform:translateX(3px) scale(1.01)}
 .sidebar .seg button.on{animation:activePulse 3s ease-in-out infinite}
 @keyframes activePulse{0%,100%{box-shadow:inset 3px 0 0 var(--acc),0 4px 14px -6px rgba(83,74,183,.12)}50%{box-shadow:inset 3px 0 0 var(--acc2),0 6px 20px -4px rgba(83,74,183,.18)}}
+/* Keyboard help overlay */
+#_kbd-help-overlay kbd{font-family:ui-monospace,monospace;font-size:11px;font-weight:600;background:linear-gradient(180deg,#F0ECE4 0%,#E8E2D8 100%);border:1px solid #D8D2C8;border-bottom-width:2px;border-radius:5px;padding:3px 7px;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.06)}
+/* Ambient mesh stays behind all content */
+#_ambient-mesh{z-index:0!important}
+.app{position:relative;z-index:1}
+/* Card hover lift effect */
+.card{transition:transform .25s cubic-bezier(.22,.61,.36,1),box-shadow .25s cubic-bezier(.22,.61,.36,1)}
+.card:hover{transform:translateY(-3px);box-shadow:var(--glow-hover)}
+/* Session timer */
+#_session-timer{animation:timerIn .3s ease}
+@keyframes timerIn{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:translateX(0)}}
 
     /* === v221: SPA pane system — managed by ViewManager === */
   .pane{display:none;opacity:0;transform:translateY(16px) scale(.992)}
@@ -5336,6 +5347,317 @@ document.addEventListener('keydown', function (event) {
   } else {
     init();
   }
+})();
+
+/* ===== AmbientBackground =====
+   Subtle animated gradient mesh that shifts slowly behind the app.
+   Very lightweight — uses CSS animations, not canvas/JS loop.
+   Creates a living, breathing feel without being distracting.
+
+   Features:
+   - 3 overlapping radial gradients that drift slowly
+   - Responds to prefers-reduced-motion (static fallback)
+   - Pure CSS, zero JS overhead after init
+*/
+(function () {
+  'use strict';
+
+  function init() {
+    // Check for reduced motion preference
+    var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) return;
+
+    var container = document.querySelector('.app') || document.body;
+
+    var mesh = document.createElement('div');
+    mesh.id = '_ambient-mesh';
+    mesh.setAttribute('aria-hidden', 'true');
+    mesh.style.cssText = 'position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden';
+
+    // Blob 1: top-right, purple
+    var blob1 = document.createElement('div');
+    blob1.style.cssText = 'position:absolute;width:60vw;height:60vw;border-radius:50%;background:radial-gradient(circle,rgba(83,74,183,.035) 0%,transparent 70%);top:-20%;right:-15%;animation:blobDrift1 20s ease-in-out infinite';
+
+    // Blob 2: bottom-left, teal accent
+    var blob2 = document.createElement('div');
+    blob2.style.cssText = 'position:absolute;width:50vw;height:50vw;border-radius:50%;background:radial-gradient(circle,rgba(15,110,86,.025) 0%,transparent 70%);bottom:-15%;left:-10%;animation:blobDrift2 25s ease-in-out infinite';
+
+    // Blob 3: center, warm accent
+    var blob3 = document.createElement('div');
+    blob3.style.cssText = 'position:absolute;width:45vw;height:45vw;border-radius:50%;background:radial-gradient(circle,rgba(154,91,11,.018) 0%,transparent 70%);top:40%;left:35%;animation:blobDrift3 18s ease-in-out infinite';
+
+    mesh.appendChild(blob1);
+    mesh.appendChild(blob2);
+    mesh.appendChild(blob3);
+
+    // Insert as first child so it's behind everything
+    container.insertBefore(mesh, container.firstChild);
+
+    // Inject keyframes
+    if (!document.getElementById('_ambient-keyframes')) {
+      var style = document.createElement('style');
+      style.id = '_ambient-keyframes';
+      style.textContent =
+        '@keyframes blobDrift1{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(-5vw,8vh) scale(1.05)}66%{transform:translate(3vw,-4vh) scale(.97)}}' +
+        '@keyframes blobDrift2{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(6vw,-6vh) scale(1.03)}66%{transform:translate(-4vw,5vh) scale(.98)}}' +
+        '@keyframes blobDrift3{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-3vw,4vh) scale(1.04)}}';
+      document.head.appendChild(style);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+
+/* ===== KeyboardHelp =====
+   Press '?' to see all keyboard shortcuts in a beautiful overlay.
+   Features:
+   - Categorized shortcuts (Navigation, Views, Tools)
+   - Visual key representation
+   - Click any shortcut to execute it
+   - Smooth open/close animations
+   - Remembers dismissal per session
+*/
+(function () {
+  'use strict';
+
+  var overlayEl = null;
+  var isOpen = false;
+
+  var SHORTCUTS = [
+    { category: 'Navigation', keys: ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O'], desc: 'Jump to module 1-9', color: 'var(--acc)' },
+    { category: 'Navigation', keys: ['←', '→'], desc: 'Navigate tour steps', color: 'var(--acc)' },
+    { category: 'Views', keys: ['Tab'], desc: 'Cycle focus', color: 'var(--teal)' },
+    { category: 'Views', keys: ['Shift + Tab'], desc: 'Focus backward', color: 'var(--teal)' },
+    { category: 'Tools', keys: ['⌘ + K'], desc: 'Search modules', color: 'var(--amber)' },
+    { category: 'Tools', keys: ['?'], desc: 'This help', color: 'var(--amber)' },
+    { category: 'Tools', keys: ['Esc'], desc: 'Close overlays', color: 'var(--amber)' },
+  ];
+
+  function create() {
+    if (overlayEl) return;
+
+    overlayEl = document.createElement('div');
+    overlayEl.id = '_kbd-help-overlay';
+    overlayEl.style.cssText = 'position:fixed;inset:0;z-index:290;background:rgba(0,0,0,.35);backdrop-filter:blur(6px);opacity:0;transition:opacity .25s ease;display:none;align-items:center;justify-content:center';
+
+    var box = document.createElement('div');
+    box.style.cssText = 'width:480px;max-width:90vw;max-height:80vh;background:linear-gradient(180deg,#fff 0%,#FAF9F5 100%);border-radius:16px;box-shadow:0 24px 80px -16px rgba(0,0,0,.25),0 0 0 1px rgba(83,74,183,.08);overflow:hidden;transform:scale(.95);transition:transform .3s cubic-bezier(.22,.61,.36,1);display:flex;flex-direction:column';
+
+    // Header
+    var header = document.createElement('div');
+    header.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid #E8E4DC';
+    var title = document.createElement('h3');
+    title.textContent = 'Keyboard Shortcuts';
+    title.style.cssText = 'margin:0;font-size:16px;font-weight:700;color:var(--ink)';
+    var closeBtn = document.createElement('button');
+    closeBtn.innerHTML = '&times;';
+    closeBtn.setAttribute('aria-label', 'Close');
+    closeBtn.style.cssText = 'width:28px;height:28px;border-radius:50%;border:0;background:#F0ECE4;color:var(--mut);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s ease';
+    closeBtn.addEventListener('click', hide);
+    closeBtn.addEventListener('mouseenter', function () { closeBtn.style.background = '#E5E0D5'; });
+    closeBtn.addEventListener('mouseleave', function () { closeBtn.style.background = '#F0ECE4'; });
+    header.appendChild(title);
+    header.appendChild(closeBtn);
+
+    // Content
+    var content = document.createElement('div');
+    content.style.cssText = 'overflow-y:auto;padding:12px 16px;flex:1';
+
+    var currentCategory = '';
+    SHORTCUTS.forEach(function (s) {
+      if (s.category !== currentCategory) {
+        currentCategory = s.category;
+        var cat = document.createElement('div');
+        cat.style.cssText = 'font-size:10px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--mut);margin:12px 0 6px 4px';
+        cat.textContent = currentCategory;
+        content.appendChild(cat);
+      }
+
+      var row = document.createElement('div');
+      row.style.cssText = 'display:flex;align-items:center;gap:12px;padding:7px 10px;border-radius:8px;transition:background .15s ease;margin-bottom:2px';
+      row.addEventListener('mouseenter', function () { row.style.background = 'rgba(83,74,183,.04)'; });
+      row.addEventListener('mouseleave', function () { row.style.background = 'transparent'; });
+
+      var keysWrap = document.createElement('div');
+      keysWrap.style.cssText = 'display:flex;gap:4px;flex-wrap:wrap;min-width:90px';
+      s.keys.forEach(function (k) {
+        var keyEl = document.createElement('kbd');
+        keyEl.textContent = k;
+        keyEl.style.cssText = 'font-family:ui-monospace,monospace;font-size:11px;font-weight:600;background:linear-gradient(180deg,#F0ECE4 0%,#E8E2D8 100%);border:1px solid #D8D2C8;border-bottom-width:2px;border-radius:5px;padding:3px 7px;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.06);white-space:nowrap';
+        keysWrap.appendChild(keyEl);
+      });
+
+      var descEl = document.createElement('span');
+      descEl.textContent = s.desc;
+      descEl.style.cssText = 'font-size:13px;color:var(--mut);flex:1';
+
+      row.appendChild(keysWrap);
+      row.appendChild(descEl);
+      content.appendChild(row);
+    });
+
+    // Footer
+    var footer = document.createElement('div');
+    footer.style.cssText = 'padding:10px 20px;border-top:1px solid #E8E4DC;font-size:11px;color:var(--mut);text-align:center';
+    footer.textContent = 'Press ? anytime to toggle this help';
+
+    box.appendChild(header);
+    box.appendChild(content);
+    box.appendChild(footer);
+    overlayEl.appendChild(box);
+    document.body.appendChild(overlayEl);
+
+    overlayEl.addEventListener('click', function (e) { if (e.target === overlayEl) hide(); });
+  }
+
+  function show() {
+    if (isOpen) return;
+    create();
+    isOpen = true;
+    overlayEl.style.display = 'flex';
+    requestAnimationFrame(function () {
+      overlayEl.style.opacity = '1';
+      overlayEl.firstElementChild.style.transform = 'scale(1)';
+    });
+  }
+
+  function hide() {
+    if (!isOpen) return;
+    isOpen = false;
+    overlayEl.style.opacity = '0';
+    overlayEl.firstElementChild.style.transform = 'scale(.95)';
+    setTimeout(function () { overlayEl.style.display = 'none'; }, 250);
+  }
+
+  // Listen for ? key (but not when typing in inputs)
+  document.addEventListener('keydown', function (e) {
+    if (e.key === '?' || e.key === '/') {
+      // Don't trigger if in input/textarea or if search overlay is open
+      var tag = e.target.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+      if (document.getElementById('_search-overlay') && document.getElementById('_search-overlay').style.display === 'flex') return;
+      e.preventDefault();
+      isOpen ? hide() : show();
+    }
+    if (e.key === 'Escape' && isOpen) hide();
+  });
+
+  window.KeyboardHelp = { show: show, hide: hide };
+})();
+
+/* ===== SessionTimer =====
+   A visual countdown timer for mock interview sessions.
+   Displays in the header area when a mock run is active.
+   Features:
+   - Countdown with visual ring
+   - Color changes as time runs low (green → amber → red)
+   - Pulse animation when time is critical
+   - Auto-dismiss when done
+*/
+(function () {
+  'use strict';
+
+  var timerEl = null;
+  var interval = null;
+  var secondsLeft = 0;
+  var totalSeconds = 0;
+
+  function formatTime(s) {
+    var m = Math.floor(s / 60);
+    var sec = s % 60;
+    return m + ':' + (sec < 10 ? '0' : '') + sec;
+  }
+
+  function getColor() {
+    var ratio = secondsLeft / totalSeconds;
+    if (ratio > 0.5) return 'var(--teal)';
+    if (ratio > 0.2) return 'var(--amber)';
+    return 'var(--red)';
+  }
+
+  function create() {
+    if (timerEl) return;
+    var hdr = document.querySelector('.hdr');
+    if (!hdr) return;
+
+    timerEl = document.createElement('div');
+    timerEl.id = '_session-timer';
+    timerEl.style.cssText = 'display:none;align-items:center;gap:8px;margin-left:auto;padding:5px 12px;background:linear-gradient(135deg,rgba(15,110,86,.08) 0%,rgba(15,110,86,.03) 100%);border:1px solid rgba(15,110,86,.15);border-radius:10px;font-family:var(--mono);font-size:14px;font-weight:700;color:var(--teal);animation:timerIn .3s ease';
+
+    var ring = document.createElement('span');
+    ring.id = '_timer-ring';
+    ring.style.cssText = 'display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--teal);box-shadow:0 0 6px rgba(15,110,86,.3)';
+
+    var text = document.createElement('span');
+    text.id = '_timer-text';
+    text.textContent = '15:00';
+
+    var stopBtn = document.createElement('button');
+    stopBtn.innerHTML = '&times;';
+    stopBtn.setAttribute('aria-label', 'Stop timer');
+    stopBtn.style.cssText = 'width:18px;height:18px;border-radius:50%;border:0;background:rgba(0,0,0,.08);color:var(--mut);font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-left:4px';
+    stopBtn.addEventListener('click', stop);
+
+    timerEl.appendChild(ring);
+    timerEl.appendChild(text);
+    timerEl.appendChild(stopBtn);
+    hdr.style.display = 'flex';
+    hdr.style.alignItems = 'center';
+    hdr.appendChild(timerEl);
+
+    if (!document.getElementById('_timer-keyframes')) {
+      var style = document.createElement('style');
+      style.id = '_timer-keyframes';
+      style.textContent = '@keyframes timerIn{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:translateX(0)}}' +
+        '@keyframes timerPulse{0%,100%{box-shadow:0 0 6px rgba(163,45,45,.3)}50%{box-shadow:0 0 12px rgba(163,45,45,.5),0 0 20px rgba(163,45,45,.2)}}';
+      document.head.appendChild(style);
+    }
+  }
+
+  function start(minutes) {
+    stop();
+    create();
+    totalSeconds = minutes * 60;
+    secondsLeft = totalSeconds;
+    timerEl.style.display = 'flex';
+    update();
+    interval = setInterval(update, 1000);
+  }
+
+  function update() {
+    secondsLeft--;
+    if (secondsLeft <= 0) {
+      stop();
+      if (window.showToast) window.showToast('Time is up!', 'error');
+      return;
+    }
+    var text = timerEl.querySelector('#_timer-text');
+    var ring = timerEl.querySelector('#_timer-ring');
+    if (text) text.textContent = formatTime(secondsLeft);
+    if (ring) {
+      var color = getColor();
+      ring.style.background = color;
+      ring.style.boxShadow = '0 0 6px ' + color.replace(')', ',.3)').replace('var(', 'rgba(').replace('--teal)', '15,110,86,0.3)').replace('--amber)', '154,91,11,0.3)').replace('--red)', '163,45,45,0.3)');
+      if (secondsLeft / totalSeconds < 0.2) {
+        ring.style.animation = 'timerPulse 1s ease-in-out infinite';
+      }
+    }
+  }
+
+  function stop() {
+    if (interval) { clearInterval(interval); interval = null; }
+    if (timerEl) timerEl.style.display = 'none';
+    secondsLeft = 0;
+  }
+
+  // Auto-start timer when mock run opens
+  document.addEventListener('mockrunstart', function () { start(15); });
+
+  window.SessionTimer = { start: start, stop: stop };
 })();
 </script>
 <script>

@@ -72,7 +72,8 @@ MBEAT_SHEET.replaceSync(`
 
 var DISC_SHEET = new CSSStyleSheet();
 DISC_SHEET.replaceSync(`
-details.disc{margin-top:12px;border:1px solid var(--bd);border-radius:10px;overflow:hidden;background:linear-gradient(135deg,var(--disc-bg) 0%,rgba(83,74,183,.02) 100%);transition:box-shadow .25s ease,border-color .2s ease}
+details.disc{margin-top:12px;border:1px solid var(--bd);border-radius:10px;overflow:hidden;background:linear-gradient(135deg,var(--disc-bg) 0%,rgba(83,74,183,.02) 100%);transition:box-shadow .25s ease,border-color .2s ease;animation:discIn .3s ease backwards}
+@keyframes discIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 details.disc[open]{border-color:rgba(83,74,183,.2);box-shadow:0 0 0 1px rgba(83,74,183,.06),var(--surf-sh)}
 details.disc summary{cursor:pointer;font:700 12px -apple-system,sans-serif;color:var(--acc);padding:11px 15px;list-style:none;display:flex;align-items:center;gap:8px;transition:background .18s ease,padding .2s ease}
 details.disc summary::-webkit-details-marker{display:none}

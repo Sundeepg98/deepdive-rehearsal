@@ -11,7 +11,8 @@ BASE_SHEET.replaceSync(`
 *{margin:0;padding:0;box-sizing:border-box}
 code{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;background:var(--code-inline-bg);padding:1px 5px;border-radius:4px;color:var(--accink)}
 :host{display:block;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
-.card{background:var(--surf);border:1px solid var(--bd);border-radius:16px;padding:24px;box-shadow:var(--glow);transition:box-shadow .35s cubic-bezier(.22,.61,.36,1),transform .35s cubic-bezier(.22,.61,.36,1),border-color .25s ease;position:relative;overflow:hidden;transform-style:preserve-3d;will-change:transform}
+.card{background:var(--surf);border:1px solid var(--bd);border-radius:16px;padding:24px;box-shadow:var(--glow);transition:box-shadow .35s cubic-bezier(.22,.61,.36,1),transform .35s cubic-bezier(.22,.61,.36,1),border-color .25s ease;position:relative;overflow:hidden;transform-style:preserve-3d;will-change:transform;animation:cardIn .4s cubic-bezier(.22,.61,.36,1) backwards}
+@keyframes cardIn{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
 .card::before{content:"";position:absolute;top:var(--mouse-y,50%);left:var(--mouse-x,50%);width:500px;height:500px;background:radial-gradient(circle,rgba(83,74,183,.1) 0%,rgba(83,74,183,.04) 30%,transparent 65%);transform:translate(-50%,-50%);opacity:0;transition:opacity .5s ease;pointer-events:none;z-index:0}
 .card::after{content:"";position:absolute;inset:-1px;border-radius:17px;background:conic-gradient(from 0deg at 50% 50%,transparent 0deg,rgba(83,74,183,.15) 60deg,transparent 120deg);opacity:0;transition:opacity .4s ease;pointer-events:none;z-index:0;animation:borderGlow 4s linear infinite}
 @keyframes borderGlow{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}

@@ -341,7 +341,7 @@ html[data-theme="dark"] .pane.on{animation-name:paneinDark}
 /* v78: distinctive display face on titles only (body + mono coords unchanged) */
 .side-id h1,.stage-head .sh-name,.sr-h{font-family:var(--display)}
 /* v79: engineering-canvas dot grid on the work surface (stage) */
-:root{--grid:rgba(83,74,183,.05);--canvas:radial-gradient(130% 90% at 50% -25%,#FDFCFA 0%,#FAF9F5 42%,#F5F2EB 100%)}
+:root{--grid:rgba(83,74,183,.07);--canvas:radial-gradient(130% 90% at 50% -25%,#FDFCFA 0%,#FAF9F5 42%,#F5F2EB 100%)}
 html[data-theme="dark"]{--grid:rgba(170,157,245,.05);--canvas:radial-gradient(130% 90% at 50% -25%,#19181F 0%,#15141A 42%,#121118 100%)}
 html[data-theme="dark"] .stage::before{background:radial-gradient(ellipse at 30% 20%,rgba(170,157,245,.12) 0%,rgba(184,171,248,.06) 40%,transparent 70%);position:fixed}
 html[data-theme="dark"] .stage::after{background:radial-gradient(ellipse at 70% 80%,rgba(139,127,232,.08) 0%,rgba(170,157,245,.04) 50%,transparent 70%);position:fixed}

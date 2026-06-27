@@ -1,0 +1,16 @@
+{
+  "timestamp": "2026-06-27T21:13:21.366130",
+  "elapsed": 73.34115076065063,
+  "passed": 53,
+  "failed": 0,
+  "errors": 0,
+  "module_times": {
+    "test_layout": 13.979934215545654,
+    "test_performance": 17.89545249938965,
+    "test_accessibility": 18.002119541168213,
+    "test_components": 23.61179256439209,
+    "test_spa": 59.36035418510437
+  },
+  "failures": [],
+  "errors_detail": []
+}

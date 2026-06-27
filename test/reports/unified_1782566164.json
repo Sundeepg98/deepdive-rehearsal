@@ -1,0 +1,25 @@
+{
+  "timestamp": "2026-06-27T21:16:04.519332",
+  "elapsed": 72.56696701049805,
+  "passed": 52,
+  "failed": 1,
+  "errors": 0,
+  "module_times": {
+    "test_layout": 14.238040208816528,
+    "test_accessibility": 17.542688369750977,
+    "test_performance": 17.854302883148193,
+    "test_components": 22.912182569503784,
+    "test_spa": 58.32806134223938
+  },
+  "failures": [
+    {
+      "module": "test_spa",
+      "group": "Views",
+      "name": "test_active_pane_opaque",
+      "expected": "assertion",
+      "actual": "Expected opacity 1.0, got 0.924148",
+      "ms": 2100.971460342407
+    }
+  ],
+  "errors_detail": []
+}

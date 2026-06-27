@@ -20,3 +20,4 @@
 <!--@build:include scripts/app/numbers-nalsd.js-->
 <!--@build:include scripts/app/router.js-->
 <!--@build:include scripts/app/view-manager.js-->
+<!--@build:include scripts/app/tour-guide.js-->

@@ -16,6 +16,30 @@
 <style>/* === Hide Kimi Agent watermark (platform-injected) === */
 a[href*="kimi.com/agent"]{display:none!important}
 
+/* === v154: Scroll progress bar === */
+#scrollprog{position:fixed;top:0;left:0;height:2.5px;background:linear-gradient(90deg,var(--acc),var(--acc2),#8B7FE8);z-index:200;width:0%;transition:width .15s ease;box-shadow:0 0 8px rgba(83,74,183,.3);border-radius:0 2px 2px 0}
+
+/* === v150: Print styles === */
+@media print{
+  .sidebar,.companion,.tools-fab,.tools-bd,.tools-x,.seg,#scrollprog{display:none!important}
+  .stage{margin-left:0!important;padding:20px!important;background:#fff!important}
+  .card{box-shadow:none!important;border:1px solid #ddd!important;break-inside:avoid}
+  .mockbar,.topic-nav,.inttog,.nav button{display:none!important}
+  body{padding:0!important;background:#fff!important;color:#000!important}
+  .app{box-shadow:none!important}
+  details.model[open]{page-break-inside:avoid}
+  .thread{break-inside:avoid}
+  .dec,.rf{break-inside:avoid}
+}
+
+/* === v151: Respect prefers-reduced-motion === */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .pane.on,.pane.on .card,.card,.thread,.dec,.rf,.ins,details.disc,.stage-head{animation:none!important}
+  .stage::before,.stage::after{display:none!important}
+  ._bs-ring{display:none!important}
+}
+
 /* === v140: Custom scrollbar, selection, smooth scroll + loading shimmer === */
 ::selection{background:rgba(83,74,183,.18);color:var(--ink)}
 html{scroll-behavior:smooth}
@@ -509,7 +533,21 @@ button,summary{-webkit-user-select:none;user-select:none}
 @media(prefers-reduced-transparency:reduce){.mock-panel,.cram-panel,.sidebar{backdrop-filter:none!important}}
 @media(forced-colors:active){.card,.dec,.rf,.piv,.thread{border:2px solid CanvasText!important;background:Canvas!important;color:CanvasText!important}.badge{background:Highlight!important;color:HighlightText!important}}
 </style>
-<script>try{var _dk=matchMedia('(prefers-color-scheme:dark)').matches;document.documentElement.dataset.theme=_dk?'dark':'light';var _tc=document.querySelector('meta[name="theme-color"]');if(_tc)_tc.setAttribute('content',_dk?'#15141A':'#FAF9F5');}catch(e){}
+<script>/* === Boot: theme detection + loading splash === */
+try{var _dk=matchMedia('(prefers-color-scheme:dark)').matches;document.documentElement.dataset.theme=_dk?'dark':'light';var _tc=document.querySelector('meta[name="theme-color"]');if(_tc)_tc.setAttribute('content',_dk?'#15141A':'#FAF9F5');}catch(e){}
+/* v147: Loading splash — removed by app.js when ready */
+(function(){
+  var s=document.createElement('div');
+  s.id='_bootsplash';
+  s.innerHTML='<div class="_bs-ring"><div></div><div></div><div></div><div></div></div>';
+  s.style.cssText='position:fixed;inset:0;z-index:9999;background:var(--bg,#FAF9F5);display:flex;align-items:center;justify-content:center;transition:opacity .4s ease,visibility .4s ease';
+  var st=document.createElement('style');
+  st.textContent='._bs-ring{display:inline-block;position:relative;width:48px;height:48px}._bs-ring div{box-sizing:border-box;display:block;position:absolute;width:36px;height:36px;margin:6px;border:3px solid transparent;border-top-color:var(--acc,#534AB7);border-radius:50%;animation:_bs-spin 1.2s cubic-bezier(.5,0,.5,1) infinite}._bs-ring div:nth-child(1){animation-delay:-.45s}._bs-ring div:nth-child(2){animation-delay:-.3s}._bs-ring div:nth-child(3){animation-delay:-.15s}@keyframes _bs-spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}#_bootsplash._bs-done{opacity:0;visibility:hidden}';
+  document.head.appendChild(st);
+  (document.body||document.documentElement).appendChild(s);
+  window._hideBootSplash=function(){var el=document.getElementById('_bootsplash');if(el){el.classList.add('_bs-done');setTimeout(function(){el.remove()},400)}};
+  setTimeout(window._hideBootSplash,3000);
+})();
 </script>
 </head>
 <body>
@@ -2784,8 +2822,10 @@ var KBD_STYLE = `
 .ks-row2:hover{transform:translateX(3px)}
 .ks-keys{flex:none;display:flex;align-items:center;gap:6px;min-width:92px}
 .ks-or{font-size:11px;color:var(--mut);font-weight:600}
-kbd{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;padding:0 7px;font-family:inherit;font-size:11.5px;font-weight:700;line-height:1;color:var(--ink);background:linear-gradient(180deg,var(--side) 0%,rgba(83,74,183,.04) 100%);border:1px solid var(--bd);border-bottom-width:2px;border-radius:6px;box-shadow:0 2px 0 rgba(30,28,24,.06),0 1px 2px rgba(83,74,183,.06);transition:transform .1s ease,box-shadow .1s ease}
+kbd{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;padding:0 7px;font-family:inherit;font-size:11.5px;font-weight:700;line-height:1;color:var(--ink);background:linear-gradient(180deg,var(--side) 0%,rgba(83,74,183,.06) 100%);border:1px solid var(--bd);border-bottom-width:2px;border-radius:6px;box-shadow:0 2px 0 rgba(30,28,24,.08),0 1px 3px rgba(83,74,183,.08);transition:transform .12s ease,box-shadow .15s ease,background .15s ease}
 kbd.ks-mini{min-width:18px;height:18px;font-size:10px;padding:0 4px}
+/* v153: Keyboard shortcut press feedback */
+.kb-press kbd,.kb-press kbd.ks-mini{background:linear-gradient(180deg,var(--accbg) 0%,rgba(83,74,183,.1) 100%);color:var(--accink);border-color:var(--acc);transform:translateY(1px);box-shadow:0 0 0 2px rgba(83,74,183,.15),0 0 12px -2px rgba(83,74,183,.2)}
 .ks-row:hover kbd,.ks-row2:hover kbd{transform:translateY(-1px);box-shadow:0 3px 0 rgba(30,28,24,.06),0 2px 4px rgba(83,74,183,.1)}
 .ks-note{margin-top:14px;font-size:11.5px;line-height:1.55;color:var(--mut2);padding:10px 13px;background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.02) 100%);border-radius:8px}
 .ks-foot{margin-top:18px;padding-top:14px;border-top:1px solid var(--bd);font-size:11.5px;line-height:1.55;color:var(--mut)}
@@ -2953,7 +2993,7 @@ class DeepCram extends HTMLElement {
     function renderNow() {
       if (rendered) return;
       rendered = true;
-      root.innerHTML = '<style>:host code{font-size:10.5px;background:var(--cram-code-bg);border-radius:4px;padding:1px 5px;font-family:ui-monospace,Menlo,monospace;color:var(--accink)}</style>' + `<div class="cs-one"><span class="cs-one-l">The one-liner</span>Event-driven ingestion: S3 &rarr; Lambda &rarr; route by type &rarr; streaming handler (<b>hash + store + record</b>) &rarr; reconciler for partial failures.</div>
+      root.innerHTML = '<style>:host code{font-size:10.5px;background:linear-gradient(135deg,var(--cram-code-bg) 0%,rgba(83,74,183,.04) 100%);border-radius:5px;padding:2px 6px;font-family:ui-monospace,Menlo,monospace;color:var(--accink);border:1px solid rgba(83,74,183,.08)}:host b{color:var(--accink);font-weight:700}</style>' + `<div class="cs-one"><span class="cs-one-l">The one-liner</span>Event-driven ingestion: S3 &rarr; Lambda &rarr; route by type &rarr; streaming handler (<b>hash + store + record</b>) &rarr; reconciler for partial failures.</div>
       <div class="cs-sec">
         <div class="cs-st">The spine &mdash; what you draw</div>
         <ol class="cs-spine">
@@ -3972,6 +4012,30 @@ document.addEventListener('keydown', function (event) {
   updateFades();
 })();
 
+</script>
+<script>
+/* v154: Scroll progress bar + boot splash hide */
+document.addEventListener('DOMContentLoaded',function(){
+  // Hide boot splash when DOM is ready
+  if(window._hideBootSplash) window._hideBootSplash();
+  
+  // Scroll progress bar
+  var prog=document.createElement('div');
+  prog.id='scrollprog';
+  document.body.appendChild(prog);
+  function updateProg(){
+    var stage=document.querySelector('.stage');
+    if(!stage) return;
+    var sh=stage.scrollHeight,ch=stage.clientHeight;
+    if(sh<=ch){prog.style.width='0%';return;}
+    var pct=Math.min(100,Math.max(0,(stage.scrollTop/(sh-ch))*100));
+    prog.style.width=pct+'%';
+  }
+  var stage=document.querySelector('.stage');
+  if(stage) stage.addEventListener('scroll',updateProg,{passive:true});
+  window.addEventListener('resize',updateProg);
+  setTimeout(updateProg,500);
+});
 </script>
 </body>
 </html>

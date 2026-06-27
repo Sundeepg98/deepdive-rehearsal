@@ -18,8 +18,10 @@ var KBD_STYLE = `
 .ks-row2:hover{transform:translateX(3px)}
 .ks-keys{flex:none;display:flex;align-items:center;gap:6px;min-width:92px}
 .ks-or{font-size:11px;color:var(--mut);font-weight:600}
-kbd{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;padding:0 7px;font-family:inherit;font-size:11.5px;font-weight:700;line-height:1;color:var(--ink);background:linear-gradient(180deg,var(--side) 0%,rgba(83,74,183,.04) 100%);border:1px solid var(--bd);border-bottom-width:2px;border-radius:6px;box-shadow:0 2px 0 rgba(30,28,24,.06),0 1px 2px rgba(83,74,183,.06);transition:transform .1s ease,box-shadow .1s ease}
+kbd{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;padding:0 7px;font-family:inherit;font-size:11.5px;font-weight:700;line-height:1;color:var(--ink);background:linear-gradient(180deg,var(--side) 0%,rgba(83,74,183,.06) 100%);border:1px solid var(--bd);border-bottom-width:2px;border-radius:6px;box-shadow:0 2px 0 rgba(30,28,24,.08),0 1px 3px rgba(83,74,183,.08);transition:transform .12s ease,box-shadow .15s ease,background .15s ease}
 kbd.ks-mini{min-width:18px;height:18px;font-size:10px;padding:0 4px}
+/* v153: Keyboard shortcut press feedback */
+.kb-press kbd,.kb-press kbd.ks-mini{background:linear-gradient(180deg,var(--accbg) 0%,rgba(83,74,183,.1) 100%);color:var(--accink);border-color:var(--acc);transform:translateY(1px);box-shadow:0 0 0 2px rgba(83,74,183,.15),0 0 12px -2px rgba(83,74,183,.2)}
 .ks-row:hover kbd,.ks-row2:hover kbd{transform:translateY(-1px);box-shadow:0 3px 0 rgba(30,28,24,.06),0 2px 4px rgba(83,74,183,.1)}
 .ks-note{margin-top:14px;font-size:11.5px;line-height:1.55;color:var(--mut2);padding:10px 13px;background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.02) 100%);border-radius:8px}
 .ks-foot{margin-top:18px;padding-top:14px;border-top:1px solid var(--bd);font-size:11.5px;line-height:1.55;color:var(--mut)}

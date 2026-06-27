@@ -18,7 +18,7 @@ class DeepCram extends HTMLElement {
     function renderNow() {
       if (rendered) return;
       rendered = true;
-      root.innerHTML = '<style>:host code{font-size:10.5px;background:var(--cram-code-bg);border-radius:4px;padding:1px 5px;font-family:ui-monospace,Menlo,monospace;color:var(--accink)}</style>' + `<div class="cs-one"><span class="cs-one-l">The one-liner</span>Event-driven ingestion: S3 &rarr; Lambda &rarr; route by type &rarr; streaming handler (<b>hash + store + record</b>) &rarr; reconciler for partial failures.</div>
+      root.innerHTML = '<style>:host code{font-size:10.5px;background:linear-gradient(135deg,var(--cram-code-bg) 0%,rgba(83,74,183,.04) 100%);border-radius:5px;padding:2px 6px;font-family:ui-monospace,Menlo,monospace;color:var(--accink);border:1px solid rgba(83,74,183,.08)}:host b{color:var(--accink);font-weight:700}</style>' + `<div class="cs-one"><span class="cs-one-l">The one-liner</span>Event-driven ingestion: S3 &rarr; Lambda &rarr; route by type &rarr; streaming handler (<b>hash + store + record</b>) &rarr; reconciler for partial failures.</div>
       <div class="cs-sec">
         <div class="cs-st">The spine &mdash; what you draw</div>
         <ol class="cs-spine">

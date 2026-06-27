@@ -1,6 +1,30 @@
 /* === Hide Kimi Agent watermark (platform-injected) === */
 a[href*="kimi.com/agent"]{display:none!important}
 
+/* === v154: Scroll progress bar === */
+#scrollprog{position:fixed;top:0;left:0;height:2.5px;background:linear-gradient(90deg,var(--acc),var(--acc2),#8B7FE8);z-index:200;width:0%;transition:width .15s ease;box-shadow:0 0 8px rgba(83,74,183,.3);border-radius:0 2px 2px 0}
+
+/* === v150: Print styles === */
+@media print{
+  .sidebar,.companion,.tools-fab,.tools-bd,.tools-x,.seg,#scrollprog{display:none!important}
+  .stage{margin-left:0!important;padding:20px!important;background:#fff!important}
+  .card{box-shadow:none!important;border:1px solid #ddd!important;break-inside:avoid}
+  .mockbar,.topic-nav,.inttog,.nav button{display:none!important}
+  body{padding:0!important;background:#fff!important;color:#000!important}
+  .app{box-shadow:none!important}
+  details.model[open]{page-break-inside:avoid}
+  .thread{break-inside:avoid}
+  .dec,.rf{break-inside:avoid}
+}
+
+/* === v151: Respect prefers-reduced-motion === */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .pane.on,.pane.on .card,.card,.thread,.dec,.rf,.ins,details.disc,.stage-head{animation:none!important}
+  .stage::before,.stage::after{display:none!important}
+  ._bs-ring{display:none!important}
+}
+
 /* === v140: Custom scrollbar, selection, smooth scroll + loading shimmer === */
 ::selection{background:rgba(83,74,183,.18);color:var(--ink)}
 html{scroll-behavior:smooth}

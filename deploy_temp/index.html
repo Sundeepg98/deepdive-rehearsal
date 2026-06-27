@@ -49,7 +49,7 @@ a[href*="kimi.com/agent"]{display:none!important}
 
 /* === v140: Custom scrollbar, selection, smooth scroll + loading shimmer === */
 ::selection{background:rgba(83,74,183,.18);color:var(--ink)}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;overflow:hidden}
 ::-webkit-scrollbar{width:6px;height:6px}
 ::-webkit-scrollbar-track{background:linear-gradient(180deg,rgba(83,74,183,.01) 0%,transparent 50%,rgba(83,74,183,.01) 100%)}
 ::-webkit-scrollbar-thumb{background:linear-gradient(180deg,rgba(83,74,183,.22) 0%,rgba(109,95,214,.18) 100%);border-radius:3px;transition:background .2s ease,box-shadow .2s ease;box-shadow:inset 0 0 2px rgba(255,255,255,.3)}
@@ -102,7 +102,7 @@ button:focus-visible,.dn-step:focus-visible,.pill:focus-visible{outline:2px soli
   ::selection{background:rgba(83,74,183,.12);color:var(--accink);transition:background .2s ease}
   ::-moz-selection{background:rgba(83,74,183,.12);color:var(--accink);transition:background .2s ease}
   ::target-text{background:rgba(83,74,183,.12);color:var(--accink);transition:background .2s ease}
-  html{scroll-behavior:smooth}
+  html{scroll-behavior:smooth;overflow:hidden}
   ::-webkit-scrollbar{width:8px;height:8px}
   ::-webkit-scrollbar-track{background:transparent;transition:background .2s ease,box-shadow .2s ease}
   ::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--bd),#D8D2C8);border-radius:4px;border:2px solid transparent;background-clip:padding-box}
@@ -110,7 +110,7 @@ button:focus-visible,.dn-step:focus-visible,.pill:focus-visible{outline:2px soli
   ::-webkit-scrollbar-corner{background:linear-gradient(135deg,rgba(83,74,183,.02) 0%,transparent 100%)}
   :root{accent-color:var(--acc);--accent-glow:0 0 8px rgba(83,74,183,.2);text-shadow:0 0 10px rgba(83,74,183,.1)}
   input[type="checkbox"],input[type="radio"]{accent-color:var(--acc);transition:transform .1s ease}
-  body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased;padding:0 0 70px;opacity:0;animation:bodyIn .5s cubic-bezier(.22,.61,.36,1) .1s forwards}
+  body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased;padding:0 0 70px;opacity:0;animation:bodyIn .5s cubic-bezier(.22,.61,.36,1) .1s forwards;overflow:hidden}
   @keyframes bodyIn{from{opacity:0}to{opacity:1}}
 
   .rail{position:sticky;top:0;height:4px;background:linear-gradient(135deg,#ECE8E0 0%,rgba(236,232,224,0) 100%);z-index:50}
@@ -140,9 +140,36 @@ button:focus-visible,.dn-step:focus-visible,.pill:focus-visible{outline:2px soli
   .seg button.on .n{color:var(--acc);text-shadow:0 0 10px rgba(83,74,183,.15);transition:text-shadow .2s ease}
 .seg button:not(.on):hover{background:rgba(83,74,183,.07);color:var(--ink);box-shadow:0 0 12px -2px rgba(83,74,183,.12);transform:translateY(-1px)}
 
-  /* === v211: View transitions — smooth SPA-like view switching === */
-  .pane{display:none;opacity:0;transform:translateY(12px) scale(.99);transition:opacity .28s cubic-bezier(.22,.61,.36,1),transform .28s cubic-bezier(.22,.61,.36,1)}
+    /* === v221: SPA pane system — managed by ViewManager === */
+  .pane{display:none;opacity:0;transform:translateY(16px) scale(.992)}
   .pane.on{display:block;opacity:1;transform:translateY(0) scale(1)}
+  /* View enter animation */
+  @keyframes viewEnter{from{opacity:0;transform:translateY(16px) scale(.992)}to{opacity:1;transform:translateY(0) scale(1)}}
+  /* View leave animation */
+  @keyframes viewLeave{from{opacity:1;transform:translateY(0) scale(1)}to{opacity:0;transform:translateY(-10px) scale(.995)}}
+  /* Card stagger within entering view */
+  @keyframes cardEnter{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  .pane.on .card{animation:cardEnter .45s cubic-bezier(.22,.61,.36,1) backwards}
+  .pane.on .card:nth-child(1){animation-delay:.05s}
+  .pane.on .card:nth-child(2){animation-delay:.12s}
+  .pane.on .card:nth-child(3){animation-delay:.19s}
+  .pane.on .card:nth-child(4){animation-delay:.26s}
+  .pane.on .card:nth-child(5){animation-delay:.33s}
+  /* Loading skeleton */
+  @keyframes _sk-pulse{0%,100%{opacity:.55}50%{opacity:1}}
+  #_vm-skeleton{position:absolute;inset:32px 0 0;z-index:10;padding:24px clamp(20px,4vw,52px);opacity:0;transition:opacity .15s ease;pointer-events:none;display:none}
+  #_vm-skeleton._sk-show{display:block;opacity:1}
+  #_vm-skeleton._sk-hide{opacity:0}
+  #_vm-skeleton ._sk-head{margin-bottom:24px;padding:12px 0;animation:_sk-pulse 1.8s ease-in-out infinite}
+  #_vm-skeleton ._sk-card{background:var(--surf);border:1px solid var(--bd);border-radius:16px;padding:24px;margin-bottom:16px;box-shadow:var(--glow);animation:_sk-pulse 1.8s ease-in-out infinite}
+  #_vm-skeleton ._sk-card:nth-child(2){animation-delay:.15s}
+  #_vm-skeleton ._sk-card:nth-child(3){animation-delay:.3s}
+  #_vm-skeleton ._sk-card:nth-child(4){animation-delay:.45s}
+  #_vm-skeleton ._sk-line{height:10px;border-radius:5px;background:linear-gradient(90deg,var(--bd) 25%,rgba(83,74,183,.08) 50%,var(--bd) 75%);background-size:200% 100%;margin-bottom:10px}
+  #_vm-skeleton ._sk-line:last-child{margin-bottom:0}
+  #_vm-skeleton ._sk-w40{width:40%}#_vm-skeleton ._sk-w50{width:50%}#_vm-skeleton ._sk-w60{width:60%}
+  #_vm-skeleton ._sk-w70{width:70%}#_vm-skeleton ._sk-w80{width:80%}#_vm-skeleton ._sk-w90{width:90%}
+  #_vm-skeleton ._sk-w100{width:100%}
   @keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
   @keyframes pop{from{opacity:0;transform:translateY(7px) scale(.99)}to{opacity:1;transform:none}}
   @keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
@@ -296,7 +323,7 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
 @media (max-width:600px){.kbd-hint{display:none}}
 
 /* ============ COMPOSED APP SHELL (v75) ============ */
-.app{display:flex;align-items:stretch;min-height:100vh;width:100%;background:linear-gradient(180deg,transparent 0%,rgba(83,74,183,.01) 100%);transition:box-shadow .25s ease,transform .2s ease}
+.app{display:flex;align-items:stretch;min-height:100vh;width:100%;background:linear-gradient(180deg,transparent 0%,rgba(83,74,183,.01) 100%);transition:box-shadow .25s ease,transform .2s ease;overflow:hidden}
 .sidebar{flex:none;width:296px;display:flex;flex-direction:column;gap:16px;background:var(--panel);border-right:1px solid var(--bd);padding:22px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;z-index:20;transition:box-shadow .25s ease,transform .2s ease}
 .side-id{order:0}
 .side-id .hdr{border-left:none;padding:0;margin:6px 0 0}
@@ -317,7 +344,7 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
 .sidebar .seg button.on .n{color:var(--acc);text-shadow:0 0 8px rgba(83,74,183,.1)}
 .sidebar .mockbar{order:2;margin-top:auto;padding-top:14px;border-top:1px solid var(--bd);gap:7px}
 .sidebar .mockbar .mb-d{display:none}
-.stage{flex:1;min-width:0;padding:32px clamp(20px,4vw,52px) 70px;overflow-x:hidden;position:relative}
+.stage{flex:1;min-width:0;padding:32px clamp(20px,4vw,52px) 70px;overflow-x:hidden;overflow-y:auto;position:relative}
 .stage::before{content:"";position:fixed;top:0;left:0;width:70vw;height:70vh;background:radial-gradient(ellipse at 30% 20%,rgba(83,74,183,.18) 0%,rgba(109,95,214,.12) 25%,rgba(139,127,232,.07) 50%,transparent 80%);animation:meshA 20s ease-in-out infinite;pointer-events:none;z-index:0;will-change:transform;opacity:.8}
 .stage::after{content:"";position:fixed;bottom:0;right:0;width:60vw;height:60vh;background:radial-gradient(ellipse at 70% 80%,rgba(139,127,232,.14) 0%,rgba(83,74,183,.1) 30%,rgba(109,95,214,.06) 55%,rgba(83,74,183,.03) 80%,transparent 100%);animation:meshB 16s ease-in-out infinite -6s;pointer-events:none;z-index:0;will-change:transform;opacity:.7}
 @keyframes meshA{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(8%,-5%) scale(1.08)}66%{transform:translate(-4%,6%) scale(.95)}}
@@ -3838,14 +3865,26 @@ const railPos = { walk: 25, drill: 50, wb: 75, sys: 100 };
 var current = 'walk';
 /* Activate a pane: toggle the segmented-control buttons and the panes, slide the
    progress rail to this tab's mark, and record it as the current pane. */
+/* v221: switchTab now integrates with HashRouter for SPA navigation.
+   Falls back to legacy toggle if router isn't loaded yet. */
 function switchTab(t) {
+  /* If router is available, delegate to it for proper SPA navigation */
+  if (window.Router && window.Router.navigate) {
+    window.Router.navigate(t);
+    return;
+  }
+  /* Legacy: direct DOM toggle (used during boot before router loads) */
   for (let i = 0; i < segBtns.length; i++) segBtns[i].classList.toggle('on', segBtns[i].getAttribute('data-tab') === t);
   for (let i = 0; i < panes.length; i++) panes[i].classList.toggle('on', panes[i].id === t);
-  railEl.style.width = railPos[t] + '%';
+  if (railEl) railEl.style.width = (railPos[t] || 75) + '%';
   current = t;
 }
 for (let i = 0; i < segBtns.length; i++) {
-  segBtns[i].onclick = function () { switchTab(this.getAttribute('data-tab')); };
+  segBtns[i].addEventListener('click', function () {
+    var tab = this.getAttribute('data-tab');
+    if (window.Router) { window.Router.navigate(tab); }
+    else { switchTab(tab); }
+  });
 }
 /* Global keyboard shortcuts. Ignored while typing in a field, and suppressed
    whenever any overlay is open (the overlay's own handlers take over). */
@@ -3856,8 +3895,13 @@ document.addEventListener('keydown', function (event) {
   if (event.key === '?') { event.preventDefault(); openKeys(); return; }
   const key = event.key.toLowerCase();
   /* q..o jump straight to a pane (the QWERTY row mirrors the tab order) */
+  /* v221: Use Router for SPA navigation when available */
   const tabKeys = { q: 'walk', w: 'drill', e: 'wb', r: 'sys', t: 'trade', y: 'model', u: 'num', i: 'rf', o: 'open' };
-  if (tabKeys[key]) { switchTab(tabKeys[key]); return; }
+  if (tabKeys[key]) {
+    if (window.Router) { window.Router.navigate(tabKeys[key]); }
+    else { switchTab(tabKeys[key]); }
+    return;
+  }
   if (current === 'walk') {
     /* arrows step through the walkthrough (bounds handled inside prev/next) */
     const w = document.querySelector('#walk deep-walkthrough');
@@ -4057,189 +4101,441 @@ document.addEventListener('keydown', function (event) {
 })();
 
 
-/* ===== View Transition Manager =====
-   Smooth SPA-like transitions between views. Uses the View Transitions API
-   when available (Chrome 111+), with a CSS animation fallback for all other
-   browsers. The transition system integrates with the existing switchTab()
-   function — no changes needed to component code.
+/* ===== HashRouter =====
+   Hash-based SPA routing with deep-linking, back/forward support,
+   and route guards. Emits routechange events for the ViewManager.
+   Zero dependencies — works in all browsers.
 
-   Features:
-   - Cross-fade + slide-up animation between views
-   - Scroll position memory (each view remembers its scroll)
-   - Loading indicator for slow-render views
-   - Keyboard navigation debounce (prevents rapid-fire switching)
-   - Graceful degradation: works in all browsers */
+   Route format:   #view              → simple view switch
+                   #view/sub-state    → view + sub-state (e.g., #drill/probe-3)
+   Invalid routes fall back to #walk. */
 
 (function () {
   'use strict';
 
-  /* ----- configuration ----- */
-  var DURATION = 280;          // transition duration in ms
-  var EASING = 'cubic-bezier(.22,.61,.36,1)'; // ease-out-cubic
-  var STAGGER = 40;            // delay between outgoing and incoming
+  /* ----- route configuration ----- */
+  var ROUTES = {
+    walk:    { id: 'walk',    title: 'Walkthrough',     label: 'Walkthrough',    segment: 0 },
+    drill:   { id: 'drill',   title: 'Probe Drill',     label: 'Probe Drill',    segment: 1 },
+    wb:      { id: 'wb',      title: 'Whiteboard',      label: 'Whiteboard',     segment: 2 },
+    sys:     { id: 'sys',     title: 'System Map',      label: 'System Map',     segment: 3 },
+    trade:   { id: 'trade',   title: 'Trade-offs',      label: 'Trade-offs',     segment: 4 },
+    model:   { id: 'model',   title: 'Model Answers',   label: 'Model Answers',  segment: 5 },
+    num:     { id: 'num',     title: 'Numbers',         label: 'Numbers',        segment: 6 },
+    rf:      { id: 'rf',      title: 'Red Flags',       label: 'Red Flags',      segment: 7 },
+    open:    { id: 'open',    title: '30-Second',       label: '30-Second',      segment: 8 }
+  };
+  var DEFAULT_ROUTE = 'walk';
+  var listeners = [];
+
+  /* ----- parse hash into route object ----- */
+  function parseHash(hash) {
+    var raw = (hash || window.location.hash || '#' + DEFAULT_ROUTE).replace(/^#/, '');
+    var parts = raw.split('/');
+    var viewId = (parts[0] || DEFAULT_ROUTE).toLowerCase().trim();
+    // Guard: unknown view → default
+    if (!ROUTES[viewId]) viewId = DEFAULT_ROUTE;
+    return {
+      view: viewId,
+      sub: parts.slice(1).join('/') || null,
+      route: ROUTES[viewId],
+      raw: raw
+    };
+  }
+
+  /* ----- emit routechange event ----- */
+  function emit(route) {
+    for (var i = 0; i < listeners.length; i++) {
+      try { listeners[i](route); } catch (e) { console.error('Router listener error:', e); }
+    }
+    // Dispatch custom event for any DOM listeners
+    try {
+      window.dispatchEvent(new CustomEvent('routechange', { detail: route }));
+    } catch (e) {}
+  }
+
+  /* ----- navigate to a route ----- */
+  function navigate(viewId, sub) {
+    if (!ROUTES[viewId]) viewId = DEFAULT_ROUTE;
+    var hash = '#' + viewId + (sub ? '/' + sub : '');
+    // Only push history if different from current
+    if (window.location.hash !== hash) {
+      window.history.pushState({ view: viewId, sub: sub }, '', hash);
+    }
+    emit(parseHash(hash));
+  }
+
+  /* ----- replace current route (no history entry) ----- */
+  function replace(viewId, sub) {
+    if (!ROUTES[viewId]) viewId = DEFAULT_ROUTE;
+    var hash = '#' + viewId + (sub ? '/' + sub : '');
+    window.history.replaceState({ view: viewId, sub: sub }, '', hash);
+    emit(parseHash(hash));
+  }
+
+  /* ----- handle hashchange ----- */
+  function onHashChange() {
+    emit(parseHash());
+  }
+
+  /* ----- handle popstate (back/forward) ----- */
+  function onPopState(e) {
+    emit(parseHash());
+  }
+
+  /* ----- subscribe to route changes ----- */
+  function subscribe(fn) {
+    listeners.push(fn);
+    return function unsubscribe() {
+      var idx = listeners.indexOf(fn);
+      if (idx > -1) listeners.splice(idx, 1);
+    };
+  }
+
+  /* ----- get current route ----- */
+  function current() {
+    return parseHash();
+  }
+
+  /* ----- init: bind listeners, emit initial route ----- */
+  function init() {
+    window.addEventListener('hashchange', onHashChange);
+    window.addEventListener('popstate', onPopState);
+    // Handle initial load
+    if (!window.location.hash) {
+      window.history.replaceState({ view: DEFAULT_ROUTE }, '', '#' + DEFAULT_ROUTE);
+    }
+    emit(parseHash());
+  }
+
+  /* ----- public API ----- */
+  window.Router = {
+    ROUTES: ROUTES,
+    navigate: navigate,
+    replace: replace,
+    subscribe: subscribe,
+    current: current,
+    parse: parseHash,
+    init: init
+  };
+
+})();
+
+/* ===== ViewManager =====
+   Manages the 9-pane SPA lifecycle: enter/leave animations, state
+   preservation, loading skeletons, and focus management. Integrates
+   with HashRouter for route-driven view switching.
+
+   Lifecycle per view switch:
+   1. beforeLeave(current)  → save scroll, focus, details state
+   2. beforeEnter(next)     → show skeleton, prepare DOM
+   3. enter(next)           → animate in (cross-fade + slide)
+   4. afterEnter(next)      → hide skeleton, restore scroll, set focus
+
+   Features:
+   - Transition lock prevents rapid-fire switching
+   - Per-view scroll position memory
+   - Per-view open <details> state memory
+   - Loading skeleton with staggered pulse animation
+   - Focus management (save/restore/initial)
+   - ARIA live region for screen reader announcements */
+
+(function () {
+  'use strict';
+
+  /* ----- config ----- */
+  var ENTER_DURATION = 320;   // ms — view enter animation
+  var LEAVE_DURATION = 200;   // ms — view leave animation
+  var SKELETON_DELAY = 80;    // ms — before showing skeleton
+  var STAGGER_CARD = 60;      // ms — between card entrances
+  var EASING = 'cubic-bezier(.22,.61,.36,1)';
 
   /* ----- state ----- */
-  var scrollMemory = {};       // per-view scroll positions
-  var isTransitioning = false; // lock during transition
-  var loadingEl = null;        // lazy-created loading indicator
+  var currentView = null;
+  var isTransitioning = false;
+  var viewStates = {};        // per-view state cache
+  var skeletonEl = null;
+  var liveRegion = null;
 
-  /* ----- loading indicator ----- */
-  function getLoadingEl() {
-    if (loadingEl) return loadingEl;
-    loadingEl = document.createElement('div');
-    loadingEl.id = '_vt-loading';
-    loadingEl.innerHTML = '<span></span><span></span><span></span>';
-    loadingEl.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:90;display:none;gap:6px;pointer-events:none';
-    var st = document.createElement('style');
-    st.textContent = '#_vt-loading{display:flex!important;opacity:0;transition:opacity .15s ease}#_vt-loading._vt-show{opacity:1}#_vt-loading span{width:8px;height:8px;border-radius:50%;background:var(--acc);animation:_vt-bounce 1.4s ease-in-out infinite both}#_vt-loading span:nth-child(1){animation-delay:-.32s}#_vt-loading span:nth-child(2){animation-delay:-.16s}@keyframes _vt-bounce{0%,80%,100%{transform:scale(0)}40%{transform:scale(1)}}';
-    document.head.appendChild(st);
-    document.body.appendChild(loadingEl);
-    return loadingEl;
+  /* ----- ARIA live region for announcements ----- */
+  function getLiveRegion() {
+    if (liveRegion) return liveRegion;
+    liveRegion = document.createElement('div');
+    liveRegion.setAttribute('aria-live', 'polite');
+    liveRegion.setAttribute('aria-atomic', 'true');
+    liveRegion.style.cssText = 'position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden';
+    document.body.appendChild(liveRegion);
+    return liveRegion;
   }
-  function showLoading() { getLoadingEl().classList.add('_vt-show'); }
-  function hideLoading() { getLoadingEl().classList.remove('_vt-show'); }
+  function announce(msg) {
+    getLiveRegion().textContent = msg;
+    setTimeout(function () { getLiveRegion().textContent = ''; }, 1000);
+  }
 
-  /* ----- core: switch with animation ----- */
-  function animateSwitch(targetTab, onComplete) {
+  /* ----- loading skeleton ----- */
+  function getSkeleton() {
+    if (skeletonEl) return skeletonEl;
+    skeletonEl = document.createElement('div');
+    skeletonEl.id = '_vm-skeleton';
+    skeletonEl.innerHTML =
+      '<div class="_sk-head"><div class="_sk-line _sk-w40"></div><div class="_sk-line _sk-w60"></div></div>' +
+      '<div class="_sk-card"><div class="_sk-line _sk-w80"></div><div class="_sk-line _sk-w100"></div><div class="_sk-line _sk-w70"></div></div>' +
+      '<div class="_sk-card"><div class="_sk-line _sk-w60"></div><div class="_sk-line _sk-w90"></div><div class="_sk-line _sk-w50"></div></div>' +
+      '<div class="_sk-card"><div class="_sk-line _sk-w70"></div><div class="_sk-line _sk-w80"></div><div class="_sk-line _sk-w40"></div></div>';
     var stage = document.querySelector('.stage');
-    var outgoing = document.querySelector('.pane.on');
-    var incoming = document.getElementById(targetTab);
-    if (!incoming) { onComplete(); return; }
+    if (stage) stage.appendChild(skeletonEl);
+    return skeletonEl;
+  }
+  function showSkeleton() {
+    getSkeleton().classList.add('_sk-show');
+    getSkeleton().classList.remove('_sk-hide');
+  }
+  function hideSkeleton() {
+    if (!skeletonEl) return;
+    skeletonEl.classList.add('_sk-hide');
+    setTimeout(function () {
+      if (skeletonEl) {
+        skeletonEl.classList.remove('_sk-show', '_sk-hide');
+        /* v221-fix: remove from DOM to prevent scroll overflow */
+        if (skeletonEl.parentNode) skeletonEl.parentNode.removeChild(skeletonEl);
+        skeletonEl = null;
+      }
+    }, 150);
+  }
 
-    // Remember outgoing scroll
-    if (outgoing && stage) scrollMemory[outgoing.id] = stage.scrollTop;
-
-    isTransitioning = true;
-
-    // Use View Transitions API if available
-    if (document.startViewTransition) {
-      document.startViewTransition(function () {
-        onComplete();
-        // Restore scroll after DOM update
-        requestAnimationFrame(function () {
-          if (stage && scrollMemory[targetTab] != null) {
-            stage.scrollTop = scrollMemory[targetTab];
-          }
-        });
+  /* ----- save/restore view state ----- */
+  function saveViewState(viewId) {
+    var pane = document.getElementById(viewId);
+    var stage = document.querySelector('.stage');
+    if (!pane || !stage) return;
+    var openDetails = [];
+    var details = pane.querySelectorAll('details[open]');
+    for (var i = 0; i < details.length; i++) {
+      // Check if details is inside a shadow DOM
+      try { openDetails.push(details[i].getAttribute('data-id') || i); } catch (e) {}
+    }
+    viewStates[viewId] = {
+      scrollTop: stage.scrollTop,
+      timestamp: Date.now(),
+      openDetails: openDetails
+    };
+    // Try to get sub-state from web components
+    var wc = pane.querySelector(pane.tagName.toLowerCase().replace('div#', '').split('-')[0] ? '[class^="deep-"]' : '*');
+    try {
+      if (pane.id === 'walk') {
+        var wt = pane.querySelector('deep-walkthrough');
+        if (wt && wt.currentStep !== undefined) viewStates[viewId].step = wt.currentStep;
+      }
+      if (pane.id === 'drill') {
+        var dd = pane.querySelector('deep-drill');
+        if (dd && dd.currentIndex !== undefined) viewStates[viewId].probe = dd.currentIndex;
+      }
+    } catch (e) {}
+  }
+  function restoreViewState(viewId) {
+    var state = viewStates[viewId];
+    if (!state) return;
+    var stage = document.querySelector('.stage');
+    if (stage && state.scrollTop != null) {
+      requestAnimationFrame(function () {
+        stage.scrollTop = state.scrollTop;
       });
-      setTimeout(function () { isTransitioning = false; }, DURATION + STAGGER);
-      return;
     }
+  }
 
-    // CSS fallback: animate outgoing, swap, animate incoming
-    if (outgoing) {
-      outgoing.style.transition = 'opacity ' + (DURATION * 0.6) + 'ms ' + EASING + ', transform ' + DURATION + 'ms ' + EASING;
-      outgoing.style.opacity = '0';
-      outgoing.style.transform = 'translateY(-8px) scale(.995)';
+  /* ----- update nav buttons ----- */
+  function updateNav(viewId) {
+    var btns = document.querySelectorAll('.seg button, .sidebar .seg button');
+    for (var i = 0; i < btns.length; i++) {
+      var tab = btns[i].getAttribute('data-tab');
+      btns[i].classList.toggle('on', tab === viewId);
     }
+    // Update rail
+    var rail = document.getElementById('rail');
+    if (rail) {
+      var positions = { walk: 25, drill: 50, wb: 75, sys: 100, trade: 75, model: 75, num: 75, rf: 75, open: 75 };
+      rail.style.width = (positions[viewId] || 75) + '%';
+    }
+  }
+
+  /* ----- update document title ----- */
+  function updateTitle(route) {
+    var base = 'Content Pipeline — Deep Rehearsal';
+    if (route && route.route) {
+      document.title = route.route.title + ' — ' + base;
+    } else {
+      document.title = base;
+    }
+  }
+
+  /* ----- focus management ----- */
+  var savedFocus = null;
+  function saveFocus() {
+    savedFocus = document.activeElement;
+  }
+  function restoreFocus() {
+    if (savedFocus && savedFocus.focus) {
+      try { savedFocus.focus(); } catch (e) {}
+    }
+    savedFocus = null;
+  }
+  function setInitialFocus(viewId) {
+    var pane = document.getElementById(viewId);
+    if (!pane) return;
+    // Focus first interactive element
+    var first = pane.querySelector('button, a, [tabindex]:not([tabindex="-1"])');
+    if (first) {
+      setTimeout(function () { first.focus({ preventScroll: true }); }, ENTER_DURATION + 50);
+    }
+  }
+
+  /* ----- animate view enter ----- */
+  function animateEnter(pane, done) {
+    if (!pane) { done(); return; }
+    pane.style.display = 'block';
+    // Prepare for entrance
+    pane.style.opacity = '0';
+    pane.style.transform = 'translateY(16px) scale(.992)';
+    pane.style.transition = 'none';
+    pane.classList.add('on');
+
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        pane.style.transition = 'opacity ' + ENTER_DURATION + 'ms ' + EASING + ', transform ' + ENTER_DURATION + 'ms ' + EASING;
+        pane.style.opacity = '1';
+        pane.style.transform = 'translateY(0) scale(1)';
+
+        setTimeout(function () {
+          pane.style.transition = '';
+          pane.style.transform = '';
+          pane.style.opacity = '';
+          done();
+        }, ENTER_DURATION + 30);
+      });
+    });
+  }
+
+  /* ----- animate view leave ----- */
+  function animateLeave(pane, done) {
+    if (!pane) { done(); return; }
+    pane.style.transition = 'opacity ' + LEAVE_DURATION + 'ms ' + EASING + ', transform ' + LEAVE_DURATION + 'ms ' + EASING;
+    pane.style.opacity = '0';
+    pane.style.transform = 'translateY(-10px) scale(.995)';
 
     setTimeout(function () {
-      onComplete();
+      pane.classList.remove('on');
+      pane.style.display = 'none';
+      pane.style.transition = '';
+      pane.style.transform = '';
+      pane.style.opacity = '';
+      done();
+    }, LEAVE_DURATION + 20);
+  }
 
-      // Prepare incoming for entrance
-      if (incoming) {
-        incoming.style.transition = 'none';
-        incoming.style.opacity = '0';
-        incoming.style.transform = 'translateY(12px) scale(.99)';
-      }
+  /* ----- core: switch view ----- */
+  function switchView(route) {
+    if (!route || !route.view) return;
+    var viewId = route.view;
 
-      requestAnimationFrame(function () {
-        requestAnimationFrame(function () {
-          if (incoming) {
-            incoming.style.transition = 'opacity ' + DURATION + 'ms ' + EASING + ', transform ' + DURATION + 'ms ' + EASING;
-            incoming.style.opacity = '1';
-            incoming.style.transform = 'translateY(0) scale(1)';
-          }
+    // Lock during transition
+    if (isTransitioning) return;
+    if (viewId === currentView) return;
+    isTransitioning = true;
 
-          // Restore scroll
-          if (stage && scrollMemory[targetTab] != null) {
-            stage.scrollTop = scrollMemory[targetTab];
-          }
+    var outgoingPane = currentView ? document.getElementById(currentView) : null;
+    var incomingPane = document.getElementById(viewId);
+    if (!incomingPane) { isTransitioning = false; return; }
 
-          setTimeout(function () {
-            if (incoming) {
-              incoming.style.transition = '';
-              incoming.style.transform = '';
-              incoming.style.opacity = '';
-            }
-            isTransitioning = false;
-          }, DURATION + 50);
-        });
+    // 1. Before leave — save state
+    if (currentView) saveViewState(currentView);
+    saveFocus();
+
+    // 2. Before enter — show skeleton, update nav
+    var skeletonTimer = setTimeout(showSkeleton, SKELETON_DELAY);
+    updateNav(viewId);
+    updateTitle(route);
+
+    // 3. Animate leave then enter
+    animateLeave(outgoingPane, function () {
+      // 4. Enter
+      clearTimeout(skeletonTimer);
+      hideSkeleton();
+      animateEnter(incomingPane, function () {
+        // 5. After enter
+        restoreViewState(viewId);
+        setInitialFocus(viewId);
+        restoreFocus();
+        announce('Navigated to ' + (route.route ? route.route.label : viewId));
+        currentView = viewId;
+        isTransitioning = false;
       });
-    }, outgoing ? (DURATION * 0.6) : 0);
-  }
-
-  /* ----- public: switch view with transition ----- */
-  window.switchView = function (targetTab) {
-    if (isTransitioning || targetTab === window._currentTab) return;
-
-    var btn = document.querySelector('.seg button[data-tab="' + targetTab + '"]');
-    if (!btn) return;
-
-    // Update nav buttons immediately (responsive feedback)
-    var segBtns = document.querySelectorAll('.seg button');
-    for (var i = 0; i < segBtns.length; i++) {
-      segBtns[i].classList.toggle('on', segBtns[i].getAttribute('data-tab') === targetTab);
-    }
-
-    // Show loading for views that may render slowly
-    showLoading();
-
-    animateSwitch(targetTab, function () {
-      // Execute the actual tab switch
-      if (typeof switchTab === 'function') {
-        // Override the button sync since we already did it
-        var panes = document.querySelectorAll('.pane');
-        var railEl = document.getElementById('rail');
-        var railPos = { walk: 25, drill: 50, wb: 75, sys: 100, trade: 75, model: 75, num: 75, rf: 75, open: 75 };
-        for (var j = 0; j < panes.length; j++) {
-          panes[j].classList.toggle('on', panes[j].id === targetTab);
-        }
-        if (railEl) railEl.style.width = (railPos[targetTab] || 75) + '%';
-        window._currentTab = targetTab;
-      }
-      hideLoading();
     });
-  };
+  }
 
-  /* ----- intercept existing switchTab calls ----- */
-  // Store original for internal use
-  var _origSwitchTab = window.switchTab;
-  window.switchTab = function (t) {
-    window.switchView(t);
-  };
+  /* ----- handle deep-link sub-state ----- */
+  function handleDeepLink(route) {
+    if (!route.sub) return;
+    var pane = document.getElementById(route.view);
+    if (!pane) return;
 
-  /* ----- nav button click handlers ----- */
-  function setupNavListeners() {
-    var btns = document.querySelectorAll('.seg button');
-    for (var i = 0; i < btns.length; i++) {
-      btns[i].onclick = function () {
-        window.switchView(this.getAttribute('data-tab'));
-      };
+    // Handle sub-state after view is rendered
+    setTimeout(function () {
+      // Walkthrough step: #walk/step-5
+      var stepMatch = route.sub.match(/^step-(\d+)$/);
+      if (stepMatch && route.view === 'walk') {
+        var wt = pane.querySelector('deep-walkthrough');
+        if (wt && wt.goTo) wt.goTo(parseInt(stepMatch[1], 10) - 1);
+      }
+      // Drill probe: #drill/probe-3
+      var probeMatch = route.sub.match(/^probe-(\d+)$/);
+      if (probeMatch && route.view === 'drill') {
+        var dd = pane.querySelector('deep-drill');
+        if (dd && dd.jumpTo) dd.jumpTo(parseInt(probeMatch[1], 10) - 1);
+      }
+    }, ENTER_DURATION + 100);
+  }
+
+  /* ----- init: subscribe to router ----- */
+  function init() {
+    if (!window.Router) return;
+    window.Router.subscribe(function (route) {
+      switchView(route);
+      handleDeepLink(route);
+    });
+    // Override nav button clicks to use router
+    var allNavBtns = document.querySelectorAll('.seg button, .sidebar .seg button');
+    for (var i = 0; i < allNavBtns.length; i++) {
+      (function (btn) {
+        btn.addEventListener('click', function (e) {
+          var tab = btn.getAttribute('data-tab');
+          if (tab) {
+            e.preventDefault();
+            window.Router.navigate(tab);
+          }
+        });
+      })(allNavBtns[i]);
     }
+    // Override keyboard shortcuts
+    document.addEventListener('keydown', function (e) {
+      if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
+      var tabKeys = { q: 'walk', w: 'drill', e: 'wb', r: 'sys', t: 'trade', y: 'model', u: 'num', i: 'rf', o: 'open' };
+      var target = tabKeys[e.key.toLowerCase()];
+      if (target && window.Router) {
+        e.preventDefault();
+        window.Router.navigate(target);
+      }
+    });
   }
 
-  /* ----- keyboard debounce ----- */
-  var keyDebounce = null;
-  document.addEventListener('keydown', function (e) {
-    if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
-    var tabKeys = { q: 'walk', w: 'drill', e: 'wb', r: 'sys', t: 'trade', y: 'model', u: 'num', i: 'rf', o: 'open' };
-    var target = tabKeys[e.key.toLowerCase()];
-    if (!target) return;
-    e.preventDefault();
-    clearTimeout(keyDebounce);
-    keyDebounce = setTimeout(function () {
-      window.switchView(target);
-    }, 80);
-  });
-
-  /* ----- init ----- */
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', setupNavListeners);
-  } else {
-    setupNavListeners();
-  }
-  window._currentTab = 'walk';
+  /* ----- public API ----- */
+  window.ViewManager = {
+    switchView: switchView,
+    saveViewState: saveViewState,
+    restoreViewState: restoreViewState,
+    currentView: function () { return currentView; },
+    isTransitioning: function () { return isTransitioning; },
+    init: init
+  };
 
 })();
 </script>
@@ -4248,7 +4544,11 @@ document.addEventListener('keydown', function (event) {
 document.addEventListener('DOMContentLoaded',function(){
   // Hide boot splash when DOM is ready
   if(window._hideBootSplash) window._hideBootSplash();
-  
+
+  /* v221: Initialize SPA Router + ViewManager */
+  if(window.Router && window.Router.init) window.Router.init();
+  if(window.ViewManager && window.ViewManager.init) window.ViewManager.init();
+
   // Scroll progress bar
   var prog=document.createElement('div');
   prog.id='scrollprog';

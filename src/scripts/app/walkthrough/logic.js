@@ -12,7 +12,8 @@
 var WALK_STYLE = `
 .dots{display:flex;gap:7px;justify-content:center;margin:0 0 16px;padding:2px 0}
 .dots i{width:9px;height:9px;border-radius:50%;background:var(--dots-i-bg);transition:transform .35s cubic-bezier(.34,1.56,.64,1),background .25s ease,opacity .25s ease,box-shadow .3s ease;cursor:pointer;position:relative}
-.dots i.on{background:var(--dots-on-bg);transform:scale(1.35);box-shadow:0 0 0 3px rgba(83,74,183,.12),0 0 12px 2px rgba(83,74,183,.18)}
+.dots i.on{background:var(--dots-on-bg);transform:scale(1.35);box-shadow:0 0 0 3px rgba(83,74,183,.12),0 0 12px 2px rgba(83,74,183,.18);animation:dotPulse 2s ease-in-out infinite}
+@keyframes dotPulse{0%,100%{box-shadow:0 0 0 3px rgba(83,74,183,.12),0 0 12px 2px rgba(83,74,183,.18)}50%{box-shadow:0 0 0 5px rgba(83,74,183,.2),0 0 20px 4px rgba(83,74,183,.3)}}
 .dots i.done{background:var(--dots-done-bg);opacity:.45}
 .dots i:hover:not(.on){transform:scale(1.15);background:rgba(83,74,183,.35)}
 .flow{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin:8px 0 4px}

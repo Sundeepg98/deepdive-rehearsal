@@ -1,6 +1,26 @@
 /* === Hide Kimi Agent watermark (platform-injected) === */
 a[href*="kimi.com/agent"]{display:none!important}
 
+/* === v140: Custom scrollbar, selection, smooth scroll + loading shimmer === */
+::selection{background:rgba(83,74,183,.18);color:var(--ink)}
+html{scroll-behavior:smooth}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(83,74,183,.2);border-radius:3px;transition:background .2s ease}
+::-webkit-scrollbar-thumb:hover{background:rgba(83,74,183,.35)}
+.stage::-webkit-scrollbar{width:4px}
+.stage::-webkit-scrollbar-thumb{background:rgba(83,74,183,.12);border-radius:2px}
+.companion::-webkit-scrollbar{width:5px}
+.companion::-webkit-scrollbar-thumb{background:rgba(83,74,183,.15);border-radius:3px}
+.sidebar::-webkit-scrollbar{display:none}
+
+/* === v142: Loading shimmer for cards before content arrives === */
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+.card:empty,.thread:empty,.dec:empty,.rf:empty{background:linear-gradient(90deg,var(--surf) 25%,rgba(83,74,183,.04) 50%,var(--surf) 75%);background-size:200% 100%;animation:shimmer 1.5s ease-in-out infinite}
+
+/* === v143: Focus glow for interactive elements === */
+button:focus-visible,.dn-step:focus-visible,.pill:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:0 0 0 3px rgba(83,74,183,.15),0 0 16px -4px rgba(83,74,183,.2)}
+
 /* === @property declarations === */
 @property --accent-hue{syntax:"<angle>";initial-value:250deg;inherits:true}
 @property --glow-opacity{syntax:"<number>";initial-value:0.06;inherits:true}
@@ -287,13 +307,15 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
 
 /* ============ v76 POLISH ============ */
 /* view-swap: fade + slide-up (overrides the bare fade) */
-.pane.on{animation:panein .35s cubic-bezier(.22,.61,.36,1)}
-.pane.on .card{animation:cardStagger .4s cubic-bezier(.22,.61,.36,1) .05s both}
-.pane.on .card:nth-child(2){animation-delay:.1s}
-.pane.on .card:nth-child(3){animation-delay:.15s}
-.pane.on .card:nth-child(4){animation-delay:.2s}
-.pane.on .card:nth-child(5){animation-delay:.25s}
-@keyframes panein{from{opacity:0;transform:translateY(10px);filter:blur(2px)}to{opacity:1;transform:none;filter:blur(0)}}
+.pane.on{animation:panein .45s cubic-bezier(.22,.61,.36,1)}
+.pane.on .card{animation:cardStagger .5s cubic-bezier(.22,.61,.36,1) .08s both}
+.pane.on .card:nth-child(2){animation-delay:.13s}
+.pane.on .card:nth-child(3){animation-delay:.18s}
+.pane.on .card:nth-child(4){animation-delay:.23s}
+.pane.on .card:nth-child(5){animation-delay:.28s}
+.pane.on .stage-head{animation:headIn .4s cubic-bezier(.22,.61,.36,1) .02s both}
+@keyframes panein{from{opacity:0;transform:translateY(16px) scale(.995);filter:blur(3px)}to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
+@keyframes headIn{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:translateX(0)}}
 html[data-theme="dark"] .pane.on{animation-name:paneinDark}
 @keyframes paneinDark{from{opacity:0;transform:translateY(10px);filter:blur(2px)}to{opacity:1;transform:none;filter:blur(0)}}
 @keyframes cardStagger{from{opacity:0;transform:translateY(12px) scale(.995)}to{opacity:1;transform:none}}
@@ -315,7 +337,7 @@ html[data-theme="dark"] .pane.on{animation-name:paneinDark}
 .sidebar .seg button:nth-child(9){animation-delay:.29s}
 @keyframes navItemIn{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:none}}
 /* focus-visible rings (keyboard a11y) */
-.sidebar .seg button:focus-visible,.mockbar button:focus-visible,.tools-fab:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.sidebar .seg button:focus-visible,.mockbar button:focus-visible,.tools-fab:focus-visible{outline:2px solid var(--acc);outline-offset:3px;border-radius:4px;box-shadow:0 0 0 4px rgba(83,74,183,.15),0 0 20px -4px rgba(83,74,183,.25)}
 /* desktop: depth + tighten so the full rail fits */
 @media(min-width:920px){
   .sidebar{box-shadow:12px 0 32px -16px rgba(0,0,0,.14),inset -1px 0 0 rgba(255,255,255,.5);gap:14px;background:linear-gradient(180deg,rgba(244,241,234,.92),rgba(236,232,222,.92));backdrop-filter:blur(20px) saturate(1.2);-webkit-backdrop-filter:blur(20px) saturate(1.2)}
@@ -330,6 +352,11 @@ html[data-theme="dark"] .pane.on{animation-name:paneinDark}
 
 /* ===== v77: stage context header ===== */
 /* v85: section masthead - gradient accent rule + baseline hairline for clear header->content structure, tighter type rhythm (applies to all 9 panes) */
+/* === v141: Button ripple effect === */
+button,.nav button,.modetog button,.pill,.dn-step,.ss-go,.ss-print,.ss-clear,.inttog,.op-rev,.wb-rev,.wb-got,.wb-miss,.mb-rev,.mb-next,.mxghost{position:relative;overflow:hidden}
+button::after,.nav button::after,.modetog button::after,.pill::after,.dn-step::after,.ss-go::after,.ss-print::after,.ss-clear::after,.inttog::after,.op-rev::after,.wb-rev::after,.wb-got::after,.wb-miss::after,.mb-rev::after,.mb-next::after,.mxghost::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at var(--rx,50%) var(--ry,50%),rgba(255,255,255,.28) 0%,transparent 55%);opacity:0;transition:opacity .25s ease;pointer-events:none}
+button:active::after,.nav button:active::after,.modetog button:active::after,.pill:active::after,.dn-step:active::after,.ss-go:active::after,.ss-print:active::after,.ss-clear:active::after,.inttog:active::after,.op-rev:active::after,.wb-rev:active::after,.wb-got:active::after,.wb-miss:active::after,.mb-rev:active::after,.mb-next:active::after,.mxghost:active::after{opacity:1;transition:opacity .04s ease}
+
 .stage-head{position:relative;max-width:830px;margin:0 auto 20px;padding:2px 0 14px 18px;border-bottom:1px solid var(--bd)}
 .stage-head::before{content:"";position:absolute;left:0;top:3px;bottom:14px;width:3px;border-radius:2px;background:linear-gradient(180deg,var(--acc),var(--acc2));box-shadow:0 0 8px -1px rgba(83,74,183,.3);animation:accentGlow 3s ease-in-out infinite}
 @keyframes accentGlow{0%,100%{box-shadow:0 0 8px -1px rgba(83,74,183,.3)}50%{box-shadow:0 0 14px 1px rgba(83,74,183,.5)}}

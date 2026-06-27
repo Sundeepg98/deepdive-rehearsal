@@ -51,7 +51,7 @@ var WB_STYLE = `
 .wb li:last-child{border-bottom:0}
 .wb li:hover{padding-left:4px}
 .wb-cue{display:flex;gap:14px;align-items:flex-start}
-.wb li .num{flex:none;width:28px;height:28px;border-radius:50%;border:1.5px solid var(--acc);color:var(--acc);font:700 12px ui-monospace,monospace;display:flex;align-items:center;justify-content:center;transition:transform .25s cubic-bezier(.34,1.56,.64,1),box-shadow .25s ease,background .2s ease}
+.wb li .num{flex:none;width:30px;height:30px;border-radius:50%;border:2px solid var(--acc);color:var(--acc);font:700 13px ui-monospace,monospace;display:flex;align-items:center;justify-content:center;transition:transform .3s cubic-bezier(.34,1.56,.64,1),box-shadow .3s ease,background .25s ease;background:linear-gradient(135deg,transparent 0%,rgba(83,74,183,.04) 100%)}
 .wb li:hover .num{transform:scale(1.12);box-shadow:0 0 0 4px rgba(83,74,183,.1);background:rgba(83,74,183,.05)}
 .wb li .num::before{content:counter(wb)}
 .wb-ct{font-size:13.5px;color:var(--ink);font-weight:600;padding-top:4px;line-height:1.5;transition:color .2s ease}

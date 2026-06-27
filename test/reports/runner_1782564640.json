@@ -1,0 +1,12 @@
+{
+  "elapsed": 5.409656524658203,
+  "passed": 1,
+  "failed": 0,
+  "failures": [],
+  "passes": [
+    {
+      "group": "Views",
+      "name": "test_correct_pane_visible"
+    }
+  ]
+}

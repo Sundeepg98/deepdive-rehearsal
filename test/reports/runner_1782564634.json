@@ -1,0 +1,12 @@
+{
+  "elapsed": 5.409073829650879,
+  "passed": 1,
+  "failed": 0,
+  "failures": [],
+  "passes": [
+    {
+      "group": "Navigation",
+      "name": "test_title_updates"
+    }
+  ]
+}

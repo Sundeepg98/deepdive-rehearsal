@@ -1,0 +1,115 @@
+{
+  "elapsed": 47.522671937942505,
+  "passed": 22,
+  "failed": 3,
+  "failures": [
+    {
+      "group": "Navigation",
+      "name": "test_title_updates",
+      "expected": "assertion",
+      "actual": ""
+    },
+    {
+      "group": "Views",
+      "name": "test_correct_pane_visible",
+      "expected": "assertion",
+      "actual": ""
+    },
+    {
+      "group": "Views",
+      "name": "test_nav_button_activated",
+      "expected": "assertion",
+      "actual": ""
+    }
+  ],
+  "passes": [
+    {
+      "group": "Router",
+      "name": "test_router_exists"
+    },
+    {
+      "group": "Router",
+      "name": "test_routes_defined"
+    },
+    {
+      "group": "Router",
+      "name": "test_default_route"
+    },
+    {
+      "group": "Navigation",
+      "name": "test_navigate_to_drill"
+    },
+    {
+      "group": "Navigation",
+      "name": "test_navigate_to_wb"
+    },
+    {
+      "group": "Navigation",
+      "name": "test_navigate_all_views"
+    },
+    {
+      "group": "Navigation",
+      "name": "test_hash_updates"
+    },
+    {
+      "group": "Views",
+      "name": "test_view_manager_exists"
+    },
+    {
+      "group": "Views",
+      "name": "test_initial_view_walk"
+    },
+    {
+      "group": "Views",
+      "name": "test_single_pane_active"
+    },
+    {
+      "group": "Views",
+      "name": "test_other_panes_hidden"
+    },
+    {
+      "group": "Desktop",
+      "name": "test_no_scroll_whitespace"
+    },
+    {
+      "group": "Desktop",
+      "name": "test_app_height_bounds"
+    },
+    {
+      "group": "Desktop",
+      "name": "test_stage_position_relative"
+    },
+    {
+      "group": "Desktop",
+      "name": "test_body_overflow_hidden"
+    },
+    {
+      "group": "Desktop",
+      "name": "test_html_overflow_hidden"
+    },
+    {
+      "group": "Desktop",
+      "name": "test_nine_nav_items"
+    },
+    {
+      "group": "Desktop",
+      "name": "test_companion_visible"
+    },
+    {
+      "group": "Desktop",
+      "name": "test_sidebar_visible"
+    },
+    {
+      "group": "Keyboard",
+      "name": "test_tab_moves_focus"
+    },
+    {
+      "group": "Keyboard",
+      "name": "test_q_navigates_walk"
+    },
+    {
+      "group": "Keyboard",
+      "name": "test_w_navigates_drill"
+    }
+  ]
+}

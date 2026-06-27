@@ -1,0 +1,64 @@
+{
+  "elapsed": 6.906412601470947,
+  "passed": 7,
+  "failed": 0,
+  "errors": 0,
+  "tests": [
+    {
+      "module": "test_redundancy",
+      "group": "Architecture",
+      "name": "test_all_included_scripts_exist",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5744.178056716919
+    },
+    {
+      "module": "test_redundancy",
+      "group": "Architecture",
+      "name": "test_no_duplicate_feature_names",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5952.31032371521
+    },
+    {
+      "module": "test_redundancy",
+      "group": "Architecture",
+      "name": "test_no_duplicate_search_features",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5954.308986663818
+    },
+    {
+      "module": "test_redundancy",
+      "group": "Architecture",
+      "name": "test_no_orphan_scripts",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6070.686817169189
+    },
+    {
+      "module": "test_redundancy",
+      "group": "Architecture",
+      "name": "test_no_duplicate_dom_ids",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6133.0437660217285
+    },
+    {
+      "module": "test_redundancy",
+      "group": "Architecture",
+      "name": "test_keyboard_overlay_exists_once",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6176.557540893555
+    },
+    {
+      "module": "test_redundancy",
+      "group": "Architecture",
+      "name": "test_unique_feature_descriptions",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6346.926212310791
+    }
+  ]
+}

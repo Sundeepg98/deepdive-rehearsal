@@ -1,0 +1,64 @@
+{
+  "elapsed": 8.039905309677124,
+  "passed": 5,
+  "failed": 2,
+  "errors": 0,
+  "tests": [
+    {
+      "module": "test_redundancy",
+      "group": "Architecture",
+      "name": "test_no_duplicate_search_features",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5879.1327476501465
+    },
+    {
+      "module": "test_redundancy",
+      "group": "Architecture",
+      "name": "test_no_orphan_scripts",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5891.339540481567
+    },
+    {
+      "module": "test_redundancy",
+      "group": "Architecture",
+      "name": "test_keyboard_overlay_exists_once",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6005.237817764282
+    },
+    {
+      "module": "test_redundancy",
+      "group": "Architecture",
+      "name": "test_no_duplicate_feature_names",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6005.461692810059
+    },
+    {
+      "module": "test_redundancy",
+      "group": "Architecture",
+      "name": "test_unique_feature_descriptions",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6169.69633102417
+    },
+    {
+      "module": "test_redundancy",
+      "group": "Architecture",
+      "name": "test_all_included_scripts_exist",
+      "status": "FAIL",
+      "detail": "Missing scripts referenced in app.js: ['scripts/app/base-styles.js', 'scripts/app/content-sheet.js', 'scripts/app/shared-sheets.js', 'scripts/app/red-flags.js', 'scripts/app/trade-offs.js', 'scripts/app/walkthrough.js', 'scripts/app/drill.js', 'scripts/app/whiteboard.js', 'scripts/app/opener-altitude.js', 'scripts/app/mock-run.js', 'scripts/app/mixed-fire.js', 'scripts/app/cram-sheet.js', 'scripts/app/keyboard-overlay.js', 'scripts/app/scope-overlay.js', 'scripts/app/gameplan-overlay.js', 'scripts/app/cram-overlay.js', 'scripts/app/session-progress.js', 'scripts/app/system-map.js', 'scripts/app/model-answers.js', 'scripts/app/numbers-nalsd.js', 'scripts/app/router.js', 'scripts/app/view-manager.js', 'scripts/app/tour-guide.js', 'scripts/app/search-overlay.js', 'scripts/app/dynamic-features.js', 'scripts/app/session-timer.js']",
+      "ms": 5905.151605606079
+    },
+    {
+      "module": "test_redundancy",
+      "group": "Architecture",
+      "name": "test_no_duplicate_dom_ids",
+      "status": "FAIL",
+      "detail": "Duplicate IDs found:\n#mxre appears 2+ times",
+      "ms": 6000.174999237061
+    }
+  ]
+}

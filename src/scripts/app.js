@@ -23,6 +23,4 @@
 <!--@build:include scripts/app/tour-guide.js-->
 <!--@build:include scripts/app/search-overlay.js-->
 <!--@build:include scripts/app/dynamic-features.js-->
-<!--@build:include scripts/app/ambient-background.js-->
-<!--@build:include scripts/app/keyboard-help.js-->
 <!--@build:include scripts/app/session-timer.js-->

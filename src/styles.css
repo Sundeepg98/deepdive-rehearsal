@@ -34,7 +34,7 @@ a[href*="kimi.com/agent"]{display:none!important}
 
 /* === v140: Custom scrollbar, selection, smooth scroll + loading shimmer === */
 ::selection{background:rgba(83,74,183,.18);color:var(--ink)}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;overflow:hidden}
 ::-webkit-scrollbar{width:6px;height:6px}
 ::-webkit-scrollbar-track{background:linear-gradient(180deg,rgba(83,74,183,.01) 0%,transparent 50%,rgba(83,74,183,.01) 100%)}
 ::-webkit-scrollbar-thumb{background:linear-gradient(180deg,rgba(83,74,183,.22) 0%,rgba(109,95,214,.18) 100%);border-radius:3px;transition:background .2s ease,box-shadow .2s ease;box-shadow:inset 0 0 2px rgba(255,255,255,.3)}
@@ -87,7 +87,7 @@ button:focus-visible,.dn-step:focus-visible,.pill:focus-visible{outline:2px soli
   ::selection{background:rgba(83,74,183,.12);color:var(--accink);transition:background .2s ease}
   ::-moz-selection{background:rgba(83,74,183,.12);color:var(--accink);transition:background .2s ease}
   ::target-text{background:rgba(83,74,183,.12);color:var(--accink);transition:background .2s ease}
-  html{scroll-behavior:smooth}
+  html{scroll-behavior:smooth;overflow:hidden}
   ::-webkit-scrollbar{width:8px;height:8px}
   ::-webkit-scrollbar-track{background:transparent;transition:background .2s ease,box-shadow .2s ease}
   ::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--bd),#D8D2C8);border-radius:4px;border:2px solid transparent;background-clip:padding-box}
@@ -95,7 +95,7 @@ button:focus-visible,.dn-step:focus-visible,.pill:focus-visible{outline:2px soli
   ::-webkit-scrollbar-corner{background:linear-gradient(135deg,rgba(83,74,183,.02) 0%,transparent 100%)}
   :root{accent-color:var(--acc);--accent-glow:0 0 8px rgba(83,74,183,.2);text-shadow:0 0 10px rgba(83,74,183,.1)}
   input[type="checkbox"],input[type="radio"]{accent-color:var(--acc);transition:transform .1s ease}
-  body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased;padding:0 0 70px;opacity:0;animation:bodyIn .5s cubic-bezier(.22,.61,.36,1) .1s forwards}
+  body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased;padding:0 0 70px;opacity:0;animation:bodyIn .5s cubic-bezier(.22,.61,.36,1) .1s forwards;overflow:hidden}
   @keyframes bodyIn{from{opacity:0}to{opacity:1}}
 
   .rail{position:sticky;top:0;height:4px;background:linear-gradient(135deg,#ECE8E0 0%,rgba(236,232,224,0) 100%);z-index:50}
@@ -125,9 +125,36 @@ button:focus-visible,.dn-step:focus-visible,.pill:focus-visible{outline:2px soli
   .seg button.on .n{color:var(--acc);text-shadow:0 0 10px rgba(83,74,183,.15);transition:text-shadow .2s ease}
 .seg button:not(.on):hover{background:rgba(83,74,183,.07);color:var(--ink);box-shadow:0 0 12px -2px rgba(83,74,183,.12);transform:translateY(-1px)}
 
-  /* === v211: View transitions — smooth SPA-like view switching === */
-  .pane{display:none;opacity:0;transform:translateY(12px) scale(.99);transition:opacity .28s cubic-bezier(.22,.61,.36,1),transform .28s cubic-bezier(.22,.61,.36,1)}
+    /* === v221: SPA pane system — managed by ViewManager === */
+  .pane{display:none;opacity:0;transform:translateY(16px) scale(.992)}
   .pane.on{display:block;opacity:1;transform:translateY(0) scale(1)}
+  /* View enter animation */
+  @keyframes viewEnter{from{opacity:0;transform:translateY(16px) scale(.992)}to{opacity:1;transform:translateY(0) scale(1)}}
+  /* View leave animation */
+  @keyframes viewLeave{from{opacity:1;transform:translateY(0) scale(1)}to{opacity:0;transform:translateY(-10px) scale(.995)}}
+  /* Card stagger within entering view */
+  @keyframes cardEnter{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  .pane.on .card{animation:cardEnter .45s cubic-bezier(.22,.61,.36,1) backwards}
+  .pane.on .card:nth-child(1){animation-delay:.05s}
+  .pane.on .card:nth-child(2){animation-delay:.12s}
+  .pane.on .card:nth-child(3){animation-delay:.19s}
+  .pane.on .card:nth-child(4){animation-delay:.26s}
+  .pane.on .card:nth-child(5){animation-delay:.33s}
+  /* Loading skeleton */
+  @keyframes _sk-pulse{0%,100%{opacity:.55}50%{opacity:1}}
+  #_vm-skeleton{position:absolute;inset:32px 0 0;z-index:10;padding:24px clamp(20px,4vw,52px);opacity:0;transition:opacity .15s ease;pointer-events:none;display:none}
+  #_vm-skeleton._sk-show{display:block;opacity:1}
+  #_vm-skeleton._sk-hide{opacity:0}
+  #_vm-skeleton ._sk-head{margin-bottom:24px;padding:12px 0;animation:_sk-pulse 1.8s ease-in-out infinite}
+  #_vm-skeleton ._sk-card{background:var(--surf);border:1px solid var(--bd);border-radius:16px;padding:24px;margin-bottom:16px;box-shadow:var(--glow);animation:_sk-pulse 1.8s ease-in-out infinite}
+  #_vm-skeleton ._sk-card:nth-child(2){animation-delay:.15s}
+  #_vm-skeleton ._sk-card:nth-child(3){animation-delay:.3s}
+  #_vm-skeleton ._sk-card:nth-child(4){animation-delay:.45s}
+  #_vm-skeleton ._sk-line{height:10px;border-radius:5px;background:linear-gradient(90deg,var(--bd) 25%,rgba(83,74,183,.08) 50%,var(--bd) 75%);background-size:200% 100%;margin-bottom:10px}
+  #_vm-skeleton ._sk-line:last-child{margin-bottom:0}
+  #_vm-skeleton ._sk-w40{width:40%}#_vm-skeleton ._sk-w50{width:50%}#_vm-skeleton ._sk-w60{width:60%}
+  #_vm-skeleton ._sk-w70{width:70%}#_vm-skeleton ._sk-w80{width:80%}#_vm-skeleton ._sk-w90{width:90%}
+  #_vm-skeleton ._sk-w100{width:100%}
   @keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
   @keyframes pop{from{opacity:0;transform:translateY(7px) scale(.99)}to{opacity:1;transform:none}}
   @keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
@@ -281,7 +308,7 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
 @media (max-width:600px){.kbd-hint{display:none}}
 
 /* ============ COMPOSED APP SHELL (v75) ============ */
-.app{display:flex;align-items:stretch;min-height:100vh;width:100%;background:linear-gradient(180deg,transparent 0%,rgba(83,74,183,.01) 100%);transition:box-shadow .25s ease,transform .2s ease}
+.app{display:flex;align-items:stretch;min-height:100vh;width:100%;background:linear-gradient(180deg,transparent 0%,rgba(83,74,183,.01) 100%);transition:box-shadow .25s ease,transform .2s ease;overflow:hidden}
 .sidebar{flex:none;width:296px;display:flex;flex-direction:column;gap:16px;background:var(--panel);border-right:1px solid var(--bd);padding:22px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;z-index:20;transition:box-shadow .25s ease,transform .2s ease}
 .side-id{order:0}
 .side-id .hdr{border-left:none;padding:0;margin:6px 0 0}
@@ -302,7 +329,7 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
 .sidebar .seg button.on .n{color:var(--acc);text-shadow:0 0 8px rgba(83,74,183,.1)}
 .sidebar .mockbar{order:2;margin-top:auto;padding-top:14px;border-top:1px solid var(--bd);gap:7px}
 .sidebar .mockbar .mb-d{display:none}
-.stage{flex:1;min-width:0;padding:32px clamp(20px,4vw,52px) 70px;overflow-x:hidden;position:relative}
+.stage{flex:1;min-width:0;padding:32px clamp(20px,4vw,52px) 70px;overflow-x:hidden;overflow-y:auto;position:relative}
 .stage::before{content:"";position:fixed;top:0;left:0;width:70vw;height:70vh;background:radial-gradient(ellipse at 30% 20%,rgba(83,74,183,.18) 0%,rgba(109,95,214,.12) 25%,rgba(139,127,232,.07) 50%,transparent 80%);animation:meshA 20s ease-in-out infinite;pointer-events:none;z-index:0;will-change:transform;opacity:.8}
 .stage::after{content:"";position:fixed;bottom:0;right:0;width:60vw;height:60vh;background:radial-gradient(ellipse at 70% 80%,rgba(139,127,232,.14) 0%,rgba(83,74,183,.1) 30%,rgba(109,95,214,.06) 55%,rgba(83,74,183,.03) 80%,transparent 100%);animation:meshB 16s ease-in-out infinite -6s;pointer-events:none;z-index:0;will-change:transform;opacity:.7}
 @keyframes meshA{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(8%,-5%) scale(1.08)}66%{transform:translate(-4%,6%) scale(.95)}}

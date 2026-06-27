@@ -1,0 +1,386 @@
+{
+  "elapsed_seconds": 67.14790081977844,
+  "passed": 40,
+  "failed": 2,
+  "total": 42,
+  "tests": [
+    {
+      "group": "Desktop",
+      "name": "T1.1 No empty scrollable whitespace",
+      "passed": false,
+      "expected": "gap <= 80px (70px stage padding-bottom intentional)",
+      "actual": "gap=146px",
+      "detail": "",
+      "timestamp": "2026-06-27T18:27:33.986172"
+    },
+    {
+      "group": "Desktop",
+      "name": "T1.2 Companion scroll contained",
+      "passed": true,
+      "expected": "800px",
+      "actual": "800px (overflow=0px)",
+      "detail": "",
+      "timestamp": "2026-06-27T18:27:33.986206"
+    },
+    {
+      "group": "Desktop",
+      "name": "T1.3 App height within bounds",
+      "passed": true,
+      "expected": "800-1200px",
+      "actual": "880px",
+      "detail": "",
+      "timestamp": "2026-06-27T18:27:33.986216"
+    },
+    {
+      "group": "Desktop",
+      "name": "T1.4 Body padding intentional (70px)",
+      "passed": true,
+      "expected": "70px",
+      "actual": "70px",
+      "detail": "",
+      "timestamp": "2026-06-27T18:27:33.986223"
+    },
+    {
+      "group": "Desktop",
+      "name": "T1.5 Scroll driven by content (no empty space)",
+      "passed": false,
+      "expected": "gap <= 80px (70px stage padding-bottom intentional)",
+      "actual": "gap=146px",
+      "detail": "",
+      "timestamp": "2026-06-27T18:27:33.986231"
+    },
+    {
+      "group": "Desktop",
+      "name": "T1.6 Stage position:relative contains pseudo-elements",
+      "passed": true,
+      "expected": "relative",
+      "actual": "relative",
+      "detail": "",
+      "timestamp": "2026-06-27T18:27:33.992596"
+    },
+    {
+      "group": "Desktop",
+      "name": "T1.7 All 9 nav items present",
+      "passed": true,
+      "expected": "9",
+      "actual": "9",
+      "detail": "",
+      "timestamp": "2026-06-27T18:27:33.995693"
+    },
+    {
+      "group": "Desktop",
+      "name": "T1.8 Walkthrough default view renders",
+      "passed": "ref: <Node>",
+      "expected": "true",
+      "actual": "ref: <Node>",
+      "detail": "",
+      "timestamp": "2026-06-27T18:27:33.998480"
+    },
+    {
+      "group": "Desktop",
+      "name": "T1.9 Companion panel visible",
+      "passed": true,
+      "expected": "not none",
+      "actual": "flex",
+      "detail": "",
+      "timestamp": "2026-06-27T18:27:34.001243"
+    },
+    {
+      "group": "Desktop",
+      "name": "T1.10 Desktop mockbar visible in sidebar",
+      "passed": true,
+      "expected": "flex",
+      "actual": "flex",
+      "detail": "",
+      "timestamp": "2026-06-27T18:27:34.005691"
+    },
+    {
+      "group": "Mobile",
+      "name": "T2.1 Mockbar hidden via transform (not display)",
+      "passed": true,
+      "expected": "transform:translateY(115%) or matrix",
+      "actual": "matrix(1, 0, 0, 1, 0, 627.9)",
+      "detail": "",
+      "timestamp": "2026-06-27T18:27:36.897453"
+    },
+    {
+      "group": "Mobile",
+      "name": "T2.2 Mockbar hidden via CSS transform",
+      "passed": true,
+      "expected": "transform off-screen + !tools-open",
+      "actual": "transform=matrix(1, 0, 0, 1, 0, 627.9), tools_open=False",
+      "detail": "",
+      "timestamp": "2026-06-27T18:27:36.917737"
+    },
+    {
+      "group": "Mobile",
+      "name": "T2.3 No tools-open class on load",
+      "passed": true,
+      "expected": "false",
+      "actual": "False",
+      "detail": "",
+      "timestamp": "2026-06-27T18:27:36.920653"
+    },
+    {
+      "group": "Mobile",
+      "name": "T2.4 Horizontal nav strip (flex-direction:row)",
+      "passed": true,
+      "expected": "row",
+      "actual": "row",
+      "detail": "",
+      "timestamp": "2026-06-27T18:27:36.924718"
+    },
+    {
+      "group": "Mobile",
+      "name": "T2.5 Tools FAB visible",
+      "passed": true,
+      "expected": "not none",
+      "actual": "flex",
+      "detail": "",
+      "timestamp": "2026-06-27T18:27:36.953203"
+    },
+    {
+      "group": "Mobile",
+      "name": "T2.6 Companion hidden on mobile",
+      "passed": true,
+      "expected": "none",
+      "actual": "none",
+      "detail": "",
+      "timestamp": "2026-06-27T18:27:36.955783"
+    },
+    {
+      "group": "Mobile",
+      "name": "T2.7 Stage fills mobile width",
+      "passed": true,
+      "expected": ">=375px",
+      "actual": "375px",
+      "detail": "",
+      "timestamp": "2026-06-27T18:27:36.959536"
+    },
+    {
+      "group": "Navigation",
+      "name": "T3.1 Walkthrough view",
+      "passed": true,
+      "expected": "visible_with_content",
+      "actual": "visible_with_content (w=592, h=682, content=True)",
+      "detail": "",
+      "timestamp": "2026-06-27T18:27:40.984985"
+    },
+    {
+      "group": "Navigation",
+      "name": "T3.2 Probe Drill view",
+      "passed": true,
+      "expected": "visible_with_content",
+      "actual": "visible_with_content (w=591, h=947, content=True)",
+      "detail": "",
+      "timestamp": "2026-06-27T18:27:42.209949"
+    },
+    {
+      "group": "Navigation",
+      "name": "T3.3 Whiteboard view",
+      "passed": true,
+      "expected": "visible_with_content",
+      "actual": "visible_with_content (w=592, h=1212, content=True)",
+      "detail": "",
+      "timestamp": "2026-06-27T18:27:43.485401"
+    },
+    {
+      "group": "Navigation",
+      "name": "T3.4 System Map view",
+      "passed": true,
+      "expected": "visible_with_content",
+      "actual": "visible_with_content (w=592, h=1155, content=True)",
+      "detail": "",
+      "timestamp": "2026-06-27T18:27:44.722852"
+    },
+    {
+      "group": "Navigation",
+      "name": "T3.5 Trade-offs view",
+      "passed": true,
+      "expected": "visible_with_content",
+      "actual": "visible_with_content (w=592, h=2323, content=True)",
+      "detail": "",
+      "timestamp": "2026-06-27T18:27:45.988586"
+    },
+    {
+      "group": "Navigation",
+      "name": "T3.6 Model Answers view",
+      "passed": true,
+      "expected": "visible_with_content",
+      "actual": "visible_with_content (w=592, h=954, content=True)",
+      "detail": "",
+      "timestamp": "2026-06-27T18:27:47.204472"
+    },
+    {
+      "group": "Navigation",
+      "name": "T3.7 Numbers view",
+      "passed": true,
+      "expected": "visible_with_content",
+      "actual": "visible_with_content (w=592, h=892, content=True)",
+      "detail": "",
+      "timestamp": "2026-06-27T18:27:48.492889"
+    },
+    {
+      "group": "Navigation",
+      "name": "T3.8 Red Flags view",
+      "passed": true,
+      "expected": "visible_with_content",
+      "actual": "visible_with_content (w=592, h=1589, content=True)",
+      "detail": "",
+      "timestamp": "2026-06-27T18:27:49.753238"
+    },
+    {
+      "group": "Navigation",
+      "name": "T3.9 30-Second view",
+      "passed": true,
+      "expected": "visible_with_content",
+      "actual": "visible_with_content (w=592, h=1569, content=True)",
+      "detail": "",
+      "timestamp": "2026-06-27T18:27:51.008316"
+    },
+    {
+      "group": "Tools Toggle",
+      "name": "T4.1 FAB click opens mockbar",
+      "passed": true,
+      "expected": "display:flex + tools-open",
+      "actual": "display=flex, tools_open=True",
+      "detail": "",
+      "timestamp": "2026-06-27T18:27:54.066594"
+    },
+    {
+      "group": "Tools Toggle",
+      "name": "T4.2 Backdrop click closes mockbar",
+      "passed": true,
+      "expected": "transform off-screen + !tools-open",
+      "actual": "transform=matrix(1, 0, 0, 1, 0, 627.9), tools_open=False",
+      "detail": "",
+      "timestamp": "2026-06-27T18:27:54.388787"
+    },
+    {
+      "group": "Tools Toggle",
+      "name": "T4.3 FAB click re-opens mockbar",
+      "passed": true,
+      "expected": "display:flex + tools-open",
+      "actual": "display=flex, tools_open=True",
+      "detail": "",
+      "timestamp": "2026-06-27T18:27:54.699259"
+    },
+    {
+      "group": "Tools Toggle",
+      "name": "T4.4 Double-toggle cycle (close via backdrop)",
+      "passed": true,
+      "expected": "transform off-screen + !tools-open",
+      "actual": "transform=matrix(1, 0, 0, 1, 0, 627.9), tools_open=False",
+      "detail": "",
+      "timestamp": "2026-06-27T18:27:55.319279"
+    },
+    {
+      "group": "Console",
+      "name": "T5.1 No JS errors after full navigation",
+      "passed": true,
+      "expected": "0 errors",
+      "actual": "0 errors: none",
+      "detail": "",
+      "timestamp": "2026-06-27T18:28:01.019208"
+    },
+    {
+      "group": "Console",
+      "name": "T5.2 No warnings after full navigation",
+      "passed": true,
+      "expected": "0 warnings",
+      "actual": "0 warnings",
+      "detail": "",
+      "timestamp": "2026-06-27T18:28:01.019244"
+    },
+    {
+      "group": "Performance",
+      "name": "T6.1 Page loads within 5 seconds",
+      "passed": true,
+      "expected": "<5s",
+      "actual": "2.81s",
+      "detail": "",
+      "timestamp": "2026-06-27T18:28:04.089318"
+    },
+    {
+      "group": "Performance",
+      "name": "T6.2 DOMContentLoaded under 3s",
+      "passed": true,
+      "expected": "<3000ms",
+      "actual": "737ms",
+      "detail": "",
+      "timestamp": "2026-06-27T18:28:04.101060"
+    },
+    {
+      "group": "Performance",
+      "name": "T6.3 Load event complete under 5s",
+      "passed": true,
+      "expected": "<5000ms",
+      "actual": "786ms",
+      "detail": "",
+      "timestamp": "2026-06-27T18:28:04.101089"
+    },
+    {
+      "group": "Visual",
+      "name": "T7 Screenshot: desktop_walkthrough",
+      "passed": true,
+      "expected": "screenshot saved",
+      "actual": "416823 bytes at /mnt/agents/output/workspace/deepdive-rehearsal/test/reports/screenshots/desktop_walkthrough.png",
+      "detail": "",
+      "timestamp": "2026-06-27T18:28:07.923798"
+    },
+    {
+      "group": "Visual",
+      "name": "T7 Screenshot: desktop_drill",
+      "passed": true,
+      "expected": "screenshot saved",
+      "actual": "515212 bytes at /mnt/agents/output/workspace/deepdive-rehearsal/test/reports/screenshots/desktop_drill.png",
+      "detail": "",
+      "timestamp": "2026-06-27T18:28:13.498180"
+    },
+    {
+      "group": "Visual",
+      "name": "T7 Screenshot: desktop_systemmap",
+      "passed": true,
+      "expected": "screenshot saved",
+      "actual": "520658 bytes at /mnt/agents/output/workspace/deepdive-rehearsal/test/reports/screenshots/desktop_systemmap.png",
+      "detail": "",
+      "timestamp": "2026-06-27T18:28:18.621570"
+    },
+    {
+      "group": "Visual",
+      "name": "T7 Screenshot: desktop_tradeoffs",
+      "passed": true,
+      "expected": "screenshot saved",
+      "actual": "523151 bytes at /mnt/agents/output/workspace/deepdive-rehearsal/test/reports/screenshots/desktop_tradeoffs.png",
+      "detail": "",
+      "timestamp": "2026-06-27T18:28:23.856806"
+    },
+    {
+      "group": "Visual",
+      "name": "T7 Screenshot: desktop_redflags",
+      "passed": true,
+      "expected": "screenshot saved",
+      "actual": "523773 bytes at /mnt/agents/output/workspace/deepdive-rehearsal/test/reports/screenshots/desktop_redflags.png",
+      "detail": "",
+      "timestamp": "2026-06-27T18:28:29.267628"
+    },
+    {
+      "group": "Visual",
+      "name": "T7 Screenshot: mobile_walkthrough",
+      "passed": true,
+      "expected": "screenshot saved",
+      "actual": "171876 bytes at /mnt/agents/output/workspace/deepdive-rehearsal/test/reports/screenshots/mobile_walkthrough.png",
+      "detail": "",
+      "timestamp": "2026-06-27T18:28:32.308409"
+    },
+    {
+      "group": "Visual",
+      "name": "T7 Screenshot: mobile_drill",
+      "passed": true,
+      "expected": "screenshot saved",
+      "actual": "168287 bytes at /mnt/agents/output/workspace/deepdive-rehearsal/test/reports/screenshots/mobile_drill.png",
+      "detail": "",
+      "timestamp": "2026-06-27T18:28:36.876006"
+    }
+  ]
+}

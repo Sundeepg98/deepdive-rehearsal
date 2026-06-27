@@ -95,14 +95,26 @@ const railPos = { walk: 25, drill: 50, wb: 75, sys: 100 };
 var current = 'walk';
 /* Activate a pane: toggle the segmented-control buttons and the panes, slide the
    progress rail to this tab's mark, and record it as the current pane. */
+/* v221: switchTab now integrates with HashRouter for SPA navigation.
+   Falls back to legacy toggle if router isn't loaded yet. */
 function switchTab(t) {
+  /* If router is available, delegate to it for proper SPA navigation */
+  if (window.Router && window.Router.navigate) {
+    window.Router.navigate(t);
+    return;
+  }
+  /* Legacy: direct DOM toggle (used during boot before router loads) */
   for (let i = 0; i < segBtns.length; i++) segBtns[i].classList.toggle('on', segBtns[i].getAttribute('data-tab') === t);
   for (let i = 0; i < panes.length; i++) panes[i].classList.toggle('on', panes[i].id === t);
-  railEl.style.width = railPos[t] + '%';
+  if (railEl) railEl.style.width = (railPos[t] || 75) + '%';
   current = t;
 }
 for (let i = 0; i < segBtns.length; i++) {
-  segBtns[i].onclick = function () { switchTab(this.getAttribute('data-tab')); };
+  segBtns[i].addEventListener('click', function () {
+    var tab = this.getAttribute('data-tab');
+    if (window.Router) { window.Router.navigate(tab); }
+    else { switchTab(tab); }
+  });
 }
 /* Global keyboard shortcuts. Ignored while typing in a field, and suppressed
    whenever any overlay is open (the overlay's own handlers take over). */
@@ -113,8 +125,13 @@ document.addEventListener('keydown', function (event) {
   if (event.key === '?') { event.preventDefault(); openKeys(); return; }
   const key = event.key.toLowerCase();
   /* q..o jump straight to a pane (the QWERTY row mirrors the tab order) */
+  /* v221: Use Router for SPA navigation when available */
   const tabKeys = { q: 'walk', w: 'drill', e: 'wb', r: 'sys', t: 'trade', y: 'model', u: 'num', i: 'rf', o: 'open' };
-  if (tabKeys[key]) { switchTab(tabKeys[key]); return; }
+  if (tabKeys[key]) {
+    if (window.Router) { window.Router.navigate(tabKeys[key]); }
+    else { switchTab(tabKeys[key]); }
+    return;
+  }
   if (current === 'walk') {
     /* arrows step through the walkthrough (bounds handled inside prev/next) */
     const w = document.querySelector('#walk deep-walkthrough');

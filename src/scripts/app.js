@@ -18,4 +18,5 @@
 <!--@build:include scripts/app/system-map.js-->
 <!--@build:include scripts/app/model-answers.js-->
 <!--@build:include scripts/app/numbers-nalsd.js-->
-<!--@build:include scripts/app/view-transitions.js-->
+<!--@build:include scripts/app/router.js-->
+<!--@build:include scripts/app/view-manager.js-->

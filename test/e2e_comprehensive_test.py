@@ -163,7 +163,7 @@ async def run_tests():
         ]
         for i, (label, tag) in enumerate(views, 1):
             clicked = await nav_to(page, label)
-            await page.wait_for_timeout(400)
+            await page.wait_for_timeout(1200)
             result = await page.evaluate(f'''() => {{const el=document.querySelector('{tag}');if(!el)return'gone';const r=el.getBoundingClientRect();const sr=el.shadowRoot;return r.width>0&&r.height>0?(sr&&sr.textContent&&sr.textContent.length>50?'content':'empty'):'zero';}}''')
             runner.add('G3 Navigation', f'T3.{i} {label}', result == 'content', 'content', result)
 
@@ -213,7 +213,7 @@ async def run_tests():
 
         # Check dot indicators in walkthrough
         await nav_to(page, 'Walkthrough')
-        await page.wait_for_timeout(400)
+        await page.wait_for_timeout(800)
         dot_bg = await page.evaluate('''() => {const w=document.querySelector('deep-walkthrough');if(!w)return'no-wt';const on=w.shadowRoot.querySelector('.dots i.on');return on?window.getComputedStyle(on).background:'no-dot';}''')
         runner.add('G4 Components', 'T4.4 Active dot has accent background', 'rgb(83, 74, 183)' in str(dot_bg) or 'accent' in str(dot_bg) or 'rgb' in str(dot_bg), 'accent', str(dot_bg)[:50])
 

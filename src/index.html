@@ -112,7 +112,11 @@
 document.addEventListener('DOMContentLoaded',function(){
   // Hide boot splash when DOM is ready
   if(window._hideBootSplash) window._hideBootSplash();
-  
+
+  /* v221: Initialize SPA Router + ViewManager */
+  if(window.Router && window.Router.init) window.Router.init();
+  if(window.ViewManager && window.ViewManager.init) window.ViewManager.init();
+
   // Scroll progress bar
   var prog=document.createElement('div');
   prog.id='scrollprog';

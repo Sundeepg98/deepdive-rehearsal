@@ -1,0 +1,26 @@
+{
+  "timestamp": "2026-06-27T22:53:51.034989",
+  "total_tests": 241,
+  "elapsed": 289.4,
+  "all_passed": false,
+  "suites": [
+    {
+      "name": "Parallel",
+      "result": "? | ?",
+      "passed": false,
+      "time": 120
+    },
+    {
+      "name": "Production",
+      "result": "42/42 passed",
+      "passed": true,
+      "time": 75.7006778717041
+    },
+    {
+      "name": "Comprehensive",
+      "result": "146/146 passed",
+      "passed": true,
+      "time": 93.5565755367279
+    }
+  ]
+}

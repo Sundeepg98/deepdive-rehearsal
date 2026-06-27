@@ -21,3 +21,5 @@
 <!--@build:include scripts/app/router.js-->
 <!--@build:include scripts/app/view-manager.js-->
 <!--@build:include scripts/app/tour-guide.js-->
+<!--@build:include scripts/app/search-overlay.js-->
+<!--@build:include scripts/app/dynamic-features.js-->

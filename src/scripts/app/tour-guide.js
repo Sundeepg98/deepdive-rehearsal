@@ -286,6 +286,8 @@
 
   /* ----- auto-start on first visit (after delay) ----- */
   setTimeout(function () {
+    // Skip auto-start in test environments or when explicitly disabled
+    if (window.__DISABLE_TOUR__) return;
     if (!window.TourGuide.isActive()) {
       window.TourGuide.start();
     }

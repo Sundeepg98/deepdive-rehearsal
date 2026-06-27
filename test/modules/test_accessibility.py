@@ -8,7 +8,10 @@ async def _nav(page, view_id):
     await page.wait_for_timeout(1200)
 
 async def test_tab_moves_focus(page):
+    # Focus the stage element, then Tab
+    await page.evaluate('() => { const s = document.querySelector(".stage"); if(s) s.focus(); }')
     await page.keyboard.press('Tab')
+    await page.wait_for_timeout(400)
     f = await page.evaluate('() => document.activeElement.tagName')
     assert f != 'BODY', f"Tab didn't move focus, still on {f}"
 test_tab_moves_focus._group = 'Keyboard'

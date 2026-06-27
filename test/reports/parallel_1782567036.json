@@ -1,0 +1,432 @@
+{
+  "elapsed": 52.45212769508362,
+  "passed": 16,
+  "failed": 1,
+  "errors": 36,
+  "tests": [
+    {
+      "module": "test_components",
+      "group": "Rendering",
+      "name": "test_adopted_stylesheets",
+      "status": "PASS",
+      "detail": "",
+      "ms": 28318.31455230713
+    },
+    {
+      "module": "test_accessibility",
+      "group": "ARIA",
+      "name": "test_html_has_lang",
+      "status": "PASS",
+      "detail": "",
+      "ms": 30879.956007003784
+    },
+    {
+      "module": "test_accessibility",
+      "group": "ARIA",
+      "name": "test_page_has_title",
+      "status": "PASS",
+      "detail": "",
+      "ms": 33524.69730377197
+    },
+    {
+      "module": "test_spa",
+      "group": "Router",
+      "name": "test_route_metadata",
+      "status": "PASS",
+      "detail": "",
+      "ms": 36718.67895126343
+    },
+    {
+      "module": "test_spa",
+      "group": "Router",
+      "name": "test_router_exists",
+      "status": "PASS",
+      "detail": "",
+      "ms": 36824.11026954651
+    },
+    {
+      "module": "test_spa",
+      "group": "Views",
+      "name": "test_view_manager_exists",
+      "status": "PASS",
+      "detail": "",
+      "ms": 37029.950857162476
+    },
+    {
+      "module": "test_spa",
+      "group": "Router",
+      "name": "test_routes_defined",
+      "status": "PASS",
+      "detail": "",
+      "ms": 37037.49465942383
+    },
+    {
+      "module": "test_spa",
+      "group": "Navigation",
+      "name": "test_hash_updates",
+      "status": "PASS",
+      "detail": "",
+      "ms": 38036.47518157959
+    },
+    {
+      "module": "test_spa",
+      "group": "Navigation",
+      "name": "test_navigate_to_drill",
+      "status": "PASS",
+      "detail": "",
+      "ms": 38256.211042404175
+    },
+    {
+      "module": "test_spa",
+      "group": "Navigation",
+      "name": "test_title_updates",
+      "status": "PASS",
+      "detail": "",
+      "ms": 38387.27355003357
+    },
+    {
+      "module": "test_spa",
+      "group": "Views",
+      "name": "test_title_matches_view",
+      "status": "PASS",
+      "detail": "",
+      "ms": 38390.37847518921
+    },
+    {
+      "module": "test_spa",
+      "group": "Views",
+      "name": "test_single_pane_active",
+      "status": "PASS",
+      "detail": "",
+      "ms": 38586.6003036499
+    },
+    {
+      "module": "test_spa",
+      "group": "Views",
+      "name": "test_other_panes_hidden",
+      "status": "PASS",
+      "detail": "",
+      "ms": 38658.33806991577
+    },
+    {
+      "module": "test_spa",
+      "group": "Navigation",
+      "name": "test_navigate_to_wb",
+      "status": "PASS",
+      "detail": "",
+      "ms": 39111.96851730347
+    },
+    {
+      "module": "test_spa",
+      "group": "History",
+      "name": "test_back_button",
+      "status": "PASS",
+      "detail": "",
+      "ms": 40353.40070724487
+    },
+    {
+      "module": "test_spa",
+      "group": "Navigation",
+      "name": "test_navigate_all_views",
+      "status": "PASS",
+      "detail": "",
+      "ms": 51097.87106513977
+    },
+    {
+      "module": "test_spa",
+      "group": "Views",
+      "name": "test_active_pane_opaque",
+      "status": "FAIL",
+      "detail": "Expected opacity 1.0, got 0",
+      "ms": 38079.4632434845
+    },
+    {
+      "module": "test_accessibility",
+      "group": "ARIA",
+      "name": "test_buttons_have_text",
+      "status": "ERROR",
+      "detail": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"file:///mnt/agents/output/workspace/deepdive-rehearsal/deepdive_content_pipeline_rehearsal.html\", waiting until \"load\"\n",
+      "ms": 31408.137798309326
+    },
+    {
+      "module": "test_accessibility",
+      "group": "Keyboard",
+      "name": "test_q_navigates_walk",
+      "status": "ERROR",
+      "detail": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"file:///mnt/agents/output/workspace/deepdive-rehearsal/deepdive_content_pipeline_rehearsal.html\", waiting until \"load\"\n",
+      "ms": 31427.321434020996
+    },
+    {
+      "module": "test_accessibility",
+      "group": "ARIA",
+      "name": "test_reduced_motion_css",
+      "status": "ERROR",
+      "detail": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"file:///mnt/agents/output/workspace/deepdive-rehearsal/deepdive_content_pipeline_rehearsal.html\", waiting until \"load\"\n",
+      "ms": 31524.099826812744
+    },
+    {
+      "module": "test_accessibility",
+      "group": "Keyboard",
+      "name": "test_w_navigates_drill",
+      "status": "ERROR",
+      "detail": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"file:///mnt/agents/output/workspace/deepdive-rehearsal/deepdive_content_pipeline_rehearsal.html\", waiting until \"load\"\n",
+      "ms": 31523.476362228394
+    },
+    {
+      "module": "test_accessibility",
+      "group": "Keyboard",
+      "name": "test_tab_moves_focus",
+      "status": "ERROR",
+      "detail": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"file:///mnt/agents/output/workspace/deepdive-rehearsal/deepdive_content_pipeline_rehearsal.html\", waiting until \"load\"\n",
+      "ms": 31562.912702560425
+    },
+    {
+      "module": "test_components",
+      "group": "Content",
+      "name": "test_content_pipeline_text",
+      "status": "ERROR",
+      "detail": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"file:///mnt/agents/output/workspace/deepdive-rehearsal/deepdive_content_pipeline_rehearsal.html\", waiting until \"load\"\n",
+      "ms": 31596.277713775635
+    },
+    {
+      "module": "test_components",
+      "group": "Console",
+      "name": "test_no_js_errors",
+      "status": "ERROR",
+      "detail": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"file:///mnt/agents/output/workspace/deepdive-rehearsal/deepdive_content_pipeline_rehearsal.html\", waiting until \"load\"\n",
+      "ms": 31572.98183441162
+    },
+    {
+      "module": "test_components",
+      "group": "Rendering",
+      "name": "test_drill_renders",
+      "status": "ERROR",
+      "detail": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"file:///mnt/agents/output/workspace/deepdive-rehearsal/deepdive_content_pipeline_rehearsal.html\", waiting until \"load\"\n",
+      "ms": 31610.787868499756
+    },
+    {
+      "module": "test_components",
+      "group": "Content",
+      "name": "test_no_placeholder_text",
+      "status": "ERROR",
+      "detail": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"file:///mnt/agents/output/workspace/deepdive-rehearsal/deepdive_content_pipeline_rehearsal.html\", waiting until \"load\"\n",
+      "ms": 31614.43305015564
+    },
+    {
+      "module": "test_components",
+      "group": "Content",
+      "name": "test_no_todo_markers",
+      "status": "ERROR",
+      "detail": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"file:///mnt/agents/output/workspace/deepdive-rehearsal/deepdive_content_pipeline_rehearsal.html\", waiting until \"load\"\n",
+      "ms": 31695.239782333374
+    },
+    {
+      "module": "test_components",
+      "group": "Content",
+      "name": "test_page_title",
+      "status": "ERROR",
+      "detail": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"file:///mnt/agents/output/workspace/deepdive-rehearsal/deepdive_content_pipeline_rehearsal.html\", waiting until \"load\"\n",
+      "ms": 31746.067762374878
+    },
+    {
+      "module": "test_components",
+      "group": "Rendering",
+      "name": "test_shadow_root_exists",
+      "status": "ERROR",
+      "detail": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"file:///mnt/agents/output/workspace/deepdive-rehearsal/deepdive_content_pipeline_rehearsal.html\", waiting until \"load\"\n",
+      "ms": 31763.13877105713
+    },
+    {
+      "module": "test_components",
+      "group": "Rendering",
+      "name": "test_walkthrough_renders",
+      "status": "ERROR",
+      "detail": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"file:///mnt/agents/output/workspace/deepdive-rehearsal/deepdive_content_pipeline_rehearsal.html\", waiting until \"load\"\n",
+      "ms": 31763.363122940063
+    },
+    {
+      "module": "test_layout",
+      "group": "Desktop",
+      "name": "test_app_height_bounds",
+      "status": "ERROR",
+      "detail": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"file:///mnt/agents/output/workspace/deepdive-rehearsal/deepdive_content_pipeline_rehearsal.html\", waiting until \"load\"\n",
+      "ms": 31763.439178466797
+    },
+    {
+      "module": "test_layout",
+      "group": "Desktop",
+      "name": "test_body_overflow_hidden",
+      "status": "ERROR",
+      "detail": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"file:///mnt/agents/output/workspace/deepdive-rehearsal/deepdive_content_pipeline_rehearsal.html\", waiting until \"load\"\n",
+      "ms": 31944.698810577393
+    },
+    {
+      "module": "test_layout",
+      "group": "Desktop",
+      "name": "test_companion_visible",
+      "status": "ERROR",
+      "detail": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"file:///mnt/agents/output/workspace/deepdive-rehearsal/deepdive_content_pipeline_rehearsal.html\", waiting until \"load\"\n",
+      "ms": 32207.582235336304
+    },
+    {
+      "module": "test_layout",
+      "group": "Desktop",
+      "name": "test_html_overflow_hidden",
+      "status": "ERROR",
+      "detail": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"file:///mnt/agents/output/workspace/deepdive-rehearsal/deepdive_content_pipeline_rehearsal.html\", waiting until \"load\"\n",
+      "ms": 32187.229871749878
+    },
+    {
+      "module": "test_layout",
+      "group": "Desktop",
+      "name": "test_nine_nav_items",
+      "status": "ERROR",
+      "detail": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"file:///mnt/agents/output/workspace/deepdive-rehearsal/deepdive_content_pipeline_rehearsal.html\", waiting until \"load\"\n",
+      "ms": 32187.100648880005
+    },
+    {
+      "module": "test_layout",
+      "group": "Desktop",
+      "name": "test_no_scroll_whitespace",
+      "status": "ERROR",
+      "detail": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"file:///mnt/agents/output/workspace/deepdive-rehearsal/deepdive_content_pipeline_rehearsal.html\", waiting until \"load\"\n",
+      "ms": 32563.31467628479
+    },
+    {
+      "module": "test_layout",
+      "group": "Desktop",
+      "name": "test_sidebar_visible",
+      "status": "ERROR",
+      "detail": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"file:///mnt/agents/output/workspace/deepdive-rehearsal/deepdive_content_pipeline_rehearsal.html\", waiting until \"load\"\n",
+      "ms": 32563.616037368774
+    },
+    {
+      "module": "test_layout",
+      "group": "Desktop",
+      "name": "test_stage_position_relative",
+      "status": "ERROR",
+      "detail": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"file:///mnt/agents/output/workspace/deepdive-rehearsal/deepdive_content_pipeline_rehearsal.html\", waiting until \"load\"\n",
+      "ms": 32564.404487609863
+    },
+    {
+      "module": "test_performance",
+      "group": "CSS",
+      "name": "test_brace_balance",
+      "status": "ERROR",
+      "detail": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"file:///mnt/agents/output/workspace/deepdive-rehearsal/deepdive_content_pipeline_rehearsal.html\", waiting until \"load\"\n",
+      "ms": 32811.84959411621
+    },
+    {
+      "module": "test_performance",
+      "group": "CSS",
+      "name": "test_has_dark_theme",
+      "status": "ERROR",
+      "detail": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"file:///mnt/agents/output/workspace/deepdive-rehearsal/deepdive_content_pipeline_rehearsal.html\", waiting until \"load\"\n",
+      "ms": 32815.9065246582
+    },
+    {
+      "module": "test_performance",
+      "group": "CSS",
+      "name": "test_has_media_queries",
+      "status": "ERROR",
+      "detail": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"file:///mnt/agents/output/workspace/deepdive-rehearsal/deepdive_content_pipeline_rehearsal.html\", waiting until \"load\"\n",
+      "ms": 33080.34372329712
+    },
+    {
+      "module": "test_performance",
+      "group": "CSS",
+      "name": "test_has_keyframes",
+      "status": "ERROR",
+      "detail": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"file:///mnt/agents/output/workspace/deepdive-rehearsal/deepdive_content_pipeline_rehearsal.html\", waiting until \"load\"\n",
+      "ms": 33083.885192871094
+    },
+    {
+      "module": "test_performance",
+      "group": "CSS",
+      "name": "test_has_reduced_motion",
+      "status": "ERROR",
+      "detail": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"file:///mnt/agents/output/workspace/deepdive-rehearsal/deepdive_content_pipeline_rehearsal.html\", waiting until \"load\"\n",
+      "ms": 33099.74026679993
+    },
+    {
+      "module": "test_performance",
+      "group": "CSS",
+      "name": "test_has_print_styles",
+      "status": "ERROR",
+      "detail": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"file:///mnt/agents/output/workspace/deepdive-rehearsal/deepdive_content_pipeline_rehearsal.html\", waiting until \"load\"\n",
+      "ms": 33102.68211364746
+    },
+    {
+      "module": "test_performance",
+      "group": "Size",
+      "name": "test_html_under_1mb",
+      "status": "ERROR",
+      "detail": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"file:///mnt/agents/output/workspace/deepdive-rehearsal/deepdive_content_pipeline_rehearsal.html\", waiting until \"load\"\n",
+      "ms": 33551.40018463135
+    },
+    {
+      "module": "test_performance",
+      "group": "Size",
+      "name": "test_html_under_500kb",
+      "status": "ERROR",
+      "detail": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"file:///mnt/agents/output/workspace/deepdive-rehearsal/deepdive_content_pipeline_rehearsal.html\", waiting until \"load\"\n",
+      "ms": 33551.748752593994
+    },
+    {
+      "module": "test_performance",
+      "group": "Size",
+      "name": "test_load_under_5s",
+      "status": "ERROR",
+      "detail": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"file:///mnt/agents/output/workspace/deepdive-rehearsal/deepdive_content_pipeline_rehearsal.html\", waiting until \"load\"\n",
+      "ms": 33704.901933670044
+    },
+    {
+      "module": "test_spa",
+      "group": "Views",
+      "name": "test_correct_pane_visible",
+      "status": "ERROR",
+      "detail": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"file:///mnt/agents/output/workspace/deepdive-rehearsal/deepdive_content_pipeline_rehearsal.html\", waiting until \"load\"\n",
+      "ms": 34044.04950141907
+    },
+    {
+      "module": "test_spa",
+      "group": "History",
+      "name": "test_deep_link_hash",
+      "status": "ERROR",
+      "detail": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"file:///mnt/agents/output/workspace/deepdive-rehearsal/deepdive_content_pipeline_rehearsal.html\", waiting until \"load\"\n",
+      "ms": 34200.244188308716
+    },
+    {
+      "module": "test_spa",
+      "group": "Router",
+      "name": "test_default_route",
+      "status": "ERROR",
+      "detail": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"file:///mnt/agents/output/workspace/deepdive-rehearsal/deepdive_content_pipeline_rehearsal.html\", waiting until \"load\"\n",
+      "ms": 34653.77378463745
+    },
+    {
+      "module": "test_spa",
+      "group": "History",
+      "name": "test_invalid_hash_fallback",
+      "status": "ERROR",
+      "detail": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"file:///mnt/agents/output/workspace/deepdive-rehearsal/deepdive_content_pipeline_rehearsal.html\", waiting until \"load\"\n",
+      "ms": 34625.80180168152
+    },
+    {
+      "module": "test_spa",
+      "group": "History",
+      "name": "test_forward_button",
+      "status": "ERROR",
+      "detail": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"file:///mnt/agents/output/workspace/deepdive-rehearsal/deepdive_content_pipeline_rehearsal.html\", waiting until \"load\"\n",
+      "ms": 34630.197048187256
+    },
+    {
+      "module": "test_spa",
+      "group": "Views",
+      "name": "test_nav_button_activated",
+      "status": "ERROR",
+      "detail": "Page.goto: Timeout 30000ms exceeded.\nCall log:\n  - navigating to \"file:///mnt/agents/output/workspace/deepdive-rehearsal/deepdive_content_pipeline_rehearsal.html\", waiting until \"load\"\n",
+      "ms": 34642.79913902283
+    }
+  ]
+}

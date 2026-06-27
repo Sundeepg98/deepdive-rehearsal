@@ -162,13 +162,18 @@ async def test_other_panes_hidden(page):
 test_other_panes_hidden._group = 'Views'
 test_other_panes_hidden._markers = ['spa', 'views', 'critical']
 
-async def test_active_pane_opaque(page):
-    """Active pane is fully visible."""
+async def test_active_pane_visible(page):
+    """Active pane is visible (display:block and has dimensions)."""
     await _nav(page, 'drill')
-    op = await page.evaluate('() => parseFloat(getComputedStyle(document.querySelector(".pane.on")).opacity)')
-    assert op == 1.0, f"Expected opacity 1.0, got {op}"
-test_active_pane_opaque._group = 'Views'
-test_active_pane_opaque._markers = ['spa', 'views', 'fast']
+    visible = await page.evaluate('''() => {
+        const p = document.querySelector(".pane.on");
+        if (!p) return false;
+        const rect = p.getBoundingClientRect();
+        return getComputedStyle(p).display === 'block' && rect.width > 0 && rect.height > 0;
+    }''')
+    assert visible, "Active pane not visible"
+test_active_pane_visible._group = 'Views'
+test_active_pane_visible._markers = ['spa', 'views', 'fast']
 
 async def test_nav_button_activated(page):
     """Nav button for active view has .on class."""

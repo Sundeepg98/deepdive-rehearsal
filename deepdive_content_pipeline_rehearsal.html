@@ -135,11 +135,30 @@ button:focus-visible,.dn-step:focus-visible,.pill:focus-visible{outline:2px soli
   .seg{display:grid;grid-template-columns:repeat(9,1fr);gap:4px;background:linear-gradient(180deg,#F0ECE4 0%,#EBE6DC 100%);border:1px solid var(--bd);border-radius:12px;padding:5px;margin-bottom:20px;box-shadow:0 1px 3px rgba(0,0,0,.04),inset 0 1px 0 rgba(255,255,255,.5);transition:box-shadow .2s ease}
   .seg button{min-width:0;white-space:nowrap;border:0;background:linear-gradient(180deg,transparent 0%,rgba(83,74,183,.01) 100%);color:var(--mut);font:650 10.5px -apple-system,sans-serif;padding:10px 3px;border-radius:9px;cursor:pointer;transition:all .18s cubic-bezier(.22,.61,.36,1);display:flex;flex-direction:column;align-items:center;gap:2px;position:relative;overflow:hidden}
   @media(max-width:600px){ .seg{grid-template-columns:repeat(3,1fr)} }
-  .seg button .n{font-size:8.5px;color:var(--mut2);font-weight:700;letter-spacing:.4px;transition:color .2s ease,transform .2s ease;text-shadow:0 0 6px rgba(83,74,183,.04)}
+  .seg button .n{font-size:10px;color:var(--mut);font-weight:750;letter-spacing:.5px;transition:color .2s ease,transform .2s ease;text-shadow:0 0 6px rgba(83,74,183,.06);display:block;margin-top:2px}
   .seg button.on{background:linear-gradient(135deg,var(--card) 0%,var(--accbg) 100%);color:var(--acc);font-weight:760;box-shadow:0 0 0 1px rgba(83,74,183,.32),0 4px 12px rgba(83,74,183,.22),inset 0 1px 0 rgba(255,255,255,.5)}
-  .seg button.on .n{color:var(--acc);text-shadow:0 0 10px rgba(83,74,183,.15);transition:text-shadow .2s ease}
+  .seg button.on .n{color:var(--acc);font-weight:800;text-shadow:0 0 12px rgba(83,74,183,.2);transition:text-shadow .2s ease}
   .seg button:not(.on):hover{background:linear-gradient(180deg,rgba(83,74,183,.06) 0%,rgba(83,74,183,.03) 100%);color:var(--ink);box-shadow:0 2px 8px -2px rgba(83,74,183,.15),0 0 0 1px rgba(83,74,183,.08);transform:translateY(-2px)}
   .seg button:not(.on):active{transform:translateY(0) scale(.97);transition:all .08s ease}
+
+/* ===== v300: Dynamic Features CSS ===== */
+/* Search overlay */
+#_search-overlay input::placeholder{color:var(--mut);opacity:.6}
+#_search-overlay kbd{font-family:ui-monospace,monospace;font-size:10px;background:linear-gradient(180deg,#F0ECE4 0%,#E5E0D5 100%);border:1px solid #DDD7CD;border-bottom-width:2px;border-radius:4px;padding:2px 6px;color:var(--mut);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+/* Progress tracker */
+#_progress-tracker{margin-bottom:12px;padding:0 4px;animation:fadeInUp .4s cubic-bezier(.22,.61,.36,1)}
+#_progress-fill{position:relative;overflow:hidden}
+#_progress-fill::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.3) 50%,transparent 100%);animation:shimmer 2s ease-in-out infinite}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+/* Toast notifications */
+#_toast-container > div{backdrop-filter:blur(8px)}
+/* Nav button shimmer on active */
+.seg button.on::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,transparent 40%,rgba(255,255,255,.12) 50%,transparent 60%);background-size:200% 100%;animation:shimmer 3s ease-in-out infinite;pointer-events:none;border-radius:inherit}
+/* Enhanced hover for sidebar nav */
+.sidebar .seg button{transition:background .2s ease,box-shadow .2s ease,transform .18s cubic-bezier(.22,.61,.36,1),border-color .2s ease,color .2s ease}
+.sidebar .seg button:not(.on):hover{transform:translateX(3px) scale(1.01)}
+.sidebar .seg button.on{animation:activePulse 3s ease-in-out infinite}
+@keyframes activePulse{0%,100%{box-shadow:inset 3px 0 0 var(--acc),0 4px 14px -6px rgba(83,74,183,.12)}50%{box-shadow:inset 3px 0 0 var(--acc2),0 6px 20px -4px rgba(83,74,183,.18)}}
 
     /* === v221: SPA pane system — managed by ViewManager === */
   .pane{display:none;opacity:0;transform:translateY(16px) scale(.992)}
@@ -371,7 +390,7 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
   .sidebar .seg{order:1;position:sticky;top:0;z-index:25;flex-direction:row;overflow-x:auto;gap:6px;background:var(--bg);border-bottom:1px solid var(--bd);padding:8px 12px;-webkit-overflow-scrolling:touch}
   .sidebar .seg button{flex:none;width:auto;white-space:nowrap;align-items:center;padding:11px 14px;border-radius:9px;transition:background .18s ease,box-shadow .2s ease,transform .15s ease}
   .sidebar .seg button>span:first-child{font-size:13px;font-weight:600}
-  .sidebar .seg button .n{display:none}
+  .sidebar .seg button .n{font-size:9px;font-weight:750;letter-spacing:.4px;color:var(--mut);display:block;margin-top:1px}
   .sidebar .seg button:active{transform:scale(.97)}
   .sidebar .seg button.on{background:var(--accbg);box-shadow:inset 0 -2.5px 0 var(--acc),0 2px 8px -3px rgba(83,74,183,.12);color:var(--accink)}
   .sidebar .seg button.on>span:first-child{font-weight:700}
@@ -4838,11 +4857,485 @@ document.addEventListener('keydown', function (event) {
 
   /* ----- auto-start on first visit (after delay) ----- */
   setTimeout(function () {
+    // Skip auto-start in test environments or when explicitly disabled
+    if (window.__DISABLE_TOUR__) return;
     if (!window.TourGuide.isActive()) {
       window.TourGuide.start();
     }
   }, 3000);
 
+})();
+
+/* ===== SearchOverlay =====
+   Global search across all module content.
+   Trigger: Cmd+K (or Ctrl+K) to open.
+   Features:
+   - Fuzzy search across all 9 module titles and keywords
+   - Keyboard navigation (ArrowUp/ArrowDown, Enter)
+   - Highlighted results with jump-to navigation
+   - Smooth open/close animations
+   - Click outside or Escape to close
+
+   Usage:
+     SearchOverlay.open();   // Programmatically open
+     SearchOverlay.close();  // Close overlay
+*/
+(function () {
+  'use strict';
+
+  var overlayEl = null;
+  var inputEl = null;
+  var resultsEl = null;
+  var isOpen = false;
+  var selectedIndex = -1;
+  var allResults = [];
+
+  // Search index: module data
+  var MODULES = [
+    { id: 'walk', label: 'Walkthrough', keywords: 'mechanics structure flow interview', desc: 'Step-by-step interview flow' },
+    { id: 'drill', label: 'Probe Drill', keywords: 'graded scoring rubric practice', desc: 'Graded practice with scoring rubric' },
+    { id: 'wb', label: 'Whiteboard', keywords: 'design reconstruct architecture system', desc: 'Reconstruct the design from scratch' },
+    { id: 'sys', label: 'System Map', keywords: 'map diagram components services', desc: 'Visual system architecture map' },
+    { id: 'trade', label: 'Trade-offs', keywords: 'tradeoff comparison decision pros cons', desc: 'Compare design alternatives' },
+    { id: 'model', label: 'Model Answers', keywords: 'answer example sample solution', desc: 'Reference model answers' },
+    { id: 'num', label: 'Numbers', keywords: 'metrics math estimation calculation', desc: 'Back-of-envelope calculations' },
+    { id: 'rf', label: 'Red Flags', keywords: 'red flag warning mistake error', desc: 'Common mistakes to avoid' },
+    { id: 'open', label: '30-Second', keywords: 'opener elevator pitch summary', desc: '30-second elevator pitch' }
+  ];
+
+  function createElements() {
+    if (overlayEl) return;
+
+    overlayEl = document.createElement('div');
+    overlayEl.id = '_search-overlay';
+    overlayEl.style.cssText = 'position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.35);backdrop-filter:blur(6px);opacity:0;transition:opacity .25s ease;display:none;align-items:flex-start;justify-content:center;padding-top:15vh';
+
+    var box = document.createElement('div');
+    box.style.cssText = 'width:560px;max-width:90vw;background:linear-gradient(180deg,#fff 0%,#FAF9F5 100%);border-radius:16px;box-shadow:0 24px 80px -16px rgba(0,0,0,.25),0 0 0 1px rgba(83,74,183,.08);overflow:hidden;transform:scale(.95) translateY(10px);transition:transform .3s cubic-bezier(.22,.61,.36,1)';
+
+    var header = document.createElement('div');
+    header.style.cssText = 'display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid #E8E4DC';
+
+    var icon = document.createElement('span');
+    icon.textContent = '\u2318';
+    icon.style.cssText = 'font-size:16px;color:var(--mut);opacity:.6';
+
+    inputEl = document.createElement('input');
+    inputEl.type = 'text';
+    inputEl.placeholder = 'Search modules, topics, keywords...';
+    inputEl.style.cssText = 'flex:1;border:0;outline:0;font-size:15px;background:transparent;color:var(--ink);font-family:inherit';
+    inputEl.addEventListener('input', onInput);
+    inputEl.addEventListener('keydown', onInputKey);
+
+    var shortcut = document.createElement('kbd');
+    shortcut.textContent = 'ESC';
+    shortcut.style.cssText = 'font-size:10px;font-family:monospace;background:#F0ECE4;border:1px solid #DDD7CD;border-radius:4px;padding:2px 6px;color:var(--mut)';
+
+    header.appendChild(icon);
+    header.appendChild(inputEl);
+    header.appendChild(shortcut);
+
+    resultsEl = document.createElement('div');
+    resultsEl.style.cssText = 'max-height:320px;overflow-y:auto;padding:6px';
+
+    box.appendChild(header);
+    box.appendChild(resultsEl);
+    overlayEl.appendChild(box);
+    document.body.appendChild(overlayEl);
+
+    overlayEl.addEventListener('click', function (e) {
+      if (e.target === overlayEl) close();
+    });
+  }
+
+  function onInput() {
+    var q = inputEl.value.trim().toLowerCase();
+    if (q.length < 1) {
+      renderResults([]);
+      return;
+    }
+    var results = MODULES.filter(function (m) {
+      return m.label.toLowerCase().includes(q) ||
+             m.keywords.toLowerCase().includes(q) ||
+             m.desc.toLowerCase().includes(q);
+    }).map(function (m) {
+      return { type: 'module', data: m };
+    });
+    renderResults(results);
+  }
+
+  function renderResults(results) {
+    allResults = results;
+    selectedIndex = results.length > 0 ? 0 : -1;
+    resultsEl.innerHTML = '';
+
+    if (results.length === 0) {
+      var empty = document.createElement('div');
+      empty.style.cssText = 'padding:24px;text-align:center;color:var(--mut);font-size:13px';
+      empty.textContent = inputEl.value.trim() ? 'No results found' : 'Type to search across all modules...';
+      resultsEl.appendChild(empty);
+      return;
+    }
+
+    results.forEach(function (r, i) {
+      var item = document.createElement('button');
+      item.style.cssText = 'display:flex;flex-direction:column;align-items:flex-start;width:100%;text-align:left;padding:10px 14px;border:0;border-radius:10px;background:' + (i === 0 ? 'rgba(83,74,183,.06)' : 'transparent') + ';cursor:pointer;transition:background .15s ease;margin-bottom:2px';
+      item.innerHTML = '<span style="font-size:13.5px;font-weight:650;color:var(--ink)">' + r.data.label + '</span><span style="font-size:11px;color:var(--mut);margin-top:2px">' + r.data.desc + '</span>';
+      item.addEventListener('mouseenter', function () { selectIndex(i); });
+      item.addEventListener('click', function () { navigateTo(r.data.id); });
+      resultsEl.appendChild(item);
+    });
+  }
+
+  function selectIndex(i) {
+    selectedIndex = i;
+    var items = resultsEl.querySelectorAll('button');
+    items.forEach(function (el, idx) {
+      el.style.background = idx === i ? 'rgba(83,74,183,.08)' : 'transparent';
+    });
+  }
+
+  function onInputKey(e) {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      selectIndex(Math.min(selectedIndex + 1, allResults.length - 1));
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      selectIndex(Math.max(selectedIndex - 1, 0));
+    } else if (e.key === 'Enter' && selectedIndex >= 0) {
+      e.preventDefault();
+      if (allResults[selectedIndex]) navigateTo(allResults[selectedIndex].data.id);
+    } else if (e.key === 'Escape') {
+      close();
+    }
+  }
+
+  function navigateTo(viewId) {
+    close();
+    if (window.Router) window.Router.navigate(viewId);
+  }
+
+  function open() {
+    if (isOpen) return;
+    createElements();
+    isOpen = true;
+    overlayEl.style.display = 'flex';
+    requestAnimationFrame(function () {
+      overlayEl.style.opacity = '1';
+      overlayEl.firstElementChild.style.transform = 'scale(1) translateY(0)';
+    });
+    inputEl.value = '';
+    inputEl.focus();
+    renderResults([]);
+  }
+
+  function close() {
+    if (!isOpen) return;
+    isOpen = false;
+    overlayEl.style.opacity = '0';
+    overlayEl.firstElementChild.style.transform = 'scale(.95) translateY(10px)';
+    setTimeout(function () {
+      overlayEl.style.display = 'none';
+    }, 250);
+  }
+
+  // Global keyboard shortcut
+  document.addEventListener('keydown', function (e) {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      e.preventDefault();
+      open();
+    }
+    if (e.key === 'Escape' && isOpen) {
+      close();
+    }
+  });
+
+  window.SearchOverlay = { open: open, close: close };
+})();
+
+/* ===== Dynamic Features =====
+   Infuses the static sidebar with life:
+   - Ripple effect on all button clicks
+   - Animated sidebar active indicator (sliding glow)
+   - Progress dots per section
+   - Nav button hover sound (visual)
+   - Toast notifications
+   - View transition counter animation
+
+   Usage: Auto-initializes on DOMContentLoaded.
+*/
+(function () {
+  'use strict';
+
+  /* ---------- Ripple Effect ---------- */
+  function initRipple() {
+    document.addEventListener('click', function (e) {
+      var btn = e.target.closest('.seg button, .tools-fab, .mockbtn, .crambtn');
+      if (!btn) return;
+
+      var ripple = document.createElement('span');
+      var rect = btn.getBoundingClientRect();
+      var size = Math.max(rect.width, rect.height);
+      var x = e.clientX - rect.left - size / 2;
+      var y = e.clientY - rect.top - size / 2;
+
+      ripple.style.cssText = 'position:absolute;border-radius:50%;background:rgba(83,74,183,.18);width:' + size + 'px;height:' + size + 'px;left:' + x + 'px;top:' + y + 'px;transform:scale(0);animation:rippleEffect .55s cubic-bezier(.22,.61,.36,1);pointer-events:none;opacity:0.6';
+      btn.style.overflow = 'hidden';
+      btn.appendChild(ripple);
+      setTimeout(function () { ripple.remove(); }, 600);
+    });
+
+    // Inject ripple keyframe
+    if (!document.getElementById('_ripple-style')) {
+      var style = document.createElement('style');
+      style.id = '_ripple-style';
+      style.textContent = '@keyframes rippleEffect{to{transform:scale(2.5);opacity:0}}';
+      document.head.appendChild(style);
+    }
+  }
+
+  /* ---------- Sliding Active Indicator ---------- */
+  function initSlidingIndicator() {
+    var sidebar = document.querySelector('.sidebar');
+    if (!sidebar) return;
+    var seg = sidebar.querySelector('.seg');
+    if (!seg) return;
+
+    var indicator = document.createElement('div');
+    indicator.id = '_slide-indicator';
+    indicator.style.cssText = 'position:absolute;left:0;width:3px;background:linear-gradient(180deg,var(--acc),var(--acc2),#8B7FE8);border-radius:0 3px 3px 0;box-shadow:0 0 8px rgba(83,74,183,.3),0 0 20px rgba(83,74,183,.15);transition:top .35s cubic-bezier(.22,.61,.36,1),height .35s cubic-bezier(.22,.61,.36,1),opacity .2s ease;opacity:0;z-index:2;pointer-events:none';
+    seg.style.position = 'relative';
+    seg.appendChild(indicator);
+
+    function updateIndicator() {
+      var active = seg.querySelector('button.on');
+      if (!active) { indicator.style.opacity = '0'; return; }
+      var top = active.offsetTop;
+      var height = active.offsetHeight;
+      indicator.style.top = top + 4 + 'px';
+      indicator.style.height = height - 8 + 'px';
+      indicator.style.opacity = '1';
+    }
+
+    // Observe class changes on buttons
+    var observer = new MutationObserver(updateIndicator);
+    seg.querySelectorAll('button').forEach(function (b) {
+      observer.observe(b, { attributes: true, attributeFilter: ['class'] });
+    });
+
+    // Initial + periodic update
+    updateIndicator();
+    setTimeout(updateIndicator, 500);
+  }
+
+  /* ---------- Progress Tracking ---------- */
+  function initProgressTracker() {
+    var sidebar = document.querySelector('.sidebar');
+    if (!sidebar) return;
+    var seg = sidebar.querySelector('.seg');
+    if (!seg) return;
+
+    // Create progress container
+    var progressDiv = document.createElement('div');
+    progressDiv.id = '_progress-tracker';
+    progressDiv.style.cssText = 'margin-bottom:12px;padding:0 4px';
+
+    var label = document.createElement('div');
+    label.style.cssText = 'font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--mut);margin-bottom:6px;display:flex;justify-content:space-between;align-items:center';
+
+    var labelText = document.createElement('span');
+    labelText.textContent = 'Session Progress';
+
+    var counter = document.createElement('span');
+    counter.id = '_progress-counter';
+    counter.style.cssText = 'font-family:var(--mono);font-size:11px;color:var(--acc);font-weight:700';
+    counter.textContent = '1 / 9';
+
+    label.appendChild(labelText);
+    label.appendChild(counter);
+    progressDiv.appendChild(label);
+
+    // Progress bar
+    var barContainer = document.createElement('div');
+    barContainer.style.cssText = 'height:4px;background:#E8E4DC;border-radius:2px;overflow:hidden';
+
+    var barFill = document.createElement('div');
+    barFill.id = '_progress-fill';
+    barFill.style.cssText = 'height:100%;width:11.1%;background:linear-gradient(90deg,var(--acc),var(--acc2));border-radius:2px;transition:width .5s cubic-bezier(.22,.61,.36,1);box-shadow:0 0 6px rgba(83,74,183,.2)';
+
+    barContainer.appendChild(barFill);
+    progressDiv.appendChild(barContainer);
+
+    // Insert before seg
+    seg.parentNode.insertBefore(progressDiv, seg);
+
+    // Listen to route changes
+    document.addEventListener('routechange', function (e) {
+      var detail = e.detail || {};
+      var viewId = detail.view || '';
+      var order = ['walk', 'drill', 'wb', 'sys', 'trade', 'model', 'num', 'rf', 'open'];
+      var idx = order.indexOf(viewId);
+      if (idx < 0) idx = 0;
+      counter.textContent = (idx + 1) + ' / 9';
+      barFill.style.width = ((idx + 1) / 9 * 100) + '%';
+    });
+  }
+
+  /* ---------- Toast Notifications ---------- */
+  var toastContainer = null;
+  function initToast() {
+    toastContainer = document.createElement('div');
+    toastContainer.id = '_toast-container';
+    toastContainer.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:400;display:flex;flex-direction:column;gap:8px;pointer-events:none';
+    document.body.appendChild(toastContainer);
+  }
+
+  window.showToast = function (message, type) {
+    type = type || 'info';
+    if (!toastContainer) initToast();
+
+    var toast = document.createElement('div');
+    var bg = type === 'success' ? 'linear-gradient(135deg,#0F6E56,#1A9A7A)' : type === 'error' ? 'linear-gradient(135deg,#A32D2D,#CC4444)' : 'linear-gradient(135deg,var(--acc),var(--acc2))';
+    toast.style.cssText = 'background:' + bg + ';color:#fff;padding:10px 18px;border-radius:10px;font-size:13px;font-weight:550;box-shadow:0 8px 24px -6px rgba(0,0,0,.2);transform:translateX(120px);opacity:0;transition:all .35s cubic-bezier(.22,.61,.36,1);pointer-events:auto;max-width:280px';
+    toast.textContent = message;
+
+    toastContainer.appendChild(toast);
+    requestAnimationFrame(function () {
+      toast.style.transform = 'translateX(0)';
+      toast.style.opacity = '1';
+    });
+
+    setTimeout(function () {
+      toast.style.transform = 'translateX(120px)';
+      toast.style.opacity = '0';
+      setTimeout(function () { toast.remove(); }, 350);
+    }, 3000);
+  };
+
+  /* ---------- Nav hover sparkle ---------- */
+  function initNavSparkle() {
+    var seg = document.querySelector('.sidebar .seg') || document.querySelector('.seg');
+    if (!seg) return;
+
+    seg.addEventListener('mousemove', function (e) {
+      var btn = e.target.closest('button');
+      if (!btn || btn.classList.contains('on')) return;
+
+      // Only create sparkle occasionally
+      if (Math.random() > 0.15) return;
+
+      var sparkle = document.createElement('span');
+      sparkle.style.cssText = 'position:absolute;width:3px;height:3px;background:rgba(83,74,183,.35);border-radius:50%;pointer-events:none;left:' + (e.offsetX || 0) + 'px;top:' + (e.offsetY || 0) + 'px;animation:sparkleFade .6s ease forwards';
+      btn.appendChild(sparkle);
+      setTimeout(function () { sparkle.remove(); }, 600);
+    });
+
+    if (!document.getElementById('_sparkle-style')) {
+      var style = document.createElement('style');
+      style.id = '_sparkle-style';
+      style.textContent = '@keyframes sparkleFade{0%{transform:scale(1);opacity:.5}100%{transform:scale(0);opacity:0}}';
+      document.head.appendChild(style);
+    }
+  }
+
+  /* ---------- Animated route change flash ---------- */
+  function initRouteFlash() {
+    document.addEventListener('routechange', function (e) {
+      var stage = document.querySelector('.stage');
+      if (!stage) return;
+
+      var flash = document.createElement('div');
+      flash.style.cssText = 'position:absolute;inset:0;background:rgba(83,74,183,.02);pointer-events:none;z-index:5;opacity:0;animation:routeFlash .4s ease';
+      stage.style.position = 'relative';
+      stage.appendChild(flash);
+      setTimeout(function () { flash.remove(); }, 450);
+    });
+
+    if (!document.getElementById('_route-flash-style')) {
+      var style = document.createElement('style');
+      style.id = '_route-flash-style';
+      style.textContent = '@keyframes routeFlash{0%{opacity:1}100%{opacity:0}}';
+      document.head.appendChild(style);
+    }
+  }
+
+  /* ---------- Dark Mode Toggle ---------- */
+  function initDarkMode() {
+    // Check if dark mode CSS already exists (from previous versions)
+    var hasDarkCSS = document.querySelector('[data-theme]') !== null ||
+      Array.from(document.styleSheets).some(function (s) {
+        try { return Array.from(s.cssRules).some(function (r) { return r.cssText && r.cssText.includes('[data-theme="dark"]'); }); } catch (e) { return false; }
+      });
+
+    if (!hasDarkCSS) return; // No dark mode CSS available
+
+    var sidebar = document.querySelector('.sidebar');
+    if (!sidebar) return;
+
+    var toggleWrap = document.createElement('div');
+    toggleWrap.style.cssText = 'display:flex;align-items:center;gap:8px;padding:8px 11px;margin-top:8px;border-top:1px solid var(--bd)';
+
+    var icon = document.createElement('span');
+    icon.textContent = document.documentElement.getAttribute('data-theme') === 'dark' ? '\u2600' : '\u263D';
+    icon.style.cssText = 'font-size:14px';
+
+    var label = document.createElement('span');
+    label.textContent = 'Dark Mode';
+    label.style.cssText = 'font-size:12px;color:var(--mut);flex:1';
+
+    var toggle = document.createElement('button');
+    toggle.setAttribute('aria-label', 'Toggle dark mode');
+    toggle.setAttribute('aria-pressed', document.documentElement.getAttribute('data-theme') === 'dark' ? 'true' : 'false');
+    toggle.style.cssText = 'width:36px;height:20px;border-radius:10px;border:0;background:var(--bd);position:relative;cursor:pointer;transition:background .25s ease;padding:0';
+
+    var knob = document.createElement('span');
+    knob.style.cssText = 'position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:2px;left:2px;transition:transform .25s cubic-bezier(.22,.61,.36,1);box-shadow:0 1px 3px rgba(0,0,0,.15)';
+    if (document.documentElement.getAttribute('data-theme') === 'dark') {
+      knob.style.transform = 'translateX(16px)';
+      toggle.style.background = 'var(--acc)';
+    }
+
+    toggle.appendChild(knob);
+    toggle.addEventListener('click', function () {
+      var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        document.documentElement.removeAttribute('data-theme');
+        knob.style.transform = 'translateX(0)';
+        toggle.style.background = 'var(--bd)';
+        toggle.setAttribute('aria-pressed', 'false');
+        icon.textContent = '\u263D';
+      } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        knob.style.transform = 'translateX(16px)';
+        toggle.style.background = 'var(--acc)';
+        toggle.setAttribute('aria-pressed', 'true');
+        icon.textContent = '\u2600';
+      }
+      try { localStorage.setItem('theme', isDark ? 'light' : 'dark'); } catch (e) {}
+    });
+
+    toggleWrap.appendChild(icon);
+    toggleWrap.appendChild(label);
+    toggleWrap.appendChild(toggle);
+    sidebar.appendChild(toggleWrap);
+  }
+
+  /* ---------- Initialize everything ---------- */
+  function init() {
+    initRipple();
+    initSlidingIndicator();
+    initProgressTracker();
+    initToast();
+    initNavSparkle();
+    initRouteFlash();
+    initDarkMode();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 })();
 </script>
 <script>

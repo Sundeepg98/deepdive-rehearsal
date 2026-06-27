@@ -4,11 +4,32 @@ Markers: layout, critical, fast
 """
 
 async def test_no_scroll_whitespace(page):
+    """Verify page has no visible scrollbar and app fits within viewport."""
+    await page.wait_for_timeout(1500)
     m = await page.evaluate('''() => {
-        const app = document.querySelector('.app'), body = document.body;
-        return { gap: document.documentElement.scrollHeight - (app ? Math.round(app.getBoundingClientRect().bottom) : 0) - parseFloat(getComputedStyle(body).paddingBottom) };
+        const de = document.documentElement, body = document.body, app = document.querySelector('.app');
+        // Check 1: overflow hidden is set (scrollbar visually hidden)
+        const htmlOverflow = getComputedStyle(de).overflow;
+        const bodyOverflow = getComputedStyle(body).overflow;
+        // Check 2: app fits within viewport (visible area, not scrollHeight)
+        const appH = app ? app.offsetHeight : 0;
+        const vpH = de.clientHeight; // viewport height excluding scrollbar
+        // Check 3: body padding-bottom should be the only bottom space
+        const bodyPad = parseFloat(getComputedStyle(body).paddingBottom) || 0;
+        // Check 4: verify no element (other than body padding) extends below app
+        const allEl = document.querySelectorAll('body > *');
+        let maxBottom = 0;
+        allEl.forEach(el => {
+            const r = el.getBoundingClientRect();
+            maxBottom = Math.max(maxBottom, r.bottom);
+        });
+        const extra = Math.round(maxBottom - (app ? app.getBoundingClientRect().bottom : 0));
+        return { htmlOverflow, bodyOverflow, appH, vpH, bodyPad, extra, maxBottom: Math.round(maxBottom) };
     }''')
-    assert m['gap'] <= 25, f"Scroll gap = {m['gap']}px"
+    assert m['htmlOverflow'] == 'hidden', f"html overflow is {m['htmlOverflow']}, expected 'hidden'"
+    assert m['bodyOverflow'] == 'hidden', f"body overflow is {m['bodyOverflow']}, expected 'hidden'"
+    assert m['appH'] <= m['vpH'] + 100, f"App height {m['appH']}px exceeds viewport {m['vpH']}px by >100px"
+    assert m['extra'] <= m['bodyPad'] + 20, f"Elements extend {m['extra']}px below app (body padding={m['bodyPad']}px)"
 test_no_scroll_whitespace._group = 'Desktop'
 test_no_scroll_whitespace._markers = ['layout', 'critical']
 

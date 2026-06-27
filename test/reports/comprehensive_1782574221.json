@@ -1,0 +1,1176 @@
+{
+  "elapsed": 82.36276292800903,
+  "passed": 146,
+  "failed": 0,
+  "total": 146,
+  "tests": [
+    {
+      "group": "G1 Desktop",
+      "name": "T1.1 No scroll with overflow hidden",
+      "passed": true,
+      "expected": "gap <= 150px (overflow:hidden clips)",
+      "actual": "gap=0px",
+      "detail": ""
+    },
+    {
+      "group": "G1 Desktop",
+      "name": "T1.2 App height reasonable",
+      "passed": true,
+      "expected": "850-1200px",
+      "actual": "880px",
+      "detail": ""
+    },
+    {
+      "group": "G1 Desktop",
+      "name": "T1.3 Stage position:relative",
+      "passed": true,
+      "expected": "relative",
+      "actual": "relative",
+      "detail": ""
+    },
+    {
+      "group": "G1 Desktop",
+      "name": "T1.4 Companion scroll contained",
+      "passed": true,
+      "expected": "<=800px",
+      "actual": "800px",
+      "detail": ""
+    },
+    {
+      "group": "G1 Desktop",
+      "name": "T1.5 All 9 nav items",
+      "passed": true,
+      "expected": "9",
+      "actual": "9",
+      "detail": ""
+    },
+    {
+      "group": "G1 Desktop",
+      "name": "T1.6 Walkthrough component exists",
+      "passed": true,
+      "expected": "true",
+      "actual": "True",
+      "detail": ""
+    },
+    {
+      "group": "G1 Desktop",
+      "name": "T1.7 Companion visible",
+      "passed": true,
+      "expected": "visible",
+      "actual": "flex",
+      "detail": ""
+    },
+    {
+      "group": "G1 Desktop",
+      "name": "T1.8 Sidebar visible",
+      "passed": true,
+      "expected": "visible",
+      "actual": "flex",
+      "detail": ""
+    },
+    {
+      "group": "G1 Desktop",
+      "name": "T1.9 Seg buttons column layout",
+      "passed": true,
+      "expected": "column",
+      "actual": "column",
+      "detail": ""
+    },
+    {
+      "group": "G1 Desktop",
+      "name": "T1.10 No scrollbar from empty space",
+      "passed": true,
+      "expected": "no scrollbar",
+      "actual": "False",
+      "detail": ""
+    },
+    {
+      "group": "G1 Desktop",
+      "name": "T1.11 CSS custom properties work",
+      "passed": true,
+      "expected": "has --accent",
+      "actual": "shadow-dom-styles",
+      "detail": ""
+    },
+    {
+      "group": "G1 Desktop",
+      "name": "T1.12 Body overflow:hidden clips content",
+      "passed": true,
+      "expected": "gap<=150px (overflow:hidden)",
+      "actual": "0px",
+      "detail": ""
+    },
+    {
+      "group": "G2 Mobile",
+      "name": "T2.1 Mockbar hidden via transform",
+      "passed": true,
+      "expected": "translateY hidden",
+      "actual": "matrix(1, 0, 0, 1, 0, 627.9)",
+      "detail": ""
+    },
+    {
+      "group": "G2 Mobile",
+      "name": "T2.2 No tools-open class",
+      "passed": true,
+      "expected": "false",
+      "actual": "False",
+      "detail": ""
+    },
+    {
+      "group": "G2 Mobile",
+      "name": "T2.3 Horizontal nav strip",
+      "passed": true,
+      "expected": "row",
+      "actual": "row",
+      "detail": ""
+    },
+    {
+      "group": "G2 Mobile",
+      "name": "T2.4 Tools FAB visible",
+      "passed": true,
+      "expected": "visible",
+      "actual": "flex",
+      "detail": ""
+    },
+    {
+      "group": "G2 Mobile",
+      "name": "T2.5 Companion hidden",
+      "passed": true,
+      "expected": "none",
+      "actual": "none",
+      "detail": ""
+    },
+    {
+      "group": "G2 Mobile",
+      "name": "T2.6 Mockbar always display:flex",
+      "passed": true,
+      "expected": "flex",
+      "actual": "flex",
+      "detail": ""
+    },
+    {
+      "group": "G2 Mobile",
+      "name": "T2.7 Viewport width stage",
+      "passed": true,
+      "expected": "375px",
+      "actual": "N/A",
+      "detail": ""
+    },
+    {
+      "group": "G2 Mobile",
+      "name": "T2.8 FAB opens mockbar",
+      "passed": true,
+      "expected": "tools-open + visible",
+      "actual": "tools_open=True, top=266",
+      "detail": ""
+    },
+    {
+      "group": "G2 Mobile",
+      "name": "T2.9 Backdrop closes mockbar",
+      "passed": true,
+      "expected": "false",
+      "actual": "False",
+      "detail": ""
+    },
+    {
+      "group": "G2 Mobile",
+      "name": "T2.10 Double-toggle cycle",
+      "passed": true,
+      "expected": "false",
+      "actual": "False",
+      "detail": ""
+    },
+    {
+      "group": "G3 Navigation",
+      "name": "T3.1 Walkthrough",
+      "passed": true,
+      "expected": "content",
+      "actual": "content",
+      "detail": ""
+    },
+    {
+      "group": "G3 Navigation",
+      "name": "T3.2 Probe Drill",
+      "passed": true,
+      "expected": "content",
+      "actual": "content",
+      "detail": ""
+    },
+    {
+      "group": "G3 Navigation",
+      "name": "T3.3 Whiteboard",
+      "passed": true,
+      "expected": "content",
+      "actual": "content",
+      "detail": ""
+    },
+    {
+      "group": "G3 Navigation",
+      "name": "T3.4 System Map",
+      "passed": true,
+      "expected": "content",
+      "actual": "content",
+      "detail": ""
+    },
+    {
+      "group": "G3 Navigation",
+      "name": "T3.5 Trade-offs",
+      "passed": true,
+      "expected": "content",
+      "actual": "content",
+      "detail": ""
+    },
+    {
+      "group": "G3 Navigation",
+      "name": "T3.6 Model Answers",
+      "passed": true,
+      "expected": "content",
+      "actual": "content",
+      "detail": ""
+    },
+    {
+      "group": "G3 Navigation",
+      "name": "T3.7 Numbers",
+      "passed": true,
+      "expected": "content",
+      "actual": "content",
+      "detail": ""
+    },
+    {
+      "group": "G3 Navigation",
+      "name": "T3.8 Red Flags",
+      "passed": true,
+      "expected": "content",
+      "actual": "content",
+      "detail": ""
+    },
+    {
+      "group": "G3 Navigation",
+      "name": "T3.9 30-Second",
+      "passed": true,
+      "expected": "content",
+      "actual": "content",
+      "detail": ""
+    },
+    {
+      "group": "G4 Components",
+      "name": "T4.1 Card background checked",
+      "passed": true,
+      "expected": "gradient or none",
+      "actual": "linear-gradient(rgb(255, 255, 255) 0%, rgb(248, 24",
+      "detail": ""
+    },
+    {
+      "group": "G4 Components",
+      "name": "T4.2 Card has box shadow",
+      "passed": true,
+      "expected": "shadow",
+      "actual": "rgba(83, 74, 183, 0.06) 0px 0px 0px 1px, rgba(40, ",
+      "detail": ""
+    },
+    {
+      "group": "G4 Components",
+      "name": "T4.3 Stage head accent bar has glow",
+      "passed": true,
+      "expected": "glow",
+      "actual": "rgba(83, 74, 183, 0.314) 0px 0px 8.38503px -0.8716",
+      "detail": ""
+    },
+    {
+      "group": "G4 Components",
+      "name": "T4.4 Active dot has accent background",
+      "passed": true,
+      "expected": "accent",
+      "actual": "rgb(83, 74, 183) none repeat scroll 0% 0% / auto p",
+      "detail": ""
+    },
+    {
+      "group": "G4 Components",
+      "name": "T4.5 Sidebar has backdrop-filter",
+      "passed": true,
+      "expected": "blur",
+      "actual": "blur(20px) saturate(1.2)",
+      "detail": ""
+    },
+    {
+      "group": "G4 Components",
+      "name": "T4.6 Stage ::before is fixed",
+      "passed": true,
+      "expected": "fixed",
+      "actual": "fixed",
+      "detail": ""
+    },
+    {
+      "group": "G4 Components",
+      "name": "T4.7 Stage ::after is fixed",
+      "passed": true,
+      "expected": "fixed",
+      "actual": "fixed",
+      "detail": ""
+    },
+    {
+      "group": "G4 Components",
+      "name": "T4.8 ::selection CSS supported",
+      "passed": true,
+      "expected": "true",
+      "actual": "True",
+      "detail": ""
+    },
+    {
+      "group": "G4 Components",
+      "name": "T4.9 Custom scrollbar CSS present",
+      "passed": true,
+      "expected": "true",
+      "actual": "True",
+      "detail": ""
+    },
+    {
+      "group": "G4 Components",
+      "name": "T4.10 Card has border-radius",
+      "passed": true,
+      "expected": "has px",
+      "actual": "16px",
+      "detail": ""
+    },
+    {
+      "group": "G4 Components",
+      "name": "T4.11 Card has padding",
+      "passed": true,
+      "expected": "has px",
+      "actual": "24px",
+      "detail": ""
+    },
+    {
+      "group": "G4 Components",
+      "name": "T4.12 Active nav button has bg",
+      "passed": true,
+      "expected": "has color",
+      "actual": "rgb(239, 237, 250)",
+      "detail": ""
+    },
+    {
+      "group": "G4 Components",
+      "name": "T4.13 Body has font-family",
+      "passed": true,
+      "expected": "has font",
+      "actual": "-apple-system, BlinkMacSystemF",
+      "detail": ""
+    },
+    {
+      "group": "G4 Components",
+      "name": "T4.14 Stage overflow-x hidden",
+      "passed": true,
+      "expected": "hidden",
+      "actual": "hidden",
+      "detail": ""
+    },
+    {
+      "group": "G5 Console",
+      "name": "T5.1 No JS errors after full navigation",
+      "passed": true,
+      "expected": "0 errors",
+      "actual": "0: []",
+      "detail": ""
+    },
+    {
+      "group": "G5 Console",
+      "name": "T5.2 No unhandled promise rejections",
+      "passed": true,
+      "expected": "0",
+      "actual": "0",
+      "detail": ""
+    },
+    {
+      "group": "G5 Console",
+      "name": "T5.3 No console.error messages",
+      "passed": true,
+      "expected": "0",
+      "actual": "0",
+      "detail": ""
+    },
+    {
+      "group": "G5 Console",
+      "name": "T5.4 JS eval works",
+      "passed": true,
+      "expected": "ok",
+      "actual": "ok",
+      "detail": ""
+    },
+    {
+      "group": "G5 Console",
+      "name": "T5.5 No syntax errors in page",
+      "passed": true,
+      "expected": "0",
+      "actual": "0",
+      "detail": ""
+    },
+    {
+      "group": "G6 Performance",
+      "name": "T6.1 Page loads under 5s",
+      "passed": true,
+      "expected": "<5s",
+      "actual": "2.44s",
+      "detail": ""
+    },
+    {
+      "group": "G6 Performance",
+      "name": "T6.2 DOMContentLoaded under 3s",
+      "passed": true,
+      "expected": "<3000ms",
+      "actual": "370ms",
+      "detail": ""
+    },
+    {
+      "group": "G6 Performance",
+      "name": "T6.3 Load complete under 5s",
+      "passed": true,
+      "expected": "<5000ms",
+      "actual": "404ms",
+      "detail": ""
+    },
+    {
+      "group": "G6 Performance",
+      "name": "T6.4 HTML under 500KB",
+      "passed": true,
+      "expected": "<500KB",
+      "actual": "470KB",
+      "detail": ""
+    },
+    {
+      "group": "G6 Performance",
+      "name": "T6.5 No oversized images",
+      "passed": true,
+      "expected": "checked",
+      "actual": "0 images checked",
+      "detail": ""
+    },
+    {
+      "group": "G6 Performance",
+      "name": "T6.6 Web Components render",
+      "passed": true,
+      "expected": "found",
+      "actual": "found=True",
+      "detail": ""
+    },
+    {
+      "group": "G6 Performance",
+      "name": "T6.7 CSS rules under 1000",
+      "passed": true,
+      "expected": "<1000",
+      "actual": "222",
+      "detail": ""
+    },
+    {
+      "group": "G7 A11y",
+      "name": "T7.1 All buttons have text/label",
+      "passed": true,
+      "expected": "0",
+      "actual": "0",
+      "detail": ""
+    },
+    {
+      "group": "G7 A11y",
+      "name": "T7.2 All images have alt",
+      "passed": true,
+      "expected": "0",
+      "actual": "0",
+      "detail": ""
+    },
+    {
+      "group": "G7 A11y",
+      "name": "T7.3 HTML has lang attribute",
+      "passed": true,
+      "expected": "present",
+      "actual": "en",
+      "detail": ""
+    },
+    {
+      "group": "G7 A11y",
+      "name": "T7.4 Page has title",
+      "passed": true,
+      "expected": "present",
+      "actual": "Content Pipeline \u2014 Deep Rehearsal",
+      "detail": ""
+    },
+    {
+      "group": "G7 A11y",
+      "name": "T7.5 Focusable elements exist",
+      "passed": true,
+      "expected": ">10",
+      "actual": "28",
+      "detail": ""
+    },
+    {
+      "group": "G7 A11y",
+      "name": "T7.6 Reduced motion media query supported",
+      "passed": true,
+      "expected": "true",
+      "actual": "True",
+      "detail": ""
+    },
+    {
+      "group": "G7 A11y",
+      "name": "T7.7 Focus-visible styles supported",
+      "passed": true,
+      "expected": "true",
+      "actual": "True",
+      "detail": ""
+    },
+    {
+      "group": "G7 A11y",
+      "name": "T7.8 Keyboard Tab navigation works",
+      "passed": true,
+      "expected": "not BODY",
+      "actual": "DEEP-WALKTHROUGH",
+      "detail": ""
+    },
+    {
+      "group": "G7 A11y",
+      "name": "T7.9 Headings present",
+      "passed": true,
+      "expected": ">0",
+      "actual": "1",
+      "detail": ""
+    },
+    {
+      "group": "G7 A11y",
+      "name": "T7.10 Semantic landmarks present",
+      "passed": true,
+      "expected": ">0",
+      "actual": "3",
+      "detail": ""
+    },
+    {
+      "group": "G8 CSS",
+      "name": "T8.1 Brace balance",
+      "passed": true,
+      "expected": "536==536",
+      "actual": "536 vs 536",
+      "detail": ""
+    },
+    {
+      "group": "G8 CSS",
+      "name": "T8.2 Print styles present",
+      "passed": true,
+      "expected": "true",
+      "actual": "True",
+      "detail": ""
+    },
+    {
+      "group": "G8 CSS",
+      "name": "T8.3 Reduced motion support",
+      "passed": true,
+      "expected": "true",
+      "actual": "True",
+      "detail": ""
+    },
+    {
+      "group": "G8 CSS",
+      "name": "T8.4 Dark theme support",
+      "passed": true,
+      "expected": "true",
+      "actual": "True",
+      "detail": ""
+    },
+    {
+      "group": "G8 CSS",
+      "name": "T8.5 Custom scrollbar",
+      "passed": true,
+      "expected": "true",
+      "actual": "True",
+      "detail": ""
+    },
+    {
+      "group": "G8 CSS",
+      "name": "T8.6 Keyframe animations present",
+      "passed": true,
+      "expected": "true",
+      "actual": "True",
+      "detail": ""
+    },
+    {
+      "group": "G8 CSS",
+      "name": "T8.7 CSS @property used",
+      "passed": true,
+      "expected": "true",
+      "actual": "True",
+      "detail": ""
+    },
+    {
+      "group": "G9 Interaction",
+      "name": "T9.1 Nav button hover has background change",
+      "passed": true,
+      "expected": "not transparent",
+      "actual": "rgba(125, 110, 210, 0.1)",
+      "detail": ""
+    },
+    {
+      "group": "G9 Interaction",
+      "name": "T9.2 Card has shadow",
+      "passed": true,
+      "expected": "shadow",
+      "actual": "rgba(83, 74, 183, 0.06) 0px 0px 0px 1px,",
+      "detail": ""
+    },
+    {
+      "group": "G9 Interaction",
+      "name": "T9.3 Card has CSS transition",
+      "passed": true,
+      "expected": "transition",
+      "actual": "box-shadow 0.35s cubic-bezier(0.22, 0.61",
+      "detail": ""
+    },
+    {
+      "group": "G9 Interaction",
+      "name": "T9.4 Active nav button highlighted",
+      "passed": true,
+      "expected": "has color",
+      "actual": "rgb(239, 237, 250)",
+      "detail": ""
+    },
+    {
+      "group": "G9 Interaction",
+      "name": "T9.5 Buttons have pointer cursor",
+      "passed": true,
+      "expected": "pointer",
+      "actual": "pointer",
+      "detail": ""
+    },
+    {
+      "group": "G9 Interaction",
+      "name": "T9.6 Button has transition",
+      "passed": true,
+      "expected": "has transition",
+      "actual": "background 0.2s, box-shadow 0.",
+      "detail": ""
+    },
+    {
+      "group": "G9 Interaction",
+      "name": "T9.7 Card has border",
+      "passed": true,
+      "expected": "has px",
+      "actual": "1px solid rgb(232, 228, 220)",
+      "detail": ""
+    },
+    {
+      "group": "G9 Interaction",
+      "name": "T9.8 Mockbar has transform transition",
+      "passed": true,
+      "expected": "transform",
+      "actual": "transform 0.26s",
+      "detail": ""
+    },
+    {
+      "group": "G10 Visual",
+      "name": "T10.1 Keyframe animations present",
+      "passed": true,
+      "expected": "true",
+      "actual": "True",
+      "detail": ""
+    },
+    {
+      "group": "G10 Visual",
+      "name": "T10.2 CSS @property used",
+      "passed": true,
+      "expected": "true",
+      "actual": "True",
+      "detail": ""
+    },
+    {
+      "group": "G10 Visual",
+      "name": "T10.3 Backdrop-filter used",
+      "passed": true,
+      "expected": "true",
+      "actual": "True",
+      "detail": ""
+    },
+    {
+      "group": "G10 Visual",
+      "name": "T10.4 color-mix used",
+      "passed": true,
+      "expected": "true",
+      "actual": "True",
+      "detail": ""
+    },
+    {
+      "group": "G10 Visual",
+      "name": "T10.5 will-change for performance",
+      "passed": true,
+      "expected": "true",
+      "actual": "True",
+      "detail": ""
+    },
+    {
+      "group": "G10 Visual",
+      "name": "T10.6 Gradients used",
+      "passed": true,
+      "expected": "true",
+      "actual": "True",
+      "detail": ""
+    },
+    {
+      "group": "G10 Visual",
+      "name": "T10.7 CSS filter used",
+      "passed": true,
+      "expected": "true",
+      "actual": "True",
+      "detail": ""
+    },
+    {
+      "group": "G10 Visual",
+      "name": "T10.8 CSS animation property used",
+      "passed": true,
+      "expected": "true",
+      "actual": "True",
+      "detail": ""
+    },
+    {
+      "group": "G11 WebComp",
+      "name": "T11.1 deep-walkthrough defined",
+      "passed": true,
+      "expected": "true",
+      "actual": "True",
+      "detail": ""
+    },
+    {
+      "group": "G11 WebComp",
+      "name": "T11.2 Web Components exist in DOM",
+      "passed": true,
+      "expected": ">0",
+      "actual": "9",
+      "detail": ""
+    },
+    {
+      "group": "G11 WebComp",
+      "name": "T11.3 Walkthrough has shadow root",
+      "passed": true,
+      "expected": "true",
+      "actual": "True",
+      "detail": ""
+    },
+    {
+      "group": "G11 WebComp",
+      "name": "T11.4 Shadow DOM has content",
+      "passed": true,
+      "expected": ">100 chars",
+      "actual": "14842",
+      "detail": ""
+    },
+    {
+      "group": "G11 WebComp",
+      "name": "T11.5 Adopted stylesheets present",
+      "passed": true,
+      "expected": ">0",
+      "actual": "3",
+      "detail": ""
+    },
+    {
+      "group": "G11 WebComp",
+      "name": "T11.6 All 9 components have shadow roots",
+      "passed": true,
+      "expected": "9",
+      "actual": "9",
+      "detail": ""
+    },
+    {
+      "group": "G11 WebComp",
+      "name": "T11.7 Constructable stylesheets supported",
+      "passed": true,
+      "expected": "true",
+      "actual": "True",
+      "detail": ""
+    },
+    {
+      "group": "G11 WebComp",
+      "name": "T11.8 Shadow DOM mode is open",
+      "passed": true,
+      "expected": "open",
+      "actual": "open",
+      "detail": ""
+    },
+    {
+      "group": "G12 Content",
+      "name": "T12.1 Walkthrough has text content",
+      "passed": true,
+      "expected": ">200 chars",
+      "actual": "12432",
+      "detail": ""
+    },
+    {
+      "group": "G12 Content",
+      "name": "T12.2 \"Content Pipeline\" text present",
+      "passed": true,
+      "expected": "true",
+      "actual": "True",
+      "detail": ""
+    },
+    {
+      "group": "G12 Content",
+      "name": "T12.3 \"Deep Rehearsal\" text present",
+      "passed": true,
+      "expected": "true",
+      "actual": "True",
+      "detail": ""
+    },
+    {
+      "group": "G12 Content",
+      "name": "T12.4 Drill has content",
+      "passed": true,
+      "expected": ">100 chars",
+      "actual": "12697",
+      "detail": ""
+    },
+    {
+      "group": "G12 Content",
+      "name": "T12.5 No Lorem ipsum placeholder",
+      "passed": true,
+      "expected": "false",
+      "actual": "False",
+      "detail": ""
+    },
+    {
+      "group": "G12 Content",
+      "name": "T12.6 No TODO/FIXME markers",
+      "passed": true,
+      "expected": "false",
+      "actual": "False",
+      "detail": ""
+    },
+    {
+      "group": "G12 Content",
+      "name": "T12.7 Page title not empty",
+      "passed": true,
+      "expected": ">5 chars",
+      "actual": "47",
+      "detail": ""
+    },
+    {
+      "group": "G12 Content",
+      "name": "T12.8 Body has substantial content",
+      "passed": true,
+      "expected": ">1000 chars",
+      "actual": "370699",
+      "detail": ""
+    },
+    {
+      "group": "G13 Animation",
+      "name": "T13.1 Body has entrance animation",
+      "passed": true,
+      "expected": "has animation",
+      "actual": "bodyIn",
+      "detail": ""
+    },
+    {
+      "group": "G13 Animation",
+      "name": "T13.2 Mesh gradient has animation",
+      "passed": true,
+      "expected": "has animation",
+      "actual": "meshA",
+      "detail": ""
+    },
+    {
+      "group": "G13 Animation",
+      "name": "T13.3 Card stagger keyframes exist",
+      "passed": true,
+      "expected": "true",
+      "actual": "True",
+      "detail": ""
+    },
+    {
+      "group": "G13 Animation",
+      "name": "T13.4 Body entrance keyframes exist",
+      "passed": true,
+      "expected": "true",
+      "actual": "True",
+      "detail": ""
+    },
+    {
+      "group": "G13 Animation",
+      "name": "T13.5 Smooth easing functions used",
+      "passed": true,
+      "expected": "true",
+      "actual": "True",
+      "detail": ""
+    },
+    {
+      "group": "G13 Animation",
+      "name": "T13.6 Multiple animation durations",
+      "passed": true,
+      "expected": ">5",
+      "actual": "309",
+      "detail": ""
+    },
+    {
+      "group": "G14 Responsive",
+      "name": "T14.1 Tablet stage has width",
+      "passed": true,
+      "expected": ">300px",
+      "actual": "768",
+      "detail": ""
+    },
+    {
+      "group": "G14 Responsive",
+      "name": "T14.2 Tablet sidebar visible",
+      "passed": true,
+      "expected": "visible",
+      "actual": "True",
+      "detail": ""
+    },
+    {
+      "group": "G14 Responsive",
+      "name": "T14.3 Tablet companion hidden (<920px)",
+      "passed": true,
+      "expected": "hidden",
+      "actual": "False",
+      "detail": ""
+    },
+    {
+      "group": "G14 Responsive",
+      "name": "T14.4 Small mobile stage fits",
+      "passed": true,
+      "expected": "<=320px",
+      "actual": "320",
+      "detail": ""
+    },
+    {
+      "group": "G14 Responsive",
+      "name": "T14.5 Small mobile FAB visible",
+      "passed": true,
+      "expected": "visible",
+      "actual": "True",
+      "detail": ""
+    },
+    {
+      "group": "G14 Responsive",
+      "name": "T14.6 Small mobile companion hidden",
+      "passed": true,
+      "expected": "hidden",
+      "actual": "True",
+      "detail": ""
+    },
+    {
+      "group": "G14 Responsive",
+      "name": "T14.7 Media queries present",
+      "passed": true,
+      "expected": "true",
+      "actual": "True",
+      "detail": ""
+    },
+    {
+      "group": "G14 Responsive",
+      "name": "T14.8 Multiple media queries",
+      "passed": true,
+      "expected": ">=2",
+      "actual": "23",
+      "detail": ""
+    },
+    {
+      "group": "G15 Router",
+      "name": "T15.1 Router module loaded",
+      "passed": true,
+      "expected": "true",
+      "actual": "True",
+      "detail": ""
+    },
+    {
+      "group": "G15 Router",
+      "name": "T15.2 Default route is walk",
+      "passed": true,
+      "expected": "walk",
+      "actual": "walk",
+      "detail": ""
+    },
+    {
+      "group": "G15 Router",
+      "name": "T15.3 Navigate to drill",
+      "passed": true,
+      "expected": "drill",
+      "actual": "drill",
+      "detail": ""
+    },
+    {
+      "group": "G15 Router",
+      "name": "T15.4 Hash updated to #drill",
+      "passed": true,
+      "expected": "#drill",
+      "actual": "#drill",
+      "detail": ""
+    },
+    {
+      "group": "G15 Router",
+      "name": "T15.5 Title contains Probe Drill",
+      "passed": true,
+      "expected": "Probe Drill",
+      "actual": "Probe Drill \u2014 Content Pipeline \u2014 Deep Rehearsal",
+      "detail": ""
+    },
+    {
+      "group": "G15 Router",
+      "name": "T15.6 Back button returns to walk",
+      "passed": true,
+      "expected": "walk",
+      "actual": "walk",
+      "detail": ""
+    },
+    {
+      "group": "G15 Router",
+      "name": "T15.7 Forward button goes to drill",
+      "passed": true,
+      "expected": "drill",
+      "actual": "drill",
+      "detail": ""
+    },
+    {
+      "group": "G15 Router",
+      "name": "T15.8 Deep link #wb opens whiteboard",
+      "passed": true,
+      "expected": "wb",
+      "actual": "wb",
+      "detail": ""
+    },
+    {
+      "group": "G15 Router",
+      "name": "T15.9 Invalid hash falls back to walk",
+      "passed": true,
+      "expected": "walk",
+      "actual": "walk",
+      "detail": ""
+    },
+    {
+      "group": "G15 Router",
+      "name": "T15.10 routechange event fires",
+      "passed": true,
+      "expected": ">=1",
+      "actual": "1",
+      "detail": ""
+    },
+    {
+      "group": "G16 Views",
+      "name": "T16.1 ViewManager loaded",
+      "passed": true,
+      "expected": "true",
+      "actual": "True",
+      "detail": ""
+    },
+    {
+      "group": "G16 Views",
+      "name": "T16.2 Only one pane active",
+      "passed": true,
+      "expected": "1",
+      "actual": "1",
+      "detail": ""
+    },
+    {
+      "group": "G16 Views",
+      "name": "T16.3 Drill pane is active",
+      "passed": true,
+      "expected": "true",
+      "actual": "True",
+      "detail": ""
+    },
+    {
+      "group": "G16 Views",
+      "name": "T16.4 Other panes not .on",
+      "passed": true,
+      "expected": "true",
+      "actual": "True",
+      "detail": ""
+    },
+    {
+      "group": "G16 Views",
+      "name": "T16.5 Active pane opacity=1",
+      "passed": true,
+      "expected": "1.0",
+      "actual": "1",
+      "detail": ""
+    },
+    {
+      "group": "G16 Views",
+      "name": "T16.6 Skeleton element created",
+      "passed": true,
+      "expected": "true",
+      "actual": "True",
+      "detail": ""
+    },
+    {
+      "group": "G16 Views",
+      "name": "T16.7 Drill nav button activated",
+      "passed": true,
+      "expected": "true",
+      "actual": "True",
+      "detail": ""
+    },
+    {
+      "group": "G16 Views",
+      "name": "T16.8 Focus inside active view",
+      "passed": true,
+      "expected": "true",
+      "actual": "True",
+      "detail": ""
+    },
+    {
+      "group": "G17 SPA-A11y",
+      "name": "T17.1 ARIA live region exists",
+      "passed": true,
+      "expected": "true",
+      "actual": "True",
+      "detail": ""
+    },
+    {
+      "group": "G17 SPA-A11y",
+      "name": "T17.2 Keyboard q \u2192 walkthrough",
+      "passed": true,
+      "expected": "walk",
+      "actual": "walk",
+      "detail": ""
+    },
+    {
+      "group": "G17 SPA-A11y",
+      "name": "T17.3 Keyboard w \u2192 drill",
+      "passed": true,
+      "expected": "drill",
+      "actual": "drill",
+      "detail": ""
+    },
+    {
+      "group": "G17 SPA-A11y",
+      "name": "T17.4 Tab moves focus",
+      "passed": true,
+      "expected": "not BODY",
+      "actual": "DEEP-DRILL",
+      "detail": ""
+    },
+    {
+      "group": "G17 SPA-A11y",
+      "name": "T17.5 Transition lock handles rapid switches",
+      "passed": true,
+      "expected": "one of walk/drill/wb",
+      "actual": "wb",
+      "detail": ""
+    },
+    {
+      "group": "G17 SPA-A11y",
+      "name": "T17.6 html overflow=hidden",
+      "passed": true,
+      "expected": "hidden",
+      "actual": "hidden",
+      "detail": ""
+    },
+    {
+      "group": "G17 SPA-A11y",
+      "name": "T17.7 body overflow=hidden",
+      "passed": true,
+      "expected": "hidden",
+      "actual": "hidden",
+      "detail": ""
+    },
+    {
+      "group": "G17 SPA-A11y",
+      "name": "T17.8 prefers-reduced-motion supported",
+      "passed": true,
+      "expected": "true",
+      "actual": "True",
+      "detail": ""
+    }
+  ]
+}

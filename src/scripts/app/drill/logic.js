@@ -32,7 +32,7 @@ var DRILL_STYLE = `@keyframes pop{from{opacity:0;transform:translateY(7px) scale
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
 
 .modetog{display:inline-flex;gap:4px;background:var(--modetog-bg);border:1px solid var(--modetog-bd);border-radius:9px;padding:4px}
-.modetog button{border:0;background:transparent;color:var(--mut);font:700 12px -apple-system,sans-serif;padding:13px 14px;border-radius:7px;cursor:pointer;transition:.15s}
+.modetog button{border:0;background:transparent;color:var(--mut);font:700 12px -apple-system,sans-serif;padding:13px 14px;border-radius:8px;cursor:pointer;transition:color .2s ease,background .2s ease,transform .15s ease}
 .modetog button.on{background:var(--card);color:var(--acc);font-weight:780;box-shadow:0 0 0 1px rgba(83,74,183,.32),0 4px 12px rgba(83,74,183,.22)}
 .modetog button:not(.on):hover{background:var(--modetog-hover-bg);color:var(--ink)}
 .tierrow{display:flex;align-items:center;gap:9px;margin:2px 0 16px;flex-wrap:wrap}
@@ -86,7 +86,9 @@ var DRILL_STYLE = `@keyframes pop{from{opacity:0;transform:translateY(7px) scale
 .verdict{margin-top:18px;font-size:13px;color:var(--ans-fg);background:var(--ans-bg);border-left:3px solid var(--acc);border-radius:9px;padding:14px 16px}
 .verdict b{color:var(--accink)}
 .debrief button{margin-top:18px;display:block;width:100%;border:1.5px solid var(--acc);background:#fff;color:var(--acc);font:700 13px -apple-system,sans-serif;padding:12px;border-radius:10px;cursor:pointer}
-.debrief .btn-sec{margin-top:14px;display:block;width:100%;border:1.5px solid var(--teal);background:var(--tealbg);color:var(--fb-t-fg);font:700 13px -apple-system,sans-serif;padding:12px;border-radius:10px;cursor:pointer;transition:.12s}
+.debrief .btn-sec{margin-top:14px;display:block;width:100%;border:1.5px solid var(--teal);background:linear-gradient(135deg,var(--tealbg) 0%,rgba(10,133,100,.04) 100%);color:var(--fb-t-fg);font:700 13px -apple-system,sans-serif;padding:12px;border-radius:10px;cursor:pointer;transition:transform .15s ease,box-shadow .2s ease,filter .2s ease}
+.debrief .btn-sec:hover{transform:translateY(-1px);box-shadow:0 4px 14px -4px rgba(10,133,100,.2);filter:brightness(1.02)}
+.debrief .btn-sec:active{transform:translateY(1px) scale(.98)}
 .debrief .btn-sec:hover{background:var(--btnsec-hover-bg)}
 .btn-sec:active{transform:translateY(1px);filter:brightness(.96)}
 .rec{text-align:center;margin-bottom:4px}
@@ -103,7 +105,7 @@ var DRILL_STYLE = `@keyframes pop{from{opacity:0;transform:translateY(7px) scale
 .dnav{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .dn-step{display:flex;align-items:center;gap:10px;text-align:left;padding:10px 12px;border-radius:11px;border:1px solid var(--bd);background:linear-gradient(135deg,var(--surf) 0%,rgba(83,74,183,.015) 100%);box-shadow:var(--surf-sh);cursor:pointer;transition:transform .18s cubic-bezier(.22,.61,.36,1),box-shadow .2s ease,border-color .2s ease,background .2s ease;font-family:inherit;min-width:0;position:relative;overflow:hidden}
 .dn-step:hover{transform:translateY(-2px) scale(1.01);box-shadow:0 6px 20px -6px rgba(83,74,183,.14);border-color:rgba(83,74,183,.2);background:linear-gradient(135deg,var(--mix-surf) 0%,rgba(83,74,183,.04) 100%)}
-.dn-n{flex:none;width:22px;height:22px;border-radius:7px;display:grid;place-items:center;font:700 10.5px -apple-system,sans-serif;background:var(--accbg);color:var(--accink);transition:.14s}
+.dn-n{flex:none;width:22px;height:22px;border-radius:7px;display:grid;place-items:center;font:700 10.5px -apple-system,sans-serif;background:var(--accbg);color:var(--accink);transition:background .2s ease,color .2s ease,box-shadow .2s ease,transform .2s cubic-bezier(.34,1.56,.64,1)}
 .dn-t{font-size:11.5px;font-weight:600;color:var(--ink);line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .dn-step.on{border-color:var(--acc);background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.06) 100%);box-shadow:0 0 0 1px var(--acc),0 4px 14px -4px rgba(83,74,183,.12);transform:translateY(-1px)}
 .dn-step.on .dn-n{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;box-shadow:0 2px 6px -2px rgba(83,74,183,.3)}

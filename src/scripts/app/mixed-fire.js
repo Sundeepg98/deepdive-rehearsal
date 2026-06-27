@@ -227,31 +227,33 @@ document.getElementById('mockx').onclick = closeMock;
    mixBody global and look up their rendered controls through mixRoot. The frame,
    open/close, and the mock-run render below (still light) stay as they are. */
 var MIX_STYLE = `
-.mx-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px;gap:10px}
+.mx-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:10px}
 .mx-prog{font:700 12px -apple-system,sans-serif;color:var(--mut2);letter-spacing:.3px}
-.mx-kind{font:800 10.5px -apple-system,sans-serif;letter-spacing:.5px;text-transform:uppercase;padding:5px 11px;border-radius:20px;white-space:nowrap}
-.mxb-probe{background:var(--accbg);color:var(--accink)}
-.mxb-curve{background:var(--mxb-curve-bg);color:var(--amber)}
-.mxb-trade{background:var(--tealbg);color:var(--mxb-trade-fg)}
-.mx-label{font:700 14px -apple-system,sans-serif;color:var(--ink);margin-bottom:9px}
-.mx-task{display:block;margin-top:9px;font:600 13.5px -apple-system,sans-serif;font-style:italic;color:var(--mut)}
-.mx-end{text-align:center;padding:8px 4px}
-.mx-end-h{font:800 17px -apple-system,sans-serif;color:var(--ink);margin-bottom:4px}
-.mx-end-pct{font:800 40px -apple-system,sans-serif;color:var(--acc);line-height:1;margin:8px 0}
-.mx-end-v{font:600 14px -apple-system,sans-serif;color:var(--mut);margin:0 auto 16px;line-height:1.5;max-width:300px}
-.mx-bd{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 16px;margin-bottom:18px;font:600 13px -apple-system,sans-serif;color:var(--mut)}
+.mx-kind{font:800 10.5px -apple-system,sans-serif;letter-spacing:.5px;text-transform:uppercase;padding:5px 12px;border-radius:20px;white-space:nowrap;box-shadow:0 1px 4px -2px rgba(83,74,183,.08)}
+.mxb-probe{background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.04) 100%);color:var(--accink)}
+.mxb-curve{background:linear-gradient(135deg,var(--mxb-curve-bg) 0%,rgba(176,108,20,.04) 100%);color:var(--amber)}
+.mxb-trade{background:linear-gradient(135deg,var(--tealbg) 0%,rgba(10,133,100,.04) 100%);color:var(--mxb-trade-fg)}
+.mx-label{font:700 14px -apple-system,sans-serif;color:var(--ink);margin-bottom:10px;line-height:1.45}
+.mx-task{display:block;margin-top:10px;font:600 13.5px -apple-system,sans-serif;font-style:italic;color:var(--mut)}
+.mx-end{text-align:center;padding:10px 4px}
+.mx-end-h{font:800 17px -apple-system,sans-serif;color:var(--ink);margin-bottom:5px}
+.mx-end-pct{font:800 40px -apple-system,sans-serif;color:var(--acc);line-height:1;margin:10px 0;text-shadow:0 2px 20px rgba(83,74,183,.15)}
+.mx-end-v{font:600 14px -apple-system,sans-serif;color:var(--mut);margin:0 auto 18px;line-height:1.5;max-width:300px}
+.mx-bd{display:flex;flex-wrap:wrap;justify-content:center;gap:9px 18px;margin-bottom:20px;font:600 13px -apple-system,sans-serif;color:var(--mut)}
 .mx-bd b{color:var(--ink);font-weight:800}
-.mx-end-list{text-align:left;margin-bottom:18px}
-.mx-erow{display:flex;align-items:center;gap:9px;padding:7px 2px;border-bottom:1px solid var(--bd)}
-.mx-edot{flex:none;width:9px;height:9px;border-radius:50%}
-.mx-edot.ok{background:var(--teal)}
-.mx-edot.no{background:var(--amber)}
+.mx-end-list{text-align:left;margin-bottom:20px}
+.mx-erow{display:flex;align-items:center;gap:10px;padding:8px 4px;border-bottom:1px solid var(--bd);transition:padding .2s ease}
+.mx-erow:hover{padding-left:8px}
+.mx-edot{flex:none;width:10px;height:10px;border-radius:50%;box-shadow:0 0 0 2px rgba(255,255,255,.5)}
+.mx-edot.ok{background:linear-gradient(135deg,var(--teal),#2dd4a8)}
+.mx-edot.no{background:linear-gradient(135deg,var(--amber),#d4902a)}
 .mx-ek{flex:none;font:800 9.5px -apple-system,sans-serif;text-transform:uppercase;letter-spacing:.4px;color:var(--mut2);width:74px}
 .mx-el{font:600 13px -apple-system,sans-serif;color:var(--ink)}
-.mx-end-btns{display:flex;flex-direction:column;gap:9px}
+.mx-end-btns{display:flex;flex-direction:column;gap:10px}
 .mx-end-btns button{margin-top:0}
-.mxghost{width:100%;font:750 13px -apple-system,sans-serif;padding:12px 14px;border-radius:11px;background:transparent;color:var(--acc);border:1.5px solid var(--bd);cursor:pointer;transition:.15s}
-.mxghost:hover{border-color:var(--acc);background:var(--accbg)}
+.mxghost{width:100%;font:750 13px -apple-system,sans-serif;padding:12px 16px;border-radius:11px;background:linear-gradient(135deg,transparent 0%,rgba(83,74,183,.02) 100%);color:var(--acc);border:1.5px solid var(--bd);cursor:pointer;transition:transform .15s ease,border-color .2s ease,background .2s ease,box-shadow .2s ease}
+.mxghost:hover{border-color:var(--acc);background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.04) 100%);transform:translateY(-1px);box-shadow:0 4px 14px -4px rgba(83,74,183,.12)}
+.mxghost:active{transform:translateY(1px) scale(.98)}
 .push:active{transform:translateY(1px);box-shadow:0 2px 7px rgba(30,28,24,.18),inset 0 1px 0 rgba(255,255,255,.10)}`;
 class DeepMixedFire extends HTMLElement {
   connectedCallback() {

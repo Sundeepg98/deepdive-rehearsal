@@ -301,7 +301,10 @@ var SESS_STYLE = `.sess-body{padding:18px 20px 24px;overflow-y:auto;flex:1;min-h
 .ss-list{margin:9px 0 0;padding:10px 13px;background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.03) 100%);border-radius:9px;font-size:11.5px;line-height:1.6;color:var(--accink)}
 .ss-list b{font-weight:750}
 .ss-none{color:var(--mut2);font-style:italic}
-.ss-clear{width:100%;margin-top:7px;border:1px dashed var(--bd);background:transparent;color:var(--mut2);font:600 11.5px -apple-system,sans-serif;padding:11px 14px;border-radius:10px;cursor:pointer;transition:.13s}
+.ss-clear{width:100%;margin-top:7px;border:1px dashed var(--bd);background:transparent;color:var(--mut2);font:600 11.5px -apple-system,sans-serif;padding:11px 14px;border-radius:10px;cursor:pointer;transition:transform .15s ease,border-color .2s ease,color .2s ease,background .2s ease}
+.ss-clear:hover{border-color:var(--mut);color:var(--mut);background:rgba(83,74,183,.02);transform:translateY(-1px)}
+.ss-clear:active{transform:translateY(1px) scale(.98)}
+.ss-clear.arm{transition:transform .15s ease,background .2s ease,color .2s ease,border-color .2s ease}
 .ss-print{width:100%;margin-top:9px;border:1.5px solid var(--acc);background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.04) 100%);color:var(--accink);font:700 12.5px -apple-system,sans-serif;padding:12px 14px;border-radius:10px;cursor:pointer;transition:transform .15s ease,box-shadow .2s ease,background .2s ease,color .2s ease}
 .ss-print:hover{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;box-shadow:0 4px 16px -4px rgba(83,74,183,.25);transform:translateY(-1px)}
 .ss-print:active{transform:translateY(1px) scale(.98)}

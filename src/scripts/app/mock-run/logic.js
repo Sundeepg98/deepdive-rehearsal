@@ -102,7 +102,9 @@ var MOCK_STYLE = `
 .mb-ml{font:800 10px -apple-system,sans-serif;letter-spacing:.6px;color:var(--acc);text-transform:uppercase;margin-bottom:7px}
 .mb-act{display:flex;gap:9px;align-items:center;margin:17px 0 0}
 .mb-keys{margin-top:13px;font-size:10.5px;color:var(--mut2);text-align:center;letter-spacing:.2px}
-.mb-rev,.mb-next{font:700 12.5px -apple-system,sans-serif;padding:9px 16px;border-radius:9px;cursor:pointer;transition:.12s}
+.mb-rev,.mb-next{font:700 12.5px -apple-system,sans-serif;padding:9px 16px;border-radius:9px;cursor:pointer;transition:transform .15s ease,box-shadow .2s ease,border-color .2s ease,background .2s ease}
+.mb-rev:hover,.mb-next:hover{transform:translateY(-1px);box-shadow:0 4px 12px -3px rgba(83,74,183,.12)}
+.mb-rev:active,.mb-next:active{transform:translateY(1px) scale(.98)}
 .mb-rev{border:1px solid #cfc7f0;background:var(--accbg);color:var(--accink)}
 .mb-rev:disabled{opacity:.5;cursor:default}
 .mb-next{border:0;background:var(--acc);color:var(--mb-next-fg);margin-left:auto}
@@ -119,7 +121,9 @@ var MOCK_STYLE = `
 .mb-verdict.show{display:block;animation:pop .24s ease}
 .mb-verdict b{font-weight:700}
 .mb-again{display:flex;gap:9px;justify-content:center;margin-top:19px}
-.mb-again button{font:700 12px -apple-system,sans-serif;padding:9px 17px;border-radius:9px;cursor:pointer;border:1px solid var(--bd);background:var(--card);color:var(--mut);transition:.12s}
+.mb-again button{font:700 12px -apple-system,sans-serif;padding:9px 17px;border-radius:9px;cursor:pointer;border:1.5px solid var(--bd);background:linear-gradient(135deg,var(--card) 0%,rgba(83,74,183,.02) 100%);color:var(--mut);transition:transform .15s ease,border-color .2s ease,box-shadow .2s ease,color .2s ease}
+.mb-again button:hover{border-color:var(--acc);color:var(--accink);transform:translateY(-1px);box-shadow:0 4px 12px -3px rgba(83,74,183,.1)}
+.mb-again button:active{transform:translateY(1px) scale(.98)}
 .mb-again button:hover{border-color:var(--acc);color:var(--acc)}
 .mb-again .pri{border:0;background:var(--acc);color:#fff}
 .mb-again .pri:hover{background:var(--accink);color:#fff}

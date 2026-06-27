@@ -9,7 +9,7 @@
 var KBD_STYLE = `
 .ks-sec{margin-bottom:18px}
 .ks-sec:last-of-type{margin-bottom:0}
-.ks-h{font-size:10.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--acc);margin:0 0 12px}
+.ks-h{font-size:10.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;background:linear-gradient(90deg,var(--acc),var(--acc2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin:0 0 12px;text-shadow:0 0 10px rgba(83,74,183,.08)}
 .ks-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px 18px}
 .ks-row{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink);transition:transform .15s ease}
 .ks-row:hover{transform:translateX(3px)}

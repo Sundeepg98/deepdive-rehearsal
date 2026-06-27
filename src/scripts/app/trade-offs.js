@@ -14,9 +14,9 @@ var TRADE_STYLE = `
 .dec:hover{box-shadow:var(--surf-sh),0 6px 24px -8px rgba(83,74,183,.12);transform:translateY(-1px);border-color:rgba(83,74,183,.15)}
 .dec::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,transparent 40%,rgba(255,255,255,.12) 50%,transparent 60%);background-size:200% 200%;animation:shineSweep 5s ease-in-out infinite;pointer-events:none}
 @keyframes shineSweep{0%{background-position:200% 200%}100%{background-position:-200% -200%}}
-.dec-q{font-size:14.5px;font-weight:800;color:var(--ink);letter-spacing:-.2px;margin-bottom:10px;line-height:1.4}
+.dec-q{font-size:14.5px;font-weight:800;background:linear-gradient(90deg,var(--ink),var(--accink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-.2px;margin-bottom:10px;line-height:1.4;text-shadow:0 0 10px rgba(83,74,183,.08)}
 .dec-q .vs{color:var(--mut2);font-weight:700;font-size:11.5px;padding:0 4px}
-.dec-tell{margin-top:14px;padding-top:12px;border-top:1px dashed var(--bd);font-size:12px;color:var(--teal);font-weight:700;line-height:1.55}
+.dec-tell{margin-top:14px;padding-top:12px;border-top:1px dashed var(--bd);font-size:12px;color:var(--teal);font-weight:700;line-height:1.55;text-shadow:0 0 8px rgba(10,133,100,.08)}
 .dec-tell::before{content:"\\2605";font-size:12px;margin-right:8px}
 .dec-tell b{color:var(--dec-tell-b-fg);font-weight:700;text-shadow:0 0 6px rgba(83,74,183,.06)}
 `;

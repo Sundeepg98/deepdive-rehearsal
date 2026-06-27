@@ -21,7 +21,7 @@ OPT_SHEET.replaceSync(`
 .opt{margin:13px 0;padding:10px 12px;background:linear-gradient(135deg,rgba(83,74,183,.02) 0%,transparent 100%);border-radius:8px;border-left:2px solid var(--acc);transition:background .2s ease,padding .2s ease}
 .opt:hover{padding-left:14px;background:linear-gradient(135deg,rgba(83,74,183,.04) 0%,transparent 100%)}
 .opt-n{display:inline-block;font:800 10.5px -apple-system,sans-serif;letter-spacing:.3px;color:var(--accink);background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.04) 100%);border:1px solid var(--opt-n-bd);border-radius:6px;padding:4px 10px;margin-bottom:6px;box-shadow:0 1px 4px -2px rgba(83,74,183,.08)}
-.opt-w{font-size:12.8px;line-height:1.57;color:var(--ink)}
+.opt-w{font-size:12.8px;line-height:1.57;color:var(--ink);transition:color .2s ease}
 .opt-w .pw{font-weight:800;color:var(--mut2);text-transform:uppercase;font-size:9.5px;letter-spacing:.5px;margin-right:7px}
 .opt-w b{color:var(--accink);font-weight:700}
 `);
@@ -64,7 +64,7 @@ MOCK_SHEET.replaceSync(`
 
 var MBEAT_SHEET = new CSSStyleSheet();
 MBEAT_SHEET.replaceSync(`
-.mbeat{margin:13px 0;font-size:13.5px;line-height:1.62;color:var(--ink)}
+.mbeat{margin:13px 0;font-size:13.5px;line-height:1.62;color:var(--ink);background:linear-gradient(135deg,transparent 0%,rgba(83,74,183,.015) 100%);border-radius:8px;padding:10px 12px;transition:background .2s ease,padding .2s ease}
 .mbeat{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--bd)}
 .mbeat:last-child{border-bottom:0;padding-bottom:2px}
 .mbeat b{color:var(--accink)}

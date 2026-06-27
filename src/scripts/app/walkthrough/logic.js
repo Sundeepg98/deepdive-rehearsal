@@ -24,7 +24,7 @@ var WALK_STYLE = `
 .fb.r{background:var(--redbg);border-color:var(--red);color:var(--fb-r-fg)}
 .fb.a{background:var(--amberbg);border-color:var(--amber);color:var(--fb-a-fg)}
 .fb.n{background:var(--fb-n-bg);border-color:#C9C3B8;color:var(--fb-n-fg)}
-.arr{color:var(--mut2);font-weight:800;font-size:14px}
+.arr{color:var(--acc);font-weight:800;font-size:14px;opacity:.5;transition:opacity .2s ease,transform .2s ease}
 .ins{margin-top:14px;font-size:12.5px;color:var(--ins-fg);background:linear-gradient(135deg,var(--ins-bg) 0%,rgba(83,74,183,.03) 100%);border-left:3px solid var(--acc);border-radius:9px;padding:13px 16px;line-height:1.6;box-shadow:0 1px 4px -2px rgba(83,74,183,.08);animation:insIn .35s ease .05s backwards}
 @keyframes insIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)}}
 .ins b{color:var(--accink)}
@@ -36,18 +36,18 @@ pre.code .c{color:#9b95c9} pre.code .k{color:#C9A2F0} pre.code .s{color:#9DD9B6}
 .nav button:hover:not(:disabled){border-color:var(--acc);color:var(--acc);background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.04) 100%);box-shadow:0 4px 14px -4px rgba(83,74,183,.18);transform:translateY(-2px)}
 .nav button:active:not(:disabled){transform:translateY(0) scale(.98);box-shadow:0 2px 6px -2px rgba(83,74,183,.12)}
 .nav button:disabled{opacity:.32;cursor:default}
-.nav .ctr{font-family:var(--mono);font-size:12px;color:var(--mut2);font-weight:700}
+.nav .ctr{font-family:var(--mono);font-size:12px;color:var(--acc);font-weight:700;background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.04) 100%);padding:4px 10px;border-radius:6px;border:1px solid var(--bd)}
 details.model{margin-top:18px;background:linear-gradient(135deg,var(--card) 0%,rgba(83,74,183,.02) 100%);box-shadow:var(--surf-sh);border:1px solid var(--bd);border-left:4px solid var(--acc);border-radius:12px;overflow:hidden;transition:box-shadow .25s ease}
 details.model[open]{box-shadow:0 0 0 1px rgba(83,74,183,.08),var(--surf-sh)}
 details.model>summary{cursor:pointer;list-style:none;padding:15px 18px;font:800 13.5px -apple-system,sans-serif;color:var(--accink);display:flex;align-items:baseline;gap:10px;user-select:none;transition:background .18s ease,padding .2s ease}
 details.model>summary::-webkit-details-marker{display:none}
 details.model>summary::before{content:"\\25B8";color:var(--acc);transition:transform .25s cubic-bezier(.34,1.56,.64,1);font-size:12px;flex:none;display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:5px;background:var(--accbg)}
 details.model[open]>summary::before{transform:rotate(90deg)}
-details.model>summary .sub{font-weight:600;color:var(--mut);font-size:11px;letter-spacing:.3px}
+details.model>summary .sub{font-weight:600;color:var(--mut);font-size:11px;letter-spacing:.3px;transition:color .2s ease}
 details.model>summary:hover{background:rgba(109,95,214,.07);padding-left:20px}
 .mbody{padding:6px 20px 20px;border-top:1px solid var(--bd)}
 .mbeat .ml{display:block;font-size:10px;font-weight:800;letter-spacing:.9px;text-transform:uppercase;color:var(--acc);margin-bottom:4px}
-.mq{margin:17px 0 0;padding:11px 13px;background:var(--mq-bg);border-radius:9px;font-size:13px;color:var(--mut);font-style:italic}
+.mq{margin:17px 0 0;padding:11px 13px;background:linear-gradient(135deg,var(--mq-bg) 0%,rgba(83,74,183,.03) 100%);border-radius:9px;font-size:13px;color:var(--mut);font-style:italic}
 .mbeat.ans{background:var(--accbg);border-radius:9px;padding:11px 14px;margin-top:7px}
 .mbeat.ans:last-child{padding-bottom:11px}/* the answer box keeps its own padding; the shared .mbeat:last-child reduction (now in MBEAT_SHEET, so it cascades after this inline rule at equal specificity) is meant only for plain beats */
 .arc-wrap{margin-top:24px}

@@ -26,7 +26,7 @@ var WB_STEPS = [
 var WB_STYLE = `
 .dgm{display:flex;flex-direction:column;align-items:center;gap:0;padding:4px 0 6px}
 .dgm-node{background:var(--accbg);border:1.5px solid var(--acc2);border-radius:9px;padding:8px 14px;text-align:center;max-width:290px;width:100%;box-sizing:border-box}
-.dgm-t{font:700 12.5px -apple-system,sans-serif;color:var(--accink);line-height:1.3}
+.dgm-t{font:700 12.5px -apple-system,sans-serif;color:var(--accink);line-height:1.3;text-shadow:0 0 8px rgba(83,74,183,.08)}
 .dgm-t code{font-family:'Courier New',monospace;font-size:11px;color:var(--accink);background:none;padding:0}
 .dgm-s{font-size:10.5px;color:var(--mut);margin-top:2px;line-height:1.4}
 .dgm-s code{font-family:'Courier New',monospace;font-size:10px;color:var(--mut);background:none;padding:0}

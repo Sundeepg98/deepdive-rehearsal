@@ -6,7 +6,7 @@
    nav that used to share this file stays global below. */
 var NUM_STYLE = `.numlead{font-size:15px;line-height:1.5;color:var(--ink);margin:2px 2px 18px}
 .numlead b{color:var(--accink);font-weight:700}
-.num-h{font:800 10px -apple-system,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:var(--mut2);margin-bottom:12px}
+.num-h{font:800 10px -apple-system,sans-serif;letter-spacing:.8px;text-transform:uppercase;color:var(--acc);margin-bottom:12px;background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.04) 100%);padding:6px 12px;border-radius:6px;display:inline-block}
 .ninp{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .ninp label{display:flex;flex-direction:column;gap:6px;font:700 11px -apple-system,sans-serif;color:var(--mut);letter-spacing:.2px}
 .ninp input{font:700 15px ui-monospace,Menlo,monospace;color:var(--accink);background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.04) 100%);border:1.5px solid var(--ninp-bd);border-radius:9px;padding:10px 12px;width:100%;-moz-appearance:textfield;transition:border-color .2s ease,box-shadow .2s ease,transform .15s ease}

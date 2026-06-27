@@ -715,28 +715,28 @@ function initCardSpotlight(root) {
    Every color is a theme token, so it flips light/dark with no variants. */
 var CS_SHEET = new CSSStyleSheet();
 CS_SHEET.replaceSync(`
-.cs-one{background:var(--accbg);border-radius:11px;padding:13px 15px;font-size:13px;line-height:1.55;color:var(--ink)}
+.cs-one{background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.04) 100%);border-radius:12px;padding:14px 17px;font-size:13px;line-height:1.55;color:var(--ink);box-shadow:0 1px 6px -2px rgba(83,74,183,.06)}
 .cs-one b{color:var(--accink);font-weight:700}
-.cs-one-l{display:block;font:800 9.5px -apple-system,sans-serif;letter-spacing:.7px;text-transform:uppercase;color:var(--acc);margin-bottom:5px}
-.cs-sec{margin-top:17px}
-.cs-st{font:800 10.5px -apple-system,sans-serif;letter-spacing:.7px;text-transform:uppercase;color:var(--acc);border-bottom:1.5px solid var(--accbg);padding-bottom:4px;margin-bottom:9px}
-.cs-spine{margin:0;padding-left:19px}
-.cs-spine li{font-size:12.2px;line-height:1.5;margin-bottom:5px;color:var(--ink)}
-.cs-dec{font-size:12.2px;line-height:1.5;margin-bottom:6px;color:var(--ink)}
-.cs-dec b{color:var(--accink)}
+.cs-one-l{display:block;font:800 9.5px -apple-system,sans-serif;letter-spacing:.7px;text-transform:uppercase;color:var(--acc);margin-bottom:6px}
+.cs-sec{margin-top:18px}
+.cs-st{font:800 10.5px -apple-system,sans-serif;letter-spacing:.7px;text-transform:uppercase;color:var(--acc);border-bottom:2px solid var(--accbg);padding-bottom:5px;margin-bottom:10px}
+.cs-spine{margin:0;padding-left:20px}
+.cs-spine li{font-size:12.2px;line-height:1.55;margin-bottom:6px;color:var(--ink)}
+.cs-dec{font-size:12.2px;line-height:1.55;margin-bottom:7px;color:var(--ink)}
+.cs-dec b{color:var(--accink);font-weight:700}
 .cs-arr{color:var(--mut2);font-weight:800;margin:0 5px}
-.cs-num{font-size:12.2px;line-height:1.5;margin-bottom:5px;color:var(--ink)}
-.cs-ha{font-size:12px;line-height:1.5;margin-bottom:6px;color:var(--ink)}
+.cs-num{font-size:12.2px;line-height:1.55;margin-bottom:6px;color:var(--ink)}
+.cs-ha{font-size:12px;line-height:1.55;margin-bottom:7px;color:var(--ink)}
 .cs-ha-l{color:var(--acc);font-weight:800}
 .cs-num b{color:var(--ink);font-weight:700}
-.cs-dim{color:var(--mut2);font-size:11.5px;margin-top:7px}
-.cs-trap{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:baseline;margin-bottom:6px}
+.cs-dim{color:var(--mut2);font-size:11.5px;margin-top:8px}
+.cs-trap{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:baseline;margin-bottom:7px;padding:6px 0}
 .cs-bad{text-align:right;color:var(--red);font-size:11.7px;line-height:1.4}
 .cs-arr2{color:var(--mut2);font-weight:800}
 .cs-fix{text-align:left;color:var(--teal);font-weight:600;font-size:11.7px;line-height:1.4}
-.cs-tells{margin:0;padding-left:19px}
-.cs-tells li{font-size:12.2px;line-height:1.5;margin-bottom:5px;color:var(--ink)}
-.cs-30{background:var(--cs30-bg);border:1px solid var(--bd);border-radius:10px;padding:12px 14px;font-size:12.3px;line-height:1.58;color:var(--ink)}
+.cs-tells{margin:0;padding-left:20px}
+.cs-tells li{font-size:12.2px;line-height:1.55;margin-bottom:6px;color:var(--ink)}
+.cs-30{background:linear-gradient(135deg,var(--cs30-bg) 0%,rgba(83,74,183,.02) 100%);border:1px solid var(--bd);border-radius:11px;padding:13px 15px;font-size:12.3px;line-height:1.58;color:var(--ink)}
 b{color:var(--accink);font-weight:700}
 b.cs-ha-l{color:var(--accink);font-weight:700}
 `);
@@ -2006,29 +2006,33 @@ customElements.define('deep-whiteboard', DeepWhiteboard);
    flip token (--op-hooks-bg / --op-foot-bg / --op-foot-fg). The .op-rev border
    (#cfc7f0) has no dark override, so it stays hardcoded -- matching the original. */
 var OP_STYLE = `
-.op-lead{font-size:15px;line-height:1.5;color:var(--ink);margin:2px 0 17px}
+.op-lead{font-size:15px;line-height:1.5;color:var(--ink);margin:2px 0 18px}
 .op-lead i{color:var(--accink);font-style:italic;font-weight:600}
-.op{border:1px solid var(--bd);border-radius:12px;padding:14px 15px;margin-bottom:12px;background:var(--surf);box-shadow:var(--surf-sh)}
-.op-h{display:flex;gap:11px;align-items:flex-start}
-.op-n{flex:none;width:25px;height:25px;border-radius:50%;background:var(--accbg);border:1.5px solid var(--acc);color:var(--accink);font:800 12px ui-monospace,monospace;display:flex;align-items:center;justify-content:center}
-.op-ht{font-size:13px;color:var(--ink);line-height:1.5;padding-top:2px}
+.op{border:1.5px solid var(--bd);border-radius:13px;padding:15px 17px;margin-bottom:13px;background:linear-gradient(135deg,var(--surf) 0%,rgba(83,74,183,.02) 100%);box-shadow:var(--surf-sh);transition:box-shadow .25s ease,transform .2s ease,border-color .2s ease}
+.op:hover{box-shadow:var(--surf-sh),0 6px 20px -8px rgba(83,74,183,.1);transform:translateY(-1px);border-color:rgba(83,74,183,.15)}
+.op-h{display:flex;gap:12px;align-items:flex-start}
+.op-n{flex:none;width:27px;height:27px;border-radius:50%;background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.06) 100%);border:1.5px solid var(--acc);color:var(--accink);font:800 12px ui-monospace,monospace;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px -2px rgba(83,74,183,.15)}
+.op-ht{font-size:13px;color:var(--ink);line-height:1.5;padding-top:3px}
 .op-ht b{color:var(--accink);font-weight:700}
 .op-ht i{color:var(--mut);font-style:italic}
-.op-a{display:none;margin:11px 0 0 36px;padding:12px 14px;background:var(--accbg);border-radius:9px;font-size:13px;color:var(--ink);line-height:1.62}
-.op-a.show{display:block}
+.op-a{display:none;margin:12px 0 0 39px;padding:14px 17px;background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.04) 100%);border-radius:10px;font-size:13px;color:var(--ink);line-height:1.62;box-shadow:0 1px 6px -2px rgba(83,74,183,.08)}
+.op-a.show{display:block;animation:pop .24s ease}
 .op-a b{color:var(--accink);font-weight:700}
-.op-rev{margin:11px 0 0 36px;font:700 11.5px -apple-system,sans-serif;padding:6px 14px;border-radius:7px;border:1px solid #cfc7f0;background:var(--accbg);color:var(--accink);cursor:pointer;transition:.12s}
-.op-rev:disabled{opacity:.5;cursor:default}
-.op-hooks{margin-top:16px;padding:14px 15px;background:var(--op-hooks-bg);border:1px solid var(--bd);border-radius:12px}
-.op-hk-t{font-size:12.7px;color:var(--mut);line-height:1.55;margin-bottom:6px}
+.op-rev{margin:12px 0 0 39px;font:700 11.5px -apple-system,sans-serif;padding:7px 15px;border-radius:8px;border:1.5px solid #cfc7f0;background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.04) 100%);color:var(--accink);cursor:pointer;transition:transform .12s ease,background .15s ease,border-color .15s ease,box-shadow .2s ease}
+.op-rev:hover{background:linear-gradient(135deg,var(--acc) 0%,var(--acc2) 100%);color:#fff;border-color:var(--acc);box-shadow:0 4px 12px -3px rgba(83,74,183,.2);transform:translateY(-1px)}
+.op-rev:active{transform:translateY(1px) scale(.98)}
+.op-rev:disabled{opacity:.5;cursor:default;transform:none}
+.op-hooks{margin-top:18px;padding:15px 17px;background:linear-gradient(135deg,var(--op-hooks-bg) 0%,rgba(83,74,183,.02) 100%);border:1px solid var(--bd);border-radius:13px}
+.op-hk-t{font-size:12.7px;color:var(--mut);line-height:1.55;margin-bottom:8px}
 .op-hk-t i{color:var(--accink);font-style:italic}
-.op-hk{margin-top:13px}
+.op-hk{margin-top:14px;padding:10px 12px;background:rgba(83,74,183,.02);border-radius:8px;border-left:2px solid var(--acc);transition:background .2s ease,padding .2s ease}
+.op-hk:hover{padding-left:14px;background:rgba(83,74,183,.04)}
 .op-q{font-size:12.5px;color:var(--teal);font-weight:700;font-style:italic}
-.op-d{font-size:12.5px;color:var(--ink);line-height:1.55;margin-top:3px}
+.op-d{font-size:12.5px;color:var(--ink);line-height:1.55;margin-top:4px}
 .op-arr{color:var(--mut2);font-weight:800;margin-right:5px}
-.op-tab{display:inline-block;margin-left:6px;font-size:10.5px;font-weight:700;color:var(--acc);background:var(--accbg);border-radius:5px;padding:1px 7px;white-space:nowrap}
-.op-foot{margin-top:16px;font-size:12.5px;color:var(--op-foot-fg);background:var(--op-foot-bg);border-left:3px solid var(--acc);border-radius:8px;padding:12px 14px;line-height:1.55}
-.op-foot b{color:var(--accink)}
+.op-tab{display:inline-block;margin-left:6px;font-size:10.5px;font-weight:700;color:var(--acc);background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.04) 100%);border-radius:5px;padding:2px 8px;white-space:nowrap;border:1px solid #cfc7f0}
+.op-foot{margin-top:18px;font-size:12.5px;color:var(--op-foot-fg);background:linear-gradient(135deg,var(--op-foot-bg) 0%,rgba(83,74,183,.03) 100%);border-left:3px solid var(--acc);border-radius:9px;padding:14px 17px;line-height:1.6}
+.op-foot b{color:var(--accink);font-weight:700}
 .op-foot i{font-style:italic;color:var(--mut)}
 `;
 var OP_HTML = `<div class="card">
@@ -2724,19 +2728,22 @@ window.addEventListener('afterprint', function () {
    themes across the shadow boundary with no extra tokens. (#keybody kbd -> kbd
    because the id selector cannot reach into the shadow.) */
 var KBD_STYLE = `
-.ks-sec{margin-bottom:17px}
+.ks-sec{margin-bottom:18px}
 .ks-sec:last-of-type{margin-bottom:0}
-.ks-h{font-size:10.5px;font-weight:800;letter-spacing:.085em;text-transform:uppercase;color:var(--mut);margin:0 0 11px}
-.ks-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px 16px}
-.ks-row{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--ink)}
-.ks-list{display:flex;flex-direction:column;gap:10px}
-.ks-row2{display:flex;align-items:center;gap:13px;font-size:13px;color:var(--ink)}
-.ks-keys{flex:none;display:flex;align-items:center;gap:5px;min-width:92px}
-.ks-or{font-size:11px;color:var(--mut)}
-kbd{display:inline-flex;align-items:center;justify-content:center;min-width:23px;height:23px;padding:0 6px;font-family:inherit;font-size:11.5px;font-weight:700;line-height:1;color:var(--ink);background:var(--side);border:1px solid var(--bd);border-bottom-width:2px;border-radius:6px;box-shadow:0 1px 0 rgba(30,28,24,.03)}
+.ks-h{font-size:10.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--acc);margin:0 0 12px}
+.ks-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px 18px}
+.ks-row{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink);transition:transform .15s ease}
+.ks-row:hover{transform:translateX(3px)}
+.ks-list{display:flex;flex-direction:column;gap:11px}
+.ks-row2{display:flex;align-items:center;gap:14px;font-size:13px;color:var(--ink);transition:transform .15s ease}
+.ks-row2:hover{transform:translateX(3px)}
+.ks-keys{flex:none;display:flex;align-items:center;gap:6px;min-width:92px}
+.ks-or{font-size:11px;color:var(--mut);font-weight:600}
+kbd{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;padding:0 7px;font-family:inherit;font-size:11.5px;font-weight:700;line-height:1;color:var(--ink);background:linear-gradient(180deg,var(--side) 0%,rgba(83,74,183,.04) 100%);border:1px solid var(--bd);border-bottom-width:2px;border-radius:6px;box-shadow:0 2px 0 rgba(30,28,24,.06),0 1px 2px rgba(83,74,183,.06);transition:transform .1s ease,box-shadow .1s ease}
 kbd.ks-mini{min-width:18px;height:18px;font-size:10px;padding:0 4px}
-.ks-note{margin-top:12px;font-size:11.5px;line-height:1.55;color:var(--mut2)}
-.ks-foot{margin-top:16px;padding-top:13px;border-top:1px solid var(--bd);font-size:11.5px;line-height:1.55;color:var(--mut)}
+.ks-row:hover kbd,.ks-row2:hover kbd{transform:translateY(-1px);box-shadow:0 3px 0 rgba(30,28,24,.06),0 2px 4px rgba(83,74,183,.1)}
+.ks-note{margin-top:14px;font-size:11.5px;line-height:1.55;color:var(--mut2);padding:10px 13px;background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.02) 100%);border-radius:8px}
+.ks-foot{margin-top:18px;padding-top:14px;border-top:1px solid var(--bd);font-size:11.5px;line-height:1.55;color:var(--mut)}
 `;
 var KBD_HTML = `<div class="ks-sec">
         <div class="ks-h">Jump straight to any view</div>
@@ -3609,23 +3616,27 @@ customElements.define('deep-model-answers', DeepModelAnswers);
    flagged when it breaches a known ceiling (Lambda's 1,000 default, a ~100-conn
    Postgres pool). A self-contained shadow component; the tab / rail / keyboard
    nav that used to share this file stays global below. */
-var NUM_STYLE = `.numlead{font-size:15px;line-height:1.5;color:var(--ink);margin:2px 2px 16px}
-.numlead b{color:var(--accink)}
-.num-h{font:800 10px -apple-system,sans-serif;letter-spacing:.5px;text-transform:uppercase;color:var(--mut2);margin-bottom:11px}
-.ninp{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.ninp label{display:flex;flex-direction:column;gap:5px;font:700 11px -apple-system,sans-serif;color:var(--mut)}
-.ninp input{font:700 15px ui-monospace,Menlo,monospace;color:var(--accink);background:var(--accbg);border:1px solid var(--ninp-bd);border-radius:8px;padding:9px 10px;width:100%;-moz-appearance:textfield}
+var NUM_STYLE = `.numlead{font-size:15px;line-height:1.5;color:var(--ink);margin:2px 2px 18px}
+.numlead b{color:var(--accink);font-weight:700}
+.num-h{font:800 10px -apple-system,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:var(--mut2);margin-bottom:12px}
+.ninp{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ninp label{display:flex;flex-direction:column;gap:6px;font:700 11px -apple-system,sans-serif;color:var(--mut);letter-spacing:.2px}
+.ninp input{font:700 15px ui-monospace,Menlo,monospace;color:var(--accink);background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.04) 100%);border:1.5px solid var(--ninp-bd);border-radius:9px;padding:10px 12px;width:100%;-moz-appearance:textfield;transition:border-color .2s ease,box-shadow .2s ease,transform .15s ease}
 .ninp input::-webkit-outer-spin-button,.ninp input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
-.ninp input:focus{outline:2px solid var(--acc2);outline-offset:0;border-color:var(--acc2)}
-.nrow{display:grid;grid-template-columns:1fr auto;grid-template-areas:"k v" "n n";gap:2px 10px;padding:11px 0;border-bottom:1px solid var(--bd)}
+.ninp input:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px rgba(83,74,183,.12),0 2px 8px -2px rgba(83,74,183,.1);transform:translateY(-1px)}
+.ninp input:hover:not(:focus){border-color:rgba(83,74,183,.3)}
+.nrow{display:grid;grid-template-columns:1fr auto;grid-template-areas:"k v" "n n";gap:3px 12px;padding:12px 0;border-bottom:1px solid var(--bd);transition:padding .2s ease}
 .nrow:last-child{border-bottom:0}
+.nrow:hover{padding-left:4px}
 .nrow-k{grid-area:k;font-size:13px;font-weight:700;color:var(--ink);align-self:center}
-.nrow-v{grid-area:v;font:800 17px ui-monospace,Menlo,monospace;color:var(--acc);align-self:center;white-space:nowrap}
+.nrow-v{grid-area:v;font:800 17px ui-monospace,Menlo,monospace;color:var(--acc);align-self:center;white-space:nowrap;transition:transform .2s cubic-bezier(.34,1.56,.64,1)}
+.nrow:hover .nrow-v{transform:scale(1.05)}
 .nrow-n{grid-area:n;font-size:11.5px;color:var(--mut2);line-height:1.45}
-.nrow.over .nrow-v{color:var(--red)}
+.nrow.over .nrow-v{color:var(--red);text-shadow:0 0 20px rgba(239,68,68,.1)}
 .nrow.over .nrow-n{color:var(--red);font-weight:600}
-.num-tell{margin-top:13px;font-size:12px;color:var(--teal);font-weight:700;line-height:1.55;padding:12px 14px;background:var(--tealbg);border-radius:10px}
-.num-tell b{color:var(--dec-tell-b-fg)}
+.nrow.over{background:linear-gradient(90deg,transparent 0%,rgba(239,68,68,.02) 100%)}
+.num-tell{margin-top:15px;font-size:12px;color:var(--teal);font-weight:700;line-height:1.55;padding:14px 17px;background:linear-gradient(135deg,var(--tealbg) 0%,rgba(10,133,100,.04) 100%);border-radius:11px;box-shadow:0 1px 6px -2px rgba(10,133,100,.08)}
+.num-tell b{color:var(--dec-tell-b-fg);font-weight:700}
 .nv-u{display:inline-block;width:30px;text-align:left;padding-left:8px;box-sizing:border-box;font-size:13px;font-weight:600;color:var(--mut)}`;
 var NUM_HTML = `<div class="numlead">The estimation an interviewer makes you do at the whiteboard. State your assumptions and the <b>ceilings fall out of the arithmetic</b> &mdash; adjust any input and the math recomputes.</div>
     <div class="card">

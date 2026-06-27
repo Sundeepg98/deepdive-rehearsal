@@ -4,23 +4,27 @@
    flagged when it breaches a known ceiling (Lambda's 1,000 default, a ~100-conn
    Postgres pool). A self-contained shadow component; the tab / rail / keyboard
    nav that used to share this file stays global below. */
-var NUM_STYLE = `.numlead{font-size:15px;line-height:1.5;color:var(--ink);margin:2px 2px 16px}
-.numlead b{color:var(--accink)}
-.num-h{font:800 10px -apple-system,sans-serif;letter-spacing:.5px;text-transform:uppercase;color:var(--mut2);margin-bottom:11px}
-.ninp{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.ninp label{display:flex;flex-direction:column;gap:5px;font:700 11px -apple-system,sans-serif;color:var(--mut)}
-.ninp input{font:700 15px ui-monospace,Menlo,monospace;color:var(--accink);background:var(--accbg);border:1px solid var(--ninp-bd);border-radius:8px;padding:9px 10px;width:100%;-moz-appearance:textfield}
+var NUM_STYLE = `.numlead{font-size:15px;line-height:1.5;color:var(--ink);margin:2px 2px 18px}
+.numlead b{color:var(--accink);font-weight:700}
+.num-h{font:800 10px -apple-system,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:var(--mut2);margin-bottom:12px}
+.ninp{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ninp label{display:flex;flex-direction:column;gap:6px;font:700 11px -apple-system,sans-serif;color:var(--mut);letter-spacing:.2px}
+.ninp input{font:700 15px ui-monospace,Menlo,monospace;color:var(--accink);background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.04) 100%);border:1.5px solid var(--ninp-bd);border-radius:9px;padding:10px 12px;width:100%;-moz-appearance:textfield;transition:border-color .2s ease,box-shadow .2s ease,transform .15s ease}
 .ninp input::-webkit-outer-spin-button,.ninp input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
-.ninp input:focus{outline:2px solid var(--acc2);outline-offset:0;border-color:var(--acc2)}
-.nrow{display:grid;grid-template-columns:1fr auto;grid-template-areas:"k v" "n n";gap:2px 10px;padding:11px 0;border-bottom:1px solid var(--bd)}
+.ninp input:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px rgba(83,74,183,.12),0 2px 8px -2px rgba(83,74,183,.1);transform:translateY(-1px)}
+.ninp input:hover:not(:focus){border-color:rgba(83,74,183,.3)}
+.nrow{display:grid;grid-template-columns:1fr auto;grid-template-areas:"k v" "n n";gap:3px 12px;padding:12px 0;border-bottom:1px solid var(--bd);transition:padding .2s ease}
 .nrow:last-child{border-bottom:0}
+.nrow:hover{padding-left:4px}
 .nrow-k{grid-area:k;font-size:13px;font-weight:700;color:var(--ink);align-self:center}
-.nrow-v{grid-area:v;font:800 17px ui-monospace,Menlo,monospace;color:var(--acc);align-self:center;white-space:nowrap}
+.nrow-v{grid-area:v;font:800 17px ui-monospace,Menlo,monospace;color:var(--acc);align-self:center;white-space:nowrap;transition:transform .2s cubic-bezier(.34,1.56,.64,1)}
+.nrow:hover .nrow-v{transform:scale(1.05)}
 .nrow-n{grid-area:n;font-size:11.5px;color:var(--mut2);line-height:1.45}
-.nrow.over .nrow-v{color:var(--red)}
+.nrow.over .nrow-v{color:var(--red);text-shadow:0 0 20px rgba(239,68,68,.1)}
 .nrow.over .nrow-n{color:var(--red);font-weight:600}
-.num-tell{margin-top:13px;font-size:12px;color:var(--teal);font-weight:700;line-height:1.55;padding:12px 14px;background:var(--tealbg);border-radius:10px}
-.num-tell b{color:var(--dec-tell-b-fg)}
+.nrow.over{background:linear-gradient(90deg,transparent 0%,rgba(239,68,68,.02) 100%)}
+.num-tell{margin-top:15px;font-size:12px;color:var(--teal);font-weight:700;line-height:1.55;padding:14px 17px;background:linear-gradient(135deg,var(--tealbg) 0%,rgba(10,133,100,.04) 100%);border-radius:11px;box-shadow:0 1px 6px -2px rgba(10,133,100,.08)}
+.num-tell b{color:var(--dec-tell-b-fg);font-weight:700}
 .nv-u{display:inline-block;width:30px;text-align:left;padding-left:8px;box-sizing:border-box;font-size:13px;font-weight:600;color:var(--mut)}`;
 var NUM_HTML = `<div class="numlead">The estimation an interviewer makes you do at the whiteboard. State your assumptions and the <b>ceilings fall out of the arithmetic</b> &mdash; adjust any input and the math recomputes.</div>
     <div class="card">

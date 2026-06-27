@@ -7,19 +7,22 @@
    themes across the shadow boundary with no extra tokens. (#keybody kbd -> kbd
    because the id selector cannot reach into the shadow.) */
 var KBD_STYLE = `
-.ks-sec{margin-bottom:17px}
+.ks-sec{margin-bottom:18px}
 .ks-sec:last-of-type{margin-bottom:0}
-.ks-h{font-size:10.5px;font-weight:800;letter-spacing:.085em;text-transform:uppercase;color:var(--mut);margin:0 0 11px}
-.ks-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px 16px}
-.ks-row{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--ink)}
-.ks-list{display:flex;flex-direction:column;gap:10px}
-.ks-row2{display:flex;align-items:center;gap:13px;font-size:13px;color:var(--ink)}
-.ks-keys{flex:none;display:flex;align-items:center;gap:5px;min-width:92px}
-.ks-or{font-size:11px;color:var(--mut)}
-kbd{display:inline-flex;align-items:center;justify-content:center;min-width:23px;height:23px;padding:0 6px;font-family:inherit;font-size:11.5px;font-weight:700;line-height:1;color:var(--ink);background:var(--side);border:1px solid var(--bd);border-bottom-width:2px;border-radius:6px;box-shadow:0 1px 0 rgba(30,28,24,.03)}
+.ks-h{font-size:10.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--acc);margin:0 0 12px}
+.ks-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px 18px}
+.ks-row{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink);transition:transform .15s ease}
+.ks-row:hover{transform:translateX(3px)}
+.ks-list{display:flex;flex-direction:column;gap:11px}
+.ks-row2{display:flex;align-items:center;gap:14px;font-size:13px;color:var(--ink);transition:transform .15s ease}
+.ks-row2:hover{transform:translateX(3px)}
+.ks-keys{flex:none;display:flex;align-items:center;gap:6px;min-width:92px}
+.ks-or{font-size:11px;color:var(--mut);font-weight:600}
+kbd{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;padding:0 7px;font-family:inherit;font-size:11.5px;font-weight:700;line-height:1;color:var(--ink);background:linear-gradient(180deg,var(--side) 0%,rgba(83,74,183,.04) 100%);border:1px solid var(--bd);border-bottom-width:2px;border-radius:6px;box-shadow:0 2px 0 rgba(30,28,24,.06),0 1px 2px rgba(83,74,183,.06);transition:transform .1s ease,box-shadow .1s ease}
 kbd.ks-mini{min-width:18px;height:18px;font-size:10px;padding:0 4px}
-.ks-note{margin-top:12px;font-size:11.5px;line-height:1.55;color:var(--mut2)}
-.ks-foot{margin-top:16px;padding-top:13px;border-top:1px solid var(--bd);font-size:11.5px;line-height:1.55;color:var(--mut)}
+.ks-row:hover kbd,.ks-row2:hover kbd{transform:translateY(-1px);box-shadow:0 3px 0 rgba(30,28,24,.06),0 2px 4px rgba(83,74,183,.1)}
+.ks-note{margin-top:14px;font-size:11.5px;line-height:1.55;color:var(--mut2);padding:10px 13px;background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.02) 100%);border-radius:8px}
+.ks-foot{margin-top:18px;padding-top:14px;border-top:1px solid var(--bd);font-size:11.5px;line-height:1.55;color:var(--mut)}
 `;
 var KBD_HTML = `<div class="ks-sec">
         <div class="ks-h">Jump straight to any view</div>

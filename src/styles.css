@@ -270,8 +270,8 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
   .sidebar .seg button>span:first-child{font-size:13px}
   .sidebar .seg button .n{display:none}
   .sidebar .seg button.on{box-shadow:inset 0 -2px 0 var(--acc)}
-  .sidebar .mockbar{order:2;position:fixed;left:0;right:0;bottom:0;z-index:60;margin:0;background:var(--card);border:none;border-top:1px solid var(--bd);border-radius:16px 16px 0 0;padding:16px 16px 22px;box-shadow:0 -12px 32px rgba(0,0,0,.20);transform:translateY(115%);transition:transform .26s ease;max-height:82vh;overflow-y:auto}
-  body.tools-open .sidebar .mockbar{transform:none}
+  .sidebar .mockbar{order:2;position:fixed;left:0;right:0;bottom:0;z-index:60;margin:0;background:var(--card);border:none;border-top:1px solid var(--bd);border-radius:16px 16px 0 0;padding:16px 16px 22px;box-shadow:0 -12px 32px rgba(0,0,0,.20);transform:translateY(115%);transition:transform .26s ease;max-height:82vh;overflow-y:auto;display:none}
+  body.tools-open .sidebar .mockbar{display:flex;transform:none}
   body.tools-open .tools-bd{display:block;position:fixed;inset:0;background:rgba(0,0,0,.34);z-index:55}
   .sidebar .mockbar .mb-d{display:block}
   .stage{padding:18px 15px 80px}

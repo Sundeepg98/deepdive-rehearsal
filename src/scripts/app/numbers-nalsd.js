@@ -183,25 +183,56 @@ document.addEventListener('keydown', function (event) {
 
 /* ===== shell: mobile tools sheet (v75) ===== */
 /* The floating "tools" button toggles the mock-bar sheet on mobile; a click
-   outside it (or on any sheet button other than the toggles) closes it. */
+   outside it (or on any sheet button other than the toggles) closes it.
+   Uses display:none when closed to prevent scrollable whitespace, but sets
+   display:flex before opening for smooth CSS transition. */
 (function () {
   const toolsFab = document.getElementById('toolsfab');
   const mockbar = document.querySelector('.mockbar');
-  if (toolsFab) {
-    toolsFab.addEventListener('click', function (event) { event.stopPropagation(); document.body.classList.toggle('tools-open'); });
+  const TRANSITION_MS = 260;
+  
+  function openMockbar() {
+    if (!mockbar) return;
+    mockbar.style.display = 'flex';
+    // Force reflow so browser processes the display change before transform
+    mockbar.offsetHeight;
+    document.body.classList.add('tools-open');
   }
+  
+  function closeMockbar() {
+    document.body.classList.remove('tools-open');
+    // Wait for CSS transition to finish before hiding
+    setTimeout(function() {
+      if (!document.body.classList.contains('tools-open') && mockbar) {
+        mockbar.style.display = '';
+      }
+    }, TRANSITION_MS);
+  }
+  
+  if (toolsFab) {
+    toolsFab.addEventListener('click', function (event) {
+      event.stopPropagation();
+      if (document.body.classList.contains('tools-open')) {
+        closeMockbar();
+      } else {
+        openMockbar();
+      }
+    });
+  }
+  
   document.addEventListener('click', function (event) {
     if (!document.body.classList.contains('tools-open')) return;
     if (mockbar && mockbar.contains(event.target)) return;
     if (toolsFab && toolsFab.contains(event.target)) return;
-    document.body.classList.remove('tools-open');
+    closeMockbar();
   });
+  
   if (mockbar) {
     mockbar.addEventListener('click', function (event) {
       const btn = event.target.closest && event.target.closest('button');
       if (!btn) return;
       if (btn.id === 'inttog' || btn.id === 'themetog') return;
-      document.body.classList.remove('tools-open');
+      closeMockbar();
     });
   }
 })();

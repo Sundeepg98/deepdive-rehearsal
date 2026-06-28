@@ -99,6 +99,28 @@ async def test_no_duplicate_search_features(page):
 test_no_duplicate_search_features._group = 'Architecture'
 test_no_duplicate_search_features._markers = ['architecture', 'fast']
 
+async def test_no_duplicate_dark_mode_toggles(page):
+    """Only one dark mode toggle should exist (themetog in mockbar is canonical)."""
+    app_dir = os.path.join(PROJECT_DIR, 'src/scripts/app')
+    # Count files that create a dark mode toggle
+    toggle_creators = []
+    for f in os.listdir(app_dir):
+        if not f.endswith('.js'):
+            continue
+        path = os.path.join(app_dir, f)
+        with open(path) as fh:
+            content = fh.read()
+        # Check for dark mode toggle creation patterns
+        if 'dark mode' in content.lower() and 'toggle' in content.lower() and 'createElement' in content:
+            toggle_creators.append(f)
+        elif 'themetog' in content and 'createElement' in content:
+            toggle_creators.append(f)
+    # Only cram-sheet.js should manage the theme toggle
+    assert len(toggle_creators) <= 1, f"Multiple files creating dark mode toggles: {toggle_creators}"
+
+test_no_duplicate_dark_mode_toggles._group = 'Architecture'
+test_no_duplicate_dark_mode_toggles._markers = ['architecture', 'fast']
+
 
 async def test_all_included_scripts_exist(page):
     """Every script referenced in app.js must exist on disk."""

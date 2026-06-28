@@ -204,67 +204,6 @@
     }
   }
 
-  /* ---------- Dark Mode Toggle ---------- */
-  function initDarkMode() {
-    // Check if dark mode CSS already exists (from previous versions)
-    var hasDarkCSS = document.querySelector('[data-theme]') !== null ||
-      Array.from(document.styleSheets).some(function (s) {
-        try { return Array.from(s.cssRules).some(function (r) { return r.cssText && r.cssText.includes('[data-theme="dark"]'); }); } catch (e) { return false; }
-      });
-
-    if (!hasDarkCSS) return; // No dark mode CSS available
-
-    var sidebar = document.querySelector('.sidebar');
-    if (!sidebar) return;
-
-    var toggleWrap = document.createElement('div');
-    toggleWrap.style.cssText = 'display:flex;align-items:center;gap:8px;padding:8px 11px;margin-top:8px;border-top:1px solid var(--bd)';
-
-    var icon = document.createElement('span');
-    icon.textContent = document.documentElement.getAttribute('data-theme') === 'dark' ? '\u2600' : '\u263D';
-    icon.style.cssText = 'font-size:14px';
-
-    var label = document.createElement('span');
-    label.textContent = 'Dark Mode';
-    label.style.cssText = 'font-size:12px;color:var(--mut);flex:1';
-
-    var toggle = document.createElement('button');
-    toggle.setAttribute('aria-label', 'Toggle dark mode');
-    toggle.setAttribute('aria-pressed', document.documentElement.getAttribute('data-theme') === 'dark' ? 'true' : 'false');
-    toggle.style.cssText = 'width:36px;height:20px;border-radius:10px;border:0;background:var(--bd);position:relative;cursor:pointer;transition:background .25s ease;padding:0';
-
-    var knob = document.createElement('span');
-    knob.style.cssText = 'position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:2px;left:2px;transition:transform .25s cubic-bezier(.22,.61,.36,1);box-shadow:0 1px 3px rgba(0,0,0,.15)';
-    if (document.documentElement.getAttribute('data-theme') === 'dark') {
-      knob.style.transform = 'translateX(16px)';
-      toggle.style.background = 'var(--acc)';
-    }
-
-    toggle.appendChild(knob);
-    toggle.addEventListener('click', function () {
-      var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-      if (isDark) {
-        document.documentElement.removeAttribute('data-theme');
-        knob.style.transform = 'translateX(0)';
-        toggle.style.background = 'var(--bd)';
-        toggle.setAttribute('aria-pressed', 'false');
-        icon.textContent = '\u263D';
-      } else {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        knob.style.transform = 'translateX(16px)';
-        toggle.style.background = 'var(--acc)';
-        toggle.setAttribute('aria-pressed', 'true');
-        icon.textContent = '\u2600';
-      }
-      try { localStorage.setItem('theme', isDark ? 'light' : 'dark'); } catch (e) {}
-    });
-
-    toggleWrap.appendChild(icon);
-    toggleWrap.appendChild(label);
-    toggleWrap.appendChild(toggle);
-    sidebar.appendChild(toggleWrap);
-  }
-
   /* ---------- Initialize everything ---------- */
   function init() {
     initRipple();
@@ -273,7 +212,6 @@
     initToast();
     initNavSparkle();
     initRouteFlash();
-    initDarkMode();
   }
 
   if (document.readyState === 'loading') {

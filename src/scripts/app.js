@@ -50,3 +50,11 @@
 <!--@build:include scripts/app/virtual-keyboard.js-->
 <!--@build:include scripts/app/night-schedule.js-->
 <!--@build:include scripts/app/double-tap.js-->
+<!--@build:include scripts/app/easter-egg.js-->
+<!--@build:include scripts/app/edge-swipe.js-->
+<!--@build:include scripts/app/network-indicator.js-->
+<!--@build:include scripts/app/prefetch-hover.js-->
+<!--@build:include scripts/app/session-logger.js-->
+<!--@build:include scripts/app/scroll-direction.js-->
+<!--@build:include scripts/app/undo-toast.js-->
+<!--@build:include scripts/app/loading-button.js-->

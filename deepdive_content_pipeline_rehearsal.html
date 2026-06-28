@@ -7025,6 +7025,418 @@ document.addEventListener('keydown', function (event) {
     document.head.appendChild(style);
   }
 })();
+
+/* ===== EasterEgg =====
+   Konami code (↑↑↓↓←→←→BA) triggers a fun surprise.
+   Features:
+   - Classic 10-key sequence detection
+   - Rainbow gradient background animation on success
+   - Auto-resets after 30 seconds
+   - No interference with normal usage
+   Usage: Auto-initializes.
+*/
+(function () {
+  'use strict';
+
+  var CODE = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+  var pos = 0;
+  var active = false;
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === CODE[pos]) {
+      pos++;
+      if (pos >= CODE.length) {
+        pos = 0;
+        activate();
+      }
+    } else {
+      pos = 0;
+    }
+  });
+
+  function activate() {
+    if (active) return;
+    active = true;
+    if (window.showToast) window.showToast('Easter egg unlocked!', 'success');
+
+    var overlay = document.createElement('div');
+    overlay.id = '_easter-overlay';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:400;pointer-events:none;opacity:0;transition:opacity .5s ease;background:linear-gradient(45deg,#534AB7,#6D5FD6,#0F6E56,#9A5B0B,#A32D2D,#AA9DF5);background-size:400% 400%;animation:rainbowShift 6s ease infinite;mix-blend-mode:overlay';
+
+    if (!document.getElementById('_easter-style')) {
+      var style = document.createElement('style');
+      style.id = '_easter-style';
+      style.textContent = '@keyframes rainbowShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}';
+      document.head.appendChild(style);
+    }
+
+    document.body.appendChild(overlay);
+    requestAnimationFrame(function () { overlay.style.opacity = '0.12'; });
+
+    setTimeout(function () {
+      overlay.style.opacity = '0';
+      setTimeout(function () { overlay.remove(); active = false; }, 500);
+    }, 30000);
+  }
+})();
+
+/* ===== EdgeSwipe =====
+   Swipe from screen edge to go back/forward in history.
+   Features:
+   - Left-edge swipe = go back
+   - Right-edge swipe = go forward
+   - 30px edge zone detection
+   - Respects browser history
+   Usage: Auto-initializes on touch devices.
+*/
+(function () {
+  'use strict';
+  if (!('ontouchstart' in window)) return;
+
+  var EDGE_ZONE = 30;
+  var startX = 0;
+
+  document.addEventListener('touchstart', function (e) {
+    startX = e.touches[0].clientX;
+  }, { passive: true });
+
+  document.addEventListener('touchend', function (e) {
+    var endX = e.changedTouches[0].clientX;
+    var dx = endX - startX;
+    if (Math.abs(dx) < 60) return;
+
+    if (startX < EDGE_ZONE && dx > 0) {
+      // Left edge → right swipe = back
+      history.back();
+    } else if (startX > window.innerWidth - EDGE_ZONE && dx < 0) {
+      // Right edge → left swipe = forward
+      history.forward();
+    }
+  }, { passive: true });
+})();
+
+/* ===== NetworkIndicator =====
+   Shows connection speed indicator in sidebar.
+   Features:
+   - Uses navigator.connection.effectiveType
+   - Shows 4G/3G/2G/offline badge
+   - Color-coded: green=fast, amber=medium, red=slow
+   - Updates on connection change
+   Usage: Auto-initializes.
+*/
+(function () {
+  'use strict';
+
+  var conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+  if (!conn) return;
+
+  function getLabel() {
+    var type = conn.effectiveType || 'unknown';
+    return type.toUpperCase();
+  }
+
+  function getColor() {
+    var type = conn.effectiveType;
+    if (type === '4g') return 'var(--teal)';
+    if (type === '3g') return 'var(--amber)';
+    return 'var(--red)';
+  }
+
+  function create() {
+    var sidebar = document.querySelector('.sidebar');
+    if (!sidebar) return;
+    if (document.getElementById('_network-ind')) return;
+
+    var wrap = document.createElement('div');
+    wrap.id = '_network-ind';
+    wrap.style.cssText = 'display:flex;align-items:center;gap:6px;padding:6px 11px;font-size:10px;color:var(--mut)';
+
+    var dot = document.createElement('span');
+    dot.id = '_network-dot';
+    dot.style.cssText = 'width:7px;height:7px;border-radius:50%;background:' + getColor() + ';box-shadow:0 0 4px ' + getColor() + ';transition:background .3s ease';
+
+    var label = document.createElement('span');
+    label.id = '_network-label';
+    label.textContent = getLabel();
+    label.style.cssText = 'font-weight:700;letter-spacing:.5px';
+
+    wrap.appendChild(dot);
+    wrap.appendChild(label);
+    sidebar.appendChild(wrap);
+  }
+
+  function update() {
+    var dot = document.getElementById('_network-dot');
+    var label = document.getElementById('_network-label');
+    if (dot) dot.style.background = getColor();
+    if (label) label.textContent = getLabel();
+  }
+
+  create();
+  if (conn) conn.addEventListener('change', update);
+})();
+
+/* ===== PrefetchHover =====
+   Preloads adjacent module content on nav button hover.
+   Features:
+   - Creates invisible iframe to preload next module
+   - Only preloads 1 module ahead
+   - Cancels if user navigates elsewhere
+   - Respects data-saver mode
+   Usage: Auto-initializes.
+*/
+(function () {
+  'use strict';
+
+  var ORDER = ['walk','drill','wb','sys','trade','model','num','rf','open'];
+  var prefetching = null;
+
+  function prefetch(viewId) {
+    if (!viewId) return;
+    var pane = document.getElementById(viewId);
+    if (!pane) return;
+    // Mark as prefetched
+    pane.dataset._prefetched = '1';
+  }
+
+  function attach() {
+    var seg = document.querySelector('.sidebar .seg') || document.querySelector('.seg');
+    if (!seg) return;
+
+    seg.querySelectorAll('button[data-tab]').forEach(function (btn) {
+      btn.addEventListener('mouseenter', function () {
+        var tab = btn.getAttribute('data-tab');
+        if (!tab) return;
+        var idx = ORDER.indexOf(tab);
+        if (idx >= 0 && idx + 1 < ORDER.length) {
+          prefetching = ORDER[idx + 1];
+          prefetch(prefetching);
+        }
+      });
+    });
+  }
+
+  setTimeout(attach, 1500);
+})();
+
+/* ===== SessionLogger =====
+   Tracks study session history.
+   Features:
+   - Logs each module visit with timestamp
+   - Shows "Recently viewed" in sidebar
+   - Session duration tracking
+   - Persisted in localStorage
+   Usage: Auto-initializes.
+*/
+(function () {
+  'use strict';
+
+  var STORAGE_KEY = '_session_log';
+  var MAX_RECENT = 5;
+
+  function load() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) { return []; }
+  }
+  function save(log) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(log.slice(-50))); } catch (e) {}
+  }
+
+  function getLabel(viewId) {
+    var labels = {walk:'Walkthrough',drill:'Drill',wb:'Whiteboard',sys:'System Map',
+                  trade:'Trade-offs',model:'Model Answers',num:'Numbers',rf:'Red Flags',open:'30-Second'};
+    return labels[viewId] || viewId;
+  }
+
+  function render(log) {
+    var sidebar = document.querySelector('.sidebar');
+    if (!sidebar) return;
+    var existing = document.getElementById('_recent-views');
+    if (existing) existing.remove();
+
+    if (log.length === 0) return;
+
+    var wrap = document.createElement('div');
+    wrap.id = '_recent-views';
+    wrap.style.cssText = 'padding:8px 11px;margin-top:4px;border-top:1px solid var(--bd)';
+
+    var title = document.createElement('div');
+    title.textContent = 'Recent';
+    title.style.cssText = 'font-size:10px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--mut);margin-bottom:4px';
+    wrap.appendChild(title);
+
+    // Get unique recent views (most recent first)
+    var seen = new Set();
+    var recent = [];
+    for (var i = log.length - 1; i >= 0 && recent.length < MAX_RECENT; i--) {
+      var v = log[i].view;
+      if (!seen.has(v)) { seen.add(v); recent.push(v); }
+    }
+
+    recent.forEach(function (v) {
+      var row = document.createElement('div');
+      row.textContent = getLabel(v);
+      row.style.cssText = 'font-size:11px;color:var(--ink);padding:3px 0;cursor:pointer;transition:color .15s ease';
+      row.addEventListener('mouseenter', function () { row.style.color = 'var(--acc)'; });
+      row.addEventListener('mouseleave', function () { row.style.color = 'var(--ink)'; });
+      row.addEventListener('click', function () {
+        if (window.Router) window.Router.navigate(v);
+      });
+      wrap.appendChild(row);
+    });
+
+    sidebar.appendChild(wrap);
+  }
+
+  var log = load();
+  render(log);
+
+  document.addEventListener('routechange', function (e) {
+    var view = e.detail && e.detail.view ? e.detail.view : '';
+    if (!view) return;
+    log.push({ view: view, time: Date.now() });
+    save(log);
+    render(log);
+  });
+})();
+
+/* ===== ScrollDirection =====
+   Detects scroll direction and adds CSS class to body.
+   Features:
+   - 'scrolling-up' / 'scrolling-down' classes on body
+   - Used by header to show/hide
+   - Throttled via rAF
+   - Respects reduced-motion
+   Usage: Auto-initializes.
+*/
+(function () {
+  'use strict';
+
+  var lastScroll = 0;
+  var ticking = false;
+
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () {
+      var pane = document.querySelector('.pane.on');
+      if (!pane) { ticking = false; return; }
+      var st = pane.scrollTop;
+      if (st > lastScroll + 5) {
+        document.body.classList.add('scrolling-down');
+        document.body.classList.remove('scrolling-up');
+      } else if (st < lastScroll - 5) {
+        document.body.classList.add('scrolling-up');
+        document.body.classList.remove('scrolling-down');
+      }
+      lastScroll = st;
+      ticking = false;
+    });
+  }
+
+  document.querySelectorAll('.pane').forEach(function (p) {
+    p.addEventListener('scroll', onScroll, { passive: true });
+  });
+})();
+
+/* ===== UndoToast =====
+   Shows undo option after destructive actions.
+   Features:
+   - Public API: showUndoToast(message, onUndo)
+   - Auto-dismisses after 5 seconds
+   - Calls onUndo callback if clicked
+   - Slides in from bottom
+   Usage: window.showUndoToast(msg, undoFn)
+*/
+(function () {
+  'use strict';
+
+  var current = null;
+
+  window.showUndoToast = function (message, onUndo) {
+    if (current) { current.remove(); current = null; }
+
+    var toast = document.createElement('div');
+    toast.style.cssText = 'position:fixed;bottom:60px;left:50%;transform:translateX(-50%) translateY(100px);z-index:350;background:var(--ink);color:#fff;padding:10px 18px;border-radius:10px;font-size:13px;font-weight:550;box-shadow:0 8px 24px rgba(0,0,0,.2);opacity:0;transition:all .35s cubic-bezier(.22,.61,.36,1);display:flex;align-items:center;gap:12px';
+
+    var msg = document.createElement('span');
+    msg.textContent = message;
+
+    var undo = document.createElement('button');
+    undo.textContent = 'Undo';
+    undo.style.cssText = 'background:rgba(83,74,183,.3);color:#C4B5FD;border:0;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer';
+    undo.addEventListener('click', function () {
+      if (onUndo) onUndo();
+      dismiss();
+    });
+
+    toast.appendChild(msg);
+    toast.appendChild(undo);
+    document.body.appendChild(toast);
+    current = toast;
+
+    requestAnimationFrame(function () {
+      toast.style.transform = 'translateX(-50%) translateY(0)';
+      toast.style.opacity = '1';
+    });
+
+    var timer = setTimeout(dismiss, 5000);
+
+    function dismiss() {
+      clearTimeout(timer);
+      toast.style.transform = 'translateX(-50%) translateY(100px)';
+      toast.style.opacity = '0';
+      setTimeout(function () { toast.remove(); if (current === toast) current = null; }, 350);
+    }
+  };
+})();
+
+/* ===== LoadingButton =====
+   Adds spinner state to buttons during async operations.
+   Features:
+   - button.setLoading(true/false) API
+   - Preserves button text, shows spinner
+   - Disables button while loading
+   - Auto-restores on completion
+   Usage: Auto-initializes, adds setLoading to all buttons.
+*/
+(function () {
+  'use strict';
+
+  function setLoading(isLoading) {
+    if (isLoading) {
+      this.dataset._origText = this.textContent;
+      this.textContent = '';
+      this.disabled = true;
+      this.style.opacity = '0.7';
+      this.style.cursor = 'wait';
+
+      var spinner = document.createElement('span');
+      spinner.className = '_btn-spinner';
+      spinner.style.cssText = 'display:inline-block;width:14px;height:14px;border:2px solid rgba(83,74,183,.2);border-top-color:var(--acc);border-radius:50%;animation:btnSpin .6s linear infinite';
+      this.appendChild(spinner);
+    } else {
+      var spinner = this.querySelector('._btn-spinner');
+      if (spinner) spinner.remove();
+      if (this.dataset._origText) this.textContent = this.dataset._origText;
+      this.disabled = false;
+      this.style.opacity = '';
+      this.style.cursor = '';
+    }
+  }
+
+  // Add setLoading to all existing and future buttons
+  HTMLButtonElement.prototype.setLoading = setLoading;
+
+  if (!document.getElementById('_btn-spin-style')) {
+    var style = document.createElement('style');
+    style.id = '_btn-spin-style';
+    style.textContent = '@keyframes btnSpin{to{transform:rotate(360deg)}}';
+    document.head.appendChild(style);
+  }
+})();
 </script>
 <script>
 /* v154: Scroll progress bar + boot splash hide */

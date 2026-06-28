@@ -34,3 +34,11 @@
 <!--@build:include scripts/app/focus-mode.js-->
 <!--@build:include scripts/app/share-url.js-->
 <!--@build:include scripts/app/font-size.js-->
+<!--@build:include scripts/app/bookmark-system.js-->
+<!--@build:include scripts/app/offline-indicator.js-->
+<!--@build:include scripts/app/page-visibility.js-->
+<!--@build:include scripts/app/progress-ring.js-->
+<!--@build:include scripts/app/typing-intro.js-->
+<!--@build:include scripts/app/audio-feedback.js-->
+<!--@build:include scripts/app/zoom-diagrams.js-->
+<!--@build:include scripts/app/animation-speed.js-->

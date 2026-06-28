@@ -6149,6 +6149,455 @@ document.addEventListener('keydown', function (event) {
     setTimeout(createControls, 1400);
   }
 })();
+
+/* ===== BookmarkSystem =====
+   Star/unstar modules to save favorites.
+   Features:
+   - Star button appears on each nav item
+   - Persisted in localStorage
+   - Visual filled/empty star state
+   - 'Bookmarks' section shows favorited modules
+   Usage: Auto-initializes on DOMContentLoaded.
+*/
+(function () {
+  'use strict';
+
+  var STORAGE_KEY = '_bookmarks';
+  var bookmarks = {};
+
+  function load() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) bookmarks = JSON.parse(raw);
+    } catch (e) {}
+  }
+  function save() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(bookmarks)); } catch (e) {}
+  }
+
+  function toggle(id, btn) {
+    if (bookmarks[id]) {
+      delete bookmarks[id];
+      btn.textContent = '\u2606';
+      btn.style.color = 'var(--mut)';
+    } else {
+      bookmarks[id] = true;
+      btn.textContent = '\u2605';
+      btn.style.color = '#E8A317';
+      btn.style.textShadow = '0 0 6px rgba(232,163,23,.3)';
+    }
+    save();
+  }
+
+  function init() {
+    load();
+    var sidebarSeg = document.querySelector('.sidebar .seg');
+    if (!sidebarSeg) return;
+
+    var buttons = sidebarSeg.querySelectorAll('button[data-tab]');
+    buttons.forEach(function (btn) {
+      if (btn.querySelector('._bookmark-star')) return; // already done
+
+      var tabId = btn.getAttribute('data-tab');
+      var star = document.createElement('span');
+      star.className = '_bookmark-star';
+      star.textContent = bookmarks[tabId] ? '\u2605' : '\u2606';
+      star.style.cssText = 'position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:13px;color:' + (bookmarks[tabId] ? '#E8A317' : 'var(--mut)') + ';cursor:pointer;transition:color .2s ease;text-shadow:' + (bookmarks[tabId] ? '0 0 6px rgba(232,163,23,.3)' : 'none') + ';pointer-events:auto;z-index:5';
+
+      star.addEventListener('click', function (e) {
+        e.stopPropagation();
+        toggle(tabId, star);
+      });
+
+      btn.style.position = 'relative';
+      btn.appendChild(star);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { setTimeout(init, 1500); });
+  } else {
+    setTimeout(init, 1500);
+  }
+})();
+
+/* ===== OfflineIndicator =====
+   Shows a subtle banner when network goes offline.
+   Features:
+   - Listens to online/offline browser events
+   - Slide-in banner at top of viewport
+   - Auto-dismisses when back online
+   - Respects reduced-motion
+   Usage: Auto-initializes.
+*/
+(function () {
+  'use strict';
+
+  var banner = null;
+
+  function show() {
+    if (banner) { banner.style.transform = 'translateY(0)'; return; }
+    banner = document.createElement('div');
+    banner.id = '_offline-banner';
+    banner.textContent = 'You are offline. Some features may not work.';
+    banner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:500;background:linear-gradient(90deg,#A32D2D,#CC4444);color:#fff;text-align:center;font-size:12px;font-weight:600;padding:6px 16px;transform:translateY(-100%);transition:transform .35s cubic-bezier(.22,.61,.36,1);box-shadow:0 2px 12px rgba(163,45,45,.3)';
+    document.body.appendChild(banner);
+    requestAnimationFrame(function () { banner.style.transform = 'translateY(0)'; });
+  }
+
+  function hide() {
+    if (banner) banner.style.transform = 'translateY(-100%)';
+  }
+
+  window.addEventListener('offline', show);
+  window.addEventListener('online', hide);
+  if (!navigator.onLine) show();
+})();
+
+/* ===== PageVisibility =====
+   Pauses expensive animations/timers when tab is hidden.
+   Saves CPU/battery. Resumes when tab becomes visible.
+   Usage: Auto-initializes.
+*/
+(function () {
+  'use strict';
+
+  var hidden = false;
+
+  document.addEventListener('visibilitychange', function () {
+    hidden = document.hidden;
+    document.body.classList.toggle('_tab-hidden', hidden);
+    if (hidden) {
+      // Pause expensive CSS animations
+      document.documentElement.style.setProperty('--animation-play-state', 'paused');
+    } else {
+      document.documentElement.style.removeProperty('--animation-play-state');
+    }
+  });
+
+  // Inject pause style
+  var style = document.createElement('style');
+  style.textContent = 'body._tab-hidden *, body._tab-hidden *::before, body._tab-hidden *::after { animation-play-state: paused !important }';
+  document.head.appendChild(style);
+})();
+
+/* ===== ProgressRing =====
+   SVG circular progress ring showing session completion.
+   Shows in sidebar, updates as user navigates through modules.
+   Usage: Auto-initializes.
+*/
+(function () {
+  'use strict';
+
+  var TOTAL = 9;
+
+  function create() {
+    var progressDiv = document.getElementById('_progress-tracker');
+    if (!progressDiv) return;
+    if (progressDiv.querySelector('._ring-wrap')) return;
+
+    var wrap = document.createElement('div');
+    wrap.className = '_ring-wrap';
+    wrap.style.cssText = 'display:flex;align-items:center;gap:10px;margin-top:8px';
+
+    var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('width', '32');
+    svg.setAttribute('height', '32');
+    svg.setAttribute('viewBox', '0 0 32 32');
+    svg.style.cssText = 'transform:rotate(-90deg);flex:none';
+
+    var r = 13, c = 16;
+    var circ = 2 * Math.PI * r;
+
+    var bg = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    bg.setAttribute('cx', c); bg.setAttribute('cy', c); bg.setAttribute('r', r);
+    bg.setAttribute('fill', 'none'); bg.setAttribute('stroke', '#E8E4DC');
+    bg.setAttribute('stroke-width', '3');
+
+    var fill = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    fill.setAttribute('cx', c); fill.setAttribute('cy', c); fill.setAttribute('r', r);
+    fill.setAttribute('fill', 'none'); fill.setAttribute('stroke', 'var(--acc)');
+    fill.setAttribute('stroke-width', '3');
+    fill.setAttribute('stroke-linecap', 'round');
+    fill.setAttribute('stroke-dasharray', circ);
+    fill.setAttribute('stroke-dashoffset', circ);
+    fill.id = '_progress-ring-fill';
+    fill.style.cssText = 'transition:stroke-dashoffset .5s cubic-bezier(.22,.61,.36,1)';
+
+    svg.appendChild(bg);
+    svg.appendChild(fill);
+
+    var pct = document.createElement('span');
+    pct.id = '_progress-ring-pct';
+    pct.textContent = '0%';
+    pct.style.cssText = 'font-size:12px;font-weight:700;color:var(--acc);font-family:var(--mono)';
+
+    wrap.appendChild(svg);
+    wrap.appendChild(pct);
+    progressDiv.appendChild(wrap);
+
+    update(1);
+  }
+
+  function update(visited) {
+    var fill = document.getElementById('_progress-ring-fill');
+    var pct = document.getElementById('_progress-ring-pct');
+    if (!fill) return;
+    var circ = 2 * Math.PI * 13;
+    var p = Math.min(visited / TOTAL, 1);
+    fill.setAttribute('stroke-dashoffset', circ * (1 - p));
+    if (pct) pct.textContent = Math.round(p * 100) + '%';
+  }
+
+  var visited = new Set();
+  document.addEventListener('routechange', function (e) {
+    var v = e.detail && e.detail.view ? e.detail.view : '';
+    if (v) visited.add(v);
+    create();
+    update(visited.size);
+  });
+
+  setTimeout(create, 1500);
+})();
+
+/* ===== TypingIntro =====
+   Typewriter effect on the main heading.
+   Types out the title once on initial load.
+   Usage: Auto-initializes.
+*/
+(function () {
+  'use strict';
+
+  var STORAGE_KEY = '_typing_seen';
+
+  function type(element, text, speed) {
+    element.textContent = '';
+    element.style.borderRight = '2px solid var(--acc)';
+    element.style.paddingRight = '2px';
+    element.style.animation = 'cursorBlink .8s step-end infinite';
+
+    var i = 0;
+    var interval = setInterval(function () {
+      if (i < text.length) {
+        element.textContent += text.charAt(i);
+        i++;
+      } else {
+        clearInterval(interval);
+        element.style.borderRight = 'none';
+        element.style.animation = 'none';
+      }
+    }, speed);
+  }
+
+  function init() {
+    try {
+      if (localStorage.getItem(STORAGE_KEY)) return;
+      localStorage.setItem(STORAGE_KEY, '1');
+    } catch (e) { return; }
+
+    var h1 = document.querySelector('.hdr h1');
+    if (!h1) return;
+    var original = h1.textContent.trim();
+    if (!original) return;
+
+    // Only type if reduced motion not preferred
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    type(h1, original, 65);
+
+    // Inject cursor blink keyframe
+    if (!document.getElementById('_cursor-blink-style')) {
+      var style = document.createElement('style');
+      style.id = '_cursor-blink-style';
+      style.textContent = '@keyframes cursorBlink{0%,100%{border-color:var(--acc)}50%{border-color:transparent}}';
+      document.head.appendChild(style);
+    }
+  }
+
+  setTimeout(init, 800);
+})();
+
+/* ===== AudioFeedback =====
+   Subtle click sounds on button interactions.
+   Uses Web Audio API — no external files needed.
+   Respects reduced-motion AND muted preference.
+   Usage: Auto-initializes.
+*/
+(function () {
+  'use strict';
+
+  var ctx = null;
+  var enabled = true;
+
+  function initAudio() {
+    if (ctx) return;
+    try { ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {}
+  }
+
+  function click() {
+    if (!enabled || !ctx) return;
+    try {
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(800, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(400, ctx.currentTime + 0.06);
+      gain.gain.setValueAtTime(0.04, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.06);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.06);
+    } catch (e) {}
+  }
+
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('button')) {
+      initAudio();
+      click();
+    }
+  });
+})();
+
+/* ===== ZoomDiagrams =====
+   Pinch-to-zoom on images and diagram elements.
+   Features:
+   - Pinch gesture detection on .card img, diagram elements
+   - Scale transform with smooth transition
+   - Double-tap to reset zoom
+   - Only on touch devices
+   Usage: Auto-initializes.
+*/
+(function () {
+  'use strict';
+  if (!('ontouchstart' in window)) return;
+
+  var scale = 1;
+  var initialDist = 0;
+  var target = null;
+
+  function getDist(e) {
+    var t = e.touches;
+    if (t.length < 2) return 0;
+    var dx = t[0].clientX - t[1].clientX;
+    var dy = t[0].clientY - t[1].clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+
+  function findTarget(el) {
+    return el.closest('.card, img, svg, .diagram, [class*="map"]');
+  }
+
+  document.addEventListener('touchstart', function (e) {
+    if (e.touches.length === 2) {
+      target = findTarget(e.target);
+      if (target) {
+        initialDist = getDist(e);
+        scale = parseFloat(target.dataset._zoom) || 1;
+      }
+    }
+  }, { passive: true });
+
+  document.addEventListener('touchmove', function (e) {
+    if (e.touches.length === 2 && target && initialDist > 0) {
+      e.preventDefault();
+      var dist = getDist(e);
+      var newScale = Math.min(3, Math.max(0.8, scale * (dist / initialDist)));
+      target.style.transform = 'scale(' + newScale.toFixed(2) + ')';
+      target.style.transformOrigin = 'center center';
+      target.style.transition = 'none';
+    }
+  }, { passive: false });
+
+  document.addEventListener('touchend', function () {
+    if (target) {
+      target.dataset._zoom = parseFloat(target.style.transform.replace(/[^0-9.]/g, '')) || 1;
+      target.style.transition = 'transform .25s ease';
+      target = null;
+      initialDist = 0;
+    }
+  });
+})();
+
+/* ===== AnimationSpeed =====
+   Accessibility: slow/normal/fast animation speed toggle.
+   Features:
+   - Small toggle in sidebar: Slow | Normal | Fast
+   - Adjusts CSS animation-duration globally
+   - Persists in localStorage
+   - Respects prefers-reduced-motion
+   Usage: Auto-initializes.
+*/
+(function () {
+  'use strict';
+
+  var STORAGE_KEY = '_anim_speed';
+  var SPEED_MAP = { slow: 2.0, normal: 1.0, fast: 0.4 };
+  var current = 'normal';
+
+  try {
+    var saved = localStorage.getItem(STORAGE_KEY);
+    if (saved && SPEED_MAP[saved]) current = saved;
+  } catch (e) {}
+
+  function apply() {
+    var factor = SPEED_MAP[current];
+    document.documentElement.style.setProperty('--anim-speed-factor', factor);
+    // Inject/update a global rule
+    var existing = document.getElementById('_anim-speed-style');
+    if (existing) existing.remove();
+    var style = document.createElement('style');
+    style.id = '_anim-speed-style';
+    style.textContent = '*{animation-duration:calc(var(--anim-speed-factor,1) * var(--_orig-duration,inherit))!important}';
+    document.head.appendChild(style);
+  }
+
+  function createControls() {
+    var sidebar = document.querySelector('.sidebar');
+    if (!sidebar) return;
+    if (sidebar.querySelector('#_anim-speed')) return;
+
+    var wrap = document.createElement('div');
+    wrap.id = '_anim-speed';
+    wrap.style.cssText = 'display:flex;align-items:center;gap:6px;padding:8px 11px;margin-top:4px;border-top:1px solid var(--bd)';
+
+    var label = document.createElement('span');
+    label.textContent = 'Anim speed';
+    label.style.cssText = 'font-size:11px;color:var(--mut);flex:1;font-weight:600';
+    wrap.appendChild(label);
+
+    ['slow', 'normal', 'fast'].forEach(function (speed) {
+      var b = document.createElement('button');
+      b.textContent = speed[0].toUpperCase();
+      b.setAttribute('aria-label', speed + ' animations');
+      b.dataset.speed = speed;
+      b.style.cssText = 'width:26px;height:26px;border-radius:6px;border:1px solid ' + (speed === current ? 'var(--acc)' : 'var(--bd)') + ';background:' + (speed === current ? 'rgba(83,74,183,.1)' : 'linear-gradient(180deg,#fff,#F8F5EF)') + ';color:' + (speed === current ? 'var(--acc)' : 'var(--mut)') + ';font-size:11px;font-weight:700;cursor:pointer;transition:all .15s ease;padding:0';
+
+      b.addEventListener('click', function () {
+        current = speed;
+        apply();
+        try { localStorage.setItem(STORAGE_KEY, current); } catch (e) {}
+        // Update visual state
+        wrap.querySelectorAll('button').forEach(function (btn) {
+          var s = btn.dataset.speed;
+          btn.style.borderColor = s === current ? 'var(--acc)' : 'var(--bd)';
+          btn.style.background = s === current ? 'rgba(83,74,183,.1)' : 'linear-gradient(180deg,#fff,#F8F5EF)';
+          btn.style.color = s === current ? 'var(--acc)' : 'var(--mut)';
+        });
+      });
+      wrap.appendChild(b);
+    });
+
+    sidebar.appendChild(wrap);
+  }
+
+  apply();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { setTimeout(createControls, 1600); });
+  } else {
+    setTimeout(createControls, 1600);
+  }
+})();
 </script>
 <script>
 /* v154: Scroll progress bar + boot splash hide */

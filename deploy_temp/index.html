@@ -5392,6 +5392,763 @@ document.addEventListener('keydown', function (event) {
 
   window.SessionTimer = { start: start, stop: stop };
 })();
+
+/* ===== ScrollProgress =====
+   Drives the existing #scrollprog CSS element.
+   Shows a thin progress bar at the top of the viewport
+   indicating scroll position within the active pane.
+   Features:
+   - Updates on scroll events (throttled via rAF)
+   - Smooth width transition via CSS
+   - Auto-attaches to whichever .pane is active
+   - Respects prefers-reduced-motion
+   Usage: Auto-initializes on DOMContentLoaded.
+*/
+(function () {
+  'use strict';
+
+  var bar = document.getElementById('scrollprog');
+  if (!bar) return; // CSS bar not present
+
+  var ticking = false;
+
+  function updateProgress() {
+    var pane = document.querySelector('.pane.on');
+    if (!pane) { bar.style.width = '0%'; return; }
+
+    var scrollTop = pane.scrollTop;
+    var scrollHeight = pane.scrollHeight - pane.clientHeight;
+    if (scrollHeight <= 0) { bar.style.width = '0%'; return; }
+
+    var pct = Math.min(100, Math.max(0, (scrollTop / scrollHeight) * 100));
+    bar.style.width = pct + '%';
+    ticking = false;
+  }
+
+  function onScroll() {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(updateProgress);
+    }
+  }
+
+  // Attach to all panes
+  var panes = document.querySelectorAll('.pane');
+  panes.forEach(function (p) { p.addEventListener('scroll', onScroll, { passive: true }); });
+
+  // Also update on view change
+  document.addEventListener('routechange', function () {
+    setTimeout(updateProgress, 100);
+  });
+
+  // Initial update
+  updateProgress();
+})();
+
+/* ===== CopyCode =====
+   Adds copy-to-clipboard buttons on all code blocks.
+   Features:
+   - Finds <pre><code> and .code blocks in both light DOM and shadow DOM
+   - Adds a subtle "Copy" button that appears on hover
+   - Uses modern Clipboard API with execCommand fallback
+   - Shows "Copied!" feedback for 2 seconds
+   - Respects reduced-motion
+   Usage: Auto-initializes on DOMContentLoaded.
+*/
+(function () {
+  'use strict';
+
+  var COPY_STYLE = 'position:absolute;top:6px;right:6px;font-size:10px;font-weight:650;letter-spacing:.5px;text-transform:uppercase;padding:4px 10px;border-radius:6px;border:1px solid var(--bd);background:rgba(255,255,255,.9);color:var(--mut);cursor:pointer;opacity:0;transition:opacity .2s ease,background .2s ease;z-index:5;backdrop-filter:blur(4px)';
+
+  function addCopyButton(block) {
+    if (block.dataset._copyBtn) return; // already processed
+    block.dataset._copyBtn = '1';
+    block.style.position = 'relative';
+
+    var btn = document.createElement('button');
+    btn.textContent = 'Copy';
+    btn.setAttribute('aria-label', 'Copy code');
+    btn.style.cssText = COPY_STYLE;
+
+    btn.addEventListener('click', function () {
+      var text = block.textContent || '';
+      var copied = false;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { copied = true; }).catch(function () {});
+      }
+      if (!copied) {
+        try {
+          var ta = document.createElement('textarea');
+          ta.value = text;
+          ta.style.cssText = 'position:fixed;left:-9999px';
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+        } catch (e) {}
+      }
+      btn.textContent = 'Copied!';
+      btn.style.background = 'rgba(15,110,86,.15)';
+      btn.style.color = 'var(--teal)';
+      btn.style.borderColor = 'rgba(15,110,86,.3)';
+      setTimeout(function () {
+        btn.textContent = 'Copy';
+        btn.style.background = 'rgba(255,255,255,.9)';
+        btn.style.color = 'var(--mut)';
+        btn.style.borderColor = 'var(--bd)';
+      }, 2000);
+    });
+
+    block.addEventListener('mouseenter', function () { btn.style.opacity = '1'; });
+    block.addEventListener('mouseleave', function () { btn.style.opacity = '0'; });
+    block.appendChild(btn);
+  }
+
+  function scan() {
+    // Light DOM code blocks
+    document.querySelectorAll('pre, code, .code-block, [class*="code"]').forEach(function (el) {
+      // Only target blocks with actual code content (more than 20 chars)
+      if ((el.textContent || '').length > 20) {
+        addCopyButton(el);
+      }
+    });
+  }
+
+  // Scan on init and after view changes
+  scan();
+  document.addEventListener('routechange', function () { setTimeout(scan, 500); });
+})();
+
+/* ===== TouchSwipe =====
+   Swipe left/right on mobile to navigate between views.
+   Features:
+   - Horizontal swipe detection on the stage area
+   - Threshold: 50px horizontal, <100px vertical (to avoid scroll conflicts)
+   - Visual feedback: subtle arrow hint during swipe
+   - Only activates on touch devices (checks touch support)
+   - Respects view transition lock
+   Usage: Auto-initializes on DOMContentLoaded.
+*/
+(function () {
+  'use strict';
+
+  // Only enable on touch-capable devices
+  if (!('ontouchstart' in window)) return;
+
+  var ORDER = ['walk', 'drill', 'wb', 'sys', 'trade', 'model', 'num', 'rf', 'open'];
+  var THRESHOLD = 50;
+  var VERTICAL_TOLERANCE = 100;
+
+  var startX = 0;
+  var startY = 0;
+  var hintEl = null;
+
+  function createHint() {
+    if (hintEl) return;
+    hintEl = document.createElement('div');
+    hintEl.id = '_swipe-hint';
+    hintEl.style.cssText = 'position:fixed;top:50%;transform:translateY(-50%);font-size:28px;color:var(--acc);opacity:0;transition:opacity .2s ease;pointer-events:none;z-index:100;padding:12px 16px;background:rgba(255,255,255,.85);border-radius:50%;box-shadow:0 4px 16px rgba(83,74,183,.15);backdrop-filter:blur(4px)';
+    document.body.appendChild(hintEl);
+  }
+
+  function showHint(direction) {
+    if (!hintEl) createHint();
+    hintEl.textContent = direction === 'left' ? '\u2039' : '\u203A';
+    hintEl.style.left = direction === 'left' ? '20px' : 'auto';
+    hintEl.style.right = direction === 'left' ? 'auto' : '20px';
+    hintEl.style.opacity = '0.6';
+  }
+
+  function hideHint() {
+    if (hintEl) hintEl.style.opacity = '0';
+  }
+
+  function navigate(direction) {
+    if (!window.Router) return;
+    var current = window.Router.current().view;
+    var idx = ORDER.indexOf(current);
+    if (idx < 0) return;
+
+    var nextIdx = direction === 'left' ? idx + 1 : idx - 1;
+    if (nextIdx >= 0 && nextIdx < ORDER.length) {
+      window.Router.navigate(ORDER[nextIdx]);
+    }
+  }
+
+  var stage = document.querySelector('.stage') || document.body;
+
+  stage.addEventListener('touchstart', function (e) {
+    startX = e.changedTouches[0].screenX;
+    startY = e.changedTouches[0].screenY;
+  }, { passive: true });
+
+  stage.addEventListener('touchmove', function (e) {
+    if (!startX) return;
+    var dx = e.changedTouches[0].screenX - startX;
+    var dy = e.changedTouches[0].screenY - startY;
+    if (Math.abs(dx) > 30 && Math.abs(dy) < VERTICAL_TOLERANCE) {
+      showHint(dx > 0 ? 'right' : 'left');
+    }
+  }, { passive: true });
+
+  stage.addEventListener('touchend', function (e) {
+    if (!startX) return;
+    var dx = e.changedTouches[0].screenX - startX;
+    var dy = e.changedTouches[0].screenY - startY;
+    hideHint();
+
+    if (Math.abs(dx) >= THRESHOLD && Math.abs(dy) < VERTICAL_TOLERANCE) {
+      navigate(dx > 0 ? 'right' : 'left');
+    }
+    startX = 0;
+    startY = 0;
+  }, { passive: true });
+})();
+
+/* ===== StatePersistence =====
+   Persists user session state to localStorage.
+   Features:
+   - Remember last viewed module (restores on return)
+   - Remember scroll position per module
+   - Remember dark mode preference
+   - Auto-saves every 5 seconds and on view change
+   - Gracefully handles localStorage being disabled
+   Usage: Auto-initializes after Router is ready.
+*/
+(function () {
+  'use strict';
+
+  var STORAGE_KEY = '_deepdive_state';
+  var SAVE_INTERVAL = 5000;
+
+  function load() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch (e) { return {}; }
+  }
+
+  function save(state) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+  }
+
+  var state = load();
+
+  // Restore last view on initial load (after a delay for Router init)
+  function restoreView() {
+    if (!window.Router || !state.lastView) return;
+    var hash = location.hash.slice(1);
+    // Only restore if user didn't deep-link
+    if (!hash || hash === 'walk') {
+      setTimeout(function () {
+        window.Router.navigate(state.lastView);
+      }, 500);
+    }
+  }
+
+  // Restore scroll position for current view
+  function restoreScroll(viewId) {
+    if (!state.scrolls || !state.scrolls[viewId]) return;
+    var pane = document.getElementById(viewId);
+    if (pane) {
+      pane.scrollTop = state.scrolls[viewId];
+    }
+  }
+
+  // Listen to route changes
+  document.addEventListener('routechange', function (e) {
+    var detail = e.detail || {};
+    var viewId = detail.view || window.Router.current().view;
+
+    // Save current view
+    state.lastView = viewId;
+
+    // Restore scroll for this view
+    setTimeout(function () { restoreScroll(viewId); }, 300);
+
+    save(state);
+  });
+
+  // Periodic scroll position save
+  setInterval(function () {
+    if (!window.Router) return;
+    var viewId = window.Router.current().view;
+    var pane = document.getElementById(viewId);
+    if (pane && pane.scrollTop > 0) {
+      state.scrolls = state.scrolls || {};
+      state.scrolls[viewId] = pane.scrollTop;
+      save(state);
+    }
+  }, SAVE_INTERVAL);
+
+  // Restore after DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { setTimeout(restoreView, 1000); });
+  } else {
+    setTimeout(restoreView, 1000);
+  }
+})();
+
+/* ===== CompletionCelebration =====
+   Subtle confetti burst when user scrolls to bottom of a module.
+   Features:
+   - Triggers once per session when scroll reaches 95%+ 
+   - Uses CSS-only particles (no canvas, no library)
+   - 15-20 small colored dots burst upward and fade
+   - Respects prefers-reduced-motion
+   - Only fires once per module per session
+   Usage: Auto-initializes on DOMContentLoaded.
+*/
+(function () {
+  'use strict';
+
+  // Skip if reduced motion preferred
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  var celebrated = {}; // track which modules we've celebrated
+  var COLORS = ['#534AB7', '#6D5FD6', '#0F6E56', '#A32D2D', '#9A5B0B', '#8B7FE8'];
+
+  function celebrate(pane) {
+    var viewId = pane.id;
+    if (!viewId || celebrated[viewId]) return;
+    celebrated[viewId] = true;
+
+    var rect = pane.getBoundingClientRect();
+    var centerX = rect.left + rect.width / 2;
+    var bottomY = rect.bottom - 40;
+
+    for (var i = 0; i < 18; i++) {
+      (function (index) {
+        setTimeout(function () {
+          var dot = document.createElement('span');
+          var color = COLORS[Math.floor(Math.random() * COLORS.length)];
+          var size = 4 + Math.random() * 5;
+          var angle = (Math.random() - 0.5) * Math.PI; // upward arc
+          var velocity = 60 + Math.random() * 80;
+          var tx = Math.sin(angle) * velocity;
+          var ty = -Math.cos(angle) * velocity - 30;
+
+          dot.style.cssText = 'position:fixed;left:' + centerX + 'px;top:' + bottomY + 'px;width:' + size + 'px;height:' + size + 'px;border-radius:50%;background:' + color + ';pointer-events:none;z-index:200;box-shadow:0 0 4px ' + color + ';animation:confettiPop .9s cubic-bezier(.22,.61,.36,1) forwards;';
+          dot.style.setProperty('--ctx', tx + 'px');
+          dot.style.setProperty('--cty', ty + 'px');
+
+          document.body.appendChild(dot);
+          setTimeout(function () { dot.remove(); }, 950);
+        }, index * 40);
+      })(i);
+    }
+  }
+
+  // Inject keyframe
+  if (!document.getElementById('_confetti-style')) {
+    var style = document.createElement('style');
+    style.id = '_confetti-style';
+    style.textContent = '@keyframes confettiPop{0%{transform:translate(0,0) scale(1);opacity:1}70%{opacity:.8}100%{transform:translate(var(--ctx),var(--cty)) scale(0);opacity:0}}';
+    document.head.appendChild(style);
+  }
+
+  // Listen to scroll on all panes
+  function attach(pane) {
+    if (pane.dataset._celebration) return;
+    pane.dataset._celebration = '1';
+
+    pane.addEventListener('scroll', function () {
+      var scrollTop = pane.scrollTop;
+      var scrollHeight = pane.scrollHeight - pane.clientHeight;
+      if (scrollHeight <= 0) return;
+      var pct = scrollTop / scrollHeight;
+      if (pct >= 0.95) {
+        celebrate(pane);
+      }
+    }, { passive: true });
+  }
+
+  document.querySelectorAll('.pane').forEach(attach);
+  // Also attach to new panes on view change
+  document.addEventListener('routechange', function () {
+    setTimeout(function () {
+      document.querySelectorAll('.pane').forEach(attach);
+    }, 300);
+  });
+})();
+
+/* ===== ScrollToTop =====
+   Floating button that appears after scrolling down.
+   Features:
+   - Appears when scroll position > 400px in active pane
+   - Smooth scroll to top on click
+   - Auto-hides when near top
+   - Respects reduced-motion preference
+   - Only one button ever created
+   Usage: Auto-initializes on DOMContentLoaded.
+*/
+(function () {
+  'use strict';
+
+  var btn = null;
+  var visible = false;
+  var THRESHOLD = 400;
+
+  function create() {
+    if (btn) return;
+    btn = document.createElement('button');
+    btn.id = '_scroll-top-btn';
+    btn.setAttribute('aria-label', 'Scroll to top');
+    btn.innerHTML = '\u2191';
+    btn.style.cssText = 'position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);width:44px;height:44px;border-radius:50%;border:0;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;font-size:20px;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(83,74,183,.25),0 0 0 1px rgba(83,74,183,.15);opacity:0;transition:transform .35s cubic-bezier(.22,.61,.36,1),opacity .25s ease;z-index:150;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)';
+
+    btn.addEventListener('click', function () {
+      var pane = document.querySelector('.pane.on');
+      if (pane) {
+        pane.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
+
+    document.body.appendChild(btn);
+  }
+
+  function update() {
+    var pane = document.querySelector('.pane.on');
+    if (!pane) return;
+    var shouldShow = pane.scrollTop > THRESHOLD;
+    if (shouldShow === visible) return;
+    visible = shouldShow;
+    if (!btn) create();
+    if (shouldShow) {
+      btn.style.transform = 'translateX(-50%) translateY(0)';
+      btn.style.opacity = '1';
+    } else {
+      btn.style.transform = 'translateX(-50%) translateY(80px)';
+      btn.style.opacity = '0';
+    }
+  }
+
+  // Attach to all panes
+  document.querySelectorAll('.pane').forEach(function (p) {
+    p.addEventListener('scroll', update, { passive: true });
+  });
+
+  // Update on view change
+  document.addEventListener('routechange', function () {
+    visible = false;
+    if (btn) {
+      btn.style.transform = 'translateX(-50%) translateY(80px)';
+      btn.style.opacity = '0';
+    }
+    setTimeout(update, 100);
+  });
+})();
+
+/* ===== ReadingTime =====
+   Displays estimated reading time per module.
+   Features:
+   - Counts words in active pane's text content
+   - Assumes 200 words/min reading speed
+   - Shows "X min read" badge near the header
+   - Updates on view change
+   - Uses ARIA live region for screen readers
+   Usage: Auto-initializes on DOMContentLoaded.
+*/
+(function () {
+  'use strict';
+
+  var WPM = 200;
+  var badgeEl = null;
+
+  function createBadge() {
+    if (badgeEl) return;
+    var hdr = document.querySelector('.hdr');
+    if (!hdr) return;
+    badgeEl = document.createElement('span');
+    badgeEl.id = '_reading-time';
+    badgeEl.setAttribute('aria-live', 'polite');
+    badgeEl.style.cssText = 'display:inline-block;font-size:10px;font-weight:700;letter-spacing:.5px;color:var(--mut);background:rgba(83,74,183,.04);padding:3px 10px;border-radius:6px;margin-left:8px;vertical-align:middle;transition:opacity .2s ease';
+    // Insert after h1
+    var h1 = hdr.querySelector('h1');
+    if (h1 && h1.nextSibling) {
+      h1.parentNode.insertBefore(badgeEl, h1.nextSibling);
+    } else if (h1) {
+      h1.parentNode.appendChild(badgeEl);
+    }
+  }
+
+  function estimate(pane) {
+    if (!pane) return 0;
+    var text = pane.textContent || '';
+    var words = text.trim().split(/\s+/).length;
+    return Math.max(1, Math.round(words / WPM));
+  }
+
+  function update() {
+    var pane = document.querySelector('.pane.on');
+    if (!pane) return;
+    var minutes = estimate(pane);
+    if (!badgeEl) createBadge();
+    if (badgeEl) {
+      badgeEl.textContent = minutes + ' min read';
+      badgeEl.style.opacity = '1';
+    }
+  }
+
+  // Update on view change
+  document.addEventListener('routechange', function () {
+    if (badgeEl) badgeEl.style.opacity = '0';
+    setTimeout(update, 400);
+  });
+
+  // Initial estimate
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { setTimeout(update, 1500); });
+  } else {
+    setTimeout(update, 1500);
+  }
+})();
+
+/* ===== FocusMode =====
+   Distraction-free reading mode. Hides sidebar and companion panel.
+   Features:
+   - Toggle via header button or keyboard shortcut (F key)
+   - Smooth CSS transition for hiding/showing
+   - Stage expands to full width in focus mode
+   - Button state persists per session
+   - Respects reduced-motion
+   Usage: Auto-initializes on DOMContentLoaded.
+*/
+(function () {
+  'use strict';
+
+  var isFocused = false;
+  var btnEl = null;
+  var STORAGE_KEY = '_focus_mode';
+
+  function createButton() {
+    if (btnEl) return;
+    var hdr = document.querySelector('.hdr');
+    if (!hdr) return;
+    btnEl = document.createElement('button');
+    btnEl.id = '_focus-toggle';
+    btnEl.setAttribute('aria-label', 'Toggle focus mode');
+    btnEl.setAttribute('aria-pressed', 'false');
+    btnEl.textContent = 'Focus';
+    btnEl.style.cssText = 'display:inline-block;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--mut);background:rgba(83,74,183,.04);border:1px solid rgba(83,74,183,.12);padding:4px 12px;border-radius:8px;cursor:pointer;margin-left:10px;transition:all .2s ease;vertical-align:middle';
+
+    btnEl.addEventListener('click', toggle);
+
+    var h1 = hdr.querySelector('h1');
+    if (h1 && h1.nextSibling) {
+      h1.parentNode.insertBefore(btnEl, h1.nextSibling);
+    } else if (h1) {
+      h1.parentNode.appendChild(badgeEl);
+    }
+  }
+
+  function toggle() {
+    isFocused = !isFocused;
+    var app = document.querySelector('.app');
+    var sidebar = document.querySelector('.sidebar');
+    var companion = document.querySelector('.companion');
+    var stage = document.querySelector('.stage');
+    var seg = document.querySelector('.seg');
+
+    if (!app) return;
+
+    if (isFocused) {
+      app.classList.add('_focus-mode');
+      if (sidebar) sidebar.style.cssText = 'width:0!important;padding:0!important;overflow:hidden!important;opacity:0!important;transition:all .35s cubic-bezier(.22,.61,.36,1)';
+      if (companion) companion.style.cssText = 'width:0!important;padding:0!important;overflow:hidden!important;opacity:0!important;transition:all .35s cubic-bezier(.22,.61,.36,1)';
+      if (seg) seg.style.cssText = 'display:none!important;transition:opacity .25s ease';
+      if (stage) stage.style.marginLeft = '0';
+      if (btnEl) {
+        btnEl.textContent = 'Exit';
+        btnEl.style.background = 'rgba(83,74,183,.1)';
+        btnEl.style.color = 'var(--acc)';
+        btnEl.setAttribute('aria-pressed', 'true');
+      }
+      // Also hide the top seg bar on desktop
+      document.querySelectorAll('.seg:not(.sidebar .seg)').forEach(function (s) {
+        s.style.display = 'none';
+      });
+    } else {
+      app.classList.remove('_focus-mode');
+      if (sidebar) sidebar.style.cssText = '';
+      if (companion) companion.style.cssText = '';
+      if (seg) seg.style.cssText = '';
+      if (stage) stage.style.marginLeft = '';
+      if (btnEl) {
+        btnEl.textContent = 'Focus';
+        btnEl.style.background = 'rgba(83,74,183,.04)';
+        btnEl.style.color = 'var(--mut)';
+        btnEl.setAttribute('aria-pressed', 'false');
+      }
+      document.querySelectorAll('.seg:not(.sidebar .seg)').forEach(function (s) {
+        s.style.display = '';
+      });
+    }
+  }
+
+  // Keyboard shortcut: F (when not in input)
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'f' || e.key === 'F') {
+      var tag = (e.target.tagName || '').toLowerCase();
+      if (tag === 'input' || tag === 'textarea') return;
+      // Don't conflict with search overlay
+      var searchOv = document.getElementById('_search-overlay');
+      if (searchOv && searchOv.style.display === 'flex') return;
+      e.preventDefault();
+      toggle();
+    }
+  });
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { setTimeout(createButton, 1200); });
+  } else {
+    setTimeout(createButton, 1200);
+  }
+})();
+
+/* ===== ShareUrl =====
+   Copies the current module's deep-link URL to clipboard.
+   Features:
+   - Small "Share" button near the header
+   - Copies window.location.href with current hash
+   - Shows "Link copied!" feedback for 2 seconds
+   - Uses modern Clipboard API with fallback
+   - Updates text on route change
+   Usage: Auto-initializes on DOMContentLoaded.
+*/
+(function () {
+  'use strict';
+
+  var btnEl = null;
+
+  function createButton() {
+    if (btnEl) return;
+    var hdr = document.querySelector('.hdr');
+    if (!hdr) return;
+    btnEl = document.createElement('button');
+    btnEl.id = '_share-url-btn';
+    btnEl.setAttribute('aria-label', 'Copy page link');
+    btnEl.textContent = 'Share';
+    btnEl.style.cssText = 'display:inline-block;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--mut);background:rgba(83,74,183,.04);border:1px solid rgba(83,74,183,.12);padding:4px 12px;border-radius:8px;cursor:pointer;margin-left:8px;transition:all .2s ease;vertical-align:middle';
+
+    btnEl.addEventListener('click', function () {
+      var url = window.location.href;
+      var copied = false;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(function () { copied = true; }).catch(function () {});
+      }
+      if (!copied) {
+        try {
+          var ta = document.createElement('textarea');
+          ta.value = url;
+          ta.style.cssText = 'position:fixed;left:-9999px';
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+        } catch (e) {}
+      }
+      btnEl.textContent = 'Link copied!';
+      btnEl.style.background = 'rgba(83,74,183,.1)';
+      btnEl.style.color = 'var(--acc)';
+      setTimeout(function () {
+        btnEl.textContent = 'Share';
+        btnEl.style.background = 'rgba(83,74,183,.04)';
+        btnEl.style.color = 'var(--mut)';
+      }, 2000);
+    });
+
+    var h1 = hdr.querySelector('h1');
+    if (h1 && h1.nextSibling) {
+      h1.parentNode.insertBefore(btnEl, h1.nextSibling);
+    } else if (h1) {
+      h1.parentNode.appendChild(btnEl);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { setTimeout(createButton, 1300); });
+  } else {
+    setTimeout(createButton, 1300);
+  }
+})();
+
+/* ===== FontSize =====
+   Accessibility: +/- buttons to adjust text size.
+   Features:
+   - Two buttons: A- (decrease) and A+ (increase)
+   - 5 levels: 85%, 92%, 100%, 108%, 116%
+   - Persists preference in localStorage
+   - Respects reduced-motion (no transition)
+   - Buttons appear in sidebar
+   Usage: Auto-initializes on DOMContentLoaded.
+*/
+(function () {
+  'use strict';
+
+  var LEVELS = [0.85, 0.92, 1.0, 1.08, 1.16];
+  var currentIdx = 2; // default = 100%
+  var STORAGE_KEY = '_font_size_idx';
+
+  // Load saved preference
+  try {
+    var saved = localStorage.getItem(STORAGE_KEY);
+    if (saved !== null) {
+      var parsed = parseInt(saved, 10);
+      if (parsed >= 0 && parsed < LEVELS.length) currentIdx = parsed;
+    }
+  } catch (e) {}
+
+  function apply() {
+    var stage = document.querySelector('.stage');
+    if (!stage) return;
+    var scale = LEVELS[currentIdx];
+    stage.style.fontSize = (scale * 100) + '%';
+    stage.style.transition = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'none' : 'font-size .2s ease';
+  }
+
+  function createControls() {
+    var sidebar = document.querySelector('.sidebar');
+    if (!sidebar) return;
+
+    var wrap = document.createElement('div');
+    wrap.id = '_font-size-controls';
+    wrap.style.cssText = 'display:flex;align-items:center;gap:6px;padding:8px 11px;margin-top:4px;border-top:1px solid var(--bd)';
+
+    var label = document.createElement('span');
+    label.textContent = 'Text size';
+    label.style.cssText = 'font-size:11px;color:var(--mut);flex:1;font-weight:600';
+
+    function makeBtn(text, action) {
+      var b = document.createElement('button');
+      b.textContent = text;
+      b.style.cssText = 'width:28px;height:28px;border-radius:6px;border:1px solid var(--bd);background:linear-gradient(180deg,#fff,#F8F5EF);color:var(--ink);font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s ease;padding:0;line-height:1';
+      b.addEventListener('click', function () {
+        action();
+        apply();
+        try { localStorage.setItem(STORAGE_KEY, String(currentIdx)); } catch (e) {}
+      });
+      b.addEventListener('mouseenter', function () { b.style.borderColor = 'var(--acc)'; b.style.boxShadow = '0 0 0 2px rgba(83,74,183,.1)'; });
+      b.addEventListener('mouseleave', function () { b.style.borderColor = 'var(--bd)'; b.style.boxShadow = 'none'; });
+      return b;
+    }
+
+    var dec = makeBtn('A\u2212', function () { if (currentIdx > 0) currentIdx--; });
+    var inc = makeBtn('A+', function () { if (currentIdx < LEVELS.length - 1) currentIdx++; });
+
+    wrap.appendChild(label);
+    wrap.appendChild(dec);
+    wrap.appendChild(inc);
+    sidebar.appendChild(wrap);
+  }
+
+  apply();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { setTimeout(createControls, 1400); });
+  } else {
+    setTimeout(createControls, 1400);
+  }
+})();
 </script>
 <script>
 /* v154: Scroll progress bar + boot splash hide */

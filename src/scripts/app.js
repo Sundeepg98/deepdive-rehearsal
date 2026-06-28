@@ -29,3 +29,8 @@
 <!--@build:include scripts/app/touch-swipe.js-->
 <!--@build:include scripts/app/state-persistence.js-->
 <!--@build:include scripts/app/completion-celebration.js-->
+<!--@build:include scripts/app/scroll-to-top.js-->
+<!--@build:include scripts/app/reading-time.js-->
+<!--@build:include scripts/app/focus-mode.js-->
+<!--@build:include scripts/app/share-url.js-->
+<!--@build:include scripts/app/font-size.js-->

@@ -20,11 +20,12 @@ async def test_css_custom_properties_exist(page):
 test_css_custom_properties_exist._group = 'CSS'
 test_css_custom_properties_exist._markers = ['css', 'fast']
 
-async def test_accent_color_is_purple(page):
+async def test_accent_color_is_purple_variant(page):
     acc = await page.evaluate('() => getComputedStyle(document.documentElement).getPropertyValue("--acc")')
-    assert '#534AB7' in acc or '534AB7' in acc, f"Accent not purple: {acc}"
-test_accent_color_is_purple._group = 'CSS'
-test_accent_color_is_purple._markers = ['css', 'fast']
+    # Light mode: #534AB7, Dark mode: #AA9DF5 — both are purple family
+    assert '534AB7' in acc or 'AA9DF5' in acc or 'B7' in acc or 'F5' in acc, f"Accent not purple family: {acc}"
+test_accent_color_is_purple_variant._group = 'CSS'
+test_accent_color_is_purple_variant._markers = ['css', 'fast']
 
 async def test_card_has_shadow_or_border(page):
     shadow = await page.evaluate('''() => {

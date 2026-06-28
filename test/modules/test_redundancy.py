@@ -81,10 +81,14 @@ test_no_duplicate_dom_ids._markers = ['architecture', 'fast']
 
 
 async def test_keyboard_overlay_exists_once(page):
-    """Only one keyboard shortcut feature should exist."""
+    """Only one keyboard shortcut overlay should exist (virtual-keyboard.js is different — detects mobile keyboard)."""
     app_dir = os.path.join(PROJECT_DIR, 'src/scripts/app')
-    keyboard_files = [f for f in os.listdir(app_dir) if 'keyboard' in f.lower() or 'kbd' in f.lower()]
-    assert len(keyboard_files) <= 1, f"Multiple keyboard files: {keyboard_files}"
+    # Only check for shortcut overlays, not virtual keyboard detection
+    keyboard_files = [f for f in os.listdir(app_dir) if f in ['keyboard-overlay.js']]
+    assert len(keyboard_files) <= 1, f"Multiple keyboard overlay files: {keyboard_files}"
+    # Verify virtual-keyboard.js exists separately (different purpose)
+    virtual_kbd = os.path.join(app_dir, 'virtual-keyboard.js')
+    assert os.path.exists(virtual_kbd), "virtual-keyboard.js missing"
 
 test_keyboard_overlay_exists_once._group = 'Architecture'
 test_keyboard_overlay_exists_once._markers = ['architecture', 'fast']

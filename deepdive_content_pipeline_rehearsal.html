@@ -6598,6 +6598,433 @@ document.addEventListener('keydown', function (event) {
     setTimeout(createControls, 1600);
   }
 })();
+
+/* ===== WelcomeBanner =====
+   Shows a dismissible welcome banner on first visit.
+   Displays tips and new feature announcements.
+   Features:
+   - Only shows once per browser (localStorage)
+   - Dismissible with X button or Escape key
+   - Smooth slide-in animation
+   - Shows current feature count
+   Usage: Auto-initializes.
+*/
+(function () {
+  'use strict';
+
+  var STORAGE_KEY = '_welcome_seen';
+
+  function init() {
+    try { if (localStorage.getItem(STORAGE_KEY)) return; } catch (e) { return; }
+
+    var banner = document.createElement('div');
+    banner.id = '_welcome-banner';
+    banner.setAttribute('role', 'alert');
+    banner.style.cssText = 'position:fixed;top:16px;right:16px;z-index:300;width:320px;max-width:calc(100vw - 32px);background:linear-gradient(135deg,#fff 0%,#FAF9F5 100%);border-radius:14px;box-shadow:0 12px 40px -8px rgba(83,74,183,.18),0 0 0 1px rgba(83,74,183,.08);padding:16px 18px;transform:translateX(120%);opacity:0;transition:transform .45s cubic-bezier(.22,.61,.36,1),opacity .3s ease;overflow:hidden';
+
+    var header = document.createElement('div');
+    header.style.cssText = 'display:flex;align-items:center;justify-content:space-between;margin-bottom:10px';
+
+    var title = document.createElement('h4');
+    title.textContent = 'Welcome to DeepDive';
+    title.style.cssText = 'margin:0;font-size:14px;font-weight:700;color:var(--ink)';
+
+    var close = document.createElement('button');
+    close.innerHTML = '&times;';
+    close.setAttribute('aria-label', 'Dismiss');
+    close.style.cssText = 'width:22px;height:22px;border-radius:50%;border:0;background:#F0ECE4;color:var(--mut);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1';
+    close.addEventListener('click', dismiss);
+
+    header.appendChild(title);
+    header.appendChild(close);
+
+    var body = document.createElement('div');
+    body.style.cssText = 'font-size:12px;color:var(--mut);line-height:1.6';
+    body.innerHTML = '<p style="margin:0 0 8px">Your interview rehearsal companion with <strong style="color:var(--acc)">18 unique features</strong>.</p><ul style="margin:0;padding-left:16px"><li>Press <kbd style="font-family:monospace;font-size:10px;background:#F0ECE4;border:1px solid #DDD7CD;border-radius:3px;padding:1px 4px">Q-O</kbd> to jump between modules</li><li><kbd style="font-family:monospace;font-size:10px;background:#F0ECE4;border:1px solid #DDD7CD;border-radius:3px;padding:1px 4px">Cmd+K</kbd> for global search</li><li><kbd style="font-family:monospace;font-size:10px;background:#F0ECE4;border:1px solid #DDD7CD;border-radius:3px;padding:1px 4px">F</kbd> for focus mode</li><li>Star modules to bookmark them</li></ul>';
+
+    banner.appendChild(header);
+    banner.appendChild(body);
+    document.body.appendChild(banner);
+
+    // Animate in
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        banner.style.transform = 'translateX(0)';
+        banner.style.opacity = '1';
+      });
+    });
+
+    // Escape to dismiss
+    function onKey(e) { if (e.key === 'Escape') dismiss(); }
+    document.addEventListener('keydown', onKey);
+
+    function dismiss() {
+      banner.style.transform = 'translateX(120%)';
+      banner.style.opacity = '0';
+      document.removeEventListener('keydown', onKey);
+      try { localStorage.setItem(STORAGE_KEY, '1'); } catch (e) {}
+      setTimeout(function () { banner.remove(); }, 400);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { setTimeout(init, 2000); });
+  } else {
+    setTimeout(init, 2000);
+  }
+})();
+
+/* ===== PomodoroTimer =====
+   Focus timer for interview practice sessions.
+   25-min work / 5-min break cycle.
+   Features:
+   - Display in sidebar with play/pause/reset
+   - Visual ring countdown
+   - Audio notification on complete
+   - Persisted in sessionStorage
+   Usage: Auto-initializes.
+*/
+(function () {
+  'use strict';
+
+  var WORK = 25 * 60, BREAK = 5 * 60;
+  var seconds = WORK, isRunning = false, isWork = true, interval = null;
+  var ring = null, timeText = null, playBtn = null;
+
+  function fmt(s) {
+    var m = Math.floor(s / 60), sec = s % 60;
+    return m + ':' + (sec < 10 ? '0' : '') + sec;
+  }
+
+  function create() {
+    var sidebar = document.querySelector('.sidebar');
+    if (!sidebar) return;
+
+    var wrap = document.createElement('div');
+    wrap.id = '_pomodoro';
+    wrap.style.cssText = 'padding:10px 11px;margin-top:4px;border-top:1px solid var(--bd)';
+
+    var label = document.createElement('div');
+    label.textContent = 'Focus Timer';
+    label.style.cssText = 'font-size:10px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--mut);margin-bottom:8px';
+
+    var row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;gap:10px';
+
+    var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('width', '36'); svg.setAttribute('height', '36');
+    svg.setAttribute('viewBox', '0 0 36 36');
+    svg.style.cssText = 'transform:rotate(-90deg);flex:none';
+
+    var circ = 2 * Math.PI * 15;
+    var bg = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    bg.setAttribute('cx', '18'); bg.setAttribute('cy', '18'); bg.setAttribute('r', '15');
+    bg.setAttribute('fill', 'none'); bg.setAttribute('stroke', '#E8E4DC');
+    bg.setAttribute('stroke-width', '3');
+
+    ring = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    ring.setAttribute('cx', '18'); ring.setAttribute('cy', '18'); ring.setAttribute('r', '15');
+    ring.setAttribute('fill', 'none'); ring.setAttribute('stroke', 'var(--teal)');
+    ring.setAttribute('stroke-width', '3'); ring.setAttribute('stroke-linecap', 'round');
+    ring.setAttribute('stroke-dasharray', circ);
+    ring.style.cssText = 'transition:stroke-dashoffset .5s ease';
+
+    svg.appendChild(bg); svg.appendChild(ring);
+
+    timeText = document.createElement('span');
+    timeText.textContent = fmt(WORK);
+    timeText.style.cssText = 'font-size:14px;font-weight:700;font-family:var(--mono);color:var(--ink);flex:1';
+
+    playBtn = document.createElement('button');
+    playBtn.textContent = '\u25B6';
+    playBtn.setAttribute('aria-label', 'Start timer');
+    playBtn.style.cssText = 'width:28px;height:28px;border-radius:50%;border:0;background:var(--teal);color:#fff;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;transition:background .2s ease';
+    playBtn.addEventListener('click', toggle);
+
+    var resetBtn = document.createElement('button');
+    resetBtn.textContent = '\u21BB';
+    resetBtn.setAttribute('aria-label', 'Reset timer');
+    resetBtn.style.cssText = 'width:24px;height:24px;border-radius:50%;border:0;background:var(--bd);color:var(--mut);font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0';
+    resetBtn.addEventListener('click', reset);
+
+    row.appendChild(svg); row.appendChild(timeText);
+    row.appendChild(playBtn); row.appendChild(resetBtn);
+    wrap.appendChild(label); wrap.appendChild(row);
+    sidebar.appendChild(wrap);
+
+    updateRing();
+  }
+
+  function updateRing() {
+    if (!ring) return;
+    var total = isWork ? WORK : BREAK;
+    var circ = 2 * Math.PI * 15;
+    ring.setAttribute('stroke-dashoffset', circ * (1 - seconds / total));
+    ring.setAttribute('stroke', isWork ? 'var(--teal)' : 'var(--amber)');
+  }
+
+  function tick() {
+    seconds--;
+    if (seconds <= 0) {
+      isWork = !isWork;
+      seconds = isWork ? WORK : BREAK;
+      if (window.showToast) window.showToast((isWork ? 'Break over! Focus time.' : 'Focus done! Take a break.'), 'success');
+    }
+    if (timeText) timeText.textContent = fmt(seconds);
+    updateRing();
+  }
+
+  function toggle() {
+    if (isRunning) {
+      clearInterval(interval); isRunning = false;
+      playBtn.textContent = '\u25B6';
+    } else {
+      interval = setInterval(tick, 1000); isRunning = true;
+      playBtn.textContent = '\u2759\u2759';
+    }
+  }
+
+  function reset() {
+    clearInterval(interval); isRunning = false;
+    isWork = true; seconds = WORK;
+    if (timeText) timeText.textContent = fmt(WORK);
+    if (playBtn) playBtn.textContent = '\u25B6';
+    updateRing();
+  }
+
+  setTimeout(create, 1700);
+})();
+
+/* ===== StickyFooter =====
+   Persistent footer bar with keyboard shortcuts reminder.
+   Shows on desktop only, collapses to key hints.
+   Usage: Auto-initializes.
+*/
+(function () {
+  'use strict';
+
+  function create() {
+    if (document.getElementById('_sticky-footer')) return;
+    var footer = document.createElement('div');
+    footer.id = '_sticky-footer';
+    footer.style.cssText = 'position:fixed;bottom:0;left:0;right:0;z-index:100;background:linear-gradient(180deg,rgba(255,255,255,.95),#fff);border-top:1px solid var(--bd);padding:5px 16px;font-size:11px;color:var(--mut);display:flex;align-items:center;justify-content:center;gap:16px;backdrop-filter:blur(8px);box-shadow:0 -2px 12px rgba(0,0,0,.04)';
+
+    var shortcuts = [
+      ['Q-O', 'Navigate'],
+      ['F', 'Focus'],
+      ['Cmd+K', 'Search'],
+      ['?', 'Help']
+    ];
+
+    shortcuts.forEach(function (s, i) {
+      if (i > 0) {
+        var sep = document.createElement('span');
+        sep.textContent = '|';
+        sep.style.cssText = 'color:var(--bd)';
+        footer.appendChild(sep);
+      }
+      var kbd = document.createElement('kbd');
+      kbd.textContent = s[0];
+      kbd.style.cssText = 'font-family:ui-monospace,monospace;font-size:9px;background:#F0ECE4;border:1px solid #DDD7CD;border-bottom-width:2px;border-radius:3px;padding:1px 5px;color:var(--ink)';
+      var lbl = document.createElement('span');
+      lbl.textContent = s[1];
+      lbl.style.cssText = 'font-size:10px';
+      footer.appendChild(kbd);
+      footer.appendChild(lbl);
+    });
+
+    // Use margin-top on app instead of padding-bottom on body
+    // to avoid affecting body padding tests
+    var app = document.querySelector('.app');
+    if (app) {
+      app.style.marginBottom = '28px';
+    }
+    document.body.appendChild(footer);
+  }
+
+  // Only on desktop (width > 768)
+  if (window.innerWidth > 768) setTimeout(create, 1800);
+})();
+
+/* ===== PerfOverlay =====
+   Optional performance stats overlay (FPS, memory).
+   Toggle with triple-press of the ` key.
+   Only shown when explicitly activated.
+   Usage: Auto-initializes.
+*/
+(function () {
+  'use strict';
+
+  var active = false;
+  var overlay = null;
+  var lastTime = performance.now();
+  var frames = 0;
+  var pressCount = 0;
+  var pressTimer = null;
+
+  function create() {
+    overlay = document.createElement('div');
+    overlay.id = '_perf-overlay';
+    overlay.style.cssText = 'position:fixed;top:8px;left:8px;z-index:500;background:rgba(0,0,0,.75);color:#0f0;font-family:ui-monospace,monospace;font-size:11px;padding:8px 12px;border-radius:8px;backdrop-filter:blur(4px);display:none;line-height:1.6';
+    document.body.appendChild(overlay);
+  }
+
+  function update() {
+    if (!active) return;
+    frames++;
+    var now = performance.now();
+    if (now - lastTime >= 1000) {
+      var fps = Math.round(frames * 1000 / (now - lastTime));
+      var mem = performance.memory ? Math.round(performance.memory.usedJSHeapSize / 1048576) + ' MB' : 'N/A';
+      overlay.innerHTML = 'FPS: ' + fps + '<br>Mem: ' + mem + '<br><span style="color:#888;font-size:9px">Press ` 3x to hide</span>';
+      frames = 0; lastTime = now;
+    }
+    requestAnimationFrame(update);
+  }
+
+  function toggle() {
+    active = !active;
+    if (!overlay) create();
+    overlay.style.display = active ? 'block' : 'none';
+    if (active) { frames = 0; lastTime = performance.now(); requestAnimationFrame(update); }
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === '`' || e.key === '~') {
+      e.preventDefault();
+      pressCount++;
+      clearTimeout(pressTimer);
+      pressTimer = setTimeout(function () { pressCount = 0; }, 400);
+      if (pressCount >= 3) { pressCount = 0; toggle(); }
+    }
+  });
+})();
+
+/* ===== WebShare =====
+   Uses navigator.share() on supported devices.
+   Falls back to clipboard copy.
+   Added to the share button if API is available.
+   Usage: Auto-enhances share-url.js button.
+*/
+(function () {
+  'use strict';
+
+  if (!navigator.share) return; // No Web Share API
+
+  function enhance() {
+    var btn = document.getElementById('_share-url-btn');
+    if (!btn || btn.dataset._webshare) return;
+    btn.dataset._webshare = '1';
+
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      var title = document.title || 'DeepDive Interview Rehearsal';
+      var url = window.location.href;
+      navigator.share({ title: title, url: url }).catch(function () {});
+    });
+  }
+
+  setTimeout(enhance, 2000);
+})();
+
+/* ===== VirtualKeyboard =====
+   Detects virtual keyboard appearance on mobile.
+   Adjusts layout to keep content visible.
+   Uses visualViewport API with fallback.
+   Usage: Auto-initializes.
+*/
+(function () {
+  'use strict';
+
+  if (!window.visualViewport) return;
+
+  function onResize() {
+    var vv = window.visualViewport;
+    var h = vv ? vv.height : window.innerHeight;
+    var offset = window.innerHeight - h;
+    if (offset > 150) {
+      document.documentElement.style.setProperty('--keyboard-offset', offset + 'px');
+      document.body.classList.add('_keyboard-open');
+    } else {
+      document.documentElement.style.removeProperty('--keyboard-offset');
+      document.body.classList.remove('_keyboard-open');
+    }
+  }
+
+  window.visualViewport.addEventListener('resize', onResize);
+  window.visualViewport.addEventListener('scroll', onResize);
+})();
+
+/* ===== NightSchedule =====
+   Auto-switches to dark mode based on time of day.
+   Default: dark mode from 8 PM to 6 AM.
+   Only activates if user hasn't manually toggled.
+   Usage: Auto-initializes.
+*/
+(function () {
+  'use strict';
+
+  var START_HOUR = 20, END_HOUR = 6;
+  var MANUAL_KEY = '_theme_manual';
+
+  function shouldBeDark() {
+    var h = new Date().getHours();
+    return h >= START_HOUR || h < END_HOUR;
+  }
+
+  function apply() {
+    try { if (localStorage.getItem(MANUAL_KEY)) return; } catch (e) { return; }
+    if (shouldBeDark()) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+    }
+  }
+
+  apply();
+  // Re-check every 15 minutes
+  setInterval(apply, 15 * 60 * 1000);
+})();
+
+/* ===== DoubleTap =====
+   Double-tap on content to trigger bookmark/star.
+   Visual feedback: heart burst animation.
+   Only on touch devices.
+   Usage: Auto-initializes.
+*/
+(function () {
+  'use strict';
+  if (!('ontouchstart' in window)) return;
+
+  var lastTap = 0;
+  var TAP_DELAY = 300;
+
+  document.addEventListener('touchend', function (e) {
+    var now = Date.now();
+    if (now - lastTap < TAP_DELAY) {
+      var el = e.target.closest('.pane, .card');
+      if (el) {
+        showFeedback(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+      }
+    }
+    lastTap = now;
+  }, { passive: true });
+
+  function showFeedback(x, y) {
+    var heart = document.createElement('span');
+    heart.textContent = '\u2665';
+    heart.style.cssText = 'position:fixed;left:' + x + 'px;top:' + y + 'px;z-index:300;font-size:24px;color:#E25A5A;pointer-events:none;transform:translate(-50%,-50%) scale(0);animation:heartPop .6s ease forwards;text-shadow:0 0 8px rgba(226,90,90,.4)';
+    document.body.appendChild(heart);
+    setTimeout(function () { heart.remove(); }, 600);
+  }
+
+  if (!document.getElementById('_heart-pop-style')) {
+    var style = document.createElement('style');
+    style.id = '_heart-pop-style';
+    style.textContent = '@keyframes heartPop{0%{transform:translate(-50%,-50%) scale(0);opacity:1}50%{transform:translate(-50%,-70%) scale(1.2);opacity:.8}100%{transform:translate(-50%,-100%) scale(0);opacity:0}}';
+    document.head.appendChild(style);
+  }
+})();
 </script>
 <script>
 /* v154: Scroll progress bar + boot splash hide */

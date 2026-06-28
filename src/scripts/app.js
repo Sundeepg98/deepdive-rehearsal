@@ -42,3 +42,11 @@
 <!--@build:include scripts/app/audio-feedback.js-->
 <!--@build:include scripts/app/zoom-diagrams.js-->
 <!--@build:include scripts/app/animation-speed.js-->
+<!--@build:include scripts/app/welcome-banner.js-->
+<!--@build:include scripts/app/pomodoro-timer.js-->
+<!--@build:include scripts/app/sticky-footer.js-->
+<!--@build:include scripts/app/perf-overlay.js-->
+<!--@build:include scripts/app/web-share.js-->
+<!--@build:include scripts/app/virtual-keyboard.js-->
+<!--@build:include scripts/app/night-schedule.js-->
+<!--@build:include scripts/app/double-tap.js-->

@@ -24,3 +24,8 @@
 <!--@build:include scripts/app/search-overlay.js-->
 <!--@build:include scripts/app/dynamic-features.js-->
 <!--@build:include scripts/app/session-timer.js-->
+<!--@build:include scripts/app/scroll-progress.js-->
+<!--@build:include scripts/app/copy-code.js-->
+<!--@build:include scripts/app/touch-swipe.js-->
+<!--@build:include scripts/app/state-persistence.js-->
+<!--@build:include scripts/app/completion-celebration.js-->

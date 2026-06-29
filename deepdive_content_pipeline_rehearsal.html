@@ -1645,7 +1645,21 @@ var DRILL_STYLE = `@keyframes pop{from{opacity:0;transform:translateY(7px) scale
 .dn-step.on .dn-n{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;box-shadow:0 2px 6px -2px rgba(83,74,183,.3)}
 .dn-step.flag{border-color:var(--amber);background:linear-gradient(135deg,var(--amberbg) 0%,rgba(176,108,20,.04) 100%)}
 .dn-step.flag .dn-n{background:linear-gradient(135deg,var(--amber),#d4902a);color:#fff}
-.dn-step:active{transform:translateY(0) scale(.99)}`;
+.dn-step:active{transform:translateY(0) scale(.99)}
+.mhp{margin-top:14px;border:1px solid var(--bd);border-radius:12px;padding:14px 16px;background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.02) 100%);animation:pop .24s ease}
+.mhp-h{font:800 10px -apple-system,sans-serif;letter-spacing:.5px;text-transform:uppercase;color:var(--acc)}
+.mhp-h .mhp-sub{display:block;margin-top:3px;font:600 11px -apple-system,sans-serif;letter-spacing:0;text-transform:none;color:var(--mut2)}
+.mhp-list{display:flex;flex-direction:column;gap:7px;margin-top:10px}
+.mhp-i{display:flex;align-items:flex-start;gap:10px;width:100%;text-align:left;border:1px solid var(--bd);background:var(--card);border-radius:9px;padding:9px 11px;cursor:pointer;font:inherit;transition:border-color .15s ease,background .15s ease}
+.mhp-i:hover{border-color:rgba(83,74,183,.3)}
+.mhp-box{flex:none;width:18px;height:18px;border-radius:5px;border:1.5px solid var(--mut2);display:flex;align-items:center;justify-content:center;font-size:11px;color:transparent;transition:background .15s ease,border-color .15s ease,color .15s ease}
+.mhp-i.on{border-color:var(--teal);background:linear-gradient(135deg,var(--tealbg) 0%,rgba(10,133,100,.04) 100%)}
+.mhp-i.on .mhp-box{background:var(--teal);border-color:var(--teal);color:#fff}
+.mhp-t{font-size:12.5px;line-height:1.4;color:var(--ink);font-weight:600}
+.mhp-cov{margin-top:11px;font-size:12px;color:var(--mut);font-weight:600}
+.mhp-cov b{color:var(--accink);font-weight:800}
+.judge .got.j-rec,.judge .shk.j-rec{box-shadow:0 0 0 2px var(--acc),0 6px 16px -5px rgba(83,74,183,.32)}
+.sigdrop{font-size:11px;color:var(--fb-a-fg);font-weight:600;margin-top:2px}`;
 
 /* Fisher-Yates shuffle of [0..count). SHARED: mixed-fire.js calls it too,
    so it stays a module-level global rather than a component method. */
@@ -1711,6 +1725,35 @@ class DeepDrill extends HTMLElement {
     this.drawCard(0);
     this.updRevset();
   }
+  /* The must-hit points for a probe = the bolded <b> terms already curated into
+     its own answer + senior tell. Pure curation of existing content (no new
+     copy); parsed via a throwaway element so entities/nested tags resolve to
+     clean text. Author-controlled card data, so innerHTML here is safe. */
+  _mustHit(card) {
+    const tmp = document.createElement('div');
+    tmp.innerHTML = (card.a || '') + ' ' + (card.senior || '');
+    const bs = tmp.querySelectorAll('b'), seen = {}, out = [];
+    for (let i = 0; i < bs.length; i++) {
+      const t = (bs[i].textContent || '').trim().replace(/[\s:;,.]+$/, '');
+      const key = t.toLowerCase();
+      if (t && t.length <= 64 && !seen[key]) { seen[key] = 1; out.push(t); }
+    }
+    return out;
+  }
+  /* Live coverage readout + a coverage-derived recommendation on the grade
+     buttons -- full coverage points at Solid, a gap points at Revisit. */
+  _updCov() {
+    const m = this._mhp ? this._mhp.length : 0;
+    let n = 0;
+    for (const k in this._cov) { if (this._cov[k]) n++; }
+    const nEl = this._root.getElementById('mhpN'); if (nEl) nEl.textContent = n;
+    const recEl = this._root.getElementById('mhpRec');
+    const jg = this._root.getElementById('jg'), js = this._root.getElementById('js');
+    const full = m > 0 && n >= m;
+    if (jg) jg.classList.toggle('j-rec', full);
+    if (js) js.classList.toggle('j-rec', !full);
+    if (recEl) recEl.textContent = full ? 'all covered \u2014 Solid' : ('dropped ' + (m - n) + ' \u2014 consider Revisit');
+  }
   drawCard(stage) {
     const self = this;
     const card = cards[this.di], maxStage = 1 + card.f.length;
@@ -1735,6 +1778,18 @@ class DeepDrill extends HTMLElement {
       html += '<button type="button" class="push' + (stage >= 1 ? ' more' : '') + '" id="adv">' +
         (stage < 1 ? 'Reveal answer' : '&#8627; Interviewer pushes further') + '</button>';
     } else {
+      /* grounded scoring: surface this probe's must-hit points as a checklist so
+         the Solid/Revisit call reflects actual coverage, not a gut feel */
+      this._mhp = this._mustHit(card); this._cov = {};
+      if (this._mhp.length) {
+        let items = '';
+        for (let i = 0; i < this._mhp.length; i++) {
+          items += '<button type="button" class="mhp-i" data-i="' + i + '" aria-pressed="false"><span class="mhp-box">&#10003;</span><span class="mhp-t">' + this._mhp[i] + '</span></button>';
+        }
+        html += '<div class="mhp"><div class="mhp-h">Must-hit points<span class="mhp-sub">tick what you actually said &middot; your score reflects coverage</span></div>' +
+          '<div class="mhp-list">' + items + '</div>' +
+          '<div class="mhp-cov">Covered <b id="mhpN">0</b> / ' + this._mhp.length + ' &middot; <span id="mhpRec"></span></div></div>';
+      }
       html += '<div class="judge"><button type="button" class="got" id="jg">&#10003; Solid <span class="hint">[1]</span></button>' +
         '<button type="button" class="shk" id="js">&#126; Revisit <span class="hint">[2]</span></button></div>';
     }
@@ -1746,13 +1801,30 @@ class DeepDrill extends HTMLElement {
     if (gotBtn) { gotBtn.onclick = function () { self.judge(true); }; }
     const revisitBtn = this._root.getElementById('js');
     if (revisitBtn) { revisitBtn.onclick = function () { self.judge(false); }; }
+    const mhpList = this._dwrap.querySelector('.mhp-list');
+    if (mhpList) {
+      mhpList.addEventListener('click', function (event) {
+        const it = event.target.closest('.mhp-i');
+        if (!it) return;
+        const i = +it.getAttribute('data-i');
+        self._cov[i] = !self._cov[i];
+        it.classList.toggle('on', !!self._cov[i]);
+        it.setAttribute('aria-pressed', self._cov[i] ? 'true' : 'false');
+        self._updCov();
+      });
+      this._updCov();
+    }
   }
   judge(ok) {
     const card = cards[this.di];
     if (ok) this.got++; else this.shk++;
     const originalIdx = _allCards.indexOf(card);
     if (originalIdx > -1) { if (ok) { delete this.revisit[originalIdx]; } else { this.revisit[originalIdx] = true; } }
-    this.results.push({ signal: card.signal, tier: card.tier, ok: ok, card: card, speak: speakLines[this.di] });
+    /* grounded coverage: how many must-hit points were ticked, and which dropped */
+    const mhp = this._mhp || [], cov = this._cov || {}, dropped = [];
+    let covered = 0;
+    for (let i = 0; i < mhp.length; i++) { if (cov[i]) covered++; else dropped.push(mhp[i]); }
+    this.results.push({ signal: card.signal, tier: card.tier, ok: ok, card: card, speak: speakLines[this.di], cov: { n: covered, m: mhp.length, dropped: dropped } });
     this.di++;
     this.renderD();
     const bumpEl = ok ? this._sGot : this._sShk;
@@ -1764,8 +1836,9 @@ class DeepDrill extends HTMLElement {
     let rows = '';
     for (let r = 0; r < this.results.length; r++) {
       const entry = this.results[r];
+      const drop = (!entry.ok && entry.cov && entry.cov.dropped && entry.cov.dropped.length) ? '<div class="sigdrop">dropped: ' + entry.cov.dropped.join(', ') + '</div>' : '';
       rows += '<div class="sigrow ' + (entry.ok ? 'ok' : 'no') + '"><div class="mk">' + (entry.ok ? '\u2713' : '\u2192') + '</div>' +
-        '<div class="nm">' + entry.signal + '</div><div class="tr"><span class="tier ' + DRILL_TIER_CLASS[entry.tier] + '">' + entry.tier + '</span></div></div>';
+        '<div class="nm">' + entry.signal + drop + '</div><div class="tr"><span class="tier ' + DRILL_TIER_CLASS[entry.tier] + '">' + entry.tier + '</span></div></div>';
     }
     let verdict;
     if (pct >= 80) verdict = 'You\'re carrying the signals a senior loop grades on. The shaky ones are polish, not gaps &mdash; re-run those threads until the <b>senior-signal line</b> comes out unprompted.';
@@ -1873,8 +1946,9 @@ class DeepDrill extends HTMLElement {
     let rows = '';
     for (let r = 0; r < this.results.length; r++) {
       const entry = this.results[r];
+      const drop = (!entry.ok && entry.cov && entry.cov.dropped && entry.cov.dropped.length) ? '<div class="sigdrop">dropped: ' + entry.cov.dropped.join(', ') + '</div>' : '';
       rows += '<div class="sigrow ' + (entry.ok ? 'ok' : 'no') + '"><div class="mk">' + (entry.ok ? '\u2713' : '\u2192') + '</div>' +
-        '<div class="nm">' + entry.signal + '</div><div class="tr"><span class="tier ' + DRILL_TIER_CLASS[entry.tier] + '">' + entry.tier + '</span></div></div>';
+        '<div class="nm">' + entry.signal + drop + '</div><div class="tr"><span class="tier ' + DRILL_TIER_CLASS[entry.tier] + '">' + entry.tier + '</span></div></div>';
     }
     let note;
     if (rec.c === 'sh') note = 'Depth held under the Staff / EXTEND probes &mdash; that\'s exactly what tips a packet from Hire to <b>Strong Hire</b>.';

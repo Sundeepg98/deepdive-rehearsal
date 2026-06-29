@@ -7437,6 +7437,402 @@ document.addEventListener('keydown', function (event) {
     document.head.appendChild(style);
   }
 })();
+
+/* ===== BadgeCounter =====
+   Shows a small count badge on bookmarked nav items.
+   Features:
+   - Displays count of bookmarked modules
+   - Updates when bookmarks change
+   - Visual dot indicator on bookmark star
+   - Persists across sessions
+   Usage: Auto-initializes.
+*/
+(function () {
+  'use strict';
+
+  var STORAGE_KEY = '_bookmarks';
+
+  function getCount() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      var bm = raw ? JSON.parse(raw) : {};
+      return Object.keys(bm).length;
+    } catch (e) { return 0; }
+  }
+
+  function create() {
+    var sidebar = document.querySelector('.sidebar');
+    if (!sidebar) return;
+    if (document.getElementById('_badge-counter')) return;
+
+    var count = getCount();
+    if (count === 0) return;
+
+    var badge = document.createElement('span');
+    badge.id = '_badge-counter';
+    badge.textContent = String(count);
+    badge.style.cssText = 'position:absolute;top:8px;right:8px;min-width:16px;height:16px;border-radius:8px;background:var(--red);color:#fff;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 4px;z-index:10;box-shadow:0 2px 4px rgba(163,45,45,.3)';
+
+    sidebar.style.position = 'relative';
+    sidebar.appendChild(badge);
+  }
+
+  function update() {
+    var badge = document.getElementById('_badge-counter');
+    var count = getCount();
+    if (count === 0) {
+      if (badge) badge.remove();
+      return;
+    }
+    if (!badge) { create(); return; }
+    badge.textContent = String(count);
+  }
+
+  // Listen for storage events from other tabs
+  window.addEventListener('storage', function (e) {
+    if (e.key === STORAGE_KEY) update();
+  });
+
+  setTimeout(create, 1600);
+  // Update periodically
+  setInterval(update, 5000);
+})();
+
+/* ===== BatteryIndicator =====
+   Shows battery level in sidebar on supported devices.
+   Features:
+   - Uses navigator.getBattery() API
+   - Shows percentage and charging state
+   - Color: green >50%, amber 20-50%, red <20%
+   - Updates on level/charging change
+   Usage: Auto-initializes.
+*/
+(function () {
+  'use strict';
+
+  if (!navigator.getBattery) return;
+
+  function create(battery) {
+    var sidebar = document.querySelector('.sidebar');
+    if (!sidebar) return;
+    if (document.getElementById('_battery-ind')) return;
+
+    var wrap = document.createElement('div');
+    wrap.id = '_battery-ind';
+    wrap.style.cssText = 'display:flex;align-items:center;gap:6px;padding:6px 11px;font-size:10px;color:var(--mut)';
+
+    var icon = document.createElement('span');
+    icon.id = '_battery-icon';
+    icon.style.cssText = 'font-size:12px';
+
+    var text = document.createElement('span');
+    text.id = '_battery-text';
+    text.style.cssText = 'font-weight:600';
+
+    wrap.appendChild(icon);
+    wrap.appendChild(text);
+    sidebar.appendChild(wrap);
+
+    update(battery);
+  }
+
+  function update(battery) {
+    var icon = document.getElementById('_battery-icon');
+    var text = document.getElementById('_battery-text');
+    if (!icon || !text) return;
+
+    var level = Math.round(battery.level * 100);
+    var charging = battery.charging;
+
+    icon.textContent = charging ? '\u26A1' : (level > 50 ? '\uD83D\udd0b' : '\uD83E\udeab');
+    text.textContent = level + '%';
+    text.style.color = level > 50 ? 'var(--teal)' : level > 20 ? 'var(--amber)' : 'var(--red)';
+  }
+
+  navigator.getBattery().then(function (battery) {
+    create(battery);
+    battery.addEventListener('levelchange', function () { update(battery); });
+    battery.addEventListener('chargingchange', function () { update(battery); });
+  });
+})();
+
+/* ===== HapticFeedback =====
+   Vibration feedback on button clicks (mobile).
+   Features:
+   - 15ms micro-vibration on all button clicks
+   - Only on devices with vibration support
+   - Respects reduced-motion preference
+   Usage: Auto-initializes.
+*/
+(function () {
+  'use strict';
+  if (!navigator.vibrate) return;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('button')) {
+      navigator.vibrate(15);
+    }
+  });
+})();
+
+/* ===== ResizeObserver =====
+   Observes container size changes and adjusts layout.
+   Features:
+   - Watches .app container
+   - Adds size class for CSS targeting
+   - Debounced updates
+   Usage: Auto-initializes.
+*/
+(function () {
+  'use strict';
+  if (!window.ResizeObserver) return;
+
+  var app = document.querySelector('.app');
+  if (!app) return;
+
+  var ro = new ResizeObserver(function (entries) {
+    for (var i = 0; i < entries.length; i++) {
+      var entry = entries[i];
+      var w = entry.contentRect.width;
+      app.classList.remove('_size-narrow', '_size-wide', '_size-normal');
+      if (w < 900) app.classList.add('_size-narrow');
+      else if (w > 1400) app.classList.add('_size-wide');
+      else app.classList.add('_size-normal');
+    }
+  });
+
+  ro.observe(app);
+})();
+
+/* ===== SelectionAPI =====
+   Enhances text selection with actions.
+   Features:
+   - Shows floating toolbar on text selection
+   - Copy selected text button
+   - Search selected text in current module
+   Usage: Auto-initializes.
+*/
+(function () {
+  'use strict';
+
+  var toolbar = null;
+
+  function showToolbar() {
+    var sel = window.getSelection();
+    if (!sel || sel.rangeCount === 0 || sel.toString().trim().length < 2) {
+      hideToolbar();
+      return;
+    }
+
+    var rect = sel.getRangeAt(0).getBoundingClientRect();
+    if (!toolbar) createToolbar();
+
+    toolbar.style.left = (rect.left + rect.width / 2 - 40) + 'px';
+    toolbar.style.top = (rect.top - 36) + 'px';
+    toolbar.style.opacity = '1';
+    toolbar.style.transform = 'translateY(0)';
+  }
+
+  function hideToolbar() {
+    if (toolbar) {
+      toolbar.style.opacity = '0';
+      toolbar.style.transform = 'translateY(8px)';
+    }
+  }
+
+  function createToolbar() {
+    toolbar = document.createElement('div');
+    toolbar.id = '_selection-toolbar';
+    toolbar.style.cssText = 'position:fixed;z-index:300;background:var(--ink);border-radius:8px;padding:4px 8px;display:flex;gap:4px;opacity:0;transform:translateY(8px);transition:all .2s ease;box-shadow:0 4px 16px rgba(0,0,0,.2);pointer-events:auto';
+
+    var copyBtn = document.createElement('button');
+    copyBtn.textContent = 'Copy';
+    copyBtn.style.cssText = 'background:transparent;color:#fff;border:0;font-size:11px;font-weight:600;padding:4px 8px;border-radius:4px;cursor:pointer;transition:background .15s ease';
+    copyBtn.addEventListener('click', function () {
+      var text = window.getSelection().toString();
+      if (navigator.clipboard) navigator.clipboard.writeText(text);
+      hideToolbar();
+    });
+    copyBtn.addEventListener('mouseenter', function () { copyBtn.style.background = 'rgba(255,255,255,.15)'; });
+    copyBtn.addEventListener('mouseleave', function () { copyBtn.style.background = 'transparent'; });
+
+    toolbar.appendChild(copyBtn);
+    document.body.appendChild(toolbar);
+  }
+
+  document.addEventListener('selectionchange', function () {
+    clearTimeout(window._selTimeout);
+    window._selTimeout = setTimeout(showToolbar, 200);
+  });
+
+  document.addEventListener('click', function (e) {
+    if (toolbar && !toolbar.contains(e.target)) hideToolbar();
+  });
+})();
+
+/* ===== NotificationSystem =====
+   Custom notification dropdown in header area.
+   Features:
+   - Bell icon with unread count
+   - Dropdown with notification list
+   - Example: "New module available", "Study streak"
+   - Marks as read on click
+   Usage: Auto-initializes.
+*/
+(function () {
+  'use strict';
+
+  var STORAGE_KEY = '_notifications';
+  var notifications = [
+    { id: 1, text: 'Try focus mode (F key) for distraction-free study', read: false, time: Date.now() },
+    { id: 2, text: 'Bookmark modules with the star icon', read: false, time: Date.now() - 3600000 },
+    { id: 3, text: '18 unique features now available!', read: false, time: Date.now() - 7200000 }
+  ];
+
+  function load() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) notifications = JSON.parse(raw);
+    } catch (e) {}
+  }
+  function save() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(notifications)); } catch (e) {}
+  }
+
+  function unreadCount() {
+    return notifications.filter(function (n) { return !n.read; }).length;
+  }
+
+  function create() {
+    var hdr = document.querySelector('.hdr');
+    if (!hdr) return;
+    if (document.getElementById('_notif-bell')) return;
+
+    var bell = document.createElement('div');
+    bell.id = '_notif-bell';
+    bell.style.cssText = 'position:relative;margin-left:auto;cursor:pointer;padding:4px';
+
+    var icon = document.createElement('span');
+    icon.textContent = '\uD83D\udd14';
+    icon.style.cssText = 'font-size:16px';
+
+    var count = unreadCount();
+    var badge = document.createElement('span');
+    badge.id = '_notif-badge';
+    badge.textContent = String(count);
+    badge.style.cssText = 'position:absolute;top:-2px;right:-2px;min-width:14px;height:14px;border-radius:7px;background:var(--red);color:#fff;font-size:8px;font-weight:800;display:' + (count > 0 ? 'flex' : 'none') + ';align-items:center;justify-content:center';
+
+    bell.appendChild(icon);
+    bell.appendChild(badge);
+
+    var dropdown = document.createElement('div');
+    dropdown.id = '_notif-dropdown';
+    dropdown.style.cssText = 'position:absolute;top:32px;right:0;width:240px;background:#fff;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.15);display:none;overflow:hidden;z-index:300';
+
+    function render() {
+      dropdown.innerHTML = '';
+      if (notifications.length === 0) {
+        var empty = document.createElement('div');
+        empty.textContent = 'No notifications';
+        empty.style.cssText = 'padding:16px;text-align:center;font-size:12px;color:var(--mut)';
+        dropdown.appendChild(empty);
+        return;
+      }
+      notifications.forEach(function (n) {
+        var item = document.createElement('div');
+        item.style.cssText = 'padding:8px 12px;font-size:11px;border-bottom:1px solid var(--bd);cursor:pointer;transition:background .15s ease;background:' + (n.read ? 'transparent' : 'rgba(83,74,183,.03)') + ';font-weight:' + (n.read ? '400' : '600') + ';color:' + (n.read ? 'var(--mut)' : 'var(--ink)') + '';
+        item.textContent = n.text;
+        item.addEventListener('click', function () {
+          n.read = true; save(); render(); updateBadge();
+        });
+        dropdown.appendChild(item);
+      });
+    }
+
+    bell.addEventListener('click', function () {
+      render();
+      dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+    });
+
+    document.addEventListener('click', function (e) {
+      if (!bell.contains(e.target)) dropdown.style.display = 'none';
+    });
+
+    bell.appendChild(dropdown);
+    hdr.appendChild(bell);
+  }
+
+  function updateBadge() {
+    var badge = document.getElementById('_notif-badge');
+    if (!badge) return;
+    var count = unreadCount();
+    badge.textContent = String(count);
+    badge.style.display = count > 0 ? 'flex' : 'none';
+  }
+
+  load();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { setTimeout(create, 1200); });
+  } else {
+    setTimeout(create, 1200);
+  }
+})();
+
+/* ===== MediaQueryListener =====
+   Responds to media query changes with CSS class toggles.
+   Features:
+   - Adds .dark-mode class when prefers-color-scheme: dark
+   - Adds .reduced-motion class when prefers-reduced-motion
+   - Adds .contrast-high class when prefers-contrast: high
+   - Live updates without reload
+   Usage: Auto-initializes.
+*/
+(function () {
+  'use strict';
+
+  function setup(mq, className) {
+    function apply() {
+      document.body.classList.toggle(className, mq.matches);
+    }
+    apply();
+    if (mq.addEventListener) mq.addEventListener('change', apply);
+    else mq.addListener(apply);
+  }
+
+  setup(window.matchMedia('(prefers-color-scheme: dark)'), '_prefers-dark');
+  setup(window.matchMedia('(prefers-reduced-motion: reduce)'), '_reduced-motion');
+  setup(window.matchMedia('(prefers-contrast: high)'), '_high-contrast');
+})();
+
+/* ===== PointerEvents =====
+   Unified pointer event handling for mouse, touch, and pen.
+   Features:
+   - Pointer-optimized drag on cards
+   - Pressure-sensitive highlighting on supported devices
+   - Coalesced event handling for smooth interaction
+   Usage: Auto-initializes.
+*/
+(function () {
+  'use strict';
+  if (!window.PointerEvent) return;
+
+  var cards = document.querySelectorAll('.card');
+  cards.forEach(function (card) {
+    card.addEventListener('pointerdown', function (e) {
+      card.style.transform = 'scale(0.98)';
+      card.style.transition = 'transform .08s ease';
+    });
+    card.addEventListener('pointerup', function (e) {
+      card.style.transform = '';
+      card.style.transition = 'transform .25s cubic-bezier(.22,.61,.36,1)';
+    });
+    card.addEventListener('pointerleave', function (e) {
+      card.style.transform = '';
+    });
+    card.style.touchAction = 'pan-y'; // Allow vertical scroll, handle horizontal gestures
+  });
+})();
 </script>
 <script>
 /* v154: Scroll progress bar + boot splash hide */

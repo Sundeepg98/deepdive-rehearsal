@@ -58,3 +58,11 @@
 <!--@build:include scripts/app/scroll-direction.js-->
 <!--@build:include scripts/app/undo-toast.js-->
 <!--@build:include scripts/app/loading-button.js-->
+<!--@build:include scripts/app/badge-counter.js-->
+<!--@build:include scripts/app/battery-indicator.js-->
+<!--@build:include scripts/app/haptic-feedback.js-->
+<!--@build:include scripts/app/resize-observer.js-->
+<!--@build:include scripts/app/selection-api.js-->
+<!--@build:include scripts/app/notification-system.js-->
+<!--@build:include scripts/app/media-query-listener.js-->
+<!--@build:include scripts/app/pointer-events.js-->

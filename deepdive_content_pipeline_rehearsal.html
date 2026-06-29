@@ -71,6 +71,7 @@ button:focus-visible,.dn-step:focus-visible,.pill:focus-visible{outline:2px soli
     --bg:#FAF9F5; --card:#fff;
    --surf:linear-gradient(180deg,#ffffff 0%,#F8F5EF 100%);
    --card-sh:0 1px 2.5px rgba(40,34,28,.05),0 7px 16px -7px rgba(40,34,28,.10),0 22px 48px -26px rgba(40,34,28,.16);
+   --card-tilt-glow:0 16px 38px -16px rgba(83,74,183,.26); --card-spot:rgba(83,74,183,.12);
    --surf-sh:0 1px 2px rgba(40,34,28,.05),0 4px 10px -5px rgba(40,34,28,.09);
    --glow:0 0 0 1px rgba(83,74,183,.06),0 1px 2px rgba(40,34,28,.04),0 8px 20px -6px rgba(40,34,28,.10),0 24px 56px -24px rgba(40,34,28,.18);
     --mix-surf:color-mix(in oklab,var(--bg) 92%,var(--acc));
@@ -240,6 +241,7 @@ html[data-theme="dark"]{
   --bg:#15141A; --card:#211F29;
    --surf:linear-gradient(180deg,#282532 0%,#1E1C26 100%);
    --card-sh:0 1px 2.5px rgba(0,0,0,.4),0 7px 16px -7px rgba(0,0,0,.45),0 22px 48px -26px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.055);
+   --card-tilt-glow:0 16px 40px -14px rgba(139,127,232,.30); --card-spot:rgba(139,127,232,.16);
    --surf-sh:0 1px 2px rgba(0,0,0,.4),0 4px 10px -5px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.045);
    --panel:linear-gradient(180deg,#1F1E26 0%,#181720 100%); --bd:#37333F; --ink:#ECEAE4; --mut:#A7A29A; --mut2:#ADA79D;
   --acc:#AA9DF5; --acc2:#B8ABF8; --accbg:#2B2640; --accink:#CABFFB; --side:#1C1B23;
@@ -796,6 +798,21 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;background:var(--
 .step-sub{font-size:12.5px;color:var(--mut);margin-bottom:6px}
 .step-t,.dec-q,.num-h,.debrief .big,.mscript-h,.rec .lvl,.sr-h,.cs-ha-l,.side-id h1,.stage-head .sh-name{font-family:var(--display)}
 ::selection{background:var(--acc);color:#fff}
+/* 3D card lift + cursor spotlight -- desktop pointers only, motion-respecting.
+   The EWC top-accent (.card::before) and .step-k tick are untouched; the
+   spotlight rides the free .card::after; the "border glow" is a hover box-shadow
+   (no continuous animation); entrance stagger stays the global cardStagger. */
+@media (hover:hover) and (pointer:fine){
+.card{isolation:isolate;transition:transform .3s cubic-bezier(.22,.61,.36,1),box-shadow .3s cubic-bezier(.22,.61,.36,1),border-color .25s ease}
+.card::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:-1;opacity:0;transition:opacity .35s ease;background:radial-gradient(340px circle at var(--mouse-x,50%) var(--mouse-y,50%),var(--card-spot,rgba(83,74,183,.12)),transparent 60%)}
+.card:hover{transform:perspective(900px) translateY(-3px) rotateX(1.4deg) rotateY(-.8deg);border-color:rgba(83,74,183,.28);box-shadow:var(--card-sh),var(--card-tilt-glow,0 16px 38px -16px rgba(83,74,183,.26))}
+.card:hover::after{opacity:1}
+}
+@media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:reduce){
+.card{transition:box-shadow .15s ease,border-color .15s ease}
+.card:hover{transform:none}
+.card:hover::after{opacity:0}
+}
 `);
 
 /* ===== shared content stylesheet: the .cs-* "scope / game-plan / cram" family =====
@@ -5084,6 +5101,50 @@ document.addEventListener('keydown', function (event) {
     if (Math.abs(dx) >= THRESHOLD && Math.abs(dy) < V_TOL) go(dx > 0 ? 'prev' : 'next');
     startX = 0;
     startY = 0;
+  }, { passive: true });
+})();
+
+/* ===== CardSpotlight =====
+   Feeds --mouse-x / --mouse-y to the hovered .card so the cursor spotlight
+   (.card::after, defined in the base sheet) tracks the pointer.
+
+   Perf-gated to match the CSS: it attaches NOTHING on touch/coarse-pointer
+   devices or when the user prefers reduced motion -- so mobile and
+   motion-sensitive users pay zero cost. A single delegated mousemove listener
+   covers every card in every shadow root via composedPath(); the cheap target
+   lookup runs per event (composedPath() is only valid during dispatch), while
+   the layout read + style write are rAF-throttled. No continuous animations.
+
+   Offline-safe: no network, storage, or permission calls. */
+(function () {
+  'use strict';
+  try {
+    if (!window.matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+    if (window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+  } catch (e) { return; }
+
+  var pending = false, card = null, mx = 0, my = 0;
+
+  function flush() {
+    pending = false;
+    if (!card) return;
+    var r = card.getBoundingClientRect();
+    if (!r.width || !r.height) return;
+    card.style.setProperty('--mouse-x', ((mx - r.left) / r.width * 100).toFixed(1) + '%');
+    card.style.setProperty('--mouse-y', ((my - r.top) / r.height * 100).toFixed(1) + '%');
+  }
+
+  document.addEventListener('mousemove', function (e) {
+    /* resolve the card NOW -- composedPath() is empty once dispatch finishes */
+    var path = (e.composedPath && e.composedPath()) || [e.target];
+    var hit = null;
+    for (var i = 0; i < path.length; i++) {
+      var el = path[i];
+      if (el && el.nodeType === 1 && el.classList && el.classList.contains('card')) { hit = el; break; }
+    }
+    if (!hit) return;
+    card = hit; mx = e.clientX; my = e.clientY;
+    if (!pending) { pending = true; requestAnimationFrame(flush); }
   }, { passive: true });
 })();
 </script>

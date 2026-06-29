@@ -22,7 +22,16 @@
   function run(apply) {
     if (typeof apply !== 'function') return;
     if (document.startViewTransition && !prefersReducedMotion()) {
-      try { document.startViewTransition(apply); return; } catch (e) {}
+      try {
+        var vt = document.startViewTransition(apply);
+        /* A transition interrupted by a rapid subsequent navigation rejects its
+           .ready/.finished promise with "Transition was skipped"; swallow these
+           benign rejections so they never surface as unhandled console errors. */
+        if (vt) ['ready', 'finished', 'updateCallbackDone'].forEach(function (k) {
+          if (vt[k] && typeof vt[k].catch === 'function') vt[k].catch(function () {});
+        });
+        return;
+      } catch (e) {}
     }
     apply();
   }

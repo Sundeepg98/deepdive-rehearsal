@@ -56,6 +56,7 @@ button:focus-visible,.dn-step:focus-visible,.pill:focus-visible{outline:2px soli
     --bg:#FAF9F5; --card:#fff;
    --surf:linear-gradient(180deg,#ffffff 0%,#F8F5EF 100%);
    --card-sh:0 1px 2.5px rgba(40,34,28,.05),0 7px 16px -7px rgba(40,34,28,.10),0 22px 48px -26px rgba(40,34,28,.16);
+   --card-tilt-glow:0 16px 38px -16px rgba(83,74,183,.26); --card-spot:rgba(83,74,183,.12);
    --surf-sh:0 1px 2px rgba(40,34,28,.05),0 4px 10px -5px rgba(40,34,28,.09);
    --glow:0 0 0 1px rgba(83,74,183,.06),0 1px 2px rgba(40,34,28,.04),0 8px 20px -6px rgba(40,34,28,.10),0 24px 56px -24px rgba(40,34,28,.18);
     --mix-surf:color-mix(in oklab,var(--bg) 92%,var(--acc));
@@ -225,6 +226,7 @@ html[data-theme="dark"]{
   --bg:#15141A; --card:#211F29;
    --surf:linear-gradient(180deg,#282532 0%,#1E1C26 100%);
    --card-sh:0 1px 2.5px rgba(0,0,0,.4),0 7px 16px -7px rgba(0,0,0,.45),0 22px 48px -26px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.055);
+   --card-tilt-glow:0 16px 40px -14px rgba(139,127,232,.30); --card-spot:rgba(139,127,232,.16);
    --surf-sh:0 1px 2px rgba(0,0,0,.4),0 4px 10px -5px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.045);
    --panel:linear-gradient(180deg,#1F1E26 0%,#181720 100%); --bd:#37333F; --ink:#ECEAE4; --mut:#A7A29A; --mut2:#ADA79D;
   --acc:#AA9DF5; --acc2:#B8ABF8; --accbg:#2B2640; --accink:#CABFFB; --side:#1C1B23;

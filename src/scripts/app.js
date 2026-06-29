@@ -29,3 +29,4 @@
 <!--@build:include scripts/app/session-timer.js-->
 <!--@build:include scripts/app/zoom-diagrams.js-->
 <!--@build:include scripts/app/touch-swipe.js-->
+<!--@build:include scripts/app/card-spotlight.js-->

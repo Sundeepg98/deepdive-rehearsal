@@ -19,4 +19,19 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;background:var(--
 .step-sub{font-size:12.5px;color:var(--mut);margin-bottom:6px}
 .step-t,.dec-q,.num-h,.debrief .big,.mscript-h,.rec .lvl,.sr-h,.cs-ha-l,.side-id h1,.stage-head .sh-name{font-family:var(--display)}
 ::selection{background:var(--acc);color:#fff}
+/* 3D card lift + cursor spotlight -- desktop pointers only, motion-respecting.
+   The EWC top-accent (.card::before) and .step-k tick are untouched; the
+   spotlight rides the free .card::after; the "border glow" is a hover box-shadow
+   (no continuous animation); entrance stagger stays the global cardStagger. */
+@media (hover:hover) and (pointer:fine){
+.card{isolation:isolate;transition:transform .3s cubic-bezier(.22,.61,.36,1),box-shadow .3s cubic-bezier(.22,.61,.36,1),border-color .25s ease}
+.card::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:-1;opacity:0;transition:opacity .35s ease;background:radial-gradient(340px circle at var(--mouse-x,50%) var(--mouse-y,50%),var(--card-spot,rgba(83,74,183,.12)),transparent 60%)}
+.card:hover{transform:perspective(900px) translateY(-3px) rotateX(1.4deg) rotateY(-.8deg);border-color:rgba(83,74,183,.28);box-shadow:var(--card-sh),var(--card-tilt-glow,0 16px 38px -16px rgba(83,74,183,.26))}
+.card:hover::after{opacity:1}
+}
+@media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:reduce){
+.card{transition:box-shadow .15s ease,border-color .15s ease}
+.card:hover{transform:none}
+.card:hover::after{opacity:0}
+}
 `);

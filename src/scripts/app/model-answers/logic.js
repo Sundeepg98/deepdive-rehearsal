@@ -7,16 +7,18 @@
    (shared-sheets.js), adopted here alongside BASE_SHEET; the .mbeat-l / .mbeat-t
    variants stay pane-local. All colors are existing theme tokens. */
 var MODEL_STYLE = `
-.msel{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-bottom:14px}
-.msel button{flex:1 1 auto;min-width:150px;border:1px solid var(--bd);background:var(--card);color:var(--mut);font:700 12px -apple-system,sans-serif;padding:9px 10px;border-radius:9px;cursor:pointer;transition:.15s}
-.msel button:hover{border-color:var(--acc2);color:var(--accink)}
-.msel button.on{background:var(--accbg);border-color:var(--acc2);color:var(--accink);box-shadow:0 1px 3px rgba(83,74,183,.13)}
+.msel{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-bottom:16px}
+.msel button{flex:1 1 auto;min-width:150px;border:1.5px solid var(--bd);background:linear-gradient(135deg,var(--card) 0%,rgba(83,74,183,.015) 100%);color:var(--mut);font:700 12px -apple-system,sans-serif;padding:10px 12px;border-radius:10px;cursor:pointer;transition:transform .15s ease,border-color .2s ease,color .2s ease,box-shadow .2s ease,background .2s ease}
+.msel button:hover{border-color:var(--acc2);color:var(--accink);background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.04) 100%);transform:translateY(-1px);box-shadow:0 4px 12px -4px rgba(83,74,183,.1)}
+.msel button:active{transform:translateY(0) scale(.98)}
+.msel button.on{background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.08) 100%);border-color:var(--acc);color:var(--accink);box-shadow:0 0 0 1px var(--acc),0 4px 14px -4px rgba(83,74,183,.18);font-weight:780;position:relative}
+.msel button.on::after{content:"";position:absolute;right:8px;top:50%;transform:translateY(-50%);width:6px;height:6px;border-radius:50%;background:var(--acc);box-shadow:0 0 8px rgba(83,74,183,.4);animation:activePulse 2s ease-in-out infinite}
 @media(max-width:560px){.msel{grid-template-columns:repeat(2,minmax(0,1fr))}}
-.mscript-h{font-size:16px;font-weight:800;color:var(--ink);letter-spacing:-.3px;margin-bottom:4px}
-.mscript-sub{font-size:12.5px;color:var(--mut);line-height:1.5;margin-bottom:6px;padding-bottom:13px;border-bottom:2px solid var(--accbg)}
-.mbeat-l{flex:none;width:76px;font:800 9.5px -apple-system,sans-serif;letter-spacing:.4px;text-transform:uppercase;padding-top:3px;line-height:1.35}
+.mscript-h{font-size:17px;font-weight:800;color:var(--ink);letter-spacing:-.3px;margin-bottom:5px}
+.mscript-sub{font-size:12.5px;color:var(--mut);line-height:1.55;margin-bottom:8px;padding-bottom:14px;border-bottom:2px solid var(--accbg)}
+.mbeat-l{flex:none;width:76px;font:800 9.5px -apple-system,sans-serif;letter-spacing:.4px;text-transform:uppercase;padding-top:4px;line-height:1.35;color:var(--acc)}
 .mbeat-t{flex:1;font-size:13px;line-height:1.62;color:var(--ink)}
-.mbeat-t b{color:var(--accink)}
+.mbeat-t b{color:var(--accink);font-weight:700}
 `;
 var MODEL_HTML = `<div class="msel">
       <button type="button" data-i="0" class="on">Make it reliable</button>

@@ -31,7 +31,11 @@ def browser():
 results = []
 for name, cmd in [('ascii_guard', ['python3', 'test/ascii_guard.py']),
                   ('syntax_check', ['python3', 'test/syntax_check.py']),
-                  ('build_integrity', ['python3', 'test/build_integrity.py'])]:
+                  ('build_integrity', ['python3', 'test/build_integrity.py']),
+                  ('css_syntax', ['python3', 'test/css_syntax.py']),
+                  ('file_integrity', ['python3', 'test/file_integrity.py']),
+                  ('unit_tests', ['python3', 'test/unit_tests.py']),
+                  ('visual_regression', ['python3', 'test/visual_regression.py'])]:
     r = run(cmd)
     results.append((name, 'PASS' if r.returncode == 0 else 'FAIL', last_line(r)))
 

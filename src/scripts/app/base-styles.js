@@ -18,4 +18,5 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;background:var(--
 .step-t{font-size:19px;font-weight:720;margin:3px 0 5px;letter-spacing:-.2px}
 .step-sub{font-size:12.5px;color:var(--mut);margin-bottom:6px}
 .step-t,.dec-q,.num-h,.debrief .big,.mscript-h,.rec .lvl,.sr-h,.cs-ha-l,.side-id h1,.stage-head .sh-name{font-family:var(--display)}
+::selection{background:var(--acc);color:#fff}
 `);

@@ -560,3 +560,40 @@ html[data-theme="dark"] .stage::after{opacity:.4}
 /* === v158: Custom cursor on interactive elements === */
 button,.seg button,.dn-step,.pill,.card,.thread,.dec,.rf,.op,.piv,.tools-fab,.crbtn{cursor:pointer}
 .dn-step,.pill,.arc-step,.wb li{cursor:pointer}
+
+/* ============ Batch 1 rescues: reading-size, focus timer, back-to-top, tab-pause ============ */
+
+/* text-zoom: scale the work-surface views (shadow-DOM, fixed-px type) via zoom,
+   which magnifies AND reflows across the shadow boundary -- font-size cannot. */
+.stage .pane{zoom:var(--read-zoom,1)}
+.textzoom{display:flex;align-items:center;gap:6px;padding:9px 11px;margin-top:4px;border-top:1px solid var(--bd)}
+.textzoom-lbl{flex:1;min-width:0;font-size:11px;font-weight:600;color:var(--mut)}
+.textzoom-btn{flex:none;width:28px;height:28px;border-radius:7px;border:1px solid var(--bd);background:var(--surf);color:var(--ink);font:700 13px -apple-system,sans-serif;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;transition:border-color .15s ease,box-shadow .15s ease,background .15s ease}
+.textzoom-btn:disabled{opacity:.4;cursor:default}
+@media(hover:hover){.textzoom-btn:not(:disabled):hover{border-color:var(--acc);box-shadow:0 0 0 2px rgba(83,74,183,.1)}}
+
+/* pomodoro: standalone sidebar focus timer (kept separate from the header SessionTimer) */
+.pomodoro{padding:10px 11px;margin-top:4px;border-top:1px solid var(--bd)}
+.pomodoro-h{font-size:10px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--mut);margin-bottom:8px}
+.pomodoro-row{display:flex;align-items:center;gap:10px}
+.pomodoro-ring{flex:none;width:36px;height:36px;transform:rotate(-90deg)}
+.pomodoro-ring circle{transition:stroke-dashoffset .5s ease,stroke .3s ease}
+.pomodoro-meta{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.15}
+.pomodoro-time{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--ink)}
+.pomodoro-phase{font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--mut2)}
+.pomodoro-btn{flex:none;border:0;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
+.pomodoro-play{width:28px;height:28px;background:var(--teal);color:#fff;font-size:12px;transition:filter .2s ease}
+.pomodoro-reset{width:24px;height:24px;background:var(--bd);color:var(--mut);font-size:11px}
+@media(hover:hover){.pomodoro-play:hover{filter:brightness(1.08)}}
+
+/* the desktop sidebar widgets do not fit the mobile chrome (nav strip + fixed tools sheet) */
+@media(max-width:919px){.textzoom,.pomodoro{display:none}}
+
+/* back-to-top: the work surface scrolls the window, so this floats over the stage (centre-bottom,
+   clear of the left sidebar and the right companion on desktop) */
+.scrolltop{position:fixed;left:50%;bottom:24px;width:44px;height:44px;border-radius:50%;border:0;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;font-size:20px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(83,74,183,.3),0 0 0 1px rgba(83,74,183,.15);opacity:0;transform:translateX(-50%) translateY(16px) scale(.9);pointer-events:none;transition:opacity .25s ease,transform .3s cubic-bezier(.22,.61,.36,1);z-index:150}
+.scrolltop.show{opacity:1;transform:translateX(-50%) translateY(0) scale(1);pointer-events:auto}
+@media(hover:hover){.scrolltop.show:hover{box-shadow:0 9px 26px rgba(83,74,183,.42),0 0 0 1px rgba(83,74,183,.25)}}
+
+/* page-visibility: freeze continuous CSS animations while the tab is backgrounded */
+body.is-hidden,body.is-hidden *,body.is-hidden *::before,body.is-hidden *::after{animation-play-state:paused!important}

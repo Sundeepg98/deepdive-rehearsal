@@ -30,3 +30,7 @@
 <!--@build:include scripts/app/zoom-diagrams.js-->
 <!--@build:include scripts/app/touch-swipe.js-->
 <!--@build:include scripts/app/card-spotlight.js-->
+<!--@build:include scripts/app/page-visibility.js-->
+<!--@build:include scripts/app/text-zoom.js-->
+<!--@build:include scripts/app/pomodoro.js-->
+<!--@build:include scripts/app/scroll-to-top.js-->

@@ -38,15 +38,20 @@ jobs:
         with:
           python-version: '3.13'
 
-      # check_all.py runs `node --check` (syntax_check) and probes for Playwright,
-      # so Node must be present or the gate errors out. The browser render/entity
-      # checks auto-skip when Playwright/Chrome are absent, keeping CI green.
+      # check_all.py runs `node --check` (syntax_check) and locates Chromium via
+      # Playwright. Node + Playwright must be present so the browser checks
+      # (render / entity_leak / e2e_interactions) RUN here instead of skipping.
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: THE GATE -- hard gate, deploy only if this passes
+      - name: Install Playwright + Chromium (so THE GATE runs its browser checks)
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: THE GATE -- hard gate, deploy only if this passes (browser checks included)
         run: python test/check_all.py
 
       - name: Build the deliverable from src/

@@ -1,0 +1,14 @@
+{
+  "name": "deepdive-content-pipeline-rehearsal",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Dev/test tooling for the offline single-file interview trainer. The shipped deliverable is zero-dependency and self-contained; this package exists ONLY so THE GATE's browser checks (render / entity_leak / e2e_interactions) can run via Playwright locally and in CI.",
+  "scripts": {
+    "gate": "python3 test/check_all.py",
+    "browser-setup": "playwright install chromium",
+    "e2e": "node test/render.cjs && node test/entity_leak.cjs && node test/e2e_interactions.cjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.40.0"
+  }
+}

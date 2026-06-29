@@ -7,11 +7,14 @@ This replaces per-edit manual vigilance with tooling that runs on every build:
   build_integrity  build resolves + deliverable consistent + structure present
   render           panes/overlays render, no JS/ref errors, no overflow  (browser)
   entity_leak      no HTML entity reaches visible text                   (browser)
+  e2e_interactions theme/text-zoom/drill must-hit/rescues, 0 console errs (browser)
 
 Browser checks are SKIPPED (not failed) when Playwright/Chrome are absent, so
-this is CI-safe; locally, with a browser present, it is the full gate.
+this is CI-safe; locally (or in CI after `npm install && npx playwright install
+chromium`), with a browser present, it is the full gate. Chromium is located via
+Playwright itself, so there are no hardcoded paths.
 """
-import os, sys, subprocess, glob
+import os, sys, subprocess
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 os.chdir(ROOT)
 
@@ -23,10 +26,12 @@ def last_line(r):
     return out[-1] if out and out[-1] else (out[-2] if len(out) > 1 else '')
 
 def browser():
-    if run(['node', '-e', "require.resolve('playwright')"]).returncode != 0:
-        return None
-    g = glob.glob('/opt/pw-browsers/chromium-*/chrome-linux/chrome')
-    return g[0] if g else None
+    """Locate Chromium via Playwright itself -- portable across OSes once
+    `npm install` + `npx playwright install chromium` have run. Relies on the
+    local node_modules (no NODE_PATH) and has no hardcoded sandbox paths."""
+    r = run(['node', '-e', "process.stdout.write(require('playwright').chromium.executablePath())"])
+    p = (r.stdout or '').strip()
+    return p if r.returncode == 0 and p and os.path.exists(p) else None
 
 results = []
 for name, cmd in [('ascii_guard', ['python3', 'test/ascii_guard.py']),
@@ -41,11 +46,12 @@ for name, cmd in [('ascii_guard', ['python3', 'test/ascii_guard.py']),
 
 chrome = browser()
 deliverable = os.path.join(ROOT, 'deepdive_content_pipeline_rehearsal.html')
-for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity_leak.cjs')]:
+for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity_leak.cjs'),
+                     ('e2e_interactions', 'test/e2e_interactions.cjs')]:
     if not chrome:
-        results.append((name, 'SKIP', 'no Playwright/Chrome'))
+        results.append((name, 'SKIP', 'no Playwright/Chrome (npm install && npx playwright install chromium)'))
         continue
-    env = dict(os.environ, CHROME=chrome, NODE_PATH='/home/claude/.npm-global/lib/node_modules')
+    env = dict(os.environ, CHROME=chrome)
     r = run(['node', script, deliverable], env=env)
     results.append((name, 'PASS' if r.returncode == 0 else 'FAIL', last_line(r)))
 

@@ -40,11 +40,16 @@ const OVERLAYS = ['mockov', 'mixov', 'cramov', 'sessov', 'keyov', 'scopeov', 'pl
   const paneFails = [];
   for (const t of PANES) {
     await page.click(`.sidebar .seg button[data-tab="${t}"]`);
-    await page.waitForTimeout(70);
-    const ok = await page.evaluate(
-      id => { const p = document.getElementById(id); return !!p && getComputedStyle(p).display !== 'none'; },
-      t
-    );
+    // The pane swap runs inside the View Transitions API (async), so wait for
+    // the pane to actually become visible rather than a brittle fixed delay.
+    let ok = false;
+    try {
+      await page.waitForFunction(
+        id => { const p = document.getElementById(id); return !!p && getComputedStyle(p).display !== 'none'; },
+        t, { timeout: 2000 }
+      );
+      ok = true;
+    } catch (e) { ok = false; }
     if (!ok) paneFails.push(t);
   }
 

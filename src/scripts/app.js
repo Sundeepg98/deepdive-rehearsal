@@ -2,8 +2,6 @@
 <!--@build:include scripts/app/content-sheet.js-->
 <!--@build:include scripts/app/shared-sheets.js-->
 <!--@build:include scripts/app/topic-protocol.js-->
-<!--@build:include scripts/app/drill/cards.js-->
-<!--@build:include scripts/app/drill/speak-lines.js-->
 <!--@build:include topics/content-pipeline.js-->
 <!--@build:include scripts/app/red-flags.js-->
 <!--@build:include scripts/app/trade-offs.js-->

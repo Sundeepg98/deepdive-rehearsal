@@ -1,14 +1,15 @@
 /* ============ PROBE DRILL ============ */
-/* The drill is a self-contained shadow-DOM component. cards / speakLines stay
-   GLOBAL (the opener pane reads cards; the component reads + reassigns both as
-   the working set). Stats reach session-progress via getStats(). */
+/* The drill is a TopicPane (built once, re-rendered in place on topic switch).
+   cards / speakLines are the registry-owned working-set globals (declared in
+   topic-protocol.js, seeded by publishBanks from the bank); the real probe bank
+   lives in topics/content-pipeline/drill.js. The component reads + reassigns the
+   working set to filtered subsets. Stats reach session-progress via getStats(). */
 var DRILL_TIER_CLASS = { SDE2: 't2', SDE3: 't3', Staff: 'tS', EXTEND: 'tX' };
-var DRILL_TIER_NOTES={all:'<b>All four levels, mixed</b> &mdash; the way a real loop actually comes at you.',SDE2:'<b>Fundamentals under pressure</b> &mdash; memory model, I/O, idempotent writes. The bar is &ldquo;this won&rsquo;t fall over&rdquo;: show the mechanics cleanly.',SDE3:'<b>Depth &amp; trade-offs</b> &mdash; consistency, schema evolution, the hidden bill. The bar is &ldquo;it depends, here&rsquo;s the switch&rdquo;: never a one-size answer.',Staff:'<b>Systems judgment</b> &mdash; irreversibility, blast radius, the exactly-once illusion. The bar is &ldquo;I see the failure mode before it ships&rdquo;: name what breaks and name the backstop.'};
-/* The full, immutable card / speak banks. cards / speakLines (above, in
-   cards.js / speak-lines.js) are the reassignable WORKING set; these keep the
-   originals. SHARED: mixed-fire.js reads _allCards to assemble its probe set. */
-/* _allCards/_allSpeak are now declared + owned by topic-protocol.js (foundation)
-   and seeded by publishBanks(); drill reads them as before. */
+var DRILL_TIER_NOTES = {};  /* per-topic; renderTopic sets this from the topic data (the 4 notes now live in topics/content-pipeline/drill.js) */
+/* cards / speakLines (the reassignable WORKING set) and _allCards / _allSpeak (the
+   immutable originals) are declared + owned by topic-protocol.js (foundation) and
+   seeded by publishBanks() from topics/content-pipeline/drill.js's bank. SHARED:
+   mixed-fire.js reads _allCards to assemble its probe set; drill reads them as before. */
 var DRILL_HTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
       <div class="modetog" id="modetog">
         <button type="button" class="on" data-m="study">Study</button>
@@ -139,34 +140,52 @@ function dShuffle(count) {
   }
   return arr;
 }
-class DeepDrill extends HTMLElement {
-  connectedCallback() {
-    if (this._built) return; this._built = true;
-    this.mode = 'study'; this.tierFilter = 'all'; this.timerId = null; this.mockLeft = 0;
-    this.di = 0; this.got = 0; this.shk = 0; this.results = [];
-    this.revisit = {}; this.revisitMode = false;
-    const root = this.attachShadow({ mode: 'open' });
-    root.adoptedStyleSheets = [BASE_SHEET, ANS_SHEET];
-    root.innerHTML = '<style>' + DRILL_STYLE + '</style>' + DRILL_HTML;
-    this._root = root;
+class DeepDrill extends TopicPane {
+  static dataKey = 'drill';
+  sheets()    { return [BASE_SHEET, ANS_SHEET]; }
+  styleText() { return DRILL_STYLE; }
+  skeleton()  { return DRILL_HTML; }
+  init(root) {
+    /* one-time HOST state not reset per-topic (renderTopic/setMode reset the rest) */
+    this.timerId = null; this.mockLeft = 0; this.revisit = {};
     this._dwrap = root.getElementById('dwrap'); this._dfill = root.getElementById('dfill');
     this._sGot = root.getElementById('sGot'); this._sShk = root.getElementById('sShk'); this._sLeft = root.getElementById('sLeft');
     this._timerEl = root.getElementById('timer');
     this._modetog = root.getElementById('modetog'); this._tiertog = root.getElementById('tiertog');
+    this._tiernote = root.getElementById('tiernote');
     const self = this;
+    /* DELEGATED listeners wired ONCE on the stable shell nodes: dnav contents are
+       rebuilt every draw; modetog / tiertog / revdrill live in the invariant skeleton. */
     root.getElementById('dnav').addEventListener('click', function (event) {
       const btn = event.target.closest('.dn-step');
       if (btn) { self.di = +btn.getAttribute('data-i'); self.renderD(); }
     });
-    for (let z = 0; z < this._modetog.children.length; z++) {
-      this._modetog.children[z].onclick = function () { self.setMode(this.getAttribute('data-m')); };
-    }
+    this._modetog.addEventListener('click', function (event) {
+      const btn = event.target.closest('button');
+      if (btn) self.setMode(btn.getAttribute('data-m'));
+    });
+    this._tiertog.addEventListener('click', function (event) {
+      const btn = event.target.closest('button');
+      if (btn) self.setTier(btn.getAttribute('data-tier'));
+    });
+    root.getElementById('revdrill').addEventListener('click', function () { self.drillRevset(); });
+  }
+  renderTopic(d) {
+    /* registry already reseeded cards / _allCards via publishBanks before this fires */
+    DRILL_TIER_NOTES = d.tierNotes;
+    this.tierFilter = 'all'; this.revisitMode = false;
     for (let z = 0; z < this._tiertog.children.length; z++) {
-      this._tiertog.children[z].onclick = function () { self.setTier(this.getAttribute('data-tier')); };
+      this._tiertog.children[z].classList.toggle('on', this._tiertog.children[z].getAttribute('data-tier') === 'all');
     }
-    const rev = root.getElementById('revdrill');
-    if (rev) rev.onclick = function () { self.drillRevset(); };
+    if (this._tiernote) this._tiernote.innerHTML = d.tierNotes.all;
+    const allBtn = this._tiertog.querySelector('[data-tier="all"]');
+    if (allBtn) allBtn.textContent = 'All ' + _allCards.length;
     this.setMode('study');
+  }
+  teardownTopic() {
+    this.stopTimer();
+    this.di = 0; this.got = 0; this.shk = 0; this.results = [];
+    this.revisit = {}; this.revisitMode = false;
   }
   renderNav() {
     const nav = this._root.getElementById('dnav');
@@ -440,6 +459,5 @@ class DeepDrill extends HTMLElement {
   getStats() { return { dTot: cards.length, dDone: this.results.length, dGot: this.got, dShk: this.shk, revisit: this.results.filter(function (r) { return !r.ok; }).map(function (r) { return r.signal; }) }; }
   reset() { this.setMode('study'); }
   weak() { return this.drillWeak(); }
-  disconnectedCallback() { this.stopTimer(); }
 }
 customElements.define('deep-drill', DeepDrill); 

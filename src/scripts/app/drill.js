@@ -1,4 +1,5 @@
 /* ============ DRILL ============ */
-/* cards.js + speak-lines.js now load EARLY (before the topic bundle) so the bundle
-   can alias the real working set; this wrapper keeps only the DeepDrill class. */
+/* The probe bank moved into the topic bundle (topics/content-pipeline/drill.js);
+   the old drill/cards.js + drill/speak-lines.js are deleted. This wrapper keeps
+   only the DeepDrill TopicPane class + its module-level helpers (logic.js). */
 <!--@build:include scripts/app/drill/logic.js-->

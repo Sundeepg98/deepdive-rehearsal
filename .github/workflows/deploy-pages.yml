@@ -7,6 +7,14 @@ name: Deploy to GitHub Pages (gated on THE GATE)
 on:
   push:
     branches: [master]
+    # Doc-only pushes don't change the deliverable, so they must not redeploy.
+    # paths-ignore skips the run only when EVERY changed file matches; a mixed
+    # code+doc push still deploys.
+    paths-ignore:
+      - '_audit/**'
+      - '**.md'
+      - '.gitignore'
+      - '.gitattributes'
   workflow_dispatch: {}
 
 # GITHUB_TOKEN needs write access to push the built HTML to the gh-pages branch.

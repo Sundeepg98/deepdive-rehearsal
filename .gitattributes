@@ -1,0 +1,6 @@
+# Normalize line endings: store text as LF, check out LF on every platform.
+# Without this, core.autocrlf=true checks sources out as CRLF on Windows, so
+# build.py concatenates a mixed-EOL deliverable that diverges from the LF blob
+# (a phantom git-dirty diff + a fresh-clone build_integrity failure). eol=lf
+# keeps the working tree LF so the build is byte-reproducible everywhere.
+* text=auto eol=lf

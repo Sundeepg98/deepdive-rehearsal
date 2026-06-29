@@ -1384,9 +1384,46 @@ var TOPIC_CP_DRILL = { cards: cards, speak: speakLines, tierNotes: DRILL_TIER_NO
    wb pane stays plain and reads its own globals); the wb agent seeds real data in Phase 1. */
 var TOPIC_CP_WB = { steps: [], diagram: '', foot: '', sub: '', okVerdict: '' };
 
-/* topics/content-pipeline/sys.js -- FOUNDATION Phase-0 STUB. Unused at boot (the
-   sys pane stays plain and reads its own globals); the sys agent seeds real data in Phase 1. */
-var TOPIC_CP_SYS = { intro: '', stages: [], pivots: [], heads: { whereHead: '', pivHead: '', pivSub: '' } };
+/* topics/content-pipeline/sys.js -- Phase 1: REAL system-map data (lifted from the
+   former SYS_STAGES / SYS_PIVOTS arrays + the baked intro and headings in
+   system-map.js). intro = the .sm-intro copy; stages = the 6-stage chain (EXACTLY
+   one has cur:true -- "you are here"); pivots = the 7 interviewer bridge points;
+   heads = the two card headings + the pivot subhead (the schema 'heads' superset --
+   card-1 heading is topic-specific). The sys intro is DATA rendered by the pane, NOT
+   light-DOM identity. Pure data (no DOM APIs -- the .map renderers live in
+   system-map.js); 7-bit ASCII (HTML entities + \uXXXX). */
+var TOPIC_CP_SYS = {
+  intro: "The content pipeline is the <b>ingestion layer</b>. Knowing the stages on either side of it &mdash; and being able to walk the whole chain &mdash; is what turns a component answer into a system answer.",
+  stages: [
+    { n: 'Operator upload', d: 'content / config pushed to S3' },
+    { n: 'Content pipeline', d: 'process &middot; hash &middot; store &middot; bundle &middot; export', cur: true },
+    { n: 'Cryptographic signing', d: 'HSM signs the package; devices reject unsigned' },
+    { n: 'Desired-state reconciliation', d: 'compute per-device target, render templates, detect drift' },
+    { n: 'Deployment', d: 'push to devices in maintenance windows, batched' },
+    { n: 'Device fetch + report', d: 'device pulls, applies, reports reported_hash' }
+  ],
+  pivots: [
+    { q: "The content is processed &mdash; now it must be tamper-proof on the device", chip: "\u2192 Signing (17)",
+      a: "The pipeline\'s output feeds the <b>signing</b> stage: the processed package hash goes to the HSM, which returns a signature stamped into the header. Devices verify it and reject unsigned packages. The pipeline produces the artifact; signing makes it trustable." },
+    { q: "Tenants see different content &mdash; how is that access isolated?", chip: "\u2192 Authz (18)",
+      a: "Every pipeline read/write is <b>tenant-scoped</b>: the JWT tenant claim becomes a query predicate, so processing and exports only ever touch one tenant\'s objects. Visibility and signing keys are provisioned per company &mdash; that\'s the authz topic." },
+    { q: "Per-device attributes drive what gets rendered &mdash; where do they live?", chip: "\u2192 EAV (21)",
+      a: "Custom per-device values come from the <b>EAV</b> store (definition + override, resolved by COALESCE). Those values are what the desired-state templates interpolate before hashing &mdash; the pipeline and reconciler both read them." },
+    { q: "How does a device know it has the right content, and that it applied it?", chip: "\u2192 Desired-state (22)",
+      a: "That\'s the <b>three-hash model</b>: desired (what it should have) vs deployed (what we sent) vs reported (what the device confirms). The pipeline\'s output hash becomes part of the desired hash; the reconciler closes the loop." },
+    { q: "A 10,000-row import finishes &mdash; how do operators find out?", chip: "\u2192 Notifications (20)",
+      a: "Completion fans out through the <b>dual-channel notification</b> system: an in-app row (polled) plus an optional email (SES, per-tenant sender). Decoupled, so a failed email never blocks the import\'s success path." },
+    { q: "All this runs on AWS &mdash; how is the infrastructure itself locked down?", chip: "\u2192 AWS hardening (19)",
+      a: "The pipeline\'s blast radius is an AWS-security problem: the processor runs on a <b>least-privilege execution role</b> &mdash; read one bucket prefix, write one table, nothing else &mdash; the bucket has <b>Block Public Access</b> on with <b>SSE</b> at rest, and traffic to S3 and the DB rides <b>VPC endpoints</b> so it never touches the public internet. Uploads arrive through presigned URLs scoped to one key with a short TTL. That whole hardening posture is its own topic." },
+    { q: "All this infra &mdash; S3, Lambda, the queue, the IAM roles &mdash; how is it defined and deployed repeatably?", chip: "\u2192 IaC (23)",
+      a: "Declaratively, as <b>infrastructure as code</b> &mdash; Terraform or CDK &mdash; so the bucket, functions, roles, and event wiring are versioned and reproducible instead of click-ops. And there\'s a clean parallel worth naming: <b>IaC drift detection is to infrastructure what the reconciler is to data</b> &mdash; both compare a declared desired state against reality and converge it. Drawing that symmetry is a senior move." }
+  ],
+  heads: {
+    whereHead: "Where this pipeline lives",
+    pivHead: "Interviewer pivot points",
+    pivSub: "The questions that bridge out of this topic. Each one leads into another deep-dive &mdash; tap to see the connecting answer."
+  }
+};
 
 /* topics/content-pipeline/trade.js -- Phase 1: REAL trade data (extracted from the
    former baked TRADE_HTML). decisions[].{q, opts:[{n,when}], tell}; the "pick when"
@@ -2815,40 +2852,18 @@ class DeepOpener extends TopicPane {
 customElements.define('deep-opener', DeepOpener);
 
 /* ============ SYSTEM MAP (web component) ============
-   Pilot conversion: the sys pane is now a fully-encapsulated custom element.
-   Its markup, styles, and data live inside this element's shadow root; the only
-   thing in the light DOM is <deep-system-map> sitting in the #sys pane host.
-   Theming crosses the shadow boundary via inherited CSS custom properties (the
-   global --acc / --mut / --surf / ... plus the --sm-* tokens in styles.css for
-   the few hardcoded colors that flip between light and dark). Native <details>
-   provides the pivot interactivity with no script. */
-
-var SYS_STAGES = [
-  { n: 'Operator upload', d: 'content / config pushed to S3' },
-  { n: 'Content pipeline', d: 'process &middot; hash &middot; store &middot; bundle &middot; export', cur: true },
-  { n: 'Cryptographic signing', d: 'HSM signs the package; devices reject unsigned' },
-  { n: 'Desired-state reconciliation', d: 'compute per-device target, render templates, detect drift' },
-  { n: 'Deployment', d: 'push to devices in maintenance windows, batched' },
-  { n: 'Device fetch + report', d: 'device pulls, applies, reports reported_hash' }
-];
-
-var SYS_PIVOTS = [
-  { q: "The content is processed &mdash; now it must be tamper-proof on the device", chip: "\u2192 Signing (17)",
-    a: "The pipeline\'s output feeds the <b>signing</b> stage: the processed package hash goes to the HSM, which returns a signature stamped into the header. Devices verify it and reject unsigned packages. The pipeline produces the artifact; signing makes it trustable." },
-  { q: "Tenants see different content &mdash; how is that access isolated?", chip: "\u2192 Authz (18)",
-    a: "Every pipeline read/write is <b>tenant-scoped</b>: the JWT tenant claim becomes a query predicate, so processing and exports only ever touch one tenant\'s objects. Visibility and signing keys are provisioned per company &mdash; that\'s the authz topic." },
-  { q: "Per-device attributes drive what gets rendered &mdash; where do they live?", chip: "\u2192 EAV (21)",
-    a: "Custom per-device values come from the <b>EAV</b> store (definition + override, resolved by COALESCE). Those values are what the desired-state templates interpolate before hashing &mdash; the pipeline and reconciler both read them." },
-  { q: "How does a device know it has the right content, and that it applied it?", chip: "\u2192 Desired-state (22)",
-    a: "That\'s the <b>three-hash model</b>: desired (what it should have) vs deployed (what we sent) vs reported (what the device confirms). The pipeline\'s output hash becomes part of the desired hash; the reconciler closes the loop." },
-  { q: "A 10,000-row import finishes &mdash; how do operators find out?", chip: "\u2192 Notifications (20)",
-    a: "Completion fans out through the <b>dual-channel notification</b> system: an in-app row (polled) plus an optional email (SES, per-tenant sender). Decoupled, so a failed email never blocks the import\'s success path." },
-  { q: "All this runs on AWS &mdash; how is the infrastructure itself locked down?", chip: "\u2192 AWS hardening (19)",
-    a: "The pipeline\'s blast radius is an AWS-security problem: the processor runs on a <b>least-privilege execution role</b> &mdash; read one bucket prefix, write one table, nothing else &mdash; the bucket has <b>Block Public Access</b> on with <b>SSE</b> at rest, and traffic to S3 and the DB rides <b>VPC endpoints</b> so it never touches the public internet. Uploads arrive through presigned URLs scoped to one key with a short TTL. That whole hardening posture is its own topic." },
-  { q: "All this infra &mdash; S3, Lambda, the queue, the IAM roles &mdash; how is it defined and deployed repeatably?", chip: "\u2192 IaC (23)",
-    a: "Declaratively, as <b>infrastructure as code</b> &mdash; Terraform or CDK &mdash; so the bucket, functions, roles, and event wiring are versioned and reproducible instead of click-ops. And there\'s a clean parallel worth naming: <b>IaC drift detection is to infrastructure what the reconciler is to data</b> &mdash; both compare a declared desired state against reality and converge it. Drawing that symmetry is a senior move." }
-];
-
+   The #sys pane, converted to the TopicPane contract (dataKey 'sys'): the base class
+   attaches the shadow + adopts BASE_SHEET + writes <style>+skeleton ONCE in
+   connectedCallback; init() caches the six child mounts (NO listeners -- the pivots
+   are native <details>, zero script); renderTopic(d) paints the intro, the stage
+   chain, the pivots, and the three headings from data (TOPIC_CP_SYS via the registry)
+   on first paint AND every topic switch. BOTH .map builders (chain dot number i+1 +
+   the .cur "you are here" badge; pivots) moved OUT of build-once INTO renderTopic
+   because the counts are per-topic. The two .card wrappers and the .chain container
+   stay in the skeleton so zoom-diagrams (.chain) and card-spotlight (.card) keep
+   matching live via composedPath. SYS_STYLE stays in the pane as styleText(); the
+   few hardcoded light/dark colors flip via the inherited --sm-* tokens in styles.css.
+   STATELESS -- no timers, no transient state, so no teardownTopic. Offline-safe. */
 var SYS_STYLE = `
 .card + .card{margin-top:16px}
 .sm-intro{font-size:12.5px;color:var(--mut);margin-bottom:18px;line-height:1.6}
@@ -2882,141 +2897,73 @@ var SYS_STYLE = `
 .piv[open] summary .pq::after{content:" \\2014 bridge:";color:var(--mut2);font-weight:700}
 `;
 
-/* Build the shadow DOM once, the first time the element connects. */
-class DeepSystemMap extends HTMLElement {
-  connectedCallback() {
-    if (this._built) return;
-    this._built = true;
-    const root = this.attachShadow({ mode: 'open' });
-    root.adoptedStyleSheets = [BASE_SHEET];
-    const chain = SYS_STAGES.map(function (s, i) {
-      return '<div class="stg' + (s.cur ? ' cur' : '') + '">' +
-        '<div class="ln"></div><div class="dot">' + (i + 1) + '</div>' +
-        '<div class="body"><div class="nm">' + s.n +
-        (s.cur ? '<span class="here">you are here</span>' : '') + '</div>' +
-        '<div class="ds">' + s.d + '</div></div></div>';
-    }).join('');
-    const pivots = SYS_PIVOTS.map(function (p) {
-      return '<details class="piv"><summary><span class="pq">' + p.q +
-        '</span><span class="chip">' + p.chip + '</span></summary>' +
-        '<div class="pa">' + p.a + '</div></details>';
-    }).join('');
-    root.innerHTML = '<style>' + SYS_STYLE + '</style>' +
-      '<div class="card"><div class="step-t">Where this pipeline lives</div>' +
-      '<div class="sm-intro">The content pipeline is the <b>ingestion layer</b>. Knowing the stages on either side of it &mdash; and being able to walk the whole chain &mdash; is what turns a component answer into a system answer.</div>' +
-      '<div class="chain">' + chain + '</div></div>' +
-      '<div class="card"><div class="piv-k">Interviewer pivot points</div>' +
-      '<div class="piv-sub">The questions that bridge out of this topic. Each one leads into another deep-dive &mdash; tap to see the connecting answer.</div>' +
-      '<div class="pivs">' + pivots + '</div></div>';
+/* Module-level renderers (prefixed so they can't clash with other panes converting in
+   the same wave). They reproduce the former baked .stg / .piv markup byte-for-byte:
+   the chain dot is numbered i+1, the .cur stage gets a " you are here" badge, and the
+   pivots are native <details class="piv"> (no script). Consumed as innerHTML only. */
+function sysRenderStage(s, i) {
+  return '<div class="stg' + (s.cur ? ' cur' : '') + '">' +
+    '<div class="ln"></div><div class="dot">' + (i + 1) + '</div>' +
+    '<div class="body"><div class="nm">' + s.n +
+    (s.cur ? '<span class="here">you are here</span>' : '') + '</div>' +
+    '<div class="ds">' + s.d + '</div></div></div>';
+}
+function sysRenderPivot(p) {
+  return '<details class="piv"><summary><span class="pq">' + p.q +
+    '</span><span class="chip">' + p.chip + '</span></summary>' +
+    '<div class="pa">' + p.a + '</div></details>';
+}
+
+class DeepSystemMap extends TopicPane {
+  static dataKey = 'sys';
+  sheets()    { return [BASE_SHEET]; }
+  styleText() { return SYS_STYLE; }
+  /* INVARIANT chrome: the two .card wrappers + the .chain container (kept so zoom /
+     spotlight match live via composedPath) with EMPTY mounts (ids prefixed `sm`). */
+  skeleton()  {
+    return '<div class="card"><div class="step-t" id="smWhere"></div>' +
+      '<div class="sm-intro" id="smIntro"></div>' +
+      '<div class="chain" id="smChain"></div></div>' +
+      '<div class="card"><div class="piv-k" id="smPivK"></div>' +
+      '<div class="piv-sub" id="smPivSub"></div>' +
+      '<div class="pivs" id="smPivs"></div></div>';
+  }
+  init(root) {
+    this._where  = root.getElementById('smWhere');
+    this._intro  = root.getElementById('smIntro');
+    this._chain  = root.getElementById('smChain');
+    this._pivK   = root.getElementById('smPivK');
+    this._pivSub = root.getElementById('smPivSub');
+    this._pivs   = root.getElementById('smPivs');
+  }
+  renderTopic(d) {
+    this._where.innerHTML  = d.heads.whereHead;
+    this._intro.innerHTML  = d.intro;
+    this._chain.innerHTML  = d.stages.map(sysRenderStage).join('');
+    this._pivK.innerHTML   = d.heads.pivHead;
+    this._pivSub.innerHTML = d.heads.pivSub;
+    this._pivs.innerHTML   = d.pivots.map(sysRenderPivot).join('');
   }
 }
 customElements.define('deep-system-map', DeepSystemMap);
 
 /* ============ MODEL ANSWERS ============ */
-var modelAnswers=[
-  { opener:"\u201CHow would you make this reliable?\u201D",
-    sub:"Production-grade = no data lost across S3+DB, and no work done twice on a retry.",
-    beats:[
-      {l:"FRAME",c:"frame",t:"Reliability here is two guarantees: <b>no data lost</b> across the S3-and-DB boundary, and <b>no work done twice</b> on a retry. Let me take them in turn."},
-      {l:"HEADLINE",c:"head",t:"The central risk is the <b>dual-write</b> \u2014 the DB and S3 can disagree \u2014 so every write is idempotent and a <b>reconciler</b> is the real backstop."},
-      {l:"NO LOSS",c:"sub",t:"On the write path I track every S3 key I create; if the DB transaction fails, I delete those keys in the catch. Best-effort cleanup can fail too, so the actual guarantee is a reconciler sweeping S3 for keys with <b>no DB row</b> and removing the orphans \u2014 eventually consistent, but correct."},
-      {l:"NO REPLAY",c:"sub",t:"On the processing path, delivery is at-least-once, so I never lean on exactly-once. I make the effect <b>idempotent</b> \u2014 a content-hash key with an upsert, or a processed-marker the handler checks-and-sets first \u2014 so a redelivered event is a no-op."},
-      {l:"NAME THE RISK",c:"risk",t:"The subtle bug is the reconciler racing an <b>in-flight upload</b>: object written, row not yet committed. I close it with an explicit <b>PENDING marker</b> written before the upload, so the reconciler never deletes work still in progress."},
-      {l:"TRADE-OFF",c:"trade",t:"I add a DLQ the moment failures need inspecting, and retries-with-backoff for transient errors \u2014 but I wouldn\u2019t reach for distributed transactions. Idempotent writes plus a reconciler give the same guarantee far more cheaply."},
-      {l:"CLOSE",c:"close",t:"So: idempotent effects, compensating cleanup, a reconciler backstop, and explicit pending-state to kill the races \u2014 production-grade without 2PC."}
-    ] },
-  { opener:"\u201CHow does this scale?\u201D",
-    sub:"\u2018Scale\u2019 for this pipeline is really \u2018which resource saturates first.\u2019",
-    beats:[
-      {l:"FRAME",c:"frame",t:"Let me pin the load first, then walk the chain and name what saturates at each stage \u2014 because <b>scale here is really \u2018which resource gives out first.\u2019</b>"},
-      {l:"HEADLINE",c:"head",t:"At normal volume the Lambda-per-object design is fine. Under a burst the first ceiling is <b>Lambda concurrency</b>, then the <b>DB connection pool</b>, then the <b>S3 PUT rate per prefix</b>."},
-      {l:"NUMBERS",c:"sub",t:"Say 10 million objects a day \u2014 about <b>115/second</b> average, bursting past <b>1,000/second</b>. Each invocation holds a DB connection, so a thousand concurrent Lambdas blows past Postgres\u2019s connection limit. Fix: <b>RDS Proxy</b> to pool connections, or buffer through SQS so I own consumer concurrency."},
-      {l:"PREFIX",c:"sub",t:"S3 caps writes per prefix, so if every key shares one prefix I throttle. I spread keys across prefixes <b>by hash</b> to parallelize, and large objects go <b>multipart</b> \u2014 a 500\u00A0MB upload becomes a hundred parallel parts, not one serial stream."},
-      {l:"NAME THE RISK",c:"risk",t:"The silent killer is the <b>held cursor</b> on exports \u2014 a slow client pins a DB connection open, and enough slow readers exhaust the pool. I cap it with a statement timeout, or stream the export to S3 and hand back a presigned URL so the database is out of the read path entirely."},
-      {l:"TRADE-OFF",c:"trade",t:"Lambda-per-object buys zero ops and low latency; the moment I need ordering, retries, a DLQ, or burst-smoothing, I move to <b>SQS and a worker pool</b>. That\u2019s the switch condition."},
-      {l:"CEILING",c:"ceil",t:"At true firehose scale I stop processing per-object synchronously and <b>batch through SQS or Kinesis</b> \u2014 amortizing fixed costs and decoupling arrival rate from processing rate."}
-    ] },
-  { opener:"\u201CWalk me through a failure.\u201D",
-    sub:"A concrete incident: thumbnails stop appearing, but uploads still succeed.",
-    beats:[
-      {l:"FRAME",c:"frame",t:"Let me take a real one: <b>thumbnails stop appearing</b> for new uploads, but the uploads themselves succeed. I\u2019ll narrate how I localize it."},
-      {l:"HEADLINE",c:"head",t:"Uploads working but processing not means the break is <b>past the S3 write</b> \u2014 in event delivery or the processor \u2014 so I check the four signals: queue depth, processing latency, error rate, reconciler orphan count."},
-      {l:"LOCALIZE",c:"sub",t:"Orphan count is climbing \u2014 objects with no processed row \u2014 so the processor gets events but fails to finish. Error rate is flat, ruling out crashes; latency p99 has spiked. That points at a <b>slow downstream dependency</b>, not a bug in my code."},
-      {l:"ROOT CAUSE",c:"sub",t:"The image library is timing out on a new file type someone started uploading \u2014 each job hangs to its limit, then the event redelivers, piling up the queue. It\u2019s a <b>poison-message pattern</b>: one bad input stalling the lane."},
-      {l:"FIX",c:"sub",t:"Immediate: a <b>DLQ</b> so poison messages stop redelivering and the lane drains. Then a guard \u2014 validate the type and cap processing time per job \u2014 so a bad input <b>fails fast</b> instead of hanging. The reconciler cleans the orphans once processing catches up."},
-      {l:"NAME THE RISK",c:"risk",t:"What I\u2019d flag in the postmortem: we had <b>no per-type timeout and no DLQ</b>, so a single unsupported file could silently back up the whole pipeline. Both are now defaults."},
-      {l:"CLOSE",c:"close",t:"So the discipline is: localize with the four signals, separate slow-from-failing, find the poison input, fail it fast, and let the reconciler reconcile state."}
-    ] },
-  { opener:"\u201CWhy this design?\u201D",
-    sub:"Defend it on cost and how it absorbs change \u2014 not just whether it works.",
-    beats:[
-      {l:"FRAME",c:"frame",t:"Let me defend it on the two axes that matter for an ingestion pipeline: <b>operational cost</b> and <b>how it absorbs change</b> \u2014 not just whether it works."},
-      {l:"HEADLINE",c:"head",t:"The spine is a <b>strategy-dispatch map</b> plus event-driven S3 triggers: O(1) routing, one handler contract, and uploads push work so nothing polls. The dispatcher\u2019s complexity stays at one forever, and a new content type is a single map entry."},
-      {l:"EXTENSIBILITY",c:"sub",t:"Adding <code>.webp</code> or a video handler is one line and zero caller changes, because every handler returns the same normalized result shape. It extends <b>along its grain</b> \u2014 when transcoding needs real compute, the same map just routes to ECS instead of processing inline."},
-      {l:"STREAMING",c:"sub",t:"Memory is constant regardless of file size because every byte path is streamed and backpressured \u2014 the PassThrough fork for hashing, the cursor for exports. A 5\u00A0GB object costs the same RAM as a 5\u00A0MB one. A deliberate choice, not an accident."},
-      {l:"NAME THE RISK",c:"risk",t:"Where I\u2019m honest about the cost: event delivery is at-least-once and the S3-DB write is a dual-write, so I\u2019m buying simplicity and paying with <b>idempotent effects and a reconciler</b>. I\u2019d rather pay there than run two-phase commit."},
-      {l:"TRADE-OFF",c:"trade",t:"And it has a clean upgrade path \u2014 Lambda-per-object now, SQS-plus-workers the moment I need retries, ordering, or a DLQ. I\u2019m not locked in; I\u2019ve named the exact threshold where I\u2019d switch."},
-      {l:"CLOSE",c:"close",t:"So it\u2019s cheap to run, cheap to extend, flat in memory, and honest about its one trade-off \u2014 which is what I want from an ingestion layer."}
-    ] },
-  { opener:"\u201CHow would you know it\u2019s healthy in production?\u201D",
-    sub:"Operational maturity = the pipeline tells you it\u2019s failing before a user does.",
-    beats:[
-      {l:"FRAME",c:"frame",t:"Health here isn\u2019t \u2018is the box up\u2019 \u2014 it\u2019s \u2018is work flowing and arriving correctly.\u2019 So I instrument the pipeline as a flow and define <b>healthy</b> as SLOs, not vibes."},
-      {l:"HEADLINE",c:"head",t:"The dashboard is the <b>four golden signals</b> mapped to this pipeline: <b>queue depth</b> (work waiting), <b>processing latency p99</b> (upload to processed-row), <b>error rate</b> (failures / min), and the one most people miss \u2014 <b>reconciler orphan count</b>, my correctness signal."},
-      {l:"THE TARGETS",c:"sub",t:"The SLIs I\u2019d commit to: <b>freshness</b> \u2014 p99 upload-to-processed under ~60\u00A0seconds \u2014 and <b>completeness</b>, the fraction of uploads that reach a terminal state. Freshness catches a <i>slow</i> pipeline; completeness catches a <i>lossy</i> one, which is the scarier failure."},
-      {l:"ALERT ON",c:"sub",t:"I alert on <b>symptoms and SLO burn</b>, not raw metrics. Page on: queue depth climbing for N minutes, the freshness SLO burning, or DLQ size above zero. I do <b>not</b> page on a single failed job \u2014 retries and the DLQ absorb that. Alert on the <b>trend</b>, not the blip."},
-      {l:"THE TELL",c:"risk",t:"The signal that separates levels is <b>orphan count</b>. Error rate flat but orphans climbing means objects are landing in S3 with no processed row \u2014 the pipeline is <i>silently</i> losing work while every box looks green. That\u2019s the metric I put front and center, because it\u2019s the failure a naive dashboard can\u2019t see."},
-      {l:"TRACE",c:"sub",t:"For diagnosis I carry a <b>correlation id</b> \u2014 the object key \u2014 through the event, the logs, and the DB row, so one slow file is traceable across S3, the queue, and the processor without grepping by timestamp. That turns \u2018thumbnails are slow\u2019 into the exact poison input in minutes."},
-      {l:"CLOSE",c:"close",t:"So: four golden signals with orphan-count as the correctness canary, SLOs on freshness and completeness, alert on burn not blips, and a correlation id that makes any one file traceable end-to-end \u2014 the pipeline tells me it\u2019s failing before a user does."}
-    ] },
-  { opener:"\u201CWhat would you build first?\u201D",
-    sub:"Pragmatism = the thinnest thing that works, with the seams that let it grow.",
-    beats:[
-      {l:"FRAME",c:"frame",t:"Scoping is a senior move before it\u2019s a coding one \u2014 I\u2019d ask the two or three questions that actually <b>fork the design</b>, then build the thinnest thing that survives those answers."},
-      {l:"QUESTIONS",c:"sub",t:"The questions that change what I build: <b>which content types</b> (that sizes the strategy map), <b>what volume</b> (Lambda-per-object vs a worker pool), and <b>is async acceptable</b> (whether I need a queue at all). Most other details don\u2019t move the architecture \u2014 these three do."},
-      {l:"THE MVP",c:"sub",t:"Given ordinary answers, the MVP is a straight line: <b>S3 ObjectCreated \u2192 one Lambda \u2192 a single handler \u2192 a DB row.</b> One content type, processed inline, no queue, no reconciler. That ships in days and is correct for the happy path."},
-      {l:"DEFER",c:"sub",t:"What I\u2019d consciously <i>not</i> build yet: the <b>DLQ</b>, <b>multipart</b>, the <b>reconciler</b>, <b>RDS Proxy</b>. Each answers a problem I don\u2019t have at MVP scale \u2014 I add the DLQ the first time a poison message bites, the reconciler when a dropped file actually hurts, the proxy when connections saturate."},
-      {l:"NEVER CUT",c:"risk",t:"Two things I build from line one anyway, because cutting them means a <b>rewrite</b>, not a patch: the <b>strategy-map seam</b>, so a second content type is one entry and not a refactor \u2014 and <b>idempotency</b>, because at-least-once becomes a property of the system the moment I add a queue, and retrofitting it is brutal."},
-      {l:"SEQUENCE",c:"sub",t:"So the growth path is ordered by <b>what gives out first</b>: ship inline-Lambda, add the DLQ at the first poison message, the reconciler when correctness starts to matter, SQS-and-workers when I need ordering or burst-smoothing, the proxy when the pool saturates. Every addition is triggered by a real signal, not a guess."},
-      {l:"CLOSE",c:"close",t:"So: ask the three questions that fork the design, ship the straight-line MVP, defer everything that solves a problem I don\u2019t have yet \u2014 but keep the two seams that would otherwise force a rewrite. Thin, correct, and built to grow."}
-    ] },
-   { opener:"\u201CWalk me through a complex system you\u2019ve built.\u201D",
-     sub:"A different muscle from designing on the spot \u2014 lead with the shape, spotlight one decision worth judgment, own one real failure, close on what you\u2019d change. Concrete beats abstract every time.",
-     beats:[
-       {l:"FRAME",c:"frame",t:"Name it in one breath before any detail: \u201CIt\u2019s an event-driven ingestion pipeline \u2014 operators drop files, it routes each by type, processes it once, and catalogs the result, with a reconciler keeping the object store and the database honest.\u201D Now they hold the shape, and everything I add hangs off it instead of piling up as a list."},
-       {l:"THE DECISION",c:"head",t:"Spotlight the single call that shows judgment, not just labor, and say <i>why</i> it mattered. The strong one here is the single-read fork \u2014 <code>readStream \u2192 PassThrough \u2192 [hash | upload]</code>. The obvious version reads the object twice or buffers it, and neither survives a 500\u00A0MB file; one read forked two ways holds memory flat at any size. That one concrete detail signals I\u2019ve felt the pain, not just drawn boxes."},
-       {l:"OWN A FAILURE",c:"risk",t:"Don\u2019t narrate a flawless system \u2014 it reads as junior. Pick the genuine hard part and own it. For this architecture it\u2019s the dual-write: two stores, no shared transaction, so a crash between the object upload and the row leaves an orphan. The senior move is to name how you <i>catch</i> it \u2014 a reconciler on a grace window, guarded by a <b>PENDING</b> marker so it never touches an in-flight upload. The failure plus the fix is the signal; tell the one you actually lived."},
-       {l:"WHAT I\u2019D CHANGE",c:"trade",t:"Hindsight is a senior signal, so volunteer it. The honest evolution: put the queue in front from day one. Per-object Lambda is simple to ship but it\u2019s the expensive, retry-poor choice at volume \u2014 SQS buys DLQs, backpressure, and ordering. The framing that lands is naming a trade I\u2019d make <i>knowingly</i>: ship the simple thing to hit the date, but know exactly the seam I\u2019d cut over at."},
-       {l:"LAND IT",c:"close",t:"Close on what it <i>does</i>, not what it is: it eats the firehose without falling over, replays are safe, and partial failures self-heal instead of paging someone at 3\u00A0a.m. Then stop \u2014 a crisp ending invites the follow-up I want, instead of trailing off into detail they didn\u2019t ask for."}
-     ] },
-   { opener:"\u201CHow would you test this pipeline?\u201D",
-     sub:"Testing an async, eventually-consistent, multi-store system is its own design problem \u2014 the senior move is testing the failure paths, not just the happy line.",
-     beats:[
-       {l:"FRAME",c:"frame",t:"Most candidates list unit tests and stop. The honest framing: this is an <i>async, multi-store, eventually-consistent</i> system, so the bugs that matter live in the failure and timing paths \u2014 I test those on purpose, not just the happy line."},
-       {l:"UNIT",c:"head",t:"The pure, deterministic logic gets exhaustive table-tests: each <b>strategy-map handler</b> in isolation, the <b>id-collision ladder</b> across every branch \u2014 REUSE / REMAP / REGEN / INSERT \u2014 and the <b>idempotency check</b>. Fast, total, and where most of the logic actually lives."},
-       {l:"THE REAL TEST",c:"risk",t:"The dual-write is the one that counts. I stand up the real stores (LocalStack or doubles), then <b>kill the process between the S3 upload and the DB row</b> and assert the <b>reconciler heals the orphan</b> inside the grace window. The failure path <i>is</i> the test \u2014 skip it and I haven\u2019t tested the part that\u2019s actually hard."},
-       {l:"ROUND-TRIP",c:"sub",t:"Export, then import into a <i>fresh</i> store and assert referential integrity: every <code>oldId\u2192newId</code> remap resolved, no dangling FK. Then a <b>schema-evolution</b> case \u2014 a file exported by the <i>old</i> format must still import, because an append-only schema is a promise I have to keep."},
-       {l:"ADVERSARIAL",c:"sub",t:"The hostile set: <b>replay the same event</b> twice and assert exactly one effect (idempotency), feed a <b>poison file</b> and assert it lands in the DLQ without taking down the worker, and run a <b>large-object load test</b> asserting memory stays flat \u2014 the backpressure claim is only true once I\u2019ve measured it."},
-       {l:"THE TELL",c:"close",t:"So: table-test the pure logic, but spend the real effort <b>injecting failures and races</b> \u2014 process kills, replays, poison inputs, schema drift. The level signal is testing the <i>eventually-consistent failure paths</i>; anyone can assert the happy path returns 200."}
-     ] },
-   { opener:"\u201CWhat would you do differently, or what are the limits of this design?\u201D",
-     sub:"Every design trades something \u2014 naming the limits you shipped on purpose, each with its fix and the trigger, reads as maturity, not weakness.",
-     beats:[
-       {l:"FRAME",c:"frame",t:"A flawless-sounding walkthrough reads as junior. So I name the limits I shipped <i>on purpose</i> \u2014 each with its principled fix and the trigger that makes me reach for it. Knowing exactly where the bodies are buried, and saying so unprompted, is the signal."},
-       {l:"THE BIGGEST GAP",c:"head",t:"The dual-write isn\u2019t atomic \u2014 two stores, no shared transaction \u2014 so the reconciler is a <i>backstop</i>, not a guarantee. The principled fix is a <b>transactional outbox</b>: commit the DB row and an outbox event in one transaction, then a relay performs the S3 work and marks the event done. Now there\u2019s a single atomic commit point, and the external write is guaranteed by the relay\u2019s retries rather than swept up after the fact. I shipped reconciler-plus-compensating-delete because the orphan window is small, self-healing, and far simpler \u2014 but the outbox is the cutover the moment correctness has to be airtight."},
-       {l:"THE KNOWING TRADE",c:"trade",t:"Per-object Lambda is the other one: the simplest thing that ships, but the expensive, retry-poor choice at volume \u2014 <b>SQS + a worker pool</b> buys DLQs, backpressure, and ordering. I frame it as a trade made <i>knowingly</i> \u2014 take the simple path to hit the date, but name the exact seam I\u2019d cut over at and the metric that trips it: sustained concurrency pinned near the account ceiling."},
-       {l:"THE SMALLER SMELLS",c:"sub",t:"Two more I\u2019d raise before they do. The <b>strategy map needs a code deploy</b> to add a file type \u2014 fine at low cardinality, but a config-driven plugin registry is the move once types proliferate. And the reconciler\u2019s <b>grace window is a tuned constant</b> \u2014 a smell; I\u2019d make it event-driven, aging a <code>PENDING</code> row off the upload\u2019s own timeout instead of babysitting a magic number."},
-       {l:"THE TELL",c:"close",t:"The level signal is naming limits as <i>knowing trades</i>, not confessions: \u201CI shipped X aware of the seam I\u2019d cut to Y, and here\u2019s what triggers it.\u201D A design\u2019s maturity is measured by how precisely you can state its own limits \u2014 vague handwaving right there is the actual tell the interviewer is listening for."}
-     ] }
-];
 /* ============ MODEL ANSWERS (logic, web component) ============
-   The #model pane: a selector strip (.msel) and a #modelBody card that
-   renderModel() fills from the global modelAnswers data (defined in answers.js,
-   included just before this file). Encapsulated in a shadow root adopting
-   BASE_SHEET; the render + selector handlers query the shadow. The base .mbeat row
-   rules are shared with the walkthrough, so they live once in MBEAT_SHEET
-   (shared-sheets.js), adopted here alongside BASE_SHEET; the .mbeat-l / .mbeat-t
-   variants stay pane-local. All colors are existing theme tokens. */
+   The #model pane, converted to the TopicPane contract (dataKey 'model'): the
+   base class attaches the shadow + adopts [BASE_SHEET, MBEAT_SHEET] + writes
+   <style>+skeleton ONCE in connectedCallback; init() caches the stable #msel and
+   #modelBody mounts and wires ONE DELEGATED .msel click listener; renderTopic(d)
+   builds the selector strip from d.selectors and fills the body from d.answers
+   (TOPIC_CP_MODEL via the registry) on first paint AND every topic switch. The
+   selector strip is COUNT-DRIVEN (one button per selector, indexed by data-i), so
+   it is rebuilt in renderTopic, not init; selectors[i] selects answers[i]
+   (parallel). renderModel() is an instance METHOD (hoisted from the old closure),
+   called by both the delegated handler and renderTopic; this._cur replaces the old
+   currentAnswer closure. The base .mbeat row rules are shared with the walkthrough,
+   so they live once in MBEAT_SHEET (shared-sheets.js), adopted here alongside
+   BASE_SHEET; the .mbeat-l / .mbeat-t variants stay pane-local. The l-<c>
+   beat-label classes are dead CSS but kept for parity. All colors are existing
+   theme tokens. Child-mounts only -- renderTopic never rewrites this._root.innerHTML. */
 var MODEL_STYLE = `
 .msel{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-bottom:16px}
 .msel button{flex:1 1 auto;min-width:150px;border:1.5px solid var(--bd);background:linear-gradient(135deg,var(--card) 0%,rgba(83,74,183,.015) 100%);color:var(--mut);font:700 12px -apple-system,sans-serif;padding:10px 12px;border-radius:10px;cursor:pointer;transition:transform .15s ease,border-color .2s ease,color .2s ease,box-shadow .2s ease,background .2s ease}
@@ -3031,49 +2978,50 @@ var MODEL_STYLE = `
 .mbeat-t{flex:1;font-size:13px;line-height:1.62;color:var(--ink)}
 .mbeat-t b{color:var(--accink);font-weight:700}
 `;
-var MODEL_HTML = `<div class="msel">
-      <button type="button" data-i="0" class="on">Make it reliable</button>
-      <button type="button" data-i="1">Make it scale</button>
-      <button type="button" data-i="2">Walk a failure</button>
-      <button type="button" data-i="3">Defend the design</button>
-      <button type="button" data-i="4">Operate it</button>
-      <button type="button" data-i="5">Cut scope</button>
-      <button type="button" data-i="6">One you built</button>
-      <button type="button" data-i="7">Test it</button>
-      <button type="button" data-i="8">Name the limits</button>
-    </div>
-    <div class="card" id="modelBody"></div>`;
-class DeepModelAnswers extends HTMLElement {
-  connectedCallback() {
-    if (this._built) return;
-    this._built = true;
-    const root = this.attachShadow({ mode: 'open' });
-    root.adoptedStyleSheets = [BASE_SHEET, MBEAT_SHEET];
-    root.innerHTML = '<style>' + MODEL_STYLE + '</style>' + MODEL_HTML;
-    const modelBody = root.querySelector('#modelBody');
-    const selectorBtns = root.querySelectorAll('.msel button');
-    let currentAnswer = 0;
-    function renderModel() {
-      const ans = modelAnswers[currentAnswer];
-      let html = '<div class="mscript-h">' + ans.opener + '</div>' +
-                 '<div class="mscript-sub">' + ans.sub + '</div>';
-      for (let i = 0; i < ans.beats.length; i++) {
-        const beat = ans.beats[i];
-        html += '<div class="mbeat"><div class="mbeat-l l-' + beat.c + '">' + beat.l +
-                '</div><div class="mbeat-t">' + beat.t + '</div></div>';
-      }
-      modelBody.innerHTML = html;
-      for (let k = 0; k < selectorBtns.length; k++) {
-        selectorBtns[k].classList.toggle('on', k === currentAnswer);
-      }
+class DeepModelAnswers extends TopicPane {
+  static dataKey = 'model';
+  sheets()    { return [BASE_SHEET, MBEAT_SHEET]; }
+  styleText() { return MODEL_STYLE; }
+  skeleton()  { return '<div class="msel" id="msel"></div><div class="card" id="modelBody"></div>'; }
+  init(root) {
+    this._msel = root.getElementById('msel');
+    this._modelBody = root.getElementById('modelBody');
+    /* ONE delegated selector listener on the stable .msel mount (the per-selector
+       buttons are rebuilt by renderTopic, so it must live on the stable parent).
+       Reads data-i, sets this._cur, re-renders -- replaces the old per-button loop. */
+    var self = this;
+    this._msel.addEventListener('click', function (e) {
+      var btn = e.target.closest('button');
+      if (!btn) return;
+      self._cur = +btn.getAttribute('data-i');
+      self.renderModel();
+    });
+  }
+  renderTopic(d) {
+    this._answers = d.answers;
+    this._cur = 0;
+    /* COUNT-DRIVEN selector strip from d.selectors (one button per selector,
+       indexed by data-i) -- built here, not init, so a topic with a different
+       selector count rebuilds cleanly. */
+    this._msel.innerHTML = d.selectors.map(function (label, i) {
+      return '<button type="button" data-i="' + i + '">' + label + '</button>';
+    }).join('');
+    this.renderModel();
+  }
+  renderModel() {
+    var ans = this._answers[this._cur];
+    var html = '<div class="mscript-h">' + ans.opener + '</div>' +
+               '<div class="mscript-sub">' + ans.sub + '</div>';
+    for (var i = 0; i < ans.beats.length; i++) {
+      var beat = ans.beats[i];
+      html += '<div class="mbeat"><div class="mbeat-l l-' + beat.c + '">' + beat.l +
+              '</div><div class="mbeat-t">' + beat.t + '</div></div>';
     }
-    for (let i = 0; i < selectorBtns.length; i++) {
-      selectorBtns[i].onclick = function () {
-        currentAnswer = +this.getAttribute('data-i');
-        renderModel();
-      };
+    this._modelBody.innerHTML = html;
+    var btns = this._msel.querySelectorAll('button');
+    for (var k = 0; k < btns.length; k++) {
+      btns[k].classList.toggle('on', k === this._cur);
     }
-    renderModel();
   }
 }
 customElements.define('deep-model-answers', DeepModelAnswers);

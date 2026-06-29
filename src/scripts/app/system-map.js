@@ -1,38 +1,16 @@
 /* ============ SYSTEM MAP (web component) ============
-   Pilot conversion: the sys pane is now a fully-encapsulated custom element.
-   Its markup, styles, and data live inside this element's shadow root; the only
-   thing in the light DOM is <deep-system-map> sitting in the #sys pane host.
-   Theming crosses the shadow boundary via inherited CSS custom properties (the
-   global --acc / --mut / --surf / ... plus the --sm-* tokens in styles.css for
-   the few hardcoded colors that flip between light and dark). Native <details>
-   provides the pivot interactivity with no script. */
-
-var SYS_STAGES = [
-  { n: 'Operator upload', d: 'content / config pushed to S3' },
-  { n: 'Content pipeline', d: 'process &middot; hash &middot; store &middot; bundle &middot; export', cur: true },
-  { n: 'Cryptographic signing', d: 'HSM signs the package; devices reject unsigned' },
-  { n: 'Desired-state reconciliation', d: 'compute per-device target, render templates, detect drift' },
-  { n: 'Deployment', d: 'push to devices in maintenance windows, batched' },
-  { n: 'Device fetch + report', d: 'device pulls, applies, reports reported_hash' }
-];
-
-var SYS_PIVOTS = [
-  { q: "The content is processed &mdash; now it must be tamper-proof on the device", chip: "\u2192 Signing (17)",
-    a: "The pipeline\'s output feeds the <b>signing</b> stage: the processed package hash goes to the HSM, which returns a signature stamped into the header. Devices verify it and reject unsigned packages. The pipeline produces the artifact; signing makes it trustable." },
-  { q: "Tenants see different content &mdash; how is that access isolated?", chip: "\u2192 Authz (18)",
-    a: "Every pipeline read/write is <b>tenant-scoped</b>: the JWT tenant claim becomes a query predicate, so processing and exports only ever touch one tenant\'s objects. Visibility and signing keys are provisioned per company &mdash; that\'s the authz topic." },
-  { q: "Per-device attributes drive what gets rendered &mdash; where do they live?", chip: "\u2192 EAV (21)",
-    a: "Custom per-device values come from the <b>EAV</b> store (definition + override, resolved by COALESCE). Those values are what the desired-state templates interpolate before hashing &mdash; the pipeline and reconciler both read them." },
-  { q: "How does a device know it has the right content, and that it applied it?", chip: "\u2192 Desired-state (22)",
-    a: "That\'s the <b>three-hash model</b>: desired (what it should have) vs deployed (what we sent) vs reported (what the device confirms). The pipeline\'s output hash becomes part of the desired hash; the reconciler closes the loop." },
-  { q: "A 10,000-row import finishes &mdash; how do operators find out?", chip: "\u2192 Notifications (20)",
-    a: "Completion fans out through the <b>dual-channel notification</b> system: an in-app row (polled) plus an optional email (SES, per-tenant sender). Decoupled, so a failed email never blocks the import\'s success path." },
-  { q: "All this runs on AWS &mdash; how is the infrastructure itself locked down?", chip: "\u2192 AWS hardening (19)",
-    a: "The pipeline\'s blast radius is an AWS-security problem: the processor runs on a <b>least-privilege execution role</b> &mdash; read one bucket prefix, write one table, nothing else &mdash; the bucket has <b>Block Public Access</b> on with <b>SSE</b> at rest, and traffic to S3 and the DB rides <b>VPC endpoints</b> so it never touches the public internet. Uploads arrive through presigned URLs scoped to one key with a short TTL. That whole hardening posture is its own topic." },
-  { q: "All this infra &mdash; S3, Lambda, the queue, the IAM roles &mdash; how is it defined and deployed repeatably?", chip: "\u2192 IaC (23)",
-    a: "Declaratively, as <b>infrastructure as code</b> &mdash; Terraform or CDK &mdash; so the bucket, functions, roles, and event wiring are versioned and reproducible instead of click-ops. And there\'s a clean parallel worth naming: <b>IaC drift detection is to infrastructure what the reconciler is to data</b> &mdash; both compare a declared desired state against reality and converge it. Drawing that symmetry is a senior move." }
-];
-
+   The #sys pane, converted to the TopicPane contract (dataKey 'sys'): the base class
+   attaches the shadow + adopts BASE_SHEET + writes <style>+skeleton ONCE in
+   connectedCallback; init() caches the six child mounts (NO listeners -- the pivots
+   are native <details>, zero script); renderTopic(d) paints the intro, the stage
+   chain, the pivots, and the three headings from data (TOPIC_CP_SYS via the registry)
+   on first paint AND every topic switch. BOTH .map builders (chain dot number i+1 +
+   the .cur "you are here" badge; pivots) moved OUT of build-once INTO renderTopic
+   because the counts are per-topic. The two .card wrappers and the .chain container
+   stay in the skeleton so zoom-diagrams (.chain) and card-spotlight (.card) keep
+   matching live via composedPath. SYS_STYLE stays in the pane as styleText(); the
+   few hardcoded light/dark colors flip via the inherited --sm-* tokens in styles.css.
+   STATELESS -- no timers, no transient state, so no teardownTopic. Offline-safe. */
 var SYS_STYLE = `
 .card + .card{margin-top:16px}
 .sm-intro{font-size:12.5px;color:var(--mut);margin-bottom:18px;line-height:1.6}
@@ -66,32 +44,52 @@ var SYS_STYLE = `
 .piv[open] summary .pq::after{content:" \\2014 bridge:";color:var(--mut2);font-weight:700}
 `;
 
-/* Build the shadow DOM once, the first time the element connects. */
-class DeepSystemMap extends HTMLElement {
-  connectedCallback() {
-    if (this._built) return;
-    this._built = true;
-    const root = this.attachShadow({ mode: 'open' });
-    root.adoptedStyleSheets = [BASE_SHEET];
-    const chain = SYS_STAGES.map(function (s, i) {
-      return '<div class="stg' + (s.cur ? ' cur' : '') + '">' +
-        '<div class="ln"></div><div class="dot">' + (i + 1) + '</div>' +
-        '<div class="body"><div class="nm">' + s.n +
-        (s.cur ? '<span class="here">you are here</span>' : '') + '</div>' +
-        '<div class="ds">' + s.d + '</div></div></div>';
-    }).join('');
-    const pivots = SYS_PIVOTS.map(function (p) {
-      return '<details class="piv"><summary><span class="pq">' + p.q +
-        '</span><span class="chip">' + p.chip + '</span></summary>' +
-        '<div class="pa">' + p.a + '</div></details>';
-    }).join('');
-    root.innerHTML = '<style>' + SYS_STYLE + '</style>' +
-      '<div class="card"><div class="step-t">Where this pipeline lives</div>' +
-      '<div class="sm-intro">The content pipeline is the <b>ingestion layer</b>. Knowing the stages on either side of it &mdash; and being able to walk the whole chain &mdash; is what turns a component answer into a system answer.</div>' +
-      '<div class="chain">' + chain + '</div></div>' +
-      '<div class="card"><div class="piv-k">Interviewer pivot points</div>' +
-      '<div class="piv-sub">The questions that bridge out of this topic. Each one leads into another deep-dive &mdash; tap to see the connecting answer.</div>' +
-      '<div class="pivs">' + pivots + '</div></div>';
+/* Module-level renderers (prefixed so they can't clash with other panes converting in
+   the same wave). They reproduce the former baked .stg / .piv markup byte-for-byte:
+   the chain dot is numbered i+1, the .cur stage gets a " you are here" badge, and the
+   pivots are native <details class="piv"> (no script). Consumed as innerHTML only. */
+function sysRenderStage(s, i) {
+  return '<div class="stg' + (s.cur ? ' cur' : '') + '">' +
+    '<div class="ln"></div><div class="dot">' + (i + 1) + '</div>' +
+    '<div class="body"><div class="nm">' + s.n +
+    (s.cur ? '<span class="here">you are here</span>' : '') + '</div>' +
+    '<div class="ds">' + s.d + '</div></div></div>';
+}
+function sysRenderPivot(p) {
+  return '<details class="piv"><summary><span class="pq">' + p.q +
+    '</span><span class="chip">' + p.chip + '</span></summary>' +
+    '<div class="pa">' + p.a + '</div></details>';
+}
+
+class DeepSystemMap extends TopicPane {
+  static dataKey = 'sys';
+  sheets()    { return [BASE_SHEET]; }
+  styleText() { return SYS_STYLE; }
+  /* INVARIANT chrome: the two .card wrappers + the .chain container (kept so zoom /
+     spotlight match live via composedPath) with EMPTY mounts (ids prefixed `sm`). */
+  skeleton()  {
+    return '<div class="card"><div class="step-t" id="smWhere"></div>' +
+      '<div class="sm-intro" id="smIntro"></div>' +
+      '<div class="chain" id="smChain"></div></div>' +
+      '<div class="card"><div class="piv-k" id="smPivK"></div>' +
+      '<div class="piv-sub" id="smPivSub"></div>' +
+      '<div class="pivs" id="smPivs"></div></div>';
+  }
+  init(root) {
+    this._where  = root.getElementById('smWhere');
+    this._intro  = root.getElementById('smIntro');
+    this._chain  = root.getElementById('smChain');
+    this._pivK   = root.getElementById('smPivK');
+    this._pivSub = root.getElementById('smPivSub');
+    this._pivs   = root.getElementById('smPivs');
+  }
+  renderTopic(d) {
+    this._where.innerHTML  = d.heads.whereHead;
+    this._intro.innerHTML  = d.intro;
+    this._chain.innerHTML  = d.stages.map(sysRenderStage).join('');
+    this._pivK.innerHTML   = d.heads.pivHead;
+    this._pivSub.innerHTML = d.heads.pivSub;
+    this._pivs.innerHTML   = d.pivots.map(sysRenderPivot).join('');
   }
 }
 customElements.define('deep-system-map', DeepSystemMap);

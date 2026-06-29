@@ -108,28 +108,18 @@
 
 <script><!--@build:include scripts/app.js--></script>
 <script>
-/* v154: Scroll progress bar + boot splash hide */
-document.addEventListener('DOMContentLoaded',function(){
-  // Hide boot splash when DOM is ready
-  if(window._hideBootSplash) window._hideBootSplash();
-  
-  // Scroll progress bar
-  var prog=document.createElement('div');
-  prog.id='scrollprog';
-  document.body.appendChild(prog);
-  function updateProg(){
-    var stage=document.querySelector('.stage');
-    if(!stage) return;
-    var sh=stage.scrollHeight,ch=stage.clientHeight;
-    if(sh<=ch){prog.style.width='0%';return;}
-    var pct=Math.min(100,Math.max(0,(stage.scrollTop/(sh-ch))*100));
-    prog.style.width=pct+'%';
+/* Boot: hide the loading splash, then start the HashRouter once every module is
+   defined. Router.init() emits the initial (possibly deep-linked) route, which
+   the ViewManager applies via switchTab(). The scroll-progress bar is now a
+   module (scripts/app/scroll-progress.js). */
+(function () {
+  function boot() {
+    if (window._hideBootSplash) window._hideBootSplash();
+    if (window.Router) window.Router.init();
   }
-  var stage=document.querySelector('.stage');
-  if(stage) stage.addEventListener('scroll',updateProg,{passive:true});
-  window.addEventListener('resize',updateProg);
-  setTimeout(updateProg,500);
-});
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
 </script>
 </body>
 </html>

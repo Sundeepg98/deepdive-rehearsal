@@ -93,28 +93,49 @@ const panes = document.querySelectorAll('.pane');
 const railEl = document.getElementById('rail');
 const railPos = { walk: 25, drill: 50, wb: 75, sys: 100 };
 var current = 'walk';
-/* Activate a pane: toggle the segmented-control buttons and the panes, slide the
-   progress rail to this tab's mark, and record it as the current pane. */
+/* Apply a view. Toggles the segmented-control buttons + rail + companion
+   synchronously (so coaching/rail update immediately), then swaps the panes --
+   through the View Transitions API when available (view-transitions.js),
+   otherwise the existing .pane.on CSS animation, which is byte-for-behavior
+   identical to before. This is the single visual applier: clicks, keyboard,
+   search and the tour all funnel here via the HashRouter (goView below). */
 function switchTab(t) {
+  var target = document.getElementById(t);
+  if (!target) return;
   for (let i = 0; i < segBtns.length; i++) segBtns[i].classList.toggle('on', segBtns[i].getAttribute('data-tab') === t);
-  for (let i = 0; i < panes.length; i++) panes[i].classList.toggle('on', panes[i].id === t);
-  railEl.style.width = railPos[t] + '%';
+  if (railEl) railEl.style.width = railPos[t] + '%';
   current = t;
+  if (window.__syncCompanion) window.__syncCompanion();
+  var swap = function () {
+    for (let i = 0; i < panes.length; i++) panes[i].classList.toggle('on', panes[i].id === t);
+  };
+  if (!target.classList.contains('on') && window.ViewTransitions && window.ViewTransitions.run) window.ViewTransitions.run(swap);
+  else swap();
+  try { window.scrollTo(0, 0); } catch (e) {}
+  var st = document.querySelector('.stage'); if (st) st.scrollTop = 0;
 }
+window.switchTab = switchTab;
+/* Intent -> Router.navigate (updates the URL hash + history) -> ViewManager ->
+   switchTab. Falls back to a direct switchTab if the router has not loaded. */
+function goView(t) { if (window.Router) window.Router.navigate(t); else switchTab(t); }
 for (let i = 0; i < segBtns.length; i++) {
-  segBtns[i].onclick = function () { switchTab(this.getAttribute('data-tab')); };
+  segBtns[i].onclick = function () { goView(this.getAttribute('data-tab')); };
 }
 /* Global keyboard shortcuts. Ignored while typing in a field, and suppressed
    whenever any overlay is open (the overlay's own handlers take over). */
 document.addEventListener('keydown', function (event) {
   const activeTag = (event.target.tagName || '').toLowerCase();
   if (activeTag === 'input' || activeTag === 'textarea') return;
+  if (window.TourGuide && window.TourGuide.isActive()) return;
+  if (window.SearchOverlay && window.SearchOverlay.isOpen && window.SearchOverlay.isOpen()) return;
   if (mockov.classList.contains('open') || cramov.classList.contains('open') || sessov.classList.contains('open') || document.getElementById('mixov').classList.contains('open') || document.getElementById('planov').classList.contains('open') || document.getElementById('scopeov').classList.contains('open') || document.getElementById('keyov').classList.contains('open')) return;
   if (event.key === '?') { event.preventDefault(); openKeys(); return; }
   const key = event.key.toLowerCase();
+  /* g starts the guided tour */
+  if (key === 'g') { if (window.TourGuide) window.TourGuide.start(); return; }
   /* q..o jump straight to a pane (the QWERTY row mirrors the tab order) */
   const tabKeys = { q: 'walk', w: 'drill', e: 'wb', r: 'sys', t: 'trade', y: 'model', u: 'num', i: 'rf', o: 'open' };
-  if (tabKeys[key]) { switchTab(tabKeys[key]); return; }
+  if (tabKeys[key]) { goView(tabKeys[key]); return; }
   if (current === 'walk') {
     /* arrows step through the walkthrough (bounds handled inside prev/next) */
     const w = document.querySelector('#walk deep-walkthrough');
@@ -233,13 +254,9 @@ document.addEventListener('keydown', function (event) {
 })();
 
 
-/* ===== v76: reset scroll to top on view switch ===== */
-(function () {
-  const navButtons = document.querySelectorAll('.sidebar .seg button');
-  for (let i = 0; i < navButtons.length; i++) {
-    navButtons[i].addEventListener('click', function () { window.scrollTo(0, 0); });
-  }
-})();
+/* ===== v76: reset scroll to top on view switch -- now handled inside
+   switchTab(), so it applies to every navigation path (click, keyboard,
+   router back/forward, search, tour), not just nav clicks. ===== */
 
 
 /* ===== v77: stage header sync ===== */
@@ -279,8 +296,10 @@ document.addEventListener('keydown', function (event) {
       if (mobileMove) mobileMove.textContent = cmpNotes[tab][2];
     }
   }
-  const navButtons = document.querySelectorAll('.sidebar .seg button');
-  for (let i = 0; i < navButtons.length; i++) navButtons[i].addEventListener('click', function () { upd(); });
+  /* switchTab() calls this on every navigation path (click, keyboard, router
+     back/forward, search, tour), so the companion stays in sync everywhere -- a
+     plain nav-click listener used to miss keyboard and routed navigation. */
+  window.__syncCompanion = upd;
   upd();
 })();
 

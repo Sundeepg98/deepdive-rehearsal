@@ -3799,28 +3799,49 @@ const panes = document.querySelectorAll('.pane');
 const railEl = document.getElementById('rail');
 const railPos = { walk: 25, drill: 50, wb: 75, sys: 100 };
 var current = 'walk';
-/* Activate a pane: toggle the segmented-control buttons and the panes, slide the
-   progress rail to this tab's mark, and record it as the current pane. */
+/* Apply a view. Toggles the segmented-control buttons + rail + companion
+   synchronously (so coaching/rail update immediately), then swaps the panes --
+   through the View Transitions API when available (view-transitions.js),
+   otherwise the existing .pane.on CSS animation, which is byte-for-behavior
+   identical to before. This is the single visual applier: clicks, keyboard,
+   search and the tour all funnel here via the HashRouter (goView below). */
 function switchTab(t) {
+  var target = document.getElementById(t);
+  if (!target) return;
   for (let i = 0; i < segBtns.length; i++) segBtns[i].classList.toggle('on', segBtns[i].getAttribute('data-tab') === t);
-  for (let i = 0; i < panes.length; i++) panes[i].classList.toggle('on', panes[i].id === t);
-  railEl.style.width = railPos[t] + '%';
+  if (railEl) railEl.style.width = railPos[t] + '%';
   current = t;
+  if (window.__syncCompanion) window.__syncCompanion();
+  var swap = function () {
+    for (let i = 0; i < panes.length; i++) panes[i].classList.toggle('on', panes[i].id === t);
+  };
+  if (!target.classList.contains('on') && window.ViewTransitions && window.ViewTransitions.run) window.ViewTransitions.run(swap);
+  else swap();
+  try { window.scrollTo(0, 0); } catch (e) {}
+  var st = document.querySelector('.stage'); if (st) st.scrollTop = 0;
 }
+window.switchTab = switchTab;
+/* Intent -> Router.navigate (updates the URL hash + history) -> ViewManager ->
+   switchTab. Falls back to a direct switchTab if the router has not loaded. */
+function goView(t) { if (window.Router) window.Router.navigate(t); else switchTab(t); }
 for (let i = 0; i < segBtns.length; i++) {
-  segBtns[i].onclick = function () { switchTab(this.getAttribute('data-tab')); };
+  segBtns[i].onclick = function () { goView(this.getAttribute('data-tab')); };
 }
 /* Global keyboard shortcuts. Ignored while typing in a field, and suppressed
    whenever any overlay is open (the overlay's own handlers take over). */
 document.addEventListener('keydown', function (event) {
   const activeTag = (event.target.tagName || '').toLowerCase();
   if (activeTag === 'input' || activeTag === 'textarea') return;
+  if (window.TourGuide && window.TourGuide.isActive()) return;
+  if (window.SearchOverlay && window.SearchOverlay.isOpen && window.SearchOverlay.isOpen()) return;
   if (mockov.classList.contains('open') || cramov.classList.contains('open') || sessov.classList.contains('open') || document.getElementById('mixov').classList.contains('open') || document.getElementById('planov').classList.contains('open') || document.getElementById('scopeov').classList.contains('open') || document.getElementById('keyov').classList.contains('open')) return;
   if (event.key === '?') { event.preventDefault(); openKeys(); return; }
   const key = event.key.toLowerCase();
+  /* g starts the guided tour */
+  if (key === 'g') { if (window.TourGuide) window.TourGuide.start(); return; }
   /* q..o jump straight to a pane (the QWERTY row mirrors the tab order) */
   const tabKeys = { q: 'walk', w: 'drill', e: 'wb', r: 'sys', t: 'trade', y: 'model', u: 'num', i: 'rf', o: 'open' };
-  if (tabKeys[key]) { switchTab(tabKeys[key]); return; }
+  if (tabKeys[key]) { goView(tabKeys[key]); return; }
   if (current === 'walk') {
     /* arrows step through the walkthrough (bounds handled inside prev/next) */
     const w = document.querySelector('#walk deep-walkthrough');
@@ -3939,13 +3960,9 @@ document.addEventListener('keydown', function (event) {
 })();
 
 
-/* ===== v76: reset scroll to top on view switch ===== */
-(function () {
-  const navButtons = document.querySelectorAll('.sidebar .seg button');
-  for (let i = 0; i < navButtons.length; i++) {
-    navButtons[i].addEventListener('click', function () { window.scrollTo(0, 0); });
-  }
-})();
+/* ===== v76: reset scroll to top on view switch -- now handled inside
+   switchTab(), so it applies to every navigation path (click, keyboard,
+   router back/forward, search, tour), not just nav clicks. ===== */
 
 
 /* ===== v77: stage header sync ===== */
@@ -3985,8 +4002,10 @@ document.addEventListener('keydown', function (event) {
       if (mobileMove) mobileMove.textContent = cmpNotes[tab][2];
     }
   }
-  const navButtons = document.querySelectorAll('.sidebar .seg button');
-  for (let i = 0; i < navButtons.length; i++) navButtons[i].addEventListener('click', function () { upd(); });
+  /* switchTab() calls this on every navigation path (click, keyboard, router
+     back/forward, search, tour), so the companion stays in sync everywhere -- a
+     plain nav-click listener used to miss keyboard and routed navigation. */
+  window.__syncCompanion = upd;
   upd();
 })();
 
@@ -4019,30 +4038,883 @@ document.addEventListener('keydown', function (event) {
   updateFades();
 })();
 
+
+/* ===== HashRouter =====
+   Hash-based SPA routing with deep-linking and back/forward support.
+   Emits routechange events for the view layer (see view-manager.js).
+   Zero dependencies, offline-safe -- works from file:// in any browser.
+
+   Route format:   #view              -> simple view switch
+                   #view/sub-state    -> view + sub-state (e.g. #drill/probe-3)
+   Invalid routes fall back to #walk. */
+
+(function () {
+  'use strict';
+
+  /* ----- route configuration: the 9 surfaces, in tab order ----- */
+  var ROUTES = {
+    walk:  { id: 'walk',  title: 'Walkthrough' },
+    drill: { id: 'drill', title: 'Probe Drill' },
+    wb:    { id: 'wb',    title: 'Whiteboard' },
+    sys:   { id: 'sys',   title: 'System Map' },
+    trade: { id: 'trade', title: 'Trade-offs' },
+    model: { id: 'model', title: 'Model Answers' },
+    num:   { id: 'num',   title: 'Numbers' },
+    rf:    { id: 'rf',    title: 'Red Flags' },
+    open:  { id: 'open',  title: '30-Second' }
+  };
+  var DEFAULT_ROUTE = 'walk';
+  var listeners = [];
+
+  /* ----- parse a hash string into a route object ----- */
+  function parseHash(hash) {
+    var raw = (hash || window.location.hash || '#' + DEFAULT_ROUTE).replace(/^#/, '');
+    var parts = raw.split('/');
+    var viewId = (parts[0] || DEFAULT_ROUTE).toLowerCase().trim();
+    if (!ROUTES[viewId]) viewId = DEFAULT_ROUTE; // guard: unknown view -> default
+    return {
+      view: viewId,
+      sub: parts.slice(1).join('/') || null,
+      route: ROUTES[viewId],
+      raw: raw
+    };
+  }
+
+  /* ----- notify subscribers + fire a DOM event ----- */
+  function emit(route) {
+    for (var i = 0; i < listeners.length; i++) {
+      try { listeners[i](route); } catch (e) {}
+    }
+    try { window.dispatchEvent(new CustomEvent('routechange', { detail: route })); } catch (e) {}
+  }
+
+  /* ----- navigate to a view (adds a history entry) ----- */
+  function navigate(viewId, sub) {
+    if (!ROUTES[viewId]) viewId = DEFAULT_ROUTE;
+    var hash = '#' + viewId + (sub ? '/' + sub : '');
+    if (window.location.hash !== hash) {
+      try { window.history.pushState({ view: viewId, sub: sub || null }, '', hash); }
+      catch (e) { window.location.hash = hash; }
+    }
+    emit(parseHash(hash));
+  }
+
+  /* ----- replace the current route (no history entry) ----- */
+  function replace(viewId, sub) {
+    if (!ROUTES[viewId]) viewId = DEFAULT_ROUTE;
+    var hash = '#' + viewId + (sub ? '/' + sub : '');
+    try { window.history.replaceState({ view: viewId, sub: sub || null }, '', hash); } catch (e) {}
+    emit(parseHash(hash));
+  }
+
+  function onHashChange() { emit(parseHash()); }
+  function onPopState() { emit(parseHash()); }
+
+  /* ----- subscribe to route changes; returns an unsubscribe fn ----- */
+  function subscribe(fn) {
+    listeners.push(fn);
+    return function () {
+      var idx = listeners.indexOf(fn);
+      if (idx > -1) listeners.splice(idx, 1);
+    };
+  }
+
+  function current() { return parseHash(); }
+
+  /* ----- bind listeners and emit the initial (possibly deep-linked) route ----- */
+  function init() {
+    window.addEventListener('hashchange', onHashChange);
+    window.addEventListener('popstate', onPopState);
+    if (!window.location.hash) {
+      try { window.history.replaceState({ view: DEFAULT_ROUTE }, '', '#' + DEFAULT_ROUTE); } catch (e) {}
+    }
+    emit(parseHash());
+  }
+
+  window.Router = {
+    ROUTES: ROUTES,
+    navigate: navigate,
+    replace: replace,
+    subscribe: subscribe,
+    current: current,
+    parse: parseHash,
+    init: init
+  };
+
+})();
+
+/* ===== ViewTransitions =====
+   A thin progressive-enhancement wrapper around a view-swap callback.
+
+   When the native View Transitions API is available (Chrome 111+) and the user
+   has not requested reduced motion, the pane swap is run inside
+   document.startViewTransition() for a smooth cross-fade. Everywhere else it
+   simply runs the callback synchronously and the existing CSS pane animation
+   (".pane.on { animation: panein }") plays exactly as before -- so the
+   no-API fallback is byte-for-behavior identical to the pre-router app.
+
+   Offline-safe: no network, storage, or permission calls. */
+
+(function () {
+  'use strict';
+
+  function prefersReducedMotion() {
+    try { return window.matchMedia('(prefers-reduced-motion:reduce)').matches; }
+    catch (e) { return false; }
+  }
+
+  /* Run `apply` (the DOM mutation that swaps the active pane). Returns nothing. */
+  function run(apply) {
+    if (typeof apply !== 'function') return;
+    if (document.startViewTransition && !prefersReducedMotion()) {
+      try { document.startViewTransition(apply); return; } catch (e) {}
+    }
+    apply();
+  }
+
+  window.ViewTransitions = { run: run };
+
+})();
+
+/* ===== ViewManager =====
+   The bridge between the HashRouter and the app's existing tab/pane system.
+
+   It does NOT own pane switching -- that stays in switchTab() (see
+   numbers-nalsd.js), which already drives the segmented control, the panes,
+   the progress rail and the companion panel. ViewManager simply subscribes to
+   route changes and asks switchTab() to apply them, then layers on the two
+   things routing makes worthwhile: a per-view document.title (so deep links and
+   bookmarks read correctly) and an ARIA live announcement (so the view change
+   is conveyed to assistive tech).
+
+   This is the "hook, not replace" seam: intent (a click, a key, search, the
+   tour) -> Router.navigate() -> here -> switchTab(). Back/forward and direct
+   deep links arrive via the router's hashchange/popstate the same way.
+
+   Offline-safe: no network, storage, or permission calls. */
+
+(function () {
+  'use strict';
+
+  var BASE_TITLE = 'Deep Rehearsal';
+  var liveRegion = null;
+  var lastView = null;
+
+  /* a visually-hidden polite live region, created lazily */
+  function announce(msg) {
+    if (!liveRegion) {
+      liveRegion = document.createElement('div');
+      liveRegion.setAttribute('aria-live', 'polite');
+      liveRegion.setAttribute('aria-atomic', 'true');
+      liveRegion.style.cssText = 'position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden';
+      document.body.appendChild(liveRegion);
+    }
+    liveRegion.textContent = '';
+    /* clear then set so repeated identical messages are still announced */
+    setTimeout(function () { liveRegion.textContent = msg; }, 30);
+  }
+
+  function applyRoute(route) {
+    if (!route || !route.view) return;
+    var view = route.view;
+    var label = route.route ? route.route.title : view;
+
+    /* drive the existing controller (idempotent if already on this view) */
+    if (typeof window.switchTab === 'function') window.switchTab(view);
+
+    document.title = label + ' \u2014 ' + BASE_TITLE;
+
+    if (view !== lastView) {
+      announce(label);
+      lastView = view;
+    }
+  }
+
+  if (window.Router) window.Router.subscribe(applyRoute);
+
+  window.ViewManager = {
+    currentView: function () { return lastView; }
+  };
+
+})();
+
+/* ===== SearchOverlay =====
+   Global search across the 9 surfaces. Trigger: Cmd+K / Ctrl+K (or the API).
+   - Matches view titles, keywords and descriptions
+   - Keyboard nav (ArrowUp/ArrowDown, Enter), Escape or click-out to close
+   - Selecting a result routes to that view via the HashRouter
+   - Theme-aware (uses the app's CSS custom properties), so it works in
+     light and dark mode
+
+   Offline-safe: no network, storage, or permission calls.
+
+   Usage:  SearchOverlay.open();  SearchOverlay.close(); */
+(function () {
+  'use strict';
+
+  var overlayEl = null, inputEl = null, resultsEl = null;
+  var isOpen = false, selectedIndex = -1, allResults = [];
+
+  /* search index: one entry per surface */
+  var MODULES = [
+    { id: 'walk',  label: 'Walkthrough',   keywords: 'mechanics structure flow interview', desc: 'Step-by-step interview flow' },
+    { id: 'drill', label: 'Probe Drill',   keywords: 'graded scoring rubric practice',      desc: 'Graded practice with scoring rubric' },
+    { id: 'wb',    label: 'Whiteboard',    keywords: 'design reconstruct architecture system', desc: 'Reconstruct the design from scratch' },
+    { id: 'sys',   label: 'System Map',    keywords: 'map diagram components services',      desc: 'Visual system architecture map' },
+    { id: 'trade', label: 'Trade-offs',    keywords: 'tradeoff comparison decision pros cons', desc: 'Compare design alternatives' },
+    { id: 'model', label: 'Model Answers', keywords: 'answer example sample solution',       desc: 'Reference model answers' },
+    { id: 'num',   label: 'Numbers',       keywords: 'metrics math estimation calculation',  desc: 'Back-of-envelope calculations' },
+    { id: 'rf',    label: 'Red Flags',     keywords: 'red flag warning mistake error',       desc: 'Common mistakes to avoid' },
+    { id: 'open',  label: '30-Second',     keywords: 'opener elevator pitch summary',        desc: '30-second elevator pitch' }
+  ];
+
+  function createElements() {
+    if (overlayEl) return;
+
+    overlayEl = document.createElement('div');
+    overlayEl.id = '_search-overlay';
+    overlayEl.setAttribute('role', 'dialog');
+    overlayEl.setAttribute('aria-modal', 'true');
+    overlayEl.setAttribute('aria-label', 'Search surfaces');
+    overlayEl.style.cssText = 'position:fixed;inset:0;z-index:1100;background:rgba(0,0,0,.35);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);opacity:0;transition:opacity .25s ease;display:none;align-items:flex-start;justify-content:center;padding-top:15vh';
+
+    var box = document.createElement('div');
+    box.style.cssText = 'width:560px;max-width:90vw;background:var(--card);border:1px solid var(--bd);border-radius:16px;box-shadow:0 24px 80px -16px rgba(0,0,0,.35);overflow:hidden;transform:scale(.96) translateY(10px);transition:transform .3s cubic-bezier(.22,.61,.36,1)';
+
+    var header = document.createElement('div');
+    header.style.cssText = 'display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--bd)';
+
+    var icon = document.createElement('span');
+    icon.textContent = '\u2318';
+    icon.style.cssText = 'font-size:16px;color:var(--mut);opacity:.7';
+
+    inputEl = document.createElement('input');
+    inputEl.type = 'text';
+    inputEl.placeholder = 'Search surfaces, topics, keywords...';
+    inputEl.setAttribute('aria-label', 'Search');
+    inputEl.style.cssText = 'flex:1;border:0;outline:0;font-size:15px;background:transparent;color:var(--ink);font-family:inherit';
+    inputEl.addEventListener('input', onInput);
+    inputEl.addEventListener('keydown', onInputKey);
+
+    var shortcut = document.createElement('kbd');
+    shortcut.textContent = 'ESC';
+    shortcut.style.cssText = 'font-size:10px;font-family:var(--mono,monospace);background:var(--bg);border:1px solid var(--bd);border-radius:4px;padding:2px 6px;color:var(--mut)';
+
+    header.appendChild(icon);
+    header.appendChild(inputEl);
+    header.appendChild(shortcut);
+
+    resultsEl = document.createElement('div');
+    resultsEl.style.cssText = 'max-height:320px;overflow-y:auto;padding:6px';
+
+    box.appendChild(header);
+    box.appendChild(resultsEl);
+    overlayEl.appendChild(box);
+    document.body.appendChild(overlayEl);
+
+    overlayEl.addEventListener('click', function (e) { if (e.target === overlayEl) close(); });
+  }
+
+  function onInput() {
+    var q = inputEl.value.trim().toLowerCase();
+    if (q.length < 1) { renderResults([]); return; }
+    var results = MODULES.filter(function (m) {
+      return m.label.toLowerCase().indexOf(q) > -1 ||
+             m.keywords.toLowerCase().indexOf(q) > -1 ||
+             m.desc.toLowerCase().indexOf(q) > -1;
+    }).map(function (m) { return { data: m }; });
+    renderResults(results);
+  }
+
+  function renderResults(results) {
+    allResults = results;
+    selectedIndex = results.length > 0 ? 0 : -1;
+    resultsEl.innerHTML = '';
+
+    if (results.length === 0) {
+      var empty = document.createElement('div');
+      empty.style.cssText = 'padding:24px;text-align:center;color:var(--mut);font-size:13px';
+      empty.textContent = inputEl.value.trim() ? 'No results found' : 'Type to search across all surfaces...';
+      resultsEl.appendChild(empty);
+      return;
+    }
+
+    results.forEach(function (r, i) {
+      var item = document.createElement('button');
+      item.type = 'button';
+      item.style.cssText = 'display:flex;flex-direction:column;align-items:flex-start;width:100%;text-align:left;padding:10px 14px;border:0;border-radius:10px;background:' + (i === 0 ? 'var(--accbg)' : 'transparent') + ';cursor:pointer;transition:background .15s ease;margin-bottom:2px;color:var(--ink)';
+      var title = document.createElement('span');
+      title.style.cssText = 'font-size:13.5px;font-weight:650;color:var(--ink)';
+      title.textContent = r.data.label;
+      var sub = document.createElement('span');
+      sub.style.cssText = 'font-size:11px;color:var(--mut);margin-top:2px';
+      sub.textContent = r.data.desc;
+      item.appendChild(title);
+      item.appendChild(sub);
+      item.addEventListener('mouseenter', function () { selectIndex(i); });
+      item.addEventListener('click', function () { navigateTo(r.data.id); });
+      resultsEl.appendChild(item);
+    });
+  }
+
+  function selectIndex(i) {
+    selectedIndex = i;
+    var items = resultsEl.querySelectorAll('button');
+    for (var k = 0; k < items.length; k++) {
+      items[k].style.background = (k === i) ? 'var(--accbg)' : 'transparent';
+    }
+  }
+
+  function onInputKey(e) {
+    if (e.key === 'ArrowDown') { e.preventDefault(); selectIndex(Math.min(selectedIndex + 1, allResults.length - 1)); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); selectIndex(Math.max(selectedIndex - 1, 0)); }
+    else if (e.key === 'Enter' && selectedIndex >= 0) { e.preventDefault(); if (allResults[selectedIndex]) navigateTo(allResults[selectedIndex].data.id); }
+    else if (e.key === 'Escape') { close(); }
+  }
+
+  function navigateTo(viewId) {
+    close();
+    if (window.Router) window.Router.navigate(viewId);
+  }
+
+  function open() {
+    if (isOpen) return;
+    createElements();
+    isOpen = true;
+    overlayEl.style.display = 'flex';
+    requestAnimationFrame(function () {
+      overlayEl.style.opacity = '1';
+      overlayEl.firstElementChild.style.transform = 'scale(1) translateY(0)';
+    });
+    inputEl.value = '';
+    inputEl.focus();
+    renderResults([]);
+  }
+
+  function close() {
+    if (!isOpen) return;
+    isOpen = false;
+    overlayEl.style.opacity = '0';
+    overlayEl.firstElementChild.style.transform = 'scale(.96) translateY(10px)';
+    setTimeout(function () { overlayEl.style.display = 'none'; }, 250);
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) { e.preventDefault(); open(); }
+    else if (e.key === 'Escape' && isOpen) { close(); }
+  });
+
+  window.SearchOverlay = { open: open, close: close, isOpen: function () { return isOpen; } };
+})();
+
+/* ===== TourGuide =====
+   Opt-in onboarding tour: a spotlight + tooltips that walk through navigation,
+   keyboard shortcuts and the key surfaces.
+
+   - Spotlight overlay (darkens everything except the highlighted element)
+   - Progress dots + step counter, Prev/Next buttons
+   - Keyboard: ArrowRight/ArrowLeft to step, Escape to dismiss
+   - Started on demand via TourGuide.start() (wired to the "g" shortcut and the
+     keyboard-shortcuts overlay). It does NOT auto-start, and dismissal is
+     remembered only for the current page session (an in-memory flag).
+
+   Offline-safe: no network, storage, or permission calls. */
+
+(function () {
+  'use strict';
+
+  var SPOTLIGHT_PADDING = 12;
+  var TOOLTIP_WIDTH = 340;
+  var dismissed = false; /* in-memory only; no storage */
+
+  var STEPS = [
+    { selector: '.hdr h1', title: 'Welcome to Deep Rehearsal', text: 'A self-contained trainer for the Content Pipeline deep-dive: 9 surfaces, all offline.', position: 'bottom' },
+    { selector: '.seg', title: 'Navigation', text: 'Switch between surfaces here, or by URL (#walk, #drill, ...). Keyboard: Q, W, E, R, T, Y, U, I, O.', position: 'bottom' },
+    { selector: '.companion', title: 'Companion', text: 'Coaching for the current surface: the move to make and the spine of a strong answer.', position: 'left' },
+    { selector: 'deep-walkthrough', title: 'Walkthrough', text: 'Step through the flow with the arrow keys or the on-screen controls.', position: 'right' },
+    { selector: '.tools-fab', title: 'Tools', text: 'Mock run on the clock, mixed fire, cram sheet, session progress and more.', position: 'top' },
+    { selector: '.seg button[data-tab="drill"]', title: 'Probe Drill', text: 'Graded follow-ups with self-assessment. Press Space to reveal, 1/2 to grade.', position: 'bottom' },
+    { selector: null, title: 'You are ready', text: 'Press Ctrl+K (or Cmd+K) to search surfaces, ? for all shortcuts, Escape to close any overlay. Good luck.', position: 'center' }
+  ];
+
+  var currentStep = -1;
+  var overlayEl = null, spotlightEl = null, tooltipEl = null;
+  var isActive = false;
+
+  function createElements() {
+    if (overlayEl) return;
+    overlayEl = document.createElement('div');
+    overlayEl.id = '_tour-overlay';
+    overlayEl.style.cssText = 'position:fixed;inset:0;z-index:1200;background:rgba(0,0,0,.55);opacity:0;transition:opacity .5s ease;pointer-events:none';
+
+    spotlightEl = document.createElement('div');
+    spotlightEl.id = '_tour-spotlight';
+    spotlightEl.style.cssText = 'position:fixed;z-index:1201;border-radius:16px;box-shadow:0 0 0 9999px rgba(0,0,0,.55),0 0 40px rgba(83,74,183,.3);transition:all .6s cubic-bezier(.22,.61,.36,1);pointer-events:none;opacity:0';
+
+    tooltipEl = document.createElement('div');
+    tooltipEl.id = '_tour-tooltip';
+    tooltipEl.setAttribute('role', 'dialog');
+    tooltipEl.setAttribute('aria-label', 'Tour step');
+    tooltipEl.style.cssText = 'position:fixed;z-index:1202;width:' + TOOLTIP_WIDTH + 'px;max-width:90vw;background:var(--card);border:1px solid var(--bd);border-radius:20px;padding:24px;box-shadow:0 20px 60px -20px rgba(0,0,0,.4);opacity:0;transform:translateY(20px) scale(.96);transition:all .5s cubic-bezier(.22,.61,.36,1);pointer-events:auto';
+
+    document.body.appendChild(overlayEl);
+    document.body.appendChild(spotlightEl);
+    document.body.appendChild(tooltipEl);
+  }
+
+  function positionSpotlight(selector) {
+    if (!selector) {
+      var cx = window.innerWidth / 2, cy = window.innerHeight / 2;
+      var size = Math.min(window.innerWidth, window.innerHeight) * 0.3;
+      spotlightEl.style.left = (cx - size / 2) + 'px';
+      spotlightEl.style.top = (cy - size / 2) + 'px';
+      spotlightEl.style.width = size + 'px';
+      spotlightEl.style.height = size + 'px';
+      spotlightEl.style.borderRadius = '50%';
+      return { x: cx, y: cy + size / 2 + 20 };
+    }
+    var el = document.querySelector(selector);
+    if (!el) return null;
+    var rect = el.getBoundingClientRect();
+    spotlightEl.style.left = (rect.left - SPOTLIGHT_PADDING) + 'px';
+    spotlightEl.style.top = (rect.top - SPOTLIGHT_PADDING) + 'px';
+    spotlightEl.style.width = (rect.width + SPOTLIGHT_PADDING * 2) + 'px';
+    spotlightEl.style.height = (rect.height + SPOTLIGHT_PADDING * 2) + 'px';
+    spotlightEl.style.borderRadius = '16px';
+    return { x: rect.left + rect.width / 2, y: rect.top + rect.height + 20, rect: rect };
+  }
+
+  function positionTooltip(pos, step) {
+    var left, top, tw = TOOLTIP_WIDTH;
+    if (step.position === 'center' || !step.selector) {
+      left = (window.innerWidth - tw) / 2; top = (window.innerHeight - 200) / 2;
+    } else if (step.position === 'top') {
+      left = Math.max(20, Math.min(window.innerWidth - tw - 20, pos.x - tw / 2)); top = Math.max(20, pos.rect.top - 220);
+    } else if (step.position === 'left') {
+      left = Math.max(20, pos.rect.left - tw - 20); top = Math.max(20, Math.min(window.innerHeight - 250, pos.y - 100));
+    } else if (step.position === 'right') {
+      left = Math.min(window.innerWidth - tw - 20, pos.rect.right + 20); top = Math.max(20, Math.min(window.innerHeight - 250, pos.y - 100));
+    } else {
+      left = Math.max(20, Math.min(window.innerWidth - tw - 20, pos.x - tw / 2)); top = Math.min(window.innerHeight - 250, pos.y);
+    }
+    tooltipEl.style.left = left + 'px';
+    tooltipEl.style.top = top + 'px';
+  }
+
+  /* tooltip content is built from the static STEPS table (no user input) */
+  function buildTooltip(step, index) {
+    var total = STEPS.length, dots = '';
+    for (var i = 0; i < total; i++) {
+      dots += '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;margin:0 4px;background:' + (i === index ? 'var(--acc)' : 'var(--bd)') + ';transition:background .3s ease"></span>';
+    }
+    tooltipEl.innerHTML =
+      '<div style="font:800 15px -apple-system,sans-serif;color:var(--ink);margin-bottom:8px;letter-spacing:-.3px">' + step.title + '</div>' +
+      '<div style="font-size:13px;color:var(--mut);line-height:1.55;margin-bottom:16px">' + step.text + '</div>' +
+      '<div style="display:flex;align-items:center;justify-content:space-between">' +
+        '<div style="display:flex;align-items:center">' + dots + '</div>' +
+        '<div style="display:flex;gap:8px">' +
+          (index > 0 ? '<button type="button" id="_tour-prev" style="background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:6px 14px;font:650 12px -apple-system,sans-serif;color:var(--mut);cursor:pointer">Prev</button>' : '') +
+          '<button type="button" id="_tour-next" style="background:linear-gradient(135deg,var(--acc) 0%,var(--acc2) 100%);border:none;border-radius:10px;padding:6px 18px;font:650 12px -apple-system,sans-serif;color:#fff;cursor:pointer;box-shadow:0 2px 8px rgba(83,74,183,.3)">' + (index < total - 1 ? 'Next' : 'Finish') + '</button>' +
+        '</div>' +
+      '</div>' +
+      '<div style="font-size:10px;color:var(--mut2);margin-top:10px;text-align:right">' + (index + 1) + ' / ' + total + '</div>';
+    var prevBtn = document.getElementById('_tour-prev'), nextBtn = document.getElementById('_tour-next');
+    if (prevBtn) prevBtn.onclick = function () { goToStep(index - 1); };
+    if (nextBtn) nextBtn.onclick = function () { if (index < total - 1) goToStep(index + 1); else destroy(); };
+  }
+
+  function goToStep(index) {
+    if (index < 0 || index >= STEPS.length) return;
+    currentStep = index;
+    var step = STEPS[index];
+    tooltipEl.style.opacity = '0';
+    tooltipEl.style.transform = 'translateY(20px) scale(.96)';
+    setTimeout(function () {
+      var pos = positionSpotlight(step.selector);
+      if (pos) positionTooltip(pos, step);
+      buildTooltip(step, index);
+      requestAnimationFrame(function () {
+        spotlightEl.style.opacity = '1';
+        tooltipEl.style.opacity = '1';
+        tooltipEl.style.transform = 'translateY(0) scale(1)';
+      });
+    }, 300);
+  }
+
+  function start() {
+    if (isActive || dismissed) return;
+    isActive = true;
+    createElements();
+    requestAnimationFrame(function () {
+      overlayEl.style.opacity = '1';
+      overlayEl.style.pointerEvents = 'auto';
+    });
+    goToStep(0);
+  }
+
+  function destroy() {
+    if (!isActive) return;
+    isActive = false;
+    dismissed = true;
+    if (spotlightEl) spotlightEl.style.opacity = '0';
+    if (tooltipEl) tooltipEl.style.opacity = '0';
+    if (overlayEl) overlayEl.style.opacity = '0';
+    setTimeout(function () { if (overlayEl) overlayEl.style.pointerEvents = 'none'; }, 500);
+    currentStep = -1;
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (!isActive) return;
+    if (e.key === 'Escape') { destroy(); return; }
+    if (e.key === 'ArrowRight') { goToStep(currentStep + 1); return; }
+    if (e.key === 'ArrowLeft') { goToStep(currentStep - 1); return; }
+  });
+
+  window.TourGuide = {
+    start: start,
+    destroy: destroy,
+    goToStep: goToStep,
+    isActive: function () { return isActive; },
+    reset: function () { dismissed = false; }
+  };
+
+})();
+
+/* ===== ScrollProgress =====
+   Drives the thin #scrollprog bar at the top of the viewport to reflect read
+   progress within the active surface. Modularizes what used to be an inline
+   script; it creates #scrollprog if it is missing (the bar's look comes from
+   the #scrollprog rule in styles.css).
+
+   Robust to layout: it measures whichever of [active pane, .stage, the
+   document] is actually the scroll container, and updates on scroll (any
+   element, rAF-throttled), resize, and route change.
+
+   Offline-safe: no network, storage, or permission calls. */
+(function () {
+  'use strict';
+
+  var bar = document.getElementById('scrollprog');
+  if (!bar) {
+    bar = document.createElement('div');
+    bar.id = 'scrollprog';
+    document.body.appendChild(bar);
+  }
+
+  var ticking = false;
+
+  /* pick the element with the most vertical overflow */
+  function scroller() {
+    var candidates = [
+      document.querySelector('.pane.on'),
+      document.querySelector('.stage'),
+      document.scrollingElement || document.documentElement
+    ];
+    var best = null, bestOverflow = 2;
+    for (var i = 0; i < candidates.length; i++) {
+      var el = candidates[i];
+      if (!el) continue;
+      var overflow = el.scrollHeight - el.clientHeight;
+      if (overflow > bestOverflow) { best = el; bestOverflow = overflow; }
+    }
+    return best;
+  }
+
+  function update() {
+    ticking = false;
+    var el = scroller();
+    if (!el) { bar.style.width = '0%'; return; }
+    var max = el.scrollHeight - el.clientHeight;
+    if (max <= 0) { bar.style.width = '0%'; return; }
+    var pct = Math.min(100, Math.max(0, (el.scrollTop / max) * 100));
+    bar.style.width = pct + '%';
+  }
+
+  function onScroll() {
+    if (!ticking) { ticking = true; requestAnimationFrame(update); }
+  }
+
+  /* capture-phase catches scroll on whichever element is the container */
+  window.addEventListener('scroll', onScroll, true);
+  window.addEventListener('resize', onScroll);
+  document.addEventListener('routechange', function () { setTimeout(update, 120); });
+
+  setTimeout(update, 200);
+})();
+
+/* ===== CopyCode =====
+   Adds a hover "Copy" button to light-DOM code blocks.
+   - Uses the synchronous document.execCommand('copy') path only, so there is
+     NO clipboard-permission prompt and nothing is requested at runtime
+     (offline-safe; the async permission-scoped clipboard API is avoided).
+   - Shows "Copied!" feedback briefly.
+
+   Note: most rehearsal content lives inside component shadow roots; this scans
+   the light DOM, so it is a no-op where there are no light-DOM code blocks.
+
+   Offline-safe: no network, storage, or permission calls. */
+(function () {
+  'use strict';
+
+  var COPY_STYLE = 'position:absolute;top:6px;right:6px;font-size:10px;font-weight:650;letter-spacing:.5px;text-transform:uppercase;padding:4px 10px;border-radius:6px;border:1px solid var(--bd);background:var(--card);color:var(--mut);cursor:pointer;opacity:0;transition:opacity .2s ease,background .2s ease;z-index:5';
+
+  function copyText(text) {
+    try {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.cssText = 'position:fixed;left:-9999px;top:0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    } catch (e) {}
+  }
+
+  function addCopyButton(block) {
+    if (block.dataset._copyBtn) return;
+    block.dataset._copyBtn = '1';
+    block.style.position = 'relative';
+
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.textContent = 'Copy';
+    btn.setAttribute('aria-label', 'Copy code');
+    btn.style.cssText = COPY_STYLE;
+
+    btn.addEventListener('click', function () {
+      copyText(block.textContent || '');
+      btn.textContent = 'Copied!';
+      btn.style.color = 'var(--teal)';
+      btn.style.borderColor = 'rgba(15,110,86,.3)';
+      setTimeout(function () {
+        btn.textContent = 'Copy';
+        btn.style.color = 'var(--mut)';
+        btn.style.borderColor = 'var(--bd)';
+      }, 2000);
+    });
+
+    block.addEventListener('mouseenter', function () { btn.style.opacity = '1'; });
+    block.addEventListener('mouseleave', function () { btn.style.opacity = '0'; });
+    block.appendChild(btn);
+  }
+
+  function scan() {
+    var blocks = document.querySelectorAll('pre, .code-block');
+    for (var i = 0; i < blocks.length; i++) {
+      if ((blocks[i].textContent || '').length > 20) addCopyButton(blocks[i]);
+    }
+  }
+
+  scan();
+  document.addEventListener('routechange', function () { setTimeout(scan, 400); });
+})();
+
+/* ===== FocusMode =====
+   Distraction-free reading: collapses the sidebar (nav + tools) and the
+   companion rail so the current surface fills the width.
+   - Toggle via a "Focus" button in the header or the F key
+   - Implemented as a single class on .app plus an injected stylesheet, so it
+     reverts cleanly (no inline-style bookkeeping)
+   - Off by default; never affects the initial layout
+
+   Offline-safe: no network, storage, or permission calls. */
+(function () {
+  'use strict';
+
+  var isFocused = false;
+  var btnEl = null;
+
+  function injectStyle() {
+    if (document.getElementById('_focus-style')) return;
+    var st = document.createElement('style');
+    st.id = '_focus-style';
+    st.textContent =
+      '.app._focus-mode .sidebar,.app._focus-mode .companion{opacity:0;visibility:hidden;width:0;min-width:0;padding:0;margin:0;border:0;overflow:hidden;transition:opacity .3s ease,width .3s ease}' +
+      '@media(prefers-reduced-motion:reduce){.app._focus-mode .sidebar,.app._focus-mode .companion{transition:none}}';
+    document.head.appendChild(st);
+  }
+
+  function createButton() {
+    if (btnEl) return;
+    var hdr = document.querySelector('.hdr');
+    if (!hdr) return;
+    btnEl = document.createElement('button');
+    btnEl.type = 'button';
+    btnEl.id = '_focus-toggle';
+    btnEl.setAttribute('aria-label', 'Toggle focus mode');
+    btnEl.setAttribute('aria-pressed', 'false');
+    btnEl.textContent = 'Focus';
+    btnEl.style.cssText = 'display:inline-block;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--mut);background:var(--accbg);border:1px solid rgba(83,74,183,.12);padding:4px 12px;border-radius:8px;cursor:pointer;margin-top:10px;transition:all .2s ease';
+    btnEl.addEventListener('click', toggle);
+    hdr.appendChild(btnEl);
+  }
+
+  function toggle() {
+    var app = document.querySelector('.app');
+    if (!app) return;
+    injectStyle();
+    isFocused = !isFocused;
+    app.classList.toggle('_focus-mode', isFocused);
+    if (btnEl) {
+      btnEl.textContent = isFocused ? 'Exit focus' : 'Focus';
+      btnEl.style.color = isFocused ? 'var(--acc)' : 'var(--mut)';
+      btnEl.setAttribute('aria-pressed', isFocused ? 'true' : 'false');
+    }
+  }
+
+  /* F toggles focus mode, unless typing or the search overlay is open */
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'f' && e.key !== 'F') return;
+    var tag = (e.target && e.target.tagName || '').toLowerCase();
+    if (tag === 'input' || tag === 'textarea') return;
+    if (window.SearchOverlay && window.SearchOverlay.isOpen && window.SearchOverlay.isOpen()) return;
+    e.preventDefault();
+    toggle();
+  });
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', createButton);
+  } else {
+    createButton();
+  }
+
+  window.FocusMode = { toggle: toggle, isFocused: function () { return isFocused; } };
+})();
+
+/* ===== SessionTimer =====
+   A countdown timer for timed mock sessions, shown in the header.
+   - Counts down with a status dot that shifts green -> amber -> red
+   - Pulses when time is critical; shows "Time!" when it hits zero
+   - Driven by the API: SessionTimer.start(minutes) / SessionTimer.stop(), and
+     it also listens for a "mockrunstart" event if the app chooses to dispatch
+     one. (The mock-run overlay already has its own elapsed clock, so this is
+     left opt-in rather than auto-attached -- see the integration notes.)
+
+   Offline-safe: no network, storage, or permission calls. */
+(function () {
+  'use strict';
+
+  var timerEl = null, interval = null, secondsLeft = 0, totalSeconds = 0;
+
+  var COLORS = {
+    teal:  { v: 'var(--teal)',  sh: 'rgba(15,110,86,.35)' },
+    amber: { v: 'var(--amber)', sh: 'rgba(154,91,11,.35)' },
+    red:   { v: 'var(--red)',   sh: 'rgba(163,45,45,.35)' }
+  };
+
+  function formatTime(s) {
+    var m = Math.floor(s / 60), sec = s % 60;
+    return m + ':' + (sec < 10 ? '0' : '') + sec;
+  }
+
+  function tone() {
+    var ratio = totalSeconds ? secondsLeft / totalSeconds : 0;
+    if (ratio > 0.5) return COLORS.teal;
+    if (ratio > 0.2) return COLORS.amber;
+    return COLORS.red;
+  }
+
+  function create() {
+    if (timerEl) return;
+    var hdr = document.querySelector('.hdr');
+    if (!hdr) return;
+
+    timerEl = document.createElement('div');
+    timerEl.id = '_session-timer';
+    timerEl.style.cssText = 'display:none;align-items:center;gap:8px;margin-top:10px;padding:5px 12px;background:var(--accbg);border:1px solid rgba(15,110,86,.15);border-radius:10px;font-family:var(--mono,monospace);font-size:14px;font-weight:700;color:var(--teal)';
+
+    var ring = document.createElement('span');
+    ring.id = '_timer-ring';
+    ring.style.cssText = 'display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--teal);box-shadow:0 0 6px rgba(15,110,86,.3)';
+
+    var text = document.createElement('span');
+    text.id = '_timer-text';
+    text.textContent = '15:00';
+
+    var stopBtn = document.createElement('button');
+    stopBtn.type = 'button';
+    stopBtn.textContent = 'x';
+    stopBtn.setAttribute('aria-label', 'Stop timer');
+    stopBtn.style.cssText = 'width:18px;height:18px;border-radius:50%;border:0;background:rgba(0,0,0,.08);color:var(--mut);font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-left:4px';
+    stopBtn.addEventListener('click', stop);
+
+    timerEl.appendChild(ring);
+    timerEl.appendChild(text);
+    timerEl.appendChild(stopBtn);
+    hdr.appendChild(timerEl);
+
+    if (!document.getElementById('_timer-keyframes')) {
+      var style = document.createElement('style');
+      style.id = '_timer-keyframes';
+      style.textContent = '@keyframes timerPulse{0%,100%{box-shadow:0 0 6px rgba(163,45,45,.3)}50%{box-shadow:0 0 12px rgba(163,45,45,.5),0 0 20px rgba(163,45,45,.2)}}';
+      document.head.appendChild(style);
+    }
+  }
+
+  function start(minutes) {
+    stop();
+    create();
+    if (!timerEl) return;
+    totalSeconds = Math.max(1, Math.round((minutes || 15) * 60));
+    secondsLeft = totalSeconds;
+    timerEl.style.display = 'flex';
+    render();
+    interval = setInterval(tick, 1000);
+  }
+
+  function tick() {
+    secondsLeft--;
+    if (secondsLeft <= 0) {
+      var txt = timerEl && timerEl.querySelector('#_timer-text');
+      if (txt) { txt.textContent = 'Time!'; }
+      if (timerEl) timerEl.style.color = 'var(--red)';
+      clearInterval(interval); interval = null;
+      setTimeout(stop, 2500);
+      return;
+    }
+    render();
+  }
+
+  function render() {
+    if (!timerEl) return;
+    var txt = timerEl.querySelector('#_timer-text');
+    var ring = timerEl.querySelector('#_timer-ring');
+    if (txt) txt.textContent = formatTime(secondsLeft);
+    if (ring) {
+      var c = tone();
+      ring.style.background = c.v;
+      ring.style.boxShadow = '0 0 6px ' + c.sh;
+      ring.style.animation = (secondsLeft / totalSeconds < 0.2) ? 'timerPulse 1s ease-in-out infinite' : '';
+    }
+  }
+
+  function stop() {
+    if (interval) { clearInterval(interval); interval = null; }
+    if (timerEl) { timerEl.style.display = 'none'; timerEl.style.color = 'var(--teal)'; }
+    secondsLeft = 0;
+  }
+
+  document.addEventListener('mockrunstart', function (e) {
+    var mins = (e && e.detail && e.detail.minutes) ? e.detail.minutes : 15;
+    start(mins);
+  });
+
+  window.SessionTimer = { start: start, stop: stop };
+})();
 </script>
 <script>
-/* v154: Scroll progress bar + boot splash hide */
-document.addEventListener('DOMContentLoaded',function(){
-  // Hide boot splash when DOM is ready
-  if(window._hideBootSplash) window._hideBootSplash();
-  
-  // Scroll progress bar
-  var prog=document.createElement('div');
-  prog.id='scrollprog';
-  document.body.appendChild(prog);
-  function updateProg(){
-    var stage=document.querySelector('.stage');
-    if(!stage) return;
-    var sh=stage.scrollHeight,ch=stage.clientHeight;
-    if(sh<=ch){prog.style.width='0%';return;}
-    var pct=Math.min(100,Math.max(0,(stage.scrollTop/(sh-ch))*100));
-    prog.style.width=pct+'%';
+/* Boot: hide the loading splash, then start the HashRouter once every module is
+   defined. Router.init() emits the initial (possibly deep-linked) route, which
+   the ViewManager applies via switchTab(). The scroll-progress bar is now a
+   module (scripts/app/scroll-progress.js). */
+(function () {
+  function boot() {
+    if (window._hideBootSplash) window._hideBootSplash();
+    if (window.Router) window.Router.init();
   }
-  var stage=document.querySelector('.stage');
-  if(stage) stage.addEventListener('scroll',updateProg,{passive:true});
-  window.addEventListener('resize',updateProg);
-  setTimeout(updateProg,500);
-});
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
 </script>
 </body>
 </html>

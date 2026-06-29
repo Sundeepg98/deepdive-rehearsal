@@ -18,3 +18,12 @@
 <!--@build:include scripts/app/system-map.js-->
 <!--@build:include scripts/app/model-answers.js-->
 <!--@build:include scripts/app/numbers-nalsd.js-->
+<!--@build:include scripts/app/router.js-->
+<!--@build:include scripts/app/view-transitions.js-->
+<!--@build:include scripts/app/view-manager.js-->
+<!--@build:include scripts/app/search-overlay.js-->
+<!--@build:include scripts/app/tour-guide.js-->
+<!--@build:include scripts/app/scroll-progress.js-->
+<!--@build:include scripts/app/copy-code.js-->
+<!--@build:include scripts/app/focus-mode.js-->
+<!--@build:include scripts/app/session-timer.js-->

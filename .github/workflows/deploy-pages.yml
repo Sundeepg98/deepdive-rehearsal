@@ -1,0 +1,62 @@
+name: Deploy to GitHub Pages (gated on THE GATE)
+
+# Auto-redeploy the single-file trainer to the gh-pages branch, but ONLY when the
+# full correctness gate (test/check_all.py) passes on master. This closes the gap
+# that let the live site drift to an unverified snapshot: no green gate => no deploy.
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch: {}
+
+# GITHUB_TOKEN needs write access to push the built HTML to the gh-pages branch.
+permissions:
+  contents: write
+
+# Never let two deploys race; let an in-flight deploy finish.
+concurrency:
+  group: gh-pages-deploy
+  cancel-in-progress: false
+
+jobs:
+  gate-then-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      # check_all.py runs `node --check` (syntax_check) and probes for Playwright,
+      # so Node must be present or the gate errors out. The browser render/entity
+      # checks auto-skip when Playwright/Chrome are absent, keeping CI green.
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: THE GATE -- hard gate, deploy only if this passes
+        run: python test/check_all.py
+
+      - name: Build the deliverable from src/
+        run: python build.py
+
+      - name: Assemble served paths (root file + docs/index.html, byte-identical)
+        run: |
+          rm -rf _site
+          mkdir -p _site/docs
+          cp deepdive_content_pipeline_rehearsal.html _site/deepdive_content_pipeline_rehearsal.html
+          cp deepdive_content_pipeline_rehearsal.html _site/docs/index.html
+
+      - name: Publish to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./_site
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: 'Deploy ${{ github.sha }} to gh-pages (gate-green)'

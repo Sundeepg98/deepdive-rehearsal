@@ -1,28 +1,11 @@
 /* ============ WHITEBOARD (web component) ============
-   Reconstruct-from-blank recall: nine self-graded cues + a verdict + the
-   assembled-diagram disclosure. Encapsulated in a shadow root adopting
-   BASE_SHEET. Coupled to session-progress, which now drives it through a public
-   API instead of reaching for the old globals:
-     resetAll()      reset every cue to ungraded
-     rerunMissed()   reset just the missed cues and scroll to the first ungraded
-     getStats()      { total, items:[{got, missed, cue}] } (cue is the raw string)
-   Eight colors had html[data-theme=dark] overrides (disc bg/body, wb-foot bg/fg,
-   wb li border, verdict ok / ok-bold / warn); each is a flip token, since
-   ancestor selectors cannot cross the shadow boundary. The diagram (.dgm-*) uses
-   only auto-flipping tokens. #wbrerun and the diagram (.dgm-*) styles live in
-   WB_STYLE; the details.disc disclosure family, shared with the walkthrough,
-   lives once in DISC_SHEET (shared-sheets.js), adopted alongside BASE_SHEET. */
-var WB_STEPS = [
-  {c:'Entry box &mdash; the handler signature and what fires it.', a:'<code>processUpload(key, bucket)</code> &mdash; the Lambda / API handler, triggered by the S3 <b>ObjectCreated</b> event.'},
-  {c:'Routing &mdash; how a file type picks its handler.', a:'<code>extname(key)</code> &rarr; the <code>strategies</code> map (jpg, mp4, ttf, bin, zip&hellip;). An <b>O(1) lookup</b>, never a switch.'},
-  {c:'The branch for an unrecognized type.', a:'unknown ext &rarr; <code>skip</code> (a logged no-op); a match &rarr; the format handler.'},
-  {c:'Inside a handler &mdash; the single-read data flow.', a:'<code>readStream &rarr; PassThrough &rarr; [hash | s3.upload] &rarr; Promise.all</code>. <b>One disk read</b>, forked two ways.'},
-  {c:'The export path, and its memory property.', a:'<code>cursor(batch 100) &rarr; csv &rarr; res</code>, the backpressure loop drawn back from socket to cursor &mdash; <b>constant memory</b> at any row count.'},
-  {c:'The import path &mdash; the id-collision algorithm.', a:'The 4-tier ladder &mdash; <b>REUSE / REMAP / REGEN / INSERT</b> &mdash; plus the <code>oldId&rarr;newId</code> FK remap applied before each child insert.'},
-  {c:'The dual-write caveat, and its fix.', a:'Two stores, no shared txn &rarr; track the S3 keys, <b>compensating-delete</b> on rollback. (The one people forget.)'},
-  {c:'The backstop for orphans &mdash; and its one guard.', a:'A <b>reconciler</b> sweeps S3 for keys with no DB row &rarr; delete &mdash; but only past a grace window / <b>PENDING</b> marker, so it never touches an in-flight upload.'},
-  {c:'How a redelivered event avoids double work.', a:'At-least-once delivery &rarr; a <b>processed-marker</b> (conditional put on the content hash). A replay sees it and no-ops &mdash; the effect is idempotent.'}
-];
+   Reconstruct-from-blank recall: self-graded cues + verdict + the assembled-diagram
+   disclosure. Phase 1: converted to the TopicPane contract -- the cues / diagram / foot /
+   sub and the OK-verdict are now data (topics/content-pipeline/wb.js), rendered into child
+   mounts; the 27 per-item closures collapse to ONE delegated #wblist listener (native
+   disabled-button gating). Public API resetAll() / rerunMissed() / getStats() unchanged
+   (session-progress drives it). sheets()=[BASE_SHEET,DISC_SHEET]; the disc family lives in
+   DISC_SHEET. Offline-safe. */
 var WB_STYLE = `
 .dgm{display:flex;flex-direction:column;align-items:center;gap:0;padding:4px 0 6px}
 .dgm-node{background:var(--accbg);border:1.5px solid var(--acc2);border-radius:9px;padding:8px 14px;text-align:center;max-width:290px;width:100%;box-sizing:border-box}
@@ -93,79 +76,78 @@ var WB_STYLE = `
 var WB_HTML = `<div class="card">
       <div class="step-k">Reconstruct from blank</div>
       <div class="step-t">What you draw, in order</div>
-      <div class="step-sub">For each cue, draw it from memory first &mdash; then reveal to check. Produce all nine cold and you can run this system on a whiteboard.</div>
-      <div class="wb-count" id="wbcount">0 recalled &middot; 0 missed &middot; 9 left</div>
+      <div class="step-sub"></div>
+      <div class="wb-count" id="wbcount"></div>
       <ol class="wb" id="wblist"></ol>
       <div class="wb-verdict" id="wbverdict"></div>
-      <div class="wb-foot"><b>The one people forget:</b> step 7. Two stores, no shared transaction &mdash; if you don't volunteer the compensating S3 delete, the interviewer knows you've only read about this, not shipped it.</div>
+      <div class="wb-foot"></div>
     </div>
     <details class="disc">
       <summary>The assembled diagram &mdash; what you draw on the board</summary>
       <div class="body">
-        <div class="dgm">
-          <div class="dgm-node"><div class="dgm-t">operator &rarr; S3 bucket</div><div class="dgm-s">the upload lands as an object</div></div>
-          <div class="dgm-conn"><span class="dgm-v">&#9660;</span><span class="dgm-lbl">S3 <code>ObjectCreated</code> event</span></div>
-          <div class="dgm-node"><div class="dgm-t"><code>processUpload(key, bucket)</code></div><div class="dgm-s">Lambda / handler entry</div></div>
-          <div class="dgm-conn"><span class="dgm-v">&#9660;</span><span class="dgm-lbl"><code>extname</code> &rarr; strategies map &middot; O(1)</span></div>
-          <div class="dgm-node"><div class="dgm-t">format handler</div><div class="dgm-s">jpg &middot; mp4 &middot; ttf &middot; bin &mdash; unknown ext &rarr; <i>skip</i></div></div>
-          <div class="dgm-conn"><span class="dgm-v">&#9660;</span><span class="dgm-lbl"><code>readStream</code></span></div>
-          <div class="dgm-node dgm-fork"><div class="dgm-t">PassThrough &middot; <span class="dgm-em">one read</span></div><div class="dgm-branches"><span class="dgm-br">&rarr; hash</span><span class="dgm-br">&rarr; s3.upload</span></div><div class="dgm-s"><code>Promise.all</code> &mdash; forked, single read</div></div>
-          <div class="dgm-conn"><span class="dgm-v">&#9660;</span><span class="dgm-lbl">persist across two stores</span></div>
-          <div class="dgm-stores"><div class="dgm-node dgm-store"><div class="dgm-t">DB record</div><div class="dgm-s">catalog row</div></div><div class="dgm-link">&harr;</div><div class="dgm-node dgm-store"><div class="dgm-t">S3 blob</div><div class="dgm-s">object bytes</div></div></div>
-          <div class="dgm-note">no shared transaction &rarr; track keys + <b>compensating-delete</b> on rollback</div>
-          <div class="dgm-conn dgm-up"><span class="dgm-v">&#9650;</span><span class="dgm-lbl">backstops the two stores</span></div>
-          <div class="dgm-node dgm-recon"><div class="dgm-t">reconciler</div><div class="dgm-s">sweeps orphans past a grace window / <b>PENDING</b> marker &mdash; never touches an in-flight upload</div></div>
-          <div class="dgm-foot">redelivered event &rarr; <b>processed-marker</b> (conditional put) &rarr; replay no-ops &middot; idempotent</div>
-        </div>
+        <div class="dgm"></div>
       </div>
     </details>`;
 
-class DeepWhiteboard extends HTMLElement {
-  connectedCallback() {
-    if (this._built) return;
-    this._built = true;
-    const root = this.attachShadow({ mode: 'open' });
-    root.adoptedStyleSheets = [BASE_SHEET, DISC_SHEET];
-    root.innerHTML = '<style>' + WB_STYLE + '</style>' + WB_HTML;
+class DeepWhiteboard extends TopicPane {
+  static dataKey = 'wb';
+  sheets()    { return [BASE_SHEET, DISC_SHEET]; }
+  styleText() { return WB_STYLE; }
+  skeleton()  { return WB_HTML; }
+  init(root) {
     this._list = root.getElementById('wblist');
     this._count = root.getElementById('wbcount');
     this._verdict = root.getElementById('wbverdict');
-    const self = this;
-    WB_STEPS.forEach(function (step, i) {
-      const item = document.createElement('li');
-      item.innerHTML = '<div class="wb-cue"><span class="num"></span><span class="wb-ct">' + step.c + '</span></div>' +
+    this._sub = root.querySelector('.step-sub');
+    this._foot = root.querySelector('.wb-foot');
+    this._dgm = root.querySelector('.dgm');
+    var self = this;
+    /* ONE delegated listener on the stable #wblist replaces 27 per-item closures;
+       disabled Drew-it / Missed buttons emit no click (native gating), so no guard. */
+    this._list.addEventListener('click', function (e) {
+      var btn = e.target.closest('button');
+      if (!btn) return;
+      var li = btn.closest('li');
+      if (!li) return;
+      if (btn.classList.contains('wb-rev')) {
+        li.querySelector('.wb-ans').classList.add('show');
+        btn.disabled = true;
+        btn.textContent = 'Revealed';
+        li.querySelector('.wb-got').disabled = false;
+        li.querySelector('.wb-miss').disabled = false;
+      } else if (btn.classList.contains('wb-got')) {
+        li.classList.add('got'); li.classList.remove('missed'); self._updCount();
+      } else if (btn.classList.contains('wb-miss')) {
+        li.classList.add('missed'); li.classList.remove('got'); self._updCount();
+      }
+    });
+  }
+  renderTopic(d) {
+    this._steps = d.steps;
+    this._okVerdict = d.okVerdict;
+    this._sub.innerHTML = d.sub;
+    this._foot.innerHTML = d.foot;
+    this._dgm.innerHTML = d.diagram;
+    this._list.innerHTML = d.steps.map(function (step) {
+      return '<li><div class="wb-cue"><span class="num"></span><span class="wb-ct">' + step.c + '</span></div>' +
         '<div class="wb-ans">' + step.a + '</div>' +
         '<div class="wb-act"><button class="wb-rev" type="button">Reveal</button>' +
         '<button class="wb-got" type="button" disabled>Drew it</button>' +
-        '<button class="wb-miss" type="button" disabled>Missed</button></div>';
-      const answer = item.querySelector('.wb-ans');
-      const revealBtn = item.querySelector('.wb-rev');
-      const gotBtn = item.querySelector('.wb-got');
-      const missBtn = item.querySelector('.wb-miss');
-      revealBtn.onclick = function () {
-        answer.classList.add('show');
-        revealBtn.disabled = true;
-        revealBtn.textContent = 'Revealed';
-        gotBtn.disabled = false;
-        missBtn.disabled = false;
-      };
-      gotBtn.onclick = function () { item.classList.add('got'); item.classList.remove('missed'); self._updCount(); };
-      missBtn.onclick = function () { item.classList.add('missed'); item.classList.remove('got'); self._updCount(); };
-      self._list.appendChild(item);
-    });
+        '<button class="wb-miss" type="button" disabled>Missed</button></div></li>';
+    }).join('');
     this._updCount();
   }
   _updCount() {
     const recalled = this._list.querySelectorAll('li.got').length;
     const missed = this._list.querySelectorAll('li.missed').length;
-    const total = WB_STEPS.length;
+    const total = this._steps.length;
     const graded = recalled + missed;
     this._count.textContent = recalled + ' recalled \u00b7 ' + missed + ' missed \u00b7 ' + (total - graded) + ' left';
     if (graded < total) { this._verdict.style.display = 'none'; return; }
     this._verdict.style.display = 'block';
     if (missed === 0) {
       this._verdict.className = 'wb-verdict ok';
-      this._verdict.innerHTML = '<b>All nine cold.</b> You can rebuild this system on a whiteboard from memory \u2014 the design round is yours to lose, not to pass.';
+      this._verdict.innerHTML = this._okVerdict;
     } else {
       this._verdict.className = 'wb-verdict warn';
       this._verdict.innerHTML = '<b>' + recalled + ' / ' + total + ' recalled.</b> ' + missed + ' still soft \u2014 drill just those until they\u2019re automatic.<button id="wbrerun" type="button">Reset the ' + missed + ' miss' + (missed > 1 ? 'es' : '') + '</button>';
@@ -199,8 +181,8 @@ class DeepWhiteboard extends HTMLElement {
   getStats() {
     const items = this._list.querySelectorAll('li');
     return {
-      total: WB_STEPS.length,
-      items: WB_STEPS.map(function (s, i) {
+      total: this._steps.length,
+      items: this._steps.map(function (s, i) {
         const li = items[i];
         return { got: !!(li && li.classList.contains('got')), missed: !!(li && li.classList.contains('missed')), cue: s.c };
       })

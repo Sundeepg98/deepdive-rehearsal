@@ -349,6 +349,75 @@ button,summary{-webkit-user-select:none;user-select:none}
 /* v111 micro-polish: drop the default mobile tap-flash (the gray box doesn't match the rounded controls); every control already has custom feedback - selection state, result change, or a press-state. The tool-opener rows only get a (delayed) overlay, so give them an in-place press. */
 .crambtn:active{transform:translateY(1px)}
 *{-webkit-tap-highlight-color:transparent}
+
+/* ============ v112: companion content styles ============
+   The .cmp-* inner styles previously lived only inside the <deep-session>
+   shadow stylesheet, so the desktop companion rail (.companion) and the
+   mobile companion (.mcomp), which both live in the LIGHT DOM, rendered as
+   unstyled raw text. They belong here (light-DOM styling = styles.css) -
+   the project separates styles by DOM boundary, not by file type.
+   Elevated (v113): an eyebrow chip, a gradient-tinted topic, a connected
+   "spine" thread with ringed beads, and a dimensional key-move callout with
+   a quotation index. Every colour is an existing theme token, so light and
+   dark are both first-class. */
+.cmp-inner{padding:34px 26px 40px;display:flex;flex-direction:column}
+.cmp-block{padding:24px 0}
+.cmp-block.cmp-top{padding-top:0}
+.cmp-block+.cmp-block{border-top:1px solid var(--bd)}
+.cmp-eyebrow{display:inline-flex;align-items:center;gap:7px;align-self:flex-start;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);background:var(--accbg);border:1px solid var(--bd);padding:4px 10px 4px 9px;border-radius:999px}
+.cmp-eyebrow::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 3px color-mix(in srgb,var(--acc) 18%,transparent)}
+.cmp-topic{font-family:var(--display);font-size:23px;font-weight:600;line-height:1.07;letter-spacing:-.014em;color:var(--ink);margin-top:13px}
+.cmp-thesis{margin:13px 0 0;font-size:12.5px;line-height:1.62;color:var(--mut2)}
+.cmp-thesis::before{content:"";display:block;width:26px;height:2px;border-radius:2px;margin-bottom:11px;background:linear-gradient(90deg,var(--acc),var(--acc2))}
+.cmp-h{font-size:9.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);margin:0 0 11px}
+.cmp-view{font-size:14.5px;font-weight:750;color:var(--ink);margin-bottom:6px}
+.cmp-note{margin:0;font-size:12.5px;line-height:1.6;color:var(--mut2)}
+.cmp-spine{position:relative;list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:13px}
+.cmp-spine::before{content:"";position:absolute;left:2.25px;top:9px;bottom:9px;width:1.5px;border-radius:2px;background:linear-gradient(180deg,var(--acc),var(--acc2));opacity:.32}
+.cmp-spine li{position:relative;display:flex;gap:12px;font-size:12.5px;line-height:1.5;color:var(--ink)}
+.cmp-dot{position:relative;z-index:1;flex:none;width:7px;height:7px;border-radius:50%;margin-top:5.5px;background:linear-gradient(135deg,var(--acc),var(--acc2));box-shadow:0 0 0 4px var(--accbg)}
+.cmp-spine b{color:var(--accink);font-weight:750}
+.cmp-spine i{font-style:italic}
+.cmp-drive{margin:0;font-size:12px;line-height:1.65;color:var(--mut2)}
+.cmp-drive b{color:var(--ink);font-weight:700}
+.cmp-kbd{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;font-family:inherit;font-size:11px;font-weight:700;color:var(--ink);background:var(--card);border:1px solid var(--bd);border-bottom-width:2px;border-radius:5px;vertical-align:middle}
+.cmp-move{position:relative;overflow:hidden;font-size:12.5px;line-height:1.55;color:var(--ink);font-weight:500;margin:0;padding:13px 15px 13px 16px;background:linear-gradient(135deg,var(--accbg),color-mix(in srgb,var(--accbg) 55%,var(--card)));border:1px solid var(--bd);border-left:2.5px solid var(--acc);border-radius:0 12px 12px 0;box-shadow:0 1px 2px rgba(40,34,28,.04),0 10px 22px -18px rgba(40,34,28,.28)}
+.cmp-move::before{content:"\201C";position:absolute;top:-10px;right:10px;font-family:var(--display);font-size:48px;line-height:1;color:var(--acc);opacity:.14}
+.cmp-move b{color:var(--accink);font-weight:750}
+/* desktop rail: frame the inner column as a panel with a masthead-matching top accent */
+@media(min-width:1280px){
+  .companion{box-shadow:-9px 0 22px -16px rgba(0,0,0,.12)}
+  .cmp-inner{position:relative}
+  .cmp-inner::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,var(--acc),var(--acc2));opacity:.55}
+}
+
+/* ============ v114: shell glow-up ============
+   A coordinated, token-only polish pass over the light-DOM chrome (the frame
+   around the shadow-DOM content). All colours are theme tokens, so dark mode
+   tracks automatically. Active-nav changes are desktop-scoped so the mobile
+   nav strip's bottom indicator is untouched; hover lifts are gated to pointer
+   devices so taps never stick. */
+
+/* top progress bar: a soft accent glow + a leading-edge cap so it reads as live */
+.rail .fill{position:relative;box-shadow:0 0 10px -1px color-mix(in srgb,var(--acc) 60%,transparent)}
+.rail .fill::after{content:"";position:absolute;right:0;top:-1px;bottom:-1px;width:2px;border-radius:2px;background:var(--acc2);box-shadow:0 0 8px 1px var(--acc2)}
+
+/* brand wordmark: tighter optical rhythm */
+.side-id h1{letter-spacing:-.5px}
+
+/* desktop sidebar nav: the active view becomes a lit, current destination */
+@media(min-width:920px){
+  .sidebar .seg button{position:relative;overflow:hidden;transition:background-color .16s ease,box-shadow .16s ease,transform .16s ease}
+  .sidebar .seg button::before{content:"";position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:0;border-radius:0 3px 3px 0;background:linear-gradient(180deg,var(--acc),var(--acc2));transition:height .2s cubic-bezier(.22,.61,.36,1)}
+  .sidebar .seg button.on{background:linear-gradient(100deg,var(--accbg),color-mix(in srgb,var(--accbg) 45%,transparent));box-shadow:0 5px 16px -5px color-mix(in srgb,var(--acc) 30%,transparent)}
+  .sidebar .seg button.on::before{height:64%}
+  .sidebar .seg button:not(.on):hover{transform:translateX(2px)}
+}
+
+/* pointer-only hover lifts on the tool-opener rows + primary mock CTA */
+@media(hover:hover){
+  .crambtn:not(.cram-tog):hover{transform:translateY(-1px);box-shadow:0 8px 20px -9px color-mix(in srgb,var(--acc) 45%,transparent)}
+}
 </style>
 <script>try{var _dk=matchMedia('(prefers-color-scheme:dark)').matches;document.documentElement.dataset.theme=_dk?'dark':'light';var _tc=document.querySelector('meta[name="theme-color"]');if(_tc)_tc.setAttribute('content',_dk?'#15141A':'#FAF9F5');}catch(e){}</script>
 </head>
@@ -549,8 +618,10 @@ BASE_SHEET.replaceSync(`
 *{margin:0;padding:0;box-sizing:border-box}
 code{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;background:var(--code-inline-bg);padding:1px 5px;border-radius:4px;color:var(--accink)}
 :host{display:block;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
-.card{background:var(--surf);border:1px solid var(--bd);border-radius:14px;padding:22px;box-shadow:var(--card-sh)}
-.step-k{font-family:var(--mono);font-size:11px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--acc)}
+.card{position:relative;background:var(--surf);border:1px solid var(--bd);border-radius:14px;padding:22px;box-shadow:var(--card-sh)}
+.card::before{content:"";position:absolute;left:14px;right:14px;top:0;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--acc),var(--acc2));opacity:.42}
+.step-k{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--acc)}
+.step-k::before{content:"";width:14px;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--acc),var(--acc2))}
 .step-t{font-size:19px;font-weight:720;margin:3px 0 5px;letter-spacing:-.2px}
 .step-sub{font-size:12.5px;color:var(--mut);margin-bottom:6px}
 .step-t,.dec-q,.num-h,.debrief .big,.mscript-h,.rec .lvl,.sr-h,.cs-ha-l,.side-id h1,.stage-head .sh-name{font-family:var(--display)}
@@ -3093,26 +3164,7 @@ var SESS_STYLE = `.sess-body{padding:18px 20px 24px}
 .tr-spark{flex:1;min-width:0;font:600 18px ui-monospace,Menlo,monospace;letter-spacing:1px;line-height:1;white-space:nowrap;overflow:hidden}
 .tr-val{flex:none;font-size:12px;color:var(--mut)}
 .ss-clear:hover{border-color:var(--mut);color:var(--mut)}
-.ss-clear.arm{border-style:solid;border-color:var(--red);background:var(--redbg);color:var(--red);font-weight:800}
-.cmp-inner{padding:34px 26px 40px;display:flex;flex-direction:column}
-.cmp-block{padding:24px 0}
-.cmp-block.cmp-top{padding-top:0}
-.cmp-block+.cmp-block{border-top:1px solid var(--bd)}
-.cmp-eyebrow{font-size:10px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--acc)}
-.cmp-topic{font-family:var(--display);font-size:22px;font-weight:600;line-height:1.08;letter-spacing:-.012em;color:var(--ink);margin-top:9px}
-.cmp-thesis{margin:12px 0 0;font-size:12.5px;line-height:1.6;color:var(--mut2)}
-.cmp-h{font-size:9.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);margin:0 0 10px}
-.cmp-view{font-size:14.5px;font-weight:750;color:var(--ink);margin-bottom:6px}
-.cmp-note{margin:0;font-size:12.5px;line-height:1.6;color:var(--mut2)}
-.cmp-spine{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
-.cmp-spine li{display:flex;gap:11px;font-size:12.5px;line-height:1.5;color:var(--ink)}
-.cmp-dot{flex:none;width:6px;height:6px;border-radius:50%;background:var(--acc);margin-top:6px;box-shadow:0 0 0 3px var(--accbg)}
-.cmp-spine b{color:var(--accink);font-weight:750}
-.cmp-spine i{font-style:italic}
-.cmp-drive{margin:0;font-size:12px;line-height:1.65;color:var(--mut2)}
-.cmp-drive b{color:var(--ink);font-weight:700}
-.cmp-kbd{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;font-family:inherit;font-size:11px;font-weight:700;color:var(--ink);background:var(--card);border:1px solid var(--bd);border-bottom-width:2px;border-radius:5px;vertical-align:middle}
-.cmp-move{font-size:12.5px;line-height:1.5;color:var(--ink);font-weight:500;margin:0;border-left:2px solid var(--acc);padding-left:12px}`;
+.ss-clear.arm{border-style:solid;border-color:var(--red);background:var(--redbg);color:var(--red);font-weight:800}`;
 class DeepSession extends HTMLElement {
   connectedCallback() {
     if (this._built) return;

@@ -1,9 +1,18 @@
-/* ============ NUMBERS / NALSD pane ============ */
-/* The back-of-envelope capacity calculator: four assumptions in, derived
-   throughput / concurrency / connection / storage / cost figures out, each row
-   flagged when it breaches a known ceiling (Lambda's 1,000 default, a ~100-conn
-   Postgres pool). A self-contained shadow component; the tab / rail / keyboard
-   nav that used to share this file stays global below. */
+/* ============ NUMBERS / NALSD pane (logic, web component) ============
+   The back-of-envelope capacity calculator, converted to the TopicPane contract
+   (dataKey 'num'): the base class attaches the shadow + adopts the inherited
+   [BASE_SHEET] + writes <style>+skeleton ONCE; init() caches the lead/input/output/
+   tell mounts and wires ONE DELEGATED input listener on the stable #ninp container;
+   renderTopic(d) stashes the per-topic d.inputs + d.compute, fills lead/tell, rebuilds
+   the input fields from d.inputs (count is per-topic -> here, not init), then _calc().
+   Unlike the array-driven panes this one is PARAMETRIC: _calc reads the inputs
+   DYNAMICALLY and defers the arithmetic + the Lambda-1,000 / Postgres-100 ceilings to
+   d.compute (the escape hatch, design 3.2), which returns the row array the pane
+   renders verbatim. NUM_STYLE is topic-invariant and stays here; _fmtN/_fmtTB/_nval
+   are pure helpers, and _fmtN/_fmtTB are passed into compute as fmt.n/fmt.tb. The
+   tab / rail / keyboard nav that used to share this file lives in num/shell.js
+   (foundation). Child-mounts only -- renderTopic never rewrites this._root.innerHTML.
+   Offline-safe: no network/storage/permission. */
 var NUM_STYLE = `.numlead{font-size:15px;line-height:1.5;color:var(--ink);margin:2px 2px 18px}
 .numlead b{color:var(--accink);font-weight:700}
 .num-h{font:800 10px -apple-system,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:var(--mut2);margin-bottom:12px}
@@ -28,33 +37,44 @@ var NUM_STYLE = `.numlead{font-size:15px;line-height:1.5;color:var(--ink);margin
 .nprog i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));border-radius:5px;transition:width .5s cubic-bezier(.22,.61,.36,1)}
 .num-tell b{color:var(--dec-tell-b-fg);font-weight:700}
 .nv-u{display:inline-block;width:30px;text-align:left;padding-left:8px;box-sizing:border-box;font-size:13px;font-weight:600;color:var(--mut)}`;
-var NUM_HTML = `<div class="numlead">The estimation an interviewer makes you do at the whiteboard. State your assumptions and the <b>ceilings fall out of the arithmetic</b> &mdash; adjust any input and the math recomputes.</div>
+class DeepNumbers extends TopicPane {
+  static dataKey = 'num';
+  styleText() { return NUM_STYLE; }
+  skeleton() {
+    return `<div class="numlead" id="nlead"></div>
     <div class="card">
       <div class="num-h">Assumptions</div>
-      <div class="ninp">
-        <label>Objects / day<input id="n_obj" type="number" value="10000000" min="0"></label>
-        <label>Avg size (MB)<input id="n_size" type="number" value="2" min="0" step="0.1"></label>
-        <label>Processing (sec)<input id="n_proc" type="number" value="2" min="0" step="0.1"></label>
-        <label>Peak : average<input id="n_peak" type="number" value="10" min="1"></label>
-      </div>
+      <div class="ninp" id="ninp"></div>
     </div>
     <div class="card" style="margin-top:13px">
       <div class="num-h">What falls out</div>
       <div id="nout"></div>
     </div>
-    <div class="num-tell">The number you say isn't the point &mdash; the <b>ceiling</b> it reveals is. Concurrency past 1,000 says &lsquo;buffer through SQS&rsquo;; connections past the pool say &lsquo;RDS Proxy.&rsquo;</div>`;
-class DeepNumbers extends HTMLElement {
-  connectedCallback() {
-    if (this._built) return; this._built = true;
-    const root = this.attachShadow({ mode: 'open' });
-    root.adoptedStyleSheets = [BASE_SHEET];
-    root.innerHTML = '<style>' + NUM_STYLE + '</style>' + NUM_HTML;
-    this._root = root;
+    <div class="num-tell" id="ntell"></div>`;
+  }
+  init(root) {
+    this._lead = root.getElementById('nlead');
+    this._ninp = root.getElementById('ninp');
     this._out = root.getElementById('nout');
-    const self = this;
-    ['n_obj', 'n_size', 'n_proc', 'n_peak'].forEach(function (id) {
-      root.getElementById(id).addEventListener('input', function () { self._calc(); });
-    });
+    this._tell = root.getElementById('ntell');
+    /* ONE delegated input listener on the stable #ninp container -- the per-topic
+       fields are rebuilt by renderTopic, so the listener must live on the stable parent. */
+    var self = this;
+    this._ninp.addEventListener('input', function () { self._calc(); });
+  }
+  renderTopic(d) {
+    this._inputs = d.inputs;
+    this._compute = d.compute;
+    this._lead.innerHTML = d.lead;
+    this._tell.innerHTML = d.tell;
+    /* COUNT-DRIVEN input fields from d.inputs (rebuilt here, not init, so a topic with
+       a different assumption count rebuilds cleanly). */
+    var html = '';
+    for (var i = 0; i < d.inputs.length; i++) {
+      var f = d.inputs[i];
+      html += '<label>' + f.label + '<input id="' + f.id + '" type="number" value="' + f.value + '" min="' + f.min + '"' + (f.step != null ? ' step="' + f.step + '"' : '') + '></label>';
+    }
+    this._ninp.innerHTML = html;
     this._calc();
   }
   _fmtN(x) { if (!isFinite(x)) x = 0; return Math.round(x).toLocaleString('en-US'); }
@@ -66,20 +86,14 @@ class DeepNumbers extends HTMLElement {
   }
   _nval(id) { const v = +this._root.getElementById(id).value; return isFinite(v) && v > 0 ? v : 0; }
   _calc() {
-    const perDay = this._nval('n_obj'), sizeMB = this._nval('n_size'), procS = this._nval('n_proc'), peakR = this._nval('n_peak');
-    const avg = perDay / 86400, peak = avg * peakR, conc = peak * procS, conn = conc;
-    const stDay = perDay * sizeMB / 1e6, stYr = stDay * 365, puts = perDay, putCost = puts / 1000 * 0.005;
-    const rows = [
-      { k: 'Average throughput', v: this._fmtN(avg), u: '/s', n: 'objects/day \u00F7 86,400 seconds', over: false },
-      { k: 'Peak throughput', v: this._fmtN(peak), u: '/s', n: 'average \u00D7 ' + this._fmtN(peakR) + ' peak ratio', over: false },
-      { k: 'Lambda concurrency at peak', v: this._fmtN(conc), u: '', n: conc > 1000 ? 'exceeds the 1,000 default \u2014 RDS Proxy, or buffer through SQS' : 'peak/s \u00D7 processing time \u2014 within the 1,000 default', over: conc > 1000 },
-      { k: 'DB connections at peak', v: this._fmtN(conn), u: '', n: conn > 100 ? 'far past a Postgres pool (~100) \u2014 needs RDS Proxy or a queue' : '\u2248 one connection per invocation \u2014 a pool can hold this', over: conn > 100 },
-      { k: 'Storage written / day', v: this._fmtTB(stDay).split(' ')[0], u: this._fmtTB(stDay).split(' ')[1], n: this._fmtTB(stYr) + ' per year of raw objects', over: false },
-      { k: 'S3 PUTs / day', v: this._fmtN(puts), u: '', n: '\u2248 $' + putCost.toFixed(2) + '/day in PUT requests alone', over: false }
-    ];
-    let html = '';
-    for (let i = 0; i < rows.length; i++) {
-      const row = rows[i];
+    /* Read the inputs DYNAMICALLY (iterate the per-topic this._inputs), defer the
+       arithmetic + ceilings to this._compute, then render the returned rows verbatim. */
+    var vals = {};
+    for (var i = 0; i < this._inputs.length; i++) { var id = this._inputs[i].id; vals[id] = this._nval(id); }
+    var rows = this._compute(vals, { n: this._fmtN, tb: this._fmtTB });
+    var html = '';
+    for (var j = 0; j < rows.length; j++) {
+      var row = rows[j];
       html += '<div class="nrow' + (row.over ? ' over' : '') + '"><div class="nrow-k">' + row.k + '</div><div class="nrow-v">' + row.v + '<span class="nv-u">' + (row.u || '') + '</span></div><div class="nrow-n">' + row.n + '</div></div>';
     }
     this._out.innerHTML = html;

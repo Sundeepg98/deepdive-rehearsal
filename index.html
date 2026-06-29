@@ -1388,9 +1388,35 @@ var TOPIC_CP_WB = { steps: [], diagram: '', foot: '', sub: '', okVerdict: '' };
    sys pane stays plain and reads its own globals); the sys agent seeds real data in Phase 1. */
 var TOPIC_CP_SYS = { intro: '', stages: [], pivots: [], heads: { whereHead: '', pivHead: '', pivSub: '' } };
 
-/* topics/content-pipeline/trade.js -- FOUNDATION Phase-0 STUB. Unused at boot (the
-   trade pane stays plain and reads its own globals); the trade agent seeds real data in Phase 1. */
-var TOPIC_CP_TRADE = { lead: '', decisions: [] };
+/* topics/content-pipeline/trade.js -- Phase 1: REAL trade data (extracted from the
+   former baked TRADE_HTML). decisions[].{q, opts:[{n,when}], tell}; the "pick when"
+   pill is in the renderer (trade-offs.js), not data. Offline-safe; 7-bit ASCII. */
+var TOPIC_CP_TRADE = {
+  lead: "The design decisions an interviewer drills &mdash; each with the <b>axis</b> that picks a side. Saying the switch condition out loud is the senior move; defending one option as universally right isn't.",
+  decisions: [
+    { q: "Lambda per object <span class=\"vs\">vs</span> SQS + worker pool",
+      opts: [{ n: "Lambda / object", when: "low or spiky volume, no ordering need, you want <b>zero ops</b> and lowest latency." }, { n: "SQS + workers", when: "you need <b>retries, a DLQ, ordering</b>, burst-smoothing, or jobs over 15&nbsp;min." }],
+      tell: "Name the <b>switch condition</b>, don't defend one side." },
+    { q: "Hash during upload <span class=\"vs\">vs</span> hash after store",
+      opts: [{ n: "During (fork)", when: "files are large, or you just want <b>one disk read</b> &mdash; i.e. almost always." }, { n: "After / two-pass", when: "the file is tiny, or an API needs the <b>digest before</b> you can store it." }],
+      tell: "The <b>PassThrough fork</b> is the only path that survives a 500&nbsp;MB object." },
+    { q: "SQLite bundle <span class=\"vs\">vs</span> JSON <span class=\"vs\">vs</span> pg_dump",
+      opts: [{ n: "SQLite", when: "you need <b>real FKs</b> and binary at <b>1:1</b> size in one portable file." }, { n: "JSON", when: "data is small, human-readable, with <b>no</b> binary or relations." }, { n: "pg_dump", when: "same engine both ends and you want exact fidelity &mdash; but it's <b>not portable</b>." }],
+      tell: "JSON base64-bloats binary <b>~33%</b> and loses referential integrity." },
+    { q: "Single PUT <span class=\"vs\">vs</span> multipart upload",
+      opts: [{ n: "Single PUT", when: "objects are <b>small</b> (&lt;100&nbsp;MB) and the network is reliable." }, { n: "Multipart", when: "large objects, flaky networks, or you want <b>per-part retry</b> and resumability." }],
+      tell: "Multipart resumes <b>per part</b> &mdash; pair it with a lifecycle rule to abort orphans." },
+    { q: "Compensating delete <span class=\"vs\">vs</span> reconciler <span class=\"vs\">vs</span> distributed txn",
+      opts: [{ n: "Compensating delete", when: "cheap cleanup of the <b>common</b> failure, in the request path." }, { n: "Reconciler", when: "you need a <b>durable backstop</b> that eventually catches every orphan." }, { n: "Distributed txn", when: "you truly need <b>cross-store atomicity</b> &mdash; rarely worth 2PC / saga cost across S3 + DB." }],
+      tell: "Run delete <b>and</b> reconciler; reach for 2PC only when atomicity is non-negotiable." },
+    { q: "Sync fast-path <span class=\"vs\">vs</span> async queue",
+      opts: [{ n: "Sync inline", when: "interactive, small payload, <b>sub-second</b> SLA." }, { n: "Async queue", when: "heavy or bulk work where <b>eventual</b> completion is fine." }],
+      tell: "Two-tier by interactivity: <b>one dispatch map, two execution venues</b>." },
+    { q: "Reconciler backstop <span class=\"vs\">vs</span> transactional outbox",
+      opts: [{ n: "Reconciler (heal)", when: "the two stores <b>can't share a transaction</b>, a brief orphan window is tolerable, and fewer moving parts wins &mdash; dual-write, then sweep orphans on a grace window." }, { n: "Outbox (prevent)", when: "correctness must be <b>airtight</b> and you can anchor on one DB transaction &mdash; commit the row + an event atomically, and a relay does the S3 work with retries off <b>one commit point</b>." }],
+      tell: "The outbox needs a DB transaction to anchor on; the reconciler is the honest backstop for when the stores genuinely can't share one." }
+  ]
+};
 
 /* topics/content-pipeline/model.js -- FOUNDATION-seeded REAL data.
    modelAnswers is pane-local (defined later in app.js order), so a thin alias would
@@ -1500,13 +1526,138 @@ var TOPIC_CP_MODEL = {
    num pane stays plain and reads its own globals); the num agent seeds real data in Phase 1. */
 var TOPIC_CP_NUM = { lead: '', tell: '', inputs: [], compute: function (vals, fmt) { return []; } };
 
-/* topics/content-pipeline/rf.js -- FOUNDATION Phase-0 STUB. Unused at boot (the
-   rf pane stays plain and reads its own globals); the rf agent seeds real data in Phase 1. */
-var TOPIC_CP_RF = { lead: '', flags: [] };
+/* topics/content-pipeline/rf.js -- topic-1 (Content Pipeline) RED FLAGS data.
+   Extracted from the baked RF_HTML: one lead + nine flags. Each flag is
+   {bad, note, tell, fix}; only flag #9 carries a note (the rest are null). The
+   invariant card chrome (the x chip &#10007;, the arrow &rarr;, the wrappers)
+   lives in rfCard() in red-flags.js, NOT here. Strings are double-quoted so
+   apostrophes need no escaping; all non-ASCII is HTML entities (ascii_guard).
+   Offline-safe: pure data, no DOM. */
+var TOPIC_CP_RF = {
+  lead: "The moves that quietly tank a candidate on this topic. Each one is something a weaker answer actually says &mdash; what the interviewer hears, and the line that flips it.",
+  flags: [
+    {
+      bad: "&ldquo;I'd query all the rows, then write them to the CSV.&rdquo;",
+      note: null,
+      tell: "The driver buffers the <b>entire result set</b> in memory before your code runs &mdash; OOM at a million rows. The interviewer hears <i>&ldquo;never run this at scale.&rdquo;</i>",
+      fix: "Server-side cursor, 100 rows at a time, piped with backpressure &mdash; <b>constant memory</b> at any row count."
+    },
+    {
+      bad: "&ldquo;I'll store the file, then read it back to hash it.&rdquo;",
+      note: null,
+      tell: "Two full disk reads, or the whole file buffered in RAM &mdash; it dies on a 500&nbsp;MB object.",
+      fix: "A <b>PassThrough fork</b> &mdash; one read feeds the hash and the upload at once."
+    },
+    {
+      bad: "&ldquo;A switch statement routes each file type to its handler.&rdquo;",
+      note: null,
+      tell: "Complexity grows with every new type, and each addition <b>edits the router</b> &mdash; a merge-conflict magnet that never stops touching shared code.",
+      fix: "An <b>O(1) dispatch map</b>. A new type is one entry and zero router changes."
+    },
+    {
+      bad: "&ldquo;It writes to S3 and Postgres, so the data's consistent.&rdquo;",
+      note: null,
+      tell: "There's <b>no atomicity across two stores</b> &mdash; a partial failure orphans objects or rows. The interviewer hears <i>&ldquo;hasn't thought about the failure path.&rdquo;</i>",
+      fix: "Track created keys, <b>compensating delete</b> on failure, and a <b>reconciler</b> as the durable backstop."
+    },
+    {
+      bad: "&ldquo;Exactly-once delivery means I won't double-process.&rdquo;",
+      note: null,
+      tell: "Exactly-once <i>delivery</i> doesn't exist &mdash; S3 and every queue are at-least-once. You <b>will</b> see the same file twice.",
+      fix: "Idempotent <b>effects</b> &mdash; a content-hash key or a processed-marker check-and-set. Replays no-op."
+    },
+    {
+      bad: "&ldquo;On any failure, I just retry.&rdquo;",
+      note: null,
+      tell: "Retrying a non-idempotent op <b>double-charges</b>; retrying a <b>poison message</b> stalls the whole lane forever.",
+      fix: "Idempotency + a <b>DLQ</b> + backoff + a per-job timeout, so one bad input fails fast instead of hanging."
+    },
+    {
+      bad: "&ldquo;Lambda per object &mdash; that's the design.&rdquo;",
+      note: null,
+      tell: "Defending one choice without naming <b>when it breaks</b> reads as inexperience. The interviewer wants the boundary, not loyalty.",
+      fix: "Name the <b>switch condition</b> &mdash; move to SQS the moment you need retries, a DLQ, or ordering."
+    },
+    {
+      bad: "&ldquo;A reconciler deletes any S3 key with no DB row.&rdquo;",
+      note: null,
+      tell: "It will delete an <b>in-flight upload</b> &mdash; object written, row not yet committed. You just corrupted a live request.",
+      fix: "A grace window, or a <b>PENDING marker</b>, so the reconciler never touches in-flight work."
+    },
+    {
+      bad: "&ldquo;&hellip;so I'd use a Lambda and an S3 trigger and&mdash;&rdquo;",
+      note: "(straight into components)",
+      tell: "No assumptions stated, no numbers, no ceiling named &mdash; the interviewer can't <b>see you reason</b>, only that you've memorized an architecture.",
+      fix: "<b>Frame first</b> (scope + load), then design, then name the <b>resource that gives out first</b>. Reasoning visible beats architecture recited."
+    }
+  ]
+};
 
-/* topics/content-pipeline/open.js -- FOUNDATION Phase-0 STUB. Unused at boot (the
-   open pane stays plain and reads its own globals); the open agent seeds real data in Phase 1. */
-var TOPIC_CP_OPEN = { cards: [] };
+/* topics/content-pipeline/open.js -- topic-1 data for the 30-second opener/closer
+   pane (TopicPane dataKey 'open'). Two cards: [0] open -- HAS hooks (the .op-hooks
+   block of 3); [1] close -- hooks:null. Strings lifted VERBATIM from the old OP_HTML
+   in opener-altitude.js. The 'Reveal mine' label, the &rarr; arrow span, and the
+   .op-arr / .op-tab wrappers are STATIC in renderOpenCard, NOT data. Pure data (no
+   DOM APIs -- renderOpenCard lives in opener-altitude.js); 7-bit ASCII (HTML
+   entities). NOTE the per-card apostrophe convention is intentionally mixed and
+   lifted as-is: card[0] uses straight ' (isn't / you're / It's / Walkthrough's),
+   card[1] uses &rsquo; -- and card[1]'s foot keeps its trailing <i>...</i>. */
+var TOPIC_CP_OPEN = {
+  cards: [
+    {
+      kind: "open",
+      k: "Match the altitude",
+      t: "The same system, said three ways",
+      lead: "Interviewers open with <i>&ldquo;quickly, how does it work?&rdquo;</i> as often as <i>&ldquo;design it.&rdquo;</i> Give the altitude they asked for &mdash; the frame when they want the frame, depth when they want depth &mdash; then expand only when they pull. Say each out loud before you reveal mine.",
+      items: [
+        {
+          n: "1",
+          ht: "<b>One breath.</b> The whole system in a single sentence &mdash; for <i>&ldquo;high level&rdquo;</i> or <i>&ldquo;quickly.&rdquo;</i>",
+          a: "An event-driven ingestion pipeline: an S3 upload fires a Lambda that routes each file by type to a streaming handler &mdash; which hashes it, stores it, and records it &mdash; with a <b>reconciler</b> to mop up partial failures."
+        },
+        {
+          n: "2",
+          ht: "<b>Thirty seconds.</b> What you lead with, unprompted &mdash; the load-bearing ideas, no code.",
+          a: "Operators push content to S3, which triggers the processor. It routes on file type through an <b>O(1) strategy map</b> &mdash; not a switch &mdash; so a new format is a one-line add. Each handler <b>streams the file once</b> and forks that read to hash and upload in parallel, so memory stays flat no matter the size. The catch: the object store and the database share no transaction, so I track written keys and <b>compensate on failure</b>, with a reconciler as the backstop. And since every trigger is <b>at-least-once</b>, processing is idempotent &mdash; a replay no-ops on a content-hash marker."
+        }
+      ],
+      hooks: {
+        lead: "The 30-second version names three loose threads <i>on purpose</i> &mdash; you're steering. Each is a tab you go deep on the moment they pull it:",
+        items: [
+          { q: "&ldquo;memory stays flat&rdquo;", d: "how the export streams a million rows without OOM", tab: "Numbers &middot; Walkthrough" },
+          { q: "&ldquo;compensate &middot; reconciler&rdquo;", d: "the dual-write, and keeping two stores consistent", tab: "Trade-offs &middot; Red Flags" },
+          { q: "&ldquo;at-least-once&rdquo;", d: "why exactly-once is a myth and replays stay safe", tab: "Probe Drill" }
+        ]
+      },
+      foot: "<b>The skill isn't knowing one version.</b> <i>&ldquo;Walk me through it&rdquo;</i> is the next altitude up &mdash; the Walkthrough's nine steps &mdash; and every tab here is a deeper zoom. It's having all of them, and reading which one they want."
+    },
+    {
+      kind: "close",
+      k: "Land it",
+      t: "How to close &mdash; don&rsquo;t trail off",
+      lead: "When time&rsquo;s nearly up &mdash; or they ask <i>&ldquo;anything else?&rdquo;</i> &mdash; <b>don&rsquo;t just stop.</b> A proactive close is a seniority signal: summarize the shape, name what you&rsquo;d watch, hand the wheel back. Thirty seconds, unprompted. Say each out loud before you reveal mine.",
+      items: [
+        {
+          n: "1",
+          ht: "<b>Summarize in one line.</b> Re-state the spine so they remember the shape, not the detours.",
+          a: "&ldquo;So &mdash; event-driven ingestion, routed by type to streaming handlers, kept consistent across two stores by a reconciler, and idempotent against replays. That&rsquo;s the core.&rdquo;"
+        },
+        {
+          n: "2",
+          ht: "<b>Name the three you&rsquo;d watch.</b> Naming your own risks reads as senior &mdash; not insecure.",
+          a: "&ldquo;In production I&rsquo;d watch three things: <b>reconciler correctness under concurrency</b>, the piece most likely to hide a race; the <b>cost curve</b>, since per-object Lambda gets pricey fast; and the <b>exactly-once illusion</b> &mdash; I&rsquo;d keep proving idempotency rather than trusting delivery.&rdquo;"
+        },
+        {
+          n: "3",
+          ht: "<b>Say what&rsquo;s next, and what you cut.</b> Shows you scoped on purpose, not from missing it.",
+          a: "&ldquo;With more time I&rsquo;d add the <b>status API</b> for consumers and the <b>multi-region</b> story. I left out auth and the client deliberately &mdash; out of scope for the pipeline. Where would you like to go deeper?&rdquo;"
+        }
+      ],
+      hooks: null,
+      foot: "<b>The close hands the wheel back</b> &mdash; <i>&ldquo;where would you like to go deeper?&rdquo;</i> &mdash; so the last minute is theirs, and your named risks are the threads they&rsquo;ll pull. The tell: juniors stop when they run out of things to say; seniors stop on a <i>summary, a risk list, and an invitation.</i>"
+    }
+  ]
+};
 
 /* ============ topics/content-pipeline/bank.js -- FOUNDATION ============
    The cross-pane mock/curveball/frame BANK for topic 1 (content-pipeline).
@@ -1597,10 +1748,13 @@ TopicRegistry.register({
 
 
 /* ============ RED FLAGS (web component) ============
-   Static presentational pane, now encapsulated. No data or logic: the markup is
-   rendered into the shadow root, styled by the shared BASE_SHEET plus the
-   red-flag-specific rules below. Every color is an existing theme token, so the
-   pane themes correctly across the shadow boundary with no extra tokens. */
+   Multi-topic pane on the TopicPane contract. The base owns shadow + adopted
+   sheets + <style> + skeleton (built ONCE in connectedCallback); renderTopic
+   paints the lead and the flag list from data on first paint AND every topic
+   switch, writing child mounts only. Static presentational, non-interactive:
+   no state, no listeners, no timers, no public API. Every color is an existing
+   theme token, so the pane themes correctly across the shadow boundary with no
+   extra tokens. */
 var RF_STYLE = `
 .rflead{font-size:15px;line-height:1.5;color:var(--ink);margin:2px 2px 18px}
 .rflead b{color:var(--accink);font-weight:700}
@@ -1618,81 +1772,44 @@ var RF_STYLE = `
 .rf-fix .rf-t{color:var(--ink)}
 .rf-fix .rf-t b{color:var(--teal);font-weight:700}
 `;
-var RF_HTML = `<div class="rflead">The moves that quietly tank a candidate on this topic. Each one is something a weaker answer actually says &mdash; what the interviewer hears, and the line that flips it.</div>
 
-    <div class="rf">
-      <div class="rf-bad"><span class="rf-x">&#10007;</span><span class="rf-t"><b>&ldquo;I'd query all the rows, then write them to the CSV.&rdquo;</b></span></div>
-      <div class="rf-tell">The driver buffers the <b>entire result set</b> in memory before your code runs &mdash; OOM at a million rows. The interviewer hears <i>&ldquo;never run this at scale.&rdquo;</i></div>
-      <div class="rf-fix"><span class="rf-c">&rarr;</span><span class="rf-t">Server-side cursor, 100 rows at a time, piped with backpressure &mdash; <b>constant memory</b> at any row count.</span></div>
-    </div>
+/* Reproduces the baked .rf card markup byte-for-byte from a flag record. The
+   invariant chrome -- the x chip (&#10007;), the arrow (&rarr;), and the .rf-*
+   wrappers -- lives HERE, not in data. The note guard keeps the LEADING space
+   that separated the <b> quote from the optional .rf-note in the baked markup
+   (only flag #9 carries a note). */
+function rfCard(f) {
+  return '<div class="rf">'
+    + '<div class="rf-bad"><span class="rf-x">&#10007;</span><span class="rf-t"><b>' + f.bad + '</b>'
+      + (f.note ? ' <span class="rf-note">' + f.note + '</span>' : '') + '</span></div>'
+    + '<div class="rf-tell">' + f.tell + '</div>'
+    + '<div class="rf-fix"><span class="rf-c">&rarr;</span><span class="rf-t">' + f.fix + '</span></div>'
+    + '</div>';
+}
 
-    <div class="rf">
-      <div class="rf-bad"><span class="rf-x">&#10007;</span><span class="rf-t"><b>&ldquo;I'll store the file, then read it back to hash it.&rdquo;</b></span></div>
-      <div class="rf-tell">Two full disk reads, or the whole file buffered in RAM &mdash; it dies on a 500&nbsp;MB object.</div>
-      <div class="rf-fix"><span class="rf-c">&rarr;</span><span class="rf-t">A <b>PassThrough fork</b> &mdash; one read feeds the hash and the upload at once.</span></div>
-    </div>
-
-    <div class="rf">
-      <div class="rf-bad"><span class="rf-x">&#10007;</span><span class="rf-t"><b>&ldquo;A switch statement routes each file type to its handler.&rdquo;</b></span></div>
-      <div class="rf-tell">Complexity grows with every new type, and each addition <b>edits the router</b> &mdash; a merge-conflict magnet that never stops touching shared code.</div>
-      <div class="rf-fix"><span class="rf-c">&rarr;</span><span class="rf-t">An <b>O(1) dispatch map</b>. A new type is one entry and zero router changes.</span></div>
-    </div>
-
-    <div class="rf">
-      <div class="rf-bad"><span class="rf-x">&#10007;</span><span class="rf-t"><b>&ldquo;It writes to S3 and Postgres, so the data's consistent.&rdquo;</b></span></div>
-      <div class="rf-tell">There's <b>no atomicity across two stores</b> &mdash; a partial failure orphans objects or rows. The interviewer hears <i>&ldquo;hasn't thought about the failure path.&rdquo;</i></div>
-      <div class="rf-fix"><span class="rf-c">&rarr;</span><span class="rf-t">Track created keys, <b>compensating delete</b> on failure, and a <b>reconciler</b> as the durable backstop.</span></div>
-    </div>
-
-    <div class="rf">
-      <div class="rf-bad"><span class="rf-x">&#10007;</span><span class="rf-t"><b>&ldquo;Exactly-once delivery means I won't double-process.&rdquo;</b></span></div>
-      <div class="rf-tell">Exactly-once <i>delivery</i> doesn't exist &mdash; S3 and every queue are at-least-once. You <b>will</b> see the same file twice.</div>
-      <div class="rf-fix"><span class="rf-c">&rarr;</span><span class="rf-t">Idempotent <b>effects</b> &mdash; a content-hash key or a processed-marker check-and-set. Replays no-op.</span></div>
-    </div>
-
-    <div class="rf">
-      <div class="rf-bad"><span class="rf-x">&#10007;</span><span class="rf-t"><b>&ldquo;On any failure, I just retry.&rdquo;</b></span></div>
-      <div class="rf-tell">Retrying a non-idempotent op <b>double-charges</b>; retrying a <b>poison message</b> stalls the whole lane forever.</div>
-      <div class="rf-fix"><span class="rf-c">&rarr;</span><span class="rf-t">Idempotency + a <b>DLQ</b> + backoff + a per-job timeout, so one bad input fails fast instead of hanging.</span></div>
-    </div>
-
-    <div class="rf">
-      <div class="rf-bad"><span class="rf-x">&#10007;</span><span class="rf-t"><b>&ldquo;Lambda per object &mdash; that's the design.&rdquo;</b></span></div>
-      <div class="rf-tell">Defending one choice without naming <b>when it breaks</b> reads as inexperience. The interviewer wants the boundary, not loyalty.</div>
-      <div class="rf-fix"><span class="rf-c">&rarr;</span><span class="rf-t">Name the <b>switch condition</b> &mdash; move to SQS the moment you need retries, a DLQ, or ordering.</span></div>
-    </div>
-
-    <div class="rf">
-      <div class="rf-bad"><span class="rf-x">&#10007;</span><span class="rf-t"><b>&ldquo;A reconciler deletes any S3 key with no DB row.&rdquo;</b></span></div>
-      <div class="rf-tell">It will delete an <b>in-flight upload</b> &mdash; object written, row not yet committed. You just corrupted a live request.</div>
-      <div class="rf-fix"><span class="rf-c">&rarr;</span><span class="rf-t">A grace window, or a <b>PENDING marker</b>, so the reconciler never touches in-flight work.</span></div>
-    </div>
-
-    <div class="rf">
-      <div class="rf-bad"><span class="rf-x">&#10007;</span><span class="rf-t"><b>&ldquo;&hellip;so I'd use a Lambda and an S3 trigger and&mdash;&rdquo;</b> <span class="rf-note">(straight into components)</span></span></div>
-      <div class="rf-tell">No assumptions stated, no numbers, no ceiling named &mdash; the interviewer can't <b>see you reason</b>, only that you've memorized an architecture.</div>
-      <div class="rf-fix"><span class="rf-c">&rarr;</span><span class="rf-t"><b>Frame first</b> (scope + load), then design, then name the <b>resource that gives out first</b>. Reasoning visible beats architecture recited.</span></div>
-    </div>`;
-class DeepRedFlags extends HTMLElement {
-  connectedCallback() {
-    if (this._built) return;
-    this._built = true;
-    const root = this.attachShadow({ mode: 'open' });
-    root.adoptedStyleSheets = [BASE_SHEET];
-    root.innerHTML = '<style>' + RF_STYLE + '</style>' + RF_HTML;
+class DeepRedFlags extends TopicPane {
+  static dataKey = 'rf';
+  sheets()    { return [BASE_SHEET]; }
+  styleText() { return RF_STYLE; }
+  skeleton()  { return '<div class="rflead" id="rflead"></div><div id="rflist"></div>'; }
+  init(root) {
+    this._lead = root.getElementById('rflead');
+    this._list = root.getElementById('rflist');
+  }
+  renderTopic(d) {
+    this._lead.innerHTML = d.lead;
+    this._list.innerHTML = d.flags.map(rfCard).join('');
   }
 }
 customElements.define('deep-red-flags', DeepRedFlags);
 
 /* ============ TRADE-OFFS (web component) ============
    A static ledger of design decisions, each with the axis that picks a side.
-   Shadow-DOM custom element adopting BASE_SHEET. Coupled to mixed-fire, which
-   used to scrape '#trade .dec' directly; that DOM now lives in the shadow, so
-   the element exposes getDecisions() -> [{q, optsHtml, tell}] and mixed-fire
-   delegates to it. The .opt trade-option family is shared with mixed-fire, so it
-   lives once in OPT_SHEET (shared-sheets.js), adopted by both; .dec/.dec-q/.dec-tell
-   are pane-exclusive and live in TRADE_STYLE. Two dark overrides become flip tokens
-   (--opt-n-bd, shared with the overlay; --dec-tell-b-fg, exclusive). */
+   Phase 1: converted to the TopicPane contract -- the formerly baked .ledger is now
+   data (topics/content-pipeline/trade.js) rendered into child mounts, and
+   getDecisions() serves mixed-fire from that data instead of reverse-scraping the
+   shadow. The .opt trade-option family is shared with mixed-fire (OPT_SHEET);
+   .dec/.dec-q/.dec-tell are pane-exclusive (TRADE_STYLE). Offline-safe. */
 var TRADE_STYLE = `
 .ledger .lead{font-size:15px;line-height:1.5;color:var(--ink);margin:2px 2px 16px}
 .ledger .lead b{color:var(--accink)}
@@ -1706,82 +1823,38 @@ var TRADE_STYLE = `
 .dec-tell::before{content:"\\2605";font-size:12px;margin-right:8px}
 .dec-tell b{color:var(--dec-tell-b-fg);font-weight:700}
 `;
-var TRADE_HTML = `<div class="ledger">
-      <div class="lead">The design decisions an interviewer drills &mdash; each with the <b>axis</b> that picks a side. Saying the switch condition out loud is the senior move; defending one option as universally right isn't.</div>
 
-      <div class="dec">
-        <div class="dec-q">Lambda per object <span class="vs">vs</span> SQS + worker pool</div>
-        <div class="opt"><span class="opt-n">Lambda / object</span><div class="opt-w"><span class="pw">pick when</span>low or spiky volume, no ordering need, you want <b>zero ops</b> and lowest latency.</div></div>
-        <div class="opt"><span class="opt-n">SQS + workers</span><div class="opt-w"><span class="pw">pick when</span>you need <b>retries, a DLQ, ordering</b>, burst-smoothing, or jobs over 15&nbsp;min.</div></div>
-        <div class="dec-tell">Name the <b>switch condition</b>, don't defend one side.</div>
-      </div>
+/* Pane-scoped renderers (prefixed so they can't clash with the rf/open agents
+   converting in the same wave). They reproduce the former baked .opt / .dec markup
+   byte-for-byte -- the literal "pick when" pill lives here, in the renderer, not data. */
+function tradeRenderOpt(o) {
+  return '<div class="opt"><span class="opt-n">' + o.n + '</span><div class="opt-w"><span class="pw">pick when</span>' + o.when + '</div></div>';
+}
+function tradeRenderDec(d) {
+  return '<div class="dec"><div class="dec-q">' + d.q + '</div>' + d.opts.map(tradeRenderOpt).join('') + '<div class="dec-tell">' + d.tell + '</div></div>';
+}
 
-      <div class="dec">
-        <div class="dec-q">Hash during upload <span class="vs">vs</span> hash after store</div>
-        <div class="opt"><span class="opt-n">During (fork)</span><div class="opt-w"><span class="pw">pick when</span>files are large, or you just want <b>one disk read</b> &mdash; i.e. almost always.</div></div>
-        <div class="opt"><span class="opt-n">After / two-pass</span><div class="opt-w"><span class="pw">pick when</span>the file is tiny, or an API needs the <b>digest before</b> you can store it.</div></div>
-        <div class="dec-tell">The <b>PassThrough fork</b> is the only path that survives a 500&nbsp;MB object.</div>
-      </div>
-
-      <div class="dec">
-        <div class="dec-q">SQLite bundle <span class="vs">vs</span> JSON <span class="vs">vs</span> pg_dump</div>
-        <div class="opt"><span class="opt-n">SQLite</span><div class="opt-w"><span class="pw">pick when</span>you need <b>real FKs</b> and binary at <b>1:1</b> size in one portable file.</div></div>
-        <div class="opt"><span class="opt-n">JSON</span><div class="opt-w"><span class="pw">pick when</span>data is small, human-readable, with <b>no</b> binary or relations.</div></div>
-        <div class="opt"><span class="opt-n">pg_dump</span><div class="opt-w"><span class="pw">pick when</span>same engine both ends and you want exact fidelity &mdash; but it's <b>not portable</b>.</div></div>
-        <div class="dec-tell">JSON base64-bloats binary <b>~33%</b> and loses referential integrity.</div>
-      </div>
-
-      <div class="dec">
-        <div class="dec-q">Single PUT <span class="vs">vs</span> multipart upload</div>
-        <div class="opt"><span class="opt-n">Single PUT</span><div class="opt-w"><span class="pw">pick when</span>objects are <b>small</b> (&lt;100&nbsp;MB) and the network is reliable.</div></div>
-        <div class="opt"><span class="opt-n">Multipart</span><div class="opt-w"><span class="pw">pick when</span>large objects, flaky networks, or you want <b>per-part retry</b> and resumability.</div></div>
-        <div class="dec-tell">Multipart resumes <b>per part</b> &mdash; pair it with a lifecycle rule to abort orphans.</div>
-      </div>
-
-      <div class="dec">
-        <div class="dec-q">Compensating delete <span class="vs">vs</span> reconciler <span class="vs">vs</span> distributed txn</div>
-        <div class="opt"><span class="opt-n">Compensating delete</span><div class="opt-w"><span class="pw">pick when</span>cheap cleanup of the <b>common</b> failure, in the request path.</div></div>
-        <div class="opt"><span class="opt-n">Reconciler</span><div class="opt-w"><span class="pw">pick when</span>you need a <b>durable backstop</b> that eventually catches every orphan.</div></div>
-        <div class="opt"><span class="opt-n">Distributed txn</span><div class="opt-w"><span class="pw">pick when</span>you truly need <b>cross-store atomicity</b> &mdash; rarely worth 2PC / saga cost across S3 + DB.</div></div>
-        <div class="dec-tell">Run delete <b>and</b> reconciler; reach for 2PC only when atomicity is non-negotiable.</div>
-      </div>
-
-      <div class="dec">
-        <div class="dec-q">Sync fast-path <span class="vs">vs</span> async queue</div>
-        <div class="opt"><span class="opt-n">Sync inline</span><div class="opt-w"><span class="pw">pick when</span>interactive, small payload, <b>sub-second</b> SLA.</div></div>
-        <div class="opt"><span class="opt-n">Async queue</span><div class="opt-w"><span class="pw">pick when</span>heavy or bulk work where <b>eventual</b> completion is fine.</div></div>
-        <div class="dec-tell">Two-tier by interactivity: <b>one dispatch map, two execution venues</b>.</div>
-      </div>
-
-      <div class="dec">
-        <div class="dec-q">Reconciler backstop <span class="vs">vs</span> transactional outbox</div>
-        <div class="opt"><span class="opt-n">Reconciler (heal)</span><div class="opt-w"><span class="pw">pick when</span>the two stores <b>can't share a transaction</b>, a brief orphan window is tolerable, and fewer moving parts wins &mdash; dual-write, then sweep orphans on a grace window.</div></div>
-        <div class="opt"><span class="opt-n">Outbox (prevent)</span><div class="opt-w"><span class="pw">pick when</span>correctness must be <b>airtight</b> and you can anchor on one DB transaction &mdash; commit the row + an event atomically, and a relay does the S3 work with retries off <b>one commit point</b>.</div></div>
-        <div class="dec-tell">The outbox needs a DB transaction to anchor on; the reconciler is the honest backstop for when the stores genuinely can't share one.</div>
-      </div>
-    </div>`;
-
-class DeepTradeOffs extends HTMLElement {
-  connectedCallback() {
-    if (this._built) return;
-    this._built = true;
-    const root = this.attachShadow({ mode: 'open' });
-    root.adoptedStyleSheets = [BASE_SHEET, OPT_SHEET];
-    root.innerHTML = '<style>' + TRADE_STYLE + '</style>' + TRADE_HTML;
-    this._root = root;
+class DeepTradeOffs extends TopicPane {
+  static dataKey = 'trade';
+  sheets()    { return [BASE_SHEET, OPT_SHEET]; }
+  styleText() { return TRADE_STYLE; }
+  skeleton()  { return '<div class="ledger"><div class="lead" id="tlead"></div><div id="tdecs"></div></div>'; }
+  init(root) {
+    this._lead = root.getElementById('tlead');
+    this._decs = root.getElementById('tdecs');
   }
+  renderTopic(d) {
+    this._decisions = d.decisions;
+    this._lead.innerHTML = d.lead;
+    this._decs.innerHTML = d.decisions.map(tradeRenderDec).join('');
+  }
+  /* mixed-fire's getTrades() consumes this -- keep the {q, optsHtml, tell} shape
+     (optsHtml = the concatenated .opt markup) so mixed-fire.js stays byte-unchanged.
+     Derived from this._decisions; the old shadow reverse-scrape is gone. */
   getDecisions() {
-    if (!this._root) return [];
-    const decisions = this._root.querySelectorAll('.dec');
-    const out = [];
-    for (let i = 0; i < decisions.length; i++) {
-      const dec = decisions[i];
-      const opts = dec.querySelectorAll('.opt');
-      let optsHtml = '';
-      for (let o = 0; o < opts.length; o++) optsHtml += opts[o].outerHTML;
-      out.push({ q: dec.querySelector('.dec-q').innerHTML, optsHtml: optsHtml, tell: dec.querySelector('.dec-tell').innerHTML });
-    }
-    return out;
+    return (this._decisions || []).map(function (d) {
+      return { q: d.q, optsHtml: d.opts.map(tradeRenderOpt).join(''), tell: d.tell };
+    });
   }
 }
 customElements.define('deep-trade-offs', DeepTradeOffs);
@@ -2643,13 +2716,19 @@ class DeepWhiteboard extends HTMLElement {
 customElements.define('deep-whiteboard', DeepWhiteboard);
 
 /* ============ OPENER / ALTITUDE (web component) ============
-   The #open pane: opener cards each with a hidden answer (.op-a) and a reveal
-   button (.op-rev). Encapsulated in a shadow root that adopts the shared
-   BASE_SHEET; the reveal handlers are wired against the shadow's own buttons.
-   Three colors had html[data-theme=dark] overrides (.op-hooks bg, .op-foot bg
-   and fg); those ancestor selectors cannot reach into a shadow, so each is a
-   flip token (--op-hooks-bg / --op-foot-bg / --op-foot-fg). The .op-rev border
-   (#cfc7f0) has no dark override, so it stays hardcoded -- matching the original. */
+   The #open pane, converted to the TopicPane contract (dataKey 'open'): the base
+   class attaches the shadow + adopts BASE_SHEET + writes <style>+skeleton ONCE in
+   connectedCallback; init() caches the stable #opbody mount and wires ONE DELEGATED
+   .op-rev click listener on it; renderTopic(d) paints the cards from data
+   (TOPIC_CP_OPEN via the registry) on first paint AND every topic switch. Each
+   opener card has a hidden answer (.op-a) revealed by its .op-rev button (show +
+   disable + relabel 'Revealed'); the listener lives on the stable #opbody parent so
+   it survives the per-render rebuild, and reveal/disabled auto-resets on a switch
+   (no teardownTopic). renderOpenCard emits via innerHTML (NEVER textContent) so the
+   HTML entities resolve to glyphs -- entity_leak.cjs descends the shadow. OP_STYLE
+   keeps its three html[data-theme=dark] flip tokens (--op-hooks-bg / --op-foot-bg /
+   --op-foot-fg) -- ancestor selectors cannot reach into a shadow -- and the .op-rev
+   border (#cfc7f0, no dark override) stays hardcoded, matching the original. */
 var OP_STYLE = `
 .op-lead{font-size:15px;line-height:1.5;color:var(--ink);margin:2px 0 18px}
 .op-lead i{color:var(--accink);font-style:italic;font-weight:600}
@@ -2680,81 +2759,57 @@ var OP_STYLE = `
 .op-foot b{color:var(--accink);font-weight:700}
 .op-foot i{font-style:italic;color:var(--mut)}
 `;
-var OP_HTML = `<div class="card">
-      <div class="step-k">Match the altitude</div>
-      <div class="step-t">The same system, said three ways</div>
-      <div class="op-lead">Interviewers open with <i>&ldquo;quickly, how does it work?&rdquo;</i> as often as <i>&ldquo;design it.&rdquo;</i> Give the altitude they asked for &mdash; the frame when they want the frame, depth when they want depth &mdash; then expand only when they pull. Say each out loud before you reveal mine.</div>
-
-      <div class="op">
-        <div class="op-h"><span class="op-n">1</span><span class="op-ht"><b>One breath.</b> The whole system in a single sentence &mdash; for <i>&ldquo;high level&rdquo;</i> or <i>&ldquo;quickly.&rdquo;</i></span></div>
-        <div class="op-a">An event-driven ingestion pipeline: an S3 upload fires a Lambda that routes each file by type to a streaming handler &mdash; which hashes it, stores it, and records it &mdash; with a <b>reconciler</b> to mop up partial failures.</div>
-        <button class="op-rev" type="button">Reveal mine</button>
-      </div>
-
-      <div class="op">
-        <div class="op-h"><span class="op-n">2</span><span class="op-ht"><b>Thirty seconds.</b> What you lead with, unprompted &mdash; the load-bearing ideas, no code.</span></div>
-        <div class="op-a">Operators push content to S3, which triggers the processor. It routes on file type through an <b>O(1) strategy map</b> &mdash; not a switch &mdash; so a new format is a one-line add. Each handler <b>streams the file once</b> and forks that read to hash and upload in parallel, so memory stays flat no matter the size. The catch: the object store and the database share no transaction, so I track written keys and <b>compensate on failure</b>, with a reconciler as the backstop. And since every trigger is <b>at-least-once</b>, processing is idempotent &mdash; a replay no-ops on a content-hash marker.</div>
-        <button class="op-rev" type="button">Reveal mine</button>
-      </div>
-
-      <div class="op-hooks">
-        <div class="op-hk-t">The 30-second version names three loose threads <i>on purpose</i> &mdash; you're steering. Each is a tab you go deep on the moment they pull it:</div>
-        <div class="op-hk">
-          <div class="op-q">&ldquo;memory stays flat&rdquo;</div>
-          <div class="op-d"><span class="op-arr">&rarr;</span>how the export streams a million rows without OOM<span class="op-tab">Numbers &middot; Walkthrough</span></div>
-        </div>
-        <div class="op-hk">
-          <div class="op-q">&ldquo;compensate &middot; reconciler&rdquo;</div>
-          <div class="op-d"><span class="op-arr">&rarr;</span>the dual-write, and keeping two stores consistent<span class="op-tab">Trade-offs &middot; Red Flags</span></div>
-        </div>
-        <div class="op-hk">
-          <div class="op-q">&ldquo;at-least-once&rdquo;</div>
-          <div class="op-d"><span class="op-arr">&rarr;</span>why exactly-once is a myth and replays stay safe<span class="op-tab">Probe Drill</span></div>
-        </div>
-      </div>
-
-      <div class="op-foot"><b>The skill isn't knowing one version.</b> <i>&ldquo;Walk me through it&rdquo;</i> is the next altitude up &mdash; the Walkthrough's nine steps &mdash; and every tab here is a deeper zoom. It's having all of them, and reading which one they want.</div>
-    </div>
-    <div class="card">
-      <div class="step-k">Land it</div>
-      <div class="step-t">How to close &mdash; don&rsquo;t trail off</div>
-      <div class="op-lead">When time&rsquo;s nearly up &mdash; or they ask <i>&ldquo;anything else?&rdquo;</i> &mdash; <b>don&rsquo;t just stop.</b> A proactive close is a seniority signal: summarize the shape, name what you&rsquo;d watch, hand the wheel back. Thirty seconds, unprompted. Say each out loud before you reveal mine.</div>
-      <div class="op">
-        <div class="op-h"><span class="op-n">1</span><span class="op-ht"><b>Summarize in one line.</b> Re-state the spine so they remember the shape, not the detours.</span></div>
-        <div class="op-a">&ldquo;So &mdash; event-driven ingestion, routed by type to streaming handlers, kept consistent across two stores by a reconciler, and idempotent against replays. That&rsquo;s the core.&rdquo;</div>
-        <button class="op-rev" type="button">Reveal mine</button>
-      </div>
-      <div class="op">
-        <div class="op-h"><span class="op-n">2</span><span class="op-ht"><b>Name the three you&rsquo;d watch.</b> Naming your own risks reads as senior &mdash; not insecure.</span></div>
-        <div class="op-a">&ldquo;In production I&rsquo;d watch three things: <b>reconciler correctness under concurrency</b>, the piece most likely to hide a race; the <b>cost curve</b>, since per-object Lambda gets pricey fast; and the <b>exactly-once illusion</b> &mdash; I&rsquo;d keep proving idempotency rather than trusting delivery.&rdquo;</div>
-        <button class="op-rev" type="button">Reveal mine</button>
-      </div>
-      <div class="op">
-        <div class="op-h"><span class="op-n">3</span><span class="op-ht"><b>Say what&rsquo;s next, and what you cut.</b> Shows you scoped on purpose, not from missing it.</span></div>
-        <div class="op-a">&ldquo;With more time I&rsquo;d add the <b>status API</b> for consumers and the <b>multi-region</b> story. I left out auth and the client deliberately &mdash; out of scope for the pipeline. Where would you like to go deeper?&rdquo;</div>
-        <button class="op-rev" type="button">Reveal mine</button>
-      </div>
-      <div class="op-foot"><b>The close hands the wheel back</b> &mdash; <i>&ldquo;where would you like to go deeper?&rdquo;</i> &mdash; so the last minute is theirs, and your named risks are the threads they&rsquo;ll pull. The tell: juniors stop when they run out of things to say; seniors stop on a <i>summary, a risk list, and an invitation.</i></div>
-    </div>`;
-class DeepOpener extends HTMLElement {
-  connectedCallback() {
-    if (this._built) return;
-    this._built = true;
-    const root = this.attachShadow({ mode: 'open' });
-    root.adoptedStyleSheets = [BASE_SHEET];
-    root.innerHTML = '<style>' + OP_STYLE + '</style>' + OP_HTML;
-    const cards = root.querySelectorAll('.op');
-    for (let i = 0; i < cards.length; i++) {
-      (function (card) {
-        const answer = card.querySelector('.op-a');
-        const btn = card.querySelector('.op-rev');
-        btn.onclick = function () {
-          answer.classList.add('show');
-          btn.disabled = true;
-          btn.textContent = 'Revealed';
-        };
-      })(cards[i]);
-    }
+/* Module-level renderer: emits ONE .card -- step-k/step-t/op-lead, THEN its reveal
+   items, THEN the .op-hooks block (only when c.hooks), THEN the foot -- reproducing
+   the old OP_HTML. The 'Reveal mine' label, the &rarr; arrow span and the
+   .op-arr / .op-tab wrappers are STATIC here, not data. Consumed as innerHTML only. */
+function renderOpenCard(c) {
+  var items = c.items.map(function (it) {
+    return '<div class="op">'
+      + '<div class="op-h"><span class="op-n">' + it.n + '</span><span class="op-ht">' + it.ht + '</span></div>'
+      + '<div class="op-a">' + it.a + '</div>'
+      + '<button class="op-rev" type="button">Reveal mine</button>'
+      + '</div>';
+  }).join('');
+  var hooks = c.hooks
+    ? '<div class="op-hooks"><div class="op-hk-t">' + c.hooks.lead + '</div>'
+        + c.hooks.items.map(function (hk) {
+            return '<div class="op-hk"><div class="op-q">' + hk.q + '</div>'
+              + '<div class="op-d"><span class="op-arr">&rarr;</span>' + hk.d
+              + '<span class="op-tab">' + hk.tab + '</span></div></div>';
+          }).join('')
+        + '</div>'
+    : '';
+  return '<div class="card">'
+    + '<div class="step-k">' + c.k + '</div>'
+    + '<div class="step-t">' + c.t + '</div>'
+    + '<div class="op-lead">' + c.lead + '</div>'
+    + items
+    + hooks
+    + '<div class="op-foot">' + c.foot + '</div>'
+    + '</div>';
+}
+class DeepOpener extends TopicPane {
+  static dataKey = 'open';
+  sheets() { return [BASE_SHEET]; }
+  styleText() { return OP_STYLE; }
+  skeleton() { return '<div id="opbody"></div>'; }
+  init(root) {
+    this._body = root.getElementById('opbody');
+    /* ONE delegated reveal listener on the stable mount (the per-item .op nodes are
+       rebuilt by renderTopic, so the listener must live on the stable parent).
+       Reproduces the old per-button behavior: show the answer, disable, relabel. */
+    this._body.addEventListener('click', function (e) {
+      var btn = e.target.closest('.op-rev');
+      if (!btn || btn.disabled) return;
+      var answer = btn.closest('.op').querySelector('.op-a');
+      if (answer) answer.classList.add('show');
+      btn.disabled = true;
+      btn.textContent = 'Revealed';
+    });
+  }
+  renderTopic(d) {
+    this._body.innerHTML = d.cards.map(renderOpenCard).join('');
   }
 }
 customElements.define('deep-opener', DeepOpener);

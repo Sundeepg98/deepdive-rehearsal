@@ -575,6 +575,43 @@ html[data-theme="dark"] .stage::after{opacity:.4}
 /* === v158: Custom cursor on interactive elements === */
 button,.seg button,.dn-step,.pill,.card,.thread,.dec,.rf,.op,.piv,.tools-fab,.crbtn{cursor:pointer}
 .dn-step,.pill,.arc-step,.wb li{cursor:pointer}
+
+/* ============ Batch 1 rescues: reading-size, focus timer, back-to-top, tab-pause ============ */
+
+/* text-zoom: scale the work-surface views (shadow-DOM, fixed-px type) via zoom,
+   which magnifies AND reflows across the shadow boundary -- font-size cannot. */
+.stage .pane{zoom:var(--read-zoom,1)}
+.textzoom{display:flex;align-items:center;gap:6px;padding:9px 11px;margin-top:4px;border-top:1px solid var(--bd)}
+.textzoom-lbl{flex:1;min-width:0;font-size:11px;font-weight:600;color:var(--mut)}
+.textzoom-btn{flex:none;width:28px;height:28px;border-radius:7px;border:1px solid var(--bd);background:var(--surf);color:var(--ink);font:700 13px -apple-system,sans-serif;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;transition:border-color .15s ease,box-shadow .15s ease,background .15s ease}
+.textzoom-btn:disabled{opacity:.4;cursor:default}
+@media(hover:hover){.textzoom-btn:not(:disabled):hover{border-color:var(--acc);box-shadow:0 0 0 2px rgba(83,74,183,.1)}}
+
+/* pomodoro: standalone sidebar focus timer (kept separate from the header SessionTimer) */
+.pomodoro{padding:10px 11px;margin-top:4px;border-top:1px solid var(--bd)}
+.pomodoro-h{font-size:10px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--mut);margin-bottom:8px}
+.pomodoro-row{display:flex;align-items:center;gap:10px}
+.pomodoro-ring{flex:none;width:36px;height:36px;transform:rotate(-90deg)}
+.pomodoro-ring circle{transition:stroke-dashoffset .5s ease,stroke .3s ease}
+.pomodoro-meta{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.15}
+.pomodoro-time{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--ink)}
+.pomodoro-phase{font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--mut2)}
+.pomodoro-btn{flex:none;border:0;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
+.pomodoro-play{width:28px;height:28px;background:var(--teal);color:#fff;font-size:12px;transition:filter .2s ease}
+.pomodoro-reset{width:24px;height:24px;background:var(--bd);color:var(--mut);font-size:11px}
+@media(hover:hover){.pomodoro-play:hover{filter:brightness(1.08)}}
+
+/* the desktop sidebar widgets do not fit the mobile chrome (nav strip + fixed tools sheet) */
+@media(max-width:919px){.textzoom,.pomodoro{display:none}}
+
+/* back-to-top: the work surface scrolls the window, so this floats over the stage (centre-bottom,
+   clear of the left sidebar and the right companion on desktop) */
+.scrolltop{position:fixed;left:50%;bottom:24px;width:44px;height:44px;border-radius:50%;border:0;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;font-size:20px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(83,74,183,.3),0 0 0 1px rgba(83,74,183,.15);opacity:0;transform:translateX(-50%) translateY(16px) scale(.9);pointer-events:none;transition:opacity .25s ease,transform .3s cubic-bezier(.22,.61,.36,1);z-index:150}
+.scrolltop.show{opacity:1;transform:translateX(-50%) translateY(0) scale(1);pointer-events:auto}
+@media(hover:hover){.scrolltop.show:hover{box-shadow:0 9px 26px rgba(83,74,183,.42),0 0 0 1px rgba(83,74,183,.25)}}
+
+/* page-visibility: freeze continuous CSS animations while the tab is backgrounded */
+body.is-hidden,body.is-hidden *,body.is-hidden *::before,body.is-hidden *::after{animation-play-state:paused!important}
 </style>
 <script>/* === Boot: theme detection + loading splash === */
 try{var _dk=matchMedia('(prefers-color-scheme:dark)').matches;document.documentElement.dataset.theme=_dk?'dark':'light';var _tc=document.querySelector('meta[name="theme-color"]');if(_tc)_tc.setAttribute('content',_dk?'#15141A':'#FAF9F5');}catch(e){}
@@ -5220,6 +5257,325 @@ document.addEventListener('keydown', function (event) {
     card = hit; mx = e.clientX; my = e.clientY;
     if (!pending) { pending = true; requestAnimationFrame(flush); }
   }, { passive: true });
+})();
+
+/* ===== PageVisibility =====
+   When the tab is backgrounded, pause continuous CSS animations (the mesh-gradient
+   washes, and any other keyframe animations) to spare CPU and battery, and
+   broadcast a hidden/visible signal that any timer can react to.
+
+   How each moving part is handled:
+   - CSS animations (mesh gradient, etc.): a `body.is-hidden` class flips
+     animation-play-state to paused (rule lives in styles.css).
+   - mock-run clock: it is rAF + performance.now(), so it already freezes while
+     hidden (rAF stops firing) and self-corrects on return from the timestamp --
+     no clock surgery needed. The signal below is provided for any consumer.
+   - card spotlight: it is mousemove-driven with no continuous animation, so it is
+     naturally idle while hidden.
+
+   Uses only the Page Visibility API (allowed). Offline-safe: no network, storage,
+   or permission calls. */
+(function () {
+  'use strict';
+
+  function apply() {
+    var hidden = !!document.hidden;
+    document.body.classList.toggle('is-hidden', hidden);
+    window.__appHidden = hidden;
+    try {
+      document.dispatchEvent(new CustomEvent(hidden ? 'app:hidden' : 'app:visible'));
+    } catch (e) {}
+  }
+
+  document.addEventListener('visibilitychange', apply);
+  apply();
+})();
+
+/* ===== TextZoom =====
+   A- / A+ reading-size control in the sidebar. Scales the work-surface views
+   across 5 levels (85% - 116%, default 100%) by setting a --read-zoom custom
+   property that drives `zoom` on each .pane.
+
+   zoom (not font-size) is used on purpose: the views are shadow-DOM components
+   with fixed-px type, which a light-DOM font-size cannot reach. zoom magnifies
+   AND reflows across the shadow boundary, and because each .pane is a normal
+   block inside .stage it reflows to fit -- no horizontal clipping.
+
+   The level is a session-only module variable (default 100%); it is deliberately
+   NOT persisted, so it never touches the portable session code or any storage.
+   Reduced motion is handled globally (the app's reduced-motion rule neutralises
+   transitions); zoom itself applies instantly.
+
+   Offline-safe: no network, storage, or permission calls. */
+(function () {
+  'use strict';
+
+  var LEVELS = [0.85, 0.92, 1.0, 1.08, 1.16];
+  var idx = 2; /* default 100%; session-only, intentionally not persisted */
+  var stage = null, decBtn = null, incBtn = null;
+
+  function apply() {
+    if (!stage) stage = document.querySelector('.stage');
+    if (stage) stage.style.setProperty('--read-zoom', String(LEVELS[idx]));
+    if (decBtn) decBtn.disabled = (idx === 0);
+    if (incBtn) incBtn.disabled = (idx === LEVELS.length - 1);
+  }
+
+  function makeBtn(txt, aria, step) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'textzoom-btn';
+    b.textContent = txt;
+    b.setAttribute('aria-label', aria);
+    b.addEventListener('click', function () {
+      idx = Math.min(LEVELS.length - 1, Math.max(0, idx + step));
+      apply();
+    });
+    return b;
+  }
+
+  function build() {
+    var sidebar = document.querySelector('.sidebar');
+    if (!sidebar || document.getElementById('textzoom')) return;
+    var mockbar = sidebar.querySelector('.mockbar');
+
+    var wrap = document.createElement('div');
+    wrap.id = 'textzoom';
+    wrap.className = 'textzoom';
+
+    var label = document.createElement('span');
+    label.className = 'textzoom-lbl';
+    label.textContent = 'Text size';
+
+    decBtn = makeBtn('A\u2212', 'Decrease text size', -1);
+    incBtn = makeBtn('A+', 'Increase text size', 1);
+
+    wrap.appendChild(label);
+    wrap.appendChild(decBtn);
+    wrap.appendChild(incBtn);
+    sidebar.insertBefore(wrap, mockbar || null);
+    apply();
+  }
+
+  build();
+})();
+
+/* ===== Pomodoro =====
+   A 25/5 focus-and-break timer in the sidebar: an SVG ring countdown with
+   play / pause / reset. On each phase change the ring flips teal (focus) ->
+   amber (break), the label tracks the phase, and an optional short WebAudio
+   tone marks the switch (best-effort; silently skipped if no AudioContext).
+
+   Kept SEPARATE from SessionTimer (the header mock-exam countdown) on purpose:
+   different purpose (a repeating focus rhythm vs a one-shot timed mock),
+   location (sidebar vs header), and lifecycle (cycles forever vs auto-stops).
+   Folding the two would conflate distinct tools and bloat SessionTimer's minimal
+   API-driven design -- so this is a standalone widget.
+
+   The phase keeps counting while the tab is hidden (a focus timer should track
+   real time), so it intentionally opts out of the page-visibility pause.
+
+   Offline-safe: no network, storage, or permission calls. */
+(function () {
+  'use strict';
+
+  var WORK = 25 * 60, BREAK = 5 * 60, R = 15, CIRC = 2 * Math.PI * R;
+  var seconds = WORK, running = false, isWork = true, interval = null;
+  var ring = null, timeText = null, phaseText = null, playBtn = null, audio = null;
+
+  function fmt(s) {
+    var m = Math.floor(s / 60), x = s % 60;
+    return m + ':' + (x < 10 ? '0' : '') + x;
+  }
+
+  function ensureAudio() {
+    try {
+      var Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return;
+      if (!audio) audio = new Ctx();
+      if (audio.state === 'suspended' && audio.resume) audio.resume();
+    } catch (e) {}
+  }
+
+  function cue() {
+    /* tiny self-contained phase-change tone -- replaces the old window.showToast */
+    try {
+      if (!audio) return;
+      var osc = audio.createOscillator(), gain = audio.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = isWork ? 660 : 440;
+      gain.gain.value = 0.04;
+      osc.connect(gain); gain.connect(audio.destination);
+      osc.start();
+      osc.stop(audio.currentTime + 0.18);
+    } catch (e) {}
+  }
+
+  function paint() {
+    if (!ring) return;
+    var total = isWork ? WORK : BREAK;
+    ring.setAttribute('stroke-dashoffset', String(CIRC * (1 - seconds / total)));
+    ring.setAttribute('stroke', isWork ? 'var(--teal)' : 'var(--amber)');
+    if (timeText) timeText.textContent = fmt(seconds);
+    if (phaseText) phaseText.textContent = isWork ? 'Focus' : 'Break';
+  }
+
+  function tick() {
+    seconds--;
+    if (seconds <= 0) {
+      isWork = !isWork;
+      seconds = isWork ? WORK : BREAK;
+      cue();
+    }
+    paint();
+  }
+
+  function setPlayUI() {
+    if (!playBtn) return;
+    playBtn.textContent = running ? '\u2759\u2759' : '\u25B6';
+    playBtn.setAttribute('aria-label', running ? 'Pause focus timer' : 'Start focus timer');
+  }
+
+  function toggle() {
+    if (running) {
+      clearInterval(interval); interval = null; running = false;
+    } else {
+      ensureAudio();
+      interval = setInterval(tick, 1000); running = true;
+    }
+    setPlayUI();
+  }
+
+  function reset() {
+    clearInterval(interval); interval = null; running = false;
+    isWork = true; seconds = WORK;
+    setPlayUI();
+    paint();
+  }
+
+  function svgCircle(stroke) {
+    var c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    c.setAttribute('cx', '18'); c.setAttribute('cy', '18'); c.setAttribute('r', String(R));
+    c.setAttribute('fill', 'none'); c.setAttribute('stroke', stroke); c.setAttribute('stroke-width', '3');
+    return c;
+  }
+
+  function build() {
+    var sidebar = document.querySelector('.sidebar');
+    if (!sidebar || document.getElementById('pomodoro')) return;
+    var mockbar = sidebar.querySelector('.mockbar');
+
+    var wrap = document.createElement('div');
+    wrap.id = 'pomodoro'; wrap.className = 'pomodoro';
+
+    var head = document.createElement('div');
+    head.className = 'pomodoro-h';
+    head.textContent = 'Focus timer';
+
+    var row = document.createElement('div');
+    row.className = 'pomodoro-row';
+
+    var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 36 36');
+    svg.setAttribute('class', 'pomodoro-ring');
+    svg.setAttribute('aria-hidden', 'true');
+    svg.appendChild(svgCircle('var(--bd)'));
+    ring = svgCircle('var(--teal)');
+    ring.setAttribute('stroke-linecap', 'round');
+    ring.setAttribute('stroke-dasharray', String(CIRC));
+    svg.appendChild(ring);
+
+    var meta = document.createElement('div');
+    meta.className = 'pomodoro-meta';
+    timeText = document.createElement('span');
+    timeText.className = 'pomodoro-time';
+    timeText.textContent = fmt(WORK);
+    phaseText = document.createElement('span');
+    phaseText.className = 'pomodoro-phase';
+    phaseText.textContent = 'Focus';
+    meta.appendChild(timeText); meta.appendChild(phaseText);
+
+    playBtn = document.createElement('button');
+    playBtn.type = 'button';
+    playBtn.className = 'pomodoro-btn pomodoro-play';
+    playBtn.addEventListener('click', toggle);
+
+    var resetBtn = document.createElement('button');
+    resetBtn.type = 'button';
+    resetBtn.className = 'pomodoro-btn pomodoro-reset';
+    resetBtn.textContent = '\u21BB';
+    resetBtn.setAttribute('aria-label', 'Reset focus timer');
+    resetBtn.addEventListener('click', reset);
+
+    row.appendChild(svg); row.appendChild(meta); row.appendChild(playBtn); row.appendChild(resetBtn);
+    wrap.appendChild(head); wrap.appendChild(row);
+    sidebar.insertBefore(wrap, mockbar || null);
+
+    setPlayUI();
+    paint();
+  }
+
+  build();
+})();
+
+/* ===== ScrollToTop =====
+   A floating "back to top" button for the long views. In this layout the work
+   surface scrolls the WINDOW (the panes are not inner scroll containers -- there
+   is no overflow-y on .stage/.pane), so it watches window scroll, fades in past
+   ~400px, and scrolls the window back to the top. It resets and re-evaluates on
+   each routechange (the router dispatches routechange on window). Reduced-motion
+   users get an instant jump instead of a smooth scroll.
+
+   Offline-safe: no network, storage, or permission calls. */
+(function () {
+  'use strict';
+
+  var THRESHOLD = 400, btn = null, shown = false;
+
+  function scrollTop() {
+    return window.pageYOffset ||
+      (document.scrollingElement || document.documentElement).scrollTop || 0;
+  }
+
+  function reduceMotion() {
+    try { return window.matchMedia('(prefers-reduced-motion:reduce)').matches; }
+    catch (e) { return false; }
+  }
+
+  function build() {
+    btn = document.createElement('button');
+    btn.type = 'button';
+    btn.id = 'scrolltop';
+    btn.className = 'scrolltop';
+    btn.setAttribute('aria-label', 'Scroll to top');
+    btn.textContent = '\u2191';
+    btn.addEventListener('click', function () {
+      window.scrollTo({ top: 0, behavior: reduceMotion() ? 'auto' : 'smooth' });
+    });
+    document.body.appendChild(btn);
+  }
+
+  function update() {
+    if (!btn) return;
+    var should = scrollTop() > THRESHOLD;
+    if (should === shown) return;
+    shown = should;
+    btn.classList.toggle('show', should);
+  }
+
+  function onRoute() {
+    shown = false;
+    if (btn) btn.classList.remove('show');
+    setTimeout(update, 120);
+  }
+
+  build();
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update, { passive: true });
+  /* router dispatches on window; also listen on document for robustness */
+  window.addEventListener('routechange', onRoute);
+  document.addEventListener('routechange', onRoute);
+  update();
 })();
 </script>
 <script>

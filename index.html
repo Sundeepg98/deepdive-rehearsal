@@ -1116,7 +1116,121 @@ class TopicPane extends HTMLElement {
   renderTopic() {}
 }
 
-var cards=[
+/* topics/content-pipeline.js -- FOUNDATION include wrapper: the topic-1 bundle.
+   identity + 9 per-pane data slices + the cross-pane bank, THEN register (which seeds
+   the working-set globals as the first topic). Loaded after the drill data globals and
+   before the 9 pane classes (see app.js / the appendix load-order invariant). */
+/* ============ topics/content-pipeline/identity.js -- FOUNDATION ============
+   Topic 1 identity: every scattered light-DOM string, centralized as the
+   SWITCHABLE source. In Phase 0 applyIdentity() does NOT run at boot -- topic 1's
+   identity stays hard-coded in index.html for a byte-identical first paint -- so
+   only `cmpNotes` is read at boot (by __syncCompanion via TOPIC_CMP_NOTES). The
+   other fields are the deliberate, tiny duplication that powers a clean switch in
+   Phase 2. cmpNotes is lifted verbatim from numbers-nalsd.js's closure-local map.
+   Offline-safe: no network/storage/permission. */
+var TOPIC_CP_IDENTITY = {
+  index: 1,
+  total: 8,
+  locatorTail: 'ingestion layer',
+  title: 'Content Pipeline',
+  h1: 'Content Pipeline',
+  sub: '<b>Mechanics</b> &rarr; <b>graded follow-up chains</b> &rarr; <b>whiteboard</b> &rarr; <b>zoom out</b> to where this sits in the whole system, and the pivots an interviewer rides into the next topic.',
+  companionTopic: 'Content Pipeline',
+  thesis: 'A file-processing service, taken apart the way an interviewer actually scores it &mdash; beat by beat, with the follow-ups they ask.',
+  spine: [
+    'A frozen strategy map keeps dispatch <b>O(1)</b> &mdash; never a switch statement.',
+    'One <b>PassThrough</b> fork hashes <i>and</i> uploads on a single read of the file.',
+    'At-least-once delivery <b>+</b> idempotent work <b>=</b> exactly-once effect.',
+    'Name the ceiling before you hit it &mdash; Lambda gives way to <b>SQS</b> past ~1,000/s.'
+  ],
+  cramTitle: 'Content Pipeline',
+  reportTitle: 'Content Pipeline',
+  cmpNotes: {
+      walk:['Walkthrough','The dispatch flow, one step at a time \u2014 the mechanics you narrate before anyone cuts in.','Say the fork out loud \u2014 \u201Cone read, two sinks.\u201D That single-read line is what they remember.'],
+      drill:['Probe Drill','Twenty graded follow-ups \u2014 the ones that separate a passing SDE2 from a Staff signal.','Commit to an answer before you reveal \u2014 saying it beats reading it. That\u2019s the rep.'],
+      wb:['Whiteboard','Rebuild the whole pipeline from memory \u2014 nine cues, nothing in front of you.','Draw the boxes from memory first, then check \u2014 recall is the test, not recognition.'],
+      sys:['System Map','Zoom out to the six stages \u2014 and the exact points an interviewer pivots.','Lead with the flow, not the boxes \u2014 \u201Cupload lands, dispatch routes, sinks fan out.\u201D'],
+      trade:['Trade-offs','The decisions they drill \u2014 each with the switch condition that picks a side.','Always say \u201Cpick when\u201D \u2014 name the condition that flips the choice, not just the options.'],
+      model:['Model Answers','Full spoken scripts \u2014 the beats, in order, the way you\u2019d actually say them.','Steal the frame, not the words \u2014 headline first, then the one risk you\u2019d name.'],
+      num:['Numbers','Back-of-envelope the load \u2014 and know which number trips which ceiling.','Lead with the peak, not the average \u2014 ~1,157/s is the number that sets the ceiling.'],
+      rf:['Red Flags','What sinks the round \u2014 the anti-patterns, and what to say instead.','Name what the interviewer hears, not just the mistake \u2014 that\u2019s the senior tell.'],
+      open:['30-Second','The opener and the close \u2014 matched to the altitude the question is asked at.','Match the altitude \u2014 open at the contract, not the code, and land on the one risk.']
+    }
+};
+
+/* topics/content-pipeline/walk.js -- topic-1 data for the WALKTHROUGH pane
+   (TopicPane dataKey 'walk'). steps[9] is the guided trace (lifted VERBATIM from the
+   former `var steps` in walkthrough/steps.js); modelScript[8] is the model-answer
+   script (the 6 plain beats, the interviewer .mq line, then the .mbeat.ans -- which
+   MUST stay LAST, the last-child CSS depends on it), lifted from the former baked
+   blob in walkthrough/logic.js. Pure data: the div/span markup lives in renderBeat
+   (logic.js), NOT here. Offline-safe; 7-bit ASCII (HTML entities). */
+var TOPIC_CP_WALK = {
+  steps: [
+  { k:"Step 1 / 9", t:"Strategy dispatch",
+    flow:'<span class="fb n">processUpload(key,bucket)</span><span class="arr">&rarr;</span><span class="fb n">extname(key)</span><span class="arr">&rarr;</span><span class="fb p">strategies[ext]</span><span class="arr">&rarr;</span><span class="fb t">handler</span><span class="arr">/</span><span class="fb a">skip</span>',
+    ins:'A frozen object literal, not a switch. Lookup is <b>O(1)</b>; every handler shares one <code>(key,bucket) &rarr; Result</code> contract, so the dispatcher\'s cyclomatic complexity stays <b>1</b> forever.',
+    deep:'The <code>Result</code> shape is normalized &mdash; image, video, font all return <code>{thumbnailKey, metadata, status}</code> &mdash; so the caller\'s PATCH-status logic is format-agnostic. Adding <code>.webp</code> is one map entry and zero caller changes.' },
+  { k:"Step 2 / 9", t:"Single-read fork",
+    flow:'<span class="fb n">createReadStream</span><span class="arr">&rarr;</span><span class="fb p">PassThrough</span><span class="arr">&rarr;</span><span class="fb t">hash.update</span><span class="arr">+</span><span class="fb r">s3.upload</span><span class="arr">&rarr;</span><span class="fb n">Promise.all</span>',
+    ins:'One disk read, forked two ways. Buffer is <code>highWaterMark</code> (16&nbsp;KB) &mdash; never the file. When S3 lags, <code>write()</code> returns <b>false</b> and the source <b>pauses</b>, so RAM is flat at 500&nbsp;MB or 5&nbsp;GB.',
+    code:'<span class="k">const</span> pass = <span class="k">new</span> PassThrough();\n<span class="k">const</span> hash = createHash(<span class="s">\'sha256\'</span>);\npass.on(<span class="s">\'data\'</span>, c => hash.update(c));      <span class="c">// consumer 1 (CPU)</span>\n<span class="k">const</span> up = s3.upload({ Bucket, Key, <span class="hl">Body: pass</span> }); <span class="c">// consumer 2 (net)</span>\ncreateReadStream(path).<span class="hl">pipe(pass)</span>;           <span class="c">// ONE disk read</span>\n<span class="k">await</span> up.promise();                        <span class="c">// pipe() handles backpressure</span>\n<span class="k">const</span> digest = hash.digest(<span class="s">\'hex\'</span>);',
+    cap:'<code>pipe()</code> wires the pause/resume; the <code>data</code>-event hash rides the same buffer. Two consumers, one read.' },
+  { k:"Step 3 / 9", t:"Cursor export",
+    flow:'<span class="fb p">QueryStream(batch 100)</span><span class="arr">&rarr;</span><span class="fb n">csv-stringify</span><span class="arr">&rarr;</span><span class="fb t">res</span>',
+    ins:'<code>DECLARE CURSOR</code>, 100 rows at a time, piped to the socket. A full TCP window backpressures the transform, which backpressures the cursor &mdash; Postgres fetches only as fast as the client drains. <b>Constant memory</b> at 1K or 10M rows.',
+    deep:'Without the cursor, the pg driver buffers the <b>entire</b> result set in JS before your code runs &mdash; that\'s the OOM. The cursor turns one giant allocation into a stream of 100-row pages the GC reclaims between batches.' },
+  { k:"Step 4 / 9", t:"Import conflict ladder",
+    flow:'<span class="fb n">row</span><span class="arr">&rarr;</span><span class="fb t">id+co? REUSE</span><span class="arr">&rarr;</span><span class="fb a">name+ver? REMAP</span><span class="arr">&rarr;</span><span class="fb r">id taken? REGEN</span><span class="arr">&rarr;</span><span class="fb t">else INSERT</span>',
+    ins:'Strict precedence. Checking <code>name+version</code> <b>before</b> id-collision means a re-import <b>de-dupes</b> (REMAP) instead of forking a new uuid (REGEN). Every REMAP/REGEN records <code>oldId&rarr;newId</code>, then rewrites child FKs before insert.',
+    code:'<span class="k">const</span> idMap = <span class="k">new</span> Map();\n<span class="k">for</span> (<span class="k">const</span> row <span class="k">of</span> incoming) {\n  <span class="k">if</span> (<span class="k">await</span> match(row.id, row.company)) reuse(row.id);\n  <span class="k">else if</span> (<span class="k">await</span> match(row.name, row.version))\n       idMap.set(row.id, existing.id);   <span class="c">// REMAP (de-dupe)</span>\n  <span class="k">else if</span> (<span class="k">await</span> idExists(row.id))\n       idMap.set(row.id, uuid());        <span class="c">// REGEN (fork)</span>\n  <span class="k">else</span> insert(row.id);                  <span class="c">// INSERT</span>\n}\n<span class="k">for</span> (<span class="k">const</span> ch <span class="k">of</span> children)               <span class="c">// FK cascade</span>\n  ch.parent_id = idMap.get(ch.parent_id) ?? ch.parent_id;',
+    cap:'<code>name+version</code> is checked before id-collision &mdash; that ordering is what makes a re-import REMAP instead of fork.' },
+  { k:"Step 5 / 9", t:"Hash + multipart",
+    flow:'<span class="fb t">sha256 streaming</span><span class="arr">&middot;</span><span class="fb n">&lt;5MB Put</span><span class="arr">/</span><span class="fb r">&ge;5MB multipart</span>',
+    ins:'The digest is content-deterministic, so the <b>key is the hash</b> &mdash; identical bytes converge on one object (dedup). A failed multipart leaves orphan parts; an S3 lifecycle rule aborts incomplete uploads.',
+    deep:'Multipart also gives retry-per-part and parallel upload: a 500&nbsp;MB blob goes as 100&times;5&nbsp;MB parts, and a transient failure retries one part &mdash; not the whole object.' },
+  { k:"Step 6 / 9", t:"S3 event routing",
+    flow:'<span class="fb n">ObjectCreated</span><span class="arr">&rarr;</span><span class="fb p">prefix &rarr; Lambda</span><span class="arr">&rarr;</span><span class="fb n">per-record</span><span class="arr">&rarr;</span><span class="fb t">PROCESSED</span><span class="arr">/</span><span class="fb r">ERROR</span>',
+    ins:'Uploads push work; nothing polls. Delivery is <b>at-least-once</b> &rarr; processing must be idempotent (hash key). And prefixes can\'t overlap &mdash; you can\'t later split <code>uploads/</code> into <code>uploads/images/</code>.',
+    deep:'The handler decodes the key first &mdash; S3 URL-encodes spaces as <code>+</code>. Skip that and <code>"my file.bin"</code> becomes <code>"my+file.bin"</code>, the DB lookup misses, and you get a silent no-match bug.' },
+  { k:"Step 7 / 9", t:"Reconciler sweep",
+    flow:'<span class="fb n">scheduled sweep</span><span class="arr">&rarr;</span><span class="fb p">list S3 keys</span><span class="arr">&rarr;</span><span class="fb a">no DB row?</span><span class="arr">&rarr;</span><span class="fb t">past grace?</span><span class="arr">&rarr;</span><span class="fb r">delete orphan</span>',
+    ins:'The dual-write\'s real backstop. A scheduled job lists S3, finds keys with <b>no DB row</b>, and deletes the orphans &mdash; but only those past a grace window (or without a PENDING marker), so it <b>never touches an in-flight upload</b>.',
+    code:'<span class="k">const</span> GRACE = 3600e3;                  <span class="c">// 1h &gt; write</span>\n<span class="k">for await</span> (<span class="k">const</span> o <span class="k">of</span> listKeys(bucket)) {\n  <span class="k">if</span> (fresh(o, GRACE)) <span class="k">continue</span>; <span class="c">// in-flight</span>\n  <span class="k">const</span> row = <span class="k">await</span> db.findByKey(o.Key);\n  <span class="k">if</span> (!row) <span class="k">await</span> s3.<span class="hl">deleteObject</span>(o.Key); <span class="c">// orphan</span>\n}',
+    cap:'The grace window (or a PENDING marker) is the one line that stops the reconciler deleting in-flight uploads.' },
+  { k:"Step 8 / 9", t:"Idempotent processing",
+    flow:'<span class="fb n">event (&ge;1&times;)</span><span class="arr">&rarr;</span><span class="fb p">conditional put marker</span><span class="arr">&rarr;</span><span class="fb a">exists? skip</span><span class="arr">/</span><span class="fb t">else process</span>',
+    ins:'S3 delivery is <b>at-least-once</b>, so the same event can arrive twice. A conditional put on a content-hash marker is a check-and-set: the first delivery wins and processes; a redelivery sees the marker and <b>no-ops</b>. The effect is idempotent even though delivery isn\'t.',
+    code:'<span class="k">const</span> marker = <span class="s">"processed#"</span> + hash; <span class="c">// dedup key</span>\n<span class="k">try</span> {\n  <span class="k">await</span> ddb.<span class="hl">put</span>({ Item: { pk: marker },\n    ConditionExpression: <span class="s">"attribute_not_exists(pk)"</span> });\n} <span class="k">catch</span> (e) {\n  <span class="k">if</span> (e.name === <span class="s">"ConditionalCheckFailed..."</span>) <span class="k">return</span>; <span class="c">// done</span>\n  <span class="k">throw</span> e;\n}\n<span class="k">await</span> process(object); <span class="c">// once per event</span>',
+    cap:'The conditional put <i>is</i> the lock &mdash; first writer wins the key; redeliveries fail the condition and skip.' },
+  { k:"Step 9 / 9", t:"Observability hooks",
+    flow:'<span class="fb n">each stage</span><span class="arr">&rarr;</span><span class="fb p">emit 4 signals</span><span class="arr">&rarr;</span><span class="fb t">page on SLA breach</span><span class="arr">/</span><span class="fb a">log the rest</span>',
+    ins:'You can\'t operate what you can\'t see. Every stage emits the <b>four signals</b> that localize an incident &mdash; queue depth, p99 latency, error/DLQ rate, reconciler orphan count &mdash; and you <b>page only on what users feel</b> (SLA breach, DLQ growth), logging the self-healing rest.',
+    code:'metrics.<span class="hl">gauge</span>(<span class="s">"queue.depth"</span>, <span class="k">await</span> queue.size());\nmetrics.<span class="hl">histogram</span>(<span class="s">"process.latency_ms"</span>, elapsed); <span class="c">// p99</span>\nmetrics.<span class="hl">count</span>(<span class="s">"process.error"</span>, err ? 1 : 0);\nmetrics.<span class="hl">gauge</span>(<span class="s">"reconciler.orphans"</span>, orphanCount);\n<span class="c">// page on: dlq.depth &gt; 0 sustained, or event.age &gt; SLA</span>',
+    cap:'Alarm on symptoms users feel; transient spikes that self-heal via retry are log-only, or you drown in false pages.' }
+  ],
+  modelScript: [
+    { ml: 'Frame it before diving', t: '"Before I trace it &mdash; I\'ll assume single region, files up to ~500&nbsp;MB, and that downstream consumers need the result within a few seconds. Stop me if any of that\'s off."' },
+    { ml: 'Headline in one breath', t: '"At a high level: the object lands in S3, that fires a trigger, I hash and validate it <b>while it streams</b>, write the metadata transactionally, then fan it out to the processors &mdash; built so memory stays flat no matter the file size."' },
+    { ml: 'Walk the path', t: '"Concretely &mdash; the upload completes to S3 and emits an event. My handler opens a read stream and forks it through a <b>PassThrough</b>: one branch computes the SHA&#8209;256, the other feeds the processor, so I never buffer the whole file or read it twice. Once I have the hash and size, I write the row &mdash; key, hash, status &mdash; to the metadata DB."' },
+    { ml: 'Name the risk yourself', t: '"The thing I\'d flag without being asked is the <b>dual&#8209;write</b>: the object is already in S3, but if the DB write fails I\'ve got an orphan. The compensating delete covers the common case, but the real backstop is a <b>reconciler</b> that sweeps S3 for keys with no committed row. I wouldn\'t claim the delete alone is safe."' },
+    { ml: 'Name the trade-off line', t: '"For dispatch I\'d run a Lambda per object at this volume &mdash; the simplest thing that works. The moment I need retries, ordering, or a DLQ, I\'d put <b>SQS</b> in front and make the processors consumers. That\'s the line I\'d move on, and I\'d say so before they ask."' },
+    { ml: 'Be honest about the ceiling', t: '"This holds to low thousands of objects a minute. Past that the metadata DB is the bottleneck &mdash; I\'d shard by tenant or key&#8209;prefix and move fully onto SQS&#8209;fronted consumers. I\'d call that out as the next redesign rather than pretend it scales forever."' },
+    { mq: 'Interviewer: "What if two uploads race on the same key?"' },
+    { ml: 'Absorb the follow-up', t: '"S3 is last&#8209;writer&#8209;wins on the object, so the bytes are fine &mdash; but my metadata could interleave. I\'d make the DB write <b>idempotent on the key</b> with a conditional put, so the second writer updates cleanly or no&#8209;ops. And if ordering genuinely matters to the business, that\'s one more reason to move to a queue with a per&#8209;key partition."', ans: true }
+  ]
+};
+
+/* topics/content-pipeline/drill.js -- Phase 1: REAL drill data (the cross-pane BANK
+   source). Seeds the working-set globals cards/speakLines (declared + owned by
+   topic-protocol.js) with the real 20-probe bank, then TOPIC_CP_DRILL aliases the
+   SAME arrays plus the 4 per-tier notes. Loads BEFORE bank.js + register in this
+   bundle, so bank.cards captures the real array and publishBanks() seeds the globals
+   at boot (mock-run + mixed-fire read them). speak[i] pairs cards[i] -- order is
+   load-bearing. The old pre-bundle homes drill/cards.js + drill/speak-lines.js (and
+   their app.js include lines) are deleted; this file is the single source now.
+   DRILL_TIER_CLASS + dShuffle stay module-level in drill/logic.js. Offline-safe. */
+cards = [
   { tier:'SDE2', signal:'Memory model under streaming',
     q:"Export a 1,000,000-row CSV without OOM. How?",
     a:"Server-side cursor (<code>pg-query-stream</code>, batch 100) piped to the response. Backpressure throttles the cursor to the client\'s drain rate, so memory is <b>constant</b> regardless of row count.",
@@ -1302,7 +1416,7 @@ var cards=[
     f:[{q:"Why not just deploy v2 everywhere at once?",a:"Because the queue holds in-flight events and workers don&rsquo;t cut over atomically &mdash; even a fast deploy has a window where old and new coexist, and any consumer lag widens it. If v2 writes a record shape v1 doesn&rsquo;t understand, v1 errors on &mdash; or silently mishandles &mdash; every event it picks up in that window. Expand/contract removes the assumption that there&rsquo;s ever a clean instant where only one version runs."},{q:"The canary looks clean, you ramp to 100%, and an hour later you find it was writing a subtly wrong field. Now what?",a:"Code rollback stops the bleeding but doesn&rsquo;t fix the hour of bad records &mdash; that&rsquo;s the asymmetry. So flip the writer back (or kill the flag), then run a <b>targeted backfill</b> over just the affected window, which I can scope because records are timestamped and the change is identifiable. That&rsquo;s exactly why the pipeline keeps enough provenance to ask &lsquo;everything written by v2 between T1 and T2,&rsquo; and why an irreversible write worries me more than a reversible one."}],
     senior:"The tell is knowing a rolling deploy means old and new run <i>concurrently</i>, so changes must be backward- and forward-compatible &mdash; expand, migrate, contract, never big-bang &mdash; and being honest that <b>rolling back code is not rolling back data</b>. Juniors say &lsquo;canary then ramp&rsquo;; seniors design the change so both versions coexist safely and so a bad write is <i>findable and reversible</i>, because the data is the part you can&rsquo;t just redeploy." }
 ];
-var speakLines=[
+speakLines = [
  "Open with the headline: <b>'I'd stream it with a server-side cursor so memory stays constant'</b> &mdash; then the backpressure, then flag the slow-reader connection risk.",
  "Lead with the failure: <b>'The risk here is a dual-write &mdash; the DB rolls back but S3 doesn't'</b> &mdash; then the compensating delete, then the reconciler as the real backstop.",
  "State the constraint first: <b>'I hash during the upload because reading twice or buffering won't survive 500MB'</b> &mdash; then describe the PassThrough fork.",
@@ -1324,118 +1438,11 @@ var speakLines=[
  "Refuse the happy path first: the bugs live in redelivery, partial failure, and concurrency, so that&rsquo;s where the tests aim. Layer it &mdash; unit on the pure logic, integration on the full upload-to-record path, and a contract test on the strategy map so it can&rsquo;t silently drift. Then the test that earns confidence: fire the <b>same event N times concurrently</b> and assert exactly one record &mdash; the one most teams skip and the one at-least-once eventually breaks. Add fault injection, kill the worker mid-handler and assert the retry converges clean, and run the reconciler against live writes. Honest close: you can&rsquo;t test exactly-once into existence, so you test idempotency and convergence and assert invariants for the rest.",
  "The trap is &lsquo;just deploy v2&rsquo; &mdash; in a rolling deploy, old and new workers run at the same time on the same queue, so for a window both versions touch the same events. So go <b>expand, migrate, contract</b>: first ship a version that tolerates both shapes, then flip the writer to the new one, then remove the old path in a third deploy. Canary a small slice, watch error rate and artifact correctness, then ramp. And say the honest part out loud: rolling back code is instant, but if the bad version already wrote bad data, a code rollback doesn&rsquo;t fix it &mdash; so the data change is forward-compatible by design and destructive steps sit behind a flag. The senior move is making both versions coexist safely and making a bad write findable and reversible."
 ];
-/* topics/content-pipeline.js -- FOUNDATION include wrapper: the topic-1 bundle.
-   identity + 9 per-pane data slices + the cross-pane bank, THEN register (which seeds
-   the working-set globals as the first topic). Loaded after the drill data globals and
-   before the 9 pane classes (see app.js / the appendix load-order invariant). */
-/* ============ topics/content-pipeline/identity.js -- FOUNDATION ============
-   Topic 1 identity: every scattered light-DOM string, centralized as the
-   SWITCHABLE source. In Phase 0 applyIdentity() does NOT run at boot -- topic 1's
-   identity stays hard-coded in index.html for a byte-identical first paint -- so
-   only `cmpNotes` is read at boot (by __syncCompanion via TOPIC_CMP_NOTES). The
-   other fields are the deliberate, tiny duplication that powers a clean switch in
-   Phase 2. cmpNotes is lifted verbatim from numbers-nalsd.js's closure-local map.
-   Offline-safe: no network/storage/permission. */
-var TOPIC_CP_IDENTITY = {
-  index: 1,
-  total: 8,
-  locatorTail: 'ingestion layer',
-  title: 'Content Pipeline',
-  h1: 'Content Pipeline',
-  sub: '<b>Mechanics</b> &rarr; <b>graded follow-up chains</b> &rarr; <b>whiteboard</b> &rarr; <b>zoom out</b> to where this sits in the whole system, and the pivots an interviewer rides into the next topic.',
-  companionTopic: 'Content Pipeline',
-  thesis: 'A file-processing service, taken apart the way an interviewer actually scores it &mdash; beat by beat, with the follow-ups they ask.',
-  spine: [
-    'A frozen strategy map keeps dispatch <b>O(1)</b> &mdash; never a switch statement.',
-    'One <b>PassThrough</b> fork hashes <i>and</i> uploads on a single read of the file.',
-    'At-least-once delivery <b>+</b> idempotent work <b>=</b> exactly-once effect.',
-    'Name the ceiling before you hit it &mdash; Lambda gives way to <b>SQS</b> past ~1,000/s.'
-  ],
-  cramTitle: 'Content Pipeline',
-  reportTitle: 'Content Pipeline',
-  cmpNotes: {
-      walk:['Walkthrough','The dispatch flow, one step at a time \u2014 the mechanics you narrate before anyone cuts in.','Say the fork out loud \u2014 \u201Cone read, two sinks.\u201D That single-read line is what they remember.'],
-      drill:['Probe Drill','Twenty graded follow-ups \u2014 the ones that separate a passing SDE2 from a Staff signal.','Commit to an answer before you reveal \u2014 saying it beats reading it. That\u2019s the rep.'],
-      wb:['Whiteboard','Rebuild the whole pipeline from memory \u2014 nine cues, nothing in front of you.','Draw the boxes from memory first, then check \u2014 recall is the test, not recognition.'],
-      sys:['System Map','Zoom out to the six stages \u2014 and the exact points an interviewer pivots.','Lead with the flow, not the boxes \u2014 \u201Cupload lands, dispatch routes, sinks fan out.\u201D'],
-      trade:['Trade-offs','The decisions they drill \u2014 each with the switch condition that picks a side.','Always say \u201Cpick when\u201D \u2014 name the condition that flips the choice, not just the options.'],
-      model:['Model Answers','Full spoken scripts \u2014 the beats, in order, the way you\u2019d actually say them.','Steal the frame, not the words \u2014 headline first, then the one risk you\u2019d name.'],
-      num:['Numbers','Back-of-envelope the load \u2014 and know which number trips which ceiling.','Lead with the peak, not the average \u2014 ~1,157/s is the number that sets the ceiling.'],
-      rf:['Red Flags','What sinks the round \u2014 the anti-patterns, and what to say instead.','Name what the interviewer hears, not just the mistake \u2014 that\u2019s the senior tell.'],
-      open:['30-Second','The opener and the close \u2014 matched to the altitude the question is asked at.','Match the altitude \u2014 open at the contract, not the code, and land on the one risk.']
-    }
+var TOPIC_CP_DRILL = {
+  cards: cards,
+  speak: speakLines,
+  tierNotes: {all:'<b>All four levels, mixed</b> &mdash; the way a real loop actually comes at you.',SDE2:'<b>Fundamentals under pressure</b> &mdash; memory model, I/O, idempotent writes. The bar is &ldquo;this won&rsquo;t fall over&rdquo;: show the mechanics cleanly.',SDE3:'<b>Depth &amp; trade-offs</b> &mdash; consistency, schema evolution, the hidden bill. The bar is &ldquo;it depends, here&rsquo;s the switch&rdquo;: never a one-size answer.',Staff:'<b>Systems judgment</b> &mdash; irreversibility, blast radius, the exactly-once illusion. The bar is &ldquo;I see the failure mode before it ships&rdquo;: name what breaks and name the backstop.'}
 };
-
-/* topics/content-pipeline/walk.js -- topic-1 data for the WALKTHROUGH pane
-   (TopicPane dataKey 'walk'). steps[9] is the guided trace (lifted VERBATIM from the
-   former `var steps` in walkthrough/steps.js); modelScript[8] is the model-answer
-   script (the 6 plain beats, the interviewer .mq line, then the .mbeat.ans -- which
-   MUST stay LAST, the last-child CSS depends on it), lifted from the former baked
-   blob in walkthrough/logic.js. Pure data: the div/span markup lives in renderBeat
-   (logic.js), NOT here. Offline-safe; 7-bit ASCII (HTML entities). */
-var TOPIC_CP_WALK = {
-  steps: [
-  { k:"Step 1 / 9", t:"Strategy dispatch",
-    flow:'<span class="fb n">processUpload(key,bucket)</span><span class="arr">&rarr;</span><span class="fb n">extname(key)</span><span class="arr">&rarr;</span><span class="fb p">strategies[ext]</span><span class="arr">&rarr;</span><span class="fb t">handler</span><span class="arr">/</span><span class="fb a">skip</span>',
-    ins:'A frozen object literal, not a switch. Lookup is <b>O(1)</b>; every handler shares one <code>(key,bucket) &rarr; Result</code> contract, so the dispatcher\'s cyclomatic complexity stays <b>1</b> forever.',
-    deep:'The <code>Result</code> shape is normalized &mdash; image, video, font all return <code>{thumbnailKey, metadata, status}</code> &mdash; so the caller\'s PATCH-status logic is format-agnostic. Adding <code>.webp</code> is one map entry and zero caller changes.' },
-  { k:"Step 2 / 9", t:"Single-read fork",
-    flow:'<span class="fb n">createReadStream</span><span class="arr">&rarr;</span><span class="fb p">PassThrough</span><span class="arr">&rarr;</span><span class="fb t">hash.update</span><span class="arr">+</span><span class="fb r">s3.upload</span><span class="arr">&rarr;</span><span class="fb n">Promise.all</span>',
-    ins:'One disk read, forked two ways. Buffer is <code>highWaterMark</code> (16&nbsp;KB) &mdash; never the file. When S3 lags, <code>write()</code> returns <b>false</b> and the source <b>pauses</b>, so RAM is flat at 500&nbsp;MB or 5&nbsp;GB.',
-    code:'<span class="k">const</span> pass = <span class="k">new</span> PassThrough();\n<span class="k">const</span> hash = createHash(<span class="s">\'sha256\'</span>);\npass.on(<span class="s">\'data\'</span>, c => hash.update(c));      <span class="c">// consumer 1 (CPU)</span>\n<span class="k">const</span> up = s3.upload({ Bucket, Key, <span class="hl">Body: pass</span> }); <span class="c">// consumer 2 (net)</span>\ncreateReadStream(path).<span class="hl">pipe(pass)</span>;           <span class="c">// ONE disk read</span>\n<span class="k">await</span> up.promise();                        <span class="c">// pipe() handles backpressure</span>\n<span class="k">const</span> digest = hash.digest(<span class="s">\'hex\'</span>);',
-    cap:'<code>pipe()</code> wires the pause/resume; the <code>data</code>-event hash rides the same buffer. Two consumers, one read.' },
-  { k:"Step 3 / 9", t:"Cursor export",
-    flow:'<span class="fb p">QueryStream(batch 100)</span><span class="arr">&rarr;</span><span class="fb n">csv-stringify</span><span class="arr">&rarr;</span><span class="fb t">res</span>',
-    ins:'<code>DECLARE CURSOR</code>, 100 rows at a time, piped to the socket. A full TCP window backpressures the transform, which backpressures the cursor &mdash; Postgres fetches only as fast as the client drains. <b>Constant memory</b> at 1K or 10M rows.',
-    deep:'Without the cursor, the pg driver buffers the <b>entire</b> result set in JS before your code runs &mdash; that\'s the OOM. The cursor turns one giant allocation into a stream of 100-row pages the GC reclaims between batches.' },
-  { k:"Step 4 / 9", t:"Import conflict ladder",
-    flow:'<span class="fb n">row</span><span class="arr">&rarr;</span><span class="fb t">id+co? REUSE</span><span class="arr">&rarr;</span><span class="fb a">name+ver? REMAP</span><span class="arr">&rarr;</span><span class="fb r">id taken? REGEN</span><span class="arr">&rarr;</span><span class="fb t">else INSERT</span>',
-    ins:'Strict precedence. Checking <code>name+version</code> <b>before</b> id-collision means a re-import <b>de-dupes</b> (REMAP) instead of forking a new uuid (REGEN). Every REMAP/REGEN records <code>oldId&rarr;newId</code>, then rewrites child FKs before insert.',
-    code:'<span class="k">const</span> idMap = <span class="k">new</span> Map();\n<span class="k">for</span> (<span class="k">const</span> row <span class="k">of</span> incoming) {\n  <span class="k">if</span> (<span class="k">await</span> match(row.id, row.company)) reuse(row.id);\n  <span class="k">else if</span> (<span class="k">await</span> match(row.name, row.version))\n       idMap.set(row.id, existing.id);   <span class="c">// REMAP (de-dupe)</span>\n  <span class="k">else if</span> (<span class="k">await</span> idExists(row.id))\n       idMap.set(row.id, uuid());        <span class="c">// REGEN (fork)</span>\n  <span class="k">else</span> insert(row.id);                  <span class="c">// INSERT</span>\n}\n<span class="k">for</span> (<span class="k">const</span> ch <span class="k">of</span> children)               <span class="c">// FK cascade</span>\n  ch.parent_id = idMap.get(ch.parent_id) ?? ch.parent_id;',
-    cap:'<code>name+version</code> is checked before id-collision &mdash; that ordering is what makes a re-import REMAP instead of fork.' },
-  { k:"Step 5 / 9", t:"Hash + multipart",
-    flow:'<span class="fb t">sha256 streaming</span><span class="arr">&middot;</span><span class="fb n">&lt;5MB Put</span><span class="arr">/</span><span class="fb r">&ge;5MB multipart</span>',
-    ins:'The digest is content-deterministic, so the <b>key is the hash</b> &mdash; identical bytes converge on one object (dedup). A failed multipart leaves orphan parts; an S3 lifecycle rule aborts incomplete uploads.',
-    deep:'Multipart also gives retry-per-part and parallel upload: a 500&nbsp;MB blob goes as 100&times;5&nbsp;MB parts, and a transient failure retries one part &mdash; not the whole object.' },
-  { k:"Step 6 / 9", t:"S3 event routing",
-    flow:'<span class="fb n">ObjectCreated</span><span class="arr">&rarr;</span><span class="fb p">prefix &rarr; Lambda</span><span class="arr">&rarr;</span><span class="fb n">per-record</span><span class="arr">&rarr;</span><span class="fb t">PROCESSED</span><span class="arr">/</span><span class="fb r">ERROR</span>',
-    ins:'Uploads push work; nothing polls. Delivery is <b>at-least-once</b> &rarr; processing must be idempotent (hash key). And prefixes can\'t overlap &mdash; you can\'t later split <code>uploads/</code> into <code>uploads/images/</code>.',
-    deep:'The handler decodes the key first &mdash; S3 URL-encodes spaces as <code>+</code>. Skip that and <code>"my file.bin"</code> becomes <code>"my+file.bin"</code>, the DB lookup misses, and you get a silent no-match bug.' },
-  { k:"Step 7 / 9", t:"Reconciler sweep",
-    flow:'<span class="fb n">scheduled sweep</span><span class="arr">&rarr;</span><span class="fb p">list S3 keys</span><span class="arr">&rarr;</span><span class="fb a">no DB row?</span><span class="arr">&rarr;</span><span class="fb t">past grace?</span><span class="arr">&rarr;</span><span class="fb r">delete orphan</span>',
-    ins:'The dual-write\'s real backstop. A scheduled job lists S3, finds keys with <b>no DB row</b>, and deletes the orphans &mdash; but only those past a grace window (or without a PENDING marker), so it <b>never touches an in-flight upload</b>.',
-    code:'<span class="k">const</span> GRACE = 3600e3;                  <span class="c">// 1h &gt; write</span>\n<span class="k">for await</span> (<span class="k">const</span> o <span class="k">of</span> listKeys(bucket)) {\n  <span class="k">if</span> (fresh(o, GRACE)) <span class="k">continue</span>; <span class="c">// in-flight</span>\n  <span class="k">const</span> row = <span class="k">await</span> db.findByKey(o.Key);\n  <span class="k">if</span> (!row) <span class="k">await</span> s3.<span class="hl">deleteObject</span>(o.Key); <span class="c">// orphan</span>\n}',
-    cap:'The grace window (or a PENDING marker) is the one line that stops the reconciler deleting in-flight uploads.' },
-  { k:"Step 8 / 9", t:"Idempotent processing",
-    flow:'<span class="fb n">event (&ge;1&times;)</span><span class="arr">&rarr;</span><span class="fb p">conditional put marker</span><span class="arr">&rarr;</span><span class="fb a">exists? skip</span><span class="arr">/</span><span class="fb t">else process</span>',
-    ins:'S3 delivery is <b>at-least-once</b>, so the same event can arrive twice. A conditional put on a content-hash marker is a check-and-set: the first delivery wins and processes; a redelivery sees the marker and <b>no-ops</b>. The effect is idempotent even though delivery isn\'t.',
-    code:'<span class="k">const</span> marker = <span class="s">"processed#"</span> + hash; <span class="c">// dedup key</span>\n<span class="k">try</span> {\n  <span class="k">await</span> ddb.<span class="hl">put</span>({ Item: { pk: marker },\n    ConditionExpression: <span class="s">"attribute_not_exists(pk)"</span> });\n} <span class="k">catch</span> (e) {\n  <span class="k">if</span> (e.name === <span class="s">"ConditionalCheckFailed..."</span>) <span class="k">return</span>; <span class="c">// done</span>\n  <span class="k">throw</span> e;\n}\n<span class="k">await</span> process(object); <span class="c">// once per event</span>',
-    cap:'The conditional put <i>is</i> the lock &mdash; first writer wins the key; redeliveries fail the condition and skip.' },
-  { k:"Step 9 / 9", t:"Observability hooks",
-    flow:'<span class="fb n">each stage</span><span class="arr">&rarr;</span><span class="fb p">emit 4 signals</span><span class="arr">&rarr;</span><span class="fb t">page on SLA breach</span><span class="arr">/</span><span class="fb a">log the rest</span>',
-    ins:'You can\'t operate what you can\'t see. Every stage emits the <b>four signals</b> that localize an incident &mdash; queue depth, p99 latency, error/DLQ rate, reconciler orphan count &mdash; and you <b>page only on what users feel</b> (SLA breach, DLQ growth), logging the self-healing rest.',
-    code:'metrics.<span class="hl">gauge</span>(<span class="s">"queue.depth"</span>, <span class="k">await</span> queue.size());\nmetrics.<span class="hl">histogram</span>(<span class="s">"process.latency_ms"</span>, elapsed); <span class="c">// p99</span>\nmetrics.<span class="hl">count</span>(<span class="s">"process.error"</span>, err ? 1 : 0);\nmetrics.<span class="hl">gauge</span>(<span class="s">"reconciler.orphans"</span>, orphanCount);\n<span class="c">// page on: dlq.depth &gt; 0 sustained, or event.age &gt; SLA</span>',
-    cap:'Alarm on symptoms users feel; transient spikes that self-heal via retry are log-only, or you drown in false pages.' }
-  ],
-  modelScript: [
-    { ml: 'Frame it before diving', t: '"Before I trace it &mdash; I\'ll assume single region, files up to ~500&nbsp;MB, and that downstream consumers need the result within a few seconds. Stop me if any of that\'s off."' },
-    { ml: 'Headline in one breath', t: '"At a high level: the object lands in S3, that fires a trigger, I hash and validate it <b>while it streams</b>, write the metadata transactionally, then fan it out to the processors &mdash; built so memory stays flat no matter the file size."' },
-    { ml: 'Walk the path', t: '"Concretely &mdash; the upload completes to S3 and emits an event. My handler opens a read stream and forks it through a <b>PassThrough</b>: one branch computes the SHA&#8209;256, the other feeds the processor, so I never buffer the whole file or read it twice. Once I have the hash and size, I write the row &mdash; key, hash, status &mdash; to the metadata DB."' },
-    { ml: 'Name the risk yourself', t: '"The thing I\'d flag without being asked is the <b>dual&#8209;write</b>: the object is already in S3, but if the DB write fails I\'ve got an orphan. The compensating delete covers the common case, but the real backstop is a <b>reconciler</b> that sweeps S3 for keys with no committed row. I wouldn\'t claim the delete alone is safe."' },
-    { ml: 'Name the trade-off line', t: '"For dispatch I\'d run a Lambda per object at this volume &mdash; the simplest thing that works. The moment I need retries, ordering, or a DLQ, I\'d put <b>SQS</b> in front and make the processors consumers. That\'s the line I\'d move on, and I\'d say so before they ask."' },
-    { ml: 'Be honest about the ceiling', t: '"This holds to low thousands of objects a minute. Past that the metadata DB is the bottleneck &mdash; I\'d shard by tenant or key&#8209;prefix and move fully onto SQS&#8209;fronted consumers. I\'d call that out as the next redesign rather than pretend it scales forever."' },
-    { mq: 'Interviewer: "What if two uploads race on the same key?"' },
-    { ml: 'Absorb the follow-up', t: '"S3 is last&#8209;writer&#8209;wins on the object, so the bytes are fine &mdash; but my metadata could interleave. I\'d make the DB write <b>idempotent on the key</b> with a conditional put, so the second writer updates cleanly or no&#8209;ops. And if ordering genuinely matters to the business, that\'s one more reason to move to a queue with a per&#8209;key partition."', ans: true }
-  ]
-};
-
-/* topics/content-pipeline/drill.js -- FOUNDATION Phase-0 thin alias.
-   cards/speakLines are the drill working-set globals, populated by drill/cards.js +
-   drill/speak-lines.js which load BEFORE this bundle (app.js order), so the alias
-   captures real data. bank.js + publishBanks read this at boot (mock-run/mixed-fire).
-   tierNotes references DRILL_TIER_NOTES (assigned later, in drill/logic.js) -- unused
-   in Phase 0 (drill stays plain). The drill agent inlines the real arrays in Phase 1. */
-var TOPIC_CP_DRILL = { cards: cards, speak: speakLines, tierNotes: DRILL_TIER_NOTES };
 
 /* topics/content-pipeline/wb.js -- Phase 1: REAL whiteboard data (extracted from the
    former baked WB_STEPS + WB_HTML). steps:[{c,a}x9]; diagram = the .dgm inner; foot;
@@ -1648,9 +1655,38 @@ var TOPIC_CP_MODEL = {
 ]
 };
 
-/* topics/content-pipeline/num.js -- FOUNDATION Phase-0 STUB. Unused at boot (the
-   num pane stays plain and reads its own globals); the num agent seeds real data in Phase 1. */
-var TOPIC_CP_NUM = { lead: '', tell: '', inputs: [], compute: function (vals, fmt) { return []; } };
+/* topics/content-pipeline/num.js -- Phase 1: REAL num data (the PARAMETRIC pane).
+   Unlike the array-driven panes, num carries a compute(vals, fmt) FUNCTION -- the
+   back-of-envelope arithmetic plus the Lambda-1,000 / Postgres-100 ceilings -- as the
+   explicit escape hatch (design 3.2). compute is DOM-METHOD-FREE (arithmetic + string
+   building only, no innerHTML/createElement) so it stays pure data; each row's `v` is
+   a DISPLAY STRING the pane renders verbatim. lead/tell/inputs were lifted from the
+   former NUM_HTML. vals = {<id>: parsed number}; fmt = {n: _fmtN, tb: _fmtTB} (the
+   pane's pure formatters). cmpNotes.num lives in identity.js, not here.
+   Offline-safe; 7-bit ASCII (entities + \uXXXX escapes). */
+var TOPIC_CP_NUM = {
+  lead: "The estimation an interviewer makes you do at the whiteboard. State your assumptions and the <b>ceilings fall out of the arithmetic</b> &mdash; adjust any input and the math recomputes.",
+  tell: "The number you say isn't the point &mdash; the <b>ceiling</b> it reveals is. Concurrency past 1,000 says &lsquo;buffer through SQS&rsquo;; connections past the pool say &lsquo;RDS Proxy.&rsquo;",
+  inputs: [
+    { id: 'n_obj', label: 'Objects / day', value: 10000000, min: 0 },
+    { id: 'n_size', label: 'Avg size (MB)', value: 2, min: 0, step: 0.1 },
+    { id: 'n_proc', label: 'Processing (sec)', value: 2, min: 0, step: 0.1 },
+    { id: 'n_peak', label: 'Peak : average', value: 10, min: 1 }
+  ],
+  compute: function (vals, fmt) {
+    var perDay = vals.n_obj, sizeMB = vals.n_size, procS = vals.n_proc, peakR = vals.n_peak;
+    var avg = perDay / 86400, peak = avg * peakR, conc = peak * procS, conn = conc;
+    var stDay = perDay * sizeMB / 1e6, stYr = stDay * 365, puts = perDay, putCost = puts / 1000 * 0.005;
+    return [
+      { k: 'Average throughput', v: fmt.n(avg), u: '/s', n: 'objects/day \u00F7 86,400 seconds', over: false },
+      { k: 'Peak throughput', v: fmt.n(peak), u: '/s', n: 'average \u00D7 ' + fmt.n(peakR) + ' peak ratio', over: false },
+      { k: 'Lambda concurrency at peak', v: fmt.n(conc), u: '', n: conc > 1000 ? 'exceeds the 1,000 default \u2014 RDS Proxy, or buffer through SQS' : 'peak/s \u00D7 processing time \u2014 within the 1,000 default', over: conc > 1000 },
+      { k: 'DB connections at peak', v: fmt.n(conn), u: '', n: conn > 100 ? 'far past a Postgres pool (~100) \u2014 needs RDS Proxy or a queue' : '\u2248 one connection per invocation \u2014 a pool can hold this', over: conn > 100 },
+      { k: 'Storage written / day', v: fmt.tb(stDay).split(' ')[0], u: fmt.tb(stDay).split(' ')[1], n: fmt.tb(stYr) + ' per year of raw objects', over: false },
+      { k: 'S3 PUTs / day', v: fmt.n(puts), u: '', n: '\u2248 $' + putCost.toFixed(2) + '/day in PUT requests alone', over: false }
+    ];
+  }
+};
 
 /* topics/content-pipeline/rf.js -- topic-1 (Content Pipeline) RED FLAGS data.
    Extracted from the baked RF_HTML: one lead + nine flags. Each flag is
@@ -2161,19 +2197,21 @@ class DeepWalkthrough extends TopicPane {
 customElements.define('deep-walkthrough', DeepWalkthrough);
 
 /* ============ DRILL ============ */
-/* cards.js + speak-lines.js now load EARLY (before the topic bundle) so the bundle
-   can alias the real working set; this wrapper keeps only the DeepDrill class. */
+/* The probe bank moved into the topic bundle (topics/content-pipeline/drill.js);
+   the old drill/cards.js + drill/speak-lines.js are deleted. This wrapper keeps
+   only the DeepDrill TopicPane class + its module-level helpers (logic.js). */
 /* ============ PROBE DRILL ============ */
-/* The drill is a self-contained shadow-DOM component. cards / speakLines stay
-   GLOBAL (the opener pane reads cards; the component reads + reassigns both as
-   the working set). Stats reach session-progress via getStats(). */
+/* The drill is a TopicPane (built once, re-rendered in place on topic switch).
+   cards / speakLines are the registry-owned working-set globals (declared in
+   topic-protocol.js, seeded by publishBanks from the bank); the real probe bank
+   lives in topics/content-pipeline/drill.js. The component reads + reassigns the
+   working set to filtered subsets. Stats reach session-progress via getStats(). */
 var DRILL_TIER_CLASS = { SDE2: 't2', SDE3: 't3', Staff: 'tS', EXTEND: 'tX' };
-var DRILL_TIER_NOTES={all:'<b>All four levels, mixed</b> &mdash; the way a real loop actually comes at you.',SDE2:'<b>Fundamentals under pressure</b> &mdash; memory model, I/O, idempotent writes. The bar is &ldquo;this won&rsquo;t fall over&rdquo;: show the mechanics cleanly.',SDE3:'<b>Depth &amp; trade-offs</b> &mdash; consistency, schema evolution, the hidden bill. The bar is &ldquo;it depends, here&rsquo;s the switch&rdquo;: never a one-size answer.',Staff:'<b>Systems judgment</b> &mdash; irreversibility, blast radius, the exactly-once illusion. The bar is &ldquo;I see the failure mode before it ships&rdquo;: name what breaks and name the backstop.'};
-/* The full, immutable card / speak banks. cards / speakLines (above, in
-   cards.js / speak-lines.js) are the reassignable WORKING set; these keep the
-   originals. SHARED: mixed-fire.js reads _allCards to assemble its probe set. */
-/* _allCards/_allSpeak are now declared + owned by topic-protocol.js (foundation)
-   and seeded by publishBanks(); drill reads them as before. */
+var DRILL_TIER_NOTES = {};  /* per-topic; renderTopic sets this from the topic data (the 4 notes now live in topics/content-pipeline/drill.js) */
+/* cards / speakLines (the reassignable WORKING set) and _allCards / _allSpeak (the
+   immutable originals) are declared + owned by topic-protocol.js (foundation) and
+   seeded by publishBanks() from topics/content-pipeline/drill.js's bank. SHARED:
+   mixed-fire.js reads _allCards to assemble its probe set; drill reads them as before. */
 var DRILL_HTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
       <div class="modetog" id="modetog">
         <button type="button" class="on" data-m="study">Study</button>
@@ -2304,34 +2342,52 @@ function dShuffle(count) {
   }
   return arr;
 }
-class DeepDrill extends HTMLElement {
-  connectedCallback() {
-    if (this._built) return; this._built = true;
-    this.mode = 'study'; this.tierFilter = 'all'; this.timerId = null; this.mockLeft = 0;
-    this.di = 0; this.got = 0; this.shk = 0; this.results = [];
-    this.revisit = {}; this.revisitMode = false;
-    const root = this.attachShadow({ mode: 'open' });
-    root.adoptedStyleSheets = [BASE_SHEET, ANS_SHEET];
-    root.innerHTML = '<style>' + DRILL_STYLE + '</style>' + DRILL_HTML;
-    this._root = root;
+class DeepDrill extends TopicPane {
+  static dataKey = 'drill';
+  sheets()    { return [BASE_SHEET, ANS_SHEET]; }
+  styleText() { return DRILL_STYLE; }
+  skeleton()  { return DRILL_HTML; }
+  init(root) {
+    /* one-time HOST state not reset per-topic (renderTopic/setMode reset the rest) */
+    this.timerId = null; this.mockLeft = 0; this.revisit = {};
     this._dwrap = root.getElementById('dwrap'); this._dfill = root.getElementById('dfill');
     this._sGot = root.getElementById('sGot'); this._sShk = root.getElementById('sShk'); this._sLeft = root.getElementById('sLeft');
     this._timerEl = root.getElementById('timer');
     this._modetog = root.getElementById('modetog'); this._tiertog = root.getElementById('tiertog');
+    this._tiernote = root.getElementById('tiernote');
     const self = this;
+    /* DELEGATED listeners wired ONCE on the stable shell nodes: dnav contents are
+       rebuilt every draw; modetog / tiertog / revdrill live in the invariant skeleton. */
     root.getElementById('dnav').addEventListener('click', function (event) {
       const btn = event.target.closest('.dn-step');
       if (btn) { self.di = +btn.getAttribute('data-i'); self.renderD(); }
     });
-    for (let z = 0; z < this._modetog.children.length; z++) {
-      this._modetog.children[z].onclick = function () { self.setMode(this.getAttribute('data-m')); };
-    }
+    this._modetog.addEventListener('click', function (event) {
+      const btn = event.target.closest('button');
+      if (btn) self.setMode(btn.getAttribute('data-m'));
+    });
+    this._tiertog.addEventListener('click', function (event) {
+      const btn = event.target.closest('button');
+      if (btn) self.setTier(btn.getAttribute('data-tier'));
+    });
+    root.getElementById('revdrill').addEventListener('click', function () { self.drillRevset(); });
+  }
+  renderTopic(d) {
+    /* registry already reseeded cards / _allCards via publishBanks before this fires */
+    DRILL_TIER_NOTES = d.tierNotes;
+    this.tierFilter = 'all'; this.revisitMode = false;
     for (let z = 0; z < this._tiertog.children.length; z++) {
-      this._tiertog.children[z].onclick = function () { self.setTier(this.getAttribute('data-tier')); };
+      this._tiertog.children[z].classList.toggle('on', this._tiertog.children[z].getAttribute('data-tier') === 'all');
     }
-    const rev = root.getElementById('revdrill');
-    if (rev) rev.onclick = function () { self.drillRevset(); };
+    if (this._tiernote) this._tiernote.innerHTML = d.tierNotes.all;
+    const allBtn = this._tiertog.querySelector('[data-tier="all"]');
+    if (allBtn) allBtn.textContent = 'All ' + _allCards.length;
     this.setMode('study');
+  }
+  teardownTopic() {
+    this.stopTimer();
+    this.di = 0; this.got = 0; this.shk = 0; this.results = [];
+    this.revisit = {}; this.revisitMode = false;
   }
   renderNav() {
     const nav = this._root.getElementById('dnav');
@@ -2605,7 +2661,6 @@ class DeepDrill extends HTMLElement {
   getStats() { return { dTot: cards.length, dDone: this.results.length, dGot: this.got, dShk: this.shk, revisit: this.results.filter(function (r) { return !r.ok; }).map(function (r) { return r.signal; }) }; }
   reset() { this.setMode('study'); }
   weak() { return this.drillWeak(); }
-  disconnectedCallback() { this.stopTimer(); }
 }
 customElements.define('deep-drill', DeepDrill); 
 
@@ -3076,12 +3131,21 @@ class DeepModelAnswers extends TopicPane {
 }
 customElements.define('deep-model-answers', DeepModelAnswers);
 
-/* ============ NUMBERS / NALSD pane ============ */
-/* The back-of-envelope capacity calculator: four assumptions in, derived
-   throughput / concurrency / connection / storage / cost figures out, each row
-   flagged when it breaches a known ceiling (Lambda's 1,000 default, a ~100-conn
-   Postgres pool). A self-contained shadow component; the tab / rail / keyboard
-   nav that used to share this file stays global below. */
+/* ============ NUMBERS / NALSD pane (logic, web component) ============
+   The back-of-envelope capacity calculator, converted to the TopicPane contract
+   (dataKey 'num'): the base class attaches the shadow + adopts the inherited
+   [BASE_SHEET] + writes <style>+skeleton ONCE; init() caches the lead/input/output/
+   tell mounts and wires ONE DELEGATED input listener on the stable #ninp container;
+   renderTopic(d) stashes the per-topic d.inputs + d.compute, fills lead/tell, rebuilds
+   the input fields from d.inputs (count is per-topic -> here, not init), then _calc().
+   Unlike the array-driven panes this one is PARAMETRIC: _calc reads the inputs
+   DYNAMICALLY and defers the arithmetic + the Lambda-1,000 / Postgres-100 ceilings to
+   d.compute (the escape hatch, design 3.2), which returns the row array the pane
+   renders verbatim. NUM_STYLE is topic-invariant and stays here; _fmtN/_fmtTB/_nval
+   are pure helpers, and _fmtN/_fmtTB are passed into compute as fmt.n/fmt.tb. The
+   tab / rail / keyboard nav that used to share this file lives in num/shell.js
+   (foundation). Child-mounts only -- renderTopic never rewrites this._root.innerHTML.
+   Offline-safe: no network/storage/permission. */
 var NUM_STYLE = `.numlead{font-size:15px;line-height:1.5;color:var(--ink);margin:2px 2px 18px}
 .numlead b{color:var(--accink);font-weight:700}
 .num-h{font:800 10px -apple-system,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:var(--mut2);margin-bottom:12px}
@@ -3106,33 +3170,44 @@ var NUM_STYLE = `.numlead{font-size:15px;line-height:1.5;color:var(--ink);margin
 .nprog i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));border-radius:5px;transition:width .5s cubic-bezier(.22,.61,.36,1)}
 .num-tell b{color:var(--dec-tell-b-fg);font-weight:700}
 .nv-u{display:inline-block;width:30px;text-align:left;padding-left:8px;box-sizing:border-box;font-size:13px;font-weight:600;color:var(--mut)}`;
-var NUM_HTML = `<div class="numlead">The estimation an interviewer makes you do at the whiteboard. State your assumptions and the <b>ceilings fall out of the arithmetic</b> &mdash; adjust any input and the math recomputes.</div>
+class DeepNumbers extends TopicPane {
+  static dataKey = 'num';
+  styleText() { return NUM_STYLE; }
+  skeleton() {
+    return `<div class="numlead" id="nlead"></div>
     <div class="card">
       <div class="num-h">Assumptions</div>
-      <div class="ninp">
-        <label>Objects / day<input id="n_obj" type="number" value="10000000" min="0"></label>
-        <label>Avg size (MB)<input id="n_size" type="number" value="2" min="0" step="0.1"></label>
-        <label>Processing (sec)<input id="n_proc" type="number" value="2" min="0" step="0.1"></label>
-        <label>Peak : average<input id="n_peak" type="number" value="10" min="1"></label>
-      </div>
+      <div class="ninp" id="ninp"></div>
     </div>
     <div class="card" style="margin-top:13px">
       <div class="num-h">What falls out</div>
       <div id="nout"></div>
     </div>
-    <div class="num-tell">The number you say isn't the point &mdash; the <b>ceiling</b> it reveals is. Concurrency past 1,000 says &lsquo;buffer through SQS&rsquo;; connections past the pool say &lsquo;RDS Proxy.&rsquo;</div>`;
-class DeepNumbers extends HTMLElement {
-  connectedCallback() {
-    if (this._built) return; this._built = true;
-    const root = this.attachShadow({ mode: 'open' });
-    root.adoptedStyleSheets = [BASE_SHEET];
-    root.innerHTML = '<style>' + NUM_STYLE + '</style>' + NUM_HTML;
-    this._root = root;
+    <div class="num-tell" id="ntell"></div>`;
+  }
+  init(root) {
+    this._lead = root.getElementById('nlead');
+    this._ninp = root.getElementById('ninp');
     this._out = root.getElementById('nout');
-    const self = this;
-    ['n_obj', 'n_size', 'n_proc', 'n_peak'].forEach(function (id) {
-      root.getElementById(id).addEventListener('input', function () { self._calc(); });
-    });
+    this._tell = root.getElementById('ntell');
+    /* ONE delegated input listener on the stable #ninp container -- the per-topic
+       fields are rebuilt by renderTopic, so the listener must live on the stable parent. */
+    var self = this;
+    this._ninp.addEventListener('input', function () { self._calc(); });
+  }
+  renderTopic(d) {
+    this._inputs = d.inputs;
+    this._compute = d.compute;
+    this._lead.innerHTML = d.lead;
+    this._tell.innerHTML = d.tell;
+    /* COUNT-DRIVEN input fields from d.inputs (rebuilt here, not init, so a topic with
+       a different assumption count rebuilds cleanly). */
+    var html = '';
+    for (var i = 0; i < d.inputs.length; i++) {
+      var f = d.inputs[i];
+      html += '<label>' + f.label + '<input id="' + f.id + '" type="number" value="' + f.value + '" min="' + f.min + '"' + (f.step != null ? ' step="' + f.step + '"' : '') + '></label>';
+    }
+    this._ninp.innerHTML = html;
     this._calc();
   }
   _fmtN(x) { if (!isFinite(x)) x = 0; return Math.round(x).toLocaleString('en-US'); }
@@ -3144,20 +3219,14 @@ class DeepNumbers extends HTMLElement {
   }
   _nval(id) { const v = +this._root.getElementById(id).value; return isFinite(v) && v > 0 ? v : 0; }
   _calc() {
-    const perDay = this._nval('n_obj'), sizeMB = this._nval('n_size'), procS = this._nval('n_proc'), peakR = this._nval('n_peak');
-    const avg = perDay / 86400, peak = avg * peakR, conc = peak * procS, conn = conc;
-    const stDay = perDay * sizeMB / 1e6, stYr = stDay * 365, puts = perDay, putCost = puts / 1000 * 0.005;
-    const rows = [
-      { k: 'Average throughput', v: this._fmtN(avg), u: '/s', n: 'objects/day \u00F7 86,400 seconds', over: false },
-      { k: 'Peak throughput', v: this._fmtN(peak), u: '/s', n: 'average \u00D7 ' + this._fmtN(peakR) + ' peak ratio', over: false },
-      { k: 'Lambda concurrency at peak', v: this._fmtN(conc), u: '', n: conc > 1000 ? 'exceeds the 1,000 default \u2014 RDS Proxy, or buffer through SQS' : 'peak/s \u00D7 processing time \u2014 within the 1,000 default', over: conc > 1000 },
-      { k: 'DB connections at peak', v: this._fmtN(conn), u: '', n: conn > 100 ? 'far past a Postgres pool (~100) \u2014 needs RDS Proxy or a queue' : '\u2248 one connection per invocation \u2014 a pool can hold this', over: conn > 100 },
-      { k: 'Storage written / day', v: this._fmtTB(stDay).split(' ')[0], u: this._fmtTB(stDay).split(' ')[1], n: this._fmtTB(stYr) + ' per year of raw objects', over: false },
-      { k: 'S3 PUTs / day', v: this._fmtN(puts), u: '', n: '\u2248 $' + putCost.toFixed(2) + '/day in PUT requests alone', over: false }
-    ];
-    let html = '';
-    for (let i = 0; i < rows.length; i++) {
-      const row = rows[i];
+    /* Read the inputs DYNAMICALLY (iterate the per-topic this._inputs), defer the
+       arithmetic + ceilings to this._compute, then render the returned rows verbatim. */
+    var vals = {};
+    for (var i = 0; i < this._inputs.length; i++) { var id = this._inputs[i].id; vals[id] = this._nval(id); }
+    var rows = this._compute(vals, { n: this._fmtN, tb: this._fmtTB });
+    var html = '';
+    for (var j = 0; j < rows.length; j++) {
+      var row = rows[j];
       html += '<div class="nrow' + (row.over ? ' over' : '') + '"><div class="nrow-k">' + row.k + '</div><div class="nrow-v">' + row.v + '<span class="nv-u">' + (row.u || '') + '</span></div><div class="nrow-n">' + row.n + '</div></div>';
     }
     this._out.innerHTML = html;

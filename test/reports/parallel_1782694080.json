@@ -1,0 +1,1736 @@
+{
+  "elapsed": 221.03901624679565,
+  "passed": 216,
+  "failed": 0,
+  "errors": 0,
+  "tests": [
+    {
+      "module": "test_accessibility",
+      "group": "ARIA",
+      "name": "test_html_has_lang",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5337.639331817627
+    },
+    {
+      "module": "test_accessibility",
+      "group": "ARIA",
+      "name": "test_buttons_have_text",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5397.364616394043
+    },
+    {
+      "module": "test_accessibility",
+      "group": "ARIA",
+      "name": "test_page_has_title",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5834.914922714233
+    },
+    {
+      "module": "test_accessibility",
+      "group": "ARIA",
+      "name": "test_reduced_motion_css",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5917.683839797974
+    },
+    {
+      "module": "test_accessibility",
+      "group": "Keyboard",
+      "name": "test_tab_moves_focus",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6537.038326263428
+    },
+    {
+      "module": "test_accessibility",
+      "group": "Keyboard",
+      "name": "test_q_navigates_walk",
+      "status": "PASS",
+      "detail": "",
+      "ms": 8583.03189277649
+    },
+    {
+      "module": "test_components",
+      "group": "Content",
+      "name": "test_content_pipeline_text",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6205.794095993042
+    },
+    {
+      "module": "test_accessibility",
+      "group": "Keyboard",
+      "name": "test_w_navigates_drill",
+      "status": "PASS",
+      "detail": "",
+      "ms": 7482.853651046753
+    },
+    {
+      "module": "test_components",
+      "group": "Rendering",
+      "name": "test_adopted_stylesheets",
+      "status": "PASS",
+      "detail": "",
+      "ms": 7535.580396652222
+    },
+    {
+      "module": "test_components",
+      "group": "Content",
+      "name": "test_no_placeholder_text",
+      "status": "PASS",
+      "detail": "",
+      "ms": 4780.645847320557
+    },
+    {
+      "module": "test_components",
+      "group": "Rendering",
+      "name": "test_drill_renders",
+      "status": "PASS",
+      "detail": "",
+      "ms": 8172.33681678772
+    },
+    {
+      "module": "test_components",
+      "group": "Console",
+      "name": "test_no_js_errors",
+      "status": "PASS",
+      "detail": "",
+      "ms": 8294.801235198975
+    },
+    {
+      "module": "test_components",
+      "group": "Content",
+      "name": "test_no_todo_markers",
+      "status": "PASS",
+      "detail": "",
+      "ms": 4576.455593109131
+    },
+    {
+      "module": "test_components",
+      "group": "Content",
+      "name": "test_page_title",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5845.371961593628
+    },
+    {
+      "module": "test_components",
+      "group": "Rendering",
+      "name": "test_shadow_root_exists",
+      "status": "PASS",
+      "detail": "",
+      "ms": 7006.811857223511
+    },
+    {
+      "module": "test_components",
+      "group": "Rendering",
+      "name": "test_walkthrough_renders",
+      "status": "PASS",
+      "detail": "",
+      "ms": 7029.165744781494
+    },
+    {
+      "module": "test_css_advanced",
+      "group": "CSS",
+      "name": "test_accent_color_is_purple_variant",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6392.96817779541
+    },
+    {
+      "module": "test_css_advanced",
+      "group": "CSS",
+      "name": "test_body_background_is_cream",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5711.93790435791
+    },
+    {
+      "module": "test_css_advanced",
+      "group": "CSS",
+      "name": "test_body_font_stack_valid",
+      "status": "PASS",
+      "detail": "",
+      "ms": 4637.384414672852
+    },
+    {
+      "module": "test_css_advanced",
+      "group": "CSS",
+      "name": "test_card_has_shadow_or_border",
+      "status": "PASS",
+      "detail": "",
+      "ms": 4244.755506515503
+    },
+    {
+      "module": "test_css_advanced",
+      "group": "CSS",
+      "name": "test_css_custom_properties_exist",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5058.433532714844
+    },
+    {
+      "module": "test_css_advanced",
+      "group": "CSS",
+      "name": "test_html_overflow_hidden",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5523.25177192688
+    },
+    {
+      "module": "test_css_advanced",
+      "group": "CSS",
+      "name": "test_focus_visible_style",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6169.81840133667
+    },
+    {
+      "module": "test_css_advanced",
+      "group": "CSS",
+      "name": "test_loading_shimmer_animation",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6114.149570465088
+    },
+    {
+      "module": "test_css_advanced",
+      "group": "CSS",
+      "name": "test_prefers_reduced_motion_supported",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5867.117643356323
+    },
+    {
+      "module": "test_css_advanced",
+      "group": "CSS",
+      "name": "test_print_stylesheet_exists",
+      "status": "PASS",
+      "detail": "",
+      "ms": 4847.3005294799805
+    },
+    {
+      "module": "test_css_advanced",
+      "group": "CSS",
+      "name": "test_scrollbar_style_in_css",
+      "status": "PASS",
+      "detail": "",
+      "ms": 4296.590805053711
+    },
+    {
+      "module": "test_css_advanced",
+      "group": "CSS",
+      "name": "test_selection_style_exists",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5401.174783706665
+    },
+    {
+      "module": "test_error_recovery",
+      "group": "Error",
+      "name": "test_all_panes_exist",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5437.930345535278
+    },
+    {
+      "module": "test_error_recovery",
+      "group": "Error",
+      "name": "test_app_container_exists",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6047.772169113159
+    },
+    {
+      "module": "test_error_recovery",
+      "group": "Error",
+      "name": "test_body_opacity_animates_in",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6082.5464725494385
+    },
+    {
+      "module": "test_error_recovery",
+      "group": "Error",
+      "name": "test_header_exists",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5635.8771324157715
+    },
+    {
+      "module": "test_error_recovery",
+      "group": "Error",
+      "name": "test_no_js_errors_on_load",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5292.237997055054
+    },
+    {
+      "module": "test_error_recovery",
+      "group": "Error",
+      "name": "test_stage_has_scrollbar_style",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5110.749959945679
+    },
+    {
+      "module": "test_error_recovery",
+      "group": "Error",
+      "name": "test_no_console_errors_after_nav",
+      "status": "PASS",
+      "detail": "",
+      "ms": 8329.736232757568
+    },
+    {
+      "module": "test_gap_features",
+      "group": "Features",
+      "name": "test_animation_speed_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5662.9979610443115
+    },
+    {
+      "module": "test_gap_features",
+      "group": "Features",
+      "name": "test_audio_feedback_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5670.116662979126
+    },
+    {
+      "module": "test_gap_features",
+      "group": "Features",
+      "name": "test_animation_speed_controls_exist",
+      "status": "PASS",
+      "detail": "",
+      "ms": 7948.564052581787
+    },
+    {
+      "module": "test_gap_features",
+      "group": "Features",
+      "name": "test_bookmark_system_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5228.325605392456
+    },
+    {
+      "module": "test_gap_features",
+      "group": "Features",
+      "name": "test_offline_indicator_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5125.370979309082
+    },
+    {
+      "module": "test_gap_features",
+      "group": "Features",
+      "name": "test_bookmark_stars_created",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6550.941944122314
+    },
+    {
+      "module": "test_gap_features",
+      "group": "Features",
+      "name": "test_page_visibility_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5544.440984725952
+    },
+    {
+      "module": "test_gap_features",
+      "group": "Features",
+      "name": "test_progress_ring_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5484.328985214233
+    },
+    {
+      "module": "test_gap_features",
+      "group": "Features",
+      "name": "test_scroll_to_top_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 4809.804916381836
+    },
+    {
+      "module": "test_gap_features",
+      "group": "Features",
+      "name": "test_progress_ring_svg_created",
+      "status": "PASS",
+      "detail": "",
+      "ms": 7266.277551651001
+    },
+    {
+      "module": "test_gap_features",
+      "group": "Features",
+      "name": "test_typing_intro_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5133.155345916748
+    },
+    {
+      "module": "test_gap_features",
+      "group": "Features",
+      "name": "test_zoom_diagrams_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5461.540222167969
+    },
+    {
+      "module": "test_genuine_gaps",
+      "group": "Features",
+      "name": "test_focus_mode_script_exists",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5349.533557891846
+    },
+    {
+      "module": "test_genuine_gaps",
+      "group": "Features",
+      "name": "test_focus_mode_button_exists",
+      "status": "PASS",
+      "detail": "",
+      "ms": 7093.960523605347
+    },
+    {
+      "module": "test_genuine_gaps",
+      "group": "Features",
+      "name": "test_font_size_controls_exist",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5865.549087524414
+    },
+    {
+      "module": "test_genuine_gaps",
+      "group": "Features",
+      "name": "test_font_size_script_exists",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5801.759719848633
+    },
+    {
+      "module": "test_genuine_gaps",
+      "group": "Features",
+      "name": "test_reading_time_script_exists",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5486.3386154174805
+    },
+    {
+      "module": "test_genuine_gaps",
+      "group": "Features",
+      "name": "test_scroll_to_top_button_script_exists",
+      "status": "PASS",
+      "detail": "",
+      "ms": 4672.839641571045
+    },
+    {
+      "module": "test_genuine_gaps",
+      "group": "Features",
+      "name": "test_reading_time_badge_exists",
+      "status": "PASS",
+      "detail": "",
+      "ms": 7517.267465591431
+    },
+    {
+      "module": "test_genuine_gaps",
+      "group": "Features",
+      "name": "test_scroll_to_top_element_created",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6405.900001525879
+    },
+    {
+      "module": "test_genuine_gaps",
+      "group": "Features",
+      "name": "test_share_url_button_exists",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5578.4666538238525
+    },
+    {
+      "module": "test_genuine_gaps",
+      "group": "Features",
+      "name": "test_share_url_script_exists",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5223.921298980713
+    },
+    {
+      "module": "test_keyboard_shortcuts",
+      "group": "Keyboard",
+      "name": "test_escape_does_not_crash",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5740.247964859009
+    },
+    {
+      "module": "test_keyboard_shortcuts",
+      "group": "Keyboard",
+      "name": "test_e_key_navigates_whiteboard",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6712.710618972778
+    },
+    {
+      "module": "test_keyboard_shortcuts",
+      "group": "Keyboard",
+      "name": "test_i_key_navigates_redflags",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6417.174816131592
+    },
+    {
+      "module": "test_keyboard_shortcuts",
+      "group": "Keyboard",
+      "name": "test_keyboard_nav_updates_title",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5196.9428062438965
+    },
+    {
+      "module": "test_keyboard_shortcuts",
+      "group": "Keyboard",
+      "name": "test_keyboard_on_input_does_not_navigate",
+      "status": "PASS",
+      "detail": "",
+      "ms": 4707.639217376709
+    },
+    {
+      "module": "test_keyboard_shortcuts",
+      "group": "Keyboard",
+      "name": "test_keyboard_nav_updates_url_hash",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6071.551084518433
+    },
+    {
+      "module": "test_keyboard_shortcuts",
+      "group": "Keyboard",
+      "name": "test_q_key_navigates_walkthrough",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5827.25977897644
+    },
+    {
+      "module": "test_keyboard_shortcuts",
+      "group": "Keyboard",
+      "name": "test_o_key_navigates_opener",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6642.728805541992
+    },
+    {
+      "module": "test_keyboard_shortcuts",
+      "group": "Keyboard",
+      "name": "test_r_key_navigates_system_map",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5697.428464889526
+    },
+    {
+      "module": "test_keyboard_shortcuts",
+      "group": "Keyboard",
+      "name": "test_shift_tab_moves_backward",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5599.252700805664
+    },
+    {
+      "module": "test_keyboard_shortcuts",
+      "group": "Keyboard",
+      "name": "test_rapid_keypresses_no_crash",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6140.291690826416
+    },
+    {
+      "module": "test_keyboard_shortcuts",
+      "group": "Keyboard",
+      "name": "test_t_key_navigates_tradeoffs",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5943.12310218811
+    },
+    {
+      "module": "test_keyboard_shortcuts",
+      "group": "Keyboard",
+      "name": "test_tab_cycles_interactive_elements",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5356.598138809204
+    },
+    {
+      "module": "test_keyboard_shortcuts",
+      "group": "Keyboard",
+      "name": "test_u_key_navigates_numbers",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6192.70658493042
+    },
+    {
+      "module": "test_keyboard_shortcuts",
+      "group": "Keyboard",
+      "name": "test_w_key_navigates_drill",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6385.36524772644
+    },
+    {
+      "module": "test_layout",
+      "group": "Desktop",
+      "name": "test_app_height_bounds",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5122.210502624512
+    },
+    {
+      "module": "test_layout",
+      "group": "Desktop",
+      "name": "test_body_overflow_hidden",
+      "status": "PASS",
+      "detail": "",
+      "ms": 4588.119745254517
+    },
+    {
+      "module": "test_keyboard_shortcuts",
+      "group": "Keyboard",
+      "name": "test_y_key_navigates_model",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6135.518312454224
+    },
+    {
+      "module": "test_layout",
+      "group": "Desktop",
+      "name": "test_companion_visible",
+      "status": "PASS",
+      "detail": "",
+      "ms": 4435.240268707275
+    },
+    {
+      "module": "test_layout",
+      "group": "Desktop",
+      "name": "test_html_overflow_hidden",
+      "status": "PASS",
+      "detail": "",
+      "ms": 4599.9791622161865
+    },
+    {
+      "module": "test_layout",
+      "group": "Desktop",
+      "name": "test_nine_nav_items",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6124.717473983765
+    },
+    {
+      "module": "test_layout",
+      "group": "Desktop",
+      "name": "test_sidebar_visible",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5499.839782714844
+    },
+    {
+      "module": "test_layout",
+      "group": "Desktop",
+      "name": "test_stage_position_relative",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6059.083700180054
+    },
+    {
+      "module": "test_layout",
+      "group": "Desktop",
+      "name": "test_no_scroll_whitespace",
+      "status": "PASS",
+      "detail": "",
+      "ms": 7206.118583679199
+    },
+    {
+      "module": "test_performance",
+      "group": "CSS",
+      "name": "test_brace_balance",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5663.31672668457
+    },
+    {
+      "module": "test_performance",
+      "group": "CSS",
+      "name": "test_has_dark_theme",
+      "status": "PASS",
+      "detail": "",
+      "ms": 4709.670543670654
+    },
+    {
+      "module": "test_performance",
+      "group": "CSS",
+      "name": "test_has_keyframes",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5212.0513916015625
+    },
+    {
+      "module": "test_performance",
+      "group": "CSS",
+      "name": "test_has_media_queries",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5008.657455444336
+    },
+    {
+      "module": "test_performance",
+      "group": "CSS",
+      "name": "test_has_print_styles",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6051.840782165527
+    },
+    {
+      "module": "test_performance",
+      "group": "CSS",
+      "name": "test_has_reduced_motion",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5960.869312286377
+    },
+    {
+      "module": "test_performance",
+      "group": "Size",
+      "name": "test_html_under_600kb",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5094.654560089111
+    },
+    {
+      "module": "test_performance",
+      "group": "Size",
+      "name": "test_html_under_1mb",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5672.231912612915
+    },
+    {
+      "module": "test_redundancy",
+      "group": "Architecture",
+      "name": "test_all_included_scripts_exist",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6083.731889724731
+    },
+    {
+      "module": "test_redundancy",
+      "group": "Architecture",
+      "name": "test_no_duplicate_feature_names",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5035.545587539673
+    },
+    {
+      "module": "test_redundancy",
+      "group": "Architecture",
+      "name": "test_keyboard_overlay_exists_once",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5597.920179367065
+    },
+    {
+      "module": "test_performance",
+      "group": "Size",
+      "name": "test_load_under_5s",
+      "status": "PASS",
+      "detail": "",
+      "ms": 8472.39375114441
+    },
+    {
+      "module": "test_redundancy",
+      "group": "Architecture",
+      "name": "test_no_duplicate_dark_mode_toggles",
+      "status": "PASS",
+      "detail": "",
+      "ms": 7305.650234222412
+    },
+    {
+      "module": "test_redundancy",
+      "group": "Architecture",
+      "name": "test_no_duplicate_dom_ids",
+      "status": "PASS",
+      "detail": "",
+      "ms": 7206.129789352417
+    },
+    {
+      "module": "test_redundancy",
+      "group": "Architecture",
+      "name": "test_no_duplicate_search_features",
+      "status": "PASS",
+      "detail": "",
+      "ms": 3997.39933013916
+    },
+    {
+      "module": "test_redundancy",
+      "group": "Architecture",
+      "name": "test_no_orphan_scripts",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5064.522981643677
+    },
+    {
+      "module": "test_router_deep",
+      "group": "Router",
+      "name": "test_all_routes_have_hash",
+      "status": "PASS",
+      "detail": "",
+      "ms": 4690.218687057495
+    },
+    {
+      "module": "test_redundancy",
+      "group": "Architecture",
+      "name": "test_unique_feature_descriptions",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5693.299055099487
+    },
+    {
+      "module": "test_router_deep",
+      "group": "Router",
+      "name": "test_all_routes_have_labels",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5895.055532455444
+    },
+    {
+      "module": "test_router_deep",
+      "group": "Router",
+      "name": "test_invalid_route_redirects",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5943.21346282959
+    },
+    {
+      "module": "test_router_deep",
+      "group": "Router",
+      "name": "test_deep_link_on_load",
+      "status": "PASS",
+      "detail": "",
+      "ms": 8534.096956253052
+    },
+    {
+      "module": "test_router_deep",
+      "group": "Router",
+      "name": "test_navigate_same_view_noop",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6787.3170375823975
+    },
+    {
+      "module": "test_router_deep",
+      "group": "Router",
+      "name": "test_navigate_sets_hash",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6508.8982582092285
+    },
+    {
+      "module": "test_router_deep",
+      "group": "Router",
+      "name": "test_router_current_returns_object",
+      "status": "PASS",
+      "detail": "",
+      "ms": 4958.70304107666
+    },
+    {
+      "module": "test_router_deep",
+      "group": "Router",
+      "name": "test_popstate_restores_view",
+      "status": "PASS",
+      "detail": "",
+      "ms": 7058.056116104126
+    },
+    {
+      "module": "test_router_deep",
+      "group": "Router",
+      "name": "test_router_has_9_routes",
+      "status": "PASS",
+      "detail": "",
+      "ms": 4533.151865005493
+    },
+    {
+      "module": "test_router_deep",
+      "group": "Router",
+      "name": "test_router_public_api_complete",
+      "status": "PASS",
+      "detail": "",
+      "ms": 4623.782634735107
+    },
+    {
+      "module": "test_shadow_dom",
+      "group": "ShadowDOM",
+      "name": "test_all_components_have_shadow_root",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5816.224575042725
+    },
+    {
+      "module": "test_shadow_dom",
+      "group": "ShadowDOM",
+      "name": "test_all_components_exist",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6073.448181152344
+    },
+    {
+      "module": "test_shadow_dom",
+      "group": "ShadowDOM",
+      "name": "test_components_have_styles",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6485.678911209106
+    },
+    {
+      "module": "test_shadow_dom",
+      "group": "ShadowDOM",
+      "name": "test_components_are_in_containers",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6589.154243469238
+    },
+    {
+      "module": "test_shadow_dom",
+      "group": "ShadowDOM",
+      "name": "test_components_hidden_by_default",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6512.122869491577
+    },
+    {
+      "module": "test_shadow_dom",
+      "group": "ShadowDOM",
+      "name": "test_drill_shadow_content",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5049.766302108765
+    },
+    {
+      "module": "test_shadow_dom",
+      "group": "ShadowDOM",
+      "name": "test_numbers_shadow_content",
+      "status": "PASS",
+      "detail": "",
+      "ms": 4607.575178146362
+    },
+    {
+      "module": "test_shadow_dom",
+      "group": "ShadowDOM",
+      "name": "test_model_answers_shadow_content",
+      "status": "PASS",
+      "detail": "",
+      "ms": 4923.578977584839
+    },
+    {
+      "module": "test_shadow_dom",
+      "group": "ShadowDOM",
+      "name": "test_opener_shadow_content",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5595.049142837524
+    },
+    {
+      "module": "test_shadow_dom",
+      "group": "ShadowDOM",
+      "name": "test_redflags_shadow_content",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5636.805772781372
+    },
+    {
+      "module": "test_shadow_dom",
+      "group": "ShadowDOM",
+      "name": "test_system_map_shadow_content",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5347.867488861084
+    },
+    {
+      "module": "test_shadow_dom",
+      "group": "ShadowDOM",
+      "name": "test_tradeoffs_shadow_content",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5516.781568527222
+    },
+    {
+      "module": "test_shadow_dom",
+      "group": "ShadowDOM",
+      "name": "test_whiteboard_shadow_content",
+      "status": "PASS",
+      "detail": "",
+      "ms": 4993.405818939209
+    },
+    {
+      "module": "test_shadow_dom",
+      "group": "ShadowDOM",
+      "name": "test_walkthrough_shadow_content",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5311.45167350769
+    },
+    {
+      "module": "test_spa",
+      "group": "Views",
+      "name": "test_correct_pane_visible",
+      "status": "PASS",
+      "detail": "",
+      "ms": 7589.664936065674
+    },
+    {
+      "module": "test_spa",
+      "group": "Views",
+      "name": "test_active_pane_visible",
+      "status": "PASS",
+      "detail": "",
+      "ms": 8067.270040512085
+    },
+    {
+      "module": "test_spa",
+      "group": "Router",
+      "name": "test_default_route",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5518.221139907837
+    },
+    {
+      "module": "test_spa",
+      "group": "History",
+      "name": "test_deep_link_hash",
+      "status": "PASS",
+      "detail": "",
+      "ms": 7953.247308731079
+    },
+    {
+      "module": "test_spa",
+      "group": "History",
+      "name": "test_back_button",
+      "status": "PASS",
+      "detail": "",
+      "ms": 9639.964580535889
+    },
+    {
+      "module": "test_spa",
+      "group": "History",
+      "name": "test_forward_button",
+      "status": "PASS",
+      "detail": "",
+      "ms": 10445.622205734253
+    },
+    {
+      "module": "test_spa",
+      "group": "Navigation",
+      "name": "test_hash_updates",
+      "status": "PASS",
+      "detail": "",
+      "ms": 7079.758882522583
+    },
+    {
+      "module": "test_spa",
+      "group": "Views",
+      "name": "test_nav_button_activated",
+      "status": "PASS",
+      "detail": "",
+      "ms": 7477.533340454102
+    },
+    {
+      "module": "test_spa",
+      "group": "History",
+      "name": "test_invalid_hash_fallback",
+      "status": "PASS",
+      "detail": "",
+      "ms": 8667.310953140259
+    },
+    {
+      "module": "test_spa",
+      "group": "Navigation",
+      "name": "test_navigate_to_drill",
+      "status": "PASS",
+      "detail": "",
+      "ms": 7213.310718536377
+    },
+    {
+      "module": "test_spa",
+      "group": "Navigation",
+      "name": "test_navigate_to_wb",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5634.326457977295
+    },
+    {
+      "module": "test_spa",
+      "group": "Router",
+      "name": "test_route_metadata",
+      "status": "PASS",
+      "detail": "",
+      "ms": 4359.546184539795
+    },
+    {
+      "module": "test_spa",
+      "group": "Views",
+      "name": "test_other_panes_hidden",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6043.527126312256
+    },
+    {
+      "module": "test_spa",
+      "group": "Router",
+      "name": "test_routes_defined",
+      "status": "PASS",
+      "detail": "",
+      "ms": 4736.103534698486
+    },
+    {
+      "module": "test_spa",
+      "group": "Router",
+      "name": "test_router_exists",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5152.690172195435
+    },
+    {
+      "module": "test_spa",
+      "group": "Views",
+      "name": "test_single_pane_active",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6457.583904266357
+    },
+    {
+      "module": "test_spa",
+      "group": "Views",
+      "name": "test_view_manager_exists",
+      "status": "PASS",
+      "detail": "",
+      "ms": 4885.255813598633
+    },
+    {
+      "module": "test_spa",
+      "group": "Views",
+      "name": "test_title_matches_view",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6575.566291809082
+    },
+    {
+      "module": "test_tools_fab",
+      "group": "Tools",
+      "name": "test_fab_button_exists",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5174.498796463013
+    },
+    {
+      "module": "test_spa",
+      "group": "Navigation",
+      "name": "test_title_updates",
+      "status": "PASS",
+      "detail": "",
+      "ms": 7150.496006011963
+    },
+    {
+      "module": "test_spa",
+      "group": "Navigation",
+      "name": "test_navigate_all_views",
+      "status": "PASS",
+      "detail": "",
+      "ms": 20022.969007492065
+    },
+    {
+      "module": "test_tools_fab",
+      "group": "Tools",
+      "name": "test_fab_is_button",
+      "status": "PASS",
+      "detail": "",
+      "ms": 4076.925277709961
+    },
+    {
+      "module": "test_tools_fab",
+      "group": "Tools",
+      "name": "test_tools_panel_exists",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5485.780954360962
+    },
+    {
+      "module": "test_tools_fab",
+      "group": "Tools",
+      "name": "test_fab_opens_panel_on_click",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5945.769309997559
+    },
+    {
+      "module": "test_tour_guide",
+      "group": "Tour",
+      "name": "test_tour_api_exists",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5637.773275375366
+    },
+    {
+      "module": "test_tour_guide",
+      "group": "Tour",
+      "name": "test_tour_api_is_functional",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5787.970781326294
+    },
+    {
+      "module": "test_tour_guide",
+      "group": "Tour",
+      "name": "test_tour_creates_spotlight",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5396.9268798828125
+    },
+    {
+      "module": "test_tour_guide",
+      "group": "Tour",
+      "name": "test_tour_creates_overlay",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6145.308256149292
+    },
+    {
+      "module": "test_tour_guide",
+      "group": "Tour",
+      "name": "test_tour_has_destroy_method",
+      "status": "PASS",
+      "detail": "",
+      "ms": 4988.717794418335
+    },
+    {
+      "module": "test_tour_guide",
+      "group": "Tour",
+      "name": "test_tour_has_reset_method",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5119.409561157227
+    },
+    {
+      "module": "test_tour_guide",
+      "group": "Tour",
+      "name": "test_tour_escape_dismisses",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6524.945974349976
+    },
+    {
+      "module": "test_tour_guide",
+      "group": "Tour",
+      "name": "test_tour_has_start_method",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5033.026456832886
+    },
+    {
+      "module": "test_unique_features",
+      "group": "Features",
+      "name": "test_completion_celebration_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5215.926885604858
+    },
+    {
+      "module": "test_unique_features",
+      "group": "Features",
+      "name": "test_confetti_keyframe_exists",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5187.613010406494
+    },
+    {
+      "module": "test_unique_features",
+      "group": "Features",
+      "name": "test_copy_code_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5374.7663497924805
+    },
+    {
+      "module": "test_unique_features",
+      "group": "Features",
+      "name": "test_no_duplicate_scroll_progress",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5239.451885223389
+    },
+    {
+      "module": "test_unique_features",
+      "group": "Features",
+      "name": "test_scroll_progress_bar_exists",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5362.9701137542725
+    },
+    {
+      "module": "test_unique_features",
+      "group": "Features",
+      "name": "test_scroll_progress_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5615.55290222168
+    },
+    {
+      "module": "test_unique_features",
+      "group": "Features",
+      "name": "test_state_persistence_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5398.169755935669
+    },
+    {
+      "module": "test_unique_features",
+      "group": "Features",
+      "name": "test_scroll_progress_width_updates",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6783.3616733551025
+    },
+    {
+      "module": "test_unique_features",
+      "group": "Features",
+      "name": "test_touch_swipe_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5198.024034500122
+    },
+    {
+      "module": "test_v305_features",
+      "group": "Features",
+      "name": "test_double_tap_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5565.377235412598
+    },
+    {
+      "module": "test_v305_features",
+      "group": "Features",
+      "name": "test_night_schedule_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5199.363470077515
+    },
+    {
+      "module": "test_v305_features",
+      "group": "Features",
+      "name": "test_double_tap_heart_keyframe",
+      "status": "PASS",
+      "detail": "",
+      "ms": 7507.795333862305
+    },
+    {
+      "module": "test_v305_features",
+      "group": "Features",
+      "name": "test_perf_overlay_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5131.949663162231
+    },
+    {
+      "module": "test_v305_features",
+      "group": "Features",
+      "name": "test_pomodoro_timer_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 4970.764398574829
+    },
+    {
+      "module": "test_v305_features",
+      "group": "Features",
+      "name": "test_pomodoro_ui_created",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6591.925621032715
+    },
+    {
+      "module": "test_v305_features",
+      "group": "Features",
+      "name": "test_sticky_footer_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5131.789445877075
+    },
+    {
+      "module": "test_v305_features",
+      "group": "Features",
+      "name": "test_virtual_keyboard_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5569.598913192749
+    },
+    {
+      "module": "test_v305_features",
+      "group": "Features",
+      "name": "test_welcome_banner_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5122.382402420044
+    },
+    {
+      "module": "test_v305_features",
+      "group": "Features",
+      "name": "test_web_share_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5861.6509437561035
+    },
+    {
+      "module": "test_v306_features",
+      "group": "Features",
+      "name": "test_easter_egg_konami_detected",
+      "status": "PASS",
+      "detail": "",
+      "ms": 4932.519435882568
+    },
+    {
+      "module": "test_v306_features",
+      "group": "Features",
+      "name": "test_edge_swipe_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5599.546432495117
+    },
+    {
+      "module": "test_v306_features",
+      "group": "Features",
+      "name": "test_easter_egg_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5705.5699825286865
+    },
+    {
+      "module": "test_v306_features",
+      "group": "Features",
+      "name": "test_loading_button_api_exists",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5775.285720825195
+    },
+    {
+      "module": "test_v306_features",
+      "group": "Features",
+      "name": "test_network_indicator_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5278.2142162323
+    },
+    {
+      "module": "test_v306_features",
+      "group": "Features",
+      "name": "test_loading_button_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6411.765813827515
+    },
+    {
+      "module": "test_v306_features",
+      "group": "Features",
+      "name": "test_prefetch_hover_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5607.948303222656
+    },
+    {
+      "module": "test_v306_features",
+      "group": "Features",
+      "name": "test_scroll_direction_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 4944.340467453003
+    },
+    {
+      "module": "test_v306_features",
+      "group": "Features",
+      "name": "test_session_logger_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5500.414133071899
+    },
+    {
+      "module": "test_v306_features",
+      "group": "Features",
+      "name": "test_undo_toast_api_exists",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5289.93821144104
+    },
+    {
+      "module": "test_v306_features",
+      "group": "Features",
+      "name": "test_undo_toast_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5305.015325546265
+    },
+    {
+      "module": "test_v307_features",
+      "group": "Features",
+      "name": "test_badge_counter_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5352.900505065918
+    },
+    {
+      "module": "test_v307_features",
+      "group": "Features",
+      "name": "test_battery_indicator_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 4032.5756072998047
+    },
+    {
+      "module": "test_v306_features",
+      "group": "Features",
+      "name": "test_session_logger_recent_views",
+      "status": "PASS",
+      "detail": "",
+      "ms": 11004.788875579834
+    },
+    {
+      "module": "test_v307_features",
+      "group": "Features",
+      "name": "test_haptic_feedback_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5188.719034194946
+    },
+    {
+      "module": "test_v307_features",
+      "group": "Features",
+      "name": "test_media_query_classes_applied",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5399.399518966675
+    },
+    {
+      "module": "test_v307_features",
+      "group": "Features",
+      "name": "test_media_query_listener_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5812.250852584839
+    },
+    {
+      "module": "test_v307_features",
+      "group": "Features",
+      "name": "test_notification_system_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5193.829536437988
+    },
+    {
+      "module": "test_v307_features",
+      "group": "Features",
+      "name": "test_notification_bell_exists",
+      "status": "PASS",
+      "detail": "",
+      "ms": 7185.822010040283
+    },
+    {
+      "module": "test_v307_features",
+      "group": "Features",
+      "name": "test_pointer_events_sets_touch_action",
+      "status": "PASS",
+      "detail": "",
+      "ms": 4901.2744426727295
+    },
+    {
+      "module": "test_v307_features",
+      "group": "Features",
+      "name": "test_pointer_events_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5424.134016036987
+    },
+    {
+      "module": "test_v307_features",
+      "group": "Features",
+      "name": "test_resize_observer_adds_class",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6005.899429321289
+    },
+    {
+      "module": "test_v307_features",
+      "group": "Features",
+      "name": "test_resize_observer_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5407.209634780884
+    },
+    {
+      "module": "test_v307_features",
+      "group": "Features",
+      "name": "test_selection_api_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 4919.728517532349
+    },
+    {
+      "module": "test_v308_features",
+      "group": "Features",
+      "name": "test_beacon_unload_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5112.8411293029785
+    },
+    {
+      "module": "test_v308_features",
+      "group": "Features",
+      "name": "test_cache_modules_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 4935.801982879639
+    },
+    {
+      "module": "test_v308_features",
+      "group": "Features",
+      "name": "test_magnetic_button_attaches",
+      "status": "PASS",
+      "detail": "",
+      "ms": 4954.670190811157
+    },
+    {
+      "module": "test_v308_features",
+      "group": "Features",
+      "name": "test_magnetic_button_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5294.203519821167
+    },
+    {
+      "module": "test_v308_features",
+      "group": "Features",
+      "name": "test_mouse_glow_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5377.930164337158
+    },
+    {
+      "module": "test_v308_features",
+      "group": "Features",
+      "name": "test_mouse_glow_element_created",
+      "status": "PASS",
+      "detail": "",
+      "ms": 7181.816816329956
+    },
+    {
+      "module": "test_v308_features",
+      "group": "Features",
+      "name": "test_permission_request_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5745.678186416626
+    },
+    {
+      "module": "test_v308_features",
+      "group": "Features",
+      "name": "test_storage_estimate_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 4893.8140869140625
+    },
+    {
+      "module": "test_v308_features",
+      "group": "Features",
+      "name": "test_save_data_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5314.759254455566
+    },
+    {
+      "module": "test_v308_features",
+      "group": "Features",
+      "name": "test_text_fragment_script_loaded",
+      "status": "PASS",
+      "detail": "",
+      "ms": 4601.252794265747
+    },
+    {
+      "module": "test_view_transitions",
+      "group": "Views",
+      "name": "test_correct_pane_visible_after_nav",
+      "status": "PASS",
+      "detail": "",
+      "ms": 5652.904272079468
+    },
+    {
+      "module": "test_view_transitions",
+      "group": "Views",
+      "name": "test_nav_button_click_navigates",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6628.265142440796
+    },
+    {
+      "module": "test_view_transitions",
+      "group": "Views",
+      "name": "test_nav_button_active_state",
+      "status": "PASS",
+      "detail": "",
+      "ms": 7012.624502182007
+    },
+    {
+      "module": "test_view_transitions",
+      "group": "Views",
+      "name": "test_pane_display_block_when_active",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6712.546825408936
+    },
+    {
+      "module": "test_view_transitions",
+      "group": "Views",
+      "name": "test_only_one_pane_active",
+      "status": "PASS",
+      "detail": "",
+      "ms": 7432.522773742676
+    },
+    {
+      "module": "test_view_transitions",
+      "group": "Views",
+      "name": "test_title_updates_on_navigate",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6050.296306610107
+    },
+    {
+      "module": "test_view_transitions",
+      "group": "Views",
+      "name": "test_transition_lock_prevents_rapid_switch",
+      "status": "PASS",
+      "detail": "",
+      "ms": 6780.978679656982
+    },
+    {
+      "module": "test_view_transitions",
+      "group": "Views",
+      "name": "test_view_manager_exists",
+      "status": "PASS",
+      "detail": "",
+      "ms": 4709.101915359497
+    },
+    {
+      "module": "test_view_transitions",
+      "group": "Views",
+      "name": "test_view_state_persists_scroll",
+      "status": "PASS",
+      "detail": "",
+      "ms": 8201.201438903809
+    }
+  ]
+}

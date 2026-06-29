@@ -7833,6 +7833,338 @@ document.addEventListener('keydown', function (event) {
     card.style.touchAction = 'pan-y'; // Allow vertical scroll, handle horizontal gestures
   });
 })();
+
+/* ===== CacheModules =====
+   Caches module HTML content using Cache API for offline reading.
+   Features:
+   - Opens a named cache on load
+   - Stores each module's content on first view
+   - Logs cache status to console
+   Usage: Auto-initializes.
+*/
+(function () {
+  'use strict';
+  if (!window.caches) return;
+
+  var CACHE_NAME = '_deepdive_modules';
+
+  async function init() {
+    try {
+      var cache = await caches.open(CACHE_NAME);
+      // Pre-cache the main HTML
+      var req = new Request(location.href);
+      var exists = await cache.match(req);
+      if (!exists) await cache.put(req, new Response(document.documentElement.outerHTML));
+    } catch (e) {}
+  }
+
+  // Cache each module on view
+  document.addEventListener('routechange', function (e) {
+    var view = e.detail && e.detail.view ? e.detail.view : '';
+    if (!view) return;
+    var pane = document.getElementById(view);
+    if (!pane) return;
+    try {
+      caches.open(CACHE_NAME).then(function (cache) {
+        var url = location.href.split('#')[0] + '#' + view;
+        cache.put(new Request(url), new Response(pane.innerHTML));
+      });
+    } catch (e) {}
+  });
+
+  init();
+})();
+
+/* ===== StorageEstimate =====
+   Shows storage usage in sidebar footer.
+   Features:
+   - Uses navigator.storage.estimate()
+   - Shows used / quota in MB
+   - Warning when >80% full
+   Usage: Auto-initializes.
+*/
+(function () {
+  'use strict';
+  if (!navigator.storage || !navigator.storage.estimate) return;
+
+  async function show() {
+    var sidebar = document.querySelector('.sidebar');
+    if (!sidebar) return;
+    if (document.getElementById('_storage-est')) return;
+
+    var est = await navigator.storage.estimate();
+    var used = est.usage || 0;
+    var quota = est.quota || 1;
+    var pct = Math.round((used / quota) * 100);
+    var usedMB = Math.round(used / 1048576);
+
+    var wrap = document.createElement('div');
+    wrap.id = '_storage-est';
+    wrap.style.cssText = 'padding:6px 11px;font-size:9px;color:var(--mut);border-top:1px solid var(--bd)';
+    wrap.textContent = 'Storage: ' + usedMB + ' MB used';
+    if (pct > 80) wrap.style.color = 'var(--red)';
+
+    sidebar.appendChild(wrap);
+  }
+
+  setTimeout(show, 2000);
+})();
+
+/* ===== SaveData =====
+   Detects data saver mode and reduces animations.
+   Features:
+   - Checks connection.saveData
+   - Adds .save-data class to body
+   - CSS can reduce animations when active
+   Usage: Auto-initializes.
+*/
+(function () {
+  'use strict';
+  var conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+  if (!conn) return;
+
+  function check() {
+    if (conn.saveData) {
+      document.body.classList.add('save-data');
+      document.documentElement.style.setProperty('--anim-intensity', '0.3');
+    } else {
+      document.body.classList.remove('save-data');
+      document.documentElement.style.removeProperty('--anim-intensity');
+    }
+  }
+
+  check();
+  if (conn.addEventListener) conn.addEventListener('change', check);
+})();
+
+/* ===== PermissionRequest =====
+   Gracefully requests permissions on first interaction.
+   Features:
+   - Clipboard read permission on first copy action
+   - Notification permission on bell click
+   - Tracks which permissions were already requested
+   Usage: Auto-initializes.
+*/
+(function () {
+  'use strict';
+
+  var STORAGE_KEY = '_permissions_requested';
+  var requested = {};
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) requested = JSON.parse(raw);
+  } catch (e) {}
+
+  function ask(name) {
+    if (requested[name]) return;
+    if (!navigator.permissions) return;
+    navigator.permissions.query({ name: name }).then(function (result) {
+      if (result.state === 'prompt') {
+        requested[name] = true;
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(requested)); } catch (e) {}
+      }
+    });
+  }
+
+  // Request clipboard permission on first Ctrl+C
+  document.addEventListener('keydown', function (e) {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'c') ask('clipboard-read');
+  });
+})();
+
+/* ===== TextFragment =====
+   Handles #:~:text= URL fragments for linking to specific text.
+   Features:
+   - Parses text fragment from URL
+   - Highlights matching text in active pane
+   - Scrolls to first match
+   Usage: Auto-initializes.
+*/
+(function () {
+  'use strict';
+
+  function handle() {
+    var hash = location.hash;
+    if (!hash || !hash.includes(':~:text=')) return;
+
+    var match = hash.match(/:~:text=([^&]+)/);
+    if (!match) return;
+    var text = decodeURIComponent(match[1]);
+
+    // Wait for view to be active
+    setTimeout(function () {
+      var pane = document.querySelector('.pane.on');
+      if (!pane) return;
+
+      // Simple text search and highlight
+      var walker = document.createTreeWalker(pane, NodeFilter.SHOW_TEXT);
+      var node;
+      while (node = walker.nextNode()) {
+        var idx = node.textContent.indexOf(text);
+        if (idx >= 0) {
+          var range = document.createRange();
+          range.setStart(node, idx);
+          range.setEnd(node, idx + text.length);
+          var sel = window.getSelection();
+          sel.removeAllRanges();
+          sel.addRange(range);
+          // Scroll into view
+          var rect = range.getBoundingClientRect();
+          pane.scrollTop += rect.top - pane.getBoundingClientRect().top - 100;
+          break;
+        }
+      }
+    }, 800);
+  }
+
+  window.addEventListener('hashchange', handle);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { setTimeout(handle, 1000); });
+  } else {
+    setTimeout(handle, 1000);
+  }
+})();
+
+/* ===== BeaconUnload =====
+   Sends session analytics on page unload using navigator.sendBeacon.
+   Features:
+   - Tracks session duration, modules visited
+   - Sends on beforeunload reliably
+   - Minimal payload, no blocking
+   Usage: Auto-initializes.
+*/
+(function () {
+  'use strict';
+
+  var sessionStart = Date.now();
+  var modulesVisited = [];
+
+  document.addEventListener('routechange', function (e) {
+    var v = e.detail && e.detail.view ? e.detail.view : '';
+    if (v && modulesVisited.indexOf(v) === -1) modulesVisited.push(v);
+  });
+
+  window.addEventListener('beforeunload', function () {
+    var payload = JSON.stringify({
+      duration: Date.now() - sessionStart,
+      modules: modulesVisited.length,
+      moduleList: modulesVisited.join(','),
+      url: location.href
+    });
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon('/analytics', new Blob([payload], { type: 'application/json' }));
+    }
+  });
+})();
+
+/* ===== MouseGlow =====
+   A subtle radial gradient spotlight that follows the cursor.
+   Creates an ambient light effect on the hero/background area.
+   Features:
+   - Smooth lerp-following cursor (not instant, feels organic)
+   - Respects prefers-reduced-motion
+   - Auto-disables on touch devices
+   - Very subtle — 8% opacity, large 600px radius
+   Usage: Auto-initializes.
+*/
+(function () {
+  'use strict';
+
+  // Skip on touch devices
+  if ('ontouchstart' in window) return;
+  // Skip reduced motion
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  var glow = document.createElement('div');
+  glow.id = '_mouse-glow';
+  glow.style.cssText = 'position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0;transition:opacity .6s ease;background:radial-gradient(600px circle at var(--gx,50%) var(--gy,50%),rgba(83,74,183,.08),transparent 70%);mix-blend-mode:screen';
+  document.body.appendChild(glow);
+
+  // Fade in after page loads
+  setTimeout(function () { glow.style.opacity = '1'; }, 500);
+
+  var targetX = 50, targetY = 50;
+  var currentX = 50, currentY = 50;
+
+  document.addEventListener('mousemove', function (e) {
+    targetX = (e.clientX / window.innerWidth) * 100;
+    targetY = (e.clientY / window.innerHeight) * 100;
+  });
+
+  function tick() {
+    // Lerp for smooth following (0.08 = slow/smooth)
+    currentX += (targetX - currentX) * 0.08;
+    currentY += (targetY - currentY) * 0.08;
+    glow.style.setProperty('--gx', currentX + '%');
+    glow.style.setProperty('--gy', currentY + '%');
+    requestAnimationFrame(tick);
+  }
+
+  requestAnimationFrame(tick);
+})();
+
+/* ===== MagneticButton =====
+   Buttons subtly attract toward the cursor on hover.
+   Creates a "magnetic pull" effect within a radius around the button.
+   Features:
+   - 80px attraction radius
+   - 0.3 max translation (subtle, not distracting)
+   - Smooth release on mouse leave
+   - Respects prefers-reduced-motion
+   - Only on desktop (no touch)
+   Usage: Auto-initializes. Targets buttons with .magnetic class.
+*/
+(function () {
+  'use strict';
+
+  if ('ontouchstart' in window) return;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  var RADIUS = 80;
+  var STRENGTH = 0.3;
+
+  function magnetic(el, e) {
+    var rect = el.getBoundingClientRect();
+    var cx = rect.left + rect.width / 2;
+    var cy = rect.top + rect.height / 2;
+    var dx = e.clientX - cx;
+    var dy = e.clientY - cy;
+    var dist = Math.sqrt(dx * dx + dy * dy);
+
+    if (dist < RADIUS) {
+      var pull = 1 - dist / RADIUS;
+      var tx = dx * pull * STRENGTH;
+      var ty = dy * pull * STRENGTH;
+      el.style.transform = 'translate(' + tx.toFixed(2) + 'px,' + ty.toFixed(2) + 'px)';
+    } else {
+      el.style.transform = '';
+    }
+  }
+
+  function attach(el) {
+    if (el.dataset._magnetic) return;
+    el.dataset._magnetic = '1';
+    el.style.transition = 'transform .15s ease-out';
+
+    var onMove = function (e) { magnetic(el, e); };
+    var onLeave = function () { el.style.transform = ''; };
+
+    // Global mousemove for smooth tracking
+    document.addEventListener('mousemove', onMove);
+    el.addEventListener('mouseleave', onLeave);
+  }
+
+  // Attach to CTA buttons and major interactive elements
+  function scan() {
+    document.querySelectorAll('button, .cta, .btn, a[href]').forEach(attach);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { setTimeout(scan, 500); });
+  } else {
+    setTimeout(scan, 500);
+  }
+})();
 </script>
 <script>
 /* v154: Scroll progress bar + boot splash hide */

@@ -66,3 +66,11 @@
 <!--@build:include scripts/app/notification-system.js-->
 <!--@build:include scripts/app/media-query-listener.js-->
 <!--@build:include scripts/app/pointer-events.js-->
+<!--@build:include scripts/app/cache-modules.js-->
+<!--@build:include scripts/app/storage-estimate.js-->
+<!--@build:include scripts/app/save-data.js-->
+<!--@build:include scripts/app/permission-request.js-->
+<!--@build:include scripts/app/text-fragment.js-->
+<!--@build:include scripts/app/beacon-unload.js-->
+<!--@build:include scripts/app/mouse-glow.js-->
+<!--@build:include scripts/app/magnetic-button.js-->

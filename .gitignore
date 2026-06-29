@@ -6,3 +6,12 @@ node_modules/
 *.zip
 .DS_Store
 /tmp/
+
+# salvage bloat-guard -- generated test output must never land on master.
+# The v300/v308 branches committed 78K-134K lines of report JSON + multi-MB
+# PNG screenshots; visual-enhancements added e2e_report_*.json. Keep them out
+# so a future file-extract/salvage can't reintroduce the bloat.
+test/reports/
+deploy_temp/
+test/scan_report.json
+e2e_report_*.json

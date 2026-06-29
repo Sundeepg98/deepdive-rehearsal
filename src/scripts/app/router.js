@@ -29,14 +29,32 @@
   function parseHash(hash) {
     var raw = (hash || window.location.hash || '#' + DEFAULT_ROUTE).replace(/^#/, '');
     var parts = raw.split('/');
-    var viewId = (parts[0] || DEFAULT_ROUTE).toLowerCase().trim();
+    /* Topic axis (above the view router). A hyphenated topic slug can NEVER equal one
+       of the 9 short view ids, so #<topic>/<view> is unambiguous and a bare #<view>
+       is unchanged. topic === null means "current/default topic" -> single-topic URLs
+       are byte-identical to before. */
+    var topicId = null, rest = parts;
+    if (typeof TopicRegistry !== 'undefined' && TopicRegistry.get(parts[0]) && !ROUTES[parts[0]]) {
+      topicId = parts[0]; rest = parts.slice(1);
+    }
+    var viewId = (rest[0] || DEFAULT_ROUTE).toLowerCase().trim();
     if (!ROUTES[viewId]) viewId = DEFAULT_ROUTE; // guard: unknown view -> default
     return {
+      topic: topicId,
       view: viewId,
-      sub: parts.slice(1).join('/') || null,
+      sub: rest.slice(1).join('/') || null,
       route: ROUTES[viewId],
       raw: raw
     };
+  }
+
+  /* The current topic's hash prefix -- empty for the default (first-registered) topic,
+     so the single-topic deliverable keeps today's bare #<view> URLs verbatim. */
+  function topicPrefix() {
+    if (typeof TopicRegistry === 'undefined') return '';
+    var cur = TopicRegistry.current(), ids = TopicRegistry.ids();
+    if (!cur || !ids.length || cur.id === ids[0]) return '';
+    return cur.id + '/';
   }
 
   /* ----- notify subscribers + fire a DOM event ----- */
@@ -50,7 +68,7 @@
   /* ----- navigate to a view (adds a history entry) ----- */
   function navigate(viewId, sub) {
     if (!ROUTES[viewId]) viewId = DEFAULT_ROUTE;
-    var hash = '#' + viewId + (sub ? '/' + sub : '');
+    var hash = '#' + topicPrefix() + viewId + (sub ? '/' + sub : '');
     if (window.location.hash !== hash) {
       try { window.history.pushState({ view: viewId, sub: sub || null }, '', hash); }
       catch (e) { window.location.hash = hash; }
@@ -61,9 +79,20 @@
   /* ----- replace the current route (no history entry) ----- */
   function replace(viewId, sub) {
     if (!ROUTES[viewId]) viewId = DEFAULT_ROUTE;
-    var hash = '#' + viewId + (sub ? '/' + sub : '');
+    var hash = '#' + topicPrefix() + viewId + (sub ? '/' + sub : '');
     try { window.history.replaceState({ view: viewId, sub: sub || null }, '', hash); } catch (e) {}
     emit(parseHash(hash));
+  }
+
+  /* ----- reflect a topic switch in the hash, SILENTLY (no emit) -----
+     The registry already drove the switch; re-emitting would loop back into
+     applyRoute. The default/first topic stays bare so its URLs are unchanged. */
+  function setTopic(id) {
+    var cur = parseHash();
+    var ids = (typeof TopicRegistry !== 'undefined') ? TopicRegistry.ids() : [];
+    var prefix = (ids.length && id === ids[0]) ? '' : id + '/';
+    var hash = '#' + prefix + cur.view + (cur.sub ? '/' + cur.sub : '');
+    try { window.history.replaceState({ topic: id, view: cur.view, sub: cur.sub }, '', hash); } catch (e) {}
   }
 
   function onHashChange() { emit(parseHash()); }
@@ -94,6 +123,7 @@
     ROUTES: ROUTES,
     navigate: navigate,
     replace: replace,
+    setTopic: setTopic,
     subscribe: subscribe,
     current: current,
     parse: parseHash,

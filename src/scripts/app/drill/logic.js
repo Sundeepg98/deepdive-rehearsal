@@ -7,7 +7,8 @@ var DRILL_TIER_NOTES={all:'<b>All four levels, mixed</b> &mdash; the way a real 
 /* The full, immutable card / speak banks. cards / speakLines (above, in
    cards.js / speak-lines.js) are the reassignable WORKING set; these keep the
    originals. SHARED: mixed-fire.js reads _allCards to assemble its probe set. */
-var _allCards = cards, _allSpeak = speakLines;
+/* _allCards/_allSpeak are now declared + owned by topic-protocol.js (foundation)
+   and seeded by publishBanks(); drill reads them as before. */
 var DRILL_HTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
       <div class="modetog" id="modetog">
         <button type="button" class="on" data-m="study">Study</button>

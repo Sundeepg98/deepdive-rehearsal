@@ -36,8 +36,22 @@
     setTimeout(function () { liveRegion.textContent = msg; }, 30);
   }
 
+  /* Re-apply the document title for the current view (used by the identity binder on a
+     topic switch; the single-topic deliverable keeps today's title verbatim). */
+  function refreshTitle() {
+    var label = (lastView && window.Router && Router.ROUTES[lastView]) ? Router.ROUTES[lastView].title : (lastView || '');
+    document.title = label + ' \u2014 ' + BASE_TITLE;
+  }
+
   function applyRoute(route) {
     if (!route || !route.view) return;
+    /* Topic axis: a deep link / back-forward to a DIFFERENT topic switches it BEFORE the
+       view shows, so panes are on the right topic (no topic-1-then-flip flash). In the
+       single-topic deliverable route.topic is null, so this is a no-op. */
+    if (route.topic && typeof TopicRegistry !== 'undefined') {
+      var curT = TopicRegistry.current();
+      if (curT && route.topic !== curT.id) TopicRegistry.setTopic(route.topic);
+    }
     var view = route.view;
     var label = route.route ? route.route.title : view;
 
@@ -55,7 +69,9 @@
   if (window.Router) window.Router.subscribe(applyRoute);
 
   window.ViewManager = {
-    currentView: function () { return lastView; }
+    currentView: function () { return lastView; },
+    announce: announce,
+    refreshTitle: refreshTitle
   };
 
 })();

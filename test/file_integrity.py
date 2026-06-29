@@ -4,6 +4,10 @@ Run this before committing: python3 test/file_integrity.py"""
 
 import re, sys, os, subprocess
 
+# Abstract base classes that are intentionally NOT registered as custom elements
+# (panes `extends TopicPane`; TopicPane itself is never customElements.define'd).
+BASE_CLASSES = {'TopicPane'}
+
 def check_js_file(path):
     """Check a JS file for truncation (unclosed classes, unclosed functions)."""
     with open(path, 'r') as f:
@@ -31,6 +35,8 @@ def check_js_file(path):
     # Check for customElements.define for each class
     class_names = [m.group(1) for m in re.finditer(r'class\s+(\w+)\s+extends', content)]
     for name in class_names:
+        if name in BASE_CLASSES:
+            continue
         pattern = f"customElements.define.*{name}"
         if not re.search(pattern, content):
             errors.append(f"  FAIL customElements.define missing for class '{name}'")

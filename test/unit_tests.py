@@ -4,6 +4,10 @@ Run: python3 test/unit_tests.py"""
 
 import sys, os, re, json
 
+# Abstract base classes that are intentionally NOT registered as custom elements
+# (panes `extends TopicPane`; TopicPane itself is never customElements.define'd).
+BASE_CLASSES = {'TopicPane'}
+
 BASE = os.path.join(os.path.dirname(__file__), '..')
 SRC = os.path.join(BASE, 'src', 'scripts')
 
@@ -32,11 +36,14 @@ suite("DATA LAYER")
 
 # Check data files are pure data (no DOM manipulation)
 data_files = {
-    'app/drill/cards.js': 185,
-    'app/drill/speak-lines.js': 21,
-    'app/walkthrough/steps.js': 42,
-    'app/mock-run/data.js': 66,
-    'app/model-answers/answers.js': 95,
+    # Repointed to the per-topic data files: the foundation OWNS this manifest so the
+    # Phase-1 pane agents never edit this shared gate file when they delete the old data
+    # files (cards/speak -> drill.js, steps -> walk.js, answers -> model.js, mock-run bank
+    # -> bank.js). Bounds are generous to cover both the Phase-0 alias/stub and Phase-1 real.
+    '../topics/content-pipeline/drill.js': 250,
+    '../topics/content-pipeline/walk.js': 120,
+    '../topics/content-pipeline/model.js': 280,
+    '../topics/content-pipeline/bank.js': 150,
 }
 
 for f, expected_lines in data_files.items():
@@ -111,6 +118,8 @@ for root, dirs, files in os.walk(os.path.join(SRC, 'app')):
             # Check customElements.define for each class
             class_names = [m.group(1) for m in re.finditer(r'class\s+(\w+)\s+extends', content)]
             for name in class_names:
+                if name in BASE_CLASSES:
+                    continue
                 pattern = f"customElements.define.*{name}"
                 found = re.search(pattern, content)
                 test(f"{relpath}: {name} has define()", bool(found))

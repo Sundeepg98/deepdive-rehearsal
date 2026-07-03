@@ -5,6 +5,7 @@
 <!--@build:include topics/content-pipeline.js-->
 <!--@build:include topics/signing.js-->
 <!--@build:include topics/authz.js-->
+<!--@build:include topics/aws-hardening.js-->
 <!--@build:include scripts/app/red-flags.js-->
 <!--@build:include scripts/app/trade-offs.js-->
 <!--@build:include scripts/app/walkthrough.js-->

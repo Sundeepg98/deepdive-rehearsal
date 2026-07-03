@@ -1,0 +1,222 @@
+/* topics/aws-hardening/drill.js -- topic 4 drill data. LOCAL arrays AWSHARD_CARDS /
+   AWSHARD_SPEAK so loading this bundle does NOT clobber topic 1's working set.
+   publishBanks() reseeds the globals from TOPIC_AWSHARD_BANK on switch.
+   AWSHARD_SPEAK[i] pairs AWSHARD_CARDS[i]. Grounded in the ICS firmware-storage S3
+   layer (50k+ terminals, signed packages, presigned delivery). 7-bit ASCII. */
+var AWSHARD_CARDS = [
+  { tier:'SDE2', signal:'Block Public Access',
+    q:"You&rsquo;re storing firmware in S3. What&rsquo;s the very first thing you configure?",
+    a:"<b>Block Public Access</b> &mdash; at the <b>account</b> and the <b>bucket</b>, all four settings on. It makes it structurally impossible for any ACL or bucket policy to expose an object publicly. Set it at the account so every new bucket is private by default, and this one specifically can never be the next public-S3 breach headline.",
+    f:[
+      { q:"What are the four settings actually doing?",
+        a:"Two govern ACLs, two govern policies. <code>BlockPublicAcls</code> rejects a PUT that carries a public ACL; <code>IgnorePublicAcls</code> neutralizes any public ACL already set. <code>BlockPublicPolicy</code> rejects a bucket policy that grants public access; <code>RestrictPublicBuckets</code> limits access on an already-public bucket to same-account and AWS-service principals. Together they close every path to &lsquo;public&rsquo; &mdash; ACL <i>and</i> policy, new <i>and</i> existing." },
+      { q:"BPA is on. Why isn&rsquo;t that the whole story?",
+        a:"BPA only stops <b>public</b> access &mdash; it does nothing about an over-broad IAM role, an unencrypted object, or a leaked presigned URL. It&rsquo;s the floor, not the ceiling: it guarantees &lsquo;not on the open internet,&rsquo; but least privilege, encryption, and delivery scoping are still all on you." }
+    ],
+    senior:"Naming <b>Block Public Access at the account level, all four settings</b> as the non-negotiable first move &mdash; and immediately clarifying it&rsquo;s the floor, not the whole design &mdash; is the reflex that separates someone who&rsquo;s run S3 in production from someone who&rsquo;s read the docs." },
+  { tier:'SDE2', signal:'Least-privilege IAM',
+    q:"The delivery service needs to read firmware from the bucket. What does its IAM policy look like?",
+    a:"<b>Exactly one action on exactly one prefix</b>: <code>s3:GetObject</code> on <code>arn:aws:s3:::fw-prod/signed/*</code> &mdash; not <code>s3:*</code>, not the whole bucket, not List or Delete. A role should be able to do precisely what it needs and nothing more, because the policy <i>is</i> the blast radius when that credential is stolen.",
+    f:[
+      { q:"Why scope the resource, not just the action?",
+        a:"Because <code>s3:GetObject</code> on <code>*</code> still reads <i>every</i> tenant&rsquo;s firmware. Scoping the action limits <i>what</i> the credential can do; scoping the resource limits <i>which data</i> it can do it to. A stolen credential with <code>GetObject</code> on one prefix reads one path; the same action on the whole bucket reads the fleet. You need both dimensions tight." },
+      { q:"How do you keep least-privilege policies from rotting over time?",
+        a:"Generate them from <b>observed access</b> and re-tighten: IAM Access Analyzer can produce a policy from CloudTrail history, and Access Analyzer findings flag unused permissions and external access. You start narrow, and you have a mechanism that catches drift &mdash; a role that accreted <code>s3:*</code> over six months of &lsquo;just add the permission&rsquo; is exactly what the analyzer surfaces." }
+    ],
+    senior:"Answering with a policy scoped on <b>both action and resource</b> &mdash; and framing the policy as &lsquo;the blast radius of a stolen credential&rsquo; rather than &lsquo;what the app needs to work&rsquo; &mdash; is the least-privilege mindset an interviewer is checking for." },
+  { tier:'SDE2', signal:'Blast radius of a stolen credential',
+    q:"An attacker steals the delivery service&rsquo;s credentials. How bad is it &mdash; and what decided that?",
+    a:"It&rsquo;s <b>exactly what that role could do</b> &mdash; no more, no less &mdash; which is why least privilege <i>is</i> the answer to &lsquo;how bad.&rsquo; If the role had <code>GetObject</code> on one prefix, the attacker reads that path. If it had <code>s3:*</code> on the bucket, they read every tenant&rsquo;s firmware <i>and</i> can replace it with malware. The scope you set at design time is the damage you pay at breach time.",
+    f:[
+      { q:"So how do you shrink it further, beyond a tight policy?",
+        a:"Layers that don&rsquo;t depend on the policy: <b>SSE-KMS</b> so the credential also needs <code>kms:Decrypt</code> on the key (a second gate), a <b>VPC endpoint policy</b> with <code>aws:PrincipalOrgID</code> so the stolen credential can&rsquo;t exfiltrate to an outside bucket, <b>CloudTrail data events</b> so the abuse is detected, and <b>short-lived credentials</b> (a role, not a long-lived key) so the stolen creds expire. Defense in depth means one stolen credential doesn&rsquo;t equal one breach." }
+    ],
+    senior:"Reframing &lsquo;how bad is the breach&rsquo; as &lsquo;whatever you granted &mdash; so the policy you wrote months ago is the answer&rsquo; &mdash; and then naming the independent layers that shrink it further &mdash; is the blast-radius thinking that reads as senior." },
+  { tier:'SDE3', signal:'SSE-S3 vs SSE-KMS',
+    q:"Encrypt the firmware bucket with SSE-S3 or SSE-KMS? Defend the choice.",
+    a:"For firmware and tenant data, <b>SSE-KMS with a customer-managed key</b>. SSE-S3 (AES-256, AWS-managed) is free and gives you at-rest encryption, but SSE-KMS buys three things it can&rsquo;t: an <b>audit trail</b> (every <code>Decrypt</code> is a CloudTrail event), <b>access control on the key itself</b> (the key policy is a second, independent gate), and <b>per-tenant crypto-shredding</b> (destroy the key, the data is unreadable everywhere). The cost is a KMS request per operation and a per-key throughput ceiling.",
+    f:[
+      { q:"When would you actually stay on SSE-S3?",
+        a:"When you don&rsquo;t need the audit trail, key-level access control, or crypto-shredding &mdash; non-sensitive, non-regulated data where SSE-S3&rsquo;s &lsquo;encrypted at rest, zero cost, zero throughput ceiling&rsquo; is exactly enough. It&rsquo;s not that KMS is always right; it&rsquo;s that the three things KMS buys are worth paying for <i>here</i>, on firmware and customer data." },
+      { q:"What&rsquo;s the throughput ceiling and how do you handle it at fleet scale?",
+        a:"KMS has a per-key requests-per-second quota, and at high fan-out (50k devices pulling at once) you can hit it. Mitigations: <b>S3 Bucket Keys</b>, which cut KMS calls dramatically by using a short-lived bucket-level key so S3 doesn&rsquo;t call KMS per object; and requesting a quota increase. Naming Bucket Keys is the tell you&rsquo;ve run SSE-KMS at scale, not just enabled it." }
+    ],
+    senior:"Defending SSE-KMS by the <b>three concrete things it buys over SSE-S3</b> (audit, key-policy gate, crypto-shred) &mdash; then naming the throughput ceiling and <b>S3 Bucket Keys</b> as the fix &mdash; is the operational depth that separates &lsquo;I enabled KMS&rsquo; from &lsquo;I ran it for a fleet.&rsquo;" },
+  { tier:'SDE2', signal:'Encryption in transit',
+    q:"You&rsquo;ve encrypted at rest. How do you guarantee firmware is never transferred as plaintext?",
+    a:"A <b>bucket policy that denies any request where <code>aws:SecureTransport</code> is false</b> &mdash; a single <code>Deny</code> statement that makes non-HTTPS access impossible. At-rest encryption protects the stored bytes; this protects the bytes on the wire. It&rsquo;s the cheapest control in the topic and the first checkbox a PCI or HIPAA auditor looks for.",
+    f:[
+      { q:"Isn&rsquo;t S3 HTTPS by default? Why the explicit deny?",
+        a:"S3 <i>supports</i> HTTPS, but it also still accepts HTTP &mdash; so &lsquo;we use the HTTPS endpoint&rsquo; is a convention, not an enforced control. The explicit <code>Deny</code> on <code>SecureTransport:false</code> turns it from &lsquo;we&rsquo;re careful&rsquo; into &lsquo;it&rsquo;s impossible,&rsquo; which is what an auditor and a threat model both want. Its absence is an instant finding." }
+    ],
+    senior:"Knowing that S3 still accepts plaintext HTTP unless you explicitly <code>Deny</code> <code>SecureTransport:false</code> &mdash; and that the one-line policy is what converts a convention into an enforced control &mdash; is a small detail that signals real hardening experience." },
+  { tier:'SDE3', signal:'Presigned URLs',
+    q:"50,000 terminals need to download firmware but can&rsquo;t hold AWS credentials. How do they get the bytes?",
+    a:"The delivery service mints a <b>presigned URL</b> &mdash; a Signature V4 URL scoped to <b>one object</b> with a <b>short expiry</b> &mdash; and hands it to the device (in the IoT Job document, never the firmware itself). The device downloads with just the URL; it never sees an AWS credential. The URL is signed with the delivery role&rsquo;s permissions, so it can do exactly what that role can and nothing more.",
+    f:[
+      { q:"A presigned URL leaks. What&rsquo;s exposed, and can you revoke it?",
+        a:"Whoever holds it can download <b>that one object until it expires</b> &mdash; a presigned URL is a <b>bearer token</b>, and you <b>cannot revoke it early</b> short of rotating the signer&rsquo;s credentials (which nukes every outstanding URL). So the defense is structural: short expiry, single object, least-privilege signer. A five-minute URL for one firmware file is a small, self-healing thing to leak." },
+      { q:"What are the hard limits on a presigned URL?",
+        a:"Expiry maxes at <b>7 days via the SDK</b> (12 hours from the console), and a single-PUT presigned URL is <b>capped at 5&nbsp;GB</b> &mdash; larger uploads need multipart with a presigned URL per part. And the URL inherits the signer&rsquo;s permissions <i>at use time</i>, so if you rotate or reduce the role, in-flight URLs can stop working. Knowing these bounds is the tell you&rsquo;ve shipped presigned delivery." }
+    ],
+    senior:"Explaining presigned URLs as <b>credential-free, single-object, expiring bearer tokens you can&rsquo;t revoke early</b> &mdash; and naming the mitigations (short window, tight scope) plus the hard limits (7-day / 5&nbsp;GB) &mdash; is the complete answer to the delivery question." },
+  { tier:'SDE3', signal:'Presigned URL alternatives',
+    q:"You need to revoke a device&rsquo;s download access mid-flight. Presigned URLs can&rsquo;t do that. What do you use?",
+    a:"Front S3 with <b>CloudFront + Origin Access Control</b> and use <b>CloudFront signed URLs or signed cookies</b>. The bucket stays private (only the CloudFront OAC can read it), and the signed URL/cookie is issued by <i>you</i> &mdash; so you can invalidate the key pair or scope access in ways a raw S3 presigned URL can&rsquo;t. You also get edge caching for a firmware file 50k devices pull, and a place to attach WAF.",
+    f:[
+      { q:"What&rsquo;s OAC and why does it matter here?",
+        a:"<b>Origin Access Control</b> is the mechanism that lets <i>only</i> CloudFront read the S3 bucket &mdash; the bucket policy grants access to the CloudFront service principal for that distribution, and Block Public Access stays fully on. It replaced the older OAI. Without it, fronting S3 with CloudFront while keeping the bucket private doesn&rsquo;t work &mdash; you&rsquo;d have to make the bucket public, which defeats the point." },
+      { q:"So when do you still prefer a raw S3 presigned URL?",
+        a:"When you <i>don&rsquo;t</i> need revocability or edge caching and want the <b>simplest</b> path &mdash; a backend that already has S3 credentials mints a URL in one SDK call, no distribution to manage. Presigned URLs win on simplicity; CloudFront+OAC wins when you need revocation, caching, or a WAF in front. Name the constraint that flips it." }
+    ],
+    senior:"Reaching for <b>CloudFront + OAC + signed URLs/cookies</b> when revocability or caching matters &mdash; and knowing OAC is what keeps the bucket private &mdash; while still preferring raw presigned URLs for the simple case, is the trade-off literacy a senior round wants." },
+  { tier:'SDE3', signal:'Bucket policy vs IAM policy',
+    q:"Access to the bucket &mdash; do you control it with a bucket policy or IAM policies? What&rsquo;s the difference?",
+    a:"Both, and they&rsquo;re different tools. An <b>IAM (identity) policy</b> attaches to a principal and says &lsquo;this role can do X&rsquo;; a <b>bucket (resource) policy</b> attaches to the bucket and says &lsquo;these principals can do X to me.&rsquo; For same-account access, IAM policies do the heavy lifting; the bucket policy is where you put <b>account-wide guardrails</b> &mdash; deny non-TLS, deny unencrypted PUT, restrict to an org &mdash; and it&rsquo;s <b>required for cross-account</b> access.",
+    f:[
+      { q:"When a principal has an Allow in IAM but the bucket policy is silent &mdash; can it access the object?",
+        a:"For <b>same-account</b> access, yes &mdash; an Allow in <i>either</i> the identity policy or the resource policy is sufficient, as long as neither has an explicit Deny. For <b>cross-account</b>, you need an Allow in <i>both</i> the caller&rsquo;s IAM policy <i>and</i> the bucket policy. Knowing that same-account is &lsquo;either&rsquo; but cross-account is &lsquo;both&rsquo; is the nuance that trips people up." }
+    ],
+    senior:"Distinguishing <b>identity policy (what a principal can do) from resource policy (who can touch this bucket)</b> &mdash; and knowing same-account access needs an Allow in <i>either</i> while cross-account needs <i>both</i> &mdash; is the IAM fluency an interviewer probes." },
+  { tier:'SDE3', signal:'IAM policy evaluation',
+    q:"You have an Allow and a Deny that both match a request. What happens?",
+    a:"<b>Explicit Deny always wins.</b> IAM evaluation is: if any applicable policy has an explicit <code>Deny</code>, the request is denied, full stop &mdash; no Allow can override it. And the baseline is <b>implicit deny</b>: with no matching Allow at all, the request is denied. So access requires an Allow <i>and</i> the absence of any Deny across identity policies, resource policies, SCPs, and permission boundaries.",
+    f:[
+      { q:"Why is &lsquo;explicit deny wins&rsquo; useful in practice, not just a rule?",
+        a:"It lets you write <b>guardrails that can&rsquo;t be granted around</b>. An SCP or bucket policy with an explicit <code>Deny</code> on <code>SecureTransport:false</code>, or a Deny on any principal outside your org, holds <i>even if</i> someone attaches an over-broad Allow to a role. Deny is how you enforce a floor centrally that individual permission-grants can&rsquo;t punch through &mdash; the whole basis of a data perimeter." }
+    ],
+    senior:"Stating the evaluation order &mdash; <b>implicit deny by default, explicit Deny always wins over any Allow</b> &mdash; and connecting it to &lsquo;guardrails you can&rsquo;t be granted around&rsquo; is the IAM-internals depth that marks a strong answer." },
+  { tier:'Staff', signal:'The confused deputy',
+    q:"A bucket policy grants an AWS service permission to write to your bucket. What&rsquo;s the classic mistake, and the fix?",
+    a:"The <b>confused-deputy</b> problem: you grant a service principal (say, a log-delivery or SNS service) access, but without a condition <i>any</i> customer&rsquo;s instance of that service can be tricked into acting on your bucket. The fix is <b><code>aws:SourceAccount</code> and <code>aws:SourceArn</code></b> conditions &mdash; pinning the grant to <i>your</i> account and the <i>specific</i> source resource, so the service acts on your behalf only for the exact caller you intended.",
+    f:[
+      { q:"Why isn&rsquo;t granting the service principal enough on its own?",
+        a:"Because the service principal is <i>shared</i> across all AWS customers &mdash; <code>logging.s3.amazonaws.com</code> is the same principal for everyone. Grant it access with no condition and you&rsquo;ve authorized the service <i>in general</i>, so an attacker who can make the service target your bucket (via their own account) becomes a &lsquo;confused deputy&rsquo; writing to you. The <code>SourceAccount</code>/<code>SourceArn</code> condition is what binds &lsquo;this service&rsquo; to &lsquo;acting for <i>me</i>, from <i>this</i> resource.&rsquo;" }
+    ],
+    senior:"Naming the <b>confused-deputy</b> attack on a service-principal grant &mdash; and the <code>aws:SourceAccount</code>/<code>aws:SourceArn</code> condition as the fix &mdash; is a Staff-level detail most candidates miss entirely, because it only bites at cross-service, multi-account scale." },
+  { tier:'SDE3', signal:'VPC endpoints',
+    q:"Your internal services read firmware from S3. How do you keep that traffic off the public internet?",
+    a:"A <b>Gateway VPC endpoint</b> for S3 &mdash; it&rsquo;s free, and it routes S3 traffic over the AWS backbone via route-table entries, so nothing egresses to the internet. (Interface endpoints / PrivateLink exist too, backed by ENIs and billed hourly, for cases a gateway endpoint can&rsquo;t serve.) For S3 specifically, the gateway endpoint is the default answer &mdash; and it&rsquo;s the &lsquo;no internet egress&rsquo; box a HIPAA or FedRAMP auditor wants ticked.",
+    f:[
+      { q:"Gateway vs interface endpoint &mdash; when do you need the interface one?",
+        a:"<b>Gateway endpoints</b> are S3 and DynamoDB only, free, and work via route tables <i>within</i> the VPC &mdash; but they can&rsquo;t be reached from on-prem over Direct Connect/VPN. <b>Interface endpoints</b> (PrivateLink) are ENI-backed, cost per-hour and per-GB, work for almost every service, and <i>are</i> reachable from on-prem. So: gateway for in-VPC S3 access (the common case), interface when you need on-prem reach or a service gateway endpoints don&rsquo;t cover." }
+    ],
+    senior:"Knowing the <b>Gateway endpoint is the free, route-table-based default for S3</b> &mdash; and the specific reasons you&rsquo;d pay for an interface endpoint (on-prem reach, other services) &mdash; is the network-hardening fluency a senior round checks." },
+  { tier:'Staff', signal:'Data exfiltration prevention',
+    q:"A compromised role has S3 read access. How do you stop it from copying your firmware to the attacker&rsquo;s own bucket?",
+    a:"A <b>data perimeter</b>: put <code>aws:PrincipalOrgID</code> (or an allowlist of your bucket ARNs) as a condition on the <b>VPC endpoint policy</b>, so any request leaving through that endpoint is restricted to <i>your org&rsquo;s</i> resources. Even a stolen credential with <code>GetObject</code> can&rsquo;t <code>PutObject</code> to an outside bucket, because the egress path itself refuses non-org destinations. Pair it with an SCP that denies the same at the org level.",
+    f:[
+      { q:"Why put the condition on the endpoint policy rather than just the role?",
+        a:"Because you can&rsquo;t trust the role &mdash; it&rsquo;s the thing that got compromised. The endpoint policy is a <b>choke point the role can&rsquo;t modify</b>: all S3 traffic from the VPC goes through it, so a condition there applies regardless of what the stolen credential is allowed to do. It&rsquo;s defense in depth &mdash; the role&rsquo;s policy is one layer, the network egress restriction is an independent second layer that holds when the first fails." }
+    ],
+    senior:"Building a <b>data perimeter with <code>aws:PrincipalOrgID</code> on the VPC endpoint policy</b> &mdash; and explaining <i>why the choke point beats the role</i> (the role is what got compromised) &mdash; is exactly the exfiltration-prevention thinking a Staff interviewer wants." },
+  { tier:'SDE3', signal:'Task role vs execution role',
+    q:"Your delivery service runs on ECS/Lambda. What&rsquo;s the difference between its execution role and its task role, and why does it matter?",
+    a:"Two distinct roles with different jobs. The <b>execution role</b> is used by the <i>infrastructure</i> &mdash; pulling the image from ECR, writing logs, fetching secrets to inject. The <b>task role</b> is assumed by <i>your application code</i> at runtime &mdash; it&rsquo;s what does <code>GetObject</code> on the firmware bucket. Keeping them separate means the app&rsquo;s runtime permissions (task role) are scoped to exactly what the code needs, independent of the platform&rsquo;s plumbing permissions.",
+    f:[
+      { q:"What breaks if you collapse them into one over-broad role?",
+        a:"You hand your application code the platform&rsquo;s permissions &mdash; ECR pulls, secret fetches, log-group creation &mdash; none of which the business logic needs, all of which widen the blast radius if the code is compromised (an SSRF, a dependency exploit). Separating them is least privilege applied to the <i>identity boundary</i>: the code gets a role scoped to the code&rsquo;s job, and the infrastructure gets its own." },
+      { q:"On EC2 launch type vs Fargate, does the isolation differ?",
+        a:"Yes &mdash; on <b>EC2 launch type</b>, tasks share the host, and research (ECScape, 2025) showed co-located tasks can potentially reach each other&rsquo;s credentials via the shared metadata surface. <b>Fargate</b> gives each task its own microVM with an isolated credential endpoint, so tasks can&rsquo;t reach each other&rsquo;s roles. That&rsquo;s a real argument for Fargate on multi-tenant or security-sensitive workloads, even at a cost premium." }
+    ],
+    senior:"Distinguishing the <b>execution role (infrastructure) from the task role (application)</b> as an identity-boundary least-privilege control &mdash; and knowing Fargate&rsquo;s per-task isolation beats EC2&rsquo;s shared host &mdash; is the container-security depth a senior round rewards." },
+  { tier:'Staff', signal:'KMS key policies + crypto-shredding',
+    q:"You use per-tenant KMS keys. Walk me through how that enables GDPR right-to-erasure across immutable backups.",
+    a:"Each tenant&rsquo;s data is encrypted with <b>their own CMK</b>. To erase a tenant, you <b>destroy (schedule deletion of) their key</b> &mdash; and every copy of their ciphertext, including <b>backups you can&rsquo;t selectively edit</b>, becomes permanently unreadable, because ciphertext without the key is noise. This is <b>crypto-shredding</b>: it solves the &lsquo;you can&rsquo;t rewrite an immutable backup&rsquo; problem that a row-level DELETE can&rsquo;t.",
+    f:[
+      { q:"The key policy is a second gate &mdash; what does that buy over the IAM policy?",
+        a:"The <b>key policy</b> governs who can use the key to <code>Decrypt</code>, <i>independently</i> of who can call S3. So even a principal with <code>s3:GetObject</code> on the bucket gets ciphertext unless the key policy <i>also</i> grants them <code>kms:Decrypt</code>. It&rsquo;s defense in depth: the object and the key are two locks, and a stolen S3 credential without KMS access can read nothing usable." },
+      { q:"What&rsquo;s the risk in scheduling a key for deletion?",
+        a:"It&rsquo;s <b>irreversible</b> and has a mandatory waiting period (7&ndash;30 days) precisely because destroying a key that still protects live data is catastrophic &mdash; you&rsquo;d lose access to everything it encrypts. So crypto-shredding requires <b>rigorous key-to-tenant mapping</b>: you must be certain the key protects <i>only</i> the tenant being erased. The power (erase across all copies) and the danger (erase the wrong thing forever) are the same lever." }
+    ],
+    senior:"Connecting <b>per-tenant KMS keys to crypto-shredding for erasure across immutable backups</b> &mdash; and naming the key policy as an independent second gate <i>and</i> the irreversibility risk of key deletion &mdash; is the compliance-and-crypto depth that marks a Staff answer." },
+  { tier:'SDE3', signal:'Object Lock and versioning',
+    q:"How do you make sure a signed firmware package can&rsquo;t be tampered with or accidentally deleted once it&rsquo;s stored?",
+    a:"<b>Versioning</b> so any overwrite creates a new version and the original is recoverable, plus <b>S3 Object Lock</b> (WORM) so the object can&rsquo;t be altered or deleted for a retention period. In <b>compliance mode</b>, not even the account root can delete it before retention expires &mdash; which matters because the firmware is a signed artifact you may need to <i>prove</i> you shipped, and immutability is that proof.",
+    f:[
+      { q:"Governance mode vs compliance mode &mdash; which do you pick and why?",
+        a:"<b>Governance mode</b> lets a privileged principal (with a special permission) override the lock &mdash; good for &lsquo;protect against accident, but leave an emergency escape.&rsquo; <b>Compliance mode</b> is absolute: no one, including root, can shorten retention or delete &mdash; use it when a regulator or an audit requires provable immutability. For firmware you may need to attest to, compliance mode is the stronger, if less forgiving, choice." }
+    ],
+    senior:"Reaching for <b>versioning plus Object Lock in compliance mode</b> for a signed artifact &mdash; and knowing the governance-vs-compliance trade-off (escape hatch vs absolute) &mdash; is the immutability depth a senior interviewer looks for." },
+  { tier:'SDE3', signal:'Secrets management',
+    q:"Your services need database creds and API keys. Where do those live?",
+    a:"<b>Never in code, env files committed to git, or AMIs</b> &mdash; in <b>Secrets Manager</b> (or SSM Parameter Store), fetched at runtime by a role, with <b>automatic rotation</b> where the secret supports it. Better still, use <b>role-based credentials</b> that avoid long-lived secrets entirely: an ECS task role, a Lambda execution role, or IRSA on EKS, so the service gets temporary, auto-rotating credentials from the metadata endpoint and there&rsquo;s no static key to leak.",
+    f:[
+      { q:"Why are IAM roles better than a stored secret when they&rsquo;re available?",
+        a:"Because a role issues <b>short-lived, automatically-rotated</b> credentials with <i>no static material</i> to steal &mdash; the credentials live minutes and are re-vended continuously. A stored secret, even in Secrets Manager, is a long-lived value that exists to be fetched; if it leaks, it&rsquo;s valid until rotated. Roles eliminate the secret entirely for AWS-service access. Secrets Manager is for the secrets you <i>can&rsquo;t</i> replace with a role &mdash; a third-party API key, a database password." }
+    ],
+    senior:"Preferring <b>role-based temporary credentials (task role / IRSA) over any stored secret</b>, and using Secrets Manager only for what can&rsquo;t be a role &mdash; with rotation &mdash; is the &lsquo;eliminate the long-lived secret&rsquo; instinct that reads as senior." },
+  { tier:'SDE3', signal:'CloudTrail data events',
+    q:"After a suspected leak, you need to know exactly who read which firmware object and when. What gives you that?",
+    a:"<b>CloudTrail data events</b> for S3 (<code>GetObject</code>/<code>PutObject</code>) &mdash; which are <b>off by default</b> and must be explicitly enabled, separately from management events. Management events log control-plane actions (who changed a bucket policy); <b>data events</b> log the object-level access itself. Without them you can prove a bucket was misconfigured but not <i>which objects were actually read</i> &mdash; and that&rsquo;s exactly what you need to scope a breach.",
+    f:[
+      { q:"Data events cost money and volume &mdash; how do you decide what to log?",
+        a:"You scope them: CloudTrail lets you log data events for <b>specific buckets or prefixes</b>, not everything. So you enable them on the sensitive buckets (firmware, tenant data) and skip the high-volume, low-value ones. It&rsquo;s the same principle as everywhere &mdash; the audit trail is worth its cost <i>where the blast radius is high</i>, and you target it there rather than logging the entire account&rsquo;s object access." }
+    ],
+    senior:"Knowing <b>S3 data events are off by default and are what scopes a breach to specific objects</b> (vs management events for config changes) &mdash; and scoping them to sensitive prefixes for cost &mdash; is the audit fluency a senior round checks." },
+  { tier:'SDE3', signal:'Detective controls',
+    q:"Beyond configuring things correctly, how do you catch a hardening regression before it becomes an incident?",
+    a:"Continuous detective controls: <b>AWS Config</b> rules to alarm when a bucket loses encryption or BPA drifts, <b>IAM Access Analyzer</b> to flag any bucket or role reachable from outside the account/org, <b>GuardDuty</b> for anomalous access patterns (a credential suddenly listing every object), and <b>Security Hub</b> to aggregate it against a benchmark. Config catches drift, Access Analyzer catches external exposure, GuardDuty catches behavior, Security Hub scores it all.",
+    f:[
+      { q:"What specifically does Access Analyzer catch that a policy review wouldn&rsquo;t?",
+        a:"It <b>mathematically proves reachability</b> &mdash; it analyzes the combined effect of bucket policies, IAM policies, ACLs, and SCPs to determine whether <i>any</i> principal outside your zone of trust can access a resource, which is far more reliable than a human reading policies one at a time. It also flags <b>unused</b> access (permissions granted but never exercised), so you can tighten roles based on evidence rather than guesswork." }
+    ],
+    senior:"Layering <b>Config (drift) + Access Analyzer (external reachability, proven) + GuardDuty (behavior) + Security Hub (scoring)</b> as continuous detection &mdash; not a one-time setup &mdash; is the operational-maturity signal a senior interviewer wants." },
+  { tier:'Staff', signal:'SCP and multi-account guardrails',
+    q:"You have dozens of AWS accounts. How do you guarantee no account can ever make a firmware bucket public or turn off encryption?",
+    a:"<b>Service Control Policies</b> at the Organizations level &mdash; org-wide guardrails that <i>no</i> account admin can override. An SCP with an explicit <code>Deny</code> on disabling Block Public Access, on <code>s3:PutBucketPublicAccessBlock</code> weakening, or on non-org principals, applies to every account including its root. It&rsquo;s the ceiling on what any account <i>can</i> do, sitting above every account&rsquo;s own IAM &mdash; because explicit deny always wins.",
+    f:[
+      { q:"How is an SCP different from an IAM policy &mdash; doesn&rsquo;t it grant permissions?",
+        a:"An SCP <b>never grants</b> anything &mdash; it only sets the <i>maximum</i> permissions an account can have. A principal&rsquo;s effective permissions are the <b>intersection</b> of what its IAM policies allow and what the SCP permits. So an SCP is a filter, not a source of access: it can take permissions <i>off the table</i> org-wide, but the account&rsquo;s own IAM still has to grant what&rsquo;s left. It&rsquo;s the guardrail, not the key." }
+    ],
+    senior:"Using <b>SCPs as un-overridable org-wide guardrails</b> &mdash; and correctly stating they only <i>cap</i> permissions (an intersection, never a grant) &mdash; is the multi-account governance depth that separates Staff from &lsquo;I know IAM.&rsquo;" },
+  { tier:'SDE2', signal:'Root account and MFA hardening',
+    q:"What do you do about the AWS account root user?",
+    a:"<b>Lock it away.</b> Enable <b>MFA</b> on root (hardware token ideally), remove any root access keys entirely, and use root for <i>nothing</i> day-to-day &mdash; all human and service access goes through IAM roles/identity-center, never root. Root has irrevocable powers no policy can restrain, so the goal is that it&rsquo;s essentially never used and can&rsquo;t be accessed with a single stolen factor.",
+    f:[
+      { q:"Why can&rsquo;t you just apply a restrictive policy to root instead?",
+        a:"Because <b>SCPs and IAM policies don&rsquo;t restrain the management-account root</b> the way they do other principals &mdash; root retains certain irrevocable capabilities by design. You can&rsquo;t policy your way to a safe root; you can only <b>minimize its use and protect its credentials</b> (MFA, no access keys, secured recovery). The control for root is operational discipline plus MFA, not a permission boundary." }
+    ],
+    senior:"Knowing you <b>protect root by disuse + MFA + removing access keys</b> rather than by policy &mdash; because root&rsquo;s powers can&rsquo;t be fully restrained by IAM/SCP &mdash; is a fundamentals check that a shaky answer fails." },
+  { tier:'Staff', signal:'The whole posture &mdash; defense in depth',
+    q:"Tie it together: what&rsquo;s the one sentence that captures how you&rsquo;d harden this storage layer?",
+    a:"<b>No single misconfiguration should be able to breach it</b> &mdash; so nothing is public (BPA), every credential is least-privilege (scoped IAM), everything is encrypted at rest and in transit (SSE-KMS + SecureTransport), delivery is credential-free and expiring (presigned URLs), egress is org-locked (VPC endpoint + PrincipalOrgID), artifacts are immutable and audited (Object Lock + CloudTrail), and org-wide guardrails (SCPs) mean no account can weaken any of it. Defense in depth is the thesis; every control bounds the failure of the others.",
+    f:[
+      { q:"If you could only ship three of those, which three?",
+        a:"<b>Block Public Access</b> (nothing on the open internet), <b>least-privilege IAM</b> (bound the blast radius of a stolen credential), and <b>SSE-KMS with a deny-unencrypted-PUT policy</b> (encrypted, auditable, crypto-shreddable). Those three cover the highest-probability, highest-impact failures &mdash; a public bucket, an over-broad role, and unencrypted or unauditable data. The rest is depth on top of a sound core." }
+    ],
+    senior:"Summarizing the whole topic as <b>&lsquo;no single misconfiguration breaches, because each control bounds the failure of the others&rsquo;</b> &mdash; and being able to name the irreducible three under pressure &mdash; is the systems-level framing that lands a Staff signal." }
+];
+var AWSHARD_SPEAK = [
+  "Lead with the non-negotiable: <b>'Block Public Access at the account and the bucket, all four settings.'</b> Then immediately say it&rsquo;s the floor, not the design &mdash; it guarantees &lsquo;not on the open internet,&rsquo; but least privilege, encryption, and delivery scoping are still all on you.",
+  "State the policy shape out loud: <b>'one action, one prefix &mdash; GetObject on fw-prod/signed-star, never s3-star.'</b> Then the frame that matters: the policy <i>is</i> the blast radius of a stolen credential, so you scope the action AND the resource.",
+  "Answer &lsquo;how bad is the breach&rsquo; with <b>'exactly what that role could do &mdash; so the policy you wrote months ago is the answer.'</b> Then name the independent layers &mdash; KMS as a second gate, PrincipalOrgID on egress, CloudTrail to detect, short-lived creds &mdash; that shrink it further.",
+  "Defend SSE-KMS by the three things it buys over SSE-S3: <b>'an audit trail, a key-policy gate, and per-tenant crypto-shredding.'</b> Then name the throughput ceiling and <b>S3 Bucket Keys</b> as the fix &mdash; that&rsquo;s the &lsquo;I ran it at scale&rsquo; tell.",
+  "Make plaintext impossible: <b>'a bucket policy that denies aws:SecureTransport false.'</b> The point people miss &mdash; S3 still <i>accepts</i> HTTP, so the explicit Deny turns &lsquo;we&rsquo;re careful&rsquo; into &lsquo;it can&rsquo;t happen.&rsquo; Its absence is an instant audit finding.",
+  "Explain delivery: <b>'the service mints a presigned URL &mdash; one object, short expiry &mdash; and the device downloads with no AWS credential.'</b> Then the honest limit: it&rsquo;s a bearer token you can&rsquo;t revoke early, so short window plus tight scope is the whole defense.",
+  "For revocability: <b>'front S3 with CloudFront and OAC, and issue signed URLs or cookies you can invalidate.'</b> OAC is what keeps the bucket private. But still prefer a raw presigned URL for the simple case &mdash; name the constraint (revocation, caching) that flips it.",
+  "Separate the two policy types: <b>'identity policy says what a principal can do; resource policy says who can touch this bucket.'</b> Then the nuance: same-account needs an Allow in <i>either</i>, cross-account needs an Allow in <i>both</i>.",
+  "Get the evaluation right: <b>'implicit deny by default, and an explicit Deny always beats any Allow.'</b> Then why it matters &mdash; it lets you write guardrails (an SCP or bucket-policy Deny) that no over-broad grant can punch through.",
+  "Name the attack: <b>'confused deputy &mdash; a shared service principal acting on your bucket for someone else.'</b> The fix is aws:SourceAccount and aws:SourceArn, pinning the grant to your account and the specific source resource. Most candidates miss this one.",
+  "Keep S3 traffic private: <b>'a Gateway VPC endpoint &mdash; free, route-table-based, no internet egress.'</b> Then the gateway-vs-interface split: gateway for in-VPC S3, interface (PrivateLink, paid) when you need on-prem reach or another service.",
+  "Build the data perimeter: <b>'aws:PrincipalOrgID on the VPC endpoint policy, so a stolen credential can&rsquo;t exfiltrate to an outside bucket.'</b> Put it on the choke point, not the role &mdash; because the role is the thing that got compromised.",
+  "Split the roles: <b>'execution role for the infrastructure, task role for the application code.'</b> Collapsing them hands your code the platform&rsquo;s permissions. And Fargate&rsquo;s per-task microVM beats EC2&rsquo;s shared host for credential isolation.",
+  "Connect keys to compliance: <b>'per-tenant KMS keys &mdash; destroy the key and every copy, including immutable backups, is crypto-shredded.'</b> The key policy is an independent second gate; scheduling a key for deletion is irreversible, so the tenant-to-key mapping has to be exact.",
+  "Make firmware immutable: <b>'versioning plus Object Lock in compliance mode &mdash; not even root can delete it before retention.'</b> It&rsquo;s a signed artifact you may need to prove you shipped. Governance mode leaves an escape hatch; compliance mode is absolute.",
+  "Kill the long-lived secret: <b>'role-based temporary credentials &mdash; task role, IRSA &mdash; over any stored secret.'</b> A role vends short-lived creds with nothing static to steal; Secrets Manager (with rotation) is only for what can&rsquo;t be a role, like a third-party key.",
+  "Scope the breach: <b>'CloudTrail data events &mdash; off by default &mdash; log which objects were actually read.'</b> Management events show config changes; data events show access. Enable them on the sensitive prefixes so cost lands where the blast radius is.",
+  "Catch regressions continuously: <b>'Config for drift, Access Analyzer for external reachability, GuardDuty for behavior, Security Hub to score it.'</b> Access Analyzer <i>proves</i> whether anything outside your trust zone can reach a bucket &mdash; more reliable than reading policies by hand.",
+  "Guardrail the org: <b>'an SCP that denies weakening Block Public Access or encryption &mdash; un-overridable, even by an account&rsquo;s root.'</b> And be precise: an SCP only <i>caps</i> permissions (an intersection), it never grants &mdash; it&rsquo;s the ceiling, not the key.",
+  "Lock away root: <b>'MFA on, access keys removed, used for nothing day-to-day.'</b> You can&rsquo;t policy root safe &mdash; its powers can&rsquo;t be fully restrained &mdash; so the control is disuse plus MFA plus removing the keys.",
+  "Land the whole thing: <b>'no single misconfiguration should breach it &mdash; each control bounds the failure of the others.'</b> Under pressure, name the irreducible three: Block Public Access, least-privilege IAM, and SSE-KMS with deny-unencrypted-PUT. The rest is depth on a sound core."
+];
+var TOPIC_AWSHARD_DRILL = {
+  cards: AWSHARD_CARDS,
+  speak: AWSHARD_SPEAK,
+  tierNotes: {
+    all:'<b>All four levels, mixed</b> &mdash; the way a real loop actually comes at you.',
+    SDE2:'<b>Fundamentals under pressure</b> &mdash; Block Public Access, least privilege, encrypt in transit, protect root. The bar is &ldquo;this is real hardening, not a checklist&rdquo;: state each control and the failure it prevents.',
+    SDE3:'<b>Depth &amp; trade-offs</b> &mdash; SSE-S3 vs KMS, presigned vs CloudFront, gateway vs interface endpoint, data events. The bar is &ldquo;it depends, here&rsquo;s the switch&rdquo;: name the constraint and the blast radius.',
+    Staff:'<b>Systems judgment</b> &mdash; the confused deputy, data perimeters, crypto-shredding, SCP guardrails. The bar is &ldquo;no single slip breaches&rdquo;: name what one misconfiguration exposes, and the layers that bound it.'
+  }
+};

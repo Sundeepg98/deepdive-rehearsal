@@ -199,7 +199,17 @@ var SIGN_CARDS = [
       { q:"How is this different from the artifact-integrity guarantee signing already gives?",
         a:"Signing proves &lsquo;this is the artifact we released&rsquo; &mdash; it says <b>nothing</b> about &lsquo;we <i>meant</i> to release it.&rsquo; Authorization-to-sign and provenance answer the second: <i>who</i> and <i>what build</i> got signed. A correctly-signed malicious release is still correctly signed; controls on <b>who can sign what</b> are a different layer from the signature itself." }
     ],
-    senior:"Separating &lsquo;can this artifact be trusted&rsquo; (signature) from &lsquo;should this have been signed at all&rsquo; (authorization + provenance) &mdash; and giving <b>several</b> bounds, not one &mdash; is the systems-security tell." }
+    senior:"Separating &lsquo;can this artifact be trusted&rsquo; (signature) from &lsquo;should this have been signed at all&rsquo; (authorization + provenance) &mdash; and giving <b>several</b> bounds, not one &mdash; is the systems-security tell." },
+  { tier:'Staff', signal:'Crypto-agility &amp; post-quantum',
+    q:"Quantum computers will eventually break RSA, and your devices are in the field for a decade. What's your migration story?",
+    a:"The answer is <b>crypto-agility</b>, designed in from the start &mdash; not a specific cipher. Because the header already carries an <b>algorithm id</b> and the device verifies against an <b>allowlist</b>, you introduce a new scheme (a PQ signature like ML-DSA / SLH-DSA) as an <i>additional</i> accepted algorithm, sign new packages with it, and retire the old one at the anchor. The migration is a <b>fleet-wide rollover</b> gated on every device accepting the new scheme &mdash; the same rotation machinery, one level up from keys to algorithms.",
+    f:[
+      { q:"PQ signatures are much larger than RSA. Does that break anything on a constrained device?",
+        a:"It's the real cost: ML-DSA / SLH-DSA signatures are <b>kilobytes, not hundreds of bytes</b>, and verification is heavier. On a constrained device that eats flash headroom and boot time. You handle it like any device limit &mdash; measure signature size and verify cost against the device budget, and if a family can't afford PQ, <i>that family's</i> migration is a <b>hardware refresh</b>, not a software one. Crypto-agility tells you <b>where</b> you're stuck, which is itself part of the answer." },
+      { q:"How do you roll to a new algorithm without a flag day that bricks something?",
+        a:"<b>Dual-accept, then cut over.</b> First ship a device update that <i>adds</i> the new scheme to the verifier's allowlist while still accepting the old &mdash; now devices trust both. Only once the fleet has that capability do you start <i>signing</i> with the new scheme; the old one is retired at the anchor last. At no point does a device meet a signature it can't verify &mdash; the <b>capability always lands before the dependency</b>, the same ordering discipline as any backward-compatible migration." }
+    ],
+    senior:"Framing PQ as a <b>crypto-agility</b> problem &mdash; algorithm id + allowlist + dual-accept rollover &mdash; instead of &lsquo;switch to cipher X&rsquo; is the Staff answer; naming the signature-size cost and capability-before-dependency ordering shows you've thought about migrating a <i>fleet</i>, not just picked an algorithm." }
 ];
 var SIGN_SPEAK = [
   "Lead with the equivalence: <b>'the hash is collision-resistant, so a signature over the 32-byte digest is equivalent to signing the content'</b> \u2014 then that it's size-independent and the device verifies by re-hashing. Signing the whole file is the tell you've only read about it.",
@@ -221,7 +231,8 @@ var SIGN_SPEAK = [
   "Lead with the point of the whole topic: <b>'verification is offline by design &mdash; package plus burned-in key, no network, no clock.'</b> Then the honest limit: freshness comes from a version counter, not time, because the device may have no clock.",
   "Separate three things most people fuse: <b>'a signature is timeless math; valid-at-signing-time needs a timestamp; the key is revoked from time T by rotation.'</b> Transparency logs make the compromise window auditable.",
   "Name the trade cleanly: <b>'a raw key is simplest but couples rotation to re-provisioning; a cert delegates through a root so leaves rotate freely.'</b> Then that expiry and revocation need a clock and network the field device may not have.",
-  "Split the two questions: <b>'signing proves this is the artifact we released &mdash; not that we meant to.'</b> Authorization-to-sign and provenance answer the second, with several bounds on a compromised signer, not one."
+  "Split the two questions: <b>'signing proves this is the artifact we released &mdash; not that we meant to.'</b> Authorization-to-sign and provenance answer the second, with several bounds on a compromised signer, not one.",
+  "Reframe &lsquo;quantum&rsquo; as <b>crypto-agility</b>: <b>'the header already carries an algorithm id and the device verifies an allowlist &mdash; so a new scheme is added, dual-accepted, then cut over.'</b> Then name the real cost (PQ signatures are kilobytes) and the ordering (capability lands before you sign with it) &mdash; that's what shows you've migrated a fleet, not picked a cipher."
 ];
 var TOPIC_SIGN_DRILL = {
   cards: SIGN_CARDS,

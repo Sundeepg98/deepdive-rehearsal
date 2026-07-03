@@ -4,6 +4,7 @@
 <!--@build:include scripts/app/topic-protocol.js-->
 <!--@build:include topics/content-pipeline.js-->
 <!--@build:include topics/signing.js-->
+<!--@build:include topics/authz.js-->
 <!--@build:include scripts/app/red-flags.js-->
 <!--@build:include scripts/app/trade-offs.js-->
 <!--@build:include scripts/app/walkthrough.js-->

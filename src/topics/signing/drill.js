@@ -123,7 +123,83 @@ var SIGN_CARDS = [
       { q:"How does a device learn the old key is revoked?",
         a:"Revocation is enforced at the <b>anchor</b> \u2014 the root stops certifying the old leaf, and/or new packages carry a key id the device checks against what the anchor currently certifies. In constrained fleets you often lean on <b>rotation + monotonic version</b> (supersede the old) rather than online revocation lists, since devices can\u2019t always reach a CRL." }
     ],
-    senior:"Explaining <i>why</i> anchoring to a root (not the leaf key) is what decouples rotation from re-flashing \u2014 the design reason, not just the mechanism \u2014 is the tell." }
+    senior:"Explaining <i>why</i> anchoring to a root (not the leaf key) is what decouples rotation from re-flashing \u2014 the design reason, not just the mechanism \u2014 is the tell." },
+  { tier:'SDE2', signal:'Anatomy of the signed header',
+    q:"What exactly goes into the signature / header &mdash; and what must stay out?",
+    a:"In: the <b>signature</b>, a <b>monotonic version</b>, the <b>key id</b> (which key signed it), and the <b>algorithm id</b> (so the verifier picks the right scheme). Out: <b>anything secret</b> &mdash; never the private key, never key material. The <b>payload is untouched</b> &mdash; header carries proof, payload carries content.",
+    f:[
+      { q:"Why put the key id in the header &mdash; isn't that leaking which key you used?",
+        a:"The key id is a <b>public identifier</b>, not the key. It tells the device <i>which public key to verify against</i> &mdash; which matters during rotation, when more than one key may be valid. Knowing the id gives an attacker nothing; they still can't sign without the private key. It's a lock's serial number, not its cut." },
+      { q:"The algorithm id is attacker-visible. Can they downgrade you to a weaker scheme?",
+        a:"That's the algorithm-confusion attack, and the defense is an <b>allowlist</b>: the device only accepts the scheme(s) it's configured for and refuses <code>alg: none</code> or an unexpected weak one outright. You read the alg id to <i>select</i> a verifier, never to let the package <i>choose</i> to be trusted with something you don't allow." }
+    ],
+    senior:"Naming that the header carries <b>public selectors</b> (key id, alg id) but never secrets &mdash; and that the alg id needs an allowlist or it's a downgrade hole &mdash; shows you treat the header as an attack surface, not a container." },
+  { tier:'SDE3', signal:'Manifest &amp; delta updates',
+    q:"The package is 200 files and you want delta updates. How do you sign it?",
+    a:"Sign a <b>manifest</b> &mdash; a list of every file's path and <b>hash</b> &mdash; not the concatenated blob. The device verifies the <b>manifest signature</b> once, then checks each file against its listed hash. That gives <b>per-file integrity</b> and enables <b>delta updates</b>: ship only the changed files, verified against the signed manifest.",
+    f:[
+      { q:"With deltas, how does the device know it ended up with the complete, correct set &mdash; not a mix of old and new?",
+        a:"The <b>manifest is the source of truth for the whole target state</b> &mdash; it lists every file's expected hash for <i>this</i> version. After applying a delta, the device verifies <b>every</b> file against the manifest, changed and unchanged, so a partial or mismatched apply fails. The manifest's own signed version ties the set together." },
+      { q:"Does signing a manifest instead of the blob change the trust model?",
+        a:"No &mdash; trust still roots in <b>one signature over the manifest</b>, and the manifest's hashes transitively cover every file. It's the same &lsquo;sign a digest&rsquo; principle one level up: the manifest <i>is</i> the digest of the file set. The unit of integrity is now a set of files, not one blob." }
+    ],
+    senior:"Recognizing the manifest as &lsquo;the digest of the file set&rsquo; &mdash; one signature transitively covering 200 files, and enabling deltas &mdash; is the insight; &lsquo;sign each file separately&rsquo; is the weaker answer." },
+  { tier:'Staff', signal:'Chain of trust &amp; secure boot',
+    q:"The device verifies against a burned-in public key. But what makes <i>that key</i> trustworthy &mdash; where does the chain start?",
+    a:"In <b>hardware</b>. The trust anchor is provisioned at manufacture into <b>immutable or write-protected storage</b> (ROM, fuses, a secure element), and <b>secure boot</b> enforces it: the boot ROM verifies the bootloader, which verifies the OS, which verifies the app &mdash; each stage checks the next against a key rooted in that anchor. If the anchor could be rewritten in the field, everything above it is meaningless.",
+    f:[
+      { q:"So the whole tower rests on the ROM key. What if <i>that</i> is compromised at manufacture?",
+        a:"Then trust is broken at the foundation and can't be repaired in software &mdash; which is why the <b>provisioning process is itself part of the threat model</b>: the anchor is burned in a controlled facility, the root generated in an HSM and never exposed. It's the one link you <i>can't</i> rotate remotely, so you protect it with process, not code." },
+      { q:"How does this connect to the signing service upstream?",
+        a:"They're the two ends of <b>one chain</b>: the offline <b>root</b> certifies the signing keys that sign packages, and the device's <b>hardware anchor</b> is what verifies a signature traces back to that root. Secure boot extends the same chain <i>inside</i> the device. The signature is only meaningful because both ends anchor to the same root." }
+    ],
+    senior:"Extending the trust chain <b>into the hardware</b> &mdash; secure boot, an immutable anchor, provisioning as threat model &mdash; is the Staff move; stopping at &lsquo;the device has the public key&rsquo; leaves the hardest question unanswered." },
+  { tier:'SDE3', signal:'KMS vs CloudHSM',
+    q:"You're on AWS. KMS or CloudHSM for the signing keys &mdash; how do you choose?",
+    a:"<b>KMS</b> for most cases: managed, keys HSM-backed and non-exportable, <b>IAM-scoped Sign</b>, automatic rotation, CloudTrail audit for free. <b>CloudHSM</b> when you need <b>single-tenant FIPS 140-2 Level 3</b>, your own key ceremony, or an algorithm KMS doesn't offer. The axis is <b>control vs. managed</b> &mdash; CloudHSM hands you the whole HSM, KMS gives you a scoped Sign API over one.",
+    f:[
+      { q:"KMS is simpler and audited. When is CloudHSM's extra burden actually worth it?",
+        a:"When a <b>compliance or contractual requirement</b> demands single-tenant hardware or a documented ceremony you control &mdash; payments and some regulated industries do. Or when you need <b>your own root</b> not AWS-managed. Absent a hard requirement, KMS's managed rotation and IAM scoping usually win; CloudHSM is a choice you <i>justify</i>, not a default." }
+    ],
+    senior:"Framing it as <b>control vs. managed</b>, and that CloudHSM is justified by a <i>requirement</i> (FIPS L3, own ceremony) rather than reached for &lsquo;to be safe,&rsquo; is the tell you've actually run one." },
+  { tier:'SDE2', signal:'Offline verification',
+    q:"A device in the field has no network and no reliable clock. Can it still verify a signed package?",
+    a:"<b>Yes &mdash; that's the whole point of signing over online trust.</b> Verification needs only the <b>package</b> and the device's <b>burned-in public key</b>: recompute the hash, check the signature, check the monotonic version. No network, no clock, no server round-trip. The trust decision is made <b>locally and offline</b> &mdash; which is exactly why you sign artifacts instead of trusting a live connection.",
+    f:[
+      { q:"No clock means no certificate-expiry check. Does that weaken anything?",
+        a:"It's a real limit: without a trustworthy clock, <b>time-based revocation</b> (cert expiry) doesn't work on-device. You lean instead on the <b>monotonic version</b> for downgrade protection (needs no clock) and <b>rotation at the anchor</b> for compromise recovery. Freshness comes from a version counter, not from time &mdash; a deliberate choice for clockless devices." },
+      { q:"If it's fully offline, how does revocation of a compromised key ever reach it?",
+        a:"Through the <b>next update it does accept</b>: push a new legitimate package signed by the rotated key, and supersession (monotonic version) moves the device forward when it reconnects. You can't <i>proactively</i> revoke on a disconnected device &mdash; only guarantee it <b>catches up safely</b>. That's the honest bound of offline fleets." }
+    ],
+    senior:"Stating verification is <b>offline by design</b> &mdash; and freshness comes from a version counter, not a clock &mdash; captures why signing exists; &lsquo;the device calls home to check&rsquo; misses the entire point." },
+  { tier:'Staff', signal:'Signature freshness &amp; expiry',
+    q:"A key was valid when it signed a package, but the key is compromised now. The signature still verifies. Should signatures expire?",
+    a:"A raw signature has <b>no inherent expiry</b> &mdash; it's math over a hash, true forever. &lsquo;Valid at signing time&rsquo; is a separate question answered by <b>timestamping and transparency</b>: a trusted timestamp (or a transparency-log entry) proves <i>when</i> a signature was made, so you can tell &lsquo;signed before compromise&rsquo; from &lsquo;forged after.&rsquo; Revocation then invalidates the <b>key</b> from a point in time &mdash; not each signature.",
+    f:[
+      { q:"So on a fleet, how do you actually stop trusting things the compromised key signed?",
+        a:"<b>Rotate and revoke at the anchor</b>: the root stops certifying the compromised leaf, so devices no longer trust <i>anything</i> that key signed, and you supersede with the new key. On constrained/offline devices without transparency infra, you lean on <b>rotation + monotonic version</b> rather than per-signature expiry &mdash; blast-radius scoping is what makes &lsquo;can't expire individual signatures&rsquo; survivable." },
+      { q:"Where does a transparency log actually help here?",
+        a:"It makes signatures <b>publicly auditable and non-repudiable</b> &mdash; every signature logged append-only with a timestamp, so you can <i>prove</i> what was signed and when, detect a compromised key being misused, and scope exactly which artifacts fall in the window. It turns &lsquo;we think the key signed X&rsquo; into &lsquo;here's the record.&rsquo;" }
+    ],
+    senior:"Separating &lsquo;a signature is timeless math,&rsquo; &lsquo;valid-at-signing-time needs a timestamp,&rsquo; and &lsquo;the key is revoked from time T&rsquo; &mdash; three ideas most candidates fuse &mdash; is a Staff-level distinction." },
+  { tier:'SDE3', signal:'Certificate vs raw public key',
+    q:"Does the device hold a raw public key, or a certificate? What changes?",
+    a:"A <b>raw public key</b> is simplest &mdash; verify directly against it &mdash; but rotation means <b>re-provisioning the device</b>. A <b>certificate</b> (the signing key certified by a root the device trusts) adds delegation: the device trusts the <b>root</b>, the cert vouches for the leaf. That's what lets you <b>rotate leaf keys without touching the device</b>, and carry <b>expiry and revocation</b> in the cert. Cost: a chain to validate and a clock for expiry.",
+    f:[
+      { q:"For a clockless, offline device, does a certificate even buy anything?",
+        a:"Less than on a connected device &mdash; no expiry check (no clock), no CRL fetch (no network). But the <b>delegation</b> still helps: the device trusts the <b>root/CA</b>, so a rotated leaf the root certifies is trusted <b>without re-provisioning</b>, even offline. You lose the time-based features but keep rotation-without-re-flash, which is usually the point." }
+    ],
+    senior:"Naming the trade precisely &mdash; raw key is simpler but couples rotation to re-provisioning; a cert delegates through a root so leaves rotate freely, at the cost of a clock/network the field device may lack &mdash; is the tell." },
+  { tier:'SDE3', signal:'Authorization to sign',
+    q:"A developer can trigger a signed release. How do you stop a rogue insider or a compromised CI from signing malware?",
+    a:"Signing authority is <b>least-privilege and gated</b>, not open to anyone with build access. The <b>Sign permission</b> is scoped to a specific automated identity, not to developers; releases pass an <b>approval gate</b> (human sign-off, protected branch); the build runs <b>isolated</b>; and you attach <b>provenance</b> (attestation of source + builder) to prove <i>what</i> got signed. The HSM key means even a compromised signer can't exfiltrate it &mdash; only misuse it for a bounded, audited window.",
+    f:[
+      { q:"An attacker gets the CI's credentials and can invoke Sign. It looks legitimate. What limits the damage?",
+        a:"Several bounds: the Sign scope is <b>one key</b> (no other tenants), <b>anomaly detection</b> catches a signing-volume spike, the <b>approval gate</b> blocks an unreviewed release from reaching Sign, and <b>provenance</b> flags an artifact from an unexpected builder. And the key survives &mdash; you rotate the <i>credential</i> and audit the window, not the key. Defense in depth: several bounds on the blast radius, not one control." },
+      { q:"How is this different from the artifact-integrity guarantee signing already gives?",
+        a:"Signing proves &lsquo;this is the artifact we released&rsquo; &mdash; it says <b>nothing</b> about &lsquo;we <i>meant</i> to release it.&rsquo; Authorization-to-sign and provenance answer the second: <i>who</i> and <i>what build</i> got signed. A correctly-signed malicious release is still correctly signed; controls on <b>who can sign what</b> are a different layer from the signature itself." }
+    ],
+    senior:"Separating &lsquo;can this artifact be trusted&rsquo; (signature) from &lsquo;should this have been signed at all&rsquo; (authorization + provenance) &mdash; and giving <b>several</b> bounds, not one &mdash; is the systems-security tell." }
 ];
 var SIGN_SPEAK = [
   "Lead with the equivalence: <b>'the hash is collision-resistant, so a signature over the 32-byte digest is equivalent to signing the content'</b> \u2014 then that it's size-independent and the device verifies by re-hashing. Signing the whole file is the tell you've only read about it.",
@@ -137,7 +213,15 @@ var SIGN_SPEAK = [
   "Separate the tiers cleanly: <b>'the offline root certifies the online signing keys.'</b> Then why you don't sign with the root directly \u2014 it'd be exposed on every release \u2014 and that the anchor is provisioned in hardware via secure boot.",
   "Name the ceiling precisely: <b>'HSM sign-ops per second \u2014 and signing is size-independent, so a bigger box doesn't help.'</b> Fix is queue-and-drain or add partitions. The point that scores: the work is in the HSM, not your process.",
   "State it as a security control: <b>'no key material, no key id, no HSM internals \u2014 ever, and redacted before the log call, not just the response.'</b> Then the safe tiered ladder (404/409/500) that's specific about the request, silent about the secret.",
-  "Give the design reason, not just the mechanism: <b>'devices anchor to the root, not the leaf key \u2014 that's what lets a signing key rotate without a fleet-wide re-flash.'</b> Direct trust in the leaf would couple rotation to a device update; the delegation layer exists to decouple them."
+  "Give the design reason, not just the mechanism: <b>'devices anchor to the root, not the leaf key \u2014 that's what lets a signing key rotate without a fleet-wide re-flash.'</b> Direct trust in the leaf would couple rotation to a device update; the delegation layer exists to decouple them.",
+  "Say what the header carries and what it can't: <b>'public selectors &mdash; key id, algorithm id, version &mdash; never the key.'</b> Then the attack surface: the alg id needs an allowlist, or you've opened an algorithm-downgrade hole.",
+  "Reframe the manifest as <b>'the digest of the whole file set'</b> &mdash; one signature transitively covers 200 files. Then the payoff: delta updates, with the device verifying every file against the signed manifest so a partial apply fails.",
+  "Take the chain into hardware: <b>'the anchor is burned in at manufacture, immutable, and secure boot enforces it stage by stage.'</b> Then the hardest part out loud &mdash; the root you can't rotate remotely is protected by process, not code.",
+  "Frame it as <b>control vs managed</b>: KMS for IAM-scoped Sign, managed rotation, free audit; CloudHSM only when a requirement (FIPS L3, own ceremony) forces it. Reaching for CloudHSM 'to be safe' is the tell you've run neither.",
+  "Lead with the point of the whole topic: <b>'verification is offline by design &mdash; package plus burned-in key, no network, no clock.'</b> Then the honest limit: freshness comes from a version counter, not time, because the device may have no clock.",
+  "Separate three things most people fuse: <b>'a signature is timeless math; valid-at-signing-time needs a timestamp; the key is revoked from time T by rotation.'</b> Transparency logs make the compromise window auditable.",
+  "Name the trade cleanly: <b>'a raw key is simplest but couples rotation to re-provisioning; a cert delegates through a root so leaves rotate freely.'</b> Then that expiry and revocation need a clock and network the field device may not have.",
+  "Split the two questions: <b>'signing proves this is the artifact we released &mdash; not that we meant to.'</b> Authorization-to-sign and provenance answer the second, with several bounds on a compromised signer, not one."
 ];
 var TOPIC_SIGN_DRILL = {
   cards: SIGN_CARDS,

@@ -3,7 +3,7 @@
    c is the beat class (frame/head/sub/risk/trade/close/ceil). Same contract as
    TOPIC_CP_MODEL. Pure data (renderer lives in model-answers.js). 7-bit ASCII. */
 var TOPIC_SIGN_MODEL = {
-  selectors: ['Make it secure', 'Key management', 'Walk a compromise', 'Device verification', 'Defend the design', 'Name the limits'],
+  selectors: ['Make it secure', 'Key management', 'Walk a compromise', 'Device verification', 'Defend the design', 'Operate it', 'One you built', 'Test it', 'Name the limits'],
   answers: [
     { opener:"\u201CHow would you make this secure?\u201D",
       sub:"Secure signing = the key never leaks, the device can\u2019t be fooled, and an old package can\u2019t be replayed.",
@@ -59,6 +59,39 @@ var TOPIC_SIGN_MODEL = {
         {l:"ALGORITHM",c:"trade",t:"RSA vs ECDSA isn\u2019t my call \u2014 it\u2019s the device\u2019s <b>trust anchor</b>. G6 verifies v1.5, G7 verifies PSS; I sign what the fleet can check. <b>That\u2019s the axis I flex on</b>, and I\u2019d say so before they ask."},
         {l:"KEYS",c:"sub",t:"Per-tenant keys over per-device: per-device is the ideal blast radius but a key-management nightmare at fleet scale; the four-table model is the pragmatic bound."},
         {l:"CLOSE",c:"close",t:"So every choice is a boundary, and the one I\u2019d genuinely flex is the algorithm \u2014 dictated by the verifier, not by what\u2019s newest."}
+      ] },
+    { opener:"\u201CHow would you operate this in production?\u201D",
+      sub:"Operating signing = catch a compromised signer early, keep the HSM healthy, and be ready to rotate under pressure.",
+      beats:[
+        {l:"FRAME",c:"frame",t:"Operating a signing service is three jobs: detect a compromised signer early, keep the HSM healthy and available, and be able to rotate a key under pressure. It's <b>low volume but high blast radius</b>, so the ops bar is unusual."},
+        {l:"HEADLINE",c:"head",t:"The one metric I'd alarm on is <b>signing volume per key</b> &mdash; an anomaly there is the earliest signal of a compromised signer, the failure that matters most."},
+        {l:"MONITOR",c:"sub",t:"Beyond volume: HSM latency and error rate (a failing HSM stalls releases), each key's <b>age</b> (rotation due), and every Sign call <b>audited</b> to a trail &mdash; who signed what, when. Signing is rare enough that <i>every</i> call is worth logging."},
+        {l:"AVAILABILITY",c:"sub",t:"The HSM is a dependency that can go down &mdash; I'd run it HA (multiple partitions, or a managed pool). Because signing is on the <b>release path, not the request path</b>, the latency budget is generous: a brief HSM blip becomes a backlog that clears, not a failed release."},
+        {l:"ROTATE",c:"risk",t:"Rotation is a runbook I've <b>rehearsed</b>, not a doc I've written &mdash; provision new key, sign new packages, revoke old at the anchor &mdash; because a rotation you've never run is one that fails during an incident."},
+        {l:"NAME THE RISK",c:"trade",t:"The silent failure is a key quietly nearing end-of-life or an HSM degrading. I'd alarm on both <b>proactively</b> rather than discover them at the next release."},
+        {l:"CLOSE",c:"close",t:"So: alarm on signing-volume anomaly, keep the HSM HA with a queue as shock absorber, audit every Sign, and rehearse rotation. Low volume, high stakes."}
+      ] },
+    { opener:"\u201CTell me about a signing system you've built.\u201D",
+      sub:"The real one: multi-tenant device signing, a four-table key model, and the gap that bit us.",
+      beats:[
+        {l:"FRAME",c:"frame",t:"I'll take the signing pipeline for a fleet of payment terminals &mdash; multi-tenant, several device families, HSM-backed. The interesting parts weren't the crypto; they were the <b>key architecture</b> and one gap that bit us."},
+        {l:"HEADLINE",c:"head",t:"Keys resolved through a <b>four-table lookup</b> &mdash; product_type &rarr; company_product_type &rarr; company_device_keys &mdash; so a signing key was scoped to one company's one product type."},
+        {l:"ARCHITECTURE",c:"sub",t:"The flow was API &rarr; packager &rarr; HSM: resolve the tenant's key, send the package <b>hash</b> to the HSM (CryptoHub), get a signature, stamp it into the header. Different device families needed different schemes &mdash; older ones verified PKCS#1 v1.5, newer ones PSS &mdash; so the service branched on family."},
+        {l:"THE GAP",c:"risk",t:"The subtle bug was a <b>visibility-vs-keys</b> gap: a tenant could be provisioned to <i>see</i> a product type before a signing <i>key</i> existed for it &mdash; so signing failed at request time with a confusing error. We made validation explicit &mdash; a ladder of key-exists (404), well-formed (409, e.g. &lsquo;must be 6 characters&rsquo;), HSM-accepts (500) &mdash; and surfaced the mismatch at <b>provisioning</b>, not sign time."},
+        {l:"THE DETAIL I'M PROUD OF",c:"sub",t:"<b>Error sanitization.</b> Signing errors are dangerous &mdash; a stack trace echoing a key or key id leaks into logs. So every error was <b>redacted before it was logged</b>, not just before the response. Security on the error path, not politeness."},
+        {l:"WHAT I'D CHANGE",c:"trade",t:"If I did it again, I'd invest earlier in <b>rotation automation</b> &mdash; we had the key model right, but rotation was more manual than I'd want when an incident is live."},
+        {l:"CLOSE",c:"close",t:"So the value was the tenant-scoped key model and closing the visibility-vs-keys gap, not the signing math. The crypto is a library call; the systems work is <b>keys and failure modes</b>."}
+      ] },
+    { opener:"\u201CHow do you test a signing system?\u201D",
+      sub:"Test the negatives &mdash; a signing system is defined by what it <i>rejects</i>.",
+      beats:[
+        {l:"FRAME",c:"frame",t:"A signing system is defined by what it <b>rejects</b>, so the tests aim there. The happy path &mdash; a valid signature verifies &mdash; is the easy 10%; the bugs live in the rejection paths."},
+        {l:"HEADLINE",c:"head",t:"The load-bearing tests are <b>negative</b>: a tampered package, an unsigned package, a downgraded version, and a wrong-key signature must <b>all fail verification</b>."},
+        {l:"NEGATIVES",c:"sub",t:"Concretely: flip one payload byte &rarr; verify fails. Strip the signature &rarr; reject. Re-stamp an old version &rarr; the monotonic-version check refuses it. Sign with tenant A's key, verify on B's device &rarr; fails. Each is a security property, and each gets a test asserting <i>rejection</i>."},
+        {l:"ROUND-TRIP",c:"sub",t:"The positive test is a full <b>round-trip</b>: sign a real package, verify with the <b>real device-side verifier</b> (not a mock), across each family's scheme &mdash; because a v1.5-vs-PSS mismatch only shows up end-to-end."},
+        {l:"FAILURE INJECTION",c:"sub",t:"Then the operational tests: <b>HSM unavailable</b> (does the request queue and retry, or fail cleanly?), a malformed key (right code from the ladder?), and a <b>rotation drill</b> &mdash; sign with the new key, confirm devices trust it via the anchor without re-flash."},
+        {l:"NAME THE RISK",c:"risk",t:"The test people skip is the <b>downgrade</b> one &mdash; easy to prove a valid signature verifies and forget to prove an old-but-valid one is refused. That gap <i>is</i> the replay attack."},
+        {l:"CLOSE",c:"close",t:"So: assert the rejections, round-trip through the real verifier per family, inject HSM failures, rehearse rotation. You can't unit-test crypto correctness into a library &mdash; you test that <i>your</i> rejection logic and failure handling hold."}
       ] },
     { opener:"\u201CWhere does this fall short?\u201D",
       sub:"The limits I shipped on purpose \u2014 said as knowing trades, not confessions.",

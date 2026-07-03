@@ -21,6 +21,9 @@ var TOPIC_SIGN_TRADE = {
       tell: "Per-device is the ideal blast radius but a key-management nightmare at 50k devices. The <b>four-table model</b> (product_type &rarr; company_product_type &rarr; company_device_keys) is the pragmatic bound." },
     { q: "Online HSM signing <span class=\"vs\">vs</span> offline root ceremony",
       opts: [{ n: "Online (HSM-backed)", when: "it&rsquo;s a <b>per-tenant signing key</b> and throughput / automation matter &mdash; the pipeline calls the HSM with a least-privilege Sign, keys never leave." }, { n: "Offline / air-gapped", when: "it&rsquo;s the <b>root of trust</b> that certifies signing keys &mdash; used rarely, behind a human ceremony, never on a network." }],
-      tell: "Two tiers: the <b>root key is offline</b> and touched almost never; the <b>signing keys are online</b> and HSM-backed for throughput. Conflating them &mdash; putting the root online, or the signing key offline &mdash; is the design smell." }
+      tell: "Two tiers: the <b>root key is offline</b> and touched almost never; the <b>signing keys are online</b> and HSM-backed for throughput. Conflating them &mdash; putting the root online, or the signing key offline &mdash; is the design smell." },
+    { q: "Explicit revocation <span class=\"vs\">vs</span> rotate + supersede",
+      opts: [{ n: "CRL / OCSP", when: "devices are <b>online</b> and can reach a revocation endpoint &mdash; immediate, explicit revocation of a specific key or cert." }, { n: "Rotate + supersede", when: "devices are <b>offline or constrained</b> and can&rsquo;t fetch a list &mdash; rotate at the anchor and let the newest <b>monotonic version</b> win, so the compromised key&rsquo;s packages are outranked." }],
+      tell: "A connected fleet gets <b>explicit revocation</b> (CRL/OCSP); an offline fleet can only be reached by <b>rotation-plus-supersession</b>. Design for the connectivity you actually have, not the one the textbook assumes." }
   ]
 };

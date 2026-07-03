@@ -612,6 +612,29 @@ button,.seg button,.dn-step,.pill,.card,.thread,.dec,.rf,.op,.piv,.tools-fab,.cr
 
 /* page-visibility: freeze continuous CSS animations while the tab is backgrounded */
 body.is-hidden,body.is-hidden *,body.is-hidden *::before,body.is-hidden *::after{animation-play-state:paused!important}
+
+/* ===== Topic switcher (the topic axis, above the view tabs) ===== */
+.topic-nav{position:relative;margin:2px 0 -2px}
+.tn-trigger{display:flex;align-items:center;gap:9px;width:100%;border:1px solid var(--bd);background:var(--card);border-radius:11px;padding:8px 12px;cursor:pointer;transition:border-color .14s ease,box-shadow .14s ease;text-align:left}
+.tn-trigger:hover{border-color:#cfc7f0;box-shadow:0 4px 12px rgba(83,74,183,.12)}
+.tn-trigger:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+.tn-eyebrow{font-size:8px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--mut2)}
+.tn-current{flex:1;font-size:13px;font-weight:720;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tn-chev{color:var(--acc);font-size:10px;transition:transform .18s ease}
+.topic-nav.tn-open .tn-chev{transform:rotate(180deg)}
+.tn-menu{position:absolute;left:0;right:0;top:calc(100% + 5px);z-index:40;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:5px;box-shadow:0 12px 34px rgba(30,28,24,.18);max-height:56vh;overflow-y:auto}
+.tn-item{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:9px;width:100%;border:0;background:none;border-radius:9px;padding:8px 10px;cursor:pointer;text-align:left;transition:background .12s ease}
+.tn-item+.tn-item{margin-top:2px}
+.tn-item:hover{background:rgba(83,74,183,.07)}
+.tn-item.on{background:var(--accbg)}
+.tn-i-idx{grid-row:1/3;align-self:center;display:flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:7px;background:var(--accbg);color:var(--acc);font-family:var(--mono);font-size:11px;font-weight:800}
+.tn-item.on .tn-i-idx{background:var(--acc);color:#fff}
+.tn-i-name{font-size:13px;font-weight:680;color:var(--ink);align-self:end}
+.tn-item.on .tn-i-name{color:var(--acc)}
+.tn-i-tail{font-size:9.5px;color:var(--mut2);text-transform:uppercase;letter-spacing:.3px;align-self:start}
+html[data-theme="dark"] .tn-trigger:hover{border-color:var(--acc);box-shadow:0 4px 12px rgba(170,157,245,.14)}
+html[data-theme="dark"] .tn-item:hover{background:rgba(170,157,245,.13)}
+@media(max-width:900px){ .side-id .topic-nav{flex-basis:100%;order:3;margin:6px 0 0} }
 </style>
 <script>/* === Boot: theme detection + loading splash === */
 try{var _dk=matchMedia('(prefers-color-scheme:dark)').matches;document.documentElement.dataset.theme=_dk?'dark':'light';var _tc=document.querySelector('meta[name="theme-color"]');if(_tc)_tc.setAttribute('content',_dk?'#15141A':'#FAF9F5');}catch(e){}
@@ -640,7 +663,7 @@ try{var _dk=matchMedia('(prefers-color-scheme:dark)').matches;document.documentE
     <div class="kbd-hint">Keyboard: <kbd>&larr;</kbd><kbd>&rarr;</kbd> steps &middot; <kbd>Space</kbd> reveal/push &middot; <kbd>1</kbd>/<kbd>2</kbd> grade &middot; <kbd>Q</kbd>&ndash;<kbd>O</kbd> tabs</div>
   </div>
 
-  <button class="tools-fab" id="toolsfab" type="button">Tools</button></div><div class="tools-bd" id="toolsbd" aria-hidden="true"></div><div class="mockbar"><button class="mockbtn" id="mockopen" type="button"><span class="mb-ic">&#9654;</span><span class="mb-lbl">Mock run &mdash; the full round, on the clock</span></button><button class="inttog" id="inttog" type="button" aria-pressed="false"><span class="inttog-dot"></span><span class="inttog-lbl">Interviewer cuts in mid-answer &mdash; <b>off</b></span></button><button class="crambtn" id="cramopen" type="button"><span class="mb-tx"><span class="mb-t">One-page cram sheet</span><span class="mb-d"> &mdash; everything that matters, on a card</span></span></button><button class="crambtn" id="sessopen" type="button"><span class="mb-tx"><span class="mb-t">Session progress</span><span class="mb-d"> &mdash; where you&rsquo;re weak, what to drill next</span></span></button><button class="crambtn" id="mixopen" type="button"><span class="mb-tx"><span class="mb-t">Mixed fire</span><span class="mb-d"> &mdash; probes &amp; curveballs in random order</span></span></button><button class="crambtn" id="planopen" type="button"><span class="mb-tx"><span class="mb-t">Game plan</span><span class="mb-d"> &mdash; how to rehearse with this over a week</span></span></button><button class="crambtn" id="scopeopen" type="button"><span class="mb-tx"><span class="mb-t">Scope it first</span><span class="mb-d"> &mdash; the clarifying questions before you design</span></span></button><button class="crambtn kbd-only" id="keyopen" type="button"><span class="mb-tx"><span class="mb-t">Keyboard shortcuts</span><span class="mb-d"> &mdash; jump views, drive it by key</span></span></button><button class="crambtn cram-tog" id="themetog" type="button" aria-pressed="false"><span class="mb-ic">&#9789;</span>Dark mode &mdash; <b class="tt-state">off</b></button></div>
+  <nav class="topic-nav" id="topicnav" aria-label="Switch topic" hidden><button class="tn-trigger" id="tntrigger" type="button" aria-haspopup="menu" aria-expanded="false"><span class="tn-eyebrow">Rehearsing</span><span class="tn-current" id="tncurrent">&mdash;</span><span class="tn-chev" aria-hidden="true">&#9662;</span></button><div class="tn-menu" id="tnmenu" role="menu" hidden></div></nav><button class="tools-fab" id="toolsfab" type="button">Tools</button></div><div class="tools-bd" id="toolsbd" aria-hidden="true"></div><div class="mockbar"><button class="mockbtn" id="mockopen" type="button"><span class="mb-ic">&#9654;</span><span class="mb-lbl">Mock run &mdash; the full round, on the clock</span></button><button class="inttog" id="inttog" type="button" aria-pressed="false"><span class="inttog-dot"></span><span class="inttog-lbl">Interviewer cuts in mid-answer &mdash; <b>off</b></span></button><button class="crambtn" id="cramopen" type="button"><span class="mb-tx"><span class="mb-t">One-page cram sheet</span><span class="mb-d"> &mdash; everything that matters, on a card</span></span></button><button class="crambtn" id="sessopen" type="button"><span class="mb-tx"><span class="mb-t">Session progress</span><span class="mb-d"> &mdash; where you&rsquo;re weak, what to drill next</span></span></button><button class="crambtn" id="mixopen" type="button"><span class="mb-tx"><span class="mb-t">Mixed fire</span><span class="mb-d"> &mdash; probes &amp; curveballs in random order</span></span></button><button class="crambtn" id="planopen" type="button"><span class="mb-tx"><span class="mb-t">Game plan</span><span class="mb-d"> &mdash; how to rehearse with this over a week</span></span></button><button class="crambtn" id="scopeopen" type="button"><span class="mb-tx"><span class="mb-t">Scope it first</span><span class="mb-d"> &mdash; the clarifying questions before you design</span></span></button><button class="crambtn kbd-only" id="keyopen" type="button"><span class="mb-tx"><span class="mb-t">Keyboard shortcuts</span><span class="mb-d"> &mdash; jump views, drive it by key</span></span></button><button class="crambtn cram-tog" id="themetog" type="button" aria-pressed="false"><span class="mb-ic">&#9789;</span>Dark mode &mdash; <b class="tt-state">off</b></button></div>
 
   <div class="seg" role="group" aria-label="Rehearsal sections">
     <button type="button" class="on" data-tab="walk"><span>Walkthrough</span><span class="n">MECHANICS</span></button>
@@ -4898,6 +4921,63 @@ customElements.define('deep-session', DeepSession);
     refreshTitle: refreshTitle
   };
 
+})();
+
+/* ============ topics switcher (the topic axis UI) ============
+   Builds the sidebar dropdown from the TopicRegistry: one row per registered
+   topic, current one marked, each row calls TopicRegistry.setTopic(id). Rebuilds
+   the current marker on every deeptopicchange, and HIDES the whole control when
+   fewer than two topics are registered (nothing to switch to -- so the single-topic
+   deliverable shows no switcher and is visually unchanged). Loads after the topic
+   bundle + router, so the registry is already populated when init() runs.
+   Offline-safe: no network, storage, or permission calls. */
+(function () {
+  function init() {
+    if (typeof TopicRegistry === 'undefined') return;
+    var nav = document.getElementById('topicnav');
+    var trigger = document.getElementById('tntrigger');
+    var menu = document.getElementById('tnmenu');
+    var current = document.getElementById('tncurrent');
+    if (!nav || !trigger || !menu || !current) return;
+
+    function esc(s) { return String(s == null ? '' : s); }
+
+    function build() {
+      var ids = TopicRegistry.ids();
+      if (ids.length < 2) { nav.hidden = true; close(); return; }  /* nothing to switch to */
+      nav.hidden = false;
+      var cur = TopicRegistry.current();
+      current.textContent = cur ? cur.identity.title.replace(/&mdash;/g, '\u2014') : '';
+      menu.innerHTML = ids.map(function (id) {
+        var t = TopicRegistry.get(id), on = !!(cur && cur.id === id), idn = t.identity;
+        return '<button class="tn-item' + (on ? ' on' : '') + '" role="menuitem" type="button"' +
+          ' data-topic="' + esc(id) + '"' + (on ? ' aria-current="true"' : '') + '>' +
+          '<span class="tn-i-idx">' + esc(idn.index) + '</span>' +
+          '<span class="tn-i-name">' + esc(idn.title) + '</span>' +
+          '<span class="tn-i-tail">' + esc(idn.locatorTail) + '</span></button>';
+      }).join('');
+    }
+    function open() { menu.hidden = false; trigger.setAttribute('aria-expanded', 'true'); nav.classList.add('tn-open'); }
+    function close() { menu.hidden = true; trigger.setAttribute('aria-expanded', 'false'); nav.classList.remove('tn-open'); }
+    function toggle() { if (menu.hidden) open(); else close(); }
+
+    trigger.addEventListener('click', function (e) { e.stopPropagation(); toggle(); });
+    menu.addEventListener('click', function (e) {
+      var b = e.target.closest ? e.target.closest('.tn-item') : null;
+      if (!b) return;
+      var id = b.getAttribute('data-topic');
+      close();
+      if (id) TopicRegistry.setTopic(id);        /* the ONE switch path -- fires deeptopicchange -> build() re-marks */
+    });
+    document.addEventListener('click', function (e) { if (!menu.hidden && !nav.contains(e.target)) close(); });
+    document.addEventListener('keydown', function (e) {
+      if ((e.key === 'Escape' || e.keyCode === 27) && !menu.hidden) { close(); try { trigger.focus(); } catch (x) {} }
+    });
+    window.addEventListener('deeptopicchange', build);
+    build();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
 })();
 
 /* ===== SearchOverlay =====

@@ -597,3 +597,26 @@ button,.seg button,.dn-step,.pill,.card,.thread,.dec,.rf,.op,.piv,.tools-fab,.cr
 
 /* page-visibility: freeze continuous CSS animations while the tab is backgrounded */
 body.is-hidden,body.is-hidden *,body.is-hidden *::before,body.is-hidden *::after{animation-play-state:paused!important}
+
+/* ===== Topic switcher (the topic axis, above the view tabs) ===== */
+.topic-nav{position:relative;margin:2px 0 -2px}
+.tn-trigger{display:flex;align-items:center;gap:9px;width:100%;border:1px solid var(--bd);background:var(--card);border-radius:11px;padding:8px 12px;cursor:pointer;transition:border-color .14s ease,box-shadow .14s ease;text-align:left}
+.tn-trigger:hover{border-color:#cfc7f0;box-shadow:0 4px 12px rgba(83,74,183,.12)}
+.tn-trigger:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+.tn-eyebrow{font-size:8px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--mut2)}
+.tn-current{flex:1;font-size:13px;font-weight:720;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tn-chev{color:var(--acc);font-size:10px;transition:transform .18s ease}
+.topic-nav.tn-open .tn-chev{transform:rotate(180deg)}
+.tn-menu{position:absolute;left:0;right:0;top:calc(100% + 5px);z-index:40;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:5px;box-shadow:0 12px 34px rgba(30,28,24,.18);max-height:56vh;overflow-y:auto}
+.tn-item{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:9px;width:100%;border:0;background:none;border-radius:9px;padding:8px 10px;cursor:pointer;text-align:left;transition:background .12s ease}
+.tn-item+.tn-item{margin-top:2px}
+.tn-item:hover{background:rgba(83,74,183,.07)}
+.tn-item.on{background:var(--accbg)}
+.tn-i-idx{grid-row:1/3;align-self:center;display:flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:7px;background:var(--accbg);color:var(--acc);font-family:var(--mono);font-size:11px;font-weight:800}
+.tn-item.on .tn-i-idx{background:var(--acc);color:#fff}
+.tn-i-name{font-size:13px;font-weight:680;color:var(--ink);align-self:end}
+.tn-item.on .tn-i-name{color:var(--acc)}
+.tn-i-tail{font-size:9.5px;color:var(--mut2);text-transform:uppercase;letter-spacing:.3px;align-self:start}
+html[data-theme="dark"] .tn-trigger:hover{border-color:var(--acc);box-shadow:0 4px 12px rgba(170,157,245,.14)}
+html[data-theme="dark"] .tn-item:hover{background:rgba(170,157,245,.13)}
+@media(max-width:900px){ .side-id .topic-nav{flex-basis:100%;order:3;margin:6px 0 0} }

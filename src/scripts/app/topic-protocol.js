@@ -49,7 +49,7 @@ function applyIdentity(idn) {
   var L = q('.locator'); if (L) L.innerHTML = 'Topic ' + idn.index + ' of ' + idn.total + ' &middot; ' + idn.locatorTail;
   var H = q('.hdr h1'); if (H) H.textContent = idn.h1;
   var S = q('.hdr .sub'); if (S) S.innerHTML = idn.sub;
-  if (byId('cmpTopic')) byId('cmpTopic').textContent = idn.companionTopic;
+  document.querySelectorAll('.cmp-topic').forEach(function (el) { el.textContent = idn.companionTopic; });
   if (q('.cmp-thesis')) q('.cmp-thesis').innerHTML = idn.thesis;
   var spineHtml = idn.spine.map(function (s) { return '<li><span class="cmp-dot"></span><span>' + s + '</span></li>'; }).join('');
   document.querySelectorAll('.cmp-spine').forEach(function (ul) { ul.innerHTML = spineHtml; });

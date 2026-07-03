@@ -134,7 +134,7 @@ test("Built HTML exists", os.path.exists(html_path))
 
 if os.path.exists(html_path):
     size = os.path.getsize(html_path)
-    test("Built HTML size reasonable (300-600KB)", 300000 <= size <= 600000, f"Size: {size} bytes")
+    test("Built HTML size reasonable (300KB-1.5MB, multi-topic)", 300000 <= size <= 1500000, f"Size: {size} bytes")
 
     with open(html_path, 'r') as f:
         html = f.read()

@@ -1048,7 +1048,7 @@ function applyIdentity(idn) {
   var L = q('.locator'); if (L) L.innerHTML = 'Topic ' + idn.index + ' of ' + idn.total + ' &middot; ' + idn.locatorTail;
   var H = q('.hdr h1'); if (H) H.textContent = idn.h1;
   var S = q('.hdr .sub'); if (S) S.innerHTML = idn.sub;
-  if (byId('cmpTopic')) byId('cmpTopic').textContent = idn.companionTopic;
+  document.querySelectorAll('.cmp-topic').forEach(function (el) { el.textContent = idn.companionTopic; });
   if (q('.cmp-thesis')) q('.cmp-thesis').innerHTML = idn.thesis;
   var spineHtml = idn.spine.map(function (s) { return '<li><span class="cmp-dot"></span><span>' + s + '</span></li>'; }).join('');
   document.querySelectorAll('.cmp-spine').forEach(function (ul) { ul.innerHTML = spineHtml; });
@@ -1928,6 +1928,646 @@ TopicRegistry.register({
     walk: TOPIC_CP_WALK, drill: TOPIC_CP_DRILL, wb: TOPIC_CP_WB, sys: TOPIC_CP_SYS,
     trade: TOPIC_CP_TRADE, model: TOPIC_CP_MODEL, num: TOPIC_CP_NUM, rf: TOPIC_CP_RF,
     open: TOPIC_CP_OPEN, bank: TOPIC_CP_BANK
+  }
+});
+
+
+/* topics/signing.js -- topic 2 (Package Signing) include wrapper. identity + 9
+   per-pane data slices + the cross-pane bank, THEN register. drill.js MUST precede
+   bank.js (bank aliases SIGN_CARDS / SIGN_SPEAK). Loaded after topic 1's bundle so
+   topic 1 stays the boot/default topic; registering here makes the switcher appear. */
+/* ============ topics/signing/identity.js -- topic 2 (Package Signing) ============
+   The switchable light-DOM identity for topic 2, same contract as topic 1's
+   TOPIC_CP_IDENTITY. applyIdentity() rewrites the locator / h1 / sub / thesis /
+   spine / cram title / companion notes from this object on every switch. Grounded
+   in the ICS / CryptoHub signing pipeline (four-table key architecture, HSM sign,
+   header stamp, device verify). Offline-safe; 7-bit ASCII (entities + \uXXXX). */
+var TOPIC_SIGN_IDENTITY = {
+  index: 2,
+  total: 8,
+  locatorTail: 'trust boundary',
+  title: 'Package Signing',
+  h1: 'Package Signing',
+  sub: '<b>The signing flow</b> &rarr; <b>graded follow-up chains</b> &rarr; <b>whiteboard</b> &rarr; <b>zoom out</b> to where the trust boundary sits, and the pivots an interviewer rides from a signature into keys, HSMs, and the device.',
+  companionTopic: 'Package Signing',
+  thesis: 'The stage that makes a package tamper-proof on the device &mdash; HSM-signed, header-stamped, and verified before it ever flashes.',
+  spine: [
+    'The private key <b>never leaves the HSM</b> &mdash; you send it a hash, it hands back a signature.',
+    'Sign the <b>hash, not the package</b> &mdash; one SHA&#8209;256, stamped into the header.',
+    'Trust lives <b>on the device</b> &mdash; it verifies against a burned-in public key and <b>rejects unsigned</b>.',
+    'Keys are <b>per-tenant, per-product-type</b> &mdash; a leaked key blasts one company, not the fleet.'
+  ],
+  cramTitle: 'Package Signing',
+  reportTitle: 'Package Signing',
+  cmpNotes: {
+    walk: ['The signing flow', 'Request to device-verify, one step at a time \u2014 the mechanics you narrate before anyone cuts in.', 'Say the split out loud \u2014 \u201Cthe private key never leaves the HSM; we send a hash, we get a signature.\u201D That line is the whole design.'],
+    drill: ['Probe Drill', 'Graded follow-ups on keys, algorithms, and the device boundary \u2014 the ones that separate a passing answer from a Staff signal.', 'Commit to an answer before you reveal \u2014 name the threat you\u2019re defending against, not just the mechanism.'],
+    wb: ['Whiteboard', 'Rebuild the whole trust chain from memory \u2014 the cues, nothing in front of you.', 'Draw the boundary first \u2014 signer on one side, device on the other, the public key crossing once. Recall is the test, not recognition.'],
+    sys: ['System Map', 'Zoom out: signing sits between the pipeline that produces the artifact and the device that trusts it.', 'Lead with the boundary, not the boxes \u2014 \u201Cthe pipeline makes the bytes, signing makes them trustable, the device enforces it.\u201D'],
+    trade: ['Trade-offs', 'The decisions they drill \u2014 RSA vs ECDSA, HSM vs KMS, sign the package vs the manifest \u2014 each with the switch condition.', 'Always say \u201Cpick when\u201D \u2014 name the constraint that flips the choice, never defend one algorithm as universally right.'],
+    model: ['Model Answers', 'Full spoken scripts \u2014 the beats, in order, the way you\u2019d actually say them.', 'Steal the frame, not the words \u2014 headline first (\u201Csign the hash, verify on device\u201D), then the one risk you\u2019d name.'],
+    num: ['Numbers', 'Back-of-envelope the signing load \u2014 and know which number trips the HSM ceiling.', 'Lead with the peak \u2014 HSM ops/sec is the wall, and batching the hash is how you stay under it.'],
+    rf: ['Red Flags', 'What sinks the round \u2014 signing the whole file, keys on disk, verifying nothing on the device \u2014 and what to say instead.', 'Name what the interviewer hears \u2014 \u201Crolled their own crypto\u201D is the fastest no-hire in the room.'],
+    open: ['30-Second', 'The opener and the close \u2014 matched to the altitude the question is asked at.', 'Match the altitude \u2014 open at the trust boundary, not the padding scheme, and land on key management as the real hard part.']
+  }
+};
+
+/* topics/signing/walk.js -- topic 2 WALKTHROUGH data. steps[] is the guided trace of
+   the signing flow (request -> key resolve -> HSM sign -> family algo -> header stamp
+   -> validation -> device verify -> flash/reject); modelScript[] is the spoken model
+   answer (plain beats, the interviewer .mq line, then the .mbeat.ans -- which MUST be
+   LAST, the last-child CSS depends on it). The div/span markup lives in renderBeat;
+   this is pure data. Offline-safe; 7-bit ASCII (entities + \uXXXX). */
+var TOPIC_SIGN_WALK = {
+  steps: [
+    { k:"Step 1 / 7", t:"Request + key resolution",
+      flow:'<span class="fb n">signPackage(hash,tenant,type)</span><span class="arr">&rarr;</span><span class="fb p">four-table lookup</span><span class="arr">&rarr;</span><span class="fb t">scoped key</span><span class="arr">/</span><span class="fb r">404 no key</span>',
+      ins:'The pipeline already hashed the package, so the signer takes the <b>digest</b>, not the bytes. The key is resolved <b>per tenant, per product type</b> &mdash; a leaked key blasts one company&rsquo;s one product line, never the fleet.',
+      code:'<span class="c">// product_type -&gt; company_product_type -&gt; company_device_keys</span>\\n<span class="k">const</span> key = <span class="k">await</span> resolveKey(tenant, productType);\\n<span class="k">if</span> (!key)\\n  <span class="k">throw</span> <span class="k">new</span> SignError(<span class="hl">404</span>, <span class="s">\'no signing key for this product\'</span>);',
+      cap:'The four-table resolution is what scopes a signature to one tenant &mdash; the same per-tenant isolation the authz topic enforces on reads.' },
+    { k:"Step 2 / 7", t:"HSM signs the hash",
+      flow:'<span class="fb n">hash</span><span class="arr">&rarr;</span><span class="fb p">HSM.sign(hash, keyId)</span><span class="arr">&rarr;</span><span class="fb t">signature</span><span class="arr">&middot;</span><span class="fb a">key never leaves</span>',
+      ins:'The service sends the hash to the HSM and gets back a signature. The <b>private key is non-exportable</b> &mdash; it never enters the process, so a compromised signer produces signatures for a bounded window but can never <b>exfiltrate the key</b>.',
+      code:'<span class="k">const</span> sig = <span class="k">await</span> hsm.<span class="hl">sign</span>({\\n  keyId: key.id,          <span class="c">// a handle, not the key</span>\\n  digest: hash,           <span class="c">// 32 bytes in</span>\\n  alg: key.alg            <span class="c">// RSA_PSS_SHA_256 / ...</span>\\n});                       <span class="c">// signature out; key stays in the HSM</span>',
+      cap:'&ldquo;Send a hash, get a signature&rdquo; is the whole security property &mdash; the boundary is the HSM, and nothing on your side ever holds the private key.' },
+    { k:"Step 3 / 7", t:"Algorithm by device family",
+      flow:'<span class="fb n">device family</span><span class="arr">&rarr;</span><span class="fb t">G6: PKCS#1 v1.5</span><span class="arr">/</span><span class="fb p">G7: RSA-PSS</span><span class="arr">/</span><span class="fb a">SEQ5: HSM v2</span>',
+      ins:'You sign with what the device&rsquo;s <b>verifier</b> implements, not what&rsquo;s newest. <b>G6</b> checks PKCS#1 v1.5, <b>G7</b> checks RSA-PSS, and older families have their own quirks &mdash; the fleet&rsquo;s trust anchor decides the scheme.',
+      deep:'This is why &ldquo;just use PSS&rdquo; is wrong as a blanket answer: a G6 device that only knows v1.5 will <b>reject</b> a PSS signature as invalid. The signing service branches on family and produces the padding <i>that device</i> can verify &mdash; a compatibility surface, not a preference.' },
+    { k:"Step 4 / 7", t:"Stamp the header",
+      flow:'<span class="fb t">signature</span><span class="arr">+</span><span class="fb p">version + keyId</span><span class="arr">&rarr;</span><span class="fb n">package header</span><span class="arr">&middot;</span><span class="fb a">payload untouched</span>',
+      ins:'The signature, a <b>monotonic version</b>, and the key id go into the package <b>header</b>; the payload bytes are never altered. Header carries <b>proof</b>, payload carries <b>content</b> &mdash; and the version rides <i>inside</i> the signed region so it can&rsquo;t be forged.',
+      deep:'Putting the version under the signature is what makes the downgrade defense real: the device reads the version from the <b>signed</b> header, so an attacker can&rsquo;t re-stamp an old package as &ldquo;newer&rdquo; without breaking the signature. Proof and freshness travel together.' },
+    { k:"Step 5 / 7", t:"Validate + sanitize",
+      flow:'<span class="fb t">exists? 404</span><span class="arr">&rarr;</span><span class="fb a">format? 409</span><span class="arr">&rarr;</span><span class="fb r">HSM reject? 500</span><span class="arr">&rarr;</span><span class="fb n">redact key material</span>',
+      ins:'A three-level ladder: the key <b>exists</b> (else 404), the input is <b>well-formed</b> (else 409, e.g. &ldquo;must be 6 characters&rdquo; for a vendor key), the HSM <b>accepts</b> it (else 500). And every error is <b>sanitized</b> &mdash; no key bytes, no key id, ever leak into a message or a log.',
+      code:'<span class="k">try</span> {\\n  assertKeyFormat(vendorKey);  <span class="c">// 409 "must be 6 characters long"</span>\\n  <span class="k">return</span> <span class="k">await</span> hsm.sign(req);\\n} <span class="k">catch</span> (e) {\\n  log.error(<span class="hl">redact</span>(e));   <span class="c">// strip key material before it&#39;s logged</span>\\n  <span class="k">throw</span> sanitize(e);       <span class="c">// 500, no secrets in the response</span>\\n}',
+      cap:'Sanitizing the error path is a security control, not politeness &mdash; a stack trace that echoes a key or key id is a leak, so redaction happens before anything is logged or returned.' },
+    { k:"Step 6 / 7", t:"Device verifies before flash",
+      flow:'<span class="fb n">package</span><span class="arr">&rarr;</span><span class="fb p">hash payload</span><span class="arr">&rarr;</span><span class="fb t">verify vs public key</span><span class="arr">&rarr;</span><span class="fb a">version &ge; current?</span><span class="arr">/</span><span class="fb r">reject</span>',
+      ins:'The device hashes the payload, verifies the header signature against its <b>burned-in public key</b>, and checks the version is not a downgrade &mdash; <b>all before writing anything</b>. Verification gates the flash; it never follows it.',
+      deep:'Three checks, any of which rejects: authenticity (does the signature verify?), freshness (is the version &ge; what&rsquo;s running?), and integrity (does the recomputed hash match what was signed?). Only a package that passes all three is allowed to touch the flash &mdash; and even then it lands in the spare A/B slot first.' },
+    { k:"Step 7 / 7", t:"Flash or reject &mdash; safely",
+      flow:'<span class="fb t">valid + newer</span><span class="arr">&rarr;</span><span class="fb p">write spare slot</span><span class="arr">&rarr;</span><span class="fb a">test-boot + confirm</span><span class="arr">/</span><span class="fb r">rollback</span>',
+      ins:'A verified package is written to the <b>spare A/B partition</b>, boots into a test state, and must <b>confirm</b> within a watchdog window or roll back. A rejected package changes <b>nothing</b> &mdash; the device keeps its current image. Refusing an update is the <b>safe</b> path, not a brick.',
+      code:'<span class="k">if</span> (!verify(pkg)) <span class="k">return</span> reject();     <span class="c">// keep current image</span>\\nwriteSlot(<span class="hl">spare</span>, pkg);                <span class="c">// never overwrite the running slot</span>\\nbootInto(spare, { test: <span class="k">true</span> });\\n<span class="k">if</span> (!confirmedWithin(watchdog))\\n  rollback(<span class="hl">active</span>);                    <span class="c">// signed-but-broken -&gt; revert</span>',
+      cap:'A/B + confirm covers the case signing can&rsquo;t: a package that is perfectly signed but boots badly. Signature proves trust; the confirm window proves it actually runs.' }
+  ],
+  modelScript: [
+    { ml: 'Frame it before diving', t: '"Before I trace it &mdash; I&rsquo;ll assume the pipeline already gives me the package hash, the devices verify with a public key we control, and signing keys are per-tenant. Stop me if any of that&rsquo;s off."' },
+    { ml: 'Headline in one breath', t: '"At a high level: the pipeline hands me a hash, I resolve the tenant&rsquo;s key, the <b>HSM signs the hash</b>, I stamp the signature into the header, and the <b>device verifies it against a burned-in key before flashing</b> &mdash; rejecting anything unsigned."' },
+    { ml: 'Walk the path', t: '"Concretely &mdash; I take the SHA&#8209;256 the pipeline computed, resolve the signing key through the four-table lookup, and send <b>just the hash</b> to the HSM. It signs with a non-exportable private key and returns a signature; the key never touches my process. I stamp signature, version, and key id into the header &mdash; payload untouched."' },
+    { ml: 'Name the risk yourself', t: '"The thing I&rsquo;d flag without being asked is that a signature proves <b>authenticity, not freshness</b> &mdash; so I carry a <b>monotonic version inside the signed header</b>, and the device refuses anything older. That&rsquo;s the downgrade defense people skip."' },
+    { ml: 'Name the trade-off line', t: '"The algorithm isn&rsquo;t my preference &mdash; it&rsquo;s what the device verifies. <b>G6 checks PKCS#1 v1.5, G7 checks PSS.</b> I sign with what the fleet can check, and I&rsquo;d say that before they ask &lsquo;why RSA.&rsquo; Rolling my own padding would be the one thing I&rsquo;d never do."' },
+    { ml: 'Be honest about the ceiling', t: '"This holds as long as the HSM keeps up. Signing is <b>size-independent</b> &mdash; I sign a 32-byte digest &mdash; so the ceiling is <b>HSM ops/sec</b>, not bandwidth. Past it I queue the hashes and batch, or add HSM partitions. And the real operational hard part isn&rsquo;t throughput &mdash; it&rsquo;s key rotation."' },
+    { mq: 'Interviewer: "What if a signing key is compromised?"' },
+    { ml: 'Absorb the follow-up', t: '"I <b>rotate</b>: provision a new key, sign new packages with it, revoke the old. What a leaked signing key can forge is bounded by what it was scoped to &mdash; one tenant&rsquo;s product type &mdash; and by the window before rotation. The device&rsquo;s <b>trust anchor</b> is what makes rotation enforceable: because devices verify against a public key or a root that certifies signing keys, I can retire a signing key <b>without re-flashing every device</b>, as long as the anchor still certifies the new one. So per-tenant keys plus a clean rotation path is the answer &mdash; and I&rsquo;d name which one the constraints allow rather than pretend one size fits."', ans: true }
+  ]
+};
+
+/* topics/signing/drill.js -- topic 2 drill data. UNLIKE topic 1 (the foundation,
+   which seeds the cross-pane globals cards/speakLines directly), topic 2 uses LOCAL
+   arrays SIGN_CARDS / SIGN_SPEAK -- so loading this bundle does NOT clobber topic 1's
+   working set. publishBanks() reseeds the globals from TOPIC_SIGN_BANK on switch.
+   SIGN_SPEAK[i] pairs SIGN_CARDS[i] (order is load-bearing). 7-bit ASCII. */
+var SIGN_CARDS = [
+  { tier:'SDE2', signal:'What signing actually operates on',
+    q:"Why sign the hash of the package instead of the whole file?",
+    a:"You sign a <b>32-byte SHA&#8209;256 digest</b>, not the bytes. A signature over the hash is cryptographically equivalent to signing the content (the hash is collision-resistant), <b>size-independent</b>, and lets the device verify by re-hashing and checking one signature. Signing the whole file reads it needlessly and buys nothing.",
+    f:[
+      { q:"So does the signature guarantee the package hasn\u2019t changed?",
+        a:"Yes \u2014 change one byte of the payload and its SHA&#8209;256 changes, so the signature no longer verifies against the recomputed hash. Integrity comes from the <b>hash</b>; authenticity comes from the <b>signature over that hash</b>. Together: tamper-evident and origin-proven." },
+      { q:"The package is many files, not one blob. Now what do you sign?",
+        a:"A <b>manifest</b> \u2014 a list of each file\u2019s hash \u2014 and you sign the manifest. The device verifies the manifest signature, then checks each file against its listed hash. That also enables <b>delta updates</b>: ship and verify only the changed files." }
+    ],
+    senior:"Saying &lsquo;the hash is collision-resistant, so signing it is equivalent to signing the content&rsquo; \u2014 not just &lsquo;I&rsquo;d sign it&rsquo; \u2014 is the tell that you understand <i>why</i> hash-then-sign is the standard." },
+  { tier:'SDE2', signal:'Where the private key lives',
+    q:"Where does the private signing key live, and why there?",
+    a:"In an <b>HSM</b> (CloudHSM / CryptoHub / KMS), <b>non-exportable</b>. The signing service sends a hash and receives a signature \u2014 the key never enters the process. So a compromised signer can request signatures for a bounded window but can <b>never exfiltrate the key</b> itself.",
+    f:[
+      { q:"What\u2019s the difference between that and just encrypting the key at rest on the server?",
+        a:"An encrypted-at-rest key is still <b>decrypted into process memory</b> to use \u2014 a memory dump or a code exploit leaks it. An HSM key is never decrypted outside the hardware boundary; you can only ask it to <i>sign</i>, never to <i>reveal</i>. That boundary is the whole point." },
+      { q:"A compromised signer can still get things signed while you haven\u2019t noticed. How do you limit that?",
+        a:"A <b>least-privilege Sign</b> scoped to one key, rate limits and anomaly alerts on signing volume, and short-lived credentials so the window is bounded. The key survives the incident; you rotate what the signer <i>could</i> reach, not the key." }
+    ],
+    senior:"Naming that the key is &lsquo;never decrypted outside the hardware&rsquo; \u2014 distinguishing HSM from encrypted-at-rest \u2014 is what separates a real answer from &lsquo;store it securely.&rsquo;" },
+  { tier:'SDE3', signal:'Key scoping &amp; blast radius',
+    q:"One signing key for everything, or many? How do you scope them?",
+    a:"<b>Per tenant, per product type</b> \u2014 resolved through the four-table lookup (<code>product_type &rarr; company_product_type &rarr; company_device_keys</code>). A single global key means one leak forges the <b>whole fleet</b> and rotation re-signs everything at once. Scoped keys bound a leak to one company\u2019s product line.",
+    f:[
+      { q:"Why not go all the way to per-device keys \u2014 isn\u2019t that the ideal?",
+        a:"It is the ideal <b>blast radius</b>, but a key-management nightmare at 50k+ devices \u2014 provisioning, storage, and rotation for millions of keys. Per-tenant-per-product-type is the pragmatic bound: small enough radius, tractable key count. I&rsquo;d name it as a bound, not pretend it&rsquo;s per-device." },
+      { q:"A key leaks. Exactly what can the attacker do, and what can\u2019t they?",
+        a:"They can forge packages for <b>that one tenant\u2019s product type</b>, for the window before rotation. They <b>cannot</b> sign for other tenants (different keys), and they <b>cannot</b> forge a new signing key (that\u2019s the offline root). The scoping <i>is</i> the containment." }
+    ],
+    senior:"Answering &lsquo;what can the attacker do <i>and</i> not do&rsquo; in terms of the exact scope \u2014 rather than &lsquo;we\u2019d rotate&rsquo; \u2014 shows you think in blast radius, the Staff-level frame." },
+  { tier:'SDE2', signal:'Device-side verification',
+    q:"The device receives a signed package. Walk what it checks before flashing.",
+    a:"Three checks, all <b>before</b> writing: (1) recompute the payload SHA&#8209;256 and <b>verify the header signature</b> against the burned-in public key; (2) check the <b>version</b> isn&rsquo;t a downgrade; (3) write to the <b>spare A/B slot</b>, test-boot, and confirm-or-rollback. Any failure &rarr; reject and keep the current image.",
+    f:[
+      { q:"Where does the device\u2019s public key come from \u2014 can an attacker swap it?",
+        a:"It\u2019s <b>burned in at manufacture</b> (or in secure/immutable storage, ideally hardware-backed). If an attacker can rewrite the trust anchor, signing is moot \u2014 which is why the anchor lives in write-protected storage or a secure element, established by <b>secure boot</b>. The chain of trust has to start in hardware." },
+      { q:"Verification passes but the image boots into a crash loop. Signing said it was fine \u2014 now what?",
+        a:"Signing proves <b>authentic</b>, not <b>functional</b>. That gap is exactly what <b>A/B + confirm</b> covers: the new image is in the spare slot, and if it doesn\u2019t confirm within the watchdog window the bootloader reverts to the known-good slot. Trust and correctness are different guarantees." }
+    ],
+    senior:"Volunteering that &lsquo;signed&rsquo; and &lsquo;boots correctly&rsquo; are different guarantees \u2014 and that A/B covers the second \u2014 is the operational tell of someone who\u2019s shipped OTA." },
+  { tier:'SDE3', signal:'Downgrade / replay defense',
+    q:"An attacker re-pushes an old, validly-signed package to exploit a fixed bug. What stops it?",
+    a:"A <b>monotonic version</b> carried <i>inside the signed header</i>. The device refuses any version below what it&rsquo;s currently running. Because the version is under the signature, an attacker can&rsquo;t re-stamp an old package as &lsquo;newer&rsquo; without breaking the signature. A signature proves <b>authenticity, not freshness</b> \u2014 the version restores freshness.",
+    f:[
+      { q:"Why does the version have to be inside the signed region \u2014 why not just a header field?",
+        a:"An unsigned header field is <b>attacker-controlled</b> \u2014 they\u2019d bump the number on an old package and it would look current. Putting the version under the signature binds freshness to authenticity: tamper with the version and the signature fails. That&rsquo;s the whole trick." },
+      { q:"How does the device know its &lsquo;current version&rsquo; hasn\u2019t itself been rolled back?",
+        a:"You anchor the counter in <b>tamper-resistant storage</b> (a secure element or a monotonic counter / anti-rollback fuse), so it only ever moves forward. Without a trustworthy floor, downgrade protection is only as strong as where you store &lsquo;current.&rsquo;" }
+    ],
+    senior:"&lsquo;A signature proves authenticity, not freshness&rsquo; is the one-line frame that unlocks this whole answer \u2014 lead with it and the fix follows." },
+  { tier:'Staff', signal:'Key compromise recovery',
+    q:"A signing key leaks. Walk the response.",
+    a:"<b>Bound, recover, verify.</b> The radius is <b>one tenant\u2019s product type</b> (that\u2019s why keys are scoped). Recover by <b>rotating</b>: provision a new key, sign new packages with it, and <b>revoke the old at the trust anchor</b> \u2014 devices verify against the anchor, so once it stops certifying the old key, forgeries stop being trusted, no re-flash. Then audit for anything the leaked key signed during the window.",
+    f:[
+      { q:"During the window before rotation completes, the attacker signs a malicious package. How do devices not accept it?",
+        a:"That&rsquo;s the hard part, and it\u2019s where the <b>downgrade defense and monitoring</b> earn their keep \u2014 a forged package still has to beat the monotonic version, and I\u2019d watch signing volume for the anomaly. Full airtight recovery may mean pushing a new legit version that supersedes anything the attacker could forge, then revoking. Rotation isn\u2019t instant; the scoping is what keeps &lsquo;not instant&rsquo; from being &lsquo;catastrophic.&rsquo;" },
+      { q:"What if the leaked key was the <b>root</b>?",
+        a:"Different, far worse incident \u2014 the root certifies signing keys, so a root leak undermines the anchor itself and can require re-establishing trust on devices. Which is <b>exactly why the root is offline and air-gapped</b>, used almost never. The two-tier model is the firewall that keeps a signing-key leak from escalating to this." }
+    ],
+    senior:"Scoping the damage and naming the offline root as the firewall \u2014 instead of catastrophizing &lsquo;the fleet is owned&rsquo; \u2014 is the Staff-level move." },
+  { tier:'SDE3', signal:'Algorithm selection',
+    q:"RSA or ECDSA? PKCS#1 v1.5 or PSS? How do you decide?",
+    a:"The <b>device\u2019s verifier decides</b>, not your preference. You sign with what the fleet can already verify against its trust anchor: <b>G6</b> devices verify PKCS#1 v1.5, <b>G7</b> verify RSA-PSS. ECDSA/Ed25519 wins when you control both ends and want smaller, faster verify \u2014 but you can\u2019t unilaterally switch a fleet that only knows RSA.",
+    f:[
+      { q:"So if PSS is more modern and secure, why are you still signing v1.5 for some devices?",
+        a:"Because a <b>G6 device only knows how to verify v1.5</b> \u2014 hand it a PSS signature and it rejects a perfectly valid package. It\u2019s a <b>compatibility surface</b>, not a preference. I\u2019d sign the scheme each family verifies and retire v1.5 as the fleet ages onto PSS." },
+      { q:"What\u2019s the one thing you\u2019d never do here?",
+        a:"<b>Roll my own</b> \u2014 custom padding, a homemade scheme, reusing nonces. That\u2019s the fastest no-hire in a crypto question. Standard primitives through a vetted library, always; the only choice I make is <i>which</i> standard, driven by the verifier." }
+    ],
+    senior:"&lsquo;The verifier decides, not me&rsquo; plus &lsquo;I\u2019d never roll my own&rsquo; are the two lines that signal you\u2019ve thought about crypto in production, not just in theory." },
+  { tier:'SDE2', signal:'Reject is the safe path',
+    q:"The device rejects an update. Doesn\u2019t refusing an update risk bricking the fleet?",
+    a:"It\u2019s the <b>opposite</b> \u2014 rejecting an untrusted package is bricking <b>prevention</b>. A rejected package changes <b>nothing</b>: the device keeps running its current, working image. The brick risk is the other failure \u2014 flashing an <b>unverified or corrupt</b> image over your only partition. Verify-before-flash plus A/B is exactly what removes it.",
+    f:[
+      { q:"When is there a real bricking risk, then?",
+        a:"An <b>interrupted or corrupt flash</b> on a device with a single partition \u2014 power loss mid-write leaves no bootable image. That\u2019s the entire reason for <b>A/B partitions</b>: write the spare slot, keep the active one intact, and only switch after the new image confirms a good boot." },
+      { q:"A device is stuck \u2014 it keeps rejecting every update you push. How do you recover it?",
+        a:"An <b>out-of-band recovery path</b>: a signed recovery image, a maintenance/recovery mode, or secure remote access. You never bypass verification to &lsquo;force&rsquo; an update \u2014 that reopens the whole hole. You fix why it\u2019s rejecting (wrong key, bad version, corrupt download) and push a correctly-signed package." }
+    ],
+    senior:"Reframing &lsquo;reject = danger&rsquo; into &lsquo;reject = the safe path, the brick risk is flashing unverified bytes&rsquo; flips the interviewer\u2019s premise \u2014 that\u2019s the senior move." },
+  { tier:'Staff', signal:'Root of trust',
+    q:"What certifies the signing keys, and where does that key live?",
+    a:"A <b>root of trust</b> \u2014 the key (or CA) that certifies signing keys \u2014 which lives <b>offline / air-gapped</b>, used almost never, behind a human ceremony. Devices anchor trust to the root (or to public keys the root certifies), which is what lets you <b>rotate signing keys without re-flashing devices</b>: the anchor stays put, the leaf keys rotate under it.",
+    f:[
+      { q:"If devices trust the root, why not just sign packages with the root directly \u2014 fewer keys?",
+        a:"Because then the <b>root is online</b>, in the signing path, exposed on every release \u2014 and a root compromise is unrecoverable without touching devices. You keep the root cold and delegate to <b>per-tenant signing keys</b> so day-to-day exposure is on cheap, rotatable, scoped keys, never the anchor." },
+      { q:"How do devices get the root/anchor in the first place, trustworthily?",
+        a:"<b>Provisioned at manufacture</b> into write-protected or secure-element storage, established by <b>secure boot</b> so the chain of trust starts in hardware. If the anchor can be rewritten in the field, none of the signing above it means anything \u2014 the anchor is the foundation the whole tower stands on." }
+    ],
+    senior:"Distinguishing the <b>offline root</b> from the <b>online signing keys</b> \u2014 and why the delegation exists \u2014 is a Staff-level distinction most candidates collapse into &lsquo;the key.&rsquo;" },
+  { tier:'SDE3', signal:'HSM throughput ceiling',
+    q:"A big release drops and the HSM is saturated with sign requests. What\u2019s the ceiling, and the fix?",
+    a:"The ceiling is <b>HSM sign-ops per second</b> \u2014 not CPU or bandwidth, because signing is size-independent (you sign a 32-byte digest). When peak signing rate exceeds one partition\u2019s throughput, you <b>queue the hashes and drain at a controlled rate</b>, or <b>add HSM partitions</b> and shard signing across them.",
+    f:[
+      { q:"Why doesn\u2019t a bigger instance or more bandwidth help?",
+        a:"Because the work isn\u2019t in <i>your</i> process \u2014 it\u2019s the HSM performing the private-key operation, and you\u2019re rate-limited by <b>its</b> throughput. Scaling your app doesn\u2019t make the HSM sign faster. You either parallelize across HSM partitions or smooth the burst with a queue." },
+      { q:"Releases are bursty. Do you actually need to sign all of them in real time?",
+        a:"Usually no \u2014 signing tolerates a short queue. Buffer the sign requests, drain against the HSM\u2019s rate, and let a release complete <i>eventually</i>. A queue turns a burst that would throttle into a backlog that clears \u2014 the same shock-absorber logic as the pipeline\u2019s SQS." }
+    ],
+    senior:"Naming that the ceiling is the HSM (a resource you don\u2019t scale by resizing your box) \u2014 and that signing is size-independent \u2014 is the numerate tell here." },
+  { tier:'Staff', signal:'Error hygiene',
+    q:"Your signing service throws on a bad request. What must the error NOT contain \u2014 and why does it matter?",
+    a:"<b>No key material, no key id, no HSM internals.</b> Errors are <b>sanitized</b> before they\u2019re logged or returned. A stack trace that echoes a key, a key id, or an HSM handle is a <b>leak</b> \u2014 into logs, into an aggregator, into an attacker\u2019s hands. Redaction happens on the error path as a security control, not politeness.",
+    f:[
+      { q:"But you still need useful errors. How do you validate without leaking?",
+        a:"A tiered ladder with <b>safe, specific</b> messages: <b>404</b> (no key for this product), <b>409</b> (malformed input, e.g. &lsquo;must be 6 characters&rsquo;), <b>500</b> (HSM rejected). Each tells the caller what to fix without exposing <i>what the key is</i>. Specific about the <b>request</b>, silent about the <b>secret</b>." },
+      { q:"Where do these leaks usually actually happen?",
+        a:"In <b>logs</b> \u2014 an unhandled exception logged verbatim, then shipped to a third-party aggregator. So redaction has to run <i>before</i> the log call, not just before the HTTP response. The response is the obvious surface; the log pipeline is the one people forget." }
+    ],
+    senior:"Knowing the leak vector is usually the <b>log pipeline</b> \u2014 not just the API response \u2014 and redacting before the log call is the operational detail that reads as real experience." },
+  { tier:'SDE3', signal:'Rotation without re-flash',
+    q:"You rotate a signing key. How do 50,000 devices trust the new key without a re-flash?",
+    a:"Because devices anchor trust to a <b>root / trust anchor</b>, not to individual signing keys. Signing keys are <b>leaf</b> keys the root certifies. Rotate = issue a new leaf under the same anchor, sign new packages with it, revoke the old. Devices already trust anything the anchor certifies, so the new key is trusted <b>without touching the device</b>.",
+    f:[
+      { q:"What if you had made devices trust the signing key <b>directly</b> instead?",
+        a:"Then rotation <b>would</b> require re-flashing every device with the new public key \u2014 exactly the trap. Direct trust in a leaf key couples key rotation to a fleet-wide update. The <b>anchor + delegation</b> layer exists precisely to decouple them." },
+      { q:"How does a device learn the old key is revoked?",
+        a:"Revocation is enforced at the <b>anchor</b> \u2014 the root stops certifying the old leaf, and/or new packages carry a key id the device checks against what the anchor currently certifies. In constrained fleets you often lean on <b>rotation + monotonic version</b> (supersede the old) rather than online revocation lists, since devices can\u2019t always reach a CRL." }
+    ],
+    senior:"Explaining <i>why</i> anchoring to a root (not the leaf key) is what decouples rotation from re-flashing \u2014 the design reason, not just the mechanism \u2014 is the tell." }
+];
+var SIGN_SPEAK = [
+  "Lead with the equivalence: <b>'the hash is collision-resistant, so a signature over the 32-byte digest is equivalent to signing the content'</b> \u2014 then that it's size-independent and the device verifies by re-hashing. Signing the whole file is the tell you've only read about it.",
+  "Say the boundary out loud: <b>'the key never leaves the HSM \u2014 I send a hash, I get a signature.'</b> Then the distinction that scores: an encrypted-at-rest key is still decrypted into memory to use; an HSM key never is. That's the whole difference.",
+  "Answer in blast radius, not mechanism: <b>'per tenant, per product type, so a leak hits one company's product line, not the fleet.'</b> Then why not per-device \u2014 ideal radius, unmanageable at 50k keys \u2014 named as a bound, not hidden.",
+  "Walk the three checks in order and stress <b>'all before the write.'</b> Then the line that separates you: signed and boots-correctly are different guarantees, and A/B-plus-confirm covers the second. That's the operational tell.",
+  "Open with the frame that unlocks it: <b>'a signature proves authenticity, not freshness.'</b> Then the fix \u2014 a monotonic version <i>inside</i> the signed header \u2014 and why unsigned wouldn't work: an attacker just bumps the number.",
+  "Refuse to catastrophize: <b>'bound, recover, verify.'</b> The radius is one tenant's product type by design; rotate and revoke at the anchor, no re-flash; the offline root is the firewall. Scoping the damage is the Staff move, not 'the fleet is owned.'",
+  "Say the thing that reframes the whole question: <b>'the verifier decides, not me.'</b> G6 verifies v1.5, G7 verifies PSS \u2014 it's a compatibility surface. Then the one absolute: never roll your own.",
+  "Flip the premise: <b>'rejecting an update is the safe path \u2014 the brick risk is flashing unverified bytes over your only partition.'</b> A rejected package changes nothing; A/B is what makes even a bad accepted image recoverable.",
+  "Separate the tiers cleanly: <b>'the offline root certifies the online signing keys.'</b> Then why you don't sign with the root directly \u2014 it'd be exposed on every release \u2014 and that the anchor is provisioned in hardware via secure boot.",
+  "Name the ceiling precisely: <b>'HSM sign-ops per second \u2014 and signing is size-independent, so a bigger box doesn't help.'</b> Fix is queue-and-drain or add partitions. The point that scores: the work is in the HSM, not your process.",
+  "State it as a security control: <b>'no key material, no key id, no HSM internals \u2014 ever, and redacted before the log call, not just the response.'</b> Then the safe tiered ladder (404/409/500) that's specific about the request, silent about the secret.",
+  "Give the design reason, not just the mechanism: <b>'devices anchor to the root, not the leaf key \u2014 that's what lets a signing key rotate without a fleet-wide re-flash.'</b> Direct trust in the leaf would couple rotation to a device update; the delegation layer exists to decouple them."
+];
+var TOPIC_SIGN_DRILL = {
+  cards: SIGN_CARDS,
+  speak: SIGN_SPEAK,
+  tierNotes: {
+    all:'<b>All four levels, mixed</b> &mdash; the way a real loop actually comes at you.',
+    SDE2:'<b>Fundamentals under pressure</b> &mdash; sign the hash, key in an HSM, the device verifies. The bar is &ldquo;this is real signing, not hand-waving&rdquo;: show the mechanics cleanly.',
+    SDE3:'<b>Depth &amp; trade-offs</b> &mdash; key scoping, algorithm choice, the downgrade defense. The bar is &ldquo;it depends, here&rsquo;s the switch&rdquo;: the verifier decides, so name the axis.',
+    Staff:'<b>Systems judgment</b> &mdash; blast radius, compromise recovery, the root of trust. The bar is &ldquo;I see the failure mode before it ships&rdquo;: name what a leaked key can forge, and the firewall that bounds it.'
+  }
+};
+
+/* topics/signing/wb.js -- topic 2 whiteboard. steps:[{c,a}x9]; diagram = the .dgm
+   inner; foot; sub + okVerdict carry the step-count-specific copy as data. Rebuilds
+   the trust boundary from memory. Offline-safe; 7-bit ASCII (entities + \uXXXX). */
+var TOPIC_SIGN_WB = {
+  steps: [
+    {c:'Entry &mdash; what hands work to the signer, and in what form.', a:'<code>signPackage(hash, tenant, productType)</code> &mdash; the pipeline already computed the package <b>SHA&#8209;256</b>, so the signer receives the <b>digest</b>, not the bytes.'},
+    {c:'Key resolution &mdash; how a package picks its key.', a:'The <b>four-table lookup</b>: <code>product_type &rarr; company_product_type &rarr; company_device_keys</code>. The key is scoped to <b>one company&rsquo;s one product type</b>.'},
+    {c:'The signing operation &mdash; where the private key lives.', a:'The service sends the hash to the <b>HSM</b>; the HSM signs with the <b>non-exportable</b> private key and returns a signature. The key <b>never leaves</b>.'},
+    {c:'Algorithm by device family &mdash; why one scheme won&rsquo;t do.', a:'<b>G6</b> verifies PKCS#1 v1.5, <b>G7</b> verifies RSA-PSS. You sign with what the <b>device&rsquo;s verifier</b> implements &mdash; the family decides the padding, not you.'},
+    {c:'Stamping &mdash; where the signature goes.', a:'The signature <b>+ version + key id</b> is written into the package <b>header</b>; the payload is untouched. Header carries proof, payload carries content.'},
+    {c:'Device receives it &mdash; the first thing it checks.', a:'It <b>hashes the payload</b>, then verifies the header signature against its <b>burned-in public key</b>. Match &rarr; trusted; mismatch or missing &rarr; <b>reject</b>.'},
+    {c:'The reject path &mdash; what a bad signature does.', a:'The device <b>refuses to flash</b> and keeps its current image. With <b>A/B partitions</b>, rejection is the <b>safe</b> path &mdash; never a brick. (The one people frame backwards.)'},
+    {c:'Downgrade defense &mdash; an old package is still validly signed.', a:'A <b>monotonic version</b> inside the <i>signed</i> header; the device refuses any version below what it&rsquo;s running. Signature proves <b>authenticity, not freshness</b>.'},
+    {c:'Key compromise &mdash; how the blast radius is bounded.', a:'<b>Per-tenant, per-product-type</b> keys + <b>rotation</b>: a leak hits one company&rsquo;s one product line, and the device&rsquo;s <b>trust anchor</b> bounds what a leaked signing key can forge.'}
+  ],
+  diagram: `
+          <div class="dgm-node"><div class="dgm-t">content pipeline</div><div class="dgm-s">produces the package + its SHA&#8209;256 digest</div></div>
+          <div class="dgm-conn"><span class="dgm-v">&#9660;</span><span class="dgm-lbl">hands over the <code>hash</code> (not the bytes)</span></div>
+          <div class="dgm-node"><div class="dgm-t"><code>signPackage(hash, tenant, productType)</code></div><div class="dgm-s">key resolved via product_type &rarr; company_product_type &rarr; company_device_keys</div></div>
+          <div class="dgm-conn"><span class="dgm-v">&#9660;</span><span class="dgm-lbl">send hash to HSM</span></div>
+          <div class="dgm-node dgm-fork"><div class="dgm-t">HSM &middot; <span class="dgm-em">key never leaves</span></div><div class="dgm-branches"><span class="dgm-br">&rarr; sign(hash)</span><span class="dgm-br">&rarr; signature</span></div><div class="dgm-s">non-exportable private key &middot; G6 PKCS#1 v1.5 / G7 PSS</div></div>
+          <div class="dgm-conn"><span class="dgm-v">&#9660;</span><span class="dgm-lbl">stamp signature + version + key id into the <b>header</b></span></div>
+          <div class="dgm-node"><div class="dgm-t">signed package</div><div class="dgm-s">header = proof &middot; payload = content (untouched)</div></div>
+          <div class="dgm-note">&mdash;&mdash;&mdash; trust boundary: signer holds the <b>private</b> key &middot; device holds the <b>public</b> key &mdash;&mdash;&mdash;</div>
+          <div class="dgm-conn"><span class="dgm-v">&#9660;</span><span class="dgm-lbl">deployed to device</span></div>
+          <div class="dgm-node dgm-recon"><div class="dgm-t">device: verify BEFORE flash</div><div class="dgm-s">hash payload &rarr; verify vs burned-in public key &rarr; version &ge; current? &mdash; else <b>reject</b> (keep current image, A/B rollback)</div></div>
+          <div class="dgm-foot">valid + newer &rarr; flash &middot; invalid / unsigned / older &rarr; reject &middot; rejection is the <b>safe</b> path</div>
+        `,
+  foot: "<b>The one people forget:</b> step 8. A signature proves the package is <i>authentic</i>, not that it&rsquo;s the <i>latest</i> &mdash; if you don&rsquo;t volunteer the monotonic-version downgrade defense, the interviewer knows you&rsquo;ve read about signing, not shipped OTA to a fleet.",
+  sub: "For each cue, draw it from memory first &mdash; then reveal to check. Produce all nine cold and you can run the trust boundary on a whiteboard.",
+  okVerdict: "<b>All nine cold.</b> You can rebuild the trust chain on a whiteboard from memory \u2014 the signing round is yours to lose, not to pass."
+};
+
+/* topics/signing/sys.js -- topic 2 system-map data. intro = the .sm-intro copy;
+   stages = the whole-system chain with SIGNING as cur:true ("you are here"); pivots
+   = the 7 interviewer bridge points OUT of signing (back to the pipeline, out to
+   keys / HSM infra / desired-state / the device / rotation / IaC); heads = the two
+   card headings + the pivot subhead. Pure data; 7-bit ASCII (entities + \uXXXX). */
+var TOPIC_SIGN_SYS = {
+  intro: "Signing is the <b>trust boundary</b>. The pipeline produces the bytes; signing makes them <b>trustable</b>; the device <b>enforces</b> it. Knowing what sits on either side &mdash; and being able to walk the whole chain from artifact to device-verify &mdash; is what turns a crypto answer into a systems answer.",
+  stages: [
+    { n: 'Content pipeline', d: 'process &middot; hash &middot; store the package' },
+    { n: 'Package signing', d: 'resolve key &middot; HSM signs the hash &middot; stamp the header', cur: true },
+    { n: 'Desired-state reconciliation', d: 'the signed hash becomes part of the per-device target' },
+    { n: 'Deployment', d: 'push signed packages to devices, batched, in windows' },
+    { n: 'Device verify + flash', d: 'check the signature vs the burned-in key; flash or reject' },
+    { n: 'Device report', d: 'device confirms its running signed version' }
+  ],
+  pivots: [
+    { q: "The bytes I&rsquo;m signing &mdash; where do they come from?", chip: "\u2192 Content pipeline (16)",
+      a: "From the <b>pipeline&rsquo;s output</b>: it processes the upload, computes the content <b>SHA&#8209;256</b>, and hands signing that hash. Signing never re-reads the whole artifact &mdash; the pipeline already produced the digest, and signing operates on the digest. The pipeline makes the bytes; signing makes them trustable." },
+    { q: "Whose key signs this &mdash; and how is one tenant&rsquo;s key kept off another&rsquo;s packages?", chip: "\u2192 Authz / keys (18)",
+      a: "Keys are resolved through a <b>four-table lookup</b> &mdash; <code>product_type &rarr; company_product_type &rarr; company_device_keys</code> &mdash; so the signing key is scoped to <b>one company&rsquo;s one product type</b>. That&rsquo;s the same per-tenant isolation as authz: the tenant claim picks the key, and a leaked key blasts one company, never the fleet." },
+    { q: "The private key lives in an HSM &mdash; how is that infrastructure locked down?", chip: "\u2192 AWS hardening (19)",
+      a: "The private key <b>never leaves the HSM</b> (CryptoHub / KMS / CloudHSM). The signing service holds a <b>least-privilege role</b> that can call exactly one operation &mdash; <code>Sign</code> on a scoped key &mdash; and nothing else: no export, no raw key access. Compromising the signer gets you signatures for a bounded window, never the key itself. That whole posture is the AWS-hardening topic." },
+    { q: "The device got a signed package &mdash; how does it know it&rsquo;s the one it&rsquo;s supposed to run?", chip: "\u2192 Desired-state (22)",
+      a: "The <b>signed hash</b> flows into the <b>three-hash model</b>: it becomes part of the <i>desired</i> hash the reconciler computes per device. The device reports back the hash it actually flashed (<i>reported</i>), and the loop closes. Signing proves the package is authentic; desired-state proves the <i>right</i> authentic package landed." },
+    { q: "The device rejects a bad signature &mdash; how does refusing an update not brick the fleet?", chip: "\u2192 Device / OTA rollback",
+      a: "Rejection is the safe path, not the dangerous one. The device verifies the signature <b>before it flashes</b>; a bad or missing signature means it keeps running the current image. Pair that with <b>A/B partitions</b> and a test-boot-then-confirm: a new image boots into the spare slot, confirms within a watchdog window, or rolls back. Refusing an untrusted update is <b>bricking prevention</b>, not a bricking risk." },
+    { q: "A signing key leaks. What now?", chip: "\u2192 Key rotation",
+      a: "You <b>rotate</b>: provision a new key, start signing new packages with it, and revoke the old. The bound on the damage is the device&rsquo;s <b>trust anchor</b> &mdash; devices verify against a public key (or a root that certifies signing keys), so what a leaked <i>signing</i> key can forge is limited to what that key was scoped to, for the window before rotation. Short-lived keys and a per-tenant key model are what keep rotation cheap and the blast radius small." },
+    { q: "The HSM, the keys, the signing role &mdash; how is all that defined repeatably?", chip: "\u2192 IaC (23)",
+      a: "Declaratively, as <b>infrastructure as code</b> &mdash; the key policy, the signing role&rsquo;s single scoped permission, the HSM/KMS wiring, all versioned and reproducible instead of click-ops. Key material is generated <i>in</i> the HSM (never in the template), but everything <i>around</i> it &mdash; who can sign, with which key, under what policy &mdash; is code you can review and roll back." }
+  ],
+  heads: {
+    whereHead: "Where the trust boundary sits",
+    pivHead: "Interviewer pivot points",
+    pivSub: "The questions that bridge out of signing. Each one leads into another deep-dive &mdash; tap to see the connecting answer."
+  }
+};
+
+/* topics/signing/trade.js -- topic 2 trade data. decisions[].{q, opts:[{n,when}],
+   tell}; the "pick when" pill is in the renderer. Grounded in the device-family
+   reality (G6 PKCS#1 v1.5, G7 RSA-PSS) and the four-table key model. 7-bit ASCII. */
+var TOPIC_SIGN_TRADE = {
+  lead: "The signing decisions an interviewer drills &mdash; each with the <b>axis</b> that picks a side. The senior move is naming what forces the choice; the tell that sinks you is defending one algorithm as universally right, because in signing the <b>verifier usually decides, not you</b>.",
+  decisions: [
+    { q: "RSA <span class=\"vs\">vs</span> ECDSA / Ed25519",
+      opts: [{ n: "RSA", when: "the device already trusts an <b>RSA root</b>, verify libraries are everywhere, and you don&rsquo;t control the device crypto stack. Bigger keys and signatures, but universal." }, { n: "ECDSA / Ed25519", when: "you control <b>both ends</b> and want smaller signatures, smaller keys, and faster verify on constrained hardware." }],
+      tell: "The device&rsquo;s existing <b>trust anchor</b> usually decides this, not your preference &mdash; you sign with what the fleet can already verify." },
+    { q: "HSM <span class=\"vs\">vs</span> managed KMS <span class=\"vs\">vs</span> keys on disk",
+      opts: [{ n: "HSM (CloudHSM / CryptoHub)", when: "keys must be <b>non-exportable</b>, you need FIPS-level assurance, and you run your own key ceremony." }, { n: "Managed KMS", when: "you want managed rotation, an <b>IAM-scoped Sign</b> call, and audit logging &mdash; and cloud HSM-backed keys are enough." }, { n: "Keys on disk", when: "<b>never</b> for production &mdash; a leaked file forges anything, forever." }],
+      tell: "The real question is HSM <b>vs</b> managed KMS. Software keys on disk is the <b>red flag</b>, not a third option." },
+    { q: "Sign the package <span class=\"vs\">vs</span> sign a manifest",
+      opts: [{ n: "Sign the package hash", when: "it&rsquo;s a <b>single monolithic image</b> &mdash; one signature over one digest, simplest to verify." }, { n: "Sign a manifest", when: "the package is <b>many files</b> and you want per-file integrity or partial / delta updates &mdash; sign a manifest of file hashes, verify each file against it." }],
+      tell: "The manifest buys <b>independent per-file verify and delta updates</b>; the single-blob signature is simpler when the image is one unit." },
+    { q: "PKCS#1 v1.5 <span class=\"vs\">vs</span> RSA-PSS",
+      opts: [{ n: "PKCS#1 v1.5", when: "you must interop with an <b>older device stack</b> that only implements it &mdash; the G6-family verifier, for instance." }, { n: "RSA-PSS", when: "you control the verifier and want the modern, <b>randomized, provably-secure</b> padding &mdash; the G7 family." }],
+      tell: "PSS is the modern default, but the <b>fleet&rsquo;s verifier decides</b> &mdash; a device that only knows v1.5 doesn&rsquo;t care what&rsquo;s newer. Rolling your own padding is the instant no-hire." },
+    { q: "Per-device keys <span class=\"vs\">vs</span> per-tenant / per-family keys",
+      opts: [{ n: "Per-device", when: "the threat model demands a compromise contained to <b>one device</b> &mdash; and you can actually manage millions of keys." }, { n: "Per-tenant, per-product-type", when: "per-device is operationally impossible at fleet scale &mdash; a leaked key blasting <b>one company&rsquo;s one product line</b> is an acceptable, bounded radius, and rotation stays tractable." }],
+      tell: "Per-device is the ideal blast radius but a key-management nightmare at 50k devices. The <b>four-table model</b> (product_type &rarr; company_product_type &rarr; company_device_keys) is the pragmatic bound." },
+    { q: "Online HSM signing <span class=\"vs\">vs</span> offline root ceremony",
+      opts: [{ n: "Online (HSM-backed)", when: "it&rsquo;s a <b>per-tenant signing key</b> and throughput / automation matter &mdash; the pipeline calls the HSM with a least-privilege Sign, keys never leave." }, { n: "Offline / air-gapped", when: "it&rsquo;s the <b>root of trust</b> that certifies signing keys &mdash; used rarely, behind a human ceremony, never on a network." }],
+      tell: "Two tiers: the <b>root key is offline</b> and touched almost never; the <b>signing keys are online</b> and HSM-backed for throughput. Conflating them &mdash; putting the root online, or the signing key offline &mdash; is the design smell." }
+  ]
+};
+
+/* topics/signing/model.js -- topic 2 model-answer data. selectors[] are the scenario
+   buttons; answers[] are the spoken scripts, each {opener, sub, beats:[{l,c,t}]} where
+   c is the beat class (frame/head/sub/risk/trade/close/ceil). Same contract as
+   TOPIC_CP_MODEL. Pure data (renderer lives in model-answers.js). 7-bit ASCII. */
+var TOPIC_SIGN_MODEL = {
+  selectors: ['Make it secure', 'Key management', 'Walk a compromise', 'Device verification', 'Defend the design', 'Name the limits'],
+  answers: [
+    { opener:"\u201CHow would you make this secure?\u201D",
+      sub:"Secure signing = the key never leaks, the device can\u2019t be fooled, and an old package can\u2019t be replayed.",
+      beats:[
+        {l:"FRAME",c:"frame",t:"Security here is three properties: the private key <b>never leaks</b>, the device <b>can\u2019t be fooled</b> into trusting a forgery, and an <b>old package can\u2019t be replayed</b>. Let me take them in turn."},
+        {l:"HEADLINE",c:"head",t:"The one non-negotiable is that the <b>private key lives in an HSM and never leaves</b> \u2014 every other guarantee builds on that."},
+        {l:"KEY",c:"sub",t:"The service sends a <b>hash</b> to the HSM and gets a signature back; the key is non-exportable, so a compromised signer forges for a bounded window but can never <b>steal the key</b>. And keys are scoped <b>per tenant, per product type</b>, so a leak is contained to one company\u2019s product line."},
+        {l:"DEVICE",c:"sub",t:"The device is the enforcer: it verifies the signature against a <b>burned-in public key</b> before flashing, and <b>rejects unsigned or invalid</b> packages. Trust lives on the device, not on the wire."},
+        {l:"REPLAY",c:"sub",t:"A signature proves authenticity, <i>not</i> freshness \u2014 so a <b>monotonic version</b> rides inside the signed header, and the device refuses any version below what it\u2019s running. That closes downgrade and replay."},
+        {l:"NAME THE RISK",c:"risk",t:"The subtle failure is <b>rolling your own crypto</b> \u2014 I don\u2019t. Standard primitives, RSA-PSS or ECDSA through a vetted library, with the algorithm chosen to match the device\u2019s verifier."},
+        {l:"CLOSE",c:"close",t:"So: HSM-held key, per-tenant scoping, device-side verify before flash, and a signed monotonic version. Secure without hand-rolling anything."}
+      ] },
+    { opener:"\u201CHow do you manage the keys?\u201D",
+      sub:"Key management is the actual hard part \u2014 where keys live, how they\u2019re scoped, how they rotate, and what the root is.",
+      beats:[
+        {l:"FRAME",c:"frame",t:"The signing is the easy part; <b>key management is the hard part</b>. Four questions: where the keys live, how they\u2019re scoped, how they rotate, and what the root of trust is."},
+        {l:"HEADLINE",c:"head",t:"Two tiers: an <b>offline root</b> that certifies signing keys, and <b>online, per-tenant signing keys</b> held in the HSM."},
+        {l:"SCOPING",c:"sub",t:"Signing keys are per-company-per-product-type through the <b>four-table model</b> \u2014 so the blast radius of any one key is one tenant\u2019s product line, and the tenant claim resolves which key signs."},
+        {l:"ROTATION",c:"sub",t:"Rotation is designed in: provision a new key, sign new packages with it, revoke the old. Because devices verify against a <b>trust anchor</b> that certifies signing keys, I can rotate a signing key <b>without re-flashing every device</b>."},
+        {l:"ROOT",c:"risk",t:"The root of trust \u2014 the key that certifies signing keys \u2014 lives <b>air-gapped</b>, touched almost never, behind a human ceremony. Putting the root online, or a signing key offline, is the design smell."},
+        {l:"TRADE",c:"trade",t:"Per-device keys would be the ideal blast radius, but at 50k+ devices that\u2019s a key-management nightmare. Per-tenant-per-product-type is the <b>pragmatic bound</b> \u2014 and I\u2019d name it as a bound, not pretend it\u2019s per-device."},
+        {l:"CLOSE",c:"close",t:"So: offline root, online HSM-backed per-tenant keys, rotation that doesn\u2019t touch devices, and a blast radius bounded by design."}
+      ] },
+    { opener:"\u201CWalk me through a key compromise.\u201D",
+      sub:"A signing key leaks. Bound the damage, recover, and make sure it can\u2019t recur silently.",
+      beats:[
+        {l:"FRAME",c:"frame",t:"First I <b>bound the damage</b>, then recover, then make sure it can\u2019t recur silently. Panicking about \u2018the whole fleet\u2019 is the junior move \u2014 I scope it."},
+        {l:"HEADLINE",c:"head",t:"The blast radius is <b>one tenant\u2019s product type</b> \u2014 that\u2019s exactly why keys are scoped that way \u2014 and it\u2019s bounded in <b>time</b> by how fast I rotate."},
+        {l:"CONTAIN",c:"sub",t:"What a leaked signing key can forge is limited to what it was scoped to: one company\u2019s product line. It <b>cannot</b> sign for other tenants, and it <b>cannot</b> act as the root \u2014 those are separate keys."},
+        {l:"RECOVER",c:"sub",t:"I rotate: provision a new key, sign new packages with it, and <b>revoke the old at the trust anchor</b>. Devices verify against the anchor, so once it stops certifying the old key, forgeries with the leaked key stop being trusted \u2014 no re-flash needed."},
+        {l:"DOWNGRADE",c:"risk",t:"The nasty part is replay: an attacker with the old key re-pushes old, validly-signed packages. The <b>monotonic-version</b> defense holds \u2014 devices refuse downgrades \u2014 but I\u2019d audit for any device that accepted a suspicious version during the exposure window."},
+        {l:"THE FIREWALL",c:"trade",t:"If the compromise reached the <b>root</b>, that\u2019s a different, far worse incident \u2014 which is precisely why the root is offline and air-gapped. The two-tier key model is the firewall that keeps a signing-key leak from being fleet-wide."},
+        {l:"CLOSE",c:"close",t:"So: bounded to one tenant, rotate and revoke at the anchor, lean on the downgrade defense, and the offline root contains the worst case."}
+      ] },
+    { opener:"\u201CHow does the device verify a package?\u201D",
+      sub:"The device is the enforcer \u2014 walk what it actually checks, and why the order matters.",
+      beats:[
+        {l:"FRAME",c:"frame",t:"The device does three checks before it writes anything, and rejects on any failure. Verification <b>gates</b> the flash \u2014 it never follows it."},
+        {l:"HEADLINE",c:"head",t:"Hash the payload, verify the signature against the <b>burned-in public key</b>, and check the version isn\u2019t a downgrade."},
+        {l:"AUTHENTICITY",c:"sub",t:"It recomputes the payload\u2019s <b>SHA&#8209;256</b> and verifies the header signature over that hash against its embedded public key. Match = authentic and untampered; mismatch = reject."},
+        {l:"FRESHNESS",c:"sub",t:"It reads the <b>monotonic version</b> from the <i>signed</i> header and refuses anything below what it\u2019s running \u2014 the replay defense, and because the version is under the signature it can\u2019t be forged."},
+        {l:"SAFETY",c:"sub",t:"A verified package lands in the <b>spare A/B partition</b>, boots into a test state, and must <b>confirm</b> within a watchdog window or roll back \u2014 covering a package that\u2019s validly signed but boots badly."},
+        {l:"NAME THE RISK",c:"risk",t:"Verify-<i>after</i>-flash would be verify-never \u2014 you\u2019d have already written untrusted code. The check has to gate the write, which is why it all happens before the spare slot is touched."},
+        {l:"CLOSE",c:"close",t:"So: authenticity, freshness, integrity \u2014 all before the write \u2014 then A/B and confirm. That\u2019s why rejecting an update is the <b>safe</b> path, not a brick."}
+      ] },
+    { opener:"\u201CDefend the design.\u201D",
+      sub:"Why these choices \u2014 and the one axis you\u2019d actually flex on.",
+      beats:[
+        {l:"FRAME",c:"frame",t:"Let me defend the load-bearing choices and name the axis I\u2019d flex each on \u2014 because in signing the <b>verifier usually decides</b>, not me."},
+        {l:"HEADLINE",c:"head",t:"HSM-held key, sign the hash, per-tenant scoping, device-side verify \u2014 each is the boundary that makes the next one meaningful."},
+        {l:"HSM",c:"sub",t:"Key in an HSM, not on disk: a disk key means one server compromise forges the fleet. The only real alternative is managed <b>KMS</b>, which is fine \u2014 software keys is the red flag, not a third option."},
+        {l:"HASH",c:"sub",t:"Sign the <b>digest</b>, not the file: signing is size-independent, so I sign 32 bytes regardless of a 40&nbsp;MB package. Signing the whole file adds zero security and just reads bytes needlessly."},
+        {l:"ALGORITHM",c:"trade",t:"RSA vs ECDSA isn\u2019t my call \u2014 it\u2019s the device\u2019s <b>trust anchor</b>. G6 verifies v1.5, G7 verifies PSS; I sign what the fleet can check. <b>That\u2019s the axis I flex on</b>, and I\u2019d say so before they ask."},
+        {l:"KEYS",c:"sub",t:"Per-tenant keys over per-device: per-device is the ideal blast radius but a key-management nightmare at fleet scale; the four-table model is the pragmatic bound."},
+        {l:"CLOSE",c:"close",t:"So every choice is a boundary, and the one I\u2019d genuinely flex is the algorithm \u2014 dictated by the verifier, not by what\u2019s newest."}
+      ] },
+    { opener:"\u201CWhere does this fall short?\u201D",
+      sub:"The limits I shipped on purpose \u2014 said as knowing trades, not confessions.",
+      beats:[
+        {l:"FRAME",c:"frame",t:"A flawless-sounding design reads as junior. So I name the limits I shipped <i>on purpose</i> \u2014 each with its principled fix and the trigger that makes me reach for it."},
+        {l:"THE BIGGEST GAP",c:"head",t:"<b>Per-tenant keys, not per-device</b>: a leaked key blasts one tenant\u2019s product line, not one device. The fix is per-device keys or per-device certs; the trigger is a threat model that can\u2019t tolerate a product-line-wide radius. At 50k+ devices, the key-management cost is why I didn\u2019t start there \u2014 stated as a bound, not hidden."},
+        {l:"THE KNOWING TRADE",c:"trade",t:"<b>Online HSM signing</b> in the pipeline is convenient and high-throughput, but it means a live service can request signatures. I bound it with a least-privilege Sign and a scoped key; the airtight version adds a <b>human-in-the-loop</b> approval for high-risk releases. The trigger is the release\u2019s blast radius."},
+        {l:"THE SMALLER SMELLS",c:"sub",t:"Two more I\u2019d raise before they do. The algorithm is dictated by <b>legacy device families</b> (v1.5 on G6) \u2014 a compatibility debt I\u2019d retire as the fleet ages onto PSS. And rotation, while designed in, is still an operational drill \u2014 I\u2019d <b>automate and rehearse</b> it, because a rotation you\u2019ve never run is one that fails under pressure."},
+        {l:"THE TELL",c:"close",t:"The level signal is naming these as <i>knowing trades</i>: \u201CI shipped per-tenant keys aware of the per-device seam, and here\u2019s what triggers the cutover.\u201D A signing design\u2019s maturity is how precisely you can state its own <b>blast radius</b> \u2014 vague hand-waving right there is the tell the interviewer is listening for."}
+      ] }
+  ]
+};
+
+/* topics/signing/num.js -- topic 2 PARAMETRIC pane. compute(vals, fmt) is
+   DOM-method-free (arithmetic + string building only). The ceiling this pane exists
+   to reveal is HSM sign-ops/sec: signing is cheap and size-independent (you sign the
+   32-byte digest, not the package), so the wall isn't CPU or bandwidth -- it's how
+   many Sign calls the HSM will do per second. Offline-safe; 7-bit ASCII. */
+var TOPIC_SIGN_NUM = {
+  lead: "The estimation an interviewer makes you do for a signing service. The trap is sizing it like the pipeline &mdash; but you sign a <b>32-byte digest</b>, not the package, so bandwidth and file size don&rsquo;t matter. The one ceiling that does is <b>HSM sign-ops per second</b>.",
+  tell: "The number that matters is <b>HSM utilization at peak</b>. Signing is size-independent and verify is nearly free &mdash; so when the arithmetic says you&rsquo;re past one partition, the answer is &lsquo;queue the hash and batch,&rsquo; or &lsquo;add HSM partitions,&rsquo; never &lsquo;a bigger box.&rsquo;",
+  inputs: [
+    { id: 's_pkg', label: 'Packages signed / day', value: 200000, min: 0 },
+    { id: 's_size', label: 'Avg package (MB)', value: 40, min: 0, step: 1 },
+    { id: 's_hsm', label: 'HSM sign ops/sec', value: 1200, min: 1 },
+    { id: 's_peak', label: 'Peak : average', value: 20, min: 1 }
+  ],
+  compute: function (vals, fmt) {
+    var perDay = vals.s_pkg, sizeMB = vals.s_size, hsmOps = vals.s_hsm, peakR = vals.s_peak;
+    var avg = perDay / 86400, peak = avg * peakR, util = peak / hsmOps;
+    var bytesMoved = perDay * sizeMB / 1e6;     /* TB/day of package bytes the signer NEVER reads */
+    return [
+      { k: 'Average signing rate', v: fmt.n(avg), u: '/s', n: 'packages/day \u00F7 86,400 seconds', over: false },
+      { k: 'Peak signing rate', v: fmt.n(peak), u: '/s', n: 'average \u00D7 ' + fmt.n(peakR) + ' \u2014 releases cluster, they don\u2019t arrive evenly', over: false },
+      { k: 'HSM utilization at peak', v: fmt.n(util * 100), u: '%', n: util > 1 ? 'past one HSM partition \u2014 queue the hash + batch, or add partitions' : 'within one HSM partition\u2019s throughput', over: util > 1 },
+      { k: 'Bytes signed per package', v: '32', u: 'B', n: 'the SHA\u2011256 digest, not the ' + fmt.n(sizeMB) + ' MB package \u2014 signing time is size-independent', over: false },
+      { k: 'Package bytes the signer reads', v: '0', u: '', n: fmt.tb(bytesMoved) + '/day flows past it \u2014 the pipeline already hashed it; the signer only touches the digest', over: false },
+      { k: 'Device-side verify cost', v: '~1', u: 'x', n: 'RSA verify is ~100\u20131000\u00D7 cheaper than sign \u2014 the device is never the bottleneck', over: false }
+    ];
+  }
+};
+
+/* topics/signing/rf.js -- topic 2 RED FLAGS. One lead + nine flags. Each flag is
+   {bad, note, tell, fix}; only the last carries a note. Strings double-quoted (no
+   apostrophe escaping); non-ASCII is HTML entities. Offline-safe, pure data. */
+var TOPIC_SIGN_RF = {
+  lead: "The moves that quietly tank a candidate on signing. Crypto is where a weak answer gets caught fastest &mdash; each of these is something a shakier candidate actually says, what the interviewer hears, and the line that flips it.",
+  flags: [
+    {
+      bad: "&ldquo;I&rsquo;d sign the whole package file.&rdquo;",
+      note: null,
+      tell: "You sign a <b>32-byte digest</b>, not a 40&nbsp;MB blob. Signing the whole file reads it needlessly and adds <b>zero</b> security over signing its hash &mdash; it just says you don&rsquo;t know how signing works.",
+      fix: "Hash the package (SHA&#8209;256), sign the <b>digest</b>, stamp the signature into the header. Verification hashes the bytes and checks the signature over that hash."
+    },
+    {
+      bad: "&ldquo;The signing key lives in the app config / on the build server.&rdquo;",
+      note: null,
+      tell: "A key on disk means <b>one server compromise forges the entire fleet&rsquo;s firmware</b>. The interviewer hears <i>&ldquo;hasn&rsquo;t thought about where the key actually lives.&rdquo;</i>",
+      fix: "Private key in an <b>HSM / KMS</b>, non-exportable. The service sends a hash and gets back a signature &mdash; the key never leaves, so a compromised signer forges only for a bounded window, never the key itself."
+    },
+    {
+      bad: "&ldquo;The device just runs whatever package it&rsquo;s sent.&rdquo;",
+      note: null,
+      tell: "Then there&rsquo;s <b>no trust boundary at all</b> &mdash; anyone who can reach a device can push backdoored firmware and brick or own the fleet. The signature is pointless if nothing checks it.",
+      fix: "The device <b>verifies the signature before it flashes</b>, against a burned-in public key, and <b>rejects unsigned or invalid</b> packages. Verification on the device is the entire point of signing."
+    },
+    {
+      bad: "&ldquo;I&rsquo;ll design my own signing scheme / padding.&rdquo;",
+      note: null,
+      tell: "<b>Rolling your own crypto</b> is the fastest no-hire in the room. The interviewer hears <i>&ldquo;will ship a subtle, catastrophic bug&rdquo;</i> &mdash; padding oracles, weak nonces, the classics.",
+      fix: "Standard primitives through a <b>vetted library</b> &mdash; RSA-PSS or ECDSA, a known padding scheme. You choose the algorithm to match the verifier; you never hand-roll the math."
+    },
+    {
+      bad: "&ldquo;One key signs everything &mdash; simpler.&rdquo;",
+      note: null,
+      tell: "A single global key means <b>one leak blasts the whole fleet</b>, and rotation forces re-signing <i>everything</i> at once. Simpler today, unrecoverable the day it leaks.",
+      fix: "Keys <b>per tenant, per product type</b> (the four-table model), so a leak is bounded to one company&rsquo;s one product line and rotation is scoped to that key."
+    },
+    {
+      bad: "&ldquo;We don&rsquo;t need rotation &mdash; the key&rsquo;s secret.&rdquo;",
+      note: null,
+      tell: "&ldquo;Secret&rdquo; is a plan for the happy path. With no rotation story, the day a key leaks you have <b>no move</b> &mdash; the interviewer hears <i>&ldquo;no plan for the worst case.&rdquo;</i>",
+      fix: "Rotation designed in from day one: provision a new key, sign new packages with it, revoke the old &mdash; the device&rsquo;s <b>trust anchor</b> bounds what a leaked key can forge before you cut over."
+    },
+    {
+      bad: "&ldquo;An old version is still validly signed, so it&rsquo;s fine to accept it.&rdquo;",
+      note: null,
+      tell: "That&rsquo;s a <b>downgrade / replay</b> attack &mdash; an attacker re-pushes an <i>old, vulnerable</i> package that still passes the signature check. A signature proves <b>authenticity, not freshness</b>.",
+      fix: "A <b>monotonic version</b> the device enforces &mdash; it refuses any package whose version is below what it&rsquo;s running &mdash; carried inside the signed header so the version itself can&rsquo;t be tampered with."
+    },
+    {
+      bad: "&ldquo;I flash it, then verify the signature.&rdquo;",
+      note: null,
+      tell: "Verify-<i>after</i>-flash is <b>verify-never</b> &mdash; you&rsquo;ve already written and possibly booted untrusted code. The check has to gate the write, not follow it.",
+      fix: "Verify <b>before</b> flashing, SHA&#8209;256 the image before writing, and use <b>A/B partitions</b> with a test-boot-and-confirm so even a signed-but-broken image rolls back."
+    },
+    {
+      bad: "&ldquo;&hellip;so I&rsquo;d use RSA and an HSM and a header field and&mdash;&rdquo;",
+      note: "(straight into mechanism)",
+      tell: "No threat model stated, no trust boundary drawn &mdash; the interviewer can&rsquo;t <b>see you reason about security</b>, only that you&rsquo;ve memorized primitives.",
+      fix: "<b>Name the threat first</b> (tamper, forgery, replay), draw the <b>boundary</b> (signer holds the private key, device holds the public key), <i>then</i> pick primitives. Reasoning about the attacker beats reciting algorithms."
+    }
+  ]
+};
+
+/* topics/signing/open.js -- topic 2 opener/closer. Two cards: [0] open (HAS hooks),
+   [1] close (hooks:null). Same shape as TOPIC_CP_OPEN. The 'Reveal mine' label, the
+   arrow, and the wrappers are static in renderOpenCard. 7-bit ASCII (entities). */
+var TOPIC_SIGN_OPEN = {
+  cards: [
+    {
+      kind: "open",
+      k: "Match the altitude",
+      t: "The same trust boundary, said three ways",
+      lead: "Interviewers open with <i>&ldquo;quickly, how does signing work?&rdquo;</i> as often as <i>&ldquo;design it.&rdquo;</i> Give the altitude they asked for &mdash; the boundary when they want the boundary, the mechanism when they want mechanism &mdash; then expand only when they pull. Say each out loud before you reveal mine.",
+      items: [
+        {
+          n: "1",
+          ht: "<b>One breath.</b> The whole trust boundary in a single sentence &mdash; for <i>&ldquo;high level&rdquo;</i> or <i>&ldquo;quickly.&rdquo;</i>",
+          a: "A signing service that makes packages tamper-proof: the pipeline&rsquo;s hash goes to an <b>HSM</b> that returns a signature, we stamp it into the header, and the <b>device verifies it against a burned-in key before flashing</b> &mdash; rejecting anything unsigned."
+        },
+        {
+          n: "2",
+          ht: "<b>Thirty seconds.</b> What you lead with, unprompted &mdash; the load-bearing ideas, no padding schemes.",
+          a: "The pipeline hands signing a <b>SHA&#8209;256 digest</b> &mdash; you sign the hash, never the whole package. The private key <b>never leaves the HSM</b>: the service sends a hash and gets back a signature, so a compromised signer can&rsquo;t exfiltrate the key. Keys are scoped <b>per tenant, per product type</b> through a four-table lookup, so a leak blasts one company, not the fleet. The signature is stamped into the header, and the real enforcer is the <b>device</b> &mdash; it verifies before it flashes and <b>rejects unsigned</b>. And the genuinely hard part isn&rsquo;t the signing, it&rsquo;s <b>key management</b>: rotation, and bounding the blast radius when a key leaks."
+        }
+      ],
+      hooks: {
+        lead: "The 30-second version leaves three threads loose <i>on purpose</i> &mdash; you&rsquo;re steering. Each is a tab you go deep on the moment they pull it:",
+        items: [
+          { q: "&ldquo;never leaves the HSM&rdquo;", d: "how HSMs work, and CloudHSM vs managed KMS", tab: "Trade-offs &middot; Numbers" },
+          { q: "&ldquo;per-tenant keys&rdquo;", d: "the four-table key model and the blast radius it buys", tab: "System Map &middot; Red Flags" },
+          { q: "&ldquo;verifies before flash&rdquo;", d: "device-side verification and how rejecting an update prevents bricking", tab: "Whiteboard &middot; Probe Drill" }
+        ]
+      },
+      foot: "<b>The skill isn&rsquo;t knowing one version.</b> <i>&ldquo;Walk me through it&rdquo;</i> is the next altitude up &mdash; the nine-step flow &mdash; and <b>key management</b> is the deepest zoom, where the real seniority shows. It&rsquo;s having all of them, and reading which one they want."
+    },
+    {
+      kind: "close",
+      k: "Land it",
+      t: "How to close &mdash; name the hard part",
+      lead: "When time&rsquo;s nearly up &mdash; or they ask <i>&ldquo;anything else?&rdquo;</i> &mdash; <b>don&rsquo;t just stop.</b> A proactive close is a seniority signal: summarize the boundary, name what you&rsquo;d watch, hand the wheel back. Thirty seconds, unprompted. Say each out loud before you reveal mine.",
+      items: [
+        {
+          n: "1",
+          ht: "<b>Summarize in one line.</b> Re-state the boundary so they remember the shape, not the detours.",
+          a: "&ldquo;So &mdash; sign the hash in an HSM, stamp the header, verify on the device before it flashes, keys scoped per tenant. That&rsquo;s the trust boundary.&rdquo;"
+        },
+        {
+          n: "2",
+          ht: "<b>Name the three you&rsquo;d watch.</b> Naming your own risks reads as senior &mdash; not insecure.",
+          a: "&ldquo;In production I&rsquo;d watch three things: <b>key rotation and compromise recovery</b> &mdash; the actual hard part, not the signing; the <b>downgrade surface</b>, since a signature proves authenticity, not freshness; and the <b>device verify path under an interrupted flash</b>, where A/B partitions and confirm-or-rollback earn their keep.&rdquo;"
+        },
+        {
+          n: "3",
+          ht: "<b>Say what&rsquo;s next, and what you cut.</b> Shows you scoped on purpose, not from missing it.",
+          a: "&ldquo;With more time I&rsquo;d chain this to a <b>hardware root of trust and secure boot</b>, and add a <b>transparency log</b> for auditable signatures. I left out the OTA transport and the pipeline itself &mdash; out of scope for the signing boundary. Where would you like to go deeper?&rdquo;"
+        }
+      ],
+      hooks: null,
+      foot: "<b>The close hands the wheel back</b> &mdash; <i>&ldquo;where would you like to go deeper?&rdquo;</i> &mdash; so the last minute is theirs. The tell: juniors stop at &ldquo;and the device verifies it&rdquo;; seniors name <b>key management as the hard part</b> and close on a <i>summary, a risk list, and an invitation.</i>"
+    }
+  ]
+};
+
+/* ============ topics/signing/bank.js -- topic 2 cross-pane BANK ============
+   The mock-run / mixed-fire / frame bank for topic 2. mockBeats + curveballs +
+   frames are signing-specific; cards/speak alias the LOCAL SIGN_CARDS / SIGN_SPEAK
+   (defined in drill.js, loaded before this in the bundle). publishBanks() seeds the
+   registry-owned globals from this object on switch. Offline-safe; 7-bit ASCII. */
+var TOPIC_SIGN_BANK = (function () {
+  var mockBeats=[
+   { tag:"FRAME", cue:"&ldquo;Design package signing &mdash; start wherever you like.&rdquo;",
+     task:"Frame the scope in one line, then give your one-sentence version.",
+     model:"<b>Frame:</b> the pipeline produces a package and its hash; signing makes that package tamper-proof so a device will only run authorized code. <b>One-liner:</b> the hash goes to an HSM that returns a signature, we stamp it into the header, and the device verifies it against a burned-in public key before flashing &mdash; rejecting anything unsigned.",
+     int:{q:"Why sign at all &mdash; if the download is over HTTPS, isn&rsquo;t it already secure?",a:"HTTPS secures the <b>channel</b>, not the <b>artifact</b>. It protects bytes in transit between two endpoints, but the moment the package leaves TLS &mdash; sitting in a CDN, a mirror, a compromised build server, or handed device-to-device &mdash; there&rsquo;s nothing binding those bytes to <i>us</i>. Signing binds authenticity to the artifact itself, so the device can verify origin and integrity no matter how the package reached it. Transport security and artifact trust are different problems."},int2:{q:"So why can&rsquo;t the device just trust whatever our server sends it?",a:"Because &lsquo;our server&rsquo; is not a durable trust anchor &mdash; servers get compromised, DNS gets spoofed, and a device in the field can&rsquo;t re-authenticate a backend on every boot. Trust has to live <b>on the device</b>, anchored to a public key it already holds, so it can decide <i>locally</i> whether a package is authentic. The signature moves the trust decision from &lsquo;did this come from a server I&rsquo;m talking to&rsquo; to &lsquo;is this signed by a key I trust&rsquo; &mdash; which survives a compromised server."} },
+   { tag:"STRUCTURE", cue:"&ldquo;Walk me through it.&rdquo;",
+     task:"Talk the whole flow, artifact to device &mdash; no code, just the spine.",
+     model:"Pipeline hands over the <b>hash</b> &rarr; resolve the key via the <b>four-table lookup</b> (per tenant, per product type) &rarr; the <b>HSM signs the hash</b> with a non-exportable key &rarr; stamp <b>signature + version + key id</b> into the header, payload untouched &rarr; deploy. On the device: <b>hash the payload, verify against the burned-in public key, check the version isn&rsquo;t a downgrade</b> &rarr; write the spare A/B slot, test-boot, <b>confirm or roll back</b>. Any failure &rarr; reject, keep the current image.",
+     int:{q:"A device family you&rsquo;ve never signed for lands &mdash; it only verifies PKCS#1 v1.5, but your default is PSS. What happens?",a:"Hand a v1.5-only device a PSS signature and it <b>rejects</b> a perfectly valid package &mdash; the verifier can&rsquo;t check a scheme it doesn&rsquo;t implement. So the signing service branches on <b>device family</b> and produces the padding <i>that family</i> verifies. It&rsquo;s a compatibility surface, not a preference: I sign what the fleet can check, and retire the old scheme as the fleet ages onto the new one. &lsquo;Just use the newest&rsquo; is exactly the trap."} },
+   { tag:"SCALE", cue:"&ldquo;A release drops to 50,000 devices and the HSM is pegged. What breaks first?&rdquo;",
+     task:"Name the first ceiling, then the fix &mdash; don&rsquo;t hand-wave &lsquo;it scales.&rsquo;",
+     model:"The ceiling is <b>HSM sign-ops per second</b> &mdash; not CPU, not bandwidth, because signing is <b>size-independent</b> (you sign a 32-byte digest). Past one partition&rsquo;s throughput you <b>queue the hashes and drain at a controlled rate</b>, or <b>add HSM partitions</b> and shard signing across them. Signing tolerates a short backlog, so a burst that would throttle becomes a queue that clears.",
+     int:{q:"Why doesn&rsquo;t a bigger instance or more bandwidth fix it &mdash; be specific.",a:"Because the work isn&rsquo;t in <i>your</i> process. The private-key operation happens <b>inside the HSM</b>, and you&rsquo;re rate-limited by <b>its</b> op/sec, not your app&rsquo;s. Resizing your box makes it wait on the HSM faster &mdash; same wall. The only real levers are <b>parallelism across HSM partitions</b> or <b>smoothing the burst with a queue</b>. Naming that the bottleneck is a resource you don&rsquo;t scale by resizing is the whole point."},int2:{q:"Do you even need to sign all 50,000 in real time?",a:"Almost never. You sign a package <b>once per key</b>, not once per device &mdash; 50,000 devices on one tenant&rsquo;s product type share <i>one</i> signature. So the real signing count is releases &times; keys, far below the device count. And even that tolerates a queue: buffer the sign requests, drain against the HSM, let the release complete <i>eventually</i>. The device fan-out is a <b>distribution</b> problem, not a signing one."} },
+   { tag:"FAILURE", cue:"&ldquo;A signing key leaks. Now what?&rdquo;",
+     task:"Walk the blast radius, then the recovery that makes a leak survivable.",
+     model:"<b>Bound, recover, verify.</b> The radius is <b>one tenant&rsquo;s product type</b> &mdash; that&rsquo;s why keys are scoped that way &mdash; and it&rsquo;s bounded in time by rotation speed. Recover by <b>rotating</b>: provision a new key, sign new packages with it, <b>revoke the old at the trust anchor</b>. Devices verify against the anchor, so once it stops certifying the old key, forgeries stop being trusted &mdash; <b>no re-flash</b>. Then audit anything the leaked key signed during the window.",
+     int:{q:"Before rotation finishes, the attacker signs a malicious package. How do devices not accept it?",a:"That&rsquo;s the hard window, and it&rsquo;s where the <b>downgrade defense plus monitoring</b> earn their keep: a forged package still has to beat the <b>monotonic version</b>, so it can&rsquo;t simply replace what&rsquo;s running with something older, and I&rsquo;d alarm on the signing-volume anomaly. The airtight move is to push a <b>new legitimate version</b> that supersedes anything the attacker could forge, then complete revocation. Rotation isn&rsquo;t instant &mdash; the <b>scoping</b> is what keeps &lsquo;not instant&rsquo; from being &lsquo;catastrophic.&rsquo;"},int2:{q:"What if it was the <b>root</b> key that leaked?",a:"Different, far worse incident. The root certifies signing keys, so a root leak undermines the <b>anchor itself</b> &mdash; you may have to re-establish trust on devices, which is exactly the fleet-wide pain you designed to avoid. Which is <i>why the root is offline and air-gapped</i>, used almost never, behind a human ceremony. The two-tier model is the firewall: day-to-day exposure is on cheap, rotatable, scoped leaf keys, never the anchor."} },
+   { tag:"CURVEBALL", theme:"Downgrade", cue:"&ldquo;An attacker re-pushes an old firmware with a known, since-patched CVE. It&rsquo;s validly signed by your real key. Stop it.&rdquo;",
+     task:"Reframe the premise out loud, then give the real mechanism.",
+     model:"The premise to say aloud: a signature proves <b>authenticity, not freshness</b> &mdash; that old package really was signed by us, so the signature check passes. The defense is a <b>monotonic version</b> carried <i>inside the signed header</i>: the device refuses any version below what it&rsquo;s running. Because the version is under the signature, an attacker can&rsquo;t re-stamp the old package as &lsquo;newer&rsquo; without breaking the signature.",
+     int:{q:"Why does the version have to be <i>inside</i> the signed region &mdash; why not just a header field the device reads?",a:"An unsigned header field is <b>attacker-controlled</b> &mdash; they&rsquo;d bump the number on the old, vulnerable package and it would look current, sail past the check, and downgrade the device. Binding the version <b>under the signature</b> ties freshness to authenticity: tamper with the version and the signature fails to verify. That&rsquo;s the entire trick &mdash; the version is only trustworthy because it&rsquo;s signed. And the device&rsquo;s &lsquo;current version&rsquo; floor lives in tamper-resistant storage so it, too, can&rsquo;t be rolled back."} },
+   { tag:"CLOSE", cue:"&ldquo;Sum it up &mdash; and what would you watch in prod?&rdquo;",
+     task:"Two-sentence close, then the one thing you&rsquo;d alarm on.",
+     model:"It&rsquo;s a trust boundary: the pipeline makes the bytes, an HSM-held key signs the hash, and the <b>device</b> enforces it &mdash; verifying before it flashes and rejecting anything unsigned, downgraded, or forged. In prod I&rsquo;d watch <b>signing volume per key</b> &mdash; an anomaly there is the earliest signal of a compromised signer, the failure mode that matters most because the key is the whole design.",
+     int:{q:"You&rsquo;ve got a week, not a month. Cut one thing you described to ship &mdash; what goes?",a:"The <b>offline-root ceremony and multi-tier key hierarchy</b> can wait &mdash; I&rsquo;d ship with HSM-held per-tenant keys and a documented (if manual) rotation, and add the formal air-gapped root next. What I would <b>not</b> cut is <b>device-side verify-before-flash</b> or the <b>monotonic-version downgrade defense</b> &mdash; those are load-bearing for the entire trust model, not nice-to-haves. Signing without on-device verification is theatre, and no-downgrade-defense means a signed old CVE walks right back in. Knowing which parts are the contract and which are the hardening is the answer."} }
+  ];
+  var mockCurveIdx=0; for(var _ci=0;_ci<mockBeats.length;_ci++){ if(mockBeats[_ci].tag==="CURVEBALL") mockCurveIdx=_ci; }
+  var curveballs=[ mockBeats[mockCurveIdx],
+    { tag:"CURVEBALL", theme:"Supply chain", cue:"&ldquo;How do you know the build you signed is the code your engineers actually wrote &mdash; and not something a compromised CI slipped in?&rdquo;",
+      task:"Name what signing does and doesn&rsquo;t prove, then the layer that closes the gap.",
+      model:"Signing proves the artifact is <b>authentic and untampered from the moment it was signed</b> &mdash; it does <b>not</b> prove that what you signed is what you <i>intended</i>. If CI is compromised, you&rsquo;ll faithfully sign malware. Closing that gap is <b>provenance</b>: sign in an <b>isolated, trusted builder</b>, produce a <b>build attestation</b> (in-toto / SLSA provenance recording the source commit, builder, and inputs), and verify that attestation before signing or before deploy. Keyless signing with a <b>transparency log</b> (Sigstore/Rekor) makes every signature publicly auditable.",
+      int:{q:"So signing alone isn&rsquo;t enough &mdash; what&rsquo;s the honest one-line summary?",a:"<b>Signing answers &lsquo;is this the artifact we released?&rsquo; &mdash; provenance answers &lsquo;is the artifact we released the one we meant to build?&rsquo;</b> You need both: a signature binds trust to the bytes, and an attestation binds the bytes to a trusted build of a known source. A signature over a compromised build is a correctly-signed compromise. The senior move is naming that boundary instead of claiming the signature covers it."} },
+    { tag:"CURVEBALL", theme:"Offline fleet", cue:"&ldquo;You need to rotate a signing key, but a chunk of the fleet is offline for weeks at a time. How?&rdquo;",
+      task:"Rotate without assuming connectivity &mdash; and say what bounds the risk meanwhile.",
+      model:"Anchor trust to the <b>root</b>, not the leaf key, so the new signing key is trusted the moment the anchor certifies it &mdash; no per-device action. For offline devices, lean on <b>supersession</b>: sign the next legitimate release with the new key and let the <b>monotonic version</b> ensure that when the device does come online, the newest authorized package is what it takes. Don&rsquo;t depend on online revocation lists a disconnected device can&rsquo;t fetch.",
+      int:{q:"A device is offline for a year, misses the rotation entirely, then reconnects. What happens &mdash; and what&rsquo;s the risk?",a:"On reconnect it fetches the current release, which is signed by the <b>new</b> key the anchor certifies, verifies fine, and updates &mdash; forward, never a downgrade. The residual risk is the <b>exposure window</b>: if the old key was compromised, that device was reachable with forged-but-old packages the whole time, though the monotonic version still blocks a straight downgrade. That&rsquo;s the honest limit of offline fleets: you can guarantee they <i>catch up safely</i>, not that they were <i>never targeted</i> &mdash; which is another argument for short-lived, tightly-scoped keys."} },
+    { tag:"CURVEBALL", theme:"Tenant isolation", cue:"&ldquo;Tenant A&rsquo;s key signed a package that ended up trusted on Tenant B&rsquo;s devices. How is that even possible, and how do you prevent it?&rdquo;",
+      task:"Diagnose the two ways it happens, then the fix on each side.",
+      model:"Two failure modes. One: a <b>key-resolution bug</b> &mdash; the four-table lookup returned the wrong key, so A&rsquo;s package got signed with a key B&rsquo;s devices also trust. Two: <b>trust anchors aren&rsquo;t tenant-scoped</b> &mdash; B&rsquo;s devices trust a key/root that also covers A. Fix on the signing side: verify the resolved key&rsquo;s scope matches the request&rsquo;s tenant <b>before</b> signing, and put the tenant/key-id in the signed header. Fix on the device side: a device only trusts packages whose <b>key id is certified for its tenant/product type</b>, not any key under a shared root.",
+      int:{q:"How does the device actually enforce &lsquo;only my tenant&rsquo;s key&rsquo; &mdash; it just has a public key burned in?",a:"You don&rsquo;t give every device the same anchor. Either the device is provisioned with the <b>public key (or intermediate) scoped to its tenant/product type</b>, so a package signed by another tenant&rsquo;s key simply won&rsquo;t verify against what <i>this</i> device holds; or the signed header carries a <b>key id / tenant id</b> and the device checks it&rsquo;s the one it&rsquo;s bound to before verifying. Isolation is only real if it&rsquo;s enforced <b>at the device&rsquo;s trust anchor</b>, not just assumed at sign time &mdash; cross-tenant trust is a provisioning decision, and getting it wrong is how one tenant&rsquo;s leak becomes another&rsquo;s problem."} }
+  ];
+  var mockFrameIdx=0; for(var _fi=0;_fi<mockBeats.length;_fi++){ if(mockBeats[_fi].tag==="FRAME") mockFrameIdx=_fi; }
+  var frames=[ mockBeats[mockFrameIdx].cue,
+    "&ldquo;We ship firmware to devices in the field. Design how you make sure a device only ever runs code we actually authorized.&rdquo;",
+    "&ldquo;Design a code-signing system for over-the-air firmware updates to a fleet of payment terminals.&rdquo;",
+    "&ldquo;How do you make a software package tamper-proof from the moment it&rsquo;s built to the moment a device runs it?&rdquo;"
+  ];
+  return { cards: SIGN_CARDS, speak: SIGN_SPEAK, curveballs: curveballs, mockBeats: mockBeats, frames: frames };
+})();
+
+/* topics/signing/register.js -- registers topic 2 (Package Signing). NOT the first
+   topic, so register() does NOT publishBanks or seed TOPIC_CMP_NOTES -- topic 1 owns
+   boot. The switcher shows this the moment it registers; setTopic('signing') then
+   reseeds the working set and applies this identity. */
+TopicRegistry.register({
+  id: 'signing',
+  identity: TOPIC_SIGN_IDENTITY,
+  data: {
+    walk: TOPIC_SIGN_WALK, drill: TOPIC_SIGN_DRILL, wb: TOPIC_SIGN_WB, sys: TOPIC_SIGN_SYS,
+    trade: TOPIC_SIGN_TRADE, model: TOPIC_SIGN_MODEL, num: TOPIC_SIGN_NUM, rf: TOPIC_SIGN_RF,
+    open: TOPIC_SIGN_OPEN, bank: TOPIC_SIGN_BANK
   }
 });
 

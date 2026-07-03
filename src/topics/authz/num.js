@@ -20,12 +20,12 @@ var TOPIC_AUTHZ_NUM = {
     var whaleM = Rm * share / 100;
     var auditM = rps * 86400 / 1e6;
     return [
-      { k: 'Rows per average tenant', v: fmt.n(rowsPerTenant), u: 'rows', n: 'total rows \\u00F7 tenants \\u2014 the scoped query\\u2019s working set', over: false },
-      { k: 'Tenant-index speedup', v: fmt.n(N), u: '\\u00D7', n: 'a tenant-leading index seeks 1 tenant\\u2019s rows instead of scanning all ' + fmt.n(Rm) + 'M', over: false },
-      { k: 'Blast radius of ONE missing filter', v: fmt.n(blastM), u: 'M rows', n: 'a single forgotten WHERE exposes every OTHER tenant\\u2019s rows \\u2014 this is the whole risk', over: true },
-      { k: 'Cross-tenant share of the dataset', v: fmt.n(crossPct), u: '%', n: 'of all rows belong to other tenants \\u2014 the fraction a missing filter leaks', over: crossPct > 90 },
-      { k: 'The whale\\u2019s rows', v: fmt.n(whaleM), u: 'M rows', n: 'largest tenant \\u2014 a tenant-led index no longer narrows here; add targeted indexes or silo it', over: false },
-      { k: 'Access events/day to audit', v: fmt.n(auditM), u: 'M/day', n: 'peak rps \\u00D7 86,400 \\u2014 the trail that lets you scope a breach and catch id-scanning', over: false }
+      { k: 'Rows per average tenant', v: fmt.n(rowsPerTenant), u: 'rows', n: 'total rows \u00F7 tenants \u2014 the scoped query\u2019s working set', over: false },
+      { k: 'Tenant-index speedup', v: fmt.n(N), u: '\u00D7', n: 'a tenant-leading index seeks 1 tenant\u2019s rows instead of scanning all ' + fmt.n(Rm) + 'M', over: false },
+      { k: 'Blast radius of ONE missing filter', v: fmt.n(blastM), u: 'M rows', n: 'a single forgotten WHERE exposes every OTHER tenant\u2019s rows \u2014 this is the whole risk', over: true },
+      { k: 'Cross-tenant share of the dataset', v: fmt.n(crossPct), u: '%', n: 'of all rows belong to other tenants \u2014 the fraction a missing filter leaks', over: crossPct > 90 },
+      { k: 'The whale\u2019s rows', v: fmt.n(whaleM), u: 'M rows', n: 'largest tenant \u2014 a tenant-led index no longer narrows here; add targeted indexes or silo it', over: false },
+      { k: 'Access events/day to audit', v: fmt.n(auditM), u: 'M/day', n: 'peak rps \u00D7 86,400 \u2014 the trail that lets you scope a breach and catch id-scanning', over: false }
     ];
   }
 };

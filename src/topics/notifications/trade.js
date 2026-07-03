@@ -1,0 +1,30 @@
+/* topics/notifications/trade.js -- topic 5 trade data. decisions[].{q, opts:[{n,when}],
+   tell}; the "pick when" pill is in the renderer. Grounded in the dual-channel reality
+   (poll vs push, one-topic-per-domain, at-least-once+idempotent, instant vs digest,
+   fallback, enqueue). q uses single quotes with unescaped class="vs". 7-bit ASCII. */
+var TOPIC_NOTIF_TRADE = {
+  lead: "The notification decisions an interviewer drills &mdash; each with the <b>axis</b> that picks a side. The senior move is naming what forces the choice; the tell that sinks you is defending one channel or one guarantee as universally right, because here the honest answer is almost always about the <b>latency and criticality the notification actually needs</b>.",
+  decisions: [
+    { q: 'Poll <span class="vs">vs</span> push (in-app delivery)',
+      opts: [{ n: 'Poll', when: 'it&rsquo;s a <b>notification badge</b> and a minute of latency is fine &mdash; a stateless query against the unread index every ~60s, no connection to maintain. The right default.' }, { n: 'Push (WebSocket/SSE)', when: 'the product needs <b>sub-second</b> delivery &mdash; a chat, a live feed &mdash; and you accept a connection per active user and delivery-on-write plumbing.' }],
+      tell: "Polling load grows as you shorten the interval (most polls find nothing), so poll for a badge and push only when the latency requirement is genuinely real-time. With push, <b>persist first</b> &mdash; it&rsquo;s an accelerator, not the source of truth." },
+    { q: 'One topic per domain <span class="vs">vs</span> per-channel topics',
+      opts: [{ n: 'One topic per event domain', when: 'you want <b>publishers channel-ignorant</b> &mdash; they emit an event, subscriber filter policies route to channels, and a new channel is a new subscription with zero publisher change.' }, { n: 'Per-channel topics/queues', when: 'you need <b>per-channel SLA isolation</b> (transactional SMS vs marketing email) &mdash; give each a queue with its own timeout and concurrency, fed from the one topic.' }],
+      tell: "Default to one topic with subscriber-side filter policies (publishers stay ignorant of channels); split to per-channel <i>queues</i> for SLA, and separate <i>topics</i> only when filter policies stop scaling or hit the key limit." },
+    { q: 'At-least-once + idempotent <span class="vs">vs</span> exactly-once',
+      opts: [{ n: 'At-least-once + idempotency', when: '<b>always</b> &mdash; retry until acked so nothing is lost, dedupe on a content-derived key so duplicates don&rsquo;t reach the user. The achievable, correct guarantee.' }, { n: 'Exactly-once delivery', when: '<b>never claim it end-to-end</b> &mdash; it&rsquo;s impossible across a network; you can&rsquo;t tell a lost ack from a failed send. Exactly-once <i>effect</i> is what you build.' }],
+      tell: "There&rsquo;s really one answer: at-least-once delivery plus idempotent processing equals effectively exactly-once. Claiming exactly-once <i>delivery</i> is the red flag; naming exactly-once <i>effect</i> is the senior move." },
+    { q: 'In-app in the main Postgres <span class="vs">vs</span> a dedicated store',
+      opts: [{ n: 'The main Postgres (row per recipient)', when: 'volume is moderate and a <b>partial index on unread</b> keeps the badge query cheap &mdash; simplest, transactional with the rest of your data, ~100 bytes/row.' }, { n: 'A dedicated store (Cassandra/DynamoDB)', when: 'notification volume dwarfs the rest of the app and would <b>bloat the primary</b> &mdash; a write-optimized store with per-user partitioning and TTL for old notifications scales the fan-in independently.' }],
+      tell: "Start in Postgres with a partial unread index &mdash; it&rsquo;s enough for a long time and keeps things simple. Move to a dedicated write-optimized store when notification writes become a meaningful fraction of your primary&rsquo;s load, not before." },
+    { q: 'Instant <span class="vs">vs</span> digest',
+      opts: [{ n: 'Instant', when: 'the notification is <b>transactional or urgent</b> &mdash; a login code, a payment, a security alert &mdash; where latency matters and one-at-a-time is correct.' }, { n: 'Digest (hourly/daily)', when: 'it&rsquo;s a <b>high-volume, low-urgency</b> stream &mdash; activity on a busy project &mdash; where 200/hour is unusable and one summary is kind. A per-category preference.' }],
+      tell: "Make it a per-category preference: instant for transactional, digest for high-volume feeds. Keep the in-app instant and complete either way; only batch the email/push into the summary." },
+    { q: 'Fire every channel <span class="vs">vs</span> smart fallback',
+      opts: [{ n: 'Fire every enabled channel', when: 'the notification is <b>critical</b> and redundancy beats politeness &mdash; a security alert where you&rsquo;d rather over-notify than risk it being missed.' }, { n: 'Smart fallback (cascade)', when: 'the default &mdash; in-app first, email only if unseen in a window, cancel the pending email if opened. Reach the user <b>once</b>, on the channel that worked.' }],
+      tell: "Cascade is the considerate default; firing all channels is reserved for genuinely critical notifications. The cascade needs an OPENED event and a <b>scheduled, cancelable</b> send &mdash; if your email path is fire-immediately, you can&rsquo;t cancel." },
+    { q: 'Send synchronously <span class="vs">vs</span> enqueue',
+      opts: [{ n: 'Enqueue (async)', when: '<b>almost always</b> &mdash; the producer&rsquo;s request returns immediately, and a worker sends with retries and DLQ. Delivery latency and provider failures never block the producer.' }, { n: 'Synchronous send', when: '<b>rarely</b> &mdash; only if the producer genuinely must confirm delivery inline (and even then, prefer enqueue-and-await-status). Blocking on SES in a request path is a smell.' }],
+      tell: "Enqueue and let a worker deliver &mdash; sending in the producer&rsquo;s request path couples its latency and availability to the email provider&rsquo;s. Fire the event, return, deliver asynchronously with retries." }
+  ]
+};

@@ -2731,6 +2731,798 @@ TopicRegistry.register({
 });
 
 
+/* topics/authz.js -- topic 3 (Tenant Authorization) include wrapper. identity + 9
+   per-pane data slices + the cross-pane bank, THEN register. drill.js MUST precede
+   bank.js (bank aliases AUTHZ_CARDS / AUTHZ_SPEAK). Loaded after topics 1-2 so topic
+   1 stays the boot/default topic; registering here adds it to the switcher. */
+/* ============ topics/authz/identity.js -- topic 3 (Tenant Authorization) ============
+   The switchable light-DOM identity for topic 3, same contract as topic 1's
+   TOPIC_CP_IDENTITY. applyIdentity() rewrites the locator / h1 / sub / thesis /
+   spine / cram title / companion notes from this object on every switch. Grounded
+   in the ICS / Invenco multi-tenant platform (50k+ terminals, Cognito tenant claim
+   via a Lambda authorizer, DynamoDB LeadingKeys, shared data-access layer that
+   injects the tenant predicate). Offline-safe; 7-bit ASCII (entities + \uXXXX). */
+var TOPIC_AUTHZ_IDENTITY = {
+  index: 3,
+  total: 8,
+  locatorTail: 'access boundary',
+  title: 'Tenant Authorization',
+  h1: 'Tenant Authorization',
+  sub: '<b>The authorization flow</b> &rarr; <b>graded follow-up chains</b> &rarr; <b>whiteboard</b> &rarr; <b>zoom out</b> to where the access boundary sits, and the pivots an interviewer rides from a token into predicates, isolation models, and the confused-deputy attack.',
+  companionTopic: 'Tenant Authorization',
+  thesis: 'The layer that keeps one tenant out of another&rsquo;s data &mdash; identity from the verified token, scope injected into every query, deny-by-default so a forgotten filter fails loud.',
+  spine: [
+    'Tenant identity comes from the <b>verified token</b>, never client input &mdash; the claim is trusted because the token is signed.',
+    'Authorization is a <b>query predicate</b>, not a one-time gate &mdash; the tenant scope is injected into every read and write.',
+    '<b>Deny-by-default</b> &mdash; no tenant context throws, it never runs unscoped; a forgotten filter fails loud, not silent.',
+    'A cross-tenant read returns <b>404, not 403</b> &mdash; a 403 would leak that the object exists.'
+  ],
+  cramTitle: 'Tenant Authorization',
+  reportTitle: 'Tenant Authorization',
+  cmpNotes: {
+    walk: ['The authorization flow', 'Token to audit, one step at a time \u2014 the mechanics you narrate before anyone cuts in.', 'Say the reframe out loud \u2014 \u201Cauthorization isn\u2019t a gate we check, it\u2019s a predicate we inject into every query.\u201D That line is the whole design.'],
+    drill: ['Probe Drill', 'Graded follow-ups on the trusted claim, isolation models, and the confused-deputy attack \u2014 the ones that separate a passing answer from a Staff signal.', 'Commit to an answer before you reveal \u2014 name the attack you\u2019re defending against (IDOR / BOLA), not just the mechanism.'],
+    wb: ['Whiteboard', 'Rebuild the whole enforcement chain from memory \u2014 the cues, nothing in front of you.', 'Draw the boundary first \u2014 the request on one side, the tenant\u2019s data on the other, the verified claim crossing once. Recall is the test, not recognition.'],
+    sys: ['System Map', 'Zoom out: authorization sits between the identity that proves who you are and the data layer that enforces what you can touch.', 'Lead with the boundary, not the boxes \u2014 \u201Cthe token proves identity, the data layer enforces scope, the database is the backstop.\u201D'],
+    trade: ['Trade-offs', 'The decisions they drill \u2014 silo vs pool, RLS vs app-layer, RBAC vs ABAC \u2014 each with the switch condition.', 'Always say \u201Cpick when\u201D \u2014 name the constraint that flips the choice, never defend one isolation model as universally right.'],
+    model: ['Model Answers', 'Full spoken scripts \u2014 the beats, in order, the way you\u2019d actually say them.', 'Steal the frame, not the words \u2014 headline first (\u201Cidentity from the token, scope in every query\u201D), then the one attack you\u2019d name.'],
+    num: ['Numbers', 'Back-of-envelope the isolation math \u2014 and know the blast radius of a single missing filter.', 'Lead with the blast radius \u2014 one forgotten WHERE exposes every other tenant\u2019s rows, and the tenant-leading index is what makes the scoped query fast.'],
+    rf: ['Red Flags', 'What sinks the round \u2014 trusting a client-supplied tenant id, checking authz per endpoint, a 403 that leaks existence \u2014 and what to say instead.', 'Name what the interviewer hears \u2014 \u201Ctrusts the client\u2019s tenant id\u201D is the fastest no-hire in a security round.'],
+    open: ['30-Second', 'The opener and the close \u2014 matched to the altitude the question is asked at.', 'Match the altitude \u2014 open at the access boundary, not the JWT library, and land on isolation-at-every-layer as the real hard part.']
+  }
+};
+
+/* topics/authz/walk.js -- topic 3 WALKTHROUGH data. steps[] is the guided trace of
+   the authorization flow (request -> authorizer verifies token -> tenant context ->
+   data layer injects predicate -> deny-by-default -> object-level check -> 404 not
+   403 -> DB backstop -> audit); modelScript[] is the spoken model answer (plain
+   beats, the interviewer .mq line, then the .mbeat.ans -- which MUST be LAST, the
+   last-child CSS depends on it). Offline-safe; 7-bit ASCII (entities + \uXXXX). */
+var TOPIC_AUTHZ_WALK = {
+  steps: [
+    { k:"Step 1 / 9", t:"The authorizer runs first",
+      flow:'<span class="fb n">request + token</span><span class="arr">&rarr;</span><span class="fb p">authorizer</span><span class="arr">&rarr;</span><span class="fb t">tenant context</span><span class="arr">/</span><span class="fb r">401 no token</span>',
+      ins:'Before any handler runs, an <b>authorizer</b> intercepts &mdash; a Lambda authorizer, or middleware. It&rsquo;s the single choke point where identity is established, so authorization can&rsquo;t be forgotten per route.',
+      deep:'Running the check <b>before</b> business logic is the whole point: authentication and tenant resolution happen in <b>one place</b>, not scattered across handlers. A request with no token or an invalid one is rejected at the door with 401 &mdash; it never reaches code that could leak. Centralizing the check is what makes &ldquo;every endpoint is protected&rdquo; a structural guarantee, not a discipline.' },
+    { k:"Step 2 / 9", t:"Verify the token, extract the claim",
+      flow:'<span class="fb n">token</span><span class="arr">&rarr;</span><span class="fb p">verify signature (JWKS)</span><span class="arr">&rarr;</span><span class="fb t">trusted claims</span><span class="arr">&middot;</span><span class="fb a">tenant from signed claim</span>',
+      ins:'The authorizer verifies the token&rsquo;s signature against the issuer&rsquo;s public key (JWKS), then reads the tenant from a <b>signed claim</b> &mdash; never from a header or body the client controls. The claim is trustworthy precisely because forging it would break the signature.',
+      code:'<span class="k">const</span> claims = <span class="k">await</span> verifyJwt(token, JWKS);  <span class="c">// throws on bad signature</span>\n<span class="k">const</span> tenantId = claims[<span class="s">\'custom:tenant_id\'</span>];  <span class="c">// a SIGNED claim</span>\n<span class="k">if</span> (!tenantId) <span class="k">throw</span> <span class="k">new</span> AuthError(<span class="hl">401</span>, <span class="s">\'no tenant in token\'</span>);\n<span class="c">// NEVER: const tenantId = req.headers[\'x-tenant-id\']  &lt;- client-controlled</span>',
+      cap:'The line that matters is what you <i>don&rsquo;t</i> do &mdash; read the tenant from a header. It&rsquo;s trusted only because it rode inside a signed token; take it from client input and the confused-deputy attack is open.' },
+    { k:"Step 3 / 9", t:"Establish tenant context",
+      flow:'<span class="fb t">tenant_id</span><span class="arr">&rarr;</span><span class="fb p">AsyncLocalStorage.run({tenant})</span><span class="arr">&rarr;</span><span class="fb a">propagates through the request</span>',
+      ins:'The verified tenant goes into per-request context &mdash; <b>AsyncLocalStorage</b> in Node, the equivalent of thread-local. It propagates through every async call in the request without being passed as a parameter, so the data layer can read it anywhere.',
+      deep:'This is the plumbing that makes &ldquo;inject the scope everywhere&rdquo; practical. Middleware calls <code>tenantStore.run({tenant}, next)</code> once; any code downstream &mdash; a repository three calls deep &mdash; reads <code>getStore().tenant</code>. Each request gets its own isolated store, so there&rsquo;s no cross-contamination under concurrency. It&rsquo;s the same mechanism OpenTelemetry uses to propagate a trace context.' },
+    { k:"Step 4 / 9", t:"The data layer injects the predicate",
+      flow:'<span class="fb n">query</span><span class="arr">&rarr;</span><span class="fb p">layer reads context</span><span class="arr">&rarr;</span><span class="fb t">WHERE tenant_id = ctx.tenant</span><span class="arr">&middot;</span><span class="fb a">scoped result</span>',
+      ins:'Here&rsquo;s the reframe: authorization isn&rsquo;t a check the handler performs, it&rsquo;s a <b>predicate the shared data layer injects into every query</b>. A developer writes <code>findOrders()</code>; the layer silently adds the tenant filter.',
+      code:'<span class="c">// ORM extension / global scope -- runs on every read and write</span>\nprisma.<span class="hl">$extends</span>({ query: { $allModels: {\n  findMany({ args, query }) {\n    <span class="k">const</span> { tenant } = tenantStore.getStore();      <span class="c">// trusted context</span>\n    args.where = { ...args.where, tenantId: tenant };  <span class="c">// injected scope</span>\n    <span class="k">return</span> query(args);\n} } } });',
+      cap:'The developer literally <i>cannot</i> forget the tenant filter, because they never write it. Moving the scope out of business logic and into the data layer turns isolation from a per-query discipline into a property of the system.' },
+    { k:"Step 5 / 9", t:"Deny-by-default",
+      flow:'<span class="fb r">no context</span><span class="arr">&rarr;</span><span class="fb r">throw</span><span class="arr">&middot;</span><span class="fb a">never runs unscoped</span><span class="arr">/</span><span class="fb t">has context &rarr; scoped</span>',
+      ins:'The accessor <b>throws</b> if there&rsquo;s no tenant context &mdash; it never falls back to an unscoped query. A bug that loses the context becomes a loud failure, not a silent full-table leak.',
+      code:'<span class="k">const</span> store = tenantStore.getStore();\n<span class="k">if</span> (!store?.tenant)\n  <span class="k">throw</span> <span class="k">new</span> Error(<span class="s">\'no tenant context -- called outside request scope\'</span>);\n<span class="c">// only reached WITH a tenant; an unscoped query is unreachable</span>',
+      cap:'Deny-by-default is the difference between a missing filter that leaks everything and one that crashes the request. You engineer it so the unsafe path <i>doesn&rsquo;t exist</i>, rather than trusting every caller to remember.' },
+    { k:"Step 6 / 9", t:"Object-level authorization",
+      flow:'<span class="fb n">fetch by id</span><span class="arr">&rarr;</span><span class="fb t">resource.tenant === ctx.tenant?</span><span class="arr">&rarr;</span><span class="fb a">ownership?</span><span class="arr">/</span><span class="fb r">deny</span>',
+      ins:'Even with the predicate, a direct <b>fetch-by-id</b> gets a second check: does this resource belong to the caller&rsquo;s tenant, and does the caller own it (or hold the role)? That&rsquo;s the object-level authorization the predicate alone doesn&rsquo;t cover for singleton lookups.',
+      deep:'The predicate scopes list queries; a <code>getById(params.id)</code> still needs an explicit <code>resource.tenantId === ctx.tenant</code> assertion, because the id came from the client. This is exactly <b>BOLA</b> &mdash; Broken Object-Level Authorization, OWASP API&nbsp;#1 &mdash; the confused deputy where an authenticated user of tenant A requests tenant B&rsquo;s object by id. The rule: the id is a <i>request</i>, not an authorization; verify ownership server-side every time.' },
+    { k:"Step 7 / 9", t:"404, not 403, on cross-tenant",
+      flow:'<span class="fb r">cross-tenant access</span><span class="arr">&rarr;</span><span class="fb p">log the attempt</span><span class="arr">&rarr;</span><span class="fb t">respond 404</span><span class="arr">&middot;</span><span class="fb a">existence hidden</span>',
+      ins:'When the object-level check fails across tenants, you return <b>404, not 403</b>. A 403 &ldquo;forbidden&rdquo; confirms the object exists; a 404 reveals nothing. The distinction is a real information-leak control.',
+      deep:'A 403 tells an attacker &ldquo;this id is real, you just can&rsquo;t see it&rdquo; &mdash; which itself enumerates valid ids across tenants. A 404 makes a cross-tenant object indistinguishable from a nonexistent one. You <b>log the attempt</b> internally (it&rsquo;s a signal), but externally the response is the same as a miss. Same idea as &ldquo;invalid username or password&rdquo; instead of &ldquo;no such user.&rdquo;' },
+    { k:"Step 8 / 9", t:"The database backstop",
+      flow:'<span class="fb t">app-layer scope</span><span class="arr">+</span><span class="fb p">DB enforcement</span><span class="arr">&rarr;</span><span class="fb a">RLS FORCE (PG) / LeadingKeys (DDB)</span>',
+      ins:'The app layer is the primary enforcement, but defense-in-depth pushes a copy into the database: Postgres <b>Row-Level Security</b>, or DynamoDB&rsquo;s <b>dynamodb:LeadingKeys</b> IAM condition. Even if application code has a bug, the database refuses cross-tenant rows.',
+      code:'<span class="c">-- Postgres RLS: enforced by the engine, even on a forgotten WHERE</span>\n<span class="k">ALTER TABLE</span> orders <span class="k">ENABLE ROW LEVEL SECURITY</span>;\n<span class="k">ALTER TABLE</span> orders <span class="hl">FORCE ROW LEVEL SECURITY</span>;  <span class="c">-- owner too</span>\n<span class="k">CREATE POLICY</span> tenant_iso <span class="k">ON</span> orders\n  <span class="k">USING</span> (tenant_id = current_setting(<span class="s">\'app.tenant\'</span>)::uuid);\n<span class="c">-- per txn: SET LOCAL app.tenant = \'...\';  (not SET -- pool leakage)</span>',
+      cap:'RLS only helps if you <b>FORCE</b> it (it skips owners by default), connect as a non-owner, and <code>SET LOCAL</code> per transaction so context doesn&rsquo;t leak across a pooled connection. On DynamoDB the parallel is <b>LeadingKeys</b> &mdash; but <code>Scan</code> bypasses it, so scan less.' },
+    { k:"Step 9 / 9", t:"Audit + anomaly detection",
+      flow:'<span class="fb n">every access</span><span class="arr">&rarr;</span><span class="fb p">structured log</span><span class="arr">&rarr;</span><span class="fb t">cross-tenant attempt flagged</span><span class="arr">&middot;</span><span class="fb a">id-scan detected</span>',
+      ins:'Every cross-tenant attempt is <b>logged</b> (a detective control and compliance evidence), and a user hitting many different object ids rapidly is <b>flagged</b> &mdash; that pattern is automated IDOR scanning.',
+      deep:'Authorization isn&rsquo;t just prevention; it&rsquo;s <b>detection</b>. You log who accessed what, segregate audit trails per tenant, and alarm on the signatures of an attack: a spike in 404s from one user, access to ids outside the caller&rsquo;s normal range, a burst of distinct-object lookups. The audit trail is what turns &ldquo;we think isolation held&rdquo; into &ldquo;here&rsquo;s the record&rdquo; &mdash; and it&rsquo;s the artifact regulators ask for.' }
+  ],
+  modelScript: [
+    { ml: 'Frame it before diving', t: '"Before I design it &mdash; I&rsquo;ll assume identity comes from a verified token with a tenant claim, we&rsquo;re pooled into shared tables, and I own the data-access layer. Stop me if any of that&rsquo;s off."' },
+    { ml: 'Headline in one breath', t: '"At a high level: authorization isn&rsquo;t a gate I check per handler &mdash; it&rsquo;s a <b>predicate the shared data layer injects into every query</b>. Identity comes from the <b>verified token</b>, the tenant scope is added automatically, and it&rsquo;s <b>deny-by-default</b> so a forgotten filter crashes rather than leaks."' },
+    { ml: 'Walk the path', t: '"Concretely &mdash; the authorizer verifies the token and pulls the tenant from a <b>signed claim</b>, never a header. I put it in per-request context, and the repository layer injects <code>WHERE tenant_id = ctx.tenant</code> on every read and write. A developer writes <code>findOrders()</code> and the scope is already there &mdash; they can&rsquo;t forget it because they never write it."' },
+    { ml: 'Name the risk yourself', t: '"The attack I&rsquo;d flag without being asked is the <b>confused deputy</b> &mdash; an authenticated user of tenant A asking for tenant B&rsquo;s object by id. The predicate covers list queries; a fetch-by-id still needs an explicit <b>ownership check</b>, and a cross-tenant miss returns <b>404, not 403</b> so I don&rsquo;t leak that the object exists. That&rsquo;s BOLA, OWASP&rsquo;s number one."' },
+    { ml: 'Name the trade-off line', t: '"The isolation model isn&rsquo;t my preference &mdash; it&rsquo;s set by the tenant. I <b>pool</b> the long tail for cost and one-migration agility, and <b>silo</b> the biggest tenants and anyone with a hard compliance line. I&rsquo;d say that before they ask &lsquo;why not a database per tenant.&rsquo;"' },
+    { ml: 'Be honest about the ceiling', t: '"This holds as long as the tenant scope is on the <b>leading edge of the index</b> &mdash; <code>WHERE tenant_id = ?</code> has to hit a contiguous range, or a big tenant&rsquo;s query scans the whole table. And the real operational hard part isn&rsquo;t the query &mdash; it&rsquo;s the <b>noisy neighbor</b>: one tenant&rsquo;s load starving the rest."' },
+    { mq: 'Interviewer: "What stops a developer from writing a raw query that skips your layer?"' },
+    { ml: 'Absorb the follow-up', t: '"Defense in depth. The primary answer is that raw queries don&rsquo;t reach the database directly &mdash; the data layer is the only path, and it&rsquo;s <b>deny-by-default</b>. But because code has bugs, I push a copy of the rule into the database: <b>Row-Level Security</b> in Postgres &mdash; <code>FORCE</code>d, so it applies even to the table owner &mdash; or <b>LeadingKeys</b> on DynamoDB, so a credential can only touch its own tenant&rsquo;s partition. Even a raw query that bypasses my layer hits the database&rsquo;s own refusal. The app layer prevents the mistake; the database catches the one that slips through &mdash; and I&rsquo;d name which backstop the datastore supports rather than pretend one fits all."', ans: true }
+  ]
+};
+
+/* topics/authz/drill.js -- topic 3 drill data. Like topic 2, uses LOCAL arrays
+   AUTHZ_CARDS / AUTHZ_SPEAK so loading this bundle does NOT clobber topic 1's
+   working set (cards / speakLines). publishBanks() reseeds the globals from
+   TOPIC_AUTHZ_BANK on switch. AUTHZ_SPEAK[i] pairs AUTHZ_CARDS[i] (order is
+   load-bearing). Grounded in the Invenco multi-tenant platform. 7-bit ASCII. */
+var AUTHZ_CARDS = [
+  { tier:'SDE2', signal:'Where tenant identity comes from',
+    q:"In a multi-tenant API, where does the tenant id come from on each request?",
+    a:"From the <b>verified token</b> &mdash; a signed claim like <code>custom:tenant_id</code> &mdash; and <b>never</b> from a header, query param, or body the client controls. The claim is trustworthy because forging it would break the token&rsquo;s signature; a client-supplied tenant id is trustworthy only if you enjoy being breached.",
+    f:[
+      { q:"Why is a header like X-Tenant-Id so dangerous if it&rsquo;s convenient?",
+        a:"Because the client sets it, so an authenticated user of tenant A just sends <code>X-Tenant-Id: B</code> and reads B&rsquo;s data &mdash; the textbook <b>confused-deputy</b> attack, where the server becomes a deputy acting on attacker-chosen scope. The tenant must be <i>derived</i> server-side from the authenticated identity, never <i>accepted</i> from the request." },
+      { q:"The token itself is client-supplied &mdash; why trust anything in it?",
+        a:"You don&rsquo;t trust the token, you <b>verify</b> it: the signature is checked against the issuer&rsquo;s public key, so a tampered or forged token is rejected. Once verified, the <i>claims</i> are trustworthy because the issuer &mdash; not the client &mdash; put them there. A sealed letter and a sticky note both arrive via the client; only one is authenticated." }
+    ],
+    senior:"Stating flatly that tenant identity comes from a <b>verified, signed claim</b> and never from client-controlled input &mdash; and naming the confused-deputy attack as the reason &mdash; is the single most important sentence in a multi-tenant authz round." },
+  { tier:'SDE2', signal:'Predicate, not a gate',
+    q:"How do you make sure every query is tenant-scoped &mdash; do you check permissions in each endpoint?",
+    a:"No &mdash; per-endpoint checks are a discipline that eventually fails when someone forgets one. Authorization is a <b>predicate injected into every query</b> by the shared data layer: the tenant filter is added automatically on every read and write, so a developer writes <code>findOrders()</code> and the scope is already there. You make isolation a property of the system, not a checklist.",
+    f:[
+      { q:"What actually does the injecting?",
+        a:"A <b>data-access layer</b> the whole app goes through &mdash; an ORM extension or global scope (Prisma <code>$extends</code>, a Sequelize <code>defaultScope</code>) that reads the tenant from per-request context and appends <code>tenantId</code> to the <code>where</code> on reads and the <code>data</code> on writes. One place enforces it; business code never touches the filter." },
+      { q:"Isn&rsquo;t injecting a global WHERE clause fragile &mdash; what about a query that legitimately spans tenants?",
+        a:"Those are rare and <b>explicit</b>: an admin or reporting path that opts out through a separate, audited accessor &mdash; never the default one. The default is always scoped; crossing tenants is a deliberate, logged exception with its own authorization. You don&rsquo;t weaken the default to serve the one-percent case." }
+    ],
+    senior:"Reframing authorization from &lsquo;a check I perform&rsquo; to &lsquo;a predicate the system injects&rsquo; &mdash; so the unscoped query is something a developer <i>cannot write</i> &mdash; is the architectural insight that separates L5 from &lsquo;add a WHERE clause.&rsquo;" },
+  { tier:'SDE2', signal:'Deny-by-default',
+    q:"Your data layer injects the tenant filter from request context. What happens if that context is missing?",
+    a:"It <b>throws</b> &mdash; it must never fall back to an unscoped query. No tenant context means &ldquo;called outside a request, or something is wrong,&rdquo; and the safe response is a loud failure, not a silent full-table read. Deny-by-default makes the leak path <i>crash</i> instead of <i>leak</i>.",
+    f:[
+      { q:"Why is a crash better than just returning nothing?",
+        a:"Returning nothing hides a real bug &mdash; a background job that lost context silently does no work, or a path that <i>drops</i> the scope quietly returns everything. A throw surfaces the defect immediately, in tests and logs, instead of shipping a silent isolation hole. Fail loud, fail early." },
+      { q:"How does this show up in Postgres RLS?",
+        a:"Same principle, enforced by the engine: if RLS is <b>enabled but no policy matches</b>, Postgres returns <b>zero rows</b> &mdash; deny-by-default. You never get an accidental &lsquo;all rows&rsquo; from a missing policy; the absence of a rule means no access, which is exactly the posture you want." }
+    ],
+    senior:"Insisting the accessor <b>throws</b> on missing context rather than degrading to unscoped &mdash; converting a silent leak into a loud failure &mdash; is the instinct that shows you&rsquo;ve debugged a real isolation incident." },
+  { tier:'SDE3', signal:'The forgotten WHERE clause',
+    q:"A developer writes a raw query and forgets the tenant filter. What saves you?",
+    a:"Layers, because you assume it <i>will</i> happen. The <b>shared data layer</b> injects the scope so most code never writes the filter; the layer is <b>deny-by-default</b>; the database enforces <b>RLS / LeadingKeys</b> as a backstop; and <b>isolation tests</b> seed two tenants and assert zero cross-tenant rows even when handed a foreign id. No single control &mdash; a stack, so one slip doesn&rsquo;t breach.",
+    f:[
+      { q:"Realistically, someone bypasses the ORM with raw SQL. Now what?",
+        a:"That&rsquo;s exactly why the <b>database backstop</b> exists: with Postgres RLS <code>FORCE</code>d, even a raw query the app issues is filtered by the engine to the session&rsquo;s tenant. The raw query bypasses <i>your</i> layer, not the database&rsquo;s policy. And a review rule or lint against raw datastore access outside the repository catches it before merge." },
+      { q:"How do you keep this from being wishful thinking?",
+        a:"Automated <b>isolation tests</b> that inject a foreign tenant&rsquo;s id and assert the boundary holds &mdash; AWS&rsquo;s SaaS Lens explicitly recommends tests that pass in another tenant&rsquo;s id and verify zero rows come back. You test the failure you&rsquo;re afraid of, in CI, so a regression is caught mechanically rather than in production." }
+    ],
+    senior:"Answering &lsquo;what saves you&rsquo; with <b>defense in depth plus a test that injects a foreign id</b> &mdash; rather than &lsquo;developers should be careful&rsquo; &mdash; is what shows you treat isolation as an engineered guarantee, not a hope." },
+  { tier:'SDE2', signal:'404, not 403',
+    q:"An authenticated user requests a record that belongs to another tenant. What status code do you return?",
+    a:"<b>404, not 403.</b> A 403 &ldquo;forbidden&rdquo; confirms the object exists &mdash; which leaks information and lets an attacker enumerate valid ids across tenants. A 404 makes a cross-tenant object indistinguishable from one that was never there. You log the attempt internally as a signal, but the response reveals nothing.",
+    f:[
+      { q:"Isn&rsquo;t 403 more honest per HTTP semantics?",
+        a:"For a resource the user genuinely can&rsquo;t access <i>within</i> their tenant, 403 is fine. But <i>across</i> tenants, existence itself is confidential &mdash; so you deliberately return 404 to avoid confirming it. Security posture wins over strict semantics here, the same reason login says &ldquo;invalid username <i>or</i> password&rdquo; rather than &ldquo;no such user.&rdquo;" }
+    ],
+    senior:"Knowing that a 403 <b>leaks existence</b> across a tenant boundary &mdash; and choosing 404 as a deliberate information-hiding control while still logging internally &mdash; is a small detail that signals real security thinking." },
+  { tier:'SDE3', signal:'IDOR / BOLA',
+    q:"Walk me through the number-one API security risk in a multi-tenant system and how you defend it.",
+    a:"<b>BOLA</b> &mdash; Broken Object-Level Authorization (OWASP API #1), the IDOR / confused-deputy attack: an authenticated user of tenant A requests <code>/orders/{id}</code> where the id belongs to tenant B. The defense is <b>object-level authorization</b> on every fetch-by-id: verify <code>resource.tenantId === ctx.tenant</code> (and ownership) server-side, return 404 on mismatch, and never treat the id as authorization &mdash; it&rsquo;s a <i>request</i>.",
+    f:[
+      { q:"The tenant predicate already scopes queries &mdash; doesn&rsquo;t that cover it?",
+        a:"For <b>list</b> queries, yes. But a direct <code>getById(params.id)</code> where the id is client-supplied still needs an <b>explicit ownership assertion</b>, because the code may fetch by primary key first and check tenant second &mdash; or forget to. The object-level check is the belt to the predicate&rsquo;s suspenders on singleton lookups." },
+      { q:"Do UUIDs fix this by making ids unguessable?",
+        a:"They <b>help</b> against enumeration &mdash; you can&rsquo;t iterate <code>/orders/1,2,3</code> &mdash; but they are <b>not a substitute</b> for the authorization check. A leaked or logged UUID is still accessible without the ownership assertion. UUIDs raise the cost of discovery; only the server-side check actually enforces the boundary." }
+    ],
+    senior:"Naming <b>BOLA / IDOR as OWASP API #1</b>, distinguishing the list-query predicate from the singleton ownership check, and adding that UUIDs help but don&rsquo;t replace authorization &mdash; is the complete answer to the question interviewers ask most." },
+  { tier:'SDE3', signal:'Silo vs pool vs bridge',
+    q:"How do you decide between a database per tenant and one shared table for everyone?",
+    a:"Three models. <b>Silo</b> (database per tenant): strongest isolation, trivial per-tenant backup/restore and delete, best compliance story &mdash; but operationally heavy (migrations across N databases, connection sprawl). <b>Pool</b> (shared tables, tenant_id discriminator): cheapest, easiest to migrate once &mdash; but weakest isolation, all burden on enforcement. <b>Bridge</b> (hybrid): pool the long tail, silo the whales and the compliance-bound. The axis is <b>cost/agility vs isolation/compliance</b>.",
+    f:[
+      { q:"Which would you actually pick for a platform with a few huge customers and a long tail of small ones?",
+        a:"The <b>bridge</b>: pool the long tail for cost and single-migration agility, and silo the few large or regulated tenants who need per-tenant encryption keys, dedicated backup, or a hard compliance boundary. Same tenant&rarr;datasource resolution in the data layer, so app code doesn&rsquo;t change &mdash; you offer premium isolation to those who require it without paying silo costs for everyone." },
+      { q:"How does &lsquo;delete this tenant&rsquo;s data&rsquo; differ between the two?",
+        a:"In a <b>silo</b> it&rsquo;s trivial &mdash; drop that tenant&rsquo;s database. In a <b>pool</b> it&rsquo;s a carefully scoped transactional DELETE across every tenant-bearing table, driven by the shared layer so nothing is missed, plus verification. That asymmetry is itself a strong argument for siloing any tenant with heavy right-to-erasure or contractual deletion SLAs." }
+    ],
+    senior:"Framing silo/pool/bridge on the <b>cost-vs-isolation axis</b> and defaulting to a hybrid &mdash; pool the long tail, silo the whales &mdash; rather than declaring one universally right is the trade-off literacy a senior round is checking for." },
+  { tier:'Staff', signal:'Row-Level Security done right',
+    q:"You put tenant isolation in Postgres Row-Level Security. What are the ways to get it subtly wrong?",
+    a:"Four classic mistakes. RLS is <b>skipped for table owners and superusers</b> by default &mdash; you must <code>FORCE ROW LEVEL SECURITY</code> and connect as a <b>non-owner</b>. You must set the tenant with <code>SET LOCAL</code> (transaction-scoped), not <code>SET</code>, or the context <b>leaks across a pooled connection</b> to the next tenant. And an enabled table with <b>no policy</b> denies all &mdash; a good default, but surprising if unplanned.",
+    f:[
+      { q:"Why is SET LOCAL vs SET such a big deal?",
+        a:"Connection pools reuse a physical connection across requests. A plain <code>SET app.tenant</code> persists on that connection, so the <i>next</i> request &mdash; a different tenant &mdash; inherits it and reads the wrong data. <code>SET LOCAL</code> is scoped to the current transaction and reset on commit, so context can&rsquo;t bleed between tenants sharing a pooled connection. It&rsquo;s the pooling equivalent of deny-by-default." },
+      { q:"If RLS is enforced by the engine, why keep the app-layer predicate at all?",
+        a:"Depth and ergonomics. RLS is the <b>backstop</b> that survives an app bug or a raw query; the app-layer predicate gives you <b>portability</b> (DynamoDB has no RLS), clearer errors, and enforcement that doesn&rsquo;t depend on every connection being configured correctly. You want both: the app layer prevents the mistake, RLS catches the one that reaches the database." }
+    ],
+    senior:"Listing the RLS footguns &mdash; <code>FORCE</code>, non-owner connection, <code>SET LOCAL</code> not <code>SET</code>, deny-by-default on no policy &mdash; is exactly the depth that separates &lsquo;I&rsquo;ve read about RLS&rsquo; from &lsquo;I&rsquo;ve shipped it and watched context leak across a pool.&rsquo;" },
+  { tier:'SDE3', signal:'DynamoDB LeadingKeys',
+    q:"How do you enforce tenant isolation in DynamoDB at the IAM layer, and what&rsquo;s the gotcha?",
+    a:"The <b>dynamodb:LeadingKeys</b> condition: you require <code>tenantId</code> as the <b>leading element of the partition key</b> and scope an IAM policy so a credential can only read/write items whose partition key <i>begins with</i> its tenant id. It&rsquo;s row-level access control enforced by IAM, not app code. The gotcha: <b>LeadingKeys constrains Query and GetItem, but Scan bypasses it</b> &mdash; so scan less, and lock down who can Scan.",
+    f:[
+      { q:"Where does the tenant id in the IAM condition come from at runtime?",
+        a:"From the <b>identity</b>, not the request &mdash; e.g. the Cognito ID token&rsquo;s <code>custom:tenant_id</code> claim, surfaced to IAM via the identity pool or a Lambda authorizer, so the policy variable resolves to the authenticated tenant. Same rule as everywhere: the tenant scope is derived from verified identity, here pushed all the way down into the IAM policy guarding the table." },
+      { q:"A large tenant makes one partition hot. How do you keep LeadingKeys and still spread load?",
+        a:"<b>Write-sharding</b> the tenant key: suffix it (<code>TENANT#bigco-7</code>) and scatter-gather reads across the shards. The partition key still <i>leads</i> with the tenant id, so LeadingKeys still holds; you&rsquo;ve just spread one tenant across partitions to dodge the 1,000 WCU / 3,000 RCU per-partition ceiling. The shard suffix serves both isolation and hot-partition mitigation." }
+    ],
+    senior:"Knowing <b>LeadingKeys</b> pushes isolation into IAM, that the tenant id comes from the verified identity, and that <b>Scan bypasses it</b> (plus the write-sharding fix for hot partitions) is precisely the DynamoDB multi-tenant depth an interviewer probes for." },
+  { tier:'SDE3', signal:'RBAC vs ABAC',
+    q:"Roles or attributes &mdash; how do you model <i>what</i> a user can do, beyond which tenant they&rsquo;re in?",
+    a:"<b>RBAC</b> assigns permissions to roles (admin, editor, viewer) and users to roles &mdash; simple, auditable, great when access maps cleanly to job functions. <b>ABAC</b> evaluates policies over attributes of the user, resource, and context (<code>department == resource.department AND time in hours</code>) &mdash; expressive, great for fine-grained or dynamic rules. Most real systems are <b>RBAC as the base, ABAC for the exceptions</b>.",
+    f:[
+      { q:"When does RBAC start to hurt?",
+        a:"<b>Role explosion.</b> When you need &lsquo;editor, but only for the Europe region, only during business hours,&rsquo; you start minting a combinatorial number of narrow roles (<code>editor-europe-daytime</code>). That&rsquo;s the signal to move those dimensions into <b>attributes</b> &mdash; ABAC evaluates them as policy instead of encoding every combination as a distinct role. RBAC for the coarse grid, ABAC where it gets fine." },
+      { q:"Where does tenant isolation fit &mdash; is it RBAC or ABAC?",
+        a:"Neither, really &mdash; it&rsquo;s a <b>separate, lower layer</b>. Tenant scoping is a hard boundary applied to <i>every</i> request regardless of role; RBAC/ABAC decide what you can do <i>within</i> your tenant. You enforce the tenant predicate first (can I see this data at all?), then role/attribute checks (what may I do with it?). Conflating them is how a &lsquo;super-admin&rsquo; role accidentally crosses tenants." }
+    ],
+    senior:"Positioning <b>RBAC as the base and ABAC for the exceptions</b>, naming role explosion as the trigger to reach for attributes, and keeping <b>tenant isolation as a separate layer beneath both</b> is the layered authorization model a Staff interviewer wants to hear." },
+  { tier:'Staff', signal:'The noisy neighbor',
+    q:"In a pooled multi-tenant system, one tenant&rsquo;s traffic spikes and everyone else slows down. How do you contain it?",
+    a:"<b>Fairness controls per tenant.</b> Per-tenant <b>rate limits</b> (429 with <code>Retry-After</code>), layered limits (per-tenant + per-endpoint + global), per-tenant <b>resource quotas</b> (query timeouts, connection caps), and <b>fair queuing</b> so work is scheduled proportionally rather than first-come. Auto-scaling with a ceiling absorbs the rest without a cost blowout. The goal: one tenant&rsquo;s burst can&rsquo;t consume another tenant&rsquo;s share.",
+    f:[
+      { q:"How do you even detect which tenant is the problem?",
+        a:"<b>Per-tenant instrumentation.</b> QPS, latency percentiles (P50/P95/P99), and resource consumption <i>broken down by tenant id</i> &mdash; you compare each tenant&rsquo;s actual usage against its configured limit. Without per-tenant metrics you see &lsquo;the system is slow&rsquo; and can&rsquo;t attribute it; with them you see &lsquo;tenant 42 is at 10x its normal QPS&rsquo; and throttle precisely." },
+      { q:"Rate limits protect the API tier. What protects the shared database?",
+        a:"Per-tenant <b>query timeouts</b> (<code>statement_timeout</code> per tier), per-tenant <b>connection limits</b> so one tenant can&rsquo;t exhaust the pool, and <b>workload separation</b> &mdash; routing heavy analytical or automated queries away from the path serving interactive traffic. The database is the scarcest shared resource, so its fairness controls matter most; the whale gets its own lane, not the whole road." }
+    ],
+    senior:"Answering noisy-neighbor with <b>per-tenant limits, quotas, fair queuing, AND per-tenant metrics to detect it</b> &mdash; and separately protecting the database as the scarcest resource &mdash; is the operational-isolation depth that marks a Staff-level multi-tenant answer." },
+  { tier:'SDE3', signal:'BFLA vs BOLA',
+    q:"Besides object-level access, what other authorization gap bites multi-tenant APIs?",
+    a:"<b>BFLA</b> &mdash; Broken <i>Function</i>-Level Authorization (OWASP API #5). BOLA is &lsquo;can this user touch this <i>object</i>&rsquo;; BFLA is &lsquo;can this user invoke this <i>function/endpoint</i> at all.&rsquo; The classic miss: an <code>/admin/*</code> route or a privileged action that checks authentication but not <b>role</b>, so any logged-in user can call it. The fix: every function checks the required role/permission, not just a valid token.",
+    f:[
+      { q:"Give a concrete example of a BFLA slip.",
+        a:"A regular user discovers <code>POST /api/users/{id}/promote</code> or an internal admin endpoint the UI hides but the API doesn&rsquo;t protect &mdash; they call it directly and escalate. The endpoint verified they were <i>logged in</i> but never that they were an <i>admin</i>. Hiding a function in the UI is not authorizing it; the server must enforce the role on the function itself." }
+    ],
+    senior:"Distinguishing <b>BFLA (function-level, API #5) from BOLA (object-level, API #1)</b> &mdash; and naming &lsquo;the UI hid it but the API didn&rsquo;t protect it&rsquo; as the classic slip &mdash; shows you cover both axes of authorization, not just object ownership." },
+  { tier:'SDE3', signal:'Per-company keys &amp; token trust',
+    q:"You trust the tenant claim because the token is signed. Signed by what &mdash; and what if that key is compromised?",
+    a:"Verified against the issuer&rsquo;s <b>public key</b>, fetched from its <b>JWKS</b> endpoint (rotated automatically). In a multi-tenant setup you may have <b>per-company issuers/keys</b>, so a token minted for company A is verified against A&rsquo;s key and can&rsquo;t be passed off as B&rsquo;s. If a signing key is compromised, you <b>rotate</b> it at the issuer &mdash; publish the new key to JWKS, retire the old &mdash; and tokens signed by the old key stop verifying.",
+    f:[
+      { q:"Tokens are self-contained &mdash; how do you revoke one before it expires?",
+        a:"That&rsquo;s the JWT trade-off: they&rsquo;re valid until expiry because verification is offline. So you keep <b>lifetimes short</b> and pair them with <b>refresh tokens</b> you <i>can</i> revoke server-side, or maintain a small <b>denylist</b> of revoked token ids checked on sensitive operations. Immediate revocation and stateless verification are in tension; short expiry plus revocable refresh is the usual balance." },
+      { q:"Why per-company keys rather than one signing key for everyone?",
+        a:"<b>Blast radius.</b> One shared key means a single compromise forges tokens for <i>every</i> tenant; per-company keys scope a compromise to one tenant and let you rotate that tenant&rsquo;s key without disrupting others. It&rsquo;s the same per-tenant key-scoping discipline as the signing topic &mdash; a leaked key should blast one company, not the platform." }
+    ],
+    senior:"Explaining that the tenant claim is trusted via <b>JWKS-verified signatures</b>, that <b>per-company keys bound a compromise to one tenant</b>, and naming the stateless-JWT revocation tension (short expiry + revocable refresh) is the token-trust depth a senior round expects." },
+  { tier:'SDE2', signal:'What belongs in the token',
+    q:"What do you put in the access token&rsquo;s claims &mdash; and what do you keep out?",
+    a:"In: <b>identity and authorization inputs</b> &mdash; subject (user id), tenant id, roles/scopes, issuer, expiry. Out: <b>secrets and large/volatile data</b> &mdash; no passwords, no PII you don&rsquo;t need, nothing that changes faster than the token&rsquo;s lifetime. The token is a signed, <b>readable</b> (base64, not encrypted) assertion carried on every request; treat it as public-but-tamper-proof.",
+    f:[
+      { q:"Roles are in the token, but a user&rsquo;s role just changed. They still have the old one &mdash; why?",
+        a:"Because the token is a <b>snapshot</b> valid until expiry &mdash; the new role won&rsquo;t take effect until it&rsquo;s refreshed. That&rsquo;s the cost of stateless authorization. You mitigate with <b>short lifetimes</b> so stale claims self-heal, and for security-critical changes (a revoked admin) you check server-side state rather than trusting the token&rsquo;s cached role." }
+    ],
+    senior:"Knowing the token is <b>signed but readable</b> (so no secrets), that claims are a <b>snapshot until expiry</b> (so short lifetimes), and what belongs vs doesn&rsquo;t &mdash; is the fundamentals check that a shaky answer here fails." },
+  { tier:'SDE3', signal:'Enforce at the gateway or the service',
+    q:"Do you enforce authorization at the API gateway or inside each service?",
+    a:"<b>Both, at different granularities.</b> The <b>gateway</b> does coarse, cheap checks &mdash; token is valid, not expired, right audience &mdash; and rejects junk before it reaches services. But <b>fine-grained, data-dependent authorization</b> (does <i>this</i> user own <i>this</i> object; tenant scoping on the query) must live <b>in the service</b>, next to the data, because only it knows the resource. The gateway can&rsquo;t do object-level authz without the object.",
+    f:[
+      { q:"Why not centralize all authorization at the gateway to keep services simple?",
+        a:"Because object-level and tenant-scoped decisions <b>need the data</b> &mdash; the gateway would have to fetch the resource to check ownership, duplicating the service. And a &lsquo;trusted internal network&rsquo; assumption is exactly what <b>zero-trust</b> rejects: a service must not assume the caller was authorized upstream. Coarse at the edge, fine at the source &mdash; the service re-checks because it&rsquo;s the only layer that can." }
+    ],
+    senior:"Splitting <b>coarse gateway checks from fine-grained in-service authorization</b> &mdash; and grounding it in zero-trust (the service can&rsquo;t assume the edge authorized the request) &mdash; is the distributed-authz answer, versus &lsquo;the gateway handles auth.&rsquo;" },
+  { tier:'SDE3', signal:'Testing the boundary',
+    q:"How do you test that tenant isolation actually holds?",
+    a:"With tests that <b>attack the boundary</b>: seed two tenants, run queries in tenant A&rsquo;s context, and assert <b>zero</b> of tenant B&rsquo;s rows come back &mdash; <b>even when you hand the query B&rsquo;s ids</b>. You test the exact failure you fear: a foreign id injected into every read path must return 404/empty, not data. AWS&rsquo;s SaaS Lens recommends precisely this &mdash; inject a foreign tenant id and verify the boundary.",
+    f:[
+      { q:"What&rsquo;s the difference between that and a normal unit test?",
+        a:"A normal test checks the <b>happy path</b> &mdash; tenant A sees A&rsquo;s data. An isolation test checks the <b>adversarial path</b> &mdash; tenant A, given B&rsquo;s id, sees <i>nothing</i>. The bug you&rsquo;re hunting only appears when you actively try to cross the boundary, so the test has to try to cross it. Happy-path tests pass while the isolation hole ships." },
+      { q:"Where in the pipeline does this run?",
+        a:"In <b>CI</b>, as a first-class gate &mdash; because isolation is a security property, a regression must fail the build mechanically, not get caught in review. You pair it with runtime <b>assertions and audit logging</b> of cross-tenant attempts, so the boundary is verified before merge and monitored after deploy." }
+    ],
+    senior:"Describing an <b>adversarial isolation test</b> &mdash; inject the other tenant&rsquo;s id and assert zero rows, gated in CI &mdash; rather than a happy-path check, is the testing instinct that shows you&rsquo;ve seen isolation regressions slip through ordinary tests." },
+  { tier:'Staff', signal:'Break-glass &amp; support access',
+    q:"Support needs to view a customer&rsquo;s data to debug an issue &mdash; deliberately crossing the tenant boundary. How do you allow it safely?",
+    a:"Through an <b>explicit, audited, time-boxed</b> path &mdash; never the normal accessor. Support uses an <b>impersonation / break-glass</b> flow: a separate privileged role, the action <b>logged with who, which tenant, and why</b>, ideally requiring <b>customer consent or a second approver</b>, and the elevated access <b>expires</b>. The boundary isn&rsquo;t removed; it&rsquo;s crossed under a spotlight, with a receipt.",
+    f:[
+      { q:"Why not just give support a &lsquo;super-admin&rsquo; role that sees everything?",
+        a:"Because a standing cross-tenant role is a <b>permanent breach waiting to happen</b> &mdash; one compromised support account reads every customer. Break-glass makes cross-tenant access <b>exceptional and observable</b>: least privilege by default, elevation only when needed, every use audited. A role that&rsquo;s <i>always</i> dangerous versus access that&rsquo;s <i>deliberately</i> and <i>temporarily</i> granted." },
+      { q:"How does this interact with compliance and the customer&rsquo;s trust?",
+        a:"It&rsquo;s often a <b>contractual and regulatory</b> requirement: customers want to know their data isn&rsquo;t casually readable by the vendor. An audited break-glass trail (and optionally customer-approved access) is the evidence &mdash; you can show <i>exactly</i> when their data was accessed, by whom, and why. It turns &lsquo;trust us&rsquo; into an auditable record, which is what enterprise buyers demand." }
+    ],
+    senior:"Handling deliberate boundary-crossing with <b>audited, time-boxed break-glass</b> rather than a standing super-admin role &mdash; and framing it as a compliance/trust artifact &mdash; is the Staff-level answer to the &lsquo;but support needs access&rsquo; curveball." },
+  { tier:'SDE3', signal:'Caching authz decisions',
+    q:"Authorization checks are on every request. Do you cache them, and what breaks if you do?",
+    a:"You cache the <b>inputs</b>, carefully. Roles/permissions and the tenant scope come from the token (already &lsquo;cached&rsquo; for its lifetime) or a short-TTL cache of a policy lookup &mdash; but the <b>hard part is invalidation</b>: when a user&rsquo;s role is revoked, a stale cached &lsquo;allow&rsquo; is a security hole. So caches are <b>short-lived</b>, and security-critical revocations either <b>bust the cache</b> or are checked against live state.",
+    f:[
+      { q:"Concretely, admin access is revoked but the decision is cached for 5 minutes. Acceptable?",
+        a:"It depends on the <b>blast radius</b> of those 5 minutes. For a low-risk read, a short TTL is fine &mdash; the stale allow self-heals. For a high-privilege action (deleting data, changing billing), 5 minutes of stale admin is <b>not</b> acceptable, so those paths check live state or subscribe to a revocation event that <b>immediately</b> invalidates. You tier it: cache the cheap, verify the dangerous." }
+    ],
+    senior:"Recognizing that caching authz is really an <b>invalidation problem</b> &mdash; a stale &lsquo;allow&rsquo; after a revoked role is the hole &mdash; and tiering it by blast radius (short TTL for reads, live check for privileged actions) is the nuance beyond &lsquo;just cache it.&rsquo;" },
+  { tier:'Staff', signal:'Right-to-erasure per tenant',
+    q:"A tenant invokes their right to be forgotten. How do you delete exactly their data and prove it&rsquo;s gone?",
+    a:"The mechanics depend on the model. In a <b>silo</b>, drop/restore that tenant&rsquo;s database &mdash; clean and provable. In a <b>pool</b>, a scoped transactional DELETE across <b>every</b> tenant-bearing table, driven by the shared layer so nothing is missed, then <b>verify</b> zero rows remain. Then the hard part: <b>backups, caches, search indexes, logs, and analytics copies</b> also hold the data &mdash; erasure isn&rsquo;t done until those are addressed.",
+    f:[
+      { q:"Backups are immutable and retained for 90 days. How do you &lsquo;delete&rsquo; from them?",
+        a:"You usually <b>don&rsquo;t</b> rewrite backups &mdash; you rely on <b>retention expiry</b> (the data ages out) plus <b>crypto-shredding</b>: if the tenant&rsquo;s data is encrypted with a per-tenant key, destroying the key makes every copy &mdash; including backups &mdash; permanently unreadable. That&rsquo;s why per-tenant encryption keys aren&rsquo;t just isolation, they&rsquo;re the practical mechanism for erasure across copies you can&rsquo;t selectively edit." }
+    ],
+    senior:"Naming that erasure spans <b>backups, caches, indexes, and logs</b> &mdash; not just the primary table &mdash; and reaching for <b>crypto-shredding a per-tenant key</b> to handle immutable copies is the systems-and-compliance depth a Staff answer shows." },
+  { tier:'SDE3', signal:'The tenant-leading index',
+    q:"You scope every query with tenant_id. How do you keep those queries fast as data grows?",
+    a:"Put <b>tenant_id on the leading edge of every composite index and primary key</b>, so <code>WHERE tenant_id = ? AND ...</code> hits a <b>contiguous index range</b> (leftmost-prefix) instead of scanning the table. In a clustered store like InnoDB, a short tenant-led PK keeps the tenant&rsquo;s rows physically together and secondary indexes compact. It&rsquo;s the same instinct as a DynamoDB partition key &mdash; tenant as the leading key.",
+    f:[
+      { q:"If I put tenant_id <i>last</i> in the index, does it still work?",
+        a:"Not efficiently &mdash; leftmost-prefix means an index on <code>(created_at, tenant_id)</code> can&rsquo;t seek directly to one tenant&rsquo;s rows; it scans and filters. The tenant predicate has to be on the <b>left</b> to turn &lsquo;my tenant&rsquo;s data&rsquo; into a range seek. Column order in a composite index is not cosmetic &mdash; it decides whether the scoped query is a seek or a scan." },
+      { q:"Doesn&rsquo;t a tenant-led index hurt when one tenant is 90% of the rows?",
+        a:"For that whale, a tenant-led index still isolates but no longer <i>narrows</i> much &mdash; so you add secondary indexes on <code>(tenant_id, other_dimension)</code> for its common query shapes, or consider siloing it. The leading tenant column is necessary for isolation and helps the long tail; the whale needs additional targeted indexes on top. Isolation and selectivity are related but not the same lever." }
+    ],
+    senior:"Explaining <b>leftmost-prefix</b> &mdash; tenant_id must lead the index to make the scoped query a range seek, mirroring a DynamoDB partition key &mdash; connects the isolation predicate to query performance, which is exactly the &lsquo;how does it stay fast&rsquo; follow-up." },
+  { tier:'Staff', signal:'Delegated &amp; third-party access',
+    q:"A third-party app or partner integration needs to act on a tenant&rsquo;s behalf. How do you authorize that without handing over the keys?",
+    a:"<b>Delegated authorization with scoped, revocable grants</b> &mdash; OAuth-style: the third party gets a token that carries the tenant, a <b>limited scope</b> (read-only, specific resources), an expiry, and is <b>independently revocable</b>. It acts <i>as</i> a constrained principal within the tenant, never with the tenant&rsquo;s full credentials. Least privilege plus revocability: the partner can do exactly what was granted, nothing more, and you can cut it off.",
+    f:[
+      { q:"How is this different from just giving them an API key?",
+        a:"A raw API key is usually <b>coarse and long-lived</b> &mdash; often full access, hard to scope, awkward to rotate. A scoped OAuth grant is <b>narrow, expiring, per-integration, and revocable</b> without disrupting others. If a partner is breached, you revoke <i>their</i> grant and the blast radius is what you scoped it to &mdash; not the tenant&rsquo;s entire account. Keys are a blunt instrument; scoped grants are the surgical one." },
+      { q:"The third party still runs your tenant&rsquo;s queries &mdash; does your isolation model change?",
+        a:"No &mdash; the same tenant predicate and object-level checks apply; the third party is just <b>another principal</b> whose token carries the tenant and a <i>reduced</i> scope. Their requests flow through the identical enforcement, additionally constrained by their granted scopes. Delegation adds a <i>tighter</i> boundary inside the tenant; it never loosens the tenant boundary itself." }
+    ],
+    senior:"Answering delegation with <b>scoped, expiring, independently-revocable OAuth grants</b> rather than a shared API key &mdash; and noting the third party is just a reduced-scope principal inside the same isolation model &mdash; is the least-privilege maturity a Staff round rewards." }
+];
+var AUTHZ_SPEAK = [
+  "Lead with the non-negotiable: <b>'tenant identity comes from a verified, signed claim &mdash; never a header or body the client controls.'</b> Then the reason &mdash; a client-supplied tenant id is the confused-deputy attack, one request away from reading another tenant.",
+  "Reframe it in one line: <b>'authorization isn&rsquo;t a check per endpoint &mdash; it&rsquo;s a predicate the data layer injects into every query.'</b> The developer can&rsquo;t forget the filter because they never write it; isolation becomes a property, not a checklist.",
+  "Say the safe-failure rule out loud: <b>'no tenant context throws &mdash; it never runs unscoped.'</b> A lost context is a crash, not a full-table leak. Same posture as Postgres RLS returning zero rows when no policy matches.",
+  "Answer &lsquo;what saves you&rsquo; with layers, not hope: <b>'the data layer injects the scope, it&rsquo;s deny-by-default, the database enforces RLS as a backstop, and a test injects a foreign id and asserts zero rows.'</b> You assume the mistake will happen and catch it four ways.",
+  "Make it a deliberate control: <b>'cross-tenant reads return 404, not 403 &mdash; a 403 confirms the object exists.'</b> Log the attempt internally, reveal nothing externally. Same reason login says &lsquo;invalid username or password.&rsquo;",
+  "Name it precisely: <b>'BOLA &mdash; OWASP API number one &mdash; an authenticated user of tenant A fetching tenant B&rsquo;s object by id.'</b> The predicate covers lists; a fetch-by-id needs an explicit ownership check, and UUIDs help but never replace it.",
+  "Put it on the axis: <b>'silo for isolation and compliance, pool for cost and agility &mdash; bridge in practice: pool the long tail, silo the whales.'</b> Then the deletion asymmetry &mdash; drop a database vs a scoped multi-table DELETE &mdash; as the argument for siloing the regulated.",
+  "Show you&rsquo;ve shipped RLS by naming the footguns: <b>'FORCE it, connect as a non-owner, SET LOCAL not SET, and no-policy means deny-all.'</b> The SET-vs-SET-LOCAL one &mdash; context leaking across a pooled connection &mdash; is the tell you&rsquo;ve debugged it.",
+  "For DynamoDB: <b>'dynamodb:LeadingKeys scopes a credential to its own tenant&rsquo;s partition &mdash; but Scan bypasses it.'</b> Tenant id comes from the verified identity, and a hot whale gets a shard-suffix that keeps the tenant leading the key.",
+  "Layer it: <b>'RBAC as the base, ABAC for the exceptions &mdash; and tenant isolation as a separate layer beneath both.'</b> Role explosion is the signal to move dimensions into attributes; the tenant predicate runs first, regardless of role.",
+  "Contain the whale: <b>'per-tenant rate limits, quotas, and fair queuing &mdash; plus per-tenant metrics to even know which tenant it is.'</b> Then protect the database as the scarcest resource &mdash; per-tenant timeouts and connection caps, a lane for the heavy load.",
+  "Cover the other axis: <b>'BFLA &mdash; API number five &mdash; function-level, versus BOLA&rsquo;s object-level.'</b> The classic slip is an admin endpoint the UI hides but the API doesn&rsquo;t protect: it checked you were logged in, never that you were an admin.",
+  "Explain the trust root: <b>'the tenant claim is trusted because the token&rsquo;s signature verifies against the issuer&rsquo;s JWKS key &mdash; per-company keys, so a compromise blasts one tenant.'</b> Then the JWT revocation tension &mdash; short expiry plus a revocable refresh token.",
+  "Get the fundamentals crisp: <b>'the token is signed but readable, so no secrets &mdash; identity, tenant, roles, expiry.'</b> And claims are a snapshot until expiry, which is why a just-changed role lags and why you keep lifetimes short.",
+  "Split the layers: <b>'coarse checks at the gateway &mdash; valid token, right audience &mdash; but object-level and tenant-scoped authorization in the service, next to the data.'</b> Zero-trust: the service re-checks because it can&rsquo;t assume the edge authorized the request.",
+  "Describe the adversarial test: <b>'seed two tenants, query as A with B&rsquo;s ids, assert zero rows &mdash; gated in CI.'</b> Happy-path tests pass while the isolation hole ships; you have to actively try to cross the boundary to catch the bug.",
+  "Handle break-glass without a standing super-admin: <b>'support gets audited, time-boxed impersonation &mdash; who, which tenant, why &mdash; that expires.'</b> A permanent cross-tenant role is a breach waiting to happen; make crossing exceptional and observable, with a receipt for compliance.",
+  "Frame caching as invalidation: <b>'a stale &ldquo;allow&rdquo; after a revoked role is the hole.'</b> So short TTLs, and tier it by blast radius &mdash; cache the cheap read, check live state for the privileged action.",
+  "Make erasure honest: <b>'in a pool it&rsquo;s a scoped multi-table DELETE plus verification &mdash; but backups, caches, indexes, and logs hold it too.'</b> Crypto-shred a per-tenant key to handle the immutable copies you can&rsquo;t selectively edit.",
+  "Tie isolation to speed: <b>'tenant_id leads every index, so the scoped query is a range seek, not a scan &mdash; leftmost-prefix.'</b> Same instinct as a DynamoDB partition key; put tenant last and you&rsquo;ve got a scan, not a seek.",
+  "Answer delegation with least privilege: <b>'a scoped, expiring, independently-revocable OAuth grant &mdash; not a shared API key.'</b> The third party is just a reduced-scope principal inside the same tenant boundary; revoke their grant and the blast radius is only what you scoped."
+];
+var TOPIC_AUTHZ_DRILL = {
+  cards: AUTHZ_CARDS,
+  speak: AUTHZ_SPEAK,
+  tierNotes: {
+    all:'<b>All four levels, mixed</b> &mdash; the way a real loop actually comes at you.',
+    SDE2:'<b>Fundamentals under pressure</b> &mdash; identity from a verified claim, scope in every query, deny-by-default. The bar is &ldquo;this is real isolation, not a WHERE clause bolted on&rdquo;: show the enforcement cleanly.',
+    SDE3:'<b>Depth &amp; trade-offs</b> &mdash; silo vs pool, RLS vs app-layer, RBAC vs ABAC, the confused-deputy defense. The bar is &ldquo;it depends, here&rsquo;s the switch&rdquo;: name the axis and the attack.',
+    Staff:'<b>Systems judgment</b> &mdash; blast radius, noisy neighbors, break-glass, erasure across copies. The bar is &ldquo;I see the failure mode before it ships&rdquo;: name what one missing filter exposes, and the layers that bound it.'
+  }
+};
+
+/* topics/authz/wb.js -- topic 3 whiteboard. steps:[{c,a}x9]; diagram = the .dgm
+   inner; foot; sub + okVerdict carry the step-count copy as data. Rebuilds the
+   access boundary from memory. Offline-safe; 7-bit ASCII (entities + \uXXXX). */
+var TOPIC_AUTHZ_WB = {
+  steps: [
+    {c:'Entry &mdash; where the tenant identity comes from on a request.', a:'The <b>verified token</b> &mdash; the authorizer checks its signature and reads the tenant from a <b>signed claim</b> (<code>custom:tenant_id</code>), never a header. Trusted because forging it breaks the signature.'},
+    {c:'Context &mdash; how the tenant reaches the data layer.', a:'Stored once in <b>per-request context</b> (<code>AsyncLocalStorage</code>); it propagates through every async call, so a repository three levels deep reads <code>getStore().tenant</code> without it being passed.'},
+    {c:'The predicate &mdash; what enforcement actually looks like.', a:'The shared data layer <b>injects</b> <code>WHERE tenant_id = ctx.tenant</code> into every read and write. A developer writes <code>findOrders()</code>; the scope is already there &mdash; they can&rsquo;t forget it.'},
+    {c:'Deny-by-default &mdash; what happens with no context.', a:'The accessor <b>throws</b> &mdash; never an unscoped query. No context is a loud crash, not a silent full-table read. The unsafe path doesn&rsquo;t exist.'},
+    {c:'Object-level check &mdash; the fetch-by-id case.', a:'A <code>getById(id)</code> gets an explicit <code>resource.tenant === ctx.tenant</code> (+ ownership) assertion, because the id came from the client. This is the <b>BOLA</b> defense &mdash; the predicate alone doesn&rsquo;t cover singleton lookups.'},
+    {c:'The cross-tenant response &mdash; the status code.', a:'<b>404, not 403</b> &mdash; a 403 confirms the object exists. Log the attempt internally as a signal; reveal nothing externally. (The one people get backwards.)'},
+    {c:'The database backstop &mdash; defense in depth.', a:'<b>RLS FORCE</b> (Postgres) or <b>dynamodb:LeadingKeys</b> (DynamoDB) enforces the boundary in the engine, so even a raw query or an app bug can&rsquo;t cross tenants. (Scan bypasses LeadingKeys.)'},
+    {c:'Noisy neighbor &mdash; the pooled-resource risk.', a:'<b>Per-tenant rate limits, quotas, fair queuing</b> &mdash; plus per-tenant metrics to detect it. One tenant&rsquo;s burst can&rsquo;t starve another&rsquo;s share; the whale gets its own lane, not the whole road.'},
+    {c:'Isolation model &mdash; silo vs pool, and the blast radius.', a:'<b>Bridge</b>: pool the long tail, silo the whales and the compliance-bound. One missing filter in a pool exposes <i>every</i> other tenant &mdash; which is exactly why enforcement is layered.'}
+  ],
+  diagram: `
+          <div class="dgm-node"><div class="dgm-t">request + token</div><div class="dgm-s">token carried on every call &middot; tenant is a SIGNED claim, not a header</div></div>
+          <div class="dgm-conn"><span class="dgm-v">&#9660;</span><span class="dgm-lbl">authorizer verifies the signature (JWKS)</span></div>
+          <div class="dgm-node"><div class="dgm-t">extract tenant claim</div><div class="dgm-s"><code>custom:tenant_id</code> from the verified token &middot; never client input</div></div>
+          <div class="dgm-conn"><span class="dgm-v">&#9660;</span><span class="dgm-lbl">put in per-request context</span></div>
+          <div class="dgm-node"><div class="dgm-t">tenant context &middot; <span class="dgm-em">AsyncLocalStorage</span></div><div class="dgm-s">propagates through every async call in the request</div></div>
+          <div class="dgm-conn"><span class="dgm-v">&#9660;</span><span class="dgm-lbl">every query flows through the shared data layer</span></div>
+          <div class="dgm-node dgm-fork"><div class="dgm-t">data layer &middot; <span class="dgm-em">injects the predicate</span></div><div class="dgm-branches"><span class="dgm-br">&rarr; WHERE tenant_id = ctx.tenant</span><span class="dgm-br">&rarr; no context? throw</span></div><div class="dgm-s">deny-by-default &middot; the unscoped query is unreachable</div></div>
+          <div class="dgm-note">&mdash;&mdash;&mdash; access boundary: request carries <b>identity</b> &middot; data layer holds the <b>scope</b> &mdash;&mdash;&mdash;</div>
+          <div class="dgm-conn"><span class="dgm-v">&#9660;</span><span class="dgm-lbl">fetch-by-id? add the object-level check</span></div>
+          <div class="dgm-node dgm-recon"><div class="dgm-t">object-level authz + DB backstop</div><div class="dgm-s">resource.tenant === ctx.tenant? &mdash; else <b>404</b> (not 403) &middot; RLS FORCE / LeadingKeys enforces it in the engine too</div></div>
+          <div class="dgm-foot">owned + in-tenant &rarr; allow &middot; cross-tenant &rarr; 404 &middot; no context &rarr; throw &middot; enforced at every layer</div>
+        `,
+  foot: "<b>The one people forget:</b> the predicate scopes <i>list</i> queries, but a <code>getById(id)</code> still needs a separate <b>ownership check</b> &mdash; the id came from the client. Skip it and you&rsquo;ve left BOLA, OWASP&rsquo;s #1, wide open. Volunteering the object-level check unprompted is the tell you&rsquo;ve defended a real multi-tenant API, not just read about one.",
+  sub: "For each cue, draw it from memory first &mdash; then reveal to check. Produce all nine cold and you can run the access boundary on a whiteboard.",
+  okVerdict: "<b>All nine cold.</b> You can rebuild the enforcement chain on a whiteboard from memory \u2014 the authorization round is yours to lose, not to pass."
+};
+
+/* topics/authz/sys.js -- topic 3 system-map data. intro = the .sm-intro copy;
+   stages = the request-to-data chain with AUTHORIZATION as cur:true ("you are
+   here"); pivots = the 7 interviewer bridge points OUT of authz (to identity,
+   per-company keys/signing, AWS hardening, the data layer, noisy-neighbor, data
+   lifecycle, IaC); heads = the two card headings + pivot subhead. 7-bit ASCII. */
+var TOPIC_AUTHZ_SYS = {
+  intro: "Authorization is the <b>access boundary</b>. Identity proves <i>who</i> you are; authorization decides <i>what</i> you can touch &mdash; and in a multi-tenant system that means keeping one tenant entirely out of another&rsquo;s data. Knowing what sits on either side &mdash; the identity that feeds it, the data layer that enforces it &mdash; and being able to walk the chain from token to row is what turns a &lsquo;check permissions&rsquo; answer into a systems answer.",
+  stages: [
+    { n: 'Identity provider', d: 'authenticates the user &middot; mints a signed token with the tenant claim' },
+    { n: 'Gateway / edge', d: 'coarse checks &middot; valid token, audience, rate limit' },
+    { n: 'Tenant authorization', d: 'verify claim &middot; inject predicate &middot; object-level check', cur: true },
+    { n: 'Data access layer', d: 'the tenant predicate applied to every query &middot; deny-by-default' },
+    { n: 'Database', d: 'RLS / LeadingKeys backstop &middot; tenant-leading index' },
+    { n: 'Audit + anomaly', d: 'log every access &middot; flag cross-tenant attempts and id-scanning' }
+  ],
+  pivots: [
+    { q: "Where does the tenant claim come from &mdash; who mints and signs the token?", chip: "\u2192 Identity / tokens",
+      a: "From the <b>identity provider</b> (Cognito, an OIDC issuer): the user authenticates, and the provider mints a <b>signed token</b> carrying the tenant claim. Authorization <i>consumes</i> that token &mdash; it verifies the signature and trusts the claim &mdash; but never mints it. The provider proves <i>who</i>; authorization decides <i>what</i>. Get the identity layer wrong and everything downstream trusts a lie." },
+    { q: "The token is signed with per-company keys &mdash; how are those managed and rotated?", chip: "\u2192 Package signing (2)",
+      a: "The same <b>per-tenant key discipline</b> as the signing topic: each company&rsquo;s tokens are signed with its own key, verified against its <b>JWKS</b> entry, and a compromised key is <b>rotated</b> at the issuer &mdash; publish the new, retire the old. Scoping keys per company means a compromise blasts one tenant, not the platform. It&rsquo;s signing&rsquo;s blast-radius argument applied to identity." },
+    { q: "The tenant scope is enforced in the database too &mdash; how is that infrastructure locked down?", chip: "\u2192 AWS hardening (4)",
+      a: "The database backstop &mdash; <b>RLS</b>, or <b>dynamodb:LeadingKeys</b> tied to the identity &mdash; is part of a least-privilege posture: the app&rsquo;s role can touch only its tenant&rsquo;s data, connections are scoped, secrets are managed. That whole &lsquo;the credential can do exactly what it needs and no more&rsquo; stance is the AWS-hardening topic; authorization is one consumer of it." },
+    { q: "Where does the tenant-scoped data actually live, and how does the scope stay fast?", chip: "\u2192 Data layer / storage",
+      a: "The predicate lands on the <b>data layer</b>: <code>tenant_id</code> leads every index so the scoped query is a range seek, and the store (Postgres RLS, or DynamoDB partition keys) enforces the boundary. Authorization decides the scope; the data layer makes it both <i>enforced</i> and <i>efficient</i>. The isolation model &mdash; silo vs pool &mdash; is a storage decision as much as a security one." },
+    { q: "One tenant&rsquo;s traffic spikes &mdash; how do you keep it from starving the others?", chip: "\u2192 Noisy-neighbor / limits",
+      a: "<b>Per-tenant fairness</b>: rate limits, quotas, fair queuing, and per-tenant metrics to attribute load. Isolation isn&rsquo;t only about <i>data</i> &mdash; it&rsquo;s about <i>resources</i> too. A pooled system where one tenant can consume another&rsquo;s share has failed isolation just as surely as one that leaks rows. The whale gets its own lane, not the whole road." },
+    { q: "A tenant asks to be deleted &mdash; how does that ripple through the system?", chip: "\u2192 Data lifecycle / compliance",
+      a: "Right-to-erasure crosses every copy: the primary tables (a scoped DELETE in a pool, drop-database in a silo), plus <b>backups, caches, indexes, and logs</b>. Crypto-shredding a <b>per-tenant key</b> handles the immutable copies. Authorization&rsquo;s tenant boundary is what makes &lsquo;exactly this tenant&rsquo;s data&rsquo; addressable in the first place &mdash; deletion is isolation run in reverse." },
+    { q: "All of this &mdash; roles, policies, RLS, key scoping &mdash; how is it defined repeatably?", chip: "\u2192 IaC (8)",
+      a: "Declaratively, as <b>infrastructure as code</b>: the IAM policies, the RLS setup, the per-tenant key wiring, the role scoping &mdash; versioned and reproducible, not click-ops. Authorization rules <i>are</i> security-critical configuration, so they belong in reviewed, rollback-able code. Who can touch what should never be a setting someone changed by hand in a console." }
+  ],
+  heads: {
+    whereHead: "Where the access boundary sits",
+    pivHead: "Interviewer pivot points",
+    pivSub: "The questions that bridge out of authorization. Each one leads into another deep-dive &mdash; tap to see the connecting answer."
+  }
+};
+
+/* topics/authz/trade.js -- topic 3 trade-offs. lead + decisions[].{q, opts:[{n,when}],
+   tell}. The decisions an interviewer drills on multi-tenant authorization; each names
+   the switch condition, never a universal winner. 7-bit ASCII (entities + \uXXXX). */
+var TOPIC_AUTHZ_TRADE = {
+  lead: "Authorization is a stack of decisions, and an interviewer drills the <i>why</i> behind each. For every one the answer is &lsquo;it depends &mdash; here&rsquo;s the constraint that flips it,&rsquo; never a universal winner. Name the axis.",
+  decisions: [
+    { q: 'Database per tenant <span class="vs">vs</span> shared pool',
+      opts: [{ n: "Silo (DB per tenant)", when: "a tenant needs a <b>hard compliance boundary</b>, its own encryption key, or trivial per-tenant backup/delete &mdash; and you can absorb migrations across N databases." }, { n: "Pool (shared tables)", when: "cost and single-migration agility dominate and you trust your <b>enforcement layer</b> &mdash; the long tail of small tenants." }, { n: "Bridge (hybrid)", when: "you have both &mdash; pool the long tail, silo the whales and the regulated. The realistic default." }],
+      tell: "The axis is <b>cost/agility vs isolation/compliance</b>. Declaring one universally right is the smell; the mature answer is a hybrid keyed on tenant size and compliance profile." },
+    { q: 'Row-Level Security <span class="vs">vs</span> app-layer predicate',
+      opts: [{ n: "Database RLS", when: "you&rsquo;re on Postgres and want the boundary enforced by the <b>engine</b> &mdash; surviving a raw query or an app bug." }, { n: "App-layer injection", when: "you need <b>portability</b> (DynamoDB has no RLS), clearer errors, and enforcement that doesn&rsquo;t depend on every connection being configured." }],
+      tell: "It&rsquo;s not either/or &mdash; the app layer <b>prevents</b> the mistake, RLS <b>catches</b> the one that reaches the database. Use both; which is primary is set by your datastore." },
+    { q: 'RBAC <span class="vs">vs</span> ABAC',
+      opts: [{ n: "RBAC (roles)", when: "access maps cleanly to <b>job functions</b> &mdash; simple, auditable, easy to reason about. The base for most systems." }, { n: "ABAC (attributes)", when: "rules are <b>fine-grained or dynamic</b> &mdash; region, time, resource attributes &mdash; and roles would explode into combinations." }],
+      tell: "<b>RBAC as the base, ABAC for the exceptions.</b> Role explosion (<code>editor-europe-daytime</code>) is the signal to move a dimension into attributes. Both sit <i>above</i> the separate tenant-isolation layer." },
+    { q: 'Authorize at the gateway <span class="vs">vs</span> in the service',
+      opts: [{ n: "Gateway (coarse)", when: "the check is <b>data-independent</b> &mdash; valid token, right audience, rate limit &mdash; and you want junk rejected before it reaches services." }, { n: "In the service (fine)", when: "the decision <b>needs the data</b> &mdash; does this user own this object, tenant scoping on the query. Object-level authz can&rsquo;t live at the edge." }],
+      tell: "Coarse at the edge, fine at the source. <b>Zero-trust</b> means the service re-checks regardless &mdash; it can&rsquo;t assume the gateway authorized the request." },
+    { q: 'Per-request context (SET LOCAL) <span class="vs">vs</span> connection-per-tenant',
+      opts: [{ n: "SET LOCAL per txn", when: "you pool connections across tenants (the norm at scale) &mdash; set the tenant transaction-scoped so it resets on commit and can&rsquo;t leak to the next request." }, { n: "Connection per tenant", when: "you have <b>few, large tenants</b> and want physical connection isolation &mdash; but it doesn&rsquo;t scale to thousands (pool sprawl)." }],
+      tell: "For a pooled system, <b>SET LOCAL not SET</b> is the rule &mdash; a session-scoped SET leaks the tenant across a reused connection. Connection-per-tenant is clean but only viable for a handful of tenants." },
+    { q: 'Central policy engine (OPA) <span class="vs">vs</span> in-code checks',
+      opts: [{ n: "Policy engine (OPA/Cedar)", when: "policies are <b>complex, shared across services</b>, or must be audited and changed without redeploying code &mdash; externalize them as data." }, { n: "In-code checks", when: "authorization is <b>simple and local</b> &mdash; a tenant predicate and a role check &mdash; and an engine would add a network hop and operational weight for little gain." }],
+      tell: "Externalize policy when it&rsquo;s <b>complex and cross-cutting</b>; keep it in code when it&rsquo;s simple. But the <b>tenant predicate</b> usually stays in the data layer either way &mdash; you don&rsquo;t want a per-row decision taking a network round-trip." },
+    { q: 'Cache the authz decision <span class="vs">vs</span> check every request',
+      opts: [{ n: "Cache (short TTL)", when: "the check is <b>expensive</b> (a policy lookup) and the action is <b>low-risk</b> &mdash; a stale allow self-heals when the TTL expires." }, { n: "Check live", when: "the action is <b>high-privilege</b> (delete, billing) where a stale &lsquo;allow&rsquo; after a revoked role is unacceptable &mdash; verify against current state." }],
+      tell: "Caching authz is an <b>invalidation</b> problem: a stale allow after a revocation is the hole. Tier it by blast radius &mdash; cache the cheap read, check live for the dangerous write." }
+  ]
+};
+
+/* topics/authz/model.js -- topic 3 model answers. selectors[i] pairs answers[i];
+   each answer = {opener, sub, beats:[{l,c,t}]} where c in frame|head|sub|risk|trade|
+   close. Full spoken scripts for the 9 scenario framings. 'Name the limits' stays
+   LAST. Grounded in the Invenco multi-tenant platform. 7-bit ASCII (entities+\uXXXX). */
+var TOPIC_AUTHZ_MODEL = {
+  selectors: ['Make it secure', 'The isolation model', 'Walk a cross-tenant leak', 'Defend the design', 'Operate it', 'Cut scope', 'One you built', 'Test it', 'Name the limits'],
+  answers: [
+    { opener:"\u201CHow do you keep one tenant out of another&rsquo;s data?\u201D",
+      sub:"Identity from the verified token, scope injected into every query, deny-by-default.",
+      beats:[
+        {l:"FRAME",c:"frame",t:"The mistake is treating this as a permission check at the top of each handler &mdash; at scale someone forgets one. I make isolation a <b>property of the system</b>, not a discipline."},
+        {l:"HEADLINE",c:"head",t:"Authorization is a <b>predicate the shared data layer injects into every query</b> &mdash; the tenant filter is added automatically, so a developer can&rsquo;t write an unscoped query."},
+        {l:"IDENTITY",c:"sub",t:"The tenant comes from the <b>verified token</b> &mdash; a signed claim &mdash; never a header or body. It&rsquo;s trusted because forging it breaks the signature; a client-supplied tenant id is the confused-deputy attack."},
+        {l:"DENY BY DEFAULT",c:"sub",t:"No tenant context <b>throws</b> &mdash; it never falls back to an unscoped query. A lost context is a loud crash, not a silent full-table leak."},
+        {l:"THE OBJECT CHECK",c:"risk",t:"The predicate covers list queries; a <code>getById(id)</code> still gets an explicit <b>ownership assertion</b>, and a cross-tenant miss returns <b>404, not 403</b>. That&rsquo;s the BOLA defense &mdash; OWASP&rsquo;s number one."},
+        {l:"DEPTH",c:"trade",t:"The database is the <b>backstop</b> &mdash; RLS <code>FORCE</code>d, or DynamoDB LeadingKeys &mdash; so even a raw query or an app bug can&rsquo;t cross tenants. The app prevents the mistake, the database catches the slip."},
+        {l:"CLOSE",c:"close",t:"So: identity from the token, scope in every query, deny-by-default, an object check on singleton lookups, and the database as backstop. Isolation a developer can&rsquo;t forget."}
+      ] },
+    { opener:"\u201CDatabase per tenant, or one shared pool?\u201D",
+      sub:"Silo, pool, bridge &mdash; keyed on tenant size and compliance.",
+      beats:[
+        {l:"FRAME",c:"frame",t:"Three models, and the choice is a <b>trade-off, not a default</b> &mdash; so I&rsquo;d name the axis before picking."},
+        {l:"THE THREE",c:"head",t:"<b>Silo</b> (DB per tenant): strongest isolation, trivial per-tenant backup and delete &mdash; but N migrations and connection sprawl. <b>Pool</b> (shared tables): cheapest, one migration &mdash; but all burden on enforcement. <b>Bridge</b>: both."},
+        {l:"THE AXIS",c:"sub",t:"The axis is <b>cost and agility vs isolation and compliance</b>. A pool is efficient but leans entirely on the enforcement layer; a silo is safe but operationally heavy."},
+        {l:"MY DEFAULT",c:"sub",t:"For a platform with a few whales and a long tail, I&rsquo;d <b>bridge</b>: pool the long tail for cost, silo the large or regulated tenants who need their own key, dedicated backup, or a hard compliance boundary."},
+        {l:"THE TELL",c:"risk",t:"The deletion asymmetry proves the point &mdash; &lsquo;delete this tenant&rsquo; is a database drop in a silo but a scoped multi-table DELETE in a pool. Any tenant with heavy right-to-erasure is a candidate to silo."},
+        {l:"NO REWRITE",c:"trade",t:"The data layer resolves tenant&rarr;datasource, so moving a tenant from pool to silo is a <b>config/route change, not a rewrite</b> &mdash; which is what makes the hybrid practical."},
+        {l:"CLOSE",c:"close",t:"So: bridge by default, keyed on tenant size and compliance profile &mdash; and I&rsquo;d resist declaring one model universally right."}
+      ] },
+    { opener:"\u201CA customer reports seeing another company&rsquo;s data. Walk me through it.\u201D",
+      sub:"Contain, find the escaped scope, close the class, prove it can&rsquo;t recur.",
+      beats:[
+        {l:"FRAME",c:"frame",t:"This is a <b>Sev-1</b> &mdash; a confidentiality breach. First contain, then diagnose, then prove it can&rsquo;t recur. I don&rsquo;t start by guessing the cause."},
+        {l:"CONTAIN",c:"head",t:"Immediately: scope the blast radius from <b>audit logs</b> (who saw what across which tenants), and if it&rsquo;s active, disable the offending path. Stop the bleeding before the forensics."},
+        {l:"THE USUAL CAUSE",c:"sub",t:"Nine times in ten it&rsquo;s a <b>query that escaped the scoped layer</b> &mdash; a raw query without the tenant filter, or a <code>getById</code> that fetched by primary key and never checked ownership. The predicate was bypassed."},
+        {l:"CONFIRM",c:"sub",t:"I&rsquo;d confirm from the logs and a repro: which query, which code path, was it the list predicate or the missing object-level check. Precision matters &mdash; the fix differs."},
+        {l:"CLOSE IT",c:"risk",t:"Fix the immediate hole, then close the <b>class</b>: route that access through the shared layer, add the object-level check, and if RLS wasn&rsquo;t <code>FORCE</code>d, force it so the database would have caught it."},
+        {l:"PROVE IT",c:"trade",t:"Then a <b>regression test that injects the foreign id</b> and asserts zero rows, gated in CI &mdash; so this exact leak fails the build forever. And a blameless postmortem on why the layer was bypassable."},
+        {l:"CLOSE",c:"close",t:"So: contain from audit logs, find the escaped query, close the class not just the instance, and lock it with an adversarial test. A leak is a missing layer, not just a missing filter."}
+      ] },
+    { opener:"\u201CWhy inject a predicate instead of just reviewing queries carefully?\u201D",
+      sub:"Because human discipline fails at scale; the system should make the mistake unwritable.",
+      beats:[
+        {l:"FRAME",c:"frame",t:"The alternative &mdash; &lsquo;developers add the tenant filter and we catch misses in review&rsquo; &mdash; is a <b>discipline</b>, and disciplines fail at scale. One person forgets one query, one time, and it&rsquo;s a breach."},
+        {l:"THE CASE",c:"head",t:"Injecting the predicate in the shared layer makes the unscoped query <b>unwritable</b> &mdash; the developer never types the filter, so they can&rsquo;t omit it. I move the guarantee from &lsquo;remember&rsquo; to &lsquo;can&rsquo;t forget.&rsquo;"},
+        {l:"VS RLS ALONE",c:"sub",t:"Why not <i>only</i> database RLS? Because I want <b>portability</b> (DynamoDB has no RLS), clearer errors, and enforcement that doesn&rsquo;t depend on every connection being configured. RLS is the backstop, not the whole plan."},
+        {l:"VS PER-ENDPOINT",c:"sub",t:"Why not per-endpoint checks? They scatter the rule across hundreds of handlers &mdash; N places to get right instead of one. Centralizing it is fewer surfaces to audit and fewer places to slip."},
+        {l:"THE HONEST COST",c:"risk",t:"The cost is that legitimate cross-tenant queries (admin, reporting) now need an <b>explicit, audited</b> opt-out accessor &mdash; but that&rsquo;s a feature: crossing tenants should be deliberate and logged, never the default."},
+        {l:"DEPTH",c:"trade",t:"And I keep <b>both</b> layers because they fail differently &mdash; the app layer prevents the common mistake, the database catches the raw-query bypass. Defense in depth isn&rsquo;t redundancy; it&rsquo;s covering different failure modes."},
+        {l:"CLOSE",c:"close",t:"So I&rsquo;d defend it as <b>making the safe path the only path</b> &mdash; the strongest security control is one that can&rsquo;t be bypassed by forgetting."}
+      ] },
+    { opener:"\u201CHow would you operate this in production?\u201D",
+      sub:"Per-tenant metrics, audit every access, alarm on the shape of an attack.",
+      beats:[
+        {l:"FRAME",c:"frame",t:"Operating multi-tenant authz is two jobs: <b>detect a boundary violation</b>, and <b>keep one tenant from starving the rest</b>. Both need per-tenant visibility."},
+        {l:"AUDIT",c:"head",t:"Every access is <b>logged</b> &mdash; who, which tenant, which object &mdash; and cross-tenant <i>attempts</i> are a first-class signal. The audit trail is both a detective control and the compliance artifact regulators ask for."},
+        {l:"ANOMALY",c:"sub",t:"I alarm on the <b>shape of an attack</b>: a spike in 404s from one user, access to ids outside their normal range, a burst of distinct-object lookups &mdash; that&rsquo;s automated IDOR scanning."},
+        {l:"NOISY NEIGHBOR",c:"sub",t:"Per-tenant <b>rate limits, quotas, and fair queuing</b>, plus <b>per-tenant metrics</b> (QPS and P99 by tenant) &mdash; without them I&rsquo;d see &lsquo;the system is slow&rsquo; and couldn&rsquo;t attribute it to tenant 42 at 10x normal."},
+        {l:"THE DATABASE",c:"risk",t:"The database is the scarcest shared resource, so per-tenant <b>query timeouts and connection caps</b> keep one tenant from exhausting the pool. The whale gets its own lane."},
+        {l:"INCIDENT READY",c:"trade",t:"And a <b>break-glass</b> path for support &mdash; audited, time-boxed impersonation &mdash; so &lsquo;we need to see the customer&rsquo;s data to debug&rsquo; doesn&rsquo;t become a standing super-admin role that&rsquo;s a breach waiting to happen."},
+        {l:"CLOSE",c:"close",t:"So: audit everything, alarm on attack shapes, enforce per-tenant fairness with per-tenant metrics, and make cross-tenant access exceptional and observable."}
+      ] },
+    { opener:"\u201CYou have two weeks for an MVP. What do you cut?\u201D",
+      sub:"Cut the sophistication, never the tenant predicate.",
+      beats:[
+        {l:"FRAME",c:"frame",t:"The rule: I cut <b>sophistication</b>, never the <b>boundary</b>. A leaked-tenant MVP isn&rsquo;t an MVP, it&rsquo;s an incident."},
+        {l:"KEEP",c:"head",t:"Non-negotiable: identity from a <b>verified claim</b>, the <b>tenant predicate</b> in the data layer, <b>deny-by-default</b>, and the <b>object-level check</b> with 404s. That&rsquo;s the irreducible core of isolation."},
+        {l:"CUT: MODEL",c:"sub",t:"<b>Pool everyone</b> &mdash; skip silos and per-tenant keys for now. Cheapest and fastest, and because the data layer resolves tenant&rarr;datasource, I can silo a tenant later without a rewrite."},
+        {l:"CUT: RICHNESS",c:"sub",t:"<b>RBAC only</b>, a handful of roles &mdash; no ABAC, no policy engine. Add attribute rules when role explosion actually shows up, not before."},
+        {l:"CUT: CACHING",c:"risk",t:"<b>No authz caching</b> &mdash; check on every request. Simpler, and it avoids the invalidation trap; I&rsquo;d only add a cache when a real hotspot appears."},
+        {l:"DON&rsquo;T CUT: RLS",c:"trade",t:"I&rsquo;d still <b>FORCE RLS</b> if I&rsquo;m on Postgres &mdash; it&rsquo;s nearly free and it&rsquo;s the backstop that turns a future bug from a breach into a caught error. Cheap insurance I wouldn&rsquo;t skip."},
+        {l:"CLOSE",c:"close",t:"So: pool, RBAC, no cache &mdash; but the verified claim, the predicate, deny-by-default, and the object check ship on day one. The boundary is the product."}
+      ] },
+    { opener:"\u201CTell me about a multi-tenant system you&rsquo;ve built.\u201D",
+      sub:"Invenco: 50k+ terminals, DynamoDB, tenant as the leading key, IAM-enforced.",
+      beats:[
+        {l:"FRAME",c:"frame",t:"I&rsquo;ll take the multi-tenant platform at Invenco &mdash; 50,000-plus payment terminals across customers on AWS, DynamoDB, multi-tenant microservices. So I&rsquo;ve lived this, and the interesting part was pushing enforcement <b>below the app</b>."},
+        {l:"THE MODEL",c:"head",t:"Tenant was the <b>leading element of the partition key</b> &mdash; <code>tenantId</code> first &mdash; so a tenant&rsquo;s items were physically grouped and every access was naturally scoped. Same instinct as a tenant-leading SQL index."},
+        {l:"IAM ENFORCEMENT",c:"sub",t:"The part I&rsquo;m proud of: isolation pushed into <b>IAM</b> with <code>dynamodb:LeadingKeys</code> &mdash; a credential could only touch items whose partition key started with its tenant id. Enforcement below application code, so an app bug couldn&rsquo;t cross tenants."},
+        {l:"IDENTITY",c:"sub",t:"Tenant context came from the <b>Cognito ID token&rsquo;s claim</b>, propagated via a Lambda authorizer &mdash; from the verified identity, never client input. The claim picked the scope all the way down to the IAM policy."},
+        {l:"THE GOTCHA",c:"risk",t:"The subtle one: <b>Scan bypasses LeadingKeys</b>. So &lsquo;scan less&rsquo; became a real rule &mdash; lock down who can Scan, prefer Query, and treat a Scan in review as a red flag. The enforcement had a hole you had to design around."},
+        {l:"WHAT I&rsquo;D CHANGE",c:"trade",t:"If I did it again I&rsquo;d invest earlier in <b>hot-partition handling</b> for the whales &mdash; a shard-suffix on the tenant key &mdash; because a large tenant on one partition hits the throughput ceiling, and retrofitting sharding is harder than designing it in."},
+        {l:"CLOSE",c:"close",t:"So the value was <b>tenant-as-leading-key plus IAM enforcement</b> &mdash; isolation the application couldn&rsquo;t accidentally break &mdash; and knowing the one hole (Scan) that the model didn&rsquo;t close."}
+      ] },
+    { opener:"\u201CHow do you test that isolation actually holds?\u201D",
+      sub:"Attack the boundary &mdash; inject the other tenant&rsquo;s id and assert zero rows.",
+      beats:[
+        {l:"FRAME",c:"frame",t:"Isolation is a <b>security property</b>, so the tests have to be <b>adversarial</b> &mdash; the happy path (tenant A sees A&rsquo;s data) is the easy part and passes even when the boundary is broken."},
+        {l:"HEADLINE",c:"head",t:"The load-bearing test: <b>seed two tenants, query as A but hand it B&rsquo;s ids, and assert zero rows come back</b> &mdash; 404 or empty, never data. You test the exact failure you fear."},
+        {l:"EVERY PATH",c:"sub",t:"I run that foreign-id injection across <b>every read path</b> &mdash; list queries, <code>getById</code>, search, exports &mdash; because the leak usually hides in the one path that fetched by primary key and forgot the ownership check."},
+        {l:"IN CI",c:"sub",t:"It runs in <b>CI as a first-class gate</b> &mdash; a regression must fail the build mechanically, not get caught in review, because &lsquo;we&rsquo;ll notice&rsquo; is exactly how isolation holes ship."},
+        {l:"RUNTIME TOO",c:"risk",t:"Paired with <b>runtime assertions and audit logging</b> of cross-tenant attempts &mdash; so the boundary is verified before merge and monitored after deploy. Tests catch the known; monitoring catches the unknown."},
+        {l:"THE RLS CASE",c:"trade",t:"On RLS I also test that it&rsquo;s actually <b>FORCE</b>d and context is <code>SET LOCAL</code> &mdash; a test that connects as the owner and confirms the policy still applies catches the &lsquo;RLS silently skipped&rsquo; footgun."},
+        {l:"CLOSE",c:"close",t:"So: adversarial foreign-id tests across every path, gated in CI, plus runtime attempt-logging. You can&rsquo;t review your way to isolation &mdash; you have to try to break it, mechanically."}
+      ] },
+    { opener:"\u201CWhere does this approach fall short?\u201D",
+      sub:"The honest edges: stateless-token staleness, the escaped raw query, the whale.",
+      beats:[
+        {l:"FRAME",c:"frame",t:"A few honest limits &mdash; naming them is the point, because pretending isolation is airtight is the junior tell."},
+        {l:"TOKEN STALENESS",c:"risk",t:"Stateless tokens are a <b>snapshot until expiry</b> &mdash; a revoked role or tenant change lags until refresh. I mitigate with short lifetimes and live checks on high-privilege actions, but immediate revocation and stateless verification are genuinely in tension."},
+        {l:"THE ESCAPED QUERY",c:"risk",t:"The predicate only protects code that goes <b>through the layer</b>. A raw query, a new datastore, a background job that forgets context &mdash; each can bypass it. RLS backstops the database, but not every store has RLS, so the guarantee is only as good as its coverage."},
+        {l:"THE WHALE",c:"trade",t:"A tenant-leading index isolates but stops <i>narrowing</i> when one tenant is most of the data &mdash; the whale needs extra targeted indexes or a silo. Isolation and query performance are related but not the same lever."},
+        {l:"CACHING",c:"sub",t:"Any authz caching reintroduces a <b>staleness window</b> on revocation &mdash; I tier it by blast radius, but a cached &lsquo;allow&rsquo; is always a small risk I&rsquo;m trading for latency."},
+        {l:"CLOSE",c:"close",t:"None of these are dealbreakers &mdash; they&rsquo;re the trade-offs I&rsquo;d name before being asked, and each has a mitigation I&rsquo;d put on the roadmap rather than pretend away."}
+      ] }
+  ]
+};
+
+/* topics/authz/num.js -- topic 3 PARAMETRIC pane. compute(vals, fmt) is
+   DOM-method-free (arithmetic + string building only). Authorization is cheap, so
+   the ceiling this pane reveals is NOT throughput -- it's BLAST RADIUS: what a single
+   missing tenant filter exposes (essentially every other tenant's rows), and why the
+   tenant-leading index makes the scoped query a seek. Offline-safe; 7-bit ASCII. */
+var TOPIC_AUTHZ_NUM = {
+  lead: "The estimation for a multi-tenant system isn&rsquo;t about throughput &mdash; authorization is cheap. It&rsquo;s about <b>blast radius</b>: what a single missing tenant filter exposes, and why the tenant-leading index is what keeps the scoped query fast.",
+  tell: "The number that matters is the <b>blast radius of one forgotten WHERE</b> &mdash; it exposes essentially <i>every other tenant&rsquo;s</i> rows. That&rsquo;s why isolation is layered and deny-by-default: the cost of a single slip is the whole dataset, so you make the slip unwritable.",
+  inputs: [
+    { id: 'a_tenants', label: 'Tenants', value: 5000, min: 1 },
+    { id: 'a_rows', label: 'Total rows (millions)', value: 500, min: 0, step: 1 },
+    { id: 'a_whale', label: 'Largest tenant (% of rows)', value: 15, min: 0, step: 1 },
+    { id: 'a_rps', label: 'Peak requests/sec', value: 20000, min: 0 }
+  ],
+  compute: function (vals, fmt) {
+    var N = vals.a_tenants, Rm = vals.a_rows, share = Math.min(vals.a_whale, 100), rps = vals.a_rps;
+    var rowsPerTenant = Rm * 1e6 / N;
+    var blastM = Rm * (N - 1) / N;               /* millions of OTHER tenants' rows a missing filter exposes */
+    var crossPct = (N - 1) / N * 100;
+    var whaleM = Rm * share / 100;
+    var auditM = rps * 86400 / 1e6;
+    return [
+      { k: 'Rows per average tenant', v: fmt.n(rowsPerTenant), u: 'rows', n: 'total rows \\u00F7 tenants \\u2014 the scoped query\\u2019s working set', over: false },
+      { k: 'Tenant-index speedup', v: fmt.n(N), u: '\\u00D7', n: 'a tenant-leading index seeks 1 tenant\\u2019s rows instead of scanning all ' + fmt.n(Rm) + 'M', over: false },
+      { k: 'Blast radius of ONE missing filter', v: fmt.n(blastM), u: 'M rows', n: 'a single forgotten WHERE exposes every OTHER tenant\\u2019s rows \\u2014 this is the whole risk', over: true },
+      { k: 'Cross-tenant share of the dataset', v: fmt.n(crossPct), u: '%', n: 'of all rows belong to other tenants \\u2014 the fraction a missing filter leaks', over: crossPct > 90 },
+      { k: 'The whale\\u2019s rows', v: fmt.n(whaleM), u: 'M rows', n: 'largest tenant \\u2014 a tenant-led index no longer narrows here; add targeted indexes or silo it', over: false },
+      { k: 'Access events/day to audit', v: fmt.n(auditM), u: 'M/day', n: 'peak rps \\u00D7 86,400 \\u2014 the trail that lets you scope a breach and catch id-scanning', over: false }
+    ];
+  }
+};
+
+/* topics/authz/rf.js -- topic 3 RED FLAGS. One lead + nine flags. Each flag is
+   {bad, note, tell, fix}; only the last carries a note. Strings double-quoted (no
+   apostrophe escaping); non-ASCII is HTML entities. Offline-safe, pure data. */
+var TOPIC_AUTHZ_RF = {
+  lead: "The moves that quietly tank a candidate on multi-tenant authorization. This is a security round, so a weak answer gets caught fast &mdash; each of these is something a shakier candidate actually says, what the interviewer hears, and the line that flips it.",
+  flags: [
+    {
+      bad: "&ldquo;I&rsquo;d read the tenant id from a header the client sends.&rdquo;",
+      note: null,
+      tell: "That&rsquo;s the <b>confused-deputy attack</b> handed to the attacker &mdash; an authenticated user of tenant A sends <code>X-Tenant-Id: B</code> and reads B&rsquo;s data. The interviewer hears <i>&ldquo;trusts client input for the security boundary.&rdquo;</i>",
+      fix: "Derive the tenant from the <b>verified token</b> &mdash; a signed claim &mdash; server-side. It&rsquo;s trusted only because forging it breaks the signature; never accept it from a header, query, or body."
+    },
+    {
+      bad: "&ldquo;Each endpoint adds a WHERE tenant_id clause.&rdquo;",
+      note: null,
+      tell: "A <b>discipline that fails</b> &mdash; hundreds of handlers, and one forgotten filter is a cross-tenant leak. The interviewer hears <i>&ldquo;isolation depends on every developer remembering, every time.&rdquo;</i>",
+      fix: "Inject the predicate in the <b>shared data layer</b> so it&rsquo;s added automatically to every query. The developer never writes the filter, so they can&rsquo;t forget it &mdash; isolation becomes a property, not a checklist."
+    },
+    {
+      bad: "&ldquo;For another tenant&rsquo;s record I return 403 Forbidden.&rdquo;",
+      note: null,
+      tell: "A 403 <b>confirms the object exists</b> &mdash; it enumerates valid ids across tenants, which is itself a leak. Subtle, but the interviewer clocks it as missing the information-disclosure angle.",
+      fix: "Return <b>404, not 403</b>, across a tenant boundary &mdash; a cross-tenant object should be indistinguishable from a nonexistent one. Log the attempt internally; reveal nothing externally."
+    },
+    {
+      bad: "&ldquo;If there&rsquo;s no tenant context, the query just runs.&rdquo;",
+      note: null,
+      tell: "That&rsquo;s a <b>silent full-table leak</b> waiting to happen &mdash; a lost context returns <i>everything</i>. The interviewer hears <i>&ldquo;the failure mode is a breach, not an error.&rdquo;</i>",
+      fix: "<b>Deny-by-default</b>: the accessor <b>throws</b> when there&rsquo;s no tenant context &mdash; it never falls back to unscoped. A lost context is a loud crash, so the unsafe path doesn&rsquo;t exist."
+    },
+    {
+      bad: "&ldquo;We enabled Row-Level Security, so we&rsquo;re covered.&rdquo;",
+      note: null,
+      tell: "RLS is <b>skipped for the table owner and superusers</b> by default &mdash; if the app connects as the owner, the policy silently does nothing. &ldquo;We enabled it&rdquo; without <code>FORCE</code> is a false sense of security.",
+      fix: "<code>FORCE ROW LEVEL SECURITY</code>, connect as a <b>non-owner</b>, and set the tenant with <code>SET LOCAL</code> (not <code>SET</code>) so it can&rsquo;t leak across a pooled connection."
+    },
+    {
+      bad: "&ldquo;LeadingKeys locks down the table, so any query is safe.&rdquo;",
+      note: null,
+      tell: "<b>Scan bypasses LeadingKeys</b> &mdash; the condition constrains Query and GetItem, but a Scan reads across tenants. Claiming &lsquo;any query is safe&rsquo; is the tell you haven&rsquo;t hit the gotcha in production.",
+      fix: "Know the hole: <b>prefer Query, lock down who can Scan</b>, and treat a Scan in review as a red flag. LeadingKeys is enforcement with an exception you design around."
+    },
+    {
+      bad: "&ldquo;I&rsquo;d just base64-decode the token and read the tenant.&rdquo;",
+      note: null,
+      tell: "Decoding <b>without verifying the signature</b> trusts a token anyone can forge &mdash; the claim is worthless unless the signature checks out. The interviewer hears <i>&ldquo;doesn&rsquo;t understand what makes a claim trustworthy.&rdquo;</i>",
+      fix: "<b>Verify the signature</b> against the issuer&rsquo;s JWKS key first &mdash; a tampered or forged token is rejected. Only <i>then</i> are the claims trustworthy, because the issuer put them there."
+    },
+    {
+      bad: "&ldquo;We tested that each tenant can see their own data.&rdquo;",
+      note: null,
+      tell: "That&rsquo;s the <b>happy path</b> &mdash; it passes even when the boundary is broken. The bug only shows when you actively try to cross it, so a happy-path test proves nothing about isolation.",
+      fix: "Test <b>adversarially</b>: seed two tenants, query as A with B&rsquo;s ids, assert <b>zero</b> rows &mdash; gated in CI. You test the exact failure you fear, mechanically."
+    },
+    {
+      bad: "&ldquo;Support has a super-admin role that can see every tenant.&rdquo;",
+      note: "This is the one that reads as &lsquo;convenient today, breach tomorrow&rsquo; &mdash; a standing cross-tenant credential is the single account that, once compromised, exposes everyone.",
+      tell: "A <b>permanent cross-tenant role is a breach waiting to happen</b> &mdash; one compromised support account reads every customer. The interviewer hears <i>&ldquo;traded the whole isolation model for a support shortcut.&rdquo;</i>",
+      fix: "<b>Break-glass</b>: audited, time-boxed impersonation &mdash; who, which tenant, why &mdash; that expires, ideally with a second approver. Cross-tenant access is exceptional and observable, never standing."
+    }
+  ]
+};
+
+/* topics/authz/open.js -- topic 3 opener/closer. Two cards: [0] open (HAS hooks),
+   [1] close (hooks:null). Same shape as TOPIC_CP_OPEN. The 'Reveal mine' label, the
+   arrow, and the wrappers are static in renderOpenCard. 7-bit ASCII (entities). */
+var TOPIC_AUTHZ_OPEN = {
+  cards: [
+    {
+      kind: "open",
+      k: "Match the altitude",
+      t: "The same access boundary, said three ways",
+      lead: "Interviewers open with <i>&ldquo;quickly, how do you do multi-tenant authorization?&rdquo;</i> as often as <i>&ldquo;design it.&rdquo;</i> Give the altitude they asked for &mdash; the boundary when they want the boundary, the mechanism when they want mechanism &mdash; then expand only when they pull. Say each out loud before you reveal mine.",
+      items: [
+        {
+          n: "1",
+          ht: "<b>One breath.</b> The whole access boundary in a single sentence &mdash; for <i>&ldquo;high level&rdquo;</i> or <i>&ldquo;quickly.&rdquo;</i>",
+          a: "Multi-tenant authorization where the tenant comes from the <b>verified token</b> and the scope is a <b>predicate injected into every query</b> &mdash; deny-by-default, so a forgotten filter crashes instead of leaking, and a cross-tenant read returns 404, not 403."
+        },
+        {
+          n: "2",
+          ht: "<b>Thirty seconds.</b> What you lead with, unprompted &mdash; the load-bearing ideas, no framework name-drops.",
+          a: "Identity comes from a <b>signed claim</b> in the verified token &mdash; never a client-supplied header, which would be the confused-deputy attack. Authorization isn&rsquo;t a per-endpoint check; it&rsquo;s a <b>predicate the shared data layer injects</b> into every read and write, so a developer can&rsquo;t write an unscoped query. It&rsquo;s <b>deny-by-default</b> &mdash; no tenant context throws. A fetch-by-id gets an explicit <b>ownership check</b> and returns <b>404 not 403</b> across tenants, so we don&rsquo;t leak existence &mdash; that&rsquo;s BOLA, OWASP&rsquo;s number one. And the database is the <b>backstop</b> &mdash; RLS or LeadingKeys &mdash; so an app bug still can&rsquo;t cross tenants. The genuinely hard part isn&rsquo;t the check, it&rsquo;s the <b>isolation model and the noisy neighbor</b>."
+        }
+      ],
+      hooks: {
+        lead: "The 30-second version leaves three threads loose <i>on purpose</i> &mdash; you&rsquo;re steering. Each is a tab you go deep on the moment they pull it:",
+        items: [
+          { q: "&ldquo;injected predicate&rdquo;", d: "the shared data layer, deny-by-default, and why per-endpoint checks fail", tab: "Walkthrough &middot; Whiteboard" },
+          { q: "&ldquo;404 not 403&rdquo;", d: "BOLA / IDOR and the object-level ownership check", tab: "Probe Drill &middot; Red Flags" },
+          { q: "&ldquo;isolation model&rdquo;", d: "silo vs pool vs bridge, and the noisy-neighbor problem", tab: "Trade-offs &middot; System Map" }
+        ]
+      },
+      foot: "<b>The skill isn&rsquo;t knowing one version.</b> <i>&ldquo;Walk me through it&rdquo;</i> is the next altitude &mdash; the nine-step flow from token to audit &mdash; and the <b>isolation model</b> is the deepest zoom, where the real seniority shows. It&rsquo;s having all of them, and reading which one they want."
+    },
+    {
+      kind: "close",
+      k: "Land it",
+      t: "How to close &mdash; name the hard part",
+      lead: "When time&rsquo;s nearly up &mdash; or they ask <i>&ldquo;anything else?&rdquo;</i> &mdash; <b>don&rsquo;t just stop.</b> A proactive close is a seniority signal: summarize the boundary, name what you&rsquo;d watch, hand the wheel back. Thirty seconds, unprompted. Say each out loud before you reveal mine.",
+      items: [
+        {
+          n: "1",
+          ht: "<b>Summarize in one line.</b> Re-state the boundary so they remember the shape, not the detours.",
+          a: "&ldquo;So &mdash; tenant from the verified token, scope injected into every query, deny-by-default, an object check with 404s, and the database as backstop. That&rsquo;s the access boundary.&rdquo;"
+        },
+        {
+          n: "2",
+          ht: "<b>Name the three you&rsquo;d watch.</b> Naming your own risks reads as senior &mdash; not insecure.",
+          a: "&ldquo;In production I&rsquo;d watch three things: the <b>isolation model</b> as tenants grow &mdash; when to silo a whale; the <b>noisy neighbor</b>, since one tenant&rsquo;s load can starve the rest; and the <b>escaped query</b> &mdash; anything that bypasses the shared layer, which is why RLS backstops it and adversarial tests gate CI.&rdquo;"
+        },
+        {
+          n: "3",
+          ht: "<b>Say what&rsquo;s next, and what you cut.</b> Shows you scoped on purpose, not from missing it.",
+          a: "&ldquo;With more time I&rsquo;d add a <b>break-glass path</b> for support &mdash; audited, time-boxed &mdash; and per-tenant <b>encryption keys</b> for crypto-shredding on erasure. I left out the identity provider itself and delegated third-party access &mdash; out of scope for the tenant boundary. Where would you like to go deeper?&rdquo;"
+        }
+      ],
+      hooks: null,
+      foot: "<b>The close hands the wheel back</b> &mdash; <i>&ldquo;where would you like to go deeper?&rdquo;</i> &mdash; so the last minute is theirs. The tell: juniors stop at &ldquo;and we filter by tenant id&rdquo;; seniors name the <b>isolation model and noisy neighbor as the hard parts</b> and close on a <i>summary, a risk list, and an invitation.</i>"
+    }
+  ]
+};
+
+/* ============ topics/authz/bank.js -- topic 3 cross-pane BANK ============
+   The mock-run / mixed-fire / frame bank for topic 3. mockBeats + curveballs +
+   frames are authz-specific; cards/speak alias the LOCAL AUTHZ_CARDS / AUTHZ_SPEAK
+   (defined in drill.js, loaded before this in the bundle). publishBanks() seeds the
+   registry-owned globals from this object on switch. Offline-safe; 7-bit ASCII. */
+var TOPIC_AUTHZ_BANK = (function () {
+  var mockBeats=[
+   { tag:"FRAME", cue:"&ldquo;Design multi-tenant authorization &mdash; start wherever you like.&rdquo;",
+     task:"Frame the scope in one line, then give your one-sentence version.",
+     model:"<b>Frame:</b> multiple companies share the platform, and no tenant may ever see another&rsquo;s data; authorization is what enforces that boundary on every request. <b>One-liner:</b> the tenant comes from a verified, signed claim, the scope is a predicate the data layer injects into every query, it&rsquo;s deny-by-default, and a cross-tenant read returns 404 not 403.",
+     int:{q:"Why isn&rsquo;t authentication enough &mdash; if I know who the user is, don&rsquo;t I know their tenant?",a:"Authentication proves <b>who</b> you are; authorization decides <b>what</b> you can touch &mdash; two different questions. Knowing a user is Alice from tenant A doesn&rsquo;t stop the <i>code</i> from fetching tenant B&rsquo;s order by id. The identity is the input; the enforcement &mdash; scoping every query, checking ownership on every object &mdash; is the work. Conflating them is how you get authenticated users reading each other&rsquo;s data."},int2:{q:"So where does the tenant actually come from &mdash; can&rsquo;t the client just tell me?",a:"Never from the client &mdash; that&rsquo;s the confused-deputy attack. The tenant comes from a <b>signed claim in the verified token</b>: the identity provider put it there, and forging it breaks the signature, so it&rsquo;s trustworthy. A header or body the client controls is not &mdash; an authenticated user of A just sends <code>tenant=B</code> and reads B. The whole model rests on deriving scope from verified identity, not accepting it from the request."} },
+   { tag:"STRUCTURE", cue:"&ldquo;Walk me through it.&rdquo;",
+     task:"Talk the whole flow, request to audit &mdash; no code, just the spine.",
+     model:"Request arrives with a token &rarr; the <b>authorizer verifies the signature and extracts the tenant claim</b> &rarr; store it in <b>per-request context</b> &rarr; the shared data layer <b>injects <code>WHERE tenant_id = ctx.tenant</code></b> into every query, <b>deny-by-default</b> if there&rsquo;s no context &rarr; a fetch-by-id also gets an <b>object-level ownership check</b>, returning <b>404 not 403</b> across tenants &rarr; the <b>database backstops</b> it with RLS or LeadingKeys &rarr; every access is <b>audited</b> and id-scanning is flagged.",
+     int:{q:"A developer three services deep needs the tenant. Do you thread it through every function call?",a:"No &mdash; that&rsquo;s brittle and easy to drop. The tenant lives in <b>per-request context</b> (AsyncLocalStorage, the Node equivalent of thread-local): middleware sets it once, and any code in that request &mdash; a repository three layers down &mdash; reads it without it being passed. It propagates through async calls automatically, so the data layer can always reach it, and there&rsquo;s no per-call plumbing to forget."} },
+   { tag:"SCALE", cue:"&ldquo;One tenant is 90% of your traffic and the shared database is pegged. What breaks first?&rdquo;",
+     task:"Name the first ceiling, then the fix &mdash; don&rsquo;t hand-wave &lsquo;it scales.&rsquo;",
+     model:"The first thing to break is the <b>shared database</b> &mdash; the whale&rsquo;s load starves everyone else&rsquo;s queries (the noisy neighbor). Fixes, in order: <b>per-tenant rate limits and query timeouts</b> so one tenant can&rsquo;t consume the pool; <b>fair queuing</b> so work is scheduled proportionally; and for a true whale, <b>silo it</b> onto its own database. Underneath, <b>tenant_id must lead every index</b> so the scoped query is a seek, not a scan &mdash; or the whale&rsquo;s query alone scans the table.",
+     int:{q:"Rate limits protect the API. Why isn&rsquo;t that enough for the database?",a:"Because a request that passes the rate limit can still issue an <b>expensive query</b> &mdash; one tenant running heavy scans exhausts connections and I/O the others need, even at a modest request rate. So you protect the database directly: <b>per-tenant connection caps</b> so one tenant can&rsquo;t drain the pool, <b>statement timeouts</b> per tier so a runaway query is killed, and <b>workload separation</b> routing analytics off the interactive path. The database is the scarcest shared resource, so it needs its own fairness controls, not just the API&rsquo;s."},int2:{q:"When do you stop tuning the pool and just silo the whale?",a:"When the whale&rsquo;s <b>normal</b> load, not a spike, is a meaningful fraction of the shared capacity &mdash; at that point per-tenant limits just throttle a legitimate customer, and you&rsquo;re optimizing a shared resource for a tenant that no longer fits in it. Siloing gives that tenant dedicated capacity, its own backup/restore, and removes it as a noisy neighbor for everyone else. The data layer already resolves tenant&rarr;datasource, so it&rsquo;s a routing change, not a rewrite. The tell is distinguishing &lsquo;bursty tenant&rsquo; (tune) from &lsquo;outgrew the pool&rsquo; (silo)."} },
+   { tag:"FAILURE", cue:"&ldquo;A customer reports seeing another company&rsquo;s data. Now what?&rdquo;",
+     task:"Walk the incident &mdash; contain, diagnose, close the class.",
+     model:"<b>Contain, diagnose, prove.</b> First, scope the blast radius from <b>audit logs</b> &mdash; who saw what across which tenants &mdash; and disable the offending path if it&rsquo;s active. Diagnose: it&rsquo;s almost always a <b>query that escaped the scoped layer</b> &mdash; a raw query without the filter, or a <code>getById</code> that checked the primary key but not ownership. Fix the instance, then close the <b>class</b>: route it through the shared layer, add the object check, <code>FORCE</code> RLS so the database would&rsquo;ve caught it. Lock it with a <b>regression test that injects the foreign id</b>.",
+     int:{q:"The logs show the query returned another tenant&rsquo;s rows but the code &lsquo;looks right.&rsquo; Where do you look?",a:"Three usual suspects. One: a <b>raw query</b> that bypassed the ORM and its injected scope. Two: a path that <b>lost the tenant context</b> &mdash; a background job, a queue consumer, an async boundary where context didn&rsquo;t propagate &mdash; so deny-by-default should have thrown but a fallback returned everything. Three: a <code>getById</code> that scoped the <i>list</i> query correctly but fetched the single object by primary key and forgot the ownership assertion. The audit log&rsquo;s query and code path tell you which; each has a different fix, which is why you diagnose before patching."},int2:{q:"How do you reassure the affected customers &mdash; and the ones who weren&rsquo;t affected?",a:"With the <b>audit trail</b>: because every access is logged per tenant, you can state <i>precisely</i> which records were exposed, to whom, and for how long &mdash; and prove which tenants were <i>not</i> touched. That specificity is the difference between &lsquo;we had a breach, scope unknown&rsquo; and &lsquo;these three records were visible to one other tenant for six minutes, here&rsquo;s the fix.&rsquo; The audit log isn&rsquo;t just detection; it&rsquo;s what lets you bound the incident honestly, which is exactly what regulators and customers demand."} },
+   { tag:"CURVEBALL", theme:"Confused deputy", cue:"&ldquo;An authenticated user of tenant A changes the id in the URL to one belonging to tenant B and gets the record back. Your auth is &lsquo;working.&rsquo; Stop it.&rdquo;",
+     task:"Reframe the premise out loud, then give the real mechanism.",
+     model:"The premise to say aloud: authentication <b>is</b> working &mdash; the user is who they say. What failed is <b>object-level authorization</b>: the code fetched by id and never checked the object belongs to the caller&rsquo;s tenant. This is <b>BOLA / IDOR</b>, OWASP API #1. The fix: on every fetch-by-id, assert <code>resource.tenantId === ctx.tenant</code> (and ownership) server-side, and return <b>404 not 403</b> so you don&rsquo;t confirm B&rsquo;s record exists. The id is a <i>request</i>, never an authorization.",
+     int:{q:"You added the ownership check to that endpoint. Why isn&rsquo;t that the end of it?",a:"Because BOLA is a <b>class</b>, not one endpoint &mdash; the same gap exists on every route that fetches by a client-supplied id. Patching one is whack-a-mole. The durable fix is <b>structural</b>: a shared authorize-resource helper that <i>every</i> by-id handler goes through, or the tenant predicate applied even to single-object fetches, plus a <b>test that injects a foreign id across every read path</b>. You close the class by making the check unavoidable, not by remembering it endpoint-by-endpoint &mdash; the same &lsquo;make the mistake unwritable&rsquo; principle as the tenant predicate."} },
+   { tag:"CLOSE", cue:"&ldquo;Sum it up &mdash; and what would you watch in prod?&rdquo;",
+     task:"Two-sentence close, then the one thing you&rsquo;d alarm on.",
+     model:"It&rsquo;s an access boundary: identity comes from a verified claim, the tenant scope is a predicate injected into every query, it&rsquo;s deny-by-default, singleton fetches get an ownership check that returns 404 not 403, and the database backstops it. In prod I&rsquo;d watch for the <b>shape of an IDOR attack</b> &mdash; a user hitting many distinct object ids, or a spike of 404s from one account &mdash; because that&rsquo;s the earliest signal someone is probing the boundary, and every cross-tenant attempt is already in the audit log.",
+     int:{q:"You&rsquo;ve got a week, not a month. Cut one thing you described to ship &mdash; what goes?",a:"The <b>sophistication</b> goes, never the boundary. I&rsquo;d ship <b>pooled</b> (skip silos and per-tenant keys), <b>RBAC only</b> (no ABAC or policy engine), and <b>no authz caching</b> (check every request) &mdash; all addable later without a rewrite because the data layer already resolves tenant&rarr;datasource. What I would <b>not</b> cut is the <b>verified-claim identity, the injected tenant predicate, deny-by-default, and the object-level check</b> &mdash; those are the contract, and a leaked-tenant MVP is an incident, not an MVP. And I&rsquo;d keep <code>FORCE</code> RLS on Postgres because it&rsquo;s nearly free insurance. Knowing which parts are the boundary and which are the hardening is the answer."} }
+  ];
+  var mockCurveIdx=0; for(var _ci=0;_ci<mockBeats.length;_ci++){ if(mockBeats[_ci].tag==="CURVEBALL") mockCurveIdx=_ci; }
+  var curveballs=[ mockBeats[mockCurveIdx],
+    { tag:"CURVEBALL", theme:"Stale token", cue:"&ldquo;You revoke an admin&rsquo;s access. Ten minutes later their token still works and they delete a tenant&rsquo;s data. How?&rdquo;",
+      task:"Name the stateless-token trade-off, then the mitigations.",
+      model:"The token is a <b>self-contained snapshot</b> &mdash; it carries the roles it was minted with and verifies <b>offline</b>, so it stays valid until it <b>expires</b>, regardless of a server-side revocation. That&rsquo;s the cost of stateless auth. Mitigations: <b>short lifetimes</b> so stale claims self-heal in minutes; <b>revocable refresh tokens</b> so the next refresh fails; a <b>denylist</b> of revoked token ids checked on sensitive operations; and for truly high-privilege actions, a <b>live check</b> against current state rather than trusting the token&rsquo;s cached role.",
+      int:{q:"Why not just check the database on every request and drop stateless tokens entirely?",a:"Because that trades the whole benefit &mdash; a stateless token means <b>no lookup on the hot path</b>, which is what lets authorization scale. Checking live state on <i>every</i> request puts a read in front of every call and reintroduces the bottleneck tokens exist to avoid. The pragmatic answer is <b>tiered</b>: trust the short-lived token for ordinary reads, and pay for a live check only on the dangerous operations (delete, billing, privilege change). You buy immediate revocation exactly where it matters and keep statelessness everywhere else."} },
+    { tag:"CURVEBALL", theme:"Pool leakage", cue:"&ldquo;Your RLS-protected app intermittently serves one tenant another&rsquo;s data under load. RLS is enabled and has a policy. What&rsquo;s happening?&rdquo;",
+      task:"Find the leak that only appears under connection reuse.",
+      model:"Almost certainly <b>SET vs SET LOCAL</b> on a pooled connection. A plain <code>SET app.tenant</code> <b>persists on that physical connection</b> &mdash; and under load, when the pool hands the same connection to the <i>next</i> request (a different tenant), that request inherits the previous tenant&rsquo;s context until it overwrites it, or reads with the stale one. The fix is <code>SET LOCAL</code>, which is <b>transaction-scoped</b> and reset on commit, so context can never bleed across a reused connection. It only shows &lsquo;under load&rsquo; because that&rsquo;s when connections get reused mid-flight.",
+      int:{q:"Would a connection-per-tenant model have avoided this?",a:"Yes &mdash; a dedicated connection per tenant physically can&rsquo;t leak context, because it&rsquo;s never shared. But it doesn&rsquo;t <b>scale</b>: thousands of tenants means thousands of connections, which exhausts the database&rsquo;s connection limit. So connection-per-tenant is viable only for a handful of large tenants. For a pooled system &mdash; the norm at scale &mdash; the answer isn&rsquo;t to stop pooling, it&rsquo;s to set the context <b>transaction-scoped</b> so pooling is safe. The bug is the <i>session</i>-scoped SET, not pooling itself."} },
+    { tag:"CURVEBALL", theme:"Escaped query", cue:"&ldquo;Your predicate-injection is airtight in the ORM. A new analytics service reads the same database with raw SQL and leaks across tenants. Whose fault, and how do you prevent the class?&rdquo;",
+      task:"Name why the app-layer guarantee didn&rsquo;t transfer, then the durable fix.",
+      model:"The app-layer predicate only protects <b>code that goes through the layer</b> &mdash; a service reading raw SQL, or a brand-new datastore, was never covered. The guarantee is real but <b>local to the enforcement path</b>. The durable fix is to push the boundary <b>below the app</b> where every reader hits it: <b>RLS <code>FORCE</code>d</b> so even raw SQL is filtered by the engine, or a policy at the datastore. And organizationally, a rule that <b>no service touches tenant data except through the shared layer or an RLS-enforced connection</b> &mdash; enforced in review, not hoped for.",
+      int:{q:"The analytics service legitimately needs cross-tenant aggregates. How do you allow that safely?",a:"Through a <b>separate, explicit, audited path</b> &mdash; never by weakening the default. Analytics gets a <b>purpose-built accessor</b> allowed to aggregate across tenants but returning <i>only aggregates</i>, not row-level data, and logging its access; or it reads from a <b>pre-aggregated, de-identified</b> dataset built for reporting. Cross-tenant is a deliberate capability granted to one service with its own authorization, not a hole in the row-level boundary. The principle holds: crossing tenants is always explicit and audited, whether it&rsquo;s a support human or an analytics job."} },
+    { tag:"CURVEBALL", theme:"Privilege abuse", cue:"&ldquo;Your break-glass support access is audited. A support engineer uses it to browse a high-profile customer&rsquo;s data out of curiosity. Audit caught it &mdash; after the fact. Is that good enough?&rdquo;",
+      task:"Distinguish detective from preventive controls, then strengthen.",
+      model:"Audit is a <b>detective</b> control &mdash; it caught the abuse, which is necessary but not sufficient. To <b>prevent</b> it, add friction and least privilege up front: break-glass should require a <b>stated reason tied to a ticket</b>, ideally a <b>second approver</b> for sensitive accounts, be <b>time-boxed</b> so access auto-expires, and <b>notify the customer</b> when their data is accessed. You can&rsquo;t make curiosity impossible, but you can make casual access <b>expensive, visible, and accountable</b> &mdash; so the audit trail is the backstop, not the only line.",
+      int:{q:"Isn&rsquo;t requiring approval for every support access going to slow down legitimate work?",a:"Which is why you <b>tier it by sensitivity</b>, not blanket it. Routine support on an ordinary account might need only a logged reason; access to a <b>high-profile or flagged</b> account, or to especially sensitive fields, requires the second approver and the notification. Most access is low-risk and stays fast; the friction lands exactly where the blast radius is highest. Blanket approval trains people to rubber-stamp; targeted friction preserves both speed and control. The goal is least privilege that&rsquo;s <i>usable</i>, so people don&rsquo;t route around it."} },
+    { tag:"CURVEBALL", theme:"Erasure", cue:"&ldquo;A tenant exercises right-to-erasure. You DELETE their rows and confirm zero remain. Legal asks you to prove it&rsquo;s <i>gone</i>, including backups. Now what?&rdquo;",
+      task:"Name every copy the data lives in, then the mechanism for the immutable ones.",
+      model:"The primary DELETE is the easy 20%. The data also lives in <b>backups, read replicas, caches, search indexes, logs, and warehouse copies</b> &mdash; erasure isn&rsquo;t done until each is addressed. Replicas and caches clear on their own or on invalidation; indexes need a targeted delete; logs age out on retention. <b>Backups are the hard one</b>: you usually can&rsquo;t surgically edit them, so you rely on <b>retention expiry</b> plus <b>crypto-shredding</b> &mdash; if the tenant&rsquo;s data is encrypted with a <b>per-tenant key</b>, destroying that key renders every copy, backups included, permanently unreadable.",
+      int:{q:"So per-tenant encryption keys aren&rsquo;t just an isolation feature?",a:"Right &mdash; they&rsquo;re the <b>practical mechanism for erasure across copies you can&rsquo;t selectively edit</b>. Deleting rows handles the live database; destroying the key handles everything else at once, because ciphertext without the key is noise. It&rsquo;s why per-tenant keys show up as both an isolation control (a compromise blasts one tenant) and a compliance control (crypto-shred one tenant on request). The senior move is connecting &lsquo;right-to-erasure&rsquo; to &lsquo;per-tenant key&rsquo; instead of promising to scrub immutable backups you can&rsquo;t actually rewrite."} },
+    { tag:"CURVEBALL", theme:"Cache invalidation", cue:"&ldquo;You cache authorization decisions for performance. A user is removed from a project but keeps editing it for five minutes. Fix it without killing the cache.&rdquo;",
+      task:"Frame it as invalidation, then tier by blast radius.",
+      model:"This is a <b>cache-invalidation</b> problem: a stale &lsquo;allow&rsquo; survived a permission change. You don&rsquo;t have to drop the cache &mdash; you <b>invalidate on the event</b>: when a role or membership changes, publish an event that <b>busts the cached decision</b> for that user (or user+resource), so the next request re-evaluates. For decisions you can&rsquo;t event-invalidate cheaply, keep a <b>short TTL</b> so staleness is bounded to seconds. And <b>tier by blast radius</b> &mdash; cache freely for low-risk reads, but for high-privilege actions check live rather than trust a cached allow.",
+      int:{q:"Event-based invalidation adds a whole pub/sub dependency. When is a short TTL just good enough?",a:"When the <b>staleness window is acceptable for the action&rsquo;s risk</b>. For most reads and ordinary edits, a 30&#8209;to&#8209;60&#8209;second TTL means a revoked permission lingers under a minute &mdash; usually fine, and far simpler than wiring events for every permission change. You reserve immediate (event-based) invalidation for cases where even a minute is unacceptable: a fired employee, a revoked admin, a security incident. Match the invalidation strategy to the blast radius &mdash; TTL for the many, events for the dangerous few &mdash; rather than paying for immediate invalidation everywhere."} },
+    { tag:"CURVEBALL", theme:"Over-broad grant", cue:"&ldquo;A partner integration you gave API access to gets breached. The attacker now has whatever you granted the partner. How bad is it, and what determined that?&rdquo;",
+      task:"Tie the blast radius to how the grant was scoped, then the least-privilege fix.",
+      model:"The blast radius is <b>exactly what you granted the partner &mdash; no more, no less</b>, which is why <i>how</i> you granted it decides how bad this is. A <b>coarse, long-lived API key</b> with broad access means the attacker has broad access to that tenant until you notice. A <b>scoped OAuth grant</b> &mdash; specific scopes, one tenant, an expiry, independently revocable &mdash; confines the attacker to those scopes, and you <b>revoke that grant</b> and cut them off without touching anyone else. Least privilege isn&rsquo;t bureaucracy; it&rsquo;s the variable that sets the blast radius of a partner breach.",
+      int:{q:"The partner says they need broad access &lsquo;to be safe&rsquo; / for future features. How do you push back?",a:"Grant for <b>what they use now</b>, not what they might use later &mdash; you can always add a scope when a feature ships, but you can&rsquo;t un-leak data an over-broad grant exposed. &lsquo;Broad to be safe&rsquo; is backwards: broad access is the <i>opposite</i> of safe, because it maximizes the blast radius when &mdash; not if &mdash; the partner is compromised. I&rsquo;d give the minimum scopes for their current integration, make expanding it a lightweight request, and keep the grant expiring and revocable. Least privilege is a property you defend at grant time, because it&rsquo;s the only cheap moment to get it right."} }
+  ];
+  var mockFrameIdx=0; for(var _fi=0;_fi<mockBeats.length;_fi++){ if(mockBeats[_fi].tag==="FRAME") mockFrameIdx=_fi; }
+  var frames=[ mockBeats[mockFrameIdx].cue,
+    "&ldquo;Each customer&rsquo;s data must be invisible to every other customer. Design the authorization layer that guarantees it.&rdquo;",
+    "&ldquo;Design multi-tenant access control for a SaaS platform &mdash; how do you keep tenants isolated in a shared database?&rdquo;",
+    "&ldquo;A user makes a request. Walk me through every check between the token and the row that decides what they&rsquo;re allowed to see.&rdquo;"
+  ];
+  return { cards: AUTHZ_CARDS, speak: AUTHZ_SPEAK, curveballs: curveballs, mockBeats: mockBeats, frames: frames };
+})();
+
+/* topics/authz/register.js -- registers topic 3 (Tenant Authorization). NOT the first
+   topic, so register() does NOT publishBanks or seed TOPIC_CMP_NOTES -- topic 1 owns
+   boot. The switcher shows this the moment it registers; setTopic('authz') then
+   reseeds the working set and applies this identity. */
+TopicRegistry.register({
+  id: 'authz',
+  identity: TOPIC_AUTHZ_IDENTITY,
+  data: {
+    walk: TOPIC_AUTHZ_WALK, drill: TOPIC_AUTHZ_DRILL, wb: TOPIC_AUTHZ_WB, sys: TOPIC_AUTHZ_SYS,
+    trade: TOPIC_AUTHZ_TRADE, model: TOPIC_AUTHZ_MODEL, num: TOPIC_AUTHZ_NUM, rf: TOPIC_AUTHZ_RF,
+    open: TOPIC_AUTHZ_OPEN, bank: TOPIC_AUTHZ_BANK
+  }
+});
+
+
 /* ============ RED FLAGS (web component) ============
    Multi-topic pane on the TopicPane contract. The base owns shadow + adopted
    sheets + <style> + skeleton (built ONCE in connectedCallback); renderTopic

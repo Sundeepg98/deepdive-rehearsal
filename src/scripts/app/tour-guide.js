@@ -19,13 +19,14 @@
   var dismissed = false; /* in-memory only; no storage */
 
   var STEPS = [
-    { selector: '.hdr h1', title: 'Welcome to Deep Rehearsal', text: 'A self-contained trainer for the Content Pipeline deep-dive: 9 surfaces, all offline.', position: 'bottom' },
-    { selector: '.seg', title: 'Navigation', text: 'Switch between surfaces here, or by URL (#walk, #drill, ...). Keyboard: Q, W, E, R, T, Y, U, I, O.', position: 'bottom' },
+    { selector: '.hdr h1', title: 'Welcome to Deep Rehearsal', text: 'A self-contained, offline trainer &mdash; a growing set of deep-dive topics, each with 9 rehearsal surfaces.', position: 'bottom' },
+    { selector: '#topicnav', title: 'Topics', text: 'The trainer spans multiple topics, grouped into six themes. Switch with this control, the <b>[</b> and <b>]</b> keys, or the Topic index in the tools.', position: 'bottom' },
+    { selector: '.seg', title: 'Surfaces', text: 'Nine surfaces per topic &mdash; walkthrough, drill, whiteboard, system map and more. Switch here or by key (<b>Q</b>&ndash;<b>O</b>).', position: 'bottom' },
     { selector: '.companion', title: 'Companion', text: 'Coaching for the current surface: the move to make and the spine of a strong answer.', position: 'left' },
     { selector: 'deep-walkthrough', title: 'Walkthrough', text: 'Step through the flow with the arrow keys or the on-screen controls.', position: 'right' },
-    { selector: '.tools-fab', title: 'Tools', text: 'Mock run on the clock, mixed fire, cram sheet, session progress and more.', position: 'top' },
+    { selector: '.tools-fab', title: 'Tools', text: 'Mock run on the clock, mixed fire, cram sheet, session progress, the Topic index and search &mdash; all here.', position: 'top' },
     { selector: '.seg button[data-tab="drill"]', title: 'Probe Drill', text: 'Graded follow-ups with self-assessment. Press Space to reveal, 1/2 to grade.', position: 'bottom' },
-    { selector: null, title: 'You are ready', text: 'Press Ctrl+K (or Cmd+K) to search surfaces, ? for all shortcuts, Escape to close any overlay. Good luck.', position: 'center' }
+    { selector: null, title: 'You are ready', text: 'Press <b>/</b> (or Cmd+K) to search topics and surfaces, <b>[</b> <b>]</b> to change topic, <b>?</b> for all shortcuts, Escape to close any overlay. Good luck.', position: 'center' }
   ];
 
   var currentStep = -1;

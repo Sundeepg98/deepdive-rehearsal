@@ -36,6 +36,8 @@ var SYS_STYLE = `
 .piv[open]{border-color:rgba(83,74,183,.2);box-shadow:0 0 0 1px rgba(83,74,183,.06),0 6px 20px -8px rgba(83,74,183,.15)}
 .piv summary{list-style:none;cursor:pointer;padding:14px 16px;display:flex;align-items:flex-start;gap:12px;transition:background .18s ease}
 .piv summary:hover{background:rgba(109,95,214,.04)}
+.piv-jump{margin-top:12px;font:700 12px -apple-system,sans-serif;color:var(--acc);background:var(--accbg);border:1px solid rgba(83,74,183,.2);border-radius:8px;padding:7px 12px;cursor:pointer;transition:background .15s ease,border-color .15s ease}
+.piv-jump:hover,.piv-jump:focus{background:var(--acc);color:#fff;border-color:var(--acc);outline:none}
 .piv summary::-webkit-details-marker{display:none}
 .piv .pq{font-size:13px;font-weight:600;color:var(--ink);line-height:1.4}
 .piv .chip{flex:none;font-size:9.5px;font-weight:800;letter-spacing:.3px;color:var(--indigo);background:linear-gradient(135deg,var(--indigobg) 0%,rgba(83,74,183,.04) 100%);border:1px solid #cfc7f0;border-radius:6px;padding:3px 9px;white-space:nowrap;margin-top:1px;margin-left:auto}
@@ -81,11 +83,15 @@ function resolveChipTarget(chipText) {
 }
 function sysRenderPivot(p) {
   var target = resolveChipTarget(p.chip);
-  var chip = target
-    ? '<span class="chip chip-link" role="button" tabindex="0" data-goto="' + target + '">' + p.chip + '</span>'
-    : '<span class="chip">' + p.chip + '</span>';
-  return '<details class="piv"><summary><span class="pq">' + p.q + '</span>' + chip + '</summary>' +
-    '<div class="pa">' + p.a + '</div></details>';
+  /* Header chip is a plain, non-interactive label (avoids an interactive control
+     nested inside the interactive <summary>). The one-click jump is a real <button>
+     in the disclosure body, so it's natively keyboard-operable. */
+  var headChip = '<span class="chip">' + p.chip + '</span>';
+  var jump = target
+    ? '<button class="piv-jump" type="button" data-goto="' + target + '">Jump to ' + p.chip.replace(/\s*\(\d+\)\s*/g, ' ').trim() + ' &rarr;</button>'
+    : '';
+  return '<details class="piv"><summary><span class="pq">' + p.q + '</span>' + headChip + '</summary>' +
+    '<div class="pa">' + p.a + jump + '</div></details>';
 }
 
 class DeepSystemMap extends TopicPane {
@@ -112,14 +118,13 @@ class DeepSystemMap extends TopicPane {
     if (this._pivs && !this._pivs.__linkWired) {
       this._pivs.__linkWired = true;
       var goChip = function (e) {
-        var chip = (e.target && e.target.closest) ? e.target.closest('.chip-link') : null;
+        var chip = (e.target && e.target.closest) ? e.target.closest('.piv-jump') : null;
         if (!chip) return;
         e.preventDefault(); e.stopPropagation();
         var id = chip.getAttribute('data-goto');
         if (id && typeof TopicRegistry !== 'undefined' && TopicRegistry.setTopic) TopicRegistry.setTopic(id);
       };
       this._pivs.addEventListener('click', goChip);
-      this._pivs.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') goChip(e); });
     }
   }
   renderTopic(d) {

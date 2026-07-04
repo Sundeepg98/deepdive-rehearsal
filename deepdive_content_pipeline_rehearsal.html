@@ -11873,7 +11873,14 @@ window.Bookmarks = Bookmarks;
     setTimeout(function () { try { w.focus(); w.print(); } catch (e) {} }, 350);
   }
 
-  function wire() { var b = document.getElementById('printqa'); if (b) b.addEventListener('click', openPrint); }
+  function wire() {
+    var b = document.getElementById('printqa'); if (b) b.addEventListener('click', openPrint);
+    /* Native browser print of a topic view comes out blank -- the shadow-DOM panes
+       don't render to print -- so route Ctrl/Cmd+P to the working printable Q&A. */
+    document.addEventListener('keydown', function (e) {
+      if ((e.metaKey || e.ctrlKey) && !e.altKey && (e.key === 'p' || e.key === 'P')) { e.preventDefault(); openPrint(); }
+    });
+  }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wire); else wire();
   window.PrintQA = { print: openPrint };
 })();

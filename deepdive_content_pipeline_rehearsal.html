@@ -662,6 +662,9 @@ body.is-hidden,body.is-hidden *,body.is-hidden *::before,body.is-hidden *::after
 .ix-g-cram{margin-left:auto;font-size:9.5px;font-weight:800;letter-spacing:.02em;text-transform:none;color:var(--acc);background:transparent;border:1px solid var(--bd);border-radius:20px;padding:3px 11px;cursor:pointer;transition:background .14s ease,border-color .14s ease}
 .ix-g-cram:hover{background:var(--accbg);border-color:var(--acc)}
 .ix-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
+.ix-cell{position:relative}
+.ix-c-reset{position:absolute;top:9px;right:9px;width:22px;height:22px;display:flex;align-items:center;justify-content:center;border:1px solid var(--bd);border-radius:6px;background:var(--card);color:var(--mut);font-size:12.5px;line-height:1;cursor:pointer;opacity:.3;transition:opacity .14s ease,color .14s ease,border-color .14s ease;padding:0}
+.ix-cell:hover .ix-c-reset,.ix-c-reset:focus{opacity:1;color:var(--red);border-color:var(--red);outline:none}
 .ix-card{display:flex;flex-direction:column;align-items:flex-start;text-align:left;border:1px solid var(--bd);background:var(--bg);border-radius:11px;padding:11px 13px;cursor:pointer;transition:border-color .14s ease,background .14s ease,transform .14s ease;position:relative}
 .ix-c-badge{position:absolute;top:10px;right:11px;display:inline-flex;align-items:center;gap:4px;font-size:9.5px;font-weight:700;letter-spacing:.02em;color:var(--mut2);white-space:nowrap}
 .ix-c-badge i{width:6px;height:6px;border-radius:50%;flex:none}
@@ -11962,11 +11965,12 @@ window.Bookmarks = Bookmarks;
         else if (_st === 'weak') { var _wn = (_pr ? _pr.shk : 0) + ((typeof Progress !== 'undefined' && Progress.shakyMarks) ? Progress.shakyMarks(id) : 0); _bdg = '<span class="ix-c-badge"><i style="background:#dc2626"></i>' + _wn + ' weak</span>'; }
         else if (_st === 'solid') _bdg = '<span class="ix-c-badge"><i style="background:#0d9488"></i>done</span>';
         var filt = ((idn.title || '') + ' ' + (idn.locatorTail || '') + ' ' + th).toLowerCase().replace(/&[a-z#0-9]+;/g, ' ').replace(/"/g, '');
-        return '<button class="ix-card' + (on ? ' on' : '') + '" type="button" data-topic="' + id + '" data-filter="' + filt + '" style="box-shadow:inset 3px 0 0 ' + (b.group.color || 'transparent') + '"' +
+        var resetBtn = (_st !== 'untouched') ? '<button class="ix-c-reset" type="button" data-reset="' + id + '" title="Reset progress for this topic" aria-label="Reset progress for ' + idn.title + '">&#8635;</button>' : '';
+        return '<div class="ix-cell"><button class="ix-card' + (on ? ' on' : '') + '" type="button" data-topic="' + id + '" data-filter="' + filt + '" style="box-shadow:inset 3px 0 0 ' + (b.group.color || 'transparent') + '"' +
           (on ? ' aria-current="true"' : '') + '>' + _bdg +
           '<span class="ix-c-name">' + idn.title + '</span>' +
           '<span class="ix-c-tail">' + idn.locatorTail + '</span>' +
-          (th ? '<span class="ix-c-thesis">' + th + '</span>' : '') + '</button>';
+          (th ? '<span class="ix-c-thesis">' + th + '</span>' : '') + '</button>' + resetBtn + '</div>';
       }).join('');
       return '<section class="ix-group"><div class="ix-g-head"><span class="ix-g-dot" style="background:' + (b.group.color || 'var(--acc)') + '"></span>' + b.group.label +
         ' <span class="ix-g-n">' + b.ids.length + '</span>' +
@@ -12005,6 +12009,17 @@ window.Bookmarks = Bookmarks;
       if (crossBtn) { var _m = crossBtn.getAttribute('data-cross'); close(); if (window.CrossDrill && CrossDrill.open) CrossDrill.open(_m); return; }
       var hashBtn = e.target.closest ? e.target.closest('[data-hash]') : null;
       if (hashBtn) { var _h = hashBtn.getAttribute('data-hash'); close(); try { location.hash = _h; } catch (e2) {} return; }
+      var perReset = e.target.closest ? e.target.closest('[data-reset]') : null;
+      if (perReset) {
+        var rid = perReset.getAttribute('data-reset');
+        var rt2 = (typeof TopicRegistry !== 'undefined') ? TopicRegistry.get(rid) : null;
+        var nm = rt2 ? rt2.identity.title.replace(/&[a-z#0-9]+;/g, ' ').trim() : 'this topic';
+        if (window.confirm('Clear saved progress for ' + nm + '?')) {
+          if (typeof Progress !== 'undefined' && Progress.clear) Progress.clear(rid);
+          overlayEl.innerHTML = panelHtml();
+        }
+        return;
+      }
       var card = e.target.closest ? e.target.closest('[data-topic]') : null;
       if (card) {
         var id = card.getAttribute('data-topic');

@@ -132,11 +132,12 @@
         else if (_st === 'weak') { var _wn = (_pr ? _pr.shk : 0) + ((typeof Progress !== 'undefined' && Progress.shakyMarks) ? Progress.shakyMarks(id) : 0); _bdg = '<span class="ix-c-badge"><i style="background:#dc2626"></i>' + _wn + ' weak</span>'; }
         else if (_st === 'solid') _bdg = '<span class="ix-c-badge"><i style="background:#0d9488"></i>done</span>';
         var filt = ((idn.title || '') + ' ' + (idn.locatorTail || '') + ' ' + th).toLowerCase().replace(/&[a-z#0-9]+;/g, ' ').replace(/"/g, '');
-        return '<button class="ix-card' + (on ? ' on' : '') + '" type="button" data-topic="' + id + '" data-filter="' + filt + '" style="box-shadow:inset 3px 0 0 ' + (b.group.color || 'transparent') + '"' +
+        var resetBtn = (_st !== 'untouched') ? '<button class="ix-c-reset" type="button" data-reset="' + id + '" title="Reset progress for this topic" aria-label="Reset progress for ' + idn.title + '">&#8635;</button>' : '';
+        return '<div class="ix-cell"><button class="ix-card' + (on ? ' on' : '') + '" type="button" data-topic="' + id + '" data-filter="' + filt + '" style="box-shadow:inset 3px 0 0 ' + (b.group.color || 'transparent') + '"' +
           (on ? ' aria-current="true"' : '') + '>' + _bdg +
           '<span class="ix-c-name">' + idn.title + '</span>' +
           '<span class="ix-c-tail">' + idn.locatorTail + '</span>' +
-          (th ? '<span class="ix-c-thesis">' + th + '</span>' : '') + '</button>';
+          (th ? '<span class="ix-c-thesis">' + th + '</span>' : '') + '</button>' + resetBtn + '</div>';
       }).join('');
       return '<section class="ix-group"><div class="ix-g-head"><span class="ix-g-dot" style="background:' + (b.group.color || 'var(--acc)') + '"></span>' + b.group.label +
         ' <span class="ix-g-n">' + b.ids.length + '</span>' +
@@ -175,6 +176,17 @@
       if (crossBtn) { var _m = crossBtn.getAttribute('data-cross'); close(); if (window.CrossDrill && CrossDrill.open) CrossDrill.open(_m); return; }
       var hashBtn = e.target.closest ? e.target.closest('[data-hash]') : null;
       if (hashBtn) { var _h = hashBtn.getAttribute('data-hash'); close(); try { location.hash = _h; } catch (e2) {} return; }
+      var perReset = e.target.closest ? e.target.closest('[data-reset]') : null;
+      if (perReset) {
+        var rid = perReset.getAttribute('data-reset');
+        var rt2 = (typeof TopicRegistry !== 'undefined') ? TopicRegistry.get(rid) : null;
+        var nm = rt2 ? rt2.identity.title.replace(/&[a-z#0-9]+;/g, ' ').trim() : 'this topic';
+        if (window.confirm('Clear saved progress for ' + nm + '?')) {
+          if (typeof Progress !== 'undefined' && Progress.clear) Progress.clear(rid);
+          overlayEl.innerHTML = panelHtml();
+        }
+        return;
+      }
       var card = e.target.closest ? e.target.closest('[data-topic]') : null;
       if (card) {
         var id = card.getAttribute('data-topic');

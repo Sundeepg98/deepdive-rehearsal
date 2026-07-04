@@ -62,6 +62,10 @@ var Store = (function () {
 
   function available() { return ok; }
 
+  /* full backup: every key under our prefix as a plain object, and restore it back */
+  function dump() { var o = {}, ks = keys(''); for (var i = 0; i < ks.length; i++) o[ks[i]] = get(ks[i], null); return o; }
+  function restore(obj) { if (!obj || typeof obj !== 'object') return 0; var n = 0; for (var k in obj) { if (obj.hasOwnProperty(k)) { set(k, obj[k]); n++; } } return n; }
+
   /* wipe everything under our prefix -- backs a "reset all data" affordance */
   function clearAll() {
     try {
@@ -74,6 +78,6 @@ var Store = (function () {
     mem = {};
   }
 
-  return { get: get, set: set, remove: remove, keys: keys, available: available, clearAll: clearAll };
+  return { get: get, set: set, remove: remove, keys: keys, available: available, clearAll: clearAll, dump: dump, restore: restore };
 })();
 window.Store = Store;

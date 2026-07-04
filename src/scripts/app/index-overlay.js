@@ -89,8 +89,12 @@
   /* footer: a reset affordance, shown only when there is saved data to clear */
   function footerHtml() {
     var any = (typeof Store !== 'undefined' && Store.keys && Store.keys('').length > 0);
-    if (!any) return '';
-    return '<div class="ix-foot"><button class="ix-reset" type="button">Reset all saved progress</button></div>';
+    /* Import is always available (restore a backup into a fresh browser); Export and
+       Reset only appear once there is saved data. */
+    var io = '<button class="ix-io" type="button" data-io="export"' + (any ? '' : ' disabled') + '>Export a backup</button>' +
+      '<label class="ix-io ix-io-imp"><input type="file" accept="application/json,.json" hidden data-io="import">Import a backup</label>';
+    var reset = any ? '<button class="ix-reset" type="button">Reset all saved progress</button>' : '';
+    return '<div class="ix-foot">' + io + reset + '</div>';
   }
 
   function weakCount() {
@@ -108,6 +112,30 @@
     if (typeof TopicRegistry === 'undefined' || !TopicRegistry.ids().length) return '';
     return '<button class="ix-cross" type="button" data-cross="1"><span class="ix-cross-tx"><span class="ix-cross-k">Cross-topic drill</span><span class="ix-cross-d">Random probes from every topic &mdash; the interview shuffle</span></span><span class="ix-cross-ar">&rarr;</span></button>';
   }
+  function downloadBackup() {
+    if (typeof Store === 'undefined' || !Store.dump) return;
+    var payload = { app: 'deepdive-rehearsal', v: 1, exported: new Date().toISOString(), data: Store.dump() };
+    var json = JSON.stringify(payload, null, 2);
+    try {
+      var blob = new Blob([json], { type: 'application/json' });
+      var url = URL.createObjectURL(blob), a = document.createElement('a');
+      a.href = url; a.download = 'deepdive-rehearsal-backup.json';
+      document.body.appendChild(a); a.click();
+      setTimeout(function () { try { document.body.removeChild(a); URL.revokeObjectURL(url); } catch (e) {} }, 120);
+    } catch (e) { try { window.prompt('Copy your backup JSON:', json); } catch (e2) {} }
+  }
+  function importBackup(file) {
+    if (!file || typeof Store === 'undefined' || !Store.restore) return;
+    var reader = new FileReader();
+    reader.onload = function () {
+      var parsed; try { parsed = JSON.parse(reader.result); } catch (e) { window.alert('That file is not valid JSON.'); return; }
+      var data = (parsed && parsed.data && typeof parsed.data === 'object') ? parsed.data : parsed;
+      if (!data || typeof data !== 'object') { window.alert('That does not look like a backup.'); return; }
+      if (window.confirm('Import this backup? It merges into your current data and reloads.')) { Store.restore(data); location.reload(); }
+    };
+    reader.readAsText(file);
+  }
+
   function panelHtml() {
     var buckets = (typeof groupedTopicIds === 'function') ? groupedTopicIds() : [];
     var cur = (typeof TopicRegistry !== 'undefined' && TopicRegistry.current) ? TopicRegistry.current() : null;
@@ -160,6 +188,7 @@
     overlayEl.setAttribute('aria-modal', 'true');
     overlayEl.setAttribute('aria-label', 'Topic index');
     document.body.appendChild(overlayEl);
+    overlayEl.addEventListener('change', function (e) { var fi = e.target.closest ? e.target.closest('[data-io="import"]') : null; if (fi && fi.files && fi.files[0]) { importBackup(fi.files[0]); fi.value = ''; } });
     overlayEl.addEventListener('click', function (e) {
       if (e.target === overlayEl) { close(); return; }
       var closer = e.target.closest ? e.target.closest('.ix-x') : null;
@@ -172,6 +201,8 @@
         }
         return;
       }
+      var ioBtn = e.target.closest ? e.target.closest('[data-io="export"]') : null;
+      if (ioBtn) { downloadBackup(); return; }
       var crossBtn = e.target.closest ? e.target.closest('[data-cross]') : null;
       if (crossBtn) { var _m = crossBtn.getAttribute('data-cross'); close(); if (window.CrossDrill && CrossDrill.open) CrossDrill.open(_m); return; }
       var hashBtn = e.target.closest ? e.target.closest('[data-hash]') : null;

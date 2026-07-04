@@ -672,6 +672,11 @@ body.is-hidden,body.is-hidden *,body.is-hidden *::before,body.is-hidden *::after
 .ix-wc{font-size:10px;color:var(--mut);background:var(--bg);border:1px solid var(--bd);border-radius:5px;padding:2px 7px;line-height:1.35}
 .ix-foot{padding:11px 16px 3px;text-align:center;border-top:1px solid var(--bd);margin-top:6px}
 .ix-reset{font-size:11px;font-weight:600;color:var(--mut);background:none;border:none;cursor:pointer;padding:6px 12px;border-radius:7px;transition:color .14s ease,background .14s ease}
+.ix-io{font:600 11px -apple-system,system-ui,sans-serif;color:var(--mut);background:transparent;border:1px solid var(--bd);border-radius:7px;padding:5px 11px;cursor:pointer;transition:color .14s ease,border-color .14s ease}
+.ix-io:hover{color:var(--ink);border-color:var(--acc)}
+.ix-io-imp{display:inline-flex;align-items:center}
+.ix-io[disabled]{opacity:.4;cursor:not-allowed}
+.ix-io[disabled]:hover{color:var(--mut);border-color:var(--bd)}
 .ix-reset:hover{color:#dc2626;background:rgba(220,38,38,.07)}
 .crambtn.starred .mb-t{color:var(--acc)}
 .crambtn.starred .mb-t::after{content:" \2605";color:#f59e0b}

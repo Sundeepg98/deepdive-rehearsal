@@ -92,7 +92,8 @@
     /* Import is always available (restore a backup into a fresh browser); Export and
        Reset only appear once there is saved data. */
     var io = '<button class="ix-io" type="button" data-io="export"' + (any ? '' : ' disabled') + '>Export a backup</button>' +
-      '<label class="ix-io ix-io-imp"><input type="file" accept="application/json,.json" hidden data-io="import">Import a backup</label>';
+      '<button class="ix-io" type="button" data-io="import-btn">Import a backup</button>' +
+      '<input type="file" accept="application/json,.json" hidden data-io="import">';
     var reset = any ? '<button class="ix-reset" type="button">Reset all saved progress</button>' : '';
     return '<div class="ix-foot">' + io + reset + '</div>';
   }
@@ -203,6 +204,8 @@
       }
       var ioBtn = e.target.closest ? e.target.closest('[data-io="export"]') : null;
       if (ioBtn) { downloadBackup(); return; }
+      var impBtn = e.target.closest ? e.target.closest('[data-io="import-btn"]') : null;
+      if (impBtn) { var fi = overlayEl.querySelector('[data-io="import"]'); if (fi) fi.click(); return; }
       var crossBtn = e.target.closest ? e.target.closest('[data-cross]') : null;
       if (crossBtn) { var _m = crossBtn.getAttribute('data-cross'); close(); if (window.CrossDrill && CrossDrill.open) CrossDrill.open(_m); return; }
       var hashBtn = e.target.closest ? e.target.closest('[data-hash]') : null;

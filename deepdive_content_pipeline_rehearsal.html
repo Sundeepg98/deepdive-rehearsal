@@ -614,13 +614,16 @@ button,.seg button,.dn-step,.pill,.card,.thread,.dec,.rf,.op,.piv,.tools-fab,.cr
 body.is-hidden,body.is-hidden *,body.is-hidden *::before,body.is-hidden *::after{animation-play-state:paused!important}
 
 /* ===== Topic switcher (the topic axis, above the view tabs) ===== */
-.topic-nav{position:relative;margin:2px 0 -2px}
-.tn-trigger{display:flex;align-items:center;gap:9px;width:100%;border:1px solid var(--bd);background:var(--card);border-radius:11px;padding:8px 12px;cursor:pointer;transition:border-color .14s ease,box-shadow .14s ease;text-align:left}
+.topic-nav{position:relative;margin:2px 0 -2px;display:flex;align-items:stretch;gap:6px}
+.tn-trigger{display:flex;align-items:center;gap:9px;flex:1;min-width:0;border:1px solid var(--bd);background:var(--card);border-radius:11px;padding:8px 12px;cursor:pointer;transition:border-color .14s ease,box-shadow .14s ease;text-align:left}
 .tn-trigger:hover{border-color:#cfc7f0;box-shadow:0 4px 12px rgba(83,74,183,.12)}
 .tn-trigger:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
 .tn-eyebrow{font-size:8px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--mut2)}
 .tn-current{flex:1;font-size:13px;font-weight:720;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tn-chev{color:var(--acc);font-size:10px;transition:transform .18s ease}
+.tn-step{flex:0 0 auto;display:flex;align-items:center;justify-content:center;width:32px;border:1px solid var(--bd);background:var(--card);border-radius:11px;color:var(--acc);font-size:15px;line-height:1;cursor:pointer;transition:border-color .14s ease,background .14s ease}
+.tn-step:hover{border-color:#cfc7f0;background:var(--accbg)}
+.tn-step:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
 .topic-nav.tn-open .tn-chev{transform:rotate(180deg)}
 .tn-menu{position:absolute;left:0;right:0;top:calc(100% + 5px);z-index:40;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:5px;box-shadow:0 12px 34px rgba(30,28,24,.18);max-height:56vh;overflow-y:auto}
 .tn-item{display:grid;grid-template-columns:1fr;grid-template-rows:auto auto;column-gap:9px;width:100%;border:0;background:none;border-radius:9px;padding:8px 10px;cursor:pointer;text-align:left;transition:background .12s ease}
@@ -686,10 +689,10 @@ try{var _dk=matchMedia('(prefers-color-scheme:dark)').matches;document.documentE
   <div class="hdr">
     <h1>Content Pipeline</h1>
     <div class="sub"><b>Mechanics</b> &rarr; <b>graded follow-up chains</b> &rarr; <b>whiteboard</b> &rarr; <b>zoom out</b> to where this sits in the whole system, and the pivots an interviewer rides into the next topic.</div>
-    <div class="kbd-hint">Keyboard: <kbd>&larr;</kbd><kbd>&rarr;</kbd> steps &middot; <kbd>Space</kbd> reveal/push &middot; <kbd>1</kbd>/<kbd>2</kbd> grade &middot; <kbd>Q</kbd>&ndash;<kbd>O</kbd> tabs</div>
+    <div class="kbd-hint">Keyboard: <kbd>&larr;</kbd><kbd>&rarr;</kbd> steps &middot; <kbd>Q</kbd>&ndash;<kbd>O</kbd> tabs &middot; <kbd>[</kbd><kbd>]</kbd> topic &middot; <kbd>/</kbd> search</div>
   </div>
 
-  <nav class="topic-nav" id="topicnav" aria-label="Switch topic" hidden><button class="tn-trigger" id="tntrigger" type="button" aria-haspopup="menu" aria-expanded="false"><span class="tn-eyebrow">Rehearsing</span><span class="tn-current" id="tncurrent">&mdash;</span><span class="tn-chev" aria-hidden="true">&#9662;</span></button><div class="tn-menu" id="tnmenu" role="menu" hidden></div></nav><button class="tools-fab" id="toolsfab" type="button">Tools</button></div><div class="tools-bd" id="toolsbd" aria-hidden="true"></div><div class="mockbar"><button class="mockbtn" id="mockopen" type="button"><span class="mb-ic">&#9654;</span><span class="mb-lbl">Mock run &mdash; the full round, on the clock</span></button><button class="inttog" id="inttog" type="button" aria-pressed="false"><span class="inttog-dot"></span><span class="inttog-lbl">Interviewer cuts in mid-answer &mdash; <b>off</b></span></button><button class="crambtn" id="idxopen" type="button"><span class="mb-tx"><span class="mb-t">Topic index</span><span class="mb-d"> &mdash; all topics across the six groups</span></span></button><button class="crambtn" id="cramopen" type="button"><span class="mb-tx"><span class="mb-t">One-page cram sheet</span><span class="mb-d"> &mdash; everything that matters, on a card</span></span></button><button class="crambtn" id="sessopen" type="button"><span class="mb-tx"><span class="mb-t">Session progress</span><span class="mb-d"> &mdash; where you&rsquo;re weak, what to drill next</span></span></button><button class="crambtn" id="mixopen" type="button"><span class="mb-tx"><span class="mb-t">Mixed fire</span><span class="mb-d"> &mdash; probes &amp; curveballs in random order</span></span></button><button class="crambtn" id="planopen" type="button"><span class="mb-tx"><span class="mb-t">Game plan</span><span class="mb-d"> &mdash; how to rehearse with this over a week</span></span></button><button class="crambtn" id="scopeopen" type="button"><span class="mb-tx"><span class="mb-t">Scope it first</span><span class="mb-d"> &mdash; the clarifying questions before you design</span></span></button><button class="crambtn kbd-only" id="keyopen" type="button"><span class="mb-tx"><span class="mb-t">Keyboard shortcuts</span><span class="mb-d"> &mdash; jump views, drive it by key</span></span></button><button class="crambtn cram-tog" id="themetog" type="button" aria-pressed="false"><span class="mb-ic">&#9789;</span>Dark mode &mdash; <b class="tt-state">off</b></button></div>
+  <nav class="topic-nav" id="topicnav" aria-label="Switch topic" hidden><button class="tn-step" id="tnprev" type="button" aria-label="Previous topic">&#8249;</button><button class="tn-trigger" id="tntrigger" type="button" aria-haspopup="menu" aria-expanded="false"><span class="tn-eyebrow">Rehearsing</span><span class="tn-current" id="tncurrent">&mdash;</span><span class="tn-chev" aria-hidden="true">&#9662;</span></button><button class="tn-step" id="tnnext" type="button" aria-label="Next topic">&#8250;</button><div class="tn-menu" id="tnmenu" role="menu" hidden></div></nav><button class="tools-fab" id="toolsfab" type="button">Tools</button></div><div class="tools-bd" id="toolsbd" aria-hidden="true"></div><div class="mockbar"><button class="mockbtn" id="mockopen" type="button"><span class="mb-ic">&#9654;</span><span class="mb-lbl">Mock run &mdash; the full round, on the clock</span></button><button class="inttog" id="inttog" type="button" aria-pressed="false"><span class="inttog-dot"></span><span class="inttog-lbl">Interviewer cuts in mid-answer &mdash; <b>off</b></span></button><button class="crambtn" id="idxopen" type="button"><span class="mb-tx"><span class="mb-t">Topic index</span><span class="mb-d"> &mdash; all topics across the six groups</span></span></button><button class="crambtn" id="searchopen" type="button"><span class="mb-tx"><span class="mb-t">Search</span><span class="mb-d"> &mdash; jump to any topic or view by name or concept</span></span></button><button class="crambtn" id="cramopen" type="button"><span class="mb-tx"><span class="mb-t">One-page cram sheet</span><span class="mb-d"> &mdash; everything that matters, on a card</span></span></button><button class="crambtn" id="sessopen" type="button"><span class="mb-tx"><span class="mb-t">Session progress</span><span class="mb-d"> &mdash; where you&rsquo;re weak, what to drill next</span></span></button><button class="crambtn" id="mixopen" type="button"><span class="mb-tx"><span class="mb-t">Mixed fire</span><span class="mb-d"> &mdash; probes &amp; curveballs in random order</span></span></button><button class="crambtn" id="planopen" type="button"><span class="mb-tx"><span class="mb-t">Game plan</span><span class="mb-d"> &mdash; how to rehearse with this over a week</span></span></button><button class="crambtn" id="scopeopen" type="button"><span class="mb-tx"><span class="mb-t">Scope it first</span><span class="mb-d"> &mdash; the clarifying questions before you design</span></span></button><button class="crambtn kbd-only" id="keyopen" type="button"><span class="mb-tx"><span class="mb-t">Keyboard shortcuts</span><span class="mb-d"> &mdash; jump views, drive it by key</span></span></button><button class="crambtn cram-tog" id="themetog" type="button" aria-pressed="false"><span class="mb-ic">&#9789;</span>Dark mode &mdash; <b class="tt-state">off</b></button></div>
 
   <div class="seg" role="group" aria-label="Rehearsal sections">
     <button type="button" class="on" data-tab="walk"><span>Walkthrough</span><span class="n">MECHANICS</span></button>
@@ -9544,7 +9547,8 @@ document.addEventListener('keydown', function (event) {
   if (activeTag === 'input' || activeTag === 'textarea') return;
   if (window.TourGuide && window.TourGuide.isActive()) return;
   if (window.SearchOverlay && window.SearchOverlay.isOpen && window.SearchOverlay.isOpen()) return;
-  if (mockov.classList.contains('open') || cramov.classList.contains('open') || sessov.classList.contains('open') || document.getElementById('mixov').classList.contains('open') || document.getElementById('planov').classList.contains('open') || document.getElementById('scopeov').classList.contains('open') || document.getElementById('keyov').classList.contains('open')) return;
+  var _openDlgs = document.querySelectorAll('[role="dialog"][aria-modal="true"]');
+  for (var _oi = 0; _oi < _openDlgs.length; _oi++) { if (_openDlgs[_oi].classList.contains('open')) return; }
   if (event.key === '?') { event.preventDefault(); openKeys(); return; }
   const key = event.key.toLowerCase();
   /* g starts the guided tour */
@@ -9552,6 +9556,9 @@ document.addEventListener('keydown', function (event) {
   /* q..o jump straight to a pane (the QWERTY row mirrors the tab order) */
   const tabKeys = { q: 'walk', w: 'drill', e: 'wb', r: 'sys', t: 'trade', y: 'model', u: 'num', i: 'rf', o: 'open' };
   if (tabKeys[key]) { goView(tabKeys[key]); return; }
+  if (key === '/') { event.preventDefault(); if (window.SearchOverlay && window.SearchOverlay.open) window.SearchOverlay.open(); return; }
+  if (key === '[') { if (window.stepTopic) window.stepTopic(-1); return; }
+  if (key === ']') { if (window.stepTopic) window.stepTopic(1); return; }
   if (current === 'walk') {
     /* arrows step through the walkthrough (bounds handled inside prev/next) */
     const w = document.querySelector('#walk deep-walkthrough');
@@ -9904,6 +9911,9 @@ var KBD_HTML = `<div class="ks-sec">
       <div class="ks-sec">
         <div class="ks-h">Anywhere</div>
         <div class="ks-list">
+          <div class="ks-row2"><span class="ks-keys"><kbd>/</kbd></span><span>Search topics, concepts &amp; views</span></div>
+          <div class="ks-row2"><span class="ks-keys"><kbd>[</kbd><kbd>]</kbd></span><span>Previous &middot; next topic</span></div>
+          <div class="ks-row2"><span class="ks-keys"><kbd>G</kbd></span><span>Start the guided tour</span></div>
           <div class="ks-row2"><span class="ks-keys"><kbd>Esc</kbd></span><span>Close any open panel</span></div>
           <div class="ks-row2"><span class="ks-keys"><kbd>?</kbd></span><span>Bring up this list</span></div>
         </div>
@@ -10777,6 +10787,17 @@ customElements.define('deep-session', DeepSession);
     document.addEventListener('keydown', function (e) {
       if ((e.key === 'Escape' || e.keyCode === 27) && !menu.hidden) { close(); try { trigger.focus(); } catch (x) {} }
     });
+    function stepTopic(delta) {
+      var ids = TopicRegistry.ids(); if (ids.length < 2) return;
+      var cur = TopicRegistry.current(); var idx = cur ? ids.indexOf(cur.id) : 0;
+      if (idx < 0) idx = 0;
+      close();
+      TopicRegistry.setTopic(ids[(idx + delta + ids.length) % ids.length]);
+    }
+    window.stepTopic = stepTopic;
+    var prevBtn = document.getElementById('tnprev'), nextBtn = document.getElementById('tnnext');
+    if (prevBtn) prevBtn.addEventListener('click', function (e) { e.stopPropagation(); stepTopic(-1); });
+    if (nextBtn) nextBtn.addEventListener('click', function (e) { e.stopPropagation(); stepTopic(1); });
     window.addEventListener('deeptopicchange', build);
     build();
   }
@@ -10994,6 +11015,7 @@ customElements.define('deep-session', DeepSession);
     else if (e.key === 'Escape' && isOpen) { close(); }
   });
 
+  (function () { var sb = document.getElementById('searchopen'); if (sb) sb.addEventListener('click', function () { open(); }); })();
   window.SearchOverlay = { open: open, close: close, isOpen: function () { return isOpen; } };
 })();
 

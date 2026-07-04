@@ -46,7 +46,8 @@ document.addEventListener('keydown', function (event) {
   if (activeTag === 'input' || activeTag === 'textarea') return;
   if (window.TourGuide && window.TourGuide.isActive()) return;
   if (window.SearchOverlay && window.SearchOverlay.isOpen && window.SearchOverlay.isOpen()) return;
-  if (mockov.classList.contains('open') || cramov.classList.contains('open') || sessov.classList.contains('open') || document.getElementById('mixov').classList.contains('open') || document.getElementById('planov').classList.contains('open') || document.getElementById('scopeov').classList.contains('open') || document.getElementById('keyov').classList.contains('open')) return;
+  var _openDlgs = document.querySelectorAll('[role="dialog"][aria-modal="true"]');
+  for (var _oi = 0; _oi < _openDlgs.length; _oi++) { if (_openDlgs[_oi].classList.contains('open')) return; }
   if (event.key === '?') { event.preventDefault(); openKeys(); return; }
   const key = event.key.toLowerCase();
   /* g starts the guided tour */
@@ -54,6 +55,9 @@ document.addEventListener('keydown', function (event) {
   /* q..o jump straight to a pane (the QWERTY row mirrors the tab order) */
   const tabKeys = { q: 'walk', w: 'drill', e: 'wb', r: 'sys', t: 'trade', y: 'model', u: 'num', i: 'rf', o: 'open' };
   if (tabKeys[key]) { goView(tabKeys[key]); return; }
+  if (key === '/') { event.preventDefault(); if (window.SearchOverlay && window.SearchOverlay.open) window.SearchOverlay.open(); return; }
+  if (key === '[') { if (window.stepTopic) window.stepTopic(-1); return; }
+  if (key === ']') { if (window.stepTopic) window.stepTopic(1); return; }
   if (current === 'walk') {
     /* arrows step through the walkthrough (bounds handled inside prev/next) */
     const w = document.querySelector('#walk deep-walkthrough');

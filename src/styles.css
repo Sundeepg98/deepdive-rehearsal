@@ -599,13 +599,16 @@ button,.seg button,.dn-step,.pill,.card,.thread,.dec,.rf,.op,.piv,.tools-fab,.cr
 body.is-hidden,body.is-hidden *,body.is-hidden *::before,body.is-hidden *::after{animation-play-state:paused!important}
 
 /* ===== Topic switcher (the topic axis, above the view tabs) ===== */
-.topic-nav{position:relative;margin:2px 0 -2px}
-.tn-trigger{display:flex;align-items:center;gap:9px;width:100%;border:1px solid var(--bd);background:var(--card);border-radius:11px;padding:8px 12px;cursor:pointer;transition:border-color .14s ease,box-shadow .14s ease;text-align:left}
+.topic-nav{position:relative;margin:2px 0 -2px;display:flex;align-items:stretch;gap:6px}
+.tn-trigger{display:flex;align-items:center;gap:9px;flex:1;min-width:0;border:1px solid var(--bd);background:var(--card);border-radius:11px;padding:8px 12px;cursor:pointer;transition:border-color .14s ease,box-shadow .14s ease;text-align:left}
 .tn-trigger:hover{border-color:#cfc7f0;box-shadow:0 4px 12px rgba(83,74,183,.12)}
 .tn-trigger:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
 .tn-eyebrow{font-size:8px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--mut2)}
 .tn-current{flex:1;font-size:13px;font-weight:720;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tn-chev{color:var(--acc);font-size:10px;transition:transform .18s ease}
+.tn-step{flex:0 0 auto;display:flex;align-items:center;justify-content:center;width:32px;border:1px solid var(--bd);background:var(--card);border-radius:11px;color:var(--acc);font-size:15px;line-height:1;cursor:pointer;transition:border-color .14s ease,background .14s ease}
+.tn-step:hover{border-color:#cfc7f0;background:var(--accbg)}
+.tn-step:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
 .topic-nav.tn-open .tn-chev{transform:rotate(180deg)}
 .tn-menu{position:absolute;left:0;right:0;top:calc(100% + 5px);z-index:40;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:5px;box-shadow:0 12px 34px rgba(30,28,24,.18);max-height:56vh;overflow-y:auto}
 .tn-item{display:grid;grid-template-columns:1fr;grid-template-rows:auto auto;column-gap:9px;width:100%;border:0;background:none;border-radius:9px;padding:8px 10px;cursor:pointer;text-align:left;transition:background .12s ease}

@@ -208,5 +208,6 @@
     else if (e.key === 'Escape' && isOpen) { close(); }
   });
 
+  (function () { var sb = document.getElementById('searchopen'); if (sb) sb.addEventListener('click', function () { open(); }); })();
   window.SearchOverlay = { open: open, close: close, isOpen: function () { return isOpen; } };
 })();

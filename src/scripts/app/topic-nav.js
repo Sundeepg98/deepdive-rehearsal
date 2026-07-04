@@ -55,6 +55,17 @@
     document.addEventListener('keydown', function (e) {
       if ((e.key === 'Escape' || e.keyCode === 27) && !menu.hidden) { close(); try { trigger.focus(); } catch (x) {} }
     });
+    function stepTopic(delta) {
+      var ids = TopicRegistry.ids(); if (ids.length < 2) return;
+      var cur = TopicRegistry.current(); var idx = cur ? ids.indexOf(cur.id) : 0;
+      if (idx < 0) idx = 0;
+      close();
+      TopicRegistry.setTopic(ids[(idx + delta + ids.length) % ids.length]);
+    }
+    window.stepTopic = stepTopic;
+    var prevBtn = document.getElementById('tnprev'), nextBtn = document.getElementById('tnnext');
+    if (prevBtn) prevBtn.addEventListener('click', function (e) { e.stopPropagation(); stepTopic(-1); });
+    if (nextBtn) nextBtn.addEventListener('click', function (e) { e.stopPropagation(); stepTopic(1); });
     window.addEventListener('deeptopicchange', build);
     build();
   }

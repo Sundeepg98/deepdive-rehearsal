@@ -46,7 +46,7 @@ function publishBanks(t) {
 function applyIdentity(idn) {
   var q = function (s) { return document.querySelector(s); },
       byId = function (i) { return document.getElementById(i); };
-  var L = q('.locator'); if (L) L.innerHTML = 'Topic ' + idn.index + ' of ' + idn.total + ' &middot; ' + idn.locatorTail;
+  var L = q('.locator'); if (L) L.innerHTML = 'Topic ' + idn.index + ' of ' + (typeof TopicRegistry !== 'undefined' && TopicRegistry.ids ? TopicRegistry.ids().length : idn.total) + ' &middot; ' + idn.locatorTail;
   var H = q('.hdr h1'); if (H) H.textContent = idn.h1;
   var S = q('.hdr .sub'); if (S) S.innerHTML = idn.sub;
   document.querySelectorAll('.cmp-topic').forEach(function (el) { el.textContent = idn.companionTopic; });

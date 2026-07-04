@@ -190,6 +190,7 @@ function renderMockEnd() {
   mockRuns++;
   mockLastTime = mockSec;
   mockLastInt = mockInterrupt ? Object.keys(mockIntSet).length : 0;
+  mockPersist();
   const t = mockFmt(mockSec);
   let html = '<div class="mb-end"><div class="mb-end-h">Round complete</div>' +
     '<div class="mb-end-t">You ran the full arc in <span class="mb-end-time">' + t + '</span>. A real design round is 35&ndash;45 min &mdash; this is the spine you expand into it.</div>' +
@@ -208,6 +209,7 @@ function renderMockEnd() {
       this.style.color = 'var(--acc)';
       const score = parseInt(this.getAttribute('data-s'), 10), verdictEl = mockRoot.getElementById('mbverdict');
       mockLastScore = score;
+      mockPersist();
       verdictEl.classList.add('show');
       if (score >= 6) { verdictEl.style.background = 'var(--tealbg)'; verdictEl.style.color = '#0a5240'; verdictEl.innerHTML = '<b>Six for six.</b> You can carry the whole round end to end &mdash; now do it faster and under interruption.'; }
       else if (score >= 4) { verdictEl.style.background = 'var(--accbg)'; verdictEl.style.color = 'var(--accink)'; verdictEl.innerHTML = '<b>' + score + ' / 6.</b> The spine holds. Re-run and target the two that wobbled until they&rsquo;re automatic.'; }

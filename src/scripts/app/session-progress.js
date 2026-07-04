@@ -23,6 +23,7 @@ function clearSession() {
   const wb = wbEl();
   if (wb) wb.resetAll();
   mockLastScore = null; mockLastTime = null; mockRuns = 0;
+  try { if (typeof Store !== 'undefined' && Store.remove) Store.remove('mock.last'); } catch (e) {}
   mixLog = []; mxRes = []; mxGot = 0; mxShk = 0;
 }
 /* Pick the single most useful "do this next" recommendation, in priority order:

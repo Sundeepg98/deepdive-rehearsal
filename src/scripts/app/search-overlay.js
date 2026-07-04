@@ -68,6 +68,12 @@
     });
   }
 
+  function ensureTopicIndex() {
+    var n = (typeof TopicRegistry !== 'undefined' && TopicRegistry.ids) ? TopicRegistry.ids().length : 0;
+    if (!TOPIC_INDEX.length || TOPIC_INDEX.length !== n) TOPIC_INDEX = buildTopicIndex();
+    return TOPIC_INDEX;
+  }
+
   function createElements() {
     if (overlayEl) return;
 
@@ -275,7 +281,7 @@
     if (isOpen) return;
     if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
     createElements();
-    TOPIC_INDEX = buildTopicIndex();
+    ensureTopicIndex();
     isOpen = true;
     overlayEl.style.display = 'flex';
     requestAnimationFrame(function () {

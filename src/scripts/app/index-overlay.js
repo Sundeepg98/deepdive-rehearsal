@@ -281,5 +281,5 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wire);
   else wire();
 
-  window.IndexOverlay = { open: open, close: close, isOpen: function () { return isOpen; } };
+  window.IndexOverlay = { open: open, close: close, isOpen: function () { return isOpen; }, exportBackup: downloadBackup };
 })();

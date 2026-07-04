@@ -43,6 +43,7 @@
 <!--@build:include scripts/app/print-qa.js-->
 <!--@build:include scripts/app/last-visit.js-->
 <!--@build:include scripts/app/index-overlay.js-->
+<!--@build:include scripts/app/storage-notice.js-->
 <!--@build:include scripts/app/tour-guide.js-->
 <!--@build:include scripts/app/scroll-progress.js-->
 <!--@build:include scripts/app/copy-code.js-->

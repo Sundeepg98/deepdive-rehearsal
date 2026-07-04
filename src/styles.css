@@ -762,3 +762,9 @@ html[data-theme="dark"] .ix-card:hover{background:rgba(170,157,245,.13)}
 html[data-theme="dark"] .tn-trigger:hover{border-color:var(--acc);box-shadow:0 4px 12px rgba(170,157,245,.14)}
 html[data-theme="dark"] .tn-item:hover{background:rgba(170,157,245,.13)}
 @media(max-width:900px){ .side-id .topic-nav{flex-basis:100%;order:3;margin:6px 0 0} }
+
+.storage-notice{position:fixed;top:0;left:0;right:0;display:flex;align-items:center;gap:12px;padding:9px 16px;background:var(--amberbg);border-bottom:1px solid var(--amber);color:var(--amber);font-size:12.5px;font-weight:600;box-shadow:0 2px 8px -2px rgba(0,0,0,.12)}
+.storage-notice-t{flex:1;line-height:1.4}
+.storage-notice-exp{flex:none;font:600 11px -apple-system,sans-serif;color:var(--amber);background:transparent;border:1px solid var(--amber);border-radius:6px;padding:4px 11px;cursor:pointer}
+.storage-notice-exp:hover{background:var(--amber);color:#fff}
+.storage-notice-x{flex:none;background:transparent;border:0;color:var(--amber);font-size:18px;line-height:1;cursor:pointer;padding:0 4px}

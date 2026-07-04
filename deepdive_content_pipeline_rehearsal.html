@@ -777,6 +777,12 @@ html[data-theme="dark"] .ix-card:hover{background:rgba(170,157,245,.13)}
 html[data-theme="dark"] .tn-trigger:hover{border-color:var(--acc);box-shadow:0 4px 12px rgba(170,157,245,.14)}
 html[data-theme="dark"] .tn-item:hover{background:rgba(170,157,245,.13)}
 @media(max-width:900px){ .side-id .topic-nav{flex-basis:100%;order:3;margin:6px 0 0} }
+
+.storage-notice{position:fixed;top:0;left:0;right:0;display:flex;align-items:center;gap:12px;padding:9px 16px;background:var(--amberbg);border-bottom:1px solid var(--amber);color:var(--amber);font-size:12.5px;font-weight:600;box-shadow:0 2px 8px -2px rgba(0,0,0,.12)}
+.storage-notice-t{flex:1;line-height:1.4}
+.storage-notice-exp{flex:none;font:600 11px -apple-system,sans-serif;color:var(--amber);background:transparent;border:1px solid var(--amber);border-radius:6px;padding:4px 11px;cursor:pointer}
+.storage-notice-exp:hover{background:var(--amber);color:#fff}
+.storage-notice-x{flex:none;background:transparent;border:0;color:var(--amber);font-size:18px;line-height:1;cursor:pointer;padding:0 4px}
 </style>
 <script>/* === Boot: theme detection + loading splash === */
 try{var _dk=matchMedia('(prefers-color-scheme:dark)').matches;document.documentElement.dataset.theme=_dk?'dark':'light';var _tc=document.querySelector('meta[name="theme-color"]');if(_tc)_tc.setAttribute('content',_dk?'#15141A':'#FAF9F5');}catch(e){}
@@ -995,6 +1001,7 @@ window.__bootHash = (typeof window !== 'undefined' && window.location) ? window.
 var Store = (function () {
   var PREFIX = 'ddr.v1.';
   var mem = {};
+  var memUsed = false;  /* a write fell back to memory (quota) -- persistence is degraded */
   var ok = (function () {
     try {
       var k = PREFIX + '__probe__';
@@ -1020,7 +1027,11 @@ var Store = (function () {
     try {
       if (ok) window.localStorage.setItem(full(key), raw); else mem[full(key)] = raw;
       return true;
-    } catch (e) { mem[full(key)] = raw; return false; }
+    } catch (e) {
+      mem[full(key)] = raw;
+      if (!memUsed) { memUsed = true; try { window.dispatchEvent(new CustomEvent('storagedegraded')); } catch (e2) {} }
+      return false;
+    }
   }
 
   function remove(key) {
@@ -1061,7 +1072,8 @@ var Store = (function () {
     mem = {};
   }
 
-  return { get: get, set: set, remove: remove, keys: keys, available: available, clearAll: clearAll, dump: dump, restore: restore };
+  function degraded() { return !ok || memUsed; }
+  return { get: get, set: set, remove: remove, keys: keys, available: available, clearAll: clearAll, dump: dump, restore: restore, degraded: degraded };
 })();
 window.Store = Store;
 
@@ -12145,7 +12157,32 @@ window.Bookmarks = Bookmarks;
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wire);
   else wire();
 
-  window.IndexOverlay = { open: open, close: close, isOpen: function () { return isOpen; } };
+  window.IndexOverlay = { open: open, close: close, isOpen: function () { return isOpen; }, exportBackup: downloadBackup };
+})();
+
+/* ===== scripts/app/storage-notice.js =====
+   A dismissible banner shown ONLY when persistence is degraded (private/incognito
+   mode, storage disabled, or quota full). Without it, saves silently fall back to
+   memory and the user's work vanishes on reload with no warning. The banner says so
+   plainly and offers an immediate Export so nothing is lost. Offline-safe. */
+(function () {
+  var dismissed = false, shown = false;
+  function show() {
+    if (shown || dismissed) return;
+    if (!(typeof Store !== 'undefined' && Store.degraded && Store.degraded())) return;
+    if (!document.body) { document.addEventListener('DOMContentLoaded', show); return; }
+    shown = true;
+    var bar = document.createElement('div');
+    bar.className = 'storage-notice'; bar.setAttribute('role', 'status'); bar.style.zIndex = '2000';
+    bar.innerHTML = '<span class="storage-notice-t">This browser isn\u2019t saving your progress \u2014 private mode or storage is full, so your work will be lost on reload.</span>' +
+      '<button type="button" class="storage-notice-exp">Export a backup</button>' +
+      '<button type="button" class="storage-notice-x" aria-label="Dismiss this notice">&#215;</button>';
+    document.body.appendChild(bar);
+    bar.querySelector('.storage-notice-exp').addEventListener('click', function () { if (window.IndexOverlay && IndexOverlay.exportBackup) IndexOverlay.exportBackup(); });
+    bar.querySelector('.storage-notice-x').addEventListener('click', function () { dismissed = true; if (bar.parentNode) bar.parentNode.removeChild(bar); });
+  }
+  window.addEventListener('storagedegraded', show);
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', show); else show();
 })();
 
 /* ===== TourGuide =====

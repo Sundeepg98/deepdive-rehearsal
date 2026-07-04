@@ -12,6 +12,7 @@ window.__bootHash = (typeof window !== 'undefined' && window.location) ? window.
 var Store = (function () {
   var PREFIX = 'ddr.v1.';
   var mem = {};
+  var memUsed = false;  /* a write fell back to memory (quota) -- persistence is degraded */
   var ok = (function () {
     try {
       var k = PREFIX + '__probe__';
@@ -37,7 +38,11 @@ var Store = (function () {
     try {
       if (ok) window.localStorage.setItem(full(key), raw); else mem[full(key)] = raw;
       return true;
-    } catch (e) { mem[full(key)] = raw; return false; }
+    } catch (e) {
+      mem[full(key)] = raw;
+      if (!memUsed) { memUsed = true; try { window.dispatchEvent(new CustomEvent('storagedegraded')); } catch (e2) {} }
+      return false;
+    }
   }
 
   function remove(key) {
@@ -78,6 +83,7 @@ var Store = (function () {
     mem = {};
   }
 
-  return { get: get, set: set, remove: remove, keys: keys, available: available, clearAll: clearAll, dump: dump, restore: restore };
+  function degraded() { return !ok || memUsed; }
+  return { get: get, set: set, remove: remove, keys: keys, available: available, clearAll: clearAll, dump: dump, restore: restore, degraded: degraded };
 })();
 window.Store = Store;

@@ -6,12 +6,12 @@
    Adding a topic = tag its identity with one of these group ids; nothing else here
    changes. Offline-safe: pure data + a pure bucketing helper, no network/storage. */
 var TOPIC_GROUPS = [
-  { id: 'messaging-events',          label: 'Messaging &amp; Events',          desc: 'How work moves &mdash; event buses, queues, notifications, scheduling, and config-driven behavior.' },
-  { id: 'data-storage',              label: 'Data &amp; Storage',              desc: 'Modeling, caching, and moving data &mdash; and reading it back correctly under pressure.' },
-  { id: 'reliability-observability', label: 'Reliability &amp; Observability', desc: 'Failing well &mdash; error propagation, debugging, incident anti-patterns, and seeing inside the system.' },
-  { id: 'platform-infra',            label: 'Platform &amp; Infra',            desc: 'The ground it runs on &mdash; provisioning, cloud hardening, serverless, and self-converging platforms.' },
-  { id: 'architecture-apis',         label: 'Architecture &amp; APIs',         desc: 'Shape and edges &mdash; ingestion pipelines, API gateways, service boundaries, and architecture reviews.' },
-  { id: 'security-tenancy',          label: 'Security &amp; Tenancy',          desc: 'Trust and isolation &mdash; signing, authorization, and keeping tenants apart across the stack.' }
+  { id: 'messaging-events',          label: 'Messaging &amp; Events',          color: '#0d9488', desc: 'How work moves &mdash; event buses, queues, notifications, scheduling, and config-driven behavior.' },
+  { id: 'data-storage',              label: 'Data &amp; Storage',              color: '#2563eb', desc: 'Modeling, caching, and moving data &mdash; and reading it back correctly under pressure.' },
+  { id: 'reliability-observability', label: 'Reliability &amp; Observability', color: '#d97706', desc: 'Failing well &mdash; error propagation, debugging, incident anti-patterns, and seeing inside the system.' },
+  { id: 'platform-infra',            label: 'Platform &amp; Infra',            color: '#7c3aed', desc: 'The ground it runs on &mdash; provisioning, cloud hardening, serverless, and self-converging platforms.' },
+  { id: 'architecture-apis',         label: 'Architecture &amp; APIs',         color: '#db2777', desc: 'Shape and edges &mdash; ingestion pipelines, API gateways, service boundaries, and architecture reviews.' },
+  { id: 'security-tenancy',          label: 'Security &amp; Tenancy',          color: '#dc2626', desc: 'Trust and isolation &mdash; signing, authorization, and keeping tenants apart across the stack.' }
 ];
 
 /* Bucket the registered topic ids by group, in group order then registration order.

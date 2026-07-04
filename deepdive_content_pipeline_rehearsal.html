@@ -666,6 +666,9 @@ body.is-hidden,body.is-hidden *,body.is-hidden *::before,body.is-hidden *::after
 .ix-filter:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(83,74,183,.12)}
 .ix-filter::placeholder{color:var(--mut2)}
 .ix-nores{font-size:11px;color:var(--mut2);white-space:nowrap}
+.tn-g-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;vertical-align:middle}
+.ix-g-dot{flex:none;width:9px;height:9px;border-radius:50%}
+.loc-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;vertical-align:middle}
 .ix-empty{padding:30px;text-align:center;color:var(--mut);font-size:13px}
 html[data-theme="dark"] .ix-card:hover{background:rgba(170,157,245,.13)}
 html[data-theme="dark"] .tn-trigger:hover{border-color:var(--acc);box-shadow:0 4px 12px rgba(170,157,245,.14)}
@@ -692,7 +695,7 @@ try{var _dk=matchMedia('(prefers-color-scheme:dark)').matches;document.documentE
 <body>
 <div class="rail" aria-hidden="true"><div class="fill" id="rail"></div></div>
 <div class="app"><aside class="sidebar"><div class="side-id">
-  <span class="badge">Deep rehearsal</span><span class="locator">Architecture &amp; APIs &middot; ingestion layer</span>
+  <span class="badge">Deep rehearsal</span><span class="locator"><span class="loc-dot" style="background:#db2777"></span>Architecture &amp; APIs &middot; ingestion layer</span>
   <div class="hdr">
     <h1>Content Pipeline</h1>
     <div class="sub"><b>Mechanics</b> &rarr; <b>graded follow-up chains</b> &rarr; <b>whiteboard</b> &rarr; <b>zoom out</b> to where this sits in the whole system, and the pivots an interviewer rides into the next topic.</div>
@@ -1081,7 +1084,7 @@ function publishBanks(t) {
 function applyIdentity(idn) {
   var q = function (s) { return document.querySelector(s); },
       byId = function (i) { return document.getElementById(i); };
-  var L = q('.locator'); if (L) { var _gl = ''; if (typeof TOPIC_GROUPS !== 'undefined' && idn.group) { for (var _gi = 0; _gi < TOPIC_GROUPS.length; _gi++) { if (TOPIC_GROUPS[_gi].id === idn.group) { _gl = TOPIC_GROUPS[_gi].label; break; } } } L.innerHTML = (_gl ? _gl + ' &middot; ' : '') + idn.locatorTail; }
+  var L = q('.locator'); if (L) { var _gl = '', _gc = ''; if (typeof TOPIC_GROUPS !== 'undefined' && idn.group) { for (var _gi = 0; _gi < TOPIC_GROUPS.length; _gi++) { if (TOPIC_GROUPS[_gi].id === idn.group) { _gl = TOPIC_GROUPS[_gi].label; _gc = TOPIC_GROUPS[_gi].color || ''; break; } } } var _dot = _gc ? '<span class="loc-dot" style="background:' + _gc + '"></span>' : ''; L.innerHTML = _dot + (_gl ? _gl + ' &middot; ' : '') + idn.locatorTail; }
   var H = q('.hdr h1'); if (H) H.textContent = idn.h1;
   var S = q('.hdr .sub'); if (S) S.innerHTML = idn.sub;
   document.querySelectorAll('.cmp-topic').forEach(function (el) { el.textContent = idn.companionTopic; });
@@ -1183,12 +1186,12 @@ class TopicPane extends HTMLElement {
    Adding a topic = tag its identity with one of these group ids; nothing else here
    changes. Offline-safe: pure data + a pure bucketing helper, no network/storage. */
 var TOPIC_GROUPS = [
-  { id: 'messaging-events',          label: 'Messaging &amp; Events',          desc: 'How work moves &mdash; event buses, queues, notifications, scheduling, and config-driven behavior.' },
-  { id: 'data-storage',              label: 'Data &amp; Storage',              desc: 'Modeling, caching, and moving data &mdash; and reading it back correctly under pressure.' },
-  { id: 'reliability-observability', label: 'Reliability &amp; Observability', desc: 'Failing well &mdash; error propagation, debugging, incident anti-patterns, and seeing inside the system.' },
-  { id: 'platform-infra',            label: 'Platform &amp; Infra',            desc: 'The ground it runs on &mdash; provisioning, cloud hardening, serverless, and self-converging platforms.' },
-  { id: 'architecture-apis',         label: 'Architecture &amp; APIs',         desc: 'Shape and edges &mdash; ingestion pipelines, API gateways, service boundaries, and architecture reviews.' },
-  { id: 'security-tenancy',          label: 'Security &amp; Tenancy',          desc: 'Trust and isolation &mdash; signing, authorization, and keeping tenants apart across the stack.' }
+  { id: 'messaging-events',          label: 'Messaging &amp; Events',          color: '#0d9488', desc: 'How work moves &mdash; event buses, queues, notifications, scheduling, and config-driven behavior.' },
+  { id: 'data-storage',              label: 'Data &amp; Storage',              color: '#2563eb', desc: 'Modeling, caching, and moving data &mdash; and reading it back correctly under pressure.' },
+  { id: 'reliability-observability', label: 'Reliability &amp; Observability', color: '#d97706', desc: 'Failing well &mdash; error propagation, debugging, incident anti-patterns, and seeing inside the system.' },
+  { id: 'platform-infra',            label: 'Platform &amp; Infra',            color: '#7c3aed', desc: 'The ground it runs on &mdash; provisioning, cloud hardening, serverless, and self-converging platforms.' },
+  { id: 'architecture-apis',         label: 'Architecture &amp; APIs',         color: '#db2777', desc: 'Shape and edges &mdash; ingestion pipelines, API gateways, service boundaries, and architecture reviews.' },
+  { id: 'security-tenancy',          label: 'Security &amp; Tenancy',          color: '#dc2626', desc: 'Trust and isolation &mdash; signing, authorization, and keeping tenants apart across the stack.' }
 ];
 
 /* Bucket the registered topic ids by group, in group order then registration order.
@@ -10811,7 +10814,7 @@ customElements.define('deep-session', DeepSession);
       var buckets = (typeof groupedTopicIds === 'function') ? groupedTopicIds() : null;
       if (buckets && buckets.length) {
         menu.innerHTML = buckets.map(function (b) {
-          return '<div class="tn-group" role="presentation">' + b.group.label + '</div>' + b.ids.map(tnItem).join('');
+          return '<div class="tn-group" role="presentation"><span class="tn-g-dot" style="background:' + (b.group.color || 'var(--mut2)') + '"></span>' + b.group.label + '</div>' + b.ids.map(tnItem).join('');
         }).join('');
       } else {
         menu.innerHTML = ids.map(tnItem).join('');
@@ -11207,13 +11210,13 @@ customElements.define('deep-session', DeepSession);
         var t = TopicRegistry.get(id), idn = t.identity, on = (id === curId);
         var th = thesisText(idn.thesis || '');
         var filt = ((idn.title || '') + ' ' + (idn.locatorTail || '') + ' ' + th).toLowerCase().replace(/&[a-z#0-9]+;/g, ' ').replace(/"/g, '');
-        return '<button class="ix-card' + (on ? ' on' : '') + '" type="button" data-topic="' + id + '" data-filter="' + filt + '"' +
+        return '<button class="ix-card' + (on ? ' on' : '') + '" type="button" data-topic="' + id + '" data-filter="' + filt + '" style="box-shadow:inset 3px 0 0 ' + (b.group.color || 'transparent') + '"' +
           (on ? ' aria-current="true"' : '') + '>' +
           '<span class="ix-c-name">' + idn.title + '</span>' +
           '<span class="ix-c-tail">' + idn.locatorTail + '</span>' +
           (th ? '<span class="ix-c-thesis">' + th + '</span>' : '') + '</button>';
       }).join('');
-      return '<section class="ix-group"><div class="ix-g-head">' + b.group.label +
+      return '<section class="ix-group"><div class="ix-g-head"><span class="ix-g-dot" style="background:' + (b.group.color || 'var(--acc)') + '"></span>' + b.group.label +
         ' <span class="ix-g-n">' + b.ids.length + '</span></div>' +
         (b.group.desc ? '<div class="ix-g-desc">' + b.group.desc + '</div>' : '') +
         '<div class="ix-grid">' + cards + '</div></section>';

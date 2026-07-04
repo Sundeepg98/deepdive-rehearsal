@@ -33,7 +33,7 @@
       var buckets = (typeof groupedTopicIds === 'function') ? groupedTopicIds() : null;
       if (buckets && buckets.length) {
         menu.innerHTML = buckets.map(function (b) {
-          return '<div class="tn-group" role="presentation">' + b.group.label + '</div>' + b.ids.map(tnItem).join('');
+          return '<div class="tn-group" role="presentation"><span class="tn-g-dot" style="background:' + (b.group.color || 'var(--mut2)') + '"></span>' + b.group.label + '</div>' + b.ids.map(tnItem).join('');
         }).join('');
       } else {
         menu.innerHTML = ids.map(tnItem).join('');

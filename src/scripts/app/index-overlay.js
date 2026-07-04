@@ -49,13 +49,13 @@
         var t = TopicRegistry.get(id), idn = t.identity, on = (id === curId);
         var th = thesisText(idn.thesis || '');
         var filt = ((idn.title || '') + ' ' + (idn.locatorTail || '') + ' ' + th).toLowerCase().replace(/&[a-z#0-9]+;/g, ' ').replace(/"/g, '');
-        return '<button class="ix-card' + (on ? ' on' : '') + '" type="button" data-topic="' + id + '" data-filter="' + filt + '"' +
+        return '<button class="ix-card' + (on ? ' on' : '') + '" type="button" data-topic="' + id + '" data-filter="' + filt + '" style="box-shadow:inset 3px 0 0 ' + (b.group.color || 'transparent') + '"' +
           (on ? ' aria-current="true"' : '') + '>' +
           '<span class="ix-c-name">' + idn.title + '</span>' +
           '<span class="ix-c-tail">' + idn.locatorTail + '</span>' +
           (th ? '<span class="ix-c-thesis">' + th + '</span>' : '') + '</button>';
       }).join('');
-      return '<section class="ix-group"><div class="ix-g-head">' + b.group.label +
+      return '<section class="ix-group"><div class="ix-g-head"><span class="ix-g-dot" style="background:' + (b.group.color || 'var(--acc)') + '"></span>' + b.group.label +
         ' <span class="ix-g-n">' + b.ids.length + '</span></div>' +
         (b.group.desc ? '<div class="ix-g-desc">' + b.group.desc + '</div>' : '') +
         '<div class="ix-grid">' + cards + '</div></section>';

@@ -58,6 +58,7 @@ document.addEventListener('keydown', function (event) {
   if (key === '/') { event.preventDefault(); if (window.SearchOverlay && window.SearchOverlay.open) window.SearchOverlay.open(); return; }
   if (key === '[') { if (window.stepTopic) window.stepTopic(-1); return; }
   if (key === ']') { if (window.stepTopic) window.stepTopic(1); return; }
+  if (key === '\\') { event.preventDefault(); if (window.IndexOverlay && window.IndexOverlay.open) window.IndexOverlay.open(); return; }
   if (current === 'walk') {
     /* arrows step through the walkthrough (bounds handled inside prev/next) */
     const w = document.querySelector('#walk deep-walkthrough');

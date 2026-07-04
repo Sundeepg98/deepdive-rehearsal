@@ -9611,6 +9611,7 @@ document.addEventListener('keydown', function (event) {
   if (key === '/') { event.preventDefault(); if (window.SearchOverlay && window.SearchOverlay.open) window.SearchOverlay.open(); return; }
   if (key === '[') { if (window.stepTopic) window.stepTopic(-1); return; }
   if (key === ']') { if (window.stepTopic) window.stepTopic(1); return; }
+  if (key === '\\') { event.preventDefault(); if (window.IndexOverlay && window.IndexOverlay.open) window.IndexOverlay.open(); return; }
   if (current === 'walk') {
     /* arrows step through the walkthrough (bounds handled inside prev/next) */
     const w = document.querySelector('#walk deep-walkthrough');
@@ -9964,6 +9965,7 @@ var KBD_HTML = `<div class="ks-sec">
         <div class="ks-h">Anywhere</div>
         <div class="ks-list">
           <div class="ks-row2"><span class="ks-keys"><kbd>/</kbd></span><span>Search topics, concepts &amp; views</span></div>
+          <div class="ks-row2"><span class="ks-keys"><kbd>\\</kbd></span><span>Open the Topic index</span></div>
           <div class="ks-row2"><span class="ks-keys"><kbd>[</kbd><kbd>]</kbd></span><span>Previous &middot; next topic</span></div>
           <div class="ks-row2"><span class="ks-keys"><kbd>G</kbd></span><span>Start the guided tour</span></div>
           <div class="ks-row2"><span class="ks-keys"><kbd>Esc</kbd></span><span>Close any open panel</span></div>

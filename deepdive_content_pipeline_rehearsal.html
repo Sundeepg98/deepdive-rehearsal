@@ -5900,6 +5900,847 @@ TopicRegistry.register({
 });
 
 
+/* topics/desired-state.js -- topic 7 (Desired State) include wrapper. identity + 9
+   per-pane data slices + the cross-pane bank, THEN register. drill.js MUST precede
+   bank.js (bank aliases DS_CARDS / DS_SPEAK). Loaded after topics 1-6 so topic 1
+   stays the boot/default topic; registering here adds it to the switcher. */
+/* ============ topics/desired-state/identity.js -- topic 7 (Desired State) ============
+   Switchable light-DOM identity for topic 7, same contract as topic 1's TOPIC_CP_IDENTITY.
+   applyIdentity() rewrites locator / h1 / sub / thesis / spine / cram title / companion
+   notes on every switch. Grounded in the ICS desired-state reconciler (three-state model:
+   desired/deployed/reported SHA-256 hashes; hash of RENDERED output not template version;
+   4-level hierarchical resolution tenant->site->tag->device storing every level; event-driven
+   calculate->render->diff->deploy->report; per-tenant distributed lock; maintenance windows).
+   Offline-safe; 7-bit ASCII (entities + \uXXXX). */
+var TOPIC_DS_IDENTITY = {
+  index: 7,
+  total: 8,
+  locatorTail: 'convergence boundary',
+  title: 'Desired State',
+  h1: 'Desired State',
+  sub: '<b>The reconciliation loop</b> &rarr; <b>graded follow-up chains</b> &rarr; <b>whiteboard</b> &rarr; <b>zoom out</b> to where the convergence boundary sits, and the pivots an interviewer rides from a drift check into hashing, hierarchical resolution, and the lock.',
+  companionTopic: 'Desired State',
+  thesis: 'A desired-state reconciler that keeps a fleet converged &mdash; three hashes (desired, deployed, reported), drift as any mismatch, and an event-driven loop that renders, diffs, and deploys under a per-tenant lock &mdash; so config intent becomes running reality and stays there.',
+  spine: [
+    '<b>Three hashes, not one</b> &mdash; desired (what config should be), deployed (what we last pushed), reported (what the device says it runs). Drift is any mismatch, and <i>which pair</i> differs localizes the fault.',
+    'The hash is of the <b>rendered output, not the template version</b> &mdash; a config&rsquo;s identity is the SHA-256 of its fully-resolved bytes, so a template bump that changes nothing isn&rsquo;t drift, and a value change that alters output is.',
+    'Desired config is <b>resolved through a hierarchy</b> &mdash; tenant &rarr; site &rarr; tag &rarr; device, each level overriding the last &mdash; and every level is stored, so you can always explain where a value came from.',
+    'Convergence is an <b>event-driven loop under a lock</b> &mdash; calculate &rarr; render &rarr; diff &rarr; deploy &rarr; report, guarded by a per-tenant distributed lock and gated by maintenance windows, so reconcilers don&rsquo;t fight and deploys land when they&rsquo;re allowed to.'
+  ],
+  cramTitle: 'Desired State',
+  reportTitle: 'Desired State',
+  cmpNotes: {
+    walk: ['The reconciliation loop', 'Resolve, render, hash, diff, deploy, report \u2014 one turn of the loop, the mechanics you narrate before anyone cuts in.', 'Say the three-hash line out loud \u2014 \u201Cdesired, deployed, reported; drift is any mismatch, and which pair differs localizes the fault.\u201D That\u2019s the whole model.'],
+    drill: ['Probe Drill', 'Graded follow-ups on the three-hash model, rendered-not-template hashing, hierarchical resolution, and the lock \u2014 the ones that separate a passing answer from a Staff signal.', 'Commit to the invariant before the mechanism \u2014 \u201Cthe system converges reported to desired\u201D \u2014 not just \u201Cwe push config to devices.\u201D'],
+    wb: ['Whiteboard', 'Rebuild the desired / deployed / reported triangle and the resolve \u2192 render \u2192 diff \u2192 deploy \u2192 report loop from memory \u2014 the cues, nothing in front of you.', 'Draw the three hashes first, then the arrows that drive them together. Recall is the test, not recognition.'],
+    sys: ['System Map', 'Zoom out: the reconciler sits between config intent and fleet reality, driving one toward the other continuously.', 'Lead with convergence, not the boxes \u2014 \u201Cdesired is the goal, reported is reality, the loop closes the gap.\u201D'],
+    trade: ['Trade-offs', 'The decisions they drill \u2014 hash rendered vs template, poll vs push reporting, level- vs edge-triggered, lock scope \u2014 each with the switch condition.', 'Always say \u201Cconverge, don\u2019t command\u201D \u2014 the reconciler drives toward a goal state, it doesn\u2019t fire one-shot commands and hope.'],
+    model: ['Model Answers', 'Full spoken scripts \u2014 the beats, in order, the way you\u2019d actually say them.', 'Steal the frame, not the words \u2014 headline first (\u201Cthree hashes, rendered output, converge under a lock\u201D), then the one risk you\u2019d name.'],
+    num: ['Numbers', 'Back-of-envelope the reconciler \u2014 and know which number sets how often the loop can run.', 'Lead with the reconcile rate \u2014 devices \u00D7 check-in frequency is the load the loop and the lock have to absorb.'],
+    rf: ['Red Flags', 'What sinks the round \u2014 hashing the template, commanding not converging, no lock, drift you can\u2019t see \u2014 and what to say instead.', 'Name what the interviewer hears \u2014 \u201Ctwo reconcilers deploying the same device at once\u201D is the fastest no-hire in the room.'],
+    open: ['30-Second', 'The opener and the close \u2014 matched to the altitude the question is asked at.', 'Match the altitude \u2014 open at the convergence boundary, not the loop, and land on drift-detection and the lock as the real hard parts.']
+  }
+};
+
+/* topics/desired-state/walk.js -- topic 7 walkthrough. steps[] is the reconciliation loop
+   (trigger -> resolve hierarchy -> render -> hash rendered -> three-way diff -> acquire lock
+   -> deploy in-window -> report/converge -> visibility); modelScript[] is the spoken model
+   answer (plain beats, the interviewer .mq line, then the .mbeat.ans -- LAST). Code strings
+   use single-backslash \n / \'. 7-bit ASCII. */
+var TOPIC_DS_WALK = {
+  steps: [
+    { k:"Step 1 / 9", t:"A trigger kicks the loop",
+      flow:'<span class="fb n">config change / check-in / schedule</span><span class="arr">&rarr;</span><span class="fb p">reconcile event</span><span class="arr">&middot;</span><span class="fb t">not a cron sweep</span><span class="arr">&middot;</span><span class="fb a">event-driven</span>',
+      ins:'The loop runs on a <b>trigger</b> &mdash; a config change, a device check-in, a scheduled window &mdash; not a blind cron sweep of the whole fleet. Each event reconciles the affected devices, so work is proportional to what changed.',
+      deep:'Event-driven is the first design choice, and it&rsquo;s about scale and freshness. With <b>10,000 devices per tenant</b>, a periodic full sweep is either too slow (drift sits undetected between sweeps) or too expensive (re-rendering and diffing every device on a timer, mostly finding nothing). Triggering on the events that <i>actually change state</i> &mdash; a config edit upstream, a device checking in with its reported state, a maintenance window opening &mdash; means the reconciler works when there&rsquo;s a reason to, and a change propagates in seconds, not on the next sweep. The loop is the same calculate-render-diff-deploy-report every time; what varies is what triggered it and which devices it touches.' },
+    { k:"Step 2 / 9", t:"Resolve the hierarchy",
+      flow:'<span class="fb n">tenant</span><span class="arr">&rarr;</span><span class="fb p">site</span><span class="arr">&rarr;</span><span class="fb t">tag</span><span class="arr">&rarr;</span><span class="fb a">device</span><span class="arr">&middot;</span><span class="fb r">each overrides &middot; store every level</span>',
+      ins:'Desired config is <b>resolved through a hierarchy</b>: start at the tenant defaults, override with site, then tag (device group), then the individual device. Each level wins over the one above it, and you <b>store every level</b> &mdash; not just the final answer.',
+      code:'<span class="c">// resolve tenant -&gt; site -&gt; tag -&gt; device; later levels override earlier</span>\n<span class="k">function</span> resolve(device) {\n  <span class="k">const</span> levels = [tenant, site(device), tag(device), device];\n  <span class="k">const</span> resolved = {};\n  <span class="k">for</span> (<span class="k">const</span> lvl <span class="k">of</span> levels)\n    Object.assign(resolved, lvl.config);   <span class="c">// last write wins</span>\n  <span class="k">return</span> resolved;   <span class="c">// plus: keep each level&#39;s source for explainability</span>\n}',
+      cap:'Storing every level is what makes desired state <b>explainable</b>: when someone asks &lsquo;why does this device have timeout = 30?&rsquo; you can answer &lsquo;the site set it; the tenant default was 60.&rsquo; The final resolved config is what gets rendered, but the per-level provenance is what lets you debug and audit it.' },
+    { k:"Step 3 / 9", t:"Render the output",
+      flow:'<span class="fb n">resolved config + template</span><span class="arr">&rarr;</span><span class="fb p">rendered bytes</span><span class="arr">&rarr;</span><span class="fb t">the exact artifact the device runs</span><span class="arr">&middot;</span><span class="fb a">deterministic</span>',
+      ins:'The resolved config is <b>rendered</b> into the actual output the device will run &mdash; the config file, the manifest, the bytes. Rendering is deterministic: the same resolved input always produces the same output artifact.',
+      deep:'Rendering turns <i>intent</i> into <i>artifact</i>, and its determinism is load-bearing for everything downstream. The desired hash (next step) is taken over this rendered output, so rendering has to be a pure function of the resolved config &mdash; same input, same bytes, every time &mdash; or the hash would be unstable and every reconcile would look like drift. That means no timestamps, no map-ordering nondeterminism, no &lsquo;rendered-at&rsquo; noise baked into the output. The payoff is that the rendered artifact is <b>content-addressable</b>: identical config anywhere in the fleet renders to identical bytes and hashes to the same value, so you can compare, dedupe, and cache by hash. Get rendering deterministic and the whole three-hash model rests on solid ground; let it be sloppy and you get phantom drift forever.' },
+    { k:"Step 4 / 9", t:"Hash the rendered output",
+      flow:'<span class="fb n">SHA-256(rendered bytes)</span><span class="arr">&rarr;</span><span class="fb p">desired hash</span><span class="arr">&middot;</span><span class="fb r">NOT the template version</span><span class="arr">&middot;</span><span class="fb a">content-addressed</span>',
+      ins:'The <b>desired hash</b> is <code>SHA-256</code> of the <b>rendered output</b> &mdash; the bytes, not the template version number. A config&rsquo;s identity is what it actually produces, so a template refactor that renders identical output is <i>not</i> a change, and a value edit that alters output <i>is</i>.',
+      code:'<span class="c">// identity of a config = hash of what it RENDERS, not its template version</span>\n<span class="k">const</span> desiredHash = sha256(render(resolve(device)));\n<span class="c">// template v4 -&gt; v5 but identical output? same hash, NOT drift</span>\n<span class="c">// one value changes the output?           different hash, IS drift</span>',
+      cap:'Hashing the rendered output instead of a template version is the design&rsquo;s sharpest idea. Drift is defined by <b>observable output</b>, not version bookkeeping: you never redeploy a whole fleet because a template was refactored with no output change, and you never miss a real change because the version happened to match. Content, not version, is the source of truth for &lsquo;is this the config we want.&rsquo;' },
+    { k:"Step 5 / 9", t:"The three hashes, diffed",
+      flow:'<span class="fb n">desired</span><span class="arr">vs</span><span class="fb p">deployed</span><span class="arr">vs</span><span class="fb t">reported</span><span class="arr">&rarr;</span><span class="fb r">any mismatch = drift</span><span class="arr">&middot;</span><span class="fb a">which pair localizes it</span>',
+      ins:'Three hashes per device: <b>desired</b> (what it should run), <b>deployed</b> (what we last pushed), <b>reported</b> (what the device says it&rsquo;s running). Drift is <i>any</i> mismatch &mdash; and <b>which pair</b> differs tells you what happened.',
+      code:'<span class="c">// three-way compare -- which pair differs localizes the fault</span>\n<span class="k">if</span> (desired === deployed &amp;&amp; deployed === reported) converged();\n<span class="k">else if</span> (desired !== deployed)  needsDeploy();     <span class="c">// config changed upstream</span>\n<span class="k">else if</span> (deployed !== reported) deviceDrifted();    <span class="c">// device changed under us</span>',
+      cap:'The three-way comparison makes drift <b>diagnosable</b>, not just detectable. <code>desired &ne; deployed</code> means the intended config changed and we haven&rsquo;t pushed it &mdash; a deploy is owed. <code>deployed &ne; reported</code> means we pushed one thing but the device runs another &mdash; it drifted locally, or the deploy failed. One hash tells you &lsquo;something&rsquo;s wrong&rsquo;; three tell you <i>where</i>.' },
+    { k:"Step 6 / 9", t:"Acquire the lock",
+      flow:'<span class="fb n">before deploy</span><span class="arr">&rarr;</span><span class="fb p">per-tenant distributed lock</span><span class="arr">&middot;</span><span class="fb t">30s hold, 4min acquire</span><span class="arr">&middot;</span><span class="fb a">no two reconcilers</span>',
+      ins:'Before pushing anything, the reconciler takes a <b>per-tenant distributed lock</b> &mdash; roughly a 30-second hold with a bounded acquire window &mdash; so two reconcilers can never deploy to the same tenant&rsquo;s fleet at once and fight over device state.',
+      code:'<span class="c">// per-tenant lock: serialize reconciles for a tenant, bounded hold + wait</span>\n<span class="k">const</span> lock = <span class="k">await</span> acquire(<span class="s">`reconcile:${tenantId}`</span>, { ttl: 30000, wait: 240000 });\n<span class="k">if</span> (!lock) <span class="k">return</span> deferToNextTrigger();   <span class="c">// someone else holds it</span>\n<span class="k">try</span> { <span class="k">await</span> reconcileTenant(tenantId); }\n<span class="k">finally</span> { <span class="k">await</span> lock.release(); }',
+      cap:'The lock is <b>per-tenant</b>, not global, on purpose: tenants are independent, so their reconciles run in parallel, but within one tenant the loop is serialized. The TTL (30s) bounds how long a crashed reconciler blocks others before the lock auto-expires; the acquire window (4min) bounds how long a waiter tries before deferring to the next trigger. Two loops deploying the same device concurrently is the failure this prevents.' },
+    { k:"Step 7 / 9", t:"Deploy within a window",
+      flow:'<span class="fb n">push rendered config</span><span class="arr">&rarr;</span><span class="fb p">record deployed hash</span><span class="arr">&middot;</span><span class="fb t">only inside a maintenance window</span><span class="arr">&middot;</span><span class="fb a">gated deploy</span>',
+      ins:'The reconciler <b>pushes the rendered config</b> to the device and records it as the new <b>deployed hash</b> &mdash; but only inside an allowed <b>maintenance window</b>. Outside the window, drift is detected and queued, not applied.',
+      deep:'Deploying is where a reconciler touches the real world, so it&rsquo;s gated twice: by the lock (no concurrent deploys) and by <b>maintenance windows</b> (deploys land only when allowed). The window matters because these are <b>payment terminals</b> &mdash; you don&rsquo;t push a config change mid-transaction or during peak hours; you wait for the site&rsquo;s window. So the loop separates <b>detecting</b> drift (always, continuously) from <b>correcting</b> it (only in-window): a device can be known-drifted for hours, visible in the API, and the deploy fires when the window opens. Recording the deployed hash the moment we push is what lets the next loop distinguish &lsquo;we pushed X, device confirms X&rsquo; (converged) from &lsquo;we pushed X, device still reports Y&rsquo; (deploy failed or device drifted). Deploy is deliberate, gated, and recorded &mdash; not fire-and-forget.' },
+    { k:"Step 8 / 9", t:"Report and confirm convergence",
+      flow:'<span class="fb n">device runs config</span><span class="arr">&rarr;</span><span class="fb p">reports its actual hash</span><span class="arr">&rarr;</span><span class="fb t">reported == desired? converged</span><span class="arr">&middot;</span><span class="fb a">closed loop</span>',
+      ins:'The device runs the pushed config and <b>reports back the hash it&rsquo;s actually running</b>. When <b>reported == desired</b>, the loop has converged for that device. Until then, it&rsquo;s still drifted &mdash; and the next trigger will act.',
+      deep:'The reported hash closes the loop from open-loop &lsquo;we sent it&rsquo; to closed-loop &lsquo;it&rsquo;s confirmed running.&rsquo; This is the difference between <b>commanding</b> and <b>converging</b>: a command-based system pushes config and assumes success; a convergence-based system keeps checking reported against desired until they match, and re-acts if they don&rsquo;t. A failed deploy, a device that rolled back, a terminal offline during its window &mdash; all show up as <code>reported &ne; desired</code> on the next loop, and the reconciler tries again. The device reporting its <i>own</i> running state (rather than us assuming the deploy stuck) is what makes the system <b>self-healing</b>: reality is measured, not presumed, and the loop runs until measurement matches intent. That&rsquo;s the core of desired-state &mdash; you declare the goal and the system drives toward it continuously, rather than firing imperative steps and hoping.' },
+    { k:"Step 9 / 9", t:"Make drift visible",
+      flow:'<span class="fb n">mismatch-visibility API</span><span class="arr">&rarr;</span><span class="fb p">which devices drifted, and why</span><span class="arr">&rarr;</span><span class="fb t">drift is observable</span><span class="arr">&middot;</span><span class="fb a">then re-loop</span>',
+      ins:'Every mismatch is surfaced through a <b>drift-visibility API</b> &mdash; which devices are drifted, which pair of hashes differs, how long they&rsquo;ve been out of sync. Drift is <b>observable</b>, not silent; and the loop re-runs on the next trigger to close it.',
+      deep:'A reconciler that silently fixes things is one you can&rsquo;t trust or debug, so <b>visibility</b> is a first-class output, not an afterthought. The API answers the operational questions: how much of the fleet is converged right now, which devices are stuck drifted (and for how long), and &mdash; because you stored every resolution level and all three hashes &mdash; <i>why</i>: which pair differs (a deploy owed vs a device that drifted), and where the desired value came from. That turns the loop from a black box into an operable system: an operator sees a terminal drifted for six hours because it missed its window, not a mystery. And the loop is <b>continuous</b> &mdash; each trigger re-resolves, re-diffs, and re-converges, so visible drift shrinks as devices come back into their windows and confirm. Detect always, correct in-window, and show your work.' }
+  ],
+  modelScript: [
+    { ml:'Frame it', t:'"The problem is keeping a fleet of 10,000-plus terminals per tenant running the config we intend, continuously &mdash; not pushing config once and hoping. So I model it as desired state: declare the goal, and a loop drives reality toward it."' },
+    { ml:'The three hashes', t:'"The core is three hashes per device &mdash; desired (what it should run), deployed (what we last pushed), reported (what it says it&rsquo;s running). Drift is any mismatch, and which pair differs localizes the fault: desired &ne; deployed means a deploy is owed; deployed &ne; reported means the device drifted under us."' },
+    { ml:'Hash the rendered output', t:'"Crucially, the hash is of the rendered output, not the template version &mdash; a config&rsquo;s identity is the bytes it produces. So a template refactor with identical output isn&rsquo;t drift, and a value change that alters output is. Content, not version."' },
+    { ml:'Hierarchical resolution', t:'"Desired config resolves through a hierarchy &mdash; tenant, site, tag, device, each overriding the last &mdash; and I store every level, so I can always explain where a value came from. That&rsquo;s what makes it auditable."' },
+    { ml:'The loop under a lock', t:'"Convergence is an event-driven loop &mdash; resolve, render, hash, diff, deploy, report &mdash; guarded by a per-tenant distributed lock so two reconcilers never deploy the same fleet at once, and gated by maintenance windows so deploys land only when they&rsquo;re allowed to."' },
+    { mq:'Interviewer: "A device has reported the wrong hash for six hours &mdash; deployed says X, reported says Y. What&rsquo;s happening, and what does your system do about it?"' },
+    { ml:'Answer the drift', t:'"Deployed &ne; reported means we pushed X but the device runs Y &mdash; the deploy failed, the device rolled back, or it was offline during its window. My system doesn&rsquo;t assume the push worked: it measures reported against desired every loop, so this device shows as drifted in the visibility API, with how long and which pair. The reconciler re-attempts the deploy on the next trigger inside the device&rsquo;s maintenance window &mdash; it keeps converging until reported matches desired. If it&rsquo;s stuck across many windows, that&rsquo;s an alert, not silent retry forever."' },
+    { ml:'Land it', t:'"So: three hashes over rendered output, hierarchical resolution stored for explainability, an event-driven loop under a per-tenant lock, deploys gated by windows, and drift made visible &mdash; a system that converges toward a declared goal instead of firing commands. The hard part isn&rsquo;t pushing config; it&rsquo;s detecting drift precisely and correcting it safely."', ans:true }
+  ]
+};
+
+/* topics/desired-state/drill.js -- topic 7 drill data. LOCAL arrays DS_CARDS / DS_SPEAK so
+   loading this bundle does NOT clobber topic 1's working set. publishBanks() reseeds the
+   globals from TOPIC_DS_BANK on switch. DS_SPEAK[i] pairs DS_CARDS[i]. Grounded in the ICS
+   desired-state reconciler (three-hash model, rendered-output hashing). 7-bit ASCII. */
+var DS_CARDS = [
+  { tier:'SDE2', signal:'Converge, not command',
+    q:"What&rsquo;s the difference between a desired-state system and just pushing config to devices?",
+    a:"A desired-state system <b>declares a goal and drives reality toward it continuously</b>; pushing config is a one-shot imperative command that assumes success. The loop keeps comparing what a device <i>should</i> run against what it <i>reports</i> running, and re-acts until they match &mdash; so a failed push, a rollback, or a device offline during a deploy all self-correct on the next loop. Command-and-hope has no feedback; converge-to-goal is closed-loop and self-healing.",
+    f:[
+      { q:"Why is command-and-hope insufficient at fleet scale?",
+        a:"Because at 10,000 devices, <b>something is always failing partially</b> &mdash; a deploy times out, a terminal is offline, a push half-applies &mdash; and a fire-and-forget command has no way to know or recover. You&rsquo;d accumulate silent divergence: devices running stale or wrong config with nothing detecting it. A convergence loop treats every device&rsquo;s state as continuously measured against the goal, so partial failures are just drift the next loop corrects. Command-and-hope works for one device you can eyeball; it doesn&rsquo;t survive a fleet where the steady state <i>is</i> partial failure." },
+      { q:"What does &lsquo;declarative&rsquo; actually buy you operationally, beyond being a buzzword?",
+        a:"<b>Idempotence and recoverability.</b> Because you declare the end state rather than the steps, running the reconcile again is always safe &mdash; it re-drives toward the same goal, whatever the current state &mdash; so retries, restarts, and crashes don&rsquo;t need bespoke recovery logic; you just reconcile again. It also makes the system <b>auditable</b> (the desired state is a value you can inspect and diff) and <b>self-correcting</b> (drift from any cause is detected and fixed uniformly). Imperative steps are order-dependent and fragile to partial completion; a declared goal plus a convergence loop is robust to exactly the messy, partial-failure reality of a fleet." }
+    ],
+    senior:"Framing it as <b>converge-toward-a-declared-goal (closed loop, self-healing) vs fire-an-imperative-command-and-assume</b> &mdash; and tying declarative to idempotence and recoverability &mdash; is the conceptual clarity an interviewer is listening for." },
+  { tier:'SDE2', signal:'The three hashes',
+    q:"What state do you track per device to know whether it&rsquo;s correctly configured?",
+    a:"<b>Three hashes.</b> <b>Desired</b> &mdash; what the device should be running. <b>Deployed</b> &mdash; what we last pushed to it. <b>Reported</b> &mdash; what the device says it&rsquo;s actually running. When all three match, the device is converged. Any mismatch is drift &mdash; and which two differ tells you what kind.",
+    f:[
+      { q:"Why three and not just desired vs reported?",
+        a:"Because <b>deployed</b> distinguishes &lsquo;we haven&rsquo;t pushed the change yet&rsquo; from &lsquo;we pushed it but the device isn&rsquo;t running it.&rsquo; With only desired vs reported, a mismatch is ambiguous &mdash; you can&rsquo;t tell whether the fix is &lsquo;deploy the new config&rsquo; or &lsquo;the deploy failed, investigate the device.&rsquo; The deployed hash is the record of <i>our</i> last action, so it splits the gap: desired-vs-deployed is about us (a deploy owed), deployed-vs-reported is about the device (it drifted or the deploy didn&rsquo;t stick). Three hashes make the state machine unambiguous; two collapse two different problems into one signal." },
+      { q:"When all three match, are you done &mdash; or do you keep checking?",
+        a:"You <b>keep checking</b> &mdash; convergence is a steady state to maintain, not a milestone to reach once. A device that matches now can drift later (a local change, a reboot to old config, a manual override on the device), and the only way to catch that is to keep re-measuring reported against desired every loop. So &lsquo;all three match&rsquo; means <i>converged right now</i>; the loop still re-evaluates on the next trigger, and if reported diverges, it re-acts. Desired-state is continuous reconciliation, so the check never stops &mdash; that&rsquo;s what makes it self-healing rather than a one-time deploy." }
+    ],
+    senior:"Naming the <b>desired / deployed / reported</b> triad &mdash; and explaining that the deployed hash is what disambiguates &lsquo;deploy owed&rsquo; from &lsquo;device drifted&rsquo; &mdash; is the model an interviewer wants to hear stated crisply." },
+  { tier:'SDE2', signal:'Hash rendered, not template',
+    q:"What exactly do you hash to get the &lsquo;desired&rsquo; state &mdash; the config template, or something else?",
+    a:"The <b>rendered output</b> &mdash; SHA-256 of the fully-resolved config bytes the device will actually run &mdash; not the template or its version. A config&rsquo;s identity is <i>what it produces</i>, so a template refactored to render identical output is not a change (same hash, no redeploy), and a value edit that alters the output is (different hash, real drift). Content, not version, defines the desired state.",
+    f:[
+      { q:"What breaks if you hash the template version instead of the rendered output?",
+        a:"Two symmetric failures. A <b>false positive</b>: you refactor a template &mdash; rename a variable, restructure it &mdash; with byte-identical output, the version bumps, and now the entire fleet looks drifted and gets needlessly redeployed. And a <b>false negative</b>: a change that <i>does</i> alter output but somehow doesn&rsquo;t bump the version (a shared partial, an included default) goes undetected because the version still matches. Hashing the version couples drift-detection to bookkeeping discipline that doesn&rsquo;t reflect reality. Hashing the rendered output couples it to <i>the actual thing the device runs</i>, which is the only definition of &lsquo;correct config&rsquo; that matters." },
+      { q:"What property must rendering have for hashing the output to be reliable?",
+        a:"<b>Determinism</b> &mdash; the same resolved config must always render to the exact same bytes. If rendering injects anything variable (a timestamp, a generation ID, unordered map keys), identical config produces different hashes and every device looks perpetually drifted. So rendering has to be a pure function of the resolved input: no clocks, no randomness, stable ordering. Given that, the output hash is a true content address &mdash; identical config anywhere hashes identically &mdash; and the whole three-hash comparison is trustworthy. Non-deterministic rendering silently poisons the entire model." }
+    ],
+    senior:"Content-addressing the <b>rendered output</b> (not the template version) &mdash; and immediately naming determinism as the property that makes it work, with the false-positive/false-negative framing &mdash; is a sharp, senior-level design instinct." },
+  { tier:'SDE2', signal:'Hierarchical resolution',
+    q:"A device&rsquo;s config comes from tenant defaults, its site, its device group, and device-specific overrides. How do you resolve the final value?",
+    a:"Resolve <b>top-down, later levels overriding earlier</b>: tenant &rarr; site &rarr; tag (group) &rarr; device, each level winning over the one above. The device-specific value beats the tag, which beats the site, which beats the tenant default. And you <b>store every level</b>, not just the resolved answer &mdash; so you can explain where any value came from.",
+    f:[
+      { q:"Why store every level and not just the final resolved config?",
+        a:"For <b>explainability and change-propagation</b>. Storing only the resolved answer loses <i>why</i> a device has a value &mdash; when an operator asks &lsquo;why is this timeout 30?&rsquo; you can&rsquo;t say &lsquo;the site overrode the tenant default of 60&rsquo; without the per-level source. It also breaks propagation: if you change a <b>site-level</b> default, you need to know which devices inherit it (no device-level override) versus which pin their own value &mdash; which requires knowing each device&rsquo;s resolution chain, not just its current answer. Storing every level makes the config <b>auditable</b> (provenance) and <b>maintainable</b> (a level change correctly re-resolves the right devices)." },
+      { q:"This is basically CSS specificity or COALESCE &mdash; what&rsquo;s the risk in the override model?",
+        a:"The risk is <b>surprising precedence and hidden overrides</b>. Like CSS, a device-level override silently wins over a well-intentioned site or tenant change, so an operator updates the site default and is baffled that some devices don&rsquo;t move &mdash; because they have a forgotten device-level pin. The mitigations are the same as good CSS: make precedence <b>explicit and visible</b> (the stored per-level provenance shows exactly which level set the effective value), avoid over-using the most-specific level (device overrides should be exceptions, not the norm, or you lose the leverage of hierarchy), and surface &lsquo;this value is overridden at a lower level&rsquo; when someone edits a higher one. Predictable precedence plus visible provenance keeps the hierarchy an asset rather than a debugging trap." }
+    ],
+    senior:"Describing <b>ordered hierarchical override (tenant&rarr;site&rarr;tag&rarr;device) with stored per-level provenance</b> &mdash; and flagging the CSS-specificity risk of hidden lower-level overrides &mdash; shows you&rsquo;ve built and operated one, not just drawn it." },
+  { tier:'SDE2', signal:'The reconciliation loop',
+    q:"Walk the loop &mdash; what happens from a config change to a device running the new config?",
+    a:"<b>Resolve &rarr; render &rarr; hash &rarr; diff &rarr; deploy &rarr; report.</b> Resolve the hierarchy into a config, render it to output bytes, hash the output (desired), diff against deployed and reported; if there&rsquo;s drift, deploy the rendered config (recording it as deployed) inside a maintenance window under a lock. The device runs it and reports its hash; when reported == desired, it&rsquo;s converged. The loop re-runs on the next trigger.",
+    f:[
+      { q:"Where in that loop is the lock, and where is the maintenance-window gate?",
+        a:"Both sit <b>just before deploy</b> &mdash; the two gates on the one step that touches devices. The reconciler resolves, renders, hashes, and diffs freely (all read-only, safe to do anytime), and only when a deploy is actually needed does it (1) acquire the <b>per-tenant lock</b> so no other reconciler deploys that fleet concurrently, and (2) check the <b>maintenance window</b> so the push only lands when it&rsquo;s safe. If the window is closed, it records the drift as visible-but-uncorrected and defers; if the lock is held, it defers to the next trigger. Detection is ungated; correction is doubly gated." },
+      { q:"What makes it a loop rather than a one-shot pipeline?",
+        a:"The <b>report step feeding back into the next diff</b>. A pipeline would end at &lsquo;deploy&rsquo; and assume success; the loop continues &mdash; the device reports its actual running hash, the next trigger re-diffs reported against desired, and if they still don&rsquo;t match, it deploys again. So the loop closes on measured reality, not on the act of pushing, and it runs continuously: every trigger re-resolves and re-diffs, correcting any new drift. It&rsquo;s a control loop (measure, compare, act, re-measure), not a deploy pipeline (do steps once and finish). That feedback is exactly what makes it converge rather than command." }
+    ],
+    senior:"Narrating the full <b>resolve&rarr;render&rarr;hash&rarr;diff&rarr;deploy&rarr;report</b> cycle as a continuous control loop &mdash; with lock and window gating only the deploy, and report closing the feedback &mdash; is the end-to-end fluency a senior round rewards." },
+  { tier:'SDE3', signal:'Drift localization',
+    q:"A device is drifted. How do you know whether the config changed upstream or the device changed under you?",
+    a:"By <b>which pair of hashes differs</b>. <code>desired &ne; deployed</code> (with deployed == reported) means the intended config changed and we <b>haven&rsquo;t pushed it yet</b> &mdash; a deploy is owed. <code>deployed &ne; reported</code> means we pushed one thing but the device is <b>running another</b> &mdash; it drifted locally, rolled back, or the deploy failed. The three-way comparison turns &lsquo;something&rsquo;s wrong&rsquo; into a specific diagnosis.",
+    f:[
+      { q:"What does desired &ne; reported but deployed == desired mean?",
+        a:"It means <b>we already pushed the correct config (deployed matches desired) but the device isn&rsquo;t running it</b> &mdash; so the device has drifted <i>after</i> a good deploy: it rolled back, someone changed it locally, or it reverted on reboot. The action isn&rsquo;t &lsquo;deploy the new config&rsquo; (we already did, and deployed is correct); it&rsquo;s <b>re-apply and investigate the device</b> &mdash; the deploy stuck once and came undone. This is exactly why the deployed hash exists: without it you&rsquo;d see desired &ne; reported and might redeploy blindly, when the real story is &lsquo;the config is right, the device won&rsquo;t hold it,&rsquo; which is a device-health problem, not a config-delivery one." },
+      { q:"How does the localized diagnosis drive the next action?",
+        a:"Each pattern maps to a distinct action. <b>desired &ne; deployed</b> &rarr; a deploy is owed: render and push (in-window, under lock). <b>deployed &ne; reported</b> &rarr; re-attempt the deploy and, if it keeps recurring, flag the device as unhealthy rather than retrying forever. <b>all match</b> &rarr; converged, do nothing but keep watching. So the three-way state isn&rsquo;t just a label &mdash; it&rsquo;s the input to the reconciler&rsquo;s decision: push, re-push-and-watch, or rest. That&rsquo;s what makes the loop precise: it doesn&rsquo;t blindly redeploy on any mismatch; it takes the <i>right</i> action for <i>which</i> pair diverged." }
+    ],
+    senior:"Reading the <b>specific differing pair</b> to separate &lsquo;deploy owed&rsquo; from &lsquo;device drifted after a good deploy&rsquo; &mdash; and mapping each to a different action (push vs re-apply-and-flag) &mdash; is the diagnostic precision that reads as senior." },
+  { tier:'SDE3', signal:'The per-tenant lock',
+    q:"Two reconciler instances pick up the same tenant at the same time. What stops them from fighting?",
+    a:"A <b>per-tenant distributed lock</b> &mdash; the reconciler acquires <code>reconcile:{tenantId}</code> before deploying, with a bounded TTL (~30s) and acquire window (~4min). Only one reconciler holds a tenant at a time, so its fleet&rsquo;s deploys are serialized; the other defers to the next trigger. It&rsquo;s <b>per-tenant, not global</b>, so different tenants reconcile in parallel &mdash; concurrency across tenants, mutual exclusion within one.",
+    f:[
+      { q:"Why per-tenant rather than a global lock or a per-device lock?",
+        a:"It&rsquo;s the right <b>granularity</b> for the contention. A <b>global</b> lock would serialize the entire platform &mdash; one tenant&rsquo;s reconcile blocks all others &mdash; throwing away the parallelism you need at scale. A <b>per-device</b> lock is finer than necessary and multiplies lock operations (10,000 acquire/release per sweep) while missing tenant-level coordination (two reconcilers interleaving different devices of the same tenant can still race on shared tenant state). <b>Per-tenant</b> matches the natural isolation boundary: tenants are independent (parallel is safe and desirable), and within a tenant the reconcile is a coherent unit that should run once at a time. Granularity follows the isolation boundary." },
+      { q:"What does the TTL protect against, and separately, what does the acquire window protect against?",
+        a:"The <b>TTL</b> (~30s) protects against a <b>crashed lock-holder</b>: if a reconciler dies mid-reconcile without releasing, the lock auto-expires so the tenant isn&rsquo;t blocked forever &mdash; it bounds the blast radius of a crash. The <b>acquire window</b> (~4min) protects the <b>waiter</b>: it bounds how long a second reconciler tries to get the lock before giving up and deferring to the next trigger, so a waiter never blocks indefinitely behind a busy tenant. One caps how long a dead holder can stall others; the other caps how long a live waiter will queue. Together they keep the lock live-lock-free and self-healing without manual intervention." }
+    ],
+    senior:"Choosing <b>per-tenant lock granularity</b> (parallel across tenants, serial within) and explaining the distinct jobs of the TTL (crash recovery) and acquire window (bounded waiting) is exactly the distributed-coordination depth a senior round probes." },
+  { tier:'SDE3', signal:'Maintenance windows',
+    q:"You detect drift on a payment terminal at 2pm during peak hours. Do you fix it immediately?",
+    a:"No &mdash; <b>detect now, correct in-window</b>. Deploys are gated by <b>maintenance windows</b>, because pushing a config change to a terminal mid-transaction or at peak is unacceptable. The device is marked drifted and visible in the API, and the reconciler applies the fix when the site&rsquo;s window opens. The loop separates <b>detection</b> (continuous) from <b>correction</b> (windowed) &mdash; a device can be known-drifted for hours before it&rsquo;s safe to deploy.",
+    f:[
+      { q:"So drift can persist for hours by design &mdash; isn&rsquo;t that a problem?",
+        a:"It&rsquo;s a <b>deliberate trade of promptness for safety</b>, and the key is that persisting drift is <b>known and bounded</b>, not silent. The alternative &mdash; deploying to a live payment terminal at peak &mdash; risks interrupting transactions, which is far worse than a config being stale for a few hours. What makes the trade acceptable is visibility: the device is in the drift API the whole time, so it&rsquo;s an <i>accounted-for</i> pending correction, not an undetected problem, and truly urgent changes (a security fix) can have an expedited or emergency window that overrides the normal schedule. Known, visible, windowed drift is a controlled state; the thing to avoid is <i>invisible</i> drift or unsafe-timed deploys." },
+      { q:"How does windowed deploy interact with the visibility story?",
+        a:"They&rsquo;re complementary: <b>windows gate correction, visibility covers the gap</b>. Because a device can be legitimately drifted-but-waiting, the visibility API has to show not just <i>that</i> it&rsquo;s drifted but <i>why it hasn&rsquo;t been fixed yet</i> &mdash; &lsquo;drifted, correction pending, next window at 02:00.&rsquo; That distinguishes a healthy &lsquo;waiting for its window&rsquo; device from an unhealthy &lsquo;deploy keeps failing&rsquo; one, which look identical if you only see &lsquo;drifted.&rsquo; So the window model <i>requires</i> good visibility to be operable: without it, windowed drift is indistinguishable from a stuck device. With it, an operator sees exactly which devices are safely pending versus genuinely stuck." }
+    ],
+    senior:"Separating <b>continuous detection from window-gated correction</b> &mdash; and recognizing that windowed drift is only acceptable <i>because</i> it&rsquo;s visible and bounded, with an emergency-window escape hatch &mdash; is the production-safety judgment a senior interviewer wants." },
+  { tier:'SDE3', signal:'Convergence confirmation',
+    q:"You push config to a device. How do you know it actually took?",
+    a:"You <b>don&rsquo;t assume &mdash; you wait for the device to report its running hash</b>. Convergence is confirmed only when <code>reported == desired</code>; until then the device is still drifted. A push that failed, a rollback, or an offline device all leave <code>deployed &ne; reported</code>, which the next loop sees and re-acts on. Measuring the device&rsquo;s <i>actual</i> reported state &mdash; rather than trusting the deploy stuck &mdash; is what makes the system self-healing.",
+    f:[
+      { q:"What if the device never reports back?",
+        a:"Then it stays in the <b>unconverged / unknown</b> state, and that&rsquo;s itself a signal. A device that was deployed to but never confirms is either offline, unhealthy, or unreachable &mdash; so it remains visibly drifted (deployed set, reported stale or missing), the reconciler keeps re-attempting on triggers, and after enough missed confirmations it escalates to an <b>alert</b> rather than retrying silently forever. The absence of a report is not treated as success (the whole point of closed-loop) nor ignored; it&rsquo;s an explicit &lsquo;this device hasn&rsquo;t confirmed&rsquo; state with its own age, so a terminal that&rsquo;s been silent for a day surfaces as a problem to investigate, not a mystery hidden behind an assumed-good deploy." },
+      { q:"Why is &lsquo;assume the push worked&rsquo; the failure mode you&rsquo;re avoiding?",
+        a:"Because a push succeeding at the <i>transport</i> level says nothing about the device <i>running</i> the config. The connection can succeed while the device rejects the config, applies it and crashes back to the old one, or reboots to a previous version &mdash; all leaving it running the wrong thing while your records say &lsquo;deployed, done.&rsquo; Assume-success turns those into <b>silent divergence</b>: your system believes the fleet is correct when it isn&rsquo;t. Closed-loop convergence refuses to mark done until the device <i>itself</i> reports the matching hash, so the source of truth for &lsquo;is it running the right config&rsquo; is the device&rsquo;s measured state, not our optimistic assumption. That&rsquo;s the difference between a system that <i>hopes</i> and one that <i>knows</i>." }
+    ],
+    senior:"Insisting convergence is confirmed only by the <b>device&rsquo;s reported hash</b> (never by assume-success), and treating a missing report as an explicit escalating state, is the closed-loop discipline that separates a robust reconciler from a fragile one." },
+  { tier:'SDE3', signal:'Deterministic rendering',
+    q:"Why does rendering the config have to be deterministic, and what goes wrong if it isn&rsquo;t?",
+    a:"Because the <b>desired hash is taken over the rendered output</b> &mdash; if the same resolved config can render to different bytes (a timestamp, unordered map keys, a &lsquo;generated-at&rsquo; comment), the hash is unstable and <b>every reconcile looks like drift</b>. You&rsquo;d redeploy the fleet endlessly chasing phantom changes. Rendering must be a <b>pure function</b> of the resolved config: same input, same bytes, always &mdash; so identical config hashes identically everywhere.",
+    f:[
+      { q:"What are the classic sources of render nondeterminism to watch for?",
+        a:"The usual suspects: <b>timestamps</b> or &lsquo;generated-at&rsquo; headers baked into output; <b>unordered iteration</b> over maps/sets/dicts so keys serialize in random order; <b>floating-point or locale-dependent formatting</b>; <b>absolute paths, hostnames, or environment values</b> leaking in; <b>random IDs or nonces</b>; and <b>non-canonical serialization</b> (JSON key order, whitespace, trailing newlines varying by library). Each makes byte-identical inputs produce different bytes. The fix is canonicalization: sort keys, strip volatile fields, pin formatting and encoding, and forbid clocks/randomness in the render path &mdash; so the output is a deterministic function of the resolved config and nothing else." },
+      { q:"How do you actually test that rendering is deterministic?",
+        a:"<b>Render the same input many times and assert byte-identical output</b> &mdash; ideally across processes, machines, and time, not just one run &mdash; and gate it in CI. A property test that feeds a range of resolved configs through render twice and diffs the bytes catches accidental nondeterminism the moment it&rsquo;s introduced. You can also hash the output in the test and assert the hash is stable across runs (mirroring exactly what production does). And a golden-file test pins known configs to known rendered bytes, so a change in rendering that shifts output is caught as an intentional-vs-accidental diff. The invariant &lsquo;same resolved config &rarr; same bytes&rsquo; is testable and belongs in the gate, because a regression here poisons the entire drift model silently." }
+    ],
+    senior:"Treating deterministic rendering as a <b>tested invariant</b> (canonical serialization, no clocks/randomness, render-twice-and-diff in CI) &mdash; and knowing the classic nondeterminism sources &mdash; is the rigor behind a content-hash-based system." },
+  { tier:'SDE3', signal:'Event-driven vs sweep',
+    q:"Do you reconcile the whole fleet on a timer, or something else?",
+    a:"<b>Event-driven</b>, triggered by what actually changes state &mdash; a config edit, a device check-in, a window opening &mdash; not a blind timer sweep of all 10,000 devices. A full periodic sweep is either too slow (drift undetected between sweeps) or too wasteful (re-rendering everything on a cron, mostly finding no change). Triggering on real events means work is proportional to change and propagation is seconds, with a slow sweep as a backstop.",
+    f:[
+      { q:"If you&rsquo;re event-driven, why keep a periodic sweep at all?",
+        a:"As a <b>backstop for missed events and silent drift</b>. Event-driven propagation is fast but not perfectly reliable &mdash; an event can be dropped, a trigger can fail, and some drift produces <i>no</i> event at all (a device silently reverts locally without checking in). A slow, low-frequency full sweep catches anything the event path missed: it re-resolves and re-diffs every device, so nothing stays drifted indefinitely just because its trigger never fired. It&rsquo;s the belt-and-suspenders pattern &mdash; events for fast, cheap, common-case convergence; the sweep as an eventual-consistency guarantee that the whole fleet gets reconciled regardless. Fast path plus safety net, rather than betting everything on events firing." },
+      { q:"What events actually trigger a reconcile?",
+        a:"Three broad classes. <b>Desired-side changes</b> &mdash; a config edit at any hierarchy level (tenant/site/tag/device), which changes desired for the affected devices. <b>Reported-side changes</b> &mdash; a device checking in with its running hash, which updates reported and may reveal drift. And <b>time/policy events</b> &mdash; a maintenance window opening (so queued corrections can now deploy) or the periodic sweep tick. Each maps to the part of the three-hash state it affects: desired-side events mean &lsquo;a deploy may now be owed,&rsquo; reported-side events mean &lsquo;the device&rsquo;s reality moved,&rsquo; window events mean &lsquo;correction is now permitted.&rsquo; The reconciler is woken by whichever fired and reconciles just the impacted devices." }
+    ],
+    senior:"Choosing <b>event-driven reconciliation (work proportional to change) with a periodic sweep as a missed-event backstop</b> &mdash; and mapping event classes to the three-hash state each moves &mdash; is the scale-and-reliability instinct a senior round rewards." },
+  { tier:'SDE3', signal:'Drift visibility',
+    q:"An operator asks &lsquo;how much of my fleet is running the right config right now?&rsquo; How do you answer?",
+    a:"Through the <b>drift-visibility API</b> &mdash; a first-class output of the reconciler. It reports, per device and aggregated, which are converged vs drifted, <b>which pair of hashes differs</b> (deploy owed vs device drifted), and <b>how long</b> each has been out of sync. Because every resolution level and all three hashes are stored, it can also answer <i>why</i>: where a value came from, and whether a drifted device is safely waiting for its window or genuinely stuck.",
+    f:[
+      { q:"Why is visibility a first-class output rather than just logs you can grep?",
+        a:"Because <b>drift is a live operational state, not a historical event</b>. Logs tell you what happened; an operator needs to know what <i>is</i> &mdash; right now, which devices are wrong, and why &mdash; to make decisions (is this rollout safe to continue? is that site&rsquo;s window working?). A queryable, current, aggregated view is what makes the fleet <b>operable</b>: you can answer &lsquo;97% converged, 300 drifted, 280 waiting for windows, 20 failing&rsquo; instantly, versus reconstructing it from log spelunking. It also makes the self-healing loop <b>trustworthy</b> &mdash; a system that silently fixes things is one you can&rsquo;t audit or debug, so surfacing exactly what it&rsquo;s doing and why is what earns the right to be autonomous. Visibility is the interface between an autonomous loop and the humans accountable for the fleet." },
+      { q:"What specific fields turn &lsquo;this device is drifted&rsquo; into something actionable?",
+        a:"The differentiators: <b>which pair differs</b> (desired&ne;deployed = we owe a deploy; deployed&ne;reported = the device won&rsquo;t hold config &mdash; different owners, different fixes); <b>how long</b> it&rsquo;s been drifted (a device drifted for minutes waiting for its window is fine; one drifted for days is a problem); <b>correction status</b> (pending-window vs actively-failing vs never-reported); the <b>next window</b> (so &lsquo;drifted&rsquo; reads as &lsquo;will self-correct at 02:00&rsquo; not &lsquo;stuck&rsquo;); and the <b>resolution provenance</b> (which level set the desired value, for &lsquo;why is it even trying to set this?&rsquo;). Bare &lsquo;drifted: true&rsquo; is noise; those fields let an operator triage &mdash; ignore the safely-pending, investigate the stuck, and know exactly what to look at." }
+    ],
+    senior:"Treating <b>drift as an observable, queryable current state</b> (which pair, how long, correction status, provenance) rather than log residue &mdash; and arguing visibility is what earns an autonomous loop the right to run &mdash; is the operability instinct a senior round values." },
+  { tier:'SDE3', signal:'Deploy failure and retry',
+    q:"A deploy to a device fails. What happens?",
+    a:"Nothing special is needed &mdash; the <b>loop handles it structurally</b>. A failed deploy leaves <code>deployed &ne; reported</code> (or reported never advances to desired), so the device stays visibly drifted, and the <b>next trigger re-attempts</b> the deploy in the next window. Because the loop converges toward desired regardless of current state, a retry is just another reconcile &mdash; no bespoke retry queue. But repeated failures escalate: after N missed windows, it&rsquo;s an <b>alert and a health flag</b>, not infinite silent retry.",
+    f:[
+      { q:"Why doesn&rsquo;t a failed deploy need its own retry mechanism?",
+        a:"Because <b>the convergence loop <i>is</i> the retry mechanism</b>. In an imperative system a failed step needs an explicit retry queue, backoff, and dead-lettering, because the system only acts when told to. Here, the loop already re-evaluates every device against desired on every trigger &mdash; a device whose deploy failed is simply still drifted, which the next reconcile naturally re-addresses. The &lsquo;retry&rsquo; falls out of the loop&rsquo;s continuous nature: you don&rsquo;t track failed deploys to retry them; you track desired state and re-converge, and a previously-failed device is just one that hasn&rsquo;t converged yet. This is a core benefit of declarative convergence &mdash; error recovery is the same code path as normal operation, not a separate failure-handling subsystem." },
+      { q:"When do you stop retrying and alert instead of looping forever?",
+        a:"When retries stop being <b>likely to succeed</b> and start being <b>noise masking a real problem</b>. A device that fails to converge across <i>several</i> maintenance windows isn&rsquo;t hitting a transient glitch &mdash; it&rsquo;s likely genuinely broken (unreachable, rejecting the config, hardware fault), and silently re-attempting forever hides that behind &lsquo;the loop will get it eventually.&rsquo; So you bound it: track consecutive failed convergence attempts, and after a threshold, <b>flag the device unhealthy and alert</b> while optionally backing off the retry cadence. The loop still owns correction, but a device that won&rsquo;t converge becomes a surfaced exception for a human, not an infinite quiet retry. Self-healing for the recoverable; escalation for the stuck." }
+    ],
+    senior:"Recognizing that <b>the convergence loop is itself the retry path</b> (no separate queue) &mdash; while bounding it with escalation-to-alert on repeated failure so stuck devices surface &mdash; is the declarative-systems maturity a senior interviewer checks." },
+  { tier:'SDE3', signal:'Idempotent loop',
+    q:"Why does it matter that a reconcile can be safely run again, and how do you guarantee it?",
+    a:"Because the loop <b>will</b> run again &mdash; on the next trigger, after a crash, on the sweep &mdash; so every reconcile must be <b>idempotent</b>: running it against an already-converged device does nothing, and against a drifted one drives it to the same goal. It&rsquo;s guaranteed by <b>declaring the end state, not steps</b>: the loop computes desired and diffs; if there&rsquo;s no diff, no action. There&rsquo;s no &lsquo;apply step 3&rsquo; that breaks if repeated &mdash; just &lsquo;make reality match desired,&rsquo; which is naturally idempotent.",
+    f:[
+      { q:"How does declaring the end-state (vs steps) give you idempotence for free?",
+        a:"Because a <b>diff-and-converge</b> operation is a no-op when there&rsquo;s nothing to converge. The loop always starts by computing desired and comparing to current (deployed/reported); if they match, it does nothing &mdash; running it once or a hundred times on a converged device has identical effect. Contrast an imperative script (&lsquo;increment the version, append this line, restart&rsquo;): re-running it double-applies &mdash; two increments, two appended lines &mdash; because each step assumes it hasn&rsquo;t run. Declarative operations are idempotent because they specify the <i>destination</i>, not the <i>journey</i>: &lsquo;be in state X&rsquo; is the same whether you&rsquo;re already there or not, whereas &lsquo;take these steps toward X&rsquo; compounds on repeat. The idempotence isn&rsquo;t added; it&rsquo;s inherent to comparing-against-a-goal." },
+      { q:"What would break idempotence, and how do you avoid it?",
+        a:"Any <b>non-declarative side effect in the loop</b>: a step that <i>appends</i> rather than <i>sets</i>, a counter it increments, an external call that isn&rsquo;t safe to repeat (charging something, sending a non-deduplicated notification), or state derived from &lsquo;did we do this already&rsquo; that a crash can lose. You avoid it by keeping the loop&rsquo;s effects to <b>convergent operations</b> &mdash; set the config to X (not &lsquo;change it&rsquo;), record the deployed hash as X (not &lsquo;log another deploy&rsquo;) &mdash; and by making any external effect idempotent (keyed, deduplicated) or driven off the diff so it only fires when state actually needs to change. The rule: the reconcile should be expressible as &lsquo;make it be X,&rsquo; and every effect inside it should be safe to apply when it&rsquo;s already X." }
+    ],
+    senior:"Grounding idempotence in <b>declarative diff-and-converge (no-op when already converged)</b> &mdash; and knowing that append/increment/non-deduplicated side effects are what break it &mdash; is the correctness reasoning behind a crash-safe, retry-safe loop." },
+  { tier:'SDE3', signal:'Safe rollout',
+    q:"A new config for 10,000 devices turns out to be bad. How do you avoid bricking the whole fleet?",
+    a:"<b>Don&rsquo;t converge everything at once.</b> Roll the desired-state change out gradually &mdash; canary a small set, watch their reported hashes and health, then expand &mdash; and gate correction with maintenance windows so devices update in waves, not simultaneously. Because desired state is declarative, a <b>rollback is just re-declaring the old desired</b>: set desired back, and the loop converges the fleet to it. Staged, windowed convergence means a bad config is caught on the canaries before it reaches the fleet.",
+    f:[
+      { q:"How is rollback different in a declarative system versus an imperative one?",
+        a:"In a declarative system, rollback is <b>trivial and uniform &mdash; you just re-declare the previous desired state</b>, and the same convergence loop that rolled forward now rolls back, converging every device to the old config. There&rsquo;s no separate &lsquo;undo&rsquo; logic, because &lsquo;go to state X&rsquo; works regardless of the current state. In an imperative system you need <b>explicit compensating actions</b> &mdash; a reverse script that undoes each forward step &mdash; which is error-prone, order-dependent, and often incomplete (some steps don&rsquo;t cleanly reverse). Declarative rollback is symmetric with roll-forward (change desired, let it converge); imperative rollback is a whole separate, fragile procedure. That symmetry is a major operational advantage of desired-state." },
+      { q:"How do canaries fit the three-hash model concretely?",
+        a:"You change desired for <b>a small canary subset first</b>, and the loop converges just those devices &mdash; then you <b>watch their reported hashes and health</b>: reported advancing to the new desired and staying healthy is your success signal. If the canaries converge cleanly and behave, you widen the desired change to the next wave; if their reported state or health goes bad, you halt the rollout and re-declare the old desired, converging the canaries back &mdash; before the other 9,900 devices ever saw the change. The three-hash model makes this measurable: &lsquo;did the canary actually take the new config and is it running it correctly&rsquo; is exactly reported==new-desired plus health, not a guess. Canaries plus reported-hash measurement give you a real, observed gate at each rollout stage." }
+    ],
+    senior:"Combining <b>staged/canaried convergence, reported-hash-gated waves, and declarative rollback (re-declare old desired)</b> &mdash; and contrasting that symmetric rollback with fragile imperative compensation &mdash; is the fleet-safety thinking a senior round rewards." },
+  { tier:'SDE3', signal:'Multi-tenant isolation',
+    q:"It&rsquo;s multi-tenant. What has to be isolated in the reconciler?",
+    a:"Everything per device is <b>tenant-scoped</b> &mdash; desired/deployed/reported state, the resolution hierarchy, and the visibility API all bounded to one tenant, so a tenant can never see or affect another&rsquo;s devices. The <b>lock is per-tenant</b>, giving cross-tenant parallelism with within-tenant serialization. And the resolution hierarchy is naturally tenant-rooted (tenant &rarr; site &rarr; tag &rarr; device), so a tenant&rsquo;s config genuinely can&rsquo;t leak into another&rsquo;s resolution.",
+    f:[
+      { q:"Where could cross-tenant leakage realistically sneak in?",
+        a:"The usual places: a <b>drift/visibility query missing its tenant filter</b> (returning another tenant&rsquo;s device states &mdash; the same missing-WHERE-tenant_id class as the authorization topic); a <b>resolution step</b> that pulls a site or tag without confirming it belongs to the device&rsquo;s tenant (so a shared or mis-keyed group bleeds config across tenants); and <b>lock keys or cache keys not namespaced by tenant</b> (so two tenants collide on a &lsquo;reconcile&rsquo; lock or read each other&rsquo;s cached resolved config). The defense is to make tenant scope <b>structural</b> &mdash; tenant-rooted hierarchy, tenant-prefixed lock/cache keys, and a data-access layer that injects the tenant predicate on every query &mdash; plus a cross-tenant isolation test in CI. Isolation that depends on every query remembering the filter is isolation you&rsquo;ll eventually lose." },
+      { q:"How does per-tenant locking serve both isolation and scale at once?",
+        a:"It aligns the <b>concurrency boundary with the isolation boundary</b>. For <b>scale</b>: tenants are independent, so per-tenant locks let all tenants reconcile in parallel &mdash; no global serialization &mdash; while still serializing within a tenant where coordination is actually needed. For <b>isolation</b>: a per-tenant lock (namespaced by tenant) means one tenant&rsquo;s reconcile contention never touches another&rsquo;s, and it reinforces that a reconcile operates on exactly one tenant&rsquo;s fleet at a time. The same choice that gives cross-tenant parallelism (scale) also guarantees cross-tenant non-interference (isolation), because the natural unit of both is the tenant. Picking the lock granularity to match the tenant boundary is what makes the two goals reinforce rather than conflict." }
+    ],
+    senior:"Scoping <b>all three-hash state, the hierarchy, and the lock/cache keys per tenant</b> &mdash; making isolation structural and noting the per-tenant lock serves parallelism and non-interference together &mdash; is the multi-tenant rigor a senior interviewer wants." },
+  { tier:'Staff', signal:'Scale at fleet size',
+    q:"10,000 devices per tenant, many tenants, all reconciling. Where does this design strain first?",
+    a:"The <b>deploy/report throughput and the lock</b>, not the diffing. Resolving and hashing are cheap and event-scoped; the pressure is (1) the rate of reported check-ins and deploys the reconciler and datastore must absorb, and (2) the <b>per-tenant lock serializing a tenant&rsquo;s reconciles</b> &mdash; if one tenant&rsquo;s fleet is large and its reconcile is slow, lock hold-time can starve its own backlog. You relieve it by making reconcile <b>incremental</b> (only affected devices per event, not the whole tenant under the lock), keeping the lock&rsquo;s critical section to the actual deploy coordination, and sharding reported-state ingestion.",
+    f:[
+      { q:"Why isn&rsquo;t the three-way diff the bottleneck?",
+        a:"Because the diff is a <b>cheap, embarrassingly-parallel hash comparison</b> &mdash; comparing three fixed-size hashes per device is trivial CPU, needs no coordination, and is done per-event on just the affected devices, not the whole fleet at once. What&rsquo;s expensive is <b>touching reality</b>: pushing config to thousands of devices (network, device-side apply, retries), ingesting a high rate of reported check-ins (write throughput, storage), and <i>coordinating</i> those safely (the lock). Those are I/O- and coordination-bound, which is where real systems bottleneck &mdash; not the arithmetic of comparing hashes. A classic mistake is optimizing the diff (the cheap part) while the deploy/report pipeline and lock (the expensive parts) are the actual ceiling. Profile the I/O and coordination, not the comparison." },
+      { q:"How do you keep the per-tenant lock from serializing too much of a big tenant&rsquo;s work?",
+        a:"By <b>doing as little as possible under the lock</b>. Resolve, render, hash, and diff are read-only &mdash; do them <i>outside</i> the lock, concurrently; acquire the lock only for the small critical section that must be exclusive: deciding to deploy a given device and recording its deployed hash, so two reconcilers can&rsquo;t deploy the same device at once. Combined with <b>incremental reconcile</b> (an event touches only its affected devices, so the locked work per event is tiny) and, if a single tenant is still too large, <b>sub-partitioning the lock</b> (per-site sub-locks so independent slices reconcile in parallel), the lock stops being a whole-tenant serialization point and becomes brief, per-slice mutual exclusion. The lock&rsquo;s job is only &lsquo;not the same device twice&rsquo; &mdash; everything not serving that can run outside it." }
+    ],
+    senior:"Identifying <b>deploy/report I/O and lock hold-time (not the diff) as the scale ceiling</b> &mdash; and relieving it with incremental reconcile, a minimal critical section, and per-site lock sub-partitioning &mdash; is the systems-scaling judgment that marks a Staff answer." },
+  { tier:'Staff', signal:'Crash mid-deploy',
+    q:"The reconciler crashes after pushing to some devices but before recording the deployed hash. What state are you in, and is it safe?",
+    a:"It&rsquo;s <b>safe, because the design is crash-idempotent</b>. The lock <b>auto-expires (TTL)</b>, freeing the tenant. For a device where the push landed but deployed wasn&rsquo;t recorded, the next loop re-diffs: the device reports the new hash while our deployed record shows the old one &mdash; a benign inconsistency the next reconcile resolves (it re-derives desired, sees reported now matches, and updates records / re-pushes idempotently). No device is left half-configured in a way a retry can&rsquo;t fix, because <b>the loop converges from whatever the actual state is</b> &mdash; it never depends on having completed a previous run. Crash recovery is &lsquo;acquire the lock and reconcile again,&rsquo; not a bespoke rollback.",
+    f:[
+      { q:"Why doesn&rsquo;t a lost &lsquo;deployed hash&rsquo; write corrupt the model?",
+        a:"Because <b>deployed is a cache of &lsquo;what we last pushed,&rsquo; not the source of truth</b> &mdash; the source of truth for reality is the device&rsquo;s <i>reported</i> hash, and for intent is <i>desired</i>, both of which survive the crash. A stale deployed record just means the next diff sees deployed&ne;reported (we think we pushed old, device reports new); the loop&rsquo;s response is to reconcile &mdash; recompute desired, observe reported already matches, and self-correct the deployed record (or, if it doesn&rsquo;t match, re-push idempotently). Worst case is a redundant re-push of config the device already runs, which is a no-op by determinism, not corruption. The three-hash model degrades gracefully because no single hash&rsquo;s staleness can make the loop <i>diverge</i> &mdash; it can only cause an extra, harmless reconcile that re-establishes truth from the durable desired/reported pair." },
+      { q:"What makes &lsquo;just reconcile again&rsquo; a valid recovery rather than a hope?",
+        a:"That the loop is <b>a pure function of current state, not of history</b>. Because each reconcile recomputes desired and diffs against the <i>actual</i> current deployed/reported &mdash; making no assumption that any prior run completed &mdash; running it from any partial state converges to the same goal. There&rsquo;s no step that requires &lsquo;the previous run got to step 3&rsquo;; there&rsquo;s only &lsquo;here is desired, here is reality, close the gap.&rsquo; That&rsquo;s precisely idempotent convergence: recovery isn&rsquo;t a special mode, it&rsquo;s the normal loop applied to whatever mess the crash left. The lock TTL guarantees the crashed holder can&rsquo;t block forever, and the loop&rsquo;s state-not-history design guarantees re-running is always correct &mdash; so &lsquo;reconcile again&rsquo; is a guarantee from the architecture, not optimism." }
+    ],
+    senior:"Explaining <b>crash-idempotence &mdash; deployed is a cache, the loop is a function of current state not history, so recovery is just re-reconcile after the lock TTL</b> &mdash; is exactly the failure-mode reasoning that separates a Staff-level answer on reconcilers." },
+  { tier:'Staff', signal:'Lock contention at scale',
+    q:"A huge tenant&rsquo;s reconciles are slow, and the per-tenant lock is becoming a bottleneck for that tenant. What do you do?",
+    a:"<b>Shrink the critical section, then shard within the tenant.</b> First, keep the lock around only the <b>coordination that truly needs mutual exclusion</b> (the per-device deploy decision and hash record), not the read-only resolve-render-diff. If a single tenant is still too big, <b>partition its lock</b> &mdash; per-site or per-shard sub-locks &mdash; so independent slices reconcile in parallel while still serializing within a slice. The principle: make the locked region as small and as parallelizable as correctness allows, since the lock exists only to stop two reconcilers deploying the <i>same</i> device at once.",
+    f:[
+      { q:"What part of the loop actually needs the lock, and what doesn&rsquo;t?",
+        a:"Only the <b>deploy coordination</b> needs it &mdash; the moment where you decide &lsquo;this device needs a push&rsquo; and record the deployed hash, because two reconcilers doing that concurrently for the same device is the race you&rsquo;re preventing. Everything else &mdash; resolving the hierarchy, rendering, hashing, and diffing &mdash; is <b>read-only</b> and produces the same result no matter how many reconcilers run it, so it needs no lock and can happen fully concurrently. The bug pattern is holding the lock across the <i>whole</i> reconcile (including the expensive read-only rendering of thousands of devices), which serializes work that never needed serializing. Pull all the read-only computation out of the lock; hold it only for the tiny exclusive deploy-and-record step." },
+      { q:"How do you partition a tenant&rsquo;s lock without reintroducing the race it prevents?",
+        a:"By partitioning along a boundary where <b>no device belongs to two partitions</b> &mdash; per-site, per-device-shard, or a consistent hash of device ID &mdash; so each device is covered by exactly one sub-lock. As long as a given device is always reconciled under the <i>same</i> sub-lock, the &lsquo;never two reconcilers on the same device&rsquo; guarantee holds within that sub-lock, while different partitions (disjoint device sets) proceed in parallel safely. The race only returns if partitions <b>overlap</b> (a device reachable under two sub-locks) or if the partition mapping isn&rsquo;t stable (a device moving between sub-locks mid-flight) &mdash; so you keep the mapping deterministic and non-overlapping. Correct sharding preserves per-device exclusion while multiplying parallelism; the invariant to protect is &lsquo;one device, one lock.&rsquo;" }
+    ],
+    senior:"Minimizing the critical section to the <b>deploy-and-record step</b> and <b>sub-partitioning the lock along a non-overlapping device boundary</b> (preserving one-device-one-lock) is the concurrency-scaling depth a Staff round is probing for." },
+  { tier:'Staff', signal:'Desired-state vs IaC',
+    q:"How is this desired-state reconciler different from infrastructure-as-code, which also has a &lsquo;desired state&rsquo; and detects drift?",
+    a:"Same <i>pattern</i>, different <b>domain and cadence</b>. IaC (Terraform/CDK) declares <b>infrastructure</b> &mdash; resources and their shape &mdash; and reconciles at <b>deploy time</b> via a human-run plan/apply, with drift detection as an occasional check. This reconciler declares <b>per-device runtime config</b> across a live fleet and reconciles <b>continuously and autonomously</b>, converging thousands of devices in real time within safety windows. IaC&rsquo;s &lsquo;resources&rsquo; are cloud objects changed rarely by operators; here they&rsquo;re payment terminals whose config changes often and whose <i>reported</i> reality must be measured, not assumed. The converge-not-command idea is shared; the scale, autonomy, real-device feedback, and windowed safety make it its own system.",
+    f:[
+      { q:"So why not just use Terraform for the fleet?",
+        a:"Because Terraform&rsquo;s model doesn&rsquo;t fit <b>continuous, autonomous, high-cardinality, measured-reality</b> reconciliation. It&rsquo;s built around a <b>human-triggered plan/apply</b> against a state file, not a loop that runs thousands of times a minute on its own; it assumes providers whose state it can <b>read authoritatively</b>, whereas a payment terminal&rsquo;s true state must be <b>reported by the device</b> and can drift locally between applies; and it has no native notion of <b>per-device maintenance windows, hierarchical per-tenant resolution at fleet scale, or the closed-loop reported-hash confirmation</b> this needs. You&rsquo;d be fighting the tool to make it autonomous, real-time, and device-feedback-driven. The <i>pattern</i> (declare desired, diff, converge) is exactly right; Terraform is the wrong <i>engine</i> for a live fleet of tens of thousands of devices reconciling continuously." },
+      { q:"What&rsquo;s the shared idea worth stealing from IaC even though you built your own?",
+        a:"The <b>declarative core</b>: represent desired state as an inspectable, diffable value; compute a <b>plan/diff</b> before acting so changes are previewable; make operations <b>idempotent</b> so re-applying is safe; and <b>detect drift</b> by comparing declared-vs-actual. Those are exactly the principles this reconciler rests on &mdash; and IaC validated them at industry scale. What you steal is the <i>discipline</i> (desired as data, plan before apply, idempotent converge, drift as first-class), and what you add is the runtime autonomy, the device-reported feedback loop, hierarchical multi-tenant resolution, and windowed safety that a live payment fleet demands. Same principles, purpose-built engine &mdash; which is often the right call when a general tool&rsquo;s <i>execution model</i> doesn&rsquo;t match your domain even though its <i>philosophy</i> does." }
+    ],
+    senior:"Placing this as the <b>same converge/diff/idempotent/drift pattern as IaC but a purpose-built engine</b> for runtime-continuous-autonomous-fleet vs deploy-time-human-infra &mdash; stealing the philosophy while rejecting the execution model &mdash; is precisely the build-vs-adapt judgment a Staff round wants." },
+  { tier:'Staff', signal:'The whole design',
+    q:"Tie it together: one sentence for how you&rsquo;d design a fleet desired-state system, and the judgment that makes it work.",
+    a:"<b>Three hashes per device &mdash; desired (hash of the rendered output), deployed, reported &mdash; resolved through a stored tenant&rarr;site&rarr;tag&rarr;device hierarchy, driven by an event-driven resolve&rarr;render&rarr;diff&rarr;deploy&rarr;report loop under a per-tenant lock, correcting only in maintenance windows, with drift made visible</b> &mdash; a system that converges toward a declared goal rather than commanding. The judgment that makes it work: hash the <i>output</i> not the version, measure the device&rsquo;s <i>reported</i> reality rather than assuming, and separate always-on detection from safe, windowed, staged correction. The hard part isn&rsquo;t pushing config; it&rsquo;s detecting drift precisely and correcting it safely.",
+    f:[
+      { q:"If you could keep only three properties of the design, which three?",
+        a:"<b>Three hashes over the rendered output</b> (the drift model itself &mdash; desired/deployed/reported hashing the actual bytes, which gives precise, localizable, content-defined drift and is the core the rest hangs on); <b>closed-loop convergence on the reported hash</b> (measuring the device&rsquo;s real state and re-acting until reported==desired, rather than assuming a push worked &mdash; this is what makes it self-healing instead of fire-and-hope); and <b>windowed, staged, gated correction</b> (deploy under a per-tenant lock, only in maintenance windows, rolled out in waves &mdash; because on live payment terminals, <i>correcting safely</i> matters as much as detecting). Those three are a working reconciler: a precise drift signal, a closed loop that acts on measured reality, and safe correction. Hierarchical resolution, visibility, and the sweep backstop are essential-at-scale layers on that spine &mdash; but the spine is content-hash drift, reported-measured convergence, and safe windowed correction." }
+    ],
+    senior:"Compressing to <b>three-hashes-over-rendered-output + closed-loop-reported-measurement + safe-windowed-staged-correction</b> &mdash; and naming the irreducible three &mdash; is the systems-level synthesis that lands a Staff signal." }
+];
+var DS_SPEAK = [
+  "Lead with the model: <b>'declare a goal and drive reality toward it continuously,'</b> not 'push config and hope.' Command-and-hope has no feedback; converge-to-goal is closed-loop and self-healing &mdash; a failed push or a rollback just self-corrects on the next loop. Tie declarative to idempotence and recoverability.",
+  "Track <b>three hashes per device: desired, deployed, reported.</b> All match = converged; any mismatch = drift. The deployed hash is the one that disambiguates &mdash; desired&ne;deployed means a deploy is owed, deployed&ne;reported means the device drifted under us. Two hashes collapse two different problems into one signal.",
+  "Hash the <b>rendered output, not the template version.</b> A config's identity is the bytes it produces &mdash; a template refactor with identical output isn't drift, a value change that alters output is. And name the property it requires: deterministic rendering, or every reconcile is phantom drift.",
+  "Resolve the hierarchy <b>tenant &rarr; site &rarr; tag &rarr; device, later overriding earlier,</b> and store every level. The stored provenance is what lets you explain 'why does this device have timeout 30' and correctly re-resolve when a site default changes. Watch the CSS-specificity trap: a device override silently beats a site change.",
+  "Narrate the loop: <b>resolve &rarr; render &rarr; hash &rarr; diff &rarr; deploy &rarr; report</b> &mdash; a control loop, not a pipeline. Lock and window gate only the deploy; the report step feeds back into the next diff, which is what makes it converge rather than command.",
+  "Localize drift by <b>which pair differs:</b> desired&ne;deployed = deploy owed (push it); deployed&ne;reported = device drifted after a good deploy (re-apply, and flag if it recurs). Map each pattern to a distinct action &mdash; the loop doesn't blindly redeploy on any mismatch.",
+  "Use a <b>per-tenant distributed lock:</b> parallel across tenants, serialized within one. The TTL (~30s) bounds how long a crashed holder blocks others; the acquire window (~4min) bounds how long a waiter tries before deferring. Granularity follows the isolation boundary &mdash; not global, not per-device.",
+  "Separate <b>detection (continuous) from correction (windowed).</b> You detect drift on a terminal at peak but don't deploy mid-transaction &mdash; you mark it drifted-and-visible and fix it when the site's maintenance window opens. Windowed drift is acceptable only because it's bounded and visible, with an emergency window as the escape hatch.",
+  "Never assume the push worked &mdash; <b>wait for the device's reported hash.</b> Converged means reported==desired, full stop. A failed deploy, a rollback, an offline terminal all leave deployed&ne;reported for the next loop to catch. A device that never reports is an explicit escalating state, not an assumed success.",
+  "Rendering must be a <b>pure function of the resolved config</b> &mdash; same input, same bytes &mdash; or the output hash is unstable and every device looks perpetually drifted. Name the nondeterminism sources (timestamps, unordered keys, nonces) and test it: render twice, assert byte-identical, gate it in CI.",
+  "Reconcile <b>event-driven, not on a blind timer</b> &mdash; a config edit, a check-in, a window opening &mdash; so work is proportional to change and propagation is seconds. Keep a slow full sweep as a backstop for dropped events and silent local drift. Fast path plus safety net.",
+  "Make <b>drift a first-class, queryable state</b>, not log residue: which pair differs, how long, correction status (pending-window vs failing vs never-reported), next window, and resolution provenance. That's what lets an operator triage &mdash; ignore the safely-pending, investigate the stuck &mdash; and it's what earns an autonomous loop the right to run.",
+  "A failed deploy <b>needs no retry queue</b> &mdash; the convergence loop <i>is</i> the retry: the device stays drifted and the next trigger re-attempts. Error recovery is the same code path as normal operation. Bound it, though: after N missed windows, flag unhealthy and alert rather than looping forever silently.",
+  "Make the loop <b>idempotent by declaring end-state, not steps:</b> diff-and-converge is a no-op when already converged, so re-running after a crash or on the sweep is always safe. What breaks it is append/increment/non-deduplicated side effects &mdash; keep every effect a convergent 'set it to X,' not 'change it.'",
+  "Don't converge 10,000 devices at once &mdash; <b>canary, watch the reported hashes and health, then expand in waves.</b> A bad config is caught on the canaries. And rollback is trivial: re-declare the old desired and the same loop converges the fleet back &mdash; symmetric with roll-forward, unlike fragile imperative compensation.",
+  "Scope <b>everything per tenant</b> &mdash; the three-hash state, the hierarchy, the lock and cache keys, the visibility API. Make isolation structural (tenant-rooted hierarchy, tenant-prefixed keys, an injected tenant predicate), not dependent on every query remembering the filter. The per-tenant lock serves parallelism and non-interference at once.",
+  "Name the real ceiling: <b>deploy/report I/O and lock hold-time, not the diff</b> &mdash; comparing three hashes is trivial; touching thousands of devices and ingesting check-ins isn't. Relieve it with incremental reconcile (only affected devices under the lock), a minimal critical section, and sharded report ingestion.",
+  "On a crash mid-deploy, you're <b>safe because the design is crash-idempotent:</b> the lock TTL frees the tenant, and the loop converges from actual state, not from history. A lost deployed-hash write can't corrupt anything &mdash; deployed is a cache; desired and reported are the durable truth &mdash; so recovery is just 'acquire the lock and reconcile again.'",
+  "When the per-tenant lock bottlenecks a big tenant, <b>shrink the critical section to the deploy-and-record step</b> (resolve/render/diff are read-only, do them outside the lock) and <b>sub-partition the lock per-site along a non-overlapping device boundary.</b> Preserve the one invariant: one device, one lock &mdash; never two reconcilers on the same device.",
+  "Distinguish it from IaC: <b>same converge/diff/idempotent/drift pattern, purpose-built engine.</b> Terraform is human-triggered plan/apply against a readable state file; this is continuous, autonomous, high-cardinality, and reconciles against device-<i>reported</i> reality within maintenance windows. Steal the declarative philosophy; reject the execution model for a live fleet.",
+  "Land the whole thing: <b>three hashes over the rendered output, hierarchical resolution stored for explainability, an event-driven loop under a per-tenant lock, correction only in windows, drift made visible.</b> Under pressure, the irreducible three: content-hash drift, closed-loop convergence on the reported hash, and safe windowed correction &mdash; a precise signal, a loop acting on measured reality, and safe correction."
+];
+var TOPIC_DS_DRILL = {
+  cards: DS_CARDS,
+  speak: DS_SPEAK,
+  tierNotes: {
+    all:'<b>All four levels, mixed</b> &mdash; the way a real loop actually comes at you.',
+    SDE2:'<b>Fundamentals under pressure</b> &mdash; converge-not-command, the three hashes, hashing rendered output, hierarchical resolution, the reconcile loop. The bar is &ldquo;a closed loop that measures reality, not a config push&rdquo;: name the three hashes and what confirms convergence.',
+    SDE3:'<b>Depth &amp; trade-offs</b> &mdash; drift localization, the per-tenant lock, maintenance windows, determinism, event-driven reconcile, visibility, safe rollout. The bar is &ldquo;detect always, correct safely&rdquo;: name the constraint and the failure each choice bounds.',
+    Staff:'<b>Systems judgment</b> &mdash; scale ceilings, crash-idempotence, lock partitioning, the IaC boundary, the whole model. The bar is &ldquo;converge toward a declared goal, safely, at fleet scale&rdquo;: name the drift model, the closed loop, and where correctness under failure comes from.'
+  }
+};
+
+/* topics/desired-state/wb.js -- topic 7 whiteboard. steps[] are {c:cue, a:answer} recall
+   prompts rebuilding the reconciliation loop from blank; diagram is a template literal
+   (backticks; literal double-quotes inside) using the dgm-* class vocabulary. okVerdict
+   uses a single-backslash \u2014 / \u201C. 7-bit ASCII. */
+var TOPIC_DS_WB = {
+  steps: [
+    { c:"Entry: what triggers a reconcile, and the model", a:"A <b>trigger</b> &mdash; a config change, a device check-in, a window opening &mdash; kicks the loop; it&rsquo;s <b>event-driven</b>, not a blind sweep. Draw the trigger entering, and say the model out loud: &lsquo;declare a goal and drive reality toward it&rsquo; &mdash; converge, not command." },
+    { c:"The three hashes: what you track per device", a:"Draw <b>three</b>: <b>desired</b> (what it should run), <b>deployed</b> (what we last pushed), <b>reported</b> (what it says it runs). All match = converged; any mismatch = drift. Say why three &mdash; deployed disambiguates &lsquo;deploy owed&rsquo; from &lsquo;device drifted.&rsquo;" },
+    { c:"Resolve the hierarchy: where desired comes from", a:"<b>tenant &rarr; site &rarr; tag &rarr; device</b>, each level overriding the one above; store every level. Draw the four levels collapsing into one resolved config, and note the provenance is what makes it explainable (&lsquo;the site set this, not the tenant&rsquo;)." },
+    { c:"Render and hash: what &lsquo;desired&rsquo; actually is", a:"Render the resolved config to <b>output bytes</b>, then <b>SHA-256 the rendered output</b> &mdash; not the template version. Draw render &rarr; hash. Say the sharp bit: a template refactor with identical output is <i>not</i> drift; a value change that alters output is. And rendering must be deterministic." },
+    { c:"Diff: how drift is detected and localized", a:"<b>Three-way compare.</b> desired == deployed == reported &rarr; converged. desired &ne; deployed &rarr; deploy owed. deployed &ne; reported &rarr; device drifted. Draw the comparison and label which pair means what &mdash; drift isn&rsquo;t just detected, it&rsquo;s diagnosed." },
+    { c:"Lock: what guards the deploy", a:"Before pushing, take a <b>per-tenant distributed lock</b> (TTL ~30s, acquire ~4min). Draw it wrapping the deploy step. Say why per-tenant: parallel across tenants, serial within &mdash; so two reconcilers never deploy the same fleet at once; the TTL frees a crashed holder." },
+    { c:"Deploy in-window: how correction is gated", a:"Push the rendered config and <b>record the deployed hash</b> &mdash; but only inside a <b>maintenance window</b>. Draw the window gate before deploy. Say it: detect always, correct in-window &mdash; you don&rsquo;t reconfigure a payment terminal mid-transaction; drift waits, visibly, for its window." },
+    { c:"Report and converge: how the loop closes", a:"The device runs the config and <b>reports its actual hash</b>; when <b>reported == desired</b>, it&rsquo;s converged. Draw the report arrow feeding back into the diff. Say the difference from commanding: you measure reality, you don&rsquo;t assume the push worked &mdash; that&rsquo;s what makes it self-healing." },
+    { c:"Visibility: how drift stays observable", a:"Surface every mismatch through a <b>drift-visibility API</b> &mdash; which devices, which pair differs, how long, correction status. Draw it reading the three-hash state. Say it: a loop you can&rsquo;t see is one you can&rsquo;t trust; visibility is what earns the loop the right to run autonomously." }
+  ],
+  diagram: `<div class="dgm">
+  <div class="dgm-node dgm-src"><div class="dgm-t">trigger</div><div class="dgm-s">config change &middot; device check-in &middot; window opens &mdash; event-driven, not a sweep</div></div>
+  <div class="dgm-conn"><span class="dgm-v">&#9660;</span></div>
+  <div class="dgm-node dgm-def"><div class="dgm-t">resolve hierarchy</div><div class="dgm-s">tenant &rarr; site &rarr; tag &rarr; device &middot; later overrides earlier &middot; store every level</div></div>
+  <div class="dgm-conn"><span class="dgm-lbl">render &rarr; SHA-256(output)</span><span class="dgm-v">&#9660;</span></div>
+  <div class="dgm-fork">
+    <div class="dgm-branches">
+      <div class="dgm-br"><div class="dgm-node dgm-val"><div class="dgm-t">desired</div><div class="dgm-s">hash of the rendered output</div></div></div>
+      <div class="dgm-br"><div class="dgm-node dgm-val"><div class="dgm-t">deployed</div><div class="dgm-s">what we last pushed</div></div></div>
+      <div class="dgm-br"><div class="dgm-node dgm-val"><div class="dgm-t">reported</div><div class="dgm-s">what the device says it runs</div></div></div>
+    </div>
+    <div class="dgm-note">three-way diff &middot; any mismatch = drift &middot; which pair differs localizes it</div>
+  </div>
+  <div class="dgm-conn"><span class="dgm-lbl">drift? &middot; per-tenant lock + maintenance window</span><span class="dgm-v">&#9660;</span></div>
+  <div class="dgm-node dgm-recon"><div class="dgm-t">deploy &middot; record deployed hash</div><div class="dgm-s">only in-window, under the lock &mdash; correction is gated; detection never is</div></div>
+  <div class="dgm-conn"><span class="dgm-lbl">device reports its hash &rarr; reported == desired?</span><span class="dgm-v">&#9660;</span></div>
+  <div class="dgm-node dgm-out"><div class="dgm-t">converged &middot; or still drifted &rarr; next loop re-acts</div><div class="dgm-s">drift-visibility API: which devices, which pair, how long, correction status</div></div>
+  <div class="dgm-foot">converge toward a declared goal, don&rsquo;t command &middot; measure the reported hash, don&rsquo;t assume the push worked</div>
+</div>`,
+  foot:'The one people forget: <b>convergence is confirmed by the reported hash, not by the deploy.</b> A command-based answer stops at &lsquo;push the config&rsquo;; the desired-state loop keeps measuring reported against desired and re-acts until they match &mdash; so a failed deploy, a rollback, or an offline terminal all self-correct on the next loop instead of becoming silent divergence.',
+  sub:'Rebuild the convergence boundary on a whiteboard &mdash; the three hashes, hierarchical resolution, rendered-output hashing, the three-way diff, the lock and window, and the reported-hash feedback &mdash; from the cues, not from a diagram you saw.',
+  okVerdict:'If you drew the three hashes, said \u201Chash the rendered output, not the template,\u201D localized drift by which pair differs, and closed the loop on the reported hash \u2014 that\u2019s the passing whiteboard. The rest (the per-tenant lock, maintenance windows, visibility, the sweep backstop) are the layers that make a correct loop safe and operable at fleet scale.'
+};
+
+/* topics/desired-state/sys.js -- topic 7 system map. intro + stages[] (exactly one cur:true,
+   the reconciler) + pivots[] (7; chips carry the 8-topic INDEX in parens for topic-refs,
+   plain names for non-topic pivots) + heads. Chip arrows use single-backslash \u2192.
+   7-bit ASCII. */
+var TOPIC_DS_SYS = {
+  intro:'Zoom out: the reconciler is the <b>boundary between config intent and fleet reality</b>, driving one toward the other continuously. Upstream, operators declare what the fleet <i>should</i> run; downstream, tens of thousands of live terminals run <i>something</i>. The loop measures the gap and closes it &mdash; converging reality to intent, safely, rather than firing config and hoping.',
+  stages:[
+    { n:'Config intent', d:'What the fleet should run &mdash; resolved through the tenant &rarr; site &rarr; tag &rarr; device hierarchy into a desired config per device, with every level stored for provenance.' },
+    { n:'The reconciler', d:'The three-hash convergence loop &mdash; desired, deployed, reported; resolve, render, diff, deploy, report &mdash; driving each device toward its declared state. Content-hash drift, closed-loop correction.', cur:true },
+    { n:'Drift detection', d:'The three-way diff runs continuously and event-driven, localizing any mismatch to deploy-owed (desired &ne; deployed) or device-drifted (deployed &ne; reported). Detection is always on.' },
+    { n:'Safe correction', d:'Deploys are gated by a per-tenant lock and maintenance windows, and rolled out in canaried waves &mdash; correction is deliberate and reversible (re-declare the old desired), not immediate.' },
+    { n:'Convergence', d:'The device reports its running hash; the loop confirms reported == desired or re-acts on the next trigger &mdash; closed-loop and self-healing, reality measured rather than assumed.' },
+    { n:'Fleet reality', d:'Tens of thousands of live terminals, each running measured config, with drift observable through the visibility API &mdash; the reality the loop continuously drives intent into.' }
+  ],
+  pivots:[
+    { q:'The reconciler renders a config from somewhere. Where do the per-device values it resolves actually come from?',
+      chip:'\u2192 Attribute Store (6)',
+      a:'The <b>attribute store</b> is a major input to the resolved config &mdash; per-device attributes (resolved override-over-default) feed the hierarchy the reconciler renders. That topic answers &lsquo;what value&rsquo;; this one answers &lsquo;how it becomes running reality and stays there.&rsquo; A change to an attribute&rsquo;s value changes desired, which the loop then detects as drift and converges.' },
+    { q:'It&rsquo;s multi-tenant. How is one tenant&rsquo;s fleet isolated from another&rsquo;s, all the way through the loop?',
+      chip:'\u2192 Tenant Authorization (3)',
+      a:'Every part of the loop is <b>tenant-scoped</b> &mdash; the three-hash state, the resolution hierarchy, the visibility API, and the lock &mdash; the same per-tenant boundary the authorization topic enforces, made structural (tenant-rooted hierarchy, tenant-prefixed keys, an injected predicate). The per-tenant lock also gives cross-tenant parallelism, so isolation and scale come from the same boundary.' },
+    { q:'You need the reported hash from tens of thousands of devices. How, without polling all of them?',
+      chip:'\u2192 Notifications (5)',
+      a:'Devices <b>report their state on check-in / push</b> rather than the platform polling 10,000 of them &mdash; the same push-not-poll reasoning as the notification topic. A reported-state change is an event that triggers a reconcile for that device. Polling the whole fleet for state would be the load-and-staleness anti-pattern; event-driven reporting keeps it fresh and cheap.' },
+    { q:'This has a &lsquo;desired state&rsquo; and detects drift &mdash; how is it different from Terraform doing the same?',
+      chip:'\u2192 IaC (8)',
+      a:'<b>Same pattern, purpose-built engine.</b> IaC declares infrastructure and reconciles at deploy time via a human-run plan/apply against a readable state file; this reconciles <b>per-device runtime config continuously and autonomously</b> against device-<i>reported</i> reality, within maintenance windows, at fleet cardinality. You steal IaC&rsquo;s declarative philosophy (desired-as-data, plan-before-apply, idempotent converge, drift-as-first-class) and reject its execution model for a live fleet.' },
+    { q:'The rendered config is pushed to a payment terminal. How does the device know to trust what it&rsquo;s told to run?',
+      chip:'\u2192 Signing (2)',
+      a:'The rendered config is an <b>artifact deployed to a terminal</b>, so it&rsquo;s signed and verified the same way the signing topic handles pushed packages &mdash; the device trusts config that carries a valid signature, not whatever arrives on the wire. Convergence delivers the <i>right</i> config; signing guarantees the device only runs config that&rsquo;s <i>authentic</i>. The deployed-hash record and the signature together make a push both correct and trusted.' },
+    { q:'The whole drift model rests on the content hash. What makes that hash trustworthy in the first place?',
+      chip:'\u2192 Deterministic render',
+      a:'<b>Deterministic rendering</b> &mdash; the same resolved config must render to byte-identical output every time, or the hash is unstable and every device looks perpetually drifted. That means no timestamps, no unordered keys, no nonces in the render path: rendering is a pure function of the resolved config. It&rsquo;s the load-bearing invariant under the entire three-hash model, and it&rsquo;s testable (render twice, assert identical, gate in CI).' },
+    { q:'This is a measure-diff-act loop. How does it relate to Kubernetes controllers and other control loops?',
+      chip:'\u2192 Control loops',
+      a:'It&rsquo;s the <b>same control-loop pattern</b>: observe actual state, compare to desired, act to close the gap, repeat &mdash; exactly how a Kubernetes controller reconciles resources. The shared ideas are declarative desired state, level-triggered (not edge-triggered) reconciliation, and idempotent convergence. What&rsquo;s specific here is the domain: real payment terminals whose state is <i>self-reported</i> (not a readable API object), windowed correction, and per-tenant fleet cardinality &mdash; a control loop over physical devices rather than cluster objects.' }
+  ],
+  heads:{
+    whereHead:'Where the convergence boundary sits',
+    pivHead:'Pivots an interviewer rides',
+    pivSub:'From a drift check into hashing, resolution, safe correction, and the systems next door &mdash; each chip is a door a strong answer opens on purpose.'
+  }
+};
+
+/* topics/desired-state/trade.js -- topic 7 trade-offs. decisions[] each {q (X vs Y,
+   single-quoted with the literal class="vs" span), opts:[{n,when}], tell}. Entities only,
+   no backslash escapes. 7-bit ASCII. */
+var TOPIC_DS_TRADE = {
+  lead:'The desired-state decisions an interviewer drills &mdash; each is a place where &lsquo;fast&rsquo; and &lsquo;safe&rsquo; (or &lsquo;simple&rsquo; and &lsquo;correct&rsquo;) pull against each other, and the answer is a switch condition, not a favorite.',
+  decisions:[
+    { q:'Hash the rendered output <span class="vs">vs</span> the template version',
+      opts:[
+        { n:'Hash the rendered output', when:'Effectively always &mdash; a config&rsquo;s identity is the bytes it produces, so drift tracks real output changes, immune to template refactors and version bookkeeping.' },
+        { n:'Hash the template version', when:'Only if rendering genuinely can&rsquo;t be made deterministic (a last resort) &mdash; and accept false positives on refactors and false negatives on shared-partial changes.' }
+      ],
+      tell:'Content, not version. Hashing output means a refactor with identical bytes isn&rsquo;t drift and a value change that alters bytes is &mdash; but it demands deterministic rendering, or every reconcile is phantom drift.' },
+    { q:'Converge to a goal <span class="vs">vs</span> command imperatively',
+      opts:[
+        { n:'Declarative converge (level-triggered)', when:'For a fleet where partial failure is the steady state &mdash; the loop re-measures and re-acts until reality matches, so retries and recovery are the normal path.' },
+        { n:'Imperative command (edge-triggered)', when:'For a one-off action on a single device you can supervise &mdash; where there&rsquo;s no ongoing goal to maintain.' }
+      ],
+      tell:'Converge, don&rsquo;t command. A declarative goal plus a level-triggered loop is idempotent and self-healing; fire-and-forget commands accumulate silent divergence at fleet scale. Level-triggered survives dropped events; edge-triggered doesn&rsquo;t.' },
+    { q:'Devices report state <span class="vs">vs</span> the platform polls them',
+      opts:[
+        { n:'Devices report (push)', when:'At fleet scale &mdash; devices push their running hash on check-in or change, so state is fresh and load is proportional to change, not to fleet size.' },
+        { n:'Poll every device', when:'Only for a small fleet, or as a fallback probe for devices that have gone silent and stopped reporting.' }
+      ],
+      tell:'Push the state, don&rsquo;t poll 10,000 devices. Polling is load &times; poll-rate mostly finding nothing, staleness bounded by the interval; reported-on-change is fresh and cheap. Keep a slow poll only to catch the silent.' },
+    { q:'Event-driven reconcile <span class="vs">vs</span> periodic full sweep',
+      opts:[
+        { n:'Event-driven (primary)', when:'Trigger on the events that change state &mdash; a config edit, a check-in, a window opening &mdash; so work is proportional to change and propagation is seconds.' },
+        { n:'Periodic full sweep (backstop)', when:'As a low-frequency safety net to catch dropped events and silent local drift that produces no event at all.' }
+      ],
+      tell:'Both, layered. Events are the fast, cheap common path; the sweep is the eventual-consistency guarantee. Betting only on events means a dropped event is permanent drift; only sweeping means slow detection and wasted work.' },
+    { q:'Per-tenant lock <span class="vs">vs</span> global or per-device',
+      opts:[
+        { n:'Per-tenant lock', when:'The default &mdash; it matches the isolation boundary: parallel across tenants, serialized within one, so tenants don&rsquo;t block each other and a tenant&rsquo;s reconcile is a coherent unit.' },
+        { n:'Global or per-device lock', when:'Global only if the platform is tiny (it serializes everything); per-device or per-site sub-locks when a single tenant is too large to serialize as one unit.' }
+      ],
+      tell:'Granularity follows the isolation boundary. Global throws away parallelism; per-device multiplies lock ops and misses tenant-level coordination. Per-tenant is the sweet spot &mdash; sub-partition (per-site) only when one tenant outgrows a single lock.' },
+    { q:'Correct drift immediately <span class="vs">vs</span> only in a maintenance window',
+      opts:[
+        { n:'Windowed correction', when:'For production devices where an untimed change is dangerous &mdash; a payment terminal mid-transaction, peak hours; detect always, correct when safe.' },
+        { n:'Immediate correction', when:'For a truly urgent change (a security fix) via an emergency window, or for devices where a config change is always safe to apply.' }
+      ],
+      tell:'Detect always, correct in-window. Separating detection from correction lets drift be known-and-bounded rather than either invisible or unsafely fixed. The escape hatch is an emergency window for genuinely can&rsquo;t-wait changes.' },
+    { q:'Assume the push worked <span class="vs">vs</span> measure the reported hash',
+      opts:[
+        { n:'Measure reported (closed loop)', when:'Always &mdash; converged means the device itself reports the matching hash; a transport-level success says nothing about the device actually running the config.' },
+        { n:'Assume-success (open loop)', when:'Essentially never &mdash; it turns failed deploys, rollbacks, and offline devices into silent divergence your records can&rsquo;t see.' }
+      ],
+      tell:'Measure, don&rsquo;t assume. Closed-loop convergence on the reported hash is what makes the system self-healing; assume-success means your records say &lsquo;correct&rsquo; while the fleet runs the wrong thing. Reality is measured, not presumed.' }
+  ]
+};
+
+/* topics/desired-state/model.js -- topic 7 model answers. selectors[i] pairs answers[i];
+   'Name the limits' is LAST. answers[6] is the Invenco desired-state-reconciler "one you built"
+   story. openers use single-backslash \u201C .. \u201D curly quotes and \u2019 / \u2014. beats carry
+   c-tags frame|head|sub|risk|trade|close. 7-bit ASCII. */
+var TOPIC_DS_MODEL = {
+  selectors: [
+    'Design it',
+    'Explain the three hashes',
+    'Walk the loop',
+    'Detect and localize drift',
+    'Make correction safe',
+    'Operate it at scale',
+    'One you built',
+    'Test it',
+    'Name the limits'
+  ],
+  answers: [
+    { opener:'\u201CI\u2019d model it as desired state \u2014 three hashes per device, drift as any mismatch, and an event-driven loop that converges reality toward a declared goal rather than firing config and hoping.\u201D',
+      sub:'The whole design in one breath, then the loop.',
+      beats:[
+        { l:'Frame', c:'frame', t:'The problem is keeping tens of thousands of live terminals running the config we intend, continuously &mdash; where partial failure is the steady state. So I declare the goal and let a loop drive toward it, instead of pushing config imperatively.' },
+        { l:'The three hashes', c:'head', t:'Per device: desired (what it should run), deployed (what we last pushed), reported (what it says it runs). All match = converged; any mismatch = drift, and which pair differs localizes it &mdash; a deploy owed vs a device that drifted.' },
+        { l:'Hash the output', c:'sub', t:'The desired hash is SHA-256 of the rendered output, not the template version &mdash; a config&rsquo;s identity is the bytes it produces, so refactors aren&rsquo;t drift and real value changes are. That demands deterministic rendering.' },
+        { l:'Resolve the hierarchy', c:'sub', t:'Desired config resolves tenant &rarr; site &rarr; tag &rarr; device, each overriding the last, storing every level so I can always explain where any value came from.' },
+        { l:'The loop under a lock', c:'trade', t:'Convergence is an event-driven resolve &rarr; render &rarr; diff &rarr; deploy &rarr; report loop, guarded by a per-tenant lock so reconcilers don&rsquo;t fight, and gated by maintenance windows so deploys land only when safe.' },
+        { l:'The hard part', c:'risk', t:'The cost I&rsquo;d name: it&rsquo;s only correct if rendering is deterministic and you measure the device&rsquo;s reported state rather than assuming the push worked. Get either wrong and you have phantom drift or silent divergence.' },
+        { l:'Land it', c:'close', t:'So: three hashes over rendered output, hierarchical resolution stored for provenance, an event-driven loop under a lock, windowed correction, drift made visible &mdash; converge toward a goal, don&rsquo;t command.' }
+      ] },
+    { opener:'\u201CThree hashes per device \u2014 desired, deployed, reported \u2014 because the pair that differs tells you not just that there\u2019s drift, but what kind and whose fault.\u201D',
+      sub:'Why three, and what each mismatch means.',
+      beats:[
+        { l:'Frame', c:'frame', t:'The state I track per device is three content hashes: desired (what it should run), deployed (what we last pushed to it), reported (what the device says it&rsquo;s actually running).' },
+        { l:'Converged', c:'head', t:'When all three match, the device is converged &mdash; we intend X, we pushed X, it&rsquo;s running X. That&rsquo;s the steady state the loop maintains, and it keeps re-checking because a converged device can drift later.' },
+        { l:'Deploy owed', c:'sub', t:'desired &ne; deployed (with deployed == reported) means the intended config changed and we haven&rsquo;t pushed it yet &mdash; a deploy is owed. The action is render and push, in-window.' },
+        { l:'Device drifted', c:'sub', t:'deployed &ne; reported means we pushed one thing but the device runs another &mdash; it drifted locally, rolled back, or the deploy failed. The action is re-apply, and flag if it recurs.' },
+        { l:'Why not two', c:'risk', t:'With only desired vs reported, a mismatch is ambiguous &mdash; you can&rsquo;t tell &lsquo;deploy the change&rsquo; from &lsquo;the deploy failed.&rsquo; The deployed hash is the record of our last action, and it&rsquo;s what disambiguates the two.' },
+        { l:'Localized diagnosis', c:'trade', t:'So the three-way comparison turns &lsquo;something&rsquo;s wrong&rsquo; into a specific, actionable diagnosis &mdash; and the reconciler takes the right action for which pair diverged, rather than blindly redeploying on any mismatch.' },
+        { l:'Close', c:'close', t:'Three hashes, one comparison &mdash; converged, deploy-owed, or device-drifted &mdash; is the whole drift model, and it&rsquo;s what makes the loop precise instead of just reactive.' }
+      ] },
+    { opener:'\u201CThe loop is resolve, render, hash, diff, deploy, report \u2014 a control loop that closes on the device\u2019s reported reality, not on the act of pushing.\u201D',
+      sub:'The cycle, and what makes it a loop.',
+      beats:[
+        { l:'Frame', c:'frame', t:'A trigger &mdash; a config edit, a check-in, a window &mdash; kicks the loop for the affected devices. It&rsquo;s event-driven, so work is proportional to what changed, not a blind sweep of the fleet.' },
+        { l:'Resolve and render', c:'head', t:'Resolve the hierarchy into a config, then render it to the exact output bytes the device will run &mdash; deterministically, so identical config always produces identical bytes.' },
+        { l:'Hash and diff', c:'sub', t:'Hash the rendered output for desired, then three-way diff against deployed and reported. All of this is read-only and safe to do anytime.' },
+        { l:'Gate the deploy', c:'sub', t:'If there&rsquo;s drift, acquire the per-tenant lock and check the maintenance window &mdash; the two gates on the one step that touches devices. Then push the config and record the deployed hash.' },
+        { l:'Close the loop', c:'trade', t:'The device runs it and reports its actual hash; the next diff compares reported against desired. That feedback is what makes it a loop, not a pipeline &mdash; it continues until measured reality matches intent.' },
+        { l:'The distinction', c:'risk', t:'A pipeline ends at &lsquo;deploy&rsquo; and assumes success; the loop keeps measuring and re-acting, so a failed deploy or a rollback is just drift the next cycle corrects. Measure, don&rsquo;t assume.' },
+        { l:'Close', c:'close', t:'So: resolve, render, hash, diff, deploy in-window under a lock, report, repeat &mdash; a continuous convergence cycle where the report step closes the feedback and the loop rests only when reported == desired.' }
+      ] },
+    { opener:'\u201CDrift detection is continuous and event-driven, and the three-way diff doesn\u2019t just detect a mismatch \u2014 it localizes it to a deploy owed or a device that drifted.\u201D',
+      sub:'How drift is found and diagnosed.',
+      beats:[
+        { l:'Frame', c:'frame', t:'Detection runs continuously &mdash; every trigger re-resolves and re-diffs the affected devices &mdash; so drift is caught in seconds, with a slow full sweep as a backstop for dropped events and silent local drift.' },
+        { l:'The comparison', c:'head', t:'For each device, compare desired, deployed, reported. Any mismatch is drift; which two differ is the diagnosis.' },
+        { l:'Deploy owed', c:'sub', t:'desired &ne; deployed: the config changed upstream and we owe a push. That&rsquo;s a config-delivery task &mdash; render and deploy in-window.' },
+        { l:'Device drifted', c:'sub', t:'deployed &ne; reported: we pushed correctly but the device runs something else &mdash; a local change, a rollback, a failed apply. That&rsquo;s a device-health task &mdash; re-apply, and escalate if it keeps recurring.' },
+        { l:'Visibility', c:'trade', t:'Every mismatch is surfaced through a drift-visibility API &mdash; which devices, which pair, how long, correction status. Drift is observable, not silent, so an operator can triage the stuck from the safely-pending.' },
+        { l:'The risk avoided', c:'risk', t:'The failure I&rsquo;m avoiding is blind redeploy on any mismatch, or invisible self-healing &mdash; both hide what&rsquo;s actually wrong. Localized, visible drift means the right action and an auditable loop.' },
+        { l:'Close', c:'close', t:'So detection is always-on and event-driven, the differing pair localizes the fault to delivery vs device, and the visibility API makes it observable &mdash; detect precisely, then act precisely.' }
+      ] },
+    { opener:'\u201CCorrection is the dangerous step, so it\u2019s gated three ways \u2014 a per-tenant lock, maintenance windows, and staged rollout \u2014 and it\u2019s reversible by just re-declaring the old desired.\u201D',
+      sub:'How you fix drift without breaking the fleet.',
+      beats:[
+        { l:'Frame', c:'frame', t:'Detecting drift is safe and continuous; correcting it touches live payment terminals, so the loop separates the two &mdash; detect always, correct deliberately and gated.' },
+        { l:'The lock', c:'head', t:'A per-tenant distributed lock serializes a tenant&rsquo;s deploys &mdash; parallel across tenants, one reconciler at a time within &mdash; so two loops never deploy the same device concurrently. A TTL frees a crashed holder.' },
+        { l:'The window', c:'sub', t:'Deploys land only inside a maintenance window &mdash; you don&rsquo;t reconfigure a terminal mid-transaction or at peak. Drift is detected now, corrected when the window opens; an emergency window covers genuinely urgent fixes.' },
+        { l:'Staged rollout', c:'sub', t:'A fleet-wide change goes out in canaried waves &mdash; a small set first, watch their reported hashes and health, then expand &mdash; so a bad config is caught on the canaries, not the whole fleet.' },
+        { l:'Rollback', c:'trade', t:'Because it&rsquo;s declarative, rollback is trivial: re-declare the previous desired and the same loop converges the fleet back &mdash; symmetric with roll-forward, unlike fragile imperative compensation.' },
+        { l:'The risk', c:'risk', t:'The failure I&rsquo;m preventing is a simultaneous fleet-wide push of bad config, or an untimed change interrupting transactions &mdash; both are outages. Gated, staged, reversible correction makes fixing drift as safe as detecting it.' },
+        { l:'Close', c:'close', t:'So: lock for exclusivity, windows for timing, canaries for blast radius, and declarative rollback for recovery &mdash; correction that&rsquo;s deliberate and reversible, never a big-bang push.' }
+      ] },
+    { opener:'\u201CAt fleet scale the ceiling isn\u2019t the diff \u2014 it\u2019s deploy and report I/O and lock hold-time \u2014 so I reconcile incrementally and keep the locked critical section tiny.\u201D',
+      sub:'Where it strains, and how you relieve it.',
+      beats:[
+        { l:'Frame', c:'frame', t:'With 10,000 devices per tenant across many tenants, the three-hash comparison is trivial CPU and embarrassingly parallel &mdash; so that&rsquo;s not where it strains. The pressure is touching reality and coordinating it.' },
+        { l:'The real ceiling', c:'head', t:'Two places: the rate of deploys and reported check-ins the reconciler and datastore must absorb, and the per-tenant lock &mdash; if one tenant&rsquo;s fleet is large and its reconcile is slow, lock hold-time starves its own backlog.' },
+        { l:'Incremental reconcile', c:'sub', t:'Each event touches only its affected devices, not the whole tenant under the lock &mdash; so the work done while holding the lock is tiny, not fleet-sized.' },
+        { l:'Tiny critical section', c:'sub', t:'Resolve, render, hash, and diff are read-only &mdash; done outside the lock, concurrently. The lock covers only the exclusive deploy-and-record step, whose only job is &lsquo;never two reconcilers on the same device.&rsquo;' },
+        { l:'Shard when needed', c:'trade', t:'If a single tenant still outgrows one lock, sub-partition it &mdash; per-site sub-locks along a non-overlapping device boundary &mdash; so independent slices reconcile in parallel while preserving one-device-one-lock. And shard reported-state ingestion.' },
+        { l:'The mistake', c:'risk', t:'The classic error is optimizing the diff (the cheap part) or holding the lock across the whole reconcile (serializing work that never needed it). Profile the I/O and coordination, not the arithmetic.' },
+        { l:'Close', c:'close', t:'So: incremental event-scoped reconcile, a minimal critical section, per-site lock partitioning, and sharded ingestion &mdash; scale the real bottlenecks (deploy, report, lock), because the drift comparison was never one.' }
+      ] },
+    { opener:'\u201CI built the desired-state reconciler for our payment-terminal platform \u2014 three hashes per device over rendered config, an event-driven convergence loop under a per-tenant lock, keeping tens of thousands of terminals converged to their intended config.\u201D',
+      sub:'The real system, and what it taught me.',
+      beats:[
+        { l:'The problem', c:'frame', t:'We had a large fleet of terminals across many tenants, each needing a specific config that changed often, and pushing config imperatively meant silent divergence &mdash; deploys that failed, devices that rolled back, no way to know the fleet&rsquo;s true state. I needed the fleet to converge to intent and stay there.' },
+        { l:'The three-hash model', c:'head', t:'So I modeled it as desired state: three SHA-256 hashes per device &mdash; desired, deployed, reported &mdash; where drift is any mismatch and the differing pair localizes it. Crucially, the hash was of the rendered output, not the template version, so a template refactor with identical output wasn&rsquo;t a fleet-wide redeploy.' },
+        { l:'Hierarchical resolution', c:'sub', t:'Desired config resolved through a four-level hierarchy &mdash; tenant, site, tag, device, each overriding the last &mdash; and I stored every level, so we could always explain where a value came from and correctly re-resolve when a site default changed.' },
+        { l:'The loop and the lock', c:'sub', t:'The reconcile ran event-driven &mdash; resolve, render, diff, deploy, report &mdash; guarded by a per-tenant distributed lock (a bounded TTL and acquire window) so two reconcilers never deployed the same fleet at once, and deploys were gated by maintenance windows because you can&rsquo;t reconfigure a terminal mid-transaction.' },
+        { l:'Closed loop and visibility', c:'sub', t:'The device reported its running hash, so convergence was confirmed by measurement, not assumption &mdash; a failed deploy or offline terminal just stayed visibly drifted for the next loop. And a drift-visibility API surfaced exactly which devices were out of sync and why.' },
+        { l:'What it taught me', c:'risk', t:'Two lessons stuck: rendering had to be deterministic or every reconcile was phantom drift, and convergence had to be measured from the device&rsquo;s reported state or the whole thing was just optimistic pushing. The subtle work wasn&rsquo;t the loop; it was making the drift signal trustworthy and the correction safe.' },
+        { l:'The lesson', c:'close', t:'So the win wasn&rsquo;t &lsquo;we push config&rsquo; &mdash; it was a fleet that self-heals toward a declared goal, with drift observable and correction gated, instead of a pile of imperative deploys and hope. Converge, don&rsquo;t command &mdash; measured, and safely.' }
+      ] },
+    { opener:'\u201CTesting a reconciler is proving the invariants \u2014 deterministic rendering, idempotent convergence, correct drift localization, and safe gated correction \u2014 not just that a config reaches a device.\u201D',
+      sub:'The invariants worth a test.',
+      beats:[
+        { l:'Frame', c:'frame', t:'The reconciler&rsquo;s value is its guarantees &mdash; the drift signal is precise, the loop is safe to re-run, correction is gated &mdash; so the tests target those, because a control loop over live devices fails in subtle, stateful ways.' },
+        { l:'Deterministic render', c:'head', t:'The load-bearing test: render the same resolved config many times and assert byte-identical output, across processes and time, gated in CI &mdash; because non-deterministic rendering silently poisons the entire hash-based drift model.' },
+        { l:'Idempotence', c:'sub', t:'Run a reconcile against an already-converged device and assert it does nothing; run it twice from a drifted state and assert the same converged result &mdash; proving re-runs after crashes or on the sweep are safe.' },
+        { l:'Drift localization', c:'sub', t:'Construct each three-hash state &mdash; desired&ne;deployed, deployed&ne;reported, all-match &mdash; and assert the reconciler takes the right action for each (deploy, re-apply, rest), so the diagnosis is correct, not just the detection.' },
+        { l:'Safe correction', c:'risk', t:'Assert deploys don&rsquo;t fire outside a maintenance window, that the per-tenant lock actually serializes concurrent reconciles (no two deploying the same device), and that a canary failure halts a rollout &mdash; the safety gates, adversarially.' },
+        { l:'Crash recovery', c:'trade', t:'Kill the reconciler mid-deploy and assert the lock TTL frees the tenant and the next reconcile converges from the actual state &mdash; proving recovery is just re-reconcile, not a bespoke rollback.' },
+        { l:'Close', c:'close', t:'So: deterministic rendering, idempotent convergence, correct localization, gated correction, and crash recovery &mdash; the invariants that make the loop trustworthy, verified in CI, not just a happy-path deploy.' }
+      ] },
+    { opener:'\u201CThe honest limits: the whole model rests on deterministic rendering and truthful device reporting, correction is deliberately slow, and it\u2019s the wrong tool for config that doesn\u2019t need continuous convergence.\u201D',
+      sub:'What desired-state costs, said plainly.',
+      beats:[
+        { l:'Determinism dependency', c:'frame', t:'The biggest limit is the foundation: if rendering isn&rsquo;t perfectly deterministic, the content hash is unstable and every device looks drifted forever. The entire drift model is only as trustworthy as the render function&rsquo;s purity.' },
+        { l:'Reporting dependency', c:'head', t:'It also depends on devices truthfully reporting their state. A device that lies, can&rsquo;t report, or reports stalely leaves the loop unable to confirm convergence &mdash; the closed loop is only as good as the measurement it closes on.' },
+        { l:'Correction latency', c:'sub', t:'Correction is deliberately slow &mdash; gated by windows and staged in waves &mdash; so a device can be known-drifted for hours. That&rsquo;s the right trade for payment terminals, but it means desired-state is not a fast-remediation tool by design.' },
+        { l:'Coordination cost', c:'risk', t:'The per-tenant lock, the windows, the staged rollout, the visibility &mdash; it&rsquo;s real machinery. For a small or homogeneous fleet, or config that rarely changes, all of that is overhead the problem doesn&rsquo;t warrant.' },
+        { l:'When it&rsquo;s wrong', c:'sub', t:'So it&rsquo;s the wrong tool when there&rsquo;s no ongoing goal to maintain &mdash; a one-off action on one device is just a command &mdash; or when the &lsquo;fleet&rsquo; is a handful of stable machines. Desired-state earns its complexity at scale, with change, and with drift that matters.' },
+        { l:'The mitigations', c:'trade', t:'Which is why the mitigations are the design: test rendering determinism in CI, treat a missing report as an explicit escalating state, use emergency windows for urgent fixes, and keep the machinery proportional to fleet size and change rate.' },
+        { l:'Close', c:'close', t:'So I&rsquo;d use desired-state for a large, changing fleet where drift is real and correctness matters &mdash; name the determinism and reporting dependencies and the correction latency upfront &mdash; and reach for a simple command when there&rsquo;s no goal to converge toward. A powerful pattern with a real bill, not a default.' }
+      ] }
+  ]
+};
+
+/* topics/desired-state/num.js -- topic 7 numbers. inputs[] (4 sliders) + compute(vals,fmt)
+   returning 6 rows; row 0 is the headline with over:true (the reconcile rate the loop must
+   absorb). n-strings and units carry single-backslash \u00D7 / \u2014. Pure arithmetic; fmt.n
+   rounds+locales. 7-bit ASCII. */
+var TOPIC_DS_NUM = {
+  lead:'The estimation for a reconciler isn\u2019t \u201Chow much config\u201D \u2014 it\u2019s the <b>reconcile rate</b> the loop must absorb and how much of it is a cheap no-op. Devices \u00D7 check-in frequency is the throughput; drift is the rare exception the deploys serve.',
+  tell:'Lead with the reconcile rate \u2014 fleet over check-in interval \u2014 then show that most reconciles are no-ops confirming convergence, which is why the three-hash diff must be trivial and only the rare drifted device needs a lock and a deploy. The full-sweep cost is why you go event-driven.',
+  inputs:[
+    { id:'n_devices', label:'Devices per tenant', value:10000, min:100, step:100 },
+    { id:'n_tenants', label:'Tenants', value:50, min:1, step:1 },
+    { id:'n_checkin_min', label:'Check-in interval (min)', value:5, min:1, step:1 },
+    { id:'n_change_pct', label:'Devices drifted per cycle (%)', value:2, min:1, step:1 }
+  ],
+  compute:function(vals, fmt){
+    var D = vals.n_devices, T = vals.n_tenants, C = vals.n_checkin_min, p = vals.n_change_pct/100;
+    var fleet = D * T;
+    var events = fleet / (C * 60);
+    var deploys = events * p;
+    var noops = events * (1 - p);
+    var perTenant = events / T;
+    var sweep = fleet;
+    return [
+      { k:'Reconcile events/sec (platform)', v:fmt.n(events), u:'events/s', n:'fleet \u00D7 check-in frequency \u2014 each device report triggers a reconcile; this is the loop\u2019s steady throughput.', over:true },
+      { k:'Total fleet (devices \u00D7 tenants)', v:fmt.n(fleet), u:'devices', n:'the population the loop keeps converged \u2014 the reconcile rate scales with it.' },
+      { k:'Deploys/sec (only drifted devices)', v:fmt.n(deploys), u:'deploys/s', n:'drift is the exception \u2014 most reconciles confirm convergence, so actual config pushes are rare.' },
+      { k:'No-op reconciles/sec (converged)', v:fmt.n(noops), u:'reconciles/s', n:'the cheap common path \u2014 this is why the three-hash diff must be trivial and read-only.' },
+      { k:'Reconciles/sec per tenant', v:fmt.n(perTenant), u:'per tenant/s', n:'the per-tenant lock must absorb this \u2014 sub-partition (per-site) if one tenant\u2019s rate runs far higher.' },
+      { k:'Full-sweep re-diff cost', v:fmt.n(sweep), u:'diffs', n:'what a periodic sweep touches \u2014 event-driven does the small rate instead; the sweep is only a backstop.' }
+    ];
+  }
+};
+
+/* topics/desired-state/rf.js -- topic 7 red flags. flags[] each {bad (the quoted misstep),
+   note (null except the LAST), tell (why it sinks the round), fix (what to say instead)}.
+   Entities only, no backslash escapes. 7-bit ASCII. */
+var TOPIC_DS_RF = {
+  lead:'The moves that quietly tank a desired-state round &mdash; each is a real thing candidates say, why it reads as a no-hire, and the sentence that turns it around.',
+  flags:[
+    { bad:'&ldquo;We detect drift by comparing the config template&rsquo;s version number.&rdquo;',
+      note:null,
+      tell:'Hashing the version instead of the rendered output gives you both false positives and false negatives. A template refactor with identical output bumps the version and looks like fleet-wide drift &mdash; so you needlessly redeploy everything; and a change that alters output without bumping the version goes undetected. Version is bookkeeping, not reality.',
+      fix:'Hash the <b>rendered output</b> &mdash; SHA-256 of the actual bytes the device will run. A config&rsquo;s identity is what it produces, so drift tracks real output changes, immune to refactors. Say &lsquo;content, not version&rsquo; &mdash; and note it requires deterministic rendering.' },
+    { bad:'&ldquo;We push the config to the device and mark it deployed &mdash; done.&rdquo;',
+      note:null,
+      tell:'That&rsquo;s commanding, not converging &mdash; a one-shot imperative push with no feedback. At fleet scale, deploys fail, devices roll back, terminals go offline; &lsquo;marked done&rsquo; accumulates silent divergence where your records say correct while the fleet runs the wrong thing. There&rsquo;s no loop to catch it.',
+      fix:'<b>Converge, don&rsquo;t command.</b> Keep comparing what the device <i>should</i> run against what it <i>reports</i> running, and re-act until they match. &lsquo;Done&rsquo; is when the device reports the desired hash &mdash; not when you pushed. The loop makes it self-healing; the command makes it hope.' },
+    { bad:'&ldquo;Once the deploy call succeeds, the device has the new config.&rdquo;',
+      note:null,
+      tell:'A deploy succeeding at the transport level says nothing about the device <i>running</i> the config &mdash; it can reject it, apply it and crash back, or reboot to the old version, all while your deploy call returned success. Assuming the push worked turns those into silent divergence you can&rsquo;t see.',
+      fix:'<b>Measure the device&rsquo;s reported hash.</b> Converged means the device <i>itself</i> reports the matching hash, not that the push returned OK. A device that never confirms stays visibly drifted and re-attempts &mdash; the source of truth for &lsquo;is it running the right config&rsquo; is measured reality, not an optimistic assumption.' },
+    { bad:'&ldquo;Any worker can reconcile any device &mdash; we just run several in parallel.&rdquo;',
+      note:null,
+      tell:'With no coordination, two reconcilers can deploy to the same device at once and fight over its state &mdash; interleaving pushes, racing on the deployed record, leaving it in a config nobody chose. Uncoordinated parallel writes to the same device is a classic distributed-systems race.',
+      fix:'Take a <b>per-tenant distributed lock</b> before deploying &mdash; parallel across tenants, serialized within one, so two reconcilers never deploy the same device concurrently. A TTL frees a crashed holder. The lock&rsquo;s one job is &lsquo;never two on the same device&rsquo;; keep its critical section tiny.' },
+    { bad:'&ldquo;We render the config with a generated-at timestamp at the top.&rdquo;',
+      note:null,
+      tell:'A timestamp (or unordered keys, or a nonce) makes rendering non-deterministic &mdash; the same config renders to different bytes each time, so the desired hash is unstable and <i>every device looks perpetually drifted</i>. You&rsquo;d redeploy the whole fleet forever, chasing phantom changes that are just render noise.',
+      fix:'Make rendering a <b>pure function</b> of the resolved config: no timestamps, no randomness, canonical key ordering, stable encoding. Then identical config hashes identically everywhere. And test it &mdash; render twice, assert byte-identical, gate in CI &mdash; because this invariant underpins the entire drift model.' },
+    { bad:'&ldquo;When we detect drift on a terminal, we fix it immediately.&rdquo;',
+      note:null,
+      tell:'Immediately reconfiguring a live payment terminal &mdash; mid-transaction, at peak &mdash; risks interrupting payments, which is far worse than a config being briefly stale. Correcting the instant you detect ignores that these are production devices where <i>when</i> you change them matters as much as <i>what</i>.',
+      fix:'<b>Detect always, correct in-window.</b> Gate deploys behind maintenance windows: the device is marked drifted-and-visible now, and the fix lands when the site&rsquo;s window opens. An emergency window covers genuinely urgent changes. Windowed drift is safe because it&rsquo;s bounded and visible, not because it&rsquo;s invisible.' },
+    { bad:'&ldquo;Every few minutes we re-render and re-diff all 10,000 devices per tenant.&rdquo;',
+      note:null,
+      tell:'A full periodic sweep is either too slow (drift sits undetected between sweeps) or too wasteful (re-rendering the entire fleet on a timer, mostly finding no change) &mdash; and it doesn&rsquo;t scale as fleets and tenants grow. You&rsquo;re doing fleet-sized work to catch a handful of changes.',
+      fix:'Reconcile <b>event-driven</b> &mdash; on a config edit, a check-in, a window &mdash; so work is proportional to change and propagation is seconds. Keep a <i>slow</i> full sweep only as a backstop for dropped events and silent local drift. Events for the common case; the sweep as a safety net, not the primary path.' },
+    { bad:'&ldquo;The loop fixes drift automatically, so operators don&rsquo;t really need to see it.&rdquo;',
+      note:null,
+      tell:'A reconciler that silently self-heals is one you can&rsquo;t trust, audit, or debug. When something is stuck &mdash; a device failing every window, a bad rollout &mdash; there&rsquo;s no way to see it, and &lsquo;the loop will handle it&rsquo; hides real problems behind assumed autonomy. Invisible automation is unaccountable automation.',
+      fix:'Make <b>drift a first-class, queryable state</b>: which devices are drifted, which pair of hashes differs, how long, and correction status (pending-window vs failing vs never-reported). Visibility is what lets operators triage the stuck from the safely-pending &mdash; and it&rsquo;s what earns an autonomous loop the right to run.' },
+    { bad:'&ldquo;We compare desired against reported &mdash; if they differ, we just redeploy.&rdquo;',
+      note:'This is the subtle one &mdash; and the deepest, because two-hash thinking looks sufficient but silently throws away the diagnosis: you can detect drift but not <b>localize</b> it, so you take the wrong action.',
+      tell:'With only desired vs reported, a mismatch is ambiguous &mdash; you can&rsquo;t tell &lsquo;we haven&rsquo;t pushed the change yet&rsquo; from &lsquo;we pushed it but the device won&rsquo;t hold it.&rsquo; So you blindly redeploy on any mismatch &mdash; re-pushing config to a device that&rsquo;s actually a health problem, and never distinguishing a delivery task from a device fault.',
+      fix:'Track <b>three</b> hashes &mdash; desired, deployed, reported. desired&ne;deployed means a deploy is owed (push it); deployed&ne;reported means the device drifted after a good deploy (re-apply, and flag if it recurs). The deployed hash is what disambiguates, so the reconciler takes the <i>right</i> action for which pair diverged instead of redeploying blindly.' }
+  ]
+};
+
+/* topics/desired-state/open.js -- topic 7 opener + closer. cards[0] kind:"open" (one-breath +
+   thirty-seconds for the reconciler, 3 hook threads); cards[1] kind:"close" (spine + 3 risks,
+   hooks:null). Entities only, no backslash escapes. 7-bit ASCII. */
+var TOPIC_DS_OPEN = {
+  cards: [
+    { kind:'open',
+      k:'30-Second Version',
+      t:'The reconciler, at altitude',
+      lead:'Asked to design a fleet config system, open at the <b>convergence boundary</b> &mdash; not the loop &mdash; then give the three hashes and the one trade.',
+      items:[
+        { n:'One breath', ht:'the single sentence',
+          a:'&ldquo;A desired-state reconciler: three hashes per device &mdash; desired, deployed, reported &mdash; and an event-driven loop that <b>converges reality toward a declared goal</b> rather than pushing config and hoping.&rdquo;' },
+        { n:'Thirty seconds', ht:'the model, then the trade',
+          a:'Each device carries three hashes: <b>desired</b> (what it should run, the SHA-256 of the <i>rendered output</i>), <b>deployed</b> (what we last pushed), <b>reported</b> (what it says it runs). Drift is any mismatch, and which pair differs localizes it. An event-driven <b>resolve &rarr; render &rarr; diff &rarr; deploy &rarr; report</b> loop drives each device to converge, under a per-tenant lock and inside maintenance windows. The trade I&rsquo;d name upfront: it&rsquo;s only correct if rendering is <b>deterministic</b> and you <b>measure the reported state</b> rather than assuming the push worked.' }
+      ],
+      hooks:{
+        lead:'Three threads an interviewer pulls from that opener, and where each leads:',
+        items:[
+          { q:'&ldquo;What exactly do you hash?&rdquo;',
+            d:'The rendered output, not the template version &mdash; content, not bookkeeping &mdash; so a refactor isn&rsquo;t drift and a real value change is. It demands deterministic rendering, or every reconcile is phantom drift.',
+            tab:'The hash' },
+          { q:'&ldquo;How do you know a device is actually running the config?&rdquo;',
+            d:'You wait for its reported hash &mdash; converged means the device itself confirms desired, not that the push returned OK. That closed loop is what makes it self-healing.',
+            tab:'Closed loop' },
+          { q:'&ldquo;A terminal is drifted at peak &mdash; do you fix it now?&rdquo;',
+            d:'No &mdash; detect always, correct in-window. The device is visibly drifted and the fix lands in its maintenance window. Reconfiguring a terminal mid-transaction is worse than brief staleness.',
+            tab:'Safe fix' }
+        ]
+      },
+      foot:'Open at the convergence boundary, give the three hashes over rendered output, and name the determinism and reported-measurement dependencies before they do &mdash; that framing signals you&rsquo;ve <i>run</i> a reconciler, not just read about control loops.' },
+    { kind:'close',
+      k:'The Close',
+      t:'Land it, and name what bites',
+      lead:'Closing the reconciler, compress to the spine &mdash; three hashes over rendered output, converge not command, correct safely &mdash; then name the three risks that separate a real design from a naive one.',
+      items:[
+        { n:'Phantom drift', ht:'the determinism risk',
+          a:'If rendering isn&rsquo;t a pure function &mdash; a timestamp, unordered keys, a nonce &mdash; identical config hashes differently and every device looks perpetually drifted, so you redeploy the fleet forever. Make rendering deterministic and test it (render twice, assert identical, gate in CI).' },
+        { n:'Silent divergence', ht:'the open-loop risk',
+          a:'If you assume the push worked instead of measuring the reported hash, failed deploys, rollbacks, and offline devices become divergence your records can&rsquo;t see. Confirm convergence only when the device <i>reports</i> desired; treat a missing report as an explicit escalating state.' },
+        { n:'Unsafe correction', ht:'the timing risk',
+          a:'If you correct drift the instant you detect it, you risk reconfiguring a live terminal mid-transaction. Separate detection (continuous) from correction (windowed, staged), with declarative rollback (re-declare the old desired) &mdash; a big-bang fleet-wide push is an outage waiting to happen.' }
+      ],
+      hooks:null,
+      foot:'What&rsquo;s next with more time: the hierarchical-resolution provenance model, per-site lock partitioning for the largest tenants, and the drift-visibility API&rsquo;s fields. What I&rsquo;d cut first: the maintenance-window scheduler details and the sweep-frequency tuning &mdash; real, but not the core of the loop.' }
+  ]
+};
+
+/* topics/desired-state/bank.js -- topic 7 working-set bank (IIFE). Builds mockBeats (6, tagged
+   FRAME/STRUCTURE/SCALE/FAILURE/CURVEBALL/CLOSE), derives curveballs (8, curve[0] === the
+   CURVEBALL mockBeat, 8 distinct themes) and frames (4, frame[0] === the FRAME mockBeat cue),
+   and aliases the LOCAL DS_CARDS / DS_SPEAK so a switch reseeds the globals without clobbering
+   topic 1. Entities only. 7-bit ASCII. */
+var TOPIC_DS_BANK = (function(){
+  var mockBeats = [
+    { tag:'FRAME',
+      cue:'Design a system to keep a large fleet&rsquo;s config converged to what you intend.',
+      task:'Frame the boundary and the model before mechanics &mdash; move from &lsquo;keep config correct&rsquo; to &lsquo;converge toward a declared goal,&rsquo; not straight to pushing config.',
+      model:'I&rsquo;d frame it as the boundary between config intent and fleet reality, and model it as desired state: three hashes per device &mdash; desired (the SHA-256 of the rendered output), deployed (what we last pushed), reported (what the device says it runs) &mdash; with drift as any mismatch and the differing pair localizing it. An event-driven resolve-render-diff-deploy-report loop converges each device, under a per-tenant lock and inside maintenance windows. The point is to converge toward a goal, not fire commands and hope.',
+      int:{ q:'Why converge instead of just pushing config to devices?', a:'Because at fleet scale partial failure is the steady state &mdash; deploys fail, devices roll back, terminals go offline &mdash; and a fire-and-forget push has no feedback to catch that, so you accumulate silent divergence. A convergence loop keeps measuring each device against the goal and re-acts until they match, so failures self-correct on the next loop. Command-and-hope works for one supervised device; it doesn&rsquo;t survive a fleet.' },
+      int2:{ q:'What&rsquo;s the single biggest risk in this design?', a:'That the whole model rests on two fragile foundations: deterministic rendering (or the content hash is unstable and every device looks perpetually drifted) and truthful device reporting (or the closed loop can&rsquo;t confirm convergence). Non-deterministic rendering gives you phantom drift; assuming the push worked instead of measuring reported gives you silent divergence. The drift signal&rsquo;s trustworthiness is the hard part, not the loop.' } },
+    { tag:'STRUCTURE',
+      cue:'Walk me through the loop &mdash; config change to running config.',
+      task:'Narrate resolve, render, hash, diff, deploy, report as a control loop &mdash; and show where the gates are.',
+      model:'A trigger &mdash; a config edit, a check-in, a window &mdash; kicks the loop for the affected devices. Resolve the tenant-site-tag-device hierarchy into a config, render it deterministically to output bytes, hash the output for desired, and three-way diff against deployed and reported. All that is read-only. If there&rsquo;s drift, acquire the per-tenant lock and check the maintenance window, then push and record the deployed hash. The device runs it and reports its hash; the next diff compares reported to desired. It&rsquo;s a loop because the report feeds back, so it converges until they match.',
+      int:{ q:'Where in the loop are the lock and the window?', a:'Both sit just before deploy &mdash; the two gates on the one step that touches devices. Resolve, render, hash, and diff are read-only and ungated, done concurrently; only when a deploy is actually needed do you take the per-tenant lock (so no other reconciler deploys that fleet at once) and check the window (so the push lands only when safe). If the window&rsquo;s closed, you record the drift as visible-but-uncorrected and defer; detection is ungated, correction is doubly gated.' } },
+    { tag:'SCALE',
+      cue:'10,000 devices per tenant, many tenants, all reconciling. Where does this strain first?',
+      task:'Locate the real ceiling &mdash; deploy/report I/O and lock hold-time, not the diff &mdash; and relieve it.',
+      model:'Not the diff &mdash; comparing three fixed-size hashes is trivial and embarrassingly parallel, and it&rsquo;s event-scoped to affected devices. The pressure is touching reality: the rate of deploys and reported check-ins the reconciler and datastore absorb, and the per-tenant lock, whose hold-time can starve a big tenant&rsquo;s own backlog if its reconcile is slow. I relieve it by reconciling incrementally (only affected devices under the lock, not the whole tenant), keeping the locked critical section to just the deploy-and-record step, sub-partitioning the lock per-site for the largest tenants, and sharding reported-state ingestion.',
+      int:{ q:'Most reconciles are the hot path. How do you keep it cheap?', a:'By making the common case a no-op: most reconciles confirm an already-converged device, which is a read-only three-hash comparison with no deploy and no lock. Only the rare drifted device does the expensive part &mdash; acquire the lock, deploy, record. So the hot path (the vast majority of reconciles) is trivial, and cost concentrates on the small fraction that actually need correction. That&rsquo;s why the diff must stay cheap and the lock must wrap only the deploy.' },
+      int2:{ q:'A tenant&rsquo;s reconciles are slow and its per-tenant lock is a bottleneck. Now what?', a:'Shrink the critical section and shard within the tenant. Pull all the read-only work (resolve, render, diff) outside the lock so it runs concurrently, and hold the lock only for the exclusive deploy-and-record step. If one tenant is still too large, sub-partition its lock along a non-overlapping device boundary &mdash; per-site sub-locks &mdash; so independent slices reconcile in parallel while preserving the one invariant that matters: one device, one lock, never two reconcilers on the same device.' } },
+    { tag:'FAILURE',
+      cue:'A config change went out and a chunk of the fleet is misbehaving. Walk the incident.',
+      task:'Diagnose a bad-config rollout and show that declarative rollback and staged convergence contain it.',
+      model:'First, the visibility API tells me the blast radius &mdash; which devices took the bad config (reported == the bad desired) and which are healthy. The immediate fix is declarative: re-declare the previous desired, and the same loop converges the affected devices back &mdash; no bespoke undo, just change the goal and reconcile, in-window. Then the real lesson: this shouldn&rsquo;t have reached a chunk of the fleet, because a config change should roll out canaried &mdash; a small set first, watch their reported hashes and health, expand only if good. So: rollback now, and staged rollout so the next bad config is caught on the canaries.',
+      int:{ q:'How does declarative rollback actually work here?', a:'You set desired back to the last-known-good config. Because the loop drives reality toward desired regardless of current state, re-declaring old desired makes every affected device drift (deployed/reported == bad, desired == good) and the loop converges them back to good &mdash; the exact same mechanism as rolling forward, run in reverse. There&rsquo;s no separate undo procedure to get wrong; rollback is symmetric with deploy, which is a core advantage of a declarative model over imperative compensation.' },
+      int2:{ q:'How do you stop a bad config from reaching the fleet next time?', a:'Canaried, reported-hash-gated rollout: change desired for a small canary subset first, and gate expansion on those canaries actually converging (reported == new desired) and staying healthy. If the canaries go bad, halt and re-declare old desired before the other devices see the change. Combined with maintenance windows spreading updates into waves, a bad config&rsquo;s blast radius is a handful of canaries, not the fleet &mdash; the three-hash model makes &lsquo;did the canary take it and is it healthy&rsquo; a measured gate, not a guess.' } },
+    { tag:'CURVEBALL',
+      theme:'Template refactor = false drift',
+      cue:'Someone refactored a config template &mdash; renamed variables, restructured it &mdash; with identical output, and now your whole fleet shows as drifted. What went wrong?',
+      task:'Diagnose drift defined by the wrong thing (template/version, not rendered output) and fix the definition of identity.',
+      model:'The system is defining a config&rsquo;s identity by the template or its version rather than the rendered output. A refactor that produces byte-identical output changed the template (and bumped its version) but changed nothing the device runs &mdash; yet the drift check saw a difference and flagged the whole fleet, triggering needless redeploys. The fix is to hash the rendered output, not the template: SHA-256 of the actual bytes. Then a refactor with identical output is not drift (same hash), and only a change that alters output is. Content, not version &mdash; which also means rendering must be deterministic so identical config always hashes the same.',
+      int:{ q:'So how should drift have been defined from the start?', a:'By observable output. A device&rsquo;s desired state is the hash of what it will actually run &mdash; the rendered bytes &mdash; so &lsquo;is this drifted&rsquo; means &lsquo;do the bytes differ,&rsquo; not &lsquo;did the template or version differ.&rsquo; That definition is immune to refactors (no output change, no drift) and catches real changes (output differs, drift), which is exactly the semantics you want. Defining identity by content rather than template-version bookkeeping is the sharp idea; this incident is what happens when you get it wrong.' } },
+    { tag:'CLOSE',
+      cue:'Two sentences &mdash; sell me the design.',
+      task:'Compress the whole reconciler to its spine and governing judgment, no hedging.',
+      model:'A fleet desired-state reconciler: three hashes per device &mdash; desired (hash of the rendered output), deployed, reported &mdash; resolved through a stored tenant-site-tag-device hierarchy, driven by an event-driven resolve-render-diff-deploy-report loop under a per-tenant lock, correcting only in maintenance windows, with drift made visible &mdash; so the fleet converges toward a declared goal instead of being commanded. The judgment that makes it work: hash the output not the version, measure the device&rsquo;s reported reality rather than assuming, and separate always-on detection from safe, windowed, staged correction.',
+      int:{ q:'If you had to cut one thing to ship, what goes?', a:'The maintenance-window scheduler sophistication and sweep-frequency tuning go first &mdash; real, but not core. What I&rsquo;d never cut is the three hashes over rendered output, the closed-loop confirmation on the reported hash, and gated correction: a precise content-defined drift signal, a loop that acts on measured reality, and safe correction. Those three are a working reconciler; hierarchical resolution and visibility are the layers on that spine.' } }
+  ];
+  var mockCurveIdx = mockBeats.findIndex(function(b){ return b.tag === 'CURVEBALL'; });
+  var curveballs = [
+    mockBeats[mockCurveIdx],
+    { tag:'CURVEBALL', theme:'Non-deterministic render',
+      cue:'Your fleet shows drifted even though nobody changed any config. What&rsquo;s your first hypothesis?',
+      task:'Diagnose phantom drift from non-deterministic rendering and fix the render function.',
+      model:'My first hypothesis is non-deterministic rendering &mdash; the same config rendering to different bytes each time, so the desired hash is unstable and every device perpetually looks drifted, with no config change involved. The usual culprits: a timestamp or generated-at header baked into the output, unordered map/dict keys serializing in random order, a nonce, or non-canonical serialization. The fix is to make rendering a pure function of the resolved config &mdash; strip volatile fields, sort keys canonically, pin encoding, forbid clocks and randomness in the render path &mdash; and add a CI test that renders the same input twice and asserts byte-identical output. That invariant underpins the whole hash-based model.',
+      int:{ q:'How do you confirm it&rsquo;s rendering and not real drift?', a:'Render the same resolved config for the same device twice, in the same process and across processes, and diff the bytes &mdash; if they differ with identical input, it&rsquo;s non-deterministic rendering, not real drift. You can also hash the output repeatedly and watch the hash change with no input change. That immediately distinguishes &lsquo;the config is genuinely different&rsquo; from &lsquo;our render function is injecting noise,&rsquo; and it&rsquo;s exactly the test that belongs in CI to prevent the class entirely.' } },
+    { tag:'CURVEBALL', theme:'Reconciler crash mid-deploy',
+      cue:'The reconciler crashes after pushing to some devices but before recording the deployed hash. What state are you in?',
+      task:'Show crash-idempotence &mdash; lock TTL frees the tenant, the loop converges from actual state, recovery is re-reconcile.',
+      model:'A safe state, because the design is crash-idempotent. The lock auto-expires via its TTL, so the tenant isn&rsquo;t blocked. For a device where the push landed but deployed wasn&rsquo;t recorded, the next loop just re-diffs: the device reports the new hash while our deployed record shows old &mdash; a benign inconsistency the next reconcile resolves, because deployed is a cache and the durable truth is desired and reported. Worst case is a redundant re-push of config the device already runs, which is a no-op by determinism. Recovery isn&rsquo;t a special mode; it&rsquo;s the normal loop, because the loop is a function of current state, not of having completed a prior run.',
+      int:{ q:'Why doesn&rsquo;t the lost &lsquo;deployed hash&rsquo; write corrupt anything?', a:'Because deployed is just a cache of &lsquo;what we last pushed,&rsquo; not a source of truth. The sources of truth &mdash; desired (intent) and reported (the device&rsquo;s measured reality) &mdash; both survive the crash. A stale deployed record only causes the next diff to see deployed != reported, which the loop handles by reconciling: recompute desired, observe reported, self-correct the record or re-push idempotently. No single hash&rsquo;s staleness can make the loop diverge &mdash; it can only cause an extra, harmless reconcile that re-establishes truth from the durable pair.' } },
+    { tag:'CURVEBALL', theme:'Lock contention at scale',
+      cue:'One tenant has a massive fleet and its reconciles are backing up behind the per-tenant lock. Fix it.',
+      task:'Minimize the critical section and sub-partition the lock while preserving same-device exclusion.',
+      model:'Two moves. First, make sure only the deploy coordination is under the lock &mdash; resolve, render, hash, and diff are read-only and should run outside it, concurrently; a common bug is holding the lock across the whole reconcile, serializing work that never needed it. Second, if that tenant is still too big for one lock, sub-partition it along a non-overlapping device boundary &mdash; per-site or a consistent hash of device ID &mdash; so disjoint slices reconcile in parallel while each device is always covered by exactly one sub-lock. The invariant to protect through all of it is one-device-one-lock: never two reconcilers deploying the same device.',
+      int:{ q:'How do you partition the lock without reintroducing the race?', a:'By partitioning so no device belongs to two partitions and the mapping is stable. As long as a given device is always reconciled under the same sub-lock, the &lsquo;never two on the same device&rsquo; guarantee holds within that sub-lock while different partitions (disjoint device sets) proceed in parallel. The race only returns if partitions overlap or a device moves between sub-locks mid-flight &mdash; so keep the device-to-sublock mapping deterministic and non-overlapping. Correct sharding multiplies parallelism while preserving per-device exclusion.' } },
+    { tag:'CURVEBALL', theme:'Device won&rsquo;t confirm',
+      cue:'You deployed to a device but it never reports the new hash. What does the system do?',
+      task:'Show the never-reports case as an explicit escalating state, not an assumed success.',
+      model:'It stays in the unconverged / unconfirmed state &mdash; which is itself a signal, not a shrug. The device was deployed to (deployed set) but reported never advances to desired, so it remains visibly drifted, the reconciler keeps re-attempting on triggers within its window, and after enough missed confirmations it escalates to an alert with a health flag rather than retrying silently forever. The key discipline is that absence of a report is never treated as success &mdash; the whole point of closed-loop &mdash; so a device silent for a day surfaces as a problem to investigate, with its own age in the visibility API, not a mystery hidden behind an assumed-good deploy.',
+      int:{ q:'How is &lsquo;never reports&rsquo; different from a device that reports a wrong hash?', a:'A wrong hash (deployed != reported) is a device running something, just not what we pushed &mdash; a rollback or failed apply the loop re-attempts. &lsquo;Never reports&rsquo; is a device we can&rsquo;t measure at all &mdash; possibly offline, unreachable, or its reporting is broken &mdash; which is a connectivity/health concern as much as a config one. Both are unconverged and visible, but they route differently: re-apply for the wrong-hash case, investigate reachability for the silent case. The visibility API distinguishes them by whether reported is stale-but-present versus missing.' } },
+    { tag:'CURVEBALL', theme:'Fleet-wide bad config',
+      cue:'A config change went out and started breaking devices before anyone noticed. How do you contain and recover?',
+      task:'Contain via declarative rollback and prevent recurrence via canaried, reported-gated rollout.',
+      model:'Contain: re-declare the last-known-good desired, and the loop converges the affected devices back &mdash; declarative rollback is symmetric with deploy, so there&rsquo;s no fragile undo to write; you change the goal and reconcile, in-window. Recover fully by using the visibility API to confirm the blast radius shrinks as devices report the good hash. Prevent recurrence with canaried rollout: change desired for a small subset first, gate expansion on those canaries actually converging and staying healthy, and halt-and-rollback if they don&rsquo;t &mdash; so a bad config&rsquo;s reach is a handful of canaries, not the fleet. Windows spreading updates into waves reinforce that.',
+      int:{ q:'Why is rollback easier here than in an imperative deploy system?', a:'Because you just re-declare the previous desired and the same convergence loop rolls back, whereas imperative rollback needs explicit compensating actions &mdash; a reverse script undoing each forward step, which is order-dependent, error-prone, and often incomplete. Declarative rollback is &lsquo;go to state X&rsquo; regardless of current state, so it&rsquo;s uniform and reliable; imperative rollback is a separate, fragile procedure. That symmetry between roll-forward and roll-back is a major operational advantage of desired-state.' } },
+    { tag:'CURVEBALL', theme:'Stuck device / blind redeploy',
+      cue:'A device keeps failing to converge and your system keeps redeploying to it every loop, forever. What&rsquo;s wrong with that, and what&rsquo;s the right behavior?',
+      task:'Show that infinite silent retry masks a real problem, and that localization plus escalation is the fix.',
+      model:'Two things are wrong. One, redeploying on every mismatch without localizing means you might be re-pushing config to a device whose problem isn&rsquo;t delivery at all &mdash; deployed already matches desired, and it&rsquo;s the device that won&rsquo;t hold config (deployed != reported), a health issue re-pushing won&rsquo;t fix. Two, retrying silently forever masks that the device is genuinely stuck. The right behavior: use the three-hash localization to take the correct action (re-apply for a device-drift, not a blind redeploy), and bound the retries &mdash; after N failed convergence attempts across windows, flag the device unhealthy and alert rather than looping. Self-healing for the recoverable; escalation for the stuck.',
+      int:{ q:'When exactly do you stop retrying and alert?', a:'When retries stop being likely to succeed and start being noise. A device that fails to converge across several maintenance windows isn&rsquo;t hitting a transient glitch &mdash; it&rsquo;s probably broken (unreachable, rejecting config, hardware), and silent infinite retry hides that behind &lsquo;the loop will get it eventually.&rsquo; So track consecutive failed attempts and, past a threshold, flag it unhealthy and alert while optionally backing off the retry cadence. The loop still owns correction, but a device that won&rsquo;t converge becomes a surfaced exception for a human, not an infinite quiet retry.' } },
+    { tag:'CURVEBALL', theme:'Why not just use Terraform',
+      cue:'This has desired state and drift detection &mdash; why build it instead of just using Terraform?',
+      task:'Distinguish the shared declarative pattern from Terraform&rsquo;s execution model, which doesn&rsquo;t fit a live fleet.',
+      model:'The pattern is identical &mdash; declare desired, diff, converge, detect drift &mdash; and I&rsquo;d steal Terraform&rsquo;s philosophy. But its execution model doesn&rsquo;t fit: Terraform is human-triggered plan/apply against a readable state file, not a loop running continuously and autonomously thousands of times a minute; it assumes providers whose state it can read authoritatively, whereas a terminal&rsquo;s true state must be self-reported and can drift locally between applies; and it has no native per-device maintenance windows, hierarchical per-tenant resolution at fleet cardinality, or closed-loop reported-hash confirmation. You&rsquo;d fight the tool to make it autonomous, real-time, and device-feedback-driven. Same principles, purpose-built engine for a live fleet.',
+      int:{ q:'What do you keep from the IaC world even though you built your own?', a:'The declarative discipline: desired state as an inspectable, diffable value; a plan/diff before acting so changes are previewable; idempotent operations so re-applying is safe; and drift as a first-class comparison of declared-vs-actual. Those are exactly what this reconciler rests on, and IaC validated them at industry scale. You steal the philosophy and add what a live payment fleet needs &mdash; runtime autonomy, device-reported feedback, hierarchical multi-tenant resolution, windowed safety. Same principles, different engine, which is often right when a general tool&rsquo;s execution model doesn&rsquo;t match your domain even though its philosophy does.' } }
+  ];
+  var mockFrameIdx = mockBeats.findIndex(function(b){ return b.tag === 'FRAME'; });
+  var frames = [
+    mockBeats[mockFrameIdx].cue,
+    'Design drift detection and correction for tens of thousands of devices.',
+    'Keep a fleet of payment terminals running their intended config, continuously.',
+    'Build a reconciler that converges device config toward a declared desired state.'
+  ];
+  return { cards: DS_CARDS, speak: DS_SPEAK, curveballs: curveballs, mockBeats: mockBeats, frames: frames };
+})();
+
+/* topics/desired-state/register.js -- registers topic 7 (Desired State) with the TopicRegistry.
+   Loaded LAST in the desired-state bundle, after every TOPIC_DS_* slice is defined. The registry
+   wires identity + the nine data panes; switching to this topic reseeds the working-set globals
+   from TOPIC_DS_BANK (which aliases the LOCAL DS_CARDS / DS_SPEAK) so topic 1 is never clobbered. */
+TopicRegistry.register({
+  id: 'desired-state',
+  identity: TOPIC_DS_IDENTITY,
+  data: {
+    walk:  TOPIC_DS_WALK,
+    drill: TOPIC_DS_DRILL,
+    wb:    TOPIC_DS_WB,
+    sys:   TOPIC_DS_SYS,
+    trade: TOPIC_DS_TRADE,
+    model: TOPIC_DS_MODEL,
+    num:   TOPIC_DS_NUM,
+    rf:    TOPIC_DS_RF,
+    open:  TOPIC_DS_OPEN,
+    bank:  TOPIC_DS_BANK
+  }
+});
+
+
 /* ============ RED FLAGS (web component) ============
    Multi-topic pane on the TopicPane contract. The base owns shadow + adopted
    sheets + <style> + skeleton (built ONCE in connectedCallback); renderTopic

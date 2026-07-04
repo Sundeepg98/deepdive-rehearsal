@@ -8,6 +8,7 @@ This replaces per-edit manual vigilance with tooling that runs on every build:
   render           panes/overlays render, no JS/ref errors, no overflow  (browser)
   entity_leak      no HTML entity reaches visible text                   (browser)
   e2e_interactions theme/text-zoom/drill must-hit/rescues, 0 console errs (browser)
+  topic_contract   every registered topic conforms to the shared shape  (browser)
 
 Browser checks are SKIPPED (not failed) when Playwright/Chrome are absent, so
 this is CI-safe; locally (or in CI after `npm install && npx playwright install
@@ -47,7 +48,8 @@ for name, cmd in [('ascii_guard', ['python3', 'test/ascii_guard.py']),
 chrome = browser()
 deliverable = os.path.join(ROOT, 'deepdive_content_pipeline_rehearsal.html')
 for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity_leak.cjs'),
-                     ('e2e_interactions', 'test/e2e_interactions.cjs')]:
+                     ('e2e_interactions', 'test/e2e_interactions.cjs'),
+                     ('topic_contract', 'test/topic_contract.cjs')]:
     if not chrome:
         results.append((name, 'SKIP', 'no Playwright/Chrome (npm install && npx playwright install chromium)'))
         continue

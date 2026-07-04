@@ -623,7 +623,7 @@ body.is-hidden,body.is-hidden *,body.is-hidden *::before,body.is-hidden *::after
 .tn-chev{color:var(--acc);font-size:10px;transition:transform .18s ease}
 .topic-nav.tn-open .tn-chev{transform:rotate(180deg)}
 .tn-menu{position:absolute;left:0;right:0;top:calc(100% + 5px);z-index:40;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:5px;box-shadow:0 12px 34px rgba(30,28,24,.18);max-height:56vh;overflow-y:auto}
-.tn-item{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:9px;width:100%;border:0;background:none;border-radius:9px;padding:8px 10px;cursor:pointer;text-align:left;transition:background .12s ease}
+.tn-item{display:grid;grid-template-columns:1fr;grid-template-rows:auto auto;column-gap:9px;width:100%;border:0;background:none;border-radius:9px;padding:8px 10px;cursor:pointer;text-align:left;transition:background .12s ease}
 .tn-item+.tn-item{margin-top:2px}
 .tn-item:hover{background:rgba(83,74,183,.07)}
 .tn-item.on{background:var(--accbg)}
@@ -632,6 +632,8 @@ body.is-hidden,body.is-hidden *,body.is-hidden *::before,body.is-hidden *::after
 .tn-i-name{font-size:13px;font-weight:680;color:var(--ink);align-self:end}
 .tn-item.on .tn-i-name{color:var(--acc)}
 .tn-i-tail{font-size:9.5px;color:var(--mut2);text-transform:uppercase;letter-spacing:.3px;align-self:start}
+.tn-group{padding:10px 10px 3px 11px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--mut2);opacity:.8}
+.tn-menu>.tn-group:first-child{padding-top:5px}
 html[data-theme="dark"] .tn-trigger:hover{border-color:var(--acc);box-shadow:0 4px 12px rgba(170,157,245,.14)}
 html[data-theme="dark"] .tn-item:hover{background:rgba(170,157,245,.13)}
 @media(max-width:900px){ .side-id .topic-nav{flex-basis:100%;order:3;margin:6px 0 0} }
@@ -656,7 +658,7 @@ try{var _dk=matchMedia('(prefers-color-scheme:dark)').matches;document.documentE
 <body>
 <div class="rail" aria-hidden="true"><div class="fill" id="rail"></div></div>
 <div class="app"><aside class="sidebar"><div class="side-id">
-  <span class="badge">Deep rehearsal</span><span class="locator">Topic 1 of 8 &middot; ingestion layer</span>
+  <span class="badge">Deep rehearsal</span><span class="locator">Architecture &amp; APIs &middot; ingestion layer</span>
   <div class="hdr">
     <h1>Content Pipeline</h1>
     <div class="sub"><b>Mechanics</b> &rarr; <b>graded follow-up chains</b> &rarr; <b>whiteboard</b> &rarr; <b>zoom out</b> to where this sits in the whole system, and the pivots an interviewer rides into the next topic.</div>
@@ -1045,7 +1047,7 @@ function publishBanks(t) {
 function applyIdentity(idn) {
   var q = function (s) { return document.querySelector(s); },
       byId = function (i) { return document.getElementById(i); };
-  var L = q('.locator'); if (L) L.innerHTML = 'Topic ' + idn.index + ' of ' + (typeof TopicRegistry !== 'undefined' && TopicRegistry.ids ? TopicRegistry.ids().length : idn.total) + ' &middot; ' + idn.locatorTail;
+  var L = q('.locator'); if (L) { var _gl = ''; if (typeof TOPIC_GROUPS !== 'undefined' && idn.group) { for (var _gi = 0; _gi < TOPIC_GROUPS.length; _gi++) { if (TOPIC_GROUPS[_gi].id === idn.group) { _gl = TOPIC_GROUPS[_gi].label; break; } } } L.innerHTML = (_gl ? _gl + ' &middot; ' : '') + idn.locatorTail; }
   var H = q('.hdr h1'); if (H) H.textContent = idn.h1;
   var S = q('.hdr .sub'); if (S) S.innerHTML = idn.sub;
   document.querySelectorAll('.cmp-topic').forEach(function (el) { el.textContent = idn.companionTopic; });
@@ -1139,6 +1141,39 @@ class TopicPane extends HTMLElement {
   renderTopic() {}
 }
 
+/* ============ scripts/app/groups.js -- the thematic axis ============
+   The six thematic groups the topics bucket into, in display order. Each topic's
+   identity carries a `group` id matching one of these. The topic switcher and the
+   index view read this to render grouped sections; groups with no registered topic
+   are skipped by the consumer, so the control stays correct at any topic count.
+   Adding a topic = tag its identity with one of these group ids; nothing else here
+   changes. Offline-safe: pure data + a pure bucketing helper, no network/storage. */
+var TOPIC_GROUPS = [
+  { id: 'messaging-events',          label: 'Messaging &amp; Events' },
+  { id: 'data-storage',              label: 'Data &amp; Storage' },
+  { id: 'reliability-observability', label: 'Reliability &amp; Observability' },
+  { id: 'platform-infra',            label: 'Platform &amp; Infra' },
+  { id: 'architecture-apis',         label: 'Architecture &amp; APIs' },
+  { id: 'security-tenancy',          label: 'Security &amp; Tenancy' }
+];
+
+/* Bucket the registered topic ids by group, in group order then registration order.
+   Returns [{ group, ids:[...] }] for non-empty groups only. */
+function groupedTopicIds() {
+  if (typeof TopicRegistry === 'undefined' || !TopicRegistry.ids) return [];
+  var ids = TopicRegistry.ids();
+  var out = [];
+  for (var i = 0; i < TOPIC_GROUPS.length; i++) {
+    var g = TOPIC_GROUPS[i], gi = [];
+    for (var j = 0; j < ids.length; j++) {
+      var t = TopicRegistry.get(ids[j]);
+      if (t && t.identity && t.identity.group === g.id) gi.push(ids[j]);
+    }
+    if (gi.length) out.push({ group: g, ids: gi });
+  }
+  return out;
+}
+
 /* topics/content-pipeline.js -- FOUNDATION include wrapper: the topic-1 bundle.
    identity + 9 per-pane data slices + the cross-pane bank, THEN register (which seeds
    the working-set globals as the first topic). Loaded after the drill data globals and
@@ -1155,6 +1190,7 @@ var TOPIC_CP_IDENTITY = {
   index: 1,
   total: 8,
   locatorTail: 'ingestion layer',
+  group: 'architecture-apis',
   title: 'Content Pipeline',
   h1: 'Content Pipeline',
   sub: '<b>Mechanics</b> &rarr; <b>graded follow-up chains</b> &rarr; <b>whiteboard</b> &rarr; <b>zoom out</b> to where this sits in the whole system, and the pivots an interviewer rides into the next topic.',
@@ -1968,6 +2004,7 @@ var TOPIC_SIGN_IDENTITY = {
   index: 2,
   total: 8,
   locatorTail: 'trust boundary',
+  group: 'security-tenancy',
   title: 'Package Signing',
   h1: 'Package Signing',
   sub: '<b>The signing flow</b> &rarr; <b>graded follow-up chains</b> &rarr; <b>whiteboard</b> &rarr; <b>zoom out</b> to where the trust boundary sits, and the pivots an interviewer rides from a signature into keys, HSMs, and the device.',
@@ -2768,6 +2805,7 @@ var TOPIC_AUTHZ_IDENTITY = {
   index: 3,
   total: 8,
   locatorTail: 'access boundary',
+  group: 'security-tenancy',
   title: 'Tenant Authorization',
   h1: 'Tenant Authorization',
   sub: '<b>The authorization flow</b> &rarr; <b>graded follow-up chains</b> &rarr; <b>whiteboard</b> &rarr; <b>zoom out</b> to where the access boundary sits, and the pivots an interviewer rides from a token into predicates, isolation models, and the confused-deputy attack.',
@@ -3560,6 +3598,7 @@ var TOPIC_AWSHARD_IDENTITY = {
   index: 4,
   total: 8,
   locatorTail: 'storage boundary',
+  group: 'platform-infra',
   title: 'AWS Hardening',
   h1: 'AWS Hardening',
   sub: '<b>The hardening flow</b> &rarr; <b>graded follow-up chains</b> &rarr; <b>whiteboard</b> &rarr; <b>zoom out</b> to where the storage boundary sits, and the pivots an interviewer rides from a bucket into IAM, KMS, and the edge.',
@@ -4363,6 +4402,7 @@ var TOPIC_NOTIF_IDENTITY = {
   index: 5,
   total: 8,
   locatorTail: 'delivery boundary',
+  group: 'messaging-events',
   title: 'Notifications',
   h1: 'Notifications',
   sub: '<b>The delivery flow</b> &rarr; <b>graded follow-up chains</b> &rarr; <b>whiteboard</b> &rarr; <b>zoom out</b> to where the delivery boundary sits, and the pivots an interviewer rides from a notification into channels, idempotency, and fallback.',
@@ -5165,6 +5205,7 @@ var TOPIC_EAV_IDENTITY = {
   index: 6,
   total: 8,
   locatorTail: 'attribute boundary',
+  group: 'data-storage',
   title: 'Attribute Store',
   h1: 'Attribute Store',
   sub: '<b>The attribute flow</b> &rarr; <b>graded follow-up chains</b> &rarr; <b>whiteboard</b> &rarr; <b>zoom out</b> to where the attribute boundary sits, and the pivots an interviewer rides from a flexible attribute into typing, resolution, and the EAV tax.',
@@ -6000,6 +6041,7 @@ var TOPIC_DS_IDENTITY = {
   index: 7,
   total: 8,
   locatorTail: 'convergence boundary',
+  group: 'platform-infra',
   title: 'Desired State',
   h1: 'Desired State',
   sub: '<b>The reconciliation loop</b> &rarr; <b>graded follow-up chains</b> &rarr; <b>whiteboard</b> &rarr; <b>zoom out</b> to where the convergence boundary sits, and the pivots an interviewer rides from a drift check into hashing, hierarchical resolution, and the lock.',
@@ -6840,6 +6882,7 @@ var TOPIC_IAC_IDENTITY = {
   index: 8,
   total: 8,
   locatorTail: 'provisioning boundary',
+  group: 'platform-infra',
   title: 'Infrastructure as Code',
   h1: 'Infrastructure as Code',
   sub: '<b>The provision loop</b> &rarr; <b>graded follow-up chains</b> &rarr; <b>whiteboard</b> &rarr; <b>zoom out</b> to where the provisioning boundary sits, and the pivots an interviewer rides from a plan/apply question into state, locking, drift, and abstraction levels.',
@@ -10678,14 +10721,21 @@ customElements.define('deep-session', DeepSession);
       nav.hidden = false;
       var cur = TopicRegistry.current();
       current.textContent = cur ? cur.identity.title.replace(/&mdash;/g, '\u2014') : '';
-      menu.innerHTML = ids.map(function (id) {
+      function tnItem(id) {
         var t = TopicRegistry.get(id), on = !!(cur && cur.id === id), idn = t.identity;
         return '<button class="tn-item' + (on ? ' on' : '') + '" role="menuitem" type="button"' +
           ' data-topic="' + esc(id) + '"' + (on ? ' aria-current="true"' : '') + '>' +
-          '<span class="tn-i-idx">' + esc(idn.index) + '</span>' +
           '<span class="tn-i-name">' + esc(idn.title) + '</span>' +
           '<span class="tn-i-tail">' + esc(idn.locatorTail) + '</span></button>';
-      }).join('');
+      }
+      var buckets = (typeof groupedTopicIds === 'function') ? groupedTopicIds() : null;
+      if (buckets && buckets.length) {
+        menu.innerHTML = buckets.map(function (b) {
+          return '<div class="tn-group" role="presentation">' + b.group.label + '</div>' + b.ids.map(tnItem).join('');
+        }).join('');
+      } else {
+        menu.innerHTML = ids.map(tnItem).join('');
+      }
     }
     function open() { menu.hidden = false; trigger.setAttribute('aria-expanded', 'true'); nav.classList.add('tn-open'); }
     function close() { menu.hidden = true; trigger.setAttribute('aria-expanded', 'false'); nav.classList.remove('tn-open'); }

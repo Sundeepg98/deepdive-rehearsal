@@ -9,6 +9,7 @@ var TOPIC_AUTHZ_IDENTITY = {
   index: 3,
   total: 8,
   locatorTail: 'access boundary',
+  group: 'security-tenancy',
   title: 'Tenant Authorization',
   h1: 'Tenant Authorization',
   sub: '<b>The authorization flow</b> &rarr; <b>graded follow-up chains</b> &rarr; <b>whiteboard</b> &rarr; <b>zoom out</b> to where the access boundary sits, and the pivots an interviewer rides from a token into predicates, isolation models, and the confused-deputy attack.',

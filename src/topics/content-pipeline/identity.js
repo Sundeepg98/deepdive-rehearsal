@@ -10,6 +10,7 @@ var TOPIC_CP_IDENTITY = {
   index: 1,
   total: 8,
   locatorTail: 'ingestion layer',
+  group: 'architecture-apis',
   title: 'Content Pipeline',
   h1: 'Content Pipeline',
   sub: '<b>Mechanics</b> &rarr; <b>graded follow-up chains</b> &rarr; <b>whiteboard</b> &rarr; <b>zoom out</b> to where this sits in the whole system, and the pivots an interviewer rides into the next topic.',

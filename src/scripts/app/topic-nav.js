@@ -23,14 +23,21 @@
       nav.hidden = false;
       var cur = TopicRegistry.current();
       current.textContent = cur ? cur.identity.title.replace(/&mdash;/g, '\u2014') : '';
-      menu.innerHTML = ids.map(function (id) {
+      function tnItem(id) {
         var t = TopicRegistry.get(id), on = !!(cur && cur.id === id), idn = t.identity;
         return '<button class="tn-item' + (on ? ' on' : '') + '" role="menuitem" type="button"' +
           ' data-topic="' + esc(id) + '"' + (on ? ' aria-current="true"' : '') + '>' +
-          '<span class="tn-i-idx">' + esc(idn.index) + '</span>' +
           '<span class="tn-i-name">' + esc(idn.title) + '</span>' +
           '<span class="tn-i-tail">' + esc(idn.locatorTail) + '</span></button>';
-      }).join('');
+      }
+      var buckets = (typeof groupedTopicIds === 'function') ? groupedTopicIds() : null;
+      if (buckets && buckets.length) {
+        menu.innerHTML = buckets.map(function (b) {
+          return '<div class="tn-group" role="presentation">' + b.group.label + '</div>' + b.ids.map(tnItem).join('');
+        }).join('');
+      } else {
+        menu.innerHTML = ids.map(tnItem).join('');
+      }
     }
     function open() { menu.hidden = false; trigger.setAttribute('aria-expanded', 'true'); nav.classList.add('tn-open'); }
     function close() { menu.hidden = true; trigger.setAttribute('aria-expanded', 'false'); nav.classList.remove('tn-open'); }

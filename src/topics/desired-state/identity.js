@@ -10,6 +10,7 @@ var TOPIC_DS_IDENTITY = {
   index: 7,
   total: 8,
   locatorTail: 'convergence boundary',
+  group: 'platform-infra',
   title: 'Desired State',
   h1: 'Desired State',
   sub: '<b>The reconciliation loop</b> &rarr; <b>graded follow-up chains</b> &rarr; <b>whiteboard</b> &rarr; <b>zoom out</b> to where the convergence boundary sits, and the pivots an interviewer rides from a drift check into hashing, hierarchical resolution, and the lock.',

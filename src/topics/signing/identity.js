@@ -8,6 +8,7 @@ var TOPIC_SIGN_IDENTITY = {
   index: 2,
   total: 8,
   locatorTail: 'trust boundary',
+  group: 'security-tenancy',
   title: 'Package Signing',
   h1: 'Package Signing',
   sub: '<b>The signing flow</b> &rarr; <b>graded follow-up chains</b> &rarr; <b>whiteboard</b> &rarr; <b>zoom out</b> to where the trust boundary sits, and the pivots an interviewer rides from a signature into keys, HSMs, and the device.',

@@ -9,6 +9,7 @@ var TOPIC_IAC_IDENTITY = {
   index: 8,
   total: 8,
   locatorTail: 'provisioning boundary',
+  group: 'platform-infra',
   title: 'Infrastructure as Code',
   h1: 'Infrastructure as Code',
   sub: '<b>The provision loop</b> &rarr; <b>graded follow-up chains</b> &rarr; <b>whiteboard</b> &rarr; <b>zoom out</b> to where the provisioning boundary sits, and the pivots an interviewer rides from a plan/apply question into state, locking, drift, and abstraction levels.',

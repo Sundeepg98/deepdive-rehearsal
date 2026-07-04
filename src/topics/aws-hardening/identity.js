@@ -9,6 +9,7 @@ var TOPIC_AWSHARD_IDENTITY = {
   index: 4,
   total: 8,
   locatorTail: 'storage boundary',
+  group: 'platform-infra',
   title: 'AWS Hardening',
   h1: 'AWS Hardening',
   sub: '<b>The hardening flow</b> &rarr; <b>graded follow-up chains</b> &rarr; <b>whiteboard</b> &rarr; <b>zoom out</b> to where the storage boundary sits, and the pivots an interviewer rides from a bucket into IAM, KMS, and the edge.',

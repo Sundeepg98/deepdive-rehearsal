@@ -9,6 +9,7 @@ var TOPIC_NOTIF_IDENTITY = {
   index: 5,
   total: 8,
   locatorTail: 'delivery boundary',
+  group: 'messaging-events',
   title: 'Notifications',
   h1: 'Notifications',
   sub: '<b>The delivery flow</b> &rarr; <b>graded follow-up chains</b> &rarr; <b>whiteboard</b> &rarr; <b>zoom out</b> to where the delivery boundary sits, and the pivots an interviewer rides from a notification into channels, idempotency, and fallback.',

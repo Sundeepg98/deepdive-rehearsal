@@ -10,6 +10,7 @@ var TOPIC_EAV_IDENTITY = {
   index: 6,
   total: 8,
   locatorTail: 'attribute boundary',
+  group: 'data-storage',
   title: 'Attribute Store',
   h1: 'Attribute Store',
   sub: '<b>The attribute flow</b> &rarr; <b>graded follow-up chains</b> &rarr; <b>whiteboard</b> &rarr; <b>zoom out</b> to where the attribute boundary sits, and the pivots an interviewer rides from a flexible attribute into typing, resolution, and the EAV tax.',

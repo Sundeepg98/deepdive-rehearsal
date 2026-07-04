@@ -34,4 +34,5 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;background:var(--
 .card:hover{transform:none}
 .card:hover::after{opacity:0}
 }
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 `);

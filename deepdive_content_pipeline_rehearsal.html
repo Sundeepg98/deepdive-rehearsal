@@ -912,6 +912,7 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;background:var(--
 .card:hover{transform:none}
 .card:hover::after{opacity:0}
 }
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 `);
 
 /* ===== shared content stylesheet: the .cs-* "scope / game-plan / cram" family =====
@@ -1114,7 +1115,9 @@ function afterTopicSwap(t) {
   var st = document.querySelector('.stage'); if (st) st.scrollTop = 0;
   var head = document.getElementById('stagehead');
   if (head) { try { head.setAttribute('tabindex', '-1'); head.focus({ preventScroll: true }); } catch (e) {} }
-  if (window.ViewManager && ViewManager.announce) ViewManager.announce('Topic ' + t.identity.index + ': ' + t.identity.h1);
+  var _grp = '';
+  if (typeof TOPIC_GROUPS !== 'undefined' && t.identity.group) { for (var _ai = 0; _ai < TOPIC_GROUPS.length; _ai++) { if (TOPIC_GROUPS[_ai].id === t.identity.group) { _grp = TOPIC_GROUPS[_ai].label.replace(/&amp;/g, '&'); break; } } }
+  if (window.ViewManager && ViewManager.announce) ViewManager.announce((_grp ? _grp + ': ' : '') + t.identity.h1);
 }
 
 var TopicRegistry = (function () {
@@ -10814,7 +10817,7 @@ customElements.define('deep-session', DeepSession);
       var buckets = (typeof groupedTopicIds === 'function') ? groupedTopicIds() : null;
       if (buckets && buckets.length) {
         menu.innerHTML = buckets.map(function (b) {
-          return '<div class="tn-group" role="presentation"><span class="tn-g-dot" style="background:' + (b.group.color || 'var(--mut2)') + '"></span>' + b.group.label + '</div>' + b.ids.map(tnItem).join('');
+          return '<div class="tn-group" role="presentation"><span class="tn-g-dot" style="background:' + (b.group.color || 'var(--mut2)') + '"></span>' + b.group.label + '</div>' + '<div role="group" aria-label="' + b.group.label + '">' + b.ids.map(tnItem).join('') + '</div>';
         }).join('');
       } else {
         menu.innerHTML = ids.map(tnItem).join('');
@@ -10869,7 +10872,7 @@ customElements.define('deep-session', DeepSession);
   'use strict';
 
   var overlayEl = null, inputEl = null, resultsEl = null;
-  var isOpen = false, selectedIndex = -1, allResults = [], TOPIC_INDEX = [];
+  var isOpen = false, selectedIndex = -1, allResults = [], TOPIC_INDEX = [], hideTimer = null;
 
   /* search index: one entry per surface */
   var MODULES = [
@@ -11129,6 +11132,7 @@ customElements.define('deep-session', DeepSession);
 
   function open() {
     if (isOpen) return;
+    if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
     createElements();
     TOPIC_INDEX = buildTopicIndex();
     isOpen = true;
@@ -11147,7 +11151,7 @@ customElements.define('deep-session', DeepSession);
     isOpen = false;
     overlayEl.style.opacity = '0';
     overlayEl.firstElementChild.style.transform = 'scale(.96) translateY(10px)';
-    setTimeout(function () { overlayEl.style.display = 'none'; }, 250);
+    hideTimer = setTimeout(function () { overlayEl.style.display = 'none'; hideTimer = null; }, 250);
   }
 
   document.addEventListener('keydown', function (e) {
@@ -11169,7 +11173,7 @@ customElements.define('deep-session', DeepSession);
    no network, storage, or permission calls. */
 (function () {
   'use strict';
-  var overlayEl = null, isOpen = false;
+  var overlayEl = null, isOpen = false, hideTimer = null;
 
   function thesisText(t) { return String(t == null ? '' : t).replace(/<[^>]+>/g, ''); }
 
@@ -11250,6 +11254,7 @@ customElements.define('deep-session', DeepSession);
 
   function open() {
     if (isOpen) return;
+    if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
     create();
     overlayEl.innerHTML = panelHtml();
     isOpen = true;
@@ -11265,7 +11270,7 @@ customElements.define('deep-session', DeepSession);
     if (!isOpen) return;
     isOpen = false;
     overlayEl.classList.remove('vis');
-    setTimeout(function () { if (overlayEl) overlayEl.classList.remove('open'); }, 220);
+    hideTimer = setTimeout(function () { if (overlayEl) overlayEl.classList.remove('open'); hideTimer = null; }, 220);
   }
 
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && isOpen) close(); });

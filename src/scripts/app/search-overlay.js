@@ -13,7 +13,7 @@
   'use strict';
 
   var overlayEl = null, inputEl = null, resultsEl = null;
-  var isOpen = false, selectedIndex = -1, allResults = [], TOPIC_INDEX = [];
+  var isOpen = false, selectedIndex = -1, allResults = [], TOPIC_INDEX = [], hideTimer = null;
 
   /* search index: one entry per surface */
   var MODULES = [
@@ -273,6 +273,7 @@
 
   function open() {
     if (isOpen) return;
+    if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
     createElements();
     TOPIC_INDEX = buildTopicIndex();
     isOpen = true;
@@ -291,7 +292,7 @@
     isOpen = false;
     overlayEl.style.opacity = '0';
     overlayEl.firstElementChild.style.transform = 'scale(.96) translateY(10px)';
-    setTimeout(function () { overlayEl.style.display = 'none'; }, 250);
+    hideTimer = setTimeout(function () { overlayEl.style.display = 'none'; hideTimer = null; }, 250);
   }
 
   document.addEventListener('keydown', function (e) {

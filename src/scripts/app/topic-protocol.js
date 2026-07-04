@@ -76,7 +76,9 @@ function afterTopicSwap(t) {
   var st = document.querySelector('.stage'); if (st) st.scrollTop = 0;
   var head = document.getElementById('stagehead');
   if (head) { try { head.setAttribute('tabindex', '-1'); head.focus({ preventScroll: true }); } catch (e) {} }
-  if (window.ViewManager && ViewManager.announce) ViewManager.announce('Topic ' + t.identity.index + ': ' + t.identity.h1);
+  var _grp = '';
+  if (typeof TOPIC_GROUPS !== 'undefined' && t.identity.group) { for (var _ai = 0; _ai < TOPIC_GROUPS.length; _ai++) { if (TOPIC_GROUPS[_ai].id === t.identity.group) { _grp = TOPIC_GROUPS[_ai].label.replace(/&amp;/g, '&'); break; } } }
+  if (window.ViewManager && ViewManager.announce) ViewManager.announce((_grp ? _grp + ': ' : '') + t.identity.h1);
 }
 
 var TopicRegistry = (function () {

@@ -8,7 +8,7 @@
    no network, storage, or permission calls. */
 (function () {
   'use strict';
-  var overlayEl = null, isOpen = false;
+  var overlayEl = null, isOpen = false, hideTimer = null;
 
   function thesisText(t) { return String(t == null ? '' : t).replace(/<[^>]+>/g, ''); }
 
@@ -89,6 +89,7 @@
 
   function open() {
     if (isOpen) return;
+    if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
     create();
     overlayEl.innerHTML = panelHtml();
     isOpen = true;
@@ -104,7 +105,7 @@
     if (!isOpen) return;
     isOpen = false;
     overlayEl.classList.remove('vis');
-    setTimeout(function () { if (overlayEl) overlayEl.classList.remove('open'); }, 220);
+    hideTimer = setTimeout(function () { if (overlayEl) overlayEl.classList.remove('open'); hideTimer = null; }, 220);
   }
 
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && isOpen) close(); });

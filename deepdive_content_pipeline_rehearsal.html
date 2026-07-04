@@ -161,6 +161,7 @@ button:focus-visible,.dn-step:focus-visible,.pill:focus-visible{outline:2px soli
 
   /* mock run */
   .mockbar{display:flex;flex-direction:column;gap:8px;margin:0 0 16px}
+.mb-sep{height:1px;background:var(--bd);opacity:.5;margin:2px 8px;flex:0 0 auto}
   .mockbtn{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;font:750 13.5px -apple-system,sans-serif;letter-spacing:.2px;padding:14px 16px;border-radius:13px;border:0;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;cursor:pointer;transition:transform .2s cubic-bezier(.22,.61,.36,1),box-shadow .25s ease;box-shadow:0 6px 18px rgba(83,74,183,.30),inset 0 1px 0 rgba(255,255,255,.14);position:relative;overflow:hidden}
 .mockbtn::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);transform:translateX(-100%);transition:none}
 .mockbtn:hover::after{animation:btnShimmer .6s ease}
@@ -702,7 +703,7 @@ try{var _dk=matchMedia('(prefers-color-scheme:dark)').matches;document.documentE
     <div class="kbd-hint">Keyboard: <kbd>&larr;</kbd><kbd>&rarr;</kbd> steps &middot; <kbd>Q</kbd>&ndash;<kbd>O</kbd> tabs &middot; <kbd>[</kbd><kbd>]</kbd> topic &middot; <kbd>/</kbd> search</div>
   </div>
 
-  <nav class="topic-nav" id="topicnav" aria-label="Switch topic" hidden><button class="tn-step" id="tnprev" type="button" aria-label="Previous topic">&#8249;</button><button class="tn-trigger" id="tntrigger" type="button" aria-haspopup="menu" aria-expanded="false"><span class="tn-eyebrow">Rehearsing</span><span class="tn-current" id="tncurrent">&mdash;</span><span class="tn-chev" aria-hidden="true">&#9662;</span></button><button class="tn-step" id="tnnext" type="button" aria-label="Next topic">&#8250;</button><div class="tn-menu" id="tnmenu" role="menu" hidden></div></nav><button class="tools-fab" id="toolsfab" type="button">Tools</button></div><div class="tools-bd" id="toolsbd" aria-hidden="true"></div><div class="mockbar"><button class="mockbtn" id="mockopen" type="button"><span class="mb-ic">&#9654;</span><span class="mb-lbl">Mock run &mdash; the full round, on the clock</span></button><button class="inttog" id="inttog" type="button" aria-pressed="false"><span class="inttog-dot"></span><span class="inttog-lbl">Interviewer cuts in mid-answer &mdash; <b>off</b></span></button><button class="crambtn" id="idxopen" type="button"><span class="mb-tx"><span class="mb-t">Topic index</span><span class="mb-d"> &mdash; all topics across the six groups</span></span></button><button class="crambtn" id="searchopen" type="button"><span class="mb-tx"><span class="mb-t">Search</span><span class="mb-d"> &mdash; jump to any topic or view by name or concept</span></span></button><button class="crambtn" id="cramopen" type="button"><span class="mb-tx"><span class="mb-t">One-page cram sheet</span><span class="mb-d"> &mdash; everything that matters, on a card</span></span></button><button class="crambtn" id="sessopen" type="button"><span class="mb-tx"><span class="mb-t">Session progress</span><span class="mb-d"> &mdash; where you&rsquo;re weak, what to drill next</span></span></button><button class="crambtn" id="mixopen" type="button"><span class="mb-tx"><span class="mb-t">Mixed fire</span><span class="mb-d"> &mdash; probes &amp; curveballs in random order</span></span></button><button class="crambtn" id="planopen" type="button"><span class="mb-tx"><span class="mb-t">Game plan</span><span class="mb-d"> &mdash; how to rehearse with this over a week</span></span></button><button class="crambtn" id="scopeopen" type="button"><span class="mb-tx"><span class="mb-t">Scope it first</span><span class="mb-d"> &mdash; the clarifying questions before you design</span></span></button><button class="crambtn kbd-only" id="keyopen" type="button"><span class="mb-tx"><span class="mb-t">Keyboard shortcuts</span><span class="mb-d"> &mdash; jump views, drive it by key</span></span></button><button class="crambtn cram-tog" id="themetog" type="button" aria-pressed="false"><span class="mb-ic">&#9789;</span>Dark mode &mdash; <b class="tt-state">off</b></button></div>
+  <nav class="topic-nav" id="topicnav" aria-label="Switch topic" hidden><button class="tn-step" id="tnprev" type="button" aria-label="Previous topic">&#8249;</button><button class="tn-trigger" id="tntrigger" type="button" aria-haspopup="menu" aria-expanded="false"><span class="tn-eyebrow">Rehearsing</span><span class="tn-current" id="tncurrent">&mdash;</span><span class="tn-chev" aria-hidden="true">&#9662;</span></button><button class="tn-step" id="tnnext" type="button" aria-label="Next topic">&#8250;</button><div class="tn-menu" id="tnmenu" role="menu" hidden></div></nav><button class="tools-fab" id="toolsfab" type="button">Tools</button></div><div class="tools-bd" id="toolsbd" aria-hidden="true"></div><div class="mockbar"><button class="mockbtn" id="mockopen" type="button"><span class="mb-ic">&#9654;</span><span class="mb-lbl">Mock run &mdash; the full round, on the clock</span></button><button class="inttog" id="inttog" type="button" aria-pressed="false"><span class="inttog-dot"></span><span class="inttog-lbl">Interviewer cuts in mid-answer &mdash; <b>off</b></span></button><button class="crambtn" id="idxopen" type="button"><span class="mb-tx"><span class="mb-t">Topic index</span><span class="mb-d"> &mdash; all topics across the six groups</span></span></button><button class="crambtn" id="searchopen" type="button"><span class="mb-tx"><span class="mb-t">Search</span><span class="mb-d"> &mdash; jump to any topic or view by name or concept</span></span></button><div class="mb-sep" aria-hidden="true"></div><button class="crambtn" id="cramopen" type="button"><span class="mb-tx"><span class="mb-t">One-page cram sheet</span><span class="mb-d"> &mdash; everything that matters, on a card</span></span></button><button class="crambtn" id="sessopen" type="button"><span class="mb-tx"><span class="mb-t">Session progress</span><span class="mb-d"> &mdash; where you&rsquo;re weak, what to drill next</span></span></button><button class="crambtn" id="mixopen" type="button"><span class="mb-tx"><span class="mb-t">Mixed fire</span><span class="mb-d"> &mdash; probes &amp; curveballs in random order</span></span></button><button class="crambtn" id="planopen" type="button"><span class="mb-tx"><span class="mb-t">Game plan</span><span class="mb-d"> &mdash; how to rehearse with this over a week</span></span></button><button class="crambtn" id="scopeopen" type="button"><span class="mb-tx"><span class="mb-t">Scope it first</span><span class="mb-d"> &mdash; the clarifying questions before you design</span></span></button><button class="crambtn kbd-only" id="keyopen" type="button"><span class="mb-tx"><span class="mb-t">Keyboard shortcuts</span><span class="mb-d"> &mdash; jump views, drive it by key</span></span></button><button class="crambtn cram-tog" id="themetog" type="button" aria-pressed="false"><span class="mb-ic">&#9789;</span>Dark mode &mdash; <b class="tt-state">off</b></button></div>
 
   <div class="seg" role="group" aria-label="Rehearsal sections">
     <button type="button" class="on" data-tab="walk"><span>Walkthrough</span><span class="n">MECHANICS</span></button>
@@ -11141,6 +11142,7 @@ customElements.define('deep-session', DeepSession);
   function open() {
     if (isOpen) return;
     if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
+    if (!isOpen) _returnFocus = document.activeElement;   /* remember trigger for focus-restore */
     createElements();
     ensureTopicIndex();
     isOpen = true;
@@ -11154,17 +11156,29 @@ customElements.define('deep-session', DeepSession);
     renderResults([]);
   }
 
+  var _returnFocus = null;
   function close() {
     if (!isOpen) return;
     isOpen = false;
     overlayEl.style.opacity = '0';
     overlayEl.firstElementChild.style.transform = 'scale(.96) translateY(10px)';
     hideTimer = setTimeout(function () { overlayEl.style.display = 'none'; hideTimer = null; }, 250);
+    if (_returnFocus && _returnFocus.focus) { try { _returnFocus.focus(); } catch (e) {} }
+    _returnFocus = null;
   }
 
   document.addEventListener('keydown', function (e) {
     if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) { e.preventDefault(); open(); }
     else if (e.key === 'Escape' && isOpen) { close(); }
+    else if (e.key === 'Tab' && isOpen) {
+      var _f = overlayEl.querySelectorAll('button,[href],input,textarea,select,[tabindex]:not([tabindex="-1"])');
+      _f = Array.prototype.filter.call(_f, function (el) { return !el.disabled && el.offsetParent !== null; });
+      if (!_f.length) { e.preventDefault(); return; }
+      var _first = _f[0], _last = _f[_f.length - 1], _a = document.activeElement;
+      if (!overlayEl.contains(_a)) { e.preventDefault(); _first.focus(); }
+      else if (e.shiftKey && _a === _first) { e.preventDefault(); _last.focus(); }
+      else if (!e.shiftKey && _a === _last) { e.preventDefault(); _first.focus(); }
+    }
   });
 
   (function () { var sb = document.getElementById('searchopen'); if (sb) sb.addEventListener('click', function () { open(); }); })();

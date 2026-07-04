@@ -1454,6 +1454,7 @@ function groupedTopicIds() {
 var Progress = (function () {
   var N = 'progress.';
   var SKN = 'shakymark.';
+  var WBN = 'wbprog.';
   function pkey(id) { return N + id; }
   function curId() { return (typeof TopicRegistry !== 'undefined' && TopicRegistry.current()) ? TopicRegistry.current().id : null; }
   function drillOf() { return document.querySelector('#drill deep-drill'); }
@@ -1465,6 +1466,23 @@ var Progress = (function () {
   function markShaky(id) { if (!id) return; Store.set(skkey(id), (Store.get(skkey(id), 0) || 0) + 1); }
   function shakyMarks(id) { return Store.get(skkey(id), 0) || 0; }
   function clearShaky(id) { Store.remove(skkey(id)); }
+
+  /* Whiteboard recall -- a distinct readiness signal from drilling: can you
+     reconstruct the whole design from blank? Own namespace, snapshotted per topic
+     on each whiteboard grade. */
+  function wbkey(id) { return WBN + id; }
+  function wbOf() { return document.querySelector('#wb deep-whiteboard'); }
+  function snapshotWb() {
+    var id = curId(), w = wbOf();
+    if (!id || !w || !w.getStats) return;
+    var st = w.getStats();
+    if (!st || !st.total) return;
+    var got = 0, missed = 0;
+    for (var i = 0; i < st.items.length; i++) { if (st.items[i].got) got++; else if (st.items[i].missed) missed++; }
+    Store.set(wbkey(id), { got: got, missed: missed, total: st.total, ts: Date.now() });
+  }
+  function wbGet(id) { return Store.get(wbkey(id), null); }
+  function clearWb(id) { Store.remove(wbkey(id)); }
 
   function snapshot() {
     var id = curId(), d = drillOf();
@@ -1480,8 +1498,8 @@ var Progress = (function () {
     for (var i = 0; i < ks.length; i++) out[ks[i].slice(N.length)] = Store.get(ks[i], null);
     return out;
   }
-  function clear(id) { Store.remove(pkey(id)); clearShaky(id); }
-  function clearAll() { var ks = Store.keys(N); for (var i = 0; i < ks.length; i++) Store.remove(ks[i]); var sk = Store.keys(SKN); for (var j = 0; j < sk.length; j++) Store.remove(sk[j]); }
+  function clear(id) { Store.remove(pkey(id)); clearShaky(id); clearWb(id); }
+  function clearAll() { var ks = Store.keys(N); for (var i = 0; i < ks.length; i++) Store.remove(ks[i]); var sk = Store.keys(SKN); for (var j = 0; j < sk.length; j++) Store.remove(sk[j]); var wk = Store.keys(WBN); for (var w = 0; w < wk.length; w++) Store.remove(wk[w]); }
 
   /* 'untouched' | 'in-progress' | 'weak' | 'solid' */
   function status(id) {
@@ -1511,11 +1529,14 @@ var Progress = (function () {
     }
     weakest.sort(function (a, b) { return (b.shk - a.shk) || (b.left - a.left); });
     var overallPct = ids.length ? Math.round(100 * compSum / ids.length) : 0;
-    return { topics: topics, byGroup: byGroup, weakest: weakest, totDone: totDone, totTot: totTot, totWeak: totWeak, touched: touched, nTopics: ids.length, overallPct: overallPct };
+    var wbRecalled = 0;
+    for (var wi = 0; wi < ids.length; wi++) { var wb = wbGet(ids[wi]); if (wb && wb.total > 0 && wb.got === wb.total) wbRecalled++; }
+    return { topics: topics, byGroup: byGroup, weakest: weakest, totDone: totDone, totTot: totTot, totWeak: totWeak, touched: touched, nTopics: ids.length, overallPct: overallPct, wbRecalled: wbRecalled };
   }
 
   document.addEventListener('drillgraded', function () { snapshot(); });
-  return { snapshot: snapshot, get: get, all: all, clear: clear, clearAll: clearAll, status: status, summary: summary, markShaky: markShaky, shakyMarks: shakyMarks };
+  document.addEventListener('whiteboardgraded', function () { snapshotWb(); });
+  return { snapshot: snapshot, get: get, all: all, clear: clear, clearAll: clearAll, status: status, summary: summary, markShaky: markShaky, shakyMarks: shakyMarks, wbGet: wbGet, snapshotWb: snapshotWb };
 })();
 window.Progress = Progress;
 
@@ -8924,9 +8945,9 @@ class DeepWhiteboard extends TopicPane {
         li.querySelector('.wb-got').disabled = false;
         li.querySelector('.wb-miss').disabled = false;
       } else if (btn.classList.contains('wb-got')) {
-        li.classList.add('got'); li.classList.remove('missed'); self._updCount();
+        li.classList.add('got'); li.classList.remove('missed'); self._updCount(); self._emitGraded();
       } else if (btn.classList.contains('wb-miss')) {
-        li.classList.add('missed'); li.classList.remove('got'); self._updCount();
+        li.classList.add('missed'); li.classList.remove('got'); self._updCount(); self._emitGraded();
       }
     });
   }
@@ -8986,6 +9007,7 @@ class DeepWhiteboard extends TopicPane {
       firstUngraded.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion:reduce)').matches ? 'auto' : 'smooth', block: 'center' });
     }
   }
+  _emitGraded() { try { this.dispatchEvent(new CustomEvent('whiteboardgraded', { bubbles: true })); } catch (e) {} }
   getStats() {
     const items = this._list.querySelectorAll('li');
     return {
@@ -11936,7 +11958,7 @@ window.Bookmarks = Bookmarks;
     return '<div class="ix-home">' +
       '<div class="ix-home-prog"><div class="ix-home-k">Your progress</div>' +
       '<div class="ix-home-bar"><span style="width:' + pct + '%"></span></div>' +
-      '<div class="ix-home-v">' + pct + '% of the curriculum &middot; ' + sum.totDone + ' probes drilled &middot; ' + sum.touched + ' of ' + sum.nTopics + ' topics started</div></div>' +
+      '<div class="ix-home-v">' + pct + '% of the curriculum &middot; ' + sum.totDone + ' probes drilled &middot; ' + sum.touched + ' of ' + sum.nTopics + ' topics started' + (sum.wbRecalled ? ' &middot; ' + sum.wbRecalled + ' with the design recalled' : '') + '</div></div>' +
       (rt ? '<button class="ix-home-btn" type="button" ' + (resumeHash ? 'data-hash="' + resumeHash + '"' : 'data-topic="' + resumeId + '"') + '><span class="ix-home-btn-k">Resume</span>' + rt.identity.title + ' &rarr;</button>' : '') +
       (weak ? '<div class="ix-weak"><div class="ix-home-k">Revisit</div><div class="ix-weak-list">' + weak + '</div>' + conceptsHtml + '</div>' : '') +
       '</div>';

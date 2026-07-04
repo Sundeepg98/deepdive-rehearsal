@@ -7,6 +7,7 @@
 var Progress = (function () {
   var N = 'progress.';
   var SKN = 'shakymark.';
+  var WBN = 'wbprog.';
   function pkey(id) { return N + id; }
   function curId() { return (typeof TopicRegistry !== 'undefined' && TopicRegistry.current()) ? TopicRegistry.current().id : null; }
   function drillOf() { return document.querySelector('#drill deep-drill'); }
@@ -18,6 +19,23 @@ var Progress = (function () {
   function markShaky(id) { if (!id) return; Store.set(skkey(id), (Store.get(skkey(id), 0) || 0) + 1); }
   function shakyMarks(id) { return Store.get(skkey(id), 0) || 0; }
   function clearShaky(id) { Store.remove(skkey(id)); }
+
+  /* Whiteboard recall -- a distinct readiness signal from drilling: can you
+     reconstruct the whole design from blank? Own namespace, snapshotted per topic
+     on each whiteboard grade. */
+  function wbkey(id) { return WBN + id; }
+  function wbOf() { return document.querySelector('#wb deep-whiteboard'); }
+  function snapshotWb() {
+    var id = curId(), w = wbOf();
+    if (!id || !w || !w.getStats) return;
+    var st = w.getStats();
+    if (!st || !st.total) return;
+    var got = 0, missed = 0;
+    for (var i = 0; i < st.items.length; i++) { if (st.items[i].got) got++; else if (st.items[i].missed) missed++; }
+    Store.set(wbkey(id), { got: got, missed: missed, total: st.total, ts: Date.now() });
+  }
+  function wbGet(id) { return Store.get(wbkey(id), null); }
+  function clearWb(id) { Store.remove(wbkey(id)); }
 
   function snapshot() {
     var id = curId(), d = drillOf();
@@ -33,8 +51,8 @@ var Progress = (function () {
     for (var i = 0; i < ks.length; i++) out[ks[i].slice(N.length)] = Store.get(ks[i], null);
     return out;
   }
-  function clear(id) { Store.remove(pkey(id)); clearShaky(id); }
-  function clearAll() { var ks = Store.keys(N); for (var i = 0; i < ks.length; i++) Store.remove(ks[i]); var sk = Store.keys(SKN); for (var j = 0; j < sk.length; j++) Store.remove(sk[j]); }
+  function clear(id) { Store.remove(pkey(id)); clearShaky(id); clearWb(id); }
+  function clearAll() { var ks = Store.keys(N); for (var i = 0; i < ks.length; i++) Store.remove(ks[i]); var sk = Store.keys(SKN); for (var j = 0; j < sk.length; j++) Store.remove(sk[j]); var wk = Store.keys(WBN); for (var w = 0; w < wk.length; w++) Store.remove(wk[w]); }
 
   /* 'untouched' | 'in-progress' | 'weak' | 'solid' */
   function status(id) {
@@ -64,10 +82,13 @@ var Progress = (function () {
     }
     weakest.sort(function (a, b) { return (b.shk - a.shk) || (b.left - a.left); });
     var overallPct = ids.length ? Math.round(100 * compSum / ids.length) : 0;
-    return { topics: topics, byGroup: byGroup, weakest: weakest, totDone: totDone, totTot: totTot, totWeak: totWeak, touched: touched, nTopics: ids.length, overallPct: overallPct };
+    var wbRecalled = 0;
+    for (var wi = 0; wi < ids.length; wi++) { var wb = wbGet(ids[wi]); if (wb && wb.total > 0 && wb.got === wb.total) wbRecalled++; }
+    return { topics: topics, byGroup: byGroup, weakest: weakest, totDone: totDone, totTot: totTot, totWeak: totWeak, touched: touched, nTopics: ids.length, overallPct: overallPct, wbRecalled: wbRecalled };
   }
 
   document.addEventListener('drillgraded', function () { snapshot(); });
-  return { snapshot: snapshot, get: get, all: all, clear: clear, clearAll: clearAll, status: status, summary: summary, markShaky: markShaky, shakyMarks: shakyMarks };
+  document.addEventListener('whiteboardgraded', function () { snapshotWb(); });
+  return { snapshot: snapshot, get: get, all: all, clear: clear, clearAll: clearAll, status: status, summary: summary, markShaky: markShaky, shakyMarks: shakyMarks, wbGet: wbGet, snapshotWb: snapshotWb };
 })();
 window.Progress = Progress;

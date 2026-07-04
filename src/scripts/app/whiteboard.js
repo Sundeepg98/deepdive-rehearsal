@@ -116,9 +116,9 @@ class DeepWhiteboard extends TopicPane {
         li.querySelector('.wb-got').disabled = false;
         li.querySelector('.wb-miss').disabled = false;
       } else if (btn.classList.contains('wb-got')) {
-        li.classList.add('got'); li.classList.remove('missed'); self._updCount();
+        li.classList.add('got'); li.classList.remove('missed'); self._updCount(); self._emitGraded();
       } else if (btn.classList.contains('wb-miss')) {
-        li.classList.add('missed'); li.classList.remove('got'); self._updCount();
+        li.classList.add('missed'); li.classList.remove('got'); self._updCount(); self._emitGraded();
       }
     });
   }
@@ -178,6 +178,7 @@ class DeepWhiteboard extends TopicPane {
       firstUngraded.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion:reduce)').matches ? 'auto' : 'smooth', block: 'center' });
     }
   }
+  _emitGraded() { try { this.dispatchEvent(new CustomEvent('whiteboardgraded', { bubbles: true })); } catch (e) {} }
   getStats() {
     const items = this._list.querySelectorAll('li');
     return {

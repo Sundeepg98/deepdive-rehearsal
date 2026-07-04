@@ -60,7 +60,7 @@
     return '<div class="ix-home">' +
       '<div class="ix-home-prog"><div class="ix-home-k">Your progress</div>' +
       '<div class="ix-home-bar"><span style="width:' + pct + '%"></span></div>' +
-      '<div class="ix-home-v">' + pct + '% of the curriculum &middot; ' + sum.totDone + ' probes drilled &middot; ' + sum.touched + ' of ' + sum.nTopics + ' topics started</div></div>' +
+      '<div class="ix-home-v">' + pct + '% of the curriculum &middot; ' + sum.totDone + ' probes drilled &middot; ' + sum.touched + ' of ' + sum.nTopics + ' topics started' + (sum.wbRecalled ? ' &middot; ' + sum.wbRecalled + ' with the design recalled' : '') + '</div></div>' +
       (rt ? '<button class="ix-home-btn" type="button" ' + (resumeHash ? 'data-hash="' + resumeHash + '"' : 'data-topic="' + resumeId + '"') + '><span class="ix-home-btn-k">Resume</span>' + rt.identity.title + ' &rarr;</button>' : '') +
       (weak ? '<div class="ix-weak"><div class="ix-home-k">Revisit</div><div class="ix-weak-list">' + weak + '</div>' + conceptsHtml + '</div>' : '') +
       '</div>';

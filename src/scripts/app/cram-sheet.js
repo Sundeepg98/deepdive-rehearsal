@@ -97,6 +97,7 @@ document.getElementById('planx').onclick = closePlan;
     toggleBtn.onclick = function () {
       docEl.dataset.theme = docEl.dataset.theme === 'dark' ? 'light' : 'dark';
       syncThemeButton();
+      if (typeof Store !== 'undefined' && Store.set) Store.set('theme', docEl.dataset.theme);
     };
   }
 })();

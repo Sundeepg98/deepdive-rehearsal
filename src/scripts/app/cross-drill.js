@@ -18,7 +18,7 @@
       if (mode === 'group' && (!t || !t.identity || t.identity.group !== groupId)) continue;
       if (t && t.data && t.data.bank && t.data.bank.cards) {
         var cs = t.data.bank.cards;
-        for (var j = 0; j < cs.length; j++) out.push({ card: cs[j], title: t.identity.title });
+        for (var j = 0; j < cs.length; j++) out.push({ card: cs[j], title: t.identity.title, id: ids[i] });
       }
     }
     return out;
@@ -56,7 +56,7 @@
     el.querySelector('#_xd-got').onclick = function () { grade(true); };
     el.querySelector('#_xd-shk').onclick = function () { grade(false); };
   }
-  function grade(ok) { if (ok) got++; else shk++; idx++; renderItem(); }
+  function grade(ok) { if (ok) got++; else { shk++; var _it = pool[idx]; if (_it && _it.id && typeof Progress !== 'undefined' && Progress.markShaky) Progress.markShaky(_it.id); } idx++; renderItem(); }
   function renderEnd() {
     var pct = pool.length ? Math.round(got / pool.length * 100) : 0;
     body.innerHTML =

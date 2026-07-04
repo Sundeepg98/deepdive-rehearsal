@@ -87,7 +87,7 @@ function renderMix() {
 }
 /* Grade the current mixed-fire item and advance (logs to mxRes + mixLog). */
 function mxJudge(ok) {
-  if (ok) mxGot++; else mxShk++;
+  if (ok) mxGot++; else { mxShk++; try { var _mid = (typeof TopicRegistry !== 'undefined' && TopicRegistry.current()) ? TopicRegistry.current().id : null; if (_mid && typeof Progress !== 'undefined' && Progress.markShaky) Progress.markShaky(_mid); } catch (e) {} }
   mxRes.push({ item: mxPool[mxIdx], ok: ok });
   mixLog.push({ kind: mxPool[mxIdx].kind, label: mxPool[mxIdx].label, ok: ok });
   mxIdx++;

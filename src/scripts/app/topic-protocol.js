@@ -118,7 +118,7 @@ var TopicRegistry = (function () {
     if (window.Router && window.Router.setTopic) window.Router.setTopic(id); /* (6) reflect in hash, silently */
     return true;
   }
-  return { register: register, current: current, get: function (i) { return byId[i]; }, ids: function () { return order.slice(); }, setTopic: setTopic };
+  return { register: register, current: current, get: function (i) { return byId[i]; }, ids: function () { var _a = order.slice(); if (typeof topicOrderIndex === 'function') _a.sort(function (x, y) { return topicOrderIndex(x) - topicOrderIndex(y); }); return _a; }, setTopic: setTopic };
 })();
 
 /* The ONE lifecycle all 9 panes will inherit (Phase 1). In Phase 0 NO pane

@@ -14,7 +14,21 @@ var TOPIC_GROUPS = [
   { id: 'security-tenancy',          label: 'Security &amp; Tenancy',          color: '#dc2626', desc: 'Trust and isolation &mdash; signing, authorization, and keeping tenants apart across the stack.' }
 ];
 
-/* Bucket the registered topic ids by group, in group order then registration order.
+/* The canonical topic sequence (flat order). Group membership lives per-topic
+   (identity.group); THIS array is the single place that defines display / stepping
+   order. Reorder = move an id here. Ids not yet registered are skipped, so the full
+   28-topic order is declared ahead of the build. */
+var TOPIC_ORDER = [
+  /* Messaging & Events    */ 'event-driven', 'cdc', 'job-orchestration', 'feature-flags', 'notifications',
+  /* Data & Storage        */ 'caching', 'eav', 'soft-delete', 'sql-forensics',
+  /* Reliability & Observ. */ 'error-propagation', 'debugging', 'observability', 'otel', 'incident-antipatterns',
+  /* Platform & Infra      */ 'iac', 'platform-engineering', 'lambda', 'desired-state', 'aws-hardening',
+  /* Architecture & APIs   */ 'architecture-audit', 'state-machine', 'content-pipeline', 'rules-engine', 'api-gateway', 'microfrontend',
+  /* Security & Tenancy    */ 'signing', 'multi-tenant', 'authz'
+];
+function topicOrderIndex(id) { var i = TOPIC_ORDER.indexOf(id); return i === -1 ? 1e4 : i; }
+
+/* Bucket the registered topic ids by group, in group order then canonical TOPIC_ORDER.
    Returns [{ group, ids:[...] }] for non-empty groups only. */
 function groupedTopicIds() {
   if (typeof TopicRegistry === 'undefined' || !TopicRegistry.ids) return [];

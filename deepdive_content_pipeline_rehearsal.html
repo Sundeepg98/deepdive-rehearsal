@@ -659,6 +659,13 @@ body.is-hidden,body.is-hidden *,body.is-hidden *::before,body.is-hidden *::after
 .ix-c-name{font-size:13.5px;font-weight:680;color:var(--ink)}
 .ix-card.on .ix-c-name{color:var(--acc)}
 .ix-c-tail{font-size:9.5px;color:var(--mut2);text-transform:uppercase;letter-spacing:.3px;margin-top:3px}
+.ix-c-thesis{font-size:10.5px;color:var(--mut);line-height:1.4;margin-top:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ix-g-desc{font-size:11px;color:var(--mut);line-height:1.4;margin:-4px 0 10px}
+.ix-filter-row{flex:0 0 auto;padding:10px 20px 4px;display:flex;align-items:center;gap:10px}
+.ix-filter{flex:1;font:inherit;font-size:13px;color:var(--ink);background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:9px 13px;outline:none;transition:border-color .14s ease,box-shadow .14s ease}
+.ix-filter:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(83,74,183,.12)}
+.ix-filter::placeholder{color:var(--mut2)}
+.ix-nores{font-size:11px;color:var(--mut2);white-space:nowrap}
 .ix-empty{padding:30px;text-align:center;color:var(--mut);font-size:13px}
 html[data-theme="dark"] .ix-card:hover{background:rgba(170,157,245,.13)}
 html[data-theme="dark"] .tn-trigger:hover{border-color:var(--acc);box-shadow:0 4px 12px rgba(170,157,245,.14)}
@@ -1176,12 +1183,12 @@ class TopicPane extends HTMLElement {
    Adding a topic = tag its identity with one of these group ids; nothing else here
    changes. Offline-safe: pure data + a pure bucketing helper, no network/storage. */
 var TOPIC_GROUPS = [
-  { id: 'messaging-events',          label: 'Messaging &amp; Events' },
-  { id: 'data-storage',              label: 'Data &amp; Storage' },
-  { id: 'reliability-observability', label: 'Reliability &amp; Observability' },
-  { id: 'platform-infra',            label: 'Platform &amp; Infra' },
-  { id: 'architecture-apis',         label: 'Architecture &amp; APIs' },
-  { id: 'security-tenancy',          label: 'Security &amp; Tenancy' }
+  { id: 'messaging-events',          label: 'Messaging &amp; Events',          desc: 'How work moves &mdash; event buses, queues, notifications, scheduling, and config-driven behavior.' },
+  { id: 'data-storage',              label: 'Data &amp; Storage',              desc: 'Modeling, caching, and moving data &mdash; and reading it back correctly under pressure.' },
+  { id: 'reliability-observability', label: 'Reliability &amp; Observability', desc: 'Failing well &mdash; error propagation, debugging, incident anti-patterns, and seeing inside the system.' },
+  { id: 'platform-infra',            label: 'Platform &amp; Infra',            desc: 'The ground it runs on &mdash; provisioning, cloud hardening, serverless, and self-converging platforms.' },
+  { id: 'architecture-apis',         label: 'Architecture &amp; APIs',         desc: 'Shape and edges &mdash; ingestion pipelines, API gateways, service boundaries, and architecture reviews.' },
+  { id: 'security-tenancy',          label: 'Security &amp; Tenancy',          desc: 'Trust and isolation &mdash; signing, authorization, and keeping tenants apart across the stack.' }
 ];
 
 /* Bucket the registered topic ids by group, in group order then registration order.
@@ -11161,6 +11168,27 @@ customElements.define('deep-session', DeepSession);
   'use strict';
   var overlayEl = null, isOpen = false;
 
+  function thesisText(t) { return String(t == null ? '' : t).replace(/<[^>]+>/g, ''); }
+
+  /* live filter: show only cards whose data-filter contains the query, hide empty
+     groups, and toggle the no-match note. Cheap DOM toggling -- no re-render. */
+  function applyFilter(q) {
+    if (!overlayEl) return;
+    q = (q || '').trim().toLowerCase();
+    var groups = overlayEl.querySelectorAll('.ix-group'), anyGlobal = false;
+    for (var i = 0; i < groups.length; i++) {
+      var cards = groups[i].querySelectorAll('.ix-card'), anyG = false;
+      for (var j = 0; j < cards.length; j++) {
+        var match = !q || (cards[j].getAttribute('data-filter') || '').indexOf(q) > -1;
+        cards[j].style.display = match ? '' : 'none';
+        if (match) { anyG = true; anyGlobal = true; }
+      }
+      groups[i].style.display = anyG ? '' : 'none';
+    }
+    var nores = overlayEl.querySelector('.ix-nores');
+    if (nores) nores.hidden = !(q && !anyGlobal);
+  }
+
   function panelHtml() {
     var buckets = (typeof groupedTopicIds === 'function') ? groupedTopicIds() : [];
     var cur = (typeof TopicRegistry !== 'undefined' && TopicRegistry.current) ? TopicRegistry.current() : null;
@@ -11172,19 +11200,26 @@ customElements.define('deep-session', DeepSession);
       buckets.length + ' group' + (buckets.length === 1 ? '' : 's') + '</div></div>' +
       '<button class="ix-x" type="button" aria-label="Close index">&#215;</button></div>';
 
+    var filter = '<div class="ix-filter-row"><input class="ix-filter" type="text" placeholder="Filter topics by name or idea..." aria-label="Filter topics"><span class="ix-nores" hidden>No topics match.</span></div>';
+
     var body = buckets.map(function (b) {
       var cards = b.ids.map(function (id) {
         var t = TopicRegistry.get(id), idn = t.identity, on = (id === curId);
-        return '<button class="ix-card' + (on ? ' on' : '') + '" type="button" data-topic="' + id + '"' +
+        var th = thesisText(idn.thesis || '');
+        var filt = ((idn.title || '') + ' ' + (idn.locatorTail || '') + ' ' + th).toLowerCase().replace(/&[a-z#0-9]+;/g, ' ').replace(/"/g, '');
+        return '<button class="ix-card' + (on ? ' on' : '') + '" type="button" data-topic="' + id + '" data-filter="' + filt + '"' +
           (on ? ' aria-current="true"' : '') + '>' +
           '<span class="ix-c-name">' + idn.title + '</span>' +
-          '<span class="ix-c-tail">' + idn.locatorTail + '</span></button>';
+          '<span class="ix-c-tail">' + idn.locatorTail + '</span>' +
+          (th ? '<span class="ix-c-thesis">' + th + '</span>' : '') + '</button>';
       }).join('');
       return '<section class="ix-group"><div class="ix-g-head">' + b.group.label +
-        ' <span class="ix-g-n">' + b.ids.length + '</span></div><div class="ix-grid">' + cards + '</div></section>';
+        ' <span class="ix-g-n">' + b.ids.length + '</span></div>' +
+        (b.group.desc ? '<div class="ix-g-desc">' + b.group.desc + '</div>' : '') +
+        '<div class="ix-grid">' + cards + '</div></section>';
     }).join('');
 
-    return '<div class="ix-panel">' + head + '<div class="ix-scroll">' +
+    return '<div class="ix-panel">' + head + filter + '<div class="ix-scroll">' +
       (buckets.length ? body : '<div class="ix-empty">No topics registered.</div>') + '</div></div>';
   }
 
@@ -11217,6 +11252,11 @@ customElements.define('deep-session', DeepSession);
     isOpen = true;
     overlayEl.classList.add('open');
     requestAnimationFrame(function () { overlayEl.classList.add('vis'); });
+    var filt = overlayEl.querySelector('.ix-filter');
+    if (filt) {
+      filt.addEventListener('input', function () { applyFilter(filt.value); });
+      setTimeout(function () { try { filt.focus(); } catch (e) {} }, 60);
+    }
   }
   function close() {
     if (!isOpen) return;

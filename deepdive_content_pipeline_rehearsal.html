@@ -11251,47 +11251,61 @@ customElements.define('deep-session', DeepSession);
     overlayEl.addEventListener('click', function (e) { if (e.target === overlayEl) close(); });
   }
 
+  function tokenize(str) { return str.split(/\s+/).filter(function (x) { return x.length > 0; }); }
+  /* Token-based match: every whitespace-separated word must appear in the field
+     (in any order), so "invalidation cache" or "cache ... strategy" both hit. */
   function onInput() {
-    var q = inputEl.value.trim().toLowerCase();
-    if (q.length < 1) { renderResults([], ''); return; }
+    var raw = inputEl.value.trim().toLowerCase();
+    if (raw.length < 1) { renderResults([], ''); return; }
+    var tokens = tokenize(raw);
+    var allIn = function (field) { for (var i = 0; i < tokens.length; i++) { if (field.indexOf(tokens[i]) === -1) return false; } return true; };
     var topicHits = [];
     TOPIC_INDEX.forEach(function (t) {
-      if (t.haystack.indexOf(q) === -1) return;
+      if (!allIn(t.haystack)) return;
       var score = 1;
-      if (t.titleLc.indexOf(q) > -1) score = 3;
-      else if (t.thesisLc.indexOf(q) > -1 || t.groupLc.indexOf(q) > -1 || t.descLc.indexOf(q) > -1) score = 2;
-      var snippet = '';
-      for (var i = 0; i < t.frags.length; i++) { if (t.frags[i].toLowerCase().indexOf(q) > -1) { snippet = t.frags[i]; break; } }
+      if (allIn(t.titleLc)) score = 3;
+      else if (allIn(t.titleLc + ' ' + t.thesisLc + ' ' + t.groupLc + ' ' + t.descLc)) score = 2;
+      var snippet = '', bestN = 0;
+      for (var i = 0; i < t.frags.length; i++) {
+        var flc = t.frags[i].toLowerCase(), n = 0;
+        for (var k = 0; k < tokens.length; k++) if (flc.indexOf(tokens[k]) > -1) n++;
+        if (n > bestN) { bestN = n; snippet = t.frags[i]; }
+      }
       topicHits.push({ score: score, data: { kind: 'topic', id: t.id, label: t.label, group: t.group, desc: t.desc, snippet: snippet } });
     });
     topicHits.sort(function (a, b) { return b.score - a.score; });
     var viewHits = MODULES.filter(function (m) {
-      return m.label.toLowerCase().indexOf(q) > -1 ||
-             m.keywords.toLowerCase().indexOf(q) > -1 ||
-             m.desc.toLowerCase().indexOf(q) > -1;
+      return allIn((m.label + ' ' + m.keywords + ' ' + m.desc).toLowerCase());
     }).map(function (m) { return { data: { kind: 'view', id: m.id, label: m.label, desc: m.desc } }; });
-    renderResults(topicHits.concat(viewHits), q);
+    renderResults(topicHits.concat(viewHits), raw);
   }
 
   /* append text to a container, wrapping each occurrence of q in a highlight span (no innerHTML) */
   function highlightInto(container, text, q) {
-    if (!q) { container.appendChild(document.createTextNode(text)); return; }
-    var lc = text.toLowerCase(), from = 0, idx = lc.indexOf(q);
-    while (idx > -1) {
-      if (idx > from) container.appendChild(document.createTextNode(text.slice(from, idx)));
+    var tokens = q ? tokenize(q) : [];
+    if (!tokens.length) { container.appendChild(document.createTextNode(text)); return; }
+    var lc = text.toLowerCase(), ranges = [];
+    tokens.forEach(function (tok) { var from = 0, idx = lc.indexOf(tok, from); while (idx > -1) { ranges.push([idx, idx + tok.length]); from = idx + tok.length; idx = lc.indexOf(tok, from); } });
+    if (!ranges.length) { container.appendChild(document.createTextNode(text)); return; }
+    ranges.sort(function (a, b) { return a[0] - b[0]; });
+    var merged = [ranges[0]];
+    for (var i = 1; i < ranges.length; i++) { var last = merged[merged.length - 1]; if (ranges[i][0] <= last[1]) last[1] = Math.max(last[1], ranges[i][1]); else merged.push(ranges[i]); }
+    var pos = 0;
+    merged.forEach(function (r) {
+      if (r[0] > pos) container.appendChild(document.createTextNode(text.slice(pos, r[0])));
       var mk = document.createElement('span');
       mk.style.cssText = 'background:var(--accbg);color:var(--acc);border-radius:3px;padding:0 1px;font-weight:700';
-      mk.textContent = text.slice(idx, idx + q.length);
-      container.appendChild(mk);
-      from = idx + q.length; idx = lc.indexOf(q, from);
-    }
-    if (from < text.length) container.appendChild(document.createTextNode(text.slice(from)));
+      mk.textContent = text.slice(r[0], r[1]);
+      container.appendChild(mk); pos = r[1];
+    });
+    if (pos < text.length) container.appendChild(document.createTextNode(text.slice(pos)));
   }
   /* trim a long snippet to a ~104-char window centred on the match */
   function clampSnippet(text, q) {
     var MAX = 104;
     if (text.length <= MAX) return text;
-    var idx = q ? text.toLowerCase().indexOf(q) : -1;
+    var tokens = q ? tokenize(q) : [], lc = text.toLowerCase(), idx = -1;
+    for (var k = 0; k < tokens.length; k++) { var pp = lc.indexOf(tokens[k]); if (pp > -1 && (idx < 0 || pp < idx)) idx = pp; }
     if (idx < 0) return text.slice(0, MAX) + '\u2026';
     var start = Math.max(0, idx - 32), end = Math.min(text.length, start + MAX);
     return (start > 0 ? '\u2026' : '') + text.slice(start, end) + (end < text.length ? '\u2026' : '');

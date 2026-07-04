@@ -4,14 +4,16 @@
    (t.data.bank.cards) directly; its own light-DOM surface so it stays decoupled
    from the per-topic drill and the mixed-fire shadow component. */
 (function () {
-  var el = null, body = null, pool = [], idx = 0, got = 0, shk = 0, revealed = false, isOpen = false, restoreFocus = null;
+  var el = null, body = null, pool = [], idx = 0, got = 0, shk = 0, revealed = false, isOpen = false, restoreFocus = null, mode = 'all';
   var COUNT = 12;
 
   function gather() {
     var out = [];
     if (typeof TopicRegistry === 'undefined') return out;
     var ids = TopicRegistry.ids();
+    var weakOnly = (mode === 'weak' && typeof Progress !== 'undefined' && Progress.status);
     for (var i = 0; i < ids.length; i++) {
+      if (weakOnly && Progress.status(ids[i]) !== 'weak') continue;
       var t = TopicRegistry.get(ids[i]);
       if (t && t.data && t.data.bank && t.data.bank.cards) {
         var cs = t.data.bank.cards;
@@ -74,9 +76,14 @@
       if (e.key === 'Tab') { var f = focusables(); if (!f.length) return; var first = f[0], last = f[f.length - 1]; if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); } else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); } }
     });
   }
-  function open() {
-    if (isOpen) return; create();
+  function open(m) {
+    if (isOpen) return;
+    mode = (m === 'weak') ? 'weak' : 'all';
+    create();
     if (!gather().length) return;
+    var tEl = el.querySelector('.xd-title'), sEl = el.querySelector('.xd-sub');
+    if (mode === 'weak') { tEl.textContent = 'Weak-spot review'; sEl.innerHTML = 'Probes drawn only from the topics you have been shaky on'; }
+    else { tEl.textContent = 'Cross-topic drill'; sEl.innerHTML = 'Random probes from every topic &mdash; the interview shuffle'; }
     build(); renderItem();
     restoreFocus = document.activeElement;
     el.classList.add('open'); isOpen = true;

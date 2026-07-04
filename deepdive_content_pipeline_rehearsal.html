@@ -742,6 +742,9 @@ body.is-hidden,body.is-hidden *,body.is-hidden *::before,body.is-hidden *::after
 .ix-cross-k{display:block;font-size:13.5px;font-weight:750;color:var(--ink)}
 .ix-cross-d{display:block;font-size:11.5px;color:var(--mut2);margin-top:2px}
 .ix-cross-ar{flex:none;font-size:18px;color:var(--acc)}
+.ix-cross-weak{border-color:var(--amber);background:linear-gradient(135deg,var(--amberbg) 0%,rgba(154,91,11,.03) 100%)}
+.ix-cross-weak:hover{box-shadow:0 6px 18px -6px rgba(154,91,11,.28)}
+.ix-cross-weak .ix-cross-ar{color:var(--amber)}
 .ix-card:hover{border-color:var(--acc);background:var(--accbg);transform:translateY(-1px)}
 .ix-card.on{border-color:var(--acc);background:var(--accbg)}
 .ix-c-name{font-size:13.5px;font-weight:680;color:var(--ink);padding-right:50px}
@@ -11602,14 +11605,16 @@ window.Bookmarks = Bookmarks;
    (t.data.bank.cards) directly; its own light-DOM surface so it stays decoupled
    from the per-topic drill and the mixed-fire shadow component. */
 (function () {
-  var el = null, body = null, pool = [], idx = 0, got = 0, shk = 0, revealed = false, isOpen = false, restoreFocus = null;
+  var el = null, body = null, pool = [], idx = 0, got = 0, shk = 0, revealed = false, isOpen = false, restoreFocus = null, mode = 'all';
   var COUNT = 12;
 
   function gather() {
     var out = [];
     if (typeof TopicRegistry === 'undefined') return out;
     var ids = TopicRegistry.ids();
+    var weakOnly = (mode === 'weak' && typeof Progress !== 'undefined' && Progress.status);
     for (var i = 0; i < ids.length; i++) {
+      if (weakOnly && Progress.status(ids[i]) !== 'weak') continue;
       var t = TopicRegistry.get(ids[i]);
       if (t && t.data && t.data.bank && t.data.bank.cards) {
         var cs = t.data.bank.cards;
@@ -11672,9 +11677,14 @@ window.Bookmarks = Bookmarks;
       if (e.key === 'Tab') { var f = focusables(); if (!f.length) return; var first = f[0], last = f[f.length - 1]; if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); } else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); } }
     });
   }
-  function open() {
-    if (isOpen) return; create();
+  function open(m) {
+    if (isOpen) return;
+    mode = (m === 'weak') ? 'weak' : 'all';
+    create();
     if (!gather().length) return;
+    var tEl = el.querySelector('.xd-title'), sEl = el.querySelector('.xd-sub');
+    if (mode === 'weak') { tEl.textContent = 'Weak-spot review'; sEl.innerHTML = 'Probes drawn only from the topics you have been shaky on'; }
+    else { tEl.textContent = 'Cross-topic drill'; sEl.innerHTML = 'Random probes from every topic &mdash; the interview shuffle'; }
     build(); renderItem();
     restoreFocus = document.activeElement;
     el.classList.add('open'); isOpen = true;
@@ -11777,6 +11787,17 @@ window.Bookmarks = Bookmarks;
     return '<div class="ix-foot"><button class="ix-reset" type="button">Reset all saved progress</button></div>';
   }
 
+  function weakCount() {
+    if (typeof TopicRegistry === 'undefined' || typeof Progress === 'undefined' || !Progress.status) return 0;
+    var ids = TopicRegistry.ids(), n = 0;
+    for (var i = 0; i < ids.length; i++) if (Progress.status(ids[i]) === 'weak') n++;
+    return n;
+  }
+  function weakDrillBar() {
+    var n = weakCount();
+    if (!n) return '';
+    return '<button class="ix-cross ix-cross-weak" type="button" data-cross="weak"><span class="ix-cross-tx"><span class="ix-cross-k">Weak-spot review</span><span class="ix-cross-d">Drill probes from the ' + n + ' topic' + (n === 1 ? '' : 's') + ' you have been shaky on</span></span><span class="ix-cross-ar">&rarr;</span></button>';
+  }
   function crossDrillBar() {
     if (typeof TopicRegistry === 'undefined' || !TopicRegistry.ids().length) return '';
     return '<button class="ix-cross" type="button" data-cross="1"><span class="ix-cross-tx"><span class="ix-cross-k">Cross-topic drill</span><span class="ix-cross-d">Random probes from every topic &mdash; the interview shuffle</span></span><span class="ix-cross-ar">&rarr;</span></button>';
@@ -11817,7 +11838,7 @@ window.Bookmarks = Bookmarks;
         '<div class="ix-grid">' + cards + '</div></section>';
     }).join('');
 
-    return '<div class="ix-panel">' + head + homeStrip() + crossDrillBar() + filter + '<div class="ix-scroll">' + starredSection() +
+    return '<div class="ix-panel">' + head + homeStrip() + crossDrillBar() + weakDrillBar() + filter + '<div class="ix-scroll">' + starredSection() +
       (buckets.length ? body : '<div class="ix-empty">No topics registered.</div>') + '</div>' + footerHtml() + '</div>';
   }
 
@@ -11844,7 +11865,7 @@ window.Bookmarks = Bookmarks;
         return;
       }
       var crossBtn = e.target.closest ? e.target.closest('[data-cross]') : null;
-      if (crossBtn) { close(); if (window.CrossDrill && CrossDrill.open) CrossDrill.open(); return; }
+      if (crossBtn) { var _m = crossBtn.getAttribute('data-cross'); close(); if (window.CrossDrill && CrossDrill.open) CrossDrill.open(_m === 'weak' ? 'weak' : 'all'); return; }
       var card = e.target.closest ? e.target.closest('[data-topic]') : null;
       if (card) {
         var id = card.getAttribute('data-topic');

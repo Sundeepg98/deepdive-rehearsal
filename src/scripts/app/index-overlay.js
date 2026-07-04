@@ -86,6 +86,17 @@
     return '<div class="ix-foot"><button class="ix-reset" type="button">Reset all saved progress</button></div>';
   }
 
+  function weakCount() {
+    if (typeof TopicRegistry === 'undefined' || typeof Progress === 'undefined' || !Progress.status) return 0;
+    var ids = TopicRegistry.ids(), n = 0;
+    for (var i = 0; i < ids.length; i++) if (Progress.status(ids[i]) === 'weak') n++;
+    return n;
+  }
+  function weakDrillBar() {
+    var n = weakCount();
+    if (!n) return '';
+    return '<button class="ix-cross ix-cross-weak" type="button" data-cross="weak"><span class="ix-cross-tx"><span class="ix-cross-k">Weak-spot review</span><span class="ix-cross-d">Drill probes from the ' + n + ' topic' + (n === 1 ? '' : 's') + ' you have been shaky on</span></span><span class="ix-cross-ar">&rarr;</span></button>';
+  }
   function crossDrillBar() {
     if (typeof TopicRegistry === 'undefined' || !TopicRegistry.ids().length) return '';
     return '<button class="ix-cross" type="button" data-cross="1"><span class="ix-cross-tx"><span class="ix-cross-k">Cross-topic drill</span><span class="ix-cross-d">Random probes from every topic &mdash; the interview shuffle</span></span><span class="ix-cross-ar">&rarr;</span></button>';
@@ -126,7 +137,7 @@
         '<div class="ix-grid">' + cards + '</div></section>';
     }).join('');
 
-    return '<div class="ix-panel">' + head + homeStrip() + crossDrillBar() + filter + '<div class="ix-scroll">' + starredSection() +
+    return '<div class="ix-panel">' + head + homeStrip() + crossDrillBar() + weakDrillBar() + filter + '<div class="ix-scroll">' + starredSection() +
       (buckets.length ? body : '<div class="ix-empty">No topics registered.</div>') + '</div>' + footerHtml() + '</div>';
   }
 
@@ -153,7 +164,7 @@
         return;
       }
       var crossBtn = e.target.closest ? e.target.closest('[data-cross]') : null;
-      if (crossBtn) { close(); if (window.CrossDrill && CrossDrill.open) CrossDrill.open(); return; }
+      if (crossBtn) { var _m = crossBtn.getAttribute('data-cross'); close(); if (window.CrossDrill && CrossDrill.open) CrossDrill.open(_m === 'weak' ? 'weak' : 'all'); return; }
       var card = e.target.closest ? e.target.closest('[data-topic]') : null;
       if (card) {
         var id = card.getAttribute('data-topic');

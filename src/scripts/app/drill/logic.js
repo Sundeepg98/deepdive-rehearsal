@@ -313,6 +313,7 @@ class DeepDrill extends TopicPane {
     this.results.push({ signal: card.signal, tier: card.tier, ok: ok, card: card, speak: speakLines[this.di], cov: { n: covered, m: mhp.length, dropped: dropped } });
     this.di++;
     this.renderD();
+    try { this.dispatchEvent(new CustomEvent('drillgraded', { bubbles: true })); } catch (e) {}
     const bumpEl = ok ? this._sGot : this._sShk;
     if (bumpEl) { bumpEl.classList.remove('cbump'); void bumpEl.offsetWidth; bumpEl.classList.add('cbump'); }
   }

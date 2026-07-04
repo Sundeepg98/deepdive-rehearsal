@@ -86,6 +86,10 @@
     return '<div class="ix-foot"><button class="ix-reset" type="button">Reset all saved progress</button></div>';
   }
 
+  function crossDrillBar() {
+    if (typeof TopicRegistry === 'undefined' || !TopicRegistry.ids().length) return '';
+    return '<button class="ix-cross" type="button" data-cross="1"><span class="ix-cross-tx"><span class="ix-cross-k">Cross-topic drill</span><span class="ix-cross-d">Random probes from every topic &mdash; the interview shuffle</span></span><span class="ix-cross-ar">&rarr;</span></button>';
+  }
   function panelHtml() {
     var buckets = (typeof groupedTopicIds === 'function') ? groupedTopicIds() : [];
     var cur = (typeof TopicRegistry !== 'undefined' && TopicRegistry.current) ? TopicRegistry.current() : null;
@@ -122,7 +126,7 @@
         '<div class="ix-grid">' + cards + '</div></section>';
     }).join('');
 
-    return '<div class="ix-panel">' + head + homeStrip() + filter + '<div class="ix-scroll">' + starredSection() +
+    return '<div class="ix-panel">' + head + homeStrip() + crossDrillBar() + filter + '<div class="ix-scroll">' + starredSection() +
       (buckets.length ? body : '<div class="ix-empty">No topics registered.</div>') + '</div>' + footerHtml() + '</div>';
   }
 
@@ -148,6 +152,8 @@
         }
         return;
       }
+      var crossBtn = e.target.closest ? e.target.closest('[data-cross]') : null;
+      if (crossBtn) { close(); if (window.CrossDrill && CrossDrill.open) CrossDrill.open(); return; }
       var card = e.target.closest ? e.target.closest('[data-topic]') : null;
       if (card) {
         var id = card.getAttribute('data-topic');

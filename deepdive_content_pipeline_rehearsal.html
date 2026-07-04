@@ -700,6 +700,48 @@ body.is-hidden,body.is-hidden *,body.is-hidden *::before,body.is-hidden *::after
 .nt-ta:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--accbg)}
 .nt-foot{padding:8px 18px 16px;font-size:10.5px;color:var(--mut)}
 .crambtn.has-notes .mb-t::after{content:" \25CF";color:var(--acc);font-size:7px;vertical-align:middle}
+.xd-ov{position:fixed;inset:0;z-index:1000;display:none;align-items:flex-start;justify-content:center;background:rgba(30,28,24,.45);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:6vh 16px 16px;opacity:0;transition:opacity .22s ease}
+.xd-ov.open{display:flex;opacity:1}
+.xd-panel{background:var(--card);border:1px solid var(--bd);border-radius:16px;width:min(680px,100%);max-height:86vh;display:flex;flex-direction:column;box-shadow:0 24px 60px -12px rgba(20,18,40,.4)}
+.xd-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:16px 20px 13px;border-bottom:1px solid var(--bd)}
+.xd-title{font-size:15px;font-weight:750;color:var(--ink)}
+.xd-sub{font-size:12px;color:var(--mut2);margin-top:3px}
+.xd-x{flex:none;width:30px;height:30px;border:1px solid var(--bd);background:var(--bg);border-radius:8px;color:var(--mut);font-size:18px;line-height:1;cursor:pointer;transition:background .14s ease,color .14s ease}
+.xd-x:hover{background:var(--accbg);color:var(--ink)}
+.xd-body{overflow-y:auto;flex:1;min-height:0;padding:18px 20px 24px}
+.xd-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.xd-prog{font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--mut)}
+.xd-from{font-size:11px;font-weight:700;color:var(--accink);background:var(--accbg);border-radius:20px;padding:3px 11px;white-space:nowrap}
+.xd-q{font-size:16px;font-weight:640;line-height:1.5;color:var(--ink);margin-bottom:14px}
+.xd-reveal{display:block;width:100%;border:1.5px solid var(--acc);background:var(--bg);color:var(--acc);font:700 13px -apple-system,system-ui,sans-serif;padding:12px;border-radius:10px;cursor:pointer;transition:background .14s ease,transform .1s ease}
+.xd-reveal:hover{background:var(--accbg)}
+.xd-reveal:active{transform:translateY(1px)}
+.xd-ans{font-size:13.5px;line-height:1.6;color:var(--ink);background:var(--accbg);border-left:3px solid var(--acc);border-radius:9px;padding:14px 16px;margin-bottom:12px}
+.xd-fu{border:1px solid var(--bd);border-radius:9px;padding:12px 14px;margin-bottom:10px;background:var(--bg)}
+.xd-fu-l{font-size:9.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin-bottom:5px}
+.xd-fu-q{font-size:13px;font-weight:640;color:var(--ink);margin-bottom:5px}
+.xd-fu-a{font-size:12.5px;line-height:1.55;color:var(--mut2)}
+.xd-senior{margin-top:4px;font-size:12.5px;line-height:1.55;color:var(--ink);background:var(--tealbg);border:1px solid var(--teal);border-radius:9px;padding:12px 14px}
+.xd-senior-l{font-size:9.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--teal);margin-bottom:5px}
+.xd-judge{display:flex;gap:10px;margin-top:16px}
+.xd-got,.xd-shk{flex:1;border:1.5px solid var(--bd);background:var(--card);border-radius:11px;padding:12px;font:700 13px -apple-system,system-ui,sans-serif;cursor:pointer;transition:border-color .14s ease,background .14s ease,transform .1s ease}
+.xd-got{color:var(--teal)}
+.xd-got:hover{border-color:var(--teal);background:var(--tealbg)}
+.xd-shk{color:var(--red)}
+.xd-shk:hover{border-color:var(--red);background:var(--redbg)}
+.xd-got:active,.xd-shk:active{transform:translateY(1px)}
+.xd-hint{font-size:10px;opacity:.6;font-weight:600}
+.xd-end{text-align:center;padding:30px 10px}
+.xd-end-pct{font-size:44px;font-weight:800;color:var(--acc);letter-spacing:-.02em}
+.xd-end-sub{font-size:13px;color:var(--mut2);margin:8px 0 22px}
+.xd-again{border:1.5px solid var(--acc);background:var(--bg);color:var(--acc);font:700 13px -apple-system,system-ui,sans-serif;padding:12px 22px;border-radius:10px;cursor:pointer;transition:background .14s ease}
+.xd-again:hover{background:var(--accbg)}
+.ix-cross{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:13px 16px;margin:0 0 12px;border:1px solid var(--acc);border-radius:12px;background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.03) 100%);cursor:pointer;transition:transform .12s ease,box-shadow .18s ease}
+.ix-cross:hover{transform:translateY(-1px);box-shadow:0 6px 18px -6px rgba(83,74,183,.28)}
+.ix-cross-tx{flex:1}
+.ix-cross-k{display:block;font-size:13.5px;font-weight:750;color:var(--ink)}
+.ix-cross-d{display:block;font-size:11.5px;color:var(--mut2);margin-top:2px}
+.ix-cross-ar{flex:none;font-size:18px;color:var(--acc)}
 .ix-card:hover{border-color:var(--acc);background:var(--accbg);transform:translateY(-1px)}
 .ix-card.on{border-color:var(--acc);background:var(--accbg)}
 .ix-c-name{font-size:13.5px;font-weight:680;color:var(--ink);padding-right:50px}
@@ -11554,6 +11596,99 @@ window.Bookmarks = Bookmarks;
   window.NotesOverlay = { open: open, close: close, isOpen: function () { return isOpen; } };
 })();
 
+/* ===== scripts/app/cross-drill.js -- cross-topic random drill (F6) =====
+   "Surprise me across all topics": pulls random probes from every registered
+   topic, one at a time -> reveal -> self-grade -> summary. Reads the topic banks
+   (t.data.bank.cards) directly; its own light-DOM surface so it stays decoupled
+   from the per-topic drill and the mixed-fire shadow component. */
+(function () {
+  var el = null, body = null, pool = [], idx = 0, got = 0, shk = 0, revealed = false, isOpen = false, restoreFocus = null;
+  var COUNT = 12;
+
+  function gather() {
+    var out = [];
+    if (typeof TopicRegistry === 'undefined') return out;
+    var ids = TopicRegistry.ids();
+    for (var i = 0; i < ids.length; i++) {
+      var t = TopicRegistry.get(ids[i]);
+      if (t && t.data && t.data.bank && t.data.bank.cards) {
+        var cs = t.data.bank.cards;
+        for (var j = 0; j < cs.length; j++) out.push({ card: cs[j], title: t.identity.title });
+      }
+    }
+    return out;
+  }
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var x = a[i]; a[i] = a[j]; a[j] = x; } return a; }
+  function build() { var all = shuffle(gather()); pool = all.slice(0, Math.min(COUNT, all.length)); idx = 0; got = 0; shk = 0; revealed = false; }
+  function focusables() { return Array.prototype.filter.call(el.querySelectorAll('button'), function (b) { return !b.disabled && b.offsetParent !== null; }); }
+
+  function renderItem() {
+    revealed = false;
+    if (idx >= pool.length) { renderEnd(); return; }
+    var it = pool[idx], c = it.card;
+    body.innerHTML =
+      '<div class="xd-top"><span class="xd-prog">Probe ' + (idx + 1) + ' / ' + pool.length + '</span><span class="xd-from">' + it.title + '</span></div>' +
+      '<div class="xd-q">' + c.q + '</div>' +
+      '<div class="xd-rev" id="_xd-rev"></div>' +
+      '<button class="xd-reveal" id="_xd-reveal" type="button">Reveal a strong answer</button>';
+    var r = el.querySelector('#_xd-reveal'); if (r) r.onclick = reveal;
+  }
+  function reveal() {
+    var it = pool[idx], c = it.card;
+    var html = '<div class="xd-ans">' + c.a + '</div>';
+    if (c.f && c.f.length) html += c.f.map(function (x) { return '<div class="xd-fu"><div class="xd-fu-l">Interviewer pushes further</div><div class="xd-fu-q">' + x.q + '</div><div class="xd-fu-a">' + x.a + '</div></div>'; }).join('');
+    if (c.senior) html += '<div class="xd-senior"><div class="xd-senior-l">What sounds senior here</div>' + c.senior + '</div>';
+    el.querySelector('#_xd-rev').innerHTML = html;
+    var rb = el.querySelector('#_xd-reveal'); if (rb) rb.style.display = 'none';
+    var jr = document.createElement('div'); jr.className = 'xd-judge';
+    jr.innerHTML = '<button class="xd-got" id="_xd-got" type="button">&#10003; Handled it <span class="xd-hint">[1]</span></button><button class="xd-shk" id="_xd-shk" type="button">&#126; Shaky <span class="xd-hint">[2]</span></button>';
+    body.appendChild(jr);
+    revealed = true;
+    el.querySelector('#_xd-got').onclick = function () { grade(true); };
+    el.querySelector('#_xd-shk').onclick = function () { grade(false); };
+  }
+  function grade(ok) { if (ok) got++; else shk++; idx++; renderItem(); }
+  function renderEnd() {
+    var pct = pool.length ? Math.round(got / pool.length * 100) : 0;
+    body.innerHTML =
+      '<div class="xd-end"><div class="xd-end-pct">' + pct + '%</div>' +
+      '<div class="xd-end-sub">' + got + ' handled &middot; ' + shk + ' shaky &middot; ' + pool.length + ' probes across the curriculum</div>' +
+      '<button class="xd-again" id="_xd-again" type="button">Shuffle another set &rarr;</button></div>';
+    var a = el.querySelector('#_xd-again'); if (a) a.onclick = function () { build(); renderItem(); setTimeout(function () { var r = el.querySelector('#_xd-reveal'); if (r) r.focus(); }, 20); };
+  }
+
+  function create() {
+    if (el) return;
+    el = document.createElement('div'); el.id = '_cross-overlay'; el.className = 'xd-ov';
+    el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-label', 'Cross-topic drill');
+    el.innerHTML = '<div class="xd-panel"><div class="xd-head"><div><div class="xd-title">Cross-topic drill</div><div class="xd-sub">Random probes from every topic &mdash; the interview shuffle</div></div><button class="xd-x" type="button" aria-label="Close">&#215;</button></div><div class="xd-body"></div></div>';
+    document.body.appendChild(el);
+    body = el.querySelector('.xd-body');
+    el.addEventListener('click', function (e) { if (e.target === el || (e.target.closest && e.target.closest('.xd-x'))) close(); });
+    el.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') { e.preventDefault(); close(); return; }
+      if (revealed && e.key === '1') { e.preventDefault(); grade(true); return; }
+      if (revealed && e.key === '2') { e.preventDefault(); grade(false); return; }
+      if (e.key === 'Tab') { var f = focusables(); if (!f.length) return; var first = f[0], last = f[f.length - 1]; if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); } else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); } }
+    });
+  }
+  function open() {
+    if (isOpen) return; create();
+    if (!gather().length) return;
+    build(); renderItem();
+    restoreFocus = document.activeElement;
+    el.classList.add('open'); isOpen = true;
+    setTimeout(function () { var r = el.querySelector('#_xd-reveal'); if (r) r.focus(); }, 40);
+  }
+  function close() {
+    if (!isOpen) return;
+    el.classList.remove('open'); isOpen = false;
+    if (restoreFocus && restoreFocus.focus) { try { restoreFocus.focus(); } catch (e) {} }
+    restoreFocus = null;
+  }
+  window.CrossDrill = { open: open, close: close, isOpen: function () { return isOpen; } };
+})();
+
 /* ===== IndexOverlay =====
    The topic index: every registered topic grouped by the six thematic groups --
    the browse / entry surface for the full set, and the home for the total scope
@@ -11642,6 +11777,10 @@ window.Bookmarks = Bookmarks;
     return '<div class="ix-foot"><button class="ix-reset" type="button">Reset all saved progress</button></div>';
   }
 
+  function crossDrillBar() {
+    if (typeof TopicRegistry === 'undefined' || !TopicRegistry.ids().length) return '';
+    return '<button class="ix-cross" type="button" data-cross="1"><span class="ix-cross-tx"><span class="ix-cross-k">Cross-topic drill</span><span class="ix-cross-d">Random probes from every topic &mdash; the interview shuffle</span></span><span class="ix-cross-ar">&rarr;</span></button>';
+  }
   function panelHtml() {
     var buckets = (typeof groupedTopicIds === 'function') ? groupedTopicIds() : [];
     var cur = (typeof TopicRegistry !== 'undefined' && TopicRegistry.current) ? TopicRegistry.current() : null;
@@ -11678,7 +11817,7 @@ window.Bookmarks = Bookmarks;
         '<div class="ix-grid">' + cards + '</div></section>';
     }).join('');
 
-    return '<div class="ix-panel">' + head + homeStrip() + filter + '<div class="ix-scroll">' + starredSection() +
+    return '<div class="ix-panel">' + head + homeStrip() + crossDrillBar() + filter + '<div class="ix-scroll">' + starredSection() +
       (buckets.length ? body : '<div class="ix-empty">No topics registered.</div>') + '</div>' + footerHtml() + '</div>';
   }
 
@@ -11704,6 +11843,8 @@ window.Bookmarks = Bookmarks;
         }
         return;
       }
+      var crossBtn = e.target.closest ? e.target.closest('[data-cross]') : null;
+      if (crossBtn) { close(); if (window.CrossDrill && CrossDrill.open) CrossDrill.open(); return; }
       var card = e.target.closest ? e.target.closest('[data-topic]') : null;
       if (card) {
         var id = card.getAttribute('data-topic');

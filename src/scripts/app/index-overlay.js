@@ -59,6 +59,26 @@
       '</div>';
   }
 
+  function groupColorFor(id) {
+    var t = (typeof TopicRegistry !== 'undefined') ? TopicRegistry.get(id) : null;
+    if (!t || typeof TOPIC_GROUPS === 'undefined') return 'var(--acc)';
+    var g = t.identity.group;
+    for (var i = 0; i < TOPIC_GROUPS.length; i++) if (TOPIC_GROUPS[i].id === g) return TOPIC_GROUPS[i].color;
+    return 'var(--acc)';
+  }
+
+  /* the Starred shelf: quick access to bookmarked topics, above the groups */
+  function starredSection() {
+    if (typeof Bookmarks === 'undefined' || typeof TopicRegistry === 'undefined') return '';
+    var ids = Bookmarks.all().filter(function (id) { return !!TopicRegistry.get(id); });
+    if (!ids.length) return '';
+    var pills = ids.map(function (id) {
+      var t = TopicRegistry.get(id);
+      return '<button class="ix-star-pill" type="button" data-topic="' + id + '" style="box-shadow:inset 3px 0 0 ' + groupColorFor(id) + '"><span class="ix-star-ic">&#9733;</span>' + t.identity.title + '</button>';
+    }).join('');
+    return '<section class="ix-starred"><div class="ix-g-head"><span class="ix-g-dot" style="background:#f59e0b"></span>Starred <span class="ix-g-n">' + ids.length + '</span></div><div class="ix-star-row">' + pills + '</div></section>';
+  }
+
   /* footer: a reset affordance, shown only when there is saved data to clear */
   function footerHtml() {
     var any = (typeof Store !== 'undefined' && Store.keys && Store.keys('').length > 0);
@@ -102,7 +122,7 @@
         '<div class="ix-grid">' + cards + '</div></section>';
     }).join('');
 
-    return '<div class="ix-panel">' + head + homeStrip() + filter + '<div class="ix-scroll">' +
+    return '<div class="ix-panel">' + head + homeStrip() + filter + '<div class="ix-scroll">' + starredSection() +
       (buckets.length ? body : '<div class="ix-empty">No topics registered.</div>') + '</div>' + footerHtml() + '</div>';
   }
 

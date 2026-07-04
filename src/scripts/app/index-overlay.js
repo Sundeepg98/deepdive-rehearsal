@@ -54,12 +54,15 @@
       var t = TopicRegistry.get(w.id);
       return '<button class="ix-weak-b" type="button" data-topic="' + w.id + '">' + (t ? t.identity.title : w.id) + (w.shk ? '<span class="ix-weak-n">' + w.shk + '</span>' : '') + '</button>';
     }).join('');
+    var concepts = [];
+    sum.weakest.slice(0, 3).forEach(function (w) { var pr = Progress.get(w.id); if (pr && pr.revisit && pr.revisit.length) { for (var ci = 0; ci < pr.revisit.length && concepts.length < 5; ci++) concepts.push(pr.revisit[ci]); } });
+    var conceptsHtml = concepts.length ? '<div class="ix-weak-concepts">' + concepts.map(function (c) { return '<span class="ix-wc">' + c + '</span>'; }).join('') + '</div>' : '';
     return '<div class="ix-home">' +
       '<div class="ix-home-prog"><div class="ix-home-k">Your progress</div>' +
       '<div class="ix-home-bar"><span style="width:' + pct + '%"></span></div>' +
       '<div class="ix-home-v">' + pct + '% of the curriculum &middot; ' + sum.totDone + ' probes drilled &middot; ' + sum.touched + ' of ' + sum.nTopics + ' topics started</div></div>' +
       (rt ? '<button class="ix-home-btn" type="button" ' + (resumeHash ? 'data-hash="' + resumeHash + '"' : 'data-topic="' + resumeId + '"') + '><span class="ix-home-btn-k">Resume</span>' + rt.identity.title + ' &rarr;</button>' : '') +
-      (weak ? '<div class="ix-weak"><div class="ix-home-k">Revisit</div><div class="ix-weak-list">' + weak + '</div></div>' : '') +
+      (weak ? '<div class="ix-weak"><div class="ix-home-k">Revisit</div><div class="ix-weak-list">' + weak + '</div>' + conceptsHtml + '</div>' : '') +
       '</div>';
   }
 

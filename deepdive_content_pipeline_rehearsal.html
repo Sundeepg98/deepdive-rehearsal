@@ -659,6 +659,8 @@ body.is-hidden,body.is-hidden *,body.is-hidden *::before,body.is-hidden *::after
 .ix-group{margin-top:16px}
 .ix-g-head{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--mut2);margin-bottom:8px;display:flex;align-items:center;gap:7px}
 .ix-g-n{font-family:var(--mono);font-size:9.5px;color:var(--acc);background:var(--accbg);border-radius:5px;padding:1px 6px;font-weight:800}
+.ix-g-cram{margin-left:auto;font-size:9.5px;font-weight:800;letter-spacing:.02em;text-transform:none;color:var(--acc);background:transparent;border:1px solid var(--bd);border-radius:20px;padding:3px 11px;cursor:pointer;transition:background .14s ease,border-color .14s ease}
+.ix-g-cram:hover{background:var(--accbg);border-color:var(--acc)}
 .ix-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
 .ix-card{display:flex;flex-direction:column;align-items:flex-start;text-align:left;border:1px solid var(--bd);background:var(--bg);border-radius:11px;padding:11px 13px;cursor:pointer;transition:border-color .14s ease,background .14s ease,transform .14s ease;position:relative}
 .ix-c-badge{position:absolute;top:10px;right:11px;display:inline-flex;align-items:center;gap:4px;font-size:9.5px;font-weight:700;letter-spacing:.02em;color:var(--mut2);white-space:nowrap}
@@ -11607,7 +11609,7 @@ window.Bookmarks = Bookmarks;
    (t.data.bank.cards) directly; its own light-DOM surface so it stays decoupled
    from the per-topic drill and the mixed-fire shadow component. */
 (function () {
-  var el = null, body = null, pool = [], idx = 0, got = 0, shk = 0, revealed = false, isOpen = false, restoreFocus = null, mode = 'all';
+  var el = null, body = null, pool = [], idx = 0, got = 0, shk = 0, revealed = false, isOpen = false, restoreFocus = null, mode = 'all', groupId = null;
   var COUNT = 12;
 
   function gather() {
@@ -11618,6 +11620,7 @@ window.Bookmarks = Bookmarks;
     for (var i = 0; i < ids.length; i++) {
       if (weakOnly && Progress.status(ids[i]) !== 'weak') continue;
       var t = TopicRegistry.get(ids[i]);
+      if (mode === 'group' && (!t || !t.identity || t.identity.group !== groupId)) continue;
       if (t && t.data && t.data.bank && t.data.bank.cards) {
         var cs = t.data.bank.cards;
         for (var j = 0; j < cs.length; j++) out.push({ card: cs[j], title: t.identity.title });
@@ -11626,6 +11629,10 @@ window.Bookmarks = Bookmarks;
     return out;
   }
   function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var x = a[i]; a[i] = a[j]; a[j] = x; } return a; }
+  function groupLabel(gid) {
+    if (typeof TOPIC_GROUPS !== 'undefined') { for (var i = 0; i < TOPIC_GROUPS.length; i++) if (TOPIC_GROUPS[i].id === gid) return TOPIC_GROUPS[i].label || gid; }
+    return gid;
+  }
   function build() { var all = shuffle(gather()); pool = all.slice(0, Math.min(COUNT, all.length)); idx = 0; got = 0; shk = 0; revealed = false; }
   function focusables() { return Array.prototype.filter.call(el.querySelectorAll('button'), function (b) { return !b.disabled && b.offsetParent !== null; }); }
 
@@ -11681,12 +11688,15 @@ window.Bookmarks = Bookmarks;
   }
   function open(m) {
     if (isOpen) return;
-    mode = (m === 'weak') ? 'weak' : 'all';
+    mode = 'all'; groupId = null;
+    if (m === 'weak') mode = 'weak';
+    else if (m && m.indexOf('group:') === 0) { mode = 'group'; groupId = m.slice(6); }
     create();
     if (!gather().length) return;
     var tEl = el.querySelector('.xd-title'), sEl = el.querySelector('.xd-sub');
-    if (mode === 'weak') { tEl.textContent = 'Weak-spot review'; sEl.innerHTML = 'Probes drawn only from the topics you have been shaky on'; }
-    else { tEl.textContent = 'Cross-topic drill'; sEl.innerHTML = 'Random probes from every topic &mdash; the interview shuffle'; }
+    if (mode === 'weak') { tEl.innerHTML = 'Weak-spot review'; sEl.innerHTML = 'Probes drawn only from the topics you have been shaky on'; }
+    else if (mode === 'group') { var gl = groupLabel(groupId); tEl.innerHTML = gl + ' cram'; sEl.innerHTML = 'Every probe from the ' + gl + ' topics, shuffled'; }
+    else { tEl.innerHTML = 'Cross-topic drill'; sEl.innerHTML = 'Random probes from every topic &mdash; the interview shuffle'; }
     build(); renderItem();
     restoreFocus = document.activeElement;
     el.classList.add('open'); isOpen = true;
@@ -11835,7 +11845,8 @@ window.Bookmarks = Bookmarks;
           (th ? '<span class="ix-c-thesis">' + th + '</span>' : '') + '</button>';
       }).join('');
       return '<section class="ix-group"><div class="ix-g-head"><span class="ix-g-dot" style="background:' + (b.group.color || 'var(--acc)') + '"></span>' + b.group.label +
-        ' <span class="ix-g-n">' + b.ids.length + '</span></div>' +
+        ' <span class="ix-g-n">' + b.ids.length + '</span>' +
+        '<button class="ix-g-cram" type="button" data-cross="group:' + b.group.id + '">Cram &rarr;</button></div>' +
         (b.group.desc ? '<div class="ix-g-desc">' + b.group.desc + '</div>' : '') +
         '<div class="ix-grid">' + cards + '</div></section>';
     }).join('');
@@ -11867,7 +11878,7 @@ window.Bookmarks = Bookmarks;
         return;
       }
       var crossBtn = e.target.closest ? e.target.closest('[data-cross]') : null;
-      if (crossBtn) { var _m = crossBtn.getAttribute('data-cross'); close(); if (window.CrossDrill && CrossDrill.open) CrossDrill.open(_m === 'weak' ? 'weak' : 'all'); return; }
+      if (crossBtn) { var _m = crossBtn.getAttribute('data-cross'); close(); if (window.CrossDrill && CrossDrill.open) CrossDrill.open(_m); return; }
       var card = e.target.closest ? e.target.closest('[data-topic]') : null;
       if (card) {
         var id = card.getAttribute('data-topic');

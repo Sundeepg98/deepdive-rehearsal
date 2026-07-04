@@ -4,7 +4,7 @@
    (t.data.bank.cards) directly; its own light-DOM surface so it stays decoupled
    from the per-topic drill and the mixed-fire shadow component. */
 (function () {
-  var el = null, body = null, pool = [], idx = 0, got = 0, shk = 0, revealed = false, isOpen = false, restoreFocus = null, mode = 'all';
+  var el = null, body = null, pool = [], idx = 0, got = 0, shk = 0, revealed = false, isOpen = false, restoreFocus = null, mode = 'all', groupId = null;
   var COUNT = 12;
 
   function gather() {
@@ -15,6 +15,7 @@
     for (var i = 0; i < ids.length; i++) {
       if (weakOnly && Progress.status(ids[i]) !== 'weak') continue;
       var t = TopicRegistry.get(ids[i]);
+      if (mode === 'group' && (!t || !t.identity || t.identity.group !== groupId)) continue;
       if (t && t.data && t.data.bank && t.data.bank.cards) {
         var cs = t.data.bank.cards;
         for (var j = 0; j < cs.length; j++) out.push({ card: cs[j], title: t.identity.title });
@@ -23,6 +24,10 @@
     return out;
   }
   function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var x = a[i]; a[i] = a[j]; a[j] = x; } return a; }
+  function groupLabel(gid) {
+    if (typeof TOPIC_GROUPS !== 'undefined') { for (var i = 0; i < TOPIC_GROUPS.length; i++) if (TOPIC_GROUPS[i].id === gid) return TOPIC_GROUPS[i].label || gid; }
+    return gid;
+  }
   function build() { var all = shuffle(gather()); pool = all.slice(0, Math.min(COUNT, all.length)); idx = 0; got = 0; shk = 0; revealed = false; }
   function focusables() { return Array.prototype.filter.call(el.querySelectorAll('button'), function (b) { return !b.disabled && b.offsetParent !== null; }); }
 
@@ -78,12 +83,15 @@
   }
   function open(m) {
     if (isOpen) return;
-    mode = (m === 'weak') ? 'weak' : 'all';
+    mode = 'all'; groupId = null;
+    if (m === 'weak') mode = 'weak';
+    else if (m && m.indexOf('group:') === 0) { mode = 'group'; groupId = m.slice(6); }
     create();
     if (!gather().length) return;
     var tEl = el.querySelector('.xd-title'), sEl = el.querySelector('.xd-sub');
-    if (mode === 'weak') { tEl.textContent = 'Weak-spot review'; sEl.innerHTML = 'Probes drawn only from the topics you have been shaky on'; }
-    else { tEl.textContent = 'Cross-topic drill'; sEl.innerHTML = 'Random probes from every topic &mdash; the interview shuffle'; }
+    if (mode === 'weak') { tEl.innerHTML = 'Weak-spot review'; sEl.innerHTML = 'Probes drawn only from the topics you have been shaky on'; }
+    else if (mode === 'group') { var gl = groupLabel(groupId); tEl.innerHTML = gl + ' cram'; sEl.innerHTML = 'Every probe from the ' + gl + ' topics, shuffled'; }
+    else { tEl.innerHTML = 'Cross-topic drill'; sEl.innerHTML = 'Random probes from every topic &mdash; the interview shuffle'; }
     build(); renderItem();
     restoreFocus = document.activeElement;
     el.classList.add('open'); isOpen = true;

@@ -132,7 +132,8 @@
           (th ? '<span class="ix-c-thesis">' + th + '</span>' : '') + '</button>';
       }).join('');
       return '<section class="ix-group"><div class="ix-g-head"><span class="ix-g-dot" style="background:' + (b.group.color || 'var(--acc)') + '"></span>' + b.group.label +
-        ' <span class="ix-g-n">' + b.ids.length + '</span></div>' +
+        ' <span class="ix-g-n">' + b.ids.length + '</span>' +
+        '<button class="ix-g-cram" type="button" data-cross="group:' + b.group.id + '">Cram &rarr;</button></div>' +
         (b.group.desc ? '<div class="ix-g-desc">' + b.group.desc + '</div>' : '') +
         '<div class="ix-grid">' + cards + '</div></section>';
     }).join('');
@@ -164,7 +165,7 @@
         return;
       }
       var crossBtn = e.target.closest ? e.target.closest('[data-cross]') : null;
-      if (crossBtn) { var _m = crossBtn.getAttribute('data-cross'); close(); if (window.CrossDrill && CrossDrill.open) CrossDrill.open(_m === 'weak' ? 'weak' : 'all'); return; }
+      if (crossBtn) { var _m = crossBtn.getAttribute('data-cross'); close(); if (window.CrossDrill && CrossDrill.open) CrossDrill.open(_m); return; }
       var card = e.target.closest ? e.target.closest('[data-topic]') : null;
       if (card) {
         var id = card.getAttribute('data-topic');

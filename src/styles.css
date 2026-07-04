@@ -645,10 +645,12 @@ body.is-hidden,body.is-hidden *,body.is-hidden *::before,body.is-hidden *::after
 .ix-g-head{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--mut2);margin-bottom:8px;display:flex;align-items:center;gap:7px}
 .ix-g-n{font-family:var(--mono);font-size:9.5px;color:var(--acc);background:var(--accbg);border-radius:5px;padding:1px 6px;font-weight:800}
 .ix-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
-.ix-card{display:flex;flex-direction:column;align-items:flex-start;text-align:left;border:1px solid var(--bd);background:var(--bg);border-radius:11px;padding:11px 13px;cursor:pointer;transition:border-color .14s ease,background .14s ease,transform .14s ease}
+.ix-card{display:flex;flex-direction:column;align-items:flex-start;text-align:left;border:1px solid var(--bd);background:var(--bg);border-radius:11px;padding:11px 13px;cursor:pointer;transition:border-color .14s ease,background .14s ease,transform .14s ease;position:relative}
+.ix-c-badge{position:absolute;top:10px;right:11px;display:inline-flex;align-items:center;gap:4px;font-size:9.5px;font-weight:700;letter-spacing:.02em;color:var(--mut2);white-space:nowrap}
+.ix-c-badge i{width:6px;height:6px;border-radius:50%;flex:none}
 .ix-card:hover{border-color:var(--acc);background:var(--accbg);transform:translateY(-1px)}
 .ix-card.on{border-color:var(--acc);background:var(--accbg)}
-.ix-c-name{font-size:13.5px;font-weight:680;color:var(--ink)}
+.ix-c-name{font-size:13.5px;font-weight:680;color:var(--ink);padding-right:50px}
 .ix-card.on .ix-c-name{color:var(--acc)}
 .ix-c-tail{font-size:9.5px;color:var(--mut2);text-transform:uppercase;letter-spacing:.3px;margin-top:3px}
 .ix-c-thesis{font-size:10.5px;color:var(--mut);line-height:1.4;margin-top:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}

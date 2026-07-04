@@ -48,9 +48,15 @@
       var cards = b.ids.map(function (id) {
         var t = TopicRegistry.get(id), idn = t.identity, on = (id === curId);
         var th = thesisText(idn.thesis || '');
+        var _st = (typeof Progress !== 'undefined') ? Progress.status(id) : 'untouched';
+        var _pr = (typeof Progress !== 'undefined') ? Progress.get(id) : null;
+        var _bdg = '';
+        if (_st === 'in-progress' && _pr) _bdg = '<span class="ix-c-badge"><i style="background:var(--acc)"></i>' + _pr.done + '/' + _pr.tot + '</span>';
+        else if (_st === 'weak' && _pr) _bdg = '<span class="ix-c-badge"><i style="background:#dc2626"></i>' + _pr.shk + ' weak</span>';
+        else if (_st === 'solid') _bdg = '<span class="ix-c-badge"><i style="background:#0d9488"></i>done</span>';
         var filt = ((idn.title || '') + ' ' + (idn.locatorTail || '') + ' ' + th).toLowerCase().replace(/&[a-z#0-9]+;/g, ' ').replace(/"/g, '');
         return '<button class="ix-card' + (on ? ' on' : '') + '" type="button" data-topic="' + id + '" data-filter="' + filt + '" style="box-shadow:inset 3px 0 0 ' + (b.group.color || 'transparent') + '"' +
-          (on ? ' aria-current="true"' : '') + '>' +
+          (on ? ' aria-current="true"' : '') + '>' + _bdg +
           '<span class="ix-c-name">' + idn.title + '</span>' +
           '<span class="ix-c-tail">' + idn.locatorTail + '</span>' +
           (th ? '<span class="ix-c-thesis">' + th + '</span>' : '') + '</button>';

@@ -38,6 +38,7 @@
 <!--@build:include scripts/app/search-overlay.js-->
 <!--@build:include scripts/app/copy-link.js-->
 <!--@build:include scripts/app/bookmarks.js-->
+<!--@build:include scripts/app/notes-overlay.js-->
 <!--@build:include scripts/app/index-overlay.js-->
 <!--@build:include scripts/app/tour-guide.js-->
 <!--@build:include scripts/app/scroll-progress.js-->

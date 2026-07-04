@@ -104,7 +104,7 @@ var SIGN_CARDS = [
         a:"Usually no \u2014 signing tolerates a short queue. Buffer the sign requests, drain against the HSM\u2019s rate, and let a release complete <i>eventually</i>. A queue turns a burst that would throttle into a backlog that clears \u2014 the same shock-absorber logic as the pipeline\u2019s SQS." }
     ],
     senior:"Naming that the ceiling is the HSM (a resource you don\u2019t scale by resizing your box) \u2014 and that signing is size-independent \u2014 is the numerate tell here." },
-  { tier:'Staff', signal:'Error hygiene',
+  { tier:'SDE3', signal:'Error hygiene',
     q:"Your signing service throws on a bad request. What must the error NOT contain \u2014 and why does it matter?",
     a:"<b>No key material, no key id, no HSM internals.</b> Errors are <b>sanitized</b> before they\u2019re logged or returned. A stack trace that echoes a key, a key id, or an HSM handle is a <b>leak</b> \u2014 into logs, into an aggregator, into an attacker\u2019s hands. Redaction happens on the error path as a security control, not politeness.",
     f:[
@@ -124,7 +124,7 @@ var SIGN_CARDS = [
         a:"Revocation is enforced at the <b>anchor</b> \u2014 the root stops certifying the old leaf, and/or new packages carry a key id the device checks against what the anchor currently certifies. In constrained fleets you often lean on <b>rotation + monotonic version</b> (supersede the old) rather than online revocation lists, since devices can\u2019t always reach a CRL." }
     ],
     senior:"Explaining <i>why</i> anchoring to a root (not the leaf key) is what decouples rotation from re-flashing \u2014 the design reason, not just the mechanism \u2014 is the tell." },
-  { tier:'SDE2', signal:'Anatomy of the signed header',
+  { tier:'SDE3', signal:'Anatomy of the signed header',
     q:"What exactly goes into the signature / header &mdash; and what must stay out?",
     a:"In: the <b>signature</b>, a <b>monotonic version</b>, the <b>key id</b> (which key signed it), and the <b>algorithm id</b> (so the verifier picks the right scheme). Out: <b>anything secret</b> &mdash; never the private key, never key material. The <b>payload is untouched</b> &mdash; header carries proof, payload carries content.",
     f:[

@@ -45,15 +45,25 @@
      on open, so it always reflects the live registry. */
   function buildTopicIndex() {
     if (typeof TopicRegistry === 'undefined' || !TopicRegistry.ids) return [];
+    var STRIP = /&[a-z#0-9]+;/g;
     return TopicRegistry.ids().map(function (id) {
       var t = TopicRegistry.get(id), idn = (t && t.identity) || {};
-      var parts = [idn.title || '', groupLabelFor(idn.group), idn.locatorTail || '', idn.thesis || ''];
       var cards = (t && t.data && t.data.drill && Array.isArray(t.data.drill.cards)) ? t.data.drill.cards : [];
-      for (var i = 0; i < cards.length; i++) { if (cards[i].signal) parts.push(cards[i].signal); if (cards[i].q) parts.push(cards[i].q); }
+      var parts = [idn.title || '', groupLabelFor(idn.group), idn.locatorTail || '', idn.thesis || ''];
+      var frags = [];
+      if (idn.thesis) frags.push(decodeEnt(idn.thesis));
+      for (var i = 0; i < cards.length; i++) {
+        if (cards[i].signal) { parts.push(cards[i].signal); frags.push(decodeEnt(cards[i].signal)); }
+        if (cards[i].q) { parts.push(cards[i].q); frags.push(decodeEnt(cards[i].q)); }
+      }
+      var gl = decodeEnt(groupLabelFor(idn.group)), dl = decodeEnt(idn.locatorTail || '');
       return {
-        kind: 'topic', id: id, label: decodeEnt(idn.title || id),
-        group: decodeEnt(groupLabelFor(idn.group)), desc: decodeEnt(idn.locatorTail || ''),
-        haystack: parts.join(' ').toLowerCase().replace(/&[a-z#0-9]+;/g, ' ')
+        kind: 'topic', id: id, label: decodeEnt(idn.title || id), group: gl, desc: dl,
+        titleLc: (idn.title || '').toLowerCase().replace(STRIP, ' '),
+        thesisLc: (idn.thesis || '').toLowerCase().replace(STRIP, ' '),
+        groupLc: gl.toLowerCase(), descLc: dl.toLowerCase(),
+        frags: frags,
+        haystack: parts.join(' ').toLowerCase().replace(STRIP, ' ')
       };
     });
   }
@@ -107,52 +117,133 @@
 
   function onInput() {
     var q = inputEl.value.trim().toLowerCase();
-    if (q.length < 1) { renderResults([]); return; }
-    var topicHits = TOPIC_INDEX.filter(function (t) { return t.haystack.indexOf(q) > -1; })
-      .map(function (t) { return { data: t }; });
+    if (q.length < 1) { renderResults([], ''); return; }
+    var topicHits = [];
+    TOPIC_INDEX.forEach(function (t) {
+      if (t.haystack.indexOf(q) === -1) return;
+      var score = 1;
+      if (t.titleLc.indexOf(q) > -1) score = 3;
+      else if (t.thesisLc.indexOf(q) > -1 || t.groupLc.indexOf(q) > -1 || t.descLc.indexOf(q) > -1) score = 2;
+      var snippet = '';
+      for (var i = 0; i < t.frags.length; i++) { if (t.frags[i].toLowerCase().indexOf(q) > -1) { snippet = t.frags[i]; break; } }
+      topicHits.push({ score: score, data: { kind: 'topic', id: t.id, label: t.label, group: t.group, desc: t.desc, snippet: snippet } });
+    });
+    topicHits.sort(function (a, b) { return b.score - a.score; });
     var viewHits = MODULES.filter(function (m) {
       return m.label.toLowerCase().indexOf(q) > -1 ||
              m.keywords.toLowerCase().indexOf(q) > -1 ||
              m.desc.toLowerCase().indexOf(q) > -1;
     }).map(function (m) { return { data: { kind: 'view', id: m.id, label: m.label, desc: m.desc } }; });
-    renderResults(topicHits.concat(viewHits));
+    renderResults(topicHits.concat(viewHits), q);
   }
 
-  function renderResults(results) {
-    allResults = results;
-    selectedIndex = results.length > 0 ? 0 : -1;
-    resultsEl.innerHTML = '';
-
-    if (results.length === 0) {
+  /* append text to a container, wrapping each occurrence of q in a highlight span (no innerHTML) */
+  function highlightInto(container, text, q) {
+    if (!q) { container.appendChild(document.createTextNode(text)); return; }
+    var lc = text.toLowerCase(), from = 0, idx = lc.indexOf(q);
+    while (idx > -1) {
+      if (idx > from) container.appendChild(document.createTextNode(text.slice(from, idx)));
+      var mk = document.createElement('span');
+      mk.style.cssText = 'background:var(--accbg);color:var(--acc);border-radius:3px;padding:0 1px;font-weight:700';
+      mk.textContent = text.slice(idx, idx + q.length);
+      container.appendChild(mk);
+      from = idx + q.length; idx = lc.indexOf(q, from);
+    }
+    if (from < text.length) container.appendChild(document.createTextNode(text.slice(from)));
+  }
+  /* trim a long snippet to a ~104-char window centred on the match */
+  function clampSnippet(text, q) {
+    var MAX = 104;
+    if (text.length <= MAX) return text;
+    var idx = q ? text.toLowerCase().indexOf(q) : -1;
+    if (idx < 0) return text.slice(0, MAX) + '\u2026';
+    var start = Math.max(0, idx - 32), end = Math.min(text.length, start + MAX);
+    return (start > 0 ? '\u2026' : '') + text.slice(start, end) + (end < text.length ? '\u2026' : '');
+  }
+  function sectionHeader(text) {
+    var h = document.createElement('div');
+    h.style.cssText = 'font-size:9px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:var(--mut2);padding:8px 14px 4px';
+    h.textContent = text;
+    return h;
+  }
+  function makeResultItem(d, i, q) {
+    var item = document.createElement('button');
+    item.type = 'button';
+    item.style.cssText = 'display:flex;flex-direction:column;align-items:flex-start;width:100%;text-align:left;padding:10px 14px;border:0;border-radius:10px;background:' + (i === 0 ? 'var(--accbg)' : 'transparent') + ';cursor:pointer;transition:background .15s ease;margin-bottom:2px;color:var(--ink)';
+    var top = document.createElement('span');
+    top.style.cssText = 'display:flex;align-items:center;gap:8px;width:100%';
+    var title = document.createElement('span');
+    title.style.cssText = 'font-size:13.5px;font-weight:650;color:var(--ink);flex:1';
+    highlightInto(title, d.label, q);
+    var tag = document.createElement('span');
+    tag.textContent = (d.kind === 'topic') ? 'TOPIC' : 'VIEW';
+    tag.style.cssText = 'font-size:8.5px;font-weight:800;letter-spacing:.5px;padding:2px 6px;border-radius:5px;font-family:var(--mono,monospace);' + ((d.kind === 'topic') ? 'color:var(--acc);background:var(--accbg)' : 'color:var(--mut);background:var(--bg);border:1px solid var(--bd)');
+    top.appendChild(title); top.appendChild(tag);
+    var sub = document.createElement('span');
+    sub.style.cssText = 'font-size:11px;color:var(--mut);margin-top:3px';
+    sub.textContent = (d.kind === 'topic') ? ((d.group ? d.group + ' \u00b7 ' : '') + d.desc) : d.desc;
+    item.appendChild(top); item.appendChild(sub);
+    if (d.kind === 'topic' && d.snippet) {
+      var snip = document.createElement('span');
+      snip.style.cssText = 'display:block;font-size:10.5px;color:var(--mut2);margin-top:4px;line-height:1.42';
+      highlightInto(snip, clampSnippet(d.snippet, q), q);
+      item.appendChild(snip);
+    }
+    item.addEventListener('mouseenter', function () { selectIndex(i); });
+    item.addEventListener('click', function () { navigateTo(d); });
+    return item;
+  }
+  function renderSuggestions() {
+    var groups = (typeof groupedTopicIds === 'function') ? groupedTopicIds() : [];
+    if (!groups.length) {
       var empty = document.createElement('div');
       empty.style.cssText = 'padding:24px;text-align:center;color:var(--mut);font-size:13px';
-      empty.textContent = inputEl.value.trim() ? 'No results found' : 'Type to search topics, concepts, and the nine views...';
+      empty.textContent = 'Type to search topics, concepts, and the nine views...';
       resultsEl.appendChild(empty);
       return;
     }
-
-    results.forEach(function (r, i) {
-      var d = r.data;
+    resultsEl.appendChild(sectionHeader('Jump to a group'));
+    groups.forEach(function (bkt) {
+      var id = bkt.ids[0], t = TopicRegistry.get(id), idn = (t && t.identity) || {};
       var item = document.createElement('button');
       item.type = 'button';
-      item.style.cssText = 'display:flex;flex-direction:column;align-items:flex-start;width:100%;text-align:left;padding:10px 14px;border:0;border-radius:10px;background:' + (i === 0 ? 'var(--accbg)' : 'transparent') + ';cursor:pointer;transition:background .15s ease;margin-bottom:2px;color:var(--ink)';
-      var top = document.createElement('span');
-      top.style.cssText = 'display:flex;align-items:center;gap:8px;width:100%';
-      var title = document.createElement('span');
-      title.style.cssText = 'font-size:13.5px;font-weight:650;color:var(--ink);flex:1';
-      title.textContent = d.label;
-      var tag = document.createElement('span');
-      tag.textContent = (d.kind === 'topic') ? 'TOPIC' : 'VIEW';
-      tag.style.cssText = 'font-size:8.5px;font-weight:800;letter-spacing:.5px;padding:2px 6px;border-radius:5px;font-family:var(--mono,monospace);' + ((d.kind === 'topic') ? 'color:var(--acc);background:var(--accbg)' : 'color:var(--mut);background:var(--bg);border:1px solid var(--bd)');
-      top.appendChild(title); top.appendChild(tag);
+      item.style.cssText = 'display:flex;flex-direction:column;align-items:flex-start;width:100%;text-align:left;padding:9px 14px;border:0;border-radius:10px;background:transparent;cursor:pointer;transition:background .15s ease;margin-bottom:2px;color:var(--ink)';
+      var g = document.createElement('span');
+      g.style.cssText = 'font-size:12.5px;font-weight:700;color:var(--ink)';
+      g.textContent = decodeEnt(bkt.group.label);
       var sub = document.createElement('span');
-      sub.style.cssText = 'font-size:11px;color:var(--mut);margin-top:3px';
-      sub.textContent = (d.kind === 'topic') ? ((d.group ? d.group + ' \u00b7 ' : '') + d.desc) : d.desc;
-      item.appendChild(top);
-      item.appendChild(sub);
-      item.addEventListener('mouseenter', function () { selectIndex(i); });
-      item.addEventListener('click', function () { navigateTo(d); });
+      sub.style.cssText = 'font-size:10.5px;color:var(--mut);margin-top:2px';
+      sub.textContent = decodeEnt(idn.title || id) + ' \u00b7 ' + bkt.ids.length + ' topic' + (bkt.ids.length === 1 ? '' : 's');
+      item.appendChild(g); item.appendChild(sub);
+      item.addEventListener('mouseenter', function () { item.style.background = 'var(--accbg)'; });
+      item.addEventListener('mouseleave', function () { item.style.background = 'transparent'; });
+      item.addEventListener('click', function () { navigateTo({ kind: 'topic', id: id }); });
       resultsEl.appendChild(item);
+    });
+  }
+  function renderResults(results, q) {
+    q = q || '';
+    allResults = results;
+    selectedIndex = results.length > 0 ? 0 : -1;
+    resultsEl.innerHTML = '';
+    if (results.length === 0) {
+      if (inputEl.value.trim()) {
+        var none = document.createElement('div');
+        none.style.cssText = 'padding:24px;text-align:center;color:var(--mut);font-size:13px';
+        none.textContent = 'No results found';
+        resultsEl.appendChild(none);
+      } else { renderSuggestions(); }
+      return;
+    }
+    var lastKind = null;
+    results.forEach(function (r, i) {
+      var d = r.data;
+      if (d.kind !== lastKind) {
+        lastKind = d.kind;
+        var cnt = 0; for (var j = 0; j < results.length; j++) if (results[j].data.kind === d.kind) cnt++;
+        resultsEl.appendChild(sectionHeader((d.kind === 'topic' ? 'Topics' : 'Views') + ' \u00b7 ' + cnt));
+      }
+      resultsEl.appendChild(makeResultItem(d, i, q));
     });
   }
 

@@ -31,6 +31,34 @@
     if (nores) nores.hidden = !(q && !anyGlobal);
   }
 
+  /* the home banner: overall progress + resume + weakest, or a start-here CTA */
+  function homeStrip() {
+    if (typeof Progress === 'undefined' || typeof TopicRegistry === 'undefined') return '';
+    var sum = Progress.summary(), all = Progress.all(), ids = TopicRegistry.ids();
+    if (!ids.length) return '';
+    if (!sum.touched) {
+      var first = TopicRegistry.get(ids[0]);
+      return '<div class="ix-home"><div class="ix-home-prog"><div class="ix-home-k">Start here</div>' +
+        '<div class="ix-home-v">Pick any topic below, or jump into the first one and start drilling.</div></div>' +
+        '<button class="ix-home-btn" type="button" data-topic="' + ids[0] + '"><span class="ix-home-btn-k">Start</span>' + (first ? first.identity.title : ids[0]) + ' &rarr;</button></div>';
+    }
+    var lastId = null, lastTs = 0;
+    for (var id in all) { if (all[id] && all[id].ts > lastTs) { lastTs = all[id].ts; lastId = id; } }
+    var rt = (lastId && TopicRegistry.get(lastId)) ? TopicRegistry.get(lastId) : null;
+    var pct = sum.overallPct || 0;
+    var weak = sum.weakest.slice(0, 3).map(function (w) {
+      var t = TopicRegistry.get(w.id);
+      return '<button class="ix-weak-b" type="button" data-topic="' + w.id + '">' + (t ? t.identity.title : w.id) + (w.shk ? '<span class="ix-weak-n">' + w.shk + '</span>' : '') + '</button>';
+    }).join('');
+    return '<div class="ix-home">' +
+      '<div class="ix-home-prog"><div class="ix-home-k">Your progress</div>' +
+      '<div class="ix-home-bar"><span style="width:' + pct + '%"></span></div>' +
+      '<div class="ix-home-v">' + pct + '% of the curriculum &middot; ' + sum.totDone + ' probes drilled &middot; ' + sum.touched + ' of ' + sum.nTopics + ' topics started</div></div>' +
+      (rt ? '<button class="ix-home-btn" type="button" data-topic="' + lastId + '"><span class="ix-home-btn-k">Resume</span>' + rt.identity.title + ' &rarr;</button>' : '') +
+      (weak ? '<div class="ix-weak"><div class="ix-home-k">Revisit</div><div class="ix-weak-list">' + weak + '</div></div>' : '') +
+      '</div>';
+  }
+
   function panelHtml() {
     var buckets = (typeof groupedTopicIds === 'function') ? groupedTopicIds() : [];
     var cur = (typeof TopicRegistry !== 'undefined' && TopicRegistry.current) ? TopicRegistry.current() : null;
@@ -67,7 +95,7 @@
         '<div class="ix-grid">' + cards + '</div></section>';
     }).join('');
 
-    return '<div class="ix-panel">' + head + filter + '<div class="ix-scroll">' +
+    return '<div class="ix-panel">' + head + homeStrip() + filter + '<div class="ix-scroll">' +
       (buckets.length ? body : '<div class="ix-empty">No topics registered.</div>') + '</div></div>';
   }
 
@@ -85,7 +113,7 @@
       if (e.target === overlayEl) { close(); return; }
       var closer = e.target.closest ? e.target.closest('.ix-x') : null;
       if (closer) { close(); return; }
-      var card = e.target.closest ? e.target.closest('.ix-card') : null;
+      var card = e.target.closest ? e.target.closest('[data-topic]') : null;
       if (card) {
         var id = card.getAttribute('data-topic');
         close();

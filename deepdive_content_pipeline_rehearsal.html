@@ -506,6 +506,12 @@ button,summary{-webkit-user-select:none;user-select:none}
 .cmp-thesis{margin:13px 0 0;font-size:12.5px;line-height:1.62;color:var(--mut2)}
 .cmp-thesis::before{content:"";display:block;width:26px;height:2px;border-radius:2px;margin-bottom:11px;background:linear-gradient(90deg,var(--acc),var(--acc2))}
 .cmp-h{font-size:9.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);margin:0 0 11px}
+.cmp-rel-list{display:flex;flex-direction:column;gap:6px}
+.cmp-rel{display:flex;flex-direction:column;align-items:flex-start;gap:1px;width:100%;text-align:left;padding:8px 11px;border:1px solid var(--bd);border-radius:9px;background:var(--surf);box-shadow:var(--surf-sh);cursor:pointer;transition:background .15s ease,border-color .15s ease,transform .1s ease}
+.cmp-rel:hover{background:var(--accbg);border-color:var(--acc)}
+.cmp-rel:active{transform:translateY(1px)}
+.cmp-rel-t{font-size:12px;font-weight:650;color:var(--ink)}
+.cmp-rel-d{font-size:10.5px;color:var(--mut2)}
 .cmp-view{font-size:14.5px;font-weight:750;color:var(--ink);margin-bottom:6px}
 .cmp-note{margin:0;font-size:12.5px;line-height:1.6;color:var(--mut2)}
 .cmp-spine{position:relative;list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:13px}
@@ -788,6 +794,7 @@ try{var _dk=matchMedia('(prefers-color-scheme:dark)').matches;document.documentE
         <div class="cmp-h">Drive it</div>
         <p class="cmp-drive">Press <kbd class="cmp-kbd">?</kbd> for every shortcut. Open <b>Tools</b> for a timed mock run, or to see where you&rsquo;re still weak.</p>
       </div>
+      <div class="cmp-block cmp-related" id="cmpRelated" hidden></div>
     </div>
   </aside>
 </div>
@@ -1094,6 +1101,22 @@ function applyIdentity(idn) {
   var spineHtml = idn.spine.map(function (s) { return '<li><span class="cmp-dot"></span><span>' + s + '</span></li>'; }).join('');
   document.querySelectorAll('.cmp-spine').forEach(function (ul) { ul.innerHTML = spineHtml; });
   var cramT = q('.cram-title'); if (cramT) cramT.innerHTML = 'Cram sheet &middot; ' + idn.cramTitle;
+  /* A6: related topics in the same group -- rendered per topic, wired to setTopic */
+  var rel = byId('cmpRelated');
+  if (rel && typeof groupedTopicIds === 'function' && typeof TopicRegistry !== 'undefined') {
+    var _cur = TopicRegistry.current(), _curId = _cur ? _cur.id : null, _bkt = null, _gg = groupedTopicIds();
+    for (var _ri = 0; _ri < _gg.length; _ri++) { if (_gg[_ri].group.id === idn.group) { _bkt = _gg[_ri]; break; } }
+    var _sibs = _bkt ? _bkt.ids.filter(function (x) { return x !== _curId; }) : [];
+    if (_sibs.length) {
+      var _links = _sibs.slice(0, 3).map(function (x) {
+        var _tp = TopicRegistry.get(x), _ti = _tp ? _tp.identity : null;
+        return '<button class="cmp-rel" type="button" data-topic="' + x + '"><span class="cmp-rel-t">' + (_ti ? _ti.title : x) + '</span><span class="cmp-rel-d">' + (_ti && _ti.locatorTail ? _ti.locatorTail : '') + '</span></button>';
+      }).join('');
+      rel.innerHTML = '<div class="cmp-h">More in <span style="color:' + (_bkt.group.color || 'var(--acc)') + '">' + _bkt.group.label + '</span></div><div class="cmp-rel-list">' + _links + '</div>';
+      rel.hidden = false;
+      rel.onclick = function (e) { var b = e.target && e.target.closest ? e.target.closest('[data-topic]') : null; if (b) TopicRegistry.setTopic(b.getAttribute('data-topic')); };
+    } else { rel.hidden = true; rel.innerHTML = ''; }
+  }
   TOPIC_CMP_NOTES = idn.cmpNotes;
   if (window.__syncCompanion) window.__syncCompanion();
   if (window.ViewManager && ViewManager.refreshTitle) ViewManager.refreshTitle();
@@ -11252,6 +11275,7 @@ customElements.define('deep-session', DeepSession);
       (buckets.length ? body : '<div class="ix-empty">No topics registered.</div>') + '</div></div>';
   }
 
+  var _ixReturn = null;
   function create() {
     if (overlayEl) return;
     overlayEl = document.createElement('div');
@@ -11272,11 +11296,30 @@ customElements.define('deep-session', DeepSession);
         if (id && typeof TopicRegistry !== 'undefined' && TopicRegistry.setTopic) TopicRegistry.setTopic(id);
       }
     });
+    overlayEl.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        var cards = Array.prototype.filter.call(overlayEl.querySelectorAll('.ix-card'), function (c) { return c.offsetParent !== null; });
+        if (!cards.length) return;
+        e.preventDefault();
+        var idx = Array.prototype.indexOf.call(cards, document.activeElement);
+        var fwd = (e.key === 'ArrowDown' || e.key === 'ArrowRight');
+        var nx = idx === -1 ? (fwd ? cards[0] : cards[cards.length - 1]) : cards[fwd ? Math.min(idx + 1, cards.length - 1) : Math.max(idx - 1, 0)];
+        nx.focus();
+      } else if (e.key === 'Tab') {
+        var f = Array.prototype.filter.call(overlayEl.querySelectorAll('button,[href],input,textarea,select,[tabindex]:not([tabindex="-1"])'), function (el) { return !el.disabled && el.offsetParent !== null; });
+        if (!f.length) { e.preventDefault(); return; }
+        var first = f[0], last = f[f.length - 1], a = document.activeElement;
+        if (!overlayEl.contains(a)) { e.preventDefault(); first.focus(); }
+        else if (e.shiftKey && a === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && a === last) { e.preventDefault(); first.focus(); }
+      }
+    });
   }
 
   function open() {
     if (isOpen) return;
     if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
+    _ixReturn = document.activeElement;
     create();
     overlayEl.innerHTML = panelHtml();
     isOpen = true;
@@ -11293,6 +11336,8 @@ customElements.define('deep-session', DeepSession);
     isOpen = false;
     overlayEl.classList.remove('vis');
     hideTimer = setTimeout(function () { if (overlayEl) overlayEl.classList.remove('open'); hideTimer = null; }, 220);
+    if (_ixReturn && _ixReturn.focus) { try { _ixReturn.focus(); } catch (e) {} }
+    _ixReturn = null;
   }
 
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && isOpen) close(); });

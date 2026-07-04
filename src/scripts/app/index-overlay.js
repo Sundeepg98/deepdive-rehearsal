@@ -65,6 +65,7 @@
       (buckets.length ? body : '<div class="ix-empty">No topics registered.</div>') + '</div></div>';
   }
 
+  var _ixReturn = null;
   function create() {
     if (overlayEl) return;
     overlayEl = document.createElement('div');
@@ -85,11 +86,30 @@
         if (id && typeof TopicRegistry !== 'undefined' && TopicRegistry.setTopic) TopicRegistry.setTopic(id);
       }
     });
+    overlayEl.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        var cards = Array.prototype.filter.call(overlayEl.querySelectorAll('.ix-card'), function (c) { return c.offsetParent !== null; });
+        if (!cards.length) return;
+        e.preventDefault();
+        var idx = Array.prototype.indexOf.call(cards, document.activeElement);
+        var fwd = (e.key === 'ArrowDown' || e.key === 'ArrowRight');
+        var nx = idx === -1 ? (fwd ? cards[0] : cards[cards.length - 1]) : cards[fwd ? Math.min(idx + 1, cards.length - 1) : Math.max(idx - 1, 0)];
+        nx.focus();
+      } else if (e.key === 'Tab') {
+        var f = Array.prototype.filter.call(overlayEl.querySelectorAll('button,[href],input,textarea,select,[tabindex]:not([tabindex="-1"])'), function (el) { return !el.disabled && el.offsetParent !== null; });
+        if (!f.length) { e.preventDefault(); return; }
+        var first = f[0], last = f[f.length - 1], a = document.activeElement;
+        if (!overlayEl.contains(a)) { e.preventDefault(); first.focus(); }
+        else if (e.shiftKey && a === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && a === last) { e.preventDefault(); first.focus(); }
+      }
+    });
   }
 
   function open() {
     if (isOpen) return;
     if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
+    _ixReturn = document.activeElement;
     create();
     overlayEl.innerHTML = panelHtml();
     isOpen = true;
@@ -106,6 +126,8 @@
     isOpen = false;
     overlayEl.classList.remove('vis');
     hideTimer = setTimeout(function () { if (overlayEl) overlayEl.classList.remove('open'); hideTimer = null; }, 220);
+    if (_ixReturn && _ixReturn.focus) { try { _ixReturn.focus(); } catch (e) {} }
+    _ixReturn = null;
   }
 
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && isOpen) close(); });

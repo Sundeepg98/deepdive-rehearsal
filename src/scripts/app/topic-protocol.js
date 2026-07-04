@@ -54,6 +54,22 @@ function applyIdentity(idn) {
   var spineHtml = idn.spine.map(function (s) { return '<li><span class="cmp-dot"></span><span>' + s + '</span></li>'; }).join('');
   document.querySelectorAll('.cmp-spine').forEach(function (ul) { ul.innerHTML = spineHtml; });
   var cramT = q('.cram-title'); if (cramT) cramT.innerHTML = 'Cram sheet &middot; ' + idn.cramTitle;
+  /* A6: related topics in the same group -- rendered per topic, wired to setTopic */
+  var rel = byId('cmpRelated');
+  if (rel && typeof groupedTopicIds === 'function' && typeof TopicRegistry !== 'undefined') {
+    var _cur = TopicRegistry.current(), _curId = _cur ? _cur.id : null, _bkt = null, _gg = groupedTopicIds();
+    for (var _ri = 0; _ri < _gg.length; _ri++) { if (_gg[_ri].group.id === idn.group) { _bkt = _gg[_ri]; break; } }
+    var _sibs = _bkt ? _bkt.ids.filter(function (x) { return x !== _curId; }) : [];
+    if (_sibs.length) {
+      var _links = _sibs.slice(0, 3).map(function (x) {
+        var _tp = TopicRegistry.get(x), _ti = _tp ? _tp.identity : null;
+        return '<button class="cmp-rel" type="button" data-topic="' + x + '"><span class="cmp-rel-t">' + (_ti ? _ti.title : x) + '</span><span class="cmp-rel-d">' + (_ti && _ti.locatorTail ? _ti.locatorTail : '') + '</span></button>';
+      }).join('');
+      rel.innerHTML = '<div class="cmp-h">More in <span style="color:' + (_bkt.group.color || 'var(--acc)') + '">' + _bkt.group.label + '</span></div><div class="cmp-rel-list">' + _links + '</div>';
+      rel.hidden = false;
+      rel.onclick = function (e) { var b = e.target && e.target.closest ? e.target.closest('[data-topic]') : null; if (b) TopicRegistry.setTopic(b.getAttribute('data-topic')); };
+    } else { rel.hidden = true; rel.innerHTML = ''; }
+  }
   TOPIC_CMP_NOTES = idn.cmpNotes;
   if (window.__syncCompanion) window.__syncCompanion();
   if (window.ViewManager && ViewManager.refreshTitle) ViewManager.refreshTitle();

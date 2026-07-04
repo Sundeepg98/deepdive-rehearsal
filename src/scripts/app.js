@@ -7,6 +7,7 @@
 <!--@build:include topics/authz.js-->
 <!--@build:include topics/aws-hardening.js-->
 <!--@build:include topics/notifications.js-->
+<!--@build:include topics/eav.js-->
 <!--@build:include scripts/app/red-flags.js-->
 <!--@build:include scripts/app/trade-offs.js-->
 <!--@build:include scripts/app/walkthrough.js-->

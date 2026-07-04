@@ -59,6 +59,13 @@
       '</div>';
   }
 
+  /* footer: a reset affordance, shown only when there is saved data to clear */
+  function footerHtml() {
+    var any = (typeof Store !== 'undefined' && Store.keys && Store.keys('').length > 0);
+    if (!any) return '';
+    return '<div class="ix-foot"><button class="ix-reset" type="button">Reset all saved progress</button></div>';
+  }
+
   function panelHtml() {
     var buckets = (typeof groupedTopicIds === 'function') ? groupedTopicIds() : [];
     var cur = (typeof TopicRegistry !== 'undefined' && TopicRegistry.current) ? TopicRegistry.current() : null;
@@ -96,7 +103,7 @@
     }).join('');
 
     return '<div class="ix-panel">' + head + homeStrip() + filter + '<div class="ix-scroll">' +
-      (buckets.length ? body : '<div class="ix-empty">No topics registered.</div>') + '</div></div>';
+      (buckets.length ? body : '<div class="ix-empty">No topics registered.</div>') + '</div>' + footerHtml() + '</div>';
   }
 
   var _ixReturn = null;
@@ -113,6 +120,14 @@
       if (e.target === overlayEl) { close(); return; }
       var closer = e.target.closest ? e.target.closest('.ix-x') : null;
       if (closer) { close(); return; }
+      var resetBtn = e.target.closest ? e.target.closest('.ix-reset') : null;
+      if (resetBtn) {
+        if (window.confirm('Clear all saved progress and data? This cannot be undone.')) {
+          if (typeof Store !== 'undefined' && Store.clearAll) Store.clearAll();
+          overlayEl.innerHTML = panelHtml();
+        }
+        return;
+      }
       var card = e.target.closest ? e.target.closest('[data-topic]') : null;
       if (card) {
         var id = card.getAttribute('data-topic');

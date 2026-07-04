@@ -678,6 +678,9 @@ body.is-hidden,body.is-hidden *,body.is-hidden *::before,body.is-hidden *::after
 .ix-weak-b{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--ink);font-size:11.5px;font-weight:600;cursor:pointer;transition:border-color .14s ease,background .14s ease}
 .ix-weak-b:hover{border-color:var(--acc);background:var(--accbg)}
 .ix-weak-n{display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;padding:0 4px;border-radius:9px;background:#dc2626;color:#fff;font-size:9px;font-weight:800}
+.ix-foot{padding:11px 16px 3px;text-align:center;border-top:1px solid var(--bd);margin-top:6px}
+.ix-reset{font-size:11px;font-weight:600;color:var(--mut);background:none;border:none;cursor:pointer;padding:6px 12px;border-radius:7px;transition:color .14s ease,background .14s ease}
+.ix-reset:hover{color:#dc2626;background:rgba(220,38,38,.07)}
 .ix-card:hover{border-color:var(--acc);background:var(--accbg);transform:translateY(-1px)}
 .ix-card.on{border-color:var(--acc);background:var(--accbg)}
 .ix-c-name{font-size:13.5px;font-weight:680;color:var(--ink);padding-right:50px}
@@ -11476,6 +11479,13 @@ customElements.define('deep-session', DeepSession);
       '</div>';
   }
 
+  /* footer: a reset affordance, shown only when there is saved data to clear */
+  function footerHtml() {
+    var any = (typeof Store !== 'undefined' && Store.keys && Store.keys('').length > 0);
+    if (!any) return '';
+    return '<div class="ix-foot"><button class="ix-reset" type="button">Reset all saved progress</button></div>';
+  }
+
   function panelHtml() {
     var buckets = (typeof groupedTopicIds === 'function') ? groupedTopicIds() : [];
     var cur = (typeof TopicRegistry !== 'undefined' && TopicRegistry.current) ? TopicRegistry.current() : null;
@@ -11513,7 +11523,7 @@ customElements.define('deep-session', DeepSession);
     }).join('');
 
     return '<div class="ix-panel">' + head + homeStrip() + filter + '<div class="ix-scroll">' +
-      (buckets.length ? body : '<div class="ix-empty">No topics registered.</div>') + '</div></div>';
+      (buckets.length ? body : '<div class="ix-empty">No topics registered.</div>') + '</div>' + footerHtml() + '</div>';
   }
 
   var _ixReturn = null;
@@ -11530,6 +11540,14 @@ customElements.define('deep-session', DeepSession);
       if (e.target === overlayEl) { close(); return; }
       var closer = e.target.closest ? e.target.closest('.ix-x') : null;
       if (closer) { close(); return; }
+      var resetBtn = e.target.closest ? e.target.closest('.ix-reset') : null;
+      if (resetBtn) {
+        if (window.confirm('Clear all saved progress and data? This cannot be undone.')) {
+          if (typeof Store !== 'undefined' && Store.clearAll) Store.clearAll();
+          overlayEl.innerHTML = panelHtml();
+        }
+        return;
+      }
       var card = e.target.closest ? e.target.closest('[data-topic]') : null;
       if (card) {
         var id = card.getAttribute('data-topic');

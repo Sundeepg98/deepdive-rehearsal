@@ -9,6 +9,7 @@
 <!--@build:include topics/notifications.js-->
 <!--@build:include topics/eav.js-->
 <!--@build:include topics/desired-state.js-->
+<!--@build:include topics/iac.js-->
 <!--@build:include scripts/app/red-flags.js-->
 <!--@build:include scripts/app/trade-offs.js-->
 <!--@build:include scripts/app/walkthrough.js-->

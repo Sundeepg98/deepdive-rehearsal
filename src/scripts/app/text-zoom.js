@@ -8,8 +8,9 @@
    AND reflows across the shadow boundary, and because each .pane is a normal
    block inside .stage it reflows to fit -- no horizontal clipping.
 
-   The level is a session-only module variable (default 100%); it is deliberately
-   NOT persisted, so it never touches the portable session code or any storage.
+   The level persists per browser via Store (default 100%) so a reader's chosen
+   size survives reloads and travels with an exported backup. It stays out of the
+   portable CPR1 session code (that is a session-stats snapshot, not preferences).
    Reduced motion is handled globally (the app's reduced-motion rule neutralises
    transitions); zoom itself applies instantly.
 
@@ -18,7 +19,9 @@
   'use strict';
 
   var LEVELS = [0.85, 0.92, 1.0, 1.08, 1.16];
-  var idx = 2; /* default 100%; session-only, intentionally not persisted */
+  var KEY = 'ui.textzoom';
+  var idx = 2; /* default 100%, persisted per browser */
+  try { var _sv = (typeof Store !== 'undefined' && Store.get) ? Store.get(KEY, null) : null; if (typeof _sv === 'number' && _sv >= 0 && _sv < LEVELS.length) idx = _sv; } catch (e) {}
   var stage = null, decBtn = null, incBtn = null;
 
   function apply() {
@@ -37,6 +40,7 @@
     b.addEventListener('click', function () {
       idx = Math.min(LEVELS.length - 1, Math.max(0, idx + step));
       apply();
+      try { if (typeof Store !== 'undefined' && Store.set) Store.set(KEY, idx); } catch (e) {}
     });
     return b;
   }

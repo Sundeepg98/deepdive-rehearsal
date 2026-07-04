@@ -12,10 +12,13 @@
    are pure helpers, and _fmtN/_fmtTB are passed into compute as fmt.n/fmt.tb. The
    tab / rail / keyboard nav that used to share this file lives in num/shell.js
    (foundation). Child-mounts only -- renderTopic never rewrites this._root.innerHTML.
-   Offline-safe: no network/storage/permission. */
+   Per-topic input tweaks persist via local Store (key num.<topic>); a Reset to
+   canonical button restores the reference scenario. Offline-safe: no network/permission. */
 var NUM_STYLE = `.numlead{font-size:15px;line-height:1.5;color:var(--ink);margin:2px 2px 18px}
 .numlead b{color:var(--accink);font-weight:700}
-.num-h{font:800 10px -apple-system,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:var(--mut2);margin-bottom:12px}
+.num-h{font:800 10px -apple-system,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:var(--mut2);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.num-reset{font:600 10px -apple-system,sans-serif;color:var(--mut);background:transparent;border:1px solid var(--bd);border-radius:6px;padding:3px 9px;cursor:pointer;text-transform:none;letter-spacing:.2px;transition:color .15s ease,border-color .15s ease}
+.num-reset:hover{color:var(--acc);border-color:var(--acc)}
 .ninp{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .ninp label{display:flex;flex-direction:column;gap:6px;font:700 11px -apple-system,sans-serif;color:var(--mut);letter-spacing:.2px}
 .ninp input{font:700 15px ui-monospace,Menlo,monospace;color:var(--accink);background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.04) 100%);border:1.5px solid var(--ninp-bd);border-radius:9px;padding:10px 12px;width:100%;-moz-appearance:textfield;transition:border-color .2s ease,box-shadow .2s ease,transform .15s ease}
@@ -43,7 +46,7 @@ class DeepNumbers extends TopicPane {
   skeleton() {
     return `<div class="numlead" id="nlead"></div>
     <div class="card">
-      <div class="num-h">Assumptions</div>
+      <div class="num-h">Assumptions <button type="button" class="num-reset" id="nreset" hidden>Reset to canonical</button></div>
       <div class="ninp" id="ninp"></div>
     </div>
     <div class="card" style="margin-top:13px">
@@ -59,24 +62,43 @@ class DeepNumbers extends TopicPane {
     this._tell = root.getElementById('ntell');
     /* ONE delegated input listener on the stable #ninp container -- the per-topic
        fields are rebuilt by renderTopic, so the listener must live on the stable parent. */
+    this._reset = root.getElementById('nreset');
     var self = this;
-    this._ninp.addEventListener('input', function () { self._calc(); });
+    this._ninp.addEventListener('input', function () { self._calc(); self._saveCurrent(); self._syncResetBtn(); });
+    if (this._reset) this._reset.addEventListener('click', function () { self._resetToCanonical(); });
   }
   renderTopic(d) {
     this._inputs = d.inputs;
     this._compute = d.compute;
+    this._topicId = (typeof TopicRegistry !== 'undefined' && TopicRegistry.current()) ? TopicRegistry.current().id : null;
     this._lead.innerHTML = d.lead;
     this._tell.innerHTML = d.tell;
-    /* COUNT-DRIVEN input fields from d.inputs (rebuilt here, not init, so a topic with
-       a different assumption count rebuilds cleanly). */
-    var html = '';
-    for (var i = 0; i < d.inputs.length; i++) {
-      var f = d.inputs[i];
-      html += '<label>' + f.label + '<input id="' + f.id + '" type="number" value="' + f.value + '" min="' + f.min + '"' + (f.step != null ? ' step="' + f.step + '"' : '') + '></label>';
+    /* COUNT-DRIVEN input fields from d.inputs, seeded from any saved per-topic tweaks
+       (else the canonical f.value), rebuilt here so a topic with a different assumption
+       count rebuilds cleanly. */
+    this._buildInputs(false);
+  }
+  _numKey() { return this._topicId ? ('num.' + this._topicId) : null; }
+  _loadSaved() { var k = this._numKey(); if (!k || typeof Store === 'undefined' || !Store.get) return null; return Store.get(k, null); }
+  _saveCurrent() {
+    var k = this._numKey(); if (!k || typeof Store === 'undefined' || !Store.set || !this._inputs) return;
+    var m = {}, canon = true;
+    for (var i = 0; i < this._inputs.length; i++) { var f = this._inputs[i], el = this._root.getElementById(f.id); if (el) { m[f.id] = el.value; if (String(el.value) !== String(f.value)) canon = false; } }
+    if (canon) { if (Store.remove) Store.remove(k); } else { Store.set(k, m); }
+  }
+  _clearSaved() { var k = this._numKey(); if (k && typeof Store !== 'undefined' && Store.remove) Store.remove(k); }
+  _buildInputs(useCanonical) {
+    var saved = useCanonical ? null : this._loadSaved(), html = '';
+    for (var i = 0; i < this._inputs.length; i++) {
+      var f = this._inputs[i], v = (saved && saved[f.id] != null) ? saved[f.id] : f.value;
+      html += '<label>' + f.label + '<input id="' + f.id + '" type="number" value="' + v + '" min="' + f.min + '"' + (f.step != null ? ' step="' + f.step + '"' : '') + '></label>';
     }
     this._ninp.innerHTML = html;
+    this._syncResetBtn();
     this._calc();
   }
+  _syncResetBtn() { if (!this._reset) return; var sv = this._loadSaved(); this._reset.hidden = !(sv && Object.keys(sv).length > 0); }
+  _resetToCanonical() { this._clearSaved(); this._buildInputs(true); }
   _fmtN(x) { if (!isFinite(x)) x = 0; return Math.round(x).toLocaleString('en-US'); }
   _fmtTB(tb) {
     if (!isFinite(tb)) tb = 0;

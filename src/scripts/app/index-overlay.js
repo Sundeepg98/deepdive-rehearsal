@@ -165,7 +165,11 @@
   }
 
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && isOpen) close(); });
-  function wire() { var btn = document.getElementById('idxopen'); if (btn) btn.addEventListener('click', open); }
+  function wire() {
+    var btn = document.getElementById('idxopen'); if (btn) btn.addEventListener('click', open);
+    /* C1: a fresh landing (no deep-link) opens the home; a deep-link is honored as-is */
+    if (!window.__bootHash) { setTimeout(open, 30); }
+  }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wire);
   else wire();
 

@@ -908,6 +908,10 @@ try{var _dk=matchMedia('(prefers-color-scheme:dark)').matches;document.documentE
    and future migrations have a hook. If localStorage is unavailable (private
    mode, disabled, quota exceeded), every call degrades to an in-memory fallback
    so the app keeps working -- persistence is an enhancement, never a dependency. */
+/* Captured before the router normalizes the URL: an empty boot hash means a
+   fresh landing (open the home), a non-empty one means a deep-link (honor it). */
+window.__bootHash = (typeof window !== 'undefined' && window.location) ? window.location.hash : '';
+
 var Store = (function () {
   var PREFIX = 'ddr.v1.';
   var mem = {};
@@ -11578,7 +11582,11 @@ customElements.define('deep-session', DeepSession);
   }
 
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && isOpen) close(); });
-  function wire() { var btn = document.getElementById('idxopen'); if (btn) btn.addEventListener('click', open); }
+  function wire() {
+    var btn = document.getElementById('idxopen'); if (btn) btn.addEventListener('click', open);
+    /* C1: a fresh landing (no deep-link) opens the home; a deep-link is honored as-is */
+    if (!window.__bootHash) { setTimeout(open, 30); }
+  }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wire);
   else wire();
 

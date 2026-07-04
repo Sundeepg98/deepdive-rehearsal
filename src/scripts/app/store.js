@@ -5,6 +5,10 @@
    and future migrations have a hook. If localStorage is unavailable (private
    mode, disabled, quota exceeded), every call degrades to an in-memory fallback
    so the app keeps working -- persistence is an enhancement, never a dependency. */
+/* Captured before the router normalizes the URL: an empty boot hash means a
+   fresh landing (open the home), a non-empty one means a deep-link (honor it). */
+window.__bootHash = (typeof window !== 'undefined' && window.location) ? window.location.hash : '';
+
 var Store = (function () {
   var PREFIX = 'ddr.v1.';
   var mem = {};

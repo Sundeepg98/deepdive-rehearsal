@@ -36,6 +36,10 @@ const OVERLAYS = ['mockov', 'mixov', 'cramov', 'sessov', 'keyov', 'scopeov', 'pl
   await page.goto('file://' + path.resolve(HTML));
   await page.evaluate(() => document.fonts.ready);
   await page.waitForTimeout(300);
+  // A bare load opens the home (Topic index) as the landing; close it before
+  // exercising the sidebar tabs so its backdrop does not swallow the clicks.
+  await page.evaluate(() => { if (window.IndexOverlay && window.IndexOverlay.isOpen && window.IndexOverlay.isOpen()) window.IndexOverlay.close(); });
+  await page.waitForTimeout(320);
 
   const paneFails = [];
   for (const t of PANES) {

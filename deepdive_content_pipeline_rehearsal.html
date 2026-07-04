@@ -11796,6 +11796,36 @@ window.Bookmarks = Bookmarks;
   window.PrintQA = { print: openPrint };
 })();
 
+/* ===== scripts/app/last-visit.js -- true cross-session Resume =====
+   Persists the last topic+view the user actually studied. Navigation uses
+   pushState/replaceState (not hash edits), so we listen to routechange (view
+   changes) + deeptopicchange (topic switches). Two guards keep the boot from
+   clobbering a real last visit: a short settle window (the router emits its
+   initial route before C1 opens the home ~30ms later) and an on-home check.
+   The topic id comes from the registry (reliable even for the bare-#view default
+   topic); the view comes from the router. Falls back to last-drilled in the home. */
+(function () {
+  var KEY = 'nav.last', ready = false;
+  function ids() { return (typeof TopicRegistry !== 'undefined') ? TopicRegistry.ids() : []; }
+  function onHome() { return (typeof IndexOverlay !== 'undefined' && IndexOverlay.isOpen) ? IndexOverlay.isOpen() : false; }
+  function record() {
+    if (!ready || onHome()) return;
+    var cur = (typeof TopicRegistry !== 'undefined' && TopicRegistry.current) ? TopicRegistry.current() : null;
+    if (!cur || !cur.id || ids().indexOf(cur.id) === -1) return;
+    var rc = (typeof Router !== 'undefined' && Router.current) ? Router.current() : null;
+    try { Store.set(KEY, { id: cur.id, view: (rc && rc.view) ? rc.view : '' }); } catch (e) {}
+  }
+  window.addEventListener('routechange', record);
+  window.addEventListener('deeptopicchange', record);
+  function arm() { setTimeout(function () { ready = true; record(); }, 500); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', arm); else arm();
+  function stored() { var v = Store.get(KEY, null); return (v && v.id) ? v : null; }
+  window.LastVisit = {
+    topicId: function () { var v = stored(); return v ? v.id : null; },
+    hash: function () { var v = stored(); return v ? ('#' + v.id + (v.view ? '/' + v.view : '')) : null; }
+  };
+})();
+
 /* ===== IndexOverlay =====
    The topic index: every registered topic grouped by the six thematic groups --
    the browse / entry surface for the full set, and the home for the total scope
@@ -11842,7 +11872,11 @@ window.Bookmarks = Bookmarks;
     }
     var lastId = null, lastTs = 0;
     for (var id in all) { if (all[id] && all[id].ts > lastTs) { lastTs = all[id].ts; lastId = id; } }
-    var rt = (lastId && TopicRegistry.get(lastId)) ? TopicRegistry.get(lastId) : null;
+    var visitId = (typeof LastVisit !== 'undefined' && LastVisit.topicId) ? LastVisit.topicId() : null;
+    var useVisit = !!(visitId && TopicRegistry.get(visitId));
+    var resumeId = useVisit ? visitId : lastId;
+    var resumeHash = (useVisit && LastVisit.hash) ? LastVisit.hash() : null;
+    var rt = (resumeId && TopicRegistry.get(resumeId)) ? TopicRegistry.get(resumeId) : null;
     var pct = sum.overallPct || 0;
     var weak = sum.weakest.slice(0, 3).map(function (w) {
       var t = TopicRegistry.get(w.id);
@@ -11852,7 +11886,7 @@ window.Bookmarks = Bookmarks;
       '<div class="ix-home-prog"><div class="ix-home-k">Your progress</div>' +
       '<div class="ix-home-bar"><span style="width:' + pct + '%"></span></div>' +
       '<div class="ix-home-v">' + pct + '% of the curriculum &middot; ' + sum.totDone + ' probes drilled &middot; ' + sum.touched + ' of ' + sum.nTopics + ' topics started</div></div>' +
-      (rt ? '<button class="ix-home-btn" type="button" data-topic="' + lastId + '"><span class="ix-home-btn-k">Resume</span>' + rt.identity.title + ' &rarr;</button>' : '') +
+      (rt ? '<button class="ix-home-btn" type="button" ' + (resumeHash ? 'data-hash="' + resumeHash + '"' : 'data-topic="' + resumeId + '"') + '><span class="ix-home-btn-k">Resume</span>' + rt.identity.title + ' &rarr;</button>' : '') +
       (weak ? '<div class="ix-weak"><div class="ix-home-k">Revisit</div><div class="ix-weak-list">' + weak + '</div></div>' : '') +
       '</div>';
   }
@@ -11964,6 +11998,8 @@ window.Bookmarks = Bookmarks;
       }
       var crossBtn = e.target.closest ? e.target.closest('[data-cross]') : null;
       if (crossBtn) { var _m = crossBtn.getAttribute('data-cross'); close(); if (window.CrossDrill && CrossDrill.open) CrossDrill.open(_m); return; }
+      var hashBtn = e.target.closest ? e.target.closest('[data-hash]') : null;
+      if (hashBtn) { var _h = hashBtn.getAttribute('data-hash'); close(); try { location.hash = _h; } catch (e2) {} return; }
       var card = e.target.closest ? e.target.closest('[data-topic]') : null;
       if (card) {
         var id = card.getAttribute('data-topic');

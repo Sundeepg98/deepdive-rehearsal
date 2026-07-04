@@ -8820,6 +8820,8 @@ var SYS_STYLE = `
 .piv summary::-webkit-details-marker{display:none}
 .piv .pq{font-size:13px;font-weight:600;color:var(--ink);line-height:1.4}
 .piv .chip{flex:none;font-size:9.5px;font-weight:800;letter-spacing:.3px;color:var(--indigo);background:linear-gradient(135deg,var(--indigobg) 0%,rgba(83,74,183,.04) 100%);border:1px solid #cfc7f0;border-radius:6px;padding:3px 9px;white-space:nowrap;margin-top:1px;margin-left:auto}
+.piv .chip.chip-link{cursor:pointer;transition:border-color .15s ease,background .15s ease,color .15s ease}
+.piv .chip.chip-link:hover,.piv .chip.chip-link:focus-visible{border-color:var(--acc);color:var(--acc);background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.06) 100%);outline:none}
 .piv .pa{padding:2px 17px 16px 43px;font-size:12px;color:var(--sm-pa-fg);line-height:1.6}
 .piv .pa b{color:var(--accink);font-weight:700}
 .piv[open] summary .pq::after{content:" \\2014 bridge:";color:var(--mut2);font-weight:700}
@@ -8836,9 +8838,34 @@ function sysRenderStage(s, i) {
     (s.cur ? '<span class="here">you are here</span>' : '') + '</div>' +
     '<div class="ds">' + s.d + '</div></div></div>';
 }
+/* A pivot chip like "-> AWS hardening (4)" cross-refs another topic by its index
+   number; resolve it to a registered topic id (never the current one) so the chip
+   becomes a one-click jump. Chips with no "(N)" point at not-yet-built topics and
+   stay plain text. */
+function resolveChipTarget(chipText) {
+  if (typeof TopicRegistry === 'undefined' || !TopicRegistry.ids) return null;
+  var cur = TopicRegistry.current ? TopicRegistry.current() : null, ids = TopicRegistry.ids(), i, t;
+  var self = function (id) { return (cur && id === cur.id) ? null : id; };
+  var m = /\((\d+)\)/.exec(chipText);
+  if (m) {                                   /* primary: "(N)" -> topic with identity.index === N */
+    var idx = parseInt(m[1], 10);
+    for (i = 0; i < ids.length; i++) { t = TopicRegistry.get(ids[i]); if (t && t.identity && t.identity.index === idx) return self(ids[i]); }
+    return null;                             /* an explicit (N) that doesn't resolve is not a link */
+  }
+  var lc = chipText.toLowerCase();           /* fallback: a full topic title inside the chip (name-based chips, M1) */
+  for (i = 0; i < ids.length; i++) {
+    t = TopicRegistry.get(ids[i]);
+    var title = (t && t.identity && t.identity.title) ? t.identity.title.toLowerCase() : '';
+    if (title.length >= 4 && lc.indexOf(title) > -1) return self(ids[i]);
+  }
+  return null;
+}
 function sysRenderPivot(p) {
-  return '<details class="piv"><summary><span class="pq">' + p.q +
-    '</span><span class="chip">' + p.chip + '</span></summary>' +
+  var target = resolveChipTarget(p.chip);
+  var chip = target
+    ? '<span class="chip chip-link" role="button" tabindex="0" data-goto="' + target + '">' + p.chip + '</span>'
+    : '<span class="chip">' + p.chip + '</span>';
+  return '<details class="piv"><summary><span class="pq">' + p.q + '</span>' + chip + '</summary>' +
     '<div class="pa">' + p.a + '</div></details>';
 }
 
@@ -8863,6 +8890,18 @@ class DeepSystemMap extends TopicPane {
     this._pivK   = root.getElementById('smPivK');
     this._pivSub = root.getElementById('smPivSub');
     this._pivs   = root.getElementById('smPivs');
+    if (this._pivs && !this._pivs.__linkWired) {
+      this._pivs.__linkWired = true;
+      var goChip = function (e) {
+        var chip = (e.target && e.target.closest) ? e.target.closest('.chip-link') : null;
+        if (!chip) return;
+        e.preventDefault(); e.stopPropagation();
+        var id = chip.getAttribute('data-goto');
+        if (id && typeof TopicRegistry !== 'undefined' && TopicRegistry.setTopic) TopicRegistry.setTopic(id);
+      };
+      this._pivs.addEventListener('click', goChip);
+      this._pivs.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') goChip(e); });
+    }
   }
   renderTopic(d) {
     this._where.innerHTML  = d.heads.whereHead;

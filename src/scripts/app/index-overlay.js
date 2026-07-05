@@ -46,6 +46,28 @@
         '<div class="ix-trend-v">solid drilled, last ' + series.length + ' sessions</div></div>';
     } catch (e) { return ''; }
   }
+  /* O3: spaced-repetition nudge. The Revisit list already covers shaky topics;
+     this surfaces the OTHER half -- topics drilled fully clean but long enough ago
+     that they're worth a refresh (you forget over time). Hidden when nothing is due. */
+  function dueReview() {
+    if (typeof Progress === 'undefined' || typeof TopicRegistry === 'undefined') return '';
+    var all = Progress.all(), now = Date.now(), DAY = 86400000, ids = TopicRegistry.ids(), due = [];
+    for (var i = 0; i < ids.length; i++) {
+      var id = ids[i], pr = all[id];
+      if (!pr || !pr.ts || !pr.done || !pr.tot) continue;
+      var shaky = (pr.shk > 0) || (pr.revisit && pr.revisit.length);
+      if (shaky || pr.done < pr.tot) continue;         // shaky/unfinished -> Revisit handles it
+      var days = Math.floor((now - pr.ts) / DAY);
+      if (days >= 7) due.push({ id: id, days: days }); // clean, but a week-plus stale
+    }
+    if (!due.length) return '';
+    due.sort(function (a, b) { return b.days - a.days; });
+    var pills = due.slice(0, 4).map(function (d) {
+      var t = TopicRegistry.get(d.id);
+      return '<button class="ix-due-b" type="button" data-topic="' + d.id + '">' + (t ? t.identity.title : d.id) + '<span class="ix-due-n">' + d.days + 'd</span></button>';
+    }).join('');
+    return '<div class="ix-due"><div class="ix-home-k">Refresh &middot; drilled clean a while ago</div><div class="ix-due-list">' + pills + '</div></div>';
+  }
   /* O4: per-area progress bars (one per topic group that has started topics),
      tinted with each group's own colour. */
   function groupBars() {
@@ -93,6 +115,7 @@
       trendSparkHome() +
       (rt ? '<button class="ix-home-btn" type="button" ' + (resumeHash ? 'data-hash="' + resumeHash + '"' : 'data-topic="' + resumeId + '"') + '><span class="ix-home-btn-k">Resume</span>' + rt.identity.title + ' &rarr;</button>' : '') +
       (weak ? '<div class="ix-weak"><div class="ix-home-k">Revisit</div><div class="ix-weak-list">' + weak + '</div>' + conceptsHtml + '</div>' : '') +
+      dueReview() +
       groupBars() +
       '</div>';
   }

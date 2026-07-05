@@ -452,6 +452,8 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover{background:rgba(150,140,
 @media(min-width:1280px){
   .stage{justify-content:flex-start}
   .companion{display:flex;flex-direction:column;flex:none;width:290px;position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--panel);border-left:1px solid var(--bd);box-shadow:inset 8px 0 24px -12px rgba(83,74,183,.08)}
+  body.cmp-collapsed .companion{display:none}
+  body.cmp-collapsed .cmp-reopen{display:flex}
   .companion .topic-item{position:relative;overflow:hidden;border-radius:9px;transition:box-shadow .25s ease,background .2s ease,transform .2s cubic-bezier(.22,.61,.36,1),padding .2s ease}
   .companion .topic-item:hover{box-shadow:0 0 20px -4px rgba(83,74,183,.18);background:rgba(83,74,183,.05);transform:translateX(2px)}
   .companion .topic-item::before{content:"";position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,var(--acc),var(--acc2));opacity:0;transition:opacity .25s ease}
@@ -710,6 +712,12 @@ body.is-hidden,body.is-hidden *,body.is-hidden *::before,body.is-hidden *::after
 .ix-undo.show{display:flex;opacity:1;transform:translateX(-50%) translateY(0)}
 .ix-undo-btn{border:0;background:var(--acc);color:#fff;font:700 12px -apple-system,system-ui,sans-serif;padding:6px 13px;border-radius:8px;cursor:pointer;transition:filter .15s ease}
 .ix-undo-btn:hover{filter:brightness(1.1)}
+.cmp-fold{position:absolute;top:12px;right:12px;width:24px;height:24px;display:flex;align-items:center;justify-content:center;border:1px solid var(--bd);border-radius:7px;background:var(--card);color:var(--mut);font-size:15px;line-height:1;cursor:pointer;opacity:.45;transition:opacity .14s ease,color .14s ease,border-color .14s ease;z-index:2;padding:0}
+.cmp-fold:hover,.cmp-fold:focus{opacity:1;color:var(--acc);border-color:var(--acc);outline:none}
+.cmp-reopen{position:fixed;right:0;top:50%;transform:translateY(-50%);display:none;flex-direction:column;align-items:center;gap:7px;padding:13px 7px;border:1px solid var(--bd);border-right:0;border-radius:9px 0 0 9px;background:var(--panel);color:var(--mut);font-size:10px;font-weight:750;letter-spacing:.04em;cursor:pointer;box-shadow:-5px 0 16px -9px rgba(0,0,0,.18);z-index:40;transition:color .14s ease,background .14s ease}
+.cmp-reopen:hover,.cmp-reopen:focus{color:var(--acc);background:var(--accbg);outline:none}
+.cmp-reopen-ic{font-size:14px;line-height:1}
+.cmp-reopen-t{writing-mode:vertical-rl;text-orientation:mixed}
 .ix-io:hover{color:var(--ink);border-color:var(--acc)}
 .ix-io-imp{display:inline-flex;align-items:center}
 .ix-io[disabled]{opacity:.4;cursor:not-allowed}
@@ -906,6 +914,7 @@ try{var _dk=matchMedia('(prefers-color-scheme:dark)').matches;document.documentE
 </main>
   <aside class="companion" aria-label="Rehearsal companion">
     <div class="cmp-inner" tabindex="0" role="region" aria-label="Coaching for this view">
+      <button class="cmp-fold" type="button" aria-label="Hide companion panel" title="Hide companion">&#8250;</button>
       <div class="cmp-block cmp-top">
         <div class="cmp-eyebrow">You&rsquo;re rehearsing</div>
         <div class="cmp-topic">Content Pipeline</div>
@@ -936,6 +945,7 @@ try{var _dk=matchMedia('(prefers-color-scheme:dark)').matches;document.documentE
       <div class="cmp-block cmp-related" id="cmpRelated" hidden></div>
     </div>
   </aside>
+  <button class="cmp-reopen" type="button" aria-label="Show companion panel"><span class="cmp-reopen-ic" aria-hidden="true">&#8249;</span><span class="cmp-reopen-t">Coaching</span></button>
 </div>
 
 <div class="mock-ov" id="mockov" role="dialog" aria-modal="true" aria-label="Mock interview run" aria-hidden="true">
@@ -13503,6 +13513,28 @@ window.Bookmarks = Bookmarks;
   window.addEventListener('routechange', onRoute);
   document.addEventListener('routechange', onRoute);
   update();
+})();
+
+/* ===== scripts/app/companion-fold.js -- fold the desktop companion rail (U2) =====
+   The 290px coaching rail (shown only >=1280px) can be folded away to give the
+   content panes more width; a slim edge tab brings it back. State persists. The
+   mobile companion is a <details> that already collapses on its own, so this is
+   desktop-only -- the reopen tab is scoped to >=1280px in CSS. This script sits near
+   the end of <body>, so the persisted state is applied before first paint (no flash). */
+(function () {
+  'use strict';
+  var KEY = 'cmp.collapsed';
+  function get() { try { return (typeof Store !== 'undefined') ? !!Store.get(KEY) : false; } catch (e) { return false; } }
+  function set(v) { try { if (typeof Store !== 'undefined') Store.set(KEY, !!v); } catch (e) {} }
+  function apply(v) { if (document.body) document.body.classList.toggle('cmp-collapsed', !!v); }
+  apply(get());
+  function wire() {
+    apply(get());
+    var fold = document.querySelector('.cmp-fold'), reopen = document.querySelector('.cmp-reopen');
+    if (fold) fold.addEventListener('click', function () { apply(true); set(true); if (reopen) reopen.focus(); });
+    if (reopen) reopen.addEventListener('click', function () { apply(false); set(false); if (fold) fold.focus(); });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wire); else wire();
 })();
 
 </script>

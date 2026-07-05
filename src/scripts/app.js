@@ -56,3 +56,4 @@
 <!--@build:include scripts/app/text-zoom.js-->
 <!--@build:include scripts/app/pomodoro.js-->
 <!--@build:include scripts/app/scroll-to-top.js-->
+<!--@build:include scripts/app/companion-fold.js-->

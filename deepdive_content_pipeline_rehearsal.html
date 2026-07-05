@@ -9753,6 +9753,13 @@ function mxCurve(cb) {
 /* Mixed-fire state: the assembled question pool, cursor, tallies, and the
    per-item log shared with the session-progress overlay. */
 var mxPool = [], mxIdx = 0, mxGot = 0, mxShk = 0, mxRes = [], mixLog = [];
+/* S3: persist the cumulative mixed-fire log so the session tally + per-item weak
+   signal survive a reload (the topic-level shaky marks already persist via
+   Progress.markShaky; this restores what session-progress' summary() derives from
+   mixLog). Capped so the store stays bounded -- mixLog is cumulative, unlike the
+   mock's single-session tally. Mirrors mock-run/data.js's mockPersist. */
+function mixPersist() { try { if (typeof Store !== 'undefined' && Store.set) Store.set('mix.log', mixLog.slice(-500)); } catch (e) {} }
+(function () { try { if (typeof Store !== 'undefined' && Store.get) { var _ml = Store.get('mix.log', null); if (Array.isArray(_ml)) mixLog = _ml; } } catch (e) {} })();
 /* Turn the Trade-offs pane's decisions into mixed-fire items (each becomes a
    "name the switch condition" prompt revealing the options + the tell). The
    decision DOM now lives inside <deep-trade-offs>, so we ask it via getDecisions()
@@ -9820,6 +9827,7 @@ function mxJudge(ok) {
   if (ok) mxGot++; else { mxShk++; try { var _mid = (typeof TopicRegistry !== 'undefined' && TopicRegistry.current()) ? TopicRegistry.current().id : null; if (_mid && typeof Progress !== 'undefined' && Progress.markShaky) Progress.markShaky(_mid); } catch (e) {} }
   mxRes.push({ item: mxPool[mxIdx], ok: ok });
   mixLog.push({ kind: mxPool[mxIdx].kind, label: mxPool[mxIdx].label, ok: ok });
+  mixPersist();
   mxIdx++;
   renderMix();
 }

@@ -1,3 +1,7 @@
+(function () {
+/* E1a: IIFE-scoped -- this module leaks no symbols other files use.
+   The web-component class + its customElements.define run inside; the tag
+   still registers globally, only the private consts/helpers stop leaking. */
 /* ============ SYSTEM MAP (web component) ============
    The #sys pane, converted to the TopicPane contract (dataKey 'sys'): the base class
    attaches the shadow + adopts BASE_SHEET + writes <style>+skeleton ONCE in
@@ -137,3 +141,4 @@ class DeepSystemMap extends TopicPane {
   }
 }
 customElements.define('deep-system-map', DeepSystemMap);
+})();

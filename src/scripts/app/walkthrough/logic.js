@@ -1,3 +1,7 @@
+(function () {
+/* E1a: IIFE-scoped -- this module leaks no symbols other files use.
+   The web-component class + its customElements.define run inside; the tag
+   still registers globally, only the private consts/helpers stop leaking. */
 /* ============ WALKTHROUGH (web component) ============
    Nine-step guided trace: dots + a rendered step card + prev/next + the arc
    jump-rail + a model-script disclosure. Phase 1: converted to the TopicPane
@@ -170,3 +174,4 @@ class DeepWalkthrough extends TopicPane {
   next() { if (this._wi < this._steps.length - 1) { this._wi++; this._renderW(); } }
 }
 customElements.define('deep-walkthrough', DeepWalkthrough);
+})();

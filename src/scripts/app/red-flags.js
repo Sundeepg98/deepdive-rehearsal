@@ -1,3 +1,7 @@
+(function () {
+/* E1a: IIFE-scoped -- this module leaks no symbols other files use.
+   The web-component class + its customElements.define run inside; the tag
+   still registers globally, only the private consts/helpers stop leaking. */
 /* ============ RED FLAGS (web component) ============
    Multi-topic pane on the TopicPane contract. The base owns shadow + adopted
    sheets + <style> + skeleton (built ONCE in connectedCallback); renderTopic
@@ -53,3 +57,4 @@ class DeepRedFlags extends TopicPane {
   }
 }
 customElements.define('deep-red-flags', DeepRedFlags);
+})();

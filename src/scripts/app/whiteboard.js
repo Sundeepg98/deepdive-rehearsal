@@ -1,3 +1,7 @@
+(function () {
+/* E1a: IIFE-scoped -- this module leaks no symbols other files use.
+   The web-component class + its customElements.define run inside; the tag
+   still registers globally, only the private consts/helpers stop leaking. */
 /* ============ WHITEBOARD (web component) ============
    Reconstruct-from-blank recall: self-graded cues + verdict + the assembled-diagram
    disclosure. Phase 1: converted to the TopicPane contract -- the cues / diagram / foot /
@@ -191,3 +195,4 @@ class DeepWhiteboard extends TopicPane {
   }
 }
 customElements.define('deep-whiteboard', DeepWhiteboard);
+})();

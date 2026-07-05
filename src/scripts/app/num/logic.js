@@ -1,3 +1,7 @@
+(function () {
+/* E1a: IIFE-scoped -- this module leaks no symbols other files use.
+   The web-component class + its customElements.define run inside; the tag
+   still registers globally, only the private consts/helpers stop leaking. */
 /* ============ NUMBERS / NALSD pane (logic, web component) ============
    The back-of-envelope capacity calculator, converted to the TopicPane contract
    (dataKey 'num'): the base class attaches the shadow + adopts the inherited
@@ -122,3 +126,4 @@ class DeepNumbers extends TopicPane {
   }
 }
 customElements.define('deep-numbers', DeepNumbers);
+})();

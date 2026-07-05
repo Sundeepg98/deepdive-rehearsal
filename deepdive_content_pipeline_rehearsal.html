@@ -8119,6 +8119,10 @@ TopicRegistry.register({
 });
 
 
+(function () {
+/* E1a: IIFE-scoped -- this module leaks no symbols other files use.
+   The web-component class + its customElements.define run inside; the tag
+   still registers globally, only the private consts/helpers stop leaking. */
 /* ============ RED FLAGS (web component) ============
    Multi-topic pane on the TopicPane contract. The base owns shadow + adopted
    sheets + <style> + skeleton (built ONCE in connectedCallback); renderTopic
@@ -8174,7 +8178,12 @@ class DeepRedFlags extends TopicPane {
   }
 }
 customElements.define('deep-red-flags', DeepRedFlags);
+})();
 
+(function () {
+/* E1a: IIFE-scoped -- this module leaks no symbols other files use.
+   The web-component class + its customElements.define run inside; the tag
+   still registers globally, only the private consts/helpers stop leaking. */
 /* ============ TRADE-OFFS (web component) ============
    A static ledger of design decisions, each with the axis that picks a side.
    Phase 1: converted to the TopicPane contract -- the formerly baked .ledger is now
@@ -8230,9 +8239,14 @@ class DeepTradeOffs extends TopicPane {
   }
 }
 customElements.define('deep-trade-offs', DeepTradeOffs);
+})();
 
 
 /* ============ WALKTHROUGH ============ */
+(function () {
+/* E1a: IIFE-scoped -- this module leaks no symbols other files use.
+   The web-component class + its customElements.define run inside; the tag
+   still registers globally, only the private consts/helpers stop leaking. */
 /* ============ WALKTHROUGH (web component) ============
    Nine-step guided trace: dots + a rendered step card + prev/next + the arc
    jump-rail + a model-script disclosure. Phase 1: converted to the TopicPane
@@ -8405,6 +8419,7 @@ class DeepWalkthrough extends TopicPane {
   next() { if (this._wi < this._steps.length - 1) { this._wi++; this._renderW(); } }
 }
 customElements.define('deep-walkthrough', DeepWalkthrough);
+})();
 
 /* ============ DRILL ============ */
 /* The probe bank moved into the topic bundle (topics/content-pipeline/drill.js);
@@ -8875,6 +8890,10 @@ class DeepDrill extends TopicPane {
 }
 customElements.define('deep-drill', DeepDrill); 
 
+(function () {
+/* E1a: IIFE-scoped -- this module leaks no symbols other files use.
+   The web-component class + its customElements.define run inside; the tag
+   still registers globally, only the private consts/helpers stop leaking. */
 /* ============ WHITEBOARD (web component) ============
    Reconstruct-from-blank recall: self-graded cues + verdict + the assembled-diagram
    disclosure. Phase 1: converted to the TopicPane contract -- the cues / diagram / foot /
@@ -9068,7 +9087,12 @@ class DeepWhiteboard extends TopicPane {
   }
 }
 customElements.define('deep-whiteboard', DeepWhiteboard);
+})();
 
+(function () {
+/* E1a: IIFE-scoped -- this module leaks no symbols other files use.
+   The web-component class + its customElements.define run inside; the tag
+   still registers globally, only the private consts/helpers stop leaking. */
 /* ============ OPENER / ALTITUDE (web component) ============
    The #open pane, converted to the TopicPane contract (dataKey 'open'): the base
    class attaches the shadow + adopts BASE_SHEET + writes <style>+skeleton ONCE in
@@ -9167,7 +9191,12 @@ class DeepOpener extends TopicPane {
   }
 }
 customElements.define('deep-opener', DeepOpener);
+})();
 
+(function () {
+/* E1a: IIFE-scoped -- this module leaks no symbols other files use.
+   The web-component class + its customElements.define run inside; the tag
+   still registers globally, only the private consts/helpers stop leaking. */
 /* ============ SYSTEM MAP (web component) ============
    The #sys pane, converted to the TopicPane contract (dataKey 'sys'): the base class
    attaches the shadow + adopts BASE_SHEET + writes <style>+skeleton ONCE in
@@ -9307,8 +9336,13 @@ class DeepSystemMap extends TopicPane {
   }
 }
 customElements.define('deep-system-map', DeepSystemMap);
+})();
 
 /* ============ MODEL ANSWERS ============ */
+(function () {
+/* E1a: IIFE-scoped -- this module leaks no symbols other files use.
+   The web-component class + its customElements.define run inside; the tag
+   still registers globally, only the private consts/helpers stop leaking. */
 /* ============ MODEL ANSWERS (logic, web component) ============
    The #model pane, converted to the TopicPane contract (dataKey 'model'): the
    base class attaches the shadow + adopts [BASE_SHEET, MBEAT_SHEET] + writes
@@ -9386,7 +9420,12 @@ class DeepModelAnswers extends TopicPane {
   }
 }
 customElements.define('deep-model-answers', DeepModelAnswers);
+})();
 
+(function () {
+/* E1a: IIFE-scoped -- this module leaks no symbols other files use.
+   The web-component class + its customElements.define run inside; the tag
+   still registers globally, only the private consts/helpers stop leaking. */
 /* ============ NUMBERS / NALSD pane (logic, web component) ============
    The back-of-envelope capacity calculator, converted to the TopicPane contract
    (dataKey 'num'): the base class attaches the shadow + adopts the inherited
@@ -9511,6 +9550,7 @@ class DeepNumbers extends TopicPane {
   }
 }
 customElements.define('deep-numbers', DeepNumbers);
+})();
 
 /* ============ MOCK RUN ============ */
 /* mock-run runtime state. The cross-pane BANK (mockBeats/curveballPool/framePool +
@@ -10321,6 +10361,10 @@ window.addEventListener('afterprint', function () {
   document.body.classList.remove('print-session');
 });
 
+(function () {
+/* E1a: IIFE-scoped -- this module leaks no symbols other files use.
+   The web-component class + its customElements.define run inside; the tag
+   still registers globally, only the private consts/helpers stop leaking. */
 /* ============ KEYBOARD SHORTCUTS OVERLAY (web component) ============
    The keyboard-shortcuts panel content, encapsulated. The overlay frame
    (.mock-ov / .mock-panel / .mock-top / close button / .cram-body) stays in light
@@ -10394,7 +10438,12 @@ class DeepKeyboard extends HTMLElement {
   }
 }
 customElements.define('deep-keyboard', DeepKeyboard);
+})();
 
+(function () {
+/* E1a: IIFE-scoped -- this module leaks no symbols other files use.
+   The web-component class + its customElements.define run inside; the tag
+   still registers globally, only the private consts/helpers stop leaking. */
 /* ============ SCOPE-IT-FIRST OVERLAY (web component) ============
    Static content, encapsulated. Frame (.mock-ov/.mock-panel/.mock-top/close/.cram-body)
    + open-close wiring (cram-sheet.js openScope -> ovShow) stay light-DOM; only the
@@ -10441,7 +10490,12 @@ class DeepScope extends HTMLElement {
   }
 }
 customElements.define('deep-scope', DeepScope);
+})();
 
+(function () {
+/* E1a: IIFE-scoped -- this module leaks no symbols other files use.
+   The web-component class + its customElements.define run inside; the tag
+   still registers globally, only the private consts/helpers stop leaking. */
 /* ============ GAME-PLAN OVERLAY (web component) ============
    Static content, encapsulated. Frame + open-close wiring (cram-sheet.js openPlan ->
    ovShow) stay light-DOM; content moves into this shadow, styled by BASE_SHEET + the
@@ -10495,7 +10549,12 @@ class DeepGameplan extends HTMLElement {
   }
 }
 customElements.define('deep-gameplan', DeepGameplan);
+})();
 
+(function () {
+/* E1a: IIFE-scoped -- this module leaks no symbols other files use.
+   The web-component class + its customElements.define run inside; the tag
+   still registers globally, only the private consts/helpers stop leaking. */
 /* ============ CRAM SHEET OVERLAY (web component) ============
    The densest overlay; uses the full .cs-* vocabulary. Frame (cram-ov/cram-panel/
    cram-top/cram-print/close) + open-close + Print wiring (cram-sheet.js openCram ->
@@ -10592,6 +10651,7 @@ class DeepCram extends HTMLElement {
   disconnectedCallback() { if (this._io) { this._io.disconnect(); this._io = null; } }
 }
 customElements.define('deep-cram', DeepCram);
+})();
 
 /* The whiteboard custom element exposes resetAll() / rerunMissed() / getStats();
    session-progress reaches it through this helper rather than the old wb globals. */

@@ -1,3 +1,7 @@
+(function () {
+/* E1a: IIFE-scoped -- this module leaks no symbols other files use.
+   The web-component class + its customElements.define run inside; the tag
+   still registers globally, only the private consts/helpers stop leaking. */
 /* ============ OPENER / ALTITUDE (web component) ============
    The #open pane, converted to the TopicPane contract (dataKey 'open'): the base
    class attaches the shadow + adopts BASE_SHEET + writes <style>+skeleton ONCE in
@@ -96,3 +100,4 @@ class DeepOpener extends TopicPane {
   }
 }
 customElements.define('deep-opener', DeepOpener);
+})();

@@ -1,3 +1,7 @@
+(function () {
+/* E1a: IIFE-scoped -- this module leaks no symbols other files use.
+   The web-component class + its customElements.define run inside; the tag
+   still registers globally, only the private consts/helpers stop leaking. */
 /* ============ CRAM SHEET OVERLAY (web component) ============
    The densest overlay; uses the full .cs-* vocabulary. Frame (cram-ov/cram-panel/
    cram-top/cram-print/close) + open-close + Print wiring (cram-sheet.js openCram ->
@@ -94,3 +98,4 @@ class DeepCram extends HTMLElement {
   disconnectedCallback() { if (this._io) { this._io.disconnect(); this._io = null; } }
 }
 customElements.define('deep-cram', DeepCram);
+})();

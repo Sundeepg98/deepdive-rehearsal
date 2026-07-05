@@ -1,3 +1,7 @@
+(function () {
+/* E1a: IIFE-scoped -- this module leaks no symbols other files use.
+   The web-component class + its customElements.define run inside; the tag
+   still registers globally, only the private consts/helpers stop leaking. */
 /* ============ SCOPE-IT-FIRST OVERLAY (web component) ============
    Static content, encapsulated. Frame (.mock-ov/.mock-panel/.mock-top/close/.cram-body)
    + open-close wiring (cram-sheet.js openScope -> ovShow) stay light-DOM; only the
@@ -44,3 +48,4 @@ class DeepScope extends HTMLElement {
   }
 }
 customElements.define('deep-scope', DeepScope);
+})();

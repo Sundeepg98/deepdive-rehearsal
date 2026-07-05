@@ -1,3 +1,7 @@
+(function () {
+/* E1a: IIFE-scoped -- this module leaks no symbols other files use.
+   The web-component class + its customElements.define run inside; the tag
+   still registers globally, only the private consts/helpers stop leaking. */
 /* ============ TRADE-OFFS (web component) ============
    A static ledger of design decisions, each with the axis that picks a side.
    Phase 1: converted to the TopicPane contract -- the formerly baked .ledger is now
@@ -53,3 +57,4 @@ class DeepTradeOffs extends TopicPane {
   }
 }
 customElements.define('deep-trade-offs', DeepTradeOffs);
+})();

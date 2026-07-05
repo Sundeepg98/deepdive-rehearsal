@@ -1,3 +1,7 @@
+(function () {
+/* E1a: IIFE-scoped -- this module leaks no symbols other files use.
+   The web-component class + its customElements.define run inside; the tag
+   still registers globally, only the private consts/helpers stop leaking. */
 /* ============ GAME-PLAN OVERLAY (web component) ============
    Static content, encapsulated. Frame + open-close wiring (cram-sheet.js openPlan ->
    ovShow) stay light-DOM; content moves into this shadow, styled by BASE_SHEET + the
@@ -51,3 +55,4 @@ class DeepGameplan extends HTMLElement {
   }
 }
 customElements.define('deep-gameplan', DeepGameplan);
+})();

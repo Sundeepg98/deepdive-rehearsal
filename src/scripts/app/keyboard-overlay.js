@@ -1,3 +1,7 @@
+(function () {
+/* E1a: IIFE-scoped -- this module leaks no symbols other files use.
+   The web-component class + its customElements.define run inside; the tag
+   still registers globally, only the private consts/helpers stop leaking. */
 /* ============ KEYBOARD SHORTCUTS OVERLAY (web component) ============
    The keyboard-shortcuts panel content, encapsulated. The overlay frame
    (.mock-ov / .mock-panel / .mock-top / close button / .cram-body) stays in light
@@ -71,3 +75,4 @@ class DeepKeyboard extends HTMLElement {
   }
 }
 customElements.define('deep-keyboard', DeepKeyboard);
+})();

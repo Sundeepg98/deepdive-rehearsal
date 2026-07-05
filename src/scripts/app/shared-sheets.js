@@ -53,6 +53,7 @@ ANS_SHEET.replaceSync(`
 .judge button{flex:1;border:1.5px solid;background:var(--judge-btn-bg);font:700 13px -apple-system,sans-serif;padding:12px;border-radius:11px;cursor:pointer;transition:transform .15s cubic-bezier(.22,.61,.36,1),box-shadow .2s ease,background .15s ease}
 .judge .got{border-color:var(--teal);color:var(--teal)} .judge .got:hover{background:var(--tealbg);box-shadow:0 4px 14px -4px rgba(10,133,100,.25);transform:translateY(-1px)}
 .judge .shk{border-color:var(--amber);color:var(--amber)} .judge .shk:hover{background:var(--amberbg);box-shadow:0 4px 14px -4px rgba(176,108,20,.25);transform:translateY(-1px)}
+.judge .miss{border-color:var(--red);color:var(--red)} .judge .miss:hover{background:var(--redbg);box-shadow:0 4px 14px -4px rgba(163,45,45,.25);transform:translateY(-1px)}
 .judge .hint{font-size:9px;font-weight:700}
 .got:active,.shk:active{transform:translateY(1px) scale(.98);filter:brightness(.96)}
 `);

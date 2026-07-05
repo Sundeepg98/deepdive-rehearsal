@@ -68,15 +68,16 @@ document.addEventListener('keydown', function (event) {
       if (event.key === 'ArrowRight') w.next();
     }
   } else if (current === 'drill') {
-    /* space/enter advances; 1 and 2 self-grade -- the controls live in the
+    /* space/enter advances; 1/2/3 self-grade (missed/shaky/solid) -- the controls live in the
        drill's shadow now, so reach through it rather than the document */
     const dd = document.querySelector('#drill deep-drill');
     if (dd) {
       const r = dd.shadowRoot;
       const advBtn = r.getElementById('adv');
       if ((event.key === ' ' || event.key === 'Enter') && advBtn) { event.preventDefault(); advBtn.click(); }
-      if (key === '1') { const jgBtn = r.getElementById('jg'); if (jgBtn) jgBtn.click(); }
+      if (key === '1') { const jmBtn = r.getElementById('jm'); if (jmBtn) jmBtn.click(); }
       if (key === '2') { const jsBtn = r.getElementById('js'); if (jsBtn) jsBtn.click(); }
+      if (key === '3') { const jgBtn = r.getElementById('jg'); if (jgBtn) jgBtn.click(); }
     }
   }
 });

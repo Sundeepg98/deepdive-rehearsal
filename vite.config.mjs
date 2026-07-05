@@ -8,6 +8,7 @@
 
 import { defineConfig } from 'vite';
 import { viteSingleFile } from 'vite-plugin-singlefile';
+import tailwindcss from '@tailwindcss/vite';
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -42,7 +43,7 @@ function concatInclude() {
 
 export default defineConfig({
   root: 'src',
-  plugins: [concatInclude(), viteSingleFile()],
+  plugins: [concatInclude(), tailwindcss(), viteSingleFile()],
   build: {
     outDir: path.join(ROOT, 'dist'),
     emptyOutDir: true,

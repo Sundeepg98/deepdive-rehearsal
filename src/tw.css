@@ -1,0 +1,15 @@
+/* tw.css -- wires Tailwind v4 into the Vite build (Phase 1 of the migration).
+
+   This phase only establishes the PLUMBING: @tailwindcss/vite processes this file and the
+   theme layer becomes available, proving the Tailwind toolchain works end-to-end. It is
+   deliberately render-neutral:
+     - NO preflight, so the app's existing base styles are untouched.
+     - Utilities are imported but generate nothing yet (no @source), so none of the app's
+       existing class names -- including `block`, which collides with a Tailwind utility --
+       produce any CSS.
+
+   The design-system / "application-feel" workstream turns these on when it starts styling
+   with Tailwind: add @source for content detection, enable preflight (reconciling the base
+   styles), and map the app's --acc/--ink tokens into a custom @theme block. */
+@import "tailwindcss/theme";
+@import "tailwindcss/utilities" source(none);

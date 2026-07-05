@@ -24,12 +24,12 @@ OVERLAYS = [b'mockov', b'mixov', b'cramov', b'sessov', b'keyov', b'scopeov', b'p
 fd, tmp = tempfile.mkstemp(suffix='.html')
 os.close(fd)
 try:
-    r = subprocess.run([sys.executable, os.path.join(ROOT, 'build.py'), tmp],
+    r = subprocess.run(['npm', 'run', 'build'], cwd=ROOT,
                        capture_output=True, text=True)
     if r.returncode != 0:
         print('FAIL: build returned %d\n%s' % (r.returncode, r.stderr), file=sys.stderr)
         sys.exit(1)
-    out = open(tmp, 'rb').read()
+    out = open(os.path.join(ROOT, 'dist', 'index.html'), 'rb').read()
 
     problems = []
     leftover = re.findall(rb'<!--@build:include', out)
@@ -38,7 +38,7 @@ try:
 
     committed = open(DELIVERABLE, 'rb').read()
     if hashlib.sha256(out).hexdigest() != hashlib.sha256(committed).hexdigest():
-        problems.append('rebuilt output != committed deliverable — run `python3 build.py` and commit it')
+        problems.append('rebuilt output != committed deliverable — run `npm run build` and commit it')
 
     for pid in PANES:
         if b'id="' + pid + b'"' not in out:

@@ -107,10 +107,16 @@
     if (typeof Progress === 'undefined' || typeof TopicRegistry === 'undefined') return '';
     var sum = Progress.summary(), all = Progress.all(), ids = TopicRegistry.ids();
     if (!ids.length) return '';
-    if (!sum.touched) {
+    var _mRuns = (typeof mockRuns !== 'undefined') ? mockRuns : 0;
+    var _mixN = (typeof mixLog !== 'undefined' && mixLog.length) ? mixLog.length : 0;
+    /* U4: show "Start here" only with zero engagement of ANY kind -- drilled,
+       whiteboarded, mocked, or mixed fire. A whiteboard-only or mock-only user
+       gets their progress, not the first-run prompt. */
+    var _engaged = sum.startedTopics > 0 || _mRuns > 0 || _mixN > 0;
+    if (!_engaged) {
       var first = TopicRegistry.get(ids[0]);
       return '<div class="ix-home"><div class="ix-home-prog"><div class="ix-home-k">Start here</div>' +
-        '<div class="ix-home-v">Pick any topic below, or jump into the first one and start drilling.</div></div>' +
+        '<div class="ix-home-v">Pick any topic below, or jump into the first one. Every topic runs the same loop &mdash; <b>drill</b> the probes, <b>recall</b> the design on the whiteboard, then <b>run</b> a timed mock. Your progress and weak spots build automatically as you go.</div></div>' +
         '<button class="ix-home-btn" type="button" data-topic="' + ids[0] + '"><span class="ix-home-btn-k">Start</span>' + (first ? first.identity.title : ids[0]) + ' &rarr;</button></div>';
     }
     var lastId = null, lastTs = 0;
@@ -133,7 +139,7 @@
     return '<div class="ix-home">' +
       '<div class="ix-home-prog"><div class="ix-home-k">Your progress</div>' +
       '<div class="ix-home-bar"><span style="width:' + pct + '%"></span></div>' +
-      '<div class="ix-home-v">' + pct + '% of the curriculum &middot; ' + sum.totDone + ' probes drilled &middot; ' + sum.touched + ' of ' + sum.nTopics + ' topics started' + (sum.wbRecalled ? ' &middot; ' + sum.wbRecalled + ' with the design recalled' : '') + '</div>' + _streakHtml + '</div>' +
+      '<div class="ix-home-v">' + pct + '% of the curriculum &middot; ' + sum.totDone + ' probes drilled &middot; ' + sum.startedTopics + ' of ' + sum.nTopics + ' topics started' + (sum.wbRecalled ? ' &middot; ' + sum.wbRecalled + ' with the design recalled' : '') + '</div>' + _streakHtml + '</div>' +
       trendSparkHome() +
       (rt ? '<button class="ix-home-btn" type="button" ' + (resumeHash ? 'data-hash="' + resumeHash + '"' : 'data-topic="' + resumeId + '"') + '><span class="ix-home-btn-k">Resume</span>' + rt.identity.title + ' &rarr;</button>' : '') +
       (weak ? '<div class="ix-weak"><div class="ix-home-k">Revisit</div><div class="ix-weak-list">' + weak + '</div>' + conceptsHtml + '</div>' : '') +

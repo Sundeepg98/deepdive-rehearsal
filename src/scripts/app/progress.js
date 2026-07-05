@@ -82,9 +82,15 @@ var Progress = (function () {
     }
     weakest.sort(function (a, b) { return (b.shk - a.shk) || (b.left - a.left); });
     var overallPct = ids.length ? Math.round(100 * compSum / ids.length) : 0;
-    var wbRecalled = 0;
-    for (var wi = 0; wi < ids.length; wi++) { var wb = wbGet(ids[wi]); if (wb && wb.total > 0 && wb.got === wb.total) wbRecalled++; }
-    return { topics: topics, byGroup: byGroup, weakest: weakest, totDone: totDone, totTot: totTot, totWeak: totWeak, touched: touched, nTopics: ids.length, overallPct: overallPct, wbRecalled: wbRecalled };
+    var wbRecalled = 0, wbTouched = 0, startedTopics = 0;
+    for (var wi = 0; wi < ids.length; wi++) {
+      var wb = wbGet(ids[wi]), wbHas = !!(wb && wb.total > 0);
+      if (wbHas && wb.got === wb.total) wbRecalled++;
+      if (wbHas) wbTouched++;
+      /* U4: a topic counts as "started" if it's been drilled OR whiteboarded */
+      if ((topics[ids[wi]] && topics[ids[wi]].done > 0) || wbHas) startedTopics++;
+    }
+    return { topics: topics, byGroup: byGroup, weakest: weakest, totDone: totDone, totTot: totTot, totWeak: totWeak, touched: touched, startedTopics: startedTopics, wbTouched: wbTouched, nTopics: ids.length, overallPct: overallPct, wbRecalled: wbRecalled };
   }
 
   document.addEventListener('drillgraded', function () { snapshot(); });

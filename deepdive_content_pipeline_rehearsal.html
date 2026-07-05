@@ -867,7 +867,34 @@ try{var _dk=matchMedia('(prefers-color-scheme:dark)').matches;document.documentE
     <div class="kbd-hint">Keyboard: <kbd>&larr;</kbd><kbd>&rarr;</kbd> steps &middot; <kbd>Q</kbd>&ndash;<kbd>O</kbd> tabs &middot; <kbd>[</kbd><kbd>]</kbd> topic &middot; <kbd>/</kbd> search</div>
   </div>
 
-  <nav class="topic-nav" id="topicnav" aria-label="Switch topic" hidden><button class="tn-step" id="tnprev" type="button" aria-label="Previous topic">&#8249;</button><button class="tn-trigger" id="tntrigger" type="button" aria-haspopup="menu" aria-expanded="false"><span class="tn-eyebrow">Rehearsing</span><span class="tn-current" id="tncurrent">&mdash;</span><span class="tn-chev" aria-hidden="true">&#9662;</span></button><button class="tn-step" id="tnnext" type="button" aria-label="Next topic">&#8250;</button><div class="tn-menu" id="tnmenu" role="menu" hidden></div></nav><button class="tools-fab" id="toolsfab" type="button">Tools</button></div><div class="tools-bd" id="toolsbd" aria-hidden="true"></div><div class="mockbar"><div class="mb-sec">Mock interview</div><button class="mockbtn" id="mockopen" type="button"><span class="mb-ic">&#9654;</span><span class="mb-lbl">Mock run &mdash; the full round, on the clock</span></button><button class="inttog" id="inttog" type="button" aria-pressed="false"><span class="inttog-dot"></span><span class="inttog-lbl">Interviewer cuts in mid-answer &mdash; <b>off</b></span></button><div class="mb-sec">Find a topic</div><button class="crambtn" id="idxopen" type="button"><span class="mb-tx"><span class="mb-t">Topic index</span><span class="mb-d"> &mdash; all topics across the six groups</span></span></button><button class="crambtn" id="searchopen" type="button"><span class="mb-tx"><span class="mb-t">Search</span><span class="mb-d"> &mdash; jump to any topic or view by name or concept</span></span></button><div class="mb-sec">This topic</div><button class="crambtn" id="copylink" type="button"><span class="mb-tx"><span class="mb-t">Copy link</span><span class="mb-d"> &mdash; a shareable link to this topic &amp; view</span></span></button><button class="crambtn" id="starbtn" type="button" aria-pressed="false"><span class="mb-tx"><span class="mb-t">Star this topic</span><span class="mb-d"> &mdash; save it to your bookmarks on the home</span></span></button><button class="crambtn" id="notesopen" type="button"><span class="mb-tx"><span class="mb-t">Your notes</span><span class="mb-d"> &mdash; jot notes &amp; mnemonics for this topic</span></span></button><button class="crambtn" id="printqa" type="button"><span class="mb-tx"><span class="mb-t">Print Q&amp;A</span><span class="mb-d"> &mdash; a printable sheet of this topic&#39;s probes</span></span></button><div class="mb-sec">Study aids</div><button class="crambtn" id="cramopen" type="button"><span class="mb-tx"><span class="mb-t">One-page cram sheet</span><span class="mb-d"> &mdash; everything that matters, on a card</span></span></button><button class="crambtn" id="sessopen" type="button"><span class="mb-tx"><span class="mb-t">Session progress</span><span class="mb-d"> &mdash; where you&rsquo;re weak, what to drill next</span></span></button><button class="crambtn" id="mixopen" type="button"><span class="mb-tx"><span class="mb-t">Mixed fire</span><span class="mb-d"> &mdash; probes &amp; curveballs in random order</span></span></button><button class="crambtn" id="planopen" type="button"><span class="mb-tx"><span class="mb-t">Game plan</span><span class="mb-d"> &mdash; how to rehearse with this over a week</span></span></button><button class="crambtn" id="scopeopen" type="button"><span class="mb-tx"><span class="mb-t">Scope it first</span><span class="mb-d"> &mdash; the clarifying questions before you design</span></span></button><div class="mb-sec">Settings</div><button class="crambtn kbd-only" id="keyopen" type="button"><span class="mb-tx"><span class="mb-t">Keyboard shortcuts</span><span class="mb-d"> &mdash; jump views, drive it by key</span></span></button><button class="crambtn cram-tog" id="themetog" type="button" aria-pressed="false"><span class="mb-ic">&#9789;</span>Dark mode &mdash; <b class="tt-state">off</b></button></div>
+  <nav class="topic-nav" id="topicnav" aria-label="Switch topic" hidden>
+    <button class="tn-step" id="tnprev" type="button" aria-label="Previous topic">&#8249;</button>
+    <button class="tn-trigger" id="tntrigger" type="button" aria-haspopup="menu" aria-expanded="false"><span class="tn-eyebrow">Rehearsing</span><span class="tn-current" id="tncurrent">&mdash;</span><span class="tn-chev" aria-hidden="true">&#9662;</span></button>
+    <button class="tn-step" id="tnnext" type="button" aria-label="Next topic">&#8250;</button>
+    <div class="tn-menu" id="tnmenu" role="menu" hidden></div></nav>
+    <button class="tools-fab" id="toolsfab" type="button">Tools</button></div>
+    <div class="tools-bd" id="toolsbd" aria-hidden="true"></div>
+    <div class="mockbar">
+    <div class="mb-sec">Mock interview</div>
+    <button class="mockbtn" id="mockopen" type="button"><span class="mb-ic">&#9654;</span><span class="mb-lbl">Mock run &mdash; the full round, on the clock</span></button>
+    <button class="inttog" id="inttog" type="button" aria-pressed="false"><span class="inttog-dot"></span><span class="inttog-lbl">Interviewer cuts in mid-answer &mdash; <b>off</b></span></button>
+    <div class="mb-sec">Find a topic</div>
+    <button class="crambtn" id="idxopen" type="button"><span class="mb-tx"><span class="mb-t">Topic index</span><span class="mb-d"> &mdash; all topics across the six groups</span></span></button>
+    <button class="crambtn" id="searchopen" type="button"><span class="mb-tx"><span class="mb-t">Search</span><span class="mb-d"> &mdash; jump to any topic or view by name or concept</span></span></button>
+    <div class="mb-sec">This topic</div>
+    <button class="crambtn" id="copylink" type="button"><span class="mb-tx"><span class="mb-t">Copy link</span><span class="mb-d"> &mdash; a shareable link to this topic &amp; view</span></span></button>
+    <button class="crambtn" id="starbtn" type="button" aria-pressed="false"><span class="mb-tx"><span class="mb-t">Star this topic</span><span class="mb-d"> &mdash; save it to your bookmarks on the home</span></span></button>
+    <button class="crambtn" id="notesopen" type="button"><span class="mb-tx"><span class="mb-t">Your notes</span><span class="mb-d"> &mdash; jot notes &amp; mnemonics for this topic</span></span></button>
+    <button class="crambtn" id="printqa" type="button"><span class="mb-tx"><span class="mb-t">Print Q&amp;A</span><span class="mb-d"> &mdash; a printable sheet of this topic&#39;s probes</span></span></button>
+    <div class="mb-sec">Study aids</div>
+    <button class="crambtn" id="cramopen" type="button"><span class="mb-tx"><span class="mb-t">One-page cram sheet</span><span class="mb-d"> &mdash; everything that matters, on a card</span></span></button>
+    <button class="crambtn" id="sessopen" type="button"><span class="mb-tx"><span class="mb-t">Session progress</span><span class="mb-d"> &mdash; where you&rsquo;re weak, what to drill next</span></span></button>
+    <button class="crambtn" id="mixopen" type="button"><span class="mb-tx"><span class="mb-t">Mixed fire</span><span class="mb-d"> &mdash; probes &amp; curveballs in random order</span></span></button>
+    <button class="crambtn" id="planopen" type="button"><span class="mb-tx"><span class="mb-t">Game plan</span><span class="mb-d"> &mdash; how to rehearse with this over a week</span></span></button>
+    <button class="crambtn" id="scopeopen" type="button"><span class="mb-tx"><span class="mb-t">Scope it first</span><span class="mb-d"> &mdash; the clarifying questions before you design</span></span></button>
+    <div class="mb-sec">Settings</div>
+    <button class="crambtn kbd-only" id="keyopen" type="button"><span class="mb-tx"><span class="mb-t">Keyboard shortcuts</span><span class="mb-d"> &mdash; jump views, drive it by key</span></span></button>
+    <button class="crambtn cram-tog" id="themetog" type="button" aria-pressed="false"><span class="mb-ic">&#9789;</span>Dark mode &mdash; <b class="tt-state">off</b></button></div>
 
   <div class="seg" role="group" aria-label="Rehearsal sections">
     <button type="button" class="on" data-tab="walk"><span>Walkthrough</span><span class="n">MECHANICS</span></button>
@@ -881,7 +908,26 @@ try{var _dk=matchMedia('(prefers-color-scheme:dark)').matches;document.documentE
     <button type="button" data-tab="open"><span>30-Second</span><span class="n">OPEN &amp; CLOSE</span></button>
   </div>
 
-  </aside><main class="stage" role="main"><div class="stage-head" id="stagehead"></div><details class="mcomp"><summary class="mcomp-sum"><span class="mcomp-eyebrow">Companion</span><span class="mcomp-cue">coaching for this view</span><span class="mcomp-chev" aria-hidden="true">&#9662;</span></summary><div class="mcomp-body"><div class="mcomp-block"><div class="cmp-h">This view</div><div class="cmp-view" id="mCmpView">Walkthrough</div><p class="cmp-note" id="mCmpNote">The dispatch flow, one step at a time &mdash; the mechanics you narrate before anyone cuts in.</p></div><div class="mcomp-block"><div class="cmp-h">The move here</div><p class="cmp-move" id="mCmpMove">Say the fork out loud &mdash; &ldquo;one read, two sinks.&rdquo; That single-read line is what they remember.</p></div><div class="mcomp-block"><div class="cmp-h">The spine of a strong answer</div><ul class="cmp-spine"><li><span class="cmp-dot"></span><span>A frozen strategy map keeps dispatch <b>O(1)</b> &mdash; never a switch statement.</span></li><li><span class="cmp-dot"></span><span>One <b>PassThrough</b> fork hashes <i>and</i> uploads on a single read of the file.</span></li><li><span class="cmp-dot"></span><span>At-least-once delivery <b>+</b> idempotent work <b>=</b> exactly-once effect.</span></li><li><span class="cmp-dot"></span><span>Name the ceiling before you hit it &mdash; Lambda gives way to <b>SQS</b> past ~1,000/s.</span></li></ul></div></div></details><div class="pane on" id="walk">
+  </aside>
+    <main class="stage" role="main">
+    <div class="stage-head" id="stagehead"></div>
+    <details class="mcomp">
+    <summary class="mcomp-sum"><span class="mcomp-eyebrow">Companion</span><span class="mcomp-cue">coaching for this view</span><span class="mcomp-chev" aria-hidden="true">&#9662;</span></summary>
+    <div class="mcomp-body">
+    <div class="mcomp-block">
+    <div class="cmp-h">This view</div>
+    <div class="cmp-view" id="mCmpView">Walkthrough</div>
+    <p class="cmp-note" id="mCmpNote">The dispatch flow, one step at a time &mdash; the mechanics you narrate before anyone cuts in.</p></div>
+    <div class="mcomp-block">
+    <div class="cmp-h">The move here</div>
+    <p class="cmp-move" id="mCmpMove">Say the fork out loud &mdash; &ldquo;one read, two sinks.&rdquo; That single-read line is what they remember.</p></div>
+    <div class="mcomp-block">
+    <div class="cmp-h">The spine of a strong answer</div>
+    <ul class="cmp-spine">
+    <li><span class="cmp-dot"></span><span>A frozen strategy map keeps dispatch <b>O(1)</b> &mdash; never a switch statement.</span></li>
+    <li><span class="cmp-dot"></span><span>One <b>PassThrough</b> fork hashes <i>and</i> uploads on a single read of the file.</span></li>
+    <li><span class="cmp-dot"></span><span>At-least-once delivery <b>+</b> idempotent work <b>=</b> exactly-once effect.</span></li>
+    <li><span class="cmp-dot"></span><span>Name the ceiling before you hit it &mdash; Lambda gives way to <b>SQS</b> past ~1,000/s.</span></li></ul></div></div></details><div class="pane on" id="walk">
     <deep-walkthrough></deep-walkthrough>
   </div>
 

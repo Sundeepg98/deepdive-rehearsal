@@ -213,6 +213,22 @@
     reader.readAsText(file);
   }
 
+  /* S2: soft undo for per-topic resets. Snapshot the topic's stored keys before
+     clearing and offer a few-seconds Undo, rather than a blocking confirm. */
+  var _undoT = null, _undoEl = null;
+  function topicKeys(id) { return ['progress.' + id, 'shakymark.' + id, 'wbprog.' + id]; }
+  function captureTopic(id) { var ks = topicKeys(id), snap = {}; for (var i = 0; i < ks.length; i++) { var v = (typeof Store !== 'undefined') ? Store.get(ks[i]) : null; if (v !== null && v !== undefined) snap[ks[i]] = v; } return snap; }
+  function restoreTopic(snap) { if (typeof Store === 'undefined') return; for (var k in snap) if (snap.hasOwnProperty(k)) Store.set(k, snap[k]); }
+  function showUndo(msg, onUndo) {
+    if (!_undoEl) { _undoEl = document.createElement('div'); _undoEl.className = 'ix-undo'; _undoEl.setAttribute('role', 'status'); document.body.appendChild(_undoEl); }
+    _undoEl.innerHTML = '<span class="ix-undo-msg"></span><button class="ix-undo-btn" type="button">Undo</button>';
+    _undoEl.querySelector('.ix-undo-msg').textContent = msg;
+    _undoEl.classList.add('show');
+    var hide = function () { if (_undoEl) _undoEl.classList.remove('show'); if (_undoT) { clearTimeout(_undoT); _undoT = null; } };
+    _undoEl.querySelector('.ix-undo-btn').onclick = function () { hide(); if (onUndo) onUndo(); };
+    if (_undoT) clearTimeout(_undoT);
+    _undoT = setTimeout(hide, 6000);
+  }
   function panelHtml() {
     var buckets = (typeof groupedTopicIds === 'function') ? groupedTopicIds() : [];
     var cur = (typeof TopicRegistry !== 'undefined' && TopicRegistry.current) ? TopicRegistry.current() : null;
@@ -299,10 +315,10 @@
         var rid = perReset.getAttribute('data-reset');
         var rt2 = (typeof TopicRegistry !== 'undefined') ? TopicRegistry.get(rid) : null;
         var nm = rt2 ? rt2.identity.title.replace(/&[a-z#0-9]+;/g, ' ').trim() : 'this topic';
-        if (window.confirm('Clear saved progress for ' + nm + '?')) {
-          if (typeof Progress !== 'undefined' && Progress.clear) Progress.clear(rid);
-          overlayEl.innerHTML = panelHtml();
-        }
+        var _snap = captureTopic(rid);
+        if (typeof Progress !== 'undefined' && Progress.clear) Progress.clear(rid);
+        overlayEl.innerHTML = panelHtml();
+        showUndo('Cleared progress for ' + nm, function () { restoreTopic(_snap); overlayEl.innerHTML = panelHtml(); });
         return;
       }
       var card = e.target.closest ? e.target.closest('[data-topic]') : null;

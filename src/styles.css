@@ -691,6 +691,10 @@ body.is-hidden,body.is-hidden *,body.is-hidden *::before,body.is-hidden *::after
 .ix-foot{padding:11px 16px 3px;text-align:center;border-top:1px solid var(--bd);margin-top:6px}
 .ix-reset{font-size:11px;font-weight:600;color:var(--mut);background:none;border:none;cursor:pointer;padding:6px 12px;border-radius:7px;transition:color .14s ease,background .14s ease}
 .ix-io{font:600 11px -apple-system,system-ui,sans-serif;color:var(--mut);background:transparent;border:1px solid var(--bd);border-radius:7px;padding:5px 11px;cursor:pointer;transition:color .14s ease,border-color .14s ease}
+.ix-undo{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(12px);z-index:1000;display:none;align-items:center;gap:14px;padding:11px 14px 11px 18px;background:var(--ink);color:var(--card);border-radius:11px;box-shadow:0 12px 30px -8px rgba(20,18,40,.5);font-size:12.5px;font-weight:500;opacity:0;transition:opacity .2s ease,transform .2s ease}
+.ix-undo.show{display:flex;opacity:1;transform:translateX(-50%) translateY(0)}
+.ix-undo-btn{border:0;background:var(--acc);color:#fff;font:700 12px -apple-system,system-ui,sans-serif;padding:6px 13px;border-radius:8px;cursor:pointer;transition:filter .15s ease}
+.ix-undo-btn:hover{filter:brightness(1.1)}
 .ix-io:hover{color:var(--ink);border-color:var(--acc)}
 .ix-io-imp{display:inline-flex;align-items:center}
 .ix-io[disabled]{opacity:.4;cursor:not-allowed}

@@ -13,7 +13,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>Content Pipeline &mdash; Deep Rehearsal</title>
-<style>/* === Hide Kimi Agent watermark (platform-injected) === */
+<style>@layer theme, app, components, utilities;@layer app{/* === Hide Kimi Agent watermark (platform-injected) === */
 a[href*="kimi.com/agent"]{display:none!important}
 
 /* === v154: Scroll progress bar === */
@@ -110,8 +110,8 @@ button:focus-visible,.dn-step:focus-visible,.pill:focus-visible{outline:2px soli
   .rail{position:sticky;top:0;height:4px;background:#ECE8E0;z-index:50}
   .rail .fill{height:100%;width:25%;background:linear-gradient(90deg,var(--acc),var(--acc2));transition:width .35s ease}
 
-  .badge{display:inline-block;font-size:10px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:#fff;background:linear-gradient(135deg,var(--acc) 0%,var(--acc2) 60%,#8B7FE8 100%);padding:5px 13px;border-radius:8px;margin-bottom:11px;box-shadow:var(--chip-sh),0 0 20px -4px rgba(83,74,183,.2);position:relative;overflow:hidden}
-.badge::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,transparent 40%,rgba(255,255,255,.15) 50%,transparent 60%);animation:badgeShimmer 4s ease-in-out infinite}
+  
+
 @keyframes badgeShimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
   .locator{display:inline-block;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.2px;text-transform:uppercase;color:var(--acc);background:var(--accbg);border:1px solid #cfc7f0;border-radius:6px;padding:3px 9px;margin:0 0 11px 7px}
   .hdr{border-left:5px solid var(--acc);padding:5px 0 7px 17px;margin-bottom:18px}
@@ -840,7 +840,7 @@ html[data-theme="dark"] .tn-item:hover{background:rgba(170,157,245,.13)}
 .storage-notice-exp{flex:none;font:600 11px -apple-system,sans-serif;color:var(--amber);background:transparent;border:1px solid var(--amber);border-radius:6px;padding:4px 11px;cursor:pointer}
 .storage-notice-exp:hover{background:var(--amber);color:#fff}
 .storage-notice-x{flex:none;background:transparent;border:0;color:var(--amber);font-size:18px;line-height:1;cursor:pointer;padding:0 4px}
-</style>
+}</style>
 <script>/* === Boot: theme detection + loading splash === */
 try{var _dk=matchMedia('(prefers-color-scheme:dark)').matches;document.documentElement.dataset.theme=_dk?'dark':'light';var _tc=document.querySelector('meta[name="theme-color"]');if(_tc)_tc.setAttribute('content',_dk?'#15141A':'#FAF9F5');}catch(e){}
 /* v147: Loading splash -- removed by app.js when ready */
@@ -859,7 +859,38 @@ try{var _dk=matchMedia('(prefers-color-scheme:dark)').matches;document.documentE
 </script>
 <script>try{var _t=localStorage.getItem('ddr.v1.theme');if(_t){_t=JSON.parse(_t);if(_t==='dark'||_t==='light'){document.documentElement.dataset.theme=_t;var _m=document.querySelector('meta[name="theme-color"]');if(_m)_m.setAttribute('content',_t==='dark'?'#15141A':'#FAF9F5');}}}catch(e){}</script>
   <style rel="stylesheet" crossorigin>/*! tailwindcss v4.3.2 | MIT License | https://tailwindcss.com */
+:root, :host {
+  --color-white: #fff;
+  --radius-sm: 8px;
+  --color-acc: #534ab7;
+  --color-acc2: #6d5fd6;
+}
 
+@layer components {
+  .badge {
+    color: var(--color-white);
+    text-transform: uppercase;
+    border-radius: var(--radius-sm);
+    letter-spacing: 1.6px;
+    background: linear-gradient(135deg, var(--color-acc) 0%, var(--color-acc2) 60%, #8b7fe8 100%);
+    box-shadow: var(--chip-sh), 0 0 20px -4px #534ab733;
+    margin-bottom: 11px;
+    padding: 5px 13px;
+    font-size: 10px;
+    font-weight: 800;
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .badge:after {
+    content: "";
+    background: linear-gradient(135deg, #0000 40%, #ffffff26 50%, #0000 60%);
+    animation: 4s ease-in-out infinite badgeShimmer;
+    position: absolute;
+    inset: 0;
+  }
+}
 /*$vite$:1*/</style>
 </head>
 <body>

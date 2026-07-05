@@ -13,7 +13,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>Content Pipeline &mdash; Deep Rehearsal</title>
-<style><!--@build:include styles.css--></style>
+<style>@layer theme, app, components, utilities;@layer app{<!--@build:include styles.css-->}</style>
 <link rel="stylesheet" href="./tw.css">
 <script><!--@build:include scripts/boot.js--></script>
 <script>try{var _t=localStorage.getItem('ddr.v1.theme');if(_t){_t=JSON.parse(_t);if(_t==='dark'||_t==='light'){document.documentElement.dataset.theme=_t;var _m=document.querySelector('meta[name="theme-color"]');if(_m)_m.setAttribute('content',_t==='dark'?'#15141A':'#FAF9F5');}}}catch(e){}</script>

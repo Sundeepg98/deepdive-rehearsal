@@ -661,6 +661,8 @@ body.is-hidden,body.is-hidden *,body.is-hidden *::before,body.is-hidden *::after
 .ix-home-bar{height:6px;background:var(--bd);border-radius:6px;overflow:hidden;margin-bottom:7px}
 .ix-home-bar span{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));border-radius:6px;transition:width .3s ease}
 .ix-home-v{font-size:11px;color:var(--mut2);line-height:1.4}
+.ix-streak{display:inline-flex;align-items:center;gap:5px;margin-top:8px;padding:3px 9px;border-radius:20px;background:rgba(217,119,6,.1);color:#b45309;font-size:10.5px;font-weight:650;align-self:flex-start}
+.ix-streak b{font-size:12px;font-weight:800}
 .ix-trend{display:flex;flex-direction:column;justify-content:center;gap:4px;min-width:120px}
 .ix-trend-s{font-family:ui-monospace,Menlo,monospace;font-size:16px;letter-spacing:1.5px;color:var(--acc);line-height:1.1}
 .ix-trend-v{font-size:10px;color:var(--mut2);line-height:1.3}

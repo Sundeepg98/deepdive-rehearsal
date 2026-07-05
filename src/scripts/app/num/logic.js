@@ -10,7 +10,7 @@
    d.compute (the escape hatch, design 3.2), which returns the row array the pane
    renders verbatim. NUM_STYLE is topic-invariant and stays here; _fmtN/_fmtTB/_nval
    are pure helpers, and _fmtN/_fmtTB are passed into compute as fmt.n/fmt.tb. The
-   tab / rail / keyboard nav that used to share this file lives in num/shell.js
+   tab / rail / keyboard nav that used to share this file lives in shell.js
    (foundation). Child-mounts only -- renderTopic never rewrites this._root.innerHTML.
    Per-topic input tweaks persist via local Store (key num.<topic>); a Reset to
    canonical button restores the reference scenario. Offline-safe: no network/permission. */

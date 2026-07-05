@@ -1307,7 +1307,7 @@ details.disc .body{padding:2px 16px 14px;font-size:12.5px;color:var(--disc-body-
    and are seeded here by publishBanks.) */
 var cards = [], speakLines = [], _allCards = [], _allSpeak = [];
 var curveballPool = [], mockBeats = [], framePool = [], mockCurveIdx = 0, mockFrameIdx = 0;
-var TOPIC_CMP_NOTES = {};   /* num/shell.js __syncCompanion reads this (was a closure-local map) */
+var TOPIC_CMP_NOTES = {};   /* shell.js __syncCompanion reads this (was a closure-local map) */
 
 /* Reseed cross-pane globals from a topic's bank, synchronously, BEFORE the event
    fires and before any overlay re-reads them. mock-run MUTATES mockBeats in
@@ -1598,7 +1598,7 @@ window.Progress = Progress;
    identity stays hard-coded in index.html for a byte-identical first paint -- so
    only `cmpNotes` is read at boot (by __syncCompanion via TOPIC_CMP_NOTES). The
    other fields are the deliberate, tiny duplication that powers a clean switch in
-   Phase 2. cmpNotes is lifted verbatim from numbers-nalsd.js's closure-local map.
+   Phase 2. cmpNotes is lifted verbatim from shell.js's closure-local map.
    Offline-safe: no network/storage/permission. */
 var TOPIC_CP_IDENTITY = {
   index: 1,
@@ -8245,7 +8245,7 @@ customElements.define('deep-trade-offs', DeepTradeOffs);
    step count never keeps stale dots/arc. The formerly baked model-script blob is
    now data, emitted by the module-level renderBeat(); the .mbeat.ans beat MUST
    stay LAST (WALK_STYLE + MBEAT_SHEET last-child rules). The keyboard handler in
-   numbers-nalsd calls prev()/next() (each bounds-checks internally); the host is
+   shell.js calls prev()/next() (each bounds-checks internally); the host is
    preserved across switches so it keeps working. The flow chips (.fb/.flow/.arr),
    .ins, .arc-*, pre.code/.codecap, details.model and .mq are pane-exclusive and
    stay here (WALK_STYLE). The base .mbeat row rules are shared with model-answers
@@ -9399,7 +9399,7 @@ customElements.define('deep-model-answers', DeepModelAnswers);
    d.compute (the escape hatch, design 3.2), which returns the row array the pane
    renders verbatim. NUM_STYLE is topic-invariant and stays here; _fmtN/_fmtTB/_nval
    are pure helpers, and _fmtN/_fmtTB are passed into compute as fmt.n/fmt.tb. The
-   tab / rail / keyboard nav that used to share this file lives in num/shell.js
+   tab / rail / keyboard nav that used to share this file lives in shell.js
    (foundation). Child-mounts only -- renderTopic never rewrites this._root.innerHTML.
    Per-topic input tweaks persist via local Store (key num.<topic>); a Reset to
    canonical button restores the reference scenario. Offline-safe: no network/permission. */
@@ -9960,8 +9960,9 @@ class DeepMixedFire extends HTMLElement {
 }
 customElements.define('deep-mixed-fire', DeepMixedFire);
 
-/* ============ NUMBERS global shell (num/shell.js) ============
-   Lifted out of numbers-nalsd.js by the Keystone A foundation (F3): switchTab + the
+/* ============ Global application shell (shell.js) ============
+   The app-level chrome shared by every view (NOT a feature module -- no numbers/
+   view-specific logic): switchTab + the
    global keyboard handler + the modal focus-trap + the mobile companion sheet +
    __syncCompanion. The per-view coaching map that used to be a closure-local `cmpNotes`
    here now reads the registry-owned global TOPIC_CMP_NOTES (seeded for topic 1 at
@@ -10214,7 +10215,7 @@ document.addEventListener('keydown', function (event) {
    Each open/close pair calls the shared ovShow/ovHide (defined in
    mock-run/logic.js) and toggles aria-hidden + the body scroll-lock. */
 
-var cramov = document.getElementById('cramov'); /* SHARED: the keyboard handler in numbers-nalsd.js reads this to see if the cram overlay is open */
+var cramov = document.getElementById('cramov'); /* SHARED: the keyboard handler in shell.js reads this to see if the cram overlay is open */
 let cramKeyBound = false;
 
 function openCram() {
@@ -11159,7 +11160,7 @@ customElements.define('deep-session', DeepSession);
    The bridge between the HashRouter and the app's existing tab/pane system.
 
    It does NOT own pane switching -- that stays in switchTab() (see
-   numbers-nalsd.js), which already drives the segmented control, the panes,
+   shell.js), which already drives the segmented control, the panes,
    the progress rail and the companion panel. ViewManager simply subscribes to
    route changes and asks switchTab() to apply them, then layers on the two
    things routing makes worthwhile: a per-view document.title (so deep links and

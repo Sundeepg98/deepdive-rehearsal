@@ -1,5 +1,6 @@
-/* ============ NUMBERS global shell (num/shell.js) ============
-   Lifted out of numbers-nalsd.js by the Keystone A foundation (F3): switchTab + the
+/* ============ Global application shell (shell.js) ============
+   The app-level chrome shared by every view (NOT a feature module -- no numbers/
+   view-specific logic): switchTab + the
    global keyboard handler + the modal focus-trap + the mobile companion sheet +
    __syncCompanion. The per-view coaching map that used to be a closure-local `cmpNotes`
    here now reads the registry-owned global TOPIC_CMP_NOTES (seeded for topic 1 at

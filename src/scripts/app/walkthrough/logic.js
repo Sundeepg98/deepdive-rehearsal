@@ -10,7 +10,7 @@
    step count never keeps stale dots/arc. The formerly baked model-script blob is
    now data, emitted by the module-level renderBeat(); the .mbeat.ans beat MUST
    stay LAST (WALK_STYLE + MBEAT_SHEET last-child rules). The keyboard handler in
-   numbers-nalsd calls prev()/next() (each bounds-checks internally); the host is
+   shell.js calls prev()/next() (each bounds-checks internally); the host is
    preserved across switches so it keeps working. The flow chips (.fb/.flow/.arr),
    .ins, .arc-*, pre.code/.codecap, details.model and .mq are pane-exclusive and
    stay here (WALK_STYLE). The base .mbeat row rules are shared with model-answers

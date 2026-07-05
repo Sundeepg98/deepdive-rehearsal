@@ -4,7 +4,7 @@
    Each open/close pair calls the shared ovShow/ovHide (defined in
    mock-run/logic.js) and toggles aria-hidden + the body scroll-lock. */
 
-var cramov = document.getElementById('cramov'); /* SHARED: the keyboard handler in numbers-nalsd.js reads this to see if the cram overlay is open */
+var cramov = document.getElementById('cramov'); /* SHARED: the keyboard handler in shell.js reads this to see if the cram overlay is open */
 let cramKeyBound = false;
 
 function openCram() {

@@ -24,7 +24,7 @@
 <!--@build:include scripts/app/num/logic.js-->
 <!--@build:include scripts/app/mock-run.js-->
 <!--@build:include scripts/app/mixed-fire.js-->
-<!--@build:include scripts/app/num/shell.js-->
+<!--@build:include scripts/app/shell.js-->
 <!--@build:include scripts/app/cram-sheet.js-->
 <!--@build:include scripts/app/keyboard-overlay.js-->
 <!--@build:include scripts/app/scope-overlay.js-->

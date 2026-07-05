@@ -4,7 +4,7 @@
    identity stays hard-coded in index.html for a byte-identical first paint -- so
    only `cmpNotes` is read at boot (by __syncCompanion via TOPIC_CMP_NOTES). The
    other fields are the deliberate, tiny duplication that powers a clean switch in
-   Phase 2. cmpNotes is lifted verbatim from numbers-nalsd.js's closure-local map.
+   Phase 2. cmpNotes is lifted verbatim from shell.js's closure-local map.
    Offline-safe: no network/storage/permission. */
 var TOPIC_CP_IDENTITY = {
   index: 1,

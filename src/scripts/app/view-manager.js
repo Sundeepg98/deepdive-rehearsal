@@ -2,7 +2,7 @@
    The bridge between the HashRouter and the app's existing tab/pane system.
 
    It does NOT own pane switching -- that stays in switchTab() (see
-   numbers-nalsd.js), which already drives the segmented control, the panes,
+   shell.js), which already drives the segmented control, the panes,
    the progress rail and the companion panel. ViewManager simply subscribes to
    route changes and asks switchTab() to apply them, then layers on the two
    things routing makes worthwhile: a per-view document.title (so deep links and

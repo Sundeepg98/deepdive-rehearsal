@@ -19,7 +19,7 @@
    and are seeded here by publishBanks.) */
 var cards = [], speakLines = [], _allCards = [], _allSpeak = [];
 var curveballPool = [], mockBeats = [], framePool = [], mockCurveIdx = 0, mockFrameIdx = 0;
-var TOPIC_CMP_NOTES = {};   /* num/shell.js __syncCompanion reads this (was a closure-local map) */
+var TOPIC_CMP_NOTES = {};   /* shell.js __syncCompanion reads this (was a closure-local map) */
 
 /* Reseed cross-pane globals from a topic's bank, synchronously, BEFORE the event
    fires and before any overlay re-reads them. mock-run MUTATES mockBeats in

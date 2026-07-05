@@ -35,6 +35,19 @@ export function prose(srcMd) {
   let html = md.renderInline(String(srcMd));
   html = html
     .replace(/<strong>/g, '<b>').replace(/<\/strong>/g, '</b>')
-    .replace(/<em>/g, '<i>').replace(/<\/em>/g, '</i>');
+    .replace(/<em>/g, '<i>').replace(/<\/em>/g, '</i>')
+    .replace(/ -&gt; /g, ' &rarr; ');   // in-prose arrows (markdown-it has already escaped -> to -&gt;)
   return toAscii(html);
+}
+
+// Convert markdown to PLAIN TEXT with real Unicode smart chars (em-dash, curly quotes) --
+// for fields the app renders as text, not HTML (cmpNotes title/desc/tip). No tags, no
+// entities: the emitter will \u-escape the Unicode when it writes the module, matching how
+// the hand-authored modules store these (e.g. \u2014, \u201C).
+export function text(srcMd) {
+  let s = md.renderInline(String(srcMd));
+  s = s.replace(/<[^>]+>/g, '');
+  s = s.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+       .replace(/&#39;/g, "'").replace(/&quot;/g, '"');
+  return s;
 }

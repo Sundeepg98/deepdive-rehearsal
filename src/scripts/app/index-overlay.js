@@ -279,11 +279,12 @@
       (buckets.length ? body : '<div class="ix-empty">No topics registered.</div>') + '</div>' + footerHtml() + '</div>';
   }
 
-  var _ixReturn = null;
+  var _modal = null;
   function create() {
     if (overlayEl) return;
     overlayEl = document.createElement('div');
     overlayEl.id = '_index-overlay';
+    _modal = window.__overlayModal(overlayEl, close, function () { return isOpen; });
     overlayEl.className = 'ix-ov';
     overlayEl.setAttribute('role', 'dialog');
     overlayEl.setAttribute('aria-modal', 'true');
@@ -337,13 +338,6 @@
         var fwd = (e.key === 'ArrowDown' || e.key === 'ArrowRight');
         var nx = idx === -1 ? (fwd ? cards[0] : cards[cards.length - 1]) : cards[fwd ? Math.min(idx + 1, cards.length - 1) : Math.max(idx - 1, 0)];
         nx.focus();
-      } else if (e.key === 'Tab') {
-        var f = Array.prototype.filter.call(overlayEl.querySelectorAll('button,[href],input,textarea,select,[tabindex]:not([tabindex="-1"])'), function (el) { return !el.disabled && el.offsetParent !== null; });
-        if (!f.length) { e.preventDefault(); return; }
-        var first = f[0], last = f[f.length - 1], a = document.activeElement;
-        if (!overlayEl.contains(a)) { e.preventDefault(); first.focus(); }
-        else if (e.shiftKey && a === first) { e.preventDefault(); last.focus(); }
-        else if (!e.shiftKey && a === last) { e.preventDefault(); first.focus(); }
       }
     });
   }
@@ -351,8 +345,8 @@
   function open() {
     if (isOpen) return;
     if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
-    _ixReturn = document.activeElement;
     create();
+    _modal.capture();
     overlayEl.innerHTML = panelHtml();
     isOpen = true;
     overlayEl.classList.add('open');
@@ -368,11 +362,10 @@
     isOpen = false;
     overlayEl.classList.remove('vis');
     hideTimer = setTimeout(function () { if (overlayEl) overlayEl.classList.remove('open'); hideTimer = null; }, 220);
-    if (_ixReturn && _ixReturn.focus) { try { _ixReturn.focus(); } catch (e) {} }
-    _ixReturn = null;
+    _modal.restore();
   }
 
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && isOpen) close(); });
+  /* Escape while open: handled by __overlayModal (overlay-focus.js) */
   function wire() {
     var btn = document.getElementById('idxopen'); if (btn) btn.addEventListener('click', open);
     /* C1: a fresh landing (no deep-link) opens the home; a deep-link is honored as-is */

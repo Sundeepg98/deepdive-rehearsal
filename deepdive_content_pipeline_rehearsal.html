@@ -11369,6 +11369,41 @@ customElements.define('deep-session', DeepSession);
   else init();
 })();
 
+/* ============ overlay-focus.js -- shared modal behaviours for the dynamic overlays ============
+   The search / notes / index overlays are built lazily on first open, AFTER shell.js's
+   one-time [role=dialog][aria-modal] scan -- so they can't ride its centralized focus
+   manager, and each used to re-implement the same Tab focus-trap + Escape-to-close +
+   focus capture/restore. This wires that shared core for a given overlay and returns
+   capture()/restore() for the overlay's own open()/close() to call.
+
+   The keydown listener is document-level and gated on the overlay's own isOpen() -- so
+   Escape closes and Tab traps even when opening the overlay didn't move focus inside it
+   (matching the search overlay's original document-level handler). Backdrop click-out
+   stays in each overlay (interleaved with overlay-specific click logic). Offline-safe. */
+window.__overlayModal = function (el, close, isOpen) {
+  var ret = null;
+  function focusables() {
+    return Array.prototype.filter.call(
+      el.querySelectorAll('button,[href],input,textarea,select,[tabindex]:not([tabindex="-1"])'),
+      function (x) { return !x.disabled && !x.hidden && x.offsetParent !== null; });
+  }
+  document.addEventListener('keydown', function (e) {
+    if (!isOpen()) return;
+    if (e.key === 'Escape') { e.preventDefault(); close(); return; }
+    if (e.key !== 'Tab') return;
+    var f = focusables();
+    if (!f.length) { e.preventDefault(); return; }
+    var first = f[0], last = f[f.length - 1], a = document.activeElement;
+    if (!el.contains(a)) { e.preventDefault(); first.focus(); }
+    else if (e.shiftKey && a === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && a === last) { e.preventDefault(); first.focus(); }
+  });
+  return {
+    capture: function () { ret = document.activeElement; },
+    restore: function () { if (ret && ret.focus) { try { ret.focus(); } catch (e) {} } ret = null; }
+  };
+};
+
 /* ===== SearchOverlay =====
    Global search across the 9 surfaces. Trigger: Cmd+K / Ctrl+K (or the API).
    - Matches view titles, keywords and descriptions
@@ -11490,6 +11525,7 @@ customElements.define('deep-session', DeepSession);
     document.body.appendChild(overlayEl);
 
     overlayEl.addEventListener('click', function (e) { if (e.target === overlayEl) close(); });
+    _modal = window.__overlayModal(overlayEl, close, function () { return isOpen; });
   }
 
   function tokenize(str) { return str.split(/\s+/).filter(function (x) { return x.length > 0; }); }
@@ -11650,7 +11686,6 @@ customElements.define('deep-session', DeepSession);
     if (e.key === 'ArrowDown') { e.preventDefault(); selectIndex(Math.min(selectedIndex + 1, allResults.length - 1)); }
     else if (e.key === 'ArrowUp') { e.preventDefault(); selectIndex(Math.max(selectedIndex - 1, 0)); }
     else if (e.key === 'Enter' && selectedIndex >= 0) { e.preventDefault(); if (allResults[selectedIndex]) navigateTo(allResults[selectedIndex].data); }
-    else if (e.key === 'Escape') { close(); }
   }
 
   function navigateTo(d) {
@@ -11665,8 +11700,8 @@ customElements.define('deep-session', DeepSession);
   function open() {
     if (isOpen) return;
     if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
-    if (!isOpen) _returnFocus = document.activeElement;   /* remember trigger for focus-restore */
     createElements();
+    _modal.capture();   /* remember trigger for focus-restore */
     ensureTopicIndex();
     isOpen = true;
     overlayEl.style.display = 'flex';
@@ -11679,29 +11714,20 @@ customElements.define('deep-session', DeepSession);
     renderResults([]);
   }
 
-  var _returnFocus = null;
+  var _modal = null;
   function close() {
     if (!isOpen) return;
     isOpen = false;
     overlayEl.style.opacity = '0';
     overlayEl.firstElementChild.style.transform = 'scale(.96) translateY(10px)';
     hideTimer = setTimeout(function () { overlayEl.style.display = 'none'; hideTimer = null; }, 250);
-    if (_returnFocus && _returnFocus.focus) { try { _returnFocus.focus(); } catch (e) {} }
-    _returnFocus = null;
+    _modal.restore();
   }
 
   document.addEventListener('keydown', function (e) {
+    /* Cmd/Ctrl+K opens from anywhere; Escape + Tab-trap while open are handled by
+       __overlayModal (overlay-focus.js) once the overlay element exists. */
     if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) { e.preventDefault(); open(); }
-    else if (e.key === 'Escape' && isOpen) { close(); }
-    else if (e.key === 'Tab' && isOpen) {
-      var _f = overlayEl.querySelectorAll('button,[href],input,textarea,select,[tabindex]:not([tabindex="-1"])');
-      _f = Array.prototype.filter.call(_f, function (el) { return !el.disabled && el.offsetParent !== null; });
-      if (!_f.length) { e.preventDefault(); return; }
-      var _first = _f[0], _last = _f[_f.length - 1], _a = document.activeElement;
-      if (!overlayEl.contains(_a)) { e.preventDefault(); _first.focus(); }
-      else if (e.shiftKey && _a === _first) { e.preventDefault(); _last.focus(); }
-      else if (!e.shiftKey && _a === _last) { e.preventDefault(); _first.focus(); }
-    }
   });
 
   (function () { var sb = document.getElementById('searchopen'); if (sb) sb.addEventListener('click', function () { open(); }); })();
@@ -11785,7 +11811,7 @@ window.Bookmarks = Bookmarks;
    topics that already have notes. */
 (function () {
   var el = null, ta = null, subEl = null, allWrap = null, listEl = null, searchEl = null;
-  var isOpen = false, saveT = null, restoreFocus = null, mode = 'one';
+  var isOpen = false, saveT = null, _modal = null, mode = 'one';
   var N = 'notes.';
   function nkey(id) { return N + id; }
   function reg() { return (typeof TopicRegistry !== 'undefined') ? TopicRegistry : null; }
@@ -11863,6 +11889,7 @@ window.Bookmarks = Bookmarks;
       '<div class="nt-all" hidden><input class="nt-search" type="text" placeholder="Search all your notes&#8230;" aria-label="Search notes" autocomplete="off" autocapitalize="off" spellcheck="false"><div class="nt-list"></div></div>' +
       '<div class="nt-foot">Saved automatically to this browser.</div></div>';
     document.body.appendChild(el);
+    _modal = window.__overlayModal(el, close, function () { return isOpen; });
     ta = el.querySelector('.nt-ta'); subEl = el.querySelector('.nt-sub');
     allWrap = el.querySelector('.nt-all'); listEl = el.querySelector('.nt-list'); searchEl = el.querySelector('.nt-search');
     var tabs = el.querySelectorAll('.nt-tab');
@@ -11877,16 +11904,7 @@ window.Bookmarks = Bookmarks;
     });
     ta.addEventListener('input', function () { if (saveT) clearTimeout(saveT); saveT = setTimeout(save, 300); });
     if (searchEl) searchEl.addEventListener('input', function () { renderList(searchEl.value); });
-    el.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') { e.preventDefault(); close(); return; }
-      if (e.key === 'Tab') {
-        var f = Array.prototype.filter.call(el.querySelectorAll('button,textarea,input'), function (x) { return !x.disabled && !x.hidden && x.offsetParent !== null; });
-        if (!f.length) return;
-        var first = f[0], last = f[f.length - 1];
-        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
-      }
-    });
+    /* Tab focus-trap + Escape-to-close: handled by __overlayModal (overlay-focus.js) */
   }
 
   function loadCur() {
@@ -11901,7 +11919,7 @@ window.Bookmarks = Bookmarks;
     mode = 'one'; if (tabsSync) tabsSync();
     if (ta) ta.hidden = false; if (allWrap) allWrap.hidden = true;
     loadCur();
-    restoreFocus = document.activeElement;
+    _modal.capture();
     el.classList.add('open'); isOpen = true;
     setTimeout(function () { if (ta) ta.focus(); }, 40);
   }
@@ -11910,8 +11928,7 @@ window.Bookmarks = Bookmarks;
     save();
     if (saveT) { clearTimeout(saveT); saveT = null; }
     el.classList.remove('open'); isOpen = false;
-    if (restoreFocus && restoreFocus.focus) { try { restoreFocus.focus(); } catch (e) {} }
-    restoreFocus = null;
+    _modal.restore();
   }
 
   function wire() {
@@ -12409,11 +12426,12 @@ window.Bookmarks = Bookmarks;
       (buckets.length ? body : '<div class="ix-empty">No topics registered.</div>') + '</div>' + footerHtml() + '</div>';
   }
 
-  var _ixReturn = null;
+  var _modal = null;
   function create() {
     if (overlayEl) return;
     overlayEl = document.createElement('div');
     overlayEl.id = '_index-overlay';
+    _modal = window.__overlayModal(overlayEl, close, function () { return isOpen; });
     overlayEl.className = 'ix-ov';
     overlayEl.setAttribute('role', 'dialog');
     overlayEl.setAttribute('aria-modal', 'true');
@@ -12467,13 +12485,6 @@ window.Bookmarks = Bookmarks;
         var fwd = (e.key === 'ArrowDown' || e.key === 'ArrowRight');
         var nx = idx === -1 ? (fwd ? cards[0] : cards[cards.length - 1]) : cards[fwd ? Math.min(idx + 1, cards.length - 1) : Math.max(idx - 1, 0)];
         nx.focus();
-      } else if (e.key === 'Tab') {
-        var f = Array.prototype.filter.call(overlayEl.querySelectorAll('button,[href],input,textarea,select,[tabindex]:not([tabindex="-1"])'), function (el) { return !el.disabled && el.offsetParent !== null; });
-        if (!f.length) { e.preventDefault(); return; }
-        var first = f[0], last = f[f.length - 1], a = document.activeElement;
-        if (!overlayEl.contains(a)) { e.preventDefault(); first.focus(); }
-        else if (e.shiftKey && a === first) { e.preventDefault(); last.focus(); }
-        else if (!e.shiftKey && a === last) { e.preventDefault(); first.focus(); }
       }
     });
   }
@@ -12481,8 +12492,8 @@ window.Bookmarks = Bookmarks;
   function open() {
     if (isOpen) return;
     if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
-    _ixReturn = document.activeElement;
     create();
+    _modal.capture();
     overlayEl.innerHTML = panelHtml();
     isOpen = true;
     overlayEl.classList.add('open');
@@ -12498,11 +12509,10 @@ window.Bookmarks = Bookmarks;
     isOpen = false;
     overlayEl.classList.remove('vis');
     hideTimer = setTimeout(function () { if (overlayEl) overlayEl.classList.remove('open'); hideTimer = null; }, 220);
-    if (_ixReturn && _ixReturn.focus) { try { _ixReturn.focus(); } catch (e) {} }
-    _ixReturn = null;
+    _modal.restore();
   }
 
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && isOpen) close(); });
+  /* Escape while open: handled by __overlayModal (overlay-focus.js) */
   function wire() {
     var btn = document.getElementById('idxopen'); if (btn) btn.addEventListener('click', open);
     /* C1: a fresh landing (no deep-link) opens the home; a deep-link is honored as-is */

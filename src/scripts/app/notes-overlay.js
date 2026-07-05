@@ -6,7 +6,7 @@
    topics that already have notes. */
 (function () {
   var el = null, ta = null, subEl = null, allWrap = null, listEl = null, searchEl = null;
-  var isOpen = false, saveT = null, restoreFocus = null, mode = 'one';
+  var isOpen = false, saveT = null, _modal = null, mode = 'one';
   var N = 'notes.';
   function nkey(id) { return N + id; }
   function reg() { return (typeof TopicRegistry !== 'undefined') ? TopicRegistry : null; }
@@ -84,6 +84,7 @@
       '<div class="nt-all" hidden><input class="nt-search" type="text" placeholder="Search all your notes&#8230;" aria-label="Search notes" autocomplete="off" autocapitalize="off" spellcheck="false"><div class="nt-list"></div></div>' +
       '<div class="nt-foot">Saved automatically to this browser.</div></div>';
     document.body.appendChild(el);
+    _modal = window.__overlayModal(el, close, function () { return isOpen; });
     ta = el.querySelector('.nt-ta'); subEl = el.querySelector('.nt-sub');
     allWrap = el.querySelector('.nt-all'); listEl = el.querySelector('.nt-list'); searchEl = el.querySelector('.nt-search');
     var tabs = el.querySelectorAll('.nt-tab');
@@ -98,16 +99,7 @@
     });
     ta.addEventListener('input', function () { if (saveT) clearTimeout(saveT); saveT = setTimeout(save, 300); });
     if (searchEl) searchEl.addEventListener('input', function () { renderList(searchEl.value); });
-    el.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') { e.preventDefault(); close(); return; }
-      if (e.key === 'Tab') {
-        var f = Array.prototype.filter.call(el.querySelectorAll('button,textarea,input'), function (x) { return !x.disabled && !x.hidden && x.offsetParent !== null; });
-        if (!f.length) return;
-        var first = f[0], last = f[f.length - 1];
-        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
-      }
-    });
+    /* Tab focus-trap + Escape-to-close: handled by __overlayModal (overlay-focus.js) */
   }
 
   function loadCur() {
@@ -122,7 +114,7 @@
     mode = 'one'; if (tabsSync) tabsSync();
     if (ta) ta.hidden = false; if (allWrap) allWrap.hidden = true;
     loadCur();
-    restoreFocus = document.activeElement;
+    _modal.capture();
     el.classList.add('open'); isOpen = true;
     setTimeout(function () { if (ta) ta.focus(); }, 40);
   }
@@ -131,8 +123,7 @@
     save();
     if (saveT) { clearTimeout(saveT); saveT = null; }
     el.classList.remove('open'); isOpen = false;
-    if (restoreFocus && restoreFocus.focus) { try { restoreFocus.focus(); } catch (e) {} }
-    restoreFocus = null;
+    _modal.restore();
   }
 
   function wire() {

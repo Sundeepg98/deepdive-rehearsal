@@ -35,6 +35,7 @@
 <!--@build:include scripts/app/view-transitions.js-->
 <!--@build:include scripts/app/view-manager.js-->
 <!--@build:include scripts/app/topic-nav.js-->
+<!--@build:include scripts/app/overlay-focus.js-->
 <!--@build:include scripts/app/search-overlay.js-->
 <!--@build:include scripts/app/copy-link.js-->
 <!--@build:include scripts/app/bookmarks.js-->

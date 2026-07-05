@@ -668,6 +668,8 @@ body.is-hidden,body.is-hidden *,body.is-hidden *::before,body.is-hidden *::after
 .ix-card{display:flex;flex-direction:column;align-items:flex-start;text-align:left;border:1px solid var(--bd);background:var(--bg);border-radius:11px;padding:11px 13px;cursor:pointer;transition:border-color .14s ease,background .14s ease,transform .14s ease;position:relative}
 .ix-c-badge{position:absolute;top:10px;right:11px;display:inline-flex;align-items:center;gap:4px;font-size:9.5px;font-weight:700;letter-spacing:.02em;color:var(--mut2);white-space:nowrap}
 .ix-c-badge i{width:6px;height:6px;border-radius:50%;flex:none}
+.ix-c-wb{margin-left:4px;color:var(--acc);font-weight:900;font-style:normal;font-size:10.5px;line-height:1}
+.ix-c-ready{color:var(--acc);font-weight:800}
 .ix-home{display:flex;flex-wrap:wrap;align-items:stretch;gap:12px 18px;padding:14px 16px;margin:0 0 10px;background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.02) 100%);border:1px solid var(--bd);border-radius:12px}
 .ix-home-k{font-size:8.5px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--mut);margin-bottom:6px}
 .ix-home-prog{flex:1 1 200px;display:flex;flex-direction:column;justify-content:center}
@@ -12259,10 +12261,18 @@ window.Bookmarks = Bookmarks;
         var th = thesisText(idn.thesis || '');
         var _st = (typeof Progress !== 'undefined') ? Progress.status(id) : 'untouched';
         var _pr = (typeof Progress !== 'undefined') ? Progress.get(id) : null;
+        /* R1/R2: fold whiteboard-recall into the badge. A small mark flags topics whose
+           design you've recalled; drilled-clean AND fully-recalled reads as "ready". */
+        var _wb = (typeof Progress !== 'undefined' && Progress.wbGet) ? Progress.wbGet(id) : null;
+        var _wbFull = !!(_wb && _wb.total && _wb.got >= _wb.total), _wbSome = !!(_wb && _wb.got > 0);
+        var _wbMark = _wbSome ? '<b class="ix-c-wb" title="Design recalled on the whiteboard">&#9998;</b>' : '';
         var _bdg = '';
-        if (_st === 'in-progress' && _pr) _bdg = '<span class="ix-c-badge"><i style="background:var(--acc)"></i>' + _pr.done + '/' + _pr.tot + '</span>';
-        else if (_st === 'weak') { var _wn = (_pr ? _pr.shk : 0) + ((typeof Progress !== 'undefined' && Progress.shakyMarks) ? Progress.shakyMarks(id) : 0); _bdg = '<span class="ix-c-badge"><i style="background:#dc2626"></i>' + _wn + ' weak</span>'; }
-        else if (_st === 'solid') _bdg = '<span class="ix-c-badge"><i style="background:#0d9488"></i>done</span>';
+        if (_st === 'in-progress' && _pr) _bdg = '<span class="ix-c-badge"><i style="background:var(--acc)"></i>' + _pr.done + '/' + _pr.tot + _wbMark + '</span>';
+        else if (_st === 'weak') { var _wn = (_pr ? _pr.shk : 0) + ((typeof Progress !== 'undefined' && Progress.shakyMarks) ? Progress.shakyMarks(id) : 0); _bdg = '<span class="ix-c-badge"><i style="background:#dc2626"></i>' + _wn + ' weak' + _wbMark + '</span>'; }
+        else if (_st === 'solid') _bdg = _wbFull
+          ? '<span class="ix-c-badge ix-c-ready"><i style="background:var(--acc)"></i>ready</span>'
+          : '<span class="ix-c-badge"><i style="background:#0d9488"></i>done' + _wbMark + '</span>';
+        else if (_wbSome) _bdg = '<span class="ix-c-badge"><i style="background:var(--acc)"></i>recalled</span>';
         var filt = ((idn.title || '') + ' ' + (idn.locatorTail || '') + ' ' + th).toLowerCase().replace(/&[a-z#0-9]+;/g, ' ').replace(/"/g, '');
         var resetBtn = (_st !== 'untouched') ? '<button class="ix-c-reset" type="button" data-reset="' + id + '" title="Reset progress for this topic" aria-label="Reset progress for ' + idn.title + '">&#8635;</button>' : '';
         return '<div class="ix-cell"><button class="ix-card' + (on ? ' on' : '') + '" type="button" data-topic="' + id + '" data-filter="' + filt + '" style="box-shadow:inset 3px 0 0 ' + (b.group.color || 'transparent') + '"' +

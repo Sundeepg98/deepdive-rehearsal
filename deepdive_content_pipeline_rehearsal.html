@@ -131,6 +131,8 @@ button:focus-visible,.dn-step:focus-visible,.pill:focus-visible{outline:2px soli
   .seg button.on{background:var(--card);color:var(--acc);font-weight:760;box-shadow:0 0 0 1px rgba(83,74,183,.32),0 4px 12px rgba(83,74,183,.22)}
   .seg button.on .n{color:var(--acc)}
 .seg button:not(.on):hover{background:rgba(83,74,183,.07);color:var(--ink)}
+.seg button{position:relative}
+.seg button.seen:not(.on)::after{content:"";position:absolute;top:5px;right:5px;width:4px;height:4px;border-radius:50%;background:var(--mut2);opacity:.55}
 
   .pane{display:none}
   .pane.on{display:block;animation:fade .35s var(--ease-out)}
@@ -10099,6 +10101,29 @@ customElements.define('deep-mixed-fire', DeepMixedFire);
    companion output. Offline-safe: no network/storage/permission. */
 /* ============ TABS + RAIL + KEYBOARD ============ */
 const segBtns = document.querySelectorAll('.seg button');
+/* E2: a per-topic trail of which of the nine views you've opened -- a subtle dot on the
+   seg-tabs you've already visited for the current topic (each topic keeps its own set,
+   keyed by TopicRegistry.current()). */
+function paintSeenTabs() {
+  try {
+    var _c = (typeof TopicRegistry !== 'undefined' && TopicRegistry.current) ? TopicRegistry.current() : null;
+    var tid = _c ? _c.id : null;
+    var seen = (tid && typeof Store !== 'undefined') ? (Store.get('viewseen.' + tid, []) || []) : [];
+    for (var i = 0; i < segBtns.length; i++) { segBtns[i].classList.toggle('seen', seen.indexOf(segBtns[i].getAttribute('data-tab')) > -1); }
+  } catch (e) {}
+}
+function markViewSeen(view) {
+  try {
+    var _c = (typeof TopicRegistry !== 'undefined' && TopicRegistry.current) ? TopicRegistry.current() : null;
+    var tid = _c ? _c.id : null;
+    if (tid && typeof Store !== 'undefined') {
+      var key = 'viewseen.' + tid, seen = Store.get(key, []) || [];
+      if (seen.indexOf(view) === -1) { seen.push(view); Store.set(key, seen); }
+    }
+    paintSeenTabs();
+  } catch (e) {}
+}
+window.addEventListener('deeptopicchange', function () { markViewSeen(current); });
 const panes = document.querySelectorAll('.pane');
 const railEl = document.getElementById('rail');
 const railPos = { walk: 25, drill: 50, wb: 75, sys: 100 };
@@ -10115,6 +10140,7 @@ function switchTab(t) {
   for (let i = 0; i < segBtns.length; i++) segBtns[i].classList.toggle('on', segBtns[i].getAttribute('data-tab') === t);
   if (railEl) railEl.style.width = railPos[t] + '%';
   current = t;
+  markViewSeen(t);
   if (window.__syncCompanion) window.__syncCompanion();
   var swap = function () {
     for (let i = 0; i < panes.length; i++) panes[i].classList.toggle('on', panes[i].id === t);

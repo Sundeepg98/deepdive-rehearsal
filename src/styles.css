@@ -116,6 +116,8 @@ button:focus-visible,.dn-step:focus-visible,.pill:focus-visible{outline:2px soli
   .seg button.on{background:var(--card);color:var(--acc);font-weight:760;box-shadow:0 0 0 1px rgba(83,74,183,.32),0 4px 12px rgba(83,74,183,.22)}
   .seg button.on .n{color:var(--acc)}
 .seg button:not(.on):hover{background:rgba(83,74,183,.07);color:var(--ink)}
+.seg button{position:relative}
+.seg button.seen:not(.on)::after{content:"";position:absolute;top:5px;right:5px;width:4px;height:4px;border-radius:50%;background:var(--mut2);opacity:.55}
 
   .pane{display:none}
   .pane.on{display:block;animation:fade .35s var(--ease-out)}

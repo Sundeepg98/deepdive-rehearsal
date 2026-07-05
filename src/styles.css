@@ -583,7 +583,7 @@ button,.seg button,.dn-step,.pill,.card,.thread,.dec,.rf,.op,.piv,.tools-fab,.cr
 .textzoom-btn:disabled{opacity:.4;cursor:default}
 @media(hover:hover){.textzoom-btn:not(:disabled):hover{border-color:var(--acc);box-shadow:0 0 0 2px rgba(83,74,183,.1)}}
 
-/* pomodoro: standalone sidebar focus timer (kept separate from the header SessionTimer) */
+/* pomodoro: standalone sidebar focus timer */
 .pomodoro{padding:10px 11px;margin-top:4px;border-top:1px solid var(--bd)}
 .pomodoro-h{font-size:10px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--mut);margin-bottom:8px}
 .pomodoro-row{display:flex;align-items:center;gap:10px}

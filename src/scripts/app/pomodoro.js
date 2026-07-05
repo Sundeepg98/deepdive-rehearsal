@@ -4,11 +4,8 @@
    amber (break), the label tracks the phase, and an optional short WebAudio
    tone marks the switch (best-effort; silently skipped if no AudioContext).
 
-   Kept SEPARATE from SessionTimer (the header mock-exam countdown) on purpose:
-   different purpose (a repeating focus rhythm vs a one-shot timed mock),
-   location (sidebar vs header), and lifecycle (cycles forever vs auto-stops).
-   Folding the two would conflate distinct tools and bloat SessionTimer's minimal
-   API-driven design -- so this is a standalone widget.
+   A standalone sidebar widget with its own lifecycle -- a repeating focus rhythm
+   that cycles forever -- distinct from the mock overlay's own elapsed clock.
 
    The phase keeps counting while the tab is hidden (a focus timer should track
    real time), so it intentionally opts out of the page-visibility pause.

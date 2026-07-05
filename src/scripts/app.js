@@ -49,7 +49,6 @@
 <!--@build:include scripts/app/scroll-progress.js-->
 <!--@build:include scripts/app/copy-code.js-->
 <!--@build:include scripts/app/focus-mode.js-->
-<!--@build:include scripts/app/session-timer.js-->
 <!--@build:include scripts/app/zoom-diagrams.js-->
 <!--@build:include scripts/app/touch-swipe.js-->
 <!--@build:include scripts/app/card-spotlight.js-->

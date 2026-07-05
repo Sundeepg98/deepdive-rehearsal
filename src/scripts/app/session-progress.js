@@ -102,6 +102,26 @@ function encodeSession() {
   const ms = (stats.mScore === null ? 'x' : stats.mScore);
   return 'CPR1.' + dt + '.' + stats.dGot + '-' + stats.dShk + '-' + stats.dDone + '-' + stats.dTot + '.' + stats.wbGot + '-' + stats.wbMiss + '-' + stats.wbTot + '.' + ms + '-' + stats.mRuns + '-' + stats.mInt + '.' + stats.mixGot + '-' + stats.mixShk + '-' + stats.mixTot;
 }
+/* ---- auto-captured trend history ----
+   Snapshot each work session's CPR1 code into a small rolling local log so the
+   Compare panel shows a trend automatically -- no copy/paste ritual required. The
+   manual paste box still works (e.g. to fold in codes from another device). The
+   snapshot for THIS page-load is updated in place (not re-appended) as you work,
+   so one study session yields one point; a reload starts a fresh point. */
+var TREND_KEY = 'trend.hist', TREND_CAP = 30, _mySessIdx = -1;
+function trendLoad() { try { var v = Store.get(TREND_KEY); var a = v ? JSON.parse(v) : []; return Array.isArray(a) ? a : []; } catch (e) { return []; } }
+function trendSave(a) { try { Store.set(TREND_KEY, JSON.stringify(a)); } catch (e) {} }
+function trendCapture() {
+  var st = sessStats();
+  if ((st.dDone + st.wbDone + st.mRuns + st.mixTot) <= 0) return;   // nothing happened this session
+  var code = encodeSession(), hist = trendLoad();
+  if (_mySessIdx >= 0 && _mySessIdx < hist.length) { hist[_mySessIdx] = code; }
+  else { hist.push(code); _mySessIdx = hist.length - 1; }
+  while (hist.length > TREND_CAP) { hist.shift(); _mySessIdx--; }
+  trendSave(hist);
+}
+document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') trendCapture(); });
+window.addEventListener('pagehide', trendCapture);
 /* Parse a "CPR1." code back into a stats object (mixed-fire group optional for
    backward compatibility); returns null if the string doesn't match the format. */
 function decodeSession(code) {
@@ -150,30 +170,46 @@ function trendRow(label, series, upGood) {
 function renderCompare() {
   const pasteEl = sessRoot.getElementById('sspaste'), outEl = sessRoot.getElementById('sscmpout');
   if (!pasteEl || !outEl) return;
-  const priors = parseCodes(pasteEl.value);
-  if (!priors.length) { outEl.innerHTML = '<div class="cmp-err">No session code found &mdash; paste one or more full <code>CPR1&hellip;</code> lines from past sessions.</div>'; return; }
   const stats = sessStats();
+  const liveActive = (stats.dDone + stats.wbDone + stats.mRuns + stats.mixTot) > 0;
+  const pasted = parseCodes(pasteEl.value);
+  var series;
+  if (pasted.length) {
+    series = pasted.concat([stats]);          /* manual: pasted priors, then this live session */
+  } else {
+    /* Auto: the rolling history IS the trend. Drop this load's own snapshot (the
+       live session stands in for it), and append the live session as the latest
+       point only once it has activity -- otherwise opening the panel before doing
+       anything would show a misleading dip to zero. */
+    var hist = trendLoad();
+    if (_mySessIdx >= 0 && _mySessIdx === hist.length - 1) hist = hist.slice(0, -1);
+    var hobjs = parseCodes(hist.join('\n'));
+    series = liveActive ? hobjs.concat([stats]) : hobjs;
+  }
+  if (series.length < 2) { outEl.innerHTML = '<div class="cmp-hint">Your trend builds itself as you study &mdash; come back after another session to see progress over time. You can also paste <code>CPR1&hellip;</code> codes from another device.</div>'; return; }
+  const cur = series[series.length - 1];
+  const priors = series.slice(0, -1);
   let html = '';
   if (priors.length === 1) {
     const prior = priors[0];
     const priorDate = prior.date.slice(0, 4) + '-' + prior.date.slice(4, 6) + '-' + prior.date.slice(6, 8);
     html = '<div class="cmp-head">Compared to ' + priorDate + '</div>';
-    html += deltaRow('Drill solid', prior.dGot, stats.dGot, true);
-    html += deltaRow('To revisit', prior.dShk, stats.dShk, false);
-    html += deltaRow('Whiteboard recalled', prior.wbGot, stats.wbGot, true);
-    html += deltaRow('Steps missed', prior.wbMiss, stats.wbMiss, false);
-    if (prior.mScore !== null && stats.mScore !== null) html += deltaRow('Mock score', prior.mScore, stats.mScore, true);
-    if (prior.mixTot > 0 && stats.mixTot > 0) html += deltaRow('Mixed fire %', Math.round(prior.mixGot / prior.mixTot * 100), Math.round(stats.mixGot / stats.mixTot * 100), true);
+    html += deltaRow('Drill solid', prior.dGot, cur.dGot, true);
+    html += deltaRow('To revisit', prior.dShk, cur.dShk, false);
+    html += deltaRow('Whiteboard recalled', prior.wbGot, cur.wbGot, true);
+    html += deltaRow('Steps missed', prior.wbMiss, cur.wbMiss, false);
+    if (prior.mScore !== null && cur.mScore !== null) html += deltaRow('Mock score', prior.mScore, cur.mScore, true);
+    if (prior.mixTot > 0 && cur.mixTot > 0) html += deltaRow('Mixed fire %', Math.round(prior.mixGot / prior.mixTot * 100), Math.round(cur.mixGot / cur.mixTot * 100), true);
   } else {
-    html = '<div class="cmp-head">Trend across ' + (priors.length + 1) + ' sessions</div>';
-    html += trendRow('Drill solid', priors.map(function (p) { return p.dGot; }).concat([stats.dGot]), true);
-    html += trendRow('To revisit', priors.map(function (p) { return p.dShk; }).concat([stats.dShk]), false);
-    html += trendRow('Whiteboard recalled', priors.map(function (p) { return p.wbGot; }).concat([stats.wbGot]), true);
-    html += trendRow('Steps missed', priors.map(function (p) { return p.wbMiss; }).concat([stats.wbMiss]), false);
-    const scores = priors.map(function (p) { return p.mScore; }).concat([stats.mScore]);
+    html = '<div class="cmp-head">Trend across ' + series.length + ' sessions</div>';
+    html += trendRow('Drill solid', priors.map(function (p) { return p.dGot; }).concat([cur.dGot]), true);
+    html += trendRow('To revisit', priors.map(function (p) { return p.dShk; }).concat([cur.dShk]), false);
+    html += trendRow('Whiteboard recalled', priors.map(function (p) { return p.wbGot; }).concat([cur.wbGot]), true);
+    html += trendRow('Steps missed', priors.map(function (p) { return p.wbMiss; }).concat([cur.wbMiss]), false);
+    const scores = priors.map(function (p) { return p.mScore; }).concat([cur.mScore]);
     if (scores.every(function (v) { return v !== null; })) html += trendRow('Mock score', scores, true);
-    const mixTotals = priors.map(function (p) { return p.mixTot; }).concat([stats.mixTot]);
-    if (mixTotals.every(function (v) { return v > 0; })) html += trendRow('Mixed fire %', priors.map(function (p) { return Math.round(p.mixGot / p.mixTot * 100); }).concat([Math.round(stats.mixGot / stats.mixTot * 100)]), true);
+    const mixTotals = priors.map(function (p) { return p.mixTot; }).concat([cur.mixTot]);
+    if (mixTotals.every(function (v) { return v > 0; })) html += trendRow('Mixed fire %', priors.map(function (p) { return Math.round(p.mixGot / p.mixTot * 100); }).concat([Math.round(cur.mixGot / cur.mixTot * 100)]), true);
   }
   outEl.innerHTML = html;
 }
@@ -217,7 +253,7 @@ function renderSession() {
   html += '</div>';
   html += '<div class="ss-carry"><div class="ss-carry-h">Carry this session across days</div>' +
      '<div class="ss-code-row"><input class="ss-code" id="sscode" readonly aria-label="Session code" value="' + encodeSession() + '"><button class="ss-copy" id="sscopy" type="button">Copy</button></div>' +
-     '<div class="ss-cmp-row"><textarea class="ss-paste" id="sspaste" rows="2" aria-label="Past session codes" placeholder="Paste past codes (one per line) for a trend" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea><button class="ss-cmpbtn" id="sscmpbtn" type="button">Compare</button></div>' +
+     '<div class="ss-cmp-row"><textarea class="ss-paste" id="sspaste" rows="2" aria-label="Past session codes" placeholder="Optional: paste codes from another device" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea><button class="ss-cmpbtn" id="sscmpbtn" type="button">Compare</button></div>' +
      '<div id="sscmpout"></div></div>';
   html += '<button class="ss-print" id="ssprint" type="button">Save this session as a PDF &rarr;</button>';
   html += '<button class="ss-clear" id="ssclear" type="button">Clear this session &amp; start fresh</button>';
@@ -263,6 +299,7 @@ function renderSession() {
   /* Cmd/Ctrl-Enter in the paste box also triggers Compare. */
   const pst = sessRoot.getElementById('sspaste');
   if (pst) pst.onkeydown = function (e) { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); renderCompare(); } };
+  renderCompare();   /* auto-show the trend from history on open (no click needed) */
 }
 /* Wire the overlay open/close triggers. */
 document.getElementById('sessopen').onclick = openSession;
@@ -324,6 +361,7 @@ var SESS_STYLE = `.sess-body{padding:18px 20px 24px;overflow-y:auto;flex:1;min-h
 .cmp-val{font-size:12.5px;color:var(--mut)}
 .cmp-d{font:800 11.5px -apple-system,sans-serif;min-width:38px;text-align:right}
 .cmp-err{font-size:12px;color:var(--red);background:linear-gradient(135deg,var(--redbg) 0%,rgba(239,68,68,.04) 100%);border:1px solid #e8c5c0;border-radius:8px;padding:10px 12px;margin-top:12px;line-height:1.5}
+.cmp-hint{font-size:12px;color:var(--mut);background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.03) 100%);border:1px solid rgba(83,74,183,.12);border-radius:8px;padding:10px 12px;margin-top:12px;line-height:1.5}
 .ss-cmp-row{align-items:flex-start}
 .tr-row{padding:9px 0;border-top:1px solid var(--bd)}
 .tr-top{display:flex;align-items:baseline;justify-content:space-between;gap:8px}

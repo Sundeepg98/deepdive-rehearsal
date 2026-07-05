@@ -1,15 +1,30 @@
-/* tw.css -- wires Tailwind v4 into the Vite build (Phase 1 of the migration).
+/* tw.css -- the design system, formalized as Tailwind v4 theme tokens.
 
-   This phase only establishes the PLUMBING: @tailwindcss/vite processes this file and the
-   theme layer becomes available, proving the Tailwind toolchain works end-to-end. It is
-   deliberately render-neutral:
-     - NO preflight, so the app's existing base styles are untouched.
-     - Utilities are imported but generate nothing yet (no @source), so none of the app's
-       existing class names -- including `block`, which collides with a Tailwind utility --
-       produce any CSS.
-
-   The design-system / "application-feel" workstream turns these on when it starts styling
-   with Tailwind: add @source for content detection, enable preflight (reconciling the base
-   styles), and map the app's --acc/--ink tokens into a custom @theme block. */
+   This is the "engineered CSS" layer: the app's palette, radius, elevation and motion become
+   one systematic scale exposed as utilities (bg-acc, text-ink, border-bd, rounded-lg,
+   shadow-card, ease-out) instead of ad-hoc values scattered across hand-CSS. No preflight
+   (the app keeps its own base), so this is render-neutral until utilities are adopted --
+   adoption is then progressive and each step is proven. */
 @import "tailwindcss/theme";
 @import "tailwindcss/utilities" source(none);
+
+@theme {
+  /* palette */
+  --color-acc: #534AB7;  --color-acc2: #6D5FD6;  --color-accbg: #EFEDFA;  --color-accink: #3A2E86;
+  --color-bg: #FAF9F5;   --color-card: #FFFFFF;  --color-side: #F1EDE4;
+  --color-bd: #E8E4DC;   --color-ink: #2A2823;   --color-mut: #6B6862;    --color-mut2: #67615A;
+  --color-teal: #0F6E56; --color-tealbg: #E7F2EE; --color-red: #A32D2D;   --color-redbg: #F8EDEC;
+  --color-amber: #9A5B0B; --color-amberbg: #FBF1E3; --color-indigo: #4338CA; --color-indigobg: #ECEBFB;
+  --color-code: #2A2740; --color-codeink: #E7E4F5;
+
+  /* radius -- a systematic scale (was drifting 10/11/12px) */
+  --radius-sm: 8px;  --radius-md: 10px;  --radius-lg: 12px;  --radius-xl: 16px;
+
+  /* elevation -- the app's shadow system as named tokens */
+  --shadow-card: 0 1px 2.5px rgba(40,34,28,.05), 0 7px 16px -7px rgba(40,34,28,.10), 0 22px 48px -26px rgba(40,34,28,.16);
+  --shadow-surf: 0 1px 2px rgba(40,34,28,.05), 0 4px 10px -5px rgba(40,34,28,.09);
+
+  /* motion */
+  --ease-out: cubic-bezier(.22,.61,.36,1);
+  --ease-spring: cubic-bezier(.34,1.56,.64,1);
+}

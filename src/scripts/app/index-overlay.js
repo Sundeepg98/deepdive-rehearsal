@@ -103,6 +103,34 @@
     }
     return rows ? '<div class="ix-groups"><div class="ix-home-k">By area</div>' + rows + '</div>' : '';
   }
+  /* R4: a simple weekly target -- how many distinct topics you drill in the current
+     (Monday-start) week, against a goal you can nudge with +/-. The count recomputes
+     from each drill record's ts, so it resets on its own when the week rolls over;
+     only the target is persisted. */
+  function weekStartMs() {
+    var n = new Date(), d = new Date(n.getFullYear(), n.getMonth(), n.getDate());
+    var back = (d.getDay() === 0) ? 6 : d.getDay() - 1;
+    d.setDate(d.getDate() - back); return d.getTime();
+  }
+  function goalTarget() {
+    try { if (typeof Store !== 'undefined') { var t = Store.get('goal.weekly', 5); if (typeof t === 'number' && t >= 1 && t <= 20) return t; } } catch (e) {}
+    return 5;
+  }
+  function weeklyGoal() {
+    var target = goalTarget(), done = 0;
+    try { if (typeof Progress !== 'undefined') { var a = Progress.all(), ws = weekStartMs(); for (var id in a) { if (a[id] && a[id].done > 0 && a[id].ts >= ws) done++; } } } catch (e) {}
+    return { target: target, done: done, pct: target > 0 ? Math.min(100, Math.round(done / target * 100)) : 0, met: done >= target };
+  }
+  function goalStrip() {
+    var g = weeklyGoal(), left = g.target - g.done;
+    var note = g.met ? 'Goal met &mdash; nice work.' : left + ' more to go';
+    return '<div class="ix-goal"><div class="ix-goal-top"><span class="ix-home-k">This week&rsquo;s goal</span>' +
+      '<span class="ix-goal-set"><button type="button" class="ix-goal-b" data-goal="dec" aria-label="Lower the weekly goal">&minus;</button>' +
+      '<span class="ix-goal-t" aria-live="polite">' + g.target + '</span>' +
+      '<button type="button" class="ix-goal-b" data-goal="inc" aria-label="Raise the weekly goal">+</button></span></div>' +
+      '<div class="ix-goal-bar' + (g.met ? ' met' : '') + '"><span style="width:' + g.pct + '%"></span></div>' +
+      '<div class="ix-home-v"><b>' + g.done + '</b> of ' + g.target + ' topics drilled this week &middot; ' + note + '</div></div>';
+  }
   function homeStrip() {
     if (typeof Progress === 'undefined' || typeof TopicRegistry === 'undefined') return '';
     var sum = Progress.summary(), all = Progress.all(), ids = TopicRegistry.ids();
@@ -140,6 +168,7 @@
       '<div class="ix-home-prog"><div class="ix-home-k">Your progress</div>' +
       '<div class="ix-home-bar"><span style="width:' + pct + '%"></span></div>' +
       '<div class="ix-home-v">' + pct + '% of the curriculum &middot; ' + sum.totDone + ' probes drilled &middot; ' + sum.startedTopics + ' of ' + sum.nTopics + ' topics started' + (sum.wbRecalled ? ' &middot; ' + sum.wbRecalled + ' with the design recalled' : '') + '</div>' + _streakHtml + '</div>' +
+      goalStrip() +
       trendSparkHome() +
       (rt ? '<button class="ix-home-btn" type="button" ' + (resumeHash ? 'data-hash="' + resumeHash + '"' : 'data-topic="' + resumeId + '"') + '><span class="ix-home-btn-k">Resume</span>' + rt.identity.title + ' &rarr;</button>' : '') +
       (weak ? '<div class="ix-weak"><div class="ix-home-k">Revisit</div><div class="ix-weak-list">' + weak + '</div>' + conceptsHtml + '</div>' : '') +
@@ -326,6 +355,17 @@
         if (typeof Progress !== 'undefined' && Progress.clear) Progress.clear(rid);
         overlayEl.innerHTML = panelHtml();
         showUndo('Cleared progress for ' + nm, function () { restoreTopic(_snap); overlayEl.innerHTML = panelHtml(); });
+        return;
+      }
+      var goalBtn = e.target.closest ? e.target.closest('[data-goal]') : null;
+      if (goalBtn) {
+        var gdir = goalBtn.getAttribute('data-goal');
+        var gcur = goalTarget();
+        gcur = gdir === 'inc' ? Math.min(20, gcur + 1) : Math.max(1, gcur - 1);
+        try { if (typeof Store !== 'undefined') Store.set('goal.weekly', gcur); } catch (e3) {}
+        var gEl = overlayEl.querySelector('.ix-goal');
+        if (gEl) { var _gt = document.createElement('div'); _gt.innerHTML = goalStrip(); if (_gt.firstChild) gEl.replaceWith(_gt.firstChild); }
+        var _nb = overlayEl.querySelector('[data-goal="' + gdir + '"]'); if (_nb) _nb.focus();
         return;
       }
       var card = e.target.closest ? e.target.closest('[data-topic]') : null;

@@ -32,6 +32,35 @@
   }
 
   /* the home banner: overall progress + resume + weakest, or a start-here CTA */
+  /* O2: a glanceable sparkline of drill-solid across recent sessions, from the
+     auto-captured trend log. Reuses parseCodes + spark from session-progress. */
+  function trendSparkHome() {
+    try {
+      if (typeof Store === 'undefined' || typeof parseCodes !== 'function' || typeof spark !== 'function') return '';
+      var v = Store.get('trend.hist'); if (!v) return '';
+      var hist = JSON.parse(v); if (!Array.isArray(hist) || hist.length < 2) return '';
+      var objs = parseCodes(hist.join('\n')); if (objs.length < 2) return '';
+      var series = objs.map(function (o) { return o.dGot; });
+      return '<div class="ix-trend"><div class="ix-home-k">Recent sessions</div>' +
+        '<div class="ix-trend-s">' + spark(series) + '</div>' +
+        '<div class="ix-trend-v">solid drilled, last ' + series.length + ' sessions</div></div>';
+    } catch (e) { return ''; }
+  }
+  /* O4: per-area progress bars (one per topic group that has started topics),
+     tinted with each group's own colour. */
+  function groupBars() {
+    if (typeof TOPIC_GROUPS === 'undefined' || typeof Progress === 'undefined') return '';
+    var bg = (Progress.summary().byGroup) || {}, rows = '';
+    for (var i = 0; i < TOPIC_GROUPS.length; i++) {
+      var g = TOPIC_GROUPS[i], d = bg[g.id];
+      if (!d || d.tot <= 0) continue;
+      var pc = Math.round(d.done / d.tot * 100);
+      rows += '<div class="ix-grp-row"><span class="ix-grp-lbl">' + g.label + '</span>' +
+        '<span class="ix-grp-bar"><i style="width:' + pc + '%;background:' + g.color + '"></i></span>' +
+        '<span class="ix-grp-pct">' + pc + '%</span></div>';
+    }
+    return rows ? '<div class="ix-groups"><div class="ix-home-k">By area</div>' + rows + '</div>' : '';
+  }
   function homeStrip() {
     if (typeof Progress === 'undefined' || typeof TopicRegistry === 'undefined') return '';
     var sum = Progress.summary(), all = Progress.all(), ids = TopicRegistry.ids();
@@ -61,8 +90,10 @@
       '<div class="ix-home-prog"><div class="ix-home-k">Your progress</div>' +
       '<div class="ix-home-bar"><span style="width:' + pct + '%"></span></div>' +
       '<div class="ix-home-v">' + pct + '% of the curriculum &middot; ' + sum.totDone + ' probes drilled &middot; ' + sum.touched + ' of ' + sum.nTopics + ' topics started' + (sum.wbRecalled ? ' &middot; ' + sum.wbRecalled + ' with the design recalled' : '') + '</div></div>' +
+      trendSparkHome() +
       (rt ? '<button class="ix-home-btn" type="button" ' + (resumeHash ? 'data-hash="' + resumeHash + '"' : 'data-topic="' + resumeId + '"') + '><span class="ix-home-btn-k">Resume</span>' + rt.identity.title + ' &rarr;</button>' : '') +
       (weak ? '<div class="ix-weak"><div class="ix-home-k">Revisit</div><div class="ix-weak-list">' + weak + '</div>' + conceptsHtml + '</div>' : '') +
+      groupBars() +
       '</div>';
   }
 

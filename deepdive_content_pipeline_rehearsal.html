@@ -674,6 +674,15 @@ body.is-hidden,body.is-hidden *,body.is-hidden *::before,body.is-hidden *::after
 .ix-home-bar{height:6px;background:var(--bd);border-radius:6px;overflow:hidden;margin-bottom:7px}
 .ix-home-bar span{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));border-radius:6px;transition:width .3s ease}
 .ix-home-v{font-size:11px;color:var(--mut2);line-height:1.4}
+.ix-trend{display:flex;flex-direction:column;justify-content:center;gap:4px;min-width:120px}
+.ix-trend-s{font-family:ui-monospace,Menlo,monospace;font-size:16px;letter-spacing:1.5px;color:var(--acc);line-height:1.1}
+.ix-trend-v{font-size:10px;color:var(--mut2);line-height:1.3}
+.ix-groups{flex:1 1 100%;display:flex;flex-direction:column;justify-content:center;gap:5px}
+.ix-grp-row{display:flex;align-items:center;gap:9px}
+.ix-grp-lbl{flex:0 0 100px;font-size:10px;color:var(--mut2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ix-grp-bar{flex:1;height:5px;background:var(--bd);border-radius:5px;overflow:hidden}
+.ix-grp-bar i{display:block;height:100%;border-radius:5px;transition:width .3s ease}
+.ix-grp-pct{flex:0 0 32px;text-align:right;font-size:10px;color:var(--mut);font-variant-numeric:tabular-nums}
 .ix-home-btn{display:inline-flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:2px;padding:9px 15px;border:1px solid var(--acc);border-radius:10px;background:var(--bg);color:var(--ink);font-size:13px;font-weight:650;cursor:pointer;transition:background .15s ease,transform .1s ease;white-space:nowrap}
 .ix-home-btn:hover{background:var(--accbg)}
 .ix-home-btn:active{transform:translateY(1px)}
@@ -11987,6 +11996,35 @@ window.Bookmarks = Bookmarks;
   }
 
   /* the home banner: overall progress + resume + weakest, or a start-here CTA */
+  /* O2: a glanceable sparkline of drill-solid across recent sessions, from the
+     auto-captured trend log. Reuses parseCodes + spark from session-progress. */
+  function trendSparkHome() {
+    try {
+      if (typeof Store === 'undefined' || typeof parseCodes !== 'function' || typeof spark !== 'function') return '';
+      var v = Store.get('trend.hist'); if (!v) return '';
+      var hist = JSON.parse(v); if (!Array.isArray(hist) || hist.length < 2) return '';
+      var objs = parseCodes(hist.join('\n')); if (objs.length < 2) return '';
+      var series = objs.map(function (o) { return o.dGot; });
+      return '<div class="ix-trend"><div class="ix-home-k">Recent sessions</div>' +
+        '<div class="ix-trend-s">' + spark(series) + '</div>' +
+        '<div class="ix-trend-v">solid drilled, last ' + series.length + ' sessions</div></div>';
+    } catch (e) { return ''; }
+  }
+  /* O4: per-area progress bars (one per topic group that has started topics),
+     tinted with each group's own colour. */
+  function groupBars() {
+    if (typeof TOPIC_GROUPS === 'undefined' || typeof Progress === 'undefined') return '';
+    var bg = (Progress.summary().byGroup) || {}, rows = '';
+    for (var i = 0; i < TOPIC_GROUPS.length; i++) {
+      var g = TOPIC_GROUPS[i], d = bg[g.id];
+      if (!d || d.tot <= 0) continue;
+      var pc = Math.round(d.done / d.tot * 100);
+      rows += '<div class="ix-grp-row"><span class="ix-grp-lbl">' + g.label + '</span>' +
+        '<span class="ix-grp-bar"><i style="width:' + pc + '%;background:' + g.color + '"></i></span>' +
+        '<span class="ix-grp-pct">' + pc + '%</span></div>';
+    }
+    return rows ? '<div class="ix-groups"><div class="ix-home-k">By area</div>' + rows + '</div>' : '';
+  }
   function homeStrip() {
     if (typeof Progress === 'undefined' || typeof TopicRegistry === 'undefined') return '';
     var sum = Progress.summary(), all = Progress.all(), ids = TopicRegistry.ids();
@@ -12016,8 +12054,10 @@ window.Bookmarks = Bookmarks;
       '<div class="ix-home-prog"><div class="ix-home-k">Your progress</div>' +
       '<div class="ix-home-bar"><span style="width:' + pct + '%"></span></div>' +
       '<div class="ix-home-v">' + pct + '% of the curriculum &middot; ' + sum.totDone + ' probes drilled &middot; ' + sum.touched + ' of ' + sum.nTopics + ' topics started' + (sum.wbRecalled ? ' &middot; ' + sum.wbRecalled + ' with the design recalled' : '') + '</div></div>' +
+      trendSparkHome() +
       (rt ? '<button class="ix-home-btn" type="button" ' + (resumeHash ? 'data-hash="' + resumeHash + '"' : 'data-topic="' + resumeId + '"') + '><span class="ix-home-btn-k">Resume</span>' + rt.identity.title + ' &rarr;</button>' : '') +
       (weak ? '<div class="ix-weak"><div class="ix-home-k">Revisit</div><div class="ix-weak-list">' + weak + '</div>' + conceptsHtml + '</div>' : '') +
+      groupBars() +
       '</div>';
   }
 

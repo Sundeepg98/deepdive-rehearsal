@@ -725,6 +725,20 @@ body.is-hidden,body.is-hidden *,body.is-hidden *::before,body.is-hidden *::after
 .nt-ta{flex:1;min-height:240px;margin:14px 18px 4px;padding:14px 16px;border:1px solid var(--bd);border-radius:11px;background:var(--bg);color:var(--ink);font:14px/1.65 -apple-system,BlinkMacSystemFont,system-ui,sans-serif;resize:vertical;outline:none;transition:border-color .14s ease,box-shadow .14s ease}
 .nt-ta:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--accbg)}
 .nt-foot{padding:8px 18px 16px;font-size:10.5px;color:var(--mut)}
+.nt-htxt{flex:1 1 auto;min-width:0}
+.nt-tabs{display:flex;gap:4px;flex:none;background:var(--bg);border:1px solid var(--bd);border-radius:9px;padding:3px}
+.nt-tab{border:0;background:transparent;color:var(--mut);font:600 11.5px -apple-system,system-ui,sans-serif;padding:5px 11px;border-radius:7px;cursor:pointer;transition:background .14s ease,color .14s ease;white-space:nowrap}
+.nt-tab.on{background:var(--acc);color:#fff}
+.nt-tab:not(.on):hover{color:var(--ink);background:var(--accbg)}
+.nt-all{flex:1;display:flex;flex-direction:column;min-height:0;margin:14px 18px 4px}
+.nt-search{flex:none;padding:10px 13px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--ink);font:13px -apple-system,system-ui,sans-serif;outline:none;margin-bottom:10px;transition:border-color .14s ease}
+.nt-search:focus{border-color:var(--acc)}
+.nt-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding-right:2px}
+.nt-item{display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:left;border:1px solid var(--bd);border-radius:10px;background:var(--bg);padding:11px 13px;cursor:pointer;transition:border-color .14s ease,background .14s ease}
+.nt-item:hover{border-color:var(--acc);background:var(--accbg)}
+.nt-item-t{font-size:12.5px;font-weight:700;color:var(--acc)}
+.nt-item-x{font-size:12px;color:var(--mut2);line-height:1.5;white-space:pre-wrap;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.nt-empty{font-size:12.5px;color:var(--mut);line-height:1.6;padding:20px 4px;text-align:center}
 .crambtn.has-notes .mb-t::after{content:" \25CF";color:var(--acc);font-size:7px;vertical-align:middle}
 .xd-ov{position:fixed;inset:0;z-index:1000;display:none;align-items:flex-start;justify-content:center;background:rgba(30,28,24,.45);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:6vh 16px 16px;opacity:0;transition:opacity .22s ease}
 .xd-ov.open{display:flex;opacity:1}
@@ -11682,17 +11696,21 @@ window.Bookmarks = Bookmarks;
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', sync); else sync();
 })();
 
-/* ===== scripts/app/notes-overlay.js -- per-topic notes (O5) =====
-   A self-contained modal (created on first open, like the index) with a textarea
-   for the current topic's notes. Saves to Store on input (debounced), keyed by
-   topic; a dot on the tools-bar button marks topics that already have notes. */
+/* ===== scripts/app/notes-overlay.js -- per-topic notes + all-notes search (O5) =====
+   A self-contained modal (created on first open, like the index). Two modes:
+   "This topic" is a textarea for the current topic's notes, saved to Store on input
+   (debounced), keyed by topic; "All notes" is a searchable read-through of every
+   topic that has notes, with click-to-jump. A dot on the tools-bar button marks
+   topics that already have notes. */
 (function () {
-  var el = null, ta = null, subEl = null, isOpen = false, saveT = null, restoreFocus = null;
+  var el = null, ta = null, subEl = null, allWrap = null, listEl = null, searchEl = null;
+  var isOpen = false, saveT = null, restoreFocus = null, mode = 'one';
   var N = 'notes.';
   function nkey(id) { return N + id; }
   function reg() { return (typeof TopicRegistry !== 'undefined') ? TopicRegistry : null; }
   function curId() { var r = reg(); return (r && r.current()) ? r.current().id : null; }
   function curTitle() { var r = reg(); return (r && r.current()) ? r.current().identity.title : ''; }
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 
   function markBtn() {
     var btn = document.getElementById('notesopen'); if (!btn) return;
@@ -11706,22 +11724,82 @@ window.Bookmarks = Bookmarks;
     markBtn();
   }
 
+  /* Gather every stored note into {id, title, text}, sorted by topic title. */
+  function allNotes() {
+    var out = [], r = reg();
+    try {
+      var keys = Store.keys ? Store.keys('') : [];
+      for (var i = 0; i < keys.length; i++) {
+        if (keys[i].indexOf(N) !== 0) continue;
+        var id = keys[i].slice(N.length), v = Store.get(keys[i]);
+        if (!v || !v.replace(/\s+/g, '')) continue;
+        var t = r ? r.get(id) : null;
+        out.push({ id: id, title: t ? t.identity.title : id, text: v });
+      }
+    } catch (e) {}
+    out.sort(function (a, b) { return a.title.localeCompare(b.title); });
+    return out;
+  }
+
+  function renderList(q) {
+    if (!listEl) return;
+    var notes = allNotes();
+    if (!notes.length) { listEl.innerHTML = '<div class="nt-empty">No notes yet. Switch to <b>This topic</b> and jot something &mdash; it shows up here across every topic.</div>'; return; }
+    q = (q || '').trim().toLowerCase();
+    if (q) notes = notes.filter(function (n) { return n.title.toLowerCase().indexOf(q) > -1 || n.text.toLowerCase().indexOf(q) > -1; });
+    if (!notes.length) { listEl.innerHTML = '<div class="nt-empty">Nothing matches &ldquo;' + esc(q) + '&rdquo;.</div>'; return; }
+    listEl.innerHTML = notes.map(function (n) {
+      return '<button class="nt-item" type="button" data-note-topic="' + esc(n.id) + '">' +
+        '<span class="nt-item-t">' + esc(n.title) + '</span>' +
+        '<span class="nt-item-x">' + esc(n.text) + '</span></button>';
+    }).join('');
+  }
+
+  function setMode(m) {
+    mode = m;
+    if (tabsSync) tabsSync();
+    if (m === 'all') {
+      if (ta) ta.hidden = true;
+      if (allWrap) allWrap.hidden = false;
+      renderList(searchEl ? searchEl.value : '');
+      setTimeout(function () { if (searchEl) searchEl.focus(); }, 40);
+    } else {
+      if (allWrap) allWrap.hidden = true;
+      if (ta) { ta.hidden = false; loadCur(); setTimeout(function () { ta.focus(); }, 40); }
+    }
+  }
+  var tabsSync = null;
+
   function create() {
     if (el) return;
     el = document.createElement('div');
     el.id = '_notes-overlay'; el.className = 'nt-ov';
     el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-label', 'Your notes');
-    el.innerHTML = '<div class="nt-panel"><div class="nt-head"><div><div class="nt-title">Your notes</div><div class="nt-sub"></div></div><button class="nt-x" type="button" aria-label="Close notes">&#215;</button></div>' +
+    el.innerHTML = '<div class="nt-panel"><div class="nt-head"><div class="nt-htxt"><div class="nt-title">Your notes</div><div class="nt-sub"></div></div>' +
+      '<div class="nt-tabs"><button class="nt-tab on" type="button" data-mode="one">This topic</button><button class="nt-tab" type="button" data-mode="all">All notes</button></div>' +
+      '<button class="nt-x" type="button" aria-label="Close notes">&#215;</button></div>' +
       '<textarea class="nt-ta" placeholder="Jot your own notes, mnemonics, and gotchas for this topic&#8230;" aria-label="Notes for this topic"></textarea>' +
+      '<div class="nt-all" hidden><input class="nt-search" type="text" placeholder="Search all your notes&#8230;" aria-label="Search notes" autocomplete="off" autocapitalize="off" spellcheck="false"><div class="nt-list"></div></div>' +
       '<div class="nt-foot">Saved automatically to this browser.</div></div>';
     document.body.appendChild(el);
     ta = el.querySelector('.nt-ta'); subEl = el.querySelector('.nt-sub');
-    el.addEventListener('click', function (e) { if (e.target === el || (e.target.closest && e.target.closest('.nt-x'))) close(); });
+    allWrap = el.querySelector('.nt-all'); listEl = el.querySelector('.nt-list'); searchEl = el.querySelector('.nt-search');
+    var tabs = el.querySelectorAll('.nt-tab');
+    tabsSync = function () { for (var i = 0; i < tabs.length; i++) tabs[i].classList.toggle('on', tabs[i].getAttribute('data-mode') === mode); };
+
+    el.addEventListener('click', function (e) {
+      if (e.target === el || (e.target.closest && e.target.closest('.nt-x'))) { close(); return; }
+      var tab = e.target.closest ? e.target.closest('.nt-tab') : null;
+      if (tab) { setMode(tab.getAttribute('data-mode')); return; }
+      var item = e.target.closest ? e.target.closest('.nt-item') : null;
+      if (item) { var id = item.getAttribute('data-note-topic'); var r = reg(); if (id && r && r.setTopic) { r.setTopic(id); setMode('one'); } }
+    });
     ta.addEventListener('input', function () { if (saveT) clearTimeout(saveT); saveT = setTimeout(save, 300); });
+    if (searchEl) searchEl.addEventListener('input', function () { renderList(searchEl.value); });
     el.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') { e.preventDefault(); close(); return; }
       if (e.key === 'Tab') {
-        var f = Array.prototype.filter.call(el.querySelectorAll('button,textarea'), function (x) { return !x.disabled && x.offsetParent !== null; });
+        var f = Array.prototype.filter.call(el.querySelectorAll('button,textarea,input'), function (x) { return !x.disabled && !x.hidden && x.offsetParent !== null; });
         if (!f.length) return;
         var first = f[0], last = f[f.length - 1];
         if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
@@ -11739,6 +11817,8 @@ window.Bookmarks = Bookmarks;
     if (isOpen) return;
     create();
     if (!curId()) return;
+    mode = 'one'; if (tabsSync) tabsSync();
+    if (ta) ta.hidden = false; if (allWrap) allWrap.hidden = true;
     loadCur();
     restoreFocus = document.activeElement;
     el.classList.add('open'); isOpen = true;
@@ -11756,7 +11836,7 @@ window.Bookmarks = Bookmarks;
   function wire() {
     var btn = document.getElementById('notesopen');
     if (btn) btn.addEventListener('click', open);
-    window.addEventListener('deeptopicchange', function () { if (isOpen) { save(); loadCur(); } markBtn(); });
+    window.addEventListener('deeptopicchange', function () { if (isOpen && mode === 'one') { save(); loadCur(); } markBtn(); });
     markBtn();
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wire); else wire();

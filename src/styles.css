@@ -710,6 +710,20 @@ body.is-hidden,body.is-hidden *,body.is-hidden *::before,body.is-hidden *::after
 .nt-ta{flex:1;min-height:240px;margin:14px 18px 4px;padding:14px 16px;border:1px solid var(--bd);border-radius:11px;background:var(--bg);color:var(--ink);font:14px/1.65 -apple-system,BlinkMacSystemFont,system-ui,sans-serif;resize:vertical;outline:none;transition:border-color .14s ease,box-shadow .14s ease}
 .nt-ta:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--accbg)}
 .nt-foot{padding:8px 18px 16px;font-size:10.5px;color:var(--mut)}
+.nt-htxt{flex:1 1 auto;min-width:0}
+.nt-tabs{display:flex;gap:4px;flex:none;background:var(--bg);border:1px solid var(--bd);border-radius:9px;padding:3px}
+.nt-tab{border:0;background:transparent;color:var(--mut);font:600 11.5px -apple-system,system-ui,sans-serif;padding:5px 11px;border-radius:7px;cursor:pointer;transition:background .14s ease,color .14s ease;white-space:nowrap}
+.nt-tab.on{background:var(--acc);color:#fff}
+.nt-tab:not(.on):hover{color:var(--ink);background:var(--accbg)}
+.nt-all{flex:1;display:flex;flex-direction:column;min-height:0;margin:14px 18px 4px}
+.nt-search{flex:none;padding:10px 13px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--ink);font:13px -apple-system,system-ui,sans-serif;outline:none;margin-bottom:10px;transition:border-color .14s ease}
+.nt-search:focus{border-color:var(--acc)}
+.nt-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding-right:2px}
+.nt-item{display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:left;border:1px solid var(--bd);border-radius:10px;background:var(--bg);padding:11px 13px;cursor:pointer;transition:border-color .14s ease,background .14s ease}
+.nt-item:hover{border-color:var(--acc);background:var(--accbg)}
+.nt-item-t{font-size:12.5px;font-weight:700;color:var(--acc)}
+.nt-item-x{font-size:12px;color:var(--mut2);line-height:1.5;white-space:pre-wrap;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.nt-empty{font-size:12.5px;color:var(--mut);line-height:1.6;padding:20px 4px;text-align:center}
 .crambtn.has-notes .mb-t::after{content:" \25CF";color:var(--acc);font-size:7px;vertical-align:middle}
 .xd-ov{position:fixed;inset:0;z-index:1000;display:none;align-items:flex-start;justify-content:center;background:rgba(30,28,24,.45);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:6vh 16px 16px;opacity:0;transition:opacity .22s ease}
 .xd-ov.open{display:flex;opacity:1}

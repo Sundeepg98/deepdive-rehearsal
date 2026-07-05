@@ -9,6 +9,7 @@ This replaces per-edit manual vigilance with tooling that runs on every build:
   entity_leak      no HTML entity reaches visible text                   (browser)
   e2e_interactions theme/text-zoom/drill must-hit/rescues, 0 console errs (browser)
   topic_contract   every registered topic conforms to the shared shape  (browser)
+  md_engine        the inline-markdown renderer (MD.render)     (node)
 
 Browser checks are SKIPPED (not failed) when Playwright/Chrome are absent, so
 this is CI-safe; locally (or in CI after `npm install && npx playwright install
@@ -44,6 +45,13 @@ for name, cmd in [('ascii_guard', ['python3', 'test/ascii_guard.py']),
                   ('visual_regression', ['python3', 'test/visual_regression.py'])]:
     r = run(cmd)
     results.append((name, 'PASS' if r.returncode == 0 else 'FAIL', last_line(r)))
+
+# md_engine: pure-Node unit test of the inline-markdown renderer (no browser needed)
+if run(['node', '--version']).returncode == 0:
+    r = run(['node', 'test/md_engine.cjs'])
+    results.append(('md_engine', 'PASS' if r.returncode == 0 else 'FAIL', last_line(r)))
+else:
+    results.append(('md_engine', 'SKIP', 'no node'))
 
 chrome = browser()
 deliverable = os.path.join(ROOT, 'deepdive_content_pipeline_rehearsal.html')

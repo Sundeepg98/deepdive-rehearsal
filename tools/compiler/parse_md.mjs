@@ -208,7 +208,49 @@ function parseSys(toks) {
   return { intro, stages, pivots, heads };
 }
 
-const PANE_PARSERS = { walk: parseSteps, rf: parseRf, trade: parseTrade, sys: parseSys };
+// Opener/closer: ## Opener, then ### <k> | <t> per card (1st = open, 2nd = close), a lead
+// paragraph, #### <ht> per item (auto-numbered) each with an answer paragraph, an optional
+// ##### Hooks block (lead paragraph + "- <q> | <d> | <tab>" bullets), and a "Foot:" paragraph.
+function parseOpen(toks) {
+  const cards = [];
+  let card = null, item = null, inHooks = false, cardIdx = 0;
+  for (let i = 0; i < toks.length; i++) {
+    const t = toks[i];
+    if (t.type === 'heading_open' && t.tag === 'h3') {
+      const raw = toks[i + 1].content; const k = raw.indexOf(' | ');
+      card = { kind: cardIdx === 0 ? 'open' : 'close', k: prose(k === -1 ? raw : raw.slice(0, k)), t: prose(k === -1 ? '' : raw.slice(k + 3)), lead: '', items: [], hooks: null, foot: '' };
+      cards.push(card); cardIdx++; item = null; inHooks = false; i += 2; continue;
+    }
+    if (t.type === 'heading_open' && t.tag === 'h4' && card) {
+      item = { n: String(card.items.length + 1), ht: prose(toks[i + 1].content), a: '' }; card.items.push(item); inHooks = false; i += 2; continue;
+    }
+    if (t.type === 'heading_open' && t.tag === 'h5' && card) {
+      card.hooks = { lead: '', items: [] }; inHooks = true; item = null; i += 2; continue;
+    }
+    if (t.type === 'bullet_list_open' && inHooks && card.hooks) {
+      let j = i + 1;
+      while (j < toks.length && toks[j].type !== 'bullet_list_close') {
+        if (toks[j].type === 'inline') {
+          const p = toks[j].content.split(' | ');
+          card.hooks.items.push({ q: prose(p[0] || ''), d: prose(p[1] || ''), tab: prose(p[2] || '') });
+        }
+        j++;
+      }
+      i = j; continue;
+    }
+    if (t.type === 'paragraph_open' && card) {
+      const raw = toks[i + 1].content; const f = /^foot:\s*/i.exec(raw);
+      if (f) card.foot = prose(raw.slice(f[0].length));
+      else if (inHooks && !card.hooks.lead) card.hooks.lead = prose(raw);
+      else if (item) item.a = prose(raw);
+      else card.lead = prose(raw);
+      i += 2; continue;
+    }
+  }
+  return { cards };
+}
+
+const PANE_PARSERS = { walk: parseSteps, rf: parseRf, trade: parseTrade, sys: parseSys, open: parseOpen };
 
 // --- top level ----------------------------------------------------------------
 

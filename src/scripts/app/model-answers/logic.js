@@ -26,10 +26,10 @@ var MODEL_STYLE = `
 .msel button.on{background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.08) 100%);border-color:var(--acc);color:var(--accink);box-shadow:0 0 0 1px var(--acc),0 4px 14px -4px rgba(83,74,183,.18);font-weight:780;position:relative}
 .msel button.on::after{content:"";position:absolute;right:var(--space-8);top:50%;transform:translateY(-50%);width:var(--space-6);height:var(--space-6);border-radius:50%;background:var(--acc);box-shadow:0 0 8px rgba(83,74,183,.4);animation:activePulse 2s ease-in-out infinite}
 @media(max-width:560px){.msel{grid-template-columns:repeat(2,minmax(0,1fr))}}
-.mscript-h{font-size:17px;font-weight:800;color:var(--ink);letter-spacing:-.3px;margin-bottom:var(--space-5)}
-.mscript-sub{font-size:12.5px;color:var(--mut);line-height:1.55;margin-bottom:var(--space-8);padding-bottom:var(--space-14);border-bottom:2px solid var(--accbg)}
+.mscript-h{font-size:var(--font-size-subhead);font-weight:800;color:var(--ink);letter-spacing:-.3px;margin-bottom:var(--space-5)}
+.mscript-sub{font-size:var(--font-size-caption);color:var(--mut);line-height:1.55;margin-bottom:var(--space-8);padding-bottom:var(--space-14);border-bottom:2px solid var(--accbg)}
 .mbeat-l{flex:none;width:var(--space-76);font:800 9.5px -apple-system,sans-serif;letter-spacing:.4px;text-transform:uppercase;padding-top:var(--space-4);line-height:1.35;color:var(--acc)}
-.mbeat-t{flex:1;font-size:13px;line-height:1.62;color:var(--ink)}
+.mbeat-t{flex:1;font-size:var(--font-size-small);line-height:1.62;color:var(--ink)}
 .mbeat-t b{color:var(--accink);font-weight:700}
 `;
 class DeepModelAnswers extends TopicPane {

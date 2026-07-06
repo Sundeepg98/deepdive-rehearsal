@@ -92,19 +92,19 @@
 
     var icon = document.createElement('span');
     icon.textContent = '\u2318';
-    icon.style.cssText = 'font-size:16px;color:var(--mut);opacity:.7';
+    icon.style.cssText = 'font-size:var(--font-size-subhead);color:var(--mut);opacity:.7';
 
     inputEl = document.createElement('input');
     inputEl.type = 'text';
     inputEl.placeholder = 'Search topics, concepts, views...';
     inputEl.setAttribute('aria-label', 'Search');
-    inputEl.style.cssText = 'flex:1;border:0;outline:0;font-size:15px;background:transparent;color:var(--ink);font-family:inherit';
+    inputEl.style.cssText = 'flex:1;border:0;outline:0;font-size:var(--font-size-body);background:transparent;color:var(--ink);font-family:inherit';
     inputEl.addEventListener('input', onInput);
     inputEl.addEventListener('keydown', onInputKey);
 
     var shortcut = document.createElement('kbd');
     shortcut.textContent = 'ESC';
-    shortcut.style.cssText = 'font-size:10px;font-family:var(--mono,monospace);background:var(--bg);border:1px solid var(--bd);border-radius:4px;padding:var(--space-2) var(--space-6);color:var(--mut)';
+    shortcut.style.cssText = 'font-size:var(--font-size-nano);font-family:var(--mono,monospace);background:var(--bg);border:1px solid var(--bd);border-radius:4px;padding:var(--space-2) var(--space-6);color:var(--mut)';
 
     header.appendChild(icon);
     header.appendChild(inputEl);
@@ -183,7 +183,7 @@
   }
   function sectionHeader(text) {
     var h = document.createElement('div');
-    h.style.cssText = 'font-size:9px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:var(--mut2);padding:var(--space-8) var(--space-14) var(--space-4)';
+    h.style.cssText = 'font-size:var(--font-size-nano);font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:var(--mut2);padding:var(--space-8) var(--space-14) var(--space-4)';
     h.textContent = text;
     return h;
   }
@@ -194,19 +194,19 @@
     var top = document.createElement('span');
     top.style.cssText = 'display:flex;align-items:center;gap:var(--space-8);width:100%';
     var title = document.createElement('span');
-    title.style.cssText = 'font-size:13.5px;font-weight:650;color:var(--ink);flex:1';
+    title.style.cssText = 'font-size:var(--font-size-small);font-weight:650;color:var(--ink);flex:1';
     highlightInto(title, d.label, q);
     var tag = document.createElement('span');
     tag.textContent = (d.kind === 'topic') ? 'TOPIC' : 'VIEW';
-    tag.style.cssText = 'font-size:8.5px;font-weight:800;letter-spacing:.5px;padding:var(--space-2) var(--space-6);border-radius:5px;font-family:var(--mono,monospace);' + ((d.kind === 'topic') ? 'color:var(--acc);background:var(--accbg)' : 'color:var(--mut);background:var(--bg);border:1px solid var(--bd)');
+    tag.style.cssText = 'font-size:var(--font-size-nano);font-weight:800;letter-spacing:.5px;padding:var(--space-2) var(--space-6);border-radius:5px;font-family:var(--mono,monospace);' + ((d.kind === 'topic') ? 'color:var(--acc);background:var(--accbg)' : 'color:var(--mut);background:var(--bg);border:1px solid var(--bd)');
     top.appendChild(title); top.appendChild(tag);
     var sub = document.createElement('span');
-    sub.style.cssText = 'font-size:11px;color:var(--mut);margin-top:var(--space-3)';
+    sub.style.cssText = 'font-size:var(--font-size-micro);color:var(--mut);margin-top:var(--space-3)';
     sub.textContent = (d.kind === 'topic') ? ((d.group ? d.group + ' \u00b7 ' : '') + d.desc) : d.desc;
     item.appendChild(top); item.appendChild(sub);
     if (d.kind === 'topic' && d.snippet) {
       var snip = document.createElement('span');
-      snip.style.cssText = 'display:block;font-size:10.5px;color:var(--mut2);margin-top:var(--space-4);line-height:1.42';
+      snip.style.cssText = 'display:block;font-size:var(--font-size-micro);color:var(--mut2);margin-top:var(--space-4);line-height:1.42';
       highlightInto(snip, clampSnippet(d.snippet, q), q);
       item.appendChild(snip);
     }
@@ -218,7 +218,7 @@
     var groups = (typeof groupedTopicIds === 'function') ? groupedTopicIds() : [];
     if (!groups.length) {
       var empty = document.createElement('div');
-      empty.style.cssText = 'padding:24px;text-align:center;color:var(--mut);font-size:13px';
+      empty.style.cssText = 'padding:24px;text-align:center;color:var(--mut);font-size:var(--font-size-small)';
       empty.textContent = 'Type to search topics, concepts, and the nine views...';
       resultsEl.appendChild(empty);
       return;
@@ -230,10 +230,10 @@
       item.type = 'button';
       item.style.cssText = 'display:flex;flex-direction:column;align-items:flex-start;width:100%;text-align:left;padding:var(--space-9) var(--space-14);border:0;border-radius:10px;background:transparent;cursor:pointer;transition:background .15s ease;margin-bottom:var(--space-2);color:var(--ink)';
       var g = document.createElement('span');
-      g.style.cssText = 'font-size:12.5px;font-weight:700;color:var(--ink)';
+      g.style.cssText = 'font-size:var(--font-size-caption);font-weight:700;color:var(--ink)';
       g.textContent = decodeEnt(bkt.group.label);
       var sub = document.createElement('span');
-      sub.style.cssText = 'font-size:10.5px;color:var(--mut);margin-top:var(--space-2)';
+      sub.style.cssText = 'font-size:var(--font-size-micro);color:var(--mut);margin-top:var(--space-2)';
       sub.textContent = decodeEnt(idn.title || id) + ' \u00b7 ' + bkt.ids.length + ' topic' + (bkt.ids.length === 1 ? '' : 's');
       item.appendChild(g); item.appendChild(sub);
       item.addEventListener('mouseenter', function () { item.style.background = 'var(--accbg)'; });
@@ -282,7 +282,7 @@
     if (results.length === 0) {
       if (inputEl.value.trim()) {
         var none = document.createElement('div');
-        none.style.cssText = 'padding:24px 24px 6px;text-align:center;color:var(--mut);font-size:13px';
+        none.style.cssText = 'padding:24px 24px 6px;text-align:center;color:var(--mut);font-size:var(--font-size-small)';
         none.textContent = 'No results found';
         resultsEl.appendChild(none);
         var near = closestMatches(inputEl.value);
@@ -291,7 +291,7 @@
           near.forEach(function (nm) {
             var sug = document.createElement('button');
             sug.type = 'button';
-            sug.style.cssText = 'display:flex;align-items:center;gap:var(--space-8);width:100%;text-align:left;padding:var(--space-9) var(--space-14);border:0;border-radius:10px;background:transparent;cursor:pointer;color:var(--ink);font-size:13px';
+            sug.style.cssText = 'display:flex;align-items:center;gap:var(--space-8);width:100%;text-align:left;padding:var(--space-9) var(--space-14);border:0;border-radius:10px;background:transparent;cursor:pointer;color:var(--ink);font-size:var(--font-size-small)';
             sug.textContent = nm.label + (nm.kind === 'view' ? '  (view)' : '');
             sug.addEventListener('mouseenter', function () { sug.style.background = 'var(--accbg)'; });
             sug.addEventListener('mouseleave', function () { sug.style.background = 'transparent'; });

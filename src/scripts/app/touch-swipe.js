@@ -41,7 +41,7 @@
     if (!hintEl) {
       hintEl = document.createElement('div');
       hintEl.id = '_swipe-hint';
-      hintEl.style.cssText = 'position:fixed;top:50%;transform:translateY(-50%);font-size:26px;line-height:1;color:var(--acc);opacity:0;transition:opacity .2s ease;pointer-events:none;z-index:90;padding:var(--space-8) var(--space-13);background:var(--card);border:1px solid var(--bd);border-radius:50%;box-shadow:0 4px 16px rgba(83,74,183,.18)';
+      hintEl.style.cssText = 'position:fixed;top:50%;transform:translateY(-50%);font-size:var(--font-size-display);line-height:1;color:var(--acc);opacity:0;transition:opacity .2s ease;pointer-events:none;z-index:90;padding:var(--space-8) var(--space-13);background:var(--card);border:1px solid var(--bd);border-radius:50%;box-shadow:0 4px 16px rgba(83,74,183,.18)';
       document.body.appendChild(hintEl);
     }
     hintEl.textContent = dir === 'prev' ? '\u2039' : '\u203a';

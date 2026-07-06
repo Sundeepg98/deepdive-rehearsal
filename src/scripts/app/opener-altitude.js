@@ -17,16 +17,16 @@
    --op-foot-fg) -- ancestor selectors cannot reach into a shadow -- and the .op-rev
    border (#cfc7f0, no dark override) stays hardcoded, matching the original. */
 var OP_STYLE = `
-.op-lead{font-size:15px;line-height:1.5;color:var(--ink);margin:var(--space-2) 0 var(--space-18)}
+.op-lead{font-size:var(--font-size-body);line-height:1.5;color:var(--ink);margin:var(--space-2) 0 var(--space-18)}
 .op-lead i{color:var(--accink);font-style:italic;font-weight:600}
 .op{border:1.5px solid var(--bd);border-radius:13px;padding:var(--space-15) var(--space-17);margin-bottom:var(--space-13);background:linear-gradient(135deg,var(--surf) 0%,rgba(83,74,183,.02) 100%);box-shadow:var(--surf-sh);transition:box-shadow .25s ease,transform .2s ease,border-color .2s ease}
 .op:hover{box-shadow:var(--surf-sh),0 6px 20px -8px rgba(83,74,183,.1);transform:translateY(-1px);border-color:rgba(83,74,183,.15)}
 .op-h{display:flex;gap:var(--space-12);align-items:flex-start}
 .op-n{flex:none;width:var(--space-27);height:var(--space-27);border-radius:50%;background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.06) 100%);border:1.5px solid var(--acc);color:var(--accink);font:800 12px ui-monospace,monospace;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px -2px rgba(83,74,183,.15)}
-.op-ht{font-size:13px;color:var(--ink);line-height:1.5;padding-top:var(--space-3)}
+.op-ht{font-size:var(--font-size-small);color:var(--ink);line-height:1.5;padding-top:var(--space-3)}
 .op-ht b{color:var(--accink);font-weight:700}
 .op-ht i{color:var(--mut);font-style:italic}
-.op-a{display:none;margin:var(--space-12) 0 0 var(--space-39);padding:var(--space-14) var(--space-17);background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.04) 100%);border-radius:10px;font-size:13px;color:var(--ink);line-height:1.62;box-shadow:0 1px 6px -2px rgba(83,74,183,.08)}
+.op-a{display:none;margin:var(--space-12) 0 0 var(--space-39);padding:var(--space-14) var(--space-17);background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.04) 100%);border-radius:10px;font-size:var(--font-size-small);color:var(--ink);line-height:1.62;box-shadow:0 1px 6px -2px rgba(83,74,183,.08)}
 .op-a.show{display:block;animation:pop .24s ease}
 .op-a b{color:var(--accink);font-weight:700}
 .op-rev{margin:var(--space-12) 0 0 var(--space-39);font:700 11.5px -apple-system,sans-serif;padding:var(--space-7) var(--space-15);border-radius:8px;border:1.5px solid #cfc7f0;background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.04) 100%);color:var(--accink);cursor:pointer;transition:transform .12s ease,background .15s ease,border-color .15s ease,box-shadow .2s ease}
@@ -34,15 +34,15 @@ var OP_STYLE = `
 .op-rev:active{transform:translateY(1px) scale(.98)}
 .op-rev:disabled{opacity:.5;cursor:default;transform:none}
 .op-hooks{margin-top:var(--space-18);padding:var(--space-15) var(--space-17);background:linear-gradient(135deg,var(--op-hooks-bg) 0%,rgba(83,74,183,.02) 100%);border:1px solid var(--bd);border-radius:13px}
-.op-hk-t{font-size:12.7px;color:var(--mut);line-height:1.55;margin-bottom:var(--space-8)}
+.op-hk-t{font-size:var(--font-size-small);color:var(--mut);line-height:1.55;margin-bottom:var(--space-8)}
 .op-hk-t i{color:var(--accink);font-style:italic}
 .op-hk{margin-top:var(--space-14);padding:var(--space-10) var(--space-12);background:rgba(83,74,183,.02);border-radius:8px;border-left:2px solid var(--acc);transition:background .2s ease,padding .2s ease}
 .op-hk:hover{padding-left:var(--space-14);background:rgba(83,74,183,.04)}
-.op-q{font-size:12.5px;color:var(--teal);font-weight:700;font-style:italic}
-.op-d{font-size:12.5px;color:var(--ink);line-height:1.55;margin-top:var(--space-4)}
+.op-q{font-size:var(--font-size-caption);color:var(--teal);font-weight:700;font-style:italic}
+.op-d{font-size:var(--font-size-caption);color:var(--ink);line-height:1.55;margin-top:var(--space-4)}
 .op-arr{color:var(--mut2);font-weight:800;margin-right:var(--space-5)}
-.op-tab{display:inline-block;margin-left:var(--space-6);font-size:10.5px;font-weight:700;color:var(--acc);background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.04) 100%);border-radius:5px;padding:var(--space-2) var(--space-8);white-space:nowrap;border:1px solid #cfc7f0}
-.op-foot{margin-top:var(--space-18);font-size:12.5px;color:var(--op-foot-fg);background:linear-gradient(135deg,var(--op-foot-bg) 0%,rgba(83,74,183,.03) 100%);border-left:3px solid var(--acc);border-radius:9px;padding:var(--space-14) var(--space-17);line-height:1.6}
+.op-tab{display:inline-block;margin-left:var(--space-6);font-size:var(--font-size-micro);font-weight:700;color:var(--acc);background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.04) 100%);border-radius:5px;padding:var(--space-2) var(--space-8);white-space:nowrap;border:1px solid #cfc7f0}
+.op-foot{margin-top:var(--space-18);font-size:var(--font-size-caption);color:var(--op-foot-fg);background:linear-gradient(135deg,var(--op-foot-bg) 0%,rgba(83,74,183,.03) 100%);border-left:3px solid var(--acc);border-radius:9px;padding:var(--space-14) var(--space-17);line-height:1.6}
 .op-foot b{color:var(--accink);font-weight:700}
 .op-foot i{font-style:italic;color:var(--mut)}
 `;

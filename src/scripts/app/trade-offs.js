@@ -10,16 +10,16 @@
    shadow. The .opt trade-option family is shared with mixed-fire (OPT_SHEET);
    .dec/.dec-q/.dec-tell are pane-exclusive (TRADE_STYLE). Offline-safe. */
 var TRADE_STYLE = `
-.ledger .lead{font-size:15px;line-height:1.5;color:var(--ink);margin:var(--space-2) var(--space-2) var(--space-16)}
+.ledger .lead{font-size:var(--font-size-body);line-height:1.5;color:var(--ink);margin:var(--space-2) var(--space-2) var(--space-16)}
 .ledger .lead b{color:var(--accink)}
 .dec{background:linear-gradient(135deg,var(--surf) 0%,rgba(83,74,183,.02) 100%);box-shadow:var(--surf-sh);border:1px solid var(--bd);border-radius:14px;padding:var(--space-17) var(--space-19);margin-bottom:var(--space-14);border-top:3px solid var(--acc);position:relative;overflow:hidden;transition:box-shadow .25s ease,transform .2s ease,border-color .2s ease}
 .dec:hover{box-shadow:var(--surf-sh),0 6px 24px -8px rgba(83,74,183,.12);transform:translateY(-1px);border-color:rgba(83,74,183,.15)}
 .dec::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,transparent 40%,rgba(255,255,255,.12) 50%,transparent 60%);background-size:200% 200%;animation:shineSweep 5s ease-in-out infinite;pointer-events:none}
 @keyframes shineSweep{0%{background-position:200% 200%}100%{background-position:-200% -200%}}
-.dec-q{font-size:14.5px;font-weight:800;color:var(--ink);letter-spacing:-.2px;margin-bottom:var(--space-10);line-height:1.4}
-.dec-q .vs{color:var(--mut2);font-weight:700;font-size:11.5px;padding:0 var(--space-4)}
-.dec-tell{margin-top:var(--space-14);padding-top:var(--space-12);border-top:1px dashed var(--bd);font-size:12px;color:var(--teal);font-weight:700;line-height:1.55}
-.dec-tell::before{content:"\\2605";font-size:12px;margin-right:var(--space-8)}
+.dec-q{font-size:var(--font-size-body);font-weight:800;color:var(--ink);letter-spacing:-.2px;margin-bottom:var(--space-10);line-height:1.4}
+.dec-q .vs{color:var(--mut2);font-weight:700;font-size:var(--font-size-micro);padding:0 var(--space-4)}
+.dec-tell{margin-top:var(--space-14);padding-top:var(--space-12);border-top:1px dashed var(--bd);font-size:var(--font-size-caption);color:var(--teal);font-weight:700;line-height:1.55}
+.dec-tell::before{content:"\\2605";font-size:var(--font-size-caption);margin-right:var(--space-8)}
 .dec-tell b{color:var(--dec-tell-b-fg);font-weight:700}
 `;
 

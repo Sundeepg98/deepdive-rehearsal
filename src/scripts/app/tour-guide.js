@@ -101,7 +101,7 @@
     }
     tooltipEl.innerHTML =
       '<div style="font:800 15px -apple-system,sans-serif;color:var(--ink);margin-bottom:var(--space-8);letter-spacing:-.3px">' + step.title + '</div>' +
-      '<div style="font-size:13px;color:var(--mut);line-height:1.55;margin-bottom:var(--space-16)">' + step.text + '</div>' +
+      '<div style="font-size:var(--font-size-small);color:var(--mut);line-height:1.55;margin-bottom:var(--space-16)">' + step.text + '</div>' +
       '<div style="display:flex;align-items:center;justify-content:space-between">' +
         '<div style="display:flex;align-items:center">' + dots + '</div>' +
         '<div style="display:flex;gap:var(--space-8)">' +
@@ -109,7 +109,7 @@
           '<button type="button" id="_tour-next" style="background:linear-gradient(135deg,var(--acc) 0%,var(--acc2) 100%);border:none;border-radius:10px;padding:var(--space-6) var(--space-18);font:650 12px -apple-system,sans-serif;color:#fff;cursor:pointer;box-shadow:0 2px 8px rgba(83,74,183,.3)">' + (index < total - 1 ? 'Next' : 'Finish') + '</button>' +
         '</div>' +
       '</div>' +
-      '<div style="font-size:10px;color:var(--mut2);margin-top:var(--space-10);text-align:right">' + (index + 1) + ' / ' + total + '</div>';
+      '<div style="font-size:var(--font-size-nano);color:var(--mut2);margin-top:var(--space-10);text-align:right">' + (index + 1) + ' / ' + total + '</div>';
     var prevBtn = document.getElementById('_tour-prev'), nextBtn = document.getElementById('_tour-next');
     if (prevBtn) prevBtn.onclick = function () { goToStep(index - 1); };
     if (nextBtn) nextBtn.onclick = function () { if (index < total - 1) goToStep(index + 1); else destroy(); };

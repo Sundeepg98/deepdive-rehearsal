@@ -60,6 +60,7 @@ var KBD_HTML = `<div class="ks-sec">
           <div class="ks-row2"><span class="ks-keys"><kbd>\\</kbd></span><span>Open the Topic index</span></div>
           <div class="ks-row2"><span class="ks-keys"><kbd>[</kbd><kbd>]</kbd></span><span>Previous &middot; next topic</span></div>
           <div class="ks-row2"><span class="ks-keys"><kbd>G</kbd></span><span>Start the guided tour</span></div>
+          <div class="ks-row2"><span class="ks-keys"><kbd>D</kbd></span><span>Cycle spacing density &mdash; compact &middot; cozy &middot; default</span></div>
           <div class="ks-row2"><span class="ks-keys"><kbd>Esc</kbd></span><span>Close any open panel</span></div>
           <div class="ks-row2"><span class="ks-keys"><kbd>?</kbd></span><span>Bring up this list</span></div>
         </div>

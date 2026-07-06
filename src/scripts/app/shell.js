@@ -66,6 +66,14 @@ for (let i = 0; i < segBtns.length; i++) {
 }
 /* Global keyboard shortcuts. Ignored while typing in a field, and suppressed
    whenever any overlay is open (the overlay's own handlers take over). */
+/* Density: cycles the spacing scale via a single --density-scale token override on <html>.
+   Reaches shadow DOM through custom-property inheritance; spacing only, font untouched. */
+window.Density = (function () {
+  var modes = ['default', 'compact', 'cozy'];
+  function set(m) { if (m === 'default') delete document.documentElement.dataset.density; else document.documentElement.dataset.density = m; }
+  function cycle() { var cur = document.documentElement.dataset.density || 'default'; set(modes[(modes.indexOf(cur) + 1) % modes.length]); }
+  return { set: set, cycle: cycle };
+})();
 document.addEventListener('keydown', function (event) {
   const activeTag = (event.target.tagName || '').toLowerCase();
   if (activeTag === 'input' || activeTag === 'textarea') return;
@@ -80,6 +88,7 @@ document.addEventListener('keydown', function (event) {
   /* q..o jump straight to a pane (the QWERTY row mirrors the tab order) */
   const tabKeys = { q: 'walk', w: 'drill', e: 'wb', r: 'sys', t: 'trade', y: 'model', u: 'num', i: 'rf', o: 'open' };
   if (tabKeys[key]) { goView(tabKeys[key]); return; }
+  if (key === 'd') { if (window.Density) window.Density.cycle(); return; }  /* d cycles density: default -> compact -> cozy */
   if (key === '/') { event.preventDefault(); if (window.SearchOverlay && window.SearchOverlay.open) window.SearchOverlay.open(); return; }
   if (key === '[') { if (window.stepTopic) window.stepTopic(-1); return; }
   if (key === ']') { if (window.stepTopic) window.stepTopic(1); return; }

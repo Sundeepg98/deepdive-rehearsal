@@ -1,10 +1,7 @@
 {
   "source": ["design-tokens/tokens.json"],
   "platforms": {
-    "css": {
-      "transformGroup": "css",
-      "buildPath": "src/",
-      "files": [{ "destination": "tokens.generated.css", "format": "css/variables", "options": { "outputReferences": true } }]
-    }
+    "css": { "transformGroup": "css", "buildPath": "src/", "files": [{ "destination": "tokens.generated.css", "format": "css/variables", "options": { "outputReferences": true } }] },
+    "js":  { "transformGroup": "js",  "buildPath": "design-tokens/build/", "files": [{ "destination": "tokens.js", "format": "javascript/es6" }] }
   }
 }

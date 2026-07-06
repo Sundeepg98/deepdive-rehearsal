@@ -13,7 +13,111 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>Content Pipeline &mdash; Deep Rehearsal</title>
-<style>@layer theme, app, components, utilities;@layer theme{/**
+<style>@layer theme, app, components, utilities;@layer theme{@property --density-scale{syntax:"<number>";inherits:true;initial-value:1}
+@property --space-1{syntax:"<length>";inherits:true;initial-value:1px}
+@property --space-2{syntax:"<length>";inherits:true;initial-value:2px}
+@property --space-3{syntax:"<length>";inherits:true;initial-value:3px}
+@property --space-4{syntax:"<length>";inherits:true;initial-value:4px}
+@property --space-5{syntax:"<length>";inherits:true;initial-value:5px}
+@property --space-6{syntax:"<length>";inherits:true;initial-value:6px}
+@property --space-7{syntax:"<length>";inherits:true;initial-value:7px}
+@property --space-8{syntax:"<length>";inherits:true;initial-value:8px}
+@property --space-9{syntax:"<length>";inherits:true;initial-value:9px}
+@property --space-10{syntax:"<length>";inherits:true;initial-value:10px}
+@property --space-11{syntax:"<length>";inherits:true;initial-value:11px}
+@property --space-12{syntax:"<length>";inherits:true;initial-value:12px}
+@property --space-13{syntax:"<length>";inherits:true;initial-value:13px}
+@property --space-14{syntax:"<length>";inherits:true;initial-value:14px}
+@property --space-15{syntax:"<length>";inherits:true;initial-value:15px}
+@property --space-16{syntax:"<length>";inherits:true;initial-value:16px}
+@property --space-17{syntax:"<length>";inherits:true;initial-value:17px}
+@property --space-18{syntax:"<length>";inherits:true;initial-value:18px}
+@property --space-19{syntax:"<length>";inherits:true;initial-value:19px}
+@property --space-20{syntax:"<length>";inherits:true;initial-value:20px}
+@property --space-22{syntax:"<length>";inherits:true;initial-value:22px}
+@property --space-23{syntax:"<length>";inherits:true;initial-value:23px}
+@property --space-24{syntax:"<length>";inherits:true;initial-value:24px}
+@property --space-26{syntax:"<length>";inherits:true;initial-value:26px}
+@property --space-27{syntax:"<length>";inherits:true;initial-value:27px}
+@property --space-28{syntax:"<length>";inherits:true;initial-value:28px}
+@property --space-30{syntax:"<length>";inherits:true;initial-value:30px}
+@property --space-32{syntax:"<length>";inherits:true;initial-value:32px}
+@property --space-34{syntax:"<length>";inherits:true;initial-value:34px}
+@property --space-36{syntax:"<length>";inherits:true;initial-value:36px}
+@property --space-38{syntax:"<length>";inherits:true;initial-value:38px}
+@property --space-39{syntax:"<length>";inherits:true;initial-value:39px}
+@property --space-40{syntax:"<length>";inherits:true;initial-value:40px}
+@property --space-42{syntax:"<length>";inherits:true;initial-value:42px}
+@property --space-43{syntax:"<length>";inherits:true;initial-value:43px}
+@property --space-44{syntax:"<length>";inherits:true;initial-value:44px}
+@property --space-46{syntax:"<length>";inherits:true;initial-value:46px}
+@property --space-50{syntax:"<length>";inherits:true;initial-value:50px}
+@property --space-52{syntax:"<length>";inherits:true;initial-value:52px}
+@property --space-60{syntax:"<length>";inherits:true;initial-value:60px}
+@property --space-70{syntax:"<length>";inherits:true;initial-value:70px}
+@property --space-74{syntax:"<length>";inherits:true;initial-value:74px}
+@property --space-76{syntax:"<length>";inherits:true;initial-value:76px}
+@property --space-80{syntax:"<length>";inherits:true;initial-value:80px}
+@property --space-92{syntax:"<length>";inherits:true;initial-value:92px}
+@property --space-120{syntax:"<length>";inherits:true;initial-value:120px}
+@property --space-140{syntax:"<length>";inherits:true;initial-value:140px}
+@property --space-150{syntax:"<length>";inherits:true;initial-value:150px}
+@property --space-240{syntax:"<length>";inherits:true;initial-value:240px}
+@property --space-270{syntax:"<length>";inherits:true;initial-value:270px}
+@property --space-290{syntax:"<length>";inherits:true;initial-value:290px}
+@property --space-296{syntax:"<length>";inherits:true;initial-value:296px}
+@property --space-300{syntax:"<length>";inherits:true;initial-value:300px}
+@property --space-420{syntax:"<length>";inherits:true;initial-value:420px}
+@property --space-430{syntax:"<length>";inherits:true;initial-value:430px}
+@property --space-560{syntax:"<length>";inherits:true;initial-value:560px}
+@property --space-600{syntax:"<length>";inherits:true;initial-value:600px}
+@property --space-620{syntax:"<length>";inherits:true;initial-value:620px}
+@property --space-660{syntax:"<length>";inherits:true;initial-value:660px}
+@property --space-680{syntax:"<length>";inherits:true;initial-value:680px}
+@property --space-760{syntax:"<length>";inherits:true;initial-value:760px}
+@property --space-830{syntax:"<length>";inherits:true;initial-value:830px}
+@property --size-font-9{syntax:"<length>";inherits:true;initial-value:9px}
+@property --size-font-11{syntax:"<length>";inherits:true;initial-value:11px}
+@property --size-font-12{syntax:"<length>";inherits:true;initial-value:12px}
+@property --size-font-13{syntax:"<length>";inherits:true;initial-value:13px}
+@property --size-font-14{syntax:"<length>";inherits:true;initial-value:14px}
+@property --size-font-16{syntax:"<length>";inherits:true;initial-value:16px}
+@property --size-font-18{syntax:"<length>";inherits:true;initial-value:18px}
+@property --size-font-21{syntax:"<length>";inherits:true;initial-value:21px}
+@property --size-font-24{syntax:"<length>";inherits:true;initial-value:24px}
+@property --size-font-32{syntax:"<length>";inherits:true;initial-value:32px}
+@property --size-font-48{syntax:"<length>";inherits:true;initial-value:48px}
+@property --z-below{syntax:"<number>";inherits:true;initial-value:-1}
+@property --z-base{syntax:"<number>";inherits:true;initial-value:0}
+@property --z-sidebar{syntax:"<number>";inherits:true;initial-value:20}
+@property --z-seg{syntax:"<number>";inherits:true;initial-value:25}
+@property --z-dropdown{syntax:"<number>";inherits:true;initial-value:40}
+@property --z-surface{syntax:"<number>";inherits:true;initial-value:50}
+@property --z-scrim{syntax:"<number>";inherits:true;initial-value:55}
+@property --z-bottombar{syntax:"<number>";inherits:true;initial-value:60}
+@property --z-tooltip{syntax:"<number>";inherits:true;initial-value:90}
+@property --z-sticky{syntax:"<number>";inherits:true;initial-value:150}
+@property --z-bar{syntax:"<number>";inherits:true;initial-value:200}
+@property --z-popup{syntax:"<number>";inherits:true;initial-value:1000}
+@property --z-overlay{syntax:"<number>";inherits:true;initial-value:1100}
+@property --z-modal{syntax:"<number>";inherits:true;initial-value:1200}
+@property --z-modal-fore{syntax:"<number>";inherits:true;initial-value:1201}
+@property --z-modal-top{syntax:"<number>";inherits:true;initial-value:1202}
+@property --z-toast{syntax:"<number>";inherits:true;initial-value:9999}
+@property --duration-instant{syntax:"<time>";inherits:true;initial-value:0ms}
+@property --duration-fast{syntax:"<time>";inherits:true;initial-value:150ms}
+@property --duration-base{syntax:"<time>";inherits:true;initial-value:200ms}
+@property --duration-moderate{syntax:"<time>";inherits:true;initial-value:250ms}
+@property --duration-slow{syntax:"<time>";inherits:true;initial-value:300ms}
+@property --duration-slowest{syntax:"<time>";inherits:true;initial-value:500ms}
+@property --line-height-tight{syntax:"<number>";inherits:true;initial-value:1.2}
+@property --line-height-snug{syntax:"<number>";inherits:true;initial-value:1.4}
+@property --line-height-normal{syntax:"<number>";inherits:true;initial-value:1.6}
+@property --font-weight-regular{syntax:"<number>";inherits:true;initial-value:400}
+@property --font-weight-medium{syntax:"<number>";inherits:true;initial-value:500}
+@property --font-weight-semibold{syntax:"<number>";inherits:true;initial-value:640}
+@property --font-weight-bold{syntax:"<number>";inherits:true;initial-value:720}
+/**
  * Do not edit directly, this file was auto-generated.
  */
 
@@ -138,6 +242,9 @@
   --font-size-display-lg: var(--size-font-32);
   --font-size-display-xl: var(--size-font-48);
 }
+
+html[data-density=compact]{--space-1:1px;--space-2:2px;--space-3:2px;--space-4:3px;--space-5:4px;--space-6:5px;--space-7:6px;--space-8:7px;--space-9:7px;--space-10:8px;--space-11:9px;--space-12:10px;--space-13:11px;--space-14:11px;--space-15:12px;--space-16:13px;--space-17:14px;--space-18:15px;--space-19:16px;--space-20:16px;--space-22:18px;--space-23:19px;--space-24:20px;--space-26:21px;--space-27:22px;--space-28:23px;--space-30:25px;--space-32:26px;--space-34:28px;--space-36:30px;--space-38:31px;--space-39:32px;--space-40:33px;--space-42:34px;--space-43:35px;--space-44:36px;--space-46:38px;--space-50:41px;--space-52:43px;--space-60:49px;--space-70:57px;--space-74:61px;--space-76:62px;--space-80:66px;--space-92:75px;--space-120:98px;--space-140:115px;--space-150:123px;--space-240:197px;--space-270:221px;--space-290:238px;--space-296:243px;--space-300:246px;--space-420:344px;--space-430:353px;--space-560:459px;--space-600:492px;--space-620:508px;--space-660:541px;--space-680:558px;--space-760:623px;--space-830:681px}
+html[data-density=cozy]{--space-1:1px;--space-2:2px;--space-3:3px;--space-4:5px;--space-5:6px;--space-6:7px;--space-7:8px;--space-8:9px;--space-9:10px;--space-10:12px;--space-11:13px;--space-12:14px;--space-13:15px;--space-14:16px;--space-15:17px;--space-16:18px;--space-17:20px;--space-18:21px;--space-19:22px;--space-20:23px;--space-22:25px;--space-23:26px;--space-24:28px;--space-26:30px;--space-27:31px;--space-28:32px;--space-30:35px;--space-32:37px;--space-34:39px;--space-36:41px;--space-38:44px;--space-39:45px;--space-40:46px;--space-42:48px;--space-43:49px;--space-44:51px;--space-46:53px;--space-50:57px;--space-52:60px;--space-60:69px;--space-70:81px;--space-74:85px;--space-76:87px;--space-80:92px;--space-92:106px;--space-120:138px;--space-140:161px;--space-150:173px;--space-240:276px;--space-270:311px;--space-290:334px;--space-296:340px;--space-300:345px;--space-420:483px;--space-430:494px;--space-560:644px;--space-600:690px;--space-620:713px;--space-660:759px;--space-680:782px;--space-760:874px;--space-830:954px}
 }@layer app{:root{}
 /* === Hide Kimi Agent watermark (platform-injected) === */
 a[href*="kimi.com/agent"]{display:none!important}
@@ -10737,6 +10844,14 @@ for (let i = 0; i < segBtns.length; i++) {
 }
 /* Global keyboard shortcuts. Ignored while typing in a field, and suppressed
    whenever any overlay is open (the overlay's own handlers take over). */
+/* Density: cycles the spacing scale via a single --density-scale token override on <html>.
+   Reaches shadow DOM through custom-property inheritance; spacing only, font untouched. */
+window.Density = (function () {
+  var modes = ['default', 'compact', 'cozy'];
+  function set(m) { if (m === 'default') delete document.documentElement.dataset.density; else document.documentElement.dataset.density = m; }
+  function cycle() { var cur = document.documentElement.dataset.density || 'default'; set(modes[(modes.indexOf(cur) + 1) % modes.length]); }
+  return { set: set, cycle: cycle };
+})();
 document.addEventListener('keydown', function (event) {
   const activeTag = (event.target.tagName || '').toLowerCase();
   if (activeTag === 'input' || activeTag === 'textarea') return;
@@ -10751,6 +10866,7 @@ document.addEventListener('keydown', function (event) {
   /* q..o jump straight to a pane (the QWERTY row mirrors the tab order) */
   const tabKeys = { q: 'walk', w: 'drill', e: 'wb', r: 'sys', t: 'trade', y: 'model', u: 'num', i: 'rf', o: 'open' };
   if (tabKeys[key]) { goView(tabKeys[key]); return; }
+  if (key === 'd') { if (window.Density) window.Density.cycle(); return; }  /* d cycles density: default -> compact -> cozy */
   if (key === '/') { event.preventDefault(); if (window.SearchOverlay && window.SearchOverlay.open) window.SearchOverlay.open(); return; }
   if (key === '[') { if (window.stepTopic) window.stepTopic(-1); return; }
   if (key === ']') { if (window.stepTopic) window.stepTopic(1); return; }
@@ -11117,6 +11233,7 @@ var KBD_HTML = `<div class="ks-sec">
           <div class="ks-row2"><span class="ks-keys"><kbd>\\</kbd></span><span>Open the Topic index</span></div>
           <div class="ks-row2"><span class="ks-keys"><kbd>[</kbd><kbd>]</kbd></span><span>Previous &middot; next topic</span></div>
           <div class="ks-row2"><span class="ks-keys"><kbd>G</kbd></span><span>Start the guided tour</span></div>
+          <div class="ks-row2"><span class="ks-keys"><kbd>D</kbd></span><span>Cycle spacing density &mdash; compact &middot; cozy &middot; default</span></div>
           <div class="ks-row2"><span class="ks-keys"><kbd>Esc</kbd></span><span>Close any open panel</span></div>
           <div class="ks-row2"><span class="ks-keys"><kbd>?</kbd></span><span>Bring up this list</span></div>
         </div>

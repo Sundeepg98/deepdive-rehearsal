@@ -558,15 +558,20 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
 .rail{display:none}
 .tools-fab{display:none}
 @media(max-width:919px){
-  .app{flex-direction:column;min-height:0;padding-top:56px}
+  .app{flex-direction:column;min-height:0;padding-top:56px;padding-bottom:calc(126px + env(safe-area-inset-bottom,0px))}
   .sidebar{width:auto;height:auto;position:static;flex-direction:column;gap:0;padding:0;border-right:none;background:transparent;overflow:visible}
   .side-id{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-8) var(--space-10);background:var(--side);border-bottom:1px solid var(--bd);padding:var(--space-11) var(--space-15)}
   .side-id .badge{display:none}
   .side-id .hdr{order:0;flex:1 1 auto;margin:0}
   .side-id h1{font-size:var(--font-size-title)}
   .side-id .locator{order:2;flex-basis:100%;margin:var(--space-4) 0 0;font-size:var(--font-size-micro);padding:var(--space-4) var(--space-10);border-radius:7px;display:inline-block;width:auto}
-  .tools-fab{order:1;position:fixed;bottom:var(--space-16);right:var(--space-16);z-index:50;display:inline-flex;align-items:center;gap:var(--space-6);flex:none;font-size:var(--font-size-caption);font-weight:var(--font-weight-bold);letter-spacing:.3px;color:#fff;background:var(--acc);border:1px solid transparent;border-radius:999px;padding:var(--space-12) var(--space-18);box-shadow:0 8px 22px -4px rgba(83,74,183,.55),0 2px 8px rgba(0,0,0,.18);cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),box-shadow var(--duration-base) var(--ease-base),border-color var(--duration-base) var(--ease-base)}
+  .tools-fab{order:0;position:static;flex:none;display:inline-flex;align-items:center;gap:var(--space-6);flex:none;font-size:var(--font-size-caption);font-weight:var(--font-weight-bold);letter-spacing:.3px;color:var(--acc);background:var(--accbg);border:1px solid var(--acc);border-radius:999px;padding:var(--space-12) var(--space-16);box-shadow:none;cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),box-shadow var(--duration-base) var(--ease-base),border-color var(--duration-base) var(--ease-base)}
   .tools-fab:active{transform:scale(.95)}
+  .sidebar .mockcta{order:2;position:fixed;bottom:0;left:0;right:0;z-index:40;display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;gap:var(--space-8) var(--space-10);margin:0;background:var(--card);border-top:1px solid var(--bd);box-shadow:0 -8px 24px rgba(0,0,0,.14);padding:var(--space-12) var(--space-15);padding-bottom:calc(var(--space-12) + env(safe-area-inset-bottom,0px))}
+  .sidebar .mockcta .mockbtn{order:0;flex:1 1 0;min-width:0;margin:0}
+  .sidebar .mockcta .tools-fab{order:1;flex:none}
+  .sidebar .mockcta .inttog{order:2;flex-basis:100%;margin:0}
+  .mbl-tail{display:none}
   .sidebar .seg{order:1;position:fixed;top:0;left:0;right:0;z-index:var(--z-seg);flex-direction:row;overflow-x:auto;gap:var(--space-6);background:var(--bg);border-bottom:1px solid var(--bd);padding:var(--space-8) var(--space-12);-webkit-overflow-scrolling:touch}
   .sidebar .seg button{flex:none;width:auto;white-space:nowrap;align-items:center;padding:var(--space-11) var(--space-14);border-radius:9px;transition:background var(--duration-base) var(--ease-base),box-shadow var(--duration-base) var(--ease-base),transform var(--duration-fast) var(--ease-base)}
   .sidebar .seg button>span:first-child{font-size:var(--font-size-small);font-weight:var(--font-weight-semibold)}
@@ -1088,7 +1093,7 @@ html[data-theme="dark"] .tn-item:hover{background:rgba(170,157,245,.13)}
 html{text-wrap:pretty}
 h1,h2,h3,h4,h5,h6{text-wrap:balance}
 
-.sidebar .mockcta{order:0;display:flex;flex-direction:column;gap:var(--space-8);margin:0 0 var(--space-14)}
+@media(min-width:920px){.sidebar .mockcta{order:0;display:flex;flex-direction:column;gap:var(--space-8);margin:0 0 var(--space-14)}}
 }</style>
 <script>/* === Boot: theme detection + loading splash === */
 try{var _dk=matchMedia('(prefers-color-scheme:dark)').matches;document.documentElement.dataset.theme=_dk?'dark':'light';var _tc=document.querySelector('meta[name="theme-color"]');if(_tc)_tc.setAttribute('content',_dk?'#15141A':'#FAF9F5');}catch(e){}
@@ -1157,10 +1162,11 @@ try{var _dk=matchMedia('(prefers-color-scheme:dark)').matches;document.documentE
     <button class="tn-trigger" id="tntrigger" type="button" aria-haspopup="menu" aria-expanded="false"><span class="tn-eyebrow">Rehearsing</span><span class="tn-current" id="tncurrent">&mdash;</span><span class="tn-chev" aria-hidden="true">&#9662;</span></button>
     <button class="tn-step" id="tnnext" type="button" aria-label="Next topic">&#8250;</button>
     <div class="tn-menu" id="tnmenu" role="menu" hidden></div></nav>
-    <button class="tools-fab" id="toolsfab" type="button">Tools</button></div>
+    </div>
     <div class="mockcta">
-    <button class="mockbtn" id="mockopen" type="button"><span class="mb-ic">&#9654;</span><span class="mb-lbl">Mock run &mdash; the full round, on the clock</span></button>
+    <button class="mockbtn" id="mockopen" type="button"><span class="mb-ic">&#9654;</span><span class="mb-lbl">Mock run<span class="mbl-tail"> &mdash; the full round, on the clock</span></span></button>
     <button class="inttog" id="inttog" type="button" aria-pressed="false"><span class="inttog-dot"></span><span class="inttog-lbl">Interviewer cuts in mid-answer &mdash; <b>off</b></span></button>
+    <button class="tools-fab" id="toolsfab" type="button">Tools</button>
     </div>
     <div class="tools-bd" id="toolsbd" aria-hidden="true"></div>
     <div class="mockbar">

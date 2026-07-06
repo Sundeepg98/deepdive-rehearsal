@@ -1,23 +1,35 @@
-// tools/compiler/compile.mjs -- the driver that turns a .topic source into module files,
-// plus a Vite plugin so this happens automatically at build time.
+// tools/compiler/compile.mjs -- the driver that turns a topic SOURCE into module files, plus
+// a Vite plugin so it happens at build time.
 //
-// compileTopic(path, {index,total,outDir}) parses the source, emits the modules, and writes
-// them to disk. index/total are provided by the caller (the build owns the topic sequence --
-// see the plugin), matching the proof's signature.
+// Source is standard markdown (.md, the primary path) or the legacy .topic; both parse to the
+// same data. Any ```mermaid step is rendered to inline SVG here (build-time) so nothing ships
+// to the runtime. index/total come from the caller (the build owns the topic sequence).
 //
-// compileTopicsPlugin({srcDir, order}) is a Vite plugin: on buildStart it compiles every
-// <id>.topic in srcDir into src/topics/<id>/*.js, computing index from the topic's position
-// in `order` and total from order.length. Those generated modules are then picked up by the
-// existing concat-include build exactly like hand-authored ones -- so a topic is authored as
-// ONE .topic file instead of twelve hand JS files.
+// compileTopicsPlugin({srcDir, order, topicsDir}) compiles every <id>.md|.topic in srcDir into
+// src/topics/<id>/*.js on buildStart, which the existing concat-include build then picks up --
+// so a topic is authored as ONE markdown file instead of twelve hand JS files.
 
 import fs from 'node:fs';
 import path from 'node:path';
 import { parseTopic } from './parse.mjs';
+import { parseMarkdown } from './parse_md.mjs';
 import { emit } from './emit.mjs';
+import { renderMermaid, closeMermaid } from './mermaid.mjs';
 
-export function compileTopic(topicPath, { index = 1, total = 1, outDir } = {}) {
-  const topic = parseTopic(fs.readFileSync(topicPath, 'utf8'), { index, total });
+async function renderDiagrams(topic) {
+  for (const v of Object.values(topic.views)) {
+    for (const step of v.steps) {
+      if (step.mermaid !== undefined) { step.diagram = await renderMermaid(step.mermaid); delete step.mermaid; }
+    }
+  }
+}
+
+export async function compileTopic(topicPath, { index = 1, total = 1, outDir } = {}) {
+  const src = fs.readFileSync(topicPath, 'utf8');
+  const topic = topicPath.endsWith('.md')
+    ? parseMarkdown(src, { index, total })
+    : parseTopic(src, { index, total });
+  await renderDiagrams(topic);
   const files = emit(topic);
   const dir = outDir || path.join(path.dirname(topicPath), topic.id);
   fs.mkdirSync(dir, { recursive: true });
@@ -28,17 +40,16 @@ export function compileTopic(topicPath, { index = 1, total = 1, outDir } = {}) {
 export function compileTopicsPlugin({ srcDir, order = [], topicsDir }) {
   return {
     name: 'ddr-compile-topics',
-    buildStart() {
+    async buildStart() {
       if (!fs.existsSync(srcDir)) return;
-      for (const f of fs.readdirSync(srcDir).filter((x) => x.endsWith('.topic'))) {
-        const id = path.basename(f, '.topic');
+      for (const f of fs.readdirSync(srcDir).filter((x) => x.endsWith('.md') || x.endsWith('.topic'))) {
+        const id = path.basename(f).replace(/\.(md|topic)$/, '');
         const i = order.indexOf(id);
-        compileTopic(path.join(srcDir, f), {
-          index: i === -1 ? 1 : i + 1,
-          total: order.length || 1,
-          outDir: path.join(topicsDir, id),
+        await compileTopic(path.join(srcDir, f), {
+          index: i === -1 ? 1 : i + 1, total: order.length || 1, outDir: path.join(topicsDir, id),
         });
       }
     },
+    async buildEnd() { await closeMermaid(); },
   };
 }

@@ -605,6 +605,9 @@ html[data-theme="dark"] .pane.on{animation-name:paneinDark}
 .sidebar .seg button:focus-visible,.mockbar button:focus-visible,.tools-fab:focus-visible{outline:2px solid var(--acc);outline-offset:3px;border-radius:4px;box-shadow:0 0 0 4px rgba(83,74,183,.15),0 0 20px -4px rgba(83,74,183,.25)}
 /* desktop: depth + tighten so the full rail fits */
 @media(min-width:920px){
+  .sidebar .mockbar{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-6) var(--space-8);align-content:start}
+  .sidebar .mockbar .mb-sec{grid-column:1 / -1}
+  .sidebar .mockbar .mb-d{grid-column:1 / -1}
   .sidebar{box-shadow:12px 0 32px -16px rgba(0,0,0,.14),inset -1px 0 0 rgba(255,255,255,.5);gap:var(--space-14);background:linear-gradient(180deg,rgba(244,241,234,.92),rgba(236,232,222,.92));backdrop-filter:blur(20px) saturate(1.2);-webkit-backdrop-filter:blur(20px) saturate(1.2)}
   .sidebar .seg button.on{box-shadow:inset 3px 0 0 var(--acc),0 3px 10px -2px rgba(83,74,183,.14);padding-right:var(--space-28)}
   .sidebar .mockbar{gap:var(--space-6);padding-top:var(--space-12)}

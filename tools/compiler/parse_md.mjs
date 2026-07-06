@@ -273,7 +273,36 @@ function parseWb(toks) {
   return { steps, diagram, foot, sub, okVerdict };
 }
 
-const PANE_PARSERS = { walk: parseSteps, rf: parseRf, trade: parseTrade, sys: parseSys, open: parseOpen, wb: parseWb };
+// Model answers: ## Model Answers, then ### <selector> | <opener> per answer (selector feeds
+// the selectors array, opener is the question), a sub paragraph, then beat bullets
+// "- <l> | <c> | <t>" (label, CSS class, text). Shape: { selectors:[], answers:[{opener,sub,beats:[{l,c,t}]}] }.
+function parseModel(toks) {
+  const selectors = [], answers = [];
+  let ans = null;
+  for (let i = 0; i < toks.length; i++) {
+    const t = toks[i];
+    if (t.type === 'heading_open' && t.tag === 'h3') {
+      const raw = toks[i + 1].content; const k = raw.indexOf(' | ');
+      selectors.push(prose(k === -1 ? raw : raw.slice(0, k)));
+      ans = { opener: prose(k === -1 ? '' : raw.slice(k + 3)), sub: '', beats: [] }; answers.push(ans); i += 2; continue;
+    }
+    if (t.type === 'bullet_list_open' && ans) {
+      let j = i + 1;
+      while (j < toks.length && toks[j].type !== 'bullet_list_close') {
+        if (toks[j].type === 'inline') {
+          const p = toks[j].content.split(' | ');
+          ans.beats.push({ l: prose(p[0] || ''), c: (p[1] || '').trim(), t: prose(p.slice(2).join(' | ')) });
+        }
+        j++;
+      }
+      i = j; continue;
+    }
+    if (t.type === 'paragraph_open' && ans && !ans.sub) { ans.sub = prose(toks[i + 1].content); i += 2; continue; }
+  }
+  return { selectors, answers };
+}
+
+const PANE_PARSERS = { walk: parseSteps, rf: parseRf, trade: parseTrade, sys: parseSys, open: parseOpen, wb: parseWb, model: parseModel };
 
 // --- top level ----------------------------------------------------------------
 

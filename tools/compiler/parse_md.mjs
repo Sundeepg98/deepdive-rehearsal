@@ -129,7 +129,37 @@ function parseRf(toks) {
   return { lead, flags };
 }
 
-const PANE_PARSERS = { walk: parseSteps, rf: parseRf };
+// Trade-offs: lead paragraph, then ### <decision q> per decision with a bullet list of
+// "<option name>: <when to pick it>" options and a following paragraph as the tell.
+function parseTrade(toks) {
+  let lead = '';
+  const decisions = [];
+  let dec = null;
+  for (let i = 0; i < toks.length; i++) {
+    const t = toks[i];
+    if (t.type === 'heading_open' && t.tag === 'h3') { dec = { q: prose(toks[i + 1].content).replace(/ vs /g, ' <span class="vs">vs</span> '), opts: [], tell: '' }; decisions.push(dec); i += 2; continue; }
+    if (t.type === 'bullet_list_open' && dec) {
+      let j = i + 1;
+      while (j < toks.length && toks[j].type !== 'bullet_list_close') {
+        if (toks[j].type === 'inline') {
+          const raw = toks[j].content;
+          const k = raw.indexOf(': ');
+          dec.opts.push({ n: prose(k === -1 ? raw : raw.slice(0, k)), when: prose(k === -1 ? '' : raw.slice(k + 2)) });
+        }
+        j++;
+      }
+      i = j; continue;
+    }
+    if (t.type === 'paragraph_open') {
+      const raw = toks[i + 1].content;
+      if (!dec) lead = prose(raw); else dec.tell = prose(raw);
+      i += 2; continue;
+    }
+  }
+  return { lead, decisions };
+}
+
+const PANE_PARSERS = { walk: parseSteps, rf: parseRf, trade: parseTrade };
 
 // --- top level ----------------------------------------------------------------
 

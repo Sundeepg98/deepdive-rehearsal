@@ -21,7 +21,6 @@
     "js-yaml": "^5.2.1",
     "markdown-it": "^14.3.0",
     "mermaid": "^11.16.0",
-    "open-props": "^1.7.23",
     "oxlint": "^1.72.0",
     "playwright": "^1.40.0",
     "shiki": "^4.3.1",
@@ -31,8 +30,5 @@
     "vite": "^8.1.3",
     "vite-plugin-singlefile": "^2.3.3",
     "zod": "^4.4.3"
-  },
-  "dependencies": {
-    "@material/material-color-utilities": "^0.4.0"
   }
 }

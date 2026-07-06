@@ -3,12 +3,8 @@
   "platforms": {
     "css": {
       "transformGroup": "css",
-      "buildPath": "design-tokens/build/",
-      "files": [{
-        "destination": "semantic-tokens.css",
-        "format": "css/variables",
-        "options": { "outputReferences": true }
-      }]
+      "buildPath": "src/",
+      "files": [{ "destination": "tokens.generated.css", "format": "css/variables", "options": { "outputReferences": true } }]
     }
   }
 }

@@ -4,8 +4,9 @@
   "private": true,
   "description": "Dev/test tooling for the offline single-file interview trainer. The shipped deliverable is zero-dependency and self-contained; this package exists ONLY so THE GATE's browser checks (render / entity_leak / e2e_interactions) can run via Playwright locally and in CI.",
   "scripts": {
-    "build": "vite build",
-    "dev": "vite",
+    "tokens": "style-dictionary build --config design-tokens/config.json",
+    "build": "style-dictionary build --config design-tokens/config.json && vite build",
+    "dev": "style-dictionary build --config design-tokens/config.json && vite",
     "preview": "vite preview",
     "gate": "python3 test/check_all.py",
     "browser-setup": "playwright install chromium",
@@ -24,5 +25,8 @@
     "vite": "^8.1.3",
     "vite-plugin-singlefile": "^2.3.3",
     "zod": "^4.4.3"
+  },
+  "dependencies": {
+    "@material/material-color-utilities": "^0.4.0"
   }
 }

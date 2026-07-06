@@ -11,9 +11,12 @@ import { viteSingleFile } from 'vite-plugin-singlefile';
 import tailwindcss from '@tailwindcss/vite';
 import fs from 'node:fs';
 import path from 'node:path';
+import { compileTopicsPlugin } from './tools/compiler/compile.mjs';
 
 const ROOT = import.meta.dirname;
 const SRC = path.join(ROOT, 'src');
+// Topic build order (by identity.index); a markdown topic's index/total is derived from this.
+const TOPIC_ORDER = ['content-pipeline', 'signing', 'authz', 'aws-hardening', 'notifications', 'eav', 'desired-state', 'iac'];
 const INCLUDE = /<!--@build:include\s+(.+?)\s*-->/g;
 
 // Recursively replace include markers with partial contents (port of build.py:resolve).
@@ -43,7 +46,12 @@ function concatInclude() {
 
 export default defineConfig({
   root: 'src',
-  plugins: [concatInclude(), tailwindcss(), viteSingleFile()],
+  plugins: [
+    // Compile any src/topics-md/<id>.md into src/topics/<id>/*.js before concat-include picks
+    // them up, so a topic can be authored as one markdown file. Empty src/topics-md = no-op.
+    compileTopicsPlugin({ srcDir: path.join(SRC, 'topics-md'), topicsDir: path.join(SRC, 'topics'), order: TOPIC_ORDER }),
+    concatInclude(), tailwindcss(), viteSingleFile(),
+  ],
   build: {
     outDir: path.join(ROOT, 'dist'),
     emptyOutDir: true,

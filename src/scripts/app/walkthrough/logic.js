@@ -65,7 +65,7 @@ details.model>summary:hover{background:rgba(109,95,214,.07);padding-left:var(--s
 .arc-h{font-size:var(--font-size-nano);font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin-bottom:var(--space-12);display:flex;align-items:baseline;gap:var(--space-9);flex-wrap:wrap}
 .arc-h .sub{font-size:var(--font-size-micro);font-weight:600;letter-spacing:.01em;text-transform:none;color:var(--mut2)}
 .arc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-10);position:relative}
-.arc-grid::before{content:"";position:absolute;top:var(--space-23);left:8%;right:8%;height:var(--space-2);background:linear-gradient(90deg,transparent 0%,var(--acc) 20%,var(--acc2) 50%,var(--acc) 80%,transparent 100%);opacity:.15;border-radius:1px;z-index:0;animation:flowLine 3s ease-in-out infinite}
+.arc-grid::before{content:"";position:absolute;top:var(--space-23);left:8%;right:8%;height:var(--space-2);background:linear-gradient(90deg,transparent 0%,var(--acc) 20%,var(--acc2) 50%,var(--acc) 80%,transparent 100%);opacity:.15;border-radius:1px;z-index:var(--z-base);animation:flowLine 3s ease-in-out infinite}
 @keyframes flowLine{0%,100%{opacity:.1;background-size:200% 100%;background-position:0% 0}50%{opacity:.2;background-size:200% 100%;background-position:100% 0}}
 .arc-step{z-index:1}
 .arc-step{display:flex;align-items:center;gap:var(--space-10);text-align:left;padding:var(--space-11) var(--space-13);border-radius:11px;border:1px solid var(--bd);background:var(--surf);box-shadow:var(--surf-sh);cursor:pointer;transition:transform .22s cubic-bezier(.22,.61,.36,1),box-shadow .25s ease,border-color .2s ease,background .2s ease;font-family:inherit;position:relative;overflow:hidden}

@@ -142,17 +142,30 @@ for name in keyframes_in_html:
 # ===== Suite 5: Z-Index Sanity =====
 suite("Z-INDEX SANITY")
 
+# z-index is now tokenized (var(--z-NAME)); resolve tokens so values parse correctly
+z_tokens = {m.group(1): int(m.group(2)) for m in re.finditer(r'--z-([a-z0-9-]+):\s*(-?\d+)', css_in_html)}
+def resolve_z(v):
+    v = (v or '').strip()
+    m = re.match(r'var\(\s*--z-([a-z0-9-]+)\s*\)', v)
+    if m:
+        return z_tokens.get(m.group(1))
+    try:
+        return int(v)
+    except (ValueError, TypeError):
+        return None
+
 z_index_map = {}
-for match in re.finditer(r'z-index:\s*(\d+)', css_in_html):
-    val = int(match.group(1))
-    if val not in z_index_map:
-        z_index_map[val] = 0
-    z_index_map[val] += 1
+for match in re.finditer(r'z-index:\s*(var\(--z-[a-z0-9-]+\)|-?\d+)', css_in_html):
+    val = resolve_z(match.group(1))
+    if val is not None:
+        z_index_map[val] = z_index_map.get(val, 0) + 1
 
 # Check overlays have highest z-index
 overlay_z = extract_css_value(css_in_html, '.mock-ov', 'z-index')
-if overlay_z:
-    check(f"Overlay z-index ({overlay_z}) is highest", int(overlay_z) >= max(z_index_map.keys()))
+if overlay_z and z_index_map:
+    rz = resolve_z(overlay_z)
+    if rz is not None:
+        check(f"Overlay z-index ({overlay_z} = {rz}) is highest", rz >= max(z_index_map.keys()))
 
 # ===== Summary =====
 print(f"\n{'='*60}")

@@ -37,17 +37,17 @@
     if (overlayEl) return;
     overlayEl = document.createElement('div');
     overlayEl.id = '_tour-overlay';
-    overlayEl.style.cssText = 'position:fixed;inset:0;z-index:1200;background:rgba(0,0,0,.55);opacity:0;transition:opacity .5s ease;pointer-events:none';
+    overlayEl.style.cssText = 'position:fixed;inset:0;z-index:var(--z-modal);background:rgba(0,0,0,.55);opacity:0;transition:opacity .5s ease;pointer-events:none';
 
     spotlightEl = document.createElement('div');
     spotlightEl.id = '_tour-spotlight';
-    spotlightEl.style.cssText = 'position:fixed;z-index:1201;border-radius:16px;box-shadow:0 0 0 9999px rgba(0,0,0,.55),0 0 40px rgba(83,74,183,.3);transition:all .6s cubic-bezier(.22,.61,.36,1);pointer-events:none;opacity:0';
+    spotlightEl.style.cssText = 'position:fixed;z-index:var(--z-modal-fore);border-radius:16px;box-shadow:0 0 0 9999px rgba(0,0,0,.55),0 0 40px rgba(83,74,183,.3);transition:all .6s cubic-bezier(.22,.61,.36,1);pointer-events:none;opacity:0';
 
     tooltipEl = document.createElement('div');
     tooltipEl.id = '_tour-tooltip';
     tooltipEl.setAttribute('role', 'dialog');
     tooltipEl.setAttribute('aria-label', 'Tour step');
-    tooltipEl.style.cssText = 'position:fixed;z-index:1202;width:' + TOOLTIP_WIDTH + 'px;max-width:90vw;background:var(--card);border:1px solid var(--bd);border-radius:20px;padding:var(--space-24);box-shadow:0 20px 60px -20px rgba(0,0,0,.4);opacity:0;transform:translateY(20px) scale(.96);transition:all .5s cubic-bezier(.22,.61,.36,1);pointer-events:auto';
+    tooltipEl.style.cssText = 'position:fixed;z-index:var(--z-modal-top);width:' + TOOLTIP_WIDTH + 'px;max-width:90vw;background:var(--card);border:1px solid var(--bd);border-radius:20px;padding:var(--space-24);box-shadow:0 20px 60px -20px rgba(0,0,0,.4);opacity:0;transform:translateY(20px) scale(.96);transition:all .5s cubic-bezier(.22,.61,.36,1);pointer-events:auto';
 
     document.body.appendChild(overlayEl);
     document.body.appendChild(spotlightEl);

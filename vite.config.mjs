@@ -47,7 +47,7 @@ export default defineConfig({
   build: {
     outDir: path.join(ROOT, 'dist'),
     emptyOutDir: true,
-    minify: false,              // Phase 0: stay close to build.py for the render-identical proof
+    minify: false,              // tested & reverted: payload is content (text/code), not compressible logic; minify saves ~1.7KB and gzip already compresses whitespace (534KB either way). Not worth the tooling risk.
     assetsInlineLimit: 100000000,
     cssCodeSplit: false,
   },

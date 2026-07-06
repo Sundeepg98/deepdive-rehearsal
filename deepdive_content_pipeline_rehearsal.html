@@ -1065,6 +1065,9 @@ html[data-theme="dark"] .tn-item:hover{background:rgba(170,157,245,.13)}
 .storage-notice-exp:hover{background:var(--amber);color:#fff}
 .storage-notice-x{flex:none;background:transparent;border:0;color:var(--amber);font-size:var(--font-size-title);line-height:1;cursor:pointer;padding:0 var(--space-4)}
 @media (prefers-reduced-motion:reduce){:root{--duration-instant:0ms;--duration-fast:.01ms;--duration-base:.01ms;--duration-moderate:.01ms;--duration-slow:.01ms;--duration-slowest:.01ms}*,::before,::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+/* Typography polish: balanced heading line-breaks, orphan-free prose (degrades gracefully) */
+h1,h2,h3,h4,h5,h6{text-wrap:balance}
+p{text-wrap:pretty}
 }</style>
 <script>/* === Boot: theme detection + loading splash === */
 try{var _dk=matchMedia('(prefers-color-scheme:dark)').matches;document.documentElement.dataset.theme=_dk?'dark':'light';var _tc=document.querySelector('meta[name="theme-color"]');if(_tc)_tc.setAttribute('content',_dk?'#15141A':'#FAF9F5');}catch(e){}

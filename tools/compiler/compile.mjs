@@ -13,6 +13,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { parseTopic } from './parse.mjs';
 import { parseMarkdown } from './parse_md.mjs';
+import { validateTopic } from './topic-schema.mjs';
 import { emit } from './emit.mjs';
 import { renderMermaid, closeMermaid } from './mermaid.mjs';
 
@@ -27,11 +28,12 @@ async function renderDiagrams(topic) {
   }
 }
 
-export async function compileTopic(topicPath, { index = 1, total = 1, outDir } = {}) {
+export async function compileTopic(topicPath, { index = 1, total = 1, outDir, validate = true } = {}) {
   const src = fs.readFileSync(topicPath, 'utf8');
   const topic = topicPath.endsWith('.md')
     ? parseMarkdown(src, { index, total })
     : parseTopic(src, { index, total });
+  if (validate) validateTopic(topic, topic.id);
   await renderDiagrams(topic);
   const files = emit(topic);
   const dir = outDir || path.join(path.dirname(topicPath), topic.id);

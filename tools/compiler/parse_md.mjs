@@ -426,7 +426,7 @@ export function parseMarkdown(src, { index = 1, total = 1 } = {}) {
   const blocks = splitH2(md.parse(content, {}));
 
   let thesisRaw = '', subRaw = '', spine = [], cmp = {};
-  const views = {};
+  const views = {}, unknownHeadings = [];
 
   for (const b of blocks) {
     const name = b.title.toLowerCase();
@@ -438,7 +438,15 @@ export function parseMarkdown(src, { index = 1, total = 1 } = {}) {
       const key = PANE_KEY[name] || name;
       const parser = PANE_PARSERS[key];
       if (parser) views[key] = parser(b.toks);
+      else unknownHeadings.push(b.title);
     }
+  }
+  if (unknownHeadings.length) {
+    throw new Error(
+      'unknown section heading(s): ' + unknownHeadings.map((h) => '"## ' + h + '"').join(', ') +
+      '. Valid headings: Thesis, Sub, Spine, Companion Notes, Walk, Drill, Whiteboard, ' +
+      'System, Trade-offs, Model Answers, Numbers, Red Flags, Opener, Bank.',
+    );
   }
 
   const identity = {

@@ -250,7 +250,30 @@ function parseOpen(toks) {
   return { cards };
 }
 
-const PANE_PARSERS = { walk: parseSteps, rf: parseRf, trade: parseTrade, sys: parseSys, open: parseOpen };
+// Whiteboard: ## Whiteboard, a sub paragraph, then ### <c> per cue with an answer paragraph,
+// a fenced ```html block captured verbatim as the diagram (inherently HTML, not markdown), and
+// "Foot:" / "Verdict:" paragraphs. Shape: { steps:[{c,a}], diagram, foot, sub, okVerdict }.
+function parseWb(toks) {
+  let sub = '', diagram = '', foot = '', okVerdict = '';
+  const steps = [];
+  let step = null;
+  for (let i = 0; i < toks.length; i++) {
+    const t = toks[i];
+    if (t.type === 'heading_open' && t.tag === 'h3') { step = { c: prose(toks[i + 1].content), a: '' }; steps.push(step); i += 2; continue; }
+    if (t.type === 'fence') { diagram = t.content.replace(/\n$/, ''); step = null; continue; }
+    if (t.type === 'paragraph_open') {
+      const raw = toks[i + 1].content; const fM = /^foot:\s*/i.exec(raw); const vM = /^verdict:\s*/i.exec(raw);
+      if (fM) foot = prose(raw.slice(fM[0].length));
+      else if (vM) okVerdict = prose(raw.slice(vM[0].length));
+      else if (step) step.a = prose(raw);
+      else sub = prose(raw);
+      i += 2; continue;
+    }
+  }
+  return { steps, diagram, foot, sub, okVerdict };
+}
+
+const PANE_PARSERS = { walk: parseSteps, rf: parseRf, trade: parseTrade, sys: parseSys, open: parseOpen, wb: parseWb };
 
 // --- top level ----------------------------------------------------------------
 

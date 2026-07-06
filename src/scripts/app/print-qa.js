@@ -13,13 +13,13 @@
     ".meta{font-size:var(--font-size-micro);color:#888;margin-top:var(--space-9);text-transform:uppercase;letter-spacing:.07em;font-weight:var(--font-weight-bold)}" +
     "article{margin-bottom:var(--space-26);padding-bottom:var(--space-22);border-bottom:1px solid #e2e2e2;break-inside:avoid;page-break-inside:avoid}" +
     ".sig{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.06em;text-transform:uppercase;color:#534AB7;margin-bottom:var(--space-6)}" +
-    "h2{font-size:var(--font-size-subhead);font-weight:var(--font-weight-bold);line-height:1.45;margin-bottom:var(--space-11)}" +
+    "h2{font-size:var(--font-size-subhead);font-weight:var(--font-weight-bold);line-height:var(--line-height-relaxed);margin-bottom:var(--space-11)}" +
     ".qn{color:#534AB7}" +
-    ".a{font-size:var(--font-size-small);line-height:1.62;margin-bottom:var(--space-12)}" +
-    ".fu{font-size:var(--font-size-caption);line-height:1.55;margin:var(--space-9) 0 var(--space-9) var(--space-18);padding-left:var(--space-13);border-left:2px solid #d0d0d0}" +
+    ".a{font-size:var(--font-size-small);line-height:var(--line-height-spacious);margin-bottom:var(--space-12)}" +
+    ".fu{font-size:var(--font-size-caption);line-height:var(--line-height-airy);margin:var(--space-9) 0 var(--space-9) var(--space-18);padding-left:var(--space-13);border-left:2px solid #d0d0d0}" +
     ".fl{font-weight:var(--font-weight-bold);color:#666}" +
     ".fa{margin-top:var(--space-3);color:#555}" +
-    ".sr{font-size:var(--font-size-caption);line-height:1.55;margin-top:var(--space-11);padding:var(--space-11) var(--space-15);background:#eef6f3;border:1px solid #b8ddd2;border-radius:7px;-webkit-print-color-adjust:exact;print-color-adjust:exact}" +
+    ".sr{font-size:var(--font-size-caption);line-height:var(--line-height-airy);margin-top:var(--space-11);padding:var(--space-11) var(--space-15);background:#eef6f3;border:1px solid #b8ddd2;border-radius:7px;-webkit-print-color-adjust:exact;print-color-adjust:exact}" +
     ".sl{font-weight:var(--font-weight-bold);color:#0F6E56}" +
     "footer{margin-top:var(--space-20);font-size:var(--font-size-nano);color:#aaa;text-align:center}" +
     "b,strong{font-weight:var(--font-weight-bold)}em,i{font-style:italic}" +

@@ -17,7 +17,7 @@
    STATELESS -- no timers, no transient state, so no teardownTopic. Offline-safe. */
 var SYS_STYLE = `
 .card + .card{margin-top:var(--space-16)}
-.sm-intro{font-size:var(--font-size-caption);color:var(--mut);margin-bottom:var(--space-18);line-height:1.6}
+.sm-intro{font-size:var(--font-size-caption);color:var(--mut);margin-bottom:var(--space-18);line-height:var(--line-height-spacious)}
 .chain{position:relative;padding-left:var(--space-8)}
 .stg{position:relative;display:flex;gap:var(--space-15);padding:0 0 var(--space-20) 0}
 .stg:last-child{padding-bottom:0}
@@ -43,11 +43,11 @@ var SYS_STYLE = `
 .piv-jump{margin-top:var(--space-12);font:700 12px -apple-system,sans-serif;color:var(--acc);background:var(--accbg);border:1px solid rgba(83,74,183,.2);border-radius:8px;padding:var(--space-7) var(--space-12);cursor:pointer;transition:background var(--duration-fast) var(--ease-base),border-color var(--duration-fast) var(--ease-base)}
 .piv-jump:hover,.piv-jump:focus{background:var(--acc);color:#fff;border-color:var(--acc);outline:none}
 .piv summary::-webkit-details-marker{display:none}
-.piv .pq{font-size:var(--font-size-small);font-weight:var(--font-weight-semibold);color:var(--ink);line-height:1.4}
+.piv .pq{font-size:var(--font-size-small);font-weight:var(--font-weight-semibold);color:var(--ink);line-height:var(--line-height-normal)}
 .piv .chip{flex:none;font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.3px;color:var(--indigo);background:linear-gradient(135deg,var(--indigobg) 0%,rgba(83,74,183,.04) 100%);border:1px solid #cfc7f0;border-radius:6px;padding:var(--space-3) var(--space-9);white-space:nowrap;margin-top:var(--space-1);margin-left:auto}
 .piv .chip.chip-link{cursor:pointer;transition:border-color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base),color var(--duration-fast) var(--ease-base)}
 .piv .chip.chip-link:hover,.piv .chip.chip-link:focus-visible{border-color:var(--acc);color:var(--acc);background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.06) 100%);outline:none}
-.piv .pa{padding:var(--space-2) var(--space-17) var(--space-16) var(--space-43);font-size:var(--font-size-caption);color:var(--sm-pa-fg);line-height:1.6}
+.piv .pa{padding:var(--space-2) var(--space-17) var(--space-16) var(--space-43);font-size:var(--font-size-caption);color:var(--sm-pa-fg);line-height:var(--line-height-spacious)}
 .piv .pa b{color:var(--accink);font-weight:var(--font-weight-bold)}
 .piv[open] summary .pq::after{content:" \\2014 bridge:";color:var(--mut2);font-weight:var(--font-weight-bold)}
 `;

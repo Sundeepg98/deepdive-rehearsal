@@ -50,7 +50,7 @@ var DRILL_STYLE = `@keyframes pop{from{opacity:0;transform:translateY(7px) scale
 .score{display:flex;gap:var(--space-9);margin-bottom:var(--space-14)}
 .pill{flex:1;text-align:center;border:1px solid var(--bd);border-radius:12px;padding:var(--space-10);background:linear-gradient(135deg,var(--card) 0%,rgba(83,74,183,.02) 100%);transition:box-shadow var(--duration-moderate) var(--ease-base),transform var(--duration-base) var(--ease-base),border-color var(--duration-base) var(--ease-base)}
 .pill:hover{box-shadow:0 4px 16px -4px rgba(83,74,183,.14);transform:translateY(-2px);border-color:rgba(83,74,183,.15)}
-.pill .v{font-size:var(--font-size-heading);font-weight:var(--font-weight-heavy);line-height:1;transition:transform var(--duration-base) var(--ease-spring)}
+.pill .v{font-size:var(--font-size-heading);font-weight:var(--font-weight-heavy);line-height:var(--line-height-none);transition:transform var(--duration-base) var(--ease-spring)}
 .pill:hover .v{transform:scale(1.08)}
 .pill .l{font-size:var(--font-size-nano);font-weight:var(--font-weight-bold);text-transform:uppercase;letter-spacing:.5px;color:var(--mut2);margin-top:var(--space-4)}
 .pill.g .v{color:var(--teal)} .pill.s .v{color:var(--amber)} .pill.left .v{color:var(--acc)}
@@ -108,7 +108,7 @@ var DRILL_STYLE = `@keyframes pop{from{opacity:0;transform:translateY(7px) scale
 .dn-step{display:flex;align-items:center;gap:var(--space-10);text-align:left;padding:var(--space-10) var(--space-12);border-radius:11px;border:1px solid var(--bd);background:linear-gradient(135deg,var(--surf) 0%,rgba(83,74,183,.015) 100%);box-shadow:var(--surf-sh);cursor:pointer;transition:transform var(--duration-base) var(--ease-glide),box-shadow var(--duration-base) var(--ease-base),border-color var(--duration-base) var(--ease-base),background var(--duration-base) var(--ease-base);font-family:inherit;min-width:0;position:relative;overflow:hidden}
 .dn-step:hover{transform:translateY(-2px) scale(1.01);box-shadow:0 6px 20px -6px rgba(83,74,183,.14);border-color:rgba(83,74,183,.2);background:linear-gradient(135deg,var(--mix-surf) 0%,rgba(83,74,183,.04) 100%)}
 .dn-n{flex:none;width:var(--space-22);height:var(--space-22);border-radius:7px;display:grid;place-items:center;font:700 10.5px -apple-system,sans-serif;background:var(--accbg);color:var(--accink);transition:background var(--duration-base) var(--ease-base),color var(--duration-base) var(--ease-base),box-shadow var(--duration-base) var(--ease-base),transform var(--duration-base) var(--ease-spring)}
-.dn-t{font-size:var(--font-size-micro);font-weight:var(--font-weight-semibold);color:var(--ink);line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.dn-t{font-size:var(--font-size-micro);font-weight:var(--font-weight-semibold);color:var(--ink);line-height:var(--line-height-snug);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .dn-step.on{border-color:var(--acc);background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.06) 100%);box-shadow:0 0 0 1px var(--acc),0 4px 14px -4px rgba(83,74,183,.12);transform:translateY(-1px)}
 .dn-step.on .dn-n{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;box-shadow:0 2px 6px -2px rgba(83,74,183,.3)}
 .dn-step.flag{border-color:var(--amber);background:linear-gradient(135deg,var(--amberbg) 0%,rgba(176,108,20,.04) 100%)}
@@ -123,7 +123,7 @@ var DRILL_STYLE = `@keyframes pop{from{opacity:0;transform:translateY(7px) scale
 .mhp-box{flex:none;width:var(--space-18);height:var(--space-18);border-radius:5px;border:1.5px solid var(--mut2);display:flex;align-items:center;justify-content:center;font-size:var(--font-size-micro);color:transparent;transition:background var(--duration-fast) var(--ease-base),border-color var(--duration-fast) var(--ease-base),color var(--duration-fast) var(--ease-base)}
 .mhp-i.on{border-color:var(--teal);background:linear-gradient(135deg,var(--tealbg) 0%,rgba(10,133,100,.04) 100%)}
 .mhp-i.on .mhp-box{background:var(--teal);border-color:var(--teal);color:#fff}
-.mhp-t{font-size:var(--font-size-caption);line-height:1.4;color:var(--ink);font-weight:var(--font-weight-semibold)}
+.mhp-t{font-size:var(--font-size-caption);line-height:var(--line-height-normal);color:var(--ink);font-weight:var(--font-weight-semibold)}
 .mhp-cov{margin-top:var(--space-11);font-size:var(--font-size-caption);color:var(--mut);font-weight:var(--font-weight-semibold)}
 .mhp-cov b{color:var(--accink);font-weight:var(--font-weight-heavy)}
 .judge .got.j-rec,.judge .shk.j-rec,.judge .miss.j-rec{box-shadow:0 0 0 2px var(--acc),0 6px 16px -5px rgba(83,74,183,.32)}

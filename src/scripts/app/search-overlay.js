@@ -206,7 +206,7 @@
     item.appendChild(top); item.appendChild(sub);
     if (d.kind === 'topic' && d.snippet) {
       var snip = document.createElement('span');
-      snip.style.cssText = 'display:block;font-size:var(--font-size-micro);color:var(--mut2);margin-top:var(--space-4);line-height:1.42';
+      snip.style.cssText = 'display:block;font-size:var(--font-size-micro);color:var(--mut2);margin-top:var(--space-4);line-height:var(--line-height-normal)';
       highlightInto(snip, clampSnippet(d.snippet, q), q);
       item.appendChild(snip);
     }

@@ -27,9 +27,9 @@ var MODEL_STYLE = `
 .msel button.on::after{content:"";position:absolute;right:var(--space-8);top:50%;transform:translateY(-50%);width:var(--space-6);height:var(--space-6);border-radius:50%;background:var(--acc);box-shadow:0 0 8px rgba(83,74,183,.4);animation:activePulse 2s ease-in-out infinite}
 @media(max-width:560px){.msel{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .mscript-h{font-size:var(--font-size-subhead);font-weight:var(--font-weight-heavy);color:var(--ink);letter-spacing:-.3px;margin-bottom:var(--space-5)}
-.mscript-sub{font-size:var(--font-size-caption);color:var(--mut);line-height:1.55;margin-bottom:var(--space-8);padding-bottom:var(--space-14);border-bottom:2px solid var(--accbg)}
-.mbeat-l{flex:none;width:var(--space-76);font:800 9.5px -apple-system,sans-serif;letter-spacing:.4px;text-transform:uppercase;padding-top:var(--space-4);line-height:1.35;color:var(--acc)}
-.mbeat-t{flex:1;font-size:var(--font-size-small);line-height:1.62;color:var(--ink)}
+.mscript-sub{font-size:var(--font-size-caption);color:var(--mut);line-height:var(--line-height-airy);margin-bottom:var(--space-8);padding-bottom:var(--space-14);border-bottom:2px solid var(--accbg)}
+.mbeat-l{flex:none;width:var(--space-76);font:800 9.5px -apple-system,sans-serif;letter-spacing:.4px;text-transform:uppercase;padding-top:var(--space-4);line-height:var(--line-height-snug);color:var(--acc)}
+.mbeat-t{flex:1;font-size:var(--font-size-small);line-height:var(--line-height-spacious);color:var(--ink)}
 .mbeat-t b{color:var(--accink);font-weight:var(--font-weight-bold)}
 `;
 class DeepModelAnswers extends TopicPane {

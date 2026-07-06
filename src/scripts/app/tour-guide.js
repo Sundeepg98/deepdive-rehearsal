@@ -101,7 +101,7 @@
     }
     tooltipEl.innerHTML =
       '<div style="font:800 15px -apple-system,sans-serif;color:var(--ink);margin-bottom:var(--space-8);letter-spacing:-.3px">' + step.title + '</div>' +
-      '<div style="font-size:var(--font-size-small);color:var(--mut);line-height:1.55;margin-bottom:var(--space-16)">' + step.text + '</div>' +
+      '<div style="font-size:var(--font-size-small);color:var(--mut);line-height:var(--line-height-airy);margin-bottom:var(--space-16)">' + step.text + '</div>' +
       '<div style="display:flex;align-items:center;justify-content:space-between">' +
         '<div style="display:flex;align-items:center">' + dots + '</div>' +
         '<div style="display:flex;gap:var(--space-8)">' +

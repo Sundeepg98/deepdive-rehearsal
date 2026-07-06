@@ -27,6 +27,7 @@ var WB_STYLE = `
 .dgm-em{color:var(--teal);font-weight:var(--font-weight-heavy)}
 .dgm-stores{display:flex;align-items:stretch;justify-content:center;gap:var(--space-6);width:100%;max-width:var(--space-290)}
 .dgm-store{max-width:var(--space-140)}
+@media(max-width:500px){.dgm-stores{flex-direction:column}.dgm-store{max-width:100%;width:100%}}
 .dgm-link{color:var(--mut2);font-size:var(--font-size-body);align-self:center}
 .dgm-note,.dgm-foot{font-size:var(--font-size-nano);color:var(--mut);text-align:center;max-width:var(--space-290);margin-top:var(--space-6);line-height:var(--line-height-relaxed)}
 .dgm-recon{border-color:var(--teal);background:var(--tealbg)}

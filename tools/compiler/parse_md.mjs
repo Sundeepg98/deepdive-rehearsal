@@ -159,7 +159,56 @@ function parseTrade(toks) {
   return { lead, decisions };
 }
 
-const PANE_PARSERS = { walk: parseSteps, rf: parseRf, trade: parseTrade };
+// System map: intro paragraph, then ### <whereHead> + a stage bullet list ("<n>: <d>", with
+// a trailing "[*]" marking the cur "you are here" stage), then ### <pivHead> + a pivSub
+// paragraph + #### <q> per pivot, each with a "-> <chip>" line and an answer paragraph.
+function parseSys(toks) {
+  let intro = '';
+  const stages = [], pivots = [], heads = {};
+  let mode = null, piv = null, sawPivSub = false;
+  for (let i = 0; i < toks.length; i++) {
+    const t = toks[i];
+    if (t.type === 'heading_open' && t.tag === 'h3') {
+      const title = prose(toks[i + 1].content);
+      if (!heads.whereHead) { heads.whereHead = title; mode = 'stages'; }
+      else { heads.pivHead = title; mode = 'pivots'; sawPivSub = false; }
+      piv = null; i += 2; continue;
+    }
+    if (t.type === 'heading_open' && t.tag === 'h4' && mode === 'pivots') {
+      piv = { q: prose(toks[i + 1].content), chip: '', a: '' }; pivots.push(piv); i += 2; continue;
+    }
+    if (t.type === 'bullet_list_open' && mode === 'stages') {
+      let j = i + 1;
+      while (j < toks.length && toks[j].type !== 'bullet_list_close') {
+        if (toks[j].type === 'inline') {
+          let raw = toks[j].content;
+          const cur = /\[\*\]\s*$/.test(raw);
+          raw = raw.replace(/\s*\[\*\]\s*$/, '');
+          const k = raw.indexOf(': ');
+          const stage = { n: prose(k === -1 ? raw : raw.slice(0, k)), d: prose(k === -1 ? '' : raw.slice(k + 2)) };
+          if (cur) stage.cur = true;
+          stages.push(stage);
+        }
+        j++;
+      }
+      i = j; continue;
+    }
+    if (t.type === 'paragraph_open') {
+      const raw = toks[i + 1].content;
+      if (mode === null) intro = prose(raw);
+      else if (mode === 'pivots' && !piv && !sawPivSub) { heads.pivSub = prose(raw); sawPivSub = true; }
+      else if (piv) {
+        const m = /^(->|\u2192)\s*/.exec(raw);
+        if (m && !piv.chip) piv.chip = '\u2192 ' + raw.slice(m[0].length);
+        else piv.a = prose(raw);
+      }
+      i += 2; continue;
+    }
+  }
+  return { intro, stages, pivots, heads };
+}
+
+const PANE_PARSERS = { walk: parseSteps, rf: parseRf, trade: parseTrade, sys: parseSys };
 
 // --- top level ----------------------------------------------------------------
 

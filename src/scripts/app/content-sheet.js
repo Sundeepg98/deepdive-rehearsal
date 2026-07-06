@@ -11,9 +11,9 @@ var CS_SHEET = new CSSStyleSheet();
 CS_SHEET.replaceSync(`
 .cs-one{background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.04) 100%);border-radius:12px;padding:var(--space-14) var(--space-17);font-size:var(--font-size-small);line-height:1.55;color:var(--ink);box-shadow:0 1px 6px -2px rgba(83,74,183,.06)}
 .cs-one b{color:var(--accink);font-weight:var(--font-weight-bold)}
-.cs-one-l{display:block;font:800 9.5px -apple-system,sans-serif;letter-spacing:.7px;text-transform:uppercase;color:var(--acc);margin-bottom:var(--space-6)}
+.cs-one-l{display:block;font:var(--font-weight-heavy) 9.5px -apple-system,sans-serif;letter-spacing:.7px;text-transform:uppercase;color:var(--acc);margin-bottom:var(--space-6)}
 .cs-sec{margin-top:var(--space-18)}
-.cs-st{font:800 10.5px -apple-system,sans-serif;letter-spacing:.7px;text-transform:uppercase;color:var(--acc);border-bottom:2px solid var(--accbg);padding-bottom:var(--space-5);margin-bottom:var(--space-10)}
+.cs-st{font:var(--font-weight-heavy) 10.5px -apple-system,sans-serif;letter-spacing:.7px;text-transform:uppercase;color:var(--acc);border-bottom:2px solid var(--accbg);padding-bottom:var(--space-5);margin-bottom:var(--space-10)}
 .cs-spine{margin:0;padding-left:var(--space-20)}
 .cs-spine li{font-size:var(--font-size-caption);line-height:1.55;margin-bottom:var(--space-6);color:var(--ink)}
 .cs-dec{font-size:var(--font-size-caption);line-height:1.55;margin-bottom:var(--space-7);color:var(--ink)}

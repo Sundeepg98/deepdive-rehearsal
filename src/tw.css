@@ -50,7 +50,7 @@
     margin-bottom: 11px;
     border-radius: var(--radius-sm);
     font-size: 10px;
-    font-weight: 800;
+    font-weight:var(--font-weight-heavy);
     letter-spacing: 1.6px;
     background: linear-gradient(135deg, var(--color-acc) 0%, var(--color-acc2) 60%, #8B7FE8 100%);
     box-shadow: var(--chip-sh), 0 0 20px -4px rgba(83, 74, 183, .2);

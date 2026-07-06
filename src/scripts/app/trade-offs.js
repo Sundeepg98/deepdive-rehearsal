@@ -16,11 +16,11 @@ var TRADE_STYLE = `
 .dec:hover{box-shadow:var(--surf-sh),0 6px 24px -8px rgba(83,74,183,.12);transform:translateY(-1px);border-color:rgba(83,74,183,.15)}
 .dec::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,transparent 40%,rgba(255,255,255,.12) 50%,transparent 60%);background-size:200% 200%;animation:shineSweep 5s ease-in-out infinite;pointer-events:none}
 @keyframes shineSweep{0%{background-position:200% 200%}100%{background-position:-200% -200%}}
-.dec-q{font-size:var(--font-size-body);font-weight:800;color:var(--ink);letter-spacing:-.2px;margin-bottom:var(--space-10);line-height:1.4}
-.dec-q .vs{color:var(--mut2);font-weight:700;font-size:var(--font-size-micro);padding:0 var(--space-4)}
-.dec-tell{margin-top:var(--space-14);padding-top:var(--space-12);border-top:1px dashed var(--bd);font-size:var(--font-size-caption);color:var(--teal);font-weight:700;line-height:1.55}
+.dec-q{font-size:var(--font-size-body);font-weight:var(--font-weight-heavy);color:var(--ink);letter-spacing:-.2px;margin-bottom:var(--space-10);line-height:1.4}
+.dec-q .vs{color:var(--mut2);font-weight:var(--font-weight-bold);font-size:var(--font-size-micro);padding:0 var(--space-4)}
+.dec-tell{margin-top:var(--space-14);padding-top:var(--space-12);border-top:1px dashed var(--bd);font-size:var(--font-size-caption);color:var(--teal);font-weight:var(--font-weight-bold);line-height:1.55}
 .dec-tell::before{content:"\\2605";font-size:var(--font-size-caption);margin-right:var(--space-8)}
-.dec-tell b{color:var(--dec-tell-b-fg);font-weight:700}
+.dec-tell b{color:var(--dec-tell-b-fg);font-weight:var(--font-weight-bold)}
 `;
 
 /* Pane-scoped renderers (prefixed so they can't clash with the rf/open agents

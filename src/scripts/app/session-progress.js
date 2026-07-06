@@ -323,8 +323,8 @@ if (inttogEl) inttogEl.onclick = function () {
 var SESS_STYLE = `.sess-body{padding:var(--space-18) var(--space-20) var(--space-24);overflow-y:auto;flex:1;min-height:0}
 .ss-rec{border-radius:12px;padding:var(--space-15) var(--space-17);margin:0 0 var(--space-16);border:1.5px solid;box-shadow:0 2px 8px -3px rgba(83,74,183,.08)}
 .ss-rk{font:800 9.5px -apple-system,sans-serif;letter-spacing:.7px;text-transform:uppercase;margin:0 0 var(--space-7)}
-.ss-rt{font-size:var(--font-size-small);line-height:1.5;font-weight:600}
-.ss-rt b{font-weight:800}
+.ss-rt{font-size:var(--font-size-small);line-height:1.5;font-weight:var(--font-weight-semibold)}
+.ss-rt b{font-weight:var(--font-weight-heavy)}
 .ss-go{margin-top:var(--space-12);border:none;border-radius:9px;padding:var(--space-10) var(--space-16);font:700 12px -apple-system,sans-serif;cursor:pointer;color:var(--ss-go-fg);background:linear-gradient(135deg,var(--acc),var(--acc2));box-shadow:0 4px 14px -4px rgba(83,74,183,.25);transition:transform var(--duration-fast) var(--ease-base),box-shadow var(--duration-base) var(--ease-base),filter var(--duration-base) var(--ease-base)}
 .ss-go:hover{filter:brightness(1.1);box-shadow:0 6px 20px -4px rgba(83,74,183,.3)}
 .ss-go:active{transform:translateY(1px) scale(.98);filter:brightness(.95)}
@@ -334,10 +334,10 @@ var SESS_STYLE = `.sess-body{padding:var(--space-18) var(--space-20) var(--space
 .ss-dot{width:var(--space-8);height:var(--space-8);border-radius:50%;flex:none;transition:transform var(--duration-base) var(--ease-base),box-shadow var(--duration-base) var(--ease-base)}
 .ss-card:hover .ss-dot{transform:scale(1.2)}
 .ss-stat{font-size:var(--font-size-caption);color:var(--mut);line-height:1.5}
-.ss-g{color:var(--teal);font-weight:750}
-.ss-s{color:var(--amber);font-weight:750}
+.ss-g{color:var(--teal);font-weight:var(--font-weight-heavy)}
+.ss-s{color:var(--amber);font-weight:var(--font-weight-heavy)}
 .ss-list{margin:var(--space-9) 0 0;padding:var(--space-10) var(--space-13);background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.03) 100%);border-radius:9px;font-size:var(--font-size-micro);line-height:1.6;color:var(--accink)}
-.ss-list b{font-weight:750}
+.ss-list b{font-weight:var(--font-weight-heavy)}
 .ss-none{color:var(--mut2);font-style:italic}
 .ss-clear{width:100%;margin-top:var(--space-7);border:1px dashed var(--bd);background:transparent;color:var(--mut2);font:600 11.5px -apple-system,sans-serif;padding:var(--space-11) var(--space-14);border-radius:10px;cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),border-color var(--duration-base) var(--ease-base),color var(--duration-base) var(--ease-base),background var(--duration-base) var(--ease-base)}
 .ss-clear:hover{border-color:var(--mut);color:var(--mut);background:rgba(83,74,183,.02);transform:translateY(-1px)}
@@ -365,13 +365,13 @@ var SESS_STYLE = `.sess-body{padding:var(--space-18) var(--space-20) var(--space
 .ss-cmp-row{align-items:flex-start}
 .tr-row{padding:var(--space-9) 0;border-top:1px solid var(--bd)}
 .tr-top{display:flex;align-items:baseline;justify-content:space-between;gap:var(--space-8)}
-.tr-lbl{font-size:var(--font-size-caption);color:var(--ink);font-weight:600}
+.tr-lbl{font-size:var(--font-size-caption);color:var(--ink);font-weight:var(--font-weight-semibold)}
 .tr-bot{display:flex;align-items:baseline;justify-content:space-between;gap:var(--space-8);margin-top:var(--space-4)}
 .tr-spark{flex:1;min-width:0;font:600 18px ui-monospace,Menlo,monospace;letter-spacing:1px;line-height:1;white-space:nowrap;overflow:hidden;text-shadow:0 0 8px rgba(83,74,183,.15)}
 .tr-row:hover .tr-spark{text-shadow:0 0 12px rgba(83,74,183,.25)}
 .tr-val{flex:none;font-size:var(--font-size-caption);color:var(--mut)}
 .ss-clear:hover{border-color:var(--mut);color:var(--mut)}
-.ss-clear.arm{border-style:solid;border-color:var(--red);background:var(--redbg);color:var(--red);font-weight:800}`;
+.ss-clear.arm{border-style:solid;border-color:var(--red);background:var(--redbg);color:var(--red);font-weight:var(--font-weight-heavy)}`;
 class DeepSession extends HTMLElement {
   connectedCallback() {
     if (this._built) return;

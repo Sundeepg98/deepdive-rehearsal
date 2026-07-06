@@ -13,9 +13,9 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:var(--font-size-micro);b
 :host{display:block;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 .card{position:relative;background:var(--surf);border:1px solid var(--bd);border-radius:14px;padding:var(--space-22);box-shadow:var(--card-sh)}
 .card::before{content:"";position:absolute;left:var(--space-14);right:var(--space-14);top:0;height:var(--space-2);border-radius:2px;background:linear-gradient(90deg,var(--acc),var(--acc2));opacity:.42}
-.step-k{display:inline-flex;align-items:center;gap:var(--space-7);font-family:var(--mono);font-size:var(--font-size-micro);font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--acc)}
+.step-k{display:inline-flex;align-items:center;gap:var(--space-7);font-family:var(--mono);font-size:var(--font-size-micro);font-weight:var(--font-weight-heavy);letter-spacing:.4px;text-transform:uppercase;color:var(--acc)}
 .step-k::before{content:"";width:var(--space-14);height:var(--space-2);border-radius:2px;background:linear-gradient(90deg,var(--acc),var(--acc2))}
-.step-t{font-size:var(--font-size-title);font-weight:720;margin:var(--space-3) 0 var(--space-5);letter-spacing:-.2px}
+.step-t{font-size:var(--font-size-title);font-weight:var(--font-weight-bold);margin:var(--space-3) 0 var(--space-5);letter-spacing:-.2px}
 .step-sub{font-size:var(--font-size-caption);color:var(--mut);margin-bottom:var(--space-6)}
 .step-t,.dec-q,.num-h,.debrief .big,.mscript-h,.rec .lvl,.sr-h,.cs-ha-l,.side-id h1,.stage-head .sh-name{font-family:var(--display)}
 ::selection{background:var(--acc);color:#fff}

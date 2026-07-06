@@ -165,7 +165,7 @@
     merged.forEach(function (r) {
       if (r[0] > pos) container.appendChild(document.createTextNode(text.slice(pos, r[0])));
       var mk = document.createElement('span');
-      mk.style.cssText = 'background:var(--accbg);color:var(--acc);border-radius:3px;padding:0 var(--space-1);font-weight:700';
+      mk.style.cssText = 'background:var(--accbg);color:var(--acc);border-radius:3px;padding:0 var(--space-1);font-weight:var(--font-weight-bold)';
       mk.textContent = text.slice(r[0], r[1]);
       container.appendChild(mk); pos = r[1];
     });
@@ -183,7 +183,7 @@
   }
   function sectionHeader(text) {
     var h = document.createElement('div');
-    h.style.cssText = 'font-size:var(--font-size-nano);font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:var(--mut2);padding:var(--space-8) var(--space-14) var(--space-4)';
+    h.style.cssText = 'font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.7px;text-transform:uppercase;color:var(--mut2);padding:var(--space-8) var(--space-14) var(--space-4)';
     h.textContent = text;
     return h;
   }
@@ -194,11 +194,11 @@
     var top = document.createElement('span');
     top.style.cssText = 'display:flex;align-items:center;gap:var(--space-8);width:100%';
     var title = document.createElement('span');
-    title.style.cssText = 'font-size:var(--font-size-small);font-weight:650;color:var(--ink);flex:1';
+    title.style.cssText = 'font-size:var(--font-size-small);font-weight:var(--font-weight-semibold);color:var(--ink);flex:1';
     highlightInto(title, d.label, q);
     var tag = document.createElement('span');
     tag.textContent = (d.kind === 'topic') ? 'TOPIC' : 'VIEW';
-    tag.style.cssText = 'font-size:var(--font-size-nano);font-weight:800;letter-spacing:.5px;padding:var(--space-2) var(--space-6);border-radius:5px;font-family:var(--mono,monospace);' + ((d.kind === 'topic') ? 'color:var(--acc);background:var(--accbg)' : 'color:var(--mut);background:var(--bg);border:1px solid var(--bd)');
+    tag.style.cssText = 'font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.5px;padding:var(--space-2) var(--space-6);border-radius:5px;font-family:var(--mono,monospace);' + ((d.kind === 'topic') ? 'color:var(--acc);background:var(--accbg)' : 'color:var(--mut);background:var(--bg);border:1px solid var(--bd)');
     top.appendChild(title); top.appendChild(tag);
     var sub = document.createElement('span');
     sub.style.cssText = 'font-size:var(--font-size-micro);color:var(--mut);margin-top:var(--space-3)';
@@ -230,7 +230,7 @@
       item.type = 'button';
       item.style.cssText = 'display:flex;flex-direction:column;align-items:flex-start;width:100%;text-align:left;padding:var(--space-9) var(--space-14);border:0;border-radius:10px;background:transparent;cursor:pointer;transition:background var(--duration-fast) var(--ease-base);margin-bottom:var(--space-2);color:var(--ink)';
       var g = document.createElement('span');
-      g.style.cssText = 'font-size:var(--font-size-caption);font-weight:700;color:var(--ink)';
+      g.style.cssText = 'font-size:var(--font-size-caption);font-weight:var(--font-weight-bold);color:var(--ink)';
       g.textContent = decodeEnt(bkt.group.label);
       var sub = document.createElement('span');
       sub.style.cssText = 'font-size:var(--font-size-micro);color:var(--mut);margin-top:var(--space-2)';

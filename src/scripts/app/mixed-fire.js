@@ -250,7 +250,7 @@ var MIX_STYLE = `
 .mx-end-pct{font:800 44px -apple-system,sans-serif;color:var(--acc);line-height:1;margin:var(--space-10) 0;text-shadow:0 2px 24px rgba(83,74,183,.2),0 0 40px rgba(83,74,183,.08);letter-spacing:-1px}
 .mx-end-v{font:600 14px -apple-system,sans-serif;color:var(--mut);margin:0 auto var(--space-18);line-height:1.5;max-width:var(--space-300)}
 .mx-bd{display:flex;flex-wrap:wrap;justify-content:center;gap:var(--space-9) var(--space-18);margin-bottom:var(--space-20);font:600 13px -apple-system,sans-serif;color:var(--mut)}
-.mx-bd b{color:var(--ink);font-weight:800}
+.mx-bd b{color:var(--ink);font-weight:var(--font-weight-heavy)}
 .mx-end-list{text-align:left;margin-bottom:var(--space-20)}
 .mx-erow{display:flex;align-items:center;gap:var(--space-10);padding:var(--space-8) var(--space-4);border-bottom:1px solid var(--bd);transition:padding var(--duration-base) var(--ease-base)}
 .mx-erow:hover{padding-left:var(--space-8)}

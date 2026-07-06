@@ -19,7 +19,7 @@
    Per-topic input tweaks persist via local Store (key num.<topic>); a Reset to
    canonical button restores the reference scenario. Offline-safe: no network/permission. */
 var NUM_STYLE = `.numlead{font-size:var(--font-size-body);line-height:1.5;color:var(--ink);margin:var(--space-2) var(--space-2) var(--space-18)}
-.numlead b{color:var(--accink);font-weight:700}
+.numlead b{color:var(--accink);font-weight:var(--font-weight-bold)}
 .num-h{font:800 10px -apple-system,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:var(--mut2);margin-bottom:var(--space-12);display:flex;align-items:center;justify-content:space-between;gap:var(--space-10)}
 .num-reset{font:600 10px -apple-system,sans-serif;color:var(--mut);background:transparent;border:1px solid var(--bd);border-radius:6px;padding:var(--space-3) var(--space-9);cursor:pointer;text-transform:none;letter-spacing:.2px;transition:color var(--duration-fast) var(--ease-base),border-color var(--duration-fast) var(--ease-base)}
 .num-reset:hover{color:var(--acc);border-color:var(--acc)}
@@ -32,18 +32,18 @@ var NUM_STYLE = `.numlead{font-size:var(--font-size-body);line-height:1.5;color:
 .nrow{display:grid;grid-template-columns:1fr auto;grid-template-areas:"k v" "n n";gap:var(--space-3) var(--space-12);padding:var(--space-12) 0;border-bottom:1px solid var(--bd);transition:padding var(--duration-base) var(--ease-base)}
 .nrow:last-child{border-bottom:0}
 .nrow:hover{padding-left:var(--space-4)}
-.nrow-k{grid-area:k;font-size:var(--font-size-small);font-weight:700;color:var(--ink);align-self:center}
+.nrow-k{grid-area:k;font-size:var(--font-size-small);font-weight:var(--font-weight-bold);color:var(--ink);align-self:center}
 .nrow-v{grid-area:v;font:800 17px ui-monospace,Menlo,monospace;color:var(--acc);align-self:center;white-space:nowrap;transition:transform var(--duration-base) var(--ease-spring)}
 .nrow:hover .nrow-v{transform:scale(1.05)}
 .nrow-n{grid-area:n;font-size:var(--font-size-micro);color:var(--mut2);line-height:1.45}
 .nrow.over .nrow-v{color:var(--red);text-shadow:0 0 20px rgba(239,68,68,.1)}
-.nrow.over .nrow-n{color:var(--red);font-weight:600}
+.nrow.over .nrow-n{color:var(--red);font-weight:var(--font-weight-semibold)}
 .nrow.over{background:linear-gradient(90deg,transparent 0%,rgba(239,68,68,.02) 100%)}
-.num-tell{margin-top:var(--space-15);font-size:var(--font-size-caption);color:var(--teal);font-weight:700;line-height:1.55;padding:var(--space-14) var(--space-17);background:linear-gradient(135deg,var(--tealbg) 0%,rgba(10,133,100,.04) 100%);border-radius:11px;box-shadow:0 1px 6px -2px rgba(10,133,100,.08)}
+.num-tell{margin-top:var(--space-15);font-size:var(--font-size-caption);color:var(--teal);font-weight:var(--font-weight-bold);line-height:1.55;padding:var(--space-14) var(--space-17);background:linear-gradient(135deg,var(--tealbg) 0%,rgba(10,133,100,.04) 100%);border-radius:11px;box-shadow:0 1px 6px -2px rgba(10,133,100,.08)}
 .nprog{height:var(--space-5);background:var(--dbar-bg);border-radius:5px;overflow:hidden;margin:var(--space-12) 0}
 .nprog i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));border-radius:5px;transition:width var(--duration-slowest) var(--ease-glide)}
-.num-tell b{color:var(--dec-tell-b-fg);font-weight:700}
-.nv-u{display:inline-block;width:var(--space-30);text-align:left;padding-left:var(--space-8);box-sizing:border-box;font-size:var(--font-size-small);font-weight:600;color:var(--mut)}`;
+.num-tell b{color:var(--dec-tell-b-fg);font-weight:var(--font-weight-bold)}
+.nv-u{display:inline-block;width:var(--space-30);text-align:left;padding-left:var(--space-8);box-sizing:border-box;font-size:var(--font-size-small);font-weight:var(--font-weight-semibold);color:var(--mut)}`;
 class DeepNumbers extends TopicPane {
   static dataKey = 'num';
   styleText() { return NUM_STYLE; }

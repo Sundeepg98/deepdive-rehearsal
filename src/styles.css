@@ -187,8 +187,7 @@ button:focus-visible,.dn-step:focus-visible,.pill:focus-visible{outline:2px soli
   /* session progress */
   /* mock interruptions */
   .inttog{width:100%;display:flex;align-items:center;gap:var(--space-10);font:var(--font-weight-semibold) 11.5px -apple-system,sans-serif;color:var(--mut);background:transparent;border:1.5px dashed var(--bd);border-radius:10px;padding:var(--space-12) var(--space-14);cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),border-color var(--duration-base) var(--ease-base),color var(--duration-base) var(--ease-base),background var(--duration-base) var(--ease-base),box-shadow var(--duration-base) var(--ease-base);text-align:left}
-.inttog:hover{transform:translateY(-1px);box-shadow:0 4px 12px -4px rgba(83,74,183,.08)}
-  .inttog:hover{border-color:var(--acc);color:var(--ink)}
+.inttog:hover{transform:translateY(-1px);box-shadow:0 4px 12px -4px rgba(83,74,183,.08);border-color:var(--acc);color:var(--ink)}
   .inttog-dot{width:var(--space-30);height:var(--space-17);border-radius:9px;background:#D8D2C8;position:relative;flex:none;transition:background var(--duration-moderate) var(--ease-glide),box-shadow var(--duration-moderate) var(--ease-base)}
 .inttog:hover .inttog-dot{box-shadow:0 0 8px rgba(83,74,183,.15)}
   .inttog-dot::after{content:"";position:absolute;top:var(--space-2);left:var(--space-2);width:var(--space-13);height:var(--space-13);border-radius:50%;background:#fff;transition:left var(--duration-moderate) var(--ease-spring),transform var(--duration-moderate) var(--ease-spring);box-shadow:0 1px 2px rgba(0,0,0,.2)}
@@ -293,8 +292,7 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
 .stage::after{content:"";position:fixed;bottom:0;right:0;width:60vw;height:60vh;background:radial-gradient(ellipse at 70% 80%,rgba(139,127,232,.14) 0%,rgba(83,74,183,.1) 30%,rgba(109,95,214,.06) 55%,rgba(83,74,183,.03) 80%,transparent 100%);animation:meshB 16s ease-in-out infinite -6s;pointer-events:none;z-index:var(--z-base);will-change:transform;opacity:.7}
 @keyframes meshA{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(8%,-5%) scale(1.08)}66%{transform:translate(-4%,6%) scale(.95)}}
 @keyframes meshB{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(-6%,4%) scale(1.05)}66%{transform:translate(5%,-3%) scale(.97)}}
-.stage .pane{position:relative;z-index:1}
-.stage .pane{max-width:var(--space-830);margin:0 auto}
+.stage .pane{position:relative;z-index:1;max-width:var(--space-830);margin:0 auto}
 
   /* Floating ambient particles in the stage */
 

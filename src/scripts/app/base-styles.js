@@ -24,13 +24,13 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:var(--font-size-micro);b
    spotlight rides the free .card::after; the "border glow" is a hover box-shadow
    (no continuous animation); entrance stagger stays the global cardStagger. */
 @media (hover:hover) and (pointer:fine){
-.card{isolation:isolate;transition:transform .3s cubic-bezier(.22,.61,.36,1),box-shadow .3s cubic-bezier(.22,.61,.36,1),border-color .25s ease}
-.card::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:var(--z-below);opacity:0;transition:opacity .35s ease;background:radial-gradient(340px circle at var(--mouse-x,50%) var(--mouse-y,50%),var(--card-spot,rgba(83,74,183,.12)),transparent 60%)}
+.card{isolation:isolate;transition:transform var(--duration-slow) var(--ease-glide),box-shadow var(--duration-slow) var(--ease-glide),border-color var(--duration-moderate) var(--ease-base)}
+.card::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:var(--z-below);opacity:0;transition:opacity var(--duration-slow) var(--ease-base);background:radial-gradient(340px circle at var(--mouse-x,50%) var(--mouse-y,50%),var(--card-spot,rgba(83,74,183,.12)),transparent 60%)}
 .card:hover{transform:perspective(900px) translateY(-3px) rotateX(1.4deg) rotateY(-.8deg);border-color:rgba(83,74,183,.28);box-shadow:var(--card-sh),var(--card-tilt-glow,0 16px 38px -16px rgba(83,74,183,.26))}
 .card:hover::after{opacity:1}
 }
 @media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:reduce){
-.card{transition:box-shadow .15s ease,border-color .15s ease}
+.card{transition:box-shadow var(--duration-fast) var(--ease-base),border-color var(--duration-fast) var(--ease-base)}
 .card:hover{transform:none}
 .card:hover::after{opacity:0}
 }

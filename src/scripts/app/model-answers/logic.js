@@ -20,7 +20,7 @@
    theme tokens. Child-mounts only -- renderTopic never rewrites this._root.innerHTML. */
 var MODEL_STYLE = `
 .msel{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--space-7);margin-bottom:var(--space-16)}
-.msel button{flex:1 1 auto;min-width:var(--space-150);border:1.5px solid var(--bd);background:linear-gradient(135deg,var(--card) 0%,rgba(83,74,183,.015) 100%);color:var(--mut);font:700 12px -apple-system,sans-serif;padding:var(--space-10) var(--space-12);border-radius:10px;cursor:pointer;transition:transform .15s ease,border-color .2s ease,color .2s ease,box-shadow .2s ease,background .2s ease}
+.msel button{flex:1 1 auto;min-width:var(--space-150);border:1.5px solid var(--bd);background:linear-gradient(135deg,var(--card) 0%,rgba(83,74,183,.015) 100%);color:var(--mut);font:700 12px -apple-system,sans-serif;padding:var(--space-10) var(--space-12);border-radius:10px;cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),border-color var(--duration-base) var(--ease-base),color var(--duration-base) var(--ease-base),box-shadow var(--duration-base) var(--ease-base),background var(--duration-base) var(--ease-base)}
 .msel button:hover{border-color:var(--acc2);color:var(--accink);background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.04) 100%);transform:translateY(-1px);box-shadow:0 4px 12px -4px rgba(83,74,183,.1)}
 .msel button:active{transform:translateY(0) scale(.98)}
 .msel button.on{background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.08) 100%);border-color:var(--acc);color:var(--accink);box-shadow:0 0 0 1px var(--acc),0 4px 14px -4px rgba(83,74,183,.18);font-weight:780;position:relative}

@@ -13,7 +13,7 @@
 var RF_STYLE = `
 .rflead{font-size:var(--font-size-body);line-height:1.5;color:var(--ink);margin:var(--space-2) var(--space-2) var(--space-18)}
 .rflead b{color:var(--accink);font-weight:700}
-.rf{background:linear-gradient(135deg,var(--surf) 0%,rgba(239,68,68,.03) 100%);box-shadow:var(--surf-sh);border:1px solid var(--bd);border-radius:14px;padding:var(--space-15) var(--space-18);margin-bottom:var(--space-13);border-left:3px solid var(--red);transition:box-shadow .25s ease,transform .2s ease,border-color .2s ease}
+.rf{background:linear-gradient(135deg,var(--surf) 0%,rgba(239,68,68,.03) 100%);box-shadow:var(--surf-sh);border:1px solid var(--bd);border-radius:14px;padding:var(--space-15) var(--space-18);margin-bottom:var(--space-13);border-left:3px solid var(--red);transition:box-shadow var(--duration-moderate) var(--ease-base),transform var(--duration-base) var(--ease-base),border-color var(--duration-base) var(--ease-base)}
 .rf:hover{box-shadow:var(--surf-sh),0 4px 18px -6px rgba(239,68,68,.1);transform:translateY(-1px);border-color:rgba(239,68,68,.2)}
 .rf-bad{display:flex;gap:var(--space-10);align-items:flex-start;font-size:var(--font-size-small);line-height:1.5}
 .rf-x{flex:none;color:var(--red);font:800 14px -apple-system,sans-serif;line-height:1.55;width:var(--space-24);height:var(--space-24);border-radius:50%;background:linear-gradient(135deg,var(--redbg) 0%,rgba(239,68,68,.1) 100%);display:flex;align-items:center;justify-content:center;border:1.5px solid var(--red)}

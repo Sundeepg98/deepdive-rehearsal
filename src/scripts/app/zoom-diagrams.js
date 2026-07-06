@@ -66,7 +66,7 @@
 
   function endPinch() {
     if (!target) return;
-    target.style.transition = 'transform .25s ease';
+    target.style.transition = 'transform var(--duration-moderate) var(--ease-base)';
     if ((parseFloat(target.dataset._zoom) || 1) <= 1) apply(target, 1);
     target = null;
     startDist = 0;
@@ -80,7 +80,7 @@
     var now = Date.now();
     if (now - lastTapAt < 300) {
       var el = zoomEl(e);
-      if (el && (parseFloat(el.dataset._zoom) || 1) > 1) { el.style.transition = 'transform .25s ease'; apply(el, 1); }
+      if (el && (parseFloat(el.dataset._zoom) || 1) > 1) { el.style.transition = 'transform var(--duration-moderate) var(--ease-base)'; apply(el, 1); }
     }
     lastTapAt = now;
   }, { passive: true });

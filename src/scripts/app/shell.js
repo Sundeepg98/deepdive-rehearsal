@@ -161,7 +161,7 @@ document.addEventListener('keydown', function (event) {
 /* The floating "tools" button toggles the mock-bar sheet on mobile; a click
    outside it (or on any sheet button other than the toggles) closes it.
    CSS handles visibility via transform:translateY(115%) -> transform:none
-   with a .26s ease transition. No display manipulation needed. */
+   with a var(--duration-moderate) var(--ease-base) transition. No display manipulation needed. */
 (function () {
   const toolsFab = document.getElementById('toolsfab');
   const mockbar = document.querySelector('.mockbar');

@@ -82,10 +82,10 @@
     overlayEl.setAttribute('role', 'dialog');
     overlayEl.setAttribute('aria-modal', 'true');
     overlayEl.setAttribute('aria-label', 'Search surfaces');
-    overlayEl.style.cssText = 'position:fixed;inset:0;z-index:var(--z-overlay);background:rgba(0,0,0,.35);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);opacity:0;transition:opacity .25s ease;display:none;align-items:flex-start;justify-content:center;padding-top:15vh';
+    overlayEl.style.cssText = 'position:fixed;inset:0;z-index:var(--z-overlay);background:rgba(0,0,0,.35);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);opacity:0;transition:opacity var(--duration-moderate) var(--ease-base);display:none;align-items:flex-start;justify-content:center;padding-top:15vh';
 
     var box = document.createElement('div');
-    box.style.cssText = 'width:560px;max-width:90vw;background:var(--card);border:1px solid var(--bd);border-radius:16px;box-shadow:0 24px 80px -16px rgba(0,0,0,.35);overflow:hidden;transform:scale(.96) translateY(10px);transition:transform .3s cubic-bezier(.22,.61,.36,1)';
+    box.style.cssText = 'width:560px;max-width:90vw;background:var(--card);border:1px solid var(--bd);border-radius:16px;box-shadow:0 24px 80px -16px rgba(0,0,0,.35);overflow:hidden;transform:scale(.96) translateY(10px);transition:transform var(--duration-slow) var(--ease-glide)';
 
     var header = document.createElement('div');
     header.style.cssText = 'display:flex;align-items:center;gap:var(--space-10);padding:var(--space-14) var(--space-18);border-bottom:1px solid var(--bd)';
@@ -190,7 +190,7 @@
   function makeResultItem(d, i, q) {
     var item = document.createElement('button');
     item.type = 'button';
-    item.style.cssText = 'display:flex;flex-direction:column;align-items:flex-start;width:100%;text-align:left;padding:var(--space-10) var(--space-14);border:0;border-radius:10px;background:' + (i === 0 ? 'var(--accbg)' : 'transparent') + ';cursor:pointer;transition:background .15s ease;margin-bottom:var(--space-2);color:var(--ink)';
+    item.style.cssText = 'display:flex;flex-direction:column;align-items:flex-start;width:100%;text-align:left;padding:var(--space-10) var(--space-14);border:0;border-radius:10px;background:' + (i === 0 ? 'var(--accbg)' : 'transparent') + ';cursor:pointer;transition:background var(--duration-fast) var(--ease-base);margin-bottom:var(--space-2);color:var(--ink)';
     var top = document.createElement('span');
     top.style.cssText = 'display:flex;align-items:center;gap:var(--space-8);width:100%';
     var title = document.createElement('span');
@@ -228,7 +228,7 @@
       var id = bkt.ids[0], t = TopicRegistry.get(id), idn = (t && t.identity) || {};
       var item = document.createElement('button');
       item.type = 'button';
-      item.style.cssText = 'display:flex;flex-direction:column;align-items:flex-start;width:100%;text-align:left;padding:var(--space-9) var(--space-14);border:0;border-radius:10px;background:transparent;cursor:pointer;transition:background .15s ease;margin-bottom:var(--space-2);color:var(--ink)';
+      item.style.cssText = 'display:flex;flex-direction:column;align-items:flex-start;width:100%;text-align:left;padding:var(--space-9) var(--space-14);border:0;border-radius:10px;background:transparent;cursor:pointer;transition:background var(--duration-fast) var(--ease-base);margin-bottom:var(--space-2);color:var(--ink)';
       var g = document.createElement('span');
       g.style.cssText = 'font-size:var(--font-size-caption);font-weight:700;color:var(--ink)';
       g.textContent = decodeEnt(bkt.group.label);

@@ -18,7 +18,7 @@
     var st = document.createElement('style');
     st.id = '_focus-style';
     st.textContent =
-      '.app._focus-mode .sidebar,.app._focus-mode .companion{opacity:0;visibility:hidden;width:0;min-width:0;padding:0;margin:0;border:0;overflow:hidden;transition:opacity .3s ease,width .3s ease}' +
+      '.app._focus-mode .sidebar,.app._focus-mode .companion{opacity:0;visibility:hidden;width:0;min-width:0;padding:0;margin:0;border:0;overflow:hidden;transition:opacity var(--duration-slow) var(--ease-base),width var(--duration-slow) var(--ease-base)}' +
       '@media(prefers-reduced-motion:reduce){.app._focus-mode .sidebar,.app._focus-mode .companion{transition:none}}';
     document.head.appendChild(st);
   }
@@ -33,7 +33,7 @@
     btnEl.setAttribute('aria-label', 'Toggle focus mode');
     btnEl.setAttribute('aria-pressed', 'false');
     btnEl.textContent = 'Focus';
-    btnEl.style.cssText = 'display:inline-block;font-size:var(--font-size-nano);font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--mut);background:var(--accbg);border:1px solid rgba(83,74,183,.12);padding:var(--space-4) var(--space-12);border-radius:8px;cursor:pointer;margin-top:var(--space-10);transition:all .2s ease';
+    btnEl.style.cssText = 'display:inline-block;font-size:var(--font-size-nano);font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--mut);background:var(--accbg);border:1px solid rgba(83,74,183,.12);padding:var(--space-4) var(--space-12);border-radius:8px;cursor:pointer;margin-top:var(--space-10);transition:all var(--duration-base) var(--ease-base)';
     btnEl.addEventListener('click', toggle);
     hdr.appendChild(btnEl);
   }

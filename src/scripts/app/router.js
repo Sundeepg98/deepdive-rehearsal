@@ -117,6 +117,24 @@
       try { window.history.replaceState({ view: DEFAULT_ROUTE }, '', '#' + DEFAULT_ROUTE); } catch (e) {}
     }
     emit(parseHash());
+
+    /* The route fragment (e.g. #walk) matches a pane element's id, so the
+       browser's on-load "scroll to fragment" step scrolls the page down to that
+       pane -- which on mobile hides the header/nav/Mock-run. Suppress smooth
+       scrolling briefly so that scroll (and our undo) is instant rather than an
+       animated bounce, pin the page to the top, then restore smooth scrolling
+       for normal navigation. The URL fragment is kept intact for deep-linking. */
+    if ('scrollRestoration' in window.history) { try { window.history.scrollRestoration = 'manual'; } catch (e) {} }
+    var docEl = document.documentElement;
+    var prevBehav = docEl.style.scrollBehavior;
+    docEl.style.scrollBehavior = 'auto';
+    var pinTop = function () { if ((window.pageYOffset || docEl.scrollTop || 0) > 0) window.scrollTo(0, 0); };
+    pinTop();
+    requestAnimationFrame(pinTop);
+    requestAnimationFrame(function () { requestAnimationFrame(pinTop); });
+    setTimeout(pinTop, 0);
+    setTimeout(pinTop, 120);
+    setTimeout(function () { pinTop(); docEl.style.scrollBehavior = prevBehav; }, 400);
   }
 
   window.Router = {

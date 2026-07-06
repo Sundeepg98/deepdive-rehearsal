@@ -400,7 +400,7 @@
     var filt = overlayEl.querySelector('.ix-filter');
     if (filt) {
       filt.addEventListener('input', function () { applyFilter(filt.value); });
-      setTimeout(function () { try { filt.focus(); } catch (e) {} }, 60);
+      setTimeout(function () { try { filt.focus({ preventScroll: true }); } catch (e) {} }, 60);
     }
   }
   function close() {

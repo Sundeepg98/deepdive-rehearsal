@@ -16,3 +16,4 @@ deploy_temp/
 test/scan_report.json
 e2e_report_*.json
 dist/
+design-tokens/build/

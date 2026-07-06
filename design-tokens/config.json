@@ -1,0 +1,14 @@
+{
+  "source": ["design-tokens/tokens.json"],
+  "platforms": {
+    "css": {
+      "transformGroup": "css",
+      "buildPath": "design-tokens/build/",
+      "files": [{
+        "destination": "semantic-tokens.css",
+        "format": "css/variables",
+        "options": { "outputReferences": true }
+      }]
+    }
+  }
+}

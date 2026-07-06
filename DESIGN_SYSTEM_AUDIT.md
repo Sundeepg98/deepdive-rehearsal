@@ -149,3 +149,55 @@ typography) still need their own systematic scales."
 5. **[TODO — minor]** Durations → small systematic scale.
 6. **[OPTIONAL / DIAL]** Spacing rationalization — the systematic-look snap (reversible; 55.9% shift shown).
 7. **[LATER]** Open Props masks (decorative corner-cuts / edges) if wanted; then Iconify (SVG icons) + Satori (CSS→SVG panels).
+
+---
+
+# Part 2 — Auditing the mature systems (Material 3, Fluent 2, Radix, Spectrum, DTCG)
+
+Open Props is dropped (a costume change — too coarse where we needed depth, too *many*
+primitives where we needed fewer: it ships 74 steps, which the field literature calls a
+"drift generator"). This part scores the five more-mature options against our real
+constraints (single-file, offline, shadow DOM, existing superior identity) and against the
+key finding that **maturity means fewer, named tokens — a method — not a bigger dependency.**
+
+For each: what it is, what is genuinely leverageable *for us*, and the verdict.
+
+### Material Design 3 (Google)
+- **What:** comprehensive tokens (dynamic color, type scale, elevation, motion, shape) on a 3-tier ref / sys / comp architecture.
+- **Leverage:** its **type-scale taxonomy** — display / headline / title / body / label as named roles — is the proven semantic vocabulary for typography. We borrow the *role structure* for our `--font-size-*` layer.
+- **Not for us:** the Material aesthetic, dynamic color, the weight of the full system.
+- **Verdict: leverage the type-scale roles (reference).** Used in the DTCG file.
+
+### Microsoft Fluent 2
+- **What:** a strict 3-level token system — global -> alias -> component — across web/native.
+- **Leverage:** the **architecture itself** — the cleanest articulation of primitive -> semantic -> component, which is exactly the layer our system lacks.
+- **Not for us:** the multi-platform machinery, the component library.
+- **Verdict: leverage the 3-tier architecture (method).** It is the backbone of the DTCG file.
+
+### Radix (Colors / Themes)
+- **What:** 12-step color scales, auto light/dark, P3, with *semantic steps* (step 9 = solid, 11 = text, 12 = high-contrast text).
+- **Leverage:** our palette is already dual-theme + P3, so we don't need Radix's colors — but its **semantic-step convention** (naming a scale position by its job) is a good reference if we ever formalize tint/shade ramps.
+- **Verdict: minor — a color-ramp convention to keep in the back pocket.** Not adopted (color isn't our gap).
+
+### Adobe Spectrum
+- **What:** tokens-as-data (the `spectrum-design-data` repo, DTCG-adjacent) + explicit **density** modes (comfortable / compact) driven by swapping token sets.
+- **Leverage:** the **density-via-tokens** idea — a compact mode achieved purely by overriding a token set, zero component changes — is genuinely nice for a dense reference tool like this. Its tokens-as-data approach also validates the DTCG direction.
+- **Verdict: minor now, a real idea for later (a compact density mode).**
+
+### DTCG (W3C format) + Style Dictionary
+- **What:** the standard JSON token format (`$value` / `$type`, references via `{group.token}`), compiled to any platform by Style Dictionary.
+- **Leverage:** **define our semantic layer once, in a standard JSON source, and compile it to the CSS custom properties the app already uses.** Demonstrated and working (`design-tokens/tokens.json` -> `design-tokens/build/semantic-tokens.css`), ~40 lines of JSON.
+- **Not for us:** the full multi-platform CI/CD pipeline is overkill for one offline HTML file (the sources flag this for small teams).
+- **Verdict: leverage the FORMAT + a light Style Dictionary compile.** This is the one that becomes real infrastructure.
+
+## Conclusion of the full audit
+
+- **No heavyweight system is adopted** — each (Material, Fluent, Radix, Spectrum) is a costume or overkill for a single-file offline app with its own identity.
+- **What is leveraged is METHOD + FORMAT, not a dependency:** Fluent's 3-tier architecture, Material's type-scale roles, and the DTCG JSON format compiled by Style Dictionary.
+- **Concrete outcome (baseline, proven):** a standard single-source DTCG token file compiled to a CSS semantic layer — 7 type roles + 7 z-index tiers — collapsing the app's 40 font-sizes and 20 z-index values into named, mature tokens, sitting on top of the app's already-superior primitives.
+- **Radix (color-step naming) and Spectrum (density mode)** are noted references for later, not adopted now.
+
+## To close the audit (application step)
+1. Wire the Style Dictionary compile into the build (run before Vite; include `semantic-tokens.css`).
+2. Adopt the semantic tokens — replace the 40 ad-hoc font-sizes with the 7 `--font-size-*` roles, and the 20 z-index values with the 7 `--z-*` tiers.
+3. That fully closes the CSS audit; everything downstream is the easy part.

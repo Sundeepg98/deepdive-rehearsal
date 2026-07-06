@@ -302,7 +302,44 @@ function parseModel(toks) {
   return { selectors, answers };
 }
 
-const PANE_PARSERS = { walk: parseSteps, rf: parseRf, trade: parseTrade, sys: parseSys, open: parseOpen, wb: parseWb, model: parseModel };
+// Drill: ## Drill, an optional tier-note bullet list ("<tier> | <note>"), then ### <tier> | <signal>
+// per card -- first paragraph = q, second = a; "Follow: <q>" starts a follow-up (next paragraph =
+// its a); "Senior: <text>" = senior; "Speak: <text>" = the card's paired speak line.
+// Shape: { cards:[{tier,signal,q,a,f:[{q,a}],senior}], speak:[], tierNotes:{} }.
+function parseDrill(toks) {
+  const cards = [], speak = [], tierNotes = {};
+  let card = null, expectFollowA = null, seenCard = false;
+  for (let i = 0; i < toks.length; i++) {
+    const t = toks[i];
+    if (t.type === 'heading_open' && t.tag === 'h3') {
+      const raw = toks[i + 1].content; const k = raw.indexOf(' | ');
+      card = { tier: (k === -1 ? raw : raw.slice(0, k)).trim(), signal: prose(k === -1 ? '' : raw.slice(k + 3)), q: '', a: '', f: [], senior: '' };
+      cards.push(card); speak.push(''); expectFollowA = null; seenCard = true; i += 2; continue;
+    }
+    if (t.type === 'bullet_list_open' && !seenCard) {
+      let j = i + 1;
+      while (j < toks.length && toks[j].type !== 'bullet_list_close') {
+        if (toks[j].type === 'inline') { const raw = toks[j].content; const k = raw.indexOf(' | '); if (k !== -1) tierNotes[raw.slice(0, k).trim()] = prose(raw.slice(k + 3)); }
+        j++;
+      }
+      i = j; continue;
+    }
+    if (t.type === 'paragraph_open' && card) {
+      const raw = toks[i + 1].content;
+      const fM = /^follow:\s*/i.exec(raw), sM = /^senior:\s*/i.exec(raw), spM = /^speak:\s*/i.exec(raw);
+      if (fM) { const rest = raw.slice(fM[0].length); const nl = rest.indexOf('\n'); const fu = { q: prose(nl === -1 ? rest : rest.slice(0, nl)), a: prose(nl === -1 ? '' : rest.slice(nl + 1)) }; card.f.push(fu); expectFollowA = nl === -1 ? fu : null; }
+      else if (sM) { card.senior = prose(raw.slice(sM[0].length)); expectFollowA = null; }
+      else if (spM) { speak[speak.length - 1] = prose(raw.slice(spM[0].length)); expectFollowA = null; }
+      else if (expectFollowA) { expectFollowA.a = prose(raw); expectFollowA = null; }
+      else if (!card.q) card.q = prose(raw);
+      else if (!card.a) card.a = prose(raw);
+      i += 2; continue;
+    }
+  }
+  return { cards, speak, tierNotes };
+}
+
+const PANE_PARSERS = { walk: parseSteps, rf: parseRf, trade: parseTrade, sys: parseSys, open: parseOpen, wb: parseWb, model: parseModel, drill: parseDrill };
 
 // --- top level ----------------------------------------------------------------
 

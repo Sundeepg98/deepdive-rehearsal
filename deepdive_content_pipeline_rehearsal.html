@@ -64,6 +64,68 @@
   --ease-spring: cubic-bezier(.34,1.56,.64,1);
   --ease-in: cubic-bezier(.55,0,1,.45);
   --ease-swap: cubic-bezier(.5,0,.5,1);
+  --space-1: 1px;
+  --space-2: 2px;
+  --space-3: 3px;
+  --space-4: 4px;
+  --space-5: 5px;
+  --space-6: 6px;
+  --space-7: 7px;
+  --space-8: 8px;
+  --space-9: 9px;
+  --space-10: 10px;
+  --space-11: 11px;
+  --space-12: 12px;
+  --space-13: 13px;
+  --space-14: 14px;
+  --space-15: 15px;
+  --space-16: 16px;
+  --space-17: 17px;
+  --space-18: 18px;
+  --space-19: 19px;
+  --space-20: 20px;
+  --space-22: 22px;
+  --space-23: 23px;
+  --space-24: 24px;
+  --space-26: 26px;
+  --space-27: 27px;
+  --space-28: 28px;
+  --space-30: 30px;
+  --space-32: 32px;
+  --space-34: 34px;
+  --space-36: 36px;
+  --space-38: 38px;
+  --space-39: 39px;
+  --space-40: 40px;
+  --space-42: 42px;
+  --space-43: 43px;
+  --space-44: 44px;
+  --space-46: 46px;
+  --space-50: 50px;
+  --space-52: 52px;
+  --space-60: 60px;
+  --space-70: 70px;
+  --space-74: 74px;
+  --space-76: 76px;
+  --space-80: 80px;
+  --space-92: 92px;
+  --space-120: 120px;
+  --space-140: 140px;
+  --space-150: 150px;
+  --space-240: 240px;
+  --space-270: 270px;
+  --space-290: 290px;
+  --space-296: 296px;
+  --space-300: 300px;
+  --space-420: 420px;
+  --space-430: 430px;
+  --space-560: 560px;
+  --space-600: 600px;
+  --space-620: 620px;
+  --space-660: 660px;
+  --space-680: 680px;
+  --space-760: 760px;
+  --space-830: 830px;
   --font-size-nano: var(--size-font-9);
   --font-size-micro: var(--size-font-11);
   --font-size-caption: var(--size-font-12);
@@ -76,7 +138,7 @@
   --font-size-display-lg: var(--size-font-32);
   --font-size-display-xl: var(--size-font-48);
 }
-}@layer app{:root{--space-1:1px;--space-2:2px;--space-3:3px;--space-4:4px;--space-5:5px;--space-6:6px;--space-7:7px;--space-8:8px;--space-9:9px;--space-10:10px;--space-11:11px;--space-12:12px;--space-13:13px;--space-14:14px;--space-15:15px;--space-16:16px;--space-17:17px;--space-18:18px;--space-19:19px;--space-20:20px;--space-22:22px;--space-23:23px;--space-24:24px;--space-26:26px;--space-27:27px;--space-28:28px;--space-30:30px;--space-32:32px;--space-34:34px;--space-36:36px;--space-38:38px;--space-39:39px;--space-40:40px;--space-42:42px;--space-43:43px;--space-44:44px;--space-46:46px;--space-50:50px;--space-52:52px;--space-60:60px;--space-70:70px;--space-74:74px;--space-76:76px;--space-80:80px;--space-92:92px;--space-120:120px;--space-140:140px;--space-150:150px;--space-240:240px;--space-270:270px;--space-290:290px;--space-296:296px;--space-300:300px;--space-420:420px;--space-430:430px;--space-560:560px;--space-600:600px;--space-620:620px;--space-660:660px;--space-680:680px;--space-760:760px;--space-830:830px;}
+}@layer app{:root{}
 /* === Hide Kimi Agent watermark (platform-injected) === */
 a[href*="kimi.com/agent"]{display:none!important}
 
@@ -904,6 +966,7 @@ html[data-theme="dark"] .tn-item:hover{background:rgba(170,157,245,.13)}
 .storage-notice-exp{flex:none;font:600 11px -apple-system,sans-serif;color:var(--amber);background:transparent;border:1px solid var(--amber);border-radius:6px;padding:var(--space-4) var(--space-11);cursor:pointer}
 .storage-notice-exp:hover{background:var(--amber);color:#fff}
 .storage-notice-x{flex:none;background:transparent;border:0;color:var(--amber);font-size:var(--font-size-title);line-height:1;cursor:pointer;padding:0 var(--space-4)}
+@media (prefers-reduced-motion:reduce){:root{--duration-instant:0ms;--duration-fast:.01ms;--duration-base:.01ms;--duration-moderate:.01ms;--duration-slow:.01ms;--duration-slowest:.01ms}*,::before,::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 }</style>
 <script>/* === Boot: theme detection + loading splash === */
 try{var _dk=matchMedia('(prefers-color-scheme:dark)').matches;document.documentElement.dataset.theme=_dk?'dark':'light';var _tc=document.querySelector('meta[name="theme-color"]');if(_tc)_tc.setAttribute('content',_dk?'#15141A':'#FAF9F5');}catch(e){}

@@ -8,6 +8,17 @@
 @import "tailwindcss/theme";
 @import "tailwindcss/utilities" source(none);
 
+/* Open Props -- ADDITIVE flourish libraries ONLY (gradients, keyframe animations, easings).
+   Deliberately NOT importing its colors/shadows/sizes: the app's own palette (dual-theme + P3),
+   shadows (warm-tinted multi-layer) and spacing scale are already more tuned than Open Props'.
+   These three just put curated decorative primitives on tap, app-wide (they pierce shadow DOM):
+   var(--gradient-N)  ->  30 hand-tuned gradients
+   var(--animation-X) ->  25 ready keyframe animations (--animation-fade-in, --animation-float, ...)
+   var(--ease-N) / var(--ease-elastic-N) / ... -> 81 easing curves */
+@import "open-props/gradients.min.css";
+@import "open-props/animations.min.css";
+@import "open-props/easings.min.css";
+
 @theme {
   /* palette */
   --color-acc: #534AB7;  --color-acc2: #6D5FD6;  --color-accbg: #EFEDFA;  --color-accink: #3A2E86;

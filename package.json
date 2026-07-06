@@ -17,6 +17,7 @@
     "js-yaml": "^5.2.1",
     "markdown-it": "^14.3.0",
     "mermaid": "^11.16.0",
+    "open-props": "^1.7.23",
     "playwright": "^1.40.0",
     "shiki": "^4.3.1",
     "vite": "^8.1.3",

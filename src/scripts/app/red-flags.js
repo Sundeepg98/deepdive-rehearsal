@@ -16,7 +16,7 @@ var RF_STYLE = `
 .rf{background:linear-gradient(135deg,var(--surf) 0%,rgba(239,68,68,.03) 100%);box-shadow:var(--surf-sh);border:1px solid var(--bd);border-radius:14px;padding:var(--space-15) var(--space-18);margin-bottom:var(--space-13);border-left:3px solid var(--red);transition:box-shadow var(--duration-moderate) var(--ease-base),transform var(--duration-base) var(--ease-base),border-color var(--duration-base) var(--ease-base)}
 .rf:hover{box-shadow:var(--surf-sh),0 4px 18px -6px rgba(239,68,68,.1);transform:translateY(-1px);border-color:rgba(239,68,68,.2)}
 .rf-bad{display:flex;gap:var(--space-10);align-items:flex-start;font-size:var(--font-size-small);line-height:var(--line-height-loose)}
-.rf-x{flex:none;color:var(--red);font:800 14px -apple-system,sans-serif;line-height:var(--line-height-airy);width:var(--space-24);height:var(--space-24);border-radius:50%;background:linear-gradient(135deg,var(--redbg) 0%,rgba(239,68,68,.1) 100%);display:flex;align-items:center;justify-content:center;border:1.5px solid var(--red)}
+.rf-x{flex:none;color:var(--red);font:var(--font-weight-heavy) 14px -apple-system,sans-serif;line-height:var(--line-height-airy);width:var(--space-24);height:var(--space-24);border-radius:50%;background:linear-gradient(135deg,var(--redbg) 0%,rgba(239,68,68,.1) 100%);display:flex;align-items:center;justify-content:center;border:1.5px solid var(--red)}
 .rf-bad .rf-t b{color:var(--red);font-weight:var(--font-weight-bold)}
 .rf-note{color:var(--mut2);font-weight:var(--font-weight-semibold);font-style:italic;font-size:var(--font-size-micro)}
 .rf-tell{font-size:var(--font-size-caption);color:var(--mut);line-height:var(--line-height-airy);margin:var(--space-9) 0 var(--space-11);padding-left:var(--space-24)}

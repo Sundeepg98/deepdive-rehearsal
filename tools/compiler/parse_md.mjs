@@ -339,7 +339,85 @@ function parseDrill(toks) {
   return { cards, speak, tierNotes };
 }
 
-const PANE_PARSERS = { walk: parseSteps, rf: parseRf, trade: parseTrade, sys: parseSys, open: parseOpen, wb: parseWb, model: parseModel, drill: parseDrill };
+// Numbers (parametric): ## Numbers, a lead paragraph, a tell paragraph, an input bullet list
+// ("<id> | <label> | <value> | <min> | <step?>"), and a fenced code block captured as the
+// compute function source (emitted raw, not serialized). Shape: { lead, tell, inputs, compute }.
+function parseNum(toks) {
+  let lead = '', tell = '', compute = '';
+  const inputs = [];
+  let paraCount = 0;
+  for (let i = 0; i < toks.length; i++) {
+    const t = toks[i];
+    if (t.type === 'bullet_list_open') {
+      let j = i + 1;
+      while (j < toks.length && toks[j].type !== 'bullet_list_close') {
+        if (toks[j].type === 'inline') {
+          const p = toks[j].content.split(' | ').map((s) => s.trim());
+          const inp = { id: p[0], label: p[1], value: Number(p[2]), min: Number(p[3]) };
+          if (p[4] !== undefined) inp.step = Number(p[4]);
+          inputs.push(inp);
+        }
+        j++;
+      }
+      i = j; continue;
+    }
+    if (t.type === 'fence') { compute = t.content.replace(/\n$/, ''); continue; }
+    if (t.type === 'paragraph_open') {
+      const raw = toks[i + 1].content;
+      if (paraCount === 0) lead = prose(raw); else if (paraCount === 1) tell = prose(raw);
+      paraCount++; i += 2; continue;
+    }
+  }
+  return { lead, tell, inputs, compute };
+}
+
+// Bank (mock-run + mixed-fire data): ## Bank, then ### <tag> | <cue> (or
+// ### CURVEBALL | <theme> | <cue>) per mock beat with "Task:"/"Model:"/"Int:"/"Int2:" fields
+// (Int/Int2 = a "<q>" line + a next-line answer). A ### Frames bullet list and ### Extra
+// Curveballs beats hold the additions; curveballs prepend the sequence's CURVEBALL beat, frames
+// prepend the FRAME beat's cue. cards/speak are added by the emitter as drill references.
+function parseBank(toks) {
+  const mockBeats = [], extraCurve = [], extraFrames = [];
+  let mode = 'mock', beat = null;
+  const mkBeat = (raw, m) => {
+    const p = raw.split(' | ');
+    if (m === 'curve') return { tag: 'CURVEBALL', theme: p[0].trim(), cue: prose(p.slice(1).join(' | ')) };
+    const tag = p[0].trim();
+    return p.length >= 3 ? { tag, theme: p[1].trim(), cue: prose(p.slice(2).join(' | ')) } : { tag, cue: prose(p[1] || '') };
+  };
+  const splitQA = (s) => { const nl = s.indexOf('\n'); return { q: prose(nl === -1 ? s : s.slice(0, nl)), a: prose(nl === -1 ? '' : s.slice(nl + 1)) }; };
+  for (let i = 0; i < toks.length; i++) {
+    const t = toks[i];
+    if (t.type === 'heading_open' && t.tag === 'h3') {
+      const raw = toks[i + 1].content;
+      if (!raw.includes(' | ')) {
+        const low = raw.toLowerCase();
+        if (low.includes('frame')) mode = 'frames'; else if (low.includes('curveball')) mode = 'curve';
+        beat = null;
+      } else { beat = mkBeat(raw, mode); (mode === 'curve' ? extraCurve : mockBeats).push(beat); }
+      i += 2; continue;
+    }
+    if (t.type === 'bullet_list_open' && mode === 'frames') {
+      let j = i + 1;
+      while (j < toks.length && toks[j].type !== 'bullet_list_close') { if (toks[j].type === 'inline') extraFrames.push(prose(toks[j].content)); j++; }
+      i = j; continue;
+    }
+    if (t.type === 'paragraph_open' && beat) {
+      const raw = toks[i + 1].content;
+      const taskM = /^task:\s*/i.exec(raw), modelM = /^model:\s*/i.exec(raw), intM = /^int:\s*/i.exec(raw), int2M = /^int2:\s*/i.exec(raw);
+      if (taskM) beat.task = prose(raw.slice(taskM[0].length));
+      else if (modelM) beat.model = prose(raw.slice(modelM[0].length));
+      else if (int2M) beat.int2 = splitQA(raw.slice(int2M[0].length));
+      else if (intM) beat.int = splitQA(raw.slice(intM[0].length));
+      i += 2; continue;
+    }
+  }
+  const cb = mockBeats.find((b) => b.tag === 'CURVEBALL');
+  const fr = mockBeats.find((b) => b.tag === 'FRAME');
+  return { curveballs: (cb ? [cb] : []).concat(extraCurve), mockBeats, frames: (fr ? [fr.cue] : []).concat(extraFrames) };
+}
+
+const PANE_PARSERS = { walk: parseSteps, rf: parseRf, trade: parseTrade, sys: parseSys, open: parseOpen, wb: parseWb, model: parseModel, drill: parseDrill, num: parseNum, bank: parseBank };
 
 // --- top level ----------------------------------------------------------------
 

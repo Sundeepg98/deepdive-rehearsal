@@ -28,7 +28,7 @@
       liveRegion = document.createElement('div');
       liveRegion.setAttribute('aria-live', 'polite');
       liveRegion.setAttribute('aria-atomic', 'true');
-      liveRegion.style.cssText = 'position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden';
+      liveRegion.style.cssText = 'position:absolute;left:-10000px;width:var(--space-1);height:var(--space-1);overflow:hidden';
       document.body.appendChild(liveRegion);
     }
     liveRegion.textContent = '';

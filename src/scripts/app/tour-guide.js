@@ -47,7 +47,7 @@
     tooltipEl.id = '_tour-tooltip';
     tooltipEl.setAttribute('role', 'dialog');
     tooltipEl.setAttribute('aria-label', 'Tour step');
-    tooltipEl.style.cssText = 'position:fixed;z-index:1202;width:' + TOOLTIP_WIDTH + 'px;max-width:90vw;background:var(--card);border:1px solid var(--bd);border-radius:20px;padding:24px;box-shadow:0 20px 60px -20px rgba(0,0,0,.4);opacity:0;transform:translateY(20px) scale(.96);transition:all .5s cubic-bezier(.22,.61,.36,1);pointer-events:auto';
+    tooltipEl.style.cssText = 'position:fixed;z-index:1202;width:' + TOOLTIP_WIDTH + 'px;max-width:90vw;background:var(--card);border:1px solid var(--bd);border-radius:20px;padding:var(--space-24);box-shadow:0 20px 60px -20px rgba(0,0,0,.4);opacity:0;transform:translateY(20px) scale(.96);transition:all .5s cubic-bezier(.22,.61,.36,1);pointer-events:auto';
 
     document.body.appendChild(overlayEl);
     document.body.appendChild(spotlightEl);
@@ -97,19 +97,19 @@
   function buildTooltip(step, index) {
     var total = STEPS.length, dots = '';
     for (var i = 0; i < total; i++) {
-      dots += '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;margin:0 4px;background:' + (i === index ? 'var(--acc)' : 'var(--bd)') + ';transition:background .3s ease"></span>';
+      dots += '<span style="display:inline-block;width:var(--space-8);height:var(--space-8);border-radius:50%;margin:0 var(--space-4);background:' + (i === index ? 'var(--acc)' : 'var(--bd)') + ';transition:background .3s ease"></span>';
     }
     tooltipEl.innerHTML =
-      '<div style="font:800 15px -apple-system,sans-serif;color:var(--ink);margin-bottom:8px;letter-spacing:-.3px">' + step.title + '</div>' +
-      '<div style="font-size:13px;color:var(--mut);line-height:1.55;margin-bottom:16px">' + step.text + '</div>' +
+      '<div style="font:800 15px -apple-system,sans-serif;color:var(--ink);margin-bottom:var(--space-8);letter-spacing:-.3px">' + step.title + '</div>' +
+      '<div style="font-size:13px;color:var(--mut);line-height:1.55;margin-bottom:var(--space-16)">' + step.text + '</div>' +
       '<div style="display:flex;align-items:center;justify-content:space-between">' +
         '<div style="display:flex;align-items:center">' + dots + '</div>' +
-        '<div style="display:flex;gap:8px">' +
-          (index > 0 ? '<button type="button" id="_tour-prev" style="background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:6px 14px;font:650 12px -apple-system,sans-serif;color:var(--mut);cursor:pointer">Prev</button>' : '') +
-          '<button type="button" id="_tour-next" style="background:linear-gradient(135deg,var(--acc) 0%,var(--acc2) 100%);border:none;border-radius:10px;padding:6px 18px;font:650 12px -apple-system,sans-serif;color:#fff;cursor:pointer;box-shadow:0 2px 8px rgba(83,74,183,.3)">' + (index < total - 1 ? 'Next' : 'Finish') + '</button>' +
+        '<div style="display:flex;gap:var(--space-8)">' +
+          (index > 0 ? '<button type="button" id="_tour-prev" style="background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:var(--space-6) var(--space-14);font:650 12px -apple-system,sans-serif;color:var(--mut);cursor:pointer">Prev</button>' : '') +
+          '<button type="button" id="_tour-next" style="background:linear-gradient(135deg,var(--acc) 0%,var(--acc2) 100%);border:none;border-radius:10px;padding:var(--space-6) var(--space-18);font:650 12px -apple-system,sans-serif;color:#fff;cursor:pointer;box-shadow:0 2px 8px rgba(83,74,183,.3)">' + (index < total - 1 ? 'Next' : 'Finish') + '</button>' +
         '</div>' +
       '</div>' +
-      '<div style="font-size:10px;color:var(--mut2);margin-top:10px;text-align:right">' + (index + 1) + ' / ' + total + '</div>';
+      '<div style="font-size:10px;color:var(--mut2);margin-top:var(--space-10);text-align:right">' + (index + 1) + ' / ' + total + '</div>';
     var prevBtn = document.getElementById('_tour-prev'), nextBtn = document.getElementById('_tour-next');
     if (prevBtn) prevBtn.onclick = function () { goToStep(index - 1); };
     if (nextBtn) nextBtn.onclick = function () { if (index < total - 1) goToStep(index + 1); else destroy(); };

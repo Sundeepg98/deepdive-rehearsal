@@ -237,31 +237,31 @@ document.getElementById('mockx').onclick = closeMock;
    mixBody global and look up their rendered controls through mixRoot. The frame,
    open/close, and the mock-run render below (still light) stay as they are. */
 var MIX_STYLE = `
-.mx-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:10px}
+.mx-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-12);gap:var(--space-10)}
 .mx-prog{font:700 12px -apple-system,sans-serif;color:var(--mut2);letter-spacing:.3px}
-.mx-kind{font:800 10.5px -apple-system,sans-serif;letter-spacing:.5px;text-transform:uppercase;padding:5px 12px;border-radius:20px;white-space:nowrap;box-shadow:0 1px 4px -2px rgba(83,74,183,.08)}
+.mx-kind{font:800 10.5px -apple-system,sans-serif;letter-spacing:.5px;text-transform:uppercase;padding:var(--space-5) var(--space-12);border-radius:20px;white-space:nowrap;box-shadow:0 1px 4px -2px rgba(83,74,183,.08)}
 .mxb-probe{background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.04) 100%);color:var(--accink)}
 .mxb-curve{background:linear-gradient(135deg,var(--mxb-curve-bg) 0%,rgba(176,108,20,.04) 100%);color:var(--amber)}
 .mxb-trade{background:linear-gradient(135deg,var(--tealbg) 0%,rgba(10,133,100,.04) 100%);color:var(--mxb-trade-fg)}
-.mx-label{font:700 14px -apple-system,sans-serif;color:var(--ink);margin-bottom:10px;line-height:1.45}
-.mx-task{display:block;margin-top:10px;font:600 13.5px -apple-system,sans-serif;font-style:italic;color:var(--mut)}
-.mx-end{text-align:center;padding:10px 4px}
-.mx-end-h{font:800 17px -apple-system,sans-serif;color:var(--ink);margin-bottom:5px}
-.mx-end-pct{font:800 44px -apple-system,sans-serif;color:var(--acc);line-height:1;margin:10px 0;text-shadow:0 2px 24px rgba(83,74,183,.2),0 0 40px rgba(83,74,183,.08);letter-spacing:-1px}
-.mx-end-v{font:600 14px -apple-system,sans-serif;color:var(--mut);margin:0 auto 18px;line-height:1.5;max-width:300px}
-.mx-bd{display:flex;flex-wrap:wrap;justify-content:center;gap:9px 18px;margin-bottom:20px;font:600 13px -apple-system,sans-serif;color:var(--mut)}
+.mx-label{font:700 14px -apple-system,sans-serif;color:var(--ink);margin-bottom:var(--space-10);line-height:1.45}
+.mx-task{display:block;margin-top:var(--space-10);font:600 13.5px -apple-system,sans-serif;font-style:italic;color:var(--mut)}
+.mx-end{text-align:center;padding:var(--space-10) var(--space-4)}
+.mx-end-h{font:800 17px -apple-system,sans-serif;color:var(--ink);margin-bottom:var(--space-5)}
+.mx-end-pct{font:800 44px -apple-system,sans-serif;color:var(--acc);line-height:1;margin:var(--space-10) 0;text-shadow:0 2px 24px rgba(83,74,183,.2),0 0 40px rgba(83,74,183,.08);letter-spacing:-1px}
+.mx-end-v{font:600 14px -apple-system,sans-serif;color:var(--mut);margin:0 auto var(--space-18);line-height:1.5;max-width:var(--space-300)}
+.mx-bd{display:flex;flex-wrap:wrap;justify-content:center;gap:var(--space-9) var(--space-18);margin-bottom:var(--space-20);font:600 13px -apple-system,sans-serif;color:var(--mut)}
 .mx-bd b{color:var(--ink);font-weight:800}
-.mx-end-list{text-align:left;margin-bottom:20px}
-.mx-erow{display:flex;align-items:center;gap:10px;padding:8px 4px;border-bottom:1px solid var(--bd);transition:padding .2s ease}
-.mx-erow:hover{padding-left:8px}
-.mx-edot{flex:none;width:10px;height:10px;border-radius:50%;box-shadow:0 0 0 2px rgba(255,255,255,.5)}
+.mx-end-list{text-align:left;margin-bottom:var(--space-20)}
+.mx-erow{display:flex;align-items:center;gap:var(--space-10);padding:var(--space-8) var(--space-4);border-bottom:1px solid var(--bd);transition:padding .2s ease}
+.mx-erow:hover{padding-left:var(--space-8)}
+.mx-edot{flex:none;width:var(--space-10);height:var(--space-10);border-radius:50%;box-shadow:0 0 0 2px rgba(255,255,255,.5)}
 .mx-edot.ok{background:linear-gradient(135deg,var(--teal),#2dd4a8)}
 .mx-edot.no{background:linear-gradient(135deg,var(--amber),#d4902a)}
-.mx-ek{flex:none;font:800 9.5px -apple-system,sans-serif;text-transform:uppercase;letter-spacing:.4px;color:var(--mut2);width:74px}
+.mx-ek{flex:none;font:800 9.5px -apple-system,sans-serif;text-transform:uppercase;letter-spacing:.4px;color:var(--mut2);width:var(--space-74)}
 .mx-el{font:600 13px -apple-system,sans-serif;color:var(--ink)}
-.mx-end-btns{display:flex;flex-direction:column;gap:10px}
+.mx-end-btns{display:flex;flex-direction:column;gap:var(--space-10)}
 .mx-end-btns button{margin-top:0}
-.mxghost{width:100%;font:750 13px -apple-system,sans-serif;padding:12px 16px;border-radius:11px;background:linear-gradient(135deg,transparent 0%,rgba(83,74,183,.02) 100%);color:var(--acc);border:1.5px solid var(--bd);cursor:pointer;transition:transform .15s ease,border-color .2s ease,background .2s ease,box-shadow .2s ease}
+.mxghost{width:100%;font:750 13px -apple-system,sans-serif;padding:var(--space-12) var(--space-16);border-radius:11px;background:linear-gradient(135deg,transparent 0%,rgba(83,74,183,.02) 100%);color:var(--acc);border:1.5px solid var(--bd);cursor:pointer;transition:transform .15s ease,border-color .2s ease,background .2s ease,box-shadow .2s ease}
 .mxghost:hover{border-color:var(--acc);background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.04) 100%);transform:translateY(-1px);box-shadow:0 4px 14px -4px rgba(83,74,183,.12)}
 .mxghost:active{transform:translateY(1px) scale(.98)}
 .push:active{transform:translateY(1px);box-shadow:0 2px 7px rgba(30,28,24,.18),inset 0 1px 0 rgba(255,255,255,.10)}`;
@@ -271,7 +271,7 @@ class DeepMixedFire extends HTMLElement {
     this._built = true;
     const root = this.attachShadow({ mode: 'open' });
     root.adoptedStyleSheets = [BASE_SHEET, OPT_SHEET, ANS_SHEET, MOCK_SHEET];
-    root.innerHTML = '<style>' + MIX_STYLE + '</style><div style="display:flex;flex-direction:column;height:100%"><div class="mock-body" id="mixbody" style="overflow-y:auto;flex:1;min-height:0;padding:18px 20px 24px"></div></div>';
+    root.innerHTML = '<style>' + MIX_STYLE + '</style><div style="display:flex;flex-direction:column;height:100%"><div class="mock-body" id="mixbody" style="overflow-y:auto;flex:1;min-height:0;padding:var(--space-18) var(--space-20) var(--space-24)"></div></div>';
     mixBody = root.getElementById('mixbody');
     mixRoot = root;
   }

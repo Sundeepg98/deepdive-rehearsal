@@ -18,20 +18,20 @@
    (foundation). Child-mounts only -- renderTopic never rewrites this._root.innerHTML.
    Per-topic input tweaks persist via local Store (key num.<topic>); a Reset to
    canonical button restores the reference scenario. Offline-safe: no network/permission. */
-var NUM_STYLE = `.numlead{font-size:15px;line-height:1.5;color:var(--ink);margin:2px 2px 18px}
+var NUM_STYLE = `.numlead{font-size:15px;line-height:1.5;color:var(--ink);margin:var(--space-2) var(--space-2) var(--space-18)}
 .numlead b{color:var(--accink);font-weight:700}
-.num-h{font:800 10px -apple-system,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:var(--mut2);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:10px}
-.num-reset{font:600 10px -apple-system,sans-serif;color:var(--mut);background:transparent;border:1px solid var(--bd);border-radius:6px;padding:3px 9px;cursor:pointer;text-transform:none;letter-spacing:.2px;transition:color .15s ease,border-color .15s ease}
+.num-h{font:800 10px -apple-system,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:var(--mut2);margin-bottom:var(--space-12);display:flex;align-items:center;justify-content:space-between;gap:var(--space-10)}
+.num-reset{font:600 10px -apple-system,sans-serif;color:var(--mut);background:transparent;border:1px solid var(--bd);border-radius:6px;padding:var(--space-3) var(--space-9);cursor:pointer;text-transform:none;letter-spacing:.2px;transition:color .15s ease,border-color .15s ease}
 .num-reset:hover{color:var(--acc);border-color:var(--acc)}
-.ninp{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.ninp label{display:flex;flex-direction:column;gap:6px;font:700 11px -apple-system,sans-serif;color:var(--mut);letter-spacing:.2px}
-.ninp input{font:700 15px ui-monospace,Menlo,monospace;color:var(--accink);background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.04) 100%);border:1.5px solid var(--ninp-bd);border-radius:9px;padding:10px 12px;width:100%;-moz-appearance:textfield;transition:border-color .2s ease,box-shadow .2s ease,transform .15s ease}
+.ninp{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-12)}
+.ninp label{display:flex;flex-direction:column;gap:var(--space-6);font:700 11px -apple-system,sans-serif;color:var(--mut);letter-spacing:.2px}
+.ninp input{font:700 15px ui-monospace,Menlo,monospace;color:var(--accink);background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.04) 100%);border:1.5px solid var(--ninp-bd);border-radius:9px;padding:var(--space-10) var(--space-12);width:100%;-moz-appearance:textfield;transition:border-color .2s ease,box-shadow .2s ease,transform .15s ease}
 .ninp input::-webkit-outer-spin-button,.ninp input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .ninp input:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px rgba(83,74,183,.12),0 2px 8px -2px rgba(83,74,183,.1);transform:translateY(-1px)}
 .ninp input:hover:not(:focus){border-color:rgba(83,74,183,.3)}
-.nrow{display:grid;grid-template-columns:1fr auto;grid-template-areas:"k v" "n n";gap:3px 12px;padding:12px 0;border-bottom:1px solid var(--bd);transition:padding .2s ease}
+.nrow{display:grid;grid-template-columns:1fr auto;grid-template-areas:"k v" "n n";gap:var(--space-3) var(--space-12);padding:var(--space-12) 0;border-bottom:1px solid var(--bd);transition:padding .2s ease}
 .nrow:last-child{border-bottom:0}
-.nrow:hover{padding-left:4px}
+.nrow:hover{padding-left:var(--space-4)}
 .nrow-k{grid-area:k;font-size:13px;font-weight:700;color:var(--ink);align-self:center}
 .nrow-v{grid-area:v;font:800 17px ui-monospace,Menlo,monospace;color:var(--acc);align-self:center;white-space:nowrap;transition:transform .2s cubic-bezier(.34,1.56,.64,1)}
 .nrow:hover .nrow-v{transform:scale(1.05)}
@@ -39,11 +39,11 @@ var NUM_STYLE = `.numlead{font-size:15px;line-height:1.5;color:var(--ink);margin
 .nrow.over .nrow-v{color:var(--red);text-shadow:0 0 20px rgba(239,68,68,.1)}
 .nrow.over .nrow-n{color:var(--red);font-weight:600}
 .nrow.over{background:linear-gradient(90deg,transparent 0%,rgba(239,68,68,.02) 100%)}
-.num-tell{margin-top:15px;font-size:12px;color:var(--teal);font-weight:700;line-height:1.55;padding:14px 17px;background:linear-gradient(135deg,var(--tealbg) 0%,rgba(10,133,100,.04) 100%);border-radius:11px;box-shadow:0 1px 6px -2px rgba(10,133,100,.08)}
-.nprog{height:5px;background:var(--dbar-bg);border-radius:5px;overflow:hidden;margin:12px 0}
+.num-tell{margin-top:var(--space-15);font-size:12px;color:var(--teal);font-weight:700;line-height:1.55;padding:var(--space-14) var(--space-17);background:linear-gradient(135deg,var(--tealbg) 0%,rgba(10,133,100,.04) 100%);border-radius:11px;box-shadow:0 1px 6px -2px rgba(10,133,100,.08)}
+.nprog{height:var(--space-5);background:var(--dbar-bg);border-radius:5px;overflow:hidden;margin:var(--space-12) 0}
 .nprog i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));border-radius:5px;transition:width .5s cubic-bezier(.22,.61,.36,1)}
 .num-tell b{color:var(--dec-tell-b-fg);font-weight:700}
-.nv-u{display:inline-block;width:30px;text-align:left;padding-left:8px;box-sizing:border-box;font-size:13px;font-weight:600;color:var(--mut)}`;
+.nv-u{display:inline-block;width:var(--space-30);text-align:left;padding-left:var(--space-8);box-sizing:border-box;font-size:13px;font-weight:600;color:var(--mut)}`;
 class DeepNumbers extends TopicPane {
   static dataKey = 'num';
   styleText() { return NUM_STYLE; }

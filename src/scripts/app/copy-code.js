@@ -12,7 +12,7 @@
 (function () {
   'use strict';
 
-  var COPY_STYLE = 'position:absolute;top:6px;right:6px;font-size:10px;font-weight:650;letter-spacing:.5px;text-transform:uppercase;padding:4px 10px;border-radius:6px;border:1px solid var(--bd);background:var(--card);color:var(--mut);cursor:pointer;opacity:0;transition:opacity .2s ease,background .2s ease;z-index:5';
+  var COPY_STYLE = 'position:absolute;top:var(--space-6);right:var(--space-6);font-size:10px;font-weight:650;letter-spacing:.5px;text-transform:uppercase;padding:var(--space-4) var(--space-10);border-radius:6px;border:1px solid var(--bd);background:var(--card);color:var(--mut);cursor:pointer;opacity:0;transition:opacity .2s ease,background .2s ease;z-index:5';
 
   function copyText(text) {
     try {

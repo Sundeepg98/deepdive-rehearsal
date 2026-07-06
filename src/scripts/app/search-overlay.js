@@ -88,7 +88,7 @@
     box.style.cssText = 'width:560px;max-width:90vw;background:var(--card);border:1px solid var(--bd);border-radius:16px;box-shadow:0 24px 80px -16px rgba(0,0,0,.35);overflow:hidden;transform:scale(.96) translateY(10px);transition:transform .3s cubic-bezier(.22,.61,.36,1)';
 
     var header = document.createElement('div');
-    header.style.cssText = 'display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--bd)';
+    header.style.cssText = 'display:flex;align-items:center;gap:var(--space-10);padding:var(--space-14) var(--space-18);border-bottom:1px solid var(--bd)';
 
     var icon = document.createElement('span');
     icon.textContent = '\u2318';
@@ -104,14 +104,14 @@
 
     var shortcut = document.createElement('kbd');
     shortcut.textContent = 'ESC';
-    shortcut.style.cssText = 'font-size:10px;font-family:var(--mono,monospace);background:var(--bg);border:1px solid var(--bd);border-radius:4px;padding:2px 6px;color:var(--mut)';
+    shortcut.style.cssText = 'font-size:10px;font-family:var(--mono,monospace);background:var(--bg);border:1px solid var(--bd);border-radius:4px;padding:var(--space-2) var(--space-6);color:var(--mut)';
 
     header.appendChild(icon);
     header.appendChild(inputEl);
     header.appendChild(shortcut);
 
     resultsEl = document.createElement('div');
-    resultsEl.style.cssText = 'max-height:320px;overflow-y:auto;padding:6px';
+    resultsEl.style.cssText = 'max-height:320px;overflow-y:auto;padding:var(--space-6)';
 
     box.appendChild(header);
     box.appendChild(resultsEl);
@@ -165,7 +165,7 @@
     merged.forEach(function (r) {
       if (r[0] > pos) container.appendChild(document.createTextNode(text.slice(pos, r[0])));
       var mk = document.createElement('span');
-      mk.style.cssText = 'background:var(--accbg);color:var(--acc);border-radius:3px;padding:0 1px;font-weight:700';
+      mk.style.cssText = 'background:var(--accbg);color:var(--acc);border-radius:3px;padding:0 var(--space-1);font-weight:700';
       mk.textContent = text.slice(r[0], r[1]);
       container.appendChild(mk); pos = r[1];
     });
@@ -183,30 +183,30 @@
   }
   function sectionHeader(text) {
     var h = document.createElement('div');
-    h.style.cssText = 'font-size:9px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:var(--mut2);padding:8px 14px 4px';
+    h.style.cssText = 'font-size:9px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:var(--mut2);padding:var(--space-8) var(--space-14) var(--space-4)';
     h.textContent = text;
     return h;
   }
   function makeResultItem(d, i, q) {
     var item = document.createElement('button');
     item.type = 'button';
-    item.style.cssText = 'display:flex;flex-direction:column;align-items:flex-start;width:100%;text-align:left;padding:10px 14px;border:0;border-radius:10px;background:' + (i === 0 ? 'var(--accbg)' : 'transparent') + ';cursor:pointer;transition:background .15s ease;margin-bottom:2px;color:var(--ink)';
+    item.style.cssText = 'display:flex;flex-direction:column;align-items:flex-start;width:100%;text-align:left;padding:var(--space-10) var(--space-14);border:0;border-radius:10px;background:' + (i === 0 ? 'var(--accbg)' : 'transparent') + ';cursor:pointer;transition:background .15s ease;margin-bottom:var(--space-2);color:var(--ink)';
     var top = document.createElement('span');
-    top.style.cssText = 'display:flex;align-items:center;gap:8px;width:100%';
+    top.style.cssText = 'display:flex;align-items:center;gap:var(--space-8);width:100%';
     var title = document.createElement('span');
     title.style.cssText = 'font-size:13.5px;font-weight:650;color:var(--ink);flex:1';
     highlightInto(title, d.label, q);
     var tag = document.createElement('span');
     tag.textContent = (d.kind === 'topic') ? 'TOPIC' : 'VIEW';
-    tag.style.cssText = 'font-size:8.5px;font-weight:800;letter-spacing:.5px;padding:2px 6px;border-radius:5px;font-family:var(--mono,monospace);' + ((d.kind === 'topic') ? 'color:var(--acc);background:var(--accbg)' : 'color:var(--mut);background:var(--bg);border:1px solid var(--bd)');
+    tag.style.cssText = 'font-size:8.5px;font-weight:800;letter-spacing:.5px;padding:var(--space-2) var(--space-6);border-radius:5px;font-family:var(--mono,monospace);' + ((d.kind === 'topic') ? 'color:var(--acc);background:var(--accbg)' : 'color:var(--mut);background:var(--bg);border:1px solid var(--bd)');
     top.appendChild(title); top.appendChild(tag);
     var sub = document.createElement('span');
-    sub.style.cssText = 'font-size:11px;color:var(--mut);margin-top:3px';
+    sub.style.cssText = 'font-size:11px;color:var(--mut);margin-top:var(--space-3)';
     sub.textContent = (d.kind === 'topic') ? ((d.group ? d.group + ' \u00b7 ' : '') + d.desc) : d.desc;
     item.appendChild(top); item.appendChild(sub);
     if (d.kind === 'topic' && d.snippet) {
       var snip = document.createElement('span');
-      snip.style.cssText = 'display:block;font-size:10.5px;color:var(--mut2);margin-top:4px;line-height:1.42';
+      snip.style.cssText = 'display:block;font-size:10.5px;color:var(--mut2);margin-top:var(--space-4);line-height:1.42';
       highlightInto(snip, clampSnippet(d.snippet, q), q);
       item.appendChild(snip);
     }
@@ -228,12 +228,12 @@
       var id = bkt.ids[0], t = TopicRegistry.get(id), idn = (t && t.identity) || {};
       var item = document.createElement('button');
       item.type = 'button';
-      item.style.cssText = 'display:flex;flex-direction:column;align-items:flex-start;width:100%;text-align:left;padding:9px 14px;border:0;border-radius:10px;background:transparent;cursor:pointer;transition:background .15s ease;margin-bottom:2px;color:var(--ink)';
+      item.style.cssText = 'display:flex;flex-direction:column;align-items:flex-start;width:100%;text-align:left;padding:var(--space-9) var(--space-14);border:0;border-radius:10px;background:transparent;cursor:pointer;transition:background .15s ease;margin-bottom:var(--space-2);color:var(--ink)';
       var g = document.createElement('span');
       g.style.cssText = 'font-size:12.5px;font-weight:700;color:var(--ink)';
       g.textContent = decodeEnt(bkt.group.label);
       var sub = document.createElement('span');
-      sub.style.cssText = 'font-size:10.5px;color:var(--mut);margin-top:2px';
+      sub.style.cssText = 'font-size:10.5px;color:var(--mut);margin-top:var(--space-2)';
       sub.textContent = decodeEnt(idn.title || id) + ' \u00b7 ' + bkt.ids.length + ' topic' + (bkt.ids.length === 1 ? '' : 's');
       item.appendChild(g); item.appendChild(sub);
       item.addEventListener('mouseenter', function () { item.style.background = 'var(--accbg)'; });
@@ -291,7 +291,7 @@
           near.forEach(function (nm) {
             var sug = document.createElement('button');
             sug.type = 'button';
-            sug.style.cssText = 'display:flex;align-items:center;gap:8px;width:100%;text-align:left;padding:9px 14px;border:0;border-radius:10px;background:transparent;cursor:pointer;color:var(--ink);font-size:13px';
+            sug.style.cssText = 'display:flex;align-items:center;gap:var(--space-8);width:100%;text-align:left;padding:var(--space-9) var(--space-14);border:0;border-radius:10px;background:transparent;cursor:pointer;color:var(--ink);font-size:13px';
             sug.textContent = nm.label + (nm.kind === 'view' ? '  (view)' : '');
             sug.addEventListener('mouseenter', function () { sug.style.background = 'var(--accbg)'; });
             sug.addEventListener('mouseleave', function () { sug.style.background = 'transparent'; });

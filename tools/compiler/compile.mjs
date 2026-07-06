@@ -18,7 +18,10 @@ import { renderMermaid, closeMermaid } from './mermaid.mjs';
 
 async function renderDiagrams(topic) {
   for (const v of Object.values(topic.views)) {
-    for (const step of v.steps) {
+    // pane-level mermaid (e.g. the whiteboard diagram) -> inline SVG at build time
+    if (v.mermaid !== undefined) { v.diagram = await renderMermaid(v.mermaid); delete v.mermaid; }
+    // step-level mermaid (walk steps); guard paneless views -- rf/trade/... have no steps
+    for (const step of v.steps || []) {
       if (step.mermaid !== undefined) { step.diagram = await renderMermaid(step.mermaid); delete step.mermaid; }
     }
   }

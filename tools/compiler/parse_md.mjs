@@ -254,13 +254,13 @@ function parseOpen(toks) {
 // a fenced ```html block captured verbatim as the diagram (inherently HTML, not markdown), and
 // "Foot:" / "Verdict:" paragraphs. Shape: { steps:[{c,a}], diagram, foot, sub, okVerdict }.
 function parseWb(toks) {
-  let sub = '', diagram = '', foot = '', okVerdict = '';
+  let sub = '', diagram = '', mermaid = '', foot = '', okVerdict = '';
   const steps = [];
   let step = null;
   for (let i = 0; i < toks.length; i++) {
     const t = toks[i];
     if (t.type === 'heading_open' && t.tag === 'h3') { step = { c: prose(toks[i + 1].content), a: '' }; steps.push(step); i += 2; continue; }
-    if (t.type === 'fence') { diagram = t.content.replace(/\n$/, ''); step = null; continue; }
+    if (t.type === 'fence') { const body = t.content.replace(/\n$/, ''); if (t.info.trim() === 'mermaid') mermaid = body; else diagram = body; step = null; continue; }
     if (t.type === 'paragraph_open') {
       const raw = toks[i + 1].content; const fM = /^foot:\s*/i.exec(raw); const vM = /^verdict:\s*/i.exec(raw);
       if (fM) foot = prose(raw.slice(fM[0].length));
@@ -270,7 +270,7 @@ function parseWb(toks) {
       i += 2; continue;
     }
   }
-  return { steps, diagram, foot, sub, okVerdict };
+  return { steps, ...(mermaid ? { mermaid } : { diagram }), foot, sub, okVerdict };
 }
 
 // Model answers: ## Model Answers, then ### <selector> | <opener> per answer (selector feeds

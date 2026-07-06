@@ -301,8 +301,8 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
 @media(max-width:919px){
   .app{flex-direction:column;min-height:0;padding-top:56px;padding-bottom:calc(126px + env(safe-area-inset-bottom,0px))}
   .sidebar{width:auto;height:auto;position:static;flex-direction:column;gap:0;padding:0;border-right:none;background:transparent;overflow:visible}
-  .side-id{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-8) var(--space-10);background:var(--side);border-bottom:1px solid var(--bd);padding:var(--space-11) var(--space-15)}
-  .side-id .badge{display:none}
+  .side-id{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-6) var(--space-10);background:var(--side);border-bottom:1px solid var(--bd);padding:var(--space-9) var(--space-15)}
+  .side-id .badge{display:none!important}
   .side-id .hdr{order:0;flex:1 1 auto;margin:0}
   .side-id h1{font-size:var(--font-size-title)}
   .side-id .locator{order:2;flex-basis:100%;margin:var(--space-4) 0 0;font-size:var(--font-size-micro);padding:var(--space-4) var(--space-10);border-radius:7px;display:inline-block;width:auto}

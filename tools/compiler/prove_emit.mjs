@@ -24,6 +24,6 @@ eval(files['identity.js'] + files['walk.js'] + files['register.js']);
 check("register id='notifications'", captured && captured.id==='notifications');
 check('register wires walk', captured && JSON.stringify(captured.data.walk)===JSON.stringify(topic.views.walk));
 
-console.log('\nEmitter round-trip: '+pass+' pass, '+fail+' fail');
 console.log('\n--- emitted register.js ---\n'+files['register.js']);
+console.log('\nEmitter round-trip: '+pass+' pass, '+fail+' fail');
 process.exit(fail===0?0:1);

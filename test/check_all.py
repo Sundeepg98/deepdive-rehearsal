@@ -42,7 +42,15 @@ for name, cmd in [('ascii_guard', ['python3', 'test/ascii_guard.py']),
                   ('css_syntax', ['python3', 'test/css_syntax.py']),
                   ('file_integrity', ['python3', 'test/file_integrity.py']),
                   ('unit_tests', ['python3', 'test/unit_tests.py']),
-                  ('visual_regression', ['python3', 'test/visual_regression.py'])]:
+                  ('visual_regression', ['python3', 'test/visual_regression.py']),
+                  # Compiler proof tests -- parse/emit/data-equivalence, no Chrome; guard against
+                  # markdown-parser and emitter regressions in the topic-authoring pipeline.
+                  ('compiler_md', ['node', 'tools/compiler/prove_md.mjs']),
+                  ('compiler_emit', ['node', 'tools/compiler/prove_emit.mjs']),
+                  ('compiler_assembly', ['node', 'tools/compiler/prove_assembly.mjs']),
+                  ('compiler_prose', ['node', 'tools/compiler/prove_prose.mjs']),
+                  ('compiler_flow', ['node', 'tools/compiler/prove_flow.mjs']),
+                  ('compiler_code', ['node', 'tools/compiler/prove_code.mjs'])]:
     r = run(cmd)
     results.append((name, 'PASS' if r.returncode == 0 else 'FAIL', last_line(r)))
 

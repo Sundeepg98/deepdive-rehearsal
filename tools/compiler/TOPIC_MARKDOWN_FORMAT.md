@@ -97,8 +97,9 @@ Per view, a `### <view>` sub-heading followed by exactly three paragraphs ->
 
 ## View sections
 
-Each `## <Heading>` maps to one view. Only `## Drill` is required; omitting any
-other pane simply omits its slice from the bundle.
+Each `## <Heading>` maps to one view. **All view panes are required** -- the app
+has a tab for every one, so omitting a pane is rejected at compile time (it would
+otherwise render blank and throw when its tab is first clicked).
 
 | Heading            | View  |
 | ------------------ | ----- |
@@ -389,7 +390,12 @@ id and the failing field path, before any files are written. Enforced:
 
 - identity fields present and non-empty; `group` one of the six;
 - `index` and `total` positive integers;
+- all nine non-drill view panes present (a missing one is named in the error);
 - drill has at least 18 cards, with each core tier (SDE2 / SDE3 / Staff) at least 3;
+- the render-critical view arrays are arrays -- `walk.steps`, `sys.stages` /
+  `sys.pivots`, `model.selectors`, `num.inputs`, `rf.flags`, `open.cards`,
+  `bank.mockBeats` / `curveballs` / `frames`, and `opts` on each trade decision;
+- the Numbers compute is a function expression, not a bare `return` body;
 - an unknown `## <Heading>` throws `unknown section heading(s)` listing the valid
   headings (catches typo'd panes that zod alone would miss).
 

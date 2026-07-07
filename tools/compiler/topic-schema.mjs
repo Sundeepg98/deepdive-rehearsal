@@ -52,11 +52,53 @@ const drill = z.object({
   }
 });
 
+// Every topic must ship all nine non-drill panes (the app has a tab for each);
+// a missing one compiles clean and only throws when its tab is first clicked.
+const REQUIRED_PANES = {
+  walk: 'Walk', wb: 'Whiteboard', sys: 'System', trade: 'Trade-offs',
+  model: 'Model Answers', num: 'Numbers', rf: 'Red Flags', open: 'Opener', bank: 'Bank',
+};
+// Top-level view fields the app renders with .map -- if absent they throw.
+const NEED_ARRAY = [
+  ['walk', 'steps'], ['sys', 'stages'], ['sys', 'pivots'], ['model', 'selectors'],
+  ['num', 'inputs'], ['rf', 'flags'], ['open', 'cards'],
+  ['bank', 'mockBeats'], ['bank', 'curveballs'], ['bank', 'frames'],
+];
+
 const topicSchema = z.object({
   id: z.string().min(1, 'frontmatter id is required'),
   prefix: z.string().min(1, 'frontmatter prefix is required'),
   identity,
   views: z.object({ drill }).loose(),
+}).superRefine((t, ctx) => {
+  const v = (t && t.views) || {};
+  for (const key of Object.keys(REQUIRED_PANES)) {
+    if (v[key] === undefined || v[key] === null) {
+      ctx.addIssue({ code: 'custom', path: ['views', key], message: 'missing the ## ' + REQUIRED_PANES[key] + ' pane' });
+    }
+  }
+  for (const [pane, field] of NEED_ARRAY) {
+    if (v[pane] != null && !Array.isArray(v[pane][field])) {
+      ctx.addIssue({ code: 'custom', path: ['views', pane, field], message: pane + '.' + field + ' must be an array (the ' + pane + ' render maps over it)' });
+    }
+  }
+  if (v.trade && Array.isArray(v.trade.decisions)) {
+    v.trade.decisions.forEach((d, i) => {
+      if (!d || !Array.isArray(d.opts)) {
+        ctx.addIssue({ code: 'custom', path: ['views', 'trade', 'decisions', i, 'opts'], message: 'trade decision ' + i + ' needs opts (an array)' });
+      }
+    });
+  }
+  // The Numbers compute is emitted verbatim as the compute value, so it must be a
+  // function expression -- a bare "return {...}" body compiles clean then throws in the app.
+  const compute = v.num && v.num.compute;
+  if (compute !== undefined) {
+    let ok = false;
+    try { ok = typeof (new Function('return (' + compute + ')'))() === 'function'; } catch (e) { ok = false; }
+    if (!ok) {
+      ctx.addIssue({ code: 'custom', path: ['views', 'num', 'compute'], message: 'Numbers compute must be a function expression like function (vals, fmt) { ... }, not a bare return body' });
+    }
+  }
 });
 
 // Throw a clear, author-facing error if a parsed topic violates the contract.

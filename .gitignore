@@ -31,3 +31,5 @@ src/topics/devices-dispatch/
 src/topics/devices-dispatch.js
 src/topics/rules-engine/
 src/topics/rules-engine.js
+src/topics/shared-definition/
+src/topics/shared-definition.js

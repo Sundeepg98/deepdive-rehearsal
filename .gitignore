@@ -39,3 +39,5 @@ src/topics/cdc/
 src/topics/cdc.js
 src/topics/feature-flags/
 src/topics/feature-flags.js
+src/topics/soft-delete/
+src/topics/soft-delete.js

@@ -17,6 +17,7 @@ import { parseMarkdown } from './parse_md.mjs';
 import { validateTopic } from './topic-schema.mjs';
 import { emit } from './emit.mjs';
 import { renderMermaid, closeMermaid } from './mermaid.mjs';
+import { renderShiki, closeShiki } from './shiki-highlight.mjs';
 
 async function renderDiagrams(topic) {
   for (const v of Object.values(topic.views)) {
@@ -25,6 +26,8 @@ async function renderDiagrams(topic) {
     // step-level mermaid (walk steps); guard paneless views -- rf/trade/... have no steps
     for (const step of v.steps || []) {
       if (step.mermaid !== undefined) { step.diagram = await renderMermaid(step.mermaid); delete step.mermaid; }
+      // step-level non-JS code fence -> Shiki-highlighted inner HTML for the app's <pre class="code">
+      if (step.shiki !== undefined) { step.code = await renderShiki(step.shiki.code, step.shiki.lang); delete step.shiki; }
     }
   }
 }
@@ -88,6 +91,6 @@ export function compileTopicsPlugin({ srcDir, topicsDir, registryName = '_genera
       }
       writeRegistry(path.join(topicsDir, registryName), topics);
     },
-    async buildEnd() { await closeMermaid(); },
+    async buildEnd() { await closeMermaid(); await closeShiki(); },
   };
 }

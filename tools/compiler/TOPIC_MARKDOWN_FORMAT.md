@@ -137,7 +137,14 @@ caught, never silently dropped.
 Per step: `### <step title>`, then a fenced `flow` diagram, then prose. The first
 paragraph is `ins`; the paragraph immediately before a fenced code block is
 `deep`; the paragraph immediately after it is `cap`. A step may carry a fenced
-`flow`, `ts`, or `mermaid` block.
+`flow` or `mermaid` diagram, or a code block.
+
+Code fences are highlighted by language. `js`/`ts` (or an unlabelled fence) use
+the minimal highlighter, where the author marks the tokens the eye should land on
+with `==emphasis==` (no grammar highlighter can infer those). Other languages --
+`sql`, `yaml`, `bash`, `json`, `python`, `go` -- are highlighted by Shiki with a
+full grammar, themed to match the app's code palette so a SQL or YAML block looks
+native next to a JS one. Both render into the same `pre.code` container.
 
     ## Walk
 

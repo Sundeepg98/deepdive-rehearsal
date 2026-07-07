@@ -11,6 +11,7 @@ import MarkdownIt from 'markdown-it';
 import { prose, text } from './prose.mjs';
 import { flow } from './flow.mjs';
 import { code } from './code.mjs';
+import { shikiLang } from './shiki-highlight.mjs';
 
 const md = new MarkdownIt();
 
@@ -108,7 +109,7 @@ function parseSteps(toks) {
       const lang = t.info.trim(); const body = t.content.replace(/\n$/, '');
       if (lang === 'flow') step.flow = flow(body.trim());
       else if (lang === 'mermaid') step.mermaid = body;
-      else step.code = code(body);
+      else { const sl = shikiLang(lang); if (sl) step.shiki = { lang: sl, code: body }; else step.code = code(body); }
       continue;
     }
     if (t.type === 'paragraph_open' && step) {

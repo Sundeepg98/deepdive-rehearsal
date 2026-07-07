@@ -82,6 +82,12 @@ SQS standard or FIFO --- what is the difference?
 
 **Standard** queues have the highest throughput but only best-effort ordering and at-least-once delivery (occasional duplicates). **FIFO** queues guarantee order and dedup within a window, at much lower throughput. Most high-volume pipelines use standard queues and handle ordering and dedup in the consumer, because the FIFO throughput ceiling is real.
 
+### SDE2 | fan-out to many consumers
+
+How do two independent services each consume the same event?
+
+Fan-out: the event goes to a topic or bus that delivers a copy to each consumer's own queue, so each processes independently at its own pace and a slow consumer doesn't block the other. A single shared queue would make consumers compete for messages, each seeing only some; fan-out gives every consumer its own full copy.
+
 ### SDE3 | why duplicates are inevitable
 
 Why can't you just prevent duplicate delivery?
@@ -118,6 +124,12 @@ How does an event-driven system handle backpressure?
 
 The queue *is* the backpressure mechanism --- when consumers fall behind, messages accumulate rather than overwhelming anything, and queue depth becomes the signal to scale consumers out. The trade is latency: messages wait longer. You watch queue depth and message age, and autoscale consumers on depth, so the buffer never grows unbounded.
 
+### SDE3 | partial batch failure
+
+Your consumer pulls a batch and one message fails. What must you handle?
+
+Partial batch failure. If you fail the whole batch, the good messages redeliver and reprocess --- safe only because the consumer is idempotent, but wasteful. The better handling reports exactly which messages failed so only those redeliver and the rest are acked. Batch processing makes per-message idempotency and per-message failure reporting both necessary.
+
 ### Staff | the exactly-once myth
 
 An interviewer asks for exactly-once. What do you say?
@@ -153,6 +165,12 @@ Version the event and make consumers tolerant --- add fields, never repurpose or
 Can you re-run events after fixing a consumer bug?
 
 Only if the events are **retained and replayable**. A durable log --- Kafka, or an archived stream --- lets you reprocess a window after a fix, and an idempotent consumer makes that replay safe to run. A plain queue deletes on ack, so it cannot replay; keeping an event archive is the price of being able to recover from a consumer that was silently wrong. Replay plus idempotency is the recovery story for bad processing, the same way a DLQ is the story for bad messages.
+
+### Staff | fat vs thin events
+
+Should an event carry its data, or just say something happened?
+
+A thin event says X changed, go look, and the consumer fetches current state --- small and always fresh, but it couples the consumer to a read API and adds a call. A fat, event-carried-state event includes the data --- self-contained and replayable, no callback, but larger and able to go stale. The choice trades coupling and extra calls against payload size and staleness.
 
 ## Walk
 

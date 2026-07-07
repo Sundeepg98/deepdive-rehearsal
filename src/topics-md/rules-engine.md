@@ -82,6 +82,12 @@ What does MFA-gating the approval add?
 
 It raises the bar on *who* is approving. An approval is a high-value action, so requiring a TOTP (or equivalent) at the moment of approval means a stolen session or password alone isn't enough to approve --- the approver must prove a second factor right then. Four-eyes stops one actor; MFA makes each of the two harder to impersonate.
 
+### SDE2 | validating a rule change
+
+What stops an invalid rule from being saved?
+
+The rule's own schema. A rule change is validated against the definition's parameter schema before it is written --- a threshold outside its allowed range or a malformed condition is rejected at write time, so the engine never reads an invalid rule. Validation-on-write is what makes rules-as-data as safe as code review makes code.
+
 ### SDE3 | the state machine
 
 What is the dual-authorization state machine?
@@ -118,6 +124,12 @@ How does the engine pick which rules to run for a tenant?
 
 It joins the **catalog** to that tenant's **subscriptions** --- the intersection is the tenant's active rule set. A tenant runs only the rules it subscribed to, with its own parameters; a rule in the catalog that a tenant didn't subscribe to is skipped for it. The join is the mechanism that makes one shared engine serve many tenants with different policy.
 
+### SDE3 | the concurrent second approval
+
+Two people approve a pending request at almost the same instant. What could go wrong?
+
+A race: both reads see pending second approval and both try to advance, or a non-atomic check lets the requester slip through as the second approver. The advance must be a conditional, atomic transition --- a compare-and-set on the state together with the distinct-identity check in one transaction --- so exactly one transition to active occurs and concurrency can't bypass the four-eyes rule.
+
 ### Staff | engine vs hardcoded
 
 When is a rules engine worth it over hardcoded logic?
@@ -153,6 +165,12 @@ Because "who changed this rule, and who approved it" is a question you *will* be
 Four-eyes adds friction. When is it worth it?
 
 When the blast radius of a single bad change is high --- a rule that pages the fleet, a config that touches every device, a security-relevant setting. There, the friction of a second approver is cheap insurance against one actor causing wide damage. For low-stakes, easily-reversible changes it's overkill; the skill is scoping the control to the changes that actually warrant it, not gating everything.
+
+### Staff | reload frequency vs freshness
+
+How quickly does an approved rule change take effect, and what is the knob?
+
+It is live in seconds, not a deploy --- but exactly when depends on how the engine picks up rules. Reloading the active set each evaluation cycle makes it live next cycle; a short cache TTL trades a little staleness for fewer reads. The knob is the reload frequency or TTL: shorter is fresher but hits the store more often, longer is cheaper but a change lags.
 
 ## Walk
 

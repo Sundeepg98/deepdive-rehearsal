@@ -82,6 +82,12 @@ What is the difference between a rate limit and a quota?
 
 A **rate limit** caps requests per short window (per second or minute) to protect against bursts; a **quota** caps total usage over a long period (per day or month), usually for billing or fairness. They guard different things and are enforced as separate counters.
 
+### SDE2 | leaky bucket vs token bucket
+
+How does a leaky bucket differ from a token bucket?
+
+A leaky bucket drains queued requests at a fixed rate, smoothing output to a constant stream with no bursts; a token bucket refills tokens at a steady rate but lets a client spend a burst up to the bucket size. Leaky bucket shapes traffic to a smooth downstream rate; token bucket permits controlled bursts. Choose leaky when a downstream needs a steady feed, token when short bursts are acceptable.
+
 ### SDE3 | why not per-instance
 
 Why can't each instance keep its own counter?
@@ -118,6 +124,12 @@ What subtle bugs come from time in a limiter?
 
 Window arithmetic depends on a clock, and skew across instances or a non-monotonic clock can double-count or reset a window early. Use the **store's** clock as the single source (for example Redis `TIME`) rather than each instance's wall clock, so every increment is timed consistently.
 
+### SDE3 | the local fallback drift
+
+While the shared store is down, your local fallback bucket has been counting. How do you reconcile when the store returns?
+
+You don't merge the counts --- the local bucket is a coarse, lossy approximation used only for availability. On recovery you resume authoritative counting from the shared store and let the local state reset. Reconciling lossy per-instance counts is complexity for no real gain; accept a brief window of loose enforcement as the price of failing open.
+
 ### Staff | policy is a product call
 
 How do you design rate-limit policy for a public API?
@@ -153,6 +165,12 @@ Start in **observe** mode --- log what *would* be rejected without rejecting ---
 Gateway or in-app --- where should the limiter live?
 
 Prefer the **edge** --- API gateway, service mesh, or CDN --- for uniform, cheap enforcement close to the client. Build limiting **in-app** only for limits that need business context the edge lacks, such as per-tenant quotas tied to billing state. Owning less limiter code is usually the win.
+
+### Staff | limiting across regions
+
+How do you enforce one client's limit across multiple regions?
+
+A truly global limit needs a shared cross-region counter, which adds inter-region latency to every request. The common alternatives are to split the limit per region (each enforces a share, accepting that a client spread across regions could exceed the global cap) or to route a client consistently to one region so its counter stays local. The trade is global accuracy against cross-region latency.
 
 ## Walk
 

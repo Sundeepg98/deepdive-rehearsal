@@ -82,6 +82,12 @@ What does the job payload look like?
 
 A self-contained document the device can apply without further calls --- an id, the target, and the config to apply. It is built once at dispatch and the same document is served to the device on its poll, so the device needs only the payload it pulled, not a conversation with the server.
 
+### SDE2 | long-poll vs short-poll
+
+Should devices short-poll or long-poll for work?
+
+Short-poll returns immediately, empty if there is no job --- simple but wasteful at fleet scale, mostly empty responses. Long-poll holds the request briefly until a job appears or it times out, cutting empty responses and job latency, but it holds a connection for that window, which at scale is its own load. For a very large fleet, short-poll with jitter is often simpler; long-poll suits smaller fleets needing lower job latency.
+
 ### SDE3 | why a stateless server
 
 Why does the dispatch server need to be stateless?
@@ -118,6 +124,12 @@ Can you cancel a job after dispatch?
 
 A **queued** job, yes --- set its state to cancelled and the device never picks it up. An **in-progress** job is harder: the device already pulled it, so cancellation is best-effort (the device checks state, or you rely on the change being idempotent and correct forward). This is why the state machine has an explicit cancelled state distinct from failed.
 
+### SDE3 | at-least-once dispatch
+
+Can a device receive and apply the same job twice? Why?
+
+Yes. A device can apply a job and then have its status report lost, so on the next poll the server --- still seeing the job as in-progress or queued --- re-serves it. That is why execution is idempotent by job id: a re-served job is re-reported, not re-applied. Pull-based dispatch inherits the same at-least-once reality as any queue; the device is the idempotent consumer.
+
 ### Staff | all-at-once vs staged
 
 Do you roll to the whole fleet at once, or in stages?
@@ -153,6 +165,12 @@ It trades freshness against load. A short interval means changes reach devices f
 Would you build fleet dispatch or use a device-management platform?
 
 For a fleet this size and this specific --- payment terminals with a custom eligibility and payload model --- owning the dispatch slice is defensible, because the targeting and the job semantics *are* the product. But the generic parts --- device identity, connectivity, the OTA transport, an MDM-style console --- are exactly what a device-management platform gives you. The call is to own the domain-specific dispatch logic and buy the undifferentiated fleet plumbing, not to rebuild an MDM from scratch.
+
+### Staff | versioning the payload
+
+How do you evolve the job payload format across a fleet on mixed firmware?
+
+Version it and keep the server additive --- old devices ignore fields they don't know, new fields are optional, and you never repurpose or remove a field a device reads. Because devices update on their own schedule, many firmware versions are live at once, so the payload is a backward-compatible contract: a device on old firmware must safely apply or safely reject a document built by a newer server.
 
 ## Walk
 

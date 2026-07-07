@@ -8620,6 +8620,14 @@ var TOPIC_RL_DRILL = {
       "senior": ""
     },
     {
+      "tier": "SDE2",
+      "signal": "leaky bucket vs token bucket",
+      "q": "How does a leaky bucket differ from a token bucket?",
+      "a": "A leaky bucket drains queued requests at a fixed rate, smoothing output to a constant stream with no bursts; a token bucket refills tokens at a steady rate but lets a client spend a burst up to the bucket size. Leaky bucket shapes traffic to a smooth downstream rate; token bucket permits controlled bursts. Choose leaky when a downstream needs a steady feed, token when short bursts are acceptable.",
+      "f": [],
+      "senior": ""
+    },
+    {
       "tier": "SDE3",
       "signal": "why not per-instance",
       "q": "Why can&rsquo;t each instance keep its own counter?",
@@ -8664,6 +8672,14 @@ var TOPIC_RL_DRILL = {
       "signal": "time is the bug",
       "q": "What subtle bugs come from time in a limiter?",
       "a": "Window arithmetic depends on a clock, and skew across instances or a non-monotonic clock can double-count or reset a window early. Use the <b>store&rsquo;s</b> clock as the single source (for example Redis <code>TIME</code>) rather than each instance&rsquo;s wall clock, so every increment is timed consistently.",
+      "f": [],
+      "senior": ""
+    },
+    {
+      "tier": "SDE3",
+      "signal": "the local fallback drift",
+      "q": "While the shared store is down, your local fallback bucket has been counting. How do you reconcile when the store returns?",
+      "a": "You don&rsquo;t merge the counts &mdash; the local bucket is a coarse, lossy approximation used only for availability. On recovery you resume authoritative counting from the shared store and let the local state reset. Reconciling lossy per-instance counts is complexity for no real gain; accept a brief window of loose enforcement as the price of failing open.",
       "f": [],
       "senior": ""
     },
@@ -8714,9 +8730,20 @@ var TOPIC_RL_DRILL = {
       "a": "Prefer the <b>edge</b> &mdash; API gateway, service mesh, or CDN &mdash; for uniform, cheap enforcement close to the client. Build limiting <b>in-app</b> only for limits that need business context the edge lacks, such as per-tenant quotas tied to billing state. Owning less limiter code is usually the win.",
       "f": [],
       "senior": ""
+    },
+    {
+      "tier": "Staff",
+      "signal": "limiting across regions",
+      "q": "How do you enforce one client&rsquo;s limit across multiple regions?",
+      "a": "A truly global limit needs a shared cross-region counter, which adds inter-region latency to every request. The common alternatives are to split the limit per region (each enforces a share, accepting that a client spread across regions could exceed the global cap) or to route a client consistently to one region so its counter stays local. The trade is global accuracy against cross-region latency.",
+      "f": [],
+      "senior": ""
     }
   ],
   "speak": [
+    "",
+    "",
+    "",
     "",
     "",
     "",
@@ -9189,6 +9216,14 @@ var TOPIC_MT_DRILL = {
       "senior": ""
     },
     {
+      "tier": "SDE2",
+      "signal": "the tenant on a write",
+      "q": "How do you ensure a newly created row belongs to the right tenant?",
+      "a": "The repository stamps the tenant id from the request context onto every insert, so the caller never supplies it. Just as reads add the predicate, writes set tenant_id from the verified claim &mdash; there is no field for the caller to set, so a row can&rsquo;t be created under another tenant. Writes are scoped by the same single enforcement point as reads.",
+      "f": [],
+      "senior": ""
+    },
+    {
       "tier": "SDE3",
       "signal": "one enforcement point",
       "q": "Where should the tenant predicate be enforced?",
@@ -9233,6 +9268,14 @@ var TOPIC_MT_DRILL = {
       "signal": "migrations across tenants",
       "q": "What is harder about schema migrations under each model?",
       "a": "<b>Shared DB:</b> one migration covers all tenants at once, but it must be backward-compatible because every tenant is on it instantly. <b>DB per tenant:</b> each database migrates independently &mdash; safer to stage and roll back per tenant, but you now run the migration N times and track which tenants are on which version.",
+      "f": [],
+      "senior": ""
+    },
+    {
+      "tier": "SDE3",
+      "signal": "the pooled connection tenant",
+      "q": "With database row-level security and a connection pool, what is the subtle bug?",
+      "a": "A pooled connection carries whatever tenant session variable the last user set. If you don&rsquo;t set the tenant on every checkout, a request can run against the previous request&rsquo;s tenant. The rule is that the tenant context must be set &mdash; and ideally reset &mdash; on each checkout, never inherited from the connection&rsquo;s last use, or pooling silently defeats the isolation.",
       "f": [],
       "senior": ""
     },
@@ -9283,9 +9326,20 @@ var TOPIC_MT_DRILL = {
       "a": "<b>App-layer</b> (a repository predicate or ORM scope) is portable, easy to reason about, and where most teams start; its weakness is that a path bypassing the layer bypasses isolation. <b>RLS</b> puts the guarantee in the database so no code bug can defeat it, at the cost of policy complexity and session setup. Defence in depth uses both &mdash; scope in the app, and let RLS be the backstop.",
       "f": [],
       "senior": ""
+    },
+    {
+      "tier": "Staff",
+      "signal": "cross-tenant analytics",
+      "q": "The product team wants aggregate metrics across all tenants. How, without weakening isolation?",
+      "a": "Through a separate, access-controlled read path &mdash; a warehouse or a read replica &mdash; that explicitly operates outside the tenant scope, never the tenant-facing service with the predicate removed. Cross-tenant aggregation is legitimate, but it lives in a distinct system with its own auth, so the tenant-facing code path stays unconditionally scoped and no ordinary bug there can read across tenants.",
+      "f": [],
+      "senior": ""
     }
   ],
   "speak": [
+    "",
+    "",
+    "",
     "",
     "",
     "",
@@ -9749,6 +9803,14 @@ var TOPIC_ED_DRILL = {
       "senior": ""
     },
     {
+      "tier": "SDE2",
+      "signal": "fan-out to many consumers",
+      "q": "How do two independent services each consume the same event?",
+      "a": "Fan-out: the event goes to a topic or bus that delivers a copy to each consumer&rsquo;s own queue, so each processes independently at its own pace and a slow consumer doesn&rsquo;t block the other. A single shared queue would make consumers compete for messages, each seeing only some; fan-out gives every consumer its own full copy.",
+      "f": [],
+      "senior": ""
+    },
+    {
       "tier": "SDE3",
       "signal": "why duplicates are inevitable",
       "q": "Why can&rsquo;t you just prevent duplicate delivery?",
@@ -9793,6 +9855,14 @@ var TOPIC_ED_DRILL = {
       "signal": "backpressure",
       "q": "How does an event-driven system handle backpressure?",
       "a": "The queue <i>is</i> the backpressure mechanism &mdash; when consumers fall behind, messages accumulate rather than overwhelming anything, and queue depth becomes the signal to scale consumers out. The trade is latency: messages wait longer. You watch queue depth and message age, and autoscale consumers on depth, so the buffer never grows unbounded.",
+      "f": [],
+      "senior": ""
+    },
+    {
+      "tier": "SDE3",
+      "signal": "partial batch failure",
+      "q": "Your consumer pulls a batch and one message fails. What must you handle?",
+      "a": "Partial batch failure. If you fail the whole batch, the good messages redeliver and reprocess &mdash; safe only because the consumer is idempotent, but wasteful. The better handling reports exactly which messages failed so only those redeliver and the rest are acked. Batch processing makes per-message idempotency and per-message failure reporting both necessary.",
       "f": [],
       "senior": ""
     },
@@ -9843,9 +9913,20 @@ var TOPIC_ED_DRILL = {
       "a": "Only if the events are <b>retained and replayable</b>. A durable log &mdash; Kafka, or an archived stream &mdash; lets you reprocess a window after a fix, and an idempotent consumer makes that replay safe to run. A plain queue deletes on ack, so it cannot replay; keeping an event archive is the price of being able to recover from a consumer that was silently wrong. Replay plus idempotency is the recovery story for bad processing, the same way a DLQ is the story for bad messages.",
       "f": [],
       "senior": ""
+    },
+    {
+      "tier": "Staff",
+      "signal": "fat vs thin events",
+      "q": "Should an event carry its data, or just say something happened?",
+      "a": "A thin event says X changed, go look, and the consumer fetches current state &mdash; small and always fresh, but it couples the consumer to a read API and adds a call. A fat, event-carried-state event includes the data &mdash; self-contained and replayable, no callback, but larger and able to go stale. The choice trades coupling and extra calls against payload size and staleness.",
+      "f": [],
+      "senior": ""
     }
   ],
   "speak": [
+    "",
+    "",
+    "",
     "",
     "",
     "",
@@ -10309,6 +10390,14 @@ var TOPIC_DD_DRILL = {
       "senior": ""
     },
     {
+      "tier": "SDE2",
+      "signal": "long-poll vs short-poll",
+      "q": "Should devices short-poll or long-poll for work?",
+      "a": "Short-poll returns immediately, empty if there is no job &mdash; simple but wasteful at fleet scale, mostly empty responses. Long-poll holds the request briefly until a job appears or it times out, cutting empty responses and job latency, but it holds a connection for that window, which at scale is its own load. For a very large fleet, short-poll with jitter is often simpler; long-poll suits smaller fleets needing lower job latency.",
+      "f": [],
+      "senior": ""
+    },
+    {
       "tier": "SDE3",
       "signal": "why a stateless server",
       "q": "Why does the dispatch server need to be stateless?",
@@ -10353,6 +10442,14 @@ var TOPIC_DD_DRILL = {
       "signal": "cancelling a job",
       "q": "Can you cancel a job after dispatch?",
       "a": "A <b>queued</b> job, yes &mdash; set its state to cancelled and the device never picks it up. An <b>in-progress</b> job is harder: the device already pulled it, so cancellation is best-effort (the device checks state, or you rely on the change being idempotent and correct forward). This is why the state machine has an explicit cancelled state distinct from failed.",
+      "f": [],
+      "senior": ""
+    },
+    {
+      "tier": "SDE3",
+      "signal": "at-least-once dispatch",
+      "q": "Can a device receive and apply the same job twice? Why?",
+      "a": "Yes. A device can apply a job and then have its status report lost, so on the next poll the server &mdash; still seeing the job as in-progress or queued &mdash; re-serves it. That is why execution is idempotent by job id: a re-served job is re-reported, not re-applied. Pull-based dispatch inherits the same at-least-once reality as any queue; the device is the idempotent consumer.",
       "f": [],
       "senior": ""
     },
@@ -10403,9 +10500,20 @@ var TOPIC_DD_DRILL = {
       "a": "For a fleet this size and this specific &mdash; payment terminals with a custom eligibility and payload model &mdash; owning the dispatch slice is defensible, because the targeting and the job semantics <i>are</i> the product. But the generic parts &mdash; device identity, connectivity, the OTA transport, an MDM-style console &mdash; are exactly what a device-management platform gives you. The call is to own the domain-specific dispatch logic and buy the undifferentiated fleet plumbing, not to rebuild an MDM from scratch.",
       "f": [],
       "senior": ""
+    },
+    {
+      "tier": "Staff",
+      "signal": "versioning the payload",
+      "q": "How do you evolve the job payload format across a fleet on mixed firmware?",
+      "a": "Version it and keep the server additive &mdash; old devices ignore fields they don&rsquo;t know, new fields are optional, and you never repurpose or remove a field a device reads. Because devices update on their own schedule, many firmware versions are live at once, so the payload is a backward-compatible contract: a device on old firmware must safely apply or safely reject a document built by a newer server.",
+      "f": [],
+      "senior": ""
     }
   ],
   "speak": [
+    "",
+    "",
+    "",
     "",
     "",
     "",
@@ -10869,6 +10977,14 @@ var TOPIC_RE_DRILL = {
       "senior": ""
     },
     {
+      "tier": "SDE2",
+      "signal": "validating a rule change",
+      "q": "What stops an invalid rule from being saved?",
+      "a": "The rule&rsquo;s own schema. A rule change is validated against the definition&rsquo;s parameter schema before it is written &mdash; a threshold outside its allowed range or a malformed condition is rejected at write time, so the engine never reads an invalid rule. Validation-on-write is what makes rules-as-data as safe as code review makes code.",
+      "f": [],
+      "senior": ""
+    },
+    {
       "tier": "SDE3",
       "signal": "the state machine",
       "q": "What is the dual-authorization state machine?",
@@ -10913,6 +11029,14 @@ var TOPIC_RE_DRILL = {
       "signal": "which rules run",
       "q": "How does the engine pick which rules to run for a tenant?",
       "a": "It joins the <b>catalog</b> to that tenant&rsquo;s <b>subscriptions</b> &mdash; the intersection is the tenant&rsquo;s active rule set. A tenant runs only the rules it subscribed to, with its own parameters; a rule in the catalog that a tenant didn&rsquo;t subscribe to is skipped for it. The join is the mechanism that makes one shared engine serve many tenants with different policy.",
+      "f": [],
+      "senior": ""
+    },
+    {
+      "tier": "SDE3",
+      "signal": "the concurrent second approval",
+      "q": "Two people approve a pending request at almost the same instant. What could go wrong?",
+      "a": "A race: both reads see pending second approval and both try to advance, or a non-atomic check lets the requester slip through as the second approver. The advance must be a conditional, atomic transition &mdash; a compare-and-set on the state together with the distinct-identity check in one transaction &mdash; so exactly one transition to active occurs and concurrency can&rsquo;t bypass the four-eyes rule.",
       "f": [],
       "senior": ""
     },
@@ -10963,9 +11087,20 @@ var TOPIC_RE_DRILL = {
       "a": "When the blast radius of a single bad change is high &mdash; a rule that pages the fleet, a config that touches every device, a security-relevant setting. There, the friction of a second approver is cheap insurance against one actor causing wide damage. For low-stakes, easily-reversible changes it&rsquo;s overkill; the skill is scoping the control to the changes that actually warrant it, not gating everything.",
       "f": [],
       "senior": ""
+    },
+    {
+      "tier": "Staff",
+      "signal": "reload frequency vs freshness",
+      "q": "How quickly does an approved rule change take effect, and what is the knob?",
+      "a": "It is live in seconds, not a deploy &mdash; but exactly when depends on how the engine picks up rules. Reloading the active set each evaluation cycle makes it live next cycle; a short cache TTL trades a little staleness for fewer reads. The knob is the reload frequency or TTL: shorter is fresher but hits the store more often, longer is cheaper but a change lags.",
+      "f": [],
+      "senior": ""
     }
   ],
   "speak": [
+    "",
+    "",
+    "",
     "",
     "",
     "",
@@ -11430,6 +11565,14 @@ var TOPIC_SD_DRILL = {
       "senior": ""
     },
     {
+      "tier": "SDE2",
+      "signal": "reverting to the default",
+      "q": "How does an entity go back to the default value?",
+      "a": "Delete its override row. Because the values table holds only deviations, removing the row means the LEFT JOIN finds nothing and COALESCE falls back to the definition&rsquo;s default &mdash; reverting is a delete, not a write of the default. It is another reason the default lives only in the definition and never in the values table.",
+      "f": [],
+      "senior": ""
+    },
+    {
       "tier": "SDE3",
       "signal": "the polymorphic key",
       "q": "How does one values table serve devices, sites, and tenants?",
@@ -11474,6 +11617,14 @@ var TOPIC_SD_DRILL = {
       "signal": "indexing the lookup",
       "q": "How do you keep resolution fast?",
       "a": "Index the values table on the lookup key &mdash; <code>(entity_type, entity_id)</code> &mdash; so resolving an entity&rsquo;s overrides is an index seek, not a scan of every override in the system. Without it, every resolution scans the whole values table; with it, the LEFT JOIN finds exactly the handful of rows for that entity. The index is what makes the single-query resolution actually cheap.",
+      "f": [],
+      "senior": ""
+    },
+    {
+      "tier": "SDE3",
+      "signal": "the N+1 on resolution",
+      "q": "You resolve attributes one entity at a time in a loop. What is wrong and how do you fix it?",
+      "a": "That is an N+1 &mdash; one query per entity. Resolve as a set instead: one query with the entity ids in an IN list, or joined against the batch, returning every resolved value at once. The single-query resolution generalizes to a single batched query, so a page of entities is one round-trip rather than one per entity.",
       "f": [],
       "senior": ""
     },
@@ -11524,9 +11675,20 @@ var TOPIC_SD_DRILL = {
       "a": "Usually worth it. A resolved value changes only when an override or a default changes, which is rare next to reads, so caching the resolved value per entity-attribute turns a per-read join into a cache hit. The write path already loads the definition and upserts, so it is exactly where you invalidate the cache key. Cache the <i>output</i> of the waterfall, keyed by entity plus attribute, and let the write that changes an override evict it.",
       "f": [],
       "senior": ""
+    },
+    {
+      "tier": "Staff",
+      "signal": "auditing an override change",
+      "q": "Someone asks who changed device 42&rsquo;s setting and when. How do you answer?",
+      "a": "The values table alone shows only the current override, not its history. For an audit trail you record each change append-only, or use history/temporal tables, so who set device 42 to 50, and when, is answerable. A governed setting needs its change history, not just the current row &mdash; the same audit discipline the rules engine applies to rule changes.",
+      "f": [],
+      "senior": ""
     }
   ],
   "speak": [
+    "",
+    "",
+    "",
     "",
     "",
     "",

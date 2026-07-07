@@ -82,6 +82,12 @@ What happens on a write?
 
 Load the definition, validate the incoming value against its JSON-Schema, and only then upsert the override row. Validation first is the point: because the value column is schemaless, the schema on the definition is what enforces type and range. A value that fails the schema is rejected with a 400; a valid one is upserted and resolves on the next read.
 
+### SDE2 | reverting to the default
+
+How does an entity go back to the default value?
+
+Delete its override row. Because the values table holds only deviations, removing the row means the LEFT JOIN finds nothing and COALESCE falls back to the definition's default --- reverting is a delete, not a write of the default. It is another reason the default lives only in the definition and never in the values table.
+
 ### SDE3 | the polymorphic key
 
 How does one values table serve devices, sites, and tenants?
@@ -118,6 +124,12 @@ How do you keep resolution fast?
 
 Index the values table on the lookup key --- `(entity_type, entity_id)` --- so resolving an entity's overrides is an index seek, not a scan of every override in the system. Without it, every resolution scans the whole values table; with it, the LEFT JOIN finds exactly the handful of rows for that entity. The index is what makes the single-query resolution actually cheap.
 
+### SDE3 | the N+1 on resolution
+
+You resolve attributes one entity at a time in a loop. What is wrong and how do you fix it?
+
+That is an N+1 --- one query per entity. Resolve as a set instead: one query with the entity ids in an IN list, or joined against the batch, returning every resolved value at once. The single-query resolution generalizes to a single batched query, so a page of entities is one round-trip rather than one per entity.
+
 ### Staff | this is EAV
 
 An interviewer says "this is just EAV." Are they right?
@@ -153,6 +165,12 @@ When the attributes are fixed, few, and known at design time. Then plain typed c
 The resolution query runs on every read --- do you cache it?
 
 Usually worth it. A resolved value changes only when an override or a default changes, which is rare next to reads, so caching the resolved value per entity-attribute turns a per-read join into a cache hit. The write path already loads the definition and upserts, so it is exactly where you invalidate the cache key. Cache the *output* of the waterfall, keyed by entity plus attribute, and let the write that changes an override evict it.
+
+### Staff | auditing an override change
+
+Someone asks who changed device 42's setting and when. How do you answer?
+
+The values table alone shows only the current override, not its history. For an audit trail you record each change append-only, or use history/temporal tables, so who set device 42 to 50, and when, is answerable. A governed setting needs its change history, not just the current row --- the same audit discipline the rules engine applies to rule changes.
 
 ## Walk
 

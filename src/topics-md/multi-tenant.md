@@ -82,6 +82,12 @@ What is the noisy-neighbour problem?
 
 In a shared system one tenant's heavy load --- a huge query, a traffic spike --- degrades latency for everyone sharing the same database and pool. Isolation of *data* does not give isolation of *performance*; that needs per-tenant limits, quotas, or moving the heavy tenant to dedicated capacity.
 
+### SDE2 | the tenant on a write
+
+How do you ensure a newly created row belongs to the right tenant?
+
+The repository stamps the tenant id from the request context onto every insert, so the caller never supplies it. Just as reads add the predicate, writes set tenant_id from the verified claim --- there is no field for the caller to set, so a row can't be created under another tenant. Writes are scoped by the same single enforcement point as reads.
+
 ### SDE3 | one enforcement point
 
 Where should the tenant predicate be enforced?
@@ -118,6 +124,12 @@ What is harder about schema migrations under each model?
 
 **Shared DB:** one migration covers all tenants at once, but it must be backward-compatible because every tenant is on it instantly. **DB per tenant:** each database migrates independently --- safer to stage and roll back per tenant, but you now run the migration N times and track which tenants are on which version.
 
+### SDE3 | the pooled connection tenant
+
+With database row-level security and a connection pool, what is the subtle bug?
+
+A pooled connection carries whatever tenant session variable the last user set. If you don't set the tenant on every checkout, a request can run against the previous request's tenant. The rule is that the tenant context must be set --- and ideally reset --- on each checkout, never inherited from the connection's last use, or pooling silently defeats the isolation.
+
 ### Staff | when to split a tenant out
 
 When do you move a tenant to its own database?
@@ -153,6 +165,12 @@ In the shared model it is nearly free --- a new tenant id and some seed rows, no
 Database row-level security or application-layer scoping --- which?
 
 **App-layer** (a repository predicate or ORM scope) is portable, easy to reason about, and where most teams start; its weakness is that a path bypassing the layer bypasses isolation. **RLS** puts the guarantee in the database so no code bug can defeat it, at the cost of policy complexity and session setup. Defence in depth uses both --- scope in the app, and let RLS be the backstop.
+
+### Staff | cross-tenant analytics
+
+The product team wants aggregate metrics across all tenants. How, without weakening isolation?
+
+Through a separate, access-controlled read path --- a warehouse or a read replica --- that explicitly operates outside the tenant scope, never the tenant-facing service with the predicate removed. Cross-tenant aggregation is legitimate, but it lives in a distinct system with its own auth, so the tenant-facing code path stays unconditionally scoped and no ordinary bug there can read across tenants.
 
 ## Walk
 

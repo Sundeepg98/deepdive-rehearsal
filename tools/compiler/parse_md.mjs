@@ -115,7 +115,7 @@ function parseSteps(toks) {
     if (t.type === 'paragraph_open' && step) {
       const raw = toks[i + 1].content;
       if (step.ins === undefined) step.ins = prose(raw);
-      else if (step.code !== undefined) step.cap = prose(raw);
+      else if (step.code !== undefined || step.shiki !== undefined) step.cap = prose(raw);
       else step.deep = prose(raw);
       i += 2; continue;
     }

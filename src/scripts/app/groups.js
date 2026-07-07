@@ -17,14 +17,16 @@ var TOPIC_GROUPS = [
 /* The canonical topic sequence (flat order). Group membership lives per-topic
    (identity.group); THIS array is the single place that defines display / stepping
    order. Reorder = move an id here. Ids not yet registered are skipped, so the full
-   28-topic order is declared ahead of the build. */
+   37-topic order (23 built + 14 declared-ahead) sits here and each new topic drops
+   into its slot the moment it is built. Within-group order is pedagogical
+   (foundational -> advanced); group order matches TOPIC_GROUPS. */
 var TOPIC_ORDER = [
-  /* Messaging & Events    */ 'event-driven', 'cdc', 'job-orchestration', 'feature-flags', 'notifications',
-  /* Data & Storage        */ 'caching', 'eav', 'soft-delete', 'sql-forensics',
-  /* Reliability & Observ. */ 'error-propagation', 'debugging', 'observability', 'otel', 'incident-antipatterns',
-  /* Platform & Infra      */ 'iac', 'platform-engineering', 'lambda', 'desired-state', 'aws-hardening',
-  /* Architecture & APIs   */ 'architecture-audit', 'state-machine', 'content-pipeline', 'rules-engine', 'api-gateway', 'microfrontend',
-  /* Security & Tenancy    */ 'signing', 'multi-tenant', 'authz'
+  /* Messaging & Events (5)    */ 'event-driven', 'notifications', 'cdc', 'kafka-internals', 'saga',
+  /* Data & Storage (7)        */ 'caching', 'soft-delete', 'eav', 'shared-definition', 'replication', 'consistent-hashing', 'storage-engines',
+  /* Reliability & Observ. (6) */ 'retries-timeouts', 'idempotency', 'circuit-breaker', 'backpressure', 'observability', 'slos',
+  /* Platform & Infra (10)     */ 'iac', 'desired-state', 'aws-hardening', 'load-balancing', 'autoscaling', 'leader-election', 'distributed-locks', 'lambda-organization', 'devices-dispatch', 'developer-platform',
+  /* Architecture & APIs (6)   */ 'state-machine', 'rules-engine', 'feature-flags', 'rate-limiting', 'content-pipeline', 'microfrontend',
+  /* Security & Tenancy (3)    */ 'signing', 'authz', 'multi-tenant'
 ];
 function topicOrderIndex(id) { var i = TOPIC_ORDER.indexOf(id); return i === -1 ? 1e4 : i; }
 

@@ -98,7 +98,7 @@ Use an **atomic** operation in the shared store --- Redis `INCR` with an `EXPIRE
 
 How do you implement a precise sliding window?
 
-A sliding-window **log** stores one timestamp per request in a sorted set, trims entries older than the window, and counts what remains --- exact, but O(requests) memory. A sliding-window **counter** approximates it by weighting the previous fixed window's count, far cheaper and usually accurate enough.
+A sliding-window **log** stores one timestamp per request in a sorted set, trims entries older than the window, and counts what remains --- exact, but $O(n)$ memory, one stored entry per request in the window. A sliding-window **counter** approximates it by weighting the previous fixed window's count, far cheaper and usually accurate enough.
 
 ### SDE3 | fail open or closed
 

@@ -13,6 +13,7 @@
 // prose only.
 
 import MarkdownIt from 'markdown-it';
+import { renderMath } from './mathjax.mjs';
 
 const md = new MarkdownIt({ html: true, typographer: true, linkify: false });
 
@@ -30,14 +31,31 @@ function toAscii(s) {
     ENT[c] || ('&#x' + c.codePointAt(0).toString(16).toUpperCase() + ';'));
 }
 
+// Pull $$...$$ (display) and $...$ (inline) LaTeX out of prose BEFORE markdown-it sees
+// it -- so backslashes, _ and ^ are not mangled -- render each to a self-contained SVG,
+// and leave an ASCII placeholder the pipeline passes through untouched. The inline form
+// requires non-space just inside the delimiters, so ordinary currency ("$5", "$5 to $9")
+// is never mistaken for math.
+function extractMath(src, store) {
+  let s = src.replace(/\$\$([^$]+?)\$\$/g, (_m, tex) => {
+    const k = '@@MTH' + store.length + '@@'; store.push(renderMath(tex, true)); return k;
+  });
+  s = s.replace(/\$(\S(?:[^$\n]*?\S)?)\$/g, (_m, tex) => {
+    const k = '@@MTH' + store.length + '@@'; store.push(renderMath(tex, false)); return k;
+  });
+  return s;
+}
+
 // Convert one markdown prose string to the app's inline HTML.
 export function prose(srcMd) {
-  let html = md.renderInline(String(srcMd));
+  const math = [];
+  let html = md.renderInline(extractMath(String(srcMd), math));
   html = html
     .replace(/<strong>/g, '<b>').replace(/<\/strong>/g, '</b>')
     .replace(/<em>/g, '<i>').replace(/<\/em>/g, '</i>')
     .replace(/ -&gt; /g, ' &rarr; ');   // in-prose arrows (markdown-it has already escaped -> to -&gt;)
-  return toAscii(html);
+  html = toAscii(html);
+  return html.replace(/@@MTH(\d+)@@/g, (_m, i) => math[+i]); // re-insert the (already-ASCII) SVG
 }
 
 // Convert markdown to PLAIN TEXT with real Unicode smart chars (em-dash, curly quotes) --

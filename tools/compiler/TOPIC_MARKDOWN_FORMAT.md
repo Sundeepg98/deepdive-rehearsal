@@ -12,7 +12,7 @@ Vite plugin `compileTopicsPlugin`:
 
 1. parses the markdown to a topic object,
 2. validates it (zod) and fails the build with a precise error if it's malformed,
-3. renders any `mermaid` fenced block to inline SVG,
+3. renders any `mermaid` fenced block (and any `$...$` / `$$...$$` LaTeX) to inline SVG,
 4. emits the per-slice `.js` files into `src/topics/<id>/`,
 5. generates the include bundle `src/topics/<id>.js`,
 6. generates the single ordered registration partial `src/topics/_generated-registry.js`.
@@ -57,6 +57,20 @@ Example:
 Body text is rendered with markdown-it inline: `**bold**`, `*italic*`,
 `` `code` ``, `[link](url)`. Three hyphens `---` become an em-dash. (Companion
 Notes bodies are plain text, not inline markdown.)
+
+### Math (LaTeX)
+
+Inline math is `$...$` and a centered display equation is `$$...$$`, both usable
+anywhere prose is rendered (thesis, spine, drill answers, the Numbers tell, ...).
+LaTeX is rendered to a **self-contained inline SVG at build time** (MathJax) --
+glyphs as vector paths with `currentColor` and `ex` sizing, so a formula inherits
+the surrounding text's color and size and ships with no web fonts and nothing at
+runtime (the same model as `mermaid` -> SVG). The full TeX package set is
+available (`\frac`, `\sum`, `O(\log n)`, Greek, ...).
+
+The inline form requires a non-space character just inside each `$`, so ordinary
+currency is never mistaken for math: `$5`, `$5 to $9`, and a lone `$` are left
+untouched. Write `$R + W > N$`, not `$ R + W > N $`.
 
 ## Identity sections
 

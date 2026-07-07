@@ -13,6 +13,7 @@
 <!--@build:include topics/eav.js-->
 <!--@build:include topics/desired-state.js-->
 <!--@build:include topics/iac.js-->
+<!--@build:include topics/_generated-registry.js-->
 <!--@build:include scripts/app/red-flags.js-->
 <!--@build:include scripts/app/trade-offs.js-->
 <!--@build:include scripts/app/walkthrough.js-->

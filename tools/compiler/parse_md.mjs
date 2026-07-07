@@ -450,7 +450,7 @@ export function parseMarkdown(src, { index = 1, total = 1 } = {}) {
   }
 
   const identity = {
-    index, total,
+    index: fm.index ?? index, total: fm.total ?? total,
     locatorTail: fm.locatorTail, group: fm.group, title: fm.title,
     h1: fm.h1 || fm.title,
     sub: prose(subRaw), thesis: prose(thesisRaw), spine,

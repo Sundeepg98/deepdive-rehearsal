@@ -15,8 +15,6 @@ import { compileTopicsPlugin } from './tools/compiler/compile.mjs';
 
 const ROOT = import.meta.dirname;
 const SRC = path.join(ROOT, 'src');
-// Topic build order (by identity.index); a markdown topic's index/total is derived from this.
-const TOPIC_ORDER = ['content-pipeline', 'signing', 'authz', 'aws-hardening', 'notifications', 'eav', 'desired-state', 'iac'];
 const INCLUDE = /<!--@build:include\s+(.+?)\s*-->/g;
 
 // Recursively replace include markers with partial contents (port of build.py:resolve).
@@ -47,9 +45,10 @@ function concatInclude() {
 export default defineConfig({
   root: 'src',
   plugins: [
-    // Compile any src/topics-md/<id>.md into src/topics/<id>/*.js before concat-include picks
-    // them up, so a topic can be authored as one markdown file. Empty src/topics-md = no-op.
-    compileTopicsPlugin({ srcDir: path.join(SRC, 'topics-md'), topicsDir: path.join(SRC, 'topics'), order: TOPIC_ORDER }),
+    // Compile each src/topics-md/<id>.md into src/topics/<id>/*.js, generate its include bundle,
+    // and generate the ordered registration partial -- all before concat-include runs. Order and
+    // total come from each file's frontmatter index. Empty src/topics-md = empty registry, no-op.
+    compileTopicsPlugin({ srcDir: path.join(SRC, 'topics-md'), topicsDir: path.join(SRC, 'topics') }),
     concatInclude(), tailwindcss(), viteSingleFile(),
   ],
   build: {

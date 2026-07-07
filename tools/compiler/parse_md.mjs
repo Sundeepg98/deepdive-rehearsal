@@ -81,10 +81,29 @@ function parseCompanion(toks) {
 // code); fences = flow / mermaid / code.
 function parseSteps(toks) {
   const steps = [];
+  const model = [];
   let step = null;
+  let modelMode = false;
   for (let i = 0; i < toks.length; i++) {
     const t = toks[i];
-    if (t.type === 'heading_open' && t.tag === 'h3') { step = { t: prose(toks[i + 1].content) }; steps.push(step); i += 2; continue; }
+    if (t.type === 'heading_open' && t.tag === 'h3') {
+      const title = prose(toks[i + 1].content);
+      // A "### Model Script" heading ends the steps and begins the spoken model-answer beats.
+      if (title === 'Model Script') { modelMode = true; step = null; i += 2; continue; }
+      step = { t: title }; steps.push(step); i += 2; continue;
+    }
+    if (modelMode && t.type === 'bullet_list_open') {
+      let j = i + 1;
+      while (j < toks.length && toks[j].type !== 'bullet_list_close') {
+        if (toks[j].type === 'inline') {
+          const raw = toks[j].content;
+          if (/^Interviewer:/.test(raw)) model.push({ mq: prose(raw) });   // interviewer interjection
+          else { const k = raw.indexOf(' | '); model.push({ ml: prose(k === -1 ? raw : raw.slice(0, k)), t: prose(k === -1 ? '' : raw.slice(k + 3)) }); }
+        }
+        j++;
+      }
+      i = j; continue;
+    }
     if (t.type === 'fence' && step) {
       const lang = t.info.trim(); const body = t.content.replace(/\n$/, '');
       if (lang === 'flow') step.flow = flow(body.trim());
@@ -102,6 +121,8 @@ function parseSteps(toks) {
   }
   const M = steps.length;
   steps.forEach((s, n) => { s.k = `Step ${n + 1} / ${M}`; });
+  // The .mbeat.ans beat MUST be last; only attach modelScript when a Model Script section was authored.
+  if (model.length) { model[model.length - 1].ans = true; return { steps, modelScript: model }; }
   return { steps };
 }
 

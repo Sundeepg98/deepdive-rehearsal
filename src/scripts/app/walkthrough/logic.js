@@ -152,7 +152,7 @@ class DeepWalkthrough extends TopicPane {
       this._arc.appendChild(btn);
     }
     /* model-script is data now (was a baked blob); .mbeat.ans stays LAST. */
-    this._mbody.innerHTML = d.modelScript.map(renderBeat).join('');
+    this._mbody.innerHTML = (d.modelScript || []).map(renderBeat).join('');
     this._renderW();
   }
   _renderW() {

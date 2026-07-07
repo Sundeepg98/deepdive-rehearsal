@@ -142,6 +142,18 @@ paragraph is `ins`; the paragraph immediately before a fenced code block is
 
     The id is content-derived, so a retry collides.
 
+Optionally, a `### Model Script` heading ends the steps and begins the spoken
+model-answer beats -- a bullet list where each `<label> | <spoken text>` is a
+beat, a bullet starting `Interviewer:` is the interviewer's interjection, and
+the last beat is automatically the closing answer (`ans`). The walk pane's
+model-answer view renders these; omit the section and that view is simply empty.
+
+    ### Model Script
+
+    - Frame it | "A producer emits an event; the system owns delivery."
+    - Interviewer: "A retry double-sends. How?"
+    - Trace the key | "The idempotency key wasn't applied on the send path."
+
 ### `## Drill`  (required)
 
 Optional tier-note bullets first (`<tier> | <note>`), then one card per
@@ -260,9 +272,13 @@ bullets `<l> | <c> | <t>` where `<c>` is a CSS class name.
 ### `## Numbers`
 
 A lead paragraph, then a "tell" paragraph, then a bullet list of inputs
-`<id> | <label> | <value> | <min> | <step?>`, then a fenced block holding the
-compute-function body (raw JavaScript, injected verbatim -- it receives the
-input ids as variables and returns the derived figures).
+`<id> | <label> | <value> | <min> | <step?>`, then a fenced block holding a
+compute **function expression** -- `function (vals, fmt) { ... }`. It is emitted
+verbatim as the `compute` value, so it must be a function, not a bare `return`.
+`vals` is an object keyed by input id (`vals.users`); `fmt.n(x)` formats a
+number. It returns an array of metric rows `{ k, v, u, n, over }` -- `k` label,
+`v` formatted value, `u` unit, `n` note, `over` true to flag a ceiling. Use
+`\uXXXX` for non-ASCII inside its strings (e.g. `\u2014` for an em-dash).
 
     ## Numbers
 
@@ -274,7 +290,13 @@ input ids as variables and returns the derived figures).
     - perUser | Notifications/user | 100 | 0 | 10
 
     ```js
-    return { rows: users * perUser, bytes: users * perUser * 100 };
+    function (vals, fmt) {
+      var rows = vals.users * vals.perUser;
+      return [
+        { k: 'Rows', v: fmt.n(rows), u: 'rows', n: 'one row per notification', over: false },
+        { k: 'Storage', v: fmt.n(Math.round(rows * 100 / 1e9)), u: 'GB', n: 'at ~100 bytes/row', over: false }
+      ];
+    }
     ```
 
 ### `## Red Flags`

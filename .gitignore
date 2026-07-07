@@ -33,3 +33,5 @@ src/topics/rules-engine/
 src/topics/rules-engine.js
 src/topics/shared-definition/
 src/topics/shared-definition.js
+src/topics/caching/
+src/topics/caching.js

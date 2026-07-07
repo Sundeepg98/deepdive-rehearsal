@@ -29,3 +29,5 @@ src/topics/event-driven/
 src/topics/event-driven.js
 src/topics/devices-dispatch/
 src/topics/devices-dispatch.js
+src/topics/rules-engine/
+src/topics/rules-engine.js

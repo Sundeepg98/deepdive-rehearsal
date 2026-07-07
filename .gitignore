@@ -25,3 +25,5 @@ src/topics/rate-limiting/
 src/topics/rate-limiting.js
 src/topics/multi-tenant/
 src/topics/multi-tenant.js
+src/topics/event-driven/
+src/topics/event-driven.js

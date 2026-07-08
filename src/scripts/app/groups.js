@@ -25,7 +25,7 @@ var TOPIC_ORDER = [
   /* Data & Storage (7)        */ 'caching', 'soft-delete', 'eav', 'shared-definition', 'replication', 'consistent-hashing', 'storage-engines',
   /* Reliability & Observ. (8) */ 'retries-timeouts', 'idempotency', 'circuit-breaker', 'error-propagation', 'backpressure', 'observability', 'debugging', 'slos',
   /* Platform & Infra (10)     */ 'iac', 'desired-state', 'aws-hardening', 'load-balancing', 'autoscaling', 'leader-election', 'distributed-locks', 'lambda-organization', 'devices-dispatch', 'developer-platform',
-  /* Architecture & APIs (6)   */ 'state-machine', 'rules-engine', 'feature-flags', 'rate-limiting', 'content-pipeline', 'microfrontend',
+  /* Architecture & APIs (7)   */ 'state-machine', 'rules-engine', 'feature-flags', 'api-design', 'rate-limiting', 'content-pipeline', 'microfrontend',
   /* Security & Tenancy (3)    */ 'signing', 'authz', 'multi-tenant'
 ];
 function topicOrderIndex(id) { var i = TOPIC_ORDER.indexOf(id); return i === -1 ? 1e4 : i; }

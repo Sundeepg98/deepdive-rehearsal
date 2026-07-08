@@ -254,3 +254,83 @@ The 6-group order is unchanged and still sound. **No re-ordering needed.**
 Coverage: 27/28 playbook sections have dedicated deep topics (only S05 reserved) + 14 breadth
 patterns. Debugging cluster shipped (2 topics). No redundancy to cut -- the overlaps are
 complementary. Ordering sound. Nothing open.
+
+---
+
+## Axis-A completion -- second-tier topic gaps built (39 -> 46 topics)
+
+After the coverage floor above (27/28 playbook sections + 14 breadth patterns, 39 topics) was
+confirmed, a "what else belongs in this app" pass produced a three-axis framing:
+
+- **Axis A -- more topics.** The real second tier of *patterns* beyond the playbook floor:
+  distinct competencies that were scattered across existing topics with no dedicated home, are
+  themselves patterns (not end-to-end design problems, which are Set-B's job), and are not
+  already owned by an existing topic. **This axis was built out (below).**
+- **Axis B -- app modes.** An in-artifact AI-interviewer (Anthropic API) and SRS/review
+  scheduling. Deferred -- the content, not the app mechanics, is the current priority.
+- **Axis C -- behavioral + comp rehearsal.** The app is 100% technical, but the real interview
+  losses were behavioral/compensation (CHRP salary handling, Autodesk debrief). A
+  behavioral + negotiation rehearsal layer (real STAR stories + the negotiation playbook drilled
+  as reps) targets the actual weak spot. Highest leverage; to be returned to next.
+
+### Axis-A topics shipped (7), strongest gap first
+
+Bar for inclusion: a distinct competency, not a design-problem, not owned by an existing topic.
+
+1. **api-design** (architecture-apis, idx 40) -- the strongest gap (79 scattered mentions, no
+   topic). Resource modeling REST/gRPC/GraphQL, status codes, cursor-vs-offset pagination,
+   versioning, idempotency keys, coded error contracts, long-running operations.
+2. **consistency-models** (data-storage, idx 41, after replication) -- the linearizable ->
+   causal -> session -> eventual spectrum, CAP/PACELC, quorums (R + W > N), LWW/vector-clocks/
+   CRDTs, linearizability vs serializability, per-operation choice.
+3. **sharding-strategies** (data-storage, idx 42, before consistent-hashing) -- the partitioning
+   DESIGN decision, explicitly disambiguated from consistent-hashing (the placement ALGORITHM).
+   Partition key, range/hash/directory, hot shards, scatter-gather, cross-shard txns,
+   resharding, LSI-vs-GSI.
+4. **real-time-delivery** (messaging-events, idx 43, after notifications) -- WebSocket/SSE/
+   long-poll transport trade, fan-out-on-write-vs-read + celebrity hybrid, connection registry +
+   pub/sub backplane, sticky sessions, reconnect-resume, presence, backpressure, C10M, auth on a
+   persistent connection.
+5. **multi-region** (platform-infra, idx 44, after distributed-locks) -- active-active vs
+   active-passive, RTO/RPO, async-vs-sync replication, read-local/write-global, split-brain
+   prevention (single-writer/quorum/fencing), data residency, failover, geo-routing.
+6. **stream-batch-processing** (messaging-events, idx 45, after kafka-internals) -- bounded-vs-
+   unbounded, MapReduce/Spark/Flink, windowing (tumbling/sliding/session), event-time vs
+   processing-time, watermarks + late data, exactly-once (effectively-once), stream joins,
+   lambda vs kappa.
+7. **probabilistic-structures** (data-storage, idx 46, after storage-engines) -- Bloom (membership,
+   no false negatives), HyperLogLog (cardinality), Count-Min (frequency/top-K); the
+   space-for-bounded-error trade, error budgets, mergeability, Bloom-in-LSM, when to stay exact.
+
+Each: 14 panes, 21 drill cards (7/7/7), shiki-python in the walk + a mermaid whiteboard, pure
+ASCII, gate PASS, render-verified (9 panes, 21 cards, 0 errors), one commit.
+
+### Resulting group state (6 groups, 46 topics)
+
+- messaging-events (7): event-driven, notifications, real-time-delivery, cdc, kafka-internals,
+  stream-batch-processing, saga
+- data-storage (10): caching, soft-delete, eav, shared-definition, replication, consistency-models,
+  sharding-strategies, consistent-hashing, storage-engines, probabilistic-structures
+- reliability-observability (8): unchanged
+- platform-infra (11): iac, desired-state, aws-hardening, load-balancing, autoscaling,
+  leader-election, distributed-locks, multi-region, lambda-organization, devices-dispatch,
+  developer-platform
+- architecture-apis (7): state-machine, rules-engine, feature-flags, api-design, rate-limiting,
+  content-pipeline, microfrontend
+- security-tenancy (3): unchanged
+
+### Build note -- prefix uniqueness
+
+The compiler derives global names TOPIC_<PREFIX>_<PANE> from the frontmatter prefix, so a
+duplicate prefix collides at the global_collisions gate (silently overrides, caught by the
+check). real-time-delivery initially reused RT (owned by retries-timeouts) and was caught by
+the gate; fixed to RTD. Remaining topics used verified-unique prefixes (MR, SBP, PDS).
+**Lesson: a new topic's prefix must be globally unique -- grep ^prefix: across all .md before
+wiring.**
+
+### Bottom line (Axis A)
+
+Axis A is complete: 7 second-tier pattern topics added, app 39 -> 46, gate green throughout, all
+pushed to visual-design. The app now covers the playbook floor (27/28 sections), 14 breadth
+patterns, and the second tier of distributed-systems patterns. Next: Axis C (behavioral + comp
+rehearsal) -- the highest-leverage remaining work, targeting the actual interview weak spot.

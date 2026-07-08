@@ -623,7 +623,7 @@ body.is-hidden,body.is-hidden *,body.is-hidden *::before,body.is-hidden *::after
 .tn-eyebrow{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:1px;text-transform:uppercase;color:var(--mut2)}
 .tn-current{flex:1;font-size:var(--font-size-small);font-weight:var(--font-weight-bold);color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tn-chev{color:var(--acc);font-size:var(--font-size-nano);transition:transform var(--duration-base) var(--ease-base)}
-.tn-step{flex:0 0 auto;display:flex;align-items:center;justify-content:center;width:var(--space-32);border:1px solid var(--bd);background:var(--card);border-radius:11px;color:var(--acc);font-size:var(--font-size-body);line-height:var(--line-height-none);cursor:pointer;transition:border-color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base)}
+.tn-step{flex:0 0 auto;display:flex;align-items:center;justify-content:center;min-width:var(--space-32);border:1px solid var(--bd);background:var(--card);border-radius:11px;color:var(--acc);font-size:var(--font-size-body);line-height:var(--line-height-none);cursor:pointer;transition:border-color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base)}
 .tn-step:hover{border-color:#cfc7f0;background:var(--accbg)}
 .tn-step:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
 .topic-nav.tn-open .tn-chev{transform:rotate(180deg)}
@@ -835,3 +835,22 @@ html{text-wrap:pretty}
 h1,h2,h3,h4,h5,h6{text-wrap:balance}
 
 @media(min-width:920px){.sidebar .mockcta{order:0;display:flex;flex-direction:column;gap:var(--space-8);margin:0 0 var(--space-14)}}
+
+/* ===== mobile polish (owner report 2026-07-08): comfortable tap targets =====
+   44px is the a11y floor (WCAG 2.5.8 / platform HIGs); raw px on purpose --
+   this is a physical-finger constant, not a layout rhythm token. */
+@media(max-width:600px){
+  .tn-step{min-width:44px;min-height:44px}
+  .tn-trigger{min-height:44px}
+  .ix-x{padding:10px 14px;min-width:44px;min-height:44px}
+}
+.tn-home{font-size:var(--font-size-subhead)}
+
+/* ===== [hidden] integrity (2026-07-08) =====================================
+   The hidden attribute's UA display:none is defeated by ANY authored display
+   rule (.seg button{display:flex}, .sidebar .seg button{...}) -- which is how
+   the conditional Visualize tab leaked onto every topic. This is the standard
+   boilerplate guard: hidden means hidden, everywhere, unconditionally. Code
+   that shows an element must remove the attribute (all of ours does).
+   Enforced by test/visual_pane_smoke.mjs: every [hidden] must measure 0. */
+[hidden]{display:none !important}

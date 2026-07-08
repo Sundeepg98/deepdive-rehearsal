@@ -414,8 +414,11 @@
   /* Escape while open: handled by __overlayModal (overlay-focus.js) */
   function wire() {
     var btn = document.getElementById('idxopen'); if (btn) btn.addEventListener('click', open);
-    /* C1: a fresh landing (no deep-link) opens the home; a deep-link is honored as-is */
-    if (!window.__bootHash) { setTimeout(open, 30); }
+    var hb = document.getElementById('homeBtn'); if (hb) hb.addEventListener('click', open);
+    /* C1 retired 2026-07-08 (owner report): booting into the overlay made the
+       app open on "the home page" with only a small close affordance. Boot now
+       lands in the app directly; the index is an intentional destination via
+       the Home button, the topic pill, #idxopen, or the backslash key. */
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wire);
   else wire();

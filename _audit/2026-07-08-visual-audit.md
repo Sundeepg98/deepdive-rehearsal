@@ -55,3 +55,27 @@ unlocked by pilot sign-off (law 5).
 ## Rerun
 CHROME=<chromium> PLAYWRIGHT_BROWSERS_PATH=<dir> node tools/visual_audit.mjs
 then the contact-sheet step in the session transcript, or view shots raw.
+
+---
+
+## Addendum: mobile polish pass (owner report, same day)
+
+Owner-reported defects, root causes, and fixes -- all mechanically verified
+by the hardened test/visual_pane_smoke.mjs (16 checks, both viewports):
+
+1. App boots into the "home page" overlay. Root cause: a deliberate earlier
+   decision (C1 in index-overlay.js) auto-opened the Topic Index on any
+   hash-less load; the only escape was a 26x25px close glyph. Retired: boot
+   lands in the app; the index is an intentional destination.
+2. No Home affordance in the chrome. Added: a house-glyph Home button in the
+   topic-nav row (both widths), wired to IndexOverlay.open().
+3. Stray "Visualize" tab on every topic (regression from the visual-pipeline
+   P0 commit). Root cause: the [hidden] attribute's UA display:none loses to
+   any authored display rule -- .sidebar .seg button{display:flex} outranked
+   the scoped fix too. Fix: the standard global guard
+   [hidden]{display:none !important} at the end of the app layer, plus a
+   page-wide smoke invariant (every [hidden] element must measure 0px) so
+   this bug class cannot return. The original smoke asserted the attribute,
+   not computed visibility -- a false-positive test, now corrected.
+4. Sub-44px tap targets on mobile (topic steppers, index close, Home).
+   Raised to a 44px floor at <=600px (WCAG 2.5.8 / platform HIGs).

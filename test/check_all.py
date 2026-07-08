@@ -42,6 +42,12 @@ for name, cmd in [('ascii_guard', ['python3', 'test/ascii_guard.py']),
                   ('css_syntax', ['python3', 'test/css_syntax.py']),
                   ('file_integrity', ['python3', 'test/file_integrity.py']),
                   ('unit_tests', ['python3', 'test/unit_tests.py']),
+                  # 15: the end-to-end behavior contract -- boots both first-run and
+                  # returning branches, the conditional GPU pane pipeline, [hidden]
+                  # integrity, mobile tap floors. Runs after build_integrity so
+                  # dist/index.html exists. Needs a browser: local shells export
+                  # CHROME; CI installs Chromium via npx playwright install.
+                  ('visual_pane_smoke', ['node', 'test/visual_pane_smoke.mjs']),
                   ('visual_regression', ['python3', 'test/visual_regression.py']),
                   # Compiler proof tests -- parse/emit/data-equivalence, no Chrome; guard against
                   # markdown-parser and emitter regressions in the topic-authoring pipeline.

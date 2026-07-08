@@ -48,32 +48,47 @@ The structure below was built and machine-verified headlessly; your job is the
 `npm run verify` proves "renders and animates" mechanically. It cannot judge
 whether it looks right or teaches well -- that is the human review below.
 
-## Your task list (the choreography upgrade), in order
+## Structural tasks: DONE (machine-verified). Your job is aesthetics.
 
-1. **True queue semantics.** Replace the dwell-shimmer approximation in
-   `src/render/scene.js` (`stepParticles`) with real accumulation: particles
-   arriving at a partition column while its lag > 0 join a visible **stack**
-   (a queue that physically grows leftward/upward with lag and shrinks as it
-   drains); departures to the consumer column happen at the consume rate.
-   Spawn rate must track produce rate; the stack length must visually track
-   `partition.lag`. The bars can then become secondary or be merged into the
-   stacks.
-2. **Make the three teaching beats unmissable.**
-   (a) *Idle consumers*: adding consumer 7/8/9 (P=6) must read as "nothing
-   changed" -- grey, smaller, visibly disconnected from any lane.
-   (b) *Rebalance stall*: on any add/remove, freeze all consumption motion for
-   the stall window with an explicit "REBALANCING" treatment; lag visibly
-   climbs during it.
-   (c) *Slow consumer*: its lanes back up while others stay clear -- skew, not
-   uniform growth.
-3. **Story mode.** A "play scenario" button per teaching beat that drives the
-   controls on a timeline (~15s each) with one-line captions:
-   spike -> lag grows -> add consumer -> drains -> add past 6 -> nothing
-   changes. This is the rehearsal artifact: watch, then narrate it yourself.
-4. **Polish.** 60 fps at 5k particles (instancing is already in place);
-   consistent color language (green/amber/red = lag, blue/grey/red =
-   consumer state); a compact legend; keyboard shortcuts optional.
-5. **Only after human sign-off:** consider TSL (law 2) and mode #2 (MODES.md).
+The original task list (queue choreography, teaching beats, story mode,
+perf) has been implemented and headlessly verified -- see `npm run verify`
+(13 checks) and the verified-state section below. What remains is visual
+judgment that requires human eyes on a live reload (`npm run dev`):
+
+1. **Tuning.** Particle size/opacity, queue spacing and compression feel,
+   easing on release flights, bar-vs-stack visual weight, color contrast,
+   caption/banner typography, layout breathing room. Keep the color language
+   (green/amber/red = lag heat; blue/ring/red = consumer state).
+2. **Legibility passes on the three beats.** The mechanics are verified;
+   make them *read at a glance*: idle rings obviously disconnected, the
+   rebalance freeze unmistakable, skewed lanes visually loud.
+3. **Story-mode feel.** Caption pacing/wording, optional step highlights
+   (for example, briefly outline the consumer a step just added).
+4. **Optional, only after sign-off:** TSL migration (law 2 -- re-verify from
+   file://) and MODES.md mode 2.
+
+Known edge (accepted): at extreme slider settings (for example rate 400,
+capacity 10, one consumer, left for minutes) total lag can exceed the 4000-
+particle pool; stacks saturate visually while bars and readouts stay exact.
+Not worth complexity before sign-off; revisit only if a story needs it.
+
+## Implemented choreography (do not regress)
+
+- Spawn exactly tracks `partition.produced`; release exactly tracks
+  `partition.consumed` (1 particle = 2 messages, per-lane delta accumulators
+  in `stepParticles`). Release credit is capped while a lane's visual queue
+  is empty -- the sim consumes instantly but particles take ~1.2s to travel,
+  and without the cap queues form seconds late (found and fixed by test).
+- Queues stack LEFTWARD from the partition column, compress as they grow,
+  and clamp at the producer edge: backpressure literally backs up to the
+  source.
+- Released particles fly to the circle of the consumer that OWNS the
+  partition, making the assignment mapping (and its rebalance changes)
+  visible.
+- Idle consumers render as hollow rings and receive no flights; a rebalance
+  shows a banner, dims the group, and freezes releases (queues keep growing).
+- Story mode drives the real sim through timed steps with captions ending in
+  an "interview line"; manual controls lock during playback.
 
 ## Human-eye review criteria (Sundeep judges; the machine cannot)
 
@@ -91,11 +106,16 @@ Interactive WebGL2/Three.js visualizer for distributed-systems concepts
 (Kafka consumer-group dynamics): deterministic simulation core with invariant
 tests, GPU-instanced particle rendering, single-file offline distribution.
 
-## Verified state at handoff (2026-07-08)
+## Verified state at handoff (2026-07-08, structural pass complete)
 
 - 11/11 sim invariants pass; deterministic.
-- Single-file build: 474 KB, 2.3 s.
-- Headless verify: 183 frames, live lag 47 -> 98, group change flips status to
-  REBALANCING, 0 console errors; canvas 4.2% non-background, 0.5% inter-frame
-  pixel change (floors 3% / 0.2%).
+- `npm run verify`: 13/13 headless checks pass -- renders (frames advancing),
+  sim live, queue stacks grow with lag, queued*2 tracks lag within the
+  in-flight band, rebalance flips status + shows the banner, slow-consumer
+  skew lands on lanes 0 and 3 only, story mode advances captions and drives
+  the sim (consumers 3 -> 4 on schedule) with controls locked, 60.5 fps under
+  spike load (headless swiftshader; floor 25), zero console errors. Pixel
+  checks: 3.5% non-background (floor 3%), 0.3% inter-frame change (floor
+  0.2%).
+- Single-file build: 481 KB, ~2s. Tracked pilot: `kafka-lag-pilot.html`.
 - Screenshot: outputs/kafka_lag_pilot_screenshot.png.

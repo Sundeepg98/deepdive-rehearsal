@@ -105,7 +105,11 @@ Not worth complexity before sign-off; revisit only if a story needs it.
   drill cards in the app? If no, stop at one mode -- the research says
   decoration that does not teach is negative value.
 
-## Resume line (once the pilot passes review)
+## Resume line (trigger met 2026-07-08 -- shipped, gate-guarded)
+
+Final wording + two sibling project entries live in
+interview-prep/resume/RESUME_AUDIT_2026-07-08.md (the resume's canonical
+version-controlled home). This section is retained as the historical seed:
 
 Interactive WebGL2/Three.js visualizer for distributed-systems concepts
 (Kafka consumer-group dynamics): deterministic simulation core with invariant

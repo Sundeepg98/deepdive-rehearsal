@@ -23,7 +23,7 @@ var TOPIC_GROUPS = [
 var TOPIC_ORDER = [
   /* Messaging & Events (5)    */ 'event-driven', 'notifications', 'cdc', 'kafka-internals', 'saga',
   /* Data & Storage (7)        */ 'caching', 'soft-delete', 'eav', 'shared-definition', 'replication', 'consistent-hashing', 'storage-engines',
-  /* Reliability & Observ. (6) */ 'retries-timeouts', 'idempotency', 'circuit-breaker', 'backpressure', 'observability', 'slos',
+  /* Reliability & Observ. (7) */ 'retries-timeouts', 'idempotency', 'circuit-breaker', 'backpressure', 'observability', 'debugging', 'slos',
   /* Platform & Infra (10)     */ 'iac', 'desired-state', 'aws-hardening', 'load-balancing', 'autoscaling', 'leader-election', 'distributed-locks', 'lambda-organization', 'devices-dispatch', 'developer-platform',
   /* Architecture & APIs (6)   */ 'state-machine', 'rules-engine', 'feature-flags', 'rate-limiting', 'content-pipeline', 'microfrontend',
   /* Security & Tenancy (3)    */ 'signing', 'authz', 'multi-tenant'

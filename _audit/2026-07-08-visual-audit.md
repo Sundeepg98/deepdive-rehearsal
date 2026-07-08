@@ -79,3 +79,13 @@ by the hardened test/visual_pane_smoke.mjs (16 checks, both viewports):
    not computed visibility -- a false-positive test, now corrected.
 4. Sub-44px tap targets on mobile (topic steppers, index close, Home).
    Raised to a 44px floor at <=600px (WCAG 2.5.8 / platform HIGs).
+
+### Follow-up (same day): boot behavior refined, not retired
+
+Owner clarified the boot report was descriptive, not a defect claim, and
+delegated the call. Verdict implemented: the C1 intent stands for FIRST RUN
+(the overlay is the designed START HERE screen; a fresh browser opens it),
+while a RETURNING user (any saved progress) boots straight into their topic.
+The smoke now proves both branches, desktop and mobile. Owner's two PR #2
+screenshots examined (OCR + pixel scan): they document the Tools sheet and
+the index overlay -- no defects found in either.

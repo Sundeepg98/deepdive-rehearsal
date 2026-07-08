@@ -19,18 +19,21 @@ const boot = await p.evaluate(() => {
     ixOpen: !!document.querySelector('.ix-ov.open'), home: !!document.getElementById('homeBtn'), leaks };
 });
 chk('viz tab INVISIBLE (computed) on a topic without a visual', boot.vizW === 0 && boot.vizDisp === 'none', JSON.stringify(boot));
-chk('boot lands IN the app -- index overlay not auto-opened', boot.ixOpen === false, 'ixOpen=' + boot.ixOpen);
+chk('FIRST-RUN boot opens the start screen (index overlay)', boot.ixOpen === true, 'ixOpen=' + boot.ixOpen);
 chk('every [hidden] element is actually invisible (page invariant)', boot.leaks.length === 0, boot.leaks.join(','));
 chk('Home button present in the chrome', boot.home === true, 'homeBtn missing');
 const homeFlow = await p.evaluate(async () => {
-  document.getElementById('homeBtn').click();
+  const x0 = document.querySelector('.ix-x'); if (x0) x0.click();          // close the first-run screen
+  await new Promise((r) => setTimeout(r, 350));
+  const closedFirst = !document.querySelector('.ix-ov.open');
+  document.getElementById('homeBtn').click();                               // Home reopens it on demand
   await new Promise((r) => setTimeout(r, 350));
   const opened = !!document.querySelector('.ix-ov.open');
   const x = document.querySelector('.ix-x'); if (x) x.click();
   await new Promise((r) => setTimeout(r, 350));
-  return { opened, closed: !document.querySelector('.ix-ov.open') };
+  return { closedFirst, opened, closed: !document.querySelector('.ix-ov.open') };
 });
-chk('Home button opens the index; close works', homeFlow.opened && homeFlow.closed, JSON.stringify(homeFlow));
+chk('start screen closable; Home reopens; close works', homeFlow.closedFirst && homeFlow.opened && homeFlow.closed, JSON.stringify(homeFlow));
 
 await p.evaluate(() => document.querySelector('.tn-trigger').click());
 await p.waitForTimeout(350);
@@ -74,6 +77,12 @@ const after = await p.evaluate(() => ({
 chk('switching to a viz-less topic disposes the kit', after.viz === false, JSON.stringify(after));
 chk('...hides the tab and bounces off the viz route', after.hidden === true && after.route !== 'viz', JSON.stringify(after));
 chk('zero page errors across the whole flow', errs.length === 0, errs.slice(0, 3).join(' | '));
+
+// ---- returning-user branch: progress exists now, a reload boots into the app
+await p.reload({ waitUntil: 'load' });
+await p.waitForTimeout(1800);
+const back = await p.evaluate(() => ({ ixOpen: !!document.querySelector('.ix-ov.open'), topic: (location.hash || '').slice(1, 30) }));
+chk('RETURNING boot lands in the app (progress saved, no overlay)', back.ixOpen === false, JSON.stringify(back));
 // ---- mobile context: same guarantees at 390px --------------------------------
 const m = await b.newPage({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
 const merrs = []; m.on('pageerror', (e) => merrs.push(e.message.slice(0, 100)));
@@ -85,7 +94,11 @@ const mb = await m.evaluate(() => ({
   homeBox: (() => { const r = document.getElementById('homeBtn').getBoundingClientRect(); return [Math.round(r.width), Math.round(r.height)]; })(),
   stepBox: (() => { const r = document.querySelector('.tn-step:not(.tn-home)').getBoundingClientRect(); return [Math.round(r.width), Math.round(r.height)]; })(),
 }));
-chk('MOBILE boot: no auto-opened overlay, no stray viz tab', mb.ixOpen === false && mb.vizW === 0, JSON.stringify(mb));
+chk('MOBILE first-run boot: start screen opens, no stray viz tab', mb.ixOpen === true && mb.vizW === 0, JSON.stringify(mb));
+await m.evaluate(() => { const x = document.querySelector('.ix-x'); if (x) x.click(); });
+await m.waitForTimeout(400);
+const mClosed = await m.evaluate(() => !document.querySelector('.ix-ov.open'));
+chk('MOBILE start screen closable (44px close)', mClosed, 'still open');
 chk('MOBILE tap targets >= 44px (home + steppers)', mb.homeBox[0] >= 44 && mb.homeBox[1] >= 44 && mb.stepBox[0] >= 44 && mb.stepBox[1] >= 44, JSON.stringify(mb));
 chk('MOBILE zero page errors', merrs.length === 0, merrs.join(' | '));
 await m.close();

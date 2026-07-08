@@ -415,10 +415,16 @@
   function wire() {
     var btn = document.getElementById('idxopen'); if (btn) btn.addEventListener('click', open);
     var hb = document.getElementById('homeBtn'); if (hb) hb.addEventListener('click', open);
-    /* C1 retired 2026-07-08 (owner report): booting into the overlay made the
-       app open on "the home page" with only a small close affordance. Boot now
-       lands in the app directly; the index is an intentional destination via
-       the Home button, the topic pill, #idxopen, or the backslash key. */
+    /* Boot behavior (owner-delegated verdict, 2026-07-08): the index overlay
+       IS the designed start screen ("START HERE"), so a brand-new browser
+       opens it for orientation -- that was C1's intent all along. A returning
+       user (any saved progress) lands straight in their topic; the index
+       stays one tap away via the Home chip, the topic pill, Tools > Topic
+       index, or the backslash key. When a proper standalone home page is
+       built, this same gate simply points there. */
+    var hasProgress = false;
+    try { hasProgress = (typeof Store !== 'undefined' && Store.keys && Store.keys('').length > 0); } catch (e) {}
+    if (!window.__bootHash && !hasProgress) { setTimeout(open, 30); }
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wire);
   else wire();

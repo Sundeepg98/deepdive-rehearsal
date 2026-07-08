@@ -50,6 +50,11 @@ whether it looks right or teaches well -- that is the human review below.
 
 ## Structural tasks: DONE (machine-verified). Your job is aesthetics.
 
+NOTE (post-refactor): the choreography now lives in src/framework/flow.js
+with loop.js + hud.js alongside -- see FRAMEWORK.md. scene.js is a thin
+consumer. Polish lands in framework primitives so every future mode
+inherits it.
+
 The original task list (queue choreography, teaching beats, story mode,
 perf) has been implemented and headlessly verified -- see `npm run verify`
 (13 checks) and the verified-state section below. What remains is visual

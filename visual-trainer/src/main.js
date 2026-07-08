@@ -2,16 +2,21 @@
 // rebalance banner, and STORY MODE (scripted teaching-beat scenarios).
 import { createSim } from './sim/kafka_lag.js';
 import { createScene } from './render/scene.js';
+import { createLoop } from './framework/loop.js';
+import { createHUD, createStoryDriver, makeControlLocker } from './framework/hud.js';
 
 const sim = createSim();
 const canvas = document.getElementById('view');
 const scene = createScene(canvas, sim);
 
 // Headless-verification hooks
+const hud = createHUD();
+const lockControls = makeControlLocker();
+const driver = createStoryDriver({ now: () => sim.state.t, hud, lockControls });
 window.__SIM = sim;
 window.__frames = 0;
 window.__QUEUES = () => scene.queues();
-window.__STORY = () => (story ? story.steps[Math.max(0, story.i - 1)].cap || '' : '');
+window.__STORY = () => driver.currentCaption();
 
 const $ = (id) => document.getElementById(id);
 const rate = $('rate'), cons = $('cons'), cap = $('cap');
@@ -54,11 +59,9 @@ window.addEventListener('keydown', (e) => {
   else if (e.key === 'x') $('slow').click();
 });
 
-// ---------------- STORY MODE ----------------------------------------------
+// ---------------- STORY MODE (framework driver) -----------------------------
 // Each story: reset to a known state, then timed steps { t, cap, do }.
 // Captions narrate the teaching beat; the human rehearses by re-narrating.
-let story = null;
-
 function baseState(rateV, consV, capV) {
   sim.setProducerRate(rateV);
   sim.setConsumerCapacity(capV);
@@ -119,75 +122,34 @@ const STORIES = {
   },
 };
 
-function setControlsDisabled(dis) {
-  for (const el of document.querySelectorAll('.panel input, .panel button')) {
-    if (el.id !== 'stopStory') el.disabled = dis;
-  }
-}
-
-function runStory(key) {
-  if (story) return;
-  const s = STORIES[key];
-  s.init();
-  story = { steps: s.steps, i: 0, start: sim.state.t };
-  setControlsDisabled(true);
-  $('stopStory').style.display = 'inline-block';
-  $('caption').style.display = 'block';
-}
-function endStory() {
-  story = null;
-  $('caption').style.display = 'none';
-  $('caption').textContent = '';
-  $('stopStory').style.display = 'none';
-  setControlsDisabled(false);
-  baseState(120, 3, 30);                  // back to the default sandbox
-}
 for (const key of Object.keys(STORIES)) {
-  $('story-' + key).addEventListener('click', () => runStory(key));
+  $('story-' + key).addEventListener('click', () =>
+    driver.run(STORIES[key].steps, { init: STORIES[key].init, onEnd: () => baseState(120, 3, 30) }));
 }
-$('stopStory').addEventListener('click', endStory);
+$('stopStory').addEventListener('click', () => driver.stop());
 
 // ---------------- frame loop -----------------------------------------------
-const DT = 1 / 30;
-let last = performance.now(), acc = 0;
-function frame(now) {
-  const ft = Math.min(0.25, (now - last) / 1000);
-  last = now;
-  acc += ft;
-  while (acc >= DT) {
-    sim.tick(DT);
+const loop = createLoop({
+  simTick: (dt) => {
+    sim.tick(dt);
     if (spikeUntil > 0 && sim.state.t >= spikeUntil) {
       sim.setProducerRate(preSpikeRate); spikeUntil = 0; syncControls();
     }
-    if (story) {
-      const el = sim.state.t - story.start;
-      while (story.i < story.steps.length && el >= story.steps[story.i].t) {
-        const st = story.steps[story.i];
-        if (st.cap) $('caption').textContent = st.cap;
-        if (st.do) st.do();
-        story.i += 1;
-      }
-      if (story.i >= story.steps.length) endStory();
-    }
-    acc -= DT;
-  }
-  scene.stepParticles(ft);
-  scene.draw();
-  window.__frames += 1;
-  // readouts + banner
-  const lag = sim.totalLag(), capE = sim.effectiveCapacity(), st = sim.status();
-  $('lagV').textContent = Math.round(lag);
-  $('ecapV').textContent = Math.round(capE) + ' msg/s';
-  $('idleV').textContent = Math.max(0, sim.state.consumerCount - sim.state.partitions.length);
-  const badge = $('status');
-  badge.textContent = st;
-  badge.className = 'badge ' + (st === 'REBALANCING' ? 'warn' : st === 'LAG GROWING' ? 'bad' : 'ok');
-  const banner = $('banner');
-  if (st === 'REBALANCING') {
-    banner.style.display = 'block';
-    banner.textContent = 'REBALANCING -- consumption paused (' + sim.state.rebalanceRemaining.toFixed(1) + 's)';
-  } else banner.style.display = 'none';
-  requestAnimationFrame(frame);
-}
+    driver.tick();
+  },
+  onFrame: (ft) => {
+    scene.stepParticles(ft);
+    scene.draw();
+    window.__frames += 1;
+    const lag = sim.totalLag(), capE = sim.effectiveCapacity(), st = sim.status();
+    $('lagV').textContent = Math.round(lag);
+    $('ecapV').textContent = Math.round(capE) + ' msg/s';
+    $('idleV').textContent = Math.max(0, sim.state.consumerCount - sim.state.partitions.length);
+    hud.setBadge(st, st === 'REBALANCING' ? 'warn' : st === 'LAG GROWING' ? 'bad' : 'ok');
+    hud.banner(st === 'REBALANCING'
+      ? 'REBALANCING -- consumption paused (' + sim.state.rebalanceRemaining.toFixed(1) + 's)'
+      : null);
+  },
+});
 syncControls();
-requestAnimationFrame(frame);
+loop.start();

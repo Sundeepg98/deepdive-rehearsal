@@ -189,3 +189,68 @@ move, it is to bring Set-B up to this app's polish, **not** to merge them.
 - **Two confirmed non-actions:** architecture-audit methodology (reserve), end-to-end design
   problems (Set-B's job -- keep them separate).
 - **Ordering: sound.** Leave it.
+
+---
+
+## Resolution (same day, later) -- "I want it all"
+
+Decision: build the debugging cluster. Shipped as **two topics** in the standard 14-pane
+format (the format fits: war stories -> drill cards, methodology -> walk, anti-patterns ->
+red-flags, SQL forensics -> walk/drill):
+
+- **debugging** (commit 7a7ffa2) -- production debugging and incident diagnosis, folding
+  playbook S02 (debugging patterns) + S03 (SQL forensics) + S28 (incident anti-patterns).
+  The diagnostic skill: distrust the success metric, read failures before the storage layer,
+  hypothesize the mechanism, confirm on the most specific evidence, fix root cause + amplifier
+  + a regression guard. Grounded in the real war stories (survivorship bias / 17k-week, the
+  NULL trap / 118,933 devices, retry amplification / 270k-in-10-days).
+- **error-propagation** (commit 65fdb72) -- meaningful failures across services, playbook S01.
+  The error-contract design pattern: a machine-readable failure-code taxonomy classified at
+  the source, preserved across boundaries, mapped to user actions (retry/fix/escalate) at the
+  edge; plus the cascading classifier, self-timeout, correlation ids, and an append-only
+  contract deployed consumer-first. Grounded in the real 4-service packaging pipeline.
+
+App now **39 topics**. reliability-observability grew to 8: retries-timeouts, idempotency,
+circuit-breaker, error-propagation, backpressure, observability, debugging, slos.
+
+### Coverage after the cluster
+
+**27 of 28 playbook sections now have a dedicated deep topic** (debugging folds S02/S03/S28,
+observability folds S15/S27). The sole section without one is **S05 architecture-audit-
+methodology**, correctly reserved (a staff/consulting meta-skill, low FAANG-interview
+relevance). Plus the 14 additive canonical breadth patterns. The debugging gap the earlier
+audit flagged is closed; coverage is now effectively complete for interview purposes.
+
+### "Which to keep" -- overlap analysis (evidence-based, keep all)
+
+The new topics are **additive, not duplicative** -- their signature concepts appear in *no*
+other topic: survivorship bias and the NULL exclusion trap (debugging only), self-timeout and
+the failure-code taxonomy (error-propagation only). The overlaps that do exist are
+**complementary (a different angle), not redundant**:
+
+| concept | pattern topic (how to build it) | new topic (how to diagnose / contract it) |
+|---|---|---|
+| retry storm / amplification | retries-timeouts (17 mentions, design) | debugging (9, diagnostic symptom) |
+| replication lag | replication (10, mechanism) | debugging (6, intermittent-404 diagnosis) |
+| transient vs permanent | retries-timeouts (1, consumes it) | error-propagation (33, owns the classification) |
+
+A candidate needs both "how to build it" and "how to recognize/handle it when it fails," so
+these are two panes on one phenomenon, not duplication. The debugging topic cross-references
+the pattern topics explicitly rather than reproducing them. **Verdict: keep all; nothing to
+cut.**
+
+### Ordering re-review -- sound
+
+Full app: 39 topics, 6 groups (messaging-events 5, data-storage 7, reliability-observability
+8, platform-infra 10, architecture-apis 6, security-tenancy 3). The within-group arc for
+reliability-observability is coherent: the error-handling cluster (retries -> idempotency ->
+circuit-breaker -> error-propagation) -> flow control (backpressure) -> see-and-diagnose
+(observability -> debugging) -> measure (slos). error-propagation slots into the error-handling
+cluster after circuit-breaker; debugging pairs with observability (the tooling, then using it).
+The 6-group order is unchanged and still sound. **No re-ordering needed.**
+
+### Bottom line (final)
+
+Coverage: 27/28 playbook sections have dedicated deep topics (only S05 reserved) + 14 breadth
+patterns. Debugging cluster shipped (2 topics). No redundancy to cut -- the overlaps are
+complementary. Ordering sound. Nothing open.

@@ -1,0 +1,21 @@
+{
+  "name": "visual-trainer",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "GPU-accelerated 2D concept trainers for the deepdive-rehearsal curriculum. Pilot: Kafka consumer lag / backpressure.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "test": "node test/sim_invariants.mjs",
+    "verify": "node _pw_verify.mjs && python3 _verify_pixels.py"
+  },
+  "dependencies": {
+    "three": "^0.170.0"
+  },
+  "devDependencies": {
+    "playwright": "^1.61.1",
+    "vite": "^6.0.0",
+    "vite-plugin-singlefile": "^2.0.0"
+  }
+}

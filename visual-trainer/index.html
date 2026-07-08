@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Kafka Consumer Lag -- Visual Trainer (pilot)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; background: #0d1117; color: #c9d1d9;
+         font: 14px/1.45 system-ui, -apple-system, Segoe UI, sans-serif; }
+  .wrap { display: flex; gap: 16px; padding: 16px; max-width: 1280px; margin: 0 auto; }
+  .stage { flex: 1; min-width: 0; }
+  canvas { width: 100%; display: block; border: 1px solid #21262d; border-radius: 8px; }
+  .panel { width: 250px; flex: none; }
+  .card { background: #161b22; border: 1px solid #21262d; border-radius: 8px;
+          padding: 12px 14px; margin-bottom: 12px; }
+  h1 { font-size: 16px; margin: 0 0 2px; }
+  .sub { color: #8b949e; font-size: 12px; margin-bottom: 10px; }
+  label { display: block; font-size: 12px; color: #8b949e; margin: 10px 0 2px; }
+  input[type=range] { width: 100%; }
+  button { background: #21262d; color: #c9d1d9; border: 1px solid #30363d;
+           border-radius: 6px; padding: 6px 10px; margin: 3px 4px 3px 0; cursor: pointer; }
+  button:hover { background: #30363d; }
+  .kv { display: flex; justify-content: space-between; margin: 4px 0; }
+  .badge { padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: 600; }
+  .badge.ok { background: #1f6f43; } .badge.bad { background: #8e2c2c; }
+  .badge.warn { background: #8a6d1d; }
+  .legend { font-size: 12px; color: #8b949e; }
+  .legend b { color: #c9d1d9; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="stage">
+    <div class="card">
+      <h1>Kafka consumer lag and backpressure</h1>
+      <div class="sub">producers (left) -&gt; partitions with lag bars (middle) -&gt; consumer group (right)</div>
+      <canvas id="view" width="1280" height="720"></canvas>
+      <div class="legend" style="margin-top:8px">
+        Bars = per-partition lag (green low, red high). Circles = consumers:
+        <b>blue</b> active, <b>grey small</b> idle (owns no partitions),
+        <b>red</b> degraded. All dim during a <b>rebalance stall</b>.
+      </div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="card">
+      <div class="kv"><span>Status</span><span id="status" class="badge ok">STEADY</span></div>
+      <div class="kv"><span>Total lag</span><b id="lagV">0</b></div>
+      <div class="kv"><span>Effective capacity</span><b id="ecapV">-</b></div>
+      <label>Producer rate: <span id="rateV"></span> msg/s</label>
+      <input id="rate" type="range" min="0" max="400" step="10">
+      <label>Consumers: <span id="consV"></span> (partitions: 6)</label>
+      <input id="cons" type="range" min="1" max="9" step="1">
+      <label>Capacity per consumer: <span id="capV"></span> msg/s</label>
+      <input id="cap" type="range" min="10" max="60" step="5">
+    </div>
+    <div class="card">
+      <button id="spike">Traffic spike x3 (8s)</button>
+      <button id="addC">Add consumer</button>
+      <button id="rmC">Remove consumer</button>
+      <button id="slow">Slow consumer</button>
+      <button id="reset">Reset</button>
+    </div>
+    <div class="card legend">
+      Try: spike -&gt; watch lag grow -&gt; add a consumer -&gt; watch it drain.
+      Then keep adding past 6: idle consumers add <b>zero</b> capacity.
+      Every add/remove triggers a <b>rebalance stall</b> -- watch lag spike
+      even when capacity is fine.
+    </div>
+  </div>
+</div>
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>

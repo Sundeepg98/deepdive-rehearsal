@@ -25,3 +25,7 @@ src/tokens.generated.css
 # partial keeps its own path because app.js includes it by that name.
 src/topics/_generated/
 src/topics/_generated-registry.js
+
+# visual-trainer subproject (own npm project; only sources + the built pilot are tracked)
+visual-trainer/node_modules/
+visual-trainer/dist/

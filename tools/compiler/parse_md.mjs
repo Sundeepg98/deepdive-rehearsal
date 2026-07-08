@@ -19,6 +19,7 @@ const md = new MarkdownIt();
 const PANE_KEY = {
   walk: 'walk', drill: 'drill', whiteboard: 'wb', system: 'sys', 'trade-offs': 'trade',
   'model answers': 'model', numbers: 'num', 'red flags': 'rf', opener: 'open', bank: 'bank',
+  visual: 'visual',
 };
 
 // --- token helpers ------------------------------------------------------------
@@ -439,7 +440,25 @@ function parseBank(toks) {
   return { curveballs: (cb ? [cb] : []).concat(extraCurve), mockBeats, frames: (fr ? [fr.cue] : []).concat(extraFrames) };
 }
 
-const PANE_PARSERS = { walk: parseSteps, rf: parseRf, trade: parseTrade, sys: parseSys, open: parseOpen, wb: parseWb, model: parseModel, drill: parseDrill, num: parseNum, bank: parseBank };
+// ## Visual -- one fenced json block: { mode, labels?, params?, stories? }.
+// Kept deliberately dumb here (find fence, JSON.parse); semantic validation
+// against the kit's mode-registry manifest happens in compile.mjs where the
+// filesystem context lives, so authoring errors fail the build with the
+// topic id attached.
+function parseVisual(toks) {
+  for (const t of toks) {
+    if (t.type === 'fence') {
+      let cfg;
+      try { cfg = JSON.parse(t.content); }
+      catch (e) { throw new Error('Visual section: fenced block is not valid JSON (' + e.message + ')'); }
+      if (!cfg || typeof cfg.mode !== 'string') throw new Error('Visual section: config must set "mode"');
+      return cfg;
+    }
+  }
+  throw new Error('Visual section: needs one fenced json block with the config');
+}
+
+const PANE_PARSERS = { visual: parseVisual, walk: parseSteps, rf: parseRf, trade: parseTrade, sys: parseSys, open: parseOpen, wb: parseWb, model: parseModel, drill: parseDrill, num: parseNum, bank: parseBank };
 
 // --- top level ----------------------------------------------------------------
 
@@ -467,7 +486,7 @@ export function parseMarkdown(src, { index = 1, total = 1 } = {}) {
     throw new Error(
       'unknown section heading(s): ' + unknownHeadings.map((h) => '"## ' + h + '"').join(', ') +
       '. Valid headings: Thesis, Sub, Spine, Companion Notes, Walk, Drill, Whiteboard, ' +
-      'System, Trade-offs, Model Answers, Numbers, Red Flags, Opener, Bank.',
+      'System, Trade-offs, Model Answers, Numbers, Red Flags, Opener, Bank, Visual.',
     );
   }
 

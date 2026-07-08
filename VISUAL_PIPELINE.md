@@ -55,12 +55,12 @@ visit, disposes on leave (one GL context alive; the 4.6 MB app grows by a
 ~500 KB kit, acceptable for a file:// artifact). Sim/render separation,
 2D-only, story driver, and the verify harness all come from the kit.
 
-## Phases
+## Phases -- status: P0 + P1 SHIPPED 2026-07-08 (gate green, smoke 9/9)
 
-- P0 kit + skeleton (no topic changed, gate must stay green): esbuild IIFE
+- [DONE] P0 kit + skeleton (no topic changed, gate must stay green): esbuild IIFE
   step wired into `npm run build` before vite; `deep-visual` element +
   conditional tab; empty registry manifest path proven. ~1 session.
-- P1 grammar + first topic: `Visual` heading in parse_md whitelist, a
+- [DONE] P1 grammar + first topic: `Visual` heading in parse_md whitelist, a
   `visual.mjs` emitter, aggregator include, registry validation; enhance
   `kafka-internals.md` as consumer #1 (config reuses the pilot mode).
   Compiler proof suites gain a visual fixture. ~1-2 sessions.

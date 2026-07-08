@@ -39,7 +39,13 @@ def included_js_files():
         except (OSError, UnicodeDecodeError):
             return
         if path.endswith('.js'):
-            files.append(path)
+            # scripts/visuals/ is the GENERATED VisualKit vendor IIFE (three.js
+            # inside, single window global, own verify harness). Its minified
+            # internals false-positive this regex scan (TSL exports float/vec4/
+            # mat3 read as module globals). Same exemption class as IIFE-scoped
+            # modules per the E1a note above.
+            if 'scripts/visuals/' not in path.replace(os.sep, '/'):
+                files.append(path)
         for m in INCLUDE.finditer(content):
             walk(m.group(1))
 

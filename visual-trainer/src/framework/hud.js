@@ -1,7 +1,7 @@
 // framework/hud.js -- shared HUD: status badge, event banner, caption bar,
 // story-mode driver, control locking. Pure DOM, no Three.js, no sim logic.
-export function createHUD({ badgeId = 'status', bannerId = 'banner', captionId = 'caption' } = {}) {
-  const $ = (id) => document.getElementById(id);
+export function createHUD({ root = document, badgeId = 'status', bannerId = 'banner', captionId = 'caption' } = {}) {
+  const $ = (id) => (root.getElementById ? root.getElementById(id) : root.querySelector('#' + id));
   return {
     setBadge(text, tone) { const b = $(badgeId); b.textContent = text; b.className = 'badge ' + tone; },
     banner(text) { const el = $(bannerId);
@@ -48,12 +48,12 @@ export function createStoryDriver({ now, hud, lockControls }) {
   };
 }
 
-export function makeControlLocker({ panelSelector = '.panel', exceptId = 'stopStory' } = {}) {
+export function makeControlLocker({ root = document, panelSelector = '.panel', exceptId = 'stopStory' } = {}) {
   return (dis) => {
-    for (const el of document.querySelectorAll(panelSelector + ' input, ' + panelSelector + ' button')) {
+    for (const el of root.querySelectorAll(panelSelector + ' input, ' + panelSelector + ' button')) {
       if (el.id !== exceptId) el.disabled = dis;
     }
-    const stop = document.getElementById(exceptId);
+    const stop = root.getElementById ? root.getElementById(exceptId) : root.querySelector('#' + exceptId);
     if (stop) stop.style.display = dis ? 'inline-block' : 'none';
   };
 }

@@ -69,6 +69,7 @@
     <button type="button" data-tab="num"><span>Numbers</span><span class="n">ESTIMATE</span></button>
     <button type="button" data-tab="rf"><span>Red Flags</span><span class="n">ANTI-PATTERNS</span></button>
     <button type="button" data-tab="open"><span>30-Second</span><span class="n">OPEN &amp; CLOSE</span></button>
+    <button type="button" data-tab="viz" hidden><span>Visualize</span><span class="n">GPU MODE</span></button>
   </div>
 
   </aside>
@@ -107,6 +108,7 @@
   <!--@build:include panes/rf.html-->
 
   <!--@build:include panes/open.html-->
+  <!--@build:include panes/viz.html-->
 </main>
   <aside class="companion" aria-label="Rehearsal companion">
     <div class="cmp-inner" tabindex="0" role="region" aria-label="Coaching for this view">
@@ -159,6 +161,7 @@
 <!--@build:include overlays/gameplan.html-->
 
 
+<script><!--@build:include scripts/visuals/kit.js--></script>
 <script><!--@build:include scripts/app.js--></script>
 <script>
 /* Boot: hide the loading splash, then start the HashRouter once every module is

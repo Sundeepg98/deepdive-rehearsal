@@ -29,3 +29,6 @@ src/topics/_generated-registry.js
 # visual-trainer subproject (own npm project; only sources + the built pilot are tracked)
 visual-trainer/node_modules/
 visual-trainer/dist/
+
+# generated visual kit (built by tools/build-visual-kit.mjs)
+src/scripts/visuals/

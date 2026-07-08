@@ -52,6 +52,10 @@ def check_all_source_files():
     js_files = []
 
     for root, dirs, files in os.walk(scripts_dir):
+        # 'visuals' holds the GENERATED VisualKit bundle (minified vendor blob);
+        # its anonymous classes false-positive the custom-element check. It has
+        # its own verify harness -- skip like other generated content.
+        dirs[:] = [d for d in dirs if d != 'visuals']
         for f in files:
             if f.endswith('.js'):
                 path = os.path.join(root, f)

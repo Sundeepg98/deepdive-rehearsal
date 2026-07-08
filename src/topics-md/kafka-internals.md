@@ -441,3 +441,37 @@ Model: this is a hot partition from key skew -- because partition = hash(user_id
 - Kafka is a partitioned, retained, replayable commit log (not a delete-on-consume queue) -> replay, many independent consumers, high throughput
 - Ordering is per-partition via the key (trades against parallelism); consumer groups map one consumer per partition (capped at partition count); consumer lag = latest minus committed offset is the scaling/health signal
 - Replication + ISR + acks=all set durability; default is at-least-once (commit after process -> duplicates on crash), so consumers must be idempotent; exactly-once (transactions) covers only the Kafka boundary
+
+## Visual
+
+```json
+{
+  "mode": "queue-flow",
+  "labels": { "src": "producers", "queue": "partitions", "sink": "consumer group" },
+  "params": { "lanes": 6, "rate": 120, "sinks": 3, "capacity": 30 },
+  "stories": [
+    {
+      "name": "Spike, then scale out",
+      "steps": [
+        { "t": 0, "cap": "Steady: 60 msg/s in, capacity 90. Lag near zero.", "set": { "rate": 60 } },
+        { "t": 3, "cap": "Traffic spikes 3x (180 msg/s). Capacity 90 -- every partition queue backs up.", "set": { "rate": 180 } },
+        { "t": 9, "cap": "Scale out: a 4th consumer. Rebalance stall first... then capacity 120.", "set": { "sinks": 4 } },
+        { "t": 13, "cap": "Still growing: 180 in vs 120 out. A 5th -- capacity 150.", "set": { "sinks": 5 } },
+        { "t": 17, "cap": "Spike ends. Capacity 150 -- the backlog drains.", "set": { "rate": 60 } },
+        { "t": 24, "cap": "The interview line: scale consumers to drain lag -- capacity versus rate." },
+        { "t": 28 }
+      ]
+    },
+    {
+      "name": "Consumers beyond partitions",
+      "steps": [
+        { "t": 0, "cap": "6 partitions, 6 consumers: capacity 180 vs 150 in. Balanced.", "set": { "rate": 150, "sinks": 6 } },
+        { "t": 4, "cap": "A 7th consumer joins. It owns NO partition -- a hollow ring. Capacity unchanged.", "set": { "sinks": 7 } },
+        { "t": 10, "cap": "An 8th. Still nothing. Consumers beyond the partition count are idle.", "set": { "sinks": 8 } },
+        { "t": 16, "cap": "The interview line: partition count caps consumer-group parallelism." },
+        { "t": 20 }
+      ]
+    }
+  ]
+}
+```

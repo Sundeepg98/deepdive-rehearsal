@@ -86,7 +86,7 @@ document.addEventListener('keydown', function (event) {
   /* g starts the guided tour */
   if (key === 'g') { if (window.TourGuide) window.TourGuide.start(); return; }
   /* q..o jump straight to a pane (the QWERTY row mirrors the tab order) */
-  const tabKeys = { q: 'walk', w: 'drill', e: 'wb', r: 'sys', t: 'trade', y: 'model', u: 'num', i: 'rf', o: 'open' };
+  const tabKeys = { q: 'walk', w: 'drill', e: 'wb', r: 'sys', t: 'trade', y: 'model', u: 'num', i: 'rf', o: 'open', v: 'viz' };
   if (tabKeys[key]) { goView(tabKeys[key]); return; }
   if (key === 'd') { if (window.Density) window.Density.cycle(); return; }  /* d cycles density: default -> compact -> cozy */
   if (key === '/') { event.preventDefault(); if (window.SearchOverlay && window.SearchOverlay.open) window.SearchOverlay.open(); return; }

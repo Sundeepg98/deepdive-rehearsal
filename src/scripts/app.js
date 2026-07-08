@@ -20,6 +20,7 @@
 <!--@build:include scripts/app/drill.js-->
 <!--@build:include scripts/app/whiteboard.js-->
 <!--@build:include scripts/app/opener-altitude.js-->
+<!--@build:include scripts/app/visual-pane.js-->
 <!--@build:include scripts/app/system-map.js-->
 <!--@build:include scripts/app/model-answers.js-->
 <!--@build:include scripts/app/num/logic.js-->

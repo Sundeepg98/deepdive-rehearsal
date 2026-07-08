@@ -20,7 +20,8 @@
     model: { id: 'model', title: 'Model Answers' },
     num:   { id: 'num',   title: 'Numbers' },
     rf:    { id: 'rf',    title: 'Red Flags' },
-    open:  { id: 'open',  title: '30-Second' }
+    open:  { id: 'open',  title: '30-Second' },
+    viz:   { id: 'viz',   title: 'Visualize' }
   };
   var DEFAULT_ROUTE = 'walk';
   var listeners = [];

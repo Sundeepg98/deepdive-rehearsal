@@ -14,6 +14,32 @@ import path from 'node:path';
 import matter from 'gray-matter';
 import { parseTopic } from './parse.mjs';
 import { parseMarkdown } from './parse_md.mjs';
+
+// Validate a topic's ## Visual config against the kit's generated registry
+// manifest (src/scripts/visuals/manifest.json -- built by
+// tools/build-visual-kit.mjs, which runs earlier in the npm build chain).
+// Authoring errors fail the build loudly, same feel as the heading grammar.
+let VISUAL_MANIFEST = null;
+function validateVisual(cfg, id, srcDir) {
+  if (VISUAL_MANIFEST === null) {
+    const p = path.join(srcDir, '..', 'scripts', 'visuals', 'manifest.json');
+    if (!fs.existsSync(p)) throw new Error(id + ': Visual section present but the kit manifest is missing -- run node tools/build-visual-kit.mjs (the npm build chain does this automatically)');
+    VISUAL_MANIFEST = JSON.parse(fs.readFileSync(p, 'utf8'));
+  }
+  const mode = VISUAL_MANIFEST.modes[cfg.mode];
+  if (!mode) throw new Error(id + ': Visual mode "' + cfg.mode + '" is not in the kit registry (' + Object.keys(VISUAL_MANIFEST.modes).join(', ') + ')');
+  for (const k of Object.keys(cfg.params || {})) {
+    if (!mode.params[k]) throw new Error(id + ': Visual param "' + k + '" is not accepted by mode "' + cfg.mode + '" (' + Object.keys(mode.params).join(', ') + ')');
+  }
+  for (const s of cfg.stories || []) {
+    if (!s.name || !Array.isArray(s.steps)) throw new Error(id + ': each Visual story needs { name, steps[] }');
+    for (const st of s.steps) {
+      for (const k of Object.keys(st.set || {})) {
+        if (mode.sets.indexOf(k) < 0) throw new Error(id + ': Visual story "' + s.name + '" sets unknown key "' + k + '" (' + mode.sets.join(', ') + ')');
+      }
+    }
+  }
+}
 import { validateTopic } from './topic-schema.mjs';
 import { emit } from './emit.mjs';
 import { renderMermaid, closeMermaid } from './mermaid.mjs';
@@ -37,6 +63,7 @@ export async function compileTopic(topicPath, { index = 1, total = 1, outDir, va
   const topic = topicPath.endsWith('.md')
     ? parseMarkdown(src, { index, total })
     : parseTopic(src, { index, total });
+  if (topic.views && topic.views.visual) validateVisual(topic.views.visual, path.basename(topicPath).replace(/\.md$/, ''), path.dirname(topicPath));
   if (validate) validateTopic(topic, topic.id);
   await renderDiagrams(topic);
   const files = emit(topic);
@@ -49,7 +76,7 @@ export async function compileTopic(topicPath, { index = 1, total = 1, outDir, va
 // Canonical bundle order: identity, each data slice, then register LAST. drill precedes bank
 // (bank aliases the drill cards). Only slices emit actually produced are included, so a topic
 // that omits an optional pane still yields a valid bundle.
-const BUNDLE_SLICES = ['identity', 'walk', 'drill', 'wb', 'sys', 'trade', 'model', 'num', 'rf', 'open', 'bank', 'register'];
+const BUNDLE_SLICES = ['identity', 'walk', 'drill', 'wb', 'sys', 'trade', 'model', 'num', 'rf', 'open', 'visual', 'bank', 'register'];
 
 // All compiled output (per-topic slices + their include bundles) lives under topics/_generated/,
 // so ONE .gitignore line covers it and it never sits beside the hand-authored topics (which are

@@ -22,7 +22,7 @@ var TOPIC_GROUPS = [
    (foundational -> advanced); group order matches TOPIC_GROUPS. */
 var TOPIC_ORDER = [
   /* Messaging & Events (7)    */ 'event-driven', 'notifications', 'real-time-delivery', 'cdc', 'kafka-internals', 'stream-batch-processing', 'saga',
-  /* Data & Storage (9)        */ 'caching', 'soft-delete', 'eav', 'shared-definition', 'replication', 'consistency-models', 'sharding-strategies', 'consistent-hashing', 'storage-engines',
+  /* Data & Storage (10)       */ 'caching', 'soft-delete', 'eav', 'shared-definition', 'replication', 'consistency-models', 'sharding-strategies', 'consistent-hashing', 'storage-engines', 'probabilistic-structures',
   /* Reliability & Observ. (8) */ 'retries-timeouts', 'idempotency', 'circuit-breaker', 'error-propagation', 'backpressure', 'observability', 'debugging', 'slos',
   /* Platform & Infra (11)     */ 'iac', 'desired-state', 'aws-hardening', 'load-balancing', 'autoscaling', 'leader-election', 'distributed-locks', 'multi-region', 'lambda-organization', 'devices-dispatch', 'developer-platform',
   /* Architecture & APIs (7)   */ 'state-machine', 'rules-engine', 'feature-flags', 'api-design', 'rate-limiting', 'content-pipeline', 'microfrontend',

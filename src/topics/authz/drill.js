@@ -222,6 +222,17 @@ var AUTHZ_CARDS = [
         a:"It runs <i>alongside</i> the tenant predicate and usually pushes toward <b>siloing</b> the vault (or the regulated tenant) &mdash; a separate store with its own encryption keys &mdash; layered <b>beneath</b> the tenant filter, so vault access is both tenant-scoped and PCI-controlled. Tenant isolation answers &lsquo;whose data,&rsquo; the data-class flag answers &lsquo;how hardened,&rsquo; and the regulated data gets the stricter of the two." }
     ],
     senior:"Framing PCI as a <b>data-class flag that triggers escalating controls, with tokenization to progressively minimize scope</b> &mdash; raw PAN in a small isolated vault, everything else out of scope &mdash; is the payment-platform judgment (blast radius = what touches the regulated data) a round on a payments system rewards." }
+,
+  { tier:'SDE3', signal:'Precomputed permissions (the materialized-view story)',
+    q:"Role checks were a 4-table join on every request &mdash; users to groups to roles to entities. How do you make that fast without weakening it?",
+    a:"Precompute it: collapse the join into a <b>PostgreSQL materialized view</b> keyed <code>(user_id, entity_id)</code> &rarr; effective permission, refreshed on mutation. The request path becomes a <b>single indexed lookup</b> instead of a live 4-way traversal &mdash; at Invenco scale (~10,000 users, ~500 groups, ~50,000 entities) the flattened view is small enough to index trivially, and the hot path stops touching the graph.",
+    f:[
+      { q:"Memberships change &mdash; how stale is a check allowed to be?",
+        a:"<b>REFRESH MATERIALIZED VIEW CONCURRENTLY</b> fires on mutation &mdash; grant, revoke, group change &mdash; so staleness is the refresh latency: seconds, not TTL-minutes. CONCURRENTLY needs a <b>unique index</b> on the view and swaps without locking readers; a plain REFRESH blocks reads for the rebuild. And for a <i>revoke</i> on a privileged action you don&rsquo;t wait &mdash; check live state for the dangerous write, the same blast-radius tiering as any authz cache." },
+      { q:"Why a materialized view and not Redis?",
+        a:"The view lives <b>inside the same engine</b> as the data it guards: transactional refresh, one consistency model, no second system to invalidate, and the planner can <b>join it</b> straight into scoped queries. Redis buys cross-service reuse but imports the classic invalidation problem plus a network hop and a second failure domain. <b>Cache</b> when many services need the answer; <b>materialize</b> when one database does." }
+    ],
+    senior:"Naming the <b>staleness contract</b> unprompted &mdash; refresh-on-mutation, CONCURRENTLY&rsquo;s unique-index requirement, a live check for revokes &mdash; is what separates &lsquo;I used a view&rsquo; from &lsquo;I owned the trade.&rsquo;" }
 ];
 var AUTHZ_SPEAK = [
   "Lead with the non-negotiable: <b>'tenant identity comes from a verified, signed claim &mdash; never a header or body the client controls.'</b> Then the reason &mdash; a client-supplied tenant id is the confused-deputy attack, one request away from reading another tenant.",
@@ -247,6 +258,8 @@ var AUTHZ_SPEAK = [
   "Answer delegation with least privilege: <b>'a scoped, expiring, independently-revocable OAuth grant &mdash; not a shared API key.'</b> The third party is just a reduced-scope principal inside the same tenant boundary; revoke their grant and the blast radius is only what you scoped.",
   "Answer &lsquo;the authorization query is the bottleneck&rsquo; with materialization: <b>'precompute the permission graph into a materialized view &mdash; Zanzibar-style relationship tuples &mdash; so a check is a lookup, not a live traversal.'</b> Then the staleness trade &mdash; a revoke leaves a stale &lsquo;allow&rsquo; until refresh &mdash; so tier by blast radius and live-check the privileged action.",
   "Handle regulated data as a class, not a special case: <b>'cardholder data is a data-class flag that triggers stricter controls, and you tokenize to progressively shrink PCI scope &mdash; raw PAN in a small isolated vault, everything downstream carrying a token and falling out of scope.'</b> The flag runs alongside the tenant predicate; the regulated data gets the stricter of the two."
+,
+  "Own the resume bullet: <b>'a 4-table join per request became one indexed lookup &mdash; a PostgreSQL materialized view over roughly 10k users, 500 groups, and 50k entities, refreshed on mutation.'</b> Then the trade unprompted: CONCURRENTLY needs a unique index, a plain refresh locks readers, and a revoke on a privileged action checks live state."
 ];
 var TOPIC_AUTHZ_DRILL = {
   cards: AUTHZ_CARDS,

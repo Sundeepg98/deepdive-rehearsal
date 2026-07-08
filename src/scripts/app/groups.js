@@ -21,7 +21,7 @@ var TOPIC_GROUPS = [
    into its slot the moment it is built. Within-group order is pedagogical
    (foundational -> advanced); group order matches TOPIC_GROUPS. */
 var TOPIC_ORDER = [
-  /* Messaging & Events (5)    */ 'event-driven', 'notifications', 'cdc', 'kafka-internals', 'saga',
+  /* Messaging & Events (6)    */ 'event-driven', 'notifications', 'real-time-delivery', 'cdc', 'kafka-internals', 'saga',
   /* Data & Storage (9)        */ 'caching', 'soft-delete', 'eav', 'shared-definition', 'replication', 'consistency-models', 'sharding-strategies', 'consistent-hashing', 'storage-engines',
   /* Reliability & Observ. (8) */ 'retries-timeouts', 'idempotency', 'circuit-breaker', 'error-propagation', 'backpressure', 'observability', 'debugging', 'slos',
   /* Platform & Infra (10)     */ 'iac', 'desired-state', 'aws-hardening', 'load-balancing', 'autoscaling', 'leader-election', 'distributed-locks', 'lambda-organization', 'devices-dispatch', 'developer-platform',

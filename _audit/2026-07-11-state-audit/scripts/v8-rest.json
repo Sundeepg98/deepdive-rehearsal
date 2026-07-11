@@ -1,0 +1,1542 @@
+{
+ "mockbar": {
+  "display": "flex",
+  "visibility": "visible",
+  "transform": "matrix(1, 0, 0, 1, 0, 795.89)",
+  "position": "fixed",
+  "top": 1084.8,
+  "bottom": 1776.9,
+  "h": 692.1,
+  "viewportH": 981,
+  "docClientH": 844,
+  "ariaHidden": null,
+  "inert": false,
+  "inertProp": false,
+  "hiddenAttr": false,
+  "bodyHasToolsOpen": false,
+  "btnCount": 13,
+  "btnIds": [
+   "idxopen",
+   "searchopen",
+   "copylink",
+   "starbtn",
+   "notesopen",
+   "printqa",
+   "cramopen",
+   "sessopen",
+   "mixopen",
+   "planopen",
+   "scopeopen",
+   "keyopen",
+   "themetog"
+  ],
+  "tabbable": 13
+ },
+ "tabTrail": [
+  {
+   "tab": 1,
+   "el": "SUMMARY.mcomp-sum",
+   "txt": "Companioncoaching for ",
+   "top": 306,
+   "left": 16,
+   "inMockbar": false,
+   "offscreen": false
+  },
+  {
+   "tab": 2,
+   "el": "SUMMARY",
+   "txt": "Go deeper",
+   "top": 807,
+   "left": 39,
+   "inMockbar": false,
+   "offscreen": false
+  },
+  {
+   "tab": 3,
+   "el": "#wnext",
+   "txt": "Next →",
+   "top": 797,
+   "left": 292,
+   "inMockbar": false,
+   "offscreen": false
+  },
+  {
+   "tab": 4,
+   "el": "SUMMARY",
+   "txt": "What a complete answer",
+   "top": 647,
+   "left": 19,
+   "inMockbar": false,
+   "offscreen": false
+  },
+  {
+   "tab": 5,
+   "el": "BUTTON.arc-step",
+   "txt": "1An API is a contract,",
+   "top": 724,
+   "left": 15,
+   "inMockbar": false,
+   "offscreen": false
+  },
+  {
+   "tab": 6,
+   "el": "BUTTON.arc-step",
+   "txt": "2Model resources and p",
+   "top": 717,
+   "left": 138,
+   "inMockbar": false,
+   "offscreen": false
+  },
+  {
+   "tab": 7,
+   "el": "BUTTON.arc-step",
+   "txt": "3Design for evolution:",
+   "top": 717,
+   "left": 262,
+   "inMockbar": false,
+   "offscreen": false
+  },
+  {
+   "tab": 8,
+   "el": "BUTTON.arc-step",
+   "txt": "4Make it safe: idempot",
+   "top": 860,
+   "left": 15,
+   "inMockbar": false,
+   "offscreen": false
+  },
+  {
+   "tab": 9,
+   "el": "#scrolltop",
+   "txt": "↑",
+   "top": 931,
+   "left": 207,
+   "inMockbar": false,
+   "offscreen": false
+  },
+  {
+   "tab": 10,
+   "el": "BODY"
+  },
+  {
+   "tab": 11,
+   "el": "#_focus-toggle",
+   "txt": "Focus",
+   "top": -161,
+   "left": 15,
+   "inMockbar": false,
+   "offscreen": true
+  },
+  {
+   "tab": 12,
+   "el": "#homeBtn",
+   "txt": "⌂",
+   "top": 93,
+   "left": 15,
+   "inMockbar": false,
+   "offscreen": false
+  },
+  {
+   "tab": 13,
+   "el": "#tnprev",
+   "txt": "‹",
+   "top": 149,
+   "left": 65,
+   "inMockbar": false,
+   "offscreen": false
+  },
+  {
+   "tab": 14,
+   "el": "#tntrigger",
+   "txt": "RehearsingAPI Design a",
+   "top": 163,
+   "left": 115,
+   "inMockbar": false,
+   "offscreen": false
+  }
+ ],
+ "firstMockbarTab": null,
+ "seg": {
+  "click": {
+   "activeTab": "open",
+   "scrollLeft": 580,
+   "scrollWidth": 976,
+   "clientWidth": 396,
+   "maxScroll": 580,
+   "activeLeft": 288.3,
+   "activeRight": 384,
+   "stripLeft": 0,
+   "stripRight": 396,
+   "activeFullyVisible": true
+  },
+  "keyboard": {
+   "activeTab": "open",
+   "scrollLeft": 580,
+   "scrollWidth": 976,
+   "clientWidth": 396,
+   "maxScroll": 580,
+   "activeLeft": 288.3,
+   "activeRight": 384,
+   "stripLeft": 0,
+   "stripRight": 396,
+   "activeFullyVisible": true
+  },
+  "deeplink": {
+   "activeTab": "open",
+   "scrollLeft": 580,
+   "scrollWidth": 976,
+   "clientWidth": 396,
+   "maxScroll": 580,
+   "activeLeft": 288.3,
+   "activeRight": 384,
+   "stripLeft": 0,
+   "stripRight": 396,
+   "activeFullyVisible": true
+  },
+  "router": {
+   "activeTab": "open",
+   "scrollLeft": 580,
+   "scrollWidth": 976,
+   "clientWidth": 396,
+   "maxScroll": 580,
+   "activeLeft": 288.3,
+   "activeRight": 384,
+   "stripLeft": 0,
+   "stripRight": 396,
+   "activeFullyVisible": true
+  }
+ },
+ "segKeyboard": [
+  {
+   "view": "walk",
+   "key": "w",
+   "tab": "drill",
+   "sl": 580,
+   "vis": false
+  },
+  {
+   "view": "drill",
+   "key": "q",
+   "tab": "walk",
+   "sl": 580,
+   "vis": false
+  },
+  {
+   "view": "wb",
+   "key": "e",
+   "tab": "wb",
+   "sl": 580,
+   "vis": false
+  },
+  {
+   "view": "sys",
+   "key": "r",
+   "tab": "sys",
+   "sl": 580,
+   "vis": false
+  },
+  {
+   "view": "trade",
+   "key": "t",
+   "tab": "trade",
+   "sl": 580,
+   "vis": false
+  },
+  {
+   "view": "model",
+   "key": "y",
+   "tab": "model",
+   "sl": 580,
+   "vis": false
+  },
+  {
+   "view": "num",
+   "key": "u",
+   "tab": "num",
+   "sl": 580,
+   "vis": true
+  },
+  {
+   "view": "rf",
+   "key": "i",
+   "tab": "rf",
+   "sl": 580,
+   "vis": true
+  },
+  {
+   "view": "open",
+   "key": "o",
+   "tab": "open",
+   "sl": 580,
+   "vis": true
+  }
+ ],
+ "segClick": [
+  {
+   "view": "walk",
+   "tab": "walk",
+   "sl": 0,
+   "vis": true
+  },
+  {
+   "view": "drill",
+   "tab": "drill",
+   "sl": 0,
+   "vis": true
+  },
+  {
+   "view": "wb",
+   "tab": "wb",
+   "sl": 0,
+   "vis": true
+  },
+  {
+   "view": "sys",
+   "tab": "sys",
+   "sl": 191,
+   "vis": true
+  },
+  {
+   "view": "trade",
+   "tab": "trade",
+   "sl": 191,
+   "vis": true
+  },
+  {
+   "view": "model",
+   "tab": "model",
+   "sl": 411,
+   "vis": true
+  },
+  {
+   "view": "num",
+   "tab": "num",
+   "sl": 411,
+   "vis": true
+  },
+  {
+   "view": "rf",
+   "tab": "rf",
+   "sl": 580,
+   "vis": true
+  },
+  {
+   "view": "open",
+   "tab": "open",
+   "sl": 580,
+   "vis": true
+  }
+ ],
+ "controls": [
+  {
+   "key": "#_focus-toggle",
+   "w": 60,
+   "h": 20,
+   "txt": "Focus",
+   "panes": [
+    "walk",
+    "drill",
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  {
+   "key": "#scrolltop",
+   "w": 39.6,
+   "h": 39.6,
+   "txt": "↑",
+   "panes": [
+    "walk",
+    "drill",
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  {
+   "key": ".wb-rev",
+   "w": 67.1,
+   "h": 28,
+   "txt": "Reveal",
+   "panes": [
+    "wb",
+    "wb"
+   ]
+  },
+  {
+   "key": ".wb-got",
+   "w": 68.3,
+   "h": 28,
+   "txt": "Drew it",
+   "panes": [
+    "wb",
+    "wb"
+   ]
+  },
+  {
+   "key": ".wb-miss",
+   "w": 69,
+   "h": 28,
+   "txt": "Missed",
+   "panes": [
+    "wb",
+    "wb"
+   ]
+  },
+  {
+   "key": "BUTTON",
+   "w": 54.7,
+   "h": 43,
+   "txt": "Staff",
+   "panes": [
+    "drill"
+   ]
+  },
+  {
+   "key": "BUTTON",
+   "w": 59.4,
+   "h": 43,
+   "txt": "SDE2",
+   "panes": [
+    "drill",
+    "drill"
+   ]
+  },
+  {
+   "key": "#toolsfab",
+   "w": 66.6,
+   "h": 40,
+   "txt": "Tools",
+   "panes": [
+    "walk",
+    "drill",
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  {
+   "key": ".op-rev",
+   "w": 99.1,
+   "h": 28,
+   "txt": "Reveal mine",
+   "panes": [
+    "open",
+    "open"
+   ]
+  },
+  {
+   "key": ".on",
+   "w": 65.3,
+   "h": 43,
+   "txt": "Study",
+   "panes": [
+    "drill",
+    "drill"
+   ]
+  },
+  {
+   "key": "#wprev",
+   "w": 82.8,
+   "h": 35,
+   "txt": "← Prev",
+   "panes": [
+    "walk"
+   ]
+  },
+  {
+   "key": "#wnext",
+   "w": 82.8,
+   "h": 35,
+   "txt": "Next →",
+   "panes": [
+    "walk"
+   ]
+  },
+  {
+   "key": "BUTTON",
+   "w": 71.4,
+   "h": 43,
+   "txt": "Quick 5",
+   "panes": [
+    "drill"
+   ]
+  },
+  {
+   "key": "BUTTON",
+   "w": 86.4,
+   "h": 39,
+   "txt": "NumbersESTIMATE",
+   "panes": [
+    "walk",
+    "drill",
+    "wb",
+    "sys",
+    "trade",
+    "model"
+   ]
+  },
+  {
+   "key": ".on",
+   "w": 86.4,
+   "h": 39,
+   "txt": "NumbersESTIMATE",
+   "panes": [
+    "num"
+   ]
+  },
+  {
+   "key": ".seen",
+   "w": 86.4,
+   "h": 39,
+   "txt": "NumbersESTIMATE",
+   "panes": [
+    "rf",
+    "open"
+   ]
+  },
+  {
+   "key": "BUTTON",
+   "w": 92.1,
+   "h": 39,
+   "txt": "Red FlagsANTI-PATT",
+   "panes": [
+    "walk",
+    "drill",
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num"
+   ]
+  },
+  {
+   "key": ".on",
+   "w": 92.1,
+   "h": 39,
+   "txt": "Red FlagsANTI-PATT",
+   "panes": [
+    "rf"
+   ]
+  },
+  {
+   "key": ".seen",
+   "w": 92.1,
+   "h": 39,
+   "txt": "Red FlagsANTI-PATT",
+   "panes": [
+    "open"
+   ]
+  },
+  {
+   "key": "BUTTON",
+   "w": 92.8,
+   "h": 39,
+   "txt": "Trade-offsDECISION",
+   "panes": [
+    "walk",
+    "drill",
+    "wb",
+    "sys"
+   ]
+  },
+  {
+   "key": ".on",
+   "w": 92.8,
+   "h": 39,
+   "txt": "Trade-offsDECISION",
+   "panes": [
+    "trade"
+   ]
+  },
+  {
+   "key": ".seen",
+   "w": 92.8,
+   "h": 39,
+   "txt": "Trade-offsDECISION",
+   "panes": [
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  {
+   "key": "BUTTON",
+   "w": 95.8,
+   "h": 39,
+   "txt": "Probe DrillGRADED",
+   "panes": [
+    "walk",
+    "walk",
+    "drill",
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf"
+   ]
+  },
+  {
+   "key": ".on",
+   "w": 95.8,
+   "h": 39,
+   "txt": "Probe DrillGRADED",
+   "panes": [
+    "drill",
+    "open"
+   ]
+  },
+  {
+   "key": ".seen",
+   "w": 95.8,
+   "h": 39,
+   "txt": "Probe DrillGRADED",
+   "panes": [
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  {
+   "key": "BUTTON",
+   "w": 101.5,
+   "h": 39,
+   "txt": "WhiteboardRECONSTR",
+   "panes": [
+    "walk",
+    "drill"
+   ]
+  },
+  {
+   "key": ".on",
+   "w": 101.5,
+   "h": 39,
+   "txt": "WhiteboardRECONSTR",
+   "panes": [
+    "wb"
+   ]
+  },
+  {
+   "key": ".seen",
+   "w": 101.5,
+   "h": 39,
+   "txt": "WhiteboardRECONSTR",
+   "panes": [
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  {
+   "key": "BUTTON",
+   "w": 96,
+   "h": 43,
+   "txt": "Mock round",
+   "panes": [
+    "drill"
+   ]
+  },
+  {
+   "key": "BUTTON",
+   "w": 105.9,
+   "h": 39,
+   "txt": "System MapZOOM OUT",
+   "panes": [
+    "walk",
+    "drill",
+    "wb"
+   ]
+  },
+  {
+   "key": ".on",
+   "w": 105.9,
+   "h": 39,
+   "txt": "System MapZOOM OUT",
+   "panes": [
+    "sys"
+   ]
+  },
+  {
+   "key": ".seen",
+   "w": 105.9,
+   "h": 39,
+   "txt": "System MapZOOM OUT",
+   "panes": [
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  {
+   "key": ".on",
+   "w": 109,
+   "h": 39,
+   "txt": "WalkthroughMECHANI",
+   "panes": [
+    "walk"
+   ]
+  },
+  {
+   "key": ".seen",
+   "w": 109,
+   "h": 39,
+   "txt": "WalkthroughMECHANI",
+   "panes": [
+    "drill",
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  {
+   "key": "BUTTON",
+   "w": 124.9,
+   "h": 39,
+   "txt": "Model AnswersSCRIP",
+   "panes": [
+    "walk",
+    "drill",
+    "wb",
+    "sys",
+    "trade"
+   ]
+  },
+  {
+   "key": ".on",
+   "w": 124.9,
+   "h": 39,
+   "txt": "Model AnswersSCRIP",
+   "panes": [
+    "model"
+   ]
+  },
+  {
+   "key": ".seen",
+   "w": 124.9,
+   "h": 39,
+   "txt": "Model AnswersSCRIP",
+   "panes": [
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  {
+   "key": "#pagesize",
+   "w": 136,
+   "h": 40,
+   "txt": "",
+   "panes": [
+    "num"
+   ]
+  },
+  {
+   "key": "#pagenum",
+   "w": 136,
+   "h": 40,
+   "txt": "",
+   "panes": [
+    "num"
+   ]
+  },
+  {
+   "key": "#rps",
+   "w": 136,
+   "h": 40,
+   "txt": "",
+   "panes": [
+    "num"
+   ]
+  },
+  {
+   "key": ".on",
+   "w": 161.5,
+   "h": 39,
+   "txt": "the reframe",
+   "panes": [
+    "model"
+   ]
+  },
+  {
+   "key": "BUTTON",
+   "w": 161.5,
+   "h": 39,
+   "txt": "the depth",
+   "panes": [
+    "model"
+   ]
+  },
+  {
+   "key": "SUMMARY",
+   "w": 282,
+   "h": 40,
+   "txt": "Go deeper",
+   "panes": [
+    "walk"
+   ]
+  },
+  {
+   "key": "#adv",
+   "w": 284,
+   "h": 41,
+   "txt": "Reveal answer",
+   "panes": [
+    "drill"
+   ]
+  },
+  {
+   "key": ".mcomp-sum",
+   "w": 328,
+   "h": 42.5,
+   "txt": "Companioncoaching ",
+   "panes": [
+    "walk",
+    "drill",
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  {
+   "key": "#inttog",
+   "w": 423,
+   "h": 43,
+   "txt": "Interviewer cuts i",
+   "panes": [
+    "walk",
+    "drill",
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  }
+ ],
+ "fonts": [
+  {
+   "key": "#_focus-toggle",
+   "fs": 9,
+   "tt": "uppercase",
+   "chars": 5,
+   "txt": "Focus",
+   "panes": [
+    "walk",
+    "drill",
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ],
+   "maxChars": 5
+  },
+  {
+   "key": ".tn-eyebrow",
+   "fs": 9,
+   "tt": "uppercase",
+   "chars": 10,
+   "txt": "Rehearsing",
+   "panes": [
+    "walk",
+    "drill",
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ],
+   "maxChars": 10
+  },
+  {
+   "key": ".tn-chev",
+   "fs": 9,
+   "tt": "none",
+   "chars": 1,
+   "txt": "▾",
+   "panes": [
+    "walk",
+    "drill",
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ],
+   "maxChars": 1
+  },
+  {
+   "key": ".sh-kick",
+   "fs": 9,
+   "tt": "uppercase",
+   "chars": 9,
+   "txt": "MECHANICS",
+   "panes": [
+    "walk",
+    "drill",
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ],
+   "maxChars": 13
+  },
+  {
+   "key": ".mcomp-eyebrow",
+   "fs": 9,
+   "tt": "uppercase",
+   "chars": 9,
+   "txt": "Companion",
+   "panes": [
+    "walk",
+    "drill",
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ],
+   "maxChars": 9
+  },
+  {
+   "key": ".mcomp-chev",
+   "fs": 9,
+   "tt": "none",
+   "chars": 1,
+   "txt": "▾",
+   "panes": [
+    "walk",
+    "drill",
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ],
+   "maxChars": 1
+  },
+  {
+   "key": ".cmp-h",
+   "fs": 9,
+   "tt": "uppercase",
+   "chars": 9,
+   "txt": "This view",
+   "panes": [
+    "walk",
+    "walk",
+    "walk",
+    "drill",
+    "drill",
+    "drill",
+    "wb",
+    "wb",
+    "wb",
+    "sys",
+    "sys",
+    "sys",
+    "trade",
+    "trade",
+    "trade",
+    "model",
+    "model",
+    "model",
+    "num",
+    "num",
+    "num",
+    "rf",
+    "rf",
+    "rf",
+    "open",
+    "open",
+    "open"
+   ],
+   "maxChars": 28
+  },
+  {
+   "key": ".ml",
+   "fs": 9,
+   "tt": "uppercase",
+   "chars": 18,
+   "txt": "Frame the contract",
+   "panes": [
+    "walk",
+    "walk",
+    "walk",
+    "walk",
+    "walk",
+    "walk"
+   ],
+   "maxChars": 22
+  },
+  {
+   "key": ".arc-h",
+   "fs": 9,
+   "tt": "uppercase",
+   "chars": 35,
+   "txt": "The whole flow tap any step to jump",
+   "panes": [
+    "walk"
+   ],
+   "maxChars": 35
+  },
+  {
+   "key": ".l",
+   "fs": 9,
+   "tt": "uppercase",
+   "chars": 5,
+   "txt": "Solid",
+   "panes": [
+    "drill",
+    "drill",
+    "drill"
+   ],
+   "maxChars": 7
+  },
+  {
+   "key": ".qk",
+   "fs": 9,
+   "tt": "uppercase",
+   "chars": 12,
+   "txt": "Probe 1 / 21",
+   "panes": [
+    "drill"
+   ],
+   "maxChars": 12
+  },
+  {
+   "key": ".sigtag",
+   "fs": 9,
+   "tt": "none",
+   "chars": 33,
+   "txt": "signal · why an API is a contract",
+   "panes": [
+    "drill"
+   ],
+   "maxChars": 33
+  },
+  {
+   "key": "B",
+   "fs": 9,
+   "tt": "none",
+   "chars": 24,
+   "txt": "why an API is a contract",
+   "panes": [
+    "drill"
+   ],
+   "maxChars": 24
+  },
+  {
+   "key": ".tier",
+   "fs": 9,
+   "tt": "uppercase",
+   "chars": 4,
+   "txt": "SDE2",
+   "panes": [
+    "drill"
+   ],
+   "maxChars": 4
+  },
+  {
+   "key": ".dnav-h",
+   "fs": 9,
+   "tt": "uppercase",
+   "chars": 60,
+   "txt": "Your drill set tap a probe to jump · flagged ",
+   "panes": [
+    "drill"
+   ],
+   "maxChars": 60
+  },
+  {
+   "key": ".chip",
+   "fs": 9,
+   "tt": "none",
+   "chars": 374,
+   "txt": "→ additive changes with a tolerant reader; ve",
+   "panes": [
+    "sys",
+    "sys"
+   ],
+   "maxChars": 374
+  },
+  {
+   "key": ".pw",
+   "fs": 9,
+   "tt": "uppercase",
+   "chars": 9,
+   "txt": "pick when",
+   "panes": [
+    "trade",
+    "trade",
+    "trade",
+    "trade",
+    "trade",
+    "trade",
+    "trade"
+   ],
+   "maxChars": 9
+  },
+  {
+   "key": ".tierlab",
+   "fs": 9.5,
+   "tt": "uppercase",
+   "chars": 14,
+   "txt": "Focus by level",
+   "panes": [
+    "drill"
+   ],
+   "maxChars": 14
+  },
+  {
+   "key": ".mbeat-l",
+   "fs": 9.5,
+   "tt": "uppercase",
+   "chars": 68,
+   "txt": "Clients couple to the shape, so design for th",
+   "panes": [
+    "model",
+    "model",
+    "model"
+   ],
+   "maxChars": 68
+  },
+  {
+   "key": ".num-h",
+   "fs": 10,
+   "tt": "uppercase",
+   "chars": 30,
+   "txt": "Assumptions Reset to canonical",
+   "panes": [
+    "num",
+    "num"
+   ],
+   "maxChars": 30
+  },
+  {
+   "key": ".dn-n",
+   "fs": 10.5,
+   "tt": "none",
+   "chars": 1,
+   "txt": "1",
+   "panes": [
+    "drill",
+    "drill",
+    "drill",
+    "drill",
+    "drill",
+    "drill",
+    "drill",
+    "drill",
+    "drill",
+    "drill",
+    "drill",
+    "drill",
+    "drill",
+    "drill",
+    "drill",
+    "drill",
+    "drill",
+    "drill",
+    "drill",
+    "drill",
+    "drill"
+   ],
+   "maxChars": 2
+  },
+  {
+   "key": ".opt-n",
+   "fs": 10.5,
+   "tt": "none",
+   "chars": 4,
+   "txt": "REST",
+   "panes": [
+    "trade",
+    "trade",
+    "trade",
+    "trade",
+    "trade",
+    "trade",
+    "trade"
+   ],
+   "maxChars": 19
+  },
+  {
+   "key": ".locator",
+   "fs": 11,
+   "tt": "uppercase",
+   "chars": 43,
+   "txt": "Architecture & APIs · the service interface",
+   "panes": [
+    "walk",
+    "drill",
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ],
+   "maxChars": 43
+  },
+  {
+   "key": ".mcomp-cue",
+   "fs": 11,
+   "tt": "none",
+   "chars": 22,
+   "txt": "coaching for this view",
+   "panes": [
+    "walk",
+    "drill",
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ],
+   "maxChars": 22
+  },
+  {
+   "key": ".step-k",
+   "fs": 11,
+   "tt": "uppercase",
+   "chars": 10,
+   "txt": "Step 1 / 4",
+   "panes": [
+    "walk",
+    "wb",
+    "open"
+   ],
+   "maxChars": 22
+  },
+  {
+   "key": "CODE",
+   "fs": 11,
+   "tt": "none",
+   "chars": 17,
+   "txt": "POST /createOrder",
+   "panes": [
+    "walk",
+    "walk",
+    "rf",
+    "rf",
+    "rf",
+    "rf",
+    "rf"
+   ],
+   "maxChars": 19
+  },
+  {
+   "key": ".sub",
+   "fs": 11,
+   "tt": "none",
+   "chars": 48,
+   "txt": "model script · the full arc, not just the ope",
+   "panes": [
+    "walk",
+    "walk",
+    "drill"
+   ],
+   "maxChars": 48
+  },
+  {
+   "key": ".arc-n",
+   "fs": 11,
+   "tt": "none",
+   "chars": 1,
+   "txt": "1",
+   "panes": [
+    "walk",
+    "walk",
+    "walk",
+    "walk"
+   ],
+   "maxChars": 1
+  },
+  {
+   "key": ".dn-t",
+   "fs": 11,
+   "tt": "none",
+   "chars": 24,
+   "txt": "why an API is a contract",
+   "panes": [
+    "drill",
+    "drill",
+    "drill",
+    "drill",
+    "drill",
+    "drill",
+    "drill",
+    "drill",
+    "drill",
+    "drill",
+    "drill",
+    "drill",
+    "drill",
+    "drill",
+    "drill",
+    "drill",
+    "drill",
+    "drill",
+    "drill",
+    "drill",
+    "drill"
+   ],
+   "maxChars": 44
+  },
+  {
+   "key": "#wbcount",
+   "fs": 11,
+   "tt": "none",
+   "chars": 30,
+   "txt": "0 recalled · 0 missed · 2 left",
+   "panes": [
+    "wb"
+   ],
+   "maxChars": 30
+  },
+  {
+   "key": "#smPivK",
+   "fs": 11,
+   "tt": "uppercase",
+   "chars": 27,
+   "txt": "Pivots an interviewer rides",
+   "panes": [
+    "sys"
+   ],
+   "maxChars": 27
+  },
+  {
+   "key": ".vs",
+   "fs": 11,
+   "tt": "none",
+   "chars": 2,
+   "txt": "vs",
+   "panes": [
+    "trade",
+    "trade",
+    "trade",
+    "trade"
+   ],
+   "maxChars": 2
+  },
+  {
+   "key": "LABEL",
+   "fs": 11,
+   "tt": "none",
+   "chars": 9,
+   "txt": "Page size",
+   "panes": [
+    "num",
+    "num",
+    "num"
+   ],
+   "maxChars": 21
+  },
+  {
+   "key": ".nrow-n",
+   "fs": 11,
+   "tt": "none",
+   "chars": 110,
+   "txt": "offset 99,980 + limit 20 — the database scans",
+   "panes": [
+    "num",
+    "num",
+    "num",
+    "num",
+    "num"
+   ],
+   "maxChars": 137
+  },
+  {
+   "key": ".op-tab",
+   "fs": 11,
+   "tt": "none",
+   "chars": 5,
+   "txt": "drill",
+   "panes": [
+    "open",
+    "open",
+    "open"
+   ],
+   "maxChars": 5
+  },
+  {
+   "key": ".inttog-lbl",
+   "fs": 11.5,
+   "tt": "none",
+   "chars": 36,
+   "txt": "Interviewer cuts in mid-answer — off",
+   "panes": [
+    "walk",
+    "drill",
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ],
+   "maxChars": 36
+  },
+  {
+   "key": "B",
+   "fs": 11.5,
+   "tt": "none",
+   "chars": 3,
+   "txt": "off",
+   "panes": [
+    "walk",
+    "drill",
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ],
+   "maxChars": 3
+  },
+  {
+   "key": ".fb",
+   "fs": 11.5,
+   "tt": "none",
+   "chars": 50,
+   "txt": "POST /createOrder, POST /getOrder -- RPC over",
+   "panes": [
+    "walk",
+    "walk",
+    "walk"
+   ],
+   "maxChars": 50
+  },
+  {
+   "key": ".wb-rev",
+   "fs": 11.5,
+   "tt": "none",
+   "chars": 6,
+   "txt": "Reveal",
+   "panes": [
+    "wb",
+    "wb"
+   ],
+   "maxChars": 6
+  },
+  {
+   "key": ".wb-got",
+   "fs": 11.5,
+   "tt": "none",
+   "chars": 7,
+   "txt": "Drew it",
+   "panes": [
+    "wb",
+    "wb"
+   ],
+   "maxChars": 7
+  },
+  {
+   "key": ".wb-miss",
+   "fs": 11.5,
+   "tt": "none",
+   "chars": 6,
+   "txt": "Missed",
+   "panes": [
+    "wb",
+    "wb"
+   ],
+   "maxChars": 6
+  },
+  {
+   "key": ".op-rev",
+   "fs": 11.5,
+   "tt": "none",
+   "chars": 11,
+   "txt": "Reveal mine",
+   "panes": [
+    "open",
+    "open"
+   ],
+   "maxChars": 11
+  }
+ ],
+ "focusToggle": {
+  "w": 60,
+  "h": 20,
+  "fontSize": "9px",
+  "padding": "4px 12px"
+ },
+ "mbeat": [
+  {
+   "cls": "mbeat-l l-key",
+   "fs": "9.5px",
+   "tt": "uppercase",
+   "chars": 74,
+   "txt": "A topic is N append-only partitions; records retained, "
+  },
+  {
+   "cls": "mbeat-l l-store",
+   "fs": "9.5px",
+   "tt": "uppercase",
+   "chars": 72,
+   "txt": "Ordering per-partition (via the key), parallelism scale"
+  },
+  {
+   "cls": "mbeat-l l-note",
+   "fs": "9.5px",
+   "tt": "uppercase",
+   "chars": 68,
+   "txt": "At-least-once by default (offsets commit separately fro"
+  }
+ ]
+}

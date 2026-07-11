@@ -1,0 +1,66 @@
+{
+ "coldLoads": {
+  "kafka-internals/viz": {
+   "endHash": "#content-pipeline/walk",
+   "currentTopic": "content-pipeline",
+   "kitMounted": false,
+   "vizTabVisible": false,
+   "activePane": [
+    "walk"
+   ],
+   "errors": []
+  },
+  "kafka-internals/walk": {
+   "endHash": "#kafka-internals/walk",
+   "currentTopic": "kafka-internals",
+   "kitMounted": false,
+   "vizTabVisible": true,
+   "activePane": [
+    "walk"
+   ],
+   "errors": []
+  },
+  "kafka-internals/drill": {
+   "endHash": "#kafka-internals/drill",
+   "currentTopic": "kafka-internals",
+   "kitMounted": false,
+   "vizTabVisible": true,
+   "activePane": [
+    "drill"
+   ],
+   "errors": []
+  },
+  "kafka-internals/num": {
+   "endHash": "#kafka-internals/num",
+   "currentTopic": "kafka-internals",
+   "kitMounted": false,
+   "vizTabVisible": true,
+   "activePane": [
+    "num"
+   ],
+   "errors": []
+  }
+ },
+ "beforeReload": {
+  "hash": "#kafka-internals/viz",
+  "topic": "kafka-internals"
+ },
+ "afterReload": {
+  "hash": "#content-pipeline/walk",
+  "topic": "content-pipeline",
+  "kitMounted": false,
+  "activePane": [
+   "walk"
+  ]
+ },
+ "registryOrder": {
+  "firstFive": [
+   "event-driven",
+   "notifications",
+   "real-time-delivery",
+   "cdc",
+   "kafka-internals"
+  ],
+  "total": 46
+ }
+}

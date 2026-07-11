@@ -1,0 +1,232 @@
+{
+ "fontSizes": [
+  {
+   "fs": 9,
+   "count": 266,
+   "onScale": true,
+   "samples": [
+    "locator",
+    "button",
+    "tn-eyebrow",
+    "tn-chev"
+   ]
+  },
+  {
+   "fs": 9.5,
+   "count": 4,
+   "onScale": false,
+   "samples": [
+    "tierlab",
+    "mbeat-l l-key",
+    "mbeat-l l-store",
+    "mbeat-l l-note"
+   ]
+  },
+  {
+   "fs": 10,
+   "count": 11,
+   "onScale": false,
+   "samples": [
+    "badge",
+    "num-h"
+   ]
+  },
+  {
+   "fs": 10.5,
+   "count": 27,
+   "onScale": false,
+   "samples": [
+    "dn-n",
+    "opt-n"
+   ]
+  },
+  {
+   "fs": 11,
+   "count": 128,
+   "onScale": true,
+   "samples": [
+    "textzoom-lbl",
+    "pomodoro-btn pomodoro-re",
+    "cmp-kbd",
+    "cmp-rel-d"
+   ]
+  },
+  {
+   "fs": 11.5,
+   "count": 29,
+   "onScale": false,
+   "samples": [
+    "inttog-lbl",
+    "b",
+    "fb p",
+    "fb b"
+   ]
+  },
+  {
+   "fs": 12,
+   "count": 338,
+   "onScale": true,
+   "samples": [
+    "mb-ic",
+    "pomodoro-btn pomodoro-pl",
+    "mb-t",
+    "crambtn cram-tog"
+   ]
+  },
+  {
+   "fs": 13,
+   "count": 158,
+   "onScale": true,
+   "samples": [
+    "tn-current",
+    "textzoom-btn",
+    "mb-ic",
+    "span"
+   ]
+  },
+  {
+   "fs": 13.5,
+   "count": 19,
+   "onScale": false,
+   "samples": [
+    "mb-lbl",
+    "mbl-tail",
+    "summary"
+   ]
+  },
+  {
+   "fs": 14,
+   "count": 60,
+   "onScale": true,
+   "samples": [
+    "tn-step",
+    "pomodoro-time",
+    "cmp-fold",
+    "cmp-view"
+   ]
+  },
+  {
+   "fs": 16,
+   "count": 31,
+   "onScale": true,
+   "samples": [
+    "tn-step tn-home",
+    "div",
+    "qq",
+    "p"
+   ]
+  },
+  {
+   "fs": 17,
+   "count": 5,
+   "onScale": false,
+   "samples": [
+    "nrow-v"
+   ]
+  },
+  {
+   "fs": 18,
+   "count": 4,
+   "onScale": true,
+   "samples": [
+    "step-t"
+   ]
+  },
+  {
+   "fs": 21,
+   "count": 21,
+   "onScale": true,
+   "samples": [
+    "h1",
+    "scrolltop",
+    "v"
+   ]
+  },
+  {
+   "fs": 24,
+   "count": 18,
+   "onScale": true,
+   "samples": [
+    "sh-name",
+    "cmp-topic"
+   ]
+  }
+ ],
+ "prose": {
+  "nrow-n": {
+   "w": 704,
+   "fs": "11px",
+   "ch": 118.7,
+   "maxWidth": "none",
+   "text": "Little law — rate times latency; at 5,00"
+  },
+  "cmp-thesis": {
+   "w": 237,
+   "fs": "12px",
+   "ch": 36.6,
+   "maxWidth": "none",
+   "text": "Decoupling producers from consumers thro"
+  },
+  "cmp-note": {
+   "w": 0,
+   "fs": "12px",
+   "ch": 0,
+   "maxWidth": "none",
+   "text": "Graded follow-ups on the delivery guaran"
+  },
+  "sm-intro": {
+   "w": 704,
+   "fs": "12px",
+   "ch": 108.8,
+   "maxWidth": "none",
+   "text": "Zoom out to where the backbone sits betw"
+  },
+  "opt-w": {
+   "w": 684,
+   "fs": "13px",
+   "ch": 97.6,
+   "maxWidth": "none",
+   "text": "pick whenan immediate answer and simple "
+  }
+ },
+ "h1": {
+  "title": "Event-Driven Backbone",
+  "h1": {
+   "fontSize": "21px",
+   "fontWeight": "800",
+   "animationName": "headingShift",
+   "animationDuration": "6s",
+   "animationIterationCount": "infinite",
+   "bgClip": "text",
+   "bgImage": "linear-gradient(135deg, rgb(83, 74, 183), rgb(109,"
+  },
+  "titleOccurrences": [
+   {
+    "cls": "H1",
+    "fs": "21px",
+    "w": 263
+   },
+   {
+    "cls": "tn-current",
+    "fs": "13px",
+    "w": 21
+   },
+   {
+    "cls": "cmp-topic",
+    "fs": "24px",
+    "w": 237
+   }
+  ]
+ },
+ "index": {
+  "dotCount": 0,
+  "dot": null,
+  "panelW": 0,
+  "panelH": 0,
+  "panelTop": 0,
+  "viewportPct": 0,
+  "cardCount": 46,
+  "gridCols": 3,
+  "cardFontSize": "13.3333px"
+ }
+}

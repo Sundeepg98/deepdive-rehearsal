@@ -1,0 +1,392 @@
+{
+ "R": {
+  "chevron": [
+   {
+    "id": "idxopen",
+    "isTog": false,
+    "after": {
+     "content": "\"›\"",
+     "position": "absolute",
+     "inset": "0px",
+     "top": "0px",
+     "left": "0px",
+     "right": "0px",
+     "marginLeft": "0px",
+     "opacity": "0.5",
+     "fontSize": "19px",
+     "background": "radial-gradient(circle, rgba(255, 255, 2"
+    },
+    "btn": {
+     "overflow": "hidden",
+     "position": "relative",
+     "borderRadius": "11px"
+    },
+    "rect": {
+     "w": 129,
+     "h": 43
+    }
+   },
+   {
+    "id": "searchopen",
+    "isTog": false,
+    "after": {
+     "content": "\"›\"",
+     "position": "absolute",
+     "inset": "0px",
+     "top": "0px",
+     "left": "0px",
+     "right": "0px",
+     "marginLeft": "0px",
+     "opacity": "0.5",
+     "fontSize": "19px",
+     "background": "radial-gradient(circle, rgba(255, 255, 2"
+    },
+    "btn": {
+     "overflow": "hidden",
+     "position": "relative",
+     "borderRadius": "11px"
+    },
+    "rect": {
+     "w": 129,
+     "h": 43
+    }
+   },
+   {
+    "id": "copylink",
+    "isTog": false,
+    "after": {
+     "content": "\"›\"",
+     "position": "absolute",
+     "inset": "0px",
+     "top": "0px",
+     "left": "0px",
+     "right": "0px",
+     "marginLeft": "0px",
+     "opacity": "0.5",
+     "fontSize": "19px",
+     "background": "radial-gradient(circle, rgba(255, 255, 2"
+    },
+    "btn": {
+     "overflow": "hidden",
+     "position": "relative",
+     "borderRadius": "11px"
+    },
+    "rect": {
+     "w": 129,
+     "h": 43
+    }
+   },
+   {
+    "id": "starbtn",
+    "isTog": false,
+    "after": {
+     "content": "\"›\"",
+     "position": "absolute",
+     "inset": "0px",
+     "top": "0px",
+     "left": "0px",
+     "right": "0px",
+     "marginLeft": "0px",
+     "opacity": "0.5",
+     "fontSize": "19px",
+     "background": "radial-gradient(circle, rgba(255, 255, 2"
+    },
+    "btn": {
+     "overflow": "hidden",
+     "position": "relative",
+     "borderRadius": "11px"
+    },
+    "rect": {
+     "w": 129,
+     "h": 43
+    }
+   }
+  ],
+  "meshCSS": {
+   "stage": {
+    "overflowX": "hidden",
+    "overflowY": "auto",
+    "position": "relative"
+   },
+   "before": {
+    "position": "fixed",
+    "w": "1008px",
+    "h": "630px",
+    "top": "0px",
+    "left": "0px",
+    "animation": "meshA"
+   },
+   "after": {
+    "position": "fixed",
+    "w": "864px",
+    "h": "540px",
+    "bottom": "0px",
+    "right": "0px",
+    "animation": "meshB"
+   }
+  },
+  "buttons": {
+   "drill": {
+    "txt": "↻ Drill my 0 flagged probesyour Revisit pile across this session · clears as you nail them",
+    "w": 0,
+    "h": 0,
+    "area": 0,
+    "fontSize": "16px",
+    "fontWeight": "400",
+    "radius": "0px",
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(42, 40, 35)",
+    "shadow": "none"
+   },
+   "walk": {
+    "err": "no match .wnext, [class*=next]",
+    "candidates": [
+     {
+      "cls": "",
+      "id": "wprev",
+      "txt": "← Prev"
+     },
+     {
+      "cls": "",
+      "id": "wnext",
+      "txt": "Next →"
+     },
+     {
+      "cls": "arc-step on",
+      "id": "",
+      "txt": "1Strategy dispatch"
+     },
+     {
+      "cls": "arc-step",
+      "id": "",
+      "txt": "2Single-read fork"
+     },
+     {
+      "cls": "arc-step",
+      "id": "",
+      "txt": "3Cursor export"
+     },
+     {
+      "cls": "arc-step",
+      "id": "",
+      "txt": "4Import conflict lad"
+     },
+     {
+      "cls": "arc-step",
+      "id": "",
+      "txt": "5Hash + multipart"
+     },
+     {
+      "cls": "arc-step",
+      "id": "",
+      "txt": "6S3 event routing"
+     },
+     {
+      "cls": "arc-step",
+      "id": "",
+      "txt": "7Reconciler sweep"
+     },
+     {
+      "cls": "arc-step",
+      "id": "",
+      "txt": "8Idempotent processi"
+     },
+     {
+      "cls": "arc-step",
+      "id": "",
+      "txt": "9Observability hooks"
+     }
+    ]
+   },
+   "wb": {
+    "txt": "Reveal",
+    "w": 67,
+    "h": 28,
+    "area": 1879,
+    "fontSize": "11.5px",
+    "fontWeight": "700",
+    "radius": "8px",
+    "bg": "linear-gradient(135deg, rgb(239, 237, 250) 0%",
+    "color": "rgb(58, 46, 134)",
+    "shadow": "none"
+   },
+   "open": {
+    "txt": "Reveal mine",
+    "w": 99,
+    "h": 28,
+    "area": 2776,
+    "fontSize": "11.5px",
+    "fontWeight": "700",
+    "radius": "8px",
+    "bg": "linear-gradient(135deg, rgb(239, 237, 250) 0%",
+    "color": "rgb(58, 46, 134)",
+    "shadow": "none"
+   }
+  },
+  "mockCTA": {
+   "txt": "▶Mock run — the full round, on",
+   "w": 263,
+   "h": 66,
+   "area": 17358,
+   "fontSize": "13.5px",
+   "fontWeight": "800",
+   "bg": "linear-gradient(135deg, rgb(83, 74, 183), rgb",
+   "shadow": "rgba(83, 74, 183, 0.3) 0px 6px 18px 0px,"
+  },
+  "headings": {
+   "sidebarH1": {
+    "txt": "Content Pipeline",
+    "fontSize": "21px",
+    "fontWeight": "800",
+    "animation": "headingShift",
+    "animDur": "0s",
+    "bgClip": "text",
+    "color": "rgb(42, 40, 35)",
+    "w": 263,
+    "h": 23
+   },
+   "stageName": {
+    "txt": "30-Second",
+    "fontSize": "24px",
+    "fontWeight": "800",
+    "animation": "none",
+    "animDur": "0s",
+    "bgClip": "border-box",
+    "color": "rgb(42, 40, 35)",
+    "w": 732,
+    "h": 26
+   }
+  },
+  "space": {
+   "walk": {
+    "stageScrollH": 900,
+    "stageClientH": 900,
+    "paneBottom": 761,
+    "deadCanvas": 139,
+    "cmpScrollH": 900,
+    "cmpClientH": 900,
+    "cmpOverflow": 0,
+    "cmpOverflowStyle": "auto"
+   },
+   "drill": {
+    "stageScrollH": 1146,
+    "stageClientH": 1146,
+    "paneBottom": 0,
+    "deadCanvas": 900,
+    "cmpScrollH": 900,
+    "cmpClientH": 900,
+    "cmpOverflow": 0,
+    "cmpOverflowStyle": "auto"
+   },
+   "wb": {
+    "stageScrollH": 1392,
+    "stageClientH": 1392,
+    "paneBottom": 0,
+    "deadCanvas": 900,
+    "cmpScrollH": 900,
+    "cmpClientH": 900,
+    "cmpOverflow": 0,
+    "cmpOverflowStyle": "auto"
+   },
+   "sys": {
+    "stageScrollH": 1252,
+    "stageClientH": 1252,
+    "paneBottom": 0,
+    "deadCanvas": 900,
+    "cmpScrollH": 900,
+    "cmpClientH": 900,
+    "cmpOverflow": 0,
+    "cmpOverflowStyle": "auto"
+   },
+   "trade": {
+    "stageScrollH": 2497,
+    "stageClientH": 2497,
+    "paneBottom": 0,
+    "deadCanvas": 900,
+    "cmpScrollH": 900,
+    "cmpClientH": 900,
+    "cmpOverflow": 0,
+    "cmpOverflowStyle": "auto"
+   },
+   "model": {
+    "stageScrollH": 1089,
+    "stageClientH": 1089,
+    "paneBottom": 0,
+    "deadCanvas": 900,
+    "cmpScrollH": 900,
+    "cmpClientH": 900,
+    "cmpOverflow": 0,
+    "cmpOverflowStyle": "auto"
+   },
+   "num": {
+    "stageScrollH": 1004,
+    "stageClientH": 1004,
+    "paneBottom": 0,
+    "deadCanvas": 900,
+    "cmpScrollH": 900,
+    "cmpClientH": 900,
+    "cmpOverflow": 0,
+    "cmpOverflowStyle": "auto"
+   },
+   "rf": {
+    "stageScrollH": 1617,
+    "stageClientH": 1617,
+    "paneBottom": 0,
+    "deadCanvas": 900,
+    "cmpScrollH": 900,
+    "cmpClientH": 900,
+    "cmpOverflow": 0,
+    "cmpOverflowStyle": "auto"
+   },
+   "open": {
+    "stageScrollH": 1620,
+    "stageClientH": 1620,
+    "paneBottom": 0,
+    "deadCanvas": 900,
+    "cmpScrollH": 900,
+    "cmpClientH": 900,
+    "cmpOverflow": 0,
+    "cmpOverflowStyle": "auto"
+   }
+  },
+  "groupColors": [
+   {
+    "c": "rgb(13, 148, 136)",
+    "w": 0,
+    "h": 0
+   },
+   {
+    "c": "rgb(37, 99, 235)",
+    "w": 0,
+    "h": 0
+   },
+   {
+    "c": "rgb(217, 119, 6)",
+    "w": 0,
+    "h": 0
+   },
+   {
+    "c": "rgb(124, 58, 237)",
+    "w": 0,
+    "h": 0
+   },
+   {
+    "c": "rgb(219, 39, 119)",
+    "w": 0,
+    "h": 0
+   },
+   {
+    "c": "rgb(220, 38, 38)",
+    "w": 0,
+    "h": 0
+   }
+  ],
+  "stageAccent": {
+   "shKick": "rgb(83, 74, 183)",
+   "cmpEyebrow": "rgb(83, 74, 183)",
+   "topicAccentVar": "(unset)",
+   "accVar": "#534AB7"
+  }
+ },
+ "errs": []
+}

@@ -1,0 +1,246 @@
+[
+  {
+    "topic": "real-time-delivery",
+    "pane": "num",
+    "over": 76
+  },
+  {
+    "topic": "cdc",
+    "pane": "num",
+    "over": 26
+  },
+  {
+    "topic": "kafka-internals",
+    "pane": "num",
+    "over": 54
+  },
+  {
+    "topic": "stream-batch-processing",
+    "pane": "walk",
+    "over": 208,
+    "past": 207.8,
+    "sel": "span.fb",
+    "ws": "nowrap",
+    "txt": "bounded finite dataset → batch: all at once, hig"
+  },
+  {
+    "topic": "stream-batch-processing",
+    "pane": "num",
+    "over": 81,
+    "past": 80.8,
+    "sel": "div.nrow-n",
+    "ws": "normal",
+    "txt": "streaming is far fresher — justified only if sec"
+  },
+  {
+    "topic": "saga",
+    "pane": "walk",
+    "over": 145,
+    "past": 144.6,
+    "sel": "span.fb",
+    "ws": "nowrap",
+    "txt": "2PC would lock resources across the network → bl"
+  },
+  {
+    "topic": "saga",
+    "pane": "num",
+    "over": 26
+  },
+  {
+    "topic": "eav",
+    "pane": "num",
+    "over": 19
+  },
+  {
+    "topic": "replication",
+    "pane": "num",
+    "over": 54
+  },
+  {
+    "topic": "consistency-models",
+    "pane": "walk",
+    "over": 12,
+    "past": 11.8,
+    "sel": "span.fb",
+    "ws": "nowrap",
+    "txt": "a read to a lagging replica returns the old valu"
+  },
+  {
+    "topic": "consistency-models",
+    "pane": "num",
+    "over": 83
+  },
+  {
+    "topic": "sharding-strategies",
+    "pane": "walk",
+    "over": 75,
+    "past": 75,
+    "sel": "span.fb",
+    "ws": "nowrap",
+    "txt": "shard, but only after replicas, cache, and verti"
+  },
+  {
+    "topic": "sharding-strategies",
+    "pane": "num",
+    "over": 69
+  },
+  {
+    "topic": "consistent-hashing",
+    "pane": "num",
+    "over": 33
+  },
+  {
+    "topic": "storage-engines",
+    "pane": "walk",
+    "over": 107,
+    "past": 106.7,
+    "sel": "span.fb",
+    "ws": "nowrap",
+    "txt": "B-tree: sorted in-place pages, or LSM: append + "
+  },
+  {
+    "topic": "storage-engines",
+    "pane": "num",
+    "over": 104
+  },
+  {
+    "topic": "probabilistic-structures",
+    "pane": "walk",
+    "over": 100,
+    "past": 100.3,
+    "sel": "span.fb",
+    "ws": "nowrap",
+    "txt": "exact answer needs memory proportional to the da"
+  },
+  {
+    "topic": "retries-timeouts",
+    "pane": "num",
+    "over": 76
+  },
+  {
+    "topic": "idempotency",
+    "pane": "num",
+    "over": 76
+  },
+  {
+    "topic": "circuit-breaker",
+    "pane": "num",
+    "over": 26
+  },
+  {
+    "topic": "error-propagation",
+    "pane": "num",
+    "over": 90
+  },
+  {
+    "topic": "backpressure",
+    "pane": "num",
+    "over": 69
+  },
+  {
+    "topic": "observability",
+    "pane": "num",
+    "over": 69
+  },
+  {
+    "topic": "debugging",
+    "pane": "num",
+    "over": 62
+  },
+  {
+    "topic": "slos",
+    "pane": "num",
+    "over": 83
+  },
+  {
+    "topic": "iac",
+    "pane": "num",
+    "over": 19
+  },
+  {
+    "topic": "desired-state",
+    "pane": "num",
+    "over": 26
+  },
+  {
+    "topic": "load-balancing",
+    "pane": "num",
+    "over": 112
+  },
+  {
+    "topic": "autoscaling",
+    "pane": "num",
+    "over": 90
+  },
+  {
+    "topic": "leader-election",
+    "pane": "num",
+    "over": 40
+  },
+  {
+    "topic": "distributed-locks",
+    "pane": "walk",
+    "over": 50,
+    "past": 49.8,
+    "sel": "span.fb",
+    "ws": "nowrap",
+    "txt": "distributed lock with a TTL: a dead holder auto-"
+  },
+  {
+    "topic": "distributed-locks",
+    "pane": "num",
+    "over": 90
+  },
+  {
+    "topic": "multi-region",
+    "pane": "walk",
+    "over": 170,
+    "past": 169.9,
+    "sel": "span.fb",
+    "ws": "nowrap",
+    "txt": "a whole region can fail, distant users lag, data"
+  },
+  {
+    "topic": "multi-region",
+    "pane": "num",
+    "over": 62,
+    "past": 62.1,
+    "sel": "div.nrow-n",
+    "ws": "normal",
+    "txt": "the data-loss window is large — reduce replicati"
+  },
+  {
+    "topic": "lambda-organization",
+    "pane": "num",
+    "over": 26
+  },
+  {
+    "topic": "developer-platform",
+    "pane": "num",
+    "over": 83
+  },
+  {
+    "topic": "state-machine",
+    "pane": "num",
+    "over": 40
+  },
+  {
+    "topic": "api-design",
+    "pane": "walk",
+    "over": 18,
+    "past": 18.1,
+    "sel": "span.fb",
+    "ws": "nowrap",
+    "txt": "POST /createOrder, POST /getOrder -- RPC over HT"
+  },
+  {
+    "topic": "api-design",
+    "pane": "num",
+    "over": 97
+  },
+  {
+    "topic": "microfrontend",
+    "pane": "num",
+    "over": 62
+  }
+]

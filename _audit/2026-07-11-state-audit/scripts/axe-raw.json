@@ -1,0 +1,305 @@
+[
+  {
+    "scenario": "first-run (default load, index overlay open)",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "app-shell walk (light, 1440)",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "pane:walk (light, 1440)",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "pane:drill (light, 1440)",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "pane:wb (light, 1440)",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "pane:sys (light, 1440)",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "pane:trade (light, 1440)",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "pane:model (light, 1440)",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "pane:num (light, 1440)",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "pane:rf (light, 1440)",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "pane:open (light, 1440)",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "topic:cdc pane:walk",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "topic:cdc pane:drill",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "topic:cdc pane:sys",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "topic:cdc pane:num",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "topic:consistency-models pane:walk",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "topic:consistency-models pane:drill",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "topic:consistency-models pane:sys",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "topic:consistency-models pane:num",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "topic:iac pane:walk",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "topic:iac pane:drill",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "topic:iac pane:sys",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "topic:iac pane:num",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "topic:rate-limiting pane:walk",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "topic:rate-limiting pane:drill",
+    "note": "",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "tags": [
+          "wcag2aa",
+          "wcag143"
+        ],
+        "nodes": 5,
+        "targets": [
+          {
+            "sel": "deep-drill,button[data-m=\"mock\"]",
+            "summary": "Fix any of the following: Element has insufficient color contrast of 4.37 (foreground color: #706d67, background color: #f0ece5, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1",
+            "html": "<button type=\"button\" data-m=\"mock\">Mock round</button>"
+          },
+          {
+            "sel": "deep-drill,button[data-m=\"quick\"]",
+            "summary": "Fix any of the following: Element has insufficient color contrast of 4.37 (foreground color: #706d67, background color: #f0ece5, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1",
+            "html": "<button type=\"button\" data-m=\"quick\">Quick 5</button>"
+          },
+          {
+            "sel": "deep-drill,button[data-tier=\"SDE2\"]",
+            "summary": "Fix any of the following: Element has insufficient color contrast of 4.37 (foreground color: #706d67, background color: #f0ece5, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1",
+            "html": "<button data-tier=\"SDE2\" type=\"button\">SDE2</button>"
+          },
+          {
+            "sel": "deep-drill,button[data-tier=\"SDE3\"]",
+            "summary": "Fix any of the following: Element has insufficient color contrast of 4.37 (foreground color: #706d67, background color: #f0ece5, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1",
+            "html": "<button data-tier=\"SDE3\" type=\"button\">SDE3</button>"
+          },
+          {
+            "sel": "deep-drill,button[data-tier=\"Staff\"]",
+            "summary": "Fix any of the following: Element has insufficient color contrast of 4.37 (foreground color: #706d67, background color: #f0ece5, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1",
+            "html": "<button data-tier=\"Staff\" type=\"button\">Staff</button>"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scenario": "topic:rate-limiting pane:sys",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "topic:rate-limiting pane:num",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "overlay:mock-run OPEN",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "overlay:mixed-fire OPEN",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "overlay:cram-sheet OPEN",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "overlay:session OPEN",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "overlay:keyboard OPEN",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "overlay:scope OPEN",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "overlay:gameplan OPEN",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "overlay:index OPEN",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "overlay:search OPEN",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "overlay:notes OPEN",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "DARK app-shell walk",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "DARK pane:walk",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "DARK pane:drill",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "DARK pane:wb",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "DARK pane:sys",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "DARK pane:trade",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "DARK pane:model",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "DARK pane:num",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "DARK pane:rf",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "DARK pane:open",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "DARK overlay:cram-sheet",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "DARK overlay:session",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "DARK overlay:mock-run",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "MOBILE390 first-run",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "MOBILE390 app-shell walk",
+    "note": "",
+    "violations": []
+  },
+  {
+    "scenario": "MOBILE390 tools sheet OPEN",
+    "note": "",
+    "violations": []
+  }
+]

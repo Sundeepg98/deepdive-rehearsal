@@ -1,0 +1,1069 @@
+{
+ "total": 46,
+ "rows": [
+  {
+   "id": "event-driven",
+   "title": "Event-Driven Backbone",
+   "nBeats": 2,
+   "tags": [
+    "SCALE",
+    "DESIGN"
+   ],
+   "hasCURVEBALLbeat": false,
+   "hasFRAMEbeat": false,
+   "nCurve": 1,
+   "curveTaskPresent": [
+    false
+   ],
+   "curveHasCue": [
+    true
+   ],
+   "nFrames": 3,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "notifications",
+   "title": "Notifications",
+   "nBeats": 6,
+   "tags": [
+    "FRAME",
+    "STRUCTURE",
+    "SCALE",
+    "FAILURE",
+    "CURVEBALL",
+    "CLOSE"
+   ],
+   "hasCURVEBALLbeat": true,
+   "hasFRAMEbeat": true,
+   "nCurve": 8,
+   "curveTaskPresent": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "curveHasCue": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "nFrames": 4,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "real-time-delivery",
+   "title": "Real-Time Delivery",
+   "nBeats": 2,
+   "tags": [
+    "SCALE",
+    "DESIGN"
+   ],
+   "hasCURVEBALLbeat": false,
+   "hasFRAMEbeat": false,
+   "nCurve": 1,
+   "curveTaskPresent": [
+    false
+   ],
+   "curveHasCue": [
+    true
+   ],
+   "nFrames": 3,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "cdc",
+   "title": "Change Data Capture",
+   "nBeats": 2,
+   "tags": [
+    "SCALE",
+    "DESIGN"
+   ],
+   "hasCURVEBALLbeat": false,
+   "hasFRAMEbeat": false,
+   "nCurve": 1,
+   "curveTaskPresent": [
+    false
+   ],
+   "curveHasCue": [
+    true
+   ],
+   "nFrames": 3,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "kafka-internals",
+   "title": "Kafka Internals",
+   "nBeats": 2,
+   "tags": [
+    "SCALE",
+    "DESIGN"
+   ],
+   "hasCURVEBALLbeat": false,
+   "hasFRAMEbeat": false,
+   "nCurve": 1,
+   "curveTaskPresent": [
+    false
+   ],
+   "curveHasCue": [
+    true
+   ],
+   "nFrames": 3,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "stream-batch-processing",
+   "title": "Stream and Batch Processing",
+   "nBeats": 2,
+   "tags": [
+    "SCALE",
+    "DESIGN"
+   ],
+   "hasCURVEBALLbeat": false,
+   "hasFRAMEbeat": false,
+   "nCurve": 1,
+   "curveTaskPresent": [
+    false
+   ],
+   "curveHasCue": [
+    true
+   ],
+   "nFrames": 3,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "saga",
+   "title": "The Saga Pattern",
+   "nBeats": 2,
+   "tags": [
+    "SCALE",
+    "DESIGN"
+   ],
+   "hasCURVEBALLbeat": false,
+   "hasFRAMEbeat": false,
+   "nCurve": 1,
+   "curveTaskPresent": [
+    false
+   ],
+   "curveHasCue": [
+    true
+   ],
+   "nFrames": 3,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "caching",
+   "title": "Caching Strategies",
+   "nBeats": 2,
+   "tags": [
+    "SCALE",
+    "DESIGN"
+   ],
+   "hasCURVEBALLbeat": false,
+   "hasFRAMEbeat": false,
+   "nCurve": 1,
+   "curveTaskPresent": [
+    false
+   ],
+   "curveHasCue": [
+    true
+   ],
+   "nFrames": 3,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "soft-delete",
+   "title": "Soft Deletes",
+   "nBeats": 2,
+   "tags": [
+    "SCALE",
+    "DESIGN"
+   ],
+   "hasCURVEBALLbeat": false,
+   "hasFRAMEbeat": false,
+   "nCurve": 1,
+   "curveTaskPresent": [
+    false
+   ],
+   "curveHasCue": [
+    true
+   ],
+   "nFrames": 3,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "eav",
+   "title": "Attribute Store",
+   "nBeats": 6,
+   "tags": [
+    "FRAME",
+    "STRUCTURE",
+    "SCALE",
+    "FAILURE",
+    "CURVEBALL",
+    "CLOSE"
+   ],
+   "hasCURVEBALLbeat": true,
+   "hasFRAMEbeat": true,
+   "nCurve": 8,
+   "curveTaskPresent": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "curveHasCue": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "nFrames": 4,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "shared-definition",
+   "title": "Shared Definition & Overrides",
+   "nBeats": 2,
+   "tags": [
+    "SCALE",
+    "DESIGN"
+   ],
+   "hasCURVEBALLbeat": false,
+   "hasFRAMEbeat": false,
+   "nCurve": 1,
+   "curveTaskPresent": [
+    false
+   ],
+   "curveHasCue": [
+    true
+   ],
+   "nFrames": 3,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "replication",
+   "title": "Replication and Quorums",
+   "nBeats": 2,
+   "tags": [
+    "SCALE",
+    "DESIGN"
+   ],
+   "hasCURVEBALLbeat": false,
+   "hasFRAMEbeat": false,
+   "nCurve": 1,
+   "curveTaskPresent": [
+    false
+   ],
+   "curveHasCue": [
+    true
+   ],
+   "nFrames": 3,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "consistency-models",
+   "title": "Consistency Models",
+   "nBeats": 2,
+   "tags": [
+    "SCALE",
+    "DESIGN"
+   ],
+   "hasCURVEBALLbeat": false,
+   "hasFRAMEbeat": false,
+   "nCurve": 1,
+   "curveTaskPresent": [
+    false
+   ],
+   "curveHasCue": [
+    true
+   ],
+   "nFrames": 3,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "sharding-strategies",
+   "title": "Sharding and Partitioning",
+   "nBeats": 2,
+   "tags": [
+    "SCALE",
+    "DESIGN"
+   ],
+   "hasCURVEBALLbeat": false,
+   "hasFRAMEbeat": false,
+   "nCurve": 1,
+   "curveTaskPresent": [
+    false
+   ],
+   "curveHasCue": [
+    true
+   ],
+   "nFrames": 3,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "consistent-hashing",
+   "title": "Consistent Hashing",
+   "nBeats": 2,
+   "tags": [
+    "SCALE",
+    "DESIGN"
+   ],
+   "hasCURVEBALLbeat": false,
+   "hasFRAMEbeat": false,
+   "nCurve": 1,
+   "curveTaskPresent": [
+    false
+   ],
+   "curveHasCue": [
+    true
+   ],
+   "nFrames": 3,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "storage-engines",
+   "title": "Storage Engines",
+   "nBeats": 2,
+   "tags": [
+    "SCALE",
+    "DESIGN"
+   ],
+   "hasCURVEBALLbeat": false,
+   "hasFRAMEbeat": false,
+   "nCurve": 1,
+   "curveTaskPresent": [
+    false
+   ],
+   "curveHasCue": [
+    true
+   ],
+   "nFrames": 3,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "probabilistic-structures",
+   "title": "Probabilistic Data Structures",
+   "nBeats": 2,
+   "tags": [
+    "SCALE",
+    "DESIGN"
+   ],
+   "hasCURVEBALLbeat": false,
+   "hasFRAMEbeat": false,
+   "nCurve": 1,
+   "curveTaskPresent": [
+    false
+   ],
+   "curveHasCue": [
+    true
+   ],
+   "nFrames": 3,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "retries-timeouts",
+   "title": "Retries, Timeouts, Deadlines",
+   "nBeats": 2,
+   "tags": [
+    "SCALE",
+    "DESIGN"
+   ],
+   "hasCURVEBALLbeat": false,
+   "hasFRAMEbeat": false,
+   "nCurve": 1,
+   "curveTaskPresent": [
+    false
+   ],
+   "curveHasCue": [
+    true
+   ],
+   "nFrames": 3,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "idempotency",
+   "title": "Idempotency",
+   "nBeats": 2,
+   "tags": [
+    "SCALE",
+    "DESIGN"
+   ],
+   "hasCURVEBALLbeat": false,
+   "hasFRAMEbeat": false,
+   "nCurve": 1,
+   "curveTaskPresent": [
+    false
+   ],
+   "curveHasCue": [
+    true
+   ],
+   "nFrames": 3,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "circuit-breaker",
+   "title": "Circuit Breaker",
+   "nBeats": 2,
+   "tags": [
+    "SCALE",
+    "DESIGN"
+   ],
+   "hasCURVEBALLbeat": false,
+   "hasFRAMEbeat": false,
+   "nCurve": 1,
+   "curveTaskPresent": [
+    false
+   ],
+   "curveHasCue": [
+    true
+   ],
+   "nFrames": 3,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "error-propagation",
+   "title": "Error Propagation Across Services",
+   "nBeats": 2,
+   "tags": [
+    "SCALE",
+    "DESIGN"
+   ],
+   "hasCURVEBALLbeat": false,
+   "hasFRAMEbeat": false,
+   "nCurve": 1,
+   "curveTaskPresent": [
+    false
+   ],
+   "curveHasCue": [
+    true
+   ],
+   "nFrames": 3,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "backpressure",
+   "title": "Backpressure and Flow Control",
+   "nBeats": 2,
+   "tags": [
+    "SCALE",
+    "DESIGN"
+   ],
+   "hasCURVEBALLbeat": false,
+   "hasFRAMEbeat": false,
+   "nCurve": 1,
+   "curveTaskPresent": [
+    false
+   ],
+   "curveHasCue": [
+    true
+   ],
+   "nFrames": 3,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "observability",
+   "title": "Observability",
+   "nBeats": 2,
+   "tags": [
+    "SCALE",
+    "DESIGN"
+   ],
+   "hasCURVEBALLbeat": false,
+   "hasFRAMEbeat": false,
+   "nCurve": 1,
+   "curveTaskPresent": [
+    false
+   ],
+   "curveHasCue": [
+    true
+   ],
+   "nFrames": 3,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "debugging",
+   "title": "Production Debugging and Incident Diagnosis",
+   "nBeats": 2,
+   "tags": [
+    "SCALE",
+    "DESIGN"
+   ],
+   "hasCURVEBALLbeat": false,
+   "hasFRAMEbeat": false,
+   "nCurve": 1,
+   "curveTaskPresent": [
+    false
+   ],
+   "curveHasCue": [
+    true
+   ],
+   "nFrames": 3,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "slos",
+   "title": "SLOs and Error Budgets",
+   "nBeats": 2,
+   "tags": [
+    "SCALE",
+    "DESIGN"
+   ],
+   "hasCURVEBALLbeat": false,
+   "hasFRAMEbeat": false,
+   "nCurve": 1,
+   "curveTaskPresent": [
+    false
+   ],
+   "curveHasCue": [
+    true
+   ],
+   "nFrames": 3,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "iac",
+   "title": "Infrastructure as Code",
+   "nBeats": 6,
+   "tags": [
+    "FRAME",
+    "STRUCTURE",
+    "SCALE",
+    "FAILURE",
+    "CURVEBALL",
+    "CLOSE"
+   ],
+   "hasCURVEBALLbeat": true,
+   "hasFRAMEbeat": true,
+   "nCurve": 8,
+   "curveTaskPresent": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "curveHasCue": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "nFrames": 4,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "desired-state",
+   "title": "Desired State",
+   "nBeats": 6,
+   "tags": [
+    "FRAME",
+    "STRUCTURE",
+    "SCALE",
+    "FAILURE",
+    "CURVEBALL",
+    "CLOSE"
+   ],
+   "hasCURVEBALLbeat": true,
+   "hasFRAMEbeat": true,
+   "nCurve": 8,
+   "curveTaskPresent": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "curveHasCue": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "nFrames": 4,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "aws-hardening",
+   "title": "AWS Hardening",
+   "nBeats": 6,
+   "tags": [
+    "FRAME",
+    "STRUCTURE",
+    "SCALE",
+    "FAILURE",
+    "CURVEBALL",
+    "CLOSE"
+   ],
+   "hasCURVEBALLbeat": true,
+   "hasFRAMEbeat": true,
+   "nCurve": 8,
+   "curveTaskPresent": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "curveHasCue": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "nFrames": 4,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "load-balancing",
+   "title": "Load Balancing",
+   "nBeats": 2,
+   "tags": [
+    "SCALE",
+    "DESIGN"
+   ],
+   "hasCURVEBALLbeat": false,
+   "hasFRAMEbeat": false,
+   "nCurve": 1,
+   "curveTaskPresent": [
+    false
+   ],
+   "curveHasCue": [
+    true
+   ],
+   "nFrames": 3,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "autoscaling",
+   "title": "Autoscaling",
+   "nBeats": 2,
+   "tags": [
+    "SCALE",
+    "DESIGN"
+   ],
+   "hasCURVEBALLbeat": false,
+   "hasFRAMEbeat": false,
+   "nCurve": 1,
+   "curveTaskPresent": [
+    false
+   ],
+   "curveHasCue": [
+    true
+   ],
+   "nFrames": 3,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "leader-election",
+   "title": "Leader Election",
+   "nBeats": 2,
+   "tags": [
+    "SCALE",
+    "DESIGN"
+   ],
+   "hasCURVEBALLbeat": false,
+   "hasFRAMEbeat": false,
+   "nCurve": 1,
+   "curveTaskPresent": [
+    false
+   ],
+   "curveHasCue": [
+    true
+   ],
+   "nFrames": 3,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "distributed-locks",
+   "title": "Distributed Locks",
+   "nBeats": 2,
+   "tags": [
+    "SCALE",
+    "DESIGN"
+   ],
+   "hasCURVEBALLbeat": false,
+   "hasFRAMEbeat": false,
+   "nCurve": 1,
+   "curveTaskPresent": [
+    false
+   ],
+   "curveHasCue": [
+    true
+   ],
+   "nFrames": 3,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "multi-region",
+   "title": "Multi-Region and Disaster Recovery",
+   "nBeats": 2,
+   "tags": [
+    "SCALE",
+    "DESIGN"
+   ],
+   "hasCURVEBALLbeat": false,
+   "hasFRAMEbeat": false,
+   "nCurve": 1,
+   "curveTaskPresent": [
+    false
+   ],
+   "curveHasCue": [
+    true
+   ],
+   "nFrames": 3,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "lambda-organization",
+   "title": "Lambda Organization at Scale",
+   "nBeats": 2,
+   "tags": [
+    "SCALE",
+    "DESIGN"
+   ],
+   "hasCURVEBALLbeat": false,
+   "hasFRAMEbeat": false,
+   "nCurve": 1,
+   "curveTaskPresent": [
+    false
+   ],
+   "curveHasCue": [
+    true
+   ],
+   "nFrames": 3,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "devices-dispatch",
+   "title": "Device Fleet Dispatch",
+   "nBeats": 2,
+   "tags": [
+    "SCALE",
+    "DESIGN"
+   ],
+   "hasCURVEBALLbeat": false,
+   "hasFRAMEbeat": false,
+   "nCurve": 1,
+   "curveTaskPresent": [
+    false
+   ],
+   "curveHasCue": [
+    true
+   ],
+   "nFrames": 3,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "developer-platform",
+   "title": "Developer Platform Engineering",
+   "nBeats": 2,
+   "tags": [
+    "SCALE",
+    "DESIGN"
+   ],
+   "hasCURVEBALLbeat": false,
+   "hasFRAMEbeat": false,
+   "nCurve": 1,
+   "curveTaskPresent": [
+    false
+   ],
+   "curveHasCue": [
+    true
+   ],
+   "nFrames": 3,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "state-machine",
+   "title": "State Machine Design",
+   "nBeats": 2,
+   "tags": [
+    "SCALE",
+    "DESIGN"
+   ],
+   "hasCURVEBALLbeat": false,
+   "hasFRAMEbeat": false,
+   "nCurve": 1,
+   "curveTaskPresent": [
+    false
+   ],
+   "curveHasCue": [
+    true
+   ],
+   "nFrames": 3,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "rules-engine",
+   "title": "Rules Engine & Dual Authorization",
+   "nBeats": 2,
+   "tags": [
+    "SCALE",
+    "DESIGN"
+   ],
+   "hasCURVEBALLbeat": false,
+   "hasFRAMEbeat": false,
+   "nCurve": 1,
+   "curveTaskPresent": [
+    false
+   ],
+   "curveHasCue": [
+    true
+   ],
+   "nFrames": 3,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "feature-flags",
+   "title": "Feature Flags & Dynamic Config",
+   "nBeats": 2,
+   "tags": [
+    "SCALE",
+    "DESIGN"
+   ],
+   "hasCURVEBALLbeat": false,
+   "hasFRAMEbeat": false,
+   "nCurve": 1,
+   "curveTaskPresent": [
+    false
+   ],
+   "curveHasCue": [
+    true
+   ],
+   "nFrames": 3,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "api-design",
+   "title": "API Design and Contracts",
+   "nBeats": 2,
+   "tags": [
+    "SCALE",
+    "DESIGN"
+   ],
+   "hasCURVEBALLbeat": false,
+   "hasFRAMEbeat": false,
+   "nCurve": 1,
+   "curveTaskPresent": [
+    false
+   ],
+   "curveHasCue": [
+    true
+   ],
+   "nFrames": 3,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "rate-limiting",
+   "title": "Rate Limiting",
+   "nBeats": 2,
+   "tags": [
+    "SCALE",
+    "DESIGN"
+   ],
+   "hasCURVEBALLbeat": false,
+   "hasFRAMEbeat": false,
+   "nCurve": 1,
+   "curveTaskPresent": [
+    false
+   ],
+   "curveHasCue": [
+    true
+   ],
+   "nFrames": 3,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "content-pipeline",
+   "title": "Content Pipeline",
+   "nBeats": 6,
+   "tags": [
+    "FRAME",
+    "STRUCTURE",
+    "SCALE",
+    "FAILURE",
+    "CURVEBALL",
+    "CLOSE"
+   ],
+   "hasCURVEBALLbeat": true,
+   "hasFRAMEbeat": true,
+   "nCurve": 8,
+   "curveTaskPresent": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "curveHasCue": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "nFrames": 4,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "microfrontend",
+   "title": "Microfrontend Architecture",
+   "nBeats": 2,
+   "tags": [
+    "SCALE",
+    "DESIGN"
+   ],
+   "hasCURVEBALLbeat": false,
+   "hasFRAMEbeat": false,
+   "nCurve": 1,
+   "curveTaskPresent": [
+    false
+   ],
+   "curveHasCue": [
+    true
+   ],
+   "nFrames": 3,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "signing",
+   "title": "Package Signing",
+   "nBeats": 6,
+   "tags": [
+    "FRAME",
+    "STRUCTURE",
+    "SCALE",
+    "FAILURE",
+    "CURVEBALL",
+    "CLOSE"
+   ],
+   "hasCURVEBALLbeat": true,
+   "hasFRAMEbeat": true,
+   "nCurve": 8,
+   "curveTaskPresent": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "curveHasCue": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "nFrames": 4,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "authz",
+   "title": "Tenant Authorization",
+   "nBeats": 6,
+   "tags": [
+    "FRAME",
+    "STRUCTURE",
+    "SCALE",
+    "FAILURE",
+    "CURVEBALL",
+    "CLOSE"
+   ],
+   "hasCURVEBALLbeat": true,
+   "hasFRAMEbeat": true,
+   "nCurve": 8,
+   "curveTaskPresent": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "curveHasCue": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "nFrames": 4,
+   "beatsMissingTask": 0
+  },
+  {
+   "id": "multi-tenant",
+   "title": "Multi-Tenant Isolation",
+   "nBeats": 2,
+   "tags": [
+    "SCALE",
+    "DESIGN"
+   ],
+   "hasCURVEBALLbeat": false,
+   "hasFRAMEbeat": false,
+   "nCurve": 1,
+   "curveTaskPresent": [
+    false
+   ],
+   "curveHasCue": [
+    true
+   ],
+   "nFrames": 3,
+   "beatsMissingTask": 0
+  }
+ ]
+}

@@ -1,0 +1,461 @@
+gate-then-deploy	UNKNOWN STEP	﻿2026-07-08T14:10:50.5385754Z Current runner version: '2.335.1'
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:50.5410768Z ##[group]Runner Image Provisioner
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:50.5411709Z Hosted Compute Agent
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:50.5412303Z Version: 20260624.560
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:50.5412970Z Commit: 925d229a51159bc391ae97e54a2dd1fe20af789d
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:50.5413691Z Build Date: 2026-06-24T18:26:47Z
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:50.5414377Z Worker ID: {30e3a13f-6299-4421-8d32-bff56bf31300}
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:50.5415155Z Azure Region: centralus
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:50.5415743Z ##[endgroup]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:50.5418107Z ##[group]Operating System
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:50.5418776Z Ubuntu
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:50.5419328Z 24.04.4
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:50.5419880Z LTS
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:50.5420382Z ##[endgroup]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:50.5420902Z ##[group]Runner Image
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:50.5421557Z Image: ubuntu-24.04
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:50.5422151Z Version: 20260628.225.1
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:50.5423987Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260628.225/images/ubuntu/Ubuntu2404-Readme.md
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:50.5425721Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260628.225
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:50.5427257Z ##[endgroup]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:50.5428428Z ##[group]GITHUB_TOKEN Permissions
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:50.5430584Z Contents: write
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:50.5431194Z Metadata: read
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:50.5431809Z ##[endgroup]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:50.5433880Z Secret source: Actions
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:50.5434886Z Prepare workflow directory
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:50.5768450Z Prepare all required actions
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:50.5805698Z Getting action download info
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:50.9234972Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:50.9935138Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.0695552Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.1567302Z Download action repository 'peaceiris/actions-gh-pages@v3' (SHA:373f7f263a76c20808c831209c920827a82a2847)
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.7305410Z Complete job name: gate-then-deploy
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.8049548Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.8058403Z ##[group]Run actions/checkout@v4
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.8059126Z with:
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.8059583Z   repository: Sundeepg98/deepdive-rehearsal
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.8063616Z   token: ***
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.8064037Z   ssh-strict: true
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.8064456Z   ssh-user: git
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.8064891Z   persist-credentials: true
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.8065421Z   clean: true
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.8066239Z   sparse-checkout-cone-mode: true
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.8066864Z   fetch-depth: 1
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.8067301Z   fetch-tags: false
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.8067736Z   show-progress: true
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.8068162Z   lfs: false
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.8068586Z   submodules: false
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.8069022Z   set-safe-directory: true
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.8069806Z ##[endgroup]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.9043156Z Syncing repository: Sundeepg98/deepdive-rehearsal
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.9045737Z ##[group]Getting Git version info
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.9047304Z Working directory is '/home/runner/work/deepdive-rehearsal/deepdive-rehearsal'
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.9049088Z [command]/usr/bin/git version
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.9109535Z git version 2.54.0
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.9165246Z ##[endgroup]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.9182020Z Temporarily overriding HOME='/home/runner/work/_temp/1d6ac7b2-4f7d-48d0-bd9a-0e2af79c531e' before making global git config changes
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.9184386Z Adding repository directory to the temporary git global config as a safe directory
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.9188065Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/deepdive-rehearsal/deepdive-rehearsal
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.9242216Z Deleting the contents of '/home/runner/work/deepdive-rehearsal/deepdive-rehearsal'
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.9246457Z ##[group]Initializing the repository
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.9251267Z [command]/usr/bin/git init /home/runner/work/deepdive-rehearsal/deepdive-rehearsal
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.9365154Z hint: Using 'master' as the name for the initial branch. This default branch name
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.9367306Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.9371604Z hint: to use in all of your new repositories, which will suppress this warning,
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.9372831Z hint: call:
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.9373697Z hint:
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.9374510Z hint: 	git config --global init.defaultBranch <name>
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.9375614Z hint:
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.9376937Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.9378472Z hint: 'development'. The just-created branch can be renamed via this command:
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.9379680Z hint:
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.9380337Z hint: 	git branch -m <name>
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.9381170Z hint:
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.9382231Z hint: Disable this message with "git config set advice.defaultBranchName false"
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.9384036Z Initialized empty Git repository in /home/runner/work/deepdive-rehearsal/deepdive-rehearsal/.git/
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.9386987Z [command]/usr/bin/git remote add origin https://github.com/Sundeepg98/deepdive-rehearsal
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.9429763Z ##[endgroup]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.9431445Z ##[group]Disabling automatic garbage collection
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.9433553Z [command]/usr/bin/git config --local gc.auto 0
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.9467791Z ##[endgroup]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.9469606Z ##[group]Setting up auth
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.9474730Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.9522282Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.9892264Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:51.9932451Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:52.0155214Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:52.0191100Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:52.0410876Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:52.0450872Z ##[endgroup]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:52.0452344Z ##[group]Fetching the repository
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:52.0462740Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +af907005d30dc4f8e77cfa80746e845a231e9b8b:refs/remotes/origin/master
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:52.9807413Z From https://github.com/Sundeepg98/deepdive-rehearsal
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:52.9809153Z  * [new ref]         af907005d30dc4f8e77cfa80746e845a231e9b8b -> origin/master
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:52.9843347Z ##[endgroup]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:52.9844170Z ##[group]Determining the checkout info
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:52.9845819Z ##[endgroup]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:52.9851687Z [command]/usr/bin/git sparse-checkout disable
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:52.9903451Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:52.9935116Z ##[group]Checking out the ref
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:52.9940588Z [command]/usr/bin/git checkout --progress --force -B master refs/remotes/origin/master
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:53.0631374Z Reset branch 'master'
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:53.0633100Z branch 'master' set up to track 'origin/master'.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:53.0643768Z ##[endgroup]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:53.0694807Z [command]/usr/bin/git log -1 --format=%H
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:53.0722470Z af907005d30dc4f8e77cfa80746e845a231e9b8b
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:53.1158126Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:53.1164302Z ##[group]Run actions/setup-python@v5
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:53.1165530Z with:
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:53.1166711Z   python-version: 3.13
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:53.1167758Z   check-latest: false
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:53.1178854Z   token: ***
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:53.1179843Z   update-environment: true
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:53.1180981Z   allow-prereleases: false
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:53.1182092Z   freethreaded: false
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:53.1183096Z ##[endgroup]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:53.2496504Z ##[group]Installed versions
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:53.2594582Z (node:2373) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:53.2599699Z (Use `node --trace-deprecation ...` to show where the warning was created)
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:53.2602617Z Successfully set up CPython (3.13.14)
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:53.2605807Z ##[endgroup]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:53.2979133Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:53.2984504Z ##[group]Run actions/setup-node@v4
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:53.2986172Z with:
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:53.2987453Z   node-version: 20
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:53.2988872Z   always-auth: false
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:53.2989976Z   check-latest: false
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:53.3000971Z   token: ***
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:53.3003132Z env:
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:53.3005295Z   pythonLocation: /opt/hostedtoolcache/Python/3.13.14/x64
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:53.3008807Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.13.14/x64/lib/pkgconfig
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:53.3011281Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.14/x64
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:53.3013382Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.14/x64
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:53.3015655Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.14/x64
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:53.3019302Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.13.14/x64/lib
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:53.3022244Z ##[endgroup]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:53.4445446Z Attempting to download 20...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:53.4548873Z (node:2381) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:53.4552047Z (Use `node --trace-deprecation ...` to show where the warning was created)
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:54.0660641Z Acquiring 20.20.2 - x64 from https://github.com/actions/node-versions/releases/download/20.20.2-23521894959/node-20.20.2-linux-x64.tar.gz
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:54.5345696Z Extracting ...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:54.5573128Z [command]/usr/bin/tar xz --strip 1 --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/fd2196f0-cf41-43bf-8874-99ca0fc38e61 -f /home/runner/work/_temp/fd72c078-83cf-4cb3-ad4b-644a98fa7f73
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:55.5864671Z Adding to the cache ...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:57.4415982Z ##[group]Environment details
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:57.6614805Z node: v20.20.2
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:57.6615311Z npm: 10.8.2
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:57.6615671Z yarn: 1.22.22
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:57.6616704Z ##[endgroup]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:57.6797273Z ##[group]Run npm ci
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:57.6797587Z [36;1mnpm ci[0m
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:57.6797876Z [36;1mnpx playwright install --with-deps chromium[0m
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:57.6968889Z shell: /usr/bin/bash -e {0}
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:57.6969174Z env:
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:57.6969455Z   pythonLocation: /opt/hostedtoolcache/Python/3.13.14/x64
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:57.6969931Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.13.14/x64/lib/pkgconfig
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:57.6970667Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.14/x64
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:57.6971096Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.14/x64
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:57.6971558Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.14/x64
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:57.6971970Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.13.14/x64/lib
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:57.6972314Z ##[endgroup]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:58.1414823Z npm warn EBADENGINE Unsupported engine {
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:58.1415775Z npm warn EBADENGINE   package: 'style-dictionary@5.5.0',
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:58.1417022Z npm warn EBADENGINE   required: { node: '>=22.0.0' },
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:58.1417976Z npm warn EBADENGINE   current: { node: 'v20.20.2', npm: '10.8.2' }
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:10:58.1418740Z npm warn EBADENGINE }
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:06.3782059Z 
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:06.3783357Z added 447 packages, and audited 448 packages in 9s
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:06.3784068Z 
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:06.3784511Z 147 packages are looking for funding
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:06.3785290Z   run `npm fund` for details
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:06.3787779Z 
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:06.3788286Z found 0 vulnerabilities
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:07.2159522Z Installing dependencies...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:07.2509539Z Switching to root user to install dependencies...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:07.3918392Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:07.4537756Z Hit:2 http://azure.archive.ubuntu.com/ubuntu noble InRelease
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:07.4549889Z Get:6 https://packages.microsoft.com/repos/azure-cli noble InRelease [3564 B]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:07.4582350Z Get:3 http://azure.archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:07.4630103Z Get:4 http://azure.archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:07.4662998Z Get:5 http://azure.archive.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:07.4799194Z Get:7 https://packages.microsoft.com/ubuntu/24.04/prod noble InRelease [3600 B]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:07.5413958Z Get:8 https://dl.google.com/linux/chrome-stable/deb stable InRelease [1825 B]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:07.5809171Z Get:9 https://packages.microsoft.com/repos/azure-cli noble/main amd64 Packages [2314 B]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:07.6303725Z Get:10 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1079 kB]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:07.6405787Z Get:11 http://azure.archive.ubuntu.com/ubuntu noble-updates/main Translation-en [267 kB]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:07.6414414Z Get:12 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 Components [181 kB]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:07.6430083Z Get:13 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 c-n-f Metadata [17.7 kB]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:07.6452254Z Get:14 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [1659 kB]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:07.6571601Z Get:15 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe Translation-en [327 kB]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:07.6592115Z Get:16 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Components [388 kB]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:07.6622368Z Get:17 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 c-n-f Metadata [34.9 kB]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:07.6636920Z Get:18 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [1196 kB]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:07.6706187Z Get:19 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted Translation-en [271 kB]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:07.7150010Z Get:20 http://azure.archive.ubuntu.com/ubuntu noble-updates/multiverse Translation-en [11.8 kB]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:07.7196514Z Get:21 http://azure.archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Components [940 B]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:07.7207224Z Get:22 http://azure.archive.ubuntu.com/ubuntu noble-backports/main amd64 Components [5760 B]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:07.7209577Z Get:23 http://azure.archive.ubuntu.com/ubuntu noble-backports/universe amd64 Components [10.5 kB]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:07.7654736Z Get:24 http://azure.archive.ubuntu.com/ubuntu noble-security/main amd64 Packages [826 kB]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:07.7698946Z Get:25 http://azure.archive.ubuntu.com/ubuntu noble-security/main Translation-en [186 kB]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:07.7718849Z Get:26 http://azure.archive.ubuntu.com/ubuntu noble-security/main amd64 Components [44.9 kB]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:07.7732864Z Get:27 http://azure.archive.ubuntu.com/ubuntu noble-security/main amd64 c-n-f Metadata [11.9 kB]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:07.7745306Z Get:28 http://azure.archive.ubuntu.com/ubuntu noble-security/universe amd64 Packages [1173 kB]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:07.7837018Z Get:29 http://azure.archive.ubuntu.com/ubuntu noble-security/universe Translation-en [230 kB]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:07.7878251Z Get:30 http://azure.archive.ubuntu.com/ubuntu noble-security/universe amd64 Components [76.3 kB]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:07.7908949Z Get:31 http://azure.archive.ubuntu.com/ubuntu noble-security/universe amd64 c-n-f Metadata [24.2 kB]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:07.7929865Z Get:32 http://azure.archive.ubuntu.com/ubuntu noble-security/restricted amd64 Packages [1133 kB]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:07.8023091Z Get:33 http://azure.archive.ubuntu.com/ubuntu noble-security/restricted Translation-en [259 kB]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:07.8275191Z Get:35 https://packages.microsoft.com/ubuntu/24.04/prod noble/main armhf Packages [11.7 kB]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:07.8330159Z Get:36 https://packages.microsoft.com/ubuntu/24.04/prod noble/main amd64 Packages [206 kB]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:07.8449397Z Get:37 https://packages.microsoft.com/ubuntu/24.04/prod noble/main arm64 Packages [174 kB]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:07.8477566Z Get:34 http://azure.archive.ubuntu.com/ubuntu noble-security/multiverse Translation-en [10.1 kB]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:07.9124363Z Get:38 https://dl.google.com/linux/chrome-stable/deb stable/main amd64 Packages [1217 B]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:12.3951546Z Fetched 10.2 MB in 1s (7750 kB/s)
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.0355726Z Reading package lists...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.0590896Z Reading package lists...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.2040691Z Building dependency tree...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.2048405Z Reading state information...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3323019Z libasound2t64 is already the newest version (1.2.11-1ubuntu0.2).
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3324021Z libasound2t64 set to manually installed.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3324994Z libatk-bridge2.0-0t64 is already the newest version (2.52.0-1build1).
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3326222Z libatk-bridge2.0-0t64 set to manually installed.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3327226Z libatk1.0-0t64 is already the newest version (2.52.0-1build1).
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3328120Z libatk1.0-0t64 set to manually installed.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3329101Z libatspi2.0-0t64 is already the newest version (2.52.0-1build1).
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3330062Z libatspi2.0-0t64 set to manually installed.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3330956Z libcairo2 is already the newest version (1.18.0-3build1).
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3331841Z libcairo2 set to manually installed.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3332826Z libcups2t64 is already the newest version (2.4.7-1.2ubuntu7.14).
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3333776Z libcups2t64 set to manually installed.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3334700Z libdbus-1-3 is already the newest version (1.14.10-4ubuntu4.1).
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3335685Z libdbus-1-3 set to manually installed.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3336882Z libdrm2 is already the newest version (2.4.125-1ubuntu0.1~24.04.2).
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3337805Z libdrm2 set to manually installed.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3338707Z libgbm1 is already the newest version (25.2.8-0ubuntu0.24.04.2).
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3339592Z libgbm1 set to manually installed.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3340489Z libglib2.0-0t64 is already the newest version (2.80.0-6ubuntu3.8).
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3341477Z libglib2.0-0t64 set to manually installed.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3342824Z libnspr4 is already the newest version (2:4.35-1.1build1).
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3343755Z libnspr4 set to manually installed.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3344690Z libpango-1.0-0 is already the newest version (1.52.1+ds-1build1).
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3345623Z libpango-1.0-0 set to manually installed.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3347077Z libx11-6 is already the newest version (2:1.8.7-1build1).
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3347742Z libx11-6 set to manually installed.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3348724Z libxcb1 is already the newest version (1.15-1ubuntu2).
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3349429Z libxcb1 set to manually installed.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3350218Z libxcomposite1 is already the newest version (1:0.4.5-1build3).
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3350978Z libxcomposite1 set to manually installed.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3351722Z libxdamage1 is already the newest version (1:1.1.6-1build1).
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3352443Z libxdamage1 set to manually installed.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3353156Z libxext6 is already the newest version (2:1.3.4-1build2).
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3353846Z libxext6 set to manually installed.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3354620Z libxfixes3 is already the newest version (1:6.0.0-2build1).
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3355359Z libxfixes3 set to manually installed.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3356385Z libxkbcommon0 is already the newest version (1.6.0-1build1).
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3357157Z libxkbcommon0 set to manually installed.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3357939Z libxrandr2 is already the newest version (2:1.5.2-2build1).
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3358713Z libxrandr2 set to manually installed.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3359477Z xvfb is already the newest version (2:21.1.12-1ubuntu1.6).
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3360511Z fonts-noto-color-emoji is already the newest version (2.047-0ubuntu0.24.04.1).
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3361620Z libfontconfig1 is already the newest version (2.15.0-1.1ubuntu2).
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3362424Z libfontconfig1 set to manually installed.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3363271Z libfreetype6 is already the newest version (2.13.2+dfsg-1ubuntu0.1).
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3364087Z libfreetype6 set to manually installed.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3364868Z fonts-liberation is already the newest version (1:2.1.5-3).
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3365644Z fonts-liberation set to manually installed.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3366666Z The following additional packages will be installed:
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3367371Z   libnss3-tools xfonts-encodings xfonts-utils
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3367957Z Recommended packages:
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3368459Z   fonts-ipafont-mincho fonts-tlwg-loma
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3533971Z The following NEW packages will be installed:
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3534775Z   fonts-freefont-ttf fonts-ipafont-gothic fonts-tlwg-loma-otf fonts-unifont
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3539660Z   fonts-wqy-zenhei xfonts-cyrillic xfonts-encodings xfonts-scalable
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3540323Z   xfonts-utils
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3544295Z The following packages will be upgraded:
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3548008Z   libnss3 libnss3-tools
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3706185Z 2 upgraded, 9 newly installed, 0 to remove and 44 not upgraded.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3706885Z Need to get 23.1 MB of archives.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3707329Z After this operation, 79.5 MB of additional disk space will be used.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.3707834Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.4160359Z Get:2 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 fonts-ipafont-gothic all 00303-21ubuntu1 [3513 kB]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.5080358Z Get:3 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 fonts-freefont-ttf all 20211204+svn4273-2 [5641 kB]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.6264257Z Get:4 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 fonts-tlwg-loma-otf all 1:0.7.3-1 [107 kB]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.6584494Z Get:5 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 fonts-unifont all 1:15.1.01-1build1 [2993 kB]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.7224911Z Get:6 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 fonts-wqy-zenhei all 0.9.45-8 [7472 kB]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.8297460Z Get:7 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 libnss3 amd64 2:3.98-1ubuntu0.2 [1445 kB]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.8759956Z Get:8 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 libnss3-tools amd64 2:3.98-1ubuntu0.2 [615 kB]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.9112758Z Get:9 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 xfonts-encodings all 1:1.0.5-0ubuntu2 [578 kB]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.9515045Z Get:10 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 xfonts-utils amd64 1:7.7+6build3 [94.4 kB]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:13.9832028Z Get:11 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 xfonts-cyrillic all 1:1.0.5+nmu1 [384 kB]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:14.0191157Z Get:12 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 xfonts-scalable all 1:1.0.3-1.3 [304 kB]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:14.2596262Z Fetched 23.1 MB in 1s (34.9 MB/s)
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:14.2862852Z Selecting previously unselected package fonts-ipafont-gothic.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:14.3121207Z (Reading database ... 
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:14.3121986Z (Reading database ... 5%
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:14.3122499Z (Reading database ... 10%
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:14.3122835Z (Reading database ... 15%
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:14.3123169Z (Reading database ... 20%
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:14.3123496Z (Reading database ... 25%
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:14.3123808Z (Reading database ... 30%
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:14.3124124Z (Reading database ... 35%
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:14.3124532Z (Reading database ... 40%
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:14.3125017Z (Reading database ... 45%
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:14.3125508Z (Reading database ... 50%
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:14.3178825Z (Reading database ... 55%
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:14.4402115Z (Reading database ... 60%
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:14.6308541Z (Reading database ... 65%
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:14.8408071Z (Reading database ... 70%
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:14.9076477Z (Reading database ... 75%
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:14.9805330Z (Reading database ... 80%
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:15.1999965Z (Reading database ... 85%
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:15.3457723Z (Reading database ... 90%
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:15.4853733Z (Reading database ... 95%
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:15.4854439Z (Reading database ... 100%
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:15.4855321Z (Reading database ... 202513 files and directories currently installed.)
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:15.4897008Z Preparing to unpack .../00-fonts-ipafont-gothic_00303-21ubuntu1_all.deb ...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:15.5052571Z Unpacking fonts-ipafont-gothic (00303-21ubuntu1) ...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:15.8483943Z Selecting previously unselected package fonts-freefont-ttf.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:15.8610092Z Preparing to unpack .../01-fonts-freefont-ttf_20211204+svn4273-2_all.deb ...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:15.8618031Z Unpacking fonts-freefont-ttf (20211204+svn4273-2) ...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:15.9395517Z Selecting previously unselected package fonts-tlwg-loma-otf.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:15.9519721Z Preparing to unpack .../02-fonts-tlwg-loma-otf_1%3a0.7.3-1_all.deb ...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:15.9527593Z Unpacking fonts-tlwg-loma-otf (1:0.7.3-1) ...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:15.9730118Z Selecting previously unselected package fonts-unifont.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:15.9853645Z Preparing to unpack .../03-fonts-unifont_1%3a15.1.01-1build1_all.deb ...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:15.9861924Z Unpacking fonts-unifont (1:15.1.01-1build1) ...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:16.0910863Z Selecting previously unselected package fonts-wqy-zenhei.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:16.1036543Z Preparing to unpack .../04-fonts-wqy-zenhei_0.9.45-8_all.deb ...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:16.1134363Z Unpacking fonts-wqy-zenhei (0.9.45-8) ...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:16.5841980Z Preparing to unpack .../05-libnss3_2%3a3.98-1ubuntu0.2_amd64.deb ...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:16.5879477Z Unpacking libnss3:amd64 (2:3.98-1ubuntu0.2) over (2:3.98-1ubuntu0.1) ...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:16.6400237Z Preparing to unpack .../06-libnss3-tools_2%3a3.98-1ubuntu0.2_amd64.deb ...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:16.6423208Z Unpacking libnss3-tools (2:3.98-1ubuntu0.2) over (2:3.98-1ubuntu0.1) ...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:16.6851378Z Selecting previously unselected package xfonts-encodings.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:16.6979956Z Preparing to unpack .../07-xfonts-encodings_1%3a1.0.5-0ubuntu2_all.deb ...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:16.6987665Z Unpacking xfonts-encodings (1:1.0.5-0ubuntu2) ...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:16.7290324Z Selecting previously unselected package xfonts-utils.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:16.7414422Z Preparing to unpack .../08-xfonts-utils_1%3a7.7+6build3_amd64.deb ...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:16.7421727Z Unpacking xfonts-utils (1:7.7+6build3) ...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:16.7724976Z Selecting previously unselected package xfonts-cyrillic.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:16.7849071Z Preparing to unpack .../09-xfonts-cyrillic_1%3a1.0.5+nmu1_all.deb ...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:16.7856729Z Unpacking xfonts-cyrillic (1:1.0.5+nmu1) ...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:16.8199806Z Selecting previously unselected package xfonts-scalable.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:16.8325175Z Preparing to unpack .../10-xfonts-scalable_1%3a1.0.3-1.3_all.deb ...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:16.8333006Z Unpacking xfonts-scalable (1:1.0.3-1.3) ...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:16.8740078Z Setting up fonts-wqy-zenhei (0.9.45-8) ...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:16.8861781Z Setting up fonts-freefont-ttf (20211204+svn4273-2) ...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:16.8882311Z Setting up libnss3:amd64 (2:3.98-1ubuntu0.2) ...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:16.8902476Z Setting up fonts-tlwg-loma-otf (1:0.7.3-1) ...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:16.8923163Z Setting up xfonts-encodings (1:1.0.5-0ubuntu2) ...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:16.8943899Z Setting up fonts-ipafont-gothic (00303-21ubuntu1) ...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:16.9009837Z update-alternatives: using /usr/share/fonts/opentype/ipafont-gothic/ipag.ttf to provide /usr/share/fonts/truetype/fonts-japanese-gothic.ttf (fonts-japanese-gothic.ttf) in auto mode
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:16.9026147Z Setting up libnss3-tools (2:3.98-1ubuntu0.2) ...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:16.9047306Z Setting up fonts-unifont (1:15.1.01-1build1) ...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:16.9068189Z Setting up xfonts-utils (1:7.7+6build3) ...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:16.9109350Z Setting up xfonts-cyrillic (1:1.0.5+nmu1) ...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:16.9394968Z Setting up xfonts-scalable (1:1.0.3-1.3) ...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:16.9669357Z Processing triggers for libc-bin (2.39-0ubuntu8.7) ...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:16.9976616Z Processing triggers for man-db (2.12.0-4build2) ...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:16.9997004Z Not building database; man-db/auto-update is not 'true'.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:17.0009885Z Processing triggers for fontconfig (2.15.0-1.1ubuntu2) ...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:17.6796621Z 
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:17.6797235Z Running kernel seems to be up-to-date.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:17.6797513Z 
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:17.6797656Z Restarting services...
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:17.6871647Z  systemctl restart udisks2.service
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:17.7358459Z 
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:17.7360119Z No containers need to be restarted.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:17.7360784Z 
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:17.7361265Z No user sessions are running outdated binaries.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:17.7361774Z 
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:17.7362466Z No VM guests are running outdated hypervisor (qemu) binaries on this host.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:18.4857926Z Downloading Chrome for Testing 149.0.7827.55 (playwright chromium v1228) from https://cdn.playwright.dev/builds/cft/149.0.7827.55/linux64/chrome-linux64.zip
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:19.5791626Z |                                                                                |   0% of 177 MiB
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:19.9130185Z |■■■■■■■■                                                                        |  10% of 177 MiB
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:20.0212025Z |■■■■■■■■■■■■■■■■                                                                |  20% of 177 MiB
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:20.1235487Z |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 177 MiB
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:20.2267659Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 177 MiB
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:20.3299246Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 177 MiB
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:20.4320209Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 177 MiB
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:20.5340337Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 177 MiB
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:20.6336348Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 177 MiB
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:20.7327219Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 177 MiB
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:20.8306252Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 177 MiB
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:24.4050069Z Chrome for Testing 149.0.7827.55 (playwright chromium v1228) downloaded to /home/runner/.cache/ms-playwright/chromium-1228
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:24.4071626Z Downloading FFmpeg (playwright ffmpeg v1011) from https://cdn.playwright.dev/dbazure/download/playwright/builds/ffmpeg/1011/ffmpeg-linux.zip
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:25.4790030Z |                                                                                |   0% of 2.3 MiB
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:25.5189077Z |■■■■■■■■                                                                        |  10% of 2.3 MiB
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:25.5357908Z |■■■■■■■■■■■■■■■■                                                                |  20% of 2.3 MiB
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:25.5492332Z |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 2.3 MiB
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:25.5599154Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 2.3 MiB
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:25.5652884Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 2.3 MiB
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:25.5744574Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 2.3 MiB
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:25.5768840Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 2.3 MiB
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:25.5863031Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 2.3 MiB
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:25.5884130Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 2.3 MiB
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:25.5906348Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 2.3 MiB
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:25.6646713Z FFmpeg (playwright ffmpeg v1011) downloaded to /home/runner/.cache/ms-playwright/ffmpeg-1011
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:25.6650559Z Downloading Chrome Headless Shell 149.0.7827.55 (playwright chromium-headless-shell v1228) from https://cdn.playwright.dev/builds/cft/149.0.7827.55/linux64/chrome-headless-shell-linux64.zip
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:26.7766392Z |                                                                                |   0% of 114.2 MiB
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:27.0658267Z |■■■■■■■■                                                                        |  10% of 114.2 MiB
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:27.1496556Z |■■■■■■■■■■■■■■■■                                                                |  20% of 114.2 MiB
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:27.2125535Z |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 114.2 MiB
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:27.2791790Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 114.2 MiB
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:27.3330966Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 114.2 MiB
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:27.3921990Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 114.2 MiB
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:27.4528809Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 114.2 MiB
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:27.5122319Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 114.2 MiB
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:27.5737784Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 114.2 MiB
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:27.6323553Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 114.2 MiB
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:30.2281047Z Chrome Headless Shell 149.0.7827.55 (playwright chromium-headless-shell v1228) downloaded to /home/runner/.cache/ms-playwright/chromium_headless_shell-1228
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:30.2478484Z ##[group]Run python test/check_all.py
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:30.2478831Z [36;1mpython test/check_all.py[0m
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:30.2513093Z shell: /usr/bin/bash -e {0}
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:30.2513352Z env:
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:30.2513623Z   pythonLocation: /opt/hostedtoolcache/Python/3.13.14/x64
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:30.2514084Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.13.14/x64/lib/pkgconfig
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:30.2514529Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.14/x64
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:30.2514913Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.14/x64
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:30.2515295Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.14/x64
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:30.2515701Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.13.14/x64/lib
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:11:30.2516336Z ##[endgroup]
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:13:18.1626777Z ================================================================
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:13:18.1629004Z   ascii_guard        PASS  ASCII GUARD: PASS  (every src/ .js/.css/.html file is 7-bit ASCII)
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:13:18.1629803Z   syntax_check       PASS  SYNTAX CHECK: PASS  (150 modules parse; 13 aggregator files skipped)
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:13:18.1630562Z   global_collisions  PASS  GLOBAL COLLISIONS: PASS  (204 top-level globals, each declared in exactly one module)
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:13:18.1631117Z   build_integrity    FAIL  Node.js v20.20.2
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:13:18.1631542Z   css_syntax         PASS    PASS All checks passed (26 keyframes validated)
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:13:18.1632044Z   file_integrity     PASS  PASS All 59 files passed integrity check
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:13:18.1632477Z   unit_tests         PASS    Results: 64 passed, 0 failed
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:13:18.1632846Z   visual_pane_smoke  FAIL  Node.js v20.20.2
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:13:18.1633219Z   visual_regression  PASS    Results: 43 passed, 0 failed
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:13:18.1633709Z   compiler_md        PASS  Markdown-parser data-equivalence: 23 pass, 0 fail
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:13:18.1634206Z   compiler_emit      PASS  Emitter round-trip: 7 pass, 0 fail
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:13:18.1634684Z   compiler_assembly  PASS  Assembly data-equivalence: 28 pass, 0 fail
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:13:18.1635218Z   compiler_prose     PASS  Layer B prose reproduction: 3/3 byte-identical
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:13:18.1635718Z   compiler_flow      PASS  Layer C flow reproduction: 3/3 byte-identical
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:13:18.1636567Z   compiler_code      PASS  Layer C code reproduction: 3/3 byte-identical
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:13:18.1636980Z   render             PASS  RENDER TEST: PASS
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:13:18.1637430Z   entity_leak        PASS  ENTITY LEAK: PASS  (no HTML entity reaches visible text)
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:13:18.1637899Z   e2e_interactions   PASS  E2E INTERACTIONS: PASS
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:13:18.1638712Z   topic_contract     PASS  TOPIC CONTRACT: PASS  (46 topics: all slices + group + tiers + cards conform)
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:13:18.1639261Z ================================================================
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:13:18.1639652Z GATE: FAIL (build_integrity, visual_pane_smoke)
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:13:18.1686620Z ##[error]Process completed with exit code 1.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:13:18.1859457Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:13:18.1860709Z Post job cleanup.
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:13:18.2703014Z [command]/usr/bin/git version
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:13:18.2745818Z git version 2.54.0
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:13:18.2789991Z Temporarily overriding HOME='/home/runner/work/_temp/7cdc08dc-b4db-4f45-822d-942f99f2a206' before making global git config changes
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:13:18.2791204Z Adding repository directory to the temporary git global config as a safe directory
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:13:18.2798237Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/deepdive-rehearsal/deepdive-rehearsal
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:13:18.2837045Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:13:18.2872599Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:13:18.3120818Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:13:18.3152826Z http.https://github.com/.extraheader
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:13:18.3166042Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:13:18.3200187Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:13:18.3455338Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:13:18.3493668Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:13:18.3908082Z Cleaning up orphan processes
+gate-then-deploy	UNKNOWN STEP	2026-07-08T14:13:18.4138744Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-node@v4, actions/setup-python@v5. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

@@ -1,0 +1,140 @@
+ok    open overlay: mock-run (#mockopen)
+ok    close overlay: mock-run
+ok    open overlay: mixed-fire (#mixopen)
+ok    close overlay: mixed-fire
+ok    open overlay: cram-sheet (#cramopen)
+ok    close overlay: cram-sheet
+ok    open overlay: session-progress (#sessopen)
+ok    close overlay: session-progress
+ok    open overlay: keyboard (#keyopen)
+ok    close overlay: keyboard
+ok    open overlay: scope (#scopeopen)
+ok    close overlay: scope
+ok    open overlay: game-plan (#planopen)
+ok    close overlay: game-plan
+ok    open overlay: topic-index (#idxopen)
+ok    close overlay: topic-index
+ok    open overlay: search (#searchopen)
+ok    close overlay: search
+ok    open overlay: notes (#notesopen)
+ok    close overlay: notes
+ok    print Q&A (#printqa)
+ok    drill: switch pane
+ok    drill: grade via keyboard 1/2/3 + space (x6)
+ok    drill: click the in-shadow grade buttons
+ok    whiteboard: open + interact
+ok    search: open with "/" and type
+ok    search: arrow + enter (jump to result)
+ok    search: reopen + empty query + escape
+ok    keys: pane jumps q w e r t y u i o v
+ok    keys: d (density cycle) x3
+ok    keys: [ and ] (topic step) x4
+ok    keys: ? (keyboard overlay)
+ok    keys: \ (index overlay)
+ok    keys: g (guided tour) + advance 5 + escape
+ok    keys: walk arrows L/R x6
+ok    theme toggle x3
+ok    topic nav: next/prev buttons
+ok    topic nav: dropdown trigger
+ok    home button (topic index)
+ok    star / bookmark topic
+ok    copy link
+ok    focus mode toggle x2
+ok    interviewer-cuts-in toggle (#inttog) x2
+ok    mock run: open + advance 10 beats
+ok    mock run: close
+ok    mixed fire: open + answer 8
+ok    mixed fire: close
+ok    session progress: open + click through its controls
+ok    session progress: close
+ok    cram sheet: open + interact
+ok    cram sheet: close
+ERR(1)  export backup (download)
+ERR(1)  import backup (round-trip the exported file)
+ok    import: malformed file -> alert path
+ok    scroll to top button
+ERR(1)  tools FAB
+ok    deep link: #caching/num then #saga/wb then back/forward
+ok    deep link: garbage hash #not-a-topic/not-a-view
+
+================ SUMMARY ================
+ERRORS: 3
+
+[2x] script :: STEP THREW: locator.click: Element is not visible
+   steps: export backup (download) | tools FAB
+
+[1x] script :: STEP THREW: ENOENT: no such file or directory, stat 'D:\claude-workspace\deepdive-rehearsal\_audit\2026-07-11-state-audit\scripts\errsweep-backup.json
+   steps: import backup (round-trip the exported file)
+
+REQUESTS: 1
+[
+ "document file:///D:/claude-workspace/deepdive-rehearsal/dist/index.html"
+]
+FAILED: 0 []
+
+--- LOG ---
+ok    open overlay: mock-run (#mockopen)
+ok    close overlay: mock-run
+ok    open overlay: mixed-fire (#mixopen)
+ok    close overlay: mixed-fire
+ok    open overlay: cram-sheet (#cramopen)
+ok    close overlay: cram-sheet
+ok    open overlay: session-progress (#sessopen)
+ok    close overlay: session-progress
+ok    open overlay: keyboard (#keyopen)
+ok    close overlay: keyboard
+ok    open overlay: scope (#scopeopen)
+ok    close overlay: scope
+ok    open overlay: game-plan (#planopen)
+ok    close overlay: game-plan
+ok    open overlay: topic-index (#idxopen)
+ok    close overlay: topic-index
+ok    open overlay: search (#searchopen)
+ok    close overlay: search
+ok    open overlay: notes (#notesopen)
+ok    close overlay: notes
+ok    print Q&A (#printqa)
+ok    drill: switch pane
+ok    drill: grade via keyboard 1/2/3 + space (x6)
+   drill buttons -> clicked: adv
+ok    drill: click the in-shadow grade buttons
+   wb -> clicked 12/27 wb buttons
+ok    whiteboard: open + interact
+ok    search: open with "/" and type
+ok    search: arrow + enter (jump to result)
+ok    search: reopen + empty query + escape
+ok    keys: pane jumps q w e r t y u i o v
+ok    keys: d (density cycle) x3
+ok    keys: [ and ] (topic step) x4
+ok    keys: ? (keyboard overlay)
+ok    keys: \ (index overlay)
+ok    keys: g (guided tour) + advance 5 + escape
+ok    keys: walk arrows L/R x6
+ok    theme toggle x3
+ok    topic nav: next/prev buttons
+ok    topic nav: dropdown trigger
+ok    home button (topic index)
+ok    star / bookmark topic
+ok    copy link
+ok    focus mode toggle x2
+ok    interviewer-cuts-in toggle (#inttog) x2
+   mock -> no buttons
+ok    mock run: open + advance 10 beats
+ok    mock run: close
+ok    mixed fire: open + answer 8
+ok    mixed fire: close
+   session -> clicked 0/0
+ok    session progress: open + click through its controls
+ok    session progress: close
+ok    cram sheet: open + interact
+ok    cram sheet: close
+   export btn count: 1
+ERR(1)  export backup (download)
+   import input count: 1
+ERR(1)  import backup (round-trip the exported file)
+DIALOG[import: malformed file -> alert path] alert: That file is not valid JSON.
+ok    import: malformed file -> alert path
+ok    scroll to top button
+ERR(1)  tools FAB
+ok    deep link: #caching/num then #saga/wb then back/forward
+ok    deep link: garbage hash #not-a-topic/not-a-view

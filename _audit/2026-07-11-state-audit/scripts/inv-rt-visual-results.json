@@ -1,0 +1,363 @@
+{
+  "desktop_asShipped": {
+    "attrW": 0,
+    "attrH": 0,
+    "drawingBuffer": {
+      "w": 1,
+      "h": 1
+    },
+    "glVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "cssBox": {
+      "w": 591.6,
+      "h": 2
+    },
+    "cssHeightStyle": "2px",
+    "cssWidthStyle": "591.625px",
+    "borderTop": "1px",
+    "borderBottom": "1px",
+    "chain": [
+      {
+        "tag": "canvas",
+        "w": 591.6,
+        "h": 2
+      },
+      {
+        "tag": "div.stageInner",
+        "w": 591.6,
+        "h": 2
+      },
+      {
+        "tag": "div.vz",
+        "w": 591.6,
+        "h": 152.9
+      },
+      {
+        "tag": "div",
+        "w": 591.6,
+        "h": 152.9
+      },
+      {
+        "tag": "deep-visual",
+        "w": 591.6,
+        "h": 152.9
+      }
+    ],
+    "emptyHidden": true,
+    "frames": 29,
+    "ctlHeights": [
+      {
+        "t": "input",
+        "txt": "",
+        "h": 16
+      },
+      {
+        "t": "input",
+        "txt": "",
+        "h": 16
+      },
+      {
+        "t": "input",
+        "txt": "",
+        "h": 16
+      },
+      {
+        "t": "button",
+        "txt": "Spike, then scale out",
+        "h": 27
+      },
+      {
+        "t": "button",
+        "txt": "Consumers beyond partitions",
+        "h": 27
+      },
+      {
+        "t": "button",
+        "txt": "Stop",
+        "h": 0
+      }
+    ]
+  },
+  "desktop_nav": "clicked tn-item",
+  "desktop_frames": {
+    "f1": 39,
+    "f2": 70,
+    "advanced": true
+  },
+  "desktop_afterResizeEvent": {
+    "attrW": 590,
+    "attrH": 332,
+    "drawingBuffer": {
+      "w": 590,
+      "h": 332
+    },
+    "glVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "cssBox": {
+      "w": 591.6,
+      "h": 333.8
+    },
+    "cssHeightStyle": "333.781px",
+    "cssWidthStyle": "591.625px",
+    "borderTop": "1px",
+    "borderBottom": "1px",
+    "chain": [
+      {
+        "tag": "canvas",
+        "w": 591.6,
+        "h": 333.8
+      },
+      {
+        "tag": "div.stageInner",
+        "w": 591.6,
+        "h": 333.8
+      },
+      {
+        "tag": "div.vz",
+        "w": 591.6,
+        "h": 484.7
+      },
+      {
+        "tag": "div",
+        "w": 591.6,
+        "h": 484.7
+      },
+      {
+        "tag": "deep-visual",
+        "w": 591.6,
+        "h": 484.7
+      }
+    ],
+    "emptyHidden": true,
+    "frames": 94,
+    "ctlHeights": [
+      {
+        "t": "input",
+        "txt": "",
+        "h": 16
+      },
+      {
+        "t": "input",
+        "txt": "",
+        "h": 16
+      },
+      {
+        "t": "input",
+        "txt": "",
+        "h": 16
+      },
+      {
+        "t": "button",
+        "txt": "Spike, then scale out",
+        "h": 27
+      },
+      {
+        "t": "button",
+        "txt": "Consumers beyond partitions",
+        "h": 27
+      },
+      {
+        "t": "button",
+        "txt": "Stop",
+        "h": 0
+      }
+    ]
+  },
+  "desktop_errs": [],
+  "reentry": {
+    "firstVisit": {
+      "buf": {
+        "w": 1,
+        "h": 1
+      },
+      "css": {
+        "w": 591.6,
+        "h": 2
+      }
+    },
+    "secondVisit": {
+      "buf": {
+        "w": 1,
+        "h": 1
+      },
+      "css": {
+        "w": 591.6,
+        "h": 2
+      }
+    }
+  },
+  "reentry_errs": [],
+  "mobile_asShipped": {
+    "attrW": 0,
+    "attrH": 0,
+    "drawingBuffer": {
+      "w": 1,
+      "h": 1
+    },
+    "glVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "cssBox": {
+      "w": 360,
+      "h": 2
+    },
+    "cssHeightStyle": "2px",
+    "cssWidthStyle": "360px",
+    "borderTop": "1px",
+    "borderBottom": "1px",
+    "chain": [
+      {
+        "tag": "canvas",
+        "w": 360,
+        "h": 2
+      },
+      {
+        "tag": "div.stageInner",
+        "w": 360,
+        "h": 2
+      },
+      {
+        "tag": "div.vz",
+        "w": 360,
+        "h": 244.8
+      },
+      {
+        "tag": "div",
+        "w": 360,
+        "h": 244.8
+      },
+      {
+        "tag": "deep-visual",
+        "w": 360,
+        "h": 244.8
+      }
+    ],
+    "emptyHidden": true,
+    "frames": 87,
+    "ctlHeights": [
+      {
+        "t": "input",
+        "txt": "",
+        "h": 16
+      },
+      {
+        "t": "input",
+        "txt": "",
+        "h": 16
+      },
+      {
+        "t": "input",
+        "txt": "",
+        "h": 16
+      },
+      {
+        "t": "button",
+        "txt": "Spike, then scale out",
+        "h": 27
+      },
+      {
+        "t": "button",
+        "txt": "Consumers beyond partitions",
+        "h": 27
+      },
+      {
+        "t": "button",
+        "txt": "Stop",
+        "h": 0
+      }
+    ]
+  },
+  "mobile_afterResize": {
+    "attrW": 358,
+    "attrH": 201,
+    "drawingBuffer": {
+      "w": 358,
+      "h": 201
+    },
+    "glVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "cssBox": {
+      "w": 360,
+      "h": 203
+    },
+    "cssHeightStyle": "203px",
+    "cssWidthStyle": "360px",
+    "borderTop": "1px",
+    "borderBottom": "1px",
+    "chain": [
+      {
+        "tag": "canvas",
+        "w": 360,
+        "h": 203
+      },
+      {
+        "tag": "div.stageInner",
+        "w": 360,
+        "h": 203
+      },
+      {
+        "tag": "div.vz",
+        "w": 360,
+        "h": 445.8
+      },
+      {
+        "tag": "div",
+        "w": 360,
+        "h": 445.8
+      },
+      {
+        "tag": "deep-visual",
+        "w": 360,
+        "h": 445.8
+      }
+    ],
+    "emptyHidden": true,
+    "frames": 158,
+    "ctlHeights": [
+      {
+        "t": "input",
+        "txt": "",
+        "h": 16
+      },
+      {
+        "t": "input",
+        "txt": "",
+        "h": 16
+      },
+      {
+        "t": "input",
+        "txt": "",
+        "h": 16
+      },
+      {
+        "t": "button",
+        "txt": "Spike, then scale out",
+        "h": 27
+      },
+      {
+        "t": "button",
+        "txt": "Consumers beyond partitions",
+        "h": 27
+      },
+      {
+        "t": "button",
+        "txt": "Stop",
+        "h": 0
+      }
+    ]
+  },
+  "mobile_overflow": {
+    "scrollW": 390,
+    "clientW": 390,
+    "vzW": 360
+  },
+  "mobile_errs": [],
+  "theme": {
+    "htmlDataTheme": "light",
+    "htmlClass": "",
+    "bodyBg": "rgb(250, 249, 245)",
+    "bodyColor": "rgb(42, 40, 35)",
+    "kitBtnBg": "rgb(33, 38, 45)",
+    "kitBtnColor": "rgb(201, 209, 217)",
+    "canvasBg": "rgb(13, 17, 23)"
+  }
+}

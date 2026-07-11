@@ -1,0 +1,2322 @@
+{
+ "num": [
+  {
+   "id": "event-driven",
+   "isMd": true,
+   "nRows": 5,
+   "dynAny": 4,
+   "dynV": 3,
+   "staticRows": [
+    "Buffer at 10x burst"
+   ],
+   "rowsV": [
+    {
+     "k": "Consumer concurrency",
+     "v": "250",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Buffer at 10x burst",
+     "v": "10",
+     "movedAny": false,
+     "movedV": false
+    },
+    {
+     "k": "Redelivered per hour",
+     "v": "18,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Dedup lookups",
+     "v": "5,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "To DLQ after 5 tries",
+     "v": "bounded",
+     "movedAny": true,
+     "movedV": false
+    }
+   ]
+  },
+  {
+   "id": "notifications",
+   "isMd": false,
+   "nRows": 6,
+   "dynAny": 6,
+   "dynV": 6,
+   "staticRows": [],
+   "rowsV": [
+    {
+     "k": "Poll read load",
+     "v": "16,667",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "If you go real-time (1s)",
+     "v": "1,000,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Fan-out deliveries/day",
+     "v": "10,000,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Peak channel-send rate",
+     "v": "1,157",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "In-app storage / month",
+     "v": "15",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Push connections if you switch",
+     "v": "1,000,000",
+     "movedAny": true,
+     "movedV": true
+    }
+   ]
+  },
+  {
+   "id": "real-time-delivery",
+   "isMd": true,
+   "nRows": 5,
+   "dynAny": 3,
+   "dynV": 3,
+   "staticRows": [
+    "Deliveries: fan-out-on-read",
+    "Verdict for this account"
+   ],
+   "rowsV": [
+    {
+     "k": "Connection gateways",
+     "v": "~25",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Deliveries: fan-out-on-write",
+     "v": "~1,000,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Deliveries: fan-out-on-read",
+     "v": "1",
+     "movedAny": false,
+     "movedV": false
+    },
+    {
+     "k": "Write amplification",
+     "v": "1,000,000x",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Verdict for this account",
+     "v": "pull (on-read)",
+     "movedAny": false,
+     "movedV": false
+    }
+   ]
+  },
+  {
+   "id": "cdc",
+   "isMd": true,
+   "nRows": 5,
+   "dynAny": 4,
+   "dynV": 4,
+   "staticRows": [
+    "Lost with dual-write"
+   ],
+   "rowsV": [
+    {
+     "k": "Change events/sec",
+     "v": "2,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Fan-out to systems",
+     "v": "6,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "End-to-end lag",
+     "v": "500",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Dedup lookups",
+     "v": "6,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Lost with dual-write",
+     "v": "nonzero",
+     "movedAny": false,
+     "movedV": false
+    }
+   ]
+  },
+  {
+   "id": "kafka-internals",
+   "isMd": true,
+   "nRows": 5,
+   "dynAny": 5,
+   "dynV": 5,
+   "staticRows": [],
+   "rowsV": [
+    {
+     "k": "Per-partition rate",
+     "v": "~8,333",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Max consumers in group",
+     "v": "12",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Max group throughput",
+     "v": "~120,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Keeps up?",
+     "v": "yes",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Consumers needed",
+     "v": "10",
+     "movedAny": true,
+     "movedV": true
+    }
+   ]
+  },
+  {
+   "id": "stream-batch-processing",
+   "isMd": true,
+   "nRows": 5,
+   "dynAny": 5,
+   "dynV": 5,
+   "staticRows": [],
+   "rowsV": [
+    {
+     "k": "Batch result freshness",
+     "v": "~6 h",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Stream result freshness",
+     "v": "~1.2 min",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Streaming is fresher by",
+     "v": "~309x",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Events per window",
+     "v": "~1,400,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Verdict",
+     "v": "stream only if freshness is valued",
+     "movedAny": true,
+     "movedV": true
+    }
+   ]
+  },
+  {
+   "id": "saga",
+   "isMd": true,
+   "nRows": 5,
+   "dynAny": 4,
+   "dynV": 4,
+   "staticRows": [
+    "Not atomic"
+   ],
+   "rowsV": [
+    {
+     "k": "Completes cleanly",
+     "v": "95.1%",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Needs compensation",
+     "v": "4.9%",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Compensation flows",
+     "v": "~5/s",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Events (choreography)",
+     "v": "~10",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Not atomic",
+     "v": "eventual",
+     "movedAny": false,
+     "movedV": false
+    }
+   ]
+  },
+  {
+   "id": "caching",
+   "isMd": true,
+   "nRows": 5,
+   "dynAny": 4,
+   "dynV": 4,
+   "staticRows": [
+    "Stampede fan-out"
+   ],
+   "rowsV": [
+    {
+     "k": "Source reads/day",
+     "v": "50,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Source load removed",
+     "v": "450,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Effective latency",
+     "v": "6",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Latency cut vs no cache",
+     "v": "88",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Stampede fan-out",
+     "v": "many to 1",
+     "movedAny": false,
+     "movedV": false
+    }
+   ]
+  },
+  {
+   "id": "soft-delete",
+   "isMd": true,
+   "nRows": 5,
+   "dynAny": 4,
+   "dynV": 4,
+   "staticRows": [
+    "Filter on every read"
+   ],
+   "rowsV": [
+    {
+     "k": "Soft-deleted rows",
+     "v": "2,000,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Table size vs live",
+     "v": "120%",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Purge past 90 days",
+     "v": "2,000,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Filter on every read",
+     "v": "required",
+     "movedAny": false,
+     "movedV": false
+    },
+    {
+     "k": "Recovery window",
+     "v": "90",
+     "movedAny": true,
+     "movedV": true
+    }
+   ]
+  },
+  {
+   "id": "eav",
+   "isMd": false,
+   "nRows": 6,
+   "dynAny": 6,
+   "dynV": 6,
+   "staticRows": [],
+   "rowsV": [
+    {
+     "k": "Potential rows: entities × attributes",
+     "v": "10,000,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Actual value rows (overrides only)",
+     "v": "1,500,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Rows avoided by sparseness",
+     "v": "8,500,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Override rows to pivot, per entity",
+     "v": "30",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Searchable partial-index entries",
+     "v": "75,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "List view: 500 devices, rows pivoted",
+     "v": "15,000",
+     "movedAny": true,
+     "movedV": true
+    }
+   ]
+  },
+  {
+   "id": "shared-definition",
+   "isMd": true,
+   "nRows": 5,
+   "dynAny": 3,
+   "dynV": 3,
+   "staticRows": [
+    "Resolution",
+    "Waterfall depth"
+   ],
+   "rowsV": [
+    {
+     "k": "Naive: value per entity",
+     "v": "10,000,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Deviations only",
+     "v": "500,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Rows never written",
+     "v": "9,500,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Resolution",
+     "v": "1",
+     "movedAny": false,
+     "movedV": false
+    },
+    {
+     "k": "Waterfall depth",
+     "v": "<=4",
+     "movedAny": false,
+     "movedV": false
+    }
+   ]
+  },
+  {
+   "id": "replication",
+   "isMd": true,
+   "nRows": 5,
+   "dynAny": 3,
+   "dynV": 3,
+   "staticRows": [
+    "Async lag",
+    "Failover cost"
+   ],
+   "rowsV": [
+    {
+     "k": "R + W",
+     "v": "4",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Write survives",
+     "v": "1",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Read survives",
+     "v": "1",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Async lag",
+     "v": "stale reads",
+     "movedAny": false,
+     "movedV": false
+    },
+    {
+     "k": "Failover cost",
+     "v": "lost writes",
+     "movedAny": false,
+     "movedV": false
+    }
+   ]
+  },
+  {
+   "id": "consistency-models",
+   "isMd": true,
+   "nRows": 5,
+   "dynAny": 5,
+   "dynV": 5,
+   "staticRows": [],
+   "rowsV": [
+    {
+     "k": "R + W vs N",
+     "v": "4 vs 3",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Read freshness",
+     "v": "strong",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Write fault tolerance",
+     "v": "1 of 3",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Read fault tolerance",
+     "v": "1 of 3",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "The trade",
+     "v": "freshness over latency",
+     "movedAny": true,
+     "movedV": true
+    }
+   ]
+  },
+  {
+   "id": "sharding-strategies",
+   "isMd": true,
+   "nRows": 5,
+   "dynAny": 5,
+   "dynV": 5,
+   "staticRows": [],
+   "rowsV": [
+    {
+     "k": "Shards needed",
+     "v": "8",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Even load / shard",
+     "v": "~500 GB",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Keys moved: hash % N resize",
+     "v": "~700M",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Keys moved: consistent hashing",
+     "v": "~89M",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Migration reduction",
+     "v": "8x",
+     "movedAny": true,
+     "movedV": true
+    }
+   ]
+  },
+  {
+   "id": "consistent-hashing",
+   "isMd": true,
+   "nRows": 5,
+   "dynAny": 4,
+   "dynV": 4,
+   "staticRows": [
+    "Does NOT fix"
+   ],
+   "rowsV": [
+    {
+     "k": "Keys moved (add/remove 1)",
+     "v": "~100,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Modulo would move",
+     "v": "~900,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Ring points",
+     "v": "1,500",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Per-node share",
+     "v": "~10",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Does NOT fix",
+     "v": "hot keys",
+     "movedAny": false,
+     "movedV": false
+    }
+   ]
+  },
+  {
+   "id": "storage-engines",
+   "isMd": true,
+   "nRows": 5,
+   "dynAny": 3,
+   "dynV": 3,
+   "staticRows": [
+    "LSM write path",
+    "The trade"
+   ],
+   "rowsV": [
+    {
+     "k": "Workload mix",
+     "v": "write-heavy",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Engine lean",
+     "v": "favor LSM",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "LSM read amp (worst)",
+     "v": "~6",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "LSM write path",
+     "v": "sequential",
+     "movedAny": false,
+     "movedV": false
+    },
+    {
+     "k": "The trade",
+     "v": "no free lunch",
+     "movedAny": false,
+     "movedV": false
+    }
+   ]
+  },
+  {
+   "id": "probabilistic-structures",
+   "isMd": true,
+   "nRows": 5,
+   "dynAny": 5,
+   "dynV": 5,
+   "staticRows": [],
+   "rowsV": [
+    {
+     "k": "Bloom bits/element",
+     "v": "~9.6",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Optimal hash functions",
+     "v": "7",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Bloom filter size",
+     "v": "~119.8 MB",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Exact set size",
+     "v": "~3.2 GB",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Space saving",
+     "v": "~27x",
+     "movedAny": true,
+     "movedV": true
+    }
+   ]
+  },
+  {
+   "id": "retries-timeouts",
+   "isMd": true,
+   "nRows": 5,
+   "dynAny": 2,
+   "dynV": 2,
+   "staticRows": [
+    "Deadline",
+    "Retry only if",
+    "Backoff + jitter"
+   ],
+   "rowsV": [
+    {
+     "k": "Retry amplification",
+     "v": "27x",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Timeout floor",
+     "v": "200",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Deadline",
+     "v": "one budget",
+     "movedAny": false,
+     "movedV": false
+    },
+    {
+     "k": "Retry only if",
+     "v": "transient + idempotent",
+     "movedAny": false,
+     "movedV": false
+    },
+    {
+     "k": "Backoff + jitter",
+     "v": "exponential + random",
+     "movedAny": false,
+     "movedV": false
+    }
+   ]
+  },
+  {
+   "id": "idempotency",
+   "isMd": true,
+   "nRows": 5,
+   "dynAny": 3,
+   "dynV": 3,
+   "staticRows": [
+    "The guarantee",
+    "Atomicity"
+   ],
+   "rowsV": [
+    {
+     "k": "Duplicate requests",
+     "v": "30",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Keys to store",
+     "v": "86,400,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "The guarantee",
+     "v": "exactly-once effect",
+     "movedAny": false,
+     "movedV": false
+    },
+    {
+     "k": "Atomicity",
+     "v": "key + effect",
+     "movedAny": false,
+     "movedV": false
+    },
+    {
+     "k": "Dedup window",
+     "v": "24",
+     "movedAny": true,
+     "movedV": true
+    }
+   ]
+  },
+  {
+   "id": "circuit-breaker",
+   "isMd": true,
+   "nRows": 5,
+   "dynAny": 3,
+   "dynV": 2,
+   "staticRows": [
+    "Failure counts",
+    "Pairs with"
+   ],
+   "rowsV": [
+    {
+     "k": "Fail-fast latency",
+     "v": "~0",
+     "movedAny": true,
+     "movedV": false
+    },
+    {
+     "k": "Trips at",
+     "v": "50",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Recovery probe after",
+     "v": "30",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Failure counts",
+     "v": "timeout / 5xx",
+     "movedAny": false,
+     "movedV": false
+    },
+    {
+     "k": "Pairs with",
+     "v": "a fallback",
+     "movedAny": false,
+     "movedV": false
+    }
+   ]
+  },
+  {
+   "id": "error-propagation",
+   "isMd": true,
+   "nRows": 5,
+   "dynAny": 4,
+   "dynV": 4,
+   "staticRows": [
+    "Actionable share"
+   ],
+   "rowsV": [
+    {
+     "k": "Transient / day (retry)",
+     "v": "~3,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Permanent / day (escalate)",
+     "v": "~2,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Legit retry load",
+     "v": "~9,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Storm if permanent misclassified",
+     "v": "~6,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Actionable share",
+     "v": "100%",
+     "movedAny": false,
+     "movedV": false
+    }
+   ]
+  },
+  {
+   "id": "backpressure",
+   "isMd": true,
+   "nRows": 5,
+   "dynAny": 4,
+   "dynV": 4,
+   "staticRows": [
+    "The principle"
+   ],
+   "rowsV": [
+    {
+     "k": "Overload (excess)",
+     "v": "+200",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Bounded buffer fills in",
+     "v": "~50",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Latency at full buffer",
+     "v": "~10,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Shed rate (if shedding)",
+     "v": "200/s",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "The principle",
+     "v": "bound + policy",
+     "movedAny": false,
+     "movedV": false
+    }
+   ]
+  },
+  {
+   "id": "observability",
+   "isMd": true,
+   "nRows": 5,
+   "dynAny": 3,
+   "dynV": 3,
+   "staticRows": [
+    "Correlation id",
+    "Cardinality guard"
+   ],
+   "rowsV": [
+    {
+     "k": "Log volume",
+     "v": "20,000,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Traces kept/sec",
+     "v": "100",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Sampling saves",
+     "v": "99%",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Correlation id",
+     "v": "every line + span",
+     "movedAny": false,
+     "movedV": false
+    },
+    {
+     "k": "Cardinality guard",
+     "v": "low-card labels",
+     "movedAny": false,
+     "movedV": false
+    }
+   ]
+  },
+  {
+   "id": "debugging",
+   "isMd": true,
+   "nRows": 5,
+   "dynAny": 4,
+   "dynV": 4,
+   "staticRows": [
+    "Time to notice, no dead-letter"
+   ],
+   "rowsV": [
+    {
+     "k": "Silent failures / day",
+     "v": "~2,400",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Amplified errors / day",
+     "v": "~28,800",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Silent loss / week",
+     "v": "~16,800",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Amplifier share",
+     "v": "12x",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Time to notice, no dead-letter",
+     "v": "never",
+     "movedAny": false,
+     "movedV": false
+    }
+   ]
+  },
+  {
+   "id": "slos",
+   "isMd": true,
+   "nRows": 5,
+   "dynAny": 4,
+   "dynV": 4,
+   "staticRows": [
+    "100% is not the target"
+   ],
+   "rowsV": [
+    {
+     "k": "Error budget",
+     "v": "0.1%",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Allowed downtime",
+     "v": "43.2",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Budget in requests",
+     "v": "~2,592,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Full outage burns it in",
+     "v": "~43.2",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "100% is not the target",
+     "v": "diminishing returns",
+     "movedAny": false,
+     "movedV": false
+    }
+   ]
+  },
+  {
+   "id": "iac",
+   "isMd": false,
+   "nRows": 6,
+   "dynAny": 6,
+   "dynV": 6,
+   "staticRows": [],
+   "rowsV": [
+    {
+     "k": "Blast radius (resources / state)",
+     "v": "100",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Total managed resources",
+     "v": "2,400",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Blast radius, one giant state",
+     "v": "800",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Plan time per split state",
+     "v": "20",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Plan time, one giant state",
+     "v": "160",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "State files across all envs",
+     "v": "24",
+     "movedAny": true,
+     "movedV": true
+    }
+   ]
+  },
+  {
+   "id": "desired-state",
+   "isMd": false,
+   "nRows": 6,
+   "dynAny": 6,
+   "dynV": 6,
+   "staticRows": [],
+   "rowsV": [
+    {
+     "k": "Reconcile events/sec (platform)",
+     "v": "1,666.67",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Total fleet (devices × tenants)",
+     "v": "500,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Deploys/sec (only drifted devices)",
+     "v": "33.33",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "No-op reconciles/sec (converged)",
+     "v": "1,633.33",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Reconciles/sec per tenant",
+     "v": "33.33",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Full-sweep re-diff cost",
+     "v": "500,000",
+     "movedAny": true,
+     "movedV": true
+    }
+   ]
+  },
+  {
+   "id": "aws-hardening",
+   "isMd": false,
+   "nRows": 6,
+   "dynAny": 5,
+   "dynV": 5,
+   "staticRows": [
+    "Objects a leaked presigned URL exposes"
+   ],
+   "rowsV": [
+    {
+     "k": "Objects exposed by ONE public bucket",
+     "v": "200,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Tenants exposed by ONE public bucket",
+     "v": "500",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Objects a leaked presigned URL exposes",
+     "v": "1",
+     "movedAny": false,
+     "movedV": false
+    },
+    {
+     "k": "Exposure window of a leaked URL",
+     "v": "5",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Public bucket vs a leaked URL",
+     "v": "200,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "KMS Decrypt calls at peak",
+     "v": "5,000",
+     "movedAny": true,
+     "movedV": true
+    }
+   ]
+  },
+  {
+   "id": "load-balancing",
+   "isMd": true,
+   "nRows": 5,
+   "dynAny": 3,
+   "dynV": 3,
+   "staticRows": [
+    "One stable address",
+    "The LB itself"
+   ],
+   "rowsV": [
+    {
+     "k": "Per-instance load",
+     "v": "1,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Load if one fails",
+     "v": "1,200",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Failure detected in",
+     "v": "~5-15",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "One stable address",
+     "v": "the VIP",
+     "movedAny": false,
+     "movedV": false
+    },
+    {
+     "k": "The LB itself",
+     "v": "must be redundant",
+     "movedAny": false,
+     "movedV": false
+    }
+   ]
+  },
+  {
+   "id": "autoscaling",
+   "isMd": true,
+   "nRows": 5,
+   "dynAny": 4,
+   "dynV": 4,
+   "staticRows": [
+    "The caveat"
+   ],
+   "rowsV": [
+    {
+     "k": "Instances at target",
+     "v": "15",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Bare minimum",
+     "v": "10",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Headroom buffer",
+     "v": "~2,500",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Target utilization",
+     "v": "70%",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "The caveat",
+     "v": "variable load only",
+     "movedAny": false,
+     "movedV": false
+    }
+   ]
+  },
+  {
+   "id": "leader-election",
+   "isMd": true,
+   "nRows": 5,
+   "dynAny": 4,
+   "dynV": 4,
+   "staticRows": [
+    "The guarantee"
+   ],
+   "rowsV": [
+    {
+     "k": "Quorum needed",
+     "v": "3",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Tolerates",
+     "v": "2",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Worst-case failover",
+     "v": "~15",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Renew headroom",
+     "v": "3x",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "The guarantee",
+     "v": "at-most-one",
+     "movedAny": false,
+     "movedV": false
+    }
+   ]
+  },
+  {
+   "id": "distributed-locks",
+   "isMd": true,
+   "nRows": 5,
+   "dynAny": 4,
+   "dynV": 4,
+   "staticRows": [
+    "The safe recipe"
+   ],
+   "rowsV": [
+    {
+     "k": "Serialized throughput",
+     "v": "~0.2",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Expiry headroom",
+     "v": "25",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Expires mid-operation?",
+     "v": "no (but pause?)",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Last-in-queue wait",
+     "v": "~45",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "The safe recipe",
+     "v": "lease + fence",
+     "movedAny": false,
+     "movedV": false
+    }
+   ]
+  },
+  {
+   "id": "multi-region",
+   "isMd": true,
+   "nRows": 5,
+   "dynAny": 4,
+   "dynV": 4,
+   "staticRows": [
+    "Verdict"
+   ],
+   "rowsV": [
+    {
+     "k": "RPO window (async)",
+     "v": "~3 s",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Writes lost on failover",
+     "v": "~15,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Sync write latency",
+     "v": "~95 ms",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Sync latency multiple",
+     "v": "19x",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Verdict",
+     "v": "tighten lag / sync critical data",
+     "movedAny": false,
+     "movedV": false
+    }
+   ]
+  },
+  {
+   "id": "lambda-organization",
+   "isMd": true,
+   "nRows": 5,
+   "dynAny": 3,
+   "dynV": 3,
+   "staticRows": [
+    "Reserve to protect",
+    "Provisioned cost"
+   ],
+   "rowsV": [
+    {
+     "k": "Functions to operate",
+     "v": "108",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Shared concurrency pool",
+     "v": "1,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Cold-start exposure",
+     "v": "5,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Reserve to protect",
+     "v": "per-function cap",
+     "movedAny": false,
+     "movedV": false
+    },
+    {
+     "k": "Provisioned cost",
+     "v": "~$15/mo",
+     "movedAny": false,
+     "movedV": false
+    }
+   ]
+  },
+  {
+   "id": "devices-dispatch",
+   "isMd": true,
+   "nRows": 5,
+   "dynAny": 5,
+   "dynV": 5,
+   "staticRows": [],
+   "rowsV": [
+    {
+     "k": "Steady poll QPS",
+     "v": "833",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Synchronized spike",
+     "v": "50,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Dispatch fanout",
+     "v": "50,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Payload served / interval",
+     "v": "2",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Time to drain (10/s writes)",
+     "v": "83",
+     "movedAny": true,
+     "movedV": true
+    }
+   ]
+  },
+  {
+   "id": "developer-platform",
+   "isMd": true,
+   "nRows": 5,
+   "dynAny": 2,
+   "dynV": 2,
+   "staticRows": [
+    "Adoption",
+    "Safe by default",
+    "Escape hatch"
+   ],
+   "rowsV": [
+    {
+     "k": "Time saved / day",
+     "v": "600",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Time saved / year",
+     "v": "2,300",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Adoption",
+     "v": "voluntary",
+     "movedAny": false,
+     "movedV": false
+    },
+    {
+     "k": "Safe by default",
+     "v": "prod read-only",
+     "movedAny": false,
+     "movedV": false
+    },
+    {
+     "k": "Escape hatch",
+     "v": "allowExpensive / elevated",
+     "movedAny": false,
+     "movedV": false
+    }
+   ]
+  },
+  {
+   "id": "state-machine",
+   "isMd": true,
+   "nRows": 5,
+   "dynAny": 4,
+   "dynV": 4,
+   "staticRows": [
+    "State storage"
+   ],
+   "rowsV": [
+    {
+     "k": "Conceivable moves",
+     "v": "56",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Allowed transitions",
+     "v": "14",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Illegal moves blocked",
+     "v": "42",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Concurrent actors",
+     "v": "3",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "State storage",
+     "v": "one field",
+     "movedAny": false,
+     "movedV": false
+    }
+   ]
+  },
+  {
+   "id": "rules-engine",
+   "isMd": true,
+   "nRows": 5,
+   "dynAny": 3,
+   "dynV": 3,
+   "staticRows": [
+    "Sequential passes",
+    "Approvers per change"
+   ],
+   "rowsV": [
+    {
+     "k": "Evaluation ceiling",
+     "v": "25,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Actual at 20% subscribe",
+     "v": "5,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Sequential passes",
+     "v": "5",
+     "movedAny": false,
+     "movedV": false
+    },
+    {
+     "k": "Approvers per change",
+     "v": "2",
+     "movedAny": false,
+     "movedV": false
+    },
+    {
+     "k": "Auto-expire after",
+     "v": "7",
+     "movedAny": true,
+     "movedV": true
+    }
+   ]
+  },
+  {
+   "id": "feature-flags",
+   "isMd": true,
+   "nRows": 5,
+   "dynAny": 3,
+   "dynV": 3,
+   "staticRows": [
+    "Eval latency",
+    "Kill-switch reach"
+   ],
+   "rowsV": [
+    {
+     "k": "Flag evaluations/sec",
+     "v": "20,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "In a 10% rollout",
+     "v": "10%",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Eval latency",
+     "v": "~0",
+     "movedAny": false,
+     "movedV": false
+    },
+    {
+     "k": "Config cached locally",
+     "v": "200",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Kill-switch reach",
+     "v": "seconds",
+     "movedAny": false,
+     "movedV": false
+    }
+   ]
+  },
+  {
+   "id": "api-design",
+   "isMd": true,
+   "nRows": 5,
+   "dynAny": 4,
+   "dynV": 4,
+   "staticRows": [
+    "Stability under inserts"
+   ],
+   "rowsV": [
+    {
+     "k": "Rows scanned (offset)",
+     "v": "~100,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Rows scanned (cursor)",
+     "v": "20",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Offset penalty at this depth",
+     "v": "5,000x",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Rows wasted / sec (fleet)",
+     "v": "~19,996,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Stability under inserts",
+     "v": "cursor only",
+     "movedAny": false,
+     "movedV": false
+    }
+   ]
+  },
+  {
+   "id": "rate-limiting",
+   "isMd": true,
+   "nRows": 5,
+   "dynAny": 4,
+   "dynV": 4,
+   "staticRows": [
+    "Added round-trip"
+   ],
+   "rowsV": [
+    {
+     "k": "Store ops/sec",
+     "v": "50,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Peak ops at 10x burst",
+     "v": "500,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Counter memory",
+     "v": "10",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Hottest-client load",
+     "v": "15,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Added round-trip",
+     "v": "~1",
+     "movedAny": false,
+     "movedV": false
+    }
+   ]
+  },
+  {
+   "id": "content-pipeline",
+   "isMd": false,
+   "nRows": 6,
+   "dynAny": 6,
+   "dynV": 6,
+   "staticRows": [],
+   "rowsV": [
+    {
+     "k": "Average throughput",
+     "v": "115.74",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Peak throughput",
+     "v": "1,157.41",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Lambda concurrency at peak",
+     "v": "2,314.81",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "DB connections at peak",
+     "v": "2,314.81",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Storage written / day",
+     "v": "20",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "S3 PUTs / day",
+     "v": "10,000,000",
+     "movedAny": true,
+     "movedV": true
+    }
+   ]
+  },
+  {
+   "id": "microfrontend",
+   "isMd": true,
+   "nRows": 5,
+   "dynAny": 5,
+   "dynV": 4,
+   "staticRows": [],
+   "rowsV": [
+    {
+     "k": "Framework shipped once",
+     "v": "140",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "If each ships its own",
+     "v": "700",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "App code payload",
+     "v": "1,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Independent deploys",
+     "v": "5",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Consistency mechanism",
+     "v": "design system",
+     "movedAny": true,
+     "movedV": false
+    }
+   ]
+  },
+  {
+   "id": "signing",
+   "isMd": false,
+   "nRows": 6,
+   "dynAny": 5,
+   "dynV": 3,
+   "staticRows": [
+    "Device-side verify cost"
+   ],
+   "rowsV": [
+    {
+     "k": "Average signing rate",
+     "v": "2.31",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Peak signing rate",
+     "v": "46.3",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "HSM utilization at peak",
+     "v": "3.86",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Bytes signed per package",
+     "v": "32",
+     "movedAny": true,
+     "movedV": false
+    },
+    {
+     "k": "Package bytes the signer reads",
+     "v": "0",
+     "movedAny": true,
+     "movedV": false
+    },
+    {
+     "k": "Device-side verify cost",
+     "v": "~1",
+     "movedAny": false,
+     "movedV": false
+    }
+   ]
+  },
+  {
+   "id": "authz",
+   "isMd": false,
+   "nRows": 6,
+   "dynAny": 6,
+   "dynV": 6,
+   "staticRows": [],
+   "rowsV": [
+    {
+     "k": "Rows per average tenant",
+     "v": "100,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Tenant-index speedup",
+     "v": "5,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Blast radius of ONE missing filter",
+     "v": "499.9",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Cross-tenant share of the dataset",
+     "v": "99.98",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "The whale’s rows",
+     "v": "75",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Access events/day to audit",
+     "v": "1,728",
+     "movedAny": true,
+     "movedV": true
+    }
+   ]
+  },
+  {
+   "id": "multi-tenant",
+   "isMd": true,
+   "nRows": 5,
+   "dynAny": 3,
+   "dynV": 3,
+   "staticRows": [
+    "Shared: predicate cost",
+    "Break-even to split"
+   ],
+   "rowsV": [
+    {
+     "k": "Shared: predicate cost",
+     "v": "~0",
+     "movedAny": false,
+     "movedV": false
+    },
+    {
+     "k": "Per-tenant connections",
+     "v": "100,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Migrate all tenants",
+     "v": "250",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Shared blast radius",
+     "v": "5,000",
+     "movedAny": true,
+     "movedV": true
+    },
+    {
+     "k": "Break-even to split",
+     "v": "~1",
+     "movedAny": false,
+     "movedV": false
+    }
+   ]
+  }
+ ],
+ "links": [
+  {
+   "id": "event-driven",
+   "isMd": true,
+   "pivots": 2,
+   "jumps": 0,
+   "samples": []
+  },
+  {
+   "id": "notifications",
+   "isMd": false,
+   "pivots": 7,
+   "jumps": 6,
+   "samples": [
+    "→ Tenant authorization (3)",
+    "→ Desired-state (7)"
+   ]
+  },
+  {
+   "id": "real-time-delivery",
+   "isMd": true,
+   "pivots": 2,
+   "jumps": 0,
+   "samples": []
+  },
+  {
+   "id": "cdc",
+   "isMd": true,
+   "pivots": 2,
+   "jumps": 0,
+   "samples": []
+  },
+  {
+   "id": "kafka-internals",
+   "isMd": true,
+   "pivots": 2,
+   "jumps": 0,
+   "samples": []
+  },
+  {
+   "id": "stream-batch-processing",
+   "isMd": true,
+   "pivots": 2,
+   "jumps": 0,
+   "samples": []
+  },
+  {
+   "id": "saga",
+   "isMd": true,
+   "pivots": 2,
+   "jumps": 0,
+   "samples": []
+  },
+  {
+   "id": "caching",
+   "isMd": true,
+   "pivots": 2,
+   "jumps": 0,
+   "samples": []
+  },
+  {
+   "id": "soft-delete",
+   "isMd": true,
+   "pivots": 2,
+   "jumps": 0,
+   "samples": []
+  },
+  {
+   "id": "eav",
+   "isMd": false,
+   "pivots": 7,
+   "jumps": 5,
+   "samples": [
+    "→ Tenant Authorization (3)",
+    "→ AWS Hardening (4)"
+   ]
+  },
+  {
+   "id": "shared-definition",
+   "isMd": true,
+   "pivots": 2,
+   "jumps": 0,
+   "samples": []
+  },
+  {
+   "id": "replication",
+   "isMd": true,
+   "pivots": 2,
+   "jumps": 0,
+   "samples": []
+  },
+  {
+   "id": "consistency-models",
+   "isMd": true,
+   "pivots": 2,
+   "jumps": 0,
+   "samples": []
+  },
+  {
+   "id": "sharding-strategies",
+   "isMd": true,
+   "pivots": 2,
+   "jumps": 0,
+   "samples": []
+  },
+  {
+   "id": "consistent-hashing",
+   "isMd": true,
+   "pivots": 2,
+   "jumps": 0,
+   "samples": []
+  },
+  {
+   "id": "storage-engines",
+   "isMd": true,
+   "pivots": 2,
+   "jumps": 0,
+   "samples": []
+  },
+  {
+   "id": "probabilistic-structures",
+   "isMd": true,
+   "pivots": 2,
+   "jumps": 0,
+   "samples": []
+  },
+  {
+   "id": "retries-timeouts",
+   "isMd": true,
+   "pivots": 2,
+   "jumps": 0,
+   "samples": []
+  },
+  {
+   "id": "idempotency",
+   "isMd": true,
+   "pivots": 2,
+   "jumps": 0,
+   "samples": []
+  },
+  {
+   "id": "circuit-breaker",
+   "isMd": true,
+   "pivots": 2,
+   "jumps": 0,
+   "samples": []
+  },
+  {
+   "id": "error-propagation",
+   "isMd": true,
+   "pivots": 2,
+   "jumps": 0,
+   "samples": []
+  },
+  {
+   "id": "backpressure",
+   "isMd": true,
+   "pivots": 2,
+   "jumps": 0,
+   "samples": []
+  },
+  {
+   "id": "observability",
+   "isMd": true,
+   "pivots": 2,
+   "jumps": 0,
+   "samples": []
+  },
+  {
+   "id": "debugging",
+   "isMd": true,
+   "pivots": 2,
+   "jumps": 0,
+   "samples": []
+  },
+  {
+   "id": "slos",
+   "isMd": true,
+   "pivots": 2,
+   "jumps": 0,
+   "samples": []
+  },
+  {
+   "id": "iac",
+   "isMd": false,
+   "pivots": 7,
+   "jumps": 5,
+   "samples": [
+    "→ Desired State (7)",
+    "→ AWS Hardening (4)"
+   ]
+  },
+  {
+   "id": "desired-state",
+   "isMd": false,
+   "pivots": 7,
+   "jumps": 5,
+   "samples": [
+    "→ Attribute Store (6)",
+    "→ Tenant Authorization (3)"
+   ]
+  },
+  {
+   "id": "aws-hardening",
+   "isMd": false,
+   "pivots": 7,
+   "jumps": 5,
+   "samples": [
+    "→ Package signing (2)",
+    "→ Tenant authorization (3)"
+   ]
+  },
+  {
+   "id": "load-balancing",
+   "isMd": true,
+   "pivots": 2,
+   "jumps": 0,
+   "samples": []
+  },
+  {
+   "id": "autoscaling",
+   "isMd": true,
+   "pivots": 2,
+   "jumps": 0,
+   "samples": []
+  },
+  {
+   "id": "leader-election",
+   "isMd": true,
+   "pivots": 2,
+   "jumps": 0,
+   "samples": []
+  },
+  {
+   "id": "distributed-locks",
+   "isMd": true,
+   "pivots": 2,
+   "jumps": 0,
+   "samples": []
+  },
+  {
+   "id": "multi-region",
+   "isMd": true,
+   "pivots": 2,
+   "jumps": 0,
+   "samples": []
+  },
+  {
+   "id": "lambda-organization",
+   "isMd": true,
+   "pivots": 2,
+   "jumps": 0,
+   "samples": []
+  },
+  {
+   "id": "devices-dispatch",
+   "isMd": true,
+   "pivots": 2,
+   "jumps": 0,
+   "samples": []
+  },
+  {
+   "id": "developer-platform",
+   "isMd": true,
+   "pivots": 2,
+   "jumps": 0,
+   "samples": []
+  },
+  {
+   "id": "state-machine",
+   "isMd": true,
+   "pivots": 2,
+   "jumps": 0,
+   "samples": []
+  },
+  {
+   "id": "rules-engine",
+   "isMd": true,
+   "pivots": 2,
+   "jumps": 0,
+   "samples": []
+  },
+  {
+   "id": "feature-flags",
+   "isMd": true,
+   "pivots": 2,
+   "jumps": 0,
+   "samples": []
+  },
+  {
+   "id": "api-design",
+   "isMd": true,
+   "pivots": 2,
+   "jumps": 0,
+   "samples": []
+  },
+  {
+   "id": "rate-limiting",
+   "isMd": true,
+   "pivots": 2,
+   "jumps": 0,
+   "samples": []
+  },
+  {
+   "id": "content-pipeline",
+   "isMd": false,
+   "pivots": 7,
+   "jumps": 7,
+   "samples": [
+    "→ Signing (2)",
+    "→ Authz (3)"
+   ]
+  },
+  {
+   "id": "microfrontend",
+   "isMd": true,
+   "pivots": 2,
+   "jumps": 0,
+   "samples": []
+  },
+  {
+   "id": "signing",
+   "isMd": false,
+   "pivots": 7,
+   "jumps": 5,
+   "samples": [
+    "→ Content pipeline (1)",
+    "→ Authz / keys (3)"
+   ]
+  },
+  {
+   "id": "authz",
+   "isMd": false,
+   "pivots": 7,
+   "jumps": 5,
+   "samples": [
+    "→ Package signing (2)",
+    "→ AWS hardening (4)"
+   ]
+  },
+  {
+   "id": "multi-tenant",
+   "isMd": true,
+   "pivots": 2,
+   "jumps": 0,
+   "samples": []
+  }
+ ]
+}

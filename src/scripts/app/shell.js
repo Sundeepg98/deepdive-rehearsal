@@ -219,6 +219,47 @@ document.addEventListener('keydown', function (event) {
 
 /* ===== v77: stage header sync ===== */
 (function(){
+  /* The rail's per-view slots: the desktop companion and the mobile <details> mirror.
+     Column index is the cmpNotes tuple index -- 0 = view title, 1 = note, 2 = the move. */
+  const CMP_SLOTS = [['cmpView', 'cmpNote', 'cmpMove'], ['mCmpView', 'mCmpNote', 'mCmpMove']];
+
+  /* The ACTIVE topic's coaching map. The registry OWNS the current topic, so its identity is the
+     only source that cannot go stale; TOPIC_CMP_NOTES is the same object republished by
+     applyIdentity, kept as the fallback for the boot window before any topic registers.
+     Returns null ONLY when there is no topic at all -- index.html's hard-coded first paint is the
+     truth then, and blanking it would leave the rail empty on load. */
+  function activeCmpNotes() {
+    const t = (typeof TopicRegistry !== 'undefined' && TopicRegistry.current) ? TopicRegistry.current() : null;
+    if (t) return (t.identity && t.identity.cmpNotes) || {};
+    if (typeof TOPIC_CMP_NOTES !== 'undefined' && TOPIC_CMP_NOTES && Object.keys(TOPIC_CMP_NOTES).length) return TOPIC_CMP_NOTES;
+    return null;
+  }
+
+  /* Write one (topic, view) note into the rail -- or, for `null`, write its ABSENCE.
+     There is no such thing as a safe stale note: leaving the DOM untouched when a topic authors
+     no note for the active pane is what put ANOTHER TOPIC'S coaching on screen for 266 of the 414
+     combos (the 38 compiled topics author only walk + drill). So absence is rendered explicitly:
+       - blank the text, so no foreign string survives in the DOM even unrendered -- a leak becomes
+         structurally impossible rather than merely invisible, and no later CSS or media-query
+         change can resurrect one;
+       - fold the two per-view blocks away, so the rail closes up instead of showing headed empty
+         boxes. The topic-level blocks (thesis, spine, related) are untouched and keep the rail
+         useful, and the stage header still names the view -- nothing is lost.
+     `hidden` is honoured because both blocks are LIGHT DOM and neither sets `display` in
+     styles.css; test/rail_integrity.cjs asserts the computed display at runtime rather than
+     trusting that. */
+  function paintCmp(note) {
+    for (let i = 0; i < CMP_SLOTS.length; i++) {
+      for (let j = 0; j < CMP_SLOTS[i].length; j++) {
+        const el = document.getElementById(CMP_SLOTS[i][j]);
+        if (!el) continue;
+        el.textContent = note ? note[j] : '';
+        const block = el.closest('.cmp-block, .mcomp-block');
+        if (block) block.hidden = !note;
+      }
+    }
+  }
+
   /* Mirror the active tab's label into the stage header and the desktop +
      mobile "companion" panels (view name, note, and pivot move from cmpNotes). */
   function upd() {
@@ -232,16 +273,9 @@ document.addEventListener('keydown', function (event) {
     stageHead.appendChild(kickEl); stageHead.appendChild(nameEl);
     stageHead.classList.remove('headin'); void stageHead.offsetWidth; stageHead.classList.add('headin');
     const tab = activeBtn.getAttribute('data-tab');
-    const deskView = document.getElementById('cmpView'), deskNote = document.getElementById('cmpNote'), deskMove = document.getElementById('cmpMove');
-    const mobileView = document.getElementById('mCmpView'), mobileNote = document.getElementById('mCmpNote'), mobileMove = document.getElementById('mCmpMove');
-    if (TOPIC_CMP_NOTES[tab]) {
-      if (deskView) deskView.textContent = TOPIC_CMP_NOTES[tab][0];
-      if (deskNote) deskNote.textContent = TOPIC_CMP_NOTES[tab][1];
-      if (deskMove) deskMove.textContent = TOPIC_CMP_NOTES[tab][2];
-      if (mobileView) mobileView.textContent = TOPIC_CMP_NOTES[tab][0];
-      if (mobileNote) mobileNote.textContent = TOPIC_CMP_NOTES[tab][1];
-      if (mobileMove) mobileMove.textContent = TOPIC_CMP_NOTES[tab][2];
-    }
+    const notes = activeCmpNotes();
+    if (!notes) return;                 /* no topic yet -- leave the first-paint markup alone */
+    paintCmp(notes[tab] || null);       /* the `else` that was missing: no note -> clear + fold */
   }
   /* switchTab() calls this on every navigation path (click, keyboard, router
      back/forward, search, tour), so the companion stays in sync everywhere -- a

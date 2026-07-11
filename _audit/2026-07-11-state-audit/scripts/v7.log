@@ -1,0 +1,119 @@
+=== PANE DOM SHAPE (num) === {"paneId":"num","kids":[{"tag":"DEEP-NUMBERS","id":"","hasShadow":true}],"hostTag":"DEEP-NUMBERS","nrowCount":5}
+
+=== api-design/num .nrow DETAIL @360 ===
+{
+ "stageCW": 360,
+ "stageSW": 457,
+ "stageOver": 97,
+ "contentRight": 345,
+ "gridCols": "167.219px 104.781px",
+ "rowsWithInkOverflow": 5,
+ "totalRows": 5,
+ "top": [
+  {
+   "key": "Rows wasted / sec (fleet)",
+   "val": "~19,996,000scanned-t",
+   "rowClientW": 284,
+   "rowScrollW": 419,
+   "rowInkOver": 135,
+   "rowRight": 322,
+   "valW": 132.8,
+   "valRight": 322,
+   "valSpillPastStage": -23,
+   "valWS": "nowrap"
+  },
+  {
+   "key": "Stability under inserts",
+   "val": "cursor onlyno skip/d",
+   "rowClientW": 284,
+   "rowScrollW": 341,
+   "rowInkOver": 57,
+   "rowRight": 322,
+   "valW": 132.8,
+   "valRight": 322,
+   "valSpillPastStage": -23,
+   "valWS": "nowrap"
+  },
+  {
+   "key": "Offset penalty at this depth",
+   "val": "5,000xmore rows",
+   "rowClientW": 284,
+   "rowScrollW": 326,
+   "rowInkOver": 42,
+   "rowRight": 322,
+   "valW": 86.1,
+   "valRight": 322,
+   "valSpillPastStage": -23,
+   "valWS": "nowrap"
+  },
+  {
+   "key": "Rows scanned (offset)",
+   "val": "~100,000per page",
+   "rowClientW": 284,
+   "rowScrollW": 319,
+   "rowInkOver": 35,
+   "rowRight": 322,
+   "valW": 104.8,
+   "valRight": 322,
+   "valSpillPastStage": -23,
+   "valWS": "nowrap"
+  },
+  {
+   "key": "Rows scanned (cursor)",
+   "val": "20per page",
+   "rowClientW": 284,
+   "rowScrollW": 319,
+   "rowInkOver": 35,
+   "rowRight": 322,
+   "valW": 48.7,
+   "valRight": 322,
+   "valSpillPastStage": -23,
+   "valWS": "nowrap"
+  }
+ ]
+}
+
+=== METRIC A: .stage scrollWidth > clientWidth (the ORIGINAL LENS metric) @360 ===
+   total states with stage overflow: 40 / 414
+   walk    9/46  max +206px  worst=stream-batch-processing
+   drill   0/46  max +0px  
+   wb      0/46  max +0px  
+   sys     0/46  max +0px  
+   trade   0/46  max +0px  
+   model   0/46  max +0px  
+   num    31/46  max +111px  worst=load-balancing
+   rf      0/46  max +0px  
+   open    0/46  max +0px  
+
+=== METRIC C: descendant ink overflow (scrollWidth>clientWidth) @360 ===
+   walk   46/46  max +919px  worst=signing [code] "// product_type -> company_product_type -> co"
+   drill  46/46  max +50px  worst=consistent-hashing [dn-t] "consistent hashing in Dynamo/Cassandra"
+   wb      3/46  max +23px  worst=iac [dgm] "config (declared infra)resources + relationsh"
+   sys    39/46  max +1886px  worst=stream-batch-processing [piv] "How do you handle out-of-order and late data?"
+   trade   0/46  max +0px  
+   model  18/46  max +97px  worst=stream-batch-processing [mbeat-l l-note] "Exactly-once is really effectively-once (at-l"
+   num    44/46  max +150px  worst=load-balancing [] "Per-instance load1,000req/s eachthe LB spread"
+   rf      0/46  max +0px  
+   open    3/46  max +21px  worst=desired-state [op-n] "Silent divergence"
+
+=== PIVOT CHIP (sys) BREADTH @360, 46 topics ===
+   topics with a CLIPPED pivot chip: 38 / 46
+   topics with >=1 EMPTY .pa body  : 38 / 46
+   piv overflow: hidden | chip flex: 0 0 auto
+   worst 6:
+     stream-batch-processing      clip=+1815.5px (86.5% hidden) paEmpty=2/2  "→ window by event-time, fire on watermarks, and set an allow"
+     consistency-models           clip=+1618.9px (85.1% hidden) paEmpty=2/2  "→ strong is a premium paid on every operation: coordination "
+     multi-region                 clip=+1617.9px (85.1% hidden) paEmpty=2/2  "→ fence the old primary before promoting, or use a quorum so"
+     real-time-delivery           clip=+1586.8px (84.8% hidden) paEmpty=2/2  "→ on-write for bounded audiences (instant reads), on-read fo"
+     api-design                   clip=+1520.7px (84.3% hidden) paEmpty=2/2  "→ additive changes with a tolerant reader; version only to b"
+     state-machine                clip=+1502.8px (84.1% hidden) paEmpty=2/2  "→ flags allow contradictory combinations nothing prevents; o"
+
+=== api-design/sys chips @360 (lens claimed chipW=1804.7, pivW=284, 1601.5px/89% hidden, paEmpty=true) ===
+  [0] chipW=1804.7 pivW=284 hidden=1520.7px (84.3%) chars=374 paLen=0 hasJump=false
+       chip="→ additive changes with a tolerant reader; version only to break, with a deprecation window
+Most cha"
+       pa=""
+  [1] chipW=1711.8 pivW=284 hidden=1427.8px (83.4%) chars=365 paLen=0 hasJump=true
+       chip="→ an idempotency key plus a dedupe recorded atomically with the effect
+The client sends a unique key"
+       pa=""

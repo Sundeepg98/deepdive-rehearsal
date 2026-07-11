@@ -1,0 +1,1173 @@
+{
+ "R": {
+  "drill": [
+   {
+    "topic": "event-driven",
+    "tiernoteHTML": "undefined",
+    "tiernoteText": "undefined",
+    "isUndefined": true,
+    "rect": {
+     "x": 348,
+     "y": 254,
+     "w": 414,
+     "h": 19
+    },
+    "undefNodes": [
+     {
+      "v": "undefined",
+      "parent": "tiernote"
+     }
+    ]
+   },
+   {
+    "topic": "stream-batch-processing",
+    "tiernoteHTML": "undefined",
+    "tiernoteText": "undefined",
+    "isUndefined": true,
+    "rect": {
+     "x": 348,
+     "y": 254,
+     "w": 414,
+     "h": 19
+    },
+    "undefNodes": [
+     {
+      "v": "undefined",
+      "parent": "tiernote"
+     }
+    ]
+   },
+   {
+    "topic": "shared-definition",
+    "tiernoteHTML": "undefined",
+    "tiernoteText": "undefined",
+    "isUndefined": true,
+    "rect": {
+     "x": 348,
+     "y": 254,
+     "w": 414,
+     "h": 19
+    },
+    "undefNodes": [
+     {
+      "v": "undefined",
+      "parent": "tiernote"
+     }
+    ]
+   },
+   {
+    "topic": "retries-timeouts",
+    "tiernoteHTML": "undefined",
+    "tiernoteText": "undefined",
+    "isUndefined": true,
+    "rect": {
+     "x": 348,
+     "y": 254,
+     "w": 414,
+     "h": 19
+    },
+    "undefNodes": [
+     {
+      "v": "undefined",
+      "parent": "tiernote"
+     }
+    ]
+   },
+   {
+    "topic": "slos",
+    "tiernoteHTML": "undefined",
+    "tiernoteText": "undefined",
+    "isUndefined": true,
+    "rect": {
+     "x": 348,
+     "y": 254,
+     "w": 414,
+     "h": 19
+    },
+    "undefNodes": [
+     {
+      "v": "undefined",
+      "parent": "tiernote"
+     }
+    ]
+   },
+   {
+    "topic": "distributed-locks",
+    "tiernoteHTML": "undefined",
+    "tiernoteText": "undefined",
+    "isUndefined": true,
+    "rect": {
+     "x": 348,
+     "y": 254,
+     "w": 414,
+     "h": 19
+    },
+    "undefNodes": [
+     {
+      "v": "undefined",
+      "parent": "tiernote"
+     }
+    ]
+   },
+   {
+    "topic": "content-pipeline",
+    "tiernoteHTML": "<b>All four levels, mixed</b> — the way a real loop actually comes at you.",
+    "tiernoteText": "All four levels, mixed — the way a real loop actually comes at you.",
+    "isUndefined": false,
+    "rect": {
+     "x": 348,
+     "y": 254,
+     "w": 414,
+     "h": 19
+    },
+    "undefNodes": []
+   },
+   {
+    "topic": "authz",
+    "tiernoteHTML": "<b>All four levels, mixed</b> — the way a real loop actually comes at you.",
+    "tiernoteText": "All four levels, mixed — the way a real loop actually comes at you.",
+    "isUndefined": false,
+    "rect": {
+     "x": 348,
+     "y": 254,
+     "w": 414,
+     "h": 19
+    },
+    "undefNodes": []
+   },
+   {
+    "topic": "caching",
+    "tiernoteHTML": "undefined",
+    "tiernoteText": "undefined",
+    "isUndefined": true,
+    "rect": {
+     "x": 348,
+     "y": 254,
+     "w": 414,
+     "h": 19
+    },
+    "undefNodes": [
+     {
+      "v": "undefined",
+      "parent": "tiernote"
+     }
+    ]
+   }
+  ],
+  "sys": [
+   {
+    "topic": "event-driven",
+    "pivots": [
+     {
+      "pivW": 704,
+      "sumScrollW": 1504,
+      "sumClientW": 702,
+      "overflow": 802,
+      "chipText": "→ at-least-once plus an idempotent consumer, never exactly-once delivery\nThe broker retries until acked, so it never drops but may duplicate. Exactly-once delivery isn't achievable across a network; at-least-once plus a dedup check gives effectively-once processing, which is the honest answer.",
+      "chipLen": 294,
+      "chipW": 1410,
+      "chipNowrap": "nowrap",
+      "paText": "",
+      "paLen": 0,
+      "paEmpty": true,
+      "pqW": 66,
+      "pivOverflowHidden": "hidden"
+     },
+     {
+      "pivW": 704,
+      "sumScrollW": 1176,
+      "sumClientW": 702,
+      "overflow": 474,
+      "chipText": "→ a max-receive count into a dead-letter queue\nA poison message cycled forever would jam the queue. After N attempts it moves to a DLQ where it can be inspected and replayed, so one bad payload can never block the pipeline.",
+      "chipLen": 223,
+      "chipW": 1097,
+      "chipNowrap": "nowrap",
+      "paText": "",
+      "paLen": 0,
+      "paEmpty": true,
+      "pqW": 51,
+      "pivOverflowHidden": "hidden"
+     }
+    ]
+   },
+   {
+    "topic": "stream-batch-processing",
+    "pivots": [
+     {
+      "pivW": 704,
+      "sumScrollW": 2058,
+      "sumClientW": 702,
+      "overflow": 1356,
+      "chipText": "→ by freshness requirement: hours-fine -> batch (simple, exact, high-throughput); seconds-matter -> stream (low-latency, windowed)\nBatch for bounded data where staleness is acceptable (reports, ETL, analytics) -- simpler and exact; stream when results must reflect events within seconds (fraud, alerting, live dashboards) -- and consider micro-batch as the middle ground before paying full streaming complexity.",
+      "chipLen": 411,
+      "chipW": 1984,
+      "chipNowrap": "nowrap",
+      "paText": "",
+      "paLen": 0,
+      "paEmpty": true,
+      "pqW": 46,
+      "pivOverflowHidden": "hidden"
+     },
+     {
+      "pivW": 704,
+      "sumScrollW": 2168,
+      "sumClientW": 702,
+      "overflow": 1466,
+      "chipText": "→ window by event-time, fire on watermarks, and set an allowed-lateness policy (update / drop / side-output)\nEvent-time windowing is correct but forces late-data handling: a watermark (event-time-so-far) decides when a window fires, allowed-lateness restates results for stragglers within a grace period, and very-late events are dropped or side-output for reconciliation -- explicitly choosing the completeness/latency/complexity trade.",
+      "chipLen": 437,
+      "chipW": 2100,
+      "chipNowrap": "nowrap",
+      "paText": "",
+      "paLen": 0,
+      "paEmpty": true,
+      "pqW": 40,
+      "pivOverflowHidden": "hidden"
+     }
+    ]
+   },
+   {
+    "topic": "shared-definition",
+    "pivots": [
+     {
+      "pivW": 704,
+      "sumScrollW": 1526,
+      "sumClientW": 702,
+      "overflow": 824,
+      "chipText": "→ one table keyed by entity_type plus entity_id, at the cost of a real FK\nOne table serves every entity kind and keeps resolution uniform. The price is that the polymorphic pair can't have a true foreign key, so you enforce existence in the app or switch to separate nullable FK columns with a CHECK.",
+      "chipLen": 300,
+      "chipW": 1423,
+      "chipNowrap": "nowrap",
+      "paText": "",
+      "paLen": 0,
+      "paEmpty": true,
+      "pqW": 75,
+      "pivOverflowHidden": "hidden"
+     },
+     {
+      "pivW": 704,
+      "sumScrollW": 1709,
+      "sumClientW": 702,
+      "overflow": 1007,
+      "chipText": "→ yes, and it is the right tool when the attribute set is variable\nEntity, attribute, value is EAV. It's correct when attributes are tenant-defined or open-ended, where columns would need a migration each; it's wrong for a fixed schema, where typed columns are simpler and safer. Owning that it's EAV, and validating on write, is the mature answer.",
+      "chipLen": 348,
+      "chipW": 1652,
+      "chipNowrap": "nowrap",
+      "paText": "",
+      "paLen": 0,
+      "paEmpty": true,
+      "pqW": 29,
+      "pivOverflowHidden": "hidden"
+     }
+    ]
+   },
+   {
+    "topic": "retries-timeouts",
+    "pivots": [
+     {
+      "pivW": 704,
+      "sumScrollW": 1310,
+      "sumClientW": 702,
+      "overflow": 608,
+      "chipText": "→ from the dependency's latency distribution -- above p99 with margin\nToo short manufactures failures on healthy-but-slow calls; too long lets a hung dependency exhaust your pool before it fires. Set it from real p99, and set connect/read/total separately.",
+      "chipLen": 256,
+      "chipW": 1235,
+      "chipNowrap": "nowrap",
+      "paText": "",
+      "paLen": 0,
+      "paEmpty": true,
+      "pqW": 47,
+      "pivOverflowHidden": "hidden"
+     },
+     {
+      "pivW": 704,
+      "sumScrollW": 1299,
+      "sumClientW": 702,
+      "overflow": 597,
+      "chipText": "→ yes -- that's a retry storm; cap with backoff, jitter, budgets, and a circuit-breaker\nRetries add load exactly when the dependency is struggling, multiplied across layers; under sustained overload you fail fast and shed load instead of retrying harder.",
+      "chipLen": 254,
+      "chipW": 1199,
+      "chipNowrap": "nowrap",
+      "paText": "",
+      "paLen": 0,
+      "paEmpty": true,
+      "pqW": 72,
+      "pivOverflowHidden": "hidden"
+     }
+    ]
+   },
+   {
+    "topic": "slos",
+    "pivots": [
+     {
+      "pivW": 704,
+      "sumScrollW": 1411,
+      "sumClientW": 702,
+      "overflow": 709,
+      "chipText": "→ a proportion of good events over valid events, measured near the user, that moves with user happiness\nNot CPU/memory (internal, weakly correlated with pain); the test is \"if this SLI is met, are users happy?\" -- and latency SLIs use percentiles under a threshold, never averages.",
+      "chipLen": 281,
+      "chipW": 1346,
+      "chipNowrap": "nowrap",
+      "paText": "",
+      "paLen": 0,
+      "paEmpty": true,
+      "pqW": 37,
+      "pivOverflowHidden": "hidden"
+     },
+     {
+      "pivW": 704,
+      "sumScrollW": 1246,
+      "sumClientW": 702,
+      "overflow": 544,
+      "chipText": "→ multi-window multi-burn-rate: a fast burn pages, a slow burn tickets\nTies alerting to user-impact-over-time (the budget), not an arbitrary threshold -- so a harmless spike doesn't page and a slow leak still gets caught, fixing both noise and gaps.",
+      "chipLen": 249,
+      "chipW": 1189,
+      "chipNowrap": "nowrap",
+      "paText": "",
+      "paLen": 0,
+      "paEmpty": true,
+      "pqW": 29,
+      "pivOverflowHidden": "hidden"
+     }
+    ]
+   },
+   {
+    "topic": "distributed-locks",
+    "pivots": [
+     {
+      "pivW": 704,
+      "sumScrollW": 1628,
+      "sumClientW": 702,
+      "overflow": 926,
+      "chipText": "→ not on its own -- a paused holder can act after expiry; you need a fencing token the resource enforces\nA lock is a performance optimization; correctness comes from the resource fencing on a monotonic token, or from a design that needs no exclusion -- and correctness-vs-efficiency decides which lock you even need.",
+      "chipLen": 316,
+      "chipW": 1528,
+      "chipNowrap": "nowrap",
+      "paText": "",
+      "paLen": 0,
+      "paEmpty": true,
+      "pqW": 73,
+      "pivOverflowHidden": "hidden"
+     },
+     {
+      "pivW": 704,
+      "sumScrollW": 1544,
+      "sumClientW": 702,
+      "overflow": 842,
+      "chipText": "→ idempotency (safe to repeat), optimistic concurrency (conditional write), or single-writer partitioning (one owner)\nMost locks prevent duplicate effects or lost updates; those alternatives address that directly, without a held lock -- a distributed lock is a last resort and, at scale, often a shared-hotspot smell.",
+      "chipLen": 317,
+      "chipW": 1483,
+      "chipNowrap": "nowrap",
+      "paText": "Jump to → idempotency (safe to repeat), optimistic concurren",
+      "paLen": 327,
+      "paEmpty": false,
+      "pqW": 32,
+      "pivOverflowHidden": "hidden"
+     }
+    ]
+   },
+   {
+    "topic": "content-pipeline",
+    "pivots": [
+     {
+      "pivW": 704,
+      "sumScrollW": 702,
+      "sumClientW": 702,
+      "overflow": 0,
+      "chipText": "→ Signing (2)",
+      "chipLen": 13,
+      "chipW": 83,
+      "chipNowrap": "nowrap",
+      "paText": "The pipeline's output feeds the signing stage: the processed",
+      "paLen": 272,
+      "paEmpty": false,
+      "pqW": 420,
+      "pivOverflowHidden": "hidden"
+     },
+     {
+      "pivW": 704,
+      "sumScrollW": 702,
+      "sumClientW": 702,
+      "overflow": 0,
+      "chipText": "→ Authz (3)",
+      "chipLen": 11,
+      "chipW": 75,
+      "chipNowrap": "nowrap",
+      "paText": "Every pipeline read/write is tenant-scoped: the JWT tenant c",
+      "paLen": 254,
+      "paEmpty": false,
+      "pqW": 353,
+      "pivOverflowHidden": "hidden"
+     },
+     {
+      "pivW": 704,
+      "sumScrollW": 702,
+      "sumClientW": 702,
+      "overflow": 0,
+      "chipText": "→ EAV (6)",
+      "chipLen": 9,
+      "chipW": 66,
+      "chipNowrap": "nowrap",
+      "paText": "Custom per-device values come from the EAV store (definition",
+      "paLen": 233,
+      "paEmpty": false,
+      "pqW": 407,
+      "pivOverflowHidden": "hidden"
+     },
+     {
+      "pivW": 704,
+      "sumScrollW": 702,
+      "sumClientW": 702,
+      "overflow": 0,
+      "chipText": "→ Desired-state (7)",
+      "chipLen": 19,
+      "chipW": 111,
+      "chipNowrap": "nowrap",
+      "paText": "That's the three-hash model: desired (what it should have) v",
+      "paLen": 243,
+      "paEmpty": false,
+      "pqW": 417,
+      "pivOverflowHidden": "hidden"
+     },
+     {
+      "pivW": 704,
+      "sumScrollW": 702,
+      "sumClientW": 702,
+      "overflow": 0,
+      "chipText": "→ Notifications (5)",
+      "chipLen": 19,
+      "chipW": 109,
+      "chipNowrap": "nowrap",
+      "paText": "Completion fans out through the dual-channel notification sy",
+      "paLen": 231,
+      "paEmpty": false,
+      "pqW": 350,
+      "pivOverflowHidden": "hidden"
+     },
+     {
+      "pivW": 704,
+      "sumScrollW": 702,
+      "sumClientW": 702,
+      "overflow": 0,
+      "chipText": "→ AWS hardening (4)",
+      "chipLen": 19,
+      "chipW": 121,
+      "chipNowrap": "nowrap",
+      "paText": "The pipeline's blast radius is an AWS-security problem: the ",
+      "paLen": 460,
+      "paEmpty": false,
+      "pqW": 401,
+      "pivOverflowHidden": "hidden"
+     },
+     {
+      "pivW": 704,
+      "sumScrollW": 702,
+      "sumClientW": 702,
+      "overflow": 0,
+      "chipText": "→ IaC (8)",
+      "chipLen": 9,
+      "chipW": 62,
+      "chipNowrap": "nowrap",
+      "paText": "Declaratively, as infrastructure as code — Terraform or CDK ",
+      "paLen": 407,
+      "paEmpty": false,
+      "pqW": 585,
+      "pivOverflowHidden": "hidden"
+     }
+    ]
+   },
+   {
+    "topic": "authz",
+    "pivots": [
+     {
+      "pivW": 704,
+      "sumScrollW": 702,
+      "sumClientW": 702,
+      "overflow": 0,
+      "chipText": "→ Identity / tokens",
+      "chipLen": 19,
+      "chipW": 110,
+      "chipNowrap": "nowrap",
+      "paText": "From the identity provider (Cognito, an OIDC issuer): the us",
+      "paLen": 369,
+      "paEmpty": false,
+      "pqW": 444,
+      "pivOverflowHidden": "hidden"
+     },
+     {
+      "pivW": 704,
+      "sumScrollW": 702,
+      "sumClientW": 702,
+      "overflow": 0,
+      "chipText": "→ Package signing (2)",
+      "chipLen": 21,
+      "chipW": 124,
+      "chipNowrap": "nowrap",
+      "paText": "The same per-tenant key discipline as the signing topic: eac",
+      "paLen": 388,
+      "paEmpty": false,
+      "pqW": 495,
+      "pivOverflowHidden": "hidden"
+     },
+     {
+      "pivW": 704,
+      "sumScrollW": 702,
+      "sumClientW": 702,
+      "overflow": 0,
+      "chipText": "→ AWS hardening (4)",
+      "chipLen": 19,
+      "chipW": 121,
+      "chipNowrap": "nowrap",
+      "paText": "The database backstop — RLS, or dynamodb:LeadingKeys tied to",
+      "paLen": 373,
+      "paEmpty": false,
+      "pqW": 537,
+      "pivOverflowHidden": "hidden"
+     },
+     {
+      "pivW": 704,
+      "sumScrollW": 702,
+      "sumClientW": 702,
+      "overflow": 0,
+      "chipText": "→ Attribute Store (6)",
+      "chipLen": 21,
+      "chipW": 119,
+      "chipNowrap": "nowrap",
+      "paText": "The predicate lands on the data layer: tenant_id leads every",
+      "paLen": 505,
+      "paEmpty": false,
+      "pqW": 491,
+      "pivOverflowHidden": "hidden"
+     },
+     {
+      "pivW": 704,
+      "sumScrollW": 702,
+      "sumClientW": 702,
+      "overflow": 0,
+      "chipText": "→ Notifications (5)",
+      "chipLen": 19,
+      "chipW": 109,
+      "chipNowrap": "nowrap",
+      "paText": "Per-tenant fairness: rate limits, quotas, fair queuing, and ",
+      "paLen": 484,
+      "paEmpty": false,
+      "pqW": 438,
+      "pivOverflowHidden": "hidden"
+     },
+     {
+      "pivW": 704,
+      "sumScrollW": 702,
+      "sumClientW": 702,
+      "overflow": 0,
+      "chipText": "→ Data lifecycle / compliance",
+      "chipLen": 29,
+      "chipW": 158,
+      "chipNowrap": "nowrap",
+      "paText": "Right-to-erasure crosses every copy: the primary tables (a s",
+      "paLen": 360,
+      "paEmpty": false,
+      "pqW": 427,
+      "pivOverflowHidden": "hidden"
+     },
+     {
+      "pivW": 704,
+      "sumScrollW": 702,
+      "sumClientW": 702,
+      "overflow": 0,
+      "chipText": "→ IaC (8)",
+      "chipLen": 9,
+      "chipW": 62,
+      "chipNowrap": "nowrap",
+      "paText": "Declaratively, as infrastructure as code: the IAM policies, ",
+      "paLen": 366,
+      "paEmpty": false,
+      "pqW": 450,
+      "pivOverflowHidden": "hidden"
+     }
+    ]
+   },
+   {
+    "topic": "caching",
+    "pivots": [
+     {
+      "pivW": 704,
+      "sumScrollW": 1634,
+      "sumClientW": 702,
+      "overflow": 932,
+      "chipText": "→ cache-aside by default, write-through where the cache must stay warm\nCache-aside caches only what's read and keeps writes simple, at the cost of a stale-populate race. Write-through keeps hot data consistent and warm, at the cost of every write paying the cache. Match it to the read/write ratio and the consistency need.",
+      "chipLen": 323,
+      "chipW": 1557,
+      "chipNowrap": "nowrap",
+      "paText": "",
+      "paLen": 0,
+      "paEmpty": true,
+      "pqW": 49,
+      "pivOverflowHidden": "hidden"
+     },
+     {
+      "pivW": 704,
+      "sumScrollW": 1465,
+      "sumClientW": 702,
+      "overflow": 763,
+      "chipText": "→ invalidate on write, TTL as the backstop\nA write clears the affected keys after it commits; a TTL bounds any staleness the invalidation misses. The cache is eventually consistent, so you cache only where that window is acceptable and reach for write-through or no-cache where it isn't.",
+      "chipLen": 287,
+      "chipW": 1368,
+      "chipNowrap": "nowrap",
+      "paText": "",
+      "paLen": 0,
+      "paEmpty": true,
+      "pqW": 69,
+      "pivOverflowHidden": "hidden"
+     }
+    ]
+   }
+  ],
+  "num": [
+   {
+    "topic": "event-driven",
+    "cardRight": 1098,
+    "cardBorderRight": 1098,
+    "rows": [
+     {
+      "text": "250workers",
+      "clientW": 58,
+      "scrollW": 86,
+      "clipped": true,
+      "overflowPx": 28,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     },
+     {
+      "text": "10sec",
+      "clientW": 49,
+      "scrollW": 49,
+      "clipped": false,
+      "overflowPx": 0,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     },
+     {
+      "text": "18,000msgs",
+      "clientW": 86,
+      "scrollW": 93,
+      "clipped": true,
+      "overflowPx": 7,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     },
+     {
+      "text": "5,000ops/s",
+      "clientW": 77,
+      "scrollW": 90,
+      "clipped": true,
+      "overflowPx": 13,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     },
+     {
+      "text": "bounded",
+      "clientW": 95,
+      "scrollW": 95,
+      "clipped": false,
+      "overflowPx": 0,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     }
+    ]
+   },
+   {
+    "topic": "stream-batch-processing",
+    "cardRight": 1098,
+    "cardBorderRight": 1098,
+    "rows": [
+     {
+      "text": "~6 hstale",
+      "clientW": 67,
+      "scrollW": 81,
+      "clipped": true,
+      "overflowPx": 14,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     },
+     {
+      "text": "~1.2 minstale",
+      "clientW": 105,
+      "scrollW": 119,
+      "clipped": true,
+      "overflowPx": 14,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     },
+     {
+      "text": "~309x",
+      "clientW": 77,
+      "scrollW": 77,
+      "clipped": false,
+      "overflowPx": 0,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     },
+     {
+      "text": "~1,400,000per window",
+      "clientW": 123,
+      "scrollW": 173,
+      "clipped": true,
+      "overflowPx": 50,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     },
+     {
+      "text": "stream only if freshness is valued",
+      "clientW": 348,
+      "scrollW": 348,
+      "clipped": false,
+      "overflowPx": 0,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     }
+    ]
+   },
+   {
+    "topic": "shared-definition",
+    "cardRight": 1098,
+    "cardBorderRight": 1098,
+    "rows": [
+     {
+      "text": "10,000,000rows",
+      "clientW": 123,
+      "scrollW": 130,
+      "clipped": true,
+      "overflowPx": 7,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     },
+     {
+      "text": "500,000rows",
+      "clientW": 95,
+      "scrollW": 102,
+      "clipped": true,
+      "overflowPx": 7,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     },
+     {
+      "text": "9,500,000rows",
+      "clientW": 114,
+      "scrollW": 121,
+      "clipped": true,
+      "overflowPx": 7,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     },
+     {
+      "text": "1query",
+      "clientW": 39,
+      "scrollW": 53,
+      "clipped": true,
+      "overflowPx": 14,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     },
+     {
+      "text": "<=4levels",
+      "clientW": 58,
+      "scrollW": 79,
+      "clipped": true,
+      "overflowPx": 21,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     }
+    ]
+   },
+   {
+    "topic": "retries-timeouts",
+    "cardRight": 1098,
+    "cardBorderRight": 1098,
+    "rows": [
+     {
+      "text": "27xworst-case load",
+      "clientW": 58,
+      "scrollW": 143,
+      "clipped": true,
+      "overflowPx": 85,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     },
+     {
+      "text": "200ms (set above this)",
+      "clientW": 58,
+      "scrollW": 172,
+      "clipped": true,
+      "overflowPx": 114,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     },
+     {
+      "text": "one budgetacross the chain",
+      "clientW": 123,
+      "scrollW": 216,
+      "clipped": true,
+      "overflowPx": 93,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     },
+     {
+      "text": "transient + idempotent",
+      "clientW": 236,
+      "scrollW": 236,
+      "clipped": false,
+      "overflowPx": 0,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     },
+     {
+      "text": "exponential + random",
+      "clientW": 217,
+      "scrollW": 217,
+      "clipped": false,
+      "overflowPx": 0,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     }
+    ]
+   },
+   {
+    "topic": "slos",
+    "cardRight": 1098,
+    "cardBorderRight": 1098,
+    "rows": [
+     {
+      "text": "0.1%of requests may fail",
+      "clientW": 67,
+      "scrollW": 188,
+      "clipped": true,
+      "overflowPx": 121,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     },
+     {
+      "text": "43min / 30d",
+      "clientW": 49,
+      "scrollW": 91,
+      "clipped": true,
+      "overflowPx": 42,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     },
+     {
+      "text": "~2,592,000failed reqs",
+      "clientW": 123,
+      "scrollW": 180,
+      "clipped": true,
+      "overflowPx": 57,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     },
+     {
+      "text": "~43min (100% burn)",
+      "clientW": 58,
+      "scrollW": 143,
+      "clipped": true,
+      "overflowPx": 85,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     },
+     {
+      "text": "diminishing returns",
+      "clientW": 208,
+      "scrollW": 208,
+      "clipped": false,
+      "overflowPx": 0,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     }
+    ]
+   },
+   {
+    "topic": "distributed-locks",
+    "cardRight": 1098,
+    "cardBorderRight": 1098,
+    "rows": [
+     {
+      "text": "~0ops/s (one at a time)",
+      "clientW": 49,
+      "scrollW": 177,
+      "clipped": true,
+      "overflowPx": 128,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     },
+     {
+      "text": "25s before TTL",
+      "clientW": 49,
+      "scrollW": 112,
+      "clipped": true,
+      "overflowPx": 63,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     },
+     {
+      "text": "no (but pause?)",
+      "clientW": 170,
+      "scrollW": 170,
+      "clipped": false,
+      "overflowPx": 0,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     },
+     {
+      "text": "~45s",
+      "clientW": 58,
+      "scrollW": 58,
+      "clipped": false,
+      "overflowPx": 0,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     },
+     {
+      "text": "lease + fenceor avoid",
+      "clientW": 152,
+      "scrollW": 187,
+      "clipped": true,
+      "overflowPx": 35,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     }
+    ]
+   },
+   {
+    "topic": "content-pipeline",
+    "cardRight": 1098,
+    "cardBorderRight": 1098,
+    "rows": [
+     {
+      "text": "116/s",
+      "clientW": 58,
+      "scrollW": 58,
+      "clipped": false,
+      "overflowPx": 0,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     },
+     {
+      "text": "1,157/s",
+      "clientW": 77,
+      "scrollW": 77,
+      "clipped": false,
+      "overflowPx": 0,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     },
+     {
+      "text": "2,315",
+      "clientW": 77,
+      "scrollW": 77,
+      "clipped": false,
+      "overflowPx": 0,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     },
+     {
+      "text": "2,315",
+      "clientW": 77,
+      "scrollW": 77,
+      "clipped": false,
+      "overflowPx": 0,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     },
+     {
+      "text": "20TB",
+      "clientW": 49,
+      "scrollW": 49,
+      "clipped": false,
+      "overflowPx": 0,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     },
+     {
+      "text": "10,000,000",
+      "clientW": 123,
+      "scrollW": 123,
+      "clipped": false,
+      "overflowPx": 0,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     }
+    ]
+   },
+   {
+    "topic": "authz",
+    "cardRight": 1098,
+    "cardBorderRight": 1098,
+    "rows": [
+     {
+      "text": "100,000rows",
+      "clientW": 95,
+      "scrollW": 102,
+      "clipped": true,
+      "overflowPx": 7,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     },
+     {
+      "text": "5,000×",
+      "clientW": 77,
+      "scrollW": 77,
+      "clipped": false,
+      "overflowPx": 0,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     },
+     {
+      "text": "500M rows",
+      "clientW": 58,
+      "scrollW": 79,
+      "clipped": true,
+      "overflowPx": 21,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     },
+     {
+      "text": "100%",
+      "clientW": 58,
+      "scrollW": 58,
+      "clipped": false,
+      "overflowPx": 0,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     },
+     {
+      "text": "75M rows",
+      "clientW": 49,
+      "scrollW": 70,
+      "clipped": true,
+      "overflowPx": 21,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     },
+     {
+      "text": "1,728M/day",
+      "clientW": 77,
+      "scrollW": 90,
+      "clipped": true,
+      "overflowPx": 13,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     }
+    ]
+   },
+   {
+    "topic": "caching",
+    "cardRight": 1098,
+    "cardBorderRight": 1098,
+    "rows": [
+     {
+      "text": "50,000reads",
+      "clientW": 86,
+      "scrollW": 100,
+      "clipped": true,
+      "overflowPx": 14,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     },
+     {
+      "text": "450,000reads",
+      "clientW": 95,
+      "scrollW": 109,
+      "clipped": true,
+      "overflowPx": 14,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     },
+     {
+      "text": "6ms",
+      "clientW": 39,
+      "scrollW": 39,
+      "clipped": false,
+      "overflowPx": 0,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     },
+     {
+      "text": "88%",
+      "clientW": 49,
+      "scrollW": 49,
+      "clipped": false,
+      "overflowPx": 0,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     },
+     {
+      "text": "many to 1",
+      "clientW": 114,
+      "scrollW": 114,
+      "clipped": false,
+      "overflowPx": 0,
+      "right": 1075,
+      "overflowStyle": "visible",
+      "ws": "nowrap"
+     }
+    ]
+   }
+  ],
+  "mock": {
+   "undefNodes": [
+    {
+     "v": "undefined",
+     "parent": "mb-task",
+     "tag": "DIV"
+    }
+   ],
+   "mbTaskHTML": "undefined",
+   "mbTaskText": "undefined",
+   "overlayOpen": true
+  }
+ },
+ "errs": []
+}

@@ -1,0 +1,19 @@
+companion notes authored, by topic:
+  notifications (hand-coded): [walk, drill, wb, sys, trade, model, num, rf, open]  = 9/9
+  caching       (compiled)  : [walk, drill]  = 2/9
+  panes where caching has NO note: wb, sys, trade, model, num, rf, open
+
+--- the repro: read notifications, then switch to caching ---
+
+1. topic=notifications  pane=wb
+   rail: "Rebuild the whole delivery path from memory — the cues, nothing in front of you."
+
+2. topic=caching        pane=wb   (caching authors no note for this pane)
+   rail: "Rebuild the whole delivery path from memory — the cues, nothing in front of you."
+
+   that note actually belongs to: notifications [wb]
+
+======================================================================
+RAIL LEAK: CONFIRMED, STILL LIVE.
+  While the user is on "caching", the coaching rail is showing NOTIFICATIONS' note.
+  Root cause: shell.js:237  if (TOPIC_CMP_NOTES[tab]) { ... }  -- no else branch.

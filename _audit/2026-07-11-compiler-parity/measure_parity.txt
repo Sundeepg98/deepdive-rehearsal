@@ -1,0 +1,33 @@
+DEPTH PARITY -- measured in the built app, through TopicRegistry (the 8 and the 38 register identically)
+topics: 8 hand-coded, 38 compiled
+
+  slice                  THE 8   THE 38   PARITY   total across the 38
+  ----------------------------------------------------------------------
+  sys.stages               6.0      5.0      83%   189
+  sys.stageCur             1.0      1.0     100%   38
+  sys.pivots               7.0      2.0      29%   76
+  sys.pivotAnswers         7.0      2.0      29%   76
+  drill.cards             21.6     21.0      97%   798
+  drill.tierNotes          4.0      3.0      75%   114
+  drill.follows           41.9      0.0       0%   0
+  drill.senior            21.6      0.0       0%   0
+  drill.speak             21.6      0.0       0%   0
+  model.answers            9.0      2.0      22%   76
+  model.beats             62.0      6.0      10%   228
+  bank.mockBeats           6.0      2.0      33%   76
+  bank.curveballs          8.0      1.0      13%   38
+  bank.beatModels         13.0      3.0      23%   114
+  bank.beatInts           13.0      2.0      15%   76
+  bank.curveThemes         8.0      1.0      13%   38
+  walk.steps               9.0      4.0      45%   153
+  walk.codeBlocks          4.1      1.4      34%   54
+  wb.steps                 9.0      2.0      22%   76
+  trade.decisions          7.0      3.0      43%   114
+  rf.flags                 9.0      3.0      33%   114
+  num.inputs               4.0      3.0      75%   114
+  open.cards               2.0      1.0      50%   38
+  identity.cmpNotes        9.0      2.0      22%   76
+  ----------------------------------------------------------------------
+  TOTAL (per topic)      303.9     70.4      23%
+
+  DEPTH PARITY vs THE 8: 23.2%

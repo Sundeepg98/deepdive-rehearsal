@@ -1,0 +1,83 @@
+topics: 46
+
+=== CONTENT SPILL PAST .stage CONTENT EDGE @360 (46 topics x 9 panes = 414 states) ===
+total clipped states: 71
+  walk   29/46 topics  maxSpill +850.4px  worst=signing [s] "'no signing key for this product'"
+  drill   0/46 topics  maxSpill +0px  
+  wb      1/46 topics  maxSpill +5.7px  worst=iac [dgm] "config (declared infra)resources + relat"
+  sys    38/46 topics  maxSpill +1854.2px  worst=stream-batch-processing [chip] "→ window by event-time, fire on watermar"
+  trade   0/46 topics  maxSpill +0px  
+  model   0/46 topics  maxSpill +0px  
+  num     3/46 topics  maxSpill +95px  worst=stream-batch-processing [nrow-v] "stream only if freshness is valued"
+  rf      0/46 topics  maxSpill +0px  
+  open    0/46 topics  maxSpill +0px  
+
+=== api-design/num @360 DETAIL ===
+{
+ "paneId": "num",
+ "stageCW": 360,
+ "stageSW": 457,
+ "stageOverflow": 97,
+ "stageOvfX": "hidden",
+ "contentRight": 345,
+ "spillCount": 0,
+ "maxSpill": 0,
+ "top": []
+}
+
+=== stream-batch-processing/walk @360 DETAIL ===
+{
+ "paneId": "walk",
+ "stageCW": 360,
+ "stageSW": 568,
+ "stageOverflow": 208,
+ "stageOvfX": "hidden",
+ "contentRight": 345,
+ "spillCount": 3,
+ "maxSpill": 222.8,
+ "top": [
+  {
+   "cls": "fb batch",
+   "tag": "SPAN",
+   "right": 567.8,
+   "spill": 222.8,
+   "w": 529.8,
+   "ws": "nowrap",
+   "ovf": "visible",
+   "txt": "bounded finite dataset → batch: all at once, high-throughput"
+  },
+  {
+   "cls": "fb stream",
+   "tag": "SPAN",
+   "right": 510.9,
+   "spill": 165.9,
+   "w": 472.9,
+   "ws": "nowrap",
+   "ovf": "visible",
+   "txt": "unbounded continuous flow → stream: as it arrives, low-laten"
+  },
+  {
+   "cls": "arc-t",
+   "tag": "SPAN",
+   "right": 353.9,
+   "spill": 8.9,
+   "w": 65.3,
+   "ws": "normal",
+   "ovf": "visible",
+   "txt": "Watermarks and late data"
+  }
+ ]
+}
+
+=== api-design/sys PIVOT CHIPS @360 ===
+
+=== PIVOT CHIP BREADTH (46 topics, sys pane) ===
+  topics with a clipped pivot chip: 0 / 46
+  topics with >=1 EMPTY .pa       : 0 / 46
+  worst 5: [{"t":"event-driven","clip":0,"pct":0},{"t":"notifications","clip":0,"pct":0},{"t":"real-time-delivery","clip":0,"pct":0},{"t":"cdc","clip":0,"pct":0},{"t":"kafka-internals","clip":0,"pct":0}]
+
+=== DESKTOP 1440 control ===
+  api-design/num                 stageCW=854 stageSW=914 stageOverflow=60 spillCount=0 maxSpill=+0px
+  stream-batch-processing/walk   stageCW=854 stageSW=854 stageOverflow=0 spillCount=0 maxSpill=+0px
+  api-design/sys                 stageCW=854 stageSW=854 stageOverflow=0 spillCount=2 maxSpill=+1158.3px
+      worst: [chip] +1158.3px "→ additive changes with a tolerant reader; version"

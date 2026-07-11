@@ -1,0 +1,2061 @@
+{
+  "census": {
+    "n": 46,
+    "orderN": 46,
+    "rows": [
+      {
+        "id": "event-driven",
+        "title": "Event-Driven Backbone",
+        "group": "messaging-events",
+        "index": 11,
+        "total": 38,
+        "src": "markdown",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 7,
+          "SDE3": 7,
+          "Staff": 7
+        },
+        "walkSteps": 4,
+        "wbSteps": 2,
+        "sysStages": 0,
+        "sysPivots": 2,
+        "pivotsWithAnswer": 0,
+        "maxChipLen": 294,
+        "maxALen": 0,
+        "chipHasNewline": true,
+        "tradeDecisions": 3,
+        "modelAnswers": 2,
+        "numInputs": 3,
+        "numShape": 4,
+        "rfFlags": 3,
+        "openCards": 1,
+        "openKinds": "open",
+        "curveballs": 1,
+        "mockBeats": 2,
+        "cmpKeys": [
+          "walk",
+          "drill"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "notifications",
+        "title": "Notifications",
+        "group": "messaging-events",
+        "index": 5,
+        "total": 8,
+        "src": "legacy",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 5,
+          "SDE3": 11,
+          "Staff": 5
+        },
+        "walkSteps": 9,
+        "wbSteps": 9,
+        "sysStages": 6,
+        "sysPivots": 7,
+        "pivotsWithAnswer": 7,
+        "maxChipLen": 39,
+        "maxALen": 594,
+        "chipHasNewline": false,
+        "tradeDecisions": 7,
+        "modelAnswers": 9,
+        "numInputs": 4,
+        "numShape": 4,
+        "rfFlags": 9,
+        "openCards": 2,
+        "openKinds": "open+close",
+        "curveballs": 8,
+        "mockBeats": 6,
+        "cmpKeys": [
+          "walk",
+          "drill",
+          "wb",
+          "sys",
+          "trade",
+          "model",
+          "num",
+          "rf",
+          "open"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "real-time-delivery",
+        "title": "Real-Time Delivery",
+        "group": "messaging-events",
+        "index": 43,
+        "total": 38,
+        "src": "markdown",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 7,
+          "SDE3": 7,
+          "Staff": 7
+        },
+        "walkSteps": 4,
+        "wbSteps": 2,
+        "sysStages": 0,
+        "sysPivots": 2,
+        "pivotsWithAnswer": 0,
+        "maxChipLen": 393,
+        "maxALen": 0,
+        "chipHasNewline": true,
+        "tradeDecisions": 3,
+        "modelAnswers": 2,
+        "numInputs": 3,
+        "numShape": 4,
+        "rfFlags": 3,
+        "openCards": 1,
+        "openKinds": "open",
+        "curveballs": 1,
+        "mockBeats": 2,
+        "cmpKeys": [
+          "walk",
+          "drill"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "cdc",
+        "title": "Change Data Capture",
+        "group": "messaging-events",
+        "index": 16,
+        "total": 38,
+        "src": "markdown",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 7,
+          "SDE3": 7,
+          "Staff": 7
+        },
+        "walkSteps": 4,
+        "wbSteps": 2,
+        "sysStages": 0,
+        "sysPivots": 2,
+        "pivotsWithAnswer": 0,
+        "maxChipLen": 301,
+        "maxALen": 0,
+        "chipHasNewline": true,
+        "tradeDecisions": 3,
+        "modelAnswers": 2,
+        "numInputs": 3,
+        "numShape": 4,
+        "rfFlags": 3,
+        "openCards": 1,
+        "openKinds": "open",
+        "curveballs": 1,
+        "mockBeats": 2,
+        "cmpKeys": [
+          "walk",
+          "drill"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "kafka-internals",
+        "title": "Kafka Internals",
+        "group": "messaging-events",
+        "index": 35,
+        "total": 38,
+        "src": "markdown",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 7,
+          "SDE3": 7,
+          "Staff": 7
+        },
+        "walkSteps": 4,
+        "wbSteps": 2,
+        "sysStages": 0,
+        "sysPivots": 2,
+        "pivotsWithAnswer": 0,
+        "maxChipLen": 352,
+        "maxALen": 0,
+        "chipHasNewline": true,
+        "tradeDecisions": 3,
+        "modelAnswers": 2,
+        "numInputs": 3,
+        "numShape": 4,
+        "rfFlags": 3,
+        "openCards": 1,
+        "openKinds": "open",
+        "curveballs": 1,
+        "mockBeats": 2,
+        "cmpKeys": [
+          "walk",
+          "drill"
+        ],
+        "hasVisual": true,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "stream-batch-processing",
+        "title": "Stream and Batch Processing",
+        "group": "messaging-events",
+        "index": 45,
+        "total": 38,
+        "src": "markdown",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 7,
+          "SDE3": 7,
+          "Staff": 7
+        },
+        "walkSteps": 4,
+        "wbSteps": 2,
+        "sysStages": 0,
+        "sysPivots": 2,
+        "pivotsWithAnswer": 0,
+        "maxChipLen": 437,
+        "maxALen": 0,
+        "chipHasNewline": true,
+        "tradeDecisions": 3,
+        "modelAnswers": 2,
+        "numInputs": 3,
+        "numShape": 4,
+        "rfFlags": 3,
+        "openCards": 1,
+        "openKinds": "open",
+        "curveballs": 1,
+        "mockBeats": 2,
+        "cmpKeys": [
+          "walk",
+          "drill"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "saga",
+        "title": "The Saga Pattern",
+        "group": "messaging-events",
+        "index": 31,
+        "total": 38,
+        "src": "markdown",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 7,
+          "SDE3": 7,
+          "Staff": 7
+        },
+        "walkSteps": 4,
+        "wbSteps": 2,
+        "sysStages": 0,
+        "sysPivots": 2,
+        "pivotsWithAnswer": 0,
+        "maxChipLen": 312,
+        "maxALen": 0,
+        "chipHasNewline": true,
+        "tradeDecisions": 3,
+        "modelAnswers": 2,
+        "numInputs": 3,
+        "numShape": 4,
+        "rfFlags": 3,
+        "openCards": 1,
+        "openKinds": "open",
+        "curveballs": 1,
+        "mockBeats": 2,
+        "cmpKeys": [
+          "walk",
+          "drill"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "caching",
+        "title": "Caching Strategies",
+        "group": "data-storage",
+        "index": 15,
+        "total": 38,
+        "src": "markdown",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 7,
+          "SDE3": 7,
+          "Staff": 7
+        },
+        "walkSteps": 4,
+        "wbSteps": 2,
+        "sysStages": 0,
+        "sysPivots": 2,
+        "pivotsWithAnswer": 0,
+        "maxChipLen": 323,
+        "maxALen": 0,
+        "chipHasNewline": true,
+        "tradeDecisions": 3,
+        "modelAnswers": 2,
+        "numInputs": 3,
+        "numShape": 4,
+        "rfFlags": 3,
+        "openCards": 1,
+        "openKinds": "open",
+        "curveballs": 1,
+        "mockBeats": 2,
+        "cmpKeys": [
+          "walk",
+          "drill"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "soft-delete",
+        "title": "Soft Deletes",
+        "group": "data-storage",
+        "index": 18,
+        "total": 38,
+        "src": "markdown",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 7,
+          "SDE3": 7,
+          "Staff": 7
+        },
+        "walkSteps": 4,
+        "wbSteps": 2,
+        "sysStages": 0,
+        "sysPivots": 2,
+        "pivotsWithAnswer": 0,
+        "maxChipLen": 321,
+        "maxALen": 0,
+        "chipHasNewline": true,
+        "tradeDecisions": 3,
+        "modelAnswers": 2,
+        "numInputs": 3,
+        "numShape": 4,
+        "rfFlags": 3,
+        "openCards": 1,
+        "openKinds": "open",
+        "curveballs": 1,
+        "mockBeats": 2,
+        "cmpKeys": [
+          "walk",
+          "drill"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "eav",
+        "title": "Attribute Store",
+        "group": "data-storage",
+        "index": 6,
+        "total": 8,
+        "src": "legacy",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 5,
+          "SDE3": 11,
+          "Staff": 5
+        },
+        "walkSteps": 9,
+        "wbSteps": 9,
+        "sysStages": 6,
+        "sysPivots": 7,
+        "pivotsWithAnswer": 7,
+        "maxChipLen": 26,
+        "maxALen": 563,
+        "chipHasNewline": false,
+        "tradeDecisions": 7,
+        "modelAnswers": 9,
+        "numInputs": 4,
+        "numShape": 4,
+        "rfFlags": 9,
+        "openCards": 2,
+        "openKinds": "open+close",
+        "curveballs": 8,
+        "mockBeats": 6,
+        "cmpKeys": [
+          "walk",
+          "drill",
+          "wb",
+          "sys",
+          "trade",
+          "model",
+          "num",
+          "rf",
+          "open"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "shared-definition",
+        "title": "Shared Definition & Overrides",
+        "group": "data-storage",
+        "index": 14,
+        "total": 38,
+        "src": "markdown",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 7,
+          "SDE3": 7,
+          "Staff": 7
+        },
+        "walkSteps": 4,
+        "wbSteps": 2,
+        "sysStages": 0,
+        "sysPivots": 2,
+        "pivotsWithAnswer": 0,
+        "maxChipLen": 348,
+        "maxALen": 0,
+        "chipHasNewline": true,
+        "tradeDecisions": 3,
+        "modelAnswers": 2,
+        "numInputs": 3,
+        "numShape": 4,
+        "rfFlags": 3,
+        "openCards": 1,
+        "openKinds": "open",
+        "curveballs": 1,
+        "mockBeats": 2,
+        "cmpKeys": [
+          "walk",
+          "drill"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "replication",
+        "title": "Replication and Quorums",
+        "group": "data-storage",
+        "index": 28,
+        "total": 38,
+        "src": "markdown",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 7,
+          "SDE3": 7,
+          "Staff": 7
+        },
+        "walkSteps": 4,
+        "wbSteps": 2,
+        "sysStages": 0,
+        "sysPivots": 2,
+        "pivotsWithAnswer": 0,
+        "maxChipLen": 312,
+        "maxALen": 0,
+        "chipHasNewline": true,
+        "tradeDecisions": 3,
+        "modelAnswers": 2,
+        "numInputs": 3,
+        "numShape": 4,
+        "rfFlags": 3,
+        "openCards": 1,
+        "openKinds": "open",
+        "curveballs": 1,
+        "mockBeats": 2,
+        "cmpKeys": [
+          "walk",
+          "drill"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "consistency-models",
+        "title": "Consistency Models",
+        "group": "data-storage",
+        "index": 41,
+        "total": 38,
+        "src": "markdown",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 7,
+          "SDE3": 7,
+          "Staff": 7
+        },
+        "walkSteps": 4,
+        "wbSteps": 2,
+        "sysStages": 0,
+        "sysPivots": 2,
+        "pivotsWithAnswer": 0,
+        "maxChipLen": 398,
+        "maxALen": 0,
+        "chipHasNewline": true,
+        "tradeDecisions": 3,
+        "modelAnswers": 2,
+        "numInputs": 3,
+        "numShape": 4,
+        "rfFlags": 3,
+        "openCards": 1,
+        "openKinds": "open",
+        "curveballs": 1,
+        "mockBeats": 2,
+        "cmpKeys": [
+          "walk",
+          "drill"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "sharding-strategies",
+        "title": "Sharding and Partitioning",
+        "group": "data-storage",
+        "index": 42,
+        "total": 38,
+        "src": "markdown",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 7,
+          "SDE3": 7,
+          "Staff": 7
+        },
+        "walkSteps": 4,
+        "wbSteps": 2,
+        "sysStages": 0,
+        "sysPivots": 2,
+        "pivotsWithAnswer": 0,
+        "maxChipLen": 346,
+        "maxALen": 0,
+        "chipHasNewline": true,
+        "tradeDecisions": 3,
+        "modelAnswers": 2,
+        "numInputs": 3,
+        "numShape": 4,
+        "rfFlags": 3,
+        "openCards": 1,
+        "openKinds": "open",
+        "curveballs": 1,
+        "mockBeats": 2,
+        "cmpKeys": [
+          "walk",
+          "drill"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "consistent-hashing",
+        "title": "Consistent Hashing",
+        "group": "data-storage",
+        "index": 29,
+        "total": 38,
+        "src": "markdown",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 7,
+          "SDE3": 7,
+          "Staff": 7
+        },
+        "walkSteps": 4,
+        "wbSteps": 2,
+        "sysStages": 0,
+        "sysPivots": 2,
+        "pivotsWithAnswer": 0,
+        "maxChipLen": 256,
+        "maxALen": 0,
+        "chipHasNewline": true,
+        "tradeDecisions": 3,
+        "modelAnswers": 2,
+        "numInputs": 3,
+        "numShape": 4,
+        "rfFlags": 3,
+        "openCards": 1,
+        "openKinds": "open",
+        "curveballs": 1,
+        "mockBeats": 2,
+        "cmpKeys": [
+          "walk",
+          "drill"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "storage-engines",
+        "title": "Storage Engines",
+        "group": "data-storage",
+        "index": 37,
+        "total": 38,
+        "src": "markdown",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 7,
+          "SDE3": 7,
+          "Staff": 7
+        },
+        "walkSteps": 4,
+        "wbSteps": 2,
+        "sysStages": 0,
+        "sysPivots": 2,
+        "pivotsWithAnswer": 0,
+        "maxChipLen": 350,
+        "maxALen": 0,
+        "chipHasNewline": true,
+        "tradeDecisions": 3,
+        "modelAnswers": 2,
+        "numInputs": 3,
+        "numShape": 4,
+        "rfFlags": 3,
+        "openCards": 1,
+        "openKinds": "open",
+        "curveballs": 1,
+        "mockBeats": 2,
+        "cmpKeys": [
+          "walk",
+          "drill"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "probabilistic-structures",
+        "title": "Probabilistic Data Structures",
+        "group": "data-storage",
+        "index": 46,
+        "total": 38,
+        "src": "markdown",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 7,
+          "SDE3": 7,
+          "Staff": 7
+        },
+        "walkSteps": 4,
+        "wbSteps": 2,
+        "sysStages": 0,
+        "sysPivots": 2,
+        "pivotsWithAnswer": 0,
+        "maxChipLen": 377,
+        "maxALen": 0,
+        "chipHasNewline": true,
+        "tradeDecisions": 3,
+        "modelAnswers": 2,
+        "numInputs": 3,
+        "numShape": 4,
+        "rfFlags": 3,
+        "openCards": 1,
+        "openKinds": "open",
+        "curveballs": 1,
+        "mockBeats": 2,
+        "cmpKeys": [
+          "walk",
+          "drill"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "retries-timeouts",
+        "title": "Retries, Timeouts, Deadlines",
+        "group": "reliability-observability",
+        "index": 25,
+        "total": 38,
+        "src": "markdown",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 7,
+          "SDE3": 7,
+          "Staff": 7
+        },
+        "walkSteps": 4,
+        "wbSteps": 2,
+        "sysStages": 0,
+        "sysPivots": 2,
+        "pivotsWithAnswer": 0,
+        "maxChipLen": 256,
+        "maxALen": 0,
+        "chipHasNewline": true,
+        "tradeDecisions": 3,
+        "modelAnswers": 2,
+        "numInputs": 3,
+        "numShape": 4,
+        "rfFlags": 3,
+        "openCards": 1,
+        "openKinds": "open",
+        "curveballs": 1,
+        "mockBeats": 2,
+        "cmpKeys": [
+          "walk",
+          "drill"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "idempotency",
+        "title": "Idempotency",
+        "group": "reliability-observability",
+        "index": 24,
+        "total": 38,
+        "src": "markdown",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 7,
+          "SDE3": 7,
+          "Staff": 7
+        },
+        "walkSteps": 4,
+        "wbSteps": 2,
+        "sysStages": 0,
+        "sysPivots": 2,
+        "pivotsWithAnswer": 0,
+        "maxChipLen": 249,
+        "maxALen": 0,
+        "chipHasNewline": true,
+        "tradeDecisions": 3,
+        "modelAnswers": 2,
+        "numInputs": 3,
+        "numShape": 4,
+        "rfFlags": 3,
+        "openCards": 1,
+        "openKinds": "open",
+        "curveballs": 1,
+        "mockBeats": 2,
+        "cmpKeys": [
+          "walk",
+          "drill"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "circuit-breaker",
+        "title": "Circuit Breaker",
+        "group": "reliability-observability",
+        "index": 26,
+        "total": 38,
+        "src": "markdown",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 7,
+          "SDE3": 7,
+          "Staff": 7
+        },
+        "walkSteps": 4,
+        "wbSteps": 2,
+        "sysStages": 0,
+        "sysPivots": 2,
+        "pivotsWithAnswer": 0,
+        "maxChipLen": 254,
+        "maxALen": 0,
+        "chipHasNewline": true,
+        "tradeDecisions": 3,
+        "modelAnswers": 2,
+        "numInputs": 3,
+        "numShape": 4,
+        "rfFlags": 3,
+        "openCards": 1,
+        "openKinds": "open",
+        "curveballs": 1,
+        "mockBeats": 2,
+        "cmpKeys": [
+          "walk",
+          "drill"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "error-propagation",
+        "title": "Error Propagation Across Services",
+        "group": "reliability-observability",
+        "index": 39,
+        "total": 38,
+        "src": "markdown",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 7,
+          "SDE3": 7,
+          "Staff": 7
+        },
+        "walkSteps": 4,
+        "wbSteps": 2,
+        "sysStages": 0,
+        "sysPivots": 2,
+        "pivotsWithAnswer": 0,
+        "maxChipLen": 361,
+        "maxALen": 0,
+        "chipHasNewline": true,
+        "tradeDecisions": 3,
+        "modelAnswers": 2,
+        "numInputs": 3,
+        "numShape": 4,
+        "rfFlags": 3,
+        "openCards": 1,
+        "openKinds": "open",
+        "curveballs": 1,
+        "mockBeats": 2,
+        "cmpKeys": [
+          "walk",
+          "drill"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "backpressure",
+        "title": "Backpressure and Flow Control",
+        "group": "reliability-observability",
+        "index": 32,
+        "total": 38,
+        "src": "markdown",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 7,
+          "SDE3": 7,
+          "Staff": 7
+        },
+        "walkSteps": 4,
+        "wbSteps": 2,
+        "sysStages": 0,
+        "sysPivots": 2,
+        "pivotsWithAnswer": 0,
+        "maxChipLen": 325,
+        "maxALen": 0,
+        "chipHasNewline": true,
+        "tradeDecisions": 3,
+        "modelAnswers": 2,
+        "numInputs": 3,
+        "numShape": 4,
+        "rfFlags": 3,
+        "openCards": 1,
+        "openKinds": "open",
+        "curveballs": 1,
+        "mockBeats": 2,
+        "cmpKeys": [
+          "walk",
+          "drill"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "observability",
+        "title": "Observability",
+        "group": "reliability-observability",
+        "index": 19,
+        "total": 38,
+        "src": "markdown",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 7,
+          "SDE3": 7,
+          "Staff": 7
+        },
+        "walkSteps": 4,
+        "wbSteps": 2,
+        "sysStages": 0,
+        "sysPivots": 2,
+        "pivotsWithAnswer": 0,
+        "maxChipLen": 320,
+        "maxALen": 0,
+        "chipHasNewline": true,
+        "tradeDecisions": 3,
+        "modelAnswers": 2,
+        "numInputs": 3,
+        "numShape": 4,
+        "rfFlags": 3,
+        "openCards": 1,
+        "openKinds": "open",
+        "curveballs": 1,
+        "mockBeats": 2,
+        "cmpKeys": [
+          "walk",
+          "drill"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "debugging",
+        "title": "Production Debugging and Incident Diagnosis",
+        "group": "reliability-observability",
+        "index": 38,
+        "total": 38,
+        "src": "markdown",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 7,
+          "SDE3": 7,
+          "Staff": 7
+        },
+        "walkSteps": 4,
+        "wbSteps": 2,
+        "sysStages": 0,
+        "sysPivots": 2,
+        "pivotsWithAnswer": 0,
+        "maxChipLen": 335,
+        "maxALen": 0,
+        "chipHasNewline": true,
+        "tradeDecisions": 3,
+        "modelAnswers": 2,
+        "numInputs": 3,
+        "numShape": 4,
+        "rfFlags": 3,
+        "openCards": 1,
+        "openKinds": "open",
+        "curveballs": 1,
+        "mockBeats": 2,
+        "cmpKeys": [
+          "walk",
+          "drill"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "slos",
+        "title": "SLOs and Error Budgets",
+        "group": "reliability-observability",
+        "index": 30,
+        "total": 38,
+        "src": "markdown",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 7,
+          "SDE3": 7,
+          "Staff": 7
+        },
+        "walkSteps": 4,
+        "wbSteps": 2,
+        "sysStages": 0,
+        "sysPivots": 2,
+        "pivotsWithAnswer": 0,
+        "maxChipLen": 281,
+        "maxALen": 0,
+        "chipHasNewline": true,
+        "tradeDecisions": 3,
+        "modelAnswers": 2,
+        "numInputs": 3,
+        "numShape": 4,
+        "rfFlags": 3,
+        "openCards": 1,
+        "openKinds": "open",
+        "curveballs": 1,
+        "mockBeats": 2,
+        "cmpKeys": [
+          "walk",
+          "drill"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "iac",
+        "title": "Infrastructure as Code",
+        "group": "platform-infra",
+        "index": 8,
+        "total": 8,
+        "src": "legacy",
+        "drillCards": 22,
+        "tiers": {
+          "SDE2": 5,
+          "SDE3": 12,
+          "Staff": 5
+        },
+        "walkSteps": 9,
+        "wbSteps": 9,
+        "sysStages": 6,
+        "sysPivots": 7,
+        "pivotsWithAnswer": 7,
+        "maxChipLen": 26,
+        "maxALen": 562,
+        "chipHasNewline": false,
+        "tradeDecisions": 7,
+        "modelAnswers": 9,
+        "numInputs": 4,
+        "numShape": 4,
+        "rfFlags": 9,
+        "openCards": 2,
+        "openKinds": "open+close",
+        "curveballs": 8,
+        "mockBeats": 6,
+        "cmpKeys": [
+          "walk",
+          "drill",
+          "wb",
+          "sys",
+          "trade",
+          "model",
+          "num",
+          "rf",
+          "open"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "desired-state",
+        "title": "Desired State",
+        "group": "platform-infra",
+        "index": 7,
+        "total": 8,
+        "src": "legacy",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 5,
+          "SDE3": 11,
+          "Staff": 5
+        },
+        "walkSteps": 9,
+        "wbSteps": 9,
+        "sysStages": 6,
+        "sysPivots": 7,
+        "pivotsWithAnswer": 7,
+        "maxChipLen": 26,
+        "maxALen": 572,
+        "chipHasNewline": false,
+        "tradeDecisions": 7,
+        "modelAnswers": 9,
+        "numInputs": 4,
+        "numShape": 4,
+        "rfFlags": 9,
+        "openCards": 2,
+        "openKinds": "open+close",
+        "curveballs": 8,
+        "mockBeats": 6,
+        "cmpKeys": [
+          "walk",
+          "drill",
+          "wb",
+          "sys",
+          "trade",
+          "model",
+          "num",
+          "rf",
+          "open"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "aws-hardening",
+        "title": "AWS Hardening",
+        "group": "platform-infra",
+        "index": 4,
+        "total": 8,
+        "src": "legacy",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 5,
+          "SDE3": 11,
+          "Staff": 5
+        },
+        "walkSteps": 9,
+        "wbSteps": 9,
+        "sysStages": 6,
+        "sysPivots": 7,
+        "pivotsWithAnswer": 7,
+        "maxChipLen": 28,
+        "maxALen": 458,
+        "chipHasNewline": false,
+        "tradeDecisions": 7,
+        "modelAnswers": 9,
+        "numInputs": 4,
+        "numShape": 4,
+        "rfFlags": 9,
+        "openCards": 2,
+        "openKinds": "open+close",
+        "curveballs": 8,
+        "mockBeats": 6,
+        "cmpKeys": [
+          "walk",
+          "drill",
+          "wb",
+          "sys",
+          "trade",
+          "model",
+          "num",
+          "rf",
+          "open"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "load-balancing",
+        "title": "Load Balancing",
+        "group": "platform-infra",
+        "index": 27,
+        "total": 38,
+        "src": "markdown",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 7,
+          "SDE3": 7,
+          "Staff": 7
+        },
+        "walkSteps": 4,
+        "wbSteps": 2,
+        "sysStages": 0,
+        "sysPivots": 2,
+        "pivotsWithAnswer": 0,
+        "maxChipLen": 286,
+        "maxALen": 0,
+        "chipHasNewline": true,
+        "tradeDecisions": 3,
+        "modelAnswers": 2,
+        "numInputs": 3,
+        "numShape": 4,
+        "rfFlags": 3,
+        "openCards": 1,
+        "openKinds": "open",
+        "curveballs": 1,
+        "mockBeats": 2,
+        "cmpKeys": [
+          "walk",
+          "drill"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "autoscaling",
+        "title": "Autoscaling",
+        "group": "platform-infra",
+        "index": 36,
+        "total": 38,
+        "src": "markdown",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 7,
+          "SDE3": 7,
+          "Staff": 7
+        },
+        "walkSteps": 4,
+        "wbSteps": 2,
+        "sysStages": 0,
+        "sysPivots": 2,
+        "pivotsWithAnswer": 0,
+        "maxChipLen": 345,
+        "maxALen": 0,
+        "chipHasNewline": true,
+        "tradeDecisions": 3,
+        "modelAnswers": 2,
+        "numInputs": 3,
+        "numShape": 4,
+        "rfFlags": 3,
+        "openCards": 1,
+        "openKinds": "open",
+        "curveballs": 1,
+        "mockBeats": 2,
+        "cmpKeys": [
+          "walk",
+          "drill"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "leader-election",
+        "title": "Leader Election",
+        "group": "platform-infra",
+        "index": 33,
+        "total": 38,
+        "src": "markdown",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 7,
+          "SDE3": 7,
+          "Staff": 7
+        },
+        "walkSteps": 4,
+        "wbSteps": 2,
+        "sysStages": 0,
+        "sysPivots": 2,
+        "pivotsWithAnswer": 0,
+        "maxChipLen": 288,
+        "maxALen": 0,
+        "chipHasNewline": true,
+        "tradeDecisions": 3,
+        "modelAnswers": 2,
+        "numInputs": 3,
+        "numShape": 4,
+        "rfFlags": 3,
+        "openCards": 1,
+        "openKinds": "open",
+        "curveballs": 1,
+        "mockBeats": 2,
+        "cmpKeys": [
+          "walk",
+          "drill"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "distributed-locks",
+        "title": "Distributed Locks",
+        "group": "platform-infra",
+        "index": 34,
+        "total": 38,
+        "src": "markdown",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 7,
+          "SDE3": 7,
+          "Staff": 7
+        },
+        "walkSteps": 4,
+        "wbSteps": 2,
+        "sysStages": 0,
+        "sysPivots": 2,
+        "pivotsWithAnswer": 0,
+        "maxChipLen": 317,
+        "maxALen": 0,
+        "chipHasNewline": true,
+        "tradeDecisions": 3,
+        "modelAnswers": 2,
+        "numInputs": 3,
+        "numShape": 4,
+        "rfFlags": 3,
+        "openCards": 1,
+        "openKinds": "open",
+        "curveballs": 1,
+        "mockBeats": 2,
+        "cmpKeys": [
+          "walk",
+          "drill"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "multi-region",
+        "title": "Multi-Region and Disaster Recovery",
+        "group": "platform-infra",
+        "index": 44,
+        "total": 38,
+        "src": "markdown",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 7,
+          "SDE3": 7,
+          "Staff": 7
+        },
+        "walkSteps": 4,
+        "wbSteps": 2,
+        "sysStages": 0,
+        "sysPivots": 2,
+        "pivotsWithAnswer": 0,
+        "maxChipLen": 400,
+        "maxALen": 0,
+        "chipHasNewline": true,
+        "tradeDecisions": 3,
+        "modelAnswers": 2,
+        "numInputs": 3,
+        "numShape": 4,
+        "rfFlags": 3,
+        "openCards": 1,
+        "openKinds": "open",
+        "curveballs": 1,
+        "mockBeats": 2,
+        "cmpKeys": [
+          "walk",
+          "drill"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "lambda-organization",
+        "title": "Lambda Organization at Scale",
+        "group": "platform-infra",
+        "index": 20,
+        "total": 38,
+        "src": "markdown",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 7,
+          "SDE3": 7,
+          "Staff": 7
+        },
+        "walkSteps": 4,
+        "wbSteps": 2,
+        "sysStages": 0,
+        "sysPivots": 2,
+        "pivotsWithAnswer": 0,
+        "maxChipLen": 286,
+        "maxALen": 0,
+        "chipHasNewline": true,
+        "tradeDecisions": 3,
+        "modelAnswers": 2,
+        "numInputs": 3,
+        "numShape": 4,
+        "rfFlags": 3,
+        "openCards": 1,
+        "openKinds": "open",
+        "curveballs": 1,
+        "mockBeats": 2,
+        "cmpKeys": [
+          "walk",
+          "drill"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "devices-dispatch",
+        "title": "Device Fleet Dispatch",
+        "group": "platform-infra",
+        "index": 12,
+        "total": 38,
+        "src": "markdown",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 7,
+          "SDE3": 7,
+          "Staff": 7
+        },
+        "walkSteps": 4,
+        "wbSteps": 2,
+        "sysStages": 0,
+        "sysPivots": 2,
+        "pivotsWithAnswer": 0,
+        "maxChipLen": 356,
+        "maxALen": 0,
+        "chipHasNewline": true,
+        "tradeDecisions": 3,
+        "modelAnswers": 2,
+        "numInputs": 3,
+        "numShape": 4,
+        "rfFlags": 3,
+        "openCards": 1,
+        "openKinds": "open",
+        "curveballs": 1,
+        "mockBeats": 2,
+        "cmpKeys": [
+          "walk",
+          "drill"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "developer-platform",
+        "title": "Developer Platform Engineering",
+        "group": "platform-infra",
+        "index": 22,
+        "total": 38,
+        "src": "markdown",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 7,
+          "SDE3": 7,
+          "Staff": 7
+        },
+        "walkSteps": 4,
+        "wbSteps": 2,
+        "sysStages": 0,
+        "sysPivots": 2,
+        "pivotsWithAnswer": 0,
+        "maxChipLen": 302,
+        "maxALen": 0,
+        "chipHasNewline": true,
+        "tradeDecisions": 3,
+        "modelAnswers": 2,
+        "numInputs": 3,
+        "numShape": 4,
+        "rfFlags": 3,
+        "openCards": 1,
+        "openKinds": "open",
+        "curveballs": 1,
+        "mockBeats": 2,
+        "cmpKeys": [
+          "walk",
+          "drill"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "state-machine",
+        "title": "State Machine Design",
+        "group": "architecture-apis",
+        "index": 21,
+        "total": 38,
+        "src": "markdown",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 7,
+          "SDE3": 7,
+          "Staff": 7
+        },
+        "walkSteps": 4,
+        "wbSteps": 2,
+        "sysStages": 0,
+        "sysPivots": 2,
+        "pivotsWithAnswer": 0,
+        "maxChipLen": 374,
+        "maxALen": 0,
+        "chipHasNewline": true,
+        "tradeDecisions": 3,
+        "modelAnswers": 2,
+        "numInputs": 3,
+        "numShape": 4,
+        "rfFlags": 3,
+        "openCards": 1,
+        "openKinds": "open",
+        "curveballs": 1,
+        "mockBeats": 2,
+        "cmpKeys": [
+          "walk",
+          "drill"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "rules-engine",
+        "title": "Rules Engine & Dual Authorization",
+        "group": "architecture-apis",
+        "index": 13,
+        "total": 38,
+        "src": "markdown",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 7,
+          "SDE3": 7,
+          "Staff": 7
+        },
+        "walkSteps": 4,
+        "wbSteps": 2,
+        "sysStages": 0,
+        "sysPivots": 2,
+        "pivotsWithAnswer": 0,
+        "maxChipLen": 283,
+        "maxALen": 0,
+        "chipHasNewline": true,
+        "tradeDecisions": 3,
+        "modelAnswers": 2,
+        "numInputs": 3,
+        "numShape": 4,
+        "rfFlags": 3,
+        "openCards": 1,
+        "openKinds": "open",
+        "curveballs": 1,
+        "mockBeats": 2,
+        "cmpKeys": [
+          "walk",
+          "drill"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "feature-flags",
+        "title": "Feature Flags & Dynamic Config",
+        "group": "architecture-apis",
+        "index": 17,
+        "total": 38,
+        "src": "markdown",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 7,
+          "SDE3": 7,
+          "Staff": 7
+        },
+        "walkSteps": 4,
+        "wbSteps": 2,
+        "sysStages": 0,
+        "sysPivots": 2,
+        "pivotsWithAnswer": 0,
+        "maxChipLen": 321,
+        "maxALen": 0,
+        "chipHasNewline": true,
+        "tradeDecisions": 3,
+        "modelAnswers": 2,
+        "numInputs": 3,
+        "numShape": 4,
+        "rfFlags": 3,
+        "openCards": 1,
+        "openKinds": "open",
+        "curveballs": 1,
+        "mockBeats": 2,
+        "cmpKeys": [
+          "walk",
+          "drill"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "api-design",
+        "title": "API Design and Contracts",
+        "group": "architecture-apis",
+        "index": 40,
+        "total": 38,
+        "src": "markdown",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 7,
+          "SDE3": 7,
+          "Staff": 7
+        },
+        "walkSteps": 4,
+        "wbSteps": 2,
+        "sysStages": 0,
+        "sysPivots": 2,
+        "pivotsWithAnswer": 0,
+        "maxChipLen": 374,
+        "maxALen": 0,
+        "chipHasNewline": true,
+        "tradeDecisions": 3,
+        "modelAnswers": 2,
+        "numInputs": 3,
+        "numShape": 4,
+        "rfFlags": 3,
+        "openCards": 1,
+        "openKinds": "open",
+        "curveballs": 1,
+        "mockBeats": 2,
+        "cmpKeys": [
+          "walk",
+          "drill"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "rate-limiting",
+        "title": "Rate Limiting",
+        "group": "architecture-apis",
+        "index": 9,
+        "total": 38,
+        "src": "markdown",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 7,
+          "SDE3": 7,
+          "Staff": 7
+        },
+        "walkSteps": 4,
+        "wbSteps": 2,
+        "sysStages": 0,
+        "sysPivots": 2,
+        "pivotsWithAnswer": 0,
+        "maxChipLen": 252,
+        "maxALen": 0,
+        "chipHasNewline": true,
+        "tradeDecisions": 3,
+        "modelAnswers": 2,
+        "numInputs": 3,
+        "numShape": 4,
+        "rfFlags": 3,
+        "openCards": 1,
+        "openKinds": "open",
+        "curveballs": 1,
+        "mockBeats": 2,
+        "cmpKeys": [
+          "walk",
+          "drill"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "content-pipeline",
+        "title": "Content Pipeline",
+        "group": "architecture-apis",
+        "index": 1,
+        "total": 8,
+        "src": "legacy",
+        "drillCards": 22,
+        "tiers": {
+          "SDE2": 3,
+          "SDE3": 10,
+          "Staff": 8,
+          "EXTEND": 1
+        },
+        "walkSteps": 9,
+        "wbSteps": 9,
+        "sysStages": 6,
+        "sysPivots": 7,
+        "pivotsWithAnswer": 7,
+        "maxChipLen": 19,
+        "maxALen": 475,
+        "chipHasNewline": false,
+        "tradeDecisions": 7,
+        "modelAnswers": 9,
+        "numInputs": 4,
+        "numShape": 4,
+        "rfFlags": 9,
+        "openCards": 2,
+        "openKinds": "open+close",
+        "curveballs": 8,
+        "mockBeats": 6,
+        "cmpKeys": [
+          "walk",
+          "drill",
+          "wb",
+          "sys",
+          "trade",
+          "model",
+          "num",
+          "rf",
+          "open"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "microfrontend",
+        "title": "Microfrontend Architecture",
+        "group": "architecture-apis",
+        "index": 23,
+        "total": 38,
+        "src": "markdown",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 7,
+          "SDE3": 7,
+          "Staff": 7
+        },
+        "walkSteps": 4,
+        "wbSteps": 2,
+        "sysStages": 0,
+        "sysPivots": 2,
+        "pivotsWithAnswer": 0,
+        "maxChipLen": 286,
+        "maxALen": 0,
+        "chipHasNewline": true,
+        "tradeDecisions": 3,
+        "modelAnswers": 2,
+        "numInputs": 3,
+        "numShape": 4,
+        "rfFlags": 3,
+        "openCards": 1,
+        "openKinds": "open",
+        "curveballs": 1,
+        "mockBeats": 2,
+        "cmpKeys": [
+          "walk",
+          "drill"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "signing",
+        "title": "Package Signing",
+        "group": "security-tenancy",
+        "index": 2,
+        "total": 8,
+        "src": "legacy",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 5,
+          "SDE3": 11,
+          "Staff": 5
+        },
+        "walkSteps": 9,
+        "wbSteps": 9,
+        "sysStages": 6,
+        "sysPivots": 7,
+        "pivotsWithAnswer": 7,
+        "maxChipLen": 23,
+        "maxALen": 468,
+        "chipHasNewline": false,
+        "tradeDecisions": 7,
+        "modelAnswers": 9,
+        "numInputs": 4,
+        "numShape": 4,
+        "rfFlags": 9,
+        "openCards": 2,
+        "openKinds": "open+close",
+        "curveballs": 8,
+        "mockBeats": 6,
+        "cmpKeys": [
+          "walk",
+          "drill",
+          "wb",
+          "sys",
+          "trade",
+          "model",
+          "num",
+          "rf",
+          "open"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "authz",
+        "title": "Tenant Authorization",
+        "group": "security-tenancy",
+        "index": 3,
+        "total": 8,
+        "src": "legacy",
+        "drillCards": 24,
+        "tiers": {
+          "SDE2": 5,
+          "SDE3": 13,
+          "Staff": 6
+        },
+        "walkSteps": 9,
+        "wbSteps": 9,
+        "sysStages": 6,
+        "sysPivots": 7,
+        "pivotsWithAnswer": 7,
+        "maxChipLen": 29,
+        "maxALen": 530,
+        "chipHasNewline": false,
+        "tradeDecisions": 7,
+        "modelAnswers": 9,
+        "numInputs": 4,
+        "numShape": 4,
+        "rfFlags": 9,
+        "openCards": 2,
+        "openKinds": "open+close",
+        "curveballs": 8,
+        "mockBeats": 6,
+        "cmpKeys": [
+          "walk",
+          "drill",
+          "wb",
+          "sys",
+          "trade",
+          "model",
+          "num",
+          "rf",
+          "open"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      },
+      {
+        "id": "multi-tenant",
+        "title": "Multi-Tenant Isolation",
+        "group": "security-tenancy",
+        "index": 10,
+        "total": 38,
+        "src": "markdown",
+        "drillCards": 21,
+        "tiers": {
+          "SDE2": 7,
+          "SDE3": 7,
+          "Staff": 7
+        },
+        "walkSteps": 5,
+        "wbSteps": 2,
+        "sysStages": 0,
+        "sysPivots": 2,
+        "pivotsWithAnswer": 0,
+        "maxChipLen": 335,
+        "maxALen": 0,
+        "chipHasNewline": true,
+        "tradeDecisions": 3,
+        "modelAnswers": 2,
+        "numInputs": 3,
+        "numShape": 4,
+        "rfFlags": 3,
+        "openCards": 1,
+        "openKinds": "open",
+        "curveballs": 1,
+        "mockBeats": 2,
+        "cmpKeys": [
+          "walk",
+          "drill"
+        ],
+        "hasVisual": false,
+        "wbDiagram": true,
+        "slicesPresent": 10
+      }
+    ]
+  },
+  "spurious": [
+    {
+      "id": "saga",
+      "jumps": [
+        {
+          "len": 322,
+          "target": "observability",
+          "label": "Jump to → choreography = event-driven, decoupled, implicit f"
+        }
+      ]
+    },
+    {
+      "id": "error-propagation",
+      "jumps": [
+        {
+          "len": 371,
+          "target": "idempotency",
+          "label": "Jump to → whether retrying can succeed (transient) and wheth"
+        }
+      ]
+    },
+    {
+      "id": "debugging",
+      "jumps": [
+        {
+          "len": 345,
+          "target": "idempotency",
+          "label": "Jump to → the amplifier is disproportionately loud -- error "
+        }
+      ]
+    },
+    {
+      "id": "distributed-locks",
+      "jumps": [
+        {
+          "len": 327,
+          "target": "idempotency",
+          "label": "Jump to → idempotency (safe to repeat), optimistic concurren"
+        }
+      ]
+    },
+    {
+      "id": "api-design",
+      "jumps": [
+        {
+          "len": 375,
+          "target": "idempotency",
+          "label": "Jump to → an idempotency key plus a dedupe recorded atomical"
+        }
+      ]
+    }
+  ],
+  "railA": {
+    "view": "System Map",
+    "note": "Zoom out to the six stages — and the exact points an interviewer pivots.",
+    "move": "Lead with the flow, not the boxes — “upload lands, dispatch routes, si"
+  },
+  "railB": {
+    "view": "System Map",
+    "note": "Zoom out to the six stages — and the exact points an interviewer pivots.",
+    "move": "Lead with the flow, not the boxes — “upload lands, dispatch routes, si"
+  },
+  "viz": [
+    {
+      "id": "event-driven",
+      "hidden": true
+    },
+    {
+      "id": "notifications",
+      "hidden": true
+    },
+    {
+      "id": "real-time-delivery",
+      "hidden": true
+    },
+    {
+      "id": "cdc",
+      "hidden": true
+    },
+    {
+      "id": "kafka-internals",
+      "hidden": true
+    },
+    {
+      "id": "stream-batch-processing",
+      "hidden": false
+    },
+    {
+      "id": "saga",
+      "hidden": true
+    },
+    {
+      "id": "caching",
+      "hidden": true
+    },
+    {
+      "id": "soft-delete",
+      "hidden": true
+    },
+    {
+      "id": "eav",
+      "hidden": true
+    },
+    {
+      "id": "shared-definition",
+      "hidden": true
+    },
+    {
+      "id": "replication",
+      "hidden": true
+    },
+    {
+      "id": "consistency-models",
+      "hidden": true
+    },
+    {
+      "id": "sharding-strategies",
+      "hidden": true
+    },
+    {
+      "id": "consistent-hashing",
+      "hidden": true
+    },
+    {
+      "id": "storage-engines",
+      "hidden": true
+    },
+    {
+      "id": "probabilistic-structures",
+      "hidden": true
+    },
+    {
+      "id": "retries-timeouts",
+      "hidden": true
+    },
+    {
+      "id": "idempotency",
+      "hidden": true
+    },
+    {
+      "id": "circuit-breaker",
+      "hidden": true
+    },
+    {
+      "id": "error-propagation",
+      "hidden": true
+    },
+    {
+      "id": "backpressure",
+      "hidden": true
+    },
+    {
+      "id": "observability",
+      "hidden": true
+    },
+    {
+      "id": "debugging",
+      "hidden": true
+    },
+    {
+      "id": "slos",
+      "hidden": true
+    },
+    {
+      "id": "iac",
+      "hidden": true
+    },
+    {
+      "id": "desired-state",
+      "hidden": true
+    },
+    {
+      "id": "aws-hardening",
+      "hidden": true
+    },
+    {
+      "id": "load-balancing",
+      "hidden": true
+    },
+    {
+      "id": "autoscaling",
+      "hidden": true
+    },
+    {
+      "id": "leader-election",
+      "hidden": true
+    },
+    {
+      "id": "distributed-locks",
+      "hidden": true
+    },
+    {
+      "id": "multi-region",
+      "hidden": true
+    },
+    {
+      "id": "lambda-organization",
+      "hidden": true
+    },
+    {
+      "id": "devices-dispatch",
+      "hidden": true
+    },
+    {
+      "id": "developer-platform",
+      "hidden": true
+    },
+    {
+      "id": "state-machine",
+      "hidden": true
+    },
+    {
+      "id": "rules-engine",
+      "hidden": true
+    },
+    {
+      "id": "feature-flags",
+      "hidden": true
+    },
+    {
+      "id": "api-design",
+      "hidden": true
+    },
+    {
+      "id": "rate-limiting",
+      "hidden": true
+    },
+    {
+      "id": "content-pipeline",
+      "hidden": true
+    },
+    {
+      "id": "microfrontend",
+      "hidden": true
+    },
+    {
+      "id": "signing",
+      "hidden": true
+    },
+    {
+      "id": "authz",
+      "hidden": true
+    },
+    {
+      "id": "multi-tenant",
+      "hidden": true
+    }
+  ]
+}

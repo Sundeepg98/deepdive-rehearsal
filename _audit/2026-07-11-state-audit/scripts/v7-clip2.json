@@ -1,0 +1,4859 @@
+{
+ "nrowDetail": {
+  "stageCW": 360,
+  "stageSW": 457,
+  "stageOver": 97,
+  "contentRight": 345,
+  "gridCols": "167.219px 104.781px",
+  "rowsWithInkOverflow": 5,
+  "totalRows": 5,
+  "top": [
+   {
+    "key": "Rows wasted / sec (fleet)",
+    "val": "~19,996,000scanned-t",
+    "rowClientW": 284,
+    "rowScrollW": 419,
+    "rowInkOver": 135,
+    "rowRight": 322,
+    "valW": 132.8,
+    "valRight": 322,
+    "valSpillPastStage": -23,
+    "valWS": "nowrap"
+   },
+   {
+    "key": "Stability under inserts",
+    "val": "cursor onlyno skip/d",
+    "rowClientW": 284,
+    "rowScrollW": 341,
+    "rowInkOver": 57,
+    "rowRight": 322,
+    "valW": 132.8,
+    "valRight": 322,
+    "valSpillPastStage": -23,
+    "valWS": "nowrap"
+   },
+   {
+    "key": "Offset penalty at this depth",
+    "val": "5,000xmore rows",
+    "rowClientW": 284,
+    "rowScrollW": 326,
+    "rowInkOver": 42,
+    "rowRight": 322,
+    "valW": 86.1,
+    "valRight": 322,
+    "valSpillPastStage": -23,
+    "valWS": "nowrap"
+   },
+   {
+    "key": "Rows scanned (offset)",
+    "val": "~100,000per page",
+    "rowClientW": 284,
+    "rowScrollW": 319,
+    "rowInkOver": 35,
+    "rowRight": 322,
+    "valW": 104.8,
+    "valRight": 322,
+    "valSpillPastStage": -23,
+    "valWS": "nowrap"
+   },
+   {
+    "key": "Rows scanned (cursor)",
+    "val": "20per page",
+    "rowClientW": 284,
+    "rowScrollW": 319,
+    "rowInkOver": 35,
+    "rowRight": 322,
+    "valW": 48.7,
+    "valRight": 322,
+    "valSpillPastStage": -23,
+    "valWS": "nowrap"
+   }
+  ]
+ },
+ "byPaneA": {
+  "walk": {
+   "n": 9,
+   "max": 206,
+   "worst": {
+    "topic": "stream-batch-processing",
+    "pane": "walk",
+    "stageOver": 206,
+    "inkCount": 7,
+    "inkMax": 246,
+    "inkWorst": {
+     "cls": "flow",
+     "d": 246,
+     "txt": "the data→bounded finite dataset → batch: all "
+    }
+   }
+  },
+  "drill": {
+   "n": 0,
+   "max": 0
+  },
+  "wb": {
+   "n": 0,
+   "max": 0
+  },
+  "sys": {
+   "n": 0,
+   "max": 0
+  },
+  "trade": {
+   "n": 0,
+   "max": 0
+  },
+  "model": {
+   "n": 0,
+   "max": 0
+  },
+  "num": {
+   "n": 31,
+   "max": 111,
+   "worst": {
+    "topic": "load-balancing",
+    "pane": "num",
+    "stageOver": 111,
+    "inkCount": 18,
+    "inkMax": 150,
+    "inkWorst": {
+     "cls": "",
+     "d": 150,
+     "txt": "Per-instance load1,000req/s eachthe LB spread"
+    }
+   }
+  },
+  "rf": {
+   "n": 0,
+   "max": 0
+  },
+  "open": {
+   "n": 0,
+   "max": 0
+  }
+ },
+ "byPaneC": {
+  "walk": {
+   "n": 46,
+   "max": 919,
+   "worst": {
+    "topic": "signing",
+    "pane": "walk",
+    "stageOver": 0,
+    "inkCount": 10,
+    "inkMax": 919,
+    "inkWorst": {
+     "cls": "code",
+     "d": 919,
+     "txt": "// product_type -> company_product_type -> co"
+    }
+   }
+  },
+  "drill": {
+   "n": 46,
+   "max": 50,
+   "worst": {
+    "topic": "consistent-hashing",
+    "pane": "drill",
+    "stageOver": 0,
+    "inkCount": 11,
+    "inkMax": 50,
+    "inkWorst": {
+     "cls": "dn-t",
+     "d": 50,
+     "txt": "consistent hashing in Dynamo/Cassandra"
+    }
+   }
+  },
+  "wb": {
+   "n": 3,
+   "max": 23,
+   "worst": {
+    "topic": "iac",
+    "pane": "wb",
+    "stageOver": 0,
+    "inkCount": 2,
+    "inkMax": 23,
+    "inkWorst": {
+     "cls": "dgm",
+     "d": 23,
+     "txt": "config (declared infra)resources + relationsh"
+    }
+   }
+  },
+  "sys": {
+   "n": 39,
+   "max": 1886,
+   "worst": {
+    "topic": "stream-batch-processing",
+    "pane": "sys",
+    "stageOver": 0,
+    "inkCount": 4,
+    "inkMax": 1886,
+    "inkWorst": {
+     "cls": "piv",
+     "d": 1886,
+     "txt": "How do you handle out-of-order and late data?"
+    }
+   }
+  },
+  "trade": {
+   "n": 0,
+   "max": 0
+  },
+  "model": {
+   "n": 18,
+   "max": 97,
+   "worst": {
+    "topic": "stream-batch-processing",
+    "pane": "model",
+    "stageOver": 0,
+    "inkCount": 3,
+    "inkMax": 97,
+    "inkWorst": {
+     "cls": "mbeat-l l-note",
+     "d": 97,
+     "txt": "Exactly-once is really effectively-once (at-l"
+    }
+   }
+  },
+  "num": {
+   "n": 44,
+   "max": 150,
+   "worst": {
+    "topic": "load-balancing",
+    "pane": "num",
+    "stageOver": 111,
+    "inkCount": 18,
+    "inkMax": 150,
+    "inkWorst": {
+     "cls": "",
+     "d": 150,
+     "txt": "Per-instance load1,000req/s eachthe LB spread"
+    }
+   }
+  },
+  "rf": {
+   "n": 0,
+   "max": 0
+  },
+  "open": {
+   "n": 3,
+   "max": 21,
+   "worst": {
+    "topic": "desired-state",
+    "pane": "open",
+    "stageOver": 0,
+    "inkCount": 5,
+    "inkMax": 21,
+    "inkWorst": {
+     "cls": "op-n",
+     "d": 21,
+     "txt": "Silent divergence"
+    }
+   }
+  }
+ },
+ "totalA": 40,
+ "rows": [
+  {
+   "topic": "event-driven",
+   "pane": "walk",
+   "stageOver": 0,
+   "inkCount": 5,
+   "inkMax": 97,
+   "inkWorst": {
+    "cls": "code",
+    "d": 97,
+    "txt": "{\n  \"id\": \"evt-7\",\n  \"source\": \"device.config"
+   }
+  },
+  {
+   "topic": "event-driven",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 8,
+   "inkMax": 18,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 18,
+    "txt": "backpressure"
+   }
+  },
+  {
+   "topic": "event-driven",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "event-driven",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 1222,
+   "inkWorst": {
+    "cls": "piv",
+    "d": 1222,
+    "txt": "Which delivery guarantee?→ at-least-once plus"
+   }
+  },
+  {
+   "topic": "event-driven",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "event-driven",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 1,
+   "inkMax": 3,
+   "inkWorst": {
+    "cls": "mbeat-l l-note",
+    "d": 3,
+    "txt": "Effectively-once via dedup"
+   }
+  },
+  {
+   "topic": "event-driven",
+   "pane": "num",
+   "stageOver": 0,
+   "inkCount": 12,
+   "inkMax": 28,
+   "inkWorst": {
+    "cls": "",
+    "d": 28,
+    "txt": "Consumer concurrency250workersLittle law — ra"
+   }
+  },
+  {
+   "topic": "event-driven",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "event-driven",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "notifications",
+   "pane": "walk",
+   "stageOver": 0,
+   "inkCount": 8,
+   "inkMax": 22,
+   "inkWorst": {
+    "cls": "arc-step",
+    "d": 22,
+    "txt": "2Make it idempotent"
+   }
+  },
+  {
+   "topic": "notifications",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 6,
+   "inkMax": 19,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 19,
+    "txt": "Idempotency"
+   }
+  },
+  {
+   "topic": "notifications",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "notifications",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 2,
+   "inkMax": 18,
+   "inkWorst": {
+    "cls": "piv",
+    "d": 18,
+    "txt": "I need sub-second in-app delivery, not 60-sec"
+   }
+  },
+  {
+   "topic": "notifications",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "notifications",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "notifications",
+   "pane": "num",
+   "stageOver": 0,
+   "inkCount": 18,
+   "inkMax": 28,
+   "inkWorst": {
+    "cls": "",
+    "d": 28,
+    "txt": "Poll read load16,667reads/severy active user "
+   }
+  },
+  {
+   "topic": "notifications",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "notifications",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "real-time-delivery",
+   "pane": "walk",
+   "stageOver": 0,
+   "inkCount": 6,
+   "inkMax": 37,
+   "inkWorst": {
+    "cls": "flow",
+    "d": 37,
+    "txt": "client polls every few seconds→latency plus m"
+   }
+  },
+  {
+   "topic": "real-time-delivery",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 10,
+   "inkMax": 18,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 18,
+    "txt": "reconnection and delivery guarantees"
+   }
+  },
+  {
+   "topic": "real-time-delivery",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "real-time-delivery",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 1649,
+   "inkWorst": {
+    "cls": "piv",
+    "d": 1649,
+    "txt": "Fan-out-on-write or on-read?→ on-write for bo"
+   }
+  },
+  {
+   "topic": "real-time-delivery",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "real-time-delivery",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 1,
+   "inkMax": 3,
+   "inkWorst": {
+    "cls": "mbeat-l l-key",
+    "d": 3,
+    "txt": "The server pushes over a persistent connectio"
+   }
+  },
+  {
+   "topic": "real-time-delivery",
+   "pane": "num",
+   "stageOver": 76,
+   "inkCount": 15,
+   "inkMax": 114,
+   "inkWorst": {
+    "cls": "",
+    "d": 114,
+    "txt": "Connection gateways~25serversceil(5,000,000 c"
+   }
+  },
+  {
+   "topic": "real-time-delivery",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "real-time-delivery",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "cdc",
+   "pane": "walk",
+   "stageOver": 0,
+   "inkCount": 2,
+   "inkMax": 9,
+   "inkWorst": {
+    "cls": "arc-step",
+    "d": 9,
+    "txt": "3A relay publishes the outbox"
+   }
+  },
+  {
+   "topic": "cdc",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 6,
+   "inkMax": 17,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 17,
+    "txt": "the transactional outbox"
+   }
+  },
+  {
+   "topic": "cdc",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "cdc",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 1270,
+   "inkWorst": {
+    "cls": "piv",
+    "d": 1270,
+    "txt": "Outbox or log-based capture?→ outbox for cura"
+   }
+  },
+  {
+   "topic": "cdc",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "cdc",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 1,
+   "inkMax": 6,
+   "inkWorst": {
+    "cls": "mbeat-l l-key",
+    "d": 6,
+    "txt": "Same transaction"
+   }
+  },
+  {
+   "topic": "cdc",
+   "pane": "num",
+   "stageOver": 25,
+   "inkCount": 12,
+   "inkMax": 64,
+   "inkWorst": {
+    "cls": "",
+    "d": 64,
+    "txt": "Change events/sec2,000events/sone event per c"
+   }
+  },
+  {
+   "topic": "cdc",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "cdc",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "kafka-internals",
+   "pane": "walk",
+   "stageOver": 0,
+   "inkCount": 7,
+   "inkMax": 25,
+   "inkWorst": {
+    "cls": "flow",
+    "d": 25,
+    "txt": "producer appends→partitioned append-only log,"
+   }
+  },
+  {
+   "topic": "kafka-internals",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 12,
+   "inkMax": 23,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 23,
+    "txt": "partition-count consequences"
+   }
+  },
+  {
+   "topic": "kafka-internals",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "kafka-internals",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 1520,
+   "inkWorst": {
+    "cls": "piv",
+    "d": 1520,
+    "txt": "How is Kafka different from a traditional que"
+   }
+  },
+  {
+   "topic": "kafka-internals",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "kafka-internals",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 2,
+   "inkMax": 2,
+   "inkWorst": {
+    "cls": "mbeat-l l-store",
+    "d": 2,
+    "txt": "Ordering per-partition (via the key), paralle"
+   }
+  },
+  {
+   "topic": "kafka-internals",
+   "pane": "num",
+   "stageOver": 54,
+   "inkCount": 15,
+   "inkMax": 92,
+   "inkWorst": {
+    "cls": "",
+    "d": 92,
+    "txt": "Per-partition rate~8,333msgs/s eachproduce ra"
+   }
+  },
+  {
+   "topic": "kafka-internals",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "kafka-internals",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "stream-batch-processing",
+   "pane": "walk",
+   "stageOver": 206,
+   "inkCount": 7,
+   "inkMax": 246,
+   "inkWorst": {
+    "cls": "flow",
+    "d": 246,
+    "txt": "the data→bounded finite dataset → batch: all "
+   }
+  },
+  {
+   "topic": "stream-batch-processing",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 12,
+   "inkMax": 19,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 19,
+    "txt": "telling the stream/batch story"
+   }
+  },
+  {
+   "topic": "stream-batch-processing",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "stream-batch-processing",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 1886,
+   "inkWorst": {
+    "cls": "piv",
+    "d": 1886,
+    "txt": "How do you handle out-of-order and late data?"
+   }
+  },
+  {
+   "topic": "stream-batch-processing",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "stream-batch-processing",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 3,
+   "inkMax": 97,
+   "inkWorst": {
+    "cls": "mbeat-l l-note",
+    "d": 97,
+    "txt": "Exactly-once is really effectively-once (at-l"
+   }
+  },
+  {
+   "topic": "stream-batch-processing",
+   "pane": "num",
+   "stageOver": 80,
+   "inkCount": 13,
+   "inkMax": 119,
+   "inkWorst": {
+    "cls": "",
+    "d": 119,
+    "txt": "Batch result freshness~6 hstalea batch result"
+   }
+  },
+  {
+   "topic": "stream-batch-processing",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "stream-batch-processing",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "saga",
+   "pane": "walk",
+   "stageOver": 143,
+   "inkCount": 7,
+   "inkMax": 183,
+   "inkWorst": {
+    "cls": "flow",
+    "d": 183,
+    "txt": "operation spans 3 services + 3 DBs→no shared "
+   }
+  },
+  {
+   "topic": "saga",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 11,
+   "inkMax": 38,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 38,
+    "txt": "isolation countermeasures"
+   }
+  },
+  {
+   "topic": "saga",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "saga",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 1337,
+   "inkWorst": {
+    "cls": "piv",
+    "d": 1337,
+    "txt": "Choreography or orchestration?→ choreography "
+   }
+  },
+  {
+   "topic": "saga",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "saga",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 2,
+   "inkMax": 17,
+   "inkWorst": {
+    "cls": "mbeat-l l-store",
+    "d": 17,
+    "txt": "Sequence of local transactions, each with a c"
+   }
+  },
+  {
+   "topic": "saga",
+   "pane": "num",
+   "stageOver": 25,
+   "inkCount": 18,
+   "inkMax": 64,
+   "inkWorst": {
+    "cls": "",
+    "d": 64,
+    "txt": "Completes cleanly95.1%of sagas(1 - per-step f"
+   }
+  },
+  {
+   "topic": "saga",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "saga",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "caching",
+   "pane": "walk",
+   "stageOver": 0,
+   "inkCount": 3,
+   "inkMax": 16,
+   "inkWorst": {
+    "cls": "arc-step",
+    "d": 16,
+    "txt": "3A write invalidates the cached copy"
+   }
+  },
+  {
+   "topic": "caching",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 17,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 17,
+    "txt": "measuring effectiveness"
+   }
+  },
+  {
+   "topic": "caching",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "caching",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 1352,
+   "inkWorst": {
+    "cls": "piv",
+    "d": 1352,
+    "txt": "Which caching pattern?→ cache-aside by defaul"
+   }
+  },
+  {
+   "topic": "caching",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "caching",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "caching",
+   "pane": "num",
+   "stageOver": 0,
+   "inkCount": 7,
+   "inkMax": 14,
+   "inkWorst": {
+    "cls": "",
+    "d": 14,
+    "txt": "Source reads/day50,000readsonly the misses re"
+   }
+  },
+  {
+   "topic": "caching",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "caching",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "soft-delete",
+   "pane": "walk",
+   "stageOver": 0,
+   "inkCount": 2,
+   "inkMax": 103,
+   "inkWorst": {
+    "cls": "code",
+    "d": 103,
+    "txt": "-- a delete is an update that stamps the dele"
+   }
+  },
+  {
+   "topic": "soft-delete",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 5,
+   "inkMax": 19,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 19,
+    "txt": "how it is implemented"
+   }
+  },
+  {
+   "topic": "soft-delete",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "soft-delete",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 1312,
+   "inkWorst": {
+    "cls": "piv",
+    "d": 1312,
+    "txt": "What breaks when you soft-delete?→ every read"
+   }
+  },
+  {
+   "topic": "soft-delete",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "soft-delete",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "soft-delete",
+   "pane": "num",
+   "stageOver": 0,
+   "inkCount": 15,
+   "inkMax": 28,
+   "inkWorst": {
+    "cls": "",
+    "d": 28,
+    "txt": "Soft-deleted rows2,000,000rowsdeleted rows st"
+   }
+  },
+  {
+   "topic": "soft-delete",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "soft-delete",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "eav",
+   "pane": "walk",
+   "stageOver": 0,
+   "inkCount": 7,
+   "inkMax": 22,
+   "inkWorst": {
+    "cls": "arc-step",
+    "d": 22,
+    "txt": "6Reconstruct the whole entity"
+   }
+  },
+  {
+   "topic": "eav",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 6,
+   "inkMax": 17,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 17,
+    "txt": "Read performance at scale"
+   }
+  },
+  {
+   "topic": "eav",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 1,
+   "inkMax": 5,
+   "inkWorst": {
+    "cls": "dgm",
+    "d": 5,
+    "txt": "product / operator / CSV importsets a value —"
+   }
+  },
+  {
+   "topic": "eav",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "eav",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "eav",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "eav",
+   "pane": "num",
+   "stageOver": 18,
+   "inkCount": 21,
+   "inkMax": 57,
+   "inkWorst": {
+    "cls": "",
+    "d": 57,
+    "txt": "Potential rows: entities × attributes10,000,0"
+   }
+  },
+  {
+   "topic": "eav",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "eav",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 5,
+   "inkMax": 14,
+   "inkWorst": {
+    "cls": "op-n",
+    "d": 14,
+    "txt": "Default-change blast radius"
+   }
+  },
+  {
+   "topic": "shared-definition",
+   "pane": "walk",
+   "stageOver": 0,
+   "inkCount": 5,
+   "inkMax": 193,
+   "inkWorst": {
+    "cls": "code",
+    "d": 193,
+    "txt": "-- shared layer: what exists, plus the defaul"
+   }
+  },
+  {
+   "topic": "shared-definition",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 7,
+   "inkMax": 16,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 16,
+    "txt": "the polymorphic key"
+   }
+  },
+  {
+   "topic": "shared-definition",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "shared-definition",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 1427,
+   "inkWorst": {
+    "cls": "piv",
+    "d": 1427,
+    "txt": "Isn’t this just EAV?→ yes, and it is the righ"
+   }
+  },
+  {
+   "topic": "shared-definition",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "shared-definition",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "shared-definition",
+   "pane": "num",
+   "stageOver": 0,
+   "inkCount": 16,
+   "inkMax": 21,
+   "inkWorst": {
+    "cls": "",
+    "d": 21,
+    "txt": "Naive: value per entity10,000,000rowsa row fo"
+   }
+  },
+  {
+   "topic": "shared-definition",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "shared-definition",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "replication",
+   "pane": "walk",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 18,
+   "inkWorst": {
+    "cls": "flow",
+    "d": 18,
+    "txt": "write→leader applies + orders it→streams chan"
+   }
+  },
+  {
+   "topic": "replication",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 13,
+   "inkMax": 16,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 16,
+    "txt": "semi-synchronous replication"
+   }
+  },
+  {
+   "topic": "replication",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "replication",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 1304,
+   "inkWorst": {
+    "cls": "piv",
+    "d": 1304,
+    "txt": "Synchronous or asynchronous replication?→ sem"
+   }
+  },
+  {
+   "topic": "replication",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "replication",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 2,
+   "inkMax": 5,
+   "inkWorst": {
+    "cls": "mbeat-l l-key",
+    "d": 5,
+    "txt": "Copies for availability, read-scale, locality"
+   }
+  },
+  {
+   "topic": "replication",
+   "pane": "num",
+   "stageOver": 54,
+   "inkCount": 18,
+   "inkMax": 92,
+   "inkWorst": {
+    "cls": "",
+    "d": 92,
+    "txt": "R + W4vs N = 3R+W > N: read and write quorums"
+   }
+  },
+  {
+   "topic": "replication",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "replication",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "consistency-models",
+   "pane": "walk",
+   "stageOver": 11,
+   "inkCount": 7,
+   "inkMax": 50,
+   "inkWorst": {
+    "cls": "flow",
+    "d": 50,
+    "txt": "write commits on the primary→replicas receive"
+   }
+  },
+  {
+   "topic": "consistency-models",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 18,
+   "inkMax": 19,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 19,
+    "txt": "what linearizability means"
+   }
+  },
+  {
+   "topic": "consistency-models",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "consistency-models",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 1712,
+   "inkWorst": {
+    "cls": "piv",
+    "d": 1712,
+    "txt": "Why not make everything strongly consistent t"
+   }
+  },
+  {
+   "topic": "consistency-models",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "consistency-models",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 2,
+   "inkMax": 7,
+   "inkWorst": {
+    "cls": "mbeat-l l-store",
+    "d": 7,
+    "txt": "The spectrum: linearizable → causal → session"
+   }
+  },
+  {
+   "topic": "consistency-models",
+   "pane": "num",
+   "stageOver": 82,
+   "inkCount": 15,
+   "inkMax": 121,
+   "inkWorst": {
+    "cls": "",
+    "d": 121,
+    "txt": "R + W vs N4 vs 3overlapR + W > N means every "
+   }
+  },
+  {
+   "topic": "consistency-models",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "consistency-models",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "sharding-strategies",
+   "pane": "walk",
+   "stageOver": 74,
+   "inkCount": 5,
+   "inkMax": 113,
+   "inkWorst": {
+    "cls": "flow",
+    "d": 113,
+    "txt": "single node holds everything→hits a ceiling: "
+   }
+  },
+  {
+   "topic": "sharding-strategies",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 10,
+   "inkMax": 13,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 13,
+    "txt": "cross-shard transactions"
+   }
+  },
+  {
+   "topic": "sharding-strategies",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "sharding-strategies",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 1454,
+   "inkWorst": {
+    "cls": "piv",
+    "d": 1454,
+    "txt": "How do you reshard without moving everything?"
+   }
+  },
+  {
+   "topic": "sharding-strategies",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "sharding-strategies",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 3,
+   "inkMax": 34,
+   "inkWorst": {
+    "cls": "mbeat-l l-key",
+    "d": 34,
+    "txt": "Confirm it is needed: reads → replicas/cache;"
+   }
+  },
+  {
+   "topic": "sharding-strategies",
+   "pane": "num",
+   "stageOver": 68,
+   "inkCount": 18,
+   "inkMax": 107,
+   "inkWorst": {
+    "cls": "",
+    "d": 107,
+    "txt": "Shards needed8nodesceil(total data / per-shar"
+   }
+  },
+  {
+   "topic": "sharding-strategies",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "sharding-strategies",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "consistent-hashing",
+   "pane": "walk",
+   "stageOver": 0,
+   "inkCount": 3,
+   "inkMax": 16,
+   "inkWorst": {
+    "cls": "arc-step on",
+    "d": 16,
+    "txt": "1Modulo hashing reshuffles almost everything"
+   }
+  },
+  {
+   "topic": "consistent-hashing",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 11,
+   "inkMax": 50,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 50,
+    "txt": "consistent hashing in Dynamo/Cassandra"
+   }
+  },
+  {
+   "topic": "consistent-hashing",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "consistent-hashing",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 1022,
+   "inkWorst": {
+    "cls": "piv",
+    "d": 1022,
+    "txt": "Does consistent hashing fix hot spots?→ no --"
+   }
+  },
+  {
+   "topic": "consistent-hashing",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "consistent-hashing",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "consistent-hashing",
+   "pane": "num",
+   "stageOver": 32,
+   "inkCount": 15,
+   "inkMax": 71,
+   "inkWorst": {
+    "cls": "",
+    "d": 71,
+    "txt": "Keys moved (add/remove 1)~100,000of 1,000,000"
+   }
+  },
+  {
+   "topic": "consistent-hashing",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "consistent-hashing",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "storage-engines",
+   "pane": "walk",
+   "stageOver": 106,
+   "inkCount": 6,
+   "inkMax": 145,
+   "inkWorst": {
+    "cls": "flow",
+    "d": 145,
+    "txt": "data on disk→B-tree: sorted in-place pages, o"
+   }
+  },
+  {
+   "topic": "storage-engines",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 8,
+   "inkMax": 23,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 23,
+    "txt": "the three amplifications"
+   }
+  },
+  {
+   "topic": "storage-engines",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "storage-engines",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 1490,
+   "inkWorst": {
+    "cls": "piv",
+    "d": 1490,
+    "txt": "B-tree or LSM for this workload?→ write-heavy"
+   }
+  },
+  {
+   "topic": "storage-engines",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "storage-engines",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 1,
+   "inkMax": 20,
+   "inkWorst": {
+    "cls": "mbeat-l l-note",
+    "d": 20,
+    "txt": "No engine wins all three amplifications (RUM)"
+   }
+  },
+  {
+   "topic": "storage-engines",
+   "pane": "num",
+   "stageOver": 104,
+   "inkCount": 15,
+   "inkMax": 142,
+   "inkWorst": {
+    "cls": "",
+    "d": 142,
+    "txt": "Workload mixwrite-heavy50,000 w/s : 10,000 r/"
+   }
+  },
+  {
+   "topic": "storage-engines",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "storage-engines",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "probabilistic-structures",
+   "pane": "walk",
+   "stageOver": 99,
+   "inkCount": 6,
+   "inkMax": 138,
+   "inkWorst": {
+    "cls": "flow",
+    "d": 138,
+    "txt": "huge set / stream→exact answer needs memory p"
+   }
+  },
+  {
+   "topic": "probabilistic-structures",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 12,
+   "inkMax": 20,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 20,
+    "txt": "what HyperLogLog does"
+   }
+  },
+  {
+   "topic": "probabilistic-structures",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "probabilistic-structures",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 1575,
+   "inkWorst": {
+    "cls": "piv",
+    "d": 1575,
+    "txt": "Is the approximate answer safe here?→ only if"
+   }
+  },
+  {
+   "topic": "probabilistic-structures",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "probabilistic-structures",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 3,
+   "inkMax": 23,
+   "inkWorst": {
+    "cls": "mbeat-l l-store",
+    "d": 23,
+    "txt": "Pick by the question: membership → Bloom, dis"
+   }
+  },
+  {
+   "topic": "probabilistic-structures",
+   "pane": "num",
+   "stageOver": 0,
+   "inkCount": 9,
+   "inkMax": 28,
+   "inkWorst": {
+    "cls": "",
+    "d": 28,
+    "txt": "Bloom bits/element~10bitsm = -n ln p / (ln 2)"
+   }
+  },
+  {
+   "topic": "probabilistic-structures",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "probabilistic-structures",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "retries-timeouts",
+   "pane": "walk",
+   "stageOver": 0,
+   "inkCount": 3,
+   "inkMax": 12,
+   "inkWorst": {
+    "cls": "arc-step",
+    "d": 12,
+    "txt": "4The failure modes: retry storms and cascadin"
+   }
+  },
+  {
+   "topic": "retries-timeouts",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 6,
+   "inkMax": 18,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 18,
+    "txt": "retries and idempotency"
+   }
+  },
+  {
+   "topic": "retries-timeouts",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "retries-timeouts",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 1028,
+   "inkWorst": {
+    "cls": "piv",
+    "d": 1028,
+    "txt": "How do you pick the timeout value?→ from the "
+   }
+  },
+  {
+   "topic": "retries-timeouts",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "retries-timeouts",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "retries-timeouts",
+   "pane": "num",
+   "stageOver": 75,
+   "inkCount": 12,
+   "inkMax": 114,
+   "inkWorst": {
+    "cls": "",
+    "d": 114,
+    "txt": "Retry amplification27xworst-case load3 layers"
+   }
+  },
+  {
+   "topic": "retries-timeouts",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "retries-timeouts",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "idempotency",
+   "pane": "walk",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 29,
+   "inkWorst": {
+    "cls": "arc-step",
+    "d": 29,
+    "txt": "2Attach an idempotency key"
+   }
+  },
+  {
+   "topic": "idempotency",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 11,
+   "inkMax": 23,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 23,
+    "txt": "implementing an idempotency key"
+   }
+  },
+  {
+   "topic": "idempotency",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "idempotency",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 1014,
+   "inkWorst": {
+    "cls": "piv",
+    "d": 1014,
+    "txt": "Can you guarantee exactly-once?→ exactly-once"
+   }
+  },
+  {
+   "topic": "idempotency",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "idempotency",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "idempotency",
+   "pane": "num",
+   "stageOver": 75,
+   "inkCount": 18,
+   "inkMax": 114,
+   "inkWorst": {
+    "cls": "",
+    "d": 114,
+    "txt": "Duplicate requests30/secat 3% retries and dou"
+   }
+  },
+  {
+   "topic": "idempotency",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "idempotency",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "circuit-breaker",
+   "pane": "walk",
+   "stageOver": 0,
+   "inkCount": 3,
+   "inkMax": 28,
+   "inkWorst": {
+    "cls": "arc-step",
+    "d": 28,
+    "txt": "4The value: graceful degradation, not cascade"
+   }
+  },
+  {
+   "topic": "circuit-breaker",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 17,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 17,
+    "txt": "observability of breakers"
+   }
+  },
+  {
+   "topic": "circuit-breaker",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "circuit-breaker",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 998,
+   "inkWorst": {
+    "cls": "piv",
+    "d": 998,
+    "txt": "What does the user get while the breaker is o"
+   }
+  },
+  {
+   "topic": "circuit-breaker",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "circuit-breaker",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "circuit-breaker",
+   "pane": "num",
+   "stageOver": 25,
+   "inkCount": 18,
+   "inkMax": 64,
+   "inkWorst": {
+    "cls": "",
+    "d": 64,
+    "txt": "Fail-fast latency~0ms when openan open breake"
+   }
+  },
+  {
+   "topic": "circuit-breaker",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "circuit-breaker",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "error-propagation",
+   "pane": "walk",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 21,
+   "inkWorst": {
+    "cls": "arc-step on",
+    "d": 21,
+    "txt": "1Deep failures collapse to “something went wr"
+   }
+  },
+  {
+   "topic": "error-propagation",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 9,
+   "inkMax": 18,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 18,
+    "txt": "error contract backward compatibility"
+   }
+  },
+  {
+   "topic": "error-propagation",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "error-propagation",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 1502,
+   "inkWorst": {
+    "cls": "piv",
+    "d": 1502,
+    "txt": "How do you decide if a failure is retryable?→"
+   }
+  },
+  {
+   "topic": "error-propagation",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "error-propagation",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "error-propagation",
+   "pane": "num",
+   "stageOver": 89,
+   "inkCount": 18,
+   "inkMax": 128,
+   "inkWorst": {
+    "cls": "",
+    "d": 128,
+    "txt": "Transient / day (retry)~3,000retryablethese c"
+   }
+  },
+  {
+   "topic": "error-propagation",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "error-propagation",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "backpressure",
+   "pane": "walk",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 28,
+   "inkWorst": {
+    "cls": "arc-step",
+    "d": 28,
+    "txt": "3The mechanisms: block, drop, or demand"
+   }
+  },
+  {
+   "topic": "backpressure",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 6,
+   "inkMax": 18,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 18,
+    "txt": "what backpressure is"
+   }
+  },
+  {
+   "topic": "backpressure",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "backpressure",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 1351,
+   "inkWorst": {
+    "cls": "piv",
+    "d": 1351,
+    "txt": "Shed or block under overload?→ SLO-driven: sh"
+   }
+  },
+  {
+   "topic": "backpressure",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "backpressure",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 1,
+   "inkMax": 39,
+   "inkWorst": {
+    "cls": "mbeat-l l-note",
+    "d": 39,
+    "txt": "The trade is latency/blocking vs loss"
+   }
+  },
+  {
+   "topic": "backpressure",
+   "pane": "num",
+   "stageOver": 68,
+   "inkCount": 12,
+   "inkMax": 107,
+   "inkWorst": {
+    "cls": "",
+    "d": 107,
+    "txt": "Overload (excess)+200/sproducer minus consume"
+   }
+  },
+  {
+   "topic": "backpressure",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "backpressure",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "observability",
+   "pane": "walk",
+   "stageOver": 0,
+   "inkCount": 7,
+   "inkMax": 423,
+   "inkWorst": {
+    "cls": "code",
+    "d": 423,
+    "txt": "{ \"level\": \"info\", \"traceId\": \"a1b2c3\", \"tena"
+   }
+  },
+  {
+   "topic": "observability",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 10,
+   "inkMax": 29,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 29,
+    "txt": "APM to OpenTelemetry migration"
+   }
+  },
+  {
+   "topic": "observability",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "observability",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 1280,
+   "inkWorst": {
+    "cls": "piv",
+    "d": 1280,
+    "txt": "A log, a metric, or a trace?→ metric for rate"
+   }
+  },
+  {
+   "topic": "observability",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "observability",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 1,
+   "inkMax": 5,
+   "inkWorst": {
+    "cls": "mbeat-l l-store",
+    "d": 5,
+    "txt": "One correlation id"
+   }
+  },
+  {
+   "topic": "observability",
+   "pane": "num",
+   "stageOver": 68,
+   "inkCount": 12,
+   "inkMax": 107,
+   "inkWorst": {
+    "cls": "",
+    "d": 107,
+    "txt": "Log volume20,000,000B/s (1,728 GB/day)structu"
+   }
+  },
+  {
+   "topic": "observability",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "observability",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "debugging",
+   "pane": "walk",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 21,
+   "inkWorst": {
+    "cls": "arc-step",
+    "d": 21,
+    "txt": "3Hypothesis, then the most specific evidence"
+   }
+  },
+  {
+   "topic": "debugging",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 8,
+   "inkMax": 17,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 17,
+    "txt": "the investigation workflow"
+   }
+  },
+  {
+   "topic": "debugging",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "debugging",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 1380,
+   "inkWorst": {
+    "cls": "piv",
+    "d": 1380,
+    "txt": "How do you tell the root cause from the ampli"
+   }
+  },
+  {
+   "topic": "debugging",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "debugging",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "debugging",
+   "pane": "num",
+   "stageOver": 61,
+   "inkCount": 18,
+   "inkMax": 100,
+   "inkWorst": {
+    "cls": "",
+    "d": 100,
+    "txt": "Silent failures / day~2,400never storedthese "
+   }
+  },
+  {
+   "topic": "debugging",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "debugging",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "slos",
+   "pane": "walk",
+   "stageOver": 0,
+   "inkCount": 1,
+   "inkMax": 9,
+   "inkWorst": {
+    "cls": "arc-step on",
+    "d": 9,
+    "txt": "1An SLI measures user health; an SLO is the t"
+   }
+  },
+  {
+   "topic": "slos",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 3,
+   "inkMax": 21,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 21,
+    "txt": "measurement window"
+   }
+  },
+  {
+   "topic": "slos",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "slos",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 1129,
+   "inkWorst": {
+    "cls": "piv",
+    "d": 1129,
+    "txt": "What makes a good SLI?→ a proportion of good "
+   }
+  },
+  {
+   "topic": "slos",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "slos",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "slos",
+   "pane": "num",
+   "stageOver": 82,
+   "inkCount": 15,
+   "inkMax": 121,
+   "inkWorst": {
+    "cls": "",
+    "d": 121,
+    "txt": "Error budget0.1%of requests may fail1 - SLO —"
+   }
+  },
+  {
+   "topic": "slos",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "slos",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "iac",
+   "pane": "walk",
+   "stageOver": 0,
+   "inkCount": 5,
+   "inkMax": 399,
+   "inkWorst": {
+    "cls": "code",
+    "d": 399,
+    "txt": "// declare resources; references between them"
+   }
+  },
+  {
+   "topic": "iac",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 9,
+   "inkMax": 22,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 22,
+    "txt": "Templating and config management (Jinja2/YAML"
+   }
+  },
+  {
+   "topic": "iac",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 2,
+   "inkMax": 23,
+   "inkWorst": {
+    "cls": "dgm",
+    "d": 23,
+    "txt": "config (declared infra)resources + relationsh"
+   }
+  },
+  {
+   "topic": "iac",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "iac",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "iac",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "iac",
+   "pane": "num",
+   "stageOver": 18,
+   "inkCount": 21,
+   "inkMax": 57,
+   "inkWorst": {
+    "cls": "",
+    "d": 57,
+    "txt": "Blast radius (resources / state)100resourcest"
+   }
+  },
+  {
+   "topic": "iac",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "iac",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 5,
+   "inkMax": 11,
+   "inkWorst": {
+    "cls": "op-n",
+    "d": 11,
+    "txt": "Thirty seconds"
+   }
+  },
+  {
+   "topic": "desired-state",
+   "pane": "walk",
+   "stageOver": 0,
+   "inkCount": 3,
+   "inkMax": 27,
+   "inkWorst": {
+    "cls": "arc-step",
+    "d": 27,
+    "txt": "8Report and confirm convergence"
+   }
+  },
+  {
+   "topic": "desired-state",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 9,
+   "inkMax": 20,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 20,
+    "txt": "The reconciliation loop"
+   }
+  },
+  {
+   "topic": "desired-state",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 1,
+   "inkMax": 13,
+   "inkWorst": {
+    "cls": "dgm",
+    "d": 13,
+    "txt": "triggerconfig change · device check-in · wind"
+   }
+  },
+  {
+   "topic": "desired-state",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "desired-state",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "desired-state",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "desired-state",
+   "pane": "num",
+   "stageOver": 25,
+   "inkCount": 21,
+   "inkMax": 64,
+   "inkWorst": {
+    "cls": "",
+    "d": 64,
+    "txt": "Reconcile events/sec (platform)1,667events/sf"
+   }
+  },
+  {
+   "topic": "desired-state",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "desired-state",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 5,
+   "inkMax": 21,
+   "inkWorst": {
+    "cls": "op-n",
+    "d": 21,
+    "txt": "Silent divergence"
+   }
+  },
+  {
+   "topic": "aws-hardening",
+   "pane": "walk",
+   "stageOver": 0,
+   "inkCount": 9,
+   "inkMax": 17,
+   "inkWorst": {
+    "cls": "arc-step",
+    "d": 17,
+    "txt": "4Encryption at rest — SSE-KMS"
+   }
+  },
+  {
+   "topic": "aws-hardening",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 14,
+   "inkMax": 19,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 19,
+    "txt": "Secrets management"
+   }
+  },
+  {
+   "topic": "aws-hardening",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "aws-hardening",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "aws-hardening",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "aws-hardening",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "aws-hardening",
+   "pane": "num",
+   "stageOver": 0,
+   "inkCount": 15,
+   "inkMax": 28,
+   "inkWorst": {
+    "cls": "",
+    "d": 28,
+    "txt": "Objects exposed by ONE public bucket200,000ob"
+   }
+  },
+  {
+   "topic": "aws-hardening",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "aws-hardening",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "load-balancing",
+   "pane": "walk",
+   "stageOver": 0,
+   "inkCount": 3,
+   "inkMax": 18,
+   "inkWorst": {
+    "cls": "arc-step",
+    "d": 18,
+    "txt": "2The algorithm distributes; at L4 or L7"
+   }
+  },
+  {
+   "topic": "load-balancing",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 6,
+   "inkMax": 13,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 13,
+    "txt": "least-connections"
+   }
+  },
+  {
+   "topic": "load-balancing",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "load-balancing",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 1199,
+   "inkWorst": {
+    "cls": "piv",
+    "d": 1199,
+    "txt": "L4 or L7 – how do you choose?→ L4 for raw thr"
+   }
+  },
+  {
+   "topic": "load-balancing",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "load-balancing",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "load-balancing",
+   "pane": "num",
+   "stageOver": 111,
+   "inkCount": 18,
+   "inkMax": 150,
+   "inkWorst": {
+    "cls": "",
+    "d": 150,
+    "txt": "Per-instance load1,000req/s eachthe LB spread"
+   }
+  },
+  {
+   "topic": "load-balancing",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "load-balancing",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "autoscaling",
+   "pane": "walk",
+   "stageOver": 0,
+   "inkCount": 6,
+   "inkMax": 37,
+   "inkWorst": {
+    "cls": "flow",
+    "d": 37,
+    "txt": "provision for peak: wasted idle capacity→prov"
+   }
+  },
+  {
+   "topic": "autoscaling",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 8,
+   "inkMax": 22,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 22,
+    "txt": "autoscaling and downstream dependencies"
+   }
+  },
+  {
+   "topic": "autoscaling",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "autoscaling",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 1406,
+   "inkWorst": {
+    "cls": "piv",
+    "d": 1406,
+    "txt": "Why can’t it just handle any spike?→ scale-up"
+   }
+  },
+  {
+   "topic": "autoscaling",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "autoscaling",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 1,
+   "inkMax": 14,
+   "inkWorst": {
+    "cls": "mbeat-l l-note",
+    "d": 14,
+    "txt": "Assumes a horizontally-scalable, mostly-state"
+   }
+  },
+  {
+   "topic": "autoscaling",
+   "pane": "num",
+   "stageOver": 89,
+   "inkCount": 18,
+   "inkMax": 128,
+   "inkWorst": {
+    "cls": "",
+    "d": 128,
+    "txt": "Instances at target15replicasto keep each ins"
+   }
+  },
+  {
+   "topic": "autoscaling",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "autoscaling",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "leader-election",
+   "pane": "walk",
+   "stageOver": 0,
+   "inkCount": 3,
+   "inkMax": 16,
+   "inkWorst": {
+    "cls": "arc-step",
+    "d": 16,
+    "txt": "4The guarantee: at-most-one active leader, vi"
+   }
+  },
+  {
+   "topic": "leader-election",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 7,
+   "inkMax": 21,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 21,
+    "txt": "consensus underpinning"
+   }
+  },
+  {
+   "topic": "leader-election",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "leader-election",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 1158,
+   "inkWorst": {
+    "cls": "piv",
+    "d": 1158,
+    "txt": "What prevents two leaders (split-brain)?→ quo"
+   }
+  },
+  {
+   "topic": "leader-election",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "leader-election",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 1,
+   "inkMax": 6,
+   "inkWorst": {
+    "cls": "mbeat-l l-note",
+    "d": 6,
+    "txt": "Safety-vs-availability: a brief no-leader win"
+   }
+  },
+  {
+   "topic": "leader-election",
+   "pane": "num",
+   "stageOver": 39,
+   "inkCount": 18,
+   "inkMax": 78,
+   "inkWorst": {
+    "cls": "",
+    "d": 78,
+    "txt": "Quorum needed3of 5 nodesa majority must agree"
+   }
+  },
+  {
+   "topic": "leader-election",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "leader-election",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "distributed-locks",
+   "pane": "walk",
+   "stageOver": 49,
+   "inkCount": 6,
+   "inkMax": 88,
+   "inkWorst": {
+    "cls": "flow",
+    "d": 88,
+    "txt": "many processes→one shared resource→distribute"
+   }
+  },
+  {
+   "topic": "distributed-locks",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 9,
+   "inkMax": 14,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 14,
+    "txt": "optimistic concurrency as an alternative"
+   }
+  },
+  {
+   "topic": "distributed-locks",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "distributed-locks",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 1346,
+   "inkWorst": {
+    "cls": "piv",
+    "d": 1346,
+    "txt": "Is a lock (or lease, or Redlock) safe for cor"
+   }
+  },
+  {
+   "topic": "distributed-locks",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "distributed-locks",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "distributed-locks",
+   "pane": "num",
+   "stageOver": 89,
+   "inkCount": 12,
+   "inkMax": 128,
+   "inkWorst": {
+    "cls": "",
+    "d": 128,
+    "txt": "Serialized throughput~0ops/s (one at a time)a"
+   }
+  },
+  {
+   "topic": "distributed-locks",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "distributed-locks",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "multi-region",
+   "pane": "walk",
+   "stageOver": 169,
+   "inkCount": 5,
+   "inkMax": 208,
+   "inkWorst": {
+    "cls": "flow",
+    "d": 208,
+    "txt": "single region→a whole region can fail, distan"
+   }
+  },
+  {
+   "topic": "multi-region",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 8,
+   "inkMax": 11,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 11,
+    "txt": "data residency and sovereignty"
+   }
+  },
+  {
+   "topic": "multi-region",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "multi-region",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 1698,
+   "inkWorst": {
+    "cls": "piv",
+    "d": 1698,
+    "txt": "How do you prevent split-brain on failover?→ "
+   }
+  },
+  {
+   "topic": "multi-region",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "multi-region",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "multi-region",
+   "pane": "num",
+   "stageOver": 61,
+   "inkCount": 16,
+   "inkMax": 100,
+   "inkWorst": {
+    "cls": "",
+    "d": 100,
+    "txt": "RPO window (async)~3 sof writes at riskasynch"
+   }
+  },
+  {
+   "topic": "multi-region",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "multi-region",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "lambda-organization",
+   "pane": "walk",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 27,
+   "inkWorst": {
+    "cls": "arc-step",
+    "d": 27,
+    "txt": "2Concurrency scales out — one environment per"
+   }
+  },
+  {
+   "topic": "lambda-organization",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 14,
+   "inkMax": 18,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 18,
+    "txt": "idempotency"
+   }
+  },
+  {
+   "topic": "lambda-organization",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "lambda-organization",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 1234,
+   "inkWorst": {
+    "cls": "piv",
+    "d": 1234,
+    "txt": "How do you organize a hundred functions?→ by "
+   }
+  },
+  {
+   "topic": "lambda-organization",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "lambda-organization",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 1,
+   "inkMax": 4,
+   "inkWorst": {
+    "cls": "mbeat-l l-note",
+    "d": 4,
+    "txt": "Reservation of one"
+   }
+  },
+  {
+   "topic": "lambda-organization",
+   "pane": "num",
+   "stageOver": 25,
+   "inkCount": 12,
+   "inkMax": 64,
+   "inkWorst": {
+    "cls": "",
+    "d": 64,
+    "txt": "Functions to operate108functionspast ~100 fun"
+   }
+  },
+  {
+   "topic": "lambda-organization",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "lambda-organization",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "devices-dispatch",
+   "pane": "walk",
+   "stageOver": 0,
+   "inkCount": 5,
+   "inkMax": 133,
+   "inkWorst": {
+    "cls": "code",
+    "d": 133,
+    "txt": "{\n  \"jobId\": 88,\n  \"deviceKey\": \"G6-A1F3\",\n  "
+   }
+  },
+  {
+   "topic": "devices-dispatch",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 5,
+   "inkMax": 17,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 17,
+    "txt": "observability"
+   }
+  },
+  {
+   "topic": "devices-dispatch",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "devices-dispatch",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 1447,
+   "inkWorst": {
+    "cls": "piv",
+    "d": 1447,
+    "txt": "Push to devices or let them pull?→ pull, beca"
+   }
+  },
+  {
+   "topic": "devices-dispatch",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "devices-dispatch",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "devices-dispatch",
+   "pane": "num",
+   "stageOver": 0,
+   "inkCount": 13,
+   "inkMax": 14,
+   "inkWorst": {
+    "cls": "",
+    "d": 14,
+    "txt": "Steady poll QPS833req/sfleet size over the in"
+   }
+  },
+  {
+   "topic": "devices-dispatch",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "devices-dispatch",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "developer-platform",
+   "pane": "walk",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 32,
+   "inkWorst": {
+    "cls": "arc-step",
+    "d": 32,
+    "txt": "4Treat infrastructure as managed, and treat t"
+   }
+  },
+  {
+   "topic": "developer-platform",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 11,
+   "inkMax": 21,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 21,
+    "txt": "infrastructure lifecycle"
+   }
+  },
+  {
+   "topic": "developer-platform",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "developer-platform",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 1273,
+   "inkWorst": {
+    "cls": "piv",
+    "d": 1273,
+    "txt": "What makes it safe to give a whole team produ"
+   }
+  },
+  {
+   "topic": "developer-platform",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "developer-platform",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "developer-platform",
+   "pane": "num",
+   "stageOver": 82,
+   "inkCount": 16,
+   "inkMax": 121,
+   "inkWorst": {
+    "cls": "",
+    "d": 121,
+    "txt": "Time saved / day600min/daya tool that removes"
+   }
+  },
+  {
+   "topic": "developer-platform",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "developer-platform",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "state-machine",
+   "pane": "walk",
+   "stageOver": 0,
+   "inkCount": 3,
+   "inkMax": 19,
+   "inkWorst": {
+    "cls": "arc-step",
+    "d": 19,
+    "txt": "4Concurrent transitions need a compare-and-sw"
+   }
+  },
+  {
+   "topic": "state-machine",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 7,
+   "inkMax": 11,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 11,
+    "txt": "idempotent transitions"
+   }
+  },
+  {
+   "topic": "state-machine",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "state-machine",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 1583,
+   "inkWorst": {
+    "cls": "piv",
+    "d": 1583,
+    "txt": "Why a state machine instead of boolean flags?"
+   }
+  },
+  {
+   "topic": "state-machine",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "state-machine",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "state-machine",
+   "pane": "num",
+   "stageOver": 39,
+   "inkCount": 18,
+   "inkMax": 78,
+   "inkWorst": {
+    "cls": "",
+    "d": 78,
+    "txt": "Conceivable moves56ordered pairswith 8 states"
+   }
+  },
+  {
+   "topic": "state-machine",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "state-machine",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "rules-engine",
+   "pane": "walk",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 187,
+   "inkWorst": {
+    "cls": "code",
+    "d": 187,
+    "txt": "-- which rules run for a tenant: catalog join"
+   }
+  },
+  {
+   "topic": "rules-engine",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 10,
+   "inkMax": 36,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 36,
+    "txt": "plain vs CONCURRENTLY"
+   }
+  },
+  {
+   "topic": "rules-engine",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "rules-engine",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 1155,
+   "inkWorst": {
+    "cls": "piv",
+    "d": 1155,
+    "txt": "Why an engine instead of hardcoded rules?→ po"
+   }
+  },
+  {
+   "topic": "rules-engine",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "rules-engine",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "rules-engine",
+   "pane": "num",
+   "stageOver": 0,
+   "inkCount": 18,
+   "inkMax": 36,
+   "inkWorst": {
+    "cls": "nrow-v",
+    "d": 36,
+    "txt": "2distinct"
+   }
+  },
+  {
+   "topic": "rules-engine",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "rules-engine",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "feature-flags",
+   "pane": "walk",
+   "stageOver": 0,
+   "inkCount": 2,
+   "inkMax": 23,
+   "inkWorst": {
+    "cls": "arc-step",
+    "d": 23,
+    "txt": "3Roll out by percentage, consistently"
+   }
+  },
+  {
+   "topic": "feature-flags",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 5,
+   "inkMax": 35,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 35,
+    "txt": "experimentation"
+   }
+  },
+  {
+   "topic": "feature-flags",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "feature-flags",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 1325,
+   "inkWorst": {
+    "cls": "piv",
+    "d": 1325,
+    "txt": "A flag or a config value?→ same machinery; a "
+   }
+  },
+  {
+   "topic": "feature-flags",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "feature-flags",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "feature-flags",
+   "pane": "num",
+   "stageOver": 0,
+   "inkCount": 9,
+   "inkMax": 35,
+   "inkWorst": {
+    "cls": "",
+    "d": 35,
+    "txt": "Flag evaluations/sec20,000/severy request res"
+   }
+  },
+  {
+   "topic": "feature-flags",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "feature-flags",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "api-design",
+   "pane": "walk",
+   "stageOver": 18,
+   "inkCount": 7,
+   "inkMax": 56,
+   "inkWorst": {
+    "cls": "flow",
+    "d": 56,
+    "txt": "POST /createOrder, POST /getOrder -- RPC over"
+   }
+  },
+  {
+   "topic": "api-design",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 10,
+   "inkMax": 18,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 18,
+    "txt": "idempotency in HTTP"
+   }
+  },
+  {
+   "topic": "api-design",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "api-design",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 1603,
+   "inkWorst": {
+    "cls": "piv",
+    "d": 1603,
+    "txt": "How do you change an API without breaking cli"
+   }
+  },
+  {
+   "topic": "api-design",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "api-design",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "api-design",
+   "pane": "num",
+   "stageOver": 96,
+   "inkCount": 18,
+   "inkMax": 135,
+   "inkWorst": {
+    "cls": "",
+    "d": 135,
+    "txt": "Rows scanned (offset)~100,000per pageoffset 9"
+   }
+  },
+  {
+   "topic": "api-design",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "api-design",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "rate-limiting",
+   "pane": "walk",
+   "stageOver": 0,
+   "inkCount": 1,
+   "inkMax": 15,
+   "inkWorst": {
+    "cls": "arc-step",
+    "d": 15,
+    "txt": "3Atomically increment and check"
+   }
+  },
+  {
+   "topic": "rate-limiting",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 1,
+   "inkMax": 3,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 3,
+    "txt": "atomic increment"
+   }
+  },
+  {
+   "topic": "rate-limiting",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "rate-limiting",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 997,
+   "inkWorst": {
+    "cls": "piv",
+    "d": 997,
+    "txt": "Which algorithm and why?→ token bucket for bu"
+   }
+  },
+  {
+   "topic": "rate-limiting",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "rate-limiting",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 1,
+   "inkMax": 7,
+   "inkWorst": {
+    "cls": "mbeat-l l-store",
+    "d": 7,
+    "txt": "Tie to the requirement"
+   }
+  },
+  {
+   "topic": "rate-limiting",
+   "pane": "num",
+   "stageOver": 0,
+   "inkCount": 10,
+   "inkMax": 14,
+   "inkWorst": {
+    "cls": "",
+    "d": 14,
+    "txt": "Store ops/sec50,000ops/sone atomic increment "
+   }
+  },
+  {
+   "topic": "rate-limiting",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "rate-limiting",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "content-pipeline",
+   "pane": "walk",
+   "stageOver": 0,
+   "inkCount": 8,
+   "inkMax": 138,
+   "inkWorst": {
+    "cls": "mbeat",
+    "d": 138,
+    "txt": "Name the risk yourself\"The thing I'd flag wit"
+   }
+  },
+  {
+   "topic": "content-pipeline",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 15,
+   "inkMax": 19,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 19,
+    "txt": "Observability & operability"
+   }
+  },
+  {
+   "topic": "content-pipeline",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "content-pipeline",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "content-pipeline",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "content-pipeline",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "content-pipeline",
+   "pane": "num",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "content-pipeline",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "content-pipeline",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "microfrontend",
+   "pane": "walk",
+   "stageOver": 0,
+   "inkCount": 2,
+   "inkMax": 28,
+   "inkWorst": {
+    "cls": "arc-step",
+    "d": 28,
+    "txt": "3Independent deploy: publish a bundle, flip o"
+   }
+  },
+  {
+   "topic": "microfrontend",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 12,
+   "inkMax": 31,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 31,
+    "txt": "cross-app communication"
+   }
+  },
+  {
+   "topic": "microfrontend",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "microfrontend",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 1227,
+   "inkWorst": {
+    "cls": "piv",
+    "d": 1227,
+    "txt": "Why microfrontends instead of a monolithic fr"
+   }
+  },
+  {
+   "topic": "microfrontend",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "microfrontend",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 1,
+   "inkMax": 18,
+   "inkWorst": {
+    "cls": "mbeat-l l-key",
+    "d": 18,
+    "txt": "Microservices for the UI"
+   }
+  },
+  {
+   "topic": "microfrontend",
+   "pane": "num",
+   "stageOver": 61,
+   "inkCount": 18,
+   "inkMax": 100,
+   "inkWorst": {
+    "cls": "",
+    "d": 100,
+    "txt": "Framework shipped once140KB (shared)sharing t"
+   }
+  },
+  {
+   "topic": "microfrontend",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "microfrontend",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "signing",
+   "pane": "walk",
+   "stageOver": 0,
+   "inkCount": 10,
+   "inkMax": 919,
+   "inkWorst": {
+    "cls": "code",
+    "d": 919,
+    "txt": "// product_type -> company_product_type -> co"
+   }
+  },
+  {
+   "topic": "signing",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 9,
+   "inkMax": 21,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 21,
+    "txt": "Authorization to sign"
+   }
+  },
+  {
+   "topic": "signing",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "signing",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "signing",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "signing",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "signing",
+   "pane": "num",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "signing",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "signing",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "authz",
+   "pane": "walk",
+   "stageOver": 0,
+   "inkCount": 13,
+   "inkMax": 358,
+   "inkWorst": {
+    "cls": "mbeat ans",
+    "d": 358,
+    "txt": "Absorb the follow-up\"Defense in depth. The pr"
+   }
+  },
+  {
+   "topic": "authz",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 6,
+   "inkMax": 20,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 20,
+    "txt": "Materialized authorization at scale"
+   }
+  },
+  {
+   "topic": "authz",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "authz",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "authz",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "authz",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "authz",
+   "pane": "num",
+   "stageOver": 0,
+   "inkCount": 13,
+   "inkMax": 21,
+   "inkWorst": {
+    "cls": "",
+    "d": 21,
+    "txt": "Rows per average tenant100,000rowstotal rows "
+   }
+  },
+  {
+   "topic": "authz",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "authz",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "multi-tenant",
+   "pane": "walk",
+   "stageOver": 0,
+   "inkCount": 3,
+   "inkMax": 22,
+   "inkWorst": {
+    "cls": "arc-step",
+    "d": 22,
+    "txt": "2Middleware pins the tenant to the request"
+   }
+  },
+  {
+   "topic": "multi-tenant",
+   "pane": "drill",
+   "stageOver": 0,
+   "inkCount": 5,
+   "inkMax": 17,
+   "inkWorst": {
+    "cls": "dn-t",
+    "d": 17,
+    "txt": "one enforcement point"
+   }
+  },
+  {
+   "topic": "multi-tenant",
+   "pane": "wb",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "multi-tenant",
+   "pane": "sys",
+   "stageOver": 0,
+   "inkCount": 4,
+   "inkMax": 1390,
+   "inkWorst": {
+    "cls": "piv",
+    "d": 1390,
+    "txt": "Which isolation model, shared or per-tenant?→"
+   }
+  },
+  {
+   "topic": "multi-tenant",
+   "pane": "trade",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "multi-tenant",
+   "pane": "model",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "multi-tenant",
+   "pane": "num",
+   "stageOver": 0,
+   "inkCount": 15,
+   "inkMax": 28,
+   "inkWorst": {
+    "cls": "",
+    "d": 28,
+    "txt": "Shared: predicate cost~0msone indexed tenant_"
+   }
+  },
+  {
+   "topic": "multi-tenant",
+   "pane": "rf",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  },
+  {
+   "topic": "multi-tenant",
+   "pane": "open",
+   "stageOver": 0,
+   "inkCount": 0,
+   "inkMax": 0,
+   "inkWorst": null
+  }
+ ],
+ "pivBreadth": [
+  {
+   "topic": "stream-batch-processing",
+   "pivots": 2,
+   "worstClip": 1815.5,
+   "worstPct": 86.5,
+   "worstTxt": "→ window by event-time, fire on watermarks, and set an allow",
+   "paEmpty": 2,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "consistency-models",
+   "pivots": 2,
+   "worstClip": 1618.9,
+   "worstPct": 85.1,
+   "worstTxt": "→ strong is a premium paid on every operation: coordination ",
+   "paEmpty": 2,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "multi-region",
+   "pivots": 2,
+   "worstClip": 1617.9,
+   "worstPct": 85.1,
+   "worstTxt": "→ fence the old primary before promoting, or use a quorum so",
+   "paEmpty": 2,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "real-time-delivery",
+   "pivots": 2,
+   "worstClip": 1586.8,
+   "worstPct": 84.8,
+   "worstTxt": "→ on-write for bounded audiences (instant reads), on-read fo",
+   "paEmpty": 2,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "api-design",
+   "pivots": 2,
+   "worstClip": 1520.7,
+   "worstPct": 84.3,
+   "worstTxt": "→ additive changes with a tolerant reader; version only to b",
+   "paEmpty": 2,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "state-machine",
+   "pivots": 2,
+   "worstClip": 1502.8,
+   "worstPct": 84.1,
+   "worstTxt": "→ flags allow contradictory combinations nothing prevents; o",
+   "paEmpty": 2,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "probabilistic-structures",
+   "pivots": 2,
+   "worstClip": 1470.4,
+   "worstPct": 83.8,
+   "worstTxt": "→ only if the error direction is harmless for the use, and c",
+   "paEmpty": 2,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "kafka-internals",
+   "pivots": 2,
+   "worstClip": 1428.7,
+   "worstPct": 83.4,
+   "worstTxt": "→ retained replayable log (pull, offsets) vs delete-on-consu",
+   "paEmpty": 2,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "error-propagation",
+   "pivots": 2,
+   "worstClip": 1412.9,
+   "worstPct": 83.3,
+   "worstTxt": "→ whether retrying can succeed (transient) and whether the o",
+   "paEmpty": 2,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "storage-engines",
+   "pivots": 2,
+   "worstClip": 1399.6,
+   "worstPct": 83.1,
+   "worstTxt": "→ write-heavy/ingest -> LSM (sequential writes + compaction)",
+   "paEmpty": 2,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "devices-dispatch",
+   "pivots": 2,
+   "worstClip": 1373.3,
+   "worstPct": 82.9,
+   "worstTxt": "→ pull, because you cannot hold connections to a huge interm",
+   "paEmpty": 2,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "shared-definition",
+   "pivots": 2,
+   "worstClip": 1368.3,
+   "worstPct": 82.8,
+   "worstTxt": "→ yes, and it is the right tool when the attribute set is va",
+   "paEmpty": 2,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "sharding-strategies",
+   "pivots": 2,
+   "worstClip": 1355,
+   "worstPct": 82.7,
+   "worstTxt": "→ consistent hashing or fixed logical partitions, then dual-",
+   "paEmpty": 2,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "autoscaling",
+   "pivots": 2,
+   "worstClip": 1336.2,
+   "worstPct": 82.5,
+   "worstTxt": "→ scale-up lag (provisioning + cold start) means it's a step",
+   "paEmpty": 2,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "multi-tenant",
+   "pivots": 2,
+   "worstClip": 1309.1,
+   "worstPct": 82.2,
+   "worstTxt": "→ shared rows for density, a database per tenant for a hard ",
+   "paEmpty": 2,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "debugging",
+   "pivots": 2,
+   "worstClip": 1291.5,
+   "worstPct": 82,
+   "worstTxt": "→ the amplifier is disproportionately loud -- error volume f",
+   "paEmpty": 2,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "caching",
+   "pivots": 2,
+   "worstClip": 1273.1,
+   "worstPct": 81.8,
+   "worstTxt": "→ cache-aside by default, write-through where the cache must",
+   "paEmpty": 2,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "backpressure",
+   "pivots": 2,
+   "worstClip": 1263.9,
+   "worstPct": 81.7,
+   "worstTxt": "→ SLO-driven: shed to protect latency (interactive, loss-tol",
+   "paEmpty": 2,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "feature-flags",
+   "pivots": 2,
+   "worstClip": 1257.3,
+   "worstPct": 81.6,
+   "worstTxt": "→ same machinery; a flag is the boolean toggle, config is an",
+   "paEmpty": 2,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "distributed-locks",
+   "pivots": 2,
+   "worstClip": 1243.5,
+   "worstPct": 81.4,
+   "worstTxt": "→ not on its own -- a paused holder can act after expiry; yo",
+   "paEmpty": 2,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "soft-delete",
+   "pivots": 2,
+   "worstClip": 1239.7,
+   "worstPct": 81.4,
+   "worstTxt": "→ every read needs the filter, and unique constraints and fo",
+   "paEmpty": 2,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "saga",
+   "pivots": 2,
+   "worstClip": 1222.3,
+   "worstPct": 81.1,
+   "worstTxt": "→ choreography = event-driven, decoupled, implicit flow; orc",
+   "paEmpty": 2,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "observability",
+   "pivots": 2,
+   "worstClip": 1209.4,
+   "worstPct": 81,
+   "worstTxt": "→ metric for rates/latency and alerts, log for the detail of",
+   "paEmpty": 2,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "replication",
+   "pivots": 2,
+   "worstClip": 1195.5,
+   "worstPct": 80.8,
+   "worstTxt": "→ quorums: a write needs W acks, a read queries R, and R + W",
+   "paEmpty": 2,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "cdc",
+   "pivots": 2,
+   "worstClip": 1189.7,
+   "worstPct": 80.7,
+   "worstTxt": "→ outbox for curated domain events, log-based for wholesale ",
+   "paEmpty": 2,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "developer-platform",
+   "pivots": 2,
+   "worstClip": 1177.5,
+   "worstPct": 80.6,
+   "worstTxt": "→ safe-by-default: prod read-only, environment explicit, EXP",
+   "paEmpty": 2,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "lambda-organization",
+   "pivots": 2,
+   "worstClip": 1143.8,
+   "worstPct": 80.1,
+   "worstTxt": "→ by business domain with a naming convention, so logs are b",
+   "paEmpty": 2,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "event-driven",
+   "pivots": 2,
+   "worstClip": 1122.3,
+   "worstPct": 79.9,
+   "worstTxt": "→ at-least-once plus an idempotent consumer, never exactly-o",
+   "paEmpty": 2,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "load-balancing",
+   "pivots": 2,
+   "worstClip": 1121.2,
+   "worstPct": 79.8,
+   "worstTxt": "→ L4 for raw throughput and non-HTTP; L7 when you need to ro",
+   "paEmpty": 2,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "microfrontend",
+   "pivots": 2,
+   "worstClip": 1106.3,
+   "worstPct": 79.6,
+   "worstTxt": "→ independent team deploys -- it's an organizational problem",
+   "paEmpty": 2,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "leader-election",
+   "pivots": 2,
+   "worstClip": 1077.2,
+   "worstPct": 79.1,
+   "worstTxt": "→ quorum (a minority can't elect) + lease (a lost leader exp",
+   "paEmpty": 2,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "slos",
+   "pivots": 2,
+   "worstClip": 1062,
+   "worstPct": 78.9,
+   "worstTxt": "→ a proportion of good events over valid events, measured ne",
+   "paEmpty": 2,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "rules-engine",
+   "pivots": 2,
+   "worstClip": 1061.9,
+   "worstPct": 78.9,
+   "worstTxt": "→ policy is editable data, changeable without a release\nRule",
+   "paEmpty": 2,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "retries-timeouts",
+   "pivots": 2,
+   "worstClip": 951.1,
+   "worstPct": 77,
+   "worstTxt": "→ from the dependency's latency distribution -- above p99 wi",
+   "paEmpty": 2,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "consistent-hashing",
+   "pivots": 2,
+   "worstClip": 932.4,
+   "worstPct": 76.7,
+   "worstTxt": "→ no -- it evens where keys live, not access frequency; a ho",
+   "paEmpty": 2,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "idempotency",
+   "pivots": 2,
+   "worstClip": 924.1,
+   "worstPct": 76.5,
+   "worstTxt": "→ exactly-once effect, not delivery: at-least-once + idempot",
+   "paEmpty": 2,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "circuit-breaker",
+   "pivots": 2,
+   "worstClip": 923.6,
+   "worstPct": 76.5,
+   "worstTxt": "→ a fallback: stale cache, default, queued write, or degrade",
+   "paEmpty": 2,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "rate-limiting",
+   "pivots": 2,
+   "worstClip": 909.1,
+   "worstPct": 76.2,
+   "worstTxt": "→ token bucket for bursts, sliding window for precision\nToke",
+   "paEmpty": 2,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "notifications",
+   "pivots": 7,
+   "worstClip": 0,
+   "worstPct": 0,
+   "worstTxt": "",
+   "paEmpty": 0,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "eav",
+   "pivots": 7,
+   "worstClip": 0,
+   "worstPct": 0,
+   "worstTxt": "",
+   "paEmpty": 0,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "iac",
+   "pivots": 7,
+   "worstClip": 0,
+   "worstPct": 0,
+   "worstTxt": "",
+   "paEmpty": 0,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "desired-state",
+   "pivots": 7,
+   "worstClip": 0,
+   "worstPct": 0,
+   "worstTxt": "",
+   "paEmpty": 0,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "aws-hardening",
+   "pivots": 7,
+   "worstClip": 0,
+   "worstPct": 0,
+   "worstTxt": "",
+   "paEmpty": 0,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "content-pipeline",
+   "pivots": 7,
+   "worstClip": 0,
+   "worstPct": 0,
+   "worstTxt": "",
+   "paEmpty": 0,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "signing",
+   "pivots": 7,
+   "worstClip": 0,
+   "worstPct": 0,
+   "worstTxt": "",
+   "paEmpty": 0,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  },
+  {
+   "topic": "authz",
+   "pivots": 7,
+   "worstClip": 0,
+   "worstPct": 0,
+   "worstTxt": "",
+   "paEmpty": 0,
+   "pivOverflow": "hidden",
+   "chipFlex": "0 0 auto"
+  }
+ ],
+ "pivSummary": {
+  "clipped": 38,
+  "paEmpty": 38,
+  "total": 46
+ },
+ "apiSys": [
+  {
+   "chipW": 1804.7,
+   "pivW": 284,
+   "hidden": 1520.7,
+   "pct": 84.3,
+   "chipChars": 374,
+   "chip": "→ additive changes with a tolerant reader; version only to break, with a deprecation window\nMost cha",
+   "paLen": 0,
+   "paSample": "",
+   "hasJump": false
+  },
+  {
+   "chipW": 1711.8,
+   "pivW": 284,
+   "hidden": 1427.8,
+   "pct": 83.4,
+   "chipChars": 365,
+   "chip": "→ an idempotency key plus a dedupe recorded atomically with the effect\nThe client sends a unique key",
+   "paLen": 0,
+   "paSample": "",
+   "hasJump": true
+  }
+ ]
+}

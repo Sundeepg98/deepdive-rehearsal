@@ -1,0 +1,1580 @@
+{
+ "sys": [
+  {
+   "id": "event-driven",
+   "stagesRendered": 5,
+   "painted": 5,
+   "cur": 1,
+   "jumps": [],
+   "chips": [
+    "→ at-least-once plus an idempotent consumer, never exactly-once delivery",
+    "→ a max-receive count into a dead-letter queue"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "notifications",
+   "stagesRendered": 6,
+   "painted": 6,
+   "cur": 1,
+   "jumps": [
+    "authz",
+    "desired-state",
+    "content-pipeline",
+    "eav",
+    "aws-hardening",
+    "observability"
+   ],
+   "chips": [
+    "→ Tenant authorization (3)",
+    "→ Desired-state (7)",
+    "→ Content pipeline (1)",
+    "→ EAV (6)",
+    "→ AWS hardening (4)",
+    "→ Push channel (WebSocket / APNs / FCM)",
+    "→ Observability / deliverability"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "real-time-delivery",
+   "stagesRendered": 5,
+   "painted": 5,
+   "cur": 1,
+   "jumps": [],
+   "chips": [
+    "→ on-write for bounded audiences (instant reads), on-read for huge audiences (avoid the write storm), hybrid for celebrities",
+    "→ assign per-channel monotonic ids and resume from the client's last-seen id over a short event log"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "cdc",
+   "stagesRendered": 5,
+   "painted": 5,
+   "cur": 1,
+   "jumps": [],
+   "chips": [
+    "→ the dual write isn't atomic, so a crash drifts the two systems",
+    "→ outbox for curated domain events, log-based for wholesale replication"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "kafka-internals",
+   "stagesRendered": 5,
+   "painted": 5,
+   "cur": 1,
+   "jumps": [],
+   "chips": [
+    "→ retained replayable log (pull, offsets) vs delete-on-consume broker (push, per-message routing)",
+    "→ lag is the signal: scale consumers (capped at partition count), speed processing, or add partitions"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "stream-batch-processing",
+   "stagesRendered": 5,
+   "painted": 5,
+   "cur": 1,
+   "jumps": [],
+   "chips": [
+    "→ by freshness requirement: hours-fine -> batch (simple, exact, high-throughput); seconds-matter -> stream (low-latency, windowed)",
+    "→ window by event-time, fire on watermarks, and set an allowed-lateness policy (update / drop / side-output)"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "saga",
+   "stagesRendered": 5,
+   "painted": 5,
+   "cur": 1,
+   "jumps": [],
+   "chips": [
+    "→ choreography = event-driven, decoupled, implicit flow; orchestration = central coordinator, explicit, observable",
+    "→ intermediate states are visible: dirty reads of a not-yet-compensated charge, lost updates between concurrent sagas"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "caching",
+   "stagesRendered": 5,
+   "painted": 5,
+   "cur": 1,
+   "jumps": [],
+   "chips": [
+    "→ cache-aside by default, write-through where the cache must stay warm",
+    "→ invalidate on write, TTL as the backstop"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "soft-delete",
+   "stagesRendered": 5,
+   "painted": 5,
+   "cur": 1,
+   "jumps": [],
+   "chips": [
+    "→ soft for recoverable, referenced, auditable data; hard for disposable or erasure",
+    "→ every read needs the filter, and unique constraints and foreign keys need rethinking"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "eav",
+   "stagesRendered": 6,
+   "painted": 6,
+   "cur": 1,
+   "jumps": [
+    "authz",
+    "aws-hardening",
+    "notifications",
+    "desired-state",
+    "iac"
+   ],
+   "chips": [
+    "→ Tenant Authorization (3)",
+    "→ AWS Hardening (4)",
+    "→ Notifications (5)",
+    "→ Desired-State (7)",
+    "→ IaC (8)",
+    "→ JSON column",
+    "→ Real columns"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "shared-definition",
+   "stagesRendered": 5,
+   "painted": 5,
+   "cur": 1,
+   "jumps": [],
+   "chips": [
+    "→ one table keyed by entity_type plus entity_id, at the cost of a real FK",
+    "→ yes, and it is the right tool when the attribute set is variable"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "replication",
+   "stagesRendered": 5,
+   "painted": 5,
+   "cur": 1,
+   "jumps": [],
+   "chips": [
+    "→ semi-synchronous usually: sync to one follower for durability, async to the rest for availability",
+    "→ quorums: a write needs W acks, a read queries R, and R + W > N forces overlap so the read sees the latest write"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "consistency-models",
+   "stagesRendered": 5,
+   "painted": 5,
+   "cur": 1,
+   "jumps": [],
+   "chips": [
+    "→ pin the user's reads to the primary (or a caught-up replica) for a short window after they write",
+    "→ strong is a premium paid on every operation: coordination latency, reduced availability under partition, a throughput ceiling"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "sharding-strategies",
+   "stagesRendered": 5,
+   "painted": 5,
+   "cur": 1,
+   "jumps": [
+    "consistent-hashing"
+   ],
+   "chips": [
+    "→ from the access patterns: even distribution plus the common queries on a single shard",
+    "→ consistent hashing or fixed logical partitions, then dual-write, backfill, verify, cut over"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "consistent-hashing",
+   "stagesRendered": 5,
+   "painted": 5,
+   "cur": 1,
+   "jumps": [],
+   "chips": [
+    "→ it remaps ~(N-1)/N of keys on any node change; consistent hashing moves only ~K/N",
+    "→ no -- it evens where keys live, not access frequency; a hot key still lands on one node"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "storage-engines",
+   "stagesRendered": 5,
+   "painted": 5,
+   "cur": 1,
+   "jumps": [],
+   "chips": [
+    "→ write-heavy/ingest -> LSM (sequential writes + compaction); read-heavy/transactional -> B-tree (in-place, one lookup)",
+    "→ bloom filters skip files lacking the key, leveled compaction bounds files-per-read to ~one per level, block cache serves hot data"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "probabilistic-structures",
+   "stagesRendered": 5,
+   "painted": 5,
+   "cur": 1,
+   "jumps": [],
+   "chips": [
+    "→ by the question: membership -> Bloom, distinct-count -> HyperLogLog, frequency/top-K -> Count-Min",
+    "→ only if the error direction is harmless for the use, and correctness-critical answers stay exact"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "retries-timeouts",
+   "stagesRendered": 5,
+   "painted": 5,
+   "cur": 1,
+   "jumps": [],
+   "chips": [
+    "→ from the dependency's latency distribution -- above p99 with margin",
+    "→ yes -- that's a retry storm; cap with backoff, jitter, budgets, and a circuit-breaker"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "idempotency",
+   "stagesRendered": 5,
+   "painted": 5,
+   "cur": 1,
+   "jumps": [],
+   "chips": [
+    "→ exactly-once effect, not delivery: at-least-once + idempotent processing",
+    "→ an atomic key claim (unique constraint) lets exactly one execute; the other replays its result"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "circuit-breaker",
+   "stagesRendered": 5,
+   "painted": 5,
+   "cur": 1,
+   "jumps": [],
+   "chips": [
+    "→ an error rate over a window (min volume), counting only timeouts/5xx/connection errors -- not 4xx",
+    "→ a fallback: stale cache, default, queued write, or degraded feature -- not just an error"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "error-propagation",
+   "stagesRendered": 5,
+   "painted": 5,
+   "cur": 1,
+   "jumps": [],
+   "chips": [
+    "→ preserve-and-carry the source code by default; degrade to generic only as an explicit, logged fallback",
+    "→ whether retrying can succeed (transient) and whether the operation is idempotent (safe to retry)"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "backpressure",
+   "stagesRendered": 5,
+   "painted": 5,
+   "cur": 1,
+   "jumps": [],
+   "chips": [
+    "→ an unbounded queue grows until OOM, and latency collapses as the backlog deepens",
+    "→ SLO-driven: shed to protect latency (interactive, loss-tolerant), block/spill to protect completeness (must-not-lose)"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "observability",
+   "stagesRendered": 5,
+   "painted": 5,
+   "cur": 1,
+   "jumps": [],
+   "chips": [
+    "→ metric for rates/latency and alerts, log for the detail of one case, trace for where the time went",
+    "→ nothing, by design -- calls become no-ops and the request is unaffected"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "debugging",
+   "stagesRendered": 5,
+   "painted": 5,
+   "cur": 1,
+   "jumps": [],
+   "chips": [
+    "→ read the failures before the storage layer, and dead-letter them so the count becomes X of Y",
+    "→ the amplifier is disproportionately loud -- error volume far above the legitimate request rate"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "slos",
+   "stagesRendered": 5,
+   "painted": 5,
+   "cur": 1,
+   "jumps": [],
+   "chips": [
+    "→ a proportion of good events over valid events, measured near the user, that moves with user happiness",
+    "→ multi-window multi-burn-rate: a fast burn pages, a slow burn tickets"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "iac",
+   "stagesRendered": 6,
+   "painted": 6,
+   "cur": 1,
+   "jumps": [
+    "desired-state",
+    "aws-hardening",
+    "eav",
+    "signing",
+    "authz"
+   ],
+   "chips": [
+    "→ Desired State (7)",
+    "→ AWS Hardening (4)",
+    "→ Attribute Store (6)",
+    "→ Signing (2)",
+    "→ Tenant Authorization (3)",
+    "→ GitOps",
+    "→ Policy as code"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "desired-state",
+   "stagesRendered": 6,
+   "painted": 6,
+   "cur": 1,
+   "jumps": [
+    "eav",
+    "authz",
+    "notifications",
+    "iac",
+    "signing"
+   ],
+   "chips": [
+    "→ Attribute Store (6)",
+    "→ Tenant Authorization (3)",
+    "→ Notifications (5)",
+    "→ IaC (8)",
+    "→ Signing (2)",
+    "→ Deterministic render",
+    "→ Control loops"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "aws-hardening",
+   "stagesRendered": 6,
+   "painted": 6,
+   "cur": 1,
+   "jumps": [
+    "signing",
+    "authz",
+    "content-pipeline",
+    "desired-state",
+    "iac"
+   ],
+   "chips": [
+    "→ Package signing (2)",
+    "→ Tenant authorization (3)",
+    "→ Content pipeline (1)",
+    "→ Desired-state (7)",
+    "→ IaC (8)",
+    "→ Device / OTA orchestration",
+    "→ Incident / key rotation"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "load-balancing",
+   "stagesRendered": 5,
+   "painted": 5,
+   "cur": 1,
+   "jumps": [],
+   "chips": [
+    "→ L4 for raw throughput and non-HTTP; L7 when you need to route by request content",
+    "→ yes; make the LB layer redundant (active-passive + floating IP, or active-active behind DNS/anycast)"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "autoscaling",
+   "stagesRendered": 5,
+   "painted": 5,
+   "cur": 1,
+   "jumps": [],
+   "chips": [
+    "→ the signal that reflects real saturation: queue depth/lag (workers), RPS/concurrency (web), p99 latency",
+    "→ scale-up lag (provisioning + cold start) means it's a step behind; you carry headroom and pre-scale known patterns"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "leader-election",
+   "stagesRendered": 5,
+   "painted": 5,
+   "cur": 1,
+   "jumps": [],
+   "chips": [
+    "→ quorum (a minority can't elect) + lease (a lost leader expires) + fencing token (a stale leader is rejected)",
+    "→ shard leadership (one leader per partition, like Kafka) and serve reads from replicas"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "distributed-locks",
+   "stagesRendered": 5,
+   "painted": 5,
+   "cur": 1,
+   "jumps": [
+    "idempotency"
+   ],
+   "chips": [
+    "→ not on its own -- a paused holder can act after expiry; you need a fencing token the resource enforces",
+    "→ idempotency (safe to repeat), optimistic concurrency (conditional write), or single-writer partitioning (one owner)"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "multi-region",
+   "stagesRendered": 5,
+   "painted": 5,
+   "cur": 1,
+   "jumps": [],
+   "chips": [
+    "→ active-passive for DR (simple, no write conflicts); active-active / read-local-write-global for global latency",
+    "→ fence the old primary before promoting, or use a quorum so a partitioned minority can't write"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "lambda-organization",
+   "stagesRendered": 5,
+   "painted": 5,
+   "cur": 1,
+   "jumps": [],
+   "chips": [
+    "→ by business domain with a naming convention, so logs are browseable and IAM scopeable",
+    "→ cap the function's reserved concurrency to what the downstream can take"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "devices-dispatch",
+   "stagesRendered": 5,
+   "painted": 5,
+   "cur": 1,
+   "jumps": [],
+   "chips": [
+    "→ pull, because you cannot hold connections to a huge intermittent fleet",
+    "→ aggregate the job table by state, and reconcile what goes silent"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "developer-platform",
+   "stagesRendered": 5,
+   "painted": 5,
+   "cur": 1,
+   "jumps": [],
+   "chips": [
+    "→ safe-by-default: prod read-only, environment explicit, EXPLAIN-checked, elevation logged",
+    "→ because the paved path is genuinely faster, and adoption is the real success metric"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "state-machine",
+   "stagesRendered": 5,
+   "painted": 5,
+   "cur": 1,
+   "jumps": [],
+   "chips": [
+    "→ flags allow contradictory combinations nothing prevents; one state plus a table makes only valid states representable",
+    "→ a compare-and-swap on the current state, so exactly one wins"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "rules-engine",
+   "stagesRendered": 5,
+   "painted": 5,
+   "cur": 1,
+   "jumps": [],
+   "chips": [
+    "→ policy is editable data, changeable without a release",
+    "→ reject the requester and the first approver at the second step"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "feature-flags",
+   "stagesRendered": 5,
+   "painted": 5,
+   "cur": 1,
+   "jumps": [],
+   "chips": [
+    "→ same machinery; a flag is the boolean toggle, config is any tuned value",
+    "→ fall back to the local cache and the safe default"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "api-design",
+   "stagesRendered": 5,
+   "painted": 5,
+   "cur": 1,
+   "jumps": [
+    "idempotency"
+   ],
+   "chips": [
+    "→ additive changes with a tolerant reader; version only to break, with a deprecation window",
+    "→ an idempotency key plus a dedupe recorded atomically with the effect"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "rate-limiting",
+   "stagesRendered": 4,
+   "painted": 4,
+   "cur": 1,
+   "jumps": [],
+   "chips": [
+    "→ token bucket for bursts, sliding window for precision",
+    "→ a deliberate fail-open or fail-closed"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "content-pipeline",
+   "stagesRendered": 6,
+   "painted": 6,
+   "cur": 1,
+   "jumps": [
+    "signing",
+    "authz",
+    "eav",
+    "desired-state",
+    "notifications",
+    "aws-hardening",
+    "iac"
+   ],
+   "chips": [
+    "→ Signing (2)",
+    "→ Authz (3)",
+    "→ EAV (6)",
+    "→ Desired-state (7)",
+    "→ Notifications (5)",
+    "→ AWS hardening (4)",
+    "→ IaC (8)"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "microfrontend",
+   "stagesRendered": 5,
+   "painted": 5,
+   "cur": 1,
+   "jumps": [],
+   "chips": [
+    "→ independent team deploys -- it's an organizational problem, not a technical one",
+    "→ share common dependencies as singletons via the import map / federation"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "signing",
+   "stagesRendered": 6,
+   "painted": 6,
+   "cur": 1,
+   "jumps": [
+    "content-pipeline",
+    "authz",
+    "aws-hardening",
+    "desired-state",
+    "iac"
+   ],
+   "chips": [
+    "→ Content pipeline (1)",
+    "→ Authz / keys (3)",
+    "→ AWS hardening (4)",
+    "→ Desired-state (7)",
+    "→ Device / OTA rollback",
+    "→ Key rotation",
+    "→ IaC (8)"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "authz",
+   "stagesRendered": 6,
+   "painted": 6,
+   "cur": 1,
+   "jumps": [
+    "signing",
+    "aws-hardening",
+    "eav",
+    "notifications",
+    "iac"
+   ],
+   "chips": [
+    "→ Identity / tokens",
+    "→ Package signing (2)",
+    "→ AWS hardening (4)",
+    "→ Attribute Store (6)",
+    "→ Notifications (5)",
+    "→ Data lifecycle / compliance",
+    "→ IaC (8)"
+   ],
+   "blankBodies": 0
+  },
+  {
+   "id": "multi-tenant",
+   "stagesRendered": 5,
+   "painted": 5,
+   "cur": 1,
+   "jumps": [],
+   "chips": [
+    "→ shared rows for density, a database per tenant for a hard wall",
+    "→ one structural enforcement point, not per-handler filtering"
+   ],
+   "blankBodies": 0
+  }
+ ],
+ "undef": [],
+ "jump": [
+  {
+   "from": "notifications",
+   "chip": "→ Tenant authorization (3)",
+   "want": "authz",
+   "landed": "authz",
+   "ok": true
+  },
+  {
+   "from": "notifications",
+   "chip": "→ Desired-state (7)",
+   "want": "desired-state",
+   "landed": "desired-state",
+   "ok": true
+  },
+  {
+   "from": "notifications",
+   "chip": "→ Content pipeline (1)",
+   "want": "content-pipeline",
+   "landed": "content-pipeline",
+   "ok": true
+  },
+  {
+   "from": "notifications",
+   "chip": "→ EAV (6)",
+   "want": "eav",
+   "landed": "eav",
+   "ok": true
+  },
+  {
+   "from": "notifications",
+   "chip": "→ AWS hardening (4)",
+   "want": "aws-hardening",
+   "landed": "aws-hardening",
+   "ok": true
+  },
+  {
+   "from": "notifications",
+   "chip": "→ Observability / deliverability",
+   "want": "observability",
+   "landed": "observability",
+   "ok": true
+  },
+  {
+   "from": "eav",
+   "chip": "→ Tenant Authorization (3)",
+   "want": "authz",
+   "landed": "authz",
+   "ok": true
+  },
+  {
+   "from": "eav",
+   "chip": "→ AWS Hardening (4)",
+   "want": "aws-hardening",
+   "landed": "aws-hardening",
+   "ok": true
+  },
+  {
+   "from": "eav",
+   "chip": "→ Notifications (5)",
+   "want": "notifications",
+   "landed": "notifications",
+   "ok": true
+  },
+  {
+   "from": "eav",
+   "chip": "→ Desired-State (7)",
+   "want": "desired-state",
+   "landed": "desired-state",
+   "ok": true
+  },
+  {
+   "from": "eav",
+   "chip": "→ IaC (8)",
+   "want": "iac",
+   "landed": "iac",
+   "ok": true
+  },
+  {
+   "from": "sharding-strategies",
+   "chip": "→ consistent hashing or fixed logical partitio",
+   "want": "consistent-hashing",
+   "landed": "consistent-hashing",
+   "ok": true
+  },
+  {
+   "from": "iac",
+   "chip": "→ Desired State (7)",
+   "want": "desired-state",
+   "landed": "desired-state",
+   "ok": true
+  },
+  {
+   "from": "iac",
+   "chip": "→ AWS Hardening (4)",
+   "want": "aws-hardening",
+   "landed": "aws-hardening",
+   "ok": true
+  },
+  {
+   "from": "iac",
+   "chip": "→ Attribute Store (6)",
+   "want": "eav",
+   "landed": "eav",
+   "ok": true
+  },
+  {
+   "from": "iac",
+   "chip": "→ Signing (2)",
+   "want": "signing",
+   "landed": "signing",
+   "ok": true
+  },
+  {
+   "from": "iac",
+   "chip": "→ Tenant Authorization (3)",
+   "want": "authz",
+   "landed": "authz",
+   "ok": true
+  },
+  {
+   "from": "desired-state",
+   "chip": "→ Attribute Store (6)",
+   "want": "eav",
+   "landed": "eav",
+   "ok": true
+  },
+  {
+   "from": "desired-state",
+   "chip": "→ Tenant Authorization (3)",
+   "want": "authz",
+   "landed": "authz",
+   "ok": true
+  },
+  {
+   "from": "desired-state",
+   "chip": "→ Notifications (5)",
+   "want": "notifications",
+   "landed": "notifications",
+   "ok": true
+  },
+  {
+   "from": "desired-state",
+   "chip": "→ IaC (8)",
+   "want": "iac",
+   "landed": "iac",
+   "ok": true
+  },
+  {
+   "from": "desired-state",
+   "chip": "→ Signing (2)",
+   "want": "signing",
+   "landed": "signing",
+   "ok": true
+  },
+  {
+   "from": "aws-hardening",
+   "chip": "→ Package signing (2)",
+   "want": "signing",
+   "landed": "signing",
+   "ok": true
+  },
+  {
+   "from": "aws-hardening",
+   "chip": "→ Tenant authorization (3)",
+   "want": "authz",
+   "landed": "authz",
+   "ok": true
+  },
+  {
+   "from": "aws-hardening",
+   "chip": "→ Content pipeline (1)",
+   "want": "content-pipeline",
+   "landed": "content-pipeline",
+   "ok": true
+  },
+  {
+   "from": "aws-hardening",
+   "chip": "→ Desired-state (7)",
+   "want": "desired-state",
+   "landed": "desired-state",
+   "ok": true
+  },
+  {
+   "from": "aws-hardening",
+   "chip": "→ IaC (8)",
+   "want": "iac",
+   "landed": "iac",
+   "ok": true
+  },
+  {
+   "from": "distributed-locks",
+   "chip": "→ idempotency (safe to repeat), optimistic con",
+   "want": "idempotency",
+   "landed": "idempotency",
+   "ok": true
+  },
+  {
+   "from": "api-design",
+   "chip": "→ an idempotency key plus a dedupe recorded at",
+   "want": "idempotency",
+   "landed": "idempotency",
+   "ok": true
+  },
+  {
+   "from": "content-pipeline",
+   "chip": "→ Signing (2)",
+   "want": "signing",
+   "landed": "signing",
+   "ok": true
+  },
+  {
+   "from": "content-pipeline",
+   "chip": "→ Authz (3)",
+   "want": "authz",
+   "landed": "authz",
+   "ok": true
+  },
+  {
+   "from": "content-pipeline",
+   "chip": "→ EAV (6)",
+   "want": "eav",
+   "landed": "eav",
+   "ok": true
+  },
+  {
+   "from": "content-pipeline",
+   "chip": "→ Desired-state (7)",
+   "want": "desired-state",
+   "landed": "desired-state",
+   "ok": true
+  },
+  {
+   "from": "content-pipeline",
+   "chip": "→ Notifications (5)",
+   "want": "notifications",
+   "landed": "notifications",
+   "ok": true
+  },
+  {
+   "from": "content-pipeline",
+   "chip": "→ AWS hardening (4)",
+   "want": "aws-hardening",
+   "landed": "aws-hardening",
+   "ok": true
+  },
+  {
+   "from": "content-pipeline",
+   "chip": "→ IaC (8)",
+   "want": "iac",
+   "landed": "iac",
+   "ok": true
+  },
+  {
+   "from": "signing",
+   "chip": "→ Content pipeline (1)",
+   "want": "content-pipeline",
+   "landed": "content-pipeline",
+   "ok": true
+  },
+  {
+   "from": "signing",
+   "chip": "→ Authz / keys (3)",
+   "want": "authz",
+   "landed": "authz",
+   "ok": true
+  },
+  {
+   "from": "signing",
+   "chip": "→ AWS hardening (4)",
+   "want": "aws-hardening",
+   "landed": "aws-hardening",
+   "ok": true
+  },
+  {
+   "from": "signing",
+   "chip": "→ Desired-state (7)",
+   "want": "desired-state",
+   "landed": "desired-state",
+   "ok": true
+  },
+  {
+   "from": "signing",
+   "chip": "→ IaC (8)",
+   "want": "iac",
+   "landed": "iac",
+   "ok": true
+  },
+  {
+   "from": "authz",
+   "chip": "→ Package signing (2)",
+   "want": "signing",
+   "landed": "signing",
+   "ok": true
+  },
+  {
+   "from": "authz",
+   "chip": "→ AWS hardening (4)",
+   "want": "aws-hardening",
+   "landed": "aws-hardening",
+   "ok": true
+  },
+  {
+   "from": "authz",
+   "chip": "→ Attribute Store (6)",
+   "want": "eav",
+   "landed": "eav",
+   "ok": true
+  },
+  {
+   "from": "authz",
+   "chip": "→ Notifications (5)",
+   "want": "notifications",
+   "landed": "notifications",
+   "ok": true
+  },
+  {
+   "from": "authz",
+   "chip": "→ IaC (8)",
+   "want": "iac",
+   "landed": "iac",
+   "ok": true
+  }
+ ],
+ "rail": [
+  {
+   "id": "event-driven",
+   "note": "Graded follow-ups on the delivery guarantee, the i",
+   "tab": "sys",
+   "isMine": false,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "notifications",
+   "note": "Zoom out: notifications sit between the events the",
+   "tab": "sys",
+   "isMine": true,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "real-time-delivery",
+   "note": "Graded reps on the transports, fan-out-on-write vs",
+   "tab": "sys",
+   "isMine": false,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "cdc",
+   "note": "Graded follow-ups on the dual write, the outbox, l",
+   "tab": "sys",
+   "isMine": false,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "kafka-internals",
+   "note": "Graded follow-ups on partitions and ordering, cons",
+   "tab": "sys",
+   "isMine": false,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "stream-batch-processing",
+   "note": "Graded reps on batch vs stream, windowing, event-t",
+   "tab": "sys",
+   "isMine": false,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "saga",
+   "note": "Graded follow-ups on compensations, the two coordi",
+   "tab": "sys",
+   "isMine": false,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "caching",
+   "note": "Graded follow-ups on the patterns, invalidation, t",
+   "tab": "sys",
+   "isMine": false,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "soft-delete",
+   "note": "Graded follow-ups on hard-versus-soft, the filter,",
+   "tab": "sys",
+   "isMine": false,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "eav",
+   "note": "Zoom out: the attribute store sits between a fixed",
+   "tab": "sys",
+   "isMine": true,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "shared-definition",
+   "note": "Graded follow-ups on the two tables, the resolutio",
+   "tab": "sys",
+   "isMine": false,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "replication",
+   "note": "Graded follow-ups on leader-follower, sync/async, ",
+   "tab": "sys",
+   "isMine": false,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "consistency-models",
+   "note": "Graded reps on the models (linearizable to eventua",
+   "tab": "sys",
+   "isMine": false,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "sharding-strategies",
+   "note": "Graded reps on when to shard, choosing a partition",
+   "tab": "sys",
+   "isMine": false,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "consistent-hashing",
+   "note": "Graded follow-ups on the ring, virtual nodes, key ",
+   "tab": "sys",
+   "isMine": false,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "storage-engines",
+   "note": "Graded follow-ups on the B-tree/LSM fork, compacti",
+   "tab": "sys",
+   "isMine": false,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "probabilistic-structures",
+   "note": "Graded reps on Bloom filters, HyperLogLog, and Cou",
+   "tab": "sys",
+   "isMine": false,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "retries-timeouts",
+   "note": "Graded follow-ups on timeouts, backoff, jitter, de",
+   "tab": "sys",
+   "isMine": false,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "idempotency",
+   "note": "Graded follow-ups on retries, idempotency keys, at",
+   "tab": "sys",
+   "isMine": false,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "circuit-breaker",
+   "note": "Graded follow-ups on the state machine, tripping t",
+   "tab": "sys",
+   "isMine": false,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "error-propagation",
+   "note": "Graded reps that hand you a cross-service failure ",
+   "tab": "sys",
+   "isMine": false,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "backpressure",
+   "note": "Graded follow-ups on bounded buffers, the block/dr",
+   "tab": "sys",
+   "isMine": false,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "observability",
+   "note": "Graded follow-ups on the pillars, structured loggi",
+   "tab": "sys",
+   "isMine": false,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "debugging",
+   "note": "Graded reps that hand you a production symptom and",
+   "tab": "sys",
+   "isMine": false,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "slos",
+   "note": "Graded follow-ups on SLIs, SLOs, error budgets, an",
+   "tab": "sys",
+   "isMine": false,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "iac",
+   "note": "Zoom out: IaC sits between declared infrastructure",
+   "tab": "sys",
+   "isMine": true,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "desired-state",
+   "note": "Zoom out: the reconciler sits between config inten",
+   "tab": "sys",
+   "isMine": true,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "aws-hardening",
+   "note": "Zoom out: hardening wraps the storage the pipeline",
+   "tab": "sys",
+   "isMine": true,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "load-balancing",
+   "note": "Graded follow-ups on L4-vs-L7, the balancing algor",
+   "tab": "sys",
+   "isMine": false,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "autoscaling",
+   "note": "Graded follow-ups on the control loop, the metric ",
+   "tab": "sys",
+   "isMine": false,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "leader-election",
+   "note": "Graded follow-ups on quorum, leases, fencing token",
+   "tab": "sys",
+   "isMine": false,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "distributed-locks",
+   "note": "Graded follow-ups on TTLs, Redlock, fencing tokens",
+   "tab": "sys",
+   "isMine": false,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "multi-region",
+   "note": "Graded reps on active-passive vs active-active, as",
+   "tab": "sys",
+   "isMine": false,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "lambda-organization",
+   "note": "Graded follow-ups on cold starts, concurrency, tri",
+   "tab": "sys",
+   "isMine": false,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "devices-dispatch",
+   "note": "Graded follow-ups on push-versus-pull, the job lif",
+   "tab": "sys",
+   "isMine": false,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "developer-platform",
+   "note": "Graded follow-ups on self-service, safe-by-default",
+   "tab": "sys",
+   "isMine": false,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "state-machine",
+   "note": "Graded follow-ups on states, guards, the transitio",
+   "tab": "sys",
+   "isMine": false,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "rules-engine",
+   "note": "Graded follow-ups on engine-versus-code, the dual-",
+   "tab": "sys",
+   "isMine": false,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "feature-flags",
+   "note": "Graded follow-ups on release-versus-deploy, the hi",
+   "tab": "sys",
+   "isMine": false,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "api-design",
+   "note": "Graded reps on resource modeling, protocol choice,",
+   "tab": "sys",
+   "isMine": false,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "rate-limiting",
+   "note": "Graded follow-ups on the algorithms, the distribut",
+   "tab": "sys",
+   "isMine": false,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "content-pipeline",
+   "note": "Zoom out to the six stages — and the exact points ",
+   "tab": "sys",
+   "isMine": true,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "microfrontend",
+   "note": "Graded follow-ups on the composition model, runtim",
+   "tab": "sys",
+   "isMine": false,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "signing",
+   "note": "Zoom out: signing sits between the pipeline that p",
+   "tab": "sys",
+   "isMine": true,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "authz",
+   "note": "Zoom out: authorization sits between the identity ",
+   "tab": "sys",
+   "isMine": true,
+   "leakedFrom": null,
+   "hasNote": true
+  },
+  {
+   "id": "multi-tenant",
+   "note": "Graded follow-ups on the isolation model, the enfo",
+   "tab": "sys",
+   "isMine": false,
+   "leakedFrom": null,
+   "hasNote": true
+  }
+ ],
+ "mock": [
+  {
+   "id": "event-driven",
+   "authored": 2,
+   "live": 2
+  },
+  {
+   "id": "notifications",
+   "authored": 6,
+   "live": 6
+  },
+  {
+   "id": "real-time-delivery",
+   "authored": 2,
+   "live": 2
+  },
+  {
+   "id": "cdc",
+   "authored": 2,
+   "live": 2
+  },
+  {
+   "id": "kafka-internals",
+   "authored": 2,
+   "live": 2
+  },
+  {
+   "id": "stream-batch-processing",
+   "authored": 2,
+   "live": 2
+  },
+  {
+   "id": "saga",
+   "authored": 2,
+   "live": 2
+  },
+  {
+   "id": "caching",
+   "authored": 2,
+   "live": 2
+  },
+  {
+   "id": "soft-delete",
+   "authored": 2,
+   "live": 2
+  },
+  {
+   "id": "eav",
+   "authored": 6,
+   "live": 6
+  },
+  {
+   "id": "shared-definition",
+   "authored": 2,
+   "live": 2
+  },
+  {
+   "id": "replication",
+   "authored": 2,
+   "live": 2
+  },
+  {
+   "id": "consistency-models",
+   "authored": 2,
+   "live": 2
+  },
+  {
+   "id": "sharding-strategies",
+   "authored": 2,
+   "live": 2
+  },
+  {
+   "id": "consistent-hashing",
+   "authored": 2,
+   "live": 2
+  },
+  {
+   "id": "storage-engines",
+   "authored": 2,
+   "live": 2
+  },
+  {
+   "id": "probabilistic-structures",
+   "authored": 2,
+   "live": 2
+  },
+  {
+   "id": "retries-timeouts",
+   "authored": 2,
+   "live": 2
+  },
+  {
+   "id": "idempotency",
+   "authored": 2,
+   "live": 2
+  },
+  {
+   "id": "circuit-breaker",
+   "authored": 2,
+   "live": 2
+  },
+  {
+   "id": "error-propagation",
+   "authored": 2,
+   "live": 2
+  },
+  {
+   "id": "backpressure",
+   "authored": 2,
+   "live": 2
+  },
+  {
+   "id": "observability",
+   "authored": 2,
+   "live": 2
+  },
+  {
+   "id": "debugging",
+   "authored": 2,
+   "live": 2
+  },
+  {
+   "id": "slos",
+   "authored": 2,
+   "live": 2
+  },
+  {
+   "id": "iac",
+   "authored": 6,
+   "live": 6
+  },
+  {
+   "id": "desired-state",
+   "authored": 6,
+   "live": 6
+  },
+  {
+   "id": "aws-hardening",
+   "authored": 6,
+   "live": 6
+  },
+  {
+   "id": "load-balancing",
+   "authored": 2,
+   "live": 2
+  },
+  {
+   "id": "autoscaling",
+   "authored": 2,
+   "live": 2
+  },
+  {
+   "id": "leader-election",
+   "authored": 2,
+   "live": 2
+  },
+  {
+   "id": "distributed-locks",
+   "authored": 2,
+   "live": 2
+  },
+  {
+   "id": "multi-region",
+   "authored": 2,
+   "live": 2
+  },
+  {
+   "id": "lambda-organization",
+   "authored": 2,
+   "live": 2
+  },
+  {
+   "id": "devices-dispatch",
+   "authored": 2,
+   "live": 2
+  },
+  {
+   "id": "developer-platform",
+   "authored": 2,
+   "live": 2
+  },
+  {
+   "id": "state-machine",
+   "authored": 2,
+   "live": 2
+  },
+  {
+   "id": "rules-engine",
+   "authored": 2,
+   "live": 2
+  },
+  {
+   "id": "feature-flags",
+   "authored": 2,
+   "live": 2
+  },
+  {
+   "id": "api-design",
+   "authored": 2,
+   "live": 2
+  },
+  {
+   "id": "rate-limiting",
+   "authored": 2,
+   "live": 2
+  },
+  {
+   "id": "content-pipeline",
+   "authored": 6,
+   "live": 6
+  },
+  {
+   "id": "microfrontend",
+   "authored": 2,
+   "live": 2
+  },
+  {
+   "id": "signing",
+   "authored": 6,
+   "live": 6
+  },
+  {
+   "id": "authz",
+   "authored": 6,
+   "live": 6
+  },
+  {
+   "id": "multi-tenant",
+   "authored": 2,
+   "live": 2
+  }
+ ]
+}

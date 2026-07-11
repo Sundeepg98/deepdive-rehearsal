@@ -1,0 +1,15 @@
+=== F3: LONG TAB TRAIL (60 tabs) — does focus enter the CLOSED mockbar? ===
+  tabs landing inside the closed .mockbar: 15
+  FIRST: Tab#19 -> #idxopen at top=1149 (viewport h=844) offscreen=true
+  mockbar tabs: ["#19:#idxopen@top1149","#20:#searchopen@top1192","#21:#copylink@top1267","#22:#starbtn@top1311","#23:#notesopen@top1355","#24:#printqa@top1398","#25:#cramopen@top1474","#26:#sessopen@top1517","#27:#mixopen@top1561","#28:#planopen@top1605","#29:#scopeopen@top1648","#30:#themetog@top1723","#58:#idxopen@top1149","#59:#searchopen@top1192","#60:#copylink@top1267"]
+
+=== F4: .seg active-tab visibility — CLEAN per-path tests (fresh page each) ===
+  deeplink open  (fresh)   tab=open   scrollLeft=   0/580  active=[868..964] stripRight=396  VISIBLE=NO  <<<<
+  deeplink rf    (fresh)   tab=rf     scrollLeft=   0/580  active=[770..862] stripRight=396  VISIBLE=NO  <<<<
+  deeplink num   (fresh)   tab=num    scrollLeft=   0/580  active=[678..764] stripRight=396  VISIBLE=NO  <<<<
+  click  open    (fresh)   tab=open   scrollLeft= 580/580  active=[288..384] stripRight=396  VISIBLE=YES
+  keyboard o     (fresh)   tab=open   scrollLeft=   0/580  active=[868..964] stripRight=396  VISIBLE=NO  <<<<
+  SWIPE x4       (fresh)   tab=walk   scrollLeft=   0/580  active=[12..121] stripRight=396  VISIBLE=YES
+
+=== F6: compiler — does p.chip really swallow the explanation, leaving p.a empty? ===
+  runtime topic object: {"via":"TOPIC_CP_SYS","pivots":[{"q":"The content is processed &mdash; now it must be tamper-proof on the device","chip":"→ Signing (2)","a":"The pipeline's output feeds the <b>signing</b> stage: the processed package hash goes to the HSM, which returns a signature stamped into the header. Devices verify it and reject unsigned packages. The pipeline produces the artifact; signing makes it trustabl

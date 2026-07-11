@@ -1,0 +1,34 @@
+BEFORE / AFTER -- one metric, both parsers. The 8 are the constant baseline.
+(the 38 are compiled; the 8 are hand-coded JS and no parser touches them)
+
+  slice                 THE 8  BEFORE  AFTER   PARITY was->now  RECOVERED
+  ------------------------------------------------------------------------
+  sys.stages              6.0     0.0    5.0         0% -> 83%       +189
+  sys.stageCur            1.0     0.0    1.0        0% -> 100%        +38
+  sys.pivots              7.0     2.0    2.0        29% -> 29%          -
+  sys.pivotAnswers        7.0     0.0    2.0         0% -> 29%        +76
+  drill.cards            21.6    21.0   21.0        97% -> 97%          -
+  drill.tierNotes         4.0     0.0    3.0         0% -> 75%       +114
+  drill.follows          41.9     0.0    0.0          0% -> 0%          -
+  drill.senior           21.6     0.0    0.0          0% -> 0%          -
+  drill.speak            21.6     0.0    0.0          0% -> 0%          -
+  model.answers           9.0     2.0    2.0        22% -> 22%          -
+  model.beats            62.0     6.0    6.0        10% -> 10%          -
+  bank.mockBeats          6.0     2.0    2.0        33% -> 33%          -
+  bank.curveballs         8.0     1.0    1.0        13% -> 13%          -
+  bank.beatModels        13.0     1.0    3.0         8% -> 23%        +76
+  bank.beatInts          13.0     0.0    2.0         0% -> 15%        +76
+  bank.curveThemes        8.0     0.0    1.0         0% -> 13%        +38
+  walk.steps              9.0     4.0    4.0        45% -> 45%          -
+  walk.codeBlocks         4.1     1.4    1.4        34% -> 34%         +1
+  wb.steps                9.0     2.0    2.0        22% -> 22%          -
+  trade.decisions         7.0     3.0    3.0        43% -> 43%          -
+  rf.flags                9.0     3.0    3.0        33% -> 33%          -
+  num.inputs              4.0     3.0    3.0        75% -> 75%          -
+  open.cards              2.0     1.0    1.0        50% -> 50%          -
+  identity.cmpNotes       9.0     2.0    2.0        22% -> 22%          -
+  ------------------------------------------------------------------------
+  TOTAL (per topic)     303.9    54.4   70.4        18% -> 23%       +608
+
+  DEPTH PARITY vs THE 8:  17.9%  ->  23.2%
+  ITEMS RECOVERED BY THE COMPILER FIX ALONE (no content authored): 608

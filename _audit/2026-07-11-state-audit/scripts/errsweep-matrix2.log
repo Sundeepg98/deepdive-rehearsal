@@ -1,0 +1,160 @@
+FAST matrix: 46 x 10 = 460 cells
+eve not rea cdc kaf str sag cac sof eav sha rep con sha con sto pro ret ide cir err bac obs deb slo iac des aws loa aut lea dis mul lam dev dev sta rul fea api rat con mic sig aut mul 
+done in 60.7s
+
+=== ERRORS: 0
+
+=== NETWORK REQUESTS: 1
+[
+ "document file:///D:/claude-workspace/deepdive-rehearsal/dist/index.html"
+]
+=== FAILED: 0 []
+
+=== THIN/EMPTY CELLS: 389 / 460
+  wb: 43 topics -> event-driven, notifications, real-time-delivery, cdc, kafka-internals, stream-batch-processing, saga, caching ...
+  trade: 38 topics -> event-driven, notifications, real-time-delivery, cdc, kafka-internals, stream-batch-processing, saga, caching ...
+  model: 42 topics -> event-driven, notifications, real-time-delivery, cdc, kafka-internals, stream-batch-processing, saga, caching ...
+  num: 45 topics -> event-driven, notifications, real-time-delivery, cdc, kafka-internals, stream-batch-processing, saga, caching ...
+  rf: 44 topics -> event-driven, notifications, real-time-delivery, cdc, kafka-internals, stream-batch-processing, saga, caching ...
+  open: 42 topics -> event-driven, notifications, cdc, kafka-internals, stream-batch-processing, caching, soft-delete, eav ...
+  walk: 41 topics -> notifications, real-time-delivery, cdc, kafka-internals, saga, caching, soft-delete, eav ...
+  drill: 39 topics -> notifications, real-time-delivery, cdc, kafka-internals, stream-batch-processing, saga, caching, eav ...
+  sys: 42 topics -> notifications, cdc, kafka-internals, stream-batch-processing, saga, caching, eav, shared-definition ...
+  viz: 13 topics -> backpressure, devices-dispatch, developer-platform, state-machine, rules-engine, feature-flags, api-design, rate-limiting ...
+[
+ {
+  "topic": "event-driven",
+  "pane": "wb",
+  "on": "drill",
+  "h": 887,
+  "txt": 15255,
+  "kids": 9,
+  "canvas": null
+ },
+ {
+  "topic": "event-driven",
+  "pane": "trade",
+  "on": "sys",
+  "h": 494,
+  "txt": 5942,
+  "kids": 3,
+  "canvas": null
+ },
+ {
+  "topic": "event-driven",
+  "pane": "model",
+  "on": "trade",
+  "h": 1073,
+  "txt": 3062,
+  "kids": 2,
+  "canvas": null
+ },
+ {
+  "topic": "event-driven",
+  "pane": "num",
+  "on": "model",
+  "h": 414,
+  "txt": 2604,
+  "kids": 3,
+  "canvas": null
+ },
+ {
+  "topic": "event-driven",
+  "pane": "rf",
+  "on": "num",
+  "h": 801,
+  "txt": 5028,
+  "kids": 5,
+  "canvas": null
+ },
+ {
+  "topic": "event-driven",
+  "pane": "open",
+  "on": "rf",
+  "h": 588,
+  "txt": 3082,
+  "kids": 3,
+  "canvas": null
+ },
+ {
+  "topic": "notifications",
+  "pane": "walk",
+  "on": "viz",
+  "h": 69,
+  "txt": 141,
+  "kids": 3,
+  "canvas": null
+ },
+ {
+  "topic": "notifications",
+  "pane": "drill",
+  "on": "walk",
+  "h": 731,
+  "txt": 13681,
+  "kids": 6,
+  "canvas": null
+ },
+ {
+  "topic": "notifications",
+  "pane": "wb",
+  "on": "drill",
+  "h": 905,
+  "txt": 15312,
+  "kids": 9,
+  "canvas": null
+ },
+ {
+  "topic": "notifications",
+  "pane": "sys",
+  "on": "wb",
+  "h": 1246,
+  "txt": 11751,
+  "kids": 3,
+  "canvas": null
+ },
+ {
+  "topic": "notifications",
+  "pane": "trade",
+  "on": "sys",
+  "h": 1203,
+  "txt": 10439,
+  "kids": 3,
+  "canvas": null
+ },
+ {
+  "topic": "notifications",
+  "pane": "model",
+  "on": "trade",
+  "h": 2646,
+  "txt": 6479,
+  "kids": 2,
+  "canvas": null
+ },
+ {
+  "topic": "notifications",
+  "pane": "num",
+  "on": "model",
+  "h": 1031,
+  "txt": 4293,
+  "kids": 3,
+  "canvas": null
+ },
+ {
+  "topic": "notifications",
+  "pane": "rf",
+  "on": "num",
+  "h": 859,
+  "txt": 5307,
+  "kids": 5,
+  "canvas": null
+ },
+ {
+  "topic": "notifications",
+  "pane": "open",
+  "on": "rf",
+  "h": 2183,
+  "txt": 7745,
+  "kids": 3,
+  "canvas": null
+ }
+]

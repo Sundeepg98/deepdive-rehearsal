@@ -1,0 +1,74 @@
+{
+ "md": {
+  "verdict": "LITERAL \"undefined\" RENDERED ON SCREEN",
+  "st": {
+   "prog": "Question 1 / 7",
+   "kind": "Curveball",
+   "taskExists": true,
+   "taskText": "undefined",
+   "taskRect": {
+    "x": 461,
+    "y": 238,
+    "w": 518,
+    "h": 15
+   },
+   "visibleText": "Question 1 / 7\nCURVEBALL\nCURVEBALL\nordering | Retries arrive out of order and two different updates race. Does idempotency fix it?\nundefined\nReveal a strong answer",
+   "hasUndefined": true
+  }
+ },
+ "or": {
+  "verdict": "no curveball reached in pool"
+ },
+ "sweep": {
+  "undef": [
+   "event-driven",
+   "real-time-delivery",
+   "cdc",
+   "kafka-internals",
+   "stream-batch-processing",
+   "saga",
+   "caching",
+   "soft-delete",
+   "shared-definition",
+   "replication",
+   "consistency-models",
+   "sharding-strategies",
+   "consistent-hashing",
+   "storage-engines",
+   "probabilistic-structures",
+   "retries-timeouts",
+   "idempotency",
+   "circuit-breaker",
+   "error-propagation",
+   "backpressure",
+   "observability",
+   "debugging",
+   "slos",
+   "load-balancing",
+   "autoscaling",
+   "leader-election",
+   "distributed-locks",
+   "multi-region",
+   "lambda-organization",
+   "devices-dispatch",
+   "developer-platform",
+   "state-machine",
+   "rules-engine",
+   "feature-flags",
+   "api-design",
+   "rate-limiting",
+   "microfrontend",
+   "multi-tenant"
+  ],
+  "clean": [
+   "notifications",
+   "eav",
+   "iac",
+   "desired-state",
+   "aws-hardening",
+   "content-pipeline",
+   "signing",
+   "authz"
+  ]
+ }
+}

@@ -1,0 +1,59 @@
+{
+ "A": {
+  "hostDisplay": "block",
+  "text": "undefined",
+  "rect": {
+   "x": 348,
+   "y": 254,
+   "w": 414,
+   "h": 19
+  },
+  "visible": true,
+  "hitTestTag": "DEEP-DRILL",
+  "innerTextHasUndefined": false
+ },
+ "B": {
+  "hostDisplay": "block",
+  "text": "All four levels, mixed — the way a real loop actually comes at you.",
+  "rect": {
+   "x": 348,
+   "y": 254,
+   "w": 414,
+   "h": 19
+  },
+  "visible": true,
+  "hitTestTag": "DEEP-DRILL",
+  "innerTextHasUndefined": false
+ },
+ "RA": {
+  "fu": 0,
+  "senior": {
+   "h": 46,
+   "w": 662,
+   "y": 653,
+   "bodyLen": 0
+  },
+  "speak": {
+   "h": 44,
+   "w": 662,
+   "y": 710,
+   "bodyLen": 0
+  }
+ },
+ "RB": {
+  "fu": 2,
+  "senior": {
+   "h": 82,
+   "w": 662,
+   "y": 900,
+   "bodyLen": 187
+  },
+  "speak": {
+   "h": 98,
+   "w": 662,
+   "y": 993,
+   "bodyLen": 272
+  }
+ },
+ "MF": null
+}

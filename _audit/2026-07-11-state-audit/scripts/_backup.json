@@ -1,0 +1,30 @@
+{
+  "app": "deepdive-rehearsal",
+  "v": 1,
+  "exported": "2026-07-11T10:59:36.440Z",
+  "data": {
+    "viewseen.content-pipeline": [
+      "walk",
+      "drill"
+    ],
+    "theme": "dark",
+    "bookmarks": [
+      "content-pipeline"
+    ],
+    "nav.last": {
+      "id": "content-pipeline",
+      "view": "drill"
+    },
+    "progress.content-pipeline": {
+      "got": 2,
+      "shk": 2,
+      "done": 4,
+      "tot": 22,
+      "revisit": [
+        "Cross-store consistency",
+        "Architecture trade-offs &amp; scaling ceilings"
+      ],
+      "ts": 1783767573598
+    }
+  }
+}

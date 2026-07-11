@@ -1,0 +1,271 @@
+[
+  {
+    "vp": "desktop",
+    "tool": "TEXT-ZOOM(correct probe)",
+    "controlVisible": true,
+    "before": {
+      "readZoom": "1",
+      "paneZoom": "1",
+      "paneW": 592,
+      "tzVisible": true
+    },
+    "after": {
+      "readZoom": "1.16",
+      "paneZoom": "1.16",
+      "paneW": 592,
+      "stored": "4"
+    },
+    "zoomApplied": true,
+    "errs": 0
+  },
+  {
+    "vp": "desktop",
+    "tool": "FOCUS-MODE-TRAP",
+    "focusModeOn": true,
+    "focusBtnVisibility": "hidden",
+    "focusBtnHitTest": "stage",
+    "focusBtnClickable": false,
+    "segTabsVisible": "hidden",
+    "toolsFabVisible": "hidden",
+    "mockctaVisible": "hidden",
+    "topicNavVisible": "hidden",
+    "persisted": [],
+    "tappableCount": 0,
+    "tappable": []
+  },
+  {
+    "vp": "desktop",
+    "tool": "FOCUS-MODE-exit-by-click",
+    "clickError": "TimeoutError: page.click: Timeout 3500ms exceeded.",
+    "stillTrapped": true
+  },
+  {
+    "vp": "desktop",
+    "tool": "FOCUS-MODE-escape-routes",
+    "escapeKeyExits": false,
+    "reloadExits": true,
+    "onlyExit": "f key (desktop kbd) or reload"
+  },
+  {
+    "vp": "desktop",
+    "tool": "ESC-double-close",
+    "cramOpen": true,
+    "whenBothOpen": {
+      "cram": true,
+      "search": true,
+      "bodyOv": "hidden"
+    },
+    "afterSingleEsc": {
+      "cram": false,
+      "search": false,
+      "bodyOv": ""
+    },
+    "BOTH_CLOSED_BY_ONE_ESC": true,
+    "errs": 0
+  },
+  {
+    "vp": "desktop",
+    "tool": "SEARCH-overlay",
+    "role": "dialog",
+    "ariaModal": "true",
+    "ariaLabel": "Search surfaces",
+    "boxW": 560,
+    "boxTop": 120,
+    "boxBottom": 495,
+    "innerH": 800,
+    "offB": -305,
+    "resultCount": 11,
+    "resultsScrollable": true,
+    "bodyOverflow": "",
+    "inputFocused": true,
+    "errs": 0
+  },
+  {
+    "vp": "desktop",
+    "tool": "NOTES-overlay",
+    "open": true,
+    "taFocused": true,
+    "offB": -190,
+    "h": 373,
+    "stored": [
+      "ddr.v1.notes.content-pipeline"
+    ],
+    "val": "\"audit note xyz\"",
+    "dot": true,
+    "closed": true,
+    "errs": 0
+  },
+  {
+    "vp": "desktop",
+    "tool": "TOUR-GUIDE",
+    "active": true,
+    "fixedLayers": [
+      {
+        "id": "_tour-overlay",
+        "cls": "",
+        "w": 1280,
+        "h": 800,
+        "offR": 0,
+        "offB": 0,
+        "txt": ""
+      },
+      {
+        "id": "_tour-spotlight",
+        "cls": "",
+        "w": 287,
+        "h": 47,
+        "offR": -989,
+        "offB": -657,
+        "txt": ""
+      },
+      {
+        "id": "_tour-tooltip",
+        "cls": "",
+        "w": 340,
+        "h": 206,
+        "offR": -920,
+        "offB": -443,
+        "txt": "Welcome to Deep RehearsalA self-containe"
+      }
+    ],
+    "errs": 0
+  },
+  {
+    "vp": "mobile",
+    "tool": "TEXT-ZOOM(correct probe)",
+    "controlVisible": false,
+    "before": {
+      "readZoom": "1",
+      "paneZoom": "1",
+      "paneW": 360,
+      "tzVisible": false
+    },
+    "after": {
+      "readZoom": "1.16",
+      "paneZoom": "1.16",
+      "paneW": 360,
+      "stored": "4"
+    },
+    "zoomApplied": true,
+    "errs": 0
+  },
+  {
+    "vp": "mobile",
+    "tool": "FOCUS-MODE-TRAP",
+    "focusModeOn": true,
+    "focusBtnVisibility": "hidden",
+    "focusBtnHitTest": "app _focus-mode",
+    "focusBtnClickable": false,
+    "segTabsVisible": "hidden",
+    "toolsFabVisible": "hidden",
+    "mockctaVisible": "hidden",
+    "topicNavVisible": "hidden",
+    "persisted": [],
+    "tappableCount": 1,
+    "tappable": [
+      {
+        "tag": "summary",
+        "id": null,
+        "cls": "mcomp-sum",
+        "txt": "Companioncoaching for this"
+      }
+    ]
+  },
+  {
+    "vp": "mobile",
+    "tool": "FOCUS-MODE-exit-by-click",
+    "clickError": "TimeoutError: page.click: Timeout 3500ms exceeded.",
+    "stillTrapped": true
+  },
+  {
+    "vp": "mobile",
+    "tool": "FOCUS-MODE-escape-routes",
+    "escapeKeyExits": false,
+    "reloadExits": true,
+    "onlyExit": "f key (desktop kbd) or reload"
+  },
+  {
+    "vp": "mobile",
+    "tool": "ESC-double-close",
+    "cramOpen": true,
+    "whenBothOpen": {
+      "cram": true,
+      "search": true,
+      "bodyOv": "hidden"
+    },
+    "afterSingleEsc": {
+      "cram": false,
+      "search": false,
+      "bodyOv": ""
+    },
+    "BOTH_CLOSED_BY_ONE_ESC": true,
+    "errs": 0
+  },
+  {
+    "vp": "mobile",
+    "tool": "SEARCH-overlay",
+    "role": "dialog",
+    "ariaModal": "true",
+    "ariaLabel": "Search surfaces",
+    "boxW": 351,
+    "boxTop": 127,
+    "boxBottom": 502,
+    "innerH": 857,
+    "offB": -355,
+    "resultCount": 11,
+    "resultsScrollable": true,
+    "bodyOverflow": "",
+    "inputFocused": true,
+    "errs": 0
+  },
+  {
+    "vp": "mobile",
+    "tool": "NOTES-overlay",
+    "open": true,
+    "taFocused": true,
+    "offB": -216,
+    "h": 373,
+    "stored": [
+      "ddr.v1.notes.content-pipeline"
+    ],
+    "val": "\"audit note xyz\"",
+    "dot": true,
+    "closed": true,
+    "errs": 0
+  },
+  {
+    "vp": "mobile",
+    "tool": "TOUR-GUIDE",
+    "active": true,
+    "fixedLayers": [
+      {
+        "id": "_tour-overlay",
+        "cls": "",
+        "w": 396,
+        "h": 857,
+        "offR": 0,
+        "offB": 0,
+        "txt": ""
+      },
+      {
+        "id": "_tour-spotlight",
+        "cls": "",
+        "w": 384,
+        "h": 44,
+        "offR": -9,
+        "offB": -760,
+        "txt": ""
+      },
+      {
+        "id": "_tour-tooltip",
+        "cls": "",
+        "w": 340,
+        "h": 206,
+        "offR": -31,
+        "offB": -546,
+        "txt": "Welcome to Deep RehearsalA self-containe"
+      }
+    ],
+    "errs": 0
+  }
+]

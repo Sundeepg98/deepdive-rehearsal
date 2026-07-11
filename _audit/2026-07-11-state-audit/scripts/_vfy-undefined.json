@@ -1,0 +1,96 @@
+{
+ "md": {
+  "paneVisible": "none",
+  "tiernoteExists": true,
+  "tiernoteHTML": "undefined",
+  "tiernoteText": "undefined",
+  "tiernoteStyle": {
+   "display": "block",
+   "visibility": "visible",
+   "opacity": "1",
+   "w": 0,
+   "h": 0,
+   "fontStyle": "italic",
+   "color": "rgb(107, 104, 98)"
+  },
+  "bodyHasUndefined": false,
+  "shadowTextHasUndefined": true
+ },
+ "or": {
+  "paneVisible": "none",
+  "tiernoteExists": true,
+  "tiernoteHTML": "<b>All four levels, mixed</b> — the way a real loop actually comes at you.",
+  "tiernoteText": "All four levels, mixed — the way a real loop actually comes at you.",
+  "tiernoteStyle": {
+   "display": "block",
+   "visibility": "visible",
+   "opacity": "1",
+   "w": 0,
+   "h": 0,
+   "fontStyle": "italic",
+   "color": "rgb(107, 104, 98)"
+  },
+  "bodyHasUndefined": false,
+  "shadowTextHasUndefined": false
+ },
+ "mdR": {
+  "pushButtonsRemaining": false,
+  "followUpBlocks": 0,
+  "seniorExists": true,
+  "seniorLabel": "What sounds senior here",
+  "seniorBodyText": "",
+  "seniorBodyLen": 0,
+  "seniorBox": {
+   "w": 0,
+   "h": 0,
+   "display": "block",
+   "bg": "rgba(0, 0, 0, 0)",
+   "pad": "13px 16px",
+   "border": "1px solid rgb(191, 224, 212)"
+  },
+  "speakExists": true,
+  "speakLabel": "Say it out loud like this",
+  "speakBodyText": "",
+  "speakBodyLen": 0,
+  "speakBox": {
+   "w": 0,
+   "h": 0,
+   "display": "block",
+   "bg": "rgb(239, 237, 250)",
+   "pad": "12px 14px",
+   "border": "1px solid rgb(207, 199, 240)"
+  },
+  "judgeShown": true,
+  "shadowHasUndefined": true
+ },
+ "orR": {
+  "pushButtonsRemaining": false,
+  "followUpBlocks": 2,
+  "seniorExists": true,
+  "seniorLabel": "What sounds senior here",
+  "seniorBodyText": "Saying ‘the hash is collision-resistant, so signing it is equivalent to signing the content’ — not just ‘I’d sign it’ — is the tell that you understand why hash-then-sign is the standard.",
+  "seniorBodyLen": 187,
+  "seniorBox": {
+   "w": 0,
+   "h": 0,
+   "display": "block",
+   "bg": "rgba(0, 0, 0, 0)",
+   "pad": "13px 16px",
+   "border": "1px solid rgb(191, 224, 212)"
+  },
+  "speakExists": true,
+  "speakLabel": "Say it out loud like this",
+  "speakBodyText": "Lead with the equivalence: 'the hash is collision-resistant, so a signature over the 32-byte digest is equivalent to signing the content' — then that it's size-independent and the device verifies by re-hashing. Signing the whole file is the tell you've only read about it.",
+  "speakBodyLen": 272,
+  "speakBox": {
+   "w": 0,
+   "h": 0,
+   "display": "block",
+   "bg": "rgb(239, 237, 250)",
+   "pad": "12px 14px",
+   "border": "1px solid rgb(207, 199, 240)"
+  },
+  "judgeShown": true,
+  "shadowHasUndefined": false
+ }
+}

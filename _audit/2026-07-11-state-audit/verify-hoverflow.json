@@ -1,0 +1,117 @@
+{
+  "menuHiddenState": {
+    "tnmenuHidden": true,
+    "htmlOverflowX": "visible",
+    "bodyOverflowX": "visible",
+    "innerWidth": 390,
+    "docScrollWidth": 396
+  },
+  "overflowingElements_MENU_HIDDEN": [
+    {
+      "tag": "button",
+      "id": null,
+      "cls": null,
+      "right": 964,
+      "width": 96,
+      "overflowPx": 574
+    },
+    {
+      "tag": "span",
+      "id": null,
+      "cls": null,
+      "right": 949,
+      "width": 66,
+      "overflowPx": 559
+    },
+    {
+      "tag": "button",
+      "id": null,
+      "cls": null,
+      "right": 862,
+      "width": 92,
+      "overflowPx": 472
+    },
+    {
+      "tag": "span",
+      "id": null,
+      "cls": null,
+      "right": 847,
+      "width": 62,
+      "overflowPx": 457
+    },
+    {
+      "tag": "button",
+      "id": null,
+      "cls": null,
+      "right": 764,
+      "width": 86,
+      "overflowPx": 374
+    },
+    {
+      "tag": "span",
+      "id": null,
+      "cls": null,
+      "right": 749,
+      "width": 56,
+      "overflowPx": 359
+    },
+    {
+      "tag": "button",
+      "id": null,
+      "cls": null,
+      "right": 672,
+      "width": 125,
+      "overflowPx": 282
+    },
+    {
+      "tag": "span",
+      "id": null,
+      "cls": null,
+      "right": 657,
+      "width": 95,
+      "overflowPx": 267
+    },
+    {
+      "tag": "button",
+      "id": null,
+      "cls": null,
+      "right": 541,
+      "width": 93,
+      "overflowPx": 151
+    },
+    {
+      "tag": "span",
+      "id": null,
+      "cls": null,
+      "right": 526,
+      "width": 63,
+      "overflowPx": 136
+    },
+    {
+      "tag": "button",
+      "id": null,
+      "cls": null,
+      "right": 442,
+      "width": 106,
+      "overflowPx": 52
+    },
+    {
+      "tag": "span",
+      "id": null,
+      "cls": null,
+      "right": 427,
+      "width": 76,
+      "overflowPx": 37
+    }
+  ],
+  "withMenuOpen": {
+    "menuRight": 396,
+    "innerWidth": 390,
+    "overflowRightPx": 6,
+    "docScrollWidth": 396,
+    "hOverflowWithMenu": true,
+    "elementAtViewportRightEdge": "tn-group",
+    "canPanNow": false,
+    "clippingAncestors": []
+  }
+}

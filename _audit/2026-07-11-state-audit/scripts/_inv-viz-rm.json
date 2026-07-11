@@ -1,0 +1,384 @@
+{
+ "reduce_atBoot": {
+  "chain": [
+   {
+    "sel": "html",
+    "opacity": "1",
+    "visibility": "visible",
+    "display": "block",
+    "animationName": "none",
+    "transform": "none",
+    "rect": [
+     1280,
+     970
+    ]
+   },
+   {
+    "sel": "body",
+    "opacity": "0",
+    "visibility": "visible",
+    "display": "block",
+    "animationName": "none",
+    "transform": "none",
+    "rect": [
+     1280,
+     970
+    ]
+   },
+   {
+    "sel": ".app",
+    "opacity": "1",
+    "visibility": "visible",
+    "display": "flex",
+    "animationName": "none",
+    "transform": "none",
+    "rect": [
+     1280,
+     900
+    ]
+   },
+   {
+    "sel": "header",
+    "missing": true
+   },
+   {
+    "sel": ".stage",
+    "opacity": "1",
+    "visibility": "visible",
+    "display": "flex",
+    "animationName": "none",
+    "transform": "none",
+    "rect": [
+     694,
+     900
+    ]
+   },
+   {
+    "sel": "#walk",
+    "opacity": "1",
+    "visibility": "visible",
+    "display": "block",
+    "animationName": "none",
+    "transform": "none",
+    "rect": [
+     592,
+     691
+    ]
+   },
+   {
+    "sel": "#viz",
+    "opacity": "1",
+    "visibility": "visible",
+    "display": "none",
+    "animationName": "none",
+    "transform": "none",
+    "rect": [
+     0,
+     0
+    ]
+   },
+   {
+    "sel": ".seg",
+    "opacity": "1",
+    "visibility": "visible",
+    "display": "flex",
+    "animationName": "none",
+    "transform": "none",
+    "rect": [
+     263,
+     420
+    ]
+   }
+  ],
+  "elAtCentre": "SPAN.ix-c-name",
+  "bodyText": "DEEP REHEARSALARCHITECTURE & APIS · INGESTION LAYER Content Pipeline FOCUS ⌂ ‹ REHEARSING ",
+  "bodyTextLen": 27186
+ },
+ "reduce_afterOverlayClosed": {
+  "chain": [
+   {
+    "sel": "html",
+    "opacity": "1",
+    "visibility": "visible",
+    "display": "block",
+    "animationName": "none",
+    "transform": "none",
+    "rect": [
+     1280,
+     970
+    ]
+   },
+   {
+    "sel": "body",
+    "opacity": "0",
+    "visibility": "visible",
+    "display": "block",
+    "animationName": "none",
+    "transform": "none",
+    "rect": [
+     1280,
+     970
+    ]
+   },
+   {
+    "sel": ".app",
+    "opacity": "1",
+    "visibility": "visible",
+    "display": "flex",
+    "animationName": "none",
+    "transform": "none",
+    "rect": [
+     1280,
+     900
+    ]
+   },
+   {
+    "sel": "header",
+    "missing": true
+   },
+   {
+    "sel": ".stage",
+    "opacity": "1",
+    "visibility": "visible",
+    "display": "flex",
+    "animationName": "none",
+    "transform": "none",
+    "rect": [
+     694,
+     900
+    ]
+   },
+   {
+    "sel": "#walk",
+    "opacity": "1",
+    "visibility": "visible",
+    "display": "block",
+    "animationName": "none",
+    "transform": "none",
+    "rect": [
+     592,
+     691
+    ]
+   },
+   {
+    "sel": "#viz",
+    "opacity": "1",
+    "visibility": "visible",
+    "display": "none",
+    "animationName": "none",
+    "transform": "none",
+    "rect": [
+     0,
+     0
+    ]
+   },
+   {
+    "sel": ".seg",
+    "opacity": "1",
+    "visibility": "visible",
+    "display": "flex",
+    "animationName": "none",
+    "transform": "none",
+    "rect": [
+     263,
+     420
+    ]
+   }
+  ],
+  "elAtCentre": "DEEP-WALKTHROUGH.",
+  "bodyText": "DEEP REHEARSALARCHITECTURE & APIS · INGESTION LAYER Content Pipeline FOCUS ⌂ ‹ REHEARSING ",
+  "bodyTextLen": 1483
+ },
+ "reduce_errors": [],
+ "no-preference_atBoot": {
+  "chain": [
+   {
+    "sel": "html",
+    "opacity": "1",
+    "visibility": "visible",
+    "display": "block",
+    "animationName": "none",
+    "transform": "none",
+    "rect": [
+     1280,
+     970
+    ]
+   },
+   {
+    "sel": "body",
+    "opacity": "1",
+    "visibility": "visible",
+    "display": "block",
+    "animationName": "bodyIn",
+    "transform": "none",
+    "rect": [
+     1280,
+     970
+    ]
+   },
+   {
+    "sel": ".app",
+    "opacity": "1",
+    "visibility": "visible",
+    "display": "flex",
+    "animationName": "none",
+    "transform": "none",
+    "rect": [
+     1280,
+     900
+    ]
+   },
+   {
+    "sel": "header",
+    "missing": true
+   },
+   {
+    "sel": ".stage",
+    "opacity": "1",
+    "visibility": "visible",
+    "display": "flex",
+    "animationName": "none",
+    "transform": "none",
+    "rect": [
+     694,
+     900
+    ]
+   },
+   {
+    "sel": "#walk",
+    "opacity": "1",
+    "visibility": "visible",
+    "display": "block",
+    "animationName": "panein",
+    "transform": "none",
+    "rect": [
+     592,
+     691
+    ]
+   },
+   {
+    "sel": "#viz",
+    "opacity": "1",
+    "visibility": "visible",
+    "display": "none",
+    "animationName": "none",
+    "transform": "none",
+    "rect": [
+     0,
+     0
+    ]
+   },
+   {
+    "sel": ".seg",
+    "opacity": "1",
+    "visibility": "visible",
+    "display": "flex",
+    "animationName": "none",
+    "transform": "none",
+    "rect": [
+     263,
+     420
+    ]
+   }
+  ],
+  "elAtCentre": "SPAN.ix-c-name",
+  "bodyText": "DEEP REHEARSALARCHITECTURE & APIS · INGESTION LAYER Content Pipeline FOCUS ⌂ ‹ REHEARSING ",
+  "bodyTextLen": 27186
+ },
+ "no-preference_afterOverlayClosed": {
+  "chain": [
+   {
+    "sel": "html",
+    "opacity": "1",
+    "visibility": "visible",
+    "display": "block",
+    "animationName": "none",
+    "transform": "none",
+    "rect": [
+     1280,
+     970
+    ]
+   },
+   {
+    "sel": "body",
+    "opacity": "1",
+    "visibility": "visible",
+    "display": "block",
+    "animationName": "bodyIn",
+    "transform": "none",
+    "rect": [
+     1280,
+     970
+    ]
+   },
+   {
+    "sel": ".app",
+    "opacity": "1",
+    "visibility": "visible",
+    "display": "flex",
+    "animationName": "none",
+    "transform": "none",
+    "rect": [
+     1280,
+     900
+    ]
+   },
+   {
+    "sel": "header",
+    "missing": true
+   },
+   {
+    "sel": ".stage",
+    "opacity": "1",
+    "visibility": "visible",
+    "display": "flex",
+    "animationName": "none",
+    "transform": "none",
+    "rect": [
+     694,
+     900
+    ]
+   },
+   {
+    "sel": "#walk",
+    "opacity": "1",
+    "visibility": "visible",
+    "display": "block",
+    "animationName": "panein",
+    "transform": "none",
+    "rect": [
+     592,
+     691
+    ]
+   },
+   {
+    "sel": "#viz",
+    "opacity": "1",
+    "visibility": "visible",
+    "display": "none",
+    "animationName": "none",
+    "transform": "none",
+    "rect": [
+     0,
+     0
+    ]
+   },
+   {
+    "sel": ".seg",
+    "opacity": "1",
+    "visibility": "visible",
+    "display": "flex",
+    "animationName": "none",
+    "transform": "none",
+    "rect": [
+     263,
+     420
+    ]
+   }
+  ],
+  "elAtCentre": "DEEP-WALKTHROUGH.",
+  "bodyText": "DEEP REHEARSALARCHITECTURE & APIS · INGESTION LAYER Content Pipeline FOCUS ⌂ ‹ REHEARSING ",
+  "bodyTextLen": 1483
+ },
+ "no-preference_errors": []
+}

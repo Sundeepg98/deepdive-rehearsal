@@ -1,0 +1,485 @@
+{
+ "RESULT": {
+  "topicCount": 46,
+  "companionSync": {
+   "event-driven": [
+    {
+     "view": "walk",
+     "stage": "Walkthrough",
+     "cmpView": "A message from emit to ack",
+     "cmpNote": "One event from the producer to a processed, a",
+     "activeTab": "walk",
+     "cmpKeys": [
+      "walk",
+      "drill"
+     ],
+     "MATCH": false
+    },
+    {
+     "view": "drill",
+     "stage": "Probe Drill",
+     "cmpView": "Probe Drill",
+     "cmpNote": "Graded follow-ups on the delivery guarantee, ",
+     "activeTab": "drill",
+     "cmpKeys": [
+      "walk",
+      "drill"
+     ],
+     "MATCH": true
+    },
+    {
+     "view": "wb",
+     "stage": "Whiteboard",
+     "cmpView": "Probe Drill",
+     "cmpNote": "Graded follow-ups on the delivery guarantee, ",
+     "activeTab": "wb",
+     "cmpKeys": [
+      "walk",
+      "drill"
+     ],
+     "MATCH": false
+    },
+    {
+     "view": "sys",
+     "stage": "System Map",
+     "cmpView": "Probe Drill",
+     "cmpNote": "Graded follow-ups on the delivery guarantee, ",
+     "activeTab": "sys",
+     "cmpKeys": [
+      "walk",
+      "drill"
+     ],
+     "MATCH": false
+    },
+    {
+     "view": "trade",
+     "stage": "Trade-offs",
+     "cmpView": "Probe Drill",
+     "cmpNote": "Graded follow-ups on the delivery guarantee, ",
+     "activeTab": "trade",
+     "cmpKeys": [
+      "walk",
+      "drill"
+     ],
+     "MATCH": false
+    },
+    {
+     "view": "model",
+     "stage": "Model Answers",
+     "cmpView": "Probe Drill",
+     "cmpNote": "Graded follow-ups on the delivery guarantee, ",
+     "activeTab": "model",
+     "cmpKeys": [
+      "walk",
+      "drill"
+     ],
+     "MATCH": false
+    },
+    {
+     "view": "num",
+     "stage": "Numbers",
+     "cmpView": "Probe Drill",
+     "cmpNote": "Graded follow-ups on the delivery guarantee, ",
+     "activeTab": "num",
+     "cmpKeys": [
+      "walk",
+      "drill"
+     ],
+     "MATCH": false
+    },
+    {
+     "view": "rf",
+     "stage": "Red Flags",
+     "cmpView": "Probe Drill",
+     "cmpNote": "Graded follow-ups on the delivery guarantee, ",
+     "activeTab": "rf",
+     "cmpKeys": [
+      "walk",
+      "drill"
+     ],
+     "MATCH": false
+    },
+    {
+     "view": "open",
+     "stage": "30-Second",
+     "cmpView": "Probe Drill",
+     "cmpNote": "Graded follow-ups on the delivery guarantee, ",
+     "activeTab": "open",
+     "cmpKeys": [
+      "walk",
+      "drill"
+     ],
+     "MATCH": false
+    }
+   ],
+   "content-pipeline": [
+    {
+     "view": "walk",
+     "stage": "Walkthrough",
+     "cmpView": "Walkthrough",
+     "cmpNote": "The dispatch flow, one step at a time — the m",
+     "activeTab": "walk",
+     "cmpKeys": [
+      "walk",
+      "drill",
+      "wb",
+      "sys",
+      "trade",
+      "model",
+      "num",
+      "rf",
+      "open"
+     ],
+     "MATCH": true
+    },
+    {
+     "view": "drill",
+     "stage": "Probe Drill",
+     "cmpView": "Probe Drill",
+     "cmpNote": "Twenty graded follow-ups — the ones that sepa",
+     "activeTab": "drill",
+     "cmpKeys": [
+      "walk",
+      "drill",
+      "wb",
+      "sys",
+      "trade",
+      "model",
+      "num",
+      "rf",
+      "open"
+     ],
+     "MATCH": true
+    },
+    {
+     "view": "wb",
+     "stage": "Whiteboard",
+     "cmpView": "Whiteboard",
+     "cmpNote": "Rebuild the whole pipeline from memory — nine",
+     "activeTab": "wb",
+     "cmpKeys": [
+      "walk",
+      "drill",
+      "wb",
+      "sys",
+      "trade",
+      "model",
+      "num",
+      "rf",
+      "open"
+     ],
+     "MATCH": true
+    },
+    {
+     "view": "sys",
+     "stage": "System Map",
+     "cmpView": "System Map",
+     "cmpNote": "Zoom out to the six stages — and the exact po",
+     "activeTab": "sys",
+     "cmpKeys": [
+      "walk",
+      "drill",
+      "wb",
+      "sys",
+      "trade",
+      "model",
+      "num",
+      "rf",
+      "open"
+     ],
+     "MATCH": true
+    },
+    {
+     "view": "trade",
+     "stage": "Trade-offs",
+     "cmpView": "Trade-offs",
+     "cmpNote": "The decisions they drill — each with the swit",
+     "activeTab": "trade",
+     "cmpKeys": [
+      "walk",
+      "drill",
+      "wb",
+      "sys",
+      "trade",
+      "model",
+      "num",
+      "rf",
+      "open"
+     ],
+     "MATCH": true
+    },
+    {
+     "view": "model",
+     "stage": "Model Answers",
+     "cmpView": "Model Answers",
+     "cmpNote": "Full spoken scripts — the beats, in order, th",
+     "activeTab": "model",
+     "cmpKeys": [
+      "walk",
+      "drill",
+      "wb",
+      "sys",
+      "trade",
+      "model",
+      "num",
+      "rf",
+      "open"
+     ],
+     "MATCH": true
+    },
+    {
+     "view": "num",
+     "stage": "Numbers",
+     "cmpView": "Numbers",
+     "cmpNote": "Back-of-envelope the load — and know which nu",
+     "activeTab": "num",
+     "cmpKeys": [
+      "walk",
+      "drill",
+      "wb",
+      "sys",
+      "trade",
+      "model",
+      "num",
+      "rf",
+      "open"
+     ],
+     "MATCH": true
+    },
+    {
+     "view": "rf",
+     "stage": "Red Flags",
+     "cmpView": "Red Flags",
+     "cmpNote": "What sinks the round — the anti-patterns, and",
+     "activeTab": "rf",
+     "cmpKeys": [
+      "walk",
+      "drill",
+      "wb",
+      "sys",
+      "trade",
+      "model",
+      "num",
+      "rf",
+      "open"
+     ],
+     "MATCH": true
+    },
+    {
+     "view": "open",
+     "stage": "30-Second",
+     "cmpView": "30-Second",
+     "cmpNote": "The opener and the close — matched to the alt",
+     "activeTab": "open",
+     "cmpKeys": [
+      "walk",
+      "drill",
+      "wb",
+      "sys",
+      "trade",
+      "model",
+      "num",
+      "rf",
+      "open"
+     ],
+     "MATCH": true
+    }
+   ],
+   "cdc": [
+    {
+     "view": "walk",
+     "stage": "Walkthrough",
+     "cmpView": "A change reaching a derived system",
+     "cmpNote": "One row change from commit to a downstream sy",
+     "activeTab": "walk",
+     "cmpKeys": [
+      "walk",
+      "drill"
+     ],
+     "MATCH": false
+    },
+    {
+     "view": "drill",
+     "stage": "Probe Drill",
+     "cmpView": "Probe Drill",
+     "cmpNote": "Graded follow-ups on the dual write, the outb",
+     "activeTab": "drill",
+     "cmpKeys": [
+      "walk",
+      "drill"
+     ],
+     "MATCH": true
+    },
+    {
+     "view": "wb",
+     "stage": "Whiteboard",
+     "cmpView": "Probe Drill",
+     "cmpNote": "Graded follow-ups on the dual write, the outb",
+     "activeTab": "wb",
+     "cmpKeys": [
+      "walk",
+      "drill"
+     ],
+     "MATCH": false
+    },
+    {
+     "view": "sys",
+     "stage": "System Map",
+     "cmpView": "Probe Drill",
+     "cmpNote": "Graded follow-ups on the dual write, the outb",
+     "activeTab": "sys",
+     "cmpKeys": [
+      "walk",
+      "drill"
+     ],
+     "MATCH": false
+    },
+    {
+     "view": "trade",
+     "stage": "Trade-offs",
+     "cmpView": "Probe Drill",
+     "cmpNote": "Graded follow-ups on the dual write, the outb",
+     "activeTab": "trade",
+     "cmpKeys": [
+      "walk",
+      "drill"
+     ],
+     "MATCH": false
+    },
+    {
+     "view": "model",
+     "stage": "Model Answers",
+     "cmpView": "Probe Drill",
+     "cmpNote": "Graded follow-ups on the dual write, the outb",
+     "activeTab": "model",
+     "cmpKeys": [
+      "walk",
+      "drill"
+     ],
+     "MATCH": false
+    },
+    {
+     "view": "num",
+     "stage": "Numbers",
+     "cmpView": "Probe Drill",
+     "cmpNote": "Graded follow-ups on the dual write, the outb",
+     "activeTab": "num",
+     "cmpKeys": [
+      "walk",
+      "drill"
+     ],
+     "MATCH": false
+    },
+    {
+     "view": "rf",
+     "stage": "Red Flags",
+     "cmpView": "Probe Drill",
+     "cmpNote": "Graded follow-ups on the dual write, the outb",
+     "activeTab": "rf",
+     "cmpKeys": [
+      "walk",
+      "drill"
+     ],
+     "MATCH": false
+    },
+    {
+     "view": "open",
+     "stage": "30-Second",
+     "cmpView": "Probe Drill",
+     "cmpNote": "Graded follow-ups on the dual write, the outb",
+     "activeTab": "open",
+     "cmpKeys": [
+      "walk",
+      "drill"
+     ],
+     "MATCH": false
+    }
+   ]
+  },
+  "cram": {
+   "event-driven": {
+    "title": "Cram sheet · Event-Driven Backbone",
+    "bodyLen": 3330,
+    "head": ":host code{font-size:var(--font-size-micro);background:linear-gradient(135deg,var(--cram-code-bg) 0%,rgba(83,74,183,.04) 100%);bor"
+   },
+   "content-pipeline": {
+    "title": "Cram sheet · Content Pipeline",
+    "bodyLen": 3330,
+    "head": ":host code{font-size:var(--font-size-micro);background:linear-gradient(135deg,var(--cram-code-bg) 0%,rgba(83,74,183,.04) 100%);bor"
+   },
+   "consistency-models": {
+    "title": "Cram sheet · Consistency Models",
+    "bodyLen": 3330,
+    "head": ":host code{font-size:var(--font-size-micro);background:linear-gradient(135deg,var(--cram-code-bg) 0%,rgba(83,74,183,.04) 100%);bor"
+   }
+  },
+  "cramBodiesIdentical": true,
+  "scope": {
+   "event-driven": {
+    "title": "Scope it first · the questions before the design",
+    "bodyLen": 2275,
+    "head": "The first signalBefore you draw anything, scope it. The first thing the interviewer reads is whether you solut"
+   },
+   "content-pipeline": {
+    "title": "Scope it first · the questions before the design",
+    "bodyLen": 2275,
+    "head": "The first signalBefore you draw anything, scope it. The first thing the interviewer reads is whether you solut"
+   },
+   "consistency-models": {
+    "title": "Scope it first · the questions before the design",
+    "bodyLen": 2275,
+    "head": "The first signalBefore you draw anything, scope it. The first thing the interviewer reads is whether you solut"
+   }
+  },
+  "scopeBodiesIdentical": true
+ },
+ "errs": [],
+ "topicIds": [
+  "event-driven",
+  "notifications",
+  "real-time-delivery",
+  "cdc",
+  "kafka-internals",
+  "stream-batch-processing",
+  "saga",
+  "caching",
+  "soft-delete",
+  "eav",
+  "shared-definition",
+  "replication",
+  "consistency-models",
+  "sharding-strategies",
+  "consistent-hashing",
+  "storage-engines",
+  "probabilistic-structures",
+  "retries-timeouts",
+  "idempotency",
+  "circuit-breaker",
+  "error-propagation",
+  "backpressure",
+  "observability",
+  "debugging",
+  "slos",
+  "iac",
+  "desired-state",
+  "aws-hardening",
+  "load-balancing",
+  "autoscaling",
+  "leader-election",
+  "distributed-locks",
+  "multi-region",
+  "lambda-organization",
+  "devices-dispatch",
+  "developer-platform",
+  "state-machine",
+  "rules-engine",
+  "feature-flags",
+  "api-design",
+  "rate-limiting",
+  "content-pipeline",
+  "microfrontend",
+  "signing",
+  "authz",
+  "multi-tenant"
+ ]
+}

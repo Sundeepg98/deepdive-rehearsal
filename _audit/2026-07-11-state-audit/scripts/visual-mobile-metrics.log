@@ -1,0 +1,127 @@
+
+### CHROME BUDGET @ 390x844 (first paint, #walk)
+{
+  "vh": 844,
+  "segH": 56,
+  "ctaH": 123,
+  "sideIdH": 161.3,
+  "stageHeadH": 54.7,
+  "mcompH": 44.5,
+  "firstContentTop": 373.5,
+  "firstContentTag": "deep-walkthrough.",
+  "visibleContentPx": 347.5,
+  "chromePct": 58.8,
+  "segScrollW": 976,
+  "segClientW": 390,
+  "docScrollW": 396,
+  "docClientW": 390
+}
+OVERFLOW past viewport (390px): []
+
+### CHROME BUDGET @ 360x844 (first paint, #walk)
+{
+  "vh": 844,
+  "segH": 56,
+  "ctaH": 123,
+  "sideIdH": 161.3,
+  "stageHeadH": 54.7,
+  "mcompH": 44.5,
+  "firstContentTop": 373.5,
+  "firstContentTag": "deep-walkthrough.",
+  "visibleContentPx": 347.5,
+  "chromePct": 58.8,
+  "segScrollW": 976,
+  "segClientW": 360,
+  "docScrollW": 396,
+  "docClientW": 360
+}
+OVERFLOW past viewport (360px): []
+
+### TOUCH TARGETS < 44px (WCAG 2.2 AA "Target Size (Minimum)" = 24px; Apple HIG/Material = 44/48)
+Total undersized interactive elements found: 216
+      20h x     60w  n=  9  ._focus-toggle  [walk,drill,wb,sys,trade,model,num,rf,open]  "Focus"
+    31.4h x    358w  n=  9  .crambtn.cram-tog  [walk,drill,wb,sys,trade,model,num,rf,open]  "☽Dark mode — off"
+    36.7h x    358w  n= 99  .crambtn  [walk,drill,wb,sys,trade,model,num,rf,open]  "Topic index — all topics a"
+      39h x   86.4w  n=  9  .on.seen  [walk,drill,wb,sys,trade,model,num,rf,open]  "WalkthroughMECHANICS"
+      39h x   86.4w  n= 36  .BUTTON  [walk,drill,wb,sys,trade,model,num,rf]  "Probe DrillGRADED"
+      39h x   86.4w  n= 36  .seen  [drill,wb,sys,trade,model,num,rf,open]  "WalkthroughMECHANICS"
+      40h x   66.6w  n=  9  .tools-fab  [walk,drill,wb,sys,trade,model,num,rf,open]  "Tools"
+      43h x    360w  n=  9  .inttog  [walk,drill,wb,sys,trade,model,num,rf,open]  "Interviewer cuts in mid-an"
+
+### TYPOGRAPHY (body copy on mobile)
+  stage-head .sh-name          fs=   21px lh= 23.1px (1.1x) w= 342px ~33cpl  rgb(42, 40, 35)  "Space Grotesk"
+  stage-head .sh-kick          fs=    9px lh= 12.6px (1.4x) w= 342px ~76cpl  rgb(83, 74, 183)  ui-monospace
+  side-id h1                   fs=   18px lh= 19.8px (1.1x) w= 360px ~40cpl  rgb(42, 40, 35)  "Space Grotesk"
+  .locator                     fs=   11px lh= 16.5px (1.5x) w= 360px ~65cpl  rgb(83, 74, 183)  ui-monospace
+  seg button label             fs=   13px lh= 15.6px (1.2x) w=  79px ~12cpl  rgb(58, 46, 134)  -apple-system
+  .mockbtn                     fs= 13.5px lh= 16.2px (1.2x) w= 283px ~42cpl  rgb(255, 255, 255)  -apple-system
+  .inttog-lbl                  fs= 11.5px lh= 13.8px (1.2x) w= 203px ~35cpl  rgb(107, 104, 98)  -apple-system
+  .crambtn .mb-t               fs=   12px lh= 16.8px (1.4x) w=  67px ~11cpl  rgb(42, 40, 35)  Arial
+  .crambtn .mb-d               fs=   12px lh= 16.8px (1.4x) w= 326px ~54cpl  rgb(107, 104, 98)  Arial
+  .mcomp-cue                   fs=   11px lh= 16.5px (1.5x) w= 229px ~42cpl  rgb(103, 97, 90)  -apple-system
+  body                         fs=   16px lh=   24px (1.5x) w= 390px ~49cpl  rgb(42, 40, 35)  -apple-system
+
+### MODEL-ANSWER long-form reading metrics
+
+### SCROLL-TOP FAB vs BOTTOM BAR
+{
+  "shown": true,
+  "fab": {
+    "x": 173,
+    "y": 776,
+    "w": 44,
+    "h": 44
+  },
+  "cta": {
+    "y": 721,
+    "h": 123
+  },
+  "inttog": {
+    "x": 15,
+    "y": 789,
+    "w": 360,
+    "h": 43
+  },
+  "overlapsBottomBar": true,
+  "overlapsInterviewerToggle": true,
+  "fabZ": "150",
+  "ctaZ": "40",
+  "elementAtFabCenter": "button.scrolltop"
+}
+
+### ACTIVE TAB VISIBILITY in the top strip
+  hash #walk   -> {"tab":"WalkthroughMECHANICS","segScrollLeft":0,"btnLeft":12,"btnRight":121,"stripRight":390,"fullyVisible":true,"clippedPx":0}
+  hash #sys    -> {"tab":"System MapZOOM OUT","segScrollLeft":0,"btnLeft":336.2,"btnRight":442.1,"stripRight":390,"fullyVisible":false,"clippedPx":52.1}
+  hash #rf     -> {"tab":"Red FlagsANTI-PATTER","segScrollLeft":0,"btnLeft":770.2,"btnRight":862.3,"stripRight":390,"fullyVisible":false,"clippedPx":472.3}
+  hash #open   -> {"tab":"30-SecondOPEN & CLOS","segScrollLeft":0,"btnLeft":868.3,"btnRight":964,"stripRight":390,"fullyVisible":false,"clippedPx":574}
+  via CLICK on hidden tab -> {"via":"click","tab":"Red FlagsANTI-PATTER","segScrollLeft":586,"fullyVisible":true}
+
+### SWIPE between panes (touch-swipe.js)
+  swipe left: #walk -> #walk  NO CHANGE
+
+### MOTION
+{
+  "tokens": {
+    "instant": "0s",
+    "fast": "0.15s",
+    "base": "0.2s",
+    "moderate": "0.25s",
+    "slow": "0.3s",
+    "slowest": "0.5s"
+  },
+  "toolsSheetTransition": "transform 0.25s",
+  "paneAnimation": "0.5s cubic-bezier(0.22, 0.61, 0.36, 1) panein",
+  "stageMeshAnimA": "20s ease-in-out infinite meshA",
+  "segTransition": "background 0.2s, box-shadow 0.2s, transform 0.15s"
+}
+
+### NUMBERS pane inputs (mobile keyboard + iOS zoom-on-focus check: fontSize < 16px triggers zoom)
+
+### DARK CONTRAST PROBE (WCAG AA body = 4.5:1, large = 3:1)
+  mb-d (tools row desc)      rgb(167, 162, 154) on rgb(33, 31, 41) = 6.4:1  (fs 12px)  
+  mb-t (tools row title)     rgb(236, 234, 228) on rgb(33, 31, 41) = 13.5:1  (fs 12px)  
+  mb-sec (tools section)     rgb(167, 162, 154) on rgb(33, 31, 41) = 6.4:1  (fs 9px)  
+  inttog label               rgb(167, 162, 154) on rgb(33, 31, 41) = 6.4:1  (fs 11.5px)  
+  locator                    rgb(170, 157, 245) on rgb(43, 38, 64) = 6.09:1  (fs 11px)  
+  mcomp cue                  rgb(173, 167, 157) on rgb(21, 20, 26) = 7.67:1  (fs 11px)  
+  seg inactive tab           rgb(236, 234, 228) on rgb(24, 22, 30) = 14.89:1  (fs 13px)  

@@ -1,0 +1,129 @@
+{
+ "desktopTabWidth": 263,
+ "desktop_AS_SHIPPED": {
+  "backingStore": [
+   0,
+   0
+  ],
+  "widthAttr": "0",
+  "heightAttr": "0",
+  "rect": [
+   592,
+   2
+  ],
+  "cssWH": [
+   "591.625px",
+   "2px"
+  ],
+  "borderTop": "1px",
+  "borderBottom": "1px",
+  "clientWH": [
+   590,
+   0
+  ],
+  "paneClass": "pane on",
+  "paneDisplay": "block",
+  "kitMounted": true,
+  "frames": 38,
+  "glCtxSize": [
+   1,
+   1
+  ]
+ },
+ "desktop_AS_SHIPPED_pixels": {
+  "a": "D:/claude-workspace/deepdive-rehearsal/_audit/2026-07-11-state-audit/shots/inv-visual-trainer-verify/shipped-desktop-canvas-a.png",
+  "b": "D:/claude-workspace/deepdive-rehearsal/_audit/2026-07-11-state-audit/shots/inv-visual-trainer-verify/shipped-desktop-canvas-b.png",
+  "clip": {
+   "x": 347,
+   "y": 126,
+   "width": 592,
+   "height": 2
+  },
+  "bytesA": 127,
+  "bytesB": 127
+ },
+ "errorsSoFar": [],
+ "desktop_AFTER_RESIZE": {
+  "backingStore": [
+   591,
+   332
+  ],
+  "widthAttr": "591",
+  "heightAttr": "332",
+  "rect": [
+   593,
+   334
+  ],
+  "cssWH": [
+   "592.531px",
+   "333.734px"
+  ],
+  "borderTop": "1px",
+  "borderBottom": "1px",
+  "clientWH": [
+   591,
+   332
+  ],
+  "paneClass": "pane on",
+  "paneDisplay": "block",
+  "kitMounted": true,
+  "frames": 126,
+  "glCtxSize": [
+   591,
+   332
+  ]
+ },
+ "desktop_AFTER_RESIZE_pixels": {
+  "a": "D:/claude-workspace/deepdive-rehearsal/_audit/2026-07-11-state-audit/shots/inv-visual-trainer-verify/resized-desktop-canvas-a.png",
+  "b": "D:/claude-workspace/deepdive-rehearsal/_audit/2026-07-11-state-audit/shots/inv-visual-trainer-verify/resized-desktop-canvas-b.png",
+  "clip": {
+   "x": 347,
+   "y": 126,
+   "width": 593,
+   "height": 334
+  },
+  "bytesA": 3680,
+  "bytesB": 3672
+ },
+ "mobile_AS_SHIPPED": {
+  "backingStore": [
+   0,
+   0
+  ],
+  "widthAttr": "0",
+  "heightAttr": "0",
+  "rect": [
+   360,
+   2
+  ],
+  "cssWH": [
+   "360px",
+   "2px"
+  ],
+  "borderTop": "1px",
+  "borderBottom": "1px",
+  "clientWH": [
+   358,
+   0
+  ],
+  "paneClass": "pane on",
+  "paneDisplay": "block",
+  "kitMounted": true,
+  "frames": 117,
+  "glCtxSize": [
+   1,
+   1
+  ]
+ },
+ "standalone_pilot": {
+  "backingStore": [
+   952,
+   536
+  ],
+  "rect": [
+   954,
+   538
+  ]
+ },
+ "pageErrors": []
+}

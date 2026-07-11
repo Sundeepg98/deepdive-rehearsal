@@ -1,0 +1,54 @@
+..............................................
+done in 693.6s
+
+=== ERRORS: 0
+
+=== NETWORK: 1 ["document file:///D:/claude-workspace/deepdive-rehearsal/dist/index.html"]
+=== FAILED: 0
+
+=== BAD CELLS (uncommitted / wrong pane / empty / zero-height): 161 / 460
+
+  viz: 17
+    kafka-internals[on=viz,txt=141,h=0,commit=true]  leader-election[on=open,txt=5873,h=821,commit=false]  distributed-locks[on=open,txt=6011,h=840,commit=false]  multi-region[on=open,txt=6747,h=916,commit=false]  lambda-organization[on=open,txt=5305,h=744,commit=false]  devices-dispatch[on=open,txt=5132,h=725,commit=false]
+
+  walk: 16
+    leader-election[on=viz,txt=141,h=69,commit=false]  distributed-locks[on=viz,txt=141,h=69,commit=false]  multi-region[on=viz,txt=141,h=69,commit=false]  lambda-organization[on=viz,txt=141,h=69,commit=false]  devices-dispatch[on=viz,txt=141,h=69,commit=false]  developer-platform[on=viz,txt=141,h=69,commit=false]
+
+  drill: 16
+    leader-election[on=walk,txt=15590,h=731,commit=false]  distributed-locks[on=walk,txt=16015,h=719,commit=false]  multi-region[on=walk,txt=16344,h=732,commit=false]  lambda-organization[on=walk,txt=14096,h=660,commit=false]  devices-dispatch[on=walk,txt=13338,h=681,commit=false]  developer-platform[on=walk,txt=14416,h=660,commit=false]
+
+  wb: 16
+    leader-election[on=drill,txt=15293,h=881,commit=false]  distributed-locks[on=drill,txt=15411,h=923,commit=false]  multi-region[on=drill,txt=15402,h=900,commit=false]  lambda-organization[on=drill,txt=15268,h=894,commit=false]  devices-dispatch[on=drill,txt=15185,h=867,commit=false]  developer-platform[on=drill,txt=15250,h=887,commit=false]
+
+  sys: 16
+    leader-election[on=wb,txt=14263,h=455,commit=false]  distributed-locks[on=wb,txt=14318,h=455,commit=false]  multi-region[on=wb,txt=15025,h=473,commit=false]  lambda-organization[on=wb,txt=13797,h=455,commit=false]  devices-dispatch[on=wb,txt=13701,h=455,commit=false]  developer-platform[on=wb,txt=14036,h=455,commit=false]
+
+  trade: 16
+    leader-election[on=sys,txt=5956,h=494,commit=false]  distributed-locks[on=sys,txt=6328,h=494,commit=false]  multi-region[on=sys,txt=6197,h=512,commit=false]  lambda-organization[on=sys,txt=6001,h=530,commit=false]  devices-dispatch[on=sys,txt=6049,h=566,commit=false]  developer-platform[on=sys,txt=6011,h=603,commit=false]
+
+  model: 16
+    leader-election[on=trade,txt=3453,h=1073,commit=false]  distributed-locks[on=trade,txt=3562,h=1131,commit=false]  multi-region[on=trade,txt=4156,h=1285,commit=false]  lambda-organization[on=trade,txt=3154,h=1053,commit=false]  devices-dispatch[on=trade,txt=3001,h=1033,commit=false]  developer-platform[on=trade,txt=3014,h=1034,commit=false]
+
+  num: 16
+    leader-election[on=model,txt=2647,h=537,commit=false]  distributed-locks[on=model,txt=2707,h=561,commit=false]  multi-region[on=model,txt=2770,h=598,commit=false]  lambda-organization[on=model,txt=2567,h=389,commit=false]  devices-dispatch[on=model,txt=2554,h=377,commit=false]  developer-platform[on=model,txt=2585,h=402,commit=false]
+
+  rf: 16
+    leader-election[on=num,txt=4983,h=783,commit=false]  distributed-locks[on=num,txt=5045,h=783,commit=false]  multi-region[on=num,txt=5107,h=804,commit=false]  lambda-organization[on=num,txt=5104,h=799,commit=false]  devices-dispatch[on=num,txt=4986,h=804,commit=false]  developer-platform[on=num,txt=5086,h=799,commit=false]
+
+  open: 16
+    leader-election[on=rf,txt=3471,h=594,commit=false]  distributed-locks[on=rf,txt=3475,h=632,commit=false]  multi-region[on=rf,txt=3816,h=671,commit=false]  lambda-organization[on=rf,txt=3350,h=574,commit=false]  devices-dispatch[on=rf,txt=3187,h=588,commit=false]  developer-platform[on=rf,txt=3347,h=608,commit=false]
+
+=== PER-PANE TEXT LENGTH (min/median/max over 46 topics) ===
+  walk   n=30  min=13027  med=14381  max=16824
+  drill  n=30  min=15170  med=15305  max=15556
+  wb     n=30  min=11751  med=13904  max=15293
+  sys    n=30  min=5854  med=6063  max=11286
+  trade  n=30  min=2898  med=3403  max=6479
+  model  n=30  min=2540  med=2651  max=4298
+  num    n=30  min=4805  med=5062  max=5363
+  rf     n=30  min=3067  med=3558  max=9472
+  open   n=30  min=5121  med=5872  max=8733
+  viz    n=30  min=141  med=141  max=141
+
+=== VIZ canvas presence: 0 / 46
+   no-canvas topics: event-driven, notifications, real-time-delivery, cdc, kafka-internals, stream-batch-processing, saga, caching, soft-delete, eav, shared-definition, replication, consistency-models, sharding-strategies, consistent-hashing, storage-engines, probabilistic-structures, retries-timeouts, idempotency, circuit-breaker, error-propagation, backpressure, observability, debugging, slos, iac, desired-state, aws-hardening, load-balancing, autoscaling, leader-election, distributed-locks, multi-region, lambda-organization, devices-dispatch, developer-platform, state-machine, rules-engine, feature-flags, api-design, rate-limiting, content-pipeline, microfrontend, signing, authz, multi-tenant

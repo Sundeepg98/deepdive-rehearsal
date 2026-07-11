@@ -1,0 +1,89 @@
+{
+ "before": {
+  "tnnext": {
+   "x": 535,
+   "right": 579,
+   "y": 199.6,
+   "w": 44,
+   "h": 44
+  },
+  "docSW": 579,
+  "docCW": 360,
+  "over": 219,
+  "scrollX": 0,
+  "innerWidth": 579,
+  "htmlOvfX": "visible",
+  "bodyOvfX": "visible",
+  "appOvfX": "visible",
+  "sidebarOvfX": "visible",
+  "sideIdOvfX": "visible"
+ },
+ "scrollTests": {
+  "afterWindowScrollTo": 0,
+  "afterDocElScrollLeft": 0,
+  "docElScrollLeftVal": 0,
+  "afterBodyScrollLeft": 0,
+  "bodyScrollLeftVal": 0,
+  "afterScrollingElement": 0,
+  "scrollingElementTag": "HTML"
+ },
+ "scrollIntoView": {
+  "scrollX": 0,
+  "x": 535,
+  "right": 579
+ },
+ "realClick": {
+  "clickResult": "CLICK FAILED after 5011ms",
+  "clickErr": "locator.click: Timeout 5000ms exceeded.",
+  "topicBefore": "#debugging/walk",
+  "topicAfter": "#debugging/walk",
+  "navigated": false
+ },
+ "afterClickScroll": {
+  "scrollX": 0
+ },
+ "tapProbe": {
+  "centerX": 557,
+  "centerY": 221.6,
+  "innerWidth": 579,
+  "centerInsideViewport": true,
+  "visiblePx": 43.96875,
+  "elementFromPointAtClampedX": "_index-overlay",
+  "elementFromPointAtRealCenter": "_index-overlay"
+ },
+ "tnrows": [],
+ "summary360": {
+  "fullyOff": 0,
+  "centerOff": 0,
+  "partial": 0,
+  "fullyVisible": 0,
+  "total": 0
+ },
+ "fixRows": [
+  {
+   "vp": 320,
+   "maxOverAfterFix": null,
+   "overflowingAfterFix": 0
+  },
+  {
+   "vp": 360,
+   "maxOverAfterFix": null,
+   "overflowingAfterFix": 0
+  },
+  {
+   "vp": 390,
+   "maxOverAfterFix": null,
+   "overflowingAfterFix": 0
+  },
+  {
+   "vp": 414,
+   "maxOverAfterFix": null,
+   "overflowingAfterFix": 0
+  },
+  {
+   "vp": 430,
+   "maxOverAfterFix": null,
+   "overflowingAfterFix": 0
+  }
+ ]
+}

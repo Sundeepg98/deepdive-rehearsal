@@ -1,0 +1,3701 @@
+{
+ "topics": 46,
+ "panes": 10,
+ "cells": 0,
+ "errorCount": 460,
+ "errors": [
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "event-driven",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "event-driven",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "event-driven",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "event-driven",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "event-driven",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "event-driven",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "event-driven",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "event-driven",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "event-driven",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "event-driven",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "notifications",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "notifications",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "notifications",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "notifications",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "notifications",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "notifications",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "notifications",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "notifications",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "notifications",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "notifications",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "real-time-delivery",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "real-time-delivery",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "real-time-delivery",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "real-time-delivery",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "real-time-delivery",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "real-time-delivery",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "real-time-delivery",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "real-time-delivery",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "real-time-delivery",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "real-time-delivery",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "cdc",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "cdc",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "cdc",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "cdc",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "cdc",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "cdc",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "cdc",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "cdc",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "cdc",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "cdc",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "kafka-internals",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "kafka-internals",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "kafka-internals",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "kafka-internals",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "kafka-internals",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "kafka-internals",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "kafka-internals",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "kafka-internals",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "kafka-internals",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "kafka-internals",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "stream-batch-processing",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "stream-batch-processing",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "stream-batch-processing",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "stream-batch-processing",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "stream-batch-processing",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "stream-batch-processing",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "stream-batch-processing",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "stream-batch-processing",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "stream-batch-processing",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "stream-batch-processing",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "saga",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "saga",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "saga",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "saga",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "saga",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "saga",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "saga",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "saga",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "saga",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "saga",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "caching",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "caching",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "caching",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "caching",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "caching",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "caching",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "caching",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "caching",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "caching",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "caching",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "soft-delete",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "soft-delete",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "soft-delete",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "soft-delete",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "soft-delete",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "soft-delete",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "soft-delete",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "soft-delete",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "soft-delete",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "soft-delete",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "eav",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "eav",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "eav",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "eav",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "eav",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "eav",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "eav",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "eav",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "eav",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "eav",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "shared-definition",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "shared-definition",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "shared-definition",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "shared-definition",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "shared-definition",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "shared-definition",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "shared-definition",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "shared-definition",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "shared-definition",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "shared-definition",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "replication",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "replication",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "replication",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "replication",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "replication",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "replication",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "replication",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "replication",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "replication",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "replication",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "consistency-models",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "consistency-models",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "consistency-models",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "consistency-models",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "consistency-models",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "consistency-models",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "consistency-models",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "consistency-models",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "consistency-models",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "consistency-models",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "sharding-strategies",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "sharding-strategies",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "sharding-strategies",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "sharding-strategies",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "sharding-strategies",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "sharding-strategies",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "sharding-strategies",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "sharding-strategies",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "sharding-strategies",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "sharding-strategies",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "consistent-hashing",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "consistent-hashing",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "consistent-hashing",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "consistent-hashing",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "consistent-hashing",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "consistent-hashing",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "consistent-hashing",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "consistent-hashing",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "consistent-hashing",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "consistent-hashing",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "storage-engines",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "storage-engines",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "storage-engines",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "storage-engines",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "storage-engines",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "storage-engines",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "storage-engines",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "storage-engines",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "storage-engines",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "storage-engines",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "probabilistic-structures",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "probabilistic-structures",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "probabilistic-structures",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "probabilistic-structures",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "probabilistic-structures",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "probabilistic-structures",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "probabilistic-structures",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "probabilistic-structures",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "probabilistic-structures",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "probabilistic-structures",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "retries-timeouts",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "retries-timeouts",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "retries-timeouts",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "retries-timeouts",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "retries-timeouts",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "retries-timeouts",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "retries-timeouts",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "retries-timeouts",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "retries-timeouts",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "retries-timeouts",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "idempotency",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "idempotency",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "idempotency",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "idempotency",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "idempotency",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "idempotency",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "idempotency",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "idempotency",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "idempotency",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "idempotency",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "circuit-breaker",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "circuit-breaker",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "circuit-breaker",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "circuit-breaker",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "circuit-breaker",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "circuit-breaker",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "circuit-breaker",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "circuit-breaker",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "circuit-breaker",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "circuit-breaker",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "error-propagation",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "error-propagation",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "error-propagation",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "error-propagation",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "error-propagation",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "error-propagation",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "error-propagation",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "error-propagation",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "error-propagation",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "error-propagation",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "backpressure",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "backpressure",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "backpressure",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "backpressure",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "backpressure",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "backpressure",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "backpressure",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "backpressure",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "backpressure",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "backpressure",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "observability",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "observability",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "observability",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "observability",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "observability",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "observability",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "observability",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "observability",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "observability",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "observability",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "debugging",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "debugging",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "debugging",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "debugging",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "debugging",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "debugging",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "debugging",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "debugging",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "debugging",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "debugging",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "slos",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "slos",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "slos",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "slos",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "slos",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "slos",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "slos",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "slos",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "slos",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "slos",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "iac",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "iac",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "iac",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "iac",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "iac",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "iac",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "iac",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "iac",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "iac",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "iac",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "desired-state",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "desired-state",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "desired-state",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "desired-state",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "desired-state",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "desired-state",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "desired-state",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "desired-state",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "desired-state",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "desired-state",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "aws-hardening",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "aws-hardening",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "aws-hardening",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "aws-hardening",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "aws-hardening",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "aws-hardening",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "aws-hardening",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "aws-hardening",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "aws-hardening",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "aws-hardening",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "load-balancing",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "load-balancing",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "load-balancing",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "load-balancing",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "load-balancing",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "load-balancing",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "load-balancing",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "load-balancing",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "load-balancing",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "load-balancing",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "autoscaling",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "autoscaling",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "autoscaling",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "autoscaling",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "autoscaling",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "autoscaling",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "autoscaling",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "autoscaling",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "autoscaling",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "autoscaling",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "leader-election",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "leader-election",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "leader-election",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "leader-election",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "leader-election",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "leader-election",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "leader-election",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "leader-election",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "leader-election",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "leader-election",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "distributed-locks",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "distributed-locks",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "distributed-locks",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "distributed-locks",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "distributed-locks",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "distributed-locks",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "distributed-locks",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "distributed-locks",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "distributed-locks",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "distributed-locks",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "multi-region",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "multi-region",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "multi-region",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "multi-region",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "multi-region",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "multi-region",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "multi-region",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "multi-region",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "multi-region",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "multi-region",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "lambda-organization",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "lambda-organization",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "lambda-organization",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "lambda-organization",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "lambda-organization",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "lambda-organization",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "lambda-organization",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "lambda-organization",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "lambda-organization",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "lambda-organization",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "devices-dispatch",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "devices-dispatch",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "devices-dispatch",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "devices-dispatch",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "devices-dispatch",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "devices-dispatch",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "devices-dispatch",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "devices-dispatch",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "devices-dispatch",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "devices-dispatch",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "developer-platform",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "developer-platform",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "developer-platform",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "developer-platform",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "developer-platform",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "developer-platform",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "developer-platform",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "developer-platform",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "developer-platform",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "developer-platform",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "state-machine",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "state-machine",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "state-machine",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "state-machine",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "state-machine",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "state-machine",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "state-machine",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "state-machine",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "state-machine",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "state-machine",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "rules-engine",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "rules-engine",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "rules-engine",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "rules-engine",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "rules-engine",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "rules-engine",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "rules-engine",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "rules-engine",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "rules-engine",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "rules-engine",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "feature-flags",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "feature-flags",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "feature-flags",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "feature-flags",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "feature-flags",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "feature-flags",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "feature-flags",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "feature-flags",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "feature-flags",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "feature-flags",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "api-design",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "api-design",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "api-design",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "api-design",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "api-design",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "api-design",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "api-design",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "api-design",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "api-design",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "api-design",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "rate-limiting",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "rate-limiting",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "rate-limiting",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "rate-limiting",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "rate-limiting",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "rate-limiting",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "rate-limiting",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "rate-limiting",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "rate-limiting",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "rate-limiting",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "content-pipeline",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "content-pipeline",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "content-pipeline",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "content-pipeline",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "content-pipeline",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "content-pipeline",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "content-pipeline",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "content-pipeline",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "content-pipeline",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "content-pipeline",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "microfrontend",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "microfrontend",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "microfrontend",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "microfrontend",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "microfrontend",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "microfrontend",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "microfrontend",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "microfrontend",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "microfrontend",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "microfrontend",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "signing",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "signing",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "signing",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "signing",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "signing",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "signing",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "signing",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "signing",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "signing",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "signing",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "authz",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "authz",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "authz",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "authz",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "authz",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "authz",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "authz",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "authz",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "authz",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "authz",
+   "pane": "viz",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"walk\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "multi-tenant",
+   "pane": "walk",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"drill\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "multi-tenant",
+   "pane": "drill",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"wb\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "multi-tenant",
+   "pane": "wb",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"sys\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "multi-tenant",
+   "pane": "sys",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"trade\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "multi-tenant",
+   "pane": "trade",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"model\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "multi-tenant",
+   "pane": "model",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"num\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "multi-tenant",
+   "pane": "num",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"rf\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "multi-tenant",
+   "pane": "rf",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"open\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "multi-tenant",
+   "pane": "open",
+   "action": "click tab"
+  },
+  {
+   "kind": "click-fail",
+   "msg": "could not click [data-tab=\"viz\"]: locator.click: Timeout 4000ms exceeded.",
+   "stack": "",
+   "topic": "multi-tenant",
+   "pane": "viz",
+   "action": "click tab"
+  }
+ ],
+ "requestCount": 1,
+ "requests": [
+  {
+   "url": "file:///D:/claude-workspace/deepdive-rehearsal/dist/index.html",
+   "type": "document",
+   "topic": "(boot)",
+   "pane": "(boot)",
+   "action": "load"
+  }
+ ],
+ "failedCount": 0,
+ "failed": [],
+ "emptyPanes": []
+}

@@ -1,0 +1,1486 @@
+{
+ "state": {
+  "overlayPresent": false,
+  "overlayClass": null,
+  "overlayDisplay": null,
+  "bootHash": "#debugging/walk",
+  "docSW": 579,
+  "docCW": 360,
+  "over": 219,
+  "innerWidth": 579,
+  "tnnext": {
+   "x": 535,
+   "right": 579,
+   "w": 44,
+   "h": 44
+  },
+  "elemAtTnnextCenter": "tnnext"
+ },
+ "hscroll": {
+  "scrollXAfter": 0,
+  "visualViewport": {
+   "w": 360,
+   "scale": 1,
+   "ox": 0
+  }
+ },
+ "clicks": [
+  {
+   "sel": "#tnnext",
+   "ok": false,
+   "ms": 5204,
+   "err": "locator.click: Timeout 5000ms exceeded. | Call log: | \u001b[2m  - waiting for locator('#tnnext')\u001b[22m | \u001b[2m    - locator resolved to <button id=\"tnnext\" type=\"button\" class=\"tn-step\" aria-label=\"Next topic\">›</button>\u001b[22m"
+  },
+  {
+   "sel": "#tnprev",
+   "ok": true,
+   "ms": 919,
+   "before": "#debugging/walk",
+   "after": "#observability/walk",
+   "changed": true
+  },
+  {
+   "sel": "#tntrigger",
+   "ok": true,
+   "ms": 618,
+   "before": "#debugging/walk",
+   "after": "#debugging/walk",
+   "changed": false
+  },
+  {
+   "sel": "#toolsfab",
+   "ok": false,
+   "ms": 5008,
+   "err": "locator.click: Timeout 5000ms exceeded. | Call log: | \u001b[2m  - waiting for locator('#toolsfab')\u001b[22m | \u001b[2m    - locator resolved to <button id=\"toolsfab\" type=\"button\" class=\"tools-fab\">Tools</button>\u001b[22m"
+  },
+  {
+   "sel": "#homeBtn",
+   "ok": true,
+   "ms": 602,
+   "before": "#debugging/walk",
+   "after": "#debugging/walk",
+   "changed": false
+  }
+ ],
+ "tap": {
+  "tapInfo": {
+   "cx": 557.03125,
+   "cy": 221.59375,
+   "innerWidth": 579,
+   "hash": "#debugging/walk"
+  },
+  "tapRes": {
+   "ok": true,
+   "hashAfter": "#debugging/walk"
+  }
+ },
+ "vpRes": {
+  "360": {
+   "total": 46,
+   "overflowing": 46,
+   "ovOpenCount": 0,
+   "maxOver": 219,
+   "tnnextFullyOff": 0,
+   "rows": [
+    {
+     "topic": "event-driven",
+     "over": 80,
+     "sw": 440,
+     "cw": 360,
+     "iw": 440,
+     "ovOpen": false,
+     "nxX": 395,
+     "nxRight": 439
+    },
+    {
+     "topic": "notifications",
+     "over": 13,
+     "sw": 373,
+     "cw": 360,
+     "iw": 373,
+     "ovOpen": false,
+     "nxX": 327.8,
+     "nxRight": 371.8
+    },
+    {
+     "topic": "real-time-delivery",
+     "over": 49,
+     "sw": 409,
+     "cw": 360,
+     "iw": 409,
+     "ovOpen": false,
+     "nxX": 365.1,
+     "nxRight": 409.1
+    },
+    {
+     "topic": "cdc",
+     "over": 65,
+     "sw": 425,
+     "cw": 360,
+     "iw": 425,
+     "ovOpen": false,
+     "nxX": 381.2,
+     "nxRight": 425.2
+    },
+    {
+     "topic": "kafka-internals",
+     "over": 26,
+     "sw": 386,
+     "cw": 360,
+     "iw": 386,
+     "ovOpen": false,
+     "nxX": 342.2,
+     "nxRight": 386.2
+    },
+    {
+     "topic": "stream-batch-processing",
+     "over": 117,
+     "sw": 477,
+     "cw": 360,
+     "iw": 477,
+     "ovOpen": false,
+     "nxX": 433.3,
+     "nxRight": 477.3
+    },
+    {
+     "topic": "saga",
+     "over": 39,
+     "sw": 399,
+     "cw": 360,
+     "iw": 399,
+     "ovOpen": false,
+     "nxX": 355.2,
+     "nxRight": 399.2
+    },
+    {
+     "topic": "caching",
+     "over": 51,
+     "sw": 411,
+     "cw": 360,
+     "iw": 411,
+     "ovOpen": false,
+     "nxX": 366.8,
+     "nxRight": 410.8
+    },
+    {
+     "topic": "soft-delete",
+     "over": 8,
+     "sw": 368,
+     "cw": 360,
+     "iw": 368,
+     "ovOpen": false,
+     "nxX": 324.2,
+     "nxRight": 368.2
+    },
+    {
+     "topic": "eav",
+     "over": 25,
+     "sw": 385,
+     "cw": 360,
+     "iw": 385,
+     "ovOpen": false,
+     "nxX": 340,
+     "nxRight": 384
+    },
+    {
+     "topic": "shared-definition",
+     "over": 118,
+     "sw": 478,
+     "cw": 360,
+     "iw": 478,
+     "ovOpen": false,
+     "nxX": 434,
+     "nxRight": 478
+    },
+    {
+     "topic": "replication",
+     "over": 91,
+     "sw": 451,
+     "cw": 360,
+     "iw": 451,
+     "ovOpen": false,
+     "nxX": 407.2,
+     "nxRight": 451.2
+    },
+    {
+     "topic": "consistency-models",
+     "over": 59,
+     "sw": 419,
+     "cw": 360,
+     "iw": 419,
+     "ovOpen": false,
+     "nxX": 374.7,
+     "nxRight": 418.7
+    },
+    {
+     "topic": "sharding-strategies",
+     "over": 93,
+     "sw": 453,
+     "cw": 360,
+     "iw": 453,
+     "ovOpen": false,
+     "nxX": 407.9,
+     "nxRight": 451.9
+    },
+    {
+     "topic": "consistent-hashing",
+     "over": 55,
+     "sw": 415,
+     "cw": 360,
+     "iw": 415,
+     "ovOpen": false,
+     "nxX": 371.1,
+     "nxRight": 415.1
+    },
+    {
+     "topic": "storage-engines",
+     "over": 36,
+     "sw": 396,
+     "cw": 360,
+     "iw": 396,
+     "ovOpen": false,
+     "nxX": 351.6,
+     "nxRight": 395.6
+    },
+    {
+     "topic": "probabilistic-structures",
+     "over": 111,
+     "sw": 471,
+     "cw": 360,
+     "iw": 471,
+     "ovOpen": false,
+     "nxX": 427.5,
+     "nxRight": 471.5
+    },
+    {
+     "topic": "retries-timeouts",
+     "over": 111,
+     "sw": 471,
+     "cw": 360,
+     "iw": 471,
+     "ovOpen": false,
+     "nxX": 426.5,
+     "nxRight": 470.5
+    },
+    {
+     "topic": "idempotency",
+     "over": 13,
+     "sw": 373,
+     "cw": 360,
+     "iw": 373,
+     "ovOpen": false,
+     "nxX": 329.2,
+     "nxRight": 373.2
+    },
+    {
+     "topic": "circuit-breaker",
+     "over": 26,
+     "sw": 386,
+     "cw": 360,
+     "iw": 386,
+     "ovOpen": false,
+     "nxX": 342.3,
+     "nxRight": 386.3
+    },
+    {
+     "topic": "error-propagation",
+     "over": 149,
+     "sw": 509,
+     "cw": 360,
+     "iw": 509,
+     "ovOpen": false,
+     "nxX": 464.6,
+     "nxRight": 508.6
+    },
+    {
+     "topic": "backpressure",
+     "over": 129,
+     "sw": 489,
+     "cw": 360,
+     "iw": 489,
+     "ovOpen": false,
+     "nxX": 444.8,
+     "nxRight": 488.8
+    },
+    {
+     "topic": "observability",
+     "over": 16,
+     "sw": 376,
+     "cw": 360,
+     "iw": 376,
+     "ovOpen": false,
+     "nxX": 331.4,
+     "nxRight": 375.4
+    },
+    {
+     "topic": "debugging",
+     "over": 219,
+     "sw": 579,
+     "cw": 360,
+     "iw": 579,
+     "ovOpen": false,
+     "nxX": 535,
+     "nxRight": 579
+    },
+    {
+     "topic": "slos",
+     "over": 86,
+     "sw": 446,
+     "cw": 360,
+     "iw": 446,
+     "ovOpen": false,
+     "nxX": 400.7,
+     "nxRight": 444.7
+    },
+    {
+     "topic": "iac",
+     "over": 73,
+     "sw": 433,
+     "cw": 360,
+     "iw": 433,
+     "ovOpen": false,
+     "nxX": 387.7,
+     "nxRight": 431.7
+    },
+    {
+     "topic": "desired-state",
+     "over": 16,
+     "sw": 376,
+     "cw": 360,
+     "iw": 376,
+     "ovOpen": false,
+     "nxX": 332.1,
+     "nxRight": 376.1
+    },
+    {
+     "topic": "aws-hardening",
+     "over": 31,
+     "sw": 391,
+     "cw": 360,
+     "iw": 391,
+     "ovOpen": false,
+     "nxX": 346.5,
+     "nxRight": 390.5
+    },
+    {
+     "topic": "load-balancing",
+     "over": 30,
+     "sw": 390,
+     "cw": 360,
+     "iw": 390,
+     "ovOpen": false,
+     "nxX": 345.8,
+     "nxRight": 389.8
+    },
+    {
+     "topic": "autoscaling",
+     "over": 7,
+     "sw": 367,
+     "cw": 360,
+     "iw": 367,
+     "ovOpen": false,
+     "nxX": 323.4,
+     "nxRight": 367.4
+    },
+    {
+     "topic": "leader-election",
+     "over": 30,
+     "sw": 390,
+     "cw": 360,
+     "iw": 390,
+     "ovOpen": false,
+     "nxX": 345.8,
+     "nxRight": 389.8
+    },
+    {
+     "topic": "distributed-locks",
+     "over": 44,
+     "sw": 404,
+     "cw": 360,
+     "iw": 404,
+     "ovOpen": false,
+     "nxX": 358.8,
+     "nxRight": 402.8
+    },
+    {
+     "topic": "multi-region",
+     "over": 156,
+     "sw": 516,
+     "cw": 360,
+     "iw": 516,
+     "ovOpen": false,
+     "nxX": 471.5,
+     "nxRight": 515.5
+    },
+    {
+     "topic": "lambda-organization",
+     "over": 119,
+     "sw": 479,
+     "cw": 360,
+     "iw": 479,
+     "ovOpen": false,
+     "nxX": 434.7,
+     "nxRight": 478.7
+    },
+    {
+     "topic": "devices-dispatch",
+     "over": 67,
+     "sw": 427,
+     "cw": 360,
+     "iw": 427,
+     "ovOpen": false,
+     "nxX": 383.4,
+     "nxRight": 427.4
+    },
+    {
+     "topic": "developer-platform",
+     "over": 131,
+     "sw": 491,
+     "cw": 360,
+     "iw": 491,
+     "ovOpen": false,
+     "nxX": 447,
+     "nxRight": 491
+    },
+    {
+     "topic": "state-machine",
+     "over": 67,
+     "sw": 427,
+     "cw": 360,
+     "iw": 427,
+     "ovOpen": false,
+     "nxX": 383.4,
+     "nxRight": 427.4
+    },
+    {
+     "topic": "rules-engine",
+     "over": 147,
+     "sw": 507,
+     "cw": 360,
+     "iw": 507,
+     "ovOpen": false,
+     "nxX": 463.1,
+     "nxRight": 507.1
+    },
+    {
+     "topic": "feature-flags",
+     "over": 134,
+     "sw": 494,
+     "cw": 360,
+     "iw": 494,
+     "ovOpen": false,
+     "nxX": 449.1,
+     "nxRight": 493.1
+    },
+    {
+     "topic": "api-design",
+     "over": 93,
+     "sw": 453,
+     "cw": 360,
+     "iw": 453,
+     "ovOpen": false,
+     "nxX": 408.7,
+     "nxRight": 452.7
+    },
+    {
+     "topic": "rate-limiting",
+     "over": 16,
+     "sw": 376,
+     "cw": 360,
+     "iw": 376,
+     "ovOpen": false,
+     "nxX": 331.4,
+     "nxRight": 375.4
+    },
+    {
+     "topic": "content-pipeline",
+     "over": 36,
+     "sw": 396,
+     "cw": 360,
+     "iw": 396,
+     "ovOpen": false,
+     "nxX": 351.6,
+     "nxRight": 395.6
+    },
+    {
+     "topic": "microfrontend",
+     "over": 100,
+     "sw": 460,
+     "cw": 360,
+     "iw": 460,
+     "ovOpen": false,
+     "nxX": 416.1,
+     "nxRight": 460.1
+    },
+    {
+     "topic": "signing",
+     "over": 38,
+     "sw": 398,
+     "cw": 360,
+     "iw": 398,
+     "ovOpen": false,
+     "nxX": 353.1,
+     "nxRight": 397.1
+    },
+    {
+     "topic": "authz",
+     "over": 62,
+     "sw": 422,
+     "cw": 360,
+     "iw": 422,
+     "ovOpen": false,
+     "nxX": 377.6,
+     "nxRight": 421.6
+    },
+    {
+     "topic": "multi-tenant",
+     "over": 66,
+     "sw": 426,
+     "cw": 360,
+     "iw": 426,
+     "ovOpen": false,
+     "nxX": 382.4,
+     "nxRight": 426.4
+    }
+   ]
+  },
+  "390": {
+   "total": 46,
+   "overflowing": 35,
+   "ovOpenCount": 0,
+   "maxOver": 189,
+   "tnnextFullyOff": 0,
+   "rows": [
+    {
+     "topic": "event-driven",
+     "over": 49,
+     "sw": 439,
+     "cw": 390,
+     "iw": 439,
+     "ovOpen": false,
+     "nxX": 395,
+     "nxRight": 439
+    },
+    {
+     "topic": "notifications",
+     "over": 0,
+     "sw": 390,
+     "cw": 390,
+     "iw": 390,
+     "ovOpen": false,
+     "nxX": 331,
+     "nxRight": 375
+    },
+    {
+     "topic": "real-time-delivery",
+     "over": 19,
+     "sw": 409,
+     "cw": 390,
+     "iw": 409,
+     "ovOpen": false,
+     "nxX": 365.1,
+     "nxRight": 409.1
+    },
+    {
+     "topic": "cdc",
+     "over": 35,
+     "sw": 425,
+     "cw": 390,
+     "iw": 425,
+     "ovOpen": false,
+     "nxX": 381.2,
+     "nxRight": 425.2
+    },
+    {
+     "topic": "kafka-internals",
+     "over": 0,
+     "sw": 390,
+     "cw": 390,
+     "iw": 390,
+     "ovOpen": false,
+     "nxX": 342.2,
+     "nxRight": 386.2
+    },
+    {
+     "topic": "stream-batch-processing",
+     "over": 87,
+     "sw": 477,
+     "cw": 390,
+     "iw": 477,
+     "ovOpen": false,
+     "nxX": 433.3,
+     "nxRight": 477.3
+    },
+    {
+     "topic": "saga",
+     "over": 9,
+     "sw": 399,
+     "cw": 390,
+     "iw": 399,
+     "ovOpen": false,
+     "nxX": 355.2,
+     "nxRight": 399.2
+    },
+    {
+     "topic": "caching",
+     "over": 21,
+     "sw": 411,
+     "cw": 390,
+     "iw": 411,
+     "ovOpen": false,
+     "nxX": 366.8,
+     "nxRight": 410.8
+    },
+    {
+     "topic": "soft-delete",
+     "over": 0,
+     "sw": 390,
+     "cw": 390,
+     "iw": 390,
+     "ovOpen": false,
+     "nxX": 331,
+     "nxRight": 375
+    },
+    {
+     "topic": "eav",
+     "over": 0,
+     "sw": 390,
+     "cw": 390,
+     "iw": 390,
+     "ovOpen": false,
+     "nxX": 340,
+     "nxRight": 384
+    },
+    {
+     "topic": "shared-definition",
+     "over": 88,
+     "sw": 478,
+     "cw": 390,
+     "iw": 478,
+     "ovOpen": false,
+     "nxX": 434,
+     "nxRight": 478
+    },
+    {
+     "topic": "replication",
+     "over": 61,
+     "sw": 451,
+     "cw": 390,
+     "iw": 451,
+     "ovOpen": false,
+     "nxX": 407.2,
+     "nxRight": 451.2
+    },
+    {
+     "topic": "consistency-models",
+     "over": 30,
+     "sw": 420,
+     "cw": 390,
+     "iw": 420,
+     "ovOpen": false,
+     "nxX": 374.7,
+     "nxRight": 418.7
+    },
+    {
+     "topic": "sharding-strategies",
+     "over": 63,
+     "sw": 453,
+     "cw": 390,
+     "iw": 453,
+     "ovOpen": false,
+     "nxX": 407.9,
+     "nxRight": 451.9
+    },
+    {
+     "topic": "consistent-hashing",
+     "over": 25,
+     "sw": 415,
+     "cw": 390,
+     "iw": 415,
+     "ovOpen": false,
+     "nxX": 371.1,
+     "nxRight": 415.1
+    },
+    {
+     "topic": "storage-engines",
+     "over": 6,
+     "sw": 396,
+     "cw": 390,
+     "iw": 396,
+     "ovOpen": false,
+     "nxX": 351.6,
+     "nxRight": 395.6
+    },
+    {
+     "topic": "probabilistic-structures",
+     "over": 82,
+     "sw": 472,
+     "cw": 390,
+     "iw": 472,
+     "ovOpen": false,
+     "nxX": 427.5,
+     "nxRight": 471.5
+    },
+    {
+     "topic": "retries-timeouts",
+     "over": 82,
+     "sw": 472,
+     "cw": 390,
+     "iw": 472,
+     "ovOpen": false,
+     "nxX": 426.5,
+     "nxRight": 470.5
+    },
+    {
+     "topic": "idempotency",
+     "over": 0,
+     "sw": 390,
+     "cw": 390,
+     "iw": 390,
+     "ovOpen": false,
+     "nxX": 331,
+     "nxRight": 375
+    },
+    {
+     "topic": "circuit-breaker",
+     "over": 0,
+     "sw": 390,
+     "cw": 390,
+     "iw": 390,
+     "ovOpen": false,
+     "nxX": 342.3,
+     "nxRight": 386.3
+    },
+    {
+     "topic": "error-propagation",
+     "over": 119,
+     "sw": 509,
+     "cw": 390,
+     "iw": 509,
+     "ovOpen": false,
+     "nxX": 464.6,
+     "nxRight": 508.6
+    },
+    {
+     "topic": "backpressure",
+     "over": 99,
+     "sw": 489,
+     "cw": 390,
+     "iw": 489,
+     "ovOpen": false,
+     "nxX": 444.8,
+     "nxRight": 488.8
+    },
+    {
+     "topic": "observability",
+     "over": 99,
+     "sw": 489,
+     "cw": 390,
+     "iw": 489,
+     "ovOpen": false,
+     "nxX": 444.8,
+     "nxRight": 488.8
+    },
+    {
+     "topic": "debugging",
+     "over": 189,
+     "sw": 579,
+     "cw": 390,
+     "iw": 579,
+     "ovOpen": false,
+     "nxX": 535,
+     "nxRight": 579
+    },
+    {
+     "topic": "slos",
+     "over": 55,
+     "sw": 445,
+     "cw": 390,
+     "iw": 445,
+     "ovOpen": false,
+     "nxX": 400.7,
+     "nxRight": 444.7
+    },
+    {
+     "topic": "iac",
+     "over": 42,
+     "sw": 432,
+     "cw": 390,
+     "iw": 432,
+     "ovOpen": false,
+     "nxX": 387.7,
+     "nxRight": 431.7
+    },
+    {
+     "topic": "desired-state",
+     "over": 0,
+     "sw": 390,
+     "cw": 390,
+     "iw": 390,
+     "ovOpen": false,
+     "nxX": 332.1,
+     "nxRight": 376.1
+    },
+    {
+     "topic": "aws-hardening",
+     "over": 1,
+     "sw": 391,
+     "cw": 390,
+     "iw": 391,
+     "ovOpen": false,
+     "nxX": 346.5,
+     "nxRight": 390.5
+    },
+    {
+     "topic": "load-balancing",
+     "over": 0,
+     "sw": 390,
+     "cw": 390,
+     "iw": 390,
+     "ovOpen": false,
+     "nxX": 345.8,
+     "nxRight": 389.8
+    },
+    {
+     "topic": "autoscaling",
+     "over": 0,
+     "sw": 390,
+     "cw": 390,
+     "iw": 390,
+     "ovOpen": false,
+     "nxX": 331,
+     "nxRight": 375
+    },
+    {
+     "topic": "leader-election",
+     "over": 0,
+     "sw": 390,
+     "cw": 390,
+     "iw": 390,
+     "ovOpen": false,
+     "nxX": 345.8,
+     "nxRight": 389.8
+    },
+    {
+     "topic": "distributed-locks",
+     "over": 14,
+     "sw": 404,
+     "cw": 390,
+     "iw": 404,
+     "ovOpen": false,
+     "nxX": 358.8,
+     "nxRight": 402.8
+    },
+    {
+     "topic": "multi-region",
+     "over": 126,
+     "sw": 516,
+     "cw": 390,
+     "iw": 516,
+     "ovOpen": false,
+     "nxX": 471.5,
+     "nxRight": 515.5
+    },
+    {
+     "topic": "lambda-organization",
+     "over": 126,
+     "sw": 516,
+     "cw": 390,
+     "iw": 516,
+     "ovOpen": false,
+     "nxX": 471.5,
+     "nxRight": 515.5
+    },
+    {
+     "topic": "devices-dispatch",
+     "over": 37,
+     "sw": 427,
+     "cw": 390,
+     "iw": 427,
+     "ovOpen": false,
+     "nxX": 383.4,
+     "nxRight": 427.4
+    },
+    {
+     "topic": "developer-platform",
+     "over": 102,
+     "sw": 492,
+     "cw": 390,
+     "iw": 492,
+     "ovOpen": false,
+     "nxX": 447,
+     "nxRight": 491
+    },
+    {
+     "topic": "state-machine",
+     "over": 37,
+     "sw": 427,
+     "cw": 390,
+     "iw": 427,
+     "ovOpen": false,
+     "nxX": 383.4,
+     "nxRight": 427.4
+    },
+    {
+     "topic": "rules-engine",
+     "over": 117,
+     "sw": 507,
+     "cw": 390,
+     "iw": 507,
+     "ovOpen": false,
+     "nxX": 463.1,
+     "nxRight": 507.1
+    },
+    {
+     "topic": "feature-flags",
+     "over": 103,
+     "sw": 493,
+     "cw": 390,
+     "iw": 493,
+     "ovOpen": false,
+     "nxX": 449.1,
+     "nxRight": 493.1
+    },
+    {
+     "topic": "api-design",
+     "over": 63,
+     "sw": 453,
+     "cw": 390,
+     "iw": 453,
+     "ovOpen": false,
+     "nxX": 408.7,
+     "nxRight": 452.7
+    },
+    {
+     "topic": "rate-limiting",
+     "over": 0,
+     "sw": 390,
+     "cw": 390,
+     "iw": 390,
+     "ovOpen": false,
+     "nxX": 331.4,
+     "nxRight": 375.4
+    },
+    {
+     "topic": "content-pipeline",
+     "over": 6,
+     "sw": 396,
+     "cw": 390,
+     "iw": 396,
+     "ovOpen": false,
+     "nxX": 351.6,
+     "nxRight": 395.6
+    },
+    {
+     "topic": "microfrontend",
+     "over": 71,
+     "sw": 461,
+     "cw": 390,
+     "iw": 461,
+     "ovOpen": false,
+     "nxX": 416.1,
+     "nxRight": 460.1
+    },
+    {
+     "topic": "signing",
+     "over": 7,
+     "sw": 397,
+     "cw": 390,
+     "iw": 397,
+     "ovOpen": false,
+     "nxX": 353.1,
+     "nxRight": 397.1
+    },
+    {
+     "topic": "authz",
+     "over": 32,
+     "sw": 422,
+     "cw": 390,
+     "iw": 422,
+     "ovOpen": false,
+     "nxX": 377.6,
+     "nxRight": 421.6
+    },
+    {
+     "topic": "multi-tenant",
+     "over": 36,
+     "sw": 426,
+     "cw": 390,
+     "iw": 426,
+     "ovOpen": false,
+     "nxX": 382.4,
+     "nxRight": 426.4
+    }
+   ]
+  },
+  "430": {
+   "total": 46,
+   "overflowing": 19,
+   "ovOpenCount": 0,
+   "maxOver": 149,
+   "tnnextFullyOff": 0,
+   "rows": [
+    {
+     "topic": "event-driven",
+     "over": 9,
+     "sw": 439,
+     "cw": 430,
+     "iw": 439,
+     "ovOpen": false,
+     "nxX": 395,
+     "nxRight": 439
+    },
+    {
+     "topic": "notifications",
+     "over": 0,
+     "sw": 430,
+     "cw": 430,
+     "iw": 430,
+     "ovOpen": false,
+     "nxX": 371,
+     "nxRight": 415
+    },
+    {
+     "topic": "real-time-delivery",
+     "over": 0,
+     "sw": 430,
+     "cw": 430,
+     "iw": 430,
+     "ovOpen": false,
+     "nxX": 371,
+     "nxRight": 415
+    },
+    {
+     "topic": "cdc",
+     "over": 0,
+     "sw": 430,
+     "cw": 430,
+     "iw": 430,
+     "ovOpen": false,
+     "nxX": 381.2,
+     "nxRight": 425.2
+    },
+    {
+     "topic": "kafka-internals",
+     "over": 0,
+     "sw": 430,
+     "cw": 430,
+     "iw": 430,
+     "ovOpen": false,
+     "nxX": 371,
+     "nxRight": 415
+    },
+    {
+     "topic": "stream-batch-processing",
+     "over": 47,
+     "sw": 477,
+     "cw": 430,
+     "iw": 477,
+     "ovOpen": false,
+     "nxX": 433.3,
+     "nxRight": 477.3
+    },
+    {
+     "topic": "saga",
+     "over": 0,
+     "sw": 430,
+     "cw": 430,
+     "iw": 430,
+     "ovOpen": false,
+     "nxX": 371,
+     "nxRight": 415
+    },
+    {
+     "topic": "caching",
+     "over": 0,
+     "sw": 430,
+     "cw": 430,
+     "iw": 430,
+     "ovOpen": false,
+     "nxX": 371,
+     "nxRight": 415
+    },
+    {
+     "topic": "soft-delete",
+     "over": 0,
+     "sw": 430,
+     "cw": 430,
+     "iw": 430,
+     "ovOpen": false,
+     "nxX": 371,
+     "nxRight": 415
+    },
+    {
+     "topic": "eav",
+     "over": 0,
+     "sw": 430,
+     "cw": 430,
+     "iw": 430,
+     "ovOpen": false,
+     "nxX": 371,
+     "nxRight": 415
+    },
+    {
+     "topic": "shared-definition",
+     "over": 48,
+     "sw": 478,
+     "cw": 430,
+     "iw": 478,
+     "ovOpen": false,
+     "nxX": 434,
+     "nxRight": 478
+    },
+    {
+     "topic": "replication",
+     "over": 21,
+     "sw": 451,
+     "cw": 430,
+     "iw": 451,
+     "ovOpen": false,
+     "nxX": 407.2,
+     "nxRight": 451.2
+    },
+    {
+     "topic": "consistency-models",
+     "over": 0,
+     "sw": 430,
+     "cw": 430,
+     "iw": 430,
+     "ovOpen": false,
+     "nxX": 374.7,
+     "nxRight": 418.7
+    },
+    {
+     "topic": "sharding-strategies",
+     "over": 23,
+     "sw": 453,
+     "cw": 430,
+     "iw": 453,
+     "ovOpen": false,
+     "nxX": 407.9,
+     "nxRight": 451.9
+    },
+    {
+     "topic": "consistent-hashing",
+     "over": 0,
+     "sw": 430,
+     "cw": 430,
+     "iw": 430,
+     "ovOpen": false,
+     "nxX": 371.1,
+     "nxRight": 415.1
+    },
+    {
+     "topic": "storage-engines",
+     "over": 0,
+     "sw": 430,
+     "cw": 430,
+     "iw": 430,
+     "ovOpen": false,
+     "nxX": 371,
+     "nxRight": 415
+    },
+    {
+     "topic": "probabilistic-structures",
+     "over": 41,
+     "sw": 471,
+     "cw": 430,
+     "iw": 471,
+     "ovOpen": false,
+     "nxX": 427.5,
+     "nxRight": 471.5
+    },
+    {
+     "topic": "retries-timeouts",
+     "over": 41,
+     "sw": 471,
+     "cw": 430,
+     "iw": 471,
+     "ovOpen": false,
+     "nxX": 426.5,
+     "nxRight": 470.5
+    },
+    {
+     "topic": "idempotency",
+     "over": 0,
+     "sw": 430,
+     "cw": 430,
+     "iw": 430,
+     "ovOpen": false,
+     "nxX": 371,
+     "nxRight": 415
+    },
+    {
+     "topic": "circuit-breaker",
+     "over": 0,
+     "sw": 430,
+     "cw": 430,
+     "iw": 430,
+     "ovOpen": false,
+     "nxX": 371,
+     "nxRight": 415
+    },
+    {
+     "topic": "error-propagation",
+     "over": 79,
+     "sw": 509,
+     "cw": 430,
+     "iw": 509,
+     "ovOpen": false,
+     "nxX": 464.6,
+     "nxRight": 508.6
+    },
+    {
+     "topic": "backpressure",
+     "over": 59,
+     "sw": 489,
+     "cw": 430,
+     "iw": 489,
+     "ovOpen": false,
+     "nxX": 444.8,
+     "nxRight": 488.8
+    },
+    {
+     "topic": "observability",
+     "over": 0,
+     "sw": 430,
+     "cw": 430,
+     "iw": 430,
+     "ovOpen": false,
+     "nxX": 371,
+     "nxRight": 415
+    },
+    {
+     "topic": "debugging",
+     "over": 149,
+     "sw": 579,
+     "cw": 430,
+     "iw": 579,
+     "ovOpen": false,
+     "nxX": 535,
+     "nxRight": 579
+    },
+    {
+     "topic": "slos",
+     "over": 15,
+     "sw": 445,
+     "cw": 430,
+     "iw": 445,
+     "ovOpen": false,
+     "nxX": 400.7,
+     "nxRight": 444.7
+    },
+    {
+     "topic": "iac",
+     "over": 2,
+     "sw": 432,
+     "cw": 430,
+     "iw": 432,
+     "ovOpen": false,
+     "nxX": 387.7,
+     "nxRight": 431.7
+    },
+    {
+     "topic": "desired-state",
+     "over": 0,
+     "sw": 430,
+     "cw": 430,
+     "iw": 430,
+     "ovOpen": false,
+     "nxX": 371,
+     "nxRight": 415
+    },
+    {
+     "topic": "aws-hardening",
+     "over": 0,
+     "sw": 430,
+     "cw": 430,
+     "iw": 430,
+     "ovOpen": false,
+     "nxX": 371,
+     "nxRight": 415
+    },
+    {
+     "topic": "load-balancing",
+     "over": 0,
+     "sw": 430,
+     "cw": 430,
+     "iw": 430,
+     "ovOpen": false,
+     "nxX": 371,
+     "nxRight": 415
+    },
+    {
+     "topic": "autoscaling",
+     "over": 0,
+     "sw": 430,
+     "cw": 430,
+     "iw": 430,
+     "ovOpen": false,
+     "nxX": 371,
+     "nxRight": 415
+    },
+    {
+     "topic": "leader-election",
+     "over": 0,
+     "sw": 430,
+     "cw": 430,
+     "iw": 430,
+     "ovOpen": false,
+     "nxX": 371,
+     "nxRight": 415
+    },
+    {
+     "topic": "distributed-locks",
+     "over": 0,
+     "sw": 430,
+     "cw": 430,
+     "iw": 430,
+     "ovOpen": false,
+     "nxX": 371,
+     "nxRight": 415
+    },
+    {
+     "topic": "multi-region",
+     "over": 86,
+     "sw": 516,
+     "cw": 430,
+     "iw": 516,
+     "ovOpen": false,
+     "nxX": 471.5,
+     "nxRight": 515.5
+    },
+    {
+     "topic": "lambda-organization",
+     "over": 49,
+     "sw": 479,
+     "cw": 430,
+     "iw": 479,
+     "ovOpen": false,
+     "nxX": 434.7,
+     "nxRight": 478.7
+    },
+    {
+     "topic": "devices-dispatch",
+     "over": 0,
+     "sw": 430,
+     "cw": 430,
+     "iw": 430,
+     "ovOpen": false,
+     "nxX": 383.4,
+     "nxRight": 427.4
+    },
+    {
+     "topic": "developer-platform",
+     "over": 61,
+     "sw": 491,
+     "cw": 430,
+     "iw": 491,
+     "ovOpen": false,
+     "nxX": 447,
+     "nxRight": 491
+    },
+    {
+     "topic": "state-machine",
+     "over": 0,
+     "sw": 430,
+     "cw": 430,
+     "iw": 430,
+     "ovOpen": false,
+     "nxX": 383.4,
+     "nxRight": 427.4
+    },
+    {
+     "topic": "rules-engine",
+     "over": 77,
+     "sw": 507,
+     "cw": 430,
+     "iw": 507,
+     "ovOpen": false,
+     "nxX": 463.1,
+     "nxRight": 507.1
+    },
+    {
+     "topic": "feature-flags",
+     "over": 63,
+     "sw": 493,
+     "cw": 430,
+     "iw": 493,
+     "ovOpen": false,
+     "nxX": 449.1,
+     "nxRight": 493.1
+    },
+    {
+     "topic": "api-design",
+     "over": 23,
+     "sw": 453,
+     "cw": 430,
+     "iw": 453,
+     "ovOpen": false,
+     "nxX": 408.7,
+     "nxRight": 452.7
+    },
+    {
+     "topic": "rate-limiting",
+     "over": 0,
+     "sw": 430,
+     "cw": 430,
+     "iw": 430,
+     "ovOpen": false,
+     "nxX": 371,
+     "nxRight": 415
+    },
+    {
+     "topic": "content-pipeline",
+     "over": 0,
+     "sw": 430,
+     "cw": 430,
+     "iw": 430,
+     "ovOpen": false,
+     "nxX": 371,
+     "nxRight": 415
+    },
+    {
+     "topic": "microfrontend",
+     "over": 30,
+     "sw": 460,
+     "cw": 430,
+     "iw": 460,
+     "ovOpen": false,
+     "nxX": 416.1,
+     "nxRight": 460.1
+    },
+    {
+     "topic": "signing",
+     "over": 0,
+     "sw": 430,
+     "cw": 430,
+     "iw": 430,
+     "ovOpen": false,
+     "nxX": 371,
+     "nxRight": 415
+    },
+    {
+     "topic": "authz",
+     "over": 0,
+     "sw": 430,
+     "cw": 430,
+     "iw": 430,
+     "ovOpen": false,
+     "nxX": 377.6,
+     "nxRight": 421.6
+    },
+    {
+     "topic": "multi-tenant",
+     "over": 0,
+     "sw": 430,
+     "cw": 430,
+     "iw": 430,
+     "ovOpen": false,
+     "nxX": 382.4,
+     "nxRight": 426.4
+    }
+   ]
+  }
+ }
+}

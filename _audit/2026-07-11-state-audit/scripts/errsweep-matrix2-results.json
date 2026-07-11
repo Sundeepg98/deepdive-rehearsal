@@ -1,0 +1,3519 @@
+{
+ "topics": 46,
+ "panes": 10,
+ "cells": 460,
+ "errors": [],
+ "requests": [
+  {
+   "url": "file:///D:/claude-workspace/deepdive-rehearsal/dist/index.html",
+   "type": "document",
+   "topic": "(boot)",
+   "pane": "(boot)"
+  }
+ ],
+ "failed": [],
+ "thin": [
+  {
+   "topic": "event-driven",
+   "pane": "wb",
+   "on": "drill",
+   "h": 887,
+   "txt": 15255,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "event-driven",
+   "pane": "trade",
+   "on": "sys",
+   "h": 494,
+   "txt": 5942,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "event-driven",
+   "pane": "model",
+   "on": "trade",
+   "h": 1073,
+   "txt": 3062,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "event-driven",
+   "pane": "num",
+   "on": "model",
+   "h": 414,
+   "txt": 2604,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "event-driven",
+   "pane": "rf",
+   "on": "num",
+   "h": 801,
+   "txt": 5028,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "event-driven",
+   "pane": "open",
+   "on": "rf",
+   "h": 588,
+   "txt": 3082,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "notifications",
+   "pane": "walk",
+   "on": "viz",
+   "h": 69,
+   "txt": 141,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "notifications",
+   "pane": "drill",
+   "on": "walk",
+   "h": 731,
+   "txt": 13681,
+   "kids": 6,
+   "canvas": null
+  },
+  {
+   "topic": "notifications",
+   "pane": "wb",
+   "on": "drill",
+   "h": 905,
+   "txt": 15312,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "notifications",
+   "pane": "sys",
+   "on": "wb",
+   "h": 1246,
+   "txt": 11751,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "notifications",
+   "pane": "trade",
+   "on": "sys",
+   "h": 1203,
+   "txt": 10439,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "notifications",
+   "pane": "model",
+   "on": "trade",
+   "h": 2646,
+   "txt": 6479,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "notifications",
+   "pane": "num",
+   "on": "model",
+   "h": 1031,
+   "txt": 4293,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "notifications",
+   "pane": "rf",
+   "on": "num",
+   "h": 859,
+   "txt": 5307,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "notifications",
+   "pane": "open",
+   "on": "rf",
+   "h": 2183,
+   "txt": 7745,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "real-time-delivery",
+   "pane": "walk",
+   "on": "viz",
+   "h": 69,
+   "txt": 141,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "real-time-delivery",
+   "pane": "drill",
+   "on": "walk",
+   "h": 704,
+   "txt": 15504,
+   "kids": 6,
+   "canvas": null
+  },
+  {
+   "topic": "real-time-delivery",
+   "pane": "wb",
+   "on": "drill",
+   "h": 907,
+   "txt": 15410,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "real-time-delivery",
+   "pane": "trade",
+   "on": "sys",
+   "h": 548,
+   "txt": 6152,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "real-time-delivery",
+   "pane": "model",
+   "on": "trade",
+   "h": 1208,
+   "txt": 3887,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "real-time-delivery",
+   "pane": "num",
+   "on": "model",
+   "h": 549,
+   "txt": 2754,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "real-time-delivery",
+   "pane": "rf",
+   "on": "num",
+   "h": 804,
+   "txt": 5155,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "cdc",
+   "pane": "walk",
+   "on": "viz",
+   "h": 69,
+   "txt": 141,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "cdc",
+   "pane": "drill",
+   "on": "walk",
+   "h": 620,
+   "txt": 13237,
+   "kids": 6,
+   "canvas": null
+  },
+  {
+   "topic": "cdc",
+   "pane": "wb",
+   "on": "drill",
+   "h": 887,
+   "txt": 15227,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "cdc",
+   "pane": "sys",
+   "on": "wb",
+   "h": 455,
+   "txt": 13763,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "cdc",
+   "pane": "trade",
+   "on": "sys",
+   "h": 530,
+   "txt": 5991,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "cdc",
+   "pane": "model",
+   "on": "trade",
+   "h": 1053,
+   "txt": 2930,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "cdc",
+   "pane": "num",
+   "on": "model",
+   "h": 365,
+   "txt": 2540,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "cdc",
+   "pane": "rf",
+   "on": "num",
+   "h": 767,
+   "txt": 4944,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "cdc",
+   "pane": "open",
+   "on": "rf",
+   "h": 570,
+   "txt": 3173,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "kafka-internals",
+   "pane": "walk",
+   "on": "viz",
+   "h": 0,
+   "txt": 141,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "kafka-internals",
+   "pane": "drill",
+   "on": "walk",
+   "h": 681,
+   "txt": 16824,
+   "kids": 6,
+   "canvas": null
+  },
+  {
+   "topic": "kafka-internals",
+   "pane": "wb",
+   "on": "drill",
+   "h": 923,
+   "txt": 15321,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "kafka-internals",
+   "pane": "sys",
+   "on": "wb",
+   "h": 455,
+   "txt": 14245,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "kafka-internals",
+   "pane": "trade",
+   "on": "sys",
+   "h": 512,
+   "txt": 6042,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "kafka-internals",
+   "pane": "model",
+   "on": "trade",
+   "h": 1070,
+   "txt": 3354,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "kafka-internals",
+   "pane": "num",
+   "on": "model",
+   "h": 610,
+   "txt": 2716,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "kafka-internals",
+   "pane": "rf",
+   "on": "num",
+   "h": 732,
+   "txt": 4805,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "kafka-internals",
+   "pane": "open",
+   "on": "rf",
+   "h": 671,
+   "txt": 3607,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "stream-batch-processing",
+   "pane": "drill",
+   "on": "walk",
+   "h": 794,
+   "txt": 16649,
+   "kids": 6,
+   "canvas": null
+  },
+  {
+   "topic": "stream-batch-processing",
+   "pane": "wb",
+   "on": "drill",
+   "h": 900,
+   "txt": 15305,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "stream-batch-processing",
+   "pane": "sys",
+   "on": "wb",
+   "h": 486,
+   "txt": 14942,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "stream-batch-processing",
+   "pane": "trade",
+   "on": "sys",
+   "h": 548,
+   "txt": 6260,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "stream-batch-processing",
+   "pane": "model",
+   "on": "trade",
+   "h": 1245,
+   "txt": 4054,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "stream-batch-processing",
+   "pane": "num",
+   "on": "model",
+   "h": 721,
+   "txt": 2857,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "stream-batch-processing",
+   "pane": "rf",
+   "on": "num",
+   "h": 790,
+   "txt": 5146,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "stream-batch-processing",
+   "pane": "open",
+   "on": "rf",
+   "h": 689,
+   "txt": 3846,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "saga",
+   "pane": "walk",
+   "on": "viz",
+   "h": 69,
+   "txt": 141,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "saga",
+   "pane": "drill",
+   "on": "walk",
+   "h": 681,
+   "txt": 15795,
+   "kids": 6,
+   "canvas": null
+  },
+  {
+   "topic": "saga",
+   "pane": "wb",
+   "on": "drill",
+   "h": 894,
+   "txt": 15276,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "saga",
+   "pane": "sys",
+   "on": "wb",
+   "h": 455,
+   "txt": 14095,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "saga",
+   "pane": "trade",
+   "on": "sys",
+   "h": 458,
+   "txt": 6334,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "saga",
+   "pane": "model",
+   "on": "trade",
+   "h": 1094,
+   "txt": 3403,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "saga",
+   "pane": "num",
+   "on": "model",
+   "h": 500,
+   "txt": 2613,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "saga",
+   "pane": "rf",
+   "on": "num",
+   "h": 767,
+   "txt": 4923,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "caching",
+   "pane": "walk",
+   "on": "viz",
+   "h": 69,
+   "txt": 141,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "caching",
+   "pane": "drill",
+   "on": "walk",
+   "h": 629,
+   "txt": 13027,
+   "kids": 6,
+   "canvas": null
+  },
+  {
+   "topic": "caching",
+   "pane": "wb",
+   "on": "drill",
+   "h": 881,
+   "txt": 15176,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "caching",
+   "pane": "sys",
+   "on": "wb",
+   "h": 455,
+   "txt": 13615,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "caching",
+   "pane": "trade",
+   "on": "sys",
+   "h": 458,
+   "txt": 6000,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "caching",
+   "pane": "model",
+   "on": "trade",
+   "h": 974,
+   "txt": 2898,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "caching",
+   "pane": "num",
+   "on": "model",
+   "h": 402,
+   "txt": 2547,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "caching",
+   "pane": "rf",
+   "on": "num",
+   "h": 751,
+   "txt": 4920,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "caching",
+   "pane": "open",
+   "on": "rf",
+   "h": 532,
+   "txt": 3067,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "soft-delete",
+   "pane": "walk",
+   "on": "viz",
+   "h": 69,
+   "txt": 141,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "soft-delete",
+   "pane": "wb",
+   "on": "drill",
+   "h": 867,
+   "txt": 15180,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "soft-delete",
+   "pane": "trade",
+   "on": "sys",
+   "h": 494,
+   "txt": 6034,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "soft-delete",
+   "pane": "model",
+   "on": "trade",
+   "h": 1013,
+   "txt": 2955,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "soft-delete",
+   "pane": "num",
+   "on": "model",
+   "h": 402,
+   "txt": 2548,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "soft-delete",
+   "pane": "rf",
+   "on": "num",
+   "h": 719,
+   "txt": 4880,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "soft-delete",
+   "pane": "open",
+   "on": "rf",
+   "h": 574,
+   "txt": 3166,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "eav",
+   "pane": "walk",
+   "on": "viz",
+   "h": 69,
+   "txt": 141,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "eav",
+   "pane": "drill",
+   "on": "walk",
+   "h": 731,
+   "txt": 13797,
+   "kids": 6,
+   "canvas": null
+  },
+  {
+   "topic": "eav",
+   "pane": "wb",
+   "on": "drill",
+   "h": 890,
+   "txt": 15275,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "eav",
+   "pane": "sys",
+   "on": "wb",
+   "h": 1264,
+   "txt": 12838,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "eav",
+   "pane": "trade",
+   "on": "sys",
+   "h": 1439,
+   "txt": 10729,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "eav",
+   "pane": "model",
+   "on": "trade",
+   "h": 2584,
+   "txt": 6129,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "eav",
+   "pane": "num",
+   "on": "model",
+   "h": 989,
+   "txt": 4045,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "eav",
+   "pane": "rf",
+   "on": "num",
+   "h": 862,
+   "txt": 5351,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "eav",
+   "pane": "open",
+   "on": "rf",
+   "h": 2135,
+   "txt": 7920,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "shared-definition",
+   "pane": "walk",
+   "on": "viz",
+   "h": 69,
+   "txt": 141,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "shared-definition",
+   "pane": "drill",
+   "on": "walk",
+   "h": 665,
+   "txt": 14047,
+   "kids": 6,
+   "canvas": null
+  },
+  {
+   "topic": "shared-definition",
+   "pane": "wb",
+   "on": "drill",
+   "h": 881,
+   "txt": 15269,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "shared-definition",
+   "pane": "sys",
+   "on": "wb",
+   "h": 455,
+   "txt": 13716,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "shared-definition",
+   "pane": "trade",
+   "on": "sys",
+   "h": 476,
+   "txt": 6063,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "shared-definition",
+   "pane": "model",
+   "on": "trade",
+   "h": 1073,
+   "txt": 3150,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "shared-definition",
+   "pane": "num",
+   "on": "model",
+   "h": 402,
+   "txt": 2576,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "shared-definition",
+   "pane": "rf",
+   "on": "num",
+   "h": 785,
+   "txt": 4962,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "shared-definition",
+   "pane": "open",
+   "on": "rf",
+   "h": 588,
+   "txt": 3167,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "replication",
+   "pane": "walk",
+   "on": "viz",
+   "h": 69,
+   "txt": 141,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "replication",
+   "pane": "wb",
+   "on": "drill",
+   "h": 894,
+   "txt": 15259,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "replication",
+   "pane": "sys",
+   "on": "wb",
+   "h": 455,
+   "txt": 13892,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "replication",
+   "pane": "trade",
+   "on": "sys",
+   "h": 512,
+   "txt": 6019,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "replication",
+   "pane": "num",
+   "on": "model",
+   "h": 439,
+   "txt": 2572,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "replication",
+   "pane": "rf",
+   "on": "num",
+   "h": 783,
+   "txt": 5037,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "replication",
+   "pane": "open",
+   "on": "rf",
+   "h": 575,
+   "txt": 3390,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "consistency-models",
+   "pane": "walk",
+   "on": "viz",
+   "h": 69,
+   "txt": 141,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "consistency-models",
+   "pane": "drill",
+   "on": "walk",
+   "h": 737,
+   "txt": 14867,
+   "kids": 6,
+   "canvas": null
+  },
+  {
+   "topic": "consistency-models",
+   "pane": "wb",
+   "on": "drill",
+   "h": 907,
+   "txt": 15444,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "consistency-models",
+   "pane": "sys",
+   "on": "wb",
+   "h": 455,
+   "txt": 14868,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "consistency-models",
+   "pane": "num",
+   "on": "model",
+   "h": 537,
+   "txt": 2709,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "consistency-models",
+   "pane": "open",
+   "on": "rf",
+   "h": 671,
+   "txt": 3753,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "sharding-strategies",
+   "pane": "walk",
+   "on": "viz",
+   "h": 69,
+   "txt": 141,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "sharding-strategies",
+   "pane": "wb",
+   "on": "drill",
+   "h": 900,
+   "txt": 15410,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "sharding-strategies",
+   "pane": "sys",
+   "on": "wb",
+   "h": 455,
+   "txt": 15022,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "sharding-strategies",
+   "pane": "model",
+   "on": "trade",
+   "h": 1148,
+   "txt": 3708,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "sharding-strategies",
+   "pane": "num",
+   "on": "model",
+   "h": 549,
+   "txt": 2718,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "sharding-strategies",
+   "pane": "rf",
+   "on": "num",
+   "h": 819,
+   "txt": 5062,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "sharding-strategies",
+   "pane": "open",
+   "on": "rf",
+   "h": 614,
+   "txt": 3524,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "consistent-hashing",
+   "pane": "walk",
+   "on": "viz",
+   "h": 69,
+   "txt": 141,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "consistent-hashing",
+   "pane": "drill",
+   "on": "walk",
+   "h": 681,
+   "txt": 14566,
+   "kids": 6,
+   "canvas": null
+  },
+  {
+   "topic": "consistent-hashing",
+   "pane": "sys",
+   "on": "wb",
+   "h": 455,
+   "txt": 13991,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "consistent-hashing",
+   "pane": "model",
+   "on": "trade",
+   "h": 1073,
+   "txt": 3182,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "consistent-hashing",
+   "pane": "num",
+   "on": "model",
+   "h": 426,
+   "txt": 2573,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "consistent-hashing",
+   "pane": "open",
+   "on": "rf",
+   "h": 594,
+   "txt": 3356,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "storage-engines",
+   "pane": "walk",
+   "on": "viz",
+   "h": 69,
+   "txt": 141,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "storage-engines",
+   "pane": "drill",
+   "on": "walk",
+   "h": 756,
+   "txt": 16531,
+   "kids": 6,
+   "canvas": null
+  },
+  {
+   "topic": "storage-engines",
+   "pane": "wb",
+   "on": "drill",
+   "h": 894,
+   "txt": 15293,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "storage-engines",
+   "pane": "sys",
+   "on": "wb",
+   "h": 455,
+   "txt": 14264,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "storage-engines",
+   "pane": "trade",
+   "on": "sys",
+   "h": 530,
+   "txt": 6073,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "storage-engines",
+   "pane": "model",
+   "on": "trade",
+   "h": 1151,
+   "txt": 3578,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "storage-engines",
+   "pane": "num",
+   "on": "model",
+   "h": 537,
+   "txt": 2651,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "storage-engines",
+   "pane": "rf",
+   "on": "num",
+   "h": 799,
+   "txt": 5185,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "storage-engines",
+   "pane": "open",
+   "on": "rf",
+   "h": 689,
+   "txt": 3741,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "probabilistic-structures",
+   "pane": "walk",
+   "on": "viz",
+   "h": 69,
+   "txt": 141,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "probabilistic-structures",
+   "pane": "wb",
+   "on": "drill",
+   "h": 936,
+   "txt": 15544,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "probabilistic-structures",
+   "pane": "sys",
+   "on": "wb",
+   "h": 473,
+   "txt": 15293,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "probabilistic-structures",
+   "pane": "num",
+   "on": "model",
+   "h": 660,
+   "txt": 2797,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "probabilistic-structures",
+   "pane": "rf",
+   "on": "num",
+   "h": 804,
+   "txt": 5034,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "retries-timeouts",
+   "pane": "walk",
+   "on": "viz",
+   "h": 69,
+   "txt": 141,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "retries-timeouts",
+   "pane": "drill",
+   "on": "walk",
+   "h": 660,
+   "txt": 14364,
+   "kids": 6,
+   "canvas": null
+  },
+  {
+   "topic": "retries-timeouts",
+   "pane": "wb",
+   "on": "drill",
+   "h": 887,
+   "txt": 15284,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "retries-timeouts",
+   "pane": "sys",
+   "on": "wb",
+   "h": 455,
+   "txt": 13904,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "retries-timeouts",
+   "pane": "model",
+   "on": "trade",
+   "h": 1073,
+   "txt": 3286,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "retries-timeouts",
+   "pane": "num",
+   "on": "model",
+   "h": 414,
+   "txt": 2606,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "retries-timeouts",
+   "pane": "rf",
+   "on": "num",
+   "h": 799,
+   "txt": 5175,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "retries-timeouts",
+   "pane": "open",
+   "on": "rf",
+   "h": 574,
+   "txt": 3348,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "idempotency",
+   "pane": "walk",
+   "on": "viz",
+   "h": 69,
+   "txt": 141,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "idempotency",
+   "pane": "drill",
+   "on": "walk",
+   "h": 665,
+   "txt": 14134,
+   "kids": 6,
+   "canvas": null
+  },
+  {
+   "topic": "idempotency",
+   "pane": "wb",
+   "on": "drill",
+   "h": 913,
+   "txt": 15355,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "idempotency",
+   "pane": "sys",
+   "on": "wb",
+   "h": 455,
+   "txt": 13873,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "idempotency",
+   "pane": "model",
+   "on": "trade",
+   "h": 1053,
+   "txt": 3257,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "idempotency",
+   "pane": "num",
+   "on": "model",
+   "h": 414,
+   "txt": 2586,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "idempotency",
+   "pane": "rf",
+   "on": "num",
+   "h": 799,
+   "txt": 5093,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "idempotency",
+   "pane": "open",
+   "on": "rf",
+   "h": 574,
+   "txt": 3306,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "circuit-breaker",
+   "pane": "walk",
+   "on": "viz",
+   "h": 69,
+   "txt": 141,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "circuit-breaker",
+   "pane": "drill",
+   "on": "walk",
+   "h": 644,
+   "txt": 14381,
+   "kids": 6,
+   "canvas": null
+  },
+  {
+   "topic": "circuit-breaker",
+   "pane": "wb",
+   "on": "drill",
+   "h": 881,
+   "txt": 15244,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "circuit-breaker",
+   "pane": "trade",
+   "on": "sys",
+   "h": 639,
+   "txt": 5901,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "circuit-breaker",
+   "pane": "model",
+   "on": "trade",
+   "h": 1053,
+   "txt": 3237,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "circuit-breaker",
+   "pane": "num",
+   "on": "model",
+   "h": 426,
+   "txt": 2558,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "circuit-breaker",
+   "pane": "rf",
+   "on": "num",
+   "h": 799,
+   "txt": 5183,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "circuit-breaker",
+   "pane": "open",
+   "on": "rf",
+   "h": 574,
+   "txt": 3314,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "error-propagation",
+   "pane": "walk",
+   "on": "viz",
+   "h": 69,
+   "txt": 141,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "error-propagation",
+   "pane": "drill",
+   "on": "walk",
+   "h": 746,
+   "txt": 14519,
+   "kids": 6,
+   "canvas": null
+  },
+  {
+   "topic": "error-propagation",
+   "pane": "wb",
+   "on": "drill",
+   "h": 936,
+   "txt": 15556,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "error-propagation",
+   "pane": "sys",
+   "on": "wb",
+   "h": 473,
+   "txt": 14594,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "error-propagation",
+   "pane": "trade",
+   "on": "sys",
+   "h": 567,
+   "txt": 6544,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "error-propagation",
+   "pane": "model",
+   "on": "trade",
+   "h": 1130,
+   "txt": 3673,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "error-propagation",
+   "pane": "num",
+   "on": "model",
+   "h": 512,
+   "txt": 2700,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "error-propagation",
+   "pane": "rf",
+   "on": "num",
+   "h": 819,
+   "txt": 5211,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "error-propagation",
+   "pane": "open",
+   "on": "rf",
+   "h": 652,
+   "txt": 3558,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "backpressure",
+   "pane": "drill",
+   "on": "walk",
+   "h": 700,
+   "txt": 15387,
+   "kids": 6,
+   "canvas": null
+  },
+  {
+   "topic": "backpressure",
+   "pane": "wb",
+   "on": "drill",
+   "h": 894,
+   "txt": 15291,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "backpressure",
+   "pane": "sys",
+   "on": "wb",
+   "h": 455,
+   "txt": 14069,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "backpressure",
+   "pane": "trade",
+   "on": "sys",
+   "h": 458,
+   "txt": 5954,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "backpressure",
+   "pane": "num",
+   "on": "model",
+   "h": 488,
+   "txt": 2651,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "backpressure",
+   "pane": "rf",
+   "on": "num",
+   "h": 799,
+   "txt": 5016,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "backpressure",
+   "pane": "open",
+   "on": "rf",
+   "h": 689,
+   "txt": 3608,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "backpressure",
+   "pane": "viz",
+   "on": "open",
+   "h": 801,
+   "txt": 5704,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "observability",
+   "pane": "walk",
+   "on": "viz",
+   "h": 69,
+   "txt": 141,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "observability",
+   "pane": "drill",
+   "on": "walk",
+   "h": 625,
+   "txt": 13807,
+   "kids": 6,
+   "canvas": null
+  },
+  {
+   "topic": "observability",
+   "pane": "wb",
+   "on": "drill",
+   "h": 881,
+   "txt": 15209,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "observability",
+   "pane": "sys",
+   "on": "wb",
+   "h": 455,
+   "txt": 13842,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "observability",
+   "pane": "trade",
+   "on": "sys",
+   "h": 512,
+   "txt": 6012,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "observability",
+   "pane": "model",
+   "on": "trade",
+   "h": 1137,
+   "txt": 3123,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "observability",
+   "pane": "num",
+   "on": "model",
+   "h": 389,
+   "txt": 2567,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "observability",
+   "pane": "rf",
+   "on": "num",
+   "h": 783,
+   "txt": 5000,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "debugging",
+   "pane": "walk",
+   "on": "viz",
+   "h": 69,
+   "txt": 141,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "debugging",
+   "pane": "wb",
+   "on": "drill",
+   "h": 936,
+   "txt": 15530,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "debugging",
+   "pane": "sys",
+   "on": "wb",
+   "h": 473,
+   "txt": 14708,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "debugging",
+   "pane": "model",
+   "on": "trade",
+   "h": 1110,
+   "txt": 3594,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "debugging",
+   "pane": "num",
+   "on": "model",
+   "h": 512,
+   "txt": 2682,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "debugging",
+   "pane": "rf",
+   "on": "num",
+   "h": 804,
+   "txt": 5056,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "debugging",
+   "pane": "open",
+   "on": "rf",
+   "h": 612,
+   "txt": 3417,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "slos",
+   "pane": "walk",
+   "on": "viz",
+   "h": 69,
+   "txt": 141,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "slos",
+   "pane": "drill",
+   "on": "walk",
+   "h": 719,
+   "txt": 14984,
+   "kids": 6,
+   "canvas": null
+  },
+  {
+   "topic": "slos",
+   "pane": "sys",
+   "on": "wb",
+   "h": 455,
+   "txt": 14001,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "slos",
+   "pane": "trade",
+   "on": "sys",
+   "h": 530,
+   "txt": 5896,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "slos",
+   "pane": "model",
+   "on": "trade",
+   "h": 1073,
+   "txt": 3217,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "slos",
+   "pane": "num",
+   "on": "model",
+   "h": 500,
+   "txt": 2605,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "slos",
+   "pane": "rf",
+   "on": "num",
+   "h": 751,
+   "txt": 4944,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "slos",
+   "pane": "open",
+   "on": "rf",
+   "h": 592,
+   "txt": 3341,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "iac",
+   "pane": "walk",
+   "on": "viz",
+   "h": 69,
+   "txt": 141,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "iac",
+   "pane": "drill",
+   "on": "walk",
+   "h": 693,
+   "txt": 13837,
+   "kids": 6,
+   "canvas": null
+  },
+  {
+   "topic": "iac",
+   "pane": "wb",
+   "on": "drill",
+   "h": 989,
+   "txt": 15418,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "iac",
+   "pane": "sys",
+   "on": "wb",
+   "h": 1283,
+   "txt": 12823,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "iac",
+   "pane": "trade",
+   "on": "sys",
+   "h": 1328,
+   "txt": 11286,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "iac",
+   "pane": "model",
+   "on": "trade",
+   "h": 2627,
+   "txt": 6303,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "iac",
+   "pane": "num",
+   "on": "model",
+   "h": 1019,
+   "txt": 4298,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "iac",
+   "pane": "rf",
+   "on": "num",
+   "h": 859,
+   "txt": 5357,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "iac",
+   "pane": "open",
+   "on": "rf",
+   "h": 2460,
+   "txt": 9472,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "desired-state",
+   "pane": "drill",
+   "on": "walk",
+   "h": 722,
+   "txt": 13967,
+   "kids": 6,
+   "canvas": null
+  },
+  {
+   "topic": "desired-state",
+   "pane": "wb",
+   "on": "drill",
+   "h": 897,
+   "txt": 15347,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "desired-state",
+   "pane": "sys",
+   "on": "wb",
+   "h": 1264,
+   "txt": 12773,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "desired-state",
+   "pane": "trade",
+   "on": "sys",
+   "h": 1328,
+   "txt": 10795,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "desired-state",
+   "pane": "model",
+   "on": "trade",
+   "h": 2642,
+   "txt": 6336,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "desired-state",
+   "pane": "num",
+   "on": "model",
+   "h": 978,
+   "txt": 4243,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "desired-state",
+   "pane": "rf",
+   "on": "num",
+   "h": 843,
+   "txt": 5363,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "desired-state",
+   "pane": "open",
+   "on": "rf",
+   "h": 2255,
+   "txt": 8520,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "aws-hardening",
+   "pane": "walk",
+   "on": "viz",
+   "h": 69,
+   "txt": 141,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "aws-hardening",
+   "pane": "drill",
+   "on": "walk",
+   "h": 724,
+   "txt": 13441,
+   "kids": 6,
+   "canvas": null
+  },
+  {
+   "topic": "aws-hardening",
+   "pane": "wb",
+   "on": "drill",
+   "h": 923,
+   "txt": 15415,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "aws-hardening",
+   "pane": "sys",
+   "on": "wb",
+   "h": 1246,
+   "txt": 11855,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "aws-hardening",
+   "pane": "trade",
+   "on": "sys",
+   "h": 1204,
+   "txt": 9567,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "aws-hardening",
+   "pane": "model",
+   "on": "trade",
+   "h": 2589,
+   "txt": 6046,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "aws-hardening",
+   "pane": "num",
+   "on": "model",
+   "h": 990,
+   "txt": 4133,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "aws-hardening",
+   "pane": "rf",
+   "on": "num",
+   "h": 859,
+   "txt": 5309,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "aws-hardening",
+   "pane": "open",
+   "on": "rf",
+   "h": 2064,
+   "txt": 7423,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "load-balancing",
+   "pane": "walk",
+   "on": "viz",
+   "h": 69,
+   "txt": 141,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "load-balancing",
+   "pane": "drill",
+   "on": "walk",
+   "h": 644,
+   "txt": 14335,
+   "kids": 6,
+   "canvas": null
+  },
+  {
+   "topic": "load-balancing",
+   "pane": "wb",
+   "on": "drill",
+   "h": 894,
+   "txt": 15305,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "load-balancing",
+   "pane": "sys",
+   "on": "wb",
+   "h": 455,
+   "txt": 13901,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "load-balancing",
+   "pane": "trade",
+   "on": "sys",
+   "h": 476,
+   "txt": 5952,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "load-balancing",
+   "pane": "model",
+   "on": "trade",
+   "h": 1073,
+   "txt": 3177,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "load-balancing",
+   "pane": "num",
+   "on": "model",
+   "h": 475,
+   "txt": 2585,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "load-balancing",
+   "pane": "rf",
+   "on": "num",
+   "h": 783,
+   "txt": 5131,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "load-balancing",
+   "pane": "open",
+   "on": "rf",
+   "h": 631,
+   "txt": 3427,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "autoscaling",
+   "pane": "walk",
+   "on": "viz",
+   "h": 69,
+   "txt": 141,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "autoscaling",
+   "pane": "drill",
+   "on": "walk",
+   "h": 737,
+   "txt": 16118,
+   "kids": 6,
+   "canvas": null
+  },
+  {
+   "topic": "autoscaling",
+   "pane": "sys",
+   "on": "wb",
+   "h": 455,
+   "txt": 14210,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "autoscaling",
+   "pane": "trade",
+   "on": "sys",
+   "h": 585,
+   "txt": 5987,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "autoscaling",
+   "pane": "model",
+   "on": "trade",
+   "h": 1090,
+   "txt": 3463,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "autoscaling",
+   "pane": "num",
+   "on": "model",
+   "h": 561,
+   "txt": 2691,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "autoscaling",
+   "pane": "rf",
+   "on": "num",
+   "h": 799,
+   "txt": 5098,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "autoscaling",
+   "pane": "open",
+   "on": "rf",
+   "h": 651,
+   "txt": 3583,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "leader-election",
+   "pane": "drill",
+   "on": "walk",
+   "h": 731,
+   "txt": 15590,
+   "kids": 6,
+   "canvas": null
+  },
+  {
+   "topic": "leader-election",
+   "pane": "wb",
+   "on": "drill",
+   "h": 881,
+   "txt": 15293,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "leader-election",
+   "pane": "sys",
+   "on": "wb",
+   "h": 455,
+   "txt": 14263,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "leader-election",
+   "pane": "trade",
+   "on": "sys",
+   "h": 494,
+   "txt": 5956,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "leader-election",
+   "pane": "model",
+   "on": "trade",
+   "h": 1073,
+   "txt": 3453,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "leader-election",
+   "pane": "num",
+   "on": "model",
+   "h": 537,
+   "txt": 2647,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "leader-election",
+   "pane": "rf",
+   "on": "num",
+   "h": 783,
+   "txt": 4983,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "leader-election",
+   "pane": "open",
+   "on": "rf",
+   "h": 594,
+   "txt": 3471,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "distributed-locks",
+   "pane": "walk",
+   "on": "viz",
+   "h": 69,
+   "txt": 141,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "distributed-locks",
+   "pane": "wb",
+   "on": "drill",
+   "h": 923,
+   "txt": 15411,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "distributed-locks",
+   "pane": "sys",
+   "on": "wb",
+   "h": 455,
+   "txt": 14318,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "distributed-locks",
+   "pane": "trade",
+   "on": "sys",
+   "h": 494,
+   "txt": 6328,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "distributed-locks",
+   "pane": "model",
+   "on": "trade",
+   "h": 1131,
+   "txt": 3562,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "distributed-locks",
+   "pane": "num",
+   "on": "model",
+   "h": 561,
+   "txt": 2707,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "distributed-locks",
+   "pane": "rf",
+   "on": "num",
+   "h": 783,
+   "txt": 5045,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "distributed-locks",
+   "pane": "open",
+   "on": "rf",
+   "h": 632,
+   "txt": 3475,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "multi-region",
+   "pane": "walk",
+   "on": "viz",
+   "h": 69,
+   "txt": 141,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "multi-region",
+   "pane": "drill",
+   "on": "walk",
+   "h": 732,
+   "txt": 16344,
+   "kids": 6,
+   "canvas": null
+  },
+  {
+   "topic": "multi-region",
+   "pane": "wb",
+   "on": "drill",
+   "h": 900,
+   "txt": 15402,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "multi-region",
+   "pane": "sys",
+   "on": "wb",
+   "h": 473,
+   "txt": 15025,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "multi-region",
+   "pane": "trade",
+   "on": "sys",
+   "h": 512,
+   "txt": 6197,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "multi-region",
+   "pane": "model",
+   "on": "trade",
+   "h": 1285,
+   "txt": 4156,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "multi-region",
+   "pane": "num",
+   "on": "model",
+   "h": 598,
+   "txt": 2770,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "multi-region",
+   "pane": "rf",
+   "on": "num",
+   "h": 804,
+   "txt": 5107,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "multi-region",
+   "pane": "open",
+   "on": "rf",
+   "h": 671,
+   "txt": 3816,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "lambda-organization",
+   "pane": "walk",
+   "on": "viz",
+   "h": 69,
+   "txt": 141,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "lambda-organization",
+   "pane": "drill",
+   "on": "walk",
+   "h": 660,
+   "txt": 14096,
+   "kids": 6,
+   "canvas": null
+  },
+  {
+   "topic": "lambda-organization",
+   "pane": "wb",
+   "on": "drill",
+   "h": 894,
+   "txt": 15268,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "lambda-organization",
+   "pane": "sys",
+   "on": "wb",
+   "h": 455,
+   "txt": 13797,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "lambda-organization",
+   "pane": "model",
+   "on": "trade",
+   "h": 1053,
+   "txt": 3154,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "lambda-organization",
+   "pane": "rf",
+   "on": "num",
+   "h": 799,
+   "txt": 5104,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "lambda-organization",
+   "pane": "open",
+   "on": "rf",
+   "h": 574,
+   "txt": 3350,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "devices-dispatch",
+   "pane": "walk",
+   "on": "viz",
+   "h": 69,
+   "txt": 141,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "devices-dispatch",
+   "pane": "drill",
+   "on": "walk",
+   "h": 681,
+   "txt": 13338,
+   "kids": 6,
+   "canvas": null
+  },
+  {
+   "topic": "devices-dispatch",
+   "pane": "wb",
+   "on": "drill",
+   "h": 867,
+   "txt": 15185,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "devices-dispatch",
+   "pane": "sys",
+   "on": "wb",
+   "h": 455,
+   "txt": 13701,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "devices-dispatch",
+   "pane": "trade",
+   "on": "sys",
+   "h": 566,
+   "txt": 6049,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "devices-dispatch",
+   "pane": "model",
+   "on": "trade",
+   "h": 1033,
+   "txt": 3001,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "devices-dispatch",
+   "pane": "num",
+   "on": "model",
+   "h": 377,
+   "txt": 2554,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "devices-dispatch",
+   "pane": "rf",
+   "on": "num",
+   "h": 804,
+   "txt": 4986,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "devices-dispatch",
+   "pane": "open",
+   "on": "rf",
+   "h": 588,
+   "txt": 3187,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "devices-dispatch",
+   "pane": "viz",
+   "on": "open",
+   "h": 725,
+   "txt": 5132,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "developer-platform",
+   "pane": "walk",
+   "on": "viz",
+   "h": 69,
+   "txt": 141,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "developer-platform",
+   "pane": "drill",
+   "on": "walk",
+   "h": 660,
+   "txt": 14416,
+   "kids": 6,
+   "canvas": null
+  },
+  {
+   "topic": "developer-platform",
+   "pane": "wb",
+   "on": "drill",
+   "h": 887,
+   "txt": 15250,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "developer-platform",
+   "pane": "sys",
+   "on": "wb",
+   "h": 455,
+   "txt": 14036,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "developer-platform",
+   "pane": "trade",
+   "on": "sys",
+   "h": 603,
+   "txt": 6011,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "developer-platform",
+   "pane": "model",
+   "on": "trade",
+   "h": 1034,
+   "txt": 3014,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "developer-platform",
+   "pane": "num",
+   "on": "model",
+   "h": 402,
+   "txt": 2585,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "developer-platform",
+   "pane": "rf",
+   "on": "num",
+   "h": 799,
+   "txt": 5086,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "developer-platform",
+   "pane": "open",
+   "on": "rf",
+   "h": 608,
+   "txt": 3347,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "developer-platform",
+   "pane": "viz",
+   "on": "open",
+   "h": 744,
+   "txt": 5436,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "state-machine",
+   "pane": "walk",
+   "on": "viz",
+   "h": 69,
+   "txt": 141,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "state-machine",
+   "pane": "drill",
+   "on": "walk",
+   "h": 660,
+   "txt": 13913,
+   "kids": 6,
+   "canvas": null
+  },
+  {
+   "topic": "state-machine",
+   "pane": "wb",
+   "on": "drill",
+   "h": 874,
+   "txt": 15250,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "state-machine",
+   "pane": "sys",
+   "on": "wb",
+   "h": 455,
+   "txt": 13796,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "state-machine",
+   "pane": "trade",
+   "on": "sys",
+   "h": 585,
+   "txt": 6082,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "state-machine",
+   "pane": "model",
+   "on": "trade",
+   "h": 1073,
+   "txt": 3185,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "state-machine",
+   "pane": "num",
+   "on": "model",
+   "h": 365,
+   "txt": 2539,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "state-machine",
+   "pane": "rf",
+   "on": "num",
+   "h": 751,
+   "txt": 4985,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "state-machine",
+   "pane": "open",
+   "on": "rf",
+   "h": 574,
+   "txt": 3220,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "state-machine",
+   "pane": "viz",
+   "on": "open",
+   "h": 744,
+   "txt": 5285,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "rules-engine",
+   "pane": "walk",
+   "on": "viz",
+   "h": 69,
+   "txt": 141,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "rules-engine",
+   "pane": "drill",
+   "on": "walk",
+   "h": 644,
+   "txt": 13422,
+   "kids": 6,
+   "canvas": null
+  },
+  {
+   "topic": "rules-engine",
+   "pane": "wb",
+   "on": "drill",
+   "h": 881,
+   "txt": 15269,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "rules-engine",
+   "pane": "sys",
+   "on": "wb",
+   "h": 455,
+   "txt": 13727,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "rules-engine",
+   "pane": "trade",
+   "on": "sys",
+   "h": 530,
+   "txt": 5990,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "rules-engine",
+   "pane": "model",
+   "on": "trade",
+   "h": 1033,
+   "txt": 2964,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "rules-engine",
+   "pane": "num",
+   "on": "model",
+   "h": 389,
+   "txt": 2574,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "rules-engine",
+   "pane": "rf",
+   "on": "num",
+   "h": 754,
+   "txt": 4939,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "rules-engine",
+   "pane": "open",
+   "on": "rf",
+   "h": 574,
+   "txt": 3130,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "rules-engine",
+   "pane": "viz",
+   "on": "open",
+   "h": 744,
+   "txt": 5200,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "feature-flags",
+   "pane": "walk",
+   "on": "viz",
+   "h": 69,
+   "txt": 141,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "feature-flags",
+   "pane": "drill",
+   "on": "walk",
+   "h": 629,
+   "txt": 12944,
+   "kids": 6,
+   "canvas": null
+  },
+  {
+   "topic": "feature-flags",
+   "pane": "wb",
+   "on": "drill",
+   "h": 881,
+   "txt": 15247,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "feature-flags",
+   "pane": "sys",
+   "on": "wb",
+   "h": 455,
+   "txt": 13694,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "feature-flags",
+   "pane": "trade",
+   "on": "sys",
+   "h": 512,
+   "txt": 5969,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "feature-flags",
+   "pane": "model",
+   "on": "trade",
+   "h": 1033,
+   "txt": 3022,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "feature-flags",
+   "pane": "num",
+   "on": "model",
+   "h": 394,
+   "txt": 2552,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "feature-flags",
+   "pane": "rf",
+   "on": "num",
+   "h": 799,
+   "txt": 4977,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "feature-flags",
+   "pane": "open",
+   "on": "rf",
+   "h": 574,
+   "txt": 3099,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "feature-flags",
+   "pane": "viz",
+   "on": "open",
+   "h": 744,
+   "txt": 5153,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "api-design",
+   "pane": "walk",
+   "on": "viz",
+   "h": 69,
+   "txt": 141,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "api-design",
+   "pane": "drill",
+   "on": "walk",
+   "h": 753,
+   "txt": 14715,
+   "kids": 6,
+   "canvas": null
+  },
+  {
+   "topic": "api-design",
+   "pane": "wb",
+   "on": "drill",
+   "h": 894,
+   "txt": 15391,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "api-design",
+   "pane": "sys",
+   "on": "wb",
+   "h": 455,
+   "txt": 14856,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "api-design",
+   "pane": "trade",
+   "on": "sys",
+   "h": 622,
+   "txt": 6551,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "api-design",
+   "pane": "model",
+   "on": "trade",
+   "h": 1196,
+   "txt": 3649,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "api-design",
+   "pane": "num",
+   "on": "model",
+   "h": 549,
+   "txt": 2726,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "api-design",
+   "pane": "rf",
+   "on": "num",
+   "h": 783,
+   "txt": 5011,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "api-design",
+   "pane": "open",
+   "on": "rf",
+   "h": 651,
+   "txt": 3504,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "api-design",
+   "pane": "viz",
+   "on": "open",
+   "h": 821,
+   "txt": 6110,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "rate-limiting",
+   "pane": "walk",
+   "on": "viz",
+   "h": 69,
+   "txt": 141,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "rate-limiting",
+   "pane": "drill",
+   "on": "walk",
+   "h": 629,
+   "txt": 12917,
+   "kids": 6,
+   "canvas": null
+  },
+  {
+   "topic": "rate-limiting",
+   "pane": "wb",
+   "on": "drill",
+   "h": 874,
+   "txt": 15220,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "rate-limiting",
+   "pane": "sys",
+   "on": "wb",
+   "h": 455,
+   "txt": 13636,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "rate-limiting",
+   "pane": "trade",
+   "on": "sys",
+   "h": 476,
+   "txt": 5891,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "rate-limiting",
+   "pane": "model",
+   "on": "trade",
+   "h": 952,
+   "txt": 2770,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "rate-limiting",
+   "pane": "num",
+   "on": "model",
+   "h": 365,
+   "txt": 2559,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "rate-limiting",
+   "pane": "rf",
+   "on": "num",
+   "h": 767,
+   "txt": 4899,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "rate-limiting",
+   "pane": "open",
+   "on": "rf",
+   "h": 495,
+   "txt": 2973,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "rate-limiting",
+   "pane": "viz",
+   "on": "open",
+   "h": 725,
+   "txt": 5010,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "content-pipeline",
+   "pane": "walk",
+   "on": "viz",
+   "h": 69,
+   "txt": 141,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "content-pipeline",
+   "pane": "drill",
+   "on": "walk",
+   "h": 687,
+   "txt": 13042,
+   "kids": 6,
+   "canvas": null
+  },
+  {
+   "topic": "content-pipeline",
+   "pane": "wb",
+   "on": "drill",
+   "h": 965,
+   "txt": 15539,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "content-pipeline",
+   "pane": "sys",
+   "on": "wb",
+   "h": 1208,
+   "txt": 11104,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "content-pipeline",
+   "pane": "trade",
+   "on": "sys",
+   "h": 1123,
+   "txt": 8574,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "content-pipeline",
+   "pane": "model",
+   "on": "trade",
+   "h": 2330,
+   "txt": 4371,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "content-pipeline",
+   "pane": "num",
+   "on": "model",
+   "h": 930,
+   "txt": 3993,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "content-pipeline",
+   "pane": "rf",
+   "on": "num",
+   "h": 804,
+   "txt": 4713,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "content-pipeline",
+   "pane": "open",
+   "on": "rf",
+   "h": 1584,
+   "txt": 4759,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "content-pipeline",
+   "pane": "viz",
+   "on": "open",
+   "h": 1496,
+   "txt": 7816,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "microfrontend",
+   "pane": "walk",
+   "on": "viz",
+   "h": 69,
+   "txt": 141,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "microfrontend",
+   "pane": "drill",
+   "on": "walk",
+   "h": 681,
+   "txt": 14507,
+   "kids": 6,
+   "canvas": null
+  },
+  {
+   "topic": "microfrontend",
+   "pane": "wb",
+   "on": "drill",
+   "h": 894,
+   "txt": 15251,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "microfrontend",
+   "pane": "sys",
+   "on": "wb",
+   "h": 455,
+   "txt": 13917,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "microfrontend",
+   "pane": "trade",
+   "on": "sys",
+   "h": 530,
+   "txt": 5979,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "microfrontend",
+   "pane": "model",
+   "on": "trade",
+   "h": 1073,
+   "txt": 3272,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "microfrontend",
+   "pane": "num",
+   "on": "model",
+   "h": 402,
+   "txt": 2601,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "microfrontend",
+   "pane": "rf",
+   "on": "num",
+   "h": 783,
+   "txt": 5037,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "microfrontend",
+   "pane": "open",
+   "on": "rf",
+   "h": 634,
+   "txt": 3352,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "microfrontend",
+   "pane": "viz",
+   "on": "open",
+   "h": 763,
+   "txt": 5405,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "signing",
+   "pane": "walk",
+   "on": "viz",
+   "h": 69,
+   "txt": 141,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "signing",
+   "pane": "drill",
+   "on": "walk",
+   "h": 730,
+   "txt": 13509,
+   "kids": 6,
+   "canvas": null
+  },
+  {
+   "topic": "signing",
+   "pane": "wb",
+   "on": "drill",
+   "h": 900,
+   "txt": 15408,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "signing",
+   "pane": "sys",
+   "on": "wb",
+   "h": 1227,
+   "txt": 11658,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "signing",
+   "pane": "trade",
+   "on": "sys",
+   "h": 1143,
+   "txt": 9155,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "signing",
+   "pane": "model",
+   "on": "trade",
+   "h": 2673,
+   "txt": 5587,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "signing",
+   "pane": "num",
+   "on": "model",
+   "h": 930,
+   "txt": 3896,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "signing",
+   "pane": "rf",
+   "on": "num",
+   "h": 843,
+   "txt": 5036,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "signing",
+   "pane": "open",
+   "on": "rf",
+   "h": 1781,
+   "txt": 5916,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "signing",
+   "pane": "viz",
+   "on": "open",
+   "h": 1550,
+   "txt": 8083,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "authz",
+   "pane": "walk",
+   "on": "viz",
+   "h": 69,
+   "txt": 141,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "authz",
+   "pane": "drill",
+   "on": "walk",
+   "h": 693,
+   "txt": 13803,
+   "kids": 6,
+   "canvas": null
+  },
+  {
+   "topic": "authz",
+   "pane": "wb",
+   "on": "drill",
+   "h": 988,
+   "txt": 15524,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "authz",
+   "pane": "sys",
+   "on": "wb",
+   "h": 1247,
+   "txt": 12064,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "authz",
+   "pane": "trade",
+   "on": "sys",
+   "h": 1222,
+   "txt": 9705,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "authz",
+   "pane": "model",
+   "on": "trade",
+   "h": 2635,
+   "txt": 5796,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "authz",
+   "pane": "num",
+   "on": "model",
+   "h": 930,
+   "txt": 3838,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "authz",
+   "pane": "rf",
+   "on": "num",
+   "h": 843,
+   "txt": 5148,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "authz",
+   "pane": "open",
+   "on": "rf",
+   "h": 1832,
+   "txt": 6310,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "authz",
+   "pane": "viz",
+   "on": "open",
+   "h": 1550,
+   "txt": 8280,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "multi-tenant",
+   "pane": "walk",
+   "on": "viz",
+   "h": 69,
+   "txt": 141,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "multi-tenant",
+   "pane": "drill",
+   "on": "walk",
+   "h": 663,
+   "txt": 13084,
+   "kids": 6,
+   "canvas": null
+  },
+  {
+   "topic": "multi-tenant",
+   "pane": "wb",
+   "on": "drill",
+   "h": 881,
+   "txt": 15276,
+   "kids": 9,
+   "canvas": null
+  },
+  {
+   "topic": "multi-tenant",
+   "pane": "sys",
+   "on": "wb",
+   "h": 455,
+   "txt": 13726,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "multi-tenant",
+   "pane": "trade",
+   "on": "sys",
+   "h": 548,
+   "txt": 6055,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "multi-tenant",
+   "pane": "model",
+   "on": "trade",
+   "h": 1073,
+   "txt": 3119,
+   "kids": 2,
+   "canvas": null
+  },
+  {
+   "topic": "multi-tenant",
+   "pane": "num",
+   "on": "model",
+   "h": 377,
+   "txt": 2586,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "multi-tenant",
+   "pane": "rf",
+   "on": "num",
+   "h": 817,
+   "txt": 5103,
+   "kids": 5,
+   "canvas": null
+  },
+  {
+   "topic": "multi-tenant",
+   "pane": "open",
+   "on": "rf",
+   "h": 569,
+   "txt": 3169,
+   "kids": 3,
+   "canvas": null
+  },
+  {
+   "topic": "multi-tenant",
+   "pane": "viz",
+   "on": "open",
+   "h": 725,
+   "txt": 5152,
+   "kids": 2,
+   "canvas": null
+  }
+ ],
+ "seconds": "60.7"
+}

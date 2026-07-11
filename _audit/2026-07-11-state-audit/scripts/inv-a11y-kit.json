@@ -1,0 +1,62 @@
+{
+  "axSliders": [
+    {
+      "role": "slider",
+      "name": "",
+      "nameLen": 0,
+      "value": 120
+    },
+    {
+      "role": "slider",
+      "name": "",
+      "nameLen": 0,
+      "value": 3
+    },
+    {
+      "role": "slider",
+      "name": "",
+      "nameLen": 0,
+      "value": 30
+    }
+  ],
+  "axCanvases": [],
+  "dom": {
+    "ranges": [
+      {
+        "id": "(none)",
+        "ariaLabel": "(none)",
+        "ariaLabelledby": "(none)",
+        "wrappedInLabel": false,
+        "siblingLabelHasFor": "(none)",
+        "labelText": "Rate (msg/s): 120"
+      },
+      {
+        "id": "(none)",
+        "ariaLabel": "(none)",
+        "ariaLabelledby": "(none)",
+        "wrappedInLabel": false,
+        "siblingLabelHasFor": "(none)",
+        "labelText": "Consumers: 3"
+      },
+      {
+        "id": "(none)",
+        "ariaLabel": "(none)",
+        "ariaLabelledby": "(none)",
+        "wrappedInLabel": false,
+        "siblingLabelHasFor": "(none)",
+        "labelText": "Capacity each: 30"
+      }
+    ],
+    "canvas": {
+      "role": "(none)",
+      "ariaLabel": "(none)",
+      "innerHTML": 0
+    }
+  },
+  "canvasClipBox": {
+    "x": 347,
+    "y": 125,
+    "width": 591,
+    "height": 2
+  }
+}

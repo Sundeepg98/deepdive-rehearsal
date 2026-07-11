@@ -1,0 +1,43 @@
+{
+  "descriptor": {
+    "hasGetter": true,
+    "hasValue": false,
+    "configurable": false,
+    "assignmentTook": false
+  },
+  "mountedOnLoad": {
+    "vizInstanceExists": false,
+    "canvasExists": false,
+    "hash": "#walk"
+  },
+  "beforeVizRoute": {
+    "vizInstanceExists": false,
+    "canvasExists": false,
+    "paneDisplay": "block",
+    "paneVisibility": "visible",
+    "paneHiddenAttr": false,
+    "paneClientW": 0,
+    "paneOffsetW": 0,
+    "hash": "#kafka-internals/walk"
+  },
+  "atMount": {
+    "note": "read inside the SAME routechange dispatch, immediately after deep-visual._mount() ran",
+    "paneDisplay": "block",
+    "paneHiddenAttr": false,
+    "paneClientW": 0,
+    "paneOffsetW": 0,
+    "canvasClientW": 0,
+    "canvasParentClientW": 0,
+    "canvasAttrs": "0x0"
+  },
+  "settled": {
+    "paneDisplay": "block",
+    "paneClientW": 592,
+    "canvasClientW": 590,
+    "canvasClientH": 0,
+    "canvasParentClientW": 592,
+    "canvasAttrs": "0x0",
+    "cssBoxH": 2
+  },
+  "errs": []
+}

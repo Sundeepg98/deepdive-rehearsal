@@ -1,0 +1,17 @@
+{
+ "kafka-internals/viz": {
+  "navCalls": [],
+  "endHash": "#content-pipeline/walk",
+  "seedTopicWasFirstRegistered": "content-pipeline"
+ },
+ "kafka-internals/walk": {
+  "navCalls": [],
+  "endHash": "#kafka-internals/walk",
+  "seedTopicWasFirstRegistered": "kafka-internals"
+ },
+ "noHashBootSeed": {
+  "current": "content-pipeline",
+  "idsFirst": "event-driven",
+  "same": false
+ }
+}

@@ -1,0 +1,38 @@
+BROWSER PROOF -- the real built app, real Shadow DOM, all 46 topics
+
+1 SYSTEM MAP stages painted
+    THE 38 with an EMPTY system map: 0/38   (was 38/38)
+    THE 8  with an EMPTY system map: 0/8
+    stages painted, the 38: 189
+    "you are here" (.cur) present on the 38: 38/38
+    pivot bodies left BLANK (chip swallowed the answer): 0
+
+2 LITERAL "undefined" in visible text
+    occurrences across all 46 topics x 9 panes: 0
+
+3 CROSS-TOPIC JUMP buttons (clicked for real)
+    jump buttons across all 46: 46   landed on the topic the chip names: 46
+    MIS-NAVIGATIONS: 0
+      OK  notifications  "→ Tenant authorization (3)" -> authz
+      OK  notifications  "→ Desired-state (7)" -> desired-state
+      OK  notifications  "→ Content pipeline (1)" -> content-pipeline
+      OK  notifications  "→ EAV (6)" -> eav
+      OK  notifications  "→ AWS hardening (4)" -> aws-hardening
+      OK  notifications  "→ Observability / deliverability" -> observability
+
+4 COACHING RAIL note ownership
+    topics whose rail shows ANOTHER topic's note: 38/46
+      event-driven leaked from null
+      real-time-delivery leaked from null
+      cdc leaked from null
+      kafka-internals leaked from null
+      stream-batch-processing leaked from null
+
+5 MOCK RUN beat count
+    topics where the live beat count != authored mockBeats: 0
+    the 38 now run mock with 2-2 beats each (was 2 scored of 6)
+
+6 CONSOLE / PAGE ERRORS: 0
+
+================================================================
+BROWSER PROOF: FAIL -- see above.

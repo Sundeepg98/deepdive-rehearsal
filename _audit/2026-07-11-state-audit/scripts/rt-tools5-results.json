@@ -1,0 +1,670 @@
+[
+  {
+    "vp": "desktop",
+    "tool": "index-controls",
+    "n": 11,
+    "ctrls": [
+      {
+        "key": "1",
+        "txt": "Cross-topic drillRandom probes"
+      },
+      {
+        "key": "group:messaging-events",
+        "txt": "Cram →"
+      },
+      {
+        "key": "group:data-storage",
+        "txt": "Cram →"
+      },
+      {
+        "key": "group:reliability-observability",
+        "txt": "Cram →"
+      },
+      {
+        "key": "group:platform-infra",
+        "txt": "Cram →"
+      },
+      {
+        "key": "group:architecture-apis",
+        "txt": "Cram →"
+      },
+      {
+        "key": "group:security-tenancy",
+        "txt": "Cram →"
+      },
+      {
+        "key": "export",
+        "txt": "Export a backup"
+      },
+      {
+        "key": "import-btn",
+        "txt": "Import a backup"
+      },
+      {
+        "key": "import",
+        "txt": ""
+      },
+      {
+        "key": "RESET",
+        "txt": "Reset all saved progress"
+      }
+    ]
+  },
+  {
+    "vp": "desktop",
+    "tool": "INDEX-scroll-chaining",
+    "scroller": "ix-scroll",
+    "overscrollBehaviorY": "auto",
+    "bodyBefore": 0,
+    "bodyAfter": 0,
+    "CHAINS_TO_PAGE": false,
+    "delta": 0
+  },
+  {
+    "vp": "desktop",
+    "tool": "export",
+    "present": true,
+    "downloadFired": true,
+    "filename": "deepdive-rehearsal-backup.json",
+    "errs": 0
+  },
+  {
+    "vp": "desktop",
+    "tool": "import",
+    "btn": true,
+    "fileInput": true,
+    "opensPicker": true,
+    "accept": "application/json,.json",
+    "errs": 0
+  },
+  {
+    "vp": "desktop",
+    "tool": "reset",
+    "present": true,
+    "confirmPrompt": [
+      "Clear all saved progress and data? This cannot be undone."
+    ],
+    "keysBefore": 3,
+    "keysAfter": 3,
+    "guarded": true,
+    "errs": 0
+  },
+  {
+    "vp": "desktop",
+    "tool": "cross-drill-modes",
+    "modes": [
+      {
+        "m": "1",
+        "t": "Cross-topic drillRandom probes"
+      },
+      {
+        "m": "group:messaging-events",
+        "t": "Cram →"
+      },
+      {
+        "m": "group:data-storage",
+        "t": "Cram →"
+      },
+      {
+        "m": "group:reliability-observability",
+        "t": "Cram →"
+      },
+      {
+        "m": "group:platform-infra",
+        "t": "Cram →"
+      },
+      {
+        "m": "group:architecture-apis",
+        "t": "Cram →"
+      },
+      {
+        "m": "group:security-tenancy",
+        "t": "Cram →"
+      }
+    ]
+  },
+  {
+    "vp": "desktop",
+    "tool": "cross-drill[1]",
+    "label": "Cross-topic drillRandom probes",
+    "created": true,
+    "opened": true,
+    "bodyOverflow": "",
+    "offR": -300,
+    "offB": -496,
+    "indexStillOpen": false,
+    "focus": "_xd-reveal",
+    "SILENT_NOOP": false,
+    "errs": 0
+  },
+  {
+    "vp": "desktop",
+    "tool": "cross-drill[1]-behaviour",
+    "scrollLeak": true,
+    "leakDelta": 157,
+    "escCloses": true
+  },
+  {
+    "vp": "desktop",
+    "tool": "cross-drill[group:messaging-events]",
+    "label": "Cram →",
+    "created": true,
+    "opened": true,
+    "bodyOverflow": "",
+    "offR": -300,
+    "offB": -520,
+    "indexStillOpen": false,
+    "focus": "_xd-reveal",
+    "SILENT_NOOP": false,
+    "errs": 0
+  },
+  {
+    "vp": "desktop",
+    "tool": "cross-drill[group:messaging-events]-behaviour",
+    "scrollLeak": false,
+    "leakDelta": 0,
+    "escCloses": true
+  },
+  {
+    "vp": "desktop",
+    "tool": "cross-drill[group:data-storage]",
+    "label": "Cram →",
+    "created": true,
+    "opened": true,
+    "bodyOverflow": "",
+    "offR": -300,
+    "offB": -520,
+    "indexStillOpen": false,
+    "focus": "_xd-reveal",
+    "SILENT_NOOP": false,
+    "errs": 0
+  },
+  {
+    "vp": "desktop",
+    "tool": "cross-drill[group:data-storage]-behaviour",
+    "scrollLeak": false,
+    "leakDelta": 0,
+    "escCloses": true
+  },
+  {
+    "vp": "desktop",
+    "tool": "cross-drill[group:reliability-observability]",
+    "label": "Cram →",
+    "created": true,
+    "opened": true,
+    "bodyOverflow": "",
+    "offR": -300,
+    "offB": -520,
+    "indexStillOpen": false,
+    "focus": "_xd-reveal",
+    "SILENT_NOOP": false,
+    "errs": 0
+  },
+  {
+    "vp": "desktop",
+    "tool": "cross-drill[group:reliability-observability]-behaviour",
+    "scrollLeak": false,
+    "leakDelta": 0,
+    "escCloses": true
+  },
+  {
+    "vp": "desktop",
+    "tool": "cross-drill[group:platform-infra]",
+    "label": "Cram →",
+    "created": true,
+    "opened": true,
+    "bodyOverflow": "",
+    "offR": -300,
+    "offB": -520,
+    "indexStillOpen": false,
+    "focus": "_xd-reveal",
+    "SILENT_NOOP": false,
+    "errs": 0
+  },
+  {
+    "vp": "desktop",
+    "tool": "cross-drill[group:platform-infra]-behaviour",
+    "scrollLeak": false,
+    "leakDelta": 0,
+    "escCloses": true
+  },
+  {
+    "vp": "desktop",
+    "tool": "cross-drill[group:architecture-apis]",
+    "label": "Cram →",
+    "created": true,
+    "opened": true,
+    "bodyOverflow": "",
+    "offR": -300,
+    "offB": -520,
+    "indexStillOpen": false,
+    "focus": "_xd-reveal",
+    "SILENT_NOOP": false,
+    "errs": 0
+  },
+  {
+    "vp": "desktop",
+    "tool": "cross-drill[group:architecture-apis]-behaviour",
+    "scrollLeak": false,
+    "leakDelta": 0,
+    "escCloses": true
+  },
+  {
+    "vp": "desktop",
+    "tool": "cross-drill[group:security-tenancy]",
+    "label": "Cram →",
+    "created": true,
+    "opened": true,
+    "bodyOverflow": "",
+    "offR": -300,
+    "offB": -496,
+    "indexStillOpen": false,
+    "focus": "_xd-reveal",
+    "SILENT_NOOP": false,
+    "errs": 0
+  },
+  {
+    "vp": "desktop",
+    "tool": "cross-drill[group:security-tenancy]-behaviour",
+    "scrollLeak": false,
+    "leakDelta": 0,
+    "escCloses": true
+  },
+  {
+    "vp": "desktop",
+    "tool": "print-qa",
+    "printCalled": 0,
+    "bodyClass": "",
+    "errs": 0
+  },
+  {
+    "vp": "desktop",
+    "tool": "interrupt-toggle-drawer-occlusion",
+    "inMockbar": false,
+    "coveredWhileDrawerOpen": true,
+    "coveredBy": null,
+    "drawerOpen": false
+  },
+  {
+    "vp": "desktop",
+    "tool": "interrupt-toggle",
+    "before": "false",
+    "after": "true",
+    "toggled": true,
+    "label": "Interviewer cuts in mid-answer — on",
+    "errs": 0
+  },
+  {
+    "vp": "desktop",
+    "tool": "topic-nav-menu",
+    "hidden": false,
+    "expanded": "true",
+    "w": 263,
+    "h": 448,
+    "offR": -1001,
+    "offB": -151,
+    "items": 46,
+    "scrollable": true,
+    "overflowY": "auto",
+    "errs": 0
+  },
+  {
+    "vp": "desktop",
+    "tool": "topic-nav-menu-esc",
+    "closedByEsc": true
+  },
+  {
+    "vp": "desktop",
+    "tool": "mixed-fire-render",
+    "probeText": ".mx-bd b{color:var(--ink);font-weight:var(--font-weight-heavy)}\n\n\n.mx-",
+    "buttons": [
+      "Reveal a strong answ"
+    ],
+    "errs": 0
+  },
+  {
+    "vp": "desktop",
+    "tool": "session-render",
+    "text": ".ss-rt b{font-weight:var(--font-weight-heavy)}\n\n.ss-go:hover{filter:br",
+    "panelBottom": 800,
+    "innerH": 800,
+    "offB": 0,
+    "innerScrollers": 0,
+    "buttons": 5,
+    "errs": 0
+  },
+  {
+    "vp": "mobile",
+    "tool": "index-controls",
+    "n": 11,
+    "ctrls": [
+      {
+        "key": "1",
+        "txt": "Cross-topic drillRandom probes"
+      },
+      {
+        "key": "group:messaging-events",
+        "txt": "Cram →"
+      },
+      {
+        "key": "group:data-storage",
+        "txt": "Cram →"
+      },
+      {
+        "key": "group:reliability-observability",
+        "txt": "Cram →"
+      },
+      {
+        "key": "group:platform-infra",
+        "txt": "Cram →"
+      },
+      {
+        "key": "group:architecture-apis",
+        "txt": "Cram →"
+      },
+      {
+        "key": "group:security-tenancy",
+        "txt": "Cram →"
+      },
+      {
+        "key": "export",
+        "txt": "Export a backup"
+      },
+      {
+        "key": "import-btn",
+        "txt": "Import a backup"
+      },
+      {
+        "key": "import",
+        "txt": ""
+      },
+      {
+        "key": "RESET",
+        "txt": "Reset all saved progress"
+      }
+    ]
+  },
+  {
+    "vp": "mobile",
+    "tool": "INDEX-scroll-chaining",
+    "scroller": "ix-scroll",
+    "overscrollBehaviorY": "auto",
+    "bodyBefore": 0,
+    "bodyAfter": 575,
+    "CHAINS_TO_PAGE": true,
+    "delta": 575
+  },
+  {
+    "vp": "mobile",
+    "tool": "export",
+    "present": true,
+    "downloadFired": true,
+    "filename": "deepdive-rehearsal-backup.json",
+    "errs": 0
+  },
+  {
+    "vp": "mobile",
+    "tool": "import",
+    "btn": true,
+    "fileInput": true,
+    "opensPicker": true,
+    "accept": "application/json,.json",
+    "errs": 0
+  },
+  {
+    "vp": "mobile",
+    "tool": "reset",
+    "present": true,
+    "confirmPrompt": [
+      "Clear all saved progress and data? This cannot be undone."
+    ],
+    "keysBefore": 3,
+    "keysAfter": 3,
+    "guarded": true,
+    "errs": 0
+  },
+  {
+    "vp": "mobile",
+    "tool": "cross-drill-modes",
+    "modes": [
+      {
+        "m": "1",
+        "t": "Cross-topic drillRandom probes"
+      },
+      {
+        "m": "group:messaging-events",
+        "t": "Cram →"
+      },
+      {
+        "m": "group:data-storage",
+        "t": "Cram →"
+      },
+      {
+        "m": "group:reliability-observability",
+        "t": "Cram →"
+      },
+      {
+        "m": "group:platform-infra",
+        "t": "Cram →"
+      },
+      {
+        "m": "group:architecture-apis",
+        "t": "Cram →"
+      },
+      {
+        "m": "group:security-tenancy",
+        "t": "Cram →"
+      }
+    ]
+  },
+  {
+    "vp": "mobile",
+    "tool": "cross-drill[1]",
+    "label": "Cross-topic drillRandom probes",
+    "created": true,
+    "opened": true,
+    "bodyOverflow": "",
+    "offR": -16,
+    "offB": -520,
+    "indexStillOpen": false,
+    "focus": "_xd-reveal",
+    "SILENT_NOOP": false,
+    "errs": 0
+  },
+  {
+    "vp": "mobile",
+    "tool": "cross-drill[1]-behaviour",
+    "scrollLeak": true,
+    "leakDelta": 500,
+    "escCloses": true
+  },
+  {
+    "vp": "mobile",
+    "tool": "cross-drill[group:messaging-events]",
+    "label": "Cram →",
+    "created": true,
+    "opened": true,
+    "bodyOverflow": "",
+    "offR": -16,
+    "offB": -544,
+    "indexStillOpen": false,
+    "focus": "_xd-reveal",
+    "SILENT_NOOP": false,
+    "errs": 0
+  },
+  {
+    "vp": "mobile",
+    "tool": "cross-drill[group:messaging-events]-behaviour",
+    "scrollLeak": true,
+    "leakDelta": 75,
+    "escCloses": true
+  },
+  {
+    "vp": "mobile",
+    "tool": "cross-drill[group:data-storage]",
+    "label": "Cram →",
+    "created": true,
+    "opened": true,
+    "bodyOverflow": "",
+    "offR": -16,
+    "offB": -520,
+    "indexStillOpen": false,
+    "focus": "_xd-reveal",
+    "SILENT_NOOP": false,
+    "errs": 0
+  },
+  {
+    "vp": "mobile",
+    "tool": "cross-drill[group:data-storage]-behaviour",
+    "scrollLeak": false,
+    "leakDelta": 0,
+    "escCloses": true
+  },
+  {
+    "vp": "mobile",
+    "tool": "cross-drill[group:reliability-observability]",
+    "label": "Cram →",
+    "created": true,
+    "opened": true,
+    "bodyOverflow": "",
+    "offR": -16,
+    "offB": -491,
+    "indexStillOpen": false,
+    "focus": "_xd-reveal",
+    "SILENT_NOOP": false,
+    "errs": 0
+  },
+  {
+    "vp": "mobile",
+    "tool": "cross-drill[group:reliability-observability]-behaviour",
+    "scrollLeak": false,
+    "leakDelta": 0,
+    "escCloses": true
+  },
+  {
+    "vp": "mobile",
+    "tool": "cross-drill[group:platform-infra]",
+    "label": "Cram →",
+    "created": true,
+    "opened": true,
+    "bodyOverflow": "",
+    "offR": -16,
+    "offB": -520,
+    "indexStillOpen": false,
+    "focus": "_xd-reveal",
+    "SILENT_NOOP": false,
+    "errs": 0
+  },
+  {
+    "vp": "mobile",
+    "tool": "cross-drill[group:platform-infra]-behaviour",
+    "scrollLeak": false,
+    "leakDelta": 0,
+    "escCloses": true
+  },
+  {
+    "vp": "mobile",
+    "tool": "cross-drill[group:architecture-apis]",
+    "label": "Cram →",
+    "created": true,
+    "opened": true,
+    "bodyOverflow": "",
+    "offR": -16,
+    "offB": -496,
+    "indexStillOpen": false,
+    "focus": "_xd-reveal",
+    "SILENT_NOOP": false,
+    "errs": 0
+  },
+  {
+    "vp": "mobile",
+    "tool": "cross-drill[group:architecture-apis]-behaviour",
+    "scrollLeak": false,
+    "leakDelta": 0,
+    "escCloses": true
+  },
+  {
+    "vp": "mobile",
+    "tool": "cross-drill[group:security-tenancy]",
+    "label": "Cram →",
+    "created": true,
+    "opened": true,
+    "bodyOverflow": "",
+    "offR": -16,
+    "offB": -496,
+    "indexStillOpen": false,
+    "focus": "_xd-reveal",
+    "SILENT_NOOP": false,
+    "errs": 0
+  },
+  {
+    "vp": "mobile",
+    "tool": "cross-drill[group:security-tenancy]-behaviour",
+    "scrollLeak": false,
+    "leakDelta": 0,
+    "escCloses": true
+  },
+  {
+    "vp": "mobile",
+    "tool": "print-qa",
+    "printCalled": 0,
+    "bodyClass": "",
+    "errs": 0
+  },
+  {
+    "vp": "mobile",
+    "tool": "interrupt-toggle-drawer-occlusion",
+    "inMockbar": false,
+    "coveredWhileDrawerOpen": true,
+    "coveredBy": "themetog",
+    "drawerOpen": true
+  },
+  {
+    "vp": "mobile",
+    "tool": "interrupt-toggle",
+    "before": "false",
+    "after": "true",
+    "toggled": true,
+    "label": "Interviewer cuts in mid-answer — on",
+    "errs": 0
+  },
+  {
+    "vp": "mobile",
+    "tool": "topic-nav-menu",
+    "hidden": false,
+    "expanded": "true",
+    "w": 381,
+    "h": 473,
+    "offR": 6,
+    "offB": -159,
+    "items": 46,
+    "scrollable": true,
+    "overflowY": "auto",
+    "errs": 0
+  },
+  {
+    "vp": "mobile",
+    "tool": "topic-nav-menu-esc",
+    "closedByEsc": true
+  },
+  {
+    "vp": "mobile",
+    "tool": "mixed-fire-render",
+    "probeText": ".mx-bd b{color:var(--ink);font-weight:var(--font-weight-heavy)}\n\n\n.mx-",
+    "buttons": [
+      "Reveal a strong answ"
+    ],
+    "errs": 0
+  },
+  {
+    "vp": "mobile",
+    "tool": "session-render",
+    "text": ".ss-rt b{font-weight:var(--font-weight-heavy)}\n\n.ss-go:hover{filter:br",
+    "panelBottom": 844,
+    "innerH": 844,
+    "offB": 0,
+    "innerScrollers": 0,
+    "buttons": 5,
+    "errs": 0
+  }
+]

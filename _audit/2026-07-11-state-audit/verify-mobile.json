@@ -1,0 +1,114 @@
+{
+  "M.A.escapeClosesStatic": {
+    "mock": {
+      "openedByTap": true,
+      "scrollLock": "hidden",
+      "escapeCloses": true,
+      "closedAfterMs": 361
+    },
+    "mix": {
+      "openedByTap": true,
+      "scrollLock": "hidden",
+      "escapeCloses": true,
+      "closedAfterMs": 449
+    },
+    "cram": {
+      "openedByTap": true,
+      "scrollLock": "hidden",
+      "escapeCloses": true,
+      "closedAfterMs": 566
+    },
+    "sess": {
+      "openedByTap": true,
+      "scrollLock": "hidden",
+      "escapeCloses": true,
+      "closedAfterMs": 442
+    },
+    "plan": {
+      "openedByTap": true,
+      "scrollLock": "hidden",
+      "escapeCloses": true,
+      "closedAfterMs": 445
+    },
+    "scope": {
+      "openedByTap": true,
+      "scrollLock": "hidden",
+      "escapeCloses": true,
+      "closedAfterMs": 442
+    },
+    "keys": {
+      "TRIGGER_NOT_TAPPABLE_ON_MOBILE": true,
+      "note": "trigger is display:none at 390px",
+      "openedByTap": false,
+      "scrollLock": "hidden",
+      "escapeCloses": true,
+      "closedAfterMs": 458
+    }
+  },
+  "M.B.cramOpened": {
+    "cramOpen": true,
+    "bodyOverflow": "hidden"
+  },
+  "M.B.afterSlash_CLAIMED_REPRO": {
+    "cramOpen": true,
+    "searchOpen": false,
+    "SLASH_STACKS": false
+  },
+  "M.B.afterCtrlK": {
+    "cramOpen": true,
+    "searchOpen": true,
+    "CTRLK_STACKS": true
+  },
+  "M.B.afterONE_Escape": {
+    "cramOpen": false,
+    "searchOpen": false,
+    "bodyOverflow": "",
+    "BOTH_CLOSED_BY_ONE_ESC": true
+  },
+  "M.C.indexScrollChain": {
+    "docScrollHeight": 1419,
+    "innerHeight": 857,
+    "pageScrollableBehindPx": 562,
+    "bodyScrollY": 0,
+    "bodyOverflowStyle": "",
+    "bodyComputedOverflow": "visible",
+    "innerOverscrollBehaviorY": "auto",
+    "scrollerScrollHeight": 4936,
+    "scrollerClientHeight": 278,
+    "bodyScrollBefore": 0,
+    "bodyScrollAfterWheel": 562,
+    "pxLeaked_wheel": 562,
+    "bodyScrollAfterTouch": 0,
+    "pxLeaked_touch": 0,
+    "CHAINS_TO_PAGE_BEHIND": true,
+    "MAX_POSSIBLE_LEAK_PX": 562
+  },
+  "M.D.topicnavMenu": {
+    "left": 15,
+    "right": 396,
+    "width": 381,
+    "innerWidth": 396,
+    "overflowRightPx": 0,
+    "docScrollWidth": 396,
+    "hOverflow": false,
+    "canPanSideways": false
+  },
+  "M.D.drawerEsc": {
+    "opened": true,
+    "stillOpenAfterEsc": true,
+    "closedByEsc": false
+  },
+  "M.D.controls": {
+    "textzoomExists": true,
+    "textzoomDisplay": "none",
+    "pomodoroExists": true,
+    "pomodoroDisplay": "none",
+    "anyTextSizeControlVisible": true
+  },
+  "M.D.pomodoroAutoRuns": {
+    "t0": "25:00",
+    "tAfter3_5s": "25:00",
+    "TIMER_RUNS_UNPROMPTED": false
+  },
+  "M.errors": []
+}

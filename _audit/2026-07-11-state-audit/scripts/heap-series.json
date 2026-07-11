@@ -1,0 +1,227 @@
+[
+  {
+    "label": "after boot (index overlay)",
+    "heapMB": 5.49,
+    "totalMB": 6.14,
+    "domNodes": 3954,
+    "jsEventListeners": 134,
+    "domNodesQ": 781,
+    "svgMounted": 1
+  },
+  {
+    "label": "1. event-driven",
+    "heapMB": 5.73,
+    "totalMB": 6.39,
+    "domNodes": 3137,
+    "jsEventListeners": 135,
+    "domNodesQ": 790,
+    "svgMounted": 1
+  },
+  {
+    "label": "2. notifications",
+    "heapMB": 5.82,
+    "totalMB": 6.64,
+    "domNodes": 4020,
+    "jsEventListeners": 135,
+    "domNodesQ": 793,
+    "svgMounted": 1
+  },
+  {
+    "label": "3. real-time-delivery",
+    "heapMB": 5.81,
+    "totalMB": 6.89,
+    "domNodes": 3174,
+    "jsEventListeners": 135,
+    "domNodesQ": 807,
+    "svgMounted": 1
+  },
+  {
+    "label": "4. cdc",
+    "heapMB": 5.8,
+    "totalMB": 6.89,
+    "domNodes": 3075,
+    "jsEventListeners": 135,
+    "domNodesQ": 791,
+    "svgMounted": 1
+  },
+  {
+    "label": "5. kafka-internals",
+    "heapMB": 5.78,
+    "totalMB": 6.89,
+    "domNodes": 3187,
+    "jsEventListeners": 135,
+    "domNodesQ": 817,
+    "svgMounted": 1
+  },
+  {
+    "label": "6. stream-batch-processing",
+    "heapMB": 5.77,
+    "totalMB": 6.89,
+    "domNodes": 3176,
+    "jsEventListeners": 135,
+    "domNodesQ": 814,
+    "svgMounted": 1
+  },
+  {
+    "label": "7. saga",
+    "heapMB": 5.81,
+    "totalMB": 6.89,
+    "domNodes": 3068,
+    "jsEventListeners": 135,
+    "domNodesQ": 791,
+    "svgMounted": 1
+  },
+  {
+    "label": "8. caching",
+    "heapMB": 5.82,
+    "totalMB": 6.89,
+    "domNodes": 3079,
+    "jsEventListeners": 135,
+    "domNodesQ": 789,
+    "svgMounted": 1
+  },
+  {
+    "label": "9. soft-delete",
+    "heapMB": 5.82,
+    "totalMB": 6.89,
+    "domNodes": 3132,
+    "jsEventListeners": 135,
+    "domNodesQ": 795,
+    "svgMounted": 1
+  },
+  {
+    "label": "10. eav",
+    "heapMB": 5.82,
+    "totalMB": 6.89,
+    "domNodes": 3819,
+    "jsEventListeners": 135,
+    "domNodesQ": 791,
+    "svgMounted": 1
+  },
+  {
+    "label": "11. shared-definition",
+    "heapMB": 5.8,
+    "totalMB": 6.89,
+    "domNodes": 3244,
+    "jsEventListeners": 135,
+    "domNodesQ": 794,
+    "svgMounted": 1
+  },
+  {
+    "label": "12. replication",
+    "heapMB": 5.78,
+    "totalMB": 6.64,
+    "domNodes": 3096,
+    "jsEventListeners": 135,
+    "domNodesQ": 803,
+    "svgMounted": 1
+  },
+  {
+    "label": "P2 1. event-driven",
+    "heapMB": 5.78,
+    "totalMB": 6.89,
+    "domNodes": 3137,
+    "jsEventListeners": 135,
+    "domNodesQ": 790,
+    "svgMounted": 1
+  },
+  {
+    "label": "P2 2. notifications",
+    "heapMB": 5.79,
+    "totalMB": 6.89,
+    "domNodes": 4020,
+    "jsEventListeners": 135,
+    "domNodesQ": 793,
+    "svgMounted": 1
+  },
+  {
+    "label": "P2 3. real-time-delivery",
+    "heapMB": 5.8,
+    "totalMB": 6.89,
+    "domNodes": 3174,
+    "jsEventListeners": 135,
+    "domNodesQ": 807,
+    "svgMounted": 1
+  },
+  {
+    "label": "P2 4. cdc",
+    "heapMB": 5.8,
+    "totalMB": 6.89,
+    "domNodes": 3075,
+    "jsEventListeners": 135,
+    "domNodesQ": 791,
+    "svgMounted": 1
+  },
+  {
+    "label": "P2 5. kafka-internals",
+    "heapMB": 5.8,
+    "totalMB": 6.89,
+    "domNodes": 3187,
+    "jsEventListeners": 135,
+    "domNodesQ": 817,
+    "svgMounted": 1
+  },
+  {
+    "label": "P2 6. stream-batch-processing",
+    "heapMB": 5.8,
+    "totalMB": 6.64,
+    "domNodes": 3176,
+    "jsEventListeners": 135,
+    "domNodesQ": 814,
+    "svgMounted": 1
+  },
+  {
+    "label": "P2 7. saga",
+    "heapMB": 5.8,
+    "totalMB": 6.89,
+    "domNodes": 3068,
+    "jsEventListeners": 135,
+    "domNodesQ": 791,
+    "svgMounted": 1
+  },
+  {
+    "label": "P2 8. caching",
+    "heapMB": 5.8,
+    "totalMB": 6.89,
+    "domNodes": 3084,
+    "jsEventListeners": 135,
+    "domNodesQ": 789,
+    "svgMounted": 1
+  },
+  {
+    "label": "P2 9. soft-delete",
+    "heapMB": 5.8,
+    "totalMB": 6.89,
+    "domNodes": 3132,
+    "jsEventListeners": 135,
+    "domNodesQ": 795,
+    "svgMounted": 1
+  },
+  {
+    "label": "P2 10. eav",
+    "heapMB": 5.8,
+    "totalMB": 6.89,
+    "domNodes": 3819,
+    "jsEventListeners": 135,
+    "domNodesQ": 791,
+    "svgMounted": 1
+  },
+  {
+    "label": "P2 11. shared-definition",
+    "heapMB": 5.8,
+    "totalMB": 6.89,
+    "domNodes": 3249,
+    "jsEventListeners": 135,
+    "domNodesQ": 794,
+    "svgMounted": 1
+  },
+  {
+    "label": "P2 12. replication",
+    "heapMB": 5.8,
+    "totalMB": 6.89,
+    "domNodes": 3096,
+    "jsEventListeners": 135,
+    "domNodesQ": 803,
+    "svgMounted": 1
+  }
+]

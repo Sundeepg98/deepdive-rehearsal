@@ -1,0 +1,37 @@
+{
+ "A_bounceRemoved": {
+  "endHash": "#kafka-internals/viz",
+  "topic": "kafka-internals",
+  "kitMounted": true,
+  "renderTopicCalls": [
+   {
+    "hasData": false,
+    "active": true,
+    "t": 256
+   },
+   {
+    "hasData": true,
+    "active": true,
+    "t": 829
+   }
+  ],
+  "activePane": [
+   "viz"
+  ]
+ },
+ "B_bounceIntact": {
+  "endHash": "#content-pipeline/walk",
+  "topic": "content-pipeline",
+  "kitMounted": false,
+  "renderTopicCalls": [
+   {
+    "hasData": false,
+    "active": true,
+    "t": 405
+   }
+  ],
+  "activePane": [
+   "walk"
+  ]
+ }
+}

@@ -1,0 +1,133 @@
+### SWIPE (hasTouch:true context)
+  ontouchstart in window: true
+  swipe LEFT (330->90px): #walk -> #walk  NO CHANGE
+
+### LONG-FORM READING metrics (shadow-pierced)
+  --- #walk
+  --- #model
+  --- #trade
+  --- #open
+  --- #rf
+
+### TOUCH TARGETS < 44px INSIDE the panes (shadow-pierced)
+  #walk:
+         35h x   82.8w  n=2  .button  "← Prev"
+         40h x    312w  n=1  .summary  "Go deeper"
+  #drill:
+         41h x    314w  n=1  .push  "Reveal answer"
+         43h x   65.3w  n=2  .on  "Study"
+         43h x   54.7w  n=5  .button  "Mock round"
+  #wb:
+         28h x   67.1w  n=9  .wb-rev  "Reveal"
+         28h x   68.3w  n=9  .wb-got  "Drew it"
+         28h x     69w  n=9  .wb-miss  "Missed"
+  #sys:
+         30h x  125.3w  n=7  .piv-jump  "Jump to → Signing →"
+  #trade: none
+  #model:
+         36h x  176.5w  n=8  .button  "Make it scale"
+         39h x  176.5w  n=1  .on  "Make it reliable"
+  #num:
+         40h x    151w  n=4  .input  "10000000"
+  #rf: none
+  #open:
+         28h x   99.1w  n=5  .op-rev  "Reveal mine"
+
+### NUMBERS pane inputs  (iOS auto-zooms the page if an input's font-size < 16px)
+  {"type":"number","inputmode":"(none)","value":"10000000","h":40,"w":151,"fs":"15px","iosZoom":true}
+  {"type":"number","inputmode":"(none)","value":"2","h":40,"w":151,"fs":"15px","iosZoom":true}
+  {"type":"number","inputmode":"(none)","value":"2","h":40,"w":151,"fs":"15px","iosZoom":true}
+  {"type":"number","inputmode":"(none)","value":"10","h":40,"w":151,"fs":"15px","iosZoom":true}
+
+### HOME (topic index) mobile geometry
+{
+  "crossRow": {
+    "cls": "ix-cross",
+    "h": 29.6,
+    "scrollH": 43,
+    "clientH": 28,
+    "clipped": true,
+    "overflow": "hidden",
+    "txt": "Cross-topic drillRandom probes from every topic — the interv"
+  },
+  "clippedTextEls": [
+    {
+      "cls": "ix-c-thesis",
+      "sh": 108,
+      "ch": 31,
+      "txt": "Decoupling producers from consumers thro"
+    },
+    {
+      "cls": "ix-c-thesis",
+      "sh": 62,
+      "ch": 31,
+      "txt": "The stage that turns an event into a not"
+    },
+    {
+      "cls": "ix-c-thesis",
+      "sh": 246,
+      "ch": 31,
+      "txt": "Real-time delivery is pushing data to co"
+    },
+    {
+      "cls": "ix-c-thesis",
+      "sh": 108,
+      "ch": 31,
+      "txt": "Reliably propagating every committed cha"
+    },
+    {
+      "cls": "ix-c-thesis",
+      "sh": 200,
+      "ch": 31,
+      "txt": "Kafka is a distributed, append-only comm"
+    },
+    {
+      "cls": "ix-c-thesis",
+      "sh": 292,
+      "ch": 31,
+      "txt": "Stream and batch are the two models for "
+    },
+    {
+      "cls": "ix-c-thesis",
+      "sh": 123,
+      "ch": 31,
+      "txt": "Managing a transaction that spans multip"
+    },
+    {
+      "cls": "ix-c-thesis",
+      "sh": 108,
+      "ch": 31,
+      "txt": "Serving reads from a fast store in front"
+    }
+  ],
+  "panel": {
+    "x": 16,
+    "w": 364,
+    "y": 67.5,
+    "h": 709,
+    "sideGutterPx": 16,
+    "scrollH": 707,
+    "clientH": 707
+  },
+  "resetBtn": {
+    "y": 748.5,
+    "h": 24,
+    "fromBottom": 71.5,
+    "txt": "Reset all saved progress"
+  }
+}
+
+### PERF: animated background layers
+{
+  "beforeAnim": "20s ease-in-out infinite meshA",
+  "beforeWillChange": "transform",
+  "beforeSize": "273px x 590.797px",
+  "beforePos": "fixed",
+  "afterAnim": "16s ease-in-out -6s infinite meshB",
+  "afterWillChange": "transform",
+  "afterSize": "234px x 506.391px",
+  "stageBgImage": "radial-gradient(circle, rgba(83, 74, 183, 0.07) 1px, rgba(0,...",
+  "paneInAnim": "panein",
+  "cardStagger": "n/a",
+  "accentGlow": "3s ease-in-out infinite accentGlow"
+}

@@ -1,0 +1,1564 @@
+[
+ {
+  "topic": "event-driven",
+  "hand": false,
+  "curTopic": "event-driven",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 294,
+    "chipW": 1410,
+    "chipOverVw": 595,
+    "paLen": 0,
+    "pivClip": 960,
+    "sumClip": 960
+   },
+   {
+    "chipLen": 223,
+    "chipW": 1097,
+    "chipOverVw": 268,
+    "paLen": 0,
+    "pivClip": 632,
+    "sumClip": 632
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "notifications",
+  "hand": true,
+  "curTopic": "notifications",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 26,
+    "chipW": 147,
+    "chipOverVw": -381,
+    "paLen": 510,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 19,
+    "chipW": 111,
+    "chipOverVw": -381,
+    "paLen": 480,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 22,
+    "chipW": 125,
+    "chipOverVw": -381,
+    "paLen": 484,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 9,
+    "chipW": 66,
+    "chipOverVw": -381,
+    "paLen": 490,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 19,
+    "chipW": 121,
+    "chipOverVw": -381,
+    "paLen": 523,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 39,
+    "chipW": 222,
+    "chipOverVw": -381,
+    "paLen": 488,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 32,
+    "chipW": 167,
+    "chipOverVw": -381,
+    "paLen": 560,
+    "pivClip": 0,
+    "sumClip": 0
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "real-time-delivery",
+  "hand": false,
+  "curTopic": "real-time-delivery",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 393,
+    "chipW": 1871,
+    "chipOverVw": 1023,
+    "paLen": 0,
+    "pivClip": 1387,
+    "sumClip": 1387
+   },
+   {
+    "chipLen": 344,
+    "chipW": 1630,
+    "chipOverVw": 813,
+    "paLen": 0,
+    "pivClip": 1178,
+    "sumClip": 1178
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "cdc",
+  "hand": false,
+  "curTopic": "cdc",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 266,
+    "chipW": 1266,
+    "chipOverVw": 438,
+    "paLen": 0,
+    "pivClip": 803,
+    "sumClip": 803
+   },
+   {
+    "chipLen": 301,
+    "chipW": 1474,
+    "chipOverVw": 643,
+    "paLen": 0,
+    "pivClip": 1008,
+    "sumClip": 1008
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "kafka-internals",
+  "hand": false,
+  "curTopic": "kafka-internals",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 352,
+    "chipW": 1713,
+    "chipOverVw": 893,
+    "paLen": 0,
+    "pivClip": 1258,
+    "sumClip": 1258
+   },
+   {
+    "chipLen": 288,
+    "chipW": 1373,
+    "chipOverVw": 558,
+    "paLen": 0,
+    "pivClip": 922,
+    "sumClip": 922
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "stream-batch-processing",
+  "hand": false,
+  "curTopic": "stream-batch-processing",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 411,
+    "chipW": 1984,
+    "chipOverVw": 1150,
+    "paLen": 0,
+    "pivClip": 1514,
+    "sumClip": 1514
+   },
+   {
+    "chipLen": 437,
+    "chipW": 2100,
+    "chipOverVw": 1259,
+    "paLen": 0,
+    "pivClip": 1624,
+    "sumClip": 1624
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "saga",
+  "hand": false,
+  "curTopic": "saga",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 312,
+    "chipW": 1506,
+    "chipOverVw": 710,
+    "paLen": 322,
+    "pivClip": 1075,
+    "sumClip": 1075
+   },
+   {
+    "chipLen": 300,
+    "chipW": 1454,
+    "chipOverVw": 624,
+    "paLen": 0,
+    "pivClip": 988,
+    "sumClip": 988
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "caching",
+  "hand": false,
+  "curTopic": "caching",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 323,
+    "chipW": 1557,
+    "chipOverVw": 725,
+    "paLen": 0,
+    "pivClip": 1090,
+    "sumClip": 1090
+   },
+   {
+    "chipLen": 287,
+    "chipW": 1368,
+    "chipOverVw": 556,
+    "paLen": 0,
+    "pivClip": 921,
+    "sumClip": 921
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "soft-delete",
+  "hand": false,
+  "curTopic": "soft-delete",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 319,
+    "chipW": 1488,
+    "chipOverVw": 650,
+    "paLen": 0,
+    "pivClip": 1014,
+    "sumClip": 1014
+   },
+   {
+    "chipLen": 321,
+    "chipW": 1524,
+    "chipOverVw": 685,
+    "paLen": 0,
+    "pivClip": 1050,
+    "sumClip": 1050
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "eav",
+  "hand": true,
+  "curTopic": "eav",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 26,
+    "chipW": 148,
+    "chipOverVw": -381,
+    "paLen": 393,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 19,
+    "chipW": 122,
+    "chipOverVw": -381,
+    "paLen": 347,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 19,
+    "chipW": 109,
+    "chipOverVw": -381,
+    "paLen": 321,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 19,
+    "chipW": 112,
+    "chipOverVw": -381,
+    "paLen": 392,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 9,
+    "chipW": 62,
+    "chipOverVw": -381,
+    "paLen": 540,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 13,
+    "chipW": 93,
+    "chipOverVw": -381,
+    "paLen": 396,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 14,
+    "chipW": 93,
+    "chipOverVw": -381,
+    "paLen": 403,
+    "pivClip": 0,
+    "sumClip": 0
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "shared-definition",
+  "hand": false,
+  "curTopic": "shared-definition",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 300,
+    "chipW": 1423,
+    "chipOverVw": 617,
+    "paLen": 0,
+    "pivClip": 982,
+    "sumClip": 982
+   },
+   {
+    "chipLen": 348,
+    "chipW": 1652,
+    "chipOverVw": 800,
+    "paLen": 0,
+    "pivClip": 1165,
+    "sumClip": 1165
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "replication",
+  "hand": false,
+  "curTopic": "replication",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 312,
+    "chipW": 1476,
+    "chipOverVw": 677,
+    "paLen": 0,
+    "pivClip": 1042,
+    "sumClip": 1042
+   },
+   {
+    "chipLen": 310,
+    "chipW": 1480,
+    "chipOverVw": 659,
+    "paLen": 0,
+    "pivClip": 1023,
+    "sumClip": 1023
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "consistency-models",
+  "hand": false,
+  "curTopic": "consistency-models",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 361,
+    "chipW": 1682,
+    "chipOverVw": 874,
+    "paLen": 0,
+    "pivClip": 1239,
+    "sumClip": 1239
+   },
+   {
+    "chipLen": 398,
+    "chipW": 1903,
+    "chipOverVw": 1085,
+    "paLen": 0,
+    "pivClip": 1450,
+    "sumClip": 1450
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "sharding-strategies",
+  "hand": false,
+  "curTopic": "sharding-strategies",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 337,
+    "chipW": 1623,
+    "chipOverVw": 793,
+    "paLen": 0,
+    "pivClip": 1158,
+    "sumClip": 1158
+   },
+   {
+    "chipLen": 346,
+    "chipW": 1639,
+    "chipOverVw": 827,
+    "paLen": 356,
+    "pivClip": 1192,
+    "sumClip": 1192
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "consistent-hashing",
+  "hand": false,
+  "curTopic": "consistent-hashing",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 231,
+    "chipW": 1121,
+    "chipOverVw": 297,
+    "paLen": 0,
+    "pivClip": 661,
+    "sumClip": 661
+   },
+   {
+    "chipLen": 256,
+    "chipW": 1216,
+    "chipOverVw": 395,
+    "paLen": 0,
+    "pivClip": 760,
+    "sumClip": 760
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "storage-engines",
+  "hand": false,
+  "curTopic": "storage-engines",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 350,
+    "chipW": 1684,
+    "chipOverVw": 863,
+    "paLen": 0,
+    "pivClip": 1228,
+    "sumClip": 1228
+   },
+   {
+    "chipLen": 344,
+    "chipW": 1637,
+    "chipOverVw": 792,
+    "paLen": 0,
+    "pivClip": 1157,
+    "sumClip": 1157
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "probabilistic-structures",
+  "hand": false,
+  "curTopic": "probabilistic-structures",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 350,
+    "chipW": 1695,
+    "chipOverVw": 870,
+    "paLen": 0,
+    "pivClip": 1235,
+    "sumClip": 1235
+   },
+   {
+    "chipLen": 377,
+    "chipW": 1754,
+    "chipOverVw": 948,
+    "paLen": 0,
+    "pivClip": 1313,
+    "sumClip": 1313
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "retries-timeouts",
+  "hand": false,
+  "curTopic": "retries-timeouts",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 256,
+    "chipW": 1235,
+    "chipOverVw": 401,
+    "paLen": 0,
+    "pivClip": 766,
+    "sumClip": 766
+   },
+   {
+    "chipLen": 254,
+    "chipW": 1199,
+    "chipOverVw": 390,
+    "paLen": 0,
+    "pivClip": 755,
+    "sumClip": 755
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "idempotency",
+  "hand": false,
+  "curTopic": "idempotency",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 249,
+    "chipW": 1208,
+    "chipOverVw": 387,
+    "paLen": 0,
+    "pivClip": 752,
+    "sumClip": 752
+   },
+   {
+    "chipLen": 228,
+    "chipW": 1105,
+    "chipOverVw": 312,
+    "paLen": 0,
+    "pivClip": 677,
+    "sumClip": 677
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "circuit-breaker",
+  "hand": false,
+  "curTopic": "circuit-breaker",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 243,
+    "chipW": 1183,
+    "chipOverVw": 345,
+    "paLen": 0,
+    "pivClip": 710,
+    "sumClip": 710
+   },
+   {
+    "chipLen": 254,
+    "chipW": 1208,
+    "chipOverVw": 371,
+    "paLen": 0,
+    "pivClip": 736,
+    "sumClip": 736
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "error-propagation",
+  "hand": false,
+  "curTopic": "error-propagation",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 346,
+    "chipW": 1655,
+    "chipOverVw": 833,
+    "paLen": 0,
+    "pivClip": 1198,
+    "sumClip": 1198
+   },
+   {
+    "chipLen": 361,
+    "chipW": 1697,
+    "chipOverVw": 875,
+    "paLen": 371,
+    "pivClip": 1240,
+    "sumClip": 1240
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "backpressure",
+  "hand": false,
+  "curTopic": "backpressure",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 251,
+    "chipW": 1245,
+    "chipOverVw": 447,
+    "paLen": 0,
+    "pivClip": 812,
+    "sumClip": 812
+   },
+   {
+    "chipLen": 325,
+    "chipW": 1548,
+    "chipOverVw": 724,
+    "paLen": 0,
+    "pivClip": 1089,
+    "sumClip": 1089
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "observability",
+  "hand": false,
+  "curTopic": "observability",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 320,
+    "chipW": 1493,
+    "chipOverVw": 653,
+    "paLen": 0,
+    "pivClip": 1018,
+    "sumClip": 1018
+   },
+   {
+    "chipLen": 291,
+    "chipW": 1407,
+    "chipOverVw": 583,
+    "paLen": 0,
+    "pivClip": 948,
+    "sumClip": 948
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "debugging",
+  "hand": false,
+  "curTopic": "debugging",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 319,
+    "chipW": 1518,
+    "chipOverVw": 709,
+    "paLen": 0,
+    "pivClip": 1074,
+    "sumClip": 1074
+   },
+   {
+    "chipLen": 335,
+    "chipW": 1576,
+    "chipOverVw": 753,
+    "paLen": 345,
+    "pivClip": 1118,
+    "sumClip": 1118
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "slos",
+  "hand": false,
+  "curTopic": "slos",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 281,
+    "chipW": 1346,
+    "chipOverVw": 503,
+    "paLen": 0,
+    "pivClip": 867,
+    "sumClip": 867
+   },
+   {
+    "chipLen": 249,
+    "chipW": 1189,
+    "chipOverVw": 337,
+    "paLen": 0,
+    "pivClip": 702,
+    "sumClip": 702
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "iac",
+  "hand": true,
+  "curTopic": "iac",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 19,
+    "chipW": 110,
+    "chipOverVw": -381,
+    "paLen": 520,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 19,
+    "chipW": 122,
+    "chipOverVw": -381,
+    "paLen": 473,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 21,
+    "chipW": 119,
+    "chipOverVw": -381,
+    "paLen": 508,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 13,
+    "chipW": 83,
+    "chipOverVw": -381,
+    "paLen": 532,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 26,
+    "chipW": 148,
+    "chipOverVw": -381,
+    "paLen": 562,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 8,
+    "chipW": 63,
+    "chipOverVw": -381,
+    "paLen": 525,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 16,
+    "chipW": 97,
+    "chipOverVw": -381,
+    "paLen": 522,
+    "pivClip": 0,
+    "sumClip": 0
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "desired-state",
+  "hand": true,
+  "curTopic": "desired-state",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 21,
+    "chipW": 119,
+    "chipOverVw": -381,
+    "paLen": 388,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 26,
+    "chipW": 148,
+    "chipOverVw": -381,
+    "paLen": 416,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 19,
+    "chipW": 109,
+    "chipOverVw": -381,
+    "paLen": 388,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 9,
+    "chipW": 62,
+    "chipOverVw": -381,
+    "paLen": 489,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 13,
+    "chipW": 83,
+    "chipOverVw": -381,
+    "paLen": 447,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 22,
+    "chipW": 128,
+    "chipOverVw": -381,
+    "paLen": 426,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 15,
+    "chipW": 95,
+    "chipOverVw": -381,
+    "paLen": 534,
+    "pivClip": 0,
+    "sumClip": 0
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "aws-hardening",
+  "hand": true,
+  "curTopic": "aws-hardening",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 21,
+    "chipW": 124,
+    "chipOverVw": -381,
+    "paLen": 418,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 26,
+    "chipW": 147,
+    "chipOverVw": -381,
+    "paLen": 452,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 22,
+    "chipW": 125,
+    "chipOverVw": -381,
+    "paLen": 352,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 19,
+    "chipW": 111,
+    "chipOverVw": -381,
+    "paLen": 353,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 9,
+    "chipW": 62,
+    "chipOverVw": -381,
+    "paLen": 432,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 28,
+    "chipW": 159,
+    "chipOverVw": -381,
+    "paLen": 372,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 25,
+    "chipW": 138,
+    "chipOverVw": -381,
+    "paLen": 382,
+    "pivClip": 0,
+    "sumClip": 0
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "load-balancing",
+  "hand": false,
+  "curTopic": "load-balancing",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 286,
+    "chipW": 1405,
+    "chipOverVw": 572,
+    "paLen": 0,
+    "pivClip": 937,
+    "sumClip": 937
+   },
+   {
+    "chipLen": 284,
+    "chipW": 1363,
+    "chipOverVw": 545,
+    "paLen": 0,
+    "pivClip": 910,
+    "sumClip": 910
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "autoscaling",
+  "hand": false,
+  "curTopic": "autoscaling",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 277,
+    "chipW": 1335,
+    "chipOverVw": 486,
+    "paLen": 0,
+    "pivClip": 850,
+    "sumClip": 850
+   },
+   {
+    "chipLen": 345,
+    "chipW": 1620,
+    "chipOverVw": 779,
+    "paLen": 0,
+    "pivClip": 1144,
+    "sumClip": 1144
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "leader-election",
+  "hand": false,
+  "curTopic": "leader-election",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 288,
+    "chipW": 1361,
+    "chipOverVw": 531,
+    "paLen": 0,
+    "pivClip": 896,
+    "sumClip": 896
+   },
+   {
+    "chipLen": 277,
+    "chipW": 1308,
+    "chipOverVw": 496,
+    "paLen": 0,
+    "pivClip": 861,
+    "sumClip": 861
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "distributed-locks",
+  "hand": false,
+  "curTopic": "distributed-locks",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 316,
+    "chipW": 1528,
+    "chipOverVw": 719,
+    "paLen": 0,
+    "pivClip": 1084,
+    "sumClip": 1084
+   },
+   {
+    "chipLen": 317,
+    "chipW": 1483,
+    "chipOverVw": 635,
+    "paLen": 327,
+    "pivClip": 1000,
+    "sumClip": 1000
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "multi-region",
+  "hand": false,
+  "curTopic": "multi-region",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 380,
+    "chipW": 1779,
+    "chipOverVw": 940,
+    "paLen": 0,
+    "pivClip": 1305,
+    "sumClip": 1305
+   },
+   {
+    "chipLen": 400,
+    "chipW": 1902,
+    "chipOverVw": 1071,
+    "paLen": 0,
+    "pivClip": 1436,
+    "sumClip": 1436
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "lambda-organization",
+  "hand": false,
+  "curTopic": "lambda-organization",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 286,
+    "chipW": 1428,
+    "chipOverVw": 608,
+    "paLen": 0,
+    "pivClip": 972,
+    "sumClip": 972
+   },
+   {
+    "chipLen": 272,
+    "chipW": 1334,
+    "chipOverVw": 526,
+    "paLen": 0,
+    "pivClip": 891,
+    "sumClip": 891
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "devices-dispatch",
+  "hand": false,
+  "curTopic": "devices-dispatch",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 356,
+    "chipW": 1657,
+    "chipOverVw": 820,
+    "paLen": 0,
+    "pivClip": 1185,
+    "sumClip": 1185
+   },
+   {
+    "chipLen": 272,
+    "chipW": 1287,
+    "chipOverVw": 441,
+    "paLen": 0,
+    "pivClip": 806,
+    "sumClip": 806
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "developer-platform",
+  "hand": false,
+  "curTopic": "developer-platform",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 302,
+    "chipW": 1462,
+    "chipOverVw": 646,
+    "paLen": 0,
+    "pivClip": 1011,
+    "sumClip": 1011
+   },
+   {
+    "chipLen": 276,
+    "chipW": 1343,
+    "chipOverVw": 521,
+    "paLen": 0,
+    "pivClip": 886,
+    "sumClip": 886
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "state-machine",
+  "hand": false,
+  "curTopic": "state-machine",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 374,
+    "chipW": 1787,
+    "chipOverVw": 956,
+    "paLen": 0,
+    "pivClip": 1321,
+    "sumClip": 1321
+   },
+   {
+    "chipLen": 281,
+    "chipW": 1355,
+    "chipOverVw": 530,
+    "paLen": 0,
+    "pivClip": 895,
+    "sumClip": 895
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "rules-engine",
+  "hand": false,
+  "curTopic": "rules-engine",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 283,
+    "chipW": 1346,
+    "chipOverVw": 528,
+    "paLen": 0,
+    "pivClip": 893,
+    "sumClip": 893
+   },
+   {
+    "chipLen": 271,
+    "chipW": 1304,
+    "chipOverVw": 481,
+    "paLen": 0,
+    "pivClip": 846,
+    "sumClip": 846
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "feature-flags",
+  "hand": false,
+  "curTopic": "feature-flags",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 321,
+    "chipW": 1541,
+    "chipOverVw": 698,
+    "paLen": 0,
+    "pivClip": 1063,
+    "sumClip": 1063
+   },
+   {
+    "chipLen": 245,
+    "chipW": 1162,
+    "chipOverVw": 331,
+    "paLen": 0,
+    "pivClip": 696,
+    "sumClip": 696
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "api-design",
+  "hand": false,
+  "curTopic": "api-design",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 374,
+    "chipW": 1805,
+    "chipOverVw": 976,
+    "paLen": 0,
+    "pivClip": 1341,
+    "sumClip": 1341
+   },
+   {
+    "chipLen": 365,
+    "chipW": 1712,
+    "chipOverVw": 865,
+    "paLen": 375,
+    "pivClip": 1230,
+    "sumClip": 1230
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "rate-limiting",
+  "hand": false,
+  "curTopic": "rate-limiting",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 252,
+    "chipW": 1193,
+    "chipOverVw": 370,
+    "paLen": 0,
+    "pivClip": 735,
+    "sumClip": 735
+   },
+   {
+    "chipLen": 228,
+    "chipW": 1056,
+    "chipOverVw": 225,
+    "paLen": 0,
+    "pivClip": 590,
+    "sumClip": 590
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "content-pipeline",
+  "hand": true,
+  "curTopic": "content-pipeline",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 13,
+    "chipW": 83,
+    "chipOverVw": -381,
+    "paLen": 272,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 11,
+    "chipW": 75,
+    "chipOverVw": -381,
+    "paLen": 254,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 9,
+    "chipW": 66,
+    "chipOverVw": -381,
+    "paLen": 233,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 19,
+    "chipW": 111,
+    "chipOverVw": -381,
+    "paLen": 243,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 19,
+    "chipW": 109,
+    "chipOverVw": -381,
+    "paLen": 231,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 19,
+    "chipW": 121,
+    "chipOverVw": -381,
+    "paLen": 460,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 9,
+    "chipW": 62,
+    "chipOverVw": -381,
+    "paLen": 407,
+    "pivClip": 0,
+    "sumClip": 0
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "microfrontend",
+  "hand": false,
+  "curTopic": "microfrontend",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 286,
+    "chipW": 1390,
+    "chipOverVw": 600,
+    "paLen": 0,
+    "pivClip": 965,
+    "sumClip": 965
+   },
+   {
+    "chipLen": 273,
+    "chipW": 1368,
+    "chipOverVw": 551,
+    "paLen": 0,
+    "pivClip": 916,
+    "sumClip": 916
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "signing",
+  "hand": true,
+  "curTopic": "signing",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 22,
+    "chipW": 125,
+    "chipOverVw": -381,
+    "paLen": 321,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 18,
+    "chipW": 107,
+    "chipOverVw": -381,
+    "paLen": 328,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 19,
+    "chipW": 121,
+    "chipOverVw": -381,
+    "paLen": 384,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 19,
+    "chipW": 111,
+    "chipOverVw": -381,
+    "paLen": 329,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 23,
+    "chipW": 134,
+    "chipOverVw": -381,
+    "paLen": 395,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 14,
+    "chipW": 90,
+    "chipOverVw": -381,
+    "paLen": 435,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 9,
+    "chipW": 62,
+    "chipOverVw": -381,
+    "paLen": 368,
+    "pivClip": 0,
+    "sumClip": 0
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "authz",
+  "hand": true,
+  "curTopic": "authz",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 19,
+    "chipW": 110,
+    "chipOverVw": -381,
+    "paLen": 369,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 21,
+    "chipW": 124,
+    "chipOverVw": -381,
+    "paLen": 388,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 19,
+    "chipW": 121,
+    "chipOverVw": -381,
+    "paLen": 373,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 21,
+    "chipW": 119,
+    "chipOverVw": -381,
+    "paLen": 505,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 19,
+    "chipW": 109,
+    "chipOverVw": -381,
+    "paLen": 484,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 29,
+    "chipW": 158,
+    "chipOverVw": -381,
+    "paLen": 360,
+    "pivClip": 0,
+    "sumClip": 0
+   },
+   {
+    "chipLen": 9,
+    "chipW": 62,
+    "chipOverVw": -381,
+    "paLen": 366,
+    "pivClip": 0,
+    "sumClip": 0
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ },
+ {
+  "topic": "multi-tenant",
+  "hand": false,
+  "curTopic": "multi-tenant",
+  "chipWS": "nowrap",
+  "pivOv": "hidden",
+  "piv": [
+   {
+    "chipLen": 335,
+    "chipW": 1593,
+    "chipOverVw": 763,
+    "paLen": 0,
+    "pivClip": 1128,
+    "sumClip": 1128
+   },
+   {
+    "chipLen": 282,
+    "chipW": 1337,
+    "chipOverVw": 486,
+    "paLen": 0,
+    "pivClip": 851,
+    "sumClip": 851
+   }
+  ],
+  "stageClip": 0,
+  "docClip": 0
+ }
+]

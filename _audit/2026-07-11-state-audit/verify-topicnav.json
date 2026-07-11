@@ -1,0 +1,58 @@
+{
+  "plain390.baseline": {
+    "innerWidth": 390,
+    "docScrollWidth": 396,
+    "bodyScrollWidth": 396,
+    "hOverflowBefore": true
+  },
+  "plain390.tnmenu": {
+    "left": 15,
+    "right": 396,
+    "width": 381,
+    "innerWidth": 390,
+    "overflowRightPx": 6,
+    "cssWidth": "380.594px",
+    "cssMaxWidth": "none",
+    "cssPosition": "absolute",
+    "cssRight": "0px",
+    "cssLeft": "0px",
+    "docScrollWidth": 396,
+    "hOverflow": true,
+    "canPan": false
+  },
+  "plain390.textzoom": {
+    "textzoomExists": true,
+    "textzoomDisplay": "none",
+    "textzoomOffsetParentNull": true,
+    "buttonsReachable": 0,
+    "pomodoroDisplay": "none"
+  },
+  "isMobile390.baseline": {
+    "innerWidth": 396,
+    "docScrollWidth": 396,
+    "bodyScrollWidth": 396,
+    "hOverflowBefore": false
+  },
+  "isMobile390.tnmenu": {
+    "left": 15,
+    "right": 396,
+    "width": 381,
+    "innerWidth": 396,
+    "overflowRightPx": 0,
+    "cssWidth": "380.594px",
+    "cssMaxWidth": "none",
+    "cssPosition": "absolute",
+    "cssRight": "0px",
+    "cssLeft": "0px",
+    "docScrollWidth": 396,
+    "hOverflow": false,
+    "canPan": false
+  },
+  "isMobile390.textzoom": {
+    "textzoomExists": true,
+    "textzoomDisplay": "none",
+    "textzoomOffsetParentNull": true,
+    "buttonsReachable": 0,
+    "pomodoroDisplay": "none"
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "r": {
+    "gl": {
+      "webgl2": true,
+      "vendor": "Google Inc. (Google)",
+      "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+    },
+    "kit": {
+      "VisualKit": "object",
+      "mount": "function",
+      "version": 1,
+      "cfg": "object"
+    },
+    "tabOnKI": {
+      "exists": true,
+      "hidden": false,
+      "text": "VisualizeGPU MODE"
+    },
+    "mounted": {
+      "instExists": true,
+      "hasFrames": true,
+      "frames": 19,
+      "queues": [
+        4,
+        4,
+        4,
+        4,
+        4,
+        4
+      ],
+      "canvases": [
+        {
+          "w": 0,
+          "h": 0,
+          "cw": 592,
+          "ch": 2
+        }
+      ],
+      "emptyMsg": "This topic has no visual mode.",
+      "emptyHidden": true
+    },
+    "anim": {
+      "f1": 25,
+      "f2": 39,
+      "pixelsDiffer": true,
+      "q1": "[7,7,7,7,7,7]",
+      "q2": "[17,17,17,16,16,16]"
+    },
+    "controls": {
+      "host": true,
+      "html": 2710,
+      "controls": [
+        {
+          "tag": "input",
+          "type": "range",
+          "label": "120",
+          "id": null,
+          "min": "0",
+          "max": "400",
+          "value": "120",
+          "h": 16,
+          "w": 140
+        },
+        {
+          "tag": "input",
+          "type": "range",
+          "label": "3",
+          "id": null,
+          "min": "1",
+          "max": "9",
+          "value": "3",
+          "h": 16,
+          "w": 140
+        },
+        {
+          "tag": "input",
+          "type": "range",
+          "label": "30",
+          "id": null,
+          "min": "10",
+          "max": "60",
+          "value": "30",
+          "h": 16,
+          "w": 140
+        },
+        {
+          "tag": "button",
+          "type": "submit",
+          "label": "Spike, then scale out",
+          "id": null,
+          "min": null,
+          "max": null,
+          "value": null,
+          "h": 27,
+          "w": 146
+        },
+        {
+          "tag": "button",
+          "type": "submit",
+          "label": "Consumers beyond partitions",
+          "id": null,
+          "min": null,
+          "max": null,
+          "value": null,
+          "h": 27,
+          "w": 195
+        },
+        {
+          "tag": "button",
+          "type": "submit",
+          "label": "Stop",
+          "id": "stopStory",
+          "min": null,
+          "max": null,
+          "value": null,
+          "h": 0,
+          "w": 0
+        }
+      ]
+    }
+  },
+  "errors": []
+}

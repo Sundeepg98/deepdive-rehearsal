@@ -1,0 +1,67 @@
+{
+ "probe1_mountTimeline": [
+  {
+   "phase": "ENTER _mount",
+   "paneClass": "pane",
+   "paneDisplay": "none",
+   "vzhostClientW": 0,
+   "hasVT": true,
+   "nativeVT": true
+  },
+  {
+   "phase": "AFTER _mount (scene built)",
+   "canvasBacking": [
+    0,
+    0
+   ],
+   "canvasAttrs": [
+    "0",
+    "0"
+   ]
+  }
+ ],
+ "probe1_settled": {
+  "backing": [
+   0,
+   0
+  ],
+  "rect": [
+   592,
+   2
+  ],
+  "frames": 22
+ },
+ "probe2_reducedMotion": {
+  "backing": [
+   590,
+   332
+  ],
+  "rect": [
+   592,
+   334
+  ],
+  "frames": 150
+ },
+ "probe3_noViewTransitions": {
+  "backing": [
+   590,
+   332
+  ],
+  "rect": [
+   592,
+   334
+  ],
+  "frames": 39
+ },
+ "probe4_control_default": {
+  "backing": [
+   0,
+   0
+  ],
+  "rect": [
+   592,
+   2
+  ],
+  "frames": 47
+ }
+}

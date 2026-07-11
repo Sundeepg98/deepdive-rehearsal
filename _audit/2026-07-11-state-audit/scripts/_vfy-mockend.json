@@ -1,0 +1,468 @@
+{
+ "r": [
+  {
+   "id": "event-driven",
+   "isMd": true,
+   "beats": 2,
+   "tags": "SCALE,DESIGN",
+   "hasCurveTag": false,
+   "curveIdx": 0,
+   "endScreenText": "Curveball this run: undefined. 1 rotate in",
+   "rendersUndefined": true
+  },
+  {
+   "id": "notifications",
+   "isMd": false,
+   "beats": 6,
+   "tags": "FRAME,STRUCTURE,SCALE,FAILURE,CURVEBALL,CLOSE",
+   "hasCurveTag": true,
+   "curveIdx": 4,
+   "endScreenText": "Curveball this run: Double-send / retry. 8 rotate in",
+   "rendersUndefined": false
+  },
+  {
+   "id": "real-time-delivery",
+   "isMd": true,
+   "beats": 2,
+   "tags": "SCALE,DESIGN",
+   "hasCurveTag": false,
+   "curveIdx": 0,
+   "endScreenText": "Curveball this run: undefined. 1 rotate in",
+   "rendersUndefined": true
+  },
+  {
+   "id": "cdc",
+   "isMd": true,
+   "beats": 2,
+   "tags": "SCALE,DESIGN",
+   "hasCurveTag": false,
+   "curveIdx": 0,
+   "endScreenText": "Curveball this run: undefined. 1 rotate in",
+   "rendersUndefined": true
+  },
+  {
+   "id": "kafka-internals",
+   "isMd": true,
+   "beats": 2,
+   "tags": "SCALE,DESIGN",
+   "hasCurveTag": false,
+   "curveIdx": 0,
+   "endScreenText": "Curveball this run: undefined. 1 rotate in",
+   "rendersUndefined": true
+  },
+  {
+   "id": "stream-batch-processing",
+   "isMd": true,
+   "beats": 2,
+   "tags": "SCALE,DESIGN",
+   "hasCurveTag": false,
+   "curveIdx": 0,
+   "endScreenText": "Curveball this run: undefined. 1 rotate in",
+   "rendersUndefined": true
+  },
+  {
+   "id": "saga",
+   "isMd": true,
+   "beats": 2,
+   "tags": "SCALE,DESIGN",
+   "hasCurveTag": false,
+   "curveIdx": 0,
+   "endScreenText": "Curveball this run: undefined. 1 rotate in",
+   "rendersUndefined": true
+  },
+  {
+   "id": "caching",
+   "isMd": true,
+   "beats": 2,
+   "tags": "SCALE,DESIGN",
+   "hasCurveTag": false,
+   "curveIdx": 0,
+   "endScreenText": "Curveball this run: undefined. 1 rotate in",
+   "rendersUndefined": true
+  },
+  {
+   "id": "soft-delete",
+   "isMd": true,
+   "beats": 2,
+   "tags": "SCALE,DESIGN",
+   "hasCurveTag": false,
+   "curveIdx": 0,
+   "endScreenText": "Curveball this run: undefined. 1 rotate in",
+   "rendersUndefined": true
+  },
+  {
+   "id": "eav",
+   "isMd": false,
+   "beats": 6,
+   "tags": "FRAME,STRUCTURE,SCALE,FAILURE,CURVEBALL,CLOSE",
+   "hasCurveTag": true,
+   "curveIdx": 4,
+   "endScreenText": "Curveball this run: Multi-attribute query explosion. 8 rotate in",
+   "rendersUndefined": false
+  },
+  {
+   "id": "shared-definition",
+   "isMd": true,
+   "beats": 2,
+   "tags": "SCALE,DESIGN",
+   "hasCurveTag": false,
+   "curveIdx": 0,
+   "endScreenText": "Curveball this run: undefined. 1 rotate in",
+   "rendersUndefined": true
+  },
+  {
+   "id": "replication",
+   "isMd": true,
+   "beats": 2,
+   "tags": "SCALE,DESIGN",
+   "hasCurveTag": false,
+   "curveIdx": 0,
+   "endScreenText": "Curveball this run: undefined. 1 rotate in",
+   "rendersUndefined": true
+  },
+  {
+   "id": "consistency-models",
+   "isMd": true,
+   "beats": 2,
+   "tags": "SCALE,DESIGN",
+   "hasCurveTag": false,
+   "curveIdx": 0,
+   "endScreenText": "Curveball this run: undefined. 1 rotate in",
+   "rendersUndefined": true
+  },
+  {
+   "id": "sharding-strategies",
+   "isMd": true,
+   "beats": 2,
+   "tags": "SCALE,DESIGN",
+   "hasCurveTag": false,
+   "curveIdx": 0,
+   "endScreenText": "Curveball this run: undefined. 1 rotate in",
+   "rendersUndefined": true
+  },
+  {
+   "id": "consistent-hashing",
+   "isMd": true,
+   "beats": 2,
+   "tags": "SCALE,DESIGN",
+   "hasCurveTag": false,
+   "curveIdx": 0,
+   "endScreenText": "Curveball this run: undefined. 1 rotate in",
+   "rendersUndefined": true
+  },
+  {
+   "id": "storage-engines",
+   "isMd": true,
+   "beats": 2,
+   "tags": "SCALE,DESIGN",
+   "hasCurveTag": false,
+   "curveIdx": 0,
+   "endScreenText": "Curveball this run: undefined. 1 rotate in",
+   "rendersUndefined": true
+  },
+  {
+   "id": "probabilistic-structures",
+   "isMd": true,
+   "beats": 2,
+   "tags": "SCALE,DESIGN",
+   "hasCurveTag": false,
+   "curveIdx": 0,
+   "endScreenText": "Curveball this run: undefined. 1 rotate in",
+   "rendersUndefined": true
+  },
+  {
+   "id": "retries-timeouts",
+   "isMd": true,
+   "beats": 2,
+   "tags": "SCALE,DESIGN",
+   "hasCurveTag": false,
+   "curveIdx": 0,
+   "endScreenText": "Curveball this run: undefined. 1 rotate in",
+   "rendersUndefined": true
+  },
+  {
+   "id": "idempotency",
+   "isMd": true,
+   "beats": 2,
+   "tags": "SCALE,DESIGN",
+   "hasCurveTag": false,
+   "curveIdx": 0,
+   "endScreenText": "Curveball this run: undefined. 1 rotate in",
+   "rendersUndefined": true
+  },
+  {
+   "id": "circuit-breaker",
+   "isMd": true,
+   "beats": 2,
+   "tags": "SCALE,DESIGN",
+   "hasCurveTag": false,
+   "curveIdx": 0,
+   "endScreenText": "Curveball this run: undefined. 1 rotate in",
+   "rendersUndefined": true
+  },
+  {
+   "id": "error-propagation",
+   "isMd": true,
+   "beats": 2,
+   "tags": "SCALE,DESIGN",
+   "hasCurveTag": false,
+   "curveIdx": 0,
+   "endScreenText": "Curveball this run: undefined. 1 rotate in",
+   "rendersUndefined": true
+  },
+  {
+   "id": "backpressure",
+   "isMd": true,
+   "beats": 2,
+   "tags": "SCALE,DESIGN",
+   "hasCurveTag": false,
+   "curveIdx": 0,
+   "endScreenText": "Curveball this run: undefined. 1 rotate in",
+   "rendersUndefined": true
+  },
+  {
+   "id": "observability",
+   "isMd": true,
+   "beats": 2,
+   "tags": "SCALE,DESIGN",
+   "hasCurveTag": false,
+   "curveIdx": 0,
+   "endScreenText": "Curveball this run: undefined. 1 rotate in",
+   "rendersUndefined": true
+  },
+  {
+   "id": "debugging",
+   "isMd": true,
+   "beats": 2,
+   "tags": "SCALE,DESIGN",
+   "hasCurveTag": false,
+   "curveIdx": 0,
+   "endScreenText": "Curveball this run: undefined. 1 rotate in",
+   "rendersUndefined": true
+  },
+  {
+   "id": "slos",
+   "isMd": true,
+   "beats": 2,
+   "tags": "SCALE,DESIGN",
+   "hasCurveTag": false,
+   "curveIdx": 0,
+   "endScreenText": "Curveball this run: undefined. 1 rotate in",
+   "rendersUndefined": true
+  },
+  {
+   "id": "iac",
+   "isMd": false,
+   "beats": 6,
+   "tags": "FRAME,STRUCTURE,SCALE,FAILURE,CURVEBALL,CLOSE",
+   "hasCurveTag": true,
+   "curveIdx": 4,
+   "endScreenText": "Curveball this run: Deleted state file. 8 rotate in",
+   "rendersUndefined": false
+  },
+  {
+   "id": "desired-state",
+   "isMd": false,
+   "beats": 6,
+   "tags": "FRAME,STRUCTURE,SCALE,FAILURE,CURVEBALL,CLOSE",
+   "hasCurveTag": true,
+   "curveIdx": 4,
+   "endScreenText": "Curveball this run: Template refactor = false drift. 8 rotate in",
+   "rendersUndefined": false
+  },
+  {
+   "id": "aws-hardening",
+   "isMd": false,
+   "beats": 6,
+   "tags": "FRAME,STRUCTURE,SCALE,FAILURE,CURVEBALL,CLOSE",
+   "hasCurveTag": true,
+   "curveIdx": 4,
+   "endScreenText": "Curveball this run: Public bucket. 8 rotate in",
+   "rendersUndefined": false
+  },
+  {
+   "id": "load-balancing",
+   "isMd": true,
+   "beats": 2,
+   "tags": "SCALE,DESIGN",
+   "hasCurveTag": false,
+   "curveIdx": 0,
+   "endScreenText": "Curveball this run: undefined. 1 rotate in",
+   "rendersUndefined": true
+  },
+  {
+   "id": "autoscaling",
+   "isMd": true,
+   "beats": 2,
+   "tags": "SCALE,DESIGN",
+   "hasCurveTag": false,
+   "curveIdx": 0,
+   "endScreenText": "Curveball this run: undefined. 1 rotate in",
+   "rendersUndefined": true
+  },
+  {
+   "id": "leader-election",
+   "isMd": true,
+   "beats": 2,
+   "tags": "SCALE,DESIGN",
+   "hasCurveTag": false,
+   "curveIdx": 0,
+   "endScreenText": "Curveball this run: undefined. 1 rotate in",
+   "rendersUndefined": true
+  },
+  {
+   "id": "distributed-locks",
+   "isMd": true,
+   "beats": 2,
+   "tags": "SCALE,DESIGN",
+   "hasCurveTag": false,
+   "curveIdx": 0,
+   "endScreenText": "Curveball this run: undefined. 1 rotate in",
+   "rendersUndefined": true
+  },
+  {
+   "id": "multi-region",
+   "isMd": true,
+   "beats": 2,
+   "tags": "SCALE,DESIGN",
+   "hasCurveTag": false,
+   "curveIdx": 0,
+   "endScreenText": "Curveball this run: undefined. 1 rotate in",
+   "rendersUndefined": true
+  },
+  {
+   "id": "lambda-organization",
+   "isMd": true,
+   "beats": 2,
+   "tags": "SCALE,DESIGN",
+   "hasCurveTag": false,
+   "curveIdx": 0,
+   "endScreenText": "Curveball this run: undefined. 1 rotate in",
+   "rendersUndefined": true
+  },
+  {
+   "id": "devices-dispatch",
+   "isMd": true,
+   "beats": 2,
+   "tags": "SCALE,DESIGN",
+   "hasCurveTag": false,
+   "curveIdx": 0,
+   "endScreenText": "Curveball this run: undefined. 1 rotate in",
+   "rendersUndefined": true
+  },
+  {
+   "id": "developer-platform",
+   "isMd": true,
+   "beats": 2,
+   "tags": "SCALE,DESIGN",
+   "hasCurveTag": false,
+   "curveIdx": 0,
+   "endScreenText": "Curveball this run: undefined. 1 rotate in",
+   "rendersUndefined": true
+  },
+  {
+   "id": "state-machine",
+   "isMd": true,
+   "beats": 2,
+   "tags": "SCALE,DESIGN",
+   "hasCurveTag": false,
+   "curveIdx": 0,
+   "endScreenText": "Curveball this run: undefined. 1 rotate in",
+   "rendersUndefined": true
+  },
+  {
+   "id": "rules-engine",
+   "isMd": true,
+   "beats": 2,
+   "tags": "SCALE,DESIGN",
+   "hasCurveTag": false,
+   "curveIdx": 0,
+   "endScreenText": "Curveball this run: undefined. 1 rotate in",
+   "rendersUndefined": true
+  },
+  {
+   "id": "feature-flags",
+   "isMd": true,
+   "beats": 2,
+   "tags": "SCALE,DESIGN",
+   "hasCurveTag": false,
+   "curveIdx": 0,
+   "endScreenText": "Curveball this run: undefined. 1 rotate in",
+   "rendersUndefined": true
+  },
+  {
+   "id": "api-design",
+   "isMd": true,
+   "beats": 2,
+   "tags": "SCALE,DESIGN",
+   "hasCurveTag": false,
+   "curveIdx": 0,
+   "endScreenText": "Curveball this run: undefined. 1 rotate in",
+   "rendersUndefined": true
+  },
+  {
+   "id": "rate-limiting",
+   "isMd": true,
+   "beats": 2,
+   "tags": "SCALE,DESIGN",
+   "hasCurveTag": false,
+   "curveIdx": 0,
+   "endScreenText": "Curveball this run: undefined. 1 rotate in",
+   "rendersUndefined": true
+  },
+  {
+   "id": "content-pipeline",
+   "isMd": false,
+   "beats": 6,
+   "tags": "FRAME,STRUCTURE,SCALE,FAILURE,CURVEBALL,CLOSE",
+   "hasCurveTag": true,
+   "curveIdx": 4,
+   "endScreenText": "Curveball this run: Exactly-once. 8 rotate in",
+   "rendersUndefined": false
+  },
+  {
+   "id": "microfrontend",
+   "isMd": true,
+   "beats": 2,
+   "tags": "SCALE,DESIGN",
+   "hasCurveTag": false,
+   "curveIdx": 0,
+   "endScreenText": "Curveball this run: undefined. 1 rotate in",
+   "rendersUndefined": true
+  },
+  {
+   "id": "signing",
+   "isMd": false,
+   "beats": 6,
+   "tags": "FRAME,STRUCTURE,SCALE,FAILURE,CURVEBALL,CLOSE",
+   "hasCurveTag": true,
+   "curveIdx": 4,
+   "endScreenText": "Curveball this run: Downgrade. 8 rotate in",
+   "rendersUndefined": false
+  },
+  {
+   "id": "authz",
+   "isMd": false,
+   "beats": 6,
+   "tags": "FRAME,STRUCTURE,SCALE,FAILURE,CURVEBALL,CLOSE",
+   "hasCurveTag": true,
+   "curveIdx": 4,
+   "endScreenText": "Curveball this run: Confused deputy. 8 rotate in",
+   "rendersUndefined": false
+  },
+  {
+   "id": "multi-tenant",
+   "isMd": true,
+   "beats": 2,
+   "tags": "SCALE,DESIGN",
+   "hasCurveTag": false,
+   "curveIdx": 0,
+   "endScreenText": "Curveball this run: undefined. 1 rotate in",
+   "rendersUndefined": true
+  }
+ ],
+ "drove": {
+  "found": false,
+  "body": "Beat 1 / 2CURVEBALL\nGive the operation an identity (idempotency key or natural key) and dedup the repeat atomically\nundefined\nMODEL ANSWER\nno – idempotency handles duplicates (the same operation twice"
+ }
+}

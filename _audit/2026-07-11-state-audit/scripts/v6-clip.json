@@ -1,0 +1,2717 @@
+{
+ "byPane": {
+  "walk": {
+   "topicsClipped": 29,
+   "maxSpill": 850.4,
+   "worst": {
+    "topic": "signing",
+    "pane": "walk",
+    "paneId": "walk",
+    "stageCW": 360,
+    "stageSW": 360,
+    "stageOverflow": 0,
+    "stageOvfX": "hidden",
+    "contentRight": 345,
+    "spillCount": 10,
+    "maxSpill": 850.4,
+    "top": [
+     {
+      "cls": "s",
+      "tag": "SPAN",
+      "right": 1195.4,
+      "spill": 850.4,
+      "w": 198.9,
+      "ws": "pre",
+      "ovf": "visible",
+      "txt": "'no signing key for this product'"
+     },
+     {
+      "cls": "hl",
+      "tag": "SPAN",
+      "right": 984.5,
+      "spill": 639.5,
+      "w": 18.1,
+      "ws": "pre",
+      "ovf": "visible",
+      "txt": "404"
+     },
+     {
+      "cls": "k",
+      "tag": "SPAN",
+      "right": 900.1,
+      "spill": 555.1,
+      "w": 18.1,
+      "ws": "pre",
+      "ovf": "visible",
+      "txt": "new"
+     },
+     {
+      "cls": "k",
+      "tag": "SPAN",
+      "right": 876,
+      "spill": 531,
+      "w": 30.1,
+      "ws": "pre",
+      "ovf": "visible",
+      "txt": "throw"
+     }
+    ]
+   }
+  },
+  "drill": {
+   "topicsClipped": 0,
+   "maxSpill": 0
+  },
+  "wb": {
+   "topicsClipped": 1,
+   "maxSpill": 5.7,
+   "worst": {
+    "topic": "iac",
+    "pane": "wb",
+    "paneId": "wb",
+    "stageCW": 360,
+    "stageSW": 360,
+    "stageOverflow": 0,
+    "stageOvfX": "hidden",
+    "contentRight": 345,
+    "spillCount": 4,
+    "maxSpill": 5.7,
+    "top": [
+     {
+      "cls": "dgm",
+      "tag": "DIV",
+      "right": 350.7,
+      "spill": 5.7,
+      "w": 341.5,
+      "ws": "normal",
+      "ovf": "visible",
+      "txt": "config (declared infra)resources + relationships as code — t"
+     },
+     {
+      "cls": "dgm-fork",
+      "tag": "DIV",
+      "right": 350.7,
+      "spill": 5.7,
+      "w": 341.5,
+      "ws": "normal",
+      "ovf": "visible",
+      "txt": "configwhat you declared\n      stateconfig ↔ real IDs (locked"
+     },
+     {
+      "cls": "dgm-branches",
+      "tag": "DIV",
+      "right": 350.7,
+      "spill": 5.7,
+      "w": 341.5,
+      "ws": "normal",
+      "ovf": "visible",
+      "txt": "configwhat you declared\n      stateconfig ↔ real IDs (locked"
+     },
+     {
+      "cls": "dgm-br",
+      "tag": "DIV",
+      "right": 350.7,
+      "spill": 5.7,
+      "w": 107.4,
+      "ws": "normal",
+      "ovf": "visible",
+      "txt": "real resourceswhat actually exists"
+     }
+    ]
+   }
+  },
+  "sys": {
+   "topicsClipped": 38,
+   "maxSpill": 1854.2,
+   "worst": {
+    "topic": "stream-batch-processing",
+    "pane": "sys",
+    "paneId": "sys",
+    "stageCW": 360,
+    "stageSW": 360,
+    "stageOverflow": 0,
+    "stageOvfX": "hidden",
+    "contentRight": 345,
+    "spillCount": 2,
+    "maxSpill": 1854.2,
+    "top": [
+     {
+      "cls": "chip",
+      "tag": "SPAN",
+      "right": 2199.2,
+      "spill": 1854.2,
+      "w": 2091.8,
+      "ws": "nowrap",
+      "ovf": "visible",
+      "txt": "→ window by event-time, fire on watermarks, and set an allow"
+     },
+     {
+      "cls": "chip",
+      "tag": "SPAN",
+      "right": 2090.4,
+      "spill": 1745.4,
+      "w": 1977.1,
+      "ws": "nowrap",
+      "ovf": "visible",
+      "txt": "→ by freshness requirement: hours-fine -> batch (simple, exa"
+     }
+    ]
+   }
+  },
+  "trade": {
+   "topicsClipped": 0,
+   "maxSpill": 0
+  },
+  "model": {
+   "topicsClipped": 0,
+   "maxSpill": 0
+  },
+  "num": {
+   "topicsClipped": 3,
+   "maxSpill": 95,
+   "worst": {
+    "topic": "stream-batch-processing",
+    "pane": "num",
+    "paneId": "num",
+    "stageCW": 360,
+    "stageSW": 440,
+    "stageOverflow": 80,
+    "stageOvfX": "hidden",
+    "contentRight": 345,
+    "spillCount": 2,
+    "maxSpill": 95,
+    "top": [
+     {
+      "cls": "nrow-v",
+      "tag": "DIV",
+      "right": 440,
+      "spill": 95,
+      "w": 346.7,
+      "ws": "nowrap",
+      "ovf": "visible",
+      "txt": "stream only if freshness is valued"
+     },
+     {
+      "cls": "nrow-n",
+      "tag": "DIV",
+      "right": 440,
+      "spill": 95,
+      "w": 401.5,
+      "ws": "normal",
+      "ovf": "visible",
+      "txt": "streaming is far fresher — justified only if second-level fr"
+     }
+    ]
+   }
+  },
+  "rf": {
+   "topicsClipped": 0,
+   "maxSpill": 0
+  },
+  "open": {
+   "topicsClipped": 0,
+   "maxSpill": 0
+  }
+ },
+ "totalClipped": 71,
+ "totalStates": 414,
+ "clippedRows": [
+  {
+   "topic": "event-driven",
+   "pane": "walk",
+   "maxSpill": 43.6,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "line",
+     "tag": "SPAN",
+     "right": 388.6,
+     "spill": 43.6,
+     "w": 320.6,
+     "ws": "pre",
+     "ovf": "visible",
+     "txt": "\"detail\": { \"deviceId\": 4821, \"firmware\": \"2.4.1\" }"
+    },
+    {
+     "cls": "SPAN",
+     "tag": "SPAN",
+     "right": 388.6,
+     "spill": 43.6,
+     "w": 12.1,
+     "ws": "pre",
+     "ovf": "visible",
+     "txt": "}"
+    },
+    {
+     "cls": "SPAN",
+     "tag": "SPAN",
+     "right": 376.5,
+     "spill": 31.5,
+     "w": 42.3,
+     "ws": "pre",
+     "ovf": "visible",
+     "txt": "\"2.4.1\""
+    }
+   ]
+  },
+  {
+   "topic": "event-driven",
+   "pane": "sys",
+   "maxSpill": 1193.1,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1538.1,
+     "spill": 1193.1,
+     "w": 1405.4,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ at-least-once plus an idempotent consumer, never exactly-o"
+    },
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1212,
+     "spill": 867,
+     "w": 1093.6,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ a max-receive count into a dead-letter queue\nA poison mess"
+    }
+   ]
+  },
+  {
+   "topic": "real-time-delivery",
+   "pane": "walk",
+   "maxSpill": 13.4,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "fb push",
+     "tag": "SPAN",
+     "right": 358.4,
+     "spill": 13.4,
+     "w": 319.9,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "hold a persistent connection and push on change"
+    }
+   ]
+  },
+  {
+   "topic": "real-time-delivery",
+   "pane": "sys",
+   "maxSpill": 1619.7,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1964.7,
+     "spill": 1619.7,
+     "w": 1865.4,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ on-write for bounded audiences (instant reads), on-read fo"
+    },
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1755.9,
+     "spill": 1410.9,
+     "w": 1625.1,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ assign per-channel monotonic ids and resume from the clien"
+    }
+   ]
+  },
+  {
+   "topic": "cdc",
+   "pane": "sys",
+   "maxSpill": 1241.6,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1586.6,
+     "spill": 1241.6,
+     "w": 1469,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ outbox for curated domain events, log-based for wholesale "
+    },
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1381.9,
+     "spill": 1036.9,
+     "w": 1261.6,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ the dual write isn't atomic, so a crash drifts the two sys"
+    }
+   ]
+  },
+  {
+   "topic": "kafka-internals",
+   "pane": "sys",
+   "maxSpill": 1489.8,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1834.8,
+     "spill": 1489.8,
+     "w": 1706.5,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ retained replayable log (pull, offsets) vs delete-on-consu"
+    },
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1500.5,
+     "spill": 1155.5,
+     "w": 1367.8,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ lag is the signal: scale consumers (capped at partition co"
+    }
+   ]
+  },
+  {
+   "topic": "stream-batch-processing",
+   "pane": "walk",
+   "maxSpill": 221.2,
+   "stageOverflow": 206,
+   "top": [
+    {
+     "cls": "fb batch",
+     "tag": "SPAN",
+     "right": 566.2,
+     "spill": 221.2,
+     "w": 527.7,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "bounded finite dataset → batch: all at once, high-throughput"
+    },
+    {
+     "cls": "fb stream",
+     "tag": "SPAN",
+     "right": 509.6,
+     "spill": 164.6,
+     "w": 471,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "unbounded continuous flow → stream: as it arrives, low-laten"
+    },
+    {
+     "cls": "arc-t",
+     "tag": "SPAN",
+     "right": 353.2,
+     "spill": 8.2,
+     "w": 65,
+     "ws": "normal",
+     "ovf": "visible",
+     "txt": "Watermarks and late data"
+    }
+   ]
+  },
+  {
+   "topic": "stream-batch-processing",
+   "pane": "sys",
+   "maxSpill": 1854.2,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 2199.2,
+     "spill": 1854.2,
+     "w": 2091.8,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ window by event-time, fire on watermarks, and set an allow"
+    },
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 2090.4,
+     "spill": 1745.4,
+     "w": 1977.1,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ by freshness requirement: hours-fine -> batch (simple, exa"
+    }
+   ]
+  },
+  {
+   "topic": "stream-batch-processing",
+   "pane": "num",
+   "maxSpill": 95,
+   "stageOverflow": 80,
+   "top": [
+    {
+     "cls": "nrow-v",
+     "tag": "DIV",
+     "right": 440,
+     "spill": 95,
+     "w": 346.7,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "stream only if freshness is valued"
+    },
+    {
+     "cls": "nrow-n",
+     "tag": "DIV",
+     "right": 440,
+     "spill": 95,
+     "w": 401.5,
+     "ws": "normal",
+     "ovf": "visible",
+     "txt": "streaming is far fresher — justified only if second-level fr"
+    }
+   ]
+  },
+  {
+   "topic": "saga",
+   "pane": "walk",
+   "maxSpill": 158.7,
+   "stageOverflow": 144,
+   "top": [
+    {
+     "cls": "fb twopc",
+     "tag": "SPAN",
+     "right": 503.7,
+     "spill": 158.7,
+     "w": 465.3,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "2PC would lock resources across the network → blocks, coordi"
+    },
+    {
+     "cls": "arc-t",
+     "tag": "SPAN",
+     "right": 370.4,
+     "spill": 25.4,
+     "w": 82.1,
+     "ws": "normal",
+     "ovf": "visible",
+     "txt": "On failure, run compensations in reverse"
+    }
+   ]
+  },
+  {
+   "topic": "saga",
+   "pane": "sys",
+   "maxSpill": 1307.8,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1652.8,
+     "spill": 1307.8,
+     "w": 1501.5,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ choreography = event-driven, decoupled, implicit flow; orc"
+    },
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1566.9,
+     "spill": 1221.9,
+     "w": 1449.3,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ intermediate states are visible: dirty reads of a not-yet-"
+    }
+   ]
+  },
+  {
+   "topic": "caching",
+   "pane": "sys",
+   "maxSpill": 1322.6,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1667.6,
+     "spill": 1322.6,
+     "w": 1551.5,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ cache-aside by default, write-through where the cache must"
+    },
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1499.4,
+     "spill": 1154.4,
+     "w": 1363.2,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ invalidate on write, TTL as the backstop\nA write clears th"
+    }
+   ]
+  },
+  {
+   "topic": "soft-delete",
+   "pane": "walk",
+   "maxSpill": 48.8,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "line",
+     "tag": "SPAN",
+     "right": 393.8,
+     "spill": 48.8,
+     "w": 325.4,
+     "ws": "pre",
+     "ovf": "visible",
+     "txt": "-- a delete is an update that stamps the deletion time"
+    },
+    {
+     "cls": "SPAN",
+     "tag": "SPAN",
+     "right": 393.8,
+     "spill": 48.8,
+     "w": 325.4,
+     "ws": "pre",
+     "ovf": "visible",
+     "txt": "-- a delete is an update that stamps the deletion time"
+    },
+    {
+     "cls": "line",
+     "tag": "SPAN",
+     "right": 369.8,
+     "spill": 24.8,
+     "w": 301.4,
+     "ws": "pre",
+     "ovf": "visible",
+     "txt": "UPDATE users SET deleted_at = now() WHERE id = 42;"
+    },
+    {
+     "cls": "SPAN",
+     "tag": "SPAN",
+     "right": 369.8,
+     "spill": 24.8,
+     "w": 6,
+     "ws": "pre",
+     "ovf": "visible",
+     "txt": ";"
+    }
+   ]
+  },
+  {
+   "topic": "soft-delete",
+   "pane": "sys",
+   "maxSpill": 1283.9,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1628.9,
+     "spill": 1283.9,
+     "w": 1519.4,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ every read needs the filter, and unique constraints and fo"
+    },
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1593.5,
+     "spill": 1248.5,
+     "w": 1483.9,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ soft for recoverable, referenced, auditable data; hard for"
+    }
+   ]
+  },
+  {
+   "topic": "eav",
+   "pane": "walk",
+   "maxSpill": 7.4,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "arc-t",
+     "tag": "SPAN",
+     "right": 352.4,
+     "spill": 7.4,
+     "w": 64.1,
+     "ws": "normal",
+     "ovf": "visible",
+     "txt": "Reconstruct the whole entity"
+    }
+   ]
+  },
+  {
+   "topic": "shared-definition",
+   "pane": "walk",
+   "maxSpill": 139.3,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "line",
+     "tag": "SPAN",
+     "right": 484.3,
+     "spill": 139.3,
+     "w": 416,
+     "ws": "pre",
+     "ovf": "visible",
+     "txt": "schema        JSONB                   -- JSON-Schema for val"
+    },
+    {
+     "cls": "SPAN",
+     "tag": "SPAN",
+     "right": 484.3,
+     "spill": 139.3,
+     "w": 174.8,
+     "ws": "pre",
+     "ovf": "visible",
+     "txt": "-- JSON-Schema for validation"
+    },
+    {
+     "cls": "line",
+     "tag": "SPAN",
+     "right": 478.3,
+     "spill": 133.3,
+     "w": 410,
+     "ws": "pre",
+     "ovf": "visible",
+     "txt": "definition_id BIGINT NOT NULL REFERENCES attribute_definitio"
+    },
+    {
+     "cls": "SPAN",
+     "tag": "SPAN",
+     "right": 478.3,
+     "spill": 133.3,
+     "w": 156.7,
+     "ws": "pre",
+     "ovf": "visible",
+     "txt": "attribute_definition(id),"
+    }
+   ]
+  },
+  {
+   "topic": "shared-definition",
+   "pane": "sys",
+   "maxSpill": 1398.8,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1743.8,
+     "spill": 1398.8,
+     "w": 1647.6,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ yes, and it is the right tool when the attribute set is va"
+    },
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1561,
+     "spill": 1216,
+     "w": 1419.3,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ one table keyed by entity_type plus entity_id, at the cost"
+    }
+   ]
+  },
+  {
+   "topic": "replication",
+   "pane": "sys",
+   "maxSpill": 1274.9,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1619.9,
+     "spill": 1274.9,
+     "w": 1471.5,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ semi-synchronous usually: sync to one follower for durabil"
+    },
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1601.8,
+     "spill": 1256.8,
+     "w": 1474.7,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ quorums: a write needs W acks, a read queries R, and R + W"
+    }
+   ]
+  },
+  {
+   "topic": "consistency-models",
+   "pane": "walk",
+   "maxSpill": 26.2,
+   "stageOverflow": 11,
+   "top": [
+    {
+     "cls": "fb stale",
+     "tag": "SPAN",
+     "right": 371.2,
+     "spill": 26.2,
+     "w": 332.7,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "a read to a lagging replica returns the old value"
+    },
+    {
+     "cls": "fb lag",
+     "tag": "SPAN",
+     "right": 358.6,
+     "spill": 13.6,
+     "w": 320.1,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "replicas receive it asynchronously, so they lag"
+    }
+   ]
+  },
+  {
+   "topic": "consistency-models",
+   "pane": "sys",
+   "maxSpill": 1682.2,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 2027.2,
+     "spill": 1682.2,
+     "w": 1896.7,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ strong is a premium paid on every operation: coordination "
+    },
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1816.7,
+     "spill": 1471.7,
+     "w": 1676.2,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ pin the user's reads to the primary (or a caught-up replic"
+    }
+   ]
+  },
+  {
+   "topic": "sharding-strategies",
+   "pane": "walk",
+   "maxSpill": 89.2,
+   "stageOverflow": 74,
+   "top": [
+    {
+     "cls": "fb last",
+     "tag": "SPAN",
+     "right": 434.2,
+     "spill": 89.2,
+     "w": 395.8,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "shard, but only after replicas, cache, and vertical scaling"
+    }
+   ]
+  },
+  {
+   "topic": "sharding-strategies",
+   "pane": "sys",
+   "maxSpill": 1425,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1770,
+     "spill": 1425,
+     "w": 1633.7,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ consistent hashing or fixed logical partitions, then dual-"
+    },
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1735.8,
+     "spill": 1390.8,
+     "w": 1617.4,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ from the access patterns: even distribution plus the commo"
+    }
+   ]
+  },
+  {
+   "topic": "consistent-hashing",
+   "pane": "sys",
+   "maxSpill": 994,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1339,
+     "spill": 994,
+     "w": 1212,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ no -- it evens where keys live, not access frequency; a ho"
+    },
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1240.4,
+     "spill": 895.4,
+     "w": 1117,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ it remaps ~(N-1)/N of keys on any node change; consistent "
+    }
+   ]
+  },
+  {
+   "topic": "storage-engines",
+   "pane": "walk",
+   "maxSpill": 120.7,
+   "stageOverflow": 106,
+   "top": [
+    {
+     "cls": "fb fork",
+     "tag": "SPAN",
+     "right": 465.7,
+     "spill": 120.7,
+     "w": 427.3,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "B-tree: sorted in-place pages, or LSM: append + background m"
+    },
+    {
+     "cls": "arc-t",
+     "tag": "SPAN",
+     "right": 355.1,
+     "spill": 10.1,
+     "w": 66.8,
+     "ws": "normal",
+     "ovf": "visible",
+     "txt": "LSM: memtable to SSTable to compaction, write-optimized"
+    }
+   ]
+  },
+  {
+   "topic": "storage-engines",
+   "pane": "sys",
+   "maxSpill": 1461.6,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1806.6,
+     "spill": 1461.6,
+     "w": 1678.8,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ write-heavy/ingest -> LSM (sequential writes + compaction)"
+    },
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1735.4,
+     "spill": 1390.4,
+     "w": 1632.5,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ bloom filters skip files lacking the key, leveled compacti"
+    }
+   ]
+  },
+  {
+   "topic": "probabilistic-structures",
+   "pane": "walk",
+   "maxSpill": 114.3,
+   "stageOverflow": 99,
+   "top": [
+    {
+     "cls": "fb exact",
+     "tag": "SPAN",
+     "right": 459.3,
+     "spill": 114.3,
+     "w": 420.8,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "exact answer needs memory proportional to the data -- gigaby"
+    },
+    {
+     "cls": "fb approx",
+     "tag": "SPAN",
+     "right": 396.3,
+     "spill": 51.3,
+     "w": 357.8,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "accept a small bounded error → a compact sketch in KB"
+    }
+   ]
+  },
+  {
+   "topic": "probabilistic-structures",
+   "pane": "sys",
+   "maxSpill": 1545.3,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1890.3,
+     "spill": 1545.3,
+     "w": 1748.8,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ only if the error direction is harmless for the use, and c"
+    },
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1812.3,
+     "spill": 1467.3,
+     "w": 1689.3,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ by the question: membership -> Bloom, distinct-count -> Hy"
+    }
+   ]
+  },
+  {
+   "topic": "retries-timeouts",
+   "pane": "sys",
+   "maxSpill": 999.8,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1344.8,
+     "spill": 999.8,
+     "w": 1231.1,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ from the dependency's latency distribution -- above p99 wi"
+    },
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1334.5,
+     "spill": 989.5,
+     "w": 1195.2,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ yes -- that's a retry storm; cap with backoff, jitter, bud"
+    }
+   ]
+  },
+  {
+   "topic": "idempotency",
+   "pane": "sys",
+   "maxSpill": 986.1,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1331.1,
+     "spill": 986.1,
+     "w": 1204.2,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ exactly-once effect, not delivery: at-least-once + idempot"
+    },
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1256.8,
+     "spill": 911.8,
+     "w": 1101.3,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ an atomic key claim (unique constraint) lets exactly one e"
+    }
+   ]
+  },
+  {
+   "topic": "circuit-breaker",
+   "pane": "sys",
+   "maxSpill": 970.4,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1315.4,
+     "spill": 970.4,
+     "w": 1203.7,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ a fallback: stale cache, default, queued write, or degrade"
+    },
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1289.4,
+     "spill": 944.4,
+     "w": 1179.2,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ an error rate over a window (min volume), counting only ti"
+    }
+   ]
+  },
+  {
+   "topic": "error-propagation",
+   "pane": "walk",
+   "maxSpill": 4.1,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "arc-t",
+     "tag": "SPAN",
+     "right": 349.1,
+     "spill": 4.1,
+     "w": 60.8,
+     "ws": "normal",
+     "ovf": "visible",
+     "txt": "Preserve the code across boundaries and map to user actions"
+    }
+   ]
+  },
+  {
+   "topic": "error-propagation",
+   "pane": "sys",
+   "maxSpill": 1472.5,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1817.5,
+     "spill": 1472.5,
+     "w": 1691.4,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ whether retrying can succeed (transient) and whether the o"
+    },
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1775.7,
+     "spill": 1430.7,
+     "w": 1649.6,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ preserve-and-carry the source code by default; degrade to "
+    }
+   ]
+  },
+  {
+   "topic": "backpressure",
+   "pane": "walk",
+   "maxSpill": 13,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "arc-t",
+     "tag": "SPAN",
+     "right": 358,
+     "spill": 13,
+     "w": 69.7,
+     "ws": "normal",
+     "ovf": "visible",
+     "txt": "The mechanisms: block, drop, or demand"
+    }
+   ]
+  },
+  {
+   "topic": "backpressure",
+   "pane": "sys",
+   "maxSpill": 1321.8,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1666.8,
+     "spill": 1321.8,
+     "w": 1542.2,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ SLO-driven: shed to protect latency (interactive, loss-tol"
+    },
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1390.8,
+     "spill": 1045.8,
+     "w": 1240.7,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ an unbounded queue grows until OOM, and latency collapses "
+    }
+   ]
+  },
+  {
+   "topic": "observability",
+   "pane": "walk",
+   "maxSpill": 368.7,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "line",
+     "tag": "SPAN",
+     "right": 713.7,
+     "spill": 368.7,
+     "w": 645.3,
+     "ws": "pre",
+     "ovf": "visible",
+     "txt": "{ \"level\": \"info\", \"traceId\": \"a1b2c3\", \"tenant\": 7, \"route\""
+    },
+    {
+     "cls": "SPAN",
+     "tag": "SPAN",
+     "right": 713.7,
+     "spill": 368.7,
+     "w": 12.1,
+     "ws": "pre",
+     "ovf": "visible",
+     "txt": "}"
+    },
+    {
+     "cls": "SPAN",
+     "tag": "SPAN",
+     "right": 701.6,
+     "spill": 356.6,
+     "w": 90.4,
+     "ws": "pre",
+     "ovf": "visible",
+     "txt": "\"order created\""
+    },
+    {
+     "cls": "SPAN",
+     "tag": "SPAN",
+     "right": 611.2,
+     "spill": 266.2,
+     "w": 12.1,
+     "ws": "pre",
+     "ovf": "visible",
+     "txt": ":"
+    }
+   ]
+  },
+  {
+   "topic": "observability",
+   "pane": "sys",
+   "maxSpill": 1251.9,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1596.9,
+     "spill": 1251.9,
+     "w": 1489.1,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ metric for rates/latency and alerts, log for the detail of"
+    },
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1526.8,
+     "spill": 1181.8,
+     "w": 1402.8,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ nothing, by design -- calls become no-ops and the request "
+    }
+   ]
+  },
+  {
+   "topic": "debugging",
+   "pane": "walk",
+   "maxSpill": 6.4,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "arc-t",
+     "tag": "SPAN",
+     "right": 351.4,
+     "spill": 6.4,
+     "w": 63.2,
+     "ws": "normal",
+     "ovf": "visible",
+     "txt": "Hypothesis, then the most specific evidence"
+    }
+   ]
+  },
+  {
+   "topic": "debugging",
+   "pane": "sys",
+   "maxSpill": 1351.5,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1696.5,
+     "spill": 1351.5,
+     "w": 1571.1,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ the amplifier is disproportionately loud -- error volume f"
+    },
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1653,
+     "spill": 1308,
+     "w": 1513.9,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ read the failures before the storage layer, and dead-lette"
+    }
+   ]
+  },
+  {
+   "topic": "slos",
+   "pane": "sys",
+   "maxSpill": 1100.8,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1445.8,
+     "spill": 1100.8,
+     "w": 1341.1,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ a proportion of good events over valid events, measured ne"
+    },
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1280.6,
+     "spill": 935.6,
+     "w": 1184.6,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ multi-window multi-burn-rate: a fast burn pages, a slow bu"
+    }
+   ]
+  },
+  {
+   "topic": "iac",
+   "pane": "walk",
+   "maxSpill": 344.3,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "c",
+     "tag": "SPAN",
+     "right": 689.3,
+     "spill": 344.3,
+     "w": 168.8,
+     "ws": "pre",
+     "ovf": "visible",
+     "txt": "// edge: api needs the table"
+    },
+    {
+     "cls": "c",
+     "tag": "SPAN",
+     "right": 454.2,
+     "spill": 109.2,
+     "w": 385.8,
+     "ws": "pre",
+     "ovf": "visible",
+     "txt": "// declare resources; references between them become graph e"
+    }
+   ]
+  },
+  {
+   "topic": "iac",
+   "pane": "wb",
+   "maxSpill": 5.7,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "dgm",
+     "tag": "DIV",
+     "right": 350.7,
+     "spill": 5.7,
+     "w": 341.5,
+     "ws": "normal",
+     "ovf": "visible",
+     "txt": "config (declared infra)resources + relationships as code — t"
+    },
+    {
+     "cls": "dgm-fork",
+     "tag": "DIV",
+     "right": 350.7,
+     "spill": 5.7,
+     "w": 341.5,
+     "ws": "normal",
+     "ovf": "visible",
+     "txt": "configwhat you declared\n      stateconfig ↔ real IDs (locked"
+    },
+    {
+     "cls": "dgm-branches",
+     "tag": "DIV",
+     "right": 350.7,
+     "spill": 5.7,
+     "w": 341.5,
+     "ws": "normal",
+     "ovf": "visible",
+     "txt": "configwhat you declared\n      stateconfig ↔ real IDs (locked"
+    },
+    {
+     "cls": "dgm-br",
+     "tag": "DIV",
+     "right": 350.7,
+     "spill": 5.7,
+     "w": 107.4,
+     "ws": "normal",
+     "ovf": "visible",
+     "txt": "real resourceswhat actually exists"
+    }
+   ]
+  },
+  {
+   "topic": "aws-hardening",
+   "pane": "walk",
+   "maxSpill": 2,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "arc-t",
+     "tag": "SPAN",
+     "right": 347,
+     "spill": 2,
+     "w": 58.8,
+     "ws": "normal",
+     "ovf": "visible",
+     "txt": "Presigned URLs — delivery without credentials"
+    }
+   ]
+  },
+  {
+   "topic": "load-balancing",
+   "pane": "sys",
+   "maxSpill": 1170.4,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1515.4,
+     "spill": 1170.4,
+     "w": 1400.7,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ L4 for raw throughput and non-HTTP; L7 when you need to ro"
+    },
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1488.7,
+     "spill": 1143.7,
+     "w": 1358.7,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ yes; make the LB layer redundant (active-passive + floatin"
+    }
+   ]
+  },
+  {
+   "topic": "autoscaling",
+   "pane": "walk",
+   "maxSpill": 13.6,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "fb avg",
+     "tag": "SPAN",
+     "right": 358.6,
+     "spill": 13.6,
+     "w": 320.1,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "provision for average: dropped requests at peak"
+    }
+   ]
+  },
+  {
+   "topic": "autoscaling",
+   "pane": "sys",
+   "maxSpill": 1377.9,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1722.9,
+     "spill": 1377.9,
+     "w": 1615.6,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ scale-up lag (provisioning + cold start) means it's a step"
+    },
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1429.8,
+     "spill": 1084.8,
+     "w": 1331,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ the signal that reflects real saturation: queue depth/lag "
+    }
+   ]
+  },
+  {
+   "topic": "leader-election",
+   "pane": "sys",
+   "maxSpill": 1130.3,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1475.3,
+     "spill": 1130.3,
+     "w": 1357.4,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ quorum (a minority can't elect) + lease (a lost leader exp"
+    },
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1440.1,
+     "spill": 1095.1,
+     "w": 1304.5,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ shard leadership (one leader per partition, like Kafka) an"
+    }
+   ]
+  },
+  {
+   "topic": "distributed-locks",
+   "pane": "walk",
+   "maxSpill": 64,
+   "stageOverflow": 49,
+   "top": [
+    {
+     "cls": "fb lock",
+     "tag": "SPAN",
+     "right": 409,
+     "spill": 64,
+     "w": 370.6,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "distributed lock with a TTL: a dead holder auto-expires"
+    }
+   ]
+  },
+  {
+   "topic": "distributed-locks",
+   "pane": "sys",
+   "maxSpill": 1317.8,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1662.8,
+     "spill": 1317.8,
+     "w": 1523.2,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ not on its own -- a paused holder can act after expiry; yo"
+    },
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1578.8,
+     "spill": 1233.8,
+     "w": 1479.3,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ idempotency (safe to repeat), optimistic concurrency (cond"
+    }
+   ]
+  },
+  {
+   "topic": "multi-region",
+   "pane": "walk",
+   "maxSpill": 183.8,
+   "stageOverflow": 169,
+   "top": [
+    {
+     "cls": "fb risk",
+     "tag": "SPAN",
+     "right": 528.8,
+     "spill": 183.8,
+     "w": 490.3,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "a whole region can fail, distant users lag, data must stay i"
+    },
+    {
+     "cls": "fb multi",
+     "tag": "SPAN",
+     "right": 440.5,
+     "spill": 95.5,
+     "w": 402.1,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "run across regions -- but pick which problem you are solving"
+    }
+   ]
+  },
+  {
+   "topic": "multi-region",
+   "pane": "sys",
+   "maxSpill": 1667.8,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 2012.8,
+     "spill": 1667.8,
+     "w": 1895.8,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ fence the old primary before promoting, or use a quorum so"
+    },
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1882.6,
+     "spill": 1537.6,
+     "w": 1772.9,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ active-passive for DR (simple, no write conflicts); active"
+    }
+   ]
+  },
+  {
+   "topic": "multi-region",
+   "pane": "num",
+   "maxSpill": 76.4,
+   "stageOverflow": 61,
+   "top": [
+    {
+     "cls": "nrow-v",
+     "tag": "DIV",
+     "right": 421.4,
+     "spill": 76.4,
+     "w": 328.2,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "tighten lag / sync critical data"
+    },
+    {
+     "cls": "nrow-n",
+     "tag": "DIV",
+     "right": 421.4,
+     "spill": 76.4,
+     "w": 383,
+     "ws": "normal",
+     "ovf": "visible",
+     "txt": "the data-loss window is large — reduce replication lag, or r"
+    }
+   ]
+  },
+  {
+   "topic": "lambda-organization",
+   "pane": "walk",
+   "maxSpill": 10.7,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "arc-t",
+     "tag": "SPAN",
+     "right": 355.7,
+     "spill": 10.7,
+     "w": 67.4,
+     "ws": "normal",
+     "ovf": "visible",
+     "txt": "Reserved concurrency isolates and protects downstream"
+    }
+   ]
+  },
+  {
+   "topic": "lambda-organization",
+   "pane": "sys",
+   "maxSpill": 1206,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1551,
+     "spill": 1206,
+     "w": 1423.2,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ by business domain with a naming convention, so logs are b"
+    },
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1469.8,
+     "spill": 1124.8,
+     "w": 1329.4,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ cap the function's reserved concurrency to what the downst"
+    }
+   ]
+  },
+  {
+   "topic": "devices-dispatch",
+   "pane": "walk",
+   "maxSpill": 79.1,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "line",
+     "tag": "SPAN",
+     "right": 424.1,
+     "spill": 79.1,
+     "w": 355.8,
+     "ws": "pre",
+     "ovf": "visible",
+     "txt": "\"payload\": { \"profile\": \"retail-v4\", \"checksum\": \"9f2c\" }"
+    },
+    {
+     "cls": "SPAN",
+     "tag": "SPAN",
+     "right": 424.1,
+     "spill": 79.1,
+     "w": 12.1,
+     "ws": "pre",
+     "ovf": "visible",
+     "txt": "}"
+    },
+    {
+     "cls": "SPAN",
+     "tag": "SPAN",
+     "right": 412.1,
+     "spill": 67.1,
+     "w": 36.2,
+     "ws": "pre",
+     "ovf": "visible",
+     "txt": "\"9f2c\""
+    },
+    {
+     "cls": "SPAN",
+     "tag": "SPAN",
+     "right": 375.9,
+     "spill": 30.9,
+     "w": 12.1,
+     "ws": "pre",
+     "ovf": "visible",
+     "txt": ":"
+    }
+   ]
+  },
+  {
+   "topic": "devices-dispatch",
+   "pane": "sys",
+   "maxSpill": 1418.1,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1763.1,
+     "spill": 1418.1,
+     "w": 1652.6,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ pull, because you cannot hold connections to a huge interm"
+    },
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1385.4,
+     "spill": 1040.4,
+     "w": 1283.8,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ aggregate the job table by state, and reconcile what goes "
+    }
+   ]
+  },
+  {
+   "topic": "developer-platform",
+   "pane": "sys",
+   "maxSpill": 1243.6,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1588.6,
+     "spill": 1243.6,
+     "w": 1456.2,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ safe-by-default: prod read-only, environment explicit, EXP"
+    },
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1464.4,
+     "spill": 1119.4,
+     "w": 1338,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ because the paved path is genuinely faster, and adoption i"
+    }
+   ]
+  },
+  {
+   "topic": "developer-platform",
+   "pane": "num",
+   "maxSpill": 9,
+   "stageOverflow": 82,
+   "top": [
+    {
+     "cls": "nrow-v",
+     "tag": "DIV",
+     "right": 354,
+     "spill": 9,
+     "w": 262.7,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "allowExpensive / elevated"
+    },
+    {
+     "cls": "nrow-n",
+     "tag": "DIV",
+     "right": 354,
+     "spill": 9,
+     "w": 315.5,
+     "ws": "normal",
+     "ovf": "visible",
+     "txt": "the paved road handles the 90%; a logged override covers the"
+    }
+   ]
+  },
+  {
+   "topic": "state-machine",
+   "pane": "sys",
+   "maxSpill": 1553.1,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1898.1,
+     "spill": 1553.1,
+     "w": 1781,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ flags allow contradictory combinations nothing prevents; o"
+    },
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1473.8,
+     "spill": 1128.8,
+     "w": 1350.3,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ a compare-and-swap on the current state, so exactly one wi"
+    }
+   ]
+  },
+  {
+   "topic": "rules-engine",
+   "pane": "walk",
+   "maxSpill": 133.3,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "line",
+     "tag": "SPAN",
+     "right": 478.3,
+     "spill": 133.3,
+     "w": 409.9,
+     "ws": "pre",
+     "ovf": "visible",
+     "txt": "-- which rules run for a tenant: catalog joined to its subsc"
+    },
+    {
+     "cls": "SPAN",
+     "tag": "SPAN",
+     "right": 478.3,
+     "spill": 133.3,
+     "w": 409.9,
+     "ws": "pre",
+     "ovf": "visible",
+     "txt": "-- which rules run for a tenant: catalog joined to its subsc"
+    },
+    {
+     "cls": "line",
+     "tag": "SPAN",
+     "right": 375.9,
+     "spill": 30.9,
+     "w": 307.6,
+     "ws": "pre",
+     "ovf": "visible",
+     "txt": "JOIN tenant_subscription s ON s.rule_id = c.rule_id"
+    },
+    {
+     "cls": "SPAN",
+     "tag": "SPAN",
+     "right": 375.9,
+     "spill": 30.9,
+     "w": 42.2,
+     "ws": "pre",
+     "ovf": "visible",
+     "txt": "rule_id"
+    }
+   ]
+  },
+  {
+   "topic": "rules-engine",
+   "pane": "sys",
+   "maxSpill": 1126.5,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1471.5,
+     "spill": 1126.5,
+     "w": 1340.9,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ policy is editable data, changeable without a release\nRule"
+    },
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1424.5,
+     "spill": 1079.5,
+     "w": 1299.3,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ reject the requester and the first approver at the second "
+    }
+   ]
+  },
+  {
+   "topic": "feature-flags",
+   "pane": "walk",
+   "maxSpill": 7.5,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "arc-t",
+     "tag": "SPAN",
+     "right": 352.5,
+     "spill": 7.5,
+     "w": 64.3,
+     "ws": "normal",
+     "ovf": "visible",
+     "txt": "Roll out by percentage, consistently"
+    }
+   ]
+  },
+  {
+   "topic": "feature-flags",
+   "pane": "sys",
+   "maxSpill": 1297.7,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1642.7,
+     "spill": 1297.7,
+     "w": 1538.4,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ same machinery; a flag is the boolean toggle, config is an"
+    },
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1276.6,
+     "spill": 931.6,
+     "w": 1159.4,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ fall back to the local cache and the safe default\nEvery in"
+    }
+   ]
+  },
+  {
+   "topic": "api-design",
+   "pane": "walk",
+   "maxSpill": 32.6,
+   "stageOverflow": 18,
+   "top": [
+    {
+     "cls": "fb verbs",
+     "tag": "SPAN",
+     "right": 377.6,
+     "spill": 32.6,
+     "w": 339.2,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "POST /createOrder, POST /getOrder -- RPC over HTTP"
+    },
+    {
+     "cls": "fb stuck",
+     "tag": "SPAN",
+     "right": 358.7,
+     "spill": 13.7,
+     "w": 320.3,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "a rename or a removed field breaks every client"
+    },
+    {
+     "cls": "arc-t",
+     "tag": "SPAN",
+     "right": 346.8,
+     "spill": 1.8,
+     "w": 58.5,
+     "ws": "normal",
+     "ovf": "visible",
+     "txt": "Design for evolution: versioning and cursor pagination"
+    }
+   ]
+  },
+  {
+   "topic": "api-design",
+   "pane": "sys",
+   "maxSpill": 1572.9,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1917.9,
+     "spill": 1572.9,
+     "w": 1798.8,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ additive changes with a tolerant reader; version only to b"
+    },
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1807.2,
+     "spill": 1462.2,
+     "w": 1706.2,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ an idempotency key plus a dedupe recorded atomically with "
+    }
+   ]
+  },
+  {
+   "topic": "rate-limiting",
+   "pane": "sys",
+   "maxSpill": 968.2,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1313.2,
+     "spill": 968.2,
+     "w": 1188.2,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ token bucket for bursts, sliding window for precision\nToke"
+    },
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1168.7,
+     "spill": 823.7,
+     "w": 1051.3,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ a deliberate fail-open or fail-closed\nFail open keeps the "
+    }
+   ]
+  },
+  {
+   "topic": "content-pipeline",
+   "pane": "walk",
+   "maxSpill": 42,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "B",
+     "tag": "B",
+     "right": 387,
+     "spill": 42,
+     "w": 59.8,
+     "ws": "normal",
+     "ovf": "visible",
+     "txt": "reconciler"
+    },
+    {
+     "cls": "arc-t",
+     "tag": "SPAN",
+     "right": 359.9,
+     "spill": 14.9,
+     "w": 71.7,
+     "ws": "normal",
+     "ovf": "visible",
+     "txt": "Observability hooks"
+    }
+   ]
+  },
+  {
+   "topic": "microfrontend",
+   "pane": "walk",
+   "maxSpill": 12.6,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "arc-t",
+     "tag": "SPAN",
+     "right": 357.6,
+     "spill": 12.6,
+     "w": 69.4,
+     "ws": "normal",
+     "ovf": "visible",
+     "txt": "Independent deploy: publish a bundle, flip one pointer"
+    }
+   ]
+  },
+  {
+   "topic": "microfrontend",
+   "pane": "sys",
+   "maxSpill": 1197.1,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1542.1,
+     "spill": 1197.1,
+     "w": 1384.6,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ independent team deploys -- it's an organizational problem"
+    },
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1493.3,
+     "spill": 1148.3,
+     "w": 1362.4,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ share common dependencies as singletons via the import map"
+    }
+   ]
+  },
+  {
+   "topic": "signing",
+   "pane": "walk",
+   "maxSpill": 850.4,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "s",
+     "tag": "SPAN",
+     "right": 1195.4,
+     "spill": 850.4,
+     "w": 198.9,
+     "ws": "pre",
+     "ovf": "visible",
+     "txt": "'no signing key for this product'"
+    },
+    {
+     "cls": "hl",
+     "tag": "SPAN",
+     "right": 984.5,
+     "spill": 639.5,
+     "w": 18.1,
+     "ws": "pre",
+     "ovf": "visible",
+     "txt": "404"
+    },
+    {
+     "cls": "k",
+     "tag": "SPAN",
+     "right": 900.1,
+     "spill": 555.1,
+     "w": 18.1,
+     "ws": "pre",
+     "ovf": "visible",
+     "txt": "new"
+    },
+    {
+     "cls": "k",
+     "tag": "SPAN",
+     "right": 876,
+     "spill": 531,
+     "w": 30.1,
+     "ws": "pre",
+     "ovf": "visible",
+     "txt": "throw"
+    }
+   ]
+  },
+  {
+   "topic": "authz",
+   "pane": "walk",
+   "maxSpill": 256.1,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "B",
+     "tag": "B",
+     "right": 601.1,
+     "spill": 256.1,
+     "w": 76.1,
+     "ws": "normal",
+     "ovf": "visible",
+     "txt": "LeadingKeys"
+    },
+    {
+     "cls": "CODE",
+     "tag": "CODE",
+     "right": 515.7,
+     "spill": 170.7,
+     "w": 82.3,
+     "ws": "normal",
+     "ovf": "visible",
+     "txt": "findOrders()"
+    },
+    {
+     "cls": "B",
+     "tag": "B",
+     "right": 509.7,
+     "spill": 164.7,
+     "w": 43.5,
+     "ws": "normal",
+     "ovf": "visible",
+     "txt": "deny-by-default"
+    },
+    {
+     "cls": "B",
+     "tag": "B",
+     "right": 471.1,
+     "spill": 126.1,
+     "w": 25.9,
+     "ws": "normal",
+     "ovf": "visible",
+     "txt": "404, not 403"
+    }
+   ]
+  },
+  {
+   "topic": "multi-tenant",
+   "pane": "sys",
+   "maxSpill": 1359.9,
+   "stageOverflow": 0,
+   "top": [
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1704.9,
+     "spill": 1359.9,
+     "w": 1587.3,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ shared rows for density, a database per tenant for a hard "
+    },
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 1429,
+     "spill": 1084,
+     "w": 1332,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ one structural enforcement point, not per-handler filterin"
+    }
+   ]
+  }
+ ],
+ "numDetail": {
+  "paneId": "num",
+  "stageCW": 360,
+  "stageSW": 457,
+  "stageOverflow": 97,
+  "stageOvfX": "hidden",
+  "contentRight": 345,
+  "spillCount": 0,
+  "maxSpill": 0,
+  "top": []
+ },
+ "walkDetail": {
+  "paneId": "walk",
+  "stageCW": 360,
+  "stageSW": 568,
+  "stageOverflow": 208,
+  "stageOvfX": "hidden",
+  "contentRight": 345,
+  "spillCount": 3,
+  "maxSpill": 222.8,
+  "top": [
+   {
+    "cls": "fb batch",
+    "tag": "SPAN",
+    "right": 567.8,
+    "spill": 222.8,
+    "w": 529.8,
+    "ws": "nowrap",
+    "ovf": "visible",
+    "txt": "bounded finite dataset → batch: all at once, high-throughput"
+   },
+   {
+    "cls": "fb stream",
+    "tag": "SPAN",
+    "right": 510.9,
+    "spill": 165.9,
+    "w": 472.9,
+    "ws": "nowrap",
+    "ovf": "visible",
+    "txt": "unbounded continuous flow → stream: as it arrives, low-laten"
+   },
+   {
+    "cls": "arc-t",
+    "tag": "SPAN",
+    "right": 353.9,
+    "spill": 8.9,
+    "w": 65.3,
+    "ws": "normal",
+    "ovf": "visible",
+    "txt": "Watermarks and late data"
+   }
+  ]
+ },
+ "piv360": [],
+ "pivBreadth": [
+  {
+   "topic": "event-driven",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "notifications",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "real-time-delivery",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "cdc",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "kafka-internals",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "stream-batch-processing",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "saga",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "caching",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "soft-delete",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "eav",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "shared-definition",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "replication",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "consistency-models",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "sharding-strategies",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "consistent-hashing",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "storage-engines",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "probabilistic-structures",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "retries-timeouts",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "idempotency",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "circuit-breaker",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "error-propagation",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "backpressure",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "observability",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "debugging",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "slos",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "iac",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "desired-state",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "aws-hardening",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "load-balancing",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "autoscaling",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "leader-election",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "distributed-locks",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "multi-region",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "lambda-organization",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "devices-dispatch",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "developer-platform",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "state-machine",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "rules-engine",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "feature-flags",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "api-design",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "rate-limiting",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "content-pipeline",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "microfrontend",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "signing",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "authz",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  },
+  {
+   "topic": "multi-tenant",
+   "pivots": 0,
+   "worstClip": 0,
+   "worstPct": 0,
+   "paEmptyCount": 0
+  }
+ ],
+ "pivSummary": {
+  "clippedTopics": 0,
+  "paEmptyTopics": 0,
+  "total": 46
+ },
+ "desk": {
+  "api-design/num": {
+   "paneId": "num",
+   "stageCW": 854,
+   "stageSW": 914,
+   "stageOverflow": 60,
+   "stageOvfX": "hidden",
+   "contentRight": 1098,
+   "spillCount": 0,
+   "maxSpill": 0,
+   "top": []
+  },
+  "stream-batch-processing/walk": {
+   "paneId": "walk",
+   "stageCW": 854,
+   "stageSW": 854,
+   "stageOverflow": 0,
+   "stageOvfX": "hidden",
+   "contentRight": 1098,
+   "spillCount": 0,
+   "maxSpill": 0,
+   "top": []
+  },
+  "api-design/sys": {
+   "paneId": "sys",
+   "stageCW": 854,
+   "stageSW": 854,
+   "stageOverflow": 0,
+   "stageOvfX": "hidden",
+   "contentRight": 1098,
+   "spillCount": 2,
+   "maxSpill": 1158.3,
+   "top": [
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 2256.3,
+     "spill": 1158.3,
+     "w": 1804.4,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ additive changes with a tolerant reader; version only to b"
+    },
+    {
+     "cls": "chip",
+     "tag": "SPAN",
+     "right": 2145.3,
+     "spill": 1047.3,
+     "w": 1711.5,
+     "ws": "nowrap",
+     "ovf": "visible",
+     "txt": "→ an idempotency key plus a dedupe recorded atomically with "
+    }
+   ]
+  }
+ }
+}

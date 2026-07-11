@@ -1,0 +1,154 @@
+
+===== FULL ERROR #tnnext =====
+locator.click: Timeout 3500ms exceeded.
+Call log:
+  - waiting for locator('#tnnext')
+    - locator resolved to <button id="tnnext" type="button" class="tn-step" aria-label="Next topic">›</button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <span id="tncurrent" class="tn-current">Production Debugging and Incident Diagnosis</span> from <button type="button" id="tntrigger" class="tn-trigger" aria-haspopup="menu" aria-expanded="false">…</button> subtree intercepts pointer events
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <span id="tncurrent" class="tn-current">Production Debugging and Incident Diagnosis</span> from <button type="button" id="tntrigger" class="tn-trigger" aria-haspopup="menu" aria-expanded="false">…</button> subtree intercepts pointer events
+    - retrying click action
+      - waiting 100ms
+    - waiting for element to be visible, enabled and stable
+    - element is visible, enabled and stable
+    - scrolling into view if needed
+    - done scrolling
+    - <div class="side-id">…</div> intercepts pointer events
+  - retrying click action
+    - waiting 500ms
+    - waiting for element to be visible, enabled and stable
+    - element is visible, enabled and stable
+    - scrolling into view if needed
+    - done scrolling
+    - <button type="button" data-tab="sys">…</button> from <div class="seg" role="group" aria-label="Rehearsal sections">…</div> subtree intercepts pointer events
+  2 × retrying click action
+      - waiting 500ms
+      - waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <span id="tncurrent" class="tn-current">Production Debugging and Incident Diagnosis</span> from <button type="button" id="tntrigger" class="tn-trigger" aria-haspopup="menu" aria-expanded="false">…</button> subtree intercepts pointer events
+  2 × retrying click action
+      - waiting 500ms
+      - waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <button type="button" data-tab="sys">…</button> from <div class="seg" role="group" aria-label="Rehearsal sections">…</div> subtree intercepts pointer events
+  - retrying click action
+    - waiting 500ms
+
+
+===== FULL ERROR #toolsfab =====
+locator.click: Timeout 3500ms exceeded.
+Call log:
+  - waiting for locator('#toolsfab')
+    - locator resolved to <button id="toolsfab" type="button" class="tools-fab">Tools</button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <deep-walkthrough></deep-walkthrough> from <main role="main" class="stage">…</main> subtree intercepts pointer events
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <deep-walkthrough></deep-walkthrough> from <main role="main" class="stage">…</main> subtree intercepts pointer events
+    - retrying click action
+      - waiting 100ms
+    6 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <deep-walkthrough></deep-walkthrough> from <main role="main" class="stage">…</main> subtree intercepts pointer events
+    - retrying click action
+      - waiting 500ms
+
+
+=== FIXED-BAR GEOMETRY @360 (isMobile) ===
+{
+ "docCW": 360,
+ "docSW": 579,
+ "innerWidth": 579,
+ "vv": {
+  "w": 360,
+  "scale": 1,
+  "offsetLeft": 204
+ },
+ "seg": {
+  "x": 0,
+  "right": 579,
+  "w": 579
+ },
+ "segPos": "fixed",
+ "mockcta": {
+  "x": 0,
+  "right": 579,
+  "w": 579
+ },
+ "mockctaPos": "fixed",
+ "toolsfab": {
+  "x": 497.4,
+  "right": 564,
+  "w": 66.6
+ },
+ "tnnext": {
+  "x": 535,
+  "right": 579,
+  "w": 44
+ },
+ "visibleEdge": 360
+}
+
+=== PAN ATTEMPT (drag 340->40) === {"before":0,"after":{"scrollX":0,"vvOffset":204}}
+
+=== B. NON-mobile @360, overlay suppressed ===
+{
+ "docSW": 579,
+ "docCW": 360,
+ "innerWidth": 360,
+ "scrollXAfterScrollTo": 0,
+ "tnnextX": 535,
+ "tnnextRight": 579
+}
+  #tnnext click (non-mobile 360): {"ok":true,"hash":"#slos/walk"}
+
+=== C. AFTER FIX (min-width:0) @360 ===
+{
+ "docSW": 360,
+ "docCW": 360,
+ "over": 0,
+ "innerWidth": 360,
+ "tnnext": {
+  "x": 301,
+  "right": 345
+ },
+ "toolsfab": {
+  "x": 278.4,
+  "right": 345
+ }
+}
+  OK   #tnnext #debugging/walk -> #slos/walk changed=true
+  OK   #toolsfab #debugging/walk -> #debugging/walk changed=false
+
+=== D. REACHABILITY within the 360px VISIBLE viewport (clientWidth), 46 topics ===
+  #tnnext  FULLY outside visible viewport : 28 / 46
+  #tnnext  partially clipped (<44px shown): 18
+  #tnnext  fully usable (>=44px)          : 0
+  #toolsfab FULLY outside visible viewport: 16 / 46
+  #toolsfab partially clipped             : 8
+  sample tnnext hidden: [{"t":"event-driven","x":395,"cw":360,"over":80},{"t":"real-time-delivery","x":365.1,"cw":360,"over":49},{"t":"cdc","x":381.2,"cw":360,"over":65},{"t":"stream-batch-processing","x":433.3,"cw":360,"over":117},{"t":"caching","x":366.8,"cw":360,"over":51}]
+  sample fab hidden   : [{"t":"stream-batch-processing","x":395.4,"cw":360},{"t":"shared-definition","x":396.4,"cw":360},{"t":"replication","x":369.4,"cw":360},{"t":"sharding-strategies","x":371.4,"cw":360},{"t":"probabilistic-structures","x":389.4,"cw":360}]

@@ -1,0 +1,508 @@
+[
+ {
+  "topic": "event-driven",
+  "chipCount": 2,
+  "worst": {
+   "text": "→ at-least-once plus an idempotent consumer, never exactly-once delivery\nThe broker retries until acked, so it never drops but may duplicate. Exactly-once delivery isn't achievable across a network; at-least-once plus a dedup check gives effectively-once processing, which is the honest answer.",
+   "chars": 294,
+   "w": 1408,
+   "right": 1873,
+   "over": 593
+  }
+ },
+ {
+  "topic": "notifications",
+  "chipCount": 7,
+  "worst": {
+   "text": "→ Tenant authorization (3)",
+   "chars": 26,
+   "w": 147,
+   "right": 899,
+   "over": -381
+  }
+ },
+ {
+  "topic": "real-time-delivery",
+  "chipCount": 2,
+  "worst": {
+   "text": "→ on-write for bounded audiences (instant reads), on-read for huge audiences (avoid the write storm), hybrid for celebrities\nPush normal accounts' events into followers' feeds for cheap instant reads; do not fan out a celebrity's post on write -- merge their recent items in at read time -- and always deliver asynchronously via a queue, batched per gateway, so a burst is absorbed and spread.",
+   "chars": 393,
+   "w": 1871,
+   "right": 2303,
+   "over": 1023
+  }
+ },
+ {
+  "topic": "cdc",
+  "chipCount": 2,
+  "worst": {
+   "text": "→ outbox for curated domain events, log-based for wholesale replication\nThe outbox emits an event shape you own, at the cost of app code; log-based captures everything with no code but couples consumers to the table's schema. Choose by whether you want deliberate domain events or a full data replica.",
+   "chars": 301,
+   "w": 1474,
+   "right": 1923,
+   "over": 643
+  }
+ },
+ {
+  "topic": "kafka-internals",
+  "chipCount": 2,
+  "worst": {
+   "text": "→ retained replayable log (pull, offsets) vs delete-on-consume broker (push, per-message routing)\nKafka: high throughput, many consumers of the same stream, replay, per-partition ordering, event-backbone/source-of-truth. RabbitMQ: flexible per-message routing, priorities, delays, native DLQ, low-latency task queues. Log vs queue -- match to the need.",
+   "chars": 352,
+   "w": 1713,
+   "right": 2173,
+   "over": 893
+  }
+ },
+ {
+  "topic": "stream-batch-processing",
+  "chipCount": 2,
+  "worst": {
+   "text": "→ window by event-time, fire on watermarks, and set an allowed-lateness policy (update / drop / side-output)\nEvent-time windowing is correct but forces late-data handling: a watermark (event-time-so-far) decides when a window fires, allowed-lateness restates results for stragglers within a grace period, and very-late events are dropped or side-output for reconciliation -- explicitly choosing the completeness/latency/complexity trade.",
+   "chars": 437,
+   "w": 2100,
+   "right": 2539,
+   "over": 1259
+  }
+ },
+ {
+  "topic": "saga",
+  "chipCount": 2,
+  "worst": {
+   "text": "→ choreography = event-driven, decoupled, implicit flow; orchestration = central coordinator, explicit, observable\nSimple sagas suit choreography (no coordinator); complex/failure-heavy sagas suit orchestration (durable state machine knows each saga's status) -- and choreography's hardest cost is observability.",
+   "chars": 312,
+   "w": 1506,
+   "right": 1990,
+   "over": 710
+  }
+ },
+ {
+  "topic": "caching",
+  "chipCount": 2,
+  "worst": {
+   "text": "→ cache-aside by default, write-through where the cache must stay warm\nCache-aside caches only what's read and keeps writes simple, at the cost of a stale-populate race. Write-through keeps hot data consistent and warm, at the cost of every write paying the cache. Match it to the read/write ratio and the consistency need.",
+   "chars": 323,
+   "w": 1557,
+   "right": 2005,
+   "over": 725
+  }
+ },
+ {
+  "topic": "soft-delete",
+  "chipCount": 2,
+  "worst": {
+   "text": "→ every read needs the filter, and unique constraints and foreign keys need rethinking\nThe deleted rows are physically present, so reads must exclude them (one structural filter), a plain unique constraint blocks value reuse (use a partial index), and foreign keys can reference deleted parents (choose a cascade policy).",
+   "chars": 321,
+   "w": 1524,
+   "right": 1965,
+   "over": 685
+  }
+ },
+ {
+  "topic": "eav",
+  "chipCount": 7,
+  "worst": {
+   "text": "→ Tenant Authorization (3)",
+   "chars": 26,
+   "w": 148,
+   "right": 899,
+   "over": -381
+  }
+ },
+ {
+  "topic": "shared-definition",
+  "chipCount": 7,
+  "worst": {
+   "text": "→ Tenant Authorization (3)",
+   "chars": 26,
+   "w": 148,
+   "right": 899,
+   "over": -381
+  }
+ },
+ {
+  "topic": "replication",
+  "chipCount": 2,
+  "worst": {
+   "text": "→ yes, and it is the right tool when the attribute set is variable\nEntity, attribute, value is EAV. It's correct when attributes are tenant-defined or open-ended, where columns would need a migration each; it's wrong for a fixed schema, where typed columns are simpler and safer. Owning that it's EAV, and validating on write, is the mature answer.",
+   "chars": 348,
+   "w": 1652,
+   "right": 2080,
+   "over": 800
+  }
+ },
+ {
+  "topic": "consistency-models",
+  "chipCount": 2,
+  "worst": {
+   "text": "→ strong is a premium paid on every operation: coordination latency, reduced availability under partition, a throughput ceiling\nMost operations do not need it, so global strong over-pays; right-size per operation -- strong for money/uniqueness/locks, the weakest acceptable model (session or eventual) for feeds and counts -- which is faster and more available and exactly as safe where it matters.",
+   "chars": 398,
+   "w": 1903,
+   "right": 2365,
+   "over": 1085
+  }
+ },
+ {
+  "topic": "sharding-strategies",
+  "chipCount": 2,
+  "worst": {
+   "text": "→ consistent hashing or fixed logical partitions, then dual-write, backfill, verify, cut over\nNaive hash mod N moves ~all keys on resize, so you use consistent hashing (remap one arc) or fixed partitions (reassign whole partitions); the live move is a background dual-write + backfill + gradual cutover with rollback, never a stop-the-world copy.",
+   "chars": 346,
+   "w": 1639,
+   "right": 2107,
+   "over": 827
+  }
+ },
+ {
+  "topic": "consistent-hashing",
+  "chipCount": 2,
+  "worst": {
+   "text": "→ no -- it evens where keys live, not access frequency; a hot key still lands on one node\nHot keys need replication, key-splitting, or a cache layer; and load variance across nodes needs bounded-load consistent hashing (cap + overflow), not the plain ring.",
+   "chars": 256,
+   "w": 1216,
+   "right": 1675,
+   "over": 395
+  }
+ },
+ {
+  "topic": "storage-engines",
+  "chipCount": 2,
+  "worst": {
+   "text": "→ write-heavy/ingest -> LSM (sequential writes + compaction); read-heavy/transactional -> B-tree (in-place, one lookup)\nB-trees pay on writes (in-place page rewrites) to keep reads a short traversal; LSM pays on reads (multiple files) and space (obsolete data) to keep writes cheap sequential appends -- match the amplification your workload affords.",
+   "chars": 350,
+   "w": 1684,
+   "right": 2143,
+   "over": 863
+  }
+ },
+ {
+  "topic": "probabilistic-structures",
+  "chipCount": 2,
+  "worst": {
+   "text": "→ only if the error direction is harmless for the use, and correctness-critical answers stay exact\nTrust the exact side (Bloom's \"no,\" never its \"yes\"; CMS overestimate must be the safe direction); accept HLL's ~1-2% for analytics but not billing; and back anything correctness- or revenue-critical with an exact structure, using the sketch as a fast pre-filter in front of it.",
+   "chars": 377,
+   "w": 1754,
+   "right": 2228,
+   "over": 948
+  }
+ },
+ {
+  "topic": "retries-timeouts",
+  "chipCount": 2,
+  "worst": {
+   "text": "→ from the dependency's latency distribution -- above p99 with margin\nToo short manufactures failures on healthy-but-slow calls; too long lets a hung dependency exhaust your pool before it fires. Set it from real p99, and set connect/read/total separately.",
+   "chars": 256,
+   "w": 1235,
+   "right": 1681,
+   "over": 401
+  }
+ },
+ {
+  "topic": "idempotency",
+  "chipCount": 2,
+  "worst": {
+   "text": "→ exactly-once effect, not delivery: at-least-once + idempotent processing\nExactly-once delivery is impossible over an unreliable network; you accept duplicates and dedup them so the effect happens once, which is what exactly-once means in practice.",
+   "chars": 249,
+   "w": 1208,
+   "right": 1667,
+   "over": 387
+  }
+ },
+ {
+  "topic": "circuit-breaker",
+  "chipCount": 2,
+  "worst": {
+   "text": "→ a fallback: stale cache, default, queued write, or degraded feature -- not just an error\nThe breaker provides the \"dependency is down\" signal; the fallback turns a hard failure into graceful degradation, which is the real value beyond saving resources.",
+   "chars": 254,
+   "w": 1208,
+   "right": 1651,
+   "over": 371
+  }
+ },
+ {
+  "topic": "error-propagation",
+  "chipCount": 2,
+  "worst": {
+   "text": "→ whether retrying can succeed (transient) and whether the operation is idempotent (safe to retry)\nA timeout or throttle is transient (retry with backoff); a missing key or bad input is permanent (fail fast) -- and retryable is a joint property of the failure and the operation's idempotency, so you only mark a code retryable if re-attempting is actually safe.",
+   "chars": 361,
+   "w": 1697,
+   "right": 2155,
+   "over": 875
+  }
+ },
+ {
+  "topic": "backpressure",
+  "chipCount": 2,
+  "worst": {
+   "text": "→ whether retrying can succeed (transient) and whether the operation is idempotent (safe to retry)\nA timeout or throttle is transient (retry with backoff); a missing key or bad input is permanent (fail fast) -- and retryable is a joint property of the failure and the operation's idempotency, so you only mark a code retryable if re-attempting is actually safe.",
+   "chars": 361,
+   "w": 1697,
+   "right": 2155,
+   "over": 875
+  }
+ },
+ {
+  "topic": "observability",
+  "chipCount": 2,
+  "worst": {
+   "text": "→ metric for rates/latency and alerts, log for the detail of one case, trace for where the time went\nEach pillar answers a different question and none substitutes for another. You alert on metrics, investigate with logs, and localize latency and errors across services with traces -- joined by the shared correlation id.",
+   "chars": 320,
+   "w": 1493,
+   "right": 1933,
+   "over": 653
+  }
+ },
+ {
+  "topic": "debugging",
+  "chipCount": 2,
+  "worst": {
+   "text": "→ the amplifier is disproportionately loud -- error volume far above the legitimate request rate\nA silent failure plus a no-backoff retry is a multiplier, not N distinct bugs; you fix the cause (code/data) and the amplification (idempotency, backoff, actionable errors) separately, because fixing either alone leaves the other running.",
+   "chars": 335,
+   "w": 1576,
+   "right": 2033,
+   "over": 753
+  }
+ },
+ {
+  "topic": "slos",
+  "chipCount": 2,
+  "worst": {
+   "text": "→ a proportion of good events over valid events, measured near the user, that moves with user happiness\nNot CPU/memory (internal, weakly correlated with pain); the test is \"if this SLI is met, are users happy?\" -- and latency SLIs use percentiles under a threshold, never averages.",
+   "chars": 281,
+   "w": 1346,
+   "right": 1783,
+   "over": 503
+  }
+ },
+ {
+  "topic": "iac",
+  "chipCount": 7,
+  "worst": {
+   "text": "→ Desired State (7)",
+   "chars": 19,
+   "w": 110,
+   "right": 899,
+   "over": -381
+  }
+ },
+ {
+  "topic": "desired-state",
+  "chipCount": 7,
+  "worst": {
+   "text": "→ Attribute Store (6)",
+   "chars": 21,
+   "w": 119,
+   "right": 899,
+   "over": -381
+  }
+ },
+ {
+  "topic": "aws-hardening",
+  "chipCount": 7,
+  "worst": {
+   "text": "→ Package signing (2)",
+   "chars": 21,
+   "w": 124,
+   "right": 899,
+   "over": -381
+  }
+ },
+ {
+  "topic": "load-balancing",
+  "chipCount": 2,
+  "worst": {
+   "text": "→ L4 for raw throughput and non-HTTP; L7 when you need to route by request content\nL4 forwards by IP/port without parsing (fast, protocol-agnostic); L7 parses to route by path/host/header and terminate TLS (smart, more work). The question is whether you need to look inside the request.",
+   "chars": 286,
+   "w": 1405,
+   "right": 1852,
+   "over": 572
+  }
+ },
+ {
+  "topic": "autoscaling",
+  "chipCount": 2,
+  "worst": {
+   "text": "→ L4 for raw throughput and non-HTTP; L7 when you need to route by request content\nL4 forwards by IP/port without parsing (fast, protocol-agnostic); L7 parses to route by path/host/header and terminate TLS (smart, more work). The question is whether you need to look inside the request.",
+   "chars": 286,
+   "w": 1405,
+   "right": 1852,
+   "over": 572
+  }
+ },
+ {
+  "topic": "leader-election",
+  "chipCount": 2,
+  "worst": {
+   "text": "→ quorum (a minority can't elect) + lease (a lost leader expires) + fencing token (a stale leader is rejected)\nEach closes a different hole: quorum the partition case, lease the crashed-leader case, fencing the paused-then-resumed case -- you need all three for at-most-one-active-leader.",
+   "chars": 288,
+   "w": 1361,
+   "right": 1811,
+   "over": 531
+  }
+ },
+ {
+  "topic": "distributed-locks",
+  "chipCount": 2,
+  "worst": {
+   "text": "→ not on its own -- a paused holder can act after expiry; you need a fencing token the resource enforces\nA lock is a performance optimization; correctness comes from the resource fencing on a monotonic token, or from a design that needs no exclusion -- and correctness-vs-efficiency decides which lock you even need.",
+   "chars": 316,
+   "w": 1528,
+   "right": 1999,
+   "over": 719
+  }
+ },
+ {
+  "topic": "multi-region",
+  "chipCount": 2,
+  "worst": {
+   "text": "→ fence the old primary before promoting, or use a quorum so a partitioned minority can't write\nNever promote a secondary while the primary might be alive-but-unreachable without fencing it (revoking its write capability); or require writes to hold a majority quorum, so the minority side of a partition structurally cannot accept writes -- and detect conservatively so you don't fail over on a blip.",
+   "chars": 400,
+   "w": 1902,
+   "right": 2351,
+   "over": 1071
+  }
+ },
+ {
+  "topic": "lambda-organization",
+  "chipCount": 2,
+  "worst": {
+   "text": "→ by business domain with a naming convention, so logs are browseable and IAM scopeable\nGrouping by domain (not technical layer) and naming as org-lambda-domain-function-env keeps the estate navigable, debuggable, and least-privilege. Ad hoc naming turns it into an unmanageable sprawl.",
+   "chars": 286,
+   "w": 1428,
+   "right": 1888,
+   "over": 608
+  }
+ },
+ {
+  "topic": "devices-dispatch",
+  "chipCount": 2,
+  "worst": {
+   "text": "→ pull, because you cannot hold connections to a huge intermittent fleet\nPushing needs a live connection per device and fails for anything offline. Pulling lets each device poll on its own interval from a stateless server, handles offline devices for free, and scales by adding stateless instances. The cost is latency --- a change waits for the next poll.",
+   "chars": 356,
+   "w": 1657,
+   "right": 2100,
+   "over": 820
+  }
+ },
+ {
+  "topic": "developer-platform",
+  "chipCount": 2,
+  "worst": {
+   "text": "→ safe-by-default: prod read-only, environment explicit, EXPLAIN-checked, elevation logged\nThe common path is easy and the dangerous path requires deliberate, audited intent, so accidents are prevented by the defaults rather than by vigilance, and concentrating access makes it the natural audit point.",
+   "chars": 302,
+   "w": 1462,
+   "right": 1926,
+   "over": 646
+  }
+ },
+ {
+  "topic": "state-machine",
+  "chipCount": 2,
+  "worst": {
+   "text": "→ flags allow contradictory combinations nothing prevents; one state plus a table makes only valid states representable\nBooleans multiply into impossible combinations (shipped-but-unpaid) with no guard; a single state field validated against a transition table makes an illegal state unreachable by construction, replacing \"hope the flags agree\" with an always-valid entity.",
+   "chars": 374,
+   "w": 1787,
+   "right": 2236,
+   "over": 956
+  }
+ },
+ {
+  "topic": "rules-engine",
+  "chipCount": 2,
+  "worst": {
+   "text": "→ policy is editable data, changeable without a release\nRules as data mean a threshold change is a row edit the engine reads next cycle, not a code change through CI/CD. It pays off when policy changes often or varies per tenant; for a few stable global rules, hardcoding is simpler.",
+   "chars": 283,
+   "w": 1346,
+   "right": 1808,
+   "over": 528
+  }
+ },
+ {
+  "topic": "feature-flags",
+  "chipCount": 2,
+  "worst": {
+   "text": "→ same machinery; a flag is the boolean toggle, config is any tuned value\nBoth are runtime values with a default, resolvable per context, changeable without a deploy. A flag gates behavior; dynamic config tunes a number or a string. A config change, being higher-blast-radius, gets schema validation and a staged rollout.",
+   "chars": 321,
+   "w": 1541,
+   "right": 1978,
+   "over": 698
+  }
+ },
+ {
+  "topic": "api-design",
+  "chipCount": 2,
+  "worst": {
+   "text": "→ additive changes with a tolerant reader; version only to break, with a deprecation window\nMost changes can be additive (new optional fields, new endpoints) needing no version; a tolerant reader ignores unknowns, you never remove or repurpose a field, and a true break gets a new version and a sunset -- the same additive-change, ordered-rollout discipline as any contract.",
+   "chars": 374,
+   "w": 1805,
+   "right": 2256,
+   "over": 976
+  }
+ },
+ {
+  "topic": "rate-limiting",
+  "chipCount": 2,
+  "worst": {
+   "text": "→ additive changes with a tolerant reader; version only to break, with a deprecation window\nMost changes can be additive (new optional fields, new endpoints) needing no version; a tolerant reader ignores unknowns, you never remove or repurpose a field, and a true break gets a new version and a sunset -- the same additive-change, ordered-rollout discipline as any contract.",
+   "chars": 374,
+   "w": 1805,
+   "right": 2256,
+   "over": 976
+  }
+ },
+ {
+  "topic": "content-pipeline",
+  "chipCount": 7,
+  "worst": {
+   "text": "→ Signing (2)",
+   "chars": 13,
+   "w": 83,
+   "right": 899,
+   "over": -381
+  }
+ },
+ {
+  "topic": "microfrontend",
+  "chipCount": 2,
+  "worst": {
+   "text": "→ independent team deploys -- it's an organizational problem, not a technical one\nA monolith couples every team to one repo and one release train; microfrontends give each team its own build and deploy, so the driver is team autonomy at org scale, and small orgs don't have the problem.",
+   "chars": 286,
+   "w": 1390,
+   "right": 1880,
+   "over": 600
+  }
+ },
+ {
+  "topic": "signing",
+  "chipCount": 2,
+  "worst": {
+   "text": "→ independent team deploys -- it's an organizational problem, not a technical one\nA monolith couples every team to one repo and one release train; microfrontends give each team its own build and deploy, so the driver is team autonomy at org scale, and small orgs don't have the problem.",
+   "chars": 286,
+   "w": 1390,
+   "right": 1880,
+   "over": 600
+  }
+ },
+ {
+  "topic": "authz",
+  "chipCount": 7,
+  "worst": {
+   "text": "→ Identity / tokens",
+   "chars": 19,
+   "w": 110,
+   "right": 899,
+   "over": -381
+  }
+ },
+ {
+  "topic": "multi-tenant",
+  "chipCount": 2,
+  "worst": {
+   "text": "→ shared rows for density, a database per tenant for a hard wall\nShared scopes every row by tenant id --- cheap and dense, but isolation is only as strong as the predicate. Per-tenant databases are a hard wall at N times the operational cost. Most systems are a hybrid: shared for the many, dedicated for the largest or most regulated.",
+   "chars": 335,
+   "w": 1593,
+   "right": 2043,
+   "over": 763
+  }
+ }
+]

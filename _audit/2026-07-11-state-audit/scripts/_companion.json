@@ -1,0 +1,818 @@
+{
+ "dataMap": {
+  "event-driven": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill"
+   ],
+   "missing": [
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  "notifications": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill",
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ],
+   "missing": []
+  },
+  "real-time-delivery": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill"
+   ],
+   "missing": [
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  "cdc": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill"
+   ],
+   "missing": [
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  "kafka-internals": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill"
+   ],
+   "missing": [
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  "stream-batch-processing": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill"
+   ],
+   "missing": [
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  "saga": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill"
+   ],
+   "missing": [
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  "caching": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill"
+   ],
+   "missing": [
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  "soft-delete": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill"
+   ],
+   "missing": [
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  "eav": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill",
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ],
+   "missing": []
+  },
+  "shared-definition": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill"
+   ],
+   "missing": [
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  "replication": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill"
+   ],
+   "missing": [
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  "consistency-models": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill"
+   ],
+   "missing": [
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  "sharding-strategies": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill"
+   ],
+   "missing": [
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  "consistent-hashing": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill"
+   ],
+   "missing": [
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  "storage-engines": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill"
+   ],
+   "missing": [
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  "probabilistic-structures": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill"
+   ],
+   "missing": [
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  "retries-timeouts": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill"
+   ],
+   "missing": [
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  "idempotency": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill"
+   ],
+   "missing": [
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  "circuit-breaker": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill"
+   ],
+   "missing": [
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  "error-propagation": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill"
+   ],
+   "missing": [
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  "backpressure": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill"
+   ],
+   "missing": [
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  "observability": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill"
+   ],
+   "missing": [
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  "debugging": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill"
+   ],
+   "missing": [
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  "slos": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill"
+   ],
+   "missing": [
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  "iac": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill",
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ],
+   "missing": []
+  },
+  "desired-state": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill",
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ],
+   "missing": []
+  },
+  "aws-hardening": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill",
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ],
+   "missing": []
+  },
+  "load-balancing": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill"
+   ],
+   "missing": [
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  "autoscaling": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill"
+   ],
+   "missing": [
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  "leader-election": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill"
+   ],
+   "missing": [
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  "distributed-locks": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill"
+   ],
+   "missing": [
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  "multi-region": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill"
+   ],
+   "missing": [
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  "lambda-organization": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill"
+   ],
+   "missing": [
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  "devices-dispatch": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill"
+   ],
+   "missing": [
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  "developer-platform": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill"
+   ],
+   "missing": [
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  "state-machine": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill"
+   ],
+   "missing": [
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  "rules-engine": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill"
+   ],
+   "missing": [
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  "feature-flags": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill"
+   ],
+   "missing": [
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  "api-design": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill"
+   ],
+   "missing": [
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  "rate-limiting": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill"
+   ],
+   "missing": [
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  "content-pipeline": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill",
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ],
+   "missing": []
+  },
+  "microfrontend": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill"
+   ],
+   "missing": [
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  },
+  "signing": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill",
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ],
+   "missing": []
+  },
+  "authz": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill",
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ],
+   "missing": []
+  },
+  "multi-tenant": {
+   "hasCmpNotes": true,
+   "views": [
+    "walk",
+    "drill"
+   ],
+   "missing": [
+    "wb",
+    "sys",
+    "trade",
+    "model",
+    "num",
+    "rf",
+    "open"
+   ]
+  }
+ },
+ "leaks": [
+  {
+   "topic": "notifications",
+   "view": "model",
+   "shownNote": "Full spoken scripts — the beats, in order, the way you’d actually say them.",
+   "belongsTo": "authz"
+  },
+  {
+   "topic": "notifications",
+   "view": "open",
+   "shownNote": "The opener and the close — matched to the altitude the question is asked at.",
+   "belongsTo": "authz"
+  },
+  {
+   "topic": "eav",
+   "view": "model",
+   "shownNote": "Full spoken scripts — the beats, in order, the way you’d actually say them.",
+   "belongsTo": "authz"
+  },
+  {
+   "topic": "eav",
+   "view": "open",
+   "shownNote": "The opener and the close — matched to the altitude the question is asked at.",
+   "belongsTo": "authz"
+  },
+  {
+   "topic": "iac",
+   "view": "model",
+   "shownNote": "Full spoken scripts — the beats, in order, the way you’d actually say them.",
+   "belongsTo": "authz"
+  },
+  {
+   "topic": "iac",
+   "view": "open",
+   "shownNote": "The opener and the close — matched to the altitude the question is asked at.",
+   "belongsTo": "authz"
+  },
+  {
+   "topic": "desired-state",
+   "view": "model",
+   "shownNote": "Full spoken scripts — the beats, in order, the way you’d actually say them.",
+   "belongsTo": "authz"
+  },
+  {
+   "topic": "desired-state",
+   "view": "open",
+   "shownNote": "The opener and the close — matched to the altitude the question is asked at.",
+   "belongsTo": "authz"
+  },
+  {
+   "topic": "aws-hardening",
+   "view": "model",
+   "shownNote": "Full spoken scripts — the beats, in order, the way you’d actually say them.",
+   "belongsTo": "authz"
+  },
+  {
+   "topic": "aws-hardening",
+   "view": "open",
+   "shownNote": "The opener and the close — matched to the altitude the question is asked at.",
+   "belongsTo": "authz"
+  },
+  {
+   "topic": "content-pipeline",
+   "view": "model",
+   "shownNote": "Full spoken scripts — the beats, in order, the way you’d actually say them.",
+   "belongsTo": "authz"
+  },
+  {
+   "topic": "content-pipeline",
+   "view": "open",
+   "shownNote": "The opener and the close — matched to the altitude the question is asked at.",
+   "belongsTo": "authz"
+  },
+  {
+   "topic": "signing",
+   "view": "model",
+   "shownNote": "Full spoken scripts — the beats, in order, the way you’d actually say them.",
+   "belongsTo": "authz"
+  },
+  {
+   "topic": "signing",
+   "view": "open",
+   "shownNote": "The opener and the close — matched to the altitude the question is asked at.",
+   "belongsTo": "authz"
+  }
+ ]
+}

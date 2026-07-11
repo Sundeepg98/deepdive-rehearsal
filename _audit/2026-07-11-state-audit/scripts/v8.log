@@ -1,0 +1,132 @@
+=== F3: MOCKBAR CLOSED STATE @390x844 ===
+{
+ "display": "flex",
+ "visibility": "visible",
+ "transform": "matrix(1, 0, 0, 1, 0, 795.89)",
+ "position": "fixed",
+ "top": 1084.8,
+ "bottom": 1776.9,
+ "h": 692.1,
+ "viewportH": 981,
+ "docClientH": 844,
+ "ariaHidden": null,
+ "inert": false,
+ "inertProp": false,
+ "hiddenAttr": false,
+ "bodyHasToolsOpen": false,
+ "btnCount": 13,
+ "btnIds": [
+  "idxopen",
+  "searchopen",
+  "copylink",
+  "starbtn",
+  "notesopen",
+  "printqa",
+  "cramopen",
+  "sessopen",
+  "mixopen",
+  "planopen",
+  "scopeopen",
+  "keyopen",
+  "themetog"
+ ],
+ "tabbable": 13
+}
+
+=== TAB TRAIL FROM PAGE LOAD (viewport h=844) ===
+  Tab# 1 SUMMARY.mcomp-sum        top=  306 left=  16 inMockbar=no offscreen=false
+  Tab# 2 SUMMARY                  top=  807 left=  39 inMockbar=no offscreen=false
+  Tab# 3 #wnext                   top=  797 left= 292 inMockbar=no offscreen=false
+  Tab# 4 SUMMARY                  top=  647 left=  19 inMockbar=no offscreen=false
+  Tab# 5 BUTTON.arc-step          top=  724 left=  15 inMockbar=no offscreen=false
+  Tab# 6 BUTTON.arc-step          top=  717 left= 138 inMockbar=no offscreen=false
+  Tab# 7 BUTTON.arc-step          top=  717 left= 262 inMockbar=no offscreen=false
+  Tab# 8 BUTTON.arc-step          top=  860 left=  15 inMockbar=no offscreen=false
+  Tab# 9 #scrolltop               top=  931 left= 207 inMockbar=no offscreen=false
+  Tab#10 BODY                     top=undefined left=undefined inMockbar=no offscreen=undefined
+  Tab#11 #_focus-toggle           top= -161 left=  15 inMockbar=no offscreen=true
+  Tab#12 #homeBtn                 top=   93 left=  15 inMockbar=no offscreen=false
+  Tab#13 #tnprev                  top=  149 left=  65 inMockbar=no offscreen=false
+  Tab#14 #tntrigger               top=  163 left= 115 inMockbar=no offscreen=false
+  => first Tab that lands INSIDE the closed mockbar: NONE
+
+=== F4: .seg ACTIVE-TAB VISIBILITY BY NAVIGATION PATH (target view = "open", the last tab) ===
+  click     activeTab=open   scrollLeft=   580/580  activeRect=[288.3..384] strip=[0..396]  ACTIVE VISIBLE=YES
+  keyboard  activeTab=open   scrollLeft=   580/580  activeRect=[288.3..384] strip=[0..396]  ACTIVE VISIBLE=YES
+  deeplink  activeTab=open   scrollLeft=   580/580  activeRect=[288.3..384] strip=[0..396]  ACTIVE VISIBLE=YES
+  router    activeTab=open   scrollLeft=   580/580  activeRect=[288.3..384] strip=[0..396]  ACTIVE VISIBLE=YES
+
+  keyboard path, each view:
+    w -> drill  scrollLeft= 580 visible=NO
+    q -> walk   scrollLeft= 580 visible=NO
+    e -> wb     scrollLeft= 580 visible=NO
+    r -> sys    scrollLeft= 580 visible=NO
+    t -> trade  scrollLeft= 580 visible=NO
+    y -> model  scrollLeft= 580 visible=NO
+    u -> num    scrollLeft= 580 visible=YES
+    i -> rf     scrollLeft= 580 visible=YES
+    o -> open   scrollLeft= 580 visible=YES
+  keyboard: views with active tab OFF-SCREEN: 6 / 9
+
+  CLICK path, each view:
+    click walk   -> tab=walk   scrollLeft=   0 visible=YES
+    click drill  -> tab=drill  scrollLeft=   0 visible=YES
+    click wb     -> tab=wb     scrollLeft=   0 visible=YES
+    click sys    -> tab=sys    scrollLeft= 191 visible=YES
+    click trade  -> tab=trade  scrollLeft= 191 visible=YES
+    click model  -> tab=model  scrollLeft= 411 visible=YES
+    click num    -> tab=num    scrollLeft= 411 visible=YES
+    click rf     -> tab=rf     scrollLeft= 580 visible=YES
+    click open   -> tab=open   scrollLeft= 580 visible=YES
+  click: views with active tab OFF-SCREEN: 0 / 9
+
+=== F5: CONTROLS UNDER 44x44 @360 (closed mockbar excluded) ===
+  distinct undersized controls: 46
+    #_focus-toggle           60x20    "Focus"  panes=9
+    #scrolltop             39.6x39.6  "↑"  panes=9
+    .wb-rev                67.1x28    "Reveal"  panes=2
+    .wb-got                68.3x28    "Drew it"  panes=2
+    .wb-miss                 69x28    "Missed"  panes=2
+    BUTTON                 54.7x43    "Staff"  panes=1
+    BUTTON                 59.4x43    "SDE2"  panes=2
+    #toolsfab              66.6x40    "Tools"  panes=9
+    .op-rev                99.1x28    "Reveal mine"  panes=2
+    .on                    65.3x43    "Study"  panes=2
+    #wprev                 82.8x35    "← Prev"  panes=1
+    #wnext                 82.8x35    "Next →"  panes=1
+    BUTTON                 71.4x43    "Quick 5"  panes=1
+    BUTTON                 86.4x39    "NumbersESTIMATE"  panes=6
+    .on                    86.4x39    "NumbersESTIMATE"  panes=1
+    .seen                  86.4x39    "NumbersESTIMATE"  panes=2
+    BUTTON                 92.1x39    "Red FlagsANTI-PATT"  panes=7
+    .on                    92.1x39    "Red FlagsANTI-PATT"  panes=1
+
+=== F7: TEXT UNDER 12px @360 ===
+  distinct elements: 42
+    #_focus-toggle     9px uppercase  maxChars=  5 "Focus"
+    .tn-eyebrow        9px uppercase  maxChars= 10 "Rehearsing"
+    .tn-chev           9px none       maxChars=  1 "▾"
+    .sh-kick           9px uppercase  maxChars= 13 "MECHANICS"
+    .mcomp-eyebrow     9px uppercase  maxChars=  9 "Companion"
+    .mcomp-chev        9px none       maxChars=  1 "▾"
+    .cmp-h             9px uppercase  maxChars= 28 "This view"
+    .ml                9px uppercase  maxChars= 22 "Frame the contract"
+    .arc-h             9px uppercase  maxChars= 35 "The whole flow tap any step to jump"
+    .l                 9px uppercase  maxChars=  7 "Solid"
+    .qk                9px uppercase  maxChars= 12 "Probe 1 / 21"
+    .sigtag            9px none       maxChars= 33 "signal · why an API is a contract"
+    B                  9px none       maxChars= 24 "why an API is a contract"
+    .tier              9px uppercase  maxChars=  4 "SDE2"
+    .dnav-h            9px uppercase  maxChars= 60 "Your drill set tap a probe to jump · flagged "
+    .chip              9px none       maxChars=374 "→ additive changes with a tolerant reader; ve"
+    .pw                9px uppercase  maxChars=  9 "pick when"
+    .tierlab           9.5px uppercase  maxChars= 14 "Focus by level"
+    .mbeat-l           9.5px uppercase  maxChars= 68 "Clients couple to the shape, so design for th"
+    .num-h             10px uppercase  maxChars= 30 "Assumptions Reset to canonical"
+
+  #_focus-toggle: {"w":60,"h":20,"fontSize":"9px","padding":"4px 12px"} (lens claimed 60x20, 9px font)
+
+  .mbeat-l (kafka-internals/model):
+    mbeat-l l-key        9.5px uppercase chars= 74 "A topic is N append-only partitions; records retained, "
+    mbeat-l l-store      9.5px uppercase chars= 72 "Ordering per-partition (via the key), parallelism scale"
+    mbeat-l l-note       9.5px uppercase chars= 68 "At-least-once by default (offsets commit separately fro"

@@ -1,0 +1,1195 @@
+{
+ "R": {
+  "deadCanvas": {
+   "event-driven": {
+    "kind": "MD",
+    "views": {
+     "walk": {
+      "paneBottom": 731,
+      "paneH": 605,
+      "stageH": 900,
+      "deadAtFold": 169,
+      "canvasBelow": 169
+     },
+     "drill": {
+      "paneBottom": 998,
+      "paneH": 872,
+      "stageH": 1068,
+      "deadAtFold": -98,
+      "canvasBelow": 70
+     },
+     "wb": {
+      "paneBottom": 584,
+      "paneH": 458,
+      "stageH": 900,
+      "deadAtFold": 316,
+      "canvasBelow": 316
+     },
+     "sys": {
+      "paneBottom": 623,
+      "paneH": 497,
+      "stageH": 900,
+      "deadAtFold": 277,
+      "canvasBelow": 277
+     },
+     "trade": {
+      "paneBottom": 1083,
+      "paneH": 957,
+      "stageH": 1153,
+      "deadAtFold": -183,
+      "canvasBelow": 70
+     },
+     "model": {
+      "paneBottom": 542,
+      "paneH": 416,
+      "stageH": 900,
+      "deadAtFold": 358,
+      "canvasBelow": 358
+     },
+     "num": {
+      "paneBottom": 849,
+      "paneH": 723,
+      "stageH": 919,
+      "deadAtFold": 51,
+      "canvasBelow": 70
+     },
+     "rf": {
+      "paneBottom": 589,
+      "paneH": 463,
+      "stageH": 900,
+      "deadAtFold": 311,
+      "canvasBelow": 311
+     },
+     "open": {
+      "paneBottom": 855,
+      "paneH": 729,
+      "stageH": 925,
+      "deadAtFold": 45,
+      "canvasBelow": 70
+     }
+    }
+   },
+   "slos": {
+    "kind": "MD",
+    "views": {
+     "walk": {
+      "paneBottom": 795,
+      "paneH": 669,
+      "stageH": 900,
+      "deadAtFold": 105,
+      "canvasBelow": 105
+     },
+     "drill": {
+      "paneBottom": 998,
+      "paneH": 872,
+      "stageH": 1068,
+      "deadAtFold": -98,
+      "canvasBelow": 70
+     },
+     "wb": {
+      "paneBottom": 584,
+      "paneH": 458,
+      "stageH": 900,
+      "deadAtFold": 316,
+      "canvasBelow": 316
+     },
+     "sys": {
+      "paneBottom": 659,
+      "paneH": 533,
+      "stageH": 900,
+      "deadAtFold": 241,
+      "canvasBelow": 241
+     },
+     "trade": {
+      "paneBottom": 1106,
+      "paneH": 980,
+      "stageH": 1176,
+      "deadAtFold": -206,
+      "canvasBelow": 70
+     },
+     "model": {
+      "paneBottom": 628,
+      "paneH": 502,
+      "stageH": 900,
+      "deadAtFold": 272,
+      "canvasBelow": 272
+     },
+     "num": {
+      "paneBottom": 881,
+      "paneH": 755,
+      "stageH": 951,
+      "deadAtFold": 19,
+      "canvasBelow": 70
+     },
+     "rf": {
+      "paneBottom": 702,
+      "paneH": 576,
+      "stageH": 900,
+      "deadAtFold": 198,
+      "canvasBelow": 198
+     },
+     "open": {
+      "paneBottom": 893,
+      "paneH": 767,
+      "stageH": 963,
+      "deadAtFold": 7,
+      "canvasBelow": 70
+     }
+    }
+   },
+   "caching": {
+    "kind": "MD",
+    "views": {
+     "walk": {
+      "paneBottom": 720,
+      "paneH": 594,
+      "stageH": 900,
+      "deadAtFold": 180,
+      "canvasBelow": 180
+     },
+     "drill": {
+      "paneBottom": 998,
+      "paneH": 872,
+      "stageH": 1068,
+      "deadAtFold": -98,
+      "canvasBelow": 70
+     },
+     "wb": {
+      "paneBottom": 584,
+      "paneH": 458,
+      "stageH": 900,
+      "deadAtFold": 316,
+      "canvasBelow": 316
+     },
+     "sys": {
+      "paneBottom": 586,
+      "paneH": 460,
+      "stageH": 900,
+      "deadAtFold": 314,
+      "canvasBelow": 314
+     },
+     "trade": {
+      "paneBottom": 1027,
+      "paneH": 901,
+      "stageH": 1097,
+      "deadAtFold": -127,
+      "canvasBelow": 70
+     },
+     "model": {
+      "paneBottom": 530,
+      "paneH": 404,
+      "stageH": 900,
+      "deadAtFold": 370,
+      "canvasBelow": 370
+     },
+     "num": {
+      "paneBottom": 849,
+      "paneH": 723,
+      "stageH": 919,
+      "deadAtFold": 51,
+      "canvasBelow": 70
+     },
+     "rf": {
+      "paneBottom": 607,
+      "paneH": 481,
+      "stageH": 900,
+      "deadAtFold": 293,
+      "canvasBelow": 293
+     },
+     "open": {
+      "paneBottom": 855,
+      "paneH": 729,
+      "stageH": 925,
+      "deadAtFold": 45,
+      "canvasBelow": 70
+     }
+    }
+   },
+   "content-pipeline": {
+    "kind": "HAND",
+    "views": {
+     "walk": {
+      "paneBottom": 761,
+      "paneH": 635,
+      "stageH": 900,
+      "deadAtFold": 139,
+      "canvasBelow": 139
+     },
+     "drill": {
+      "paneBottom": 1076,
+      "paneH": 950,
+      "stageH": 1146,
+      "deadAtFold": -176,
+      "canvasBelow": 70
+     },
+     "wb": {
+      "paneBottom": 1322,
+      "paneH": 1196,
+      "stageH": 1392,
+      "deadAtFold": -422,
+      "canvasBelow": 70
+     },
+     "sys": {
+      "paneBottom": 1182,
+      "paneH": 1056,
+      "stageH": 1252,
+      "deadAtFold": -282,
+      "canvasBelow": 70
+     },
+     "trade": {
+      "paneBottom": 2427,
+      "paneH": 2301,
+      "stageH": 2497,
+      "deadAtFold": -1527,
+      "canvasBelow": 70
+     },
+     "model": {
+      "paneBottom": 1019,
+      "paneH": 893,
+      "stageH": 1089,
+      "deadAtFold": -119,
+      "canvasBelow": 70
+     },
+     "num": {
+      "paneBottom": 934,
+      "paneH": 808,
+      "stageH": 1004,
+      "deadAtFold": -34,
+      "canvasBelow": 70
+     },
+     "rf": {
+      "paneBottom": 1547,
+      "paneH": 1421,
+      "stageH": 1617,
+      "deadAtFold": -647,
+      "canvasBelow": 70
+     },
+     "open": {
+      "paneBottom": 1550,
+      "paneH": 1424,
+      "stageH": 1620,
+      "deadAtFold": -650,
+      "canvasBelow": 70
+     }
+    }
+   },
+   "authz": {
+    "kind": "HAND",
+    "views": {
+     "walk": {
+      "paneBottom": 777,
+      "paneH": 651,
+      "stageH": 900,
+      "deadAtFold": 123,
+      "canvasBelow": 123
+     },
+     "drill": {
+      "paneBottom": 1056,
+      "paneH": 930,
+      "stageH": 1126,
+      "deadAtFold": -156,
+      "canvasBelow": 70
+     },
+     "wb": {
+      "paneBottom": 1360,
+      "paneH": 1234,
+      "stageH": 1430,
+      "deadAtFold": -460,
+      "canvasBelow": 70
+     },
+     "sys": {
+      "paneBottom": 1234,
+      "paneH": 1108,
+      "stageH": 1304,
+      "deadAtFold": -334,
+      "canvasBelow": 70
+     },
+     "trade": {
+      "paneBottom": 2656,
+      "paneH": 2530,
+      "stageH": 2726,
+      "deadAtFold": -1756,
+      "canvasBelow": 70
+     },
+     "model": {
+      "paneBottom": 936,
+      "paneH": 810,
+      "stageH": 1006,
+      "deadAtFold": -36,
+      "canvasBelow": 70
+     },
+     "num": {
+      "paneBottom": 934,
+      "paneH": 808,
+      "stageH": 1004,
+      "deadAtFold": -34,
+      "canvasBelow": 70
+     },
+     "rf": {
+      "paneBottom": 1831,
+      "paneH": 1705,
+      "stageH": 1901,
+      "deadAtFold": -931,
+      "canvasBelow": 70
+     },
+     "open": {
+      "paneBottom": 1569,
+      "paneH": 1443,
+      "stageH": 1639,
+      "deadAtFold": -669,
+      "canvasBelow": 70
+     }
+    }
+   },
+   "signing": {
+    "kind": "HAND",
+    "views": {
+     "walk": {
+      "paneBottom": 761,
+      "paneH": 635,
+      "stageH": 900,
+      "deadAtFold": 139,
+      "canvasBelow": 139
+     },
+     "drill": {
+      "paneBottom": 998,
+      "paneH": 872,
+      "stageH": 1068,
+      "deadAtFold": -98,
+      "canvasBelow": 70
+     },
+     "wb": {
+      "paneBottom": 1340,
+      "paneH": 1214,
+      "stageH": 1410,
+      "deadAtFold": -440,
+      "canvasBelow": 70
+     },
+     "sys": {
+      "paneBottom": 1201,
+      "paneH": 1075,
+      "stageH": 1271,
+      "deadAtFold": -301,
+      "canvasBelow": 70
+     },
+     "trade": {
+      "paneBottom": 2597,
+      "paneH": 2471,
+      "stageH": 2667,
+      "deadAtFold": -1697,
+      "canvasBelow": 70
+     },
+     "model": {
+      "paneBottom": 957,
+      "paneH": 831,
+      "stageH": 1027,
+      "deadAtFold": -57,
+      "canvasBelow": 70
+     },
+     "num": {
+      "paneBottom": 973,
+      "paneH": 847,
+      "stageH": 1043,
+      "deadAtFold": -73,
+      "canvasBelow": 70
+     },
+     "rf": {
+      "paneBottom": 1794,
+      "paneH": 1668,
+      "stageH": 1864,
+      "deadAtFold": -894,
+      "canvasBelow": 70
+     },
+     "open": {
+      "paneBottom": 1550,
+      "paneH": 1424,
+      "stageH": 1620,
+      "deadAtFold": -650,
+      "canvasBelow": 70
+     }
+    }
+   }
+  },
+  "companion": {
+   "event-driven": {
+    "kind": "MD",
+    "views": {
+     "walk": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "drill": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "wb": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "sys": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "trade": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "model": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "num": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "rf": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "open": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     }
+    }
+   },
+   "slos": {
+    "kind": "MD",
+    "views": {
+     "walk": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "drill": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "wb": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "sys": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "trade": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "model": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "num": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "rf": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "open": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     }
+    }
+   },
+   "caching": {
+    "kind": "MD",
+    "views": {
+     "walk": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "drill": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "wb": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "sys": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "trade": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "model": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "num": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "rf": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "open": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     }
+    }
+   },
+   "content-pipeline": {
+    "kind": "HAND",
+    "views": {
+     "walk": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "drill": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "wb": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "sys": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "trade": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "model": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "num": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "rf": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "open": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     }
+    }
+   },
+   "authz": {
+    "kind": "HAND",
+    "views": {
+     "walk": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "drill": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "wb": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "sys": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "trade": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "model": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "num": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "rf": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "open": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     }
+    }
+   },
+   "signing": {
+    "kind": "HAND",
+    "views": {
+     "walk": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "drill": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "wb": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "sys": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "trade": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "model": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "num": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "rf": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     },
+     "open": {
+      "scrollH": 900,
+      "clientH": 900,
+      "over": 0
+     }
+    }
+   }
+  },
+  "wbFoot": {
+   "event-driven": [
+    {
+     "w": 704,
+     "h": 26,
+     "textLen": 0,
+     "empty": true,
+     "html": ""
+    }
+   ],
+   "slos": [
+    {
+     "w": 704,
+     "h": 26,
+     "textLen": 0,
+     "empty": true,
+     "html": ""
+    }
+   ],
+   "caching": [
+    {
+     "w": 704,
+     "h": 26,
+     "textLen": 0,
+     "empty": true,
+     "html": ""
+    }
+   ],
+   "content-pipeline": [
+    {
+     "w": 704,
+     "h": 64,
+     "textLen": 184,
+     "empty": false,
+     "html": "<b>The one people forget:</b> step 7. Two stores, "
+    }
+   ],
+   "authz": [
+    {
+     "w": 704,
+     "h": 84,
+     "textLen": 323,
+     "empty": false,
+     "html": "<b>The one people forget:</b> the predicate scopes"
+    }
+   ],
+   "signing": [
+    {
+     "w": 704,
+     "h": 64,
+     "textLen": 243,
+     "empty": false,
+     "html": "<b>The one people forget:</b> step 8. A signature "
+    }
+   ]
+  },
+  "drillBtns": [
+   {
+    "id": "",
+    "cls": "on",
+    "txt": "Study",
+    "w": 65.3,
+    "h": 43,
+    "area": 2810,
+    "fontSize": "12px",
+    "fontWeight": "800",
+    "radius": "8px",
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(83, 74, 183)",
+    "shadow": "yes"
+   },
+   {
+    "id": "",
+    "cls": "",
+    "txt": "Mock round",
+    "w": 96,
+    "h": 43,
+    "area": 4128,
+    "fontSize": "12px",
+    "fontWeight": "700",
+    "radius": "8px",
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(107, 104, 98)",
+    "shadow": "none"
+   },
+   {
+    "id": "",
+    "cls": "",
+    "txt": "Quick 5",
+    "w": 71.4,
+    "h": 43,
+    "area": 3068,
+    "fontSize": "12px",
+    "fontWeight": "700",
+    "radius": "8px",
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(107, 104, 98)",
+    "shadow": "none"
+   },
+   {
+    "id": "",
+    "cls": "on",
+    "txt": "All 22",
+    "w": 65.3,
+    "h": 43,
+    "area": 2810,
+    "fontSize": "12px",
+    "fontWeight": "800",
+    "radius": "8px",
+    "bg": "rgb(255, 255, 255)",
+    "color": "rgb(83, 74, 183)",
+    "shadow": "yes"
+   },
+   {
+    "id": "",
+    "cls": "",
+    "txt": "SDE2",
+    "w": 59.4,
+    "h": 43,
+    "area": 2552,
+    "fontSize": "12px",
+    "fontWeight": "700",
+    "radius": "8px",
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(107, 104, 98)",
+    "shadow": "none"
+   },
+   {
+    "id": "",
+    "cls": "",
+    "txt": "SDE3",
+    "w": 59.4,
+    "h": 43,
+    "area": 2552,
+    "fontSize": "12px",
+    "fontWeight": "700",
+    "radius": "8px",
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(107, 104, 98)",
+    "shadow": "none"
+   },
+   {
+    "id": "",
+    "cls": "",
+    "txt": "Staff",
+    "w": 54.7,
+    "h": 43,
+    "area": 2351,
+    "fontSize": "12px",
+    "fontWeight": "700",
+    "radius": "8px",
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(107, 104, 98)",
+    "shadow": "none"
+   },
+   {
+    "id": "adv",
+    "cls": "push",
+    "txt": "Reveal answer",
+    "w": 704,
+    "h": 41,
+    "area": 28864,
+    "fontSize": "13px",
+    "fontWeight": "700",
+    "radius": "11px",
+    "bg": "gradient",
+    "color": "rgb(255, 255, 255)",
+    "shadow": "yes"
+   },
+   {
+    "id": "",
+    "cls": "dn-step on",
+    "txt": "1Memory model under st",
+    "w": 244.7,
+    "h": 44,
+    "area": 10765,
+    "fontSize": "13.3333px",
+    "fontWeight": "400",
+    "radius": "11px",
+    "bg": "gradient",
+    "color": "rgb(0, 0, 0)",
+    "shadow": "yes"
+   },
+   {
+    "id": "",
+    "cls": "dn-step",
+    "txt": "2Cross-store consisten",
+    "w": 244.7,
+    "h": 44,
+    "area": 10766,
+    "fontSize": "13.3333px",
+    "fontWeight": "400",
+    "radius": "11px",
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(0, 0, 0)",
+    "shadow": "yes"
+   },
+   {
+    "id": "",
+    "cls": "dn-step",
+    "txt": "3I/O & concurrency rea",
+    "w": 244.7,
+    "h": 44,
+    "area": 10766,
+    "fontSize": "13.3333px",
+    "fontWeight": "400",
+    "radius": "11px",
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(0, 0, 0)",
+    "shadow": "yes"
+   },
+   {
+    "id": "",
+    "cls": "dn-step",
+    "txt": "4Architecture trade-of",
+    "w": 244.7,
+    "h": 50.6,
+    "area": 12378,
+    "fontSize": "13.3333px",
+    "fontWeight": "400",
+    "radius": "11px",
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(0, 0, 0)",
+    "shadow": "yes"
+   },
+   {
+    "id": "",
+    "cls": "dn-step",
+    "txt": "5Data modeling & idemp",
+    "w": 244.7,
+    "h": 50.6,
+    "area": 12379,
+    "fontSize": "13.3333px",
+    "fontWeight": "400",
+    "radius": "11px",
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(0, 0, 0)",
+    "shadow": "yes"
+   },
+   {
+    "id": "",
+    "cls": "dn-step",
+    "txt": "6Irreversible-decision",
+    "w": 244.7,
+    "h": 50.6,
+    "area": 12379,
+    "fontSize": "13.3333px",
+    "fontWeight": "400",
+    "radius": "11px",
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(0, 0, 0)",
+    "shadow": "yes"
+   },
+   {
+    "id": "",
+    "cls": "dn-step",
+    "txt": "7Design adaptability",
+    "w": 244.7,
+    "h": 44,
+    "area": 10765,
+    "fontSize": "13.3333px",
+    "fontWeight": "400",
+    "radius": "11px",
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(0, 0, 0)",
+    "shadow": "yes"
+   },
+   {
+    "id": "",
+    "cls": "dn-step",
+    "txt": "8Security boundary & l",
+    "w": 244.7,
+    "h": 44,
+    "area": 10766,
+    "fontSize": "13.3333px",
+    "fontWeight": "400",
+    "radius": "11px",
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(0, 0, 0)",
+    "shadow": "yes"
+   },
+   {
+    "id": "",
+    "cls": "dn-step",
+    "txt": "9Observability & opera",
+    "w": 244.7,
+    "h": 44,
+    "area": 10766,
+    "fontSize": "13.3333px",
+    "fontWeight": "400",
+    "radius": "11px",
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(0, 0, 0)",
+    "shadow": "yes"
+   },
+   {
+    "id": "",
+    "cls": "dn-step",
+    "txt": "10The exactly-once ill",
+    "w": 244.7,
+    "h": 50.6,
+    "area": 12378,
+    "fontSize": "13.3333px",
+    "fontWeight": "400",
+    "radius": "11px",
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(0, 0, 0)",
+    "shadow": "yes"
+   },
+   {
+    "id": "",
+    "cls": "dn-step",
+    "txt": "11Large-object transfe",
+    "w": 244.7,
+    "h": 50.6,
+    "area": 12379,
+    "fontSize": "13.3333px",
+    "fontWeight": "400",
+    "radius": "11px",
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(0, 0, 0)",
+    "shadow": "yes"
+   },
+   {
+    "id": "",
+    "cls": "dn-step",
+    "txt": "12Reconciler correctne",
+    "w": 244.7,
+    "h": 50.6,
+    "area": 12379,
+    "fontSize": "13.3333px",
+    "fontWeight": "400",
+    "radius": "11px",
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(0, 0, 0)",
+    "shadow": "yes"
+   },
+   {
+    "id": "",
+    "cls": "dn-step",
+    "txt": "13Cost modeling & the ",
+    "w": 244.7,
+    "h": 50.6,
+    "area": 12378,
+    "fontSize": "13.3333px",
+    "fontWeight": "400",
+    "radius": "11px",
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(0, 0, 0)",
+    "shadow": "yes"
+   },
+   {
+    "id": "",
+    "cls": "dn-step",
+    "txt": "14Format & schema evol",
+    "w": 244.7,
+    "h": 50.6,
+    "area": 12379,
+    "fontSize": "13.3333px",
+    "fontWeight": "400",
+    "radius": "11px",
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(0, 0, 0)",
+    "shadow": "yes"
+   },
+   {
+    "id": "",
+    "cls": "dn-step",
+    "txt": "15Backpressure through",
+    "w": 244.7,
+    "h": 50.6,
+    "area": 12379,
+    "fontSize": "13.3333px",
+    "fontWeight": "400",
+    "radius": "11px",
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(0, 0, 0)",
+    "shadow": "yes"
+   },
+   {
+    "id": "",
+    "cls": "dn-step",
+    "txt": "16Data deletion & the ",
+    "w": 244.7,
+    "h": 50.6,
+    "area": 12378,
+    "fontSize": "13.3333px",
+    "fontWeight": "400",
+    "radius": "11px",
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(0, 0, 0)",
+    "shadow": "yes"
+   },
+   {
+    "id": "",
+    "cls": "dn-step",
+    "txt": "17Multi-tenant fairnes",
+    "w": 244.7,
+    "h": 50.6,
+    "area": 12379,
+    "fontSize": "13.3333px",
+    "fontWeight": "400",
+    "radius": "11px",
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(0, 0, 0)",
+    "shadow": "yes"
+   },
+   {
+    "id": "",
+    "cls": "dn-step",
+    "txt": "18Blast radius when do",
+    "w": 244.7,
+    "h": 50.6,
+    "area": 12379,
+    "fontSize": "13.3333px",
+    "fontWeight": "400",
+    "radius": "11px",
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(0, 0, 0)",
+    "shadow": "yes"
+   },
+   {
+    "id": "",
+    "cls": "dn-step",
+    "txt": "19Testing & confidence",
+    "w": 244.7,
+    "h": 44,
+    "area": 10765,
+    "fontSize": "13.3333px",
+    "fontWeight": "400",
+    "radius": "11px",
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(0, 0, 0)",
+    "shadow": "yes"
+   },
+   {
+    "id": "",
+    "cls": "dn-step",
+    "txt": "20Shipping a change to",
+    "w": 244.7,
+    "h": 44,
+    "area": 10766,
+    "fontSize": "13.3333px",
+    "fontWeight": "400",
+    "radius": "11px",
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(0, 0, 0)",
+    "shadow": "yes"
+   },
+   {
+    "id": "",
+    "cls": "dn-step",
+    "txt": "21Compressing the expo",
+    "w": 244.7,
+    "h": 44,
+    "area": 10766,
+    "fontSize": "13.3333px",
+    "fontWeight": "400",
+    "radius": "11px",
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(0, 0, 0)",
+    "shadow": "yes"
+   },
+   {
+    "id": "",
+    "cls": "dn-step",
+    "txt": "22Resumable export",
+    "w": 244.7,
+    "h": 44,
+    "area": 10765,
+    "fontSize": "13.3333px",
+    "fontWeight": "400",
+    "radius": "11px",
+    "bg": "rgba(0, 0, 0, 0)",
+    "color": "rgb(0, 0, 0)",
+    "shadow": "yes"
+   }
+  ]
+ },
+ "errs": []
+}

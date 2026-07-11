@@ -1,0 +1,338 @@
+[
+ {
+  "walk": {
+   "len": 12969,
+   "head": ".dots{display:flex;gap:var(--space-7);justify-content:center;margin:0 0 var(--space-16);padding:var(--space-2)"
+  },
+  "drill": {
+   "len": 15436,
+   "head": "@keyframes pop{from{opacity:0;transform:translateY(7px) scale(.99)}to{opacity:1;transform:none}} @keyframes cb"
+  },
+  "wb": {
+   "len": 10897,
+   "head": ".dgm{display:flex;flex-direction:column;align-items:center;gap:0;padding:var(--space-4) 0 var(--space-6)} .dgm"
+  },
+  "sys": {
+   "len": 8574,
+   "head": ".card + .card{margin-top:var(--space-16)} .sm-intro{font-size:var(--font-size-caption);color:var(--mut);margin"
+  },
+  "trade": {
+   "len": 4371,
+   "head": ".ledger .lead{font-size:var(--font-size-body);line-height:var(--line-height-loose);color:var(--ink);margin:var"
+  },
+  "model": {
+   "len": 3993,
+   "head": ".msel{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--space-7);margin-bottom:var(--space-"
+  },
+  "num": {
+   "len": 4665,
+   "head": ".numlead{font-size:var(--font-size-body);line-height:var(--line-height-loose);color:var(--ink);margin:var(--sp"
+  },
+  "rf": {
+   "len": 4759,
+   "head": ".rflead{font-size:var(--font-size-body);line-height:var(--line-height-loose);color:var(--ink);margin:var(--spa"
+  },
+  "open": {
+   "len": 7816,
+   "head": ".op-lead{font-size:var(--font-size-body);line-height:var(--line-height-loose);color:var(--ink);margin:var(--sp"
+  },
+  "__id": "content-pipeline",
+  "__h1": "Content Pipeline",
+  "__locator": "Architecture & APIs · ingestion layer",
+  "__cmpTopic": "Content Pipeline",
+  "__cramTitle": "Cram sheet · Content Pipeline",
+  "__tncurrent": "Content Pipeline",
+  "__hash": "#walk",
+  "__markers": {
+   "drill": "Memory model under streaming",
+   "wb": "Entry box &mdash; the handler signature and what fires it.",
+   "walk": "Strategy dispatch",
+   "num": "{\"lead\":\"The estimation an interviewer makes you do at the w",
+   "trade": "{\"lead\":\"The design decisions an interviewer drills &mdash; ",
+   "rf": "{\"lead\":\"The moves that quietly tank a candidate on this top",
+   "open": "{\"cards\":[{\"kind\":\"open\",\"k\":\"Match the altitude\",\"t\":\"The s",
+   "model": "{\"selectors\":[\"Make it reliable\",\"Make it scale\",\"Walk a fai",
+   "sys": "{\"intro\":\"The content pipeline is the <b>ingestion layer</b>"
+  }
+ },
+ {
+  "walk": {
+   "len": 12954,
+   "head": ".dots{display:flex;gap:var(--space-7);justify-content:center;margin:0 0 var(--space-16);padding:var(--space-2)"
+  },
+  "drill": {
+   "len": 15073,
+   "head": "@keyframes pop{from{opacity:0;transform:translateY(7px) scale(.99)}to{opacity:1;transform:none}} @keyframes cb"
+  },
+  "wb": {
+   "len": 13538,
+   "head": ".dgm{display:flex;flex-direction:column;align-items:center;gap:0;padding:var(--space-4) 0 var(--space-6)} .dgm"
+  },
+  "sys": {
+   "len": 6000,
+   "head": ".card + .card{margin-top:var(--space-16)} .sm-intro{font-size:var(--font-size-caption);color:var(--mut);margin"
+  },
+  "trade": {
+   "len": 2898,
+   "head": ".ledger .lead{font-size:var(--font-size-body);line-height:var(--line-height-loose);color:var(--ink);margin:var"
+  },
+  "model": {
+   "len": 2547,
+   "head": ".msel{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--space-7);margin-bottom:var(--space-"
+  },
+  "num": {
+   "len": 4872,
+   "head": ".numlead{font-size:var(--font-size-body);line-height:var(--line-height-loose);color:var(--ink);margin:var(--sp"
+  },
+  "rf": {
+   "len": 3067,
+   "head": ".rflead{font-size:var(--font-size-body);line-height:var(--line-height-loose);color:var(--ink);margin:var(--spa"
+  },
+  "open": {
+   "len": 5121,
+   "head": ".op-lead{font-size:var(--font-size-body);line-height:var(--line-height-loose);color:var(--ink);margin:var(--sp"
+  },
+  "__id": "caching",
+  "__h1": "Caching Strategies",
+  "__locator": "Data & Storage · cache layer",
+  "__cmpTopic": "Caching Strategies",
+  "__cramTitle": "Cram sheet · Caching Strategies",
+  "__tncurrent": "Caching Strategies",
+  "__hash": "#caching/walk",
+  "__markers": {
+   "drill": "what a cache does",
+   "wb": "What is the read path?",
+   "walk": "The read checks the cache first",
+   "num": "{\"lead\":\"Back-of-envelope the load a cache removes and the l",
+   "trade": "{\"lead\":\"The calls that separate &ldquo;add Redis&rdquo; fro",
+   "rf": "{\"lead\":\"What makes an interviewer wince.\",\"flags\":[{\"bad\":\"",
+   "open": "{\"cards\":[{\"kind\":\"open\",\"k\":\"30s\",\"t\":\"The one-liner\",\"lead",
+   "model": "{\"selectors\":[\"cache-aside\",\"invalidation\"],\"answers\":[{\"ope",
+   "sys": "{\"intro\":\"Zoom out to where the cache sits relative to the s"
+  }
+ },
+ {
+  "walk": {
+   "len": 16751,
+   "head": ".dots{display:flex;gap:var(--space-7);justify-content:center;margin:0 0 var(--space-16);padding:var(--space-2)"
+  },
+  "drill": {
+   "len": 15218,
+   "head": "@keyframes pop{from{opacity:0;transform:translateY(7px) scale(.99)}to{opacity:1;transform:none}} @keyframes cb"
+  },
+  "wb": {
+   "len": 14168,
+   "head": ".dgm{display:flex;flex-direction:column;align-items:center;gap:0;padding:var(--space-4) 0 var(--space-6)} .dgm"
+  },
+  "sys": {
+   "len": 6042,
+   "head": ".card + .card{margin-top:var(--space-16)} .sm-intro{font-size:var(--font-size-caption);color:var(--mut);margin"
+  },
+  "trade": {
+   "len": 3354,
+   "head": ".ledger .lead{font-size:var(--font-size-body);line-height:var(--line-height-loose);color:var(--ink);margin:var"
+  },
+  "model": {
+   "len": 2716,
+   "head": ".msel{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--space-7);margin-bottom:var(--space-"
+  },
+  "num": {
+   "len": 4757,
+   "head": ".numlead{font-size:var(--font-size-body);line-height:var(--line-height-loose);color:var(--ink);margin:var(--sp"
+  },
+  "rf": {
+   "len": 3607,
+   "head": ".rflead{font-size:var(--font-size-body);line-height:var(--line-height-loose);color:var(--ink);margin:var(--spa"
+  },
+  "open": {
+   "len": 6027,
+   "head": ".op-lead{font-size:var(--font-size-body);line-height:var(--line-height-loose);color:var(--ink);margin:var(--sp"
+  },
+  "__id": "kafka-internals",
+  "__h1": "Kafka Internals",
+  "__locator": "Messaging & Events · the distributed log",
+  "__cmpTopic": "Kafka Internals",
+  "__cramTitle": "Cram sheet · Kafka Internals",
+  "__tncurrent": "Kafka Internals",
+  "__hash": "#kafka-internals/walk",
+  "__markers": {
+   "drill": "what Kafka is",
+   "wb": "Why is ordering only guaranteed within a partition?",
+   "walk": "A durable, replayable log &mdash; not a queue",
+   "num": "{\"lead\":\"Back-of-envelope the consumer parallelism ceiling a",
+   "trade": "{\"lead\":\"The calls that separate &ldquo;Kafka is a queue&rdq",
+   "rf": "{\"lead\":\"What makes an interviewer wince.\",\"flags\":[{\"bad\":\"",
+   "open": "{\"cards\":[{\"kind\":\"open\",\"k\":\"30s\",\"t\":\"The one-liner\",\"lead",
+   "model": "{\"selectors\":[\"the reframe\",\"the depth\"],\"answers\":[{\"opener",
+   "sys": "{\"intro\":\"Zoom out to where Kafka sits as an event backbone."
+  }
+ },
+ {
+  "walk": {
+   "len": 12844,
+   "head": ".dots{display:flex;gap:var(--space-7);justify-content:center;margin:0 0 var(--space-16);padding:var(--space-2)"
+  },
+  "drill": {
+   "len": 15117,
+   "head": "@keyframes pop{from{opacity:0;transform:translateY(7px) scale(.99)}to{opacity:1;transform:none}} @keyframes cb"
+  },
+  "wb": {
+   "len": 13559,
+   "head": ".dgm{display:flex;flex-direction:column;align-items:center;gap:0;padding:var(--space-4) 0 var(--space-6)} .dgm"
+  },
+  "sys": {
+   "len": 5891,
+   "head": ".card + .card{margin-top:var(--space-16)} .sm-intro{font-size:var(--font-size-caption);color:var(--mut);margin"
+  },
+  "trade": {
+   "len": 2770,
+   "head": ".ledger .lead{font-size:var(--font-size-body);line-height:var(--line-height-loose);color:var(--ink);margin:var"
+  },
+  "model": {
+   "len": 2559,
+   "head": ".msel{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--space-7);margin-bottom:var(--space-"
+  },
+  "num": {
+   "len": 4851,
+   "head": ".numlead{font-size:var(--font-size-body);line-height:var(--line-height-loose);color:var(--ink);margin:var(--sp"
+  },
+  "rf": {
+   "len": 2973,
+   "head": ".rflead{font-size:var(--font-size-body);line-height:var(--line-height-loose);color:var(--ink);margin:var(--spa"
+  },
+  "open": {
+   "len": 5010,
+   "head": ".op-lead{font-size:var(--font-size-body);line-height:var(--line-height-loose);color:var(--ink);margin:var(--sp"
+  },
+  "__id": "rate-limiting",
+  "__h1": "Rate Limiting",
+  "__locator": "Architecture & APIs · throttling boundary",
+  "__cmpTopic": "Rate Limiting",
+  "__cramTitle": "Cram sheet · Rate Limiting",
+  "__tncurrent": "Rate Limiting",
+  "__hash": "#rate-limiting/walk",
+  "__markers": {
+   "drill": "token bucket basics",
+   "wb": "Where does the counter live?",
+   "walk": "The request arrives at the edge",
+   "num": "{\"lead\":\"Back-of-envelope the store load a limiter adds.\",\"t",
+   "trade": "{\"lead\":\"The calls that separate a mechanical answer from a ",
+   "rf": "{\"lead\":\"What makes an interviewer wince.\",\"flags\":[{\"bad\":\"",
+   "open": "{\"cards\":[{\"kind\":\"open\",\"k\":\"30s\",\"t\":\"The one-liner\",\"lead",
+   "model": "{\"selectors\":[\"algorithm choice\",\"the distributed catch\"],\"a",
+   "sys": "{\"intro\":\"Zoom out to where throttling sits relative to the "
+  }
+ },
+ {
+  "walk": {
+   "len": 15722,
+   "head": ".dots{display:flex;gap:var(--space-7);justify-content:center;margin:0 0 var(--space-16);padding:var(--space-2)"
+  },
+  "drill": {
+   "len": 15173,
+   "head": "@keyframes pop{from{opacity:0;transform:translateY(7px) scale(.99)}to{opacity:1;transform:none}} @keyframes cb"
+  },
+  "wb": {
+   "len": 14018,
+   "head": ".dgm{display:flex;flex-direction:column;align-items:center;gap:0;padding:var(--space-4) 0 var(--space-6)} .dgm"
+  },
+  "sys": {
+   "len": 6334,
+   "head": ".card + .card{margin-top:var(--space-16)} .sm-intro{font-size:var(--font-size-caption);color:var(--mut);margin"
+  },
+  "trade": {
+   "len": 3403,
+   "head": ".ledger .lead{font-size:var(--font-size-body);line-height:var(--line-height-loose);color:var(--ink);margin:var"
+  },
+  "model": {
+   "len": 2613,
+   "head": ".msel{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--space-7);margin-bottom:var(--space-"
+  },
+  "num": {
+   "len": 4875,
+   "head": ".numlead{font-size:var(--font-size-body);line-height:var(--line-height-loose);color:var(--ink);margin:var(--sp"
+  },
+  "rf": {
+   "len": 3715,
+   "head": ".rflead{font-size:var(--font-size-body);line-height:var(--line-height-loose);color:var(--ink);margin:var(--spa"
+  },
+  "open": {
+   "len": 5834,
+   "head": ".op-lead{font-size:var(--font-size-body);line-height:var(--line-height-loose);color:var(--ink);margin:var(--sp"
+  },
+  "__id": "saga",
+  "__h1": "The Saga Pattern",
+  "__locator": "Messaging & Events · distributed transactions",
+  "__cmpTopic": "The Saga Pattern",
+  "__cramTitle": "Cram sheet · The Saga Pattern",
+  "__tncurrent": "The Saga Pattern",
+  "__hash": "#saga/walk",
+  "__markers": {
+   "drill": "what a saga is",
+   "wb": "Why compensations instead of a rollback?",
+   "walk": "No ACID across services, and 2PC doesn&rsquo;t scale",
+   "num": "{\"lead\":\"Back-of-envelope how often a saga must compensate a",
+   "trade": "{\"lead\":\"The calls that separate &ldquo;use a distributed tr",
+   "rf": "{\"lead\":\"What makes an interviewer wince.\",\"flags\":[{\"bad\":\"",
+   "open": "{\"cards\":[{\"kind\":\"open\",\"k\":\"30s\",\"t\":\"The one-liner\",\"lead",
+   "model": "{\"selectors\":[\"the reframe\",\"the depth\"],\"answers\":[{\"opener",
+   "sys": "{\"intro\":\"Zoom out to where a saga sits in a microservices w"
+  }
+ },
+ {
+  "walk": {
+   "len": 12969,
+   "head": ".dots{display:flex;gap:var(--space-7);justify-content:center;margin:0 0 var(--space-16);padding:var(--space-2)"
+  },
+  "drill": {
+   "len": 15436,
+   "head": "@keyframes pop{from{opacity:0;transform:translateY(7px) scale(.99)}to{opacity:1;transform:none}} @keyframes cb"
+  },
+  "wb": {
+   "len": 10897,
+   "head": ".dgm{display:flex;flex-direction:column;align-items:center;gap:0;padding:var(--space-4) 0 var(--space-6)} .dgm"
+  },
+  "sys": {
+   "len": 8574,
+   "head": ".card + .card{margin-top:var(--space-16)} .sm-intro{font-size:var(--font-size-caption);color:var(--mut);margin"
+  },
+  "trade": {
+   "len": 4371,
+   "head": ".ledger .lead{font-size:var(--font-size-body);line-height:var(--line-height-loose);color:var(--ink);margin:var"
+  },
+  "model": {
+   "len": 3993,
+   "head": ".msel{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--space-7);margin-bottom:var(--space-"
+  },
+  "num": {
+   "len": 4665,
+   "head": ".numlead{font-size:var(--font-size-body);line-height:var(--line-height-loose);color:var(--ink);margin:var(--sp"
+  },
+  "rf": {
+   "len": 4759,
+   "head": ".rflead{font-size:var(--font-size-body);line-height:var(--line-height-loose);color:var(--ink);margin:var(--spa"
+  },
+  "open": {
+   "len": 7816,
+   "head": ".op-lead{font-size:var(--font-size-body);line-height:var(--line-height-loose);color:var(--ink);margin:var(--sp"
+  },
+  "__id": "content-pipeline",
+  "__h1": "Content Pipeline",
+  "__locator": "Architecture & APIs · ingestion layer",
+  "__cmpTopic": "Content Pipeline",
+  "__cramTitle": "Cram sheet · Content Pipeline",
+  "__tncurrent": "Content Pipeline",
+  "__hash": "#content-pipeline/walk",
+  "__markers": {
+   "drill": "Memory model under streaming",
+   "wb": "Entry box &mdash; the handler signature and what fires it.",
+   "walk": "Strategy dispatch",
+   "num": "{\"lead\":\"The estimation an interviewer makes you do at the w",
+   "trade": "{\"lead\":\"The design decisions an interviewer drills &mdash; ",
+   "rf": "{\"lead\":\"The moves that quietly tank a candidate on this top",
+   "open": "{\"cards\":[{\"kind\":\"open\",\"k\":\"Match the altitude\",\"t\":\"The s",
+   "model": "{\"selectors\":[\"Make it reliable\",\"Make it scale\",\"Walk a fai",
+   "sys": "{\"intro\":\"The content pipeline is the <b>ingestion layer</b>"
+  }
+ }
+]

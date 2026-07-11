@@ -1,0 +1,339 @@
+[
+  {
+    "vp": "desktop",
+    "tool": "DRAWER-geometry",
+    "note": "no FAB on desktop; mockbar always in sidebar"
+  },
+  {
+    "vp": "desktop",
+    "tool": "extra-tools-placement",
+    "textzoom": {
+      "display": "flex",
+      "w": 263,
+      "h": 47,
+      "y": 369,
+      "inViewport": true,
+      "needsScroll": false
+    },
+    "pomodoro": {
+      "display": "block",
+      "w": 263,
+      "h": 79,
+      "y": 434,
+      "inViewport": true,
+      "needsScroll": false
+    },
+    "focusBtn": {
+      "display": "inline-block",
+      "w": 60,
+      "h": 20,
+      "y": 141,
+      "inViewport": true,
+      "needsScroll": false
+    }
+  },
+  {
+    "vp": "desktop",
+    "tool": "text-zoom",
+    "before": {
+      "scale": "(unset)",
+      "stageFs": "16px"
+    },
+    "after": {
+      "scale": "(unset)",
+      "stageFs": "16px",
+      "stored": "ddr.v1.ui.textzoom"
+    },
+    "changed": false,
+    "errs": 0
+  },
+  {
+    "vp": "desktop",
+    "tool": "pomodoro",
+    "start": "25:00",
+    "after2s": "24:58",
+    "phase": "Focus",
+    "counting": true,
+    "afterReset": "25:00",
+    "resetWorks": true,
+    "errs": 0
+  },
+  {
+    "vp": "desktop",
+    "tool": "focus-mode",
+    "cls": "app _focus-mode",
+    "pressed": "true",
+    "label": "Exit focus",
+    "sidebarW": 0,
+    "compW": 0,
+    "engaged": true,
+    "errs": 0
+  },
+  {
+    "vp": "desktop",
+    "tool": "focus-mode-EXIT-reachable",
+    "btnW": 60,
+    "btnH": 30,
+    "btnVisible": false,
+    "sidebarVis": "hidden",
+    "sidebarOpacity": "0",
+    "sidebarW": "0px",
+    "canClickExitButton": false
+  },
+  {
+    "vp": "desktop",
+    "tool": "focus-mode-f-key-exit",
+    "stillFocused": false,
+    "exitedViaKey": true,
+    "errs": 0
+  },
+  {
+    "vp": "desktop",
+    "tool": "copylink-deeplink",
+    "switchedTo": "content-pipeline",
+    "title": "Content Pipeline",
+    "locationHash": "#content-pipeline/num",
+    "copied": "file:///D:/claude-workspace/deepdive-rehearsal/dist/index.html#content-pipeline/num",
+    "carriesTopic": true,
+    "carriesView": true,
+    "errs": 0
+  },
+  {
+    "vp": "desktop",
+    "tool": "copylink-ROUNDTRIP",
+    "expectTopic": "content-pipeline",
+    "expectView": "num",
+    "gotTopic": "content-pipeline",
+    "gotView": "num",
+    "topicOK": true,
+    "viewOK": true,
+    "errs": 0
+  },
+  {
+    "vp": "desktop",
+    "tool": "key-/ -> search",
+    "opened": true,
+    "errs": 0
+  },
+  {
+    "vp": "desktop",
+    "tool": "key-\\ -> index",
+    "opened": true,
+    "errs": 0
+  },
+  {
+    "vp": "desktop",
+    "tool": "key-? -> keyboard",
+    "opened": true,
+    "errs": 0
+  },
+  {
+    "vp": "desktop",
+    "tool": "key-g -> tour",
+    "active": true,
+    "popover": false,
+    "errs": 0
+  },
+  {
+    "vp": "desktop",
+    "tool": "key-d -> density",
+    "before": "(default)",
+    "after": "compact",
+    "changed": true,
+    "errs": 0
+  },
+  {
+    "vp": "desktop",
+    "tool": "STACKED-overlay-scrolllock",
+    "afterCram": "hidden",
+    "whileSearchOnTop": "hidden",
+    "bothOpen": true,
+    "afterSearchClosed": "",
+    "cramStillOpen": false,
+    "leakedAfter": true,
+    "leakDelta": 157,
+    "errs": 0
+  },
+  {
+    "vp": "mobile",
+    "tool": "DRAWER-geometry",
+    "scrimVisible": true,
+    "scrimZ": "55",
+    "barZ": "60",
+    "fabRect": {
+      "y": 738,
+      "h": 40
+    },
+    "barRect": {
+      "y": 152,
+      "bottom": 844
+    },
+    "fabCoveredBy": "mockbar",
+    "fabClickable": false,
+    "barBottomVsViewport": 0,
+    "barScrollable": false,
+    "errs": 0
+  },
+  {
+    "vp": "mobile",
+    "tool": "DRAWER-scrim-dismiss",
+    "closed": true,
+    "errs": 0
+  },
+  {
+    "vp": "mobile",
+    "tool": "DRAWER-esc-dismiss",
+    "closedByEsc": false,
+    "errs": 0
+  },
+  {
+    "vp": "mobile",
+    "tool": "extra-tools-placement",
+    "textzoom": {
+      "display": "none",
+      "w": 0,
+      "h": 0,
+      "y": 0,
+      "inViewport": false,
+      "needsScroll": false
+    },
+    "pomodoro": {
+      "display": "none",
+      "w": 0,
+      "h": 0,
+      "y": 0,
+      "inViewport": false,
+      "needsScroll": false
+    },
+    "focusBtn": {
+      "display": "inline-block",
+      "w": 60,
+      "h": 20,
+      "y": 95,
+      "inViewport": true,
+      "needsScroll": false
+    }
+  },
+  {
+    "vp": "mobile",
+    "tool": "text-zoom",
+    "before": {
+      "scale": "(unset)",
+      "stageFs": "16px"
+    },
+    "after": {
+      "scale": "(unset)",
+      "stageFs": "16px",
+      "stored": "ddr.v1.ui.textzoom"
+    },
+    "changed": false,
+    "errs": 0
+  },
+  {
+    "vp": "mobile",
+    "tool": "pomodoro",
+    "start": "25:00",
+    "after2s": "24:58",
+    "phase": "Focus",
+    "counting": true,
+    "afterReset": "25:00",
+    "resetWorks": true,
+    "errs": 0
+  },
+  {
+    "vp": "mobile",
+    "tool": "focus-mode",
+    "cls": "app _focus-mode",
+    "pressed": "true",
+    "label": "Exit focus",
+    "sidebarW": 0,
+    "compW": 0,
+    "engaged": true,
+    "errs": 0
+  },
+  {
+    "vp": "mobile",
+    "tool": "focus-mode-EXIT-reachable",
+    "btnW": 67,
+    "btnH": 30,
+    "btnVisible": false,
+    "sidebarVis": "hidden",
+    "sidebarOpacity": "0",
+    "sidebarW": "0px",
+    "canClickExitButton": false
+  },
+  {
+    "vp": "mobile",
+    "tool": "focus-mode-f-key-exit",
+    "stillFocused": false,
+    "exitedViaKey": true,
+    "errs": 0
+  },
+  {
+    "vp": "mobile",
+    "tool": "copylink-deeplink",
+    "switchedTo": "content-pipeline",
+    "title": "Content Pipeline",
+    "locationHash": "#content-pipeline/num",
+    "copied": "file:///D:/claude-workspace/deepdive-rehearsal/dist/index.html#content-pipeline/num",
+    "carriesTopic": true,
+    "carriesView": true,
+    "errs": 0
+  },
+  {
+    "vp": "mobile",
+    "tool": "copylink-ROUNDTRIP",
+    "expectTopic": "content-pipeline",
+    "expectView": "num",
+    "gotTopic": "content-pipeline",
+    "gotView": "num",
+    "topicOK": true,
+    "viewOK": true,
+    "errs": 0
+  },
+  {
+    "vp": "mobile",
+    "tool": "key-/ -> search",
+    "opened": true,
+    "errs": 0
+  },
+  {
+    "vp": "mobile",
+    "tool": "key-\\ -> index",
+    "opened": true,
+    "errs": 0
+  },
+  {
+    "vp": "mobile",
+    "tool": "key-? -> keyboard",
+    "opened": true,
+    "errs": 0
+  },
+  {
+    "vp": "mobile",
+    "tool": "key-g -> tour",
+    "active": true,
+    "popover": false,
+    "errs": 0
+  },
+  {
+    "vp": "mobile",
+    "tool": "key-d -> density",
+    "before": "(default)",
+    "after": "compact",
+    "changed": true,
+    "errs": 0
+  },
+  {
+    "vp": "mobile",
+    "tool": "STACKED-overlay-scrolllock",
+    "afterCram": "hidden",
+    "whileSearchOnTop": "hidden",
+    "bothOpen": true,
+    "afterSearchClosed": "",
+    "cramStillOpen": false,
+    "leakedAfter": true,
+    "leakDelta": 500,
+    "errs": 0
+  }
+]

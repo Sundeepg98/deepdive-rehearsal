@@ -32,3 +32,6 @@ visual-trainer/dist/
 
 # generated visual kit (built by tools/build-visual-kit.mjs)
 src/scripts/visuals/
+
+# Playwright MCP session scratch (browser snapshots), not source
+.playwright-mcp/

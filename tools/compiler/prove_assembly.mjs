@@ -1,3 +1,20 @@
+// LEGACY PATH -- parse.mjs / the .topic format. THIS IS NOT EVIDENCE ABOUT THE SHIPPING COMPILER.
+//
+// Every assertion below exercises parseTopic() from parse.mjs. ZERO shipping topics use it: all
+// 38 are markdown and go through parse_md.mjs (compile.mjs:64 routes .md -> parseMarkdown, and
+// the only .topic file in the repo is the fixture this test reads). So its 28 green assertions
+// were 28 green assertions about a code path the product does not execute -- and they sat in the
+// gate next to the real compiler checks, reading like proof that topic compilation was sound
+// while parse_md.mjs silently destroyed 571 authored items on every build.
+//
+// The file is KEPT because parse.mjs is still reachable (compile.mjs:65 falls back to it for any
+// non-.md input) and a working test of it is worth having. But it now says what it is, and its
+// gate row is named `compiler_legacy_topic` so it can never again be read as coverage of the
+// pipeline that actually ships. For that, see:
+//     tools/compiler/prove_conservation.mjs   (reference: the author's raw bytes)
+//     tools/compiler/prove_doc_examples.mjs   (reference: the format spec's worked examples)
+//     tools/compiler/prove_md.mjs             (reference: the hand-coded 8)
+//
 // Proof: does the .topic (parsed through all layers) yield the SAME structured data the
 // hand-authored modules hold? If so, the built app reads identical data => render-identical.
 import fs from 'node:fs';
@@ -33,5 +50,10 @@ for (let s = 0; s < 3; s++)
 // k derivation: shape matches (slice has 3 steps, full topic has 9)
 eq('walk.step1.k (shape)', out.views.walk.steps[0].k, 'Step 1 / 3');
 
-console.log(`\nAssembly data-equivalence: ${pass} pass, ${fail} fail`);
+// State the coverage honestly, every run: how many topics actually take this path?
+const shipping = fs.existsSync('src/topics-md')
+  ? fs.readdirSync('src/topics-md').filter((f) => f.endsWith('.topic')).length : 0;
+console.log(`\nLEGACY .topic path: ${pass} pass, ${fail} fail`);
+console.log(`  ${shipping} of the shipping topics use this parser (the other ${38 - shipping} use parse_md.mjs).`);
+console.log('  This says NOTHING about the compiler that ships. See prove_conservation.mjs.');
 process.exit(fail === 0 ? 0 : 1);

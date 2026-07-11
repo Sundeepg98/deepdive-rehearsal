@@ -54,6 +54,12 @@ async function renderDiagrams(topic) {
       if (step.mermaid !== undefined) { step.diagram = await renderMermaid(step.mermaid); delete step.mermaid; }
       // step-level non-JS code fence -> Shiki-highlighted inner HTML for the app's <pre class="code">
       if (step.shiki !== undefined) { step.code = await renderShiki(step.shiki.code, step.shiki.lang); delete step.shiki; }
+      // A step may carry MORE THAN ONE code block (parse_md.mjs, F7): blocks 1..N ride in
+      // step.blocks and need the same Shiki pass -- miss this and the second block ships as an
+      // unrendered {lang, code} object, which is the silent-loss failure mode in a new costume.
+      for (const b of step.blocks || []) {
+        if (b.shiki !== undefined) { b.code = await renderShiki(b.shiki.code, b.shiki.lang); delete b.shiki; }
+      }
     }
   }
 }

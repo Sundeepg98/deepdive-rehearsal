@@ -1,0 +1,69 @@
+---
+id: notifications
+prefix: NOTIF
+group: messaging-events
+title: Notifications
+locatorTail: delivery boundary
+---
+
+## Thesis
+
+The stage that turns an event into a notification the right user actually sees --- dual-channel in-app and email, idempotent so a retry never double-sends, with a fallback when a channel is missed.
+
+## Sub
+
+**The delivery flow** -> **graded follow-up chains** -> **whiteboard** -> **zoom out** to where the delivery boundary sits, and the pivots an interviewer rides from a notification into channels, idempotency, and fallback.
+
+## Spine
+
+- Fan-out **at the boundary** --- producers emit `notify(user, event)`; the system picks the channels, so a producer never knows about email or in-app.
+- Exactly-once by **idempotency** --- a deterministic id plus a dedup store, because at-least-once delivery and retries *will* duplicate.
+- Two channels, one **fallback** --- in-app is the cheap default, email is reach and backup; if the in-app isn't seen, cascade to email.
+- A **row per recipient** --- each notification is a ~100-byte row with a partial index for unread, so a million notifications is ~100 MB and a read is a seek.
+
+## Companion Notes
+
+### walk
+
+The delivery flow
+
+Event to seen-by-the-user, one step at a time --- the mechanics you narrate before anyone cuts in.
+
+Say the split out loud --- "producers emit an event; the system decides the channels and guarantees delivery once." That line is the whole design.
+
+### drill
+
+Probe Drill
+
+Graded follow-ups on idempotency, fan-out, fallback, and delivery guarantees --- the ones that separate a passing answer from a Staff signal.
+
+Commit to an answer before you reveal --- name the delivery guarantee you're making, not just the queue you're using.
+
+## Walk
+
+### The producer emits an event
+
+```flow
+n[service] -> p[notify(user, event)] -> t[notification request] . a[producer knows no channels]
+```
+
+A producer calls `notify(user, event)` --- it emits 'this user should know about this event,' and stops there. It never names email or in-app; the notification system owns channel selection, so adding a channel is **zero producer change**.
+
+This is the boundary that makes the whole thing maintainable. A producer --- an order service, a firmware-rollout job --- shouldn't know or care whether the user gets an email, an in-app badge, or both; it emits a **domain event** and the notification system decides delivery. So preferences, channel routing, batching, and fallback all live on *one* side of the boundary, and producers stay ignorant. The alternative --- each producer calling SES directly --- scatters channel logic across every service and makes 'add a channel' a fleet-wide change instead of one.
+
+### Make it idempotent
+
+```flow
+n[request] -> p[id = hash(user, event, channel)] -> t[dedup store (SET NX)] / r[already sent -> skip]
+```
+
+Before anything sends, compute a **deterministic id** --- `hash(user_id, event_id, channel)` --- and record it in a dedup store with a conditional write. If the id is already there, this is a **retry**: acknowledge and **don't re-send**. Non-negotiable, because at-least-once delivery and retries both duplicate.
+
+```ts
+// deterministic id -- same event + user + channel always collides
+const id = sha256(`${userId}:${eventId}:${channel}`);
+const fresh = await dedup.==setNX==(id, ==1==, { ttl: ==7== * DAY });  // SET if Not eXists
+if (!fresh) return ack();          // already sent -- ack the retry, send nothing
+```
+
+The id is *content-derived*, not random --- so a retry of the exact same notification computes the exact same id and collides. That collision is what turns at-least-once machinery into **effectively exactly-once** delivery, without the producer thinking about it.

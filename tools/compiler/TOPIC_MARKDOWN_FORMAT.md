@@ -135,9 +135,11 @@ caught, never silently dropped.
 ### `## Walk`
 
 Per step: `### <step title>`, then a fenced `flow` diagram, then prose. The first
-paragraph is `ins`; the paragraph immediately before a fenced code block is
-`deep`; the paragraph immediately after it is `cap`. A step may carry a fenced
-`flow` or `mermaid` diagram, or a code block.
+paragraph is `ins`; a paragraph before any fenced code block is `deep`; the
+paragraph immediately after a code block is that block's caption (`cap`). A step
+may carry a fenced `flow` or `mermaid` diagram, and **one or more** code blocks --
+a second code block and its caption are kept (they render into the same "See the
+code" disclosure), not silently dropped in favour of the last.
 
 Code fences are highlighted by language. `js`/`ts` (or an unlabelled fence) use
 the minimal highlighter, where the author marks the tokens the eye should land on
@@ -178,13 +180,23 @@ model-answer view renders these; omit the section and that view is simply empty.
 
 ### `## Drill`  (required)
 
-Optional tier-note bullets first (`<tier> | <note>`), then one card per
-`### <tier> | <signal>`. The first paragraph under a card is the question, the
-second is the answer. Optional per-card lines: `Follow: <q>` (answer on the next
-line or the following paragraph), `Senior: <text>`, `Speak: <text>`.
+Optional tier notes first -- one `<tier> | <note>` **per line** (a bullet list of
+the same items is also accepted) -- then one card per `### <tier> | <signal>`.
+The first paragraph under a card is the question, the second is the answer.
+Optional per-card lines: `Follow: <q>` (answer on the next line or the following
+paragraph), `Senior: <text>`, `Speak: <text>`. These labelled lines may sit
+directly beneath one another with no blank line between them; each owns its own
+line(s).
+
+The tier key `all` is the note shown on the drill LANDING view, before any tier is
+picked -- the hand-coded topics all carry it. Omit it and the pane falls back to a
+generic line. (This example shipped without `all` for months, so all 38 compiled
+topics are missing it; the drill pane used to render the literal word "undefined"
+there.)
 
     ## Drill
 
+    all | All four levels, mixed --- the way a real loop actually comes at you
     SDE2 | baseline mechanics
     SDE3 | failure modes
     Staff | organizational leverage
@@ -236,11 +248,15 @@ fenced block is kept verbatim as the diagram. `Foot: <text>` and
 ### `## System`
 
 An intro paragraph. The first `### <heading>` opens the "where it sits" stages:
-bullets `<n>: <d>`, with a trailing `[*]` marking the current stage. The second
+one `<n>: <d>` **per line**, with a trailing `[*]` marking the current stage (a
+bullet list of the same `<n>: <d>` items is also accepted). The second
 `### <heading>` opens the pivots: an optional sub paragraph, then per pivot a
-`#### <question>` carrying a `-> <chip>` line and an answer paragraph. A pivot
-chip becomes a jump when its text contains a `(N)` index or another topic's
-title.
+`#### <question>` carrying a `-> <chip>` line with **the answer on the next
+line**. A pivot chip becomes a jump when its text contains a `(N)` index or
+another topic's title.
+
+The chip is a short LABEL, not a sentence -- the hand-coded topics run 8-39
+characters. Long chips wrap rather than crop, but they crowd the question.
 
     ## System
 
@@ -404,6 +420,40 @@ beats (`### CURVEBALL | <theme> | <cue>`).
   available in Walk steps and the Whiteboard. Quote any label containing special
   characters, e.g. `B["notify(user, event)"]`, or mermaid parsing fails.
 
+## Conservation: the compiler never drops what you wrote
+
+**Nothing you author is discarded.** If the compiler cannot place a line, it
+**stops the build** and names the pane, the source line and the fix -- it does not
+compile two-thirds of your topic and say nothing.
+
+This is a rule with a history. Until 2026-07-11 the parser demanded a bullet list
+for System stages and Drill tier notes while this document's own worked examples
+wrote them as plain lines, and it matched a `Task:` / `Senior:` / `-> ` prefix and
+then swallowed every line beneath it into that one field. **571 authored items --
+189 system-map stages, 114 tier notes, 76 pivot answers, 76 bank model answers, 76
+interviewer questions, a code block and its caption -- were destroyed on every
+build, silently, while the gate reported 19/19 green.** The tests could not see it
+because each compared the parser against a fixture trimmed to the panes that
+happened to work, or against the parser's own output.
+
+Two checks now hold references the compiler cannot influence, and they run on
+every build:
+
+- **`compiler_conservation`** (`tools/compiler/prove_conservation.mjs`) -- the
+  reference is **your raw bytes**. A line scanner reads `src/topics-md/*.md`
+  without importing the parser, and four laws must hold: every authored item is
+  emitted (COUNT), every authored text survives somewhere in the output
+  (SURVIVAL), no single-value field contains a newline -- i.e. no field swallowed
+  the next (FUSION), and a value parsed from a structured heading equals what you
+  wrote (VALUE).
+- **`compiler_doc_examples`** (`tools/compiler/prove_doc_examples.mjs`) -- the
+  reference is **the worked examples in this file**. Every example below is fed to
+  the real parser and must survive intact. If this document and the parser ever
+  disagree again, the build fails and names the example. What you are told to copy
+  is guaranteed to compile.
+
+So the format is defined by the examples, and the examples are executable.
+
 ## Validation
 
 Every topic is validated at compile time (zod). A failure throws with the topic
@@ -427,9 +477,20 @@ id and the failing field path, before any files are written. Enforced:
   (ordered by `index`). `app.js` includes the registry once.
 - The registry is generated at `buildStart` and gitignored; the build
   regenerates it every time.
-- The gate (`make check`) runs the compiler proof tests -- `compiler_md`,
-  `compiler_emit`, `compiler_assembly`, `compiler_prose`, `compiler_flow`,
-  `compiler_code` -- so a parser or emitter regression fails the build.
+- The gate (`python3 test/check_all.py`) runs the compiler proof tests. Two hold
+  an INDEPENDENT reference and are the only ones able to detect a silent drop:
+  `compiler_conservation` (your raw bytes) and `compiler_doc_examples` (this
+  file's examples). `compiler_md` compares the parser against the hand-coded
+  `notifications` topic across **all ten panes** and fails if the fixture stops
+  exercising one -- a pane the fixture omits is a pane the test is blind to, which
+  is how 23 green assertions once coexisted with a compiler that dropped a third
+  of every topic. `compiler_prose` / `compiler_flow` / `compiler_code` pin the
+  Layer B/C renderers.
+  `compiler_emit_serializer` round-trips the parser against ITSELF and
+  `compiler_legacy_topic` exercises the `.topic` parser (zero shipping topics
+  use it): neither can detect a parser bug, and they are named so nobody reads
+  them as if they could. **Never add a compiler check whose expected value comes
+  from the compiler.**
 
 ## The eight existing hand-JS topics
 

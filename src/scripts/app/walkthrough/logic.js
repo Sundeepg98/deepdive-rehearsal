@@ -160,7 +160,19 @@ class DeepWalkthrough extends TopicPane {
     let html = '<div class="step-k">' + step.k + '</div><div class="step-t">' + step.t + '</div>' +
       '<div class="flow">' + step.flow + '</div><div class="ins">' + step.ins + '</div>';
     if (step.deep) { html += '<details class="disc"><summary>Go deeper</summary><div class="body">' + step.deep + '</div></details>'; }
-    if (step.code) { html += '<details class="disc"><summary>See the code</summary><pre class="code">' + step.code + '</pre><div class="codecap">' + step.cap + '</div></details>'; }
+    /* A step may carry MORE THAN ONE code block: step.code/.cap is the first (the shape the
+       hand-coded topics use -- unchanged for them), and step.blocks holds any further
+       {code, cap} pairs, rendered into the SAME disclosure so the summary is not repeated.
+       Before this, a second fence in one markdown step silently annihilated the first at
+       compile time (parse_md.mjs F7). */
+    if (step.code) {
+      html += '<details class="disc"><summary>See the code</summary><pre class="code">' + step.code + '</pre><div class="codecap">' + step.cap + '</div>';
+      var blocks = step.blocks || [];
+      for (var b = 0; b < blocks.length; b++) {
+        html += '<pre class="code">' + blocks[b].code + '</pre><div class="codecap">' + blocks[b].cap + '</div>';
+      }
+      html += '</details>';
+    }
     this._card.innerHTML = html;
     const dots = this._dots.children;
     for (let i = 0; i < dots.length; i++) { dots[i].className = i < this._wi ? 'done' : (i === this._wi ? 'on' : ''); }

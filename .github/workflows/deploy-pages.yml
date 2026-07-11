@@ -51,11 +51,12 @@ jobs:
           npm ci
           npx playwright install --with-deps chromium
 
+      # THE GATE's build_integrity check already runs `npm run build` and asserts the
+      # fresh output is byte-identical to the committed deliverable, so a green gate
+      # means the committed file IS the verified artifact -- no separate build step.
+      # (The old `python build.py` step was retired in the Vite migration, 97b746e.)
       - name: THE GATE -- hard gate, deploy only if this passes (browser checks included)
         run: python test/check_all.py
-
-      - name: Build the deliverable from src/
-        run: python build.py
 
       - name: Assemble served paths (root index.html + named file, byte-identical)
         run: |

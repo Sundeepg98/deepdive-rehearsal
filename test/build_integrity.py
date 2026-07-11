@@ -4,7 +4,7 @@
 Rebuilds src/ to a temp file and verifies:
   1. the build succeeds with ZERO unresolved include markers,
   2. the freshly-built output is byte-identical to the committed deliverable
-     (i.e. src/ and the shipped artifact are in sync — nobody forgot to rebuild),
+     (i.e. src/ and the shipped artifact are in sync -- nobody forgot to rebuild),
   3. the expected structural anchors are present (9 panes, 7 dialog overlays).
 
 Exits non-zero on any failure. Safe to run in CI.
@@ -24,8 +24,12 @@ OVERLAYS = [b'mockov', b'mixov', b'cramov', b'sessov', b'keyov', b'scopeov', b'p
 fd, tmp = tempfile.mkstemp(suffix='.html')
 os.close(fd)
 try:
+    # On Windows npm is npm.cmd, which CreateProcess cannot launch by bare name;
+    # shell=True routes it through cmd.exe. On POSIX a list + shell=True would
+    # drop the args, so it stays off there.
     r = subprocess.run(['npm', 'run', 'build'], cwd=ROOT,
-                       capture_output=True, text=True)
+                       capture_output=True, text=True,
+                       shell=(os.name == 'nt'))
     if r.returncode != 0:
         print('FAIL: build returned %d\n%s' % (r.returncode, r.stderr), file=sys.stderr)
         sys.exit(1)
@@ -38,7 +42,12 @@ try:
 
     committed = open(DELIVERABLE, 'rb').read()
     if hashlib.sha256(out).hexdigest() != hashlib.sha256(committed).hexdigest():
-        problems.append('rebuilt output != committed deliverable — run `npm run build` and commit it')
+        # ASCII only. This string is printed by a CHILD process whose stdout Python encodes with
+        # the console codec (cp1252 on Windows): a literal em-dash here left byte 0x97 on the
+        # pipe, which is not valid UTF-8, so THE GATE's reader decoded it to U+FFFD and then died
+        # trying to print that back to the same cp1252 console. A failure message must never be
+        # the thing that takes down the harness reporting it.
+        problems.append('rebuilt output != committed deliverable -- run `npm run build` and commit it')
 
     for pid in PANES:
         if b'id="' + pid + b'"' not in out:

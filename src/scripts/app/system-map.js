@@ -44,7 +44,17 @@ var SYS_STYLE = `
 .piv-jump:hover,.piv-jump:focus{background:var(--acc);color:#fff;border-color:var(--acc);outline:none}
 .piv summary::-webkit-details-marker{display:none}
 .piv .pq{font-size:var(--font-size-small);font-weight:var(--font-weight-semibold);color:var(--ink);line-height:var(--line-height-normal)}
-.piv .chip{flex:none;font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.3px;color:var(--indigo);background:linear-gradient(135deg,var(--indigobg) 0%,rgba(83,74,183,.04) 100%);border:1px solid #cfc7f0;border-radius:6px;padding:var(--space-3) var(--space-9);white-space:nowrap;margin-top:var(--space-1);margin-left:auto}
+/* The chip was white-space:nowrap inside .piv{overflow:hidden}: it could not wrap, so a long chip
+   ran past the container that hides overflow and its tail was simply invisible -- and, being
+   unshrinkable, it starved the pivot QUESTION beside it down to 46px. The hand-coded 8 never hit
+   this (their chips are 8-39 chars); the compiled topics average 88 and reach 131.
+   flex:none is KEPT deliberately -- it makes the flex base size max-content, so a short chip still
+   lays out at its natural width on ONE line and the 8's geometry is byte-for-byte what it was
+   (dropping to flex:0 1 auto let short chips shrink and wrap: 22px -> 35px tall, a regression).
+   max-width caps only the long ones, and white-space:normal lets a capped chip WRAP rather than
+   be cropped. Content the author wrote is not silently cut off by the layout -- the same rule the
+   compiler now obeys, one layer down. */
+.piv .chip{flex:none;max-width:55%;font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.3px;color:var(--indigo);background:linear-gradient(135deg,var(--indigobg) 0%,rgba(83,74,183,.04) 100%);border:1px solid #cfc7f0;border-radius:6px;padding:var(--space-3) var(--space-9);white-space:normal;overflow-wrap:anywhere;margin-top:var(--space-1);margin-left:auto}
 .piv .chip.chip-link{cursor:pointer;transition:border-color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base),color var(--duration-fast) var(--ease-base)}
 .piv .chip.chip-link:hover,.piv .chip.chip-link:focus-visible{border-color:var(--acc);color:var(--acc);background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.06) 100%);outline:none}
 .piv .pa{padding:var(--space-2) var(--space-17) var(--space-16) var(--space-43);font-size:var(--font-size-caption);color:var(--sm-pa-fg);line-height:var(--line-height-spacious)}

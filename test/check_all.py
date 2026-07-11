@@ -8,7 +8,18 @@ This replaces per-edit manual vigilance with tooling that runs on every build:
   render           panes/overlays render, no JS/ref errors, no overflow  (browser)
   entity_leak      no HTML entity reaches visible text                   (browser)
   e2e_interactions theme/text-zoom/drill must-hit/rescues, 0 console errs (browser)
-  topic_contract   every registered topic conforms to the shared shape  (browser)
+  topic_contract   every topic POPULATED to the depth of the hand-coded 8 (browser)
+
+A NOTE ON WHAT A GREEN GATE MEANS (learned the hard way, 2026-07-11).
+This gate reported PASS 19/19 while the compiler silently discarded 571 authored items on every
+build, because every compiler check compared the parser against a fixture curated to the parser's
+working subset, or against the parser's own output. A test whose reference is derived from the
+system under test cannot fail when that system is wrong; it can only agree with it. Two checks
+here now hold an INDEPENDENT reference -- compiler_conservation (the author's raw bytes) and
+compiler_doc_examples (the format spec's own worked examples) -- and topic_contract now measures
+POPULATION against the 8 hand-coded topics rather than asserting a slice is merely present
+(`if (!data[v])` is truthy for `{stages: []}`). Do not add a compiler check whose expected value
+comes from the compiler.
 
 Browser checks are SKIPPED (not failed) when Playwright/Chrome are absent, so
 this is CI-safe; locally (or in CI after `npm install && npx playwright install
@@ -20,10 +31,30 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 os.chdir(ROOT)
 
 def run(cmd, env=None):
-    return subprocess.run(cmd, capture_output=True, text=True, env=env)
+    # THE GATE MUST SURVIVE WHATEVER A CHECK PRINTS. Two separate ways it did not:
+    #
+    # 1. DECODE. Without encoding/errors, Python decodes a child's stdout with the platform codec
+    #    (cp1252 on Windows), so a SINGLE non-ASCII byte in any check's output -- a "->" chip
+    #    rendered as U+2192, a smart quote in a topic's prose -- raises UnicodeDecodeError inside
+    #    the reader thread, leaves r.stdout as None, and takes down the whole gate with a
+    #    TypeError instead of reporting the check.
+    # 2. ENCODE. A Python child inherits the console's cp1252 stdout, so its own print() of an
+    #    em-dash puts byte 0x97 on the pipe -- not valid UTF-8. errors='replace' turns that into
+    #    U+FFFD, and printing U+FFFD back to the cp1252 console raises UnicodeEncodeError. The
+    #    gate then dies while REPORTING a failure, which is the worst possible moment.
+    #    PYTHONIOENCODING makes every Python child emit UTF-8 regardless of the console, and
+    #    ascii_safe() below guarantees the summary line is printable no matter what arrives.
+    env = dict(env or os.environ)
+    env.setdefault('PYTHONIOENCODING', 'utf-8')
+    return subprocess.run(cmd, capture_output=True, text=True, env=env,
+                          encoding='utf-8', errors='replace')
+
+def ascii_safe(s):
+    """Anything -> printable ASCII. The summary must render on any console."""
+    return str(s).encode('ascii', 'backslashreplace').decode('ascii')
 
 def last_line(r):
-    out = (r.stdout + r.stderr).strip().split('\n')
+    out = ((r.stdout or '') + (r.stderr or '')).strip().split('\n')
     return out[-1] if out and out[-1] else (out[-2] if len(out) > 1 else '')
 
 def browser():
@@ -49,11 +80,30 @@ for name, cmd in [('ascii_guard', ['python3', 'test/ascii_guard.py']),
                   # CHROME; CI installs Chromium via npx playwright install.
                   ('visual_pane_smoke', ['node', 'test/visual_pane_smoke.mjs']),
                   ('visual_regression', ['python3', 'test/visual_regression.py']),
-                  # Compiler proof tests -- parse/emit/data-equivalence, no Chrome; guard against
-                  # markdown-parser and emitter regressions in the topic-authoring pipeline.
+                  # ---- COMPILER: does it keep what the authors wrote? --------------------------
+                  # These two have an INDEPENDENT reference and are the only checks here capable of
+                  # detecting a silent drop. Everything else in this section compares the compiler
+                  # against a fixture or against itself, and stayed green through 571 lost items.
+                  #   conservation  -- reference: the author's raw bytes in src/topics-md/*.md.
+                  #                    A line scanner that shares no code with the parser. Fails if
+                  #                    ANY authored item is dropped, annihilated, fused or misfiled.
+                  #   doc_examples  -- reference: the worked examples in TOPIC_MARKDOWN_FORMAT.md.
+                  #                    Fails if the documented format does not survive its own parser.
+                  #                    This is the check that would have caught all 380 drops on day 1.
+                  ('compiler_conservation', ['node', 'tools/compiler/prove_conservation.mjs']),
+                  ('compiler_doc_examples', ['node', 'tools/compiler/prove_doc_examples.mjs']),
+                  # ---- COMPILER: fixture / serializer checks ------------------------------------
+                  # compiler_md asserts its own COVERAGE now: a pane missing from the fixture is a
+                  # pane it is blind to, and blindness is a hard failure (that blindness is exactly
+                  # how 23 green assertions coexisted with a compiler that dropped a third of every
+                  # topic). The two below CANNOT detect a parser bug and are named so nobody reads
+                  # them as if they could:
+                  #   emit_serializer   -- reference is the PARSER'S OWN OUTPUT (round-trip). A parser
+                  #                        that drops a field drops it on both sides of the equals sign.
+                  #   legacy_topic      -- exercises parse.mjs / the .topic format: 0 shipping topics.
                   ('compiler_md', ['node', 'tools/compiler/prove_md.mjs']),
-                  ('compiler_emit', ['node', 'tools/compiler/prove_emit.mjs']),
-                  ('compiler_assembly', ['node', 'tools/compiler/prove_assembly.mjs']),
+                  ('compiler_emit_serializer', ['node', 'tools/compiler/prove_emit.mjs']),
+                  ('compiler_legacy_topic', ['node', 'tools/compiler/prove_assembly.mjs']),
                   ('compiler_prose', ['node', 'tools/compiler/prove_prose.mjs']),
                   ('compiler_flow', ['node', 'tools/compiler/prove_flow.mjs']),
                   ('compiler_code', ['node', 'tools/compiler/prove_code.mjs'])]:
@@ -75,7 +125,7 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
 w = max(len(n) for n, _, _ in results)
 print('=' * 64)
 for n, st, msg in results:
-    print('  %-*s  %-4s  %s' % (w, n, st, msg))
+    print('  %-*s  %-4s  %s' % (w, n, st, ascii_safe(msg)))
 print('=' * 64)
 failed = [n for n, st, _ in results if st == 'FAIL']
 print('GATE: FAIL (%s)' % ', '.join(failed) if failed else 'GATE: PASS')

@@ -5,7 +5,7 @@
 import esbuild from 'esbuild';
 import { writeFileSync, mkdirSync } from 'fs';
 import { resolve, dirname } from 'path';
-import { fileURLToPath } from 'url';
+import { fileURLToPath, pathToFileURL } from 'url';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const OUT_DIR = resolve(ROOT, 'src/scripts/visuals');
@@ -24,6 +24,6 @@ await esbuild.build({
   outfile: resolve(OUT_DIR, 'kit.js'),
 });
 
-const { KIT_MANIFEST } = await import(resolve(ROOT, 'visual-trainer/src/manifest.js'));
+const { KIT_MANIFEST } = await import(pathToFileURL(resolve(ROOT, 'visual-trainer/src/manifest.js')).href);
 writeFileSync(resolve(OUT_DIR, 'manifest.json'), JSON.stringify(KIT_MANIFEST, null, 1) + '\n');
 console.log('visual kit built -> src/scripts/visuals/kit.js + manifest.json');

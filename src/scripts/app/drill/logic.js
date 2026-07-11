@@ -153,6 +153,12 @@ class DeepDrill extends TopicPane {
     this._timerEl = root.getElementById('timer');
     this._modetog = root.getElementById('modetog'); this._tiertog = root.getElementById('tiertog');
     this._tiernote = root.getElementById('tiernote');
+    /* The skeleton's own copy is the FALLBACK for a topic that has no note for the active tier.
+       A topic's tierNotes may legitimately lack the "all" key -- the hand-coded 8 carry
+       {all, SDE2, SDE3, Staff} but the markdown format's worked example shows only the three
+       tiers, so every compiled topic authored three. Reading .all unguarded put the literal
+       string "undefined" on the drill landing view of all 38. Never render a missing value. */
+    this._tiernoteBase = this._tiernote ? this._tiernote.innerHTML : '';
     const self = this;
     /* DELEGATED listeners wired ONCE on the stable shell nodes: dnav contents are
        rebuilt every draw; modetog / tiertog / revdrill live in the invariant skeleton. */
@@ -172,12 +178,12 @@ class DeepDrill extends TopicPane {
   }
   renderTopic(d) {
     /* registry already reseeded cards / _allCards via publishBanks before this fires */
-    DRILL_TIER_NOTES = d.tierNotes;
+    DRILL_TIER_NOTES = d.tierNotes || {};
     this.tierFilter = 'all'; this.revisitMode = false;
     for (let z = 0; z < this._tiertog.children.length; z++) {
       this._tiertog.children[z].classList.toggle('on', this._tiertog.children[z].getAttribute('data-tier') === 'all');
     }
-    if (this._tiernote) this._tiernote.innerHTML = d.tierNotes.all;
+    if (this._tiernote) this._tiernote.innerHTML = DRILL_TIER_NOTES.all || this._tiernoteBase;
     const allBtn = this._tiertog.querySelector('[data-tier="all"]');
     if (allBtn) allBtn.textContent = 'All ' + _allCards.length;
     this.setMode('study');
@@ -472,7 +478,9 @@ class DeepDrill extends TopicPane {
   setTier(t) {
     this.tierFilter = t;
     const tn = this._root.getElementById('tiernote');
-    if (tn) tn.innerHTML = DRILL_TIER_NOTES[t] || DRILL_TIER_NOTES.all;
+    /* Same guard as renderTopic: a topic with no note for this tier (and no "all") must fall back
+       to the skeleton's copy, never to the string "undefined". */
+    if (tn) tn.innerHTML = DRILL_TIER_NOTES[t] || DRILL_TIER_NOTES.all || this._tiernoteBase;
     for (let z = 0; z < this._tiertog.children.length; z++) this._tiertog.children[z].classList.toggle('on', this._tiertog.children[z].getAttribute('data-tier') === t);
     this.setMode(this.mode);
   }

@@ -36,7 +36,35 @@ class DeepVisual extends TopicPane {
       deferred: the topic protocol rewrites the hash AFTER this handler, so an
       immediate navigate gets overwritten back to #viz */
       var self = this;
-      setTimeout(function () { if (!self._data && self._active && window.goView) window.goView('walk'); }, 0);
+      setTimeout(function () {
+        if (self._data || !self._active || !window.goView) return;
+        /* DEEP-LINK GUARD. On a "#<topic>/viz" deep link this handler ALSO runs at FIRST
+           PAINT, while the registry still holds the DEFAULT topic -- whose data.visual is
+           undefined. The old unconditional bounce therefore called goView('walk') ->
+           pushState, overwriting the deep-linked hash BEFORE Router.init() ever parsed it;
+           the router then read "#<default>/walk" and the user was silently stranded on the
+           default topic. viz was the ONLY route that could not be deep-linked (measured:
+           "#kafka-internals/viz" landed on "#content-pipeline/walk").
+           So when the route names a topic the registry has not applied yet, decide from
+           the PENDING topic's data, never from the stale current one. */
+        var r = (window.Router && window.Router.current) ? window.Router.current() : null;
+        var reg = (typeof TopicRegistry !== 'undefined') ? TopicRegistry : null;
+        var curT = (reg && reg.current()) ? reg.current().id : null;
+        if (r && r.topic && curT && reg && r.topic !== curT) {
+          var pend = reg.get(r.topic);
+          if (pend && pend.data && pend.data.visual) return;   /* it HAS a visual: stand down,
+              let the router land the topic, and renderTopic runs again with real data. */
+          /* Pending topic has NO visual either, so we do still bounce -- but land the topic
+             FIRST. goView() builds the hash from the CURRENT topic's prefix, so bouncing
+             while the default topic is still current would rewrite the deep-linked topic
+             away a second time. Landing it here also means the router never queues a viz
+             pane swap: switchTab('viz') and switchTab('walk') both defer their DOM mutation
+             into startViewTransition(), and when they overlap the viz callback resolves LAST
+             and wins -- leaving the viz pane visibly on under a "/walk" hash. */
+          reg.setTopic(r.topic);
+        }
+        window.goView('walk');
+      }, 0);
     }
     if (this._active) this._mount();
   }

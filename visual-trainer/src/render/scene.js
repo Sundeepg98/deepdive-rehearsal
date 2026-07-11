@@ -90,13 +90,59 @@ export function createScene(canvas, sim) {
     renderer.render(scene, camera);
   }
 
+  // --- sizing ---------------------------------------------------------------
+  // We are mounted while the pane is still display:none: the app defers the
+  // .pane.on swap into document.startViewTransition(), so the swap lands AFTER
+  // the routechange listener that mounts us (view-transitions.js:24 ->
+  // shell.js:55). A one-shot measure therefore reads 0x0, and on a static
+  // offline page no window 'resize' ever fires to correct it -- the canvas
+  // stays 0x0 forever. (Under prefers-reduced-motion the swap runs
+  // synchronously, which is the only reason the visual ever appeared to work.)
+  //
+  // So: never trust a single measurement, and never apply a zero size. Observe
+  // the box; the observer fires the moment the pane gains a layout box
+  // (0 -> real width) and on every later reflow -- pane re-show, container
+  // resize, sidebar fold, mobile rotate.
+  let lastW = 0, lastH = 0, lastDpr = 0;
   function resize() {
-    const w = canvas.clientWidth || canvas.parentElement.clientWidth;
-    renderer.setSize(w, Math.round((w * H) / W), false);
-    renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+    const box = canvas.parentElement;
+    const w = Math.floor(canvas.clientWidth || (box && box.clientWidth) || 0);
+    if (!w) return;                       // hidden / not laid out: keep the last good size
+    const h = Math.round((w * H) / W);
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    if (w === lastW && h === lastH && dpr === lastDpr) return;  // idempotent: no RO feedback loop
+    lastW = w; lastH = h; lastDpr = dpr;
+    renderer.setPixelRatio(dpr);          // before setSize: setPixelRatio re-applies the last size
+    renderer.setSize(w, h, false);        // false = drawing buffer only; CSS keeps width:100%
+    draw();                               // paint now, so the first visible frame is never blank
   }
-  window.addEventListener('resize', resize);
+
+  const obs = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(resize) : null;
+  if (obs) obs.observe(canvas.parentElement || canvas);
+  window.addEventListener('resize', resize);   // ResizeObserver does not fire on DPR-only changes
   resize();
 
-  return { stepParticles: flow.step, draw, renderer, queues: flow.queues };
+  // --- teardown -------------------------------------------------------------
+  // renderer.dispose() frees three's caches but does NOT release the WebGL
+  // context -- the context stays live on the detached canvas until GC, and
+  // Chrome hard-caps ~16 live contexts (the 17th evicts the oldest: "Too many
+  // active WebGL contexts"). One mount per pane visit therefore killed the
+  // visual permanently after ~16 opens. forceContextLoss() releases it
+  // deterministically. dispose() first, so three's own webglcontextlost
+  // listener is already gone and the forced loss is silent.
+  function dispose() {
+    if (obs) obs.disconnect();
+    window.removeEventListener('resize', resize);
+    flow.dispose();
+    scene.traverse((o) => {
+      if (o.geometry) o.geometry.dispose();
+      const m = o.material;
+      if (m) (Array.isArray(m) ? m : [m]).forEach((x) => x.dispose());
+    });
+    scene.clear();
+    renderer.dispose();
+    renderer.forceContextLoss();
+  }
+
+  return { stepParticles: flow.step, draw, resize, renderer, queues: flow.queues, dispose };
 }

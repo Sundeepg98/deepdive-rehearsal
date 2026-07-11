@@ -38,6 +38,20 @@ export function createQueueFlow({
   );
   inst.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
   inst.instanceColor = new THREE.InstancedBufferAttribute(new Float32Array(maxParticles * 3), 3);
+  // THE PARTICLES WERE INVISIBLE UNTIL THIS LINE. three computes
+  // InstancedMesh.boundingSphere LAZILY, from inside the very first frustum
+  // check -- which happens on the first rendered frame, when NO particle has
+  // spawned yet and inst.count is 0. An empty box yields radius -1, and three
+  // never invalidates that sphere when the instance matrices change. So
+  // Frustum.intersectsSphere then tests `distance(0) < -(-1)` = `0 < 1` = true
+  // = REJECT, on every frame, forever: 126 live particles, 0 draw calls.
+  // Culling this mesh can never pay anyway -- the particle field spans the
+  // whole 16x9 world by construction (source column to sink column, every
+  // lane), so it is never off-screen. Turn the per-object test off; that is
+  // the standard three idiom for an InstancedMesh whose matrices mutate every
+  // frame (the alternative, recomputing the sphere over 4000 instances per
+  // frame, buys a sphere that always covers the view).
+  inst.frustumCulled = false;
   scene.add(inst);
 
   const pool = Array.from({ length: maxParticles }, () => ({
@@ -125,5 +139,15 @@ export function createQueueFlow({
     if (inst.instanceColor) inst.instanceColor.needsUpdate = true;
   }
 
-  return { step, updateInstances, queues: () => st.map((s) => s.queue.length) };
+  // Release the GPU buffers this module owns (instanced matrix/color attributes,
+  // geometry, material) and detach the mesh, so a pane teardown leaves nothing
+  // behind for the next mount.
+  function dispose() {
+    scene.remove(inst);
+    inst.dispose();              // instanceMatrix + instanceColor
+    inst.geometry.dispose();
+    inst.material.dispose();
+  }
+
+  return { step, updateInstances, dispose, queues: () => st.map((s) => s.queue.length) };
 }

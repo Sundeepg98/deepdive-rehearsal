@@ -147,7 +147,13 @@ export function mount(host, config) {
     dispose() {
       loop.stop();
       driver.stop();
-      try { scene.renderer.dispose(); } catch (e) { /* context loss is fine */ }
+      // scene.dispose() releases the GL context for real (renderer.dispose()
+      // alone leaks it -- see render/scene.js). Without this, every pane visit
+      // banked a live context and Chrome killed the visual at ~the 17th.
+      try {
+        if (scene.dispose) scene.dispose();
+        else scene.renderer.dispose();
+      } catch (e) { /* context loss is fine */ }
       host.innerHTML = '';
     },
   };

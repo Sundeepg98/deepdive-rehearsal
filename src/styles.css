@@ -87,7 +87,15 @@ button:focus-visible,.dn-step:focus-visible,.pill:focus-visible{outline:2px soli
   ::-webkit-scrollbar-corner{background:transparent}
   :root{accent-color:var(--acc)}
   input[type="checkbox"],input[type="radio"]{accent-color:var(--acc)}
-  body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:var(--line-height-loose);-webkit-font-smoothing:antialiased;padding:0 0 var(--space-70);opacity:0;animation:bodyIn var(--duration-slowest) var(--ease-glide) var(--duration-fast) forwards}
+  /* FAIL-SAFE REVEAL. The base state is VISIBLE (opacity:1) and the fade-in is decoration on
+     top of it. Do NOT go back to opacity:0 + `forwards`: that made the app's visibility DEPEND
+     on an animation, and the prefers-reduced-motion block below (`*{animation:none!important}`)
+     strips animation-name -- so the reveal never ran, body stayed at opacity:0, and the ENTIRE
+     APP was a blank white page for every reduced-motion user, with zero console errors.
+     `backwards` fill supplies from{opacity:0} during the delay, so the normal fade is visually
+     unchanged; when the animation is stripped there is no fill and the base opacity:1 shows
+     through. Failure mode is now "no fade", never "invisible app". */
+  body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:var(--line-height-loose);-webkit-font-smoothing:antialiased;padding:0 0 var(--space-70);opacity:1;animation:bodyIn var(--duration-slowest) var(--ease-glide) var(--duration-fast) backwards}
   @keyframes bodyIn{from{opacity:0}to{opacity:1}}
 
   .rail{position:sticky;top:0;height:var(--space-4);background:#ECE8E0;z-index:var(--z-surface)}
@@ -306,7 +314,20 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
   .side-id .hdr{order:0;flex:1 1 auto;margin:0}
   .side-id h1{font-size:var(--font-size-title)}
   .side-id .locator{order:2;flex-basis:100%;margin:var(--space-4) 0 0;font-size:var(--font-size-micro);padding:var(--space-4) var(--space-10);border-radius:7px;display:inline-block;width:auto}
-  .tools-fab{order:0;position:static;flex:none;display:inline-flex;align-items:center;gap:var(--space-6);flex:none;font-size:var(--font-size-caption);font-weight:var(--font-weight-bold);letter-spacing:.3px;color:var(--acc);background:var(--accbg);border:1px solid var(--acc);border-radius:999px;padding:var(--space-12) var(--space-16);box-shadow:none;cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),box-shadow var(--duration-base) var(--ease-base),border-color var(--duration-base) var(--ease-base)}
+  /* A flex item's automatic minimum size is its MIN-CONTENT, not zero. .topic-nav is a flex
+     item of .side-id, and its min-content is the un-ellipsised topic title inside .tn-current
+     (white-space:nowrap). So a long title made .topic-nav refuse to shrink -- 564px inside a
+     330px row on "Production Debugging and Incident Diagnosis" -- overflowing the DOCUMENT to
+     579px. The fixed .mockcta bar (left:0;right:0) is sized by that widened layout viewport,
+     which carried the Tools button (its last child, and the ONLY entry point to 12 tools) to
+     x=497 on a 360px screen: off the edge, at every scroll position. min-width:0 restores the
+     shrink, so .tn-current's text-overflow:ellipsis finally engages as it was always meant to.
+     Measured: 219px overflow -> 0px; Tools reachable on 0/46 topics -> 46/46 at 360/390/430. */
+  .side-id .topic-nav{min-width:0}
+  /* 44px is the a11y floor (WCAG 2.5.8); raw px on purpose -- a physical-finger constant, not a
+     layout token. The padding alone left this at 67x40. Set here, not in the <=600px polish
+     block, because the button is on-screen across this whole <=919px range. */
+  .tools-fab{order:0;position:static;flex:none;display:inline-flex;align-items:center;gap:var(--space-6);flex:none;min-height:44px;font-size:var(--font-size-caption);font-weight:var(--font-weight-bold);letter-spacing:.3px;color:var(--acc);background:var(--accbg);border:1px solid var(--acc);border-radius:999px;padding:var(--space-12) var(--space-16);box-shadow:none;cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),box-shadow var(--duration-base) var(--ease-base),border-color var(--duration-base) var(--ease-base)}
   .tools-fab:active{transform:scale(.95)}
   .sidebar .mockcta{order:2;position:fixed;bottom:0;left:0;right:0;z-index:40;display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;gap:var(--space-8) var(--space-10);margin:0;background:var(--card);border-top:1px solid var(--bd);box-shadow:0 -8px 24px rgba(0,0,0,.14);padding:var(--space-12) var(--space-15);padding-bottom:calc(var(--space-12) + env(safe-area-inset-bottom,0px))}
   .sidebar .mockcta .mockbtn{order:0;flex:1 1 0;min-width:0;margin:0}

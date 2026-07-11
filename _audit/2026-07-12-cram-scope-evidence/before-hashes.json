@@ -1,0 +1,324 @@
+[
+  {
+    "id": "event-driven",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "notifications",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "real-time-delivery",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "cdc",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "kafka-internals",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "stream-batch-processing",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "saga",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "caching",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "soft-delete",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "eav",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "shared-definition",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "replication",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "consistency-models",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "sharding-strategies",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "consistent-hashing",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "storage-engines",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "probabilistic-structures",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "retries-timeouts",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "idempotency",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "circuit-breaker",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "error-propagation",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "backpressure",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "observability",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "debugging",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "slos",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "iac",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "desired-state",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "aws-hardening",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "load-balancing",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "autoscaling",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "leader-election",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "distributed-locks",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "multi-region",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "lambda-organization",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "devices-dispatch",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "developer-platform",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "state-machine",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "rules-engine",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "feature-flags",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "api-design",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "rate-limiting",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "content-pipeline",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "microfrontend",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "signing",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "authz",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  },
+  {
+    "id": "multi-tenant",
+    "cram": "1b8bac55",
+    "cLen": 3330,
+    "scope": "c938e745",
+    "sLen": 2275
+  }
+]

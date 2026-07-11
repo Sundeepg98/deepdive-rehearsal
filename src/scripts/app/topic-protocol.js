@@ -53,7 +53,11 @@ function applyIdentity(idn) {
   if (q('.cmp-thesis')) q('.cmp-thesis').innerHTML = idn.thesis;
   var spineHtml = idn.spine.map(function (s) { return '<li><span class="cmp-dot"></span><span>' + s + '</span></li>'; }).join('');
   document.querySelectorAll('.cmp-spine').forEach(function (ul) { ul.innerHTML = spineHtml; });
-  var cramT = q('.cram-title'); if (cramT) cramT.innerHTML = 'Cram sheet &middot; ' + idn.cramTitle;
+  /* Both overlay headers, BY ID. (They share the .cram-title class, so the old
+     q('.cram-title') only ever renamed whichever came first in the DOM -- the cram
+     one -- and left the scope header naming no topic at all.) */
+  var cramT = byId('cramtitle'); if (cramT) cramT.innerHTML = 'Cram sheet &middot; ' + idn.cramTitle;
+  var scopeT = byId('scopetitle'); if (scopeT) scopeT.innerHTML = 'Scope it first &middot; ' + idn.cramTitle;
   /* A6: related topics in the same group -- rendered per topic, wired to setTopic */
   var rel = byId('cmpRelated');
   if (rel && typeof groupedTopicIds === 'function' && typeof TopicRegistry !== 'undefined') {

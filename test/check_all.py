@@ -9,6 +9,7 @@ This replaces per-edit manual vigilance with tooling that runs on every build:
   entity_leak      no HTML entity reaches visible text                   (browser)
   e2e_interactions theme/text-zoom/drill must-hit/rescues, 0 console errs (browser)
   topic_contract   every topic POPULATED to the depth of the hand-coded 8 (browser)
+  cram_scope_distinct  no two topics RENDER the same cram/scope body       (browser)
 
 A NOTE ON WHAT A GREEN GATE MEANS (learned the hard way, 2026-07-11).
 This gate reported PASS 19/19 while the compiler silently discarded 571 authored items on every
@@ -114,7 +115,8 @@ chrome = browser()
 deliverable = os.path.join(ROOT, 'deepdive_content_pipeline_rehearsal.html')
 for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity_leak.cjs'),
                      ('e2e_interactions', 'test/e2e_interactions.cjs'),
-                     ('topic_contract', 'test/topic_contract.cjs')]:
+                     ('topic_contract', 'test/topic_contract.cjs'),
+                     ('cram_scope_distinct', 'test/cram_scope_distinct.cjs')]:
     if not chrome:
         results.append((name, 'SKIP', 'no Playwright/Chrome (npm install && npx playwright install chromium)'))
         continue

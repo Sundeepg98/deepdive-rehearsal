@@ -15,8 +15,11 @@ function mxProbe(c) {
 function mxCurve(cb) {
   return {
     kind: 'Curveball', badge: 'mxb-curve', label: cb.theme || 'Scenario',
-    prompt: cb.cue + '<div class="mx-task">' + cb.task + '</div>',
-    reveal: '<div class="ans">' + cb.model + '</div>' +
+    /* task is OPTIONAL -- the 38 markdown topics' curveballs are cue + model only, and this
+       interpolated it unguarded, so mixed fire printed a literal "undefined" after the cue
+       on every one of them. */
+    prompt: cb.cue + (cb.task ? '<div class="mx-task">' + cb.task + '</div>' : ''),
+    reveal: '<div class="ans">' + (cb.model || '') + '</div>' +
       (cb.int ? '<div class="fu"><div class="lab">The interviewer cuts in</div><div class="fq">' + cb.int.q + '</div><div class="fa">' + cb.int.a + '</div></div>' : '')
   };
 }
@@ -159,11 +162,14 @@ function renderMockBeat() {
   if (mockBeat >= mockBeats.length) { renderMockEnd(); return; }
   const beat = mockBeats[mockBeat], last = (mockBeat === mockBeats.length - 1);
   const fire = !!(mockInterrupt && beat.int && mockIntSet[mockBeat]);
+  /* task is OPTIONAL: none of the 38 markdown topics' curveballs author one (they are cue +
+     model only), and the old code interpolated it unguarded -- so the literal string
+     "undefined" was painted into the task line of every markdown mock run. */
   mockbody.innerHTML =
     '<div><span class="mb-prog">Beat ' + (mockBeat + 1) + ' / ' + mockBeats.length + '</span><span class="mb-tag">' + beat.tag + '</span>' + '</div>' +
     '<div class="mb-cue">' + beat.cue + '</div>' +
-    '<div class="mb-task">' + beat.task + '</div>' +
-    '<div class="mb-model"><div class="mb-ml">Model answer</div>' + beat.model + '</div>' +
+    (beat.task ? '<div class="mb-task">' + beat.task + '</div>' : '') +
+    '<div class="mb-model"><div class="mb-ml">Model answer</div>' + (beat.model || '') + '</div>' +
     (fire ? '<div class="mb-int" id="mbint"><div class="mb-int-h">&#128308;&nbsp; The interviewer cuts in</div><div class="mb-int-q">' + beat.int.q + '</div><button class="mb-irev" id="mbirev" type="button">Reveal a strong reply</button><div class="mb-int-a" id="mbinta"><div class="mb-int-al">A strong reply hits</div>' + beat.int.a + '</div>' + (beat.int2 ? '<div class="mb-int2" id="mbint2"><div class="mb-int-h2">&#128308;&nbsp; And they push again</div><div class="mb-int-q">' + beat.int2.q + '</div><button class="mb-irev" id="mbirev2" type="button">Reveal a strong reply</button><div class="mb-int-a" id="mbinta2"><div class="mb-int-al">A strong reply hits</div>' + beat.int2.a + '</div></div>' : '') + '</div>' : '') +
     '<div class="mb-act"><button class="mb-rev" id="mbrev" type="button">Reveal model</button>' +
     '<button class="mb-next" id="mbnext" type="button">' + (last ? 'Finish' : 'Next beat &rarr;') + '</button></div>' +
@@ -192,20 +198,36 @@ function renderMockBeat() {
   mockRoot.getElementById('mbnext').onclick = function () { mockBeat++; renderMockBeat(); };
 }
 /* Mock-run end screen: stop the clock, record run stats, show time + which
-   curveball and interruptions fired, then a 0-6 self-score that paints a verdict. */
+   curveball and interruptions fired, then a self-score OUT OF THE BEATS THIS RUN
+   ACTUALLY ASKED that paints a verdict.
+
+   The denominator was hardcoded 6 -- the beat count of the 8 hand-coded topics. The
+   38 markdown topics author TWO beats, so a flawless run scored 2, landed under the
+   `score >= 4` middle bucket, and was told "the arc isn't solid yet": the bottom
+   verdict, unreachable-to-escape, on 38 of 46 topics. Everything is relative to
+   mockBeats.length now. At 6 beats the buckets, the copy and the thresholds are
+   byte-identical to before, so the 8 are untouched. */
+function mockOutOf() { return mockBeats.length; }
+/* The middle bucket's floor: two thirds of the beats. At 6 -> 4, exactly the old
+   hardcoded threshold. Never 0, so a 1-beat topic still has a bottom bucket. */
+function mockMidBar(n) { return Math.max(1, Math.round(n * 2 / 3)); }
+var MOCK_NUMWORD = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
+function mockWord(n) { return MOCK_NUMWORD[n] || String(n); }
 function renderMockEnd() {
-  if (mockClock) { clearInterval(mockClock); mockClock = null; }
+  closeMockClock();                     /* was clearInterval() on a requestAnimationFrame handle -- a no-op, so the clock kept ticking through the end screen */
   mockRuns++;
   mockLastTime = mockSec;
   mockLastInt = mockInterrupt ? Object.keys(mockIntSet).length : 0;
+  const nBeats = mockOutOf(), midBar = mockMidBar(nBeats);
+  mockLastOutOf = nBeats;               /* the score is meaningless without the denominator it was scored against -- persist both */
   mockPersist();
   const t = mockFmt(mockSec);
   let html = '<div class="mb-end"><div class="mb-end-h">Round complete</div>' +
     '<div class="mb-end-t">You ran the full arc in <span class="mb-end-time">' + t + '</span>. A real design round is 35&ndash;45 min &mdash; this is the spine you expand into it.</div>' +
-    '<div class="mb-end-cv">Curveball this run: <b>' + mockBeats[mockCurveIdx].theme + '</b>. ' + curveballPool.length + ' rotate in &mdash; run again for a different one.</div>' +
-    (mockInterrupt && Object.keys(mockIntSet).length ? '<div class="mb-end-int">Cut off on <b>' + Object.keys(mockIntSet).length + '</b> of ' + mockBeats.length + ' beats &mdash; the version that counts.</div>' : '') +
-    '<div class="mb-score-q">How many of the six did you deliver cleanly, out loud?</div><div class="mb-score" id="mbscore">';
-  for (let i = 0; i <= 6; i++) html += '<button type="button" data-s="' + i + '">' + i + '</button>';
+    (mockCurveIdx >= 0 && mockBeats[mockCurveIdx] ? '<div class="mb-end-cv">Curveball this run: <b>' + mockBeats[mockCurveIdx].theme + '</b>. ' + curveballPool.length + ' rotate in &mdash; run again for a different one.</div>' : '') +
+    (mockInterrupt && Object.keys(mockIntSet).length ? '<div class="mb-end-int">Cut off on <b>' + Object.keys(mockIntSet).length + '</b> of ' + nBeats + ' beats &mdash; the version that counts.</div>' : '') +
+    '<div class="mb-score-q">How many of the ' + mockWord(nBeats) + ' did you deliver cleanly, out loud?</div><div class="mb-score" id="mbscore">';
+  for (let i = 0; i <= nBeats; i++) html += '<button type="button" data-s="' + i + '">' + i + '</button>';
   html += '</div><div class="mb-verdict" id="mbverdict"></div><div class="mb-again"><button class="pri" id="mbagain" type="button">Run again</button><button id="mbclose2" type="button">Close</button></div></div>';
   mockbody.innerHTML = html;
   const scoreBtns = mockRoot.getElementById('mbscore');
@@ -217,11 +239,13 @@ function renderMockEnd() {
       this.style.color = 'var(--acc)';
       const score = parseInt(this.getAttribute('data-s'), 10), verdictEl = mockRoot.getElementById('mbverdict');
       mockLastScore = score;
+      mockLastOutOf = nBeats;
       mockPersist();
       verdictEl.classList.add('show');
-      if (score >= 6) { verdictEl.style.background = 'var(--tealbg)'; verdictEl.style.color = '#0a5240'; verdictEl.innerHTML = '<b>Six for six.</b> You can carry the whole round end to end &mdash; now do it faster and under interruption.'; }
-      else if (score >= 4) { verdictEl.style.background = 'var(--accbg)'; verdictEl.style.color = 'var(--accink)'; verdictEl.innerHTML = '<b>' + score + ' / 6.</b> The spine holds. Re-run and target the two that wobbled until they&rsquo;re automatic.'; }
-      else { verdictEl.style.background = 'var(--amberbg)'; verdictEl.style.color = '#5e3c0a'; verdictEl.innerHTML = '<b>' + score + ' / 6.</b> The arc isn&rsquo;t solid yet &mdash; drill the weak beats in their own tabs, then run it again.'; }
+      const w = mockWord(nBeats), missed = nBeats - score, mw = mockWord(missed);
+      if (score >= nBeats) { verdictEl.style.background = 'var(--tealbg)'; verdictEl.style.color = '#0a5240'; verdictEl.innerHTML = '<b>' + w.charAt(0).toUpperCase() + w.slice(1) + ' for ' + w + '.</b> You can carry the whole round end to end &mdash; now do it faster and under interruption.'; }
+      else if (score >= midBar) { verdictEl.style.background = 'var(--accbg)'; verdictEl.style.color = 'var(--accink)'; verdictEl.innerHTML = '<b>' + score + ' / ' + nBeats + '.</b> The spine holds. Re-run and target the ' + mw + ' that wobbled until ' + (missed === 1 ? 'it&rsquo;s' : 'they&rsquo;re') + ' automatic.'; }
+      else { verdictEl.style.background = 'var(--amberbg)'; verdictEl.style.color = '#5e3c0a'; verdictEl.innerHTML = '<b>' + score + ' / ' + nBeats + '.</b> The arc isn&rsquo;t solid yet &mdash; drill the weak beats in their own tabs, then run it again.'; }
     };
   }
   mockRoot.getElementById('mbagain').onclick = openMock;

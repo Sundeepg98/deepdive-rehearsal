@@ -79,6 +79,136 @@ const HTML = process.argv[2] ||
   ok('must-hit checklist renders points', mh.count >= 1);
   ok('ticking a point updates coverage', mh.before === '0' && mh.after === '1');
 
+  /* ================= MOCK RUN: relative scoring + canonical-bank integrity =================
+     Two P1 regressions this locks down, both of which were invisible to every other check:
+
+     1. THE DENOMINATOR WAS HARDCODED 6. The 8 hand-coded topics author 6 mock beats; the 38
+        markdown topics author TWO (tagged SCALE + DESIGN). A flawless run on any of those 38
+        scored 2, fell under the `score >= 4` middle bucket, and was handed the BOTTOM verdict
+        ("the arc isn't solid yet") -- unescapable on 38 of 46 topics.
+     2. THE RUN WROTE THROUGH INTO THE CANONICAL BANK. Both bank builders assemble the curveball
+        pool as [ the CURVEBALL mockBeat, ...extras ], so pool[0] IS a bank object, and
+        publishBanks only .slice()d the pool (new array, SAME objects). openMock then did
+        `mockBeats[mockCurveIdx] = curveballPool[rand]` (aliasing a bank object into the run) and
+        `mockBeats[mockFrameIdx].cue = framePool[rand]`. On all 38 markdown topics neither a FRAME
+        nor a CURVEBALL beat exists, so BOTH indices defaulted to 0 and that second line wrote a
+        frame cue straight into the pooled curveball -- permanently, and mixed fire draws from that
+        same pool.
+
+     Driven on a MARKDOWN topic, which is where both bugs actually bite. */
+  const helper = await page.evaluate(() => {
+    /* pick a topic whose beats are NOT the hand-coded 6 -- i.e. one the old hardcoded 6 lied about */
+    const ids = TopicRegistry.ids();
+    const md = ids.find((i) => TopicRegistry.get(i).data.bank.mockBeats.length !== 6);
+    return { md: md || null, total: ids.length };
+  });
+  ok('a topic exists whose beat count is not 6', !!helper.md);
+
+  const runMock = async (topicId) => page.evaluate(async (t) => {
+    TopicRegistry.setTopic(t);
+    const bank = TopicRegistry.get(t).data.bank;
+    const snap = () => JSON.stringify({ c: bank.curveballs, b: bank.mockBeats, f: bank.frames });
+    const poolSnap = () => JSON.stringify(curveballPool);
+    const canonBefore = snap(), poolBefore = poolSnap();
+    const authored = bank.mockBeats.length;
+
+    document.getElementById('mockopen').click();
+    await new Promise((r) => setTimeout(r, 200));
+    let shown = 0, undef = 0;
+    for (let i = 0; i < 40; i++) {                       // walk every beat, answering it "well"
+      const next = mockRoot.getElementById('mbnext');
+      if (!next) break;                                  // end screen
+      const rev = mockRoot.getElementById('mbrev');
+      if (rev && !rev.disabled) rev.click();
+      /* A beat must never paint the literal string "undefined" -- an unguarded optional field
+         (`'<div class="mb-task">' + beat.task + '</div>'` with no task) renders EXACTLY that.
+         Match the ARTIFACT SHAPE ">undefined<" in the markup, not the word in textContent:
+         textContent concatenates children with no separator, so the real bug reads
+         "...how?undefinedModel answer" and a /\bundefined\b/ scan cannot fail on it (d->M is
+         no word boundary). It also cannot false-positive on prose that merely says "undefined". */
+      if ((mockbody.innerHTML || '').indexOf('>undefined<') !== -1) undef++;
+      shown++;
+      next.click();
+      await new Promise((r) => setTimeout(r, 40));
+    }
+    const askedOutOf = mockBeats.length;                 // the beats this run actually asked
+    const btns = Array.from(mockbody.querySelectorAll('.mb-score button')).map((b) => +b.getAttribute('data-s'));
+    /* score it PERFECTLY: every beat delivered cleanly */
+    const perfect = mockbody.querySelector('.mb-score button[data-s="' + askedOutOf + '"]');
+    if (perfect) perfect.click();
+    await new Promise((r) => setTimeout(r, 120));
+    const v = mockbody.querySelector('.mb-verdict');
+    const bg = v ? v.style.background : '';
+    const out = {
+      authored, askedOutOf, shown, undef,
+      buttons: btns,
+      maxButton: btns.length ? btns[btns.length - 1] : null,
+      question: (mockbody.querySelector('.mb-score-q') || {}).textContent || '',
+      verdict: v ? (v.textContent || '').trim() : '',
+      /* the three buckets are painted teal / accent / amber, in that order */
+      top: bg.indexOf('teal') !== -1,
+      bottom: bg.indexOf('amber') !== -1,
+      canonIntact: snap() === canonBefore,
+      poolIntact: poolSnap() === poolBefore,
+    };
+    mockRoot.getElementById('mbclose2').click();
+    await new Promise((r) => setTimeout(r, 350));
+    return out;
+  }, topicId);
+
+  const md = await runMock(helper.md);
+  ok('markdown topic: every authored beat is asked', md.shown === md.askedOutOf && md.askedOutOf >= md.authored);
+  ok('markdown topic: score buttons run 0..N, not 0..6', md.maxButton === md.askedOutOf && md.buttons.length === md.askedOutOf + 1);
+  ok('markdown topic: the question names the real beat count', !/of the six/.test(md.question) || md.askedOutOf === 6);
+  ok('markdown topic: a PERFECT run gets the TOP verdict', md.top === true && md.bottom === false);
+  ok('markdown topic: verdict is out of the real beat count', md.verdict.indexOf('/ 6') === -1 || md.askedOutOf === 6);
+  ok('markdown topic: mock run leaves the CANONICAL BANK intact', md.canonIntact === true);
+  ok('markdown topic: mock run leaves the MIXED-FIRE pool intact', md.poolIntact === true);
+  ok('markdown topic: no beat paints the literal "undefined"', md.undef === 0);
+
+  /* the reference spec: the 8 hand-coded topics keep their 6-beat arc, 0..6 scoring and buckets */
+  const hand = await runMock('content-pipeline');
+  ok('hand-coded topic still asks 6 beats', hand.askedOutOf === 6 && hand.authored === 6);
+  ok('hand-coded topic still scores 0..6', hand.maxButton === 6 && hand.buttons.length === 7);
+  ok('hand-coded topic: 6/6 is still the TOP verdict', hand.top === true);
+  ok('hand-coded topic: bank + pool intact after a run', hand.canonIntact === true && hand.poolIntact === true);
+
+  /* a SECOND run must not compound: reruns rebuild the beats from the pristine bank */
+  const md2 = await runMock(helper.md);
+  ok('a rerun does not grow or corrupt the beat list', md2.askedOutOf === md.askedOutOf && md2.canonIntact === true && md2.poolIntact === true);
+
+  /* MIXED FIRE reads the same pool the mock run rolls from -- it must show the AUTHORED
+     curveball, not a frame cue the mock wrote through into it, and never a bare "undefined". */
+  const mx = await page.evaluate(async (t) => {
+    TopicRegistry.setTopic(t);
+    const authored = TopicRegistry.get(t).data.bank.curveballs.map((c) => c.cue);
+    document.getElementById('mixopen').click();
+    await new Promise((r) => setTimeout(r, 250));
+    const cards = [];
+    let undef = 0;
+    for (let i = 0; i < 12; i++) {
+      const kind = ((mixBody.querySelector('.mx-kind') || {}).textContent || '').trim();
+      const prompt = ((mixBody.querySelector('.qq') || {}).textContent || '').trim();
+      if (kind === 'Curveball') cards.push(prompt);
+      const show = mixRoot.getElementById('mxshow');
+      if (!show) break;
+      show.click();
+      await new Promise((r) => setTimeout(r, 40));
+      if ((mixBody.innerHTML || '').indexOf('>undefined<') !== -1) undef++;   /* see the note in runMock */
+      const g = mixRoot.getElementById('mxg');
+      if (!g) break;
+      g.click();
+      await new Promise((r) => setTimeout(r, 40));
+    }
+    document.getElementById('mixx').click();
+    await new Promise((r) => setTimeout(r, 300));
+    /* every curveball mixed fire showed must still open with an AUTHORED cue */
+    const allAuthored = cards.every((p) => authored.some((c) => p.indexOf(c.replace(/&rsquo;/g, '’').replace(/&mdash;/g, '—')) === 0));
+    return { seen: cards.length, allAuthored, undef };
+  }, helper.md);
+  ok('mixed fire curveballs are the AUTHORED cues, not mock-run debris', mx.seen === 0 || mx.allAuthored === true);
+  ok('mixed fire never paints the literal "undefined"', mx.undef === 0);
+
   /* ---- rescue: scroll-to-top (button built; shows past threshold if scrollable) ---- */
   const stb = await page.evaluate(() => !!document.getElementById('scrolltop'));
   ok('scroll-to-top button built', stb);

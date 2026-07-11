@@ -36,8 +36,22 @@ function openMock() {
   mockBeat = 0;
   mockSec = 0;
   mockclockEl.textContent = '0:00';
-  mockBeats[mockCurveIdx] = curveballPool[Math.floor(Math.random() * curveballPool.length)];
-  mockBeats[mockFrameIdx].cue = framePool[Math.floor(Math.random() * framePool.length)];
+  /* THIS RUN'S BEATS, rebuilt from the pristine topic bank (see resetMockBeats).
+     Every run starts from the authored arc -- reruns cannot compound, and the two
+     rolls below write only into this run's private copies. */
+  resetMockBeats();
+  /* Roll the curveball. CLONE it out of the pool before it enters mockBeats: the
+     pool is what mixed-fire draws from, so an aliased entry here turns any later
+     beat write into pool corruption (which is exactly what the frame-cue roll below
+     used to be -- on all 38 markdown topics mockCurveIdx and mockFrameIdx were both
+     0, so `mockBeats[0].cue = ...` wrote straight through into the curveball pool). */
+  if (curveballPool.length) {
+    var cb = cloneBeat(curveballPool[Math.floor(Math.random() * curveballPool.length)]);
+    if (mockCurveIdx >= 0) mockBeats[mockCurveIdx] = cb;   /* the topic authored a CURVEBALL slot -> rotate what fills it */
+    else { mockBeats.push(cb); mockCurveIdx = mockBeats.length - 1; } /* no slot -> the curveball is an EXTRA beat; it must never evict an authored one */
+  }
+  /* Roll the frame cue -- only where the topic actually authored a FRAME beat. */
+  if (mockFrameIdx >= 0 && framePool.length) mockBeats[mockFrameIdx].cue = framePool[Math.floor(Math.random() * framePool.length)];
   mockIntSet = mockInterrupt ? pickInterrupts() : {};
   ovShow(mockov);
   mockov.setAttribute('aria-hidden', 'false');

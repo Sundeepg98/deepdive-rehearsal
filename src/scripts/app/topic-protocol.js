@@ -18,25 +18,55 @@
    mock-run/data.js's mockBeats/curveballPool/framePool/indices move to bank.js
    and are seeded here by publishBanks.) */
 var cards = [], speakLines = [], _allCards = [], _allSpeak = [];
-var curveballPool = [], mockBeats = [], framePool = [], mockCurveIdx = 0, mockFrameIdx = 0;
+var curveballPool = [], mockBeats = [], mockBeatsBank = [], framePool = [], mockCurveIdx = -1, mockFrameIdx = -1;
 var TOPIC_CMP_NOTES = {};   /* shell.js __syncCompanion reads this (was a closure-local map) */
 
-/* Reseed cross-pane globals from a topic's bank, synchronously, BEFORE the event
-   fires and before any overlay re-reads them. mock-run MUTATES mockBeats in
-   place, so it gets a private deep-ish copy; the canonical topic data is never
-   clobbered. */
-function publishBanks(t) {
-  var b = t.data.bank;
-  _allCards = b.cards; _allSpeak = b.speak;
-  cards = _allCards.slice(); speakLines = _allSpeak.slice();
-  curveballPool = b.curveballs.slice();
-  mockBeats = b.mockBeats.map(function (x) { var o = {}; for (var k in x) o[k] = x[k]; return o; });
-  mockCurveIdx = 0; mockFrameIdx = 0;
+/* Copy a beat / curveball off the canonical bank. A beat is flat strings PLUS the
+   nested int/int2 QA objects, so a `for (k in x)` copy alone still hands out live
+   references to those two -- clone them explicitly. */
+function cloneBeat(x) {
+  var o = {}, k;
+  for (k in x) o[k] = x[k];
+  if (x.int) o.int = { q: x.int.q, a: x.int.a };
+  if (x.int2) o.int2 = { q: x.int2.q, a: x.int2.a };
+  return o;
+}
+
+/* Fresh beats for ONE mock run, off the pristine per-topic bank, with the
+   curveball/frame slots re-derived from the tags. Called by publishBanks on every
+   topic switch AND by openMock on every run: a run therefore always starts from
+   the AUTHORED arc, so a previous run's curveball swap or frame-cue roll can never
+   accumulate, and no run can write through into the topic bank.
+   -1 = the topic authored no such beat (the 38 markdown topics tag their two beats
+   SCALE + DESIGN, so they have NEITHER a FRAME nor a CURVEBALL slot). It must not
+   silently fall back to 0, which aimed both writes at beat 0. */
+function resetMockBeats() {
+  mockBeats = mockBeatsBank.map(cloneBeat);
+  mockCurveIdx = -1; mockFrameIdx = -1;
   for (var i = 0; i < mockBeats.length; i++) {
     if (mockBeats[i].tag === 'CURVEBALL') mockCurveIdx = i;
     if (mockBeats[i].tag === 'FRAME') mockFrameIdx = i;
   }
-  framePool = (b.frames && b.frames.slice()) || [mockBeats[mockFrameIdx] && mockBeats[mockFrameIdx].cue];
+}
+
+/* Reseed cross-pane globals from a topic's bank, synchronously, BEFORE the event
+   fires and before any overlay re-reads them. mock-run MUTATES its beats in place,
+   so it renders from a private copy; the canonical topic data is never clobbered.
+
+   THE POOL IS CLONED, NOT SLICED. Both bank builders assemble the curveball pool as
+   [ the CURVEBALL mockBeat, ...extras ] -- each topic's own bank.js, and parse_md.mjs's
+   `curveballs: (cb ? [cb] : []).concat(extraCurve)` -- so pool[0] IS a canonical beat
+   object. A .slice() copies the ARRAY and shares the OBJECTS, so a write through any
+   pool entry lands in t.data.bank -- permanently, for the whole session, across topic
+   switches -- and mixed-fire, which draws from this same pool, renders the damage. */
+function publishBanks(t) {
+  var b = t.data.bank;
+  _allCards = b.cards; _allSpeak = b.speak;
+  cards = _allCards.slice(); speakLines = _allSpeak.slice();
+  curveballPool = b.curveballs.map(cloneBeat);
+  mockBeatsBank = b.mockBeats.map(cloneBeat);
+  resetMockBeats();
+  framePool = (b.frames && b.frames.slice()) || (mockFrameIdx >= 0 ? [mockBeats[mockFrameIdx].cue] : []);
 }
 
 /* The ONLY home for the scattered light-DOM identity (index.html x6 + mobile

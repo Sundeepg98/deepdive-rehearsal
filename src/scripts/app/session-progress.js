@@ -22,7 +22,7 @@ function clearSession() {
   const d = drillEl(); if (d) d.reset();
   const wb = wbEl();
   if (wb) wb.resetAll();
-  mockLastScore = null; mockLastTime = null; mockRuns = 0;
+  mockLastScore = null; mockLastOutOf = null; mockLastTime = null; mockRuns = 0;
   try { if (typeof Store !== 'undefined' && Store.remove) Store.remove('mock.last'); } catch (e) {}
   mixLog = []; mxRes = []; mxGot = 0; mxShk = 0;
 }
@@ -30,10 +30,18 @@ function clearSession() {
    flagged revisits and missed whiteboard steps first, then a weak mock, then any
    unfinished surface (drill / whiteboard / mock / mixed fire), else "you're ready".
    Each branch returns a config: kicker, text, button label, target tab, colors. */
-function pickRec(revisit, missed, mScore, dDone, dTot, wbDone, mRuns, mixWeak) {
+/* The mock is scored out of the BEATS THAT TOPIC ACTUALLY HAS (6 for the hand-coded 8,
+   2 for the 38 markdown topics) -- never a hardcoded 6, which read a flawless 2-beat run
+   as "2 / 6" and recommended re-running it. mOut() is the persisted denominator, falling
+   back to 6 for a score persisted before it was recorded. mockMidBar (mixed-fire.js) is
+   the SAME two-thirds floor the end-screen verdict uses, so the report, the session sheet
+   and the verdict can never disagree; at 6 beats it is 4, exactly the old threshold. */
+function mOut(stats) { return (stats && stats.mOut) || 6; }
+function mockIsStrong(mScore, outOf) { return mScore !== null && mScore >= mockMidBar(outOf); }
+function pickRec(revisit, missed, mScore, dDone, dTot, wbDone, mRuns, mixWeak, mOutOf) {
   if(revisit.length&&dDone>=dTot)return {kicker:'Focus next',text:'You flagged <b>'+revisit.length+'</b> probe'+(revisit.length===1?'':'s')+' to revisit. Re-drill '+(revisit.length===1?'it':'them')+' until the signal comes automatically.',btn:'Re-drill weak spots \u2192',tab:'drill',weak:true,bd:'#e8c5c0',bg:'var(--redbg)',ink:'var(--red)'};
   if(missed.length)return {kicker:'Focus next',text:'You missed <b>'+missed.length+'</b> step'+(missed.length===1?'':'s')+' on the whiteboard. Re-draw '+(missed.length===1?'it':'them')+' from a blank page.',btn:'Re-draw missed steps \u2192',tab:'wb',wbreset:true,bd:'#e8c5c0',bg:'var(--redbg)',ink:'var(--red)'};
-  if(mScore!==null&&mScore<4)return {kicker:'Focus next',text:'Your last mock landed at <b>'+mScore+' / 6</b>. Run the arc again and target the beats that wobbled.',btn:'Run the round again \u2192',tab:'__mock__',bd:'#e8c5c0',bg:'var(--redbg)',ink:'var(--red)'};
+  if(mScore!==null&&!mockIsStrong(mScore,mOutOf))return {kicker:'Focus next',text:'Your last mock landed at <b>'+mScore+' / '+mOutOf+'</b>. Run the arc again and target the beats that wobbled.',btn:'Run the round again \u2192',tab:'__mock__',bd:'#e8c5c0',bg:'var(--redbg)',ink:'var(--red)'};
   if(dDone<dTot)return {kicker:'Keep going',text:'You\u2019ve graded <b>'+dDone+' of '+dTot+'</b> probes. Clear the rest so nothing in the round is a surprise.',btn:'Back to the drill \u2192',tab:'drill',bd:'#cfc7f0',bg:'var(--accbg)',ink:'var(--accink)'};
   if(wbDone===0)return {kicker:'Keep going',text:'You haven\u2019t tried the <b>whiteboard recall</b> yet \u2014 rebuild the whole design from cues alone.',btn:'Try the whiteboard \u2192',tab:'wb',bd:'#cfc7f0',bg:'var(--accbg)',ink:'var(--accink)'};
   if(mRuns===0)return {kicker:'Keep going',text:'Drill and whiteboard are clean. Now pressure-test the <b>whole arc</b> on the clock.',btn:'Start a mock run \u2192',tab:'__mock__',bd:'#cfc7f0',bg:'var(--accbg)',ink:'var(--accink)'};
@@ -64,13 +72,13 @@ function sessStats() {
   for (let mi = 0; mi < mixLog.length; mi++) { if (mixLog[mi].ok) mixGot++; mixLatest[mixLog[mi].label] = mixLog[mi].ok; }
   const mixShk = mixTot - mixGot, mixWeak = [];
   for (let label in mixLatest) { if (mixLatest[label] === false) mixWeak.push(label); }
-  return { dTot: dTot, dDone: dDone, dGot: dGot, dShk: dShk, dLeft: dLeft, revisit: revisit, wbGot: wbGot, wbMiss: wbMiss, missed: missed, wbTot: wbTot, wbDone: wbDone, mScore: mockLastScore, mTime: mockLastTime, mRuns: mockRuns, mInt: mockLastInt, mixTot: mixTot, mixGot: mixGot, mixShk: mixShk, mixWeak: mixWeak };
+  return { dTot: dTot, dDone: dDone, dGot: dGot, dShk: dShk, dLeft: dLeft, revisit: revisit, wbGot: wbGot, wbMiss: wbMiss, missed: missed, wbTot: wbTot, wbDone: wbDone, mScore: mockLastScore, mOut: mockLastOutOf, mTime: mockLastTime, mRuns: mockRuns, mInt: mockLastInt, mixTot: mixTot, mixGot: mixGot, mixShk: mixShk, mixWeak: mixWeak };
 }
 /* Build the printable HTML report (used by Save-as-PDF): a header with the
    timestamp, the recommendation, and a section per surface with its stats. */
 function buildSessReport() {
   const stats = sessStats();
-  const rec = pickRec(stats.revisit, stats.missed, stats.mScore, stats.dDone, stats.dTot, stats.wbDone, stats.mRuns, stats.mixWeak);
+  const rec = pickRec(stats.revisit, stats.missed, stats.mScore, stats.dDone, stats.dTot, stats.wbDone, stats.mRuns, stats.mixWeak, mOut(stats));
   const now = new Date(), pad = function (x) { return x < 10 ? '0' + x : '' + x; };
   const when = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate()) + ' &middot; ' + now.getHours() + ':' + pad(now.getMinutes());
   let html = '<div class="sr-head"><div class="sr-ttl">Content Pipeline &mdash; Session Report</div><div class="sr-when">' + when + '</div></div>';
@@ -85,7 +93,7 @@ function buildSessReport() {
   html += '</div>';
   html += '<div class="sr-sec"><div class="sr-h">Mock Run</div>';
   if (stats.mScore === null && stats.mRuns === 0) html += '<div class="sr-stat">Not run yet.</div>';
-  else html += '<div class="sr-stat">Last run: ' + (stats.mScore === null ? 'completed, unscored' : stats.mScore + ' / 6') + (stats.mTime != null ? ' in ' + mockFmt(stats.mTime) : '') + ' &middot; ' + stats.mRuns + ' run' + (stats.mRuns === 1 ? '' : 's') + (stats.mInt ? ' &middot; cut off on ' + stats.mInt + ' of 6 beats' : '') + '</div>';
+  else html += '<div class="sr-stat">Last run: ' + (stats.mScore === null ? 'completed, unscored' : stats.mScore + ' / ' + mOut(stats)) + (stats.mTime != null ? ' in ' + mockFmt(stats.mTime) : '') + ' &middot; ' + stats.mRuns + ' run' + (stats.mRuns === 1 ? '' : 's') + (stats.mInt ? ' &middot; cut off on ' + stats.mInt + ' of ' + mOut(stats) + ' beats' : '') + '</div>';
   html += '</div>';
   html += '<div class="sr-sec"><div class="sr-h">Mixed Fire</div>';
   if (stats.mixTot === 0) html += '<div class="sr-stat">Not run yet.</div>';
@@ -219,7 +227,7 @@ function renderCompare() {
 function renderSession() {
   const stats = sessStats();
   const dTot = stats.dTot, dDone = stats.dDone, dGot = stats.dGot, dShk = stats.dShk, dLeft = stats.dLeft, revisit = stats.revisit, wbGot = stats.wbGot, wbMiss = stats.wbMiss, missed = stats.missed, wbTot = stats.wbTot, wbDone = stats.wbDone, mScore = stats.mScore, mTime = stats.mTime, mRuns = stats.mRuns, mInt = stats.mInt;
-  const rec = pickRec(revisit, missed, mScore, dDone, dTot, wbDone, mRuns, stats.mixWeak);
+  const rec = pickRec(revisit, missed, mScore, dDone, dTot, wbDone, mRuns, stats.mixWeak, mOut(stats));
   let html = '';
   html += '<div class="ss-rec" style="border-color:' + rec.bd + ';background:' + rec.bg + '">' +
        '<div class="ss-rk" style="color:' + rec.ink + '">' + rec.kicker + '</div>' +
@@ -242,7 +250,7 @@ function renderSession() {
   html += '</div>';
   html += '<div class="ss-card"><div class="ss-h"><span class="ss-dot" style="background:var(--indigo)"></span>Mock Run</div>';
   if (mScore === null && mRuns === 0) html += '<div class="ss-stat ss-none">Not run yet \u2014 take the full round on the clock.</div>';
-  else html += '<div class="ss-stat">Last run: <span class="' + (mScore !== null && mScore >= 4 ? 'ss-g' : 'ss-s') + '">' + (mScore === null ? 'completed, unscored' : mScore + ' / 6') + '</span>' + (mTime != null ? ' in ' + mockFmt(mTime) : '') + ' &middot; ' + mRuns + ' run' + (mRuns === 1 ? '' : 's') + (mInt ? ' &middot; cut off on <b>' + mInt + '</b> of 6' : '') + '</div>';
+  else html += '<div class="ss-stat">Last run: <span class="' + (mockIsStrong(mScore, mOut(stats)) ? 'ss-g' : 'ss-s') + '">' + (mScore === null ? 'completed, unscored' : mScore + ' / ' + mOut(stats)) + '</span>' + (mTime != null ? ' in ' + mockFmt(mTime) : '') + ' &middot; ' + mRuns + ' run' + (mRuns === 1 ? '' : 's') + (mInt ? ' &middot; cut off on <b>' + mInt + '</b> of ' + mOut(stats) + '' : '') + '</div>';
   html += '</div>';
   html += '<div class="ss-card"><div class="ss-h"><span class="ss-dot" style="background:var(--acc2)"></span>Mixed Fire</div>';
   if (stats.mixTot === 0) html += '<div class="ss-stat ss-none">Not run yet \u2014 mix all three registers under one clock.</div>';

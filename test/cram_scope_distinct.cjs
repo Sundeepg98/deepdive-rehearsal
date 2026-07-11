@@ -40,6 +40,15 @@ const HTML = process.argv.slice(2).find((a) => !a.startsWith('--'))
 // A real cram sheet is dense (the 8 hand-coded ones run 3-5k chars). A body under this is
 // not a summary of anything -- it is a render that failed. Deliberately well below the
 // smallest real one so it flags BLANKNESS, not brevity.
+//
+// THE FLOOR MUST MEASURE CONTENT, NOT CSS (hardened 2026-07-12, verification pass).
+// <deep-cram>'s shadow root is `<style>...</style>` + the derived body, and shadowRoot
+// .textContent includes the STYLE ELEMENT'S CSS TEXT -- 345 chars of it. Measured against a
+// raw textContent, a floor of 300 is therefore INERT for cram: a body with ZERO derived
+// content still measures 345 and sails past it. The floor exists precisely because "a
+// previous a11y audit in this repo certified a COMPLETELY BLANK PAGE as passing"; a floor
+// that its own <style> tag satisfies would have repeated that exact mistake. norm() below
+// now skips STYLE nodes, so this floor is measured against derived content ONLY.
 const MIN_BODY = 300;
 
 (async () => {
@@ -59,7 +68,14 @@ const MIN_BODY = 300;
     const ix = document.querySelector('.ix-x'); if (ix) ix.click();
     await sleep(200);
     const ids = TopicRegistry.ids();
-    const norm = (el) => (el && el.shadowRoot ? el.shadowRoot.textContent : '').replace(/\s+/g, ' ').trim();
+    // Read the DERIVED CONTENT only. Skipping STYLE keeps 345 chars of inlined CSS out of
+    // both the length floor and the distinctness hash -- see the MIN_BODY note above.
+    const norm = (el) => {
+      if (!el || !el.shadowRoot) return '';
+      let t = '';
+      el.shadowRoot.childNodes.forEach((n) => { if (n.nodeName !== 'STYLE') t += (n.textContent || ''); });
+      return t.replace(/\s+/g, ' ').trim();
+    };
 
     // DETERMINISTIC topic switch. setTopic() routes the `deeptopicchange` dispatch through
     // ViewTransitions.run() -> document.startViewTransition(), which fires the callback in a
@@ -125,6 +141,16 @@ const MIN_BODY = 300;
       // (2) NON-EMPTY -- distinctness is worthless if the bodies are blank.
       if (body.length < MIN_BODY) {
         problems.push(kind + ': ' + id + ' renders only ' + body.length + ' chars (floor ' + MIN_BODY + ') -- blank/near-blank body');
+      }
+      // (4) NO EMPTY STATE. deriveCram/deriveScope fall back to an explicit "Nothing authored
+      // yet" card when a topic has no usable slices ("empty beats WRONG"). That fallback is the
+      // right RUNTIME behaviour, but it must never be reachable in the shipped build -- and it
+      // slips through both checks above: it is ~535 chars (clears the floor) and, so long as
+      // only ONE topic hits it, it is distinct from every other body. So a topic silently
+      // degrading to an empty cram sheet would leave this gate GREEN. Assert it outright.
+      if (/Nothing authored yet/.test(body)) {
+        problems.push(kind + ': ' + id + ' renders the EMPTY STATE ("Nothing authored yet") -- its source slices are '
+          + 'missing, so it has no ' + kind + ' sheet at all. Empty beats wrong, but neither is shippable.');
       }
       (byHash[h(body)] = byHash[h(body)] || []).push(id);
     });

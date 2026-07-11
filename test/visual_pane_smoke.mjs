@@ -234,6 +234,67 @@ chk('MOBILE 390px: the visual pane causes NO horizontal overflow', mOv === false
 
 chk('MOBILE zero page errors', merrs.length === 0, merrs.join(' | '));
 await m.close();
+
+/* ===== IS THE VISUAL REACHABLE BY URL? ========================================
+   viz was the ONE route that could not be deep-linked. deep-visual's renderTopic()
+   also runs at FIRST PAINT, when the registry still holds the DEFAULT topic (no
+   .visual) -- so its "bounce off a viz-less topic" fired and called goView('walk')
+   -> pushState, overwriting the deep-linked hash BEFORE Router.init() ever parsed
+   it. Measured: "#kafka-internals/viz" silently landed on "#content-pipeline/walk"
+   with no canvas at all. Every other route deep-linked fine, so nothing caught it.
+   The bounce now decides from the PENDING topic's data, not the stale current one. */
+const dl = await b.newPage({ viewport: { width: 1280, height: 900 } });
+const dlerrs = []; dl.on('pageerror', (e) => dlerrs.push(e.message.slice(0, 100)));
+/* PROBE reads window.__GL, so this page needs the same context counter the others get. */
+await dl.addInitScript(() => {
+  window.__prevFrame = null;
+  window.__GL = { created: 0, ctxs: [] };
+  const orig = HTMLCanvasElement.prototype.getContext;
+  HTMLCanvasElement.prototype.getContext = function (type, attrs) {
+    const c = orig.call(this, type, attrs);
+    if (c && String(type).indexOf('webgl') === 0 && window.__GL.ctxs.indexOf(c) === -1) {
+      window.__GL.created += 1; window.__GL.ctxs.push(c);
+    }
+    return c;
+  };
+});
+await dl.goto('file://' + FILE + '#kafka-internals/viz', { waitUntil: 'load' });
+await dl.waitForTimeout(2600);
+await dl.evaluate(() => { const x = document.querySelector('.ix-x'); if (x) x.click(); });
+await dl.waitForTimeout(1600);
+const dlWhere = await dl.evaluate(() => ({
+  hash: location.hash,
+  topic: (typeof TopicRegistry !== 'undefined' && TopicRegistry.current()) ? TopicRegistry.current().id : null,
+}));
+await dl.evaluate(PROBE);
+await dl.waitForTimeout(1000);
+const dlPix = await dl.evaluate(PROBE);
+chk('DEEP LINK "#<topic>/viz" lands on that topic, on viz',
+  dlWhere.topic === 'kafka-internals' && dlWhere.hash.indexOf('viz') !== -1, JSON.stringify(dlWhere));
+chk('DEEP LINK: the visual actually RENDERS on a cold boot (not just after clicking in)',
+  dlPix.bufW > 200 && dlPix.inkPct > 1.5 && dlPix.changed > 3000, JSON.stringify(dlPix));
+chk('DEEP LINK: zero page errors', dlerrs.length === 0, dlerrs.join(' | '));
+await dl.close();
+
+/* The bounce must still FIRE for a topic that genuinely has no visual -- and must
+   leave the viz PANE off, not merely rewrite the hash. (switchTab('viz') and
+   switchTab('walk') both defer their DOM swap into startViewTransition(); when they
+   overlap the viz callback resolves LAST and wins, stranding the viz pane visibly on
+   under a "/walk" hash. Landing the topic before bouncing means viz is never queued.) */
+const bo = await b.newPage({ viewport: { width: 1280, height: 900 } });
+await bo.goto('file://' + FILE + '#idempotency/viz', { waitUntil: 'load' });
+await bo.waitForTimeout(2800);
+const boS = await bo.evaluate(() => ({
+  hash: location.hash,
+  topic: (typeof TopicRegistry !== 'undefined' && TopicRegistry.current()) ? TopicRegistry.current().id : null,
+  vizPaneOn: document.getElementById('viz').classList.contains('on'),
+  vizTabHidden: document.querySelector('button[data-tab="viz"]').hidden,
+}));
+chk('BOUNCE still fires: "/viz" on a viz-LESS topic keeps the topic, drops the pane',
+  boS.topic === 'idempotency' && boS.hash.indexOf('viz') === -1 && boS.vizPaneOn === false && boS.vizTabHidden === true,
+  JSON.stringify(boS));
+await bo.close();
+
 await b.close();
 console.log(fails === 0 ? 'VISUAL PIPELINE SMOKE: ALL PASS' : 'SMOKE: ' + fails + ' FAILURE(S)');
 process.exit(fails ? 1 : 0);

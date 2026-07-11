@@ -484,7 +484,26 @@ class DeepDrill extends TopicPane {
     for (let z = 0; z < this._tiertog.children.length; z++) this._tiertog.children[z].classList.toggle('on', this._tiertog.children[z].getAttribute('data-tier') === t);
     this.setMode(this.mode);
   }
-  getStats() { return { dTot: cards.length, dDone: this.results.length, dGot: this.got, dShk: this.shk, revisit: this.results.filter(function (r) { return !r.ok; }).map(function (r) { return r.signal; }) }; }
+  /* Two different questions, two different answers -- conflating them was a P0.
+     dTot / dDone / dGot / dShk / revisit describe THIS RUN over the CURRENT WORKING
+     SET (`cards`), which setMode('quick'), setTier(), drillWeak() and drillRevset()
+     all deliberately shrink to a subset. That is what the live session panel wants.
+     It is NOT what a persisted topic record wants: writing it there truncated a
+     completed {done:22,tot:22} to {done:1,tot:3} on the first grade of a 3-probe
+     re-drill. The bank-relative fields below answer "which probe of the WHOLE topic
+     did the user just grade, and how", so Progress can MERGE the grade into the
+     full-topic record instead of overwriting it with the subset on screen.
+     `i` is the probe's index in _allCards -- the same stable key judge() already
+     uses for the revisit map (cards holds _allCards' own object refs, never copies). */
+  getStats() {
+    return {
+      dTot: cards.length, dDone: this.results.length, dGot: this.got, dShk: this.shk,
+      revisit: this.results.filter(function (r) { return !r.ok; }).map(function (r) { return r.signal; }),
+      bankTot: _allCards.length,
+      bankSignals: _allCards.map(function (c) { return c.signal; }),
+      graded: this.results.map(function (r) { return { i: _allCards.indexOf(r.card), level: r.level || (r.ok ? 3 : 2) }; })
+    };
+  }
   reset() { this.setMode('study'); }
   weak() { return this.drillWeak(); }
 }

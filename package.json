@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "gate": "python3 test/check_all.py",
     "browser-setup": "playwright install chromium",
-    "e2e": "node test/render.cjs && node test/entity_leak.cjs && node test/e2e_interactions.cjs",
+    "e2e": "node test/render.cjs && node test/entity_leak.cjs && node test/e2e_interactions.cjs && node test/progress_merge.cjs",
     "lint": "stylelint \"src/**/*.css\"",
     "lint:js": "oxlint src/"
   },

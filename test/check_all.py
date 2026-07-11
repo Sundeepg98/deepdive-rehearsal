@@ -8,6 +8,7 @@ This replaces per-edit manual vigilance with tooling that runs on every build:
   render           panes/overlays render, no JS/ref errors, no overflow  (browser)
   entity_leak      no HTML entity reaches visible text                   (browser)
   e2e_interactions theme/text-zoom/drill must-hit/rescues, 0 console errs (browser)
+  progress_merge   a filtered sub-drill MERGES into progress, never truncates (browser)
   topic_contract   every topic POPULATED to the depth of the hand-coded 8 (browser)
   cram_scope_distinct  no two topics RENDER the same cram/scope body       (browser)
   rail_integrity   the coaching rail NEVER shows another topic's note      (browser)
@@ -116,6 +117,14 @@ chrome = browser()
 deliverable = os.path.join(ROOT, 'deepdive_content_pipeline_rehearsal.html')
 for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity_leak.cjs'),
                      ('e2e_interactions', 'test/e2e_interactions.cjs'),
+                     # A filtered sub-drill must MERGE into the topic's canonical progress
+                     # record, never REPLACE it. Guards a shipped P0: the app's own
+                     # recommended "Drill my N Revisit probes ->" button turned a completed
+                     # {done:22,tot:22,revisit:[3]} into {done:1,tot:3,revisit:[]} after ONE
+                     # grade, because the persistence layer wrote the drill's current
+                     # WORKING SET into the record. Reference is the user's own completed
+                     # run, read back from localStorage -- not anything the writer produced.
+                     ('progress_merge', 'test/progress_merge.cjs'),
                      ('topic_contract', 'test/topic_contract.cjs'),
                      ('cram_scope_distinct', 'test/cram_scope_distinct.cjs'),
                      # The rail is per (topic, view), and a MISSING note is a state the renderer has

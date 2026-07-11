@@ -1,0 +1,324 @@
+[
+  {
+    "id": "event-driven",
+    "cram": "b2299b22",
+    "cLen": 3248,
+    "scope": "d18deca1",
+    "sLen": 1964
+  },
+  {
+    "id": "notifications",
+    "cram": "1850df98",
+    "cLen": 10629,
+    "scope": "bc54fc79",
+    "sLen": 4194
+  },
+  {
+    "id": "real-time-delivery",
+    "cram": "169ac31e",
+    "cLen": 5805,
+    "scope": "0e1f7468",
+    "sLen": 2506
+  },
+  {
+    "id": "cdc",
+    "cram": "23acef51",
+    "cLen": 3250,
+    "scope": "12a1ee29",
+    "sLen": 1854
+  },
+  {
+    "id": "kafka-internals",
+    "cram": "7147502b",
+    "cLen": 4514,
+    "scope": "d9d4aee5",
+    "sLen": 2046
+  },
+  {
+    "id": "stream-batch-processing",
+    "cram": "815e434f",
+    "cLen": 6210,
+    "scope": "e4e95d03",
+    "sLen": 2561
+  },
+  {
+    "id": "saga",
+    "cram": "53ade0eb",
+    "cLen": 4456,
+    "scope": "bd3045df",
+    "sLen": 2057
+  },
+  {
+    "id": "caching",
+    "cram": "764c1655",
+    "cLen": 3038,
+    "scope": "cc6216f1",
+    "sLen": 1924
+  },
+  {
+    "id": "soft-delete",
+    "cram": "466f9005",
+    "cLen": 3315,
+    "scope": "b62ab44d",
+    "sLen": 1830
+  },
+  {
+    "id": "eav",
+    "cram": "a419508a",
+    "cLen": 11793,
+    "scope": "4daa8683",
+    "sLen": 4104
+  },
+  {
+    "id": "shared-definition",
+    "cram": "4ecca60e",
+    "cLen": 3300,
+    "scope": "74fb1a22",
+    "sLen": 2174
+  },
+  {
+    "id": "replication",
+    "cram": "c971b4db",
+    "cLen": 4000,
+    "scope": "d59e1edd",
+    "sLen": 2162
+  },
+  {
+    "id": "consistency-models",
+    "cram": "03c61f31",
+    "cLen": 5423,
+    "scope": "e07c96a4",
+    "sLen": 2325
+  },
+  {
+    "id": "sharding-strategies",
+    "cram": "fa31b532",
+    "cLen": 5659,
+    "scope": "151f76db",
+    "sLen": 2330
+  },
+  {
+    "id": "consistent-hashing",
+    "cram": "09538487",
+    "cLen": 4017,
+    "scope": "7a345c19",
+    "sLen": 1929
+  },
+  {
+    "id": "storage-engines",
+    "cram": "3a0fa5e0",
+    "cLen": 5029,
+    "scope": "fdc5ede6",
+    "sLen": 2338
+  },
+  {
+    "id": "probabilistic-structures",
+    "cram": "0cabf13c",
+    "cLen": 6297,
+    "scope": "084c7c23",
+    "sLen": 2555
+  },
+  {
+    "id": "retries-timeouts",
+    "cram": "d89a87d3",
+    "cLen": 4052,
+    "scope": "3db64348",
+    "sLen": 2160
+  },
+  {
+    "id": "idempotency",
+    "cram": "5da00a1c",
+    "cLen": 3994,
+    "scope": "f4f98a3c",
+    "sLen": 2134
+  },
+  {
+    "id": "circuit-breaker",
+    "cram": "5468accc",
+    "cLen": 4082,
+    "scope": "9a7aabac",
+    "sLen": 2165
+  },
+  {
+    "id": "error-propagation",
+    "cram": "5069dd97",
+    "cLen": 5360,
+    "scope": "3a7cc95c",
+    "sLen": 2359
+  },
+  {
+    "id": "backpressure",
+    "cram": "1905e619",
+    "cLen": 4398,
+    "scope": "dce947d0",
+    "sLen": 2133
+  },
+  {
+    "id": "observability",
+    "cram": "681e4ba3",
+    "cLen": 3710,
+    "scope": "c9eb0a01",
+    "sLen": 2011
+  },
+  {
+    "id": "debugging",
+    "cram": "c6d79f5b",
+    "cLen": 5010,
+    "scope": "5b03e4da",
+    "sLen": 2473
+  },
+  {
+    "id": "slos",
+    "cram": "6f97d5d4",
+    "cLen": 3860,
+    "scope": "8e4444ce",
+    "sLen": 2136
+  },
+  {
+    "id": "iac",
+    "cram": "b933f66e",
+    "cLen": 12230,
+    "scope": "6d947376",
+    "sLen": 3852
+  },
+  {
+    "id": "desired-state",
+    "cram": "5652813f",
+    "cLen": 11828,
+    "scope": "19a4a4bb",
+    "sLen": 4120
+  },
+  {
+    "id": "aws-hardening",
+    "cram": "0271b100",
+    "cLen": 10141,
+    "scope": "32717a9c",
+    "sLen": 4019
+  },
+  {
+    "id": "load-balancing",
+    "cram": "0262a00b",
+    "cLen": 4091,
+    "scope": "19cc4722",
+    "sLen": 2083
+  },
+  {
+    "id": "autoscaling",
+    "cram": "7fe58800",
+    "cLen": 4674,
+    "scope": "d0036fc7",
+    "sLen": 2223
+  },
+  {
+    "id": "leader-election",
+    "cram": "8c3bb1a1",
+    "cLen": 4510,
+    "scope": "56e18c26",
+    "sLen": 2167
+  },
+  {
+    "id": "distributed-locks",
+    "cram": "06aeb0a8",
+    "cLen": 4692,
+    "scope": "db69c39a",
+    "sLen": 2300
+  },
+  {
+    "id": "multi-region",
+    "cram": "2318e879",
+    "cLen": 6238,
+    "scope": "f4db8d70",
+    "sLen": 2593
+  },
+  {
+    "id": "lambda-organization",
+    "cram": "31755dbb",
+    "cLen": 3747,
+    "scope": "e897722b",
+    "sLen": 2001
+  },
+  {
+    "id": "devices-dispatch",
+    "cram": "20c884c3",
+    "cLen": 3345,
+    "scope": "b1d52290",
+    "sLen": 1903
+  },
+  {
+    "id": "developer-platform",
+    "cram": "d3cdbb4c",
+    "cLen": 3941,
+    "scope": "c55a29d2",
+    "sLen": 1982
+  },
+  {
+    "id": "state-machine",
+    "cram": "81e0b1e1",
+    "cLen": 3725,
+    "scope": "be124ae4",
+    "sLen": 2014
+  },
+  {
+    "id": "rules-engine",
+    "cram": "54a6113f",
+    "cLen": 3204,
+    "scope": "c15749df",
+    "sLen": 1939
+  },
+  {
+    "id": "feature-flags",
+    "cram": "cd506200",
+    "cLen": 3286,
+    "scope": "9f84be13",
+    "sLen": 1970
+  },
+  {
+    "id": "api-design",
+    "cram": "fd88e9d7",
+    "cLen": 5140,
+    "scope": "144cf79d",
+    "sLen": 2390
+  },
+  {
+    "id": "rate-limiting",
+    "cram": "809ff9e9",
+    "cLen": 2899,
+    "scope": "cfe9b8e1",
+    "sLen": 1742
+  },
+  {
+    "id": "content-pipeline",
+    "cram": "3f5fad63",
+    "cLen": 6195,
+    "scope": "20224a99",
+    "sLen": 2960
+  },
+  {
+    "id": "microfrontend",
+    "cram": "d16d04fb",
+    "cLen": 4070,
+    "scope": "89ae11f8",
+    "sLen": 2129
+  },
+  {
+    "id": "signing",
+    "cram": "475573d5",
+    "cLen": 8457,
+    "scope": "501f2cac",
+    "sLen": 3674
+  },
+  {
+    "id": "authz",
+    "cram": "576b9c84",
+    "cLen": 9031,
+    "scope": "e02c7151",
+    "sLen": 3817
+  },
+  {
+    "id": "multi-tenant",
+    "cram": "a632dbbc",
+    "cLen": 3461,
+    "scope": "42c26900",
+    "sLen": 2080
+  }
+]

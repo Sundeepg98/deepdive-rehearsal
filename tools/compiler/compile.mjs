@@ -113,8 +113,13 @@ export function compileTopicsPlugin({ srcDir, topicsDir, registryName = '_genera
   return {
     name: 'ddr-compile-topics',
     async buildStart() {
+      // .sort() IS LOAD-BEARING, not tidiness. readdirSync returns FILESYSTEM order, and NTFS and
+      // ext4 do not agree -- so without it the compiler emits the topics in a different order on
+      // Windows than on Linux, the two builds differ byte-for-byte, and build_integrity fails in CI
+      // against a deliverable that is perfectly correct. (prove_conservation.mjs already sorted;
+      // the compiler that ships the bytes did not.) Sorting makes the build reproducible anywhere.
       const files = fs.existsSync(srcDir)
-        ? fs.readdirSync(srcDir).filter((x) => x.endsWith('.md') || x.endsWith('.topic'))
+        ? fs.readdirSync(srcDir).filter((x) => x.endsWith('.md') || x.endsWith('.topic')).sort()
         : [];
       // Derive order + total from each source's own frontmatter index -- nothing hardcoded.
       const topics = files.map((f) => {

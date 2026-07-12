@@ -63,12 +63,25 @@ const SLOTS = [['cmpView', 'cmpNote', 'cmpMove'], ['mCmpView', 'mCmpNote', 'mCmp
 (async () => {
   const browser = await chromium.launch(B.launchOpts());
   // DEFAULT motion preference on purpose -- the state real users and the other browser checks run
-  // in. (Do NOT be tempted to set reducedMotion:'reduce' to make view transitions synchronous: it
-  // is not needed -- every rail write is synchronous, applyIdentity() and switchTab() both call
-  // __syncCompanion() before handing the pane swap to ViewTransitions -- and under reduced motion
-  // styles.css:137's `*{animation:none!important}` cancels the bodyIn fade that styles.css:90
-  // relies on to lift `body{opacity:0}`, so the whole app renders INVISIBLE. A check that runs
-  // there is a check that cannot see the thing it is asserting about.)
+  // in. Setting reducedMotion:'reduce' to make view transitions synchronous is simply UNNECESSARY:
+  // every rail write is already synchronous (applyIdentity() and switchTab() both call
+  // __syncCompanion() before handing the pane swap to ViewTransitions), so it would buy this check
+  // nothing.
+  //
+  // It is no longer DANGEROUS either, and the warning that used to stand here is now WRONG.
+  // It said: under reduced motion `*{animation:none!important}` cancels the bodyIn fade that
+  // `body{opacity:0}` depends on to ever become visible, so the whole app renders INVISIBLE and a
+  // check running there cannot see the thing it asserts about. That WAS true. It has since been
+  // fixed at the source: styles.css:178 now declares body{opacity:1} and takes the fade-in from a
+  // BACKWARDS-filled bodyIn keyframe (:179), so visibility no longer depends on an animation
+  // running -- strip every animation in the app and the body just stays visible.
+  //
+  // Re-verified 2026-07-13 by counting PAINTED PIXELS, and it has to be done that way: opacity:0
+  // on <body> does NOT propagate into descendants' computed opacity, so counting "visible" text
+  // nodes reports ~667 of them on a page that is rendering absolutely nothing -- a check that
+  // cannot fail. Decoding the actual screenshot under reducedMotion:'reduce': the app paints 75.7%
+  // (light) / 66.8% (dark) non-background pixels at 1440x900 with bodyOpacity=1, indistinguishable
+  // from the default preference; the same detector aimed at a deliberately blanked page reads 0%.
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const page = await ctx.newPage();
   const pageErrors = [];

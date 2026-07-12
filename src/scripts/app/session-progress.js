@@ -2,7 +2,7 @@
    session-progress reaches it through this helper rather than the old wb globals. */
 function wbEl() { return document.querySelector('#wb deep-whiteboard'); }
 /* ============ SESSION PROGRESS ============ */
-var sessov = document.getElementById('sessov'), sessbody = null, sessRoot = null;
+var sessov = document.getElementById('sessov'), sessbody = null, sessactions = null, sessRoot = null;
 /* Open/close the session-progress overlay (re-rendered fresh on every open). */
 function openSession() {
   renderSession();
@@ -292,6 +292,20 @@ function ssDot(done, tot, weak) {
   if (!weak && done >= tot * 0.8) return 'var(--teal)';
   return 'var(--amber)';
 }
+/* The progress track renders ONLY on a surface that has a position to report.
+   At zero state a 0%-filled bar is an empty grey hairline that says exactly what the "Not
+   started" line directly beneath it already says, only mutely -- 22px of chrome per card for
+   no information, 88px across the four. That 88px is what pushed this overlay's own Save-PDF
+   and Clear controls off the bottom of the screen, so the track was not merely decorative: it
+   was costing the panel its actions. It is worth its height the moment there IS a fraction to
+   show, and worth nothing before that -- so it appears exactly then.
+   `show` is the NEGATION OF THE CARD'S OWN "not started" TEST, passed in from the one place
+   that test is written, so the bar and the stat line can never drift out of agreement.
+   The mock gates on RUNS, not score: a round you took and scored 0 on is an honest empty bar
+   ("you ran it, you got nothing"); a round you never took has no bar at all. */
+function ssBar(show, pct) {
+  return show ? '<div class="ss-bar"><i style="width:' + pct + '%"></i></div>' : '';
+}
 /* Render the whole overlay body: the "do this next" card, a stat card per
    surface (drill / whiteboard / mock / mixed fire), the carry-across-days code
    widget, and the Save-PDF / Clear actions &mdash; then wire every button. */
@@ -305,26 +319,30 @@ function renderSession() {
        '<div class="ss-rt" style="color:' + rec.ink + '">' + rec.text + '</div>' +
        (rec.btn ? '<button class="ss-go" id="ssgo" type="button">' + rec.btn + '</button>' : '') +
      '</div>';
-  html += '<div class="ss-card"><div class="ss-h"><span class="ss-dot" style="background:' + ssDot(dDone, dTot, dShk) + '"></span>Probe Drill</div><div class="ss-bar"><i style="width:' + (dTot ? Math.round(dDone / dTot * 100) : 0) + '%"></i></div>';
-  if (dDone === 0) html += '<div class="ss-stat ss-none">Not started \u2014 0 of ' + dTot + ' graded.</div>';
+  /* One boolean per card decides BOTH the track and the copy -- see ssBar(). */
+  const dStarted = dDone > 0, wbStarted = wbDone > 0;
+  const mRan = !(mScore === null && mRuns === 0), mixRan = stats.mixTot > 0;
+
+  html += '<div class="ss-card"><div class="ss-h"><span class="ss-dot" style="background:' + ssDot(dDone, dTot, dShk) + '"></span>Probe Drill</div>' + ssBar(dStarted, dTot ? Math.round(dDone / dTot * 100) : 0);
+  if (!dStarted) html += '<div class="ss-stat ss-none">Not started \u2014 0 of ' + dTot + ' graded.</div>';
   else {
     html += '<div class="ss-stat"><span class="ss-g">' + dGot + ' solid</span> &middot; <span class="ss-s">' + dShk + ' to revisit</span> &middot; ' + dLeft + ' untouched of ' + dTot + '</div>';
     if (revisit.length) html += '<div class="ss-list"><b>Revisit:</b> ' + revisit.join(' &middot; ') + '</div>';
   }
   html += '</div>';
-  html += '<div class="ss-card"><div class="ss-h"><span class="ss-dot" style="background:' + ssDot(wbDone, wbTot, wbMiss) + '"></span>Whiteboard recall</div><div class="ss-bar"><i style="width:' + (wbTot ? Math.round(wbDone / wbTot * 100) : 0) + '%"></i></div>';
-  if (wbDone === 0) html += '<div class="ss-stat ss-none">Not started \u2014 0 of ' + wbTot + ' graded.</div>';
+  html += '<div class="ss-card"><div class="ss-h"><span class="ss-dot" style="background:' + ssDot(wbDone, wbTot, wbMiss) + '"></span>Whiteboard recall</div>' + ssBar(wbStarted, wbTot ? Math.round(wbDone / wbTot * 100) : 0);
+  if (!wbStarted) html += '<div class="ss-stat ss-none">Not started \u2014 0 of ' + wbTot + ' graded.</div>';
   else {
     html += '<div class="ss-stat"><span class="ss-g">' + wbGot + ' recalled</span> &middot; <span class="ss-s">' + wbMiss + ' missed</span> of ' + wbTot + '</div>';
     if (missed.length) html += '<div class="ss-list"><b>Re-draw:</b> ' + missed.join(' &middot; ') + '</div>';
   }
   html += '</div>';
-  html += '<div class="ss-card"><div class="ss-h"><span class="ss-dot" style="background:' + (mRuns === 0 ? 'var(--mut)' : (mockIsStrong(mScore, mOut(stats)) ? 'var(--teal)' : 'var(--amber)')) + '"></span>Mock Run</div><div class="ss-bar"><i style="width:' + ((mScore != null && mOut(stats)) ? Math.round(mScore / mOut(stats) * 100) : 0) + '%"></i></div>';
-  if (mScore === null && mRuns === 0) html += '<div class="ss-stat ss-none">Not run yet \u2014 take the full round on the clock.</div>';
+  html += '<div class="ss-card"><div class="ss-h"><span class="ss-dot" style="background:' + (mRuns === 0 ? 'var(--mut)' : (mockIsStrong(mScore, mOut(stats)) ? 'var(--teal)' : 'var(--amber)')) + '"></span>Mock Run</div>' + ssBar(mRan, (mScore != null && mOut(stats)) ? Math.round(mScore / mOut(stats) * 100) : 0);
+  if (!mRan) html += '<div class="ss-stat ss-none">Not run yet \u2014 take the full round on the clock.</div>';
   else html += '<div class="ss-stat">Last run: <span class="' + (mockIsStrong(mScore, mOut(stats)) ? 'ss-g' : 'ss-s') + '">' + (mScore === null ? 'completed, unscored' : mScore + ' / ' + mOut(stats)) + '</span>' + (mTime != null ? ' in ' + mockFmt(mTime) : '') + ' &middot; ' + mRuns + ' run' + (mRuns === 1 ? '' : 's') + (mInt ? ' &middot; cut off on <b>' + mInt + '</b> of ' + mOut(stats) + '' : '') + '</div>';
   html += '</div>';
-  html += '<div class="ss-card"><div class="ss-h"><span class="ss-dot" style="background:' + ssDot(stats.mixTot, stats.mixTot, stats.mixShk) + '"></span>Mixed Fire</div><div class="ss-bar"><i style="width:' + (stats.mixTot ? Math.round(stats.mixGot / stats.mixTot * 100) : 0) + '%"></i></div>';
-  if (stats.mixTot === 0) html += '<div class="ss-stat ss-none">Not run yet \u2014 mix all three registers under one clock.</div>';
+  html += '<div class="ss-card"><div class="ss-h"><span class="ss-dot" style="background:' + ssDot(stats.mixTot, stats.mixTot, stats.mixShk) + '"></span>Mixed Fire</div>' + ssBar(mixRan, stats.mixTot ? Math.round(stats.mixGot / stats.mixTot * 100) : 0);
+  if (!mixRan) html += '<div class="ss-stat ss-none">Not run yet \u2014 mix all three registers under one clock.</div>';
   else {
     html += '<div class="ss-stat"><span class="ss-g">' + stats.mixGot + ' handled</span> &middot; <span class="ss-s">' + stats.mixShk + ' shaky</span> across ' + stats.mixTot + ' item' + (stats.mixTot === 1 ? '' : 's') + '</div>';
     if (stats.mixWeak.length) html += '<div class="ss-list"><b>Shaky:</b> ' + stats.mixWeak.join(' &middot; ') + '</div>';
@@ -334,9 +352,16 @@ function renderSession() {
      '<div class="ss-code-row"><input class="ss-code" id="sscode" readonly aria-label="Session code" value="' + encodeSession() + '"><button class="ss-copy" id="sscopy" type="button">Copy</button></div>' +
      '<div class="ss-cmp-row"><textarea class="ss-paste" id="sspaste" rows="2" aria-label="Past session codes" placeholder="Optional: paste codes from another device" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea><button class="ss-cmpbtn" id="sscmpbtn" type="button">Compare</button></div>' +
      '<div id="sscmpout"></div></div>';
-  html += '<button class="ss-print" id="ssprint" type="button">Save this session as a PDF &rarr;</button>';
-  html += '<button class="ss-clear" id="ssclear" type="button">Clear this session &amp; start fresh</button>';
   sessbody.innerHTML = html;
+  /* The two ACTIONS live in a pinned footer, OUTSIDE the scrolling body (see the shadow tree in
+     connectedCallback). They used to be the last two children of the scroll area, which made their
+     visibility a function of how much progress you happened to have: a long revisit list pushed
+     "Save this session as a PDF" past the bottom of the panel, and the panel CLIPPED rather than
+     scrolled, so the button did not go below the fold -- it ceased to exist. Out here their
+     position does not depend on the content at all, so they cannot be pushed anywhere. */
+  sessactions.innerHTML =
+    '<button class="ss-print" id="ssprint" type="button">Save this session as a PDF &rarr;</button>' +
+    '<button class="ss-clear" id="ssclear" type="button">Clear this session &amp; start fresh</button>';
 
   /* "do this next" button: close, then jump to the relevant tab/overlay (and
      pre-load the weak-spot drill or whiteboard reset where the rec asks for it).
@@ -413,7 +438,26 @@ if (inttogEl) inttogEl.onclick = function () {
    shadow body via the reassigned `sessbody` global and look up their rendered
    controls through `sessRoot` (ShadowRoot.getElementById, the drill pattern).
    The frame + open/close + the light print container (#sessreport) stay light. */
-var SESS_STYLE = `.sess-body{padding:var(--space-18) var(--space-20) var(--space-24);overflow-y:auto;flex:1;min-height:0}
+/* :host(deep-session), NOT :host -- and the argument is load-bearing, not decoration.
+   BASE_SHEET declares :host{display:block} and lands in adoptedStyleSheets, which the CSSOM
+   orders AFTER a shadow root's own <style>. So at equal specificity the adopted sheet WINS and a
+   bare :host{display:flex} here silently loses -- it applied flex-grow and min-height (which
+   BASE_SHEET does not set) while leaving display:block, i.e. it looked like it worked and did
+   not. Verified by reading display back off the live host, not by reasoning about the cascade.
+   :host(<compound>) carries the specificity of :host PLUS its argument (0,1,1 vs 0,1,0), so this
+   beats it honestly, without !important and without reaching in from styles.css.
+
+   The chain that makes this panel SCROLL instead of AMPUTATE, one link per line:
+     .mock-panel   flex column, max-height:calc(100vh - 36px), overflow:hidden   [styles.css:264]
+       :host       flex:1 1 auto + min-height:0  -> may shrink below its content
+                   display:flex  + column        -> so its children are flex items at all
+         .sess-body  flex:1 + min-height:0 + overflow-y:auto  -> becomes THE scroll container
+         .sess-actions  flex:none                             -> never scrolls, never moves
+   Every link is a flex item with min-height:0. No percentage height resolves anywhere, which is
+   what the old `height:100%` wrapper was betting on -- against a host whose height was auto. */
+var SESS_STYLE = `:host(deep-session){display:flex;flex-direction:column;flex:1 1 auto;min-height:0}
+.sess-body{padding:var(--space-18) var(--space-20) var(--space-16);overflow-y:auto;flex:1;min-height:0}
+.sess-actions{flex:none;display:flex;flex-direction:column;gap:var(--space-8);padding:var(--space-12) var(--space-20) var(--space-14);border-top:1px solid var(--bd);background:var(--card)}
 .ss-rec{border-radius:12px;padding:var(--space-15) var(--space-17);margin:0 0 var(--space-16);border:1.5px solid;box-shadow:0 2px 8px -3px var(--acc-a08)}
 .ss-rk{font:var(--font-weight-heavy) 9.5px -apple-system,sans-serif;letter-spacing:.7px;text-transform:uppercase;margin:0 0 var(--space-7)}
 .ss-rt{font-size:var(--font-size-small);line-height:var(--line-height-loose);font-weight:var(--font-weight-semibold)}
@@ -434,11 +478,11 @@ var SESS_STYLE = `.sess-body{padding:var(--space-18) var(--space-20) var(--space
 .ss-none{color:var(--mut2)}
 .ss-bar{height:var(--space-5);background:var(--dbar-bg);border-radius:5px;overflow:hidden;margin:var(--space-8) 0 var(--space-9)}
 .ss-bar i{display:block;height:100%;background:var(--topic-solid);border-radius:5px;transition:width var(--duration-slow) var(--ease-base)}
-.ss-clear{width:100%;margin-top:var(--space-7);border:1px dashed var(--bd);background:transparent;color:var(--mut2);font:var(--font-weight-semibold) 11.5px -apple-system,sans-serif;padding:var(--space-11) var(--space-14);border-radius:10px;cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),border-color var(--duration-base) var(--ease-base),color var(--duration-base) var(--ease-base),background var(--duration-base) var(--ease-base)}
+.ss-clear{width:100%;border:1px dashed var(--bd);background:transparent;color:var(--mut2);font:var(--font-weight-semibold) 11.5px -apple-system,sans-serif;padding:var(--space-11) var(--space-14);border-radius:10px;cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),border-color var(--duration-base) var(--ease-base),color var(--duration-base) var(--ease-base),background var(--duration-base) var(--ease-base)}
 .ss-clear:hover{border-color:var(--mut);color:var(--mut);background:var(--acc-a02);transform:translateY(-1px)}
 .ss-clear:active{transform:translateY(1px) scale(.98)}
 .ss-clear.arm{transition:transform var(--duration-fast) var(--ease-base),background var(--duration-base) var(--ease-base),color var(--duration-base) var(--ease-base),border-color var(--duration-base) var(--ease-base)}
-.ss-print{width:100%;margin-top:var(--space-9);border:1.5px solid var(--acc);background:linear-gradient(135deg,var(--accbg) 0%,var(--acc-a04) 100%);color:var(--accink);font:var(--font-weight-bold) 12.5px -apple-system,sans-serif;padding:var(--space-12) var(--space-14);border-radius:10px;cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),box-shadow var(--duration-base) var(--ease-base),background var(--duration-base) var(--ease-base),color var(--duration-base) var(--ease-base)}
+.ss-print{width:100%;border:1.5px solid var(--acc);background:linear-gradient(135deg,var(--accbg) 0%,var(--acc-a04) 100%);color:var(--accink);font:var(--font-weight-bold) 12.5px -apple-system,sans-serif;padding:var(--space-12) var(--space-14);border-radius:10px;cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),box-shadow var(--duration-base) var(--ease-base),background var(--duration-base) var(--ease-base),color var(--duration-base) var(--ease-base)}
 .ss-print:hover{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;box-shadow:0 4px 16px -4px var(--acc-a25);transform:translateY(-1px)}
 .ss-print:active{transform:translateY(1px) scale(.98)}
 .ss-carry{margin-top:var(--space-16);padding:var(--space-14) var(--space-16);border:1px solid var(--bd);border-radius:12px;background:linear-gradient(135deg,var(--ss-carry-bg) 0%,var(--acc-a02) 100%)}
@@ -473,8 +517,16 @@ class DeepSession extends HTMLElement {
     this._built = true;
     const root = this.attachShadow({ mode: 'open' });
     root.adoptedStyleSheets = [BASE_SHEET];
-    root.innerHTML = '<style>' + SESS_STYLE + '</style><div style="display:flex;flex-direction:column;height:100%"><div class="sess-body" id="sessbody"></div></div>';
+    /* Two children of the HOST itself, and the split is load-bearing: #sessbody SCROLLS
+       (flex:1;min-height:0), #sessactions does NOT (flex:none). The old tree wrapped both in a
+       `height:100%` div, a percentage that resolved against a host whose own height was
+       content-sized -- i.e. against `auto` -- so it collapsed to auto, nothing ever became a
+       scroll container, and the panel's overflow:hidden amputated the tail of the panel instead
+       of scrolling it. The wrapper is gone: the host is now the flex column directly.
+       See the :host(deep-session) rule in SESS_STYLE for the other half of this fix. */
+    root.innerHTML = '<style>' + SESS_STYLE + '</style><div class="sess-body" id="sessbody"></div><div class="sess-actions" id="sessactions"></div>';
     sessbody = root.getElementById('sessbody');
+    sessactions = root.getElementById('sessactions');
     sessRoot = root;
   }
 }

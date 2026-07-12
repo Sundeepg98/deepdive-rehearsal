@@ -35,6 +35,7 @@
  */
 const path = require('path');
 const { chromium } = require('playwright');
+const B = require('./_boot.cjs');
 
 const HTML = process.argv[2] ||
   path.join(__dirname, '..', 'deepdive_content_pipeline_rehearsal.html');
@@ -210,20 +211,24 @@ const GRADE_WB = (page, idx, got) => page.evaluate(async (a) => {
     if (!cond) fails.push(name);
   };
 
-  const launch = { args: ['--no-sandbox', '--disable-dev-shm-usage'] };
-  if (process.env.CHROME) launch.executablePath = process.env.CHROME;
-  const browser = await chromium.launch(launch);
+  const browser = await chromium.launch(B.launchOpts());
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   page.on('pageerror', e => errs.push('pageerror: ' + e.message));
   page.on('console', m => { if (m.type() === 'error') errs.push('console: ' + m.text()); });
 
-  const url = 'file://' + path.resolve(HTML);
+  /* was: goto + waitForTimeout(300/350/150). Each of those numbers was a bet on how fast the
+     machine parses 11.4MB and wires its globals; the code immediately after each one calls
+     switchTab()/localStorage, so losing the bet is a ReferenceError, not a slow test. */
+  const BOOT = () => B.gotoApp(page, HTML);
+  const PANE_ON = (id) => page.waitForFunction(
+    (t) => { const el = document.getElementById(t); return !!el && getComputedStyle(el).display !== 'none'; },
+    id, { timeout: B.ACT_MS });
   const fresh = async () => {
-    await page.goto(url); await page.waitForTimeout(300);
+    await BOOT();
     await page.evaluate(() => localStorage.clear());
-    await page.goto(url); await page.waitForTimeout(350);
+    await BOOT();
   };
-  const openDrill = async () => { await page.evaluate(() => switchTab('drill')); await page.waitForTimeout(150); };
+  const openDrill = async () => { await page.evaluate(() => switchTab('drill')); await PANE_ON('drill'); await B.settle(page); };
 
   /* ============ 1. a completed topic is stored under CONTENT ids ============ */
   await fresh();
@@ -386,7 +391,7 @@ const GRADE_WB = (page, idx, got) => page.evaluate(async (a) => {
     return { want: bank.map((c, i) => ({ signal: c.signal, level: (i % 3 === 0) ? 2 : 3 })) };
   }, TOPIC);
 
-  await page.goto(url); await page.waitForTimeout(400);      /* boot -> eager migrate() */
+  await BOOT(); await B.settle(page);                        /* boot -> eager migrate() */
   const r4 = (await REC(page, TOPIC)).p;
   const bank4 = await BANK(page, TOPIC);
 
@@ -420,7 +425,7 @@ const GRADE_WB = (page, idx, got) => page.evaluate(async (a) => {
     return { flagged: revisit.slice(), shifted: bank.slice(0, 2).map(c => c.signal) };
   }, TOPIC);
 
-  await page.goto(url); await page.waitForTimeout(400);
+  await BOOT(); await B.settle(page);
   const r5 = (await REC(page, TOPIC)).p;
   const bank5 = await BANK(page, TOPIC);
   const graded5 = bank5.filter(c => r5 && r5.cards[c.id] !== undefined);

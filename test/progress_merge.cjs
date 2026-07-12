@@ -26,6 +26,7 @@
  */
 const path = require('path');
 const { chromium } = require('playwright');
+const B = require('./_boot.cjs');
 
 const HTML = process.argv[2] ||
   path.join(__dirname, '..', 'deepdive_content_pipeline_rehearsal.html');
@@ -73,27 +74,36 @@ const STORED = (page) => page.evaluate(() => {
     if (!cond) fails.push(name);
   };
 
-  const launch = { args: ['--no-sandbox', '--disable-dev-shm-usage'] };
-  if (process.env.CHROME) launch.executablePath = process.env.CHROME;
-  const browser = await chromium.launch(launch);
+  const browser = await chromium.launch(B.launchOpts());
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   page.on('pageerror', e => errs.push('pageerror: ' + e.message));
   page.on('console', m => { if (m.type() === 'error') errs.push('console: ' + m.text()); });
 
-  const url = 'file://' + path.resolve(HTML);
+  /* Every reload below used to be `goto(url); waitForTimeout(350)`. The 350 was a guess about
+     how long an 11.4MB file takes to parse and wire switchTab/Progress -- and the very next line
+     always calls into those globals. BOOT() waits for them instead. */
+  const BOOT = () => B.gotoApp(page, HTML);
+  /* switchTab(x) then "wait 150-200ms for the pane to render" becomes: wait for the pane to
+     actually BE rendered. The shadow-root queries that follow depend on it existing. */
+  const PANE_ON = async (id) => {
+    await page.evaluate((t) => switchTab(t), id);
+    await page.waitForFunction(
+      (t) => { const el = document.getElementById(t); return !!el && getComputedStyle(el).display !== 'none'; },
+      id, { timeout: B.ACT_MS });
+    await B.settle(page);
+  };
+  const OPEN_DRILL = () => PANE_ON('drill');
   /* Fresh store, then a completed topic + a reload that proves it persisted.
      Returns the canonical record every case below must not damage. */
   const completedTopic = async (shakyEvery) => {
-    await page.goto(url); await page.waitForTimeout(350);
+    await BOOT();
     await page.evaluate(() => localStorage.clear());
-    await page.goto(url); await page.waitForTimeout(350);
-    await page.evaluate(() => switchTab('drill'));
-    await page.waitForTimeout(150);
+    await BOOT();
+    await OPEN_DRILL();
     const graded = await RUN_DRILL(page, shakyEvery);
     await page.waitForTimeout(80);
-    await page.goto(url); await page.waitForTimeout(350);            // RELOAD
-    await page.evaluate(() => switchTab('drill'));
-    await page.waitForTimeout(150);
+    await BOOT();                                                    // RELOAD
+    await OPEN_DRILL();
     return Object.assign(await STORED(page), { graded });
   };
   /* Re-enter the debrief in the current session (the drill's own state is
@@ -165,11 +175,10 @@ const STORED = (page) => page.evaluate(() => {
     JSON.stringify(pre5.p) + ' -> ' + JSON.stringify(post5.p));
 
   /* ================= 6. the whiteboard record, same bug class ======================== */
-  await page.goto(url); await page.waitForTimeout(350);
+  await BOOT();
   await page.evaluate(() => localStorage.clear());
-  await page.goto(url); await page.waitForTimeout(350);
-  await page.evaluate(() => switchTab('wb'));
-  await page.waitForTimeout(200);
+  await BOOT();
+  await PANE_ON('wb');
   const wbAll = await page.evaluate(async () => {
     const r = document.querySelector('#wb deep-whiteboard').shadowRoot;
     const sleep = (ms) => new Promise(x => setTimeout(x, ms));
@@ -184,9 +193,8 @@ const STORED = (page) => page.evaluate(() => {
   const preW = await STORED(page);
   ok('full whiteboard recall stores every step', !!preW.w && preW.w.got === wbAll && preW.w.total === wbAll,
     JSON.stringify(preW.w));
-  await page.goto(url); await page.waitForTimeout(350);               // RELOAD -> blank board
-  await page.evaluate(() => switchTab('wb'));
-  await page.waitForTimeout(200);
+  await BOOT();                                                       // RELOAD -> blank board
+  await PANE_ON('wb');
   await page.evaluate(async () => {
     const r = document.querySelector('#wb deep-whiteboard').shadowRoot;
     const sleep = (ms) => new Promise(x => setTimeout(x, ms));

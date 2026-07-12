@@ -46,6 +46,7 @@
  */
 const path = require('path');
 const { chromium } = require('playwright');
+const B = require('./_boot.cjs');
 
 const ARGS = process.argv.slice(2);
 const VERBOSE = ARGS.includes('--verbose');
@@ -60,7 +61,7 @@ const VIEWS = ['walk', 'drill', 'wb', 'sys', 'trade', 'model', 'num', 'rf', 'ope
 const SLOTS = [['cmpView', 'cmpNote', 'cmpMove'], ['mCmpView', 'mCmpNote', 'mCmpMove']];
 
 (async () => {
-  const browser = await chromium.launch({ executablePath: process.env.CHROME || undefined });
+  const browser = await chromium.launch(B.launchOpts());
   // DEFAULT motion preference on purpose -- the state real users and the other browser checks run
   // in. (Do NOT be tempted to set reducedMotion:'reduce' to make view transitions synchronous: it
   // is not needed -- every rail write is synchronous, applyIdentity() and switchTab() both call
@@ -73,8 +74,7 @@ const SLOTS = [['cmpView', 'cmpNote', 'cmpMove'], ['mCmpView', 'mCmpNote', 'mCmp
   const pageErrors = [];
   page.on('pageerror', (e) => pageErrors.push(String(e && e.message ? e.message : e)));
 
-  await page.goto('file:///' + HTML.replace(/\\/g, '/').replace(/^\/+/, ''));
-  await page.waitForTimeout(400);
+  await B.gotoApp(page, HTML);   /* was: goto + a 400ms bet that boot had finished */
 
   const rep = await page.evaluate((cfg) => {
     if (typeof TopicRegistry === 'undefined') return { fatal: 'TopicRegistry undefined' };

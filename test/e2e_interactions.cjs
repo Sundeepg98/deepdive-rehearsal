@@ -21,6 +21,7 @@
  */
 const path = require('path');
 const { chromium } = require('playwright');
+const B = require('./_boot.cjs');
 
 const HTML = process.argv[2] ||
   path.join(__dirname, '..', 'deepdive_content_pipeline_rehearsal.html');
@@ -29,16 +30,12 @@ const HTML = process.argv[2] ||
   const errs = [], fails = [];
   const ok = (name, cond) => { console.log((cond ? '  PASS ' : '  FAIL ') + name); if (!cond) fails.push(name); };
 
-  const launch = { args: ['--no-sandbox', '--disable-dev-shm-usage'] };
-  if (process.env.CHROME) launch.executablePath = process.env.CHROME;
-  const browser = await chromium.launch(launch);
+  const browser = await chromium.launch(B.launchOpts());
   const page = await browser.newPage({ viewport: { width: 1280, height: 720 } });
   page.on('pageerror', e => errs.push('pageerror: ' + e.message));
   page.on('console', m => { if (m.type() === 'error') errs.push('console: ' + m.text()); });
 
-  await page.goto('file://' + path.resolve(HTML));
-  await page.evaluate(() => document.fonts && document.fonts.ready);
-  await page.waitForTimeout(300);
+  await B.gotoApp(page, HTML);   /* was: goto + a 300ms bet that boot had finished */
 
   /* ---- theme toggle ---- */
   const theme = await page.evaluate(() => {

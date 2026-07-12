@@ -32,6 +32,7 @@
 const fs = require('fs');
 const path = require('path');
 const { chromium } = require('playwright');
+const B = require('./_boot.cjs');
 // argv[2] is the build to measure -- but a FLAG is not a path. `--write-debt` was being taken as
 // the deliverable and Playwright dutifully navigated to file:///.../--write-debt.
 const HTML = process.argv.slice(2).find((a) => !a.startsWith('--'))
@@ -85,14 +86,11 @@ const PARITY_DEBT = fs.existsSync(DEBT_FILE) ? JSON.parse(fs.readFileSync(DEBT_F
 const WRITE_DEBT = process.argv.includes('--write-debt');
 
 (async () => {
-  const launch = { args: ['--no-sandbox', '--disable-dev-shm-usage'] };
-  if (process.env.CHROME) launch.executablePath = process.env.CHROME;
-  const browser = await chromium.launch(launch);
+  const browser = await chromium.launch(B.launchOpts());
   const page = await browser.newPage();
   const perr = [];
   page.on('pageerror', (e) => perr.push('pageerror: ' + e.message));
-  await page.goto('file://' + path.resolve(HTML));
-  await page.waitForTimeout(300);
+  await B.gotoApp(page, HTML);   /* was: goto + 300ms */
 
   const rep = await page.evaluate((cfg) => {
     if (typeof TopicRegistry === 'undefined') return { fatal: 'TopicRegistry undefined' };

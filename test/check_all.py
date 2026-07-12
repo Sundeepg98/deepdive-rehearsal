@@ -61,6 +61,21 @@ def last_line(r):
     out = ((r.stdout or '') + (r.stderr or '')).strip().split('\n')
     return out[-1] if out and out[-1] else (out[-2] if len(out) > 1 else '')
 
+def report(r):
+    """The message the gate prints for a check.
+
+    THE GATE MUST NEVER PRINT A RED IT CANNOT EXPLAIN. A check that dies without output --
+    killed, crashed, or exiting before its diagnostic flushed -- used to render as a blank
+    message next to the word FAIL. A failure with no stated cause is indistinguishable from
+    noise, and a human who cannot tell noise from signal re-runs the gate until it is green.
+    That reflex is exactly how a compiler bug that destroyed 608 authored items per build
+    survived weeks of PASS 19/19. So: say the exit code, say that there was no output, and
+    make a silent death look like the anomaly it is instead of a shrug."""
+    msg = last_line(r)
+    if msg:
+        return msg
+    return '(no output; the check died silently -- exit=%s. This is a HARNESS fault, not a flake.)' % r.returncode
+
 def browser():
     """Locate Chromium via Playwright itself -- portable across OSes once
     `npm install` + `npx playwright install chromium` have run. Relies on the
@@ -127,7 +142,7 @@ for name, cmd in [('ascii_guard', ['python3', 'test/ascii_guard.py']),
                   ('compiler_flow', ['node', 'tools/compiler/prove_flow.mjs']),
                   ('compiler_code', ['node', 'tools/compiler/prove_code.mjs'])]:
     r = run(cmd)
-    results.append((name, 'PASS' if r.returncode == 0 else 'FAIL', last_line(r)))
+    results.append((name, 'PASS' if r.returncode == 0 else 'FAIL', report(r)))
 
 chrome = browser()
 deliverable = os.path.join(ROOT, 'deepdive_content_pipeline_rehearsal.html')
@@ -175,7 +190,7 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
         continue
     env = dict(os.environ, CHROME=chrome)
     r = run(['node', script, deliverable], env=env)
-    results.append((name, 'PASS' if r.returncode == 0 else 'FAIL', last_line(r)))
+    results.append((name, 'PASS' if r.returncode == 0 else 'FAIL', report(r)))
 
 w = max(len(n) for n, _, _ in results)
 print('=' * 64)

@@ -33,6 +33,7 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const { chromium } = require('playwright');
+const B = require('./_boot.cjs');
 
 const HTML = process.argv.slice(2).find((a) => !a.startsWith('--'))
   || path.join(__dirname, '..', 'deepdive_content_pipeline_rehearsal.html');
@@ -52,14 +53,11 @@ const HTML = process.argv.slice(2).find((a) => !a.startsWith('--'))
 const MIN_BODY = 300;
 
 (async () => {
-  const launch = { args: ['--no-sandbox', '--disable-dev-shm-usage'] };
-  if (process.env.CHROME) launch.executablePath = process.env.CHROME;
-  const browser = await chromium.launch(launch);
+  const browser = await chromium.launch(B.launchOpts());
   const page = await browser.newPage();
   const perr = [];
   page.on('pageerror', (e) => perr.push('pageerror: ' + e.message));
-  await page.goto('file://' + path.resolve(HTML));
-  await page.waitForTimeout(300);
+  await B.gotoApp(page, HTML);   /* was: goto + 300ms */
 
   const rep = await page.evaluate(async () => {
     if (typeof TopicRegistry === 'undefined') return { fatal: 'TopicRegistry undefined' };

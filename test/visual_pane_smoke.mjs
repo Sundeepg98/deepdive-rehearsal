@@ -2,8 +2,16 @@
 //   markdown ## Visual -> TOPIC_KI_VISUAL -> conditional tab -> mounted kit.
 // Run: CHROME=<path> PLAYWRIGHT_BROWSERS_PATH=<dir> node test/visual_pane_smoke.mjs [file]
 import { chromium } from 'playwright';
+import B from './_boot.cjs';
 const FILE = process.argv[2] || process.cwd() + '/dist/index.html';
-const b = await chromium.launch({ executablePath: process.env.CHROME, args: ['--no-sandbox', '--disable-dev-shm-usage'] });
+
+/* launchOpts() adds --disable-renderer-backgrounding and friends. THIS FILE IS WHY THEY EXIST.
+   Chromium throttles rAF and timers in a tab that is backgrounded or occluded, and this check
+   holds several pages open at once -- so all but one are occluded BY CONSTRUCTION. Every
+   animation assertion below (frames advanced, pixels changed) measures rAF-driven progress, so a
+   throttled tab makes a perfectly healthy visual look dead. That is a flake with a plausible
+   cover story, which is the worst kind: it looks like a real regression. */
+const b = await chromium.launch(B.launchOpts());
 const p = await b.newPage({ viewport: { width: 1280, height: 900 } });
 const errs = []; p.on('pageerror', (e) => errs.push(e.message.slice(0, 110)));
 // Chrome evicts the oldest WebGL context past ~16 live ones. Match ONLY that
@@ -24,7 +32,14 @@ await p.addInitScript(() => {
   };
 });
 let fails = 0;
-const chk = (n, ok, d) => { console.log((ok ? '  PASS  ' : '  FAIL  ') + n + (ok ? '' : ' -- ' + d)); if (!ok) fails++; };
+/* Remember WHICH assertions failed, not just how many. THE GATE reports a check by its LAST
+   LINE, so "SMOKE: 1 FAILURE(S)" is all anyone ever sees -- a red with no cause, which reads as
+   noise and gets re-run rather than diagnosed. The last line must name the thing that broke. */
+const failed = [];
+const chk = (n, ok, d) => {
+  console.log((ok ? '  PASS  ' : '  FAIL  ') + n + (ok ? '' : ' -- ' + d));
+  if (!ok) { fails++; failed.push(n + (d ? ' [' + String(d).slice(0, 90) + ']' : '')); }
+};
 
 /* ---- the pixel probe -------------------------------------------------------
    Read the GL drawing buffer directly, inside a rAF registered AFTER the kit's
@@ -62,8 +77,58 @@ const PROBE = () => new Promise((res) => requestAnimationFrame(() => {
   res({ ...base, ink, inkPct: +(100 * ink / (w * h)).toFixed(2), changed });
 }));
 
-await p.goto('file://' + FILE, { waitUntil: 'load' });
-await p.waitForTimeout(2200);
+/* A fresh 1-SECOND sampling window, re-taken until the visual proves it animates.
+   The metric is px/SECOND: the comment above calibrates 3000 against a 1000ms window (culled
+   measures ~1100, drawn measures 7000-10800), so the window is part of the metric and shrinking
+   it would silently invalidate the threshold. Retry the WINDOW instead of widening it -- a
+   window that lands in a scheduling stall under-counts, but a visual that is genuinely culled,
+   blank, or dead NEVER crosses 3000 no matter how many windows you take. Broken still fails;
+   slow just tries again. Returns the last sample either way, so chk() can print what it saw. */
+const animWindow = async (pg, probe) => {
+  await pg.evaluate(() => { window.__prevFrame = null; window.__genPrev = null; });
+  await pg.evaluate(probe);            /* baseline frame */
+  await pg.waitForTimeout(1000);       /* the METRIC's window, not a readiness guess */
+  return pg.evaluate(probe);           /* diffs against the baseline */
+};
+const untilAnimating = async (pg, probe, capMs = B.ACT_MS) => {
+  const t0 = Date.now();
+  let s;
+  do { s = await animWindow(pg, probe); } while (!(s.changed > 3000) && Date.now() - t0 < capMs);
+  return s;
+};
+
+/* Open the topic nav and pick a topic BY WAITING FOR IT TO EXIST.
+   The shape this replaces was: click the trigger, sleep 300-350ms, then
+   [...querySelectorAll('.tn-item')].find(t).click(). If the list had not rendered inside that
+   sleep, find() returns undefined and .click() throws a TypeError -- so a slow machine did not
+   produce a failed assertion, it produced a HARNESS CRASH, reported to the gate as a stack trace
+   with no bearing on the app. On a CI runner (~4x slower than this box) a 300ms bet on a
+   46-topic list rendering is not a bet worth taking. Wait for the item, click it, then wait for
+   the topic to ACTUALLY change -- the thing the next assertions read. */
+const pickTopic = async (pg, label, expectId) => {
+  await pg.evaluate(() => document.querySelector('.tn-trigger').click());
+  await pg.waitForFunction(
+    (t) => [...document.querySelectorAll('.tn-item')].some((e) => e.textContent.includes(t)),
+    label, { timeout: B.ACT_MS });
+  await pg.evaluate((t) => {
+    const i = [...document.querySelectorAll('.tn-item')].find((e) => e.textContent.includes(t));
+    if (i) i.click();
+  }, label);
+  if (expectId) {
+    await pg.waitForFunction(
+      (id) => typeof TopicRegistry !== 'undefined' && TopicRegistry.current() && TopicRegistry.current().id === id,
+      expectId, { timeout: B.ACT_MS }).catch(() => {});
+  }
+  await B.settle(pg);
+};
+
+await B.gotoApp(p, FILE);   /* explicit nav cap + wait for the app's OWN globals, not 2200ms */
+/* The first-run overlay is opened by the app a beat after boot, and the very next chk() ASSERTS
+   it is open -- so wait for it deterministically rather than sleeping 2200ms and hoping. The
+   .catch() is load-bearing: if the overlay never opens, we must fall through and let the
+   assertion below report ixOpen=false. A wait that THREW here would convert a real regression
+   into a harness error, and a wait that could not expire would make the assertion unfalsifiable. */
+await B.waitIndexOpen(p);
 const boot = await p.evaluate(() => {
   const vz = document.querySelector('button[data-tab="viz"]');
   const leaks = [...document.querySelectorAll('[hidden]')].filter((e) => e.offsetWidth > 0)
@@ -88,18 +153,55 @@ const homeFlow = await p.evaluate(async () => {
 });
 chk('start screen closable; Home reopens; close works', homeFlow.closedFirst && homeFlow.opened && homeFlow.closed, JSON.stringify(homeFlow));
 
-await p.evaluate(() => document.querySelector('.tn-trigger').click());
-await p.waitForTimeout(350);
-await p.evaluate(() => [...document.querySelectorAll('.tn-item')].find((e) => e.textContent.includes('Kafka Internals')).click());
-await p.waitForTimeout(700);
+await pickTopic(p, 'Kafka Internals', 'kafka-internals');
 const vzOn = await p.evaluate(() => document.querySelector('button[data-tab="viz"]').offsetWidth);
 chk('viz tab APPEARS (computed) on Kafka Internals', vzOn > 0, 'w=' + vzOn);
 
 await p.evaluate(() => window.goView('viz'));
-await p.waitForTimeout(1400);
-const s1 = await p.evaluate(() => window.__VIZ ? { f: window.__VIZ.frames(), q: window.__VIZ.queues().reduce((a, c) => a + c, 0), lag: window.__VIZ.sim.totalLag() } : null);
-await p.waitForTimeout(1800);
-const s2 = await p.evaluate(() => window.__VIZ ? { f: window.__VIZ.frames(), q: window.__VIZ.queues().reduce((a, c) => a + c, 0), lag: window.__VIZ.sim.totalLag() } : null);
+/* Wait for the kit to MOUNT, then poll until it has advanced -- instead of sleeping 1400ms,
+   sampling, sleeping 1800ms and demanding that exactly those two naps contained 20 frames and
+   20 units of lag. The assertions are unchanged (>20 frames, >20 lag); what changed is that a
+   busy machine now takes longer to satisfy them rather than failing them. A kit that never
+   mounts, or a sim that is frozen, still goes red -- it just takes the full cap to say so. */
+const VS = () => (window.__VIZ ? { f: window.__VIZ.frames(), q: window.__VIZ.queues().reduce((a, c) => a + c, 0), lag: window.__VIZ.sim.totalLag() } : null);
+await p.waitForFunction(() => !!window.__VIZ, null, { timeout: B.ACT_MS }).catch(() => {});
+const s1 = await p.evaluate(VS);
+/* OBSERVE IN-PAGE, AND RETURN THE VALUES FROM THE FRAME THAT SATISFIED THE CONDITION.
+ *
+ * The obvious rewrite -- waitForFunction(cond) then evaluate() to read the values back -- is
+ * RACY, and measurably so: it failed 4 runs in 18 under load, and the instrumented failure is
+ * unambiguous. The poll RETURNED in 1.8s (it did not time out), having genuinely observed
+ * queue > 5; the follow-up read, one CDP round-trip later, came back 0.
+ *
+ * The queue is not monotonic. flow.js banks release credit and drains a lane's visual queue in
+ * a burst, so "queue > 5" early in the run is a TRANSIENT, not a level. Between waitForFunction
+ * seeing it and a second round-trip reading it, the queue empties -- and the check reports
+ * [0,0], which looks exactly like a dead sim. A red that indicts the app for a harness bug is
+ * the most expensive kind of flake there is.
+ *
+ * The fixed sleeps this replaced (1400ms, then 1800ms) dodged the race BY ACCIDENT: by 3.2s the
+ * backlog is large and stable, so any sample lands well clear of the threshold. That is why
+ * naively swapping them for "poll until the condition first holds" made the check WORSE -- it
+ * moved the sample into the spikiest part of the run. A long sleep is not always laziness;
+ * sometimes it is load-bearing, and replacing one without asking WHY it was long enough trades a
+ * slow check for a flaky one. (Measured: original 0/12 failures, naive poll 4/18.)
+ *
+ * So: sample every frame INSIDE the page, require all three conditions in the SAME frame, and
+ * return that frame's numbers. Nothing can drain between the observation and the assertion
+ * because there is no longer a gap between them. A sim that never backs up still fails. */
+const s2 = await p.evaluate((b0) => new Promise((res) => {
+  const t0 = performance.now();
+  const tick = () => {
+    if (!window.__VIZ || !b0) return res(null);
+    const f = window.__VIZ.frames();
+    const lag = window.__VIZ.sim.totalLag();
+    const q = window.__VIZ.queues().reduce((a, c) => a + c, 0);
+    if (f > b0.f + 20 && lag > b0.lag + 20 && q > b0.q + 5) return res({ f, lag, q });
+    if (performance.now() - t0 > 60000) return res({ f, lag, q, timedOut: true });
+    requestAnimationFrame(tick);
+  };
+  tick();
+}), s1);
 chk('kit mounted from TOPIC config; frames advancing', !!s1 && !!s2 && s2.f > s1.f + 20, JSON.stringify([s1 && s1.f, s2 && s2.f]));
 chk('sim live (lag grows at authored params 120 vs 90)', !!s2 && s2.lag > (s1 ? s1.lag : 0) + 20, s1 && s2 ? s1.lag.toFixed(0) + '->' + s2.lag.toFixed(0) : 'null');
 chk('queue choreography live inside the app pane', !!s2 && s2.q > (s1 ? s1.q : 0) + 5, JSON.stringify([s1 && s1.q, s2 && s2.q]));
@@ -127,8 +229,7 @@ chk('queue choreography live inside the app pane', !!s2 && s2.q > (s1 ? s1.q : 0
    Do not relax these to make a build green. A 0x0 canvas is a blank page. */
 await p.evaluate(() => { window.__prevFrame = null; });
 const d1 = await p.evaluate(PROBE);
-await p.waitForTimeout(1000);
-const d2 = await p.evaluate(PROBE);                     // diffs against d1's frame
+const d2 = await untilAnimating(p, PROBE);              // re-takes the 1s window until it animates
 chk('canvas has a NON-ZERO drawing buffer (0x0 = a blank pane)',
   d1.bufW > 200 && d1.bufH > 100 && d1.cssH > 100, JSON.stringify(d1));
 chk('canvas actually PAINTS (non-background pixels present)',
@@ -136,17 +237,19 @@ chk('canvas actually PAINTS (non-background pixels present)',
 chk('the sim is VISIBLY animating (particle layer drawn, not culled)',
   d2.changed > 3000, "changed=" + d2.changed + "px/s (culled+sized measures ~1100; drawn measures 7000-10000)");
 
+/* These two sleeps are DELIBERATE and must stay. They are not a readiness gate -- they ARE the
+   stimulus. Churning the pane fast enough to cycle WebGL contexts is the entire point of the leak
+   test, and politely waiting for each mount to settle would defeat the experiment. The assertion
+   that follows is race-free on its own (untilAnimating retries its own window), so the stress is
+   free to stay stressful. Not every waitForTimeout is a bug; this one is the test. */
 for (let i = 0; i < 20; i++) {                          // the leak: it used to die at ~17
   await p.evaluate(() => window.goView('walk'));
   await p.waitForTimeout(130);
   await p.evaluate(() => window.goView('viz'));
   await p.waitForTimeout(230);
 }
-await p.waitForTimeout(800);
-await p.evaluate(() => { window.__prevFrame = null; });
-await p.evaluate(PROBE);
-await p.waitForTimeout(1000);
-const dL = await p.evaluate(PROBE);
+await B.settle(p);
+const dL = await untilAnimating(p, PROBE);             // same 1s window, retried, after the leak loop
 chk('20 pane open/close cycles leak NO WebGL context', dL.live <= 2 && ctxWarn.length === 0,
   'live=' + dL.live + '/' + dL.created + ' created, ctxLossWarnings=' + ctxWarn.length);
 chk('...and the visual still renders + animates after 20 cycles',
@@ -158,7 +261,13 @@ const storyBtn = await p.evaluate(() => {
   if (btns[0]) { btns[0].click(); return true; }
   return false;
 });
-await p.waitForTimeout(1200);
+/* The assertion below is that a caption APPEARS. Wait for exactly that rather than betting 1200ms
+   on it; the wait expiring still lets chk() report the empty caption it actually found. */
+await p.waitForFunction(() => {
+  const h = document.querySelector('deep-visual');
+  const c = h && h.shadowRoot ? h.shadowRoot.querySelector('#caption') : null;
+  return !!c && c.textContent.trim().length > 10;
+}, null, { timeout: B.ACT_MS }).catch(() => {});
 const cap = await p.evaluate(() => {
   const host = document.querySelector('deep-visual');
   const c = host.shadowRoot.querySelector('#caption');
@@ -166,10 +275,10 @@ const cap = await p.evaluate(() => {
 });
 chk('story from the MARKDOWN config runs with captions', storyBtn && cap.length > 10, JSON.stringify(cap.slice(0, 40)));
 
-await p.evaluate(() => document.querySelector('.tn-trigger').click());
-await p.waitForTimeout(300);
-await p.evaluate(() => [...document.querySelectorAll('.tn-item')].find((e) => e.textContent.includes('Event-Driven')).click());
-await p.waitForTimeout(800);
+await pickTopic(p, 'Event-Driven');
+/* The assertion below is that the kit gets DISPOSED. Wait for exactly that, rather than sleeping
+   800ms and hoping disposal beat the clock. It expiring still lets the assertion report viz=true. */
+await p.waitForFunction(() => !window.__VIZ, null, { timeout: B.ACT_MS }).catch(() => {});
 const after = await p.evaluate(() => ({
   viz: !!window.__VIZ,
   hidden: document.querySelector('button[data-tab="viz"]').offsetWidth === 0,
@@ -180,10 +289,20 @@ chk('...hides the tab and bounces off the viz route', after.hidden === true && a
 chk('zero page errors across the whole flow', errs.length === 0, errs.slice(0, 3).join(' | '));
 
 // ---- returning-user branch: progress exists now, a reload boots into the app
-await p.reload({ waitUntil: 'load' });
-await p.waitForTimeout(1800);
+await p.reload({ waitUntil: 'load', timeout: B.NAV_MS });
+await p.waitForFunction(B.APP_READY, null, { timeout: B.READY_MS });
+/* This assertion is a NEGATIVE ("the overlay does NOT open"), and a negative that is read too
+   early passes for free -- the failure mode is a green, which is the one this repo fears most.
+   So give the overlay a real chance to appear and require that it does not take it. The wait
+   EXPIRING is the healthy path; that is the whole point of it. */
+await p.waitForFunction(() => !!document.querySelector('.ix-ov.open'), null, { timeout: 3000 }).catch(() => {});
 const back = await p.evaluate(() => ({ ixOpen: !!document.querySelector('.ix-ov.open'), topic: (location.hash || '').slice(1, 30) }));
 chk('RETURNING boot lands in the app (progress saved, no overlay)', back.ixOpen === false, JSON.stringify(back));
+/* Close it. This page was held open for the entire run, which (a) leaked its WebGL contexts into
+   the very budget the leak check below measures, and (b) forced every page opened after it to be
+   an OCCLUDED tab -- where Chromium throttles the rAF loop that the animation assertions depend
+   on. The launch flags now defend against that too, but not holding the page open is the fix. */
+await p.close();
 // ---- mobile context: same guarantees at 390px --------------------------------
 const m = await b.newPage({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
 const merrs = []; m.on('pageerror', (e) => merrs.push(e.message.slice(0, 100)));
@@ -198,8 +317,12 @@ await m.addInitScript(() => {
     return c;
   };
 });
-await m.goto('file://' + FILE, { waitUntil: 'load' });
-await m.waitForTimeout(2000);
+await B.gotoApp(m, FILE);        /* was: goto + a 2000ms guess that the app had booted */
+/* The overlay opens ASYNCHRONOUSLY (see _boot closeIndex). The very next chk asserts it IS open,
+   so waiting is what makes the read honest -- not what makes it vacuous: if it never opens, this
+   expires and the assertion below still reports ixOpen=false. Dropping the old 2000ms sleep
+   without this is what turned the mobile first-run check red in 4 of 5 gate runs. */
+await B.waitIndexOpen(m);
 const mb = await m.evaluate(() => ({
   ixOpen: !!document.querySelector('.ix-ov.open'),
   vizW: document.querySelector('button[data-tab="viz"]').offsetWidth,
@@ -208,25 +331,22 @@ const mb = await m.evaluate(() => ({
 }));
 chk('MOBILE first-run boot: start screen opens, no stray viz tab', mb.ixOpen === true && mb.vizW === 0, JSON.stringify(mb));
 await m.evaluate(() => { const x = document.querySelector('.ix-x'); if (x) x.click(); });
-await m.waitForTimeout(400);
+await m.waitForFunction(() => !document.querySelector('.ix-ov.open'), null, { timeout: B.ACT_MS }).catch(() => {});
+await B.settle(m);
 const mClosed = await m.evaluate(() => !document.querySelector('.ix-ov.open'));
 chk('MOBILE start screen closable (44px close)', mClosed, 'still open');
 chk('MOBILE tap targets >= 44px (home + steppers)', mb.homeBox[0] >= 44 && mb.homeBox[1] >= 44 && mb.stepBox[0] >= 44 && mb.stepBox[1] >= 44, JSON.stringify(mb));
 
 // the 0x0 canvas was worst on mobile: a 2px sliver that was purely its own borders
-await m.evaluate(() => document.querySelector('.tn-trigger').click());
-await m.waitForTimeout(350);
-await m.evaluate(() => {
-  const i = [...document.querySelectorAll('.tn-item')].find((e) => e.textContent.includes('Kafka Internals'));
-  if (i) i.click();
-});
-await m.waitForTimeout(800);
+await pickTopic(m, 'Kafka Internals', 'kafka-internals');
 await m.evaluate(() => window.goView('viz'));
-await m.waitForTimeout(1800);
-await m.evaluate(() => { window.__prevFrame = null; });
-await m.evaluate(PROBE);
-await m.waitForTimeout(1000);
-const mv = await m.evaluate(PROBE);
+await m.waitForFunction(() => !!window.__VIZ, null, { timeout: B.ACT_MS }).catch(() => {});
+/* Retried window, same as the desktop probes. This one bites HARDER on mobile: the drawing
+   buffer is only ~358x201 (~72k px) against the desktop's much larger canvas, yet the animation
+   threshold is the same flat 3000 changed px -- so it represents ~4% of the mobile buffer versus
+   a far smaller fraction on desktop. A starved 1-second window under-counts, and mobile has the
+   least room to absorb it. (Measured: 2 failures in 20 under saturation as a single sample.) */
+const mv = await untilAnimating(m, PROBE);
 chk('MOBILE 390px: visual renders, animates, and fits the viewport',
   mv.bufW > 200 && mv.cssH > 80 && mv.inkPct > 1.5 && mv.changed > 3000 && mv.fits === true, JSON.stringify(mv));
 const mOv = await m.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
@@ -258,17 +378,18 @@ await dl.addInitScript(() => {
     return c;
   };
 });
-await dl.goto('file://' + FILE + '#kafka-internals/viz', { waitUntil: 'load' });
-await dl.waitForTimeout(2600);
+await B.gotoApp(dl, FILE, { hash: '#kafka-internals/viz' });   /* was: goto + 2600ms */
+/* .ix-x does not exist until the overlay has opened, so dismissing it without waiting is a no-op
+   that leaves a modal sitting over the visual we are about to photograph. */
+await B.waitIndexOpen(dl);
 await dl.evaluate(() => { const x = document.querySelector('.ix-x'); if (x) x.click(); });
-await dl.waitForTimeout(1600);
+await dl.waitForFunction(() => !document.querySelector('.ix-ov.open'), null, { timeout: B.ACT_MS }).catch(() => {});
+await B.settle(dl);
 const dlWhere = await dl.evaluate(() => ({
   hash: location.hash,
   topic: (typeof TopicRegistry !== 'undefined' && TopicRegistry.current()) ? TopicRegistry.current().id : null,
 }));
-await dl.evaluate(PROBE);
-await dl.waitForTimeout(1000);
-const dlPix = await dl.evaluate(PROBE);
+const dlPix = await untilAnimating(dl, PROBE);   /* retried window, not a single 1s sample */
 chk('DEEP LINK "#<topic>/viz" lands on that topic, on viz',
   dlWhere.topic === 'kafka-internals' && dlWhere.hash.indexOf('viz') !== -1, JSON.stringify(dlWhere));
 chk('DEEP LINK: the visual actually RENDERS on a cold boot (not just after clicking in)',
@@ -282,8 +403,7 @@ await dl.close();
    overlap the viz callback resolves LAST and wins, stranding the viz pane visibly on
    under a "/walk" hash. Landing the topic before bouncing means viz is never queued.) */
 const bo = await b.newPage({ viewport: { width: 1280, height: 900 } });
-await bo.goto('file://' + FILE + '#idempotency/viz', { waitUntil: 'load' });
-await bo.waitForTimeout(2800);
+await B.gotoApp(bo, FILE, { hash: '#idempotency/viz' });       /* was: goto + 2800ms */
 const boS = await bo.evaluate(() => ({
   hash: location.hash,
   topic: (typeof TopicRegistry !== 'undefined' && TopicRegistry.current()) ? TopicRegistry.current().id : null,
@@ -310,10 +430,9 @@ await bo.close();
    this proves they survive the bundle and reach a real canvas.               */
 const gp = await b.newPage({ viewport: { width: 1280, height: 900 } });
 const gerrs = []; gp.on('pageerror', (e) => gerrs.push(e.message.slice(0, 100)));
-await gp.goto('file://' + FILE, { waitUntil: 'load' });
-await gp.waitForTimeout(2000);
+await B.gotoApp(gp, FILE);       /* was: goto + 2000ms */
 await gp.evaluate(() => { const x = document.querySelector('.ix-x'); if (x) x.click(); });
-await gp.waitForTimeout(300);
+await B.settle(gp);
 const gen = await gp.evaluate(async () => {
   const host = document.createElement('div');
   host.id = 'genhost';
@@ -332,13 +451,26 @@ const gen = await gp.evaluate(async () => {
   const out = { shared: s.shared, at3, at9, stalled: s.stalled(),
     stallRemaining: s.state.stallRemaining, idle: s.idleSinks(),
     labels: [...host.querySelectorAll('.ctl label')].map((l) => l.textContent.split(':')[0].trim()) };
-  // overload, then scale out: the capacity number must not be a lie
+  // overload, then scale out: the capacity number must not be a lie.
+  // The sim advances on rAF, so a fixed 2200/2800ms nap is a bet on the frame rate -- exactly
+  // the bet that loses on a loaded box. Poll the sim's OWN state to the same thresholds the
+  // assertions use (grew > 200, then drained below a quarter of that) with a hard cap. A sim
+  // that does not really drain never reaches the condition and still fails.
+  const waitFor = (cond, cap) => new Promise((res) => {
+    const t0 = Date.now();
+    const tick = () => {
+      if (cond() || Date.now() - t0 > cap) return res();
+      requestAnimationFrame(tick);
+    };
+    tick();
+  });
   s.setSinkCount(2); s.setProducerRate(300);
   for (const ln of s.state.lanes) ln.lag = 0;
-  await new Promise((r) => setTimeout(r, 2200));
+  await waitFor(() => s.totalLag() > 200, 20000);
   out.grew = s.totalLag();
+  const target = out.grew * 0.25;
   s.setSinkCount(9); s.setProducerRate(60);
-  await new Promise((r) => setTimeout(r, 2800));
+  await waitFor(() => s.totalLag() < target, 20000);
   out.drained = s.totalLag();
   return out;
 });
@@ -374,10 +506,7 @@ const GPROBE = () => new Promise((res) => requestAnimationFrame(() => {
   window.__genPrev = buf;
   res({ bufW: w, bufH: h, inkPct: +(100 * ink / (w * h)).toFixed(2), changed });
 }));
-await gp.evaluate(() => { window.__genPrev = null; });
-await gp.evaluate(GPROBE);
-await gp.waitForTimeout(1000);
-const gpx = await gp.evaluate(GPROBE);
+const gpx = await untilAnimating(gp, GPROBE);           // same 1s window, retried until it animates
 chk('GENERIC MODE: it PAINTS and ANIMATES (a registered mode that draws nothing is not a mode)',
   gpx.bufW > 200 && gpx.inkPct > 1.5 && gpx.changed > 3000, JSON.stringify(gpx));
 const gdisp = await gp.evaluate(() => {
@@ -389,5 +518,6 @@ chk('GENERIC MODE: disposes cleanly, zero page errors', gdisp && gerrs.length ==
 await gp.close();
 
 await b.close();
-console.log(fails === 0 ? 'VISUAL PIPELINE SMOKE: ALL PASS' : 'SMOKE: ' + fails + ' FAILURE(S)');
-process.exit(fails ? 1 : 0);
+console.log(fails === 0 ? 'VISUAL PIPELINE SMOKE: ALL PASS'
+  : 'SMOKE: ' + fails + ' FAILURE(S): ' + failed.join(' ;; '));
+await B.finish(fails ? 1 : 0);

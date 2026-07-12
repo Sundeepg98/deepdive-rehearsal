@@ -7,22 +7,20 @@
    Usage: node test/room_browser.cjs <deliverable.html>   (CHROME=<path> for the browser). */
 const path = require('path');
 const { chromium } = require('playwright');
+const B = require('./_boot.cjs');
 
 const HTML = process.argv[2] || path.join(__dirname, '..', 'deepdive_content_pipeline_rehearsal.html');
 const URL = 'file:///' + path.resolve(HTML).replace(/\\/g, '/');
 
 (async () => {
-  const launch = {};
-  if (process.env.CHROME) launch.executablePath = process.env.CHROME;
-  const browser = await chromium.launch(launch);
+  const browser = await chromium.launch(B.launchOpts());
   const fails = [];
 
   // 1. room wired at boot
   {
     const ctx = await browser.newContext();
     const page = await ctx.newPage();
-    await page.goto(URL + '#walk');
-    await page.waitForTimeout(600);
+    await B.gotoApp(page, HTML, { hash: '#walk' });   /* was: goto + 600ms */
     const boot = await page.evaluate(() => ({
       group: document.documentElement.getAttribute('data-group'),
       ink: getComputedStyle(document.documentElement).getPropertyValue('--topic-ink').trim(),
@@ -39,8 +37,8 @@ const URL = 'file:///' + path.resolve(HTML).replace(/\\/g, '/');
     const ctx = await browser.newContext({ reducedMotion: 'reduce' });
     const page = await ctx.newPage();
     await page.addInitScript((t) => { try { localStorage.setItem('ddr.v1.theme', JSON.stringify(t)); } catch (e) {} }, theme);
-    await page.goto(URL + '#walk');
-    await page.waitForTimeout(600);
+    await B.gotoApp(page, HTML, { hash: '#walk' });   /* was: goto + 600ms */
+    await B.settle(page);
     const r = await page.evaluate(() => {
       const op = getComputedStyle(document.body).opacity;
       const txt = (document.body.innerText || '').trim().length;

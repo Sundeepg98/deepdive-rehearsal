@@ -43,6 +43,7 @@
  */
 const path = require('path');
 const { chromium } = require('playwright');
+const B = require('./_boot.cjs');
 
 const HTML = process.argv[2] ||
   path.join(__dirname, '..', 'deepdive_content_pipeline_rehearsal.html');
@@ -75,50 +76,62 @@ const MEASURE = () => {
   return { over, scrollW: de.scrollWidth, clientW: cw, offenders: offenders.slice(0, 4) };
 };
 
-/* Boot the deliverable and WAIT FOR THE APP, not for a stopwatch. The single file is >5MB, so
+/* Boot the deliverable and WAIT FOR THE APP, not for a stopwatch. The single file is 11.4MB, so
    how long it takes to parse and wire its globals depends on what else the machine is doing --
    a fixed sleep passes on an idle box and loses a race inside a loaded CI run, where this check
    is one of two dozen. Gate the page on the globals this test actually drives, and a slow boot
-   costs a few more milliseconds instead of failing the build for no reason. */
+   costs a few more milliseconds instead of failing the build for no reason.
+
+   goto() carries an EXPLICIT navigation cap now. It always had one -- Playwright's silent 30s
+   default -- but nobody chose it, nobody wrote it down, and it was the only thing standing
+   between this check and a payload that had just doubled. An assumption you cannot see is an
+   assumption you cannot audit. (Measured: 455ms idle, 645ms under 8-core saturation.)
+
+   The 120ms "let the close transition settle" sleep is gone: closeIndex() waits for the overlay
+   to actually be closed and then for two rAFs -- the browser reporting that it has laid out and
+   painted, instead of us guessing how long that takes. */
 const READY = async (p) => {
-  await p.goto('file://' + path.resolve(HTML));
-  await p.evaluate(() => document.fonts.ready);
-  await p.waitForFunction(
-    () => typeof switchTab === 'function' && typeof TopicRegistry !== 'undefined' && TopicRegistry.ids().length > 0,
-    null, { timeout: 30000 }
-  );
+  await B.gotoApp(p, HTML);
   // A bare load opens the home (Topic index) as the landing; close it before exercising the
-  // tabs so its backdrop cannot swallow a click, then wait for it to actually be gone.
-  await p.evaluate(() => { if (window.IndexOverlay && window.IndexOverlay.isOpen && window.IndexOverlay.isOpen()) window.IndexOverlay.close(); });
-  await p.waitForFunction(
-    () => !(window.IndexOverlay && window.IndexOverlay.isOpen && window.IndexOverlay.isOpen()),
-    null, { timeout: 10000 }
-  );
-  await p.waitForTimeout(120);   // let the close transition settle before anything is measured
+  // tabs so its backdrop cannot swallow a trusted click, then wait for it to actually be gone.
+  await B.closeIndex(p);
 };
 
 (async () => {
   const errs = [];
-  const launch = { args: ['--no-sandbox', '--disable-dev-shm-usage'] };
-  if (process.env.CHROME) launch.executablePath = process.env.CHROME;
-
-  const browser = await chromium.launch(launch);
+  const browser = await chromium.launch(B.launchOpts());
   const page = await browser.newPage();
   page.on('pageerror', e => errs.push('pageerror: ' + e.message));
   page.on('console', m => { if (m.type() === 'error') errs.push('console: ' + m.text()); });
 
   await READY(page);
 
+  /* ---- every pane becomes visible when its tab is clicked -----------------------------------
+     The condition here was always right (wait for the pane to actually be displayed, not for a
+     fixed delay). The CAP was wrong. 2000ms was not a correctness budget, it was a PERFORMANCE
+     budget nobody declared -- and when the deliverable doubled to 11.4MB it quietly ate the
+     headroom. Measured on this 8-core box: the pane is visible 24-157ms after the click when
+     idle, 45-313ms under full saturation. A CI runner is ~4x weaker, which lands ~1.25s against
+     a 2000ms cap: a 1.6x margin, i.e. a coin-flip waiting to happen on a bad afternoon.
+
+     So: keep the condition, and give the cap the only job a timeout should ever have -- turning
+     a HANG into a failure. A pane that is genuinely broken never becomes visible at all and
+     still fails, just as loudly, 30s later. A pane that is merely slow no longer fails at all.
+     That is the whole difference between "the box was busy" and "the app is broken", and a gate
+     that cannot tell them apart is a gate that teaches people to re-run it.
+
+     Motion is deliberately LEFT ON for this page. Playwright's click() waits for the element to
+     be stable (it waits out the CSS animation), which is most of the cost above -- but it is
+     also the real user path, and the reduced-motion path is already covered by the overflow
+     sweep below. Buying speed here by turning animation off would buy it by deleting coverage. */
   const paneFails = [];
   for (const t of PANES) {
-    await page.click(`.sidebar .seg button[data-tab="${t}"]`);
-    // The pane swap runs inside the View Transitions API (async), so wait for
-    // the pane to actually become visible rather than a brittle fixed delay.
+    await page.click(`.sidebar .seg button[data-tab="${t}"]`, { timeout: B.ACT_MS });
     let ok = false;
     try {
       await page.waitForFunction(
         id => { const p = document.getElementById(id); return !!p && getComputedStyle(p).display !== 'none'; },
-        t, { timeout: 2000 }
+        t, { timeout: B.ACT_MS }
       );
       ok = true;
     } catch (e) { ok = false; }
@@ -186,12 +199,17 @@ const READY = async (p) => {
   if (overflows.length > 6) console.log(`  ...and ${overflows.length - 6} more overflowing states`);
   errs.slice(0, 8).forEach(e => console.log('  ' + e));
   console.log(pass ? 'RENDER TEST: PASS' : 'RENDER TEST: FAIL');
-  process.exit(pass ? 0 : 1);
-})().catch((e) => {
+  await B.finish(pass ? 0 : 1);
+})().catch(async (e) => {
   /* An uncaught rejection here would dump a Node stack whose LAST line is the runtime version
      -- and the gate reports a check by its last line, so the build would fail with the words
-     "Node.js v25.2.1" and no cause. Anything that escapes is reported as what it is. */
+     "Node.js v25.2.1" and no cause. Anything that escapes is reported as what it is.
+
+     finish() drains stdout before exiting. process.exit() is documented to terminate "even if
+     there are still asynchronous operations pending ... including I/O to process.stdout", and
+     the gate captures this check through a PIPE. A check that dies without saying why prints a
+     red with a blank reason, and a blank reason reads as "flake, run it again" -- which is
+     precisely the reflex this whole exercise exists to kill. */
   console.log('  harness error: ' + (e && e.stack ? e.stack.split('\n').slice(0, 3).join(' | ') : e));
-  console.log('RENDER TEST: FAIL');
-  process.exit(1);
+  await B.finish(1, 'RENDER TEST: FAIL');
 });

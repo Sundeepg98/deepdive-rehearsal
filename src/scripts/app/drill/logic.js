@@ -487,12 +487,19 @@ class DeepDrill extends TopicPane {
   /* Two different questions, two different answers -- conflating them was a P0.
      dTot / dDone / dGot / dShk / revisit describe THIS RUN over the CURRENT WORKING
      SET (`cards`), which setMode('quick'), setTier(), drillWeak() and drillRevset()
-     all deliberately shrink to a subset. That is what the live session panel wants.
-     It is NOT what a persisted topic record wants: writing it there truncated a
-     completed {done:22,tot:22} to {done:1,tot:3} on the first grade of a 3-probe
-     re-drill. The bank-relative fields below answer "which probe of the WHOLE topic
-     did the user just grade, and how", so Progress can MERGE the grade into the
-     full-topic record instead of overwriting it with the subset on screen.
+     all deliberately shrink to a subset. They are the DRILL'S OWN view of the run in
+     front of the user, and nothing that has to outlive the run may read them.
+     Two callers learned that the hard way, and neither reads the working set any more:
+       - the persisted topic record -- writing it there truncated a completed
+         {done:22,tot:22} to {done:1,tot:3} on the first grade of a 3-probe re-drill;
+       - the session-progress panel -- a page load starts `results` empty, so it
+         announced "Not started -- 0 of 22 graded" on a finished topic and sent the user
+         "Back to the drill ->". It now reads the canonical record (see session-progress.js),
+         and takes only bankTot from here -- the one number the record cannot supply
+         before a topic has ever been graded.
+     The bank-relative fields below answer "which probe of the WHOLE topic did the user
+     just grade, and how", so Progress can MERGE the grade into the full-topic record
+     instead of overwriting it with the subset on screen.
      `i` is the probe's index in _allCards -- the same stable key judge() already
      uses for the revisit map (cards holds _allCards' own object refs, never copies). */
   getStats() {
@@ -505,6 +512,30 @@ class DeepDrill extends TopicPane {
     };
   }
   reset() { this.setMode('study'); }
-  weak() { return this.drillWeak(); }
+  /* Load a re-drill set from explicit BANK INDICES -- the reload-proof way in.
+     drillWeak() reads THIS RUN's `results` and drillRevset() THIS RUN's `revisit` flags, and a
+     page load empties BOTH (see the constructor / setMode). That is fine for the debrief, which
+     by definition has a run behind it, but not for the session panel: its "Re-drill weak spots"
+     recommendation is driven by the PERSISTED record and can therefore fire on a freshly loaded
+     page, where drillWeak() would find nothing, silently return false, and leave the user staring
+     at the study list they were promised a drill of. Indices, because the record is keyed by the
+     probe's position in the bank -- the one identifier that survives a reload. */
+  drillBank(indices) {
+    const idx = (indices || []).filter(function (i) { return i >= 0 && i < _allCards.length; })
+      .sort(function (a, b) { return a - b; });
+    if (!idx.length) return false;
+    cards = idx.map(function (i) { return _allCards[i]; });
+    speakLines = idx.map(function (i) { return _allSpeak[i]; });
+    this.di = 0; this.got = 0; this.shk = 0; this.results = []; this.revisitMode = true;
+    /* carry the flags in, so re-grading one Solid clears it exactly as it would mid-run */
+    this.revisit = {};
+    for (let k = 0; k < idx.length; k++) this.revisit[idx[k]] = true;
+    this.stopTimer();
+    this.renderD();
+    return true;
+  }
+  /* Re-drill the weak spots. Given the canonical bank indices, use them; otherwise fall back to
+     this run's results (the in-run callers, which have one). */
+  weak(bankIdx) { return this.drillBank(bankIdx) || this.drillWeak(); }
 }
 customElements.define('deep-drill', DeepDrill); 

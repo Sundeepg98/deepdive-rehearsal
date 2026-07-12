@@ -488,7 +488,14 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover{background:rgba(150,140,
 .mcomp[open] .mcomp-sum{border-bottom:1px solid var(--bd)}
 .mcomp-body{padding:var(--space-4) var(--space-16) var(--space-16)}
 .mcomp-block{padding:var(--space-15) 0}
-.mcomp-block+.mcomp-block{border-top:1px solid var(--bd)}
+/* SEPARATOR BETWEEN RENDERED BLOCKS -- see the .cmp-block rule for the full rationale.
+   A sibling combinator MATCHES ACROSS a display:none element, so the old
+   `.mcomp-block+.mcomp-block` drew a border-top on the spine block whenever paintCmp()
+   folded the two per-view blocks away -- a hairline with nothing above it, on 266 of the
+   414 (topic, view) combos. Qualifying BOTH sides with :not([hidden]) and using the
+   general sibling combinator makes the rule mean what it always intended: a separator
+   exists only BETWEEN two blocks that are both actually rendered. */
+.mcomp-block:not([hidden])~.mcomp-block:not([hidden]){border-top:1px solid var(--bd)}
 @media(min-width:1280px){.mcomp{display:none}}
 /* v109 micro-polish: press feedback on the newest interactive elements + a soft companion reveal */
 @media(hover:hover){.mcomp-sum:hover{background:var(--accbg)}}
@@ -515,7 +522,23 @@ button,summary{-webkit-user-select:none;user-select:none}
 .cmp-inner{padding:var(--space-34) var(--space-26) var(--space-40);display:flex;flex-direction:column}
 .cmp-block{padding:var(--space-24) 0}
 .cmp-block.cmp-top{padding-top:0}
-.cmp-block+.cmp-block{border-top:1px solid var(--bd)}
+/* SEPARATOR BETWEEN RENDERED BLOCKS -- NOT between DOM siblings. The two are the same
+   thing only until something is hidden, and paintCmp() hides a LOT: it sets [hidden] on
+   the two per-view blocks (`This view` / `The move here`) on every (topic, view) combo the
+   topic authors no note for -- 266 of 414, because the 38 compiled topics author only
+   walk + drill.
+   THE TRAP: an adjacent-sibling combinator STILL MATCHES across a display:none element.
+   `.cmp-block+.cmp-block` therefore kept drawing a border-top on the first block that was
+   actually VISIBLE, producing a hairline with nothing above it (the mobile companion has
+   no always-on thesis block, so its spine block took the hit on all 266).
+   THE RULE: qualify BOTH sides with :not([hidden]) and use the general sibling combinator.
+   A block then gets a separator iff some PRECEDING sibling block is actually rendered --
+   i.e. iff it is not the first visible one. This is correct for ANY pattern of hidden
+   blocks, not just the two this code happens to fold today, so the whole class of bug is
+   gone rather than one instance of it. Sound because `[hidden]{display:none !important}`
+   (the [hidden]-integrity guard below) makes the attribute the single, authoritative
+   hiding mechanism -- so :not([hidden]) is an exact proxy for "is rendered". */
+.cmp-block:not([hidden])~.cmp-block:not([hidden]){border-top:1px solid var(--bd)}
 .cmp-eyebrow{display:inline-flex;align-items:center;gap:var(--space-7);align-self:flex-start;font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.12em;text-transform:uppercase;color:var(--acc);background:var(--accbg);border:1px solid var(--bd);padding:var(--space-4) var(--space-10) var(--space-4) var(--space-9);border-radius:999px}
 .cmp-eyebrow::before{content:"";width:var(--space-5);height:var(--space-5);border-radius:50%;background:var(--acc);box-shadow:0 0 0 3px color-mix(in srgb,var(--acc) 18%,transparent)}
 .cmp-topic{font-family:var(--display);font-size:var(--font-size-display);font-weight:var(--font-weight-semibold);line-height:var(--line-height-tight);letter-spacing:-.014em;color:var(--ink);margin-top:var(--space-13)}

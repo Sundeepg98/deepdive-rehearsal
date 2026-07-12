@@ -33,7 +33,7 @@
     btnEl.setAttribute('aria-label', 'Toggle focus mode');
     btnEl.setAttribute('aria-pressed', 'false');
     btnEl.textContent = 'Focus';
-    btnEl.style.cssText = 'display:inline-block;font-size:var(--font-size-nano);font-weight:var(--font-weight-bold);letter-spacing:.5px;text-transform:uppercase;color:var(--mut);background:var(--accbg);border:1px solid rgba(83,74,183,.12);padding:var(--space-4) var(--space-12);border-radius:8px;cursor:pointer;margin-top:var(--space-10);transition:all var(--duration-base) var(--ease-base)';
+    btnEl.style.cssText = 'display:inline-block;font-size:var(--font-size-nano);font-weight:var(--font-weight-bold);letter-spacing:.5px;text-transform:uppercase;color:var(--mut);background:var(--accbg);border:1px solid var(--acc-a12);padding:var(--space-4) var(--space-12);border-radius:8px;cursor:pointer;margin-top:var(--space-10);transition:all var(--duration-base) var(--ease-base)';
     btnEl.addEventListener('click', toggle);
     hdr.appendChild(btnEl);
   }

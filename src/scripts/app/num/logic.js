@@ -25,20 +25,22 @@ var NUM_STYLE = `.numlead{font-size:var(--font-size-body);line-height:var(--line
 .num-reset:hover{color:var(--acc);border-color:var(--acc)}
 .ninp{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-12)}
 .ninp label{display:flex;flex-direction:column;gap:var(--space-6);font:var(--font-weight-bold) 11px -apple-system,sans-serif;color:var(--mut);letter-spacing:.2px}
-.ninp input{font:var(--font-weight-bold) 15px ui-monospace,Menlo,monospace;color:var(--accink);background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.04) 100%);border:1.5px solid var(--ninp-bd);border-radius:9px;padding:var(--space-10) var(--space-12);width:100%;-moz-appearance:textfield;transition:border-color var(--duration-base) var(--ease-base),box-shadow var(--duration-base) var(--ease-base),transform var(--duration-fast) var(--ease-base)}
+.ninp input{font:var(--font-weight-bold) 15px ui-monospace,Menlo,monospace;color:var(--accink);background:linear-gradient(135deg,var(--accbg) 0%,var(--acc-a04) 100%);border:1.5px solid var(--ninp-bd);border-radius:9px;padding:var(--space-10) var(--space-12);width:100%;-moz-appearance:textfield;transition:border-color var(--duration-base) var(--ease-base),box-shadow var(--duration-base) var(--ease-base),transform var(--duration-fast) var(--ease-base)}
 .ninp input::-webkit-outer-spin-button,.ninp input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
-.ninp input:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px rgba(83,74,183,.12),0 2px 8px -2px rgba(83,74,183,.1);transform:translateY(-1px)}
-.ninp input:hover:not(:focus){border-color:rgba(83,74,183,.3)}
+.ninp input:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px var(--acc-a12),0 2px 8px -2px var(--acc-a10);transform:translateY(-1px)}
+.ninp input:hover:not(:focus){border-color:var(--acc-a30)}
 .nrow{display:grid;grid-template-columns:1fr auto;grid-template-areas:"k v" "n n";gap:var(--space-3) var(--space-12);padding:var(--space-12) 0;border-bottom:1px solid var(--bd);transition:padding var(--duration-base) var(--ease-base)}
 .nrow:last-child{border-bottom:0}
 .nrow:hover{padding-left:var(--space-4)}
 .nrow-k{grid-area:k;font-size:var(--font-size-small);font-weight:var(--font-weight-bold);color:var(--ink);align-self:center}
-.nrow-v{grid-area:v;font:var(--font-weight-heavy) 17px ui-monospace,Menlo,monospace;color:var(--acc);align-self:center;white-space:nowrap;transition:transform var(--duration-base) var(--ease-spring)}
-.nrow:hover .nrow-v{transform:scale(1.05)}
+.nrow-v{grid-area:v;font:var(--font-weight-heavy) 17px ui-monospace,Menlo,monospace;color:var(--ink);align-self:center;white-space:nowrap}
+/* .nrow-v is INK now (was --acc): painting every figure accent destroyed the breach-red
+   signal. The hover scale(1.05) is deleted -- a number you point at must not grow, or you
+   cannot compare it. Only the breached rows carry colour, and now they land. */
 .nrow-n{grid-area:n;font-size:var(--font-size-micro);color:var(--mut2);line-height:var(--line-height-relaxed)}
-.nrow.over .nrow-v{color:var(--red);text-shadow:0 0 20px rgba(239,68,68,.1)}
+.nrow.over .nrow-v{color:var(--red)}
 .nrow.over .nrow-n{color:var(--red);font-weight:var(--font-weight-semibold)}
-.nrow.over{background:linear-gradient(90deg,transparent 0%,rgba(239,68,68,.02) 100%)}
+.nrow.over{background:linear-gradient(90deg,transparent 0%,rgba(239,68,68,.02) 100%);border-left:2px solid var(--red)}
 .num-tell{margin-top:var(--space-15);font-size:var(--font-size-caption);color:var(--teal);font-weight:var(--font-weight-bold);line-height:var(--line-height-airy);padding:var(--space-14) var(--space-17);background:linear-gradient(135deg,var(--tealbg) 0%,rgba(10,133,100,.04) 100%);border-radius:11px;box-shadow:0 1px 6px -2px rgba(10,133,100,.08)}
 .nprog{height:var(--space-5);background:var(--dbar-bg);border-radius:5px;overflow:hidden;margin:var(--space-12) 0}
 .nprog i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));border-radius:5px;transition:width var(--duration-slowest) var(--ease-glide)}

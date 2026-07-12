@@ -41,7 +41,7 @@
 
     spotlightEl = document.createElement('div');
     spotlightEl.id = '_tour-spotlight';
-    spotlightEl.style.cssText = 'position:fixed;z-index:var(--z-modal-fore);border-radius:16px;box-shadow:0 0 0 9999px rgba(0,0,0,.55),0 0 40px rgba(83,74,183,.3);transition:all var(--duration-slowest) var(--ease-glide);pointer-events:none;opacity:0';
+    spotlightEl.style.cssText = 'position:fixed;z-index:var(--z-modal-fore);border-radius:16px;box-shadow:0 0 0 9999px rgba(0,0,0,.55),0 0 40px var(--acc-a30);transition:all var(--duration-slowest) var(--ease-glide);pointer-events:none;opacity:0';
 
     tooltipEl = document.createElement('div');
     tooltipEl.id = '_tour-tooltip';
@@ -106,7 +106,7 @@
         '<div style="display:flex;align-items:center">' + dots + '</div>' +
         '<div style="display:flex;gap:var(--space-8)">' +
           (index > 0 ? '<button type="button" id="_tour-prev" style="background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:var(--space-6) var(--space-14);font:var(--font-weight-semibold) 12px -apple-system,sans-serif;color:var(--mut);cursor:pointer">Prev</button>' : '') +
-          '<button type="button" id="_tour-next" style="background:linear-gradient(135deg,var(--acc) 0%,var(--acc2) 100%);border:none;border-radius:10px;padding:var(--space-6) var(--space-18);font:var(--font-weight-semibold) 12px -apple-system,sans-serif;color:#fff;cursor:pointer;box-shadow:0 2px 8px rgba(83,74,183,.3)">' + (index < total - 1 ? 'Next' : 'Finish') + '</button>' +
+          '<button type="button" id="_tour-next" style="background:linear-gradient(135deg,var(--acc) 0%,var(--acc2) 100%);border:none;border-radius:10px;padding:var(--space-6) var(--space-18);font:var(--font-weight-semibold) 12px -apple-system,sans-serif;color:#fff;cursor:pointer;box-shadow:0 2px 8px var(--acc-a30)">' + (index < total - 1 ? 'Next' : 'Finish') + '</button>' +
         '</div>' +
       '</div>' +
       '<div style="font-size:var(--font-size-nano);color:var(--mut2);margin-top:var(--space-10);text-align:right">' + (index + 1) + ' / ' + total + '</div>';

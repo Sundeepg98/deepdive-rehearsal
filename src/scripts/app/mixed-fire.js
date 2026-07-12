@@ -263,15 +263,15 @@ document.getElementById('mockx').onclick = closeMock;
 var MIX_STYLE = `
 .mx-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-12);gap:var(--space-10)}
 .mx-prog{font:var(--font-weight-bold) 12px -apple-system,sans-serif;color:var(--mut2);letter-spacing:.3px}
-.mx-kind{font:var(--font-weight-heavy) 10.5px -apple-system,sans-serif;letter-spacing:.5px;text-transform:uppercase;padding:var(--space-5) var(--space-12);border-radius:20px;white-space:nowrap;box-shadow:0 1px 4px -2px rgba(83,74,183,.08)}
-.mxb-probe{background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.04) 100%);color:var(--accink)}
+.mx-kind{font:var(--font-weight-heavy) 10.5px -apple-system,sans-serif;letter-spacing:.5px;text-transform:uppercase;padding:var(--space-5) var(--space-12);border-radius:20px;white-space:nowrap;box-shadow:0 1px 4px -2px var(--acc-a08)}
+.mxb-probe{background:linear-gradient(135deg,var(--accbg) 0%,var(--acc-a04) 100%);color:var(--accink)}
 .mxb-curve{background:linear-gradient(135deg,var(--mxb-curve-bg) 0%,rgba(176,108,20,.04) 100%);color:var(--amber)}
 .mxb-trade{background:linear-gradient(135deg,var(--tealbg) 0%,rgba(10,133,100,.04) 100%);color:var(--mxb-trade-fg)}
 .mx-label{font:var(--font-weight-bold) 14px -apple-system,sans-serif;color:var(--ink);margin-bottom:var(--space-10);line-height:var(--line-height-relaxed)}
 .mx-task{display:block;margin-top:var(--space-10);font:var(--font-weight-semibold) 13.5px -apple-system,sans-serif;font-style:italic;color:var(--mut)}
 .mx-end{text-align:center;padding:var(--space-10) var(--space-4)}
 .mx-end-h{font:var(--font-weight-heavy) 17px -apple-system,sans-serif;color:var(--ink);margin-bottom:var(--space-5)}
-.mx-end-pct{font:var(--font-weight-heavy) 44px -apple-system,sans-serif;color:var(--acc);line-height:var(--line-height-none);margin:var(--space-10) 0;text-shadow:0 2px 24px rgba(83,74,183,.2),0 0 40px rgba(83,74,183,.08);letter-spacing:-1px}
+.mx-end-pct{font:var(--font-weight-heavy) 44px -apple-system,sans-serif;color:var(--acc);line-height:var(--line-height-none);margin:var(--space-10) 0;text-shadow:0 2px 24px var(--acc-a20),0 0 40px var(--acc-a08);letter-spacing:-1px}
 .mx-end-v{font:var(--font-weight-semibold) 14px -apple-system,sans-serif;color:var(--mut);margin:0 auto var(--space-18);line-height:var(--line-height-loose);max-width:var(--space-300)}
 .mx-bd{display:flex;flex-wrap:wrap;justify-content:center;gap:var(--space-9) var(--space-18);margin-bottom:var(--space-20);font:var(--font-weight-semibold) 13px -apple-system,sans-serif;color:var(--mut)}
 .mx-bd b{color:var(--ink);font-weight:var(--font-weight-heavy)}
@@ -285,8 +285,8 @@ var MIX_STYLE = `
 .mx-el{font:var(--font-weight-semibold) 13px -apple-system,sans-serif;color:var(--ink)}
 .mx-end-btns{display:flex;flex-direction:column;gap:var(--space-10)}
 .mx-end-btns button{margin-top:0}
-.mxghost{width:100%;font:var(--font-weight-heavy) 13px -apple-system,sans-serif;padding:var(--space-12) var(--space-16);border-radius:11px;background:linear-gradient(135deg,transparent 0%,rgba(83,74,183,.02) 100%);color:var(--acc);border:1.5px solid var(--bd);cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),border-color var(--duration-base) var(--ease-base),background var(--duration-base) var(--ease-base),box-shadow var(--duration-base) var(--ease-base)}
-.mxghost:hover{border-color:var(--acc);background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.04) 100%);transform:translateY(-1px);box-shadow:0 4px 14px -4px rgba(83,74,183,.12)}
+.mxghost{width:100%;font:var(--font-weight-heavy) 13px -apple-system,sans-serif;padding:var(--space-12) var(--space-16);border-radius:11px;background:linear-gradient(135deg,transparent 0%,var(--acc-a02) 100%);color:var(--acc);border:1.5px solid var(--bd);cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),border-color var(--duration-base) var(--ease-base),background var(--duration-base) var(--ease-base),box-shadow var(--duration-base) var(--ease-base)}
+.mxghost:hover{border-color:var(--acc);background:linear-gradient(135deg,var(--accbg) 0%,var(--acc-a04) 100%);transform:translateY(-1px);box-shadow:0 4px 14px -4px var(--acc-a12)}
 .mxghost:active{transform:translateY(1px) scale(.98)}
 .push:active{transform:translateY(1px);box-shadow:0 2px 7px rgba(30,28,24,.18),inset 0 1px 0 rgba(255,255,255,.10)}`;
 class DeepMixedFire extends HTMLElement {

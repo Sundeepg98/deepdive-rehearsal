@@ -98,7 +98,7 @@
       if (!d || d.tot <= 0) continue;
       var pc = Math.round(d.done / d.tot * 100);
       rows += '<div class="ix-grp-row"><span class="ix-grp-lbl">' + g.label + '</span>' +
-        '<span class="ix-grp-bar"><i style="width:' + pc + '%;background:' + g.color + '"></i></span>' +
+        '<span class="ix-grp-bar"><i style="width:' + pc + '%;background:var(--room-' + g.id + ')"></i></span>' +
         '<span class="ix-grp-pct">' + pc + '%</span></div>';
     }
     return rows ? '<div class="ix-groups"><div class="ix-home-k">By area</div>' + rows + '</div>' : '';
@@ -297,13 +297,13 @@
         else if (_wbSome) _bdg = '<span class="ix-c-badge"><i style="background:var(--acc)"></i>recalled</span>';
         var filt = ((idn.title || '') + ' ' + (idn.locatorTail || '') + ' ' + th).toLowerCase().replace(/&[a-z#0-9]+;/g, ' ').replace(/"/g, '');
         var resetBtn = (_st !== 'untouched') ? '<button class="ix-c-reset" type="button" data-reset="' + id + '" title="Reset progress for this topic" aria-label="Reset progress for ' + idn.title + '">&#8635;</button>' : '';
-        return '<div class="ix-cell"><button class="ix-card' + (on ? ' on' : '') + '" type="button" data-topic="' + id + '" data-filter="' + filt + '" style="box-shadow:inset 3px 0 0 ' + (b.group.color || 'transparent') + '"' +
+        return '<div class="ix-cell"><button class="ix-card' + (on ? ' on' : '') + '" type="button" data-topic="' + id + '" data-filter="' + filt + '" style="box-shadow:inset 3px 0 0 var(--room-' + b.group.id + ')"' +
           (on ? ' aria-current="true"' : '') + '>' + _bdg +
           '<span class="ix-c-name">' + idn.title + '</span>' +
           '<span class="ix-c-tail">' + idn.locatorTail + '</span>' +
           (th ? '<span class="ix-c-thesis">' + th + '</span>' : '') + '</button>' + resetBtn + '</div>';
       }).join('');
-      return '<section class="ix-group"><div class="ix-g-head"><span class="ix-g-dot" style="background:' + (b.group.color || 'var(--acc)') + '"></span>' + b.group.label +
+      return '<section class="ix-group" data-group="' + b.group.id + '" style="--rm:var(--room-' + b.group.id + ')"><div class="ix-g-head"><span class="ix-g-dot" style="background:var(--rm)"></span>' + b.group.label +
         ' <span class="ix-g-n">' + b.ids.length + '</span>' +
         '<button class="ix-g-cram" type="button" data-cross="group:' + b.group.id + '">Cram &rarr;</button></div>' +
         (b.group.desc ? '<div class="ix-g-desc">' + b.group.desc + '</div>' : '') +

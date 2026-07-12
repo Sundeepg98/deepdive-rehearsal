@@ -48,6 +48,25 @@ try:
         # trying to print that back to the same cp1252 console. A failure message must never be
         # the thing that takes down the harness reporting it.
         problems.append('rebuilt output != committed deliverable -- run `npm run build` and commit it')
+        # SAY WHAT DIFFERS. "They differ" with no evidence is a blank red: it gets re-run rather
+        # than diagnosed, which is how a compiler that destroyed 608 authored items per build stayed
+        # green for weeks. This diff is what localises a cross-platform build divergence (the build
+        # runs on Windows locally and Linux in CI) in ONE run instead of one guess per push.
+        i = 0
+        n = min(len(out), len(committed))
+        while i < n and out[i] == committed[i]:
+            i += 1
+        lo = max(0, i - 50)
+
+        def _s(b):
+            return repr(b[lo:i + 70])[2:-1][:150]   # ASCII-safe, bounded
+
+        # ONE dense line, and it must be LAST: THE GATE reports only the final line of a failing
+        # check, so a diagnostic split across several lines is a diagnostic nobody ever reads.
+        problems.append(
+            'DIFF byte=%d line=%d sizes=%d/%d(%+d) || COMMITTED[%s] || FRESH[%s]' % (
+                i, committed[:i].count(b'\n') + 1, len(committed), len(out),
+                len(out) - len(committed), _s(committed), _s(out)))
 
     for pid in PANES:
         if b'id="' + pid + b'"' not in out:

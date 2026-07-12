@@ -9,7 +9,7 @@
    Every color is a theme token, so it flips light/dark with no variants. */
 var CS_SHEET = new CSSStyleSheet();
 CS_SHEET.replaceSync(`
-.cs-one{background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.04) 100%);border-radius:12px;padding:var(--space-14) var(--space-17);font-size:var(--font-size-small);line-height:var(--line-height-airy);color:var(--ink);box-shadow:0 1px 6px -2px rgba(83,74,183,.06)}
+.cs-one{background:linear-gradient(135deg,var(--accbg) 0%,var(--acc-a04) 100%);border-radius:12px;padding:var(--space-14) var(--space-17);font-size:var(--font-size-small);line-height:var(--line-height-airy);color:var(--ink);box-shadow:0 1px 6px -2px var(--acc-a06)}
 .cs-one b{color:var(--accink);font-weight:var(--font-weight-bold)}
 .cs-one-l{display:block;font:var(--font-weight-heavy) 9.5px -apple-system,sans-serif;letter-spacing:.7px;text-transform:uppercase;color:var(--acc);margin-bottom:var(--space-6)}
 .cs-sec{margin-top:var(--space-18)}
@@ -30,7 +30,7 @@ CS_SHEET.replaceSync(`
 .cs-fix{text-align:left;color:var(--teal);font-weight:var(--font-weight-semibold);font-size:var(--font-size-caption);line-height:var(--line-height-normal)}
 .cs-tells{margin:0;padding-left:var(--space-20)}
 .cs-tells li{font-size:var(--font-size-caption);line-height:var(--line-height-airy);margin-bottom:var(--space-6);color:var(--ink)}
-.cs-30{background:linear-gradient(135deg,var(--cs30-bg) 0%,rgba(83,74,183,.02) 100%);border:1px solid var(--bd);border-radius:11px;padding:var(--space-13) var(--space-15);font-size:var(--font-size-caption);line-height:var(--line-height-airy);color:var(--ink)}
+.cs-30{background:linear-gradient(135deg,var(--cs30-bg) 0%,var(--acc-a02) 100%);border:1px solid var(--bd);border-radius:11px;padding:var(--space-13) var(--space-15);font-size:var(--font-size-caption);line-height:var(--line-height-airy);color:var(--ink)}
 b{color:var(--accink);font-weight:var(--font-weight-bold)}
 b.cs-ha-l{color:var(--accink);font-weight:var(--font-weight-bold)}
 `);

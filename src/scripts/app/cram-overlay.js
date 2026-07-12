@@ -45,7 +45,7 @@ class DeepCram extends HTMLElement {
     if (!this._dirty) return;
     this._dirty = false;
     if (this._io) { this._io.disconnect(); this._io = null; }
-    const STYLE = '<style>:host code{font-size:var(--font-size-micro);background:linear-gradient(135deg,var(--cram-code-bg) 0%,rgba(83,74,183,.04) 100%);border-radius:5px;padding:var(--space-2) var(--space-6);font-family:ui-monospace,Menlo,monospace;color:var(--accink);border:1px solid rgba(83,74,183,.08)}:host b{color:var(--accink);font-weight:var(--font-weight-bold)}</style>';
+    const STYLE = '<style>:host code{font-size:var(--font-size-micro);background:linear-gradient(135deg,var(--cram-code-bg) 0%,var(--acc-a04) 100%);border-radius:5px;padding:var(--space-2) var(--space-6);font-family:ui-monospace,Menlo,monospace;color:var(--accink);border:1px solid var(--acc-a08)}:host b{color:var(--accink);font-weight:var(--font-weight-bold)}</style>';
     this._root.innerHTML = STYLE + deriveCram(TopicRegistry.current());
   }
   disconnectedCallback() {

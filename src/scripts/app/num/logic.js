@@ -25,10 +25,10 @@ var NUM_STYLE = `.numlead{font-size:var(--font-size-body);line-height:var(--line
 .num-reset:hover{color:var(--acc);border-color:var(--acc)}
 .ninp{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-12)}
 .ninp label{display:flex;flex-direction:column;gap:var(--space-6);font:var(--font-weight-bold) 11px -apple-system,sans-serif;color:var(--mut);letter-spacing:.2px}
-.ninp input{font:var(--font-weight-bold) 15px ui-monospace,Menlo,monospace;color:var(--accink);background:linear-gradient(135deg,var(--accbg) 0%,rgba(83,74,183,.04) 100%);border:1.5px solid var(--ninp-bd);border-radius:9px;padding:var(--space-10) var(--space-12);width:100%;-moz-appearance:textfield;transition:border-color var(--duration-base) var(--ease-base),box-shadow var(--duration-base) var(--ease-base),transform var(--duration-fast) var(--ease-base)}
+.ninp input{font:var(--font-weight-bold) 15px ui-monospace,Menlo,monospace;color:var(--accink);background:linear-gradient(135deg,var(--accbg) 0%,var(--acc-a04) 100%);border:1.5px solid var(--ninp-bd);border-radius:9px;padding:var(--space-10) var(--space-12);width:100%;-moz-appearance:textfield;transition:border-color var(--duration-base) var(--ease-base),box-shadow var(--duration-base) var(--ease-base),transform var(--duration-fast) var(--ease-base)}
 .ninp input::-webkit-outer-spin-button,.ninp input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
-.ninp input:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px rgba(83,74,183,.12),0 2px 8px -2px rgba(83,74,183,.1);transform:translateY(-1px)}
-.ninp input:hover:not(:focus){border-color:rgba(83,74,183,.3)}
+.ninp input:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px var(--acc-a12),0 2px 8px -2px var(--acc-a10);transform:translateY(-1px)}
+.ninp input:hover:not(:focus){border-color:var(--acc-a30)}
 .nrow{display:grid;grid-template-columns:1fr auto;grid-template-areas:"k v" "n n";gap:var(--space-3) var(--space-12);padding:var(--space-12) 0;border-bottom:1px solid var(--bd);transition:padding var(--duration-base) var(--ease-base)}
 .nrow:last-child{border-bottom:0}
 .nrow:hover{padding-left:var(--space-4)}

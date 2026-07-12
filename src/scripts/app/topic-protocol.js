@@ -76,7 +76,12 @@ function publishBanks(t) {
 function applyIdentity(idn) {
   var q = function (s) { return document.querySelector(s); },
       byId = function (i) { return document.getElementById(i); };
-  var L = q('.locator'); if (L) { var _gl = '', _gc = ''; if (typeof TOPIC_GROUPS !== 'undefined' && idn.group) { for (var _gi = 0; _gi < TOPIC_GROUPS.length; _gi++) { if (TOPIC_GROUPS[_gi].id === idn.group) { _gl = TOPIC_GROUPS[_gi].label; _gc = TOPIC_GROUPS[_gi].color || ''; break; } } } var _dot = _gc ? '<span class="loc-dot" style="background:' + _gc + '"></span>' : ''; L.innerHTML = _dot + (_gl ? _gl + ' &middot; ' : '') + idn.locatorTail; }
+  /* Stamp the ROOM on <html>. Every var(--acc)/--acc-aNN in every shadow sheet then
+     retints to this room's ink (styles.css THE SIX ROOMS). Boot is pre-stamped in
+     index.html, so this only has to hold the room across switches. */
+  if (idn.group) document.documentElement.setAttribute('data-group', idn.group);
+  var LOC_KEYS = { 'messaging-events': 'MSG', 'data-storage': 'DAT', 'reliability-observability': 'REL', 'platform-infra': 'PLT', 'architecture-apis': 'ARC', 'security-tenancy': 'SEC' };
+  var L = q('.locator'); if (L) { var _gl = ''; if (typeof TOPIC_GROUPS !== 'undefined' && idn.group) { for (var _gi = 0; _gi < TOPIC_GROUPS.length; _gi++) { if (TOPIC_GROUPS[_gi].id === idn.group) { _gl = TOPIC_GROUPS[_gi].label; break; } } } var _key = LOC_KEYS[idn.group] || ''; var _kh = _key ? '<span class="loc-key">' + _key + '</span>' : ''; L.innerHTML = _kh + (_gl ? _gl + ' &middot; ' : '') + idn.locatorTail; }
   var H = q('.hdr h1'); if (H) H.textContent = idn.h1;
   var S = q('.hdr .sub'); if (S) S.innerHTML = idn.sub;
   document.querySelectorAll('.cmp-topic').forEach(function (el) { el.textContent = idn.companionTopic; });

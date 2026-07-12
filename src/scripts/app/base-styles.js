@@ -12,7 +12,7 @@ BASE_SHEET.replaceSync(`
 code{font-family:ui-monospace,Menlo,monospace;font-size:var(--font-size-micro);background:var(--code-inline-bg);padding:var(--space-1) var(--space-5);border-radius:4px;color:var(--accink)}
 :host{display:block;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 .card{position:relative;background:var(--surf);border:1px solid var(--bd);border-radius:14px;padding:var(--space-22);box-shadow:var(--card-sh)}
-.card::before{content:"";position:absolute;left:var(--space-14);right:var(--space-14);top:0;height:var(--space-2);border-radius:2px;background:linear-gradient(90deg,var(--acc),var(--acc2));opacity:.42}
+.card::before{content:"";position:absolute;left:var(--space-14);right:var(--space-14);top:0;height:var(--space-2);border-radius:2px;background:var(--topic-edge);opacity:1}
 .step-k{display:inline-flex;align-items:center;gap:var(--space-7);font-family:var(--mono);font-size:var(--font-size-micro);font-weight:var(--font-weight-heavy);letter-spacing:.4px;text-transform:uppercase;color:var(--acc)}
 .step-k::before{content:"";width:var(--space-14);height:var(--space-2);border-radius:2px;background:linear-gradient(90deg,var(--acc),var(--acc2))}
 .step-t{font-size:var(--font-size-title);font-weight:var(--font-weight-bold);margin:var(--space-3) 0 var(--space-5);letter-spacing:-.2px}
@@ -25,8 +25,8 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:var(--font-size-micro);b
    (no continuous animation); entrance stagger stays the global cardStagger. */
 @media (hover:hover) and (pointer:fine){
 .card{isolation:isolate;transition:transform var(--duration-slow) var(--ease-glide),box-shadow var(--duration-slow) var(--ease-glide),border-color var(--duration-moderate) var(--ease-base)}
-.card::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:var(--z-below);opacity:0;transition:opacity var(--duration-slow) var(--ease-base);background:radial-gradient(340px circle at var(--mouse-x,50%) var(--mouse-y,50%),var(--card-spot,rgba(83,74,183,.12)),transparent 60%)}
-.card:hover{transform:perspective(900px) translateY(-3px) rotateX(1.4deg) rotateY(-.8deg);border-color:rgba(83,74,183,.28);box-shadow:var(--card-sh),var(--card-tilt-glow,0 16px 38px -16px rgba(83,74,183,.26))}
+.card::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:var(--z-below);opacity:0;transition:opacity var(--duration-slow) var(--ease-base);background:radial-gradient(340px circle at var(--mouse-x,50%) var(--mouse-y,50%),var(--card-spot,var(--acc-a12)),transparent 60%)}
+.card:hover{transform:perspective(900px) translateY(-3px) rotateX(1.4deg) rotateY(-.8deg);border-color:var(--acc-a30);box-shadow:var(--card-sh),var(--card-tilt-glow,0 16px 38px -16px var(--acc-a26))}
 .card:hover::after{opacity:1}
 }
 @media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:reduce){
@@ -35,4 +35,10 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:var(--font-size-micro);b
 .card:hover::after{opacity:0}
 }
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+/* PRINT PAGE-BREAK CONTROL. This used to live in styles.css, where it reached NOTHING:
+   .card / .thread / .dec / .rf / details.model are all inside a shadow root, and a
+   light-DOM rule cannot cross that boundary. The shipped "Print Q&A" tool has therefore
+   never had page-break control -- a card could split across a page at any point. BASE_SHEET
+   is adopted by all 17 shadow hosts, so one rule here reaches every printable surface. */
+@media print{.card,.thread,.dec,.rf,.piv,details.model[open]{break-inside:avoid}.card{box-shadow:none;border:1px solid #ddd}}
 `);

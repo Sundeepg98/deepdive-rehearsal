@@ -493,15 +493,28 @@ class DeepDrill extends TopicPane {
      re-drill. The bank-relative fields below answer "which probe of the WHOLE topic
      did the user just grade, and how", so Progress can MERGE the grade into the
      full-topic record instead of overwriting it with the subset on screen.
-     `i` is the probe's index in _allCards -- the same stable key judge() already
-     uses for the revisit map (cards holds _allCards' own object refs, never copies). */
+     `i` is the probe's index in _allCards (cards holds _allCards' own object refs,
+     never copies), and `id` is that probe's CONTENT-DERIVED identity.
+
+     WHY BOTH, AND WHY `id` IS THE ONE THAT PERSISTS. `i` is a position and dies the
+     moment a card is inserted above it -- it is fine for THIS session's in-memory
+     revisit map (the bank cannot change mid-session) and useless as a durable key.
+     A stored grade must survive the 38 topics being authored, i.e. survive probes
+     being inserted and reordered, so persistence keys on `id` (see card-id.js) and
+     progress.js writes nothing positional. bankIds[] is published in bank order so
+     the reader can pair id <-> signal without re-deriving anything. */
   getStats() {
+    const bankIds = (typeof CardId !== 'undefined') ? CardId.forCards(_allCards) : [];
     return {
       dTot: cards.length, dDone: this.results.length, dGot: this.got, dShk: this.shk,
       revisit: this.results.filter(function (r) { return !r.ok; }).map(function (r) { return r.signal; }),
       bankTot: _allCards.length,
       bankSignals: _allCards.map(function (c) { return c.signal; }),
-      graded: this.results.map(function (r) { return { i: _allCards.indexOf(r.card), level: r.level || (r.ok ? 3 : 2) }; })
+      bankIds: bankIds,
+      graded: this.results.map(function (r) {
+        const i = _allCards.indexOf(r.card);
+        return { i: i, id: (i >= 0 ? bankIds[i] : null), level: r.level || (r.ok ? 3 : 2) };
+      })
     };
   }
   reset() { this.setMode('study'); }

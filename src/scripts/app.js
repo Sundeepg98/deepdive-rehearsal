@@ -1,4 +1,5 @@
 <!--@build:include scripts/app/store.js-->
+<!--@build:include scripts/app/card-id.js-->
 <!--@build:include scripts/app/base-styles.js-->
 <!--@build:include scripts/app/content-sheet.js-->
 <!--@build:include scripts/app/shared-sheets.js-->

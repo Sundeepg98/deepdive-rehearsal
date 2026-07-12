@@ -35,4 +35,11 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:var(--font-size-micro);b
    never had page-break control -- a card could split across a page at any point. BASE_SHEET
    is adopted by all 17 shadow hosts, so one rule here reaches every printable surface. */
 @media print{.card,.thread,.dec,.rf,.piv,details.model[open]{break-inside:avoid}.card{box-shadow:none;border:1px solid #ddd}}
+/* MOBILE TAP FLOOR -- THE SHADOW HALF. styles.css carries the same floor for the light DOM and
+   CANNOT reach in here: the drill's mode switch (Study / Mock round / Quick 5), its level filter
+   (SDE2/SDE3/Staff) and #adv ("Reveal answer") are all inside a shadow root, and every one of
+   them measured under 44px at 390px -- the segments at 43px, one pixel short. A rule in
+   styles.css aimed at them matches zero nodes, which is exactly how this repo has shipped dead
+   pane-internal CSS before. BASE_SHEET is adopted by all 17 shadow hosts, so this reaches them. */
+@media (max-width:919px){button,summary,[role="button"]{min-height:44px}}
 `);

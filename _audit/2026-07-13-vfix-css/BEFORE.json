@@ -1,0 +1,641 @@
+{
+  "label": "BEFORE",
+  "dist": "D:/claude-workspace/_worktrees/deepdive-rehearsal/vfix-css/dist/index.html",
+  "cta": [
+    {
+      "group": "messaging-events",
+      "theme": "light",
+      "el": "reveal",
+      "bg": "#00746b",
+      "fg": "#ffffff",
+      "ratio": 5.66,
+      "ratioWorst": 5.23,
+      "nText": 238,
+      "nLocal": 1215,
+      "AA": true
+    },
+    {
+      "group": "messaging-events",
+      "theme": "light",
+      "el": "mock",
+      "bg": "#00746b",
+      "fg": "#ffffff",
+      "ratio": 5.66,
+      "ratioWorst": 4.77,
+      "nText": 1154,
+      "nLocal": 3822,
+      "AA": true
+    },
+    {
+      "group": "messaging-events",
+      "theme": "dark",
+      "el": "reveal",
+      "bg": "#13baac",
+      "fg": "#1a1622",
+      "ratio": 7.32,
+      "ratioWorst": 7.32,
+      "nText": 207,
+      "nLocal": 1220,
+      "AA": true
+    },
+    {
+      "group": "messaging-events",
+      "theme": "dark",
+      "el": "mock",
+      "bg": "#1c353b",
+      "fg": "#13baac",
+      "ratio": 5.33,
+      "ratioWorst": 5.33,
+      "nText": 1194,
+      "nLocal": 3818,
+      "AA": true
+    },
+    {
+      "group": "data-storage",
+      "theme": "light",
+      "el": "reveal",
+      "bg": "#316be9",
+      "fg": "#ffffff",
+      "ratio": 4.76,
+      "ratioWorst": 5.22,
+      "nText": 247,
+      "nLocal": 1215,
+      "AA": true
+    },
+    {
+      "group": "data-storage",
+      "theme": "light",
+      "el": "mock",
+      "bg": "#316ae6",
+      "fg": "#ffffff",
+      "ratio": 4.84,
+      "ratioWorst": 4.77,
+      "nText": 1195,
+      "nLocal": 3818,
+      "AA": true
+    },
+    {
+      "group": "data-storage",
+      "theme": "dark",
+      "el": "reveal",
+      "bg": "#7da6f3",
+      "fg": "#1a1622",
+      "ratio": 7.29,
+      "ratioWorst": 7.29,
+      "nText": 207,
+      "nLocal": 1220,
+      "AA": true
+    },
+    {
+      "group": "data-storage",
+      "theme": "dark",
+      "el": "mock",
+      "bg": "#2d3246",
+      "fg": "#7da6f3",
+      "ratio": 5.2,
+      "ratioWorst": 5.2,
+      "nText": 1193,
+      "nLocal": 3808,
+      "AA": true
+    },
+    {
+      "group": "reliability-observability",
+      "theme": "light",
+      "el": "reveal",
+      "bg": "#ab5c00",
+      "fg": "#ffffff",
+      "ratio": 4.93,
+      "ratioWorst": 5.18,
+      "nText": 247,
+      "nLocal": 1215,
+      "AA": true
+    },
+    {
+      "group": "reliability-observability",
+      "theme": "light",
+      "el": "mock",
+      "bg": "#ab5c00",
+      "fg": "#ffffff",
+      "ratio": 4.93,
+      "ratioWorst": 4.77,
+      "nText": 1182,
+      "nLocal": 3808,
+      "AA": true
+    },
+    {
+      "group": "reliability-observability",
+      "theme": "dark",
+      "el": "reveal",
+      "bg": "#e19556",
+      "fg": "#1a1622",
+      "ratio": 7.31,
+      "ratioWorst": 7.31,
+      "nText": 207,
+      "nLocal": 1220,
+      "AA": true
+    },
+    {
+      "group": "reliability-observability",
+      "theme": "dark",
+      "el": "mock",
+      "bg": "#3d2f2d",
+      "fg": "#e19556",
+      "ratio": 5.26,
+      "ratioWorst": 5.26,
+      "nText": 1195,
+      "nLocal": 3818,
+      "AA": true
+    },
+    {
+      "group": "platform-infra",
+      "theme": "light",
+      "el": "reveal",
+      "bg": "#6c4fb6",
+      "fg": "#ffffff",
+      "ratio": 6.12,
+      "ratioWorst": 5.16,
+      "nText": 250,
+      "nLocal": 1215,
+      "AA": true
+    },
+    {
+      "group": "platform-infra",
+      "theme": "light",
+      "el": "mock",
+      "bg": "#7653cb",
+      "fg": "#ffffff",
+      "ratio": 5.43,
+      "ratioWorst": 4.78,
+      "nText": 1196,
+      "nLocal": 3818,
+      "AA": true
+    },
+    {
+      "group": "platform-infra",
+      "theme": "dark",
+      "el": "reveal",
+      "bg": "#ad9aee",
+      "fg": "#1a1622",
+      "ratio": 7.31,
+      "ratioWorst": 7.31,
+      "nText": 207,
+      "nLocal": 1220,
+      "AA": true
+    },
+    {
+      "group": "platform-infra",
+      "theme": "dark",
+      "el": "mock",
+      "bg": "#353045",
+      "fg": "#ad9aee",
+      "ratio": 5.2,
+      "ratioWorst": 5.2,
+      "nText": 1030,
+      "nLocal": 3864,
+      "AA": true
+    },
+    {
+      "group": "architecture-apis",
+      "theme": "light",
+      "el": "reveal",
+      "bg": "#a53d93",
+      "fg": "#ffffff",
+      "ratio": 5.69,
+      "ratioWorst": 5.21,
+      "nText": 250,
+      "nLocal": 1215,
+      "AA": true
+    },
+    {
+      "group": "architecture-apis",
+      "theme": "light",
+      "el": "mock",
+      "bg": "#a63d94",
+      "fg": "#ffffff",
+      "ratio": 5.65,
+      "ratioWorst": 4.78,
+      "nText": 1196,
+      "nLocal": 3818,
+      "AA": true
+    },
+    {
+      "group": "architecture-apis",
+      "theme": "dark",
+      "el": "reveal",
+      "bg": "#da8dca",
+      "fg": "#1a1622",
+      "ratio": 7.31,
+      "ratioWorst": 7.31,
+      "nText": 207,
+      "nLocal": 1220,
+      "AA": true
+    },
+    {
+      "group": "architecture-apis",
+      "theme": "dark",
+      "el": "mock",
+      "bg": "#3c2e3f",
+      "fg": "#da8dca",
+      "ratio": 5.22,
+      "ratioWorst": 5.22,
+      "nText": 1030,
+      "nLocal": 3864,
+      "AA": true
+    },
+    {
+      "group": "security-tenancy",
+      "theme": "light",
+      "el": "reveal",
+      "bg": "#c53530",
+      "fg": "#ffffff",
+      "ratio": 5.35,
+      "ratioWorst": 5.2,
+      "nText": 247,
+      "nLocal": 1215,
+      "AA": true
+    },
+    {
+      "group": "security-tenancy",
+      "theme": "light",
+      "el": "mock",
+      "bg": "#c53530",
+      "fg": "#ffffff",
+      "ratio": 5.35,
+      "ratioWorst": 4.77,
+      "nText": 1194,
+      "nLocal": 3818,
+      "AA": true
+    },
+    {
+      "group": "security-tenancy",
+      "theme": "dark",
+      "el": "reveal",
+      "bg": "#ec8c81",
+      "fg": "#1a1622",
+      "ratio": 7.31,
+      "ratioWorst": 7.31,
+      "nText": 207,
+      "nLocal": 1220,
+      "AA": true
+    },
+    {
+      "group": "security-tenancy",
+      "theme": "dark",
+      "el": "mock",
+      "bg": "#3f2e34",
+      "fg": "#ec8c81",
+      "ratio": 5.23,
+      "ratioWorst": 5.23,
+      "nText": 1194,
+      "nLocal": 3818,
+      "AA": true
+    }
+  ],
+  "board": [
+    {
+      "group": "messaging-events",
+      "theme": "light",
+      "solid": 11.79,
+      "revisit": 12.59,
+      "left": 12.62,
+      "winner": "left",
+      "correct": false,
+      "margin": -0.8
+    },
+    {
+      "group": "messaging-events",
+      "theme": "dark",
+      "solid": 15.04,
+      "revisit": 16.03,
+      "left": 15.02,
+      "winner": "revisit",
+      "correct": false,
+      "margin": -0.99
+    },
+    {
+      "group": "data-storage",
+      "theme": "light",
+      "solid": 12.36,
+      "revisit": 13.15,
+      "left": 12.3,
+      "winner": "revisit",
+      "correct": false,
+      "margin": -0.79
+    },
+    {
+      "group": "data-storage",
+      "theme": "dark",
+      "solid": 15.5,
+      "revisit": 16.48,
+      "left": 16.48,
+      "winner": "revisit",
+      "correct": false,
+      "margin": -0.98
+    },
+    {
+      "group": "reliability-observability",
+      "theme": "light",
+      "solid": 11.35,
+      "revisit": 12.14,
+      "left": 12.12,
+      "winner": "revisit",
+      "correct": false,
+      "margin": -0.79
+    },
+    {
+      "group": "reliability-observability",
+      "theme": "dark",
+      "solid": 15.16,
+      "revisit": 16.15,
+      "left": 15.63,
+      "winner": "revisit",
+      "correct": false,
+      "margin": -0.99
+    },
+    {
+      "group": "platform-infra",
+      "theme": "light",
+      "solid": 16.79,
+      "revisit": 17.3,
+      "left": 12.19,
+      "winner": "revisit",
+      "correct": false,
+      "margin": -0.51
+    },
+    {
+      "group": "platform-infra",
+      "theme": "dark",
+      "solid": 19.1,
+      "revisit": 20.26,
+      "left": 17.59,
+      "winner": "revisit",
+      "correct": false,
+      "margin": -1.16
+    },
+    {
+      "group": "architecture-apis",
+      "theme": "light",
+      "solid": 11.8,
+      "revisit": 12.57,
+      "left": 11.42,
+      "winner": "revisit",
+      "correct": false,
+      "margin": -0.77
+    },
+    {
+      "group": "architecture-apis",
+      "theme": "dark",
+      "solid": 15.52,
+      "revisit": 16.5,
+      "left": 16.63,
+      "winner": "left",
+      "correct": false,
+      "margin": -0.98
+    },
+    {
+      "group": "security-tenancy",
+      "theme": "light",
+      "solid": 11.54,
+      "revisit": 12.34,
+      "left": 11.85,
+      "winner": "revisit",
+      "correct": false,
+      "margin": -0.8
+    },
+    {
+      "group": "security-tenancy",
+      "theme": "dark",
+      "solid": 15.34,
+      "revisit": 16.33,
+      "left": 16.09,
+      "winner": "revisit",
+      "correct": false,
+      "margin": -0.99
+    }
+  ],
+  "taps": [
+    {
+      "theme": "light",
+      "total": 59,
+      "small": 22,
+      "pass": 37,
+      "worst": [
+        {
+          "tag": "BUTTON",
+          "id": "_focus-toggle",
+          "cls": "",
+          "w": 60,
+          "h": 20
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "cls": "",
+          "w": 55,
+          "h": 43
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "cls": "",
+          "w": 59,
+          "h": 43
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "cls": "",
+          "w": 59,
+          "h": 43
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "cls": "on",
+          "w": 65,
+          "h": 43
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "cls": "on",
+          "w": 65,
+          "h": 43
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "cls": "",
+          "w": 71,
+          "h": 43
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "cls": "",
+          "w": 96,
+          "h": 43
+        },
+        {
+          "tag": "BUTTON",
+          "id": "themetog",
+          "cls": "crambtn",
+          "w": 358,
+          "h": 31
+        },
+        {
+          "tag": "BUTTON",
+          "id": "adv",
+          "cls": "push",
+          "w": 314,
+          "h": 41
+        },
+        {
+          "tag": "BUTTON",
+          "id": "idxopen",
+          "cls": "crambtn",
+          "w": 358,
+          "h": 37
+        },
+        {
+          "tag": "BUTTON",
+          "id": "searchopen",
+          "cls": "crambtn",
+          "w": 358,
+          "h": 37
+        },
+        {
+          "tag": "BUTTON",
+          "id": "copylink",
+          "cls": "crambtn",
+          "w": 358,
+          "h": 37
+        },
+        {
+          "tag": "BUTTON",
+          "id": "starbtn",
+          "cls": "crambtn",
+          "w": 358,
+          "h": 37
+        }
+      ],
+      "overflowX": false
+    },
+    {
+      "theme": "dark",
+      "total": 59,
+      "small": 22,
+      "pass": 37,
+      "worst": [
+        {
+          "tag": "BUTTON",
+          "id": "_focus-toggle",
+          "cls": "",
+          "w": 60,
+          "h": 20
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "cls": "",
+          "w": 55,
+          "h": 43
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "cls": "",
+          "w": 59,
+          "h": 43
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "cls": "",
+          "w": 59,
+          "h": 43
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "cls": "on",
+          "w": 65,
+          "h": 43
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "cls": "on",
+          "w": 65,
+          "h": 43
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "cls": "",
+          "w": 71,
+          "h": 43
+        },
+        {
+          "tag": "BUTTON",
+          "id": "",
+          "cls": "",
+          "w": 96,
+          "h": 43
+        },
+        {
+          "tag": "BUTTON",
+          "id": "themetog",
+          "cls": "crambtn",
+          "w": 358,
+          "h": 31
+        },
+        {
+          "tag": "BUTTON",
+          "id": "adv",
+          "cls": "push",
+          "w": 314,
+          "h": 41
+        },
+        {
+          "tag": "BUTTON",
+          "id": "idxopen",
+          "cls": "crambtn",
+          "w": 358,
+          "h": 37
+        },
+        {
+          "tag": "BUTTON",
+          "id": "searchopen",
+          "cls": "crambtn",
+          "w": 358,
+          "h": 37
+        },
+        {
+          "tag": "BUTTON",
+          "id": "copylink",
+          "cls": "crambtn",
+          "w": 358,
+          "h": 37
+        },
+        {
+          "tag": "BUTTON",
+          "id": "starbtn",
+          "cls": "crambtn",
+          "w": 358,
+          "h": 37
+        }
+      ],
+      "overflowX": false
+    }
+  ],
+  "rm": {
+    "paintedPixels": 369883,
+    "sharePainted": 0.4804,
+    "distinctColours": 4000,
+    "backdrop": "#f5f2eb",
+    "bodyOpacity": "1",
+    "naiveVisibleNodeCount": 250,
+    "RENDERS": true
+  }
+}

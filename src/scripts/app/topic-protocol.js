@@ -81,7 +81,35 @@ function applyIdentity(idn) {
      index.html, so this only has to hold the room across switches. */
   if (idn.group) document.documentElement.setAttribute('data-group', idn.group);
   var LOC_KEYS = { 'messaging-events': 'MSG', 'data-storage': 'DAT', 'reliability-observability': 'REL', 'platform-infra': 'PLT', 'architecture-apis': 'ARC', 'security-tenancy': 'SEC' };
-  var L = q('.locator'); if (L) { var _gl = ''; if (typeof TOPIC_GROUPS !== 'undefined' && idn.group) { for (var _gi = 0; _gi < TOPIC_GROUPS.length; _gi++) { if (TOPIC_GROUPS[_gi].id === idn.group) { _gl = TOPIC_GROUPS[_gi].label; break; } } } var _key = LOC_KEYS[idn.group] || ''; var _kh = _key ? '<span class="loc-key">' + _key + '</span>' : ''; L.innerHTML = _kh + (_gl ? _gl + ' &middot; ' : '') + idn.locatorTail; }
+  /* THE LOCATOR NAMES THE ROOM ONCE. It used to render `ARC | ARCHITECTURE & APIS . ingestion
+     layer` -- a three-letter code immediately followed by the very words it abbreviates. Beyond
+     the stutter, the redundancy cost real space: at 260px the badge WRAPPED TO TWO LINES in the
+     longer rooms (REL / ARC), where before the room pass it was one clean line.
+     The CODE is the one that stays: it is the CVD/greyscale-safe room marker that styles.css
+     added .loc-key for in the first place ("colour alone, across six hues, fails; the letters
+     do not"), and it is a fixed 3 chars in every room, so the badge cannot wrap again. The
+     spelled-out label is not lost -- it moves to the ACCESSIBLE name, which costs zero width:
+     title= for a hover expansion, aria-label= so a screen reader still hears "Architecture &
+     APIs" rather than spelling out three letters. */
+  var L = q('.locator');
+  if (L) {
+    var _gl = '';
+    if (typeof TOPIC_GROUPS !== 'undefined' && idn.group) {
+      for (var _gi = 0; _gi < TOPIC_GROUPS.length; _gi++) {
+        if (TOPIC_GROUPS[_gi].id === idn.group) { _gl = TOPIC_GROUPS[_gi].label; break; }
+      }
+    }
+    var _key = LOC_KEYS[idn.group] || '';
+    var _kh = _key ? '<span class="loc-key">' + _key + '</span>' : '';
+    L.innerHTML = _kh + idn.locatorTail;
+    var _txt = L.textContent || '';
+    var _tail = (_key && _txt.indexOf(_key) === 0) ? _txt.slice(_key.length) : _txt;
+    var _plain = _gl.replace(/&amp;/g, '&');
+    if (_plain) {
+      L.setAttribute('title', _plain);
+      L.setAttribute('aria-label', _plain + ' \u2014 ' + _tail);
+    }
+  }
   var H = q('.hdr h1'); if (H) H.textContent = idn.h1;
   var S = q('.hdr .sub'); if (S) S.innerHTML = idn.sub;
   document.querySelectorAll('.cmp-topic').forEach(function (el) { el.textContent = idn.companionTopic; });

@@ -135,13 +135,21 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
   html[data-group="reliability-observability"]{--topic-ink:#924E00;--topic-solid:#B46100;--topic-wash:#FDF4ED;--topic-edge:#F4CFB4}
   html[data-group="platform-infra"]           {--topic-ink:#694EB0;--topic-solid:#8659EC;--topic-wash:#F6F4FF;--topic-edge:#D8D1F9}
   html[data-group="architecture-apis"]        {--topic-ink:#963D86;--topic-solid:#C53DAF;--topic-wash:#FCF2FA;--topic-edge:#EFCAE6}
-  html[data-group="security-tenancy"]         {--topic-ink:#AA3832;--topic-solid:#E0322E;--topic-wash:#FFF2F1;--topic-edge:#FACAC4}
+  /* security-tenancy was FIRE-ENGINE RED (ink #AA3832 / solid #E0322E, 1.3deg off pure red).
+     Its primary CTA -- "Reveal answer" -- rendered as a saturated red slab, which reads as
+     DESTRUCTIVE: the universal delete/danger signal, on the one button you most want people
+     to press. Retuned to a deep RASPBERRY. The wheel is crowded (teal/blue/orange/violet/
+     magenta are all placed), so the only free arc is magenta->red->orange; this sits at the
+     rose end of it, 19deg clear of pure red. It is not a compromise on either contract:
+     the min hue gap to another room IMPROVES (21.0deg -> 32.8deg, vs reliability in dark),
+     and white-on-solid goes from a knife-edge 4.50 to 5.03. See _audit/.../palette.py. */
+  html[data-group="security-tenancy"]         {--topic-ink:#A73A57;--topic-solid:#C53A66;--topic-wash:#FFF1F5;--topic-edge:#F6C6D4}
   html[data-theme="dark"][data-group="messaging-events"]         {--topic-ink:#13BAAC;--topic-solid:#13BAAC;--topic-wash:#142422;--topic-edge:#24514B}
   html[data-theme="dark"][data-group="data-storage"]             {--topic-ink:#7DA6F3;--topic-solid:#7DA6F3;--topic-wash:#1B212B;--topic-edge:#394863}
   html[data-theme="dark"][data-group="reliability-observability"]{--topic-ink:#E19556;--topic-solid:#E19556;--topic-wash:#291E16;--topic-edge:#5C412C}
   html[data-theme="dark"][data-group="platform-infra"]           {--topic-ink:#AD9AEE;--topic-solid:#AD9AEE;--topic-wash:#211F2A;--topic-edge:#484360}
   html[data-theme="dark"][data-group="architecture-apis"]        {--topic-ink:#DA8DCA;--topic-solid:#DA8DCA;--topic-wash:#271D25;--topic-edge:#593D52}
-  html[data-theme="dark"][data-group="security-tenancy"]         {--topic-ink:#EC8C81;--topic-solid:#EC8C81;--topic-wash:#2A1C1B;--topic-edge:#603D39}
+  html[data-theme="dark"][data-group="security-tenancy"]         {--topic-ink:#EE8CA4;--topic-solid:#EE8CA4;--topic-wash:#2A1B20;--topic-edge:#60383F}
 
   /* --acc BECOMES the room's ink; --acc2 the room's solid; --accbg the wash. */
   html{--acc:var(--topic-ink);--acc2:var(--topic-solid);--accbg:var(--topic-wash);--accink:color-mix(in oklab,var(--topic-ink) 82%,var(--ink))}
@@ -152,8 +160,29 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
 
   /* Flat, static room map -- each room's ink addressable by group id, for
      cross-topic wayfinding (pivot chips, index bands). Does NOT vary by current room. */
-  html{--room-messaging-events:#006B63;--room-data-storage:#315BB4;--room-reliability-observability:#924E00;--room-platform-infra:#694EB0;--room-architecture-apis:#963D86;--room-security-tenancy:#AA3832}
-  html[data-theme="dark"]{--room-messaging-events:#13BAAC;--room-data-storage:#7DA6F3;--room-reliability-observability:#E19556;--room-platform-infra:#AD9AEE;--room-architecture-apis:#DA8DCA;--room-security-tenancy:#EC8C81}
+  html{--room-messaging-events:#006B63;--room-data-storage:#315BB4;--room-reliability-observability:#924E00;--room-platform-infra:#694EB0;--room-architecture-apis:#963D86;--room-security-tenancy:#A73A57}
+  html[data-theme="dark"]{--room-messaging-events:#13BAAC;--room-data-storage:#7DA6F3;--room-reliability-observability:#E19556;--room-platform-infra:#AD9AEE;--room-architecture-apis:#DA8DCA;--room-security-tenancy:#EE8CA4}
+
+  /* ===================== STATUS IS NOT A ROOM =====================
+     A STATUS SIGNAL MUST NOT BE ABLE TO CAMOUFLAGE AGAINST THE ROOM IT SITS IN.
+     The drill scoreboard used --teal for SOLID and --amber for REVISIT. Those are also two
+     of the six room hues, so in the teal room the SOLID tile dissolved into the wallpaper and
+     REVISIT was the only tile that popped -- the board read INVERTED, and a good score pulled
+     your eye straight to the failure count. In the orange room the same thing happened to
+     REVISIT. Measured over all six rooms x both themes, the loudest tile was NEVER Solid: 0/12.
+
+     These tokens are deliberately NOT derived from --acc/--topic-*: they do not move when the
+     room does, which is the entire property that was missing. They are also NOT --teal/--amber,
+     which stay put for their existing non-status uses (.tier.t2, --wb-ok-fg, --fb-t-fg ...) --
+     giving status its own names is what stops the next person re-tinting a verdict by accident.
+     --st-ok is pulled toward a true GREEN (145deg), well clear of the teal room (175deg), so it
+     cannot read as "just the room colour again" even in messaging-events.
+
+     Contrast is solved, not hoped for: --st-ok-on on --st-ok is 6.18:1 (light) and 9.17:1 (dark).
+     But hue is only the BACKUP channel here -- see .pill in drill/logic.js, where the load-bearing
+     signal is FILL-vs-OUTLINE plus a glyph, both of which survive any room tint AND greyscale. */
+  html{--st-ok:#1D6F3F;--st-ok-on:#FFFFFF;--st-warn:#9A5B0B;--st-warn-edge:#D2A059}
+  html[data-theme="dark"]{--st-ok:#5BD08A;--st-ok-on:#1A1622;--st-warn:#E5A24A;--st-warn-edge:#7E5C31}
 
   *{margin:0;padding:0;box-sizing:border-box}
   ::selection{background:var(--acc-a12);color:var(--accink)}
@@ -793,6 +822,76 @@ body.is-hidden,body.is-hidden *,body.is-hidden *::before,body.is-hidden *::after
 .tn-i-tail{font-size:var(--font-size-nano);color:var(--mut2);text-transform:uppercase;letter-spacing:.3px;align-self:start}
 .tn-group{padding:var(--space-10) var(--space-10) var(--space-3) var(--space-11);font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);text-transform:uppercase;letter-spacing:.7px;color:var(--mut2);opacity:.8}
 .tn-menu>.tn-group:first-child{padding-top:var(--space-5)}
+/* ===================== CROSS-GROUP SURFACES ARE ROOMLESS =====================
+   The Topic Index lists all 46 topics across ALL SIX groups; the Cross-topic drill pulls probes
+   from every one of them. Both inherited --acc from <html>, so they wore whichever room happened
+   to be open behind them: reach the index from a security topic and the panel containing all six
+   rooms is raspberry; reach the SAME panel from messaging and it is teal. A surface that spans
+   every room must not advertise one of them -- it misrepresents what it holds, and it makes a
+   global tool look like a local one.
+
+   Fixed by RE-BINDING the room tokens on the container: the same mechanism THE SIX ROOMS uses to
+   stamp a room on <html>, just pointed the other way. All ~25 var(--acc*) rules inside these
+   panels retint for free and not one of them had to be edited.
+
+   THE RUNGS MUST BE RE-DECLARED HERE, NOT INHERITED. A custom property's var()s are substituted
+   AT THE ELEMENT THAT DECLARES IT, so :root's --acc-aNN rungs have ALREADY baked in the ROOM's
+   --acc and will not follow a re-bound --acc on a descendant. Re-bind --acc alone and you get the
+   worst of both: neutral borders with every glow, wash and ring inside them still room-tinted --
+   a half-recoloured overlay. (Asserted at runtime, not assumed: verify.mjs reads --acc-a15 back
+   off .ix-panel with getComputedStyle, in the room whose accent would show if this were wrong.)
+
+   The neutral is the app's BRAND indigo -- already this codebase's roomless default (the bare
+   html{} rule in THE SIX ROOMS, before any data-group is stamped) and the badge colour. It is
+   not one of the six rooms and, the whole point, IT DOES NOT MOVE. The six room hues still appear
+   inside the panel on the per-group bands (--rm), which is exactly where they belong. */
+/* THE FULL SET, not just the two that were reported. A cross-group surface is any surface that
+   ENUMERATES OR ACTS ACROSS ROOMS, and there are four:
+     .ix-panel         the Topic Index          -- 46 topics, all 6 groups
+     .xd-panel         the Cross-topic drill    -- probes drawn from every topic
+     #_search-overlay  Search                   -- indexes every topic in every group
+     .tn-menu          the topic-nav dropdown   -- lists all topics, grouped by room
+   Search and the dropdown had exactly the same bug and were simply not in the report; fixing the
+   two named ones and stopping would have left the defect in place under a different selector.
+   (Search is built with INLINE styles in JS, which does not matter: an inline var(--acc) still
+   resolves against the custom property inherited from this container.)
+   NOT included, deliberately: .tn-trigger / .tn-step / .tn-chev -- the nav bar itself. That control
+   names the CURRENT topic, so wearing the current room is correct there, not a bug. */
+.ix-panel,.xd-panel,#_search-overlay,.tn-menu{
+  --topic-ink:#534AB7;--topic-solid:#534AB7;--topic-wash:#EFEDFA;--topic-edge:#CFC7F0;
+  --acc:var(--topic-ink);--acc2:var(--topic-solid);--accbg:var(--topic-wash);
+  --accink:color-mix(in oklab,var(--topic-ink) 82%,var(--ink));
+  --acc-a02:color-mix(in srgb,var(--acc) 2%,transparent);
+  --acc-a03:color-mix(in srgb,var(--acc) 3%,transparent);
+  --acc-a04:color-mix(in srgb,var(--acc) 4%,transparent);
+  --acc-a06:color-mix(in srgb,var(--acc) 6%,transparent);
+  --acc-a08:color-mix(in srgb,var(--acc) 8%,transparent);
+  --acc-a10:color-mix(in srgb,var(--acc) 10%,transparent);
+  --acc-a12:color-mix(in srgb,var(--acc) 12%,transparent);
+  --acc-a15:color-mix(in srgb,var(--acc) 15%,transparent);
+  --acc-a18:color-mix(in srgb,var(--acc) 18%,transparent);
+  --acc-a20:color-mix(in srgb,var(--acc) 20%,transparent);
+  --acc-a25:color-mix(in srgb,var(--acc) 25%,transparent);
+  --acc-a26:color-mix(in srgb,var(--acc) 26%,transparent);
+  --acc-a30:color-mix(in srgb,var(--acc) 30%,transparent);
+  --acc-a32:color-mix(in srgb,var(--acc) 32%,transparent);
+  --acc-a35:color-mix(in srgb,var(--acc) 35%,transparent);
+  --acc-a40:color-mix(in srgb,var(--acc) 40%,transparent);
+  --acc-a45:color-mix(in srgb,var(--acc) 45%,transparent);
+  --acc-a50:color-mix(in srgb,var(--acc) 50%,transparent);
+  --acc2-a04:color-mix(in srgb,var(--acc2) 4%,transparent);
+  --acc2-a06:color-mix(in srgb,var(--acc2) 6%,transparent);
+  --acc2-a07:color-mix(in srgb,var(--acc2) 7%,transparent);
+  --acc2-a10:color-mix(in srgb,var(--acc2) 10%,transparent);
+  --acc2-a12:color-mix(in srgb,var(--acc2) 12%,transparent);
+  --acc2-a13:color-mix(in srgb,var(--acc2) 13%,transparent);
+}
+/* dark only needs the four inks: --acc and every rung above are declared ON this element and
+   re-substitute against whichever --topic-ink wins the cascade here. */
+html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-theme="dark"] #_search-overlay,html[data-theme="dark"] .tn-menu{
+  --topic-ink:#9D93F0;--topic-solid:#9D93F0;--topic-wash:#24223C;--topic-edge:#3A3552;
+}
+
 /* ---- topic index overlay ---- */
 .ix-ov{position:fixed;inset:0;z-index:var(--z-popup);background:rgba(30,28,24,.45);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:none;align-items:flex-start;justify-content:center;padding:8vh var(--space-16) var(--space-16);opacity:0;transition:opacity var(--duration-base) var(--ease-base)}
 .ix-ov.open{display:flex}
@@ -953,7 +1052,12 @@ body.is-hidden,body.is-hidden *,body.is-hidden *::before,body.is-hidden *::after
 .xd-end-sub{font-size:var(--font-size-small);color:var(--mut2);margin:var(--space-8) 0 var(--space-22)}
 .xd-again{border:1.5px solid var(--acc);background:var(--bg);color:var(--acc);font:var(--font-weight-bold) 13px -apple-system,system-ui,sans-serif;padding:var(--space-12) var(--space-22);border-radius:10px;cursor:pointer;transition:background var(--duration-fast) var(--ease-base)}
 .xd-again:hover{background:var(--accbg)}
-.ix-cross{display:flex;align-items:center;gap:var(--space-12);width:100%;text-align:left;padding:var(--space-13) var(--space-16);margin:0 0 var(--space-12);border:1px solid var(--acc);border-radius:12px;background:linear-gradient(135deg,var(--accbg) 0%,var(--acc-a03) 100%);cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),box-shadow var(--duration-base) var(--ease-base)}
+/* THE CROSS-TOPIC DRILL SHOWS ALL SIX ROOMS, because it draws its probes from all six. The
+   stripe is built from the FLAT --room-* map, which does not vary with the current topic, so
+   this button looks identical from every room in the app -- and now says what it does instead
+   of impersonating whichever topic you happened to come from. */
+.ix-cross{display:flex;align-items:center;gap:var(--space-12);width:100%;text-align:left;padding:var(--space-13) var(--space-16) var(--space-13) var(--space-22);margin:0 0 var(--space-12);border:1px solid var(--acc);border-radius:12px;background:linear-gradient(135deg,var(--accbg) 0%,var(--acc-a03) 100%);cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),box-shadow var(--duration-base) var(--ease-base);position:relative;overflow:hidden}
+.ix-cross::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(180deg,var(--room-messaging-events) 0 16.66%,var(--room-data-storage) 16.66% 33.33%,var(--room-reliability-observability) 33.33% 50%,var(--room-platform-infra) 50% 66.66%,var(--room-architecture-apis) 66.66% 83.33%,var(--room-security-tenancy) 83.33% 100%)}
 .ix-cross:hover{transform:translateY(-1px);box-shadow:0 6px 18px -6px var(--acc-a30)}
 .ix-cross-tx{flex:1}
 .ix-cross-k{display:block;font-size:var(--font-size-small);font-weight:var(--font-weight-heavy);color:var(--ink)}
@@ -1014,3 +1118,25 @@ h1,h2,h3,h4,h5,h6{text-wrap:balance}
    that shows an element must remove the attribute (all of ours does).
    Enforced by test/visual_pane_smoke.mjs: every [hidden] must measure 0. */
 [hidden]{display:none !important}
+
+/* ===================== MOBILE TAP FLOOR (LIGHT DOM) =====================
+   Measured at 390px, shadow-DOM pierced: only 37 of 59 visible interactive elements cleared
+   44x44. The most-tapped rows in the whole app -- Topic index / Search / Copy link / Star --
+   were 358x37, SEVEN PIXELS short of the WCAG floor, and #themetog was 358x31. They are full
+   -width rows: there was never a layout reason for them to be short, they just were.
+
+   THIS BLOCK ONLY REACHES THE LIGHT DOM. The other half of the offenders -- the Study /
+   Mock round / Quick 5 segments, the SDE2/SDE3/Staff level filter, and #adv ("Reveal answer",
+   314x41) -- live inside the drill's SHADOW ROOT, where a rule in this file matches NOTHING.
+   styles.css has shipped dead pane-internal selectors before (the loading shimmer never ran
+   once; the print page-break rules matched zero nodes for the app's whole life). The shadow
+   half of this floor therefore lives in BASE_SHEET (base-styles.js), which all 17 shadow hosts
+   adopt. Both halves are verified by measurement, not by inspection. */
+@media (max-width:919px){
+  button,summary,[role="button"]{min-height:44px}
+  /* the four sidebar rows + the theme toggle: full-width, so height is the only lever */
+  .crambtn{min-height:44px;padding-top:var(--space-12);padding-bottom:var(--space-12)}
+  /* focus-mode.js builds this one in JS. Its inline style no longer pins `display`, so this
+     rule can centre the label in the taller box (an inline style would have won otherwise). */
+  #_focus-toggle{min-height:44px;display:inline-flex;align-items:center;justify-content:center}
+}

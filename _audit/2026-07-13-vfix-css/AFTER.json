@@ -1,0 +1,443 @@
+{
+  "label": "AFTER",
+  "dist": "D:/claude-workspace/_worktrees/deepdive-rehearsal/vfix-css/dist/index.html",
+  "cta": [
+    {
+      "group": "messaging-events",
+      "theme": "light",
+      "el": "reveal",
+      "bg": "#00746b",
+      "fg": "#ffffff",
+      "ratio": 5.66,
+      "ratioWorst": 5.23,
+      "nText": 238,
+      "nLocal": 1215,
+      "AA": true
+    },
+    {
+      "group": "messaging-events",
+      "theme": "light",
+      "el": "mock",
+      "bg": "#00746b",
+      "fg": "#ffffff",
+      "ratio": 5.66,
+      "ratioWorst": 4.77,
+      "nText": 1154,
+      "nLocal": 3822,
+      "AA": true
+    },
+    {
+      "group": "messaging-events",
+      "theme": "dark",
+      "el": "reveal",
+      "bg": "#13baac",
+      "fg": "#1a1622",
+      "ratio": 7.32,
+      "ratioWorst": 7.32,
+      "nText": 207,
+      "nLocal": 1220,
+      "AA": true
+    },
+    {
+      "group": "messaging-events",
+      "theme": "dark",
+      "el": "mock",
+      "bg": "#1c353b",
+      "fg": "#13baac",
+      "ratio": 5.33,
+      "ratioWorst": 5.33,
+      "nText": 1194,
+      "nLocal": 3818,
+      "AA": true
+    },
+    {
+      "group": "data-storage",
+      "theme": "light",
+      "el": "reveal",
+      "bg": "#316be9",
+      "fg": "#ffffff",
+      "ratio": 4.76,
+      "ratioWorst": 5.22,
+      "nText": 247,
+      "nLocal": 1215,
+      "AA": true
+    },
+    {
+      "group": "data-storage",
+      "theme": "light",
+      "el": "mock",
+      "bg": "#3162cb",
+      "fg": "#ffffff",
+      "ratio": 5.61,
+      "ratioWorst": 4.77,
+      "nText": 1195,
+      "nLocal": 3818,
+      "AA": true
+    },
+    {
+      "group": "data-storage",
+      "theme": "dark",
+      "el": "reveal",
+      "bg": "#7da6f3",
+      "fg": "#1a1622",
+      "ratio": 7.29,
+      "ratioWorst": 7.29,
+      "nText": 207,
+      "nLocal": 1220,
+      "AA": true
+    },
+    {
+      "group": "data-storage",
+      "theme": "dark",
+      "el": "mock",
+      "bg": "#2d3246",
+      "fg": "#7da6f3",
+      "ratio": 5.2,
+      "ratioWorst": 5.2,
+      "nText": 1193,
+      "nLocal": 3808,
+      "AA": true
+    },
+    {
+      "group": "reliability-observability",
+      "theme": "light",
+      "el": "reveal",
+      "bg": "#ab5c00",
+      "fg": "#ffffff",
+      "ratio": 4.93,
+      "ratioWorst": 5.18,
+      "nText": 247,
+      "nLocal": 1215,
+      "AA": true
+    },
+    {
+      "group": "reliability-observability",
+      "theme": "light",
+      "el": "mock",
+      "bg": "#ab5c00",
+      "fg": "#ffffff",
+      "ratio": 4.93,
+      "ratioWorst": 4.77,
+      "nText": 1182,
+      "nLocal": 3808,
+      "AA": true
+    },
+    {
+      "group": "reliability-observability",
+      "theme": "dark",
+      "el": "reveal",
+      "bg": "#e19556",
+      "fg": "#1a1622",
+      "ratio": 7.31,
+      "ratioWorst": 7.31,
+      "nText": 207,
+      "nLocal": 1220,
+      "AA": true
+    },
+    {
+      "group": "reliability-observability",
+      "theme": "dark",
+      "el": "mock",
+      "bg": "#3d2f2d",
+      "fg": "#e19556",
+      "ratio": 5.26,
+      "ratioWorst": 5.26,
+      "nText": 1195,
+      "nLocal": 3818,
+      "AA": true
+    },
+    {
+      "group": "platform-infra",
+      "theme": "light",
+      "el": "reveal",
+      "bg": "#6c4fb6",
+      "fg": "#ffffff",
+      "ratio": 6.12,
+      "ratioWorst": 5.16,
+      "nText": 250,
+      "nLocal": 1215,
+      "AA": true
+    },
+    {
+      "group": "platform-infra",
+      "theme": "light",
+      "el": "mock",
+      "bg": "#7151c1",
+      "fg": "#ffffff",
+      "ratio": 5.75,
+      "ratioWorst": 4.78,
+      "nText": 1196,
+      "nLocal": 3818,
+      "AA": true
+    },
+    {
+      "group": "platform-infra",
+      "theme": "dark",
+      "el": "reveal",
+      "bg": "#ad9aee",
+      "fg": "#1a1622",
+      "ratio": 7.31,
+      "ratioWorst": 7.31,
+      "nText": 207,
+      "nLocal": 1220,
+      "AA": true
+    },
+    {
+      "group": "platform-infra",
+      "theme": "dark",
+      "el": "mock",
+      "bg": "#353045",
+      "fg": "#ad9aee",
+      "ratio": 5.2,
+      "ratioWorst": 5.2,
+      "nText": 1030,
+      "nLocal": 3864,
+      "AA": true
+    },
+    {
+      "group": "architecture-apis",
+      "theme": "light",
+      "el": "reveal",
+      "bg": "#a53d93",
+      "fg": "#ffffff",
+      "ratio": 5.69,
+      "ratioWorst": 5.21,
+      "nText": 250,
+      "nLocal": 1215,
+      "AA": true
+    },
+    {
+      "group": "architecture-apis",
+      "theme": "light",
+      "el": "mock",
+      "bg": "#a63d94",
+      "fg": "#ffffff",
+      "ratio": 5.65,
+      "ratioWorst": 4.78,
+      "nText": 1196,
+      "nLocal": 3818,
+      "AA": true
+    },
+    {
+      "group": "architecture-apis",
+      "theme": "dark",
+      "el": "reveal",
+      "bg": "#da8dca",
+      "fg": "#1a1622",
+      "ratio": 7.31,
+      "ratioWorst": 7.31,
+      "nText": 207,
+      "nLocal": 1220,
+      "AA": true
+    },
+    {
+      "group": "architecture-apis",
+      "theme": "dark",
+      "el": "mock",
+      "bg": "#3c2e3f",
+      "fg": "#da8dca",
+      "ratio": 5.22,
+      "ratioWorst": 5.22,
+      "nText": 1030,
+      "nLocal": 3864,
+      "AA": true
+    },
+    {
+      "group": "security-tenancy",
+      "theme": "light",
+      "el": "reveal",
+      "bg": "#af3a5b",
+      "fg": "#ffffff",
+      "ratio": 5.87,
+      "ratioWorst": 5.47,
+      "nText": 247,
+      "nLocal": 1215,
+      "AA": true
+    },
+    {
+      "group": "security-tenancy",
+      "theme": "light",
+      "el": "mock",
+      "bg": "#b13a5c",
+      "fg": "#ffffff",
+      "ratio": 5.79,
+      "ratioWorst": 5.22,
+      "nText": 1195,
+      "nLocal": 3818,
+      "AA": true
+    },
+    {
+      "group": "security-tenancy",
+      "theme": "dark",
+      "el": "reveal",
+      "bg": "#ee8ca4",
+      "fg": "#1a1622",
+      "ratio": 7.55,
+      "ratioWorst": 7.55,
+      "nText": 207,
+      "nLocal": 1220,
+      "AA": true
+    },
+    {
+      "group": "security-tenancy",
+      "theme": "dark",
+      "el": "mock",
+      "bg": "#3f2e39",
+      "fg": "#ee8ca4",
+      "ratio": 5.37,
+      "ratioWorst": 5.37,
+      "nText": 1030,
+      "nLocal": 3864,
+      "AA": true
+    }
+  ],
+  "board": [
+    {
+      "group": "messaging-events",
+      "theme": "light",
+      "solid": 306.03,
+      "revisit": 22.45,
+      "left": 23.4,
+      "winner": "solid",
+      "correct": true,
+      "margin": 283.58
+    },
+    {
+      "group": "messaging-events",
+      "theme": "dark",
+      "solid": 227.24,
+      "revisit": 22.56,
+      "left": 24.6,
+      "winner": "solid",
+      "correct": true,
+      "margin": 204.68
+    },
+    {
+      "group": "data-storage",
+      "theme": "light",
+      "solid": 306.03,
+      "revisit": 22.45,
+      "left": 23.4,
+      "winner": "solid",
+      "correct": true,
+      "margin": 283.58
+    },
+    {
+      "group": "data-storage",
+      "theme": "dark",
+      "solid": 227.24,
+      "revisit": 22.56,
+      "left": 24.6,
+      "winner": "solid",
+      "correct": true,
+      "margin": 204.68
+    },
+    {
+      "group": "reliability-observability",
+      "theme": "light",
+      "solid": 306.03,
+      "revisit": 22.45,
+      "left": 23.4,
+      "winner": "solid",
+      "correct": true,
+      "margin": 283.58
+    },
+    {
+      "group": "reliability-observability",
+      "theme": "dark",
+      "solid": 227.24,
+      "revisit": 22.56,
+      "left": 24.6,
+      "winner": "solid",
+      "correct": true,
+      "margin": 204.68
+    },
+    {
+      "group": "platform-infra",
+      "theme": "light",
+      "solid": 305.74,
+      "revisit": 24.81,
+      "left": 23.63,
+      "winner": "solid",
+      "correct": true,
+      "margin": 280.93
+    },
+    {
+      "group": "platform-infra",
+      "theme": "dark",
+      "solid": 227.02,
+      "revisit": 24.22,
+      "left": 25.32,
+      "winner": "solid",
+      "correct": true,
+      "margin": 202.8
+    },
+    {
+      "group": "architecture-apis",
+      "theme": "light",
+      "solid": 306.03,
+      "revisit": 22.45,
+      "left": 23.4,
+      "winner": "solid",
+      "correct": true,
+      "margin": 283.58
+    },
+    {
+      "group": "architecture-apis",
+      "theme": "dark",
+      "solid": 227.24,
+      "revisit": 22.56,
+      "left": 24.6,
+      "winner": "solid",
+      "correct": true,
+      "margin": 204.68
+    },
+    {
+      "group": "security-tenancy",
+      "theme": "light",
+      "solid": 306.03,
+      "revisit": 22.45,
+      "left": 23.4,
+      "winner": "solid",
+      "correct": true,
+      "margin": 283.58
+    },
+    {
+      "group": "security-tenancy",
+      "theme": "dark",
+      "solid": 227.24,
+      "revisit": 22.56,
+      "left": 24.6,
+      "winner": "solid",
+      "correct": true,
+      "margin": 204.68
+    }
+  ],
+  "taps": [
+    {
+      "theme": "light",
+      "total": 59,
+      "small": 0,
+      "pass": 59,
+      "worst": [],
+      "overflowX": false
+    },
+    {
+      "theme": "dark",
+      "total": 59,
+      "small": 0,
+      "pass": 59,
+      "worst": [],
+      "overflowX": false
+    }
+  ],
+  "rm": {
+    "paintedPixels": 365662,
+    "sharePainted": 0.4749,
+    "distinctColours": 4000,
+    "backdrop": "#f5f2eb",
+    "bodyOpacity": "1",
+    "naiveVisibleNodeCount": 250,
+    "RENDERS": true
+  }
+}

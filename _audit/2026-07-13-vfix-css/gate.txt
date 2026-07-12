@@ -1,0 +1,36 @@
+
+> deepdive-content-pipeline-rehearsal@1.0.0 gate
+> python3 test/check_all.py
+
+================================================================
+  ascii_guard               PASS  ASCII GUARD: PASS  (every src/ .js/.css/.html file is 7-bit ASCII)
+  syntax_check              PASS  SYNTAX CHECK: PASS  (610 modules parse; 52 aggregator files skipped)
+  global_collisions         PASS  GLOBAL COLLISIONS: PASS  (642 top-level globals, each declared in exactly one module)
+  build_integrity           PASS  BUILD INTEGRITY: PASS  (11456049 bytes, 0 unresolved, matches committed, 9 panes + 7 overlays)
+  css_syntax                PASS    PASS All checks passed (17 keyframes validated)
+  room_static               PASS  ROOM STATIC: PASS  (codemod=0, styles.css infinite=0, 6 room blocks + rebind, boot stamped)
+  room_contrast             PASS  ROOM CONTRAST: PASS  (12 rooms x ink/bg + white/solid, all >= 4.5)
+  file_integrity            PASS  PASS All 61 files passed integrity check
+  unit_tests                PASS    Results: 55 passed, 0 failed
+  sim_invariants            PASS  SIM INVARIANTS: ALL PASS
+  visual_pane_smoke         PASS  VISUAL PIPELINE SMOKE: ALL PASS
+  visual_regression         PASS    Results: 34 passed, 0 failed
+  compiler_conservation     PASS  CONSERVATION: PASS -- every authored item survives compilation intact.
+  compiler_doc_examples     PASS  DOC EXAMPLES: PASS -- every worked example in the spec survives the parser intact.
+  compiler_md               PASS  Markdown-parser data-equivalence vs the hand-coded spec: 54 pass, 0 fail
+  compiler_emit_serializer  PASS  That is prove_conservation.mjs / prove_doc_examples.mjs, which have an INDEPENDENT reference.
+  compiler_legacy_topic     PASS    This says NOTHING about the compiler that ships. See prove_conservation.mjs.
+  compiler_prose            PASS  Layer B prose reproduction: 3/3 byte-identical
+  compiler_flow             PASS  Layer C flow reproduction: 3/3 byte-identical
+  compiler_code             PASS  Layer C code reproduction: 3/3 byte-identical
+  render                    PASS  RENDER TEST: PASS
+  entity_leak               PASS  ENTITY LEAK: PASS  (no HTML entity reaches visible text; 3/3 overlay bodies opened + inspected)
+  room_browser              PASS  ROOM BROWSER: PASS  (data-group + --topic-ink + --acc rebind at boot; reduced-motion renders in both themes)
+  e2e_interactions          PASS  E2E INTERACTIONS: PASS
+  progress_merge            PASS  PROGRESS MERGE: PASS
+  card_identity             PASS  CARD IDENTITY: PASS
+  topic_contract            PASS  TOPIC CONTRACT: PASS  (46 topics: population, parity, tiers, cards conform; 11 allowlisted shortfalls)
+  cram_scope_distinct       PASS  CRAM/SCOPE DISTINCT: PASS  (46 topics: 46/46 distinct cram bodies, 46/46 distinct scope bodies; shortest 2950 chars)
+  rail_integrity            PASS  rail_integrity: PASS -- 414 combos, 0 leaks, 0 empty boxes, all 414 authored notes render
+================================================================
+GATE: PASS

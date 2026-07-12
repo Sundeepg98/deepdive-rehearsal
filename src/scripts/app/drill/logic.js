@@ -47,15 +47,63 @@ var DRILL_STYLE = `@keyframes pop{from{opacity:0;transform:translateY(7px) scale
 .dbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--acc),var(--acc2) 60%,#8B7FE8);transition:width var(--duration-slow) var(--ease-glide);position:relative;overflow:hidden;border-radius:7px}
 /* .dbar i::after barShimmer (infinite) deleted -- a progress bar that shimmers when
    nothing is loading is lying. The fill width IS the progress. */
+/* ===================== THE SCOREBOARD: STATUS OFF THE HUE CHANNEL =====================
+   WAS: .pill.g{border-color:var(--teal)} / .pill.s{border-color:var(--amber)}, on a tile whose
+   own background was var(--acc-a02) -- the ROOM's wash. Green and amber are ALSO two of the six
+   room hues, so the status tiles were painted in the same palette as the wallpaper behind them.
+   In messaging-events (teal) the SOLID tile dissolved and REVISIT was the only tile that popped;
+   in reliability-observability (orange) REVISIT dissolved instead. Pixel-measured salience across
+   all six rooms x both themes at a GOOD score (5 solid / 1 revisit): the loudest tile was Solid
+   in 0 of 12. The board did not merely look off -- it read INVERTED. You glanced at a good score
+   and your eye was pulled to the failure count.
+
+   Re-picking the two colliding room hues would only MOVE the collision: it would still leave the
+   verdict encoded in hue alone, which (a) re-breaks the moment a seventh room or a palette tweak
+   lands, and (b) is invisible to red-green colour blindness regardless of room -- green-vs-amber
+   is THE classic confusion pair, and this scoreboard is the only feedback the drill gives you.
+   styles.css already made exactly this argument once, for .loc-key: "colour alone, across six
+   hues, fails; the letters do not." Status is a higher-stakes signal than room identity.
+
+   So the verdict now rides on channels a room tint CANNOT reach:
+     FILL vs OUTLINE  the load-bearing one. SOLID is the ONLY tile that ever fills. A filled slab
+                      beats an outline against ANY wallpaper because that is an area+luminance
+                      contrast, not a hue contrast -- it holds in all six rooms and in greyscale.
+     A GLYPH          check / recycle, the same vocabulary as the judge buttons and the revisit
+                      drill button below. Survives greyscale and every flavour of CVD.
+     HUE              KEPT, but demoted to redundant reinforcement, and pinned to the --st-*
+                      status tokens, which no room can move.
+
+   And the pop TRACKS THE SCORE. .pill.g fills only when Solid > 0 -- renderD() already toggles
+   .z on a zero count, so :not(.z) IS "you have banked something", with no new state to keep in
+   sync. A statically-loud SOLID tile would be its own bug: it would celebrate 0/21.
+   REVISIT NEVER FILLS. A failure count must not be the loudest object on the board; the revset
+   bar directly below already carries the "go drill your flagged pile" call to action. */
 .score{display:flex;gap:var(--space-9);margin-bottom:var(--space-14)}
-.pill{flex:1;text-align:center;border:1px solid var(--bd);border-radius:12px;padding:var(--space-10);background:linear-gradient(135deg,var(--card) 0%,var(--acc-a02) 100%);transition:box-shadow var(--duration-moderate) var(--ease-base),transform var(--duration-base) var(--ease-base),border-color var(--duration-base) var(--ease-base)}
-.pill:hover{box-shadow:0 4px 16px -4px var(--acc-a15);transform:translateY(-2px);border-color:var(--acc-a15)}
-.pill .v{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:24px;font-weight:var(--font-weight-heavy);line-height:var(--line-height-none)}
+.pill{flex:1;text-align:center;border:1.5px solid var(--bd);border-radius:12px;padding:var(--space-10);background:var(--card);transition:box-shadow var(--duration-moderate) var(--ease-base),transform var(--duration-base) var(--ease-base),border-color var(--duration-base) var(--ease-base)}
+.pill:hover{box-shadow:0 4px 16px -4px var(--acc-a15);transform:translateY(-2px)}
+.pill .v{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:24px;font-weight:var(--font-weight-heavy);line-height:var(--line-height-none);color:var(--ink)}
 /* .pill:hover .v scale deleted -- a scoreboard figure must not jump when you point at it. */
-.pill .l{font-size:var(--font-size-nano);font-weight:var(--font-weight-bold);text-transform:uppercase;letter-spacing:.5px;color:var(--mut2);margin-top:var(--space-4)}
-.pill.g .v{color:var(--teal)} .pill.s .v{color:var(--amber)} .pill.left .v{color:var(--acc)}
-.pill.g{border-color:var(--teal)} .pill.s{border-color:var(--amber)}
-.pill.z .v{color:var(--mut)} .pill.z{opacity:.7}
+.pill .l{display:flex;align-items:center;justify-content:center;gap:var(--space-5);font-size:var(--font-size-nano);font-weight:var(--font-weight-bold);text-transform:uppercase;letter-spacing:.5px;color:var(--mut2);margin-top:var(--space-4)}
+.pill .l::before{font-family:var(--mono);font-weight:var(--font-weight-black);line-height:1}
+/* NOTE THE DOUBLE BACKSLASH. DRILL_STYLE is a JS TEMPLATE LITERAL, so a lone \\2713 is read by
+   the JS parser as an octal escape, not by CSS as a codepoint -- and octal escapes are ILLEGAL
+   in template literals. Writing content:"\\2713" single-slashed threw a SyntaxError at parse
+   time, which meant customElements.define('deep-drill') never ran and the ENTIRE DRILL PANE
+   silently failed to upgrade: no shadow root, no scoreboard, no probes. The build still went
+   green (a bundler does not execute it) and the pane just... was not there. Escape the slash. */
+.pill.g .l::before{content:"\\2713"}   /* check   -- as on the Solid judge button */
+.pill.s .l::before{content:"\\21BB"}   /* recycle -- as on the "Drill my flagged probes" button */
+/* SOLID, banked. The one tile that fills -- and only when there is something to celebrate. */
+.pill.g:not(.z){background:var(--st-ok);border-color:var(--st-ok);box-shadow:0 5px 16px -7px var(--st-ok)}
+.pill.g:not(.z) .v,.pill.g:not(.z) .l{color:var(--st-ok-on)}
+/* REVISIT. Ink and a glyph; never a fill. Information, not an alarm. */
+.pill.s:not(.z){border-color:var(--st-warn-edge)}
+.pill.s:not(.z) .v{color:var(--st-warn)}
+/* LEFT is a REMAINDER, not a status. It wore var(--acc) -- the room accent -- which is why in
+   half the rooms the tile that popped loudest was the one counting what you had not done yet. */
+.pill.left .v{color:var(--ink)}
+.pill.z{opacity:.62}
+.pill.z .v{color:var(--mut)}
 .revset{display:flex;align-items:center;gap:var(--space-11);flex-wrap:wrap;margin:var(--space-2) 0 var(--space-18)}
 .revset-b{font:var(--font-weight-semibold) 13px -apple-system,system-ui,sans-serif;color:var(--accink);background:var(--accbg);border:1px solid var(--acc);border-radius:8px;padding:var(--space-7) var(--space-13);cursor:pointer;transition:background var(--duration-fast),color var(--duration-fast),transform var(--duration-instant);display:inline-flex;align-items:center;gap:var(--space-6)}
 .revset-b:hover{background:var(--acc);color:var(--bg)}

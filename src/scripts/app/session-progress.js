@@ -16,15 +16,26 @@ function closeSession() {
   document.body.style.overflow = '';
 }
 /* Reset every tracked surface to a clean slate: drill (back to study mode),
-   whiteboard cues, mock-run records, and mixed-fire state. */
+   whiteboard cues, mock-run records, and mixed-fire state.
+   It must clear what the PANEL READS, or the button is a lie. The panel's drill and
+   whiteboard figures come from this topic's canonical record (see sessStats), so resetting
+   only the live components would re-render the very same numbers and "Clear this session"
+   would visibly do nothing. Progress.clear(id) drops the topic's drill record, its whiteboard
+   record and its ad-hoc shaky marks -- and ONLY this topic's, matching the panel's scope
+   (Progress.clearAll would wipe the other 45 topics the panel never claimed to report on).
+   The mixed-fire log is PERSISTED, so it has to be cleared in the store too, not just in
+   memory -- blanking the variable alone let a reload restore everything it had just wiped. */
 function drillEl() { return document.querySelector('#drill deep-drill'); }
 function clearSession() {
   const d = drillEl(); if (d) d.reset();
   const wb = wbEl();
   if (wb) wb.resetAll();
-  mockLastScore = null; mockLastOutOf = null; mockLastTime = null; mockRuns = 0;
+  const id = sessTopicId();
+  try { if (id && typeof Progress !== 'undefined' && Progress.clear) Progress.clear(id); } catch (e) {}
+  mockLastScore = null; mockLastOutOf = null; mockLastTime = null; mockRuns = 0; mockLastInt = 0;
   try { if (typeof Store !== 'undefined' && Store.remove) Store.remove('mock.last'); } catch (e) {}
   mixLog = []; mxRes = []; mxGot = 0; mxShk = 0;
+  try { if (typeof mixPersist === 'function') mixPersist(); } catch (e) {}
 }
 /* Pick the single most useful "do this next" recommendation, in priority order:
    flagged revisits and missed whiteboard steps first, then a weak mock, then any
@@ -48,24 +59,61 @@ function pickRec(revisit, missed, mScore, dDone, dTot, wbDone, mRuns, mixWeak, m
   if(mixWeak&&mixWeak.length)return {kicker:'Sharpen',text:'You fumbled <b>'+mixWeak.length+'</b> item'+(mixWeak.length===1?'':'s')+' in mixed fire \u2014 register-switching is where rounds slip. Re-run a mixed set and clear them.',btn:'Run mixed fire \u2192',tab:'__mix__',bd:'#cfc7f0',bg:'var(--accbg)',ink:'var(--accink)'};
   return {kicker:'You\u2019re ready',text:'Solid across the drill, the whiteboard, and a timed run. Keep it sharp \u2014 run it again faster, or under interruption.',btn:null,tab:null,bd:'#bfe0d3',bg:'var(--tealbg)',ink:'var(--teal)'};
 }
-/* Gather a full snapshot of progress across all four surfaces (drill,
-   whiteboard, mock, mixed fire) into one flat stats object. */
+/* The topic the panel is reporting on. Every per-topic figure below is keyed to it. */
+function sessTopicId() {
+  try { return (typeof TopicRegistry !== 'undefined' && TopicRegistry.current()) ? TopicRegistry.current().id : null; } catch (e) { return null; }
+}
+/* Gather a full snapshot of progress across all four surfaces (drill, whiteboard, mock,
+   mixed fire) into one flat stats object.
+
+   CANONICAL RECORD, NOT THE LIVE BOARD -- the panel LIED after a reload without this.
+   getStats() on the drill / whiteboard describes their CURRENT WORKING SET, and a page load
+   starts both blank. So on a topic whose persisted record said done = 22/22, the panel
+   announced "Not started -- 0 of 22 graded" and then recommended "Back to the drill ->" at a
+   user who had finished it. Same live-vs-record conflation that used to TRUNCATE the stored
+   record before Progress.snapshot() learned to MERGE (see progress.js) -- contained there,
+   still misreported here.
+
+   What the panel reports is unchanged: this topic's rehearsal record across four surfaces.
+   It now reads all four from the same place. Mock and mixed fire ALREADY did -- mock.last and
+   mix.log are restored from Store on load -- so drill and whiteboard were the only two
+   surfaces answering a different question from the other two. Progress.snapshot() merges every
+   grade into the record the instant it is made, so the record is never staler than the board:
+   the panel reads identically DURING a session and, unlike before, still tells the truth after
+   a reload.
+
+   The live components remain the source for the two things only they know:
+     - the FULL bank size (the denominator) before anything has been graded, and
+     - each whiteboard step's CUE TEXT -- the record stores grades by step index, not prose.
+   Note dTot is the WHOLE topic's bank, never `cards.length`: Quick 5, a tier filter and every
+   re-drill shrink the live working set, and "0 of 22 graded" was always a claim about the
+   topic, not about whatever subset happened to be on screen. */
 function sessStats() {
-  const ds = drillEl() ? drillEl().getStats() : { dTot: 0, dDone: 0, dGot: 0, dShk: 0, revisit: [] };
-  const dTot = ds.dTot, dDone = ds.dDone, dGot = ds.dGot, dShk = ds.dShk, dLeft = dTot - dDone;
-  const revisit = ds.revisit;
-  const wbStats = wbEl() ? wbEl().getStats() : { total: 0, items: [] };
+  const id = sessTopicId();
+  const dLive = drillEl() ? drillEl().getStats() : null;
+  const dRec = (id && typeof Progress !== 'undefined') ? Progress.get(id) : null;
+  const dTot = (dLive && dLive.bankTot) ? dLive.bankTot : (dRec ? dRec.tot : 0);
+  const dDone = dRec ? dRec.done : 0, dGot = dRec ? dRec.got : 0, dShk = dRec ? dRec.shk : 0;
+  const revisit = (dRec && dRec.revisit) ? dRec.revisit : [];
+  const dLeft = dTot - dDone;
+
+  const wLive = wbEl() ? wbEl().getStats() : null;
+  const items = (wLive && wLive.items) ? wLive.items : [];
+  const wbTot = wLive ? wLive.total : 0;
+  /* grades: the persisted record (survives the reload). cue text: the live board. */
+  const steps = (id && typeof Progress !== 'undefined' && Progress.wbSteps) ? Progress.wbSteps(id, wbTot) : null;
   let wbGot = 0, wbMiss = 0;
   const missed = [];
-  for (let i = 0; i < wbStats.items.length; i++) {
-    if (wbStats.items[i].got) wbGot++;
-    else if (wbStats.items[i].missed) {
+  for (let i = 0; i < wbTot; i++) {
+    const lv = steps ? steps[i] : (items[i] && items[i].got ? 1 : (items[i] && items[i].missed ? 2 : 0));
+    if (lv === 1) wbGot++;
+    else if (lv === 2) {
       wbMiss++;
-      const cue = wbStats.items[i].cue || ('Step ' + (i + 1));
+      const cue = (items[i] && items[i].cue) || ('Step ' + (i + 1));
       missed.push(cue.split('&mdash;')[0].replace(/[.\s]+$/, ''));
     }
   }
-  const wbTot = wbStats.total, wbDone = wbGot + wbMiss;
+  const wbDone = wbGot + wbMiss;
   const mixTot = mixLog.length;
   let mixGot = 0;
   const mixLatest = {};
@@ -73,6 +121,22 @@ function sessStats() {
   const mixShk = mixTot - mixGot, mixWeak = [];
   for (let label in mixLatest) { if (mixLatest[label] === false) mixWeak.push(label); }
   return { dTot: dTot, dDone: dDone, dGot: dGot, dShk: dShk, dLeft: dLeft, revisit: revisit, wbGot: wbGot, wbMiss: wbMiss, missed: missed, wbTot: wbTot, wbDone: wbDone, mScore: mockLastScore, mOut: mockLastOutOf, mTime: mockLastTime, mRuns: mockRuns, mInt: mockLastInt, mixTot: mixTot, mixGot: mixGot, mixShk: mixShk, mixWeak: mixWeak };
+}
+/* "Has anything happened on THIS page-load?" -- deliberately a LIVE question, and the one
+   thing here that must NOT read the canonical record. The trend keeps ONE point per active
+   page-load; the record is CUMULATIVE, so asking it "is this session active?" would answer
+   yes on a bare reload of an already-drilled topic and append a fresh, identical point on
+   every visit. This is the same expression the trend gate always used -- live drill + live
+   whiteboard, plus the mock/mixed counters, which only grow within a load -- so the gate's
+   behaviour is unchanged even though the numbers it guards are now canonical. */
+function sessLiveActivity() {
+  const d = drillEl(), w = wbEl();
+  let n = d ? d.getStats().dDone : 0;
+  if (w) {
+    const items = w.getStats().items;
+    for (let i = 0; i < items.length; i++) { if (items[i].got || items[i].missed) n++; }
+  }
+  return n + mockRuns + mixLog.length;
 }
 /* Build the printable HTML report (used by Save-as-PDF): a header with the
    timestamp, the recommendation, and a section per surface with its stats. */
@@ -120,8 +184,7 @@ var TREND_KEY = 'trend.hist', TREND_CAP = 30, _mySessIdx = -1;
 function trendLoad() { try { var v = Store.get(TREND_KEY); var a = v ? JSON.parse(v) : []; return Array.isArray(a) ? a : []; } catch (e) { return []; } }
 function trendSave(a) { try { Store.set(TREND_KEY, JSON.stringify(a)); } catch (e) {} }
 function trendCapture() {
-  var st = sessStats();
-  if ((st.dDone + st.wbDone + st.mRuns + st.mixTot) <= 0) return;   // nothing happened this session
+  if (sessLiveActivity() <= 0) return;   // nothing happened this session
   var code = encodeSession(), hist = trendLoad();
   if (_mySessIdx >= 0 && _mySessIdx < hist.length) { hist[_mySessIdx] = code; }
   else { hist.push(code); _mySessIdx = hist.length - 1; }
@@ -179,7 +242,7 @@ function renderCompare() {
   const pasteEl = sessRoot.getElementById('sspaste'), outEl = sessRoot.getElementById('sscmpout');
   if (!pasteEl || !outEl) return;
   const stats = sessStats();
-  const liveActive = (stats.dDone + stats.wbDone + stats.mRuns + stats.mixTot) > 0;
+  const liveActive = sessLiveActivity() > 0;
   const pasted = parseCodes(pasteEl.value);
   var series;
   if (pasted.length) {
@@ -268,13 +331,27 @@ function renderSession() {
   sessbody.innerHTML = html;
 
   /* "do this next" button: close, then jump to the relevant tab/overlay (and
-     pre-load the weak-spot drill or whiteboard reset where the rec asks for it). */
+     pre-load the weak-spot drill or whiteboard reset where the rec asks for it).
+     The recommendation is computed from the CANONICAL record, so its ACTION has to act on the
+     same record -- otherwise the panel promises a re-drill of the probes it just listed and
+     hands over an empty one. dr.weak() alone reads the drill's live results, which a reload
+     empties; the panel can now legitimately recommend a re-drill on a freshly loaded page (that
+     is the whole point of reading the record), so it passes the record's own weak bank indices.
+     Falls back to the live run when there is no record to read. */
   const go = sessRoot.getElementById('ssgo');
   if (go) go.onclick = function () {
     closeSession();
     if (rec.tab === '__mock__') { openMock(); return; }
     if (rec.tab === '__mix__') { openMix(); return; }
-    if (rec.tab) { switchTab(rec.tab); if (rec.weak) { const dr = drillEl(); if (dr) dr.weak(); } else if (rec.wbreset) { const w = wbEl(); if (w) w.rerunMissed(); } }
+    if (rec.tab) {
+      switchTab(rec.tab);
+      if (rec.weak) {
+        const dr = drillEl();
+        let widx = [];
+        try { if (typeof Progress !== 'undefined' && Progress.weakIdx) widx = Progress.weakIdx(sessTopicId()); } catch (e) {}
+        if (dr) dr.weak(widx);
+      } else if (rec.wbreset) { const w = wbEl(); if (w) w.rerunMissed(); }
+    }
   };
   /* Clear is two-tap (arm, then confirm) so progress can't be wiped by accident. */
   const clr = sessRoot.getElementById('ssclear');

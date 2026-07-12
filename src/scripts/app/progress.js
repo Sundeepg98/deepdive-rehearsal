@@ -271,6 +271,17 @@ var Progress = (function () {
   }
   function wbGet(id) { return Store.get(wbkey(id), null); }
   function clearWb(id) { Store.remove(wbkey(id)); }
+  /* The topic's whiteboard grades as a normalized { stepIndex: 1 got | 2 missed } map, or
+     null if the topic has never been whiteboarded. Legacy counts-only records are seeded
+     positionally through the SAME legacySteps() the writer uses, so a reader can never see
+     a shape the writer doesn't produce -- and there is exactly one place that knows what a
+     wbprog record looks like. `total` is the board's CURRENT step count (a content edit can
+     outdate the record's own), so callers pass what they are rendering against. */
+  function wbSteps(id, total) {
+    var prev = wbGet(id);
+    if (!prev) return null;
+    return prev.steps ? prev.steps : legacySteps(prev, total || prev.total || 0);
+  }
 
   /* ================= THE EAGER BOOT MIGRATION =================
      Runs ONCE, over EVERY registered topic, as soon as the topic bundle is in memory
@@ -318,6 +329,26 @@ var Progress = (function () {
   function migration() { return mig; }
 
   function get(id) { return Store.get(pkey(id), null); }
+  /* The bank indices this topic still owes work on (level 1 missed / 2 shaky), straight from the
+     canonical record -- so "re-drill my weak spots" survives a RELOAD. The drill's own
+     drillWeak() / drillRevset() can only see the run currently on screen, and a page load starts
+     that empty; the record is the only thing that remembers. Legacy records (no per-probe map)
+     are reconstructed through the same legacyCards() the writer uses, so this can never see a
+     shape snapshot() does not produce. */
+  function weakIdx(id) {
+    var tid = id || curId();
+    var prev = tid ? get(tid) : null;
+    if (!prev) return [];
+    var map = prev.cards;
+    if (!map) {
+      var d = drillOf(), s = (d && d.getStats) ? d.getStats() : null;
+      map = legacyCards(prev, (s && s.bankSignals) ? s.bankSignals : []);
+    }
+    var out = [], k;
+    for (k in map) { if (map.hasOwnProperty(k) && map[k] < 3) out.push(+k); }
+    out.sort(function (a, b) { return a - b; });
+    return out;
+  }
   function all() {
     var out = {}, ks = Store.keys(N);
     for (var i = 0; i < ks.length; i++) out[ks[i].slice(N.length)] = Store.get(ks[i], null);
@@ -371,6 +402,6 @@ var Progress = (function () {
      fully populated by DOMContentLoaded -- and no grade can land before it. */
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', migrate);
   else migrate();
-  return { snapshot: snapshot, get: get, all: all, clear: clear, clearAll: clearAll, status: status, summary: summary, markShaky: markShaky, shakyMarks: shakyMarks, wbGet: wbGet, snapshotWb: snapshotWb, migrate: migrate, migration: migration };
+  return { snapshot: snapshot, get: get, all: all, clear: clear, clearAll: clearAll, status: status, summary: summary, markShaky: markShaky, shakyMarks: shakyMarks, wbGet: wbGet, wbSteps: wbSteps, weakIdx: weakIdx, snapshotWb: snapshotWb, migrate: migrate, migration: migration };
 })();
 window.Progress = Progress;

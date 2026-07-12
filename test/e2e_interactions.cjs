@@ -202,8 +202,15 @@ const HTML = process.argv[2] ||
     }
     document.getElementById('mixx').click();
     await new Promise((r) => setTimeout(r, 300));
-    /* every curveball mixed fire showed must still open with an AUTHORED cue */
-    const allAuthored = cards.every((p) => authored.some((c) => p.indexOf(c.replace(/&rsquo;/g, '’').replace(/&mdash;/g, '—')) === 0));
+    /* every curveball mixed fire showed must still open with an AUTHORED cue.
+       Decode ALL entities on the authored cue (the compiler smart-quotes prose, so a cue can
+       carry &ldquo;/&rdquo;/&ndash;/&amp; etc.) before matching the rendered prompt -- a two-entity
+       replace silently failed once cues used curly quotes, as the hand-coded 8 do. */
+    const ENT = { '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&mdash;': '—', '&ndash;': '–', '&rsquo;': '’', '&lsquo;': '‘', '&ldquo;': '“', '&rdquo;': '”', '&hellip;': '…', '&rarr;': '→', '&middot;': '·', '&nbsp;': ' ', '&times;': '×' };
+    // strip inline HTML first (a cue may carry <i>..</i>, which the DOM renders and .qq textContent
+    // drops), then decode entities -- so we compare rendered plain text against rendered plain text.
+    const decode = (s) => s.replace(/<[^>]+>/g, '').replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16))).replace(/&#(\d+);/g, (_, d) => String.fromCodePoint(+d)).replace(/&[a-z]+;/gi, (e) => ENT[e] || e);
+    const allAuthored = cards.every((p) => authored.some((c) => p.indexOf(decode(c)) === 0));
     return { seen: cards.length, allAuthored, undef };
   }, helper.md);
   ok('mixed fire curveballs are the AUTHORED cues, not mock-run debris', mx.seen === 0 || mx.allAuthored === true);

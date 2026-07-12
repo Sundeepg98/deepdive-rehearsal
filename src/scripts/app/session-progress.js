@@ -221,6 +221,14 @@ function renderCompare() {
   }
   outEl.innerHTML = html;
 }
+/* Status colour for a surface's dot: grey (untouched) / amber (started) / teal (solid --
+   done, none weak, >= 80% covered). Replaces the old arbitrary IDENTITY colours (--acc /
+   teal / indigo / acc2), which said nothing about where you actually stand. */
+function ssDot(done, tot, weak) {
+  if (!done) return 'var(--mut)';
+  if (!weak && done >= tot * 0.8) return 'var(--teal)';
+  return 'var(--amber)';
+}
 /* Render the whole overlay body: the "do this next" card, a stat card per
    surface (drill / whiteboard / mock / mixed fire), the carry-across-days code
    widget, and the Save-PDF / Clear actions &mdash; then wire every button. */
@@ -234,25 +242,25 @@ function renderSession() {
        '<div class="ss-rt" style="color:' + rec.ink + '">' + rec.text + '</div>' +
        (rec.btn ? '<button class="ss-go" id="ssgo" type="button">' + rec.btn + '</button>' : '') +
      '</div>';
-  html += '<div class="ss-card"><div class="ss-h"><span class="ss-dot" style="background:var(--acc)"></span>Probe Drill</div>';
+  html += '<div class="ss-card"><div class="ss-h"><span class="ss-dot" style="background:' + ssDot(dDone, dTot, dShk) + '"></span>Probe Drill</div><div class="ss-bar"><i style="width:' + (dTot ? Math.round(dDone / dTot * 100) : 0) + '%"></i></div>';
   if (dDone === 0) html += '<div class="ss-stat ss-none">Not started \u2014 0 of ' + dTot + ' graded.</div>';
   else {
     html += '<div class="ss-stat"><span class="ss-g">' + dGot + ' solid</span> &middot; <span class="ss-s">' + dShk + ' to revisit</span> &middot; ' + dLeft + ' untouched of ' + dTot + '</div>';
     if (revisit.length) html += '<div class="ss-list"><b>Revisit:</b> ' + revisit.join(' &middot; ') + '</div>';
   }
   html += '</div>';
-  html += '<div class="ss-card"><div class="ss-h"><span class="ss-dot" style="background:var(--teal)"></span>Whiteboard recall</div>';
+  html += '<div class="ss-card"><div class="ss-h"><span class="ss-dot" style="background:' + ssDot(wbDone, wbTot, wbMiss) + '"></span>Whiteboard recall</div><div class="ss-bar"><i style="width:' + (wbTot ? Math.round(wbDone / wbTot * 100) : 0) + '%"></i></div>';
   if (wbDone === 0) html += '<div class="ss-stat ss-none">Not started \u2014 0 of ' + wbTot + ' graded.</div>';
   else {
     html += '<div class="ss-stat"><span class="ss-g">' + wbGot + ' recalled</span> &middot; <span class="ss-s">' + wbMiss + ' missed</span> of ' + wbTot + '</div>';
     if (missed.length) html += '<div class="ss-list"><b>Re-draw:</b> ' + missed.join(' &middot; ') + '</div>';
   }
   html += '</div>';
-  html += '<div class="ss-card"><div class="ss-h"><span class="ss-dot" style="background:var(--indigo)"></span>Mock Run</div>';
+  html += '<div class="ss-card"><div class="ss-h"><span class="ss-dot" style="background:' + (mRuns === 0 ? 'var(--mut)' : (mockIsStrong(mScore, mOut(stats)) ? 'var(--teal)' : 'var(--amber)')) + '"></span>Mock Run</div><div class="ss-bar"><i style="width:' + ((mScore != null && mOut(stats)) ? Math.round(mScore / mOut(stats) * 100) : 0) + '%"></i></div>';
   if (mScore === null && mRuns === 0) html += '<div class="ss-stat ss-none">Not run yet \u2014 take the full round on the clock.</div>';
   else html += '<div class="ss-stat">Last run: <span class="' + (mockIsStrong(mScore, mOut(stats)) ? 'ss-g' : 'ss-s') + '">' + (mScore === null ? 'completed, unscored' : mScore + ' / ' + mOut(stats)) + '</span>' + (mTime != null ? ' in ' + mockFmt(mTime) : '') + ' &middot; ' + mRuns + ' run' + (mRuns === 1 ? '' : 's') + (mInt ? ' &middot; cut off on <b>' + mInt + '</b> of ' + mOut(stats) + '' : '') + '</div>';
   html += '</div>';
-  html += '<div class="ss-card"><div class="ss-h"><span class="ss-dot" style="background:var(--acc2)"></span>Mixed Fire</div>';
+  html += '<div class="ss-card"><div class="ss-h"><span class="ss-dot" style="background:' + ssDot(stats.mixTot, stats.mixTot, stats.mixShk) + '"></span>Mixed Fire</div><div class="ss-bar"><i style="width:' + (stats.mixTot ? Math.round(stats.mixGot / stats.mixTot * 100) : 0) + '%"></i></div>';
   if (stats.mixTot === 0) html += '<div class="ss-stat ss-none">Not run yet \u2014 mix all three registers under one clock.</div>';
   else {
     html += '<div class="ss-stat"><span class="ss-g">' + stats.mixGot + ' handled</span> &middot; <span class="ss-s">' + stats.mixShk + ' shaky</span> across ' + stats.mixTot + ' item' + (stats.mixTot === 1 ? '' : 's') + '</div>';
@@ -346,7 +354,9 @@ var SESS_STYLE = `.sess-body{padding:var(--space-18) var(--space-20) var(--space
 .ss-s{color:var(--amber);font-weight:var(--font-weight-heavy)}
 .ss-list{margin:var(--space-9) 0 0;padding:var(--space-10) var(--space-13);background:linear-gradient(135deg,var(--accbg) 0%,var(--acc-a03) 100%);border-radius:9px;font-size:var(--font-size-micro);line-height:var(--line-height-spacious);color:var(--accink)}
 .ss-list b{font-weight:var(--font-weight-heavy)}
-.ss-none{color:var(--mut2);font-style:italic}
+.ss-none{color:var(--mut2)}
+.ss-bar{height:var(--space-5);background:var(--dbar-bg);border-radius:5px;overflow:hidden;margin:var(--space-8) 0 var(--space-9)}
+.ss-bar i{display:block;height:100%;background:var(--topic-solid);border-radius:5px;transition:width var(--duration-slow) var(--ease-base)}
 .ss-clear{width:100%;margin-top:var(--space-7);border:1px dashed var(--bd);background:transparent;color:var(--mut2);font:var(--font-weight-semibold) 11.5px -apple-system,sans-serif;padding:var(--space-11) var(--space-14);border-radius:10px;cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),border-color var(--duration-base) var(--ease-base),color var(--duration-base) var(--ease-base),background var(--duration-base) var(--ease-base)}
 .ss-clear:hover{border-color:var(--mut);color:var(--mut);background:var(--acc-a02);transform:translateY(-1px)}
 .ss-clear:active{transform:translateY(1px) scale(.98)}

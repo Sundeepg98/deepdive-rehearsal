@@ -40,7 +40,16 @@ let _browser = null;
 async function browser() {
   if (_browser) return _browser;
   _browser = await loadChromium().launch({
-    args: ['--no-sandbox', '--disable-dev-shm-usage'],
+    args: [
+      '--no-sandbox', '--disable-dev-shm-usage',
+      // ...AND THE HINTING PINS THE ROUNDING. Embedding the font (above) made both platforms measure
+      // the SAME face, but they still disagreed in the last fraction of a pixel: Linux Chromium
+      // applies full font hinting and SNAPS glyph advances to whole pixels, Windows keeps subpixel
+      // precision -- so the same labels came out 1072 vs 1072.15625 wide and the SVGs still differed.
+      // Disabling hinting takes advances straight from the font's own metrics, which are the same
+      // bytes everywhere. This is the standard flag for reproducible headless text layout.
+      '--font-render-hinting=none',
+    ],
     executablePath: process.env.CHROME || undefined,
   });
   return _browser;

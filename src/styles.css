@@ -402,7 +402,7 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
 .rail{display:none}
 .tools-fab{display:none}
 @media(max-width:919px){
-  .app{flex-direction:column;min-height:0;padding-top:56px;padding-bottom:calc(126px + env(safe-area-inset-bottom,0px))}
+  .app{flex-direction:column;min-height:0;padding-top:56px;padding-bottom:calc(80px + env(safe-area-inset-bottom,0px))}
   .sidebar{width:auto;height:auto;position:static;flex-direction:column;gap:0;padding:0;border-right:none;background:transparent;overflow:visible}
   .side-id{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-6) var(--space-10);background:var(--side);border-bottom:1px solid var(--bd);padding:var(--space-9) var(--space-15)}
   .side-id .badge{display:none!important}
@@ -427,10 +427,15 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
   .sidebar .mockcta{order:2;position:fixed;bottom:0;left:0;right:0;z-index:40;display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;gap:var(--space-8) var(--space-10);margin:0;background:var(--card);border-top:1px solid var(--bd);box-shadow:0 -8px 24px rgba(0,0,0,.14);padding:var(--space-12) var(--space-15);padding-bottom:calc(var(--space-12) + env(safe-area-inset-bottom,0px))}
   .sidebar .mockcta .mockbtn{order:0;flex:1 1 0;min-width:0;margin:0}
   .sidebar .mockcta .tools-fab{order:1;flex:none}
-  .sidebar .mockcta .inttog{order:2;flex-basis:100%;margin:0}
+  /* The "Interviewer cuts in mid-answer" toggle is a mock-run SETTING, not a global
+     action -- its flex-basis:100% forced a second full row, making the fixed bottom bar
+     123px and clipping the drill question (the entire reason the pane exists) to 27px.
+     Removed from the persistent mobile bar; the bar collapses to one row (+59px of content).
+     Available on desktop (defaults off). Full "move into the mock overlay" is a follow-up. */
+  .sidebar .mockcta .inttog{display:none}
   .mbl-tail{display:none}
   .sidebar .seg{order:1;position:fixed;top:0;left:0;right:0;z-index:var(--z-seg);flex-direction:row;overflow-x:auto;gap:var(--space-6);background:var(--bg);border-bottom:1px solid var(--bd);padding:var(--space-8) var(--space-12);-webkit-overflow-scrolling:touch}
-  .sidebar .seg button{flex:none;width:auto;white-space:nowrap;align-items:center;padding:var(--space-11) var(--space-14);border-radius:9px;transition:background var(--duration-base) var(--ease-base),box-shadow var(--duration-base) var(--ease-base),transform var(--duration-fast) var(--ease-base)}
+  .sidebar .seg button{flex:none;width:auto;white-space:nowrap;align-items:center;min-height:44px;padding:var(--space-11) var(--space-14);border-radius:9px;transition:background var(--duration-base) var(--ease-base),box-shadow var(--duration-base) var(--ease-base),transform var(--duration-fast) var(--ease-base)}
   .sidebar .seg button>span:first-child{font-size:var(--font-size-small);font-weight:var(--font-weight-semibold)}
   .sidebar .seg button .n{display:none}
   .sidebar .seg button:active{transform:scale(.97)}
@@ -501,7 +506,10 @@ button:active::after,.inttog:active::after{opacity:1;transition:opacity var(--du
 .stage-head .sh-kick{font-family:var(--mono);font-size:var(--font-size-nano);font-weight:var(--font-weight-bold);letter-spacing:1.8px;color:var(--acc);text-transform:uppercase;line-height:var(--line-height-normal)}
 /* 700, not 800 -- see .hdr h1 above. This is the app's other display-face heading. */
 .stage-head .sh-name{font-size:var(--font-size-display);font-weight:var(--font-weight-bold);letter-spacing:-.5px;color:var(--ink);margin-top:var(--space-4);line-height:var(--line-height-tight)}
-@media(max-width:919px){.stage-head{max-width:none;margin:0 0 var(--space-15);padding-bottom:var(--space-12)} .stage-head .sh-name{font-size:var(--font-size-heading)}}
+/* On mobile the view is already named twice above the fold (the seg tab + the companion),
+   so the big .stage-head masthead is redundant chrome -- delete it to reclaim ~70px, which
+   (with the collapsed bottom bar) unclips the drill question. (Spec Phase 5 #2.) */
+@media(max-width:919px){.stage-head{display:none}}
 <!--@build:include fonts.css-->
 :root{--display:'Space Grotesk',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
 /* v78: distinctive display face on titles only (body + mono coords unchanged) */

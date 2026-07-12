@@ -1,0 +1,8 @@
+[cold 0] goto=455ms readyAtGoto=true readyWait=23ms closeOv=31ms worstPaneSwitch=607ms(drill)  | page: domInteractive=438 DCL=447 load=450
+[cold 1] goto=356ms readyAtGoto=true readyWait=70ms closeOv=5ms worstPaneSwitch=465ms(wb)  | page: domInteractive=336 DCL=349 load=351
+[cold 2] goto=368ms readyAtGoto=true readyWait=21ms closeOv=42ms worstPaneSwitch=973ms(trade)  | page: domInteractive=354 DCL=363 load=365
+[cold 3] goto=358ms readyAtGoto=true readyWait=22ms closeOv=35ms worstPaneSwitch=459ms(wb)  | page: domInteractive=344 DCL=353 load=355
+[cold 4] goto=354ms readyAtGoto=true readyWait=23ms closeOv=11ms worstPaneSwitch=431ms(walk)  | page: domInteractive=341 DCL=350 load=352
+
+== cold MAX over 5 runs ==  goto=455ms  readyWait=70ms  paneSwitch=973ms  pageLoad=450ms
+JSON {"tag":"cold","rows":[{"i":0,"tGoto":455,"readyAtGoto":true,"tReady":23,"tClose":31,"worstPane":607,"worstName":"drill","dcl":447,"load":450,"resp":82,"domInt":438},{"i":1,"tGoto":356,"readyAtGoto":true,"tReady":70,"tClose":5,"worstPane":465,"worstName":"wb","dcl":349,"load":351,"resp":149,"domInt":336},{"i":2,"tGoto":368,"readyAtGoto":true,"tReady":21,"tClose":42,"worstPane":973,"worstName":"trade","dcl":363,"load":365,"resp":167,"domInt":354},{"i":3,"tGoto":358,"readyAtGoto":true,"tReady":22,"tClose":35,"worstPane":459,"worstName":"wb","dcl":353,"load":355,"resp":153,"domInt":344},{"i":4,"tGoto":354,"readyAtGoto":true,"tReady":23,"tClose":11,"worstPane":431,"worstName":"walk","dcl":350,"load":352,"resp":154,"domInt":341}]}

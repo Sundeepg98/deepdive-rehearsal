@@ -1,0 +1,7 @@
+[LOADED 0] goto=598ms readyAtGoto=true readyWait=31ms closeOv=54ms worstPaneSwitch=1598ms(drill)  | page: domInteractive=571 DCL=590 load=591
+[LOADED 1] goto=594ms readyAtGoto=true readyWait=89ms closeOv=8ms worstPaneSwitch=588ms(trade)  | page: domInteractive=573 DCL=586 load=589
+[LOADED 2] goto=645ms readyAtGoto=true readyWait=99ms closeOv=21ms worstPaneSwitch=478ms(wb)  | page: domInteractive=624 DCL=638 load=641
+[LOADED 3] goto=603ms readyAtGoto=true readyWait=85ms closeOv=24ms worstPaneSwitch=551ms(model)  | page: domInteractive=583 DCL=597 load=599
+
+== LOADED MAX over 4 runs ==  goto=645ms  readyWait=99ms  paneSwitch=1598ms  pageLoad=641ms
+JSON {"tag":"LOADED","rows":[{"i":0,"tGoto":598,"readyAtGoto":true,"tReady":31,"tClose":54,"worstPane":1598,"worstName":"drill","dcl":590,"load":591,"resp":112,"domInt":571},{"i":1,"tGoto":594,"readyAtGoto":true,"tReady":89,"tClose":8,"worstPane":588,"worstName":"trade","dcl":586,"load":589,"resp":272,"domInt":573},{"i":2,"tGoto":645,"readyAtGoto":true,"tReady":99,"tClose":21,"worstPane":478,"worstName":"wb","dcl":638,"load":641,"resp":305,"domInt":624},{"i":3,"tGoto":603,"readyAtGoto":true,"tReady":85,"tClose":24,"worstPane":551,"worstName":"model","dcl":597,"load":599,"resp":278,"domInt":583}]}

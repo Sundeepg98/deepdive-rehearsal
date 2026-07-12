@@ -1,0 +1,144 @@
+{
+  "sizes": {
+    "A": {
+      "raw": 13389542,
+      "gz": 4033296
+    },
+    "B": {
+      "raw": 13696450,
+      "gz": 4052973
+    },
+    "C": {
+      "raw": 13409584,
+      "gz": 4036239
+    }
+  },
+  "res": {
+    "A": [
+      {
+        "done": 1628,
+        "heap": 10.31,
+        "proof": "TOPICS=464 firstTopicKeys=9",
+        "parseHTML": 501,
+        "compile": 490,
+        "evaluate": 13
+      },
+      {
+        "done": 1344,
+        "heap": 10.31,
+        "proof": "TOPICS=464 firstTopicKeys=9",
+        "parseHTML": 390,
+        "compile": 534,
+        "evaluate": 14
+      },
+      {
+        "done": 1357,
+        "heap": 10.31,
+        "proof": "TOPICS=464 firstTopicKeys=9",
+        "parseHTML": 469,
+        "compile": 412,
+        "evaluate": 21
+      },
+      {
+        "done": 1351,
+        "heap": 10.31,
+        "proof": "TOPICS=464 firstTopicKeys=9",
+        "parseHTML": 431,
+        "compile": 454,
+        "evaluate": 24
+      },
+      {
+        "done": 1132,
+        "heap": 10.31,
+        "proof": "TOPICS=464 firstTopicKeys=9",
+        "parseHTML": 356,
+        "compile": 428,
+        "evaluate": 12
+      }
+    ],
+    "B": [
+      {
+        "done": 1379,
+        "heap": 14.11,
+        "proof": "TOPICS=464 firstTopicKeys=9",
+        "parseHTML": 482,
+        "compile": 331,
+        "evaluate": 10
+      },
+      {
+        "done": 994,
+        "heap": 14.11,
+        "proof": "TOPICS=464 firstTopicKeys=9",
+        "parseHTML": 362,
+        "compile": 243,
+        "evaluate": 9
+      },
+      {
+        "done": 1275,
+        "heap": 14.11,
+        "proof": "TOPICS=464 firstTopicKeys=9",
+        "parseHTML": 453,
+        "compile": 317,
+        "evaluate": 4
+      },
+      {
+        "done": 1142,
+        "heap": 14.11,
+        "proof": "TOPICS=464 firstTopicKeys=9",
+        "parseHTML": 420,
+        "compile": 327,
+        "evaluate": 4
+      },
+      {
+        "done": 1152,
+        "heap": 14.11,
+        "proof": "TOPICS=464 firstTopicKeys=9",
+        "parseHTML": 413,
+        "compile": 322,
+        "evaluate": 2
+      }
+    ],
+    "C": [
+      {
+        "done": 988,
+        "heap": 0.63,
+        "proof": "TOPICS=464 firstTopicKeys=9",
+        "parseHTML": 317,
+        "compile": 1,
+        "evaluate": 4
+      },
+      {
+        "done": 1075,
+        "heap": 0.63,
+        "proof": "TOPICS=464 firstTopicKeys=9",
+        "parseHTML": 345,
+        "compile": 1,
+        "evaluate": 2
+      },
+      {
+        "done": 729,
+        "heap": 0.63,
+        "proof": "TOPICS=464 firstTopicKeys=9",
+        "parseHTML": 269,
+        "compile": 1,
+        "evaluate": 3
+      },
+      {
+        "done": 640,
+        "heap": 0.63,
+        "proof": "TOPICS=464 firstTopicKeys=9",
+        "parseHTML": 245,
+        "compile": 1,
+        "evaluate": 2
+      },
+      {
+        "done": 602,
+        "heap": 0.63,
+        "proof": "TOPICS=464 firstTopicKeys=9",
+        "parseHTML": 226,
+        "compile": 1,
+        "evaluate": 3
+      }
+    ]
+  }
+}

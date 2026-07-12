@@ -1,0 +1,166 @@
+{
+  "rows": [
+    {
+      "k": "ParseHTML (tokenize the file)",
+      "b": 716,
+      "a": 1333,
+      "d": 617
+    },
+    {
+      "k": "Layout",
+      "b": 571,
+      "a": 1168,
+      "d": 597
+    },
+    {
+      "k": "EvaluateScript (run top-level)",
+      "b": 623,
+      "a": 1181,
+      "d": 558
+    },
+    {
+      "k": "FunctionCall (app code)",
+      "b": 169,
+      "a": 574,
+      "d": 405
+    },
+    {
+      "k": "v8 compile/parse JS",
+      "b": 160,
+      "a": 501,
+      "d": 341
+    },
+    {
+      "k": "Style recalc",
+      "b": 68,
+      "a": 170,
+      "d": 102
+    },
+    {
+      "k": "Paint/Composite",
+      "b": 85,
+      "a": 184,
+      "d": 99
+    },
+    {
+      "k": "GC",
+      "b": 29,
+      "a": 31,
+      "d": 2
+    }
+  ],
+  "res": {
+    "BEFORE": [
+      {
+        "label": "BEFORE",
+        "ready": 1111,
+        "proof": {
+          "textLen": 26668,
+          "shadowNodes": 1104
+        },
+        "agg": {
+          "Paint/Composite": 39,
+          "ParseHTML (tokenize the file)": 716,
+          "EvaluateScript (run top-level)": 623,
+          "v8 compile/parse JS": 153,
+          "Style recalc": 68,
+          "Layout": 571,
+          "FunctionCall (app code)": 169,
+          "GC": 29
+        }
+      },
+      {
+        "label": "BEFORE",
+        "ready": 1040,
+        "proof": {
+          "textLen": 26668,
+          "shadowNodes": 1104
+        },
+        "agg": {
+          "ParseHTML (tokenize the file)": 562,
+          "EvaluateScript (run top-level)": 451,
+          "v8 compile/parse JS": 160,
+          "Style recalc": 51,
+          "Layout": 566,
+          "Paint/Composite": 87,
+          "FunctionCall (app code)": 186,
+          "GC": 36
+        }
+      },
+      {
+        "label": "BEFORE",
+        "ready": 1410,
+        "proof": {
+          "textLen": 26668,
+          "shadowNodes": 1104
+        },
+        "agg": {
+          "ParseHTML (tokenize the file)": 915,
+          "EvaluateScript (run top-level)": 797,
+          "v8 compile/parse JS": 229,
+          "Style recalc": 123,
+          "Layout": 669,
+          "Paint/Composite": 85,
+          "FunctionCall (app code)": 164,
+          "GC": 12
+        }
+      }
+    ],
+    "AFTER": [
+      {
+        "label": "AFTER",
+        "ready": 1792,
+        "proof": {
+          "textLen": 26612,
+          "shadowNodes": 1121
+        },
+        "agg": {
+          "ParseHTML (tokenize the file)": 1173,
+          "EvaluateScript (run top-level)": 960,
+          "v8 compile/parse JS": 501,
+          "Style recalc": 121,
+          "Layout": 640,
+          "Paint/Composite": 73,
+          "FunctionCall (app code)": 189,
+          "GC": 29
+        }
+      },
+      {
+        "label": "AFTER",
+        "ready": 3917,
+        "proof": {
+          "textLen": 26612,
+          "shadowNodes": 1121
+        },
+        "agg": {
+          "ParseHTML (tokenize the file)": 2558,
+          "EvaluateScript (run top-level)": 2129,
+          "v8 compile/parse JS": 790,
+          "Style recalc": 293,
+          "Layout": 1750,
+          "Paint/Composite": 380,
+          "FunctionCall (app code)": 748,
+          "GC": 110
+        }
+      },
+      {
+        "label": "AFTER",
+        "ready": 2036,
+        "proof": {
+          "textLen": 26612,
+          "shadowNodes": 1121
+        },
+        "agg": {
+          "ParseHTML (tokenize the file)": 1333,
+          "EvaluateScript (run top-level)": 1181,
+          "v8 compile/parse JS": 333,
+          "Style recalc": 170,
+          "Layout": 1168,
+          "Paint/Composite": 184,
+          "FunctionCall (app code)": 574,
+          "GC": 31
+        }
+      }
+    ]
+  }
+}

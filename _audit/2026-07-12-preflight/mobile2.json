@@ -1,0 +1,470 @@
+[
+  {
+    "build": "BEFORE",
+    "theme": "light",
+    "totalInteractive": 60,
+    "smallCount": 33,
+    "small": [
+      {
+        "tag": "BUTTON",
+        "id": "_focus-toggle",
+        "cls": "",
+        "w": 60,
+        "h": 20,
+        "txt": "FOCUS"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "inttog",
+        "cls": "inttog",
+        "w": 366,
+        "h": 43,
+        "txt": "Interviewer cuts in "
+      },
+      {
+        "tag": "BUTTON",
+        "id": "toolsfab",
+        "cls": "tools-fab",
+        "w": 67,
+        "h": 40,
+        "txt": "Tools"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "idxopen",
+        "cls": "crambtn",
+        "w": 364,
+        "h": 37,
+        "txt": "Topic index\n— all to"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "searchopen",
+        "cls": "crambtn",
+        "w": 364,
+        "h": 37,
+        "txt": "Search\n— jump to any"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "copylink",
+        "cls": "crambtn",
+        "w": 364,
+        "h": 37,
+        "txt": "Copy link\n— a sharea"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "starbtn",
+        "cls": "crambtn",
+        "w": 364,
+        "h": 37,
+        "txt": "Star this topic\n— sa"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "notesopen",
+        "cls": "crambtn",
+        "w": 364,
+        "h": 37,
+        "txt": "Your notes\n— jot not"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "printqa",
+        "cls": "crambtn",
+        "w": 364,
+        "h": 37,
+        "txt": "Print Q&A\n— a printa"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "cramopen",
+        "cls": "crambtn",
+        "w": 364,
+        "h": 37,
+        "txt": "One-page cram sheet\n"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "sessopen",
+        "cls": "crambtn",
+        "w": 364,
+        "h": 37,
+        "txt": "Session progress\n— w"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "mixopen",
+        "cls": "crambtn",
+        "w": 364,
+        "h": 37,
+        "txt": "Mixed fire\n— probes "
+      }
+    ],
+    "overflowX": true,
+    "scrollW": 396,
+    "clientW": 390,
+    "question": {
+      "top": 734,
+      "bottom": 781,
+      "vh": 857,
+      "barTop": 734,
+      "fullyVisible": false,
+      "occludedByBar": true,
+      "offscreen": false
+    },
+    "deepNodes": 1885
+  },
+  {
+    "build": "BEFORE",
+    "theme": "dark",
+    "totalInteractive": 60,
+    "smallCount": 33,
+    "small": [
+      {
+        "tag": "BUTTON",
+        "id": "_focus-toggle",
+        "cls": "",
+        "w": 60,
+        "h": 20,
+        "txt": "FOCUS"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "inttog",
+        "cls": "inttog",
+        "w": 366,
+        "h": 43,
+        "txt": "Interviewer cuts in "
+      },
+      {
+        "tag": "BUTTON",
+        "id": "toolsfab",
+        "cls": "tools-fab",
+        "w": 67,
+        "h": 40,
+        "txt": "Tools"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "idxopen",
+        "cls": "crambtn",
+        "w": 364,
+        "h": 37,
+        "txt": "Topic index\n— all to"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "searchopen",
+        "cls": "crambtn",
+        "w": 364,
+        "h": 37,
+        "txt": "Search\n— jump to any"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "copylink",
+        "cls": "crambtn",
+        "w": 364,
+        "h": 37,
+        "txt": "Copy link\n— a sharea"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "starbtn",
+        "cls": "crambtn",
+        "w": 364,
+        "h": 37,
+        "txt": "Star this topic\n— sa"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "notesopen",
+        "cls": "crambtn",
+        "w": 364,
+        "h": 37,
+        "txt": "Your notes\n— jot not"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "printqa",
+        "cls": "crambtn",
+        "w": 364,
+        "h": 37,
+        "txt": "Print Q&A\n— a printa"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "cramopen",
+        "cls": "crambtn",
+        "w": 364,
+        "h": 37,
+        "txt": "One-page cram sheet\n"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "sessopen",
+        "cls": "crambtn",
+        "w": 364,
+        "h": 37,
+        "txt": "Session progress\n— w"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "mixopen",
+        "cls": "crambtn",
+        "w": 364,
+        "h": 37,
+        "txt": "Mixed fire\n— probes "
+      }
+    ],
+    "overflowX": true,
+    "scrollW": 396,
+    "clientW": 390,
+    "question": {
+      "top": 735,
+      "bottom": 781,
+      "vh": 857,
+      "barTop": 734,
+      "fullyVisible": false,
+      "occludedByBar": true,
+      "offscreen": false
+    },
+    "deepNodes": 1885
+  },
+  {
+    "build": "AFTER",
+    "theme": "light",
+    "totalInteractive": 59,
+    "smallCount": 22,
+    "small": [
+      {
+        "tag": "BUTTON",
+        "id": "_focus-toggle",
+        "cls": "",
+        "w": 60,
+        "h": 20,
+        "txt": "FOCUS"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "idxopen",
+        "cls": "crambtn",
+        "w": 358,
+        "h": 37,
+        "txt": "Topic index\n— all to"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "searchopen",
+        "cls": "crambtn",
+        "w": 358,
+        "h": 37,
+        "txt": "Search\n— jump to any"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "copylink",
+        "cls": "crambtn",
+        "w": 358,
+        "h": 37,
+        "txt": "Copy link\n— a sharea"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "starbtn",
+        "cls": "crambtn",
+        "w": 358,
+        "h": 37,
+        "txt": "Star this topic\n— sa"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "notesopen",
+        "cls": "crambtn",
+        "w": 358,
+        "h": 37,
+        "txt": "Your notes\n— jot not"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "printqa",
+        "cls": "crambtn",
+        "w": 358,
+        "h": 37,
+        "txt": "Print Q&A\n— a printa"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "cramopen",
+        "cls": "crambtn",
+        "w": 358,
+        "h": 37,
+        "txt": "One-page cram sheet\n"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "sessopen",
+        "cls": "crambtn",
+        "w": 358,
+        "h": 37,
+        "txt": "Session progress\n— w"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "mixopen",
+        "cls": "crambtn",
+        "w": 358,
+        "h": 37,
+        "txt": "Mixed fire\n— probes "
+      },
+      {
+        "tag": "BUTTON",
+        "id": "planopen",
+        "cls": "crambtn",
+        "w": 358,
+        "h": 37,
+        "txt": "Game plan\n— how to r"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "scopeopen",
+        "cls": "crambtn",
+        "w": 358,
+        "h": 37,
+        "txt": "Scope it first\n— the"
+      }
+    ],
+    "overflowX": false,
+    "scrollW": 390,
+    "clientW": 390,
+    "question": {
+      "top": 667,
+      "bottom": 720,
+      "vh": 844,
+      "barTop": 772,
+      "fullyVisible": true,
+      "occludedByBar": false,
+      "offscreen": false
+    },
+    "deepNodes": 1902
+  },
+  {
+    "build": "AFTER",
+    "theme": "dark",
+    "totalInteractive": 59,
+    "smallCount": 22,
+    "small": [
+      {
+        "tag": "BUTTON",
+        "id": "_focus-toggle",
+        "cls": "",
+        "w": 60,
+        "h": 20,
+        "txt": "FOCUS"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "idxopen",
+        "cls": "crambtn",
+        "w": 358,
+        "h": 37,
+        "txt": "Topic index\n— all to"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "searchopen",
+        "cls": "crambtn",
+        "w": 358,
+        "h": 37,
+        "txt": "Search\n— jump to any"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "copylink",
+        "cls": "crambtn",
+        "w": 358,
+        "h": 37,
+        "txt": "Copy link\n— a sharea"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "starbtn",
+        "cls": "crambtn",
+        "w": 358,
+        "h": 37,
+        "txt": "Star this topic\n— sa"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "notesopen",
+        "cls": "crambtn",
+        "w": 358,
+        "h": 37,
+        "txt": "Your notes\n— jot not"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "printqa",
+        "cls": "crambtn",
+        "w": 358,
+        "h": 37,
+        "txt": "Print Q&A\n— a printa"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "cramopen",
+        "cls": "crambtn",
+        "w": 358,
+        "h": 37,
+        "txt": "One-page cram sheet\n"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "sessopen",
+        "cls": "crambtn",
+        "w": 358,
+        "h": 37,
+        "txt": "Session progress\n— w"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "mixopen",
+        "cls": "crambtn",
+        "w": 358,
+        "h": 37,
+        "txt": "Mixed fire\n— probes "
+      },
+      {
+        "tag": "BUTTON",
+        "id": "planopen",
+        "cls": "crambtn",
+        "w": 358,
+        "h": 37,
+        "txt": "Game plan\n— how to r"
+      },
+      {
+        "tag": "BUTTON",
+        "id": "scopeopen",
+        "cls": "crambtn",
+        "w": 358,
+        "h": 37,
+        "txt": "Scope it first\n— the"
+      }
+    ],
+    "overflowX": false,
+    "scrollW": 390,
+    "clientW": 390,
+    "question": {
+      "top": 668,
+      "bottom": 720,
+      "vh": 844,
+      "barTop": 770,
+      "fullyVisible": true,
+      "occludedByBar": false,
+      "offscreen": false
+    },
+    "deepNodes": 1902
+  }
+]

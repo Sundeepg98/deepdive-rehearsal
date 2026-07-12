@@ -1,0 +1,202 @@
+{
+  "rows": [
+    {
+      "k": "other",
+      "b": 510,
+      "a": 1217,
+      "d": 707
+    },
+    {
+      "k": "ParseHTML",
+      "b": 373,
+      "a": 822,
+      "d": 449
+    },
+    {
+      "k": "EvaluateScript",
+      "b": 396,
+      "a": 481,
+      "d": 85
+    },
+    {
+      "k": "FunctionCall",
+      "b": 112,
+      "a": 147,
+      "d": 35
+    },
+    {
+      "k": "GC",
+      "b": 1,
+      "a": 1,
+      "d": 0
+    },
+    {
+      "k": "Paint/Composite",
+      "b": 328,
+      "a": 323,
+      "d": -5
+    },
+    {
+      "k": "Style recalc",
+      "b": 408,
+      "a": 342,
+      "d": -66
+    },
+    {
+      "k": "Layout",
+      "b": 2699,
+      "a": 2336,
+      "d": -363
+    }
+  ],
+  "res": {
+    "BEFORE": [
+      {
+        "ready": 3121,
+        "proof": {
+          "textLen": 26668,
+          "shadow": 1104
+        },
+        "counters": {
+          "script": 479,
+          "layout": 2032,
+          "style": 312,
+          "task": 4495
+        },
+        "agg": {
+          "container": 5,
+          "Paint/Composite": 292,
+          "other": 465,
+          "ParseHTML": 340,
+          "EvaluateScript": 343,
+          "Style recalc": 308,
+          "Layout": 2031,
+          "FunctionCall": 100,
+          "GC": 4
+        }
+      },
+      {
+        "ready": 3588,
+        "proof": {
+          "textLen": 26668,
+          "shadow": 1104
+        },
+        "counters": {
+          "script": 582,
+          "layout": 2703,
+          "style": 573,
+          "task": 6177
+        },
+        "agg": {
+          "container": 13,
+          "other": 566,
+          "ParseHTML": 386,
+          "EvaluateScript": 396,
+          "Style recalc": 576,
+          "Layout": 2699,
+          "Paint/Composite": 607,
+          "FunctionCall": 112,
+          "GC": 0
+        }
+      },
+      {
+        "ready": 4330,
+        "proof": {
+          "textLen": 26668,
+          "shadow": 1104
+        },
+        "counters": {
+          "script": 870,
+          "layout": 2949,
+          "style": 409,
+          "task": 5997
+        },
+        "agg": {
+          "container": 15,
+          "other": 510,
+          "ParseHTML": 373,
+          "EvaluateScript": 640,
+          "Style recalc": 408,
+          "Layout": 2946,
+          "Paint/Composite": 328,
+          "FunctionCall": 154,
+          "GC": 1
+        }
+      }
+    ],
+    "AFTER": [
+      {
+        "ready": 2209,
+        "proof": {
+          "textLen": 26612,
+          "shadow": 1121
+        },
+        "counters": {
+          "script": 175,
+          "layout": 979,
+          "style": 98,
+          "task": 2403
+        },
+        "agg": {
+          "container": 1,
+          "other": 359,
+          "ParseHTML": 396,
+          "EvaluateScript": 145,
+          "Style recalc": 97,
+          "Layout": 978,
+          "Paint/Composite": 46,
+          "GC": 0,
+          "FunctionCall": 20
+        }
+      },
+      {
+        "ready": 6641,
+        "proof": {
+          "textLen": 26612,
+          "shadow": 1121
+        },
+        "counters": {
+          "script": 1206,
+          "layout": 3365,
+          "style": 476,
+          "task": 9048
+        },
+        "agg": {
+          "container": 4,
+          "other": 1217,
+          "ParseHTML": 1175,
+          "EvaluateScript": 880,
+          "Style recalc": 472,
+          "Layout": 3355,
+          "Paint/Composite": 409,
+          "GC": 1,
+          "FunctionCall": 254
+        }
+      },
+      {
+        "ready": 5052,
+        "proof": {
+          "textLen": 26612,
+          "shadow": 1121
+        },
+        "counters": {
+          "script": 695,
+          "layout": 2338,
+          "style": 341,
+          "task": 6609
+        },
+        "agg": {
+          "container": 10,
+          "other": 1308,
+          "ParseHTML": 822,
+          "EvaluateScript": 481,
+          "Style recalc": 342,
+          "Layout": 2336,
+          "Paint/Composite": 323,
+          "GC": 1,
+          "FunctionCall": 147
+        }
+      }
+    ]
+  }
+}

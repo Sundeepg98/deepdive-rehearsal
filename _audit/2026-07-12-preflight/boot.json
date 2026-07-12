@@ -1,0 +1,1170 @@
+{
+  "BEFORE|desktop-1x": {
+    "RENDER_OK": false,
+    "runs": [
+      {
+        "domInteractive": 246,
+        "dcl": 257,
+        "load": 257,
+        "splashHidden": 248,
+        "longTaskTotal": 185,
+        "longTasks": [
+          185
+        ],
+        "eng": {
+          "script": 33,
+          "layout": 123,
+          "style": 36,
+          "task": 294
+        },
+        "proof": {
+          "textLen": 27186,
+          "textHead": "DEEP REHEARSALARCHITECTURE & APIS · INGESTION LAYER Content Pipeline FOCUS ⌂ ‹ REHEARSING ",
+          "visibleEls": 456,
+          "totalEls": 761,
+          "shadowNodes": 1104,
+          "h1": "Content Pipeline",
+          "splashStillVisible": true
+        },
+        "heap": 7632700,
+        "gotoWall": 260,
+        "clickMs": 80,
+        "interactive": true,
+        "RENDER_OK": false
+      },
+      {
+        "domInteractive": 259,
+        "dcl": 270,
+        "load": 271,
+        "splashHidden": 261,
+        "longTaskTotal": 181,
+        "longTasks": [
+          66,
+          115
+        ],
+        "eng": {
+          "script": 45,
+          "layout": 132,
+          "style": 18,
+          "task": 317
+        },
+        "proof": {
+          "textLen": 27186,
+          "textHead": "DEEP REHEARSALARCHITECTURE & APIS · INGESTION LAYER Content Pipeline FOCUS ⌂ ‹ REHEARSING ",
+          "visibleEls": 460,
+          "totalEls": 761,
+          "shadowNodes": 1104,
+          "h1": "Content Pipeline",
+          "splashStillVisible": true
+        },
+        "heap": 7478824,
+        "gotoWall": 273,
+        "clickMs": 66,
+        "interactive": true,
+        "RENDER_OK": false
+      },
+      {
+        "domInteractive": 229,
+        "dcl": 237,
+        "load": 238,
+        "splashHidden": 230,
+        "longTaskTotal": 154,
+        "longTasks": [
+          63,
+          91
+        ],
+        "eng": {
+          "script": 34,
+          "layout": 99,
+          "style": 11,
+          "task": 260
+        },
+        "proof": {
+          "textLen": 27186,
+          "textHead": "DEEP REHEARSALARCHITECTURE & APIS · INGESTION LAYER Content Pipeline FOCUS ⌂ ‹ REHEARSING ",
+          "visibleEls": 459,
+          "totalEls": 761,
+          "shadowNodes": 1104,
+          "h1": "Content Pipeline",
+          "splashStillVisible": true
+        },
+        "heap": 7481144,
+        "gotoWall": 239,
+        "clickMs": 67,
+        "interactive": true,
+        "RENDER_OK": false
+      },
+      {
+        "domInteractive": 256,
+        "dcl": 264,
+        "load": 265,
+        "splashHidden": 258,
+        "longTaskTotal": 174,
+        "longTasks": [
+          72,
+          102
+        ],
+        "eng": {
+          "script": 35,
+          "layout": 110,
+          "style": 12,
+          "task": 281
+        },
+        "proof": {
+          "textLen": 27174,
+          "textHead": "DEEP REHEARSALARCHITECTURE & APIS · INGESTION LAYER Content Pipeline FOCUS ⌂ ‹ REHEARSING ",
+          "visibleEls": 458,
+          "totalEls": 761,
+          "shadowNodes": 1104,
+          "h1": "Content Pipeline",
+          "splashStillVisible": true
+        },
+        "heap": 7382896,
+        "gotoWall": 267,
+        "clickMs": 75,
+        "interactive": true,
+        "RENDER_OK": false
+      },
+      {
+        "domInteractive": 245,
+        "dcl": 255,
+        "load": 256,
+        "splashHidden": 247,
+        "longTaskTotal": 170,
+        "longTasks": [
+          76,
+          94
+        ],
+        "eng": {
+          "script": 33,
+          "layout": 115,
+          "style": 11,
+          "task": 273
+        },
+        "proof": {
+          "textLen": 27174,
+          "textHead": "DEEP REHEARSALARCHITECTURE & APIS · INGESTION LAYER Content Pipeline FOCUS ⌂ ‹ REHEARSING ",
+          "visibleEls": 458,
+          "totalEls": 761,
+          "shadowNodes": 1104,
+          "h1": "Content Pipeline",
+          "splashStillVisible": true
+        },
+        "heap": 7462656,
+        "gotoWall": 258,
+        "clickMs": 77,
+        "interactive": true,
+        "RENDER_OK": false
+      }
+    ],
+    "med": {
+      "dcl": 257,
+      "load": 257,
+      "splash": 248,
+      "longTaskTotal": 174,
+      "script": 34,
+      "layout": 115,
+      "style": 12,
+      "task": 281,
+      "heapMB": 7.1
+    },
+    "proof": {
+      "textLen": 27186,
+      "textHead": "DEEP REHEARSALARCHITECTURE & APIS · INGESTION LAYER Content Pipeline FOCUS ⌂ ‹ REHEARSING ",
+      "visibleEls": 456,
+      "totalEls": 761,
+      "shadowNodes": 1104,
+      "h1": "Content Pipeline",
+      "splashStillVisible": true
+    }
+  },
+  "BEFORE|mobile-4x": {
+    "RENDER_OK": true,
+    "runs": [
+      {
+        "domInteractive": 1602,
+        "dcl": 1669,
+        "load": 1684,
+        "splashHidden": 1611,
+        "longTaskTotal": 1630,
+        "longTasks": [
+          434,
+          109,
+          709,
+          87,
+          291
+        ],
+        "eng": {
+          "script": 301,
+          "layout": 912,
+          "style": 149,
+          "task": 2215
+        },
+        "proof": {
+          "textLen": 26668,
+          "textHead": "ARCHITECTURE & APIS · INGESTION LAYER Content Pipeline FOCUS ⌂ ‹ REHEARSING Content Pipeli",
+          "visibleEls": 437,
+          "totalEls": 761,
+          "shadowNodes": 1104,
+          "h1": "Content Pipeline",
+          "splashStillVisible": false
+        },
+        "heap": 7662688,
+        "gotoWall": 1686,
+        "clickMs": 75,
+        "interactive": true,
+        "RENDER_OK": true
+      },
+      {
+        "domInteractive": 1665,
+        "dcl": 1701,
+        "load": 1703,
+        "splashHidden": 1672,
+        "longTaskTotal": 1635,
+        "longTasks": [
+          362,
+          95,
+          859,
+          319
+        ],
+        "eng": {
+          "script": 307,
+          "layout": 954,
+          "style": 119,
+          "task": 2227
+        },
+        "proof": {
+          "textLen": 26668,
+          "textHead": "ARCHITECTURE & APIS · INGESTION LAYER Content Pipeline FOCUS ⌂ ‹ REHEARSING Content Pipeli",
+          "visibleEls": 437,
+          "totalEls": 761,
+          "shadowNodes": 1104,
+          "h1": "Content Pipeline",
+          "splashStillVisible": false
+        },
+        "heap": 7662700,
+        "gotoWall": 1704,
+        "clickMs": 70,
+        "interactive": true,
+        "RENDER_OK": true
+      },
+      {
+        "domInteractive": 1664,
+        "dcl": 1736,
+        "load": 1740,
+        "splashHidden": 1698,
+        "longTaskTotal": 1552,
+        "longTasks": [
+          524,
+          72,
+          54,
+          618,
+          78,
+          206
+        ],
+        "eng": {
+          "script": 277,
+          "layout": 914,
+          "style": 162,
+          "task": 2105
+        },
+        "proof": {
+          "textLen": 26668,
+          "textHead": "ARCHITECTURE & APIS · INGESTION LAYER Content Pipeline FOCUS ⌂ ‹ REHEARSING Content Pipeli",
+          "visibleEls": 437,
+          "totalEls": 761,
+          "shadowNodes": 1104,
+          "h1": "Content Pipeline",
+          "splashStillVisible": false
+        },
+        "heap": 7671028,
+        "gotoWall": 1742,
+        "clickMs": 73,
+        "interactive": true,
+        "RENDER_OK": true
+      },
+      {
+        "domInteractive": 1614,
+        "dcl": 1725,
+        "load": 1727,
+        "splashHidden": 1640,
+        "longTaskTotal": 1692,
+        "longTasks": [
+          331,
+          74,
+          863,
+          115,
+          55,
+          254
+        ],
+        "eng": {
+          "script": 378,
+          "layout": 937,
+          "style": 146,
+          "task": 2235
+        },
+        "proof": {
+          "textLen": 26668,
+          "textHead": "ARCHITECTURE & APIS · INGESTION LAYER Content Pipeline FOCUS ⌂ ‹ REHEARSING Content Pipeli",
+          "visibleEls": 437,
+          "totalEls": 761,
+          "shadowNodes": 1104,
+          "h1": "Content Pipeline",
+          "splashStillVisible": false
+        },
+        "heap": 7662844,
+        "gotoWall": 1730,
+        "clickMs": 82,
+        "interactive": true,
+        "RENDER_OK": true
+      },
+      {
+        "domInteractive": 1717,
+        "dcl": 1834,
+        "load": 1841,
+        "splashHidden": 1727,
+        "longTaskTotal": 1704,
+        "longTasks": [
+          344,
+          96,
+          133,
+          772,
+          128,
+          231
+        ],
+        "eng": {
+          "script": 301,
+          "layout": 985,
+          "style": 159,
+          "task": 2231
+        },
+        "proof": {
+          "textLen": 26668,
+          "textHead": "ARCHITECTURE & APIS · INGESTION LAYER Content Pipeline FOCUS ⌂ ‹ REHEARSING Content Pipeli",
+          "visibleEls": 437,
+          "totalEls": 761,
+          "shadowNodes": 1104,
+          "h1": "Content Pipeline",
+          "splashStillVisible": false
+        },
+        "heap": 7662856,
+        "gotoWall": 1844,
+        "clickMs": 75,
+        "interactive": true,
+        "RENDER_OK": true
+      }
+    ],
+    "med": {
+      "dcl": 1725,
+      "load": 1727,
+      "splash": 1672,
+      "longTaskTotal": 1635,
+      "script": 301,
+      "layout": 937,
+      "style": 149,
+      "task": 2227,
+      "heapMB": 7.3
+    },
+    "proof": {
+      "textLen": 26668,
+      "textHead": "ARCHITECTURE & APIS · INGESTION LAYER Content Pipeline FOCUS ⌂ ‹ REHEARSING Content Pipeli",
+      "visibleEls": 437,
+      "totalEls": 761,
+      "shadowNodes": 1104,
+      "h1": "Content Pipeline",
+      "splashStillVisible": false
+    }
+  },
+  "BEFORE|mobile-6x": {
+    "RENDER_OK": true,
+    "runs": [
+      {
+        "domInteractive": 2880,
+        "dcl": 2999,
+        "load": 3002,
+        "splashHidden": 4374,
+        "longTaskTotal": 3634,
+        "longTasks": [
+          80,
+          851,
+          169,
+          1171,
+          126,
+          102,
+          958,
+          58
+        ],
+        "eng": {
+          "script": 602,
+          "layout": 2093,
+          "style": 305,
+          "task": 4665
+        },
+        "proof": {
+          "textLen": 26668,
+          "textHead": "ARCHITECTURE & APIS · INGESTION LAYER Content Pipeline FOCUS ⌂ ‹ REHEARSING Content Pipeli",
+          "visibleEls": 437,
+          "totalEls": 761,
+          "shadowNodes": 1104,
+          "h1": "Content Pipeline",
+          "splashStillVisible": false
+        },
+        "heap": 7674556,
+        "gotoWall": 3004,
+        "clickMs": 91,
+        "interactive": true,
+        "RENDER_OK": true
+      },
+      {
+        "domInteractive": 2683,
+        "dcl": 2764,
+        "load": 2766,
+        "splashHidden": 3510,
+        "longTaskTotal": 2635,
+        "longTasks": [
+          720,
+          150,
+          1165,
+          87,
+          513
+        ],
+        "eng": {
+          "script": 482,
+          "layout": 1470,
+          "style": 265,
+          "task": 3569
+        },
+        "proof": {
+          "textLen": 26668,
+          "textHead": "ARCHITECTURE & APIS · INGESTION LAYER Content Pipeline FOCUS ⌂ ‹ REHEARSING Content Pipeli",
+          "visibleEls": 437,
+          "totalEls": 761,
+          "shadowNodes": 1104,
+          "h1": "Content Pipeline",
+          "splashStillVisible": false
+        },
+        "heap": 7675300,
+        "gotoWall": 2770,
+        "clickMs": 90,
+        "interactive": true,
+        "RENDER_OK": true
+      },
+      {
+        "domInteractive": 2584,
+        "dcl": 2660,
+        "load": 2663,
+        "splashHidden": 3584,
+        "longTaskTotal": 2751,
+        "longTasks": [
+          62,
+          614,
+          117,
+          1223,
+          83,
+          652
+        ],
+        "eng": {
+          "script": 469,
+          "layout": 1581,
+          "style": 271,
+          "task": 3686
+        },
+        "proof": {
+          "textLen": 26668,
+          "textHead": "ARCHITECTURE & APIS · INGESTION LAYER Content Pipeline FOCUS ⌂ ‹ REHEARSING Content Pipeli",
+          "visibleEls": 437,
+          "totalEls": 761,
+          "shadowNodes": 1104,
+          "h1": "Content Pipeline",
+          "splashStillVisible": false
+        },
+        "heap": 7652744,
+        "gotoWall": 2665,
+        "clickMs": 90,
+        "interactive": true,
+        "RENDER_OK": true
+      },
+      {
+        "domInteractive": 2875,
+        "dcl": 3065,
+        "load": 3072,
+        "splashHidden": 4626,
+        "longTaskTotal": 4066,
+        "longTasks": [
+          54,
+          819,
+          167,
+          1334,
+          201,
+          104,
+          102,
+          1061
+        ],
+        "eng": {
+          "script": 650,
+          "layout": 2137,
+          "style": 369,
+          "task": 4856
+        },
+        "proof": {
+          "textLen": 26668,
+          "textHead": "ARCHITECTURE & APIS · INGESTION LAYER Content Pipeline FOCUS ⌂ ‹ REHEARSING Content Pipeli",
+          "visibleEls": 437,
+          "totalEls": 761,
+          "shadowNodes": 1104,
+          "h1": "Content Pipeline",
+          "splashStillVisible": false
+        },
+        "heap": 7675188,
+        "gotoWall": 3073,
+        "clickMs": 102,
+        "interactive": true,
+        "RENDER_OK": true
+      },
+      {
+        "domInteractive": 2915,
+        "dcl": 3169,
+        "load": 3175,
+        "splashHidden": 4328,
+        "longTaskTotal": 3844,
+        "longTasks": [
+          80,
+          403,
+          284,
+          159,
+          1306,
+          273,
+          95,
+          93
+        ],
+        "eng": {
+          "script": 629,
+          "layout": 2045,
+          "style": 361,
+          "task": 4907
+        },
+        "proof": {
+          "textLen": 26668,
+          "textHead": "ARCHITECTURE & APIS · INGESTION LAYER Content Pipeline FOCUS ⌂ ‹ REHEARSING Content Pipeli",
+          "visibleEls": 437,
+          "totalEls": 761,
+          "shadowNodes": 1104,
+          "h1": "Content Pipeline",
+          "splashStillVisible": false
+        },
+        "heap": 7661804,
+        "gotoWall": 3177,
+        "clickMs": 87,
+        "interactive": true,
+        "RENDER_OK": true
+      }
+    ],
+    "med": {
+      "dcl": 2999,
+      "load": 3002,
+      "splash": 4328,
+      "longTaskTotal": 3634,
+      "script": 602,
+      "layout": 2045,
+      "style": 305,
+      "task": 4665,
+      "heapMB": 7.3
+    },
+    "proof": {
+      "textLen": 26668,
+      "textHead": "ARCHITECTURE & APIS · INGESTION LAYER Content Pipeline FOCUS ⌂ ‹ REHEARSING Content Pipeli",
+      "visibleEls": 437,
+      "totalEls": 761,
+      "shadowNodes": 1104,
+      "h1": "Content Pipeline",
+      "splashStillVisible": false
+    }
+  },
+  "AFTER|desktop-1x": {
+    "RENDER_OK": false,
+    "runs": [
+      {
+        "domInteractive": 329,
+        "dcl": 342,
+        "load": 343,
+        "splashHidden": 333,
+        "longTaskTotal": 217,
+        "longTasks": [
+          75,
+          142
+        ],
+        "eng": {
+          "script": 42,
+          "layout": 119,
+          "style": 15,
+          "task": 359
+        },
+        "proof": {
+          "textLen": 27177,
+          "textHead": "DEEP REHEARSALARCARCHITECTURE & APIS · INGESTION LAYER Content Pipeline FOCUS ⌂ ‹ REHEARSI",
+          "visibleEls": 460,
+          "totalEls": 761,
+          "shadowNodes": 1121,
+          "h1": "Content Pipeline",
+          "splashStillVisible": true
+        },
+        "heap": 14107272,
+        "gotoWall": 345,
+        "clickMs": 75,
+        "interactive": true,
+        "RENDER_OK": false
+      },
+      {
+        "domInteractive": 311,
+        "dcl": 325,
+        "load": 327,
+        "splashHidden": 315,
+        "longTaskTotal": 201,
+        "longTasks": [
+          66,
+          135
+        ],
+        "eng": {
+          "script": 43,
+          "layout": 132,
+          "style": 18,
+          "task": 380
+        },
+        "proof": {
+          "textLen": 27189,
+          "textHead": "DEEP REHEARSALARCARCHITECTURE & APIS · INGESTION LAYER Content Pipeline FOCUS ⌂ ‹ REHEARSI",
+          "visibleEls": 460,
+          "totalEls": 761,
+          "shadowNodes": 1121,
+          "h1": "Content Pipeline",
+          "splashStillVisible": true
+        },
+        "heap": 14126488,
+        "gotoWall": 329,
+        "clickMs": 64,
+        "interactive": true,
+        "RENDER_OK": false
+      },
+      {
+        "domInteractive": 323,
+        "dcl": 337,
+        "load": 339,
+        "splashHidden": 327,
+        "longTaskTotal": 219,
+        "longTasks": [
+          87,
+          132
+        ],
+        "eng": {
+          "script": 39,
+          "layout": 142,
+          "style": 14,
+          "task": 380
+        },
+        "proof": {
+          "textLen": 27189,
+          "textHead": "DEEP REHEARSALARCARCHITECTURE & APIS · INGESTION LAYER Content Pipeline FOCUS ⌂ ‹ REHEARSI",
+          "visibleEls": 460,
+          "totalEls": 761,
+          "shadowNodes": 1121,
+          "h1": "Content Pipeline",
+          "splashStillVisible": true
+        },
+        "heap": 14067256,
+        "gotoWall": 342,
+        "clickMs": 74,
+        "interactive": true,
+        "RENDER_OK": false
+      },
+      {
+        "domInteractive": 320,
+        "dcl": 330,
+        "load": 332,
+        "splashHidden": 322,
+        "longTaskTotal": 214,
+        "longTasks": [
+          80,
+          134
+        ],
+        "eng": {
+          "script": 40,
+          "layout": 146,
+          "style": 15,
+          "task": 379
+        },
+        "proof": {
+          "textLen": 27189,
+          "textHead": "DEEP REHEARSALARCARCHITECTURE & APIS · INGESTION LAYER Content Pipeline FOCUS ⌂ ‹ REHEARSI",
+          "visibleEls": 460,
+          "totalEls": 761,
+          "shadowNodes": 1121,
+          "h1": "Content Pipeline",
+          "splashStillVisible": true
+        },
+        "heap": 13991160,
+        "gotoWall": 334,
+        "clickMs": 77,
+        "interactive": true,
+        "RENDER_OK": false
+      },
+      {
+        "domInteractive": 306,
+        "dcl": 317,
+        "load": 319,
+        "splashHidden": 310,
+        "longTaskTotal": 198,
+        "longTasks": [
+          69,
+          129
+        ],
+        "eng": {
+          "script": 38,
+          "layout": 110,
+          "style": 12,
+          "task": 336
+        },
+        "proof": {
+          "textLen": 27177,
+          "textHead": "DEEP REHEARSALARCARCHITECTURE & APIS · INGESTION LAYER Content Pipeline FOCUS ⌂ ‹ REHEARSI",
+          "visibleEls": 458,
+          "totalEls": 761,
+          "shadowNodes": 1121,
+          "h1": "Content Pipeline",
+          "splashStillVisible": true
+        },
+        "heap": 14124184,
+        "gotoWall": 321,
+        "clickMs": 74,
+        "interactive": true,
+        "RENDER_OK": false
+      }
+    ],
+    "med": {
+      "dcl": 330,
+      "load": 332,
+      "splash": 322,
+      "longTaskTotal": 214,
+      "script": 40,
+      "layout": 132,
+      "style": 15,
+      "task": 379,
+      "heapMB": 13.5
+    },
+    "proof": {
+      "textLen": 27177,
+      "textHead": "DEEP REHEARSALARCARCHITECTURE & APIS · INGESTION LAYER Content Pipeline FOCUS ⌂ ‹ REHEARSI",
+      "visibleEls": 460,
+      "totalEls": 761,
+      "shadowNodes": 1121,
+      "h1": "Content Pipeline",
+      "splashStillVisible": true
+    }
+  },
+  "AFTER|mobile-4x": {
+    "RENDER_OK": true,
+    "runs": [
+      {
+        "domInteractive": 2114,
+        "dcl": 2184,
+        "load": 2187,
+        "splashHidden": 2134,
+        "longTaskTotal": 1841,
+        "longTasks": [
+          361,
+          120,
+          1016,
+          74,
+          270
+        ],
+        "eng": {
+          "script": 288,
+          "layout": 849,
+          "style": 131,
+          "task": 2586
+        },
+        "proof": {
+          "textLen": 26612,
+          "textHead": "ARCARCHITECTURE & APIS · INGESTION LAYER Content Pipeline FOCUS ⌂ ‹ REHEARSING Content Pip",
+          "visibleEls": 430,
+          "totalEls": 761,
+          "shadowNodes": 1121,
+          "h1": "Content Pipeline",
+          "splashStillVisible": false
+        },
+        "heap": 14053356,
+        "gotoWall": 2188,
+        "clickMs": 78,
+        "interactive": true,
+        "RENDER_OK": true
+      },
+      {
+        "domInteractive": 2428,
+        "dcl": 2541,
+        "load": 2557,
+        "splashHidden": 2481,
+        "longTaskTotal": 2126,
+        "longTasks": [
+          491,
+          81,
+          65,
+          1108,
+          138,
+          193,
+          50
+        ],
+        "eng": {
+          "script": 348,
+          "layout": 998,
+          "style": 166,
+          "task": 2982
+        },
+        "proof": {
+          "textLen": 26612,
+          "textHead": "ARCARCHITECTURE & APIS · INGESTION LAYER Content Pipeline FOCUS ⌂ ‹ REHEARSING Content Pip",
+          "visibleEls": 430,
+          "totalEls": 761,
+          "shadowNodes": 1121,
+          "h1": "Content Pipeline",
+          "splashStillVisible": false
+        },
+        "heap": 14038648,
+        "gotoWall": 2559,
+        "clickMs": 83,
+        "interactive": true,
+        "RENDER_OK": true
+      },
+      {
+        "domInteractive": 2215,
+        "dcl": 2273,
+        "load": 2278,
+        "splashHidden": 2237,
+        "longTaskTotal": 1929,
+        "longTasks": [
+          467,
+          107,
+          1034,
+          66,
+          255
+        ],
+        "eng": {
+          "script": 368,
+          "layout": 918,
+          "style": 152,
+          "task": 2672
+        },
+        "proof": {
+          "textLen": 26612,
+          "textHead": "ARCARCHITECTURE & APIS · INGESTION LAYER Content Pipeline FOCUS ⌂ ‹ REHEARSING Content Pip",
+          "visibleEls": 430,
+          "totalEls": 761,
+          "shadowNodes": 1121,
+          "h1": "Content Pipeline",
+          "splashStillVisible": false
+        },
+        "heap": 14012928,
+        "gotoWall": 2281,
+        "clickMs": 67,
+        "interactive": true,
+        "RENDER_OK": true
+      },
+      {
+        "domInteractive": 2198,
+        "dcl": 2298,
+        "load": 2302,
+        "splashHidden": 2220,
+        "longTaskTotal": 1888,
+        "longTasks": [
+          465,
+          101,
+          942,
+          112,
+          268
+        ],
+        "eng": {
+          "script": 287,
+          "layout": 889,
+          "style": 121,
+          "task": 2709
+        },
+        "proof": {
+          "textLen": 26612,
+          "textHead": "ARCARCHITECTURE & APIS · INGESTION LAYER Content Pipeline FOCUS ⌂ ‹ REHEARSING Content Pip",
+          "visibleEls": 430,
+          "totalEls": 761,
+          "shadowNodes": 1121,
+          "h1": "Content Pipeline",
+          "splashStillVisible": false
+        },
+        "heap": 14026300,
+        "gotoWall": 2304,
+        "clickMs": 81,
+        "interactive": true,
+        "RENDER_OK": true
+      },
+      {
+        "domInteractive": 2226,
+        "dcl": 2298,
+        "load": 2304,
+        "splashHidden": 2254,
+        "longTaskTotal": 1948,
+        "longTasks": [
+          419,
+          85,
+          1104,
+          84,
+          256
+        ],
+        "eng": {
+          "script": 363,
+          "layout": 905,
+          "style": 167,
+          "task": 2728
+        },
+        "proof": {
+          "textLen": 26612,
+          "textHead": "ARCARCHITECTURE & APIS · INGESTION LAYER Content Pipeline FOCUS ⌂ ‹ REHEARSING Content Pip",
+          "visibleEls": 430,
+          "totalEls": 761,
+          "shadowNodes": 1121,
+          "h1": "Content Pipeline",
+          "splashStillVisible": false
+        },
+        "heap": 14038272,
+        "gotoWall": 2306,
+        "clickMs": 75,
+        "interactive": true,
+        "RENDER_OK": true
+      }
+    ],
+    "med": {
+      "dcl": 2298,
+      "load": 2302,
+      "splash": 2237,
+      "longTaskTotal": 1929,
+      "script": 348,
+      "layout": 905,
+      "style": 152,
+      "task": 2709,
+      "heapMB": 13.4
+    },
+    "proof": {
+      "textLen": 26612,
+      "textHead": "ARCARCHITECTURE & APIS · INGESTION LAYER Content Pipeline FOCUS ⌂ ‹ REHEARSING Content Pip",
+      "visibleEls": 430,
+      "totalEls": 761,
+      "shadowNodes": 1121,
+      "h1": "Content Pipeline",
+      "splashStillVisible": false
+    }
+  },
+  "AFTER|mobile-6x": {
+    "RENDER_OK": true,
+    "runs": [
+      {
+        "domInteractive": 4460,
+        "dcl": 4735,
+        "load": 4748,
+        "splashHidden": 4800,
+        "longTaskTotal": 4740,
+        "longTasks": [
+          50,
+          739,
+          138,
+          2387,
+          88,
+          292,
+          171,
+          875
+        ],
+        "eng": {
+          "script": 795,
+          "layout": 2515,
+          "style": 488,
+          "task": 6079
+        },
+        "proof": {
+          "textLen": 26612,
+          "textHead": "ARCARCHITECTURE & APIS · INGESTION LAYER Content Pipeline FOCUS ⌂ ‹ REHEARSING Content Pip",
+          "visibleEls": 430,
+          "totalEls": 761,
+          "shadowNodes": 1121,
+          "h1": "Content Pipeline",
+          "splashStillVisible": false
+        },
+        "heap": 14041132,
+        "gotoWall": 4750,
+        "clickMs": 80,
+        "interactive": true,
+        "RENDER_OK": true
+      },
+      {
+        "domInteractive": 3913,
+        "dcl": 4061,
+        "load": 4127,
+        "splashHidden": 4179,
+        "longTaskTotal": 4028,
+        "longTasks": [
+          58,
+          700,
+          144,
+          2159,
+          218,
+          583,
+          106,
+          60
+        ],
+        "eng": {
+          "script": 637,
+          "layout": 1954,
+          "style": 379,
+          "task": 5313
+        },
+        "proof": {
+          "textLen": 26612,
+          "textHead": "ARCARCHITECTURE & APIS · INGESTION LAYER Content Pipeline FOCUS ⌂ ‹ REHEARSING Content Pip",
+          "visibleEls": 430,
+          "totalEls": 761,
+          "shadowNodes": 1121,
+          "h1": "Content Pipeline",
+          "splashStillVisible": false
+        },
+        "heap": 14032336,
+        "gotoWall": 4143,
+        "clickMs": 86,
+        "interactive": true,
+        "RENDER_OK": true
+      },
+      {
+        "domInteractive": 4259,
+        "dcl": 4407,
+        "load": 4415,
+        "splashHidden": 4474,
+        "longTaskTotal": 4471,
+        "longTasks": [
+          78,
+          827,
+          154,
+          2295,
+          162,
+          52,
+          51,
+          747
+        ],
+        "eng": {
+          "script": 741,
+          "layout": 2129,
+          "style": 413,
+          "task": 5813
+        },
+        "proof": {
+          "textLen": 26612,
+          "textHead": "ARCARCHITECTURE & APIS · INGESTION LAYER Content Pipeline FOCUS ⌂ ‹ REHEARSING Content Pip",
+          "visibleEls": 430,
+          "totalEls": 761,
+          "shadowNodes": 1121,
+          "h1": "Content Pipeline",
+          "splashStillVisible": false
+        },
+        "heap": 14052728,
+        "gotoWall": 4419,
+        "clickMs": 72,
+        "interactive": true,
+        "RENDER_OK": true
+      },
+      {
+        "domInteractive": 4988,
+        "dcl": 5218,
+        "load": 5233,
+        "splashHidden": 5291,
+        "longTaskTotal": 5346,
+        "longTasks": [
+          57,
+          53,
+          832,
+          150,
+          2700,
+          250,
+          51,
+          104
+        ],
+        "eng": {
+          "script": 1184,
+          "layout": 2591,
+          "style": 455,
+          "task": 6797
+        },
+        "proof": {
+          "textLen": 26612,
+          "textHead": "ARCARCHITECTURE & APIS · INGESTION LAYER Content Pipeline FOCUS ⌂ ‹ REHEARSING Content Pip",
+          "visibleEls": 430,
+          "totalEls": 761,
+          "shadowNodes": 1121,
+          "h1": "Content Pipeline",
+          "splashStillVisible": false
+        },
+        "heap": 14052692,
+        "gotoWall": 5236,
+        "clickMs": 84,
+        "interactive": true,
+        "RENDER_OK": true
+      },
+      {
+        "domInteractive": 4523,
+        "dcl": 4714,
+        "load": 4721,
+        "splashHidden": 4797,
+        "longTaskTotal": 5226,
+        "longTasks": [
+          64,
+          233,
+          133,
+          534,
+          254,
+          2306,
+          213,
+          67
+        ],
+        "eng": {
+          "script": 683,
+          "layout": 2774,
+          "style": 496,
+          "task": 6570
+        },
+        "proof": {
+          "textLen": 26612,
+          "textHead": "ARCARCHITECTURE & APIS · INGESTION LAYER Content Pipeline FOCUS ⌂ ‹ REHEARSING Content Pip",
+          "visibleEls": 430,
+          "totalEls": 761,
+          "shadowNodes": 1121,
+          "h1": "Content Pipeline",
+          "splashStillVisible": false
+        },
+        "heap": 14052740,
+        "gotoWall": 4724,
+        "clickMs": 86,
+        "interactive": true,
+        "RENDER_OK": true
+      }
+    ],
+    "med": {
+      "dcl": 4714,
+      "load": 4721,
+      "splash": 4797,
+      "longTaskTotal": 4740,
+      "script": 741,
+      "layout": 2515,
+      "style": 455,
+      "task": 6079,
+      "heapMB": 13.4
+    },
+    "proof": {
+      "textLen": 26612,
+      "textHead": "ARCARCHITECTURE & APIS · INGESTION LAYER Content Pipeline FOCUS ⌂ ‹ REHEARSING Content Pip",
+      "visibleEls": 430,
+      "totalEls": 761,
+      "shadowNodes": 1121,
+      "h1": "Content Pipeline",
+      "splashStillVisible": false
+    }
+  }
+}

@@ -1,0 +1,506 @@
+[
+  {
+    "build": "BEFORE",
+    "theme": "light",
+    "group": "messaging-events",
+    "el": "mock",
+    "text": [
+      255,
+      255,
+      255
+    ],
+    "slab": [
+      97,
+      86,
+      199
+    ],
+    "ratio": 5.73,
+    "textPx": 6708,
+    "slabPx": 63776,
+    "AA": true,
+    "AA_large": true
+  },
+  {
+    "build": "BEFORE",
+    "theme": "light",
+    "group": "data-storage",
+    "el": "mock",
+    "text": [
+      255,
+      255,
+      255
+    ],
+    "slab": [
+      97,
+      86,
+      199
+    ],
+    "ratio": 5.73,
+    "textPx": 6708,
+    "slabPx": 63776,
+    "AA": true,
+    "AA_large": true
+  },
+  {
+    "build": "BEFORE",
+    "theme": "light",
+    "group": "reliability-observability",
+    "el": "mock",
+    "text": [
+      255,
+      255,
+      255
+    ],
+    "slab": [
+      97,
+      86,
+      199
+    ],
+    "ratio": 5.73,
+    "textPx": 6708,
+    "slabPx": 63776,
+    "AA": true,
+    "AA_large": true
+  },
+  {
+    "build": "BEFORE",
+    "theme": "light",
+    "group": "platform-infra",
+    "el": "mock",
+    "text": [
+      255,
+      255,
+      255
+    ],
+    "slab": [
+      97,
+      86,
+      199
+    ],
+    "ratio": 5.73,
+    "textPx": 6707,
+    "slabPx": 63777,
+    "AA": true,
+    "AA_large": true
+  },
+  {
+    "build": "BEFORE",
+    "theme": "light",
+    "group": "architecture-apis",
+    "el": "mock",
+    "text": [
+      255,
+      255,
+      255
+    ],
+    "slab": [
+      97,
+      86,
+      199
+    ],
+    "ratio": 5.73,
+    "textPx": 6707,
+    "slabPx": 63777,
+    "AA": true,
+    "AA_large": true
+  },
+  {
+    "build": "BEFORE",
+    "theme": "light",
+    "group": "security-tenancy",
+    "el": "mock",
+    "text": [
+      255,
+      255,
+      255
+    ],
+    "slab": [
+      97,
+      86,
+      199
+    ],
+    "ratio": 5.73,
+    "textPx": 6707,
+    "slabPx": 63777,
+    "AA": true,
+    "AA_large": true
+  },
+  {
+    "build": "BEFORE",
+    "theme": "dark",
+    "group": "messaging-events",
+    "el": "mock",
+    "text": [
+      26,
+      22,
+      34
+    ],
+    "slab": [
+      177,
+      164,
+      246
+    ],
+    "ratio": 8.05,
+    "textPx": 7006,
+    "slabPx": 63478,
+    "AA": true,
+    "AA_large": true
+  },
+  {
+    "build": "BEFORE",
+    "theme": "dark",
+    "group": "data-storage",
+    "el": "mock",
+    "text": [
+      26,
+      22,
+      34
+    ],
+    "slab": [
+      177,
+      164,
+      246
+    ],
+    "ratio": 8.05,
+    "textPx": 7006,
+    "slabPx": 63478,
+    "AA": true,
+    "AA_large": true
+  },
+  {
+    "build": "BEFORE",
+    "theme": "dark",
+    "group": "reliability-observability",
+    "el": "mock",
+    "text": [
+      26,
+      22,
+      34
+    ],
+    "slab": [
+      177,
+      164,
+      246
+    ],
+    "ratio": 8.05,
+    "textPx": 6996,
+    "slabPx": 63488,
+    "AA": true,
+    "AA_large": true
+  },
+  {
+    "build": "BEFORE",
+    "theme": "dark",
+    "group": "platform-infra",
+    "el": "mock",
+    "text": [
+      26,
+      22,
+      34
+    ],
+    "slab": [
+      177,
+      164,
+      246
+    ],
+    "ratio": 8.05,
+    "textPx": 7006,
+    "slabPx": 63478,
+    "AA": true,
+    "AA_large": true
+  },
+  {
+    "build": "BEFORE",
+    "theme": "dark",
+    "group": "architecture-apis",
+    "el": "mock",
+    "text": [
+      26,
+      22,
+      34
+    ],
+    "slab": [
+      177,
+      164,
+      246
+    ],
+    "ratio": 8.05,
+    "textPx": 7007,
+    "slabPx": 63477,
+    "AA": true,
+    "AA_large": true
+  },
+  {
+    "build": "BEFORE",
+    "theme": "dark",
+    "group": "security-tenancy",
+    "el": "mock",
+    "text": [
+      26,
+      22,
+      34
+    ],
+    "slab": [
+      177,
+      164,
+      246
+    ],
+    "ratio": 8.05,
+    "textPx": 7006,
+    "slabPx": 63478,
+    "AA": true,
+    "AA_large": true
+  },
+  {
+    "build": "AFTER",
+    "theme": "light",
+    "group": "messaging-events",
+    "el": "mock",
+    "text": [
+      255,
+      255,
+      255
+    ],
+    "slab": [
+      2,
+      121,
+      112
+    ],
+    "ratio": 5.29,
+    "textPx": 6687,
+    "slabPx": 62993,
+    "AA": true,
+    "AA_large": true
+  },
+  {
+    "build": "AFTER",
+    "theme": "light",
+    "group": "data-storage",
+    "el": "mock",
+    "text": [
+      255,
+      255,
+      255
+    ],
+    "slab": [
+      51,
+      102,
+      212
+    ],
+    "ratio": 5.26,
+    "textPx": 6692,
+    "slabPx": 62988,
+    "AA": true,
+    "AA_large": true
+  },
+  {
+    "build": "AFTER",
+    "theme": "light",
+    "group": "reliability-observability",
+    "el": "mock",
+    "text": [
+      255,
+      255,
+      255
+    ],
+    "slab": [
+      164,
+      89,
+      2
+    ],
+    "ratio": 5.24,
+    "textPx": 6691,
+    "slabPx": 62989,
+    "AA": true,
+    "AA_large": true
+  },
+  {
+    "build": "AFTER",
+    "theme": "light",
+    "group": "platform-infra",
+    "el": "mock",
+    "text": [
+      255,
+      255,
+      255
+    ],
+    "slab": [
+      121,
+      85,
+      206
+    ],
+    "ratio": 5.25,
+    "textPx": 6715,
+    "slabPx": 62965,
+    "AA": true,
+    "AA_large": true
+  },
+  {
+    "build": "AFTER",
+    "theme": "light",
+    "group": "architecture-apis",
+    "el": "mock",
+    "text": [
+      255,
+      255,
+      255
+    ],
+    "slab": [
+      174,
+      63,
+      155
+    ],
+    "ratio": 5.27,
+    "textPx": 6673,
+    "slabPx": 63007,
+    "AA": true,
+    "AA_large": true
+  },
+  {
+    "build": "AFTER",
+    "theme": "light",
+    "group": "security-tenancy",
+    "el": "mock",
+    "text": [
+      255,
+      255,
+      255
+    ],
+    "slab": [
+      198,
+      55,
+      50
+    ],
+    "ratio": 5.26,
+    "textPx": 6661,
+    "slabPx": 63019,
+    "AA": true,
+    "AA_large": true
+  },
+  {
+    "build": "AFTER",
+    "theme": "dark",
+    "group": "messaging-events",
+    "el": "mock",
+    "text": [
+      19,
+      186,
+      172
+    ],
+    "slab": [
+      28,
+      53,
+      59
+    ],
+    "ratio": 5.33,
+    "textPx": 7237,
+    "slabPx": 64523,
+    "AA": true,
+    "AA_large": true
+  },
+  {
+    "build": "AFTER",
+    "theme": "dark",
+    "group": "data-storage",
+    "el": "mock",
+    "text": [
+      125,
+      166,
+      243
+    ],
+    "slab": [
+      45,
+      50,
+      70
+    ],
+    "ratio": 5.2,
+    "textPx": 7482,
+    "slabPx": 64278,
+    "AA": true,
+    "AA_large": true
+  },
+  {
+    "build": "AFTER",
+    "theme": "dark",
+    "group": "reliability-observability",
+    "el": "mock",
+    "text": [
+      225,
+      149,
+      86
+    ],
+    "slab": [
+      61,
+      47,
+      45
+    ],
+    "ratio": 5.26,
+    "textPx": 7481,
+    "slabPx": 64279,
+    "AA": true,
+    "AA_large": true
+  },
+  {
+    "build": "AFTER",
+    "theme": "dark",
+    "group": "platform-infra",
+    "el": "mock",
+    "text": [
+      173,
+      154,
+      238
+    ],
+    "slab": [
+      53,
+      48,
+      69
+    ],
+    "ratio": 5.2,
+    "textPx": 7495,
+    "slabPx": 64265,
+    "AA": true,
+    "AA_large": true
+  },
+  {
+    "build": "AFTER",
+    "theme": "dark",
+    "group": "architecture-apis",
+    "el": "mock",
+    "text": [
+      218,
+      141,
+      202
+    ],
+    "slab": [
+      60,
+      46,
+      63
+    ],
+    "ratio": 5.22,
+    "textPx": 7491,
+    "slabPx": 64269,
+    "AA": true,
+    "AA_large": true
+  },
+  {
+    "build": "AFTER",
+    "theme": "dark",
+    "group": "security-tenancy",
+    "el": "mock",
+    "text": [
+      236,
+      140,
+      129
+    ],
+    "slab": [
+      63,
+      46,
+      52
+    ],
+    "ratio": 5.23,
+    "textPx": 7491,
+    "slabPx": 64269,
+    "AA": true,
+    "AA_large": true
+  }
+]

@@ -1,0 +1,1019 @@
+{
+  "contrast": [
+    {
+      "theme": "light",
+      "group": "messaging-events",
+      "sample": "--acc as text on page bg",
+      "fg": "rgb(0, 107, 99)",
+      "bg": "rgb(250, 249, 245)",
+      "ratio": 6.07,
+      "AA": true,
+      "AA_large": true,
+      "note": "accent used as body-ish text"
+    },
+    {
+      "theme": "light",
+      "group": "messaging-events",
+      "sample": "--topic-ink on page bg",
+      "fg": "rgb(0, 107, 99)",
+      "bg": "rgb(250, 249, 245)",
+      "ratio": 6.07,
+      "AA": true,
+      "AA_large": true,
+      "note": ""
+    },
+    {
+      "theme": "light",
+      "group": "messaging-events",
+      "sample": "--topic-solid on page bg",
+      "fg": "rgb(0, 133, 122)",
+      "bg": "rgb(250, 249, 245)",
+      "ratio": 4.3,
+      "AA": false,
+      "AA_large": true,
+      "note": "fill colour, not necessarily text"
+    },
+    {
+      "theme": "light",
+      "group": "messaging-events",
+      "sample": ".locator (REAL rendered)",
+      "fg": "rgb(0, 107, 99)",
+      "bg": "rgb(236, 249, 247)",
+      "ratio": 5.93,
+      "AA": true,
+      "AA_large": true,
+      "note": "9px/700"
+    },
+    {
+      "theme": "light",
+      "group": "messaging-events",
+      "sample": "body ink on page bg",
+      "fg": "rgb(42, 40, 35)",
+      "bg": "rgb(250, 249, 245)",
+      "ratio": 13.98,
+      "AA": true,
+      "AA_large": true,
+      "note": "baseline body text"
+    },
+    {
+      "theme": "light",
+      "group": "data-storage",
+      "sample": "--acc as text on page bg",
+      "fg": "rgb(49, 91, 180)",
+      "bg": "rgb(250, 249, 245)",
+      "ratio": 6.07,
+      "AA": true,
+      "AA_large": true,
+      "note": "accent used as body-ish text"
+    },
+    {
+      "theme": "light",
+      "group": "data-storage",
+      "sample": "--topic-ink on page bg",
+      "fg": "rgb(49, 91, 180)",
+      "bg": "rgb(250, 249, 245)",
+      "ratio": 6.07,
+      "AA": true,
+      "AA_large": true,
+      "note": ""
+    },
+    {
+      "theme": "light",
+      "group": "data-storage",
+      "sample": "--topic-solid on page bg",
+      "fg": "rgb(49, 110, 243)",
+      "bg": "rgb(250, 249, 245)",
+      "ratio": 4.28,
+      "AA": false,
+      "AA_large": true,
+      "note": "fill colour, not necessarily text"
+    },
+    {
+      "theme": "light",
+      "group": "data-storage",
+      "sample": ".locator (REAL rendered)",
+      "fg": "rgb(49, 91, 180)",
+      "bg": "rgb(241, 246, 255)",
+      "ratio": 5.89,
+      "AA": true,
+      "AA_large": true,
+      "note": "9px/700"
+    },
+    {
+      "theme": "light",
+      "group": "data-storage",
+      "sample": "body ink on page bg",
+      "fg": "rgb(42, 40, 35)",
+      "bg": "rgb(250, 249, 245)",
+      "ratio": 13.98,
+      "AA": true,
+      "AA_large": true,
+      "note": "baseline body text"
+    },
+    {
+      "theme": "light",
+      "group": "reliability-observability",
+      "sample": "--acc as text on page bg",
+      "fg": "rgb(146, 78, 0)",
+      "bg": "rgb(250, 249, 245)",
+      "ratio": 6.02,
+      "AA": true,
+      "AA_large": true,
+      "note": "accent used as body-ish text"
+    },
+    {
+      "theme": "light",
+      "group": "reliability-observability",
+      "sample": "--topic-ink on page bg",
+      "fg": "rgb(146, 78, 0)",
+      "bg": "rgb(250, 249, 245)",
+      "ratio": 6.02,
+      "AA": true,
+      "AA_large": true,
+      "note": ""
+    },
+    {
+      "theme": "light",
+      "group": "reliability-observability",
+      "sample": "--topic-solid on page bg",
+      "fg": "rgb(180, 97, 0)",
+      "bg": "rgb(250, 249, 245)",
+      "ratio": 4.29,
+      "AA": false,
+      "AA_large": true,
+      "note": "fill colour, not necessarily text"
+    },
+    {
+      "theme": "light",
+      "group": "reliability-observability",
+      "sample": ".locator (REAL rendered)",
+      "fg": "rgb(146, 78, 0)",
+      "bg": "rgb(253, 244, 237)",
+      "ratio": 5.84,
+      "AA": true,
+      "AA_large": true,
+      "note": "9px/700"
+    },
+    {
+      "theme": "light",
+      "group": "reliability-observability",
+      "sample": "body ink on page bg",
+      "fg": "rgb(42, 40, 35)",
+      "bg": "rgb(250, 249, 245)",
+      "ratio": 13.98,
+      "AA": true,
+      "AA_large": true,
+      "note": "baseline body text"
+    },
+    {
+      "theme": "light",
+      "group": "platform-infra",
+      "sample": "--acc as text on page bg",
+      "fg": "rgb(105, 78, 176)",
+      "bg": "rgb(250, 249, 245)",
+      "ratio": 6.01,
+      "AA": true,
+      "AA_large": true,
+      "note": "accent used as body-ish text"
+    },
+    {
+      "theme": "light",
+      "group": "platform-infra",
+      "sample": "--topic-ink on page bg",
+      "fg": "rgb(105, 78, 176)",
+      "bg": "rgb(250, 249, 245)",
+      "ratio": 6.01,
+      "AA": true,
+      "AA_large": true,
+      "note": ""
+    },
+    {
+      "theme": "light",
+      "group": "platform-infra",
+      "sample": "--topic-solid on page bg",
+      "fg": "rgb(134, 89, 236)",
+      "bg": "rgb(250, 249, 245)",
+      "ratio": 4.28,
+      "AA": false,
+      "AA_large": true,
+      "note": "fill colour, not necessarily text"
+    },
+    {
+      "theme": "light",
+      "group": "platform-infra",
+      "sample": ".locator (REAL rendered)",
+      "fg": "rgb(105, 78, 176)",
+      "bg": "rgb(246, 244, 255)",
+      "ratio": 5.82,
+      "AA": true,
+      "AA_large": true,
+      "note": "9px/700"
+    },
+    {
+      "theme": "light",
+      "group": "platform-infra",
+      "sample": "body ink on page bg",
+      "fg": "rgb(42, 40, 35)",
+      "bg": "rgb(250, 249, 245)",
+      "ratio": 13.98,
+      "AA": true,
+      "AA_large": true,
+      "note": "baseline body text"
+    },
+    {
+      "theme": "light",
+      "group": "architecture-apis",
+      "sample": "--acc as text on page bg",
+      "fg": "rgb(150, 61, 134)",
+      "bg": "rgb(250, 249, 245)",
+      "ratio": 6.02,
+      "AA": true,
+      "AA_large": true,
+      "note": "accent used as body-ish text"
+    },
+    {
+      "theme": "light",
+      "group": "architecture-apis",
+      "sample": "--topic-ink on page bg",
+      "fg": "rgb(150, 61, 134)",
+      "bg": "rgb(250, 249, 245)",
+      "ratio": 6.02,
+      "AA": true,
+      "AA_large": true,
+      "note": ""
+    },
+    {
+      "theme": "light",
+      "group": "architecture-apis",
+      "sample": "--topic-solid on page bg",
+      "fg": "rgb(197, 61, 175)",
+      "bg": "rgb(250, 249, 245)",
+      "ratio": 4.28,
+      "AA": false,
+      "AA_large": true,
+      "note": "fill colour, not necessarily text"
+    },
+    {
+      "theme": "light",
+      "group": "architecture-apis",
+      "sample": ".locator (REAL rendered)",
+      "fg": "rgb(150, 61, 134)",
+      "bg": "rgb(252, 242, 250)",
+      "ratio": 5.81,
+      "AA": true,
+      "AA_large": true,
+      "note": "9px/700"
+    },
+    {
+      "theme": "light",
+      "group": "architecture-apis",
+      "sample": "body ink on page bg",
+      "fg": "rgb(42, 40, 35)",
+      "bg": "rgb(250, 249, 245)",
+      "ratio": 13.98,
+      "AA": true,
+      "AA_large": true,
+      "note": "baseline body text"
+    },
+    {
+      "theme": "light",
+      "group": "security-tenancy",
+      "sample": "--acc as text on page bg",
+      "fg": "rgb(170, 56, 50)",
+      "bg": "rgb(250, 249, 245)",
+      "ratio": 6,
+      "AA": true,
+      "AA_large": true,
+      "note": "accent used as body-ish text"
+    },
+    {
+      "theme": "light",
+      "group": "security-tenancy",
+      "sample": "--topic-ink on page bg",
+      "fg": "rgb(170, 56, 50)",
+      "bg": "rgb(250, 249, 245)",
+      "ratio": 6,
+      "AA": true,
+      "AA_large": true,
+      "note": ""
+    },
+    {
+      "theme": "light",
+      "group": "security-tenancy",
+      "sample": "--topic-solid on page bg",
+      "fg": "rgb(224, 50, 46)",
+      "bg": "rgb(250, 249, 245)",
+      "ratio": 4.27,
+      "AA": false,
+      "AA_large": true,
+      "note": "fill colour, not necessarily text"
+    },
+    {
+      "theme": "light",
+      "group": "security-tenancy",
+      "sample": ".locator (REAL rendered)",
+      "fg": "rgb(170, 56, 50)",
+      "bg": "rgb(255, 242, 241)",
+      "ratio": 5.79,
+      "AA": true,
+      "AA_large": true,
+      "note": "9px/700"
+    },
+    {
+      "theme": "light",
+      "group": "security-tenancy",
+      "sample": "body ink on page bg",
+      "fg": "rgb(42, 40, 35)",
+      "bg": "rgb(250, 249, 245)",
+      "ratio": 13.98,
+      "AA": true,
+      "AA_large": true,
+      "note": "baseline body text"
+    },
+    {
+      "theme": "dark",
+      "group": "messaging-events",
+      "sample": "--acc as text on page bg",
+      "fg": "rgb(19, 186, 172)",
+      "bg": "rgb(15, 14, 19)",
+      "ratio": 7.91,
+      "AA": true,
+      "AA_large": true,
+      "note": "accent used as body-ish text"
+    },
+    {
+      "theme": "dark",
+      "group": "messaging-events",
+      "sample": "--topic-ink on page bg",
+      "fg": "rgb(19, 186, 172)",
+      "bg": "rgb(15, 14, 19)",
+      "ratio": 7.91,
+      "AA": true,
+      "AA_large": true,
+      "note": ""
+    },
+    {
+      "theme": "dark",
+      "group": "messaging-events",
+      "sample": "--topic-solid on page bg",
+      "fg": "rgb(19, 186, 172)",
+      "bg": "rgb(15, 14, 19)",
+      "ratio": 7.91,
+      "AA": true,
+      "AA_large": true,
+      "note": "fill colour, not necessarily text"
+    },
+    {
+      "theme": "dark",
+      "group": "messaging-events",
+      "sample": ".locator (REAL rendered)",
+      "fg": "rgb(19, 186, 172)",
+      "bg": "rgb(20, 36, 34)",
+      "ratio": 6.63,
+      "AA": true,
+      "AA_large": true,
+      "note": "9px/700"
+    },
+    {
+      "theme": "dark",
+      "group": "messaging-events",
+      "sample": "body ink on page bg",
+      "fg": "rgb(236, 234, 228)",
+      "bg": "rgb(15, 14, 19)",
+      "ratio": 15.98,
+      "AA": true,
+      "AA_large": true,
+      "note": "baseline body text"
+    },
+    {
+      "theme": "dark",
+      "group": "data-storage",
+      "sample": "--acc as text on page bg",
+      "fg": "rgb(125, 166, 243)",
+      "bg": "rgb(15, 14, 19)",
+      "ratio": 7.89,
+      "AA": true,
+      "AA_large": true,
+      "note": "accent used as body-ish text"
+    },
+    {
+      "theme": "dark",
+      "group": "data-storage",
+      "sample": "--topic-ink on page bg",
+      "fg": "rgb(125, 166, 243)",
+      "bg": "rgb(15, 14, 19)",
+      "ratio": 7.89,
+      "AA": true,
+      "AA_large": true,
+      "note": ""
+    },
+    {
+      "theme": "dark",
+      "group": "data-storage",
+      "sample": "--topic-solid on page bg",
+      "fg": "rgb(125, 166, 243)",
+      "bg": "rgb(15, 14, 19)",
+      "ratio": 7.89,
+      "AA": true,
+      "AA_large": true,
+      "note": "fill colour, not necessarily text"
+    },
+    {
+      "theme": "dark",
+      "group": "data-storage",
+      "sample": ".locator (REAL rendered)",
+      "fg": "rgb(125, 166, 243)",
+      "bg": "rgb(27, 33, 43)",
+      "ratio": 6.64,
+      "AA": true,
+      "AA_large": true,
+      "note": "9px/700"
+    },
+    {
+      "theme": "dark",
+      "group": "data-storage",
+      "sample": "body ink on page bg",
+      "fg": "rgb(236, 234, 228)",
+      "bg": "rgb(15, 14, 19)",
+      "ratio": 15.98,
+      "AA": true,
+      "AA_large": true,
+      "note": "baseline body text"
+    },
+    {
+      "theme": "dark",
+      "group": "reliability-observability",
+      "sample": "--acc as text on page bg",
+      "fg": "rgb(225, 149, 86)",
+      "bg": "rgb(15, 14, 19)",
+      "ratio": 7.9,
+      "AA": true,
+      "AA_large": true,
+      "note": "accent used as body-ish text"
+    },
+    {
+      "theme": "dark",
+      "group": "reliability-observability",
+      "sample": "--topic-ink on page bg",
+      "fg": "rgb(225, 149, 86)",
+      "bg": "rgb(15, 14, 19)",
+      "ratio": 7.9,
+      "AA": true,
+      "AA_large": true,
+      "note": ""
+    },
+    {
+      "theme": "dark",
+      "group": "reliability-observability",
+      "sample": "--topic-solid on page bg",
+      "fg": "rgb(225, 149, 86)",
+      "bg": "rgb(15, 14, 19)",
+      "ratio": 7.9,
+      "AA": true,
+      "AA_large": true,
+      "note": "fill colour, not necessarily text"
+    },
+    {
+      "theme": "dark",
+      "group": "reliability-observability",
+      "sample": ".locator (REAL rendered)",
+      "fg": "rgb(225, 149, 86)",
+      "bg": "rgb(41, 30, 22)",
+      "ratio": 6.69,
+      "AA": true,
+      "AA_large": true,
+      "note": "9px/700"
+    },
+    {
+      "theme": "dark",
+      "group": "reliability-observability",
+      "sample": "body ink on page bg",
+      "fg": "rgb(236, 234, 228)",
+      "bg": "rgb(15, 14, 19)",
+      "ratio": 15.98,
+      "AA": true,
+      "AA_large": true,
+      "note": "baseline body text"
+    },
+    {
+      "theme": "dark",
+      "group": "platform-infra",
+      "sample": "--acc as text on page bg",
+      "fg": "rgb(173, 154, 238)",
+      "bg": "rgb(15, 14, 19)",
+      "ratio": 7.9,
+      "AA": true,
+      "AA_large": true,
+      "note": "accent used as body-ish text"
+    },
+    {
+      "theme": "dark",
+      "group": "platform-infra",
+      "sample": "--topic-ink on page bg",
+      "fg": "rgb(173, 154, 238)",
+      "bg": "rgb(15, 14, 19)",
+      "ratio": 7.9,
+      "AA": true,
+      "AA_large": true,
+      "note": ""
+    },
+    {
+      "theme": "dark",
+      "group": "platform-infra",
+      "sample": "--topic-solid on page bg",
+      "fg": "rgb(173, 154, 238)",
+      "bg": "rgb(15, 14, 19)",
+      "ratio": 7.9,
+      "AA": true,
+      "AA_large": true,
+      "note": "fill colour, not necessarily text"
+    },
+    {
+      "theme": "dark",
+      "group": "platform-infra",
+      "sample": ".locator (REAL rendered)",
+      "fg": "rgb(173, 154, 238)",
+      "bg": "rgb(33, 31, 42)",
+      "ratio": 6.67,
+      "AA": true,
+      "AA_large": true,
+      "note": "9px/700"
+    },
+    {
+      "theme": "dark",
+      "group": "platform-infra",
+      "sample": "body ink on page bg",
+      "fg": "rgb(236, 234, 228)",
+      "bg": "rgb(15, 14, 19)",
+      "ratio": 15.98,
+      "AA": true,
+      "AA_large": true,
+      "note": "baseline body text"
+    },
+    {
+      "theme": "dark",
+      "group": "architecture-apis",
+      "sample": "--acc as text on page bg",
+      "fg": "rgb(218, 141, 202)",
+      "bg": "rgb(15, 14, 19)",
+      "ratio": 7.91,
+      "AA": true,
+      "AA_large": true,
+      "note": "accent used as body-ish text"
+    },
+    {
+      "theme": "dark",
+      "group": "architecture-apis",
+      "sample": "--topic-ink on page bg",
+      "fg": "rgb(218, 141, 202)",
+      "bg": "rgb(15, 14, 19)",
+      "ratio": 7.91,
+      "AA": true,
+      "AA_large": true,
+      "note": ""
+    },
+    {
+      "theme": "dark",
+      "group": "architecture-apis",
+      "sample": "--topic-solid on page bg",
+      "fg": "rgb(218, 141, 202)",
+      "bg": "rgb(15, 14, 19)",
+      "ratio": 7.91,
+      "AA": true,
+      "AA_large": true,
+      "note": "fill colour, not necessarily text"
+    },
+    {
+      "theme": "dark",
+      "group": "architecture-apis",
+      "sample": ".locator (REAL rendered)",
+      "fg": "rgb(218, 141, 202)",
+      "bg": "rgb(39, 29, 37)",
+      "ratio": 6.71,
+      "AA": true,
+      "AA_large": true,
+      "note": "9px/700"
+    },
+    {
+      "theme": "dark",
+      "group": "architecture-apis",
+      "sample": "body ink on page bg",
+      "fg": "rgb(236, 234, 228)",
+      "bg": "rgb(15, 14, 19)",
+      "ratio": 15.98,
+      "AA": true,
+      "AA_large": true,
+      "note": "baseline body text"
+    },
+    {
+      "theme": "dark",
+      "group": "security-tenancy",
+      "sample": "--acc as text on page bg",
+      "fg": "rgb(236, 140, 129)",
+      "bg": "rgb(15, 14, 19)",
+      "ratio": 7.9,
+      "AA": true,
+      "AA_large": true,
+      "note": "accent used as body-ish text"
+    },
+    {
+      "theme": "dark",
+      "group": "security-tenancy",
+      "sample": "--topic-ink on page bg",
+      "fg": "rgb(236, 140, 129)",
+      "bg": "rgb(15, 14, 19)",
+      "ratio": 7.9,
+      "AA": true,
+      "AA_large": true,
+      "note": ""
+    },
+    {
+      "theme": "dark",
+      "group": "security-tenancy",
+      "sample": "--topic-solid on page bg",
+      "fg": "rgb(236, 140, 129)",
+      "bg": "rgb(15, 14, 19)",
+      "ratio": 7.9,
+      "AA": true,
+      "AA_large": true,
+      "note": "fill colour, not necessarily text"
+    },
+    {
+      "theme": "dark",
+      "group": "security-tenancy",
+      "sample": ".locator (REAL rendered)",
+      "fg": "rgb(236, 140, 129)",
+      "bg": "rgb(42, 28, 27)",
+      "ratio": 6.74,
+      "AA": true,
+      "AA_large": true,
+      "note": "9px/700"
+    },
+    {
+      "theme": "dark",
+      "group": "security-tenancy",
+      "sample": "body ink on page bg",
+      "fg": "rgb(236, 234, 228)",
+      "bg": "rgb(15, 14, 19)",
+      "ratio": 15.98,
+      "AA": true,
+      "AA_large": true,
+      "note": "baseline body text"
+    }
+  ],
+  "reducedMotion": [
+    {
+      "build": "BEFORE",
+      "visibleTextNodes": 276,
+      "innerTextLen": 27186,
+      "mainW": 750,
+      "mainH": 635,
+      "mainOpacity": "1",
+      "bodyOpacity": "0",
+      "prefersReduced": true,
+      "pageErrors": []
+    },
+    {
+      "build": "AFTER",
+      "visibleTextNodes": 277,
+      "innerTextLen": 27189,
+      "mainW": 720,
+      "mainH": 671,
+      "mainOpacity": "1",
+      "bodyOpacity": "1",
+      "prefersReduced": true,
+      "pageErrors": []
+    }
+  ],
+  "groups": [
+    {
+      "theme": "light",
+      "colors": {
+        "messaging-events": "rgb(0, 107, 99)",
+        "data-storage": "rgb(49, 91, 180)",
+        "reliability-observability": "rgb(146, 78, 0)",
+        "platform-infra": "rgb(105, 78, 176)",
+        "architecture-apis": "rgb(150, 61, 134)",
+        "security-tenancy": "rgb(170, 56, 50)"
+      }
+    },
+    {
+      "theme": "dark",
+      "colors": {
+        "messaging-events": "rgb(19, 186, 172)",
+        "data-storage": "rgb(125, 166, 243)",
+        "reliability-observability": "rgb(225, 149, 86)",
+        "platform-infra": "rgb(173, 154, 238)",
+        "architecture-apis": "rgb(218, 141, 202)",
+        "security-tenancy": "rgb(236, 140, 129)"
+      }
+    }
+  ],
+  "mobile": [
+    {
+      "build": "BEFORE",
+      "overflowX": true,
+      "scrollW": 396,
+      "clientW": 390,
+      "clippedCount": 58,
+      "clipped": [
+        {
+          "sel": "button.crambtn",
+          "clientH": 35,
+          "scrollH": 46,
+          "lost": 11,
+          "text": "Topic index\n— all topics across the six groups"
+        },
+        {
+          "sel": "button.crambtn",
+          "clientH": 35,
+          "scrollH": 46,
+          "lost": 11,
+          "text": "Search\n— jump to any topic or view by name or concept"
+        },
+        {
+          "sel": "button.crambtn",
+          "clientH": 35,
+          "scrollH": 46,
+          "lost": 11,
+          "text": "Copy link\n— a shareable link to this topic & view"
+        },
+        {
+          "sel": "button.crambtn",
+          "clientH": 35,
+          "scrollH": 46,
+          "lost": 11,
+          "text": "Star this topic\n— save it to your bookmarks on the home"
+        },
+        {
+          "sel": "button.crambtn",
+          "clientH": 35,
+          "scrollH": 46,
+          "lost": 11,
+          "text": "Your notes\n— jot notes & mnemonics for this topic"
+        },
+        {
+          "sel": "button.crambtn",
+          "clientH": 35,
+          "scrollH": 46,
+          "lost": 11,
+          "text": "Print Q&A\n— a printable sheet of this topic's probes"
+        },
+        {
+          "sel": "button.crambtn",
+          "clientH": 35,
+          "scrollH": 46,
+          "lost": 11,
+          "text": "One-page cram sheet\n— everything that matters, on a card"
+        },
+        {
+          "sel": "button.crambtn",
+          "clientH": 35,
+          "scrollH": 46,
+          "lost": 11,
+          "text": "Session progress\n— where you’re weak, what to drill next"
+        }
+      ],
+      "smallTapCount": 37,
+      "smallTaps": [
+        {
+          "sel": "button#_focus-toggle",
+          "w": 60,
+          "h": 20,
+          "txt": "FOCUS"
+        },
+        {
+          "sel": "button#inttog",
+          "w": 366,
+          "h": 43,
+          "txt": "Interviewer cuts in mi"
+        },
+        {
+          "sel": "button#toolsfab",
+          "w": 67,
+          "h": 40,
+          "txt": "Tools"
+        },
+        {
+          "sel": "button#idxopen",
+          "w": 364,
+          "h": 37,
+          "txt": "Topic index\n— all topi"
+        },
+        {
+          "sel": "button#searchopen",
+          "w": 364,
+          "h": 37,
+          "txt": "Search\n— jump to any t"
+        },
+        {
+          "sel": "button#copylink",
+          "w": 364,
+          "h": 37,
+          "txt": "Copy link\n— a shareabl"
+        },
+        {
+          "sel": "button#starbtn",
+          "w": 364,
+          "h": 37,
+          "txt": "Star this topic\n— save"
+        },
+        {
+          "sel": "button#notesopen",
+          "w": 364,
+          "h": 37,
+          "txt": "Your notes\n— jot notes"
+        },
+        {
+          "sel": "button#printqa",
+          "w": 364,
+          "h": 37,
+          "txt": "Print Q&A\n— a printabl"
+        },
+        {
+          "sel": "button#cramopen",
+          "w": 364,
+          "h": 37,
+          "txt": "One-page cram sheet\n— "
+        },
+        {
+          "sel": "button#sessopen",
+          "w": 364,
+          "h": 37,
+          "txt": "Session progress\n— whe"
+        },
+        {
+          "sel": "button#mixopen",
+          "w": 364,
+          "h": 37,
+          "txt": "Mixed fire\n— probes & "
+        },
+        {
+          "sel": "button#planopen",
+          "w": 364,
+          "h": 37,
+          "txt": "Game plan\n— how to reh"
+        },
+        {
+          "sel": "button#scopeopen",
+          "w": 364,
+          "h": 37,
+          "txt": "Scope it first\n— the c"
+        }
+      ]
+    },
+    {
+      "build": "AFTER",
+      "overflowX": false,
+      "scrollW": 390,
+      "clientW": 390,
+      "clippedCount": 58,
+      "clipped": [
+        {
+          "sel": "button.crambtn",
+          "clientH": 35,
+          "scrollH": 46,
+          "lost": 11,
+          "text": "Topic index\n— all topics across the six groups"
+        },
+        {
+          "sel": "button.crambtn",
+          "clientH": 35,
+          "scrollH": 46,
+          "lost": 11,
+          "text": "Search\n— jump to any topic or view by name or concept"
+        },
+        {
+          "sel": "button.crambtn",
+          "clientH": 35,
+          "scrollH": 46,
+          "lost": 11,
+          "text": "Copy link\n— a shareable link to this topic & view"
+        },
+        {
+          "sel": "button.crambtn",
+          "clientH": 35,
+          "scrollH": 46,
+          "lost": 11,
+          "text": "Star this topic\n— save it to your bookmarks on the home"
+        },
+        {
+          "sel": "button.crambtn",
+          "clientH": 35,
+          "scrollH": 46,
+          "lost": 11,
+          "text": "Your notes\n— jot notes & mnemonics for this topic"
+        },
+        {
+          "sel": "button.crambtn",
+          "clientH": 35,
+          "scrollH": 46,
+          "lost": 11,
+          "text": "Print Q&A\n— a printable sheet of this topic's probes"
+        },
+        {
+          "sel": "button.crambtn",
+          "clientH": 35,
+          "scrollH": 46,
+          "lost": 11,
+          "text": "One-page cram sheet\n— everything that matters, on a card"
+        },
+        {
+          "sel": "button.crambtn",
+          "clientH": 35,
+          "scrollH": 46,
+          "lost": 11,
+          "text": "Session progress\n— where you’re weak, what to drill next"
+        }
+      ],
+      "smallTapCount": 26,
+      "smallTaps": [
+        {
+          "sel": "button#_focus-toggle",
+          "w": 60,
+          "h": 20,
+          "txt": "FOCUS"
+        },
+        {
+          "sel": "button#idxopen",
+          "w": 358,
+          "h": 37,
+          "txt": "Topic index\n— all topi"
+        },
+        {
+          "sel": "button#searchopen",
+          "w": 358,
+          "h": 37,
+          "txt": "Search\n— jump to any t"
+        },
+        {
+          "sel": "button#copylink",
+          "w": 358,
+          "h": 37,
+          "txt": "Copy link\n— a shareabl"
+        },
+        {
+          "sel": "button#starbtn",
+          "w": 358,
+          "h": 37,
+          "txt": "Star this topic\n— save"
+        },
+        {
+          "sel": "button#notesopen",
+          "w": 358,
+          "h": 37,
+          "txt": "Your notes\n— jot notes"
+        },
+        {
+          "sel": "button#printqa",
+          "w": 358,
+          "h": 37,
+          "txt": "Print Q&A\n— a printabl"
+        },
+        {
+          "sel": "button#cramopen",
+          "w": 358,
+          "h": 37,
+          "txt": "One-page cram sheet\n— "
+        },
+        {
+          "sel": "button#sessopen",
+          "w": 358,
+          "h": 37,
+          "txt": "Session progress\n— whe"
+        },
+        {
+          "sel": "button#mixopen",
+          "w": 358,
+          "h": 37,
+          "txt": "Mixed fire\n— probes & "
+        },
+        {
+          "sel": "button#planopen",
+          "w": 358,
+          "h": 37,
+          "txt": "Game plan\n— how to reh"
+        },
+        {
+          "sel": "button#scopeopen",
+          "w": 358,
+          "h": 37,
+          "txt": "Scope it first\n— the c"
+        },
+        {
+          "sel": "button#themetog",
+          "w": 358,
+          "h": 31,
+          "txt": "☽\nDark mode —\noff"
+        },
+        {
+          "sel": "summary.mcomp-sum",
+          "w": 358,
+          "h": 43,
+          "txt": "COMPANION\ncoaching for"
+        }
+      ]
+    }
+  ],
+  "tapTargets": []
+}

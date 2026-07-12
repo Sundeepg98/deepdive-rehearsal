@@ -1,0 +1,506 @@
+[
+  {
+    "build": "BEFORE",
+    "vp": "desktop",
+    "theme": "light",
+    "view": "walk",
+    "visibleTextNodes": 95
+  },
+  {
+    "build": "BEFORE",
+    "vp": "desktop",
+    "theme": "light",
+    "view": "drill",
+    "visibleTextNodes": 95
+  },
+  {
+    "build": "BEFORE",
+    "vp": "desktop",
+    "theme": "light",
+    "view": "sys",
+    "visibleTextNodes": 95
+  },
+  {
+    "build": "BEFORE",
+    "vp": "desktop",
+    "theme": "light",
+    "view": "model",
+    "visibleTextNodes": 95
+  },
+  {
+    "build": "BEFORE",
+    "vp": "desktop",
+    "theme": "light",
+    "view": "num",
+    "visibleTextNodes": 95
+  },
+  {
+    "build": "BEFORE",
+    "vp": "desktop",
+    "theme": "light",
+    "view": "tools",
+    "ERROR": "page.click: Timeout 5000ms exceeded."
+  },
+  {
+    "build": "BEFORE",
+    "vp": "desktop",
+    "theme": "light",
+    "view": "idx",
+    "visibleTextNodes": 276
+  },
+  {
+    "build": "BEFORE",
+    "vp": "desktop",
+    "theme": "light",
+    "view": "sess",
+    "ERROR": "page.click: Timeout 4000ms exceeded."
+  },
+  {
+    "build": "BEFORE",
+    "vp": "desktop",
+    "theme": "light",
+    "view": "cram",
+    "ERROR": "page.click: Timeout 4000ms exceeded."
+  },
+  {
+    "build": "BEFORE",
+    "vp": "desktop",
+    "theme": "dark",
+    "view": "walk",
+    "visibleTextNodes": 95
+  },
+  {
+    "build": "BEFORE",
+    "vp": "desktop",
+    "theme": "dark",
+    "view": "drill",
+    "visibleTextNodes": 95
+  },
+  {
+    "build": "BEFORE",
+    "vp": "desktop",
+    "theme": "dark",
+    "view": "sys",
+    "visibleTextNodes": 95
+  },
+  {
+    "build": "BEFORE",
+    "vp": "desktop",
+    "theme": "dark",
+    "view": "model",
+    "visibleTextNodes": 95
+  },
+  {
+    "build": "BEFORE",
+    "vp": "desktop",
+    "theme": "dark",
+    "view": "num",
+    "visibleTextNodes": 95
+  },
+  {
+    "build": "BEFORE",
+    "vp": "desktop",
+    "theme": "dark",
+    "view": "tools",
+    "ERROR": "page.click: Timeout 5000ms exceeded."
+  },
+  {
+    "build": "BEFORE",
+    "vp": "desktop",
+    "theme": "dark",
+    "view": "idx",
+    "visibleTextNodes": 276
+  },
+  {
+    "build": "BEFORE",
+    "vp": "desktop",
+    "theme": "dark",
+    "view": "sess",
+    "ERROR": "page.click: Timeout 4000ms exceeded."
+  },
+  {
+    "build": "BEFORE",
+    "vp": "desktop",
+    "theme": "dark",
+    "view": "cram",
+    "ERROR": "page.click: Timeout 4000ms exceeded."
+  },
+  {
+    "build": "BEFORE",
+    "vp": "mobile",
+    "theme": "light",
+    "view": "walk",
+    "visibleTextNodes": 80
+  },
+  {
+    "build": "BEFORE",
+    "vp": "mobile",
+    "theme": "light",
+    "view": "drill",
+    "visibleTextNodes": 80
+  },
+  {
+    "build": "BEFORE",
+    "vp": "mobile",
+    "theme": "light",
+    "view": "sys",
+    "visibleTextNodes": 80
+  },
+  {
+    "build": "BEFORE",
+    "vp": "mobile",
+    "theme": "light",
+    "view": "model",
+    "visibleTextNodes": 80
+  },
+  {
+    "build": "BEFORE",
+    "vp": "mobile",
+    "theme": "light",
+    "view": "num",
+    "visibleTextNodes": 80
+  },
+  {
+    "build": "BEFORE",
+    "vp": "mobile",
+    "theme": "light",
+    "view": "tools",
+    "visibleTextNodes": 80
+  },
+  {
+    "build": "BEFORE",
+    "vp": "mobile",
+    "theme": "light",
+    "view": "idx",
+    "visibleTextNodes": 261
+  },
+  {
+    "build": "BEFORE",
+    "vp": "mobile",
+    "theme": "light",
+    "view": "sess",
+    "visibleTextNodes": 82
+  },
+  {
+    "build": "BEFORE",
+    "vp": "mobile",
+    "theme": "light",
+    "view": "cram",
+    "visibleTextNodes": 83
+  },
+  {
+    "build": "BEFORE",
+    "vp": "mobile",
+    "theme": "dark",
+    "view": "walk",
+    "visibleTextNodes": 80
+  },
+  {
+    "build": "BEFORE",
+    "vp": "mobile",
+    "theme": "dark",
+    "view": "drill",
+    "visibleTextNodes": 80
+  },
+  {
+    "build": "BEFORE",
+    "vp": "mobile",
+    "theme": "dark",
+    "view": "sys",
+    "visibleTextNodes": 80
+  },
+  {
+    "build": "BEFORE",
+    "vp": "mobile",
+    "theme": "dark",
+    "view": "model",
+    "visibleTextNodes": 80
+  },
+  {
+    "build": "BEFORE",
+    "vp": "mobile",
+    "theme": "dark",
+    "view": "num",
+    "visibleTextNodes": 80
+  },
+  {
+    "build": "BEFORE",
+    "vp": "mobile",
+    "theme": "dark",
+    "view": "tools",
+    "visibleTextNodes": 80
+  },
+  {
+    "build": "BEFORE",
+    "vp": "mobile",
+    "theme": "dark",
+    "view": "idx",
+    "visibleTextNodes": 261
+  },
+  {
+    "build": "BEFORE",
+    "vp": "mobile",
+    "theme": "dark",
+    "view": "sess",
+    "visibleTextNodes": 82
+  },
+  {
+    "build": "BEFORE",
+    "vp": "mobile",
+    "theme": "dark",
+    "view": "cram",
+    "visibleTextNodes": 83
+  },
+  {
+    "build": "AFTER",
+    "vp": "desktop",
+    "theme": "light",
+    "view": "walk",
+    "visibleTextNodes": 96
+  },
+  {
+    "build": "AFTER",
+    "vp": "desktop",
+    "theme": "light",
+    "view": "drill",
+    "visibleTextNodes": 96
+  },
+  {
+    "build": "AFTER",
+    "vp": "desktop",
+    "theme": "light",
+    "view": "sys",
+    "visibleTextNodes": 96
+  },
+  {
+    "build": "AFTER",
+    "vp": "desktop",
+    "theme": "light",
+    "view": "model",
+    "visibleTextNodes": 96
+  },
+  {
+    "build": "AFTER",
+    "vp": "desktop",
+    "theme": "light",
+    "view": "num",
+    "visibleTextNodes": 96
+  },
+  {
+    "build": "AFTER",
+    "vp": "desktop",
+    "theme": "light",
+    "view": "tools",
+    "ERROR": "page.click: Timeout 5000ms exceeded."
+  },
+  {
+    "build": "AFTER",
+    "vp": "desktop",
+    "theme": "light",
+    "view": "idx",
+    "visibleTextNodes": 277
+  },
+  {
+    "build": "AFTER",
+    "vp": "desktop",
+    "theme": "light",
+    "view": "sess",
+    "ERROR": "page.click: Timeout 4000ms exceeded."
+  },
+  {
+    "build": "AFTER",
+    "vp": "desktop",
+    "theme": "light",
+    "view": "cram",
+    "ERROR": "page.click: Timeout 4000ms exceeded."
+  },
+  {
+    "build": "AFTER",
+    "vp": "desktop",
+    "theme": "dark",
+    "view": "walk",
+    "visibleTextNodes": 96
+  },
+  {
+    "build": "AFTER",
+    "vp": "desktop",
+    "theme": "dark",
+    "view": "drill",
+    "visibleTextNodes": 96
+  },
+  {
+    "build": "AFTER",
+    "vp": "desktop",
+    "theme": "dark",
+    "view": "sys",
+    "visibleTextNodes": 96
+  },
+  {
+    "build": "AFTER",
+    "vp": "desktop",
+    "theme": "dark",
+    "view": "model",
+    "visibleTextNodes": 96
+  },
+  {
+    "build": "AFTER",
+    "vp": "desktop",
+    "theme": "dark",
+    "view": "num",
+    "visibleTextNodes": 96
+  },
+  {
+    "build": "AFTER",
+    "vp": "desktop",
+    "theme": "dark",
+    "view": "tools",
+    "ERROR": "page.click: Timeout 5000ms exceeded."
+  },
+  {
+    "build": "AFTER",
+    "vp": "desktop",
+    "theme": "dark",
+    "view": "idx",
+    "visibleTextNodes": 277
+  },
+  {
+    "build": "AFTER",
+    "vp": "desktop",
+    "theme": "dark",
+    "view": "sess",
+    "ERROR": "page.click: Timeout 4000ms exceeded."
+  },
+  {
+    "build": "AFTER",
+    "vp": "desktop",
+    "theme": "dark",
+    "view": "cram",
+    "ERROR": "page.click: Timeout 4000ms exceeded."
+  },
+  {
+    "build": "AFTER",
+    "vp": "mobile",
+    "theme": "light",
+    "view": "walk",
+    "visibleTextNodes": 77
+  },
+  {
+    "build": "AFTER",
+    "vp": "mobile",
+    "theme": "light",
+    "view": "drill",
+    "visibleTextNodes": 77
+  },
+  {
+    "build": "AFTER",
+    "vp": "mobile",
+    "theme": "light",
+    "view": "sys",
+    "visibleTextNodes": 77
+  },
+  {
+    "build": "AFTER",
+    "vp": "mobile",
+    "theme": "light",
+    "view": "model",
+    "visibleTextNodes": 77
+  },
+  {
+    "build": "AFTER",
+    "vp": "mobile",
+    "theme": "light",
+    "view": "num",
+    "visibleTextNodes": 77
+  },
+  {
+    "build": "AFTER",
+    "vp": "mobile",
+    "theme": "light",
+    "view": "tools",
+    "visibleTextNodes": 77
+  },
+  {
+    "build": "AFTER",
+    "vp": "mobile",
+    "theme": "light",
+    "view": "idx",
+    "visibleTextNodes": 258
+  },
+  {
+    "build": "AFTER",
+    "vp": "mobile",
+    "theme": "light",
+    "view": "sess",
+    "visibleTextNodes": 79
+  },
+  {
+    "build": "AFTER",
+    "vp": "mobile",
+    "theme": "light",
+    "view": "cram",
+    "visibleTextNodes": 80
+  },
+  {
+    "build": "AFTER",
+    "vp": "mobile",
+    "theme": "dark",
+    "view": "walk",
+    "visibleTextNodes": 77
+  },
+  {
+    "build": "AFTER",
+    "vp": "mobile",
+    "theme": "dark",
+    "view": "drill",
+    "visibleTextNodes": 77
+  },
+  {
+    "build": "AFTER",
+    "vp": "mobile",
+    "theme": "dark",
+    "view": "sys",
+    "visibleTextNodes": 77
+  },
+  {
+    "build": "AFTER",
+    "vp": "mobile",
+    "theme": "dark",
+    "view": "model",
+    "visibleTextNodes": 77
+  },
+  {
+    "build": "AFTER",
+    "vp": "mobile",
+    "theme": "dark",
+    "view": "num",
+    "visibleTextNodes": 77
+  },
+  {
+    "build": "AFTER",
+    "vp": "mobile",
+    "theme": "dark",
+    "view": "tools",
+    "visibleTextNodes": 77
+  },
+  {
+    "build": "AFTER",
+    "vp": "mobile",
+    "theme": "dark",
+    "view": "idx",
+    "visibleTextNodes": 258
+  },
+  {
+    "build": "AFTER",
+    "vp": "mobile",
+    "theme": "dark",
+    "view": "sess",
+    "visibleTextNodes": 79
+  },
+  {
+    "build": "AFTER",
+    "vp": "mobile",
+    "theme": "dark",
+    "view": "cram",
+    "visibleTextNodes": 80
+  }
+]

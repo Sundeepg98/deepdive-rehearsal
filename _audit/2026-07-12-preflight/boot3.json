@@ -1,0 +1,182 @@
+{
+  "BEFORE|desktop-1x": {
+    "RENDER_OK": true,
+    "med": {
+      "dcl": 443,
+      "load": 444,
+      "ready": 429,
+      "tabMs": null,
+      "ltMax": 191,
+      "script": 64,
+      "layout": 232,
+      "style": 29,
+      "task": 555,
+      "heapMB": 8.5
+    },
+    "proof": {
+      "textLen": 27186,
+      "visibleEls": 461,
+      "shadowNodes": 1104,
+      "splashGone": true
+    },
+    "readyRuns": [
+      429,
+      342,
+      243,
+      526,
+      458,
+      494,
+      412
+    ]
+  },
+  "AFTER|desktop-1x": {
+    "RENDER_OK": true,
+    "med": {
+      "dcl": 554,
+      "load": 555,
+      "ready": 543,
+      "tabMs": null,
+      "ltMax": 223,
+      "script": 69,
+      "layout": 240,
+      "style": 25,
+      "task": 637,
+      "heapMB": 14.9
+    },
+    "proof": {
+      "textLen": 27189,
+      "visibleEls": 461,
+      "shadowNodes": 1121,
+      "splashGone": true
+    },
+    "readyRuns": [
+      448,
+      436,
+      337,
+      543,
+      547,
+      688,
+      593
+    ]
+  },
+  "BEFORE|mobile-4x": {
+    "RENDER_OK": true,
+    "med": {
+      "dcl": 2136,
+      "load": 2138,
+      "ready": 2067,
+      "tabMs": null,
+      "ltMax": 964,
+      "script": 397,
+      "layout": 1136,
+      "style": 173,
+      "task": 2735,
+      "heapMB": 8.5
+    },
+    "proof": {
+      "textLen": 26668,
+      "visibleEls": 438,
+      "shadowNodes": 1104,
+      "splashGone": true
+    },
+    "readyRuns": [
+      2404,
+      2067,
+      1996,
+      1115,
+      2204,
+      2552,
+      1527
+    ]
+  },
+  "AFTER|mobile-4x": {
+    "RENDER_OK": true,
+    "med": {
+      "dcl": 2944,
+      "load": 2951,
+      "ready": 2902,
+      "tabMs": null,
+      "ltMax": 1322,
+      "script": 457,
+      "layout": 1197,
+      "style": 224,
+      "task": 3536,
+      "heapMB": 14.6
+    },
+    "proof": {
+      "textLen": 26612,
+      "visibleEls": 431,
+      "shadowNodes": 1121,
+      "splashGone": true
+    },
+    "readyRuns": [
+      2902,
+      2511,
+      3737,
+      2908,
+      1196,
+      1811,
+      4034
+    ]
+  },
+  "BEFORE|mobile-6x": {
+    "RENDER_OK": true,
+    "med": {
+      "dcl": 3998,
+      "load": 4006,
+      "ready": 3749,
+      "tabMs": null,
+      "ltMax": 1972,
+      "script": 788,
+      "layout": 2447,
+      "style": 466,
+      "task": 5352,
+      "heapMB": 8.4
+    },
+    "proof": {
+      "textLen": 26668,
+      "visibleEls": 438,
+      "shadowNodes": 1104,
+      "splashGone": true
+    },
+    "readyRuns": [
+      5092,
+      1548,
+      3501,
+      3749,
+      6702,
+      3678,
+      3854
+    ]
+  },
+  "AFTER|mobile-6x": {
+    "RENDER_OK": true,
+    "med": {
+      "dcl": 5551,
+      "load": 5561,
+      "ready": 5012,
+      "tabMs": null,
+      "ltMax": 2520,
+      "script": 985,
+      "layout": 2470,
+      "style": 414,
+      "task": 6624,
+      "heapMB": 14.6
+    },
+    "proof": {
+      "textLen": 26612,
+      "visibleEls": 431,
+      "shadowNodes": 1121,
+      "splashGone": true
+    },
+    "readyRuns": [
+      5012,
+      6002,
+      4421,
+      5432,
+      3275,
+      4747,
+      5492
+    ]
+  }
+}

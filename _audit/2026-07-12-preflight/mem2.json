@@ -1,0 +1,198 @@
+{
+  "BEFORE": {
+    "label": "BEFORE",
+    "boot": 5.98,
+    "series": [
+      {
+        "topic": "(boot)",
+        "mb": 5.98,
+        "h1": "Content Pipeline"
+      },
+      {
+        "topic": "event-driven",
+        "mb": 6.02,
+        "h1": "Event-Driven Backbone",
+        "txt": 28172,
+        "shadow": 784
+      },
+      {
+        "topic": "notifications",
+        "mb": 6.09,
+        "h1": "Notifications",
+        "txt": 27753,
+        "shadow": 1110
+      },
+      {
+        "topic": "real-time-delivery",
+        "mb": 6.1,
+        "h1": "Real-Time Delivery",
+        "txt": 29632,
+        "shadow": 780
+      },
+      {
+        "topic": "cdc",
+        "mb": 6.09,
+        "h1": "Change Data Capture",
+        "txt": 28173,
+        "shadow": 751
+      },
+      {
+        "topic": "kafka-internals",
+        "mb": 6.07,
+        "h1": "Kafka Internals",
+        "txt": 29805,
+        "shadow": 767
+      },
+      {
+        "topic": "stream-batch-processing",
+        "mb": 6.05,
+        "h1": "Stream and Batch Processing",
+        "txt": 29953,
+        "shadow": 759
+      },
+      {
+        "topic": "saga",
+        "mb": 6.09,
+        "h1": "The Saga Pattern",
+        "txt": 29091,
+        "shadow": 739
+      },
+      {
+        "topic": "caching",
+        "mb": 6.1,
+        "h1": "Caching Strategies",
+        "txt": 28101,
+        "shadow": 761
+      },
+      {
+        "topic": "soft-delete",
+        "mb": 6.1,
+        "h1": "Soft Deletes",
+        "txt": 28161,
+        "shadow": 768
+      },
+      {
+        "topic": "eav",
+        "mb": 6.09,
+        "h1": "Attribute Store",
+        "txt": 27915,
+        "shadow": 1040
+      },
+      {
+        "topic": "shared-definition",
+        "mb": 6.07,
+        "h1": "Shared Definition & Overrides",
+        "txt": 28061,
+        "shadow": 832
+      },
+      {
+        "topic": "replication",
+        "mb": 6.06,
+        "h1": "Replication and Quorums",
+        "txt": 28622,
+        "shadow": 729
+      }
+    ],
+    "revisit": 6.05,
+    "uniqueH1": 12,
+    "n": 12
+  },
+  "AFTER": {
+    "label": "AFTER",
+    "boot": 11.61,
+    "series": [
+      {
+        "topic": "(boot)",
+        "mb": 11.61,
+        "h1": "Content Pipeline"
+      },
+      {
+        "topic": "event-driven",
+        "mb": 11.93,
+        "h1": "Event-Driven Backbone",
+        "txt": 28175,
+        "shadow": 1220
+      },
+      {
+        "topic": "notifications",
+        "mb": 12,
+        "h1": "Notifications",
+        "txt": 27756,
+        "shadow": 1122
+      },
+      {
+        "topic": "real-time-delivery",
+        "mb": 12,
+        "h1": "Real-Time Delivery",
+        "txt": 29635,
+        "shadow": 1321
+      },
+      {
+        "topic": "cdc",
+        "mb": 11.99,
+        "h1": "Change Data Capture",
+        "txt": 28230,
+        "shadow": 1274
+      },
+      {
+        "topic": "kafka-internals",
+        "mb": 11.97,
+        "h1": "Kafka Internals",
+        "txt": 29808,
+        "shadow": 1444
+      },
+      {
+        "topic": "stream-batch-processing",
+        "mb": 11.96,
+        "h1": "Stream and Batch Processing",
+        "txt": 29956,
+        "shadow": 1183
+      },
+      {
+        "topic": "saga",
+        "mb": 11.99,
+        "h1": "The Saga Pattern",
+        "txt": 29094,
+        "shadow": 1184
+      },
+      {
+        "topic": "caching",
+        "mb": 12,
+        "h1": "Caching Strategies",
+        "txt": 28104,
+        "shadow": 1300
+      },
+      {
+        "topic": "soft-delete",
+        "mb": 12,
+        "h1": "Soft Deletes",
+        "txt": 28164,
+        "shadow": 1207
+      },
+      {
+        "topic": "eav",
+        "mb": 11.99,
+        "h1": "Attribute Store",
+        "txt": 27918,
+        "shadow": 1036
+      },
+      {
+        "topic": "shared-definition",
+        "mb": 11.99,
+        "h1": "Shared Definition & Overrides",
+        "txt": 28064,
+        "shadow": 1142
+      },
+      {
+        "topic": "replication",
+        "mb": 11.97,
+        "h1": "Replication and Quorums",
+        "txt": 28625,
+        "shadow": 1184
+      }
+    ],
+    "revisit": 11.97,
+    "uniqueH1": 12,
+    "n": 12
+  }
+}

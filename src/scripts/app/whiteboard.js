@@ -184,13 +184,21 @@ class DeepWhiteboard extends TopicPane {
     }
   }
   _emitGraded() { try { this.dispatchEvent(new CustomEvent('whiteboardgraded', { bubbles: true })); } catch (e) {} }
+  /* `id` is each step's CONTENT-DERIVED identity (a hash of its cue), and it is what
+     the persisted wbprog record keys a grade by. The board used to be stored by step
+     INDEX, so inserting one step at the top of a spine slid every saved grade onto
+     the wrong step, silently -- the same P0 the drill had. See card-id.js. The
+     positional `items` array is unchanged (session-progress reads it live, in order,
+     where position is exactly what it wants); only the DURABLE key changed. */
   getStats() {
     const items = this._list.querySelectorAll('li');
+    const stepIds = (typeof CardId !== 'undefined') ? CardId.forSteps(this._steps) : [];
     return {
       total: this._steps.length,
+      stepIds: stepIds,
       items: this._steps.map(function (s, i) {
         const li = items[i];
-        return { got: !!(li && li.classList.contains('got')), missed: !!(li && li.classList.contains('missed')), cue: s.c };
+        return { got: !!(li && li.classList.contains('got')), missed: !!(li && li.classList.contains('missed')), cue: s.c, id: stepIds[i] };
       })
     };
   }

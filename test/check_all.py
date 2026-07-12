@@ -9,6 +9,7 @@ This replaces per-edit manual vigilance with tooling that runs on every build:
   entity_leak      no HTML entity reaches visible text                   (browser)
   e2e_interactions theme/text-zoom/drill must-hit/rescues, 0 console errs (browser)
   progress_merge   a filtered sub-drill MERGES into progress, never truncates (browser)
+  card_identity    a grade survives its bank being REORDERED + INSERTED into  (browser)
   topic_contract   every topic POPULATED to the depth of the hand-coded 8 (browser)
   cram_scope_distinct  no two topics RENDER the same cram/scope body       (browser)
   rail_integrity   the coaching rail NEVER shows another topic's note      (browser)
@@ -133,6 +134,19 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # WORKING SET into the record. Reference is the user's own completed
                      # run, read back from localStorage -- not anything the writer produced.
                      ('progress_merge', 'test/progress_merge.cjs'),
+                     # A stored grade belongs to a QUESTION, not to a SLOT. Grades were keyed by
+                     # the probe's INDEX IN THE BANK, so inserting one probe at the top of a bank
+                     # slid every stored grade below it onto the WRONG question -- silently, with
+                     # no error and no count change, telling the user they had mastered a probe
+                     # they had never seen. 38 topics are about to be authored, so probes WILL be
+                     # inserted. This check does the thing that detonates it: completes a topic,
+                     # then REORDERS the bank AND INSERTS probes into it, and asserts every
+                     # surviving grade still lands on its original question -- matched by content,
+                     # never by position. Reference is the user's own completed run, captured
+                     # before the bank is touched, so the writer agreeing with itself cannot make
+                     # it pass. Also proves the v1 -> v2 migration is exact, and that a record
+                     # whose bank has already shifted is salvaged, never mis-attributed.
+                     ('card_identity', 'test/card_identity.cjs'),
                      ('topic_contract', 'test/topic_contract.cjs'),
                      ('cram_scope_distinct', 'test/cram_scope_distinct.cjs'),
                      # The rail is per (topic, view), and a MISSING note is a state the renderer has

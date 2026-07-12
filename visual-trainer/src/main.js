@@ -1,11 +1,19 @@
-// Boot: fixed-dt sim ticks (30 Hz) + rAF render. Controls, readouts,
-// rebalance banner, and STORY MODE (scripted teaching-beat scenarios).
-import { createSim } from './sim/kafka_lag.js';
+// Boot for the STANDALONE KAFKA PILOT (index.html -> kafka-lag-pilot.html):
+// fixed-dt sim ticks (30 Hz) + rAF render. Controls, readouts, rebalance banner,
+// and STORY MODE (scripted teaching-beat scenarios).
+//
+// This page is the Kafka consumer-group demo, so it mounts the KAFKA mode
+// explicitly. That matters: the sim under it is now generic by default (shared
+// worker pool -- linear capacity, no stop-the-world rebalance), and every story
+// below ("hollow ring", "the WHOLE group pauses") is a claim that is only TRUE
+// under consumer-group semantics. Booting the default sim here would leave the
+// captions narrating behaviour the simulation no longer has.
+import { kafkaConsumerLagMode } from './modes/kafka-consumer-lag/index.js';
 import { createScene } from './render/scene.js';
 import { createLoop } from './framework/loop.js';
 import { createHUD, createStoryDriver, makeControlLocker } from './framework/hud.js';
 
-const sim = createSim();
+const sim = kafkaConsumerLagMode.createSim({});
 const canvas = document.getElementById('view');
 const scene = createScene(canvas, sim);
 
@@ -23,15 +31,15 @@ const rate = $('rate'), cons = $('cons'), cap = $('cap');
 
 function syncControls() {
   rate.value = sim.state.producerRate;
-  cons.value = sim.state.consumerCount;
-  cap.value = sim.state.consumerCapacity;
+  cons.value = sim.state.sinks;
+  cap.value = sim.state.sinkCapacity;
   $('rateV').textContent = Math.round(sim.state.producerRate);
-  $('consV').textContent = sim.state.consumerCount;
-  $('capV').textContent = Math.round(sim.state.consumerCapacity);
+  $('consV').textContent = sim.state.sinks;
+  $('capV').textContent = Math.round(sim.state.sinkCapacity);
 }
 rate.addEventListener('input', () => { sim.setProducerRate(+rate.value); syncControls(); });
-cons.addEventListener('input', () => { sim.setConsumerCount(+cons.value); syncControls(); });
-cap.addEventListener('input', () => { sim.setConsumerCapacity(+cap.value); syncControls(); });
+cons.addEventListener('input', () => { sim.setSinkCount(+cons.value); syncControls(); });
+cap.addEventListener('input', () => { sim.setSinkCapacity(+cap.value); syncControls(); });
 
 let spikeUntil = 0, preSpikeRate = 0;
 function doSpike() {
@@ -42,11 +50,11 @@ function doSpike() {
   syncControls();
 }
 $('spike').addEventListener('click', doSpike);
-$('addC').addEventListener('click', () => { sim.setConsumerCount(sim.state.consumerCount + 1); syncControls(); });
-$('rmC').addEventListener('click', () => { sim.setConsumerCount(sim.state.consumerCount - 1); syncControls(); });
+$('addC').addEventListener('click', () => { sim.setSinkCount(sim.state.sinks + 1); syncControls(); });
+$('rmC').addEventListener('click', () => { sim.setSinkCount(sim.state.sinks - 1); syncControls(); });
 $('slow').addEventListener('click', () => {
-  sim.setSlowConsumer(sim.state.slowConsumer === -1 ? 0 : -1);
-  $('slow').textContent = sim.state.slowConsumer === -1 ? 'Slow consumer' : 'Heal consumer';
+  sim.setSlowSink(sim.state.slowSink === -1 ? 0 : -1);
+  $('slow').textContent = sim.state.slowSink === -1 ? 'Slow consumer' : 'Heal consumer';
 });
 $('reset').addEventListener('click', () => window.location.reload());
 
@@ -54,8 +62,8 @@ $('reset').addEventListener('click', () => window.location.reload());
 window.addEventListener('keydown', (e) => {
   if (e.target.tagName === 'INPUT') return;
   if (e.key === 's') doSpike();
-  else if (e.key === 'ArrowUp') { sim.setConsumerCount(sim.state.consumerCount + 1); syncControls(); }
-  else if (e.key === 'ArrowDown') { sim.setConsumerCount(sim.state.consumerCount - 1); syncControls(); }
+  else if (e.key === 'ArrowUp') { sim.setSinkCount(sim.state.sinks + 1); syncControls(); }
+  else if (e.key === 'ArrowDown') { sim.setSinkCount(sim.state.sinks - 1); syncControls(); }
   else if (e.key === 'x') $('slow').click();
 });
 
@@ -64,11 +72,11 @@ window.addEventListener('keydown', (e) => {
 // Captions narrate the teaching beat; the human rehearses by re-narrating.
 function baseState(rateV, consV, capV) {
   sim.setProducerRate(rateV);
-  sim.setConsumerCapacity(capV);
-  if (sim.state.consumerCount !== consV) sim.setConsumerCount(consV);
-  sim.state.rebalanceRemaining = 0;       // stories start clean
-  sim.setSlowConsumer(-1);
-  for (const p of sim.state.partitions) p.lag = 0;
+  sim.setSinkCapacity(capV);
+  if (sim.state.sinks !== consV) sim.setSinkCount(consV);
+  sim.state.stallRemaining = 0;           // stories start clean
+  sim.setSlowSink(-1);
+  for (const ln of sim.state.lanes) ln.lag = 0;
   $('slow').textContent = 'Slow consumer';
   syncControls();
 }
@@ -80,8 +88,8 @@ const STORIES = {
     steps: [
       { t: 0,  cap: 'Steady: 60 msg/s in, capacity 90. Lag ~0.' },
       { t: 3,  cap: 'Traffic spikes 3x (180 msg/s). Capacity 90 -- watch every queue back up.', do: () => { sim.setProducerRate(180); syncControls(); } },
-      { t: 9,  cap: 'Scale out: add a consumer. Rebalance stall first... then capacity 120.', do: () => { sim.setConsumerCount(4); syncControls(); } },
-      { t: 13, cap: 'Still growing: 180 in vs 120 out. Add another -- capacity 150.', do: () => { sim.setConsumerCount(5); syncControls(); } },
+      { t: 9,  cap: 'Scale out: add a consumer. Rebalance stall first... then capacity 120.', do: () => { sim.setSinkCount(4); syncControls(); } },
+      { t: 13, cap: 'Still growing: 180 in vs 120 out. Add another -- capacity 150.', do: () => { sim.setSinkCount(5); syncControls(); } },
       { t: 17, cap: 'Spike ends (back to 60). Capacity 150 -- the backlog drains.', do: () => { sim.setProducerRate(60); syncControls(); } },
       { t: 24, cap: 'Drained. The interview line: scale consumers to drain lag -- capacity vs rate.' },
       { t: 28 },
@@ -92,8 +100,8 @@ const STORIES = {
     init: () => baseState(150, 6, 30),
     steps: [
       { t: 0,  cap: '6 partitions, 6 consumers, capacity 180 vs 150 in. Balanced.' },
-      { t: 4,  cap: 'Add a 7th consumer. It has NO partition to own -- a hollow ring. Capacity unchanged.', do: () => { sim.setConsumerCount(7); syncControls(); } },
-      { t: 10, cap: 'An 8th. Still nothing. Consumers beyond the partition count are IDLE.', do: () => { sim.setConsumerCount(8); syncControls(); } },
+      { t: 4,  cap: 'Add a 7th consumer. It has NO partition to own -- a hollow ring. Capacity unchanged.', do: () => { sim.setSinkCount(7); syncControls(); } },
+      { t: 10, cap: 'An 8th. Still nothing. Consumers beyond the partition count are IDLE.', do: () => { sim.setSinkCount(8); syncControls(); } },
       { t: 16, cap: 'The interview line: partition count caps consumer-group parallelism.' },
       { t: 20 },
     ],
@@ -103,7 +111,7 @@ const STORIES = {
     init: () => baseState(60, 3, 30),
     steps: [
       { t: 0,  cap: 'Steady at 60 in / 90 capacity. Lag ~0.' },
-      { t: 3,  cap: 'Add a consumer. The WHOLE group pauses to rebalance -- nobody consumes.', do: () => { sim.setConsumerCount(4); syncControls(); } },
+      { t: 3,  cap: 'Add a consumer. The WHOLE group pauses to rebalance -- nobody consumes.', do: () => { sim.setSinkCount(4); syncControls(); } },
       { t: 6,  cap: 'Lag spiked ~120 during the stall -- even though capacity was always sufficient.' },
       { t: 11, cap: 'Drained. The interview line: every membership change has a stop-the-world cost.' },
       { t: 15 },
@@ -114,9 +122,9 @@ const STORIES = {
     init: () => baseState(60, 3, 30),
     steps: [
       { t: 0,  cap: '3 consumers, all healthy. Lag ~0 everywhere.' },
-      { t: 3,  cap: 'Consumer 1 degrades to 25%. Watch ONLY its two partitions back up.', do: () => { sim.setSlowConsumer(0); $('slow').textContent = 'Heal consumer'; } },
+      { t: 3,  cap: 'Consumer 1 degrades to 25%. Watch ONLY its two partitions back up.', do: () => { sim.setSlowSink(0); $('slow').textContent = 'Heal consumer'; } },
       { t: 12, cap: 'Skew, not uniform growth -- total capacity lies; per-partition lag tells the truth.' },
-      { t: 16, cap: 'Healed. Its backlog drains; the others never suffered.', do: () => { sim.setSlowConsumer(-1); $('slow').textContent = 'Slow consumer'; } },
+      { t: 16, cap: 'Healed. Its backlog drains; the others never suffered.', do: () => { sim.setSlowSink(-1); $('slow').textContent = 'Slow consumer'; } },
       { t: 22 },
     ],
   },
@@ -144,10 +152,10 @@ const loop = createLoop({
     const lag = sim.totalLag(), capE = sim.effectiveCapacity(), st = sim.status();
     $('lagV').textContent = Math.round(lag);
     $('ecapV').textContent = Math.round(capE) + ' msg/s';
-    $('idleV').textContent = Math.max(0, sim.state.consumerCount - sim.state.partitions.length);
+    $('idleV').textContent = sim.idleSinks();
     hud.setBadge(st, st === 'REBALANCING' ? 'warn' : st === 'LAG GROWING' ? 'bad' : 'ok');
     hud.banner(st === 'REBALANCING'
-      ? 'REBALANCING -- consumption paused (' + sim.state.rebalanceRemaining.toFixed(1) + 's)'
+      ? 'REBALANCING -- consumption paused (' + sim.state.stallRemaining.toFixed(1) + 's)'
       : null);
   },
 });

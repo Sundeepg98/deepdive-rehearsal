@@ -76,6 +76,14 @@ for name, cmd in [('ascii_guard', ['python3', 'test/ascii_guard.py']),
                   ('css_syntax', ['python3', 'test/css_syntax.py']),
                   ('file_integrity', ['python3', 'test/file_integrity.py']),
                   ('unit_tests', ['python3', 'test/unit_tests.py']),
+                  # The visual sim's invariants ARE the teaching points its modes exist to
+                  # convey (capacity is linear in a worker pool; partition-capped in a Kafka
+                  # consumer group; a pool does not stop the world when you add a worker).
+                  # They shipped UNGATED: nothing in CI ran them, so a sim that taught a
+                  # falsehood would have gone green. Includes the golden-trajectory replay
+                  # that pins kafka-internals' shipped visual to the exact numbers it had
+                  # before the sim was generalised. Pure node, no browser, ~1s.
+                  ('sim_invariants', ['node', 'visual-trainer/test/sim_invariants.mjs']),
                   # 15: the end-to-end behavior contract -- boots both first-run and
                   # returning branches, the conditional GPU pane pipeline, [hidden]
                   # integrity, mobile tap floors. Runs after build_integrity so

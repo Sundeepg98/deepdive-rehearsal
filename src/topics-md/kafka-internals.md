@@ -446,7 +446,7 @@ Model: this is a hot partition from key skew -- because partition = hash(user_id
 
 ```json
 {
-  "mode": "queue-flow",
+  "mode": "kafka-consumer-lag",
   "labels": { "src": "producers", "queue": "partitions", "sink": "consumer group" },
   "params": { "lanes": 6, "rate": 120, "sinks": 3, "capacity": 30 },
   "stories": [

@@ -1,12 +1,21 @@
-// Kafka-lag mode scene: static art (lanes, bars, consumers, producers) plus
-// the framework queue-flow for all particle choreography. 2D orthographic by
-// law (CLAUDE.md). Reads sim state only.
+// Queue scene, shared by BOTH queue modes (queue-flow and kafka-consumer-lag):
+// static art (lanes, bars, sinks, producers) plus the framework queue-flow for
+// all particle choreography. 2D orthographic by law (CLAUDE.md).
+//
+// THE RENDERER READS SIM FACTS; IT DOES NOT RE-DERIVE THEM. It used to compute
+// ownership itself (`per[p.consumer]`) and paint a hollow "idle" ring from that
+// -- i.e. Kafka's partition cap was hard-coded a SECOND time, here, outside the
+// sim that owns it. So the honest generic sim would still have been drawn with
+// Kafka's conclusions: workers correctly adding capacity, rendered as idle
+// spectators. Idleness and stalls now come from the sim (sinkIdle / stalled),
+// which is the only thing that knows whether they are even possible.
 import * as THREE from 'three';
 import { createQueueFlow } from '../framework/flow.js';
 
 const W = 16, H = 9;
 const COL_PROD = 2, COL_PART = 7.5, COL_CONS = 13;
 const LAG_FULL = 200;
+const MAX_SINKS = 9;                       // sink meshes drawn (matches the mode control max)
 
 export function createScene(canvas, sim) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
@@ -15,7 +24,7 @@ export function createScene(canvas, sim) {
   const camera = new THREE.OrthographicCamera(0, W, H, 0, -10, 10);
   camera.position.z = 1;
 
-  const P = sim.state.partitions.length;
+  const P = sim.state.lanes.length;
   const laneYn = (i, n) => H - 1.2 - (i * (H - 2.4)) / Math.max(1, n - 1);
   const laneY = (i) => laneYn(i, P);
 
@@ -32,16 +41,16 @@ export function createScene(canvas, sim) {
     scene.add(guide);
     bars.push(m);
   }
-  const consumers = [];
-  for (let i = 0; i < 9; i++) {
+  const sinks = [];
+  for (let i = 0; i < MAX_SINKS; i++) {
     const fill = new THREE.Mesh(new THREE.CircleGeometry(0.32, 24),
       new THREE.MeshBasicMaterial({ color: 0x4da3ff, transparent: true }));
     const ring = new THREE.Mesh(new THREE.RingGeometry(0.24, 0.32, 24),
       new THREE.MeshBasicMaterial({ color: 0x484f58, transparent: true }));
-    fill.position.set(COL_CONS, laneYn(i, 9), 0);
-    ring.position.set(COL_CONS, laneYn(i, 9), 0);
+    fill.position.set(COL_CONS, laneYn(i, MAX_SINKS), 0);
+    ring.position.set(COL_CONS, laneYn(i, MAX_SINKS), 0);
     scene.add(fill); scene.add(ring);
-    consumers.push({ fill, ring });
+    sinks.push({ fill, ring });
   }
   for (let i = 0; i < P; i++) {
     const m = new THREE.Mesh(new THREE.PlaneGeometry(0.4, 0.4),
@@ -51,33 +60,48 @@ export function createScene(canvas, sim) {
   }
 
   // --- particle choreography: the framework, fed by sim counters ------------
+  // SINK ROUTING is display choreography, never a capacity claim -- and the two
+  // models genuinely route differently:
+  //   partitioned -- an item goes to its lane's OWNER. Ownership IS the lesson;
+  //     it is why a consumer past the partition count receives nothing.
+  //   shared      -- any worker can take any item, so releases fan out
+  //     round-robin across EVERY worker. This is also what makes the linear
+  //     capacity readout legible: add a 7th worker and you SEE it start taking
+  //     work, rather than watch a hollow ring do nothing while the number climbs.
+  let rr = 0;
+  const sinkYOf = (L) => (sim.shared
+    ? laneYn((rr++) % sim.state.sinks, MAX_SINKS)
+    : laneYn(sim.state.lanes[L].sink, MAX_SINKS));
+
   const flow = createQueueFlow({
     scene,
     lanes: P,
     laneY,
     srcX: COL_PROD, queueX: COL_PART, sinkX: COL_CONS,
-    producedOf: (L) => sim.state.partitions[L].produced,
-    consumedOf: (L) => sim.state.partitions[L].consumed,
-    sinkYOf: (L) => laneYn(sim.state.partitions[L].consumer, 9),
-    heatOf: (L) => sim.state.partitions[L].lag / LAG_FULL,
-    stalled: () => sim.state.rebalanceRemaining > 0,
+    producedOf: (L) => sim.state.lanes[L].produced,
+    consumedOf: (L) => sim.state.lanes[L].consumed,
+    sinkYOf,
+    heatOf: (L) => sim.state.lanes[L].lag / LAG_FULL,
+    stalled: () => sim.stalled(),
   });
 
   function draw() {
     for (let i = 0; i < P; i++) {
-      const f = Math.min(1, sim.state.partitions[i].lag / LAG_FULL);
+      const f = Math.min(1, sim.state.lanes[i].lag / LAG_FULL);
       bars[i].scale.set(0.7, 0.1 + f * 1.1, 1);
       bars[i].material.color.setHSL(0.33 * (1 - f), 0.75, 0.45);
     }
-    const per = Array(sim.state.consumerCount).fill(0);
-    for (const p of sim.state.partitions) per[p.consumer] += 1;
-    const stalled = sim.state.rebalanceRemaining > 0;
-    for (let i = 0; i < 9; i++) {
-      const on = i < sim.state.consumerCount;
-      const c = consumers[i];
+    const stalled = sim.stalled();
+    for (let i = 0; i < MAX_SINKS; i++) {
+      const on = i < sim.state.sinks;
+      const c = sinks[i];
       if (!on) { c.fill.visible = false; c.ring.visible = false; continue; }
-      const idle = (per[i] || 0) === 0;
-      const slow = i === sim.state.slowConsumer;
+      // ASK THE SIM. A hollow ring is a claim that this sink CANNOT work no
+      // matter the backlog -- true only under partitioned ownership. In the
+      // shared model sinkIdle() is false by construction, so a worker that is
+      // pulling real work is never drawn as a spectator.
+      const idle = sim.sinkIdle(i);
+      const slow = i === sim.state.slowSink;
       c.fill.visible = !idle;
       c.ring.visible = idle;
       c.fill.material.color.setHex(slow ? 0xff6b6b : 0x4da3ff);

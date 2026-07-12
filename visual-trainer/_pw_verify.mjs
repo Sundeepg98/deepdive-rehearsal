@@ -28,7 +28,7 @@ chk('sim live: lag grows (rate 120 > capacity 90)', s2.lag > s1.lag + 30, s1.lag
 chk('choreography: queue stacks grow with lag', s2.q > s1.q + 10, 'q1=' + s1.q + ' q2=' + s2.q);
 chk('choreography: queued particles ~ lag/2 (msgs per particle), minus in-flight',
   2 * s2.q > s2.lag * 0.3 && 2 * s2.q < s2.lag + 60, '2q=' + 2 * s2.q + ' lag=' + s2.lag.toFixed(0));
-await p.evaluate(() => { window.__SIM.setConsumerCount(5); });
+await p.evaluate(() => { window.__SIM.setSinkCount(5); });
 await p.waitForTimeout(300);
 chk('rebalance: group change flips status', (await p.evaluate(() => window.__SIM.status())) === 'REBALANCING', '');
 chk('rebalance: banner visible', await p.evaluate(() => document.getElementById('banner').style.display === 'block'), '');
@@ -36,7 +36,7 @@ chk('rebalance: banner visible', await p.evaluate(() => document.getElementById(
 // --- 2. slow-consumer skew lands on lanes 0 and 3 ---------------------------
 await p.goto(url, { waitUntil: 'load' });
 await p.waitForTimeout(400);
-await p.evaluate(() => { window.__SIM.setProducerRate(60); window.__SIM.setSlowConsumer(0); });
+await p.evaluate(() => { window.__SIM.setProducerRate(60); window.__SIM.setSlowSink(0); });
 await p.waitForTimeout(6000);
 const q = await p.evaluate(() => window.__QUEUES());
 const slowQ = q[0] + q[3], okQ = q[1] + q[2] + q[4] + q[5];
@@ -53,7 +53,7 @@ await p.waitForTimeout(2000);
 const f2 = await p.evaluate(() => window.__frames);
 await p.waitForTimeout(6800);                       // past the t=9 step
 const cap2 = await p.evaluate(() => document.getElementById('caption').textContent);
-const consNow = await p.evaluate(() => window.__SIM.state.consumerCount);
+const consNow = await p.evaluate(() => window.__SIM.state.sinks);
 const disabled = await p.evaluate(() => document.getElementById('spike').disabled);
 chk('story: captions present and advancing', cap1.length > 10 && cap2.length > 10 && cap1 !== cap2, JSON.stringify([cap1.slice(0, 30), cap2.slice(0, 30)]));
 chk('story: script drove the sim (consumers 3 -> 4 at t=9)', consNow === 4, 'consumers=' + consNow);

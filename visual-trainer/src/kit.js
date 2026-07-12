@@ -7,9 +7,19 @@
 import { createLoop } from './framework/loop.js';
 import { createHUD, createStoryDriver, makeControlLocker } from './framework/hud.js';
 import { queueFlowMode } from './modes/queue-flow/index.js';
+import { kafkaConsumerLagMode } from './modes/kafka-consumer-lag/index.js';
 import { KIT_MANIFEST } from './manifest.js';
 
-const MODES = { 'queue-flow': queueFlowMode };
+// A mode's SEMANTICS are its identity. `queue-flow` is the honest generic queue
+// (linear capacity, no stall, work shared); `kafka-consumer-lag` is the consumer
+// group (partition-capped capacity, stop-the-world rebalance). Keep this table
+// and manifest.js in lockstep -- the manifest is what the compiler validates a
+// topic's `## Visual` block against, so a mode missing from it is unauthorable,
+// and a mode missing from HERE fails at mount with "unknown mode".
+const MODES = {
+  'queue-flow': queueFlowMode,
+  'kafka-consumer-lag': kafkaConsumerLagMode,
+};
 
 const KIT_CSS = [
   ':host { display: block; }',

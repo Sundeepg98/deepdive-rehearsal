@@ -295,6 +295,99 @@ chk('BOUNCE still fires: "/viz" on a viz-LESS topic keeps the topic, drops the p
   JSON.stringify(boS));
 await bo.close();
 
+/* ===== THE OTHER MODE, WHICH NO TOPIC USES YET ================================
+   kafka-internals is the only topic shipping a `## Visual`, so EVERY check above
+   exercises `kafka-consumer-lag` and NOTHING exercises `queue-flow` -- the mode
+   the ~12-15 pipeline topics are supposed to adopt. Untested-because-unadopted is
+   how the original defect stayed invisible: `queue-flow` was Kafka's sim under a
+   generic name, and the first topic to adopt it would have been the first to find
+   out. So mount it here, through the SHIPPED VisualKit global, on the exact path a
+   topic takes -- and assert the physics that make it safe to adopt:
+     - capacity LINEAR and uncapped by lanes (Kafka caps it at the partition count)
+     - adding a worker does NOT stop the world (Kafka stalls 2s)
+     - no worker is structurally idle (Kafka idles the ones past the lane count)
+   The numeric invariants live in visual-trainer/test/sim_invariants.mjs (gated);
+   this proves they survive the bundle and reach a real canvas.               */
+const gp = await b.newPage({ viewport: { width: 1280, height: 900 } });
+const gerrs = []; gp.on('pageerror', (e) => gerrs.push(e.message.slice(0, 100)));
+await gp.goto('file://' + FILE, { waitUntil: 'load' });
+await gp.waitForTimeout(2000);
+await gp.evaluate(() => { const x = document.querySelector('.ix-x'); if (x) x.click(); });
+await gp.waitForTimeout(300);
+const gen = await gp.evaluate(async () => {
+  const host = document.createElement('div');
+  host.id = 'genhost';
+  host.style.cssText = 'width:900px;height:520px;position:fixed;left:0;top:0;z-index:9999';
+  document.body.appendChild(host);
+  const inst = window.VisualKit.mount(host, {
+    mode: 'queue-flow',
+    labels: { src: 'clients', queue: 'work queues', sink: 'workers' },
+    params: { lanes: 6, rate: 120, sinks: 3, capacity: 30 },
+  });
+  window.__GEN = inst;
+  const s = inst.sim;
+  const at3 = s.effectiveCapacity();          // 3 x 30
+  s.setSinkCount(9);                          // 9 workers, 6 lanes
+  const at9 = s.effectiveCapacity();          // MUST be 270, not Kafka's 180
+  const out = { shared: s.shared, at3, at9, stalled: s.stalled(),
+    stallRemaining: s.state.stallRemaining, idle: s.idleSinks(),
+    labels: [...host.querySelectorAll('.ctl label')].map((l) => l.textContent.split(':')[0].trim()) };
+  // overload, then scale out: the capacity number must not be a lie
+  s.setSinkCount(2); s.setProducerRate(300);
+  for (const ln of s.state.lanes) ln.lag = 0;
+  await new Promise((r) => setTimeout(r, 2200));
+  out.grew = s.totalLag();
+  s.setSinkCount(9); s.setProducerRate(60);
+  await new Promise((r) => setTimeout(r, 2800));
+  out.drained = s.totalLag();
+  return out;
+});
+chk('GENERIC MODE: queue-flow is registered and mounts from the shipped kit',
+  gen.shared === true, JSON.stringify(gen));
+chk('GENERIC MODE: capacity is LINEAR, uncapped by lanes (9x30 = 270, NOT Kafka 180)',
+  gen.at3 === 90 && gen.at9 === 270, 'at3=' + gen.at3 + ' at9=' + gen.at9);
+chk('GENERIC MODE: adding a worker does NOT stop the world, and nobody is idle',
+  !gen.stalled && gen.stallRemaining === 0 && gen.idle === 0, JSON.stringify(gen));
+chk('GENERIC MODE: honest vocabulary (Workers, not Consumers)',
+  gen.labels.join(',') === 'Arrival rate (/s),Workers,Capacity each', JSON.stringify(gen.labels));
+chk('GENERIC MODE: backlog grows under overload, then really DRAINS on scale-out',
+  gen.grew > 200 && gen.drained < gen.grew * 0.25,
+  'grew=' + (gen.grew || 0).toFixed(0) + ' drained=' + (gen.drained || 0).toFixed(0));
+const GPROBE = () => new Promise((res) => requestAnimationFrame(() => {
+  const c = document.getElementById('genhost').querySelector('canvas');
+  const gl = c && (c.getContext('webgl2') || c.getContext('webgl'));
+  const w = c ? c.width : 0, h = c ? c.height : 0;
+  if (!gl || !w || !h) return res({ bufW: w, bufH: h, inkPct: 0, changed: 0 });
+  const buf = new Uint8Array(w * h * 4);
+  gl.readPixels(0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, buf);
+  let ink = 0;
+  for (let i = 0; i < buf.length; i += 4) {
+    if (Math.abs(buf[i] - 13) + Math.abs(buf[i + 1] - 17) + Math.abs(buf[i + 2] - 23) > 24) ink += 1;
+  }
+  let changed = 0;
+  const prev = window.__genPrev;
+  if (prev && prev.length === buf.length) {
+    for (let i = 0; i < buf.length; i += 4) {
+      if (Math.abs(buf[i] - prev[i]) + Math.abs(buf[i + 1] - prev[i + 1]) + Math.abs(buf[i + 2] - prev[i + 2]) > 12) changed += 1;
+    }
+  }
+  window.__genPrev = buf;
+  res({ bufW: w, bufH: h, inkPct: +(100 * ink / (w * h)).toFixed(2), changed });
+}));
+await gp.evaluate(() => { window.__genPrev = null; });
+await gp.evaluate(GPROBE);
+await gp.waitForTimeout(1000);
+const gpx = await gp.evaluate(GPROBE);
+chk('GENERIC MODE: it PAINTS and ANIMATES (a registered mode that draws nothing is not a mode)',
+  gpx.bufW > 200 && gpx.inkPct > 1.5 && gpx.changed > 3000, JSON.stringify(gpx));
+const gdisp = await gp.evaluate(() => {
+  window.__GEN.dispose();
+  document.getElementById('genhost').remove();
+  return !document.getElementById('genhost');
+});
+chk('GENERIC MODE: disposes cleanly, zero page errors', gdisp && gerrs.length === 0, gerrs.slice(0, 2).join(' | '));
+await gp.close();
+
 await b.close();
 console.log(fails === 0 ? 'VISUAL PIPELINE SMOKE: ALL PASS' : 'SMOKE: ' + fails + ' FAILURE(S)');
 process.exit(fails ? 1 : 0);

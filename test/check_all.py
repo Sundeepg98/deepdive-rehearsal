@@ -74,6 +74,13 @@ for name, cmd in [('ascii_guard', ['python3', 'test/ascii_guard.py']),
                   ('global_collisions', ['python3', 'test/global_collisions.py']),
                   ('build_integrity', ['python3', 'test/build_integrity.py']),
                   ('css_syntax', ['python3', 'test/css_syntax.py']),
+                  # THE SIX ROOMS invariants (Phase 6 -- each would have caught a bug that
+                  # shipped for months). room_static: codemod=0, styles.css infinite=0, the
+                  # palette + rebind + boot stamp are present. room_contrast: the six rooms'
+                  # ink/bg + on-solid contrast is re-derived from the hex via WCAG and must
+                  # clear AA -- the contract is the contrast, not the hex.
+                  ('room_static', ['python3', 'test/room_static.py']),
+                  ('room_contrast', ['python3', 'test/room_contrast.py']),
                   ('file_integrity', ['python3', 'test/file_integrity.py']),
                   ('unit_tests', ['python3', 'test/unit_tests.py']),
                   # 15: the end-to-end behavior contract -- boots both first-run and
@@ -116,6 +123,10 @@ for name, cmd in [('ascii_guard', ['python3', 'test/ascii_guard.py']),
 chrome = browser()
 deliverable = os.path.join(ROOT, 'deepdive_content_pipeline_rehearsal.html')
 for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity_leak.cjs'),
+                     # room wired at boot (data-group + --topic-ink + --acc rebind) AND the
+                     # blank-page class of bug cannot recur (reduced-motion still RENDERS,
+                     # both themes). The two things a grep cannot see. (Phase 6)
+                     ('room_browser', 'test/room_browser.cjs'),
                      ('e2e_interactions', 'test/e2e_interactions.cjs'),
                      # A filtered sub-drill must MERGE into the topic's canonical progress
                      # record, never REPLACE it. Guards a shipped P0: the app's own

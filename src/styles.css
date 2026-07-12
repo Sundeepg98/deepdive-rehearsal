@@ -62,6 +62,7 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
     --bg:#FAF9F5; --card:#fff;
    --surf:linear-gradient(180deg,#ffffff 0%,#F8F5EF 100%);
    --card-sh:0 1px 2.5px rgba(40,34,28,.05),0 7px 16px -7px rgba(40,34,28,.10),0 22px 48px -26px rgba(40,34,28,.16);
+   --card-bd:var(--bd);   /* light: the room lives in fills + rules, so the card border stays neutral */
    /* --card-tilt-glow / --card-spot removed with the 3D card tilt + cursor spotlight (Phase 3.5) */
    --surf-sh:0 1px 2px rgba(40,34,28,.05),0 4px 10px -5px rgba(40,34,28,.09);
    --glow:0 0 0 1px var(--acc-a06),0 1px 2px rgba(40,34,28,.04),0 8px 20px -6px rgba(40,34,28,.10),0 24px 56px -24px rgba(40,34,28,.18);
@@ -318,18 +319,24 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
 
 /* ============ DARK THEME (scoped - light mode untouched) ============ */
 html[data-theme="dark"]{
-  --bg:#15141A; --card:#211F29;
-   --surf:linear-gradient(180deg,#282532 0%,#1E1C26 100%);
-   --card-sh:0 1px 2.5px rgba(0,0,0,.4),0 7px 16px -7px rgba(0,0,0,.45),0 22px 48px -26px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.055);
+  /* ELEVATION BY LIGHTNESS, not shadow (shadow does not exist on a dark surface). The five
+     planes used to sit inside an 8% band and melt together; this is a real ladder:
+     bg #0F0E13 -> side/panel #17161D -> card #1E1C25 -> raised #26232E (~+8 L/step). */
+  --bg:#0F0E13; --card:#1E1C25;
+   --surf:linear-gradient(180deg,#26232E 0%,#201D28 100%);
+   --card-sh:inset 0 1px 0 rgba(255,255,255,.06),0 2px 10px -4px rgba(0,0,0,.5),0 14px 30px -20px rgba(0,0,0,.65);
    /* --card-tilt-glow / --card-spot removed (Phase 3.5) */
+   --card-bd:color-mix(in srgb,var(--topic-ink) 18%,var(--bd));   /* dark: the room lives in EDGES -- a faint room-tinted card border */
    --surf-sh:0 1px 2px rgba(0,0,0,.4),0 4px 10px -5px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.045);
-   --panel:linear-gradient(180deg,#1F1E26 0%,#181720 100%); --bd:#37333F; --ink:#ECEAE4; --mut:#A7A29A; --mut2:#ADA79D;
+   --panel:linear-gradient(180deg,#1A1921 0%,#151419 100%); --bd:#37333F; --ink:#ECEAE4; --mut:#A7A29A; --mut2:#ADA79D;
   /* --acc/--acc2/--accbg/--accink now come from THE SIX ROOMS dark rebind (room ink/solid/wash). */
-  --side:#1C1B23;
+  --side:#17161D;
   --teal:#4FCDAB; --tealbg:#143028; --red:#F08A8A; --redbg:#3A2020;
   --amber:#E5A24A; --amberbg:#352712; --indigo:#9D93F0; --indigobg:#24223C;
   --code:#15131D; --codeink:#E7E4F5;
-  --sm-line:#3A3642; --sm-dot-bg:#2A2730; --sm-card-bg:#262430; --sm-pa-fg:#C7C2BA; --sm-here-fg:#1A1622; --sm-cur-dot-bg:#2A2730; --op-hooks-bg:#262430; --op-foot-bg:#2A2540; --op-foot-fg:#BAB4AA; --disc-bg:#262430; --disc-body-fg:#B2ACA2; --wb-foot-bg:#2A2540; --wb-foot-fg:#BAB4AA; --wb-li-bd:#322E3A; --wb-ok-fg:#5FD3B0; --wb-ok-b-fg:#8FE0C8; --wb-warn-fg:#E8BC78; --opt-n-bd:#3A3552; --dec-tell-b-fg:#8FE0C8; --fb-n-bg:#262430; --fb-n-fg:#DAD6CE; --fb-t-fg:#8FE0C8; --fb-r-fg:#F0A0A0; --fb-a-fg:#E8BC78; --ins-bg:#262430; --ins-fg:#BAB4AA; --mq-bg:#2A2730; --dots-i-bg:#44404C; --dots-on-bg:var(--dots-i-bg); --dots-done-bg:var(--dots-i-bg); --thread-bg:#262430; --ans-bg:#2A2540; --fa-bg:#2A2540; --ans-fg:#DAD6CE; --fa-b-fg:#E8BC78; --senior-bd:#2E5A4A; --senior-fg:#7FD9BE; --speak-fg:#CABFFB; --push-fg:#1A1622; --judge-btn-bg:#262430; --modetog-bg:#2A2730; --modetog-bd:#37333F; --modetog-hover-bg:rgba(170,157,245,.13); --dbar-bg:#211F28; --btnsec-hover-bg:#1A3A30; --sigrow-bd:#322E3A; --codecap-fg:#B2ACA2; --code-inline-bg:#2A2833; --ninp-bd:#3A3552;--cs30-bg:#262430;--cram-code-bg:#2C2740;--ss-card-bg:#262430;--ss-carry-bg:#262430;--ss-code-bd:#3A3552;--ss-go-fg:#1A1622;--ss-btn-bg:#262430;--mxb-curve-bg:#3A2814;--mxb-trade-fg:#B6ADE8;--mb-next-fg:#1A1622;--mb-cv-bd:#3A3552;--mb-intq-fg:#F0A0A0;--mb-irev-bg:#262430;--mb-irev-bd:#5A3A38;
+  --sm-line:#3A3642; --sm-dot-bg:#2A2730; --sm-card-bg:#262430; --sm-pa-fg:#C7C2BA; --sm-here-fg:#1A1622; --sm-cur-dot-bg:var(--topic-solid); --op-hooks-bg:#262430; --op-foot-bg:#2A2540; --op-foot-fg:#BAB4AA; --disc-bg:#262430; --disc-body-fg:#B2ACA2; --wb-foot-bg:#2A2540; --wb-foot-fg:#BAB4AA; --wb-li-bd:#322E3A; --wb-ok-fg:#5FD3B0; --wb-ok-b-fg:#8FE0C8; --wb-warn-fg:#E8BC78; --opt-n-bd:#3A3552; --dec-tell-b-fg:#8FE0C8; --fb-n-bg:#262430; --fb-n-fg:#DAD6CE; --fb-t-fg:#8FE0C8; --fb-r-fg:#F0A0A0; --fb-a-fg:#E8BC78; --ins-bg:#262430; --ins-fg:#BAB4AA; --mq-bg:#2A2730; /* DARK DOTS BUG FIX: all three step-states were #44404C -- the walkthrough progress dots
+   had NO state in dark. Current = the room solid; done = a faded room solid; todo = grey. */
+--dots-i-bg:#44404C; --dots-on-bg:var(--topic-solid); --dots-done-bg:color-mix(in oklab,var(--topic-solid) 45%,transparent); --thread-bg:#262430; --ans-bg:#2A2540; --fa-bg:#2A2540; --ans-fg:#DAD6CE; --fa-b-fg:#E8BC78; --senior-bd:#2E5A4A; --senior-fg:#7FD9BE; --speak-fg:#CABFFB; --push-fg:#1A1622; --judge-btn-bg:#262430; --modetog-bg:#2A2730; --modetog-bd:#37333F; --modetog-hover-bg:rgba(170,157,245,.13); --dbar-bg:#211F28; --btnsec-hover-bg:#1A3A30; --sigrow-bd:#322E3A; --codecap-fg:#B2ACA2; --code-inline-bg:#2A2833; --ninp-bd:#3A3552;--cs30-bg:#262430;--cram-code-bg:#2C2740;--ss-card-bg:#262430;--ss-carry-bg:#262430;--ss-code-bd:#3A3552;--ss-go-fg:#1A1622;--ss-btn-bg:#262430;--mxb-curve-bg:#3A2814;--mxb-trade-fg:#B6ADE8;--mb-next-fg:#1A1622;--mb-cv-bd:#3A3552;--mb-intq-fg:#F0A0A0;--mb-irev-bg:#262430;--mb-irev-bd:#5A3A38;
 }
 html[data-theme="dark"] body{background:var(--bg)}
 html[data-theme="dark"] ::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#3A3642,#2E2A38)}
@@ -352,7 +359,9 @@ html[data-theme="dark"] .sr-list{color:#C8C4BC}
 html[data-theme="dark"] .seg{background:#18161E}
 html[data-theme="dark"] .seg button:not(.on):hover{background:rgba(170,157,245,.13);color:var(--ink)}
 /* accent-bg buttons need dark text on light accent */
-html[data-theme="dark"] .mockbtn{color:#1A1622}
+/* CTA reversal: on dark, a bright accent slab with dark text is LOUDER than in light and
+   the first thing the eye hits. Fill is a light-mode device; on dark, border + glow are. */
+html[data-theme="dark"] .mockbtn{background:color-mix(in srgb,var(--topic-solid) 16%,var(--card));border:1px solid var(--topic-solid);color:var(--topic-ink);box-shadow:0 2px 14px -6px var(--acc-a30)}
 html[data-theme="dark"] .badge{color:#1A1622}
 /* kbd hint chips text */
 html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}

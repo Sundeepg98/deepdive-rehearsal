@@ -23,14 +23,14 @@ OPT_SHEET.replaceSync(`
 .opt-n{display:inline-block;font:var(--font-weight-heavy) 10.5px -apple-system,sans-serif;letter-spacing:.3px;color:var(--accink);background:linear-gradient(135deg,var(--accbg) 0%,var(--acc-a04) 100%);border:1px solid var(--opt-n-bd);border-radius:6px;padding:var(--space-4) var(--space-10);margin-bottom:var(--space-6);box-shadow:0 1px 4px -2px var(--acc-a08)}
 .opt-w{font-size:var(--font-size-small);line-height:var(--line-height-airy);color:var(--ink)}
 .opt-w .pw{font-weight:var(--font-weight-heavy);color:var(--mut2);text-transform:uppercase;font-size:var(--font-size-nano);letter-spacing:.5px;margin-right:var(--space-7)}
-.opt-w b{color:var(--accink);font-weight:var(--font-weight-bold)}
+.opt-w b{color:inherit;font-weight:var(--font-weight-semibold)}
 `);
 
 var ANS_SHEET = new CSSStyleSheet();
 ANS_SHEET.replaceSync(`
-.qq{font-size:var(--font-size-subhead);font-weight:var(--font-weight-bold);color:var(--ink);line-height:var(--line-height-relaxed);letter-spacing:-.01em}
-.ans{font-size:var(--font-size-small);color:var(--ans-fg);margin-top:var(--space-14);padding:var(--space-14) var(--space-17);background:linear-gradient(135deg,var(--ans-bg) 0%,var(--acc-a03) 100%);border-left:3px solid var(--acc);border-radius:9px;animation:pop var(--duration-base) var(--ease-base);box-shadow:0 1px 4px -2px var(--acc-a06);line-height:var(--line-height-spacious)}
-.ans b{color:var(--accink);font-weight:var(--font-weight-bold)}
+.qq{font-size:var(--font-size-title);font-weight:var(--font-weight-bold);color:var(--ink);line-height:var(--line-height-relaxed);letter-spacing:-.01em;max-width:var(--measure-tight);text-wrap:balance}
+.ans{font-size:var(--font-size-reading);color:var(--ans-fg);max-width:var(--measure);margin-top:var(--space-14);padding:var(--space-14) var(--space-17);background:linear-gradient(135deg,var(--ans-bg) 0%,var(--acc-a03) 100%);border-left:3px solid var(--acc);border-radius:9px;animation:pop var(--duration-base) var(--ease-base);box-shadow:0 1px 4px -2px var(--acc-a06);line-height:var(--line-height-spacious)}
+.ans b{color:inherit;font-weight:var(--font-weight-semibold)}
 .fu{margin-top:var(--space-14);animation:pop var(--duration-moderate) var(--ease-base)}
 .fu .lab{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.8px;text-transform:uppercase;color:var(--amber);display:flex;align-items:center;gap:var(--space-7);margin-bottom:var(--space-7)}
 .fu .lab::before{content:"\\21B3";font-size:var(--font-size-body)}
@@ -45,8 +45,8 @@ ANS_SHEET.replaceSync(`
 .push::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,transparent 30%,rgba(255,255,255,.1) 50%,transparent 70%);opacity:0;transition:opacity var(--duration-slow) var(--ease-base)}
 .push:hover::after{opacity:1}
 .push.more{background:linear-gradient(135deg,var(--amber),#b9740f);box-shadow:0 5px 15px rgba(176,108,20,.30),inset 0 1px 0 rgba(255,255,255,.16)}
-.push:hover:not(.more){box-shadow:0 10px 28px var(--acc-a45),inset 0 1px 0 rgba(255,255,255,.14),0 0 40px -10px var(--acc-a20);transform:translateY(-2px);filter:brightness(1.05);animation:pushGlow 2s ease-in-out infinite}
-@keyframes pushGlow{0%,100%{box-shadow:0 10px 28px var(--acc-a45),inset 0 1px 0 rgba(255,255,255,.14),0 0 40px -10px var(--acc-a15)}50%{box-shadow:0 10px 28px var(--acc-a50),inset 0 1px 0 rgba(255,255,255,.14),0 0 60px -10px var(--acc-a25)}}
+.push:hover:not(.more){box-shadow:0 10px 28px var(--acc-a45),inset 0 1px 0 rgba(255,255,255,.14),0 0 40px -10px var(--acc-a20);transform:translateY(-2px);filter:brightness(1.05)}
+/* pushGlow (2s infinite hover pulse) deleted -- the hover box-shadow is the feedback. */
 .push.more:hover{box-shadow:0 10px 28px rgba(176,108,20,.45),inset 0 1px 0 rgba(255,255,255,.14);transform:translateY(-2px);filter:brightness(1.05)}
 .push:active:not(.more),.push.more:active{transform:translateY(1px) scale(.99);box-shadow:0 2px 7px rgba(30,28,24,.18),inset 0 1px 0 rgba(255,255,255,.1);filter:brightness(.97)}
 .judge{display:flex;gap:var(--space-10);margin-top:var(--space-15)}
@@ -65,10 +65,10 @@ MOCK_SHEET.replaceSync(`
 
 var MBEAT_SHEET = new CSSStyleSheet();
 MBEAT_SHEET.replaceSync(`
-.mbeat{margin:var(--space-13) 0;font-size:var(--font-size-small);line-height:var(--line-height-spacious);color:var(--ink)}
+.mbeat{margin:var(--space-13) 0;font-size:var(--font-size-reading);line-height:var(--line-height-spacious);color:var(--ink)}
 .mbeat{display:flex;gap:var(--space-12);padding:var(--space-12) 0;border-bottom:1px solid var(--bd)}
 .mbeat:last-child{border-bottom:0;padding-bottom:var(--space-2)}
-.mbeat b{color:var(--accink)}
+.mbeat b{color:inherit;font-weight:var(--font-weight-semibold)}
 `);
 
 var DISC_SHEET = new CSSStyleSheet();
@@ -81,5 +81,5 @@ details.disc summary::-webkit-details-marker{display:none}
 details.disc summary::before{content:"\\25B8";transition:transform var(--duration-moderate) var(--ease-spring);font-size:var(--font-size-micro);display:inline-flex;align-items:center;justify-content:center;width:var(--space-18);height:var(--space-18);border-radius:5px;background:var(--accbg)}
 details.disc[open] summary::before{transform:rotate(90deg)}
 details.disc summary:hover{background:var(--acc2-a07);padding-left:var(--space-17)}
-details.disc .body{padding:var(--space-2) var(--space-16) var(--space-14);font-size:var(--font-size-caption);color:var(--disc-body-fg);line-height:var(--line-height-spacious)}
+details.disc .body{padding:var(--space-2) var(--space-16) var(--space-14);font-size:var(--font-size-reading-sm);max-width:var(--measure);color:var(--disc-body-fg);line-height:var(--line-height-spacious)}
 `);

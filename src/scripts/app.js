@@ -54,7 +54,7 @@
 <!--@build:include scripts/app/focus-mode.js-->
 <!--@build:include scripts/app/zoom-diagrams.js-->
 <!--@build:include scripts/app/touch-swipe.js-->
-<!--@build:include scripts/app/card-spotlight.js-->
+<!-- card-spotlight.js dropped: the cursor-tracking .card::after spotlight it fed is gone (Phase 3.5) -->
 <!--@build:include scripts/app/page-visibility.js-->
 <!--@build:include scripts/app/text-zoom.js-->
 <!--@build:include scripts/app/pomodoro.js-->

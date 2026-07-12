@@ -15,24 +15,18 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:var(--font-size-micro);b
 .card::before{content:"";position:absolute;left:var(--space-14);right:var(--space-14);top:0;height:var(--space-2);border-radius:2px;background:var(--topic-edge);opacity:1}
 .step-k{display:inline-flex;align-items:center;gap:var(--space-7);font-family:var(--mono);font-size:var(--font-size-micro);font-weight:var(--font-weight-heavy);letter-spacing:.4px;text-transform:uppercase;color:var(--acc)}
 .step-k::before{content:"";width:var(--space-14);height:var(--space-2);border-radius:2px;background:linear-gradient(90deg,var(--acc),var(--acc2))}
-.step-t{font-size:var(--font-size-title);font-weight:var(--font-weight-bold);margin:var(--space-3) 0 var(--space-5);letter-spacing:-.2px}
+.step-t{font-size:var(--font-size-title);font-weight:var(--font-weight-bold);margin:var(--space-3) 0 var(--space-5);letter-spacing:-.2px;text-wrap:balance}
 .step-sub{font-size:var(--font-size-caption);color:var(--mut);margin-bottom:var(--space-6)}
 .step-t,.dec-q,.num-h,.debrief .big,.mscript-h,.rec .lvl,.sr-h,.cs-ha-l,.side-id h1,.stage-head .sh-name{font-family:var(--display)}
 ::selection{background:var(--acc);color:#fff}
-/* 3D card lift + cursor spotlight -- desktop pointers only, motion-respecting.
-   The EWC top-accent (.card::before) and .step-k tick are untouched; the
-   spotlight rides the free .card::after; the "border glow" is a hover box-shadow
-   (no continuous animation); entrance stagger stays the global cardStagger. */
+/* Card hover: a quiet tint of the border to the room's edge. The 3D perspective-tilt
+   + cursor-tracking radial spotlight (.card::after) -- a landing-page trick, and noise
+   in a 40-minute study session -- are DELETED, along with card-spotlight.js (dropped
+   from app.js) and the --card-spot / --card-tilt-glow tokens. The BOX stays (surface,
+   border, top room-edge); only its chrome went. Feedback, never ambience. */
 @media (hover:hover) and (pointer:fine){
-.card{isolation:isolate;transition:transform var(--duration-slow) var(--ease-glide),box-shadow var(--duration-slow) var(--ease-glide),border-color var(--duration-moderate) var(--ease-base)}
-.card::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:var(--z-below);opacity:0;transition:opacity var(--duration-slow) var(--ease-base);background:radial-gradient(340px circle at var(--mouse-x,50%) var(--mouse-y,50%),var(--card-spot,var(--acc-a12)),transparent 60%)}
-.card:hover{transform:perspective(900px) translateY(-3px) rotateX(1.4deg) rotateY(-.8deg);border-color:var(--acc-a30);box-shadow:var(--card-sh),var(--card-tilt-glow,0 16px 38px -16px var(--acc-a26))}
-.card:hover::after{opacity:1}
-}
-@media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:reduce){
-.card{transition:box-shadow var(--duration-fast) var(--ease-base),border-color var(--duration-fast) var(--ease-base)}
-.card:hover{transform:none}
-.card:hover::after{opacity:0}
+.card{transition:border-color var(--duration-base) var(--ease-base)}
+.card:hover{border-color:var(--topic-edge)}
 }
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 /* PRINT PAGE-BREAK CONTROL. This used to live in styles.css, where it reached NOTHING:

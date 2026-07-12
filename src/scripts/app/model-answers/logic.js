@@ -24,12 +24,13 @@ var MODEL_STYLE = `
 .msel button:hover{border-color:var(--acc2);color:var(--accink);background:linear-gradient(135deg,var(--accbg) 0%,var(--acc-a04) 100%);transform:translateY(-1px);box-shadow:0 4px 12px -4px var(--acc-a10)}
 .msel button:active{transform:translateY(0) scale(.98)}
 .msel button.on{background:linear-gradient(135deg,var(--accbg) 0%,var(--acc-a08) 100%);border-color:var(--acc);color:var(--accink);box-shadow:0 0 0 1px var(--acc),0 4px 14px -4px var(--acc-a18);font-weight:var(--font-weight-heavy);position:relative}
-.msel button.on::after{content:"";position:absolute;right:var(--space-8);top:50%;transform:translateY(-50%);width:var(--space-6);height:var(--space-6);border-radius:50%;background:var(--acc);box-shadow:0 0 8px var(--acc-a40);animation:activePulse 2s ease-in-out infinite}
+.msel button.on::after{content:"";position:absolute;right:var(--space-8);top:50%;transform:translateY(-50%);width:var(--space-6);height:var(--space-6);border-radius:50%;background:var(--acc);box-shadow:0 0 8px var(--acc-a40)}
+/* activePulse (2s endless) removed -- the filled dot marks the active register; no loop. */
 @media(max-width:560px){.msel{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .mscript-h{font-size:var(--font-size-subhead);font-weight:var(--font-weight-heavy);color:var(--ink);letter-spacing:-.3px;margin-bottom:var(--space-5)}
 .mscript-sub{font-size:var(--font-size-caption);color:var(--mut);line-height:var(--line-height-airy);margin-bottom:var(--space-8);padding-bottom:var(--space-14);border-bottom:2px solid var(--accbg)}
 .mbeat-l{flex:none;width:var(--space-76);font:var(--font-weight-heavy) 9.5px -apple-system,sans-serif;letter-spacing:.4px;text-transform:uppercase;padding-top:var(--space-4);line-height:var(--line-height-snug);color:var(--acc)}
-.mbeat-t{flex:1;font-size:var(--font-size-small);line-height:var(--line-height-spacious);color:var(--ink)}
+.mbeat-t{flex:1;font-size:var(--font-size-reading);max-width:var(--measure);line-height:var(--line-height-spacious);color:var(--ink)}
 .mbeat-t b{color:var(--accink);font-weight:var(--font-weight-bold)}
 `;
 class DeepModelAnswers extends TopicPane {

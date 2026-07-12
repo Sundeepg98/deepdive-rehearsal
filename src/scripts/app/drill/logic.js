@@ -45,15 +45,16 @@ var DRILL_STYLE = `@keyframes pop{from{opacity:0;transform:translateY(7px) scale
 .timer.low{color:var(--red);background:var(--redbg);border-color:#e8c5c0;animation:pulse var(--duration-slowest) infinite}
 .dbar{height:var(--space-7);background:var(--dbar-bg);border-radius:7px;overflow:hidden;margin-bottom:var(--space-16);box-shadow:inset 0 1px 2px rgba(0,0,0,.06)}
 .dbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--acc),var(--acc2) 60%,#8B7FE8);transition:width var(--duration-slow) var(--ease-glide);position:relative;overflow:hidden;border-radius:7px}
-.dbar i::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.25) 50%,transparent 100%);animation:barShimmer var(--duration-slowest) ease-in-out infinite}
-@keyframes barShimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+/* .dbar i::after barShimmer (infinite) deleted -- a progress bar that shimmers when
+   nothing is loading is lying. The fill width IS the progress. */
 .score{display:flex;gap:var(--space-9);margin-bottom:var(--space-14)}
 .pill{flex:1;text-align:center;border:1px solid var(--bd);border-radius:12px;padding:var(--space-10);background:linear-gradient(135deg,var(--card) 0%,var(--acc-a02) 100%);transition:box-shadow var(--duration-moderate) var(--ease-base),transform var(--duration-base) var(--ease-base),border-color var(--duration-base) var(--ease-base)}
 .pill:hover{box-shadow:0 4px 16px -4px var(--acc-a15);transform:translateY(-2px);border-color:var(--acc-a15)}
-.pill .v{font-size:var(--font-size-heading);font-weight:var(--font-weight-heavy);line-height:var(--line-height-none);transition:transform var(--duration-base) var(--ease-spring)}
-.pill:hover .v{transform:scale(1.08)}
+.pill .v{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:24px;font-weight:var(--font-weight-heavy);line-height:var(--line-height-none)}
+/* .pill:hover .v scale deleted -- a scoreboard figure must not jump when you point at it. */
 .pill .l{font-size:var(--font-size-nano);font-weight:var(--font-weight-bold);text-transform:uppercase;letter-spacing:.5px;color:var(--mut2);margin-top:var(--space-4)}
 .pill.g .v{color:var(--teal)} .pill.s .v{color:var(--amber)} .pill.left .v{color:var(--acc)}
+.pill.g{border-color:var(--teal)} .pill.s{border-color:var(--amber)}
 .pill.z .v{color:var(--mut)} .pill.z{opacity:.7}
 .revset{display:flex;align-items:center;gap:var(--space-11);flex-wrap:wrap;margin:var(--space-2) 0 var(--space-18)}
 .revset-b{font:var(--font-weight-semibold) 13px -apple-system,system-ui,sans-serif;color:var(--accink);background:var(--accbg);border:1px solid var(--acc);border-radius:8px;padding:var(--space-7) var(--space-13);cursor:pointer;transition:background var(--duration-fast),color var(--duration-fast),transform var(--duration-instant);display:inline-flex;align-items:center;gap:var(--space-6)}

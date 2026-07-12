@@ -33,12 +33,14 @@ var NUM_STYLE = `.numlead{font-size:var(--font-size-body);line-height:var(--line
 .nrow:last-child{border-bottom:0}
 .nrow:hover{padding-left:var(--space-4)}
 .nrow-k{grid-area:k;font-size:var(--font-size-small);font-weight:var(--font-weight-bold);color:var(--ink);align-self:center}
-.nrow-v{grid-area:v;font:var(--font-weight-heavy) 17px ui-monospace,Menlo,monospace;color:var(--acc);align-self:center;white-space:nowrap;transition:transform var(--duration-base) var(--ease-spring)}
-.nrow:hover .nrow-v{transform:scale(1.05)}
+.nrow-v{grid-area:v;font:var(--font-weight-heavy) 17px ui-monospace,Menlo,monospace;color:var(--ink);align-self:center;white-space:nowrap}
+/* .nrow-v is INK now (was --acc): painting every figure accent destroyed the breach-red
+   signal. The hover scale(1.05) is deleted -- a number you point at must not grow, or you
+   cannot compare it. Only the breached rows carry colour, and now they land. */
 .nrow-n{grid-area:n;font-size:var(--font-size-micro);color:var(--mut2);line-height:var(--line-height-relaxed)}
-.nrow.over .nrow-v{color:var(--red);text-shadow:0 0 20px rgba(239,68,68,.1)}
+.nrow.over .nrow-v{color:var(--red)}
 .nrow.over .nrow-n{color:var(--red);font-weight:var(--font-weight-semibold)}
-.nrow.over{background:linear-gradient(90deg,transparent 0%,rgba(239,68,68,.02) 100%)}
+.nrow.over{background:linear-gradient(90deg,transparent 0%,rgba(239,68,68,.02) 100%);border-left:2px solid var(--red)}
 .num-tell{margin-top:var(--space-15);font-size:var(--font-size-caption);color:var(--teal);font-weight:var(--font-weight-bold);line-height:var(--line-height-airy);padding:var(--space-14) var(--space-17);background:linear-gradient(135deg,var(--tealbg) 0%,rgba(10,133,100,.04) 100%);border-radius:11px;box-shadow:0 1px 6px -2px rgba(10,133,100,.08)}
 .nprog{height:var(--space-5);background:var(--dbar-bg);border-radius:5px;overflow:hidden;margin:var(--space-12) 0}
 .nprog i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));border-radius:5px;transition:width var(--duration-slowest) var(--ease-glide)}

@@ -29,8 +29,8 @@ var SYS_STYLE = `
 .stg .nm{font-size:var(--font-size-body);font-weight:var(--font-weight-bold);transition:color var(--duration-base) var(--ease-base)}
 .stg:hover .nm{color:var(--accink)}
 .stg .ds{font-size:var(--font-size-caption);color:var(--mut);margin-top:var(--space-2)}
-.stg.cur .dot{background:linear-gradient(135deg,var(--acc),var(--acc2));border-color:var(--acc);color:#fff;box-shadow:0 0 0 5px var(--accbg),0 2px 10px -2px var(--acc-a30);animation:curPulse 2s ease-in-out infinite}
-@keyframes curPulse{0%,100%{box-shadow:0 0 0 5px var(--accbg),0 2px 10px -2px var(--acc-a30)}50%{box-shadow:0 0 0 8px var(--acc-a10),0 0 20px -4px var(--acc-a40)}}
+.stg.cur .dot{background:linear-gradient(135deg,var(--acc),var(--acc2));border-color:var(--acc);color:#fff;box-shadow:0 0 0 5px var(--accbg),0 2px 10px -2px var(--acc-a30)}
+/* curPulse (2s endless) removed -- the "you are here" dot's fill + ring IS the state. */
 .stg.cur .nm{color:var(--accink);font-weight:var(--font-weight-bold)}
 .stg.cur .here{display:inline-block;font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.6px;text-transform:uppercase;color:var(--sm-here-fg);background:linear-gradient(135deg,var(--acc),var(--acc2));border-radius:5px;padding:var(--space-2) var(--space-8);margin-left:var(--space-8);vertical-align:middle;box-shadow:0 2px 6px -2px var(--acc-a25)}
 .piv-k{font-size:var(--font-size-micro);font-weight:var(--font-weight-heavy);letter-spacing:.8px;text-transform:uppercase;color:var(--acc);margin-bottom:var(--space-4)}

@@ -62,7 +62,7 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
     --bg:#FAF9F5; --card:#fff;
    --surf:linear-gradient(180deg,#ffffff 0%,#F8F5EF 100%);
    --card-sh:0 1px 2.5px rgba(40,34,28,.05),0 7px 16px -7px rgba(40,34,28,.10),0 22px 48px -26px rgba(40,34,28,.16);
-   --card-tilt-glow:0 16px 38px -16px var(--acc-a26); --card-spot:var(--acc-a12);
+   /* --card-tilt-glow / --card-spot removed with the 3D card tilt + cursor spotlight (Phase 3.5) */
    --surf-sh:0 1px 2px rgba(40,34,28,.05),0 4px 10px -5px rgba(40,34,28,.09);
    --glow:0 0 0 1px var(--acc-a06),0 1px 2px rgba(40,34,28,.04),0 8px 20px -6px rgba(40,34,28,.10),0 24px 56px -24px rgba(40,34,28,.18);
     --mix-surf:color-mix(in oklab,var(--bg) 92%,var(--acc));
@@ -145,6 +145,10 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
   /* --acc BECOMES the room's ink; --acc2 the room's solid; --accbg the wash. */
   html{--acc:var(--topic-ink);--acc2:var(--topic-solid);--accbg:var(--topic-wash);--accink:color-mix(in oklab,var(--topic-ink) 82%,var(--ink))}
 
+  /* comfortable reading measure -- a ch value, so it lives here not in tokens.json.
+     Caps PROSE line length (not the .card), which runs 100+ch today. 62-75ch is the target. */
+  html{--measure:68ch;--measure-tight:58ch}
+
   /* Flat, static room map -- each room's ink addressable by group id, for
      cross-topic wayfinding (pivot chips, index bands). Does NOT vary by current room. */
   html{--room-messaging-events:#006B63;--room-data-storage:#315BB4;--room-reliability-observability:#924E00;--room-platform-infra:#694EB0;--room-architecture-apis:#963D86;--room-security-tenancy:#AA3832}
@@ -187,10 +191,10 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
   /* 700, not 800. Space Grotesk's variable wght axis is 300-700 (see fonts.css); 800 is
      off the end of it, so the browser SYNTHESISED a fake bold. The two display headings
      have rendered faux-bold for the app's whole life. Ask for a weight the face has. */
-  .hdr h1{font-size:clamp(25px,7.2vw,30px);font-weight:var(--font-weight-bold);letter-spacing:-.7px;line-height:var(--line-height-tight);position:relative}
-@supports (background-clip:text) or (-webkit-background-clip:text){
-  .hdr h1{background:linear-gradient(135deg,var(--acc),var(--acc2),#9B8FD4,var(--acc));background-size:300% 300%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:headingShift 6s ease-in-out infinite}
-  @keyframes headingShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}}
+  .hdr h1{font-size:clamp(25px,7.2vw,30px);font-weight:var(--font-weight-bold);letter-spacing:-.7px;line-height:var(--line-height-tight);position:relative;color:var(--ink)}
+/* headingShift (6s endlessly-looping animated lavender-on-cream gradient text -- the
+   app's LOWEST-contrast text, and it never stopped moving) DELETED. The title is a solid
+   high-contrast anchor now; the room lives in the wall/locator/masthead/edges. */
 .hdr .sub{font-size:var(--font-size-small);color:var(--mut);margin-top:var(--space-6);max-width:var(--space-620)}
 .sub b{color:var(--ink);font-weight:var(--font-weight-bold)}
   .kbd-hint{font-size:var(--font-size-micro);color:var(--mut2);margin-top:var(--space-9)}
@@ -317,7 +321,7 @@ html[data-theme="dark"]{
   --bg:#15141A; --card:#211F29;
    --surf:linear-gradient(180deg,#282532 0%,#1E1C26 100%);
    --card-sh:0 1px 2.5px rgba(0,0,0,.4),0 7px 16px -7px rgba(0,0,0,.45),0 22px 48px -26px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.055);
-   --card-tilt-glow:0 16px 40px -14px rgba(139,127,232,.30); --card-spot:rgba(139,127,232,.16);
+   /* --card-tilt-glow / --card-spot removed (Phase 3.5) */
    --surf-sh:0 1px 2px rgba(0,0,0,.4),0 4px 10px -5px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.045);
    --panel:linear-gradient(180deg,#1F1E26 0%,#181720 100%); --bd:#37333F; --ink:#ECEAE4; --mut:#A7A29A; --mut2:#ADA79D;
   /* --acc/--acc2/--accbg/--accink now come from THE SIX ROOMS dark rebind (room ink/solid/wash). */
@@ -378,10 +382,10 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
 .sidebar .mockbar{order:2;margin-top:auto;padding-top:var(--space-14);border-top:1px solid var(--bd);gap:var(--space-7)}
 .sidebar .mockbar .mb-d{display:none}
 .stage{flex:1;min-width:0;padding:var(--space-32) clamp(var(--space-20),4vw,var(--space-52)) var(--space-70);overflow-x:hidden;position:relative}
-.stage::before{content:"";position:fixed;top:0;left:0;width:70vw;height:70vh;background:radial-gradient(ellipse at 30% 20%,var(--acc-a18) 0%,var(--acc2-a12) 25%,rgba(139,127,232,.07) 50%,transparent 80%);animation:meshA 20s ease-in-out infinite;pointer-events:none;z-index:var(--z-base);will-change:transform;opacity:.8}
-.stage::after{content:"";position:fixed;bottom:0;right:0;width:60vw;height:60vh;background:radial-gradient(ellipse at 70% 80%,rgba(139,127,232,.14) 0%,var(--acc-a10) 30%,var(--acc2-a06) 55%,var(--acc-a03) 80%,transparent 100%);animation:meshB 16s ease-in-out infinite -6s;pointer-events:none;z-index:var(--z-base);will-change:transform;opacity:.7}
-@keyframes meshA{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(8%,-5%) scale(1.08)}66%{transform:translate(-4%,6%) scale(.95)}}
-@keyframes meshB{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(-6%,4%) scale(1.05)}66%{transform:translate(5%,-3%) scale(.97)}}
+/* Two perpetually-drifting purple mesh clouds (meshA 20s + meshB 16s, forever-looping)
+   behind dense technical text -- DELETED, with two viewport-sized will-change layers.
+   A precision instrument is still until YOU move it. The static --canvas radial (.stage
+   background, below) already grounds the work surface. */
 .stage .pane{position:relative;z-index:1;max-width:var(--space-830);margin:0 auto}
 
   /* Floating ambient particles in the stage */
@@ -483,7 +487,7 @@ button:active::after,.inttog:active::after{opacity:1;transition:opacity var(--du
 
 .stage-head{position:relative;max-width:var(--space-830);margin:0 auto var(--space-20);padding:var(--space-2) 0 var(--space-14) var(--space-18);border-bottom:1px solid var(--bd)}
 .stage-head::before{content:"";position:absolute;left:0;top:var(--space-3);bottom:var(--space-14);width:var(--space-3);border-radius:2px;background:var(--topic-solid);box-shadow:0 0 8px -1px var(--acc-a30)}
-/* accentGlow (infinite pulse) removed -- a masthead that breathes is a masthead that
+/* accentGlow (endless pulse) removed -- a masthead that breathes is a masthead that
    distracts. The room's solid bar is the anchor; its glow is static. */
 .stage-head .sh-kick{font-family:var(--mono);font-size:var(--font-size-nano);font-weight:var(--font-weight-bold);letter-spacing:1.8px;color:var(--acc);text-transform:uppercase;line-height:var(--line-height-normal)}
 /* 700, not 800 -- see .hdr h1 above. This is the app's other display-face heading. */
@@ -496,8 +500,7 @@ button:active::after,.inttog:active::after{opacity:1;transition:opacity var(--du
 /* v79: engineering-canvas dot grid on the work surface (stage) */
 :root{--grid:var(--acc-a08);--canvas:radial-gradient(130% 90% at 50% -25%,#FDFCFA 0%,#FAF9F5 42%,#F5F2EB 100%)}
 html[data-theme="dark"]{--grid:var(--acc-a08);--canvas:radial-gradient(130% 90% at 50% -25%,#19181F 0%,#15141A 42%,#121118 100%)}
-html[data-theme="dark"] .stage::before{background:radial-gradient(ellipse at 30% 20%,rgba(170,157,245,.12) 0%,rgba(184,171,248,.06) 40%,transparent 70%);position:fixed}
-html[data-theme="dark"] .stage::after{background:radial-gradient(ellipse at 70% 80%,rgba(139,127,232,.08) 0%,rgba(170,157,245,.04) 50%,transparent 70%);position:fixed}
+/* dark .stage::before/::after mesh overrides deleted with the mesh (above). */
 html[data-theme="dark"] .sidebar{background:linear-gradient(180deg,rgba(30,28,38,.92),rgba(24,23,32,.92))}
 .stage{background-color:var(--bg);background-image:radial-gradient(circle,var(--grid) 1px,transparent 1px),var(--canvas);background-size:23px 23px,100% 100%;background-repeat:repeat,no-repeat;position:relative}
 /* v80: mobile nav strip edge-fade affordance (signals the hidden views) */
@@ -556,7 +559,7 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover{background:rgba(150,140,
 .companion{display:none}
 @media(min-width:1280px){
   .stage{justify-content:flex-start}
-  .companion{display:flex;flex-direction:column;flex:none;width:var(--space-290);position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--panel);border-left:1px solid var(--bd);box-shadow:inset 8px 0 24px -12px var(--acc-a08)}
+  .companion{display:flex;flex-direction:column;flex:none;width:320px;position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--panel);border-left:1px solid var(--bd);box-shadow:inset 8px 0 24px -12px var(--acc-a08)}
   body.cmp-collapsed .companion{display:none}
   body.cmp-collapsed .cmp-reopen{display:flex}
   .companion .topic-item{position:relative;overflow:hidden;border-radius:9px;transition:box-shadow var(--duration-moderate) var(--ease-base),background var(--duration-base) var(--ease-base),transform var(--duration-base) var(--ease-glide),padding var(--duration-base) var(--ease-base)}
@@ -610,7 +613,7 @@ button,summary{-webkit-user-select:none;user-select:none}
 .cmp-eyebrow{display:inline-flex;align-items:center;gap:var(--space-7);align-self:flex-start;font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.12em;text-transform:uppercase;color:var(--acc);background:var(--accbg);border:1px solid var(--bd);padding:var(--space-4) var(--space-10) var(--space-4) var(--space-9);border-radius:999px}
 .cmp-eyebrow::before{content:"";width:var(--space-5);height:var(--space-5);border-radius:50%;background:var(--acc);box-shadow:0 0 0 3px color-mix(in srgb,var(--acc) 18%,transparent)}
 .cmp-topic{font-family:var(--display);font-size:var(--font-size-display);font-weight:var(--font-weight-semibold);line-height:var(--line-height-tight);letter-spacing:-.014em;color:var(--ink);margin-top:var(--space-13)}
-.cmp-thesis{margin:var(--space-13) 0 0;font-size:var(--font-size-caption);line-height:var(--line-height-spacious);color:var(--mut2)}
+.cmp-thesis{margin:var(--space-13) 0 0;font-size:var(--font-size-small);line-height:var(--line-height-spacious);color:var(--mut2)}
 .cmp-thesis::before{content:"";display:block;width:var(--space-26);height:var(--space-2);border-radius:2px;margin-bottom:var(--space-11);background:linear-gradient(90deg,var(--acc),var(--acc2))}
 .cmp-h{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.12em;text-transform:uppercase;color:var(--mut);margin:0 0 var(--space-11)}
 .cmp-rel-list{display:flex;flex-direction:column;gap:var(--space-6)}
@@ -683,8 +686,7 @@ html[data-theme="dark"] .card{box-shadow:0 1px 3px rgba(0,0,0,.3),0 0 30px -8px 
 html[data-theme="dark"] .card:hover{box-shadow:0 8px 32px -10px rgba(139,127,232,.15),0 0 40px -12px rgba(139,127,232,.08)}
 html[data-theme="dark"] .thread{box-shadow:0 1px 3px rgba(0,0,0,.25)}
 html[data-theme="dark"] .thread:hover{box-shadow:0 6px 24px -8px rgba(139,127,232,.12)}
-html[data-theme="dark"] .stage::before{opacity:.5}
-html[data-theme="dark"] .stage::after{opacity:.4}
+/* (dark .stage::before/::after opacity overrides deleted with the mesh) */
 
 /* === v158: Custom cursor on interactive elements === */
 button,.seg button,.dn-step,.pill,.card,.thread,.dec,.rf,.op,.piv,.tools-fab,.crbtn{cursor:pointer}

@@ -15,12 +15,12 @@ CS_SHEET.replaceSync(`
 .cs-sec{margin-top:var(--space-18)}
 .cs-st{font:var(--font-weight-heavy) 10.5px -apple-system,sans-serif;letter-spacing:.7px;text-transform:uppercase;color:var(--acc);border-bottom:2px solid var(--accbg);padding-bottom:var(--space-5);margin-bottom:var(--space-10)}
 .cs-spine{margin:0;padding-left:var(--space-20)}
-.cs-spine li{font-size:var(--font-size-caption);line-height:var(--line-height-airy);margin-bottom:var(--space-6);color:var(--ink)}
-.cs-dec{font-size:var(--font-size-caption);line-height:var(--line-height-airy);margin-bottom:var(--space-7);color:var(--ink)}
+.cs-spine li{font-size:var(--font-size-reading-sm);line-height:var(--line-height-airy);margin-bottom:var(--space-6);color:var(--ink)}
+.cs-dec{font-size:var(--font-size-reading-sm);line-height:var(--line-height-airy);margin-bottom:var(--space-7);color:var(--ink)}
 .cs-dec b{color:var(--accink);font-weight:var(--font-weight-bold)}
 .cs-arr{color:var(--mut2);font-weight:var(--font-weight-heavy);margin:0 var(--space-5)}
-.cs-num{font-size:var(--font-size-caption);line-height:var(--line-height-airy);margin-bottom:var(--space-6);color:var(--ink)}
-.cs-ha{font-size:var(--font-size-caption);line-height:var(--line-height-airy);margin-bottom:var(--space-7);color:var(--ink)}
+.cs-num{font-size:var(--font-size-reading-sm);line-height:var(--line-height-airy);margin-bottom:var(--space-6);color:var(--ink)}
+.cs-ha{font-size:var(--font-size-reading-sm);line-height:var(--line-height-airy);margin-bottom:var(--space-7);color:var(--ink)}
 .cs-ha-l{color:var(--acc);font-weight:var(--font-weight-heavy)}
 .cs-num b{color:var(--ink);font-weight:var(--font-weight-bold)}
 .cs-dim{color:var(--mut2);font-size:var(--font-size-micro);margin-top:var(--space-8)}
@@ -29,8 +29,9 @@ CS_SHEET.replaceSync(`
 .cs-arr2{color:var(--mut2);font-weight:var(--font-weight-heavy)}
 .cs-fix{text-align:left;color:var(--teal);font-weight:var(--font-weight-semibold);font-size:var(--font-size-caption);line-height:var(--line-height-normal)}
 .cs-tells{margin:0;padding-left:var(--space-20)}
-.cs-tells li{font-size:var(--font-size-caption);line-height:var(--line-height-airy);margin-bottom:var(--space-6);color:var(--ink)}
+.cs-tells li{font-size:var(--font-size-reading-sm);line-height:var(--line-height-airy);margin-bottom:var(--space-6);color:var(--ink)}
 .cs-30{background:linear-gradient(135deg,var(--cs30-bg) 0%,var(--acc-a02) 100%);border:1px solid var(--bd);border-radius:11px;padding:var(--space-13) var(--space-15);font-size:var(--font-size-caption);line-height:var(--line-height-airy);color:var(--ink)}
-b{color:var(--accink);font-weight:var(--font-weight-bold)}
-b.cs-ha-l{color:var(--accink);font-weight:var(--font-weight-bold)}
+b{color:inherit;font-weight:var(--font-weight-semibold)}
+/* b.cs-ha-l override DELETED -- a <b class=cs-ha-l> now takes .cs-ha-l{color:var(--acc)}
+   (the room-marker label colour), which is correct. Emphasis is WEIGHT; colour is meaning. */
 `);

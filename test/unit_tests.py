@@ -134,7 +134,11 @@ test("Built HTML exists", os.path.exists(html_path))
 
 if os.path.exists(html_path):
     size = os.path.getsize(html_path)
-    test("Built HTML size reasonable (300KB-6MB, multi-topic)", 300000 <= size <= 6000000, f"Size: {size} bytes")
+    # Ceiling raised 6MB -> 16MB when the 38 markdown topics were authored to the full depth of
+    # the hand-coded 8 (parity debt 684 -> 11): the offline single-file design inlines every topic,
+    # so full-depth content across 46 topics is ~11.4MB. Still a runaway-bloat guard, recalibrated
+    # to the real content baseline (not a code-size regression).
+    test("Built HTML size reasonable (300KB-16MB, 46 full-depth topics)", 300000 <= size <= 16000000, f"Size: {size} bytes")
 
     with open(html_path, 'r') as f:
         html = f.read()

@@ -104,7 +104,7 @@ function applyIdentity(idn) {
         var _tp = TopicRegistry.get(x), _ti = _tp ? _tp.identity : null;
         return '<button class="cmp-rel" type="button" data-topic="' + x + '"><span class="cmp-rel-t">' + (_ti ? _ti.title : x) + '</span><span class="cmp-rel-d">' + (_ti && _ti.locatorTail ? _ti.locatorTail : '') + '</span></button>';
       }).join('');
-      rel.innerHTML = '<div class="cmp-h">More in <span style="color:' + (_bkt.group.color || 'var(--acc)') + '">' + _bkt.group.label + '</span></div><div class="cmp-rel-list">' + _links + '</div>';
+      rel.innerHTML = '<div class="cmp-h">More in <span style="color:var(--room-' + _bkt.group.id + ')">' + _bkt.group.label + '</span></div><div class="cmp-rel-list">' + _links + '</div>';
       rel.hidden = false;
       rel.onclick = function (e) { var b = e.target && e.target.closest ? e.target.closest('[data-topic]') : null; if (b) TopicRegistry.setTopic(b.getAttribute('data-topic')); };
     } else { rel.hidden = true; rel.innerHTML = ''; }

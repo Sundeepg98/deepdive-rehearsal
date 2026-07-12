@@ -54,7 +54,9 @@ var SYS_STYLE = `
    max-width caps only the long ones, and white-space:normal lets a capped chip WRAP rather than
    be cropped. Content the author wrote is not silently cut off by the layout -- the same rule the
    compiler now obeys, one layer down. */
-.piv .chip{flex:none;max-width:55%;font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.3px;color:var(--indigo);background:linear-gradient(135deg,var(--indigobg) 0%,var(--acc-a04) 100%);border:1px solid #cfc7f0;border-radius:6px;padding:var(--space-3) var(--space-9);white-space:normal;overflow-wrap:anywhere;margin-top:var(--space-1);margin-left:auto}
+.piv .chip{flex:none;max-width:55%;font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.3px;color:var(--mut2);background:transparent;border:1px solid var(--bd);border-radius:6px;padding:var(--space-3) var(--space-9);white-space:normal;overflow-wrap:anywhere;margin-top:var(--space-1);margin-left:auto}
+/* a pivot that lands in another room glows that room's ink -- wayfinding, not decoration */
+.piv .chip.chip-dest{color:var(--dest);border-color:color-mix(in srgb,var(--dest) 35%,var(--bd));background:color-mix(in srgb,var(--dest) 7%,transparent)}
 .piv .chip.chip-link{cursor:pointer;transition:border-color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base),color var(--duration-fast) var(--ease-base)}
 .piv .chip.chip-link:hover,.piv .chip.chip-link:focus-visible{border-color:var(--acc);color:var(--acc);background:linear-gradient(135deg,var(--accbg) 0%,var(--acc-a06) 100%);outline:none}
 .piv .pa{padding:var(--space-2) var(--space-17) var(--space-16) var(--space-43);font-size:var(--font-size-caption);color:var(--sm-pa-fg);line-height:var(--line-height-spacious)}
@@ -100,7 +102,10 @@ function sysRenderPivot(p) {
   /* Header chip is a plain, non-interactive label (avoids an interactive control
      nested inside the interactive <summary>). The one-click jump is a real <button>
      in the disclosure body, so it's natively keyboard-operable. */
-  var headChip = '<span class="chip">' + p.chip + '</span>';
+  /* Room wayfinding: if the pivot resolves to another topic, tint the chip with the
+     DESTINATION room's ink, so the map reads "three of my pivots go into Security". */
+  var _tgt = target ? TopicRegistry.get(target) : null, _grp = _tgt && _tgt.identity && _tgt.identity.group;
+  var headChip = '<span class="chip' + (_grp ? ' chip-dest' : '') + '"' + (_grp ? ' style="--dest:var(--room-' + _grp + ')"' : '') + '>' + p.chip + '</span>';
   var jump = target
     ? '<button class="piv-jump" type="button" data-goto="' + target + '">Jump to ' + p.chip.replace(/\s*\(\d+\)\s*/g, ' ').trim() + ' &rarr;</button>'
     : '';

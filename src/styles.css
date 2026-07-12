@@ -768,6 +768,11 @@ body.is-hidden,body.is-hidden *,body.is-hidden *::before,body.is-hidden *::after
 .ix-group{margin-top:var(--space-16)}
 .ix-g-head{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);text-transform:uppercase;letter-spacing:.7px;color:var(--mut2);margin-bottom:var(--space-8);display:flex;align-items:center;gap:var(--space-7)}
 .ix-g-n{font-family:var(--mono);font-size:var(--font-size-nano);color:var(--acc);background:var(--accbg);border-radius:5px;padding:var(--space-1) var(--space-6);font-weight:var(--font-weight-heavy)}
+/* THE INDEX IS THE MAP -- all six rooms visible at once. index-overlay sets --rm per
+   group section, so each group head/dot/card wears ITS OWN room's ink here. */
+.ix-group .ix-g-head{color:var(--rm);background:linear-gradient(90deg,color-mix(in srgb,var(--rm) 11%,transparent),transparent 55%);padding:var(--space-5) var(--space-9);border-radius:7px}
+.ix-group .ix-g-n{color:var(--rm);background:color-mix(in srgb,var(--rm) 13%,transparent)}
+.ix-group .ix-card{border-color:color-mix(in srgb,var(--rm) 25%,var(--bd))}
 .ix-g-cram{margin-left:auto;font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.02em;text-transform:none;color:var(--acc);background:transparent;border:1px solid var(--bd);border-radius:20px;padding:var(--space-3) var(--space-11);cursor:pointer;transition:background var(--duration-fast) var(--ease-base),border-color var(--duration-fast) var(--ease-base)}
 .ix-g-cram:hover{background:var(--accbg);border-color:var(--acc)}
 .ix-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:var(--space-8)}

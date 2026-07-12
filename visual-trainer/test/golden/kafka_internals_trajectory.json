@@ -1,0 +1,984 @@
+{
+ "note": "Trajectory of kafka-internals ## Visual stories, captured from the PRE-generalisation sim (sim/kafka_lag.js @ 0b65ff3, mode queue-flow). The kafka-consumer-lag mode MUST reproduce these digests EXACTLY -- that is the proof the generalisation did not move the one visual that already shipped correct. Regenerating this file to make a red test green would destroy the guarantee.",
+ "capturedFrom": "visual-trainer/src/sim/kafka_lag.js + src/modes/queue-flow/index.js (pre-change)",
+ "dt": 0.03333333333333333,
+ "params": {
+  "lanes": 6,
+  "rate": 120,
+  "sinks": 3,
+  "capacity": 30
+ },
+ "stories": [
+  {
+   "name": "Spike, then scale out",
+   "steps": [
+    {
+     "t": 0,
+     "cap": "Steady: 60 msg/s in, capacity 90. Lag near zero.",
+     "set": {
+      "rate": 60
+     }
+    },
+    {
+     "t": 3,
+     "cap": "Traffic spikes 3x (180 msg/s). Capacity 90 -- every partition queue backs up.",
+     "set": {
+      "rate": 180
+     }
+    },
+    {
+     "t": 9,
+     "cap": "Scale out: a 4th consumer. Rebalance stall first... then capacity 120.",
+     "set": {
+      "sinks": 4
+     }
+    },
+    {
+     "t": 13,
+     "cap": "Still growing: 180 in vs 120 out. A 5th -- capacity 150.",
+     "set": {
+      "sinks": 5
+     }
+    },
+    {
+     "t": 17,
+     "cap": "Spike ends. Capacity 150 -- the backlog drains.",
+     "set": {
+      "rate": 60
+     }
+    },
+    {
+     "t": 24,
+     "cap": "The interview line: scale consumers to drain lag -- capacity versus rate."
+    },
+    {
+     "t": 28
+    }
+   ],
+   "digest": "22b144ad",
+   "ticks": 841,
+   "trace": [
+    {
+     "t": 0,
+     "lag": 0,
+     "cap": 90,
+     "sinks": 3,
+     "stalled": 0,
+     "idle": 0,
+     "status": "STEADY"
+    },
+    {
+     "t": 0.5,
+     "lag": 0,
+     "cap": 90,
+     "sinks": 3,
+     "stalled": 0,
+     "idle": 0,
+     "status": "STEADY"
+    },
+    {
+     "t": 1,
+     "lag": 0,
+     "cap": 90,
+     "sinks": 3,
+     "stalled": 0,
+     "idle": 0,
+     "status": "STEADY"
+    },
+    {
+     "t": 1.5,
+     "lag": 0,
+     "cap": 90,
+     "sinks": 3,
+     "stalled": 0,
+     "idle": 0,
+     "status": "STEADY"
+    },
+    {
+     "t": 2,
+     "lag": 0,
+     "cap": 90,
+     "sinks": 3,
+     "stalled": 0,
+     "idle": 0,
+     "status": "STEADY"
+    },
+    {
+     "t": 2.5,
+     "lag": 0,
+     "cap": 90,
+     "sinks": 3,
+     "stalled": 0,
+     "idle": 0,
+     "status": "STEADY"
+    },
+    {
+     "t": 3,
+     "lag": 0,
+     "cap": 90,
+     "sinks": 3,
+     "stalled": 0,
+     "idle": 0,
+     "status": "LAG GROWING"
+    },
+    {
+     "t": 3.5,
+     "lag": 45,
+     "cap": 90,
+     "sinks": 3,
+     "stalled": 0,
+     "idle": 0,
+     "status": "LAG GROWING"
+    },
+    {
+     "t": 4,
+     "lag": 90,
+     "cap": 90,
+     "sinks": 3,
+     "stalled": 0,
+     "idle": 0,
+     "status": "LAG GROWING"
+    },
+    {
+     "t": 4.5,
+     "lag": 135,
+     "cap": 90,
+     "sinks": 3,
+     "stalled": 0,
+     "idle": 0,
+     "status": "LAG GROWING"
+    },
+    {
+     "t": 5,
+     "lag": 180,
+     "cap": 90,
+     "sinks": 3,
+     "stalled": 0,
+     "idle": 0,
+     "status": "LAG GROWING"
+    },
+    {
+     "t": 5.5,
+     "lag": 225,
+     "cap": 90,
+     "sinks": 3,
+     "stalled": 0,
+     "idle": 0,
+     "status": "LAG GROWING"
+    },
+    {
+     "t": 6,
+     "lag": 270,
+     "cap": 90,
+     "sinks": 3,
+     "stalled": 0,
+     "idle": 0,
+     "status": "LAG GROWING"
+    },
+    {
+     "t": 6.5,
+     "lag": 315,
+     "cap": 90,
+     "sinks": 3,
+     "stalled": 0,
+     "idle": 0,
+     "status": "LAG GROWING"
+    },
+    {
+     "t": 7,
+     "lag": 360,
+     "cap": 90,
+     "sinks": 3,
+     "stalled": 0,
+     "idle": 0,
+     "status": "LAG GROWING"
+    },
+    {
+     "t": 7.5,
+     "lag": 405,
+     "cap": 90,
+     "sinks": 3,
+     "stalled": 0,
+     "idle": 0,
+     "status": "LAG GROWING"
+    },
+    {
+     "t": 8,
+     "lag": 450,
+     "cap": 90,
+     "sinks": 3,
+     "stalled": 0,
+     "idle": 0,
+     "status": "LAG GROWING"
+    },
+    {
+     "t": 8.5,
+     "lag": 495,
+     "cap": 90,
+     "sinks": 3,
+     "stalled": 0,
+     "idle": 0,
+     "status": "LAG GROWING"
+    },
+    {
+     "t": 9,
+     "lag": 540,
+     "cap": 120,
+     "sinks": 4,
+     "stalled": 1,
+     "idle": 0,
+     "status": "REBALANCING"
+    },
+    {
+     "t": 9.5,
+     "lag": 630,
+     "cap": 120,
+     "sinks": 4,
+     "stalled": 1,
+     "idle": 0,
+     "status": "REBALANCING"
+    },
+    {
+     "t": 10,
+     "lag": 720,
+     "cap": 120,
+     "sinks": 4,
+     "stalled": 1,
+     "idle": 0,
+     "status": "REBALANCING"
+    },
+    {
+     "t": 10.5,
+     "lag": 810,
+     "cap": 120,
+     "sinks": 4,
+     "stalled": 1,
+     "idle": 0,
+     "status": "REBALANCING"
+    },
+    {
+     "t": 11,
+     "lag": 900,
+     "cap": 120,
+     "sinks": 4,
+     "stalled": 0,
+     "idle": 0,
+     "status": "LAG GROWING"
+    },
+    {
+     "t": 11.5,
+     "lag": 930,
+     "cap": 120,
+     "sinks": 4,
+     "stalled": 0,
+     "idle": 0,
+     "status": "LAG GROWING"
+    },
+    {
+     "t": 12,
+     "lag": 960,
+     "cap": 120,
+     "sinks": 4,
+     "stalled": 0,
+     "idle": 0,
+     "status": "LAG GROWING"
+    },
+    {
+     "t": 12.5,
+     "lag": 990,
+     "cap": 120,
+     "sinks": 4,
+     "stalled": 0,
+     "idle": 0,
+     "status": "LAG GROWING"
+    },
+    {
+     "t": 13,
+     "lag": 1020,
+     "cap": 150,
+     "sinks": 5,
+     "stalled": 1,
+     "idle": 0,
+     "status": "REBALANCING"
+    },
+    {
+     "t": 13.5,
+     "lag": 1110,
+     "cap": 150,
+     "sinks": 5,
+     "stalled": 1,
+     "idle": 0,
+     "status": "REBALANCING"
+    },
+    {
+     "t": 14,
+     "lag": 1200,
+     "cap": 150,
+     "sinks": 5,
+     "stalled": 1,
+     "idle": 0,
+     "status": "REBALANCING"
+    },
+    {
+     "t": 14.5,
+     "lag": 1290,
+     "cap": 150,
+     "sinks": 5,
+     "stalled": 1,
+     "idle": 0,
+     "status": "REBALANCING"
+    },
+    {
+     "t": 15,
+     "lag": 1380,
+     "cap": 150,
+     "sinks": 5,
+     "stalled": 0,
+     "idle": 0,
+     "status": "LAG GROWING"
+    },
+    {
+     "t": 15.5,
+     "lag": 1395,
+     "cap": 150,
+     "sinks": 5,
+     "stalled": 0,
+     "idle": 0,
+     "status": "LAG GROWING"
+    },
+    {
+     "t": 16,
+     "lag": 1410,
+     "cap": 150,
+     "sinks": 5,
+     "stalled": 0,
+     "idle": 0,
+     "status": "LAG GROWING"
+    },
+    {
+     "t": 16.5,
+     "lag": 1425,
+     "cap": 150,
+     "sinks": 5,
+     "stalled": 0,
+     "idle": 0,
+     "status": "LAG GROWING"
+    },
+    {
+     "t": 17,
+     "lag": 1440,
+     "cap": 150,
+     "sinks": 5,
+     "stalled": 0,
+     "idle": 0,
+     "status": "DRAINING"
+    },
+    {
+     "t": 17.5,
+     "lag": 1395,
+     "cap": 150,
+     "sinks": 5,
+     "stalled": 0,
+     "idle": 0,
+     "status": "DRAINING"
+    },
+    {
+     "t": 18,
+     "lag": 1350,
+     "cap": 150,
+     "sinks": 5,
+     "stalled": 0,
+     "idle": 0,
+     "status": "DRAINING"
+    },
+    {
+     "t": 18.5,
+     "lag": 1305,
+     "cap": 150,
+     "sinks": 5,
+     "stalled": 0,
+     "idle": 0,
+     "status": "DRAINING"
+    },
+    {
+     "t": 19,
+     "lag": 1260,
+     "cap": 150,
+     "sinks": 5,
+     "stalled": 0,
+     "idle": 0,
+     "status": "DRAINING"
+    },
+    {
+     "t": 19.5,
+     "lag": 1215,
+     "cap": 150,
+     "sinks": 5,
+     "stalled": 0,
+     "idle": 0,
+     "status": "DRAINING"
+    },
+    {
+     "t": 20,
+     "lag": 1170,
+     "cap": 150,
+     "sinks": 5,
+     "stalled": 0,
+     "idle": 0,
+     "status": "DRAINING"
+    },
+    {
+     "t": 20.5,
+     "lag": 1125,
+     "cap": 150,
+     "sinks": 5,
+     "stalled": 0,
+     "idle": 0,
+     "status": "DRAINING"
+    },
+    {
+     "t": 21,
+     "lag": 1080,
+     "cap": 150,
+     "sinks": 5,
+     "stalled": 0,
+     "idle": 0,
+     "status": "DRAINING"
+    },
+    {
+     "t": 21.5,
+     "lag": 1035,
+     "cap": 150,
+     "sinks": 5,
+     "stalled": 0,
+     "idle": 0,
+     "status": "DRAINING"
+    },
+    {
+     "t": 22,
+     "lag": 990,
+     "cap": 150,
+     "sinks": 5,
+     "stalled": 0,
+     "idle": 0,
+     "status": "DRAINING"
+    },
+    {
+     "t": 22.5,
+     "lag": 945,
+     "cap": 150,
+     "sinks": 5,
+     "stalled": 0,
+     "idle": 0,
+     "status": "DRAINING"
+    },
+    {
+     "t": 23,
+     "lag": 900,
+     "cap": 150,
+     "sinks": 5,
+     "stalled": 0,
+     "idle": 0,
+     "status": "DRAINING"
+    },
+    {
+     "t": 23.5,
+     "lag": 855,
+     "cap": 150,
+     "sinks": 5,
+     "stalled": 0,
+     "idle": 0,
+     "status": "DRAINING"
+    },
+    {
+     "t": 24,
+     "lag": 810,
+     "cap": 150,
+     "sinks": 5,
+     "stalled": 0,
+     "idle": 0,
+     "status": "DRAINING"
+    },
+    {
+     "t": 24.5,
+     "lag": 765,
+     "cap": 150,
+     "sinks": 5,
+     "stalled": 0,
+     "idle": 0,
+     "status": "DRAINING"
+    },
+    {
+     "t": 25,
+     "lag": 720,
+     "cap": 150,
+     "sinks": 5,
+     "stalled": 0,
+     "idle": 0,
+     "status": "DRAINING"
+    },
+    {
+     "t": 25.5,
+     "lag": 675,
+     "cap": 150,
+     "sinks": 5,
+     "stalled": 0,
+     "idle": 0,
+     "status": "DRAINING"
+    },
+    {
+     "t": 26,
+     "lag": 630,
+     "cap": 150,
+     "sinks": 5,
+     "stalled": 0,
+     "idle": 0,
+     "status": "DRAINING"
+    },
+    {
+     "t": 26.5,
+     "lag": 585,
+     "cap": 150,
+     "sinks": 5,
+     "stalled": 0,
+     "idle": 0,
+     "status": "DRAINING"
+    },
+    {
+     "t": 27,
+     "lag": 540,
+     "cap": 150,
+     "sinks": 5,
+     "stalled": 0,
+     "idle": 0,
+     "status": "DRAINING"
+    },
+    {
+     "t": 27.5,
+     "lag": 495,
+     "cap": 150,
+     "sinks": 5,
+     "stalled": 0,
+     "idle": 0,
+     "status": "DRAINING"
+    },
+    {
+     "t": 28,
+     "lag": 470,
+     "cap": 150,
+     "sinks": 5,
+     "stalled": 0,
+     "idle": 0,
+     "status": "DRAINING"
+    }
+   ]
+  },
+  {
+   "name": "Consumers beyond partitions",
+   "steps": [
+    {
+     "t": 0,
+     "cap": "6 partitions, 6 consumers: capacity 180 vs 150 in. Balanced.",
+     "set": {
+      "rate": 150,
+      "sinks": 6
+     }
+    },
+    {
+     "t": 4,
+     "cap": "A 7th consumer joins. It owns NO partition -- a hollow ring. Capacity unchanged.",
+     "set": {
+      "sinks": 7
+     }
+    },
+    {
+     "t": 10,
+     "cap": "An 8th. Still nothing. Consumers beyond the partition count are idle.",
+     "set": {
+      "sinks": 8
+     }
+    },
+    {
+     "t": 16,
+     "cap": "The interview line: partition count caps consumer-group parallelism."
+    },
+    {
+     "t": 20
+    }
+   ],
+   "digest": "29bdf51d",
+   "ticks": 601,
+   "trace": [
+    {
+     "t": 0,
+     "lag": 0,
+     "cap": 180,
+     "sinks": 6,
+     "stalled": 1,
+     "idle": 0,
+     "status": "REBALANCING"
+    },
+    {
+     "t": 0.5,
+     "lag": 75,
+     "cap": 180,
+     "sinks": 6,
+     "stalled": 1,
+     "idle": 0,
+     "status": "REBALANCING"
+    },
+    {
+     "t": 1,
+     "lag": 150,
+     "cap": 180,
+     "sinks": 6,
+     "stalled": 1,
+     "idle": 0,
+     "status": "REBALANCING"
+    },
+    {
+     "t": 1.5,
+     "lag": 225,
+     "cap": 180,
+     "sinks": 6,
+     "stalled": 1,
+     "idle": 0,
+     "status": "REBALANCING"
+    },
+    {
+     "t": 2,
+     "lag": 300,
+     "cap": 180,
+     "sinks": 6,
+     "stalled": 0,
+     "idle": 0,
+     "status": "DRAINING"
+    },
+    {
+     "t": 2.5,
+     "lag": 285,
+     "cap": 180,
+     "sinks": 6,
+     "stalled": 0,
+     "idle": 0,
+     "status": "DRAINING"
+    },
+    {
+     "t": 3,
+     "lag": 270,
+     "cap": 180,
+     "sinks": 6,
+     "stalled": 0,
+     "idle": 0,
+     "status": "DRAINING"
+    },
+    {
+     "t": 3.5,
+     "lag": 255,
+     "cap": 180,
+     "sinks": 6,
+     "stalled": 0,
+     "idle": 0,
+     "status": "DRAINING"
+    },
+    {
+     "t": 4,
+     "lag": 240,
+     "cap": 180,
+     "sinks": 7,
+     "stalled": 1,
+     "idle": 1,
+     "status": "REBALANCING"
+    },
+    {
+     "t": 4.5,
+     "lag": 315,
+     "cap": 180,
+     "sinks": 7,
+     "stalled": 1,
+     "idle": 1,
+     "status": "REBALANCING"
+    },
+    {
+     "t": 5,
+     "lag": 390,
+     "cap": 180,
+     "sinks": 7,
+     "stalled": 1,
+     "idle": 1,
+     "status": "REBALANCING"
+    },
+    {
+     "t": 5.5,
+     "lag": 465,
+     "cap": 180,
+     "sinks": 7,
+     "stalled": 1,
+     "idle": 1,
+     "status": "REBALANCING"
+    },
+    {
+     "t": 6,
+     "lag": 540,
+     "cap": 180,
+     "sinks": 7,
+     "stalled": 0,
+     "idle": 1,
+     "status": "DRAINING"
+    },
+    {
+     "t": 6.5,
+     "lag": 525,
+     "cap": 180,
+     "sinks": 7,
+     "stalled": 0,
+     "idle": 1,
+     "status": "DRAINING"
+    },
+    {
+     "t": 7,
+     "lag": 510,
+     "cap": 180,
+     "sinks": 7,
+     "stalled": 0,
+     "idle": 1,
+     "status": "DRAINING"
+    },
+    {
+     "t": 7.5,
+     "lag": 495,
+     "cap": 180,
+     "sinks": 7,
+     "stalled": 0,
+     "idle": 1,
+     "status": "DRAINING"
+    },
+    {
+     "t": 8,
+     "lag": 480,
+     "cap": 180,
+     "sinks": 7,
+     "stalled": 0,
+     "idle": 1,
+     "status": "DRAINING"
+    },
+    {
+     "t": 8.5,
+     "lag": 465,
+     "cap": 180,
+     "sinks": 7,
+     "stalled": 0,
+     "idle": 1,
+     "status": "DRAINING"
+    },
+    {
+     "t": 9,
+     "lag": 450,
+     "cap": 180,
+     "sinks": 7,
+     "stalled": 0,
+     "idle": 1,
+     "status": "DRAINING"
+    },
+    {
+     "t": 9.5,
+     "lag": 435,
+     "cap": 180,
+     "sinks": 7,
+     "stalled": 0,
+     "idle": 1,
+     "status": "DRAINING"
+    },
+    {
+     "t": 10,
+     "lag": 420,
+     "cap": 180,
+     "sinks": 8,
+     "stalled": 1,
+     "idle": 2,
+     "status": "REBALANCING"
+    },
+    {
+     "t": 10.5,
+     "lag": 495,
+     "cap": 180,
+     "sinks": 8,
+     "stalled": 1,
+     "idle": 2,
+     "status": "REBALANCING"
+    },
+    {
+     "t": 11,
+     "lag": 570,
+     "cap": 180,
+     "sinks": 8,
+     "stalled": 1,
+     "idle": 2,
+     "status": "REBALANCING"
+    },
+    {
+     "t": 11.5,
+     "lag": 645,
+     "cap": 180,
+     "sinks": 8,
+     "stalled": 1,
+     "idle": 2,
+     "status": "REBALANCING"
+    },
+    {
+     "t": 12,
+     "lag": 720,
+     "cap": 180,
+     "sinks": 8,
+     "stalled": 0,
+     "idle": 2,
+     "status": "DRAINING"
+    },
+    {
+     "t": 12.5,
+     "lag": 705,
+     "cap": 180,
+     "sinks": 8,
+     "stalled": 0,
+     "idle": 2,
+     "status": "DRAINING"
+    },
+    {
+     "t": 13,
+     "lag": 690,
+     "cap": 180,
+     "sinks": 8,
+     "stalled": 0,
+     "idle": 2,
+     "status": "DRAINING"
+    },
+    {
+     "t": 13.5,
+     "lag": 675,
+     "cap": 180,
+     "sinks": 8,
+     "stalled": 0,
+     "idle": 2,
+     "status": "DRAINING"
+    },
+    {
+     "t": 14,
+     "lag": 660,
+     "cap": 180,
+     "sinks": 8,
+     "stalled": 0,
+     "idle": 2,
+     "status": "DRAINING"
+    },
+    {
+     "t": 14.5,
+     "lag": 645,
+     "cap": 180,
+     "sinks": 8,
+     "stalled": 0,
+     "idle": 2,
+     "status": "DRAINING"
+    },
+    {
+     "t": 15,
+     "lag": 630,
+     "cap": 180,
+     "sinks": 8,
+     "stalled": 0,
+     "idle": 2,
+     "status": "DRAINING"
+    },
+    {
+     "t": 15.5,
+     "lag": 615,
+     "cap": 180,
+     "sinks": 8,
+     "stalled": 0,
+     "idle": 2,
+     "status": "DRAINING"
+    },
+    {
+     "t": 16,
+     "lag": 600,
+     "cap": 180,
+     "sinks": 8,
+     "stalled": 0,
+     "idle": 2,
+     "status": "DRAINING"
+    },
+    {
+     "t": 16.5,
+     "lag": 585,
+     "cap": 180,
+     "sinks": 8,
+     "stalled": 0,
+     "idle": 2,
+     "status": "DRAINING"
+    },
+    {
+     "t": 17,
+     "lag": 570,
+     "cap": 180,
+     "sinks": 8,
+     "stalled": 0,
+     "idle": 2,
+     "status": "DRAINING"
+    },
+    {
+     "t": 17.5,
+     "lag": 555,
+     "cap": 180,
+     "sinks": 8,
+     "stalled": 0,
+     "idle": 2,
+     "status": "DRAINING"
+    },
+    {
+     "t": 18,
+     "lag": 540,
+     "cap": 180,
+     "sinks": 8,
+     "stalled": 0,
+     "idle": 2,
+     "status": "DRAINING"
+    },
+    {
+     "t": 18.5,
+     "lag": 525,
+     "cap": 180,
+     "sinks": 8,
+     "stalled": 0,
+     "idle": 2,
+     "status": "DRAINING"
+    },
+    {
+     "t": 19,
+     "lag": 510,
+     "cap": 180,
+     "sinks": 8,
+     "stalled": 0,
+     "idle": 2,
+     "status": "DRAINING"
+    },
+    {
+     "t": 19.5,
+     "lag": 495,
+     "cap": 180,
+     "sinks": 8,
+     "stalled": 0,
+     "idle": 2,
+     "status": "DRAINING"
+    },
+    {
+     "t": 20,
+     "lag": 480,
+     "cap": 180,
+     "sinks": 8,
+     "stalled": 0,
+     "idle": 2,
+     "status": "DRAINING"
+    }
+   ]
+  }
+ ]
+}

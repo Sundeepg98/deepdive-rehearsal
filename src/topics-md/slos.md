@@ -331,7 +331,7 @@ Speak: Split it by purpose: **&lsquo;rolling for engineering, calendar for contr
 
 How do you alert on SLOs well?
 
-With **multi-window, multi-burn-rate** alerts, not simple thresholds. The idea: alert on the error budget *burn rate* over multiple time windows simultaneously. A **fast-burn** alert (e.g. burning 14.4x budget over 1 hour --- which would exhaust a month's budget in ~2 days) pages immediately: something is seriously wrong now. A **slow-burn** alert (e.g. 3x over 6 hours) files a ticket: a smaller sustained problem that will eventually blow the budget but doesn't need a 3am page. Using multiple windows together gives both *fast detection* of severe issues and *low false positives* (a short window confirms the burn is real and ongoing, a longer window catches slow leaks). This is far better than "alert if error rate > X%" because it ties alerting directly to *user-impact-over-time* (the budget) and calibrates urgency to how fast you're actually losing reliability --- the SRE-standard approach.
+With **multi-window, multi-burn-rate** alerts, not simple thresholds. The idea: alert on the error budget *burn rate* over multiple time windows simultaneously. A **fast-burn** alert (burning 14.4x budget over 1 hour --- which would exhaust a month's budget in ~2 days) pages immediately: something is seriously wrong now. A **slow-burn** alert (**1x over 3 days**) files a ticket: a leak precisely on pace to consume the window, which will blow the budget if nobody fixes it but does not deserve a 3am page. What calibrates the ladder is **how much budget is already spent when each rule fires** --- 14.4x/1h fires at **2%** of the month, 1x/3d at **10%** --- and that ladder has to be **monotonic**: a rule that files a *ticket* after spending *more* budget than the rule that *pages* has the escalation backwards, and you would page too late and ticket too early. Using multiple windows together gives both *fast detection* of severe issues and *low false positives* (a short window confirms the burn is real and ongoing, a longer window catches slow leaks). This is far better than "alert if error rate > X%" because it ties alerting directly to *user-impact-over-time* (the budget) and calibrates urgency to how fast you're actually losing reliability --- the SRE-standard approach.
 
 Follow: Give me the actual alert configuration. Real numbers.
 For a 99.9% SLO on a 30-day window, the standard setup is **three rules**, and the *derivation* is the tell --- every number falls out of one formula. **Page, fast burn: 14.4x over 1 hour**, confirmed by a 5-minute short window. Why 14.4? Because 14.4 x (1h / 720h) = **2% of the month's budget** --- you page having spent only 2%, and a sustained 14.4x would exhaust the entire month in about **2 days**. **Page, medium burn: 6x over 6 hours**, confirmed by a 30-minute window: 6 x (6 / 720) = **5% of budget**. **Ticket, slow burn: 1x over 3 days**, confirmed by a 6-hour window: 1 x (72 / 720) = **10% of budget** --- a leak that is precisely on pace to consume the window, which does not deserve a 3am page but absolutely must be fixed. Every one of those is the same formula: **budget consumed when the alert fires = burn rate x (long window / SLO window)**. So you are not guessing thresholds --- you are *choosing how much budget you are willing to spend before waking someone up*, and the burn rate follows.
@@ -500,25 +500,43 @@ c[errors consume budget] -> r[burn rate = how fast vs the sustainable rate] -> a
 The key operational signal isn't the raw error rate --- it's the **burn rate**, how fast you're spending the budget relative to the rate that would exactly exhaust it over the window. Burn rate 1 = on target; burn rate 10 = spending 10x too fast.
 
 ```python
-def error_budget_status(slo_pct, window_days, actual_success_rate, elapsed_frac):
-    budget = 1 - slo_pct / 100          # e.g. 99.9% -> 0.001
-    error_rate = 1 - actual_success_rate
-    burn_rate = error_rate / budget     # >1 means too fast
+SLO_WINDOW_H = 30 * 24                   # 720h -- the SLO window
 
-    consumed = burn_rate * elapsed_frac # fraction of budget used so far
-    remaining = max(0.0, 1 - consumed)
+# ONE formula sets every threshold:
+#   budget spent when the rule fires = burn_rate x (long_window / SLO_window)
+# You don't guess numbers -- you choose how much budget to spend before waking
+# someone, and the burn rate falls out. The ladder must RISE in budget-spent
+# (2% -> 5% -> 10%): a rule that tickets after spending more budget than the
+# rule that pages has the escalation backwards.
+BURN_RULES = [                           # severity,          long_h, short_h, rate
+    ("PAGE   (fast burn)",    1,  5 / 60, 14.4),   # 14.4 x (1/720)  =  2% of budget
+    ("PAGE   (medium burn)",  6,  0.5,     6.0),   #  6.0 x (6/720)  =  5% of budget
+    ("TICKET (slow burn)",   72,  6.0,     1.0),   #  1.0 x (72/720) = 10% of budget
+]
 
-    # multi-window alerting: page on a fast burn, ticket on a slow burn
-    if burn_rate >= 14.4:               # ~exhausts a 30-day budget in ~2 days
-        alert = "PAGE (fast burn)"
-    elif burn_rate >= 3:                # a slow sustained leak
-        alert = "TICKET (slow burn)"
-    else:
-        alert = "ok"
-    return burn_rate, remaining, alert
+def burn_rate(slo_pct, error_rate):
+    budget = 1 - slo_pct / 100           # 99.9% -> 0.001
+    return error_rate / budget           # 1.0 would exactly exhaust the budget by day 30
+
+def budget_remaining(slo_pct, error_rate, elapsed_frac):
+    consumed = burn_rate(slo_pct, error_rate) * elapsed_frac
+    return max(0.0, 1 - consumed)        # fraction of the budget still unspent
+
+def evaluate(slo_pct, error_rate_over):
+    """error_rate_over(hours) -> the measured error ratio over that trailing window."""
+    for severity, long_h, short_h, threshold in BURN_RULES:
+        long_burn = burn_rate(slo_pct, error_rate_over(long_h))
+        short_burn = burn_rate(slo_pct, error_rate_over(short_h))
+        # BOTH windows must be over. The long one supplies significance (enough
+        # budget is genuinely at risk); the short one supplies currency (it is
+        # still happening now), which is what makes the alert clear fast.
+        if long_burn > threshold and short_burn > threshold:
+            spent = threshold * (long_h / SLO_WINDOW_H)
+            return severity, f"{long_burn:.1f}x over {long_h:g}h -- fires at {spent:.0%} of budget"
+    return "ok", "burning below every threshold"
 ```
 
-You alert on burn rate over *multiple windows*: a fast-burn alert (e.g. 14.4x over 1 hour) pages immediately (something's seriously wrong now), while a slow-burn alert (3x over 6 hours) files a ticket (a leak that'll eventually blow the budget but needn't wake anyone). This ties alerting to *user impact over time*, not an arbitrary threshold --- so a harmless spike doesn't page, and a slow degradation still gets caught.
+You alert on burn rate over *multiple windows*: a fast-burn alert (**14.4x over 1 hour**) pages immediately (something's seriously wrong now), while a slow-burn alert (**1x over 3 days**) files a ticket (a leak precisely on pace to consume the window --- it'll blow the budget if nobody fixes it, but it needn't wake anyone). Every threshold falls out of one formula --- *budget spent when the rule fires = burn rate x (long window / SLO window)* --- so the fast rule fires at **2%** of the month's budget and the ticket rule at **10%**, and each is AND-ed with a short confirmation window so it clears when the incident does. This ties alerting to *user impact over time*, not an arbitrary threshold --- so a harmless spike doesn't page, and a slow degradation still gets caught.
 
 ### Multi-window, multi-burn-rate --- the actual configuration
 
@@ -579,7 +597,7 @@ This converts a recurring emotional argument ("is it safe to ship?") into an aut
 - Frame the reframe | "The core idea is making reliability a measurable number you manage, not a vague 'keep it up.' Three terms: an SLI is a metric of user-visible health, usually a ratio of good events to total -- proportion of requests that succeed or are fast. An SLO is the target for that SLI over a window, like 99.9% over 30 days. And an SLA is the external contract with penalties, which you set looser than the SLO so the internal goal fails harmlessly first."
 - Where you measure | "The part I'd be explicit about early is the measurement point, because an SLI is only as honest as where you measure it. If I compute success rate inside the app server, I'm blind to everything upstream -- a bad load-balancer config, a CDN error, DNS -- because those requests never arrive, so they never land in the denominator. The SLI reads a beautiful 100% while half of users are getting errors. So I measure at the load balancer or the client. And I'd pin down what 'good' means: a 429 from my own rate limiter is my failure, and a 200 with an empty body because a dependency timed out is a failure the status code will happily call a success."
 - Why not 100% and the budget | "You deliberately don't target 100% -- each extra nine costs about ten times more for shrinking benefit, and past a point the user's own network is less reliable than your service anyway, so the extra nines are invisible. The gap below 100% is the error budget, one minus the SLO. A 99.9% SLO is a 0.1% budget, which over a month is about 43 minutes of allowed downtime. That's the intuition: we can be down about 43 minutes this month before we breach the objective, and every incident spends from that budget."
-- Burn rate and alerting | "The key operational signal is the burn rate -- how fast you're spending the budget versus the rate that would exhaust it over the window. Burn rate one is on target; burn rate ten is spending ten times too fast. I alert on burn rate over multiple windows: a fast burn, say 14x over an hour, pages immediately because something is seriously wrong now; a slow burn, 3x over six hours, files a ticket because it's a leak that'll eventually blow the budget but doesn't need a 3am page. That's much better than 'alert if error rate exceeds one percent' -- it ties alerting to user impact over time, so a harmless spike doesn't page and a slow degradation still gets caught."
+- Burn rate and alerting | "The key operational signal is the burn rate -- how fast you're spending the budget versus the rate that would exhaust it over the window. Burn rate one is on target; burn rate ten is spending ten times too fast. I alert on burn rate over multiple windows, and the numbers are derived rather than guessed: budget spent when a rule fires equals burn rate times long-window-over-SLO-window. So a fast burn -- 14.4x over an hour -- pages immediately, because that's two percent of the month's budget gone and a two-day path to zero. A slow burn -- 1x over three days -- files a ticket, because that's a leak precisely on pace to consume the window: ten percent of budget, and it needs fixing but not at 3am. Notice the ladder rises in budget spent, two percent to ten -- if your ticket rule fired later than your page rule, you'd have the escalation backwards. That's much better than 'alert if error rate exceeds one percent' -- it ties alerting to user impact over time, so a harmless spike doesn't page and a slow degradation still gets caught."
 - The policy | "The budget's real power is as a decision rule agreed in advance between engineering and product -- the error budget policy. Budget remaining, ship features and take risks. Budget exhausted, freeze features and focus on stability until it recovers. That turns a recurring emotional argument -- is it safe to ship -- into an automatic, data-driven decision, and it gives developers a direct incentive to build reliably, because a flaky service burns budget and triggers a freeze that stops their own feature work."
 - Interviewer: "How would you pick the SLO target for a new service?"
 - Choosing the target | "By what users actually need, then set it just high enough -- not aspirationally. I'd look at current performance so I don't set something we're already badly missing or something so loose it's always met and meaningless; at what level of failure users actually notice for this specific service; and at the cost of each nine. The SLO should be achievable but meaningful -- tight enough that meeting it means users are genuinely well-served, loose enough that we have real error budget to work with. The classic mistake is setting SLOs by ambition -- 'we want five nines' -- rather than user need, which produces a permanently-exhausted budget and constant firefighting that everyone eventually ignores."
@@ -888,7 +906,7 @@ function (vals, fmt) {
     { k: 'Error budget', v: r(budgetFrac * 100, 3) + '%', u: 'of requests may fail', n: '1 - SLO \u2014 the fraction of events allowed to be bad over the window before you breach the objective', over: false },
     { k: 'Allowed downtime', v: fmt.n(r(allowedMin, 1)), u: 'min / ' + window + 'd', n: 'the budget expressed as time \u2014 a ' + slo + '% SLO over ' + window + ' days permits about this much total unavailability', over: false },
     { k: 'Budget in requests', v: '~' + fmt.n(Math.round(failedReqs)), u: 'failed reqs', n: 'at ' + fmt.n(rps) + ' req/s that is this many failed requests over the window before the SLO is breached \u2014 and this is NOT the same budget as the minutes above, because a request-based SLI spends budget with TRAFFIC, not with time', over: false },
-    { k: 'Full outage burns it in', v: '~' + fmt.n(r(allowedMin, 1)), u: 'min (100% burn)', n: 'a total outage spends budget at a 100% burn rate \u2014 the whole budget gone in the allowed-downtime window, which is why a fast burn must page', over: r(allowedMin, 1) < 15 },
+    { k: 'Full outage burns it in', v: '~' + fmt.n(r(allowedMin, 1)), u: 'min (100% errors)', n: 'a total outage means a 100% ERROR rate \u2014 so the whole budget is gone in exactly the allowed-downtime window above, which is why a fast burn must page. (Its BURN RATE is the row below: error rate / budget, a multiple, not a percentage.)', over: r(allowedMin, 1) < 15 },
     { k: 'Outage burn rate', v: fmt.n(r(outageBurn, 0)) + 'x', u: 'vs sustainable', n: 'burn rate = error rate / budget \u2014 a 100% error rate against a ' + r(budgetFrac * 100, 3) + '% budget burns this many times faster than the rate that would exactly exhaust the window', over: false },
     { k: 'Fast-burn page fires in', v: detectV, u: detectU, n: 'the standard 14.4x-over-1h rule detects a total outage in (1h x 14.4 / ' + fmt.n(r(outageBurn, 0)) + 'x) \u2014 you page having spent only ~2% of the budget', over: false },
     { k: 'Dependency ceiling', v: r(ceiling, 3) + '%', u: deps + ' hard deps in series', n: deps > 0 ? 'availability multiplies down the critical path: ' + deps + ' hard synchronous dependencies each held to ' + slo + '% cap you at ' + r(ceiling, 3) + '% \u2014 strictly BELOW your own target, so the SLO is unreachable until one comes off the hard path (cache, async, fallback)' : 'no hard synchronous dependencies \u2014 nothing caps you but your own service', over: deps > 0 && slo > ceiling },
@@ -1030,7 +1048,7 @@ Because the cost curve between nines is a **cliff, not a slope**, and 99.95% is 
 ### DESIGN | On-call alerting for a service with an SLO
 
 Task: design alerting tied to the SLO.
-Model: replace static thresholds with multi-window, multi-burn-rate alerts on the error budget -- a fast-burn alert (e.g. 14.4x over 1h, exhausting a month in ~2 days) pages immediately, a slow-burn alert (e.g. 3x over 6h) files a ticket; this catches severe issues fast, catches slow leaks that never spike, and stays quiet for harmless blips; back it with an error budget policy so a sustained breach triggers a feature freeze, and keep the number of SLOs small (critical user journeys only) so alerts stay actionable.
+Model: replace static thresholds with multi-window, multi-burn-rate alerts on the error budget -- and derive every threshold from one formula (**budget spent when the rule fires = burn rate x long-window / SLO-window**) rather than guessing. For a 99.9% / 30-day SLO that is the standard trio: **14.4x over 1h pages** (2% of the month's budget, a ~2-day path to zero), **6x over 6h pages** (5%), **1x over 3d tickets** (10% -- a leak exactly on pace to consume the window). The ladder rises in budget-spent, which is the check that it is coherent. Each rule is AND-ed with a short confirmation window (~1/12 of the long one) so it clears fast when the incident ends. This catches severe issues fast, catches slow leaks that never spike, and stays quiet for harmless blips; back it with an error budget policy so a sustained breach triggers a feature freeze, and keep the number of SLOs small (critical user journeys only) so alerts stay actionable.
 Int: what's wrong with "page if error rate > 1% for 5 minutes"?
 It's noisy (harmless spikes page -> fatigue) and gappy (a slow burn under 1% silently eats the budget) -- burn-rate alerting fixes both by tracking user-impact-over-time.
 Int2: You're deleting 200 threshold alerts. What breaks?

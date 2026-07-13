@@ -1408,7 +1408,7 @@ html[data-view="home"] .cmp-reopen{display:none}
   color:var(--mut);font-weight:var(--font-weight-bold);margin:0 0 var(--space-12)}
 .hm-cta{display:flex;width:100%;align-items:center;gap:var(--space-14);text-align:left;
   padding:var(--space-18) var(--space-20);margin:0 auto var(--space-26);max-width:var(--space-980,980px);
-  border:1px solid var(--acc);border-radius:14px;background:var(--acc);color:#fff;cursor:pointer;
+  border:1px solid var(--acc);border-radius:14px;background:var(--acc);color:var(--on-slab);cursor:pointer;
   font:inherit;min-height:44px;box-shadow:0 10px 30px -12px var(--acc)}
 .hm-cta:hover{filter:brightness(1.06)}
 .hm-cta:focus-visible{outline:3px solid var(--ink);outline-offset:3px}

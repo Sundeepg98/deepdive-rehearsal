@@ -107,6 +107,18 @@ function applyIdentity(idn) {
     var _plain = _gl.replace(/&amp;/g, '&');
     if (_plain) {
       L.setAttribute('title', _plain);
+      /* role="img" is what makes the aria-label below LEGAL. ARIA PROHIBITS aria-label on a
+         roleless <span> (axe: aria-prohibited-attr) -- so the comment above, which put the
+         spelled-out room name in the accessible name "so a screen reader still hears
+         'Architecture & APIs'", placed it on the one element where the spec says to IGNORE it.
+         Chromium honours it anyway, which is why this went unnoticed; other engines and AT are
+         not obliged to. The name IS needed (the visible text is "ARCingestion layer"), so the
+         answer is to make it legal, not to drop it: role="img" marks the chip as one atomic
+         named thing, which is the standard treatment for an abbreviation+text composite.
+         This runs on EVERY topic switch and re-stamps the element, so the role has to be set
+         HERE as well as in index.html's static copy -- setting it in only one of the two is a
+         fix that quietly comes undone the first time the user changes topic. */
+      L.setAttribute('role', 'img');
       L.setAttribute('aria-label', _plain + ' \u2014 ' + _tail);
     }
   }

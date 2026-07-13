@@ -21,7 +21,10 @@
 <body>
 <div class="rail" aria-hidden="true"><div class="fill" id="rail"></div></div>
 <div class="app"><aside class="sidebar"><div class="side-id">
-  <span class="badge">Deep rehearsal</span><span class="locator" title="Architecture &amp; APIs" aria-label="Architecture &amp; APIs &mdash; ingestion layer"><span class="loc-key">ARC</span>ingestion layer</span>
+  <!-- .locator role="img": ARIA prohibits aria-label on a roleless <span>, and the name IS
+       needed (visible text is only "ARCingestion layer"). Rationale + the matching runtime
+       rewrite live in topic-protocol.js applyIdentity() -- KEEP THE TWO IN SYNC. -->
+  <span class="badge">Deep rehearsal</span><span class="locator" role="img" title="Architecture &amp; APIs" aria-label="Architecture &amp; APIs &mdash; ingestion layer"><span class="loc-key">ARC</span>ingestion layer</span>
   <div class="hdr">
     <h1>Content Pipeline</h1>
     <div class="sub"><b>Mechanics</b> &rarr; <b>graded follow-up chains</b> &rarr; <b>whiteboard</b> &rarr; <b>zoom out</b> to where this sits in the whole system, and the pivots an interviewer rides into the next topic.</div>

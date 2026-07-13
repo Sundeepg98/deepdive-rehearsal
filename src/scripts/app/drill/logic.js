@@ -16,7 +16,14 @@ var DRILL_HTML = `<div style="display:flex;justify-content:space-between;align-i
         <button type="button" data-m="mock">Mock round</button>
         <button type="button" data-m="quick">Quick 5</button>
       </div>
-      <div class="timer" id="timer" role="timer" aria-live="polite" aria-label="Mock round time remaining" style="display:none">22:00</div>
+      <!-- NO aria-live. role="timer" carries an implicit aria-live="off" for exactly this
+           reason; the explicit "polite" overrode that safe default and made the clock speak
+           EVERY SECOND -- ~1320 utterances over a 22-minute round. This is not merely noise:
+           polite announcements share ONE FIFO queue, so the clock was also burying the
+           announcement that actually matters (the grade, below) behind a wall of ticks. The
+           time stays readable on demand -- role + name are intact, and a screen-reader user
+           can query the timer whenever they want. Announcing it is the part that was wrong. -->
+      <div class="timer" id="timer" role="timer" aria-label="Mock round time remaining" style="display:none">22:00</div>
     </div>
     <div class="tierrow"><span class="tierlab">Focus by level</span><div class="modetog" id="tiertog"><button class="on" data-tier="all" type="button">All 20</button><button data-tier="SDE2" type="button">SDE2</button><button data-tier="SDE3" type="button">SDE3</button><button data-tier="Staff" type="button">Staff</button></div></div>
     <div class="tiernote" id="tiernote"><b>All four levels, mixed</b> &mdash; the way a real loop actually comes at you.</div>
@@ -176,7 +183,26 @@ var DRILL_STYLE = `@keyframes pop{from{opacity:0;transform:translateY(7px) scale
 .mhp-cov{margin-top:var(--space-11);font-size:var(--font-size-caption);color:var(--mut);font-weight:var(--font-weight-semibold)}
 .mhp-cov b{color:var(--accink);font-weight:var(--font-weight-heavy)}
 .judge .got.j-rec,.judge .shk.j-rec,.judge .miss.j-rec{box-shadow:0 0 0 2px var(--acc),0 6px 16px -5px var(--acc-a32)}
-.sigdrop{font-size:var(--font-size-micro);color:var(--fb-a-fg);font-weight:var(--font-weight-semibold);margin-top:var(--space-2)}`;
+.sigdrop{font-size:var(--font-size-micro);color:var(--fb-a-fg);font-weight:var(--font-weight-semibold);margin-top:var(--space-2)}
+/* ===================== THE LANDING PADS FOR PROGRAMMATIC FOCUS =====================
+   Every re-render of #dwrap destroyed the focused element and dumped focus on <body>.
+   _focusNew() now lands focus on the block that JUST APPEARED, so the reader is placed in
+   the new content instead of at the top of the document. Those blocks are non-interactive
+   containers, so they get tabindex="-1" (focusable, NOT in the tab sequence) at the moment
+   we focus them -- never in the markup, so nothing else picks up a stray tab stop.
+
+   The ring: suppressed for the base :focus, restored on :focus-visible. Chrome's
+   focus-visible heuristic keys off the LAST INPUT MODALITY, so a .focus() that follows a
+   mouse click on "Solid" paints nothing (a sighted mouse user must not see a box appear
+   around the question), while the same .focus() following the "3" key paints the ring (a
+   sighted keyboard user must see where focus went). The attribute selector is deliberate:
+   these rules apply only while the element is a focus target.
+   SPECIFICITY, because this sheet LOSES ties: DRILL_STYLE is the shadow root's own <style>
+   and adoptedStyleSheets (BASE_SHEET, ANS_SHEET) cascade AFTER it. Neither declares any
+   outline or :focus rule today, so (0,2,0) is unopposed -- and :focus-visible at (0,3,0)
+   beats the :focus reset regardless. Verified with getComputedStyle, not assumed. */
+.thread[tabindex],.ans[tabindex],.fu[tabindex],.senior[tabindex],.debrief[tabindex]{outline:none}
+.thread[tabindex]:focus-visible,.ans[tabindex]:focus-visible,.fu[tabindex]:focus-visible,.senior[tabindex]:focus-visible,.debrief[tabindex]:focus-visible{outline:2px solid var(--acc);outline-offset:3px;border-radius:10px}`;
 
 /* Fisher-Yates shuffle of [0..count). SHARED: mixed-fire.js calls it too,
    so it stays a module-level global rather than a component method. */
@@ -211,9 +237,13 @@ class DeepDrill extends TopicPane {
     const self = this;
     /* DELEGATED listeners wired ONCE on the stable shell nodes: dnav contents are
        rebuilt every draw; modetog / tiertog / revdrill live in the invariant skeleton. */
+    /* A THIRD focus-destruction site, and not one the audit flagged: renderNav() rebuilds
+       #dnav's innerHTML on every render, so jumping to a probe DESTROYS THE VERY BUTTON YOU
+       JUST CLICKED and drops focus on <body> -- same root cause as the reveal and the grade,
+       different element. You asked to jump to probe 7, so land on probe 7. */
     root.getElementById('dnav').addEventListener('click', function (event) {
       const btn = event.target.closest('.dn-step');
-      if (btn) { self.di = +btn.getAttribute('data-i'); self.renderD(); }
+      if (btn) { self.di = +btn.getAttribute('data-i'); self.renderD(true); }
     });
     this._modetog.addEventListener('click', function (event) {
       const btn = event.target.closest('button');
@@ -252,7 +282,45 @@ class DeepDrill extends TopicPane {
     }
     nav.innerHTML = html;
   }
-  renderD() {
+  /* ===================== FOCUS AFTER A RE-RENDER =====================
+     `this._dwrap.innerHTML = html` deletes the focused element, and the browser's fallback
+     for "the focused element no longer exists" is <body>. So every reveal, every grade and
+     every jump silently teleported the user to the top of the document -- 44+ times a round.
+
+     WHY WE MOVE FOCUS RATHER THAN RESTORE IT. Restoring is not available: the element that
+     had focus is genuinely gone (you graded the card; there is no "Solid" button any more).
+     Re-focusing the equivalent NEW control -- the next "Reveal answer" button -- would satisfy
+     "focus is not body" while still being useless, because it announces "Reveal answer, button"
+     and says nothing about the probe you are now supposed to answer; the reader would have to
+     navigate BACKWARD to find the question. So focus goes to the block that JUST APPEARED --
+     the new probe, the revealed answer, the follow-up, the debrief. That is what a sighted
+     user's eye does, it is what the reader needs to hear, and because these blocks sit BEFORE
+     their controls in DOM order, the next control is still exactly one Tab away. Content
+     first, action one keystroke later.
+
+     THE FLAG IS OPT-IN, AND THAT IS DELIBERATE. renderD() is on the boot path
+     (renderTopic -> setMode('study') -> renderD) and on the topic-switch path, for a pane that
+     may not even be visible. A default-on focus move would yank focus into a hidden drill on
+     page load -- a worse bug than the one being fixed, and one that would hit everybody, not
+     just screen-reader users. So the default is "do not touch focus", and the four call sites
+     that are genuinely a user action inside #dwrap opt in explicitly. Anything I have failed
+     to enumerate keeps today's behaviour instead of acquiring a new way to misbehave. */
+  _focusNew(el) {
+    if (!el) return null;
+    el.setAttribute('tabindex', '-1');   /* focusable, but NOT a tab stop */
+    try { el.focus(); } catch (e) {}
+    return el;
+  }
+  /* The block that just appeared, per stage. maxStage = 1 + card.f.length, and the k-th
+     follow-up appears at stage 2+k -- so at maxStage the LAST follow-up and the senior/speak
+     blocks land together, and the follow-up is the one the user actually asked for. */
+  _newBlock(stage) {
+    if (stage <= 0) return this._dwrap.querySelector('.thread');
+    if (stage === 1) return this._dwrap.querySelector('.ans');
+    const fus = this._dwrap.querySelectorAll('.fu');
+    return fus.length ? fus[fus.length - 1] : this._dwrap.querySelector('.thread');
+  }
+  renderD(moveFocus) {
     this._sGot.textContent = this.got; this._sGot.parentNode.classList.toggle('z', this.got === 0);
     this._sShk.textContent = this.shk; this._sShk.parentNode.classList.toggle('z', this.shk === 0);
     this._sLeft.textContent = cards.length - this.di; this._sLeft.parentNode.classList.toggle('z', cards.length - this.di === 0);
@@ -260,10 +328,13 @@ class DeepDrill extends TopicPane {
     this.renderNav();
     if (this.di >= cards.length) {
       if (this.mode === 'mock') { this.renderVerdict(); } else { this.renderDebrief(); }
+      /* The debrief IS the payoff of the round, and it was being rendered straight into
+         <body>-focus -- i.e. never read at all. Land on it. */
+      if (moveFocus) this._focusNew(this._dwrap.querySelector('.debrief'));
       this.updRevset();
       return;
     }
-    this.drawCard(0);
+    this.drawCard(0, moveFocus);
     this.updRevset();
   }
   /* The must-hit points for a probe = the bolded <b> terms already curated into
@@ -296,7 +367,7 @@ class DeepDrill extends TopicPane {
     if (jm) jm.classList.toggle('j-rec', none);
     if (recEl) recEl.textContent = m === 0 ? '' : (full ? 'all covered \u2014 Solid' : none ? 'none covered \u2014 Missed' : ('dropped ' + (m - n) + ' \u2014 Shaky'));
   }
-  drawCard(stage) {
+  drawCard(stage, moveFocus) {
     const self = this;
     const card = cards[this.di], maxStage = 1 + card.f.length;
     let html = '<div class="card"><div class="thread">' +
@@ -338,8 +409,16 @@ class DeepDrill extends TopicPane {
     }
     html += '</div>';
     this._dwrap.innerHTML = html;
+    /* Land on what just appeared. On a REVEAL this is the answer / the follow-up -- i.e. the
+       exact content the user pressed the button to get. Note we do NOT also fire a live-region
+       announcement for a reveal: the answer is long-form prose, and a polite region would recite
+       the whole thing with no way to pause, re-read or navigate, on top of the focus utterance.
+       A live region is for terse transient status (the score); FOCUS is for content you have to
+       read. The drill previously got both of those backwards -- it announced neither and focused
+       nothing. */
+    if (moveFocus) this._focusNew(this._newBlock(stage));
     const advBtn = this._root.getElementById('adv');
-    if (advBtn) { advBtn.onclick = function () { self.drawCard(stage + 1); }; }
+    if (advBtn) { advBtn.onclick = function () { self.drawCard(stage + 1, true); }; }
     const missBtn = this._root.getElementById('jm');
     if (missBtn) { missBtn.onclick = function () { self.judge(1); }; }
     const shkBtn = this._root.getElementById('js');
@@ -378,7 +457,36 @@ class DeepDrill extends TopicPane {
     for (let i = 0; i < mhp.length; i++) { if (cov[i]) covered++; else dropped.push(mhp[i]); }
     this.results.push({ signal: card.signal, tier: card.tier, ok: solid, level: level, card: card, speak: speakLines[this.di], cov: { n: covered, m: mhp.length, dropped: dropped } });
     this.di++;
-    this.renderD();
+    this.renderD(true);
+    /* ===================== SPEAK THE GRADE =====================
+       The scoreboard is the drill's ONLY feedback, and it was mute: grading fired nine DOM
+       mutations and not one of them was inside a live region. The user graded a card and the
+       reader said nothing -- twenty-two times a round.
+
+       The fix is a call, not a component. ViewManager.announce() has been a correct
+       visually-hidden polite region this whole time; it simply had two callers (pane switch,
+       topic switch) and the highest-stakes signal in the app was not one of them.
+
+       WHAT IT SAYS: the outcome, then the running score -- what changed, and where you now
+       stand. The wording tracks the two vocabularies already on screen, deliberately: the
+       OUTCOME is the word on the button the user just pressed (Missed / Shaky / Solid) and the
+       SCORE is the words on the scoreboard tiles (solid / revisit / left). `shk` counts shaky
+       AND missed, which is exactly what the "Revisit" tile displays, so the spoken score and
+       the visible score can never disagree.
+
+       ORDERING, since focus also moves on this same click: focus lands synchronously on the
+       new probe (the task), and the announcement is deferred ~30ms into a POLITE region (the
+       confirmation). So the reader hears the new probe, then "Solid. 4 solid, 1 revisit, 17
+       left." That is the right order -- the user already knows which button they pressed; what
+       they do not know is the next question. Polite exists precisely so a confirmation can
+       arrive without interrupting. (And the mock clock no longer sits in front of this in the
+       polite queue -- see the timer in the skeleton above.) */
+    const left = cards.length - this.di;
+    const outcome = (level >= 3) ? 'Solid' : (level === 2 ? 'Shaky' : 'Missed');
+    const msg = (this.di >= cards.length)
+      ? outcome + '. Round complete. ' + this.got + ' solid, ' + this.shk + ' to revisit.'
+      : outcome + '. ' + this.got + ' solid, ' + this.shk + ' revisit, ' + left + ' left.';
+    if (typeof ViewManager !== 'undefined' && ViewManager.announce) ViewManager.announce(msg);
     try { this.dispatchEvent(new CustomEvent('drillgraded', { bubbles: true })); } catch (e) {}
     const bumpEl = solid ? this._sGot : this._sShk;
     if (bumpEl) { bumpEl.classList.remove('cbump'); void bumpEl.offsetWidth; bumpEl.classList.add('cbump'); }
@@ -409,20 +517,24 @@ class DeepDrill extends TopicPane {
       '<div class="sumline">' + sumParts.join(' &middot; ') + ' &middot; ' + pct + '% ' + (this.mode === 'quick' ? 'of a quick 5' : 'signal coverage') + '</div>' +
       rows + '<div class="verdict">' + verdict + '</div>' + weakBtn +
       '<button type="button" id="drestart">' + (this.mode === 'quick' ? 'Another quick 5 &rarr;' : 'Run the full round again') + '</button></div>';
-    if (this.shk > 0) { this._root.getElementById('dweak').onclick = function () { self.drillWeak(); }; }
-    this._root.getElementById('drestart').onclick = function () { self.setMode(self.mode); };
+    /* These two buttons live INSIDE #dwrap, so pressing them destroys them. Land on the card
+       (or debrief) that replaces them, or focus falls to <body> exactly as before. */
+    if (this.shk > 0) { this._root.getElementById('dweak').onclick = function () { self.drillWeak(true); }; }
+    this._root.getElementById('drestart').onclick = function () { self.setMode(self.mode, true); };
   }
-  drillWeak() {
+  drillWeak(moveFocus) {
     const weakCards = this.results.filter(function (r) { return !r.ok; }).sort(function (a, b) { return (a.level || (a.ok ? 3 : 2)) - (b.level || (b.ok ? 3 : 2)); });
     if (!weakCards.length) return false;
     cards = weakCards.map(function (r) { return r.card; });
     speakLines = weakCards.map(function (r) { return r.speak; });
     this.di = 0; this.got = 0; this.shk = 0; this.results = []; this.revisitMode = true;
-    this.renderD();
+    this.renderD(moveFocus);
     return true;
   }
+  /* #revdrill lives in the invariant skeleton, so it is not destroyed -- but updRevset() HIDES
+     it the moment revisitMode goes true, and focus on a display:none element is just as gone.
+     Same destination either way: the first card of the set the user asked for. */
   drillRevset() {
-    const self = this;
     const indices = [];
     for (let key in this.revisit) { if (this.revisit.hasOwnProperty(key)) indices.push(+key); }
     if (!indices.length) return;
@@ -431,7 +543,7 @@ class DeepDrill extends TopicPane {
     speakLines = indices.map(function (i) { return _allSpeak[i]; });
     this.di = 0; this.got = 0; this.shk = 0; this.results = []; this.revisitMode = true;
     this.stopTimer();
-    this.renderD();
+    this.renderD(true);
   }
   updRevset() {
     let count = 0;
@@ -469,8 +581,12 @@ class DeepDrill extends TopicPane {
     }
     return indices;
   }
-  setMode(m) {
-    const self = this;
+  /* moveFocus is passed ONLY by the debrief/verdict restart buttons, which live inside #dwrap
+     and are destroyed by the re-render. The mode/tier toggles do NOT pass it and must not:
+     they sit in the invariant skeleton, so focus on them SURVIVES the #dwrap rewrite and
+     stays where the user put it -- and setMode is also the boot path (renderTopic ->
+     setMode('study')), where stealing focus into a possibly-hidden pane would be a new bug. */
+  setMode(m, moveFocus) {
     this.mode = m;
     const base = this.basePoolIdx();
     if (m === 'quick') {
@@ -485,7 +601,7 @@ class DeepDrill extends TopicPane {
     const modeBtns = this._modetog.children;
     for (let z = 0; z < modeBtns.length; z++) modeBtns[z].classList.toggle('on', modeBtns[z].getAttribute('data-m') === m);
     if (m === 'mock') this.startTimer(); else this.stopTimer();
-    this.renderD();
+    this.renderD(moveFocus);
   }
   recLevel(pct, depthOk) {
     if (pct >= 85 && depthOk) return { c: 'sh', t: 'Strong Hire' };
@@ -522,7 +638,7 @@ class DeepDrill extends TopicPane {
       '<div class="tu">' + this.got + ' / ' + cards.length + ' signals &middot; ' + answered + ' probes reached &middot; ' + this._fmt(used) + ' on the clock</div></div>' +
       '<div style="height:12px"></div>' + rows + '<div class="verdict">' + note + '</div>' +
       '<button type="button" id="vrestart">Run another round</button></div>';
-    this._root.getElementById('vrestart').onclick = function () { self.setMode('mock'); };
+    this._root.getElementById('vrestart').onclick = function () { self.setMode('mock', true); };
   }
   setTier(t) {
     this.tierFilter = t;
@@ -593,11 +709,14 @@ class DeepDrill extends TopicPane {
     this.revisit = {};
     for (let k = 0; k < idx.length; k++) this.revisit[idx[k]] = true;
     this.stopTimer();
-    this.renderD();
+    /* Always an explicit user action ("Re-drill weak spots" from the session panel, which also
+       switches to this pane), so landing on the first card is right -- and the panel button
+       that triggered it is on its way out anyway. */
+    this.renderD(true);
     return true;
   }
   /* Re-drill the weak spots. Given the canonical bank indices, use them; otherwise fall back to
      this run's results (the in-run callers, which have one). */
-  weak(bankIdx) { return this.drillBank(bankIdx) || this.drillWeak(); }
+  weak(bankIdx) { return this.drillBank(bankIdx) || this.drillWeak(true); }
 }
 customElements.define('deep-drill', DeepDrill); 

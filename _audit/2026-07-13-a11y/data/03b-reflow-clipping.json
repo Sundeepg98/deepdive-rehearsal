@@ -1,0 +1,1152 @@
+{
+ "320": {
+  "walk": {
+   "clippers": [
+    {
+     "sel": "span#tncurrent",
+     "host": "(light)",
+     "clientW": 12,
+     "scrollW": 146,
+     "cutPx": 134,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "html body div",
+     "host": "(light)",
+     "clientW": 1,
+     "scrollW": 76,
+     "cutPx": 75,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "div#warc button.arc-step",
+     "host": "deep-walkthrough",
+     "clientW": 88,
+     "scrollW": 121,
+     "cutPx": 33,
+     "overflowX": "hidden",
+     "worstChild": {
+      "ov": 19,
+      "sel": "div#warc button.arc-step span.arc-t",
+      "tag": "span",
+      "text": "The router fans out to each consumer’s o"
+     }
+    },
+    {
+     "sel": "div#warc button.arc-step",
+     "host": "deep-walkthrough",
+     "clientW": 88,
+     "scrollW": 116,
+     "cutPx": 28,
+     "overflowX": "hidden",
+     "worstChild": {
+      "ov": 14,
+      "sel": "div#warc button.arc-step span.arc-t",
+      "tag": "span",
+      "text": "Duplicates are made harmless"
+     }
+    },
+    {
+     "sel": "div#warc button.arc-step",
+     "host": "deep-walkthrough",
+     "clientW": 88,
+     "scrollW": 112,
+     "cutPx": 24,
+     "overflowX": "hidden",
+     "worstChild": {
+      "ov": 10,
+      "sel": "div#warc button.arc-step span.arc-t",
+      "tag": "span",
+      "text": "The queue buffers and the consumer pulls"
+     }
+    },
+    {
+     "sel": "div#warc button.arc-step",
+     "host": "deep-walkthrough",
+     "clientW": 88,
+     "scrollW": 112,
+     "cutPx": 24,
+     "overflowX": "hidden",
+     "worstChild": {
+      "ov": 10,
+      "sel": "div#warc button.arc-step span.arc-t",
+      "tag": "span",
+      "text": "The consumer processes and acks — with a"
+     }
+    },
+    {
+     "sel": "div#warc button.arc-step",
+     "host": "deep-walkthrough",
+     "clientW": 88,
+     "scrollW": 111,
+     "cutPx": 23,
+     "overflowX": "hidden",
+     "worstChild": {
+      "ov": 9,
+      "sel": "div#warc button.arc-step span.arc-t",
+      "tag": "span",
+      "text": "Ordering, where it actually matters"
+     }
+    },
+    {
+     "sel": "div#warc button.arc-step.on",
+     "host": "deep-walkthrough",
+     "clientW": 88,
+     "scrollW": 108,
+     "cutPx": 20,
+     "overflowX": "hidden",
+     "worstChild": {
+      "ov": 6,
+      "sel": "div#warc button.arc-step.on span.arc-t",
+      "tag": "span",
+      "text": "The producer emits and moves on"
+     }
+    },
+    {
+     "sel": "div#warc button.arc-step",
+     "host": "deep-walkthrough",
+     "clientW": 88,
+     "scrollW": 108,
+     "cutPx": 20,
+     "overflowX": "hidden",
+     "worstChild": {
+      "ov": 6,
+      "sel": "div#warc button.arc-step span.arc-t",
+      "tag": "span",
+      "text": "Failure: bounded retries, then dead-lett"
+     }
+    },
+    {
+     "sel": "div#warc button.arc-step",
+     "host": "deep-walkthrough",
+     "clientW": 88,
+     "scrollW": 107,
+     "cutPx": 19,
+     "overflowX": "hidden",
+     "worstChild": {
+      "ov": 5,
+      "sel": "div#warc button.arc-step span.arc-t",
+      "tag": "span",
+      "text": "The numbers you watch"
+     }
+    },
+    {
+     "sel": "div#warc button.arc-step",
+     "host": "deep-walkthrough",
+     "clientW": 88,
+     "scrollW": 106,
+     "cutPx": 18,
+     "overflowX": "hidden",
+     "worstChild": {
+      "ov": 4,
+      "sel": "div#warc button.arc-step span.arc-t",
+      "tag": "span",
+      "text": "The message is leased, not handed over"
+     }
+    },
+    {
+     "sel": "div#warc button.arc-step",
+     "host": "deep-walkthrough",
+     "clientW": 88,
+     "scrollW": 98,
+     "cutPx": 10,
+     "overflowX": "hidden",
+     "worstChild": null
+    }
+   ],
+   "escapees": [
+    {
+     "sel": "div#warc button.arc-step span.arc-t",
+     "host": "deep-walkthrough",
+     "over": 4,
+     "w": 62,
+     "text": "The router fans out to each consum"
+    }
+   ],
+   "docScroll": false
+  },
+  "drill": {
+   "clippers": [
+    {
+     "sel": "span#tncurrent",
+     "host": "(light)",
+     "clientW": 12,
+     "scrollW": 146,
+     "cutPx": 134,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "html body div",
+     "host": "(light)",
+     "clientW": 1,
+     "scrollW": 42,
+     "cutPx": 41,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "div#dnav button.dn-step span.dn-t",
+     "host": "deep-drill",
+     "clientW": 33,
+     "scrollW": 65,
+     "cutPx": 32,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "div#dnav button.dn-step span.dn-t",
+     "host": "deep-drill",
+     "clientW": 33,
+     "scrollW": 64,
+     "cutPx": 31,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "div#dnav button.dn-step span.dn-t",
+     "host": "deep-drill",
+     "clientW": 33,
+     "scrollW": 63,
+     "cutPx": 30,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "div#dnav button.dn-step span.dn-t",
+     "host": "deep-drill",
+     "clientW": 33,
+     "scrollW": 60,
+     "cutPx": 27,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "div#dnav button.dn-step span.dn-t",
+     "host": "deep-drill",
+     "clientW": 33,
+     "scrollW": 58,
+     "cutPx": 25,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "div#dnav button.dn-step span.dn-t",
+     "host": "deep-drill",
+     "clientW": 33,
+     "scrollW": 55,
+     "cutPx": 22,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "div#dnav button.dn-step span.dn-t",
+     "host": "deep-drill",
+     "clientW": 33,
+     "scrollW": 54,
+     "cutPx": 21,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "div#dnav button.dn-step span.dn-t",
+     "host": "deep-drill",
+     "clientW": 33,
+     "scrollW": 51,
+     "cutPx": 18,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "div#dnav button.dn-step span.dn-t",
+     "host": "deep-drill",
+     "clientW": 33,
+     "scrollW": 48,
+     "cutPx": 15,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "div#dnav button.dn-step span.dn-t",
+     "host": "deep-drill",
+     "clientW": 33,
+     "scrollW": 47,
+     "cutPx": 14,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "div#dnav button.dn-step span.dn-t",
+     "host": "deep-drill",
+     "clientW": 33,
+     "scrollW": 44,
+     "cutPx": 11,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "div#dnav button.dn-step span.dn-t",
+     "host": "deep-drill",
+     "clientW": 33,
+     "scrollW": 43,
+     "cutPx": 10,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "div#dnav button.dn-step span.dn-t",
+     "host": "deep-drill",
+     "clientW": 33,
+     "scrollW": 43,
+     "cutPx": 10,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "div#dnav button.dn-step span.dn-t",
+     "host": "deep-drill",
+     "clientW": 33,
+     "scrollW": 41,
+     "cutPx": 8,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "div#dnav button.dn-step span.dn-t",
+     "host": "deep-drill",
+     "clientW": 33,
+     "scrollW": 39,
+     "cutPx": 6,
+     "overflowX": "hidden",
+     "worstChild": null
+    }
+   ],
+   "escapees": [],
+   "docScroll": false
+  },
+  "wb": {
+   "clippers": [
+    {
+     "sel": "span#tncurrent",
+     "host": "(light)",
+     "clientW": 12,
+     "scrollW": 146,
+     "cutPx": 134,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "html body div",
+     "host": "(light)",
+     "clientW": 1,
+     "scrollW": 84,
+     "cutPx": 83,
+     "overflowX": "hidden",
+     "worstChild": null
+    }
+   ],
+   "escapees": [],
+   "docScroll": false
+  },
+  "sys": {
+   "clippers": [
+    {
+     "sel": "span#tncurrent",
+     "host": "(light)",
+     "clientW": 12,
+     "scrollW": 146,
+     "cutPx": 134,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "html body div",
+     "host": "(light)",
+     "clientW": 1,
+     "scrollW": 50,
+     "cutPx": 49,
+     "overflowX": "hidden",
+     "worstChild": null
+    }
+   ],
+   "escapees": [],
+   "docScroll": false
+  },
+  "trade": {
+   "clippers": [
+    {
+     "sel": "span#tncurrent",
+     "host": "(light)",
+     "clientW": 12,
+     "scrollW": 146,
+     "cutPx": 134,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "html body div",
+     "host": "(light)",
+     "clientW": 1,
+     "scrollW": 45,
+     "cutPx": 44,
+     "overflowX": "hidden",
+     "worstChild": null
+    }
+   ],
+   "escapees": [],
+   "docScroll": false
+  },
+  "model": {
+   "clippers": [
+    {
+     "sel": "span#tncurrent",
+     "host": "(light)",
+     "clientW": 12,
+     "scrollW": 146,
+     "cutPx": 134,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "html body div",
+     "host": "(light)",
+     "clientW": 1,
+     "scrollW": 58,
+     "cutPx": 57,
+     "overflowX": "hidden",
+     "worstChild": null
+    }
+   ],
+   "escapees": [],
+   "docScroll": false
+  },
+  "num": {
+   "clippers": [
+    {
+     "sel": "span#tncurrent",
+     "host": "(light)",
+     "clientW": 12,
+     "scrollW": 146,
+     "cutPx": 134,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "html body div",
+     "host": "(light)",
+     "clientW": 1,
+     "scrollW": 65,
+     "cutPx": 64,
+     "overflowX": "hidden",
+     "worstChild": null
+    }
+   ],
+   "escapees": [],
+   "docScroll": false
+  },
+  "rf": {
+   "clippers": [
+    {
+     "sel": "span#tncurrent",
+     "host": "(light)",
+     "clientW": 12,
+     "scrollW": 146,
+     "cutPx": 134,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "html body div",
+     "host": "(light)",
+     "clientW": 1,
+     "scrollW": 36,
+     "cutPx": 35,
+     "overflowX": "hidden",
+     "worstChild": null
+    }
+   ],
+   "escapees": [],
+   "docScroll": false
+  },
+  "open": {
+   "clippers": [
+    {
+     "sel": "span#tncurrent",
+     "host": "(light)",
+     "clientW": 12,
+     "scrollW": 146,
+     "cutPx": 134,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "html body div",
+     "host": "(light)",
+     "clientW": 1,
+     "scrollW": 52,
+     "cutPx": 51,
+     "overflowX": "hidden",
+     "worstChild": null
+    }
+   ],
+   "escapees": [],
+   "docScroll": false
+  }
+ },
+ "360": {
+  "walk": {
+   "clippers": [
+    {
+     "sel": "span#tncurrent",
+     "host": "(light)",
+     "clientW": 52,
+     "scrollW": 146,
+     "cutPx": 94,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "html body div",
+     "host": "(light)",
+     "clientW": 1,
+     "scrollW": 76,
+     "cutPx": 75,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "div#warc button.arc-step",
+     "host": "deep-walkthrough",
+     "clientW": 101,
+     "scrollW": 121,
+     "cutPx": 20,
+     "overflowX": "hidden",
+     "worstChild": {
+      "ov": 5,
+      "sel": "div#warc button.arc-step span.arc-t",
+      "tag": "span",
+      "text": "The router fans out to each consumer’s o"
+     }
+    },
+    {
+     "sel": "div#warc button.arc-step",
+     "host": "deep-walkthrough",
+     "clientW": 101,
+     "scrollW": 116,
+     "cutPx": 15,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "div#warc button.arc-step",
+     "host": "deep-walkthrough",
+     "clientW": 101,
+     "scrollW": 112,
+     "cutPx": 11,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "div#warc button.arc-step",
+     "host": "deep-walkthrough",
+     "clientW": 101,
+     "scrollW": 112,
+     "cutPx": 11,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "div#warc button.arc-step",
+     "host": "deep-walkthrough",
+     "clientW": 101,
+     "scrollW": 111,
+     "cutPx": 10,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "div#warc button.arc-step.on",
+     "host": "deep-walkthrough",
+     "clientW": 101,
+     "scrollW": 108,
+     "cutPx": 7,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "div#warc button.arc-step",
+     "host": "deep-walkthrough",
+     "clientW": 101,
+     "scrollW": 108,
+     "cutPx": 7,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "div#warc button.arc-step",
+     "host": "deep-walkthrough",
+     "clientW": 101,
+     "scrollW": 107,
+     "cutPx": 6,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "div#warc button.arc-step",
+     "host": "deep-walkthrough",
+     "clientW": 101,
+     "scrollW": 106,
+     "cutPx": 5,
+     "overflowX": "hidden",
+     "worstChild": null
+    }
+   ],
+   "escapees": [],
+   "docScroll": false
+  },
+  "drill": {
+   "clippers": [
+    {
+     "sel": "span#tncurrent",
+     "host": "(light)",
+     "clientW": 52,
+     "scrollW": 146,
+     "cutPx": 94,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "html body div",
+     "host": "(light)",
+     "clientW": 1,
+     "scrollW": 42,
+     "cutPx": 41,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "div#dnav button.dn-step span.dn-t",
+     "host": "deep-drill",
+     "clientW": 47,
+     "scrollW": 65,
+     "cutPx": 18,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "div#dnav button.dn-step span.dn-t",
+     "host": "deep-drill",
+     "clientW": 47,
+     "scrollW": 64,
+     "cutPx": 17,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "div#dnav button.dn-step span.dn-t",
+     "host": "deep-drill",
+     "clientW": 47,
+     "scrollW": 63,
+     "cutPx": 16,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "div#dnav button.dn-step span.dn-t",
+     "host": "deep-drill",
+     "clientW": 47,
+     "scrollW": 60,
+     "cutPx": 13,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "div#dnav button.dn-step span.dn-t",
+     "host": "deep-drill",
+     "clientW": 47,
+     "scrollW": 58,
+     "cutPx": 11,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "div#dnav button.dn-step span.dn-t",
+     "host": "deep-drill",
+     "clientW": 47,
+     "scrollW": 55,
+     "cutPx": 8,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "div#dnav button.dn-step span.dn-t",
+     "host": "deep-drill",
+     "clientW": 47,
+     "scrollW": 54,
+     "cutPx": 7,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "div#dnav button.dn-step span.dn-t",
+     "host": "deep-drill",
+     "clientW": 47,
+     "scrollW": 51,
+     "cutPx": 4,
+     "overflowX": "hidden",
+     "worstChild": null
+    }
+   ],
+   "escapees": [],
+   "docScroll": false
+  },
+  "wb": {
+   "clippers": [
+    {
+     "sel": "span#tncurrent",
+     "host": "(light)",
+     "clientW": 52,
+     "scrollW": 146,
+     "cutPx": 94,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "html body div",
+     "host": "(light)",
+     "clientW": 1,
+     "scrollW": 84,
+     "cutPx": 83,
+     "overflowX": "hidden",
+     "worstChild": null
+    }
+   ],
+   "escapees": [],
+   "docScroll": false
+  },
+  "sys": {
+   "clippers": [
+    {
+     "sel": "span#tncurrent",
+     "host": "(light)",
+     "clientW": 52,
+     "scrollW": 146,
+     "cutPx": 94,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "html body div",
+     "host": "(light)",
+     "clientW": 1,
+     "scrollW": 50,
+     "cutPx": 49,
+     "overflowX": "hidden",
+     "worstChild": null
+    }
+   ],
+   "escapees": [],
+   "docScroll": false
+  },
+  "trade": {
+   "clippers": [
+    {
+     "sel": "span#tncurrent",
+     "host": "(light)",
+     "clientW": 52,
+     "scrollW": 146,
+     "cutPx": 94,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "html body div",
+     "host": "(light)",
+     "clientW": 1,
+     "scrollW": 45,
+     "cutPx": 44,
+     "overflowX": "hidden",
+     "worstChild": null
+    }
+   ],
+   "escapees": [],
+   "docScroll": false
+  },
+  "model": {
+   "clippers": [
+    {
+     "sel": "span#tncurrent",
+     "host": "(light)",
+     "clientW": 52,
+     "scrollW": 146,
+     "cutPx": 94,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "html body div",
+     "host": "(light)",
+     "clientW": 1,
+     "scrollW": 58,
+     "cutPx": 57,
+     "overflowX": "hidden",
+     "worstChild": null
+    }
+   ],
+   "escapees": [],
+   "docScroll": false
+  },
+  "num": {
+   "clippers": [
+    {
+     "sel": "span#tncurrent",
+     "host": "(light)",
+     "clientW": 52,
+     "scrollW": 146,
+     "cutPx": 94,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "html body div",
+     "host": "(light)",
+     "clientW": 1,
+     "scrollW": 65,
+     "cutPx": 64,
+     "overflowX": "hidden",
+     "worstChild": null
+    }
+   ],
+   "escapees": [],
+   "docScroll": false
+  },
+  "rf": {
+   "clippers": [
+    {
+     "sel": "span#tncurrent",
+     "host": "(light)",
+     "clientW": 52,
+     "scrollW": 146,
+     "cutPx": 94,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "html body div",
+     "host": "(light)",
+     "clientW": 1,
+     "scrollW": 36,
+     "cutPx": 35,
+     "overflowX": "hidden",
+     "worstChild": null
+    }
+   ],
+   "escapees": [],
+   "docScroll": false
+  },
+  "open": {
+   "clippers": [
+    {
+     "sel": "span#tncurrent",
+     "host": "(light)",
+     "clientW": 52,
+     "scrollW": 146,
+     "cutPx": 94,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "html body div",
+     "host": "(light)",
+     "clientW": 1,
+     "scrollW": 52,
+     "cutPx": 51,
+     "overflowX": "hidden",
+     "worstChild": null
+    }
+   ],
+   "escapees": [],
+   "docScroll": false
+  }
+ },
+ "390": {
+  "walk": {
+   "clippers": [
+    {
+     "sel": "html body div",
+     "host": "(light)",
+     "clientW": 1,
+     "scrollW": 76,
+     "cutPx": 75,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "span#tncurrent",
+     "host": "(light)",
+     "clientW": 82,
+     "scrollW": 146,
+     "cutPx": 64,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "div#warc button.arc-step",
+     "host": "deep-walkthrough",
+     "clientW": 111,
+     "scrollW": 121,
+     "cutPx": 10,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "div#warc button.arc-step",
+     "host": "deep-walkthrough",
+     "clientW": 111,
+     "scrollW": 116,
+     "cutPx": 5,
+     "overflowX": "hidden",
+     "worstChild": null
+    }
+   ],
+   "escapees": [],
+   "docScroll": false
+  },
+  "drill": {
+   "clippers": [
+    {
+     "sel": "span#tncurrent",
+     "host": "(light)",
+     "clientW": 82,
+     "scrollW": 146,
+     "cutPx": 64,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "html body div",
+     "host": "(light)",
+     "clientW": 1,
+     "scrollW": 42,
+     "cutPx": 41,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "div#dnav button.dn-step span.dn-t",
+     "host": "deep-drill",
+     "clientW": 57,
+     "scrollW": 65,
+     "cutPx": 8,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "div#dnav button.dn-step span.dn-t",
+     "host": "deep-drill",
+     "clientW": 57,
+     "scrollW": 64,
+     "cutPx": 7,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "div#dnav button.dn-step span.dn-t",
+     "host": "deep-drill",
+     "clientW": 57,
+     "scrollW": 63,
+     "cutPx": 6,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "div#dnav button.dn-step span.dn-t",
+     "host": "deep-drill",
+     "clientW": 57,
+     "scrollW": 60,
+     "cutPx": 3,
+     "overflowX": "hidden",
+     "worstChild": null
+    }
+   ],
+   "escapees": [],
+   "docScroll": false
+  },
+  "wb": {
+   "clippers": [
+    {
+     "sel": "html body div",
+     "host": "(light)",
+     "clientW": 1,
+     "scrollW": 84,
+     "cutPx": 83,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "span#tncurrent",
+     "host": "(light)",
+     "clientW": 82,
+     "scrollW": 146,
+     "cutPx": 64,
+     "overflowX": "hidden",
+     "worstChild": null
+    }
+   ],
+   "escapees": [],
+   "docScroll": false
+  },
+  "sys": {
+   "clippers": [
+    {
+     "sel": "span#tncurrent",
+     "host": "(light)",
+     "clientW": 82,
+     "scrollW": 146,
+     "cutPx": 64,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "html body div",
+     "host": "(light)",
+     "clientW": 1,
+     "scrollW": 50,
+     "cutPx": 49,
+     "overflowX": "hidden",
+     "worstChild": null
+    }
+   ],
+   "escapees": [],
+   "docScroll": false
+  },
+  "trade": {
+   "clippers": [
+    {
+     "sel": "span#tncurrent",
+     "host": "(light)",
+     "clientW": 82,
+     "scrollW": 146,
+     "cutPx": 64,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "html body div",
+     "host": "(light)",
+     "clientW": 1,
+     "scrollW": 45,
+     "cutPx": 44,
+     "overflowX": "hidden",
+     "worstChild": null
+    }
+   ],
+   "escapees": [],
+   "docScroll": false
+  },
+  "model": {
+   "clippers": [
+    {
+     "sel": "span#tncurrent",
+     "host": "(light)",
+     "clientW": 82,
+     "scrollW": 146,
+     "cutPx": 64,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "html body div",
+     "host": "(light)",
+     "clientW": 1,
+     "scrollW": 58,
+     "cutPx": 57,
+     "overflowX": "hidden",
+     "worstChild": null
+    }
+   ],
+   "escapees": [],
+   "docScroll": false
+  },
+  "num": {
+   "clippers": [
+    {
+     "sel": "span#tncurrent",
+     "host": "(light)",
+     "clientW": 82,
+     "scrollW": 146,
+     "cutPx": 64,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "html body div",
+     "host": "(light)",
+     "clientW": 1,
+     "scrollW": 65,
+     "cutPx": 64,
+     "overflowX": "hidden",
+     "worstChild": null
+    }
+   ],
+   "escapees": [],
+   "docScroll": false
+  },
+  "rf": {
+   "clippers": [
+    {
+     "sel": "span#tncurrent",
+     "host": "(light)",
+     "clientW": 82,
+     "scrollW": 146,
+     "cutPx": 64,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "html body div",
+     "host": "(light)",
+     "clientW": 1,
+     "scrollW": 36,
+     "cutPx": 35,
+     "overflowX": "hidden",
+     "worstChild": null
+    }
+   ],
+   "escapees": [],
+   "docScroll": false
+  },
+  "open": {
+   "clippers": [
+    {
+     "sel": "span#tncurrent",
+     "host": "(light)",
+     "clientW": 82,
+     "scrollW": 146,
+     "cutPx": 64,
+     "overflowX": "hidden",
+     "worstChild": null
+    },
+    {
+     "sel": "html body div",
+     "host": "(light)",
+     "clientW": 1,
+     "scrollW": 52,
+     "cutPx": 51,
+     "overflowX": "hidden",
+     "worstChild": null
+    }
+   ],
+   "escapees": [],
+   "docScroll": false
+  }
+ },
+ "negControl": {
+  "cleanWorst": 134,
+  "brokenWorst": 610,
+  "docScrollGrew": false,
+  "caught": true
+ }
+}

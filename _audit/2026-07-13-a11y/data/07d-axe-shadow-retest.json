@@ -1,0 +1,26 @@
+{
+ "before": 0,
+ "seen": {
+  "light": {
+   "rendered": true,
+   "visible": true
+  },
+  "shadow": {
+   "rendered": true,
+   "visible": true
+  }
+ },
+ "caughtLight": true,
+ "caughtShadow": true,
+ "nodes": [
+  [
+   [
+    "deep-drill",
+    "#__nc_shadow_nolabel"
+   ]
+  ],
+  [
+   "#__nc_light_nolabel"
+  ]
+ ]
+}

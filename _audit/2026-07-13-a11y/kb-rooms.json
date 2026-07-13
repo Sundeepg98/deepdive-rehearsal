@@ -1,0 +1,866 @@
+[
+ {
+  "group": "messaging-events",
+  "theme": "light",
+  "acc": "#006B63",
+  "control": "focus toggle",
+  "signal": 637,
+  "contrast": 5.67,
+  "ring": [
+   0,
+   107,
+   99
+  ],
+  "over": [
+   244,
+   241,
+   234
+  ]
+ },
+ {
+  "group": "messaging-events",
+  "theme": "light",
+  "acc": "#006B63",
+  "control": "topic switcher",
+  "signal": 1191,
+  "contrast": 5.67,
+  "ring": [
+   0,
+   107,
+   99
+  ],
+  "over": [
+   244,
+   241,
+   234
+  ]
+ },
+ {
+  "group": "messaging-events",
+  "theme": "light",
+  "acc": "#006B63",
+  "control": "tool button",
+  "signal": 1957,
+  "contrast": 5.53,
+  "ring": [
+   0,
+   107,
+   99
+  ],
+  "over": [
+   242,
+   238,
+   231
+  ]
+ },
+ {
+  "group": "messaging-events",
+  "theme": "light",
+  "acc": "#006B63",
+  "control": "pane switcher",
+  "signal": 1378,
+  "contrast": 5.57,
+  "ring": [
+   0,
+   107,
+   99
+  ],
+  "over": [
+   242,
+   239,
+   231
+  ]
+ },
+ {
+  "group": "messaging-events",
+  "theme": "dark",
+  "acc": "#13BAAC",
+  "control": "focus toggle",
+  "signal": 626,
+  "contrast": 7.08,
+  "ring": [
+   19,
+   186,
+   172
+  ],
+  "over": [
+   28,
+   26,
+   35
+  ]
+ },
+ {
+  "group": "messaging-events",
+  "theme": "dark",
+  "acc": "#13BAAC",
+  "control": "topic switcher",
+  "signal": 1206,
+  "contrast": 7.15,
+  "ring": [
+   19,
+   186,
+   172
+  ],
+  "over": [
+   27,
+   25,
+   35
+  ]
+ },
+ {
+  "group": "messaging-events",
+  "theme": "dark",
+  "acc": "#13BAAC",
+  "control": "tool button",
+  "signal": 1996,
+  "contrast": 7.37,
+  "ring": [
+   19,
+   186,
+   172
+  ],
+  "over": [
+   24,
+   22,
+   31
+  ]
+ },
+ {
+  "group": "messaging-events",
+  "theme": "dark",
+  "acc": "#13BAAC",
+  "control": "pane switcher",
+  "signal": 1318,
+  "contrast": 7.3,
+  "ring": [
+   19,
+   186,
+   172
+  ],
+  "over": [
+   25,
+   23,
+   32
+  ]
+ },
+ {
+  "group": "data-storage",
+  "theme": "light",
+  "acc": "#315BB4",
+  "control": "focus toggle",
+  "signal": 636,
+  "contrast": 5.67,
+  "ring": [
+   49,
+   91,
+   180
+  ],
+  "over": [
+   244,
+   241,
+   234
+  ]
+ },
+ {
+  "group": "data-storage",
+  "theme": "light",
+  "acc": "#315BB4",
+  "control": "topic switcher",
+  "signal": 1191,
+  "contrast": 5.67,
+  "ring": [
+   49,
+   91,
+   180
+  ],
+  "over": [
+   244,
+   241,
+   235
+  ]
+ },
+ {
+  "group": "data-storage",
+  "theme": "light",
+  "acc": "#315BB4",
+  "control": "tool button",
+  "signal": 1856,
+  "contrast": 5.53,
+  "ring": [
+   49,
+   91,
+   180
+  ],
+  "over": [
+   242,
+   238,
+   231
+  ]
+ },
+ {
+  "group": "data-storage",
+  "theme": "light",
+  "acc": "#315BB4",
+  "control": "pane switcher",
+  "signal": 1384,
+  "contrast": 5.56,
+  "ring": [
+   49,
+   91,
+   180
+  ],
+  "over": [
+   242,
+   239,
+   231
+  ]
+ },
+ {
+  "group": "data-storage",
+  "theme": "dark",
+  "acc": "#7DA6F3",
+  "control": "focus toggle",
+  "signal": 633,
+  "contrast": 7.06,
+  "ring": [
+   125,
+   166,
+   243
+  ],
+  "over": [
+   28,
+   26,
+   35
+  ]
+ },
+ {
+  "group": "data-storage",
+  "theme": "dark",
+  "acc": "#7DA6F3",
+  "control": "topic switcher",
+  "signal": 1206,
+  "contrast": 7.07,
+  "ring": [
+   125,
+   166,
+   243
+  ],
+  "over": [
+   27,
+   26,
+   35
+  ]
+ },
+ {
+  "group": "data-storage",
+  "theme": "dark",
+  "acc": "#7DA6F3",
+  "control": "tool button",
+  "signal": 2084,
+  "contrast": 7.35,
+  "ring": [
+   125,
+   166,
+   243
+  ],
+  "over": [
+   24,
+   22,
+   30
+  ]
+ },
+ {
+  "group": "data-storage",
+  "theme": "dark",
+  "acc": "#7DA6F3",
+  "control": "pane switcher",
+  "signal": 1315,
+  "contrast": 7.27,
+  "ring": [
+   125,
+   166,
+   243
+  ],
+  "over": [
+   25,
+   23,
+   33
+  ]
+ },
+ {
+  "group": "reliability-observability",
+  "theme": "light",
+  "acc": "#924E00",
+  "control": "focus toggle",
+  "signal": 636,
+  "contrast": 5.62,
+  "ring": [
+   146,
+   78,
+   0
+  ],
+  "over": [
+   244,
+   241,
+   234
+  ]
+ },
+ {
+  "group": "reliability-observability",
+  "theme": "light",
+  "acc": "#924E00",
+  "control": "topic switcher",
+  "signal": 1196,
+  "contrast": 5.62,
+  "ring": [
+   146,
+   78,
+   0
+  ],
+  "over": [
+   244,
+   241,
+   234
+  ]
+ },
+ {
+  "group": "reliability-observability",
+  "theme": "light",
+  "acc": "#924E00",
+  "control": "tool button",
+  "signal": 1955,
+  "contrast": 5.47,
+  "ring": [
+   146,
+   78,
+   0
+  ],
+  "over": [
+   241,
+   238,
+   231
+  ]
+ },
+ {
+  "group": "reliability-observability",
+  "theme": "light",
+  "acc": "#924E00",
+  "control": "pane switcher",
+  "signal": 1361,
+  "contrast": 5.52,
+  "ring": [
+   146,
+   78,
+   0
+  ],
+  "over": [
+   242,
+   239,
+   231
+  ]
+ },
+ {
+  "group": "reliability-observability",
+  "theme": "dark",
+  "acc": "#E19556",
+  "control": "focus toggle",
+  "signal": 636,
+  "contrast": 7.09,
+  "ring": [
+   225,
+   149,
+   86
+  ],
+  "over": [
+   27,
+   26,
+   35
+  ]
+ },
+ {
+  "group": "reliability-observability",
+  "theme": "dark",
+  "acc": "#E19556",
+  "control": "topic switcher",
+  "signal": 1209,
+  "contrast": 7.09,
+  "ring": [
+   225,
+   149,
+   86
+  ],
+  "over": [
+   27,
+   26,
+   35
+  ]
+ },
+ {
+  "group": "reliability-observability",
+  "theme": "dark",
+  "acc": "#E19556",
+  "control": "tool button",
+  "signal": 2083,
+  "contrast": 7.33,
+  "ring": [
+   225,
+   149,
+   86
+  ],
+  "over": [
+   23,
+   23,
+   31
+  ]
+ },
+ {
+  "group": "reliability-observability",
+  "theme": "dark",
+  "acc": "#E19556",
+  "control": "pane switcher",
+  "signal": 1336,
+  "contrast": 7.27,
+  "ring": [
+   225,
+   149,
+   86
+  ],
+  "over": [
+   26,
+   23,
+   32
+  ]
+ },
+ {
+  "group": "platform-infra",
+  "theme": "light",
+  "acc": "#694EB0",
+  "control": "focus toggle",
+  "signal": 628,
+  "contrast": 5.61,
+  "ring": [
+   105,
+   78,
+   176
+  ],
+  "over": [
+   244,
+   241,
+   234
+  ]
+ },
+ {
+  "group": "platform-infra",
+  "theme": "light",
+  "acc": "#694EB0",
+  "control": "topic switcher",
+  "signal": 1189,
+  "contrast": 5.61,
+  "ring": [
+   105,
+   78,
+   176
+  ],
+  "over": [
+   244,
+   241,
+   234
+  ]
+ },
+ {
+  "group": "platform-infra",
+  "theme": "light",
+  "acc": "#694EB0",
+  "control": "tool button",
+  "signal": 1852,
+  "contrast": 5.51,
+  "ring": [
+   105,
+   78,
+   176
+  ],
+  "over": [
+   242,
+   239,
+   231
+  ]
+ },
+ {
+  "group": "platform-infra",
+  "theme": "light",
+  "acc": "#694EB0",
+  "control": "pane switcher",
+  "signal": 1385,
+  "contrast": 5.51,
+  "ring": [
+   105,
+   78,
+   176
+  ],
+  "over": [
+   242,
+   239,
+   231
+  ]
+ },
+ {
+  "group": "platform-infra",
+  "theme": "dark",
+  "acc": "#AD9AEE",
+  "control": "focus toggle",
+  "signal": 631,
+  "contrast": 7.07,
+  "ring": [
+   173,
+   154,
+   238
+  ],
+  "over": [
+   28,
+   26,
+   35
+  ]
+ },
+ {
+  "group": "platform-infra",
+  "theme": "dark",
+  "acc": "#AD9AEE",
+  "control": "topic switcher",
+  "signal": 1206,
+  "contrast": 7.14,
+  "ring": [
+   173,
+   154,
+   238
+  ],
+  "over": [
+   27,
+   25,
+   34
+  ]
+ },
+ {
+  "group": "platform-infra",
+  "theme": "dark",
+  "acc": "#AD9AEE",
+  "control": "tool button",
+  "signal": 2078,
+  "contrast": 7.36,
+  "ring": [
+   173,
+   154,
+   238
+  ],
+  "over": [
+   24,
+   22,
+   30
+  ]
+ },
+ {
+  "group": "platform-infra",
+  "theme": "dark",
+  "acc": "#AD9AEE",
+  "control": "pane switcher",
+  "signal": 1314,
+  "contrast": 7.28,
+  "ring": [
+   173,
+   154,
+   238
+  ],
+  "over": [
+   25,
+   23,
+   33
+  ]
+ },
+ {
+  "group": "architecture-apis",
+  "theme": "light",
+  "acc": "#963D86",
+  "control": "focus toggle",
+  "signal": 631,
+  "contrast": 5.63,
+  "ring": [
+   150,
+   61,
+   134
+  ],
+  "over": [
+   244,
+   241,
+   234
+  ]
+ },
+ {
+  "group": "architecture-apis",
+  "theme": "light",
+  "acc": "#963D86",
+  "control": "topic switcher",
+  "signal": 1192,
+  "contrast": 5.63,
+  "ring": [
+   150,
+   61,
+   134
+  ],
+  "over": [
+   244,
+   241,
+   234
+  ]
+ },
+ {
+  "group": "architecture-apis",
+  "theme": "light",
+  "acc": "#963D86",
+  "control": "tool button",
+  "signal": 1852,
+  "contrast": 5.52,
+  "ring": [
+   150,
+   61,
+   134
+  ],
+  "over": [
+   242,
+   239,
+   231
+  ]
+ },
+ {
+  "group": "architecture-apis",
+  "theme": "light",
+  "acc": "#963D86",
+  "control": "pane switcher",
+  "signal": 1381,
+  "contrast": 5.52,
+  "ring": [
+   150,
+   61,
+   134
+  ],
+  "over": [
+   242,
+   239,
+   231
+  ]
+ },
+ {
+  "group": "architecture-apis",
+  "theme": "dark",
+  "acc": "#DA8DCA",
+  "control": "focus toggle",
+  "signal": 632,
+  "contrast": 7.09,
+  "ring": [
+   218,
+   141,
+   202
+  ],
+  "over": [
+   27,
+   26,
+   35
+  ]
+ },
+ {
+  "group": "architecture-apis",
+  "theme": "dark",
+  "acc": "#DA8DCA",
+  "control": "topic switcher",
+  "signal": 1207,
+  "contrast": 7.09,
+  "ring": [
+   218,
+   141,
+   202
+  ],
+  "over": [
+   27,
+   26,
+   35
+  ]
+ },
+ {
+  "group": "architecture-apis",
+  "theme": "dark",
+  "acc": "#DA8DCA",
+  "control": "tool button",
+  "signal": 2083,
+  "contrast": 7.33,
+  "ring": [
+   218,
+   141,
+   202
+  ],
+  "over": [
+   23,
+   23,
+   31
+  ]
+ },
+ {
+  "group": "architecture-apis",
+  "theme": "dark",
+  "acc": "#DA8DCA",
+  "control": "pane switcher",
+  "signal": 1321,
+  "contrast": 7.28,
+  "ring": [
+   218,
+   141,
+   202
+  ],
+  "over": [
+   26,
+   23,
+   32
+  ]
+ },
+ {
+  "group": "security-tenancy",
+  "theme": "light",
+  "acc": "#A73A57",
+  "control": "focus toggle",
+  "signal": 630,
+  "contrast": 5.5,
+  "ring": [
+   167,
+   58,
+   87
+  ],
+  "over": [
+   244,
+   241,
+   234
+  ]
+ },
+ {
+  "group": "security-tenancy",
+  "theme": "light",
+  "acc": "#A73A57",
+  "control": "topic switcher",
+  "signal": 1192,
+  "contrast": 5.5,
+  "ring": [
+   167,
+   58,
+   87
+  ],
+  "over": [
+   244,
+   241,
+   234
+  ]
+ },
+ {
+  "group": "security-tenancy",
+  "theme": "light",
+  "acc": "#A73A57",
+  "control": "tool button",
+  "signal": 1852,
+  "contrast": 5.4,
+  "ring": [
+   167,
+   58,
+   87
+  ],
+  "over": [
+   242,
+   239,
+   231
+  ]
+ },
+ {
+  "group": "security-tenancy",
+  "theme": "light",
+  "acc": "#A73A57",
+  "control": "pane switcher",
+  "signal": 1374,
+  "contrast": 5.4,
+  "ring": [
+   167,
+   58,
+   87
+  ],
+  "over": [
+   242,
+   239,
+   231
+  ]
+ },
+ {
+  "group": "security-tenancy",
+  "theme": "dark",
+  "acc": "#EE8CA4",
+  "control": "focus toggle",
+  "signal": 635,
+  "contrast": 7.32,
+  "ring": [
+   238,
+   140,
+   164
+  ],
+  "over": [
+   27,
+   26,
+   35
+  ]
+ },
+ {
+  "group": "security-tenancy",
+  "theme": "dark",
+  "acc": "#EE8CA4",
+  "control": "topic switcher",
+  "signal": 1207,
+  "contrast": 7.32,
+  "ring": [
+   238,
+   140,
+   164
+  ],
+  "over": [
+   27,
+   26,
+   35
+  ]
+ },
+ {
+  "group": "security-tenancy",
+  "theme": "dark",
+  "acc": "#EE8CA4",
+  "control": "tool button",
+  "signal": 2173,
+  "contrast": 7.57,
+  "ring": [
+   238,
+   140,
+   164
+  ],
+  "over": [
+   23,
+   23,
+   31
+  ]
+ },
+ {
+  "group": "security-tenancy",
+  "theme": "dark",
+  "acc": "#EE8CA4",
+  "control": "pane switcher",
+  "signal": 1323,
+  "contrast": 7.51,
+  "ring": [
+   238,
+   140,
+   164
+  ],
+  "over": [
+   26,
+   23,
+   32
+  ]
+ }
+]

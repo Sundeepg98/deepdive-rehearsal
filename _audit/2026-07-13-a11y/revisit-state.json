@@ -1,0 +1,1874 @@
+[
+  {
+    "room": "messaging-events",
+    "theme": "light",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill g",
+    "kind": "value",
+    "text": "2",
+    "fontSize": 24,
+    "weight": 800,
+    "threshold": 3,
+    "box": {
+      "x": 347.2970275878906,
+      "y": 360.8841552734375,
+      "w": 235.40597534179688,
+      "h": 25.762939453125
+    },
+    "fg": "#ffffff",
+    "bg": "#1d6f3f",
+    "ratio": 6.18
+  },
+  {
+    "room": "messaging-events",
+    "theme": "light",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill g",
+    "kind": "label",
+    "text": "Solid",
+    "fontSize": 9,
+    "weight": 700,
+    "threshold": 4.5,
+    "box": {
+      "x": 359.5,
+      "y": 390.265625,
+      "w": 211,
+      "h": 12.5
+    },
+    "fg": "#ffffff",
+    "bg": "#1d6f3f",
+    "ratio": 6.18
+  },
+  {
+    "room": "messaging-events",
+    "theme": "light",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill s",
+    "kind": "value",
+    "text": "3",
+    "fontSize": 24,
+    "weight": 800,
+    "threshold": 3,
+    "box": {
+      "x": 602.5,
+      "y": 362.265625,
+      "w": 211,
+      "h": 23
+    },
+    "fg": "#9a5b0b",
+    "bg": "#ffffff",
+    "ratio": 5.42
+  },
+  {
+    "room": "messaging-events",
+    "theme": "light",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill s",
+    "kind": "label",
+    "text": "Revisit",
+    "fontSize": 9,
+    "weight": 700,
+    "threshold": 4.5,
+    "box": {
+      "x": 602.5,
+      "y": 390.265625,
+      "w": 211,
+      "h": 12.5
+    },
+    "fg": "#67615a",
+    "bg": "#ffffff",
+    "ratio": 6.11
+  },
+  {
+    "room": "messaging-events",
+    "theme": "light",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill left",
+    "kind": "value",
+    "text": "16",
+    "fontSize": 24,
+    "weight": 800,
+    "threshold": 3,
+    "box": {
+      "x": 845.5,
+      "y": 362.265625,
+      "w": 211,
+      "h": 23
+    },
+    "fg": "#2a2823",
+    "bg": "#ffffff",
+    "ratio": 14.72
+  },
+  {
+    "room": "messaging-events",
+    "theme": "light",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill left",
+    "kind": "label",
+    "text": "Left",
+    "fontSize": 9,
+    "weight": 700,
+    "threshold": 4.5,
+    "box": {
+      "x": 845.5,
+      "y": 390.265625,
+      "w": 211,
+      "h": 12.5
+    },
+    "fg": "#67615a",
+    "bg": "#ffffff",
+    "ratio": 6.11
+  },
+  {
+    "room": "messaging-events",
+    "theme": "dark",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill g",
+    "kind": "value",
+    "text": "2",
+    "fontSize": 24,
+    "weight": 800,
+    "threshold": 3,
+    "box": {
+      "x": 341.54595947265625,
+      "y": 360.23309326171875,
+      "w": 246.9080810546875,
+      "h": 27.0650634765625
+    },
+    "fg": "#1a1622",
+    "bg": "#5bd08a",
+    "ratio": 9.17
+  },
+  {
+    "room": "messaging-events",
+    "theme": "dark",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill g",
+    "kind": "label",
+    "text": "Solid",
+    "fontSize": 9,
+    "weight": 700,
+    "threshold": 4.5,
+    "box": {
+      "x": 359.5,
+      "y": 390.265625,
+      "w": 211,
+      "h": 12.5
+    },
+    "fg": "#1a1622",
+    "bg": "#5bd08a",
+    "ratio": 9.17
+  },
+  {
+    "room": "messaging-events",
+    "theme": "dark",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill s",
+    "kind": "value",
+    "text": "3",
+    "fontSize": 24,
+    "weight": 800,
+    "threshold": 3,
+    "box": {
+      "x": 602.5,
+      "y": 362.265625,
+      "w": 211,
+      "h": 23
+    },
+    "fg": "#e5a24a",
+    "bg": "#1e1c25",
+    "ratio": 7.69
+  },
+  {
+    "room": "messaging-events",
+    "theme": "dark",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill s",
+    "kind": "label",
+    "text": "Revisit",
+    "fontSize": 9,
+    "weight": 700,
+    "threshold": 4.5,
+    "box": {
+      "x": 602.5,
+      "y": 390.265625,
+      "w": 211,
+      "h": 12.5
+    },
+    "fg": "#ada79d",
+    "bg": "#1e1c25",
+    "ratio": 7.04
+  },
+  {
+    "room": "messaging-events",
+    "theme": "dark",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill left",
+    "kind": "value",
+    "text": "16",
+    "fontSize": 24,
+    "weight": 800,
+    "threshold": 3,
+    "box": {
+      "x": 845.5,
+      "y": 362.265625,
+      "w": 211,
+      "h": 23
+    },
+    "fg": "#eceae4",
+    "bg": "#1e1c25",
+    "ratio": 13.99
+  },
+  {
+    "room": "messaging-events",
+    "theme": "dark",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill left",
+    "kind": "label",
+    "text": "Left",
+    "fontSize": 9,
+    "weight": 700,
+    "threshold": 4.5,
+    "box": {
+      "x": 845.5,
+      "y": 390.265625,
+      "w": 211,
+      "h": 12.5
+    },
+    "fg": "#ada79d",
+    "bg": "#1e1c25",
+    "ratio": 7.04
+  },
+  {
+    "room": "data-storage",
+    "theme": "light",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill g",
+    "kind": "value",
+    "text": "2",
+    "fontSize": 24,
+    "weight": 800,
+    "threshold": 3,
+    "box": {
+      "x": 347.2990417480469,
+      "y": 360.8843994140625,
+      "w": 235.40188598632812,
+      "h": 25.762451171875
+    },
+    "fg": "#ffffff",
+    "bg": "#1d6f3f",
+    "ratio": 6.18
+  },
+  {
+    "room": "data-storage",
+    "theme": "light",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill g",
+    "kind": "label",
+    "text": "Solid",
+    "fontSize": 9,
+    "weight": 700,
+    "threshold": 4.5,
+    "box": {
+      "x": 359.5,
+      "y": 390.265625,
+      "w": 211,
+      "h": 12.5
+    },
+    "fg": "#ffffff",
+    "bg": "#1d6f3f",
+    "ratio": 6.18
+  },
+  {
+    "room": "data-storage",
+    "theme": "light",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill s",
+    "kind": "value",
+    "text": "3",
+    "fontSize": 24,
+    "weight": 800,
+    "threshold": 3,
+    "box": {
+      "x": 602.5,
+      "y": 362.265625,
+      "w": 211,
+      "h": 23
+    },
+    "fg": "#9a5b0b",
+    "bg": "#ffffff",
+    "ratio": 5.42
+  },
+  {
+    "room": "data-storage",
+    "theme": "light",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill s",
+    "kind": "label",
+    "text": "Revisit",
+    "fontSize": 9,
+    "weight": 700,
+    "threshold": 4.5,
+    "box": {
+      "x": 602.5,
+      "y": 390.265625,
+      "w": 211,
+      "h": 12.5
+    },
+    "fg": "#67615a",
+    "bg": "#ffffff",
+    "ratio": 6.11
+  },
+  {
+    "room": "data-storage",
+    "theme": "light",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill left",
+    "kind": "value",
+    "text": "16",
+    "fontSize": 24,
+    "weight": 800,
+    "threshold": 3,
+    "box": {
+      "x": 845.5,
+      "y": 362.265625,
+      "w": 211,
+      "h": 23
+    },
+    "fg": "#2a2823",
+    "bg": "#ffffff",
+    "ratio": 14.72
+  },
+  {
+    "room": "data-storage",
+    "theme": "light",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill left",
+    "kind": "label",
+    "text": "Left",
+    "fontSize": 9,
+    "weight": 700,
+    "threshold": 4.5,
+    "box": {
+      "x": 845.5,
+      "y": 390.265625,
+      "w": 211,
+      "h": 12.5
+    },
+    "fg": "#67615a",
+    "bg": "#ffffff",
+    "ratio": 6.11
+  },
+  {
+    "room": "data-storage",
+    "theme": "dark",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill g",
+    "kind": "value",
+    "text": "2",
+    "fontSize": 24,
+    "weight": 800,
+    "threshold": 3,
+    "box": {
+      "x": 350.4211730957031,
+      "y": 361.2378234863281,
+      "w": 229.15768432617188,
+      "h": 25.05560302734375
+    },
+    "fg": "#1a1622",
+    "bg": "#5bd08a",
+    "ratio": 9.17
+  },
+  {
+    "room": "data-storage",
+    "theme": "dark",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill g",
+    "kind": "label",
+    "text": "Solid",
+    "fontSize": 9,
+    "weight": 700,
+    "threshold": 4.5,
+    "box": {
+      "x": 359.5,
+      "y": 390.265625,
+      "w": 211,
+      "h": 12.5
+    },
+    "fg": "#1a1622",
+    "bg": "#5bd08a",
+    "ratio": 9.17
+  },
+  {
+    "room": "data-storage",
+    "theme": "dark",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill s",
+    "kind": "value",
+    "text": "3",
+    "fontSize": 24,
+    "weight": 800,
+    "threshold": 3,
+    "box": {
+      "x": 602.5,
+      "y": 362.265625,
+      "w": 211,
+      "h": 23
+    },
+    "fg": "#e5a24a",
+    "bg": "#1e1c25",
+    "ratio": 7.69
+  },
+  {
+    "room": "data-storage",
+    "theme": "dark",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill s",
+    "kind": "label",
+    "text": "Revisit",
+    "fontSize": 9,
+    "weight": 700,
+    "threshold": 4.5,
+    "box": {
+      "x": 602.5,
+      "y": 390.265625,
+      "w": 211,
+      "h": 12.5
+    },
+    "fg": "#ada79d",
+    "bg": "#1e1c25",
+    "ratio": 7.04
+  },
+  {
+    "room": "data-storage",
+    "theme": "dark",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill left",
+    "kind": "value",
+    "text": "16",
+    "fontSize": 24,
+    "weight": 800,
+    "threshold": 3,
+    "box": {
+      "x": 845.5,
+      "y": 362.265625,
+      "w": 211,
+      "h": 23
+    },
+    "fg": "#eceae4",
+    "bg": "#1e1c25",
+    "ratio": 13.99
+  },
+  {
+    "room": "data-storage",
+    "theme": "dark",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill left",
+    "kind": "label",
+    "text": "Left",
+    "fontSize": 9,
+    "weight": 700,
+    "threshold": 4.5,
+    "box": {
+      "x": 845.5,
+      "y": 390.265625,
+      "w": 211,
+      "h": 12.5
+    },
+    "fg": "#ada79d",
+    "bg": "#1e1c25",
+    "ratio": 7.04
+  },
+  {
+    "room": "reliability-observability",
+    "theme": "light",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill g",
+    "kind": "value",
+    "text": "2",
+    "fontSize": 24,
+    "weight": 800,
+    "threshold": 3,
+    "box": {
+      "x": 344.00360107421875,
+      "y": 360.5113220214844,
+      "w": 241.9927978515625,
+      "h": 26.50860595703125
+    },
+    "fg": "#ffffff",
+    "bg": "#1d6f3f",
+    "ratio": 6.18
+  },
+  {
+    "room": "reliability-observability",
+    "theme": "light",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill g",
+    "kind": "label",
+    "text": "Solid",
+    "fontSize": 9,
+    "weight": 700,
+    "threshold": 4.5,
+    "box": {
+      "x": 359.5,
+      "y": 390.265625,
+      "w": 211,
+      "h": 12.5
+    },
+    "fg": "#ffffff",
+    "bg": "#1d6f3f",
+    "ratio": 6.18
+  },
+  {
+    "room": "reliability-observability",
+    "theme": "light",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill s",
+    "kind": "value",
+    "text": "3",
+    "fontSize": 24,
+    "weight": 800,
+    "threshold": 3,
+    "box": {
+      "x": 602.5,
+      "y": 362.265625,
+      "w": 211,
+      "h": 23
+    },
+    "fg": "#9a5b0b",
+    "bg": "#ffffff",
+    "ratio": 5.42
+  },
+  {
+    "room": "reliability-observability",
+    "theme": "light",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill s",
+    "kind": "label",
+    "text": "Revisit",
+    "fontSize": 9,
+    "weight": 700,
+    "threshold": 4.5,
+    "box": {
+      "x": 602.5,
+      "y": 390.265625,
+      "w": 211,
+      "h": 12.5
+    },
+    "fg": "#67615a",
+    "bg": "#ffffff",
+    "ratio": 6.11
+  },
+  {
+    "room": "reliability-observability",
+    "theme": "light",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill left",
+    "kind": "value",
+    "text": "16",
+    "fontSize": 24,
+    "weight": 800,
+    "threshold": 3,
+    "box": {
+      "x": 845.5,
+      "y": 362.265625,
+      "w": 211,
+      "h": 23
+    },
+    "fg": "#2a2823",
+    "bg": "#ffffff",
+    "ratio": 14.72
+  },
+  {
+    "room": "reliability-observability",
+    "theme": "light",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill left",
+    "kind": "label",
+    "text": "Left",
+    "fontSize": 9,
+    "weight": 700,
+    "threshold": 4.5,
+    "box": {
+      "x": 845.5,
+      "y": 390.265625,
+      "w": 211,
+      "h": 12.5
+    },
+    "fg": "#67615a",
+    "bg": "#ffffff",
+    "ratio": 6.11
+  },
+  {
+    "room": "reliability-observability",
+    "theme": "dark",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill g",
+    "kind": "value",
+    "text": "2",
+    "fontSize": 24,
+    "weight": 800,
+    "threshold": 3,
+    "box": {
+      "x": 340.42071533203125,
+      "y": 360.105712890625,
+      "w": 249.1585693359375,
+      "h": 27.31982421875
+    },
+    "fg": "#1a1622",
+    "bg": "#5bd08a",
+    "ratio": 9.17
+  },
+  {
+    "room": "reliability-observability",
+    "theme": "dark",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill g",
+    "kind": "label",
+    "text": "Solid",
+    "fontSize": 9,
+    "weight": 700,
+    "threshold": 4.5,
+    "box": {
+      "x": 359.5,
+      "y": 390.265625,
+      "w": 211,
+      "h": 12.5
+    },
+    "fg": "#1a1622",
+    "bg": "#5bd08a",
+    "ratio": 9.17
+  },
+  {
+    "room": "reliability-observability",
+    "theme": "dark",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill s",
+    "kind": "value",
+    "text": "3",
+    "fontSize": 24,
+    "weight": 800,
+    "threshold": 3,
+    "box": {
+      "x": 602.5,
+      "y": 362.265625,
+      "w": 211,
+      "h": 23
+    },
+    "fg": "#e5a24a",
+    "bg": "#1e1c25",
+    "ratio": 7.69
+  },
+  {
+    "room": "reliability-observability",
+    "theme": "dark",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill s",
+    "kind": "label",
+    "text": "Revisit",
+    "fontSize": 9,
+    "weight": 700,
+    "threshold": 4.5,
+    "box": {
+      "x": 602.5,
+      "y": 390.265625,
+      "w": 211,
+      "h": 12.5
+    },
+    "fg": "#ada79d",
+    "bg": "#1e1c25",
+    "ratio": 7.04
+  },
+  {
+    "room": "reliability-observability",
+    "theme": "dark",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill left",
+    "kind": "value",
+    "text": "16",
+    "fontSize": 24,
+    "weight": 800,
+    "threshold": 3,
+    "box": {
+      "x": 845.5,
+      "y": 362.265625,
+      "w": 211,
+      "h": 23
+    },
+    "fg": "#eceae4",
+    "bg": "#1e1c25",
+    "ratio": 13.99
+  },
+  {
+    "room": "reliability-observability",
+    "theme": "dark",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill left",
+    "kind": "label",
+    "text": "Left",
+    "fontSize": 9,
+    "weight": 700,
+    "threshold": 4.5,
+    "box": {
+      "x": 845.5,
+      "y": 390.265625,
+      "w": 211,
+      "h": 12.5
+    },
+    "fg": "#ada79d",
+    "bg": "#1e1c25",
+    "ratio": 7.04
+  },
+  {
+    "room": "platform-infra",
+    "theme": "light",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill g",
+    "kind": "value",
+    "text": "2",
+    "fontSize": 24,
+    "weight": 800,
+    "threshold": 3,
+    "box": {
+      "x": 352.9669494628906,
+      "y": 361.5260314941406,
+      "w": 224.06613159179688,
+      "h": 24.47918701171875
+    },
+    "fg": "#ffffff",
+    "bg": "#1d6f3f",
+    "ratio": 6.18
+  },
+  {
+    "room": "platform-infra",
+    "theme": "light",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill g",
+    "kind": "label",
+    "text": "Solid",
+    "fontSize": 9,
+    "weight": 700,
+    "threshold": 4.5,
+    "box": {
+      "x": 359.5,
+      "y": 390.265625,
+      "w": 211,
+      "h": 12.5
+    },
+    "fg": "#ffffff",
+    "bg": "#1d6f3f",
+    "ratio": 6.18
+  },
+  {
+    "room": "platform-infra",
+    "theme": "light",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill s",
+    "kind": "value",
+    "text": "3",
+    "fontSize": 24,
+    "weight": 800,
+    "threshold": 3,
+    "box": {
+      "x": 602.5,
+      "y": 362.265625,
+      "w": 211,
+      "h": 23
+    },
+    "fg": "#9a5b0b",
+    "bg": "#ffffff",
+    "ratio": 5.42
+  },
+  {
+    "room": "platform-infra",
+    "theme": "light",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill s",
+    "kind": "label",
+    "text": "Revisit",
+    "fontSize": 9,
+    "weight": 700,
+    "threshold": 4.5,
+    "box": {
+      "x": 602.5,
+      "y": 390.265625,
+      "w": 211,
+      "h": 12.5
+    },
+    "fg": "#67615a",
+    "bg": "#ffffff",
+    "ratio": 6.11
+  },
+  {
+    "room": "platform-infra",
+    "theme": "light",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill left",
+    "kind": "value",
+    "text": "16",
+    "fontSize": 24,
+    "weight": 800,
+    "threshold": 3,
+    "box": {
+      "x": 845.5,
+      "y": 362.265625,
+      "w": 211,
+      "h": 23
+    },
+    "fg": "#2a2823",
+    "bg": "#ffffff",
+    "ratio": 14.72
+  },
+  {
+    "room": "platform-infra",
+    "theme": "light",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill left",
+    "kind": "label",
+    "text": "Left",
+    "fontSize": 9,
+    "weight": 700,
+    "threshold": 4.5,
+    "box": {
+      "x": 845.5,
+      "y": 390.265625,
+      "w": 211,
+      "h": 12.5
+    },
+    "fg": "#67615a",
+    "bg": "#ffffff",
+    "ratio": 6.11
+  },
+  {
+    "room": "platform-infra",
+    "theme": "dark",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill g",
+    "kind": "value",
+    "text": "2",
+    "fontSize": 24,
+    "weight": 800,
+    "threshold": 3,
+    "box": {
+      "x": 347.28961181640625,
+      "y": 360.8833312988281,
+      "w": 235.4207763671875,
+      "h": 25.764617919921875
+    },
+    "fg": "#1a1622",
+    "bg": "#5bd08a",
+    "ratio": 9.17
+  },
+  {
+    "room": "platform-infra",
+    "theme": "dark",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill g",
+    "kind": "label",
+    "text": "Solid",
+    "fontSize": 9,
+    "weight": 700,
+    "threshold": 4.5,
+    "box": {
+      "x": 359.5,
+      "y": 390.265625,
+      "w": 211,
+      "h": 12.5
+    },
+    "fg": "#1a1622",
+    "bg": "#5bd08a",
+    "ratio": 9.17
+  },
+  {
+    "room": "platform-infra",
+    "theme": "dark",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill s",
+    "kind": "value",
+    "text": "3",
+    "fontSize": 24,
+    "weight": 800,
+    "threshold": 3,
+    "box": {
+      "x": 602.5,
+      "y": 362.265625,
+      "w": 211,
+      "h": 23
+    },
+    "fg": "#e5a24a",
+    "bg": "#1e1c25",
+    "ratio": 7.69
+  },
+  {
+    "room": "platform-infra",
+    "theme": "dark",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill s",
+    "kind": "label",
+    "text": "Revisit",
+    "fontSize": 9,
+    "weight": 700,
+    "threshold": 4.5,
+    "box": {
+      "x": 602.5,
+      "y": 390.265625,
+      "w": 211,
+      "h": 12.5
+    },
+    "fg": "#ada79d",
+    "bg": "#1e1c25",
+    "ratio": 7.04
+  },
+  {
+    "room": "platform-infra",
+    "theme": "dark",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill left",
+    "kind": "value",
+    "text": "16",
+    "fontSize": 24,
+    "weight": 800,
+    "threshold": 3,
+    "box": {
+      "x": 845.5,
+      "y": 362.265625,
+      "w": 211,
+      "h": 23
+    },
+    "fg": "#eceae4",
+    "bg": "#1e1c25",
+    "ratio": 13.99
+  },
+  {
+    "room": "platform-infra",
+    "theme": "dark",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill left",
+    "kind": "label",
+    "text": "Left",
+    "fontSize": 9,
+    "weight": 700,
+    "threshold": 4.5,
+    "box": {
+      "x": 845.5,
+      "y": 390.265625,
+      "w": 211,
+      "h": 12.5
+    },
+    "fg": "#ada79d",
+    "bg": "#1e1c25",
+    "ratio": 7.04
+  },
+  {
+    "room": "architecture-apis",
+    "theme": "light",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill g",
+    "kind": "value",
+    "text": "2",
+    "fontSize": 24,
+    "weight": 800,
+    "threshold": 3,
+    "box": {
+      "x": 352.9598693847656,
+      "y": 361.5252380371094,
+      "w": 224.08029174804688,
+      "h": 24.48077392578125
+    },
+    "fg": "#ffffff",
+    "bg": "#1d6f3f",
+    "ratio": 6.18
+  },
+  {
+    "room": "architecture-apis",
+    "theme": "light",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill g",
+    "kind": "label",
+    "text": "Solid",
+    "fontSize": 9,
+    "weight": 700,
+    "threshold": 4.5,
+    "box": {
+      "x": 359.5,
+      "y": 390.265625,
+      "w": 211,
+      "h": 12.5
+    },
+    "fg": "#ffffff",
+    "bg": "#1d6f3f",
+    "ratio": 6.18
+  },
+  {
+    "room": "architecture-apis",
+    "theme": "light",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill s",
+    "kind": "value",
+    "text": "3",
+    "fontSize": 24,
+    "weight": 800,
+    "threshold": 3,
+    "box": {
+      "x": 602.5,
+      "y": 362.265625,
+      "w": 211,
+      "h": 23
+    },
+    "fg": "#9a5b0b",
+    "bg": "#ffffff",
+    "ratio": 5.42
+  },
+  {
+    "room": "architecture-apis",
+    "theme": "light",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill s",
+    "kind": "label",
+    "text": "Revisit",
+    "fontSize": 9,
+    "weight": 700,
+    "threshold": 4.5,
+    "box": {
+      "x": 602.5,
+      "y": 390.265625,
+      "w": 211,
+      "h": 12.5
+    },
+    "fg": "#67615a",
+    "bg": "#ffffff",
+    "ratio": 6.11
+  },
+  {
+    "room": "architecture-apis",
+    "theme": "light",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill left",
+    "kind": "value",
+    "text": "16",
+    "fontSize": 24,
+    "weight": 800,
+    "threshold": 3,
+    "box": {
+      "x": 845.5,
+      "y": 362.265625,
+      "w": 211,
+      "h": 23
+    },
+    "fg": "#2a2823",
+    "bg": "#ffffff",
+    "ratio": 14.72
+  },
+  {
+    "room": "architecture-apis",
+    "theme": "light",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill left",
+    "kind": "label",
+    "text": "Left",
+    "fontSize": 9,
+    "weight": 700,
+    "threshold": 4.5,
+    "box": {
+      "x": 845.5,
+      "y": 390.265625,
+      "w": 211,
+      "h": 12.5
+    },
+    "fg": "#67615a",
+    "bg": "#ffffff",
+    "ratio": 6.11
+  },
+  {
+    "room": "architecture-apis",
+    "theme": "dark",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill g",
+    "kind": "value",
+    "text": "2",
+    "fontSize": 24,
+    "weight": 800,
+    "threshold": 3,
+    "box": {
+      "x": 350.4177551269531,
+      "y": 361.2374572753906,
+      "w": 229.16452026367188,
+      "h": 25.05633544921875
+    },
+    "fg": "#1a1622",
+    "bg": "#5bd08a",
+    "ratio": 9.17
+  },
+  {
+    "room": "architecture-apis",
+    "theme": "dark",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill g",
+    "kind": "label",
+    "text": "Solid",
+    "fontSize": 9,
+    "weight": 700,
+    "threshold": 4.5,
+    "box": {
+      "x": 359.5,
+      "y": 390.265625,
+      "w": 211,
+      "h": 12.5
+    },
+    "fg": "#1a1622",
+    "bg": "#5bd08a",
+    "ratio": 9.17
+  },
+  {
+    "room": "architecture-apis",
+    "theme": "dark",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill s",
+    "kind": "value",
+    "text": "3",
+    "fontSize": 24,
+    "weight": 800,
+    "threshold": 3,
+    "box": {
+      "x": 602.5,
+      "y": 362.265625,
+      "w": 211,
+      "h": 23
+    },
+    "fg": "#e5a24a",
+    "bg": "#1e1c25",
+    "ratio": 7.69
+  },
+  {
+    "room": "architecture-apis",
+    "theme": "dark",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill s",
+    "kind": "label",
+    "text": "Revisit",
+    "fontSize": 9,
+    "weight": 700,
+    "threshold": 4.5,
+    "box": {
+      "x": 602.5,
+      "y": 390.265625,
+      "w": 211,
+      "h": 12.5
+    },
+    "fg": "#ada79d",
+    "bg": "#1e1c25",
+    "ratio": 7.04
+  },
+  {
+    "room": "architecture-apis",
+    "theme": "dark",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill left",
+    "kind": "value",
+    "text": "16",
+    "fontSize": 24,
+    "weight": 800,
+    "threshold": 3,
+    "box": {
+      "x": 845.5,
+      "y": 362.265625,
+      "w": 211,
+      "h": 23
+    },
+    "fg": "#eceae4",
+    "bg": "#1e1c25",
+    "ratio": 13.99
+  },
+  {
+    "room": "architecture-apis",
+    "theme": "dark",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill left",
+    "kind": "label",
+    "text": "Left",
+    "fontSize": 9,
+    "weight": 700,
+    "threshold": 4.5,
+    "box": {
+      "x": 845.5,
+      "y": 390.265625,
+      "w": 211,
+      "h": 12.5
+    },
+    "fg": "#ada79d",
+    "bg": "#1e1c25",
+    "ratio": 7.04
+  },
+  {
+    "room": "security-tenancy",
+    "theme": "light",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill g",
+    "kind": "value",
+    "text": "2",
+    "fontSize": 24,
+    "weight": 800,
+    "threshold": 3,
+    "box": {
+      "x": 359.5,
+      "y": 362.265625,
+      "w": 211,
+      "h": 23
+    },
+    "fg": "#ffffff",
+    "bg": "#1d6f3f",
+    "ratio": 6.18
+  },
+  {
+    "room": "security-tenancy",
+    "theme": "light",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill g",
+    "kind": "label",
+    "text": "Solid",
+    "fontSize": 9,
+    "weight": 700,
+    "threshold": 4.5,
+    "box": {
+      "x": 359.5,
+      "y": 390.265625,
+      "w": 211,
+      "h": 12.5
+    },
+    "fg": "#ffffff",
+    "bg": "#1d6f3f",
+    "ratio": 6.18
+  },
+  {
+    "room": "security-tenancy",
+    "theme": "light",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill s",
+    "kind": "value",
+    "text": "3",
+    "fontSize": 24,
+    "weight": 800,
+    "threshold": 3,
+    "box": {
+      "x": 602.5,
+      "y": 362.265625,
+      "w": 211,
+      "h": 23
+    },
+    "fg": "#9a5b0b",
+    "bg": "#ffffff",
+    "ratio": 5.42
+  },
+  {
+    "room": "security-tenancy",
+    "theme": "light",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill s",
+    "kind": "label",
+    "text": "Revisit",
+    "fontSize": 9,
+    "weight": 700,
+    "threshold": 4.5,
+    "box": {
+      "x": 602.5,
+      "y": 390.265625,
+      "w": 211,
+      "h": 12.5
+    },
+    "fg": "#67615a",
+    "bg": "#ffffff",
+    "ratio": 6.11
+  },
+  {
+    "room": "security-tenancy",
+    "theme": "light",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill left",
+    "kind": "value",
+    "text": "16",
+    "fontSize": 24,
+    "weight": 800,
+    "threshold": 3,
+    "box": {
+      "x": 845.5,
+      "y": 362.265625,
+      "w": 211,
+      "h": 23
+    },
+    "fg": "#2a2823",
+    "bg": "#ffffff",
+    "ratio": 14.72
+  },
+  {
+    "room": "security-tenancy",
+    "theme": "light",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill left",
+    "kind": "label",
+    "text": "Left",
+    "fontSize": 9,
+    "weight": 700,
+    "threshold": 4.5,
+    "box": {
+      "x": 845.5,
+      "y": 390.265625,
+      "w": 211,
+      "h": 12.5
+    },
+    "fg": "#67615a",
+    "bg": "#ffffff",
+    "ratio": 6.11
+  },
+  {
+    "room": "security-tenancy",
+    "theme": "dark",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill g",
+    "kind": "value",
+    "text": "2",
+    "fontSize": 24,
+    "weight": 800,
+    "threshold": 3,
+    "box": {
+      "x": 359.231201171875,
+      "y": 362.2351989746094,
+      "w": 211.53759765625,
+      "h": 23.06085205078125
+    },
+    "fg": "#1a1622",
+    "bg": "#5bd08a",
+    "ratio": 9.17
+  },
+  {
+    "room": "security-tenancy",
+    "theme": "dark",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill g",
+    "kind": "label",
+    "text": "Solid",
+    "fontSize": 9,
+    "weight": 700,
+    "threshold": 4.5,
+    "box": {
+      "x": 359.5,
+      "y": 390.265625,
+      "w": 211,
+      "h": 12.5
+    },
+    "fg": "#1a1622",
+    "bg": "#5bd08a",
+    "ratio": 9.17
+  },
+  {
+    "room": "security-tenancy",
+    "theme": "dark",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill s",
+    "kind": "value",
+    "text": "3",
+    "fontSize": 24,
+    "weight": 800,
+    "threshold": 3,
+    "box": {
+      "x": 602.5,
+      "y": 362.265625,
+      "w": 211,
+      "h": 23
+    },
+    "fg": "#e5a24a",
+    "bg": "#1e1c25",
+    "ratio": 7.69
+  },
+  {
+    "room": "security-tenancy",
+    "theme": "dark",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill s",
+    "kind": "label",
+    "text": "Revisit",
+    "fontSize": 9,
+    "weight": 700,
+    "threshold": 4.5,
+    "box": {
+      "x": 602.5,
+      "y": 390.265625,
+      "w": 211,
+      "h": 12.5
+    },
+    "fg": "#ada79d",
+    "bg": "#1e1c25",
+    "ratio": 7.04
+  },
+  {
+    "room": "security-tenancy",
+    "theme": "dark",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill left",
+    "kind": "value",
+    "text": "16",
+    "fontSize": 24,
+    "weight": 800,
+    "threshold": 3,
+    "box": {
+      "x": 845.5,
+      "y": 362.265625,
+      "w": 211,
+      "h": 23
+    },
+    "fg": "#eceae4",
+    "bg": "#1e1c25",
+    "ratio": 13.99
+  },
+  {
+    "room": "security-tenancy",
+    "theme": "dark",
+    "counts": {
+      "solid": 2,
+      "revisit": 3,
+      "left": 16,
+      "gCls": "pill g",
+      "sCls": "pill s"
+    },
+    "tile": "pill left",
+    "kind": "label",
+    "text": "Left",
+    "fontSize": 9,
+    "weight": 700,
+    "threshold": 4.5,
+    "box": {
+      "x": 845.5,
+      "y": 390.265625,
+      "w": 211,
+      "h": 12.5
+    },
+    "fg": "#ada79d",
+    "bg": "#1e1c25",
+    "ratio": 7.04
+  }
+]

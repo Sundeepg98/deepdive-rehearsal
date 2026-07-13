@@ -1,0 +1,487 @@
+{
+ "rows100": [
+  {
+   "sel": "button#idxopen",
+   "clientH": 42,
+   "scrollH": 50,
+   "cutY": 8,
+   "overflow": "hidden",
+   "overflowY": "hidden",
+   "cssHeight": "44px",
+   "minHeight": "44px",
+   "text": "Topic index — all topics across the six groups"
+  },
+  {
+   "sel": "button#searchopen",
+   "clientH": 42,
+   "scrollH": 50,
+   "cutY": 8,
+   "overflow": "hidden",
+   "overflowY": "hidden",
+   "cssHeight": "44px",
+   "minHeight": "44px",
+   "text": "Search — jump to any topic or view by name or "
+  },
+  {
+   "sel": "button#copylink",
+   "clientH": 42,
+   "scrollH": 50,
+   "cutY": 8,
+   "overflow": "hidden",
+   "overflowY": "hidden",
+   "cssHeight": "44px",
+   "minHeight": "44px",
+   "text": "Copy link — a shareable link to this topic & v"
+  },
+  {
+   "sel": "button#starbtn",
+   "clientH": 42,
+   "scrollH": 50,
+   "cutY": 8,
+   "overflow": "hidden",
+   "overflowY": "hidden",
+   "cssHeight": "44px",
+   "minHeight": "44px",
+   "text": "Star this topic — save it to your bookmarks on"
+  },
+  {
+   "sel": "button#notesopen",
+   "clientH": 42,
+   "scrollH": 50,
+   "cutY": 8,
+   "overflow": "hidden",
+   "overflowY": "hidden",
+   "cssHeight": "44px",
+   "minHeight": "44px",
+   "text": "Your notes — jot notes & mnemonics for this to"
+  },
+  {
+   "sel": "button#printqa",
+   "clientH": 42,
+   "scrollH": 50,
+   "cutY": 8,
+   "overflow": "hidden",
+   "overflowY": "hidden",
+   "cssHeight": "44px",
+   "minHeight": "44px",
+   "text": "Print Q&A — a printable sheet of this topic's "
+  },
+  {
+   "sel": "button#cramopen",
+   "clientH": 42,
+   "scrollH": 50,
+   "cutY": 8,
+   "overflow": "hidden",
+   "overflowY": "hidden",
+   "cssHeight": "44px",
+   "minHeight": "44px",
+   "text": "One-page cram sheet — everything that matters,"
+  },
+  {
+   "sel": "button#sessopen",
+   "clientH": 42,
+   "scrollH": 50,
+   "cutY": 8,
+   "overflow": "hidden",
+   "overflowY": "hidden",
+   "cssHeight": "44px",
+   "minHeight": "44px",
+   "text": "Session progress — where you’re weak, what to "
+  },
+  {
+   "sel": "button#mixopen",
+   "clientH": 42,
+   "scrollH": 50,
+   "cutY": 8,
+   "overflow": "hidden",
+   "overflowY": "hidden",
+   "cssHeight": "44px",
+   "minHeight": "44px",
+   "text": "Mixed fire — probes & curveballs in random ord"
+  },
+  {
+   "sel": "button#planopen",
+   "clientH": 42,
+   "scrollH": 50,
+   "cutY": 8,
+   "overflow": "hidden",
+   "overflowY": "hidden",
+   "cssHeight": "44px",
+   "minHeight": "44px",
+   "text": "Game plan — how to rehearse with this over a w"
+  },
+  {
+   "sel": "button#scopeopen",
+   "clientH": 42,
+   "scrollH": 50,
+   "cutY": 8,
+   "overflow": "hidden",
+   "overflowY": "hidden",
+   "cssHeight": "44px",
+   "minHeight": "44px",
+   "text": "Scope it first — the clarifying questions befo"
+  },
+  {
+   "sel": "button#keyopen",
+   "clientH": 0,
+   "scrollH": 0,
+   "cutY": 0,
+   "overflow": "hidden",
+   "overflowY": "hidden",
+   "cssHeight": "auto",
+   "minHeight": "44px",
+   "text": "Keyboard shortcuts — jump views, drive it by k"
+  },
+  {
+   "sel": "button#themetog",
+   "clientH": 42,
+   "scrollH": 42,
+   "cutY": 0,
+   "overflow": "hidden",
+   "overflowY": "hidden",
+   "cssHeight": "44px",
+   "minHeight": "44px",
+   "text": "☽Dark mode — off"
+  }
+ ],
+ "rows200": [
+  {
+   "sel": "button#idxopen",
+   "clientH": 42,
+   "scrollH": 503,
+   "cutY": 461,
+   "overflow": "hidden",
+   "overflowY": "hidden",
+   "cssHeight": "44px",
+   "minHeight": "44px",
+   "text": "Topic index — all topics across the six groups"
+  },
+  {
+   "sel": "button#searchopen",
+   "clientH": 42,
+   "scrollH": 638,
+   "cutY": 596,
+   "overflow": "hidden",
+   "overflowY": "hidden",
+   "cssHeight": "44px",
+   "minHeight": "44px",
+   "text": "Search — jump to any topic or view by name or "
+  },
+  {
+   "sel": "button#copylink",
+   "clientH": 42,
+   "scrollH": 571,
+   "cutY": 529,
+   "overflow": "hidden",
+   "overflowY": "hidden",
+   "cssHeight": "44px",
+   "minHeight": "44px",
+   "text": "Copy link — a shareable link to this topic & v"
+  },
+  {
+   "sel": "button#starbtn",
+   "clientH": 42,
+   "scrollH": 638,
+   "cutY": 596,
+   "overflow": "hidden",
+   "overflowY": "hidden",
+   "cssHeight": "44px",
+   "minHeight": "44px",
+   "text": "Star this topic — save it to your bookmarks on"
+  },
+  {
+   "sel": "button#notesopen",
+   "clientH": 42,
+   "scrollH": 503,
+   "cutY": 461,
+   "overflow": "hidden",
+   "overflowY": "hidden",
+   "cssHeight": "44px",
+   "minHeight": "44px",
+   "text": "Your notes — jot notes & mnemonics for this to"
+  },
+  {
+   "sel": "button#printqa",
+   "clientH": 42,
+   "scrollH": 571,
+   "cutY": 529,
+   "overflow": "hidden",
+   "overflowY": "hidden",
+   "cssHeight": "44px",
+   "minHeight": "44px",
+   "text": "Print Q&A — a printable sheet of this topic's "
+  },
+  {
+   "sel": "button#cramopen",
+   "clientH": 42,
+   "scrollH": 705,
+   "cutY": 663,
+   "overflow": "hidden",
+   "overflowY": "hidden",
+   "cssHeight": "44px",
+   "minHeight": "44px",
+   "text": "One-page cram sheet — everything that matters,"
+  },
+  {
+   "sel": "button#sessopen",
+   "clientH": 42,
+   "scrollH": 638,
+   "cutY": 596,
+   "overflow": "hidden",
+   "overflowY": "hidden",
+   "cssHeight": "44px",
+   "minHeight": "44px",
+   "text": "Session progress — where you’re weak, what to "
+  },
+  {
+   "sel": "button#mixopen",
+   "clientH": 42,
+   "scrollH": 638,
+   "cutY": 596,
+   "overflow": "hidden",
+   "overflowY": "hidden",
+   "cssHeight": "44px",
+   "minHeight": "44px",
+   "text": "Mixed fire — probes & curveballs in random ord"
+  },
+  {
+   "sel": "button#planopen",
+   "clientH": 42,
+   "scrollH": 638,
+   "cutY": 596,
+   "overflow": "hidden",
+   "overflowY": "hidden",
+   "cssHeight": "44px",
+   "minHeight": "44px",
+   "text": "Game plan — how to rehearse with this over a w"
+  },
+  {
+   "sel": "button#scopeopen",
+   "clientH": 42,
+   "scrollH": 571,
+   "cutY": 529,
+   "overflow": "hidden",
+   "overflowY": "hidden",
+   "cssHeight": "44px",
+   "minHeight": "44px",
+   "text": "Scope it first — the clarifying questions befo"
+  },
+  {
+   "sel": "button#keyopen",
+   "clientH": 0,
+   "scrollH": 0,
+   "cutY": 0,
+   "overflow": "hidden",
+   "overflowY": "hidden",
+   "cssHeight": "auto",
+   "minHeight": "44px",
+   "text": "Keyboard shortcuts — jump views, drive it by k"
+  },
+  {
+   "sel": "button#themetog",
+   "clientH": 42,
+   "scrollH": 67,
+   "cutY": 25,
+   "overflow": "hidden",
+   "overflowY": "hidden",
+   "cssHeight": "44px",
+   "minHeight": "44px",
+   "text": "☽Dark mode — off"
+  }
+ ],
+ "clippedRows": [
+  {
+   "sel": "button#idxopen",
+   "clientH": 42,
+   "scrollH": 503,
+   "cutY": 461,
+   "overflow": "hidden",
+   "overflowY": "hidden",
+   "cssHeight": "44px",
+   "minHeight": "44px",
+   "text": "Topic index — all topics across the six groups"
+  },
+  {
+   "sel": "button#searchopen",
+   "clientH": 42,
+   "scrollH": 638,
+   "cutY": 596,
+   "overflow": "hidden",
+   "overflowY": "hidden",
+   "cssHeight": "44px",
+   "minHeight": "44px",
+   "text": "Search — jump to any topic or view by name or "
+  },
+  {
+   "sel": "button#copylink",
+   "clientH": 42,
+   "scrollH": 571,
+   "cutY": 529,
+   "overflow": "hidden",
+   "overflowY": "hidden",
+   "cssHeight": "44px",
+   "minHeight": "44px",
+   "text": "Copy link — a shareable link to this topic & v"
+  },
+  {
+   "sel": "button#starbtn",
+   "clientH": 42,
+   "scrollH": 638,
+   "cutY": 596,
+   "overflow": "hidden",
+   "overflowY": "hidden",
+   "cssHeight": "44px",
+   "minHeight": "44px",
+   "text": "Star this topic — save it to your bookmarks on"
+  },
+  {
+   "sel": "button#notesopen",
+   "clientH": 42,
+   "scrollH": 503,
+   "cutY": 461,
+   "overflow": "hidden",
+   "overflowY": "hidden",
+   "cssHeight": "44px",
+   "minHeight": "44px",
+   "text": "Your notes — jot notes & mnemonics for this to"
+  },
+  {
+   "sel": "button#printqa",
+   "clientH": 42,
+   "scrollH": 571,
+   "cutY": 529,
+   "overflow": "hidden",
+   "overflowY": "hidden",
+   "cssHeight": "44px",
+   "minHeight": "44px",
+   "text": "Print Q&A — a printable sheet of this topic's "
+  },
+  {
+   "sel": "button#cramopen",
+   "clientH": 42,
+   "scrollH": 705,
+   "cutY": 663,
+   "overflow": "hidden",
+   "overflowY": "hidden",
+   "cssHeight": "44px",
+   "minHeight": "44px",
+   "text": "One-page cram sheet — everything that matters,"
+  },
+  {
+   "sel": "button#sessopen",
+   "clientH": 42,
+   "scrollH": 638,
+   "cutY": 596,
+   "overflow": "hidden",
+   "overflowY": "hidden",
+   "cssHeight": "44px",
+   "minHeight": "44px",
+   "text": "Session progress — where you’re weak, what to "
+  },
+  {
+   "sel": "button#mixopen",
+   "clientH": 42,
+   "scrollH": 638,
+   "cutY": 596,
+   "overflow": "hidden",
+   "overflowY": "hidden",
+   "cssHeight": "44px",
+   "minHeight": "44px",
+   "text": "Mixed fire — probes & curveballs in random ord"
+  },
+  {
+   "sel": "button#planopen",
+   "clientH": 42,
+   "scrollH": 638,
+   "cutY": 596,
+   "overflow": "hidden",
+   "overflowY": "hidden",
+   "cssHeight": "44px",
+   "minHeight": "44px",
+   "text": "Game plan — how to rehearse with this over a w"
+  },
+  {
+   "sel": "button#scopeopen",
+   "clientH": 42,
+   "scrollH": 571,
+   "cutY": 529,
+   "overflow": "hidden",
+   "overflowY": "hidden",
+   "cssHeight": "44px",
+   "minHeight": "44px",
+   "text": "Scope it first — the clarifying questions befo"
+  },
+  {
+   "sel": "button#themetog",
+   "clientH": 42,
+   "scrollH": 67,
+   "cutY": 25,
+   "overflow": "hidden",
+   "overflowY": "hidden",
+   "cssHeight": "44px",
+   "minHeight": "44px",
+   "text": "☽Dark mode — off"
+  }
+ ],
+ "ovDrawer": [
+  {
+   "a": "button#mockopen",
+   "b": "button#cramopen",
+   "overlap": "251x16"
+  },
+  {
+   "a": "button#mockopen",
+   "b": "button#sessopen",
+   "overlap": "251x44"
+  },
+  {
+   "a": "button#mockopen",
+   "b": "button#mixopen",
+   "overlap": "251x44"
+  },
+  {
+   "a": "button#mockopen",
+   "b": "button#planopen",
+   "overlap": "251x44"
+  },
+  {
+   "a": "button#mockopen",
+   "b": "button#scopeopen",
+   "overlap": "251x4"
+  },
+  {
+   "a": "button#toolsfab",
+   "b": "button#sessopen",
+   "overlap": "97x4"
+  },
+  {
+   "a": "button#toolsfab",
+   "b": "button#mixopen",
+   "overlap": "97x43"
+  }
+ ],
+ "drillState": {
+  "reveal": {
+   "rect": "314x57 @y=950",
+   "onScreen": false,
+   "clientH": 57,
+   "scrollH": 57,
+   "cutY": 0,
+   "overflow": "hidden",
+   "text": "Reveal answer"
+  },
+  "scoreboard": null,
+  "gradeButtons": []
+ },
+ "ovDrill": [
+  {
+   "a": "button#mockopen",
+   "b": "button#scrolltop",
+   "overlap": "44x44"
+  }
+ ],
+ "negControl": {
+  "base": 1,
+  "broken": 10
+ }
+}

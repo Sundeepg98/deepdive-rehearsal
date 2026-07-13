@@ -1,0 +1,24 @@
+{
+ "meta": {
+  "version": "4.12.1",
+  "totalRules": 105,
+  "targetSize": {
+   "ruleId": "target-size",
+   "description": "Ensure touch targets have sufficient size and space",
+   "help": "All touch targets must be 24px large, or leave sufficient space",
+   "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/target-size?application=axeAPI",
+   "tags": [
+    "cat.sensory-and-visual-cues",
+    "wcag22aa",
+    "wcag258"
+   ],
+   "enabled": false
+  }
+ },
+ "tagRun": {
+  "violations": 0,
+  "ranTargetSize": true
+ },
+ "forced": [],
+ "forced2": []
+}

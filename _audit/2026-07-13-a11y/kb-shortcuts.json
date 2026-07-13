@@ -1,0 +1,145 @@
+[
+ {
+  "k": "q",
+  "doc": "Walkthrough",
+  "worked": false,
+  "effect": []
+ },
+ {
+  "k": "w",
+  "doc": "Probe Drill",
+  "worked": true,
+  "effect": [
+   "pane: walk -> drill"
+  ]
+ },
+ {
+  "k": "e",
+  "doc": "Whiteboard",
+  "worked": true,
+  "effect": [
+   "pane: walk -> wb"
+  ]
+ },
+ {
+  "k": "r",
+  "doc": "System Map",
+  "worked": true,
+  "effect": [
+   "pane: walk -> sys"
+  ]
+ },
+ {
+  "k": "t",
+  "doc": "Trade-offs",
+  "worked": true,
+  "effect": [
+   "pane: walk -> trade"
+  ]
+ },
+ {
+  "k": "y",
+  "doc": "Model Answers",
+  "worked": true,
+  "effect": [
+   "pane: walk -> model"
+  ]
+ },
+ {
+  "k": "u",
+  "doc": "Numbers",
+  "worked": true,
+  "effect": [
+   "pane: walk -> num"
+  ]
+ },
+ {
+  "k": "i",
+  "doc": "Red Flags",
+  "worked": true,
+  "effect": [
+   "pane: walk -> rf"
+  ]
+ },
+ {
+  "k": "o",
+  "doc": "30-Second",
+  "worked": true,
+  "effect": [
+   "pane: walk -> open"
+  ]
+ },
+ {
+  "k": "ArrowRight",
+  "doc": "Step forward through the walkthrough",
+  "worked": true,
+  "effect": [
+   "walkStep: 0 -> 1"
+  ]
+ },
+ {
+  "k": "ArrowLeft",
+  "doc": "Step back through the walkthrough",
+  "worked": true,
+  "effect": [
+   "walkStep: 1 -> 0"
+  ]
+ },
+ {
+  "k": "/",
+  "doc": "Search topics, concepts & views",
+  "worked": true,
+  "effect": [
+   "search: false -> true"
+  ]
+ },
+ {
+  "k": "\\",
+  "doc": "Open the Topic index",
+  "worked": true,
+  "effect": [
+   "index: false -> true",
+   "anyDialog: null -> _index-overlay"
+  ]
+ },
+ {
+  "k": "]",
+  "doc": "Next topic",
+  "worked": true,
+  "effect": [
+   "topic: content-pipeline -> microfrontend"
+  ]
+ },
+ {
+  "k": "[",
+  "doc": "Previous topic",
+  "worked": true,
+  "effect": [
+   "topic: microfrontend -> content-pipeline"
+  ]
+ },
+ {
+  "k": "g",
+  "doc": "Start the guided tour",
+  "worked": true,
+  "effect": [
+   "tour: false -> true"
+  ]
+ },
+ {
+  "k": "d",
+  "doc": "Cycle spacing density",
+  "worked": true,
+  "effect": [
+   "density: default -> compact"
+  ]
+ },
+ {
+  "k": "?",
+  "doc": "Bring up this list",
+  "worked": true,
+  "effect": [
+   "anyDialog: null -> keyov"
+  ]
+ }
+]

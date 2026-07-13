@@ -1,0 +1,48 @@
+{
+ "boot": {
+  "title": "Walkthrough — Deep Rehearsal",
+  "vw": 390,
+  "vh": 844,
+  "dpr": 3,
+  "touch": true,
+  "shadowHosts": [
+   "deep-walkthrough",
+   "deep-drill",
+   "deep-whiteboard",
+   "deep-system-map",
+   "deep-trade-offs",
+   "deep-model-answers",
+   "deep-numbers",
+   "deep-red-flags",
+   "deep-opener",
+   "deep-visual",
+   "deep-mock-run",
+   "deep-mixed-fire",
+   "deep-cram",
+   "deep-session",
+   "deep-keyboard",
+   "deep-scope",
+   "deep-gameplan"
+  ],
+  "docOnlyInteractive": 157,
+  "deepInteractive": 263,
+  "visibleTextNodes": 666
+ },
+ "inkLive": {
+  "total": 2962440,
+  "painted": 1934662,
+  "modalColour": "#ffffff",
+  "distinctColours": 9697
+ },
+ "blank": {
+  "visibleTextNodes": 666,
+  "bodyComputedOpacity": "0",
+  "aChildComputedOpacity": "1"
+ },
+ "inkBlank": {
+  "total": 2962440,
+  "painted": 0,
+  "modalColour": "#faf9f5",
+  "distinctColours": 1
+ }
+}

@@ -1,0 +1,113 @@
+{
+ "at100": {
+  "label": "100% text",
+  "log": [
+   {
+    "name": "tap a topic card in the first-run index",
+    "ok": true
+   },
+   {
+    "name": "tap the \"Probe Drill\" tab in the pane strip",
+    "ok": true
+   },
+   {
+    "name": "tap \"Reveal answer\"",
+    "ok": true
+   },
+   {
+    "name": "tap \"↳ Interviewer pushes further\"",
+    "ok": true
+   },
+   {
+    "name": "tap \"↳ Interviewer pushes further\"",
+    "ok": true
+   },
+   {
+    "name": "tap a \"must-hit point\" checkbox",
+    "ok": true
+   },
+   {
+    "name": "tap the \"Solid\" grade button",
+    "ok": true
+   }
+  ],
+  "before": {
+   "got": "0",
+   "shk": "0",
+   "left": "21"
+  },
+  "after": {
+   "got": "1",
+   "shk": "0",
+   "left": "20"
+  },
+  "scored": true,
+  "sizes": {
+   "Reveal": {
+    "occluded": false,
+    "rectW": 314,
+    "rectH": 44,
+    "hitW": 69,
+    "hitH": 44,
+    "cappedW": true,
+    "cappedH": false,
+    "x": 38,
+    "y": 94
+   }
+  },
+  "failedSteps": 0
+ },
+ "at200": {
+  "label": "200% text",
+  "log": [
+   {
+    "name": "tap a topic card in the first-run index",
+    "ok": true
+   },
+   {
+    "name": "tap the \"Probe Drill\" tab in the pane strip",
+    "ok": true
+   },
+   {
+    "name": "tap \"Reveal answer\"",
+    "ok": true
+   },
+   {
+    "name": "tap \"↳ Interviewer pushes further\"",
+    "ok": true
+   },
+   {
+    "name": "tap \"↳ Interviewer pushes further\"",
+    "ok": true
+   },
+   {
+    "name": "tap a \"must-hit point\" checkbox",
+    "ok": true
+   },
+   {
+    "name": "tap the \"Solid\" grade button",
+    "ok": true
+   }
+  ],
+  "before": {
+   "got": "0",
+   "shk": "0",
+   "left": "21"
+  },
+  "after": {
+   "got": "1",
+   "shk": "0",
+   "left": "20"
+  },
+  "scored": true,
+  "sizes": {
+   "Reveal": {
+    "occluded": true,
+    "reason": "centre-offscreen",
+    "rectW": 314,
+    "rectH": 44
+   }
+  },
+  "failedSteps": 0
+ }
+}

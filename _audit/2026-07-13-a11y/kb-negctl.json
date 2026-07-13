@@ -1,0 +1,163 @@
+{
+ "before": {
+  "#_focus-toggle": {
+   "signal": 631,
+   "noise": 0,
+   "perim": 336,
+   "contrast": 5.63,
+   "verdict": "OK",
+   "rect": {
+    "x": 19,
+    "y": 140.59375,
+    "w": 60,
+    "h": 20
+   }
+  },
+  "#searchopen": {
+   "signal": 1852,
+   "noise": 0,
+   "perim": 695,
+   "contrast": 5.52,
+   "verdict": "OK",
+   "rect": {
+    "x": 152,
+    "y": 458.59375,
+    "w": 127,
+    "h": 42.796875
+   }
+  },
+  "#cramopen": {
+   "signal": 2027,
+   "noise": 0,
+   "perim": 762,
+   "contrast": 5.42,
+   "verdict": "OK",
+   "rect": {
+    "x": 19,
+    "y": 598.984375,
+    "w": 127,
+    "h": 59.59375
+   }
+  },
+  ".sidebar .seg button": {
+   "signal": 1381,
+   "noise": 0,
+   "perim": 1232,
+   "contrast": 5.52,
+   "verdict": "OK",
+   "rect": {
+    "x": 19,
+    "y": 458.09375,
+    "w": 260,
+    "h": 44
+   }
+  },
+  "#tntrigger": {
+   "signal": 1191,
+   "noise": 0,
+   "perim": 732,
+   "contrast": 5.63,
+   "verdict": "OK",
+   "rect": {
+    "x": 95,
+    "y": 162.59375,
+    "w": 146,
+    "h": 33
+   }
+  }
+ },
+ "after": {
+  "#_focus-toggle": {
+   "signal": 0,
+   "noise": 0,
+   "perim": 336,
+   "contrast": 1,
+   "verdict": "INVISIBLE",
+   "rect": {
+    "x": 19,
+    "y": 140.59375,
+    "w": 60,
+    "h": 20
+   }
+  },
+  "#searchopen": {
+   "signal": 106,
+   "noise": 0,
+   "perim": 695,
+   "contrast": 1.26,
+   "verdict": "WEAK",
+   "rect": {
+    "x": 152,
+    "y": 458.59375,
+    "w": 127,
+    "h": 42.796875
+   }
+  },
+  "#cramopen": {
+   "signal": 98,
+   "noise": 0,
+   "perim": 762,
+   "contrast": 1.26,
+   "verdict": "WEAK",
+   "rect": {
+    "x": 19,
+    "y": 598.984375,
+    "w": 127,
+    "h": 59.59375
+   }
+  },
+  ".sidebar .seg button": {
+   "signal": 85,
+   "noise": 0,
+   "perim": 1232,
+   "contrast": 1.19,
+   "verdict": "WEAK",
+   "rect": {
+    "x": 19,
+    "y": 458.09375,
+    "w": 260,
+    "h": 44
+   }
+  },
+  "#tntrigger": {
+   "signal": 1191,
+   "noise": 0,
+   "perim": 732,
+   "contrast": 5.63,
+   "verdict": "OK",
+   "rect": {
+    "x": 95,
+    "y": 162.59375,
+    "w": 146,
+    "h": 33
+   }
+  }
+ },
+ "pos": {
+  "signal": 678,
+  "noise": 0,
+  "perim": 412,
+  "contrast": 1.45,
+  "verdict": "WEAK",
+  "rect": {
+   "x": 420,
+   "y": 420,
+   "w": 66.921875,
+   "h": 32
+  }
+ },
+ "neg": {
+  "signal": 0,
+  "noise": 0,
+  "perim": 449,
+  "contrast": 1,
+  "verdict": "INVISIBLE",
+  "rect": {
+   "x": 506.921875,
+   "y": 420,
+   "w": 76.25,
+   "h": 32
+  }
+ },
+ "css": "#_focus-toggle:focus,#_focus-toggle:focus-visible{outline-style:none!important;outline-width:3px!important;outline-color:rgb(107, 104, 98)!important;outline-offset:0px!important;box-shadow:none!important;background-color:rgb(252, 242, 250)!important;background-image:none!important;border-color:color(srgb 0.588235 0.239216 0.52549 / 0.12)!important;color:rgb(107, 104, 98)!important;transform:none!important;opacity:1!important;filter:none!important}\n#searchopen:focus,#searchopen:focus-visible{outline-style:none!important;outline-width:3px!important;outline-color:rgb(0, 0, 0)!important;outline-offset:0px!important;box-shadow:rgba(40, 34, 28, 0.05) 0px 1px 2px 0px, rgba(40, 34, 28, 0.09) 0px 4px 10px -5px!important;background-color:rgba(0, 0, 0, 0)!important;background-image:linear-gradient(rgb(255, 255, 255) 0%, rgb(248, 245, 239) 100%)!important;border-color:rgb(232, 228, 220)!important;color:rgb(0, 0, 0)!important;transform:none!important;opacity:1!important;filter:none!important}\n#cramopen:focus,#cramopen:focus-visible{outline-style:none!important;outline-width:3px!important;outline-color:rgb(0, 0, 0)!important;outline-offset:0px!important;box-shadow:rgba(40, 34, 28, 0.05) 0px 1px 2px 0px, rgba(40, 34, 28, 0.09) 0px 4px 10px -5px!important;background-color:rgba(0, 0, 0, 0)!important;background-image:linear-gradient(rgb(255, 255, 255) 0%, rgb(248, 245, 239) 100%)!important;border-color:rgb(232, 228, 220)!important;color:rgb(0, 0, 0)!important;transform:none!important;opacity:1!important;filter:none!important}\n.sidebar .seg button:focus,.sidebar .seg button:focus-visible{outline-style:none!important;outline-width:3px!important;outline-color:rgb(150, 61, 134)!important;outline-offset:0px!important;box-shadow:color(srgb 0.588235 0.239216 0.52549 / 0.3) 0px 5px 16px -5px!important;background-color:rgba(0, 0, 0, 0)!important;background-image:linear-gradient(100deg, rgb(252, 242, 250), color(srgb 0.988235 0.94902 0.980392 / 0.45))!important;border-color:rgba(0, 0, 0, 0)!important;color:rgb(150, 61, 134)!important;transform:none!important;opacity:1!important;filter:none!important}\n#tntrigger:focus,#tntrigger:focus-visible{outline-style:solid!important;outline-width:2px!important;outline-color:rgb(150, 61, 134)!important;outline-offset:1px!important;box-shadow:color(srgb 0.588235 0.239216 0.52549 / 0.15) 0px 0px 0px 3px, color(srgb 0.588235 0.239216 0.52549 / 0.2) 0px 0px 16px -4px!important;background-color:rgb(255, 255, 255)!important;background-image:none!important;border-color:rgb(232, 228, 220)!important;color:rgb(0, 0, 0)!important;transform:none!important;opacity:1!important;filter:none!important}\n"
+}

@@ -1,0 +1,738 @@
+[
+ {
+  "w": 320,
+  "name": "Event-Driven Backbone",
+  "clientW": 12,
+  "scrollW": 146,
+  "frac": 0.0821917808219178,
+  "visiblePct": 8
+ },
+ {
+  "w": 320,
+  "name": "Notifications",
+  "clientW": 12,
+  "scrollW": 79,
+  "frac": 0.1518987341772152,
+  "visiblePct": 15
+ },
+ {
+  "w": 320,
+  "name": "Real-Time Delivery",
+  "clientW": 12,
+  "scrollW": 116,
+  "frac": 0.10344827586206896,
+  "visiblePct": 10
+ },
+ {
+  "w": 320,
+  "name": "Change Data Capture",
+  "clientW": 12,
+  "scrollW": 132,
+  "frac": 0.09090909090909091,
+  "visiblePct": 9
+ },
+ {
+  "w": 320,
+  "name": "Kafka Internals",
+  "clientW": 12,
+  "scrollW": 93,
+  "frac": 0.12903225806451613,
+  "visiblePct": 13
+ },
+ {
+  "w": 320,
+  "name": "Stream and Batch Processing",
+  "clientW": 12,
+  "scrollW": 184,
+  "frac": 0.06521739130434782,
+  "visiblePct": 7
+ },
+ {
+  "w": 320,
+  "name": "The Saga Pattern",
+  "clientW": 12,
+  "scrollW": 106,
+  "frac": 0.11320754716981132,
+  "visiblePct": 11
+ },
+ {
+  "w": 320,
+  "name": "Caching Strategies",
+  "clientW": 12,
+  "scrollW": 118,
+  "frac": 0.1016949152542373,
+  "visiblePct": 10
+ },
+ {
+  "w": 320,
+  "name": "Soft Deletes",
+  "clientW": 12,
+  "scrollW": 75,
+  "frac": 0.16,
+  "visiblePct": 16
+ },
+ {
+  "w": 320,
+  "name": "Attribute Store",
+  "clientW": 12,
+  "scrollW": 91,
+  "frac": 0.13186813186813187,
+  "visiblePct": 13
+ },
+ {
+  "w": 320,
+  "name": "Shared Definition & Overrides",
+  "clientW": 12,
+  "scrollW": 185,
+  "frac": 0.06486486486486487,
+  "visiblePct": 6
+ },
+ {
+  "w": 320,
+  "name": "Replication and Quorums",
+  "clientW": 12,
+  "scrollW": 158,
+  "frac": 0.0759493670886076,
+  "visiblePct": 8
+ },
+ {
+  "w": 320,
+  "name": "Consistency Models",
+  "clientW": 12,
+  "scrollW": 126,
+  "frac": 0.09523809523809523,
+  "visiblePct": 10
+ },
+ {
+  "w": 320,
+  "name": "Sharding and Partitioning",
+  "clientW": 12,
+  "scrollW": 159,
+  "frac": 0.07547169811320754,
+  "visiblePct": 8
+ },
+ {
+  "w": 320,
+  "name": "Consistent Hashing",
+  "clientW": 12,
+  "scrollW": 122,
+  "frac": 0.09836065573770492,
+  "visiblePct": 10
+ },
+ {
+  "w": 320,
+  "name": "Storage Engines",
+  "clientW": 12,
+  "scrollW": 103,
+  "frac": 0.11650485436893204,
+  "visiblePct": 12
+ },
+ {
+  "w": 320,
+  "name": "Probabilistic Data Structures",
+  "clientW": 12,
+  "scrollW": 178,
+  "frac": 0.06741573033707865,
+  "visiblePct": 7
+ },
+ {
+  "w": 320,
+  "name": "Retries, Timeouts, Deadlines",
+  "clientW": 12,
+  "scrollW": 178,
+  "frac": 0.06741573033707865,
+  "visiblePct": 7
+ },
+ {
+  "w": 320,
+  "name": "Idempotency",
+  "clientW": 12,
+  "scrollW": 80,
+  "frac": 0.15,
+  "visiblePct": 15
+ },
+ {
+  "w": 320,
+  "name": "Circuit Breaker",
+  "clientW": 12,
+  "scrollW": 93,
+  "frac": 0.12903225806451613,
+  "visiblePct": 13
+ },
+ {
+  "w": 320,
+  "name": "Error Propagation Across Services",
+  "clientW": 12,
+  "scrollW": 216,
+  "frac": 0.05555555555555555,
+  "visiblePct": 6
+ },
+ {
+  "w": 320,
+  "name": "Backpressure and Flow Control",
+  "clientW": 12,
+  "scrollW": 196,
+  "frac": 0.061224489795918366,
+  "visiblePct": 6
+ },
+ {
+  "w": 320,
+  "name": "Observability",
+  "clientW": 12,
+  "scrollW": 82,
+  "frac": 0.14634146341463414,
+  "visiblePct": 15
+ },
+ {
+  "w": 320,
+  "name": "Production Debugging and Incident Diagnosis",
+  "clientW": 12,
+  "scrollW": 286,
+  "frac": 0.04195804195804196,
+  "visiblePct": 4
+ },
+ {
+  "w": 320,
+  "name": "SLOs and Error Budgets",
+  "clientW": 12,
+  "scrollW": 152,
+  "frac": 0.07894736842105263,
+  "visiblePct": 8
+ },
+ {
+  "w": 320,
+  "name": "Infrastructure as Code",
+  "clientW": 12,
+  "scrollW": 139,
+  "frac": 0.08633093525179857,
+  "visiblePct": 9
+ },
+ {
+  "w": 320,
+  "name": "Desired State",
+  "clientW": 12,
+  "scrollW": 83,
+  "frac": 0.14457831325301204,
+  "visiblePct": 14
+ },
+ {
+  "w": 320,
+  "name": "AWS Hardening",
+  "clientW": 12,
+  "scrollW": 98,
+  "frac": 0.12244897959183673,
+  "visiblePct": 12
+ },
+ {
+  "w": 320,
+  "name": "Load Balancing",
+  "clientW": 12,
+  "scrollW": 97,
+  "frac": 0.12371134020618557,
+  "visiblePct": 12
+ },
+ {
+  "w": 320,
+  "name": "Autoscaling",
+  "clientW": 12,
+  "scrollW": 74,
+  "frac": 0.16216216216216217,
+  "visiblePct": 16
+ },
+ {
+  "w": 320,
+  "name": "Leader Election",
+  "clientW": 12,
+  "scrollW": 97,
+  "frac": 0.12371134020618557,
+  "visiblePct": 12
+ },
+ {
+  "w": 320,
+  "name": "Distributed Locks",
+  "clientW": 12,
+  "scrollW": 110,
+  "frac": 0.10909090909090909,
+  "visiblePct": 11
+ },
+ {
+  "w": 320,
+  "name": "Multi-Region and Disaster Recovery",
+  "clientW": 12,
+  "scrollW": 223,
+  "frac": 0.053811659192825115,
+  "visiblePct": 5
+ },
+ {
+  "w": 320,
+  "name": "Lambda Organization at Scale",
+  "clientW": 12,
+  "scrollW": 186,
+  "frac": 0.06451612903225806,
+  "visiblePct": 6
+ },
+ {
+  "w": 320,
+  "name": "Device Fleet Dispatch",
+  "clientW": 12,
+  "scrollW": 134,
+  "frac": 0.08955223880597014,
+  "visiblePct": 9
+ },
+ {
+  "w": 320,
+  "name": "Developer Platform Engineering",
+  "clientW": 12,
+  "scrollW": 198,
+  "frac": 0.06060606060606061,
+  "visiblePct": 6
+ },
+ {
+  "w": 320,
+  "name": "State Machine Design",
+  "clientW": 12,
+  "scrollW": 134,
+  "frac": 0.08955223880597014,
+  "visiblePct": 9
+ },
+ {
+  "w": 320,
+  "name": "Rules Engine & Dual Authorization",
+  "clientW": 12,
+  "scrollW": 214,
+  "frac": 0.056074766355140186,
+  "visiblePct": 6
+ },
+ {
+  "w": 320,
+  "name": "Feature Flags & Dynamic Config",
+  "clientW": 12,
+  "scrollW": 200,
+  "frac": 0.06,
+  "visiblePct": 6
+ },
+ {
+  "w": 320,
+  "name": "API Design and Contracts",
+  "clientW": 12,
+  "scrollW": 160,
+  "frac": 0.075,
+  "visiblePct": 8
+ },
+ {
+  "w": 320,
+  "name": "Rate Limiting",
+  "clientW": 12,
+  "scrollW": 82,
+  "frac": 0.14634146341463414,
+  "visiblePct": 15
+ },
+ {
+  "w": 320,
+  "name": "Content Pipeline",
+  "clientW": 12,
+  "scrollW": 103,
+  "frac": 0.11650485436893204,
+  "visiblePct": 12
+ },
+ {
+  "w": 320,
+  "name": "Microfrontend Architecture",
+  "clientW": 12,
+  "scrollW": 167,
+  "frac": 0.0718562874251497,
+  "visiblePct": 7
+ },
+ {
+  "w": 320,
+  "name": "Package Signing",
+  "clientW": 12,
+  "scrollW": 104,
+  "frac": 0.11538461538461539,
+  "visiblePct": 12
+ },
+ {
+  "w": 320,
+  "name": "Tenant Authorization",
+  "clientW": 12,
+  "scrollW": 129,
+  "frac": 0.09302325581395349,
+  "visiblePct": 9
+ },
+ {
+  "w": 320,
+  "name": "Multi-Tenant Isolation",
+  "clientW": 12,
+  "scrollW": 133,
+  "frac": 0.09022556390977443,
+  "visiblePct": 9
+ },
+ {
+  "w": 390,
+  "name": "Event-Driven Backbone",
+  "clientW": 82,
+  "scrollW": 146,
+  "frac": 0.5616438356164384,
+  "visiblePct": 56
+ },
+ {
+  "w": 390,
+  "name": "Notifications",
+  "clientW": 82,
+  "scrollW": 82,
+  "frac": 1,
+  "visiblePct": 100
+ },
+ {
+  "w": 390,
+  "name": "Real-Time Delivery",
+  "clientW": 82,
+  "scrollW": 116,
+  "frac": 0.7068965517241379,
+  "visiblePct": 71
+ },
+ {
+  "w": 390,
+  "name": "Change Data Capture",
+  "clientW": 82,
+  "scrollW": 132,
+  "frac": 0.6212121212121212,
+  "visiblePct": 62
+ },
+ {
+  "w": 390,
+  "name": "Kafka Internals",
+  "clientW": 82,
+  "scrollW": 93,
+  "frac": 0.8817204301075269,
+  "visiblePct": 88
+ },
+ {
+  "w": 390,
+  "name": "Stream and Batch Processing",
+  "clientW": 82,
+  "scrollW": 184,
+  "frac": 0.44565217391304346,
+  "visiblePct": 45
+ },
+ {
+  "w": 390,
+  "name": "The Saga Pattern",
+  "clientW": 82,
+  "scrollW": 106,
+  "frac": 0.7735849056603774,
+  "visiblePct": 77
+ },
+ {
+  "w": 390,
+  "name": "Caching Strategies",
+  "clientW": 82,
+  "scrollW": 118,
+  "frac": 0.6949152542372882,
+  "visiblePct": 69
+ },
+ {
+  "w": 390,
+  "name": "Soft Deletes",
+  "clientW": 82,
+  "scrollW": 82,
+  "frac": 1,
+  "visiblePct": 100
+ },
+ {
+  "w": 390,
+  "name": "Attribute Store",
+  "clientW": 82,
+  "scrollW": 91,
+  "frac": 0.9010989010989011,
+  "visiblePct": 90
+ },
+ {
+  "w": 390,
+  "name": "Shared Definition & Overrides",
+  "clientW": 82,
+  "scrollW": 185,
+  "frac": 0.44324324324324327,
+  "visiblePct": 44
+ },
+ {
+  "w": 390,
+  "name": "Replication and Quorums",
+  "clientW": 82,
+  "scrollW": 158,
+  "frac": 0.5189873417721519,
+  "visiblePct": 52
+ },
+ {
+  "w": 390,
+  "name": "Consistency Models",
+  "clientW": 82,
+  "scrollW": 126,
+  "frac": 0.6507936507936508,
+  "visiblePct": 65
+ },
+ {
+  "w": 390,
+  "name": "Sharding and Partitioning",
+  "clientW": 82,
+  "scrollW": 159,
+  "frac": 0.5157232704402516,
+  "visiblePct": 52
+ },
+ {
+  "w": 390,
+  "name": "Consistent Hashing",
+  "clientW": 82,
+  "scrollW": 122,
+  "frac": 0.6721311475409836,
+  "visiblePct": 67
+ },
+ {
+  "w": 390,
+  "name": "Storage Engines",
+  "clientW": 82,
+  "scrollW": 103,
+  "frac": 0.7961165048543689,
+  "visiblePct": 80
+ },
+ {
+  "w": 390,
+  "name": "Probabilistic Data Structures",
+  "clientW": 82,
+  "scrollW": 178,
+  "frac": 0.4606741573033708,
+  "visiblePct": 46
+ },
+ {
+  "w": 390,
+  "name": "Retries, Timeouts, Deadlines",
+  "clientW": 82,
+  "scrollW": 178,
+  "frac": 0.4606741573033708,
+  "visiblePct": 46
+ },
+ {
+  "w": 390,
+  "name": "Idempotency",
+  "clientW": 82,
+  "scrollW": 82,
+  "frac": 1,
+  "visiblePct": 100
+ },
+ {
+  "w": 390,
+  "name": "Circuit Breaker",
+  "clientW": 82,
+  "scrollW": 93,
+  "frac": 0.8817204301075269,
+  "visiblePct": 88
+ },
+ {
+  "w": 390,
+  "name": "Error Propagation Across Services",
+  "clientW": 82,
+  "scrollW": 216,
+  "frac": 0.37962962962962965,
+  "visiblePct": 38
+ },
+ {
+  "w": 390,
+  "name": "Backpressure and Flow Control",
+  "clientW": 82,
+  "scrollW": 196,
+  "frac": 0.41836734693877553,
+  "visiblePct": 42
+ },
+ {
+  "w": 390,
+  "name": "Observability",
+  "clientW": 82,
+  "scrollW": 82,
+  "frac": 1,
+  "visiblePct": 100
+ },
+ {
+  "w": 390,
+  "name": "Production Debugging and Incident Diagnosis",
+  "clientW": 82,
+  "scrollW": 286,
+  "frac": 0.2867132867132867,
+  "visiblePct": 29
+ },
+ {
+  "w": 390,
+  "name": "SLOs and Error Budgets",
+  "clientW": 82,
+  "scrollW": 152,
+  "frac": 0.5394736842105263,
+  "visiblePct": 54
+ },
+ {
+  "w": 390,
+  "name": "Infrastructure as Code",
+  "clientW": 82,
+  "scrollW": 139,
+  "frac": 0.5899280575539568,
+  "visiblePct": 59
+ },
+ {
+  "w": 390,
+  "name": "Desired State",
+  "clientW": 82,
+  "scrollW": 83,
+  "frac": 0.9879518072289156,
+  "visiblePct": 99
+ },
+ {
+  "w": 390,
+  "name": "AWS Hardening",
+  "clientW": 82,
+  "scrollW": 98,
+  "frac": 0.8367346938775511,
+  "visiblePct": 84
+ },
+ {
+  "w": 390,
+  "name": "Load Balancing",
+  "clientW": 82,
+  "scrollW": 97,
+  "frac": 0.845360824742268,
+  "visiblePct": 85
+ },
+ {
+  "w": 390,
+  "name": "Autoscaling",
+  "clientW": 82,
+  "scrollW": 82,
+  "frac": 1,
+  "visiblePct": 100
+ },
+ {
+  "w": 390,
+  "name": "Leader Election",
+  "clientW": 82,
+  "scrollW": 97,
+  "frac": 0.845360824742268,
+  "visiblePct": 85
+ },
+ {
+  "w": 390,
+  "name": "Distributed Locks",
+  "clientW": 82,
+  "scrollW": 110,
+  "frac": 0.7454545454545455,
+  "visiblePct": 75
+ },
+ {
+  "w": 390,
+  "name": "Multi-Region and Disaster Recovery",
+  "clientW": 82,
+  "scrollW": 223,
+  "frac": 0.36771300448430494,
+  "visiblePct": 37
+ },
+ {
+  "w": 390,
+  "name": "Lambda Organization at Scale",
+  "clientW": 82,
+  "scrollW": 186,
+  "frac": 0.44086021505376344,
+  "visiblePct": 44
+ },
+ {
+  "w": 390,
+  "name": "Device Fleet Dispatch",
+  "clientW": 82,
+  "scrollW": 134,
+  "frac": 0.6119402985074627,
+  "visiblePct": 61
+ },
+ {
+  "w": 390,
+  "name": "Developer Platform Engineering",
+  "clientW": 82,
+  "scrollW": 198,
+  "frac": 0.41414141414141414,
+  "visiblePct": 41
+ },
+ {
+  "w": 390,
+  "name": "State Machine Design",
+  "clientW": 82,
+  "scrollW": 134,
+  "frac": 0.6119402985074627,
+  "visiblePct": 61
+ },
+ {
+  "w": 390,
+  "name": "Rules Engine & Dual Authorization",
+  "clientW": 82,
+  "scrollW": 214,
+  "frac": 0.38317757009345793,
+  "visiblePct": 38
+ },
+ {
+  "w": 390,
+  "name": "Feature Flags & Dynamic Config",
+  "clientW": 82,
+  "scrollW": 200,
+  "frac": 0.41,
+  "visiblePct": 41
+ },
+ {
+  "w": 390,
+  "name": "API Design and Contracts",
+  "clientW": 82,
+  "scrollW": 160,
+  "frac": 0.5125,
+  "visiblePct": 51
+ },
+ {
+  "w": 390,
+  "name": "Rate Limiting",
+  "clientW": 82,
+  "scrollW": 82,
+  "frac": 1,
+  "visiblePct": 100
+ },
+ {
+  "w": 390,
+  "name": "Content Pipeline",
+  "clientW": 82,
+  "scrollW": 103,
+  "frac": 0.7961165048543689,
+  "visiblePct": 80
+ },
+ {
+  "w": 390,
+  "name": "Microfrontend Architecture",
+  "clientW": 82,
+  "scrollW": 167,
+  "frac": 0.49101796407185627,
+  "visiblePct": 49
+ },
+ {
+  "w": 390,
+  "name": "Package Signing",
+  "clientW": 82,
+  "scrollW": 104,
+  "frac": 0.7884615384615384,
+  "visiblePct": 79
+ },
+ {
+  "w": 390,
+  "name": "Tenant Authorization",
+  "clientW": 82,
+  "scrollW": 129,
+  "frac": 0.6356589147286822,
+  "visiblePct": 64
+ },
+ {
+  "w": 390,
+  "name": "Multi-Tenant Isolation",
+  "clientW": 82,
+  "scrollW": 133,
+  "frac": 0.6165413533834586,
+  "visiblePct": 62
+ }
+]

@@ -1,0 +1,114 @@
+{
+  "calibration": [
+    {
+      "name": "black on white",
+      "expect": 21,
+      "got": 21,
+      "ok": true
+    },
+    {
+      "name": "#767676 on white (the WCAG 4.5:1 boundary)",
+      "expect": 4.54,
+      "got": 4.54,
+      "ok": true
+    },
+    {
+      "name": "#b9b9b9 on white (known fail)",
+      "expect": 1.93,
+      "got": 1.96,
+      "ok": true
+    },
+    {
+      "name": "#598a83 on #f3f0ea (axe's claim for the teal room)",
+      "expect": 3.42,
+      "got": 3.43,
+      "ok": true
+    }
+  ],
+  "verified": [
+    {
+      "room": "platform-infra",
+      "theme": "light",
+      "pane": "rf",
+      "host": "#rf deep-red-flags",
+      "sel": ".rf-tell > code",
+      "axe": 3.67,
+      "pixels": 6.38,
+      "fgPainted": "#5c4895",
+      "bgPainted": "#f0ede6",
+      "glyphPx": 272,
+      "fails": false,
+      "verdict": "axe FALSE POSITIVE"
+    },
+    {
+      "room": "platform-infra",
+      "theme": "light",
+      "pane": "drill",
+      "host": "#drill deep-drill",
+      "sel": "button[data-m=\"quick\"]",
+      "axe": 4.06,
+      "pixels": 4.71,
+      "fgPainted": "#6b6862",
+      "bgPainted": "#f0ece4",
+      "glyphPx": 255,
+      "fails": false,
+      "verdict": "axe FALSE POSITIVE"
+    },
+    {
+      "room": "data-storage",
+      "theme": "light",
+      "pane": "drill",
+      "host": "#drill deep-drill",
+      "sel": "button[data-tier=\"Staff\"]",
+      "axe": 4.06,
+      "pixels": 4.71,
+      "fgPainted": "#6b6862",
+      "bgPainted": "#f0ece4",
+      "glyphPx": 191,
+      "fails": false,
+      "verdict": "axe FALSE POSITIVE"
+    },
+    {
+      "room": "reliability-observability",
+      "theme": "light",
+      "pane": "drill",
+      "host": "#drill deep-drill",
+      "sel": "button[data-m=\"quick\"]",
+      "axe": 4.28,
+      "pixels": 4.71,
+      "fgPainted": "#6b6862",
+      "bgPainted": "#f0ece4",
+      "glyphPx": 255,
+      "fails": false,
+      "verdict": "axe FALSE POSITIVE"
+    },
+    {
+      "room": "architecture-apis",
+      "theme": "light",
+      "pane": "drill",
+      "host": "#drill deep-drill",
+      "sel": "button[data-m=\"quick\"]",
+      "axe": null,
+      "pixels": 4.71,
+      "fgPainted": "#6b6862",
+      "bgPainted": "#f0ece4",
+      "glyphPx": 255,
+      "fails": false,
+      "verdict": "clean — agrees with axe"
+    },
+    {
+      "room": "architecture-apis",
+      "theme": "light",
+      "pane": "rf",
+      "host": "#rf deep-red-flags",
+      "sel": ".rf-tell > code",
+      "axe": null,
+      "pixels": 6.36,
+      "fgPainted": "#823b73",
+      "bgPainted": "#f0ede6",
+      "glyphPx": 272,
+      "fails": false,
+      "verdict": "clean — agrees with axe"
+    }
+  ]
+}

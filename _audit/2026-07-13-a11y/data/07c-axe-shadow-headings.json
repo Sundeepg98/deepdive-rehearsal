@@ -1,0 +1,64 @@
+{
+ "axeSeesShadow": false,
+ "cleanViolations": 0,
+ "headings": {
+  "headings": [
+   {
+    "tag": "h1",
+    "host": "(light)",
+    "visible": true,
+    "text": "Event-Driven Backbone"
+   }
+  ],
+  "visible": [
+   {
+    "tag": "h1",
+    "host": "(light)",
+    "visible": true,
+    "text": "Event-Driven Backbone"
+   }
+  ],
+  "fakeHeads": [
+   {
+    "tag": "div",
+    "cls": "mb-sec",
+    "text": "Find a topic"
+   },
+   {
+    "tag": "div",
+    "cls": "mb-sec",
+    "text": "This topic"
+   },
+   {
+    "tag": "div",
+    "cls": "mb-sec",
+    "text": "Study aids"
+   },
+   {
+    "tag": "div",
+    "cls": "mb-sec",
+    "text": "Settings"
+   },
+   {
+    "tag": "div",
+    "cls": "stage-head headin",
+    "text": "MECHANICSWalkthrough"
+   }
+  ]
+ },
+ "landmarks": {
+  "main": 1,
+  "nav": 1,
+  "banner": 0,
+  "liveRegions": [
+   {
+    "live": "polite",
+    "text": "Messaging & Events: Event-Driven Backbon"
+   }
+  ],
+  "segRole": "group",
+  "segLabel": "Rehearsal sections",
+  "tabsUseTablist": false,
+  "skipLink": false
+ }
+}

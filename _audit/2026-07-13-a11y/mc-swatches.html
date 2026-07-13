@@ -1,0 +1,42 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>mc contrast calibration swatches</title>
+<style>
+  body { margin: 0; background: #808080; font-family: -apple-system, Segoe UI, sans-serif; }
+  .sw { width: 380px; height: 56px; display: flex; align-items: center; justify-content: center;
+        font-size: 16px; font-weight: 400; margin: 0; }
+
+  /* ---- SOLID: exact known answers, hand-computed in node from the hex pair ---- */
+  #s_21   { color:#000000; background:#FFFFFF; }  /* 21.00  PASS */
+  #s_pass { color:#767676; background:#FFFFFF; }  /*  4.54  PASS  (the canonical AA boundary) */
+  #s_fail { color:#777777; background:#FFFFFF; }  /*  4.48  FAIL  <- the instrument MUST call this */
+  #s_hard { color:#949494; background:#FFFFFF; }  /*  3.03  FAIL */
+  #s_stok { color:#FFFFFF; background:#1D6F3F; }  /* repo claims 6.18 (styles.css:181) */
+  #s_stokd{ color:#1A1622; background:#5BD08A; }  /* repo claims 9.17 (styles.css:181) */
+
+  /* ---- GRADIENT-PAINTED, but FLAT: identical stops, so the local background under every
+          glyph is exactly #C53DAF and the answer is still hand-computable. getComputedStyle
+          STILL reports the useless literal "linear-gradient(...)" here -- this swatch proves
+          the pipeline decodes a gradient-painted background to the right number. ---- */
+  #s_gradflat { color:#FFFFFF; background:linear-gradient(135deg,#C53DAF,#C53DAF); }
+
+  /* ---- GRADIENT, genuinely varying: the real architecture-apis .mockbtn (white on ink->solid).
+          No single hand-computed answer exists -- the honest assertion is that the decoded
+          worst-under-a-glyph lies BETWEEN the two endpoint ratios. A naive "worst background
+          pixel in the element" metric would instead report the endpoint, which is where the
+          six bogus ~3.1:1 failures came from. ---- */
+  #s_grad { color:#FFFFFF; background:linear-gradient(135deg,#963D86,#C53DAF); }
+
+  /* ---- GRADIENT that must FAIL no matter where the glyphs land: BOTH endpoints are too
+          light for white text, so any honest metric has to report FAIL. ---- */
+  #s_gradbad { color:#FFFFFF; background:linear-gradient(90deg,#E8A8D8,#F2CDEA); }
+</style>
+<div class="sw" id="s_21">contrast calibration swatch</div>
+<div class="sw" id="s_pass">contrast calibration swatch</div>
+<div class="sw" id="s_fail">contrast calibration swatch</div>
+<div class="sw" id="s_hard">contrast calibration swatch</div>
+<div class="sw" id="s_stok">contrast calibration swatch</div>
+<div class="sw" id="s_stokd">contrast calibration swatch</div>
+<div class="sw" id="s_gradflat">contrast calibration swatch</div>
+<div class="sw" id="s_grad">contrast calibration swatch</div>
+<div class="sw" id="s_gradbad">contrast calibration swatch</div>

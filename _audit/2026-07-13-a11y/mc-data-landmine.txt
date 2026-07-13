@@ -1,0 +1,25 @@
+
+=== prefers-reduced-motion: reduce ===
+   planted: opacity:0 base + `animation: mcReveal 300ms ease forwards`  (identical CSS on both sides)
+   LIGHT  DOM: computed opacity=0    animation-name=none      fill=none      dur=1e-05s  -> painted(dark px in its box) = 0
+   SHADOW DOM: computed opacity=1    animation-name=mcReveal  fill=forwards  dur=1e-05s  -> painted(dark px in its box) = 26028
+   => LIGHT is *** INVISIBLE — THE LANDMINE BITES ***;  SHADOW is VISIBLE
+
+=== prefers-reduced-motion: no-preference ===
+   planted: opacity:0 base + `animation: mcReveal 300ms ease forwards`  (identical CSS on both sides)
+   LIGHT  DOM: computed opacity=1    animation-name=mcReveal  fill=forwards  dur=0.3s    -> painted(dark px in its box) = 26178
+   SHADOW DOM: computed opacity=1    animation-name=mcReveal  fill=forwards  dur=0.3s    -> painted(dark px in its box) = 26028
+   => LIGHT is VISIBLE;  SHADOW is VISIBLE
+
+================ VERDICT ================
+CONFIRMED, and it is ASYMMETRIC.
+  The identical pattern (opacity:0 + animation ... forwards):
+    - in the LIGHT DOM under reduced motion  -> computed opacity 0, 0 painted px = INVISIBLE.
+    - in a SHADOW ROOT under reduced motion  -> computed opacity 1, 26028 painted px = fine.
+    - with motion allowed, BOTH render (26178 / 26028 px).
+  styles.css:260 `*{animation:none!important}` strips animation-NAME, so `forwards` never fills.
+  BASE_SHEET (base-styles.js:31) only zeroes animation-DURATION, so inside a shadow root the
+  animation still runs to completion in .01ms and `forwards` lands.
+  => the SAME CSS is a blank-screen bug on one side of the shadow boundary and safe on the other,
+     with nothing in the codebase marking the difference. The app is currently safe only because
+     every reveal happens to use `backwards`. This is the trap that already shipped once.

@@ -1,0 +1,38 @@
+=== NC-1  PAINTED PIXELS vs THE NODE-COUNT TRAP ===
+
+  healthy : painted=8,66,882 (75.25%)  uniqueColors=7618  naiveVisibleNodes=332
+  BLANKED : painted=0 (0%)  uniqueColors=1  naiveVisibleNodes=332
+  -> painted collapsed 8,66,882 -> 0
+  -> the naive node counter STILL reports 332 "visible" nodes on a page that paints NOTHING.
+  NC-1 PASS  (instrument can go red; the node counter demonstrably cannot)
+
+=== NC-2  CONTRAST PIPELINE vs HAND-COMPUTED SWATCHES ===
+
+  swatch       decoded  expected            delta  floor  verdict  want   core-px  aMax  spread(edge/core)
+  s_21            21   21.00           0.000  4.5    PASS    PASS     114  1   0.722 / 0  ok
+  s_pass        4.54    4.54           0.002  4.5    PASS    PASS     114  1   0.722 / 0  ok
+  s_fail        4.48    4.48           0.002  4.5    FAIL    FAIL     114  1   0.722 / 0  ok
+  s_hard        3.03    3.03           0.003  4.5    FAIL    FAIL     114  1   0.722 / 0  ok
+  s_stok        6.18    6.18           0.000  4.5    PASS    PASS     114  1   0.824 / 0  ok
+  s_stokd       9.17    9.17           0.002  4.5    PASS    PASS     114  1   0.776 / 0  ok
+  s_gradflat    4.51    4.51           0.004  4.5    PASS    PASS     114  1   0.714 / 0  ok
+  s_grad        4.96  [4.51,6.35]        -    4.5    PASS    PASS     114  1   0.737 / 0  ok
+  s_gradbad     1.53  [1.43,1.90]        -    4.5    FAIL    FAIL     114  1   0.714 / 0  ok
+
+  getComputedStyle(#s_grad).backgroundColor = "rgba(0, 0, 0, 0)"   <- transparent. tells you NOTHING.
+  getComputedStyle(#s_grad).backgroundImage = "linear-gradient(135deg, rgb(150, 61, 134), rgb(197, 61, 17..."  <- a string. tells you NOTHING.
+  the pipeline decoded the background actually under each glyph regardless.
+  spread(edge/core): Chromium uses SUBPIXEL antialiasing here, so per-channel coverage disagrees badly at glyph
+  EDGES (~0.7) and collapses to ~0 on the glyph CORE. Sampling only the core is what makes alpha recovery exact --
+  and the exact agreement with the hand-computed column above is the proof that it is.
+  NC-2 PASS  (reproduces hand-computed values; correctly FAILS 4.48 while PASSING 4.54; brackets both gradients)
+
+=== NC-3  IS forcedColors EMULATION ACTUALLY FORCING COLOURS? ===
+
+  normal        : {"mq":false,"bodyColor":"rgb(42, 40, 35)","bodyBg":"rgb(250, 249, 245)","btnBgImage":"linear-gradient(135deg, rgb(150, 61, 134","btnBgColor":"rgba(0, 0, 0, 0)","btnColor":"rgb(255, 255, 255)","cardBg":"rgba(0, 0, 0, 0)","cardBorder":"rgb(232, 228, 220)"}
+  forcedColors  : {"mq":true,"bodyColor":"rgb(0, 0, 0)","bodyBg":"rgb(255, 255, 255)","btnBgImage":"none","btnBgColor":"rgba(255, 255, 255, 0)","btnColor":"rgb(0, 0, 0)","cardBg":"rgba(255, 255, 255, 0)","cardBorder":"rgb(0, 0, 0)"}
+  media query matches: true;  computed colours actually changed: true
+  NC-3 PASS  (emulation genuinely substitutes system colours -- not just an MQ flip)
+
+
+================  CALIBRATION PASS — instruments proven able to go red  ================

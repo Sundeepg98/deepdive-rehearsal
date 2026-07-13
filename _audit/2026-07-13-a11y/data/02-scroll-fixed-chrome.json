@@ -1,0 +1,484 @@
+{
+ "viewports": {
+  "p390": {
+   "chromeGeom": [
+    {
+     "sel": "body div.app aside.sidebar div.mockcta",
+     "position": "fixed",
+     "top": 772,
+     "h": 72,
+     "zIndex": "40"
+    },
+    {
+     "sel": "body div.app aside.sidebar div.mockbar",
+     "position": "fixed",
+     "top": 948,
+     "h": 692,
+     "zIndex": "60"
+    },
+    {
+     "sel": "button#scrolltop",
+     "position": "fixed",
+     "top": 794,
+     "h": 40,
+     "zIndex": "150"
+    }
+   ],
+   "stagePad": {
+    "paddingBottom": "80px",
+    "scrollH": 1705,
+    "innerH": 844
+   },
+   "panes": {
+    "walk": {
+     "measured": 25,
+     "fail44": 0,
+     "fails": [],
+     "trapped": []
+    },
+    "drill": {
+     "measured": 41,
+     "fail44": 0,
+     "fails": [],
+     "trapped": [
+      {
+       "sel": "button#adv",
+       "host": "deep-drill",
+       "text": "Reveal answer",
+       "rect": "314x44 @y=783",
+       "under": "div.mockcta"
+      }
+     ]
+    },
+    "wb": {
+     "measured": 14,
+     "fail44": 0,
+     "fails": [],
+     "trapped": [
+      {
+       "sel": "ol#wblist li div.wb-act button.wb-rev",
+       "host": "deep-whiteboard",
+       "text": "Reveal",
+       "rect": "67x44 @y=799",
+       "under": "div.mockcta"
+      }
+     ]
+    },
+    "sys": {
+     "measured": 19,
+     "fail44": 0,
+     "fails": [],
+     "trapped": [
+      {
+       "sel": "div#smPivs details.piv summary",
+       "host": "deep-system-map",
+       "text": "When do you need a replayable log rather tha",
+       "rect": "312x83 @y=732",
+       "under": "div.mockcta"
+      }
+     ]
+    },
+    "trade": {
+     "measured": 12,
+     "fail44": 0,
+     "fails": [],
+     "trapped": []
+    },
+    "model": {
+     "measured": 21,
+     "fail44": 0,
+     "fails": [],
+     "trapped": []
+    },
+    "num": {
+     "measured": 16,
+     "fail44": 4,
+     "fails": [
+      {
+       "sel": "input#msgRate",
+       "host": "deep-numbers",
+       "tag": "input",
+       "text": "",
+       "inShadow": true,
+       "kind": "semantic",
+       "nested": false,
+       "occluded": false,
+       "rectW": 151,
+       "rectH": 40,
+       "hitW": 69,
+       "hitH": 40,
+       "cappedW": true,
+       "cappedH": false,
+       "x": 38,
+       "y": 455,
+       "verdict": "FAIL",
+       "verdictAA": "PASS"
+      },
+      {
+       "sel": "input#procMs",
+       "host": "deep-numbers",
+       "tag": "input",
+       "text": "",
+       "inShadow": true,
+       "kind": "semantic",
+       "nested": false,
+       "occluded": false,
+       "rectW": 151,
+       "rectH": 40,
+       "hitW": 69,
+       "hitH": 40,
+       "cappedW": true,
+       "cappedH": false,
+       "x": 201,
+       "y": 455,
+       "verdict": "FAIL",
+       "verdictAA": "PASS"
+      },
+      {
+       "sel": "input#maxRecv",
+       "host": "deep-numbers",
+       "tag": "input",
+       "text": "",
+       "inShadow": true,
+       "kind": "semantic",
+       "nested": false,
+       "occluded": false,
+       "rectW": 151,
+       "rectH": 40,
+       "hitW": 69,
+       "hitH": 40,
+       "cappedW": true,
+       "cappedH": false,
+       "x": 38,
+       "y": 525,
+       "verdict": "FAIL",
+       "verdictAA": "PASS"
+      },
+      {
+       "sel": "input#dedupDays",
+       "host": "deep-numbers",
+       "tag": "input",
+       "text": "",
+       "inShadow": true,
+       "kind": "semantic",
+       "nested": false,
+       "occluded": false,
+       "rectW": 151,
+       "rectH": 40,
+       "hitW": 69,
+       "hitH": 40,
+       "cappedW": true,
+       "cappedH": false,
+       "x": 201,
+       "y": 525,
+       "verdict": "FAIL",
+       "verdictAA": "PASS"
+      }
+     ],
+     "trapped": []
+    },
+    "rf": {
+     "measured": 12,
+     "fail44": 0,
+     "fails": [],
+     "trapped": []
+    },
+    "open": {
+     "measured": 13,
+     "fail44": 0,
+     "fails": [],
+     "trapped": []
+    }
+   }
+  },
+  "p360": {
+   "chromeGeom": [
+    {
+     "sel": "body div.app aside.sidebar div.mockcta",
+     "position": "fixed",
+     "top": 568,
+     "h": 72,
+     "zIndex": "40"
+    },
+    {
+     "sel": "body div.app aside.sidebar div.mockbar",
+     "position": "fixed",
+     "top": 719,
+     "h": 525,
+     "zIndex": "60"
+    },
+    {
+     "sel": "button#scrolltop",
+     "position": "fixed",
+     "top": 590,
+     "h": 40,
+     "zIndex": "150"
+    }
+   ],
+   "stagePad": {
+    "paddingBottom": "80px",
+    "scrollH": 1792,
+    "innerH": 640
+   },
+   "panes": {
+    "walk": {
+     "measured": 25,
+     "fail44": 0,
+     "fails": [],
+     "trapped": [
+      {
+       "sel": "div#warc button.arc-step.on",
+       "host": "deep-walkthrough",
+       "text": "1The producer emits and moves on",
+       "rect": "103x118 @y=563",
+       "under": "div.mockcta"
+      },
+      {
+       "sel": "div#warc button.arc-step",
+       "host": "deep-walkthrough",
+       "text": "2The emit is made atomic — the outbox",
+       "rect": "103x118 @y=565",
+       "under": "div.mockcta"
+      },
+      {
+       "sel": "div#warc button.arc-step",
+       "host": "deep-walkthrough",
+       "text": "3The router fans out to each consumer’s own ",
+       "rect": "103x118 @y=565",
+       "under": "div.mockcta"
+      }
+     ]
+    },
+    "drill": {
+     "measured": 41,
+     "fail44": 0,
+     "fails": [],
+     "trapped": [
+      {
+       "sel": "div#dnav button.dn-step",
+       "host": "deep-drill",
+       "text": "7fan-out to many consumers",
+       "rect": "105x51 @y=548",
+       "under": "div.mockcta"
+      },
+      {
+       "sel": "div#dnav button.dn-step",
+       "host": "deep-drill",
+       "text": "8why duplicates are inevitable",
+       "rect": "105x51 @y=548",
+       "under": "button#scrolltop"
+      },
+      {
+       "sel": "div#dnav button.dn-step",
+       "host": "deep-drill",
+       "text": "9the idempotent consumer",
+       "rect": "105x51 @y=548",
+       "under": "div.mockcta"
+      },
+      {
+       "sel": "div#dnav button.dn-step",
+       "host": "deep-drill",
+       "text": "10the dedup store",
+       "rect": "105x51 @y=607",
+       "under": "div.mockcta"
+      },
+      {
+       "sel": "div#dnav button.dn-step",
+       "host": "deep-drill",
+       "text": "11ordering",
+       "rect": "105x51 @y=607",
+       "under": "div.mockcta"
+      },
+      {
+       "sel": "div#dnav button.dn-step",
+       "host": "deep-drill",
+       "text": "12poison messages",
+       "rect": "105x51 @y=607",
+       "under": "div.mockcta"
+      }
+     ]
+    },
+    "wb": {
+     "measured": 14,
+     "fail44": 0,
+     "fails": [],
+     "trapped": [
+      {
+       "sel": "ol#wblist li div.wb-act button.wb-rev",
+       "host": "deep-whiteboard",
+       "text": "Reveal",
+       "rect": "67x44 @y=545",
+       "under": "div.mockcta"
+      }
+     ]
+    },
+    "sys": {
+     "measured": 19,
+     "fail44": 1,
+     "fails": [
+      {
+       "sel": "div#smPivs details.piv summary",
+       "host": "deep-system-map",
+       "tag": "summary",
+       "text": "Which delivery guarantee?→ at-least-once + i",
+       "inShadow": true,
+       "kind": "semantic",
+       "nested": false,
+       "occluded": false,
+       "rectW": 282,
+       "rectH": 64.4,
+       "hitW": 69,
+       "hitH": 34,
+       "cappedW": true,
+       "cappedH": false,
+       "x": 39,
+       "y": 534,
+       "verdict": "FAIL",
+       "verdictAA": "PASS"
+      }
+     ],
+     "trapped": [
+      {
+       "sel": "div#smPivs details.piv summary",
+       "host": "deep-system-map",
+       "text": "The consumers are falling behind. What actua",
+       "rect": "282x83 @y=565",
+       "under": "button#scrolltop"
+      }
+     ]
+    },
+    "trade": {
+     "measured": 12,
+     "fail44": 0,
+     "fails": [],
+     "trapped": []
+    },
+    "model": {
+     "measured": 20,
+     "fail44": 0,
+     "fails": [],
+     "trapped": [
+      {
+       "sel": "div#msel button",
+       "host": "deep-model-answers",
+       "text": "name the limits",
+       "rect": "162x44 @y=545",
+       "under": "div.mockcta"
+      }
+     ]
+    },
+    "num": {
+     "measured": 16,
+     "fail44": 4,
+     "fails": [
+      {
+       "sel": "input#msgRate",
+       "host": "deep-numbers",
+       "tag": "input",
+       "text": "",
+       "inShadow": true,
+       "kind": "semantic",
+       "nested": false,
+       "occluded": false,
+       "rectW": 136,
+       "rectH": 40,
+       "hitW": 69,
+       "hitH": 40,
+       "cappedW": true,
+       "cappedH": false,
+       "x": 38,
+       "y": 455,
+       "verdict": "FAIL",
+       "verdictAA": "PASS"
+      },
+      {
+       "sel": "input#procMs",
+       "host": "deep-numbers",
+       "tag": "input",
+       "text": "",
+       "inShadow": true,
+       "kind": "semantic",
+       "nested": false,
+       "occluded": false,
+       "rectW": 136,
+       "rectH": 40,
+       "hitW": 69,
+       "hitH": 40,
+       "cappedW": true,
+       "cappedH": false,
+       "x": 186,
+       "y": 455,
+       "verdict": "FAIL",
+       "verdictAA": "PASS"
+      },
+      {
+       "sel": "input#maxRecv",
+       "host": "deep-numbers",
+       "tag": "input",
+       "text": "",
+       "inShadow": true,
+       "kind": "semantic",
+       "nested": false,
+       "occluded": false,
+       "rectW": 136,
+       "rectH": 40,
+       "hitW": 69,
+       "hitH": 40,
+       "cappedW": true,
+       "cappedH": false,
+       "x": 38,
+       "y": 525,
+       "verdict": "FAIL",
+       "verdictAA": "PASS"
+      },
+      {
+       "sel": "input#dedupDays",
+       "host": "deep-numbers",
+       "tag": "input",
+       "text": "",
+       "inShadow": true,
+       "kind": "semantic",
+       "nested": false,
+       "occluded": false,
+       "rectW": 136,
+       "rectH": 40,
+       "hitW": 69,
+       "hitH": 40,
+       "cappedW": true,
+       "cappedH": false,
+       "x": 186,
+       "y": 525,
+       "verdict": "FAIL",
+       "verdictAA": "PASS"
+      }
+     ],
+     "trapped": []
+    },
+    "rf": {
+     "measured": 12,
+     "fail44": 0,
+     "fails": [],
+     "trapped": []
+    },
+    "open": {
+     "measured": 13,
+     "fail44": 0,
+     "fails": [],
+     "trapped": [
+      {
+       "sel": "div#opbody div.card div.op button.op-rev",
+       "host": "deep-opener",
+       "text": "Reveal mine",
+       "rect": "99x44 @y=570",
+       "under": "div.mockcta"
+      }
+     ]
+    }
+   }
+  }
+ },
+ "negControl": {
+  "before": 0,
+  "after": 3
+ }
+}

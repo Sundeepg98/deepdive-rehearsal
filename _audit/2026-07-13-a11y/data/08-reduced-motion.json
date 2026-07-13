@@ -1,0 +1,41 @@
+{
+ "rows": [
+  {
+   "vp": "390x844",
+   "motion": "no-preference",
+   "boot": 1934662,
+   "app": 2584045,
+   "drill": 2584045,
+   "nodes": 790
+  },
+  {
+   "vp": "390x844",
+   "motion": "reduce",
+   "boot": 1934662,
+   "app": 2584045,
+   "drill": 2584045,
+   "nodes": 790
+  },
+  {
+   "vp": "360x640",
+   "motion": "no-preference",
+   "boot": 1340326,
+   "app": 1724635,
+   "drill": 1724635,
+   "nodes": 790
+  },
+  {
+   "vp": "360x640",
+   "motion": "reduce",
+   "boot": 1340326,
+   "app": 1724635,
+   "drill": 1724635,
+   "nodes": 790
+  }
+ ],
+ "negControl": {
+  "live": 2584045,
+  "blank": 0,
+  "nodesOnBlank": 675
+ }
+}

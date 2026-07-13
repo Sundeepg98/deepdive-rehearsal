@@ -1,0 +1,58 @@
+{
+ "focusObscured": {
+  "fully": [],
+  "partly": [
+   {
+    "el": "summary.",
+    "label": "See the code",
+    "y": 738,
+    "isChrome": false,
+    "coveredPct": 22
+   },
+   {
+    "el": "button#wnext",
+    "label": "Next →",
+    "y": 822,
+    "isChrome": false,
+    "coveredPct": 50
+   }
+  ],
+  "n": 38
+ },
+ "axTree": {
+  "total": 556,
+  "exposed": 374,
+  "exposedClosedSheet": [
+   "Topic index",
+   "Search",
+   "Copy link",
+   "Star this topic",
+   "Your notes",
+   "Print Q&A",
+   "One-page cram sheet",
+   "Session progress",
+   "Mixed fire",
+   "Game plan",
+   "Scope it first",
+   "Dark mode"
+  ],
+  "roles": {
+   "RootWebArea": 1,
+   "complementary": 1,
+   "main": 1,
+   "generic": 42,
+   "button": 41,
+   "heading": 1,
+   "navigation": 1,
+   "group": 4,
+   "StaticText": 105,
+   "DisclosureTriangle": 3,
+   "InlineTextBox": 174
+  }
+ },
+ "axe": [],
+ "axeNC": {
+  "cb": true,
+  "ci": true
+ }
+}

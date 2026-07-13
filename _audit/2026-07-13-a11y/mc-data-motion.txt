@@ -1,0 +1,95 @@
+=== 0. FIRST-RUN ONBOARDING OVERLAY (must be dismissed before anything is measured) ===
+
+   on load, with NO interaction: #_index-overlay = "ix-ov open vis"  opacity=1  backdrop-filter=blur(6px)
+   index-overlay.js:427 auto-opens it whenever there is no saved progress — i.e. on EVERY fresh profile.
+   painted=8,66,882 — but those pixels are THE ONBOARDING PANEL, and the app behind it is
+   BLURRED by backdrop-filter. Measuring here would certify the overlay, not the app.
+   Escape closes it under reduced motion after 286ms (its close path is a 220ms setTimeout, not animationend — motion-safe).
+   after dismiss: painted=5,48,494 — THIS is the app. Everything below measures this state.
+
+=== 1. REDUCED MOTION — PAINTED PIXELS, 6 ROOMS x 2 THEMES (onboarding dismissed) ===
+
+   room                        theme  painted(reduce)  painted(normal)  delta   naiveNodes  verdict
+   messaging-events            light     559481           559483 +0%         173      RENDERS
+   messaging-events            dark      434338           434337 +0%         173      RENDERS
+   data-storage                light     547134           547135 +0%         149      RENDERS
+   data-storage                dark      425900           425899 +0%         149      RENDERS
+   reliability-observability   light     523357           523356 +0%         149      RENDERS
+   reliability-observability   dark      450131           450131 +0%         149      RENDERS
+   platform-infra              light     562354           562353 +0%         162      RENDERS
+   platform-infra              dark      424503           424503 +0%         162      RENDERS
+   architecture-apis           light     549372           549373 +0%         149      RENDERS
+   architecture-apis           dark      441510           441510 +0%         149      RENDERS
+   security-tenancy            light     556424           556423 +0%         167      RENDERS
+   security-tenancy            dark      425794           425794 +0%         167      RENDERS
+
+=== 2. THE LANDMINE (`*{animation:none!important}`) — armed? and is the body fail-safe holding? ===
+
+   normal  : elements with a running animation-name = 7  {"bodyIn":1,"railin":1,"headin":1,"paneinDark":1,"insIn":1,"discIn":2}
+             body{opacity=1, animation-name=bodyIn, fill=backwards}
+   reduce  : elements with a running animation-name = 3  {"insIn":1,"discIn":2}
+             body{opacity=1, animation-name=none, fill=none}
+
+   The landmine IS still armed in the LIGHT DOM: styles.css:260 `*{animation:none!important}` strips
+   animation-NAME, so a "forwards" fill can never apply. body survives only because its base state is
+   opacity:1 + fill "backwards" (styles.css:207). Put opacity:0 + "forwards" back and the app is blank again.
+
+   But note WHICH animations still run under reduce: {"insIn":1,"discIn":2} — these are SHADOW-DOM
+   (insIn = walkthrough/logic.js:39, discIn = shared-sheets.js:76). The light-DOM `animation:none` rule
+   CANNOT cross the shadow boundary, and BASE_SHEET (base-styles.js:31) only zeroes the DURATION, not the
+   name — so inside a shadow root the animation still RUNS (in .01ms) and a "forwards" fill still lands.
+   => the two halves of this app have OPPOSITE reduced-motion semantics. See mc-01b-landmine.mjs.
+   body fail-safe: HOLDING
+
+=== 3. HUNT — content whose VISIBILITY depends on an animation end-state ===
+
+   (effective opacity = ancestor-chain PRODUCT, across shadow boundaries — the thing a
+    getComputedStyle(el).opacity check cannot see)
+
+   pane walk   painted= 425793  invisible-only-under-reduce: 0  clean
+   pane drill  painted= 459094  invisible-only-under-reduce: 0  clean
+   pane wb     painted= 732873  invisible-only-under-reduce: 0  clean
+   pane sys    painted= 555827  invisible-only-under-reduce: 0  clean
+   pane trade  painted= 225958  invisible-only-under-reduce: 0  clean
+   pane model  painted= 799811  invisible-only-under-reduce: 0  clean
+   pane num    painted= 508180  invisible-only-under-reduce: 0  clean
+   pane rf     painted= 261987  invisible-only-under-reduce: 0  clean
+   pane open   painted= 543560  invisible-only-under-reduce: 0  clean
+   pane viz    painted= 236305  invisible-only-under-reduce: 0  clean
+
+   -> NO element in any of the 10 panes becomes invisible under reduced motion.
+
+=== 4. EXIT ANIMATIONS — `forwards` fills that reduced motion strips (ovbgout / ovpanout) ===
+
+   styles.css:596-7 close the overlays with animation:...forwards, and mock-run/logic.js:25
+   waits on `animationend` to set display:none. Reduced motion sets animation-name:none, so
+   animationend NEVER FIRES. Does the overlay still close? (there is a 500ms setTimeout fallback)
+
+   mock  opened={"open":true,"opacity":"1","anim":"none"}
+   mock  closed after 557ms   <-- the exit animation is dead; only the 500ms setTimeout fallback closes it
+   cram  opened={"open":true,"opacity":"1","anim":"none"}
+   cram  closed after 533ms   <-- the exit animation is dead; only the 500ms setTimeout fallback closes it
+
+=== 5. NEGATIVE CONTROL (re-proved in situ) ===
+
+   painted           : 4,53,508  ->  0
+   naive node count  : 167  ->  167   <-- UNCHANGED on a blank page. This is the trap.
+   effectiveOpacity  : flags 168 elements as invisible (why: opacity:0@body)
+   NC PASS — the painted-pixel + effective-opacity instruments both go red where the node counter cannot.
+
+================ SUMMARY ================
+FINDINGS:
+[
+  {
+    "kind": "overlay-slow",
+    "label": "mock",
+    "closedAt": 557
+  },
+  {
+    "kind": "overlay-slow",
+    "label": "cram",
+    "closedAt": 533
+  }
+]
+
+page errors (reduce): []

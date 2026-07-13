@@ -1,0 +1,112 @@
+[guard] force/restore cycle leaves the page unchanged: YES
+
+=== CONTRAST SWEEP — 6 rooms x 2 themes, walk + drill panes ===
+
+   measured 1964 text elements (light DOM + shadow roots), all backgrounds decoded LOCAL to the glyph.
+   77 below their WCAG AA floor.
+   12 more are below floor but are DISABLED controls — WCAG 1.4.3 exempts inactive components, so they are NOT counted as failures.
+
+--- THE FULL BAND, by surface (min ratio observed across all 12 room x theme states) ---
+
+   surface                                     band(min..max)   floor  n   worst state                         status
+   button.pomodoro-btn.pomodoro-play            1.96 .. 6.09    4.5  24  messaging-events/dark              *** 12 FAIL
+   deep-walkthrough::button                        2 .. 14.54   4.5  24  messaging-events/light             pass
+   scoreboard value                             2.51 .. 13.48     3  36  messaging-events/light             *** 12 FAIL
+   scoreboard label                             2.63 .. 7.04    4.5  36  messaging-events/light             *** 24 FAIL
+   badge                                        3.89 .. 3.89    4.5  24  messaging-events/light             *** 24 FAIL
+   deep-walkthrough::div.arc-h                  4.43 .. 7.4     4.5  12  messaging-events/light             *** 3 FAIL
+   deep-drill::div.dnav-h                       4.45 .. 7.28    4.5  12  security-tenancy/light             *** 1 FAIL
+   deep-walkthrough::span.sub                   4.49 .. 7.47    4.5  24  data-storage/light                 *** 1 FAIL
+   span.textzoom-lbl                            4.51 .. 6.55    4.5  24  reliability-observability/light    pass
+   div.cmp-h                                    4.54 .. 7.16    4.5  76  reliability-observability/light    pass
+   deep-drill::div.tiernote                     4.66 .. 7.22    4.5  12  platform-infra/light               pass
+   deep-drill::button                           4.71 .. 5.78    4.5  60  messaging-events/light             pass
+   span.inttog-lbl                              4.75 .. 6.79    4.5  24  messaging-events/light             pass
+   div.pomodoro-h                               4.75 .. 6.86    4.5  24  reliability-observability/light    pass
+   deep-walkthrough::span.ctr                   4.76 .. 7.32    4.5  12  messaging-events/light             pass
+   span.mbl-tail                                4.77 .. 5.37    4.5  24  data-storage/light                 pass
+   b                                             4.8 .. 15.1    4.5  94  reliability-observability/light    pass
+   deep-drill::span.sub                         4.86 .. 7.39    4.5  12  security-tenancy/light             pass
+   deep-walkthrough::span.ml                    4.97 .. 7.4     4.5  12  messaging-events/light             pass
+   p.cmp-drive                                     5 .. 7.6     4.5   4  security-tenancy/light             pass
+   span.mb-ic                                   5.01 .. 5.87    4.5  24  platform-infra/dark                pass
+   button                                       5.06 .. 6.49    4.5  24  security-tenancy/light             pass
+   span.n                                       5.08 .. 7.5     4.5  188  messaging-events/light             pass
+   p.cmp-note                                   5.13 .. 7.46    4.5  24  reliability-observability/light    pass
+   deep-drill::b                                5.16 .. 6.88    4.5  24  security-tenancy/light             pass
+   deep-drill::button.push                      5.16 .. 7.55    4.5  12  platform-infra/light               pass
+   span.mb-lbl                                   5.2 .. 5.74    4.5  24  data-storage/dark                  pass
+   span.pomodoro-phase                          5.23 .. 7.3     4.5  24  messaging-events/light             pass
+   p.cmp-thesis                                 5.23 .. 7.3     4.5  24  reliability-observability/light    pass
+   locator                                      5.25 .. 6.66    4.5  24  security-tenancy/light             pass
+   deep-walkthrough::summary                     5.4 .. 6.99    4.5  24  security-tenancy/light             pass
+   deep-drill::span.tier.t2                     5.42 .. 7.18    4.5  12  messaging-events/light             pass
+   div.sh-kick                                  5.46 .. 7.38    4.5  12  security-tenancy/light             pass
+   deep-drill::div.qk                           5.65 .. 6.14    4.5  12  security-tenancy/light             pass
+   div.cmp-eyebrow                              5.66 .. 6.99    4.5  24  security-tenancy/light             pass
+   deep-drill::span.tierlab                     5.67 .. 7.67    4.5  12  messaging-events/light             pass
+
+--- EVERY FAILURE (below WCAG AA, excluding disabled controls) — deduped to element x state ---
+
+   ratio  floor  size/wt    room / theme                        element                                text
+    1.96   4.5    12px/400 messaging-events / dark             button.pomodoro-btn.pomodoro-play     "▶"
+    1.96   4.5    12px/400 data-storage / dark                 button.pomodoro-btn.pomodoro-play     "▶"
+    1.96   4.5    12px/400 reliability-observability / dark    button.pomodoro-btn.pomodoro-play     "▶"
+    1.96   4.5    12px/400 platform-infra / dark               button.pomodoro-btn.pomodoro-play     "▶"
+    1.96   4.5    12px/400 architecture-apis / dark            button.pomodoro-btn.pomodoro-play     "▶"
+    1.96   4.5    12px/400 security-tenancy / dark             button.pomodoro-btn.pomodoro-play     "▶"
+    2.51     3    24px/800 messaging-events / light            deep-drill::div.v                     "0"
+    2.51     3    24px/800 data-storage / light                deep-drill::div.v                     "0"
+    2.51     3    24px/800 reliability-observability / light   deep-drill::div.v                     "0"
+    2.51     3    24px/800 platform-infra / light              deep-drill::div.v                     "0"
+    2.51     3    24px/800 architecture-apis / light           deep-drill::div.v                     "0"
+    2.51     3    24px/800 security-tenancy / light            deep-drill::div.v                     "0"
+    2.63   4.5     9px/700 messaging-events / light            deep-drill::div.l                     "Revisit"
+    2.63   4.5     9px/700 data-storage / light                deep-drill::div.l                     "Revisit"
+    2.63   4.5     9px/700 reliability-observability / light   deep-drill::div.l                     "Revisit"
+    2.63   4.5     9px/700 platform-infra / light              deep-drill::div.l                     "Revisit"
+    2.63   4.5     9px/700 architecture-apis / light           deep-drill::div.l                     "Revisit"
+    2.63   4.5     9px/700 security-tenancy / light            deep-drill::div.l                     "Revisit"
+    2.66   4.5     9px/700 messaging-events / light            deep-drill::div.l                     "Solid"
+    2.66   4.5     9px/700 data-storage / light                deep-drill::div.l                     "Solid"
+    2.66   4.5     9px/700 reliability-observability / light   deep-drill::div.l                     "Solid"
+    2.66   4.5     9px/700 platform-infra / light              deep-drill::div.l                     "Solid"
+    2.66   4.5     9px/700 architecture-apis / light           deep-drill::div.l                     "Solid"
+    2.66   4.5     9px/700 security-tenancy / light            deep-drill::div.l                     "Solid"
+    3.36   4.5     9px/700 architecture-apis / dark            deep-drill::div.l                     "Solid"
+    3.36   4.5     9px/700 architecture-apis / dark            deep-drill::div.l                     "Revisit"
+    3.37   4.5     9px/700 messaging-events / dark             deep-drill::div.l                     "Solid"
+    3.37   4.5     9px/700 messaging-events / dark             deep-drill::div.l                     "Revisit"
+    3.37   4.5     9px/700 data-storage / dark                 deep-drill::div.l                     "Solid"
+    3.37   4.5     9px/700 data-storage / dark                 deep-drill::div.l                     "Revisit"
+    3.37   4.5     9px/700 reliability-observability / dark    deep-drill::div.l                     "Solid"
+    3.37   4.5     9px/700 reliability-observability / dark    deep-drill::div.l                     "Revisit"
+    3.37   4.5     9px/700 platform-infra / dark               deep-drill::div.l                     "Solid"
+    3.37   4.5     9px/700 platform-infra / dark               deep-drill::div.l                     "Revisit"
+    3.37   4.5     9px/700 security-tenancy / dark             deep-drill::div.l                     "Solid"
+    3.37   4.5     9px/700 security-tenancy / dark             deep-drill::div.l                     "Revisit"
+    3.89   4.5    10px/800 messaging-events / light            span.badge                            "Deep rehearsal"
+    3.89   4.5    10px/800 messaging-events / dark             span.badge                            "Deep rehearsal"
+    3.89   4.5    10px/800 data-storage / light                span.badge                            "Deep rehearsal"
+    3.89   4.5    10px/800 data-storage / dark                 span.badge                            "Deep rehearsal"
+    3.89   4.5    10px/800 reliability-observability / light   span.badge                            "Deep rehearsal"
+    3.89   4.5    10px/800 reliability-observability / dark    span.badge                            "Deep rehearsal"
+    3.89   4.5    10px/800 platform-infra / light              span.badge                            "Deep rehearsal"
+    3.89   4.5    10px/800 platform-infra / dark               span.badge                            "Deep rehearsal"
+    3.89   4.5    10px/800 architecture-apis / light           span.badge                            "Deep rehearsal"
+    3.89   4.5    10px/800 architecture-apis / dark            span.badge                            "Deep rehearsal"
+    3.89   4.5    10px/800 security-tenancy / light            span.badge                            "Deep rehearsal"
+    3.89   4.5    10px/800 security-tenancy / dark             span.badge                            "Deep rehearsal"
+    4.43   4.5     9px/800 messaging-events / light            deep-walkthrough::div.arc-h           "The whole flow tap any s"
+    4.45   4.5     9px/800 data-storage / light                deep-walkthrough::div.arc-h           "The whole flow tap any s"
+    4.45   4.5     9px/800 security-tenancy / light            deep-drill::div.dnav-h                "Your drill set tap a pro"
+    4.46   4.5     9px/800 architecture-apis / light           deep-walkthrough::div.arc-h           "The whole flow tap any s"
+    4.49   4.5    11px/600 data-storage / light                deep-walkthrough::span.sub            "model script · the full "
+
+--- BELOW FLOOR BUT WCAG-EXEMPT (disabled / inactive controls) ---
+
+       2  deep-walkthrough::button              "← Prev"  (disabled — not a violation)
+
+--- #mockopen (the gradient CTA; brief flags a known thin spot at ~4.77 light) ---
+
+   room                        theme   min    p05    median  max    floor  verdict

@@ -1,0 +1,273 @@
+{
+  "coverage": {
+    "passes": 14,
+    "violations": 0,
+    "incomplete": 158
+  },
+  "controlled": {
+    "messaging-events/light": {
+      "trade": [
+        {
+          "target": "deep-trade-offs >>> .opt-n > code",
+          "msg": "Element has insufficient color contrast of 3.42 (foreground color: #598a83, background color: #f3f0ea, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1",
+          "ratio": 3.42,
+          "fg": "#598a83",
+          "bg": "#f3f0ea",
+          "expected": "4.5:1"
+        },
+        {
+          "target": "deep-trade-offs >>> code:nth-child(2)",
+          "msg": "Element has insufficient color contrast of 3.42 (foreground color: #598a83, background color: #f3f0ea, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1",
+          "ratio": 3.42,
+          "fg": "#598a83",
+          "bg": "#f3f0ea",
+          "expected": "4.5:1"
+        },
+        {
+          "target": "deep-trade-offs >>> code:nth-child(3)",
+          "msg": "Element has insufficient color contrast of 3.42 (foreground color: #598a83, background color: #f3f0ea, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1",
+          "ratio": 3.42,
+          "fg": "#598a83",
+          "bg": "#f3f0ea",
+          "expected": "4.5:1"
+        }
+      ]
+    },
+    "data-storage/light": {
+      "drill": [
+        {
+          "target": "deep-drill >>> button[data-m=\"mock\"]",
+          "msg": "Element has insufficient color contrast of 4.06 (foreground color: #75736d, background color: #f1ede5, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1",
+          "ratio": 4.06,
+          "fg": "#75736d",
+          "bg": "#f1ede5",
+          "expected": "4.5:1"
+        },
+        {
+          "target": "deep-drill >>> button[data-m=\"quick\"]",
+          "msg": "Element has insufficient color contrast of 4.06 (foreground color: #75736d, background color: #f1ede5, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1",
+          "ratio": 4.06,
+          "fg": "#75736d",
+          "bg": "#f1ede5",
+          "expected": "4.5:1"
+        },
+        {
+          "target": "deep-drill >>> button[data-tier=\"SDE2\"]",
+          "msg": "Element has insufficient color contrast of 4.06 (foreground color: #75736d, background color: #f1ede5, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1",
+          "ratio": 4.06,
+          "fg": "#75736d",
+          "bg": "#f1ede5",
+          "expected": "4.5:1"
+        },
+        {
+          "target": "deep-drill >>> button[data-tier=\"SDE3\"]",
+          "msg": "Element has insufficient color contrast of 4.06 (foreground color: #75736d, background color: #f1ede5, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1",
+          "ratio": 4.06,
+          "fg": "#75736d",
+          "bg": "#f1ede5",
+          "expected": "4.5:1"
+        },
+        {
+          "target": "deep-drill >>> button[data-tier=\"Staff\"]",
+          "msg": "Element has insufficient color contrast of 4.06 (foreground color: #75736d, background color: #f1ede5, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1",
+          "ratio": 4.06,
+          "fg": "#75736d",
+          "bg": "#f1ede5",
+          "expected": "4.5:1"
+        }
+      ]
+    },
+    "reliability-observability/light": {
+      "drill": [
+        {
+          "target": "deep-drill >>> button[data-m=\"mock\"]",
+          "msg": "Element has insufficient color contrast of 4.28 (foreground color: #726f69, background color: #f0ede5, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1",
+          "ratio": 4.28,
+          "fg": "#726f69",
+          "bg": "#f0ede5",
+          "expected": "4.5:1"
+        },
+        {
+          "target": "deep-drill >>> button[data-m=\"quick\"]",
+          "msg": "Element has insufficient color contrast of 4.28 (foreground color: #726f69, background color: #f0ede5, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1",
+          "ratio": 4.28,
+          "fg": "#726f69",
+          "bg": "#f0ede5",
+          "expected": "4.5:1"
+        },
+        {
+          "target": "deep-drill >>> button[data-tier=\"SDE2\"]",
+          "msg": "Element has insufficient color contrast of 4.28 (foreground color: #726f69, background color: #f0ede5, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1",
+          "ratio": 4.28,
+          "fg": "#726f69",
+          "bg": "#f0ede5",
+          "expected": "4.5:1"
+        },
+        {
+          "target": "deep-drill >>> button[data-tier=\"SDE3\"]",
+          "msg": "Element has insufficient color contrast of 4.28 (foreground color: #726f69, background color: #f0ede5, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1",
+          "ratio": 4.28,
+          "fg": "#726f69",
+          "bg": "#f0ede5",
+          "expected": "4.5:1"
+        },
+        {
+          "target": "deep-drill >>> button[data-tier=\"Staff\"]",
+          "msg": "Element has insufficient color contrast of 4.28 (foreground color: #726f69, background color: #f0ede5, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1",
+          "ratio": 4.28,
+          "fg": "#726f69",
+          "bg": "#f0ede5",
+          "expected": "4.5:1"
+        }
+      ]
+    },
+    "platform-infra/light": {
+      "drill": [
+        {
+          "target": "deep-drill >>> button[data-m=\"mock\"]",
+          "msg": "Element has insufficient color contrast of 4.06 (foreground color: #75736d, background color: #f1ede5, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1",
+          "ratio": 4.06,
+          "fg": "#75736d",
+          "bg": "#f1ede5",
+          "expected": "4.5:1"
+        },
+        {
+          "target": "deep-drill >>> button[data-m=\"quick\"]",
+          "msg": "Element has insufficient color contrast of 4.06 (foreground color: #75736d, background color: #f1ede5, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1",
+          "ratio": 4.06,
+          "fg": "#75736d",
+          "bg": "#f1ede5",
+          "expected": "4.5:1"
+        },
+        {
+          "target": "deep-drill >>> button[data-tier=\"SDE2\"]",
+          "msg": "Element has insufficient color contrast of 4.06 (foreground color: #75736d, background color: #f1ede5, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1",
+          "ratio": 4.06,
+          "fg": "#75736d",
+          "bg": "#f1ede5",
+          "expected": "4.5:1"
+        },
+        {
+          "target": "deep-drill >>> button[data-tier=\"SDE3\"]",
+          "msg": "Element has insufficient color contrast of 4.06 (foreground color: #75736d, background color: #f1ede5, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1",
+          "ratio": 4.06,
+          "fg": "#75736d",
+          "bg": "#f1ede5",
+          "expected": "4.5:1"
+        },
+        {
+          "target": "deep-drill >>> button[data-tier=\"Staff\"]",
+          "msg": "Element has insufficient color contrast of 4.06 (foreground color: #75736d, background color: #f1ede5, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1",
+          "ratio": 4.06,
+          "fg": "#75736d",
+          "bg": "#f1ede5",
+          "expected": "4.5:1"
+        }
+      ],
+      "rf": [
+        {
+          "target": "deep-red-flags >>> .rf-tell > code",
+          "msg": "Element has insufficient color contrast of 3.67 (foreground color: #8373ac, background color: #f2f0ea, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1",
+          "ratio": 3.67,
+          "fg": "#8373ac",
+          "bg": "#f2f0ea",
+          "expected": "4.5:1"
+        },
+        {
+          "target": "deep-red-flags >>> .rf:nth-child(2) > .rf-fix > .rf-t > code",
+          "msg": "Element has insufficient color contrast of 3.67 (foreground color: #8373ac, background color: #f2f0ea, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1",
+          "ratio": 3.67,
+          "fg": "#8373ac",
+          "bg": "#f2f0ea",
+          "expected": "4.5:1"
+        },
+        {
+          "target": "deep-red-flags >>> .rf:nth-child(3) > .rf-fix > .rf-t > code:nth-child(1)",
+          "msg": "Element has insufficient color contrast of 3.67 (foreground color: #8373ac, background color: #f2f0ea, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1",
+          "ratio": 3.67,
+          "fg": "#8373ac",
+          "bg": "#f2f0ea",
+          "expected": "4.5:1"
+        },
+        {
+          "target": "deep-red-flags >>> .rf:nth-child(3) > .rf-fix > .rf-t > code:nth-child(2)",
+          "msg": "Element has insufficient color contrast of 3.67 (foreground color: #8373ac, background color: #f2f0ea, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1",
+          "ratio": 3.67,
+          "fg": "#8373ac",
+          "bg": "#f2f0ea",
+          "expected": "4.5:1"
+        },
+        {
+          "target": "deep-red-flags >>> .rf:nth-child(5) > .rf-fix > .rf-t > code",
+          "msg": "Element has insufficient color contrast of 3.67 (foreground color: #8373ac, background color: #f2f0ea, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1",
+          "ratio": 3.67,
+          "fg": "#8373ac",
+          "bg": "#f2f0ea",
+          "expected": "4.5:1"
+        }
+      ]
+    },
+    "architecture-apis/light": {},
+    "security-tenancy/light": {
+      "trade": [
+        {
+          "target": "deep-trade-offs >>> .opt-n > code",
+          "msg": "Element has insufficient color contrast of 4 (foreground color: #a66170, background color: #f2efe9, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1",
+          "ratio": 4,
+          "fg": "#a66170",
+          "bg": "#f2efe9",
+          "expected": "4.5:1"
+        },
+        {
+          "target": "deep-trade-offs >>> code:nth-child(2)",
+          "msg": "Element has insufficient color contrast of 4 (foreground color: #a66170, background color: #f2efe9, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1",
+          "ratio": 4,
+          "fg": "#a66170",
+          "bg": "#f2efe9",
+          "expected": "4.5:1"
+        },
+        {
+          "target": "deep-trade-offs >>> code:nth-child(3)",
+          "msg": "Element has insufficient color contrast of 4 (foreground color: #a66170, background color: #f2efe9, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1",
+          "ratio": 4,
+          "fg": "#a66170",
+          "bg": "#f2efe9",
+          "expected": "4.5:1"
+        }
+      ]
+    },
+    "messaging-events/dark": {
+      "trade": [
+        {
+          "target": "deep-trade-offs >>> .opt-n > code",
+          "msg": "Element has insufficient color contrast of 3.52 (foreground color: #3d7f78, background color: #201e27, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1",
+          "ratio": 3.52,
+          "fg": "#3d7f78",
+          "bg": "#201e27",
+          "expected": "4.5:1"
+        },
+        {
+          "target": "deep-trade-offs >>> code:nth-child(2)",
+          "msg": "Element has insufficient color contrast of 3.52 (foreground color: #3d7f78, background color: #201e27, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1",
+          "ratio": 3.52,
+          "fg": "#3d7f78",
+          "bg": "#201e27",
+          "expected": "4.5:1"
+        },
+        {
+          "target": "deep-trade-offs >>> code:nth-child(3)",
+          "msg": "Element has insufficient color contrast of 3.52 (foreground color: #3d7f78, background color: #201e27, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1",
+          "ratio": 3.52,
+          "fg": "#3d7f78",
+          "bg": "#201e27",
+          "expected": "4.5:1"
+        }
+      ]
+    },
+    "data-storage/dark": {},
+    "reliability-observability/dark": {},
+    "platform-infra/dark": {},
+    "architecture-apis/dark": {},
+    "security-tenancy/dark": {}
+  }
+}

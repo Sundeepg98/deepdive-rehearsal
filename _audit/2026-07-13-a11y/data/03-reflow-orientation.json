@@ -1,0 +1,358 @@
+{
+ "reflow": {
+  "320": {
+   "atBoot": {
+    "vw": 320,
+    "docScrollW": 320,
+    "bodyScrollW": 320,
+    "horizontalScroll": false,
+    "overshoot": 0,
+    "offenders": [
+     {
+      "sel": "div#warc button.arc-step span.arc-t",
+      "host": "deep-walkthrough",
+      "right": 334,
+      "over": 14,
+      "w": 72,
+      "inScroller": false,
+      "text": "Observability hooks"
+     }
+    ],
+    "offendersInScrollers": 13
+   },
+   "atApp": {
+    "vw": 320,
+    "docScrollW": 320,
+    "bodyScrollW": 320,
+    "horizontalScroll": false,
+    "overshoot": 0,
+    "offenders": [
+     {
+      "sel": "div#warc button.arc-step span.arc-t",
+      "host": "deep-walkthrough",
+      "right": 324,
+      "over": 4,
+      "w": 62,
+      "inScroller": false,
+      "text": "The router fans out to each co"
+     }
+    ],
+    "offendersInScrollers": 13
+   },
+   "atTools": {
+    "vw": 320,
+    "docScrollW": 320,
+    "bodyScrollW": 320,
+    "horizontalScroll": false,
+    "overshoot": 0,
+    "offenders": [
+     {
+      "sel": "div#warc button.arc-step span.arc-t",
+      "host": "deep-walkthrough",
+      "right": 324,
+      "over": 4,
+      "w": 62,
+      "inScroller": false,
+      "text": "The router fans out to each co"
+     }
+    ],
+    "offendersInScrollers": 13
+   }
+  },
+  "340": {
+   "atBoot": {
+    "vw": 340,
+    "docScrollW": 340,
+    "bodyScrollW": 340,
+    "horizontalScroll": false,
+    "overshoot": 0,
+    "offenders": [
+     {
+      "sel": "div#warc button.arc-step span.arc-t",
+      "host": "deep-walkthrough",
+      "right": 347,
+      "over": 7,
+      "w": 72,
+      "inScroller": false,
+      "text": "Observability hooks"
+     }
+    ],
+    "offendersInScrollers": 12
+   },
+   "atApp": {
+    "vw": 340,
+    "docScrollW": 340,
+    "bodyScrollW": 340,
+    "horizontalScroll": false,
+    "overshoot": 0,
+    "offenders": [],
+    "offendersInScrollers": 12
+   },
+   "atTools": {
+    "vw": 340,
+    "docScrollW": 340,
+    "bodyScrollW": 340,
+    "horizontalScroll": false,
+    "overshoot": 0,
+    "offenders": [],
+    "offendersInScrollers": 12
+   }
+  },
+  "360": {
+   "atBoot": {
+    "vw": 360,
+    "docScrollW": 360,
+    "bodyScrollW": 360,
+    "horizontalScroll": false,
+    "overshoot": 0,
+    "offenders": [],
+    "offendersInScrollers": 12
+   },
+   "atApp": {
+    "vw": 360,
+    "docScrollW": 360,
+    "bodyScrollW": 360,
+    "horizontalScroll": false,
+    "overshoot": 0,
+    "offenders": [],
+    "offendersInScrollers": 12
+   },
+   "atTools": {
+    "vw": 360,
+    "docScrollW": 360,
+    "bodyScrollW": 360,
+    "horizontalScroll": false,
+    "overshoot": 0,
+    "offenders": [],
+    "offendersInScrollers": 12
+   }
+  },
+  "375": {
+   "atBoot": {
+    "vw": 375,
+    "docScrollW": 375,
+    "bodyScrollW": 375,
+    "horizontalScroll": false,
+    "overshoot": 0,
+    "offenders": [],
+    "offendersInScrollers": 12
+   },
+   "atApp": {
+    "vw": 375,
+    "docScrollW": 375,
+    "bodyScrollW": 375,
+    "horizontalScroll": false,
+    "overshoot": 0,
+    "offenders": [],
+    "offendersInScrollers": 12
+   },
+   "atTools": {
+    "vw": 375,
+    "docScrollW": 375,
+    "bodyScrollW": 375,
+    "horizontalScroll": false,
+    "overshoot": 0,
+    "offenders": [],
+    "offendersInScrollers": 12
+   }
+  },
+  "390": {
+   "atBoot": {
+    "vw": 390,
+    "docScrollW": 390,
+    "bodyScrollW": 390,
+    "horizontalScroll": false,
+    "overshoot": 0,
+    "offenders": [],
+    "offendersInScrollers": 12
+   },
+   "atApp": {
+    "vw": 390,
+    "docScrollW": 390,
+    "bodyScrollW": 390,
+    "horizontalScroll": false,
+    "overshoot": 0,
+    "offenders": [],
+    "offendersInScrollers": 12
+   },
+   "atTools": {
+    "vw": 390,
+    "docScrollW": 390,
+    "bodyScrollW": 390,
+    "horizontalScroll": false,
+    "overshoot": 0,
+    "offenders": [],
+    "offendersInScrollers": 12
+   }
+  },
+  "412": {
+   "atBoot": {
+    "vw": 412,
+    "docScrollW": 412,
+    "bodyScrollW": 412,
+    "horizontalScroll": false,
+    "overshoot": 0,
+    "offenders": [],
+    "offendersInScrollers": 12
+   },
+   "atApp": {
+    "vw": 412,
+    "docScrollW": 412,
+    "bodyScrollW": 412,
+    "horizontalScroll": false,
+    "overshoot": 0,
+    "offenders": [],
+    "offendersInScrollers": 12
+   },
+   "atTools": {
+    "vw": 412,
+    "docScrollW": 412,
+    "bodyScrollW": 412,
+    "horizontalScroll": false,
+    "overshoot": 0,
+    "offenders": [],
+    "offendersInScrollers": 12
+   }
+  },
+  "430": {
+   "atBoot": {
+    "vw": 430,
+    "docScrollW": 430,
+    "bodyScrollW": 430,
+    "horizontalScroll": false,
+    "overshoot": 0,
+    "offenders": [],
+    "offendersInScrollers": 11
+   },
+   "atApp": {
+    "vw": 430,
+    "docScrollW": 430,
+    "bodyScrollW": 430,
+    "horizontalScroll": false,
+    "overshoot": 0,
+    "offenders": [],
+    "offendersInScrollers": 11
+   },
+   "atTools": {
+    "vw": 430,
+    "docScrollW": 430,
+    "bodyScrollW": 430,
+    "horizontalScroll": false,
+    "overshoot": 0,
+    "offenders": [],
+    "offendersInScrollers": 11
+   }
+  }
+ },
+ "orientation": {
+  "844x390 (iPhone landscape)": {
+   "ov": {
+    "vw": 844,
+    "docScrollW": 844,
+    "bodyScrollW": 844,
+    "horizontalScroll": false,
+    "overshoot": 0,
+    "offenders": [],
+    "offendersInScrollers": 4
+   },
+   "reach": {
+    "toolsFabOnScreen": true,
+    "toolsFabRect": "67x44 @y=333",
+    "segVisible": true,
+    "stageH": 958,
+    "viewportH": 390
+   },
+   "sheet": {
+    "rect": "844x320 @y=70",
+    "maxHeight": "319.8px",
+    "overflowY": "auto",
+    "viewportH": 390,
+    "sheetTallerThanViewport": false,
+    "buttonsOutsideViewport": 8,
+    "totalButtons": 13,
+    "scrollable": true
+   },
+   "ink": 2138671,
+   "inkTools": 2199731
+  },
+  "640x360 (Android landscape)": {
+   "ov": {
+    "vw": 640,
+    "docScrollW": 640,
+    "bodyScrollW": 640,
+    "horizontalScroll": false,
+    "overshoot": 0,
+    "offenders": [],
+    "offendersInScrollers": 8
+   },
+   "reach": {
+    "toolsFabOnScreen": true,
+    "toolsFabRect": "67x44 @y=303",
+    "segVisible": true,
+    "stageH": 973,
+    "viewportH": 360
+   },
+   "sheet": {
+    "rect": "640x295 @y=65",
+    "maxHeight": "295.2px",
+    "overflowY": "auto",
+    "viewportH": 360,
+    "sheetTallerThanViewport": false,
+    "buttonsOutsideViewport": 8,
+    "totalButtons": 13,
+    "scrollable": true
+   },
+   "ink": 1449955,
+   "inkTools": 1490008
+  }
+ },
+ "negControl": {
+  "clean": {
+   "vw": 320,
+   "docScrollW": 320,
+   "bodyScrollW": 320,
+   "horizontalScroll": false,
+   "overshoot": 0,
+   "offenders": [
+    {
+     "sel": "div#warc button.arc-step span.arc-t",
+     "host": "deep-walkthrough",
+     "right": 324,
+     "over": 4,
+     "w": 62,
+     "inScroller": false,
+     "text": "The router fans out to each co"
+    }
+   ],
+   "offendersInScrollers": 13
+  },
+  "broken": {
+   "vw": 320,
+   "docScrollW": 320,
+   "bodyScrollW": 320,
+   "horizontalScroll": false,
+   "overshoot": 0,
+   "offenders": [
+    {
+     "sel": "div#__nc_wide",
+     "host": "(light)",
+     "right": 915,
+     "over": 595,
+     "w": 900,
+     "inScroller": false,
+     "text": ""
+    },
+    {
+     "sel": "div#warc button.arc-step span.arc-t",
+     "host": "deep-walkthrough",
+     "right": 324,
+     "over": 4,
+     "w": 62,
+     "inScroller": false,
+     "text": "The router fans out to each co"
+    }
+   ],
+   "offendersInScrollers": 13
+  }
+ }
+}

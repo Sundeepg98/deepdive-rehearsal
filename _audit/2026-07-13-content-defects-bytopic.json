@@ -1,0 +1,272 @@
+{
+ "distributed-locks": [
+  {
+   "topic": "distributed-locks",
+   "kind": "TECHNICAL-ERROR",
+   "severity": "P1",
+   "location": "src/topics-md/distributed-locks.md:1000",
+   "quote": "another client can now win a fresh majority (that node plus others as their keys turn over) and acquire the \"same\" lock -> two holders.",
+   "why": "The parenthetical is self-defeating and would collapse under one follow-up. If the *other* nodes' keys \"turn over\" (expire naturally), then the original holder's lease has genuinely ended everywhere and there is no two-holders overlap left to demonstrate — the whole point of the curveball evaporates. The actual Kleppmann mechanism needs no waiting at all and is airtight: the holder only ever needed a majority (3 of 5), so **2 nodes never held its key in the first place**. A single node's forward clock jump expires the key on a third node. The challenger now takes those 3 (the clock-jumped node + the 2 that were always free) and wins a fresh majority *immediately*, while the original holder still believes its lease is valid. An interviewer who knows the paper will push on 'wait — if the other keys expired, where's the overlap?' and the candidate has nothing.",
+   "fix": "\"...so the key vanishes there while the holder still thinks the lock is valid. And here's why that's instantly fatal: the holder only ever needed 3 of 5, so **two nodes never had its key at all**. The clock jump frees a third. A challenger now takes that node plus the two that were always free -- a fresh majority, with no waiting -- while the original holder still believes it holds the lock. Two holders.\""
+  }
+ ],
+ "error-propagation": [
+  {
+   "topic": "error-propagation",
+   "kind": "TECHNICAL-ERROR",
+   "severity": "P2",
+   "location": "src/topics-md/error-propagation.md:188",
+   "quote": "a 503 marked \"permanently gone\" is really permanent",
+   "why": "HTTP 503 is *specified* as an explicitly transient condition — Service Unavailable, the server is temporarily unable to handle the request, conventionally carrying Retry-After. \"A 503 marked permanently gone\" is a non-standard construct that doesn't correspond to anything real; the status code for permanently gone is 410. Since the surrounding sentence is making the genuinely good point that class is about \"can retrying plausibly succeed,\" not the raw status, it deserves the canonical example rather than an invented one. As written it is the weakest item in an otherwise sharp list and would draw a puzzled \"...what do you mean, a 503 marked permanently gone?\" — turning a strong answer into a stumble.",
+   "fix": "Replace with the real permanent-despite-5xx case: \"...a **500 from a deterministic bug** is permanent despite being 5xx -- a poison payload will fail identically on every retry, so retrying it is pure waste -- and a 409 conflict may be retryable after re-reading state.\" (If a \"gone\" example is wanted, use 410 Gone, which *is* the permanent status.)"
+  }
+ ],
+ "devices-dispatch": [
+  {
+   "topic": "devices-dispatch",
+   "kind": "TECHNICAL-ERROR",
+   "severity": "P2",
+   "location": "src/topics-md/devices-dispatch.md:816",
+   "quote": "{ k: 'Time to drain (10/s writes)', v: fmt.n(Math.round(fleetSize / 600)), u: 'min', n: 'even queuing conservatively, the fleet is dispatched in minutes — the long pole is devices polling and applying, not the enqueue', over: false }",
+   "why": "This row contradicts itself and the row three lines above it, and the arithmetic disproves its own note. At the defaults (fleetSize=50,000) it computes 50000/600 = **83 minutes**, which the note then calls \"minutes\" and claims is *not* the long pole — but the default poll interval is 60s, so on this model devices poll within a minute while the enqueue takes an hour and twenty minutes. The enqueue *is* the long pole by its own numbers. Worse, the 10-writes/sec rate is arbitrary and contradicts line 813, which correctly says the fanout is \"a bulk insert, not 50k live sends, so the fanout is cheap\" — a bulk INSERT of 50k rows in Postgres is seconds, not 83 minutes. A candidate internalising this panel would walk in with a mutually inconsistent model of their own dispatch cost.",
+   "fix": "Model the fanout as what it actually is — a bulk insert — and drop the fake 10/s serial-write rate. E.g. `{ k: 'Dispatch enqueue', v: '<1', u: 'min (bulk insert)', n: 'one bulk INSERT of ' + fmt.n(fleetSize) + ' rows -- seconds, not a per-device send loop. The long pole is genuinely the devices polling and applying, which is bounded by the poll interval, not the enqueue' }`. If a conservative serial-write row is wanted for contrast, label it as the *anti-pattern* (\"if you inserted row-by-row at 10/s: 83 min -- which is why you bulk-insert\") rather than as the expected behaviour."
+  }
+ ],
+ "storage-engines": [
+  {
+   "topic": "storage-engines",
+   "kind": "TECHNICAL-ERROR",
+   "severity": "P0",
+   "location": "src/topics-md/storage-engines.md:342",
+   "quote": "A larger T means fewer levels and fewer rewrites per byte, paid for with more read amp per level and bigger compactions.",
+   "why": "This is backwards for LEVELED compaction, and the same sentence states the formula that refutes it. For leveling, total write amp ≈ T · log_T(N/M) = T·ln(N/M)/ln(T). Since d/dT[T/ln T] = (ln T − 1)/(ln T)², the product is INCREASING in T for every T > e ≈ 2.72 — i.e. across the entire practical range. Concretely, with N/M = 10^6: T=10 gives 6 levels and WA ≈ 60; T=20 gives 4.6 levels and WA ≈ 92. Raising the fan-out from 10 to 20 makes write amplification ~50% WORSE. Each level transition merges the incoming data against a level T times larger, so you buy fewer levels but pay strictly more per level, and the T factor wins. The question this answers explicitly states 'You are on leveled compaction and write amplification is killing SSD endurance' — so the candidate is being told, as lever #1 'in rough order of leverage', to do the thing that makes the stated problem worse. The error looks like size-tiered intuition leaking in: for TIERING, WA ≈ log_T(N) with no T factor, so raising T genuinely does cut write amp — but this is the leveling answer. Internal tell: the doc's own lever (2), 'grow the memtable', is correct precisely BECAUSE it shrinks the level count (raises M, so log_T(N/M) falls) WITHOUT paying a larger per-level merge factor — which is exactly the argument that condemns lever (1).",
+   "fix": "Invert it: '**Lower the fan-out.** Total WA ≈ T·log_T(N/M) — each level transition merges against a level T× bigger, so a larger T buys fewer levels but pays more per level, and the product RISES with T for anything above T≈3. Going 10→20 takes WA from ~60 to ~92. To cut write amp you shrink T, paying for it in read amp (more levels to check). Better still, cut the level COUNT without touching T by growing the memtable — which is why that is the safer lever, and it is the same reason raising T is not.' (Raising T is the right move for SIZE-TIERED, where WA ≈ log_T(N); do not carry that intuition into leveling.)"
+  },
+  {
+   "topic": "storage-engines",
+   "kind": "HALLUCINATED-SPECIFIC",
+   "severity": "P2",
+   "location": "src/topics-md/storage-engines.md:81",
+   "quote": "10 MB/s of logical writes becomes ~400 MB/s of physical writes in either engine",
+   "why": "Implies a 40x write amplification, which exceeds the topic's own stated range and contradicts its own careful nuance. Line 249 says measured RocksDB WA 'is commonly quoted in the 10-30x range'; the Numbers calculator defaults to 15x; and line 354's worked example uses 10 MB/s × 30x = 300 MB/s — not 400. Worse, 'in either engine' flattens the distinction the topic elsewhere takes real care to make: lines 177 and 249 correctly insist the B-tree's page-arithmetic WA is a WORST case that the buffer pool coalesces away while the working set fits in RAM, so a B-tree does not sit at 40x in steady state.",
+   "fix": "'10 MB/s of logical writes becomes roughly 150-300 MB/s of physical writes at a 15-30x amplification' — matching the topic's own measured range and its own worked example, and dropping 'in either engine' (or qualifying it: 'in an LSM through compaction, and in a B-tree once the working set stops fitting in RAM')."
+  }
+ ],
+ "state-machine": [
+  {
+   "topic": "state-machine",
+   "kind": "HALLUCINATED-SPECIFIC",
+   "severity": "P1",
+   "location": "src/topics-md/state-machine.md:815",
+   "quote": "The compare-and-swap serializes moves on a **single row** -- at ~5ms per atomic commit, that's ~200 moves/sec on one entity.",
+   "why": "The '~5ms per atomic commit' is an invented constant, and the ~200/s figure derived from it is repeated five times (lines 815, 836 as the hardcoded calculator constant `rowCeil = 200`, 969, 973, 1010) and made the load-bearing number of two curveball answers ('500 moves/sec want to hit one row'; '~200/s is the ceiling I design around and name --- not one I pretend away'). What actually bounds single-row CAS throughput is the ROW-LOCK HOLD TIME, which for an autocommit single-row UPDATE is dominated by the WAL fsync at commit — and same-row writers cannot group-commit with each other, so throughput ≈ 1/(commit fsync latency). That is ~50-200µs on local NVMe (→ thousands/sec) and ~0.5-1ms on cloud network storage (→ order-1,000/sec). 5ms is a spinning-disk or heavily-loaded figure, so the stated ceiling is 5-25x too pessimistic. It is also internally shaky: this topic's own design has the transition writing the state row PLUS a same-transaction transition-log row PLUS an outbox row, which lengthens the lock hold — so no single constant is defensible. A candidate who confidently asserts 'a single row serializes at about 200 moves per second' to anyone who has operated a database invites 'where did that number come from?', and '5ms per commit' does not survive the question.",
+   "fix": "Replace the constant with the derivation the candidate performs live: 'The row lock is held across the commit fsync, and same-row writers cannot group-commit with each other — so the ceiling is 1/(commit latency). On cloud storage with a ~1ms fsync that is order-1,000 moves/sec on one row; on local NVMe, several thousand. And optimistic CAS DEGRADES under contention — the losers re-read and retry, burning work — so the practical ceiling sits below the theoretical one. I would measure my actual commit latency rather than quote a number.' Same change for the calculator: derive rowCeil from a commit-latency input slider instead of hardcoding 200."
+  },
+  {
+   "topic": "state-machine",
+   "kind": "TECHNICAL-ERROR",
+   "severity": "P2",
+   "location": "src/topics-md/state-machine.md:802",
+   "quote": "For 8 states there are 8x7 = 56 ordered pairs; I drive the tests off the table -- assert the ~14 legal moves fire their action, and the other ~42 are **rejected with the state unchanged**.",
+   "why": "This enumerates the wrong space, and it contradicts the topic's own core teaching. Lines 148-152 and 731 insist — correctly, and repeatedly — that 'the transition is keyed on BOTH the current state and the event... The (state, event) pair is the key, never the event alone.' But the test matrix here is over (from-state, to-state) pairs. You cannot 'attempt a from→to transition'; you attempt an EVENT, and the target state is the table's OUTPUT, not an input you can supply. The counts also do not compose: 14 table entries keyed on (state, event) can collapse to fewer than 14 distinct (from, to) pairs, because two different events from the same state can legally land on the same target — so '14 legal of 56, 42 rejected' silently mixes two different spaces. A sharp interviewer who has been told 'the key is (state, event)' will ask what the 56 pairs are.",
+   "fix": "'The mechanical matrix is states × EVENTS — the space the table actually keys on. With 8 states and, say, 6 events that is 48 (state, event) cells: for each, assert either the table's target state plus its action, or a rejection with the state unchanged. The negative space (the cells with no table entry) is where the bugs hide and where hand-written tests always have gaps.' That is also the only matrix you can actually drive, since an event is the input and the next state is the output."
+  }
+ ],
+ "slos": [
+  {
+   "topic": "slos",
+   "kind": "TECHNICAL-ERROR",
+   "severity": "P1",
+   "location": "src/topics-md/slos.md:334",
+   "quote": "A **slow-burn** alert (e.g. 3x over 6 hours) files a ticket: a smaller sustained problem that will eventually blow the budget but doesn't need a 3am page.",
+   "why": "This threshold fails the topic's OWN derivation formula, in a topic whose central claim is that the numbers are derived rather than guessed. Lines 337/529/820 state the rule: 'budget consumed when the alert fires = burn rate × (long window / SLO window)', and add 'you are not guessing thresholds --- you are choosing how much budget you are willing to spend before waking someone up.' Apply it to 3x over 6h: 3 × (6/720) = 2.5% of the month's budget. But the topic's FAST-BURN rule (14.4x/1h) fires at 2%. So this 'ticket' rule triggers having spent MORE budget (2.5%) than the rule that PAGES (2%) — an incoherent escalation ladder that inverts the whole point. The 3x burn rate is real (it appears in Sloth/Pyrra's four-window configs) but there it is paired with a 1-DAY window: 3 × (24/720) = 10% → ticket, which is coherent and matches the 1x/3d row's 10%. The doc has spliced a burn rate from one row onto a window from another. It then propagates: line 521 (Walk), line 515 (the Python `elif burn_rate >= 3` ticket branch), and line 1033 (the DESIGN bank answer) all repeat it — while lines 337/529/821 give the correct canonical trio, so the topic contradicts itself.",
+   "fix": "Use the canonical, self-consistent trio everywhere the '3x over 6 hours' example appears: '**6x over 6 hours** PAGES (that is 5% of the month's budget), and **1x over 3 days** TICKETS (10% — a leak precisely on pace to consume the window).' If a 3x rule is wanted, pair it with its correct window: '3x over 1 day tickets (10% of budget)'. Also fix the Python at line 515 (`elif burn_rate >= 3`) so its thresholds match — an instantaneous burn-rate check with no window contradicts the topic's own multi-window thesis anyway."
+  }
+ ],
+ "soft-delete": [
+  {
+   "topic": "soft-delete",
+   "kind": "TECHNICAL-ERROR",
+   "severity": "P2",
+   "location": "src/topics-md/soft-delete.md:865",
+   "quote": "var deleted = Math.round(rows * deletePct / 100);",
+   "why": "The Numbers calculator computes the deleted count as a percentage of LIVE rows (input `rows` is labelled 'Live rows'), not as a share of the table — so 'Deleted (%) = 20' yields 2M deleted against 10M live, i.e. 16.7% of the 12M-row table, not 20%. That directly undercuts the section's own stated framing at line 854: 'Lead with the deleted fraction, not the total: the number that bites is what share of every index and every scan is data you always throw away.' The `deletePct` slider is NOT that share. It also breaks against the prose: the CURVEBALL at line 1067 reasons about a table that is '80% tombstones' with 'four wasted fetches for every useful one' (correct if deleted/total = 80%), but under this calculator setting deletePct=80 gives 8M deleted / 18M total = 44% tombstones and only ~0.8 wasted fetches per useful one.",
+   "fix": "Either relabel the input to match the math ('Deleted rows as % of live rows'), or — better, since it matches both the section's own framing and the prose — make deletePct the share of the TABLE: `var total = rows; var deleted = Math.round(total * deletePct / 100); var live = total - deleted;` with the first input relabelled 'Total rows'. Then deletePct=80 reproduces the '80% tombstones, four wasted fetches per useful one' example exactly."
+  }
+ ],
+ "replication": [
+  {
+   "topic": "replication",
+   "kind": "TECHNICAL-ERROR",
+   "severity": "P1",
+   "location": "src/topics-md/replication.md:152",
+   "quote": "It also cannot see events still sitting in the relay log.",
+   "why": "Exactly backwards. Seconds_Behind_Master is computed as (replica now) - (timestamp of the most recent SOURCE event the SQL/applier thread has executed) - clock offset. So a relay-log backlog is precisely what DOES drive the number up: the applier is replaying an event the source committed minutes ago, so the metric reads large. The metric's real blind spot is the opposite one -- events the I/O thread has NOT YET FETCHED. MySQL's own documentation says it: 'the replica SQL thread may quite often be caught up with the slow-reading replica I/O thread, so Seconds_Behind_Source often shows a value of 0, even if the I/O thread is late compared to the source.' The first half of this very sentence states that correctly (it reports 0 on a wedged connection because there is nothing to apply), so the appended clause contradicts the card's own point. A candidate who repeats 'Seconds_Behind_Master can't see events sitting in the relay log' to an interviewer who has operated MySQL replication gets corrected on the spot -- and this is the card whose whole purpose is to prove they have run replicas, not read about them.",
+   "fix": "It also cannot see events the I/O thread has not yet fetched -- it is effectively measuring the SQL thread's lag behind the I/O thread, so a slow or wedged receiver makes it read low. (Relay-log backlog is the one thing it does surface: the applier is replaying an old event, so the number climbs.)"
+  }
+ ],
+ "retries-timeouts": [
+  {
+   "topic": "retries-timeouts",
+   "kind": "TECHNICAL-ERROR",
+   "severity": "P2",
+   "location": "src/topics-md/retries-timeouts.md:154",
+   "quote": "**equal jitter** (`base/2 + random(0, base/2)`)",
+   "why": "Taken literally with this document's own definition of `base`, this formula does not back off at all. `base` is the INITIAL delay everywhere else in the topic -- the full-jitter formula in the same sentence is `random(0, min(cap, base * 2^attempt))`, and the decorrelated formula immediately after is `min(cap, random(base, prev * 3))` (which matches AWS exactly, with `base` as the initial delay). So `base/2 + random(0, base/2)` contains no exponential term and no attempt index: it yields the same constant-delay distribution on attempt 1 and attempt 6. That is precisely the fixed-delay anti-pattern this same topic demolishes two cards earlier at line 139 ('a fixed delay gives you neither... it hammers at a flat rate forever'). AWS's equal jitter operates on the CAPPED EXPONENTIAL value, not on base. The prose gloss ('trades some of that spread to guarantee a minimum spacing') is correct -- only the symbols are wrong -- but a candidate who writes this on a whiteboard has written a backoff that doesn't back off.",
+   "fix": "**equal jitter** (`temp = min(cap, base * 2^attempt)`, then `sleep = temp/2 + random(0, temp/2)`) trades some of that spread to guarantee a minimum spacing."
+  }
+ ],
+ "sharding-strategies": [
+  {
+   "topic": "sharding-strategies",
+   "kind": "TECHNICAL-ERROR",
+   "severity": "P2",
+   "location": "src/topics-md/sharding-strategies.md:251",
+   "quote": "This is what **Kafka** does (partition count is fixed at topic creation; brokers get reassigned)",
+   "why": "Kafka's partition count is not fixed at topic creation. You can increase it (`kafka-topics --alter --topic X --partitions N`); you simply cannot decrease it. What you CANNOT do safely is increase it without consequence: the default partitioner is murmur2(key) % numPartitions, so raising the count rehashes keys onto different partitions, destroying per-key ordering and co-partitioning -- which is the mod-N problem the passage goes on to describe two sentences later. So the CONCLUSION ('effectively permanent... you must choose it big enough up front') is correct, and the mechanism the passage gives for it is correct; only the stated fact is wrong. It matters because Kafka is the canonical example in this card, most interviewers run it daily, and the accurate version is strictly stronger -- 'you can grow it but never shrink it, and growing it rehashes your keys' is a sharper illustration of the very trap being taught. (The Elasticsearch half of the same sentence is correct: primary shard count is fixed for a given index; _split/_shrink produce a NEW index.)",
+   "fix": "This is what **Kafka** does (you can *increase* a topic's partition count but never decrease it -- and increasing it rehashes keys onto different partitions, breaking per-key ordering -- so in practice you fix the count up front and just reassign brokers) and what **Elasticsearch** does (primary shard count is fixed at index creation)."
+  }
+ ],
+ "kafka-internals": [
+  {
+   "topic": "kafka-internals",
+   "kind": "DATED",
+   "severity": "P2",
+   "location": "src/topics-md/kafka-internals.md:233",
+   "quote": "Not the broker --- **the group leader, which is one of the consumers.** The **group coordinator** (a broker) owns membership and heartbeats, but when a rebalance happens it elects one consumer as the **group leader**, and that consumer **computes the assignment** using a pluggable **assignor**, then ships the result back through the coordinator to everyone else.",
+   "why": "True for the CLASSIC consumer group protocol -- which is still the default -- but no longer unconditionally true. KIP-848 (the new consumer rebalance protocol, GA in Kafka 4.0) moves assignment computation to the BROKER-SIDE group coordinator, using server-side assignors (`uniform` and `range`), and rebalances incrementally with no client-side leader and no global sync barrier. It is opt-in via `group.protocol=consumer`, so the card is correct by default but is stated as an unqualified fact of 'how Kafka works.' This matters more than usual because the card's Senior tell explicitly coaches the candidate to LEAD with this as their differentiating depth signal ('Knowing the assignment is computed by the group leader (a consumer, not the broker)'), and the downstream advice -- that switching to `CooperativeStickyAssignor` is 'one of the cheapest, highest-value changes you can make' -- is classic-protocol-specific and does not apply under the new protocol. A 2026 interviewer at a Kafka 4.x shop would correct the very line the candidate was told to lead with. The file elsewhere shows excellent currency (it names KRaft, `enable.idempotence` default-since-3.0, and the removal of `replica.lag.max.messages`), which makes this gap conspicuous rather than excusable.",
+   "fix": "Qualify it to the protocol and add the new one as the depth beat: 'Under the CLASSIC protocol, not the broker -- the group leader, which is one of the consumers, computes the assignment with a pluggable assignor (Range, RoundRobin, Sticky, CooperativeSticky) and ships it back through the coordinator. KIP-848, GA in Kafka 4.0 and opt-in via `group.protocol=consumer`, moves this server-side: the coordinator computes the target assignment with a server-side assignor (uniform or range) and drives the group toward it incrementally, so there is no client-side leader and no stop-the-world barrier -- which also means the client-side assignor config, including CooperativeSticky, no longer applies.' Knowing WHICH protocol you are on -- and that CooperativeSticky is the right answer only on the classic one -- is now the actual senior signal."
+  },
+  {
+   "topic": "kafka-internals",
+   "kind": "TECHNICAL-ERROR",
+   "severity": "P2",
+   "location": "src/topics-md/kafka-internals.md:176",
+   "quote": "a **caught-up** consumer reads from the OS **page cache** (the records were just written, so they're still in memory) and is almost free, and Kafka serves it via **zero-copy** (`sendfile`) straight from page cache to socket.",
+   "why": "Stated as an unconditional property, but Kafka's `sendfile` zero-copy path is DISABLED whenever the consumer connection is TLS-encrypted -- SSL/TLS requires the broker to copy records into userspace to encrypt them, so the kernel-to-socket fast path is lost and the broker pays real CPU per byte served. Since essentially all production Kafka runs TLS on client connections, the card's load-bearing conclusion for the common case ('a caught-up consumer ... is almost free', therefore 'adding readers is cheap') materially overstates it: with TLS on, each additional consumer group costs measurable broker CPU on top of the network/disk read amplification the card correctly identifies. The claim is not false in the plaintext case, but it is presented as the reason fan-out is cheap, and the exception is the normal configuration.",
+   "fix": "Add the TLS caveat and make it the depth beat, since it strengthens the card rather than weakening it: '...and on a PLAINTEXT connection Kafka serves it via zero-copy (`sendfile`) straight from page cache to socket. The caveat worth naming: enabling TLS DISABLES the zero-copy path -- the broker must pull records into userspace to encrypt them -- so on a TLS cluster (i.e. essentially every production one) an extra consumer group costs real broker CPU per byte, not just page-cache reads. Adding readers is still far cheaper than adding replayers, but it is not free the way the zero-copy story implies.'"
+  }
+ ],
+ "autoscaling": [
+  {
+   "topic": "autoscaling",
+   "kind": "TECHNICAL-ERROR",
+   "severity": "P2",
+   "location": "src/topics-md/autoscaling.md:113",
+   "quote": "A typical consumer or business web service runs a diurnal curve with a peak that's roughly **3-5x its overnight trough**, so if you size the fleet for peak, average utilization across the day lands somewhere around **25-40%** --- meaning **60-75% of what you're paying for is idle** most of the time.",
+   "why": "The word \"so\" asserts a derivation that does not hold. A 3-5x peak-to-trough ratio means utilization is 20-33% *at the trough*. **Average** utilization over the day is much higher: for a realistic diurnal curve (elevated ~8-10h, low ~12-14h) the mean lands around 55-65% of peak. Worked example: peak P for 8h, P/4 for 12h, ~0.6P ramp for 4h gives mean = 0.56P, i.e. ~56% average utilization, not 25-40%. The card appears to have substituted trough utilization for average utilization, which then overstates the idle waste as 60-75%. The 25-40% band IS a real, commonly-reported cloud-fleet figure -- but it comes from empirical over-provisioning (safety margin above peak, N+1/AZ redundancy, padded resource requests), not from the peak-to-trough ratio. This is the weakest of my four findings: the claim is hedged (\"roughly\", \"somewhere around\") and the card's actual advice (\"measure the peak-to-trough ratio before promising anything\") is sound. But it is framed as arithmetic, and an interviewer who asks \"walk me through that\" will find it doesn't close.",
+   "fix": "Either derive it honestly -- \"a 4x peak-to-trough curve sized exactly for peak runs at ~25% utilization *at the trough* and ~55-60% on average\" -- or stop claiming the derivation and present 25-40% as what it is: the measured utilization of real cloud fleets, which is low because people size above peak, not because of the trough ratio. The business case (savings are bounded by how variable your load actually is; go measure it) survives either fix intact."
+  },
+  {
+   "topic": "autoscaling",
+   "kind": "TECHNICAL-ERROR",
+   "severity": "P2",
+   "location": "src/topics-md/autoscaling.md:383",
+   "quote": "Concretely: a fleet serving 5,000 req/s that can ramp at 30 req/s per second, with a 90-second lag, needs `30 x 90 = 2,700` req/s of spare capacity --- which is a **35% headroom on a 5,000 req/s baseline**, and *that* is where \"target 65-70%\" actually comes from.",
+   "why": "2,700 / 5,000 = **54%**, not 35%. The 35% figure is only correct against *total fleet capacity*: the fleet must be sized for 5,000 + 2,700 = 7,700 req/s, and 2,700/7,700 = 35% headroom, giving 5,000/7,700 = 65% utilization. So the destination (\"target 65-70%\") is exactly right and the `g x L` derivation is sound -- but the phrase \"on a 5,000 req/s baseline\" points the reader at the wrong denominator. This card's entire thesis is \"derive the number instead of memorizing it,\" so an ambiguous derivation undercuts the one thing it is trying to teach, and it invites the obvious challenge: \"wait, 2,700 over 5,000 is 54%.\" A candidate who says this line out loud has to recover mid-answer.",
+   "fix": "\"...needs `30 x 90 = 2,700` req/s of spare capacity -- so the fleet must be sized for 7,700 req/s total, of which 2,700 (**35% of capacity**) sits idle as headroom. That is a **65% utilization target**, and that is where \"target 65-70%\" actually comes from.\""
+  }
+ ],
+ "backpressure": [
+  {
+   "topic": "backpressure",
+   "kind": "TECHNICAL-ERROR",
+   "severity": "P1",
+   "location": "src/topics-md/backpressure.md:338",
+   "quote": "That is the whole hockey stick: for M/M/1, waiting time scales as `1/(1-rho)`, so going from 50% to 90% utilization multiplies queueing delay by about 9, and 90% to 99% multiplies it by another 10 --- at the *same average throughput*.",
+   "why": "The stated formula does not produce the stated number. `1/(1-rho)` is the scaling of **W, total time in system** (sojourn time): W = (1/mu) * 1/(1-rho). Apply it: rho=0.5 -> 2; rho=0.9 -> 10. That is a **5x** jump, not 9x. (The second figure survives: rho=0.99 -> 100, so 90%->99% is 10x.) The **9x** the card claims is correct only for **Wq, queueing delay**, which scales as **rho/(1-rho)**: 0.5/0.5 = 1 -> 0.9/0.1 = 9, giving exactly 9x; and 9 -> 99 giving 11x, matching \"another 10.\" So the card's *numbers* are right for the quantity it names (\"queueing delay\") but its *formula* is the one for a different quantity. This matters because the card explicitly invites the interviewer to do the arithmetic -- it is a Staff card whose whole selling point is quantification -- and a candidate who says \"delay scales as 1/(1-rho), so 50 to 90 percent is 9x\" gets corrected across the table with \"no, that's 5x.\" Confirming this is a genuine outlier and not the house style: autoscaling.md:398 uses `1/(1-rho)` and correctly derives 60%->90% as 2.5->10 = \"roughly quadruples.\" That card is right; this one is not.",
+   "fix": "State the queueing-delay form, which is what the numbers already assume: \"for M/M/1, **queueing delay** scales as `rho/(1-rho)`, so going from 50% to 90% utilization multiplies it by about **9**, and 90% to 99% by another **11**.\" (Alternatively, keep `1/(1-rho)` -- the total-time-in-system form -- and change \"about 9\" to \"about 5\" and \"another 10\" stays correct. The first fix is better, because the card is explicitly talking about queueing delay, and it also fixes the Speak line at :344 which repeats \"queueing delay scales as one-over-one-minus-utilization.\")"
+  }
+ ],
+ "consistency-models": [
+  {
+   "topic": "consistency-models",
+   "kind": "TECHNICAL-ERROR",
+   "severity": "P1",
+   "location": "src/topics-md/consistency-models.md:353",
+   "quote": "That is precisely why Spanner and CockroachDB are **per-range Raft** rather than one big consensus group.",
+   "why": "**Google Spanner does not use Raft. It uses Paxos.** The Spanner OSDI 2012 paper is explicit: \"Each spanserver implements a single Paxos state machine on top of each tablet\" -- Spanner runs multi-Paxos per tablet/split group. CockroachDB is the system that uses per-range **Raft** (it was designed as an open-source Spanner-alike and deliberately chose Raft over Paxos). The sentence fuses the two and mis-attributes Raft to Spanner. Worse, the file **contradicts itself**: line 371 correctly prices a Spanner commit as \"...pays that commit-wait ... *plus* the **Paxos** round.\" So the topic already knows the right answer 18 lines later. The underlying architectural argument -- that the write ceiling is per consensus group, that adding replicas makes it *worse* not better (a bigger quorum waits on a slower median), and that you scale by adding groups/shards -- is completely correct and applies to Paxos and Raft alike. Only the protocol attribution is wrong. But this is a confidently-stated, checkable falsehood about one of the most famous systems in the field, and any interviewer who has read the Spanner paper will correct it, which then puts the (correct) rest of the answer under suspicion.",
+   "fix": "\"That is precisely why Spanner and CockroachDB shard consensus into **many small per-range groups** -- Spanner runs multi-Paxos per tablet, CockroachDB runs Raft per range -- rather than one big consensus group.\""
+  },
+  {
+   "topic": "consistency-models",
+   "kind": "TECHNICAL-ERROR",
+   "severity": "P1",
+   "location": "src/topics-md/consistency-models.md:358",
+   "quote": "you scale by adding *shards*, which is why Spanner is per-range Raft) --- and pricing the cross-region write concretely (~75-90 ms to the second-closest region, so 100-200 ms per call) leading to **localize authority** --- is the Staff answer here.",
+   "why": "Same factual error as :353 (Spanner is multi-Paxos, not Raft), but this instance is **more damaging** because it sits in the `Senior:` line. That line's entire job is to tell the learner \"this specific thing is the marker of a Staff-level answer\" -- so the product is actively coaching the user to walk into the room and assert a falsehood *as their seniority signal*. If the interviewer knows Spanner (and anyone asking a consistency-models question at Staff level does), the candidate has just volunteered a wrong specific in the exact sentence meant to demonstrate depth. That is the worst possible placement for this defect and is why I am rating it P1 rather than P2 despite being a single-word fix.",
+   "fix": "\"you scale by adding *shards*, which is why both Spanner and CockroachDB run **many small consensus groups** -- multi-Paxos per tablet and Raft per range respectively -- rather than one global one) --- and pricing the cross-region write concretely (~75-90 ms to the second-closest region, so 100-200 ms per call) leading to **localize authority** --- is the Staff answer here.\""
+  }
+ ],
+ "probabilistic-structures": [
+  {
+   "topic": "probabilistic-structures",
+   "kind": "TECHNICAL-ERROR",
+   "severity": "P1",
+   "location": "src/topics-md/probabilistic-structures.md:237",
+   "quote": "each extra ~0.7 bits per element roughly halves it",
+   "why": "Off by a factor of 2. At optimal k, p = 2^(-(m/n)·ln2), so log2(p) = -(m/n)·ln2 and halving p requires Δ(m/n) = 1/ln2 = 1.443 bits/element, not 0.7. Verified numerically: 1% FP needs 9.59 bits/element, 0.5% needs 11.03 -> a delta of 1.44 bits. Cross-check against the standard table: 1%->9.6, 0.1%->14.4, 0.01%->19.2 bits, i.e. ~4.8 bits per 10x reduction = 4.8/3.32 = 1.44 bits per halving. The author has grabbed ln2 (~0.69), which is the coefficient in k=(m/n)·ln2, and misapplied it as the halving increment (which is 1/ln2). Same error repeated verbatim at line 188 in the Walk section.",
+   "fix": "\"each extra ~1.44 bits per element (1/ln 2) roughly halves it\" -- i.e. going from ~10 bits/element (1%) to ~11.4 bits/element buys you 0.5%."
+  },
+  {
+   "topic": "probabilistic-structures",
+   "kind": "HALLUCINATED-SPECIFIC",
+   "severity": "P1",
+   "location": "src/topics-md/probabilistic-structures.md:489",
+   "quote": "then m/n = -1.44 * ln(p) ~ 10 bits/element sets the memory",
+   "why": "The stated formula does not produce the stated number, and a candidate reciting both would contradict themselves in one breath. -1.44 · ln(0.01) = 6.63 bits/element, NOT ~10. The expression -1.44·ln(p) is in fact log2(1/p) -- the information-theoretic LOWER BOUND the file itself correctly cites at line 342 -- not a Bloom filter's actual m/n. Bloom's real m/n at optimal k is -ln(p)/(ln2)^2 = -2.08·ln(p) = 9.59 bits at p=1%, which IS the ~10 bits figure. The same wrong formula appears in the parenthetical at line 342: \"(m/n = -1.44 ln p bits/element at optimal k)\". The file's own Numbers calculator computes `mBits = -(n * Math.log(p)) / (ln2 * ln2)` -- the correct formula -- so the prose contradicts the shipped widget.",
+   "fix": "\"then m/n = -ln(p)/(ln 2)^2 ~ 2.08 · ln(1/p) ~ 10 bits/element sets the memory\" (and fix the identical parenthetical at line 342)."
+  },
+  {
+   "topic": "probabilistic-structures",
+   "kind": "TECHNICAL-ERROR",
+   "severity": "P2",
+   "location": "src/topics-md/probabilistic-structures.md:344",
+   "quote": "bits-per-element has an **information-theoretic floor** (~1.44 * log2(1/p), and Bloom is ~44% above it)",
+   "why": "Self-contradictory: 1.44 · log2(1/p) IS a Bloom filter's m/n at optimal k (= -ln p/(ln2)^2), so if that were the floor, Bloom would be sitting exactly ON it, not 44% above it. The actual floor is log2(1/p) with no 1.44 multiplier -- which line 342's first clause states correctly (\"needs at least ~log2(1/p) bits per element\"). The 1.44 has been double-applied. The conclusion (\"Bloom is ~44% above optimal\") is right; only the formula labelled as the floor is wrong.",
+   "fix": "\"bits-per-element has an **information-theoretic floor** of ~log2(1/p) (= 1.44 · ln(1/p)), and Bloom's -ln p/(ln 2)^2 sits ~44% above it\""
+  }
+ ],
+ "rate-limiting": [
+  {
+   "topic": "rate-limiting",
+   "kind": "TECHNICAL-ERROR",
+   "severity": "P1",
+   "location": "src/topics-md/rate-limiting.md:973",
+   "quote": "During the outage a client spread across N instances can reach up to N times its intended cap",
+   "why": "Contradicts the card's own stated design two lines earlier. Line 971 says the fallback bucket bounds each client \"to roughly limit-over-instances\" (i.e. limit/N per instance), and line 216 likewise specifies \"a per-instance local bucket sized to limit/M-with-headroom\". If each of N instances grants limit/N, a client hitting all N gets N × (limit/N) = the limit -- plus whatever headroom factor -- NOT N × the limit. To actually reach N× the cap, each local bucket would have to be sized at the FULL limit. The interviewer prompt at line 972 bakes the same error in (\"still lets a client do instances-times the limit\"). The file states the correct general rule at line 272 -- overshoot = (local allowance x number of instances) -- and here it silently substitutes the full limit for the local allowance. An interviewer would ride straight into this: \"you just said each bucket is limit/N -- so how is the total N times the limit?\"",
+   "fix": "\"During the outage a client spread across N instances can reach up to (local allowance x N) -- so with each fallback bucket sized at limit/N that's roughly the intended cap plus headroom, not a multiple of it. It's only N times the cap if you size each local bucket at the FULL limit, which is why you size the fallback at a slice, not the whole number.\""
+  },
+  {
+   "topic": "rate-limiting",
+   "kind": "TECHNICAL-ERROR",
+   "severity": "P2",
+   "location": "src/topics-md/rate-limiting.md:798",
+   "quote": "a 10x spike over average — what one shard must absorb, where a single node nears its wall around 100k ops/s",
+   "why": "Conflates fleet-aggregate op rate with single-shard load, and contradicts the metric directly beneath it. This value is rps x 10 -- the TOTAL peak store ops across the whole limiter. In any sharded/clustered store that total is spread across shards by key hashing; it is not \"what one shard must absorb.\" The very next metric ('Hottest-client load') is the one that correctly identifies single-shard concentration (\"its counter is a hot key on one shard -- the real bottleneck\"), which would be redundant if the aggregate already landed on one shard. The claim is only true for a single-node Redis, which is never stated.",
+   "fix": "\"a 10x spike over average — the total store load the limiter must absorb; on a single-node store this is one node's wall (~100k ops/s), and on a cluster it spreads across shards — except for the hot key below, which does land on one.\""
+  }
+ ],
+ "multi-region": [
+  {
+   "topic": "multi-region",
+   "kind": "HALLUCINATED-SPECIFIC",
+   "severity": "P2",
+   "location": "src/topics-md/multi-region.md:110",
+   "quote": "a user in Europe hitting a US-only service pays ~100ms+ each way",
+   "why": "Overstates one-way transatlantic latency by ~2.5x and contradicts the topic's own baseline. London->N.Virginia is ~70-90ms ROUND TRIP (~35-45ms one way); the speed-of-light-in-fiber floor for that path is ~28ms one way. \"~100ms+ each way\" implies a 200ms+ RTT. Every other passage in this file -- 18 of them -- uses ~100ms as the ROUND TRIP (\"Cross-region round trips are ~80-100ms\", \"a cross-region round trip is **~80-100ms**\", \"pays the full ~100ms round trip\"), and the Numbers model's own input defaults to `rtt | Cross-region round-trip (ms) | 90`. So this sentence doubles the number the rest of the topic is built on. Repeated verbatim at line 387.",
+   "fix": "\"a user in Europe hitting a US-only service pays a ~80-100ms round trip\" -- consistent with the file's own ~90ms cross-region RTT baseline. (Same fix at line 387.)"
+  }
+ ],
+ "real-time-delivery": [
+  {
+   "topic": "real-time-delivery",
+   "kind": "TECHNICAL-ERROR",
+   "severity": "P2",
+   "location": "src/topics-md/real-time-delivery.md:331",
+   "quote": "A **load balancer** distributes new connections across the gateways with sticky affinity (a connection stays on its gateway for life).",
+   "why": "Directly contradicts this topic's own sharpest and most-emphasised correction. The SDE3 card at line 243 says: \"'WebSockets need sticky sessions' is one of the most reflexively repeated and least examined lines in real-time design... There is **no subsequent request to route**, so there is nothing for a stickiness cookie to do... the stickiness is mostly folklore\" -- and its Senior line (246) explicitly names \"puncturing the 'WebSockets need sticky sessions' reflex\" as the seniority signal, with the Speak line (247) telling the candidate to say \"that does not mean 'sticky sessions.'\" The parenthetical here -- \"a connection stays on its gateway for life\" -- is describing pinning-BY-CONSTRUCTION (one TCP connection, one LB decision at the upgrade), which is exactly the thing the SDE3 card says must NOT be called sticky affinity. Stickiness is only required for the long-poll/HTTP fallback. Same error at line 292 (\"**sticky load balancing** for the connections\"). A candidate who absorbs both cards will deliver the folklore in their architecture answer, then have to walk it back.",
+   "fix": "\"A **load balancer** distributes new connections across the gateways (least-connections, not round-robin); no session stickiness is needed -- a WebSocket is pinned by construction, because the LB makes exactly one routing decision at the upgrade and the TCP connection is a fixed pipe thereafter. Stickiness is only required if you keep an HTTP long-poll fallback.\" (Same fix at line 292.)"
+  }
+ ]
+}

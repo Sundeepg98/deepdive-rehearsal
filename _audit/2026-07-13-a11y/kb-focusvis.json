@@ -1,0 +1,962 @@
+[
+ {
+  "id": "kb0",
+  "label": "Toggle focus mode",
+  "path": "div.app aside.sidebar div.side-id div.hdr button#_focus-toggle",
+  "w": 60,
+  "h": 20,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 631,
+  "perimArea": 336,
+  "contrast": 5.63,
+  "maxDelta": 180,
+  "verdict": "OK",
+  "rect": {
+   "x": 19,
+   "y": 140.59375,
+   "w": 60,
+   "h": 20
+  }
+ },
+ {
+  "id": "kb1",
+  "label": "Home — topic index",
+  "path": "div.app aside.sidebar div.side-id nav#topicnav button#homeBtn",
+  "w": 32,
+  "h": 33,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 507,
+  "perimArea": 276,
+  "contrast": 5.63,
+  "maxDelta": 180,
+  "verdict": "OK",
+  "rect": {
+   "x": 19,
+   "y": 162.59375,
+   "w": 32,
+   "h": 33
+  }
+ },
+ {
+  "id": "kb2",
+  "label": "Previous topic",
+  "path": "div.app aside.sidebar div.side-id nav#topicnav button#tnprev",
+  "w": 32,
+  "h": 33,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 508,
+  "perimArea": 276,
+  "contrast": 5.63,
+  "maxDelta": 180,
+  "verdict": "OK",
+  "rect": {
+   "x": 57,
+   "y": 162.59375,
+   "w": 32,
+   "h": 33
+  }
+ },
+ {
+  "id": "kb3",
+  "label": "RehearsingContent Pipeline▾",
+  "path": "div.app aside.sidebar div.side-id nav#topicnav button#tntrigger",
+  "w": 146,
+  "h": 33,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 1191,
+  "perimArea": 732,
+  "contrast": 5.63,
+  "maxDelta": 180,
+  "verdict": "OK",
+  "rect": {
+   "x": 95,
+   "y": 162.59375,
+   "w": 146,
+   "h": 33
+  }
+ },
+ {
+  "id": "kb4",
+  "label": "Next topic",
+  "path": "div.app aside.sidebar div.side-id nav#topicnav button#tnnext",
+  "w": 32,
+  "h": 33,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 509,
+  "perimArea": 276,
+  "contrast": 5.63,
+  "maxDelta": 180,
+  "verdict": "OK",
+  "rect": {
+   "x": 247,
+   "y": 162.59375,
+   "w": 32,
+   "h": 33
+  }
+ },
+ {
+  "id": "kb5",
+  "label": "▶Mock run — the full round, on the clock",
+  "path": "div.app aside.sidebar div.mockcta button#mockopen",
+  "w": 260,
+  "h": 66,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 4489,
+  "perimArea": 1320,
+  "contrast": 5.42,
+  "maxDelta": 175,
+  "verdict": "OK",
+  "rect": {
+   "x": 19,
+   "y": 207.59375,
+   "w": 260,
+   "h": 66
+  }
+ },
+ {
+  "id": "kb6",
+  "label": "Interviewer cuts in mid-answer — off",
+  "path": "div.app aside.sidebar div.mockcta button#inttog",
+  "w": 260,
+  "h": 55,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 2735,
+  "perimArea": 1276,
+  "contrast": 5.57,
+  "maxDelta": 179,
+  "verdict": "OK",
+  "rect": {
+   "x": 19,
+   "y": 281.59375,
+   "w": 260,
+   "h": 55
+  }
+ },
+ {
+  "id": "kb7",
+  "label": "Decrease text size",
+  "path": "div.app aside.sidebar div#textzoom button.textzoom-btn",
+  "w": 28,
+  "h": 28,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 484,
+  "perimArea": 240,
+  "contrast": 5.53,
+  "maxDelta": 178,
+  "verdict": "OK",
+  "rect": {
+   "x": 206,
+   "y": 378.59375,
+   "w": 28,
+   "h": 28
+  }
+ },
+ {
+  "id": "kb8",
+  "label": "Increase text size",
+  "path": "div.app aside.sidebar div#textzoom button.textzoom-btn",
+  "w": 28,
+  "h": 28,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 484,
+  "perimArea": 240,
+  "contrast": 5.53,
+  "maxDelta": 178,
+  "verdict": "OK",
+  "rect": {
+   "x": 240,
+   "y": 378.59375,
+   "w": 28,
+   "h": 28
+  }
+ },
+ {
+  "id": "kb9",
+  "label": "Start focus timer",
+  "path": "div.app aside.sidebar div#pomodoro div.pomodoro-row button.pomodoro-btn.pomodoro-play",
+  "w": 28,
+  "h": 28,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 634,
+  "perimArea": 240,
+  "contrast": 5.36,
+  "maxDelta": 227,
+  "verdict": "OK",
+  "rect": {
+   "x": 206,
+   "y": 466.09375,
+   "w": 28,
+   "h": 28
+  }
+ },
+ {
+  "id": "kb10",
+  "label": "Reset focus timer",
+  "path": "div.app aside.sidebar div#pomodoro div.pomodoro-row button.pomodoro-btn.pomodoro-reset",
+  "w": 24,
+  "h": 24,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 463,
+  "perimArea": 208,
+  "contrast": 5.52,
+  "maxDelta": 178,
+  "verdict": "OK",
+  "rect": {
+   "x": 244,
+   "y": 468.09375,
+   "w": 24,
+   "h": 24
+  }
+ },
+ {
+  "id": "kb11",
+  "label": "Topic index — all topics across the six gr",
+  "path": "div.app aside.sidebar div.mockbar button#idxopen",
+  "w": 127,
+  "h": 43,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 1859,
+  "perimArea": 695,
+  "contrast": 5.52,
+  "maxDelta": 178,
+  "verdict": "OK",
+  "rect": {
+   "x": 19,
+   "y": 458.59375,
+   "w": 127,
+   "h": 42.796875
+  }
+ },
+ {
+  "id": "kb12",
+  "label": "Search — jump to any topic or view by name",
+  "path": "div.app aside.sidebar div.mockbar button#searchopen",
+  "w": 127,
+  "h": 43,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 1852,
+  "perimArea": 695,
+  "contrast": 5.52,
+  "maxDelta": 178,
+  "verdict": "OK",
+  "rect": {
+   "x": 152,
+   "y": 458.59375,
+   "w": 127,
+   "h": 42.796875
+  }
+ },
+ {
+  "id": "kb13",
+  "label": "Copy link — a shareable link to this topic",
+  "path": "div.app aside.sidebar div.mockbar button#copylink",
+  "w": 127,
+  "h": 43,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 1868,
+  "perimArea": 695,
+  "contrast": 5.47,
+  "maxDelta": 177,
+  "verdict": "OK",
+  "rect": {
+   "x": 19,
+   "y": 470.890625,
+   "w": 127,
+   "h": 42.796875
+  }
+ },
+ {
+  "id": "kb14",
+  "label": "Star this topic — save it to your bookmark",
+  "path": "div.app aside.sidebar div.mockbar button#starbtn",
+  "w": 127,
+  "h": 43,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 1858,
+  "perimArea": 695,
+  "contrast": 5.47,
+  "maxDelta": 177,
+  "verdict": "OK",
+  "rect": {
+   "x": 152,
+   "y": 470.890625,
+   "w": 127,
+   "h": 42.796875
+  }
+ },
+ {
+  "id": "kb15",
+  "label": "Your notes — jot notes & mnemonics for thi",
+  "path": "div.app aside.sidebar div.mockbar button#notesopen",
+  "w": 127,
+  "h": 43,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 1852,
+  "perimArea": 695,
+  "contrast": 5.47,
+  "maxDelta": 177,
+  "verdict": "OK",
+  "rect": {
+   "x": 19,
+   "y": 519.6875,
+   "w": 127,
+   "h": 42.796875
+  }
+ },
+ {
+  "id": "kb16",
+  "label": "Print Q&A — a printable sheet of this topi",
+  "path": "div.app aside.sidebar div.mockbar button#printqa",
+  "w": 127,
+  "h": 43,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 1847,
+  "perimArea": 695,
+  "contrast": 5.44,
+  "maxDelta": 176,
+  "verdict": "OK",
+  "rect": {
+   "x": 152,
+   "y": 519.6875,
+   "w": 127,
+   "h": 42.796875
+  }
+ },
+ {
+  "id": "kb17",
+  "label": "One-page cram sheet — everything that matt",
+  "path": "div.app aside.sidebar div.mockbar button#cramopen",
+  "w": 127,
+  "h": 60,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 2027,
+  "perimArea": 762,
+  "contrast": 5.42,
+  "maxDelta": 176,
+  "verdict": "OK",
+  "rect": {
+   "x": 19,
+   "y": 598.984375,
+   "w": 127,
+   "h": 59.59375
+  }
+ },
+ {
+  "id": "kb18",
+  "label": "Session progress — where you’re weak, what",
+  "path": "div.app aside.sidebar div.mockbar button#sessopen",
+  "w": 127,
+  "h": 60,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 2021,
+  "perimArea": 762,
+  "contrast": 5.42,
+  "maxDelta": 176,
+  "verdict": "OK",
+  "rect": {
+   "x": 152,
+   "y": 598.984375,
+   "w": 127,
+   "h": 59.59375
+  }
+ },
+ {
+  "id": "kb19",
+  "label": "Mixed fire — probes & curveballs in random",
+  "path": "div.app aside.sidebar div.mockbar button#mixopen",
+  "w": 127,
+  "h": 43,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 1842,
+  "perimArea": 695,
+  "contrast": 5.37,
+  "maxDelta": 175,
+  "verdict": "OK",
+  "rect": {
+   "x": 19,
+   "y": 664.578125,
+   "w": 127,
+   "h": 42.796875
+  }
+ },
+ {
+  "id": "kb20",
+  "label": "Game plan — how to rehearse with this over",
+  "path": "div.app aside.sidebar div.mockbar button#planopen",
+  "w": 127,
+  "h": 43,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 1842,
+  "perimArea": 695,
+  "contrast": 5.37,
+  "maxDelta": 175,
+  "verdict": "OK",
+  "rect": {
+   "x": 152,
+   "y": 664.578125,
+   "w": 127,
+   "h": 42.796875
+  }
+ },
+ {
+  "id": "kb21",
+  "label": "Scope it first — the clarifying questions ",
+  "path": "div.app aside.sidebar div.mockbar button#scopeopen",
+  "w": 127,
+  "h": 43,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 1852,
+  "perimArea": 695,
+  "contrast": 5.37,
+  "maxDelta": 175,
+  "verdict": "OK",
+  "rect": {
+   "x": 19,
+   "y": 713.375,
+   "w": 127,
+   "h": 42.796875
+  }
+ },
+ {
+  "id": "kb22",
+  "label": "Keyboard shortcuts — jump views, drive it ",
+  "path": "div.app aside.sidebar div.mockbar button#keyopen",
+  "w": 127,
+  "h": 60,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 2012,
+  "perimArea": 762,
+  "contrast": 5.34,
+  "maxDelta": 174,
+  "verdict": "OK",
+  "rect": {
+   "x": 19,
+   "y": 792.671875,
+   "w": 127,
+   "h": 59.59375
+  }
+ },
+ {
+  "id": "kb23",
+  "label": "☽Dark mode — off",
+  "path": "div.app aside.sidebar div.mockbar button#themetog",
+  "w": 127,
+  "h": 60,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 2012,
+  "perimArea": 762,
+  "contrast": 5.34,
+  "maxDelta": 174,
+  "verdict": "OK",
+  "rect": {
+   "x": 152,
+   "y": 792.671875,
+   "w": 127,
+   "h": 59.59375
+  }
+ },
+ {
+  "id": "kb24",
+  "label": "WalkthroughMECHANICS",
+  "path": "div.app aside.sidebar div.seg button.on.seen",
+  "w": 260,
+  "h": 44,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 1381,
+  "perimArea": 1232,
+  "contrast": 5.52,
+  "maxDelta": 178,
+  "verdict": "OK",
+  "rect": {
+   "x": 19,
+   "y": 458.09375,
+   "w": 260,
+   "h": 44
+  }
+ },
+ {
+  "id": "kb25",
+  "label": "Probe DrillGRADED",
+  "path": "div.app aside.sidebar div.seg button",
+  "w": 260,
+  "h": 44,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 3107,
+  "perimArea": 1232,
+  "contrast": 5.86,
+  "maxDelta": 182,
+  "verdict": "OK",
+  "rect": {
+   "x": 19,
+   "y": 458.09375,
+   "w": 260,
+   "h": 44
+  }
+ },
+ {
+  "id": "kb26",
+  "label": "WhiteboardRECONSTRUCT",
+  "path": "div.app aside.sidebar div.seg button",
+  "w": 260,
+  "h": 44,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 3096,
+  "perimArea": 1232,
+  "contrast": 5.52,
+  "maxDelta": 178,
+  "verdict": "OK",
+  "rect": {
+   "x": 19,
+   "y": 458.09375,
+   "w": 260,
+   "h": 44
+  }
+ },
+ {
+  "id": "kb27",
+  "label": "System MapZOOM OUT",
+  "path": "div.app aside.sidebar div.seg button",
+  "w": 260,
+  "h": 44,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 3096,
+  "perimArea": 1232,
+  "contrast": 5.52,
+  "maxDelta": 178,
+  "verdict": "OK",
+  "rect": {
+   "x": 19,
+   "y": 458.09375,
+   "w": 260,
+   "h": 44
+  }
+ },
+ {
+  "id": "kb28",
+  "label": "Trade-offsDECISIONS",
+  "path": "div.app aside.sidebar div.seg button",
+  "w": 260,
+  "h": 44,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 3096,
+  "perimArea": 1232,
+  "contrast": 5.52,
+  "maxDelta": 178,
+  "verdict": "OK",
+  "rect": {
+   "x": 19,
+   "y": 458.09375,
+   "w": 260,
+   "h": 44
+  }
+ },
+ {
+  "id": "kb29",
+  "label": "Model AnswersSCRIPTS",
+  "path": "div.app aside.sidebar div.seg button",
+  "w": 260,
+  "h": 44,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 3098,
+  "perimArea": 1232,
+  "contrast": 5.52,
+  "maxDelta": 178,
+  "verdict": "OK",
+  "rect": {
+   "x": 19,
+   "y": 458.09375,
+   "w": 260,
+   "h": 44
+  }
+ },
+ {
+  "id": "kb30",
+  "label": "NumbersESTIMATE",
+  "path": "div.app aside.sidebar div.seg button",
+  "w": 260,
+  "h": 44,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 3096,
+  "perimArea": 1232,
+  "contrast": 5.52,
+  "maxDelta": 178,
+  "verdict": "OK",
+  "rect": {
+   "x": 19,
+   "y": 458.09375,
+   "w": 260,
+   "h": 44
+  }
+ },
+ {
+  "id": "kb31",
+  "label": "Red FlagsANTI-PATTERNS",
+  "path": "div.app aside.sidebar div.seg button",
+  "w": 260,
+  "h": 44,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 3096,
+  "perimArea": 1232,
+  "contrast": 5.52,
+  "maxDelta": 178,
+  "verdict": "OK",
+  "rect": {
+   "x": 19,
+   "y": 458.09375,
+   "w": 260,
+   "h": 44
+  }
+ },
+ {
+  "id": "kb32",
+  "label": "30-SecondOPEN & CLOSE",
+  "path": "div.app aside.sidebar div.seg button",
+  "w": 260,
+  "h": 44,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 3096,
+  "perimArea": 1232,
+  "contrast": 5.52,
+  "maxDelta": 178,
+  "verdict": "OK",
+  "rect": {
+   "x": 19,
+   "y": 458.09375,
+   "w": 260,
+   "h": 44
+  }
+ },
+ {
+  "id": "kb33",
+  "label": "Go deeper",
+  "path": "div.app main.stage div#walk deep-walkthrough >> summary",
+  "w": 672,
+  "h": 40,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 1384,
+  "perimArea": 2864,
+  "contrast": 18.4,
+  "maxDelta": 236,
+  "verdict": "WEAK",
+  "rect": {
+   "x": 372,
+   "y": 398.484375,
+   "w": 672,
+   "h": 40
+  }
+ },
+ {
+  "id": "kb34",
+  "label": "Next →",
+  "path": "div.app main.stage div#walk deep-walkthrough >> button#wnext",
+  "w": 83,
+  "h": 35,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 693,
+  "perimArea": 487,
+  "contrast": 19.01,
+  "maxDelta": 239,
+  "verdict": "OK",
+  "rect": {
+   "x": 985.203125,
+   "y": 462.484375,
+   "w": 82.796875,
+   "h": 35
+  }
+ },
+ {
+  "id": "kb35",
+  "label": "What a complete answer sounds like model s",
+  "path": "div.app main.stage div#walk deep-walkthrough >> summary",
+  "w": 715,
+  "h": 50,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 1486,
+  "perimArea": 3074,
+  "contrast": 19.03,
+  "maxDelta": 239,
+  "verdict": "WEAK",
+  "rect": {
+   "x": 352,
+   "y": 462.484375,
+   "w": 715,
+   "h": 49.5
+  }
+ },
+ {
+  "id": "kb36",
+  "label": "1Strategy dispatch",
+  "path": "div.app main.stage div#walk deep-walkthrough >> button.arc-step.on",
+  "w": 233,
+  "h": 47,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 1689,
+  "perimArea": 1137,
+  "contrast": 17.42,
+  "maxDelta": 236,
+  "verdict": "OK",
+  "rect": {
+   "x": 348,
+   "y": 563.484375,
+   "w": 233.328125,
+   "h": 47
+  }
+ },
+ {
+  "id": "kb37",
+  "label": "2Single-read fork",
+  "path": "div.app main.stage div#walk deep-walkthrough >> button.arc-step",
+  "w": 233,
+  "h": 47,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 1688,
+  "perimArea": 1137,
+  "contrast": 19.02,
+  "maxDelta": 239,
+  "verdict": "OK",
+  "rect": {
+   "x": 591.328125,
+   "y": 565.484375,
+   "w": 233.328125,
+   "h": 47
+  }
+ },
+ {
+  "id": "kb38",
+  "label": "3Cursor export",
+  "path": "div.app main.stage div#walk deep-walkthrough >> button.arc-step",
+  "w": 233,
+  "h": 47,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 1680,
+  "perimArea": 1137,
+  "contrast": 19.03,
+  "maxDelta": 239,
+  "verdict": "OK",
+  "rect": {
+   "x": 834.65625,
+   "y": 565.484375,
+   "w": 233.328125,
+   "h": 47
+  }
+ },
+ {
+  "id": "kb39",
+  "label": "4Import conflict ladder",
+  "path": "div.app main.stage div#walk deep-walkthrough >> button.arc-step",
+  "w": 233,
+  "h": 47,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 1676,
+  "perimArea": 1137,
+  "contrast": 19.03,
+  "maxDelta": 239,
+  "verdict": "OK",
+  "rect": {
+   "x": 348,
+   "y": 622.484375,
+   "w": 233.328125,
+   "h": 47
+  }
+ },
+ {
+  "id": "kb40",
+  "label": "5Hash + multipart",
+  "path": "div.app main.stage div#walk deep-walkthrough >> button.arc-step",
+  "w": 233,
+  "h": 47,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 1681,
+  "perimArea": 1137,
+  "contrast": 19.03,
+  "maxDelta": 239,
+  "verdict": "OK",
+  "rect": {
+   "x": 591.328125,
+   "y": 622.484375,
+   "w": 233.328125,
+   "h": 47
+  }
+ },
+ {
+  "id": "kb41",
+  "label": "6S3 event routing",
+  "path": "div.app main.stage div#walk deep-walkthrough >> button.arc-step",
+  "w": 233,
+  "h": 47,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 1675,
+  "perimArea": 1137,
+  "contrast": 19.03,
+  "maxDelta": 239,
+  "verdict": "OK",
+  "rect": {
+   "x": 834.65625,
+   "y": 622.484375,
+   "w": 233.328125,
+   "h": 47
+  }
+ },
+ {
+  "id": "kb42",
+  "label": "7Reconciler sweep",
+  "path": "div.app main.stage div#walk deep-walkthrough >> button.arc-step",
+  "w": 233,
+  "h": 47,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 1675,
+  "perimArea": 1137,
+  "contrast": 19.03,
+  "maxDelta": 239,
+  "verdict": "OK",
+  "rect": {
+   "x": 348,
+   "y": 679.484375,
+   "w": 233.328125,
+   "h": 47
+  }
+ },
+ {
+  "id": "kb43",
+  "label": "8Idempotent processing",
+  "path": "div.app main.stage div#walk deep-walkthrough >> button.arc-step",
+  "w": 233,
+  "h": 47,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 1681,
+  "perimArea": 1137,
+  "contrast": 19.02,
+  "maxDelta": 239,
+  "verdict": "OK",
+  "rect": {
+   "x": 591.328125,
+   "y": 679.484375,
+   "w": 233.328125,
+   "h": 47
+  }
+ },
+ {
+  "id": "kb44",
+  "label": "9Observability hooks",
+  "path": "div.app main.stage div#walk deep-walkthrough >> button.arc-step",
+  "w": 233,
+  "h": 47,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 1675,
+  "perimArea": 1137,
+  "contrast": 19.03,
+  "maxDelta": 239,
+  "verdict": "OK",
+  "rect": {
+   "x": 834.65625,
+   "y": 679.484375,
+   "w": 233.328125,
+   "h": 47
+  }
+ },
+ {
+  "id": "kb45",
+  "label": "Coaching for this view",
+  "path": "div.app aside.companion div.cmp-inner",
+  "w": 319,
+  "h": 960,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 2566,
+  "perimArea": 5132,
+  "contrast": 16.87,
+  "maxDelta": 228,
+  "verdict": "OK",
+  "rect": {
+   "x": 1121,
+   "y": 0,
+   "w": 319,
+   "h": 960
+  }
+ },
+ {
+  "id": "kb46",
+  "label": "Hide companion panel",
+  "path": "div.app aside.companion div.cmp-inner button.cmp-fold",
+  "w": 24,
+  "h": 24,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 806,
+  "perimArea": 208,
+  "contrast": 5.49,
+  "maxDelta": 178,
+  "verdict": "OK",
+  "rect": {
+   "x": 1404,
+   "y": 12,
+   "w": 24,
+   "h": 24
+  }
+ },
+ {
+  "id": "kb47",
+  "label": "Scroll to top",
+  "path": "button#scrolltop",
+  "w": 40,
+  "h": 40,
+  "focusVisible": true,
+  "noise": 0,
+  "signal": 0,
+  "perimArea": 333,
+  "contrast": 1,
+  "maxDelta": 0,
+  "verdict": "INVISIBLE",
+  "rect": {
+   "x": 700.2000122070312,
+   "y": 910.2000122070312,
+   "w": 39.5999755859375,
+   "h": 39.5999755859375
+  }
+ }
+]

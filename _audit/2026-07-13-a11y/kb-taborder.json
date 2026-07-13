@@ -1,0 +1,880 @@
+{
+ "seq": [
+  "kb0",
+  "kb1",
+  "kb2",
+  "kb3",
+  "kb4",
+  "kb5",
+  "kb6",
+  "kb7",
+  "kb8",
+  "kb9",
+  "kb10",
+  "kb11",
+  "kb12",
+  "kb13",
+  "kb14",
+  "kb15",
+  "kb16",
+  "kb17",
+  "kb18",
+  "kb19",
+  "kb20",
+  "kb21",
+  "kb22",
+  "kb23",
+  "kb24",
+  "kb25",
+  "kb26",
+  "kb27",
+  "kb28",
+  "kb29",
+  "kb30",
+  "kb31",
+  "kb32",
+  "kb33",
+  "kb34",
+  "kb35",
+  "kb36",
+  "kb37",
+  "kb38",
+  "kb39",
+  "kb40",
+  "kb41",
+  "kb42",
+  "kb43",
+  "kb44",
+  "kb45",
+  "kb46",
+  "kb47"
+ ],
+ "layout": {
+  "kb0": {
+   "region": "sidebar",
+   "cy": 141,
+   "cx": 19,
+   "label": "Toggle focus mode",
+   "path": "div.app aside.sidebar div.side-id div.hdr button#_focus-toggle",
+   "domIndex": 0
+  },
+  "kb1": {
+   "region": "sidebar",
+   "cy": 163,
+   "cx": 19,
+   "label": "Home — topic index",
+   "path": "div.app aside.sidebar div.side-id nav#topicnav button#homeBtn",
+   "domIndex": 1
+  },
+  "kb2": {
+   "region": "sidebar",
+   "cy": 163,
+   "cx": 57,
+   "label": "Previous topic",
+   "path": "div.app aside.sidebar div.side-id nav#topicnav button#tnprev",
+   "domIndex": 2
+  },
+  "kb3": {
+   "region": "sidebar",
+   "cy": 163,
+   "cx": 95,
+   "label": "RehearsingContent Pipeline▾",
+   "path": "div.app aside.sidebar div.side-id nav#topicnav button#tntrigger",
+   "domIndex": 3
+  },
+  "kb4": {
+   "region": "sidebar",
+   "cy": 163,
+   "cx": 247,
+   "label": "Next topic",
+   "path": "div.app aside.sidebar div.side-id nav#topicnav button#tnnext",
+   "domIndex": 4
+  },
+  "kb5": {
+   "region": "sidebar",
+   "cy": 208,
+   "cx": 19,
+   "label": "▶Mock run — the full round, on the clock",
+   "path": "div.app aside.sidebar div.mockcta button#mockopen",
+   "domIndex": 5
+  },
+  "kb6": {
+   "region": "sidebar",
+   "cy": 282,
+   "cx": 19,
+   "label": "Interviewer cuts in mid-answer — off",
+   "path": "div.app aside.sidebar div.mockcta button#inttog",
+   "domIndex": 6
+  },
+  "kb7": {
+   "region": "sidebar",
+   "cy": 379,
+   "cx": 206,
+   "label": "Decrease text size",
+   "path": "div.app aside.sidebar div#textzoom button.textzoom-btn",
+   "domIndex": 7
+  },
+  "kb8": {
+   "region": "sidebar",
+   "cy": 379,
+   "cx": 240,
+   "label": "Increase text size",
+   "path": "div.app aside.sidebar div#textzoom button.textzoom-btn",
+   "domIndex": 8
+  },
+  "kb9": {
+   "region": "sidebar",
+   "cy": 470,
+   "cx": 206,
+   "label": "Start focus timer",
+   "path": "div.app aside.sidebar div#pomodoro div.pomodoro-row button.pomodoro-btn.pomodoro-play",
+   "domIndex": 9
+  },
+  "kb10": {
+   "region": "sidebar",
+   "cy": 472,
+   "cx": 244,
+   "label": "Reset focus timer",
+   "path": "div.app aside.sidebar div#pomodoro div.pomodoro-row button.pomodoro-btn.pomodoro-reset",
+   "domIndex": 10
+  },
+  "kb11": {
+   "region": "sidebar",
+   "cy": 995,
+   "cx": 19,
+   "label": "Topic index — all topics across the six gr",
+   "path": "div.app aside.sidebar div.mockbar button#idxopen",
+   "domIndex": 11
+  },
+  "kb12": {
+   "region": "sidebar",
+   "cy": 995,
+   "cx": 152,
+   "label": "Search — jump to any topic or view by name",
+   "path": "div.app aside.sidebar div.mockbar button#searchopen",
+   "domIndex": 12
+  },
+  "kb13": {
+   "region": "sidebar",
+   "cy": 1074,
+   "cx": 19,
+   "label": "Copy link — a shareable link to this topic",
+   "path": "div.app aside.sidebar div.mockbar button#copylink",
+   "domIndex": 13
+  },
+  "kb14": {
+   "region": "sidebar",
+   "cy": 1074,
+   "cx": 152,
+   "label": "Star this topic — save it to your bookmark",
+   "path": "div.app aside.sidebar div.mockbar button#starbtn",
+   "domIndex": 14
+  },
+  "kb15": {
+   "region": "sidebar",
+   "cy": 1123,
+   "cx": 19,
+   "label": "Your notes — jot notes & mnemonics for thi",
+   "path": "div.app aside.sidebar div.mockbar button#notesopen",
+   "domIndex": 15
+  },
+  "kb16": {
+   "region": "sidebar",
+   "cy": 1123,
+   "cx": 152,
+   "label": "Print Q&A — a printable sheet of this topi",
+   "path": "div.app aside.sidebar div.mockbar button#printqa",
+   "domIndex": 16
+  },
+  "kb17": {
+   "region": "sidebar",
+   "cy": 1202,
+   "cx": 19,
+   "label": "One-page cram sheet — everything that matt",
+   "path": "div.app aside.sidebar div.mockbar button#cramopen",
+   "domIndex": 17
+  },
+  "kb18": {
+   "region": "sidebar",
+   "cy": 1202,
+   "cx": 152,
+   "label": "Session progress — where you’re weak, what",
+   "path": "div.app aside.sidebar div.mockbar button#sessopen",
+   "domIndex": 18
+  },
+  "kb19": {
+   "region": "sidebar",
+   "cy": 1268,
+   "cx": 19,
+   "label": "Mixed fire — probes & curveballs in random",
+   "path": "div.app aside.sidebar div.mockbar button#mixopen",
+   "domIndex": 19
+  },
+  "kb20": {
+   "region": "sidebar",
+   "cy": 1268,
+   "cx": 152,
+   "label": "Game plan — how to rehearse with this over",
+   "path": "div.app aside.sidebar div.mockbar button#planopen",
+   "domIndex": 20
+  },
+  "kb21": {
+   "region": "sidebar",
+   "cy": 1316,
+   "cx": 19,
+   "label": "Scope it first — the clarifying questions ",
+   "path": "div.app aside.sidebar div.mockbar button#scopeopen",
+   "domIndex": 21
+  },
+  "kb22": {
+   "region": "sidebar",
+   "cy": 1396,
+   "cx": 19,
+   "label": "Keyboard shortcuts — jump views, drive it ",
+   "path": "div.app aside.sidebar div.mockbar button#keyopen",
+   "domIndex": 22
+  },
+  "kb23": {
+   "region": "sidebar",
+   "cy": 1396,
+   "cx": 152,
+   "label": "☽Dark mode — off",
+   "path": "div.app aside.sidebar div.mockbar button#themetog",
+   "domIndex": 23
+  },
+  "kb24": {
+   "region": "sidebar",
+   "cy": 526,
+   "cx": 19,
+   "label": "WalkthroughMECHANICS",
+   "path": "div.app aside.sidebar div.seg button.on.seen",
+   "domIndex": 24
+  },
+  "kb25": {
+   "region": "sidebar",
+   "cy": 573,
+   "cx": 19,
+   "label": "Probe DrillGRADED",
+   "path": "div.app aside.sidebar div.seg button",
+   "domIndex": 25
+  },
+  "kb26": {
+   "region": "sidebar",
+   "cy": 620,
+   "cx": 19,
+   "label": "WhiteboardRECONSTRUCT",
+   "path": "div.app aside.sidebar div.seg button",
+   "domIndex": 26
+  },
+  "kb27": {
+   "region": "sidebar",
+   "cy": 667,
+   "cx": 19,
+   "label": "System MapZOOM OUT",
+   "path": "div.app aside.sidebar div.seg button",
+   "domIndex": 27
+  },
+  "kb28": {
+   "region": "sidebar",
+   "cy": 714,
+   "cx": 19,
+   "label": "Trade-offsDECISIONS",
+   "path": "div.app aside.sidebar div.seg button",
+   "domIndex": 28
+  },
+  "kb29": {
+   "region": "sidebar",
+   "cy": 761,
+   "cx": 19,
+   "label": "Model AnswersSCRIPTS",
+   "path": "div.app aside.sidebar div.seg button",
+   "domIndex": 29
+  },
+  "kb30": {
+   "region": "sidebar",
+   "cy": 808,
+   "cx": 19,
+   "label": "NumbersESTIMATE",
+   "path": "div.app aside.sidebar div.seg button",
+   "domIndex": 30
+  },
+  "kb31": {
+   "region": "sidebar",
+   "cy": 855,
+   "cx": 19,
+   "label": "Red FlagsANTI-PATTERNS",
+   "path": "div.app aside.sidebar div.seg button",
+   "domIndex": 31
+  },
+  "kb32": {
+   "region": "sidebar",
+   "cy": 902,
+   "cx": 19,
+   "label": "30-SecondOPEN & CLOSE",
+   "path": "div.app aside.sidebar div.seg button",
+   "domIndex": 32
+  },
+  "kb33": {
+   "region": "stage",
+   "cy": 398,
+   "cx": 372,
+   "label": "Go deeper",
+   "path": "div.app main.stage div#walk deep-walkthrough >> summary",
+   "domIndex": 33
+  },
+  "kb34": {
+   "region": "stage",
+   "cy": 478,
+   "cx": 985,
+   "label": "Next →",
+   "path": "div.app main.stage div#walk deep-walkthrough >> button#wnext",
+   "domIndex": 34
+  },
+  "kb35": {
+   "region": "stage",
+   "cy": 532,
+   "cx": 352,
+   "label": "What a complete answer sounds like model s",
+   "path": "div.app main.stage div#walk deep-walkthrough >> summary",
+   "domIndex": 35
+  },
+  "kb36": {
+   "region": "stage",
+   "cy": 633,
+   "cx": 348,
+   "label": "1Strategy dispatch",
+   "path": "div.app main.stage div#walk deep-walkthrough >> button.arc-step.on",
+   "domIndex": 36
+  },
+  "kb37": {
+   "region": "stage",
+   "cy": 635,
+   "cx": 591,
+   "label": "2Single-read fork",
+   "path": "div.app main.stage div#walk deep-walkthrough >> button.arc-step",
+   "domIndex": 37
+  },
+  "kb38": {
+   "region": "stage",
+   "cy": 635,
+   "cx": 835,
+   "label": "3Cursor export",
+   "path": "div.app main.stage div#walk deep-walkthrough >> button.arc-step",
+   "domIndex": 38
+  },
+  "kb39": {
+   "region": "stage",
+   "cy": 692,
+   "cx": 348,
+   "label": "4Import conflict ladder",
+   "path": "div.app main.stage div#walk deep-walkthrough >> button.arc-step",
+   "domIndex": 39
+  },
+  "kb40": {
+   "region": "stage",
+   "cy": 692,
+   "cx": 591,
+   "label": "5Hash + multipart",
+   "path": "div.app main.stage div#walk deep-walkthrough >> button.arc-step",
+   "domIndex": 40
+  },
+  "kb41": {
+   "region": "stage",
+   "cy": 692,
+   "cx": 835,
+   "label": "6S3 event routing",
+   "path": "div.app main.stage div#walk deep-walkthrough >> button.arc-step",
+   "domIndex": 41
+  },
+  "kb42": {
+   "region": "stage",
+   "cy": 749,
+   "cx": 348,
+   "label": "7Reconciler sweep",
+   "path": "div.app main.stage div#walk deep-walkthrough >> button.arc-step",
+   "domIndex": 42
+  },
+  "kb43": {
+   "region": "stage",
+   "cy": 749,
+   "cx": 591,
+   "label": "8Idempotent processing",
+   "path": "div.app main.stage div#walk deep-walkthrough >> button.arc-step",
+   "domIndex": 43
+  },
+  "kb44": {
+   "region": "stage",
+   "cy": 749,
+   "cx": 835,
+   "label": "9Observability hooks",
+   "path": "div.app main.stage div#walk deep-walkthrough >> button.arc-step",
+   "domIndex": 44
+  },
+  "kb45": {
+   "region": "companion",
+   "cy": 0,
+   "cx": 1121,
+   "label": "Coaching for this view",
+   "path": "div.app aside.companion div.cmp-inner",
+   "domIndex": 45
+  },
+  "kb46": {
+   "region": "companion",
+   "cy": 12,
+   "cx": 1404,
+   "label": "Hide companion panel",
+   "path": "div.app aside.companion div.cmp-inner button.cmp-fold",
+   "domIndex": 46
+  },
+  "kb47": {
+   "region": "floating",
+   "cy": 910,
+   "cx": 700,
+   "label": "Scroll to top",
+   "path": "button#scrolltop",
+   "domIndex": 47
+  }
+ },
+ "byRegion": {
+  "sidebar": [
+   {
+    "i": 1,
+    "region": "sidebar",
+    "cy": 141,
+    "cx": 19,
+    "label": "Toggle focus mode",
+    "path": "div.app aside.sidebar div.side-id div.hdr button#_focus-toggle",
+    "domIndex": 0
+   },
+   {
+    "i": 2,
+    "region": "sidebar",
+    "cy": 163,
+    "cx": 19,
+    "label": "Home — topic index",
+    "path": "div.app aside.sidebar div.side-id nav#topicnav button#homeBtn",
+    "domIndex": 1
+   },
+   {
+    "i": 3,
+    "region": "sidebar",
+    "cy": 163,
+    "cx": 57,
+    "label": "Previous topic",
+    "path": "div.app aside.sidebar div.side-id nav#topicnav button#tnprev",
+    "domIndex": 2
+   },
+   {
+    "i": 4,
+    "region": "sidebar",
+    "cy": 163,
+    "cx": 95,
+    "label": "RehearsingContent Pipeline▾",
+    "path": "div.app aside.sidebar div.side-id nav#topicnav button#tntrigger",
+    "domIndex": 3
+   },
+   {
+    "i": 5,
+    "region": "sidebar",
+    "cy": 163,
+    "cx": 247,
+    "label": "Next topic",
+    "path": "div.app aside.sidebar div.side-id nav#topicnav button#tnnext",
+    "domIndex": 4
+   },
+   {
+    "i": 6,
+    "region": "sidebar",
+    "cy": 208,
+    "cx": 19,
+    "label": "▶Mock run — the full round, on the clock",
+    "path": "div.app aside.sidebar div.mockcta button#mockopen",
+    "domIndex": 5
+   },
+   {
+    "i": 7,
+    "region": "sidebar",
+    "cy": 282,
+    "cx": 19,
+    "label": "Interviewer cuts in mid-answer — off",
+    "path": "div.app aside.sidebar div.mockcta button#inttog",
+    "domIndex": 6
+   },
+   {
+    "i": 8,
+    "region": "sidebar",
+    "cy": 379,
+    "cx": 206,
+    "label": "Decrease text size",
+    "path": "div.app aside.sidebar div#textzoom button.textzoom-btn",
+    "domIndex": 7
+   },
+   {
+    "i": 9,
+    "region": "sidebar",
+    "cy": 379,
+    "cx": 240,
+    "label": "Increase text size",
+    "path": "div.app aside.sidebar div#textzoom button.textzoom-btn",
+    "domIndex": 8
+   },
+   {
+    "i": 10,
+    "region": "sidebar",
+    "cy": 470,
+    "cx": 206,
+    "label": "Start focus timer",
+    "path": "div.app aside.sidebar div#pomodoro div.pomodoro-row button.pomodoro-btn.pomodoro-play",
+    "domIndex": 9
+   },
+   {
+    "i": 11,
+    "region": "sidebar",
+    "cy": 472,
+    "cx": 244,
+    "label": "Reset focus timer",
+    "path": "div.app aside.sidebar div#pomodoro div.pomodoro-row button.pomodoro-btn.pomodoro-reset",
+    "domIndex": 10
+   },
+   {
+    "i": 12,
+    "region": "sidebar",
+    "cy": 995,
+    "cx": 19,
+    "label": "Topic index — all topics across the six gr",
+    "path": "div.app aside.sidebar div.mockbar button#idxopen",
+    "domIndex": 11
+   },
+   {
+    "i": 13,
+    "region": "sidebar",
+    "cy": 995,
+    "cx": 152,
+    "label": "Search — jump to any topic or view by name",
+    "path": "div.app aside.sidebar div.mockbar button#searchopen",
+    "domIndex": 12
+   },
+   {
+    "i": 14,
+    "region": "sidebar",
+    "cy": 1074,
+    "cx": 19,
+    "label": "Copy link — a shareable link to this topic",
+    "path": "div.app aside.sidebar div.mockbar button#copylink",
+    "domIndex": 13
+   },
+   {
+    "i": 15,
+    "region": "sidebar",
+    "cy": 1074,
+    "cx": 152,
+    "label": "Star this topic — save it to your bookmark",
+    "path": "div.app aside.sidebar div.mockbar button#starbtn",
+    "domIndex": 14
+   },
+   {
+    "i": 16,
+    "region": "sidebar",
+    "cy": 1123,
+    "cx": 19,
+    "label": "Your notes — jot notes & mnemonics for thi",
+    "path": "div.app aside.sidebar div.mockbar button#notesopen",
+    "domIndex": 15
+   },
+   {
+    "i": 17,
+    "region": "sidebar",
+    "cy": 1123,
+    "cx": 152,
+    "label": "Print Q&A — a printable sheet of this topi",
+    "path": "div.app aside.sidebar div.mockbar button#printqa",
+    "domIndex": 16
+   },
+   {
+    "i": 18,
+    "region": "sidebar",
+    "cy": 1202,
+    "cx": 19,
+    "label": "One-page cram sheet — everything that matt",
+    "path": "div.app aside.sidebar div.mockbar button#cramopen",
+    "domIndex": 17
+   },
+   {
+    "i": 19,
+    "region": "sidebar",
+    "cy": 1202,
+    "cx": 152,
+    "label": "Session progress — where you’re weak, what",
+    "path": "div.app aside.sidebar div.mockbar button#sessopen",
+    "domIndex": 18
+   },
+   {
+    "i": 20,
+    "region": "sidebar",
+    "cy": 1268,
+    "cx": 19,
+    "label": "Mixed fire — probes & curveballs in random",
+    "path": "div.app aside.sidebar div.mockbar button#mixopen",
+    "domIndex": 19
+   },
+   {
+    "i": 21,
+    "region": "sidebar",
+    "cy": 1268,
+    "cx": 152,
+    "label": "Game plan — how to rehearse with this over",
+    "path": "div.app aside.sidebar div.mockbar button#planopen",
+    "domIndex": 20
+   },
+   {
+    "i": 22,
+    "region": "sidebar",
+    "cy": 1316,
+    "cx": 19,
+    "label": "Scope it first — the clarifying questions ",
+    "path": "div.app aside.sidebar div.mockbar button#scopeopen",
+    "domIndex": 21
+   },
+   {
+    "i": 23,
+    "region": "sidebar",
+    "cy": 1396,
+    "cx": 19,
+    "label": "Keyboard shortcuts — jump views, drive it ",
+    "path": "div.app aside.sidebar div.mockbar button#keyopen",
+    "domIndex": 22
+   },
+   {
+    "i": 24,
+    "region": "sidebar",
+    "cy": 1396,
+    "cx": 152,
+    "label": "☽Dark mode — off",
+    "path": "div.app aside.sidebar div.mockbar button#themetog",
+    "domIndex": 23
+   },
+   {
+    "i": 25,
+    "region": "sidebar",
+    "cy": 526,
+    "cx": 19,
+    "label": "WalkthroughMECHANICS",
+    "path": "div.app aside.sidebar div.seg button.on.seen",
+    "domIndex": 24
+   },
+   {
+    "i": 26,
+    "region": "sidebar",
+    "cy": 573,
+    "cx": 19,
+    "label": "Probe DrillGRADED",
+    "path": "div.app aside.sidebar div.seg button",
+    "domIndex": 25
+   },
+   {
+    "i": 27,
+    "region": "sidebar",
+    "cy": 620,
+    "cx": 19,
+    "label": "WhiteboardRECONSTRUCT",
+    "path": "div.app aside.sidebar div.seg button",
+    "domIndex": 26
+   },
+   {
+    "i": 28,
+    "region": "sidebar",
+    "cy": 667,
+    "cx": 19,
+    "label": "System MapZOOM OUT",
+    "path": "div.app aside.sidebar div.seg button",
+    "domIndex": 27
+   },
+   {
+    "i": 29,
+    "region": "sidebar",
+    "cy": 714,
+    "cx": 19,
+    "label": "Trade-offsDECISIONS",
+    "path": "div.app aside.sidebar div.seg button",
+    "domIndex": 28
+   },
+   {
+    "i": 30,
+    "region": "sidebar",
+    "cy": 761,
+    "cx": 19,
+    "label": "Model AnswersSCRIPTS",
+    "path": "div.app aside.sidebar div.seg button",
+    "domIndex": 29
+   },
+   {
+    "i": 31,
+    "region": "sidebar",
+    "cy": 808,
+    "cx": 19,
+    "label": "NumbersESTIMATE",
+    "path": "div.app aside.sidebar div.seg button",
+    "domIndex": 30
+   },
+   {
+    "i": 32,
+    "region": "sidebar",
+    "cy": 855,
+    "cx": 19,
+    "label": "Red FlagsANTI-PATTERNS",
+    "path": "div.app aside.sidebar div.seg button",
+    "domIndex": 31
+   },
+   {
+    "i": 33,
+    "region": "sidebar",
+    "cy": 902,
+    "cx": 19,
+    "label": "30-SecondOPEN & CLOSE",
+    "path": "div.app aside.sidebar div.seg button",
+    "domIndex": 32
+   }
+  ],
+  "stage": [
+   {
+    "i": 34,
+    "region": "stage",
+    "cy": 398,
+    "cx": 372,
+    "label": "Go deeper",
+    "path": "div.app main.stage div#walk deep-walkthrough >> summary",
+    "domIndex": 33
+   },
+   {
+    "i": 35,
+    "region": "stage",
+    "cy": 478,
+    "cx": 985,
+    "label": "Next →",
+    "path": "div.app main.stage div#walk deep-walkthrough >> button#wnext",
+    "domIndex": 34
+   },
+   {
+    "i": 36,
+    "region": "stage",
+    "cy": 532,
+    "cx": 352,
+    "label": "What a complete answer sounds like model s",
+    "path": "div.app main.stage div#walk deep-walkthrough >> summary",
+    "domIndex": 35
+   },
+   {
+    "i": 37,
+    "region": "stage",
+    "cy": 633,
+    "cx": 348,
+    "label": "1Strategy dispatch",
+    "path": "div.app main.stage div#walk deep-walkthrough >> button.arc-step.on",
+    "domIndex": 36
+   },
+   {
+    "i": 38,
+    "region": "stage",
+    "cy": 635,
+    "cx": 591,
+    "label": "2Single-read fork",
+    "path": "div.app main.stage div#walk deep-walkthrough >> button.arc-step",
+    "domIndex": 37
+   },
+   {
+    "i": 39,
+    "region": "stage",
+    "cy": 635,
+    "cx": 835,
+    "label": "3Cursor export",
+    "path": "div.app main.stage div#walk deep-walkthrough >> button.arc-step",
+    "domIndex": 38
+   },
+   {
+    "i": 40,
+    "region": "stage",
+    "cy": 692,
+    "cx": 348,
+    "label": "4Import conflict ladder",
+    "path": "div.app main.stage div#walk deep-walkthrough >> button.arc-step",
+    "domIndex": 39
+   },
+   {
+    "i": 41,
+    "region": "stage",
+    "cy": 692,
+    "cx": 591,
+    "label": "5Hash + multipart",
+    "path": "div.app main.stage div#walk deep-walkthrough >> button.arc-step",
+    "domIndex": 40
+   },
+   {
+    "i": 42,
+    "region": "stage",
+    "cy": 692,
+    "cx": 835,
+    "label": "6S3 event routing",
+    "path": "div.app main.stage div#walk deep-walkthrough >> button.arc-step",
+    "domIndex": 41
+   },
+   {
+    "i": 43,
+    "region": "stage",
+    "cy": 749,
+    "cx": 348,
+    "label": "7Reconciler sweep",
+    "path": "div.app main.stage div#walk deep-walkthrough >> button.arc-step",
+    "domIndex": 42
+   },
+   {
+    "i": 44,
+    "region": "stage",
+    "cy": 749,
+    "cx": 591,
+    "label": "8Idempotent processing",
+    "path": "div.app main.stage div#walk deep-walkthrough >> button.arc-step",
+    "domIndex": 43
+   },
+   {
+    "i": 45,
+    "region": "stage",
+    "cy": 749,
+    "cx": 835,
+    "label": "9Observability hooks",
+    "path": "div.app main.stage div#walk deep-walkthrough >> button.arc-step",
+    "domIndex": 44
+   }
+  ],
+  "companion": [
+   {
+    "i": 46,
+    "region": "companion",
+    "cy": 0,
+    "cx": 1121,
+    "label": "Coaching for this view",
+    "path": "div.app aside.companion div.cmp-inner",
+    "domIndex": 45
+   },
+   {
+    "i": 47,
+    "region": "companion",
+    "cy": 12,
+    "cx": 1404,
+    "label": "Hide companion panel",
+    "path": "div.app aside.companion div.cmp-inner button.cmp-fold",
+    "domIndex": 46
+   }
+  ],
+  "floating": [
+   {
+    "i": 48,
+    "region": "floating",
+    "cy": 910,
+    "cx": 700,
+    "label": "Scroll to top",
+    "path": "button#scrolltop",
+    "domIndex": 47
+   }
+  ]
+ }
+}

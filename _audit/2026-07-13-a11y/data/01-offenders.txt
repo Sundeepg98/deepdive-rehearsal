@@ -1,0 +1,35 @@
+(light)|section.ix-group div.ix-grid div.ix-cell button.ix-card|316x88.8|hit 36x9
+(light)|div#_index-overlay div.ix-panel button.ix-cross span.ix-cross-ar|18x21|hit 18x22
+(light)|div.ix-panel div.ix-home button.ix-home-btn span.ix-home-btn-k|36.9x13|hit 38x14
+(light)|div.ix-grid div.ix-cell button.ix-card span.ix-c-tail|87.7x10|hit 69x10
+(light)|div.ix-panel button.ix-cross span.ix-cross-tx span.ix-cross-d|286x12|hit 69x12
+(light)|div div button span|163.3x12|hit 69x12
+(light)|div div button span|146.8x12|hit 69x12
+(light)|div div button span|188.3x12|hit 69x12
+(light)|div div button span|161.8x12|hit 69x12
+(light)|div div button span|155.3x12|hit 69x12
+(light)|div div button span|130.3x12|hit 69x12
+(light)|div div button span|116.7x14|hit 69x14
+(light)|div div button span|86x14|hit 69x14
+(light)|div div button span|148.1x14|hit 69x14
+(light)|div div button span|90x14|hit 69x14
+(light)|div div button span|112.3x14|hit 69x14
+(light)|div div button span|110.5x14|hit 69x14
+(light)|div.ix-grid div.ix-cell button.ix-card span.ix-c-name|195.9x15|hit 69x16
+(light)|div.ix-panel button.ix-cross span.ix-cross-tx span.ix-cross-k|256x18|hit 69x17
+(light)|div.ix-panel button.ix-cross span.ix-cross-tx span.ix-cross-k|286x18|hit 69x18
+(light)|div#_notes-overlay div.nt-panel div.nt-head button.nt-x|30x44|hit 30x44
+(light)|div#_search-overlay div div input|245.2x19|hit 69x20
+(light)|div#_search-overlay div div input|218.2x19|hit 69x20
+(light)|button#cramx|32x44|hit 32x44
+(light)|button#sessx|32x44|hit 32x44
+(light)|button#mockx|32x44|hit 32x44
+(light)|div.ix-panel button.ix-cross span.ix-cross-tx span.ix-cross-d|256x24|hit 69x23
+(light)|div.ix-scroll section.ix-group div.ix-g-head button.ix-g-cram|63.2x44|hit 64x31
+(light)|div#_index-overlay div.ix-panel button.ix-cross span.ix-cross-tx|286x32|hit 69x32
+(light)|div.ix-grid div.ix-cell button.ix-card span.ix-c-thesis|288x30.8|hit 69x32
+deep-session|button#sscopy|55.5x44|hit 56x41
+(light)|div#_index-overlay div.ix-panel div.ix-filter-row input.ix-filter|316x39.5|hit 69x40
+(light)|div#_index-overlay div.ix-panel div.ix-filter-row input.ix-filter|286x39.5|hit 69x40
+deep-session|input#sscode|214.5x44|hit 69x41
+(light)|div#_index-overlay div.ix-panel button.ix-cross span.ix-cross-tx|256x44|hit 69x42

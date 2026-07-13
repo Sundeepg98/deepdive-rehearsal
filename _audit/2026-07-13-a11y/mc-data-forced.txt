@@ -1,0 +1,127 @@
+=== A. DEAD-RULE AUDIT — do the forced-colors / prefers-contrast blocks match any nodes? ===
+
+  styles.css:751  @media(forced-colors:active){ .card,.dec,.rf,.piv,.thread{...} .badge{...} ... }
+  styles.css:749  @media(prefers-contrast:more){ .card,.dec,.rf,.piv,.thread{border-width:2px} ... }
+  Both live in the LIGHT-DOM stylesheet. Where do those elements actually exist?
+
+  selector          lightDOM   shadowDOM   the light-DOM @media rule...
+  .card                 0          10   *** MATCHES NOTHING (all 10 are in shadow roots) ***
+  .dec                  0           7   *** MATCHES NOTHING (all 7 are in shadow roots) ***
+  .rf                   0           9   *** MATCHES NOTHING (all 9 are in shadow roots) ***
+  .piv                  0           7   *** MATCHES NOTHING (all 7 are in shadow roots) ***
+  .thread               0           1   *** MATCHES NOTHING (all 1 are in shadow roots) ***
+  .badge                1           0   reaches 1
+  .mockbtn              1           0   reaches 1
+  .crambtn             13           0   reaches 13
+  .tools-fab            1           0   reaches 1
+  .inttog               1           0   reaches 1
+  .seg button          10           0   reaches 10
+  .locator              1           0   reaches 1
+  .sub                  1           3   reaches 1
+  .mb-d                12           0   reaches 12
+  .cmp-note             2           0   reaches 2
+  .cmp-thesis           1           0   reaches 1
+  .dgm-s                0           7   *** MATCHES NOTHING (all 7 are in shadow roots) ***
+  .cmp-reopen           1           0   reaches 1
+  .tn-trigger           1           0   reaches 1
+  .tn-step              3           0   reaches 3
+  .pill                 0           3   *** MATCHES NOTHING (all 3 are in shadow roots) ***
+
+  >>> 6 selector(s) named in those two @media blocks exist ONLY inside shadow roots.
+      A light-DOM stylesheet cannot cross a shadow boundary, so those declarations apply to
+      ZERO elements. The high-contrast / forced-colors "support" for the card surfaces — which
+      is where ALL the content lives — is not merely weak, it never executes.
+      base-styles.js already learned this exact lesson TWICE (print page-breaks, the 44px tap
+      floor) and carries a shadow-side rule for each. It carries NO forced-colors and NO
+      prefers-contrast rule.
+
+  adoptedStyleSheets on <deep-walkthrough> (the shadow side):
+    sheet[0]   2172 chars  forced-colors:false  prefers-contrast:false  reduced-motion:true  print:true
+    sheet[1]    393 chars  forced-colors:false  prefers-contrast:false  reduced-motion:false  print:false
+    sheet[2]   1698 chars  forced-colors:false  prefers-contrast:false  reduced-motion:false  print:false
+  => the shadow side carries reduced-motion and print rules, but forced-colors:false  prefers-contrast:false
+
+=== B. FORCED-COLORS RENDERING — 6 rooms x 2 themes ===
+
+   room                        theme  painted   uniqueColors  verdict
+   messaging-events            light   106224          602   RENDERS
+   messaging-events            dark    106224          595   RENDERS
+   data-storage                light   102608          601   RENDERS
+   data-storage                dark    102608          594   RENDERS
+   reliability-observability   light   105357          616   RENDERS
+   reliability-observability   dark    105358          612   RENDERS
+   platform-infra              light   101082          603   RENDERS
+   platform-infra              dark    101082          596   RENDERS
+   architecture-apis           light   107179          602   RENDERS
+   architecture-apis           dark    107179          595   RENDERS
+   security-tenancy            light    95736          602   RENDERS
+   security-tenancy            dark     95736          595   RENDERS
+
+   Room distinguishability under forced-colors (pixel diff between room screenshots, light):
+     messaging-events vs data-storage                differing px = 122609  (colour is gone; the differences are TEXT)
+     messaging-events vs reliability-observability   differing px = 166059  (colour is gone; the differences are TEXT)
+     messaging-events vs platform-infra              differing px = 117858  (colour is gone; the differences are TEXT)
+     messaging-events vs architecture-apis           differing px = 89480  (colour is gone; the differences are TEXT)
+     messaging-events vs security-tenancy            differing px = 114733  (colour is gone; the differences are TEXT)
+
+   .locator under forced-colors: {"text":"SECtrust boundary","key":"SEC","color":"rgb(0, 0, 0)","bg":"rgb(255, 255, 255)","border":"rgb(0, 0, 0)"}
+   -> the room hue is unavailable in forced-colors BY DESIGN (that is correct and unavoidable).
+      The room letter-code (.loc-key) is what must carry room identity there — and it does.
+
+=== C. DRILL SCOREBOARD — does the FILL-vs-OUTLINE encoding survive forced-colors? ===
+
+  --- NORMAL ---
+    before grading: Solid="0Solid" cls="pill g z"   tile bg(px)=[252,252,250]   Revisit tile bg(px)=[252,252,250]   distance=0
+    after  grading: Solid="3Solid" cls="pill g"   tile bg(px)=[29,111,63]   Revisit tile bg(px)=[252,252,250]   distance=551
+    computed background-color of the SOLID tile: rgb(29, 111, 63)    forced-color-adjust: auto
+    glyphs: Solid="\"✓\""  Revisit="\"↻\""
+    => the SOLID tile FILLS (fill-vs-outline encoding INTACT)
+    positive control: unfilled(z)=0 -> filled=551. Instrument DETECTS a fill
+
+  --- FORCED ---
+    before grading: Solid="0Solid" cls="pill g z"   tile bg(px)=[255,255,255]   Revisit tile bg(px)=[255,255,255]   distance=0
+    after  grading: Solid="3Solid" cls="pill g"   tile bg(px)=[255,255,255]   Revisit tile bg(px)=[255,255,255]   distance=0
+    computed background-color of the SOLID tile: rgb(255, 255, 255)    forced-color-adjust: auto
+    glyphs: Solid="\"✓\""  Revisit="\"↻\""
+    => the SOLID tile *** DOES NOT FILL — the encoding is GONE ***
+
+=== D. prefers-contrast:more — does the block do anything? ===
+
+   normal        : {"mq":false,"cardBorderWidth":"1px","cardOutline":"3px","segOutline":"3px","mockbtnBorder":"0px","locatorColor":"rgb(150, 61, 134)","subColor":"rgb(107, 104, 98)"}
+   contrast:more : {"mq":true,"cardBorderWidth":"1px","cardOutline":"3px","segOutline":"2px","mockbtnBorder":"1px","locatorColor":"rgb(42, 40, 35)","subColor":"rgb(107, 104, 98)"}
+   media query matches: true
+   properties that actually CHANGED: segOutline, mockbtnBorder, locatorColor
+   >>> .card border-width is UNCHANGED (still 1px). styles.css:749 asks for 2px,
+       but .card lives in a shadow root and the rule is in the light-DOM sheet. It never runs.
+
+================ FINDINGS ================
+[
+  {
+    "id": "F1",
+    "sev": "HIGH",
+    "deadSelectors": [
+      ".card",
+      ".dec",
+      ".rf",
+      ".piv",
+      ".thread",
+      ".dgm-s"
+    ]
+  },
+  {
+    "id": "F2",
+    "sev": "HIGH",
+    "detail": "SOLID tile does not fill under forced-colors",
+    "bg": "rgb(255, 255, 255)",
+    "fca": "auto",
+    "distance": 0,
+    "glyph": "\"✓\""
+  },
+  {
+    "id": "F3",
+    "sev": "MEDIUM",
+    "detail": ".card border-width unchanged under prefers-contrast:more (rule is light-DOM, .card is shadow-DOM)",
+    "want": "2px",
+    "got": "1px"
+  }
+]

@@ -1,0 +1,32 @@
+
+### focus-btn  [security-tenancy / dark / walk]
+   text="Focus"  color=rgb(167, 162, 154)  nearest opaque bg=rgb(42,27,32) (from button)  chainOpacity=1  gradientInChain=false
+   HAND-COMPUTED contrast (from computed styles, independent of the pixel pipeline) = 6.49:1
+   rect={"x":19,"y":141,"w":60,"h":20} display=inline-block visibility=visible
+   crop saved: D:/claude-workspace/deepdive-rehearsal/_audit/2026-07-13-a11y/shots/motion-contrast/verify-focus-btn-dark.png
+
+### walk-nav  [messaging-events / dark / walk]
+   text="← Prev"  color=rgb(236, 234, 228)  nearest opaque bg=rgb(30,28,37) (from button)  chainOpacity=0.32  gradientInChain=false
+   HAND-COMPUTED contrast (from computed styles, independent of the pixel pipeline) = 2.62:1
+   rect={"x":347,"y":503,"w":83,"h":35} display=block visibility=visible
+   crop saved: D:/claude-workspace/deepdive-rehearsal/_audit/2026-07-13-a11y/shots/motion-contrast/verify-walk-nav-dark.png
+
+### pomodoro  [messaging-events / dark / walk]
+   text="▶"  color=rgb(255, 255, 255)  nearest opaque bg=rgb(79,205,171) (from button.pomodoro-btn)  chainOpacity=1  gradientInChain=false
+   HAND-COMPUTED contrast (from computed styles, independent of the pixel pipeline) = 1.97:1
+   rect={"x":206,"y":472,"w":28,"h":28} display=flex visibility=visible
+   crop saved: D:/claude-workspace/deepdive-rehearsal/_audit/2026-07-13-a11y/shots/motion-contrast/verify-pomodoro-dark.png
+
+### badge  [messaging-events / light / walk]
+   text="Deep rehearsal"  color=rgb(255, 255, 255)  nearest opaque bg=rgb(250,249,245) (from body)  chainOpacity=1  gradientInChain=true
+   HAND-COMPUTED contrast (from computed styles, independent of the pixel pipeline) = 1.05:1
+   rect={"x":19,"y":22,"w":135,"h":25} display=inline-block visibility=visible
+   crop saved: D:/claude-workspace/deepdive-rehearsal/_audit/2026-07-13-a11y/shots/motion-contrast/verify-badge-light.png
+
+### pill-zero  [messaging-events / light / drill]
+   text="0"  color=rgb(107, 104, 98)  nearest opaque bg=rgb(255,255,255) (from div.pill)  chainOpacity=0.62  gradientInChain=false
+   HAND-COMPUTED contrast (from computed styles, independent of the pixel pipeline) = 2.57:1
+   rect={"x":358,"y":325,"w":159,"h":24} display=block visibility=visible
+   crop saved: D:/claude-workspace/deepdive-rehearsal/_audit/2026-07-13-a11y/shots/motion-contrast/verify-pill-zero-light.png
+
+sidebar crop (dark): D:/claude-workspace/deepdive-rehearsal/_audit/2026-07-13-a11y/shots/motion-contrast/verify-sidebar-dark.png

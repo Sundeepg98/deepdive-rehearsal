@@ -1,0 +1,6622 @@
+{
+ "p390": {
+  "walk": {
+   "at1": {
+    "clipped": [
+     {
+      "sel": "span#tncurrent",
+      "host": "(light)",
+      "cutX": 64,
+      "cutY": 0,
+      "box": "82x15",
+      "content": "146x15",
+      "text": "Event-Driven Backbone"
+     },
+     {
+      "sel": "div#warc button.arc-step",
+      "host": "deep-walkthrough",
+      "cutX": 10,
+      "cutY": 0,
+      "box": "111x116",
+      "content": "121x116",
+      "text": "3The router fans out to each consumer’s ow"
+     },
+     {
+      "sel": "button#idxopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Topic index — all topics across the six gr"
+     },
+     {
+      "sel": "button#searchopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Search — jump to any topic or view by name"
+     },
+     {
+      "sel": "button#copylink",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Copy link — a shareable link to this topic"
+     },
+     {
+      "sel": "button#starbtn",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Star this topic — save it to your bookmark"
+     },
+     {
+      "sel": "button#notesopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Your notes — jot notes & mnemonics for thi"
+     },
+     {
+      "sel": "button#printqa",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Print Q&A — a printable sheet of this topi"
+     },
+     {
+      "sel": "button#cramopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "One-page cram sheet — everything that matt"
+     },
+     {
+      "sel": "button#sessopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Session progress — where you’re weak, what"
+     },
+     {
+      "sel": "button#mixopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Mixed fire — probes & curveballs in random"
+     },
+     {
+      "sel": "button#planopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Game plan — how to rehearse with this over"
+     },
+     {
+      "sel": "button#scopeopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Scope it first — the clarifying questions "
+     },
+     {
+      "sel": "div#warc button.arc-step",
+      "host": "deep-walkthrough",
+      "cutX": 5,
+      "cutY": 0,
+      "box": "111x116",
+      "content": "116x116",
+      "text": "7Duplicates are made harmless"
+     }
+    ],
+    "escaped": [],
+    "overlaps": [
+     {
+      "a": "button#mockopen",
+      "b": "button#wprev",
+      "overlap": "83x10"
+     },
+     {
+      "a": "button#mockopen",
+      "b": "button#wnext",
+      "overlap": "6x10"
+     },
+     {
+      "a": "button#toolsfab",
+      "b": "button#wnext",
+      "overlap": "67x9"
+     },
+     {
+      "a": "button#idxopen",
+      "b": "div#warc button.arc-step.on",
+      "overlap": "112x44"
+     },
+     {
+      "a": "button#idxopen",
+      "b": "div#warc button.arc-step",
+      "overlap": "113x44"
+     },
+     {
+      "a": "button#idxopen",
+      "b": "div#warc button.arc-step",
+      "overlap": "112x44"
+     },
+     {
+      "a": "button#searchopen",
+      "b": "div#warc button.arc-step.on",
+      "overlap": "112x44"
+     },
+     {
+      "a": "button#searchopen",
+      "b": "div#warc button.arc-step",
+      "overlap": "113x44"
+     },
+     {
+      "a": "button#searchopen",
+      "b": "div#warc button.arc-step",
+      "overlap": "112x44"
+     },
+     {
+      "a": "button#copylink",
+      "b": "div#warc button.arc-step",
+      "overlap": "112x44"
+     },
+     {
+      "a": "button#copylink",
+      "b": "div#warc button.arc-step",
+      "overlap": "113x44"
+     },
+     {
+      "a": "button#copylink",
+      "b": "div#warc button.arc-step",
+      "overlap": "112x44"
+     }
+    ],
+    "nClipped": 14,
+    "nEscaped": 0,
+    "nOverlaps": 26
+   },
+   "at2": {
+    "clipped": [
+     {
+      "sel": "span#tncurrent",
+      "host": "(light)",
+      "cutX": 284,
+      "cutY": 0,
+      "box": "8x31",
+      "content": "292x31",
+      "text": "Event-Driven Backbone"
+     },
+     {
+      "sel": "div#warc button.arc-step",
+      "host": "deep-walkthrough",
+      "cutX": 71,
+      "cutY": 0,
+      "box": "111x209",
+      "content": "182x209",
+      "text": "3The router fans out to each consumer’s ow"
+     },
+     {
+      "sel": "div#warc button.arc-step",
+      "host": "deep-walkthrough",
+      "cutX": 62,
+      "cutY": 0,
+      "box": "111x209",
+      "content": "173x209",
+      "text": "7Duplicates are made harmless"
+     },
+     {
+      "sel": "div#warc button.arc-step",
+      "host": "deep-walkthrough",
+      "cutX": 55,
+      "cutY": 0,
+      "box": "111x240",
+      "content": "166x240",
+      "text": "4The queue buffers and the consumer pulls"
+     },
+     {
+      "sel": "div#warc button.arc-step",
+      "host": "deep-walkthrough",
+      "cutX": 55,
+      "cutY": 0,
+      "box": "111x240",
+      "content": "166x240",
+      "text": "6The consumer processes and acks — with a "
+     },
+     {
+      "sel": "div#warc button.arc-step",
+      "host": "deep-walkthrough",
+      "cutX": 51,
+      "cutY": 0,
+      "box": "111x209",
+      "content": "162x209",
+      "text": "8Ordering, where it actually matters"
+     },
+     {
+      "sel": "div#warc button.arc-step.on",
+      "host": "deep-walkthrough",
+      "cutX": 47,
+      "cutY": 0,
+      "box": "111x209",
+      "content": "158x209",
+      "text": "1The producer emits and moves on"
+     },
+     {
+      "sel": "div#warc button.arc-step",
+      "host": "deep-walkthrough",
+      "cutX": 46,
+      "cutY": 0,
+      "box": "111x209",
+      "content": "157x209",
+      "text": "9Failure: bounded retries, then dead-lette"
+     },
+     {
+      "sel": "div#warc button.arc-step",
+      "host": "deep-walkthrough",
+      "cutX": 44,
+      "cutY": 0,
+      "box": "111x147",
+      "content": "155x147",
+      "text": "10The numbers you watch"
+     },
+     {
+      "sel": "div#warc button.arc-step",
+      "host": "deep-walkthrough",
+      "cutX": 42,
+      "cutY": 0,
+      "box": "111x240",
+      "content": "153x240",
+      "text": "5The message is leased, not handed over"
+     },
+     {
+      "sel": "button#idxopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Topic index — all topics across the six gr"
+     },
+     {
+      "sel": "button#searchopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Search — jump to any topic or view by name"
+     },
+     {
+      "sel": "button#copylink",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Copy link — a shareable link to this topic"
+     },
+     {
+      "sel": "button#starbtn",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Star this topic — save it to your bookmark"
+     },
+     {
+      "sel": "button#notesopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Your notes — jot notes & mnemonics for thi"
+     },
+     {
+      "sel": "button#printqa",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Print Q&A — a printable sheet of this topi"
+     },
+     {
+      "sel": "button#cramopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "One-page cram sheet — everything that matt"
+     },
+     {
+      "sel": "button#sessopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Session progress — where you’re weak, what"
+     },
+     {
+      "sel": "button#mixopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Mixed fire — probes & curveballs in random"
+     },
+     {
+      "sel": "button#planopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Game plan — how to rehearse with this over"
+     },
+     {
+      "sel": "button#scopeopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Scope it first — the clarifying questions "
+     },
+     {
+      "sel": "div#warc button.arc-step",
+      "host": "deep-walkthrough",
+      "cutX": 25,
+      "cutY": 0,
+      "box": "111x209",
+      "content": "136x209",
+      "text": "2The emit is made atomic — the outbox"
+     },
+     {
+      "sel": "button#themetog",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "☽Dark mode — off"
+     }
+    ],
+    "escaped": [
+     {
+      "sel": "div#warc button.arc-step span.arc-t",
+      "host": "deep-walkthrough",
+      "over": 42
+     },
+     {
+      "sel": "div#warc button.arc-step span.arc-t",
+      "host": "deep-walkthrough",
+      "over": 26
+     },
+     {
+      "sel": "div#warc button.arc-step span.arc-t",
+      "host": "deep-walkthrough",
+      "over": 17
+     }
+    ],
+    "overlaps": [
+     {
+      "a": "button#themetog",
+      "b": "div#wcard details.disc summary",
+      "overlap": "312x4"
+     }
+    ],
+    "nClipped": 23,
+    "nEscaped": 3,
+    "nOverlaps": 1
+   },
+   "nodes": 2010,
+   "ink": 2449204
+  },
+  "drill": {
+   "at1": {
+    "clipped": [
+     {
+      "sel": "span#tncurrent",
+      "host": "(light)",
+      "cutX": 64,
+      "cutY": 0,
+      "box": "82x15",
+      "content": "146x15",
+      "text": "Event-Driven Backbone"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 0,
+      "cutY": 28,
+      "box": "57x29",
+      "content": "57x57",
+      "text": "why a queue between services"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 0,
+      "cutY": 28,
+      "box": "57x29",
+      "content": "57x57",
+      "text": "why duplicates are inevitable"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 0,
+      "cutY": 28,
+      "box": "57x29",
+      "content": "57x57",
+      "text": "when not to go event-driven"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 3,
+      "cutY": 14,
+      "box": "57x29",
+      "content": "60x43",
+      "text": "EventBridge vs SQS vs SNS"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 1,
+      "cutY": 14,
+      "box": "57x29",
+      "content": "58x43",
+      "text": "the idempotent consumer"
+     },
+     {
+      "sel": "div#dnav button.dn-step.on span.dn-t",
+      "host": "deep-drill",
+      "cutX": 0,
+      "cutY": 14,
+      "box": "57x29",
+      "content": "57x43",
+      "text": "what event-driven is"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 0,
+      "cutY": 14,
+      "box": "57x29",
+      "content": "57x43",
+      "text": "the visibility timeout"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 0,
+      "cutY": 14,
+      "box": "57x29",
+      "content": "57x43",
+      "text": "the dead-letter queue"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 0,
+      "cutY": 14,
+      "box": "57x29",
+      "content": "57x43",
+      "text": "standard vs FIFO queue"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 0,
+      "cutY": 14,
+      "box": "57x29",
+      "content": "57x43",
+      "text": "fan-out to many consumers"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 0,
+      "cutY": 14,
+      "box": "57x29",
+      "content": "57x43",
+      "text": "partial batch failure"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 0,
+      "cutY": 14,
+      "box": "57x29",
+      "content": "57x43",
+      "text": "the exactly-once myth"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 0,
+      "cutY": 14,
+      "box": "57x29",
+      "content": "57x43",
+      "text": "event schema evolution"
+     },
+     {
+      "sel": "button#idxopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Topic index — all topics across the six gr"
+     },
+     {
+      "sel": "button#searchopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Search — jump to any topic or view by name"
+     },
+     {
+      "sel": "button#copylink",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Copy link — a shareable link to this topic"
+     },
+     {
+      "sel": "button#starbtn",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Star this topic — save it to your bookmark"
+     },
+     {
+      "sel": "button#notesopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Your notes — jot notes & mnemonics for thi"
+     },
+     {
+      "sel": "button#printqa",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Print Q&A — a printable sheet of this topi"
+     },
+     {
+      "sel": "button#cramopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "One-page cram sheet — everything that matt"
+     },
+     {
+      "sel": "button#sessopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Session progress — where you’re weak, what"
+     },
+     {
+      "sel": "button#mixopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Mixed fire — probes & curveballs in random"
+     },
+     {
+      "sel": "button#planopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Game plan — how to rehearse with this over"
+     },
+     {
+      "sel": "button#scopeopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Scope it first — the clarifying questions "
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 8,
+      "cutY": 0,
+      "box": "57x14",
+      "content": "65x14",
+      "text": "backpressure"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 7,
+      "cutY": 0,
+      "box": "57x14",
+      "content": "64x14",
+      "text": "observability"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 6,
+      "cutY": 0,
+      "box": "57x29",
+      "content": "63x29",
+      "text": "replay and reprocessing"
+     }
+    ],
+    "escaped": [],
+    "overlaps": [
+     {
+      "a": "button#mockopen",
+      "b": "button#adv",
+      "overlap": "260x42"
+     },
+     {
+      "a": "button#toolsfab",
+      "b": "button#adv",
+      "overlap": "44x41"
+     },
+     {
+      "a": "button#idxopen",
+      "b": "div#dnav button.dn-step",
+      "overlap": "114x36"
+     },
+     {
+      "a": "button#idxopen",
+      "b": "div#dnav button.dn-step",
+      "overlap": "115x36"
+     },
+     {
+      "a": "button#idxopen",
+      "b": "div#dnav button.dn-step",
+      "overlap": "114x36"
+     },
+     {
+      "a": "button#searchopen",
+      "b": "div#dnav button.dn-step",
+      "overlap": "114x7"
+     },
+     {
+      "a": "button#searchopen",
+      "b": "div#dnav button.dn-step",
+      "overlap": "115x7"
+     },
+     {
+      "a": "button#searchopen",
+      "b": "div#dnav button.dn-step",
+      "overlap": "114x7"
+     },
+     {
+      "a": "button#searchopen",
+      "b": "div#dnav button.dn-step",
+      "overlap": "114x29"
+     },
+     {
+      "a": "button#searchopen",
+      "b": "div#dnav button.dn-step",
+      "overlap": "115x29"
+     },
+     {
+      "a": "button#searchopen",
+      "b": "div#dnav button.dn-step",
+      "overlap": "114x29"
+     },
+     {
+      "a": "button#copylink",
+      "b": "div#dnav button.dn-step",
+      "overlap": "114x42"
+     }
+    ],
+    "nClipped": 28,
+    "nEscaped": 0,
+    "nOverlaps": 23
+   },
+   "at2": {
+    "clipped": [
+     {
+      "sel": "span#tncurrent",
+      "host": "(light)",
+      "cutX": 284,
+      "cutY": 0,
+      "box": "8x31",
+      "content": "292x31",
+      "text": "Event-Driven Backbone"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 63,
+      "cutY": 86,
+      "box": "57x57",
+      "content": "120x143",
+      "text": "EventBridge vs SQS vs SNS"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 51,
+      "cutY": 86,
+      "box": "57x57",
+      "content": "108x143",
+      "text": "fan-out to many consumers"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 29,
+      "cutY": 86,
+      "box": "57x57",
+      "content": "86x143",
+      "text": "why a queue between services"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 45,
+      "cutY": 58,
+      "box": "57x57",
+      "content": "102x115",
+      "text": "why duplicates are inevitable"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 70,
+      "cutY": 29,
+      "box": "57x57",
+      "content": "127x86",
+      "text": "replay and reprocessing"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 6,
+      "cutY": 86,
+      "box": "57x57",
+      "content": "63x143",
+      "text": "when not to go event-driven"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 31,
+      "cutY": 58,
+      "box": "57x57",
+      "content": "88x115",
+      "text": "standard vs FIFO queue"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 60,
+      "cutY": 29,
+      "box": "57x57",
+      "content": "117x86",
+      "text": "the idempotent consumer"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 21,
+      "cutY": 58,
+      "box": "57x57",
+      "content": "78x115",
+      "text": "the exactly-once myth"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 74,
+      "cutY": 0,
+      "box": "57x29",
+      "content": "131x29",
+      "text": "backpressure"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 72,
+      "cutY": 0,
+      "box": "57x29",
+      "content": "129x29",
+      "text": "observability"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 37,
+      "cutY": 29,
+      "box": "57x57",
+      "content": "94x86",
+      "text": "event schema evolution"
+     },
+     {
+      "sel": "div#dnav button.dn-step.on span.dn-t",
+      "host": "deep-drill",
+      "cutX": 6,
+      "cutY": 58,
+      "box": "57x57",
+      "content": "63x115",
+      "text": "what event-driven is"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 5,
+      "cutY": 58,
+      "box": "57x57",
+      "content": "62x115",
+      "text": "the dead-letter queue"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 54,
+      "cutY": 1,
+      "box": "57x57",
+      "content": "111x58",
+      "text": "delivery guarantees"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 25,
+      "cutY": 29,
+      "box": "57x57",
+      "content": "82x86",
+      "text": "the visibility timeout"
+     },
+     {
+      "sel": "button#idxopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Topic index — all topics across the six gr"
+     },
+     {
+      "sel": "button#searchopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Search — jump to any topic or view by name"
+     },
+     {
+      "sel": "button#copylink",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Copy link — a shareable link to this topic"
+     },
+     {
+      "sel": "button#starbtn",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Star this topic — save it to your bookmark"
+     },
+     {
+      "sel": "button#notesopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Your notes — jot notes & mnemonics for thi"
+     },
+     {
+      "sel": "button#printqa",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Print Q&A — a printable sheet of this topi"
+     },
+     {
+      "sel": "button#cramopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "One-page cram sheet — everything that matt"
+     },
+     {
+      "sel": "button#sessopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Session progress — where you’re weak, what"
+     },
+     {
+      "sel": "button#mixopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Mixed fire — probes & curveballs in random"
+     },
+     {
+      "sel": "button#planopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Game plan — how to rehearse with this over"
+     },
+     {
+      "sel": "button#scopeopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Scope it first — the clarifying questions "
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 39,
+      "cutY": 1,
+      "box": "57x57",
+      "content": "96x58",
+      "text": "poison messages"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 8,
+      "cutY": 29,
+      "box": "57x57",
+      "content": "65x86",
+      "text": "fat vs thin events"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 7,
+      "cutY": 29,
+      "box": "57x57",
+      "content": "64x86",
+      "text": "the dedup store"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 7,
+      "cutY": 29,
+      "box": "57x57",
+      "content": "64x86",
+      "text": "partial batch failure"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 29,
+      "cutY": 0,
+      "box": "57x29",
+      "content": "86x29",
+      "text": "ordering"
+     },
+     {
+      "sel": "button#themetog",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "☽Dark mode — off"
+     }
+    ],
+    "escaped": [],
+    "overlaps": [
+     {
+      "a": "button#printqa",
+      "b": "button#adv",
+      "overlap": "314x15"
+     },
+     {
+      "a": "button#planopen",
+      "b": "div#dnav button.dn-step.on",
+      "overlap": "114x44"
+     },
+     {
+      "a": "button#planopen",
+      "b": "div#dnav button.dn-step",
+      "overlap": "115x44"
+     },
+     {
+      "a": "button#planopen",
+      "b": "div#dnav button.dn-step",
+      "overlap": "114x44"
+     },
+     {
+      "a": "button#scopeopen",
+      "b": "div#dnav button.dn-step.on",
+      "overlap": "114x23"
+     },
+     {
+      "a": "button#scopeopen",
+      "b": "div#dnav button.dn-step",
+      "overlap": "115x24"
+     },
+     {
+      "a": "button#scopeopen",
+      "b": "div#dnav button.dn-step",
+      "overlap": "114x24"
+     },
+     {
+      "a": "button#scopeopen",
+      "b": "div#dnav button.dn-step",
+      "overlap": "114x12"
+     },
+     {
+      "a": "button#scopeopen",
+      "b": "div#dnav button.dn-step",
+      "overlap": "115x12"
+     },
+     {
+      "a": "button#scopeopen",
+      "b": "div#dnav button.dn-step",
+      "overlap": "114x12"
+     },
+     {
+      "a": "button#themetog",
+      "b": "div#dnav button.dn-step",
+      "overlap": "114x15"
+     },
+     {
+      "a": "button#themetog",
+      "b": "div#dnav button.dn-step",
+      "overlap": "115x15"
+     }
+    ],
+    "nClipped": 34,
+    "nEscaped": 0,
+    "nOverlaps": 16
+   },
+   "nodes": 2010,
+   "ink": 2449204
+  },
+  "wb": {
+   "at1": {
+    "clipped": [
+     {
+      "sel": "span#tncurrent",
+      "host": "(light)",
+      "cutX": 64,
+      "cutY": 0,
+      "box": "82x15",
+      "content": "146x15",
+      "text": "Event-Driven Backbone"
+     },
+     {
+      "sel": "button#idxopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Topic index — all topics across the six gr"
+     },
+     {
+      "sel": "button#searchopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Search — jump to any topic or view by name"
+     },
+     {
+      "sel": "button#copylink",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Copy link — a shareable link to this topic"
+     },
+     {
+      "sel": "button#starbtn",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Star this topic — save it to your bookmark"
+     },
+     {
+      "sel": "button#notesopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Your notes — jot notes & mnemonics for thi"
+     },
+     {
+      "sel": "button#printqa",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Print Q&A — a printable sheet of this topi"
+     },
+     {
+      "sel": "button#cramopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "One-page cram sheet — everything that matt"
+     },
+     {
+      "sel": "button#sessopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Session progress — where you’re weak, what"
+     },
+     {
+      "sel": "button#mixopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Mixed fire — probes & curveballs in random"
+     },
+     {
+      "sel": "button#planopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Game plan — how to rehearse with this over"
+     },
+     {
+      "sel": "button#scopeopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Scope it first — the clarifying questions "
+     }
+    ],
+    "escaped": [],
+    "overlaps": [
+     {
+      "a": "button#mockopen",
+      "b": "ol#wblist li div.wb-act button.wb-rev",
+      "overlap": "67x33"
+     },
+     {
+      "a": "button#mockopen",
+      "b": "ol#wblist li div.wb-act button.wb-got",
+      "overlap": "68x33"
+     },
+     {
+      "a": "button#mockopen",
+      "b": "ol#wblist li div.wb-act button.wb-miss",
+      "overlap": "65x33"
+     },
+     {
+      "a": "button#searchopen",
+      "b": "ol#wblist li div.wb-act button.wb-rev",
+      "overlap": "67x40"
+     },
+     {
+      "a": "button#searchopen",
+      "b": "ol#wblist li div.wb-act button.wb-got",
+      "overlap": "68x40"
+     },
+     {
+      "a": "button#searchopen",
+      "b": "ol#wblist li div.wb-act button.wb-miss",
+      "overlap": "69x40"
+     },
+     {
+      "a": "button#copylink",
+      "b": "ol#wblist li div.wb-act button.wb-rev",
+      "overlap": "67x15"
+     },
+     {
+      "a": "button#copylink",
+      "b": "ol#wblist li div.wb-act button.wb-got",
+      "overlap": "68x15"
+     },
+     {
+      "a": "button#copylink",
+      "b": "ol#wblist li div.wb-act button.wb-miss",
+      "overlap": "69x15"
+     },
+     {
+      "a": "button#starbtn",
+      "b": "ol#wblist li div.wb-act button.wb-rev",
+      "overlap": "67x22"
+     },
+     {
+      "a": "button#starbtn",
+      "b": "ol#wblist li div.wb-act button.wb-got",
+      "overlap": "68x22"
+     },
+     {
+      "a": "button#starbtn",
+      "b": "ol#wblist li div.wb-act button.wb-miss",
+      "overlap": "69x22"
+     }
+    ],
+    "nClipped": 12,
+    "nEscaped": 0,
+    "nOverlaps": 25
+   },
+   "at2": {
+    "clipped": [
+     {
+      "sel": "span#tncurrent",
+      "host": "(light)",
+      "cutX": 284,
+      "cutY": 0,
+      "box": "8x31",
+      "content": "292x31",
+      "text": "Event-Driven Backbone"
+     },
+     {
+      "sel": "button#idxopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Topic index — all topics across the six gr"
+     },
+     {
+      "sel": "button#searchopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Search — jump to any topic or view by name"
+     },
+     {
+      "sel": "button#copylink",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Copy link — a shareable link to this topic"
+     },
+     {
+      "sel": "button#starbtn",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Star this topic — save it to your bookmark"
+     },
+     {
+      "sel": "button#notesopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Your notes — jot notes & mnemonics for thi"
+     },
+     {
+      "sel": "button#printqa",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Print Q&A — a printable sheet of this topi"
+     },
+     {
+      "sel": "button#cramopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "One-page cram sheet — everything that matt"
+     },
+     {
+      "sel": "button#sessopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Session progress — where you’re weak, what"
+     },
+     {
+      "sel": "button#mixopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Mixed fire — probes & curveballs in random"
+     },
+     {
+      "sel": "button#planopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Game plan — how to rehearse with this over"
+     },
+     {
+      "sel": "button#scopeopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Scope it first — the clarifying questions "
+     },
+     {
+      "sel": "button#themetog",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "☽Dark mode — off"
+     },
+     {
+      "sel": "html body div.app main.stage",
+      "host": "(light)",
+      "cutX": 6,
+      "cutY": 0,
+      "box": "390x2885",
+      "content": "396x2885",
+      "text": "RECONSTRUCTWhiteboard Companioncoaching fo"
+     }
+    ],
+    "escaped": [
+     {
+      "sel": "ol#wblist li div.wb-act button.wb-miss",
+      "host": "deep-whiteboard",
+      "over": 6
+     },
+     {
+      "sel": "ol#wblist li div.wb-act button.wb-miss",
+      "host": "deep-whiteboard",
+      "over": 6
+     },
+     {
+      "sel": "ol#wblist li div.wb-act button.wb-miss",
+      "host": "deep-whiteboard",
+      "over": 6
+     },
+     {
+      "sel": "ol#wblist li div.wb-act button.wb-miss",
+      "host": "deep-whiteboard",
+      "over": 6
+     },
+     {
+      "sel": "ol#wblist li div.wb-act button.wb-miss",
+      "host": "deep-whiteboard",
+      "over": 6
+     },
+     {
+      "sel": "ol#wblist li div.wb-act button.wb-miss",
+      "host": "deep-whiteboard",
+      "over": 6
+     },
+     {
+      "sel": "ol#wblist li div.wb-act button.wb-miss",
+      "host": "deep-whiteboard",
+      "over": 6
+     },
+     {
+      "sel": "ol#wblist li div.wb-act button.wb-miss",
+      "host": "deep-whiteboard",
+      "over": 6
+     },
+     {
+      "sel": "ol#wblist li div.wb-act button.wb-miss",
+      "host": "deep-whiteboard",
+      "over": 6
+     }
+    ],
+    "overlaps": [
+     {
+      "a": "button#idxopen",
+      "b": "ol#wblist li div.wb-act button.wb-rev",
+      "overlap": "104x38"
+     },
+     {
+      "a": "button#idxopen",
+      "b": "ol#wblist li div.wb-act button.wb-got",
+      "overlap": "86x38"
+     },
+     {
+      "a": "button#idxopen",
+      "b": "ol#wblist li div.wb-act button.wb-miss",
+      "overlap": "86x38"
+     },
+     {
+      "a": "button#searchopen",
+      "b": "ol#wblist li div.wb-act button.wb-rev",
+      "overlap": "104x25"
+     },
+     {
+      "a": "button#searchopen",
+      "b": "ol#wblist li div.wb-act button.wb-got",
+      "overlap": "86x25"
+     },
+     {
+      "a": "button#searchopen",
+      "b": "ol#wblist li div.wb-act button.wb-miss",
+      "overlap": "86x25"
+     },
+     {
+      "a": "button#notesopen",
+      "b": "ol#wblist li div.wb-act button.wb-rev",
+      "overlap": "104x15"
+     },
+     {
+      "a": "button#notesopen",
+      "b": "ol#wblist li div.wb-act button.wb-got",
+      "overlap": "86x15"
+     },
+     {
+      "a": "button#notesopen",
+      "b": "ol#wblist li div.wb-act button.wb-miss",
+      "overlap": "86x15"
+     },
+     {
+      "a": "button#printqa",
+      "b": "ol#wblist li div.wb-act button.wb-rev",
+      "overlap": "104x44"
+     },
+     {
+      "a": "button#printqa",
+      "b": "ol#wblist li div.wb-act button.wb-got",
+      "overlap": "86x44"
+     },
+     {
+      "a": "button#printqa",
+      "b": "ol#wblist li div.wb-act button.wb-miss",
+      "overlap": "86x44"
+     }
+    ],
+    "nClipped": 14,
+    "nEscaped": 9,
+    "nOverlaps": 21
+   },
+   "nodes": 2010,
+   "ink": 2449207
+  },
+  "sys": {
+   "at1": {
+    "clipped": [
+     {
+      "sel": "span#tncurrent",
+      "host": "(light)",
+      "cutX": 64,
+      "cutY": 0,
+      "box": "82x15",
+      "content": "146x15",
+      "text": "Event-Driven Backbone"
+     },
+     {
+      "sel": "button#idxopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Topic index — all topics across the six gr"
+     },
+     {
+      "sel": "button#searchopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Search — jump to any topic or view by name"
+     },
+     {
+      "sel": "button#copylink",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Copy link — a shareable link to this topic"
+     },
+     {
+      "sel": "button#starbtn",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Star this topic — save it to your bookmark"
+     },
+     {
+      "sel": "button#notesopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Your notes — jot notes & mnemonics for thi"
+     },
+     {
+      "sel": "button#printqa",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Print Q&A — a printable sheet of this topi"
+     },
+     {
+      "sel": "button#cramopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "One-page cram sheet — everything that matt"
+     },
+     {
+      "sel": "button#sessopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Session progress — where you’re weak, what"
+     },
+     {
+      "sel": "button#mixopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Mixed fire — probes & curveballs in random"
+     },
+     {
+      "sel": "button#planopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Game plan — how to rehearse with this over"
+     },
+     {
+      "sel": "button#scopeopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Scope it first — the clarifying questions "
+     }
+    ],
+    "escaped": [],
+    "overlaps": [
+     {
+      "a": "button#idxopen",
+      "b": "div#smPivs details.piv summary",
+      "overlap": "312x29"
+     },
+     {
+      "a": "button#searchopen",
+      "b": "div#smPivs details.piv summary",
+      "overlap": "312x28"
+     },
+     {
+      "a": "button#searchopen",
+      "b": "div#smPivs details.piv summary",
+      "overlap": "312x4"
+     },
+     {
+      "a": "button#copylink",
+      "b": "div#smPivs details.piv summary",
+      "overlap": "312x41"
+     },
+     {
+      "a": "button#starbtn",
+      "b": "div#smPivs details.piv summary",
+      "overlap": "312x42"
+     },
+     {
+      "a": "button#notesopen",
+      "b": "div#smPivs details.piv summary",
+      "overlap": "312x44"
+     },
+     {
+      "a": "button#printqa",
+      "b": "div#smPivs details.piv summary",
+      "overlap": "312x32"
+     },
+     {
+      "a": "button#cramopen",
+      "b": "div#smPivs details.piv summary",
+      "overlap": "312x12"
+     },
+     {
+      "a": "button#cramopen",
+      "b": "div#smPivs details.piv summary",
+      "overlap": "312x20"
+     },
+     {
+      "a": "button#sessopen",
+      "b": "div#smPivs details.piv summary",
+      "overlap": "312x44"
+     },
+     {
+      "a": "button#mixopen",
+      "b": "div#smPivs details.piv summary",
+      "overlap": "312x5"
+     },
+     {
+      "a": "button#mixopen",
+      "b": "div#smPivs details.piv summary",
+      "overlap": "312x27"
+     }
+    ],
+    "nClipped": 12,
+    "nEscaped": 0,
+    "nOverlaps": 15
+   },
+   "at2": {
+    "clipped": [
+     {
+      "sel": "span#tncurrent",
+      "host": "(light)",
+      "cutX": 284,
+      "cutY": 0,
+      "box": "8x31",
+      "content": "292x31",
+      "text": "Event-Driven Backbone"
+     },
+     {
+      "sel": "button#idxopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Topic index — all topics across the six gr"
+     },
+     {
+      "sel": "button#searchopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Search — jump to any topic or view by name"
+     },
+     {
+      "sel": "button#copylink",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Copy link — a shareable link to this topic"
+     },
+     {
+      "sel": "button#starbtn",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Star this topic — save it to your bookmark"
+     },
+     {
+      "sel": "button#notesopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Your notes — jot notes & mnemonics for thi"
+     },
+     {
+      "sel": "button#printqa",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Print Q&A — a printable sheet of this topi"
+     },
+     {
+      "sel": "button#cramopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "One-page cram sheet — everything that matt"
+     },
+     {
+      "sel": "button#sessopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Session progress — where you’re weak, what"
+     },
+     {
+      "sel": "button#mixopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Mixed fire — probes & curveballs in random"
+     },
+     {
+      "sel": "button#planopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Game plan — how to rehearse with this over"
+     },
+     {
+      "sel": "button#scopeopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Scope it first — the clarifying questions "
+     },
+     {
+      "sel": "button#themetog",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "☽Dark mode — off"
+     },
+     {
+      "sel": "div#smPivs details.piv",
+      "host": "deep-system-map",
+      "cutX": 2,
+      "cutY": 0,
+      "box": "312x246",
+      "content": "314x246",
+      "text": "You need a transaction across three servic"
+     }
+    ],
+    "escaped": [],
+    "overlaps": [],
+    "nClipped": 14,
+    "nEscaped": 0,
+    "nOverlaps": 0
+   },
+   "nodes": 2010,
+   "ink": 2449159
+  },
+  "trade": {
+   "at1": {
+    "clipped": [
+     {
+      "sel": "span#tncurrent",
+      "host": "(light)",
+      "cutX": 64,
+      "cutY": 0,
+      "box": "82x15",
+      "content": "146x15",
+      "text": "Event-Driven Backbone"
+     },
+     {
+      "sel": "button#idxopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Topic index — all topics across the six gr"
+     },
+     {
+      "sel": "button#searchopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Search — jump to any topic or view by name"
+     },
+     {
+      "sel": "button#copylink",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Copy link — a shareable link to this topic"
+     },
+     {
+      "sel": "button#starbtn",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Star this topic — save it to your bookmark"
+     },
+     {
+      "sel": "button#notesopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Your notes — jot notes & mnemonics for thi"
+     },
+     {
+      "sel": "button#printqa",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Print Q&A — a printable sheet of this topi"
+     },
+     {
+      "sel": "button#cramopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "One-page cram sheet — everything that matt"
+     },
+     {
+      "sel": "button#sessopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Session progress — where you’re weak, what"
+     },
+     {
+      "sel": "button#mixopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Mixed fire — probes & curveballs in random"
+     },
+     {
+      "sel": "button#planopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Game plan — how to rehearse with this over"
+     },
+     {
+      "sel": "button#scopeopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Scope it first — the clarifying questions "
+     }
+    ],
+    "escaped": [],
+    "overlaps": [],
+    "nClipped": 12,
+    "nEscaped": 0,
+    "nOverlaps": 0
+   },
+   "at2": {
+    "clipped": [
+     {
+      "sel": "span#tncurrent",
+      "host": "(light)",
+      "cutX": 284,
+      "cutY": 0,
+      "box": "8x31",
+      "content": "292x31",
+      "text": "Event-Driven Backbone"
+     },
+     {
+      "sel": "button#idxopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Topic index — all topics across the six gr"
+     },
+     {
+      "sel": "button#searchopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Search — jump to any topic or view by name"
+     },
+     {
+      "sel": "button#copylink",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Copy link — a shareable link to this topic"
+     },
+     {
+      "sel": "button#starbtn",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Star this topic — save it to your bookmark"
+     },
+     {
+      "sel": "button#notesopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Your notes — jot notes & mnemonics for thi"
+     },
+     {
+      "sel": "button#printqa",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Print Q&A — a printable sheet of this topi"
+     },
+     {
+      "sel": "button#cramopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "One-page cram sheet — everything that matt"
+     },
+     {
+      "sel": "button#sessopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Session progress — where you’re weak, what"
+     },
+     {
+      "sel": "button#mixopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Mixed fire — probes & curveballs in random"
+     },
+     {
+      "sel": "button#planopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Game plan — how to rehearse with this over"
+     },
+     {
+      "sel": "button#scopeopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Scope it first — the clarifying questions "
+     },
+     {
+      "sel": "button#themetog",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "☽Dark mode — off"
+     }
+    ],
+    "escaped": [],
+    "overlaps": [],
+    "nClipped": 13,
+    "nEscaped": 0,
+    "nOverlaps": 0
+   },
+   "nodes": 2010,
+   "ink": 2449156
+  },
+  "model": {
+   "at1": {
+    "clipped": [
+     {
+      "sel": "span#tncurrent",
+      "host": "(light)",
+      "cutX": 64,
+      "cutY": 0,
+      "box": "82x15",
+      "content": "146x15",
+      "text": "Event-Driven Backbone"
+     },
+     {
+      "sel": "button#idxopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Topic index — all topics across the six gr"
+     },
+     {
+      "sel": "button#searchopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Search — jump to any topic or view by name"
+     },
+     {
+      "sel": "button#copylink",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Copy link — a shareable link to this topic"
+     },
+     {
+      "sel": "button#starbtn",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Star this topic — save it to your bookmark"
+     },
+     {
+      "sel": "button#notesopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Your notes — jot notes & mnemonics for thi"
+     },
+     {
+      "sel": "button#printqa",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Print Q&A — a printable sheet of this topi"
+     },
+     {
+      "sel": "button#cramopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "One-page cram sheet — everything that matt"
+     },
+     {
+      "sel": "button#sessopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Session progress — where you’re weak, what"
+     },
+     {
+      "sel": "button#mixopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Mixed fire — probes & curveballs in random"
+     },
+     {
+      "sel": "button#planopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Game plan — how to rehearse with this over"
+     },
+     {
+      "sel": "button#scopeopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Scope it first — the clarifying questions "
+     }
+    ],
+    "escaped": [],
+    "overlaps": [],
+    "nClipped": 12,
+    "nEscaped": 0,
+    "nOverlaps": 0
+   },
+   "at2": {
+    "clipped": [
+     {
+      "sel": "span#tncurrent",
+      "host": "(light)",
+      "cutX": 284,
+      "cutY": 0,
+      "box": "8x31",
+      "content": "292x31",
+      "text": "Event-Driven Backbone"
+     },
+     {
+      "sel": "button#idxopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Topic index — all topics across the six gr"
+     },
+     {
+      "sel": "button#searchopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Search — jump to any topic or view by name"
+     },
+     {
+      "sel": "button#copylink",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Copy link — a shareable link to this topic"
+     },
+     {
+      "sel": "button#starbtn",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Star this topic — save it to your bookmark"
+     },
+     {
+      "sel": "button#notesopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Your notes — jot notes & mnemonics for thi"
+     },
+     {
+      "sel": "button#printqa",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Print Q&A — a printable sheet of this topi"
+     },
+     {
+      "sel": "button#cramopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "One-page cram sheet — everything that matt"
+     },
+     {
+      "sel": "button#sessopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Session progress — where you’re weak, what"
+     },
+     {
+      "sel": "button#mixopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Mixed fire — probes & curveballs in random"
+     },
+     {
+      "sel": "button#planopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Game plan — how to rehearse with this over"
+     },
+     {
+      "sel": "button#scopeopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Scope it first — the clarifying questions "
+     },
+     {
+      "sel": "button#themetog",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "☽Dark mode — off"
+     }
+    ],
+    "escaped": [],
+    "overlaps": [
+     {
+      "a": "button#mockopen",
+      "b": "div#msel button",
+      "overlap": "177x12"
+     },
+     {
+      "a": "button#mockopen",
+      "b": "div#msel button",
+      "overlap": "69x12"
+     },
+     {
+      "a": "button#mockopen",
+      "b": "div#msel button",
+      "overlap": "177x47"
+     },
+     {
+      "a": "button#toolsfab",
+      "b": "div#msel button",
+      "overlap": "98x6"
+     }
+    ],
+    "nClipped": 13,
+    "nEscaped": 0,
+    "nOverlaps": 4
+   },
+   "nodes": 2010,
+   "ink": 2449156
+  },
+  "num": {
+   "at1": {
+    "clipped": [
+     {
+      "sel": "span#tncurrent",
+      "host": "(light)",
+      "cutX": 64,
+      "cutY": 0,
+      "box": "82x15",
+      "content": "146x15",
+      "text": "Event-Driven Backbone"
+     },
+     {
+      "sel": "button#idxopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Topic index — all topics across the six gr"
+     },
+     {
+      "sel": "button#searchopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Search — jump to any topic or view by name"
+     },
+     {
+      "sel": "button#copylink",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Copy link — a shareable link to this topic"
+     },
+     {
+      "sel": "button#starbtn",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Star this topic — save it to your bookmark"
+     },
+     {
+      "sel": "button#notesopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Your notes — jot notes & mnemonics for thi"
+     },
+     {
+      "sel": "button#printqa",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Print Q&A — a printable sheet of this topi"
+     },
+     {
+      "sel": "button#cramopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "One-page cram sheet — everything that matt"
+     },
+     {
+      "sel": "button#sessopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Session progress — where you’re weak, what"
+     },
+     {
+      "sel": "button#mixopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Mixed fire — probes & curveballs in random"
+     },
+     {
+      "sel": "button#planopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Game plan — how to rehearse with this over"
+     },
+     {
+      "sel": "button#scopeopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Scope it first — the clarifying questions "
+     }
+    ],
+    "escaped": [],
+    "overlaps": [],
+    "nClipped": 12,
+    "nEscaped": 0,
+    "nOverlaps": 0
+   },
+   "at2": {
+    "clipped": [
+     {
+      "sel": "span#tncurrent",
+      "host": "(light)",
+      "cutX": 284,
+      "cutY": 0,
+      "box": "8x31",
+      "content": "292x31",
+      "text": "Event-Driven Backbone"
+     },
+     {
+      "sel": "html body div.app main.stage",
+      "host": "(light)",
+      "cutX": 70,
+      "cutY": 0,
+      "box": "390x3059",
+      "content": "460x3059",
+      "text": "ESTIMATENumbers Companioncoaching for this"
+     },
+     {
+      "sel": "button#idxopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Topic index — all topics across the six gr"
+     },
+     {
+      "sel": "button#searchopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Search — jump to any topic or view by name"
+     },
+     {
+      "sel": "button#copylink",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Copy link — a shareable link to this topic"
+     },
+     {
+      "sel": "button#starbtn",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Star this topic — save it to your bookmark"
+     },
+     {
+      "sel": "button#notesopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Your notes — jot notes & mnemonics for thi"
+     },
+     {
+      "sel": "button#printqa",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Print Q&A — a printable sheet of this topi"
+     },
+     {
+      "sel": "button#cramopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "One-page cram sheet — everything that matt"
+     },
+     {
+      "sel": "button#sessopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Session progress — where you’re weak, what"
+     },
+     {
+      "sel": "button#mixopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Mixed fire — probes & curveballs in random"
+     },
+     {
+      "sel": "button#planopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Game plan — how to rehearse with this over"
+     },
+     {
+      "sel": "button#scopeopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Scope it first — the clarifying questions "
+     },
+     {
+      "sel": "button#themetog",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "☽Dark mode — off"
+     }
+    ],
+    "escaped": [
+     {
+      "sel": "div#nout div.nrow div.nrow-v",
+      "host": "deep-numbers",
+      "over": 35
+     },
+     {
+      "sel": "div#nout div.nrow div.nrow-v span.nv-u",
+      "host": "deep-numbers",
+      "over": 35
+     },
+     {
+      "sel": "div#nout div.nrow div.nrow-n",
+      "host": "deep-numbers",
+      "over": 35
+     }
+    ],
+    "overlaps": [
+     {
+      "a": "button#mockopen",
+      "b": "input#msgRate",
+      "overlap": "151x29"
+     },
+     {
+      "a": "button#mockopen",
+      "b": "input#procMs",
+      "overlap": "66x55"
+     },
+     {
+      "a": "button#toolsfab",
+      "b": "input#procMs",
+      "overlap": "75x49"
+     }
+    ],
+    "nClipped": 14,
+    "nEscaped": 3,
+    "nOverlaps": 3
+   },
+   "nodes": 2010,
+   "ink": 2449156
+  },
+  "rf": {
+   "at1": {
+    "clipped": [
+     {
+      "sel": "span#tncurrent",
+      "host": "(light)",
+      "cutX": 64,
+      "cutY": 0,
+      "box": "82x15",
+      "content": "146x15",
+      "text": "Event-Driven Backbone"
+     },
+     {
+      "sel": "button#idxopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Topic index — all topics across the six gr"
+     },
+     {
+      "sel": "button#searchopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Search — jump to any topic or view by name"
+     },
+     {
+      "sel": "button#copylink",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Copy link — a shareable link to this topic"
+     },
+     {
+      "sel": "button#starbtn",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Star this topic — save it to your bookmark"
+     },
+     {
+      "sel": "button#notesopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Your notes — jot notes & mnemonics for thi"
+     },
+     {
+      "sel": "button#printqa",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Print Q&A — a printable sheet of this topi"
+     },
+     {
+      "sel": "button#cramopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "One-page cram sheet — everything that matt"
+     },
+     {
+      "sel": "button#sessopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Session progress — where you’re weak, what"
+     },
+     {
+      "sel": "button#mixopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Mixed fire — probes & curveballs in random"
+     },
+     {
+      "sel": "button#planopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Game plan — how to rehearse with this over"
+     },
+     {
+      "sel": "button#scopeopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Scope it first — the clarifying questions "
+     }
+    ],
+    "escaped": [],
+    "overlaps": [],
+    "nClipped": 12,
+    "nEscaped": 0,
+    "nOverlaps": 0
+   },
+   "at2": {
+    "clipped": [
+     {
+      "sel": "span#tncurrent",
+      "host": "(light)",
+      "cutX": 284,
+      "cutY": 0,
+      "box": "8x31",
+      "content": "292x31",
+      "text": "Event-Driven Backbone"
+     },
+     {
+      "sel": "button#idxopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Topic index — all topics across the six gr"
+     },
+     {
+      "sel": "button#searchopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Search — jump to any topic or view by name"
+     },
+     {
+      "sel": "button#copylink",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Copy link — a shareable link to this topic"
+     },
+     {
+      "sel": "button#starbtn",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Star this topic — save it to your bookmark"
+     },
+     {
+      "sel": "button#notesopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Your notes — jot notes & mnemonics for thi"
+     },
+     {
+      "sel": "button#printqa",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Print Q&A — a printable sheet of this topi"
+     },
+     {
+      "sel": "button#cramopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "One-page cram sheet — everything that matt"
+     },
+     {
+      "sel": "button#sessopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Session progress — where you’re weak, what"
+     },
+     {
+      "sel": "button#mixopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Mixed fire — probes & curveballs in random"
+     },
+     {
+      "sel": "button#planopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Game plan — how to rehearse with this over"
+     },
+     {
+      "sel": "button#scopeopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Scope it first — the clarifying questions "
+     },
+     {
+      "sel": "button#themetog",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "☽Dark mode — off"
+     }
+    ],
+    "escaped": [],
+    "overlaps": [],
+    "nClipped": 13,
+    "nEscaped": 0,
+    "nOverlaps": 0
+   },
+   "nodes": 2010,
+   "ink": 2449204
+  },
+  "open": {
+   "at1": {
+    "clipped": [
+     {
+      "sel": "span#tncurrent",
+      "host": "(light)",
+      "cutX": 64,
+      "cutY": 0,
+      "box": "82x15",
+      "content": "146x15",
+      "text": "Event-Driven Backbone"
+     },
+     {
+      "sel": "button#idxopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Topic index — all topics across the six gr"
+     },
+     {
+      "sel": "button#searchopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Search — jump to any topic or view by name"
+     },
+     {
+      "sel": "button#copylink",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Copy link — a shareable link to this topic"
+     },
+     {
+      "sel": "button#starbtn",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Star this topic — save it to your bookmark"
+     },
+     {
+      "sel": "button#notesopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Your notes — jot notes & mnemonics for thi"
+     },
+     {
+      "sel": "button#printqa",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Print Q&A — a printable sheet of this topi"
+     },
+     {
+      "sel": "button#cramopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "One-page cram sheet — everything that matt"
+     },
+     {
+      "sel": "button#sessopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Session progress — where you’re weak, what"
+     },
+     {
+      "sel": "button#mixopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Mixed fire — probes & curveballs in random"
+     },
+     {
+      "sel": "button#planopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Game plan — how to rehearse with this over"
+     },
+     {
+      "sel": "button#scopeopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "Scope it first — the clarifying questions "
+     }
+    ],
+    "escaped": [],
+    "overlaps": [
+     {
+      "a": "button#mixopen",
+      "b": "div#opbody div.card div.op button.op-rev",
+      "overlap": "99x15"
+     },
+     {
+      "a": "button#planopen",
+      "b": "div#opbody div.card div.op button.op-rev",
+      "overlap": "99x22"
+     },
+     {
+      "a": "button#themetog",
+      "b": "div#opbody div.card div.op button.op-rev",
+      "overlap": "99x17"
+     }
+    ],
+    "nClipped": 12,
+    "nEscaped": 0,
+    "nOverlaps": 3
+   },
+   "at2": {
+    "clipped": [
+     {
+      "sel": "span#tncurrent",
+      "host": "(light)",
+      "cutX": 284,
+      "cutY": 0,
+      "box": "8x31",
+      "content": "292x31",
+      "text": "Event-Driven Backbone"
+     },
+     {
+      "sel": "button#idxopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Topic index — all topics across the six gr"
+     },
+     {
+      "sel": "button#searchopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Search — jump to any topic or view by name"
+     },
+     {
+      "sel": "button#copylink",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Copy link — a shareable link to this topic"
+     },
+     {
+      "sel": "button#starbtn",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Star this topic — save it to your bookmark"
+     },
+     {
+      "sel": "button#notesopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Your notes — jot notes & mnemonics for thi"
+     },
+     {
+      "sel": "button#printqa",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Print Q&A — a printable sheet of this topi"
+     },
+     {
+      "sel": "button#cramopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "One-page cram sheet — everything that matt"
+     },
+     {
+      "sel": "button#sessopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Session progress — where you’re weak, what"
+     },
+     {
+      "sel": "button#mixopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Mixed fire — probes & curveballs in random"
+     },
+     {
+      "sel": "button#planopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Game plan — how to rehearse with this over"
+     },
+     {
+      "sel": "button#scopeopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "356x42",
+      "content": "356x83",
+      "text": "Scope it first — the clarifying questions "
+     },
+     {
+      "sel": "button#themetog",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "356x42",
+      "content": "356x50",
+      "text": "☽Dark mode — off"
+     }
+    ],
+    "escaped": [],
+    "overlaps": [
+     {
+      "a": "button#idxopen",
+      "b": "div#opbody div.card div.op button.op-rev",
+      "overlap": "166x37"
+     }
+    ],
+    "nClipped": 13,
+    "nEscaped": 0,
+    "nOverlaps": 1
+   },
+   "nodes": 2010,
+   "ink": 2449204
+  }
+ },
+ "p360": {
+  "walk": {
+   "at1": {
+    "clipped": [
+     {
+      "sel": "span#tncurrent",
+      "host": "(light)",
+      "cutX": 94,
+      "cutY": 0,
+      "box": "52x15",
+      "content": "146x15",
+      "text": "Event-Driven Backbone"
+     },
+     {
+      "sel": "div#warc button.arc-step",
+      "host": "deep-walkthrough",
+      "cutX": 20,
+      "cutY": 0,
+      "box": "101x116",
+      "content": "121x116",
+      "text": "3The router fans out to each consumer’s ow"
+     },
+     {
+      "sel": "div#warc button.arc-step",
+      "host": "deep-walkthrough",
+      "cutX": 15,
+      "cutY": 0,
+      "box": "101x116",
+      "content": "116x116",
+      "text": "7Duplicates are made harmless"
+     },
+     {
+      "sel": "div#warc button.arc-step",
+      "host": "deep-walkthrough",
+      "cutX": 11,
+      "cutY": 0,
+      "box": "101x131",
+      "content": "112x131",
+      "text": "4The queue buffers and the consumer pulls"
+     },
+     {
+      "sel": "div#warc button.arc-step",
+      "host": "deep-walkthrough",
+      "cutX": 11,
+      "cutY": 0,
+      "box": "101x131",
+      "content": "112x131",
+      "text": "6The consumer processes and acks — with a "
+     },
+     {
+      "sel": "div#warc button.arc-step",
+      "host": "deep-walkthrough",
+      "cutX": 10,
+      "cutY": 0,
+      "box": "101x116",
+      "content": "111x116",
+      "text": "8Ordering, where it actually matters"
+     },
+     {
+      "sel": "button#idxopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Topic index — all topics across the six gr"
+     },
+     {
+      "sel": "button#searchopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Search — jump to any topic or view by name"
+     },
+     {
+      "sel": "button#copylink",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Copy link — a shareable link to this topic"
+     },
+     {
+      "sel": "button#starbtn",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Star this topic — save it to your bookmark"
+     },
+     {
+      "sel": "button#notesopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Your notes — jot notes & mnemonics for thi"
+     },
+     {
+      "sel": "button#printqa",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Print Q&A — a printable sheet of this topi"
+     },
+     {
+      "sel": "button#cramopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "One-page cram sheet — everything that matt"
+     },
+     {
+      "sel": "button#sessopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Session progress — where you’re weak, what"
+     },
+     {
+      "sel": "button#mixopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Mixed fire — probes & curveballs in random"
+     },
+     {
+      "sel": "button#planopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Game plan — how to rehearse with this over"
+     },
+     {
+      "sel": "button#scopeopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Scope it first — the clarifying questions "
+     },
+     {
+      "sel": "div#warc button.arc-step.on",
+      "host": "deep-walkthrough",
+      "cutX": 7,
+      "cutY": 0,
+      "box": "101x116",
+      "content": "108x116",
+      "text": "1The producer emits and moves on"
+     },
+     {
+      "sel": "div#warc button.arc-step",
+      "host": "deep-walkthrough",
+      "cutX": 7,
+      "cutY": 0,
+      "box": "101x116",
+      "content": "108x116",
+      "text": "9Failure: bounded retries, then dead-lette"
+     },
+     {
+      "sel": "div#warc button.arc-step",
+      "host": "deep-walkthrough",
+      "cutX": 6,
+      "cutY": 0,
+      "box": "101x84",
+      "content": "107x84",
+      "text": "10The numbers you watch"
+     },
+     {
+      "sel": "div#warc button.arc-step",
+      "host": "deep-walkthrough",
+      "cutX": 5,
+      "cutY": 0,
+      "box": "101x131",
+      "content": "106x131",
+      "text": "5The message is leased, not handed over"
+     }
+    ],
+    "escaped": [],
+    "overlaps": [
+     {
+      "a": "button#idxopen",
+      "b": "div#wcard details.disc summary",
+      "overlap": "282x36"
+     },
+     {
+      "a": "button#searchopen",
+      "b": "button#wprev",
+      "overlap": "82x3"
+     },
+     {
+      "a": "button#searchopen",
+      "b": "button#wnext",
+      "overlap": "82x3"
+     },
+     {
+      "a": "button#copylink",
+      "b": "button#wprev",
+      "overlap": "82x3"
+     },
+     {
+      "a": "button#copylink",
+      "b": "button#wnext",
+      "overlap": "82x3"
+     },
+     {
+      "a": "button#copylink",
+      "b": "div#walk deep-walkthrough details.model summary",
+      "overlap": "325x22"
+     },
+     {
+      "a": "button#starbtn",
+      "b": "div#walk deep-walkthrough details.model summary",
+      "overlap": "325x44"
+     },
+     {
+      "a": "button#notesopen",
+      "b": "div#walk deep-walkthrough details.model summary",
+      "overlap": "325x7"
+     },
+     {
+      "a": "button#printqa",
+      "b": "div#warc button.arc-step.on",
+      "overlap": "102x37"
+     },
+     {
+      "a": "button#printqa",
+      "b": "div#warc button.arc-step",
+      "overlap": "103x35"
+     },
+     {
+      "a": "button#printqa",
+      "b": "div#warc button.arc-step",
+      "overlap": "102x35"
+     },
+     {
+      "a": "button#cramopen",
+      "b": "div#warc button.arc-step.on",
+      "overlap": "102x42"
+     }
+    ],
+    "nClipped": 21,
+    "nEscaped": 0,
+    "nOverlaps": 30
+   },
+   "at2": {
+    "clipped": [
+     {
+      "sel": "span#tncurrent",
+      "host": "(light)",
+      "cutX": 292,
+      "cutY": 0,
+      "box": "0x31",
+      "content": "292x31",
+      "text": "Event-Driven Backbone"
+     },
+     {
+      "sel": "div#warc button.arc-step",
+      "host": "deep-walkthrough",
+      "cutX": 81,
+      "cutY": 0,
+      "box": "101x209",
+      "content": "182x209",
+      "text": "3The router fans out to each consumer’s ow"
+     },
+     {
+      "sel": "div#warc button.arc-step",
+      "host": "deep-walkthrough",
+      "cutX": 72,
+      "cutY": 0,
+      "box": "101x209",
+      "content": "173x209",
+      "text": "7Duplicates are made harmless"
+     },
+     {
+      "sel": "div#warc button.arc-step",
+      "host": "deep-walkthrough",
+      "cutX": 65,
+      "cutY": 0,
+      "box": "101x240",
+      "content": "166x240",
+      "text": "4The queue buffers and the consumer pulls"
+     },
+     {
+      "sel": "div#warc button.arc-step",
+      "host": "deep-walkthrough",
+      "cutX": 65,
+      "cutY": 0,
+      "box": "101x240",
+      "content": "166x240",
+      "text": "6The consumer processes and acks — with a "
+     },
+     {
+      "sel": "div#warc button.arc-step",
+      "host": "deep-walkthrough",
+      "cutX": 61,
+      "cutY": 0,
+      "box": "101x209",
+      "content": "162x209",
+      "text": "8Ordering, where it actually matters"
+     },
+     {
+      "sel": "div#warc button.arc-step.on",
+      "host": "deep-walkthrough",
+      "cutX": 57,
+      "cutY": 0,
+      "box": "101x209",
+      "content": "158x209",
+      "text": "1The producer emits and moves on"
+     },
+     {
+      "sel": "div#warc button.arc-step",
+      "host": "deep-walkthrough",
+      "cutX": 56,
+      "cutY": 0,
+      "box": "101x209",
+      "content": "157x209",
+      "text": "9Failure: bounded retries, then dead-lette"
+     },
+     {
+      "sel": "div#warc button.arc-step",
+      "host": "deep-walkthrough",
+      "cutX": 54,
+      "cutY": 0,
+      "box": "101x147",
+      "content": "155x147",
+      "text": "10The numbers you watch"
+     },
+     {
+      "sel": "div#warc button.arc-step",
+      "host": "deep-walkthrough",
+      "cutX": 52,
+      "cutY": 0,
+      "box": "101x240",
+      "content": "153x240",
+      "text": "5The message is leased, not handed over"
+     },
+     {
+      "sel": "button#idxopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Topic index — all topics across the six gr"
+     },
+     {
+      "sel": "button#searchopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Search — jump to any topic or view by name"
+     },
+     {
+      "sel": "button#copylink",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Copy link — a shareable link to this topic"
+     },
+     {
+      "sel": "button#starbtn",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Star this topic — save it to your bookmark"
+     },
+     {
+      "sel": "button#notesopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Your notes — jot notes & mnemonics for thi"
+     },
+     {
+      "sel": "button#printqa",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Print Q&A — a printable sheet of this topi"
+     },
+     {
+      "sel": "button#cramopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "One-page cram sheet — everything that matt"
+     },
+     {
+      "sel": "button#sessopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Session progress — where you’re weak, what"
+     },
+     {
+      "sel": "button#mixopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Mixed fire — probes & curveballs in random"
+     },
+     {
+      "sel": "button#planopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Game plan — how to rehearse with this over"
+     },
+     {
+      "sel": "button#scopeopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Scope it first — the clarifying questions "
+     },
+     {
+      "sel": "div#warc button.arc-step",
+      "host": "deep-walkthrough",
+      "cutX": 35,
+      "cutY": 0,
+      "box": "101x209",
+      "content": "136x209",
+      "text": "2The emit is made atomic — the outbox"
+     },
+     {
+      "sel": "button#tntrigger",
+      "host": "(light)",
+      "cutX": 22,
+      "cutY": 0,
+      "box": "178x47",
+      "content": "200x47",
+      "text": "RehearsingEvent-Driven Backbone▾"
+     },
+     {
+      "sel": "button#themetog",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "☽Dark mode — off"
+     }
+    ],
+    "escaped": [
+     {
+      "sel": "div#warc button.arc-step span.arc-t",
+      "host": "deep-walkthrough",
+      "over": 52
+     },
+     {
+      "sel": "div#warc button.arc-step span.arc-t",
+      "host": "deep-walkthrough",
+      "over": 36
+     },
+     {
+      "sel": "div#warc button.arc-step span.arc-t",
+      "host": "deep-walkthrough",
+      "over": 27
+     }
+    ],
+    "overlaps": [],
+    "nClipped": 24,
+    "nEscaped": 3,
+    "nOverlaps": 0
+   },
+   "nodes": 2010,
+   "ink": 1602754
+  },
+  "drill": {
+   "at1": {
+    "clipped": [
+     {
+      "sel": "span#tncurrent",
+      "host": "(light)",
+      "cutX": 94,
+      "cutY": 0,
+      "box": "52x15",
+      "content": "146x15",
+      "text": "Event-Driven Backbone"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 4,
+      "cutY": 28,
+      "box": "47x29",
+      "content": "51x57",
+      "text": "why duplicates are inevitable"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 16,
+      "cutY": 14,
+      "box": "47x29",
+      "content": "63x43",
+      "text": "replay and reprocessing"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 0,
+      "cutY": 28,
+      "box": "47x29",
+      "content": "47x57",
+      "text": "why a queue between services"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 0,
+      "cutY": 28,
+      "box": "47x29",
+      "content": "47x57",
+      "text": "the dead-letter queue"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 0,
+      "cutY": 28,
+      "box": "47x29",
+      "content": "47x57",
+      "text": "the exactly-once myth"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 0,
+      "cutY": 28,
+      "box": "47x29",
+      "content": "47x57",
+      "text": "when not to go event-driven"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 13,
+      "cutY": 14,
+      "box": "47x29",
+      "content": "60x43",
+      "text": "EventBridge vs SQS vs SNS"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 11,
+      "cutY": 14,
+      "box": "47x29",
+      "content": "58x43",
+      "text": "the idempotent consumer"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 7,
+      "cutY": 14,
+      "box": "47x29",
+      "content": "54x43",
+      "text": "fan-out to many consumers"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 18,
+      "cutY": 0,
+      "box": "47x14",
+      "content": "65x14",
+      "text": "backpressure"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 17,
+      "cutY": 0,
+      "box": "47x14",
+      "content": "64x14",
+      "text": "observability"
+     },
+     {
+      "sel": "div#dnav button.dn-step.on span.dn-t",
+      "host": "deep-drill",
+      "cutX": 0,
+      "cutY": 14,
+      "box": "47x29",
+      "content": "47x43",
+      "text": "what event-driven is"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 0,
+      "cutY": 14,
+      "box": "47x29",
+      "content": "47x43",
+      "text": "the visibility timeout"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 0,
+      "cutY": 14,
+      "box": "47x29",
+      "content": "47x43",
+      "text": "standard vs FIFO queue"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 0,
+      "cutY": 14,
+      "box": "47x29",
+      "content": "47x43",
+      "text": "the dedup store"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 0,
+      "cutY": 14,
+      "box": "47x29",
+      "content": "47x43",
+      "text": "partial batch failure"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 0,
+      "cutY": 14,
+      "box": "47x29",
+      "content": "47x43",
+      "text": "event schema evolution"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 0,
+      "cutY": 14,
+      "box": "47x29",
+      "content": "47x43",
+      "text": "fat vs thin events"
+     },
+     {
+      "sel": "button#idxopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Topic index — all topics across the six gr"
+     },
+     {
+      "sel": "button#searchopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Search — jump to any topic or view by name"
+     },
+     {
+      "sel": "button#copylink",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Copy link — a shareable link to this topic"
+     },
+     {
+      "sel": "button#starbtn",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Star this topic — save it to your bookmark"
+     },
+     {
+      "sel": "button#notesopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Your notes — jot notes & mnemonics for thi"
+     },
+     {
+      "sel": "button#printqa",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Print Q&A — a printable sheet of this topi"
+     },
+     {
+      "sel": "button#cramopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "One-page cram sheet — everything that matt"
+     },
+     {
+      "sel": "button#sessopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Session progress — where you’re weak, what"
+     },
+     {
+      "sel": "button#mixopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Mixed fire — probes & curveballs in random"
+     },
+     {
+      "sel": "button#planopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Game plan — how to rehearse with this over"
+     },
+     {
+      "sel": "button#scopeopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Scope it first — the clarifying questions "
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 8,
+      "cutY": 0,
+      "box": "47x29",
+      "content": "55x29",
+      "text": "delivery guarantees"
+     }
+    ],
+    "escaped": [],
+    "overlaps": [
+     {
+      "a": "button#idxopen",
+      "b": "button#adv",
+      "overlap": "284x22"
+     },
+     {
+      "a": "button#searchopen",
+      "b": "button#adv",
+      "overlap": "284x15"
+     },
+     {
+      "a": "button#copylink",
+      "b": "div#dnav button.dn-step.on",
+      "overlap": "104x17"
+     },
+     {
+      "a": "button#copylink",
+      "b": "div#dnav button.dn-step",
+      "overlap": "105x16"
+     },
+     {
+      "a": "button#copylink",
+      "b": "div#dnav button.dn-step",
+      "overlap": "104x16"
+     },
+     {
+      "a": "button#starbtn",
+      "b": "div#dnav button.dn-step.on",
+      "overlap": "104x27"
+     },
+     {
+      "a": "button#starbtn",
+      "b": "div#dnav button.dn-step",
+      "overlap": "105x28"
+     },
+     {
+      "a": "button#starbtn",
+      "b": "div#dnav button.dn-step",
+      "overlap": "104x28"
+     },
+     {
+      "a": "button#starbtn",
+      "b": "div#dnav button.dn-step",
+      "overlap": "104x8"
+     },
+     {
+      "a": "button#starbtn",
+      "b": "div#dnav button.dn-step",
+      "overlap": "105x8"
+     },
+     {
+      "a": "button#starbtn",
+      "b": "div#dnav button.dn-step",
+      "overlap": "104x8"
+     },
+     {
+      "a": "button#notesopen",
+      "b": "div#dnav button.dn-step",
+      "overlap": "104x36"
+     }
+    ],
+    "nClipped": 31,
+    "nEscaped": 0,
+    "nOverlaps": 35
+   },
+   "at2": {
+    "clipped": [
+     {
+      "sel": "span#tncurrent",
+      "host": "(light)",
+      "cutX": 292,
+      "cutY": 0,
+      "box": "0x31",
+      "content": "292x31",
+      "text": "Event-Driven Backbone"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 73,
+      "cutY": 86,
+      "box": "47x57",
+      "content": "120x143",
+      "text": "EventBridge vs SQS vs SNS"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 61,
+      "cutY": 86,
+      "box": "47x57",
+      "content": "108x143",
+      "text": "fan-out to many consumers"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 16,
+      "cutY": 115,
+      "box": "47x57",
+      "content": "63x172",
+      "text": "when not to go event-driven"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 39,
+      "cutY": 86,
+      "box": "47x57",
+      "content": "86x143",
+      "text": "why a queue between services"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 55,
+      "cutY": 58,
+      "box": "47x57",
+      "content": "102x115",
+      "text": "why duplicates are inevitable"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 80,
+      "cutY": 29,
+      "box": "47x57",
+      "content": "127x86",
+      "text": "replay and reprocessing"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 41,
+      "cutY": 58,
+      "box": "47x57",
+      "content": "88x115",
+      "text": "standard vs FIFO queue"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 70,
+      "cutY": 29,
+      "box": "47x57",
+      "content": "117x86",
+      "text": "the idempotent consumer"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 31,
+      "cutY": 58,
+      "box": "47x57",
+      "content": "78x115",
+      "text": "the exactly-once myth"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 84,
+      "cutY": 0,
+      "box": "47x29",
+      "content": "131x29",
+      "text": "backpressure"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 82,
+      "cutY": 0,
+      "box": "47x29",
+      "content": "129x29",
+      "text": "observability"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 47,
+      "cutY": 29,
+      "box": "47x57",
+      "content": "94x86",
+      "text": "event schema evolution"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 18,
+      "cutY": 58,
+      "box": "47x57",
+      "content": "65x115",
+      "text": "fat vs thin events"
+     },
+     {
+      "sel": "div#dnav button.dn-step.on span.dn-t",
+      "host": "deep-drill",
+      "cutX": 16,
+      "cutY": 58,
+      "box": "47x57",
+      "content": "63x115",
+      "text": "what event-driven is"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 15,
+      "cutY": 58,
+      "box": "47x57",
+      "content": "62x115",
+      "text": "the dead-letter queue"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 64,
+      "cutY": 1,
+      "box": "47x57",
+      "content": "111x58",
+      "text": "delivery guarantees"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 35,
+      "cutY": 29,
+      "box": "47x57",
+      "content": "82x86",
+      "text": "the visibility timeout"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 49,
+      "cutY": 1,
+      "box": "47x57",
+      "content": "96x58",
+      "text": "poison messages"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 17,
+      "cutY": 29,
+      "box": "47x57",
+      "content": "64x86",
+      "text": "the dedup store"
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 17,
+      "cutY": 29,
+      "box": "47x57",
+      "content": "64x86",
+      "text": "partial batch failure"
+     },
+     {
+      "sel": "button#idxopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Topic index — all topics across the six gr"
+     },
+     {
+      "sel": "button#searchopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Search — jump to any topic or view by name"
+     },
+     {
+      "sel": "button#copylink",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Copy link — a shareable link to this topic"
+     },
+     {
+      "sel": "button#starbtn",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Star this topic — save it to your bookmark"
+     },
+     {
+      "sel": "button#notesopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Your notes — jot notes & mnemonics for thi"
+     },
+     {
+      "sel": "button#printqa",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Print Q&A — a printable sheet of this topi"
+     },
+     {
+      "sel": "button#cramopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "One-page cram sheet — everything that matt"
+     },
+     {
+      "sel": "button#sessopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Session progress — where you’re weak, what"
+     },
+     {
+      "sel": "button#mixopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Mixed fire — probes & curveballs in random"
+     },
+     {
+      "sel": "button#planopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Game plan — how to rehearse with this over"
+     },
+     {
+      "sel": "button#scopeopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Scope it first — the clarifying questions "
+     },
+     {
+      "sel": "div#dnav button.dn-step span.dn-t",
+      "host": "deep-drill",
+      "cutX": 39,
+      "cutY": 0,
+      "box": "47x29",
+      "content": "86x29",
+      "text": "ordering"
+     },
+     {
+      "sel": "button#tntrigger",
+      "host": "(light)",
+      "cutX": 22,
+      "cutY": 0,
+      "box": "178x47",
+      "content": "200x47",
+      "text": "RehearsingEvent-Driven Backbone▾"
+     },
+     {
+      "sel": "button#themetog",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "☽Dark mode — off"
+     },
+     {
+      "sel": "html body div.app main.stage",
+      "host": "(light)",
+      "cutX": 2,
+      "cutY": 0,
+      "box": "360x1929",
+      "content": "362x1929",
+      "text": "GRADEDProbe Drill Companioncoaching for th"
+     }
+    ],
+    "escaped": [
+     {
+      "sel": "div#tiertog",
+      "host": "deep-drill",
+      "over": 2
+     }
+    ],
+    "overlaps": [
+     {
+      "a": "button#mockopen",
+      "b": "div#tiertog button.on",
+      "overlap": "63x30"
+     },
+     {
+      "a": "button#mockopen",
+      "b": "div#tiertog button",
+      "overlap": "91x30"
+     },
+     {
+      "a": "button#mockopen",
+      "b": "div#tiertog button",
+      "overlap": "56x30"
+     },
+     {
+      "a": "button#toolsfab",
+      "b": "div#tiertog button",
+      "overlap": "25x24"
+     },
+     {
+      "a": "button#toolsfab",
+      "b": "div#tiertog button",
+      "overlap": "69x24"
+     },
+     {
+      "a": "button#planopen",
+      "b": "button#adv",
+      "overlap": "284x35"
+     },
+     {
+      "a": "button#scopeopen",
+      "b": "button#adv",
+      "overlap": "284x15"
+     }
+    ],
+    "nClipped": 36,
+    "nEscaped": 1,
+    "nOverlaps": 7
+   },
+   "nodes": 2010,
+   "ink": 1602759
+  },
+  "wb": {
+   "at1": {
+    "clipped": [
+     {
+      "sel": "span#tncurrent",
+      "host": "(light)",
+      "cutX": 94,
+      "cutY": 0,
+      "box": "52x15",
+      "content": "146x15",
+      "text": "Event-Driven Backbone"
+     },
+     {
+      "sel": "button#idxopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Topic index — all topics across the six gr"
+     },
+     {
+      "sel": "button#searchopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Search — jump to any topic or view by name"
+     },
+     {
+      "sel": "button#copylink",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Copy link — a shareable link to this topic"
+     },
+     {
+      "sel": "button#starbtn",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Star this topic — save it to your bookmark"
+     },
+     {
+      "sel": "button#notesopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Your notes — jot notes & mnemonics for thi"
+     },
+     {
+      "sel": "button#printqa",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Print Q&A — a printable sheet of this topi"
+     },
+     {
+      "sel": "button#cramopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "One-page cram sheet — everything that matt"
+     },
+     {
+      "sel": "button#sessopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Session progress — where you’re weak, what"
+     },
+     {
+      "sel": "button#mixopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Mixed fire — probes & curveballs in random"
+     },
+     {
+      "sel": "button#planopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Game plan — how to rehearse with this over"
+     },
+     {
+      "sel": "button#scopeopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Scope it first — the clarifying questions "
+     }
+    ],
+    "escaped": [],
+    "overlaps": [
+     {
+      "a": "button#mockopen",
+      "b": "ol#wblist li div.wb-act button.wb-rev",
+      "overlap": "67x17"
+     },
+     {
+      "a": "button#mockopen",
+      "b": "ol#wblist li div.wb-act button.wb-got",
+      "overlap": "68x17"
+     },
+     {
+      "a": "button#mockopen",
+      "b": "ol#wblist li div.wb-act button.wb-miss",
+      "overlap": "35x17"
+     },
+     {
+      "a": "button#toolsfab",
+      "b": "ol#wblist li div.wb-act button.wb-miss",
+      "overlap": "24x16"
+     },
+     {
+      "a": "button#idxopen",
+      "b": "ol#wblist li div.wb-act button.wb-rev",
+      "overlap": "67x26"
+     },
+     {
+      "a": "button#idxopen",
+      "b": "ol#wblist li div.wb-act button.wb-got",
+      "overlap": "68x26"
+     },
+     {
+      "a": "button#idxopen",
+      "b": "ol#wblist li div.wb-act button.wb-miss",
+      "overlap": "69x26"
+     },
+     {
+      "a": "button#searchopen",
+      "b": "ol#wblist li div.wb-act button.wb-rev",
+      "overlap": "67x11"
+     },
+     {
+      "a": "button#searchopen",
+      "b": "ol#wblist li div.wb-act button.wb-got",
+      "overlap": "68x11"
+     },
+     {
+      "a": "button#searchopen",
+      "b": "ol#wblist li div.wb-act button.wb-miss",
+      "overlap": "69x11"
+     },
+     {
+      "a": "button#copylink",
+      "b": "ol#wblist li div.wb-act button.wb-rev",
+      "overlap": "67x31"
+     },
+     {
+      "a": "button#copylink",
+      "b": "ol#wblist li div.wb-act button.wb-got",
+      "overlap": "68x31"
+     }
+    ],
+    "nClipped": 12,
+    "nEscaped": 0,
+    "nOverlaps": 37
+   },
+   "at2": {
+    "clipped": [
+     {
+      "sel": "span#tncurrent",
+      "host": "(light)",
+      "cutX": 292,
+      "cutY": 0,
+      "box": "0x31",
+      "content": "292x31",
+      "text": "Event-Driven Backbone"
+     },
+     {
+      "sel": "button#idxopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Topic index — all topics across the six gr"
+     },
+     {
+      "sel": "button#searchopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Search — jump to any topic or view by name"
+     },
+     {
+      "sel": "button#copylink",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Copy link — a shareable link to this topic"
+     },
+     {
+      "sel": "button#starbtn",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Star this topic — save it to your bookmark"
+     },
+     {
+      "sel": "button#notesopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Your notes — jot notes & mnemonics for thi"
+     },
+     {
+      "sel": "button#printqa",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Print Q&A — a printable sheet of this topi"
+     },
+     {
+      "sel": "button#cramopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "One-page cram sheet — everything that matt"
+     },
+     {
+      "sel": "button#sessopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Session progress — where you’re weak, what"
+     },
+     {
+      "sel": "button#mixopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Mixed fire — probes & curveballs in random"
+     },
+     {
+      "sel": "button#planopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Game plan — how to rehearse with this over"
+     },
+     {
+      "sel": "button#scopeopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Scope it first — the clarifying questions "
+     },
+     {
+      "sel": "html body div.app main.stage",
+      "host": "(light)",
+      "cutX": 36,
+      "cutY": 0,
+      "box": "360x2979",
+      "content": "396x2979",
+      "text": "RECONSTRUCTWhiteboard Companioncoaching fo"
+     },
+     {
+      "sel": "button#tntrigger",
+      "host": "(light)",
+      "cutX": 22,
+      "cutY": 0,
+      "box": "178x47",
+      "content": "200x47",
+      "text": "RehearsingEvent-Driven Backbone▾"
+     },
+     {
+      "sel": "button#themetog",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "☽Dark mode — off"
+     }
+    ],
+    "escaped": [
+     {
+      "sel": "ol#wblist li div.wb-act button.wb-miss",
+      "host": "deep-whiteboard",
+      "over": 36
+     },
+     {
+      "sel": "ol#wblist li div.wb-act button.wb-miss",
+      "host": "deep-whiteboard",
+      "over": 36
+     },
+     {
+      "sel": "ol#wblist li div.wb-act button.wb-miss",
+      "host": "deep-whiteboard",
+      "over": 36
+     },
+     {
+      "sel": "ol#wblist li div.wb-act button.wb-miss",
+      "host": "deep-whiteboard",
+      "over": 36
+     },
+     {
+      "sel": "ol#wblist li div.wb-act button.wb-miss",
+      "host": "deep-whiteboard",
+      "over": 36
+     },
+     {
+      "sel": "ol#wblist li div.wb-act button.wb-miss",
+      "host": "deep-whiteboard",
+      "over": 36
+     },
+     {
+      "sel": "ol#wblist li div.wb-act button.wb-miss",
+      "host": "deep-whiteboard",
+      "over": 36
+     },
+     {
+      "sel": "ol#wblist li div.wb-act button.wb-miss",
+      "host": "deep-whiteboard",
+      "over": 36
+     },
+     {
+      "sel": "ol#wblist li div.wb-act button.wb-miss",
+      "host": "deep-whiteboard",
+      "over": 36
+     }
+    ],
+    "overlaps": [
+     {
+      "a": "button#notesopen",
+      "b": "ol#wblist li div.wb-act button.wb-rev",
+      "overlap": "104x42"
+     },
+     {
+      "a": "button#notesopen",
+      "b": "ol#wblist li div.wb-act button.wb-got",
+      "overlap": "86x42"
+     },
+     {
+      "a": "button#notesopen",
+      "b": "ol#wblist li div.wb-act button.wb-miss",
+      "overlap": "56x42"
+     },
+     {
+      "a": "button#printqa",
+      "b": "ol#wblist li div.wb-act button.wb-rev",
+      "overlap": "104x21"
+     },
+     {
+      "a": "button#printqa",
+      "b": "ol#wblist li div.wb-act button.wb-got",
+      "overlap": "86x21"
+     },
+     {
+      "a": "button#printqa",
+      "b": "ol#wblist li div.wb-act button.wb-miss",
+      "overlap": "56x21"
+     },
+     {
+      "a": "button#mixopen",
+      "b": "ol#wblist li div.wb-act button.wb-rev",
+      "overlap": "104x19"
+     },
+     {
+      "a": "button#mixopen",
+      "b": "ol#wblist li div.wb-act button.wb-got",
+      "overlap": "86x19"
+     },
+     {
+      "a": "button#mixopen",
+      "b": "ol#wblist li div.wb-act button.wb-miss",
+      "overlap": "56x19"
+     },
+     {
+      "a": "button#planopen",
+      "b": "ol#wblist li div.wb-act button.wb-rev",
+      "overlap": "104x44"
+     },
+     {
+      "a": "button#planopen",
+      "b": "ol#wblist li div.wb-act button.wb-got",
+      "overlap": "86x44"
+     },
+     {
+      "a": "button#planopen",
+      "b": "ol#wblist li div.wb-act button.wb-miss",
+      "overlap": "56x44"
+     }
+    ],
+    "nClipped": 15,
+    "nEscaped": 9,
+    "nOverlaps": 12
+   },
+   "nodes": 2010,
+   "ink": 1602754
+  },
+  "sys": {
+   "at1": {
+    "clipped": [
+     {
+      "sel": "span#tncurrent",
+      "host": "(light)",
+      "cutX": 94,
+      "cutY": 0,
+      "box": "52x15",
+      "content": "146x15",
+      "text": "Event-Driven Backbone"
+     },
+     {
+      "sel": "button#idxopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Topic index — all topics across the six gr"
+     },
+     {
+      "sel": "button#searchopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Search — jump to any topic or view by name"
+     },
+     {
+      "sel": "button#copylink",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Copy link — a shareable link to this topic"
+     },
+     {
+      "sel": "button#starbtn",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Star this topic — save it to your bookmark"
+     },
+     {
+      "sel": "button#notesopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Your notes — jot notes & mnemonics for thi"
+     },
+     {
+      "sel": "button#printqa",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Print Q&A — a printable sheet of this topi"
+     },
+     {
+      "sel": "button#cramopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "One-page cram sheet — everything that matt"
+     },
+     {
+      "sel": "button#sessopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Session progress — where you’re weak, what"
+     },
+     {
+      "sel": "button#mixopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Mixed fire — probes & curveballs in random"
+     },
+     {
+      "sel": "button#planopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Game plan — how to rehearse with this over"
+     },
+     {
+      "sel": "button#scopeopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Scope it first — the clarifying questions "
+     }
+    ],
+    "escaped": [],
+    "overlaps": [
+     {
+      "a": "button#notesopen",
+      "b": "div#smPivs details.piv summary",
+      "overlap": "282x17"
+     },
+     {
+      "a": "button#printqa",
+      "b": "div#smPivs details.piv summary",
+      "overlap": "282x40"
+     },
+     {
+      "a": "button#cramopen",
+      "b": "div#smPivs details.piv summary",
+      "overlap": "282x44"
+     },
+     {
+      "a": "button#sessopen",
+      "b": "div#smPivs details.piv summary",
+      "overlap": "282x19"
+     },
+     {
+      "a": "button#sessopen",
+      "b": "div#smPivs details.piv summary",
+      "overlap": "282x13"
+     },
+     {
+      "a": "button#mixopen",
+      "b": "div#smPivs details.piv summary",
+      "overlap": "282x44"
+     },
+     {
+      "a": "button#planopen",
+      "b": "div#smPivs details.piv summary",
+      "overlap": "282x44"
+     },
+     {
+      "a": "button#scopeopen",
+      "b": "div#smPivs details.piv summary",
+      "overlap": "282x35"
+     },
+     {
+      "a": "button#themetog",
+      "b": "div#smPivs details.piv summary",
+      "overlap": "282x28"
+     },
+     {
+      "a": "button#themetog",
+      "b": "div#smPivs details.piv summary",
+      "overlap": "282x4"
+     }
+    ],
+    "nClipped": 12,
+    "nEscaped": 0,
+    "nOverlaps": 10
+   },
+   "at2": {
+    "clipped": [
+     {
+      "sel": "span#tncurrent",
+      "host": "(light)",
+      "cutX": 292,
+      "cutY": 0,
+      "box": "0x31",
+      "content": "292x31",
+      "text": "Event-Driven Backbone"
+     },
+     {
+      "sel": "button#idxopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Topic index — all topics across the six gr"
+     },
+     {
+      "sel": "button#searchopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Search — jump to any topic or view by name"
+     },
+     {
+      "sel": "button#copylink",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Copy link — a shareable link to this topic"
+     },
+     {
+      "sel": "button#starbtn",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Star this topic — save it to your bookmark"
+     },
+     {
+      "sel": "button#notesopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Your notes — jot notes & mnemonics for thi"
+     },
+     {
+      "sel": "button#printqa",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Print Q&A — a printable sheet of this topi"
+     },
+     {
+      "sel": "button#cramopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "One-page cram sheet — everything that matt"
+     },
+     {
+      "sel": "button#sessopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Session progress — where you’re weak, what"
+     },
+     {
+      "sel": "button#mixopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Mixed fire — probes & curveballs in random"
+     },
+     {
+      "sel": "button#planopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Game plan — how to rehearse with this over"
+     },
+     {
+      "sel": "button#scopeopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Scope it first — the clarifying questions "
+     },
+     {
+      "sel": "button#tntrigger",
+      "host": "(light)",
+      "cutX": 22,
+      "cutY": 0,
+      "box": "178x47",
+      "content": "200x47",
+      "text": "RehearsingEvent-Driven Backbone▾"
+     },
+     {
+      "sel": "div#smPivs details.piv",
+      "host": "deep-system-map",
+      "cutX": 15,
+      "cutY": 0,
+      "box": "282x137",
+      "content": "297x137",
+      "text": "Which delivery guarantee?→ at-least-once +"
+     },
+     {
+      "sel": "div#smPivs details.piv",
+      "host": "deep-system-map",
+      "cutX": 15,
+      "cutY": 0,
+      "box": "282x246",
+      "content": "297x246",
+      "text": "You need a transaction across three servic"
+     },
+     {
+      "sel": "div#smPivs details.piv",
+      "host": "deep-system-map",
+      "cutX": 11,
+      "cutY": 0,
+      "box": "282x283",
+      "content": "293x283",
+      "text": "The consumers are falling behind. What act"
+     },
+     {
+      "sel": "button#themetog",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "☽Dark mode — off"
+     },
+     {
+      "sel": "div#smPivs details.piv",
+      "host": "deep-system-map",
+      "cutX": 6,
+      "cutY": 0,
+      "box": "282x283",
+      "content": "288x283",
+      "text": "When do you need a replayable log rather t"
+     },
+     {
+      "sel": "div#smPivs details.piv",
+      "host": "deep-system-map",
+      "cutX": 4,
+      "cutY": 0,
+      "box": "282x283",
+      "content": "286x283",
+      "text": "How does the event get into the queue atom"
+     }
+    ],
+    "escaped": [],
+    "overlaps": [],
+    "nClipped": 19,
+    "nEscaped": 0,
+    "nOverlaps": 0
+   },
+   "nodes": 2010,
+   "ink": 1602709
+  },
+  "trade": {
+   "at1": {
+    "clipped": [
+     {
+      "sel": "span#tncurrent",
+      "host": "(light)",
+      "cutX": 94,
+      "cutY": 0,
+      "box": "52x15",
+      "content": "146x15",
+      "text": "Event-Driven Backbone"
+     },
+     {
+      "sel": "button#idxopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Topic index — all topics across the six gr"
+     },
+     {
+      "sel": "button#searchopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Search — jump to any topic or view by name"
+     },
+     {
+      "sel": "button#copylink",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Copy link — a shareable link to this topic"
+     },
+     {
+      "sel": "button#starbtn",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Star this topic — save it to your bookmark"
+     },
+     {
+      "sel": "button#notesopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Your notes — jot notes & mnemonics for thi"
+     },
+     {
+      "sel": "button#printqa",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Print Q&A — a printable sheet of this topi"
+     },
+     {
+      "sel": "button#cramopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "One-page cram sheet — everything that matt"
+     },
+     {
+      "sel": "button#sessopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Session progress — where you’re weak, what"
+     },
+     {
+      "sel": "button#mixopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Mixed fire — probes & curveballs in random"
+     },
+     {
+      "sel": "button#planopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Game plan — how to rehearse with this over"
+     },
+     {
+      "sel": "button#scopeopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Scope it first — the clarifying questions "
+     }
+    ],
+    "escaped": [],
+    "overlaps": [],
+    "nClipped": 12,
+    "nEscaped": 0,
+    "nOverlaps": 0
+   },
+   "at2": {
+    "clipped": [
+     {
+      "sel": "span#tncurrent",
+      "host": "(light)",
+      "cutX": 292,
+      "cutY": 0,
+      "box": "0x31",
+      "content": "292x31",
+      "text": "Event-Driven Backbone"
+     },
+     {
+      "sel": "button#idxopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Topic index — all topics across the six gr"
+     },
+     {
+      "sel": "button#searchopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Search — jump to any topic or view by name"
+     },
+     {
+      "sel": "button#copylink",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Copy link — a shareable link to this topic"
+     },
+     {
+      "sel": "button#starbtn",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Star this topic — save it to your bookmark"
+     },
+     {
+      "sel": "button#notesopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Your notes — jot notes & mnemonics for thi"
+     },
+     {
+      "sel": "button#printqa",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Print Q&A — a printable sheet of this topi"
+     },
+     {
+      "sel": "button#cramopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "One-page cram sheet — everything that matt"
+     },
+     {
+      "sel": "button#sessopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Session progress — where you’re weak, what"
+     },
+     {
+      "sel": "button#mixopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Mixed fire — probes & curveballs in random"
+     },
+     {
+      "sel": "button#planopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Game plan — how to rehearse with this over"
+     },
+     {
+      "sel": "button#scopeopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Scope it first — the clarifying questions "
+     },
+     {
+      "sel": "button#tntrigger",
+      "host": "(light)",
+      "cutX": 22,
+      "cutY": 0,
+      "box": "178x47",
+      "content": "200x47",
+      "text": "RehearsingEvent-Driven Backbone▾"
+     },
+     {
+      "sel": "button#themetog",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "☽Dark mode — off"
+     }
+    ],
+    "escaped": [],
+    "overlaps": [],
+    "nClipped": 14,
+    "nEscaped": 0,
+    "nOverlaps": 0
+   },
+   "nodes": 2010,
+   "ink": 1602706
+  },
+  "model": {
+   "at1": {
+    "clipped": [
+     {
+      "sel": "span#tncurrent",
+      "host": "(light)",
+      "cutX": 94,
+      "cutY": 0,
+      "box": "52x15",
+      "content": "146x15",
+      "text": "Event-Driven Backbone"
+     },
+     {
+      "sel": "button#idxopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Topic index — all topics across the six gr"
+     },
+     {
+      "sel": "button#searchopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Search — jump to any topic or view by name"
+     },
+     {
+      "sel": "button#copylink",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Copy link — a shareable link to this topic"
+     },
+     {
+      "sel": "button#starbtn",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Star this topic — save it to your bookmark"
+     },
+     {
+      "sel": "button#notesopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Your notes — jot notes & mnemonics for thi"
+     },
+     {
+      "sel": "button#printqa",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Print Q&A — a printable sheet of this topi"
+     },
+     {
+      "sel": "button#cramopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "One-page cram sheet — everything that matt"
+     },
+     {
+      "sel": "button#sessopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Session progress — where you’re weak, what"
+     },
+     {
+      "sel": "button#mixopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Mixed fire — probes & curveballs in random"
+     },
+     {
+      "sel": "button#planopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Game plan — how to rehearse with this over"
+     },
+     {
+      "sel": "button#scopeopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Scope it first — the clarifying questions "
+     }
+    ],
+    "escaped": [],
+    "overlaps": [
+     {
+      "a": "button#mockopen",
+      "b": "div#msel button",
+      "overlap": "162x8"
+     }
+    ],
+    "nClipped": 12,
+    "nEscaped": 0,
+    "nOverlaps": 1
+   },
+   "at2": {
+    "clipped": [
+     {
+      "sel": "span#tncurrent",
+      "host": "(light)",
+      "cutX": 292,
+      "cutY": 0,
+      "box": "0x31",
+      "content": "292x31",
+      "text": "Event-Driven Backbone"
+     },
+     {
+      "sel": "button#idxopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Topic index — all topics across the six gr"
+     },
+     {
+      "sel": "button#searchopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Search — jump to any topic or view by name"
+     },
+     {
+      "sel": "button#copylink",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Copy link — a shareable link to this topic"
+     },
+     {
+      "sel": "button#starbtn",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Star this topic — save it to your bookmark"
+     },
+     {
+      "sel": "button#notesopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Your notes — jot notes & mnemonics for thi"
+     },
+     {
+      "sel": "button#printqa",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Print Q&A — a printable sheet of this topi"
+     },
+     {
+      "sel": "button#cramopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "One-page cram sheet — everything that matt"
+     },
+     {
+      "sel": "button#sessopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Session progress — where you’re weak, what"
+     },
+     {
+      "sel": "button#mixopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Mixed fire — probes & curveballs in random"
+     },
+     {
+      "sel": "button#planopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Game plan — how to rehearse with this over"
+     },
+     {
+      "sel": "button#scopeopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Scope it first — the clarifying questions "
+     },
+     {
+      "sel": "button#tntrigger",
+      "host": "(light)",
+      "cutX": 22,
+      "cutY": 0,
+      "box": "178x47",
+      "content": "200x47",
+      "text": "RehearsingEvent-Driven Backbone▾"
+     },
+     {
+      "sel": "button#themetog",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "☽Dark mode — off"
+     }
+    ],
+    "escaped": [],
+    "overlaps": [
+     {
+      "a": "button#mockopen",
+      "b": "div#msel button.on",
+      "overlap": "162x17"
+     },
+     {
+      "a": "button#mockopen",
+      "b": "div#msel button",
+      "overlap": "54x17"
+     },
+     {
+      "a": "button#mockopen",
+      "b": "div#msel button",
+      "overlap": "162x42"
+     },
+     {
+      "a": "button#mockopen",
+      "b": "div#msel button",
+      "overlap": "54x42"
+     },
+     {
+      "a": "button#toolsfab",
+      "b": "div#msel button",
+      "overlap": "98x11"
+     },
+     {
+      "a": "button#toolsfab",
+      "b": "div#msel button",
+      "overlap": "98x36"
+     },
+     {
+      "a": "button#idxopen",
+      "b": "div#msel button",
+      "overlap": "161x11"
+     },
+     {
+      "a": "button#idxopen",
+      "b": "div#msel button",
+      "overlap": "161x11"
+     },
+     {
+      "a": "button#idxopen",
+      "b": "div#msel button",
+      "overlap": "161x26"
+     },
+     {
+      "a": "button#searchopen",
+      "b": "div#msel button",
+      "overlap": "161x44"
+     }
+    ],
+    "nClipped": 14,
+    "nEscaped": 0,
+    "nOverlaps": 10
+   },
+   "nodes": 2010,
+   "ink": 1602706
+  },
+  "num": {
+   "at1": {
+    "clipped": [
+     {
+      "sel": "span#tncurrent",
+      "host": "(light)",
+      "cutX": 94,
+      "cutY": 0,
+      "box": "52x15",
+      "content": "146x15",
+      "text": "Event-Driven Backbone"
+     },
+     {
+      "sel": "button#idxopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Topic index — all topics across the six gr"
+     },
+     {
+      "sel": "button#searchopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Search — jump to any topic or view by name"
+     },
+     {
+      "sel": "button#copylink",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Copy link — a shareable link to this topic"
+     },
+     {
+      "sel": "button#starbtn",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Star this topic — save it to your bookmark"
+     },
+     {
+      "sel": "button#notesopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Your notes — jot notes & mnemonics for thi"
+     },
+     {
+      "sel": "button#printqa",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Print Q&A — a printable sheet of this topi"
+     },
+     {
+      "sel": "button#cramopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "One-page cram sheet — everything that matt"
+     },
+     {
+      "sel": "button#sessopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Session progress — where you’re weak, what"
+     },
+     {
+      "sel": "button#mixopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Mixed fire — probes & curveballs in random"
+     },
+     {
+      "sel": "button#planopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Game plan — how to rehearse with this over"
+     },
+     {
+      "sel": "button#scopeopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Scope it first — the clarifying questions "
+     }
+    ],
+    "escaped": [],
+    "overlaps": [],
+    "nClipped": 12,
+    "nEscaped": 0,
+    "nOverlaps": 0
+   },
+   "at2": {
+    "clipped": [
+     {
+      "sel": "span#tncurrent",
+      "host": "(light)",
+      "cutX": 292,
+      "cutY": 0,
+      "box": "0x31",
+      "content": "292x31",
+      "text": "Event-Driven Backbone"
+     },
+     {
+      "sel": "html body div.app main.stage",
+      "host": "(light)",
+      "cutX": 100,
+      "cutY": 0,
+      "box": "360x3331",
+      "content": "460x3331",
+      "text": "ESTIMATENumbers Companioncoaching for this"
+     },
+     {
+      "sel": "button#idxopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Topic index — all topics across the six gr"
+     },
+     {
+      "sel": "button#searchopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Search — jump to any topic or view by name"
+     },
+     {
+      "sel": "button#copylink",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Copy link — a shareable link to this topic"
+     },
+     {
+      "sel": "button#starbtn",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Star this topic — save it to your bookmark"
+     },
+     {
+      "sel": "button#notesopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Your notes — jot notes & mnemonics for thi"
+     },
+     {
+      "sel": "button#printqa",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Print Q&A — a printable sheet of this topi"
+     },
+     {
+      "sel": "button#cramopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "One-page cram sheet — everything that matt"
+     },
+     {
+      "sel": "button#sessopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Session progress — where you’re weak, what"
+     },
+     {
+      "sel": "button#mixopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Mixed fire — probes & curveballs in random"
+     },
+     {
+      "sel": "button#planopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Game plan — how to rehearse with this over"
+     },
+     {
+      "sel": "button#scopeopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Scope it first — the clarifying questions "
+     },
+     {
+      "sel": "button#tntrigger",
+      "host": "(light)",
+      "cutX": 22,
+      "cutY": 0,
+      "box": "178x47",
+      "content": "200x47",
+      "text": "RehearsingEvent-Driven Backbone▾"
+     },
+     {
+      "sel": "button#themetog",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "☽Dark mode — off"
+     }
+    ],
+    "escaped": [
+     {
+      "sel": "div#nout div.nrow div.nrow-v",
+      "host": "deep-numbers",
+      "over": 65
+     },
+     {
+      "sel": "div#nout div.nrow div.nrow-v span.nv-u",
+      "host": "deep-numbers",
+      "over": 65
+     },
+     {
+      "sel": "div#nout div.nrow div.nrow-n",
+      "host": "deep-numbers",
+      "over": 65
+     }
+    ],
+    "overlaps": [
+     {
+      "a": "button#idxopen",
+      "b": "input#procMs",
+      "overlap": "122x26"
+     },
+     {
+      "a": "button#searchopen",
+      "b": "input#maxRecv",
+      "overlap": "150x25"
+     },
+     {
+      "a": "button#copylink",
+      "b": "input#dedupDays",
+      "overlap": "122x7"
+     }
+    ],
+    "nClipped": 15,
+    "nEscaped": 3,
+    "nOverlaps": 3
+   },
+   "nodes": 2010,
+   "ink": 1602706
+  },
+  "rf": {
+   "at1": {
+    "clipped": [
+     {
+      "sel": "span#tncurrent",
+      "host": "(light)",
+      "cutX": 94,
+      "cutY": 0,
+      "box": "52x15",
+      "content": "146x15",
+      "text": "Event-Driven Backbone"
+     },
+     {
+      "sel": "button#idxopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Topic index — all topics across the six gr"
+     },
+     {
+      "sel": "button#searchopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Search — jump to any topic or view by name"
+     },
+     {
+      "sel": "button#copylink",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Copy link — a shareable link to this topic"
+     },
+     {
+      "sel": "button#starbtn",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Star this topic — save it to your bookmark"
+     },
+     {
+      "sel": "button#notesopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Your notes — jot notes & mnemonics for thi"
+     },
+     {
+      "sel": "button#printqa",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Print Q&A — a printable sheet of this topi"
+     },
+     {
+      "sel": "button#cramopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "One-page cram sheet — everything that matt"
+     },
+     {
+      "sel": "button#sessopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Session progress — where you’re weak, what"
+     },
+     {
+      "sel": "button#mixopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Mixed fire — probes & curveballs in random"
+     },
+     {
+      "sel": "button#planopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Game plan — how to rehearse with this over"
+     },
+     {
+      "sel": "button#scopeopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Scope it first — the clarifying questions "
+     }
+    ],
+    "escaped": [],
+    "overlaps": [],
+    "nClipped": 12,
+    "nEscaped": 0,
+    "nOverlaps": 0
+   },
+   "at2": {
+    "clipped": [
+     {
+      "sel": "span#tncurrent",
+      "host": "(light)",
+      "cutX": 292,
+      "cutY": 0,
+      "box": "0x31",
+      "content": "292x31",
+      "text": "Event-Driven Backbone"
+     },
+     {
+      "sel": "button#idxopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Topic index — all topics across the six gr"
+     },
+     {
+      "sel": "button#searchopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Search — jump to any topic or view by name"
+     },
+     {
+      "sel": "button#copylink",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Copy link — a shareable link to this topic"
+     },
+     {
+      "sel": "button#starbtn",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Star this topic — save it to your bookmark"
+     },
+     {
+      "sel": "button#notesopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Your notes — jot notes & mnemonics for thi"
+     },
+     {
+      "sel": "button#printqa",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Print Q&A — a printable sheet of this topi"
+     },
+     {
+      "sel": "button#cramopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "One-page cram sheet — everything that matt"
+     },
+     {
+      "sel": "button#sessopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Session progress — where you’re weak, what"
+     },
+     {
+      "sel": "button#mixopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Mixed fire — probes & curveballs in random"
+     },
+     {
+      "sel": "button#planopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Game plan — how to rehearse with this over"
+     },
+     {
+      "sel": "button#scopeopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Scope it first — the clarifying questions "
+     },
+     {
+      "sel": "button#tntrigger",
+      "host": "(light)",
+      "cutX": 22,
+      "cutY": 0,
+      "box": "178x47",
+      "content": "200x47",
+      "text": "RehearsingEvent-Driven Backbone▾"
+     },
+     {
+      "sel": "button#themetog",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "☽Dark mode — off"
+     }
+    ],
+    "escaped": [],
+    "overlaps": [],
+    "nClipped": 14,
+    "nEscaped": 0,
+    "nOverlaps": 0
+   },
+   "nodes": 2010,
+   "ink": 1602754
+  },
+  "open": {
+   "at1": {
+    "clipped": [
+     {
+      "sel": "span#tncurrent",
+      "host": "(light)",
+      "cutX": 94,
+      "cutY": 0,
+      "box": "52x15",
+      "content": "146x15",
+      "text": "Event-Driven Backbone"
+     },
+     {
+      "sel": "button#idxopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Topic index — all topics across the six gr"
+     },
+     {
+      "sel": "button#searchopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Search — jump to any topic or view by name"
+     },
+     {
+      "sel": "button#copylink",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Copy link — a shareable link to this topic"
+     },
+     {
+      "sel": "button#starbtn",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Star this topic — save it to your bookmark"
+     },
+     {
+      "sel": "button#notesopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Your notes — jot notes & mnemonics for thi"
+     },
+     {
+      "sel": "button#printqa",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Print Q&A — a printable sheet of this topi"
+     },
+     {
+      "sel": "button#cramopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "One-page cram sheet — everything that matt"
+     },
+     {
+      "sel": "button#sessopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Session progress — where you’re weak, what"
+     },
+     {
+      "sel": "button#mixopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Mixed fire — probes & curveballs in random"
+     },
+     {
+      "sel": "button#planopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Game plan — how to rehearse with this over"
+     },
+     {
+      "sel": "button#scopeopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "Scope it first — the clarifying questions "
+     }
+    ],
+    "escaped": [],
+    "overlaps": [],
+    "nClipped": 12,
+    "nEscaped": 0,
+    "nOverlaps": 0
+   },
+   "at2": {
+    "clipped": [
+     {
+      "sel": "span#tncurrent",
+      "host": "(light)",
+      "cutX": 292,
+      "cutY": 0,
+      "box": "0x31",
+      "content": "292x31",
+      "text": "Event-Driven Backbone"
+     },
+     {
+      "sel": "button#idxopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Topic index — all topics across the six gr"
+     },
+     {
+      "sel": "button#searchopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Search — jump to any topic or view by name"
+     },
+     {
+      "sel": "button#copylink",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Copy link — a shareable link to this topic"
+     },
+     {
+      "sel": "button#starbtn",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Star this topic — save it to your bookmark"
+     },
+     {
+      "sel": "button#notesopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Your notes — jot notes & mnemonics for thi"
+     },
+     {
+      "sel": "button#printqa",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Print Q&A — a printable sheet of this topi"
+     },
+     {
+      "sel": "button#cramopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "One-page cram sheet — everything that matt"
+     },
+     {
+      "sel": "button#sessopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Session progress — where you’re weak, what"
+     },
+     {
+      "sel": "button#mixopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Mixed fire — probes & curveballs in random"
+     },
+     {
+      "sel": "button#planopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Game plan — how to rehearse with this over"
+     },
+     {
+      "sel": "button#scopeopen",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 41,
+      "box": "326x42",
+      "content": "326x83",
+      "text": "Scope it first — the clarifying questions "
+     },
+     {
+      "sel": "button#tntrigger",
+      "host": "(light)",
+      "cutX": 22,
+      "cutY": 0,
+      "box": "178x47",
+      "content": "200x47",
+      "text": "RehearsingEvent-Driven Backbone▾"
+     },
+     {
+      "sel": "button#themetog",
+      "host": "(light)",
+      "cutX": 0,
+      "cutY": 8,
+      "box": "326x42",
+      "content": "326x50",
+      "text": "☽Dark mode — off"
+     }
+    ],
+    "escaped": [],
+    "overlaps": [
+     {
+      "a": "button#searchopen",
+      "b": "div#opbody div.card div.op button.op-rev",
+      "overlap": "166x41"
+     },
+     {
+      "a": "button#starbtn",
+      "b": "div#opbody div.card div.op button.op-rev",
+      "overlap": "166x6"
+     },
+     {
+      "a": "button#notesopen",
+      "b": "div#opbody div.card div.op button.op-rev",
+      "overlap": "166x31"
+     }
+    ],
+    "nClipped": 14,
+    "nEscaped": 0,
+    "nOverlaps": 3
+   },
+   "nodes": 2010,
+   "ink": 1602754
+  }
+ },
+ "negControl": {
+  "base": 14,
+  "broken": 15,
+  "caught": true
+ }
+}

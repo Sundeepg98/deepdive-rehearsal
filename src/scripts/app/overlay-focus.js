@@ -29,6 +29,22 @@ window.__overlayModal = function (el, close, isOpen) {
   });
   return {
     capture: function () { ret = document.activeElement; },
-    restore: function () { if (ret && ret.focus) { try { ret.focus(); } catch (e) {} } ret = null; }
+    /* FOCUS MUST LEAVE THE DIALOG THE INSTANT IT STARTS CLOSING.
+       restore() used to only re-focus the CAPTURED TRIGGER -- and when the overlay opens ITSELF
+       (the boot start screen) the captured trigger is <body>, which is not focusable, so .focus()
+       was a SILENT NO-OP and focus stayed parked in the overlay's .ix-filter <input>. shell.js
+       bails on `activeTag === 'input'` at :79, BEFORE it reaches the dialog gate at :82 -- so
+       every keystroke was swallowed until the browser reset activeElement at display:none, 220ms
+       later. Measured: activeElement = INPUT.ix-filter at close+0/60/150/210ms; BODY at +300.
+       Fixing the dialog gate alone does NOT fix this; both halves are required.
+       Shared by the search / notes / index overlays -- all three benefit. */
+    restore: function () {
+      var a = document.activeElement;
+      if (a && a.blur && el.contains(a)) { try { a.blur(); } catch (e) {} }
+      if (ret && ret.focus && ret !== document.body && ret !== document.documentElement) {
+        try { ret.focus(); } catch (e) {}
+      }
+      ret = null;
+    }
   };
 };

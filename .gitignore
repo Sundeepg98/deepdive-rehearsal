@@ -35,3 +35,6 @@ src/scripts/visuals/
 
 # Playwright MCP session scratch (browser snapshots), not source
 .playwright-mcp/
+
+# scratch probes + screenshots from the entry-architecture work (generated; never commit)
+_probe/

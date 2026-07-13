@@ -177,10 +177,16 @@ function afterTopicSwap(t) {
 }
 
 var TopicRegistry = (function () {
-  var byId = {}, order = [], cur = null;
+  var byId = {}, order = [], cur = null, bootId = null;
   function register(t) {
     byId[t.id] = t; order.push(t.id);
-    if (cur === null) { cur = t.id; publishBanks(t); TOPIC_CMP_NOTES = t.identity.cmpNotes; } /* first topic seeds the data side; light DOM already correct in index.html */
+    /* bootId = THE TOPIC A BARE HASH DECODES TO. The registry boots on the FIRST-REGISTERED topic
+       (index.html's light DOM is hard-coded to it -- see applyIdentity, which deliberately does
+       NOT run at boot), while ids() returns the DISPLAY order (sorted by topicOrderIndex). Those
+       are different topics. router.js's topicPrefix() compared against ids()[0] and so disagreed
+       with its own decoder: see the note there. Exposing the boot topic is what lets the encoder
+       and the decoder agree on what "bare" means. */
+    if (cur === null) { cur = t.id; bootId = t.id; publishBanks(t); TOPIC_CMP_NOTES = t.identity.cmpNotes; } /* first topic seeds the data side; light DOM already correct in index.html */
   }
   function current() { return cur ? byId[cur] : null; }
   function setTopic(id) {
@@ -197,7 +203,7 @@ var TopicRegistry = (function () {
     if (window.Router && window.Router.setTopic) window.Router.setTopic(id); /* (6) reflect in hash, silently */
     return true;
   }
-  return { register: register, current: current, get: function (i) { return byId[i]; }, ids: function () { var _a = order.slice(); if (typeof topicOrderIndex === 'function') _a.sort(function (x, y) { return topicOrderIndex(x) - topicOrderIndex(y); }); return _a; }, setTopic: setTopic };
+  return { register: register, current: current, get: function (i) { return byId[i]; }, ids: function () { var _a = order.slice(); if (typeof topicOrderIndex === 'function') _a.sort(function (x, y) { return topicOrderIndex(x) - topicOrderIndex(y); }); return _a; }, setTopic: setTopic, bootId: function () { return bootId; } };
 })();
 
 /* The ONE lifecycle all 9 panes will inherit (Phase 1). In Phase 0 NO pane

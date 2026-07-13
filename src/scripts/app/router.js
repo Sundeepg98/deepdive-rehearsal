@@ -21,9 +21,17 @@
     num:   { id: 'num',   title: 'Numbers' },
     rf:    { id: 'rf',    title: 'Red Flags' },
     open:  { id: 'open',  title: '30-Second' },
-    viz:   { id: 'viz',   title: 'Visualize' }
+    viz:   { id: 'viz',   title: 'Visualize' },
+    home:  { id: 'home',  title: 'Home' }
   };
+  /* DEFAULT_ROUTE MUST STAY 'walk'. It is the fallback for an UNKNOWN view id -- and a bare
+     `#<topic>` deep link parses as topic + NO view, so it takes this fallback too. Setting it to
+     'home' would silently land EVERY bare `#saga` deep link on the home instead of on saga.
+     Only the BARE-ROOT case changes, and that is done in init(), not here. */
   var DEFAULT_ROUTE = 'walk';
+  /* Views with NO topic axis. The home is the curriculum, not a topic -- so it must never take a
+     topic prefix, and a topic switch must never rewrite the hash while you are on it. */
+  var TOPICLESS = { home: 1 };
   var listeners = [];
 
   /* ----- parse a hash string into a route object ----- */
@@ -49,12 +57,27 @@
     };
   }
 
-  /* The current topic's hash prefix -- empty for the default (first-registered) topic,
-     so the single-topic deliverable keeps today's bare #<view> URLs verbatim. */
+  /* The current topic's hash prefix -- empty for the topic a BARE hash decodes to, so the
+     single-topic deliverable keeps today's bare #<view> URLs verbatim.
+
+     THE ENCODER MUST AGREE WITH THE DECODER. parseHash() resolves a bare `#<view>` to
+     `topic: null`, which the app resolves to the registry's BOOT topic -- the FIRST-REGISTERED
+     one (content-pipeline). This function used to compare against `ids()[0]`, the first
+     DISPLAYED one (event-driven, sorted by topicOrderIndex). Two different topics. So on
+     event-driven the app emitted a bare `#walk`, and a FRESH LOAD of `#walk` landed on
+     content-pipeline. copy-link.js copies location.href verbatim, so the hash IS the share
+     contract: copy-link, bookmark and reload all silently pointed at the wrong topic -- for the
+     exact topic the cold-start CTA sends every first-time user to. Measured, then fixed here.
+     Now: on the boot topic -> bare `#drill` (and `#drill` decodes back to it). On any other ->
+     `#<topic>/drill`. Every URL round-trips. */
+  function bootTopicId() {
+    if (typeof TopicRegistry === 'undefined' || !TopicRegistry.bootId) return null;
+    return TopicRegistry.bootId();
+  }
   function topicPrefix() {
     if (typeof TopicRegistry === 'undefined') return '';
-    var cur = TopicRegistry.current(), ids = TopicRegistry.ids();
-    if (!cur || !ids.length || cur.id === ids[0]) return '';
+    var cur = TopicRegistry.current(), boot = bootTopicId();
+    if (!cur || !boot || cur.id === boot) return '';
     return cur.id + '/';
   }
 
@@ -66,10 +89,16 @@
     try { window.dispatchEvent(new CustomEvent('routechange', { detail: route })); } catch (e) {}
   }
 
+  /* A topic-less view takes NO topic prefix. Without this, Router.navigate('home') produced
+     `#content-pipeline/home` -- a home nailed to a topic. (Measured.) */
+  function hashFor(viewId, sub) {
+    return '#' + (TOPICLESS[viewId] ? '' : topicPrefix()) + viewId + (sub ? '/' + sub : '');
+  }
+
   /* ----- navigate to a view (adds a history entry) ----- */
   function navigate(viewId, sub) {
     if (!ROUTES[viewId]) viewId = DEFAULT_ROUTE;
-    var hash = '#' + topicPrefix() + viewId + (sub ? '/' + sub : '');
+    var hash = hashFor(viewId, sub);
     if (window.location.hash !== hash) {
       try { window.history.pushState({ view: viewId, sub: sub || null }, '', hash); }
       catch (e) { window.location.hash = hash; }
@@ -80,7 +109,7 @@
   /* ----- replace the current route (no history entry) ----- */
   function replace(viewId, sub) {
     if (!ROUTES[viewId]) viewId = DEFAULT_ROUTE;
-    var hash = '#' + topicPrefix() + viewId + (sub ? '/' + sub : '');
+    var hash = hashFor(viewId, sub);
     try { window.history.replaceState({ view: viewId, sub: sub || null }, '', hash); } catch (e) {}
     emit(parseHash(hash));
   }
@@ -90,8 +119,13 @@
      applyRoute. The default/first topic stays bare so its URLs are unchanged. */
   function setTopic(id) {
     var cur = parseHash();
-    var ids = (typeof TopicRegistry !== 'undefined') ? TopicRegistry.ids() : [];
-    var prefix = (ids.length && id === ids[0]) ? '' : id + '/';
+    /* A TOPIC SWITCH MUST NOT REWRITE A TOPIC-LESS ROUTE. On the home, a setTopic() (the room
+       cards, the resume CTA, a cross-drill) turned the hash into `#saga/home` via replaceState --
+       DESTROYING the home's own history entry, so Back no longer worked. The home has no topic;
+       leave its hash alone and let the caller navigate. (Measured.) */
+    if (TOPICLESS[cur.view]) return;
+    var boot = bootTopicId();
+    var prefix = (boot && id === boot) ? '' : id + '/';   /* same contract as topicPrefix() */
     var hash = '#' + prefix + cur.view + (cur.sub ? '/' + cur.sub : '');
     try { window.history.replaceState({ topic: id, view: cur.view, sub: cur.sub }, '', hash); } catch (e) {}
   }
@@ -110,12 +144,34 @@
 
   function current() { return parseHash(); }
 
+  /* WHERE A BARE ARRIVAL LANDS. The home, unless the user has explicitly opted out ("Skip the home
+     -- resume straight into my last topic", a checkbox on the home itself, persisted as
+     home.landing). This is the ONLY route change: every existing #<view> and #<topic>/<view> link
+     is byte-identical, and a deep link is never redirected.
+
+     The opt-out VALIDATES the stored topic before honouring it. If a content release renames or
+     drops that topic, we fall back to the HOME -- not to #walk. That matters: #walk resolves to the
+     boot topic, so the app would dump the user on a topic they never chose AND then let
+     LastVisit.record() overwrite their real resume pointer with it. The home has no topic, so
+     there is nothing for record() to write -- the guard stops being a coincidence and becomes a
+     rule. (See last-visit.js.) */
+  function bootLanding() {
+    try {
+      if (typeof Store === 'undefined' || Store.get('home.landing', '') !== 'resume') return '#home';
+      if (typeof LastVisit === 'undefined' || !LastVisit.topicId) return '#home';
+      var id = LastVisit.topicId();
+      if (!id || typeof TopicRegistry === 'undefined' || !TopicRegistry.get(id)) return '#home';
+      return LastVisit.hash() || '#home';
+    } catch (e) { return '#home'; }
+  }
+
   /* ----- bind listeners and emit the initial (possibly deep-linked) route ----- */
   function init() {
     window.addEventListener('hashchange', onHashChange);
     window.addEventListener('popstate', onPopState);
     if (!window.location.hash) {
-      try { window.history.replaceState({ view: DEFAULT_ROUTE }, '', '#' + DEFAULT_ROUTE); } catch (e) {}
+      var landing = bootLanding();
+      try { window.history.replaceState({ view: parseHash(landing).view }, '', landing); } catch (e) {}
     }
     emit(parseHash());
 

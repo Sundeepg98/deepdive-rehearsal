@@ -998,6 +998,35 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
 .ix-ov{position:fixed;inset:0;z-index:var(--z-popup);background:rgba(30,28,24,.45);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:none;align-items:flex-start;justify-content:center;padding:8vh var(--space-16) var(--space-16);opacity:0;transition:opacity var(--duration-base) var(--ease-base)}
 .ix-ov.open{display:flex}
 .ix-ov.vis{opacity:1}
+
+/* ===================== THE INTERACTIVITY INVARIANT =====================
+   `.open`              = PRESENT   (and possibly animating OUT)
+   `.open:not(.closing)` = INTERACTIVE
+
+   A layer mid-fade-out is invisible but still PAINTED, and a painted layer still HIT-TESTS.
+   Opacity is a paint property; it does not stop hit-testing. Measured on the shipped build:
+   .ix-ov held `display:flex` with `pointer-events:auto` for 220ms after close(), and mock/cram
+   hold `.open` for up to 500ms via ovHide() -- so every click on the whole viewport was eaten
+   while the overlay was ~fully transparent, and a real trusted click right after close() landed
+   on #_index-overlay.
+
+   Gate on `.open:not(.closing)`:
+     NOT on `.open`  -- that stays `auto` for the entire fade-out (the bug).
+     NOT on `.vis`   -- ONLY .ix-ov ever sets .vis. A genuinely open Mock Run carries the
+                        classes [mock-ov open] and NO .vis (measured), so a .vis gate would make
+                        the global keymap live UNDERNEATH a timed interview.
+                        (And do not write a literal HTML class attribute in a comment here:
+                        styles.css is inlined into the deliverable, and visual_regression.py
+                        scans the raw text for overlay elements -- prose that looks like markup
+                        is read as markup. It caught exactly that, correctly.)
+   `:not(.closing)` rather than source-order: order-independent, so a later reshuffle of this
+   file cannot silently un-fix it.
+
+   shell.js's global keymap reads the SAME predicate. ovHide() (mock-run/logic.js) ALREADY adds
+   `.closing`, and :596 below already styles it -- the wire was run and never connected.
+   Enforced at runtime by test/overlay_deadzone.cjs, which FAILS on the pre-fix build. */
+.ix-ov,.mock-ov,.cram-ov{pointer-events:none}
+.ix-ov.open:not(.closing),.mock-ov.open:not(.closing),.cram-ov.open:not(.closing){pointer-events:auto}
 .ix-panel{width:var(--space-760);max-width:94vw;background:var(--card);border:1px solid var(--bd);border-radius:16px;box-shadow:0 24px 80px -16px rgba(0,0,0,.4);transform:scale(.97) translateY(10px);transition:transform var(--duration-slow) var(--ease-glide);overflow:hidden;max-height:84vh;display:flex;flex-direction:column}
 .ix-ov.vis .ix-panel{transform:none}
 .ix-head{display:flex;align-items:flex-start;justify-content:space-between;padding:var(--space-18) var(--space-20) var(--space-14);border-bottom:1px solid var(--bd);flex:0 0 auto}
@@ -1045,12 +1074,9 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
 .ix-trend{display:flex;flex-direction:column;justify-content:center;gap:var(--space-4);min-width:var(--space-120)}
 .ix-trend-s{font-family:ui-monospace,Menlo,monospace;font-size:var(--font-size-subhead);letter-spacing:1.5px;color:var(--acc);line-height:var(--line-height-tight)}
 .ix-trend-v{font-size:var(--font-size-nano);color:var(--mut2);line-height:var(--line-height-snug)}
-.ix-groups{flex:1 1 100%;display:flex;flex-direction:column;justify-content:center;gap:var(--space-5)}
-.ix-grp-row{display:flex;align-items:center;gap:var(--space-9)}
-.ix-grp-lbl{flex:0 0 100px;font-size:var(--font-size-nano);color:var(--mut2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ix-grp-bar{flex:1;height:var(--space-5);background:var(--bd);border-radius:5px;overflow:hidden}
-.ix-grp-bar i{display:block;height:100%;border-radius:5px;transition:width var(--duration-slow) var(--ease-base)}
-.ix-grp-pct{flex:0 0 32px;text-align:right;font-size:var(--font-size-nano);color:var(--mut);font-variant-numeric:tabular-nums}
+/* .ix-groups / .ix-grp-* REMOVED with groupBars(): the six room cards (.hm-room) supersede the
+   "By area" bars outright. Leaving the rules behind would be dead CSS -- this file already carried
+   three dead lines nobody noticed for months. */
 .ix-due{display:flex;flex-direction:column;justify-content:center;min-width:var(--space-150)}
 .ix-due-list{display:flex;flex-wrap:wrap;gap:var(--space-6)}
 .ix-due-b{display:inline-flex;align-items:center;gap:var(--space-6);padding:var(--space-5) var(--space-10);border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--ink);font-size:var(--font-size-micro);font-weight:var(--font-weight-semibold);cursor:pointer;transition:border-color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base)}
@@ -1256,4 +1282,99 @@ h1,h2,h3,h4,h5,h6{text-wrap:balance}
   /* focus-mode.js builds this one in JS. Its inline style no longer pins `display`, so this
      rule can centre the label in the taller box (an inline style would have won otherwise). */
   #_focus-toggle{min-height:44px;display:inline-flex;align-items:center;justify-content:center}
+}
+
+/* ===================== THE HOME (#home) =====================
+   A ROUTE, not a modal. The app used to open on a topic nobody chose (the returning user's
+   nav.last was read by nothing at boot) while the one surface that could say what to study next --
+   the dashboard -- lived inside a 46-topic modal that fired once per browser, ever, and was
+   disarmed by the app's own first-paint write. So the dashboard became a place you can go.
+
+   STRUCTURE. #home is a SIBLING of .app (see index.html). It is deliberately NOT a .pane:
+   shell.js captures .pane as a STATIC NodeList at parse, so a late .pane never gets .on and stays
+   display:none -- a populated DOM that paints nothing, which is this repo's signature bug.
+
+   SHADOW BOUNDARY: LIGHT DOM, every selector below. #home is a <body> child and the .ix-* /
+   .hm-* markup is rendered into it by home-view.js. Verified at runtime with getComputedStyle
+   (test/overlay_deadzone.cjs asserts the home actually PAINTS PIXELS, not that nodes exist). No
+   selector here reaches into a pane's shadow root -- the nine panes are untouched. */
+#home{display:none}
+html[data-view="home"] #home{display:block}
+html[data-view="home"] .app,
+html[data-view="home"] .rail,
+html[data-view="home"] .cmp-reopen{display:none}
+#home{padding:var(--space-28) var(--space-20) 80px;min-height:100vh;background:var(--bg)}
+
+/* UNBOX THE PANEL. These renderers were built for a modal: .ix-panel carried max-height:84vh, its
+   own border, shadow, transform and an inner scroller. On a page it gets the document scroll and
+   the whole viewport instead -- which is the entire point. On a phone the modal showed ONE of 46
+   topic cards; the page shows the library with a single document scroll. */
+#home .ix-panel{width:100%;max-width:var(--space-980,980px);margin:0 auto;max-height:none;border:0;
+  box-shadow:none;background:transparent;transform:none;overflow:visible;display:block}
+#home .ix-scroll{overflow:visible;max-height:none}
+#home .ix-foot{border-top:1px solid var(--bd);margin-top:var(--space-28)}
+
+/* the home's own header -- the sidebar is hidden on this route, so Search / Shortcuts / Theme /
+   Tools need a home of their own or they are simply gone. */
+.hm-top{display:flex;align-items:center;justify-content:space-between;gap:var(--space-14);
+  max-width:var(--space-980,980px);margin:0 auto var(--space-24);flex-wrap:wrap}
+.hm-brand{display:inline-flex;align-items:center;gap:var(--space-10);font-weight:var(--font-weight-bold);
+  letter-spacing:.04em;text-transform:uppercase;font-size:var(--font-size-caption);color:var(--acc)}
+.hm-acts{display:flex;gap:var(--space-8);flex-wrap:wrap}
+.hm-act{min-height:44px;padding:var(--space-8) var(--space-14);border:1px solid var(--bd);border-radius:10px;
+  background:var(--card);color:var(--ink);font:inherit;font-size:var(--font-size-caption);
+  font-weight:var(--font-weight-medium);cursor:pointer;display:inline-flex;align-items:center;gap:var(--space-6)}
+.hm-act:hover{border-color:var(--acc);color:var(--acc)}
+.hm-act kbd{font:inherit;font-size:var(--font-size-micro,11px);opacity:.7;border:1px solid var(--bd);
+  border-radius:4px;padding:0 var(--space-4)}
+
+/* ONE line of state, then ONE decision. Telemetry (goal / streak / trend / due) sits BELOW the
+   decision, not above it: on the old surface it was ~40-45% of everything above a single choice. */
+.hm-state{max-width:var(--space-980,980px);margin:0 auto var(--space-18)}
+.hm-h{font-size:var(--font-size-caption);text-transform:uppercase;letter-spacing:.08em;
+  color:var(--mut);font-weight:var(--font-weight-bold);margin:0 0 var(--space-12)}
+.hm-cta{display:flex;width:100%;align-items:center;gap:var(--space-14);text-align:left;
+  padding:var(--space-18) var(--space-20);margin:0 auto var(--space-26);max-width:var(--space-980,980px);
+  border:1px solid var(--acc);border-radius:14px;background:var(--acc);color:#fff;cursor:pointer;
+  font:inherit;min-height:44px;box-shadow:0 10px 30px -12px var(--acc)}
+.hm-cta:hover{filter:brightness(1.06)}
+.hm-cta:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.hm-cta-k{display:block;font-size:var(--font-size-micro,11px);text-transform:uppercase;
+  letter-spacing:.1em;font-weight:var(--font-weight-bold);opacity:.85}
+.hm-cta-t{display:block;font-size:var(--font-size-h3,20px);font-weight:var(--font-weight-bold)}
+.hm-cta-d{display:block;font-size:var(--font-size-caption);opacity:.85;margin-top:2px}
+.hm-cta-ar{margin-left:auto;font-size:var(--font-size-h3,20px)}
+
+/* THE SIX ROOMS. A cold user asks "what is in here?" -- six rooms answers that; 46 tiles does not. */
+.hm-rooms{max-width:var(--space-980,980px);margin:0 auto var(--space-30)}
+.hm-room-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:var(--space-12)}
+.hm-room{display:flex;flex-direction:column;gap:var(--space-8);align-items:stretch;text-align:left;
+  padding:var(--space-14) var(--space-16);border:1px solid var(--bd);border-radius:12px;background:var(--card);
+  cursor:pointer;font:inherit;color:var(--ink);box-shadow:inset 3px 0 0 var(--rm);min-height:44px}
+.hm-room:hover{border-color:var(--rm)}
+.hm-room:focus-visible{outline:2px solid var(--rm);outline-offset:2px}
+.hm-room-k{display:flex;align-items:center;gap:var(--space-8);font-weight:var(--font-weight-bold)}
+.hm-room-n{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;
+  border-radius:5px;background:var(--rm);color:#fff;font-size:var(--font-size-micro,11px);
+  font-weight:var(--font-weight-bold);flex:0 0 auto}
+.hm-room-c{font-size:var(--font-size-caption);color:var(--mut)}
+.hm-room-bar{display:block;height:5px;border-radius:3px;background:var(--bd);overflow:hidden}
+.hm-room-bar i{display:block;height:100%;background:var(--rm);border-radius:3px}
+.hm-room-f{display:flex;align-items:center;justify-content:space-between;gap:var(--space-8);
+  font-size:var(--font-size-caption);color:var(--mut)}
+.hm-room-weak{color:#dc2626;font-weight:var(--font-weight-bold)}
+
+.hm-sec{max-width:var(--space-980,980px);margin:0 auto var(--space-26)}
+/* below the fold: the telemetry the old surface put ABOVE the decision */
+.hm-tele{max-width:var(--space-980,980px);margin:0 auto var(--space-26);padding-top:var(--space-20);
+  border-top:1px solid var(--bd)}
+.hm-skip{display:flex;align-items:center;gap:var(--space-8);max-width:var(--space-980,980px);
+  margin:0 auto var(--space-20);font-size:var(--font-size-caption);color:var(--mut);min-height:44px}
+.hm-skip input{width:16px;height:16px;accent-color:var(--acc);cursor:pointer}
+.hm-skip label{cursor:pointer}
+
+@media(max-width:919px){
+  #home{padding:var(--space-16) var(--space-14) 80px}
+  .hm-room-grid{grid-template-columns:1fr}
+  .hm-cta{padding:var(--space-14) var(--space-16)}
 }

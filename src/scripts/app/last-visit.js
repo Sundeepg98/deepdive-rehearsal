@@ -9,13 +9,25 @@
 (function () {
   var KEY = 'nav.last', ready = false;
   function ids() { return (typeof TopicRegistry !== 'undefined') ? TopicRegistry.ids() : []; }
-  function onHome() { return (typeof IndexOverlay !== 'undefined' && IndexOverlay.isOpen) ? IndexOverlay.isOpen() : false; }
+
+  /* A TOPIC-LESS ROUTE IS NOT A VISIT.
+     The old guard asked "is the index modal open?" -- which is true only for the user who has
+     NOTHING to protect (it fired once per browser, for a brand-new user). For everyone else the
+     modal was shut, so ~500ms after boot this fired on a topic THE USER NEVER CHOSE (the app dumps
+     you on the first-registered topic) and overwrote their real resume pointer with it. Seeded
+     `saga/drill`, boot, wait 1500ms -> `content-pipeline/walk`. The pointer destroyed itself.
+
+     Now it asks the only question that matters: is this route a topic at all? The home has no
+     topic, so at boot there is nothing to write, and the clobber is not merely unlikely -- it is
+     structurally impossible. A deep link to #saga/drill still records: that IS a genuine visit.
+     Both halves are required: without the #home landing, boot would still write the boot topic. */
   function record() {
-    if (!ready || onHome()) return;
+    if (!ready) return;
+    var rc = (typeof Router !== 'undefined' && Router.current) ? Router.current() : null;
+    if (!rc || !rc.view || rc.view === 'home') return;
     var cur = (typeof TopicRegistry !== 'undefined' && TopicRegistry.current) ? TopicRegistry.current() : null;
     if (!cur || !cur.id || ids().indexOf(cur.id) === -1) return;
-    var rc = (typeof Router !== 'undefined' && Router.current) ? Router.current() : null;
-    try { Store.set(KEY, { id: cur.id, view: (rc && rc.view) ? rc.view : '' }); } catch (e) {}
+    try { Store.set(KEY, { id: cur.id, view: rc.view }); } catch (e) {}
   }
   window.addEventListener('routechange', record);
   window.addEventListener('deeptopicchange', record);

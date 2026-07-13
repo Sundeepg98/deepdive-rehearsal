@@ -147,6 +147,23 @@ for name, cmd in [('ascii_guard', ['python3', 'test/ascii_guard.py']),
 chrome = browser()
 deliverable = os.path.join(ROOT, 'deepdive_content_pipeline_rehearsal.html')
 for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity_leak.cjs'),
+                     # THE FIRST CLICK MUST LAND. Every layer this app paints over the viewport --
+                     # the boot splash and the three overlays -- kept HIT-TESTING while invisible
+                     # or fading, and swallowed the user's input. A real trusted click at
+                     # splash+87ms landed on #_bootsplash: that is the literal first tap of every
+                     # session, for EVERY user. The index overlay held pointer-events:auto over the
+                     # whole viewport for 220ms after close(), and left focus in its own <input>,
+                     # which shell.js bails on BEFORE it reaches the dialog gate -- so clicks AND
+                     # keys were eaten. It also opened ITSELF at boot, in front of first paint.
+                     # This check dispatches REAL, HIT-TESTED input (page.mouse.click, not
+                     # el.click(), which bypasses hit-testing and reports success on a provably
+                     # unclickable button -- exactly how this class of bug survives a suite), and
+                     # counts PAINTED PIXELS, never nodes. It carries an anti-regression arm: under
+                     # a genuinely OPEN modal the keymap must STILL be suppressed, which is what
+                     # catches the plausible-but-wrong `.vis` gate. It FAILED 20 of 35 assertions
+                     # on the pre-fix build before it was committed. A check that has never failed
+                     # is not a check.
+                     ('overlay_deadzone', 'test/overlay_deadzone.cjs'),
                      # room wired at boot (data-group + --topic-ink + --acc rebind) AND the
                      # blank-page class of bug cannot recur (reduced-motion still RENDERS,
                      # both themes). The two things a grep cannot see. (Phase 6)

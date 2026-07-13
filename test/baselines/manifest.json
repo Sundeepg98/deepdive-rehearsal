@@ -1,0 +1,175 @@
+{
+  "envs": {
+    "win32-chromium149": {
+      "env": {
+        "platform": "win32",
+        "arch": "x64",
+        "chromium": "149.0.7827.55",
+        "chromiumMajor": "149",
+        "executable": "chrome.exe",
+        "playwright": "1.61.1"
+      },
+      "capture": {
+        "deviceScaleFactor": 1,
+        "locale": "en-US",
+        "timezoneId": "UTC",
+        "reducedMotion": "no-preference",
+        "forcedColors": "none",
+        "colorProfile": "srgb",
+        "lcdText": false,
+        "mathRandom": "seeded-lcg"
+      },
+      "tolerance": {
+        "channelTol": 2,
+        "maxChanged": 32
+      },
+      "generated": "2026-07-13T07:03:42.141Z",
+      "baselines": {
+        "home-light": {
+          "file": "home-light-win32-chromium149.png",
+          "w": 1280,
+          "h": 800,
+          "sha256": "1ae1e70ce59224aa",
+          "hash": "",
+          "theme": "light",
+          "vp": "desktop"
+        },
+        "home-dark": {
+          "file": "home-dark-win32-chromium149.png",
+          "w": 1280,
+          "h": 800,
+          "sha256": "b67410e022609291",
+          "hash": "",
+          "theme": "dark",
+          "vp": "desktop"
+        },
+        "walk-light": {
+          "file": "walk-light-win32-chromium149.png",
+          "w": 1280,
+          "h": 800,
+          "sha256": "0df8f349ce62dd21",
+          "hash": "#event-driven/walk",
+          "theme": "light",
+          "vp": "desktop"
+        },
+        "walk-dark": {
+          "file": "walk-dark-win32-chromium149.png",
+          "w": 1280,
+          "h": 800,
+          "sha256": "194354c66393d145",
+          "hash": "#event-driven/walk",
+          "theme": "dark",
+          "vp": "desktop"
+        },
+        "drill-light": {
+          "file": "drill-light-win32-chromium149.png",
+          "w": 1280,
+          "h": 800,
+          "sha256": "d95849b9dd4a3847",
+          "hash": "#event-driven/drill",
+          "theme": "light",
+          "vp": "desktop"
+        },
+        "drill-dark": {
+          "file": "drill-dark-win32-chromium149.png",
+          "w": 1280,
+          "h": 800,
+          "sha256": "593cfd23594ff831",
+          "hash": "#event-driven/drill",
+          "theme": "dark",
+          "vp": "desktop"
+        },
+        "sys-light": {
+          "file": "sys-light-win32-chromium149.png",
+          "w": 1280,
+          "h": 800,
+          "sha256": "6539394569e9c06f",
+          "hash": "#event-driven/sys",
+          "theme": "light",
+          "vp": "desktop"
+        },
+        "num-light": {
+          "file": "num-light-win32-chromium149.png",
+          "w": 1280,
+          "h": 800,
+          "sha256": "dc8671181d027728",
+          "hash": "#event-driven/num",
+          "theme": "light",
+          "vp": "desktop"
+        },
+        "wb-light": {
+          "file": "wb-light-win32-chromium149.png",
+          "w": 1280,
+          "h": 800,
+          "sha256": "661764aa4a61e70e",
+          "hash": "#event-driven/wb",
+          "theme": "light",
+          "vp": "desktop"
+        },
+        "room-data-storage": {
+          "file": "room-data-storage-win32-chromium149.png",
+          "w": 1280,
+          "h": 800,
+          "sha256": "c223ea76c38b9d73",
+          "hash": "#caching/walk",
+          "theme": "light",
+          "vp": "desktop"
+        },
+        "room-reliability-observability": {
+          "file": "room-reliability-observability-win32-chromium149.png",
+          "w": 1280,
+          "h": 800,
+          "sha256": "0847025e45c22424",
+          "hash": "#retries-timeouts/walk",
+          "theme": "light",
+          "vp": "desktop"
+        },
+        "room-platform-infra": {
+          "file": "room-platform-infra-win32-chromium149.png",
+          "w": 1280,
+          "h": 800,
+          "sha256": "332dc03c21df3446",
+          "hash": "#iac/walk",
+          "theme": "light",
+          "vp": "desktop"
+        },
+        "room-architecture-apis": {
+          "file": "room-architecture-apis-win32-chromium149.png",
+          "w": 1280,
+          "h": 800,
+          "sha256": "5693dee0bbda7ee9",
+          "hash": "#state-machine/walk",
+          "theme": "light",
+          "vp": "desktop"
+        },
+        "room-security-tenancy": {
+          "file": "room-security-tenancy-win32-chromium149.png",
+          "w": 1280,
+          "h": 800,
+          "sha256": "3b6556b408f8bc93",
+          "hash": "#signing/walk",
+          "theme": "light",
+          "vp": "desktop"
+        },
+        "m-walk-light": {
+          "file": "m-walk-light-win32-chromium149.png",
+          "w": 390,
+          "h": 844,
+          "sha256": "a969dda984a364e2",
+          "hash": "#event-driven/walk",
+          "theme": "light",
+          "vp": "mobile"
+        },
+        "m-walk-dark": {
+          "file": "m-walk-dark-win32-chromium149.png",
+          "w": 390,
+          "h": 844,
+          "sha256": "a06f1ccf436a1a3e",
+          "hash": "#event-driven/walk",
+          "theme": "dark",
+          "vp": "mobile"
+        }
+      }
+    }
+  }
+}

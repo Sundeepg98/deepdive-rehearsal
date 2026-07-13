@@ -13,6 +13,8 @@ This replaces per-edit manual vigilance with tooling that runs on every build:
   topic_contract   every topic POPULATED to the depth of the hand-coded 8 (browser)
   cram_scope_distinct  no two topics RENDER the same cram/scope body       (browser)
   rail_integrity   the coaching rail NEVER shows another topic's note      (browser)
+  layout_static    source-level layout assertions (a regex; SEES NO PIXELS)
+  visual_regression the app is RENDERED and its pixels diffed vs baselines (browser)
 
 A NOTE ON WHAT A GREEN GATE MEANS (learned the hard way, 2026-07-11).
 This gate reported PASS 19/19 while the compiler silently discarded 571 authored items on every
@@ -124,7 +126,13 @@ for name, cmd in [('ascii_guard', ['python3', 'test/ascii_guard.py']),
                   # dist/index.html exists. Needs a browser: local shells export
                   # CHROME; CI installs Chromium via npx playwright install.
                   ('visual_pane_smoke', ['node', 'test/visual_pane_smoke.mjs']),
-                  ('visual_regression', ['python3', 'test/visual_regression.py']),
+                  # WAS `visual_regression`, and the name was the bug. It is a regex over the CSS/HTML
+                  # SOURCE -- it imports re/sys/os and nothing else, so it structurally cannot observe a
+                  # pixel, and a DOM reorder that moved the pane switcher went through it GREEN. Its
+                  # assertions are still worth having (they reach :hover rules and keyframe bodies that no
+                  # screenshot can navigate to); they are simply not visual regression, so they no longer
+                  # claim to be. The pixel check now owns that name, and runs below with the browser.
+                  ('layout_static', ['python3', 'test/layout_static.py']),
                   # ---- COMPILER: does it keep what the authors wrote? --------------------------
                   # These two have an INDEPENDENT reference and are the only checks here capable of
                   # detecting a silent drop. Everything else in this section compares the compiler
@@ -272,13 +280,50 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # so thin state coverage can only cause a MISS, never a false accusation. It
                      # plants a known-dead rule on every run and aborts if it cannot see it, so it
                      # is not the seventh check here that cannot fail.
-                     ('shadow_css_guard', 'test/shadow_css_guard.mjs')]:
+                     ('shadow_css_guard', 'test/shadow_css_guard.mjs'),
+                     # THE CHECK THAT ACTUALLY LOOKS AT THE SCREEN. Everything above this line reads the
+                     # DOM, the source, or a computed style; none of them can tell you what was PAINTED.
+                     # The old `visual_regression.py` claimed to and could not -- it was a regex over CSS
+                     # text (see layout_static, above). This renders the app, brings it to a PROVEN rest
+                     # state, and diffs decoded pixels against committed baselines.
+                     #
+                     # Three things make it hard, and it handles each rather than hoping:
+                     #  - THE SHADOW BOUNDARY, again. document.getAnimations() is BLIND to shadow roots
+                     #    (measured: a planted animation in <deep-drill> is reported by
+                     #    shadowRoot.getAnimations() and NOT by document's), so a stillness gate built on
+                     #    it reports "all still" across 17 of the 18 roots while they animate. The gate
+                     #    walks every root, and plants an animation in a shadow root ON EVERY RUN, aborting
+                     #    if it cannot see it -- so nobody can quietly simplify it back.
+                     #  - ANIMATIONS. bodyIn/panein/railin are mid-flight for 650ms and the boot spinner is
+                     #    INFINITE (it freezes at a random angle). Finite animations are FINISHED, infinite
+                     #    ones PINNED to a fixed phase, and nothing is captured until two consecutive frames
+                     #    are byte-identical. MEASURED: a capture taken 60ms early is 460,000+ px wrong.
+                     #  - A BLANK BASELINE WOULD CERTIFY A BLANK PAGE -- the exact trap that let an a11y
+                     #    audit pass an empty screen here. Every capture must clear an ink floor, on the
+                     #    write path as well as the verify path.
+                     #
+                     # PROVEN: a 1px border on ONE rule inside a shadow root turns 14 of 16 baselines red
+                     # (22,656-58,086 px each); reverting it turns them green. Noise floor over repeated
+                     # runs is <=9 px against a 120 px budget.
+                     #
+                     # EXIT 2 = SKIP: baselines are per-platform ON PURPOSE. The app's body text is a
+                     # SYSTEM font stack, so the glyphs on this box are not the glyphs on the CI runner,
+                     # and no tolerance absorbs a different typeface while still catching a 1px shift.
+                     # An environment with no baselines is reported SKIP -- never a PASS it did not earn,
+                     # and never a red nobody can act on. To cover CI: run `npm run vr:update` ON the
+                     # runner and commit test/baselines/. (A MISSING MANIFEST is still a hard FAIL --
+                     # deleting the baselines must not turn the gate green.)
+                     ('visual_regression', 'test/visual_regression.cjs')]:
     if not chrome:
         results.append((name, 'SKIP', 'no Playwright/Chrome (npm install && npx playwright install chromium)'))
         continue
     env = dict(os.environ, CHROME=chrome)
     r = run(['node', script, deliverable], env=env)
-    results.append((name, 'PASS' if r.returncode == 0 else 'FAIL', report(r)))
+    # exit 2 = "this check has no baselines for THIS platform". That is a genuine environment fact,
+    # not a defect and not a pass, so it gets the same SKIP the missing-browser branch gets. Any
+    # other non-zero is a real failure. A check must never be able to buy a green with an exit code.
+    st = 'PASS' if r.returncode == 0 else ('SKIP' if r.returncode == 2 else 'FAIL')
+    results.append((name, st, report(r)))
 
 w = max(len(n) for n, _, _ in results)
 print('=' * 64)

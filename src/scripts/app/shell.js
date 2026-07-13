@@ -74,9 +74,98 @@ window.Density = (function () {
   function cycle() { var cur = document.documentElement.dataset.density || 'default'; set(modes[(modes.indexOf(cur) + 1) % modes.length]); }
   return { set: set, cycle: cycle };
 })();
+/* ============ KeyGuard -- WHERE IS FOCUS, REALLY? ============
+   Every global shortcut in this app is a DOCUMENT-level keydown listener, and a
+   document-level listener cannot see into a shadow root: on its way out, the event is
+   RETARGETED to the host. So while you type in the Numbers pane's four estimation
+   fields (they live in deep-numbers' shadow root):
+
+       event.target.tagName      = "DEEP-NUMBERS"   <- what the old guard tested
+       event.composedPath()[0]   = "INPUT"          <- what it actually is
+
+   ...which is why `activeTag === 'input'` never matched and 14 of 17 shortcuts fired
+   WHILE TYPING. Typing "1e6" -- legal scientific notation in a type=number field --
+   navigated to the Whiteboard on the "e" and destroyed the entry. The three overlay
+   text fields only looked clean because the handler below bails while a dialog is open,
+   so the tagName guard was never exercised there: it has been silently broken for every
+   shadow-DOM field and would have broken the next one added.
+
+   These are the only correct way to ask "where is focus" from a document-level handler
+   in this app. Nine of the panes are shadow DOM; a light-DOM-only check is a no-op that
+   LOOKS like a guard. Never test event.target / document.activeElement directly here.
+
+     isTyping(event)     -- focus is on a surface that consumes typed characters.
+                            Every letter/punctuation shortcut must bail on this.
+     isActivatable(el)   -- the control handles Enter/Space ITSELF. A pane-level
+                            Enter/Space shortcut must not steal the key from it.
+     eventTarget(event)  -- composedPath()[0]: the real target, before retargeting.
+                            (composedPath() is only valid DURING dispatch.)
+     deepActiveElement() -- document.activeElement, recursed through every shadow root. */
+window.KeyGuard = (function () {
+  /* roles that own Enter/Space the way a native button does */
+  var ACTIVATION_ROLES = ['button', 'link', 'checkbox', 'radio', 'switch', 'tab',
+    'menuitem', 'menuitemcheckbox', 'menuitemradio', 'option', 'textbox', 'searchbox', 'combobox'];
+
+  /* the REAL focused element -- document.activeElement stops at the shadow HOST, so
+     walk each root's own activeElement all the way down (shadow roots nest). */
+  function deepActiveElement() {
+    var el = document.activeElement;
+    while (el && el.shadowRoot && el.shadowRoot.activeElement) el = el.shadowRoot.activeElement;
+    return el;
+  }
+
+  /* the element the key ACTUALLY went to, before shadow retargeting */
+  function eventTarget(event) {
+    if (event && typeof event.composedPath === 'function') {
+      var path = event.composedPath();
+      if (path && path.length) return path[0];
+    }
+    return (event && event.target) || deepActiveElement();
+  }
+
+  /* a surface that consumes typed characters */
+  function isTypingSurface(el) {
+    if (!el || el.nodeType !== 1) return false;
+    var tag = (el.tagName || '').toLowerCase();
+    if (tag === 'input' || tag === 'textarea' || tag === 'select') return true;
+    return el.isContentEditable === true;
+  }
+  function isTyping(event) { return isTypingSurface(eventTarget(event)); }
+
+  /* a control that handles Enter/Space itself: stealing the key from it breaks it */
+  function isActivatable(el) {
+    if (!el || el.nodeType !== 1) return false;
+    if (el.disabled) return false;
+    var tag = (el.tagName || '').toLowerCase();
+    if (tag === 'button' || tag === 'input' || tag === 'textarea' || tag === 'select' ||
+        tag === 'summary' || tag === 'details' || tag === 'audio' || tag === 'video') return true;
+    if ((tag === 'a' || tag === 'area') && el.hasAttribute('href')) return true;
+    if (el.isContentEditable === true) return true;
+    /* anything the author made focusable is presumed to want its own keys */
+    var ti = el.getAttribute && el.getAttribute('tabindex');
+    if (ti !== null && ti !== undefined && ti !== '' && parseInt(ti, 10) >= 0) return true;
+    var role = (el.getAttribute && el.getAttribute('role') || '').toLowerCase();
+    return ACTIVATION_ROLES.indexOf(role) > -1;
+  }
+
+  /* Enter/Space belongs to a PANE-level shortcut only when focus is not parked on a
+     control that would handle the key itself -- i.e. focus is on <body> or on inert
+     content ("you are in the pane"), not on a button/link/field anywhere in the app,
+     shadow root or not. Gate on FOCUS, never on which pane happens to be showing. */
+  function ownsActivationKeys(event) { return !isActivatable(eventTarget(event)); }
+
+  return {
+    deepActiveElement: deepActiveElement,
+    eventTarget: eventTarget,
+    isTypingSurface: isTypingSurface,
+    isTyping: isTyping,
+    isActivatable: isActivatable,
+    ownsActivationKeys: ownsActivationKeys
+  };
+})();
 document.addEventListener('keydown', function (event) {
-  const activeTag = (event.target.tagName || '').toLowerCase();
-  if (activeTag === 'input' || activeTag === 'textarea') return;
+  /* THE typing guard. Reads through shadow roots -- see KeyGuard above. */
+  if (window.KeyGuard.isTyping(event)) return;
   if (window.TourGuide && window.TourGuide.isActive()) return;
   if (window.SearchOverlay && window.SearchOverlay.isOpen && window.SearchOverlay.isOpen()) return;
   var _openDlgs = document.querySelectorAll('[role="dialog"][aria-modal="true"]');
@@ -107,7 +196,20 @@ document.addEventListener('keydown', function (event) {
     if (dd) {
       const r = dd.shadowRoot;
       const advBtn = r.getElementById('adv');
-      if ((event.key === ' ' || event.key === 'Enter') && advBtn) { event.preventDefault(); advBtn.click(); }
+      /* Space/Enter advance the drill ONLY when focus is not on some other control.
+         This used to be gated on the active PANE alone, so while the drill was showing it
+         preventDefault()-ed and swallowed EVERY Enter and EVERY Space in the document and
+         redirected it into #adv: you could Tab 27 times to the "Whiteboard" pane button,
+         press Enter, and stay on the drill. The visible pane switcher -- and every other
+         control in the app -- was dead to the keyboard, and the only way out was a letter
+         shortcut nobody is told about. (It went dormant at the grading stage only because
+         #adv and the judge row are mutually exclusive, which is why casual testing missed
+         it.) Gate on FOCUS: if the key belongs to the focused control, let it have it --
+         the browser then activates that control natively, exactly once.
+         Focus on <body>/the drill surface still advances, so the drill's own flow is intact. */
+      if ((event.key === ' ' || event.key === 'Enter') && advBtn && window.KeyGuard.ownsActivationKeys(event)) {
+        event.preventDefault(); advBtn.click();
+      }
       if (key === '1') { const jmBtn = r.getElementById('jm'); if (jmBtn) jmBtn.click(); }
       if (key === '2') { const jsBtn = r.getElementById('js'); if (jsBtn) jsBtn.click(); }
       if (key === '3') { const jgBtn = r.getElementById('jg'); if (jgBtn) jgBtn.click(); }

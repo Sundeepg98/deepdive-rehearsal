@@ -55,11 +55,15 @@
     }
   }
 
-  /* F toggles focus mode, unless typing or the search overlay is open */
+  /* F toggles focus mode, unless typing or the search overlay is open.
+     The typing guard MUST go through KeyGuard (shell.js): this is a document-level
+     listener, so e.target is retargeted to the shadow HOST -- it read "DEEP-NUMBERS",
+     never "INPUT", and F collapsed the sidebar while you were typing in the Numbers
+     pane's estimation fields. KeyGuard.isTyping reads composedPath()[0], the real
+     target, so it sees through every shadow root -- today's four fields and any added later. */
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'f' && e.key !== 'F') return;
-    var tag = (e.target && e.target.tagName || '').toLowerCase();
-    if (tag === 'input' || tag === 'textarea') return;
+    if (window.KeyGuard && window.KeyGuard.isTyping(e)) return;
     if (window.SearchOverlay && window.SearchOverlay.isOpen && window.SearchOverlay.isOpen()) return;
     e.preventDefault();
     toggle();

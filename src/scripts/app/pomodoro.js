@@ -98,7 +98,12 @@
   function build() {
     var sidebar = document.querySelector('.sidebar');
     if (!sidebar || document.getElementById('pomodoro')) return;
-    var mockbar = sidebar.querySelector('.mockbar');
+    /* Anchor on .seg, not .mockbar -- same reason as text-zoom.js: the sidebar's flex `order`
+       is gone (it desynced tab order from paint, WCAG 2.4.3), so DOM position now IS paint
+       position and this widget must be inserted before the pane switcher to stay above it.
+       text-zoom.js runs first and inserts before .seg too, so the pair keeps its order:
+       text zoom, then pomodoro, then the switcher. */
+    var anchor = sidebar.querySelector('.seg');
 
     var wrap = document.createElement('div');
     wrap.id = 'pomodoro'; wrap.className = 'pomodoro';
@@ -144,7 +149,7 @@
 
     row.appendChild(svg); row.appendChild(meta); row.appendChild(playBtn); row.appendChild(resetBtn);
     wrap.appendChild(head); wrap.appendChild(row);
-    sidebar.insertBefore(wrap, mockbar || null);
+    sidebar.insertBefore(wrap, anchor || null);
 
     setPlayUI();
     paint();

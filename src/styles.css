@@ -409,7 +409,14 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
 .side-id .hdr{border-left:none;padding:0;margin:var(--space-6) 0 0}
 .side-id h1{font-size:var(--font-size-heading);letter-spacing:-.4px;line-height:var(--line-height-tight)}
 .side-id .sub,.side-id .kbd-hint{display:none}
-.sidebar .seg{order:1;display:flex;flex-direction:column;gap:var(--space-3);background:none;border:none;border-radius:0;padding:0;margin:0;grid-template-columns:none}
+/* NO `order` HERE, DELIBERATELY. `.seg{order:1}` + `.mockbar{order:2}` used to paint the
+   pane switcher above the tool list while the DOM said otherwise -- and flex `order`
+   reorders PAINT, never TAB ORDER. Focus follows the DOM, so the app's primary navigation
+   was tab stop 25 of 48, reached only after walking the 13 tool buttons painted BELOW it
+   (WCAG 2.4.3 Focus Order). The DOM now carries the order (index.html: .seg precedes
+   .mockbar) and both declarations are gone, so paint and focus cannot drift apart again.
+   Do not reintroduce `order` in this column: it would silently desync them a second time. */
+.sidebar .seg{display:flex;flex-direction:column;gap:var(--space-3);background:none;border:none;border-radius:0;padding:0;margin:0;grid-template-columns:none}
 .sidebar .seg button{display:flex;flex-direction:column;align-items:flex-start;gap:var(--space-1);width:100%;text-align:left;padding:var(--space-8) var(--space-11);border:1px solid transparent;border-radius:10px;background:none;cursor:pointer;transition:background var(--duration-fast) var(--ease-base),box-shadow var(--duration-fast) var(--ease-base)}
 .sidebar .seg button>span:first-child{font-size:var(--font-size-small);font-weight:var(--font-weight-bold);color:var(--ink)}
 .sidebar .seg button .n{font-size:var(--font-size-nano);font-weight:var(--font-weight-bold);letter-spacing:.5px;color:var(--mut2)}
@@ -417,7 +424,10 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
 .sidebar .seg button.on{background:var(--accbg);box-shadow:inset 3px 0 0 var(--acc)}
 .sidebar .seg button.on>span:first-child{color:var(--accink)}
 .sidebar .seg button.on .n{color:var(--acc)}
-.sidebar .mockbar{order:2;margin-top:auto;padding-top:var(--space-14);border-top:1px solid var(--bd);gap:var(--space-7)}
+/* `order:2` deleted with .seg's `order:1` (see above). `margin-top:auto` is what actually
+   pins the tool list to the bottom of the column -- the `order` was only ever compensating
+   for the DOM having .mockbar before .seg, and it desynced tab order from paint to do it. */
+.sidebar .mockbar{margin-top:auto;padding-top:var(--space-14);border-top:1px solid var(--bd);gap:var(--space-7)}
 .sidebar .mockbar .mb-d{display:none}
 .stage{flex:1;min-width:0;padding:var(--space-32) clamp(var(--space-20),4vw,var(--space-52)) var(--space-70);overflow-x:hidden;position:relative}
 /* Two perpetually-drifting purple mesh clouds (meshA 20s + meshB 16s, forever-looping)
@@ -791,8 +801,18 @@ button,.seg button,.dn-step,.pill,.card,.thread,.dec,.rf,.op,.piv,.tools-fab,.cr
 
 /* back-to-top: the work surface scrolls the window, so this floats over the stage (centre-bottom,
    clear of the left sidebar and the right companion on desktop) */
-.scrolltop{position:fixed;left:50%;bottom:var(--space-24);width:var(--space-44);height:var(--space-44);border-radius:50%;border:0;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;font-size:var(--font-size-heading);line-height:var(--line-height-none);cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px var(--acc-a30),0 0 0 1px var(--acc-a15);opacity:0;transform:translateX(-50%) translateY(16px) scale(.9);pointer-events:none;transition:opacity var(--duration-moderate) var(--ease-base),transform var(--duration-slow) var(--ease-glide);z-index:var(--z-sticky)}
-.scrolltop.show{opacity:1;transform:translateX(-50%) translateY(0) scale(1);pointer-events:auto}
+/* `visibility` is load-bearing, not decoration. opacity:0 + pointer-events:none hides this
+   from the MOUSE but not from the KEYBOARD: the button stayed tabbable, matched
+   :focus-visible, and painted its focus ring at 0% opacity -- a Tab stop where focus simply
+   vanishes (WCAG 2.4.7). It was reached on Tab 49 of 49, and on the default pane the document
+   only scrolls ~70px against the 400px reveal threshold, so it never becomes visible at all:
+   a permanent phantom stop at the end of every Tab cycle. visibility:hidden is what actually
+   removes an element from the tab order, so it is the fix -- pointer-events:none is not.
+   The `visibility 0s linear var(--vis-delay)` step keeps the fade-out: --vis-delay holds
+   visibility ON for the length of the transition while opacity/transform animate out, and
+   .show flips it to 0s so the button appears instantly on the way in. */
+.scrolltop{--vis-delay:var(--duration-slow);position:fixed;left:50%;bottom:var(--space-24);width:var(--space-44);height:var(--space-44);border-radius:50%;border:0;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;font-size:var(--font-size-heading);line-height:var(--line-height-none);cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px var(--acc-a30),0 0 0 1px var(--acc-a15);opacity:0;visibility:hidden;transform:translateX(-50%) translateY(16px) scale(.9);pointer-events:none;transition:opacity var(--duration-moderate) var(--ease-base),transform var(--duration-slow) var(--ease-glide),visibility 0s linear var(--vis-delay);z-index:var(--z-sticky)}
+.scrolltop.show{--vis-delay:0s;opacity:1;visibility:visible;transform:translateX(-50%) translateY(0) scale(1);pointer-events:auto}
 @media(hover:hover){.scrolltop.show:hover{box-shadow:0 9px 26px var(--acc-a40),0 0 0 1px var(--acc-a25)}}
 
 /* page-visibility: freeze continuous CSS animations while the tab is backgrounded */

@@ -160,6 +160,7 @@ function pickInterrupts() {
    revealable. Wires Reveal-model, the cut-in reveals, and the Next/Finish button. */
 function renderMockBeat() {
   if (mockBeat >= mockBeats.length) { renderMockEnd(); return; }
+  const held = mockHoldsFocus();   /* this render is about to destroy the focused control */
   const beat = mockBeats[mockBeat], last = (mockBeat === mockBeats.length - 1);
   const fire = !!(mockInterrupt && beat.int && mockIntSet[mockBeat]);
   /* task is OPTIONAL: none of the 38 markdown topics' curveballs author one (they are cue +
@@ -196,6 +197,7 @@ function renderMockBeat() {
     };
   }
   mockRoot.getElementById('mbnext').onclick = function () { mockBeat++; renderMockBeat(); };
+  mockRestoreFocus(held);   /* back onto the run surface -- never let it fall to <body> */
 }
 /* Mock-run end screen: stop the clock, record run stats, show time + which
    curveball and interruptions fired, then a self-score OUT OF THE BEATS THIS RUN
@@ -215,6 +217,7 @@ var MOCK_NUMWORD = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven
 function mockWord(n) { return MOCK_NUMWORD[n] || String(n); }
 function renderMockEnd() {
   closeMockClock();                     /* was clearInterval() on a requestAnimationFrame handle -- a no-op, so the clock kept ticking through the end screen */
+  const held = mockHoldsFocus();        /* this render is about to destroy the focused control */
   mockRuns++;
   mockLastTime = mockSec;
   mockLastInt = mockInterrupt ? Object.keys(mockIntSet).length : 0;
@@ -250,6 +253,7 @@ function renderMockEnd() {
   }
   mockRoot.getElementById('mbagain').onclick = openMock;
   mockRoot.getElementById('mbclose2').onclick = closeMock;
+  mockRestoreFocus(held);   /* the score row + Run again are now Tab-reachable; land on the surface */
 }
 /* Wire the mock-run overlay open/close triggers. */
 document.getElementById('mockopen').onclick = openMock;

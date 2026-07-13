@@ -260,10 +260,48 @@ document.addEventListener('keydown', function (event) {
 (function () {
   const overlays = Array.prototype.slice.call(document.querySelectorAll('[role="dialog"][aria-modal="true"]'));
   let returnFocusTo = null;
-  /* the tabbable, visible elements inside an overlay */
+  const FOCUS_SEL = 'button,[href],input,textarea,select,[tabindex]:not([tabindex="-1"])';
+
+  /* THE SHADOW BOUNDARY, INSIDE THE FOCUS TRAP ITSELF.
+     Every one of these dialogs hosts its BODY in a shadow root -- <deep-mock-run>, <deep-cram>,
+     <deep-session>, <deep-mixed-fire>, <deep-keyboard>, <deep-scope>, <deep-gameplan>. And
+     querySelectorAll DOES NOT CROSS INTO A SHADOW ROOT. So this list used to contain only the
+     light-DOM chrome, and the wrap below then computed first/last from it:
+
+       mock run / session / mixed fire / keyboard -> exactly ONE light-DOM focusable, the close
+       button. first === last === #mockx, so EVERY Tab hit `!shiftKey && active === last` and was
+       preventDefault()-ed straight back onto it. MEASURED: 1 distinct tab stop across 8 presses.
+       The entire dialog body -- the mock run's Reveal/Next, the end screen's score buttons and
+       "Run again", the session tracker's controls -- was UNREACHABLE BY KEYBOARD.
+       cram / game plan / scope -> the ring cycled the light-DOM chrome and wrapped at the last
+       one, so their shadow content was skipped too. All seven were affected.
+
+     A light-DOM scan of a shadow-DOM app is a no-op that LOOKS done. Walk the roots. */
   function getFocusable(overlay) {
-    const nodes = overlay.querySelectorAll('button,[href],input,textarea,select,[tabindex]:not([tabindex="-1"])');
-    return Array.prototype.filter.call(nodes, function (el) { return !el.disabled && el.offsetParent !== null; });
+    const out = [];
+    (function walk(node) {
+      const kids = node.children;
+      for (let i = 0; i < kids.length; i++) {
+        const el = kids[i];
+        if (el.matches && el.matches(FOCUS_SEL) && !el.disabled && el.offsetParent !== null) out.push(el);
+        /* shadow content is sequentially focused AT THE HOST'S POSITION -- recurse there, so this
+           list stays in true tab order and first/last are the real ends of the ring. */
+        if (el.shadowRoot) walk(el.shadowRoot);
+        walk(el);
+      }
+    })(overlay);
+    return out;
+  }
+  /* `overlay.contains(node)` is FALSE for a node inside the overlay's own shadow root -- contains()
+     stops at the boundary too. Hop out through each root's host until we reach the light tree. */
+  function deepContains(overlay, node) {
+    let n = node;
+    while (n) {
+      if (overlay.contains(n)) return true;
+      const root = n.getRootNode && n.getRootNode();
+      n = root && root.host;
+    }
+    return false;
   }
   /* whichever overlay is currently INTERACTIVE, or null. `.open:not(.closing)` -- the same
      invariant again: Tab must not be trapped inside, and Escape must not target, a dialog that is
@@ -291,11 +329,21 @@ document.addEventListener('keydown', function (event) {
       if (isOpen && !overlay.__open) {
         overlay.__open = true;
         returnFocusTo = document.activeElement;
-        setTimeout(function () { const focusable = getFocusable(overlay); if (focusable.length) focusable[0].focus(); }, 0);
+        setTimeout(function () {
+          /* AN OVERLAY MAY NOMINATE ITS OWN INITIAL FOCUS TARGET, and the mock run does.
+             Defaulting to focusable[0] means landing the user on the CLOSE BUTTON -- it is the
+             first thing in .mock-top in every one of these dialogs. For a dialog that is just a
+             document (cram, keyboard, game plan) that is harmless. For the mock run it is the
+             whole bug: focus parked on a control means the run's own Space/Enter cannot be
+             gated on focus without killing them, which is exactly why this defect survived a
+             one-line fix. The run nominates its SURFACE instead (see mock-run/logic.js). */
+          const want = (typeof overlay.__initialFocus === 'function' && overlay.__initialFocus()) || getFocusable(overlay)[0];
+          if (want) { try { want.focus(); } catch (e) {} }
+        }, 0);
       } else if (!isOpen && overlay.__open) {
         overlay.__open = false;
-        const a = document.activeElement;
-        if (a && a.blur && overlay.contains(a)) { try { a.blur(); } catch (e) {} }
+        const a = window.KeyGuard.deepActiveElement();
+        if (a && a.blur && deepContains(overlay, a)) { try { a.blur(); } catch (e) {} }
         if (returnFocusTo && returnFocusTo.focus && returnFocusTo !== document.body && returnFocusTo !== document.documentElement) {
           try { returnFocusTo.focus(); } catch (e) {}
         }
@@ -303,15 +351,20 @@ document.addEventListener('keydown', function (event) {
       }
     }).observe(overlay, { attributes: true, attributeFilter: ['class'] });
   });
-  /* Tab / Shift-Tab cycle within the open overlay */
+  /* Tab / Shift-Tab cycle within the open overlay.
+     `active` MUST be the DEEP active element: document.activeElement stops at the shadow HOST, so
+     with a shadow-aware `focusable` list it would never equal first or last (they are the real
+     nodes, inside the root) and the ring would never wrap -- Tab would walk straight out of the
+     modal into the page behind it. Read through the boundary on BOTH sides or not at all. */
   document.addEventListener('keydown', function (event) {
     if (event.key !== 'Tab') return;
     const overlay = openOverlay();
     if (!overlay) return;
     const focusable = getFocusable(overlay);
     if (!focusable.length) { event.preventDefault(); return; }
-    const first = focusable[0], last = focusable[focusable.length - 1], active = document.activeElement;
-    if (!overlay.contains(active)) { event.preventDefault(); first.focus(); return; }
+    const first = focusable[0], last = focusable[focusable.length - 1];
+    const active = window.KeyGuard.deepActiveElement();
+    if (!deepContains(overlay, active)) { event.preventDefault(); first.focus(); return; }
     if (event.shiftKey && active === first) { event.preventDefault(); last.focus(); }
     else if (!event.shiftKey && active === last) { event.preventDefault(); first.focus(); }
   }, true);

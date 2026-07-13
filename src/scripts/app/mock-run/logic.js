@@ -6,10 +6,42 @@ function mockFmt(totalSeconds) {
 }
 
 /* SHARED overlay helpers (used by every overlay, here and in cram-sheet.js).
-   Each overlay element carries a private "_exT" timeout handle used to force
-   the close animation to finish even if the animationend event never fires. */
+   Each overlay element carries two private handles for the pending hide: "_exT" (the fallback
+   timer) and "_exH" (the animationend listener). BOTH must be cancelled to cancel a hide. */
+
+/* ONE resolver for the animating panel, used by ovShow and ovHide alike. They MUST agree: an
+   addEventListener on one node and a removeEventListener on another is a silent no-op that looks
+   like a cancel -- exactly the bug class this file already carries scars from. */
+function ovPanel(overlay) { return overlay.querySelector('.mock-panel,.cram-panel') || overlay; }
+
+/* Is `node` inside `overlay`, ACROSS the shadow boundary? Node.contains() stops at a shadow root,
+   and every one of these dialogs keeps its controls in one -- so hop out through each root's host.
+   A light-DOM contains() on a shadow-DOM app silently answers "no" and skips the work. */
+function ovContains(overlay, node) {
+  var n = node;
+  while (n) {
+    if (overlay.contains(n)) return true;
+    var root = n.getRootNode && n.getRootNode();
+    n = root && root.host;
+  }
+  return false;
+}
+
 function ovShow(overlay) {
   if (overlay._exT) { clearTimeout(overlay._exT); overlay._exT = null; }
+  /* CANCEL THE PENDING HIDE -- BOTH ARMS OF IT.
+     ovHide() arms finishHide TWICE: on the panel's `animationend`, and on a 500ms fallback timer.
+     This used to clear only the TIMER, leaving the listener live -- and that listener is not scoped
+     to the close animation. It fires on the NEXT animationend on that panel, which after a reopen
+     is the OPEN animation's. finishHide then ran classList.remove('open','closing') against the
+     dialog we had just opened, and THE DIALOG CLOSED ITSELF.
+     MEASURED on the shipped build (pre-fix, verbatim from HEAD): close the mock run and reopen it
+     at any gap -- 0, 50, 150, 400ms -- and `.open` is stripped 446-700ms later with no user action
+     at all. Every overlay shares these two helpers, so every overlay had it. */
+  if (overlay._exH) {
+    ovPanel(overlay).removeEventListener('animationend', overlay._exH);
+    overlay._exH = null;
+  }
   overlay.classList.remove('closing');
   overlay.classList.add('open');
 }
@@ -20,17 +52,77 @@ function ovHide(overlay) {
      leave SYNCHRONOUSLY, in the same tick -- shell.js's focus manager reads the same predicate, but
      it is a MutationObserver, i.e. a microtask, so it cannot restore focus until the current task
      ends. Blur here and the invariant holds at EVERY instant: focus is never inside a layer the
-     user can no longer use. shell.js then returns focus to the trigger a microtask later. */
-  const _a = document.activeElement;
-  if (_a && _a.blur && overlay.contains(_a)) { try { _a.blur(); } catch (e) {} }
-  const panel = overlay.querySelector('.mock-panel,.cram-panel') || overlay;
+     user can no longer use. shell.js then returns focus to the trigger a microtask later.
+     READ FOCUS THROUGH THE SHADOW BOUNDARY: document.activeElement reports the HOST
+     (<deep-mock-run>) for anything focused inside the run, and now that a dialog can open focused
+     on a node in its own shadow root, blurring the host is not the same thing as blurring what is
+     actually focused. */
+  const _a = window.KeyGuard.deepActiveElement();
+  if (_a && _a.blur && ovContains(overlay, _a)) { try { _a.blur(); } catch (e) {} }
+  const panel = ovPanel(overlay);
   const finishHide = function () {
     overlay.classList.remove('open', 'closing');
     if (overlay._exT) { clearTimeout(overlay._exT); overlay._exT = null; }
     panel.removeEventListener('animationend', finishHide);
+    overlay._exH = null;
   };
+  overlay._exH = finishHide;                 /* so a reopen can cancel THIS listener, not just the timer */
   panel.addEventListener('animationend', finishHide, { once: true });
   overlay._exT = setTimeout(finishHide, 500); /* fallback if animationend never fires */
+}
+
+/* ===================== THE MOCK RUN'S KEYBOARD CONTRACT =====================
+   THE BUG THIS EXISTS TO KILL (WCAG 2.1.1): the keydown handler below used to gate on
+   "is the overlay open" and then preventDefault() Enter. Enter on the mock overlay's OWN
+   close button therefore clicked #mbnext and DID NOT CLOSE -- measured; preventDefault() on
+   keydown also suppresses the button's native activation, so the key was stolen twice over.
+   Space on the close button fired #mbrev the same way. Identical disease to the drill's.
+
+   WHY THE DRILL'S ONE-LINE FIX DOES NOT TRANSPLANT. The drill's cure was "gate on focus, not on
+   pane" (KeyGuard.ownsActivationKeys). Dropped in here verbatim it would have DISABLED
+   Space-to-reveal outright, because focus inside this modal was ALWAYS parked on a control:
+   shell.js's focus trap scanned the light DOM only, found exactly ONE focusable in this dialog
+   (#mockx), and so pinned focus to the close button forever -- first === last, every Tab bounced
+   back. A previous agent correctly refused the one-liner and called for a design decision. This
+   is it, and it is three coupled parts, because each is load-bearing for the others:
+
+     1. THE RING CROSSES THE SHADOW BOUNDARY (shell.js getFocusable). Without it there is nowhere
+        to focus but the close button, and any focus-based gate is a dead Space key.
+     2. THE RUN OPENS FOCUSED ON ITS SURFACE, not on a control (__initialFocus below). #mockbody
+        already exists for this -- role="region", tabindex="0", "Mock run content". The user lands
+        IN THE RUN. Space reveals and Enter advances from there, with nothing stolen from anyone.
+     3. THE KEYS GATE ON FOCUS (mockRunOwnsKeys). Tab to Reveal/Next/Close and that control owns
+        its own Enter and Space, natively, exactly once -- so the close button closes.
+
+   Rejected: rebinding reveal to a non-colliding key. Space-to-reveal IS the interaction, it is
+   printed on screen in .mb-keys, and rebinding it would not have restored the tab ring -- the
+   user still could not have reached a single control. The collision was never the disease. */
+
+/* Space/Enter/-> belong to the RUN only when focus is on the run SURFACE, or nowhere (<body>) --
+   never when it is parked on a control that handles the key itself. */
+function mockRunOwnsKeys(event) {
+  /* The surface is a REGION, not a control. It carries tabindex="0" so it can be focused and
+     scrolled -- and that is precisely what KeyGuard.isActivatable() reads as "this element wants
+     its own keys". A correct default; wrong for this one node. The surface IS the run, so it
+     owns the run's keys. Everything else defers to the shared rule. */
+  if (mockbody && window.KeyGuard.eventTarget(event) === mockbody) return true;
+  return window.KeyGuard.ownsActivationKeys(event);
+}
+
+/* Is focus currently INSIDE the mock overlay? Read through the shadow boundary on BOTH sides:
+   the deep active element, and a contains() that crosses roots. */
+function mockHoldsFocus() { return ovContains(mockov, window.KeyGuard.deepActiveElement()); }
+/* Every beat render REPLACES the body (mockbody.innerHTML = ...), destroying whatever the user had
+   focused -- so focus fell to <body>, and both the keyboard user's place and the screen reader's
+   were lost mid-round, every single beat. Put focus back on the run surface: the user stays IN the
+   run, and the run keeps owning Space/Enter (contract point 2).
+   ONLY when focus was already inside the overlay. The FIRST render runs from openMock(), while the
+   TRIGGER button still holds focus -- and shell.js's modal observer reads document.activeElement at
+   the end of that same task to remember where to restore focus on close. Steal focus there and the
+   overlay captures ITSELF as its own return target, so closing it would strand focus in a hidden
+   dialog. Guard on "did this render actually destroy the user's focus", and it cannot happen. */
+function mockRestoreFocus(held) {
+  if (held && mockbody) { try { mockbody.focus(); } catch (e) {} }
 }
 
 /* Open the mock-interview overlay: reset the clock/beat, randomly pick this
@@ -60,6 +152,9 @@ function openMock() {
   /* Roll the frame cue -- only where the topic actually authored a FRAME beat. */
   if (mockFrameIdx >= 0 && framePool.length) mockBeats[mockFrameIdx].cue = framePool[Math.floor(Math.random() * framePool.length)];
   mockIntSet = mockInterrupt ? pickInterrupts() : {};
+  /* THE RUN SURFACE, not the close button (contract point 2). shell.js's modal observer reads this
+     on open; without it, focusable[0] is #mockx and the user starts the round on "close". */
+  mockov.__initialFocus = function () { return mockbody; };
   ovShow(mockov);
   mockov.setAttribute('aria-hidden', 'false');
   document.body.style.overflow = 'hidden';
@@ -76,6 +171,13 @@ function openMock() {
   if (!mockKeyCtrl) mockKeyCtrl = new AbortController();
   document.addEventListener('keydown', function (event) {
     if (!mockov.classList.contains('open')) return;
+    /* THE GATE (contract point 3). Gating on the overlay alone stole Enter and Space from every
+       control INSIDE the overlay -- including the close button, which is where this modal put the
+       user's focus. If the key belongs to the focused control, let it have it: the browser then
+       activates that control natively, exactly once. Guarding the WHOLE handler (-> included) also
+       means any typing surface added to this overlay later is safe by construction -- this handler
+       never consulted KeyGuard.isTyping, and would have eaten a text field's keys. */
+    if (!mockRunOwnsKeys(event)) return;
     if (event.key === ' ') {
       event.preventDefault();
       var revealBtn = mockRoot.getElementById('mbrev');

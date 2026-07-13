@@ -1,7 +1,7 @@
 # Topic Contract
 
 Adding a topic is pure content-filling: author the files below to the shape here,
-build, and `make check`. The **`topic_contract` gate check**
+then `npm run build && npm run gate`. The **`topic_contract` gate check**
 (`test/topic_contract.cjs`) fails the build if a topic is malformed, so drift
 cannot ship -- no redesign, no shared-file surgery.
 
@@ -32,7 +32,7 @@ A pivot chip becomes a one-click jump when its text carries a `(N)` index
 for not-yet-built topics stay plain text -- that's fine.
 
 ## Enforced by the gate
-`make check` runs `topic_contract`, which asserts all of the above for every
+`npm run gate` runs `topic_contract`, which asserts all of the above for every
 registered topic. A missing slice, missing identity field, non-existent group,
 too few cards, or a missing core tier fails the build and names the offending
 topic. Adding a topic to a group is automatic: the grouped nav, index overlay,

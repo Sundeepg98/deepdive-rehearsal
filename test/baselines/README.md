@@ -7,10 +7,18 @@ changing an assertion, because that is what it is.
 ## Regenerating them (deliberately)
 
 ```bash
-npm run build          # the check reads the deliverable; make sure it is the build you mean
+npm run build          # writes dist/index.html AND the deliverable -- the check reads the deliverable
 npm run vr:update      # re-captures every baseline for THIS platform, rewrites manifest.json
 git add test/baselines && git diff --cached --stat
 ```
+
+The `npm run build` line is not a formality. `vr:update` captures whatever is in the
+**deliverable** — and until `tools/sync-deliverable.mjs` was wired into the build, `npm run build`
+did not write that file (only the `make build` target did, and `make` is not installed on the dev
+box). Running this recipe on a stale deliverable re-baselines the **old** pixels and commits them
+as the new reference: the check then certifies the past, forever, and no diff shows it. This step
+now syncs the deliverable by construction, so the trap is closed — but that is *why* the line is
+there.
 
 Then **look at the PNGs that changed.** `git diff` cannot show you a picture; open them. If a
 baseline moved and you cannot say *why* in one sentence, do not commit it — regenerating without

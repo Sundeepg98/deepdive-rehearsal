@@ -851,26 +851,30 @@ The honest case against your own design.
 
 Back-of-envelope the bloat soft deletes accumulate and what the purge caps.
 
-Deleted rows stay in the table, so they grow the table and every scan the filter excludes them from --- until a purge past retention removes them for real. Lead with the deleted fraction, not the total: the number that bites is what share of every index and every scan is data you always throw away.
+Deleted rows stay in the table --- they are live tuples your predicate excludes, not space the database reclaims --- until a purge past retention removes them for real. So lead with the deleted **fraction**, not the total: the number that bites is what share of every index and every scan is data you always throw away. At 80% deleted that is four wasted fetches for every useful one.
 
-- rows | Live rows | 10000000 | 0 | 100000
-- deletePct | Deleted (%) | 20 | 0 | 5
+- rows | Total rows | 10000000 | 0 | 100000
+- deletePct | Deleted (% of table) | 20 | 0 | 5
 - retentionDays | Retention (days) | 90 | 0 | 30
 - rowBytes | Bytes per row | 400 | 0 | 50
 
 ```js
 function (vals, fmt) {
-  var rows = vals.rows, deletePct = vals.deletePct;
+  var total = vals.rows, deletePct = Math.min(100, Math.max(0, vals.deletePct));
   var retentionDays = vals.retentionDays, rowBytes = vals.rowBytes;
-  var deleted = Math.round(rows * deletePct / 100);
-  var total = rows + deleted;
+  var deleted = Math.round(total * deletePct / 100);
+  var live = Math.max(0, total - deleted);
+  var wasted = live > 0 ? deleted / live : Infinity;
+  // fmt.n() rounds to an integer, so format this fraction by hand or 0.25 would render as "0"
+  var wastedStr = live > 0 ? String(Math.round(wasted * 10) / 10) : '\u221e';
   var wasteMB = Math.round(deleted * rowBytes / 1e6);
   var batch = 5000;
   var batches = Math.ceil(deleted / batch);
   return [
-    { k: 'Soft-deleted rows carried', v: fmt.n(deleted), u: 'rows', n: 'tombstones physically present in the table \u2014 every non-partial index still holds an entry for each one, and every scan walks past them', over: true },
+    { k: 'Soft-deleted rows carried', v: fmt.n(deleted), u: 'rows', n: deletePct + '% of the table is tombstones \u2014 physically present, every non-partial index still holds an entry for each one, and every scan walks past them', over: deletePct >= 50 },
+    { k: 'Wasted fetches per useful row', v: wastedStr, u: 'dead : 1 live', n: 'the number that actually bites. A lookup on any OTHER column walks the tombstones interleaved with the live rows, fetches their heap pages and throws them away \u2014 so you pay I/O proportional to TOTAL rows. At 80% deleted this is 4: four wasted fetches for every useful one', over: wasted >= 1 },
     { k: 'Dead weight in the heap', v: fmt.n(wasteMB), u: 'MB', n: 'at ' + rowBytes + ' bytes/row \u2014 storage you pay for and always filter out. VACUUM will never reclaim it: a soft-deleted row is a LIVE tuple', over: false },
-    { k: 'Rows scanned per full pass', v: fmt.n(total), u: 'rows', n: 'live + deleted \u2014 ' + fmt.n(100 + deletePct) + '% of the useful data. A partial index on deleted_at IS NULL keeps the live working set off the bloat', over: false },
+    { k: 'Rows scanned per full pass', v: fmt.n(total), u: 'rows', n: fmt.n(live) + ' live + ' + fmt.n(deleted) + ' deleted \u2014 a full pass reads every one. A partial index on deleted_at IS NULL keeps the live working set off the bloat', over: false },
     { k: 'Purge batches at ' + fmt.n(batch) + '/batch', v: fmt.n(batches), u: 'batches', n: 'never one giant DELETE \u2014 that is a long transaction, a replication-lag spike, and a full rollback if it dies at 90 percent', over: false },
     { k: 'Partition drop instead', v: '1', u: 'op', n: 'partition by deletion date and DROP the expired partition \u2014 a metadata operation. O(1) instead of O(rows). This is the number that changes the design', over: false },
     { k: 'Recovery window', v: fmt.n(retentionDays), u: 'days', n: 'a soft delete is reversible until it is purged \u2014 the whole point, and the number that goes in the privacy policy', over: false }

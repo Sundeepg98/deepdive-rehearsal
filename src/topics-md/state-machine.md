@@ -78,7 +78,7 @@ Numbers
 
 Back-of-envelope what the table constrains and where concurrency bites --- the illegal-move space and the hot-entity ceiling.
 
-Lead with the gap: states-squared conceivable moves, a handful legal, everything else rejected --- that gap is what the machine buys you.
+Lead with the gap: states times events is the space the table keys on, a handful of those cells are defined, everything else is rejected --- that gap is what the machine buys you.
 
 ### rf
 
@@ -379,17 +379,17 @@ Speak: "CAS makes the *state* write idempotent for free --- the second move find
 
 How do you test a state machine thoroughly?
 
-By covering the *transitions*, not just the states --- assert that every legal transition works and fires its action, and critically that every *illegal* transition is rejected (the negative cases are where bugs hide). Because the machine is a table, you can drive tests off it: enumerate the pairs, confirm the allowed ones succeed and the rest are refused. Add tests for the guards (a same-person second approval is blocked) and for concurrency (two racing transitions, one wins). The transition table makes the test matrix finite and mechanical, which is a real advantage of the explicit model.
+By covering the *transitions*, not just the states --- assert that every legal transition works and fires its action, and critically that every *illegal* transition is rejected (the negative cases are where bugs hide). Because the machine is a table, you can drive tests off it: enumerate the `(state, event)` cells the table keys on, confirm the ones it defines succeed and the rest are refused. Add tests for the guards (a same-person second approval is blocked) and for concurrency (two racing transitions, one wins). The transition table makes the test matrix finite and mechanical, which is a real advantage of the explicit model.
 
 Follow: You have 8 states and 14 legal transitions --- that's 8 x 7 = 56 ordered pairs. Do you test all 56?
-Yes, and that's the *advantage* of the explicit model: the pair space is finite and enumerable, so you drive the tests off the table itself. For each of the 56 `(from, to)` pairs, assert the 14 in the table succeed and fire their action, and the other 42 are rejected with the state unchanged. That negative space --- the 42 illegal moves --- is where the bugs hide and where hand-written tests always have gaps; generating the matrix from the table guarantees you cover the rejections you'd never think to write by hand. The table makes exhaustive transition testing *mechanical*.
+I'd push back on the space, and catching *why* is the point. The table doesn't key on `(from, to)` --- it keys on `(state, event)`. You can't *attempt* a from-to transition: you fire an **event**, and the target state is the table's **output**, not an input you get to supply. So the matrix I can actually drive is states x **events** --- 8 states and, say, 6 events is 48 cells --- and for each I assert either the table's target state *and* its action, or a rejection with the state unchanged. The negative space --- the 34 cells the table leaves undefined --- is where the bugs hide and where hand-written tests always have gaps. The two spaces don't even compose: two different events from one state can legally land on the *same* target (`cancel` and `timeout` both reaching `cancelled`), so 14 table entries can collapse to fewer than 14 distinct `(from, to)` pairs, and "56 minus 14" is subtracting one space from another.
 
 Follow: What can't that transition matrix catch --- where do you still need hand-written tests?
-Three things the matrix misses. *Guards*: the pair `submitted -> approved` is legal, but the same-person second approval must be rejected --- that's a guard, not a table cell, so it needs its own test. *Concurrency*: two racing transitions, assert exactly one wins and the CAS rejects the loser --- a property test, not a pair. *Effects*: the action actually fired, once, and idempotently on replay. The matrix proves the *structure* is enforced; guards, races, and side effects are the semantic layer on top, and they're where the subtle bugs live. So: generate the pair matrix, then hand-write the guard, race, and effect tests.
+Three things the matrix misses. *Guards*: the cell `(submitted, approve)` is defined, but a same-person second approval must still be rejected --- that's a runtime condition on a cell that exists, not a question of whether the cell exists, so it needs its own test. *Concurrency*: two racing transitions, assert exactly one wins and the CAS rejects the loser --- a property test, not a cell. *Effects*: the action actually fired, once, and idempotently on replay. The matrix proves the *structure* is enforced; guards, races, and side effects are the semantic layer on top, and they're where the subtle bugs live. So: generate the `(state, event)` matrix, then hand-write the guard, race, and effect tests.
 
-Senior: Driving the *full* pair matrix (especially the negative space of illegal moves) off the table mechanically --- then knowing the matrix *can't* cover guards, concurrency, and effects, which need targeted property and race tests --- is the testing maturity; juniors test the happy-path transitions and never the 42 rejections or the race.
+Senior: Catching that the mechanical matrix is states x *events*, not from/to pairs --- because the event is the input and the next state is the output, so a `(from, to)` pair is not something you can even attempt --- and then driving that full matrix off the table, especially the cells it leaves undefined. Then knowing the matrix *can't* cover guards, concurrency, and effects, which need targeted property and race tests. Juniors test the happy-path transitions and never the rejections or the race.
 
-Speak: "The table makes it mechanical: enumerate all `(from, to)` pairs, assert the legal ones fire and the illegal ones are rejected unchanged --- the negative space is where bugs hide." Then hand-write what the matrix can't cover: guards, the concurrent race (exactly one wins), and that effects fire once.
+Speak: "Careful --- the table keys on `(state, event)`, not `(from, to)`. The event is the input; the next state is the *output*, so I can't attempt a from-to pair." Then commit: **"The matrix is states by events --- 8 by 6 is 48 cells. For each, assert the table's target and its action, or a rejection with the state unchanged."** Then hand-write what the matrix can't cover: guards, the concurrent race (exactly one wins), and that effects fire once.
 
 ### Staff | distributed state machine
 
@@ -799,12 +799,12 @@ Why each load-bearing choice -- and the one axis I'd actually flex.
 The transition matrix is mechanical -- the guards, races, and effects are where the bugs hide.
 
 - FRAME | frame | The explicit table is a testing *gift*: the transition space is finite, so I test it mechanically -- and then hand-write what the matrix can't reach.
-- THE MATRIX | head | For 8 states there are 8x7 = 56 ordered pairs; I drive the tests off the table -- assert the ~14 legal moves fire their action, and the other ~42 are **rejected with the state unchanged**.
-- THE NEGATIVE SPACE | sub | That negative space -- the 42 illegal moves -- is where bugs hide and hand-written tests always have gaps. Generating the matrix from the table guarantees I cover the rejections I'd never think to write by hand.
-- GUARDS | sub | The matrix *can't* catch guards: `submitted -> approved` is a legal pair, but a **same-person second approval** must be rejected -- that's a guard, needing its own test, not a table cell.
+- THE MATRIX | head | The mechanical matrix is states x **events** -- the space the table actually keys on, and the only one I can drive, since the event is the *input* and the next state is the *output*. 8 states and 6 events is 48 `(state, event)` cells: for each, assert either the table's target state **and** its action, or a **rejection with the state unchanged**.
+- THE NEGATIVE SPACE | sub | The negative space -- the 34 cells the table leaves undefined -- is where bugs hide and hand-written tests always have gaps. Generating the matrix from the table guarantees I cover the rejections I'd never think to write by hand.
+- GUARDS | sub | The matrix *can't* catch guards: `(submitted, approve)` is a legal cell, but a **same-person second approval** must be rejected -- that's a guard, needing its own test, not a table cell.
 - CONCURRENCY | sub | Nor races: I fire the **same transition twice, concurrently**, and assert exactly one wins and the CAS rejects the loser -- a property test, and the one most teams skip that at-least-once delivery eventually breaks.
 - EFFECTS | risk | And effects: assert the action **fired once** and is idempotent on replay -- kill the worker after the state write but before the effect, and assert the retry converges without double-firing.
-- CLOSE | close | So: generate the full pair matrix off the table (especially the rejections), then hand-write the guard, race, and effect tests. The table makes structural testing mechanical; the semantics are where I aim the hard tests.
+- CLOSE | close | So: generate the full `(state, event)` matrix off the table (especially the rejections), then hand-write the guard, race, and effect tests. The table makes structural testing mechanical; the semantics are where I aim the hard tests.
 
 ### Name the limits | The knowing trades
 
@@ -812,7 +812,7 @@ The limits I'd ship on purpose -- said as knowing trades, not confessions.
 
 - FRAME | frame | A flawless-sounding design reads as junior, so I name the limits I shipped *on purpose*, each with its trigger for change.
 - WHEN OVERKILL | head | The first limit is knowing when **not** to build one: if there are no ordering rules -- any status can follow any other -- a machine is ceremony and an **enum** is honest. I promote enum to machine **reactively**, when scattered `if`s start drifting, not speculatively.
-- HOT ENTITY | sub | The compare-and-swap serializes moves on a **single row** -- at ~5ms per atomic commit, that's ~200 moves/sec on one entity. A hot entity above that contends; the fix is to shard the entity or batch its moves, and I'd name that ceiling rather than pretend one row scales.
+- HOT ENTITY | sub | The compare-and-swap serializes moves on a **single row**: the row lock is held across the commit, and same-row writers can't group-commit with *each other*, so the ceiling is **1 / commit latency** -- order-1,000 moves/sec at a ~1ms cloud-storage commit, several thousand on local NVMe. And it's a *soft* ceiling, because optimistic CAS **degrades** under contention -- the losers re-read and retry, burning work. So I'd measure my commit latency rather than quote a number, then shard the entity or batch its moves, rather than pretend one row scales.
 - EVOLUTION | risk | Changing the lifecycle with **live entities in flight** is a data migration in disguise -- the state column was written by old code, so I use **expand / migrate / contract** with an explicit, logged `migrate` transition, and remove a state last, gated on zero live rows.
 - DISTRIBUTED HONESTY | trade | Across services, **compensation is semantic, not rollback** -- I can't un-happen a commit, only offset it, and the un-reserved item may already be resold. So compensating paths are their own business transitions, and some states are only eventually and approximately reconciled.
 - THE OUTBOX SEAM | sub | The transactional outbox trades **latency** for correctness -- effects are delivered by a relay after commit, so a synchronous consumer sees a small delay. Where that's unacceptable I pay the inline coupling knowingly.
@@ -822,24 +822,28 @@ The limits I'd ship on purpose -- said as knowing trades, not confessions.
 
 Back-of-envelope how much the transition table constrains, and where concurrency bites.
 
-The states squared is the space of conceivable moves; the table permits only a few, and everything else is rejected --- that gap is what the machine buys you.
+States times events is the space the table actually keys on; it defines only a few of those cells, and every cell it leaves undefined is rejected --- that gap is what the machine buys you. The hot-entity ceiling is not a constant to memorise: it is one over your commit latency, so it is a number you measure.
 
 - states | States | 8 | 2 | 1
-- transitions | Allowed transitions | 14 | 1 | 1
+- events | Events | 6 | 1 | 1
+- transitions | Cells defined in the table | 14 | 1 | 1
 - actors | Concurrent actors | 3 | 1 | 1
 - hot | Peak moves/sec on the hottest entity | 40 | 0 | 5
+- commitMs | Commit latency (ms) | 1 | 0.1 | 0.1
 
 ```js
 function (vals, fmt) {
-  var states = vals.states, transitions = vals.transitions, actors = vals.actors, hot = vals.hot;
-  var pairs = states * (states - 1);
-  var rowCeil = 200; // ~5ms per atomic CAS + commit => ~200 serialized moves/sec on ONE row
+  var states = vals.states, events = vals.events, actors = vals.actors, hot = vals.hot;
+  var cells = states * events;
+  var legal = Math.min(vals.transitions, cells);
+  var commitMs = Math.max(0.05, vals.commitMs);
+  var rowCeil = Math.round(1000 / commitMs); // one row serializes at 1/(commit latency) -- MEASURE it
   return [
-    { k: 'Conceivable moves', v: fmt.n(pairs), u: 'ordered pairs', n: 'with ' + states + ' states there are this many moves you could imagine \u2014 the transition table permits only a few of them', over: false },
-    { k: 'Allowed transitions', v: fmt.n(transitions), u: 'in the table', n: 'the whitelist \u2014 only these moves are legal; the gap between this and the conceivable moves is the illegal space', over: false },
-    { k: 'Illegal moves blocked', v: fmt.n(Math.max(0, pairs - transitions)), u: 'rejected', n: 'every move not in the table is refused \u2014 an impossible state is unreachable by construction, not merely unlikely', over: false },
+    { k: 'Transition-table cells', v: fmt.n(cells), u: '(state, event)', n: states + ' states \u00d7 ' + events + ' events \u2014 the table keys on the PAIR, so this is the space it covers and the only matrix you can drive: the event is the input, the next state is the output', over: false },
+    { k: 'Cells the table defines', v: fmt.n(legal), u: 'legal', n: 'the whitelist \u2014 each names a target state and an action. Two events from one state may legally land on the same target, which is why you count cells, not from/to pairs', over: false },
+    { k: 'Rejected by construction', v: fmt.n(Math.max(0, cells - legal)), u: 'cells', n: 'every (state, event) the table leaves undefined is refused with the state unchanged \u2014 an impossible state is unreachable by construction, not merely unlikely. This negative space is where hand-written tests always have gaps', over: false },
     { k: 'Concurrent actors', v: fmt.n(actors), u: 'actors', n: actors + ' actors moving one entity means transitions race \u2014 a compare-and-swap on the state is what lets exactly one win', over: actors > 1 },
-    { k: 'Hot-entity ceiling', v: fmt.n(rowCeil), u: 'moves/s on one row', n: hot > rowCeil ? hot + '/s on the hottest entity exceeds ~200 \u2014 a single row serializes atomic moves at one per ~5ms commit, so the losers retry; shard the entity or batch its moves' : 'a single row serializes atomic moves at ~200/s (~5ms per CAS + commit); ' + hot + '/s fits on one row', over: hot > rowCeil },
+    { k: 'Hot-entity ceiling', v: fmt.n(rowCeil), u: 'moves/s on one row', n: 'the row lock is held across the commit, and same-row writers cannot group-commit with each other \u2014 so one row serializes at 1/(commit latency), here ' + commitMs + 'ms \u2192 ~' + fmt.n(rowCeil) + '/s. ' + (hot > rowCeil ? hot + '/s on the hottest entity exceeds it: shard the entity or batch its moves through a single-writer lane' : hot + '/s fits \u2014 but CAS DEGRADES under contention (the losers re-read and retry), so the practical ceiling sits below this one'), over: hot > rowCeil },
     { k: 'State storage', v: 'one field', u: '(or event log)', n: 'the current state is one persisted field validated on every transition, or replayed from an event log \u2014 either way, one source of truth for where the entity is', over: false }
   ];
 }
@@ -966,11 +970,11 @@ The transition engine's table lookup: every change goes through `(state, event) 
 ### SCALE | "An eight-state lifecycle with several concurrent actors."
 
 Task: reason about what the table constrains and where concurrency bites.
-Model: The states-squared space of conceivable moves (8x7 = 56 ordered pairs) is narrowed by the table to a small whitelist (say 14), everything else rejected; concurrent actors on one entity race, so each transition is a compare-and-swap that lets exactly one win and is idempotent under retries. The ceiling isn't the table --- it's the **hot entity**: a single row serializes atomic moves at roughly one per commit, so ~200/s on one entity, above which the losers retry.
+Model: The table keys on `(state, event)`, so the mechanical space is states by events --- 8 states and 6 events is 48 cells, of which the table defines a small whitelist (say 14) and every other cell is rejected with the state unchanged; concurrent actors on one entity race, so each transition is a compare-and-swap that lets exactly one win and is idempotent under retries. The ceiling isn't the table --- it's the **hot entity**: the row lock is held across the commit and same-row writers can't group-commit with each other, so one row serializes at roughly 1/(commit latency) --- order-1,000 moves/sec at a ~1ms commit --- above which the losers retry.
 Int: What's the single biggest win of the explicit model here?
-An impossible state is unreachable by construction, not merely unlikely --- every one of the 42 illegal moves is refused at the table, so no amount of concurrency or careless calling can land the entity in a state the lifecycle doesn't permit.
+An impossible state is unreachable by construction, not merely unlikely --- every one of the 34 cells the table leaves undefined is refused, so no amount of concurrency or careless calling can land the entity in a state the lifecycle doesn't permit.
 Int2: The hot entity is now the bottleneck --- 500 moves/sec want to hit one row. Now what?
-A single row serializes atomic CAS-plus-commit at ~200/s, so 500 can't all win on one row. I'd shard the entity if the semantics allow (split the lifecycle into independent sub-entities that transition separately), or **batch** its moves through a single-writer queue per entity so they serialize deliberately instead of contending. If the moves genuinely must all hit one row, ~200/s is the ceiling I design around and name --- not one I pretend away.
+First I'd *derive* the ceiling instead of asserting one: the row lock is held across the commit, and same-row writers can't group-commit with each other, so one row tops out near 1/(commit latency) --- about 1,000/s at a 1ms commit. So 500/s isn't over the cliff; it's a **strictly serial lane running at half capacity**, which is the more dangerous place to be, because there's no headroom for a commit-latency spike and optimistic CAS doesn't plateau gracefully --- past the knee the losers re-read and retry, which *adds* load and collapses throughput. So: measure the real commit latency, then **shard the entity** if the semantics allow (split the lifecycle into independent sub-entities that transition separately), or **batch** its moves through a single-writer lane per entity key, which converts contention into deliberate serialization and removes the retry amplification. If they genuinely must all hit one row, I name the measured ceiling and design around it --- I don't pretend one row scales.
 
 ### DESIGN | "A two-approver, MFA-gated document publish flow."
 
@@ -1007,7 +1011,7 @@ Because the cap is a property of *this entity's* retry history, and it has to su
 ### CURVEBALL | hot-entity | One tenant's entity takes 30% of all transitions, and the compare-and-swap on it is now the bottleneck. Fix it.
 
 Task: name the ceiling, then the fix, without hand-waving "it scales."
-Model: A single row serializes atomic CAS-plus-commit at roughly one per ~5ms, so ~200 moves/sec on one entity --- above that, writers contend and the losers retry, wasting work. The fix isn't a bigger box: either **shard the entity** (split its lifecycle into independent sub-entities that transition on their own rows), or **batch** its moves through a single-writer queue per entity so they serialize deliberately instead of racing. If the moves genuinely must hit one row, ~200/s is the ceiling I design around and state out loud.
+Model: Name the ceiling by *deriving* it, not by quoting a constant. The row lock is held across the commit, and same-row writers can't group-commit with **each other** --- writer two can't even take the lock until writer one has committed --- so one row serializes at **1/(commit latency)**: order-1,000 moves/sec at a ~1ms cloud-storage commit, several thousand on local NVMe. And it's a *soft* ceiling: optimistic CAS **degrades** under contention, because the losers re-read and retry, so offered load climbs while useful throughput falls. The first lever is the **lock hold time** --- a single-statement CAS holds the row only across the commit, whereas a `SELECT ... FOR UPDATE` held across an application round-trip adds those round-trips to *every* serialized move. Then the structural fixes: **shard the entity** (split its lifecycle into independent sub-entities that transition on their own rows), or **batch** its moves through a single-writer lane per entity key so they serialize deliberately instead of racing --- which also kills the retry amplification. I'd measure my commit latency and state the ceiling out loud, rather than quote a number I can't defend.
 Int: A queue per hot entity, for thousands of entities?
 No --- the serialization is logical, not thousands of physical queues. I partition by entity key (a queue or actor per *active* hot key, or a per-key lock) so only genuinely contended entities get a single-writer lane; the cold majority transition directly with a plain CAS. The discipline lives in routing by entity key, not in a physical queue per row.
 

@@ -100,10 +100,43 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:var(--font-size-micro);b
 .rf{border-left-width:3px}
 .sub,.step-sub,.dgm-s{color:var(--ink)!important}
 }
-/* forced-colors is different, and the shorthand is RIGHT here: every colour collapses to the
-   system palette, so an accent HUE carries no information any more and a uniform CanvasText box
-   is the strongest thing the surface can be. */
+/* FORCED COLORS -- AND THE SAME TRAP THE BLOCK ABOVE SPENT NINE LINES WARNING ABOUT.
+   This block used to carry the argument: "the shorthand is RIGHT here: every colour collapses to
+   the system palette, so an accent HUE carries no information any more and a uniform CanvasText
+   box is the strongest thing the surface can be."
+
+   THAT CONFLATES HUE WITH WIDTH, and it is why the accents shipped flattened. forced-colors
+   recolours a border; it does not erase its WIDTH or its SIDE. The premise is true -- the hue is
+   gone -- and the conclusion does not follow from it: the border property is a SHORTHAND, so it
+   reset all four sides and quietly shaved .dec's 3px top and .rf's 3px left down to 2px. (And no,
+   that word is not quoted in backticks: this comment lives INSIDE the BASE_SHEET template literal,
+   where a backtick terminates the string and the rest of the CSS is parsed as JavaScript. I wrote
+   it with them first. The build went green -- a bundler does not execute the string -- and the app
+   booted to a blank page with zero styled shadow hosts, exactly as the warning 60 lines up says it
+   will. The trap is real and it is cheap to fall into.) Measured, in every
+   room and both themes: THREE distinct border signatures (.card 1/1/1/1, .dec 3/1/1/1 thick-top,
+   .rf 1/1/1/3 thick-left) collapsed to ONE -- every surface became an identical 2/2/2/2 box.
+
+   And the width is exactly what was carrying the distinction once the hue went. A trade-off card
+   and a red-flag card are the same rectangle in high contrast; the thick edge, and which SIDE it
+   is on, is the only thing left that tells them apart. (.rf still has its red-flag glyph to fall
+   back on. .dec has no such marker -- it had nothing but the edge.) Under a preference for MORE
+   contrast, deleting a distinction is backwards, which is the identical argument the
+   prefers-contrast block makes directly above; it simply was not carried across.
+
+   So: keep the 2px frame (the genuinely weak 1px hairline is what wanted thickening) and put the
+   two accents back on top of it. Restoring 3 signatures, not merely 2 -- .card/.piv/.thread stay
+   a uniform 2px box, .dec is thick-TOP, .rf is thick-LEFT.
+
+   THESE TWO LINES MUST LIVE HERE, IN BASE_SHEET, AND NOWHERE ELSE. Put them in a component's own
+   <style> (trade-offs.js / red-flags.js, where .dec and .rf are actually declared) and they are a
+   NO-OP: adoptedStyleSheets cascade AFTER a shadow root's own <style>, so this sheet's shorthand
+   would simply overwrite them again. Same specificity, later sheet, later wins. It is the
+   shadow-boundary bug wearing its other face -- not "the rule cannot reach the node", but "the
+   rule reaches it and then loses". */
 @media (forced-colors:active){
 .card,.dec,.rf,.piv,.thread{border:2px solid CanvasText;background:Canvas;color:CanvasText}
+.dec{border-top-width:3px}
+.rf{border-left-width:3px}
 }
 `);

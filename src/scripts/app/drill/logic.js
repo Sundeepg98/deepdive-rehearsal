@@ -396,6 +396,57 @@ class DeepDrill extends TopicPane {
     try { el.focus(); } catch (e) {}
     return el;
   }
+  /* ===================== REPAIR IF AND ONLY IF WE BROKE IT =====================
+     THE OPT-IN LIST WAS THE BUG. The flag above was wired at the four call sites someone
+     enumerated, and the round's fifth exit -- the mock clock running out (startTimer, below) --
+     was not one of them: it called renderD() with no argument, renderVerdict() rewrote #dwrap,
+     and focus fell to <body> while the reader said nothing. The user cannot even know the round
+     is over. An enumeration is only as good as the person enumerating, and this codebase has now
+     found that same defect FIVE times, one site at a time.
+
+     So the trigger is no longer a list of sites. It is the CONDITION ITSELF: before a redraw,
+     ask whether the element that currently has focus is one this redraw is about to destroy.
+     If it is, we broke it, so we repair it -- at every site, including the ones nobody thought of.
+
+     THE THREE DOOMED REGIONS, all of which really do eat focus:
+       #dwrap   the card / verdict / debrief. innerHTML is replaced on every draw.
+       #dnav    renderNav() rebuilds the probe chips on every draw -- so jumping to a probe
+                destroys the very chip you clicked.
+       #revset  not destroyed but updRevset() can display:none it, and focus on a hidden
+                element is just as gone.
+
+     WHY THIS DOES NOT STEAL FOCUS -- the failure mode the opt-in existed to prevent. renderD() is
+     also the BOOT path (renderTopic -> setMode('study')) and the mode/tier-toggle path, for a pane
+     that may not even be visible. A default-on focus move would yank the user into a hidden drill.
+     This guard cannot: at boot nothing in the drill has focus, so nothing is doomed and nothing
+     moves. Ditto the toggles -- they live in the invariant skeleton, survive the redraw, and keep
+     focus exactly where the user put it. And the mock clock keeps ticking after you switch panes:
+     if it expires while the user is reading the walkthrough, their focus is NOT in a doomed region
+     (a .pane is display:none, which blurs it), so we leave them alone and merely announce. Moving
+     focus there would be a change of context on no user action -- a worse bug than the one fixed.
+
+     ShadowRoot.activeElement, NOT document.activeElement: the latter returns the HOST
+     (<deep-drill>) for anything focused inside this shadow root, so it can neither see which
+     element has focus nor tell "inside #dwrap" from "on the mode toggle". Asking the wrong root
+     is how a light-DOM guard reads `event.target.tagName` and sees "deep-numbers". */
+  _focusDoomed() {
+    const el = this._root && this._root.activeElement;
+    if (!el) return false;                       /* focus is outside this pane entirely */
+    const nav = this._root.getElementById('dnav');
+    const rev = this._root.getElementById('revset');
+    return !!((this._dwrap && this._dwrap.contains(el)) ||
+              (nav && nav.contains(el)) ||
+              (rev && rev.contains(el)));
+  }
+  /* A round ends TWO ways -- you grade the last card, or the clock runs out -- and both must say
+     the same thing, so they say it from one place. When these were written apart, one of them
+     said nothing at all. */
+  _roundEndMsg(lead) {
+    return lead + '. Round complete. ' + this.got + ' solid, ' + this.shk + ' to revisit.';
+  }
+  _say(msg) {
+    if (typeof ViewManager !== 'undefined' && ViewManager.announce) ViewManager.announce(msg);
+  }
   /* The block that just appeared, per stage. maxStage = 1 + card.f.length, and the k-th
      follow-up appears at stage 2+k -- so at maxStage the LAST follow-up and the senior/speak
      blocks land together, and the follow-up is the one the user actually asked for. */
@@ -406,6 +457,9 @@ class DeepDrill extends TopicPane {
     return fus.length ? fus[fus.length - 1] : this._dwrap.querySelector('.thread');
   }
   renderD(moveFocus) {
+    /* Resolve the landing decision FIRST -- renderNav() below rewrites #dnav, so a chip that has
+       focus is already destroyed (and activeElement already <body>) by the time we could ask. */
+    const land = !!moveFocus || this._focusDoomed();
     this._sGot.textContent = this.got; this._sGot.parentNode.classList.toggle('z', this.got === 0);
     this._sShk.textContent = this.shk; this._sShk.parentNode.classList.toggle('z', this.shk === 0);
     this._sLeft.textContent = cards.length - this.di; this._sLeft.parentNode.classList.toggle('z', cards.length - this.di === 0);
@@ -415,11 +469,11 @@ class DeepDrill extends TopicPane {
       if (this.mode === 'mock') { this.renderVerdict(); } else { this.renderDebrief(); }
       /* The debrief IS the payoff of the round, and it was being rendered straight into
          <body>-focus -- i.e. never read at all. Land on it. */
-      if (moveFocus) this._focusNew(this._dwrap.querySelector('.debrief'));
+      if (land) this._focusNew(this._dwrap.querySelector('.debrief'));
       this.updRevset();
       return;
     }
-    this.drawCard(0, moveFocus);
+    this.drawCard(0, land);
     this.updRevset();
   }
   /* The must-hit points for a probe = the bolded <b> terms already curated into
@@ -454,6 +508,9 @@ class DeepDrill extends TopicPane {
   }
   drawCard(stage, moveFocus) {
     const self = this;
+    /* #adv calls drawCard DIRECTLY (not via renderD), and #adv lives inside #dwrap -- so pressing
+       "Reveal answer" destroys the button that was pressed. Same guard, same reason. */
+    const land = !!moveFocus || this._focusDoomed();
     const card = cards[this.di], maxStage = 1 + card.f.length;
     let html = '<div class="card"><div class="thread">' +
       '<div class="qrow"><div><div class="qk">Probe ' + (this.di + 1) + ' / ' + cards.length + '</div>' +
@@ -501,7 +558,7 @@ class DeepDrill extends TopicPane {
        A live region is for terse transient status (the score); FOCUS is for content you have to
        read. The drill previously got both of those backwards -- it announced neither and focused
        nothing. */
-    if (moveFocus) this._focusNew(this._newBlock(stage));
+    if (land) this._focusNew(this._newBlock(stage));
     const advBtn = this._root.getElementById('adv');
     if (advBtn) { advBtn.onclick = function () { self.drawCard(stage + 1, true); }; }
     const missBtn = this._root.getElementById('jm');
@@ -569,9 +626,9 @@ class DeepDrill extends TopicPane {
     const left = cards.length - this.di;
     const outcome = (level >= 3) ? 'Solid' : (level === 2 ? 'Shaky' : 'Missed');
     const msg = (this.di >= cards.length)
-      ? outcome + '. Round complete. ' + this.got + ' solid, ' + this.shk + ' to revisit.'
+      ? this._roundEndMsg(outcome)                    /* shared with the clock-expiry exit */
       : outcome + '. ' + this.got + ' solid, ' + this.shk + ' revisit, ' + left + ' left.';
-    if (typeof ViewManager !== 'undefined' && ViewManager.announce) ViewManager.announce(msg);
+    this._say(msg);
     try { this.dispatchEvent(new CustomEvent('drillgraded', { bubbles: true })); } catch (e) {}
     const bumpEl = solid ? this._sGot : this._sShk;
     if (bumpEl) { bumpEl.classList.remove('cbump'); void bumpEl.offsetWidth; bumpEl.classList.add('cbump'); }
@@ -655,7 +712,30 @@ class DeepDrill extends TopicPane {
       self.mockLeft--;
       self._timerEl.textContent = self._fmt(self.mockLeft);
       if (self.mockLeft <= 60) self._timerEl.classList.add('low');
-      if (self.mockLeft <= 0) { clearInterval(self.timerId); self.timerId = null; self.di = cards.length; self.renderD(); }
+      /* ===================== THE FIFTH FOCUS-DESTRUCTION SITE =====================
+         This line used to read `self.renderD()` -- no argument -- and it is the WORST of the five,
+         because it is the only one the user did not trigger. The clock silently ends a 22-minute
+         mock round: renderVerdict() replaces #dwrap, the card the user was reading is destroyed,
+         focus falls to <body>, and the screen reader says NOTHING. They cannot know the round is
+         over. It hits sighted keyboard users too -- Tab restarts from the top of the document.
+         The other four exits opted into the focus move; this one, reached by a timer rather than a
+         click, was never enumerated. (It is an incompleteness, not a regression: the pre-fix build
+         is equally broken here. Nothing guarded it -- the sr-verify script never mentions mockLeft.)
+
+         renderD() is STILL called with no argument, deliberately. _focusDoomed() now repairs focus
+         exactly when this redraw destroys it and leaves it alone otherwise, which is what makes
+         this safe: the clock keeps running after you switch panes, and forcing renderD(true) here
+         would yank a user out of the walkthrough they are reading and into a hidden drill -- a
+         change of context on no user action, i.e. a new bug in place of the old one.
+
+         The announcement is NOT conditional on any of that: whichever pane you are on, a round you
+         started has just ended, and that is exactly what a live region is for. */
+      if (self.mockLeft <= 0) {
+        clearInterval(self.timerId); self.timerId = null;
+        self.di = cards.length;
+        self.renderD();
+        self._say(self._roundEndMsg('Time'));
+      }
     }, 1000);
   }
   stopTimer() { if (this.timerId) { clearInterval(this.timerId); this.timerId = null; } this._timerEl.style.display = 'none'; }

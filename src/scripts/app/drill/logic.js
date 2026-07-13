@@ -80,11 +80,44 @@ var DRILL_STYLE = `@keyframes pop{from{opacity:0;transform:translateY(7px) scale
      HUE              KEPT, but demoted to redundant reinforcement, and pinned to the --st-*
                       status tokens, which no room can move.
 
-   And the pop TRACKS THE SCORE. .pill.g fills only when Solid > 0 -- renderD() already toggles
-   .z on a zero count, so :not(.z) IS "you have banked something", with no new state to keep in
-   sync. A statically-loud SOLID tile would be its own bug: it would celebrate 0/21.
+   WHAT THE FILL CLAIMS -- AND WHAT IT DELIBERATELY DOES NOT.
+   This comment used to say "the pop TRACKS THE SCORE". It did not, and it never had. The fill is
+   gated on "got > 0", not on the score being good: pixel-measured, the Solid tile at 1 solid /
+   5 revisit is ~11x louder than Revisit -- and it is EXACTLY that loud at 5 solid / 1 revisit
+   too. The code was right and the sentence was a lie, which is the more dangerous half: a comment
+   asserting a property nothing enforces is how this repo has shipped five checks that could not
+   fail. So the claim is now stated as it actually is, argued, and GUARDED (see the bottom).
+
+   Should the emphasis track the ratio instead -- a strong Solid at 5/6, a muted one at 1/6? No.
+
+   1. A RUNNING TALLY CANNOT GRADE A PARTIAL SAMPLE. At probe 2 of 21, "1 solid / 1 revisit" is
+      not 50% -- it is a sample of size two. A ratio-driven fill would blaze at 1/1, halve at 1/2,
+      and swing on nothing for the first few probes: sampling noise, rendered as performance
+      feedback. The component that CAN grade is the one holding the whole sample -- renderDebrief()
+      and renderVerdict() -- and they already do it, per probe, in words. A scoreboard that
+      editorialises mid-round is inventing a verdict it does not have the evidence for.
+   2. IT WOULD MAKE SOLID QUIETEST EXACTLY WHEN REVISIT IS LARGEST. The fill exists to guarantee
+      the board can never read INVERTED (that was the whole bug above). Fading Solid as the score
+      drops re-opens that door at the bottom end -- amplifying a failure count at the person who
+      is already struggling. That is a worse product than the one we started with.
+   3. THE FILL IS A HIERARCHY, NOT A GRADE. It says "this is the pile you are growing" -- the goal
+      state of the entire drill loop (Left -> Solid). That is true at every score, and it is most
+      worth saying at a bad one.
+   4. THE RATIO IS ALREADY REPORTED, EXACTLY, BY THE TWO DIGITS SITTING SIDE BY SIDE. Re-encoding
+      it in luminance is redundant at best and lossy at worst.
+
+   So the fill's claim is the narrow one it can actually support: THIS PILE IS NON-EMPTY. True,
+   monotonic, and incapable of overstating. .pill.g fills only when Solid > 0 -- renderD() already
+   toggles .z on a zero count, so :not(.z) IS "you have banked something", with no new state to
+   keep in sync. That 0-guard is what stops it celebrating 0/21.
    REVISIT NEVER FILLS. A failure count must not be the loudest object on the board; the revset
-   bar directly below already carries the "go drill your flagged pile" call to action. */
+   bar directly below already carries the "go drill your flagged pile" call to action.
+
+   AND IT IS NOW ENFORCED, NOT ASSERTED. test/scoreboard_salience.cjs decodes the rendered pixels
+   in all 6 rooms x 2 themes x 4 score states and fails if Solid is ever not the loudest tile, or
+   if it fills at zero. The previous pass measured exactly this by hand, wrote it in a comment,
+   and left it unguarded -- which is precisely how the sentence at the top of this block came to
+   say something the code did not do. */
 .score{display:flex;gap:var(--space-9);margin-bottom:var(--space-14)}
 .pill{flex:1;text-align:center;border:1.5px solid var(--bd);border-radius:12px;padding:var(--space-10);background:var(--card);transition:box-shadow var(--duration-moderate) var(--ease-base),transform var(--duration-base) var(--ease-base),border-color var(--duration-base) var(--ease-base)}
 .pill:hover{box-shadow:0 4px 16px -4px var(--acc-a15);transform:translateY(-2px)}
@@ -100,7 +133,10 @@ var DRILL_STYLE = `@keyframes pop{from{opacity:0;transform:translateY(7px) scale
    green (a bundler does not execute it) and the pane just... was not there. Escape the slash. */
 .pill.g .l::before{content:"\\2713"}   /* check   -- as on the Solid judge button */
 .pill.s .l::before{content:"\\21BB"}   /* recycle -- as on the "Drill my flagged probes" button */
-/* SOLID, banked. The one tile that fills -- and only when there is something to celebrate. */
+/* SOLID, banked. The one tile that EVER fills -- and never at zero. Not "you are doing well"
+   (the board cannot know that mid-round); "this is the pile you are growing, and it has something
+   in it". Fill-vs-outline is an area+luminance contrast, so it survives any room tint and
+   greyscale -- which is the property hue could not give us. */
 .pill.g:not(.z){background:var(--st-ok);border-color:var(--st-ok);box-shadow:0 5px 16px -7px var(--st-ok)}
 .pill.g:not(.z) .v,.pill.g:not(.z) .l{color:var(--st-ok-on)}
 /* REVISIT. Ink and a glyph; never a fill. Information, not an alarm. */
@@ -165,7 +201,7 @@ var DRILL_STYLE = `@keyframes pop{from{opacity:0;transform:translateY(7px) scale
 .tier.t2{color:var(--teal);background:var(--tealbg);border-color:var(--senior-bd)}
 .tier.t3{color:var(--accink);background:var(--accbg);border-color:#cfc7f0}
 .tier.tS{color:var(--red);background:var(--redbg);border-color:#e8c5c0}
-.tier.tX{color:#fff;background:var(--indigo);border-color:var(--indigo)}
+.tier.tX{color:var(--on-slab);background:var(--indigo);border-color:var(--indigo)}
 .speak{margin-top:var(--space-11);font-size:var(--font-size-caption);color:var(--speak-fg);background:var(--accbg);border:1px solid #cfc7f0;border-radius:9px;padding:var(--space-12) var(--space-14);animation:pop var(--duration-moderate) var(--ease-base)}
 .speak .sl{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.8px;text-transform:uppercase;color:var(--acc);display:flex;align-items:center;gap:var(--space-6);margin-bottom:var(--space-5)}
 .speak .sl::before{content:"\\1F5E3"}
@@ -174,7 +210,7 @@ var DRILL_STYLE = `@keyframes pop{from{opacity:0;transform:translateY(7px) scale
 .debrief .sumline{text-align:center;color:var(--mut);font-size:var(--font-size-small);margin-bottom:var(--space-18)}
 .sigrow{display:flex;align-items:center;gap:var(--space-11);padding:var(--space-11) 0;border-bottom:1px solid var(--sigrow-bd)}
 .sigrow:last-of-type{border-bottom:0}
-.sigrow .mk{flex:none;width:var(--space-24);height:var(--space-24);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:var(--font-size-small);font-weight:var(--font-weight-heavy);color:#fff}
+.sigrow .mk{flex:none;width:var(--space-24);height:var(--space-24);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:var(--font-size-small);font-weight:var(--font-weight-heavy);color:var(--on-slab)}
 .sigrow.ok .mk{background:var(--teal)} .sigrow.no .mk{background:var(--amber)} .sigrow.miss .mk{background:var(--red)}
 .sigrow .nm{font-size:var(--font-size-small);font-weight:var(--font-weight-semibold)}
 .sigrow .tr{margin-left:auto}
@@ -215,9 +251,9 @@ var DRILL_STYLE = `@keyframes pop{from{opacity:0;transform:translateY(7px) scale
 .dn-n{flex:none;width:var(--space-22);height:var(--space-22);border-radius:7px;display:grid;place-items:center;font:var(--font-weight-bold) 10.5px -apple-system,sans-serif;background:var(--accbg);color:var(--accink);transition:background var(--duration-base) var(--ease-base),color var(--duration-base) var(--ease-base),box-shadow var(--duration-base) var(--ease-base),transform var(--duration-base) var(--ease-spring)}
 .dn-t{font-size:var(--font-size-micro);font-weight:var(--font-weight-semibold);color:var(--ink);line-height:var(--line-height-snug);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
 .dn-step.on{border-color:var(--acc);background:linear-gradient(135deg,var(--accbg) 0%,var(--acc-a06) 100%);box-shadow:0 0 0 1px var(--acc),0 4px 14px -4px var(--acc-a12);transform:translateY(-1px)}
-.dn-step.on .dn-n{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;box-shadow:0 2px 6px -2px var(--acc-a30)}
+.dn-step.on .dn-n{background:linear-gradient(135deg,var(--acc),var(--acc2));color:var(--on-slab);box-shadow:0 2px 6px -2px var(--acc-a30)}
 .dn-step.flag{border-color:var(--amber);background:linear-gradient(135deg,var(--amberbg) 0%,rgba(176,108,20,.04) 100%)}
-.dn-step.flag .dn-n{background:linear-gradient(135deg,var(--amber),#d4902a);color:#fff}
+.dn-step.flag .dn-n{background:linear-gradient(135deg,var(--amber),#d4902a);color:var(--on-slab)}
 .dn-step:active{transform:translateY(0) scale(.99)}
 .mhp{margin-top:var(--space-14);border:1px solid var(--bd);border-radius:12px;padding:var(--space-14) var(--space-16);background:linear-gradient(135deg,var(--accbg) 0%,var(--acc-a02) 100%);animation:pop var(--duration-moderate) var(--ease-base)}
 .mhp-h{font:var(--font-weight-heavy) 10px -apple-system,sans-serif;letter-spacing:.5px;text-transform:uppercase;color:var(--acc)}
@@ -227,7 +263,7 @@ var DRILL_STYLE = `@keyframes pop{from{opacity:0;transform:translateY(7px) scale
 .mhp-i:hover{border-color:var(--acc-a30)}
 .mhp-box{flex:none;width:var(--space-18);height:var(--space-18);border-radius:5px;border:1.5px solid var(--mut2);display:flex;align-items:center;justify-content:center;font-size:var(--font-size-micro);color:transparent;transition:background var(--duration-fast) var(--ease-base),border-color var(--duration-fast) var(--ease-base),color var(--duration-fast) var(--ease-base)}
 .mhp-i.on{border-color:var(--teal);background:linear-gradient(135deg,var(--tealbg) 0%,rgba(10,133,100,.04) 100%)}
-.mhp-i.on .mhp-box{background:var(--teal);border-color:var(--teal);color:#fff}
+.mhp-i.on .mhp-box{background:var(--teal);border-color:var(--teal);color:var(--on-slab)}
 .mhp-t{font-size:var(--font-size-caption);line-height:var(--line-height-normal);color:var(--ink);font-weight:var(--font-weight-semibold)}
 .mhp-cov{margin-top:var(--space-11);font-size:var(--font-size-caption);color:var(--mut);font-weight:var(--font-weight-semibold)}
 .mhp-cov b{color:var(--accink);font-weight:var(--font-weight-heavy)}

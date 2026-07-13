@@ -30,7 +30,7 @@ var OP_STYLE = `
 .op-a.show{display:block;animation:pop var(--duration-moderate) var(--ease-base)}
 .op-a b{color:var(--accink);font-weight:var(--font-weight-bold)}
 .op-rev{margin:var(--space-12) 0 0 var(--space-39);font:var(--font-weight-bold) 11.5px -apple-system,sans-serif;padding:var(--space-7) var(--space-15);border-radius:8px;border:1.5px solid #cfc7f0;background:linear-gradient(135deg,var(--accbg) 0%,var(--acc-a04) 100%);color:var(--accink);cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base),border-color var(--duration-fast) var(--ease-base),box-shadow var(--duration-base) var(--ease-base)}
-.op-rev:hover{background:linear-gradient(135deg,var(--acc) 0%,var(--acc2) 100%);color:#fff;border-color:var(--acc);box-shadow:0 4px 12px -3px var(--acc-a20);transform:translateY(-1px)}
+.op-rev:hover{background:linear-gradient(135deg,var(--acc) 0%,var(--acc2) 100%);color:var(--on-slab);border-color:var(--acc);box-shadow:0 4px 12px -3px var(--acc-a20);transform:translateY(-1px)}
 .op-rev:active{transform:translateY(1px) scale(.98)}
 .op-rev:disabled{opacity:.5;cursor:default;transform:none}
 .op-hooks{margin-top:var(--space-18);padding:var(--space-15) var(--space-17);background:linear-gradient(135deg,var(--op-hooks-bg) 0%,var(--acc-a02) 100%);border:1px solid var(--bd);border-radius:13px}

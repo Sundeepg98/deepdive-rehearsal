@@ -97,6 +97,17 @@ for name, cmd in [('ascii_guard', ['python3', 'test/ascii_guard.py']),
                   # clear AA -- the contract is the contrast, not the hex.
                   ('room_static', ['python3', 'test/room_static.py']),
                   ('room_contrast', ['python3', 'test/room_contrast.py']),
+                  # slab_ink: EVERY colour this app fills a slab with (--acc/--acc2, and the
+                  # verdict hues --teal/--red/--amber/--indigo) INVERTS its lightness between the
+                  # two themes -- it has to, to stay legible against its own background. So a
+                  # literal `color:#fff` on one is correct in exactly ONE theme, and nothing about
+                  # the rule looks wrong. 25 rules had it; measured in dark, white on the drill-nav
+                  # chip came in at 2.35-2.44:1 -- half the AA floor, on a "you are here" marker,
+                  # shipped. A grep cannot see contrast, but it CAN see a literal white in the same
+                  # rule as a flipping background, which is the shape this bug has every time --
+                  # and unlike the browser check it reaches the :hover, :focus and ::selection
+                  # rules no smoke test can navigate to. 0.6s.
+                  ('slab_ink', ['python3', 'test/slab_ink.py']),
                   ('file_integrity', ['python3', 'test/file_integrity.py']),
                   ('unit_tests', ['python3', 'test/unit_tests.py']),
                   # The visual sim's invariants ARE the teaching points its modes exist to
@@ -168,6 +179,28 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # blank-page class of bug cannot recur (reduced-motion still RENDERS,
                      # both themes). The two things a grep cannot see. (Phase 6)
                      ('room_browser', 'test/room_browser.cjs'),
+                     # cta_contrast: the primary CTAs are painted in a GRADIENT, and
+                     # getComputedStyle('background-color') on a gradient returns rgba(0,0,0,0) --
+                     # it tells you nothing, in a tone of voice that sounds like an answer. This
+                     # DECODES THE RENDERED PIXELS: screenshot the CTA, screenshot it again with
+                     # its text forced transparent, solve per-pixel alpha to find the pixels that
+                     # genuinely ARE the text colour, and read the background LOCAL TO EACH GLYPH.
+                     # (The naive "worst pixel anywhere in the button" metric manufactures false
+                     # failures at ~3.1:1 off the gradient's brightest corner, where no glyph has
+                     # ever been painted.) room_contrast pins the token; this proves the BUTTON.
+                     # 6 rooms x 2 themes x 3 CTAs. ~1m40s.
+                     ('cta_contrast', 'test/cta_contrast.cjs'),
+                     # scoreboard_salience: the drill scoreboard once encoded its verdict in HUE --
+                     # and two of the six ROOM hues were the same two colours, so in the teal room
+                     # the Solid tile dissolved into the wallpaper and the board read INVERTED: a
+                     # good score pulled your eye to the failure count. Fixed by moving the verdict
+                     # onto FILL-vs-OUTLINE... and then verified BY HAND, asserted in a comment, and
+                     # left UNGUARDED -- after which the comment drifted into claiming a property
+                     # the code did not have. This measures PAINTED INK per tile (mean |Y - Y(card)|,
+                     # deliberately hue-BLIND, because hue-blindness is the property under test) and
+                     # fails if Solid is ever not the loudest tile, or if it fills at zero.
+                     # 6 rooms x 2 themes x 4 score states. ~1m50s.
+                     ('scoreboard_salience', 'test/scoreboard_salience.cjs'),
                      ('e2e_interactions', 'test/e2e_interactions.cjs'),
                      # A filtered sub-drill must MERGE into the topic's canonical progress
                      # record, never REPLACE it. Guards a shipped P0: the app's own

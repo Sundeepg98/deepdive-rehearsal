@@ -58,9 +58,9 @@ var WB_STYLE = `
 
 .wb-rev:not(:disabled):active,.wb-got:not(:disabled):active,.wb-miss:not(:disabled):active{transform:translateY(1px) scale(.98);filter:brightness(.96)}
 .wb-got:disabled,.wb-miss:disabled{opacity:.4;cursor:default}
-.wb li.got .num{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;border-color:var(--acc);box-shadow:0 2px 8px -2px var(--acc-a30)}
+.wb li.got .num{background:linear-gradient(135deg,var(--acc),var(--acc2));color:var(--on-slab);border-color:var(--acc);box-shadow:0 2px 8px -2px var(--acc-a30)}
 .wb li.got .num::before{content:"\\2713"}
-.wb li.missed .num{background:linear-gradient(135deg,var(--red),#e07070);color:#fff;border-color:var(--red);box-shadow:0 2px 8px -2px rgba(239,68,68,.3)}
+.wb li.missed .num{background:linear-gradient(135deg,var(--red),#e07070);color:var(--on-slab);border-color:var(--red);box-shadow:0 2px 8px -2px rgba(239,68,68,.3)}
 .wb li.missed .num::before{content:"\\2717"}
 .wb li.got .wb-ct,.wb li.missed .wb-ct{color:var(--mut2)}
 .wb li.got .wb-got{background:var(--tealbg);color:var(--teal);border-color:var(--teal);opacity:1}
@@ -70,7 +70,7 @@ var WB_STYLE = `
 .wb-verdict.ok::before{content:"\\2714";margin-right:var(--space-6);font-size:var(--font-size-body)}
 .wb-verdict.ok b{color:var(--wb-ok-b-fg)}
 #wbrerun{display:block;margin-top:var(--space-12);font:var(--font-weight-bold) 12px -apple-system,sans-serif;padding:var(--space-8) var(--space-16);border-radius:8px;border:1.5px solid var(--amber);background:linear-gradient(135deg,#fff 0%,var(--amberbg) 100%);color:var(--amber);cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),box-shadow var(--duration-base) var(--ease-base)}
-#wbrerun:hover{background:linear-gradient(135deg,var(--amber) 0%,#d4902a 100%);color:#fff;box-shadow:0 4px 14px -4px rgba(176,108,20,.25);transform:translateY(-1px)}
+#wbrerun:hover{background:linear-gradient(135deg,var(--amber) 0%,#d4902a 100%);color:var(--on-slab);box-shadow:0 4px 14px -4px rgba(176,108,20,.25);transform:translateY(-1px)}
 #wbrerun:active{transform:translateY(1px) scale(.98)}
 .wb-foot{margin-top:var(--space-18);font-size:var(--font-size-caption);color:var(--wb-foot-fg);background:linear-gradient(135deg,var(--wb-foot-bg) 0%,var(--acc-a03) 100%);border-left:3px solid var(--acc);border-radius:9px;padding:var(--space-13) var(--space-16);line-height:var(--line-height-spacious)}
 .wb-foot b{color:var(--accink);font-weight:var(--font-weight-bold)}

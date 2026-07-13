@@ -45,6 +45,24 @@
 
   function applyRoute(route) {
     if (!route || !route.view) return;
+
+    /* THE HOME IS NOT A TAB. This branch runs BEFORE switchTab, and never calls it.
+       switchTab('home') would find getElementById('home') (the container is a real element), then:
+         - set railEl.style.width = railPos['home'] + '%'  ->  the string "undefined%";
+         - call markViewSeen('home'), writing `viewseen.<topic>` for a view that HAS no topic --
+           poisoning both the per-topic seen-dots and the old boot gate that read those keys;
+         - toggle .on OFF every pane, so leaving the home would land on a blank stage.
+       The home owns its own visibility through html[data-view="home"] instead. */
+    if (route.view === 'home') {
+      document.documentElement.dataset.view = 'home';
+      if (window.HomeView && HomeView.render) HomeView.render();
+      document.title = 'Home \u2014 ' + BASE_TITLE;
+      if (lastView !== 'home') { announce('Home'); lastView = 'home'; }
+      try { window.scrollTo(0, 0); } catch (e) {}
+      return;
+    }
+    if (document.documentElement.dataset.view === 'home') delete document.documentElement.dataset.view;
+
     /* Topic axis: a deep link / back-forward to a DIFFERENT topic switches it BEFORE the
        view shows, so panes are on the right topic (no topic-1-then-flip flash). In the
        single-topic deliverable route.topic is null, so this is a no-op. */

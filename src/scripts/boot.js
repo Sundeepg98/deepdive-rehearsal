@@ -7,7 +7,15 @@ try{var _dk=matchMedia('(prefers-color-scheme:dark)').matches;document.documentE
   s.innerHTML='<div class="_bs-ring"><div></div><div></div><div></div><div></div></div>';
   s.style.cssText='position:fixed;inset:0;z-index:9999;background:var(--bg,#FAF9F5);display:flex;align-items:center;justify-content:center;transition:opacity .4s ease,visibility .4s ease';
   var st=document.createElement('style');
-  st.textContent='._bs-ring{display:inline-block;position:relative;width:48px;height:48px}._bs-ring div{box-sizing:border-box;display:block;position:absolute;width:36px;height:36px;margin:6px;border:3px solid transparent;border-top-color:var(--acc,#534AB7);border-radius:50%;animation:_bs-spin 1.2s cubic-bezier(.5,0,.5,1) infinite}._bs-ring div:nth-child(1){animation-delay:-.45s}._bs-ring div:nth-child(2){animation-delay:-.3s}._bs-ring div:nth-child(3){animation-delay:-.15s}@keyframes _bs-spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}#_bootsplash._bs-done{opacity:0;visibility:hidden}';
+  /* THE FIRST CLICK. `_bs-done` starts a 400ms fade -- and a `visibility` transition to `hidden`
+     holds `visible` for the ENTIRE 400ms. The splash is position:fixed; inset:0; z-index:9999, so
+     without `pointer-events:none` it keeps HIT-TESTING while it is 99% transparent: measured, a
+     real trusted click at +87ms landed on #_bootsplash and did nothing. That is the literal first
+     tap of every session, for EVERY user (the returning one and the deep-linker never see the
+     index overlay at all) -- and at 9999 it outranks even the overlays (--z-popup = 1000), so the
+     first-run start screen's own "Start" CTA was dead too. Opacity is a paint property; it does
+     not stop hit-testing. Only this does. See test/overlay_deadzone.cjs. */
+  st.textContent='._bs-ring{display:inline-block;position:relative;width:48px;height:48px}._bs-ring div{box-sizing:border-box;display:block;position:absolute;width:36px;height:36px;margin:6px;border:3px solid transparent;border-top-color:var(--acc,#534AB7);border-radius:50%;animation:_bs-spin 1.2s cubic-bezier(.5,0,.5,1) infinite}._bs-ring div:nth-child(1){animation-delay:-.45s}._bs-ring div:nth-child(2){animation-delay:-.3s}._bs-ring div:nth-child(3){animation-delay:-.15s}@keyframes _bs-spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}#_bootsplash._bs-done{opacity:0;visibility:hidden;pointer-events:none}';
   document.head.appendChild(st);
   (document.body||document.documentElement).appendChild(s);
   window._hideBootSplash=function(){var el=document.getElementById('_bootsplash');if(el){el.classList.add('_bs-done');setTimeout(function(){el.remove()},400)}};

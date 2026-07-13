@@ -70,8 +70,10 @@ const APP_READY = () =>
   typeof TopicRegistry !== 'undefined' &&
   TopicRegistry.ids().length > 0;
 
-/* Navigate and WAIT FOR THE APP. Does NOT touch the landing overlay: visual_pane_smoke asserts
- * that a first-run boot OPENS it, so closing it here would silently delete that assertion. */
+/* Navigate and WAIT FOR THE APP. Does NOT navigate off the landing surface: visual_pane_smoke
+ * asserts what a first-run boot actually lands on (the #home route, with NO modal in front of it),
+ * so moving away from it here would silently delete that assertion. Checks that want the TOPIC
+ * chrome should pass { hash: '#walk' }, or call enterApp() below. */
 async function gotoApp(page, html, opts) {
   const o = opts || {};
   await page.goto(fileUrl(html, o.hash), { timeout: NAV_MS, waitUntil: 'load' });
@@ -80,36 +82,43 @@ async function gotoApp(page, html, opts) {
   return page;
 }
 
-/* The landing overlay is a real modal: its backdrop swallows trusted clicks. Checks that click
- * through Playwright (rather than via in-page .click(), which ignores pointer-events) must close
- * it FIRST and then wait for it to actually be gone.
+/* GET TO THE TOPIC UI. (Was closeIndex -- see the history below, it is worth keeping.)
  *
- * AND IT OPENS ASYNCHRONOUSLY, AFTER BOOT. This is the trap, and it cost 4 gate runs in 5:
- * calling close() before the overlay has opened is a NO-OP that LOSES. isOpen() reads false, we
- * skip the close, the overlay opens behind us, and its backdrop then silently swallows every
- * trusted click for the rest of the run -- so the failure surfaces somewhere else entirely, as a
- * pane that "would not switch".
+ * THE HISTORY. This function used to exist because THE APP OPENED A MODAL ON ITSELF AT BOOT, and
+ * that modal's backdrop swallowed trusted clicks. Every check that clicks through Playwright had
+ * to close it first, and it opened ASYNCHRONOUSLY, which cost 4 gate runs in 5: close() before the
+ * overlay had opened was a no-op that LOST, the overlay then opened behind us, and its backdrop
+ * silently ate every trusted click for the rest of the run -- surfacing somewhere else entirely as
+ * "a pane that would not switch".
  *
- * Note WHY this only appeared now: the old boot was goto() + a 300-400ms sleep, which happened to
- * outlast the overlay's open. Replacing the sleep with a readiness condition made the harness
- * FASTER, and the extra speed walked straight into a race the sleep had been masking. Removing a
- * fixed sleep can expose a latent race as easily as it fixes one -- the sleep is not always doing
- * nothing, and "it got faster" is not the same as "it got correct".
+ * That was the harness working around a REAL BUG in the product rather than reporting it. The bug
+ * is now fixed: the boot-open gate is gone (the entry is the #home ROUTE), and no layer hit-tests
+ * while it fades. test/overlay_deadzone.cjs asserts all of that directly, and FAILS on the old
+ * build -- so the contract is now guarded where it belongs, in a check, not papered over here.
  *
- * So: give it a bounded chance to APPEAR (this wait EXPIRING is the healthy path for a returning
- * user, who gets no overlay), then close whatever is actually there, re-closing if it reopens,
- * and only succeed once it is really gone. */
-async function closeIndex(page) {
+ * WHAT IT DOES NOW. A bare arrival lands on #home, where .app is display:none. A check that wants
+ * the TOPIC chrome (panes, rail, tools) must therefore navigate to a topic view. That is all this
+ * does -- plus close any overlay a check itself opened. It no longer waits 5s for a modal that can
+ * no longer appear. */
+async function enterApp(page) {
   await page.waitForFunction(
-    () => !!(window.IndexOverlay && typeof window.IndexOverlay.isOpen === 'function'),
+    () => !!(window.IndexOverlay && typeof window.IndexOverlay.isOpen === 'function' && window.Router),
     null, { timeout: ACT_MS });
-  await page.waitForFunction(() => window.IndexOverlay.isOpen(), null, { timeout: 5000 }).catch(() => {});
+  await page.evaluate(() => {
+    if (window.IndexOverlay.isOpen()) window.IndexOverlay.close();
+    if (document.documentElement.dataset.view === 'home') window.Router.navigate('walk');
+  });
+  /* succeed only once the topic UI is really up and nothing modal is over it */
   await page.waitForFunction(() => {
     if (window.IndexOverlay.isOpen()) { window.IndexOverlay.close(); return false; }
-    return true;
+    if (document.documentElement.dataset.view === 'home') return false;
+    const app = document.querySelector('.app');
+    return !!app && getComputedStyle(app).display !== 'none';
   }, null, { timeout: ACT_MS });
   return settle(page);
 }
+/* the old name, kept so existing checks read unchanged */
+const closeIndex = enterApp;
 
 /* Bounded wait for the landing overlay to APPEAR. Never throws: a check that ASSERTS the overlay
  * opened must be allowed to see that it did not, and a check that merely needs it gone must not
@@ -170,5 +179,5 @@ async function finish(code, label) {
 
 module.exports = {
   NAV_MS, READY_MS, ACT_MS, LAUNCH_ARGS,
-  launchOpts, fileUrl, APP_READY, gotoApp, closeIndex, waitIndexOpen, settle, until, pollFor, finish,
+  launchOpts, fileUrl, APP_READY, gotoApp, enterApp, closeIndex, waitIndexOpen, settle, until, pollFor, finish,
 };

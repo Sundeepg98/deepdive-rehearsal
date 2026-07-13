@@ -79,12 +79,49 @@ document.addEventListener('keydown', function (event) {
   if (activeTag === 'input' || activeTag === 'textarea') return;
   if (window.TourGuide && window.TourGuide.isActive()) return;
   if (window.SearchOverlay && window.SearchOverlay.isOpen && window.SearchOverlay.isOpen()) return;
+  /* `.open:not(.closing)` -- THE INTERACTIVITY INVARIANT (styles.css). `.open` alone stays set for
+     the whole fade-out, so every keystroke was swallowed for 220ms (index) / 500ms (mock, cram)
+     after a close. NOT `.vis`: only .ix-ov ever sets it, so a .vis gate would let `w`, `\` and `d`
+     fire UNDERNEATH an open Mock Run. */
   var _openDlgs = document.querySelectorAll('[role="dialog"][aria-modal="true"]');
-  for (var _oi = 0; _oi < _openDlgs.length; _oi++) { if (_openDlgs[_oi].classList.contains('open')) return; }
+  for (var _oi = 0; _oi < _openDlgs.length; _oi++) {
+    var _d = _openDlgs[_oi];
+    if (_d.classList.contains('open') && !_d.classList.contains('closing')) return;
+  }
   if (event.key === '?') { event.preventDefault(); openKeys(); return; }
   const key = event.key.toLowerCase();
+
+  /* ---- THE HOME IS A DESTINATION, NOT A MODAL ----
+     h goes home from anywhere (and Back returns -- free, because it is a real route; it was
+     impossible while the "home" was a modal). Escape does NOT leave the home: nothing to escape.
+     On the home there is no current topic view, so the topic/pane keys must not silently act on
+     the BOOT topic -- measured, `w` on the home ran goView('drill') -> '#drill' -> the drill of a
+     topic the user never chose. They retarget to the resume topic, or do nothing. */
+  const onHome = document.documentElement.dataset.view === 'home';
+  if (key === 'h') { if (window.Router) window.Router.navigate('home'); return; }
+  if (onHome) {
+    if (key >= '1' && key <= '6') {                       /* the six rooms. Safe: the 1/2/3 grade
+                                                            keys are scoped to current==='drill'. */
+      if (window.HomeView && HomeView.openRoomByIndex && HomeView.openRoomByIndex(+key)) event.preventDefault();
+      return;
+    }
+    if (key === '[' || key === ']') return;               /* stepping topics invisibly: no. */
+    const homeTabKeys = { q: 'walk', w: 'drill', e: 'wb', r: 'sys', t: 'trade', y: 'model', u: 'num', i: 'rf', o: 'open', v: 'viz' };
+    if (homeTabKeys[key]) {
+      const rid = (window.LastVisit && LastVisit.topicId) ? LastVisit.topicId() : null;
+      if (!rid || typeof TopicRegistry === 'undefined' || !TopicRegistry.get(rid)) return;   /* no topic to mean */
+      const c = TopicRegistry.current();
+      if (!c || c.id !== rid) TopicRegistry.setTopic(rid);
+      goView(homeTabKeys[key]);
+      return;
+    }
+    /* everything else (/ \ ? d g) is topic-agnostic and falls through unchanged */
+  }
+
   /* g starts the guided tour */
   if (key === 'g') { if (window.TourGuide) window.TourGuide.start(); return; }
+  /* p opens the per-topic session panel (Progress) */
+  if (key === 'p') { var _sp = document.getElementById('sessopen'); if (_sp) _sp.click(); return; }
   /* q..o jump straight to a pane (the QWERTY row mirrors the tab order) */
   const tabKeys = { q: 'walk', w: 'drill', e: 'wb', r: 'sys', t: 'trade', y: 'model', u: 'num', i: 'rf', o: 'open', v: 'viz' };
   if (tabKeys[key]) { goView(tabKeys[key]); return; }
@@ -126,20 +163,40 @@ document.addEventListener('keydown', function (event) {
     const nodes = overlay.querySelectorAll('button,[href],input,textarea,select,[tabindex]:not([tabindex="-1"])');
     return Array.prototype.filter.call(nodes, function (el) { return !el.disabled && el.offsetParent !== null; });
   }
-  /* whichever overlay is currently open, or null */
-  function openOverlay() { for (let i = 0; i < overlays.length; i++) if (overlays[i].classList.contains('open')) return overlays[i]; return null; }
-  /* watch each overlay's class: on open, remember the trigger and move focus in; on close, restore it */
+  /* whichever overlay is currently INTERACTIVE, or null. `.open:not(.closing)` -- the same
+     invariant again: Tab must not be trapped inside, and Escape must not target, a dialog that is
+     already fading out and already non-interactive. */
+  function openOverlay() {
+    for (let i = 0; i < overlays.length; i++) {
+      const o = overlays[i];
+      if (o.classList.contains('open') && !o.classList.contains('closing')) return o;
+    }
+    return null;
+  }
+  /* Watch each overlay's class: on open, remember the trigger and move focus in; on close, restore it.
+     THE PREDICATE IS `.open:not(.closing)` -- the same INTERACTIVITY INVARIANT the CSS and the
+     global keymap read (see styles.css). It used to be `.open` alone, which is not removed until
+     the fade-out FINISHES: ovHide() holds it for up to 500ms. So focus stayed parked on a button
+     inside a dialog that was already invisible and already non-interactive, and only left when the
+     browser reset it at display:none. Reading `.closing` restores focus to the trigger the instant
+     the dialog stops being interactive -- so focus is never inside a layer the user cannot use.
+     Caught by test/overlay_deadzone.cjs, which asserts it for every [role=dialog][aria-modal]. */
   overlays.forEach(function (overlay) {
-    overlay.__open = overlay.classList.contains('open');
+    const interactive = function () { return overlay.classList.contains('open') && !overlay.classList.contains('closing'); };
+    overlay.__open = interactive();
     new MutationObserver(function () {
-      const isOpen = overlay.classList.contains('open');
+      const isOpen = interactive();
       if (isOpen && !overlay.__open) {
         overlay.__open = true;
         returnFocusTo = document.activeElement;
         setTimeout(function () { const focusable = getFocusable(overlay); if (focusable.length) focusable[0].focus(); }, 0);
       } else if (!isOpen && overlay.__open) {
         overlay.__open = false;
-        if (returnFocusTo && returnFocusTo.focus) { try { returnFocusTo.focus(); } catch (e) {} }
+        const a = document.activeElement;
+        if (a && a.blur && overlay.contains(a)) { try { a.blur(); } catch (e) {} }
+        if (returnFocusTo && returnFocusTo.focus && returnFocusTo !== document.body && returnFocusTo !== document.documentElement) {
+          try { returnFocusTo.focus(); } catch (e) {}
+        }
         returnFocusTo = null;
       }
     }).observe(overlay, { attributes: true, attributeFilter: ['class'] });

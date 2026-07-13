@@ -87,7 +87,7 @@ const SLOTS = [['cmpView', 'cmpNote', 'cmpMove'], ['mCmpView', 'mCmpNote', 'mCmp
   const pageErrors = [];
   page.on('pageerror', (e) => pageErrors.push(String(e && e.message ? e.message : e)));
 
-  await B.gotoApp(page, HTML);   /* was: goto + a 400ms bet that boot had finished */
+  await B.gotoApp(page, HTML, { hash: '#walk' });   /* the rail is TOPIC chrome: a bare arrival now lands on the topic-less #home, where .app is display:none. Boot straight to a topic. */
 
   const rep = await page.evaluate((cfg) => {
     if (typeof TopicRegistry === 'undefined') return { fatal: 'TopicRegistry undefined' };

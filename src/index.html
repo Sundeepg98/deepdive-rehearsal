@@ -58,7 +58,12 @@
     <button class="crambtn" id="scopeopen" type="button"><span class="mb-tx"><span class="mb-t">Scope it first</span><span class="mb-d"> &mdash; the clarifying questions before you design</span></span></button>
     <div class="mb-sec">Settings</div>
     <button class="crambtn kbd-only" id="keyopen" type="button"><span class="mb-tx"><span class="mb-t">Keyboard shortcuts</span><span class="mb-d"> &mdash; jump views, drive it by key</span></span></button>
-    <button class="crambtn cram-tog" id="themetog" type="button" aria-pressed="false"><span class="mb-ic">&#9789;</span>Dark mode &mdash; <b class="tt-state">off</b></button></div>
+    <button class="crambtn cram-tog" id="themetog" type="button" aria-pressed="false"><span class="mb-ic">&#9789;</span>Dark mode &mdash; <b class="tt-state">off</b></button>
+    <!-- Reset lives HERE now, not on the entry surface. It used to sit in the index overlay's
+         footer -- i.e. on the modal the app opened itself on -- where, on a phone, "Reset all
+         saved progress" was fully visible while ZERO of the 46 topic cards were. A destructive,
+         irreversible action does not belong on the screen the app opens on. Wired by panels.js. -->
+    <button class="crambtn" id="resetall" type="button"><span class="mb-tx"><span class="mb-t">Reset all saved progress</span><span class="mb-d"> &mdash; clears every topic, permanently</span></span></button></div>
 
   <div class="seg" role="group" aria-label="Rehearsal sections">
     <button type="button" class="on" data-tab="walk"><span>Walkthrough</span><span class="n">MECHANICS</span></button>
@@ -146,6 +151,15 @@
   </aside>
   <button class="cmp-reopen" type="button" aria-label="Show companion panel"><span class="cmp-reopen-ic" aria-hidden="true">&#8249;</span><span class="cmp-reopen-t">Coaching</span></button>
 </div>
+
+<!-- THE HOME. A SIBLING of .app, deliberately NOT a .pane and NOT inside .stage.
+     shell.js:34 does `const panes = document.querySelectorAll('.pane')` -- a STATIC NodeList
+     captured at parse. An element that is a .pane but arrives later never receives .on, and
+     .pane{display:none} keeps it dark forever: a fully-populated DOM that paints nothing. Being a
+     sibling makes switchTab's NodeList structurally unable to contain it. Empty here; home-view.js
+     fills it, exactly as the overlays do. Visibility is CSS-only via html[data-view="home"] -- NOT
+     the `hidden` attribute, which any author `display` rule silently beats. -->
+<main class="homev" id="home"></main>
 
 <!--@build:include overlays/mock-run.html-->
 

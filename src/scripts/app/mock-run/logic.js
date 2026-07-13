@@ -16,6 +16,13 @@ function ovShow(overlay) {
 function ovHide(overlay) {
   if (!overlay.classList.contains('open')) { overlay.classList.remove('closing'); return; }
   overlay.classList.add('closing');
+  /* `.closing` = painted but NOT interactive (THE INTERACTIVITY INVARIANT, styles.css). Focus must
+     leave SYNCHRONOUSLY, in the same tick -- shell.js's focus manager reads the same predicate, but
+     it is a MutationObserver, i.e. a microtask, so it cannot restore focus until the current task
+     ends. Blur here and the invariant holds at EVERY instant: focus is never inside a layer the
+     user can no longer use. shell.js then returns focus to the trigger a microtask later. */
+  const _a = document.activeElement;
+  if (_a && _a.blur && overlay.contains(_a)) { try { _a.blur(); } catch (e) {} }
   const panel = overlay.querySelector('.mock-panel,.cram-panel') || overlay;
   const finishHide = function () {
     overlay.classList.remove('open', 'closing');

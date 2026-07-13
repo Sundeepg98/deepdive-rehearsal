@@ -123,35 +123,50 @@ const pickTopic = async (pg, label, expectId) => {
 };
 
 await B.gotoApp(p, FILE);   /* explicit nav cap + wait for the app's OWN globals, not 2200ms */
-/* The first-run overlay is opened by the app a beat after boot, and the very next chk() ASSERTS
-   it is open -- so wait for it deterministically rather than sleeping 2200ms and hoping. The
-   .catch() is load-bearing: if the overlay never opens, we must fall through and let the
-   assertion below report ixOpen=false. A wait that THREW here would convert a real regression
-   into a harness error, and a wait that could not expire would make the assertion unfalsifiable. */
-await B.waitIndexOpen(p);
+/* THE ENTRY CONTRACT CHANGED, AND THIS IS THE NEW ONE.
+   These assertions used to demand that a first-run boot OPENED A MODAL on itself (the index
+   overlay as "start screen"). That was the bug, not the contract: a modal in front of first paint
+   ate the user's first tap (measured -- a real trusted click at splash+87ms landed on the splash,
+   and the overlay held pointer-events:auto over the whole viewport for 220ms after close), and it
+   fired exactly ONCE PER BROWSER, EVER, because the app's own first-paint write to `viewseen.*`
+   satisfied its `Store.keys('').length > 0` gate.
+   The entry is now the #home ROUTE. So: a first-run boot must land on the home, with NOTHING modal
+   in front of it, and the switcher must still be reachable on demand. Strictly stronger, and
+   test/overlay_deadzone.cjs asserts the input side of it directly (and fails on the old build). */
+await B.settle(p);
 const boot = await p.evaluate(() => {
   const vz = document.querySelector('button[data-tab="viz"]');
   const leaks = [...document.querySelectorAll('[hidden]')].filter((e) => e.offsetWidth > 0)
     .map((e) => (e.id || e.className || e.tagName).toString().slice(0, 24));
   return { vizW: vz.offsetWidth, vizDisp: getComputedStyle(vz).display,
-    ixOpen: !!document.querySelector('.ix-ov.open'), home: !!document.getElementById('homeBtn'), leaks };
+    ixOpen: !!document.querySelector('.ix-ov.open'),
+    onHome: document.documentElement.dataset.view === 'home',
+    cta: !!document.querySelector('#home .hm-cta'),
+    rooms: document.querySelectorAll('#home .hm-room').length,
+    home: !!document.getElementById('homeBtn'), leaks };
 });
 chk('viz tab INVISIBLE (computed) on a topic without a visual', boot.vizW === 0 && boot.vizDisp === 'none', JSON.stringify(boot));
-chk('FIRST-RUN boot opens the start screen (index overlay)', boot.ixOpen === true, 'ixOpen=' + boot.ixOpen);
+chk('FIRST-RUN boot lands on the HOME route', boot.onHome === true, 'dataset.view=' + boot.onHome);
+chk('FIRST-RUN boot opens NO modal in front of first paint', boot.ixOpen === false, 'an overlay opened itself');
+chk('the home offers ONE primary action and the six rooms', boot.cta === true && boot.rooms === 6,
+  'cta=' + boot.cta + ' rooms=' + boot.rooms);
 chk('every [hidden] element is actually invisible (page invariant)', boot.leaks.length === 0, boot.leaks.join(','));
 chk('Home button present in the chrome', boot.home === true, 'homeBtn missing');
 const homeFlow = await p.evaluate(async () => {
-  const x0 = document.querySelector('.ix-x'); if (x0) x0.click();          // close the first-run screen
-  await new Promise((r) => setTimeout(r, 350));
-  const closedFirst = !document.querySelector('.ix-ov.open');
-  document.getElementById('homeBtn').click();                               // Home reopens it on demand
+  window.IndexOverlay.open();                                   // the switcher is reachable on demand
   await new Promise((r) => setTimeout(r, 350));
   const opened = !!document.querySelector('.ix-ov.open');
-  const x = document.querySelector('.ix-x'); if (x) x.click();
+  const x = document.querySelector('.ix-x'); if (x) x.click();  // ...and closes from its own button
   await new Promise((r) => setTimeout(r, 350));
-  return { closedFirst, opened, closed: !document.querySelector('.ix-ov.open') };
+  const closed = !document.querySelector('.ix-ov.open');
+  window.Router.navigate('walk');                               // leave the home for the topic UI
+  await new Promise((r) => setTimeout(r, 250));
+  const leftHome = document.documentElement.dataset.view !== 'home' &&
+    getComputedStyle(document.querySelector('.app')).display !== 'none';
+  return { opened, closed, leftHome };
 });
-chk('start screen closable; Home reopens; close works', homeFlow.closedFirst && homeFlow.opened && homeFlow.closed, JSON.stringify(homeFlow));
+chk('switcher opens on demand, closes, and the home hands off to the topic UI',
+  homeFlow.opened && homeFlow.closed && homeFlow.leftHome, JSON.stringify(homeFlow));
 
 await pickTopic(p, 'Kafka Internals', 'kafka-internals');
 const vzOn = await p.evaluate(() => document.querySelector('button[data-tab="viz"]').offsetWidth);
@@ -318,24 +333,43 @@ await m.addInitScript(() => {
   };
 });
 await B.gotoApp(m, FILE);        /* was: goto + a 2000ms guess that the app had booted */
-/* The overlay opens ASYNCHRONOUSLY (see _boot closeIndex). The very next chk asserts it IS open,
-   so waiting is what makes the read honest -- not what makes it vacuous: if it never opens, this
-   expires and the assertion below still reports ixOpen=false. Dropping the old 2000ms sleep
-   without this is what turned the mobile first-run check red in 4 of 5 gate runs. */
-await B.waitIndexOpen(m);
-const mb = await m.evaluate(() => ({
-  ixOpen: !!document.querySelector('.ix-ov.open'),
-  vizW: document.querySelector('button[data-tab="viz"]').offsetWidth,
-  homeBox: (() => { const r = document.getElementById('homeBtn').getBoundingClientRect(); return [Math.round(r.width), Math.round(r.height)]; })(),
-  stepBox: (() => { const r = document.querySelector('.tn-step:not(.tn-home)').getBoundingClientRect(); return [Math.round(r.width), Math.round(r.height)]; })(),
-}));
-chk('MOBILE first-run boot: start screen opens, no stray viz tab', mb.ixOpen === true && mb.vizW === 0, JSON.stringify(mb));
+/* MOBILE FIRST RUN, against the NEW entry contract (see the desktop block above). A phone used to
+   get a modal announcing "46 TOPICS ACROSS 6 GROUPS" that rendered exactly ONE topic card in an
+   82px scroller -- while "Reset all saved progress" sat fully visible beneath it. It now gets the
+   home: a real page, with the whole viewport and one document scroll.
+   The tap-target floor is measured on what a phone user ACTUALLY touches first -- the home's own
+   primary CTA and its room cards. (The old check measured #homeBtn and .tn-step, which live inside
+   .app and are topic chrome; on the home they are display:none and report [0,0], which is not a
+   44px violation but an assertion pointed at the wrong screen.) */
+await B.settle(m);
+const mb = await m.evaluate(() => {
+  const box = (el) => { if (!el) return [0, 0]; const r = el.getBoundingClientRect(); return [Math.round(r.width), Math.round(r.height)]; };
+  return {
+    ixOpen: !!document.querySelector('.ix-ov.open'),
+    onHome: document.documentElement.dataset.view === 'home',
+    vizW: document.querySelector('button[data-tab="viz"]').offsetWidth,
+    ctaBox: box(document.querySelector('#home .hm-cta')),
+    roomBox: box(document.querySelector('#home .hm-room')),
+    actBox: box(document.querySelector('#home .hm-act')),
+    cards: document.querySelectorAll('#home .ix-card').length,
+  };
+});
+chk('MOBILE first-run boot: lands on the home, no modal, no stray viz tab',
+  mb.onHome === true && mb.ixOpen === false && mb.vizW === 0, JSON.stringify(mb));
+chk('MOBILE: the home reaches the WHOLE library (the modal showed 1 of 46)', mb.cards === 46, 'cards=' + mb.cards);
+chk('MOBILE tap targets >= 44px (the home\'s CTA, room cards and header actions)',
+  mb.ctaBox[1] >= 44 && mb.roomBox[1] >= 44 && mb.actBox[1] >= 44, JSON.stringify(mb));
+/* the switcher is still reachable and still closable on a phone */
+await m.evaluate(() => window.IndexOverlay.open());
+await m.waitForFunction(() => !!document.querySelector('.ix-ov.open'), null, { timeout: B.ACT_MS }).catch(() => {});
 await m.evaluate(() => { const x = document.querySelector('.ix-x'); if (x) x.click(); });
 await m.waitForFunction(() => !document.querySelector('.ix-ov.open'), null, { timeout: B.ACT_MS }).catch(() => {});
 await B.settle(m);
 const mClosed = await m.evaluate(() => !document.querySelector('.ix-ov.open'));
-chk('MOBILE start screen closable (44px close)', mClosed, 'still open');
-chk('MOBILE tap targets >= 44px (home + steppers)', mb.homeBox[0] >= 44 && mb.homeBox[1] >= 44 && mb.stepBox[0] >= 44 && mb.stepBox[1] >= 44, JSON.stringify(mb));
+chk('MOBILE switcher opens on demand and closes (44px close)', mClosed, 'still open');
+await m.evaluate(() => window.Router.navigate('walk'));   /* the rest of this file tests TOPIC chrome */
+await m.waitForFunction(() => document.documentElement.dataset.view !== 'home', null, { timeout: B.ACT_MS }).catch(() => {});
+await B.settle(m);
 
 // the 0x0 canvas was worst on mobile: a 2px sliver that was purely its own borders
 await pickTopic(m, 'Kafka Internals', 'kafka-internals');
@@ -379,9 +413,10 @@ await dl.addInitScript(() => {
   };
 });
 await B.gotoApp(dl, FILE, { hash: '#kafka-internals/viz' });   /* was: goto + 2600ms */
-/* .ix-x does not exist until the overlay has opened, so dismissing it without waiting is a no-op
-   that leaves a modal sitting over the visual we are about to photograph. */
-await B.waitIndexOpen(dl);
+/* A deep link never opened the overlay (window.__bootHash suppressed it) and the app no longer
+   opens one at all -- so there is nothing to dismiss, and waiting 5s for a modal that cannot
+   appear was pure cost. Just make sure nothing is over the visual we are about to photograph. */
+await B.settle(dl);
 await dl.evaluate(() => { const x = document.querySelector('.ix-x'); if (x) x.click(); });
 await dl.waitForFunction(() => !document.querySelector('.ix-ov.open'), null, { timeout: B.ACT_MS }).catch(() => {});
 await B.settle(dl);

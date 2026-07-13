@@ -299,6 +299,14 @@ var Progress = (function () {
     var bank = (t.data.bank && t.data.bank.cards) || null;
     var steps = (t.data.wb && t.data.wb.steps) || null;
     var prev, ids, sig, rec, out;
+    /* A MIGRATION IS NOT A STUDY SESSION.
+       record() and wbRecord() both hard-code `ts: Date.now()` -- correct for a grade, WRONG for a
+       migration, which rewrites every record on any `cv` mismatch. No path carried prev.ts
+       forward, so a content release restamped every topic as "studied just now":
+         - dueReview() (needs ts >= 7 days old) was EMPTIED for every user, every release --
+           the spaced-repetition nudge silently stopped existing;
+         - weeklyGoal() (counts ts >= weekStart) FALSELY COMPLETED the goal, for everyone.
+       The user's last-studied time is theirs; a build cannot be allowed to overwrite it. */
     prev = Store.get(pkey(id), null);
     if (prev && prev.cv !== CV && bank && bank.length) {
       ids = CardId.forCards(bank);
@@ -306,7 +314,7 @@ var Progress = (function () {
       out = {};
       rec = record(ids, sig, cardsMapOf(prev, ids, sig, out));
       bump(mig.drill, out.path);
-      if (rec) Store.set(pkey(id), rec);
+      if (rec) { if (prev.ts) rec.ts = prev.ts; Store.set(pkey(id), rec); }
       else { Store.remove(pkey(id)); mig.dropped.push('progress.' + id); }
     }
     prev = Store.get(wbkey(id), null);
@@ -315,7 +323,7 @@ var Progress = (function () {
       out = {};
       rec = wbRecord(ids, stepsMapOf(prev, ids, out));
       bump(mig.wb, out.path);
-      if (rec) Store.set(wbkey(id), rec);
+      if (rec) { if (prev.ts) rec.ts = prev.ts; Store.set(wbkey(id), rec); }
       else { Store.remove(wbkey(id)); mig.dropped.push('wbprog.' + id); }
     }
   }
@@ -375,7 +383,17 @@ var Progress = (function () {
       var t = (typeof TopicRegistry !== 'undefined') ? TopicRegistry.get(id) : null;
       var grp = t && t.identity ? t.identity.group : null;
       var sm = shakyMarks(id);
-      var rec = { done: p ? p.done : 0, tot: p ? p.tot : 0, shk: p ? p.shk : 0, marks: sm, status: status(id) };
+      /* AN UNTOUCHED TOPIC STILL HAS PROBES. `tot: 0` for a topic with no saved record made it
+         vanish from its group's DENOMINATOR, so a group's coverage was measured only across the
+         topics you had already started -- i.e. it divided by the work done. Measured on the
+         shipped build: Messaging & Events, 7 topics / 147 probes, 1 topic drilled (21 probes),
+         showed 100% when the truth is 14%. (overallPct, two lines down, was right all along
+         because it divides by ids.length -- two rollups in one function, one of them lying.)
+         The bank is the source of truth for how much work a topic IS, whether or not it has
+         been started. The room cards also skip groups with tot <= 0, so this is what makes all six
+         rooms render instead of only the touched ones. */
+      var bankTot = (t && t.data && t.data.bank && t.data.bank.cards) ? t.data.bank.cards.length : 0;
+      var rec = { done: p ? p.done : 0, tot: p ? p.tot : bankTot, shk: p ? p.shk : 0, marks: sm, status: status(id) };
       topics[id] = rec;
       totDone += rec.done; totTot += rec.tot; totWeak += rec.shk + sm; if (rec.done) touched++;
       compSum += (rec.tot > 0) ? (rec.done / rec.tot) : 0;

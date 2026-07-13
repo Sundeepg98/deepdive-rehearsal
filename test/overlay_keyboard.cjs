@@ -230,17 +230,33 @@ const PROBE = () => {
       restored === 'button#' + d.opener,
       'focus landed on ' + restored + ' instead -- the user is dropped at the top of the document');
 
-    /* ---------- F. REOPENING IT DOES NOT MAKE IT CLOSE ITSELF ---------- */
+    /* ---------- F. REOPENING IT MID-FADE DOES NOT MAKE IT CLOSE ITSELF ---------- */
     /* ovHide() arms finishHide on BOTH the panel's animationend and a 500ms fallback timer. ovShow()
        used to cancel only the timer -- so the listener survived, fired on the NEXT animationend
-       (after a reopen, that is the OPEN animation's), and stripped `.open` off the dialog that had
-       just opened. On the pre-fix build every overlay closed itself 446-700ms after being reopened.
-       This is an ABSENCE assertion -- "nothing rips the class off within the race window" -- so it
-       has to observe a window rather than wait on a condition. It samples per rAF and reports the
-       exact frame the class died, instead of betting on one sample landing after the failure. */
+       (after a reopen, that is the OPEN animation's, and animationend BUBBLES, so any child's
+       animation serves too) and stripped `.open` off the dialog that had just opened.
+
+       IT MUST BE REOPENED WHILE IT IS STILL FADING, and that is not a detail -- it is the whole
+       bug. finishHide removes its own listener when it runs, so once a close has fully COMPLETED
+       there is no stale listener and no race. The defect exists only in the window where ovShow()
+       interrupts a close in flight -- which is exactly the user's gesture: click X, then
+       immediately click the trigger again. The first version of this assertion let the close finish
+       first, and the negative control duly went red on only 2 of the 7 dialogs, by luck. Wait on
+       `.closing` (a CONDITION, not a stopwatch) and it reproduces on all 7, every run.
+
+       The observation itself is an ABSENCE assertion -- "nothing rips the class off within the race
+       window" -- which cannot be expressed as a condition wait. It samples per rAF and reports the
+       exact frame the class died, rather than betting on one sample landing after the failure. */
     await openOv(d);
-    await closeOv(d);
-    await openOv(d);
+    await page.evaluate((s) => {
+      const ov = document.querySelector(s);
+      const x = ov && ov.querySelector('.mock-x,.cram-x');
+      if (x) x.click();
+    }, d.sel);
+    await B.until(page, (s) => document.querySelector(s).classList.contains('closing'), d.sel, 3000,
+      d.name + ' starts fading');
+    await page.evaluate((id) => document.getElementById(id).click(), d.opener);   /* reopen MID-FADE */
+    await B.until(page, (s) => window.__K.isOpen(s), d.sel, 5000, d.name + ' reopens mid-fade');
     const selfClosed = await page.evaluate((s) => new Promise((res) => {
       const ov = document.querySelector(s);
       const t0 = performance.now();
@@ -286,12 +302,30 @@ const PROBE = () => {
   chk('[mock run] Enter on the surface still ADVANCES the run',
     c.includes('button#mbnext'), 'Enter fired ' + (c.join(', ') || 'nothing'));
 
-  /* ...AND FOCUS IS BACK ON THE SURFACE. The render replaces the body and destroys the focused
-     control; without a restore, focus falls to <body> and the user's place is lost every beat. */
+  /* ...AND ADVANCING FROM THE FOCUSED "Next" BUTTON DOES NOT DROP THE USER.
+     THIS MUST BE DRIVEN FROM #mbnext, NEVER FROM THE SURFACE. renderMockBeat() replaces
+     mockbody's CHILDREN -- the surface element itself survives and keeps focus -- so an advance
+     driven from the surface CANNOT observe this bug. It is the focused CHILD that gets destroyed,
+     and without the restore focus falls to <body>: the user is dropped at the top of the document
+     mid-round, every beat.
+     THE FIRST VERSION OF THIS ASSERTION DROVE IT FROM THE SURFACE, AND THE NEGATIVE CONTROL CAUGHT
+     IT: with mockRestoreFocus() deleted outright, this file still reported 47/47 PASS. It was a
+     check that could not fail. Drive the path that actually destroys the focused node. */
+  await closeOv(M);
+  await openOv(M);                 /* fresh beat 0, so #mbnext is guaranteed to exist */
+  await page.evaluate(() => {
+    const n = document.querySelector('deep-mock-run').shadowRoot.getElementById('mbnext');
+    if (n) n.focus();
+  });
+  await B.settle(page);
+  const onNext = await page.evaluate(() => window.__K.focus());
+  await page.keyboard.press('Enter');          /* native activation -> the beat re-renders */
+  await B.settle(page);
   const afterBeat = await page.evaluate(() => window.__K.focus());
-  chk('[mock run] after a beat re-renders, focus is back on the surface (not <body>)',
-    afterBeat === 'div#mockbody',
-    'focus fell to ' + afterBeat + ' -- the render destroyed the focused node and dropped the user');
+  chk('[mock run] advancing from the FOCUSED Next button lands focus on the surface, not <body>',
+    onNext === 'button#mbnext' && afterBeat === 'div#mockbody',
+    'focus was ' + onNext + ', and after the re-render destroyed it focus fell to ' + afterBeat +
+    ' -- the user is dropped at the top of the document mid-round');
 
   /* THE KEY IS NOT STOLEN FROM A FOCUSED CONTROL: Enter on Reveal must reveal, NOT advance. */
   await page.evaluate(() => {

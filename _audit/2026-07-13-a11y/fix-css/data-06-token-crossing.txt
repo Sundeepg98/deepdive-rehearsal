@@ -1,0 +1,17 @@
+
+=== DOES THE THEME TOKEN STILL CROSS THE SHADOW BOUNDARY? ===
+
+  --card-sh (on <html>, light) : 0 1px 2.5px rgba(40,34,28,.05),0 7px 16p...
+  --card-sh (on <html>, dark)  : inset 0 1px 0 rgba(255,255,255,.06),0 2p...
+
+  .card box-shadow  light : rgba(40, 34, 28, 0.05) 0px 1px 2.5px 0px, rgba(40, 34, 28, 0.1
+  .card box-shadow  dark  : rgba(255, 255, 255, 0.06) 0px 1px 0px 0px inset, rgba(0, 0, 0,
+  -> .card shadow is theme-aware INSIDE the shadow root: YES
+
+  .thread box-shadow light : rgba(40, 34, 28, 0.05) 0px 1px 2px 0px, rgba(40, 34, 28, 0.09)
+  .thread box-shadow dark  : rgba(0, 0, 0, 0.4) 0px 1px 2px 0px, rgba(0, 0, 0, 0.4) 0px 4px
+  -> .thread shadow is theme-aware INSIDE the shadow root: YES
+
+  VERDICT: PASS -- the deleted v157 rules really were redundant. Custom properties cross the boundary;
+           the dark card/thread elevation still works, via --card-sh / --surf-sh.
+

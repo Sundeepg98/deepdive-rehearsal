@@ -34,7 +34,19 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:var(--font-size-micro);b
    light-DOM rule cannot cross that boundary. The shipped "Print Q&A" tool has therefore
    never had page-break control -- a card could split across a page at any point. BASE_SHEET
    is adopted by all 17 shadow hosts, so one rule here reaches every printable surface. */
-@media print{.card,.thread,.dec,.rf,.piv,details.model[open]{break-inside:avoid}.card{box-shadow:none;border:1px solid #ddd}}
+@media print{.card,.thread,.dec,.rf,.piv,details.model[open]{break-inside:avoid}.card{box-shadow:none;border:1px solid #ddd}
+/* NO BACKTICKS ANYWHERE IN THIS SHEET, INCLUDING IN COMMENTS. BASE_SHEET is a JS template literal,
+   so one backtick TERMINATES THE STRING and the rest of the CSS is parsed as JavaScript. Quoting
+   ".nav button" in backticks here did exactly that: "missing ) after argument list", BASE_SHEET
+   never defined, and NOT ONE of the 17 shadow hosts got a stylesheet. The build stayed green -- a
+   bundler does not execute it -- and the app booted to nothing. (DRILL_STYLE carries the same
+   warning for backslashes, one aisle over. Same class of trap, different character.)
+
+   The walkthrough's Prev/Next pair. styles.css tried to hide ".nav button" on print and could not
+   reach it (0 light / 21 shadow), so every printed walkthrough has carried a dead pair of buttons
+   for the app's whole life -- the same hole the break-inside rules above were moved here to plug.
+   Found by test/shadow_css_guard.mjs, not by a human noticing it on a printout. */
+.nav button{display:none}}
 /* MOBILE TAP FLOOR -- THE SHADOW HALF. styles.css carries the same floor for the light DOM and
    CANNOT reach in here: the drill's mode switch (Study / Mock round / Quick 5), its level filter
    (SDE2/SDE3/Staff) and #adv ("Reveal answer") are all inside a shadow root, and every one of
@@ -42,4 +54,56 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:var(--font-size-micro);b
    styles.css aimed at them matches zero nodes, which is exactly how this repo has shipped dead
    pane-internal CSS before. BASE_SHEET is adopted by all 17 shadow hosts, so this reaches them. */
 @media (max-width:919px){button,summary,[role="button"]{min-height:44px}}
+/* HIGH-CONTRAST + FORCED-COLORS -- THE SHADOW HALF. THE SAME BUG, A THIRD TIME.
+   styles.css aimed @media(prefers-contrast:more) and @media(forced-colors:active) at
+   .card/.dec/.rf/.piv/.thread/.dgm-s FROM THE LIGHT DOM. Measured on the walkthrough:
+
+       .card 0 light / 10 shadow    .dec 0/7    .rf 0/9    .piv 0/7    .thread 0/1    .dgm-s 0/7
+
+   ALL 41 of them live inside a shadow root, so BOTH rules matched ZERO nodes and the shipped
+   high-contrast "support" never executed once. It was not subtly wrong; it was dead code that
+   read as done. The print rule and the tap floor directly above are in BASE_SHEET for EXACTLY
+   this reason and say so in as many words -- these two were simply never given the same
+   treatment. BASE_SHEET is adopted by all 17 shadow hosts, so a rule here reaches every one.
+
+   PROVEN, not asserted: with contrast:'more' emulated, .card border-top-width now moves
+   1px -> 2px. It did not move before. (fix-css/01-shadow-boundary.mjs, which also runs the
+   light-DOM half of the same block as a negative control, so a dead EMULATION cannot be
+   mistaken for a dead rule.)
+
+   !important ON THE COLOURS, deliberately. BASE_SHEET is adopted, so it cascades AFTER each
+   component's own <style> and wins TIES -- but specificity still beats order, and the three
+   real .sub nodes are all more specific than a bare .sub (0,1,0):
+       details.model>summary .sub (0,3,0)   .arc-h .sub (0,2,0)   .dnav-h .sub (0,2,0)
+   That SECOND deadness is why the old .sub rule failed even in the light DOM, and the audit
+   named it: "dead by specificity". BASE_SHEET cannot know every component's selector
+   specificity, and hardcoding today's three here would rot on the next component. A
+   user-preference override, inside a media query that only fires under that preference, is
+   precisely where !important belongs. The border-widths need no !important: they beat their
+   component rules on order alone. */
+/* Only classes that GENUINELY live in a shadow root belong here. .cmp-note / .cmp-thesis are
+   the companion rail: 2 and 1 light-DOM matches, 0 in shadow -- they stay in styles.css, where
+   they already work. Putting them here as well would be the identical dead-code sin, pointed the
+   other way, and the guard would (rightly) not catch it. */
+@media (prefers-contrast:more){
+.card,.dec,.rf,.piv,.thread{border-width:2px}
+/* DO NOT LET THE HIGH-CONTRAST RULE MAKE A BORDER THINNER. .dec carries border-top:3px solid
+   var(--acc) and .rf carries border-left:3px solid var(--red) -- accent edges, and the only thing
+   that tells a trade-off card apart from a red-flag card at a glance. A blanket border-width:2px
+   sets ALL FOUR sides, so it QUIETLY SHAVED THOSE 3px ACCENTS DOWN TO 2px: measured .dec 3px ->
+   2px. Under a preference for MORE contrast, that is backwards.
+   The rule inherited this flaw from styles.css, where it was invisible because it never ran. The
+   moment it started running, the latent bug became a live one -- which is the whole argument for
+   verifying a rule's EFFECT and not just its presence. Restore the accents; only the 1px hairline
+   (the genuinely weak boundary, --bd on --surf) is what wanted thickening. */
+.dec{border-top-width:3px}
+.rf{border-left-width:3px}
+.sub,.step-sub,.dgm-s{color:var(--ink)!important}
+}
+/* forced-colors is different, and the shorthand is RIGHT here: every colour collapses to the
+   system palette, so an accent HUE carries no information any more and a uniform CanvasText box
+   is the strongest thing the surface can be. */
+@media (forced-colors:active){
+.card,.dec,.rf,.piv,.thread{border:2px solid CanvasText;background:Canvas;color:CanvasText}
+}
 `);

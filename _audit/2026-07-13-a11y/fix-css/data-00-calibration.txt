@@ -1,0 +1,43 @@
+
+=== FIXTURE SELF-CHECK (the swatch page must render what it claims) ===
+  .backdrop background : rgb(252, 251, 249)   (must be rgb(252, 251, 249))
+  #s_lab62 opacity     : 0.62   (must be 0.62)
+  all swatches on-screen: true
+
+=== CONTRAST INSTRUMENT CALIBRATION ===
+  (reference = hand-computed WCAG from the hex pairs; measured = decoded from pixels)
+
+  swatch        hand-computed  measured   d       floor  expect  instrument says
+  ----------------------------------------------------------------------------
+  s_21              21.00         21   ±0.000    4.5    PASS   PASS  ok
+  s_pass             4.54       4.54   ±0.002    4.5    PASS   PASS  ok
+  s_fail             4.48       4.48   ±0.002    4.5    FAIL   FAIL  ok
+  s_stok             6.18       6.18   ±0.000    4.5    PASS   PASS  ok
+  s_stokd            9.17       9.17   ±0.002    4.5    PASS   PASS  ok
+  s_gradflat         4.51       4.51   ±0.004    4.5    PASS   PASS  ok
+  s_lab62            2.64       2.67   ±0.030    4.5    FAIL   FAIL  ok
+  s_lab90            4.73       4.75   ±0.023    4.5    PASS   PASS  ok
+  s_val62            2.53       2.55   ±0.024      3    FAIL   FAIL  ok
+  s_val90            4.32       4.38   ±0.064      3    PASS   PASS  ok
+
+  THE BOUNDARY TEST (this is the whole point):
+    #777777/#fff -> 4.48   must be < 4.5  ->  FAIL, correctly
+    #767676/#fff -> 4.54   must be >= 4.5 ->  PASS, correctly
+    splits the AA boundary: YES
+
+  THE OPACITY TEST -- and why the glyph-core cut must be RELATIVE.
+  .pill.z is opacity:.62. A naive ABSOLUTE core cut (alpha >= 0.85) finds ZERO core
+  pixels on it and would silently report a CLEAN BILL on the failing tile.
+    .pill .l  --mut2 @ .62 ->  2.67 (hand 2.64, floor 4.5)  alphaMax 0.62  corePx: relative 114 / absolute-.85-cut 0
+    .pill .l  --mut2 @ .90 ->  4.75 (hand 4.73, floor 4.5)  alphaMax 0.902  corePx: relative 114 / absolute-.85-cut 114
+    .pill .v  --mut  @ .62 ->  2.55 (hand 2.53, floor 3)  alphaMax 0.62  corePx: relative 114 / absolute-.85-cut 0
+    .pill .v  --mut  @ .90 ->  4.38 (hand 4.32, floor 3)  alphaMax 0.902  corePx: relative 114 / absolute-.85-cut 114
+    -> at opacity .62 an ABSOLUTE cut measures 0 pixels: it cannot see the failing tile
+       at all, and would report it CLEAN. The relative cut measures it. That is the bug class.
+
+  GRADIENT TEST (getComputedStyle returns a literal string here and can see NOTHING):
+    getComputedStyle(.backgroundColor) = rgba(0, 0, 0, 0)   <- useless
+    pixel-decoded contrast             = 4.51   (hand-computed 4.51)
+
+CALIBRATED: the instrument reproduces every hand-computed value and splits the AA boundary.
+

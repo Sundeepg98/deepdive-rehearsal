@@ -184,7 +184,24 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # asserts the INVARIANT over all 46 x 9 combos, after adversarially priming the
                      # rail with a foreign note each time. It measures TEXT, not pixels, so a leak has
                      # to be structurally impossible rather than merely hidden by CSS.
-                     ('rail_integrity', 'test/rail_integrity.cjs')]:
+                     ('rail_integrity', 'test/rail_integrity.cjs'),
+                     # THE SHADOW BOUNDARY. Four times now, CSS written in styles.css has silently
+                     # failed to reach elements that live in a shadow root -- the v142 loading
+                     # shimmer (never ran once), the print page-break rules (the "Print Q&A" tool
+                     # shipped with NO page-break control for the app's whole life), the mobile 44px
+                     # tap floor, and the entire forced-colors + prefers-contrast block (the shipped
+                     # "high-contrast support" matched ZERO nodes). Every one was found by a human
+                     # squinting at a screenshot months later; not one was found by a test. The
+                     # failure is silent by construction: no error, no warning, and a dead rule looks
+                     # exactly like a live one in the diff.
+                     # This enumerates every class on every element in the light DOM and in all 17
+                     # shadow roots -- across all 10 panes and all 10 overlays -- and FAILS if a
+                     # selector in styles.css targets a class that exists ONLY in a shadow root. It
+                     # is asymmetric on purpose: a class never observed anywhere is never reported,
+                     # so thin state coverage can only cause a MISS, never a false accusation. It
+                     # plants a known-dead rule on every run and aborts if it cannot see it, so it
+                     # is not the seventh check here that cannot fail.
+                     ('shadow_css_guard', 'test/shadow_css_guard.mjs')]:
     if not chrome:
         results.append((name, 'SKIP', 'no Playwright/Chrome (npm install && npx playwright install chromium)'))
         continue

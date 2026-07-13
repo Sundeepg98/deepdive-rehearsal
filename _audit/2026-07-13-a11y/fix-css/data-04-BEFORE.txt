@@ -1,0 +1,138 @@
+
+============ HIGH-4: WHAT IS overflow-x:hidden HIDING? (BEFORE) ============
+
+  [negative control] inject a 900px-wide div into a 320px viewport:
+
+    A. THE DEAD DETECTOR  documentElement.scrollWidth > innerWidth
+       before: false   after: false   -> *** STILL SAYS NO OVERFLOW. THIS IS THE CHECK THAT CANNOT FAIL. ***
+
+    B. THE CLIPPING DETECTOR  (every clipper: scrollWidth > clientWidth?)
+       clippers before: 12   after: 13   -> caught 610px cut on main.stage
+       -> FIRED (it can go RED)
+
+    => `overflow-x:hidden` on .stage does not just fail to prevent overflow.
+       It BLINDS the standard detector to it. That is why the audit reported CLEAN.
+
+  ---- 320px ----
+    walk    doc overflow:   0px with the clip ON (the lie) |   0px with it OFF (the truth)
+        overflows by  644px: button  "30-SecondOPEN & CLOSE"
+        overflows by  629px: span  "30-Second"
+        CLIPPED (content lost): span#tncurrent.tn-current cut 91px (overflow-x:hidden)
+        CLIPPED (content lost): div cut 90px (overflow-x:hidden)
+        CLIPPED (content lost): deep-walkthrough >>> button.arc-step cut 43px (overflow-x:hidden)
+        CLIPPED (content lost): deep-walkthrough >>> button.arc-step cut 35px (overflow-x:hidden)
+    drill   doc overflow:   0px with the clip ON (the lie) |   0px with it OFF (the truth)
+        overflows by  644px: button  "30-SecondOPEN & CLOSE"
+        overflows by  629px: span  "30-Second"
+        CLIPPED (content lost): span#tncurrent.tn-current cut 91px (overflow-x:hidden)
+        CLIPPED (content lost): div cut 90px (overflow-x:hidden)
+        CLIPPED (content lost): deep-drill >>> span.dn-t cut 33px (overflow-x:hidden)
+        CLIPPED (content lost): deep-drill >>> span.dn-t cut 33px (overflow-x:hidden)
+    wb      doc overflow:   0px with the clip ON (the lie) |   0px with it OFF (the truth)
+        overflows by  644px: button  "30-SecondOPEN & CLOSE"
+        overflows by  629px: span  "30-Second"
+        CLIPPED (content lost): span#tncurrent.tn-current cut 91px (overflow-x:hidden)
+        CLIPPED (content lost): div cut 90px (overflow-x:hidden)
+    sys     doc overflow:   0px with the clip ON (the lie) |   0px with it OFF (the truth)
+        overflows by  644px: button  "30-SecondOPEN & CLOSE"
+        overflows by  629px: span  "30-Second"
+        CLIPPED (content lost): span#tncurrent.tn-current cut 91px (overflow-x:hidden)
+        CLIPPED (content lost): div cut 90px (overflow-x:hidden)
+    num     doc overflow:   0px with the clip ON (the lie) |   0px with it OFF (the truth)
+        overflows by  644px: button  "30-SecondOPEN & CLOSE"
+        overflows by  629px: span  "30-Second"
+        overflows by  444px: button.on.seen  "NumbersESTIMATE"
+        CLIPPED (content lost): span#tncurrent.tn-current cut 91px (overflow-x:hidden)
+        CLIPPED (content lost): div cut 90px (overflow-x:hidden)
+
+  ---- 360px ----
+    walk    doc overflow:   0px with the clip ON (the lie) |   0px with it OFF (the truth)
+        overflows by  604px: button  "30-SecondOPEN & CLOSE"
+        overflows by  589px: span  "30-Second"
+        CLIPPED (content lost): div cut 90px (overflow-x:hidden)
+        CLIPPED (content lost): span#tncurrent.tn-current cut 51px (overflow-x:hidden)
+        CLIPPED (content lost): deep-walkthrough >>> button.arc-step cut 30px (overflow-x:hidden)
+        CLIPPED (content lost): deep-walkthrough >>> button.arc-step cut 22px (overflow-x:hidden)
+    drill   doc overflow:   0px with the clip ON (the lie) |   0px with it OFF (the truth)
+        overflows by  604px: button  "30-SecondOPEN & CLOSE"
+        overflows by  589px: span  "30-Second"
+        CLIPPED (content lost): div cut 90px (overflow-x:hidden)
+        CLIPPED (content lost): span#tncurrent.tn-current cut 51px (overflow-x:hidden)
+        CLIPPED (content lost): deep-drill >>> span.dn-t cut 19px (overflow-x:hidden)
+        CLIPPED (content lost): deep-drill >>> span.dn-t cut 19px (overflow-x:hidden)
+    wb      doc overflow:   0px with the clip ON (the lie) |   0px with it OFF (the truth)
+        overflows by  604px: button  "30-SecondOPEN & CLOSE"
+        overflows by  589px: span  "30-Second"
+        CLIPPED (content lost): div cut 90px (overflow-x:hidden)
+        CLIPPED (content lost): span#tncurrent.tn-current cut 51px (overflow-x:hidden)
+    sys     doc overflow:   0px with the clip ON (the lie) |   0px with it OFF (the truth)
+        overflows by  604px: button  "30-SecondOPEN & CLOSE"
+        overflows by  589px: span  "30-Second"
+        CLIPPED (content lost): div cut 90px (overflow-x:hidden)
+        CLIPPED (content lost): span#tncurrent.tn-current cut 51px (overflow-x:hidden)
+    num     doc overflow:   0px with the clip ON (the lie) |   0px with it OFF (the truth)
+        overflows by  604px: button  "30-SecondOPEN & CLOSE"
+        overflows by  589px: span  "30-Second"
+        overflows by  404px: button.on.seen  "NumbersESTIMATE"
+        CLIPPED (content lost): div cut 90px (overflow-x:hidden)
+        CLIPPED (content lost): span#tncurrent.tn-current cut 51px (overflow-x:hidden)
+
+  ---- 390px ----
+    walk    doc overflow:   0px with the clip ON (the lie) |   0px with it OFF (the truth)
+        overflows by  574px: button  "30-SecondOPEN & CLOSE"
+        overflows by  559px: span  "30-Second"
+        CLIPPED (content lost): div cut 90px (overflow-x:hidden)
+        CLIPPED (content lost): span#tncurrent.tn-current cut 21px (overflow-x:hidden)
+        CLIPPED (content lost): deep-walkthrough >>> button.arc-step cut 20px (overflow-x:hidden)
+        CLIPPED (content lost): deep-walkthrough >>> button.arc-step cut 12px (overflow-x:hidden)
+    drill   doc overflow:   0px with the clip ON (the lie) |   0px with it OFF (the truth)
+        overflows by  574px: button  "30-SecondOPEN & CLOSE"
+        overflows by  559px: span  "30-Second"
+        CLIPPED (content lost): div cut 90px (overflow-x:hidden)
+        CLIPPED (content lost): span#tncurrent.tn-current cut 21px (overflow-x:hidden)
+        CLIPPED (content lost): deep-drill >>> span.dn-t cut 9px (overflow-x:hidden)
+        CLIPPED (content lost): deep-drill >>> span.dn-t cut 9px (overflow-x:hidden)
+    wb      doc overflow:   0px with the clip ON (the lie) |   0px with it OFF (the truth)
+        overflows by  574px: button  "30-SecondOPEN & CLOSE"
+        overflows by  559px: span  "30-Second"
+        CLIPPED (content lost): div cut 90px (overflow-x:hidden)
+        CLIPPED (content lost): span#tncurrent.tn-current cut 21px (overflow-x:hidden)
+    sys     doc overflow:   0px with the clip ON (the lie) |   0px with it OFF (the truth)
+        overflows by  574px: button  "30-SecondOPEN & CLOSE"
+        overflows by  559px: span  "30-Second"
+        CLIPPED (content lost): div cut 90px (overflow-x:hidden)
+        CLIPPED (content lost): span#tncurrent.tn-current cut 21px (overflow-x:hidden)
+    num     doc overflow:   0px with the clip ON (the lie) |   0px with it OFF (the truth)
+        overflows by  574px: button  "30-SecondOPEN & CLOSE"
+        overflows by  559px: span  "30-Second"
+        overflows by  374px: button.on.seen  "NumbersESTIMATE"
+        CLIPPED (content lost): div cut 90px (overflow-x:hidden)
+        CLIPPED (content lost): span#tncurrent.tn-current cut 21px (overflow-x:hidden)
+
+  ---- 430px ----
+    walk    doc overflow:   0px with the clip ON (the lie) |   0px with it OFF (the truth)
+        overflows by  534px: button  "30-SecondOPEN & CLOSE"
+        overflows by  519px: span  "30-Second"
+        CLIPPED (content lost): div cut 90px (overflow-x:hidden)
+        CLIPPED (content lost): deep-walkthrough >>> button.arc-step cut 6px (overflow-x:hidden)
+    drill   doc overflow:   0px with the clip ON (the lie) |   0px with it OFF (the truth)
+        overflows by  534px: button  "30-SecondOPEN & CLOSE"
+        overflows by  519px: span  "30-Second"
+        CLIPPED (content lost): div cut 90px (overflow-x:hidden)
+    wb      doc overflow:   0px with the clip ON (the lie) |   0px with it OFF (the truth)
+        overflows by  534px: button  "30-SecondOPEN & CLOSE"
+        overflows by  519px: span  "30-Second"
+        CLIPPED (content lost): div cut 90px (overflow-x:hidden)
+    sys     doc overflow:   0px with the clip ON (the lie) |   0px with it OFF (the truth)
+        overflows by  534px: button  "30-SecondOPEN & CLOSE"
+        overflows by  519px: span  "30-Second"
+        CLIPPED (content lost): div cut 90px (overflow-x:hidden)
+    num     doc overflow:   0px with the clip ON (the lie) |   0px with it OFF (the truth)
+        overflows by  534px: button  "30-SecondOPEN & CLOSE"
+        overflows by  519px: span  "30-Second"
+        overflows by  334px: button.on.seen  "NumbersESTIMATE"
+        CLIPPED (content lost): div cut 90px (overflow-x:hidden)
+
+  TOTAL true document overflow across all widths x panes: 0px
+  VERDICT: PASS -- with the concealer REMOVED the layout genuinely does not overflow.
+

@@ -1,0 +1,80 @@
+
+============ HIGH-2: DOES THE SOLID TILE STILL FILL IN FORCED-COLORS? ============
+
+  Driving the REAL drill state machine (#adv -> #jg), never stamping a class on.
+
+  mode              state        SOLID tile bg      REVISIT tile bg    distance
+  --------------------------------------------------------------------------
+  normal          Solid=0    [  255,255,254] [  255,255,254]        0
+  normal          Solid=3    [    29,111,63] [  255,255,254]   329.08  <- FILLS
+  forced-colors   Solid=0    [  255,255,255] [  255,255,255]        0
+  forced-colors   Solid=3    [     55,0,110] [  255,255,255]   355.04  <- FILLS
+
+  [negative control] an UNGRADED board must read distance ~0 (the detector is not
+                     hallucinating a fill): normal 0, forced-colors 0 -> OK
+
+  RESULT: normal        329.08  (was 551 before -- unchanged, the design still works)
+          forced-colors 355.04  (was 0 before -- the fill was STRIPPED)  -> THE FILL SURVIVES
+
+
+============ SERIOUS-5: THE DRILL SCOREBOARD ZERO STATE ============
+
+  The state EVERY user opens the drill in: Solid 0, Revisit 0.
+  Contrast decoded from PAINTED PIXELS over the glyph core (getComputedStyle returns
+  n/a on these gradients). Calibrated in 00-calibrate.mjs: FAILS 4.48, PASSES 4.54.
+
+  room                       theme  node              text      ratio  floor  verdict
+  --------------------------------------------------------------------------------
+  messaging-events           light  pill .v (value)   "0"          4.54     3   PASS
+  messaging-events           light  pill .v (value)   "0"          4.52     3   PASS
+  messaging-events           light  pill .l (label)   "Solid"      4.93   4.5   PASS
+  messaging-events           light  pill .l (label)   "Revisit"    4.93   4.5   PASS
+  messaging-events           dark   pill .v (value)   "0"          5.63     3   PASS
+  messaging-events           dark   pill .v (value)   "0"          5.63     3   PASS
+  messaging-events           dark   pill .l (label)   "Solid"      5.94   4.5   PASS
+  messaging-events           dark   pill .l (label)   "Revisit"    5.94   4.5   PASS
+  data-storage               light  pill .v (value)   "0"          4.54     3   PASS
+  data-storage               light  pill .v (value)   "0"          4.52     3   PASS
+  data-storage               light  pill .l (label)   "Solid"      4.93   4.5   PASS
+  data-storage               light  pill .l (label)   "Revisit"    4.93   4.5   PASS
+  data-storage               dark   pill .v (value)   "0"          5.63     3   PASS
+  data-storage               dark   pill .v (value)   "0"          5.63     3   PASS
+  data-storage               dark   pill .l (label)   "Solid"      5.94   4.5   PASS
+  data-storage               dark   pill .l (label)   "Revisit"    5.94   4.5   PASS
+  reliability-observability  light  pill .v (value)   "0"          4.54     3   PASS
+  reliability-observability  light  pill .v (value)   "0"          4.52     3   PASS
+  reliability-observability  light  pill .l (label)   "Solid"      4.93   4.5   PASS
+  reliability-observability  light  pill .l (label)   "Revisit"    4.93   4.5   PASS
+  reliability-observability  dark   pill .v (value)   "0"          5.63     3   PASS
+  reliability-observability  dark   pill .v (value)   "0"          5.63     3   PASS
+  reliability-observability  dark   pill .l (label)   "Solid"      5.94   4.5   PASS
+  reliability-observability  dark   pill .l (label)   "Revisit"    5.94   4.5   PASS
+  platform-infra             light  pill .v (value)   "0"          4.54     3   PASS
+  platform-infra             light  pill .v (value)   "0"          4.52     3   PASS
+  platform-infra             light  pill .l (label)   "Solid"      4.93   4.5   PASS
+  platform-infra             light  pill .l (label)   "Revisit"    4.91   4.5   PASS
+  platform-infra             dark   pill .v (value)   "0"          5.63     3   PASS
+  platform-infra             dark   pill .v (value)   "0"          5.63     3   PASS
+  platform-infra             dark   pill .l (label)   "Solid"      5.94   4.5   PASS
+  platform-infra             dark   pill .l (label)   "Revisit"    5.94   4.5   PASS
+  architecture-apis          light  pill .v (value)   "0"          4.54     3   PASS
+  architecture-apis          light  pill .v (value)   "0"          4.54     3   PASS
+  architecture-apis          light  pill .l (label)   "Solid"      4.93   4.5   PASS
+  architecture-apis          light  pill .l (label)   "Revisit"    4.93   4.5   PASS
+  architecture-apis          dark   pill .v (value)   "0"          5.62     3   PASS
+  architecture-apis          dark   pill .v (value)   "0"          5.63     3   PASS
+  architecture-apis          dark   pill .l (label)   "Solid"      5.94   4.5   PASS
+  architecture-apis          dark   pill .l (label)   "Revisit"    5.94   4.5   PASS
+  security-tenancy           light  pill .v (value)   "0"          4.54     3   PASS
+  security-tenancy           light  pill .v (value)   "0"          4.52     3   PASS
+  security-tenancy           light  pill .l (label)   "Solid"      4.93   4.5   PASS
+  security-tenancy           light  pill .l (label)   "Revisit"    4.91   4.5   PASS
+  security-tenancy           dark   pill .v (value)   "0"          5.63     3   PASS
+  security-tenancy           dark   pill .v (value)   "0"          5.63     3   PASS
+  security-tenancy           dark   pill .l (label)   "Solid"      5.94   4.5   PASS
+  security-tenancy           dark   pill .l (label)   "Revisit"    5.94   4.5   PASS
+
+  48 of 48 zero-state nodes clear their WCAG floor. Worst: 4.52
+
+  VERDICT: PASS -- the fill survives forced-colors AND every zero-state node clears AA.
+

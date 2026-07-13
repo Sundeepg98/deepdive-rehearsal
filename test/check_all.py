@@ -175,6 +175,31 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # on the pre-fix build before it was committed. A check that has never failed
                      # is not a check.
                      ('overlay_deadzone', 'test/overlay_deadzone.cjs'),
+                     # overlay_keyboard: overlay_deadzone above tests Escape, hit-testing and focus
+                     # RESTORE -- and never once presses Enter on a button. An audit built on those
+                     # questions certified these overlays "10/10, no defects" with two WCAG 2.1.1
+                     # defects underneath it:
+                     #   (1) Enter on the mock run's OWN close button did not close it. Its keydown
+                     #       gated on "is the overlay open" and preventDefault()-ed Enter, so the key
+                     #       fired #mbnext AND was suppressed on the focused button. Same disease as
+                     #       the drill's "gate on the pane, never on focus".
+                     #   (2) THE FOCUS TRAP WAS SHADOW-BLIND. Every dialog hosts its body in a shadow
+                     #       root, and shell.js's getFocusable() used querySelectorAll, which does not
+                     #       cross one -- so for mock/session/mixed-fire/keyboard it returned exactly
+                     #       ONE element (the close button), first === last, and every Tab was bounced
+                     #       back onto it. MEASURED: 1 distinct tab stop across 8 presses. The session
+                     #       tracker's <input>/<textarea>/Copy/Compare, the mock's Reveal/Next and its
+                     #       whole end-screen score row were UNREACHABLE BY KEYBOARD.
+                     # It also pins the reopen race it uncovered: ovShow() cancelled ovHide()'s
+                     # fallback timer but not its animationend listener, so reopening ANY overlay made
+                     # it close itself 446-700ms later with no user action.
+                     # Drives TRUSTED keys only (a synthetic Enter does not reproduce native button
+                     # activation, so it would have passed on the broken build) and reads focus THROUGH
+                     # the shadow boundary (document.activeElement stops at the host and reports that
+                     # focus never moves). Asserts the ring against the TRUE focusable set, not a
+                     # threshold -- the keyboard overlay legitimately has one control. All five
+                     # mechanisms were reverted one at a time and watched going red. ~2m.
+                     ('overlay_keyboard', 'test/overlay_keyboard.cjs'),
                      # room wired at boot (data-group + --topic-ink + --acc rebind) AND the
                      # blank-page class of bug cannot recur (reduced-motion still RENDERS,
                      # both themes). The two things a grep cannot see. (Phase 6)

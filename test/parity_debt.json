@@ -1,13 +1,1 @@
-{
-  "slos::bank.curveballs": 7,
-  "multi-region::sys.pivots": 6,
-  "multi-region::sys.pivotAnswers": 6,
-  "multi-region::model.answers": 6,
-  "multi-region::model.beats": 42,
-  "multi-region::walk.steps": 8,
-  "multi-region::wb.steps": 8,
-  "multi-region::trade.decisions": 6,
-  "multi-region::rf.flags": 8,
-  "multi-region::bank.curveballs": 7,
-  "rules-engine::bank.curveballs": 7
-}
+{}

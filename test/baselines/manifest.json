@@ -23,7 +23,7 @@
         "channelTol": 2,
         "maxChanged": 32
       },
-      "generated": "2026-07-13T07:03:42.141Z",
+      "generated": "2026-07-13T11:03:19.282Z",
       "baselines": {
         "home-light": {
           "file": "home-light-win32-chromium149.png",
@@ -47,7 +47,7 @@
           "file": "walk-light-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "0df8f349ce62dd21",
+          "sha256": "09015602d2e4b20f",
           "hash": "#event-driven/walk",
           "theme": "light",
           "vp": "desktop"
@@ -65,7 +65,7 @@
           "file": "drill-light-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "d95849b9dd4a3847",
+          "sha256": "6347bc84b651586d",
           "hash": "#event-driven/drill",
           "theme": "light",
           "vp": "desktop"
@@ -74,7 +74,7 @@
           "file": "drill-dark-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "593cfd23594ff831",
+          "sha256": "a09ec8d680794e20",
           "hash": "#event-driven/drill",
           "theme": "dark",
           "vp": "desktop"
@@ -83,7 +83,7 @@
           "file": "sys-light-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "6539394569e9c06f",
+          "sha256": "eae0964d665b0dca",
           "hash": "#event-driven/sys",
           "theme": "light",
           "vp": "desktop"
@@ -92,7 +92,7 @@
           "file": "num-light-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "dc8671181d027728",
+          "sha256": "cd7a63e33b08ecd0",
           "hash": "#event-driven/num",
           "theme": "light",
           "vp": "desktop"
@@ -101,7 +101,7 @@
           "file": "wb-light-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "661764aa4a61e70e",
+          "sha256": "de1dadf28a24895a",
           "hash": "#event-driven/wb",
           "theme": "light",
           "vp": "desktop"
@@ -110,7 +110,7 @@
           "file": "room-data-storage-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "c223ea76c38b9d73",
+          "sha256": "b952045f4293784b",
           "hash": "#caching/walk",
           "theme": "light",
           "vp": "desktop"
@@ -119,7 +119,7 @@
           "file": "room-reliability-observability-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "0847025e45c22424",
+          "sha256": "aee04fa5077a846d",
           "hash": "#retries-timeouts/walk",
           "theme": "light",
           "vp": "desktop"
@@ -128,7 +128,7 @@
           "file": "room-platform-infra-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "332dc03c21df3446",
+          "sha256": "4ee89adab84b6436",
           "hash": "#iac/walk",
           "theme": "light",
           "vp": "desktop"
@@ -137,7 +137,7 @@
           "file": "room-architecture-apis-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "5693dee0bbda7ee9",
+          "sha256": "84d225a0f1e25815",
           "hash": "#state-machine/walk",
           "theme": "light",
           "vp": "desktop"
@@ -146,7 +146,7 @@
           "file": "room-security-tenancy-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "3b6556b408f8bc93",
+          "sha256": "df160f6a25ebaa69",
           "hash": "#signing/walk",
           "theme": "light",
           "vp": "desktop"

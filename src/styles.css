@@ -80,7 +80,7 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
     --indigo:#4338CA; --indigobg:#ECEBFB;
     --code:#2A2740; --codeink:#E7E4F5;
     /* system-map theme-flip tokens (inherit across the shadow boundary) */
-    --sm-line:#E0DBD1; --sm-dot-bg:#F0ECE4; --sm-card-bg:#FCFBF9; --sm-pa-fg:#4a463f; --sm-here-fg:#fff; --sm-cur-dot-bg:var(--acc); --op-hooks-bg:#FBFAF7; --op-foot-bg:#F1EEFB; --op-foot-fg:#46423b; --disc-bg:#FCFBF9; --disc-body-fg:#4a463f; --wb-foot-bg:#F1EEFB; --wb-foot-fg:#46423b; --wb-li-bd:#EFEAE1; --wb-ok-fg:#0a5240; --wb-ok-b-fg:#0a5240; --wb-warn-fg:#5e3c0a; --opt-n-bd:#dcd6f5; --dec-tell-b-fg:#0a5240; --fb-n-bg:#F7F4EE; --fb-n-fg:#3a372f; --fb-t-fg:#0a5240; --fb-r-fg:#7e2020; --fb-a-fg:#6a3f08; --ins-bg:#F5F2EC; --ins-fg:#46423b; --mq-bg:#F0ECE4; --dots-i-bg:#DCD7CD; --dots-on-bg:var(--acc); --dots-done-bg:var(--acc2); --thread-bg:linear-gradient(180deg,#fff,#FBFAFF); --ans-bg:#F4F1FB; --fa-bg:#FBF6EE; --ans-fg:#3c3830; --fa-b-fg:#7a4708; --senior-bd:#bfe0d4; --senior-fg:#0c4f3d; --speak-fg:#3a2e86; --push-fg:#fff; --judge-btn-bg:#fff; --modetog-bg:#F0ECE4; --modetog-bd:var(--bd); --modetog-hover-bg:var(--acc2-a10); --dbar-bg:#ECE8E0; --btnsec-hover-bg:#dcefe6; --sigrow-bd:#EFEAE1; --codecap-fg:#4a463f; --code-inline-bg:#F0EDE6; --ninp-bd:#d8d2f3;--cs30-bg:#FBFAF7;--cram-code-bg:#F1EFFB;--ss-card-bg:#FCFBF8;--ss-carry-bg:#fbfaf7;--ss-code-bd:#d8d3f2;--ss-go-fg:#fff;--ss-btn-bg:#fff;--mxb-curve-bg:#FBEDE4;--mxb-trade-fg:var(--teal);--mb-next-fg:#fff;--mb-cv-bd:#d6d2f3;--mb-intq-fg:#7d2222;--mb-irev-bg:#fff;--mb-irev-bd:#e0b9b4;
+    --sm-line:#E0DBD1; --sm-dot-bg:#F0ECE4; --sm-card-bg:#FCFBF9; --sm-pa-fg:#4a463f; --sm-here-fg:var(--on-slab); --sm-cur-dot-bg:var(--acc); --op-hooks-bg:#FBFAF7; --op-foot-bg:#F1EEFB; --op-foot-fg:#46423b; --disc-bg:#FCFBF9; --disc-body-fg:#4a463f; --wb-foot-bg:#F1EEFB; --wb-foot-fg:#46423b; --wb-li-bd:#EFEAE1; --wb-ok-fg:#0a5240; --wb-ok-b-fg:#0a5240; --wb-warn-fg:#5e3c0a; --opt-n-bd:#dcd6f5; --dec-tell-b-fg:#0a5240; --fb-n-bg:#F7F4EE; --fb-n-fg:#3a372f; --fb-t-fg:#0a5240; --fb-r-fg:#7e2020; --fb-a-fg:#6a3f08; --ins-bg:#F5F2EC; --ins-fg:#46423b; --mq-bg:#F0ECE4; --dots-i-bg:#DCD7CD; --dots-on-bg:var(--acc); --dots-done-bg:var(--acc2); --thread-bg:linear-gradient(180deg,#fff,#FBFAFF); --ans-bg:#F4F1FB; --fa-bg:#FBF6EE; --ans-fg:#3c3830; --fa-b-fg:#7a4708; --senior-bd:#bfe0d4; --senior-fg:#0c4f3d; --speak-fg:#3a2e86; --push-fg:var(--on-slab); --judge-btn-bg:#fff; --modetog-bg:#F0ECE4; --modetog-bd:var(--bd); --modetog-hover-bg:var(--acc2-a10); --dbar-bg:#ECE8E0; --btnsec-hover-bg:#dcefe6; --sigrow-bd:#EFEAE1; --codecap-fg:#4a463f; --code-inline-bg:#F0EDE6; --ninp-bd:#d8d2f3;--cs30-bg:#FBFAF7;--cram-code-bg:#F1EFFB;--ss-card-bg:#FCFBF8;--ss-carry-bg:#fbfaf7;--ss-code-bd:#d8d3f2;--ss-go-fg:var(--on-slab);--ss-btn-bg:#fff;--mxb-curve-bg:#FBEDE4;--mxb-trade-fg:var(--teal);--mb-next-fg:var(--on-slab);--mb-cv-bd:#d6d2f3;--mb-intq-fg:#7d2222;--mb-irev-bg:#fff;--mb-irev-bd:#e0b9b4;
 
     /* ===== THE ACCENT ALPHA RAMP -- and why it is the whole schedule =====
        226 hardcoded indigo rgba() literals were spread across 20 files, two-thirds of them
@@ -126,15 +126,57 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
      are the one thing that crosses the shadow boundary. data-group is stamped on
      <html> at boot (index.html) AND on every switch (topic-protocol.js
      applyIdentity), so the very first paint is already a room. The verdict hues
-     (--teal / --red / --amber) are NEVER a room. Every value is contrast-solved:
-     ink >= 6.0 on --bg (light) and >= 7.5 on --bg (dark); white >= 4.5 on --solid.
-     Enforced by test/check_all.py (room_contract wires it, room_contrast proves it). */
+     (--teal / --red / --amber) are NEVER a room. Every value is contrast-solved. MEASURED, not
+     claimed: ink/bg is 5.89-6.07 (light) and 7.89-8.17 (dark); the ON-SLAB INK on --solid is
+     5.18-5.23 (light) and 7.29-7.55 (dark). Floors: ink/bg >= 4.5, on-slab/solid >= 5.0.
+     Enforced by test/check_all.py (room_contract wires it, room_contrast proves it).
+     (This block used to claim "ink >= 6.0 (light)". security-tenancy is 5.89 and always was --
+     a round number someone liked, sitting one line above the values that disagreed with it.)
+
+     WHY THE ON-SLAB FLOOR IS 5.0 AND NOT AA's 4.5.
+     --topic-solid is the BRIGHT end of `linear-gradient(135deg, var(--acc), var(--acc2))` --
+     the paint under every primary CTA in the app (.mockbtn "Mock run", .push "Reveal answer",
+     and the .arc-n / .dn-n / .num / .dot step chips). The six solids were previously solved to
+     the bare AA minimum and landed at 4.51-4.53; the RENDERED result was a CTA whose worst glyph
+     measured 4.77:1 -- passing, by 0.27. A floor you are permanently within 6% of is not a
+     floor, it is a coincidence, and the next hue nudge spends it.
+
+     THE FLOOR IS THE BRIGHT ENDPOINT -- PROVABLE, NOT HOPEFUL.
+     CSS interpolates a legacy linear-gradient in gamma-encoded sRGB, and sRGB->linear is CONVEX.
+     By Jensen's inequality every interior colour of the gradient therefore has a LOWER relative
+     luminance than the linear interpolation of its endpoints: it is darker than the average, so
+     it carries MORE contrast against white, never less. The minimum over the whole slab is
+     consequently reached AT AN ENDPOINT, and the brighter endpoint is --topic-solid. Hold
+     white-on-solid at 5.0 and EVERY glyph on EVERY gradient CTA in the app clears 5.0 for free.
+     (test/cta_contrast.cjs still decodes the pixels. The proof says where to look; it is not a
+     substitute for looking.)
+
+     The six solids below were re-solved by scaling each in LINEAR LIGHT -- multiply all three
+     linear-RGB channels by one constant k. In CIE terms that is (X,Y,Z) -> k(X,Y,Z): it preserves
+     CHROMATICITY EXACTLY and scales luminance by k. It is, literally, the same colour dimmed.
+     MEASURED, so the claim is checkable rather than flattering:
+       CIE xy chromaticity drift  <= 0.0009   (8-bit rounding, nothing else)
+       hue shift (OKLCH)          <= 0.17 deg
+       min pairwise hue gap        31.3 -> 31.5 deg   (the closest pair, arch vs security: it
+                                                       marginally IMPROVES; nothing crowds)
+       OKLCH lightness             -3.4 pts,  chroma  -5.2% mean / -6.1% worst
+     That chroma drop is NOT an accident to be apologised for -- it is arithmetic: at fixed
+     chromaticity, chroma scales with lightness, so you cannot buy contrast against white without
+     spending exactly that much. What you must not spend is HUE, and hue is what this transform
+     buys you for free. (An earlier draft of this comment claimed "saturation untouched". A naive
+     HLS read says -14.6pp for data-storage and that reading is not wrong so much as meaningless --
+     HLS S is computed on gamma-encoded bytes and is not a perceptual quantity. The honest numbers
+     are the ones above. A comment that flatters the change it describes is how the scoreboard two
+     files over ended up claiming it tracked a score it had never tracked.)
+     Measured white-on-solid: 4.51-5.03 -> 5.18-5.23.
+     DARK is a SEPARATE declaration and was NOT touched: there --topic-solid is a light tint, and
+     the ink that sits on it is --on-slab's near-black (see --on-slab). */
   html{--topic-ink:#534AB7;--topic-solid:#534AB7;--topic-wash:#EFEDFA;--topic-edge:#CFC7F0}
-  html[data-group="messaging-events"]         {--topic-ink:#006B63;--topic-solid:#00857A;--topic-wash:#ECF9F7;--topic-edge:#AFE4DC}
-  html[data-group="data-storage"]             {--topic-ink:#315BB4;--topic-solid:#316EF3;--topic-wash:#F1F6FF;--topic-edge:#C5D8FD}
-  html[data-group="reliability-observability"]{--topic-ink:#924E00;--topic-solid:#B46100;--topic-wash:#FDF4ED;--topic-edge:#F4CFB4}
-  html[data-group="platform-infra"]           {--topic-ink:#694EB0;--topic-solid:#8659EC;--topic-wash:#F6F4FF;--topic-edge:#D8D1F9}
-  html[data-group="architecture-apis"]        {--topic-ink:#963D86;--topic-solid:#C53DAF;--topic-wash:#FCF2FA;--topic-edge:#EFCAE6}
+  html[data-group="messaging-events"]         {--topic-ink:#006B63;--topic-solid:#007A70;--topic-wash:#ECF9F7;--topic-edge:#AFE4DC}
+  html[data-group="data-storage"]             {--topic-ink:#315BB4;--topic-solid:#2C65E0;--topic-wash:#F1F6FF;--topic-edge:#C5D8FD}
+  html[data-group="reliability-observability"]{--topic-ink:#924E00;--topic-solid:#A65900;--topic-wash:#FDF4ED;--topic-edge:#F4CFB4}
+  html[data-group="platform-infra"]           {--topic-ink:#694EB0;--topic-solid:#7B51DA;--topic-wash:#F6F4FF;--topic-edge:#D8D1F9}
+  html[data-group="architecture-apis"]        {--topic-ink:#963D86;--topic-solid:#B537A1;--topic-wash:#FCF2FA;--topic-edge:#EFCAE6}
   /* security-tenancy was FIRE-ENGINE RED (ink #AA3832 / solid #E0322E, 1.3deg off pure red).
      Its primary CTA -- "Reveal answer" -- rendered as a saturated red slab, which reads as
      DESTRUCTIVE: the universal delete/danger signal, on the one button you most want people
@@ -142,8 +184,11 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
      magenta are all placed), so the only free arc is magenta->red->orange; this sits at the
      rose end of it, 19deg clear of pure red. It is not a compromise on either contract:
      the min hue gap to another room IMPROVES (21.0deg -> 32.8deg, vs reliability in dark),
-     and white-on-solid goes from a knife-edge 4.50 to 5.03. See _audit/.../palette.py. */
-  html[data-group="security-tenancy"]         {--topic-ink:#A73A57;--topic-solid:#C53A66;--topic-wash:#FFF1F5;--topic-edge:#F6C6D4}
+     and white-on-solid goes from a knife-edge 4.50 to 5.03. See _audit/.../palette.py.
+     (Its solid then took the same linear-light deepening as the other five -- #C53A66 -> #C13964,
+     5.03 -> 5.20 -- so all six now sit in one band instead of five-at-4.5 plus one outlier. It
+     barely moved because it was the only one already solved above the AA minimum.) */
+  html[data-group="security-tenancy"]         {--topic-ink:#A73A57;--topic-solid:#C13964;--topic-wash:#FFF1F5;--topic-edge:#F6C6D4}
   html[data-theme="dark"][data-group="messaging-events"]         {--topic-ink:#13BAAC;--topic-solid:#13BAAC;--topic-wash:#142422;--topic-edge:#24514B}
   html[data-theme="dark"][data-group="data-storage"]             {--topic-ink:#7DA6F3;--topic-solid:#7DA6F3;--topic-wash:#1B212B;--topic-edge:#394863}
   html[data-theme="dark"][data-group="reliability-observability"]{--topic-ink:#E19556;--topic-solid:#E19556;--topic-wash:#291E16;--topic-edge:#5C412C}
@@ -153,6 +198,34 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
 
   /* --acc BECOMES the room's ink; --acc2 the room's solid; --accbg the wash. */
   html{--acc:var(--topic-ink);--acc2:var(--topic-solid);--accbg:var(--topic-wash);--accink:color-mix(in oklab,var(--topic-ink) 82%,var(--ink))}
+
+  /* ===================== --on-slab: THE INK THAT SITS ON A SLAB =====================
+     EVERY colour this app fills a slab with INVERTS ITS LIGHTNESS between the two themes.
+     --acc / --acc2 (the room), and --teal / --red / --amber / --indigo (the verdicts), are all
+     DARK hues in light and LIGHT tints in dark -- they have to be, because each must stay legible
+     against its own background. A literal `color:#fff` on top of one is therefore correct in
+     exactly ONE theme and a hard AA failure in the other, and nothing about the rule looks wrong.
+
+     26 rules hardcoded `color:#fff`. 25 of them sat on a flipping slab. MEASURED IN DARK, by
+     decoding the rendered pixels (test/cta_contrast.cjs): white on the drill-nav chip .dn-n came
+     in at 2.35-2.44:1 across the six rooms. Not a thin margin -- roughly HALF the AA floor, and
+     it shipped. Same for the walkthrough's current-step chip, the system map's current-stage dot,
+     the whiteboard's covered-point number, the debrief's verdict marks, and ::selection itself.
+     Every one of them is a "YOU ARE HERE" marker, which is the exact class of element you least
+     want unreadable.
+
+     Four tokens already did this correctly and independently -- --push-fg, --ss-go-fg,
+     --mb-next-fg, --sm-here-fg -- all four with the identical pair of values. Four names for one
+     idea, and the rules that did not happen to reach for one of them got white and got it wrong.
+     So the idea gets ONE name, and the four keep their names as aliases of it (a pure no-op: same
+     computed value, both themes, no consumer changes).
+
+     THE CONTRACT: a background built from a theme-flipping token takes var(--on-slab), never a
+     literal. Enforced by test/slab_ink.py -- a grep cannot see contrast, but it CAN see a literal
+     white on a var(--acc) background, which is the shape this bug has every single time.
+     Light: #fff on the dark hue (5.2-7.9:1). Dark: near-black on the light tint (7.3-7.6:1). */
+  html{--on-slab:#fff}
+  html[data-theme="dark"]{--on-slab:#1A1622}
 
   /* comfortable reading measure -- a ch value, so it lives here not in tokens.json.
      Caps PROSE line length (not the .card), which runs 100+ch today. 62-75ch is the target. */
@@ -272,7 +345,7 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
 .mb-sep{height:var(--space-1);background:var(--bd);opacity:.5;margin:var(--space-2) var(--space-8);flex:0 0 auto}
 .mb-sec{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.1em;text-transform:uppercase;color:var(--mut);padding:var(--space-7) var(--space-8) var(--space-1);margin-top:var(--space-3)}
 .mb-sec:first-child{margin-top:0;padding-top:var(--space-1)}
-  .mockbtn{display:flex;align-items:center;justify-content:center;gap:var(--space-9);width:100%;font:var(--font-weight-heavy) 13.5px -apple-system,sans-serif;letter-spacing:.2px;padding:var(--space-14) var(--space-16);border-radius:13px;border:0;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;cursor:pointer;transition:transform var(--duration-base) var(--ease-glide),box-shadow var(--duration-moderate) var(--ease-base);box-shadow:0 6px 18px var(--acc-a30),inset 0 1px 0 rgba(255,255,255,.14);position:relative;overflow:hidden}
+  .mockbtn{display:flex;align-items:center;justify-content:center;gap:var(--space-9);width:100%;font:var(--font-weight-heavy) 13.5px -apple-system,sans-serif;letter-spacing:.2px;padding:var(--space-14) var(--space-16);border-radius:13px;border:0;background:linear-gradient(135deg,var(--acc),var(--acc2));color:var(--on-slab);cursor:pointer;transition:transform var(--duration-base) var(--ease-glide),box-shadow var(--duration-moderate) var(--ease-base);box-shadow:0 6px 18px var(--acc-a30),inset 0 1px 0 rgba(255,255,255,.14);position:relative;overflow:hidden}
 .mockbtn::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);transform:translateX(-100%);transition:none}
 .mockbtn:hover::after{animation:btnShimmer var(--duration-slowest) var(--ease-base)}
 .mockbtn .mb-ic{font-size:var(--font-size-caption);flex:none;line-height:var(--line-height-none)}
@@ -304,7 +377,7 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
   .cram-top{display:flex;align-items:center;gap:var(--space-12);padding:var(--space-13) var(--space-18);border-bottom:1px solid var(--bd);background:var(--card);position:sticky;top:0;z-index:2}
   .cram-title{flex:1;font:var(--font-weight-heavy) 12px -apple-system,sans-serif;letter-spacing:.5px;text-transform:uppercase;color:var(--accink)}
   .cram-print{flex:none;font:var(--font-weight-bold) 11.5px -apple-system,sans-serif;padding:var(--space-6) var(--space-14);border-radius:8px;border:1px solid #cfc7f0;background:var(--accbg);color:var(--accink);cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),background var(--duration-base) var(--ease-base),color var(--duration-base) var(--ease-base),border-color var(--duration-base) var(--ease-base),box-shadow var(--duration-base) var(--ease-base)}
-  .cram-print:hover{background:var(--acc);color:#fff;border-color:var(--acc);transform:translateY(-1px);box-shadow:0 4px 12px -3px var(--acc-a20)}
+  .cram-print:hover{background:var(--acc);color:var(--on-slab);border-color:var(--acc);transform:translateY(-1px);box-shadow:0 4px 12px -3px var(--acc-a20)}
   .cram-body{padding:var(--space-18) var(--space-20) var(--space-24);overflow-y:auto;flex:1;min-height:0}
 
   /* session progress */
@@ -363,9 +436,9 @@ html[data-theme="dark"]{
   --teal:#4FCDAB; --tealbg:#143028; --red:#F08A8A; --redbg:#3A2020;
   --amber:#E5A24A; --amberbg:#352712; --indigo:#9D93F0; --indigobg:#24223C;
   --code:#15131D; --codeink:#E7E4F5;
-  --sm-line:#3A3642; --sm-dot-bg:#2A2730; --sm-card-bg:#262430; --sm-pa-fg:#C7C2BA; --sm-here-fg:#1A1622; --sm-cur-dot-bg:var(--topic-solid); --op-hooks-bg:#262430; --op-foot-bg:#2A2540; --op-foot-fg:#BAB4AA; --disc-bg:#262430; --disc-body-fg:#B2ACA2; --wb-foot-bg:#2A2540; --wb-foot-fg:#BAB4AA; --wb-li-bd:#322E3A; --wb-ok-fg:#5FD3B0; --wb-ok-b-fg:#8FE0C8; --wb-warn-fg:#E8BC78; --opt-n-bd:#3A3552; --dec-tell-b-fg:#8FE0C8; --fb-n-bg:#262430; --fb-n-fg:#DAD6CE; --fb-t-fg:#8FE0C8; --fb-r-fg:#F0A0A0; --fb-a-fg:#E8BC78; --ins-bg:#262430; --ins-fg:#BAB4AA; --mq-bg:#2A2730; /* DARK DOTS BUG FIX: all three step-states were #44404C -- the walkthrough progress dots
+  --sm-line:#3A3642; --sm-dot-bg:#2A2730; --sm-card-bg:#262430; --sm-pa-fg:#C7C2BA; --sm-here-fg:var(--on-slab); --sm-cur-dot-bg:var(--topic-solid); --op-hooks-bg:#262430; --op-foot-bg:#2A2540; --op-foot-fg:#BAB4AA; --disc-bg:#262430; --disc-body-fg:#B2ACA2; --wb-foot-bg:#2A2540; --wb-foot-fg:#BAB4AA; --wb-li-bd:#322E3A; --wb-ok-fg:#5FD3B0; --wb-ok-b-fg:#8FE0C8; --wb-warn-fg:#E8BC78; --opt-n-bd:#3A3552; --dec-tell-b-fg:#8FE0C8; --fb-n-bg:#262430; --fb-n-fg:#DAD6CE; --fb-t-fg:#8FE0C8; --fb-r-fg:#F0A0A0; --fb-a-fg:#E8BC78; --ins-bg:#262430; --ins-fg:#BAB4AA; --mq-bg:#2A2730; /* DARK DOTS BUG FIX: all three step-states were #44404C -- the walkthrough progress dots
    had NO state in dark. Current = the room solid; done = a faded room solid; todo = grey. */
---dots-i-bg:#44404C; --dots-on-bg:var(--topic-solid); --dots-done-bg:color-mix(in oklab,var(--topic-solid) 45%,transparent); --thread-bg:#262430; --ans-bg:#2A2540; --fa-bg:#2A2540; --ans-fg:#DAD6CE; --fa-b-fg:#E8BC78; --senior-bd:#2E5A4A; --senior-fg:#7FD9BE; --speak-fg:#CABFFB; --push-fg:#1A1622; --judge-btn-bg:#262430; --modetog-bg:#2A2730; --modetog-bd:#37333F; --modetog-hover-bg:rgba(170,157,245,.13); --dbar-bg:#211F28; --btnsec-hover-bg:#1A3A30; --sigrow-bd:#322E3A; --codecap-fg:#B2ACA2; --code-inline-bg:#2A2833; --ninp-bd:#3A3552;--cs30-bg:#262430;--cram-code-bg:#2C2740;--ss-card-bg:#262430;--ss-carry-bg:#262430;--ss-code-bd:#3A3552;--ss-go-fg:#1A1622;--ss-btn-bg:#262430;--mxb-curve-bg:#3A2814;--mxb-trade-fg:#B6ADE8;--mb-next-fg:#1A1622;--mb-cv-bd:#3A3552;--mb-intq-fg:#F0A0A0;--mb-irev-bg:#262430;--mb-irev-bd:#5A3A38;
+--dots-i-bg:#44404C; --dots-on-bg:var(--topic-solid); --dots-done-bg:color-mix(in oklab,var(--topic-solid) 45%,transparent); --thread-bg:#262430; --ans-bg:#2A2540; --fa-bg:#2A2540; --ans-fg:#DAD6CE; --fa-b-fg:#E8BC78; --senior-bd:#2E5A4A; --senior-fg:#7FD9BE; --speak-fg:#CABFFB; --push-fg:var(--on-slab); --judge-btn-bg:#262430; --modetog-bg:#2A2730; --modetog-bd:#37333F; --modetog-hover-bg:rgba(170,157,245,.13); --dbar-bg:#211F28; --btnsec-hover-bg:#1A3A30; --sigrow-bd:#322E3A; --codecap-fg:#B2ACA2; --code-inline-bg:#2A2833; --ninp-bd:#3A3552;--cs30-bg:#262430;--cram-code-bg:#2C2740;--ss-card-bg:#262430;--ss-carry-bg:#262430;--ss-code-bd:#3A3552;--ss-go-fg:var(--on-slab);--ss-btn-bg:#262430;--mxb-curve-bg:#3A2814;--mxb-trade-fg:#B6ADE8;--mb-next-fg:var(--on-slab);--mb-cv-bd:#3A3552;--mb-intq-fg:#F0A0A0;--mb-irev-bg:#262430;--mb-irev-bd:#5A3A38;
 }
 html[data-theme="dark"] body{background:var(--bg)}
 html[data-theme="dark"] ::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#3A3642,#2E2A38)}
@@ -782,7 +855,7 @@ button,.seg button,.dn-step,.pill,.card,.thread,.dec,.rf,.op,.piv,.tools-fab,.cr
 .pomodoro-time{font-family:var(--mono);font-size:var(--font-size-body);font-weight:var(--font-weight-bold);color:var(--ink)}
 .pomodoro-phase{font-size:var(--font-size-nano);font-weight:var(--font-weight-bold);letter-spacing:.4px;text-transform:uppercase;color:var(--mut2)}
 .pomodoro-btn{flex:none;border:0;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;line-height:var(--line-height-none)}
-.pomodoro-play{width:var(--space-28);height:var(--space-28);background:var(--teal);color:#fff;font-size:var(--font-size-caption);transition:filter var(--duration-base) var(--ease-base)}
+.pomodoro-play{width:var(--space-28);height:var(--space-28);background:var(--teal);color:var(--on-slab);font-size:var(--font-size-caption);transition:filter var(--duration-base) var(--ease-base)}
 .pomodoro-reset{width:var(--space-24);height:var(--space-24);background:var(--bd);color:var(--mut);font-size:var(--font-size-micro)}
 @media(hover:hover){.pomodoro-play:hover{filter:brightness(1.08)}}
 
@@ -791,7 +864,7 @@ button,.seg button,.dn-step,.pill,.card,.thread,.dec,.rf,.op,.piv,.tools-fab,.cr
 
 /* back-to-top: the work surface scrolls the window, so this floats over the stage (centre-bottom,
    clear of the left sidebar and the right companion on desktop) */
-.scrolltop{position:fixed;left:50%;bottom:var(--space-24);width:var(--space-44);height:var(--space-44);border-radius:50%;border:0;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;font-size:var(--font-size-heading);line-height:var(--line-height-none);cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px var(--acc-a30),0 0 0 1px var(--acc-a15);opacity:0;transform:translateX(-50%) translateY(16px) scale(.9);pointer-events:none;transition:opacity var(--duration-moderate) var(--ease-base),transform var(--duration-slow) var(--ease-glide);z-index:var(--z-sticky)}
+.scrolltop{position:fixed;left:50%;bottom:var(--space-24);width:var(--space-44);height:var(--space-44);border-radius:50%;border:0;background:linear-gradient(135deg,var(--acc),var(--acc2));color:var(--on-slab);font-size:var(--font-size-heading);line-height:var(--line-height-none);cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px var(--acc-a30),0 0 0 1px var(--acc-a15);opacity:0;transform:translateX(-50%) translateY(16px) scale(.9);pointer-events:none;transition:opacity var(--duration-moderate) var(--ease-base),transform var(--duration-slow) var(--ease-glide);z-index:var(--z-sticky)}
 .scrolltop.show{opacity:1;transform:translateX(-50%) translateY(0) scale(1);pointer-events:auto}
 @media(hover:hover){.scrolltop.show:hover{box-shadow:0 9px 26px var(--acc-a40),0 0 0 1px var(--acc-a25)}}
 
@@ -816,7 +889,7 @@ body.is-hidden,body.is-hidden *,body.is-hidden *::before,body.is-hidden *::after
 .tn-item:hover{background:var(--acc-a08)}
 .tn-item.on{background:var(--accbg)}
 .tn-i-idx{grid-row:1/3;align-self:center;display:flex;align-items:center;justify-content:center;width:var(--space-22);height:var(--space-22);border-radius:7px;background:var(--accbg);color:var(--acc);font-family:var(--mono);font-size:var(--font-size-micro);font-weight:var(--font-weight-heavy)}
-.tn-item.on .tn-i-idx{background:var(--acc);color:#fff}
+.tn-item.on .tn-i-idx{background:var(--acc);color:var(--on-slab)}
 .tn-i-name{font-size:var(--font-size-small);font-weight:var(--font-weight-bold);color:var(--ink);align-self:end}
 .tn-item.on .tn-i-name{color:var(--acc)}
 .tn-i-tail{font-size:var(--font-size-nano);color:var(--mut2);text-transform:uppercase;letter-spacing:.3px;align-self:start}
@@ -970,7 +1043,7 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
 .ix-io{font:var(--font-weight-semibold) 11px -apple-system,system-ui,sans-serif;color:var(--mut);background:transparent;border:1px solid var(--bd);border-radius:7px;padding:var(--space-5) var(--space-11);cursor:pointer;transition:color var(--duration-fast) var(--ease-base),border-color var(--duration-fast) var(--ease-base)}
 .ix-undo{position:fixed;left:50%;bottom:var(--space-24);transform:translateX(-50%) translateY(12px);z-index:var(--z-popup);display:none;align-items:center;gap:var(--space-14);padding:var(--space-11) var(--space-14) var(--space-11) var(--space-18);background:var(--ink);color:var(--card);border-radius:11px;box-shadow:0 12px 30px -8px rgba(20,18,40,.5);font-size:var(--font-size-caption);font-weight:var(--font-weight-medium);opacity:0;transition:opacity var(--duration-base) var(--ease-base),transform var(--duration-base) var(--ease-base)}
 .ix-undo.show{display:flex;opacity:1;transform:translateX(-50%) translateY(0)}
-.ix-undo-btn{border:0;background:var(--acc);color:#fff;font:var(--font-weight-bold) 12px -apple-system,system-ui,sans-serif;padding:var(--space-6) var(--space-13);border-radius:8px;cursor:pointer;transition:filter var(--duration-fast) var(--ease-base)}
+.ix-undo-btn{border:0;background:var(--acc);color:var(--on-slab);font:var(--font-weight-bold) 12px -apple-system,system-ui,sans-serif;padding:var(--space-6) var(--space-13);border-radius:8px;cursor:pointer;transition:filter var(--duration-fast) var(--ease-base)}
 .ix-undo-btn:hover{filter:brightness(1.1)}
 .cmp-fold{position:absolute;top:var(--space-12);right:var(--space-12);width:var(--space-24);height:var(--space-24);display:flex;align-items:center;justify-content:center;border:1px solid var(--bd);border-radius:7px;background:var(--card);color:var(--mut);font-size:var(--font-size-body);line-height:var(--line-height-none);cursor:pointer;opacity:.45;transition:opacity var(--duration-fast) var(--ease-base),color var(--duration-fast) var(--ease-base),border-color var(--duration-fast) var(--ease-base);z-index:2;padding:0}
 .cmp-fold:hover,.cmp-fold:focus{opacity:1;color:var(--acc);border-color:var(--acc);outline:none}
@@ -1004,7 +1077,7 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
 .nt-htxt{flex:1 1 auto;min-width:0}
 .nt-tabs{display:flex;gap:var(--space-4);flex:none;background:var(--bg);border:1px solid var(--bd);border-radius:9px;padding:var(--space-3)}
 .nt-tab{border:0;background:transparent;color:var(--mut);font:var(--font-weight-semibold) 11.5px -apple-system,system-ui,sans-serif;padding:var(--space-5) var(--space-11);border-radius:7px;cursor:pointer;transition:background var(--duration-fast) var(--ease-base),color var(--duration-fast) var(--ease-base);white-space:nowrap}
-.nt-tab.on{background:var(--acc);color:#fff}
+.nt-tab.on{background:var(--acc);color:var(--on-slab)}
 .nt-tab:not(.on):hover{color:var(--ink);background:var(--accbg)}
 .nt-all{flex:1;display:flex;flex-direction:column;min-height:0;margin:var(--space-14) var(--space-18) var(--space-4)}
 .nt-search{flex:none;padding:var(--space-10) var(--space-13);border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--ink);font:13px -apple-system,system-ui,sans-serif;outline:none;margin-bottom:var(--space-10);transition:border-color var(--duration-fast) var(--ease-base)}
@@ -1091,7 +1164,7 @@ html[data-theme="dark"] .tn-item:hover{background:rgba(170,157,245,.13)}
 .storage-notice{position:fixed;top:0;left:0;right:0;display:flex;align-items:center;gap:var(--space-12);padding:var(--space-9) var(--space-16);background:var(--amberbg);border-bottom:1px solid var(--amber);color:var(--amber);font-size:var(--font-size-caption);font-weight:var(--font-weight-semibold);box-shadow:0 2px 8px -2px rgba(0,0,0,.12)}
 .storage-notice-t{flex:1;line-height:var(--line-height-normal)}
 .storage-notice-exp{flex:none;font:var(--font-weight-semibold) 11px -apple-system,sans-serif;color:var(--amber);background:transparent;border:1px solid var(--amber);border-radius:6px;padding:var(--space-4) var(--space-11);cursor:pointer}
-.storage-notice-exp:hover{background:var(--amber);color:#fff}
+.storage-notice-exp:hover{background:var(--amber);color:var(--on-slab)}
 .storage-notice-x{flex:none;background:transparent;border:0;color:var(--amber);font-size:var(--font-size-title);line-height:var(--line-height-none);cursor:pointer;padding:0 var(--space-4)}
 @media (prefers-reduced-motion:reduce){:root{--duration-instant:0ms;--duration-fast:.01ms;--duration-base:.01ms;--duration-moderate:.01ms;--duration-slow:.01ms;--duration-slowest:.01ms}*,::before,::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 /* Typography polish: text-wrap is inherited, so html-level pretty reaches shadow-DOM prose; balanced headings in the shell */

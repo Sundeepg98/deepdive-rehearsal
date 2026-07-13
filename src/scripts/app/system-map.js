@@ -29,7 +29,7 @@ var SYS_STYLE = `
 .stg .nm{font-size:var(--font-size-body);font-weight:var(--font-weight-bold);transition:color var(--duration-base) var(--ease-base)}
 .stg:hover .nm{color:var(--accink)}
 .stg .ds{font-size:var(--font-size-caption);color:var(--mut);margin-top:var(--space-2)}
-.stg.cur .dot{background:linear-gradient(135deg,var(--acc),var(--acc2));border-color:var(--acc);color:#fff;box-shadow:0 0 0 5px var(--accbg),0 2px 10px -2px var(--acc-a30)}
+.stg.cur .dot{background:linear-gradient(135deg,var(--acc),var(--acc2));border-color:var(--acc);color:var(--on-slab);box-shadow:0 0 0 5px var(--accbg),0 2px 10px -2px var(--acc-a30)}
 /* curPulse (2s endless) removed -- the "you are here" dot's fill + ring IS the state. */
 .stg.cur .nm{color:var(--accink);font-weight:var(--font-weight-bold)}
 .stg.cur .here{display:inline-block;font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.6px;text-transform:uppercase;color:var(--sm-here-fg);background:linear-gradient(135deg,var(--acc),var(--acc2));border-radius:5px;padding:var(--space-2) var(--space-8);margin-left:var(--space-8);vertical-align:middle;box-shadow:0 2px 6px -2px var(--acc-a25)}
@@ -41,7 +41,7 @@ var SYS_STYLE = `
 .piv summary{list-style:none;cursor:pointer;padding:var(--space-14) var(--space-16);display:flex;align-items:flex-start;gap:var(--space-12);transition:background var(--duration-base) var(--ease-base)}
 .piv summary:hover{background:var(--acc2-a04)}
 .piv-jump{margin-top:var(--space-12);font:var(--font-weight-bold) 12px -apple-system,sans-serif;color:var(--acc);background:var(--accbg);border:1px solid var(--acc-a20);border-radius:8px;padding:var(--space-7) var(--space-12);cursor:pointer;transition:background var(--duration-fast) var(--ease-base),border-color var(--duration-fast) var(--ease-base)}
-.piv-jump:hover,.piv-jump:focus{background:var(--acc);color:#fff;border-color:var(--acc);outline:none}
+.piv-jump:hover,.piv-jump:focus{background:var(--acc);color:var(--on-slab);border-color:var(--acc);outline:none}
 .piv summary::-webkit-details-marker{display:none}
 .piv .pq{font-size:var(--font-size-small);font-weight:var(--font-weight-semibold);color:var(--ink);line-height:var(--line-height-normal)}
 /* The chip was white-space:nowrap inside .piv{overflow:hidden}: it could not wrap, so a long chip

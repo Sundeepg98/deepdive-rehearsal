@@ -483,7 +483,7 @@ var SESS_STYLE = `:host(deep-session){display:flex;flex-direction:column;flex:1 
 .ss-clear:active{transform:translateY(1px) scale(.98)}
 .ss-clear.arm{transition:transform var(--duration-fast) var(--ease-base),background var(--duration-base) var(--ease-base),color var(--duration-base) var(--ease-base),border-color var(--duration-base) var(--ease-base)}
 .ss-print{width:100%;border:1.5px solid var(--acc);background:linear-gradient(135deg,var(--accbg) 0%,var(--acc-a04) 100%);color:var(--accink);font:var(--font-weight-bold) 12.5px -apple-system,sans-serif;padding:var(--space-12) var(--space-14);border-radius:10px;cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),box-shadow var(--duration-base) var(--ease-base),background var(--duration-base) var(--ease-base),color var(--duration-base) var(--ease-base)}
-.ss-print:hover{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;box-shadow:0 4px 16px -4px var(--acc-a25);transform:translateY(-1px)}
+.ss-print:hover{background:linear-gradient(135deg,var(--acc),var(--acc2));color:var(--on-slab);box-shadow:0 4px 16px -4px var(--acc-a25);transform:translateY(-1px)}
 .ss-print:active{transform:translateY(1px) scale(.98)}
 .ss-carry{margin-top:var(--space-16);padding:var(--space-14) var(--space-16);border:1px solid var(--bd);border-radius:12px;background:linear-gradient(135deg,var(--ss-carry-bg) 0%,var(--acc-a02) 100%)}
 .ss-carry-h{font:var(--font-weight-heavy) 10px -apple-system,sans-serif;letter-spacing:.5px;text-transform:uppercase;color:var(--mut2);margin-bottom:var(--space-10)}

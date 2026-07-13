@@ -1,0 +1,60 @@
+
+============ HIGH-4: WHAT IS overflow-x:hidden HIDING? (AFTER) ============
+
+  [negative control] inject a 900px-wide div into a 320px viewport:
+
+    A. THE DEAD DETECTOR   documentElement.scrollWidth > window.innerWidth
+       before: false   after: false   (scrollWidth 915 vs innerWidth 915)
+       -> *** STILL SAYS NO OVERFLOW -- AND NOT BECAUSE OF THE CLIP. ***
+       On mobile Chromium WIDENS THE LAYOUT VIEWPORT to fit overflow, so innerWidth
+       grows to 915px with the content and the comparison is a number against ITSELF.
+       This check cannot fire on a phone AT ALL -- removing overflow-x:hidden does not
+       revive it. The clip was only half the reason it was dead.
+
+    B. THE REAL DETECTOR   scrollWidth vs the width we ASKED for (320px, a fixed ruler)
+       before: 0px   after: 595px   -> FIRED (it can go RED)
+
+    C. THE CLIPPING DETECTOR   (every clipper: scrollWidth > clientWidth?)
+       clippers before: 2   after: 2
+       -> with .stage no longer clipping, the 900px div now OVERFLOWS THE DOCUMENT
+          (detector B) instead of being silently swallowed. That is the point of the fix:
+          the failure is now visible AND detectable, rather than hidden and unmeasurable.
+
+    D. THE "ECHOED IN FULL" RULE   (a truncation is not LOSS if the text is on screen elsewhere)
+       worst topic ("Production Debugging and Incident Diagnosis") at 320px:
+         #tncurrent is cut by 189px, and the <h1> renders the same name in full
+         with the <h1> present : echoedInFull = true  -> not counted as loss
+         with the <h1> hidden  : echoedInFull = false  -> counted as LOSS  (rule FIRED -- it can go RED)
+
+  ---- 320px ----
+    walk    doc overflow:   0px (clip ON) |   0px (clip OFF -- the truth)   content-loss boxes: 0
+    drill   doc overflow:   0px (clip ON) |   0px (clip OFF -- the truth)   content-loss boxes: 0
+    wb      doc overflow:   0px (clip ON) |   0px (clip OFF -- the truth)   content-loss boxes: 0
+    sys     doc overflow:   0px (clip ON) |   0px (clip OFF -- the truth)   content-loss boxes: 0
+    num     doc overflow:   0px (clip ON) |   0px (clip OFF -- the truth)   content-loss boxes: 0
+
+  ---- 360px ----
+    walk    doc overflow:   0px (clip ON) |   0px (clip OFF -- the truth)   content-loss boxes: 0
+    drill   doc overflow:   0px (clip ON) |   0px (clip OFF -- the truth)   content-loss boxes: 0
+    wb      doc overflow:   0px (clip ON) |   0px (clip OFF -- the truth)   content-loss boxes: 0
+    sys     doc overflow:   0px (clip ON) |   0px (clip OFF -- the truth)   content-loss boxes: 0
+    num     doc overflow:   0px (clip ON) |   0px (clip OFF -- the truth)   content-loss boxes: 0
+
+  ---- 390px ----
+    walk    doc overflow:   0px (clip ON) |   0px (clip OFF -- the truth)   content-loss boxes: 0
+    drill   doc overflow:   0px (clip ON) |   0px (clip OFF -- the truth)   content-loss boxes: 0
+    wb      doc overflow:   0px (clip ON) |   0px (clip OFF -- the truth)   content-loss boxes: 0
+    sys     doc overflow:   0px (clip ON) |   0px (clip OFF -- the truth)   content-loss boxes: 0
+    num     doc overflow:   0px (clip ON) |   0px (clip OFF -- the truth)   content-loss boxes: 0
+
+  ---- 430px ----
+    walk    doc overflow:   0px (clip ON) |   0px (clip OFF -- the truth)   content-loss boxes: 0
+    drill   doc overflow:   0px (clip ON) |   0px (clip OFF -- the truth)   content-loss boxes: 0
+    wb      doc overflow:   0px (clip ON) |   0px (clip OFF -- the truth)   content-loss boxes: 0
+    sys     doc overflow:   0px (clip ON) |   0px (clip OFF -- the truth)   content-loss boxes: 0
+    num     doc overflow:   0px (clip ON) |   0px (clip OFF -- the truth)   content-loss boxes: 0
+
+  TOTAL true document overflow (concealer removed): 0px
+  TOTAL boxes cutting off their own content:        0
+  VERDICT: PASS -- no document overflow AND no content loss at 320-430px.
+

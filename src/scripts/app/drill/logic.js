@@ -109,8 +109,45 @@ var DRILL_STYLE = `@keyframes pop{from{opacity:0;transform:translateY(7px) scale
 /* LEFT is a REMAINDER, not a status. It wore var(--acc) -- the room accent -- which is why in
    half the rooms the tile that popped loudest was the one counting what you had not done yet. */
 .pill.left .v{color:var(--ink)}
-.pill.z{opacity:.62}
+/* THE ZERO STATE IS THE STATE EVERY USER OPENS THE DRILL IN, and it shipped below AA.
+   opacity multiplies the INK and the border alike, and .62 dragged both tiles under the floor:
+       .l  "Solid"/"Revisit"  --mut2 #67615A  9px/700  -> 2.67:1   (floor 4.5)  FAIL
+       .v  "0"                --mut  #6B6862 24px/800  -> 2.55:1   (floor 3.0)  FAIL
+   .7 -> .62 was my own regression: at .7 the label ALREADY failed (3.21), but the light "0"
+   value still passed at 3.03 and .62 newly broke it (2.63). Raised to .9, hand-computed from
+   the composite and confirmed by decoding the painted glyph core:
+       .l -> 4.75:1  (floor 4.5)  PASS      .v -> 4.38:1  (floor 3.0)  PASS
+   The design intent is untouched: Left is still the loudest tile, and Solid still does not fill
+   -- and therefore does not celebrate -- at 0/21. Dimming is a de-emphasis, not a licence to go
+   unreadable. (fix-css/00-calibrate.mjs swatches both inks at both opacities against a
+   hand-computed reference; fix-css/05-pill-contrast.mjs measures the real tiles in both themes.) */
+.pill.z{opacity:.9}
 .pill.z .v{color:var(--mut)}
+/* FORCED COLORS: KEEP THE FILL, WHICH IS THE ONE CHANNEL THE DESIGN CALLS LOAD-BEARING.
+   NO BACKTICKS IN THIS COMMENT -- see the escape warning above: DRILL_STYLE is a JS template
+   literal, so a backtick here TERMINATES THE STRING and the rest of the sheet is parsed as JS.
+   (Writing forced-color-adjust's default value in backticks did exactly that: "Unexpected
+   identifier 'auto'", customElements.define('deep-drill') never ran, and the entire drill pane
+   silently failed to upgrade -- the same failure the double-backslash note describes, via a
+   different character. The build still went green; a bundler does not execute it.)
+   forced-color-adjust defaults to auto, so the UA forces .pill.g:not(.z)'s background to
+   Canvas -- and the SOLID tile, the only tile that ever fills, became pixel-identical to the
+   others. Measured: Solid-vs-Revisit background distance 551 normally, 0 in forced-colors.
+   The redundant encoding (the check/recycle glyphs, the labels, the numbers) is what stops that
+   being a catastrophe -- the board stays decodable -- but a sighted high-contrast user lost the
+   celebration signal entirely, which is exactly the channel the rework was built on.
+   Highlight/HighlightText is a GUARANTEED-CONTRASTING PAIR in every forced-colors theme (it is
+   the selection pair), so it survives whatever palette the user runs. forced-color-adjust:none
+   opts the tile out of the UA's substitution so the fill lands -- and it INHERITS, which is why
+   .v/.l must be given HighlightText explicitly: left alone they would paint the authored
+   var(--st-ok-on) (#FFFFFF) literally, and vanish on a light Highlight.
+   styles.css already does exactly this for .badge. .pill never got it -- because .pill is in a
+   shadow root and that block could not reach it. This is the same bug as HIGH-1, one pane down. */
+@media (forced-colors:active){
+.pill{border:1px solid CanvasText}
+.pill.g:not(.z){background:Highlight;border-color:Highlight;box-shadow:none;forced-color-adjust:none}
+.pill.g:not(.z) .v,.pill.g:not(.z) .l{color:HighlightText}
+}
 .revset{display:flex;align-items:center;gap:var(--space-11);flex-wrap:wrap;margin:var(--space-2) 0 var(--space-18)}
 .revset-b{font:var(--font-weight-semibold) 13px -apple-system,system-ui,sans-serif;color:var(--accink);background:var(--accbg);border:1px solid var(--acc);border-radius:8px;padding:var(--space-7) var(--space-13);cursor:pointer;transition:background var(--duration-fast),color var(--duration-fast),transform var(--duration-instant);display:inline-flex;align-items:center;gap:var(--space-6)}
 .revset-b:hover{background:var(--acc);color:var(--bg)}
@@ -160,11 +197,23 @@ var DRILL_STYLE = `@keyframes pop{from{opacity:0;transform:translateY(7px) scale
 .dnav-wrap{margin-top:var(--space-22)}
 .dnav-h{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin-bottom:var(--space-12);display:flex;align-items:baseline;gap:var(--space-9);flex-wrap:wrap}
 .dnav-h .sub{font-size:var(--font-size-micro);font-weight:var(--font-weight-semibold);letter-spacing:.01em;text-transform:none;color:var(--mut2)}
+/* ===== THREE COLUMNS DO NOT FIT ON A PHONE (WCAG 1.4.10, loss of content) =====
+   repeat(3,1fr) had no breakpoint, so at 320px each probe chip is ~91px -- and after the number
+   badge (23px), the gap and the padding, the TITLE gets 33px. "Observability & operability" is one
+   66px word; it overflowed its box and .dn-step{overflow:hidden} ate it. Measured: 33px cut at
+   320px, 19px at 360px, 9px at 390px, on every probe in the set. The user cannot tell the chips
+   apart, which is the entire job of this nav.
+   Two columns below 600px and one below 400px give the title real room. overflow-wrap:anywhere is
+   the BACKSTOP -- a single word longer than its column can never again silently overflow, whatever
+   a future topic decides to call a signal. Media queries inside a shadow sheet evaluate against the
+   viewport exactly as they do outside it. */
 .dnav{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-8)}
+@media (max-width:600px){.dnav{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:400px){.dnav{grid-template-columns:1fr}}
 .dn-step{display:flex;align-items:center;gap:var(--space-10);text-align:left;padding:var(--space-10) var(--space-12);border-radius:11px;border:1px solid var(--bd);background:linear-gradient(135deg,var(--surf) 0%,var(--acc-a02) 100%);box-shadow:var(--surf-sh);cursor:pointer;transition:transform var(--duration-base) var(--ease-glide),box-shadow var(--duration-base) var(--ease-base),border-color var(--duration-base) var(--ease-base),background var(--duration-base) var(--ease-base);font-family:inherit;min-width:0;position:relative;overflow:hidden}
 .dn-step:hover{transform:translateY(-2px) scale(1.01);box-shadow:0 6px 20px -6px var(--acc-a15);border-color:var(--acc-a20);background:linear-gradient(135deg,var(--mix-surf) 0%,var(--acc-a04) 100%)}
 .dn-n{flex:none;width:var(--space-22);height:var(--space-22);border-radius:7px;display:grid;place-items:center;font:var(--font-weight-bold) 10.5px -apple-system,sans-serif;background:var(--accbg);color:var(--accink);transition:background var(--duration-base) var(--ease-base),color var(--duration-base) var(--ease-base),box-shadow var(--duration-base) var(--ease-base),transform var(--duration-base) var(--ease-spring)}
-.dn-t{font-size:var(--font-size-micro);font-weight:var(--font-weight-semibold);color:var(--ink);line-height:var(--line-height-snug);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.dn-t{font-size:var(--font-size-micro);font-weight:var(--font-weight-semibold);color:var(--ink);line-height:var(--line-height-snug);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
 .dn-step.on{border-color:var(--acc);background:linear-gradient(135deg,var(--accbg) 0%,var(--acc-a06) 100%);box-shadow:0 0 0 1px var(--acc),0 4px 14px -4px var(--acc-a12);transform:translateY(-1px)}
 .dn-step.on .dn-n{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;box-shadow:0 2px 6px -2px var(--acc-a30)}
 .dn-step.flag{border-color:var(--amber);background:linear-gradient(135deg,var(--amberbg) 0%,rgba(176,108,20,.04) 100%)}

@@ -13,7 +13,10 @@ a[href*="kimi.com/agent"]{display:none!important}
 @media print{
   .sidebar,.companion,.tools-fab,.tools-bd,.tools-x,.seg,#scrollprog{display:none!important}
   .stage{margin-left:0!important;padding:var(--space-20)!important;background:#fff!important}
-  .mockbar,.topic-nav,.inttog,.nav button{display:none!important}
+  /* `.nav button` (the walkthrough's prev/next) went to BASE_SHEET's print block with the rest of
+     the print rules -- .nav is shadow-only (0 light / 21 shadow), so it never hid anything from
+     here, and every printed walkthrough has carried a dead "Prev / Next" pair. */
+  .mockbar,.topic-nav,.inttog{display:none!important}
   body{padding:0!important;background:#fff!important;color:#000!important}
   .app{box-shadow:none!important}
 }
@@ -429,7 +432,26 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
    for the DOM having .mockbar before .seg, and it desynced tab order from paint to do it. */
 .sidebar .mockbar{margin-top:auto;padding-top:var(--space-14);border-top:1px solid var(--bd);gap:var(--space-7)}
 .sidebar .mockbar .mb-d{display:none}
-.stage{flex:1;min-width:0;padding:var(--space-32) clamp(var(--space-20),4vw,var(--space-52)) var(--space-70);overflow-x:hidden;position:relative}
+/* ===== overflow-x:hidden IS GONE, AND IT WAS NEVER PREVENTING ANYTHING (WCAG 1.4.10) =====
+   WCAG 1.4.10 has two halves: "no horizontal scrolling" AND "without loss of content".
+   `overflow-x:hidden` buys the first by VIOLATING the second -- it does not stop content
+   overflowing, it CUTS IT OFF and says nothing. Worse, it makes the failure undetectable: the
+   content column can never widen the document, so the standard `documentElement.scrollWidth >
+   innerWidth` reflow check is structurally INCAPABLE of failing here. The audit's detector duly
+   reported CLEAN at 320-430px -- and then its negative control injected a 900px div into a 320px
+   viewport and it STILL said "no overflow". Reproduced here: fix-css/04-reflow.mjs runs that exact
+   control and the naive check stays false while a clipping detector catches a 610px cut.
+
+   So: is it load-bearing? MEASURED, by neutralising it. With overflow-x forced back to `visible`,
+   the true document overflow is 0px at 320 / 360 / 390 / 430 across walk, drill, wb, sys and num.
+   It is hiding NOTHING. The one thing that genuinely can be wider than the column -- a code block
+   -- already scrolls inside its own container (pre.code{overflow-x:auto}), which is the correct
+   pattern and the reason the document was never overflowing in the first place.
+
+   Removing it costs no layout and buys back the ability to FAIL: any future overflow now shows up
+   as a real horizontal scrollbar, loudly, instead of quietly eating the right-hand edge of
+   somebody's diagram. A bug you can see is a bug that gets fixed. */
+.stage{flex:1;min-width:0;padding:var(--space-32) clamp(var(--space-20),4vw,var(--space-52)) var(--space-70);position:relative}
 /* Two perpetually-drifting purple mesh clouds (meshA 20s + meshB 16s, forever-looping)
    behind dense technical text -- DELETED, with two viewport-sized will-change layers.
    A precision instrument is still until YOU move it. The static --canvas radial (.stage
@@ -481,6 +503,31 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
   .sidebar .seg button.on{background:var(--accbg);box-shadow:inset 0 -2.5px 0 var(--acc),0 2px 8px -3px var(--acc-a12);color:var(--accink)}
   .sidebar .seg button.on>span:first-child{font-weight:var(--font-weight-bold)}
   .sidebar .mockbar{order:2;position:fixed;left:0;right:0;bottom:0;z-index:var(--z-bottombar);margin:0;background:var(--card);border:none;border-top:1px solid var(--bd);border-radius:16px 16px 0 0;padding:var(--space-16) var(--space-16) var(--space-22);box-shadow:0 -12px 32px rgba(0,0,0,.20);transform:translateY(115%);transition:transform var(--duration-moderate) var(--ease-base);max-height:82vh;overflow-y:auto}
+  /* ===== THE TOOLS SHEET MUST SCROLL, NOT CRUSH (WCAG 1.4.4) =====
+     This sheet is a COLUMN FLEX container with max-height:82vh, and its rows are flex items
+     carrying the CSS default flex-shrink:1. So when the content is taller than the sheet the
+     browser does not scroll it -- it CRUSHES every row to its min-height and stops. Two
+     well-intentioned fixes then finish the job: min-height:44px (the tap-target floor) sets the
+     floor it collapses to, button{overflow:hidden} (added to clip the ripple) hides the wreckage,
+     and align-items:center parks the visible 44px window in the MIDDLE of the content -- so what
+     survives is a mid-word fragment of the wrapped description and the tool's NAME is gone.
+
+     Measured at a genuine 200% text zoom: 11 of the 12 rows show no name at all. "Topic index"
+     reads as "topics"; "One-page cram sheet" as "it to". The rows need 83px in a 44px box.
+     (The published -663px / 705px figure is NOT real: the audit's text-zoom emulator re-scaled
+     each element on top of its already-scaled parent, compounding x2 per nesting level -- html x2,
+     body x4, .mb-t x8. The BUG is real and this is the fix for it; the magnitude was the
+     instrument's. fix-css/lib.mjs now snapshots every size before writing any, and asserts every
+     element scaled exactly once before it will report a number.)
+
+     flex-shrink:0 on the CHILDREN is the whole fix: the sheet already has overflow-y:auto, so
+     once the rows refuse to be crushed it does the thing it was always meant to do and SCROLLS.
+     Applied to every child, not just .crambtn -- the .mb-sec section headings are flex items too
+     and shrink for exactly the same reason, and a rule that only covers today's children rots the
+     moment someone adds one. Text zoom is not exotic: it is the Android font-size slider and iOS
+     Dynamic Type, and the app's own zoom control is display:none below 919px, so a phone user has
+     no escape hatch. */
+  .sidebar .mockbar>*{flex-shrink:0}
   body.tools-open .sidebar .mockbar{transform:none}
   body.tools-open .tools-bd{display:block;position:fixed;inset:0;background:rgba(0,0,0,.34);z-index:var(--z-scrim)}
   .sidebar .mockbar .mb-d{display:block}
@@ -752,24 +799,59 @@ button,summary{-webkit-user-select:none;user-select:none}
 
 /* (@supports subgrid { .arc-grid } deleted -- .arc-grid is shadow-only: 0 light-DOM
    matches, so this never applied. It lives in walkthrough/logic.js if it is ever wanted.) */
-@container (max-width:500px){.card{padding:var(--space-18);border-radius:12px}.seg button{padding:var(--space-8) var(--space-2);font-size:var(--font-size-nano)}}
-@container (max-width:380px){.card{padding:var(--space-14)}}
+/* (the two @container blocks are DELETED -- they were dead TWICE OVER, and the guard found them.
+   (a) .card is shadow-only (0 light / 210 shadow), so a rule here could never reach it; and
+   (b) `container-type` is not set on a single element anywhere in this codebase, so `@container`
+       had no container to resolve against and matched NOTHING AT ALL -- not even `.seg button`,
+       which IS light-DOM. Two independent reasons for the same zero.
+   If narrow-container card padding is genuinely wanted, it needs BOTH halves: `container-type:
+   inline-size` on .stage .pane, AND the @container rule inside BASE_SHEET (container queries do
+   resolve across the shadow boundary against a flat-tree ancestor). That is a design change, not
+   an a11y fix, and it is not smuggled in here. Reflow at 320px measures 0 content loss without
+   it. Precedent for deleting rather than resurrecting: the loading shimmer, cardStagger and the
+   ripple selector lists, all removed from this file for exactly this reason.) */
 
-/* === Accessibility === */
-@media(prefers-contrast:more){.card,.dec,.rf,.piv,.thread{border-width:2px}.seg button.on{outline:2px solid var(--acc);outline-offset:2px}.mockbtn,.crambtn,.tools-fab,.inttog{border:1px solid var(--acc)}.mb-d,.sub,.cmp-note,.cmp-thesis,.dgm-s,.locator{color:var(--ink)}}
+/* === Accessibility ===
+   THE SHADOW-ONLY CLASSES ARE STRIPPED FROM BOTH BLOCKS. They were never doing anything.
+   .card / .dec / .rf / .piv / .thread / .dgm-s are ALL inside shadow roots -- measured on the
+   walkthrough: 0 light-DOM matches vs 41 in shadow -- so a rule in THIS file could not reach a
+   single one of them, and the "forced-colors + prefers-contrast now cover interactions" commit
+   shipped dead code that read as done. That is the third time this file has aimed CSS across the
+   shadow boundary (the loading shimmer never ran once; the print page-break rules matched zero
+   nodes for the app's whole life). Those two were fixed by MOVING the rule into BASE_SHEET, which
+   all 17 shadow hosts adopt; these two now live there as well, next to them.
+   `.sub` went with them, and it was dead TWICE: its only light-DOM instance is `.hdr .sub` inside
+   .side-id, which is display:none -- and even if it rendered, `.hdr .sub` (0,2,0) at :228 outranks
+   a bare `.sub` (0,1,0) here. The three .sub nodes that actually render are all in shadow roots.
+   test/shadow_css_guard.py now FAILS THE BUILD if a selector here targets a shadow-only class, so
+   this cannot silently regrow. Everything below is verified to have light-DOM matches. */
+@media(prefers-contrast:more){.seg button.on{outline:2px solid var(--acc);outline-offset:2px}.mockbtn,.crambtn,.tools-fab,.inttog{border:1px solid var(--acc)}.mb-d,.cmp-note,.cmp-thesis,.locator{color:var(--ink)}}
 @media(prefers-reduced-transparency:reduce){.mock-panel,.cram-panel,.sidebar{backdrop-filter:none!important}}
-@media(forced-colors:active){.card,.dec,.rf,.piv,.thread{border:2px solid CanvasText!important;background:Canvas!important;color:CanvasText!important}.badge{background:Highlight!important;color:HighlightText!important}.mockbtn,.crambtn,.tools-fab,.inttog,.cmp-reopen,.tn-trigger,.tn-step,.seg button{border:1px solid ButtonText!important}.mockbtn,.seg button.on{border:2px solid Highlight!important}:focus-visible{outline:2px solid Highlight!important;outline-offset:2px}}
+@media(forced-colors:active){.badge{background:Highlight!important;color:HighlightText!important}.mockbtn,.crambtn,.tools-fab,.inttog,.cmp-reopen,.tn-trigger,.tn-step,.seg button{border:1px solid ButtonText!important}.mockbtn,.seg button.on{border:2px solid Highlight!important}:focus-visible{outline:2px solid Highlight!important;outline-offset:2px}}
 
-/* === v157: Dark mode glow enhancements === */
-html[data-theme="dark"] .card{box-shadow:0 1px 3px rgba(0,0,0,.3),0 0 30px -8px rgba(139,127,232,.06)}
-html[data-theme="dark"] .card:hover{box-shadow:0 8px 32px -10px rgba(139,127,232,.15),0 0 40px -12px rgba(139,127,232,.08)}
-html[data-theme="dark"] .thread{box-shadow:0 1px 3px rgba(0,0,0,.25)}
-html[data-theme="dark"] .thread:hover{box-shadow:0 6px 24px -8px rgba(139,127,232,.12)}
-/* (dark .stage::before/::after opacity overrides deleted with the mesh) */
+/* === v157: Dark mode glow enhancements -- DELETED, dead AND redundant ===
+   The four rules here (html[data-theme="dark"] .card / .card:hover / .thread / .thread:hover)
+   targeted shadow-only classes from the light DOM and matched zero nodes. They were also
+   REDUNDANT: .card{box-shadow:var(--card-sh)} and .thread{box-shadow:var(--surf-sh)} already read
+   TOKENS, and --card-sh / --surf-sh are both re-declared in the html[data-theme="dark"] block
+   above. Custom properties are the one thing that DOES cross the shadow boundary -- which is the
+   mechanism the whole room system is built on -- so the dark card shadow has always worked, via
+   the token, and these rules added nothing on top. Verified at runtime: .card's computed
+   box-shadow still differs between themes with them gone. */
 
-/* === v158: Custom cursor on interactive elements === */
-button,.seg button,.dn-step,.pill,.card,.thread,.dec,.rf,.op,.piv,.tools-fab,.crbtn{cursor:pointer}
-.dn-step,.pill,.arc-step,.wb li{cursor:pointer}
+/* === v158: Custom cursor on interactive elements ===
+   STRIPPED TO ONE SELECTOR, and the deletions are a FIX, not a tidy-up.
+   Every other class in the two original lists is shadow-only and matched zero nodes:
+     .dn-step (462)  .card (210)  .rf (189)  .arc-step (189)  .dec (147)  .piv (147)
+     .op (105)  .pill (63)  .thread (21)  .wb (21)          (.crbtn exists nowhere at all)
+   And it is LUCKY they were dead. .card / .thread / .dec / .rf / .piv / .op / .wb li are content
+   SURFACES and .pill is a scoreboard TILE -- none of them is interactive, and a pointer cursor on
+   them advertises a click that does nothing. That is a dead affordance, the same defect as the
+   walkthrough's fake-tappable step dots. Had this rule ever reached them it would have been a bug.
+   The two that ARE interactive -- .dn-step and .arc-step, both real <button>s -- already set
+   cursor:pointer in their own shadow sheets, so nothing is lost by dropping them here.
+   `button` alone covers .seg button, .tools-fab, .crambtn and .inttog: they are all buttons. */
+button{cursor:pointer}
 
 /* ============ Batch 1 rescues: reading-size, focus timer, back-to-top, tab-pause ============ */
 
@@ -1125,8 +1207,23 @@ h1,h2,h3,h4,h5,h6{text-wrap:balance}
    this is a physical-finger constant, not a layout rhythm token. */
 @media(max-width:600px){
   .tn-step{min-width:44px;min-height:44px}
-  .tn-trigger{min-height:44px}
   .ix-x{padding:10px 14px;min-width:44px;min-height:44px}
+  /* ===== THE TOPIC NAME GETS 12 PIXELS (WCAG 1.4.10, loss of content) =====
+     .tn-trigger is a single flex ROW: [REHEARSING] [the topic name] [chevron]. The eyebrow takes
+     its full natural width, the chevron takes its, and .tn-current (flex:1) gets the remainder --
+     which at 320px is TWELVE PIXELS for a name that needs 103. With white-space:nowrap +
+     text-overflow:ellipsis it degrades to an ellipsis and nothing else, so the switcher reads
+     "REHEARSING C..." on every one of the 46 topics.
+     Let the row WRAP and give the eyebrow its own line. The name then owns the full width, and
+     the eyebrow -- which labels the control for everyone, including screen-reader users -- is
+     KEPT rather than deleted. Deleting it would have "fixed" the measurement by destroying the
+     label, which is not a fix.
+     (The <h1> above already renders the full name, so this was never a total LOSS of the
+     information -- measured, not assumed: 04-reflow.mjs asserts the h1 shows it in full, and
+     flips #tncurrent to a reported failure the moment that h1 is hidden. But a switcher whose
+     current value is unreadable is still a bad control, and 91px -> 6px of clipping is real.) */
+  .tn-trigger{min-height:44px;flex-wrap:wrap;row-gap:var(--space-1)}
+  .tn-eyebrow{flex:0 0 100%}
 }
 .tn-home{font-size:var(--font-size-subhead)}
 

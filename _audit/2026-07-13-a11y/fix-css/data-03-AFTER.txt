@@ -1,0 +1,37 @@
+
+============ CRITICAL-3: THE TOOLS MENU AT 200% TEXT ZOOM (AFTER) ============
+
+  [negative control] clamp #idxopen to height:10px
+    name visible before: true   after: false   -> detector FIRED (it can go RED)
+    (rows with a readable name at 100%: 12 of 12)
+
+  [instrument check] text zoom must scale every element EXACTLY x2, once:
+    elements scaled: 1902   off-target: 0   worst ratio: 2x  
+    -> clean: no element double-scaled. The numbers below are the app, not the harness.
+
+  200%% TEXT ZOOM -- can the user read each tool's NAME?
+
+    row              box   needs    cut   shrink  name shown?  what the user sees
+    ----------------------------------------------------------------------------------------
+    idxopen       127px   125px      0      0          YES   Topic index
+    searchopen    127px   125px      0      0          YES   Search
+    copylink      127px   125px      0      0          YES   Copy link
+    starbtn       127px   125px      0      0          YES   Star this topic
+    notesopen     127px   125px      0      0          YES   Your notes
+    printqa       127px   125px      0      0          YES   Print Q&A
+    cramopen      127px   125px      0      0          YES   One-page cram sheet
+    sessopen      127px   125px      0      0          YES   Session progress
+    mixopen       127px   125px      0      0          YES   Mixed fire
+    planopen      127px   125px      0      0          YES   Game plan
+    scopeopen     127px   125px      0      0          YES   Scope it first
+    themetog       59px    57px      0      0          YES   ☽Dark mode — off
+
+    rows whose own name is UNREADABLE: 0 of 12
+    worst row: idxopen needs 125px in a 127px box (0px of content cut)
+
+    HIT-TEST (does a tap on the row actually reach the row?)
+      all 12 rows receive their own taps
+
+    screenshot: shots/zoom200-tools-AFTER.png
+
+  VERDICT: PASS -- every tool row shows its full name at 200% and receives its own taps

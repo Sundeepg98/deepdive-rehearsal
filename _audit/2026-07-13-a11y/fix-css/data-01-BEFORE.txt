@@ -1,0 +1,60 @@
+
+================ HIGH-1: DOES THE A11Y CSS REACH ANYTHING? ================
+
+  (1) SELECTOR REACH -- a light-DOM stylesheet can style ONLY the "light" column.
+
+      selector          light   shadow   a light-DOM rule targeting it...
+      ------------------------------------------------------------------------
+      .card                 0      10   *** MATCHES NOTHING (all 10 are in shadow roots) ***
+      .dec                  0       7   *** MATCHES NOTHING (all 7 are in shadow roots) ***
+      .rf                   0       9   *** MATCHES NOTHING (all 9 are in shadow roots) ***
+      .piv                  0       7   *** MATCHES NOTHING (all 7 are in shadow roots) ***
+      .thread               0       1   *** MATCHES NOTHING (all 1 are in shadow roots) ***
+      .dgm-s                0       7   *** MATCHES NOTHING (all 7 are in shadow roots) ***
+      .pill                 0       3   *** MATCHES NOTHING (all 3 are in shadow roots) ***
+      .cmp-note             2       0   reaches all 2
+      .cmp-thesis           1       0   reaches all 1
+      .sub                  1       3   reaches 1, MISSES 3 in shadow
+      .locator              1       0   reaches all 1
+      .mb-d                12       0   reaches all 12
+      .seg button          10       0   reaches all 10
+      .mockbtn              1       0   reaches all 1
+      .crambtn             13       0   reaches all 13
+      .tools-fab            1       0   reaches all 1
+      .inttog               1       0   reaches all 1
+      .badge                1       0   reaches all 1
+
+  (2) RULE EFFECT -- turn the media feature ON and see if the number MOVES.
+
+      @media (prefers-contrast: more)
+      probe                     half                  OFF          ON        moved?
+      ------------------------------------------------------------------------------
+      .card border-width       SHADOW                       1px         1px   no  <-- DEAD RULE
+      .thread border-width     SHADOW                (not present)
+      .rf border-width         SHADOW                (not present)
+      .hdr .sub color          LIGHT (specificity)   (not present)
+      .seg button.on outline   LIGHT (control)              3px         2px   YES
+      .mockbtn border-width    LIGHT (control)              0px         1px   YES
+
+      [negative control] the LIGHT half of the same block moved: YES -- the emulation IS firing
+      [result]          the SHADOW half moved on 0 of 1 probes
+
+      @media (forced-colors: active)
+      probe                     half                  OFF          ON        moved?
+      ------------------------------------------------------------------------------
+      .card border-width       SHADOW                       1px         1px   no  <-- DEAD RULE
+      .thread border-width     SHADOW                (not present)
+      .rf border-width         SHADOW                (not present)
+      .badge background        LIGHT (control)      rgba(0, 0,  rgb(55, 0,    YES
+      .seg button border       LIGHT (control)              1px         2px   YES
+
+      [negative control] forced-colors genuinely substitutes system colours:
+                         body color      rgb(42, 40, 35) -> rgb(0, 0, 0)
+                         .mockbtn bg-img linear-gradient(135deg, rgb(15... -> none
+                         => emulation is REAL
+      [result]          the SHADOW half moved on 0 of 1 probes
+
+  (4) CASCADE ORDER inside a shadow root (decides WHERE each fix must go):
+      deep-drill: 2 adopted sheet(s) + 1 own <style>
+      at EQUAL specificity -> ADOPTED sheet (BASE_SHEET) wins ties
+

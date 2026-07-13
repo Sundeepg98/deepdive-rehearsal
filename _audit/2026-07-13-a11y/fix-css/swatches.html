@@ -1,0 +1,58 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>contrast calibration swatches</title>
+<style>
+  body { margin: 0; background: #808080; font-family: -apple-system, Segoe UI, sans-serif; }
+  .sw { width: 380px; height: 56px; display: flex; align-items: center; justify-content: center;
+        font-size: 16px; font-weight: 400; margin: 0; }
+
+  /* ---- SOLID: exact known answers, hand-computable from the hex pair ---- */
+  #s_21   { color:#000000; background:#FFFFFF; }  /* 21.00  PASS */
+  #s_pass { color:#767676; background:#FFFFFF; }  /*  4.54  PASS  <- the canonical AA boundary */
+  #s_fail { color:#777777; background:#FFFFFF; }  /*  4.48  FAIL  <- the instrument MUST call this */
+  #s_stok { color:#FFFFFF; background:#1D6F3F; }  /* --st-ok light: repo claims 6.18 */
+  #s_stokd{ color:#1A1622; background:#5BD08A; }  /* --st-ok dark:  repo claims 9.17 */
+
+  /* ---- GRADIENT-PAINTED but FLAT: getComputedStyle returns the useless literal
+          "linear-gradient(...)" here, yet the true local bg under every glyph is exactly
+          #C53DAF. Proves the pipeline decodes a gradient-painted background correctly. ---- */
+  #s_gradflat { color:#FFFFFF; background:linear-gradient(135deg,#C53DAF,#C53DAF); }
+
+  /* ---- OPACITY, modelled EXACTLY as the app does it ----
+     `opacity` is GROUP opacity: the element (background AND text) is rendered to its own
+     layer, then that whole layer is composited over WHAT IS BEHIND IT. So the reference
+     depends on the backdrop, and the first version of this file got that wrong -- it
+     composited onto the swatch's own background while the swatch actually sat on
+     body{#808080}, and the instrument (correctly) disagreed with it by 0.5.
+
+     The shipped .pill.z sits on the drill card, which paints ~#FCFBF9. Reproduce that:
+     the wrapper IS the backdrop, so bg' = .62*#FCFBF9 + .38*#FCFBF9 = #FCFBF9 (unchanged)
+     and only the ink moves -- which is the audit's model, and the real one.
+
+     This swatch also exists to prove the RELATIVE glyph-core cut. A naive ABSOLUTE cut
+     (alpha >= 0.85) finds ZERO core pixels on an element at opacity .62 -- it would
+     silently measure NOTHING and report a clean bill. Watch alphaMax/corePx below.
+
+     The two REAL pill nodes have DIFFERENT inks and DIFFERENT floors, and conflating them
+     is how you talk yourself into the wrong fix:
+       .pill .l  label  --mut2 #67615A   9px/700  -> floor 4.5
+       .pill .v  value  --mut  #6B6862  24px/800  -> LARGE TEXT, floor 3.0
+     So both are swatched, at the shipped .62 and the proposed .90. ---- */
+  .backdrop { background:#FCFBF9; }
+  #s_lab62 { color:#67615A; background:#FCFBF9; opacity:.62; }
+  #s_lab90 { color:#67615A; background:#FCFBF9; opacity:.90; }
+  #s_val62 { color:#6B6862; background:#FCFBF9; opacity:.62; }
+  #s_val90 { color:#6B6862; background:#FCFBF9; opacity:.90; }
+</style>
+<div class="sw" id="s_21">contrast calibration swatch</div>
+<div class="sw" id="s_pass">contrast calibration swatch</div>
+<div class="sw" id="s_fail">contrast calibration swatch</div>
+<div class="sw" id="s_stok">contrast calibration swatch</div>
+<div class="sw" id="s_stokd">contrast calibration swatch</div>
+<div class="sw" id="s_gradflat">contrast calibration swatch</div>
+<div class="backdrop">
+  <div class="sw" id="s_lab62">contrast calibration swatch</div>
+  <div class="sw" id="s_lab90">contrast calibration swatch</div>
+  <div class="sw" id="s_val62">contrast calibration swatch</div>
+  <div class="sw" id="s_val90">contrast calibration swatch</div>
+</div>

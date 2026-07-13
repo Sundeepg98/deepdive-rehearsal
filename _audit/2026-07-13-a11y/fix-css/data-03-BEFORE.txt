@@ -1,0 +1,37 @@
+
+============ CRITICAL-3: THE TOOLS MENU AT 200% TEXT ZOOM (BEFORE) ============
+
+  [negative control] clamp #idxopen to height:10px
+    name visible before: true   after: false   -> detector FIRED (it can go RED)
+    (rows with a readable name at 100%: 12 of 12)
+
+  [instrument check] text zoom must scale every element EXACTLY x2, once:
+    elements scaled: 1902   off-target: 0   worst ratio: 2x  
+    -> clean: no element double-scaled. The numbers below are the app, not the harness.
+
+  200%% TEXT ZOOM -- can the user read each tool's NAME?
+
+    row              box   needs    cut   shrink  name shown?  what the user sees
+    ----------------------------------------------------------------------------------------
+    idxopen        44px    83px    -41      1          NO    *** "Topic index" IS CUT OFF (25px outside the box) ***
+    searchopen     44px    83px    -41      1          NO    *** "Search" IS CUT OFF (25px outside the box) ***
+    copylink       44px    83px    -41      1          NO    *** "Copy link" IS CUT OFF (25px outside the box) ***
+    starbtn        44px    83px    -41      1          NO    *** "Star this topic" IS CUT OFF (25px outside the box) ***
+    notesopen      44px    83px    -41      1          NO    *** "Your notes" IS CUT OFF (25px outside the box) ***
+    printqa        44px    83px    -41      1          NO    *** "Print Q&A" IS CUT OFF (25px outside the box) ***
+    cramopen       44px    83px    -41      1          NO    *** "One-page cram sheet" IS CUT OFF (25px outside the box) ***
+    sessopen       44px    83px    -41      1          NO    *** "Session progress" IS CUT OFF (25px outside the box) ***
+    mixopen        44px    83px    -41      1          NO    *** "Mixed fire" IS CUT OFF (25px outside the box) ***
+    planopen       44px    83px    -41      1          NO    *** "Game plan" IS CUT OFF (25px outside the box) ***
+    scopeopen      44px    83px    -41      1          NO    *** "Scope it first" IS CUT OFF (25px outside the box) ***
+    themetog       44px    50px     -8      1          YES   ☽Dark mode — off
+
+    rows whose own name is UNREADABLE: 11 of 12
+    worst row: idxopen needs 83px in a 44px box (41px of content cut)
+
+    HIT-TEST (does a tap on the row actually reach the row?)
+      all 12 rows receive their own taps
+
+    screenshot: shots/zoom200-tools-BEFORE.png
+
+  VERDICT: FAIL -- 11 shredded row(s), 0 unreachable row(s)

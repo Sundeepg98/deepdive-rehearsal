@@ -1,0 +1,76 @@
+
+================ HIGH-1: DOES THE A11Y CSS REACH ANYTHING? ================
+
+  (1) SELECTOR REACH -- a light-DOM stylesheet can style ONLY the "light" column.
+
+      selector          light   shadow   a light-DOM rule targeting it...
+      ------------------------------------------------------------------------
+      .card                 0      10   *** MATCHES NOTHING (all 10 are in shadow roots) ***
+      .dec                  0       7   *** MATCHES NOTHING (all 7 are in shadow roots) ***
+      .rf                   0       9   *** MATCHES NOTHING (all 9 are in shadow roots) ***
+      .piv                  0       7   *** MATCHES NOTHING (all 7 are in shadow roots) ***
+      .thread               0       1   *** MATCHES NOTHING (all 1 are in shadow roots) ***
+      .dgm-s                0       7   *** MATCHES NOTHING (all 7 are in shadow roots) ***
+      .pill                 0       3   *** MATCHES NOTHING (all 3 are in shadow roots) ***
+      .cmp-note             2       0   reaches all 2
+      .cmp-thesis           1       0   reaches all 1
+      .sub                  1       3   reaches 1, MISSES 3 in shadow
+      .locator              1       0   reaches all 1
+      .mb-d                12       0   reaches all 12
+      .seg button          10       0   reaches all 10
+      .mockbtn              1       0   reaches all 1
+      .crambtn             13       0   reaches all 13
+      .tools-fab            1       0   reaches all 1
+      .inttog               1       0   reaches all 1
+      .badge                1       0   reaches all 1
+
+  (2)(3) RULE EFFECT -- turn the media feature ON and see if the number MOVES.
+
+      @media (prefers-contrast: more)
+      probe                    half                     OFF             ON     moved?
+      ----------------------------------------------------------------------------------
+      .card border            SHADOW                           1px            2px   YES
+      .thread border          SHADOW                           1px            2px   YES
+      .rf border              SHADOW                           1px            2px   YES
+      .dec border             SHADOW                           1px            2px   YES
+      .piv border             SHADOW                           1px            2px   YES
+      .arc-h .sub color       SHADOW (specificity)  rgb(103, 97, 9 rgb(42, 40, 35   YES
+      .dnav-h .sub color      SHADOW (specificity)  rgb(103, 97, 9 rgb(42, 40, 35   YES
+      .dgm-s color            SHADOW                rgb(107, 104,  rgb(42, 40, 35   YES
+      .dec top accent         SHADOW (accent)                  3px            3px   held at 3px  (must be >= 3px)
+      .rf left accent         SHADOW (accent)                  3px            3px   held at 3px  (must be >= 3px)
+      .seg btn.on outline     LIGHT (control)                  3px            2px   YES
+      .mockbtn border         LIGHT (control)                  0px            1px   YES
+
+      [negative control] the LIGHT half of the same block moved: YES
+                         => emulation is REAL -- a "no" above is a DEAD RULE, not a dead instrument
+      [result]           SHADOW rules that took effect: 6 of 6   (not present: 0, accents thinned: 0)
+
+      @media (forced-colors: active)
+      probe                    half                     OFF             ON     moved?
+      ----------------------------------------------------------------------------------
+      .card border            SHADOW                           1px            2px   YES
+      .thread border          SHADOW                           1px            2px   YES
+      .rf border              SHADOW                           1px            2px   YES
+      .dec border             SHADOW                           1px            2px   YES
+      .piv border             SHADOW                           1px            2px   YES
+      .arc-h .sub color       SHADOW (specificity)  rgb(103, 97, 9   rgb(0, 0, 0)   YES
+      .dnav-h .sub color      SHADOW (specificity)  rgb(103, 97, 9   rgb(0, 0, 0)   YES
+      .dgm-s color            SHADOW                rgb(107, 104,    rgb(0, 0, 0)   YES
+      .dec top accent         SHADOW (accent)                  3px            2px   flattened to 2px (correct in forced-colors)
+      .rf left accent         SHADOW (accent)                  3px            2px   flattened to 2px (correct in forced-colors)
+      .seg btn.on border      LIGHT (control)                  1px            2px   YES
+      .mockbtn border         LIGHT (control)                  0px            2px   YES
+
+      [negative control] forced-colors genuinely substitutes system colours:
+                         body color      rgb(42, 40, 35) -> rgb(0, 0, 0)
+                         .mockbtn bg-img linear-gradient(135deg, rgb(... -> none
+                         => emulation is REAL -- a "no" above is a DEAD RULE, not a dead instrument
+      [result]           SHADOW rules that took effect: 6 of 6   (not present: 0, accents thinned: 0)
+
+  (4) CASCADE ORDER inside a shadow root (decides WHERE each fix must go):
+      deep-drill: 2 adopted sheet(s) + 1 own <style>
+      at EQUAL specificity -> ADOPTED sheet (BASE_SHEET) wins ties
+
+  VERDICT: PASS -- every shadow-DOM a11y rule TAKES EFFECT (prefers-contrast 6/6, forced-colors 6/6) and no accent edge was thinned.
+

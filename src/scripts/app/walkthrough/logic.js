@@ -28,7 +28,22 @@ var WALK_STYLE = `
 .dots i.done{background:var(--dots-done-bg);opacity:.45}
 .dots i:hover:not(.on){transform:scale(1.15);background:var(--acc-a35)}
 .flow{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-7);margin:var(--space-8) 0 var(--space-4)}
-.fb{font:var(--font-weight-semibold) 11.5px ui-monospace,Menlo,monospace;padding:var(--space-7) var(--space-11);border-radius:8px;border:1.5px solid;white-space:nowrap;transition:transform var(--duration-fast) var(--ease-base),box-shadow var(--duration-fast) var(--ease-base);cursor:default}
+/* ===== A FLOW CHIP MUST NOT BE WIDER THAN THE SCREEN (WCAG 1.4.10) =====
+   white-space:nowrap is right for a chip that says "batch" or "back-pressure" -- you do not want a
+   two-word token splitting across lines. But the chip text is AUTHORED PER TOPIC, and some topics
+   put a whole sentence in one: stream-batch-processing ships
+       "bounded finite dataset -> batch: all at once, ..."
+   which lays out at 530px. With nowrap it cannot wrap and it cannot shrink, so on a 320px phone it
+   simply ran off the right-hand edge -- and .stage{overflow-x:hidden} silently ATE the rest of the
+   sentence. 45 of 385 (topic x pane x width) states were losing content this way, across 46 topics.
+   NOBODY EVER SAW IT: the clip meant there was no scrollbar, no reflow, and no way for any check to
+   notice. Removing the clip is what surfaced this -- which is the entire argument for removing it.
+
+   white-space:normal lets a long chip wrap at its spaces; overflow-wrap:anywhere breaks a single
+   unbreakable token only if it STILL does not fit; max-width:100% guarantees the box can never
+   exceed its flex line. Short chips have no spaces and are far under the line width, so none of
+   the three ever engages on them -- the existing look is unchanged. Only the sentences move. */
+.fb{font:var(--font-weight-semibold) 11.5px ui-monospace,Menlo,monospace;padding:var(--space-7) var(--space-11);border-radius:8px;border:1.5px solid;white-space:normal;overflow-wrap:anywhere;max-width:100%;transition:transform var(--duration-fast) var(--ease-base),box-shadow var(--duration-fast) var(--ease-base);cursor:default}
 .fb:hover{transform:translateY(-1px) scale(1.02);box-shadow:0 4px 12px -3px var(--acc-a15)}
 .fb.p{background:var(--accbg);border-color:var(--acc);color:var(--accink)}
 .fb.t{background:var(--tealbg);border-color:var(--teal);color:var(--fb-t-fg)}
@@ -64,8 +79,18 @@ details.model>summary:hover{background:var(--acc2-a07);padding-left:var(--space-
 .arc-wrap{margin-top:var(--space-24)}
 .arc-h{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin-bottom:var(--space-12);display:flex;align-items:baseline;gap:var(--space-9);flex-wrap:wrap}
 .arc-h .sub{font-size:var(--font-size-micro);font-weight:var(--font-weight-semibold);letter-spacing:.01em;text-transform:none;color:var(--mut2)}
+/* ===== THREE COLUMNS DO NOT FIT ON A PHONE (WCAG 1.4.10, loss of content) =====
+   Same defect as the drill's .dnav, one pane over: repeat(3,1fr) with no breakpoint. At 320px each
+   step is ~91px, and after the number badge + gap + padding the LABEL gets ~33px -- so the step
+   titles were cut by 43px at 320, 30px at 360, 20px at 390. The step names ARE the flow this pane
+   exists to teach; a step you cannot read is a step that is not there.
+   The ::before connector line is drawn for a 3-across row (left:8% -> right:8%, at the badge's
+   y-offset). Once the grid stacks it would be a stray rule struck through the first card, so it
+   goes with the third column. It is decoration at opacity .15; the steps are the content. */
 .arc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-10);position:relative}
 .arc-grid::before{content:"";position:absolute;top:var(--space-23);left:8%;right:8%;height:var(--space-2);background:linear-gradient(90deg,transparent 0%,var(--acc) 20%,var(--acc2) 50%,var(--acc) 80%,transparent 100%);opacity:.15;border-radius:1px;z-index:var(--z-base)}
+@media (max-width:600px){.arc-grid{grid-template-columns:repeat(2,1fr)}.arc-grid::before{display:none}}
+@media (max-width:400px){.arc-grid{grid-template-columns:1fr}}
 /* flowLine (3s infinite) deleted -- the connector line is static now. */
 .arc-step{z-index:1}
 .arc-step{display:flex;align-items:center;gap:var(--space-10);text-align:left;padding:var(--space-11) var(--space-13);border-radius:11px;border:1px solid var(--bd);background:var(--surf);box-shadow:var(--surf-sh);cursor:pointer;transition:transform var(--duration-base) var(--ease-glide),box-shadow var(--duration-moderate) var(--ease-base),border-color var(--duration-base) var(--ease-base),background var(--duration-base) var(--ease-base);font-family:inherit;position:relative;overflow:hidden}
@@ -77,7 +102,7 @@ details.model>summary:hover{background:var(--acc2-a07);padding-left:var(--space-
 .arc-step:nth-child(3n+1):hover{transform:translateY(-3px) scale(1.01) rotateX(2deg) rotateY(-1deg)}
 .arc-step:nth-child(3n+2):hover{transform:translateY(-3px) scale(1.01) rotateX(2deg) rotateY(1deg)}
 .arc-n{flex:none;width:var(--space-23);height:var(--space-23);border-radius:7px;display:grid;place-items:center;font:var(--font-weight-bold) 11px -apple-system,sans-serif;background:var(--accbg);color:var(--accink);transition:background var(--duration-base) var(--ease-base),color var(--duration-base) var(--ease-base),box-shadow var(--duration-base) var(--ease-base),transform var(--duration-base) var(--ease-spring)}
-.arc-t{font-size:var(--font-size-caption);font-weight:var(--font-weight-semibold);color:var(--ink);line-height:var(--line-height-snug)}
+.arc-t{font-size:var(--font-size-caption);font-weight:var(--font-weight-semibold);color:var(--ink);line-height:var(--line-height-snug);overflow-wrap:anywhere}
 .arc-step.on{border-color:var(--acc);background:linear-gradient(135deg,var(--accbg) 0%,var(--acc-a06) 100%);box-shadow:0 0 0 1px var(--acc),0 0 20px -6px var(--acc-a18),var(--surf-sh);transform:translateY(-2px)}
 .arc-step.on .arc-n{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;box-shadow:0 2px 8px -2px var(--acc-a40)}
 .arc-step.done .arc-n{background:transparent;color:var(--acc);box-shadow:inset 0 0 0 1.5px var(--acc)}

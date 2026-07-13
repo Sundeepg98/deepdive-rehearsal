@@ -111,18 +111,18 @@ both allowed forms are ASCII and both fail loudly. The enforced, global part is
 "ASCII-only".
 
 `tools/normalize_to_ascii.py` did the one-time migration (258 raw chars across 17
-files, deterministically -- not by hand). `make check` enforces it from then on,
+files, deterministically -- not by hand). `npm run gate` enforces it from then on,
 running five checks and blocking on any failure:
 
 | check | enforces |
 |---|---|
 | `ascii_guard` | source is ASCII-only |
 | `syntax_check` | every editable module parses (`node --check`; build-include aggregators skipped) |
-| `build_integrity` | build resolves, rebuilt deliverable matches, 9 panes + 7 overlays present |
+| `build_integrity` | build resolves + syncs the deliverable, the COMMITTED deliverable is a fresh build of the COMMITTED source, 9 panes + 7 overlays present |
 | `render` | panes/overlays render, no JS/reference errors, no horizontal overflow |
 | `entity_leak` | no HTML entity reaches visible text (catches the `textContent` trap) |
 
-The browser checks skip cleanly when Playwright/Chrome are absent, so `make check` is
+The browser checks skip cleanly when Playwright/Chrome are absent, so `npm run gate` is
 CI-safe. This is not theoretical: on its first run the gate caught a real defect --
 the `cmpNotes` coaching strings were entitized by the migration but are consumed via
 `textContent`, so `&mdash;` would have shown up literally. They were switched to `\u`

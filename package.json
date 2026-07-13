@@ -5,7 +5,7 @@
   "description": "Dev/test tooling for the offline single-file interview trainer. The shipped deliverable is zero-dependency and self-contained; this package exists ONLY so THE GATE's browser checks (render / entity_leak / e2e_interactions) can run via Playwright locally and in CI.",
   "scripts": {
     "tokens": "style-dictionary build --config design-tokens/config.json",
-    "build": "style-dictionary build --config design-tokens/config.json && node tools/postprocess-tokens.mjs && node tools/build-visual-kit.mjs && vite build",
+    "build": "style-dictionary build --config design-tokens/config.json && node tools/postprocess-tokens.mjs && node tools/build-visual-kit.mjs && vite build && node tools/sync-deliverable.mjs",
     "dev": "style-dictionary build --config design-tokens/config.json && node tools/postprocess-tokens.mjs && node tools/build-visual-kit.mjs && vite",
     "preview": "vite preview",
     "gate": "python3 test/check_all.py",

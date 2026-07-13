@@ -109,24 +109,36 @@ would be fragmentation, not modularity.
 Then rebuild:
 
 ```
-python3 build.py                 # → deepdive_content_pipeline_rehearsal.html
-python3 build.py out.html        # → a custom path
+npm run build     # → dist/index.html AND deepdive_content_pipeline_rehearsal.html
 ```
+
+**`npm run build` writes both files, every time.** That is deliberate, and it is the
+only build there is. The deliverable is what ships, what CI deploys, and what every
+browser check in THE GATE actually loads — so a build that refreshed `dist/` and left
+the deliverable behind meant you were testing yesterday's bytes while believing you
+were testing your change. (It did, for months: the copy lived only in a `make` target,
+and `make` is not installed on the Windows dev box. Agents measured the stale artifact
+and blamed their own fixes.) There is now no command that produces one without the other.
 
 ## Development
 
 ```
-make build        # assemble src/ -> the deliverable
-make check        # dependency-free integrity check (rebuild + verify, no browser)
-make test-render  # functional browser test (needs: npm i playwright && npx playwright install chromium)
+npm run build     # assemble src/ → dist/index.html + the deliverable
+npm run gate      # THE GATE: every check (browser checks skip if Playwright is absent)
+npm run e2e       # just the browser checks
+npm run dev       # vite dev server with watch
 ```
 
-`make check` rebuilds the source and asserts the output is **byte-identical to
-the committed deliverable** (so source and shipped file never drift), that no
-include markers are left unresolved, and that the 9 panes + 7 overlays are
-present. `make test-render` loads the built file in a real browser and confirms
-every pane switches, every overlay exists, and there are no JS errors or
-horizontal overflow.
+`make build` / `make check` are thin aliases for the first two, for anyone who has
+`make`. They hold no build logic of their own.
+
+`npm run gate` runs 30+ checks. Among them, `build_integrity` rebuilds the source and
+asserts that the **committed** deliverable is byte-identical to a fresh build of the
+**committed** source (so the shipped file can never drift from `src/`), that the build
+step which syncs the deliverable actually ran, that no include markers are left
+unresolved, and that the 9 panes + 7 overlays are present. The browser checks load the
+deliverable in a real browser and confirm every pane switches, every overlay exists, and
+there are no JS errors or horizontal overflow.
 
 ## Design notes
 

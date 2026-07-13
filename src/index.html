@@ -41,6 +41,27 @@
     <button class="tools-fab" id="toolsfab" type="button">Tools</button>
     </div>
     <div class="tools-bd" id="toolsbd" aria-hidden="true"></div>
+  <!-- .seg (the pane switcher) MUST precede .mockbar in the DOM. It PAINTS above the tool
+       list, and it used to be dragged there by `.sidebar .seg{order:1}` in styles.css --
+       but flex `order` reorders PAINT and never TAB ORDER, so focus followed the DOM: the
+       app's primary navigation was the 25th of 48 tab stops, reached only after walking all
+       13 tool buttons that sit visually BELOW it (WCAG 2.4.3). Both `order` declarations are
+       now gone and the DOM carries the order, so paint and focus cannot drift apart again.
+       text-zoom.js and pomodoro.js inject their widgets immediately before this element,
+       which is what keeps them painting between .mockcta and the switcher. -->
+  <div class="seg" role="group" aria-label="Rehearsal sections">
+    <button type="button" class="on" data-tab="walk"><span>Walkthrough</span><span class="n">MECHANICS</span></button>
+    <button type="button" data-tab="drill"><span>Probe Drill</span><span class="n">GRADED</span></button>
+    <button type="button" data-tab="wb"><span>Whiteboard</span><span class="n">RECONSTRUCT</span></button>
+    <button type="button" data-tab="sys"><span>System Map</span><span class="n">ZOOM OUT</span></button>
+    <button type="button" data-tab="trade"><span>Trade-offs</span><span class="n">DECISIONS</span></button>
+    <button type="button" data-tab="model"><span>Model Answers</span><span class="n">SCRIPTS</span></button>
+    <button type="button" data-tab="num"><span>Numbers</span><span class="n">ESTIMATE</span></button>
+    <button type="button" data-tab="rf"><span>Red Flags</span><span class="n">ANTI-PATTERNS</span></button>
+    <button type="button" data-tab="open"><span>30-Second</span><span class="n">OPEN &amp; CLOSE</span></button>
+    <button type="button" data-tab="viz" hidden><span>Visualize</span><span class="n">GPU MODE</span></button>
+  </div>
+
     <div class="mockbar">
     <div class="mb-sec">Find a topic</div>
     <button class="crambtn" id="idxopen" type="button"><span class="mb-tx"><span class="mb-t">Topic index</span><span class="mb-d"> &mdash; all topics across the six groups</span></span></button>
@@ -59,19 +80,6 @@
     <div class="mb-sec">Settings</div>
     <button class="crambtn kbd-only" id="keyopen" type="button"><span class="mb-tx"><span class="mb-t">Keyboard shortcuts</span><span class="mb-d"> &mdash; jump views, drive it by key</span></span></button>
     <button class="crambtn cram-tog" id="themetog" type="button" aria-pressed="false"><span class="mb-ic">&#9789;</span>Dark mode &mdash; <b class="tt-state">off</b></button></div>
-
-  <div class="seg" role="group" aria-label="Rehearsal sections">
-    <button type="button" class="on" data-tab="walk"><span>Walkthrough</span><span class="n">MECHANICS</span></button>
-    <button type="button" data-tab="drill"><span>Probe Drill</span><span class="n">GRADED</span></button>
-    <button type="button" data-tab="wb"><span>Whiteboard</span><span class="n">RECONSTRUCT</span></button>
-    <button type="button" data-tab="sys"><span>System Map</span><span class="n">ZOOM OUT</span></button>
-    <button type="button" data-tab="trade"><span>Trade-offs</span><span class="n">DECISIONS</span></button>
-    <button type="button" data-tab="model"><span>Model Answers</span><span class="n">SCRIPTS</span></button>
-    <button type="button" data-tab="num"><span>Numbers</span><span class="n">ESTIMATE</span></button>
-    <button type="button" data-tab="rf"><span>Red Flags</span><span class="n">ANTI-PATTERNS</span></button>
-    <button type="button" data-tab="open"><span>30-Second</span><span class="n">OPEN &amp; CLOSE</span></button>
-    <button type="button" data-tab="viz" hidden><span>Visualize</span><span class="n">GPU MODE</span></button>
-  </div>
 
   </aside>
     <main class="stage" role="main">

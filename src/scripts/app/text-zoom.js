@@ -48,7 +48,12 @@
   function build() {
     var sidebar = document.querySelector('.sidebar');
     if (!sidebar || document.getElementById('textzoom')) return;
-    var mockbar = sidebar.querySelector('.mockbar');
+    /* Anchor on .seg, not .mockbar. This widget paints BETWEEN the mock CTA and the pane
+       switcher, and it held that spot only because .mockbar carried `order:2` -- with the
+       sidebar's `order` gone (it desynced tab order from paint: WCAG 2.4.3, see styles.css),
+       DOM position IS paint position, so inserting before .seg is what keeps this above the
+       switcher. Inserting before .mockbar would now drop it BELOW the switcher. */
+    var anchor = sidebar.querySelector('.seg');
 
     var wrap = document.createElement('div');
     wrap.id = 'textzoom';
@@ -64,7 +69,7 @@
     wrap.appendChild(label);
     wrap.appendChild(decBtn);
     wrap.appendChild(incBtn);
-    sidebar.insertBefore(wrap, mockbar || null);
+    sidebar.insertBefore(wrap, anchor || null);
     apply();
   }
 

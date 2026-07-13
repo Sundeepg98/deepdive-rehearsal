@@ -710,13 +710,35 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover{background:rgba(150,140,
 /* overlay entrance (v94): backdrop fade + panel slide-up&scale - reduced-motion-safe (global rule makes it instant) */
 @keyframes ovbg{from{opacity:0;backdrop-filter:blur(0px)}to{opacity:1;backdrop-filter:blur(8px)}}
 @keyframes ovpan{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:none}}
-/* View Transitions API */
-@supports (view-transition-name:none){
-::view-transition-old(root){animation:vtOut var(--duration-moderate) var(--ease-glide)}
-::view-transition-new(root){animation:vtIn var(--duration-moderate) var(--ease-glide)}
-@keyframes vtOut{from{opacity:1}to{opacity:0;transform:translateY(-8px)}}
-@keyframes vtIn{from{opacity:0;transform:translateY(8px)}to{opacity:1}}
-}
+/* ===== THE VIEW TRANSITION RULES ARE GONE, AND THEY MUST NOT COME BACK =====
+   There were four here: `::view-transition-old(root)` / `-new(root)` animations and their keyframes.
+   The app no longer calls document.startViewTransition() at all (view-transitions.js), so every one
+   of them was dead -- and dead CSS that reads as done is the single most expensive habit in this file
+   (the loading shimmer never ran once; the print page-break rules matched zero nodes for the app's
+   whole life; 41 forced-colors selectors matched nothing because they aimed across the shadow
+   boundary). They are deleted rather than left to rot.
+
+   WHY THE API WENT. A view transition CAPTURES A SNAPSHOT of the page, and the browser stops
+   hit-testing what it has captured. The UA default captures the ENTIRE DOCUMENT
+   (`view-transition-name:root` on the root element), so for 0-500ms after every pane and topic
+   switch the app was INERT: elementsFromPoint over a pane tab returned exactly the root element --
+   not the button, not even BODY -- while the button was still visible and pointer-events:auto.
+   Nothing was covering it. A real trusted click did nothing.
+
+   BOTH CSS FIXES WERE TRIED AND MEASURED, and neither reaches zero:
+     `::view-transition{pointer-events:none}` -- correct, survives the build, the whole pseudo tree
+        really does compute `none`, and it CHANGES NOTHING. The snapshot is not what eats the input.
+        You cannot have a full-page snapshot and a live page under it: the snapshot IS the page.
+     scoping the capture to `.stage` -- genuinely better (input revives while the animation is still
+        running rather than after it), but still ~150ms dead, because the freeze is the UA taking the
+        snapshot of an 11.4MB document, not the app's own work (measured at 0.2ms) and not the
+        animation. No CSS reaches it.
+
+   So the swap runs directly now, and the incoming pane still animates -- `.pane.on{animation:panein}`
+   at :624 was always doing most of the visible work, and it costs nothing, because it animates the
+   LIVE element instead of a snapshot of it. Full rationale and the phase timings: view-transitions.js.
+   Enforced by test/transition_deadzone.cjs, which fires real hit-tested clicks at +0/+16/+60/+150/
+   +300ms after every switch. Restore the API here or there and it goes red. */
 .mock-ov.open,.cram-ov.open{animation:ovbg var(--duration-base) var(--ease-base)}
 @keyframes panelIn{from{opacity:0;transform:translateY(28px) scale(.96) translateZ(-30px)}to{opacity:1;transform:none translateZ(0)}}
 .mock-ov.open .mock-panel,.cram-ov.open .cram-panel{animation:panelIn var(--duration-slow) var(--ease-glide)}

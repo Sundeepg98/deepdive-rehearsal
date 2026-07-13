@@ -196,8 +196,15 @@ var TopicRegistry = (function () {
     publishBanks(t);                                     /* (2) reseed globals BEFORE anyone reads */
     applyIdentity(t.identity);                           /* (3) one identity home */
     var fire = function () { window.dispatchEvent(new CustomEvent('deeptopicchange', { detail: { topic: t, id: id } })); };
-    if (window.ViewTransitions && window.ViewTransitions.run && document.querySelector('.pane.on'))
-      window.ViewTransitions.run(fire);                  /* (4) cross-fade ONLY the visible pane; other 8 are display:none */
+    /* (4) The swap. ViewTransitions.run() no longer defers into document.startViewTransition() --
+       it runs `fire` synchronously. That API captured a SNAPSHOT of the page, and a browser does not
+       hit-test what it has captured: for 0-500ms after every switch the app was INERT and a real
+       click on a pane tab did nothing. The incoming pane still animates (`.pane.on{animation:panein}`),
+       because that animates the LIVE element rather than a picture of it. See view-transitions.js for
+       the measurements, and test/transition_deadzone.cjs for the guard.
+       `fire` is now SYNCHRONOUS: deeptopicchange has already been delivered by the time setTopic
+       returns, so afterTopicSwap below runs against panes that are ALREADY re-rendered. */
+    if (window.ViewTransitions && window.ViewTransitions.run) window.ViewTransitions.run(fire);
     else fire();
     afterTopicSwap(t);                                   /* (5) scroll/focus/announce */
     if (window.Router && window.Router.setTopic) window.Router.setTopic(id); /* (6) reflect in hash, silently */

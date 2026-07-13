@@ -108,13 +108,47 @@ async function enterApp(page) {
     if (window.IndexOverlay.isOpen()) window.IndexOverlay.close();
     if (document.documentElement.dataset.view === 'home') window.Router.navigate('walk');
   });
-  /* succeed only once the topic UI is really up and nothing modal is over it */
-  await page.waitForFunction(() => {
+  /* SUCCEED ONLY ON THE ACTUAL END STATE -- never on a boolean that flips ahead of the DOM.
+   *
+   * THE TRAP THIS CLOSES (it made a check that could not fail -- the ninth in this repo).
+   * IndexOverlay.close() flips isOpen() to false SYNCHRONOUSLY, but the element keeps the `open`
+   * class for another 220ms (a setTimeout, so the fade-out can paint). This helper used to wait for
+   * `isOpen() === false` and then settle() -- two rAFs, ~32ms -- so it RETURNED INSIDE THAT WINDOW,
+   * with the overlay still carrying `open`. Anything the caller did next ran against a layer the app
+   * still considered present.
+   *
+   * That was not academic. shell.js's global keymap bails out under an open dialog, and it used to
+   * test the CLASS alone -- so for those 220ms THE ENTIRE KEYBOARD WAS DEAD while the app's own API
+   * reported the overlay closed. Every check that closed the overlay and immediately pressed a key
+   * was driving a switched-off keyboard, and "key X does not leak" went GREEN FOR THE WRONG REASON.
+   *
+   * shell.js and styles.css have since been fixed to gate on `.open:not(.closing)` (THE INTERACTIVITY
+   * INVARIANT), so the window is no longer dead -- but a harness whose exit condition is a boolean
+   * that disagrees with the DOM is a loaded gun regardless: it would silently start lying again the
+   * day anyone widened that predicate back to `.open`. So wait for what is actually TRUE: no dialog
+   * is still open. It costs one extra frame and it cannot lie.
+   *
+   * Scoped to [role=dialog][aria-modal=true] -- the same set shell.js's keymap consults, derived from
+   * the DOM rather than a hard-coded list, so a future overlay is covered the day it is added. */
+  const QUIESCENT = () => {
     if (window.IndexOverlay.isOpen()) { window.IndexOverlay.close(); return false; }
+    if (document.querySelector('[role="dialog"][aria-modal="true"].open')) return false;  /* zombie layer */
     if (document.documentElement.dataset.view === 'home') return false;
     const app = document.querySelector('.app');
     return !!app && getComputedStyle(app).display !== 'none';
-  }, null, { timeout: ACT_MS });
+  };
+  try {
+    await page.waitForFunction(QUIESCENT, null, { timeout: ACT_MS });
+  } catch (e) {
+    /* A blank timeout reads as a flake, and "flake" is how this repo has historically lost a red.
+       Name the layer that is still up. (enterApp's contract is "the topic UI, with nothing modal over
+       it" -- so a check that deliberately leaves Mock Run open must not call it.) */
+    const stuck = await page.evaluate(() => {
+      const d = document.querySelector('[role="dialog"][aria-modal="true"].open');
+      return d ? (d.id || d.className) : (document.documentElement.dataset.view === 'home' ? '(still on #home)' : '(.app never became visible)');
+    }).catch(() => '(page gone)');
+    throw new Error('enterApp: the app never became usable -- still blocked by: ' + stuck);
+  }
   return settle(page);
 }
 /* the old name, kept so existing checks read unchanged */

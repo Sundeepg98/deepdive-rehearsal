@@ -175,6 +175,27 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # on the pre-fix build before it was committed. A check that has never failed
                      # is not a check.
                      ('overlay_deadzone', 'test/overlay_deadzone.cjs'),
+                     # ...AND NEITHER MAY A SWITCH. The sister check: same invariant (a surface being
+                     # ANIMATED, not interacted with, must never consume input), one layer further out.
+                     # overlay_deadzone guards the layers the APP paints; this guards the layer the
+                     # BROWSER paints. Both switch paths ran their DOM swap inside
+                     # document.startViewTransition(), which CAPTURES A SNAPSHOT -- and a browser does
+                     # not hit-test what it has captured. The UA default captures the ENTIRE DOCUMENT,
+                     # so for 0-500ms after every pane and topic switch elementsFromPoint over a pane
+                     # tab returned exactly ["HTML"] -- not the button, not even BODY -- while the
+                     # button was still visible and pointer-events:auto. Nothing was covering it. The
+                     # page was INERT and a real trusted click did nothing. Stacked with the index
+                     # overlay's fade-out that is the PRIMARY entry action: pick a topic, click a pane
+                     # tab, and the app ignores you for over half a second.
+                     # The reflex fix -- ::view-transition{pointer-events:none} -- is CORRECT, survives
+                     # the build, computes `none` across the whole pseudo tree, AND CHANGES NOTHING;
+                     # a check asserting on that property would have gone green on a no-op. So every
+                     # assertion here is BEHAVIOURAL: real page.mouse.click / page.keyboard.press at
+                     # +0/+16/+60/+150/+300ms after each switch, each of which must REACH its tab AND
+                     # make the app respond. It also asserts each switch genuinely happened, so it
+                     # cannot pass because nothing moved. FAILED 24 of 38 assertions on the pre-fix
+                     # build, and still failed on the plausible half-fix (scoping the capture).
+                     ('transition_deadzone', 'test/transition_deadzone.cjs'),
                      # room wired at boot (data-group + --topic-ink + --acc rebind) AND the
                      # blank-page class of bug cannot recur (reduced-motion still RENDERS,
                      # both themes). The two things a grep cannot see. (Phase 6)

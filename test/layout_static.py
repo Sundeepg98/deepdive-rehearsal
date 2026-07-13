@@ -1,7 +1,25 @@
 #!/usr/bin/env python3
-"""Visual regression tests -- structure-based checks for layout issues.
-These catch common visual bugs by inspecting the built HTML + CSS.
-Run: python3 test/visual_regression.py"""
+"""STATIC LAYOUT ASSERTIONS -- a regex over the CSS/HTML SOURCE. IT CANNOT SEE A PIXEL.
+
+This file was called `visual_regression.py` for most of its life, and the name was a lie that
+cost real coverage. It imports `re, sys, os` and nothing else: no browser, no screenshot, no image
+decoder. It can assert that the string `display:none` appears inside the `.mock-ov` block; it
+cannot observe that anything was actually PAINTED. A DOM reorder that moved the pane switcher
+sailed through it GREEN, and an agent had to write a private pixel differ to prove paint-neutrality
+(0 of 284,160 px desktop, 0 of 329,160 px mobile) because THE GATE COULD NOT. It was the tenth
+check in this repo that structurally could not fail -- not because its assertions were wrong, but
+because its NAME promised a capability its imports made impossible.
+
+The assertions below are still worth having. They are cheap, they need no browser, and they reach
+places a screenshot cannot -- :hover rules, keyframe bodies, z-index tokens, duplicate IDs. They
+are just not VISUAL REGRESSION, so they no longer claim to be.
+
+THE REAL PIXEL CHECK IS `test/visual_regression.cjs`: it renders the app in Chromium, brings it to
+a proven rest state across all 18 shadow/light roots, and diffs the decoded pixels against
+committed baselines. If you are about to add an assertion here that is really about what the screen
+LOOKS like, it belongs there instead.
+
+Run: python3 test/layout_static.py"""
 
 import re, sys, os
 
@@ -168,6 +186,12 @@ if overlay_z and z_index_map:
         check(f"Overlay z-index ({overlay_z} = {rz}) is highest", rz >= max(z_index_map.keys()))
 
 # ===== Summary =====
+# The gate reports a check by its LAST LINE. Say what this actually proved -- and, just as
+# importantly, what it did not, so nobody reads a green here as "the app looks right".
 print(f"\n{'='*60}")
-print(f"  Results: {PASSED} passed, {FAILED} failed")
+if FAILED:
+    print(f"LAYOUT STATIC: FAIL ({FAILED} failed, {PASSED} passed)")
+else:
+    print(f"LAYOUT STATIC: PASS  ({PASSED} source assertions; NO PIXELS INSPECTED -- "
+          f"test/visual_regression.cjs is the check that looks at the screen)")
 sys.exit(0 if FAILED == 0 else 1)

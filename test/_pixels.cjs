@@ -85,6 +85,54 @@ function decodePng(buf) {
   return { w, h, data: out };
 }
 
+/* ===== ENCODE ==============================================================================
+ * The decoder above answers "did it render?". The ENCODER exists so a failing pixel check can
+ * hand a human the EVIDENCE -- the actual frame and a diff map with the changed pixels burned in
+ * red -- instead of a number. A visual check whose only output is "4,812 pixels changed" makes a
+ * human re-run it; one that hands over an image makes them look at it.
+ * 8-bit RGBA, colour type 6, filter 0 on every row. Round-trips through decodePng() above.
+ */
+const CRC_TABLE = (() => {
+  const t = new Int32Array(256);
+  for (let n = 0; n < 256; n++) {
+    let c = n;
+    for (let k = 0; k < 8; k++) c = (c & 1) ? (0xedb88320 ^ (c >>> 1)) : (c >>> 1);
+    t[n] = c;
+  }
+  return t;
+})();
+
+function crc32(buf) {
+  let c = -1;
+  for (let i = 0; i < buf.length; i++) c = CRC_TABLE[(c ^ buf[i]) & 0xff] ^ (c >>> 8);
+  return (c ^ -1) >>> 0;
+}
+
+function chunk(type, data) {
+  const len = Buffer.alloc(4);
+  len.writeUInt32BE(data.length, 0);
+  const td = Buffer.concat([Buffer.from(type, 'ascii'), data]);
+  const crc = Buffer.alloc(4);
+  crc.writeUInt32BE(crc32(td), 0);
+  return Buffer.concat([len, td, crc]);
+}
+
+function encodePng(w, h, rgba) {
+  const stride = w * 4;
+  const raw = Buffer.alloc((stride + 1) * h);
+  for (let y = 0; y < h; y++) {
+    raw[y * (stride + 1)] = 0;                                   /* filter: none */
+    rgba.copy(raw, y * (stride + 1) + 1, y * stride, y * stride + stride);
+  }
+  const ihdr = Buffer.alloc(13);
+  ihdr.writeUInt32BE(w, 0);
+  ihdr.writeUInt32BE(h, 4);
+  ihdr[8] = 8;    /* bit depth   */
+  ihdr[9] = 6;    /* colour type: RGBA */
+  return Buffer.concat([PNG_SIG, chunk('IHDR', ihdr),
+    chunk('IDAT', zlib.deflateSync(raw, { level: 9 })), chunk('IEND', Buffer.alloc(0))]);
+}
+
 /* The modal colour = the background, by definition: on any real page the background is the single
    most common colour, and on a BLANK page it is the ONLY one. Quantised to 8 levels per channel so
    a subpixel-antialiased gradient background still reads as one bucket. */
@@ -123,4 +171,4 @@ function ink(png, box) {
   return { w: img.w, h: img.h, ink: n, tot, inkPct: tot ? +(100 * n / tot).toFixed(2) : 0, distinct: dom.distinct };
 }
 
-module.exports = { decodePng, dominant, ink };
+module.exports = { decodePng, encodePng, dominant, ink };

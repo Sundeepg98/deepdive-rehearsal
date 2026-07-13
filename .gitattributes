@@ -4,3 +4,9 @@
 # (a phantom git-dirty diff + a fresh-clone build_integrity failure). eol=lf
 # keeps the working tree LF so the build is byte-reproducible everywhere.
 * text=auto eol=lf
+
+# ...but the visual-regression baselines are BINARY, and `text=auto` above is free to GUESS.
+# A PNG that gets EOL-normalised is a corrupt PNG -- and it would corrupt SILENTLY, on checkout,
+# on somebody else's machine, surfacing as "the pixel check is flaky" rather than as what it is.
+# Be explicit. (`binary` = `-text -diff`.)
+*.png binary

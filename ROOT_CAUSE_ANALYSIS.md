@@ -261,5 +261,6 @@ function closeMockbar() {
 |-----------|---------|
 | `test/e2e_scroll_test.py` | Verifies zero body scroll on desktop, mockbar hidden on mobile |
 | `test/css_syntax.py` | Validates brace balance, keyframe syntax |
-| `test/visual_regression.py` | Structure-based visual assertions |
+| `test/layout_static.py` | Source-level layout assertions (a regex over CSS/HTML -- **sees no pixels**; was misnamed `visual_regression.py`) |
+| `test/visual_regression.cjs` | Renders the app in Chromium and diffs **actual pixels** against committed per-platform baselines |
 | `test/unit_tests.py` | 66 tests covering data purity, CSS, JS integrity |

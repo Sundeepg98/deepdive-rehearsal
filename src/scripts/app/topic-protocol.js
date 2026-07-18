@@ -169,6 +169,31 @@ function closeTransientOverlays() {
 function afterTopicSwap(t) {
   try { window.scrollTo(0, 0); } catch (e) {}
   var st = document.querySelector('.stage'); if (st) st.scrollTop = 0;
+  /* QW1: fade the freshly repainted work surface in (styles.css `.stage.topicswap`). The swap
+     itself stays SYNCHRONOUS -- this decorates the already-swapped frame, it never defers the
+     swap (the startViewTransition mistake; see view-transitions.js). animationend takes the
+     class back off so the stage rests with a clean class list, which also makes the normal path
+     a bare classList.add; the remove -> reflow -> add replay idiom (the .stage-head.headin
+     trick) is paid ONLY when a switch lands inside the previous fade's 150ms window.
+     REDUCED MOTION IS GATED HERE TOO, not just in CSS: with the animation stripped, animationend
+     never fires, the class would stay parked, and every later switch would pay the remove ->
+     void offsetWidth -> add path -- a real style invalidation + FORCED SYNCHRONOUS LAYOUT of an
+     11.6MB document, measured at 1412ms once under emulated reduce on this box. Skipping the
+     stamp entirely makes reduced motion strictly CHEAPER than the fade path, never dearer, and
+     the CSS strip (styles.css line ~336/@media blocks) stays as the second, independent lock.
+     If the stage is display:none right now (a room card on the home called setTopic before
+     goView), the fade simply plays when the stage next gets a box: the reveal IS the swap the
+     user sees. */
+  if (st && !(window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches)) {
+    if (!st.__swapWired) {
+      st.__swapWired = true;
+      st.addEventListener('animationend', function (e) {
+        if (e.target === st && e.animationName === 'stagefade') st.classList.remove('topicswap');
+      });
+    }
+    if (st.classList.contains('topicswap')) { st.classList.remove('topicswap'); void st.offsetWidth; }
+    st.classList.add('topicswap');
+  }
   var head = document.getElementById('stagehead');
   if (head) { try { head.setAttribute('tabindex', '-1'); head.focus({ preventScroll: true }); } catch (e) {} }
   var _grp = '';

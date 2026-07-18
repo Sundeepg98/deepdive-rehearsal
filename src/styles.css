@@ -703,6 +703,26 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
 @keyframes panein{from{opacity:0;filter:blur(3px)}to{opacity:1;filter:blur(0)}}
 html[data-theme="dark"] .pane.on{animation-name:paneinDark}
 @keyframes paneinDark{from{opacity:0;filter:blur(2px)}to{opacity:1;filter:blur(0)}}
+/* ===== QW1: THE TOPIC SWAP FADES TOO. =====
+   A pane switch re-toggles `.on`, so panein replays -- but a TOPIC switch repaints the pane's
+   shadow content IN PLACE (setTopic never touches `.on`; pane.getAnimations() is empty either
+   side -- click_drift.cjs verified it), so the app's single most content-heavy state change was
+   its only unanimated one: MEASURED flat opacity 1 on every rAF sample after stepTopic(1), a
+   one-frame hard snap after a ~43ms synchronous re-render stall.
+   The stage -- the whole work surface, masthead included -- wears .topicswap for ONE pass of
+   `stagefade` (stamped by afterTopicSwap in topic-protocol.js, removed on animationend), the
+   same opacity+blur entrance panein already ships, but at var(--duration-fast): a topic step
+   ([ / ], the dropdown, a related-topic jump) is a rapid-repeat action, and a 500ms fade on it
+   would read as lag, not smoothness. NOT a startViewTransition (that API froze hit-testing for
+   150-500ms on this 11.6MB document and was torn out -- see view-transitions.js); NOT a
+   transform (hit-testing follows transforms -- the panein lesson above). Opacity and filter
+   leave geometry and hit-tests untouched, so the deadzone/drift gates stay green by
+   construction. Blur is containing-block-safe here: .stage is already position:relative, and
+   every position:fixed element in the app (scrolltop, ix-undo, tour, swipe hint) is appended to
+   document.body, OUTSIDE it. Fail-safe under reduced motion: base opacity is 1; the fade exists
+   only inside @keyframes, so stripping the animation yields "no fade", never "invisible app". */
+.stage.topicswap{animation:stagefade var(--duration-fast) var(--ease-glide)}
+@keyframes stagefade{from{opacity:0;filter:blur(2px)}to{opacity:1;filter:blur(0)}}
 /* one-time rail entrance (opacity only -> sticky-safe) */
 .sidebar{animation:railin var(--duration-slowest) var(--ease-glide)}
 @keyframes railin{from{opacity:0}to{opacity:1}}
@@ -721,7 +741,7 @@ html[data-theme="dark"] .pane.on{animation-name:paneinDark}
 @media(max-width:919px){
   .sidebar .mockbar::before{content:"";display:block;width:var(--space-36);height:var(--space-4);border-radius:2px;background:var(--bd);margin:var(--space-2) auto var(--space-14)}
 }
-@media(prefers-reduced-motion:reduce){ .pane.on,.sidebar{animation:none} }
+@media(prefers-reduced-motion:reduce){ .pane.on,.sidebar,.stage.topicswap{animation:none} }
 
 /* ===== v77: stage context header ===== */
 /* v85: section masthead - gradient accent rule + baseline hairline for clear header->content structure, tighter type rhythm (applies to all 9 panes) */
@@ -1138,6 +1158,15 @@ body.is-hidden,body.is-hidden *,body.is-hidden *::before,body.is-hidden *::after
 .tn-i-tail{font-size:var(--font-size-nano);color:var(--mut2);text-transform:uppercase;letter-spacing:.3px;align-self:start}
 .tn-group{padding:var(--space-10) var(--space-10) var(--space-3) var(--space-11);font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);text-transform:uppercase;letter-spacing:.7px;color:var(--mut2);opacity:.8}
 .tn-menu>.tn-group:first-child{padding-top:var(--space-5)}
+/* QW1: the dropdown POPPED (hidden toggles display -- measured flat opacity 1 on its first
+   painted frame). Opening now replays `menuin` each time the box is created, the same
+   opacity+blur entrance as panein/stagefade at the menu-appropriate var(--duration-fast).
+   CLOSE STAYS INSTANT, deliberately: the close path is `hidden` (display:none in the same
+   frame), so a dismissed menu can never linger as an invisible click-eating layer over the
+   sidebar -- the exact zombie-layer class the INTERACTIVITY INVARIANT above exists to kill.
+   Fail-safe under reduced motion: base opacity 1, fade only inside the keyframes. */
+.tn-menu:not([hidden]){animation:menuin var(--duration-fast) var(--ease-glide)}
+@keyframes menuin{from{opacity:0;filter:blur(2px)}to{opacity:1;filter:blur(0)}}
 /* ===================== CROSS-GROUP SURFACES ARE ROOMLESS =====================
    The Topic Index lists all 46 topics across ALL SIX groups; the Cross-topic drill pulls probes
    from every one of them. Both inherited --acc from <html>, so they wore whichever room happened
@@ -1513,7 +1542,18 @@ h1,h2,h3,h4,h5,h6{text-wrap:balance}
    (test/overlay_deadzone.cjs asserts the home actually PAINTS PIXELS, not that nodes exist). No
    selector here reaches into a pane's shadow root -- the nine panes are untouched. */
 #home{display:none}
-html[data-view="home"] #home{display:block}
+/* QW1: entering the home was the app's last hard CUT (measured flat opacity 1 on its first
+   painted frame; the topic chrome vanishes and 100vh of new document snaps in). The display
+   flip re-creates #home's box, so `homein` replays on every entry -- opacity ONLY, no blur:
+   this is also the boot surface, and it must stay the cheapest possible compositor fade under
+   bodyIn. LEAVING the home needs nothing added: .app's display flip already restarts panein on
+   the visible pane and railin on the sidebar (measured: panein 0 -> 1 over 500ms on home
+   leave), so both directions of the enter-leave pair now fade. Fail-safe under reduced motion:
+   base opacity 1 (the blank-page class of bug cannot recur -- the reduced-motion blocks strip
+   animation-name, and what remains is a fully visible home). */
+html[data-view="home"] #home{display:block;animation:homein var(--duration-fast) var(--ease-glide)}
+@keyframes homein{from{opacity:0}to{opacity:1}}
+@media(prefers-reduced-motion:reduce){html[data-view="home"] #home,.tn-menu:not([hidden]){animation:none}}
 html[data-view="home"] .app,
 html[data-view="home"] .rail,
 html[data-view="home"] .cmp-reopen{display:none}

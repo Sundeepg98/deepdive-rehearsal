@@ -51,7 +51,7 @@ var WALK_STYLE = `
 .fb.a{background:var(--amberbg);border-color:var(--amber);color:var(--fb-a-fg)}
 .fb.n{background:var(--fb-n-bg);border-color:#C9C3B8;color:var(--fb-n-fg)}
 .arr{color:var(--mut2);font-weight:var(--font-weight-heavy);font-size:var(--font-size-body)}
-.ins{margin-top:var(--space-14);font-size:var(--font-size-reading-sm);color:var(--ins-fg);max-width:var(--measure);background:linear-gradient(135deg,var(--ins-bg) 0%,var(--acc-a03) 100%);border-left:3px solid var(--acc);border-radius:9px;padding:var(--space-13) var(--space-16);line-height:var(--line-height-max);box-shadow:0 1px 4px -2px var(--acc-a08);animation:insIn var(--duration-slow) var(--ease-base) var(--duration-instant) backwards}
+.ins{margin-top:var(--space-14);font-size:var(--font-size-reading);color:var(--ins-fg);max-width:var(--measure);background:linear-gradient(135deg,var(--ins-bg) 0%,var(--acc-a03) 100%);border-left:3px solid var(--acc);border-radius:9px;padding:var(--space-13) var(--space-16);line-height:var(--line-height-max);box-shadow:0 1px 4px -2px var(--acc-a08);animation:insIn var(--duration-slow) var(--ease-base) var(--duration-instant) backwards}
 @keyframes insIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)}}
 .ins b{color:inherit;font-weight:var(--font-weight-semibold)}
 pre.code{margin:var(--space-2) var(--space-14) var(--space-13);background:linear-gradient(180deg,rgba(42,39,64,.98) 0%,rgba(36,33,58,.98) 100%),var(--code);border-radius:9px;padding:var(--space-13) var(--space-15);overflow-x:auto;font-family:ui-monospace,Menlo,monospace;font-size:var(--font-size-micro);line-height:var(--line-height-max);color:var(--codeink);position:relative;border-top:3px solid var(--acc);box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 4px 12px -4px rgba(0,0,0,.3)}
@@ -72,8 +72,8 @@ details.model[open]>summary::before{transform:rotate(90deg)}
 details.model>summary .sub{font-weight:var(--font-weight-semibold);color:var(--mut);font-size:var(--font-size-micro);letter-spacing:.3px}
 details.model>summary:hover{background:var(--acc2-a07);padding-left:var(--space-20)}
 .mbody{padding:var(--space-6) var(--space-20) var(--space-20);border-top:1px solid var(--bd)}
-.mbeat .ml{display:block;font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.9px;text-transform:uppercase;color:var(--acc);margin-bottom:var(--space-4)}
-.mq{margin:var(--space-17) 0 0;padding:var(--space-11) var(--space-13);background:var(--mq-bg);border-radius:9px;font-size:var(--font-size-small);color:var(--mut);font-style:italic}
+.mbeat .ml{display:block;font-size:var(--font-size-micro);font-weight:var(--font-weight-heavy);letter-spacing:.9px;text-transform:uppercase;color:var(--acc);margin-bottom:var(--space-4)}
+.mq{margin:var(--space-17) 0 0;padding:var(--space-11) var(--space-13);background:var(--mq-bg);border-radius:9px;font-size:var(--font-size-body);max-width:var(--measure);color:var(--mut);font-style:italic}
 .mbeat.ans{background:var(--accbg);border-radius:9px;padding:var(--space-11) var(--space-14);margin-top:var(--space-7)}
 .mbeat.ans:last-child{padding-bottom:var(--space-11)}/* the answer box keeps its own padding; the shared .mbeat:last-child reduction (now in MBEAT_SHEET, so it cascades after this inline rule at equal specificity) is meant only for plain beats */
 .arc-wrap{margin-top:var(--space-24)}

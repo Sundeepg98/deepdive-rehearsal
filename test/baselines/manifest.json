@@ -23,7 +23,7 @@
         "channelTol": 2,
         "maxChanged": 32
       },
-      "generated": "2026-07-13T11:03:19.282Z",
+      "generated": "2026-07-18T06:38:59.348Z",
       "baselines": {
         "home-light": {
           "file": "home-light-win32-chromium149.png",
@@ -47,7 +47,7 @@
           "file": "walk-light-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "09015602d2e4b20f",
+          "sha256": "760eddf0f0654a06",
           "hash": "#event-driven/walk",
           "theme": "light",
           "vp": "desktop"
@@ -56,7 +56,7 @@
           "file": "walk-dark-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "194354c66393d145",
+          "sha256": "d0a659a920f3d73c",
           "hash": "#event-driven/walk",
           "theme": "dark",
           "vp": "desktop"
@@ -65,7 +65,7 @@
           "file": "drill-light-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "6347bc84b651586d",
+          "sha256": "240d790e97a4ccdb",
           "hash": "#event-driven/drill",
           "theme": "light",
           "vp": "desktop"
@@ -74,7 +74,7 @@
           "file": "drill-dark-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "a09ec8d680794e20",
+          "sha256": "506ba156e5025020",
           "hash": "#event-driven/drill",
           "theme": "dark",
           "vp": "desktop"
@@ -83,7 +83,7 @@
           "file": "sys-light-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "eae0964d665b0dca",
+          "sha256": "6f9ff6e7096cbba8",
           "hash": "#event-driven/sys",
           "theme": "light",
           "vp": "desktop"
@@ -92,7 +92,7 @@
           "file": "num-light-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "cd7a63e33b08ecd0",
+          "sha256": "669894305ea3b784",
           "hash": "#event-driven/num",
           "theme": "light",
           "vp": "desktop"
@@ -101,7 +101,7 @@
           "file": "wb-light-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "de1dadf28a24895a",
+          "sha256": "b142a752bb328642",
           "hash": "#event-driven/wb",
           "theme": "light",
           "vp": "desktop"
@@ -110,7 +110,7 @@
           "file": "room-data-storage-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "b952045f4293784b",
+          "sha256": "a67a39196f4587ef",
           "hash": "#caching/walk",
           "theme": "light",
           "vp": "desktop"
@@ -119,7 +119,7 @@
           "file": "room-reliability-observability-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "aee04fa5077a846d",
+          "sha256": "a194249a0b037e22",
           "hash": "#retries-timeouts/walk",
           "theme": "light",
           "vp": "desktop"
@@ -128,7 +128,7 @@
           "file": "room-platform-infra-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "4ee89adab84b6436",
+          "sha256": "a1cf6b47027e0837",
           "hash": "#iac/walk",
           "theme": "light",
           "vp": "desktop"
@@ -137,7 +137,7 @@
           "file": "room-architecture-apis-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "84d225a0f1e25815",
+          "sha256": "67e4df1447e8c306",
           "hash": "#state-machine/walk",
           "theme": "light",
           "vp": "desktop"
@@ -146,7 +146,7 @@
           "file": "room-security-tenancy-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "df160f6a25ebaa69",
+          "sha256": "7a513884027f4d0f",
           "hash": "#signing/walk",
           "theme": "light",
           "vp": "desktop"
@@ -155,7 +155,7 @@
           "file": "m-walk-light-win32-chromium149.png",
           "w": 390,
           "h": 844,
-          "sha256": "a969dda984a364e2",
+          "sha256": "2bf494ff7581cdf3",
           "hash": "#event-driven/walk",
           "theme": "light",
           "vp": "mobile"
@@ -164,7 +164,7 @@
           "file": "m-walk-dark-win32-chromium149.png",
           "w": 390,
           "h": 844,
-          "sha256": "a06f1ccf436a1a3e",
+          "sha256": "8bfad804b6c5545e",
           "hash": "#event-driven/walk",
           "theme": "dark",
           "vp": "mobile"

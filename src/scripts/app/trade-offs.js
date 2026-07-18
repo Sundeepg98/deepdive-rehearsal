@@ -10,7 +10,7 @@
    shadow. The .opt trade-option family is shared with mixed-fire (OPT_SHEET);
    .dec/.dec-q/.dec-tell are pane-exclusive (TRADE_STYLE). Offline-safe. */
 var TRADE_STYLE = `
-.ledger .lead{font-size:var(--font-size-body);line-height:var(--line-height-loose);color:var(--ink);margin:var(--space-2) var(--space-2) var(--space-16)}
+.ledger .lead{font-size:var(--font-size-body);max-width:var(--measure);line-height:var(--line-height-loose);color:var(--ink);margin:var(--space-2) var(--space-2) var(--space-16)}
 .ledger .lead b{color:var(--accink)}
 .dec{background:linear-gradient(135deg,var(--surf) 0%,var(--acc-a02) 100%);box-shadow:var(--surf-sh);border:1px solid var(--bd);border-radius:14px;padding:var(--space-17) var(--space-19);margin-bottom:var(--space-14);border-top:3px solid var(--acc);position:relative;overflow:hidden;transition:box-shadow var(--duration-moderate) var(--ease-base),transform var(--duration-base) var(--ease-base),border-color var(--duration-base) var(--ease-base)}
 .dec:hover{box-shadow:var(--surf-sh),0 6px 24px -8px var(--acc-a12);transform:translateY(-1px);border-color:var(--acc-a15)}
@@ -18,8 +18,8 @@ var TRADE_STYLE = `
    ambient decoration behind dense trade-off text. Consistent with the spec's motion kill. */
 .dec-q{font-size:var(--font-size-body);font-weight:var(--font-weight-heavy);color:var(--ink);letter-spacing:-.2px;margin-bottom:var(--space-10);line-height:var(--line-height-normal)}
 .dec-q .vs{color:var(--mut2);font-weight:var(--font-weight-bold);font-size:var(--font-size-micro);padding:0 var(--space-4)}
-.dec-tell{margin-top:var(--space-14);padding-top:var(--space-12);border-top:1px dashed var(--bd);font-size:var(--font-size-caption);color:var(--teal);font-weight:var(--font-weight-bold);line-height:var(--line-height-airy)}
-.dec-tell::before{content:"\\2605";font-size:var(--font-size-caption);margin-right:var(--space-8)}
+.dec-tell{margin-top:var(--space-14);padding-top:var(--space-12);border-top:1px dashed var(--bd);font-size:var(--font-size-body);max-width:var(--measure);color:var(--teal);font-weight:var(--font-weight-bold);line-height:var(--line-height-airy)}
+.dec-tell::before{content:"\\2605";font-size:var(--font-size-body);margin-right:var(--space-8)}
 .dec-tell b{color:var(--dec-tell-b-fg);font-weight:var(--font-weight-bold)}
 `;
 

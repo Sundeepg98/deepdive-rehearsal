@@ -18,7 +18,7 @@
    (foundation). Child-mounts only -- renderTopic never rewrites this._root.innerHTML.
    Per-topic input tweaks persist via local Store (key num.<topic>); a Reset to
    canonical button restores the reference scenario. Offline-safe: no network/permission. */
-var NUM_STYLE = `.numlead{font-size:var(--font-size-body);line-height:var(--line-height-loose);color:var(--ink);margin:var(--space-2) var(--space-2) var(--space-18)}
+var NUM_STYLE = `.numlead{font-size:var(--font-size-body);max-width:var(--measure);line-height:var(--line-height-loose);color:var(--ink);margin:var(--space-2) var(--space-2) var(--space-18)}
 .numlead b{color:var(--accink);font-weight:var(--font-weight-bold)}
 .num-h{font:var(--font-weight-heavy) 10px -apple-system,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:var(--mut2);margin-bottom:var(--space-12);display:flex;align-items:center;justify-content:space-between;gap:var(--space-10)}
 .num-reset{font:var(--font-weight-semibold) 10px -apple-system,sans-serif;color:var(--mut);background:transparent;border:1px solid var(--bd);border-radius:6px;padding:var(--space-3) var(--space-9);cursor:pointer;text-transform:none;letter-spacing:.2px;transition:color var(--duration-fast) var(--ease-base),border-color var(--duration-fast) var(--ease-base)}
@@ -94,11 +94,11 @@ var NUM_STYLE = `.numlead{font-size:var(--font-size-body);line-height:var(--line
 /* .nrow-v is INK now (was --acc): painting every figure accent destroyed the breach-red
    signal. The hover scale(1.05) is deleted -- a number you point at must not grow, or you
    cannot compare it. Only the breached rows carry colour, and now they land. */
-.nrow-n{grid-area:n;font-size:var(--font-size-micro);color:var(--mut2);line-height:var(--line-height-relaxed);overflow-wrap:anywhere}
+.nrow-n{grid-area:n;font-size:var(--font-size-caption);max-width:var(--measure);color:var(--mut2);line-height:var(--line-height-relaxed);overflow-wrap:anywhere}
 .nrow.over .nrow-v{color:var(--red)}
 .nrow.over .nrow-n{color:var(--red);font-weight:var(--font-weight-semibold)}
 .nrow.over{background:linear-gradient(90deg,transparent 0%,rgba(239,68,68,.02) 100%);border-left:2px solid var(--red)}
-.num-tell{margin-top:var(--space-15);font-size:var(--font-size-caption);color:var(--teal);font-weight:var(--font-weight-bold);line-height:var(--line-height-airy);padding:var(--space-14) var(--space-17);background:linear-gradient(135deg,var(--tealbg) 0%,rgba(10,133,100,.04) 100%);border-radius:11px;box-shadow:0 1px 6px -2px rgba(10,133,100,.08)}
+.num-tell{margin-top:var(--space-15);font-size:var(--font-size-body);max-width:var(--measure);color:var(--teal);font-weight:var(--font-weight-bold);line-height:var(--line-height-airy);padding:var(--space-14) var(--space-17);background:linear-gradient(135deg,var(--tealbg) 0%,rgba(10,133,100,.04) 100%);border-radius:11px;box-shadow:0 1px 6px -2px rgba(10,133,100,.08)}
 .nprog{height:var(--space-5);background:var(--dbar-bg);border-radius:5px;overflow:hidden;margin:var(--space-12) 0}
 .nprog i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));border-radius:5px;transition:width var(--duration-slowest) var(--ease-glide)}
 .num-tell b{color:var(--dec-tell-b-fg);font-weight:var(--font-weight-bold)}

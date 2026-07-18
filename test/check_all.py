@@ -245,7 +245,11 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # ON EVERY RUN -- it re-injects the translateY, neutralises the sidebar reserve,
                      # adds a pane animation to the topic path, and blanks a pane -- and exits non-zero
                      # if any probe fails to notice. It also asserts its own COVERAGE, so it cannot pass
-                     # by skipping every target. FAILED 14-15 of 128 assertions on the pre-fix build (timing-dependent at the +60ms sample).
+                     # by skipping every target. RED ON THE PRE-FIX BUILD VIA A DETERMINISTIC BACKBONE:
+                     # the 9 tab-drift assertions + 1 behavioural fail on EVERY run -- 55.6px is a static
+                     # layout measurement, no timing in it -- so this can never false-green on the defect.
+                     # The +60ms panein sample adds a timing-dependent FEW on top (observed totals: 11 of
+                     # 128 under heavy load, 14-15 idle). No pre-fix total is an invariant; the 10 are.
                      ('click_drift', 'test/click_drift.cjs'),
                      # overlay_keyboard: overlay_deadzone above tests Escape, hit-testing and focus
                      # RESTORE -- and never once presses Enter on a button. An audit built on those

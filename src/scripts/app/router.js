@@ -173,6 +173,54 @@
       var landing = bootLanding();
       try { window.history.replaceState({ view: parseHash(landing).view }, '', landing); } catch (e) {}
     }
+
+    /* BACK-STOP FOR A DIRECT ENTRY. The line above installs the landing route with replaceState --
+       the app never PUSHES its boot entry, it occupies the tab's current one. On a direct entry
+       (the offline file opened by itself, or the URL typed into a fresh tab) that is the tab's ONLY
+       in-document entry, so one browser Back does not move within the app: it unloads the document
+       to the blank page that preceded it (about:blank). Measured pre-fix at 1280x800 AND 360x740:
+       one Back -> a fully blank screen (innerText 0, single-colour viewport), recoverable only by
+       Forward/reload. It is the literal first Back of every direct session. (Visual sweep A1, P1.)
+
+       Fix: seat exactly ONE in-app #home guard entry BELOW the boot entry, so the first Back lands
+       on the app home instead of a blank document, while a SECOND Back still leaves the app. The
+       guard is one entry, seated once, never re-pushed -- so the Back button is never trapped.
+
+       Gated on an EMPTY document.referrer -- the true signal for "entered directly, the previous
+       document is blank/foreign". history.length is NOT usable: a fresh tab (and a Playwright
+       context) seats an about:blank below us, so length is 2-3 on the very entry that blanks -- the
+       audited repro measured length 3, so a `length===1` gate would never fire on the real defect.
+       A non-empty referrer means the user came from a real page and Back should return there, so no
+       guard is seated in that case.
+
+       The boot route stays the TOP entry, so deep links, copy-link and the URL bar are byte-for-byte
+       unchanged; only an invisible #home entry is inserted beneath the boot entry.
+
+       SEAT IT AT MOST ONCE PER TAB SESSION. document.referrer is empty on a direct entry AND on every
+       RELOAD of one, so gating on the referrer alone re-fires this block on each reload -- and each
+       re-fire pushes ANOTHER #home guard, so history.length climbs +1 per reload without bound and
+       every reload adds one Back the user must press to leave (measured pre-fix: #home 3,4,5,6,7,8;
+       a topic 5,6,7,8,9,10). The guard is one entry, and it SURVIVES the reload (a reload never drops
+       back entries), so it must be seated once and never again this session. A sessionStorage flag is
+       exactly that lifetime: it persists across a reload but is fresh in a new tab/window, so a direct
+       entry still seats one guard and a reload seats none. The flag is written only AFTER the history
+       entries are actually in place, so a throw on the history call leaves it unset and the next load
+       simply retries -- the guard is never skipped without one already existing. Storage access is
+       wrapped: if sessionStorage is unavailable the seat still happens (degrading to the pre-fix
+       per-init behaviour, never to a crash and never to the blank dead-end). */
+    if (!document.referrer) {
+      var guardSeated = false;
+      try { guardSeated = sessionStorage.getItem('ddr-guard-seated') === '1'; } catch (e) {}
+      if (!guardSeated) {
+        try {
+          var bootHash = window.location.hash || '#home';
+          window.history.replaceState({ view: 'home', guard: true }, '', '#home');
+          window.history.pushState({ view: parseHash(bootHash).view }, '', bootHash);
+          try { sessionStorage.setItem('ddr-guard-seated', '1'); } catch (e) {}
+        } catch (e) {}
+      }
+    }
+
     emit(parseHash());
 
     /* The route fragment (e.g. #walk) matches a pane element's id, so the

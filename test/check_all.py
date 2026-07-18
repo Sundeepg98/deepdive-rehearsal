@@ -276,6 +276,19 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # blank-page class of bug cannot recur (reduced-motion still RENDERS,
                      # both themes). The two things a grep cannot see. (Phase 6)
                      ('room_browser', 'test/room_browser.cjs'),
+                     # back_deadend: the ROUTING sibling of room_browser's blank-page guard. The app
+                     # installs its landing route with replaceState, so on a DIRECT entry (the offline
+                     # file opened by itself, or a URL typed into a fresh tab) it holds the tab's only
+                     # in-document history entry -- and one browser Back unloaded the whole document to
+                     # the blank page beneath it (about:blank). Measured pre-fix at BOTH viewports: one
+                     # Back -> innerText 0, a single-colour viewport, recoverable only by Forward/reload.
+                     # It is the literal first Back of every direct session, so it shipped as a P1.
+                     # This measures the SCREEN (decoded pixels: a blank page is inkPct ~0 / distinct ~1)
+                     # AND the DOM, presses real browser Back/Forward, and holds both arms: the fix
+                     # (first Back -> a painted home) and the anti-regression (a second Back still LEAVES
+                     # the app, and pane Back/Forward still round-trips -- the guard is ONE entry, never a
+                     # Back-blocking loop). FAILED every "one Back" assertion on the pre-fix build.
+                     ('back_deadend', 'test/back_deadend.cjs'),
                      # cta_contrast: the primary CTAs are painted in a GRADIENT, and
                      # getComputedStyle('background-color') on a gradient returns rgba(0,0,0,0) --
                      # it tells you nothing, in a tone of voice that sounds like an answer. This

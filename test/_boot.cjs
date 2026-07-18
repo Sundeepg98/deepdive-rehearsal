@@ -207,12 +207,26 @@ async function pollFor(probe, ok, ms, label) {
  * animations (bodyIn/railin, and each pane's own fade) that ramp opacity 0->1 for ~300ms AFTER
  * settle()'s two rAFs return -- so a pixel/screenshot check that fires inside that window measures
  * antialiased ghosts, not glyphs. Condition, not duration: a target that never reaches full
- * opacity times out into a real failure, so this cannot mask a genuinely unpainted element. */
+ * opacity times out into a real failure, so this cannot mask a genuinely unpainted element.
+ *
+ * THE WALK CROSSES SHADOW BOUNDARIES. At the top of a shadow tree parentElement is null (the
+ * parent is the ShadowRoot, a fragment, not an element), so a parentElement-only walk silently
+ * EXEMPTS every shadow-DOM target from the ancestors that actually fade it -- bodyIn animates
+ * <body>, which sits ABOVE the host. The drill CTAs (.push/.dn-n, inside deep-drill's root) only
+ * ever measured their shadow-local chain (~1) and read "painted" mid-fade; they passed cta_contrast
+ * incidentally, because the light-DOM #mockopen is checked first and its wait outlives the fade.
+ * So: when parentElement runs out, hop to getRootNode().host and keep multiplying. For a light-DOM
+ * element the hop clause is reached exactly once, at <html>, where getRootNode() is the document
+ * and .host is undefined -- the chain walked, the product, and the poll cadence are identical to
+ * the old walk, so existing light-DOM callers see the same behaviour to the frame. */
 async function waitPainted(locator, ms) {
   return pollFor(
     () => locator.evaluate((el) => {
       let o = 1, n = el;
-      while (n && n.nodeType === 1) { const v = parseFloat(getComputedStyle(n).opacity); if (!isNaN(v)) o *= v; n = n.parentElement; }
+      while (n && n.nodeType === 1) {
+        const v = parseFloat(getComputedStyle(n).opacity); if (!isNaN(v)) o *= v;
+        n = n.parentElement || n.getRootNode().host || null;
+      }
       return o;
     }).catch(() => 0),
     (o) => o >= 0.995,

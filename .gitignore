@@ -38,3 +38,4 @@ src/scripts/visuals/
 
 # scratch probes + screenshots from the entry-architecture work (generated; never commit)
 _probe/
+_audit/shots/

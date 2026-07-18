@@ -194,13 +194,31 @@
        guard is seated in that case.
 
        The boot route stays the TOP entry, so deep links, copy-link and the URL bar are byte-for-byte
-       unchanged; only an invisible #home entry is inserted beneath the boot entry. */
+       unchanged; only an invisible #home entry is inserted beneath the boot entry.
+
+       SEAT IT AT MOST ONCE PER TAB SESSION. document.referrer is empty on a direct entry AND on every
+       RELOAD of one, so gating on the referrer alone re-fires this block on each reload -- and each
+       re-fire pushes ANOTHER #home guard, so history.length climbs +1 per reload without bound and
+       every reload adds one Back the user must press to leave (measured pre-fix: #home 3,4,5,6,7,8;
+       a topic 5,6,7,8,9,10). The guard is one entry, and it SURVIVES the reload (a reload never drops
+       back entries), so it must be seated once and never again this session. A sessionStorage flag is
+       exactly that lifetime: it persists across a reload but is fresh in a new tab/window, so a direct
+       entry still seats one guard and a reload seats none. The flag is written only AFTER the history
+       entries are actually in place, so a throw on the history call leaves it unset and the next load
+       simply retries -- the guard is never skipped without one already existing. Storage access is
+       wrapped: if sessionStorage is unavailable the seat still happens (degrading to the pre-fix
+       per-init behaviour, never to a crash and never to the blank dead-end). */
     if (!document.referrer) {
-      try {
-        var bootHash = window.location.hash || '#home';
-        window.history.replaceState({ view: 'home', guard: true }, '', '#home');
-        window.history.pushState({ view: parseHash(bootHash).view }, '', bootHash);
-      } catch (e) {}
+      var guardSeated = false;
+      try { guardSeated = sessionStorage.getItem('ddr-guard-seated') === '1'; } catch (e) {}
+      if (!guardSeated) {
+        try {
+          var bootHash = window.location.hash || '#home';
+          window.history.replaceState({ view: 'home', guard: true }, '', '#home');
+          window.history.pushState({ view: parseHash(bootHash).view }, '', bootHash);
+          try { sessionStorage.setItem('ddr-guard-seated', '1'); } catch (e) {}
+        } catch (e) {}
+      }
     }
 
     emit(parseHash());

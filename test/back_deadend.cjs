@@ -168,6 +168,94 @@ const DISTINCT_MIN = 20;  /* number of distinct 8-level colour buckets present  
     await page.close();
   }
 
+  /* ============ PART D: a RELOAD must not RE-SEAT the guard (one seat per tab session) ============
+     The direct-entry gate keys on an EMPTY document.referrer -- but a reload of a direct entry ALSO
+     has an empty referrer, so a per-init gate re-fires on every reload and stacks another #home guard
+     each time: history.length climbs +1 per reload, unbounded, and every reload adds one Back press
+     the user must make to escape the app. The guard already sits in history and survives the reload,
+     so re-seating is pure regression. The fix seats at most once per TAB SESSION (a sessionStorage
+     flag: survives reload, fresh per new tab), so a reload leaves history.length flat while the one
+     seated guard keeps the first Back on a painted home. PROVEN RED at 38f6f6e (each reload +1); GREEN
+     once seating is per-session. Measured pre-fix: #home [3,4,5,6,7,8], a topic [6,7,8,9,10,11]. */
+  {
+    const RELOADS = 5;
+    const reloadSeries = async (page) => {
+      const lens = [await page.evaluate(() => history.length)];
+      const refs = [await page.evaluate(() => document.referrer)];
+      for (let i = 0; i < RELOADS; i++) {
+        await page.reload({ waitUntil: 'load' });
+        await page.waitForFunction(B.APP_READY, null, { timeout: B.READY_MS });
+        await B.settle(page);
+        lens.push(await page.evaluate(() => history.length));
+        refs.push(await page.evaluate(() => document.referrer));
+      }
+      return { lens, refs };
+    };
+
+    /* D1 -- direct #home entry: reload N times, history.length must stay FLAT (0 re-seat/reload) */
+    {
+      const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
+      const errs = [];
+      page.on('pageerror', (e) => errs.push('pageerror: ' + e.message));
+      await B.gotoApp(page, HTML);
+      const boot = await page.evaluate(() => history.length);
+      const { lens, refs } = await reloadSeries(page);
+      const grew = Math.max.apply(null, lens) - lens[0];
+      ok('[reload #home] a reload never re-seats the guard (history.length flat across ' + RELOADS + ' reloads)',
+        grew === 0, 'lens=' + lens.join(',') + '  (direct-entry reload, referrer all empty=' +
+        refs.every((r) => r === '') + ')');
+
+      /* the one seated guard is still there: Back after the reloads lands on a PAINTED home */
+      await page.goBack({ timeout: 15000 }).catch(() => {});
+      await B.settle(page);
+      const back1 = await page.evaluate(() => ({
+        href: location.href,
+        view: document.documentElement.dataset ? document.documentElement.dataset.view : null,
+        innerTextLen: ((document.body && document.body.innerText) || '').length,
+        gone: typeof TopicRegistry === 'undefined',
+      })).catch(() => ({ href: 'about:blank', view: null, innerTextLen: 0, gone: true }));
+      let painted = { inkPct: 0, distinct: 0 };
+      try {
+        painted = await B.pollFor(() => paint(page),
+          (r) => r.inkPct > INK_MIN && r.distinct > DISTINCT_MIN, 5000, 'Back-after-reload paints ink');
+      } catch (e) { painted = (e && e.last) || painted; }
+      ok('[reload #home] Back after reloads stays on a PAINTED home (guard intact, P1 not reintroduced)',
+        back1.href.indexOf('about:blank') === -1 && !back1.gone && back1.view === 'home' &&
+        back1.innerTextLen > 1000 && painted.inkPct > INK_MIN && painted.distinct > DISTINCT_MIN,
+        'href=' + back1.href + ' view=' + back1.view + ' ink=' + painted.inkPct + ' distinct=' + painted.distinct);
+
+      /* still exactly ONE guard: a second Back LEAVES -- on the buggy build there are N guards, so it
+         would not leave (this and the flat-length check are the two that go RED at 38f6f6e). */
+      await page.goBack({ timeout: 15000 }).catch(() => {});
+      await page.evaluate(() => new Promise((r) => setTimeout(r, 200))).catch(() => {});
+      const back2 = await page.evaluate(() => ({
+        href: location.href, gone: typeof TopicRegistry === 'undefined',
+      })).catch(() => ({ href: 'about:blank', gone: true }));
+      ok('[reload #home] guard is still ONE entry after reloads (second Back leaves, not a growing trap)',
+        back2.href.indexOf('about:blank') !== -1 || back2.gone, 'href=' + back2.href);
+
+      ok('[reload #home] zero page errors', errs.length === 0, errs.slice(0, 3).join(' | '));
+      await page.close();
+    }
+
+    /* D2 -- at a TOPIC (#wb), the surface the sweep measured the climb on: reload must stay FLAT too */
+    {
+      const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
+      const errs = [];
+      page.on('pageerror', (e) => errs.push('pageerror: ' + e.message));
+      await B.gotoApp(page, HTML);
+      await B.enterApp(page);
+      await page.evaluate(() => window.Router.navigate('wb')); await B.settle(page);
+      const atWb = await page.evaluate(() => (window.Router && window.Router.current) ? window.Router.current().view : null);
+      const { lens } = await reloadSeries(page);
+      const grew = Math.max.apply(null, lens) - lens[0];
+      ok('[reload topic] a topic reload never re-seats the guard (history.length flat across ' + RELOADS + ' reloads)',
+        grew === 0 && atWb === 'wb', 'onView=' + atWb + ' lens=' + lens.join(','));
+      ok('[reload topic] zero page errors', errs.length === 0, errs.slice(0, 3).join(' | '));
+      await page.close();
+    }
+  }
+
   await browser.close();
   const pass = fails.length === 0;
   console.log('BACK DEADEND: ' + (pass ? 'PASS' : 'FAIL (' + fails.join('; ') + ')'));

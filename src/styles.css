@@ -568,6 +568,12 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
      Available on desktop (defaults off). Full "move into the mock overlay" is a follow-up. */
   .sidebar .mockcta .inttog{display:none}
   .mbl-tail{display:none}
+  /* LOAD-BEARING: `position:fixed` here is the ENTIRE reason the mobile strip does not drift on a
+     topic switch. A dual-instrument measurement (task #8; _audit/2026-07-13-visual-sweep.md, the
+     mobile-drift section) certified 0px drift across all 46 topics WITH this pin; synthetically
+     removing it drifts the strip 39.6-59.4px per switch, landing taps on the wrong view. Do not
+     un-pin this to "simplify" the mobile layout -- the v90 edge scrims below also depend on it
+     (they are position:fixed to these left:0/right:0 viewport edges). */
   .sidebar .seg{order:1;position:fixed;top:0;left:0;right:0;z-index:var(--z-seg);flex-direction:row;overflow-x:auto;gap:var(--space-6);background:var(--bg);border-bottom:1px solid var(--bd);padding:var(--space-8) var(--space-12);-webkit-overflow-scrolling:touch}
   .sidebar .seg button{flex:none;width:auto;white-space:nowrap;align-items:center;min-height:44px;padding:var(--space-11) var(--space-14);border-radius:9px;transition:background var(--duration-base) var(--ease-base),box-shadow var(--duration-base) var(--ease-base),transform var(--duration-fast) var(--ease-base)}
   .sidebar .seg button>span:first-child{font-size:var(--font-size-small);font-weight:var(--font-weight-semibold)}
@@ -679,8 +685,49 @@ html[data-theme="dark"]{--grid:var(--acc-a08);--canvas:radial-gradient(130% 90% 
 /* dark .stage::before/::after mesh overrides deleted with the mesh (above). */
 html[data-theme="dark"] .sidebar{background:linear-gradient(180deg,rgba(30,28,38,.92),rgba(24,23,32,.92))}
 .stage{background-color:var(--bg);background-image:radial-gradient(circle,var(--grid) 1px,transparent 1px),var(--canvas);background-size:23px 23px,100% 100%;background-repeat:repeat,no-repeat;position:relative}
-/* v80: mobile nav strip edge-fade affordance (signals the hidden views) */
-@media(max-width:919px){.sidebar .seg{-webkit-mask-image:linear-gradient(to right,transparent 0,#000 var(--fl,0px),#000 calc(100% - var(--fr,0px)),transparent 100%);mask-image:linear-gradient(to right,transparent 0,#000 var(--fl,0px),#000 calc(100% - var(--fr,0px)),transparent 100%);}}
+/* v90 (PKG-D): mobile nav-strip scroll affordance. The strip carries 9 view tabs but only ~4 fit
+   at 360-390px (scrollW 976 vs 360). v80's 24px edge-MASK was directionally correct but too faint
+   to read as "6 more tabs" -- it just dimmed the clipped letter (audit finding D1). Replace it with
+   two edge SCRIMS that fade the clipped tab into the bar colour AND carry a directional chevron.
+   They are position:fixed: the strip is itself position:fixed;left:0;right:0, so the viewport's top
+   corners ARE the strip's edges -- fixed pins the scrims to the VISIBLE edge (an absolute pseudo of
+   an overflow-x:auto box scrolls away with the content) and escapes the strip's overflow clip.
+   CSS-ONLY, reusing shell.js's UNCHANGED v80 listener, which already sets --fl/--fr to 24px/0px =
+   "is there strip hidden on this side?"; the scrim's WIDTH gates off that (see the width rule below).
+   Both sides are 0px on desktop (the strip is a vertical column there, no horizontal overflow), so the
+   scrims stay collapsed -> zero desktop change. Mask dropped: it faded to TRANSPARENT (a dark-theme seam,
+   strip #18161E over body #0F0E13) and would have eaten the chevron and any edge focus ring; a colour
+   scrim fades to the bar's OWN background and sits behind nothing it shouldn't. */
+@media(max-width:919px){
+  .sidebar .seg{--seg-bg:var(--bg)}
+  .sidebar .seg::before,
+  .sidebar .seg::after{
+    content:"\203A";   /* decorative chevron. Plain content (NOT content/"" alt-text): the alt syntax
+                          is unsupported on older iOS Safari, where it would invalidate the whole
+                          declaration and drop the scrim entirely -- unacceptable for a mobile cue. It
+                          is a11y-safe anyway: .seg is role=group with an explicit aria-label, so this
+                          pseudo never contributes to any accessible name, and SR users hear each
+                          button's own label when they navigate in. */
+    position:fixed;top:0;z-index:2;pointer-events:none;   /* z:2 rides above the tabs (z:auto) inside .seg's z:25 context; none -> taps fall through */
+    height:calc(44px + var(--space-8) * 2);      /* the strip's content box: 44px tap-target floor + 8/8 vertical padding */
+    display:grid;align-items:center;overflow:hidden;      /* overflow:hidden clips the chevron when the scrim collapses to width 0 */
+    font:var(--font-weight-regular) 20px -apple-system,sans-serif;color:var(--mut2);
+    width:0;transition:width var(--duration-base) var(--ease-base);  /* transition neutralised under prefers-reduced-motion by the global rule */
+  }
+  /* WIDTH is the gate: shell.js's v80 --fl/--fr is 24px when this side has hidden tabs, else 0px.
+     min(flag x 100, full-width) => any positive flag opens to full responsive width; 0px collapses
+     to 0 (the chevron is then clipped by overflow:hidden). Reads the shipped signal without a JS
+     change of ours, and without depending on its exact 24px magnitude. */
+  .sidebar .seg::before{left:0;justify-items:start;padding-left:var(--space-6);
+    content:"\2039";                             /* left-pointing */
+    background:linear-gradient(to left,transparent,var(--seg-bg) 62%);
+    width:min(calc(var(--fl,0px) * 100),clamp(var(--space-44),14vw,var(--space-60)))}
+  .sidebar .seg::after{right:0;justify-items:end;padding-right:var(--space-6);
+    background:linear-gradient(to right,transparent,var(--seg-bg) 62%);
+    width:min(calc(var(--fr,0px) * 100),clamp(var(--space-44),14vw,var(--space-60)))}
+}
+/* dark: the strip bg is overridden to #18161E (see the .seg dark rule); match the scrim fade to it */
+html[data-theme="dark"] .sidebar .seg{--seg-bg:#18161E}
 /* v84: ground the desktop work surface - top-anchor the content so the section header
    sits at a STABLE vertical position across panes (no jump on tab-switch) and its accent
    rule lines up with the content column's left edge. (v81 flex-centering shrank short

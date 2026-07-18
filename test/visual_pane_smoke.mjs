@@ -371,6 +371,13 @@ await m.evaluate(() => window.Router.navigate('walk'));   /* the rest of this fi
 await m.waitForFunction(() => document.documentElement.dataset.view !== 'home', null, { timeout: B.ACT_MS }).catch(() => {});
 await B.settle(m);
 
+/* LOAD-BEARING PIN (task #8 / _audit 2026-07-13 mobile-drift): the mobile pane-strip's immunity to
+   topic-switch drift rests ENTIRELY on position:fixed -- measured 0px drift with it, 39.6-59.4px
+   without (taps then land on the wrong view). Assert it computes `fixed` so a future "cleanup" of the
+   pin goes red HERE instead of silently reintroducing the drift. One read, no new check file. */
+const segPos = await m.evaluate(() => { const s = document.querySelector('.sidebar .seg'); return s ? getComputedStyle(s).position : '(no strip)'; });
+chk('MOBILE pane-strip stays position:fixed (topic-switch drift immunity, task #8)', segPos === 'fixed', 'position=' + segPos);
+
 // the 0x0 canvas was worst on mobile: a 2px sliver that was purely its own borders
 await pickTopic(m, 'Kafka Internals', 'kafka-internals');
 await m.evaluate(() => window.goView('viz'));

@@ -15,6 +15,14 @@ var KBD_STYLE = `
 .ks-sec:last-of-type{margin-bottom:0}
 .ks-h{font-size:var(--font-size-micro);font-weight:var(--font-weight-heavy);letter-spacing:.1em;text-transform:uppercase;color:var(--acc);margin:0 0 var(--space-12)}
 .ks-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-9) var(--space-18)}
+/* Narrow phones: two columns, not three. At 360px the panel body is ~322px wide and the
+   3-track grid's min-content is ~339px (kbd chip + "Walkthrough"-class labels do not shrink),
+   so the third column clipped 17px off the right edge (visual-sweep row 14's second half).
+   A media query, NOT auto-fit minmax: auto-fit would also refit DESKTOP (4+ columns at the
+   560px panel), and the desktop layout is shipped and correct. Shadow sheets evaluate @media
+   against the viewport, so this only bites where the clip lives; 419px covers the 360-414
+   phone band with margin so a marginal 390px fit cannot re-clip on wider device fonts. */
+@media(max-width:419px){.ks-grid{grid-template-columns:repeat(2,1fr)}}
 .ks-row{display:flex;align-items:center;gap:var(--space-10);font-size:var(--font-size-small);color:var(--ink);transition:transform var(--duration-fast) var(--ease-base)}
 .ks-row:hover{transform:translateX(3px)}
 .ks-list{display:flex;flex-direction:column;gap:var(--space-11)}

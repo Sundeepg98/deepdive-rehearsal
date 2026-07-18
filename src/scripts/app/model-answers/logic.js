@@ -28,8 +28,8 @@ var MODEL_STYLE = `
 /* activePulse (2s endless) removed -- the filled dot marks the active register; no loop. */
 @media(max-width:560px){.msel{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .mscript-h{font-size:var(--font-size-subhead);font-weight:var(--font-weight-heavy);color:var(--ink);letter-spacing:-.3px;margin-bottom:var(--space-5)}
-.mscript-sub{font-size:var(--font-size-caption);color:var(--mut);line-height:var(--line-height-airy);margin-bottom:var(--space-8);padding-bottom:var(--space-14);border-bottom:2px solid var(--accbg)}
-.mbeat-l{flex:none;width:var(--space-76);font:var(--font-weight-heavy) 9.5px -apple-system,sans-serif;letter-spacing:.4px;text-transform:uppercase;padding-top:var(--space-4);line-height:var(--line-height-snug);color:var(--acc)}
+.mscript-sub{font-size:var(--font-size-body);max-width:var(--measure);color:var(--mut);line-height:var(--line-height-airy);margin-bottom:var(--space-8);padding-bottom:var(--space-14);border-bottom:2px solid var(--accbg)}
+.mbeat-l{flex:none;width:var(--space-76);font:var(--font-weight-heavy) var(--font-size-micro) -apple-system,sans-serif;letter-spacing:.4px;text-transform:uppercase;padding-top:var(--space-4);line-height:var(--line-height-snug);color:var(--acc)}
 .mbeat-t{flex:1;font-size:var(--font-size-reading);max-width:var(--measure);line-height:var(--line-height-spacious);color:var(--ink)}
 .mbeat-t b{color:var(--accink);font-weight:var(--font-weight-bold)}
 `;

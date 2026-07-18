@@ -16,7 +16,7 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:var(--font-size-micro);b
 .step-k{display:inline-flex;align-items:center;gap:var(--space-7);font-family:var(--mono);font-size:var(--font-size-micro);font-weight:var(--font-weight-heavy);letter-spacing:.4px;text-transform:uppercase;color:var(--acc)}
 .step-k::before{content:"";width:var(--space-14);height:var(--space-2);border-radius:2px;background:linear-gradient(90deg,var(--acc),var(--acc2))}
 .step-t{font-size:var(--font-size-title);font-weight:var(--font-weight-bold);margin:var(--space-3) 0 var(--space-5);letter-spacing:-.2px;text-wrap:balance}
-.step-sub{font-size:var(--font-size-caption);color:var(--mut);margin-bottom:var(--space-6)}
+.step-sub{font-size:var(--font-size-body);max-width:var(--measure);color:var(--mut);margin-bottom:var(--space-6)}
 .step-t,.dec-q,.num-h,.debrief .big,.mscript-h,.rec .lvl,.sr-h,.cs-ha-l,.side-id h1,.stage-head .sh-name{font-family:var(--display)}
 ::selection{background:var(--acc);color:var(--on-slab)}
 /* Card hover: a quiet tint of the border to the room's edge. The 3D perspective-tilt

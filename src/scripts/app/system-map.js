@@ -17,7 +17,7 @@
    STATELESS -- no timers, no transient state, so no teardownTopic. Offline-safe. */
 var SYS_STYLE = `
 .card + .card{margin-top:var(--space-16)}
-.sm-intro{font-size:var(--font-size-caption);color:var(--mut);margin-bottom:var(--space-18);line-height:var(--line-height-spacious)}
+.sm-intro{font-size:var(--font-size-body);max-width:var(--measure);color:var(--mut);margin-bottom:var(--space-18);line-height:var(--line-height-spacious)}
 .chain{position:relative;padding-left:var(--space-8)}
 .stg{position:relative;display:flex;gap:var(--space-15);padding:0 0 var(--space-20) 0}
 .stg:last-child{padding-bottom:0}
@@ -28,13 +28,13 @@ var SYS_STYLE = `
 .stg .body{padding-top:var(--space-3)}
 .stg .nm{font-size:var(--font-size-body);font-weight:var(--font-weight-bold);transition:color var(--duration-base) var(--ease-base)}
 .stg:hover .nm{color:var(--accink)}
-.stg .ds{font-size:var(--font-size-caption);color:var(--mut);margin-top:var(--space-2)}
+.stg .ds{font-size:var(--font-size-body);max-width:var(--measure);color:var(--mut);margin-top:var(--space-2)}
 .stg.cur .dot{background:linear-gradient(135deg,var(--acc),var(--acc2));border-color:var(--acc);color:var(--on-slab);box-shadow:0 0 0 5px var(--accbg),0 2px 10px -2px var(--acc-a30)}
 /* curPulse (2s endless) removed -- the "you are here" dot's fill + ring IS the state. */
 .stg.cur .nm{color:var(--accink);font-weight:var(--font-weight-bold)}
-.stg.cur .here{display:inline-block;font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.6px;text-transform:uppercase;color:var(--sm-here-fg);background:linear-gradient(135deg,var(--acc),var(--acc2));border-radius:5px;padding:var(--space-2) var(--space-8);margin-left:var(--space-8);vertical-align:middle;box-shadow:0 2px 6px -2px var(--acc-a25)}
+.stg.cur .here{display:inline-block;font-size:var(--font-size-micro);font-weight:var(--font-weight-heavy);letter-spacing:.6px;text-transform:uppercase;color:var(--sm-here-fg);background:linear-gradient(135deg,var(--acc),var(--acc2));border-radius:5px;padding:var(--space-2) var(--space-8);margin-left:var(--space-8);vertical-align:middle;box-shadow:0 2px 6px -2px var(--acc-a25)}
 .piv-k{font-size:var(--font-size-micro);font-weight:var(--font-weight-heavy);letter-spacing:.8px;text-transform:uppercase;color:var(--acc);margin-bottom:var(--space-4)}
-.piv-sub{font-size:var(--font-size-caption);color:var(--mut);margin-bottom:var(--space-16)}
+.piv-sub{font-size:var(--font-size-body);max-width:var(--measure);color:var(--mut);margin-bottom:var(--space-16)}
 .piv{border:1px solid var(--bd);border-radius:12px;margin-bottom:var(--space-10);overflow:hidden;background:linear-gradient(135deg,var(--sm-card-bg) 0%,var(--acc-a02) 100%);transition:border-color var(--duration-base) var(--ease-base),box-shadow var(--duration-moderate) var(--ease-base),transform var(--duration-base) var(--ease-base)}
 .piv:hover{border-color:var(--acc);box-shadow:0 6px 20px -8px var(--acc-a20);transform:translateY(-1px)}
 .piv[open]{border-color:var(--acc-a20);box-shadow:0 0 0 1px var(--acc-a06),0 6px 20px -8px var(--acc-a15)}
@@ -43,7 +43,7 @@ var SYS_STYLE = `
 .piv-jump{margin-top:var(--space-12);font:var(--font-weight-bold) 12px -apple-system,sans-serif;color:var(--acc);background:var(--accbg);border:1px solid var(--acc-a20);border-radius:8px;padding:var(--space-7) var(--space-12);cursor:pointer;transition:background var(--duration-fast) var(--ease-base),border-color var(--duration-fast) var(--ease-base)}
 .piv-jump:hover,.piv-jump:focus{background:var(--acc);color:var(--on-slab);border-color:var(--acc);outline:none}
 .piv summary::-webkit-details-marker{display:none}
-.piv .pq{font-size:var(--font-size-small);font-weight:var(--font-weight-semibold);color:var(--ink);line-height:var(--line-height-normal)}
+.piv .pq{font-size:var(--font-size-body);max-width:var(--measure);font-weight:var(--font-weight-semibold);color:var(--ink);line-height:var(--line-height-normal)}
 /* The chip was white-space:nowrap inside .piv{overflow:hidden}: it could not wrap, so a long chip
    ran past the container that hides overflow and its tail was simply invisible -- and, being
    unshrinkable, it starved the pivot QUESTION beside it down to 46px. The hand-coded 8 never hit
@@ -54,12 +54,12 @@ var SYS_STYLE = `
    max-width caps only the long ones, and white-space:normal lets a capped chip WRAP rather than
    be cropped. Content the author wrote is not silently cut off by the layout -- the same rule the
    compiler now obeys, one layer down. */
-.piv .chip{flex:none;max-width:55%;font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.3px;color:var(--mut2);background:transparent;border:1px solid var(--bd);border-radius:6px;padding:var(--space-3) var(--space-9);white-space:normal;overflow-wrap:anywhere;margin-top:var(--space-1);margin-left:auto}
+.piv .chip{flex:none;max-width:55%;font-size:var(--font-size-micro);font-weight:var(--font-weight-heavy);letter-spacing:.3px;color:var(--mut2);background:transparent;border:1px solid var(--bd);border-radius:6px;padding:var(--space-3) var(--space-9);white-space:normal;overflow-wrap:anywhere;margin-top:var(--space-1);margin-left:auto}
 /* a pivot that lands in another room glows that room's ink -- wayfinding, not decoration */
 .piv .chip.chip-dest{color:var(--dest);border-color:color-mix(in srgb,var(--dest) 35%,var(--bd));background:color-mix(in srgb,var(--dest) 7%,transparent)}
 .piv .chip.chip-link{cursor:pointer;transition:border-color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base),color var(--duration-fast) var(--ease-base)}
 .piv .chip.chip-link:hover,.piv .chip.chip-link:focus-visible{border-color:var(--acc);color:var(--acc);background:linear-gradient(135deg,var(--accbg) 0%,var(--acc-a06) 100%);outline:none}
-.piv .pa{padding:var(--space-2) var(--space-17) var(--space-16) var(--space-43);font-size:var(--font-size-caption);color:var(--sm-pa-fg);line-height:var(--line-height-spacious)}
+.piv .pa{padding:var(--space-2) var(--space-17) var(--space-16) var(--space-43);font-size:var(--font-size-body);max-width:var(--measure);color:var(--sm-pa-fg);line-height:var(--line-height-spacious)}
 .piv .pa b{color:var(--accink);font-weight:var(--font-weight-bold)}
 .piv[open] summary .pq::after{content:" \\2014 bridge:";color:var(--mut2);font-weight:var(--font-weight-bold)}
 `;

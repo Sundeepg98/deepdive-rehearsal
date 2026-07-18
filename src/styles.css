@@ -650,6 +650,33 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
   body.tools-open .sidebar .mockbar{transform:none}
   body.tools-open .tools-bd{display:block;position:fixed;inset:0;background:rgba(0,0,0,.34);z-index:var(--z-scrim)}
   .sidebar .mockbar .mb-d{display:block}
+  /* ===== the sheet's bottom scroll cue (visual-sweep row 17) =====
+     At 360x740 this sheet opens with ~41% of its rows (415px) below the fold and nothing said so:
+     max-height:82vh + overflow-y:auto scroll fine, but the fold falls mid-row-GAP as often as
+     mid-row, so there was no clipped-letter peek either. Same recipe as the v90 seg scrims below:
+     shell.js's v75 block sets --fb to 24px while rows are hidden below / 0px at the end (the
+     vertical sibling of v80's --fl/--fr), and the cue's HEIGHT gates off that flag, so it
+     disappears exactly when the scroll bottoms out. The gradient fades to the sheet's OWN
+     background (var(--card)) -- v90 proved fade-to-transparent is a dark-theme seam. position:
+     fixed, because an absolute ::after of an overflow-y:auto box scrolls away with the content;
+     this sheet is itself position:fixed at the viewport bottom, so the viewport bottom IS the
+     sheet's visible bottom edge -- and while the sheet is closed or mid-slide its transform makes
+     it the pseudo's containing block, so the cue rides the sheet instead of orphaning on the
+     viewport. pointer-events:none -> taps fall through to the rows. Reduced-motion stays fully
+     usable: the cue is a static gradient (no animation); only its height TRANSITION exists, and
+     the global reduced-motion rule collapses that to .01ms. overflow:hidden clips the chevron
+     when the height collapses to 0 (the v90 trick). z:2 rides above the sheet's flex rows inside
+     .mockbar's own stacking context. */
+  .sidebar .mockbar::after{
+    content:"\25BE";
+    position:fixed;left:0;right:0;bottom:0;z-index:2;pointer-events:none;
+    display:grid;justify-items:center;align-items:end;overflow:hidden;
+    font:var(--font-weight-regular) 13px -apple-system,sans-serif;color:var(--mut2);
+    padding-bottom:var(--space-3);
+    background:linear-gradient(to bottom,transparent,var(--card) 72%);
+    height:min(calc(var(--fb,0px) * 100),var(--space-36));
+    transition:height var(--duration-base) var(--ease-base);
+  }
   .stage{padding:var(--space-18) var(--space-15) var(--space-80)}
   .stage .pane{max-width:none}
 }

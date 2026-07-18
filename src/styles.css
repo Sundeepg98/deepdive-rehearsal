@@ -543,6 +543,26 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
 .sidebar .seg button.on{background:var(--accbg);box-shadow:inset 3px 0 0 var(--acc)}
 .sidebar .seg button.on>span:first-child{color:var(--accink)}
 .sidebar .seg button.on .n{color:var(--acc)}
+/* ===== QW3: the pane tabs wear their jump keys (desktop only) =====
+   Every tab has had a single-letter shortcut since the QWERTY keymap shipped (shell.js
+   tabKeys) and NOTHING on screen said so. The badge is the .kbd-hint kbd recipe -- the
+   app's one established "this is a key" treatment -- at eyebrow size and muted, so it
+   reads as metadata, not a control.
+   THE LAYOUT CONTRACT: absolutely positioned, so it occupies ZERO flow -- the button's
+   height and every tab's y are byte-identical with and without it (click_drift asserts
+   identical tab y across all 46 topics). Centered by margin, NEVER transform: hit-testing
+   follows transforms and the badge sits inside the app's primary click targets.
+   pointer-events:none so the badge itself can never be a hit surface. Hidden below 920px
+   (the mobile strip is cramped; shortcuts are keyboard-only and .kbd-only hides the
+   shortcut panel there too) and in print with the rest of the sidebar. No motion is
+   introduced: static in both themes, inert under prefers-reduced-motion by construction. */
+.seg button .seg-key{display:none}
+@media(min-width:920px){
+  .sidebar .seg button .seg-key{display:inline-flex;align-items:center;justify-content:center;position:absolute;right:var(--space-10);top:50%;height:var(--space-16);min-width:var(--space-16);margin-top:calc(var(--space-16) / -2);padding:0 var(--space-4);box-sizing:border-box;pointer-events:none;font-family:ui-monospace,monospace;font-size:var(--font-size-nano);font-weight:var(--font-weight-bold);line-height:var(--line-height-none);color:#4a463f;background:#EEEAE1;border:1px solid #DBD5CB;border-bottom-width:2px;border-radius:4px}
+  .sidebar .seg button.on .seg-key{color:var(--acc);border-color:var(--acc-a32);background:var(--card)}
+}
+html[data-theme="dark"] .sidebar .seg button .seg-key{color:#B4AEA4;background:#2E2A35;border-color:#46424E}
+html[data-theme="dark"] .sidebar .seg button.on .seg-key{color:var(--acc);border-color:var(--acc-a32);background:var(--card)}
 /* `order:2` deleted with .seg's `order:1` (see above). `margin-top:auto` is what actually
    pins the tool list to the bottom of the column -- the `order` was only ever compensating
    for the DOM having .mockbar before .seg, and it desynced tab order from paint to do it. */

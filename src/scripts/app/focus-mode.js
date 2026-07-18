@@ -32,6 +32,7 @@
     btnEl.id = '_focus-toggle';
     btnEl.setAttribute('aria-label', 'Toggle focus mode');
     btnEl.setAttribute('aria-pressed', 'false');
+    btnEl.setAttribute('aria-keyshortcuts', 'F');
     btnEl.textContent = 'Focus';
     /* NOTE: `display` is deliberately NOT set here. It used to say display:inline-block, and an
        inline style beats a stylesheet rule -- which pinned this button at 60x20 and made the
@@ -63,6 +64,10 @@
      target, so it sees through every shadow root -- today's four fields and any added later. */
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'f' && e.key !== 'F') return;
+    /* plain F only. This used to preventDefault() on Ctrl/Cmd+F too, which HIJACKED the
+       browser's find-in-page AND collapsed the sidebar underneath it (QW3, same class of
+       bug as the shell map's Ctrl+P double-fire). A chord is not this binding. */
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
     if (window.KeyGuard && window.KeyGuard.isTyping(e)) return;
     if (window.SearchOverlay && window.SearchOverlay.isOpen && window.SearchOverlay.isOpen()) return;
     e.preventDefault();

@@ -166,6 +166,19 @@ window.KeyGuard = (function () {
 document.addEventListener('keydown', function (event) {
   /* THE typing guard. Reads through shadow roots -- see KeyGuard above. */
   if (window.KeyGuard.isTyping(event)) return;
+  /* THE MODIFIER GUARD (QW3). Every binding in this map is a PLAIN key; a chord is the
+     browser's (or another handler's), not this map's. Without this, Ctrl+P opened the
+     Session panel UNDERNEATH print-qa's popup (both are document-level 'p' listeners --
+     MEASURED: the stray dialog then swallowed every subsequent key, which is how the
+     probe caught it), and Alt+ArrowLeft (browser Back) also stepped the walkthrough.
+     THE CARVE-OUTS ARE LAYOUTS, NOT CHORDS. event.key is layout-relative, and on real
+     keyboards some of THESE VERY BINDINGS arrive wearing a modifier: '\' is AltGr+eszett on a
+     German PC (Chromium reports AltGr as ctrl+alt BOTH true) and Alt+Shift+7 on a German
+     Mac. So: block Cmd/Win-anything; block Ctrl-without-Alt (a real Ctrl chord -- AltGr
+     always sets both); block Alt only for NON-printable keys (Alt+ArrowLeft is Back;
+     Alt+"\" is a person typing a backslash). Shift is never blocked: '?' IS Shift+/. */
+  if (event.metaKey || (event.ctrlKey && !event.altKey) ||
+      (event.altKey && !event.ctrlKey && event.key.length > 1)) return;
   if (window.TourGuide && window.TourGuide.isActive()) return;
   if (window.SearchOverlay && window.SearchOverlay.isOpen && window.SearchOverlay.isOpen()) return;
   /* `.open:not(.closing)` -- THE INTERACTIVITY INVARIANT (styles.css). `.open` alone stays set for

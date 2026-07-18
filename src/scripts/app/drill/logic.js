@@ -536,7 +536,7 @@ class DeepDrill extends TopicPane {
     }
     html += '</div>';
     if (stage < maxStage) {
-      html += '<button type="button" class="push' + (stage >= 1 ? ' more' : '') + '" id="adv">' +
+      html += '<button type="button" class="push' + (stage >= 1 ? ' more' : '') + '" id="adv" aria-keyshortcuts="Space Enter">' +
         (stage < 1 ? 'Reveal answer' : '&#8627; Interviewer pushes further') + '</button>';
     } else {
       /* grounded scoring: surface this probe's must-hit points as a checklist so
@@ -551,9 +551,9 @@ class DeepDrill extends TopicPane {
           '<div class="mhp-list">' + items + '</div>' +
           '<div class="mhp-cov">Covered <b id="mhpN">0</b> / ' + this._mhp.length + ' &middot; <span id="mhpRec"></span></div></div>';
       }
-      html += '<div class="judge"><button type="button" class="miss" id="jm">&#10007; Missed <span class="hint">[1]</span></button>' +
-        '<button type="button" class="shk" id="js">&#126; Shaky <span class="hint">[2]</span></button>' +
-        '<button type="button" class="got" id="jg">&#10003; Solid <span class="hint">[3]</span></button></div>';
+      html += '<div class="judge"><button type="button" class="miss" id="jm" aria-keyshortcuts="1">&#10007; Missed <span class="hint">[1]</span></button>' +
+        '<button type="button" class="shk" id="js" aria-keyshortcuts="2">&#126; Shaky <span class="hint">[2]</span></button>' +
+        '<button type="button" class="got" id="jg" aria-keyshortcuts="3">&#10003; Solid <span class="hint">[3]</span></button></div>';
     }
     html += '</div>';
     this._dwrap.innerHTML = html;

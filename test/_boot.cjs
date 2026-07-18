@@ -202,6 +202,24 @@ async function pollFor(probe, ok, ms, label) {
   }
 }
 
+/* Wait until `locator` is fully PAINTED: its EFFECTIVE opacity (the product of computed opacity
+ * up the ancestor chain) has reached ~1. Freshly-mounted content sits under the app's entry
+ * animations (bodyIn/railin, and each pane's own fade) that ramp opacity 0->1 for ~300ms AFTER
+ * settle()'s two rAFs return -- so a pixel/screenshot check that fires inside that window measures
+ * antialiased ghosts, not glyphs. Condition, not duration: a target that never reaches full
+ * opacity times out into a real failure, so this cannot mask a genuinely unpainted element. */
+async function waitPainted(locator, ms) {
+  return pollFor(
+    () => locator.evaluate((el) => {
+      let o = 1, n = el;
+      while (n && n.nodeType === 1) { const v = parseFloat(getComputedStyle(n).opacity); if (!isNaN(v)) o *= v; n = n.parentElement; }
+      return o;
+    }).catch(() => 0),
+    (o) => o >= 0.995,
+    ms || ACT_MS,
+    'paint-settle: effective opacity ~= 1');
+}
+
 /* A check that dies without saying why is the single most corrosive thing in a gate: the gate
  * reports a check by its LAST LINE, so a silent death prints a red with a blank reason, and a
  * blank reason reads as "flake -- run it again". Route every exit through here. */
@@ -213,5 +231,5 @@ async function finish(code, label) {
 
 module.exports = {
   NAV_MS, READY_MS, ACT_MS, LAUNCH_ARGS,
-  launchOpts, fileUrl, APP_READY, gotoApp, enterApp, closeIndex, waitIndexOpen, settle, until, pollFor, finish,
+  launchOpts, fileUrl, APP_READY, gotoApp, enterApp, closeIndex, waitIndexOpen, settle, until, pollFor, waitPainted, finish,
 };

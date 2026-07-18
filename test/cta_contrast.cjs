@@ -158,6 +158,11 @@ const SHOW_TEXT = (e) => { (e.__sv || []).forEach(([n, s]) => { if (s) n.setAttr
           continue;
         }
         const fg = await loc.evaluate((e) => getComputedStyle(e).color);
+        /* Do not shoot until the glyphs are fully PAINTED. body@bodyIn / sidebar@railin (and the
+         * drill pane's own entry fade) hold this CTA's effective opacity < 1 for ~300ms after
+         * B.settle(); a screenshot inside that window catches glyphs at alpha ~0.6-0.9 -- all below
+         * CORE_ALPHA -- and ANALYZE then reports "no core glyph pixels", run-to-run, load-dependent. */
+        await B.waitPainted(loc);
         const a = await loc.screenshot();
         await loc.evaluate(HIDE_TEXT);
         const b = await loc.screenshot();

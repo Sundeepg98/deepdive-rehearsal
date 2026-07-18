@@ -61,6 +61,18 @@ ANS_SHEET.replaceSync(`
 var MOCK_SHEET = new CSSStyleSheet();
 MOCK_SHEET.replaceSync(`
 .mock-body{padding:var(--space-19) var(--space-18) var(--space-22)}
+/* The run surface is a FOCUS TARGET by design -- mockov lands its initial focus on #mockbody
+   (mock-run/logic.js, contract point 2) -- but no rule in this shadow ever themed that focus, so
+   keyboard users got the raw ~1px near-black UA outline and mouse users nothing (2026-07-13
+   desktop-overlay addendum, ED3). This is the app's standard ring (styles.css button:focus-visible
+   family: 2px solid var(--acc) + offset), with the OFFSET INWARD: the surface sits flush against
+   the panel's rounded corners, so an outward ring would be clipped by the panel edge. No halo
+   box-shadow for the same reason -- outside the box it cannot paint. :focus-visible, not :focus,
+   keeps the mouse path clean (clicking the surface to scroll it must not draw a ring).
+   On .mock-body, not #mockbody: #mixbody shares the class and the gap -- it has no tabindex
+   today, but Chromium keyboard-focuses scrollable regions without focusable children, so the
+   same un-themed ring was one content change away over there. */
+.mock-body:focus-visible{outline:2px solid var(--acc);outline-offset:-2px}
 `);
 
 var MBEAT_SHEET = new CSSStyleSheet();

@@ -399,15 +399,37 @@ document.addEventListener('keydown', function (event) {
 (function () {
   const toolsFab = document.getElementById('toolsfab');
   const mockbar = document.querySelector('.mockbar');
-  
+
+  /* The sheet's bottom scroll cue (visual-sweep row 17). The vertical sibling of v80's --fl/--fr:
+     --fb is 24px while rows are still hidden below the sheet's fold, 0px once the scroll bottoms
+     out; the mobile-only .sidebar .mockbar::after in styles.css turns any positive flag into the
+     bottom scrim and collapses it at 0. Why the sheet needs its own flag rather than reusing
+     v80's: that block is scoped to the .seg strip and its axis is horizontal. The initial call
+     is honest even though the sheet boots translated off-screen -- transform skips layout, so
+     scrollHeight/clientHeight are already real. On desktop the mockbar is not a scroller
+     (the .sidebar is), so the flag rests at 0px and the ::after does not exist there anyway. */
+  function updateSheetCue() {
+    if (!mockbar) return;   /* same null-tolerance as every other lookup in this block */
+    const more = mockbar.scrollTop + mockbar.clientHeight < mockbar.scrollHeight - 4;
+    mockbar.style.setProperty('--fb', more ? '24px' : '0px');
+  }
+
   function openMockbar() {
     document.body.classList.add('tools-open');
+    updateSheetCue();   /* row set can have changed since boot (text zoom, font swap) */
   }
-  
+
   function closeMockbar() {
     document.body.classList.remove('tools-open');
   }
-  
+
+  if (mockbar) {
+    mockbar.addEventListener('scroll', updateSheetCue, { passive: true });
+    window.addEventListener('resize', updateSheetCue);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(updateSheetCue);
+    updateSheetCue();
+  }
+
   if (toolsFab) {
     toolsFab.addEventListener('click', function (event) {
       event.stopPropagation();

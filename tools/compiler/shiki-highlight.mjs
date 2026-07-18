@@ -60,7 +60,23 @@ async function highlighter() {
 // Highlight one non-JS/TS code block to the inner HTML the app drops into <pre class="code">.
 export async function renderShiki(code, lang) {
   const hl = await highlighter();
-  const html = hl.codeToHtml(String(code), { lang, theme: 'ddr' });
+  // tokenizeTimeLimit:0 IS LOAD-BEARING, and it is why this build was a coin flip. Shiki's
+  // tokenizer (@shikijs/primitive) gives each LINE a wall-clock budget -- default 500ms, read
+  // from Date.now() INSIDE the scan loop -- and when a line's tokenization is preempted past that
+  // budget it BAILS and emits the rest of the line as ONE unstyled token, silently dropping its
+  // colors. Nothing about the SOURCE changed: a scheduler stall (GC, a busy machine, ten builds
+  // back to back) is enough to make Date.now()-startTime clear 500ms on a 65-char line, so the
+  // SAME source highlighted a SQL comment on one build and shipped it as plaintext on the next
+  // -- byte-different output, ~10% of builds, which build_integrity correctly flagged as a
+  // nondeterministic build. Setting the budget to 0 disables the timeout branch entirely
+  // (`if (timeLimit !== 0)` is now false), so tokenization runs to completion regardless of load
+  // and the bytes are a function of the source alone. This is safe because the inputs are our own
+  // short authored snippets in known languages, not untrusted input -- the 500ms guard exists for
+  // catastrophic-backtracking on hostile input, which would manifest as a line that is slow EVERY
+  // time (deterministic, caught at authoring), never as this intermittent flip. Guarded by
+  // test/build_determinism.mjs, which renders every authored block under a simulated stall and
+  // fails if this option is ever dropped.
+  const html = hl.codeToHtml(String(code), { lang, theme: 'ddr', tokenizeTimeLimit: 0 });
   // Drop Shiki's own <pre class="shiki" ...><code> ... </code></pre> wrapper; keep the inner
   // lines (colored token spans + newlines) so they render in the app's own code container.
   return html.replace(/^<pre[^>]*><code>/, '').replace(/<\/code><\/pre>\s*$/, '');

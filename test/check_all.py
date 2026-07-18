@@ -159,7 +159,18 @@ for name, cmd in [('ascii_guard', ['python3', 'test/ascii_guard.py']),
                   ('compiler_legacy_topic', ['node', 'tools/compiler/prove_assembly.mjs']),
                   ('compiler_prose', ['node', 'tools/compiler/prove_prose.mjs']),
                   ('compiler_flow', ['node', 'tools/compiler/prove_flow.mjs']),
-                  ('compiler_code', ['node', 'tools/compiler/prove_code.mjs'])]:
+                  ('compiler_code', ['node', 'tools/compiler/prove_code.mjs']),
+                  # build_determinism: the build's syntax highlighting must not depend on the wall
+                  # clock. Shiki gives each LINE a 500ms wall-clock tokenize budget and, when a line
+                  # is preempted past it (GC, a busy box, builds back to back), BAILS and ships the
+                  # rest of that line as one unstyled token. Same source, different bytes, ~10% of
+                  # builds -- build_integrity caught the divergence but could only flag it
+                  # intermittently. renderShiki now passes tokenizeTimeLimit:0; this drives every
+                  # authored block under a SIMULATED stall and fails if the option is ever dropped.
+                  # A plain build-twice-and-diff would be decoration here: the flip is load-dependent
+                  # so two clean builds agree ~90% of the time. Carries a negative control that
+                  # aborts if the stall does not trip a default-budget tokenizer. Pure node, ~2s.
+                  ('build_determinism', ['node', 'test/build_determinism.mjs'])]:
     r = run(cmd)
     results.append((name, 'PASS' if r.returncode == 0 else 'FAIL', report(r)))
 

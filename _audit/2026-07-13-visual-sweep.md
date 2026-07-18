@@ -258,3 +258,36 @@ Ran the 7 overlays in dark theme (`data-theme=dark`) on content-pipeline + signi
 - Uniform across all 7 overlays and both topics; 0 page errors. Screenshots: `DESK-OV-dark-{content-pipeline,signing}-*.png` (14).
 
 **Counts (desktop overlays lens): P0 = 0, P1 = 0, P2 = 0, P3 = 4 (ED1–ED4).** Desktop overlay baseline CLEAN, consistent with the mobile baseline; both mobile carry-over questions answered (anchoring CONFIRMED, amber ring REFUTED). Dark-theme overlay chrome also CLEAN (bonus pass — no C2-class dark-variant gap).
+
+---
+
+## Mobile tab-strip drift follow-up (task #8) — CERTIFIED NEGATIVE, dual-instrument
+
+The sweep's lens briefs excluded the topic-switch layout-shift class as known-in-flight, which also
+excluded its MOBILE variant — so no data existed. Measured after the fact by TWO independent
+instruments (the desktop fixer's fresh one and the desktop verifier's proven one, extended), same
+artifact (n-drift deliverable — mobile-identical to base, the desktop fix is ≥920px-scoped), no
+cross-talk, 360×740 + 390×844.
+
+**VERDICT: mobile does NOT drift — 0px on all 46 topics, both instruments, both viewports**, incl.
+wrap-extreme pairs, same-wrap zero-controls, and coordinate-landing tests. Not a blind negative:
+both instruments passed a mandatory SYNTHETIC control — with the seg forced back into normal flow
+plus a forced wrap, one read 59.4px and the other 39.6px (different plants, both fired), then 0px
+again restored.
+
+**Mechanism:** at <920px `.sidebar .seg` is `position:fixed; top:0` (main `styles.css:571`) — a
+fixed top rail outside `.side-id`'s flow. The desktop defect (seg inherits identity-block height)
+is structurally impossible there. `headin`/D2 is moot (<920px masthead is `display:none`).
+
+**⚠ THE IMMUNITY IS ONE DECLARATION.** Remove or override that `position:fixed` and the drift
+returns at ~40–60px for wrapping titles (the synthetic plants are the standing proof). A
+LOAD-BEARING comment (+ ideally a one-line fixed-position assertion in a browser check) is being
+added by the active styles.css owner (PKG-D).
+
+Recorded discrepancy — RESOLVED (verifier self-correction): its "no title wraps at mobile" was an
+overclaim from a 12-of-46 side-survey; the fixer's full-46 observation stands (exactly 1 title
+wraps, side-id height 188.3→208.1px). Not an instrument conflict — a coverage gap in an incidental
+aside, honestly retracted. The 0px verdict never rested on wrap count: the synthetic control forced
+a 3-line title against the pinned strip and it moved 0px, so the immunity holds for any wrap count. Instruments: fixer scratch `mobile_drift_measure.cjs`; verifier
+`D:/claude-workspace/v-drift-verifier/mobile_instrument.js` (+ `mobile-drift-results.json`) —
+promotion into the repo gate is a punch-list-wave decision.

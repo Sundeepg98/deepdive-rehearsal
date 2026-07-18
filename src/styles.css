@@ -485,6 +485,46 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
 .side-id .hdr{border-left:none;padding:0;margin:var(--space-6) 0 0}
 .side-id h1{font-size:var(--font-size-heading);letter-spacing:-.4px;line-height:var(--line-height-tight)}
 .side-id .sub,.side-id .kbd-hint{display:none}
+/* ===== THE PANE TABS MUST NOT MOVE WHEN THE TOPIC DOES =====
+   .seg -- the nine pane tabs, the app's PRIMARY navigation -- sits directly below .side-id in the
+   sidebar column, so it is positioned by whatever height the identity block happens to be. And the
+   identity block is sized by CONTENT THAT CHANGES ON EVERY TOPIC SWITCH. Measured across all 46
+   topics at 1440x900: .side-id ranges 147.6px -> 203.2px, landing the tabs at FOUR different
+   heights (502.1 / 526.1 / 549.2 / 557.7). A user who clicks where a tab WAS misses it -- and a
+   missed click is indistinguishable from an eaten one. This fires on the app's commonest action.
+
+   THREE content variables stack, not one. Fixing only the title -- the obvious one -- would have
+   left 32px of the 55.6px still moving:
+     23.1px  .hdr h1 wraps to a 2nd line       (13 of 46 titles: "Microfrontend Architecture")
+     24.0px  the locator drops below the badge (45 of 46; only "DATcache layer" is short enough to
+                                                sit BESIDE it, so caching is the one topic 24px up)
+     13.5px  the locator itself wraps to 2 lines (2 of 46: "MSGprocessing data in motion and at rest")
+
+   RESERVED IN `lh`, NOT IN PIXELS -- because a pixel reserve here is a lie on two axes. `d` cycles
+   Density, which rescales every --space-* token (cozy is ~18% larger), and --mono is a SYSTEM font
+   stack, so the locator's wrap point is not even the same on the CI runner as it is here (the same
+   reason test/baselines are per-platform). A magic px would be wrong at cozy and wrong on another
+   box -- silently, which is the failure mode this file exists to avoid. `lh` is the element's OWN
+   line box, so both reserves adapt to whatever font and density actually render.
+
+   NOT a min-height on .side-id: that is the same magic px wearing a hat. These pin the two things
+   that VARY, so the block is constant BY CONSTRUCTION.
+
+   A third line would still overflow the title's reserve. Deliberately NOT clamped: test/click_drift
+   asserts the tabs sit at an identical y on all 46 topics, so a title that outgrows its reserve
+   goes RED at the gate. A loud red beats an ellipsis nobody notices. */
+@media(min-width:920px){
+  /* Two lines, always. 13 of 46 titles need the second; the other 33 get an invisible blank one
+     (an h1 has no background, so the reserve costs nothing but the space it is there to hold). The
+     full title always renders -- nothing is truncated. */
+  .side-id .hdr h1{min-height:2lh}
+  /* One line, always, on a row of its own. This is not a new rule so much as the enforcement of one
+     the app already BELIEVES: applyIdentity() swapped the spelled-out room for the 3-letter code
+     specifically so "the badge cannot wrap again" -- and then two topics wrapped anyway. The code
+     is the part that carries meaning (it is the CVD/greyscale-safe room marker); the tail is a
+     gloss, and it stays in full in the aria-label either way. */
+  .side-id .locator{display:block;width:fit-content;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+}
 /* NO `order` HERE, DELIBERATELY. `.seg{order:1}` + `.mockbar{order:2}` used to paint the
    pane switcher above the tool list while the DOM said otherwise -- and flex `order`
    reorders PAINT, never TAB ORDER. Focus follows the DOM, so the app's primary navigation
@@ -620,11 +660,43 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
      .dots i.on{animation:dotActivePulse}    -- .dots is shadow-only. The walkthrough's
        shadow sheet has its own working dotPulse.
    Their now-orphaned @keyframes (cardStagger, headIn, dotActivePulse) went with them. */
-/* view-swap: fade + slide-up (overrides the bare fade) */
+/* ===== view-swap: THE PANE FADES IN. IT NO LONGER SLIDES. =====
+   `panein` used to open on `transform:translateY(16px) scale(.995)`, and HIT-TESTING FOLLOWS
+   TRANSFORMS. So for the 500ms of every pane and topic switch, every control inside the incoming
+   pane was somewhere other than where it rests -- measured +18.2px at t=0 on <deep-drill>'s mode
+   button, decaying to +1.3px by 300ms. (16px of that is the translate; the rest is `scale(.995)`
+   pulling everything toward the pane's centre. Both move the hit box.)
+
+   A user aims where a control RESTS. The control was not there. The click landed on whatever the
+   displacement had slid under the cursor -- and A MISSED CLICK IS INDISTINGUISHABLE FROM AN EATEN
+   ONE: both read as "the app ignored me". MEASURED, with real page.mouse.click:
+       <button class="wb-rev"> "Reveal"      28px tall -> MISS at +0 / +16 / +60ms (landed on <li>)
+       <button class="op-rev"> "Reveal mine" 28px tall -> MISS at +0 / +16 / +60ms (landed on <div.op>)
+   The failure is HEIGHT-DEPENDENT, which is why it hid for so long: a click at a control's resting
+   centre still lands while the displacement is under half the control's height, so the 40-50px
+   controls (drill's, num's) kept working and only the 28-30px ones broke. 29 of the 70 shadow-root
+   controls are under 36.4px. And that only describes clicks at the CENTRE -- a click near a
+   control's top edge misses for ANY downward displacement at all, which is why the fix is zero
+   displacement rather than a smaller one.
+
+   THE DEAD-ZONE TRAP, NOT REINTRODUCED. The obvious fix -- `pointer-events:none` while the
+   animation runs -- is the disease the View Transition API was just REMOVED for (see
+   view-transitions.js): it does not move the target, it DELETES it, and the click is eaten instead
+   of misplaced. Same symptom, worse cause. So the pane keeps hit-testing throughout; only the
+   motion goes.
+
+   WHY OPACITY + BLUR ARE SAFE, AND A TRANSFORM IS NOT. Neither `opacity` nor `filter` participates
+   in layout or hit-test geometry -- an opacity:0 element is still hit-tested at its resting box
+   (VERIFIED at runtime, not assumed: a real click at t=0, while the pane is fully transparent,
+   reaches its intended control). A transform, uniquely, moves the box the browser tests against.
+   So the entrance keeps its fade and its focus-pull, and loses only the 16px nobody could click
+   through. This is exactly the reasoning `.sidebar{animation:railin}` below already followed --
+   "opacity only -> sticky-safe" -- and the same reasoning that deleted meshA/meshB and
+   headingShift: a precision instrument is still until YOU move it. */
 .pane.on{animation:panein var(--duration-slowest) var(--ease-glide)}
-@keyframes panein{from{opacity:0;transform:translateY(16px) scale(.995);filter:blur(3px)}to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
+@keyframes panein{from{opacity:0;filter:blur(3px)}to{opacity:1;filter:blur(0)}}
 html[data-theme="dark"] .pane.on{animation-name:paneinDark}
-@keyframes paneinDark{from{opacity:0;transform:translateY(10px);filter:blur(2px)}to{opacity:1;transform:none;filter:blur(0)}}
+@keyframes paneinDark{from{opacity:0;filter:blur(2px)}to{opacity:1;filter:blur(0)}}
 /* one-time rail entrance (opacity only -> sticky-safe) */
 .sidebar{animation:railin var(--duration-slowest) var(--ease-glide)}
 @keyframes railin{from{opacity:0}to{opacity:1}}

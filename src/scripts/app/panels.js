@@ -25,12 +25,15 @@
 
   function thesisText(t) { return String(t == null ? '' : t).replace(/<[^>]+>/g, ''); }
 
+  /* A topic's group colour, as a live CSS reference into the room palette (styles.css --room-*,
+     the flat per-group map that carries both light and dark variants) -- NOT a baked hex. Keyed by
+     the topic's group id, so the star pill's edge matches its room card / index dot exactly and
+     retints per theme for free. Falls back to the current accent only when the topic/group is
+     unknown. */
   function groupColorFor(id) {
     var t = (typeof TopicRegistry !== 'undefined') ? TopicRegistry.get(id) : null;
-    if (!t || typeof TOPIC_GROUPS === 'undefined') return 'var(--acc)';
-    var g = t.identity.group;
-    for (var i = 0; i < TOPIC_GROUPS.length; i++) if (TOPIC_GROUPS[i].id === g) return TOPIC_GROUPS[i].color;
-    return 'var(--acc)';
+    var g = (t && t.identity) ? t.identity.group : null;
+    return g ? 'var(--room-' + g + ')' : 'var(--acc)';
   }
 
   /* THE ENGAGEMENT PREDICATE -- the one true answer to "has this user done anything?".

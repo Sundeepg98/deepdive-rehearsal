@@ -319,10 +319,13 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
   .pane{display:none}
   .pane.on{display:block;animation:fade var(--duration-slow) var(--ease-out)}
   @keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
-  @keyframes pop{from{opacity:0;transform:translateY(7px) scale(.99)}to{opacity:1;transform:none}}
+  /* The pop keyframes + .dnr deleted -- both were DEAD here, twice over. .dnr was stamped only
+     inside the drill's shadow root, which a light-DOM rule cannot reach (the shadow-boundary bug,
+     again); and keyframes names are TREE-SCOPED, so a document-level definition of pop never served
+     one of the eleven shadow rules that reference the name -- measured: whiteboard/mixed-fire/
+     mock-run/opener reveals all no-oped while this definition sat here. pop now lives in BASE_SHEET,
+     in scope for every shadow host. fade STAYS: .pane.on is genuinely light-DOM and uses it. */
   code{font-family:ui-monospace,Menlo,monospace;font-size:var(--font-size-micro);background:var(--code-inline-bg);padding:var(--space-1) var(--space-5);border-radius:4px;color:var(--accink)}
-
-  .dnr{animation:pop var(--duration-moderate) var(--ease-base)}
 
   .crambtn:active{transform:translateY(1px);filter:brightness(.96)}
 

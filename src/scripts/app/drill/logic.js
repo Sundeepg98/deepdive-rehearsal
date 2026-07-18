@@ -36,7 +36,11 @@ var DRILL_HTML = `<div style="display:flex;justify-content:space-between;align-i
     <div class="revset" id="revset" style="display:none"><button type="button" id="revdrill" class="revset-b">&#8635; Drill my <b id="revn">0</b> flagged <span id="revw">probes</span></button><span class="revset-h">your Revisit pile across this session &middot; clears as you nail them</span></div>
     <div id="dwrap"></div>
     <div class="dnav-wrap"><div class="dnav-h">Your drill set <span class="sub">tap a probe to jump &middot; flagged ones are marked</span></div><div class="dnav" id="dnav"></div></div>`;
-var DRILL_STYLE = `@keyframes pop{from{opacity:0;transform:translateY(7px) scale(.99)}to{opacity:1;transform:none}}
+var DRILL_STYLE = `/* @keyframes pop moved to BASE_SHEET. Five shadow scopes reference it and a name
+   defined only here was visible to exactly one -- every reveal outside the drill silently
+   no-oped (keyframes are tree-scoped). BASE_SHEET is adopted by this root too, so .speak/.mhp
+   and ANS_SHEET's .ans/.fu/.senior resolve it exactly as before; cbump/pulse stay: this is
+   their only consumer. */
 @keyframes cbump{0%{transform:scale(1)}28%{transform:scale(1.18)}100%{transform:scale(1)}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
 
@@ -517,7 +521,9 @@ class DeepDrill extends TopicPane {
       '<div class="sigtag">signal &middot; <b>' + card.signal + '</b></div></div>' +
       '<span class="tier ' + DRILL_TIER_CLASS[card.tier] + '">' + card.tier + '</span></div>' +
       '<div class="qq">' + card.q + '</div>';
-    if (stage >= 1) { html += '<div class="ans' + (stage === 1 ? ' dnr' : '') + '">' + card.a + '</div>'; }
+    /* (the old stage===1 'dnr' stamp is gone: its only rule was a light-DOM styles.css line that
+       could never reach this shadow root -- a class with no rule in any scope is dead weight) */
+    if (stage >= 1) { html += '<div class="ans">' + card.a + '</div>'; }
     for (let k = 0; k < card.f.length; k++) {
       if (stage >= 2 + k) {
         html += '<div class="fu"><div class="lab">Interviewer pushes further</div>' +

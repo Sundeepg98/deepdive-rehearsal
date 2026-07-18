@@ -1,0 +1,1099 @@
+{
+  "file": "D:/claude-workspace/deepdive-rehearsal/deepdive_content_pipeline_rehearsal.html",
+  "generated": "2026-07-18T06:33:58.455Z",
+  "viewport": {
+    "width": 1440,
+    "height": 1300
+  },
+  "animWindowMs": 800,
+  "settled": {
+    "notifications": {
+      "tabCount": 9,
+      "coreTabsPresent": true,
+      "vizEnabled": false,
+      "tabs": {
+        "walk": {
+          "top": 538.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 560,
+          "w": 260,
+          "h": 44
+        },
+        "drill": {
+          "top": 585.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 607,
+          "w": 260,
+          "h": 44
+        },
+        "wb": {
+          "top": 632.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 654,
+          "w": 260,
+          "h": 44
+        },
+        "sys": {
+          "top": 679.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 701,
+          "w": 260,
+          "h": 44
+        },
+        "trade": {
+          "top": 726.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 748,
+          "w": 260,
+          "h": 44
+        },
+        "model": {
+          "top": 773.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 795,
+          "w": 260,
+          "h": 44
+        },
+        "num": {
+          "top": 820.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 842,
+          "w": 260,
+          "h": 44
+        },
+        "rf": {
+          "top": 867.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 889,
+          "w": 260,
+          "h": 44
+        },
+        "open": {
+          "top": 914.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 936,
+          "w": 260,
+          "h": 44
+        }
+      },
+      "h1": {
+        "txt": "Notifications",
+        "h": 46.2,
+        "lines": 2
+      },
+      "paneTop": 126,
+      "paneTY": 0,
+      "paneOpacity": 1,
+      "scrollY": 0,
+      "tablistLeft": 19,
+      "rightPanel": true
+    },
+    "saga": {
+      "tabCount": 9,
+      "coreTabsPresent": true,
+      "vizEnabled": false,
+      "tabs": {
+        "walk": {
+          "top": 538.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 560,
+          "w": 260,
+          "h": 44
+        },
+        "drill": {
+          "top": 585.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 607,
+          "w": 260,
+          "h": 44
+        },
+        "wb": {
+          "top": 632.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 654,
+          "w": 260,
+          "h": 44
+        },
+        "sys": {
+          "top": 679.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 701,
+          "w": 260,
+          "h": 44
+        },
+        "trade": {
+          "top": 726.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 748,
+          "w": 260,
+          "h": 44
+        },
+        "model": {
+          "top": 773.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 795,
+          "w": 260,
+          "h": 44
+        },
+        "num": {
+          "top": 820.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 842,
+          "w": 260,
+          "h": 44
+        },
+        "rf": {
+          "top": 867.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 889,
+          "w": 260,
+          "h": 44
+        },
+        "open": {
+          "top": 914.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 936,
+          "w": 260,
+          "h": 44
+        }
+      },
+      "h1": {
+        "txt": "The Saga Pattern",
+        "h": 46.2,
+        "lines": 2
+      },
+      "paneTop": 126,
+      "paneTY": 0,
+      "paneOpacity": 1,
+      "scrollY": 0,
+      "tablistLeft": 19,
+      "rightPanel": true
+    },
+    "kafka-internals": {
+      "tabCount": 10,
+      "coreTabsPresent": true,
+      "vizEnabled": true,
+      "tabs": {
+        "walk": {
+          "top": 538.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 560,
+          "w": 260,
+          "h": 44
+        },
+        "drill": {
+          "top": 585.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 607,
+          "w": 260,
+          "h": 44
+        },
+        "wb": {
+          "top": 632.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 654,
+          "w": 260,
+          "h": 44
+        },
+        "sys": {
+          "top": 679.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 701,
+          "w": 260,
+          "h": 44
+        },
+        "trade": {
+          "top": 726.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 748,
+          "w": 260,
+          "h": 44
+        },
+        "model": {
+          "top": 773.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 795,
+          "w": 260,
+          "h": 44
+        },
+        "num": {
+          "top": 820.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 842,
+          "w": 260,
+          "h": 44
+        },
+        "rf": {
+          "top": 867.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 889,
+          "w": 260,
+          "h": 44
+        },
+        "open": {
+          "top": 914.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 936,
+          "w": 260,
+          "h": 44
+        },
+        "viz": {
+          "top": 961.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 983,
+          "w": 260,
+          "h": 44
+        }
+      },
+      "h1": {
+        "txt": "Kafka Internals",
+        "h": 46.2,
+        "lines": 2
+      },
+      "paneTop": 126,
+      "paneTY": 0,
+      "paneOpacity": 1,
+      "scrollY": 0,
+      "tablistLeft": 19,
+      "rightPanel": true
+    },
+    "caching": {
+      "tabCount": 9,
+      "coreTabsPresent": true,
+      "vizEnabled": false,
+      "tabs": {
+        "walk": {
+          "top": 538.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 560,
+          "w": 260,
+          "h": 44
+        },
+        "drill": {
+          "top": 585.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 607,
+          "w": 260,
+          "h": 44
+        },
+        "wb": {
+          "top": 632.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 654,
+          "w": 260,
+          "h": 44
+        },
+        "sys": {
+          "top": 679.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 701,
+          "w": 260,
+          "h": 44
+        },
+        "trade": {
+          "top": 726.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 748,
+          "w": 260,
+          "h": 44
+        },
+        "model": {
+          "top": 773.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 795,
+          "w": 260,
+          "h": 44
+        },
+        "num": {
+          "top": 820.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 842,
+          "w": 260,
+          "h": 44
+        },
+        "rf": {
+          "top": 867.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 889,
+          "w": 260,
+          "h": 44
+        },
+        "open": {
+          "top": 914.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 936,
+          "w": 260,
+          "h": 44
+        }
+      },
+      "h1": {
+        "txt": "Caching Strategies",
+        "h": 46.2,
+        "lines": 2
+      },
+      "paneTop": 126,
+      "paneTY": 0,
+      "paneOpacity": 1,
+      "scrollY": 0,
+      "tablistLeft": 19,
+      "rightPanel": true
+    },
+    "stream-batch-processing": {
+      "tabCount": 9,
+      "coreTabsPresent": true,
+      "vizEnabled": false,
+      "tabs": {
+        "walk": {
+          "top": 538.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 560,
+          "w": 260,
+          "h": 44
+        },
+        "drill": {
+          "top": 585.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 607,
+          "w": 260,
+          "h": 44
+        },
+        "wb": {
+          "top": 632.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 654,
+          "w": 260,
+          "h": 44
+        },
+        "sys": {
+          "top": 679.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 701,
+          "w": 260,
+          "h": 44
+        },
+        "trade": {
+          "top": 726.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 748,
+          "w": 260,
+          "h": 44
+        },
+        "model": {
+          "top": 773.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 795,
+          "w": 260,
+          "h": 44
+        },
+        "num": {
+          "top": 820.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 842,
+          "w": 260,
+          "h": 44
+        },
+        "rf": {
+          "top": 867.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 889,
+          "w": 260,
+          "h": 44
+        },
+        "open": {
+          "top": 914.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 936,
+          "w": 260,
+          "h": 44
+        }
+      },
+      "h1": {
+        "txt": "Stream and Batch Processing",
+        "h": 46.2,
+        "lines": 2
+      },
+      "paneTop": 126,
+      "paneTY": 0,
+      "paneOpacity": 1,
+      "scrollY": 0,
+      "tablistLeft": 19,
+      "rightPanel": true
+    },
+    "error-propagation": {
+      "tabCount": 9,
+      "coreTabsPresent": true,
+      "vizEnabled": false,
+      "tabs": {
+        "walk": {
+          "top": 538.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 560,
+          "w": 260,
+          "h": 44
+        },
+        "drill": {
+          "top": 585.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 607,
+          "w": 260,
+          "h": 44
+        },
+        "wb": {
+          "top": 632.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 654,
+          "w": 260,
+          "h": 44
+        },
+        "sys": {
+          "top": 679.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 701,
+          "w": 260,
+          "h": 44
+        },
+        "trade": {
+          "top": 726.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 748,
+          "w": 260,
+          "h": 44
+        },
+        "model": {
+          "top": 773.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 795,
+          "w": 260,
+          "h": 44
+        },
+        "num": {
+          "top": 820.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 842,
+          "w": 260,
+          "h": 44
+        },
+        "rf": {
+          "top": 867.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 889,
+          "w": 260,
+          "h": 44
+        },
+        "open": {
+          "top": 914.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 936,
+          "w": 260,
+          "h": 44
+        }
+      },
+      "h1": {
+        "txt": "Error Propagation Across Services",
+        "h": 46.2,
+        "lines": 2
+      },
+      "paneTop": 126,
+      "paneTY": 0,
+      "paneOpacity": 1,
+      "scrollY": 0,
+      "tablistLeft": 19,
+      "rightPanel": true
+    },
+    "shared-definition": {
+      "tabCount": 9,
+      "coreTabsPresent": true,
+      "vizEnabled": false,
+      "tabs": {
+        "walk": {
+          "top": 538.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 560,
+          "w": 260,
+          "h": 44
+        },
+        "drill": {
+          "top": 585.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 607,
+          "w": 260,
+          "h": 44
+        },
+        "wb": {
+          "top": 632.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 654,
+          "w": 260,
+          "h": 44
+        },
+        "sys": {
+          "top": 679.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 701,
+          "w": 260,
+          "h": 44
+        },
+        "trade": {
+          "top": 726.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 748,
+          "w": 260,
+          "h": 44
+        },
+        "model": {
+          "top": 773.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 795,
+          "w": 260,
+          "h": 44
+        },
+        "num": {
+          "top": 820.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 842,
+          "w": 260,
+          "h": 44
+        },
+        "rf": {
+          "top": 867.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 889,
+          "w": 260,
+          "h": 44
+        },
+        "open": {
+          "top": 914.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 936,
+          "w": 260,
+          "h": 44
+        }
+      },
+      "h1": {
+        "txt": "Shared Definition & Overrides",
+        "h": 46.2,
+        "lines": 2
+      },
+      "paneTop": 126,
+      "paneTY": 0,
+      "paneOpacity": 1,
+      "scrollY": 0,
+      "tablistLeft": 19,
+      "rightPanel": true
+    },
+    "retries-timeouts": {
+      "tabCount": 9,
+      "coreTabsPresent": true,
+      "vizEnabled": false,
+      "tabs": {
+        "walk": {
+          "top": 538.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 560,
+          "w": 260,
+          "h": 44
+        },
+        "drill": {
+          "top": 585.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 607,
+          "w": 260,
+          "h": 44
+        },
+        "wb": {
+          "top": 632.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 654,
+          "w": 260,
+          "h": 44
+        },
+        "sys": {
+          "top": 679.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 701,
+          "w": 260,
+          "h": 44
+        },
+        "trade": {
+          "top": 726.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 748,
+          "w": 260,
+          "h": 44
+        },
+        "model": {
+          "top": 773.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 795,
+          "w": 260,
+          "h": 44
+        },
+        "num": {
+          "top": 820.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 842,
+          "w": 260,
+          "h": 44
+        },
+        "rf": {
+          "top": 867.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 889,
+          "w": 260,
+          "h": 44
+        },
+        "open": {
+          "top": 914.2,
+          "left": 19,
+          "cx": 149,
+          "cy": 936,
+          "w": 260,
+          "h": 44
+        }
+      },
+      "h1": {
+        "txt": "Retries, Timeouts, Deadlines",
+        "h": 46.2,
+        "lines": 2
+      },
+      "paneTop": 126,
+      "paneTY": 0,
+      "paneOpacity": 1,
+      "scrollY": 0,
+      "tablistLeft": 19,
+      "rightPanel": true
+    }
+  },
+  "pairs": [
+    {
+      "from": "notifications",
+      "to": "stream-batch-processing",
+      "kind": "short->long",
+      "walkDelta": 0,
+      "maxAbsDelta": 0,
+      "perTab": {
+        "walk": 0,
+        "drill": 0,
+        "wb": 0,
+        "sys": 0,
+        "trade": 0,
+        "model": 0,
+        "num": 0,
+        "rf": 0,
+        "open": 0
+      },
+      "fromWalkCoord": [
+        149,
+        560
+      ],
+      "afterSwitchHitTab": "walk",
+      "afterSwitchSig": "button.on.seen#tab=walk|WalkthroughMEC",
+      "walkStillUnderOldCoord": true
+    },
+    {
+      "from": "stream-batch-processing",
+      "to": "notifications",
+      "kind": "long->short",
+      "walkDelta": 0,
+      "maxAbsDelta": 0,
+      "perTab": {
+        "walk": 0,
+        "drill": 0,
+        "wb": 0,
+        "sys": 0,
+        "trade": 0,
+        "model": 0,
+        "num": 0,
+        "rf": 0,
+        "open": 0
+      },
+      "fromWalkCoord": [
+        149,
+        560
+      ],
+      "afterSwitchHitTab": "walk",
+      "afterSwitchSig": "button.on.seen#tab=walk|WalkthroughMEC",
+      "walkStillUnderOldCoord": true
+    },
+    {
+      "from": "notifications",
+      "to": "shared-definition",
+      "kind": "short->long(modal)",
+      "walkDelta": 0,
+      "maxAbsDelta": 0,
+      "perTab": {
+        "walk": 0,
+        "drill": 0,
+        "wb": 0,
+        "sys": 0,
+        "trade": 0,
+        "model": 0,
+        "num": 0,
+        "rf": 0,
+        "open": 0
+      },
+      "fromWalkCoord": [
+        149,
+        560
+      ],
+      "afterSwitchHitTab": "walk",
+      "afterSwitchSig": "button.on.seen#tab=walk|WalkthroughMEC",
+      "walkStillUnderOldCoord": true
+    },
+    {
+      "from": "caching",
+      "to": "error-propagation",
+      "kind": "worst-case",
+      "walkDelta": 0,
+      "maxAbsDelta": 0,
+      "perTab": {
+        "walk": 0,
+        "drill": 0,
+        "wb": 0,
+        "sys": 0,
+        "trade": 0,
+        "model": 0,
+        "num": 0,
+        "rf": 0,
+        "open": 0
+      },
+      "fromWalkCoord": [
+        149,
+        560
+      ],
+      "afterSwitchHitTab": "walk",
+      "afterSwitchSig": "button.on.seen#tab=walk|WalkthroughMEC",
+      "walkStillUnderOldCoord": true
+    },
+    {
+      "from": "notifications",
+      "to": "saga",
+      "kind": "CONTROL short->short",
+      "walkDelta": 0,
+      "maxAbsDelta": 0,
+      "perTab": {
+        "walk": 0,
+        "drill": 0,
+        "wb": 0,
+        "sys": 0,
+        "trade": 0,
+        "model": 0,
+        "num": 0,
+        "rf": 0,
+        "open": 0
+      },
+      "fromWalkCoord": [
+        149,
+        560
+      ],
+      "afterSwitchHitTab": "walk",
+      "afterSwitchSig": "button.on.seen#tab=walk|WalkthroughMEC",
+      "walkStillUnderOldCoord": true
+    },
+    {
+      "from": "stream-batch-processing",
+      "to": "error-propagation",
+      "kind": "CONTROL long->long",
+      "walkDelta": 0,
+      "maxAbsDelta": 0,
+      "perTab": {
+        "walk": 0,
+        "drill": 0,
+        "wb": 0,
+        "sys": 0,
+        "trade": 0,
+        "model": 0,
+        "num": 0,
+        "rf": 0,
+        "open": 0
+      },
+      "fromWalkCoord": [
+        149,
+        560
+      ],
+      "afterSwitchHitTab": "walk",
+      "afterSwitchSig": "button.on.seen#tab=walk|WalkthroughMEC",
+      "walkStillUnderOldCoord": true
+    },
+    {
+      "from": "caching",
+      "to": "notifications",
+      "kind": "higher->baseline",
+      "walkDelta": 0,
+      "maxAbsDelta": 0,
+      "perTab": {
+        "walk": 0,
+        "drill": 0,
+        "wb": 0,
+        "sys": 0,
+        "trade": 0,
+        "model": 0,
+        "num": 0,
+        "rf": 0,
+        "open": 0
+      },
+      "fromWalkCoord": [
+        149,
+        560
+      ],
+      "afterSwitchHitTab": "walk",
+      "afterSwitchSig": "button.on.seen#tab=walk|WalkthroughMEC",
+      "walkStillUnderOldCoord": true
+    }
+  ],
+  "live": [
+    {
+      "id": "entry",
+      "from": "(home)",
+      "to": "stream-batch-processing",
+      "via": "enter",
+      "kind": "index->topic ENTRY",
+      "frames": 22,
+      "peakPaneTranslateY": 0,
+      "paneSettleMs": 477,
+      "framesPaneDisplacedGt2px": 0,
+      "peakHeadTranslateY": 5,
+      "headSettleMs": 287,
+      "peakPaneElementOffsetPx": 0,
+      "paneProbesWithHitDrift": 0,
+      "hitDriftDetail": [],
+      "walkTabJumpInstant": true,
+      "h1To": "Stream and Batch Processing",
+      "switchHappened": true
+    },
+    {
+      "id": "paneswitch",
+      "from": "notifications",
+      "to": "drill",
+      "via": "pane",
+      "kind": "PANE switch walk->drill",
+      "frames": 20,
+      "peakPaneTranslateY": 0,
+      "paneSettleMs": 548,
+      "framesPaneDisplacedGt2px": 0,
+      "peakHeadTranslateY": 5,
+      "headSettleMs": 331,
+      "peakPaneElementOffsetPx": 0,
+      "paneProbesWithHitDrift": 0,
+      "hitDriftDetail": [],
+      "walkTabJumpInstant": true,
+      "h1To": "Notifications",
+      "switchHappened": true
+    },
+    {
+      "id": "topic-dd-sl",
+      "from": "notifications",
+      "to": "stream-batch-processing",
+      "via": "dropdown",
+      "kind": "TOPIC switch short->long",
+      "frames": 36,
+      "peakPaneTranslateY": 0,
+      "paneSettleMs": 37,
+      "framesPaneDisplacedGt2px": 0,
+      "peakHeadTranslateY": 5,
+      "headSettleMs": 254,
+      "peakPaneElementOffsetPx": 0,
+      "paneProbesWithHitDrift": 0,
+      "hitDriftDetail": [],
+      "walkTabJumpInstant": true,
+      "h1To": "Stream and Batch Processing",
+      "switchHappened": true
+    },
+    {
+      "id": "topic-next-sl",
+      "from": "kafka-internals",
+      "to": "stream-batch-processing",
+      "via": "next",
+      "kind": "TOPIC switch short->long (arrow)",
+      "frames": 35,
+      "peakPaneTranslateY": 0,
+      "paneSettleMs": 28,
+      "framesPaneDisplacedGt2px": 0,
+      "peakHeadTranslateY": 5,
+      "headSettleMs": 290,
+      "peakPaneElementOffsetPx": 0,
+      "paneProbesWithHitDrift": 0,
+      "hitDriftDetail": [],
+      "walkTabJumpInstant": true,
+      "h1To": "Stream and Batch Processing",
+      "switchHappened": true
+    },
+    {
+      "id": "topic-dd-ls",
+      "from": "stream-batch-processing",
+      "to": "notifications",
+      "via": "dropdown",
+      "kind": "TOPIC switch long->short",
+      "frames": 37,
+      "peakPaneTranslateY": 0,
+      "paneSettleMs": 25,
+      "framesPaneDisplacedGt2px": 0,
+      "peakHeadTranslateY": 5,
+      "headSettleMs": 275,
+      "peakPaneElementOffsetPx": 0,
+      "paneProbesWithHitDrift": 0,
+      "hitDriftDetail": [],
+      "walkTabJumpInstant": true,
+      "h1To": "Notifications",
+      "switchHappened": true
+    },
+    {
+      "id": "topic-ctrl",
+      "from": "notifications",
+      "to": "saga",
+      "via": "dropdown",
+      "kind": "CONTROL TOPIC switch short->short",
+      "frames": 35,
+      "peakPaneTranslateY": 0,
+      "paneSettleMs": 35,
+      "framesPaneDisplacedGt2px": 0,
+      "peakHeadTranslateY": 5,
+      "headSettleMs": 302,
+      "peakPaneElementOffsetPx": 0,
+      "paneProbesWithHitDrift": 0,
+      "hitDriftDetail": [],
+      "walkTabJumpInstant": true,
+      "h1To": "The Saga Pattern",
+      "switchHappened": true
+    }
+  ],
+  "controls": {
+    "all9CoreTabsPresent": true,
+    "vizEnabledTopics": [
+      "kafka-internals"
+    ],
+    "allScrollYZero": true,
+    "tablistLeftValues": [
+      19
+    ],
+    "rightPanelPresent": true,
+    "allTransitionsDidIntendedThing": true
+  },
+  "buildHint": {
+    "size": 11644555,
+    "mtime": "2026-07-18T06:28:10.812Z"
+  },
+  "screenshotEntryMidTY": 0,
+  "summary": {
+    "D1_maxSettledTabShiftPx": 0,
+    "D1_anyPairDriftsWalkOffOldCoord": false,
+    "D1_controlSameWrapPairShiftsPx": [
+      {
+        "pair": "notifications->saga",
+        "shift": 0
+      },
+      {
+        "pair": "stream-batch-processing->error-propagation",
+        "shift": 0
+      }
+    ],
+    "D2_maxPaneTranslateYPx": 0,
+    "D2_maxHeadTranslateYPx": 5,
+    "D2_paneTranslateByTransition": [
+      {
+        "id": "entry",
+        "pane": 0,
+        "head": 5
+      },
+      {
+        "id": "paneswitch",
+        "pane": 0,
+        "head": 5
+      },
+      {
+        "id": "topic-dd-sl",
+        "pane": 0,
+        "head": 5
+      },
+      {
+        "id": "topic-next-sl",
+        "pane": 0,
+        "head": 5
+      },
+      {
+        "id": "topic-dd-ls",
+        "pane": 0,
+        "head": 5
+      },
+      {
+        "id": "topic-ctrl",
+        "pane": 0,
+        "head": 5
+      }
+    ],
+    "negControl_D1_reproduces": false,
+    "negControl_D2_reproduces": true
+  }
+}

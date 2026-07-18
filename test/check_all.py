@@ -204,6 +204,38 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # cannot pass because nothing moved. FAILED 24 of 38 assertions on the pre-fix
                      # build, and still failed on the plausible half-fix (scoping the capture).
                      ('transition_deadzone', 'test/transition_deadzone.cjs'),
+                     # ...AND THE TARGET MAY NOT MOVE EITHER. The third of the trio, and the other half
+                     # of the same sentence: transition_deadzone guards against a click being EATEN,
+                     # this guards against a click being MISSED. A MISSED CLICK IS INDISTINGUISHABLE
+                     # FROM AN EATEN ONE -- both read as "the app ignored me".
+                     # transition_deadzone could not catch either defect, structurally: it re-measures
+                     # its target's LIVE box before clicking (correct, for ITS invariant), and it only
+                     # ever clicks light-DOM pane tabs, which sit in the sidebar and outside every
+                     # transform this app applies. It reported the shift in a NOTE and moved on. This
+                     # is that NOTE, promoted to an assertion, and aimed INSIDE the shadow roots.
+                     #   1. THE PANE TABS MOVED UP TO 55.6px WHEN THE TOPIC CHANGED. .seg is positioned
+                     #      by an identity block sized from content that changes on every switch, so the
+                     #      tabs landed at FOUR heights across the 46 topics. THREE variables stacked,
+                     #      and the obvious one (the title wrapping, 23.1px) was worth less than half:
+                     #      the locator dropping below the badge is 24px, and the locator wrapping is
+                     #      13.5px more. Fixing only the title would have left 32px still moving.
+                     #   2. panein's `translateY(16px) scale(.995)` MOVED EVERY CONTROL IN THE INCOMING
+                     #      PANE for 500ms -- +18.2px at t=0 -- and HIT-TESTING FOLLOWS TRANSFORMS. It is
+                     #      HEIGHT-DEPENDENT, which is why it hid: a click at the resting centre still
+                     #      lands while the displacement is under half the control's height, so drill's
+                     #      41px controls worked and the 28px "Reveal" buttons did not. 29 of 70 controls
+                     #      are under the threshold. The fix is ZERO displacement, not a smaller one: a
+                     #      click near a control's top edge misses for ANY downward shift.
+                     # The reflex fix -- pointer-events:none during the animation -- is the disease the
+                     # View Transition API was just REMOVED for. It does not move the target, it DELETES
+                     # it. So the pane keeps hit-testing throughout and only the motion goes.
+                     # Every assertion is BEHAVIOURAL (real page.mouse.click at +0/+16/+60/+150/+300ms
+                     # on both switch paths), and all four probes are RE-ARMED AGAINST A PLANTED DEFECT
+                     # ON EVERY RUN -- it re-injects the translateY, neutralises the sidebar reserve,
+                     # adds a pane animation to the topic path, and blanks a pane -- and exits non-zero
+                     # if any probe fails to notice. It also asserts its own COVERAGE, so it cannot pass
+                     # by skipping every target. FAILED 14-15 of 128 assertions on the pre-fix build (timing-dependent at the +60ms sample).
+                     ('click_drift', 'test/click_drift.cjs'),
                      # overlay_keyboard: overlay_deadzone above tests Escape, hit-testing and focus
                      # RESTORE -- and never once presses Enter on a button. An audit built on those
                      # questions certified these overlays "10/10, no defects" with two WCAG 2.1.1

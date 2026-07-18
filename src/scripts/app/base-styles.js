@@ -28,6 +28,21 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:var(--font-size-micro);b
 .card{transition:border-color var(--duration-base) var(--ease-base)}
 .card:hover{border-color:var(--topic-edge)}
 }
+/* ===== THE REVEAL PRIMITIVE -- @keyframes pop -- DEFINED ONCE, IN THE SHEET EVERY SHADOW HOST ADOPTS.
+   Keyframes names are TREE-SCOPED: animation-name inside a shadow root resolves only against
+   keyframes defined in that same shadow scope (its own style element or an adopted sheet) -- a
+   document-level definition does not serve shadow content. ELEVEN rules across FIVE shadow scopes
+   reference pop -- the drill (.speak/.mhp + ANS_SHEET's .ans/.fu/.senior), mixed-fire (that same
+   ANS_SHEET family + the mock beat boxes), mock-run (.mb-model/.mb-verdict/.mb-int/.mb-int2 .show),
+   the whiteboard (.wb-ans.show) and the opener (.op-a.show) -- but the only in-scope definition
+   lived in DRILL_STYLE. So outside the drill, EVERY reveal in the app SILENTLY NO-OPED: computed
+   style reported "pop 250ms", element.getAnimations() returned [], zero animationstart events
+   fired, and the answer just APPEARED (measured 2026-07-18 on the shipped build: whiteboard and
+   mixed-fire reveals dead, drill alive -- the same one-scope-works trap as the print/tap-floor/
+   contrast blocks below, wearing keyframes instead of selectors). Defined HERE, the name resolves
+   in every scope that references it today or ever will; the reduced-motion rule directly below
+   compresses it to .01ms in the same scopes, so suppression travels with the definition. */
+@keyframes pop{from{opacity:0;transform:translateY(7px) scale(.99)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 /* PRINT PAGE-BREAK CONTROL. This used to live in styles.css, where it reached NOTHING:
    .card / .thread / .dec / .rf / details.model are all inside a shadow root, and a

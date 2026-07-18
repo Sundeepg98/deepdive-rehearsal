@@ -364,19 +364,33 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
 .cram-tog .tt-state{color:var(--acc);font-weight:var(--font-weight-heavy)}
   .crambtn:hover{border-color:var(--acc);background:var(--accbg)}
 .crambtn:not(.cram-tog):hover::after{opacity:1;color:var(--acc);transform:translateX(3px)}
+  /* ===== THE DIALOG FAMILY SHARES ONE FRAME =====
+     All 7 dialogs (mock/mix/sess/key/scope/plan + cram) hang from the top of the SAME 18px
+     backdrop frame: container padding 18 + panel margin 0 + max-height 100vh-36 = an 18px
+     inset on every side a panel can reach. The panel used to ALSO carry margin-top:18 -- a
+     double top inset (top=36) that pushed the max-height-capped tall dialogs 18px PAST the
+     frame's bottom edge (flush at viewport bottom, 0px gap) while cram sat at 18/18 -- three
+     distinct vertical treatments across one family at 360px. TOP-HUNG, not centred, on
+     measured grounds: the two content-sized dialogs are exactly the two whose height breathes
+     while open (mock grows +150px on Reveal, mixed-fire re-draws random-length prompts), and
+     vertical centring would shift the header/clock/close by half of every delta mid-run --
+     click-target drift on the control under the cursor. Top-hung keeps chrome fixed; only the
+     bottom edge moves, which is what these six always did within a run. */
   .mock-ov{display:none;position:fixed;inset:0;z-index:var(--z-popup);background:rgba(28,26,22,.45);backdrop-filter:blur(8px) saturate(1.2);-webkit-backdrop-filter:blur(8px) saturate(1.2);padding:var(--space-18);overflow:hidden}
   .mock-ov.open{display:flex;align-items:flex-start;justify-content:center;overflow:hidden}
-  .mock-panel{background:linear-gradient(180deg,rgba(250,249,245,.97),rgba(248,245,239,.97));width:100%;max-width:var(--space-560);border-radius:18px;box-shadow:0 8px 32px -8px var(--acc-a20),0 28px 64px -18px rgba(0,0,0,.34),0 0 80px -20px var(--acc-a15);margin:var(--space-18) auto 0;overflow:hidden;border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(24px) saturate(1.3);-webkit-backdrop-filter:blur(24px) saturate(1.3);display:flex;flex-direction:column;max-height:calc(100vh - var(--space-36));transform-origin:center top}
+  .mock-panel{background:linear-gradient(180deg,rgba(250,249,245,.97),rgba(248,245,239,.97));width:100%;max-width:var(--space-560);border-radius:18px;box-shadow:0 8px 32px -8px var(--acc-a20),0 28px 64px -18px rgba(0,0,0,.34),0 0 80px -20px var(--acc-a15);margin:0 auto;overflow:hidden;border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(24px) saturate(1.3);-webkit-backdrop-filter:blur(24px) saturate(1.3);display:flex;flex-direction:column;max-height:calc(100vh - var(--space-36));transform-origin:center top}
   .mock-top{display:flex;align-items:center;gap:var(--space-12);padding:var(--space-13) var(--space-18);border-bottom:1px solid var(--bd);background:var(--card);position:sticky;top:0;z-index:2}
   .mock-x{flex:none;width:var(--space-32);height:var(--space-32);border-radius:9px;border:1px solid var(--bd);background:var(--card);color:var(--mut);font-size:var(--font-size-title);line-height:var(--line-height-none);cursor:pointer;transition:transform var(--duration-fast) var(--ease-spring),background var(--duration-base) var(--ease-base),color var(--duration-base) var(--ease-base),border-color var(--duration-base) var(--ease-base),box-shadow var(--duration-base) var(--ease-base);display:flex;align-items:center;justify-content:center}
   .mock-x:hover{border-color:var(--red);color:var(--red);background:var(--redbg);transform:scale(1.1) rotate(90deg);box-shadow:0 0 0 3px rgba(239,68,68,.1)}
   .mock-title{flex:1;font:var(--font-weight-heavy) 12px -apple-system,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:var(--accink)}
   .mock-clock{flex:none;font:var(--font-weight-heavy) 16px ui-monospace,Menlo,monospace;color:var(--acc);background:var(--accbg);border-radius:8px;padding:var(--space-4) var(--space-12)}
 
-  /* cram sheet */
+  /* cram sheet -- same frame, same width, same open-state layout as the six .mock-ov dialogs
+     (it was the one member at 600px wide on a display:block container; print unaffected, the
+     @media print block overrides display/max-width/margin with !important either way) */
   .cram-ov{display:none;position:fixed;inset:0;z-index:var(--z-popup);background:rgba(28,26,22,.45);backdrop-filter:blur(8px) saturate(1.2);-webkit-backdrop-filter:blur(8px) saturate(1.2);padding:var(--space-18);overflow:hidden}
-  .cram-ov.open{display:block;overflow:hidden}
-  .cram-panel{background:linear-gradient(180deg,rgba(250,249,245,.97),rgba(248,245,239,.97));width:100%;max-width:var(--space-600);border-radius:18px;box-shadow:0 8px 32px -8px var(--acc-a20),0 28px 64px -18px rgba(0,0,0,.34),0 0 80px -20px var(--acc-a15);margin:0 auto;overflow:hidden;border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(24px) saturate(1.3);-webkit-backdrop-filter:blur(24px) saturate(1.3);display:flex;flex-direction:column;max-height:calc(100vh - var(--space-36));transform-origin:center top}
+  .cram-ov.open{display:flex;align-items:flex-start;justify-content:center;overflow:hidden}
+  .cram-panel{background:linear-gradient(180deg,rgba(250,249,245,.97),rgba(248,245,239,.97));width:100%;max-width:var(--space-560);border-radius:18px;box-shadow:0 8px 32px -8px var(--acc-a20),0 28px 64px -18px rgba(0,0,0,.34),0 0 80px -20px var(--acc-a15);margin:0 auto;overflow:hidden;border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(24px) saturate(1.3);-webkit-backdrop-filter:blur(24px) saturate(1.3);display:flex;flex-direction:column;max-height:calc(100vh - var(--space-36));transform-origin:center top}
   .cram-top{display:flex;align-items:center;gap:var(--space-12);padding:var(--space-13) var(--space-18);border-bottom:1px solid var(--bd);background:var(--card);position:sticky;top:0;z-index:2}
   .cram-title{flex:1;font:var(--font-weight-heavy) 12px -apple-system,sans-serif;letter-spacing:.5px;text-transform:uppercase;color:var(--accink)}
   .cram-print{flex:none;font:var(--font-weight-bold) 11.5px -apple-system,sans-serif;padding:var(--space-6) var(--space-14);border-radius:8px;border:1px solid #cfc7f0;background:var(--accbg);color:var(--accink);cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),background var(--duration-base) var(--ease-base),color var(--duration-base) var(--ease-base),border-color var(--duration-base) var(--ease-base),box-shadow var(--duration-base) var(--ease-base)}
@@ -1257,7 +1271,14 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
 .ix-group .ix-g-head{color:var(--rm);background:linear-gradient(90deg,color-mix(in srgb,var(--rm) 11%,transparent),transparent 55%);padding:var(--space-5) var(--space-9);border-radius:7px}
 .ix-group .ix-g-n{color:var(--rm);background:color-mix(in srgb,var(--rm) 13%,transparent)}
 .ix-group .ix-card{border-color:color-mix(in srgb,var(--rm) 25%,var(--bd))}
-.ix-g-cram{margin-left:auto;font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.02em;text-transform:none;color:var(--acc);background:transparent;border:1px solid var(--bd);border-radius:20px;padding:var(--space-3) var(--space-11);cursor:pointer;transition:background var(--duration-fast) var(--ease-base),border-color var(--duration-fast) var(--ease-base)}
+/* min-height 24px: WCAG 2.5.8 target floor, raw px on purpose (a physical-finger constant, not a
+   layout token -- same reasoning as .tools-fab's 44px). The pill measured 63x21 at desktop, the
+   only sub-24px control on the index; inline-flex keeps the label centred in the taller box.
+   24 is the DESKTOP floor only. This class (0,1,0) outranks the MOBILE TAP FLOOR's bare `button`
+   44px (0,0,1, <=919px) at EVERY width, so that block re-asserts 44 on this class by name --
+   round 1 shipped without the re-assert and silently shrank a live touch target 44->24px at
+   360x740 (pills-r1.json vs pills-parent.json, _audit/2026-07-18-nit-css). */
+.ix-g-cram{margin-left:auto;display:inline-flex;align-items:center;justify-content:center;min-height:24px;font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.02em;text-transform:none;color:var(--acc);background:transparent;border:1px solid var(--bd);border-radius:20px;padding:var(--space-3) var(--space-11);cursor:pointer;transition:background var(--duration-fast) var(--ease-base),border-color var(--duration-fast) var(--ease-base)}
 .ix-g-cram:hover{background:var(--accbg);border-color:var(--acc)}
 .ix-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:var(--space-8)}
 .ix-cell{position:relative}
@@ -1496,6 +1517,11 @@ h1,h2,h3,h4,h5,h6{text-wrap:balance}
   /* focus-mode.js builds this one in JS. Its inline style no longer pins `display`, so this
      rule can centre the label in the taller box (an inline style would have won otherwise). */
   #_focus-toggle{min-height:44px;display:inline-flex;align-items:center;justify-content:center}
+  /* the Cram pill's 24px DESKTOP floor (class, 0,1,0) beats the bare `button` floor above at
+     every width -- without this re-assert the pills measured 44->24px at 360x740. Same pattern
+     as .crambtn/#_focus-toggle: a control whose own rule outranks the element floor re-states
+     44 here by name. */
+  .ix-g-cram{min-height:44px}
 }
 
 /* ===================== THE HOME (#home) =====================

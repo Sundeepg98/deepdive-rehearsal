@@ -1,0 +1,176 @@
+{
+  "reload1": {
+    "topicHist": [
+      5,
+      5,
+      5,
+      5,
+      5,
+      5
+    ],
+    "topicDeltas": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "topicBackPainted": [
+      {
+        "painted": true,
+        "blank": false,
+        "nonbg": 1016133,
+        "hash": "#caching/walk"
+      },
+      {
+        "painted": true,
+        "blank": false,
+        "nonbg": 1016133,
+        "hash": "#caching/walk"
+      },
+      {
+        "painted": true,
+        "blank": false,
+        "nonbg": 1016134,
+        "hash": "#caching/walk"
+      },
+      {
+        "painted": true,
+        "blank": false,
+        "nonbg": 1016133,
+        "hash": "#caching/walk"
+      },
+      {
+        "painted": true,
+        "blank": false,
+        "nonbg": 1016130,
+        "hash": "#caching/walk"
+      }
+    ],
+    "homeHist": [
+      3,
+      3,
+      3,
+      3
+    ],
+    "homeDeltas": [
+      0,
+      0,
+      0
+    ]
+  },
+  "reload2": {
+    "topicHist": [
+      5,
+      5,
+      5,
+      5,
+      5,
+      5
+    ],
+    "topicDeltas": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "topicBackPainted": [
+      {
+        "painted": true,
+        "blank": false,
+        "nonbg": 1016130,
+        "hash": "#caching/walk"
+      },
+      {
+        "painted": true,
+        "blank": false,
+        "nonbg": 1016133,
+        "hash": "#caching/walk"
+      },
+      {
+        "painted": true,
+        "blank": false,
+        "nonbg": 1016131,
+        "hash": "#caching/walk"
+      },
+      {
+        "painted": true,
+        "blank": false,
+        "nonbg": 1016134,
+        "hash": "#caching/walk"
+      },
+      {
+        "painted": true,
+        "blank": false,
+        "nonbg": 1016134,
+        "hash": "#caching/walk"
+      }
+    ],
+    "homeHist": [
+      3,
+      3,
+      3,
+      3
+    ],
+    "homeDeltas": [
+      0,
+      0,
+      0
+    ]
+  },
+  "arms": {
+    "direct": {
+      "bootHistLen": 3,
+      "bootReferrer": "",
+      "back1Painted": true,
+      "back1Hash": "#home",
+      "back1Nonbg": 166772,
+      "back2Leaves": true,
+      "back2Blank": true,
+      "errs": []
+    },
+    "referrer": {
+      "histLen": 2,
+      "referrer": "https://example.com/ref",
+      "backLeaves": true
+    },
+    "deeplink": {
+      "bootHash": "#event-driven/drill",
+      "bootHistLen": 3,
+      "atTopic": true,
+      "backHash": "#home",
+      "backPainted": true
+    },
+    "roundtrip": {
+      "steps": 5,
+      "allPreExitPainted": true,
+      "exitedToBlank": true,
+      "anyMidBlank": false,
+      "allForwardPainted": true,
+      "backHashes": [
+        "#event-driven/sys",
+        "#event-driven/walk",
+        "#home",
+        "#home",
+        "BLANK"
+      ]
+    }
+  },
+  "P": {
+    "reload_delta0_topic": true,
+    "reload_delta0_home": true,
+    "reload_back_never_blank": true,
+    "direct_single_seat_hl3": true,
+    "direct_back1_painted": true,
+    "direct_back2_leaves": true,
+    "referrer_no_seat_hl2": true,
+    "referrer_back_leaves": true,
+    "deeplink_single_seat_hl3": true,
+    "deeplink_back_painted": true,
+    "roundtrip_never_blank": true,
+    "collateral_no_errors": true
+  },
+  "determinismReload": true,
+  "ALL_PASS": true
+}

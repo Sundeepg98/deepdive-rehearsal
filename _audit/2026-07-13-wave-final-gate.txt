@@ -1,0 +1,47 @@
+
+> deepdive-content-pipeline-rehearsal@1.0.0 gate
+> python3 test/check_all.py
+
+================================================================
+  ascii_guard               PASS  ASCII GUARD: PASS  (every src/ .js/.css/.html file is 7-bit ASCII)
+  syntax_check              PASS  SYNTAX CHECK: PASS  (612 modules parse; 52 aggregator files skipped)
+  global_collisions         PASS  GLOBAL COLLISIONS: PASS  (648 top-level globals, each declared in exactly one module)
+  build_integrity           PASS  BUILD INTEGRITY: PASS  (11653311 bytes, 0 unresolved, 9 panes + 7 overlays, build SYNCED the deliverable, COMMITTED deliverable == fresh build of HEAD)
+  css_syntax                PASS    PASS All checks passed (15 keyframes validated)
+  room_static               PASS  ROOM STATIC: PASS  (codemod=0, styles.css infinite=0, 6 room blocks + rebind, boot stamped)
+  room_contrast             PASS  ROOM CONTRAST: PASS  (12 rooms: ink/bg >= 4.5, on-slab/solid >= 5.0)
+  slab_ink                  PASS  SLAB INK: PASS
+  file_integrity            PASS  PASS All 63 files passed integrity check
+  unit_tests                PASS    Results: 53 passed, 0 failed
+  sim_invariants            PASS  SIM INVARIANTS: ALL PASS
+  visual_pane_smoke         PASS  VISUAL PIPELINE SMOKE: ALL PASS
+  layout_static             PASS  LAYOUT STATIC: PASS  (32 source assertions; NO PIXELS INSPECTED -- test/visual_regression.cjs is the check that looks at the screen)
+  compiler_conservation     PASS  CONSERVATION: PASS -- every authored item survives compilation intact.
+  compiler_doc_examples     PASS  DOC EXAMPLES: PASS -- every worked example in the spec survives the parser intact.
+  compiler_md               PASS  Markdown-parser data-equivalence vs the hand-coded spec: 54 pass, 0 fail
+  compiler_emit_serializer  PASS  That is prove_conservation.mjs / prove_doc_examples.mjs, which have an INDEPENDENT reference.
+  compiler_legacy_topic     PASS    This says NOTHING about the compiler that ships. See prove_conservation.mjs.
+  compiler_prose            PASS  Layer B prose reproduction: 3/3 byte-identical
+  compiler_flow             PASS  Layer C flow reproduction: 3/3 byte-identical
+  compiler_code             PASS  Layer C code reproduction: 3/3 byte-identical
+  build_determinism         PASS  BUILD DETERMINISM: PASS  (88 Shiki blocks render identically under a simulated 600ms/line stall; control confirmed the stall trips a default-budget tokenizer)
+  render                    PASS  RENDER TEST: PASS
+  entity_leak               PASS  ENTITY LEAK: PASS  (no HTML entity reaches visible text; 3/3 overlay bodies opened + inspected)
+  overlay_deadzone          PASS  OVERLAY DEADZONE: PASS  (35 assertions: the first real click lands; no layer hit-tests while fading; focus leaves a closing dialog; the keymap stays suppressed under an open one; no unrequested modal at first paint)
+  transition_deadzone       PASS  TRANSITION DEADZONE: PASS  (39 assertions: real clicks and keys land throughout every pane and topic switch, including straight out of the index overlay; the hit-test never collapses to the captured root; and every switch under test provably happened)
+  click_drift               PASS  CLICK DRIFT: PASS  (118 assertions: the nine pane tabs sit at an identical y on all 46 topics, and a real click at the resting centre of the shortest control in five shadow roots lands on that control at +0/+16/+60/+150/+300ms after both a pane switch and a topic switch; all three probes were re-armed against a planted defect on this run)
+  overlay_keyboard          PASS  OVERLAY KEYBOARD: PASS  (47 assertions across 7 dialogs: every focusable is Tab-reachable through the shadow boundary; focus never escapes; Enter AND Space on the focused close button close it; focus restores to the trigger; the mock run opens on its surface and keeps Space-to-reveal)
+  room_browser              PASS  ROOM BROWSER: PASS  (data-group + --topic-ink + --acc rebind at boot; reduced-motion renders in both themes)
+  back_deadend              PASS  BACK DEADEND: PASS
+  cta_contrast              PASS  CTA CONTRAST: PASS  (36 CTA x room x theme, every core glyph pixel >= 5.0:1)
+  scoreboard_salience       PASS  SCOREBOARD SALIENCE: PASS  (48 room x theme x score; Solid is the loudest tile whenever it is non-empty, in every room, both themes, and never fills at zero)
+  e2e_interactions          PASS  E2E INTERACTIONS: PASS
+  progress_merge            PASS  PROGRESS MERGE: PASS
+  card_identity             PASS  CARD IDENTITY: PASS
+  topic_contract            PASS  TOPIC CONTRACT: PASS  (46 topics: population, parity, tiers, cards conform)
+  cram_scope_distinct       PASS  CRAM/SCOPE DISTINCT: PASS  (46 topics: 46/46 distinct cram bodies, 46/46 distinct scope bodies; shortest 2960 chars)
+  rail_integrity            PASS  rail_integrity: PASS -- 414 combos, 0 leaks, 0 empty boxes, all 414 authored notes render
+  shadow_css_guard          PASS    PASS: every class styles.css selects is reachable from the light DOM.
+  visual_regression         PASS  VISUAL REGRESSION: PASS  (16 baselines, win32-chromium149; every capture reached a proven rest state across all 18 roots, cleared the blank-page floor, and matched its committed pixels)
+================================================================
+GATE: PASS

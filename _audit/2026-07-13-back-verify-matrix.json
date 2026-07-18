@@ -1,0 +1,679 @@
+{
+  "trunkDeep": {
+    "bootHash": "#event-driven/drill",
+    "bootHistLen": 2,
+    "bootTitle": "Probe Drill — Deep Rehearsal",
+    "back_isBlank": true,
+    "back_hash": ""
+  },
+  "all": {
+    "desktop": [
+      {
+        "vpName": "desktop",
+        "run": 1,
+        "A": {
+          "bootHistLen": 3,
+          "bootReferrer": "",
+          "bootHash": "#home",
+          "back1_painted": true,
+          "back1_blank": false,
+          "back1_href": "file:///D:/claude-workspace/_worktrees/deepdive-rehearsal/pkg-a/deepdive_content_pipeline_rehearsal.html#home",
+          "back1_hash": "#home",
+          "back1_nonbg": 166772,
+          "back1_colors": 255,
+          "back1_textLen": 26091,
+          "back2_blank": true,
+          "back2_isBlankUrl": true,
+          "back2_href": "about:blank",
+          "back2_nonbg": 0,
+          "errors": []
+        },
+        "B": {
+          "afterTopicHash": "#event-driven/walk",
+          "afterTopicHistLen": 4,
+          "paneRes": [
+            {
+              "ok": true,
+              "hash": "#event-driven/drill",
+              "pushed": 1
+            },
+            {
+              "ok": true,
+              "hash": "#event-driven/sys",
+              "pushed": 1
+            },
+            {
+              "ok": true,
+              "hash": "#event-driven/model",
+              "pushed": 1
+            }
+          ],
+          "deepestHash": "#event-driven/model",
+          "deepestHistLen": 7,
+          "backSteps": [
+            {
+              "hash": "#event-driven/sys",
+              "href": "file:///D:/claude-workspace/_worktrees/deepdive-rehearsal/pkg-a/deepdive_content_pipeline_rehearsal.html#event-driven/sys",
+              "isBlank": false,
+              "painted": true,
+              "blank": false,
+              "nonbg": 1003781
+            },
+            {
+              "hash": "#event-driven/drill",
+              "href": "file:///D:/claude-workspace/_worktrees/deepdive-rehearsal/pkg-a/deepdive_content_pipeline_rehearsal.html#event-driven/drill",
+              "isBlank": false,
+              "painted": true,
+              "blank": false,
+              "nonbg": 984232
+            },
+            {
+              "hash": "#event-driven/walk",
+              "href": "file:///D:/claude-workspace/_worktrees/deepdive-rehearsal/pkg-a/deepdive_content_pipeline_rehearsal.html#event-driven/walk",
+              "isBlank": false,
+              "painted": true,
+              "blank": false,
+              "nonbg": 1003714
+            },
+            {
+              "hash": "#home",
+              "href": "file:///D:/claude-workspace/_worktrees/deepdive-rehearsal/pkg-a/deepdive_content_pipeline_rehearsal.html#home",
+              "isBlank": false,
+              "painted": true,
+              "blank": false,
+              "nonbg": 171936
+            },
+            {
+              "hash": "#home",
+              "href": "file:///D:/claude-workspace/_worktrees/deepdive-rehearsal/pkg-a/deepdive_content_pipeline_rehearsal.html#home",
+              "isBlank": false,
+              "painted": true,
+              "blank": false,
+              "nonbg": 171935
+            },
+            {
+              "hash": "",
+              "href": "about:blank",
+              "isBlank": true,
+              "painted": false,
+              "blank": true,
+              "nonbg": 0
+            }
+          ],
+          "fwdSteps": [
+            {
+              "hash": "#home",
+              "isBlank": false,
+              "painted": true,
+              "nonbg": 166772
+            },
+            {
+              "hash": "#home",
+              "isBlank": false,
+              "painted": true,
+              "nonbg": 166772
+            },
+            {
+              "hash": "#home",
+              "isBlank": false,
+              "painted": true,
+              "nonbg": 166772
+            },
+            {
+              "hash": "#home",
+              "isBlank": false,
+              "painted": true,
+              "nonbg": 166772
+            },
+            {
+              "hash": "#home",
+              "isBlank": false,
+              "painted": true,
+              "nonbg": 166772
+            },
+            {
+              "hash": "#home",
+              "isBlank": false,
+              "painted": true,
+              "nonbg": 166772
+            }
+          ],
+          "allPreExitPainted": true,
+          "exitedToBlank": true,
+          "anyMidHistoryBlank": false,
+          "allForwardPainted": true,
+          "errors": []
+        },
+        "C": {
+          "preReloadHash": "#caching/drill",
+          "preReloadHistLen": 5,
+          "postReloadHash": "#caching/drill",
+          "postReloadPainted": true,
+          "postReloadHistLen": 6,
+          "hashPreserved": true,
+          "histLenDelta_doubleSeat": 1,
+          "back_blank": false,
+          "back_isBlankUrl": false,
+          "back_painted": true,
+          "back_hash": "#home",
+          "back_nonbg": 166772,
+          "errors": []
+        },
+        "D": {
+          "bootHash": "#event-driven/drill",
+          "bootHistLen": 3,
+          "bootPainted": true,
+          "bootTitle": "Probe Drill — Deep Rehearsal",
+          "bootAtTopic": true,
+          "back_hash": "#home",
+          "back_href": "file:///D:/claude-workspace/_worktrees/deepdive-rehearsal/pkg-a/deepdive_content_pipeline_rehearsal.html#home",
+          "back_isBlankUrl": false,
+          "back_painted": true,
+          "back_blank": false,
+          "back_nonbg": 166772,
+          "errors": []
+        }
+      },
+      {
+        "vpName": "desktop",
+        "run": 2,
+        "A": {
+          "bootHistLen": 3,
+          "bootReferrer": "",
+          "bootHash": "#home",
+          "back1_painted": true,
+          "back1_blank": false,
+          "back1_href": "file:///D:/claude-workspace/_worktrees/deepdive-rehearsal/pkg-a/deepdive_content_pipeline_rehearsal.html#home",
+          "back1_hash": "#home",
+          "back1_nonbg": 166772,
+          "back1_colors": 255,
+          "back1_textLen": 26091,
+          "back2_blank": true,
+          "back2_isBlankUrl": true,
+          "back2_href": "about:blank",
+          "back2_nonbg": 0,
+          "errors": []
+        },
+        "B": {
+          "afterTopicHash": "#event-driven/walk",
+          "afterTopicHistLen": 4,
+          "paneRes": [
+            {
+              "ok": true,
+              "hash": "#event-driven/drill",
+              "pushed": 1
+            },
+            {
+              "ok": true,
+              "hash": "#event-driven/sys",
+              "pushed": 1
+            },
+            {
+              "ok": true,
+              "hash": "#event-driven/model",
+              "pushed": 1
+            }
+          ],
+          "deepestHash": "#event-driven/model",
+          "deepestHistLen": 7,
+          "backSteps": [
+            {
+              "hash": "#event-driven/sys",
+              "href": "file:///D:/claude-workspace/_worktrees/deepdive-rehearsal/pkg-a/deepdive_content_pipeline_rehearsal.html#event-driven/sys",
+              "isBlank": false,
+              "painted": true,
+              "blank": false,
+              "nonbg": 1003926
+            },
+            {
+              "hash": "#event-driven/drill",
+              "href": "file:///D:/claude-workspace/_worktrees/deepdive-rehearsal/pkg-a/deepdive_content_pipeline_rehearsal.html#event-driven/drill",
+              "isBlank": false,
+              "painted": true,
+              "blank": false,
+              "nonbg": 984221
+            },
+            {
+              "hash": "#event-driven/walk",
+              "href": "file:///D:/claude-workspace/_worktrees/deepdive-rehearsal/pkg-a/deepdive_content_pipeline_rehearsal.html#event-driven/walk",
+              "isBlank": false,
+              "painted": true,
+              "blank": false,
+              "nonbg": 1003714
+            },
+            {
+              "hash": "#home",
+              "href": "file:///D:/claude-workspace/_worktrees/deepdive-rehearsal/pkg-a/deepdive_content_pipeline_rehearsal.html#home",
+              "isBlank": false,
+              "painted": true,
+              "blank": false,
+              "nonbg": 171936
+            },
+            {
+              "hash": "#home",
+              "href": "file:///D:/claude-workspace/_worktrees/deepdive-rehearsal/pkg-a/deepdive_content_pipeline_rehearsal.html#home",
+              "isBlank": false,
+              "painted": true,
+              "blank": false,
+              "nonbg": 171935
+            },
+            {
+              "hash": "",
+              "href": "about:blank",
+              "isBlank": true,
+              "painted": false,
+              "blank": true,
+              "nonbg": 0
+            }
+          ],
+          "fwdSteps": [
+            {
+              "hash": "#home",
+              "isBlank": false,
+              "painted": true,
+              "nonbg": 166772
+            },
+            {
+              "hash": "#home",
+              "isBlank": false,
+              "painted": true,
+              "nonbg": 166772
+            },
+            {
+              "hash": "#home",
+              "isBlank": false,
+              "painted": true,
+              "nonbg": 166772
+            },
+            {
+              "hash": "#home",
+              "isBlank": false,
+              "painted": true,
+              "nonbg": 166772
+            },
+            {
+              "hash": "#home",
+              "isBlank": false,
+              "painted": true,
+              "nonbg": 166772
+            },
+            {
+              "hash": "#home",
+              "isBlank": false,
+              "painted": true,
+              "nonbg": 166772
+            }
+          ],
+          "allPreExitPainted": true,
+          "exitedToBlank": true,
+          "anyMidHistoryBlank": false,
+          "allForwardPainted": true,
+          "errors": []
+        },
+        "C": {
+          "preReloadHash": "#caching/drill",
+          "preReloadHistLen": 5,
+          "postReloadHash": "#caching/drill",
+          "postReloadPainted": true,
+          "postReloadHistLen": 6,
+          "hashPreserved": true,
+          "histLenDelta_doubleSeat": 1,
+          "back_blank": false,
+          "back_isBlankUrl": false,
+          "back_painted": true,
+          "back_hash": "#home",
+          "back_nonbg": 166772,
+          "errors": []
+        },
+        "D": {
+          "bootHash": "#event-driven/drill",
+          "bootHistLen": 3,
+          "bootPainted": true,
+          "bootTitle": "Probe Drill — Deep Rehearsal",
+          "bootAtTopic": true,
+          "back_hash": "#home",
+          "back_href": "file:///D:/claude-workspace/_worktrees/deepdive-rehearsal/pkg-a/deepdive_content_pipeline_rehearsal.html#home",
+          "back_isBlankUrl": false,
+          "back_painted": true,
+          "back_blank": false,
+          "back_nonbg": 166772,
+          "errors": []
+        }
+      }
+    ],
+    "mobile": [
+      {
+        "vpName": "mobile",
+        "run": 1,
+        "A": {
+          "bootHistLen": 3,
+          "bootReferrer": "",
+          "bootHash": "#home",
+          "back1_painted": true,
+          "back1_blank": false,
+          "back1_href": "file:///D:/claude-workspace/_worktrees/deepdive-rehearsal/pkg-a/deepdive_content_pipeline_rehearsal.html#home",
+          "back1_hash": "#home",
+          "back1_nonbg": 63189,
+          "back1_colors": 104,
+          "back1_textLen": 26091,
+          "back2_blank": true,
+          "back2_isBlankUrl": true,
+          "back2_href": "about:blank",
+          "back2_nonbg": 0,
+          "errors": []
+        },
+        "B": {
+          "afterTopicHash": "#event-driven/walk",
+          "afterTopicHistLen": 4,
+          "paneRes": [
+            {
+              "ok": true,
+              "hash": "#event-driven/drill",
+              "pushed": 1
+            },
+            {
+              "ok": true,
+              "hash": "#event-driven/sys",
+              "pushed": 1
+            },
+            {
+              "ok": true,
+              "hash": "#event-driven/model",
+              "pushed": 1
+            }
+          ],
+          "deepestHash": "#event-driven/model",
+          "deepestHistLen": 7,
+          "backSteps": [
+            {
+              "hash": "#event-driven/sys",
+              "href": "file:///D:/claude-workspace/_worktrees/deepdive-rehearsal/pkg-a/deepdive_content_pipeline_rehearsal.html#event-driven/sys",
+              "isBlank": false,
+              "painted": true,
+              "blank": false,
+              "nonbg": 84414
+            },
+            {
+              "hash": "#event-driven/drill",
+              "href": "file:///D:/claude-workspace/_worktrees/deepdive-rehearsal/pkg-a/deepdive_content_pipeline_rehearsal.html#event-driven/drill",
+              "isBlank": false,
+              "painted": true,
+              "blank": false,
+              "nonbg": 102789
+            },
+            {
+              "hash": "#event-driven/walk",
+              "href": "file:///D:/claude-workspace/_worktrees/deepdive-rehearsal/pkg-a/deepdive_content_pipeline_rehearsal.html#event-driven/walk",
+              "isBlank": false,
+              "painted": true,
+              "blank": false,
+              "nonbg": 85964
+            },
+            {
+              "hash": "#home",
+              "href": "file:///D:/claude-workspace/_worktrees/deepdive-rehearsal/pkg-a/deepdive_content_pipeline_rehearsal.html#home",
+              "isBlank": false,
+              "painted": true,
+              "blank": false,
+              "nonbg": 64505
+            },
+            {
+              "hash": "#home",
+              "href": "file:///D:/claude-workspace/_worktrees/deepdive-rehearsal/pkg-a/deepdive_content_pipeline_rehearsal.html#home",
+              "isBlank": false,
+              "painted": true,
+              "blank": false,
+              "nonbg": 64505
+            },
+            {
+              "hash": "",
+              "href": "about:blank",
+              "isBlank": true,
+              "painted": false,
+              "blank": true,
+              "nonbg": 0
+            }
+          ],
+          "fwdSteps": [
+            {
+              "hash": "#home",
+              "isBlank": false,
+              "painted": true,
+              "nonbg": 63189
+            },
+            {
+              "hash": "#home",
+              "isBlank": false,
+              "painted": true,
+              "nonbg": 63189
+            },
+            {
+              "hash": "#home",
+              "isBlank": false,
+              "painted": true,
+              "nonbg": 63189
+            },
+            {
+              "hash": "#home",
+              "isBlank": false,
+              "painted": true,
+              "nonbg": 63189
+            },
+            {
+              "hash": "#home",
+              "isBlank": false,
+              "painted": true,
+              "nonbg": 63189
+            },
+            {
+              "hash": "#home",
+              "isBlank": false,
+              "painted": true,
+              "nonbg": 63189
+            }
+          ],
+          "allPreExitPainted": true,
+          "exitedToBlank": true,
+          "anyMidHistoryBlank": false,
+          "allForwardPainted": true,
+          "errors": []
+        },
+        "C": {
+          "preReloadHash": "#caching/drill",
+          "preReloadHistLen": 5,
+          "postReloadHash": "#caching/drill",
+          "postReloadPainted": true,
+          "postReloadHistLen": 6,
+          "hashPreserved": true,
+          "histLenDelta_doubleSeat": 1,
+          "back_blank": false,
+          "back_isBlankUrl": false,
+          "back_painted": true,
+          "back_hash": "#home",
+          "back_nonbg": 63189,
+          "errors": []
+        },
+        "D": {
+          "bootHash": "#event-driven/drill",
+          "bootHistLen": 3,
+          "bootPainted": true,
+          "bootTitle": "Probe Drill — Deep Rehearsal",
+          "bootAtTopic": true,
+          "back_hash": "#home",
+          "back_href": "file:///D:/claude-workspace/_worktrees/deepdive-rehearsal/pkg-a/deepdive_content_pipeline_rehearsal.html#home",
+          "back_isBlankUrl": false,
+          "back_painted": true,
+          "back_blank": false,
+          "back_nonbg": 63189,
+          "errors": []
+        }
+      },
+      {
+        "vpName": "mobile",
+        "run": 2,
+        "A": {
+          "bootHistLen": 3,
+          "bootReferrer": "",
+          "bootHash": "#home",
+          "back1_painted": true,
+          "back1_blank": false,
+          "back1_href": "file:///D:/claude-workspace/_worktrees/deepdive-rehearsal/pkg-a/deepdive_content_pipeline_rehearsal.html#home",
+          "back1_hash": "#home",
+          "back1_nonbg": 63189,
+          "back1_colors": 104,
+          "back1_textLen": 26091,
+          "back2_blank": true,
+          "back2_isBlankUrl": true,
+          "back2_href": "about:blank",
+          "back2_nonbg": 0,
+          "errors": []
+        },
+        "B": {
+          "afterTopicHash": "#event-driven/walk",
+          "afterTopicHistLen": 4,
+          "paneRes": [
+            {
+              "ok": true,
+              "hash": "#event-driven/drill",
+              "pushed": 1
+            },
+            {
+              "ok": true,
+              "hash": "#event-driven/sys",
+              "pushed": 1
+            },
+            {
+              "ok": true,
+              "hash": "#event-driven/model",
+              "pushed": 1
+            }
+          ],
+          "deepestHash": "#event-driven/model",
+          "deepestHistLen": 7,
+          "backSteps": [
+            {
+              "hash": "#event-driven/sys",
+              "href": "file:///D:/claude-workspace/_worktrees/deepdive-rehearsal/pkg-a/deepdive_content_pipeline_rehearsal.html#event-driven/sys",
+              "isBlank": false,
+              "painted": true,
+              "blank": false,
+              "nonbg": 84428
+            },
+            {
+              "hash": "#event-driven/drill",
+              "href": "file:///D:/claude-workspace/_worktrees/deepdive-rehearsal/pkg-a/deepdive_content_pipeline_rehearsal.html#event-driven/drill",
+              "isBlank": false,
+              "painted": true,
+              "blank": false,
+              "nonbg": 102526
+            },
+            {
+              "hash": "#event-driven/walk",
+              "href": "file:///D:/claude-workspace/_worktrees/deepdive-rehearsal/pkg-a/deepdive_content_pipeline_rehearsal.html#event-driven/walk",
+              "isBlank": false,
+              "painted": true,
+              "blank": false,
+              "nonbg": 85964
+            },
+            {
+              "hash": "#home",
+              "href": "file:///D:/claude-workspace/_worktrees/deepdive-rehearsal/pkg-a/deepdive_content_pipeline_rehearsal.html#home",
+              "isBlank": false,
+              "painted": true,
+              "blank": false,
+              "nonbg": 64505
+            },
+            {
+              "hash": "#home",
+              "href": "file:///D:/claude-workspace/_worktrees/deepdive-rehearsal/pkg-a/deepdive_content_pipeline_rehearsal.html#home",
+              "isBlank": false,
+              "painted": true,
+              "blank": false,
+              "nonbg": 64505
+            },
+            {
+              "hash": "",
+              "href": "about:blank",
+              "isBlank": true,
+              "painted": false,
+              "blank": true,
+              "nonbg": 0
+            }
+          ],
+          "fwdSteps": [
+            {
+              "hash": "#home",
+              "isBlank": false,
+              "painted": true,
+              "nonbg": 63189
+            },
+            {
+              "hash": "#home",
+              "isBlank": false,
+              "painted": true,
+              "nonbg": 63189
+            },
+            {
+              "hash": "#home",
+              "isBlank": false,
+              "painted": true,
+              "nonbg": 63189
+            },
+            {
+              "hash": "#home",
+              "isBlank": false,
+              "painted": true,
+              "nonbg": 63189
+            },
+            {
+              "hash": "#home",
+              "isBlank": false,
+              "painted": true,
+              "nonbg": 63189
+            },
+            {
+              "hash": "#home",
+              "isBlank": false,
+              "painted": true,
+              "nonbg": 63189
+            }
+          ],
+          "allPreExitPainted": true,
+          "exitedToBlank": true,
+          "anyMidHistoryBlank": false,
+          "allForwardPainted": true,
+          "errors": []
+        },
+        "C": {
+          "preReloadHash": "#caching/drill",
+          "preReloadHistLen": 5,
+          "postReloadHash": "#caching/drill",
+          "postReloadPainted": true,
+          "postReloadHistLen": 6,
+          "hashPreserved": true,
+          "histLenDelta_doubleSeat": 1,
+          "back_blank": false,
+          "back_isBlankUrl": false,
+          "back_painted": true,
+          "back_hash": "#home",
+          "back_nonbg": 63189,
+          "errors": []
+        },
+        "D": {
+          "bootHash": "#event-driven/drill",
+          "bootHistLen": 3,
+          "bootPainted": true,
+          "bootTitle": "Probe Drill — Deep Rehearsal",
+          "bootAtTopic": true,
+          "back_hash": "#home",
+          "back_href": "file:///D:/claude-workspace/_worktrees/deepdive-rehearsal/pkg-a/deepdive_content_pipeline_rehearsal.html#home",
+          "back_isBlankUrl": false,
+          "back_painted": true,
+          "back_blank": false,
+          "back_nonbg": 63189,
+          "errors": []
+        }
+      }
+    ]
+  }
+}

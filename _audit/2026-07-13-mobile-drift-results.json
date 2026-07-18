@@ -1,0 +1,172 @@
+{
+  "file": "D:/claude-workspace/_worktrees/deepdive-rehearsal/n-drift/deepdive_content_pipeline_rehearsal.html",
+  "generated": "2026-07-18T06:15:59.747Z",
+  "viewports": [
+    {
+      "w": 360,
+      "h": 740
+    },
+    {
+      "w": 390,
+      "h": 844
+    }
+  ],
+  "byViewport": {
+    "360x740": {
+      "pairs": [
+        {
+          "from": "notifications",
+          "to": "stream-batch-processing",
+          "kind": "wrap-extreme",
+          "segTopDelta": 0,
+          "maxTabTopDelta": 0,
+          "h1lines": [
+            1,
+            1
+          ],
+          "walkCoordAfter": "walk",
+          "walkStillThere": true,
+          "segPosition": "fixed"
+        },
+        {
+          "from": "stream-batch-processing",
+          "to": "notifications",
+          "kind": "wrap-extreme rev",
+          "segTopDelta": 0,
+          "maxTabTopDelta": 0,
+          "h1lines": [
+            1,
+            1
+          ],
+          "walkCoordAfter": "walk",
+          "walkStillThere": true,
+          "segPosition": "fixed"
+        },
+        {
+          "from": "caching",
+          "to": "error-propagation",
+          "kind": "wrap-extreme",
+          "segTopDelta": 0,
+          "maxTabTopDelta": 0,
+          "h1lines": [
+            1,
+            1
+          ],
+          "walkCoordAfter": "walk",
+          "walkStillThere": true,
+          "segPosition": "fixed"
+        },
+        {
+          "from": "notifications",
+          "to": "saga",
+          "kind": "CONTROL same-wrap",
+          "segTopDelta": 0,
+          "maxTabTopDelta": 0,
+          "h1lines": [
+            1,
+            1
+          ],
+          "walkCoordAfter": "walk",
+          "walkStillThere": true,
+          "segPosition": "fixed"
+        }
+      ],
+      "synthetic": {
+        "segDomSiblingAfterSideId": true,
+        "segPosition": "fixed",
+        "partA_unpinned_forcedWrap": {
+          "before": 244.3,
+          "after": 283.9,
+          "moved": 39.6
+        },
+        "partB_pinned_forcedWrap": {
+          "before": 0,
+          "after": 0,
+          "moved": 0
+        },
+        "metricFires": true,
+        "immuneWhilePinned": true
+      }
+    },
+    "390x844": {
+      "pairs": [
+        {
+          "from": "notifications",
+          "to": "stream-batch-processing",
+          "kind": "wrap-extreme",
+          "segTopDelta": 0,
+          "maxTabTopDelta": 0,
+          "h1lines": [
+            1,
+            1
+          ],
+          "walkCoordAfter": "walk",
+          "walkStillThere": true,
+          "segPosition": "fixed"
+        },
+        {
+          "from": "stream-batch-processing",
+          "to": "notifications",
+          "kind": "wrap-extreme rev",
+          "segTopDelta": 0,
+          "maxTabTopDelta": 0,
+          "h1lines": [
+            1,
+            1
+          ],
+          "walkCoordAfter": "walk",
+          "walkStillThere": true,
+          "segPosition": "fixed"
+        },
+        {
+          "from": "caching",
+          "to": "error-propagation",
+          "kind": "wrap-extreme",
+          "segTopDelta": 0,
+          "maxTabTopDelta": 0,
+          "h1lines": [
+            1,
+            1
+          ],
+          "walkCoordAfter": "walk",
+          "walkStillThere": true,
+          "segPosition": "fixed"
+        },
+        {
+          "from": "notifications",
+          "to": "saga",
+          "kind": "CONTROL same-wrap",
+          "segTopDelta": 0,
+          "maxTabTopDelta": 0,
+          "h1lines": [
+            1,
+            1
+          ],
+          "walkCoordAfter": "walk",
+          "walkStillThere": true,
+          "segPosition": "fixed"
+        }
+      ],
+      "synthetic": {
+        "segDomSiblingAfterSideId": true,
+        "segPosition": "fixed",
+        "partA_unpinned_forcedWrap": {
+          "before": 242.3,
+          "after": 281.9,
+          "moved": 39.6
+        },
+        "partB_pinned_forcedWrap": {
+          "before": 0,
+          "after": 0,
+          "moved": 0
+        },
+        "metricFires": true,
+        "immuneWhilePinned": true
+      }
+    }
+  },
+  "artifact": {
+    "size": 11644555,
+    "mtime": "2026-07-13T11:48:42.002Z"
+  }
+}

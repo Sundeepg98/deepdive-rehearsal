@@ -370,6 +370,12 @@ class DeepDrill extends TopicPane {
     const allBtn = this._tiertog.querySelector('[data-tier="all"]');
     if (allBtn) allBtn.textContent = 'All ' + _allCards.length;
     this.setMode('study');
+    /* W2 -- restore the pos.<id> drill probe (study mode's stable base order), so Resume lands on the
+       probe they left, not probe 1. Display-only: drawCard shows probe di; no judge fires, and grades
+       merge by content-id, so continuing from probe 5 records 5..end without touching the record's
+       0..4 (restore-NEVER-regrades). setMode already set di=0 + rendered; re-render at the cursor. */
+    var _pd = (typeof posRestore === 'function') ? posRestore('drill', cards.length) : 0;
+    if (_pd > 0) { this.di = _pd; this.renderD(false); }
   }
   teardownTopic() {
     this.stopTimer();
@@ -476,6 +482,18 @@ class DeepDrill extends TopicPane {
     return fus.length ? fus[fus.length - 1] : this._dwrap.querySelector('.thread');
   }
   renderD(moveFocus) {
+    /* W2 -- throttled pos.<id> drill-probe cursor write. Persist di ONLY in the canonical full-bank
+       study walk, where di is a true "probe N of NN" bank position. mode==='study' alone is too weak:
+       a tier filter (setTier keeps mode 'study', shrinks `cards` to the tier) and a revisit sub-drill
+       (drillRevset leaves mode 'study', sets revisitMode) both index a SUBSET, so their di resolves to
+       a DIFFERENT probe on restore -- a lie the Resume sub-line would then print. Quick 5 reshuffles,
+       mock is timed (both mode!=='study'). Display index only, never a grade: grades persist by
+       content-id (judge -> drillgraded -> Progress.snapshot), so this write cannot re-grade.
+       COMPLETION RESET: once the walk reaches the debrief (di >= cards.length) there is no resume
+       probe, so the cursor resets to 0 -- re-entry lands on the study list at probe 1, exactly the
+       pre-cursor behavior that re-entering a FINISHED drill relied on (a completed run is not a
+       resume point). A partial walk persists its di and resumes there. */
+    if (typeof posSet === 'function' && this.mode === 'study' && this.tierFilter === 'all' && !this.revisitMode) posSet('drill', this.di < cards.length ? this.di : 0);
     /* Resolve the landing decision FIRST -- renderNav() below rewrites #dnav, so a chip that has
        focus is already destroyed (and activeElement already <body>) by the time we could ask. */
     const land = !!moveFocus || this._focusDoomed();
@@ -531,6 +549,10 @@ class DeepDrill extends TopicPane {
        "Reveal answer" destroys the button that was pressed. Same guard, same reason. */
     const land = !!moveFocus || this._focusDoomed();
     const card = cards[this.di], maxStage = 1 + card.f.length;
+    /* W2 beat3 -- a JUDGMENT POINT is when the answer is fully revealed and the Missed/Shaky/Solid
+       row is on screen (stage >= maxStage). The dock's micro tier renders armed keys ONLY then (the
+       judges' amendment: quiet mid-read, armed at the judgment, full targets at the boundary). */
+    this._judgeOn = (stage >= maxStage);
     let html = '<div class="card"><div class="thread">' +
       '<div class="qrow"><div><div class="qk">Probe ' + (this.di + 1) + ' / ' + cards.length + '</div>' +
       '<div class="sigtag">signal &middot; <b>' + card.signal + '</b></div></div>' +
@@ -601,7 +623,12 @@ class DeepDrill extends TopicPane {
       });
       this._updCov();
     }
+    /* Signal the dock (visible-pane read, never a hidden one) so its micro tier can arm/disarm the
+       judgment keys as the reveal advances. Cheap: fires only on a draw, and only the dock listens. */
+    try { this.dispatchEvent(new CustomEvent('flowjudgment', { bubbles: true })); } catch (e) {}
   }
+  /* Is the drill sitting on a revealed probe awaiting a grade? (the dock's micro armed-keys gate) */
+  atJudgment() { return !!this._judgeOn && this.mode !== 'mock'; }
   judge(level) {
     /* R5: level is 1 (missed) / 2 (shaky) / 3 (solid). got/shk stay derived --
        solid (3) is a "got", missed + shaky (1,2) are "to revisit" -- so every
@@ -656,7 +683,22 @@ class DeepDrill extends TopicPane {
   }
   renderDebrief() {
     const self = this;
-    const pct = Math.round(this.got / cards.length * 100);
+    /* W2 -- % is over the probes ANSWERED THIS RUN (results.length), not the full bank. Identical on
+       a full run (answered === cards.length); the difference shows only on a RESUMED run, where the
+       debrief is inherently this-session's coverage detail (its cov/dropped rows come from live
+       grading the record does not store) -- so scoring it against the full bank penalized a perfect
+       resume (17/22 = 77%). The cumulative picture lives in the record (panel / dock / pip). */
+    const pct = Math.round(this.got / Math.max(1, this.results.length) * 100);
+    /* W2 -- the coverage label must not imply full-bank mastery on a RESUMED run. `pct` is over the
+       probes ANSWERED THIS RUN (results.length). When that IS the whole working set (a full run) the
+       label stays the unchanged "signal coverage" -- byte-identical to the old full-bank math, since
+       results.length === cards.length there (the structural-equivalence case, gated). When fewer were
+       answered (resumed past probe 1, or jumped forward), it reads "of N answered this run", so a
+       perfect 17/17 never renders as 17/22. Quick 5 always runs its whole 5, so it keeps its label. */
+    const answered = this.results.length;
+    const covLabel = (this.mode === 'quick') ? 'of a quick 5'
+      : (answered === cards.length) ? 'signal coverage'
+      : 'of ' + answered + ' answered this run';
     let nMissed = 0, nShaky = 0, nSolid = 0;
     for (let ri = 0; ri < this.results.length; ri++) { const _l = this.results[ri].level || (this.results[ri].ok ? 3 : 2); if (_l >= 3) nSolid++; else if (_l === 2) nShaky++; else nMissed++; }
     const sumParts = [];
@@ -677,7 +719,7 @@ class DeepDrill extends TopicPane {
     else verdict = 'You know the happy path; the depth isn\'t there yet. Work the <b>Walkthrough</b> + <b>See the code</b>, then re-run &mdash; the follow-up chains are where this round is won or lost.';
     const weakBtn = this.shk > 0 ? '<button type="button" id="dweak" class="btn-sec">Drill my ' + this.shk + ' Revisit ' + (this.shk === 1 ? 'probe' : 'probes') + ' \u2192</button>' : '';
     this._dwrap.innerHTML = '<div class="card debrief"><div class="big">' + (this.mode === 'quick' ? 'Quick 5 debrief' : 'Interviewer debrief') + '</div>' +
-      '<div class="sumline">' + sumParts.join(' &middot; ') + ' &middot; ' + pct + '% ' + (this.mode === 'quick' ? 'of a quick 5' : 'signal coverage') + '</div>' +
+      '<div class="sumline">' + sumParts.join(' &middot; ') + ' &middot; ' + pct + '% ' + covLabel + '</div>' +
       rows + '<div class="verdict">' + verdict + '</div>' + '<div class="flow-slot" id="dflow"></div>' + weakBtn +
       '<button type="button" id="drestart">' + (this.mode === 'quick' ? 'Another quick 5 &rarr;' : 'Run the full round again') + '</button></div>';
     /* These two buttons live INSIDE #dwrap, so pressing them destroys them. Land on the card

@@ -214,6 +214,113 @@ document.addEventListener('drillgraded', function () { flowFresh(flowPip); });
 document.addEventListener('whiteboardgraded', function () { flowFresh(flowPip); });
 document.addEventListener('flowstatechange', flowPip);            /* mock/mixed completion fire this */
 (function () { function boot() { flowPip(); } if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot(); })();
+
+/* W2 -- NEXTUP: the formalized forward compute over the SAME flowRec/pickRec spine (ONE compute, no
+   fork -- the anti-goal is a second recommendation source). Three tiers:
+   - MICRO: you are mid-unit in the pane flowRec points at -> the pane owns momentum; the dock stays
+     quiet (boundary-suppression, the judges' amendment).
+   - MESO: a unit is complete, or you are on a reading pane -> flowRec() verbatim (the recommendation).
+   - MACRO: the meso terminal ("you're ready") -> flowRec's cross-topic __topic__ hand-off
+     (flowNextTopic). Progress.summary() is read ONLY down this lazy path, never on the hot mid-unit
+     path.
+   The tier is decided from PURE DATA -- "is the recommendation the pane I am already on?" -- reading
+   no pane's live state, so it never trips the perf deferral rule (eager getters / registry data). */
+function nextUp() {
+  var rec = flowRec();
+  if (!rec || !rec.btn || !rec.tab) return { tier: 'none', rec: rec };   /* "you're ready" -- nothing to hand to */
+  var curTab = null;
+  try { var on = document.querySelector('.seg button.on'); curTab = on ? on.getAttribute('data-tab') : null; } catch (e) {}
+  if (rec.tab === curTab) return { tier: 'micro', rec: rec };            /* the pane owns momentum -- stay quiet */
+  return { tier: (rec.tab === '__topic__') ? 'macro' : 'meso', rec: rec };
+}
+
+/* W2 -- the desktop CONTINUE DOCK (light DOM, between .side-id and .mockcta). Renders nextUp():
+   hidden on micro / none / home (it never nags mid-unit), a compact CTA on meso / macro. The label
+   and receipt are flowRec's VERBATIM -- byte-identical to the seg pip and the session panel (the
+   one-compute contract test proves it). `n` activates it (shell.js: KeyGuard + dialog bail).
+   Recomputed on every state change AND on pane switch -- its suppression depends on the current
+   pane, unlike the pip, so switchTab fires flowstatechange. */
+function flowDock() {
+  try {
+    var d = document.getElementById('ndock');
+    if (!d) return;
+    var n = (document.documentElement.dataset.view === 'home') ? { tier: 'home' } : nextUp();
+    /* MICRO -- you are on the recommended pane. Quiet mid-read; at a JUDGMENT POINT the dock arms the
+       pane's native grade keys (the judges' amendment). Never a CTA, never louder than the pane. */
+    if (n.tier === 'micro') {
+      var armed = dockArmedKeys();
+      d.innerHTML = armed; d.hidden = !armed;
+      return;
+    }
+    if (!n.rec || n.tier !== 'meso' && n.tier !== 'macro' || !n.rec.btn) { d.hidden = true; d.innerHTML = ''; return; }
+    var rec = n.rec, receipt = rec.receipt ? '<span class="nd-rcpt">' + rec.receipt + '</span>' : '';
+    d.innerHTML = '<span class="nd-k" style="color:' + rec.ink + '">' + rec.kicker + '</span>' +
+      '<button class="nd-go" type="button" aria-keyshortcuts="N">' + rec.btn + '</button>' + receipt;
+    var b = d.querySelector('.nd-go');
+    if (b) b.onclick = function () { if (typeof flowGo === 'function') flowGo(rec); };
+    d.hidden = false;
+  } catch (e) {}
+}
+/* The current pane's armed judgment keys for the dock's micro tier, or '' when not at a judgment
+   point. Reads the CURRENT (visible) pane's live state via atJudgment() -- never a hidden pane, so
+   it does not trip the deferral rule. Quiet by construction: a key legend, not a CTA; it never
+   grades (pressing 1/2/3 is handled by the pane's own keymap, which the dock only echoes). */
+function dockArmedKeys() {
+  try {
+    var on = document.querySelector('.seg button.on'), tab = on ? on.getAttribute('data-tab') : null;
+    if (tab === 'drill') {
+      var dr = drillEl();
+      if (dr && dr.atJudgment && dr.atJudgment()) {
+        return '<span class="nd-k nd-armk">Grade</span><span class="nd-armed"><b>1</b> Missed <b>2</b> Shaky <b>3</b> Solid</span>';
+      }
+    }
+    return '';
+  } catch (e) { return ''; }
+}
+window.addEventListener('deeptopicchange', flowDock);
+window.addEventListener('routechange', flowDock);
+document.addEventListener('drillgraded', function () { flowFresh(flowDock); });
+document.addEventListener('whiteboardgraded', function () { flowFresh(flowDock); });
+document.addEventListener('flowjudgment', flowDock);                 /* drill reveal reached / left the judgment point (micro armed keys) */
+document.addEventListener('flowstatechange', flowDock);              /* mock/mixed completion + pane switch */
+(function () { function boot() { flowDock(); } if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot(); })();
+
+/* W2 -- pos.<id> CURSOR STORE. {view, walk, drill}: where the user was in a topic, so Resume lands
+   in the drill probe they were on, not on walk step 1 (kills the measured 5-action re-establish).
+   Written THROTTLED from the panes' own renders (300ms debounce -- never every keystroke). Each
+   field is restored by the pane that OWNS it, once, when it renders the topic -- so a deferred pane
+   restores its cursor only when it flushes (deferral-safe). RESTORE NEVER REGRADES: a pane sets its
+   display index and re-renders; no judge fires, and grades merge by content-id (card_identity), so
+   continuing from probe 5 records 5..end without touching the record's 0..4. Cleared with the
+   topic's sibling keys (Store.clear reaches pos. by prefix). */
+var _posPend = null, _posTimer = 0;
+function posKey(id) { return 'pos.' + id; }
+function posFlush() {
+  if (_posTimer) { clearTimeout(_posTimer); _posTimer = 0; }
+  var p = _posPend; _posPend = null;
+  try { if (p && p._id && typeof Store !== 'undefined' && Store.set) { var cur = Store.get(posKey(p._id), {}) || {}; for (var k in p) { if (k !== '_id' && p.hasOwnProperty(k)) cur[k] = p[k]; } Store.set(posKey(p._id), cur); } } catch (e) {}
+}
+function posSet(field, val) {
+  try {
+    var id = sessTopicId(); if (!id || typeof Store === 'undefined') return;
+    if (_posPend && _posPend._id !== id) posFlush();            /* a topic changed under us -- flush the old first */
+    if (!_posPend) _posPend = { _id: id };
+    _posPend[field] = val;
+    if (!_posTimer) _posTimer = setTimeout(posFlush, 300);
+  } catch (e) {}
+}
+function posGet(id) { try { id = id || sessTopicId(); return (id && typeof Store !== 'undefined' && Store.get) ? Store.get(posKey(id), null) : null; } catch (e) { return null; } }
+/* the index a pane should render on topic entry: its saved cursor, clamped to the live count, or 0.
+   `id` is optional -- omitted, it reads the CURRENT topic (the pane callers); passed, it reads that
+   topic's cursor, so the home CTA can show "probe 9 of 22" through the SAME clamp the drill restores
+   with (the sub-line can never disagree with where Resume actually lands). */
+function posRestore(field, count, id) { try { var p = posGet(id); var v = (p && typeof p[field] === 'number') ? p[field] : 0; return (v >= 0 && v < count) ? v : 0; } catch (e) { return 0; } }
+/* Durability: a RELOAD or tab-hide must not lose a pending cursor write -- the 300ms throttle would
+   drop it, so Resume would land on a stale probe (or, after a completed drill, on the last graded one
+   instead of the reset). Flush on the same signals the trend log uses (proven to fire in this app);
+   posFlush is a no-op when nothing is pending. */
+window.addEventListener('pagehide', posFlush);
+document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') posFlush(); });
 /* The topic the panel is reporting on. Every per-topic figure below is keyed to it. */
 function sessTopicId() {
   try { return (typeof TopicRegistry !== 'undefined' && TopicRegistry.current()) ? TopicRegistry.current().id : null; } catch (e) { return null; }
@@ -245,14 +352,19 @@ function sessTopicId() {
    topic, not about whatever subset happened to be on screen. */
 function sessStats() {
   const id = sessTopicId();
-  const dLive = drillEl() ? drillEl().getStats() : null;
+  /* getStats guarded against an UN-UPGRADED element, not just a null one: flowRec()->sessStats can
+     run during a pane's connectedCallback (the walk's last-step morph calls flowRec while restoring
+     its cursor), before a SIBLING pane -- #drill/#wb -- has been upgraded by customElements. The
+     element is then present (drillEl() truthy) but has no getStats yet. Treat that exactly like an
+     absent live board: fall back to the canonical record below (which is loaded synchronously). */
+  const dEl = drillEl(), dLive = (dEl && dEl.getStats) ? dEl.getStats() : null;
   const dRec = (id && typeof Progress !== 'undefined') ? Progress.get(id) : null;
   const dTot = (dLive && dLive.bankTot) ? dLive.bankTot : (dRec ? dRec.tot : 0);
   const dDone = dRec ? dRec.done : 0, dGot = dRec ? dRec.got : 0, dShk = dRec ? dRec.shk : 0;
   const revisit = (dRec && dRec.revisit) ? dRec.revisit : [];
   const dLeft = dTot - dDone;
 
-  const wLive = wbEl() ? wbEl().getStats() : null;
+  const wEl = wbEl(), wLive = (wEl && wEl.getStats) ? wEl.getStats() : null;
   const items = (wLive && wLive.items) ? wLive.items : [];
   const wbTot = wLive ? wLive.total : 0;
   /* grades: the persisted record (survives the reload). cue text: the live board. */
@@ -278,13 +390,23 @@ function sessStats() {
     }
   }
   const wbDone = wbGot + wbMiss;
-  const mixTot = mixLog.length;
+  /* mixLog + the mock globals may be UN-INITIALIZED when sessStats runs during a pane's
+     connectedCallback (the walk last-step morph fires flowRec while restoring its cursor, before
+     mixed-fire.js / mock-run.js have run their top-level `var` init). Treat un-ready as the
+     initialized default -- empty log, null scores -- so flowRec computes from the canonical record
+     and never throws, whatever the module-load order. Identical to the ready state once loaded (the
+     guards are no-ops then); same contract as the getStats + Progress guards above. */
+  const _mix = (typeof mixLog !== 'undefined' && mixLog) ? mixLog : [];
+  const mixTot = _mix.length;
   let mixGot = 0;
   const mixLatest = {};
-  for (let mi = 0; mi < mixLog.length; mi++) { if (mixLog[mi].ok) mixGot++; mixLatest[mixLog[mi].label] = mixLog[mi].ok; }
+  for (let mi = 0; mi < _mix.length; mi++) { if (_mix[mi].ok) mixGot++; mixLatest[_mix[mi].label] = _mix[mi].ok; }
   const mixShk = mixTot - mixGot, mixWeak = [];
   for (let label in mixLatest) { if (mixLatest[label] === false) mixWeak.push(label); }
-  return { dTot: dTot, dDone: dDone, dGot: dGot, dShk: dShk, dLeft: dLeft, revisit: revisit, wbGot: wbGot, wbMiss: wbMiss, missed: missed, wbTot: wbTot, wbDone: wbDone, mScore: mockLastScore, mOut: mockLastOutOf, mTime: mockLastTime, mRuns: mockRuns, mInt: mockLastInt, mixTot: mixTot, mixGot: mixGot, mixShk: mixShk, mixWeak: mixWeak };
+  const _mScore = (typeof mockLastScore !== 'undefined') ? mockLastScore : null, _mOut = (typeof mockLastOutOf !== 'undefined') ? mockLastOutOf : null,
+        _mTime = (typeof mockLastTime !== 'undefined') ? mockLastTime : null, _mRuns = (typeof mockRuns !== 'undefined') ? mockRuns : 0,
+        _mInt = (typeof mockLastInt !== 'undefined') ? mockLastInt : 0;
+  return { dTot: dTot, dDone: dDone, dGot: dGot, dShk: dShk, dLeft: dLeft, revisit: revisit, wbGot: wbGot, wbMiss: wbMiss, missed: missed, wbTot: wbTot, wbDone: wbDone, mScore: _mScore, mOut: _mOut, mTime: _mTime, mRuns: _mRuns, mInt: _mInt, mixTot: mixTot, mixGot: mixGot, mixShk: mixShk, mixWeak: mixWeak };
 }
 /* "Has anything happened on THIS page-load?" -- deliberately a LIVE question, and the one
    thing here that must NOT read the canonical record. The trend keeps ONE point per active
@@ -295,8 +417,8 @@ function sessStats() {
    behaviour is unchanged even though the numbers it guards are now canonical. */
 function sessLiveActivity() {
   const d = drillEl(), w = wbEl();
-  let n = d ? d.getStats().dDone : 0;
-  if (w) {
+  let n = (d && d.getStats) ? d.getStats().dDone : 0;   /* un-upgraded pane during boot -> 0, same as absent */
+  if (w && w.getStats) {
     const items = w.getStats().items;
     for (let i = 0; i < items.length; i++) { if (items[i].got || items[i].missed) n++; }
   }
@@ -476,7 +598,11 @@ function ssBar(show, pct) {
 function renderSession() {
   const stats = sessStats();
   const dTot = stats.dTot, dDone = stats.dDone, dGot = stats.dGot, dShk = stats.dShk, dLeft = stats.dLeft, revisit = stats.revisit, wbGot = stats.wbGot, wbMiss = stats.wbMiss, missed = stats.missed, wbTot = stats.wbTot, wbDone = stats.wbDone, mScore = stats.mScore, mTime = stats.mTime, mRuns = stats.mRuns, mInt = stats.mInt;
-  const rec = pickRec(revisit, missed, mScore, dDone, dTot, wbDone, mRuns, stats.mixWeak, mOut(stats), stats.mixTot);
+  /* W2 -- the panel's #ssgo renders flowRec(), not pickRec directly, so it is the SAME compute as
+     the dock and the seg pip (the one-compute contract). This is also what stops the session overlay
+     ever ending button-less: at the "you're ready" terminal flowRec hands #ssgo the cross-topic
+     "Next: <topic>" rec, where bare pickRec returned btn:null and the sheet dead-ended. */
+  const rec = flowRec(stats);
   let html = '';
   html += '<div class="ss-rec" style="border-color:' + rec.bd + ';background:' + rec.bg + '">' +
        '<div class="ss-rk" style="color:' + rec.ink + '">' + rec.kicker + '</div>' +

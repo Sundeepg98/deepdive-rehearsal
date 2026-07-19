@@ -63,6 +63,9 @@ function switchTab(t) {
   else swap();
   try { window.scrollTo(0, 0); } catch (e) {}
   var st = document.querySelector('.stage'); if (st) st.scrollTop = 0;
+  /* W2 -- the Continue dock's boundary-suppression depends on WHICH pane is current, so recompute
+     the flow surfaces on every pane switch (flowDock + flowPip both listen; both idempotent). */
+  try { document.dispatchEvent(new CustomEvent('flowstatechange')); } catch (e) {}
 }
 window.switchTab = switchTab;
 /* Intent -> Router.navigate (updates the URL hash + history) -> ViewManager ->
@@ -227,6 +230,19 @@ document.addEventListener('keydown', function (event) {
     /* everything else (/ \ ? d g) is topic-agnostic and falls through unchanged */
   }
 
+  /* W2 -- n goes to the NextUp target: the SAME flowGo the Continue dock, the seg pip and the
+     session panel use (one compute). Fires only when there IS a forward target elsewhere (nextUp's
+     meso/macro tier -- i.e. the dock is showing a CTA); mid-unit (micro) it is a deliberate no-op,
+     since the target is the pane you are already in. Boundaries are never auto-crossed: real press
+     only, and dialog/typing/home are already bailed above. Extends QW3's aria-keyshortcuts system
+     (the dock's go button wears aria-keyshortcuts="N"), it does not start a new one. */
+  if (key === 'n' && !onHome) {
+    try {
+      var _nu = (typeof nextUp === 'function') ? nextUp() : null;
+      if (_nu && (_nu.tier === 'meso' || _nu.tier === 'macro') && _nu.rec && typeof flowGo === 'function') { event.preventDefault(); flowGo(_nu.rec); }
+    } catch (e) {}
+    return;
+  }
   /* g starts the guided tour */
   if (key === 'g') { if (window.TourGuide) window.TourGuide.start(); return; }
   /* p opens the per-topic session panel (Progress) */

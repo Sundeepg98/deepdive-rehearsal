@@ -100,7 +100,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     let g = 0; while (w._wi < w._steps.length - 1 && g++ < 60) { w.shadowRoot.getElementById('wnext').click(); await s(12); }
     await s(80);
     const b = w.shadowRoot.getElementById('wnext'), bx = b.getBoundingClientRect();
-    return { cta: b.classList.contains('flow-cta'), disabled: b.disabled, moved: Math.round(box0.x) !== Math.round(bx.x) || Math.round(box0.width) !== Math.round(bx.width) };
+    return { cta: b.classList.contains('flow-cta'), disabled: b.disabled, moved: Math.round(box0.x) !== Math.round(bx.x) || Math.round(box0.width) !== Math.round(bx.width) || Math.round(box0.height) !== Math.round(bx.height) };
   });
   ok('walk last step: #wnext morphs to a live CTA (row 1)', walk.cta && !walk.disabled, JSON.stringify(walk));
   ok('walk morph: geometry LOCKED (hit surface did not move)', !walk.moved, JSON.stringify(walk));

@@ -334,6 +334,15 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # isolation driven through the REAL writers; and the legacy honest-discard
                      # migration. Every assertion FAILS on the pre-Wave-0 build.
                      ('flow_data', 'test/flow_data.cjs'),
+                     # WAVE 1 "the hand-offs": every completion terminal (drill debrief, whiteboard
+                     # ok-verdict, both mock ends, mixed-fire end, the walk last step) must offer
+                     # EXACTLY ONE forward affordance -- the surface's own SELF button (#dweak/#wbrerun/
+                     # #mbagain/#mxretry) OR a flowStripHtml strip, never both (button soup) and never
+                     # neither on a surface with a next step. Drives all five hand-offs to their states
+                     # and asserts the count; asserts the walk #wnext morph re-aims on LOCKED geometry;
+                     # and arms a negative control (neuter flowStripHtml -> the strips must go dark) so
+                     # the affordance count is not decorative.
+                     ('flow_handoff', 'test/flow_handoff.cjs'),
                      # A stored grade belongs to a QUESTION, not to a SLOT. Grades were keyed by
                      # the probe's INDEX IN THE BANK, so inserting one probe at the top of a bank
                      # slid every stored grade below it onto the WRONG question -- silently, with

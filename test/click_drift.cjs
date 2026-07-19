@@ -281,13 +281,28 @@ async function boot(browser, opts) {
   return { ctx, page };
 }
 
-/* Re-break the app, at runtime, in the browser. Used ONLY by the negative controls. */
+/* Re-break the app, at runtime, in the browser. Used ONLY by the negative controls.
+ *
+ * WHY THIS IS A WIDE, HELD DISPLACEMENT AND NOT THE HISTORICAL 16px EASE (task #25).
+ * The bug this arm exists to catch was `panein` opening on `translateY(16px) scale(.995)` and
+ * EASING to rest over 500ms. But 16px on the shortest control (28px, ~14px half-height) is a
+ * ~2px hit-test margin, and an ease returns the control toward the resting centre within tens of
+ * ms. So the probe's red-capability lived entirely in the first ~50ms of the animation -- and
+ * `page.mouse.click` at dt=0 does not hit-test at t=0: under load the round-trip lands the click
+ * later in the ease, where the displacement has already shrunk below the margin and the control is
+ * back under the cursor. The arm then self-reported as DECORATION (observed once during W0's gate
+ * under a 35-chrome load spike; green 3/3 at 23-25 chrome). The verdict-margin was never the point
+ * of a NEGATIVE control -- its only job is to prove the click probe CAN go red -- so widen the
+ * planted displacement to 48px and HOLD it across the click window (0%..70%), then return to rest.
+ * That is exactly the shape BREAK_TOPIC below already uses reliably: a constant, unambiguous
+ * displacement, not a race against an ease. The resting baseline is still taken at rest -- AT_REST
+ * waits for the animation to FINISH (transform back to none), so the plateau is invisible to it. */
 const BREAK_PANEIN = () => {
   const s = document.createElement('style');
   s.id = '__nc_panein';
-  s.textContent = '@keyframes __ncslide{from{opacity:0;transform:translateY(16px) scale(.995)}' +
-    'to{opacity:1;transform:translateY(0) scale(1)}}' +
-    '.pane.on{animation:__ncslide 500ms cubic-bezier(.22,.61,.36,1) !important}';
+  s.textContent = '@keyframes __ncslide{0%,70%{opacity:1;transform:translateY(48px) scale(.995)}' +
+    '100%{opacity:1;transform:translateY(0) scale(1)}}' +
+    '.pane.on{animation:__ncslide 700ms linear !important}';
   document.head.appendChild(s);
 };
 const BREAK_SIDEBAR = () => {
@@ -303,13 +318,16 @@ const BREAK_SIDEBAR = () => {
  * never restarts), so re-injecting panein would not touch the topic arm at all -- and an arm whose
  * negative control does not reach it is an arm that is green for free. This installs the defect the
  * topic arm actually exists to catch: SOMEONE RE-ADDS A PANE ANIMATION TO THE TOPIC PATH. It
- * displaces the incoming pane by 16px on deeptopicchange and releases it 400ms later, which is
- * exactly the shape panein had. AT_REST() waits on the computed transform, so the resting baseline
- * this NC is measured against is still taken at rest. */
+ * displaces the incoming pane by 48px on deeptopicchange and releases it 400ms later. This arm was
+ * always reliable (a STATIC hold, not an ease -- the constant displacement is why it detected its
+ * defect where the pane arm's ease did not), but 16px carried the same ~2px margin as the old pane
+ * defect; 48px removes that latent fragility so both arms fail loudly under load, not marginally.
+ * AT_REST() waits on the computed transform, so the resting baseline this NC is measured against is
+ * still taken at rest. */
 const BREAK_TOPIC = () => {
   window.addEventListener('deeptopicchange', () => {
     document.querySelectorAll('.pane.on').forEach((p) => {
-      p.style.transform = 'translateY(16px)';
+      p.style.transform = 'translateY(48px)';
       setTimeout(() => { p.style.transform = ''; }, 400);
     });
   });
@@ -578,9 +596,9 @@ async function clickAfterTopicSwitch(page, pane, dt, from, to) {
     chk('[pane switch][negative control] with the translateY put back, the +0ms click MISSES (this probe can go red)',
       paneDetected,
       rp.skip || rp.vacuous ||
-      ('the click still reached the control even with `translateY(16px) scale(.995)` re-injected into' +
-       ' panein. This probe is DECORATION: it would report PASS on the broken build it was written to' +
-       ' catch. (aimed at <' + (rp.c ? rp.c.tag + '.' + rp.c.cls + '> ' + rp.c.h + 'px' : '?') + ')'));
+      ('the click still reached the control even with `translateY(48px) scale(.995)` re-injected into' +
+       ' panein and HELD across the click window. This probe is DECORATION: it would report PASS on a' +
+       ' broken build. (aimed at <' + (rp.c ? rp.c.tag + '.' + rp.c.cls + '> ' + rp.c.h + 'px' : '?') + ')'));
     if (paneDetected) {
       notes.push('  ....  [pane switch][negative control] armed: re-injecting the slide makes the ' +
         rp.c.h + 'px <' + rp.c.tag + '.' + rp.c.cls + '> click land on ' + rp.landed + ' instead');
@@ -596,7 +614,7 @@ async function clickAfterTopicSwitch(page, pane, dt, from, to) {
       ' (this probe can go red)',
       topicDetected,
       rt.skip || rt.vacuous ||
-      ('the click still reached the control even with the incoming pane displaced 16px on' +
+      ('the click still reached the control even with the incoming pane displaced 48px on' +
        ' deeptopicchange. The topic arm is DECORATION: it is green because nothing animates that path' +
        ' TODAY, not because it would notice if something did.'));
     if (topicDetected) {

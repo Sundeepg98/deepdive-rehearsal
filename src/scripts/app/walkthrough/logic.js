@@ -63,6 +63,15 @@ pre.code .c{color:#9b95c9} pre.code .k{color:#C9A2F0} pre.code .s{color:#9DD9B6}
 .nav button:active:not(:disabled){transform:translateY(0) scale(.98);box-shadow:0 2px 6px -2px var(--acc-a12)}
 .nav button:disabled{opacity:.32;cursor:default}
 .nav .ctr{font-family:var(--mono);font-size:var(--font-size-caption);color:var(--mut2);font-weight:var(--font-weight-bold)}
+/* W1 row 1 -- the walk last-step morph. #wnext is a FIXED-width forward SLOT: locking its box means
+   morphing its label from "Next ->" to the ladder's next action never moves the hit surface (the
+   binding click-surface invariant -- the button RE-AIMS, it does not relocate). Sized past the
+   longest ladder label so no label ever grows it. The CTA gradient marks it as the forward action;
+   the receipt line sits below-right, so it never displaces the button above it. */
+#wnext{min-width:210px;white-space:nowrap}
+.nav button#wnext.flow-cta{border:none;color:var(--on-slab);background:linear-gradient(135deg,var(--acc),var(--acc2));box-shadow:0 4px 14px -4px var(--acc-a25)}
+.nav button#wnext.flow-cta:hover:not(:disabled){color:var(--on-slab);background:linear-gradient(135deg,var(--accink),var(--acc));box-shadow:0 6px 20px -4px var(--acc-a30);transform:translateY(-2px)}
+.wflow-r{margin-top:var(--space-8);font-size:var(--font-size-micro);color:var(--mut2);font-weight:var(--font-weight-semibold);text-align:right;letter-spacing:.2px}
 details.model{margin-top:var(--space-18);background:linear-gradient(135deg,var(--card) 0%,var(--acc-a02) 100%);box-shadow:var(--surf-sh);border:1px solid var(--bd);border-left:4px solid var(--acc);border-radius:12px;overflow:hidden;transition:box-shadow var(--duration-moderate) var(--ease-base)}
 details.model[open]{box-shadow:0 0 0 1px var(--acc-a08),var(--surf-sh)}
 details.model>summary{cursor:pointer;list-style:none;padding:var(--space-15) var(--space-18);font:var(--font-weight-heavy) 13.5px -apple-system,sans-serif;color:var(--accink);display:flex;align-items:baseline;gap:var(--space-10);user-select:none;transition:background var(--duration-base) var(--ease-base),padding var(--duration-base) var(--ease-base)}
@@ -116,6 +125,7 @@ var WALK_HTML = `<div class="dots" id="wdots"></div>
       <span class="ctr" id="wctr"></span>
       <button type="button" id="wnext" aria-keyshortcuts="ArrowRight">Next &rarr;</button>
     </div>
+    <div class="wflow-r" id="wflowr" aria-live="polite"></div>
     <details class="model">
       <summary>What a complete answer sounds like <span class="sub">model script &middot; the full arc, not just the opener</span></summary>
       <div class="mbody" id="wmbody"></div>
@@ -145,6 +155,8 @@ class DeepWalkthrough extends TopicPane {
     this._ctr = root.getElementById('wctr');
     this._prev = root.getElementById('wprev');
     this._next = root.getElementById('wnext');
+    this._flowr = root.getElementById('wflowr');
+    this._flowRec = null;                          /* the last-step morph's rec; next()/onclick read it */
     this._arc = root.getElementById('warc');
     this._mbody = root.getElementById('wmbody');
     var self = this;
@@ -205,10 +217,32 @@ class DeepWalkthrough extends TopicPane {
     for (let i = 0; i < arcSteps.length; i++) { arcSteps[i].className = 'arc-step' + (i < this._wi ? ' done' : (i === this._wi ? ' on' : '')); }
     this._ctr.textContent = (this._wi + 1) + ' of ' + this._steps.length;
     this._prev.disabled = this._wi === 0;
-    this._next.disabled = this._wi === this._steps.length - 1;
+    /* W1 row 1: at the last step, #wnext RE-AIMS from a dead "Next" into the ladder's forward action
+       (label + flowGo) instead of going disabled. Its fixed-width slot (WALK_STYLE) locks the hit
+       surface -- it re-aims, it never relocates. next() and the button's onclick BOTH route through
+       this._flowRec, so a click AND ArrowRight (shell.js -> w.next()) reach the same action. The
+       walk grades nothing, so the record is already fresh -- no flowFresh needed here. */
+    var isLast = this._wi === this._steps.length - 1;
+    if (isLast && typeof flowRec === 'function') {
+      var frec = flowRec();
+      this._flowRec = frec;
+      this._next.disabled = false;
+      this._next.classList.add('flow-cta');
+      this._next.innerHTML = frec.btn || 'Next &rarr;';
+      if (this._flowr) this._flowr.textContent = frec.receipt || '';
+    } else {
+      this._flowRec = null;
+      this._next.disabled = isLast;                 /* no flowRec -> the old dead-end behavior */
+      this._next.classList.remove('flow-cta');
+      this._next.innerHTML = 'Next &rarr;';
+      if (this._flowr) this._flowr.textContent = '';
+    }
   }
   prev() { if (this._wi > 0) { this._wi--; this._renderW(); } }
-  next() { if (this._wi < this._steps.length - 1) { this._wi++; this._renderW(); } }
+  next() {
+    if (this._wi < this._steps.length - 1) { this._wi++; this._renderW(); }
+    else if (this._flowRec && typeof flowGo === 'function') { flowGo(this._flowRec); }
+  }
 }
 customElements.define('deep-walkthrough', DeepWalkthrough);
 })();

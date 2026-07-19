@@ -152,7 +152,25 @@ class DeepWhiteboard extends TopicPane {
     this._verdict.style.display = 'block';
     if (missed === 0) {
       this._verdict.className = 'wb-verdict ok';
-      this._verdict.innerHTML = this._okVerdict;
+      /* W1 decision-table row 5: the ok-verdict was a button-less DEAD END. It gets its first-ever
+         forward action -- a strip to the next surface (typically the mock, never run). Row 4 (warn)
+         keeps its existing #wbrerun as the SELF affordance, so no strip there. flowFresh is
+         LOAD-BEARING here, not defensive: _updCount() runs BEFORE _emitGraded() (see the grade
+         handler), so a synchronous flowRec would read the record one grade short -- exactly the W0
+         freshness hazard. The microtask lands after snapshotWb, and ONE compute (flowRec) means this
+         strip and the session panel can never disagree. */
+      this._verdict.innerHTML = this._okVerdict + '<div class="flow-slot" id="wbflow"></div>';
+      var wv = this;
+      if (typeof flowFresh === 'function' && typeof flowRec === 'function') {
+        flowFresh(function () {
+          var slot = wv._verdict.querySelector('#wbflow');
+          if (!slot) return;
+          var rec = flowRec();
+          slot.innerHTML = (typeof flowStripHtml === 'function') ? flowStripHtml(rec) : '';
+          var btn = slot.querySelector('.flow-go');
+          if (btn) btn.onclick = function () { if (typeof flowGo === 'function') flowGo(rec); };
+        });
+      }
     } else {
       this._verdict.className = 'wb-verdict warn';
       this._verdict.innerHTML = '<b>' + recalled + ' / ' + total + ' recalled.</b> ' + missed + ' still soft \u2014 drill just those until they\u2019re automatic.<button id="wbrerun" type="button">Reset the ' + missed + ' miss' + (missed > 1 ? 'es' : '') + '</button>';

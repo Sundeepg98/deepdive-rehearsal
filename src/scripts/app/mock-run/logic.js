@@ -206,6 +206,9 @@ function closeMock() {
   document.body.style.overflow = '';
   closeMockClock();
   if (mockKeyCtrl) { mockKeyCtrl.abort(); mockKeyCtrl = null; }
+  /* the seg strip was occluded while the overlay was up; a completed mock may have moved the
+     recommendation, so recompute the seg pip now that the strip is visible again (W1). */
+  try { document.dispatchEvent(new CustomEvent('flowstatechange')); } catch (e) {}
 }
 
 /* ===== MOCK RUN as a shadow component =====

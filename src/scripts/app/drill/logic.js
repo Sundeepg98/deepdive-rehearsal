@@ -220,11 +220,15 @@ var DRILL_STYLE = `/* @keyframes pop moved to BASE_SHEET. Five shadow scopes ref
 .sigrow .tr{margin-left:auto}
 .verdict{margin-top:var(--space-18);font-size:var(--font-size-body);max-width:var(--measure);color:var(--ans-fg);background:var(--ans-bg);border-left:3px solid var(--acc);border-radius:9px;padding:var(--space-14) var(--space-16)}
 .verdict b{color:var(--accink)}
-.debrief button{margin-top:var(--space-18);display:block;width:100%;border:1.5px solid var(--acc);background:#fff;color:var(--acc);font:var(--font-weight-bold) 13px -apple-system,sans-serif;padding:var(--space-12);border-radius:10px;cursor:pointer}
+/* :not(.flow-go) -- the W1 hand-off CTA is a BASE_SHEET .flow-go (gradient); this generic
+   debrief-button rule (specificity 0,1,1) would otherwise beat it (0,1,0) and flatten it to the
+   plain white/acc outline, so the drill strip would look nothing like the wb/mock strips. */
+.debrief button:not(.flow-go){margin-top:var(--space-18);display:block;width:100%;border:1.5px solid var(--acc);background:#fff;color:var(--acc);font:var(--font-weight-bold) 13px -apple-system,sans-serif;padding:var(--space-12);border-radius:10px;cursor:pointer}
 .debrief .btn-sec{margin-top:var(--space-14);display:block;width:100%;border:1.5px solid var(--teal);background:linear-gradient(135deg,var(--tealbg) 0%,rgba(10,133,100,.04) 100%);color:var(--fb-t-fg);font:var(--font-weight-bold) 13px -apple-system,sans-serif;padding:var(--space-12);border-radius:10px;cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),box-shadow var(--duration-base) var(--ease-base),filter var(--duration-base) var(--ease-base)}
 .debrief .btn-sec:hover{transform:translateY(-1px);box-shadow:0 4px 14px -4px rgba(10,133,100,.2);filter:brightness(1.02)}
 .debrief .btn-sec:active{transform:translateY(1px) scale(.98)}
 .debrief .btn-sec:hover{background:var(--btnsec-hover-bg)}
+/* .flow-strip / .flow-go / .flow-rcpt now live in BASE_SHEET (adopted by every terminal scope). */
 .btn-sec:active{transform:translateY(1px);filter:brightness(.96)}
 .rec{text-align:center;margin-bottom:var(--space-6)}
 .rec .lvl{display:inline-block;font-size:var(--font-size-heading);font-weight:var(--font-weight-heavy);letter-spacing:-.3px;padding:var(--space-10) var(--space-24);border-radius:12px;border:2px solid;box-shadow:0 2px 8px -2px var(--acc-a10);transition:transform var(--duration-base) var(--ease-spring),box-shadow var(--duration-moderate) var(--ease-base)}
@@ -663,12 +667,28 @@ class DeepDrill extends TopicPane {
     const weakBtn = this.shk > 0 ? '<button type="button" id="dweak" class="btn-sec">Drill my ' + this.shk + ' Revisit ' + (this.shk === 1 ? 'probe' : 'probes') + ' \u2192</button>' : '';
     this._dwrap.innerHTML = '<div class="card debrief"><div class="big">' + (this.mode === 'quick' ? 'Quick 5 debrief' : 'Interviewer debrief') + '</div>' +
       '<div class="sumline">' + sumParts.join(' &middot; ') + ' &middot; ' + pct + '% ' + (this.mode === 'quick' ? 'of a quick 5' : 'signal coverage') + '</div>' +
-      rows + '<div class="verdict">' + verdict + '</div>' + weakBtn +
+      rows + '<div class="verdict">' + verdict + '</div>' + '<div class="flow-slot" id="dflow"></div>' + weakBtn +
       '<button type="button" id="drestart">' + (this.mode === 'quick' ? 'Another quick 5 &rarr;' : 'Run the full round again') + '</button></div>';
     /* These two buttons live INSIDE #dwrap, so pressing them destroys them. Land on the card
        (or debrief) that replaces them, or focus falls to <body> exactly as before. */
     if (this.shk > 0) { this._root.getElementById('dweak').onclick = function () { self.drillWeak(true); }; }
     this._root.getElementById('drestart').onclick = function () { self.setMode(self.mode, true); };
+    /* W1 decision-table rows 2-3: hand the CLEAN debrief forward to the next surface. When shk>0
+       (row 2) the #dweak button IS the recommendation, so SELF-dedupe suppresses the strip -- one
+       offered next per screen, no button soup. Computed on flowFresh (the W0 freshness law: the
+       last grade's snapshot must land before flowRec reads the record) and rendered from flowRec
+       (ONE compute -- the same engine the session panel and every other terminal use). */
+    if (typeof flowFresh === 'function' && typeof flowRec === 'function') {
+      flowFresh(function () {
+        var slot = self._root.getElementById('dflow');
+        if (!slot) return;
+        var rec = flowRec();
+        rec.self = (self.shk > 0);   /* #dweak already offers the re-drill (SELF-dedupe) */
+        slot.innerHTML = (typeof flowStripHtml === 'function') ? flowStripHtml(rec) : '';
+        var btn = slot.querySelector('.flow-go');
+        if (btn) btn.onclick = function () { if (typeof flowGo === 'function') flowGo(rec); };
+      });
+    }
   }
   drillWeak(moveFocus) {
     const weakCards = this.results.filter(function (r) { return !r.ok; }).sort(function (a, b) { return (a.level || (a.ok ? 3 : 2)) - (b.level || (b.ok ? 3 : 2)); });
@@ -808,8 +828,24 @@ class DeepDrill extends TopicPane {
     this._dwrap.innerHTML = '<div class="card debrief"><div class="rec ' + rec.c + '"><div class="lvl">' + rec.t + '</div>' +
       '<div class="tu">' + this.got + ' / ' + cards.length + ' signals &middot; ' + answered + ' probes reached &middot; ' + this._fmt(used) + ' on the clock</div></div>' +
       '<div style="height:12px"></div>' + rows + '<div class="verdict">' + note + '</div>' +
+      '<div class="flow-slot" id="vrflow"></div>' +
       '<button type="button" id="vrestart">Run another round</button></div>';
     this._root.getElementById('vrestart').onclick = function () { self.setMode('mock', true); };
+    /* W1 decision-table row 8: the drill-pane timed-mock verdict (the fifth terminal) hands forward
+       to the next surface, the same strip logic as the mock overlay's end (rows 6-7). #vrestart
+       ("Run another round") re-runs the timed drill -- not a ladder rec -- so there is no SELF
+       conflict; the strip is the complementary forward path. flowFresh (freshness law) + flowRec
+       (ONE compute). */
+    if (typeof flowFresh === 'function' && typeof flowRec === 'function') {
+      flowFresh(function () {
+        var slot = self._root.getElementById('vrflow');
+        if (!slot) return;
+        var r = flowRec();
+        slot.innerHTML = (typeof flowStripHtml === 'function') ? flowStripHtml(r) : '';
+        var b = slot.querySelector('.flow-go');
+        if (b) b.onclick = function () { if (typeof flowGo === 'function') flowGo(r); };
+      });
+    }
   }
   setTier(t) {
     this.tierFilter = t;

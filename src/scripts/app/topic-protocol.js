@@ -302,20 +302,20 @@ class TopicPane extends HTMLElement {
     this._tpDirty = true;
     TopicPaneQueue.add(this);
   }
-  /* "Is this pane what the route is showing?" -- decided from APP STATE ONLY (container
-     class + route hash + the home flag). NEVER a layout read: offsetParent/offsetWidth
-     here would re-create the forced-reflow cost this deferral exists to remove. A host
-     with no .pane ancestor (e.g. topic_contract's probe host appended to <body>) keeps
-     the old always-sync behavior. A false "on screen" merely costs one sync render --
-     today's behavior -- never a stale pane. */
+  /* "Is this pane what the route is showing?" -- decided from the .pane.on CLASS that
+     switchTab() itself owns, plus the home flag. The route HASH is deliberately NOT consulted:
+     session-progress.js reveals a pane with a bare switchTab(rec.tab) and no hash write, and
+     setTopic() re-derives the view from the OLD hash, so a hash oracle misreads a VISIBLE .on
+     pane as off-screen and leaves stale content on it through the next topic change (the
+     round-1 regression). NEVER a layout read either: offsetParent/offsetWidth here would
+     re-create the forced-reflow cost this deferral exists to remove. A host with no .pane
+     ancestor (e.g. topic_contract's probe host appended to <body>) keeps the old always-sync
+     behavior. Erring toward "on screen" only ever costs one sync render -- never a stale pane. */
   _tpOnScreen() {
     var box = this.closest ? this.closest('.pane') : null;
-    if (!box) return true;
-    if (!box.classList.contains('on')) return false;
+    if (!box) return true;                                               /* no .pane ancestor: always sync */
     if (document.documentElement.dataset.view === 'home') return false;  /* stage hidden behind the home */
-    var raw = (window.location.hash || '').replace(/^#/, '');
-    if (!raw) return false;               /* bare boot: the router lands the route (and flushes) in this same task */
-    return ('/' + raw + '/').indexOf('/' + box.id + '/') !== -1;
+    return box.classList.contains('on');                                 /* the class switchTab owns == on screen */
   }
   /* Called by the queue, and by switchTab() just before this pane is revealed. */
   __tpFlush() {

@@ -349,6 +349,12 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # and fails on mismatch -- so a recommendation bug is a red diff, not a silent lie.
                      # Negative control: poison the record so the receipt can no longer be true.
                      ('flow_evidence', 'test/flow_evidence.cjs'),
+                     # WAVE 2 one-compute contract: every visible "next" surface (Continue dock, seg
+                     # pip, and -- as they land -- home CTA / #ssgo) renders the SAME flowRec compute.
+                     # Drives mutations and asserts dock label == flowRec button + pip on flowRec.tab
+                     # after each; asserts boundary-suppression (dock quiet on the recommended pane);
+                     # negative control (flowRec with no target -> the dock must go dark, watched red).
+                     ('flow_contract', 'test/flow_contract.cjs'),
                      # A stored grade belongs to a QUESTION, not to a SLOT. Grades were keyed by
                      # the probe's INDEX IN THE BANK, so inserting one probe at the top of a bank
                      # slid every stored grade below it onto the WRONG question -- silently, with

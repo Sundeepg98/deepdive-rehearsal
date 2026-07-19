@@ -214,6 +214,52 @@ document.addEventListener('drillgraded', function () { flowFresh(flowPip); });
 document.addEventListener('whiteboardgraded', function () { flowFresh(flowPip); });
 document.addEventListener('flowstatechange', flowPip);            /* mock/mixed completion fire this */
 (function () { function boot() { flowPip(); } if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot(); })();
+
+/* W2 -- NEXTUP: the formalized forward compute over the SAME flowRec/pickRec spine (ONE compute, no
+   fork -- the anti-goal is a second recommendation source). Three tiers:
+   - MICRO: you are mid-unit in the pane flowRec points at -> the pane owns momentum; the dock stays
+     quiet (boundary-suppression, the judges' amendment).
+   - MESO: a unit is complete, or you are on a reading pane -> flowRec() verbatim (the recommendation).
+   - MACRO: the meso terminal ("you're ready") -> flowRec's cross-topic __topic__ hand-off
+     (flowNextTopic). Progress.summary() is read ONLY down this lazy path, never on the hot mid-unit
+     path.
+   The tier is decided from PURE DATA -- "is the recommendation the pane I am already on?" -- reading
+   no pane's live state, so it never trips the perf deferral rule (eager getters / registry data). */
+function nextUp() {
+  var rec = flowRec();
+  if (!rec || !rec.btn || !rec.tab) return { tier: 'none', rec: rec };   /* "you're ready" -- nothing to hand to */
+  var curTab = null;
+  try { var on = document.querySelector('.seg button.on'); curTab = on ? on.getAttribute('data-tab') : null; } catch (e) {}
+  if (rec.tab === curTab) return { tier: 'micro', rec: rec };            /* the pane owns momentum -- stay quiet */
+  return { tier: (rec.tab === '__topic__') ? 'macro' : 'meso', rec: rec };
+}
+
+/* W2 -- the desktop CONTINUE DOCK (light DOM, between .side-id and .mockcta). Renders nextUp():
+   hidden on micro / none / home (it never nags mid-unit), a compact CTA on meso / macro. The label
+   and receipt are flowRec's VERBATIM -- byte-identical to the seg pip and the session panel (the
+   one-compute contract test proves it). `n` activates it (shell.js: KeyGuard + dialog bail).
+   Recomputed on every state change AND on pane switch -- its suppression depends on the current
+   pane, unlike the pip, so switchTab fires flowstatechange. */
+function flowDock() {
+  try {
+    var d = document.getElementById('ndock');
+    if (!d) return;
+    var n = (document.documentElement.dataset.view === 'home') ? { tier: 'home' } : nextUp();
+    if (!n.rec || n.tier !== 'meso' && n.tier !== 'macro' || !n.rec.btn) { d.hidden = true; d.innerHTML = ''; return; }
+    var rec = n.rec, receipt = rec.receipt ? '<span class="nd-rcpt">' + rec.receipt + '</span>' : '';
+    d.innerHTML = '<span class="nd-k" style="color:' + rec.ink + '">' + rec.kicker + '</span>' +
+      '<button class="nd-go" type="button" aria-keyshortcuts="N">' + rec.btn + '</button>' + receipt;
+    var b = d.querySelector('.nd-go');
+    if (b) b.onclick = function () { if (typeof flowGo === 'function') flowGo(rec); };
+    d.hidden = false;
+  } catch (e) {}
+}
+window.addEventListener('deeptopicchange', flowDock);
+window.addEventListener('routechange', flowDock);
+document.addEventListener('drillgraded', function () { flowFresh(flowDock); });
+document.addEventListener('whiteboardgraded', function () { flowFresh(flowDock); });
+document.addEventListener('flowstatechange', flowDock);              /* mock/mixed completion + pane switch */
+(function () { function boot() { flowDock(); } if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot(); })();
 /* The topic the panel is reporting on. Every per-topic figure below is keyed to it. */
 function sessTopicId() {
   try { return (typeof TopicRegistry !== 'undefined' && TopicRegistry.current()) ? TopicRegistry.current().id : null; } catch (e) { return null; }

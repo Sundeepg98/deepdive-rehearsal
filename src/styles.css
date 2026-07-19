@@ -362,6 +362,23 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
 .mb-sep{height:var(--space-1);background:var(--bd);opacity:.5;margin:var(--space-2) var(--space-8);flex:0 0 auto}
 .mb-sec{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.1em;text-transform:uppercase;color:var(--mut);padding:var(--space-7) var(--space-8) var(--space-1);margin-top:var(--space-3)}
 .mb-sec:first-child{margin-top:0;padding-top:var(--space-1)}
+  /* W2 -- the NextUp CONTINUE DOCK: a compact forward CTA between the topic id and the mock CTA.
+     HARD height cap (the doc's <=64px condition; fold-measured at 1280x800 + 1536x864 before merge)
+     so it never pushes .mockcta below the fold. Accent-tinted (rebinds per room), kicker + button
+     + receipt stacked; overflow:hidden enforces the cap even if a label wraps. */
+  .dock{flex:none;max-height:64px;overflow:hidden;box-sizing:border-box;margin:var(--space-10) 0 0;padding:var(--space-7) var(--space-10);border:1px solid var(--acc-a32);border-radius:11px;background:var(--accbg);display:flex;flex-direction:column;gap:var(--space-1);align-items:flex-start}
+  .dock[hidden]{display:none}
+  .nd-k{font:var(--font-weight-heavy) var(--font-size-nano)/1 -apple-system,sans-serif;letter-spacing:.6px;text-transform:uppercase}
+  /* overflow:visible + flex:none are LOAD-BEARING: the global button{overflow:hidden} (styles.css,
+     the ripple clip) makes a flex item's automatic minimum size 0 (CSS Flexbox 4.5), so the button
+     collapsed to height:0 in this column. Restoring visible overflow gives it back its content height. */
+  .nd-go{flex:none;overflow:visible;border:0;background:transparent;padding:0;font:var(--font-weight-heavy) var(--font-size-caption) -apple-system,sans-serif;color:var(--accink);cursor:pointer;text-align:left;line-height:1.2}
+  .nd-go:hover{text-decoration:underline}
+  .nd-rcpt{font-size:var(--font-size-nano);color:var(--mut2)}
+  /* Desktop-only: the mobile bottom dock (absorbing #toolsfab) is W2's SEVERABLE TAIL with its own
+     merge condition; until it lands, the sidebar dock is hidden below the app's 920px boundary so it
+     never renders inside the mobile top-strip layout. */
+  @media(max-width:919px){ .dock{display:none} }
   .mockbtn{display:flex;align-items:center;justify-content:center;gap:var(--space-9);width:100%;font:var(--font-weight-heavy) 13.5px -apple-system,sans-serif;letter-spacing:.2px;padding:var(--space-14) var(--space-16);border-radius:13px;border:0;background:linear-gradient(135deg,var(--acc),var(--acc2));color:var(--on-slab);cursor:pointer;transition:transform var(--duration-base) var(--ease-glide),box-shadow var(--duration-moderate) var(--ease-base);box-shadow:0 6px 18px var(--acc-a30),inset 0 1px 0 rgba(255,255,255,.14);position:relative;overflow:hidden}
 .mockbtn::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);transform:translateX(-100%);transition:none}
 .mockbtn:hover::after{animation:btnShimmer var(--duration-slowest) var(--ease-base)}

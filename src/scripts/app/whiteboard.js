@@ -135,11 +135,25 @@ class DeepWhiteboard extends TopicPane {
         li.querySelector('.wb-got').disabled = false;
         li.querySelector('.wb-miss').disabled = false;
       } else if (btn.classList.contains('wb-got')) {
-        li.classList.add('got'); li.classList.remove('missed'); self._updCount(); self._emitGraded();
+        li.classList.add('got'); li.classList.remove('missed'); self._updCount(); self._emitGraded(); self._nextCue(li);
       } else if (btn.classList.contains('wb-miss')) {
-        li.classList.add('missed'); li.classList.remove('got'); self._updCount(); self._emitGraded();
+        li.classList.add('missed'); li.classList.remove('got'); self._updCount(); self._emitGraded(); self._nextCue(li);
       }
     });
+  }
+  /* W2 -- after grading a cue, glide to the next UNGRADED one so the recall loop keeps moving without
+     a manual scroll. The next cue is the first ungraded li after this one, else the first ungraded
+     anywhere; none left -> no-op (the verdict is showing now). Reduced-motion jumps instantly (the
+     app's motion contract). */
+  _nextCue(li) {
+    try {
+      var next = null, n = li.nextElementSibling;
+      while (n) { if (!n.classList.contains('got') && !n.classList.contains('missed')) { next = n; break; } n = n.nextElementSibling; }
+      if (!next) next = this._list.querySelector('li:not(.got):not(.missed)');
+      if (!next) return;
+      var rm = false; try { rm = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+      next.scrollIntoView({ behavior: rm ? 'auto' : 'smooth', block: 'center' });
+    } catch (e) {}
   }
   renderTopic(d) {
     this._steps = d.steps;

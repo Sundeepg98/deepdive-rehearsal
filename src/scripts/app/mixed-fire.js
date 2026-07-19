@@ -26,13 +26,47 @@ function mxCurve(cb) {
 /* Mixed-fire state: the assembled question pool, cursor, tallies, and the
    per-item log shared with the session-progress overlay. */
 var mxPool = [], mxIdx = 0, mxGot = 0, mxShk = 0, mxRes = [], mixLog = [];
-/* S3: persist the cumulative mixed-fire log so the session tally + per-item weak
-   signal survive a reload (the topic-level shaky marks already persist via
-   Progress.markShaky; this restores what session-progress' summary() derives from
-   mixLog). Capped so the store stays bounded -- mixLog is cumulative, unlike the
-   mock's single-session tally. Mirrors mock-run/data.js's mockPersist. */
-function mixPersist() { try { if (typeof Store !== 'undefined' && Store.set) Store.set('mix.log', mixLog.slice(-500)); } catch (e) {} }
-(function () { try { if (typeof Store !== 'undefined' && Store.get) { var _ml = Store.get('mix.log', null); if (Array.isArray(_ml)) mixLog = _ml; } } catch (e) {} })();
+/* S3 + Wave 0 re-key: persist the mixed-fire log PER TOPIC under `mix.<id>` (was the global,
+   topic-less `mix.log`). Like the mock record, sessStats/pickRec read this as the CURRENT topic's
+   truth; keyed globally it leaked topic A's fumbles into topic B's "run mixed fire again" nudge.
+   Mixed fire always assembles from the CURRENT topic's bank (buildMix -> _allCards/curveballPool/
+   getTrades), so the log IS per-topic data -- it was only ever STORED topic-less. Capped so the
+   store stays bounded (mixLog is cumulative). The topic-level shaky marks already persist via
+   Progress.markShaky; this restores what session-progress' summary() derives from mixLog. Mirrors
+   mock-run/data.js's mockPersist. */
+function mixCurId() { try { return (typeof TopicRegistry !== 'undefined' && TopicRegistry.current()) ? TopicRegistry.current().id : null; } catch (e) { return null; } }
+function mixKey(id) { return 'mix.' + id; }
+function mixPersist() { try { var id = mixCurId(); if (id && typeof Store !== 'undefined' && Store.set) Store.set(mixKey(id), mixLog.slice(-500)); } catch (e) {} }
+/* Load THIS topic's mixed-fire log into the live global -- or empty it when the topic has none, so
+   switching topics can never leak the previous one's fumbles. Fired on every deeptopicchange and
+   once for the boot topic (register() seeds it WITHOUT firing the event -- see mockLoadForTopic). */
+function mixLoadForTopic(id) {
+  var a = (id && typeof Store !== 'undefined' && Store.get) ? Store.get(mixKey(id), null) : null;
+  mixLog = Array.isArray(a) ? a : [];
+}
+/* Cross-topic "has the user mixed-fired on ANY topic?" for panels.js engaged() -- see mockRanAny. */
+function mixRanAny() {
+  try {
+    if (typeof Store === 'undefined' || !Store.keys) return false;
+    var ks = Store.keys('mix.');
+    for (var i = 0; i < ks.length; i++) { if (ks[i] !== 'mix.log') return true; }
+  } catch (e) {}
+  return false;
+}
+/* Legacy discard: the old global `mix.log` is a cumulative blob spanning every topic touched --
+   unattributable to any one, so discarded, never mis-attributed (same doctrine as __mockMig). */
+var __mixMig = { legacy: 'none' };
+function mixMigrateLegacy() {
+  try {
+    if (typeof Store === 'undefined' || !Store.get) return;
+    if (Store.get('mix.log', null) != null) { __mixMig.legacy = 'discarded'; Store.remove('mix.log'); }
+  } catch (e) {}
+}
+window.addEventListener('deeptopicchange', function (e) { mixLoadForTopic(e && e.detail ? e.detail.id : mixCurId()); });
+(function () {
+  function boot() { mixMigrateLegacy(); mixLoadForTopic(mixCurId()); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
 /* Turn the Trade-offs pane's decisions into mixed-fire items (each becomes a
    "name the switch condition" prompt revealing the options + the tell). The
    decision DOM now lives inside <deep-trade-offs>, so we ask it via getDecisions()

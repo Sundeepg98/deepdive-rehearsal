@@ -15,6 +15,14 @@ var KBD_STYLE = `
 .ks-sec:last-of-type{margin-bottom:0}
 .ks-h{font-size:var(--font-size-micro);font-weight:var(--font-weight-heavy);letter-spacing:.1em;text-transform:uppercase;color:var(--acc);margin:0 0 var(--space-12)}
 .ks-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-9) var(--space-18)}
+/* Narrow phones: two columns, not three. At 360px the panel body is ~322px wide and the
+   3-track grid's min-content is ~339px (kbd chip + "Walkthrough"-class labels do not shrink),
+   so the third column clipped 17px off the right edge (visual-sweep row 14's second half).
+   A media query, NOT auto-fit minmax: auto-fit would also refit DESKTOP (4+ columns at the
+   560px panel), and the desktop layout is shipped and correct. Shadow sheets evaluate @media
+   against the viewport, so this only bites where the clip lives; 419px covers the 360-414
+   phone band with margin so a marginal 390px fit cannot re-clip on wider device fonts. */
+@media(max-width:419px){.ks-grid{grid-template-columns:repeat(2,1fr)}}
 .ks-row{display:flex;align-items:center;gap:var(--space-10);font-size:var(--font-size-small);color:var(--ink);transition:transform var(--duration-fast) var(--ease-base)}
 .ks-row:hover{transform:translateX(3px)}
 .ks-list{display:flex;flex-direction:column;gap:var(--space-11)}
@@ -43,29 +51,33 @@ var KBD_HTML = `<div class="ks-sec">
           <div class="ks-row"><kbd>I</kbd><span>Red Flags</span></div>
           <div class="ks-row"><kbd>O</kbd><span>30-Second</span></div>
         </div>
-        <div class="ks-note"><kbd class="ks-mini">Q</kbd> to <kbd class="ks-mini">O</kbd> run left-to-right across the top row, in pane order &mdash; just reach, no memorizing.</div>
+        <div class="ks-note"><kbd class="ks-mini">Q</kbd> to <kbd class="ks-mini">O</kbd> run left-to-right across the top row, in pane order &mdash; just reach, no memorizing. Topics with a visual mode add <kbd class="ks-mini">V</kbd> &mdash; Visualize.</div>
       </div>
       <div class="ks-sec">
         <div class="ks-h">Move through the one you&rsquo;re on</div>
         <div class="ks-list">
           <div class="ks-row2"><span class="ks-keys"><kbd>&larr;</kbd><kbd>&rarr;</kbd></span><span>Step back &amp; forward through the walkthrough</span></div>
           <div class="ks-row2"><span class="ks-keys"><kbd>Space</kbd><span class="ks-or">/</span><kbd>Enter</kbd></span><span>Reveal the answer &middot; advance the next beat</span></div>
-          <div class="ks-row2"><span class="ks-keys"><kbd>1</kbd><kbd>2</kbd></span><span>In the drill, score the probe &mdash; Solid or Revisit</span></div>
+          <div class="ks-row2"><span class="ks-keys"><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd></span><span>In the drill, grade yourself &mdash; Missed &middot; Shaky &middot; Solid</span></div>
         </div>
       </div>
       <div class="ks-sec">
         <div class="ks-h">Anywhere</div>
         <div class="ks-list">
-          <div class="ks-row2"><span class="ks-keys"><kbd>/</kbd></span><span>Search topics, concepts &amp; views</span></div>
+          <div class="ks-row2"><span class="ks-keys"><kbd>/</kbd><span class="ks-or">or</span><kbd>Ctrl</kbd><kbd>K</kbd></span><span>Search topics, concepts &amp; views</span></div>
           <div class="ks-row2"><span class="ks-keys"><kbd>\\</kbd></span><span>Open the Topic index</span></div>
+          <div class="ks-row2"><span class="ks-keys"><kbd>H</kbd></span><span>Home &mdash; every topic, your bookmarks, where you left off</span></div>
           <div class="ks-row2"><span class="ks-keys"><kbd>[</kbd><kbd>]</kbd></span><span>Previous &middot; next topic</span></div>
+          <div class="ks-row2"><span class="ks-keys"><kbd>P</kbd></span><span>Session progress &mdash; where you&rsquo;re weak, what to drill next</span></div>
+          <div class="ks-row2"><span class="ks-keys"><kbd>F</kbd></span><span>Focus mode &mdash; hide the side panels</span></div>
+          <div class="ks-row2"><span class="ks-keys"><kbd>Ctrl</kbd><kbd>P</kbd></span><span>Printable Q&amp;A of this topic&rsquo;s probes</span></div>
           <div class="ks-row2"><span class="ks-keys"><kbd>G</kbd></span><span>Start the guided tour</span></div>
           <div class="ks-row2"><span class="ks-keys"><kbd>D</kbd></span><span>Cycle spacing density &mdash; compact &middot; cozy &middot; default</span></div>
           <div class="ks-row2"><span class="ks-keys"><kbd>Esc</kbd></span><span>Close any open panel</span></div>
           <div class="ks-row2"><span class="ks-keys"><kbd>?</kbd></span><span>Bring up this list</span></div>
         </div>
       </div>
-      <div class="ks-foot">These pause while a panel like this one is open &mdash; close it and they&rsquo;re live again.</div>`;
+      <div class="ks-foot">The single keys pause while a panel like this one is open &mdash; close it and they&rsquo;re live again. On a Mac, <kbd class="ks-mini">Ctrl</kbd> shortcuts answer to <kbd class="ks-mini">&#8984;</kbd> too.</div>`;
 class DeepKeyboard extends HTMLElement {
   connectedCallback() {
     if (this._built) return;

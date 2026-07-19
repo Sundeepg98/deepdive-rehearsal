@@ -112,9 +112,9 @@ details.model>summary:hover{background:var(--acc2-a07);padding-left:var(--space-
 var WALK_HTML = `<div class="dots" id="wdots"></div>
     <div class="card" id="wcard"></div>
     <div class="nav">
-      <button type="button" id="wprev">&larr; Prev</button>
+      <button type="button" id="wprev" aria-keyshortcuts="ArrowLeft">&larr; Prev</button>
       <span class="ctr" id="wctr"></span>
-      <button type="button" id="wnext">Next &rarr;</button>
+      <button type="button" id="wnext" aria-keyshortcuts="ArrowRight">Next &rarr;</button>
     </div>
     <details class="model">
       <summary>What a complete answer sounds like <span class="sub">model script &middot; the full arc, not just the opener</span></summary>

@@ -173,6 +173,19 @@ window.KeyGuard = (function () {
 document.addEventListener('keydown', function (event) {
   /* THE typing guard. Reads through shadow roots -- see KeyGuard above. */
   if (window.KeyGuard.isTyping(event)) return;
+  /* THE MODIFIER GUARD (QW3). Every binding in this map is a PLAIN key; a chord is the
+     browser's (or another handler's), not this map's. Without this, Ctrl+P opened the
+     Session panel UNDERNEATH print-qa's popup (both are document-level 'p' listeners --
+     MEASURED: the stray dialog then swallowed every subsequent key, which is how the
+     probe caught it), and Alt+ArrowLeft (browser Back) also stepped the walkthrough.
+     THE CARVE-OUTS ARE LAYOUTS, NOT CHORDS. event.key is layout-relative, and on real
+     keyboards some of THESE VERY BINDINGS arrive wearing a modifier: '\' is AltGr+eszett on a
+     German PC (Chromium reports AltGr as ctrl+alt BOTH true) and Alt+Shift+7 on a German
+     Mac. So: block Cmd/Win-anything; block Ctrl-without-Alt (a real Ctrl chord -- AltGr
+     always sets both); block Alt only for NON-printable keys (Alt+ArrowLeft is Back;
+     Alt+"\" is a person typing a backslash). Shift is never blocked: '?' IS Shift+/. */
+  if (event.metaKey || (event.ctrlKey && !event.altKey) ||
+      (event.altKey && !event.ctrlKey && event.key.length > 1)) return;
   if (window.TourGuide && window.TourGuide.isActive()) return;
   if (window.SearchOverlay && window.SearchOverlay.isOpen && window.SearchOverlay.isOpen()) return;
   /* `.open:not(.closing)` -- THE INTERACTIVITY INVARIANT (styles.css). `.open` alone stays set for
@@ -393,15 +406,37 @@ document.addEventListener('keydown', function (event) {
 (function () {
   const toolsFab = document.getElementById('toolsfab');
   const mockbar = document.querySelector('.mockbar');
-  
+
+  /* The sheet's bottom scroll cue (visual-sweep row 17). The vertical sibling of v80's --fl/--fr:
+     --fb is 24px while rows are still hidden below the sheet's fold, 0px once the scroll bottoms
+     out; the mobile-only .sidebar .mockbar::after in styles.css turns any positive flag into the
+     bottom scrim and collapses it at 0. Why the sheet needs its own flag rather than reusing
+     v80's: that block is scoped to the .seg strip and its axis is horizontal. The initial call
+     is honest even though the sheet boots translated off-screen -- transform skips layout, so
+     scrollHeight/clientHeight are already real. On desktop the mockbar is not a scroller
+     (the .sidebar is), so the flag rests at 0px and the ::after does not exist there anyway. */
+  function updateSheetCue() {
+    if (!mockbar) return;   /* same null-tolerance as every other lookup in this block */
+    const more = mockbar.scrollTop + mockbar.clientHeight < mockbar.scrollHeight - 4;
+    mockbar.style.setProperty('--fb', more ? '24px' : '0px');
+  }
+
   function openMockbar() {
     document.body.classList.add('tools-open');
+    updateSheetCue();   /* row set can have changed since boot (text zoom, font swap) */
   }
-  
+
   function closeMockbar() {
     document.body.classList.remove('tools-open');
   }
-  
+
+  if (mockbar) {
+    mockbar.addEventListener('scroll', updateSheetCue, { passive: true });
+    window.addEventListener('resize', updateSheetCue);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(updateSheetCue);
+    updateSheetCue();
+  }
+
   if (toolsFab) {
     toolsFab.addEventListener('click', function (event) {
       event.stopPropagation();

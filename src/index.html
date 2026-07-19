@@ -32,10 +32,10 @@
   </div>
 
   <nav class="topic-nav" id="topicnav" aria-label="Switch topic" hidden>
-    <button class="tn-step tn-home" id="homeBtn" type="button" aria-label="Home &mdash; topic index" title="Home &mdash; topic index">&#8962;</button>
-    <button class="tn-step" id="tnprev" type="button" aria-label="Previous topic">&#8249;</button>
+    <button class="tn-step tn-home" id="homeBtn" type="button" aria-label="Home &mdash; topic index" title="Home &mdash; topic index" aria-keyshortcuts="H">&#8962;</button>
+    <button class="tn-step" id="tnprev" type="button" aria-label="Previous topic" aria-keyshortcuts="[">&#8249;</button>
     <button class="tn-trigger" id="tntrigger" type="button" aria-haspopup="menu" aria-expanded="false"><span class="tn-eyebrow">Rehearsing</span><span class="tn-current" id="tncurrent">&mdash;</span><span class="tn-chev" aria-hidden="true">&#9662;</span></button>
-    <button class="tn-step" id="tnnext" type="button" aria-label="Next topic">&#8250;</button>
+    <button class="tn-step" id="tnnext" type="button" aria-label="Next topic" aria-keyshortcuts="]">&#8250;</button>
     <div class="tn-menu" id="tnmenu" role="menu" hidden></div></nav>
     </div>
     <div class="mockcta">
@@ -52,36 +52,47 @@
        now gone and the DOM carries the order, so paint and focus cannot drift apart again.
        text-zoom.js and pomodoro.js inject their widgets immediately before this element,
        which is what keeps them painting between .mockcta and the switcher. -->
+  <!-- QW3: each tab wears its jump key. The .seg-key badge is aria-hidden (the binding is
+       exposed to AT via aria-keyshortcuts on the button, not by polluting its name) and is
+       absolutely positioned by styles.css so it adds ZERO layout -- click_drift asserts the
+       tabs sit at an identical y on all 46 topics, and a badge that grew the button would
+       move every tab below it. Desktop-only (>=920px): the mobile strip is cramped and the
+       shortcuts are keyboard-only anyway (.kbd-only hides the shortcut panel there too). -->
   <div class="seg" role="group" aria-label="Rehearsal sections">
-    <button type="button" class="on" data-tab="walk"><span>Walkthrough</span><span class="n">MECHANICS</span></button>
-    <button type="button" data-tab="drill"><span>Probe Drill</span><span class="n">GRADED</span></button>
-    <button type="button" data-tab="wb"><span>Whiteboard</span><span class="n">RECONSTRUCT</span></button>
-    <button type="button" data-tab="sys"><span>System Map</span><span class="n">ZOOM OUT</span></button>
-    <button type="button" data-tab="trade"><span>Trade-offs</span><span class="n">DECISIONS</span></button>
-    <button type="button" data-tab="model"><span>Model Answers</span><span class="n">SCRIPTS</span></button>
-    <button type="button" data-tab="num"><span>Numbers</span><span class="n">ESTIMATE</span></button>
-    <button type="button" data-tab="rf"><span>Red Flags</span><span class="n">ANTI-PATTERNS</span></button>
-    <button type="button" data-tab="open"><span>30-Second</span><span class="n">OPEN &amp; CLOSE</span></button>
-    <button type="button" data-tab="viz" hidden><span>Visualize</span><span class="n">GPU MODE</span></button>
+    <button type="button" class="on" data-tab="walk" aria-keyshortcuts="Q"><span>Walkthrough</span><span class="n">MECHANICS</span><kbd class="seg-key" aria-hidden="true">Q</kbd></button>
+    <button type="button" data-tab="drill" aria-keyshortcuts="W"><span>Probe Drill</span><span class="n">GRADED</span><kbd class="seg-key" aria-hidden="true">W</kbd></button>
+    <button type="button" data-tab="wb" aria-keyshortcuts="E"><span>Whiteboard</span><span class="n">RECONSTRUCT</span><kbd class="seg-key" aria-hidden="true">E</kbd></button>
+    <button type="button" data-tab="sys" aria-keyshortcuts="R"><span>System Map</span><span class="n">ZOOM OUT</span><kbd class="seg-key" aria-hidden="true">R</kbd></button>
+    <button type="button" data-tab="trade" aria-keyshortcuts="T"><span>Trade-offs</span><span class="n">DECISIONS</span><kbd class="seg-key" aria-hidden="true">T</kbd></button>
+    <button type="button" data-tab="model" aria-keyshortcuts="Y"><span>Model Answers</span><span class="n">SCRIPTS</span><kbd class="seg-key" aria-hidden="true">Y</kbd></button>
+    <button type="button" data-tab="num" aria-keyshortcuts="U"><span>Numbers</span><span class="n">ESTIMATE</span><kbd class="seg-key" aria-hidden="true">U</kbd></button>
+    <button type="button" data-tab="rf" aria-keyshortcuts="I"><span>Red Flags</span><span class="n">ANTI-PATTERNS</span><kbd class="seg-key" aria-hidden="true">I</kbd></button>
+    <button type="button" data-tab="open" aria-keyshortcuts="O"><span>30-Second</span><span class="n">OPEN &amp; CLOSE</span><kbd class="seg-key" aria-hidden="true">O</kbd></button>
+    <button type="button" data-tab="viz" hidden aria-keyshortcuts="V"><span>Visualize</span><span class="n">GPU MODE</span><kbd class="seg-key" aria-hidden="true">V</kbd></button>
   </div>
 
     <div class="mockbar">
     <div class="mb-sec">Find a topic</div>
-    <button class="crambtn" id="idxopen" type="button"><span class="mb-tx"><span class="mb-t">Topic index</span><span class="mb-d"> &mdash; all topics across the six groups</span></span></button>
-    <button class="crambtn" id="searchopen" type="button"><span class="mb-tx"><span class="mb-t">Search</span><span class="mb-d"> &mdash; jump to any topic or view by name or concept</span></span></button>
+    <button class="crambtn" id="idxopen" type="button" aria-keyshortcuts="\"><span class="mb-tx"><span class="mb-t">Topic index</span><span class="mb-d"> &mdash; all topics across the six groups</span></span></button>
+    <button class="crambtn" id="searchopen" type="button" aria-keyshortcuts="/ Control+K Meta+K"><span class="mb-tx"><span class="mb-t">Search</span><span class="mb-d"> &mdash; jump to any topic or view by name or concept</span></span></button>
     <div class="mb-sec">This topic</div>
     <button class="crambtn" id="copylink" type="button"><span class="mb-tx"><span class="mb-t">Copy link</span><span class="mb-d"> &mdash; a shareable link to this topic &amp; view</span></span></button>
     <button class="crambtn" id="starbtn" type="button" aria-pressed="false"><span class="mb-tx"><span class="mb-t">Star this topic</span><span class="mb-d"> &mdash; save it to your bookmarks on the home</span></span></button>
     <button class="crambtn" id="notesopen" type="button"><span class="mb-tx"><span class="mb-t">Your notes</span><span class="mb-d"> &mdash; jot notes &amp; mnemonics for this topic</span></span></button>
-    <button class="crambtn" id="printqa" type="button"><span class="mb-tx"><span class="mb-t">Print Q&amp;A</span><span class="mb-d"> &mdash; a printable sheet of this topic&#39;s probes</span></span></button>
+    <button class="crambtn" id="printqa" type="button" aria-keyshortcuts="Control+P Meta+P"><span class="mb-tx"><span class="mb-t">Print Q&amp;A</span><span class="mb-d"> &mdash; a printable sheet of this topic&#39;s probes</span></span></button>
     <div class="mb-sec">Study aids</div>
     <button class="crambtn" id="cramopen" type="button"><span class="mb-tx"><span class="mb-t">One-page cram sheet</span><span class="mb-d"> &mdash; everything that matters, on a card</span></span></button>
-    <button class="crambtn" id="sessopen" type="button"><span class="mb-tx"><span class="mb-t">Session progress</span><span class="mb-d"> &mdash; where you&rsquo;re weak, what to drill next</span></span></button>
+    <button class="crambtn" id="sessopen" type="button" aria-keyshortcuts="P"><span class="mb-tx"><span class="mb-t">Session progress</span><span class="mb-d"> &mdash; where you&rsquo;re weak, what to drill next</span></span></button>
     <button class="crambtn" id="mixopen" type="button"><span class="mb-tx"><span class="mb-t">Mixed fire</span><span class="mb-d"> &mdash; probes &amp; curveballs in random order</span></span></button>
     <button class="crambtn" id="planopen" type="button"><span class="mb-tx"><span class="mb-t">Game plan</span><span class="mb-d"> &mdash; how to rehearse with this over a week</span></span></button>
     <button class="crambtn" id="scopeopen" type="button"><span class="mb-tx"><span class="mb-t">Scope it first</span><span class="mb-d"> &mdash; the clarifying questions before you design</span></span></button>
     <div class="mb-sec">Settings</div>
-    <button class="crambtn kbd-only" id="keyopen" type="button"><span class="mb-tx"><span class="mb-t">Keyboard shortcuts</span><span class="mb-d"> &mdash; jump views, drive it by key</span></span></button>
+    <!-- NOT `kbd-only` any more, deliberately. Hiding this under 920px made the shortcuts
+         reference UNREACHABLE on every touch device -- this button is the ONLY pointer path to
+         #keyov (the `?` binding needs the very keyboard the panel documents). Tablets with
+         hardware keyboards report sub-920 widths, and the panel documents the app even when you
+         cannot press the keys. (2026-07-13 visual sweep, row 14 / PKG-E, P2.) -->
+    <button class="crambtn" id="keyopen" type="button" aria-keyshortcuts="?"><span class="mb-tx"><span class="mb-t">Keyboard shortcuts</span><span class="mb-d"> &mdash; jump views, drive it by key</span></span></button>
     <button class="crambtn cram-tog" id="themetog" type="button" aria-pressed="false"><span class="mb-ic">&#9789;</span>Dark mode &mdash; <b class="tt-state">off</b></button>
     <!-- Reset lives HERE now, not on the entry surface. It used to sit in the index overlay's
          footer -- i.e. on the modal the app opened itself on -- where, on a phone, "Reset all

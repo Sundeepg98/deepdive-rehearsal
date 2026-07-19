@@ -150,6 +150,23 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   const full = await debriefPct();
   ok('structural-equivalence: a full fresh run reads 100% "signal coverage" (unchanged old math)', full.pct === 100 && /signal coverage/.test(full.txt) && !/answered this run/.test(full.txt), JSON.stringify(full));
 
+  /* ---- BEAT 2: the HOME CTA resume sub-line carries the pos.<id> drill cursor ("probe N of NN"),
+   *      through the SAME posRestore clamp the drill restores with -- not the generic copy ---- */
+  await fresh();
+  await pane('drill');
+  await gradeN(5);                 /* pos.drill = 5 -> Resume lands on probe 6 */
+  const home = await page.evaluate(() => {
+    const id = TopicRegistry.current().id;
+    if (window.Store) Store.set('nav.last', { id: id, view: 'drill' });   /* the resume target = this topic's drill */
+    const bank = document.querySelector('#drill deep-drill').shadowRoot.querySelectorAll('.dn-step').length;
+    const pd = (JSON.parse(localStorage.getItem('ddr.v1.pos.' + id) || '{}')).drill;
+    if (window.HomeView && HomeView.render) HomeView.render();
+    const d = document.querySelector('#home .hm-cta .hm-cta-d');
+    return { sub: d ? d.textContent : null, bank: bank, pd: pd };
+  });
+  const want = 'probe ' + (home.pd + 1) + ' of ' + home.bank;
+  ok('home CTA resume sub-line shows the drill cursor ("' + want + '")', !!home.sub && home.sub.indexOf(want) !== -1 && home.pd === 5, JSON.stringify(home));
+
   ok('zero console/page errors', errs.length === 0, errs.slice(0, 4).join(' | '));
 
   await browser.close();

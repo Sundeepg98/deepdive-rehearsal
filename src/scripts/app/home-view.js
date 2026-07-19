@@ -48,6 +48,26 @@
     return (window.Router && Router.ROUTES[v]) ? Router.ROUTES[v].title : '';
   }
 
+  /* The resume CURSOR detail for the Resume sub-line: "probe 9 of 22" (drill) / "step 3 of 9" (walk),
+     read from pos.<id> through posRestore -- the SAME clamp the pane restores with, so the sub-line
+     can never promise a probe Resume won't land on (the pos.<id> detail of the target, not nav.last).
+     Empty for a topic with no stored cursor, or a view that has none (those keep the plain copy). */
+  function resumeCursorLine(id, view) {
+    try {
+      if (typeof posRestore !== 'function' || typeof posGet !== 'function' || !posGet(id)) return '';
+      var t = TopicRegistry.get(id);
+      if (view === 'drill' && t && t.data && t.data.bank && t.data.bank.cards && t.data.bank.cards.length) {
+        var nb = t.data.bank.cards.length;
+        return 'probe ' + (posRestore('drill', nb, id) + 1) + ' of ' + nb;
+      }
+      if (view === 'walk' && t && t.data && t.data.walk && t.data.walk.steps && t.data.walk.steps.length) {
+        var ns = t.data.walk.steps.length;
+        return 'step ' + (posRestore('walk', ns, id) + 1) + ' of ' + ns;
+      }
+      return '';
+    } catch (e) { return ''; }
+  }
+
   /* The compact header. On this route the sidebar is hidden -- it is TOPIC chrome (topic nav, the
      nine tabs, this-topic tools) and the home has no topic -- so Search / Shortcuts / Theme / the
      topic index would simply be GONE without this. Theme delegates to the real #themetog so there
@@ -92,10 +112,15 @@
     var r = Panels.resumeTarget();
     if (!r) return '';
     var vt = lastViewTitle();
+    /* W2 -- the Resume sub-line now carries the pos.<id> cursor of the target ("Probe Drill / probe
+       9 of 22") instead of the generic "pick up where you left off", so the daily loop shows exactly
+       where Enter lands. A pane with no cursor (or none stored) keeps the plain copy. */
+    var cur = resumeCursorLine(r.id, lastView());
+    var sub = cur ? (vt + ' &middot; ' + cur) : ((vt ? vt + ' &middot; ' : '') + 'pick up where you left off');
     return '<button class="hm-cta" type="button" ' + (r.hash ? 'data-hash="' + r.hash + '"' : 'data-topic="' + r.id + '"') + ' data-autofocus="1">' +
       '<span><span class="hm-cta-k">Resume</span>' +
       '<span class="hm-cta-t">' + r.topic.identity.title + '</span>' +
-      '<span class="hm-cta-d">' + (vt ? vt + ' &middot; ' : '') + 'pick up where you left off</span></span>' +
+      '<span class="hm-cta-d">' + sub + '</span></span>' +
       '<span class="hm-cta-ar">&rarr;</span></button>';
   }
 

@@ -286,8 +286,11 @@ function posSet(field, val) {
   } catch (e) {}
 }
 function posGet(id) { try { id = id || sessTopicId(); return (id && typeof Store !== 'undefined' && Store.get) ? Store.get(posKey(id), null) : null; } catch (e) { return null; } }
-/* the index a pane should render on topic entry: its saved cursor, clamped to the live count, or 0. */
-function posRestore(field, count) { try { var p = posGet(); var v = (p && typeof p[field] === 'number') ? p[field] : 0; return (v >= 0 && v < count) ? v : 0; } catch (e) { return 0; } }
+/* the index a pane should render on topic entry: its saved cursor, clamped to the live count, or 0.
+   `id` is optional -- omitted, it reads the CURRENT topic (the pane callers); passed, it reads that
+   topic's cursor, so the home CTA can show "probe 9 of 22" through the SAME clamp the drill restores
+   with (the sub-line can never disagree with where Resume actually lands). */
+function posRestore(field, count, id) { try { var p = posGet(id); var v = (p && typeof p[field] === 'number') ? p[field] : 0; return (v >= 0 && v < count) ? v : 0; } catch (e) { return 0; } }
 /* Durability: a RELOAD or tab-hide must not lose a pending cursor write -- the 300ms throttle would
    drop it, so Resume would land on a stale probe (or, after a completed drill, on the last graded one
    instead of the reset). Flush on the same signals the trend log uses (proven to fire in this app);

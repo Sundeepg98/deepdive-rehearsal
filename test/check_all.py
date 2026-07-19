@@ -343,6 +343,12 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # and arms a negative control (neuter flowStripHtml -> the strips must go dark) so
                      # the affordance count is not decorative.
                      ('flow_handoff', 'test/flow_handoff.cjs'),
+                     # WAVE 1 receipts (D5): every forward strip renders the raw stored numbers that
+                     # justify it. This reads the receipt a terminal actually rendered, recomputes the
+                     # same claim INDEPENDENTLY from localStorage (never through sessStats/flowReceipt),
+                     # and fails on mismatch -- so a recommendation bug is a red diff, not a silent lie.
+                     # Negative control: poison the record so the receipt can no longer be true.
+                     ('flow_evidence', 'test/flow_evidence.cjs'),
                      # A stored grade belongs to a QUESTION, not to a SLOT. Grades were keyed by
                      # the probe's INDEX IN THE BANK, so inserting one probe at the top of a bank
                      # slid every stored grade below it onto the WRONG question -- silently, with

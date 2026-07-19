@@ -482,9 +482,18 @@ class DeepDrill extends TopicPane {
     return fus.length ? fus[fus.length - 1] : this._dwrap.querySelector('.thread');
   }
   renderD(moveFocus) {
-    /* W2 -- write the pos.<id> drill cursor, but ONLY in study mode: quick/mock decks are
-       session-random/timed, so a saved probe index there would point at a different card on restore. */
-    if (this.mode === 'study' && typeof posSet === 'function') posSet('drill', this.di);
+    /* W2 -- throttled pos.<id> drill-probe cursor write. Persist di ONLY in the canonical full-bank
+       study walk, where di is a true "probe N of NN" bank position. mode==='study' alone is too weak:
+       a tier filter (setTier keeps mode 'study', shrinks `cards` to the tier) and a revisit sub-drill
+       (drillRevset leaves mode 'study', sets revisitMode) both index a SUBSET, so their di resolves to
+       a DIFFERENT probe on restore -- a lie the Resume sub-line would then print. Quick 5 reshuffles,
+       mock is timed (both mode!=='study'). Display index only, never a grade: grades persist by
+       content-id (judge -> drillgraded -> Progress.snapshot), so this write cannot re-grade.
+       COMPLETION RESET: once the walk reaches the debrief (di >= cards.length) there is no resume
+       probe, so the cursor resets to 0 -- re-entry lands on the study list at probe 1, exactly the
+       pre-cursor behavior that re-entering a FINISHED drill relied on (a completed run is not a
+       resume point). A partial walk persists its di and resumes there. */
+    if (typeof posSet === 'function' && this.mode === 'study' && this.tierFilter === 'all' && !this.revisitMode) posSet('drill', this.di < cards.length ? this.di : 0);
     /* Resolve the landing decision FIRST -- renderNav() below rewrites #dnav, so a chip that has
        focus is already destroyed (and activeElement already <body>) by the time we could ask. */
     const land = !!moveFocus || this._focusDoomed();
@@ -671,6 +680,16 @@ class DeepDrill extends TopicPane {
        grading the record does not store) -- so scoring it against the full bank penalized a perfect
        resume (17/22 = 77%). The cumulative picture lives in the record (panel / dock / pip). */
     const pct = Math.round(this.got / Math.max(1, this.results.length) * 100);
+    /* W2 -- the coverage label must not imply full-bank mastery on a RESUMED run. `pct` is over the
+       probes ANSWERED THIS RUN (results.length). When that IS the whole working set (a full run) the
+       label stays the unchanged "signal coverage" -- byte-identical to the old full-bank math, since
+       results.length === cards.length there (the structural-equivalence case, gated). When fewer were
+       answered (resumed past probe 1, or jumped forward), it reads "of N answered this run", so a
+       perfect 17/17 never renders as 17/22. Quick 5 always runs its whole 5, so it keeps its label. */
+    const answered = this.results.length;
+    const covLabel = (this.mode === 'quick') ? 'of a quick 5'
+      : (answered === cards.length) ? 'signal coverage'
+      : 'of ' + answered + ' answered this run';
     let nMissed = 0, nShaky = 0, nSolid = 0;
     for (let ri = 0; ri < this.results.length; ri++) { const _l = this.results[ri].level || (this.results[ri].ok ? 3 : 2); if (_l >= 3) nSolid++; else if (_l === 2) nShaky++; else nMissed++; }
     const sumParts = [];
@@ -691,7 +710,7 @@ class DeepDrill extends TopicPane {
     else verdict = 'You know the happy path; the depth isn\'t there yet. Work the <b>Walkthrough</b> + <b>See the code</b>, then re-run &mdash; the follow-up chains are where this round is won or lost.';
     const weakBtn = this.shk > 0 ? '<button type="button" id="dweak" class="btn-sec">Drill my ' + this.shk + ' Revisit ' + (this.shk === 1 ? 'probe' : 'probes') + ' \u2192</button>' : '';
     this._dwrap.innerHTML = '<div class="card debrief"><div class="big">' + (this.mode === 'quick' ? 'Quick 5 debrief' : 'Interviewer debrief') + '</div>' +
-      '<div class="sumline">' + sumParts.join(' &middot; ') + ' &middot; ' + pct + '% ' + (this.mode === 'quick' ? 'of a quick 5' : 'signal coverage') + '</div>' +
+      '<div class="sumline">' + sumParts.join(' &middot; ') + ' &middot; ' + pct + '% ' + covLabel + '</div>' +
       rows + '<div class="verdict">' + verdict + '</div>' + '<div class="flow-slot" id="dflow"></div>' + weakBtn +
       '<button type="button" id="drestart">' + (this.mode === 'quick' ? 'Another quick 5 &rarr;' : 'Run the full round again') + '</button></div>';
     /* These two buttons live INSIDE #dwrap, so pressing them destroys them. Land on the card

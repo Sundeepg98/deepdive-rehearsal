@@ -288,6 +288,12 @@ function posSet(field, val) {
 function posGet(id) { try { id = id || sessTopicId(); return (id && typeof Store !== 'undefined' && Store.get) ? Store.get(posKey(id), null) : null; } catch (e) { return null; } }
 /* the index a pane should render on topic entry: its saved cursor, clamped to the live count, or 0. */
 function posRestore(field, count) { try { var p = posGet(); var v = (p && typeof p[field] === 'number') ? p[field] : 0; return (v >= 0 && v < count) ? v : 0; } catch (e) { return 0; } }
+/* Durability: a RELOAD or tab-hide must not lose a pending cursor write -- the 300ms throttle would
+   drop it, so Resume would land on a stale probe (or, after a completed drill, on the last graded one
+   instead of the reset). Flush on the same signals the trend log uses (proven to fire in this app);
+   posFlush is a no-op when nothing is pending. */
+window.addEventListener('pagehide', posFlush);
+document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') posFlush(); });
 /* The topic the panel is reporting on. Every per-topic figure below is keyed to it. */
 function sessTopicId() {
   try { return (typeof TopicRegistry !== 'undefined' && TopicRegistry.current()) ? TopicRegistry.current().id : null; } catch (e) { return null; }
@@ -319,14 +325,19 @@ function sessTopicId() {
    topic, not about whatever subset happened to be on screen. */
 function sessStats() {
   const id = sessTopicId();
-  const dLive = drillEl() ? drillEl().getStats() : null;
+  /* getStats guarded against an UN-UPGRADED element, not just a null one: flowRec()->sessStats can
+     run during a pane's connectedCallback (the walk's last-step morph calls flowRec while restoring
+     its cursor), before a SIBLING pane -- #drill/#wb -- has been upgraded by customElements. The
+     element is then present (drillEl() truthy) but has no getStats yet. Treat that exactly like an
+     absent live board: fall back to the canonical record below (which is loaded synchronously). */
+  const dEl = drillEl(), dLive = (dEl && dEl.getStats) ? dEl.getStats() : null;
   const dRec = (id && typeof Progress !== 'undefined') ? Progress.get(id) : null;
   const dTot = (dLive && dLive.bankTot) ? dLive.bankTot : (dRec ? dRec.tot : 0);
   const dDone = dRec ? dRec.done : 0, dGot = dRec ? dRec.got : 0, dShk = dRec ? dRec.shk : 0;
   const revisit = (dRec && dRec.revisit) ? dRec.revisit : [];
   const dLeft = dTot - dDone;
 
-  const wLive = wbEl() ? wbEl().getStats() : null;
+  const wEl = wbEl(), wLive = (wEl && wEl.getStats) ? wEl.getStats() : null;
   const items = (wLive && wLive.items) ? wLive.items : [];
   const wbTot = wLive ? wLive.total : 0;
   /* grades: the persisted record (survives the reload). cue text: the live board. */
@@ -352,13 +363,23 @@ function sessStats() {
     }
   }
   const wbDone = wbGot + wbMiss;
-  const mixTot = mixLog.length;
+  /* mixLog + the mock globals may be UN-INITIALIZED when sessStats runs during a pane's
+     connectedCallback (the walk last-step morph fires flowRec while restoring its cursor, before
+     mixed-fire.js / mock-run.js have run their top-level `var` init). Treat un-ready as the
+     initialized default -- empty log, null scores -- so flowRec computes from the canonical record
+     and never throws, whatever the module-load order. Identical to the ready state once loaded (the
+     guards are no-ops then); same contract as the getStats + Progress guards above. */
+  const _mix = (typeof mixLog !== 'undefined' && mixLog) ? mixLog : [];
+  const mixTot = _mix.length;
   let mixGot = 0;
   const mixLatest = {};
-  for (let mi = 0; mi < mixLog.length; mi++) { if (mixLog[mi].ok) mixGot++; mixLatest[mixLog[mi].label] = mixLog[mi].ok; }
+  for (let mi = 0; mi < _mix.length; mi++) { if (_mix[mi].ok) mixGot++; mixLatest[_mix[mi].label] = _mix[mi].ok; }
   const mixShk = mixTot - mixGot, mixWeak = [];
   for (let label in mixLatest) { if (mixLatest[label] === false) mixWeak.push(label); }
-  return { dTot: dTot, dDone: dDone, dGot: dGot, dShk: dShk, dLeft: dLeft, revisit: revisit, wbGot: wbGot, wbMiss: wbMiss, missed: missed, wbTot: wbTot, wbDone: wbDone, mScore: mockLastScore, mOut: mockLastOutOf, mTime: mockLastTime, mRuns: mockRuns, mInt: mockLastInt, mixTot: mixTot, mixGot: mixGot, mixShk: mixShk, mixWeak: mixWeak };
+  const _mScore = (typeof mockLastScore !== 'undefined') ? mockLastScore : null, _mOut = (typeof mockLastOutOf !== 'undefined') ? mockLastOutOf : null,
+        _mTime = (typeof mockLastTime !== 'undefined') ? mockLastTime : null, _mRuns = (typeof mockRuns !== 'undefined') ? mockRuns : 0,
+        _mInt = (typeof mockLastInt !== 'undefined') ? mockLastInt : 0;
+  return { dTot: dTot, dDone: dDone, dGot: dGot, dShk: dShk, dLeft: dLeft, revisit: revisit, wbGot: wbGot, wbMiss: wbMiss, missed: missed, wbTot: wbTot, wbDone: wbDone, mScore: _mScore, mOut: _mOut, mTime: _mTime, mRuns: _mRuns, mInt: _mInt, mixTot: mixTot, mixGot: mixGot, mixShk: mixShk, mixWeak: mixWeak };
 }
 /* "Has anything happened on THIS page-load?" -- deliberately a LIVE question, and the one
    thing here that must NOT read the canonical record. The trend keeps ONE point per active
@@ -369,8 +390,8 @@ function sessStats() {
    behaviour is unchanged even though the numbers it guards are now canonical. */
 function sessLiveActivity() {
   const d = drillEl(), w = wbEl();
-  let n = d ? d.getStats().dDone : 0;
-  if (w) {
+  let n = (d && d.getStats) ? d.getStats().dDone : 0;   /* un-upgraded pane during boot -> 0, same as absent */
+  if (w && w.getStats) {
     const items = w.getStats().items;
     for (let i = 0; i < items.length; i++) { if (items[i].got || items[i].missed) n++; }
   }

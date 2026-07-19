@@ -44,6 +44,13 @@ var current = 'walk';
 function switchTab(t) {
   var target = document.getElementById(t);
   if (!target) return;
+  /* PERF (perf/chunk-proto): a pane deferred by TopicPaneQueue must be CURRENT before it
+     is shown. __tpFlush() is a no-op unless the pane is dirty (topic-protocol.js), so the
+     common case costs one property lookup; the reveal case renders synchronously HERE --
+     before the .on toggle below -- so stale content is never on screen. */
+  for (var _pc = target.firstElementChild; _pc; _pc = _pc.nextElementSibling) {
+    if (typeof _pc.__tpFlush === 'function') _pc.__tpFlush();
+  }
   for (let i = 0; i < segBtns.length; i++) segBtns[i].classList.toggle('on', segBtns[i].getAttribute('data-tab') === t);
   if (railEl) railEl.style.width = railPos[t] + '%';
   current = t;

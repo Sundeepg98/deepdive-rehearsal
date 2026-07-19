@@ -33,9 +33,12 @@ function clearSession() {
   const id = sessTopicId();
   try { if (id && typeof Progress !== 'undefined' && Progress.clear) Progress.clear(id); } catch (e) {}
   mockLastScore = null; mockLastOutOf = null; mockLastTime = null; mockRuns = 0; mockLastInt = 0;
-  try { if (typeof Store !== 'undefined' && Store.remove) Store.remove('mock.last'); } catch (e) {}
+  try { if (id && typeof Store !== 'undefined' && Store.remove) Store.remove('mock.' + id); } catch (e) {}
   mixLog = []; mxRes = []; mxGot = 0; mxShk = 0;
-  try { if (typeof mixPersist === 'function') mixPersist(); } catch (e) {}
+  /* REMOVE the per-topic mix key, do not persist an empty log: an empty `mix.<id>` still EXISTS,
+     and mixRanAny() (panels.js engaged()) counts existence, so writing [] would leave the home
+     falsely "engaged" after a clear. Removal is the honest clear now that the log is per-topic. */
+  try { if (id && typeof Store !== 'undefined' && Store.remove) Store.remove('mix.' + id); } catch (e) {}
 }
 /* Pick the single most useful "do this next" recommendation, in priority order:
    flagged revisits and missed whiteboard steps first, then a weak mock, then any
@@ -49,15 +52,40 @@ function clearSession() {
    and the verdict can never disagree; at 6 beats it is 4, exactly the old threshold. */
 function mOut(stats) { return (stats && stats.mOut) || 6; }
 function mockIsStrong(mScore, outOf) { return mScore !== null && mScore >= mockMidBar(outOf); }
-function pickRec(revisit, missed, mScore, dDone, dTot, wbDone, mRuns, mixWeak, mOutOf) {
+function pickRec(revisit, missed, mScore, dDone, dTot, wbDone, mRuns, mixWeak, mOutOf, mixTot) {
   if(revisit.length&&dDone>=dTot)return {kicker:'Focus next',text:'You flagged <b>'+revisit.length+'</b> probe'+(revisit.length===1?'':'s')+' to revisit. Re-drill '+(revisit.length===1?'it':'them')+' until the signal comes automatically.',btn:'Re-drill weak spots \u2192',tab:'drill',weak:true,bd:'#e8c5c0',bg:'var(--redbg)',ink:'var(--red)'};
   if(missed.length)return {kicker:'Focus next',text:'You missed <b>'+missed.length+'</b> step'+(missed.length===1?'':'s')+' on the whiteboard. Re-draw '+(missed.length===1?'it':'them')+' from a blank page.',btn:'Re-draw missed steps \u2192',tab:'wb',wbreset:true,bd:'#e8c5c0',bg:'var(--redbg)',ink:'var(--red)'};
   if(mScore!==null&&!mockIsStrong(mScore,mOutOf))return {kicker:'Focus next',text:'Your last mock landed at <b>'+mScore+' / '+mOutOf+'</b>. Run the arc again and target the beats that wobbled.',btn:'Run the round again \u2192',tab:'__mock__',bd:'#e8c5c0',bg:'var(--redbg)',ink:'var(--red)'};
   if(dDone<dTot)return {kicker:'Keep going',text:'You\u2019ve graded <b>'+dDone+' of '+dTot+'</b> probes. Clear the rest so nothing in the round is a surprise.',btn:'Back to the drill \u2192',tab:'drill',bd:'#cfc7f0',bg:'var(--accbg)',ink:'var(--accink)'};
   if(wbDone===0)return {kicker:'Keep going',text:'You haven\u2019t tried the <b>whiteboard recall</b> yet \u2014 rebuild the whole design from cues alone.',btn:'Try the whiteboard \u2192',tab:'wb',bd:'#cfc7f0',bg:'var(--accbg)',ink:'var(--accink)'};
   if(mRuns===0)return {kicker:'Keep going',text:'Drill and whiteboard are clean. Now pressure-test the <b>whole arc</b> on the clock.',btn:'Start a mock run \u2192',tab:'__mock__',bd:'#cfc7f0',bg:'var(--accbg)',ink:'var(--accink)'};
+  /* 6.5 -- the ONLY ladder edit (blast-radius rule). Branch 7 below requires mixWeak NON-EMPTY, so
+     the ladder structurally never hands anyone to a FIRST mixed-fire run: a user who drilled,
+     whiteboarded and ran a mock but never touched mixed fire fell straight through to branch 8
+     ("you're ready") -- a lie, since register-switching is the one surface they have not tested.
+     mixTot===0 at this position (past every drill/wb/mock branch) is exactly that state. This
+     upgrades the session panel and the printed report for free. Cross-topic logic stays OUTSIDE
+     pickRec; the whole decision table is golden-pinned in test/flow_data.cjs. */
+  if(mixTot===0)return {kicker:'Sharpen',text:'Drill, whiteboard and a timed run are behind you \u2014 but you haven\u2019t run <b>mixed fire</b> yet. Switching registers cold is where real rounds slip; go clear a mixed set.',btn:'Run mixed fire \u2192',tab:'__mix__',bd:'#cfc7f0',bg:'var(--accbg)',ink:'var(--accink)'};
   if(mixWeak&&mixWeak.length)return {kicker:'Sharpen',text:'You fumbled <b>'+mixWeak.length+'</b> item'+(mixWeak.length===1?'':'s')+' in mixed fire \u2014 register-switching is where rounds slip. Re-run a mixed set and clear them.',btn:'Run mixed fire \u2192',tab:'__mix__',bd:'#cfc7f0',bg:'var(--accbg)',ink:'var(--accink)'};
   return {kicker:'You\u2019re ready',text:'Solid across the drill, the whiteboard, and a timed run. Keep it sharp \u2014 run it again faster, or under interruption.',btn:null,tab:null,bd:'#bfe0d3',bg:'var(--tealbg)',ink:'var(--teal)'};
+}
+/* ===== THE MICROTASK FRESHNESS LAW (Wave 0 mechanism) =====
+   Every completion-moment recommendation MUST be computed through flowFresh, never inline.
+   Here is the landmine it steps over, verified in source: a grade updates the canonical record
+   SYNCHRONOUSLY, but only AFTER the completion RENDER. The whiteboard grades by running
+   _updCount() -- which renders the verdict -- and only THEN _emitGraded(), which fires
+   `whiteboardgraded` -> Progress.snapshotWb() (whiteboard.js:124-126, :186; progress.js:418).
+   The drill likewise renders its scoreboard before dispatching `drillgraded` (drill/logic.js:638).
+   So a rec computed INLINE during that render reads the record ONE GRADE SHORT and recommends the
+   state the user just left -- e.g. it never sees the step they just missed. queueMicrotask defers
+   the computation until the current task unwinds, i.e. until after the synchronous snapshot, so
+   the record is fresh. This is MECHANISM, not per-call-site vigilance: Wave 1's flowRec() routes
+   every terminal-state recommendation through here, and test/flow_data.cjs pins the drill AND wb
+   last-grade-then-read cases (inline = stale, flowFresh = fresh) so the law cannot silently rot. */
+function flowFresh(compute) {
+  if (typeof queueMicrotask === 'function') queueMicrotask(compute);
+  else Promise.resolve().then(compute);   /* older engines: a resolved promise is the same microtask turn */
 }
 /* The topic the panel is reporting on. Every per-topic figure below is keyed to it. */
 function sessTopicId() {
@@ -105,7 +133,16 @@ function sessStats() {
   let wbGot = 0, wbMiss = 0;
   const missed = [];
   for (let i = 0; i < wbTot; i++) {
-    const lv = steps ? steps[i] : (items[i] && items[i].got ? 1 : (items[i] && items[i].missed ? 2 : 0));
+    /* READ THE STEP MAP BY THE STEP'S CONTENT ID, NOT BY THE LOOP COUNTER. snapshotWb writes
+       map[stepId] (a content hash -- card-id.js), so indexing it by `i` matched NOTHING for every
+       v2 record and reported EVERY whiteboard as 0 recalled / 0 missed -- to the session panel AND
+       to pickRec, however much had actually been drawn (measured: an 8-got/1-missed record read as
+       0/0). It hid because the panel is below the fold; the flow-grammar surfaces will read this,
+       so it must be honest before they do. A legacy record (pre-content-id) is still index-keyed,
+       so fall back to `steps[i]` for it; with no record, read the live board. */
+    const sid = items[i] && items[i].id;
+    const lv = steps ? ((sid != null && steps[sid] != null) ? steps[sid] : steps[i])
+                     : (items[i] && items[i].got ? 1 : (items[i] && items[i].missed ? 2 : 0));
     if (lv === 1) wbGot++;
     else if (lv === 2) {
       wbMiss++;
@@ -142,7 +179,7 @@ function sessLiveActivity() {
    timestamp, the recommendation, and a section per surface with its stats. */
 function buildSessReport() {
   const stats = sessStats();
-  const rec = pickRec(stats.revisit, stats.missed, stats.mScore, stats.dDone, stats.dTot, stats.wbDone, stats.mRuns, stats.mixWeak, mOut(stats));
+  const rec = pickRec(stats.revisit, stats.missed, stats.mScore, stats.dDone, stats.dTot, stats.wbDone, stats.mRuns, stats.mixWeak, mOut(stats), stats.mixTot);
   const now = new Date(), pad = function (x) { return x < 10 ? '0' + x : '' + x; };
   const when = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate()) + ' &middot; ' + now.getHours() + ':' + pad(now.getMinutes());
   let html = '<div class="sr-head"><div class="sr-ttl">Content Pipeline &mdash; Session Report</div><div class="sr-when">' + when + '</div></div>';
@@ -312,7 +349,7 @@ function ssBar(show, pct) {
 function renderSession() {
   const stats = sessStats();
   const dTot = stats.dTot, dDone = stats.dDone, dGot = stats.dGot, dShk = stats.dShk, dLeft = stats.dLeft, revisit = stats.revisit, wbGot = stats.wbGot, wbMiss = stats.wbMiss, missed = stats.missed, wbTot = stats.wbTot, wbDone = stats.wbDone, mScore = stats.mScore, mTime = stats.mTime, mRuns = stats.mRuns, mInt = stats.mInt;
-  const rec = pickRec(revisit, missed, mScore, dDone, dTot, wbDone, mRuns, stats.mixWeak, mOut(stats));
+  const rec = pickRec(revisit, missed, mScore, dDone, dTot, wbDone, mRuns, stats.mixWeak, mOut(stats), stats.mixTot);
   let html = '';
   html += '<div class="ss-rec" style="border-color:' + rec.bd + ';background:' + rec.bg + '">' +
        '<div class="ss-rk" style="color:' + rec.ink + '">' + rec.kicker + '</div>' +

@@ -53,3 +53,32 @@ The mobile `.sidebar .mockcta` is already a load-bearing fixed bottom bar; anti-
 ---
 
 *Instruments: `scratchpad/w0-verify/w2a.cjs` (restore-never-regrades), `w2b.cjs` (one-compute/D4/dock-boundary), `w2c2.cjs` (home sub-line), `w2d.cjs` (fold budget), `vrdiff2.cjs` (VR decode), plus the planted artifacts art_w2_fullbank/nomerge/dockdiverge.html. Verdict CLEAN — W2 ships the spine, the honest cursor, and the one-compute contract; restore-never-regrades holds at the mechanism and behavior level.*
+
+---
+
+## ADDENDUM (post-merge, 2026-07-19 ~22:05 IST) — the verifier instrument's OWN negative control
+
+*Recorded by team-lead from w0-verifier's post-merge report; the verifier's direct file update was
+lost when the w0-data worktree teardown raced it (uncommitted edits; teardown-precondition lesson
+recorded in the fleet-hazards memory). Content reconstructed from the verifier's message verbatim
+in substance.*
+
+The original pass proved the PRODUCT's checks can fail (§3) but had not explicitly demonstrated the
+**verifier's own probe** (`w2a.cjs` RECORD_BYTE_IDENTICAL) failing. The verifier closed that gap
+post-merge, per the dispatch standard ("demonstrate your instrument's negative control before
+trusting its green"):
+
+- **Plant:** a fake regrade injected INTO the product's restore site (`if (_pd > 0) {…}` in
+  drill/logic.js — flips `got` in `progress.<id>` on restore; the freeze report's check-1 plant),
+  in a SCRATCH copy — the worktree artifact untouched.
+- **Own-probe result:** `w2a` → RECORD_BYTE_IDENTICAL = **false** (before got:3 → after got:4,
+  caught). The byte-comparison probe genuinely detects a regrade; its §2 green is not vacuous.
+- **Gate re-witness:** flow_cursor → RED on exactly "restore-in-isolation writes NOTHING to the
+  grade record (byte-identical incl. ts)" — the freeze's check 1, independently re-witnessed
+  (check 3 was already re-witnessed in §3 via the full-bank denominator plant).
+
+Also recorded: the §1 gate ran on the committed tip with `build_integrity`'s HEAD-match
+("COMMITTED deliverable == fresh build of HEAD") proving build-freshness — deliberately
+non-mutating in the junction-backed tree, equivalent to a destructive rebuild.
+
+**Verdict unchanged: CLEAN.** The addendum only strengthens the §2 instrument's standing.

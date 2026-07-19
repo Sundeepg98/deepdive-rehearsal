@@ -158,6 +158,61 @@ if os.path.exists(html_path):
     test("disconnectedCallback on drill", 'disconnectedCallback' in js_part and 'stopTimer' in js_part)
     test("disconnectedCallback on cram", 'disconnectedCallback' in js_part and '_io.disconnect' in js_part)
 
+# ===== Suite 5: Wave 0 flow-data honesty (source-level; behavior is pinned in test/flow_data.cjs) =====
+suite("WAVE 0 FLOW DATA")
+
+def _read_app(rel):
+    p = os.path.join(SRC, 'app', rel)
+    return open(p, encoding='utf-8').read() if os.path.exists(p) else ''
+
+sp = _read_app('session-progress.js')
+mrd = _read_app('mock-run/data.js')
+mf = _read_app('mixed-fire.js')
+wbj = _read_app('whiteboard.js')
+pnl = _read_app('panels.js')
+
+# --- re-key: no WRITER of the old global, topic-less keys remains ---
+test("no writer of global mock.last (re-keyed per topic)",
+     "Store.set('mock.last'" not in mrd and "Store.set('mock.last'" not in sp)
+test("no writer of global mix.log (re-keyed per topic)",
+     "Store.set('mix.log'" not in mf and "Store.set('mix.log'" not in sp)
+test("mock persists under a per-topic key (mockKey)", "function mockKey" in mrd and "mockKey(id)" in mrd)
+test("mix persists under a per-topic key (mixKey)", "function mixKey" in mf and "mixKey(id)" in mf)
+
+# --- per-topic load wired to the topic-switch choke point AND the boot topic ---
+test("mock record loads on deeptopicchange", "deeptopicchange" in mrd and "mockLoadForTopic" in mrd)
+test("mix record loads on deeptopicchange", "deeptopicchange" in mf and "mixLoadForTopic" in mf)
+test("mock boot-loads at DOMContentLoaded (register() fires no deeptopicchange)", "DOMContentLoaded" in mrd)
+test("mix boot-loads at DOMContentLoaded", "DOMContentLoaded" in mf)
+
+# --- legacy migration: honest discard, reported (non-silent) ---
+test("legacy mock.last discarded via Store.remove and reported (__mockMig)",
+     "Store.remove('mock.last')" in mrd and "__mockMig" in mrd)
+test("legacy mix.log discarded via Store.remove and reported (__mixMig)",
+     "Store.remove('mix.log')" in mf and "__mixMig" in mf)
+
+# --- the one cross-topic reader is migrated too ---
+test("engaged() reads cross-topic mockRanAny/mixRanAny, not the per-topic globals",
+     "mockRanAny" in pnl and "mixRanAny" in pnl)
+
+# --- pickRec branch 6.5 (the ONLY ladder edit) + mixTot threaded through ---
+test("pickRec takes a mixTot parameter", re.search(r'function pickRec\([^)]*mixTot', sp) is not None)
+test("branch 6.5 present (mixTot===0 -> Run mixed fire)",
+     re.search(r'mixTot\s*===\s*0', sp) is not None and 'Run mixed fire' in sp)
+test("both pickRec call sites pass mixTot", sp.count('mOut(stats), stats.mixTot') == 2)
+
+# --- the microtask freshness LAW mechanism ---
+test("flowFresh mechanism exists and defers via queueMicrotask",
+     "function flowFresh" in sp and "queueMicrotask" in sp)
+# the documented hazard the law steps over: the wb grade RENDERS (_updCount) before it EMITS
+# (_emitGraded -> snapshotWb), so an inline rec at that render reads the record one grade short.
+test("wb grade path renders (_updCount) BEFORE it emits (_emitGraded) -- the freshness hazard",
+     "_updCount(); self._emitGraded()" in wbj)
+# the wb step map is content-id-keyed; sessStats must read it by that id, not the loop counter
+# (indexing by `i` reported every whiteboard as 0 recalled/0 missed to the panel and to pickRec).
+test("sessStats reads the wb step map by content id (steps[sid]), not the loop counter",
+     "steps[sid]" in sp)
+
 # ===== Summary =====
 print(f"\n{'='*60}")
 print(f"  Results: {PASSED} passed, {FAILED} failed")

@@ -76,29 +76,79 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   ok('cursor is data-driven: planted pos.walk=5 restores to step 5', planted.at5 === 5, JSON.stringify(planted));
   ok('out-of-range pos.walk=999 clamps to step 0 (never a broken index)', planted.clamped === 0, JSON.stringify(planted));
 
-  /* ---- drill cursor: grade some probes, leave, return -> restored to the probe left off ---- */
-  await fresh();
-  await pane('drill');
+  /* ================= DRILL PROBE CURSOR (BEAT 1) ================= */
   const gradeN = (n) => page.evaluate(async (k) => {
     const r = document.querySelector('#drill deep-drill').shadowRoot; const s = (ms) => new Promise((x) => setTimeout(x, ms));
     let done = 0, g = 0; while (g++ < 300 && done < k) { if (r.getElementById('adv')) { r.getElementById('adv').click(); await s(3); continue; } const jg = r.getElementById('jg'); if (!jg) break; jg.click(); done++; await s(4); }
     await s(400);
   }, n);
-  await gradeN(5);
-  const d1 = await page.evaluate(() => { const d = document.querySelector('#drill deep-drill'); const id = TopicRegistry.current().id; const rec = JSON.parse(localStorage.getItem('ddr.v1.progress.' + id) || 'null'); return { di: d.di, id, bank: d.shadowRoot.querySelectorAll('.dn-step').length, recDone: rec ? rec.done : 0 }; });
-  const drillRestored = await page.evaluate(async (id) => {
-    const o = TopicRegistry.ids().find((x) => x !== id);
+  const gradeMiss1 = () => page.evaluate(async () => {
+    const r = document.querySelector('#drill deep-drill').shadowRoot; const s = (ms) => new Promise((x) => setTimeout(x, ms));
+    let g = 0; while (r.getElementById('adv') && g++ < 25) { r.getElementById('adv').click(); await s(3); }
+    r.getElementById('jm').click(); await s(400);   /* probe 0 -> Missed: a revisit flag; di -> 1 */
+  });
+  const posOf = (id) => page.evaluate((i) => JSON.parse(localStorage.getItem('ddr.v1.pos.' + i) || 'null'), id);
+  const recOf = (id) => page.evaluate((i) => localStorage.getItem('ddr.v1.progress.' + i), id);
+  const leaveReturn = (id) => page.evaluate(async (i) => {
+    const o = TopicRegistry.ids().find((x) => x !== i);
     TopicRegistry.setTopic(o); await new Promise((r) => setTimeout(r, 200));
-    TopicRegistry.setTopic(id); await new Promise((r) => setTimeout(r, 300));
+    TopicRegistry.setTopic(i); await new Promise((r) => setTimeout(r, 300));   /* restore fires on return */
     return document.querySelector('#drill deep-drill').di;
-  }, d1.id);
-  ok('drill cursor round-trips: graded to probe ' + d1.di + ', restored to ' + drillRestored + ' after leave+return', d1.di === 5 && drillRestored === 5, JSON.stringify({ d1: d1.di, restored: drillRestored }));
+  }, id);
+  const debriefPct = () => page.evaluate(() => { const d = document.querySelector('#drill deep-drill'); const sl = d.shadowRoot.querySelector('.debrief .sumline'); const txt = sl ? sl.textContent : ''; const m = txt.match(/(\d+)%/); return { pct: m ? +m[1] : -1, txt: txt }; });
 
-  /* ---- RESTORE NEVER REGRADES: from the restored probe, grade to the end -> the record keeps the
-   * earlier probes (done grows to the FULL bank, not reset to this run's count) ---- */
-  await gradeN(999);   /* finish the rest of the bank from the restored probe */
-  const d4 = await page.evaluate((id) => { const rec = JSON.parse(localStorage.getItem('ddr.v1.progress.' + id) || 'null'); return { recDone: rec ? rec.done : 0 }; }, d1.id);
-  ok('restore-never-regrades: record keeps 0..4, done reaches the full bank (' + d1.bank + '), not this run\'s ' + (d1.bank - 5), d4.recDone === d1.bank, JSON.stringify({ before: d1.recDone, afterFinish: d4.recDone, bank: d1.bank }));
+  /* ---- round-trip + RESTORE-IN-ISOLATION: grade 5, leave+return -> di is restored AND the grade
+   *      record is BYTE-IDENTICAL (incl. ts) -- a pure restore is display-only and writes nothing. ---- */
+  await fresh();
+  await pane('drill');
+  await gradeN(5);
+  const d1 = await page.evaluate(() => { const d = document.querySelector('#drill deep-drill'); return { di: d.di, id: TopicRegistry.current().id, bank: d.shadowRoot.querySelectorAll('.dn-step').length }; });
+  const recBefore = await recOf(d1.id);
+  const drillRestored = await leaveReturn(d1.id);
+  const recAfter = await recOf(d1.id);
+  ok('drill cursor round-trips: graded to probe ' + d1.di + ', restored to ' + drillRestored, d1.di === 5 && drillRestored === 5, JSON.stringify({ di: d1.di, restored: drillRestored }));
+  ok('restore-in-isolation writes NOTHING to the grade record (byte-identical incl. ts)', !!recBefore && recAfter === recBefore, 'a pure leave+return changed the record -- restore is touching grades\n       before=' + recBefore + '\n       after =' + recAfter);
+
+  /* ---- restore-never-regrades (MERGE): finish 5..end -> done reaches the FULL bank (0..4 kept by
+   *      content-id), never reset to this run's count. ---- */
+  await gradeN(999);
+  const mergeDone = await page.evaluate((id) => { const rec = JSON.parse(localStorage.getItem('ddr.v1.progress.' + id) || 'null'); return rec ? rec.done : 0; }, d1.id);
+  ok('restore-never-regrades: 0..4 kept, done reaches the full bank (' + d1.bank + '), not this run\'s ' + (d1.bank - 5), mergeDone === d1.bank, JSON.stringify({ done: mergeDone, bank: d1.bank }));
+
+  /* ---- write-guard honesty: a REVISIT sub-drill (mode stays 'study', revisitMode=true, `cards`
+   *      shrunk to the subset) must NOT overwrite the full-bank study cursor -- else Resume lands on a
+   *      subset index. The guard is (study && all && !revisit); mode==='study' alone leaks the lie. ---- */
+  await fresh();
+  await pane('drill');
+  const gId = await page.evaluate(() => TopicRegistry.current().id);
+  await gradeMiss1();     /* probe 0 -> Missed (revisit flag), di -> 1 */
+  await gradeN(2);        /* probes 1,2 -> Solid, di = 3 in the full study walk */
+  await page.evaluate(() => new Promise((r) => setTimeout(r, 400)));   /* flush pos.drill = 3 */
+  const posB = await posOf(gId);
+  await page.evaluate(async () => { document.querySelector('#drill deep-drill').drillRevset(); await new Promise((r) => setTimeout(r, 450)); });
+  const posA = await posOf(gId);
+  const gst = await page.evaluate(() => { const d = document.querySelector('#drill deep-drill'); return { mode: d.mode, rev: d.revisitMode, di: d.di }; });
+  ok('write-guard: a revisit sub-drill (mode \'' + gst.mode + '\', revisit ' + gst.rev + ', di ' + gst.di + ') does NOT overwrite the study cursor (stays 3)', !!posB && !!posA && posB.drill === 3 && posA.drill === 3, JSON.stringify({ before: posB, after: posA, gst: gst }));
+
+  /* ---- RESUME-PENALTY: resume at probe 5, finish 5..end ALL SOLID -> the debrief % is over the
+   *      probes ANSWERED THIS RUN (100%), NOT the full bank (~77%); the copy says "answered this run". ---- */
+  await fresh();
+  await pane('drill');
+  await gradeN(5);
+  const rId = await page.evaluate(() => TopicRegistry.current().id);
+  await leaveReturn(rId);          /* di restored to 5 */
+  await gradeN(999);               /* grade 5..end all solid -> debrief */
+  const resume = await debriefPct();
+  ok('resume-penalty: a perfect resume of 5..end reads 100% of THIS RUN, not ~77% of the bank', resume.pct === 100, JSON.stringify(resume));
+  ok('resume-penalty copy is un-misreadable ("answered this run", not "signal coverage")', /answered this run/.test(resume.txt) && !/signal coverage/.test(resume.txt), JSON.stringify({ txt: resume.txt }));
+
+  /* ---- STRUCTURAL EQUIVALENCE: a FULL fresh run (di 0..end) is byte-identical to the OLD math --
+   *      pct = got/bank and the copy is the unchanged "signal coverage" (no resume penalty applied). ---- */
+  await fresh();
+  await pane('drill');
+  await gradeN(999);               /* full run from probe 1, all solid */
+  const full = await debriefPct();
+  ok('structural-equivalence: a full fresh run reads 100% "signal coverage" (unchanged old math)', full.pct === 100 && /signal coverage/.test(full.txt) && !/answered this run/.test(full.txt), JSON.stringify(full));
 
   ok('zero console/page errors', errs.length === 0, errs.slice(0, 4).join(' | '));
 

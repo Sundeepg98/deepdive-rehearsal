@@ -549,6 +549,10 @@ class DeepDrill extends TopicPane {
        "Reveal answer" destroys the button that was pressed. Same guard, same reason. */
     const land = !!moveFocus || this._focusDoomed();
     const card = cards[this.di], maxStage = 1 + card.f.length;
+    /* W2 beat3 -- a JUDGMENT POINT is when the answer is fully revealed and the Missed/Shaky/Solid
+       row is on screen (stage >= maxStage). The dock's micro tier renders armed keys ONLY then (the
+       judges' amendment: quiet mid-read, armed at the judgment, full targets at the boundary). */
+    this._judgeOn = (stage >= maxStage);
     let html = '<div class="card"><div class="thread">' +
       '<div class="qrow"><div><div class="qk">Probe ' + (this.di + 1) + ' / ' + cards.length + '</div>' +
       '<div class="sigtag">signal &middot; <b>' + card.signal + '</b></div></div>' +
@@ -619,7 +623,12 @@ class DeepDrill extends TopicPane {
       });
       this._updCov();
     }
+    /* Signal the dock (visible-pane read, never a hidden one) so its micro tier can arm/disarm the
+       judgment keys as the reveal advances. Cheap: fires only on a draw, and only the dock listens. */
+    try { this.dispatchEvent(new CustomEvent('flowjudgment', { bubbles: true })); } catch (e) {}
   }
+  /* Is the drill sitting on a revealed probe awaiting a grade? (the dock's micro armed-keys gate) */
+  atJudgment() { return !!this._judgeOn && this.mode !== 'mock'; }
   judge(level) {
     /* R5: level is 1 (missed) / 2 (shaky) / 3 (solid). got/shk stay derived --
        solid (3) is a "got", missed + shaky (1,2) are "to revisit" -- so every

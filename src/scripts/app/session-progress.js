@@ -245,6 +245,13 @@ function flowDock() {
     var d = document.getElementById('ndock');
     if (!d) return;
     var n = (document.documentElement.dataset.view === 'home') ? { tier: 'home' } : nextUp();
+    /* MICRO -- you are on the recommended pane. Quiet mid-read; at a JUDGMENT POINT the dock arms the
+       pane's native grade keys (the judges' amendment). Never a CTA, never louder than the pane. */
+    if (n.tier === 'micro') {
+      var armed = dockArmedKeys();
+      d.innerHTML = armed; d.hidden = !armed;
+      return;
+    }
     if (!n.rec || n.tier !== 'meso' && n.tier !== 'macro' || !n.rec.btn) { d.hidden = true; d.innerHTML = ''; return; }
     var rec = n.rec, receipt = rec.receipt ? '<span class="nd-rcpt">' + rec.receipt + '</span>' : '';
     d.innerHTML = '<span class="nd-k" style="color:' + rec.ink + '">' + rec.kicker + '</span>' +
@@ -254,10 +261,27 @@ function flowDock() {
     d.hidden = false;
   } catch (e) {}
 }
+/* The current pane's armed judgment keys for the dock's micro tier, or '' when not at a judgment
+   point. Reads the CURRENT (visible) pane's live state via atJudgment() -- never a hidden pane, so
+   it does not trip the deferral rule. Quiet by construction: a key legend, not a CTA; it never
+   grades (pressing 1/2/3 is handled by the pane's own keymap, which the dock only echoes). */
+function dockArmedKeys() {
+  try {
+    var on = document.querySelector('.seg button.on'), tab = on ? on.getAttribute('data-tab') : null;
+    if (tab === 'drill') {
+      var dr = drillEl();
+      if (dr && dr.atJudgment && dr.atJudgment()) {
+        return '<span class="nd-k nd-armk">Grade</span><span class="nd-armed"><b>1</b> Missed <b>2</b> Shaky <b>3</b> Solid</span>';
+      }
+    }
+    return '';
+  } catch (e) { return ''; }
+}
 window.addEventListener('deeptopicchange', flowDock);
 window.addEventListener('routechange', flowDock);
 document.addEventListener('drillgraded', function () { flowFresh(flowDock); });
 document.addEventListener('whiteboardgraded', function () { flowFresh(flowDock); });
+document.addEventListener('flowjudgment', flowDock);                 /* drill reveal reached / left the judgment point (micro armed keys) */
 document.addEventListener('flowstatechange', flowDock);              /* mock/mixed completion + pane switch */
 (function () { function boot() { flowDock(); } if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot(); })();
 

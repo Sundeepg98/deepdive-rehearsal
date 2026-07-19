@@ -65,6 +65,27 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   let sup = await snap();
   ok('boundary-suppression: dock hidden on the pane flowRec points at (the pane owns momentum)', sup.dockHidden === true, JSON.stringify(sup));
 
+  /* ---- micro ARMED KEYS (beat 3): on the recommended DRILL pane, REVEAL to the judgment point ->
+   *      the dock arms the grade keys (quiet legend, never a CTA); at rest it stayed hidden above ---- */
+  if (sup.dockHidden === true && s.recTab === 'drill') {
+    const armed = await page.evaluate(async () => {
+      const r = document.querySelector('#drill deep-drill').shadowRoot; const z = (ms) => new Promise((x) => setTimeout(x, ms));
+      let g = 0; while (r.getElementById('adv') && g++ < 20) { r.getElementById('adv').click(); await z(4); }   /* reveal to the judge row */
+      await z(60);
+      const d = document.getElementById('ndock');
+      return { hidden: d ? d.hidden : null, txt: d ? d.textContent.replace(/\s+/g, ' ').trim() : '', hasJudge: !!r.getElementById('jg'), hasGo: !!(d && d.querySelector('.nd-go')) };
+    });
+    ok('micro armed keys: at a drill judgment point the dock arms 1/2/3 (a legend, not a CTA)',
+      armed.hasJudge && armed.hidden === false && /1 Missed/.test(armed.txt) && /3 Solid/.test(armed.txt) && !armed.hasGo, JSON.stringify(armed));
+    const disarm = await page.evaluate(async () => {
+      const r = document.querySelector('#drill deep-drill').shadowRoot; const z = (ms) => new Promise((x) => setTimeout(x, ms));
+      r.getElementById('jg').click(); await z(80);   /* grade Solid -> next probe drawn at stage 0, no judge row */
+      const d = document.getElementById('ndock');
+      return { hidden: d ? d.hidden : null, hasJudge: !!r.getElementById('jg') };
+    });
+    ok('micro armed keys disarm after grading (dock quiet again until the next reveal)', disarm.hidden === true && disarm.hasJudge === false, JSON.stringify(disarm));
+  }
+
   /* ---- mutation: grade every drill probe -> flowRec moves to wb; the dock must FOLLOW, still == flowRec ---- */
   await fresh();
   await pane('drill');

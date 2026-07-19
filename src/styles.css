@@ -315,6 +315,17 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
 .seg button:not(.on):hover{background:var(--acc-a08);color:var(--ink)}
 .seg button{position:relative}
 .seg button.seen:not(.on)::after{content:"";position:absolute;top:var(--space-5);right:var(--space-5);width:var(--space-4);height:var(--space-4);border-radius:50%;background:var(--mut2);opacity:.55}
+/* W1 -- THE FLOW RECOMMENDATION PIP. flowRec's next surface, marked on the light-DOM nav so the
+   recommended-next is visible WITHOUT opening the session panel. Every form is an absolute pseudo-
+   element => ZERO box delta: the seg tab and the mock/mixed buttons never resize, so the seg strip's
+   one-declaration drift immunity and the click-surface verdict both stand. On the seg tab the pip
+   sits top-LEFT so it never collides with the grey "seen" dot (top-right), and is suppressed on the
+   active tab (:not(.on)) -- it points you elsewhere. On the mock/mixed buttons the pip is placed
+   INSIDE the corner (the .mockbtn clips overflow) with a --card halo so it reads on the accent
+   gradient as well as the neutral cram surface. */
+.seg button.flow-pip:not(.on)::before{content:"";position:absolute;top:var(--space-4);left:var(--space-5);width:var(--space-6);height:var(--space-6);border-radius:50%;background:var(--acc);box-shadow:0 0 0 3px var(--acc-a20)}
+#mixopen{position:relative}
+#mockopen.flow-cta::before,#mixopen.flow-cta::before{content:"";position:absolute;top:var(--space-7);right:var(--space-7);width:var(--space-7);height:var(--space-7);border-radius:50%;background:var(--acc);box-shadow:0 0 0 2px var(--card),0 0 0 4px var(--acc-a25);pointer-events:none;z-index:2}
 
   .pane{display:none}
   .pane.on{display:block;animation:fade var(--duration-slow) var(--ease-out)}

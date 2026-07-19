@@ -105,6 +105,43 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   ok('walk last step: #wnext morphs to a live CTA (row 1)', walk.cta && !walk.disabled, JSON.stringify(walk));
   ok('walk morph: geometry LOCKED (hit surface did not move)', !walk.moved, JSON.stringify(walk));
 
+  /* ---- seg recommendation pip (W1): the light-DOM nav mirrors flowRec, ONE compute, zero box delta.
+   * It is NOT a competing recommendation source -- it reads the SAME flowRec the strips do -- so it is
+   * checked here for fidelity (it points where flowRec points) and armed with a watched-red control. */
+  await fresh();   /* fresh topic, no work done -> pickRec falls to "back to the drill" (tab 'drill') */
+  await page.waitForFunction(() => document.querySelectorAll('.flow-pip, .flow-cta').length === 1, null, { timeout: B.ACT_MS }).catch(() => {});
+  const pip = await page.evaluate(() => {
+    const rec = flowRec(); const nodes = document.querySelectorAll('.flow-pip, .flow-cta');
+    let where = null;
+    if (nodes.length === 1) { const n = nodes[0]; where = n.id === 'mockopen' ? '__mock__' : n.id === 'mixopen' ? '__mix__' : n.getAttribute('data-tab'); }
+    return { recTab: rec ? rec.tab : null, count: nodes.length, where };
+  });
+  ok('seg pip: exactly one, on the surface flowRec points at (' + pip.recTab + ')', pip.count === 1 && pip.where === pip.recTab, JSON.stringify(pip));
+
+  /* data-driven: force flowRec to a DIFFERENT surface and refire -- the pip must MOVE (not hardcoded) */
+  const moved = await page.evaluate(async () => {
+    const orig = flowRec;
+    flowRec = function () { return { tab: 'wb', btn: 'x', kicker: '', text: '', bd: '', bg: '', ink: '' }; };
+    document.dispatchEvent(new CustomEvent('flowstatechange')); await new Promise((r) => setTimeout(r, 40));
+    const on = document.querySelector('.seg button[data-tab="wb"]').classList.contains('flow-pip');
+    const total = document.querySelectorAll('.flow-pip, .flow-cta').length;
+    flowRec = orig; document.dispatchEvent(new CustomEvent('flowstatechange'));
+    return { on, total };
+  });
+  ok('seg pip is data-driven: forcing flowRec->wb moves the pip to the wb tab (exactly one)', moved.on && moved.total === 1, JSON.stringify(moved));
+
+  /* NEGATIVE CONTROL: flowRec with no forward surface -> zero pips (proves the check can go red) */
+  const negpip = await page.evaluate(async () => {
+    const orig = flowRec;
+    flowRec = function () { return { tab: null, btn: null }; };
+    document.dispatchEvent(new CustomEvent('flowstatechange')); await new Promise((r) => setTimeout(r, 40));
+    const n = document.querySelectorAll('.flow-pip, .flow-cta').length;
+    flowRec = orig; document.dispatchEvent(new CustomEvent('flowstatechange'));
+    return { n };
+  });
+  ok('[negative control] flowRec with no next surface leaves zero pips (this check can go red)', negpip.n === 0,
+    'a pip persisted with no recommendation -- the pip is decorative, not flowRec-driven');
+
   /* ---- NEGATIVE CONTROL: neuter flowStripHtml -> every strip terminal must go dark ---- */
   a = await driveDrill(false);   /* re-establish the clean debrief with strips working */
   const neg = await page.evaluate(async () => {

@@ -188,6 +188,32 @@ function flowStripHtml(rec) {
     '<div class="flow-act"><button class="flow-go" type="button">' + rec.btn + '</button>' + receipt + '</div>' +
     '</div>';
 }
+/* W1 -- THE SEG RECOMMENDATION PIP. An always-on marker on the surface flowRec points at, so the
+   recommended next is visible WITHOUT opening the session panel: a pip on its seg tab, or a
+   .flow-cta ring on #mockopen / #mixopen when the next is an overlay. Absolute-positioned (::before
+   / box-shadow), so it adds ZERO box delta -- the tab/button never resizes, and the seg strip's
+   one-declaration drift immunity + the click-surface verdict are both untouched. Recomputed on
+   every state change: topic switch, each grade, and mock/mixed completion. Suppressed on #home and
+   on the tab you are already on (the pip points elsewhere). */
+function flowPip() {
+  try {
+    var was = document.querySelectorAll('.flow-pip, .flow-cta');
+    for (var i = 0; i < was.length; i++) was[i].classList.remove('flow-pip', 'flow-cta');
+    if (typeof flowRec !== 'function' || document.documentElement.dataset.view === 'home') return;
+    var rec = flowRec();
+    if (!rec || !rec.tab || rec.tab === '__topic__') return;    /* the topic-end hands off elsewhere */
+    var t = (rec.tab === '__mock__') ? document.getElementById('mockopen')
+          : (rec.tab === '__mix__') ? document.getElementById('mixopen')
+          : document.querySelector('.seg button[data-tab="' + rec.tab + '"]');
+    if (t) t.classList.add((rec.tab === '__mock__' || rec.tab === '__mix__') ? 'flow-cta' : 'flow-pip');
+  } catch (e) {}
+}
+window.addEventListener('deeptopicchange', flowPip);              /* topic switch (fires post data-load) */
+window.addEventListener('routechange', flowPip);                 /* home<->topic: clears the pip on home, restores it on return, where deeptopicchange (same topic) would not fire */
+document.addEventListener('drillgraded', function () { flowFresh(flowPip); });
+document.addEventListener('whiteboardgraded', function () { flowFresh(flowPip); });
+document.addEventListener('flowstatechange', flowPip);            /* mock/mixed completion fire this */
+(function () { function boot() { flowPip(); } if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot(); })();
 /* The topic the panel is reporting on. Every per-topic figure below is keyed to it. */
 function sessTopicId() {
   try { return (typeof TopicRegistry !== 'undefined' && TopicRegistry.current()) ? TopicRegistry.current().id : null; } catch (e) { return null; }

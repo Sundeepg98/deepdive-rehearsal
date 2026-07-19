@@ -110,6 +110,9 @@ function closeMix() {
   ovHide(ov);
   ov.setAttribute('aria-hidden', 'true');
   document.body.style.overflow = '';
+  /* recompute the seg pip: a completed mixed-fire may have moved the recommendation, and the strip
+     is only visible again once this overlay is down (W1). */
+  try { document.dispatchEvent(new CustomEvent('flowstatechange')); } catch (e) {}
 }
 /* Render the current mixed-fire item: badge + label + prompt, with a Reveal
    button that exposes the answer and the Handled-it / Shaky self-grade pair. */

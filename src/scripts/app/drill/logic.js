@@ -225,6 +225,17 @@ var DRILL_STYLE = `/* @keyframes pop moved to BASE_SHEET. Five shadow scopes ref
 .debrief .btn-sec:hover{transform:translateY(-1px);box-shadow:0 4px 14px -4px rgba(10,133,100,.2);filter:brightness(1.02)}
 .debrief .btn-sec:active{transform:translateY(1px) scale(.98)}
 .debrief .btn-sec:hover{background:var(--btnsec-hover-bg)}
+/* W1 forward hand-off strip (flowStripHtml): the clean-debrief dead end gets a next-surface CTA.
+   No transform on the strip itself (hit surface stays put); the button lifts on hover only. */
+.flow-strip{margin-top:var(--space-16);border:1.5px solid;border-radius:12px;padding:var(--space-14) var(--space-16);box-shadow:0 2px 8px -3px var(--acc-a08)}
+.flow-strip .flow-k{font:var(--font-weight-heavy) 9.5px -apple-system,sans-serif;letter-spacing:.7px;text-transform:uppercase;margin:0 0 var(--space-6)}
+.flow-strip .flow-t{font-size:var(--font-size-small);line-height:var(--line-height-loose);font-weight:var(--font-weight-semibold);margin:0 0 var(--space-11)}
+.flow-strip .flow-t b{font-weight:var(--font-weight-heavy)}
+.flow-act{display:flex;align-items:center;gap:var(--space-12);flex-wrap:wrap}
+.flow-go{margin:0;width:auto;border:none;border-radius:9px;padding:var(--space-10) var(--space-16);font:var(--font-weight-bold) 12px -apple-system,sans-serif;cursor:pointer;color:var(--on-slab);background:linear-gradient(135deg,var(--acc),var(--acc2));box-shadow:0 4px 14px -4px var(--acc-a25);transition:transform var(--duration-fast) var(--ease-base),box-shadow var(--duration-base) var(--ease-base),filter var(--duration-base) var(--ease-base)}
+.flow-go:hover{filter:brightness(1.1);box-shadow:0 6px 20px -4px var(--acc-a30)}
+.flow-go:active{transform:translateY(1px) scale(.98);filter:brightness(.95)}
+.flow-rcpt{font-size:var(--font-size-micro);color:var(--mut2);font-weight:var(--font-weight-semibold);letter-spacing:.2px}
 .btn-sec:active{transform:translateY(1px);filter:brightness(.96)}
 .rec{text-align:center;margin-bottom:var(--space-6)}
 .rec .lvl{display:inline-block;font-size:var(--font-size-heading);font-weight:var(--font-weight-heavy);letter-spacing:-.3px;padding:var(--space-10) var(--space-24);border-radius:12px;border:2px solid;box-shadow:0 2px 8px -2px var(--acc-a10);transition:transform var(--duration-base) var(--ease-spring),box-shadow var(--duration-moderate) var(--ease-base)}
@@ -663,12 +674,28 @@ class DeepDrill extends TopicPane {
     const weakBtn = this.shk > 0 ? '<button type="button" id="dweak" class="btn-sec">Drill my ' + this.shk + ' Revisit ' + (this.shk === 1 ? 'probe' : 'probes') + ' \u2192</button>' : '';
     this._dwrap.innerHTML = '<div class="card debrief"><div class="big">' + (this.mode === 'quick' ? 'Quick 5 debrief' : 'Interviewer debrief') + '</div>' +
       '<div class="sumline">' + sumParts.join(' &middot; ') + ' &middot; ' + pct + '% ' + (this.mode === 'quick' ? 'of a quick 5' : 'signal coverage') + '</div>' +
-      rows + '<div class="verdict">' + verdict + '</div>' + weakBtn +
+      rows + '<div class="verdict">' + verdict + '</div>' + '<div class="flow-slot" id="dflow"></div>' + weakBtn +
       '<button type="button" id="drestart">' + (this.mode === 'quick' ? 'Another quick 5 &rarr;' : 'Run the full round again') + '</button></div>';
     /* These two buttons live INSIDE #dwrap, so pressing them destroys them. Land on the card
        (or debrief) that replaces them, or focus falls to <body> exactly as before. */
     if (this.shk > 0) { this._root.getElementById('dweak').onclick = function () { self.drillWeak(true); }; }
     this._root.getElementById('drestart').onclick = function () { self.setMode(self.mode, true); };
+    /* W1 decision-table rows 2-3: hand the CLEAN debrief forward to the next surface. When shk>0
+       (row 2) the #dweak button IS the recommendation, so SELF-dedupe suppresses the strip -- one
+       offered next per screen, no button soup. Computed on flowFresh (the W0 freshness law: the
+       last grade's snapshot must land before flowRec reads the record) and rendered from flowRec
+       (ONE compute -- the same engine the session panel and every other terminal use). */
+    if (typeof flowFresh === 'function' && typeof flowRec === 'function') {
+      flowFresh(function () {
+        var slot = self._root.getElementById('dflow');
+        if (!slot) return;
+        var rec = flowRec();
+        rec.self = (self.shk > 0);   /* #dweak already offers the re-drill (SELF-dedupe) */
+        slot.innerHTML = (typeof flowStripHtml === 'function') ? flowStripHtml(rec) : '';
+        var btn = slot.querySelector('.flow-go');
+        if (btn) btn.onclick = function () { if (typeof flowGo === 'function') flowGo(rec); };
+      });
+    }
   }
   drillWeak(moveFocus) {
     const weakCards = this.results.filter(function (r) { return !r.ok; }).sort(function (a, b) { return (a.level || (a.ok ? 3 : 2)) - (b.level || (b.ok ? 3 : 2)); });

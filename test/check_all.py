@@ -324,6 +324,31 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # WORKING SET into the record. Reference is the user's own completed
                      # run, read back from localStorage -- not anything the writer produced.
                      ('progress_merge', 'test/progress_merge.cjs'),
+                     # WAVE 0 "un-lie the data": mock/mixed-fire results are stored PER TOPIC
+                     # (mock.<id>/mix.<id>), not the old global topic-less mock.last/mix.log that
+                     # sessStats/pickRec read as this topic's truth -- so a mock on topic A stopped
+                     # leaking into topic B's recommendation. Pins: the pickRec ladder rung by rung
+                     # incl. the new branch 6.5 (first-mixed-fire, the discovered engine defect); the
+                     # microtask freshness law (a rec computed inline at a grade's completion render
+                     # reads the record ONE SHORT -- drill AND wb -- and flowFresh fixes it); per-topic
+                     # isolation driven through the REAL writers; and the legacy honest-discard
+                     # migration. Every assertion FAILS on the pre-Wave-0 build.
+                     ('flow_data', 'test/flow_data.cjs'),
+                     # WAVE 1 "the hand-offs": every completion terminal (drill debrief, whiteboard
+                     # ok-verdict, both mock ends, mixed-fire end, the walk last step) must offer
+                     # EXACTLY ONE forward affordance -- the surface's own SELF button (#dweak/#wbrerun/
+                     # #mbagain/#mxretry) OR a flowStripHtml strip, never both (button soup) and never
+                     # neither on a surface with a next step. Drives all five hand-offs to their states
+                     # and asserts the count; asserts the walk #wnext morph re-aims on LOCKED geometry;
+                     # and arms a negative control (neuter flowStripHtml -> the strips must go dark) so
+                     # the affordance count is not decorative.
+                     ('flow_handoff', 'test/flow_handoff.cjs'),
+                     # WAVE 1 receipts (D5): every forward strip renders the raw stored numbers that
+                     # justify it. This reads the receipt a terminal actually rendered, recomputes the
+                     # same claim INDEPENDENTLY from localStorage (never through sessStats/flowReceipt),
+                     # and fails on mismatch -- so a recommendation bug is a red diff, not a silent lie.
+                     # Negative control: poison the record so the receipt can no longer be true.
+                     ('flow_evidence', 'test/flow_evidence.cjs'),
                      # A stored grade belongs to a QUESTION, not to a SLOT. Grades were keyed by
                      # the probe's INDEX IN THE BANK, so inserting one probe at the top of a bank
                      # slid every stored grade below it onto the WRONG question -- silently, with

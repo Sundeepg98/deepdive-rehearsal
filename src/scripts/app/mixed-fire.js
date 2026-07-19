@@ -26,13 +26,47 @@ function mxCurve(cb) {
 /* Mixed-fire state: the assembled question pool, cursor, tallies, and the
    per-item log shared with the session-progress overlay. */
 var mxPool = [], mxIdx = 0, mxGot = 0, mxShk = 0, mxRes = [], mixLog = [];
-/* S3: persist the cumulative mixed-fire log so the session tally + per-item weak
-   signal survive a reload (the topic-level shaky marks already persist via
-   Progress.markShaky; this restores what session-progress' summary() derives from
-   mixLog). Capped so the store stays bounded -- mixLog is cumulative, unlike the
-   mock's single-session tally. Mirrors mock-run/data.js's mockPersist. */
-function mixPersist() { try { if (typeof Store !== 'undefined' && Store.set) Store.set('mix.log', mixLog.slice(-500)); } catch (e) {} }
-(function () { try { if (typeof Store !== 'undefined' && Store.get) { var _ml = Store.get('mix.log', null); if (Array.isArray(_ml)) mixLog = _ml; } } catch (e) {} })();
+/* S3 + Wave 0 re-key: persist the mixed-fire log PER TOPIC under `mix.<id>` (was the global,
+   topic-less `mix.log`). Like the mock record, sessStats/pickRec read this as the CURRENT topic's
+   truth; keyed globally it leaked topic A's fumbles into topic B's "run mixed fire again" nudge.
+   Mixed fire always assembles from the CURRENT topic's bank (buildMix -> _allCards/curveballPool/
+   getTrades), so the log IS per-topic data -- it was only ever STORED topic-less. Capped so the
+   store stays bounded (mixLog is cumulative). The topic-level shaky marks already persist via
+   Progress.markShaky; this restores what session-progress' summary() derives from mixLog. Mirrors
+   mock-run/data.js's mockPersist. */
+function mixCurId() { try { return (typeof TopicRegistry !== 'undefined' && TopicRegistry.current()) ? TopicRegistry.current().id : null; } catch (e) { return null; } }
+function mixKey(id) { return 'mix.' + id; }
+function mixPersist() { try { var id = mixCurId(); if (id && typeof Store !== 'undefined' && Store.set) Store.set(mixKey(id), mixLog.slice(-500)); } catch (e) {} }
+/* Load THIS topic's mixed-fire log into the live global -- or empty it when the topic has none, so
+   switching topics can never leak the previous one's fumbles. Fired on every deeptopicchange and
+   once for the boot topic (register() seeds it WITHOUT firing the event -- see mockLoadForTopic). */
+function mixLoadForTopic(id) {
+  var a = (id && typeof Store !== 'undefined' && Store.get) ? Store.get(mixKey(id), null) : null;
+  mixLog = Array.isArray(a) ? a : [];
+}
+/* Cross-topic "has the user mixed-fired on ANY topic?" for panels.js engaged() -- see mockRanAny. */
+function mixRanAny() {
+  try {
+    if (typeof Store === 'undefined' || !Store.keys) return false;
+    var ks = Store.keys('mix.');
+    for (var i = 0; i < ks.length; i++) { if (ks[i] !== 'mix.log') return true; }
+  } catch (e) {}
+  return false;
+}
+/* Legacy discard: the old global `mix.log` is a cumulative blob spanning every topic touched --
+   unattributable to any one, so discarded, never mis-attributed (same doctrine as __mockMig). */
+var __mixMig = { legacy: 'none' };
+function mixMigrateLegacy() {
+  try {
+    if (typeof Store === 'undefined' || !Store.get) return;
+    if (Store.get('mix.log', null) != null) { __mixMig.legacy = 'discarded'; Store.remove('mix.log'); }
+  } catch (e) {}
+}
+window.addEventListener('deeptopicchange', function (e) { mixLoadForTopic(e && e.detail ? e.detail.id : mixCurId()); });
+(function () {
+  function boot() { mixMigrateLegacy(); mixLoadForTopic(mixCurId()); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
 /* Turn the Trade-offs pane's decisions into mixed-fire items (each becomes a
    "name the switch condition" prompt revealing the options + the tell). The
    decision DOM now lives inside <deep-trade-offs>, so we ask it via getDecisions()
@@ -76,6 +110,9 @@ function closeMix() {
   ovHide(ov);
   ov.setAttribute('aria-hidden', 'true');
   document.body.style.overflow = '';
+  /* recompute the seg pip: a completed mixed-fire may have moved the recommendation, and the strip
+     is only visible again once this overlay is down (W1). */
+  try { document.dispatchEvent(new CustomEvent('flowstatechange')); } catch (e) {}
 }
 /* Render the current mixed-fire item: badge + label + prompt, with a Reveal
    button that exposes the answer and the Handled-it / Shaky self-grade pair. */
@@ -123,10 +160,24 @@ function renderMixEnd() {
   mxRes.forEach(function (r) { if (!r.ok) shakyCount++; });
   const retry = shakyCount ? '<button class="push" id="mxretry" type="button">Retry the ' + shakyCount + ' you fumbled</button>' : '';
   const again = shakyCount ? '<button class="mxghost" id="mxre" type="button">Run a fresh mixed set</button>' : '<button class="push" id="mxre" type="button">Run another mixed set</button>';
-  body.innerHTML = '<div class="mx-end"><div class="mx-end-h">Mixed fire &mdash; ' + mxGot + ' / ' + mxPool.length + ' handled</div><div class="mx-end-pct">' + pct + '%</div><div class="mx-end-v">' + verdict + '</div><div class="mx-bd">' + scoreBadge('Probes', byKind.Probe) + scoreBadge('Curveballs', byKind.Curve) + scoreBadge('Trade-offs', byKind.Trade) + '</div><div class="mx-end-list">' + rows + '</div><div class="mx-end-btns">' + retry + again + '</div></div>';
+  body.innerHTML = '<div class="mx-end"><div class="mx-end-h">Mixed fire &mdash; ' + mxGot + ' / ' + mxPool.length + ' handled</div><div class="mx-end-pct">' + pct + '%</div><div class="mx-end-v">' + verdict + '</div><div class="mx-bd">' + scoreBadge('Probes', byKind.Probe) + scoreBadge('Curveballs', byKind.Curve) + scoreBadge('Trade-offs', byKind.Trade) + '</div><div class="mx-end-list">' + rows + '</div><div class="flow-slot" id="mxflow"></div><div class="mx-end-btns">' + retry + again + '</div></div>';
   mixRoot.getElementById('mxre').onclick = openMix;
   const rt = mixRoot.getElementById('mxretry');
   if (rt) rt.onclick = retryShaky;
+  /* W1 rows 9-10: a CLEAN mixed set (no fumbles) is the end of the arc -- hand forward. flowRec
+     attaches the topic-end ("Next: <weakest || next-in-room>") when the whole per-topic ladder is
+     done, else the honest next surface. Fumbles keep #mxretry as the SELF affordance (row 9), no
+     strip. flowFresh honors the freshness law (mxJudge's mixPersist just ran); closeMix before the
+     hand-off so the overlay is gone first. */
+  var mxflow = mixRoot.getElementById('mxflow');
+  if (mxflow && shakyCount === 0 && typeof flowFresh === 'function' && typeof flowRec === 'function') {
+    flowFresh(function () {
+      var rec = flowRec();
+      mxflow.innerHTML = (typeof flowStripHtml === 'function') ? flowStripHtml(rec) : '';
+      var b = mxflow.querySelector('.flow-go');
+      if (b) b.onclick = function () { if (typeof closeMix === 'function') closeMix(); if (typeof flowGo === 'function') flowGo(rec); };
+    });
+  }
 }
 /* Re-run only the items graded Shaky this round, reshuffled. */
 function retryShaky() {
@@ -231,7 +282,7 @@ function renderMockEnd() {
     (mockInterrupt && Object.keys(mockIntSet).length ? '<div class="mb-end-int">Cut off on <b>' + Object.keys(mockIntSet).length + '</b> of ' + nBeats + ' beats &mdash; the version that counts.</div>' : '') +
     '<div class="mb-score-q">How many of the ' + mockWord(nBeats) + ' did you deliver cleanly, out loud?</div><div class="mb-score" id="mbscore">';
   for (let i = 0; i <= nBeats; i++) html += '<button type="button" data-s="' + i + '">' + i + '</button>';
-  html += '</div><div class="mb-verdict" id="mbverdict"></div><div class="mb-again"><button class="pri" id="mbagain" type="button">Run again</button><button id="mbclose2" type="button">Close</button></div></div>';
+  html += '</div><div class="mb-verdict" id="mbverdict"></div><div class="flow-slot" id="mbflow"></div><div class="mb-again"><button class="pri" id="mbagain" type="button">Run again</button><button id="mbclose2" type="button">Close</button></div></div>';
   mockbody.innerHTML = html;
   const scoreBtns = mockRoot.getElementById('mbscore');
   for (let k = 0; k < scoreBtns.children.length; k++) {
@@ -249,6 +300,24 @@ function renderMockEnd() {
       if (score >= nBeats) { verdictEl.style.background = 'var(--tealbg)'; verdictEl.style.color = '#0a5240'; verdictEl.innerHTML = '<b>' + w.charAt(0).toUpperCase() + w.slice(1) + ' for ' + w + '.</b> You can carry the whole round end to end &mdash; now do it faster and under interruption.'; }
       else if (score >= midBar) { verdictEl.style.background = 'var(--accbg)'; verdictEl.style.color = 'var(--accink)'; verdictEl.innerHTML = '<b>' + score + ' / ' + nBeats + '.</b> The spine holds. Re-run and target the ' + mw + ' that wobbled until ' + (missed === 1 ? 'it&rsquo;s' : 'they&rsquo;re') + ' automatic.'; }
       else { verdictEl.style.background = 'var(--amberbg)'; verdictEl.style.color = '#5e3c0a'; verdictEl.innerHTML = '<b>' + score + ' / ' + nBeats + '.</b> The arc isn&rsquo;t solid yet &mdash; drill the weak beats in their own tabs, then run it again.'; }
+      /* W1 decision-table rows 6-7: a STRONG mock (score >= midBar) hands forward to the next
+         surface -- typically mixed fire (the 6.5 rung), the first surface a solid arc has not
+         tested. A weak score keeps #mbagain as its SELF affordance (row 6), so no strip. Recomputed
+         on every score click. flowFresh honors the freshness law (mockPersist just ran); one compute
+         (flowRec). Row 7 mechanism: closeMock BEFORE flowGo so the overlay is gone first. */
+      var mbflow = mockRoot.getElementById('mbflow');
+      if (mbflow) {
+        mbflow.innerHTML = '';
+        if (score >= midBar && typeof flowFresh === 'function' && typeof flowRec === 'function') {
+          flowFresh(function () {
+            var rec = flowRec();
+            rec.self = (rec.tab === '__mock__');   /* a re-run-mock rec already IS #mbagain */
+            mbflow.innerHTML = (typeof flowStripHtml === 'function') ? flowStripHtml(rec) : '';
+            var b = mbflow.querySelector('.flow-go');
+            if (b) b.onclick = function () { if (typeof closeMock === 'function') closeMock(); if (typeof flowGo === 'function') flowGo(rec); };
+          });
+        }
+      }
     };
   }
   mockRoot.getElementById('mbagain').onclick = openMock;

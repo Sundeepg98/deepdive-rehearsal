@@ -44,9 +44,15 @@
   function engaged() {
     if (typeof Progress === 'undefined') return false;
     var sum = Progress.summary();
-    var mRuns = (typeof mockRuns !== 'undefined') ? mockRuns : 0;
-    var mixN = (typeof mixLog !== 'undefined' && mixLog.length) ? mixLog.length : 0;
-    return sum.startedTopics > 0 || mRuns > 0 || mixN > 0;
+    /* Wave 0: mock/mix records are now PER TOPIC, so the live mockRuns/mixLog globals speak only
+       for the CURRENT topic. "Has the user mocked or mixed-fired on ANY topic?" is a cross-topic
+       question -- mockRanAny()/mixRanAny() enumerate the per-topic keys (skipping the discarded
+       legacy globals). A user who only ever mocked, on a topic they are not currently viewing,
+       stays correctly "engaged" -- reading the live globals here would have flipped them to the
+       first-run screen the moment they navigated away from the topic they mocked. */
+    var mocked = (typeof mockRanAny === 'function') ? mockRanAny() : false;
+    var mixed = (typeof mixRanAny === 'function') ? mixRanAny() : false;
+    return sum.startedTopics > 0 || mocked || mixed;
   }
 
   /* ---- the pieces of the dashboard ------------------------------------------------------ */

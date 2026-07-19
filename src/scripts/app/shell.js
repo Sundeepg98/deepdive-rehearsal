@@ -264,8 +264,16 @@ document.addEventListener('keydown', function (event) {
          it.) Gate on FOCUS: if the key belongs to the focused control, let it have it --
          the browser then activates that control natively, exactly once.
          Focus on <body>/the drill surface still advances, so the drill's own flow is intact. */
-      if ((event.key === ' ' || event.key === 'Enter') && advBtn && window.KeyGuard.ownsActivationKeys(event)) {
-        event.preventDefault(); advBtn.click();
+      if ((event.key === ' ' || event.key === 'Enter') && window.KeyGuard.ownsActivationKeys(event)) {
+        if (advBtn) { event.preventDefault(); advBtn.click(); }
+        else {
+          /* W1 keymap extension: at the debrief (no #adv), Space/Enter take the ONE forward
+             hand-off -- the strip's .flow-go (clean debrief / #vrestart verdict) or #dweak (shaky),
+             the SELF-deduped affordance -- so the debrief's next step is reachable without a
+             pointer, else the restart. Same focus gate: a focused control keeps its own keys. */
+          var fwd = r.querySelector('.flow-go') || r.getElementById('dweak') || r.getElementById('drestart') || r.getElementById('vrestart');
+          if (fwd) { event.preventDefault(); fwd.click(); }
+        }
       }
       if (key === '1') { const jmBtn = r.getElementById('jm'); if (jmBtn) jmBtn.click(); }
       if (key === '2') { const jsBtn = r.getElementById('js'); if (jsBtn) jsBtn.click(); }

@@ -154,4 +154,18 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:var(--font-size-micro);b
 .dec{border-top-width:3px}
 .rf{border-left-width:3px}
 }
+/* W1 forward hand-off strip (flowStripHtml) -- a terminal's next-surface CTA + receipt. Shared
+   here because five terminal shadow scopes render it (drill/wb/mock/mixed/session all adopt
+   BASE_SHEET); a per-component copy would rot and could mount before it was defined. NO transform
+   on the strip itself -- the hit surface never moves (the binding click-surface invariant); the
+   button lifts on hover only, and the * reduced-motion rule above compresses it to instant. */
+.flow-strip{margin-top:var(--space-16);border:1.5px solid;border-radius:12px;padding:var(--space-14) var(--space-16);box-shadow:0 2px 8px -3px var(--acc-a08)}
+.flow-strip .flow-k{font:var(--font-weight-heavy) 9.5px -apple-system,sans-serif;letter-spacing:.7px;text-transform:uppercase;margin:0 0 var(--space-6)}
+.flow-strip .flow-t{font-size:var(--font-size-small);line-height:var(--line-height-loose);font-weight:var(--font-weight-semibold);margin:0 0 var(--space-11)}
+.flow-strip .flow-t b{font-weight:var(--font-weight-heavy)}
+.flow-act{display:flex;align-items:center;gap:var(--space-12);flex-wrap:wrap}
+.flow-go{margin:0;width:auto;border:none;border-radius:9px;padding:var(--space-10) var(--space-16);font:var(--font-weight-bold) 12px -apple-system,sans-serif;cursor:pointer;color:var(--on-slab);background:linear-gradient(135deg,var(--acc),var(--acc2));box-shadow:0 4px 14px -4px var(--acc-a25);transition:transform var(--duration-fast) var(--ease-base),box-shadow var(--duration-base) var(--ease-base),filter var(--duration-base) var(--ease-base)}
+.flow-go:hover{filter:brightness(1.1);box-shadow:0 6px 20px -4px var(--acc-a30)}
+.flow-go:active{transform:translateY(1px) scale(.98);filter:brightness(.95)}
+.flow-rcpt{font-size:var(--font-size-micro);color:var(--mut2);font-weight:var(--font-weight-semibold);letter-spacing:.2px}
 `);

@@ -178,7 +178,9 @@ class DeepWalkthrough extends TopicPane {
   }
   renderTopic(d) {
     this._steps = d.steps;
-    this._wi = 0;
+    /* W2 -- restore the pos.<id> walk cursor (clamped to this topic's step count), so Resume lands
+       on the step they left, not step 1. The walk has no grades, so this restore is trivially safe. */
+    this._wi = (typeof posRestore === 'function') ? posRestore('walk', this._steps.length) : 0;
     /* COUNT-dependent structure rebuilds HERE (not init): a topic with != 9 steps
        must not keep stale dots/arc buttons. */
     this._dots.innerHTML = '';
@@ -197,6 +199,7 @@ class DeepWalkthrough extends TopicPane {
     this._renderW();
   }
   _renderW() {
+    if (typeof posSet === 'function') posSet('walk', this._wi);   /* W2 -- throttled cursor write */
     const step = this._steps[this._wi];
     let html = '<div class="step-k">' + step.k + '</div><div class="step-t">' + step.t + '</div>' +
       '<div class="flow">' + step.flow + '</div><div class="ins">' + step.ins + '</div>';

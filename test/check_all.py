@@ -355,6 +355,12 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # after each; asserts boundary-suppression (dock quiet on the recommended pane);
                      # negative control (flowRec with no target -> the dock must go dark, watched red).
                      ('flow_contract', 'test/flow_contract.cjs'),
+                     # WAVE 2 pos.<id> cursor: each pane writes its position (throttled) and restores
+                     # it on topic entry, so Resume lands where the user left off. Proves the walk
+                     # cursor round-trips, is data-driven (planted pos honored, out-of-range clamped),
+                     # negative control (no pos -> step 0). (Drill probe + restore-never-regrades grow
+                     # this gate with the drill-mode integration.)
+                     ('flow_cursor', 'test/flow_cursor.cjs'),
                      # A stored grade belongs to a QUESTION, not to a SLOT. Grades were keyed by
                      # the probe's INDEX IN THE BANK, so inserting one probe at the top of a bank
                      # slid every stored grade below it onto the WRONG question -- silently, with

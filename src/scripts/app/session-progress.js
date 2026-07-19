@@ -260,6 +260,34 @@ document.addEventListener('drillgraded', function () { flowFresh(flowDock); });
 document.addEventListener('whiteboardgraded', function () { flowFresh(flowDock); });
 document.addEventListener('flowstatechange', flowDock);              /* mock/mixed completion + pane switch */
 (function () { function boot() { flowDock(); } if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot(); })();
+
+/* W2 -- pos.<id> CURSOR STORE. {view, walk, drill}: where the user was in a topic, so Resume lands
+   in the drill probe they were on, not on walk step 1 (kills the measured 5-action re-establish).
+   Written THROTTLED from the panes' own renders (300ms debounce -- never every keystroke). Each
+   field is restored by the pane that OWNS it, once, when it renders the topic -- so a deferred pane
+   restores its cursor only when it flushes (deferral-safe). RESTORE NEVER REGRADES: a pane sets its
+   display index and re-renders; no judge fires, and grades merge by content-id (card_identity), so
+   continuing from probe 5 records 5..end without touching the record's 0..4. Cleared with the
+   topic's sibling keys (Store.clear reaches pos. by prefix). */
+var _posPend = null, _posTimer = 0;
+function posKey(id) { return 'pos.' + id; }
+function posFlush() {
+  if (_posTimer) { clearTimeout(_posTimer); _posTimer = 0; }
+  var p = _posPend; _posPend = null;
+  try { if (p && p._id && typeof Store !== 'undefined' && Store.set) { var cur = Store.get(posKey(p._id), {}) || {}; for (var k in p) { if (k !== '_id' && p.hasOwnProperty(k)) cur[k] = p[k]; } Store.set(posKey(p._id), cur); } } catch (e) {}
+}
+function posSet(field, val) {
+  try {
+    var id = sessTopicId(); if (!id || typeof Store === 'undefined') return;
+    if (_posPend && _posPend._id !== id) posFlush();            /* a topic changed under us -- flush the old first */
+    if (!_posPend) _posPend = { _id: id };
+    _posPend[field] = val;
+    if (!_posTimer) _posTimer = setTimeout(posFlush, 300);
+  } catch (e) {}
+}
+function posGet(id) { try { id = id || sessTopicId(); return (id && typeof Store !== 'undefined' && Store.get) ? Store.get(posKey(id), null) : null; } catch (e) { return null; } }
+/* the index a pane should render on topic entry: its saved cursor, clamped to the live count, or 0. */
+function posRestore(field, count) { try { var p = posGet(); var v = (p && typeof p[field] === 'number') ? p[field] : 0; return (v >= 0 && v < count) ? v : 0; } catch (e) { return 0; } }
 /* The topic the panel is reporting on. Every per-topic figure below is keyed to it. */
 function sessTopicId() {
   try { return (typeof TopicRegistry !== 'undefined' && TopicRegistry.current()) ? TopicRegistry.current().id : null; } catch (e) { return null; }

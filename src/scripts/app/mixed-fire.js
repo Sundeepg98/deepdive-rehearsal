@@ -265,7 +265,7 @@ function renderMockEnd() {
     (mockInterrupt && Object.keys(mockIntSet).length ? '<div class="mb-end-int">Cut off on <b>' + Object.keys(mockIntSet).length + '</b> of ' + nBeats + ' beats &mdash; the version that counts.</div>' : '') +
     '<div class="mb-score-q">How many of the ' + mockWord(nBeats) + ' did you deliver cleanly, out loud?</div><div class="mb-score" id="mbscore">';
   for (let i = 0; i <= nBeats; i++) html += '<button type="button" data-s="' + i + '">' + i + '</button>';
-  html += '</div><div class="mb-verdict" id="mbverdict"></div><div class="mb-again"><button class="pri" id="mbagain" type="button">Run again</button><button id="mbclose2" type="button">Close</button></div></div>';
+  html += '</div><div class="mb-verdict" id="mbverdict"></div><div class="flow-slot" id="mbflow"></div><div class="mb-again"><button class="pri" id="mbagain" type="button">Run again</button><button id="mbclose2" type="button">Close</button></div></div>';
   mockbody.innerHTML = html;
   const scoreBtns = mockRoot.getElementById('mbscore');
   for (let k = 0; k < scoreBtns.children.length; k++) {
@@ -283,6 +283,24 @@ function renderMockEnd() {
       if (score >= nBeats) { verdictEl.style.background = 'var(--tealbg)'; verdictEl.style.color = '#0a5240'; verdictEl.innerHTML = '<b>' + w.charAt(0).toUpperCase() + w.slice(1) + ' for ' + w + '.</b> You can carry the whole round end to end &mdash; now do it faster and under interruption.'; }
       else if (score >= midBar) { verdictEl.style.background = 'var(--accbg)'; verdictEl.style.color = 'var(--accink)'; verdictEl.innerHTML = '<b>' + score + ' / ' + nBeats + '.</b> The spine holds. Re-run and target the ' + mw + ' that wobbled until ' + (missed === 1 ? 'it&rsquo;s' : 'they&rsquo;re') + ' automatic.'; }
       else { verdictEl.style.background = 'var(--amberbg)'; verdictEl.style.color = '#5e3c0a'; verdictEl.innerHTML = '<b>' + score + ' / ' + nBeats + '.</b> The arc isn&rsquo;t solid yet &mdash; drill the weak beats in their own tabs, then run it again.'; }
+      /* W1 decision-table rows 6-7: a STRONG mock (score >= midBar) hands forward to the next
+         surface -- typically mixed fire (the 6.5 rung), the first surface a solid arc has not
+         tested. A weak score keeps #mbagain as its SELF affordance (row 6), so no strip. Recomputed
+         on every score click. flowFresh honors the freshness law (mockPersist just ran); one compute
+         (flowRec). Row 7 mechanism: closeMock BEFORE flowGo so the overlay is gone first. */
+      var mbflow = mockRoot.getElementById('mbflow');
+      if (mbflow) {
+        mbflow.innerHTML = '';
+        if (score >= midBar && typeof flowFresh === 'function' && typeof flowRec === 'function') {
+          flowFresh(function () {
+            var rec = flowRec();
+            rec.self = (rec.tab === '__mock__');   /* a re-run-mock rec already IS #mbagain */
+            mbflow.innerHTML = (typeof flowStripHtml === 'function') ? flowStripHtml(rec) : '';
+            var b = mbflow.querySelector('.flow-go');
+            if (b) b.onclick = function () { if (typeof closeMock === 'function') closeMock(); if (typeof flowGo === 'function') flowGo(rec); };
+          });
+        }
+      }
     };
   }
   mockRoot.getElementById('mbagain').onclick = openMock;

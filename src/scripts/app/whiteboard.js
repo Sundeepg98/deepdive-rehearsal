@@ -96,6 +96,16 @@ var WB_HTML = `<div class="card">
 
 class DeepWhiteboard extends TopicPane {
   static dataKey = 'wb';
+  /* PERF (perf/chunk-proto): NOT deferred. getStats() reports this._steps, which ONLY
+     renderTopic() assigns -- and progress.js + session-progress.js read wbEl().getStats()
+     cross-component (progress merge, the session-panel recommendation) while this pane is
+     HIDDEN. Deferring the render would leave those reads on the PREVIOUS topic's spine until
+     the queue drained (~400ms after a topic change): the session panel's "do this next" could
+     be computed on stale whiteboard state, and card_identity's re-publish check caught it.
+     The drill needs no such flag -- publishBanks() reseeds its working set synchronously, so
+     drillEl().getStats() is current even while deferred; only the board reads render-assigned
+     state. Rendering topic-1 into a display:none shadow costs ~24ms and buys correctness. */
+  static eagerTopic = true;
   sheets()    { return [BASE_SHEET, DISC_SHEET]; }
   styleText() { return WB_STYLE; }
   skeleton()  { return WB_HTML; }

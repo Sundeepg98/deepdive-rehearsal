@@ -31,10 +31,16 @@ class DeepCram extends HTMLElement {
     this._maybeRender();
   }
   /* Render now if we are visible; otherwise arm the observer and render on reveal.
-     (.cram-ov is display:none until .open, so offsetParent is the visibility test.) */
+     PERF (perf/chunk-proto): the visibility probe used to be `this.offsetParent !== null`,
+     which forces a full style+layout flush on EVERY deeptopicchange (~55ms of each entry
+     task at 4x CPU). The overlay frame already OWNS visibility as state: .cram-ov is
+     display:none until ovShow() stamps `.open` (cram-sheet.js) -- so the class answers
+     "visible now?" with zero layout work. offsetParent remains only as the fallback for
+     a host mounted outside the overlay frame. */
   _maybeRender() {
     if (!this._dirty) return;
-    if (this.offsetParent !== null) { this._renderNow(); return; }
+    if (this._ovBox === undefined) this._ovBox = this.closest('.cram-ov');
+    if (this._ovBox ? this._ovBox.classList.contains('open') : this.offsetParent !== null) { this._renderNow(); return; }
     if (this._io) return;
     this._io = new IntersectionObserver(function (entries) {
       if (entries[0].isIntersecting) { this._renderNow(); }

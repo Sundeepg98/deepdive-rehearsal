@@ -514,6 +514,29 @@ document.addEventListener('keydown', function (event) {
     }
   }
 
+  /* PERF (perf/chunk-proto): restart the masthead entrance WITHOUT the classic
+     `remove class; void offsetWidth; add class` trick. That offsetWidth read forces a
+     FULL-DOCUMENT style+layout flush -- and upd() runs twice per topic entry and once
+     per pane switch (measured 69-379ms per switch at 4x CPU; ~337ms of every entry
+     task). Instead: the class is added ONCE (which starts the CSS animation), the
+     resulting CSSAnimation object is captured on a later SETTLED frame (style is clean
+     there, so getAnimations() flushes nothing), and every restart after that is
+     cancel()+play() -- pure writes, zero style/layout reads on the switch path.
+     Under prefers-reduced-motion the animation completes in .01ms and is gone by
+     capture time, so headAnim stays null and nothing restarts -- exactly what the
+     reduced-motion block demands (the old reflow trick also showed no motion there). */
+  let headAnim = null, headAnimArmed = false;
+  function armHeadAnim(stageHead) {
+    if (headAnimArmed || headAnim) return;
+    headAnimArmed = true;
+    requestAnimationFrame(function () { requestAnimationFrame(function () {
+      const list = (stageHead.getAnimations ? stageHead.getAnimations() : []);
+      for (let i = 0; i < list.length; i++) {
+        if (list[i].animationName === 'headin') { headAnim = list[i]; break; }
+      }
+      if (!headAnim) headAnimArmed = false;   /* finished too fast (throttled tab): retry on a later switch */
+    }); });
+  }
   /* Mirror the active tab's label into the stage header and the desktop +
      mobile "companion" panels (view name, note, and pivot move from cmpNotes). */
   function upd() {
@@ -525,7 +548,9 @@ document.addEventListener('keydown', function (event) {
     const kickEl = document.createElement('div'); kickEl.className = 'sh-kick'; kickEl.textContent = kickSpan ? kickSpan.textContent : '';
     const nameEl = document.createElement('div'); nameEl.className = 'sh-name'; nameEl.textContent = nameSpan ? nameSpan.textContent : '';
     stageHead.appendChild(kickEl); stageHead.appendChild(nameEl);
-    stageHead.classList.remove('headin'); void stageHead.offsetWidth; stageHead.classList.add('headin');
+    if (!stageHead.classList.contains('headin')) stageHead.classList.add('headin');
+    else if (headAnim) { headAnim.cancel(); headAnim.play(); }
+    armHeadAnim(stageHead);                    /* no-op once captured */
     const tab = activeBtn.getAttribute('data-tab');
     const notes = activeCmpNotes();
     if (!notes) return;                 /* no topic yet -- leave the first-paint markup alone */

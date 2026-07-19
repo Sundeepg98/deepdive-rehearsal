@@ -828,8 +828,24 @@ class DeepDrill extends TopicPane {
     this._dwrap.innerHTML = '<div class="card debrief"><div class="rec ' + rec.c + '"><div class="lvl">' + rec.t + '</div>' +
       '<div class="tu">' + this.got + ' / ' + cards.length + ' signals &middot; ' + answered + ' probes reached &middot; ' + this._fmt(used) + ' on the clock</div></div>' +
       '<div style="height:12px"></div>' + rows + '<div class="verdict">' + note + '</div>' +
+      '<div class="flow-slot" id="vrflow"></div>' +
       '<button type="button" id="vrestart">Run another round</button></div>';
     this._root.getElementById('vrestart').onclick = function () { self.setMode('mock', true); };
+    /* W1 decision-table row 8: the drill-pane timed-mock verdict (the fifth terminal) hands forward
+       to the next surface, the same strip logic as the mock overlay's end (rows 6-7). #vrestart
+       ("Run another round") re-runs the timed drill -- not a ladder rec -- so there is no SELF
+       conflict; the strip is the complementary forward path. flowFresh (freshness law) + flowRec
+       (ONE compute). */
+    if (typeof flowFresh === 'function' && typeof flowRec === 'function') {
+      flowFresh(function () {
+        var slot = self._root.getElementById('vrflow');
+        if (!slot) return;
+        var r = flowRec();
+        slot.innerHTML = (typeof flowStripHtml === 'function') ? flowStripHtml(r) : '';
+        var b = slot.querySelector('.flow-go');
+        if (b) b.onclick = function () { if (typeof flowGo === 'function') flowGo(r); };
+      });
+    }
   }
   setTier(t) {
     this.tierFilter = t;

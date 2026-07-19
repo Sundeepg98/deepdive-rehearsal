@@ -69,7 +69,11 @@ pre.code .c{color:#9b95c9} pre.code .k{color:#C9A2F0} pre.code .s{color:#9DD9B6}
    longest ladder label so no label ever grows it. The CTA gradient marks it as the forward action;
    the receipt line sits below-right, so it never displaces the button above it. */
 #wnext{min-width:210px;white-space:nowrap}
-.nav button#wnext.flow-cta{border:none;color:var(--on-slab);background:linear-gradient(135deg,var(--acc),var(--acc2));box-shadow:0 4px 14px -4px var(--acc-a25)}
+/* border:1.5px solid TRANSPARENT, not border:none -- the base .nav button carries a 1.5px border,
+   so dropping it shrank the morphed button by 3px and the last-step morph jumped 2px in height (the
+   W1 cold-verify note). A transparent border keeps the box; background-clip:border-box fills the
+   gradient under it, so it looks borderless. Geometry is now locked on BOTH axes. */
+.nav button#wnext.flow-cta{border:1.5px solid transparent;color:var(--on-slab);background:linear-gradient(135deg,var(--acc),var(--acc2));box-shadow:0 4px 14px -4px var(--acc-a25)}
 .nav button#wnext.flow-cta:hover:not(:disabled){color:var(--on-slab);background:linear-gradient(135deg,var(--accink),var(--acc));box-shadow:0 6px 20px -4px var(--acc-a30);transform:translateY(-2px)}
 .wflow-r{margin-top:var(--space-8);font-size:var(--font-size-micro);color:var(--mut2);font-weight:var(--font-weight-semibold);text-align:right;letter-spacing:.2px}
 details.model{margin-top:var(--space-18);background:linear-gradient(135deg,var(--card) 0%,var(--acc-a02) 100%);box-shadow:var(--surf-sh);border:1px solid var(--bd);border-left:4px solid var(--acc);border-radius:12px;overflow:hidden;transition:box-shadow var(--duration-moderate) var(--ease-base)}

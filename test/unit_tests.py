@@ -199,7 +199,11 @@ test("engaged() reads cross-topic mockRanAny/mixRanAny, not the per-topic global
 test("pickRec takes a mixTot parameter", re.search(r'function pickRec\([^)]*mixTot', sp) is not None)
 test("branch 6.5 present (mixTot===0 -> Run mixed fire)",
      re.search(r'mixTot\s*===\s*0', sp) is not None and 'Run mixed fire' in sp)
-test("both pickRec call sites pass mixTot", sp.count('mOut(stats), stats.mixTot') == 2)
+# W2: renderSession's #ssgo now delegates to flowRec (one-compute), so pickRec has two remaining
+# call sites -- flowRec (uses `s`) and the printed report (uses `stats`); both must pass mixTot so
+# branch 6.5 stays reachable from either. (The report stays per-topic pickRec by design: a printed
+# snapshot does not offer the cross-topic __topic__ hand-off that flowRec adds for the live surfaces.)
+test("every pickRec call site passes mixTot", sp.count('mOut(s), s.mixTot') == 1 and sp.count('mOut(stats), stats.mixTot') == 1)
 
 # --- the microtask freshness LAW mechanism ---
 test("flowFresh mechanism exists and defers via queueMicrotask",

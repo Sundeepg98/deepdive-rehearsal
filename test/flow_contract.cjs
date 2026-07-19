@@ -118,6 +118,34 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   ok('[negative control] flowRec with no target darkens the dock (this check can go red)', neg.hidden === true,
     'the dock stayed lit with no recommendation -- it is decorative, not flowRec-driven');
 
+  /* ---- 3-way parity: the session panel's #ssgo renders the SAME flowRec compute as the dock ---- */
+  await fresh();   /* walk pane, rec = drill */
+  const panel = await page.evaluate(async () => {
+    if (typeof openSession === 'function') openSession();
+    await new Promise((r) => setTimeout(r, 150));
+    const rec = flowRec();
+    const tmp = document.createElement('div'); tmp.innerHTML = (rec && rec.btn) || ''; const expected = tmp.textContent.trim();
+    const go = (typeof sessRoot !== 'undefined' && sessRoot) ? sessRoot.getElementById('ssgo') : null;
+    const label = go ? go.textContent.trim() : null;
+    if (typeof closeSession === 'function') closeSession();
+    return { expected, label };
+  });
+  ok('3-way parity: session panel #ssgo label == flowRec button (== the dock, ' + panel.expected + ')', panel.label === panel.expected, JSON.stringify(panel));
+
+  /* ---- the panel never ends button-less: at the terminal flowRec hands #ssgo the __topic__ CTA ---- */
+  const term = await page.evaluate(async () => {
+    const orig = flowRec;
+    flowRec = function () { return { btn: 'Next: Topic X &rarr;', tab: '__topic__', nextTopic: 'x', kicker: 'Banked', text: 't', receipt: '', bd: '#bfe0d3', bg: '#eef', ink: '#333' }; };
+    if (typeof openSession === 'function') openSession();
+    if (typeof renderSession === 'function') renderSession();
+    await new Promise((r) => setTimeout(r, 80));
+    const go = (typeof sessRoot !== 'undefined' && sessRoot) ? sessRoot.getElementById('ssgo') : null;
+    const label = go ? go.textContent.trim() : null;
+    flowRec = orig; if (typeof closeSession === 'function') closeSession();
+    return { label };
+  });
+  ok('session overlay never button-less: #ssgo renders the terminal __topic__ hand-off', term.label === 'Next: Topic X →', JSON.stringify(term));
+
   ok('zero console/page errors', errs.length === 0, errs.slice(0, 4).join(' | '));
 
   await browser.close();

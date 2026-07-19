@@ -522,7 +522,11 @@ function ssBar(show, pct) {
 function renderSession() {
   const stats = sessStats();
   const dTot = stats.dTot, dDone = stats.dDone, dGot = stats.dGot, dShk = stats.dShk, dLeft = stats.dLeft, revisit = stats.revisit, wbGot = stats.wbGot, wbMiss = stats.wbMiss, missed = stats.missed, wbTot = stats.wbTot, wbDone = stats.wbDone, mScore = stats.mScore, mTime = stats.mTime, mRuns = stats.mRuns, mInt = stats.mInt;
-  const rec = pickRec(revisit, missed, mScore, dDone, dTot, wbDone, mRuns, stats.mixWeak, mOut(stats), stats.mixTot);
+  /* W2 -- the panel's #ssgo renders flowRec(), not pickRec directly, so it is the SAME compute as
+     the dock and the seg pip (the one-compute contract). This is also what stops the session overlay
+     ever ending button-less: at the "you're ready" terminal flowRec hands #ssgo the cross-topic
+     "Next: <topic>" rec, where bare pickRec returned btn:null and the sheet dead-ended. */
+  const rec = flowRec(stats);
   let html = '';
   html += '<div class="ss-rec" style="border-color:' + rec.bd + ';background:' + rec.bg + '">' +
        '<div class="ss-rk" style="color:' + rec.ink + '">' + rec.kicker + '</div>' +

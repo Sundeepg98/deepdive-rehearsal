@@ -220,22 +220,15 @@ var DRILL_STYLE = `/* @keyframes pop moved to BASE_SHEET. Five shadow scopes ref
 .sigrow .tr{margin-left:auto}
 .verdict{margin-top:var(--space-18);font-size:var(--font-size-body);max-width:var(--measure);color:var(--ans-fg);background:var(--ans-bg);border-left:3px solid var(--acc);border-radius:9px;padding:var(--space-14) var(--space-16)}
 .verdict b{color:var(--accink)}
-.debrief button{margin-top:var(--space-18);display:block;width:100%;border:1.5px solid var(--acc);background:#fff;color:var(--acc);font:var(--font-weight-bold) 13px -apple-system,sans-serif;padding:var(--space-12);border-radius:10px;cursor:pointer}
+/* :not(.flow-go) -- the W1 hand-off CTA is a BASE_SHEET .flow-go (gradient); this generic
+   debrief-button rule (specificity 0,1,1) would otherwise beat it (0,1,0) and flatten it to the
+   plain white/acc outline, so the drill strip would look nothing like the wb/mock strips. */
+.debrief button:not(.flow-go){margin-top:var(--space-18);display:block;width:100%;border:1.5px solid var(--acc);background:#fff;color:var(--acc);font:var(--font-weight-bold) 13px -apple-system,sans-serif;padding:var(--space-12);border-radius:10px;cursor:pointer}
 .debrief .btn-sec{margin-top:var(--space-14);display:block;width:100%;border:1.5px solid var(--teal);background:linear-gradient(135deg,var(--tealbg) 0%,rgba(10,133,100,.04) 100%);color:var(--fb-t-fg);font:var(--font-weight-bold) 13px -apple-system,sans-serif;padding:var(--space-12);border-radius:10px;cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),box-shadow var(--duration-base) var(--ease-base),filter var(--duration-base) var(--ease-base)}
 .debrief .btn-sec:hover{transform:translateY(-1px);box-shadow:0 4px 14px -4px rgba(10,133,100,.2);filter:brightness(1.02)}
 .debrief .btn-sec:active{transform:translateY(1px) scale(.98)}
 .debrief .btn-sec:hover{background:var(--btnsec-hover-bg)}
-/* W1 forward hand-off strip (flowStripHtml): the clean-debrief dead end gets a next-surface CTA.
-   No transform on the strip itself (hit surface stays put); the button lifts on hover only. */
-.flow-strip{margin-top:var(--space-16);border:1.5px solid;border-radius:12px;padding:var(--space-14) var(--space-16);box-shadow:0 2px 8px -3px var(--acc-a08)}
-.flow-strip .flow-k{font:var(--font-weight-heavy) 9.5px -apple-system,sans-serif;letter-spacing:.7px;text-transform:uppercase;margin:0 0 var(--space-6)}
-.flow-strip .flow-t{font-size:var(--font-size-small);line-height:var(--line-height-loose);font-weight:var(--font-weight-semibold);margin:0 0 var(--space-11)}
-.flow-strip .flow-t b{font-weight:var(--font-weight-heavy)}
-.flow-act{display:flex;align-items:center;gap:var(--space-12);flex-wrap:wrap}
-.flow-go{margin:0;width:auto;border:none;border-radius:9px;padding:var(--space-10) var(--space-16);font:var(--font-weight-bold) 12px -apple-system,sans-serif;cursor:pointer;color:var(--on-slab);background:linear-gradient(135deg,var(--acc),var(--acc2));box-shadow:0 4px 14px -4px var(--acc-a25);transition:transform var(--duration-fast) var(--ease-base),box-shadow var(--duration-base) var(--ease-base),filter var(--duration-base) var(--ease-base)}
-.flow-go:hover{filter:brightness(1.1);box-shadow:0 6px 20px -4px var(--acc-a30)}
-.flow-go:active{transform:translateY(1px) scale(.98);filter:brightness(.95)}
-.flow-rcpt{font-size:var(--font-size-micro);color:var(--mut2);font-weight:var(--font-weight-semibold);letter-spacing:.2px}
+/* .flow-strip / .flow-go / .flow-rcpt now live in BASE_SHEET (adopted by every terminal scope). */
 .btn-sec:active{transform:translateY(1px);filter:brightness(.96)}
 .rec{text-align:center;margin-bottom:var(--space-6)}
 .rec .lvl{display:inline-block;font-size:var(--font-size-heading);font-weight:var(--font-weight-heavy);letter-spacing:-.3px;padding:var(--space-10) var(--space-24);border-radius:12px;border:2px solid;box-shadow:0 2px 8px -2px var(--acc-a10);transition:transform var(--duration-base) var(--ease-spring),box-shadow var(--duration-moderate) var(--ease-base)}

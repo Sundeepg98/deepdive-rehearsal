@@ -238,12 +238,45 @@ var TopicRegistry = (function () {
   return { register: register, current: current, get: function (i) { return byId[i]; }, ids: function () { var _a = order.slice(); if (typeof topicOrderIndex === 'function') _a.sort(function (x, y) { return topicOrderIndex(x) - topicOrderIndex(y); }); return _a; }, setTopic: setTopic, bootId: function () { return bootId; } };
 })();
 
+/* ============ PERF: deferred hidden-pane rendering (perf/chunk-proto) ============
+   Measured (trace RunTask decomposition, CPU-throttled 4x): every topic entry was ONE
+   855-1185ms synchronous click task, and all 10 panes re-rendered inside it -- 9 of
+   them into display:none shadow roots the user cannot see. The visible pane must
+   render synchronously (the thing you look at paints first); a hidden pane only has
+   to be CURRENT BEFORE IT IS NEXT SEEN. So a hidden pane marks itself dirty and
+   drains through this queue, ONE PANE PER MACROTASK -- each drain task is 1-25ms,
+   far under the 50ms long-task line, and the browser can paint and take input
+   between them.
+   Every pane still renders every topic (the queue always drains; the laziness is
+   WHEN, not IF -- entity_leak walks every shadow root and must keep seeing topic
+   content), and switchTab() flushes a dirty pane synchronously BEFORE revealing it,
+   so stale content is never on screen. Switches while queued COALESCE: a flush
+   renders whatever topic is current at flush time, never a queued snapshot. */
+var TopicPaneQueue = (function () {
+  var q = [], timer = 0;
+  function pump() {
+    timer = 0;
+    var el = q.shift();
+    if (q.length) schedule();      /* schedule the rest FIRST: a throwing render must not stall the queue */
+    if (!el) return;
+    try { el.__tpFlush(); }
+    catch (e) { setTimeout(function () { throw e; }, 0); }  /* surface like a listener throw; keep draining */
+  }
+  function schedule() { if (!timer) timer = setTimeout(pump, 0); }
+  return {
+    add: function (el) { if (q.indexOf(el) === -1) q.push(el); schedule(); },
+    remove: function (el) { var i = q.indexOf(el); if (i > -1) q.splice(i, 1); }
+  };
+})();
+
 /* The ONE lifecycle all 9 panes will inherit (Phase 1). In Phase 0 NO pane
    extends this yet -- it is defined dormant so the contract name is frozen. */
 class TopicPane extends HTMLElement {
   /* subclass: static dataKey = 'walk'|'drill'|'wb'|'sys'|'trade'|'model'|'num'|'rf'|'open'
      subclass implements: sheets(), styleText(), skeleton(), init(root), renderTopic(data, topic)
-     subclass MAY implement: teardownTopic() -- release timers / drop transient state before a swap */
+     subclass MAY implement: teardownTopic() -- release timers / drop transient state before a swap
+     subclass MAY set: static eagerTopic = true -- always render synchronously (deep-visual: its
+     renderTopic also toggles the light-DOM viz tab, which must not lag the switch) */
   connectedCallback() {
     if (this._tpBuilt) return;                           /* one-time HOST wiring -- survives every re-render */
     this._tpBuilt = true;
@@ -252,12 +285,49 @@ class TopicPane extends HTMLElement {
     root.adoptedStyleSheets = this.sheets();             /* adopted ONCE, never reassigned */
     root.innerHTML = '<style>' + this.styleText() + '</style>' + this.skeleton(); /* <style> + INVARIANT shell, ONCE */
     this.init(root);                                     /* ONE-TIME: cache mount refs + DELEGATED listeners on stable nodes */
-    this._onTopic = function (e) { this._applyTopic(e.detail.topic, false); }.bind(this);
+    this._onTopic = function (e) { this._tpTopic(e.detail.topic); }.bind(this);
     window.addEventListener('deeptopicchange', this._onTopic);
-    this._applyTopic(TopicRegistry.current(), true);     /* first paint */
+    this._tpTopic(TopicRegistry.current());              /* first paint: sync only when this pane is the routed one */
+  }
+  /* Route a topic to this pane: render NOW if the pane is (about to be) on screen,
+     otherwise mark dirty and let TopicPaneQueue drain it off the critical task. */
+  _tpTopic(topic) {
+    if (!topic) return;
+    if (this.constructor.eagerTopic || this._tpOnScreen()) {
+      this._tpDirty = false;
+      TopicPaneQueue.remove(this);
+      this._applyTopic(topic, !this._tpRendered);
+      return;
+    }
+    this._tpDirty = true;
+    TopicPaneQueue.add(this);
+  }
+  /* "Is this pane what the route is showing?" -- decided from the .pane.on CLASS that
+     switchTab() itself owns, plus the home flag. The route HASH is deliberately NOT consulted:
+     session-progress.js reveals a pane with a bare switchTab(rec.tab) and no hash write, and
+     setTopic() re-derives the view from the OLD hash, so a hash oracle misreads a VISIBLE .on
+     pane as off-screen and leaves stale content on it through the next topic change (the
+     round-1 regression). NEVER a layout read either: offsetParent/offsetWidth here would
+     re-create the forced-reflow cost this deferral exists to remove. A host with no .pane
+     ancestor (e.g. topic_contract's probe host appended to <body>) keeps the old always-sync
+     behavior. Erring toward "on screen" only ever costs one sync render -- never a stale pane. */
+  _tpOnScreen() {
+    var box = this.closest ? this.closest('.pane') : null;
+    if (!box) return true;                                               /* no .pane ancestor: always sync */
+    if (document.documentElement.dataset.view === 'home') return false;  /* stage hidden behind the home */
+    return box.classList.contains('on');                                 /* the class switchTab owns == on screen */
+  }
+  /* Called by the queue, and by switchTab() just before this pane is revealed. */
+  __tpFlush() {
+    if (!this._tpDirty) return;
+    this._tpDirty = false;
+    if (!this.isConnected) return;
+    var t = TopicRegistry.current();
+    if (t) this._applyTopic(t, !this._tpRendered);
   }
   _applyTopic(topic, first) {
     if (!topic) return;
+    this._tpRendered = true;
     if (!first && this.teardownTopic) this.teardownTopic();                  /* stop timers, clear transient state */
     var hadFocus = !first && this._root && (this.contains(document.activeElement) || this._root.activeElement);
     this.renderTopic(topic.data[this.constructor.dataKey], topic);          /* in-place repaint of child mounts ONLY */
@@ -265,6 +335,7 @@ class TopicPane extends HTMLElement {
   }
   disconnectedCallback() {
     if (this._onTopic) window.removeEventListener('deeptopicchange', this._onTopic);
+    TopicPaneQueue.remove(this);
     if (this.teardownTopic) this.teardownTopic();
   }
   /* hook defaults */

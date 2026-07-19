@@ -233,7 +233,11 @@
     var docEl = document.documentElement;
     var prevBehav = docEl.style.scrollBehavior;
     docEl.style.scrollBehavior = 'auto';
-    var pinTop = function () { if ((window.pageYOffset || docEl.scrollTop || 0) > 0) window.scrollTo(0, 0); };
+    /* PERF (perf/chunk-proto): write-only. The old guard read pageYOffset/scrollTop
+       first -- a layout-forcing read, five times across the boot window (~660ms of the
+       4x-throttled boot). scrollTo(0,0) when already at 0 is a no-op, so the guard
+       bought nothing the bare write does not already do. */
+    var pinTop = function () { window.scrollTo(0, 0); };
     pinTop();
     requestAnimationFrame(pinTop);
     requestAnimationFrame(function () { requestAnimationFrame(pinTop); });

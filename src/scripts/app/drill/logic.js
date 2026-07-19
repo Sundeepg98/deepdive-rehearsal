@@ -310,6 +310,17 @@ function dShuffle(count) {
 }
 class DeepDrill extends TopicPane {
   static dataKey = 'drill';
+  /* PERF (perf/chunk-proto): NOT deferred -- same rule as the whiteboard. getStats() reports the
+     drill's LIVE working set (bankTot the denominator, dDone, items), which renderTopic() assigns,
+     and sessStats() -> flowRec() reads drillEl().getStats() cross-component while #drill is HIDDEN:
+     it feeds W1's seg recommendation pip and the terminal hand-off strips. Deferred, drill's
+     bankTot is stale when flowPip() fires on the initial deeptopicchange (before the queue drains),
+     so flowRec() mis-picks and the pip never lands (proven: the pip is absent at the VR rest state,
+     present the instant flowPip re-fires with drill drained). Its render is ~5ms and it renders
+     synchronously anyway whenever it is the active pane, so this only touches hidden-drill entries;
+     the drill-active deferral win is unchanged. (Pure-data reads take the registry-direct path
+     instead -- see deep-trade-offs.getDecisions(); getStats() is live state, so it must be eager.) */
+  static eagerTopic = true;
   sheets()    { return [BASE_SHEET, ANS_SHEET]; }
   styleText() { return DRILL_STYLE; }
   skeleton()  { return DRILL_HTML; }

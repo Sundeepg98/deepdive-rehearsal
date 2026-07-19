@@ -6,6 +6,11 @@
    exactly one GL context lives. The nav tab shows only for opted-in topics. */
 class DeepVisual extends TopicPane {
   static dataKey = 'visual';
+  /* PERF (perf/chunk-proto): NOT deferred. renderTopic() here also toggles the
+     light-DOM viz TAB (`btn.hidden = !d`) and owns the bounce-off-a-viz-less-topic
+     guard -- both must stay synchronous with the switch (visual_pane_smoke asserts
+     the tab state). The render itself is ~0.6ms; deferring it buys nothing. */
+  static eagerTopic = true;
   styleText() {
     return ':host{display:block}#vzhost{display:block}' +
       '#vzempty{color:var(--tx-dim,#8b949e);font-size:14px;padding:24px 8px}';

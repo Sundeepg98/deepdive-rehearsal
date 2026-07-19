@@ -49,9 +49,20 @@ class DeepTradeOffs extends TopicPane {
   }
   /* mixed-fire's getTrades() consumes this -- keep the {q, optsHtml, tell} shape
      (optsHtml = the concatenated .opt markup) so mixed-fire.js stays byte-unchanged.
-     Derived from this._decisions; the old shadow reverse-scrape is gone. */
+     PERF (perf/chunk-proto): read the CURRENT topic's decisions from the registry, NOT
+     this._decisions -- which only renderTopic() assigns, so a hidden pane DEFERRED by
+     TopicPaneQueue would serve the PREVIOUS topic's decisions until the drain (~300ms).
+     openMix() calls this while #trade is hidden; the cold lane reproduced it user-reachable
+     (topic change -> open Mixed Fire within ~90-280ms -> mix items from the old topic).
+     THE RULE (contrast the whiteboard, which is eager): make a hidden pane eager only when the
+     cross-component read is LIVE state that render+interaction accrue (board grading counts --
+     underivable); when it is PURE topic data the registry already owns -- these decisions --
+     read it at the source and keep the pane's render deferrable. this._decisions stays as the
+     fallback for a host with no registry (a bare probe). */
   getDecisions() {
-    return (this._decisions || []).map(function (d) {
+    var t = (typeof TopicRegistry !== 'undefined' && TopicRegistry.current) ? TopicRegistry.current() : null;
+    var src = (t && t.data && t.data.trade && t.data.trade.decisions) || this._decisions || [];
+    return src.map(function (d) {
       return { q: d.q, optsHtml: d.opts.map(tradeRenderOpt).join(''), tell: d.tell };
     });
   }

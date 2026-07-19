@@ -10,11 +10,20 @@
 (function () {
   'use strict';
 
-  var THRESHOLD = 400, btn = null, shown = false;
+  var THRESHOLD = 400, btn = null, shown = false, lastY = 0;
 
-  function scrollTop() {
-    return window.pageYOffset ||
+  /* PERF (perf/chunk-proto): the scroll position is CACHED from the scroll event
+     instead of read on demand. Reading pageYOffset forces a style+layout flush when
+     the DOM is dirty -- and the on-demand reads here ran at exactly those moments
+     (boot, every routechange; ~172ms of the 4x boot, ~19ms per entry). During a real
+     scroll the browser has just laid out, so the one read in the handler is cheap; on
+     boot/route the cache serves. onRoute() force-hides before its re-check, so a
+     momentarily stale cache can only keep the button hidden, never show it wrongly. */
+  function scrollTop() { return lastY; }
+  function onScroll() {
+    lastY = window.pageYOffset ||
       (document.scrollingElement || document.documentElement).scrollTop || 0;
+    update();
   }
 
   function reduceMotion() {
@@ -50,7 +59,7 @@
   }
 
   build();
-  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', update, { passive: true });
   /* router dispatches on window; also listen on document for robustness */
   window.addEventListener('routechange', onRoute);

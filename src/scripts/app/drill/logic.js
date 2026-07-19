@@ -370,6 +370,12 @@ class DeepDrill extends TopicPane {
     const allBtn = this._tiertog.querySelector('[data-tier="all"]');
     if (allBtn) allBtn.textContent = 'All ' + _allCards.length;
     this.setMode('study');
+    /* W2 -- restore the pos.<id> drill probe (study mode's stable base order), so Resume lands on the
+       probe they left, not probe 1. Display-only: drawCard shows probe di; no judge fires, and grades
+       merge by content-id, so continuing from probe 5 records 5..end without touching the record's
+       0..4 (restore-NEVER-regrades). setMode already set di=0 + rendered; re-render at the cursor. */
+    var _pd = (typeof posRestore === 'function') ? posRestore('drill', cards.length) : 0;
+    if (_pd > 0) { this.di = _pd; this.renderD(false); }
   }
   teardownTopic() {
     this.stopTimer();
@@ -476,6 +482,9 @@ class DeepDrill extends TopicPane {
     return fus.length ? fus[fus.length - 1] : this._dwrap.querySelector('.thread');
   }
   renderD(moveFocus) {
+    /* W2 -- write the pos.<id> drill cursor, but ONLY in study mode: quick/mock decks are
+       session-random/timed, so a saved probe index there would point at a different card on restore. */
+    if (this.mode === 'study' && typeof posSet === 'function') posSet('drill', this.di);
     /* Resolve the landing decision FIRST -- renderNav() below rewrites #dnav, so a chip that has
        focus is already destroyed (and activeElement already <body>) by the time we could ask. */
     const land = !!moveFocus || this._focusDoomed();
@@ -656,7 +665,12 @@ class DeepDrill extends TopicPane {
   }
   renderDebrief() {
     const self = this;
-    const pct = Math.round(this.got / cards.length * 100);
+    /* W2 -- % is over the probes ANSWERED THIS RUN (results.length), not the full bank. Identical on
+       a full run (answered === cards.length); the difference shows only on a RESUMED run, where the
+       debrief is inherently this-session's coverage detail (its cov/dropped rows come from live
+       grading the record does not store) -- so scoring it against the full bank penalized a perfect
+       resume (17/22 = 77%). The cumulative picture lives in the record (panel / dock / pip). */
+    const pct = Math.round(this.got / Math.max(1, this.results.length) * 100);
     let nMissed = 0, nShaky = 0, nSolid = 0;
     for (let ri = 0; ri < this.results.length; ri++) { const _l = this.results[ri].level || (this.results[ri].ok ? 3 : 2); if (_l >= 3) nSolid++; else if (_l === 2) nShaky++; else nMissed++; }
     const sumParts = [];

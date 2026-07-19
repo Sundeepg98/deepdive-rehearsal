@@ -87,6 +87,76 @@ function flowFresh(compute) {
   if (typeof queueMicrotask === 'function') queueMicrotask(compute);
   else Promise.resolve().then(compute);   /* older engines: a resolved promise is the same microtask turn */
 }
+/* ===================================================================================
+   WAVE 1 -- THE HAND-OFF GRAMMAR (scaffold). Direction A, panel doc Wave-1 line (S59).
+   ONE compute, N renderings: every forward affordance in the app -- the walk #wnext morph,
+   the drill/wb/mock/mixed terminal strips, the seg pip -- renders from flowRec(), never from a
+   second recommendation source (the anti-goal). pickRec is the ladder; flowRec is the meso tier
+   that WRAPS it (never forks it), attaches the D5 receipt (the raw stored numbers justifying the
+   rec), and owns the ONE piece of cross-topic logic pickRec must not: the topic-end hand-off
+   (decision-table row 10), computed OUTSIDE pickRec.
+
+   The three primitives the five terminals consume:
+     flowRec(stats)      -> the recommendation object (pickRec + receipt + topic-end), fresh
+     flowGo(rec)         -> executes rec.tab: pane switch / openMock / openMix / next-topic
+     flowStripHtml(rec)  -> the forward strip's HTML (SELF-dedupe: '' when the surface's own
+                            button already IS the rec, so no button soup)
+   Terminals are wired in subsequent commits; each new gate (flow_handoff, flow_evidence) is
+   watched RED before it is trusted. Completion-moment callers MUST route through flowFresh. */
+
+/* The raw-number receipt for a rec -- D5's trust mechanism. flow_evidence recomputes each of
+   these from the stored record and fails on mismatch, so a receipt is a claim the gate audits,
+   not decoration. Keyed off the rec's tab/flags + the same stats the rec was computed from. */
+function flowReceipt(rec, s) {
+  if (!rec || !s) return '';
+  if (rec.weak) return s.revisit.length + ' to revisit';
+  if (rec.wbreset) return s.missed.length + ' step' + (s.missed.length === 1 ? '' : 's') + ' missed';
+  if (rec.tab === '__mock__') return (s.mScore != null) ? (s.mScore + ' / ' + mOut(s) + ' last mock') : (s.mRuns + ' mock run' + (s.mRuns === 1 ? '' : 's'));
+  if (rec.tab === '__mix__') return (s.mixWeak && s.mixWeak.length) ? (s.mixWeak.length + ' fumbled') : (s.mixTot + ' mixed set' + (s.mixTot === 1 ? '' : 's'));
+  if (rec.tab === 'drill') return s.dDone + ' of ' + s.dTot + ' graded';
+  if (rec.tab === 'wb') return s.wbDone + ' of ' + s.wbTot + ' recalled';
+  return '';
+}
+
+/* The meso-tier recommendation: pickRec verbatim, plus its receipt. Cross-topic (topic-end)
+   logic will attach here in the mixed-end terminal commit; the scaffold delegates to pickRec so
+   behavior is identical to today until a terminal opts in. */
+function flowRec(stats) {
+  var s = stats || sessStats();
+  var rec = pickRec(s.revisit, s.missed, s.mScore, s.dDone, s.dTot, s.wbDone, s.mRuns, s.mixWeak, mOut(s), s.mixTot);
+  rec.receipt = flowReceipt(rec, s);
+  return rec;
+}
+
+/* Execute a rec's forward navigation. Extracted VERBATIM from the session panel's #ssgo onclick
+   so the two can never drift (one-compute): the panel now calls this. Every future terminal calls
+   it too. Boundaries are never auto-crossed -- flowGo runs only from a real press. */
+function flowGo(rec) {
+  if (!rec || !rec.tab) return;
+  if (rec.tab === '__mock__') { if (typeof openMock === 'function') openMock(); return; }
+  if (rec.tab === '__mix__') { if (typeof openMix === 'function') openMix(); return; }
+  if (rec.tab === '__topic__') { try { if (rec.nextTopic && typeof TopicRegistry !== 'undefined' && TopicRegistry.setTopic) TopicRegistry.setTopic(rec.nextTopic); } catch (e) {} return; }
+  switchTab(rec.tab);
+  if (rec.weak) {
+    var dr = drillEl(), widx = [];
+    try { if (typeof Progress !== 'undefined' && Progress.weakIdx) widx = Progress.weakIdx(sessTopicId()); } catch (e) {}
+    if (dr) dr.weak(widx);
+  } else if (rec.wbreset) { var w = wbEl(); if (w) w.rerunMissed(); }
+}
+
+/* The forward strip's HTML for a terminal. SELF-dedupe: when the surface's own existing button
+   already IS the recommendation (drill #dweak, wb #wbrerun, mock #mbagain, mixed #mxretry), the
+   rec carries `self:true` and this returns '' -- one offered next per screen, no button soup.
+   A rec with no button (the "you're ready" terminal) likewise yields no strip. */
+function flowStripHtml(rec) {
+  if (!rec || !rec.btn || rec.self) return '';
+  var receipt = rec.receipt ? '<span class="flow-rcpt">' + rec.receipt + '</span>' : '';
+  return '<div class="flow-strip" style="border-color:' + rec.bd + ';background:' + rec.bg + '">' +
+    '<div class="flow-k" style="color:' + rec.ink + '">' + rec.kicker + '</div>' +
+    '<div class="flow-t" style="color:' + rec.ink + '">' + rec.text + '</div>' +
+    '<div class="flow-act"><button class="flow-go" type="button">' + rec.btn + '</button>' + receipt + '</div>' +
+    '</div>';
+}
 /* The topic the panel is reporting on. Every per-topic figure below is keyed to it. */
 function sessTopicId() {
   try { return (typeof TopicRegistry !== 'undefined' && TopicRegistry.current()) ? TopicRegistry.current().id : null; } catch (e) { return null; }
@@ -409,20 +479,9 @@ function renderSession() {
      is the whole point of reading the record), so it passes the record's own weak bank indices.
      Falls back to the live run when there is no record to read. */
   const go = sessRoot.getElementById('ssgo');
-  if (go) go.onclick = function () {
-    closeSession();
-    if (rec.tab === '__mock__') { openMock(); return; }
-    if (rec.tab === '__mix__') { openMix(); return; }
-    if (rec.tab) {
-      switchTab(rec.tab);
-      if (rec.weak) {
-        const dr = drillEl();
-        let widx = [];
-        try { if (typeof Progress !== 'undefined' && Progress.weakIdx) widx = Progress.weakIdx(sessTopicId()); } catch (e) {}
-        if (dr) dr.weak(widx);
-      } else if (rec.wbreset) { const w = wbEl(); if (w) w.rerunMissed(); }
-    }
-  };
+  /* One-compute: the panel navigates through flowGo(), the same executor every W1 terminal will
+     use, so the session sheet and the strips can never disagree on what "go" means. */
+  if (go) go.onclick = function () { closeSession(); flowGo(rec); };
   /* Clear is two-tap (arm, then confirm) so progress can't be wiped by accident. */
   const clr = sessRoot.getElementById('ssclear');
   let clrArmed = false;

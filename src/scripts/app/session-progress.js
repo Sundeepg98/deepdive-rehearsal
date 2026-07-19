@@ -118,12 +118,43 @@ function flowReceipt(rec, s) {
   return '';
 }
 
-/* The meso-tier recommendation: pickRec verbatim, plus its receipt. Cross-topic (topic-end)
-   logic will attach here in the mixed-end terminal commit; the scaffold delegates to pickRec so
-   behavior is identical to today until a terminal opts in. */
+/* The next TOPIC to study -- the ONE cross-topic step, kept OUTSIDE pickRec (the anti-goal:
+   pickRec is per-topic; nothing cross-topic may live in it). Priority: the weakest OTHER topic by
+   the record's own ranking (Progress.summary().weakest), else the next UNTOUCHED topic in the
+   current room (same group), else any untouched. Returns { id, label, receipt } or null. */
+function flowNextTopic() {
+  try {
+    if (typeof Progress === 'undefined' || typeof TopicRegistry === 'undefined') return null;
+    var cur = TopicRegistry.current() ? TopicRegistry.current().id : null;
+    var nameOf = function (id) { var t = TopicRegistry.get(id); return (t && t.identity && t.identity.h1) ? t.identity.h1 : id; };
+    var weak = (Progress.summary().weakest || []), i, ids = TopicRegistry.ids(), k;
+    for (i = 0; i < weak.length; i++) {
+      if (weak[i].id === cur) continue;
+      return { id: weak[i].id, label: nameOf(weak[i].id), receipt: weak[i].shk ? (weak[i].shk + ' shaky') : (weak[i].left + ' left') };
+    }
+    var curT = cur ? TopicRegistry.get(cur) : null, grp = (curT && curT.identity) ? curT.identity.group : null;
+    for (k = 0; k < ids.length; k++) {
+      if (ids[k] === cur) continue;
+      var t2 = TopicRegistry.get(ids[k]);
+      if (grp && t2 && t2.identity && t2.identity.group === grp && Progress.status(ids[k]) === 'untouched') return { id: ids[k], label: nameOf(ids[k]), receipt: 'not started' };
+    }
+    for (k = 0; k < ids.length; k++) { if (ids[k] !== cur && Progress.status(ids[k]) === 'untouched') return { id: ids[k], label: nameOf(ids[k]), receipt: 'not started' }; }
+    return null;
+  } catch (e) { return null; }
+}
+
+/* The meso-tier recommendation: pickRec verbatim + its receipt, PLUS the one cross-topic step.
+   When the per-topic ladder is exhausted ("you're ready", no btn), hand forward to the NEXT topic
+   (decision-table row 10). Attaching it HERE -- not only in the mixed-fire end -- means every
+   terminal that reaches "ready" offers the next topic, from ONE compute. */
 function flowRec(stats) {
   var s = stats || sessStats();
   var rec = pickRec(s.revisit, s.missed, s.mScore, s.dDone, s.dTot, s.wbDone, s.mRuns, s.mixWeak, mOut(s), s.mixTot);
+  if (rec.btn == null) {
+    var nt = flowNextTopic();
+    if (nt) return { kicker: 'Banked', text: 'This topic is banked &mdash; solid across the drill, whiteboard, mock and mixed fire. Move to your next weak spot.', btn: 'Next: ' + nt.label + ' &rarr;', tab: '__topic__', nextTopic: nt.id, receipt: nt.receipt, bd: '#bfe0d3', bg: 'var(--tealbg)', ink: 'var(--teal)' };
+    return rec;   /* nothing left to hand to -- keep the "you're ready" terminal (no strip) */
+  }
   rec.receipt = flowReceipt(rec, s);
   return rec;
 }

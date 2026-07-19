@@ -157,10 +157,24 @@ function renderMixEnd() {
   mxRes.forEach(function (r) { if (!r.ok) shakyCount++; });
   const retry = shakyCount ? '<button class="push" id="mxretry" type="button">Retry the ' + shakyCount + ' you fumbled</button>' : '';
   const again = shakyCount ? '<button class="mxghost" id="mxre" type="button">Run a fresh mixed set</button>' : '<button class="push" id="mxre" type="button">Run another mixed set</button>';
-  body.innerHTML = '<div class="mx-end"><div class="mx-end-h">Mixed fire &mdash; ' + mxGot + ' / ' + mxPool.length + ' handled</div><div class="mx-end-pct">' + pct + '%</div><div class="mx-end-v">' + verdict + '</div><div class="mx-bd">' + scoreBadge('Probes', byKind.Probe) + scoreBadge('Curveballs', byKind.Curve) + scoreBadge('Trade-offs', byKind.Trade) + '</div><div class="mx-end-list">' + rows + '</div><div class="mx-end-btns">' + retry + again + '</div></div>';
+  body.innerHTML = '<div class="mx-end"><div class="mx-end-h">Mixed fire &mdash; ' + mxGot + ' / ' + mxPool.length + ' handled</div><div class="mx-end-pct">' + pct + '%</div><div class="mx-end-v">' + verdict + '</div><div class="mx-bd">' + scoreBadge('Probes', byKind.Probe) + scoreBadge('Curveballs', byKind.Curve) + scoreBadge('Trade-offs', byKind.Trade) + '</div><div class="mx-end-list">' + rows + '</div><div class="flow-slot" id="mxflow"></div><div class="mx-end-btns">' + retry + again + '</div></div>';
   mixRoot.getElementById('mxre').onclick = openMix;
   const rt = mixRoot.getElementById('mxretry');
   if (rt) rt.onclick = retryShaky;
+  /* W1 rows 9-10: a CLEAN mixed set (no fumbles) is the end of the arc -- hand forward. flowRec
+     attaches the topic-end ("Next: <weakest || next-in-room>") when the whole per-topic ladder is
+     done, else the honest next surface. Fumbles keep #mxretry as the SELF affordance (row 9), no
+     strip. flowFresh honors the freshness law (mxJudge's mixPersist just ran); closeMix before the
+     hand-off so the overlay is gone first. */
+  var mxflow = mixRoot.getElementById('mxflow');
+  if (mxflow && shakyCount === 0 && typeof flowFresh === 'function' && typeof flowRec === 'function') {
+    flowFresh(function () {
+      var rec = flowRec();
+      mxflow.innerHTML = (typeof flowStripHtml === 'function') ? flowStripHtml(rec) : '';
+      var b = mxflow.querySelector('.flow-go');
+      if (b) b.onclick = function () { if (typeof closeMix === 'function') closeMix(); if (typeof flowGo === 'function') flowGo(rec); };
+    });
+  }
 }
 /* Re-run only the items graded Shaky this round, reshuffled. */
 function retryShaky() {

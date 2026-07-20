@@ -293,6 +293,15 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # the app, and pane Back/Forward still round-trips -- the guard is ONE entry, never a
                      # Back-blocking loop). FAILED every "one Back" assertion on the pre-fix build.
                      ('back_deadend', 'test/back_deadend.cjs'),
+                     # no_dead_ends: the ROUTING sibling's UI sibling. back_deadend guards the browser
+                     # Back trap; this guards the two in-APP dead ends the post-ship audit found (D1):
+                     # focus mode hiding its own only exit (the #_focus-toggle lives inside the very
+                     # .sidebar focus mode collapses, and there was no Esc path -- a hard trap on mobile,
+                     # where the only escape was a reload), and (next) the scroll-top FAB tap-intercepting
+                     # the fixed mock CTA. Drives REAL input + a hit-test at each control's painted centre
+                     # (never el.click()), at desktop AND 360px, and carries a live plant so the
+                     # reachability probe cannot become one that never fails. RED on the pre-fix build.
+                     ('no_dead_ends', 'test/no_dead_ends.cjs'),
                      # cta_contrast: the primary CTAs are painted in a GRADIENT, and
                      # getComputedStyle('background-color') on a gradient returns rgba(0,0,0,0) --
                      # it tells you nothing, in a tone of voice that sounds like an answer. This

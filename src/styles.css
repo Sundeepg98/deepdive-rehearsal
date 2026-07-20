@@ -1233,6 +1233,21 @@ button{cursor:pointer}
 .scrolltop.show{--vis-delay:0s;opacity:1;visibility:visible;transform:translateX(-50%) translateY(0) scale(1);pointer-events:auto}
 @media(hover:hover){.scrolltop.show:hover{box-shadow:0 9px 26px var(--acc-a40),0 0 0 1px var(--acc-a25)}}
 
+/* ===== Focus-mode exit affordance (the always-reachable way out) =====
+   focus-mode.js appends #_focus-exit as a SIBLING of .sidebar/.companion (a child of .app), so the
+   focus-mode collapse -- which zeroes .sidebar, where the header's own #_focus-toggle lives -- can
+   never reach it. It is in the DOM at all times but only PAINTS while .app._focus-mode is set: the
+   base rule keeps it display:none (never render it outside focus mode), the mode rule reveals it.
+   Its `display` lives ONLY in these rules, never inline, so the mode rule can win (the #_focus-toggle
+   trap, recorded in focus-mode.js). Kept below the overlay layer (z-sticky 150 < z-popup 1000) so an
+   open dialog covers it and its own Escape closes the dialog first. 44px tap floor on BOTH viewports;
+   the accent-CTA treatment matches the app's other primary floating control (.scrolltop). */
+#_focus-exit{display:none}
+.app._focus-mode #_focus-exit{position:fixed;top:calc(var(--space-16) + env(safe-area-inset-top,0px));right:var(--space-16);z-index:var(--z-sticky);display:inline-flex;align-items:center;gap:var(--space-7);min-height:44px;padding:var(--space-10) var(--space-18);font:var(--font-weight-bold) var(--font-size-caption) -apple-system,sans-serif;letter-spacing:.3px;color:var(--on-slab);background:linear-gradient(135deg,var(--acc),var(--acc2));border:0;border-radius:999px;box-shadow:0 6px 18px var(--acc-a30),0 0 0 1px var(--acc-a15);cursor:pointer;transition:box-shadow var(--duration-base) var(--ease-base),transform var(--duration-fast) var(--ease-base)}
+@media(hover:hover){.app._focus-mode #_focus-exit:hover{box-shadow:0 9px 26px var(--acc-a40),0 0 0 1px var(--acc-a25);transform:translateY(-1px)}}
+.app._focus-mode #_focus-exit:active{transform:translateY(0) scale(.98)}
+.app._focus-mode #_focus-exit:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+
 /* page-visibility: freeze continuous CSS animations while the tab is backgrounded */
 body.is-hidden,body.is-hidden *,body.is-hidden *::before,body.is-hidden *::after{animation-play-state:paused!important}
 

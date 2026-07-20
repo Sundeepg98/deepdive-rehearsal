@@ -627,8 +627,18 @@ class DeepDrill extends TopicPane {
        judgment keys as the reveal advances. Cheap: fires only on a draw, and only the dock listens. */
     try { this.dispatchEvent(new CustomEvent('flowjudgment', { bubbles: true })); } catch (e) {}
   }
-  /* Is the drill sitting on a revealed probe awaiting a grade? (the dock's micro armed-keys gate) */
-  atJudgment() { return !!this._judgeOn && this.mode !== 'mock'; }
+  /* Is the drill sitting on a revealed probe awaiting a grade? (the dock's micro armed-keys gate)
+     `di < cards.length` is the ROOT-CAUSE guard for audit #6: _judgeOn is set true by drawCard at a
+     probe's max stage and is NEVER cleared when renderD() falls into renderDebrief() (which does not
+     call drawCard), so at the debrief it was left stale-true and atJudgment() lied -- arming a
+     phantom grade legend on a terminal with no probe on screen. At the debrief di===cards.length, so
+     this is false there, honestly. */
+  atJudgment() { return !!this._judgeOn && this.mode !== 'mock' && this.di < cards.length; }
+  /* At the study/quick DEBRIEF -- every probe in the working set answered, a TERMINAL, not a probe
+     awaiting a grade. nextUp() reads this to classify the debrief as MESO (a re-drill CTA + a live
+     `n`) rather than the MICRO tier meant for a probe still on screen. mock has its own verdict
+     terminal (renderVerdict), excluded here exactly as atJudgment excludes it. */
+  atDebrief() { return this.mode !== 'mock' && this.di >= cards.length; }
   judge(level) {
     /* R5: level is 1 (missed) / 2 (shaky) / 3 (solid). got/shk stay derived --
        solid (3) is a "got", missed + shaky (1,2) are "to revisit" -- so every

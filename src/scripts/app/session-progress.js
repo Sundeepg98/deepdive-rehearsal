@@ -230,8 +230,20 @@ function nextUp() {
   if (!rec || !rec.btn || !rec.tab) return { tier: 'none', rec: rec };   /* "you're ready" -- nothing to hand to */
   var curTab = null;
   try { var on = document.querySelector('.seg button.on'); curTab = on ? on.getAttribute('data-tab') : null; } catch (e) {}
-  if (rec.tab === curTab) return { tier: 'micro', rec: rec };            /* the pane owns momentum -- stay quiet */
+  /* MICRO = you are MID-UNIT in the pane flowRec points at, so the pane owns momentum and the dock
+     stays quiet. The drill DEBRIEF is a TERMINAL, not mid-unit: a completed drill's "Re-drill weak
+     spots" rec loops back to 'drill', but the unit is DONE, so it belongs to the dock as a MESO CTA
+     (and `n` must navigate). Only the drill has this self-loop; other panes keep the plain rule.
+     (audit #6: clearing the stale _judgeOn alone only HID the dock -- this is what surfaces the CTA.) */
+  if (rec.tab === curTab && !drillAtTerminal(curTab)) return { tier: 'micro', rec: rec };
   return { tier: (rec.tab === '__topic__') ? 'macro' : 'meso', rec: rec };
+}
+/* The drill's debrief is the one pane-terminal a recommendation can loop back onto (re-drill). Reads
+   the CURRENT (visible) drill's live state via atDebrief(), never a hidden pane, so it does not trip
+   the perf deferral rule -- the same discipline as dockArmedKeys' atJudgment read. */
+function drillAtTerminal(tab) {
+  if (tab !== 'drill') return false;
+  try { var dr = drillEl(); return !!(dr && dr.atDebrief && dr.atDebrief()); } catch (e) { return false; }
 }
 
 /* W2 -- the desktop CONTINUE DOCK (light DOM, between .side-id and .mockcta). Renders nextUp():

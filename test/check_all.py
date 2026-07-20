@@ -312,6 +312,15 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # topic. Two plants (a gibberish miss + a real hit both show ZERO chips) keep the
                      # section from degrading into fire-for-everything. RED on the pre-fix build.
                      ('search_deadend', 'test/search_deadend.cjs'),
+                     # cold_open: the OTHER half of audit #13. The first minute under-stated identity
+                     # -- "system design" appeared nowhere above the fold, and the home led with
+                     # undefined jargon. A cold user (link before an interview) spent 60s deciding
+                     # what this even is. Asserts the cold home shows a value-prop lead naming "system
+                     # design" ABOVE THE FOLD, the Start CTA is de-jargoned, and -- the gating -- the
+                     # lead is GONE once engaged (the returning user's lean home is not taxed). Live
+                     # plant (hide the lead -> the above-fold value prop is gone). RED pre-fix (the
+                     # lead did not exist). Guards STRUCTURE; the words are the operator's to review.
+                     ('cold_open', 'test/cold_open.cjs'),
                      # cta_contrast: the primary CTAs are painted in a GRADIENT, and
                      # getComputedStyle('background-color') on a gradient returns rgba(0,0,0,0) --
                      # it tells you nothing, in a tone of voice that sounds like an answer. This

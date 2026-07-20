@@ -1722,6 +1722,13 @@ html[data-view="home"] .cmp-reopen{display:none}
 .hm-act kbd{font:inherit;font-size:var(--font-size-micro,11px);opacity:.7;border:1px solid var(--bd);
   border-radius:4px;padding:0 var(--space-4)}
 
+/* audit #13 -- the cold-open value prop: a quiet identity line with the key phrase in ink, so it
+   reads at a glance without shouting. Cold users only (home-view.js gates it), so it never taxes a
+   returning user's one-line-of-state, one-decision home. */
+.hm-lead{max-width:var(--space-980,980px);margin:0 auto var(--space-16);font-size:var(--font-size-body);
+  color:var(--mut);line-height:var(--line-height-normal)}
+.hm-lead b{color:var(--ink);font-weight:var(--font-weight-semibold)}
+
 /* ONE line of state, then ONE decision. Telemetry (goal / streak / trend / due) sits BELOW the
    decision, not above it: on the old surface it was ~40-45% of everything above a single choice. */
 .hm-state{max-width:var(--space-980,980px);margin:0 auto var(--space-18)}

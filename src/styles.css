@@ -1232,6 +1232,32 @@ button{cursor:pointer}
 .scrolltop{--vis-delay:var(--duration-slow);position:fixed;left:50%;bottom:var(--space-24);width:var(--space-44);height:var(--space-44);border-radius:50%;border:0;background:linear-gradient(135deg,var(--acc),var(--acc2));color:var(--on-slab);font-size:var(--font-size-heading);line-height:var(--line-height-none);cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px var(--acc-a30),0 0 0 1px var(--acc-a15);opacity:0;visibility:hidden;transform:translateX(-50%) translateY(16px) scale(.9);pointer-events:none;transition:opacity var(--duration-moderate) var(--ease-base),transform var(--duration-slow) var(--ease-glide),visibility 0s linear var(--vis-delay);z-index:var(--z-sticky)}
 .scrolltop.show{--vis-delay:0s;opacity:1;visibility:visible;transform:translateX(-50%) translateY(0) scale(1);pointer-events:auto}
 @media(hover:hover){.scrolltop.show:hover{box-shadow:0 9px 26px var(--acc-a40),0 0 0 1px var(--acc-a25)}}
+/* Fix 2 (audit #5): on mobile the scroll-top FAB (centered, bottom:24px, z-sticky) sat ON the fixed
+   mock CTA bar (.sidebar .mockcta, bottom:0, z-40) and WON the tap in the normal scrolled state --
+   silently scrolling to top instead of starting the mock. Lift it above the bar's reserved band
+   (the .app mobile layout already reserves 80px + safe-area at the bottom for that bar) and
+   right-align it, so BOTH targets are fully tappable. The 44px width/height is untouched (only the
+   position moves); the transform drops the centering translateX(-50%) but keeps the show/hide
+   translateY+scale, so the reveal animation is byte-identical to desktop's. */
+@media(max-width:919px){
+  .scrolltop{left:auto;right:var(--space-16);bottom:calc(80px + env(safe-area-inset-bottom,0px) + var(--space-16));transform:translateY(16px) scale(.9)}
+  .scrolltop.show{transform:translateY(0) scale(1)}
+}
+
+/* ===== Focus-mode exit affordance (the always-reachable way out) =====
+   focus-mode.js appends #_focus-exit as a SIBLING of .sidebar/.companion (a child of .app), so the
+   focus-mode collapse -- which zeroes .sidebar, where the header's own #_focus-toggle lives -- can
+   never reach it. It is in the DOM at all times but only PAINTS while .app._focus-mode is set: the
+   base rule keeps it display:none (never render it outside focus mode), the mode rule reveals it.
+   Its `display` lives ONLY in these rules, never inline, so the mode rule can win (the #_focus-toggle
+   trap, recorded in focus-mode.js). Kept below the overlay layer (z-sticky 150 < z-popup 1000) so an
+   open dialog covers it and its own Escape closes the dialog first. 44px tap floor on BOTH viewports;
+   the accent-CTA treatment matches the app's other primary floating control (.scrolltop). */
+#_focus-exit{display:none}
+.app._focus-mode #_focus-exit{position:fixed;top:calc(var(--space-16) + env(safe-area-inset-top,0px));right:var(--space-16);z-index:var(--z-sticky);display:inline-flex;align-items:center;gap:var(--space-7);min-height:44px;padding:var(--space-10) var(--space-18);font:var(--font-weight-bold) var(--font-size-caption) -apple-system,sans-serif;letter-spacing:.3px;color:var(--on-slab);background:linear-gradient(135deg,var(--acc),var(--acc2));border:0;border-radius:999px;box-shadow:0 6px 18px var(--acc-a30),0 0 0 1px var(--acc-a15);cursor:pointer;transition:box-shadow var(--duration-base) var(--ease-base),transform var(--duration-fast) var(--ease-base)}
+@media(hover:hover){.app._focus-mode #_focus-exit:hover{box-shadow:0 9px 26px var(--acc-a40),0 0 0 1px var(--acc-a25);transform:translateY(-1px)}}
+.app._focus-mode #_focus-exit:active{transform:translateY(0) scale(.98)}
+.app._focus-mode #_focus-exit:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
 
 /* page-visibility: freeze continuous CSS animations while the tab is backgrounded */
 body.is-hidden,body.is-hidden *,body.is-hidden *::before,body.is-hidden *::after{animation-play-state:paused!important}

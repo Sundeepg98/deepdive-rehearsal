@@ -167,6 +167,50 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   });
   ok('session overlay never button-less: #ssgo renders the terminal __topic__ hand-off', term.label === 'Next: Topic X →', JSON.stringify(term));
 
+  /* ---- W3 fix (audit #6): the drill DEBRIEF is a TERMINAL (meso), not a judgment point (micro).
+   *      Grade EVERY probe with >=1 Shaky so a revisit exists -> flowRec loops back to 'drill'
+   *      ("Re-drill weak spots"); STAY on the drill pane -- the exact state the bug lived in. Pre-fix:
+   *      stale _judgeOn -> the dock armed a phantom grade legend and `n` was inert at the terminal. ---- */
+  await fresh();
+  await pane('drill');
+  await page.evaluate(async () => {
+    const r = document.querySelector('#drill deep-drill').shadowRoot; const s = (ms) => new Promise((x) => setTimeout(x, ms));
+    let first = true, g = 0;
+    while (g++ < 600) {
+      if (r.getElementById('adv')) { r.getElementById('adv').click(); await s(2); continue; }
+      const jg = r.getElementById('jg'), js = r.getElementById('js');
+      if (!jg) break;
+      if (first && js) { js.click(); first = false; } else { jg.click(); }   /* first probe Shaky -> a revisit; rest Solid */
+      await s(3);
+    }
+  });
+  await sleep(200);   /* flowFresh dock recompute */
+  const deb = await page.evaluate(() => {
+    const dr = document.querySelector('#drill deep-drill');
+    const atDeb = (dr && dr.atDebrief) ? dr.atDebrief() : null;
+    const d = document.getElementById('ndock');
+    const go = (d && !d.hidden) ? d.querySelector('.nd-go') : null;
+    const txt = d ? d.textContent.replace(/\s+/g, ' ').trim() : '';
+    const rec = (typeof flowRec === 'function') ? flowRec() : null;
+    const tmp = document.createElement('div'); tmp.innerHTML = (rec && rec.btn) || '';
+    const expected = tmp.textContent.trim();
+    return { atDeb, recTab: rec ? rec.tab : null, expected, dockHidden: d ? d.hidden : null, dockLabel: go ? go.textContent.trim() : null, hasArmedLegend: /Missed/.test(txt) && /Solid/.test(txt) && !go };
+  });
+  ok('debrief is a terminal: the drill reports atDebrief() true', deb.atDeb === true, JSON.stringify(deb));
+  ok('debrief: flowRec loops back to the drill (Re-drill weak spots)', deb.recTab === 'drill', JSON.stringify(deb));
+  ok('debrief: the dock shows the re-drill CTA (meso), byte-matching flowRec (' + deb.expected + ')', deb.dockHidden === false && deb.dockLabel === deb.expected, JSON.stringify(deb));
+  ok('debrief: the dock does NOT arm the phantom grade legend', deb.hasArmedLegend === false, JSON.stringify(deb));
+  const nAtDebrief = await page.evaluate(async () => {
+    const dr = document.querySelector('#drill deep-drill');
+    const beforeDeb = dr.atDebrief ? dr.atDebrief() : null;
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'n', bubbles: true }));
+    await new Promise((r) => setTimeout(r, 200));
+    const afterDeb = dr.atDebrief ? dr.atDebrief() : null;
+    const hasProbe = !!(dr.shadowRoot && dr.shadowRoot.querySelector('.qq'));
+    return { beforeDeb, afterDeb, hasProbe };
+  });
+  ok('debrief: n navigates (re-drills weak spots) -- leaves the debrief onto a probe', nAtDebrief.beforeDeb === true && nAtDebrief.afterDeb === false && nAtDebrief.hasProbe === true, JSON.stringify(nAtDebrief));
+
   ok('zero console/page errors', errs.length === 0, errs.slice(0, 4).join(' | '));
 
   await browser.close();

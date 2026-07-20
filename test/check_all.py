@@ -293,6 +293,15 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # the app, and pane Back/Forward still round-trips -- the guard is ONE entry, never a
                      # Back-blocking loop). FAILED every "one Back" assertion on the pre-fix build.
                      ('back_deadend', 'test/back_deadend.cjs'),
+                     # no_dead_ends: the ROUTING sibling's UI sibling. back_deadend guards the browser
+                     # Back trap; this guards the two in-APP dead ends the post-ship audit found (D1):
+                     # focus mode hiding its own only exit (the #_focus-toggle lives inside the very
+                     # .sidebar focus mode collapses, and there was no Esc path -- a hard trap on mobile,
+                     # where the only escape was a reload), and (next) the scroll-top FAB tap-intercepting
+                     # the fixed mock CTA. Drives REAL input + a hit-test at each control's painted centre
+                     # (never el.click()), at desktop AND 360px, and carries a live plant so the
+                     # reachability probe cannot become one that never fails. RED on the pre-fix build.
+                     ('no_dead_ends', 'test/no_dead_ends.cjs'),
                      # cta_contrast: the primary CTAs are painted in a GRADIENT, and
                      # getComputedStyle('background-color') on a gradient returns rgba(0,0,0,0) --
                      # it tells you nothing, in a tone of voice that sounds like an answer. This
@@ -315,6 +324,16 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # fails if Solid is ever not the loudest tile, or if it fills at zero.
                      # 6 rooms x 2 themes x 4 score states. ~1m50s.
                      ('scoreboard_salience', 'test/scoreboard_salience.cjs'),
+                     # scoreboard_resume: the tiles (Solid/Revisit/Left) are THIS-RUN counters -- the
+                     # debrief's own pct (got / results.length) and the round-end announcement both read
+                     # got/shk, so they cannot be seeded from the record without corrupting that. On a
+                     # RESUME the cursor is restored but got/shk start at 0, so "0 Solid / 0 Revisit"
+                     # read as LOST while the dock/pip/panel said "3 of 21 graded" (audit #22). This
+                     # grades 3, RELOADS (a real reload -- a hash-only goto leaves the live state in
+                     # memory), and asserts the tiles read 0/0, the record still holds 3, and the board
+                     # is scoped "This run" so the two numbers read as honestly different, not a lie.
+                     # Watched RED pre-fix (the caption was absent).
+                     ('scoreboard_resume', 'test/scoreboard_resume.cjs'),
                      ('e2e_interactions', 'test/e2e_interactions.cjs'),
                      # A filtered sub-drill must MERGE into the topic's canonical progress
                      # record, never REPLACE it. Guards a shipped P0: the app's own
@@ -334,6 +353,16 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # isolation driven through the REAL writers; and the legacy honest-discard
                      # migration. Every assertion FAILS on the pre-Wave-0 build.
                      ('flow_data', 'test/flow_data.cjs'),
+                     # trend_integrity (D6): the Compare/trend surface's own data honesty. A CPR1 code
+                     # carried date + tallies but NO topic id, and sessStats measures the ACTIVE topic --
+                     # so a normal topic switch (caching solid 18 -> sharding solid 3) painted as a red
+                     # "regression -15" the stored data never supported. And trend.hist was DOUBLE
+                     # JSON-encoded (the only key needing a second parse). This drives the real
+                     # renderCompare: a legacy untagged point must be DISCARDED not misattributed; a
+                     # different topic's point must not compare; same-topic points still must; and after
+                     # a capture the store must be SINGLE-encoded. Every one FAILS on the pre-fix build
+                     # (it literally renders "Compared to <date> ... cmp-bad").
+                     ('trend_integrity', 'test/trend_integrity.cjs'),
                      # WAVE 1 "the hand-offs": every completion terminal (drill debrief, whiteboard
                      # ok-verdict, both mock ends, mixed-fire end, the walk last step) must offer
                      # EXACTLY ONE forward affordance -- the surface's own SELF button (#dweak/#wbrerun/

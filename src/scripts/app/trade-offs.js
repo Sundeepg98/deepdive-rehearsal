@@ -22,7 +22,7 @@ var TRADE_STYLE = `
    matched-load A/B (base build vs this): ~-250ms input->paint on this pane, and ZERO pixels move --
    the skipped cards sit below the 800px VR fold, so the at-rest capture is byte-identical (verified).
    contain-intrinsic-size reserves each card's height so the scrollbar/scroll position stay stable
-   (`auto` then remembers the real size after first render). @media print forces full render so a
+   (auto then remembers the real size after first render). @media print forces full render so a
    printout is never missing a below-fold decision. This does NOT touch the drill reveal region, home,
    or search (product wave's), nor the six-rooms retint (the topic-open cost, left as-is). */
 .dec{content-visibility:auto;contain-intrinsic-size:auto 300px}

@@ -130,12 +130,23 @@ async function measureRoom(browser, scratch, group, theme, plantLightBg) {
     const loc = page.locator('#ndock ' + t.sel).nth(t.nth || 0);
     if (!(await loc.count()) || !(await loc.isVisible().catch(() => false))) { out.push({ label: t.label, err: 'not rendered' }); continue; }
     const fg = await loc.evaluate((e) => getComputedStyle(e).color);
-    await B.waitPainted(loc);
-    const a = await loc.screenshot();
-    await loc.evaluate(HIDE_TEXT);
-    const b = await loc.screenshot();
-    await loc.evaluate(SHOW_TEXT);
-    const r = await scratch.evaluate(ANALYZE, { a: a.toString('base64'), b: b.toString('base64'), fg, coreAlpha: CORE_ALPHA });
+    /* "no core glyph pixels" is a TRANSIENT paint state, not a defect: the sidebar/body entry fades
+       hold effective opacity < 1 for ~650ms after load, and the tiny "Grade" run has too few pixels
+       to survive a marginal alpha (cta_contrast's larger CTAs mask the same window). waitPainted +
+       settle usually clears it; retry a few times if it does not, so a real "text never paints" still
+       fails (4 settles will not paint an unpainted element) but a paint race does not flake the gate. */
+    let r = null;
+    for (let attempt = 0; attempt < 5; attempt++) {
+      await B.waitPainted(loc);
+      await B.settle(page);
+      const a = await loc.screenshot();
+      await loc.evaluate(HIDE_TEXT);
+      const b = await loc.screenshot();
+      await loc.evaluate(SHOW_TEXT);
+      r = await scratch.evaluate(ANALYZE, { a: a.toString('base64'), b: b.toString('base64'), fg, coreAlpha: CORE_ALPHA });
+      if (!r.err) break;
+      await new Promise((res) => setTimeout(res, 150));
+    }
     out.push({ label: t.label, fg, ...r });
   }
   await ctx.close();

@@ -276,6 +276,19 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # threshold -- the keyboard overlay legitimately has one control. All five
                      # mechanisms were reverted one at a time and watched going red. ~2m.
                      ('overlay_keyboard', 'test/overlay_keyboard.cjs'),
+                     # flow_a11y (D4 #10/#18/#19/#20): the SR/keyboard half of the forward-flow chrome
+                     # (Continue dock, seg pip, terminal strip). #10 the global `n` (NextUp) key -- a
+                     # shipped W2 key the dock go button already wears as aria-keyshortcuts="N" -- must
+                     # be DOCUMENTED in the Shortcuts overlay. #18 the dock's meso/macro CTA must be
+                     # ANNOUNCED to a polite live region, while the MICRO armed grade legend must NOT be
+                     # (it echoes the drill's own judge buttons; speaking it at the reveal would talk
+                     # over the answer) -- via a DEDICATED region, not the shared announcer the drill
+                     # debrief fires through on the same microtask. #19 the visual-only pip must carry a
+                     # "Recommended next" accessible description (aria-describedby). #20 the shadow-DOM
+                     # .flow-go must get the app's 2px var(--acc) focus ring (the document ring cannot
+                     # cross the boundary). Watched red on the pre-fix build; #18b self-tests its
+                     # armed-legend detector against a planted leak.
+                     ('flow_a11y', 'test/flow_a11y.cjs'),
                      # room wired at boot (data-group + --topic-ink + --acc rebind) AND the
                      # blank-page class of bug cannot recur (reduced-motion still RENDERS,
                      # both themes). The two things a grep cannot see. (Phase 6)

@@ -313,6 +313,15 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # ever been painted.) room_contrast pins the token; this proves the BUTTON.
                      # 6 rooms x 2 themes x 3 CTAs. ~1m40s.
                      ('cta_contrast', 'test/cta_contrast.cjs'),
+                     # dock_contrast (D4 #3): the dark Continue dock was flattened from the accent
+                     # wash to a recessed --panel so it stops reading as the twin of the accent-
+                     # bordered Mock CTA. Its MICRO tier still renders the armed grade legend, whose
+                     # AA contrast the audit put at 5.11-6.81:1 and the brief said "must not degrade".
+                     # --panel is a GRADIENT (getComputedStyle background-color -> transparent), so
+                     # this reuses cta_contrast's pixel-decode to read the legend's glyphs against the
+                     # ACTUAL painted panel across all 6 rooms in dark. Carries a per-run self-test: a
+                     # planted light dock bg must drop the accent digit below the floor, or it aborts.
+                     ('dock_contrast', 'test/dock_contrast.cjs'),
                      # scoreboard_salience: the drill scoreboard once encoded its verdict in HUE --
                      # and two of the six ROOM hues were the same two colours, so in the teal room
                      # the Solid tile dissolved into the wallpaper and the board read INVERTED: a

@@ -315,6 +315,20 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # (never el.click()), at desktop AND 360px, and carries a live plant so the
                      # reachability probe cannot become one that never fails. RED on the pre-fix build.
                      ('no_dead_ends', 'test/no_dead_ends.cjs'),
+                     # mobile_nextup (D5, the Beat-4 revisit): the mobile flow spine has no touch
+                     # equivalent of the desktop Continue dock + `n` key (`.dock` is display:none below
+                     # 920px). This wave adds the NextUp chip (#ndm) inside the fixed bottom bar --
+                     # rendered by flowDock from the SAME nextUp() compute as #ndock/pip/#ssgo. This
+                     # guards the whole contract on the app's most drift-sensitive surface: the chip
+                     # appears on meso / hides on micro, clears 44px, a REAL tap runs flowGo, the bar
+                     # stays ONE row with IDENTICAL height chip-shown vs chip-hidden (no reflow across
+                     # the micro<->meso boundary), zero overflow at 360/390, the mock CTA + Tools FAB
+                     # stay reachable, the accessible name contains the visible kicker (WCAG 2.5.3), and
+                     # the touch-complete-judgment invariant (the Missed/Shaky/Solid buttons clear 44px
+                     # at the judgment moment). Real input only; three plants (hide the chip, let the
+                     # mock label wrap, shrink the grade buttons) are re-armed every run. RED on the
+                     # pre-chip build (the chip assertions fail: #ndm does not exist).
+                     ('mobile_nextup', 'test/mobile_nextup.cjs'),
                      # cta_contrast: the primary CTAs are painted in a GRADIENT, and
                      # getComputedStyle('background-color') on a gradient returns rgba(0,0,0,0) --
                      # it tells you nothing, in a tone of voice that sounds like an answer. This

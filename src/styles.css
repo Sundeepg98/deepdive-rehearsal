@@ -393,6 +393,12 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
      merge condition; until it lands, the sidebar dock is hidden below the app's 920px boundary so it
      never renders inside the mobile top-strip layout. */
   @media(max-width:919px){ .dock{display:none} }
+  /* D5 -- the MOBILE NextUp chip (#ndm), the touch equivalent of the sidebar dock hidden above.
+     display:none by default so it never paints on desktop (the real #ndock owns that surface) and
+     is invisible until flowDock un-hides it on meso/macro; the mobile show + look live in the
+     max-width:919px block by the fixed bottom bar. Quiet by contract: accent on the kicker only,
+     never a second loud primary (the mock CTA keeps that). */
+  .nd-m{display:none}
   .mockbtn{display:flex;align-items:center;justify-content:center;gap:var(--space-9);width:100%;font:var(--font-weight-heavy) 13.5px -apple-system,sans-serif;letter-spacing:.2px;padding:var(--space-14) var(--space-16);border-radius:13px;border:0;background:linear-gradient(135deg,var(--acc),var(--acc2));color:var(--on-slab);cursor:pointer;transition:transform var(--duration-base) var(--ease-glide),box-shadow var(--duration-moderate) var(--ease-base);box-shadow:0 6px 18px var(--acc-a30),inset 0 1px 0 rgba(255,255,255,.14);position:relative;overflow:hidden}
 .mockbtn::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);transform:translateX(-100%);transition:none}
 .mockbtn:hover::after{animation:btnShimmer var(--duration-slowest) var(--ease-base)}
@@ -691,7 +697,20 @@ html[data-theme="dark"] .sidebar .seg button.on .seg-key{color:var(--acc);border
   .tools-fab:active{transform:scale(.95)}
   .sidebar .mockcta{order:2;position:fixed;bottom:0;left:0;right:0;z-index:40;display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;gap:var(--space-8) var(--space-10);margin:0;background:var(--card);border-top:1px solid var(--bd);box-shadow:0 -8px 24px rgba(0,0,0,.14);padding:var(--space-12) var(--space-15);padding-bottom:calc(var(--space-12) + env(safe-area-inset-bottom,0px))}
   .sidebar .mockcta .mockbtn{order:0;flex:1 1 0;min-width:0;margin:0}
-  .sidebar .mockcta .tools-fab{order:1;flex:none}
+  /* D5 -- the mobile NextUp chip sits BETWEEN the loud mock CTA (order 0) and the Tools FAB (now
+     order 2), in the SAME single row -- absorb, never a second row (anti-goal 8). flex:none + a
+     BOUNDED label (the kicker, not the variable-length rec.btn) is what keeps it from ever wrapping
+     the load-bearing one-row bar; min-height:44px is the tap floor, and it stays SHORTER than the
+     ~48px mock button so the bar height is identical whether the chip shows or hides (no reflow of
+     the fixed bar across the micro<->meso boundary). Quiet: a neutral hairline pill, accent only on
+     the kicker + arrow -- clearly a tier below the filled mock CTA, and distinct from the
+     accent-outlined Tools FAB. */
+  .sidebar .mockcta .nd-m:not([hidden]){order:1;flex:none;display:inline-flex;align-items:center;gap:var(--space-6);min-height:44px;box-sizing:border-box;padding:var(--space-7) var(--space-13);border:1px solid var(--bd);border-radius:999px;background:var(--card);cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),border-color var(--duration-base) var(--ease-base),background var(--duration-base) var(--ease-base)}
+  .sidebar .mockcta .nd-m:not([hidden]):hover{border-color:var(--acc);background:var(--accbg)}
+  .sidebar .mockcta .nd-m:not([hidden]):active{transform:scale(.96)}
+  .nd-m-k{font:var(--font-weight-heavy) var(--font-size-caption) -apple-system,sans-serif;letter-spacing:.2px;color:var(--accink);white-space:nowrap}
+  .nd-m-ar{font-size:var(--font-size-body);line-height:var(--line-height-none);color:var(--acc);flex:none;font-weight:var(--font-weight-heavy)}
+  .sidebar .mockcta .tools-fab{order:2;flex:none}
   /* The "Interviewer cuts in mid-answer" toggle is a mock-run SETTING, not a global
      action -- its flex-basis:100% forced a second full row, making the fixed bottom bar
      123px and clipping the drill question (the entire reason the pane exists) to 27px.
@@ -699,6 +718,12 @@ html[data-theme="dark"] .sidebar .seg button.on .seg-key{color:var(--acc);border
      Available on desktop (defaults off). Full "move into the mock overlay" is a follow-up. */
   .sidebar .mockcta .inttog{display:none}
   .mbl-tail{display:none}
+  /* D5 -- with the NextUp chip sharing the row, the flex:1 mock CTA narrows; "Mock run" must stay
+     ONE line so the mock button's height (and thus the fixed bar's height) never grows when the chip
+     appears -- otherwise the bar would resize across the micro<->meso boundary, the very drift the
+     position:fixed pin exists to prevent. The label is short (the desktop tail .mbl-tail is hidden
+     here), so nowrap keeps one line without clipping. */
+  .sidebar .mockcta .mockbtn .mb-lbl{white-space:nowrap}
   /* LOAD-BEARING: `position:fixed` here is the ENTIRE reason the mobile strip does not drift on a
      topic switch. A dual-instrument measurement (task #8; _audit/2026-07-13-visual-sweep.md, the
      mobile-drift section) certified 0px drift across all 46 topics WITH this pin; synthetically

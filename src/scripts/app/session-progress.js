@@ -198,14 +198,20 @@ function flowStripHtml(rec) {
 function flowPip() {
   try {
     var was = document.querySelectorAll('.flow-pip, .flow-cta');
-    for (var i = 0; i < was.length; i++) was[i].classList.remove('flow-pip', 'flow-cta');
+    for (var i = 0; i < was.length; i++) {
+      was[i].classList.remove('flow-pip', 'flow-cta');
+      if (was[i].getAttribute('aria-describedby') === 'flowpip-desc') was[i].removeAttribute('aria-describedby');   /* #19: drop the text equivalent when the pip moves */
+    }
     if (typeof flowRec !== 'function' || document.documentElement.dataset.view === 'home') return;
     var rec = flowRec();
     if (!rec || !rec.tab || rec.tab === '__topic__') return;    /* the topic-end hands off elsewhere */
     var t = (rec.tab === '__mock__') ? document.getElementById('mockopen')
           : (rec.tab === '__mix__') ? document.getElementById('mixopen')
           : document.querySelector('.seg button[data-tab="' + rec.tab + '"]');
-    if (t) t.classList.add((rec.tab === '__mock__' || rec.tab === '__mix__') ? 'flow-cta' : 'flow-pip');
+    if (t) {
+      t.classList.add((rec.tab === '__mock__' || rec.tab === '__mix__') ? 'flow-cta' : 'flow-pip');
+      t.setAttribute('aria-describedby', 'flowpip-desc');   /* #19: the visual-only pip gets a "Recommended next" text equivalent for AT */
+    }
   } catch (e) {}
 }
 window.addEventListener('deeptopicchange', flowPip);              /* topic switch (fires post data-load) */
@@ -246,6 +252,38 @@ function drillAtTerminal(tab) {
   try { var dr = drillEl(); return !!(dr && dr.atDebrief && dr.atDebrief()); } catch (e) { return false; }
 }
 
+/* W2/#18 -- announce the dock's next-step CTA to a screen reader through a DEDICATED polite region.
+   NOT ViewManager's shared announcer: flowDock recomputes on the SAME 'drillgraded' microtask that
+   fires the drill's debrief readout through that region, and its 30ms cancel-pending would collapse
+   the two -- the CTA would clobber the more important debrief summary. A separate region lets both
+   be heard. De-duped on the last message, so navigating panes with the SAME recommendation does not
+   re-announce. The armed MICRO legend is deliberately NEVER passed here: it echoes the drill's own
+   judge buttons (which carry aria-keyshortcuts) and announcing it at the reveal would talk over the
+   just-revealed answer (the brief's "a judgment point must not shout over the answer text"). */
+var _dockLive = null, _dockSaid = '';
+function dockAnnounce(kicker, btnHtml) {
+  try {
+    var tmp = document.createElement('div'); tmp.innerHTML = btnHtml || '';
+    var label = (tmp.textContent || '').replace(/\s*\u2192\s*$/, '').replace(/\s+/g, ' ').trim();   /* drop the trailing arrow */
+    if (!label) return;
+    var ktmp = document.createElement('div'); ktmp.innerHTML = kicker || '';
+    var k = (ktmp.textContent || '').replace(/\s+/g, ' ').trim();
+    var msg = k ? (k + ': ' + label) : label;
+    if (msg === _dockSaid) return;   /* only a CHANGED next-step re-announces */
+    _dockSaid = msg;
+    if (!_dockLive) {
+      _dockLive = document.createElement('div');
+      _dockLive.setAttribute('data-nd-live', '');
+      _dockLive.setAttribute('aria-live', 'polite');
+      _dockLive.setAttribute('aria-atomic', 'true');
+      _dockLive.style.cssText = 'position:absolute;left:-10000px;width:var(--space-1);height:var(--space-1);overflow:hidden';
+      (document.body || document.documentElement).appendChild(_dockLive);
+    }
+    var el = _dockLive;
+    el.textContent = '';   /* clear-then-defer, the same pattern ViewManager.announce uses, so a repeat still speaks */
+    setTimeout(function () { el.textContent = msg; }, 30);
+  } catch (e) {}
+}
 /* W2 -- the desktop CONTINUE DOCK (light DOM, between .side-id and .mockcta). Renders nextUp():
    hidden on micro / none / home (it never nags mid-unit), a compact CTA on meso / macro. The label
    and receipt are flowRec's VERBATIM -- byte-identical to the seg pip and the session panel (the
@@ -254,24 +292,51 @@ function drillAtTerminal(tab) {
    pane, unlike the pip, so switchTab fires flowstatechange. */
 function flowDock() {
   try {
-    var d = document.getElementById('ndock');
-    if (!d) return;
     var n = (document.documentElement.dataset.view === 'home') ? { tier: 'home' } : nextUp();
-    /* MICRO -- you are on the recommended pane. Quiet mid-read; at a JUDGMENT POINT the dock arms the
-       pane's native grade keys (the judges' amendment). Never a CTA, never louder than the pane. */
-    if (n.tier === 'micro') {
-      var armed = dockArmedKeys();
-      d.innerHTML = armed; d.hidden = !armed;
-      return;
-    }
-    if (!n.rec || n.tier !== 'meso' && n.tier !== 'macro' || !n.rec.btn) { d.hidden = true; d.innerHTML = ''; return; }
-    var rec = n.rec, receipt = rec.receipt ? '<span class="nd-rcpt">' + rec.receipt + '</span>' : '';
-    d.innerHTML = '<span class="nd-k" style="color:' + rec.ink + '">' + rec.kicker + '</span>' +
-      '<button class="nd-go" type="button" aria-keyshortcuts="N">' + rec.btn + '</button>' + receipt;
-    var b = d.querySelector('.nd-go');
-    if (b) b.onclick = function () { if (typeof flowGo === 'function') flowGo(rec); };
-    d.hidden = false;
+    flowDockDesktop(document.getElementById('ndock'), n);   /* >=920px surface */
+    flowDockMobile(document.getElementById('ndm'), n);       /* <=919px chip -- SAME n, no second compute */
   } catch (e) {}
+}
+/* The desktop Continue dock -- behaviour UNCHANGED (extracted verbatim from flowDock so the mobile
+   chip could join the SAME one compute without moving a desktop pixel; the VR desktop baselines
+   prove the extraction is a no-op there). */
+function flowDockDesktop(d, n) {
+  if (!d) return;
+  /* MICRO -- you are on the recommended pane. Quiet mid-read; at a JUDGMENT POINT the dock arms the
+     pane's native grade keys (the judges' amendment). Never a CTA, never louder than the pane. */
+  if (n.tier === 'micro') {
+    var armed = dockArmedKeys();
+    d.innerHTML = armed; d.hidden = !armed;
+    return;
+  }
+  if (!n.rec || n.tier !== 'meso' && n.tier !== 'macro' || !n.rec.btn) { d.hidden = true; d.innerHTML = ''; return; }
+  var rec = n.rec, receipt = rec.receipt ? '<span class="nd-rcpt">' + rec.receipt + '</span>' : '';
+  d.innerHTML = '<span class="nd-k" style="color:' + rec.ink + '">' + rec.kicker + '</span>' +
+    '<button class="nd-go" type="button" aria-keyshortcuts="N">' + rec.btn + '</button>' + receipt;
+  var b = d.querySelector('.nd-go');
+  if (b) b.onclick = function () { if (typeof flowGo === 'function') flowGo(rec); };
+  d.hidden = false;
+  dockAnnounce(rec.kicker, rec.btn);   /* #18 (D4): speak the CTA to AT via the body-level live region.
+     Runs on mobile too -- #ndock is display:none there, but dockAnnounce writes to a separate
+     aria-live region (not #ndock), so the SAME next-step is announced for the touch chip; the chip
+     itself carries the focusable aria-label. De-duped, so the single call site suffices. */
+}
+/* D5 -- the MOBILE NextUp chip (#ndm). The same nextUp() result rendered as a compact touch target:
+   the BOUNDED kicker as its label (rec.btn is variable-length -- "Next: <long topic> ->" -- and
+   would wrap the load-bearing one-row bar), a tap runs flowGo (the `n` destination mobile lacks; the
+   seg pip carries WHERE). Shown ONLY on meso/macro -- exactly when the desktop dock shows a CTA and
+   when `n` fires (shell.js) -- so the touch affordance and the key stay in lockstep. Hidden on micro
+   (the pane owns momentum; grade via the pane's own touch buttons, not an armed-KEY legend that means
+   nothing without a keyboard), home, and none. The visible kicker is the accessible name's prefix
+   (WCAG 2.5.3 Label in Name); aria-label enriches it with the full action for AT. */
+function flowDockMobile(dm, n) {
+  if (!dm) return;
+  if (!n.rec || n.tier !== 'meso' && n.tier !== 'macro' || !n.rec.btn) { dm.hidden = true; dm.innerHTML = ''; dm.onclick = null; return; }
+  var rec = n.rec;
+  dm.innerHTML = '<span class="nd-m-k">' + rec.kicker + '</span><span class="nd-m-ar" aria-hidden="true">\u2192</span>';
+  dm.setAttribute('aria-label', rec.kicker + ' \u2014 ' + rec.btn.replace(/\s*\u2192\s*$/, ''));
+  dm.onclick = function () { if (typeof flowGo === 'function') flowGo(rec); };
+  dm.hidden = false;
 }
 /* The current pane's armed judgment keys for the dock's micro tier, or '' when not at a judgment
    point. Reads the CURRENT (visible) pane's live state via atJudgment() -- never a hidden pane, so

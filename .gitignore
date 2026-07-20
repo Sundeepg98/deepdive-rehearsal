@@ -39,3 +39,7 @@ src/scripts/visuals/
 # scratch probes + screenshots from the entry-architecture work (generated; never commit)
 _probe/
 _audit/shots/
+
+# team-lead <-> agent coordination artifacts (never part of a build)
+_TEAM_LEAD_*.md
+_W2_DRILL_BLOCKED.md

@@ -23,13 +23,13 @@
         "channelTol": 2,
         "maxChanged": 32
       },
-      "generated": "2026-07-19T10:49:29.646Z",
+      "generated": "2026-07-20T06:53:20.984Z",
       "baselines": {
         "home-light": {
           "file": "home-light-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "c5997c71ce0dfa20",
+          "sha256": "ff91cf05a7ca161d",
           "hash": "",
           "theme": "light",
           "vp": "desktop"
@@ -38,7 +38,7 @@
           "file": "home-dark-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "8615b046f5ce0ae4",
+          "sha256": "d33877a16d2570fb",
           "hash": "",
           "theme": "dark",
           "vp": "desktop"
@@ -47,7 +47,7 @@
           "file": "walk-light-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "761e6b6de141565b",
+          "sha256": "5b75100beacf2469",
           "hash": "#event-driven/walk",
           "theme": "light",
           "vp": "desktop"
@@ -56,7 +56,7 @@
           "file": "walk-dark-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "3d020e0c0dae0164",
+          "sha256": "28c833e1913a05ba",
           "hash": "#event-driven/walk",
           "theme": "dark",
           "vp": "desktop"
@@ -83,7 +83,7 @@
           "file": "sys-light-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "f766815ce24d1f5c",
+          "sha256": "42ff58e2ea702cc9",
           "hash": "#event-driven/sys",
           "theme": "light",
           "vp": "desktop"
@@ -92,7 +92,7 @@
           "file": "num-light-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "8932628cf76a2205",
+          "sha256": "e60c1b395e33ce62",
           "hash": "#event-driven/num",
           "theme": "light",
           "vp": "desktop"
@@ -101,7 +101,7 @@
           "file": "wb-light-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "83ffa4bdb22fda09",
+          "sha256": "399b8862c0426502",
           "hash": "#event-driven/wb",
           "theme": "light",
           "vp": "desktop"
@@ -110,7 +110,7 @@
           "file": "room-data-storage-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "82eb869df52f7bea",
+          "sha256": "d546fe66bfef77a2",
           "hash": "#caching/walk",
           "theme": "light",
           "vp": "desktop"
@@ -119,7 +119,7 @@
           "file": "room-reliability-observability-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "a8d9867752635554",
+          "sha256": "4df073e00ed069dd",
           "hash": "#retries-timeouts/walk",
           "theme": "light",
           "vp": "desktop"
@@ -128,7 +128,7 @@
           "file": "room-platform-infra-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "ebe1a62c0c7071a2",
+          "sha256": "249a45703d55c791",
           "hash": "#iac/walk",
           "theme": "light",
           "vp": "desktop"
@@ -137,7 +137,7 @@
           "file": "room-architecture-apis-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "b8b49ea426c9043f",
+          "sha256": "67e9da37fed1e940",
           "hash": "#state-machine/walk",
           "theme": "light",
           "vp": "desktop"
@@ -146,7 +146,7 @@
           "file": "room-security-tenancy-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "8793d92e644889bd",
+          "sha256": "ee9730084ac41190",
           "hash": "#signing/walk",
           "theme": "light",
           "vp": "desktop"
@@ -155,7 +155,7 @@
           "file": "m-walk-light-win32-chromium149.png",
           "w": 390,
           "h": 844,
-          "sha256": "a889edd98b816169",
+          "sha256": "cc82a38eef0e77eb",
           "hash": "#event-driven/walk",
           "theme": "light",
           "vp": "mobile"
@@ -164,7 +164,7 @@
           "file": "m-walk-dark-win32-chromium149.png",
           "w": 390,
           "h": 844,
-          "sha256": "069f6feb9d8df2ee",
+          "sha256": "b189117fad1db269",
           "hash": "#event-driven/walk",
           "theme": "dark",
           "vp": "mobile"

@@ -276,6 +276,19 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # threshold -- the keyboard overlay legitimately has one control. All five
                      # mechanisms were reverted one at a time and watched going red. ~2m.
                      ('overlay_keyboard', 'test/overlay_keyboard.cjs'),
+                     # flow_a11y (D4 #10/#18/#19/#20): the SR/keyboard half of the forward-flow chrome
+                     # (Continue dock, seg pip, terminal strip). #10 the global `n` (NextUp) key -- a
+                     # shipped W2 key the dock go button already wears as aria-keyshortcuts="N" -- must
+                     # be DOCUMENTED in the Shortcuts overlay. #18 the dock's meso/macro CTA must be
+                     # ANNOUNCED to a polite live region, while the MICRO armed grade legend must NOT be
+                     # (it echoes the drill's own judge buttons; speaking it at the reveal would talk
+                     # over the answer) -- via a DEDICATED region, not the shared announcer the drill
+                     # debrief fires through on the same microtask. #19 the visual-only pip must carry a
+                     # "Recommended next" accessible description (aria-describedby). #20 the shadow-DOM
+                     # .flow-go must get the app's 2px var(--acc) focus ring (the document ring cannot
+                     # cross the boundary). Watched red on the pre-fix build; #18b self-tests its
+                     # armed-legend detector against a planted leak.
+                     ('flow_a11y', 'test/flow_a11y.cjs'),
                      # room wired at boot (data-group + --topic-ink + --acc rebind) AND the
                      # blank-page class of bug cannot recur (reduced-motion still RENDERS,
                      # both themes). The two things a grep cannot see. (Phase 6)
@@ -302,6 +315,39 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # (never el.click()), at desktop AND 360px, and carries a live plant so the
                      # reachability probe cannot become one that never fails. RED on the pre-fix build.
                      ('no_dead_ends', 'test/no_dead_ends.cjs'),
+                     # mobile_nextup (D5, the Beat-4 revisit): the mobile flow spine has no touch
+                     # equivalent of the desktop Continue dock + `n` key (`.dock` is display:none below
+                     # 920px). This wave adds the NextUp chip (#ndm) inside the fixed bottom bar --
+                     # rendered by flowDock from the SAME nextUp() compute as #ndock/pip/#ssgo. This
+                     # guards the whole contract on the app's most drift-sensitive surface: the chip
+                     # appears on meso / hides on micro, clears 44px, a REAL tap runs flowGo, the bar
+                     # stays ONE row with IDENTICAL height chip-shown vs chip-hidden (no reflow across
+                     # the micro<->meso boundary), zero overflow at 360/390, the mock CTA + Tools FAB
+                     # stay reachable, the accessible name contains the visible kicker (WCAG 2.5.3), and
+                     # the touch-complete-judgment invariant (the Missed/Shaky/Solid buttons clear 44px
+                     # at the judgment moment). Real input only; three plants (hide the chip, let the
+                     # mock label wrap, shrink the grade buttons) are re-armed every run. RED on the
+                     # pre-chip build (the chip assertions fail: #ndm does not exist).
+                     ('mobile_nextup', 'test/mobile_nextup.cjs'),
+                     # search_deadend: the SEARCH sibling of the dead-end family (audit #13). A
+                     # candidate types the whole-system prompt they rehearse ("design twitter", "url
+                     # shortener") and search returned a bare "No results found" -- because this
+                     # trainer teaches the COMPONENTS such systems are built from, not the prompts. A
+                     # matched prompt now routes to its real component topics. Drives REAL typing +
+                     # asserts an honest miss ("No results found" IS shown, so nothing is faked), the
+                     # chips are all registry-real, and a real hit-tested click on a chip routes to the
+                     # topic. Two plants (a gibberish miss + a real hit both show ZERO chips) keep the
+                     # section from degrading into fire-for-everything. RED on the pre-fix build.
+                     ('search_deadend', 'test/search_deadend.cjs'),
+                     # cold_open: the OTHER half of audit #13. The first minute under-stated identity
+                     # -- "system design" appeared nowhere above the fold, and the home led with
+                     # undefined jargon. A cold user (link before an interview) spent 60s deciding
+                     # what this even is. Asserts the cold home shows a value-prop lead naming "system
+                     # design" ABOVE THE FOLD, the Start CTA is de-jargoned, and -- the gating -- the
+                     # lead is GONE once engaged (the returning user's lean home is not taxed). Live
+                     # plant (hide the lead -> the above-fold value prop is gone). RED pre-fix (the
+                     # lead did not exist). Guards STRUCTURE; the words are the operator's to review.
+                     ('cold_open', 'test/cold_open.cjs'),
                      # cta_contrast: the primary CTAs are painted in a GRADIENT, and
                      # getComputedStyle('background-color') on a gradient returns rgba(0,0,0,0) --
                      # it tells you nothing, in a tone of voice that sounds like an answer. This
@@ -313,6 +359,15 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # ever been painted.) room_contrast pins the token; this proves the BUTTON.
                      # 6 rooms x 2 themes x 3 CTAs. ~1m40s.
                      ('cta_contrast', 'test/cta_contrast.cjs'),
+                     # dock_contrast (D4 #3): the dark Continue dock was flattened from the accent
+                     # wash to a recessed --panel so it stops reading as the twin of the accent-
+                     # bordered Mock CTA. Its MICRO tier still renders the armed grade legend, whose
+                     # AA contrast the audit put at 5.11-6.81:1 and the brief said "must not degrade".
+                     # --panel is a GRADIENT (getComputedStyle background-color -> transparent), so
+                     # this reuses cta_contrast's pixel-decode to read the legend's glyphs against the
+                     # ACTUAL painted panel across all 6 rooms in dark. Carries a per-run self-test: a
+                     # planted light dock bg must drop the accent digit below the floor, or it aborts.
+                     ('dock_contrast', 'test/dock_contrast.cjs'),
                      # scoreboard_salience: the drill scoreboard once encoded its verdict in HUE --
                      # and two of the six ROOM hues were the same two colours, so in the teal room
                      # the Solid tile dissolved into the wallpaper and the board read INVERTED: a
@@ -334,6 +389,18 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # is scoped "This run" so the two numbers read as honestly different, not a lie.
                      # Watched RED pre-fix (the caption was absent).
                      ('scoreboard_resume', 'test/scoreboard_resume.cjs'),
+                     # grade_reveal: the self-grade must be unmissable-by-ignorance for a cold
+                     # first-timer (audit #4). The judge row (Missed/Shaky/Solid) used to render ONLY
+                     # at the full judgment point (stage >= maxStage) -- after the ENTIRE follow-up
+                     # chain was clicked through, and every probe carries 2-3 follow-ups -- so a
+                     # first-timer who revealed the answer and moved on never saw the grade and
+                     # forfeited the spaced-repetition spine. The fix renders the in-pane row the
+                     # instant the answer is shown (stage >= 1), push-further kept above it. This
+                     # drives a REAL reveal, asserts push-further is STILL offered (so stage 1 is
+                     # genuinely pre-judgment), hit-tests the Solid button across the shadow boundary,
+                     # GRADES with a real page.mouse.click (record 0 -> 1), and plants (hide the row ->
+                     # unreachable). Watched RED pre-fix (the row is absent at reveal). ~15s.
+                     ('grade_reveal', 'test/grade_reveal.cjs'),
                      ('e2e_interactions', 'test/e2e_interactions.cjs'),
                      # A filtered sub-drill must MERGE into the topic's canonical progress
                      # record, never REPLACE it. Guards a shipped P0: the app's own

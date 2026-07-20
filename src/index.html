@@ -44,6 +44,14 @@
   <div class="dock" id="ndock" hidden></div>
     <div class="mockcta">
     <button class="mockbtn" id="mockopen" type="button"><span class="mb-ic">&#9654;</span><span class="mb-lbl">Mock run<span class="mbl-tail"> &mdash; the full round, on the clock</span></span></button>
+    <!-- D5: the MOBILE NextUp chip. The desktop Continue dock (#ndock) is display:none below 920px;
+         this is its touch equivalent -- a QUIET, compact tap target inside the fixed bottom bar that
+         gives mobile the `n`-key destination it otherwise lacks. flowDock() populates it from the SAME
+         nextUp() compute as #ndock / the seg pip / #ssgo (one compute, no second recommendation source):
+         the bounded kicker as its label (rec.btn is variable-length -> would wrap the load-bearing
+         one-row bar), the pip carries WHERE, a tap runs flowGo. Shown only on meso/macro; hidden on
+         micro/home. display:none >=920px so it never renders in the desktop column. -->
+    <button class="nd-m" id="ndm" type="button" hidden aria-keyshortcuts="N"></button>
     <button class="inttog" id="inttog" type="button" aria-pressed="false"><span class="inttog-dot"></span><span class="inttog-lbl">Interviewer cuts in mid-answer &mdash; <b>off</b></span></button>
     <button class="tools-fab" id="toolsfab" type="button">Tools</button>
     </div>
@@ -74,6 +82,11 @@
     <button type="button" data-tab="open" aria-keyshortcuts="O"><span>30-Second</span><span class="n">OPEN &amp; CLOSE</span><kbd class="seg-key" aria-hidden="true">O</kbd></button>
     <button type="button" data-tab="viz" hidden aria-keyshortcuts="V"><span>Visualize</span><span class="n">GPU MODE</span><kbd class="seg-key" aria-hidden="true">V</kbd></button>
   </div>
+  <!-- #19: the seg recommendation pip is a pure ::before dot -- no accessible cue. flowPip()
+       (session-progress.js) points the recommended tab's aria-describedby here, so AT hears
+       "Recommended next" on that tab. Off-screen (not display:none) so the description is computed
+       by every SR; position:absolute keeps it out of flow (zero layout / paint / VR impact). -->
+  <span id="flowpip-desc" style="position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden">Recommended next</span>
 
     <div class="mockbar">
     <div class="mb-sec">Find a topic</div>

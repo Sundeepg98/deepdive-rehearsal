@@ -106,7 +106,7 @@
       return '<button class="hm-cta" type="button" data-topic="' + ids[0] + '" data-autofocus="1">' +
         '<span><span class="hm-cta-k">Start</span>' +
         '<span class="hm-cta-t">' + (first ? first.identity.title : ids[0]) + '</span>' +
-        '<span class="hm-cta-d">Drill the probes, recall the design, then run a timed mock.</span></span>' +
+        '<span class="hm-cta-d">Drill the interviewer\'s follow-ups, rebuild the design from memory, then run a timed mock.</span></span>' +
         '<span class="hm-cta-ar">&rarr;</span></button>';
     }
     var r = Panels.resumeTarget();
@@ -143,9 +143,23 @@
       '<label for="hm-skip-cb">Skip the home &mdash; resume straight into my last topic</label></div>';
   }
 
+  /* COLD-OPEN VALUE PROP (audit #13). The first minute under-stated identity: "system design"
+     appeared nowhere above the fold, and the copy led with undefined jargon. This one quiet line
+     names WHAT this is, in the app's register (cf. a topic thesis -- "...taken apart the way an
+     interviewer actually scores it"). Shown to COLD users only: a returning, engaged user already
+     knows what the app is, and the home's discipline is ONE line of state then ONE decision, so the
+     lead must not tax them. */
+  function leadHtml() {
+    if (Panels.engaged()) return '';
+    var n = (typeof TopicRegistry !== 'undefined' && TopicRegistry.ids) ? TopicRegistry.ids().length : 0;
+    return '<div class="hm-lead">A <b>system-design interview</b> trainer &mdash; ' + n +
+      ' topics, each taken apart the way an interviewer actually scores it.</div>';
+  }
+
   function html() {
     var tele = Panels.telemetryHtml();
     return headerHtml() + '<div class="ix-panel">' +
+      leadHtml() +
       stateHtml() +
       ctaHtml() +
       shakyHtml() +

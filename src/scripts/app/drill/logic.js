@@ -285,6 +285,14 @@ var DRILL_STYLE = `/* @keyframes pop moved to BASE_SHEET. Five shadow scopes ref
 .mhp-cov{margin-top:var(--space-11);font-size:var(--font-size-caption);color:var(--mut);font-weight:var(--font-weight-semibold)}
 .mhp-cov b{color:var(--accink);font-weight:var(--font-weight-heavy)}
 .judge .got.j-rec,.judge .shk.j-rec,.judge .miss.j-rec{box-shadow:0 0 0 2px var(--acc),0 6px 16px -5px var(--acc-a32)}
+/* audit #4 -- the quiet framing above the REVEAL-MOMENT grade row (at the full judgment point the
+   must-hit checklist frames the row instead, so this never renders there). Muted by design: it makes
+   the self-grade discoverable-by-ignorance without shouting -- quiet-by-default -- and adds no motion,
+   so it is reduced-motion safe with nothing to suppress. */
+.judge-lead{margin-top:var(--space-15)}
+.judge-lead .jl-h{font:var(--font-weight-heavy) 12px -apple-system,sans-serif;color:var(--ink)}
+.judge-lead .jl-s{margin-top:var(--space-3);font-size:var(--font-size-caption);color:var(--mut);font-style:italic}
+.judge-lead+.judge{margin-top:var(--space-9)}
 .sigdrop{font-size:var(--font-size-micro);color:var(--fb-a-fg);font-weight:var(--font-weight-semibold);margin-top:var(--space-2)}
 /* ===================== THE LANDING PADS FOR PROGRAMMATIC FOCUS =====================
    Every re-render of #dwrap destroyed the focused element and dumped focus on <body>.
@@ -558,9 +566,12 @@ class DeepDrill extends TopicPane {
        "Reveal answer" destroys the button that was pressed. Same guard, same reason. */
     const land = !!moveFocus || this._focusDoomed();
     const card = cards[this.di], maxStage = 1 + card.f.length;
-    /* W2 beat3 -- a JUDGMENT POINT is when the answer is fully revealed and the Missed/Shaky/Solid
-       row is on screen (stage >= maxStage). The dock's micro tier renders armed keys ONLY then (the
-       judges' amendment: quiet mid-read, armed at the judgment, full targets at the boundary). */
+    /* W2 beat3 -- the DOCK's JUDGMENT POINT is when the answer is fully revealed AND the whole
+       follow-up chain is exhausted (stage >= maxStage). The dock's micro tier renders armed keys
+       ONLY then (the judges' amendment: quiet mid-read, armed at the judgment, full targets at the
+       boundary). This flag governs the DOCK only (atJudgment -> dockArmedKeys), and audit #4 leaves
+       it UNTOUCHED: the in-pane judge row now appears at the reveal moment (stage >= 1, see below),
+       but the sidebar dock stays quiet mid-read exactly as shipped. */
     this._judgeOn = (stage >= maxStage);
     let html = '<div class="card"><div class="thread">' +
       '<div class="qrow"><div><div class="qk">Probe ' + (this.di + 1) + ' / ' + cards.length + '</div>' +
@@ -581,9 +592,34 @@ class DeepDrill extends TopicPane {
       html += '<div class="speak"><div class="sl">Say it out loud like this</div>' + speakLines[this.di] + '</div>';
     }
     html += '</div>';
+    /* The ONE grade control -- Missed/Shaky/Solid. Rendered both at the reveal moment (below) and at
+       the full judgment point: same ids, same handlers, same judge(). One decision engine, surfaced
+       earlier -- never a second one. */
+    const judgeRow = '<div class="judge"><button type="button" class="miss" id="jm" aria-keyshortcuts="1">&#10007; Missed <span class="hint">[1]</span></button>' +
+      '<button type="button" class="shk" id="js" aria-keyshortcuts="2">&#126; Shaky <span class="hint">[2]</span></button>' +
+      '<button type="button" class="got" id="jg" aria-keyshortcuts="3">&#10003; Solid <span class="hint">[3]</span></button></div>';
     if (stage < maxStage) {
       html += '<button type="button" class="push' + (stage >= 1 ? ' more' : '') + '" id="adv" aria-keyshortcuts="Space Enter">' +
         (stage < 1 ? 'Reveal answer' : '&#8627; Interviewer pushes further') + '</button>';
+      /* ===================== GRADE AT THE REVEAL MOMENT (audit #4) =====================
+         The judge row used to render ONLY at the full judgment point (stage >= maxStage) -- i.e.
+         after the user clicked through the ENTIRE follow-up chain. Every probe here carries 2-3
+         follow-ups, so a cold first-timer who revealed the answer and moved on never saw the
+         self-grade at all, silently forfeiting the spaced-repetition spine the whole app is built
+         on (the Resume hero, the "still shaky" chips, the weakness view -- all fed by this grade).
+         So the instant the answer is on screen (stage >= 1) the grade is offered in-pane, with
+         "Interviewer pushes further" kept right above it as the OPTIONAL deepen path: quick-grade
+         if you're confident, or push further for the full test, then grade at the boundary.
+         The must-hit checklist stays at the judgment point -- it is derived from the senior tell,
+         which is only revealed there -- so a grade taken here is an honest gut-feel call. _mhp/_cov
+         are cleared so the previous card's checklist can't bleed into that call (judge() reads them;
+         cleared they record cov{0,0}, "coverage not assessed", not a false 0-of-N). */
+      if (stage >= 1) {
+        this._mhp = []; this._cov = {};
+        html += '<div class="judge-lead"><div class="jl-h">How did you do?</div>' +
+          '<div class="jl-s">Grade yourself &mdash; this is what surfaces your weak spots later.</div></div>' +
+          judgeRow;
+      }
     } else {
       /* grounded scoring: surface this probe's must-hit points as a checklist so
          the Solid/Revisit call reflects actual coverage, not a gut feel */
@@ -597,9 +633,7 @@ class DeepDrill extends TopicPane {
           '<div class="mhp-list">' + items + '</div>' +
           '<div class="mhp-cov">Covered <b id="mhpN">0</b> / ' + this._mhp.length + ' &middot; <span id="mhpRec"></span></div></div>';
       }
-      html += '<div class="judge"><button type="button" class="miss" id="jm" aria-keyshortcuts="1">&#10007; Missed <span class="hint">[1]</span></button>' +
-        '<button type="button" class="shk" id="js" aria-keyshortcuts="2">&#126; Shaky <span class="hint">[2]</span></button>' +
-        '<button type="button" class="got" id="jg" aria-keyshortcuts="3">&#10003; Solid <span class="hint">[3]</span></button></div>';
+      html += judgeRow;
     }
     html += '</div>';
     this._dwrap.innerHTML = html;

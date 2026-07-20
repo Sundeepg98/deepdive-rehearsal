@@ -68,6 +68,7 @@ var KBD_HTML = `<div class="ks-sec">
           <div class="ks-row2"><span class="ks-keys"><kbd>\\</kbd></span><span>Open the Topic index</span></div>
           <div class="ks-row2"><span class="ks-keys"><kbd>H</kbd></span><span>Home &mdash; every topic, your bookmarks, where you left off</span></div>
           <div class="ks-row2"><span class="ks-keys"><kbd>[</kbd><kbd>]</kbd></span><span>Previous &middot; next topic</span></div>
+          <div class="ks-row2"><span class="ks-keys"><kbd>N</kbd></span><span>Go to your next step &mdash; the drill, whiteboard or mock the app points you at</span></div>
           <div class="ks-row2"><span class="ks-keys"><kbd>P</kbd></span><span>Session progress &mdash; where you&rsquo;re weak, what to drill next</span></div>
           <div class="ks-row2"><span class="ks-keys"><kbd>F</kbd></span><span>Focus mode &mdash; hide the side panels</span></div>
           <div class="ks-row2"><span class="ks-keys"><kbd>Ctrl</kbd><kbd>P</kbd></span><span>Printable Q&amp;A of this topic&rsquo;s probes</span></div>

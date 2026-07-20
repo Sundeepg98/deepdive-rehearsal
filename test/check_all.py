@@ -334,6 +334,18 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # is scoped "This run" so the two numbers read as honestly different, not a lie.
                      # Watched RED pre-fix (the caption was absent).
                      ('scoreboard_resume', 'test/scoreboard_resume.cjs'),
+                     # grade_reveal: the self-grade must be unmissable-by-ignorance for a cold
+                     # first-timer (audit #4). The judge row (Missed/Shaky/Solid) used to render ONLY
+                     # at the full judgment point (stage >= maxStage) -- after the ENTIRE follow-up
+                     # chain was clicked through, and every probe carries 2-3 follow-ups -- so a
+                     # first-timer who revealed the answer and moved on never saw the grade and
+                     # forfeited the spaced-repetition spine. The fix renders the in-pane row the
+                     # instant the answer is shown (stage >= 1), push-further kept above it. This
+                     # drives a REAL reveal, asserts push-further is STILL offered (so stage 1 is
+                     # genuinely pre-judgment), hit-tests the Solid button across the shadow boundary,
+                     # GRADES with a real page.mouse.click (record 0 -> 1), and plants (hide the row ->
+                     # unreachable). Watched RED pre-fix (the row is absent at reveal). ~15s.
+                     ('grade_reveal', 'test/grade_reveal.cjs'),
                      ('e2e_interactions', 'test/e2e_interactions.cjs'),
                      # A filtered sub-drill must MERGE into the topic's canonical progress
                      # record, never REPLACE it. Guards a shipped P0: the app's own

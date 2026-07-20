@@ -254,24 +254,47 @@ function drillAtTerminal(tab) {
    pane, unlike the pip, so switchTab fires flowstatechange. */
 function flowDock() {
   try {
-    var d = document.getElementById('ndock');
-    if (!d) return;
     var n = (document.documentElement.dataset.view === 'home') ? { tier: 'home' } : nextUp();
-    /* MICRO -- you are on the recommended pane. Quiet mid-read; at a JUDGMENT POINT the dock arms the
-       pane's native grade keys (the judges' amendment). Never a CTA, never louder than the pane. */
-    if (n.tier === 'micro') {
-      var armed = dockArmedKeys();
-      d.innerHTML = armed; d.hidden = !armed;
-      return;
-    }
-    if (!n.rec || n.tier !== 'meso' && n.tier !== 'macro' || !n.rec.btn) { d.hidden = true; d.innerHTML = ''; return; }
-    var rec = n.rec, receipt = rec.receipt ? '<span class="nd-rcpt">' + rec.receipt + '</span>' : '';
-    d.innerHTML = '<span class="nd-k" style="color:' + rec.ink + '">' + rec.kicker + '</span>' +
-      '<button class="nd-go" type="button" aria-keyshortcuts="N">' + rec.btn + '</button>' + receipt;
-    var b = d.querySelector('.nd-go');
-    if (b) b.onclick = function () { if (typeof flowGo === 'function') flowGo(rec); };
-    d.hidden = false;
+    flowDockDesktop(document.getElementById('ndock'), n);   /* >=920px surface */
+    flowDockMobile(document.getElementById('ndm'), n);       /* <=919px chip -- SAME n, no second compute */
   } catch (e) {}
+}
+/* The desktop Continue dock -- behaviour UNCHANGED (extracted verbatim from flowDock so the mobile
+   chip could join the SAME one compute without moving a desktop pixel; the VR desktop baselines
+   prove the extraction is a no-op there). */
+function flowDockDesktop(d, n) {
+  if (!d) return;
+  /* MICRO -- you are on the recommended pane. Quiet mid-read; at a JUDGMENT POINT the dock arms the
+     pane's native grade keys (the judges' amendment). Never a CTA, never louder than the pane. */
+  if (n.tier === 'micro') {
+    var armed = dockArmedKeys();
+    d.innerHTML = armed; d.hidden = !armed;
+    return;
+  }
+  if (!n.rec || n.tier !== 'meso' && n.tier !== 'macro' || !n.rec.btn) { d.hidden = true; d.innerHTML = ''; return; }
+  var rec = n.rec, receipt = rec.receipt ? '<span class="nd-rcpt">' + rec.receipt + '</span>' : '';
+  d.innerHTML = '<span class="nd-k" style="color:' + rec.ink + '">' + rec.kicker + '</span>' +
+    '<button class="nd-go" type="button" aria-keyshortcuts="N">' + rec.btn + '</button>' + receipt;
+  var b = d.querySelector('.nd-go');
+  if (b) b.onclick = function () { if (typeof flowGo === 'function') flowGo(rec); };
+  d.hidden = false;
+}
+/* D5 -- the MOBILE NextUp chip (#ndm). The same nextUp() result rendered as a compact touch target:
+   the BOUNDED kicker as its label (rec.btn is variable-length -- "Next: <long topic> ->" -- and
+   would wrap the load-bearing one-row bar), a tap runs flowGo (the `n` destination mobile lacks; the
+   seg pip carries WHERE). Shown ONLY on meso/macro -- exactly when the desktop dock shows a CTA and
+   when `n` fires (shell.js) -- so the touch affordance and the key stay in lockstep. Hidden on micro
+   (the pane owns momentum; grade via the pane's own touch buttons, not an armed-KEY legend that means
+   nothing without a keyboard), home, and none. The visible kicker is the accessible name's prefix
+   (WCAG 2.5.3 Label in Name); aria-label enriches it with the full action for AT. */
+function flowDockMobile(dm, n) {
+  if (!dm) return;
+  if (!n.rec || n.tier !== 'meso' && n.tier !== 'macro' || !n.rec.btn) { dm.hidden = true; dm.innerHTML = ''; dm.onclick = null; return; }
+  var rec = n.rec;
+  dm.innerHTML = '<span class="nd-m-k">' + rec.kicker + '</span><span class="nd-m-ar" aria-hidden="true">\u2192</span>';
+  dm.setAttribute('aria-label', rec.kicker + ' \u2014 ' + rec.btn.replace(/\s*\u2192\s*$/, ''));
+  dm.onclick = function () { if (typeof flowGo === 'function') flowGo(rec); };
+  dm.hidden = false;
 }
 /* The current pane's armed judgment keys for the dock's micro tier, or '' when not at a judgment
    point. Reads the CURRENT (visible) pane's live state via atJudgment() -- never a hidden pane, so

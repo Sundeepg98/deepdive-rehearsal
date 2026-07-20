@@ -135,6 +135,39 @@ const CHIP = () => {
   if (boxM) { await page.mouse.click(boxM.x, boxM.y); await B.settle(page); }
   ok('[360] tapping the exit chip restores the chrome (the only exit on a phone)', boxM && (await isFocused()) === false, boxM ? 'still focused after tap' : 'no chip to tap');
 
+  /* ================= FIX 2 -- SCROLL-TOP FAB CLEARS THE MOCK CTA (mobile) =================
+     The centered z-sticky FAB sat on the fixed z-40 mock CTA bar and won the tap in the normal
+     scrolled state -- a silent scroll-to-top instead of starting the mock (audit #5). Both must be
+     fully tappable: the FAB right-aligned and lifted above the bar's reserved band. Real hit-tests
+     at each control's painted centre + a rect-overlap check (the pre-fix red). */
+  for (const w of [360, 390]) {
+    await page.setViewportSize({ width: w, height: 800 });
+    await B.gotoApp(page, HTML, { hash: '#drill' });   /* the drill's 20-probe dnav makes the pane tall enough to scroll past the FAB's 400px reveal threshold */
+    await B.enterApp(page);
+    await page.evaluate(() => window.scrollTo(0, 2000));
+    await page.waitForFunction(() => { const f = document.getElementById('scrolltop'); return f && f.classList.contains('show'); }, null, { timeout: B.ACT_MS }).catch(() => {});
+    await B.settle(page);
+    const h = await page.evaluate(() => {
+      const fab = document.getElementById('scrolltop'), cta = document.getElementById('mockopen');
+      if (!fab || !cta) return { ready: false };
+      const fr = fab.getBoundingClientRect(), cr = cta.getBoundingClientRect();
+      const inEl = (el, t) => !!el && (el === t || t.contains(el));
+      const fabHit = document.elementFromPoint(Math.round(fr.left + fr.width / 2), Math.round(fr.top + fr.height / 2));
+      const ctaHit = document.elementFromPoint(Math.round(cr.left + cr.width / 2), Math.round(cr.top + cr.height / 2));
+      const overlap = !(fr.bottom <= cr.top || fr.top >= cr.bottom || fr.right <= cr.left || fr.left >= cr.right);
+      /* 44px floor is measured off the LAYOUT box (offsetHeight), not the rect: the FAB scales in
+         over ~duration-slow, so a rect read right after .show is mid-animation and smaller -- the
+         resting tap target is what the floor is about, and that is the layout height. */
+      return { ready: true, shown: fab.classList.contains('show'), overlap, fabH: fab.offsetHeight, ctaH: cta.offsetHeight, fabHitsFab: inEl(fabHit, fab), ctaHitsCta: inEl(ctaHit, cta) };
+    });
+    ok('[' + w + '] scroll-top FAB shows when scrolled past the reveal threshold', h.ready && h.shown === true, JSON.stringify(h));
+    ok('[' + w + '] FAB and the mock CTA bar do NOT overlap (the tap-collision is gone)', h.ready && h.overlap === false, JSON.stringify(h));
+    ok('[' + w + '] the mock CTA center is tappable (hit-test returns the CTA, not the FAB)', h.ready && h.ctaHitsCta === true, JSON.stringify(h));
+    ok('[' + w + '] the scroll-top FAB center is tappable (hit-test returns the FAB)', h.ready && h.fabHitsFab === true, JSON.stringify(h));
+    ok('[' + w + '] FAB keeps its 44px target', h.ready && h.fabH >= 44, JSON.stringify(h));
+    ok('[' + w + '] mock CTA keeps its 44px target', h.ready && h.ctaH >= 44, JSON.stringify(h));
+  }
+
   ok('zero console/page errors', errs.length === 0, errs.slice(0, 4).join(' | '));
 
   await browser.close();

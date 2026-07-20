@@ -617,7 +617,7 @@ class DeepDrill extends TopicPane {
       if (stage >= 1) {
         this._mhp = []; this._cov = {};
         html += '<div class="judge-lead"><div class="jl-h">How did you do?</div>' +
-          '<div class="jl-s">Grade yourself &mdash; it\'s what tracks your weak spots to revisit.</div></div>' +
+          '<div class="jl-s">Grade yourself &mdash; this is what surfaces your weak spots later.</div></div>' +
           judgeRow;
       }
     } else {

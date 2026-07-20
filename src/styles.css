@@ -364,9 +364,18 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
 .mb-sec:first-child{margin-top:0;padding-top:var(--space-1)}
   /* W2 -- the NextUp CONTINUE DOCK: a compact forward CTA between the topic id and the mock CTA.
      HARD height cap (the doc's <=64px condition; fold-measured at 1280x800 + 1536x864 before merge)
-     so it never pushes .mockcta below the fold. Accent-tinted (rebinds per room), kicker + button
-     + receipt stacked; overflow:hidden enforces the cap even if a label wraps. */
-  .dock{flex:none;max-height:64px;overflow:hidden;box-sizing:border-box;margin:var(--space-10) 0 0;padding:var(--space-7) var(--space-10);border:1px solid var(--acc-a32);border-radius:11px;background:var(--accbg);display:flex;flex-direction:column;gap:var(--space-1);align-items:flex-start}
+     so it never pushes .mockcta below the fold. Kicker + button + receipt stacked; overflow:hidden
+     enforces the cap even if a label wraps.
+     THE DOCK OWNS ITS OWN SURFACE TOKENS (audit #24). It used to paint in --accbg + --acc-a32 -- the
+     same accent wash the ACTIVE seg tab uses (:590) a few px away: one token, two meanings. --dock-bg
+     / --dock-bd split that. LIGHT keeps the shipped wash byte-for-byte (below); DARK flattens to a
+     recessed --panel so the dock sits a tier BELOW the accent-bordered Mock CTA, which in dark is a
+     tinted fill + --topic-solid border + accent text -- previously the dock read as its identical
+     twin (audit #3). Design contract (the mobile wave inherits it): the dock is a QUIET flat panel;
+     accent belongs to the kicker only; exactly ONE loud primary per surface -- the Mock CTA. */
+  html{--dock-bg:var(--accbg);--dock-bd:var(--acc-a32)}
+  html[data-theme="dark"]{--dock-bg:var(--panel);--dock-bd:var(--bd)}
+  .dock{flex:none;max-height:64px;overflow:hidden;box-sizing:border-box;margin:var(--space-10) 0 0;padding:var(--space-7) var(--space-10);border:1px solid var(--dock-bd);border-radius:11px;background:var(--dock-bg);display:flex;flex-direction:column;gap:var(--space-1);align-items:flex-start}
   .dock[hidden]{display:none}
   .nd-k{font:var(--font-weight-heavy) var(--font-size-nano)/1 -apple-system,sans-serif;letter-spacing:.6px;text-transform:uppercase}
   /* overflow:visible + flex:none are LOAD-BEARING: the global button{overflow:hidden} (styles.css,
@@ -517,6 +526,11 @@ html[data-theme="dark"] .seg button:not(.on):hover{background:rgba(170,157,245,.
 /* CTA reversal: on dark, a bright accent slab with dark text is LOUDER than in light and
    the first thing the eye hits. Fill is a light-mode device; on dark, border + glow are. */
 html[data-theme="dark"] .mockbtn{background:color-mix(in srgb,var(--topic-solid) 16%,var(--card));border:1px solid var(--topic-solid);color:var(--topic-ink);box-shadow:0 2px 14px -6px var(--acc-a30)}
+/* Dark dock CTA: accent belongs to the KICKER only (audit #3 design contract). The Mock CTA above
+   is the one loud primary (tinted fill + --topic-solid border + accent text); the flattened dock's
+   CTA label recedes to plain --ink so the two no longer read as one accent tier. Light unchanged
+   (--accink): there the filled-gradient Mock CTA already dominates, so the dock stays subordinate. */
+html[data-theme="dark"] .nd-go{color:var(--ink)}
 html[data-theme="dark"] .badge{color:#1A1622}
 /* kbd hint chips text */
 html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
@@ -590,6 +604,13 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
 .sidebar .seg button.on{background:var(--accbg);box-shadow:inset 3px 0 0 var(--acc)}
 .sidebar .seg button.on>span:first-child{color:var(--accink)}
 .sidebar .seg button.on .n{color:var(--acc)}
+/* audit #23: the seg recommendation pip. The base rule (:326) tops it at space-4, which centres it
+   on the horizontal strip's short centred button -- but on the vertical sidebar nav the label row
+   sits ~16.5px down (padding-top space-8 + half a 13px line), so the pip floated up in the gutter,
+   detached. Re-top it to sit against the label as a leading marker (left stays in the gutter).
+   Desktop-only: the horizontal strip (<920px) keeps the base top-left dot. Density-safe (space token
+   scales with the padding it tracks). */
+@media(min-width:920px){ .sidebar .seg button.flow-pip:not(.on)::before{top:var(--space-14)} }
 /* ===== QW3: the pane tabs wear their jump keys (desktop only) =====
    Every tab has had a single-letter shortcut since the QWERTY keymap shipped (shell.js
    tabKeys) and NOTHING on screen said so. The badge is the .kbd-hint kbd recipe -- the

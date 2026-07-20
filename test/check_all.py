@@ -276,6 +276,19 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # threshold -- the keyboard overlay legitimately has one control. All five
                      # mechanisms were reverted one at a time and watched going red. ~2m.
                      ('overlay_keyboard', 'test/overlay_keyboard.cjs'),
+                     # flow_a11y (D4 #10/#18/#19/#20): the SR/keyboard half of the forward-flow chrome
+                     # (Continue dock, seg pip, terminal strip). #10 the global `n` (NextUp) key -- a
+                     # shipped W2 key the dock go button already wears as aria-keyshortcuts="N" -- must
+                     # be DOCUMENTED in the Shortcuts overlay. #18 the dock's meso/macro CTA must be
+                     # ANNOUNCED to a polite live region, while the MICRO armed grade legend must NOT be
+                     # (it echoes the drill's own judge buttons; speaking it at the reveal would talk
+                     # over the answer) -- via a DEDICATED region, not the shared announcer the drill
+                     # debrief fires through on the same microtask. #19 the visual-only pip must carry a
+                     # "Recommended next" accessible description (aria-describedby). #20 the shadow-DOM
+                     # .flow-go must get the app's 2px var(--acc) focus ring (the document ring cannot
+                     # cross the boundary). Watched red on the pre-fix build; #18b self-tests its
+                     # armed-legend detector against a planted leak.
+                     ('flow_a11y', 'test/flow_a11y.cjs'),
                      # room wired at boot (data-group + --topic-ink + --acc rebind) AND the
                      # blank-page class of bug cannot recur (reduced-motion still RENDERS,
                      # both themes). The two things a grep cannot see. (Phase 6)
@@ -313,6 +326,15 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # ever been painted.) room_contrast pins the token; this proves the BUTTON.
                      # 6 rooms x 2 themes x 3 CTAs. ~1m40s.
                      ('cta_contrast', 'test/cta_contrast.cjs'),
+                     # dock_contrast (D4 #3): the dark Continue dock was flattened from the accent
+                     # wash to a recessed --panel so it stops reading as the twin of the accent-
+                     # bordered Mock CTA. Its MICRO tier still renders the armed grade legend, whose
+                     # AA contrast the audit put at 5.11-6.81:1 and the brief said "must not degrade".
+                     # --panel is a GRADIENT (getComputedStyle background-color -> transparent), so
+                     # this reuses cta_contrast's pixel-decode to read the legend's glyphs against the
+                     # ACTUAL painted panel across all 6 rooms in dark. Carries a per-run self-test: a
+                     # planted light dock bg must drop the accent digit below the floor, or it aborts.
+                     ('dock_contrast', 'test/dock_contrast.cjs'),
                      # scoreboard_salience: the drill scoreboard once encoded its verdict in HUE --
                      # and two of the six ROOM hues were the same two colours, so in the teal room
                      # the Solid tile dissolved into the wallpaper and the board read INVERTED: a

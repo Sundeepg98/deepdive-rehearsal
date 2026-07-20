@@ -167,5 +167,11 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:var(--font-size-micro);b
 .flow-go{margin:0;width:auto;border:none;border-radius:9px;padding:var(--space-10) var(--space-16);font:var(--font-weight-bold) 12px -apple-system,sans-serif;cursor:pointer;color:var(--on-slab);background:linear-gradient(135deg,var(--acc),var(--acc2));box-shadow:0 4px 14px -4px var(--acc-a25);transition:transform var(--duration-fast) var(--ease-base),box-shadow var(--duration-base) var(--ease-base),filter var(--duration-base) var(--ease-base)}
 .flow-go:hover{filter:brightness(1.1);box-shadow:0 6px 20px -4px var(--acc-a30)}
 .flow-go:active{transform:translateY(1px) scale(.98);filter:brightness(.95)}
+/* #20 -- the shadow half of the focus ring. document button:focus-visible (styles.css) cannot cross
+   the shadow boundary, so Tab landed the ~1px UA outline on this saturated accent-gradient button.
+   The app's 2px var(--acc) ring, OUTWARD (offset 2px) -- matching the sibling .revset-b in the same
+   drill scope. Outward, not the -2px inset .mock-body uses, because an inset accent ring would paint
+   accent-on-accent over this button's own gradient (invisible); outward it lands on the pane bg. */
+.flow-go:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
 .flow-rcpt{font-size:var(--font-size-micro);color:var(--mut2);font-weight:var(--font-weight-semibold);letter-spacing:.2px}
 `);

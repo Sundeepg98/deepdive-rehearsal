@@ -82,6 +82,11 @@
     <button type="button" data-tab="open" aria-keyshortcuts="O"><span>30-Second</span><span class="n">OPEN &amp; CLOSE</span><kbd class="seg-key" aria-hidden="true">O</kbd></button>
     <button type="button" data-tab="viz" hidden aria-keyshortcuts="V"><span>Visualize</span><span class="n">GPU MODE</span><kbd class="seg-key" aria-hidden="true">V</kbd></button>
   </div>
+  <!-- #19: the seg recommendation pip is a pure ::before dot -- no accessible cue. flowPip()
+       (session-progress.js) points the recommended tab's aria-describedby here, so AT hears
+       "Recommended next" on that tab. Off-screen (not display:none) so the description is computed
+       by every SR; position:absolute keeps it out of flow (zero layout / paint / VR impact). -->
+  <span id="flowpip-desc" style="position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden">Recommended next</span>
 
     <div class="mockbar">
     <div class="mb-sec">Find a topic</div>

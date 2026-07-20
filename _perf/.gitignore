@@ -1,0 +1,4 @@
+# Measurement artifacts — large / ephemeral. The reusable instrument (*.cjs) is tracked
+# so the cold verifier can re-run the A/B; the build snapshots and raw results are not.
+builds/
+results/

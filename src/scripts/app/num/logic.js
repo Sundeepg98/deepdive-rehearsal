@@ -86,6 +86,13 @@ var NUM_STYLE = `.numlead{font-size:var(--font-size-body);max-width:var(--measur
      overflow-wrap    the backstop: a single pathological token can never spill, whatever a future
                       topic decides to call a unit. */
 .nrow{display:grid;grid-template-columns:minmax(20%,1fr) auto;grid-template-areas:"k v" "n n";gap:var(--space-3) var(--space-12);padding:var(--space-12) 0;border-bottom:1px solid var(--bd);transition:padding var(--duration-base) var(--ease-base)}
+/* PERF (d3-first-visit, audit #8): same lever as Trade-offs' .dec -- the output rows below the fold
+   skip layout on the pane's first reveal (content-visibility:auto), so the display:none->block reveal
+   lays out only the visible rows. Numbers IS a VR-guarded pane (num-light baseline), so the gate itself
+   proves zero pixels move: the skipped rows are below the 800px fold. contain-intrinsic-size keeps the
+   scroll stable; print forces full render. Modest but real (matched-load A/B in _audit/2026-07-20-d3-perf.md). */
+.nrow{content-visibility:auto;contain-intrinsic-size:auto 64px}
+@media print{.nrow{content-visibility:visible}}
 .nrow:last-child{border-bottom:0}
 .nrow:hover{padding-left:var(--space-4)}
 .nrow>*{min-width:0}

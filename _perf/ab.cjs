@@ -49,22 +49,25 @@ const PROBE = () => {
 
 async function measureOnce(browser, html, target) {
   const page = await browser.newPage();
-  const client = await page.context().newCDPSession(page);
-  await client.send('Emulation.setCPUThrottlingRate', { rate: 1 });
-  await boot.gotoApp(page, html);
-  await page.evaluate(PROBE);
-  await boot.enterApp(page);
-  await boot.settle(page);
-  // warm JIT then measure spin at 4x = load covariate
-  await client.send('Emulation.setCPUThrottlingRate', { rate: 1 });
-  await page.evaluate(() => window.__perf.spin()); await page.evaluate(() => window.__perf.spin());
-  await client.send('Emulation.setCPUThrottlingRate', { rate: 4 });
-  const spin = await page.evaluate(() => window.__perf.spin());
-  let m;
-  if (KIND === 'topic') m = await page.evaluate((t) => window.__perf.switchTopic(t), target);
-  else m = await page.evaluate((t) => window.__perf.switchPane(t), target);
-  await page.close();
-  return { toPaint: m.toPaint, sync: m.sync, spin: +spin.toFixed(1), err: m.err };
+  try {
+    const client = await page.context().newCDPSession(page);
+    await client.send('Emulation.setCPUThrottlingRate', { rate: 1 });
+    await boot.gotoApp(page, html);
+    await page.evaluate(PROBE);
+    await boot.enterApp(page);
+    await boot.settle(page);
+    // warm JIT then measure spin at 4x = load covariate
+    await client.send('Emulation.setCPUThrottlingRate', { rate: 1 });
+    await page.evaluate(() => window.__perf.spin()); await page.evaluate(() => window.__perf.spin());
+    await client.send('Emulation.setCPUThrottlingRate', { rate: 4 });
+    const spin = await page.evaluate(() => window.__perf.spin());
+    let m;
+    if (KIND === 'topic') m = await page.evaluate((t) => window.__perf.switchTopic(t), target);
+    else m = await page.evaluate((t) => window.__perf.switchPane(t), target);
+    return { toPaint: m.toPaint, sync: m.sync, spin: +spin.toFixed(1), err: m.err };
+  } finally {
+    await page.close().catch(() => {});   // never leak a page/chromium on a boot-timeout throw
+  }
 }
 
 function stats(xs) { if (!xs.length) return {}; const s = xs.slice().sort((a, b) => a - b); const q = (p) => s[Math.min(s.length - 1, Math.round(p * (s.length - 1)))]; return { n: xs.length, min: s[0], p50: q(0.5), max: s[s.length - 1] }; }
@@ -74,19 +77,22 @@ async function run() {
   const targets = KIND === 'topic' ? [TOPIC] : PANES;
   const result = { base: BASE, branch: BRANCH, kind: KIND, cycles: CYCLES, when: new Date().toISOString(), data: {} };
 
-  for (const tgt of targets) {
-    const pairs = [];
-    for (let c = 0; c < CYCLES; c++) {
-      // alternate order to cancel any order bias
-      let b, p;
-      if (c % 2 === 0) { b = await measureOnce(browser, BASE, tgt); p = await measureOnce(browser, BRANCH, tgt); }
-      else { p = await measureOnce(browser, BRANCH, tgt); b = await measureOnce(browser, BASE, tgt); }
-      const matched = Math.abs(b.spin - p.spin) / Math.max(b.spin, p.spin) <= 0.15;
-      pairs.push({ base: b.toPaint, branch: p.toPaint, baseSync: b.sync, branchSync: p.sync, dPaint: +(p.toPaint - b.toPaint).toFixed(1), baseSpin: b.spin, branchSpin: p.spin, matched });
+  try {
+    for (const tgt of targets) {
+      const pairs = [];
+      for (let c = 0; c < CYCLES; c++) {
+        // alternate order to cancel any order bias
+        let b, p;
+        if (c % 2 === 0) { b = await measureOnce(browser, BASE, tgt); p = await measureOnce(browser, BRANCH, tgt); }
+        else { p = await measureOnce(browser, BRANCH, tgt); b = await measureOnce(browser, BASE, tgt); }
+        const matched = Math.abs(b.spin - p.spin) / Math.max(b.spin, p.spin) <= 0.15;
+        pairs.push({ base: b.toPaint, branch: p.toPaint, baseSync: b.sync, branchSync: p.sync, dPaint: +(p.toPaint - b.toPaint).toFixed(1), baseSpin: b.spin, branchSpin: p.spin, matched });
+      }
+      result.data[tgt] = pairs;
     }
-    result.data[tgt] = pairs;
+  } finally {
+    await browser.close().catch(() => {});   // always close, even on a boot-timeout throw — no orphaned chromium
   }
-  await browser.close();
   fs.writeFileSync(path.join(OUT, 'ab-' + KIND + '.json'), JSON.stringify(result, null, 2));
 
   console.log('\n=== MATCHED-LOAD A/B  kind=' + KIND + '  cycles=' + CYCLES + ' @4x ===');

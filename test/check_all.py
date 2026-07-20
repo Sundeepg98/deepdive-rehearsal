@@ -343,6 +343,16 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # isolation driven through the REAL writers; and the legacy honest-discard
                      # migration. Every assertion FAILS on the pre-Wave-0 build.
                      ('flow_data', 'test/flow_data.cjs'),
+                     # trend_integrity (D6): the Compare/trend surface's own data honesty. A CPR1 code
+                     # carried date + tallies but NO topic id, and sessStats measures the ACTIVE topic --
+                     # so a normal topic switch (caching solid 18 -> sharding solid 3) painted as a red
+                     # "regression -15" the stored data never supported. And trend.hist was DOUBLE
+                     # JSON-encoded (the only key needing a second parse). This drives the real
+                     # renderCompare: a legacy untagged point must be DISCARDED not misattributed; a
+                     # different topic's point must not compare; same-topic points still must; and after
+                     # a capture the store must be SINGLE-encoded. Every one FAILS on the pre-fix build
+                     # (it literally renders "Compared to <date> ... cmp-bad").
+                     ('trend_integrity', 'test/trend_integrity.cjs'),
                      # WAVE 1 "the hand-offs": every completion terminal (drill debrief, whiteboard
                      # ok-verdict, both mock ends, mixed-fire end, the walk last step) must offer
                      # EXACTLY ONE forward affordance -- the surface's own SELF button (#dweak/#wbrerun/

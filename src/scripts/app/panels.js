@@ -60,10 +60,12 @@
   /* a glanceable sparkline of drill-solid across recent sessions, from the auto-captured trend log */
   function trendSparkHome() {
     try {
-      if (typeof Store === 'undefined' || typeof parseCodes !== 'function' || typeof spark !== 'function') return '';
-      var v = Store.get('trend.hist'); if (!v) return '';
-      var hist = JSON.parse(v); if (!Array.isArray(hist) || hist.length < 2) return '';
-      var objs = parseCodes(hist.join('\n')); if (objs.length < 2) return '';
+      if (typeof trendLoad !== 'function' || typeof parseCodes !== 'function' || typeof spark !== 'function') return '';
+      /* trendLoad returns normalized {t,c} points (and migrates the legacy double-encode); the home
+         sparkline is an aggregate activity trend with no topic to scope to and makes NO good/bad
+         regression claim (unlike Compare), so it reads across all topics -- just via .c now. */
+      var hist = trendLoad(); if (hist.length < 2) return '';
+      var objs = parseCodes(hist.map(function (e) { return e.c; }).join('\n')); if (objs.length < 2) return '';
       var series = objs.map(function (o) { return o.dGot; });
       return '<div class="ix-trend"><div class="ix-home-k">Recent sessions</div>' +
         '<div class="ix-trend-s">' + spark(series) + '</div>' +
@@ -74,11 +76,12 @@
   /* consecutive calendar days with a logged session. 0 if the last was 2+ days ago (broken). */
   function studyStreak() {
     try {
-      if (typeof Store === 'undefined') return 0;
-      var v = Store.get('trend.hist'); if (!v) return 0;
-      var hist = JSON.parse(v); if (!Array.isArray(hist) || !hist.length) return 0;
+      if (typeof trendLoad !== 'function') return 0;
+      /* the streak is calendar days with ANY logged session -- topic-agnostic by nature -- so it
+         reads every point's date, now via the normalized {t,c} shape (.c). */
+      var hist = trendLoad(); if (!hist.length) return 0;
       var set = {};
-      for (var i = 0; i < hist.length; i++) { var m = /CPR1\.(\d{8})\./.exec(hist[i]); if (m) set[m[1]] = 1; }
+      for (var i = 0; i < hist.length; i++) { var m = /CPR1\.(\d{8})\./.exec(hist[i].c); if (m) set[m[1]] = 1; }
       var days = Object.keys(set).sort(); if (!days.length) return 0;
       function toD(x) { return new Date(+x.slice(0, 4), +x.slice(4, 6) - 1, +x.slice(6, 8)); }
       var DAY = 86400000, now = new Date(), today = new Date(now.getFullYear(), now.getMonth(), now.getDate());

@@ -467,13 +467,35 @@ function encodeSession() {
    snapshot for THIS page-load is updated in place (not re-appended) as you work,
    so one study session yields one point; a reload starts a fresh point. */
 var TREND_KEY = 'trend.hist', TREND_CAP = 30, _mySessIdx = -1;
-function trendLoad() { try { var v = Store.get(TREND_KEY); var a = v ? JSON.parse(v) : []; return Array.isArray(a) ? a : []; } catch (e) { return []; } }
-function trendSave(a) { try { Store.set(TREND_KEY, JSON.stringify(a)); } catch (e) {} }
+/* A trend point is now {t: topicId, c: CPR1code} -- the topic tag is what lets Compare group
+   same-basis and refuse to paint one topic's score as another's regression (audit #7). trendLoad
+   READS BOTH shapes and returns the canonical one:
+     - the legacy DOUBLE-ENCODED blob (#21: trendSave JSON.stringify'd, then Store.set stringified
+       again) surfaces as a STRING out of Store.get's single parse -- unwrap it once more;
+     - a legacy plain-string code (untagged) becomes {t:null, c} -- topic UNKNOWN, so Compare will
+       DISCARD it rather than guess a topic (the W0 honest-discard law; never misattribute).
+   trendSave writes the canonical single-encoded array, so the store self-heals on the next capture. */
+function trendLoad() {
+  try {
+    var a = Store.get(TREND_KEY, []);
+    if (typeof a === 'string') { try { a = JSON.parse(a); } catch (e) { a = []; } }   /* legacy double-encode */
+    if (!Array.isArray(a)) return [];
+    var out = [];
+    for (var i = 0; i < a.length; i++) {
+      var e = a[i];
+      if (typeof e === 'string') out.push({ t: null, c: e });                          /* legacy untagged point */
+      else if (e && typeof e === 'object' && typeof e.c === 'string') out.push({ t: (e.t != null ? e.t : null), c: e.c });
+    }
+    return out;
+  } catch (e) { return []; }
+}
+function trendSave(a) { try { Store.set(TREND_KEY, a); } catch (e) {} }   /* single-encode: Store.set already stringifies */
 function trendCapture() {
   if (sessLiveActivity() <= 0) return;   // nothing happened this session
-  var code = encodeSession(), hist = trendLoad();
-  if (_mySessIdx >= 0 && _mySessIdx < hist.length) { hist[_mySessIdx] = code; }
-  else { hist.push(code); _mySessIdx = hist.length - 1; }
+  var tid = sessTopicId(); if (!tid) return;   // no topic to attribute this point to -- never store an untagged one
+  var entry = { t: tid, c: encodeSession() }, hist = trendLoad();
+  if (_mySessIdx >= 0 && _mySessIdx < hist.length) { hist[_mySessIdx] = entry; }
+  else { hist.push(entry); _mySessIdx = hist.length - 1; }
   while (hist.length > TREND_CAP) { hist.shift(); _mySessIdx--; }
   trendSave(hist);
 }
@@ -540,7 +562,14 @@ function renderCompare() {
        anything would show a misleading dip to zero. */
     var hist = trendLoad();
     if (_mySessIdx >= 0 && _mySessIdx === hist.length - 1) hist = hist.slice(0, -1);
-    var hobjs = parseCodes(hist.join('\n'));
+    /* SAME-TOPIC-ONLY (audit #7's core fix): a point now carries its topic, so compare THIS topic's
+       own history, never another topic's -- that is what stops a normal topic switch reading as a
+       colored "regression". Legacy UNTAGGED points (t===null) match no real id and are DISCARDED
+       here, never misattributed to the current topic. The manual paste box is unchanged (the user
+       supplies those codes deliberately). */
+    var _curId = sessTopicId(), _codes = [];
+    for (var _hi = 0; _hi < hist.length; _hi++) { if (hist[_hi].t != null && hist[_hi].t === _curId) _codes.push(hist[_hi].c); }
+    var hobjs = parseCodes(_codes.join('\n'));
     series = liveActive ? hobjs.concat([stats]) : hobjs;
   }
   if (series.length < 2) { outEl.innerHTML = '<div class="cmp-hint">Your trend builds itself as you study &mdash; come back after another session to see progress over time. You can also paste <code>CPR1&hellip;</code> codes from another device.</div>'; return; }

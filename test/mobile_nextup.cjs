@@ -170,7 +170,16 @@ const BAR_H_CHIP_HIDDEN = () => {
       const st = document.createElement('style'); st.id = '__nc_wrap';
       st.textContent = '@media(max-width:919px){.sidebar .mockcta .mockbtn .mb-lbl{white-space:normal !important}}';
       document.head.appendChild(st);
-      return Math.round(document.querySelector('.sidebar .mockcta').getBoundingClientRect().height);
+      /* The wrap must be DETERMINISTIC: on Ubuntu's narrower font stack the natural label fits
+         one line at 360 even without nowrap (CI run #66 -- the plant could not go red there), so
+         the plant also lengthens the label. Wrap now happens under ANY font metrics; the
+         production probe above is untouched. Text is restored before the style is removed. */
+      const lbl = document.querySelector('.sidebar .mockcta .mockbtn .mb-lbl');
+      const prevText = lbl.textContent;
+      lbl.textContent = 'force a deterministic wrap regardless of platform font metrics '.repeat(3);
+      const h = Math.round(document.querySelector('.sidebar .mockcta').getBoundingClientRect().height);
+      lbl.textContent = prevText;
+      return h;
     });
     await page.evaluate(() => { const s = document.getElementById('__nc_wrap'); if (s) s.remove(); });
     ok('[plant] removing the mock-label nowrap grows the bar past one row (the no-growth probe can go red)',

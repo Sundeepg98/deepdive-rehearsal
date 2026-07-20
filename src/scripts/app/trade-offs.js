@@ -14,19 +14,6 @@ var TRADE_STYLE = `
 .ledger .lead b{color:var(--accink)}
 .dec{background:linear-gradient(135deg,var(--surf) 0%,var(--acc-a02) 100%);box-shadow:var(--surf-sh);border:1px solid var(--bd);border-radius:14px;padding:var(--space-17) var(--space-19);margin-bottom:var(--space-14);border-top:3px solid var(--acc);position:relative;overflow:hidden;transition:box-shadow var(--duration-moderate) var(--ease-base),transform var(--duration-base) var(--ease-base),border-color var(--duration-base) var(--ease-base)}
 .dec:hover{box-shadow:var(--surf-sh),0 6px 24px -8px var(--acc-a12);transform:translateY(-1px);border-color:var(--acc-a15)}
-/* PERF (d3-first-visit, audit #8): the Trade-offs pane is the heaviest first-visit reveal in the
-   audit's P2 set (217ms @4x). ATTRIBUTION (trace self-time, this branch's _perf/ instrument): that
-   cost is the LAYOUT of this pane's shadow subtree the instant .pane.on flips display:none->block --
-   NOT script (all JS was ~4ms). The decision cards below the fold don't need to lay out until the
-   user scrolls to them, so content-visibility:auto skips their layout on the FIRST reveal. Measured
-   matched-load A/B (base build vs this): ~-250ms input->paint on this pane, and ZERO pixels move --
-   the skipped cards sit below the 800px VR fold, so the at-rest capture is byte-identical (verified).
-   contain-intrinsic-size reserves each card's height so the scrollbar/scroll position stay stable
-   (auto then remembers the real size after first render). @media print forces full render so a
-   printout is never missing a below-fold decision. This does NOT touch the drill reveal region, home,
-   or search (product wave's), nor the six-rooms retint (the topic-open cost, left as-is). */
-.dec{content-visibility:auto;contain-intrinsic-size:auto 300px}
-@media print{.dec{content-visibility:visible}}
 /* .dec::after shineSweep (5s endless diagonal shine over every decision card) deleted --
    ambient decoration behind dense trade-off text. Consistent with the spec's motion kill. */
 .dec-q{font-size:var(--font-size-body);font-weight:var(--font-weight-heavy);color:var(--ink);letter-spacing:-.2px;margin-bottom:var(--space-10);line-height:var(--line-height-normal)}

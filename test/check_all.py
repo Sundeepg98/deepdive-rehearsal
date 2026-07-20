@@ -329,6 +329,25 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # mock label wrap, shrink the grade buttons) are re-armed every run. RED on the
                      # pre-chip build (the chip assertions fail: #ndm does not exist).
                      ('mobile_nextup', 'test/mobile_nextup.cjs'),
+                     # search_deadend: the SEARCH sibling of the dead-end family (audit #13). A
+                     # candidate types the whole-system prompt they rehearse ("design twitter", "url
+                     # shortener") and search returned a bare "No results found" -- because this
+                     # trainer teaches the COMPONENTS such systems are built from, not the prompts. A
+                     # matched prompt now routes to its real component topics. Drives REAL typing +
+                     # asserts an honest miss ("No results found" IS shown, so nothing is faked), the
+                     # chips are all registry-real, and a real hit-tested click on a chip routes to the
+                     # topic. Two plants (a gibberish miss + a real hit both show ZERO chips) keep the
+                     # section from degrading into fire-for-everything. RED on the pre-fix build.
+                     ('search_deadend', 'test/search_deadend.cjs'),
+                     # cold_open: the OTHER half of audit #13. The first minute under-stated identity
+                     # -- "system design" appeared nowhere above the fold, and the home led with
+                     # undefined jargon. A cold user (link before an interview) spent 60s deciding
+                     # what this even is. Asserts the cold home shows a value-prop lead naming "system
+                     # design" ABOVE THE FOLD, the Start CTA is de-jargoned, and -- the gating -- the
+                     # lead is GONE once engaged (the returning user's lean home is not taxed). Live
+                     # plant (hide the lead -> the above-fold value prop is gone). RED pre-fix (the
+                     # lead did not exist). Guards STRUCTURE; the words are the operator's to review.
+                     ('cold_open', 'test/cold_open.cjs'),
                      # cta_contrast: the primary CTAs are painted in a GRADIENT, and
                      # getComputedStyle('background-color') on a gradient returns rgba(0,0,0,0) --
                      # it tells you nothing, in a tone of voice that sounds like an answer. This
@@ -370,6 +389,18 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # is scoped "This run" so the two numbers read as honestly different, not a lie.
                      # Watched RED pre-fix (the caption was absent).
                      ('scoreboard_resume', 'test/scoreboard_resume.cjs'),
+                     # grade_reveal: the self-grade must be unmissable-by-ignorance for a cold
+                     # first-timer (audit #4). The judge row (Missed/Shaky/Solid) used to render ONLY
+                     # at the full judgment point (stage >= maxStage) -- after the ENTIRE follow-up
+                     # chain was clicked through, and every probe carries 2-3 follow-ups -- so a
+                     # first-timer who revealed the answer and moved on never saw the grade and
+                     # forfeited the spaced-repetition spine. The fix renders the in-pane row the
+                     # instant the answer is shown (stage >= 1), push-further kept above it. This
+                     # drives a REAL reveal, asserts push-further is STILL offered (so stage 1 is
+                     # genuinely pre-judgment), hit-tests the Solid button across the shadow boundary,
+                     # GRADES with a real page.mouse.click (record 0 -> 1), and plants (hide the row ->
+                     # unreachable). Watched RED pre-fix (the row is absent at reveal). ~15s.
+                     ('grade_reveal', 'test/grade_reveal.cjs'),
                      ('e2e_interactions', 'test/e2e_interactions.cjs'),
                      # A filtered sub-drill must MERGE into the topic's canonical progress
                      # record, never REPLACE it. Guards a shipped P0: the app's own

@@ -23,13 +23,13 @@
         "channelTol": 2,
         "maxChanged": 32
       },
-      "generated": "2026-07-20T05:48:39.000Z",
+      "generated": "2026-07-20T06:53:20.984Z",
       "baselines": {
         "home-light": {
           "file": "home-light-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "c5997c71ce0dfa20",
+          "sha256": "ff91cf05a7ca161d",
           "hash": "",
           "theme": "light",
           "vp": "desktop"
@@ -38,7 +38,7 @@
           "file": "home-dark-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "8615b046f5ce0ae4",
+          "sha256": "d33877a16d2570fb",
           "hash": "",
           "theme": "dark",
           "vp": "desktop"

@@ -302,6 +302,16 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # (never el.click()), at desktop AND 360px, and carries a live plant so the
                      # reachability probe cannot become one that never fails. RED on the pre-fix build.
                      ('no_dead_ends', 'test/no_dead_ends.cjs'),
+                     # search_deadend: the SEARCH sibling of the dead-end family (audit #13). A
+                     # candidate types the whole-system prompt they rehearse ("design twitter", "url
+                     # shortener") and search returned a bare "No results found" -- because this
+                     # trainer teaches the COMPONENTS such systems are built from, not the prompts. A
+                     # matched prompt now routes to its real component topics. Drives REAL typing +
+                     # asserts an honest miss ("No results found" IS shown, so nothing is faked), the
+                     # chips are all registry-real, and a real hit-tested click on a chip routes to the
+                     # topic. Two plants (a gibberish miss + a real hit both show ZERO chips) keep the
+                     # section from degrading into fire-for-everything. RED on the pre-fix build.
+                     ('search_deadend', 'test/search_deadend.cjs'),
                      # cta_contrast: the primary CTAs are painted in a GRADIENT, and
                      # getComputedStyle('background-color') on a gradient returns rgba(0,0,0,0) --
                      # it tells you nothing, in a tone of voice that sounds like an answer. This

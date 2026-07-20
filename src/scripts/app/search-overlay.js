@@ -274,6 +274,75 @@
     for (var k = 0; k < out.length && uniq.length < 4; k++) { if (!seen[out[k].label]) { seen[out[k].label] = 1; uniq.push(out[k]); } }
     return uniq;
   }
+  /* ===== CANONICAL WHOLE-SYSTEM PROMPTS (audit #13) =====
+     A candidate types "design twitter" / "url shortener" -- a whole-system design -- and search
+     returns a bare "No results found", because this trainer teaches the COMPONENTS such systems are
+     built from (caching, sharding, real-time delivery...), not the prompts themselves. A blank
+     dead-end on their exact question reads as "doesn't have my material" when the parts are all here.
+     So a matched prompt routes to the real component topics that compose it. NEVER a faked result:
+     every chip is an actual registered topic, and the list is filtered to what the registry holds --
+     the section fires ONLY on a genuine miss (results.length === 0), so it can never mask a real hit. */
+  var SYSTEM_PROMPTS = [
+    { label: 'Twitter / X',              aliases: ['twitter', 'x feed', 'tweet'],                                          topics: ['real-time-delivery', 'sharding-strategies', 'caching', 'rate-limiting'] },
+    { label: 'Instagram',                aliases: ['instagram', 'photo sharing', 'photo feed'],                            topics: ['content-pipeline', 'caching', 'sharding-strategies', 'real-time-delivery'] },
+    { label: 'a URL shortener',          aliases: ['url shortener', 'tinyurl', 'bitly', 'link shortener', 'short link'],   topics: ['caching', 'consistent-hashing', 'sharding-strategies', 'rate-limiting'] },
+    { label: 'YouTube / Netflix',        aliases: ['youtube', 'netflix', 'video streaming', 'video platform'],            topics: ['content-pipeline', 'caching', 'load-balancing'] },
+    { label: 'Uber / Lyft',              aliases: ['uber', 'lyft', 'ride sharing', 'ride-share', 'ride hailing'],         topics: ['devices-dispatch', 'real-time-delivery', 'sharding-strategies'] },
+    { label: 'WhatsApp / a chat system', aliases: ['whatsapp', 'messenger', 'chat app', 'chat system', 'messaging app'],  topics: ['real-time-delivery', 'event-driven', 'sharding-strategies'] },
+    { label: 'search autocomplete',      aliases: ['autocomplete', 'typeahead', 'type ahead', 'search suggestions'],      topics: ['probabilistic-structures', 'caching', 'load-balancing'] },
+    { label: 'a news feed',              aliases: ['news feed', 'newsfeed', 'activity feed', 'feed system'],               topics: ['real-time-delivery', 'caching', 'sharding-strategies'] },
+    { label: 'Dropbox / Google Drive',   aliases: ['dropbox', 'google drive', 'file sync', 'file storage', 'cloud storage'], topics: ['content-pipeline', 'sharding-strategies', 'consistency-models'] },
+    { label: 'a booking system',         aliases: ['ticketmaster', 'booking system', 'reservation system', 'ticket booking', 'seat booking'], topics: ['distributed-locks', 'idempotency', 'consistency-models'] },
+    { label: 'a payment system',         aliases: ['payment system', 'payments', 'stripe', 'wallet', 'checkout flow'],    topics: ['idempotency', 'saga', 'consistency-models'] },
+    { label: 'a notification system',    aliases: ['notification system', 'notifications', 'push notification'],           topics: ['notifications', 'real-time-delivery', 'event-driven'] },
+    { label: 'a web crawler',            aliases: ['web crawler', 'crawler'],                                              topics: ['backpressure', 'rate-limiting', 'sharding-strategies'] },
+    { label: 'a leaderboard',            aliases: ['leaderboard', 'ranking system'],                                      topics: ['probabilistic-structures', 'caching', 'sharding-strategies'] }
+  ];
+  /* Match a miss against a known whole-system prompt: the query contains an alias ("design twitter"
+     -> "twitter"), or a short query is the start of one ("uber" -> "uber"). Returns the label + the
+     component topics that ACTUALLY exist in the registry, or null. */
+  function systemPromptMatch(raw) {
+    var query = (raw || '').toLowerCase().trim();
+    if (query.length < 3 || typeof TopicRegistry === 'undefined' || !TopicRegistry.get) return null;
+    for (var i = 0; i < SYSTEM_PROMPTS.length; i++) {
+      var sp = SYSTEM_PROMPTS[i];
+      var hit = sp.aliases.some(function (a) { return query.indexOf(a) > -1 || (query.length >= 4 && a.indexOf(query) === 0); });
+      if (!hit) continue;
+      var topics = sp.topics.filter(function (id) { return !!TopicRegistry.get(id); });
+      if (topics.length) return { label: sp.label, topics: topics };
+    }
+    return null;
+  }
+  /* Render a whole-system miss as its component topics -- honest routing to real, existing topics. */
+  function renderSystemPrompt(sys) {
+    resultsEl.appendChild(sectionHeader('Build ' + sys.label + ' from these'));
+    var note = document.createElement('div');
+    note.style.cssText = 'padding:0 var(--space-14) var(--space-8);font-size:var(--font-size-micro);color:var(--mut2);line-height:var(--line-height-normal)';
+    note.textContent = 'This trainer drills the components a whole-system design is built from \u2014 start with one:';
+    resultsEl.appendChild(note);
+    sys.topics.forEach(function (id) {
+      var t = TopicRegistry.get(id), idn = (t && t.identity) || {};
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('data-sys-topic', id);
+      b.style.cssText = 'display:flex;align-items:baseline;gap:var(--space-8);width:100%;text-align:left;padding:var(--space-9) var(--space-14);border:0;border-radius:10px;background:transparent;cursor:pointer;color:var(--ink);font-size:var(--font-size-small)';
+      var tt = document.createElement('span');
+      tt.style.cssText = 'font-weight:var(--font-weight-semibold)';
+      tt.textContent = decodeEnt(idn.title || id);
+      b.appendChild(tt);
+      var gl = decodeEnt(groupLabelFor(idn.group));
+      if (gl) {
+        var sg = document.createElement('span');
+        sg.style.cssText = 'color:var(--mut);font-size:var(--font-size-micro)';
+        sg.textContent = '\u00b7 ' + gl;
+        b.appendChild(sg);
+      }
+      b.addEventListener('mouseenter', function () { b.style.background = 'var(--accbg)'; });
+      b.addEventListener('mouseleave', function () { b.style.background = 'transparent'; });
+      b.addEventListener('click', function () { navigateTo({ kind: 'topic', id: id }); });
+      resultsEl.appendChild(b);
+    });
+  }
   function renderResults(results, q) {
     q = q || '';
     allResults = results;
@@ -285,7 +354,10 @@
         none.style.cssText = 'padding:24px 24px 6px;text-align:center;color:var(--mut);font-size:var(--font-size-small)';
         none.textContent = 'No results found';
         resultsEl.appendChild(none);
-        var near = closestMatches(inputEl.value);
+        /* a whole-system prompt routes to its component topics; otherwise fall back to typo-tolerance */
+        var sys = systemPromptMatch(inputEl.value);
+        if (sys) renderSystemPrompt(sys);
+        var near = sys ? [] : closestMatches(inputEl.value);
         if (near.length) {
           resultsEl.appendChild(sectionHeader('Did you mean'));
           near.forEach(function (nm) {

@@ -92,6 +92,11 @@ async function toDrillReveal(page) {
   await page.waitForFunction(() => { const d = document.querySelector('#drill deep-drill'); return d && d.shadowRoot && d.shadowRoot.getElementById('adv'); }, null, { timeout: B.ACT_MS }).catch(() => {});
   /* reveal ONCE: stage 0 ("Reveal answer") -> stage 1 (answer on screen, follow-ups still remain) */
   await page.evaluate(() => { const a = document.querySelector('#drill deep-drill').shadowRoot.getElementById('adv'); if (a) a.click(); });
+  /* The reveal is COMPLETE when the grade row has rendered. Wait for it so downstream geometry reads
+     and the real click never race a slow reveal render under gate load (caught: the merge section
+     flaked when #jm had not yet painted). Non-throwing: on the pre-fix build the row never appears
+     here, so this times out and the assertions below read it absent -- still RED, just slower. */
+  await page.waitForFunction(() => { const d = document.querySelector('#drill deep-drill'); return d && d.shadowRoot && d.shadowRoot.getElementById('jg'); }, null, { timeout: B.ACT_MS }).catch(() => {});
   await B.settle(page);
 }
 
@@ -192,7 +197,11 @@ const REC = (page, tid) => page.evaluate((t) => { const p = localStorage.getItem
   const id0 = await page.evaluate(() => { const d = document.querySelector('#drill deep-drill'); const card = cards[d.di]; return CardId.forCards(_allCards)[_allCards.indexOf(card)]; });
   await scrollTo(page, 'jm');
   const missBox = await page.evaluate(BTN_BOX, 'jm');
-  if (missBox) { await page.mouse.click(missBox.x, missBox.y); await B.settle(page); }
+  if (missBox) {
+    await page.mouse.click(missBox.x, missBox.y);
+    /* poll the record until the grade lands -- the drillgraded snapshot can lag the click under load */
+    await page.waitForFunction((a) => { const p = localStorage.getItem('ddr.v1.progress.' + a.t); if (!p) return false; const r = JSON.parse(p); return !!(r.cards && r.cards[a.id] === 1); }, { t: topicId, id: id0 }, { timeout: B.ACT_MS }).catch(() => {});
+  }
   const recMiss = await REC(page, topicId);
   ok('reveal: a real click on Missed at the reveal moment records the grade (level 1) under the probe content id', !!missBox && !!recMiss && recMiss.cards[id0] === 1 && recMiss.done === 1, JSON.stringify({ hadButton: !!missBox, level: recMiss && recMiss.cards[id0], done: recMiss && recMiss.done }));
 
@@ -200,6 +209,8 @@ const REC = (page, tid) => page.evaluate((t) => { const p = localStorage.getItem
   await page.evaluate(() => document.querySelector('#drill deep-drill').drillBank([0]));
   await page.waitForFunction(() => { const r = document.querySelector('#drill deep-drill').shadowRoot; return r && r.getElementById('adv'); }, null, { timeout: B.ACT_MS }).catch(() => {});
   await page.evaluate(async () => { const r = document.querySelector('#drill deep-drill').shadowRoot; const s = (ms) => new Promise((x) => setTimeout(x, ms)); let g = 0; while (r.getElementById('adv') && g++ < 12) { r.getElementById('adv').click(); await s(3); } const jg = r.getElementById('jg'); if (jg) jg.click(); await s(40); });
+  /* poll until the re-grade overwrites (level 3) -- same async-snapshot robustness as above */
+  await page.waitForFunction((a) => { const p = localStorage.getItem('ddr.v1.progress.' + a.t); if (!p) return false; const r = JSON.parse(p); return !!(r.cards && r.cards[a.id] === 3); }, { t: topicId, id: id0 }, { timeout: B.ACT_MS }).catch(() => {});
   await B.settle(page);
   const recSolid = await REC(page, topicId);
   ok('merge: re-grading the same probe (via re-drill) overwrites -- record holds the SECOND grade (Solid, level 3)', !!recSolid && recSolid.cards[id0] === 3, JSON.stringify({ level: recSolid && recSolid.cards[id0] }));

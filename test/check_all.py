@@ -324,6 +324,16 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # fails if Solid is ever not the loudest tile, or if it fills at zero.
                      # 6 rooms x 2 themes x 4 score states. ~1m50s.
                      ('scoreboard_salience', 'test/scoreboard_salience.cjs'),
+                     # scoreboard_resume: the tiles (Solid/Revisit/Left) are THIS-RUN counters -- the
+                     # debrief's own pct (got / results.length) and the round-end announcement both read
+                     # got/shk, so they cannot be seeded from the record without corrupting that. On a
+                     # RESUME the cursor is restored but got/shk start at 0, so "0 Solid / 0 Revisit"
+                     # read as LOST while the dock/pip/panel said "3 of 21 graded" (audit #22). This
+                     # grades 3, RELOADS (a real reload -- a hash-only goto leaves the live state in
+                     # memory), and asserts the tiles read 0/0, the record still holds 3, and the board
+                     # is scoped "This run" so the two numbers read as honestly different, not a lie.
+                     # Watched RED pre-fix (the caption was absent).
+                     ('scoreboard_resume', 'test/scoreboard_resume.cjs'),
                      ('e2e_interactions', 'test/e2e_interactions.cjs'),
                      # A filtered sub-drill must MERGE into the topic's canonical progress
                      # record, never REPLACE it. Guards a shipped P0: the app's own

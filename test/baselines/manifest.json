@@ -65,7 +65,7 @@
           "file": "drill-light-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "1a633e09cf8f543f",
+          "sha256": "4ba249fbef623fe4",
           "hash": "#event-driven/drill",
           "theme": "light",
           "vp": "desktop"
@@ -74,7 +74,7 @@
           "file": "drill-dark-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "8778f05a021deccc",
+          "sha256": "d68a043e041d241a",
           "hash": "#event-driven/drill",
           "theme": "dark",
           "vp": "desktop"

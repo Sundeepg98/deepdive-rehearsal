@@ -28,6 +28,7 @@ var DRILL_HTML = `<div style="display:flex;justify-content:space-between;align-i
     <div class="tierrow"><span class="tierlab">Focus by level</span><div class="modetog" id="tiertog"><button class="on" data-tier="all" type="button">All 20</button><button data-tier="SDE2" type="button">SDE2</button><button data-tier="SDE3" type="button">SDE3</button><button data-tier="Staff" type="button">Staff</button></div></div>
     <div class="tiernote" id="tiernote"><b>All four levels, mixed</b> &mdash; the way a real loop actually comes at you.</div>
     <div class="dbar"><i id="dfill"></i></div>
+    <div class="score-cap">This run</div>
     <div class="score">
       <div class="pill g"><div class="v" id="sGot">0</div><div class="l">Solid</div></div>
       <div class="pill s"><div class="v" id="sShk">0</div><div class="l">Revisit</div></div>
@@ -122,6 +123,14 @@ var DRILL_STYLE = `/* @keyframes pop moved to BASE_SHEET. Five shadow scopes ref
    if it fills at zero. The previous pass measured exactly this by hand, wrote it in a comment,
    and left it unguarded -- which is precisely how the sentence at the top of this block came to
    say something the code did not do. */
+/* audit #22: the scoreboard tiles (Solid/Revisit/Left) are THIS-RUN counters -- got/shk are the
+   live working-set counts the debrief's own pct (got / results.length) and the round-end
+   announcement both read. On RESUME the cursor is restored but got/shk start at 0 for the fresh
+   page-load, so "0 Solid / 0 Revisit" read as LOST while the dock/pip/panel said "3 of 21 graded".
+   Seeding the tiles from the record would corrupt that this-run denominator from the other side, so
+   the honest fix is to LABEL them: this caption scopes the board to the current run, so 0/0 reads as
+   "nothing graded THIS load yet" and the record's larger count is understood as a different number. */
+.score-cap{font:var(--font-weight-bold) var(--font-size-nano)/1 -apple-system,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:var(--mut2);margin:0 0 var(--space-6)}
 .score{display:flex;gap:var(--space-9);margin-bottom:var(--space-14)}
 .pill{flex:1;text-align:center;border:1.5px solid var(--bd);border-radius:12px;padding:var(--space-10);background:var(--card);transition:box-shadow var(--duration-moderate) var(--ease-base),transform var(--duration-base) var(--ease-base),border-color var(--duration-base) var(--ease-base)}
 .pill:hover{box-shadow:0 4px 16px -4px var(--acc-a15);transform:translateY(-2px)}

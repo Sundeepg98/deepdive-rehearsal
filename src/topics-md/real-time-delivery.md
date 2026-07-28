@@ -781,19 +781,22 @@ Gateways = connections / per-gateway capacity; a gateway is capped by RAM (rough
 ```js
 function (vals, fmt) {
   var conns = vals.conns * 1e6, percap = vals.percap * 1e3, kb = vals.kbconn, followers = vals.followers * 1e3;
-  var gateways = Math.ceil(conns / percap);
+  /* per-gateway capacity is the divisor for the whole gateway tier; emptied, it made the
+     gateway count Infinity and fmt.n rendered a confident "0" servers. */
+  var gwOk = percap > 0;
+  var gateways = gwOk ? Math.ceil(conns / percap) : 0;
   var ramGw = percap * kb / 1e6;          // KB -> GB, per gateway
   var ramAll = conns * kb / 1e6;          // KB -> GB, whole fleet
   var writesOnWrite = followers;
   function r(x, d) { var m = Math.pow(10, d); return Math.round(x * m) / m; }
   return [
-    { k: 'Connection gateways', v: '~' + fmt.n(gateways), u: 'servers', n: 'ceil(' + fmt.n(conns) + ' connections / ' + fmt.n(percap) + ' per gateway) \u2014 the stateful tier scales on connection count, independent of event throughput', over: false },
+    { k: 'Connection gateways', v: gwOk ? '~' + fmt.n(gateways) : 'n/a', u: 'servers', n: 'ceil(' + fmt.n(conns) + ' connections / ' + fmt.n(percap) + ' per gateway) \u2014 the stateful tier scales on connection count, independent of event throughput', over: false },
     { k: 'RAM per gateway', v: '~' + r(ramGw, 1), u: 'GB', n: fmt.n(percap) + ' sockets \u00d7 ' + kb + ' KB \u2014 MEMORY is the ceiling on a connection server, NOT ports: a server accepts on ONE port and a connection is a 4-tuple, so 65,535 is a client-side ephemeral-port limit, never an accept limit', over: ramGw > 64 },
     { k: 'RAM to hold the fleet idle', v: '~' + r(ramAll, 0), u: 'GB', n: 'just to HOLD the sockets \u2014 before a single message is delivered. This is what push costs and polling does not; the event loop is O(active), so idle sockets cost memory and only the ACTIVE ones cost CPU', over: false },
     { k: 'Blast radius of one gateway', v: fmt.n(percap), u: 'reconnects', n: 'lose one box and this many clients reconnect AT ONCE \u2014 hitting auth, the backplane, presence and the resume path simultaneously. Size the gateway by what the reconnect path absorbs, not by the RAM you can fill', over: percap > 250000 },
     { k: 'Deliveries: fan-out-on-write', v: '~' + fmt.n(writesOnWrite), u: 'per post', n: 'one post by a ' + fmt.n(followers) + '-follower account is this many writes into the durable feed \u2014 instant reads, but a burst that must be queued and batched, never sent inline', over: writesOnWrite > 100000 },
     { k: 'Deliveries: fan-out-on-read', v: '1', u: 'per post', n: 'store the post once; each follower pulls and merges it at read time \u2014 cheap write, but every read now does fan-out work', over: false },
-    { k: 'Write amplification', v: fmt.n(writesOnWrite) + 'x', u: 'on-write vs on-read', n: 'the write-cost multiple of pushing vs pulling \u2014 which is why huge-audience accounts are special-cased to fan-out-on-read (the hybrid). Note this is the DURABLE feed: the LIVE push only reaches whoever is currently connected', over: writesOnWrite >= 1000 },
+    { k: 'Write amplification', v: fmt.n(writesOnWrite) + 'x', u: 'on-write vs on-read', n: 'the write-cost multiple of pushing vs pulling \u2014 which is why huge-audience accounts are special-cased to fan-out-on-read (the hybrid). Note this is the DURABLE feed: the LIVE push only reaches whoever is currently connected', over: writesOnWrite >= 100000 },
     { k: 'Verdict for this account', v: (followers >= 100000 ? 'pull (on-read)' : 'push (on-write)'), u: '', n: followers >= 100000 ? 'a high-fan-out account: fan-out-on-read (merge at read time) to avoid the write storm \u2014 but check the posting RATE too, since a dormant celebrity is a false positive' : 'a bounded audience: fan-out-on-write for instant, cheap reads \u2014 unless it posts hundreds of times a day, which makes it a false negative', over: false }
   ];
 }

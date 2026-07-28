@@ -828,18 +828,23 @@ The LB spreads traffic across the pool; when an instance drops, its load redistr
 ```js
 function (vals, fmt) {
   var n = vals.instances, rps = vals.rps, cap = Math.max(1, vals.capacity), iv = vals.checkInt;
-  var per = Math.round(rps / n);
-  var util = Math.round(per / cap * 100);
+  /* capacity and (n - 1) are clamped above/below; the pool size itself was not, so an emptied
+     "Backend instances" divided by zero and put a literal "Infinity%" on the Utilization row.
+     Clamping n to 1 like capacity would be worse than the crash -- it silently answers the
+     one-instance question instead. With no pool there is no per-instance anything: say so. */
+  var nOk = n > 0;
+  var per = nOk ? Math.round(rps / n) : 0;
+  var util = nOk ? Math.round(per / cap * 100) : 0;
   var onFail = Math.round(rps / Math.max(1, n - 1));
   var failUtil = Math.round(onFail / cap * 100);
   var need = Math.ceil(rps / cap);
   var spare = n - need;
   var detect = iv * 3;
   return [
-    { k: 'Per-instance load', v: fmt.n(per), u: 'req/s each', n: 'the LB spreads ' + fmt.n(rps) + ' req/s across ' + n + ' instances -- roughly even, so no single instance is overwhelmed', over: false },
-    { k: 'Utilization', v: util + '%', u: 'of ' + fmt.n(cap) + ' req/s', n: 'how hard each instance is working at steady state -- this is the number people quote, and it is the one that hides the real risk', over: util > 100 },
-    { k: 'If one instance dies', v: fmt.n(onFail) + ' req/s (' + failUtil + '%)', u: 'on each survivor', n: 'its traffic redistributes to the remaining ' + Math.max(1, n - 1) + ' -- if this crosses 100%, the survivors start failing health checks, get ejected, and their load redistributes again: that is the cascade', over: failUtil > 100 },
-    { k: 'Instances you can lose', v: fmt.n(spare), u: 'of ' + n, n: 'you need ' + need + ' instances to serve ' + fmt.n(rps) + ' req/s at all -- everything above that is failure headroom. Below 1, a single instance failure takes the service down; this is the N+1 rule, and it is what pool sizing is actually for', over: spare < 1 },
+    { k: 'Per-instance load', v: nOk ? fmt.n(per) : 'n/a', u: 'req/s each', n: 'the LB spreads ' + fmt.n(rps) + ' req/s across ' + n + ' instances -- roughly even, so no single instance is overwhelmed', over: false },
+    { k: 'Utilization', v: nOk ? util + '%' : 'n/a', u: 'of ' + fmt.n(cap) + ' req/s', n: 'how hard each instance is working at steady state -- this is the number people quote, and it is the one that hides the real risk', over: nOk && util > 100 },
+    { k: 'If one instance dies', v: nOk ? fmt.n(onFail) + ' req/s (' + failUtil + '%)' : 'n/a', u: 'on each survivor', n: 'its traffic redistributes to the remaining ' + Math.max(1, n - 1) + ' -- if this crosses 100%, the survivors start failing health checks, get ejected, and their load redistributes again: that is the cascade', over: failUtil > 100 },
+    { k: 'Instances you can lose', v: nOk ? fmt.n(spare) : 'n/a', u: 'of ' + n, n: 'you need ' + need + ' instances to serve ' + fmt.n(rps) + ' req/s at all -- everything above that is failure headroom. Below 1, a single instance failure takes the service down; this is the N+1 rule, and it is what pool sizing is actually for', over: spare < 1 },
     { k: 'Failure detected in', v: '~' + fmt.n(detect), u: 's (interval x threshold)', n: 'at a ' + iv + 's probe interval and 3 consecutive failures to eject -- the window during which a dead instance is still being handed requests. Tighten it and you flap on a transient blip; the real fix is passive ejection plus a retry, which closes the window at request time', over: false },
     { k: 'The LB itself', v: 'must be redundant', u: 'or it is the SPOF', n: 'a single LB is a single point of failure -- it needs an active-passive pair with a floating IP, or anycast, or the availability layer becomes the fragility', over: false }
   ];

@@ -20,7 +20,7 @@ Corpus-wide the tool went **170 -> 96 live findings**. The 74-finding delta is e
 
 ## 2. Reconciliation -- the sweep list vs the derived list
 
-The brief told me to start from the 2026-07-20 catalog sweep's §4 Classes A+B and reconcile once
+The brief told me to start from the 2026-07-20 catalog sweep's Sec.4 Classes A+B and reconcile once
 wB1's derived prepass appeared. Both halves of that instruction mattered, because **the two lists
 disagree substantially and the derived one is right**.
 
@@ -126,7 +126,7 @@ for a Model opening with markdown markup -- `observability`'s Model opens with a
 **compiled** output where that is `<code>customer_id</code>`, strips the tag, and correctly sees a
 lowercase `c`. **The authoritative receipt for every row is the tool's own run**, which cleared
 that entry along with the other 73. I am flagging the discrepancy rather than quietly reconciling
-it, because it is the same paraphrase-vs-surface trap described in §2.1.
+it, because it is the same paraphrase-vs-surface trap described in Sec.2.1.
 
 ---
 
@@ -227,7 +227,7 @@ just the fields that were the stated target.
   `:199`. Unchanged on this branch: I did not touch `check_all.py`, and `bank_pushback` is **not**
   registered here (wB1 registers it). Verified by AST parse, not by grep.
 - **VR**: zero baseline churn expected and observed -- Bank content renders inside the mock
-  overlay, which is not captured at rest. See §7 for the gate's verdict line.
+  overlay, which is not captured at rest. See Sec.7 for the gate's verdict line.
 - **wB1's tool was run from its blob, never committed here.** `test/bank_pushback.cjs` and
   `test/bank_pushback_debt.json` were `git show`-n from `content/bank-alpha` into a scratch path,
   copied in to run, and **removed before the gate** so the gate measured this branch's real tree.
@@ -297,10 +297,10 @@ which the team lead rebuilds.
 
 1. **The debt baseline must be regenerated after both merges.** My receipts are measured against
    wB1's snapshot; the final ratchet arithmetic reconciles at merge, not here.
-2. **`real-time-delivery` was cleared, not skipped** -- see §2. Worth an independent confirmation,
+2. **`real-time-delivery` was cleared, not skipped** -- see Sec.2. Worth an independent confirmation,
    since the sweep and the derived list disagree about it.
 3. **Content quality is human judgment, not a green run.** The tool measures vocabulary novelty and
    says so in its own header: it cannot tell whether a question is one an interviewer would really
    ask, nor whether the answer is correct. Every one of my 43 cards passes mechanically; the
    dual-charter verifier's content pass is what actually validates them.
-4. **§5's Int2 hazard** applies equally to wB1's half.
+4. **Sec.5's Int2 hazard** applies equally to wB1's half.

@@ -276,8 +276,10 @@ Trade-off tell, 0.525) must not.
 
 ## 7. Gate verdict and the byte-unchanged claim
 
-**`npm run build` → exit 0. Full gate → `GATE: PASS`, 56/56, exit 0** (capture files
-`/tmp/wC_build.log`, `/tmp/wC_gate.log`; verdict read from the capture, never a piped exit code).
+**`npm run build` → exit 0. Full gate → `GATE: PASS`, 56/56, 0 FAIL, 0 SKIP, exit 0.**
+Run twice: once on the working tree (`/tmp/wC_gate.log`) and again on the **freeze commit
+`017278c`** (`/tmp/wC_gate_freeze.log`), so the run of record is the tree that actually freezes.
+Verdict read from the capture file, never a piped exit code.
 
 ```
 cram_surface   PASS  CRAM SURFACE: PASS  (46 topics, 66 known cram-surface defect(s)

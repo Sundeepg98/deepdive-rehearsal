@@ -855,17 +855,18 @@ function (vals, fmt) {
   var activePerTenant = rules * (subPct / 100);
   var subs = Math.round(ceiling * (subPct / 100));
   var evalsPerCycle = Math.round(tenants * activePerTenant * devices);
-  var cyclesPerDay = Math.round(1440 / cycleMin);
-  var evalsPerSec = Math.round(evalsPerCycle / (cycleMin * 60));
+  var cycleOk = cycleMin > 0;                 // an emptied cycle length divided by zero
+  var cyclesPerDay = cycleOk ? Math.round(1440 / cycleMin) : 0;
+  var evalsPerSec = cycleOk ? Math.round(evalsPerCycle / (cycleMin * 60)) : 0;
   var historyPerDay = evalsPerCycle * cyclesPerDay;
   var transitionsPerDay = Math.round(historyPerDay * 0.01);
   return [
     { k: 'Evaluation ceiling', v: fmt.n(ceiling), u: 'rule-subs', n: 'catalog times tenants if everyone subscribed to everything \u2014 the ceiling the join stays under', over: false },
     { k: 'Actual subscriptions', v: fmt.n(subs), u: 'rule-subs', n: 'each tenant runs only its subscribed rules \u2014 the catalog-to-subscriptions join is what keeps the rule set sparse', over: false },
     { k: 'Evaluations per cycle', v: fmt.n(evalsPerCycle), u: 'evals', n: 'tenants \u00D7 subscribed rules \u00D7 devices \u2014 the rules are cheap, the DEVICES are the expensive dimension', over: evalsPerCycle > 5000000 },
-    { k: 'Evaluation rate', v: fmt.n(evalsPerSec), u: '/sec', n: 'spread across the cycle; when cycle DURATION approaches the interval you are at the ceiling \u2014 shard the fleet, do not shorten the cycle', over: false },
-    { k: 'History rows/day (all results)', v: fmt.n(historyPerDay), u: 'rows', n: 'appending EVERY evaluation result: ' + fmt.n(cyclesPerDay) + ' cycles a day \u00D7 the per-cycle evaluations \u2014 this is the number that kills you', over: historyPerDay > 50000000 },
-    { k: 'History rows/day (transitions)', v: fmt.n(transitionsPerDay), u: 'rows', n: 'the fix: record only STATE CHANGES (~1% churn), not every pass \u2014 a device that passed again is not news, and the hot current state lives in a TTL store', over: false },
+    { k: 'Evaluation rate', v: cycleOk ? fmt.n(evalsPerSec) : 'n/a', u: '/sec', n: 'spread across the cycle; when cycle DURATION approaches the interval you are at the ceiling \u2014 shard the fleet, do not shorten the cycle', over: false },
+    { k: 'History rows/day (all results)', v: cycleOk ? fmt.n(historyPerDay) : 'n/a', u: 'rows', n: 'appending EVERY evaluation result: ' + fmt.n(cyclesPerDay) + ' cycles a day \u00D7 the per-cycle evaluations \u2014 this is the number that kills you', over: cycleOk && historyPerDay > 50000000 },
+    { k: 'History rows/day (transitions)', v: cycleOk ? fmt.n(transitionsPerDay) : 'n/a', u: 'rows', n: 'the fix: record only STATE CHANGES (~1% churn), not every pass \u2014 a device that passed again is not news, and the hot current state lives in a TTL store', over: false },
     { k: 'Approvers per change', v: '2', u: 'distinct', n: 'four-eyes on a sensitive change: two provably different people, MFA-gated; the friction is the feature \u2014 and it is a FIXED cost, independent of fleet size', over: false },
     { k: 'Auto-expire after', v: fmt.n(expiryDays), u: 'days', n: 'a half-approved request older than this expires \u2014 long enough to survive a weekend, short enough that nothing goes stale', over: false }
   ];

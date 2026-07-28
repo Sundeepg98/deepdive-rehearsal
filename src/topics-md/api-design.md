@@ -893,7 +893,7 @@ function (vals, fmt) {
     { k: 'Offset penalty at this depth', v: fmt.n(Math.round(blowup)) + 'x', u: 'more rows', n: 'offset touches this many times more rows than cursor for the same page \u2014 the deeper the page, the worse it gets', over: blowup >= 100 },
     { k: 'Rows wasted / sec (fleet)', v: '~' + fmt.n(Math.round(wastedPerSec)), u: 'scanned-then-discarded', n: 'at ' + fmt.n(rps) + ' list req/s, this many rows a second are scanned only to be thrown away by offset paging', over: wastedPerSec > 1000000 },
     { k: 'Wasted read bandwidth', v: '~' + fmt.n(Math.round(mbPerSec)), u: 'MB/s', n: 'at ~' + rowbytes + ' bytes/row \u2014 real bytes pulled through the buffer pool and discarded. This is the figure to say out loud: it is I/O and cache you are paying for and throwing away.', over: mbPerSec > 100 },
-    { k: 'Deepest page under a 1k-row budget', v: fmt.n(Math.max(1, Math.floor(1000 / pagesize))), u: 'pages', n: 'if you cap an offset query at ~1,000 rows scanned, this is the last page you can serve \u2014 past it, offset must be refused or replaced. Cursor has no such ceiling.', over: false },
+    { k: 'Deepest page under a 1k-row budget', v: pagesize > 0 ? fmt.n(Math.max(1, Math.floor(1000 / pagesize))) : 'n/a', u: 'pages', n: 'if you cap an offset query at ~1,000 rows scanned, this is the last page you can serve \u2014 past it, offset must be refused or replaced. Cursor has no such ceiling.', over: false },
     { k: 'Stability under inserts', v: 'cursor only', u: 'no skip/dup', n: 'offset points at a position so a concurrent insert shifts rows and clients skip or duplicate; a cursor points at a value, so it is stable', over: false }
   ];
 }

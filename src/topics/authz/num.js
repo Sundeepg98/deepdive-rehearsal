@@ -14,16 +14,17 @@ var TOPIC_AUTHZ_NUM = {
   ],
   compute: function (vals, fmt) {
     var N = vals.a_tenants, Rm = vals.a_rows, share = Math.min(vals.a_whale, 100), rps = vals.a_rps;
-    var rowsPerTenant = Rm * 1e6 / N;
-    var blastM = Rm * (N - 1) / N;               /* millions of OTHER tenants' rows a missing filter exposes */
-    var crossPct = (N - 1) / N * 100;
+    var nOk = N > 0;                             /* an emptied tenant count divided by zero */
+    var rowsPerTenant = nOk ? Rm * 1e6 / N : 0;
+    var blastM = nOk ? Rm * (N - 1) / N : 0;               /* millions of OTHER tenants' rows a missing filter exposes */
+    var crossPct = nOk ? (N - 1) / N * 100 : 0;
     var whaleM = Rm * share / 100;
     var auditM = rps * 86400 / 1e6;
     return [
-      { k: 'Rows per average tenant', v: fmt.n(rowsPerTenant), u: 'rows', n: 'total rows \u00F7 tenants \u2014 the scoped query\u2019s working set', over: false },
+      { k: 'Rows per average tenant', v: nOk ? fmt.n(rowsPerTenant) : 'n/a', u: 'rows', n: 'total rows \u00F7 tenants \u2014 the scoped query\u2019s working set', over: false },
       { k: 'Tenant-index speedup', v: fmt.n(N), u: '\u00D7', n: 'a tenant-leading index seeks 1 tenant\u2019s rows instead of scanning all ' + fmt.n(Rm) + 'M', over: false },
-      { k: 'Blast radius of ONE missing filter', v: fmt.n(blastM), u: 'M rows', n: 'a single forgotten WHERE exposes every OTHER tenant\u2019s rows \u2014 this is the whole risk', over: true },
-      { k: 'Cross-tenant share of the dataset', v: fmt.n(crossPct), u: '%', n: 'of all rows belong to other tenants \u2014 the fraction a missing filter leaks', over: crossPct > 90 },
+      { k: 'Blast radius of ONE missing filter', v: nOk ? fmt.n(blastM) : 'n/a', u: 'M rows', n: 'a single forgotten WHERE exposes every OTHER tenant\u2019s rows \u2014 this is the whole risk', over: true },
+      { k: 'Cross-tenant share of the dataset', v: nOk ? fmt.n(crossPct) : 'n/a', u: '%', n: 'of all rows belong to other tenants \u2014 the fraction a missing filter leaks', over: nOk && crossPct > 90 },
       { k: 'The whale\u2019s rows', v: fmt.n(whaleM), u: 'M rows', n: 'largest tenant \u2014 a tenant-led index no longer narrows here; add targeted indexes or silo it', over: false },
       { k: 'Access events/day to audit', v: fmt.n(auditM), u: 'M/day', n: 'peak rps \u00D7 86,400 \u2014 the trail that lets you scope a breach and catch id-scanning', over: false }
     ];

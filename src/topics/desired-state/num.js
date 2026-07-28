@@ -14,17 +14,18 @@ var TOPIC_DS_NUM = {
   compute:function(vals, fmt){
     var D = vals.n_devices, T = vals.n_tenants, C = vals.n_checkin_min, p = vals.n_change_pct/100;
     var fleet = D * T;
-    var events = fleet / (C * 60);
+    var cOk = C > 0, tOk = T > 0;   /* emptied check-in interval / tenant count divide by zero */
+    var events = cOk ? fleet / (C * 60) : 0;
     var deploys = events * p;
     var noops = events * (1 - p);
-    var perTenant = events / T;
+    var perTenant = (cOk && tOk) ? events / T : 0;
     var sweep = fleet;
     return [
-      { k:'Reconcile events/sec (platform)', v:fmt.n(events), u:'events/s', n:'fleet \u00D7 check-in frequency \u2014 each device report triggers a reconcile; this is the loop\u2019s steady throughput.', over:true },
+      { k:'Reconcile events/sec (platform)', v:cOk ? fmt.n(events) : 'n/a', u:'events/s', n:'fleet \u00D7 check-in frequency \u2014 each device report triggers a reconcile; this is the loop\u2019s steady throughput.', over:true },
       { k:'Total fleet (devices \u00D7 tenants)', v:fmt.n(fleet), u:'devices', n:'the population the loop keeps converged \u2014 the reconcile rate scales with it.' },
-      { k:'Deploys/sec (only drifted devices)', v:fmt.n(deploys), u:'deploys/s', n:'drift is the exception \u2014 most reconciles confirm convergence, so actual config pushes are rare.' },
-      { k:'No-op reconciles/sec (converged)', v:fmt.n(noops), u:'reconciles/s', n:'the cheap common path \u2014 this is why the three-hash diff must be trivial and read-only.' },
-      { k:'Reconciles/sec per tenant', v:fmt.n(perTenant), u:'per tenant/s', n:'the per-tenant lock must absorb this \u2014 sub-partition (per-site) if one tenant\u2019s rate runs far higher.' },
+      { k:'Deploys/sec (only drifted devices)', v:cOk ? fmt.n(deploys) : 'n/a', u:'deploys/s', n:'drift is the exception \u2014 most reconciles confirm convergence, so actual config pushes are rare.' },
+      { k:'No-op reconciles/sec (converged)', v:cOk ? fmt.n(noops) : 'n/a', u:'reconciles/s', n:'the cheap common path \u2014 this is why the three-hash diff must be trivial and read-only.' },
+      { k:'Reconciles/sec per tenant', v:(cOk && tOk) ? fmt.n(perTenant) : 'n/a', u:'per tenant/s', n:'the per-tenant lock must absorb this \u2014 sub-partition (per-site) if one tenant\u2019s rate runs far higher.' },
       { k:'Full-sweep re-diff cost', v:fmt.n(sweep), u:'diffs', n:'what a periodic sweep touches \u2014 event-driven does the small rate instead; the sweep is only a backstop.' }
     ];
   }

@@ -624,8 +624,8 @@
     "h": "908d5f25"
   },
   "consistent-hashing::CURVEBALL/Adversarial keys:your-public-api-caches-by-a.int": {
-    "n": 13,
-    "h": "2ce21e29"
+    "n": 107,
+    "h": "51fa314d"
   },
   "consistent-hashing::CURVEBALL/Balanced but hot:your-key-counts-are-perfectly-even.int": {
     "n": 121,
@@ -636,32 +636,32 @@
     "h": "d7a6dec2"
   },
   "consistent-hashing::CURVEBALL/Flapping node:a-node-s-health-check-is.int": {
-    "n": 12,
-    "h": "b5f082d4"
+    "n": 109,
+    "h": "457f7afb"
   },
   "consistent-hashing::CURVEBALL/Kafka's modulo:you-just-told-me-modulo-hashing.int": {
-    "n": 16,
-    "h": "71b6feb3"
+    "n": 129,
+    "h": "aff8224d"
   },
   "consistent-hashing::CURVEBALL/Silent RF=1:you-configured-replication-factor-3-a.int": {
-    "n": 10,
-    "h": "1757ce10"
+    "n": 110,
+    "h": "2f106e41"
   },
   "consistent-hashing::CURVEBALL/Split ring:two-of-your-cache-clients-were.int": {
-    "n": 18,
-    "h": "84a59481"
+    "n": 113,
+    "h": "d564e971"
   },
   "consistent-hashing::CURVEBALL/The 'free' rebalance:you-add-a-node-during-peak.int": {
-    "n": 12,
-    "h": "23056a29"
+    "n": 106,
+    "h": "4f7592fb"
   },
   "consistent-hashing::CURVEBALL/The 4096-token cluster:your-team-set-virtual-nodes-to.int": {
-    "n": 15,
-    "h": "f51f23f8"
+    "n": 130,
+    "h": "ede2f5c1"
   },
   "consistent-hashing::CURVEBALL/The stateless ring:a-team-hashes-requests-to-your.int": {
-    "n": 7,
-    "h": "2f255903"
+    "n": 105,
+    "h": "51184b25"
   },
   "consistent-hashing::DESIGN:partitioning-for-a-dynamo-style-key.int": {
     "n": 94,

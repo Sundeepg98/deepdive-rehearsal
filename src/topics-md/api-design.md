@@ -455,20 +455,21 @@ The cursor is an opaque encoding of the last row's sort key plus a unique tiebre
 ### Make it safe: idempotency keys and a coded error contract
 
 ```flow
-key[client sends an Idempotency-Key] -> dedupe[server records it atomically with the effect] -> replay[a retry with the same key replays the result, no double write]
+key[client sends an Idempotency-Key] -> dedupe[server claims it atomically, then commits it with the effect] -> replay[a retry with the same key replays the result, no double write]
 ```
 
-Writes have to be safe to retry, because networks drop responses. For non-idempotent POSTs, use an **idempotency key**: the client sends a unique key, the server checks a dedupe store, performs the write only if the key is unseen, and records the key **atomically with the effect** so a crash cannot lose the dedupe:
+Writes have to be safe to retry, because networks drop responses. For non-idempotent POSTs, use an **idempotency key**: the client sends a unique key, the server **claims** it in one atomic operation --- an insert-if-absent into an `in_progress` state, never a read followed by a write --- and then commits the effect and the key's `completed` state together, so a crash cannot leave the work done with the dedupe lost. The claim being **one statement** is the part that carries the weight: a `get` followed by a `put` is the check-then-act race, and two concurrent retries both read nothing and both create an order. The loser of that race must not return an empty success --- there is nothing stored yet --- so it either waits briefly and replays the winner's response, or returns **409** meaning the key is still in flight. And a winner that dies between claiming and committing wedges the key, so the claim carries a **lease** after which it can be reclaimed:
 
 ```python
 def create_order(request, idempotency_key):
-    existing = dedupe_store.get(idempotency_key)   # keyed by the client's Idempotency-Key
-    if existing:
-        return existing.response                   # replay -- no second order
+    # ONE atomic claim -- not get-then-put, or two concurrent retries both proceed.
+    claimed = dedupe_store.claim(idempotency_key)  # INSERT ... ON CONFLICT DO NOTHING -> in_progress
+    if not claimed:                                # another attempt already owns this key
+        return replay_or_409(idempotency_key)      # completed -> stored response; in flight -> 409
 
-    with db.transaction():                         # effect + key recorded together
+    with db.transaction():                         # effect + completion commit together
         order = orders.insert(request.body)
-        dedupe_store.put(idempotency_key, order.id, response=serialize(order))
+        dedupe_store.complete(idempotency_key, order.id, response=serialize(order))
     return serialize(order)
 ```
 

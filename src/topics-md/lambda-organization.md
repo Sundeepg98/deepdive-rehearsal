@@ -808,9 +808,10 @@ Back-of-envelope the concurrency a traffic level actually needs, what that draws
 
 The headline is **Little's Law: concurrency = rate x duration**. That single multiplication turns "it scales automatically" into a number you can defend --- and it carries the trap, because **duration is a multiplier**: if a downstream slows, your concurrency rises on identical traffic. The second number is **utilization**, which is what actually decides whether this should be a Lambda at all.
 
-- rps | Steady request rate (req/s) | 200 | 0 | 10
+- rps | Average request rate (req/s) | 200 | 0 | 10
 - durMs | Avg duration (ms) | 120 | 1 | 10
 - memMb | Memory (MB) | 1024 | 128 | 128
+- peakToAvg | Peak-to-average traffic | 1 | 1 | 0.5
 - accountLimit | Account concurrency limit | 1000 | 0 | 100
 - fns | Functions in the estate | 108 | 0 | 10
 
@@ -818,22 +819,32 @@ The headline is **Little's Law: concurrency = rate x duration**. That single mul
 function (vals, fmt) {
   var rps = vals.rps, durMs = vals.durMs, memMb = vals.memMb;
   var limit = vals.accountLimit, fns = vals.fns;
+  var peakToAvg = Math.max(vals.peakToAvg, 1);
   var gb = memMb / 1024;
   var conc = rps * (durMs / 1000);                          // Little's Law
   var poolPct = limit > 0 ? (conc / limit) * 100 : 0;
   var invPerMo = rps * 2592000;                             // 30 days
   var gbSec = invPerMo * (durMs / 1000) * gb;
   var lambdaMo = (invPerMo / 1e6) * 0.20 + gbSec * 0.0000166667;
-  var vcpu = conc * (memMb / 1769);                         // 1769 MB == 1 full vCPU
-  var fargateMo = 730 * (vcpu * 0.04048 + conc * gb * 0.004445);
+  var util = 100 / peakToAvg;                               // average / peak
+  var peakConc = conc * peakToAvg;                          // a container is sized for PEAK
+  var vcpu = Math.max(peakConc * (memMb / 1769), 0.25);     // 1769 MB == 1 vCPU; 0.25 = smallest task
+  var taskGb = Math.max(peakConc * gb, 0.5);
+  var fargateMo = 730 * (vcpu * 0.04048 + taskGb * 0.004445);
   var ratio = fargateMo > 0 ? lambdaMo / fargateMo : 0;
+  var flatVcpu = Math.max(conc * (memMb / 1769), 0.25);     // the same box at 100% utilization
+  var flatGb = Math.max(conc * gb, 0.5);
+  var flatFargate = 730 * (flatVcpu * 0.04048 + flatGb * 0.004445);
+  var flatRatio = flatFargate > 0 ? lambdaMo / flatFargate : 0;
+  var xover = flatRatio > 1 ? 100 / flatRatio : 100;        // utilization where the two meet
   var estate = conc * fns;
   return [
     { k: 'Concurrency needed', v: fmt.n(Math.ceil(conc)), u: 'concurrent', n: 'Little\u2019s Law: rate \u00D7 duration. The whole capacity model is one multiplication \u2014 and duration is a MULTIPLIER: if a downstream slows and duration triples, this triples on identical traffic, which is how a slow dependency quietly eats the pool', over: false },
     { k: 'Share of the shared pool', v: poolPct.toFixed(1) + '%', u: 'of ' + fmt.n(limit), n: 'one function\u2019s draw on the ONE per-region pool every unreserved function shares \u2014 the fault domain. Only a reservation partitions it; raising the limit just makes the shared pool bigger', over: poolPct > 50 },
     { k: 'Lambda cost / month', v: '$' + fmt.n(Math.round(lambdaMo)), u: '/mo', n: 'at $0.20/M requests + ~$0.0000167/GB-s over ' + fmt.n(Math.round(invPerMo / 1e6)) + 'M invocations \u2014 you pay only while code runs, which is the entire serverless bargain', over: false },
-    { k: 'Always-on equivalent', v: '$' + fmt.n(Math.round(fargateMo)), u: '/mo', n: 'the same steady compute as Fargate (~$0.04/vCPU-hr; Lambda gives 1 vCPU at 1,769 MB) \u2014 billed for wall-clock whether busy or idle', over: false },
-    { k: 'Lambda vs always-on', v: ratio.toFixed(1) + '\u00D7', u: 'the container', n: ratio > 1 ? 'STEADY enough that Lambda is paying a premium for elasticity it never uses \u2014 Lambda costs ~2\u00D7 per BUSY vCPU-hour, so it only wins below roughly 50% utilization. The always-warm, always-busy function is the one to move to containers' : 'Lambda wins \u2014 idle enough that not paying for idle beats the ~2\u00D7 per-busy-vCPU-hour premium. This is the spiky, event-driven shape serverless is for', over: ratio > 1 },
+    { k: 'Container utilization', v: util.toFixed(0) + '%', u: 'busy', n: 'what an always-on box sized for the PEAK would actually be doing \u2014 average concurrency over peak. This is the number the whole build-or-not decision turns on, and for this function the two options meet at about ' + xover.toFixed(0) + '% \u2014 below that, not paying for idle wins', over: false },
+    { k: 'Always-on equivalent', v: '$' + fmt.n(Math.round(fargateMo)), u: '/mo', n: 'the same workload on Fargate (~$0.04/vCPU-hr; Lambda gives 1 vCPU at 1,769 MB), sized for PEAK concurrency because a container cannot scale per request, and floored at the smallest real task (0.25 vCPU / 0.5 GB) \u2014 billed for wall-clock whether busy or idle', over: false },
+    { k: 'Lambda vs always-on', v: ratio.toFixed(1) + '\u00D7', u: 'the container', n: ratio > 1 ? 'STEADY enough that Lambda is paying a premium for elasticity it never uses \u2014 Lambda costs ~2\u00D7 per BUSY vCPU-hour, so it only wins below about ' + xover.toFixed(0) + '% utilization for this shape. The always-warm, always-busy function is the one to move to containers' : 'Lambda wins \u2014 idle enough that not paying for idle beats the ~2\u00D7 per-busy-vCPU-hour premium. This is the spiky, event-driven shape serverless is for', over: ratio > 1 },
     { k: 'If all ' + fmt.n(fns) + ' did this', v: fmt.n(Math.ceil(estate)), u: 'concurrent', n: 'the estate\u2019s aggregate draw against a ' + fmt.n(limit) + ' pool \u2014 this is why a hundred functions is a shared fault domain and not a hundred independent things. Over the line, somebody throttles, and it will not be the function that caused it', over: estate > limit }
   ];
 }

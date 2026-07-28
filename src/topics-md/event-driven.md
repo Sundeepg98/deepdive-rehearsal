@@ -242,7 +242,7 @@ Speak: "A stable id per event, and a **conditional** write --- `INSERT ... ON CO
 
 What does the dedup store look like?
 
-A keyed record of processed message ids --- a Redis set with a TTL, or a database table with the id as the primary key. The natural business key often works too (an order id, an event id). The TTL or retention must outlive the maximum possible redelivery window, or a late duplicate slips past an expired record.
+A keyed record of processed **event ids** --- a Redis set with a TTL, or a database table with the id as the primary key. A deterministic business key works just as well (`hash(order_id, 'shipped')`). The TTL or retention must outlive the maximum possible redelivery window, or a late duplicate slips past an expired record.
 
 Follow: You put the dedup store in Redis for speed. Redis is not the database holding the business write. What breaks?
 The **atomicity between the dedup record and the effect** --- which was the entire point of the exercise. "Record the id" (Redis) and "apply the change" (Postgres) are now two systems, so a crash between them gives you one of two outcomes: the id is recorded but the change never applied --- so the redelivery sees the id, skips, and **the work is silently never done**, which is strictly *worse* than a duplicate --- or the change is applied but the id never recorded, which is a duplicate. The first failure mode is a silent data-loss bug that looks *exactly* like a working dedup. So when the effect is transactional, put the dedup row in the **same database as the write** and commit them together --- it is free and it is correct. Redis is a fine choice when the effect is *already* non-transactional (an external API call), or as a fast **pre-filter** in front of the authoritative check --- but it must not be the *only* record when a transactional option exists.
@@ -504,7 +504,7 @@ After the visibility timeout the broker sees an un-acked message and cannot tell
 d[message arrives again] -> k[dedup check] -> s[skip or process once]
 ```
 
-The consumer treats every message as possibly a duplicate. It checks the dedup record for the message id first; if the id is already recorded, it acks and skips with no second effect. Only a first-seen id is processed, and the id is recorded atomically with the work.
+The consumer treats every message as possibly a duplicate. It checks the dedup record for the **event id carried in the payload** first; if the id is already recorded, it acks and skips with no second effect. Only a first-seen id is processed, and the id is recorded atomically with the work.
 
 ```ts
 async function handle(msg) {
@@ -515,7 +515,7 @@ async function handle(msg) {
 }
 ```
 
-The claim and the work must be atomic --- a conditional insert, not a read-then-write --- or two concurrent deliveries both pass the check and both run. Done right, this is what turns at-least-once delivery into effectively-once processing.
+The id being claimed is the event's own --- the `evt-7` assigned at emit --- never the broker's delivery id, which changes on every redrive. And the claim and the work must be atomic --- a conditional insert, not a read-then-write --- or two concurrent deliveries both pass the check and both run. Done right, this is what turns at-least-once delivery into effectively-once processing.
 
 ### Ordering, where it actually matters
 
@@ -589,7 +589,7 @@ The ack gap --- work done, ack lost or consumer crashed, so the broker redeliver
 
 ### Where is it made harmless?
 
-At the consumer --- a dedup check on the message id, atomic with the work, so a second delivery is a no-op.
+At the consumer --- a dedup check on the **event id carried in the payload** (never the broker's message id), atomic with the work, so a second delivery is a no-op.
 
 ### Ordering --- what you get, and what you don't
 
@@ -770,7 +770,7 @@ Contain, diagnose, then close the class --- not the instance.
 - SUSPECT ONE | sub | **The id was random, not stable.** A fresh UUID per delivery attempt collides with nothing, so the dedup store dutifully records two different ids for one logical event and lets both charges through. It looks like idempotency and dedups nothing.
 - SUSPECT TWO | sub | **The check was read-then-write.** `SELECT` then `INSERT` is a race: two concurrent deliveries --- which the visibility timeout expiring mid-work will happily produce --- both read "not seen" and both charge. The check and the claim must be **one conditional write**.
 - SUSPECT THREE | sub | **The dedup TTL expired before the redelivery.** A DLQ redrive three days later, against a one-hour dedup TTL, re-executes everything. This one passes every test and only bites during an incident recovery.
-- SUSPECT FOUR | sub | **The dedup store and the write are in different systems** --- and the crash landed between them. Or the consumer acked *before* charging, so a retry re-charged. The logs tell me which: the *same* id charged twice means the check isn't running or isn't atomic; *two* ids for one order means the id isn't stable.
+- SUSPECT FOUR | sub | **The dedup store and the write are in different systems** --- and the crash landed between them. The logs tell me which: the *same* id charged twice means the check isn't running or isn't atomic; *two* ids for one order means the id isn't stable.
 - NAME THE RISK | risk | The fix I would resist is "add a check to that one path." That is whack-a-mole. Idempotency has to be **structural** --- one claim gate that every handler goes through, so a new consumer physically cannot forget it --- plus a test that fires a duplicate at every consumer.
 - CLOSE | close | So: contain, classify from the logs (random id, racy check, expired TTL, cross-system crash), fix the specific cause, then **close the class** by making the dedup gate unavoidable rather than remembered. The double-charge is the fastest way to lose a customer's trust, so it is worth closing at the class level.
 
@@ -1000,7 +1000,7 @@ In the **ack gap** --- between the work completing and the ack landing at the br
 ### DESIGN | A dispatch pipeline that must not double-act
 
 Task: design so a redelivered command doesn't act twice.
-Model: EventBridge routes, SQS buffers, an idempotent consumer claims each message id atomically with the work and skips a seen id; failures dead-letter after N tries.
+Model: EventBridge routes, SQS buffers, an idempotent consumer claims each **event id** --- the one in the payload, not the SQS MessageId --- atomically with the work and skips a seen id; failures dead-letter after N tries.
 Int: where does the duplicate come from in the first place?
 The ack gap --- work done, ack lost or consumer crashed, broker redelivers.
 Int2: The dispatch command goes to a device over an API you don't control, and it has no idempotency key. Now what?

@@ -307,6 +307,10 @@
     "n": 89,
     "h": "644642a2"
   },
+  "backpressure::CURVEBALL/zero goodput:during-the-incident-your-service-was.int2": {
+    "n": 98,
+    "h": "45e28d61"
+  },
   "backpressure::DESIGN:overload-handling-for-a-user-facing.int": {
     "n": 90,
     "h": "3120540c"
@@ -656,16 +660,16 @@
     "h": "4f7592fb"
   },
   "consistent-hashing::CURVEBALL/The 4096-token cluster:your-team-set-virtual-nodes-to.int": {
-    "n": 130,
-    "h": "ede2f5c1"
+    "n": 166,
+    "h": "9a8f5dd3"
   },
   "consistent-hashing::CURVEBALL/The stateless ring:a-team-hashes-requests-to-your.int": {
     "n": 105,
     "h": "51184b25"
   },
   "consistent-hashing::DESIGN:partitioning-for-a-dynamo-style-key.int": {
-    "n": 94,
-    "h": "47ca8231"
+    "n": 95,
+    "h": "6c665cfd"
   },
   "consistent-hashing::DESIGN:partitioning-for-a-dynamo-style-key.int2": {
     "n": 102,
@@ -806,6 +810,10 @@
   "debugging::FAILURE:one-endpoint-is-logging-30-000.int": {
     "n": 24,
     "h": "647b9cca"
+  },
+  "debugging::FAILURE:one-endpoint-is-logging-30-000.int2": {
+    "n": 131,
+    "h": "c95ce5c3"
   },
   "debugging::FRAME:you-re-on-call-data-is.int": {
     "n": 31,
@@ -1222,6 +1230,10 @@
   "event-driven::CURVEBALL/Poison message:you-re-on-kafka-one-malformed.int": {
     "n": 63,
     "h": "edf12c33"
+  },
+  "event-driven::CURVEBALL/Poison message:you-re-on-kafka-one-malformed.int2": {
+    "n": 103,
+    "h": "63588be5"
   },
   "event-driven::CURVEBALL/Replay blast:you-replay-a-week-of-events.int": {
     "n": 71,
@@ -2263,6 +2275,10 @@
     "n": 61,
     "h": "b300dec5"
   },
+  "rate-limiting::CURVEBALL/Store outage:the-limiter-s-redis-is-down.int2": {
+    "n": 93,
+    "h": "e2ed983d"
+  },
   "rate-limiting::DESIGN:a-public-api-with-paid-tiers.int": {
     "n": 127,
     "h": "870a8fdd"
@@ -2503,6 +2519,10 @@
     "n": 60,
     "h": "b05c9bde"
   },
+  "retries-timeouts::CURVEBALL/thundering herd:your-cache-has-a-60-second.int2": {
+    "n": 112,
+    "h": "4f44b6ad"
+  },
   "retries-timeouts::CURVEBALL/tight timeout:a-senior-engineer-set-the-timeout.int": {
     "n": 52,
     "h": "ac49a16d"
@@ -2634,6 +2654,10 @@
   "saga::CURVEBALL/Choreography black hole:nine-services-fully-choreographed-no-coordinator.int": {
     "n": 82,
     "h": "fb8e6546"
+  },
+  "saga::CURVEBALL/Choreography black hole:nine-services-fully-choreographed-no-coordinator.int2": {
+    "n": 102,
+    "h": "823ca2fa"
   },
   "saga::CURVEBALL/Compensation rejected:your-compensation-is-refund-the-card.int": {
     "n": 58,

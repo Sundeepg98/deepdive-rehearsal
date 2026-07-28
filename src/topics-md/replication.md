@@ -422,7 +422,7 @@ a[write] -> sync[wait for follower ack: durable, can stall] -> async[ack immedia
 
 The critical choice is *when the leader acknowledges the write*. **Synchronous**: wait for a follower to confirm it has the write --- so an acknowledged write provably exists on two nodes (durable), but the client waits, and a stalled synchronous follower blocks writes entirely. **Asynchronous**: acknowledge as soon as the leader has it, replicate in the background --- fast and unaffected by follower health, but the leader can acknowledge a write the followers don't have yet.
 
-The cost of async is **replication lag**: followers always trail the leader, usually by milliseconds but sometimes seconds. Most systems compromise with **semi-synchronous** --- synchronous to one follower (at least two copies), async to the rest (no single slow follower stalls everything).
+The cost of async is **replication lag**: followers always trail the leader, usually by milliseconds but sometimes seconds. Most systems compromise with **semi-synchronous** --- synchronous to one follower (at least two copies), async to the rest (no single slow follower stalls everything). Say the better form of that compromise in the same breath, because it is what this whole board has been building toward: wait for **any k of n** followers rather than one *named* follower --- Postgres spells it `ANY 1 (s1, s2, s3)` --- so the write path pays the **k-th fastest** replica instead of the slowest, and a single sick node can never stall it.
 
 ### The follower applies --- and falls behind
 
@@ -560,7 +560,7 @@ An **ordered log of changes** --- not "the data" --- plus a **position** per fol
 
 ### What does sync vs async change?
 
-Sync waits for a follower before acknowledging (durable, but a slow follower stalls writes); async acks immediately (fast, but followers lag and a failover can lose the un-replicated writes).
+Sync waits for a follower before acknowledging (durable, but a slow follower stalls writes); async acks immediately (fast, but followers lag and a failover can lose the un-replicated writes). Draw the resolution rather than the binary: wait for **any k of n** followers, never one *named* follower, so the write path pays the **k-th fastest** replica instead of the slowest and no single sick node can stall it.
 
 ### Where does the lag come from --- and how do you measure it honestly?
 
@@ -572,7 +572,7 @@ Route by the **freshness the operation needs**, not by node load. Draw two arrow
 
 ### Why does R + W > N guarantee a fresh read?
 
-Because a write set of W nodes and a read set of R nodes, together exceeding N, must overlap in at least one node -- so the read includes a node holding the latest write.
+Because a write set of W nodes and a read set of R nodes, together exceeding N, must overlap in at least one node --- so the read includes a node holding the latest **completed** write. Write the qualifier on the board, because it is the whole guarantee: anything that stopped short of W is outside the overlap and this diagram promises nothing about it.
 
 ### The leader dies: which follower do you promote, and what do you lose?
 

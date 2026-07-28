@@ -796,7 +796,7 @@ Retries multiply across a call chain and hit the deepest dependency hardest; a t
 - layers | Call-chain depth | 3 | 1 | 1
 - retries | Attempts per layer (1 try + retries) | 3 | 1 | 1
 - p99 | Dependency p99 (ms) | 200 | 0 | 10
-- deadline | Request deadline (ms) | 2000 | 0 | 100
+- deadline | Request deadline (ms) | 1000 | 0 | 100
 
 ```js
 function (vals, fmt) {

@@ -824,7 +824,7 @@ A lock serializes the critical section (a throughput ceiling); the TTL must outl
 - holders | Contending processes | 10 | 1 | 1
 - ttl | Lock TTL (s) | 30 | 1 | 1
 - op | Critical section (s) | 5 | 0 | 1
-- pause | Max STW/GC pause (s) | 8 | 0 | 1
+- pause | Max STW/GC pause (s) | 45 | 0 | 1
 
 ```js
 function (vals, fmt) {

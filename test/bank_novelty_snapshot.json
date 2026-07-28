@@ -36,8 +36,8 @@
     "h": "1cb59611"
   },
   "api-design::DESIGN:a-write-api-that-clients-will.int": {
-    "n": 101,
-    "h": "6f024037"
+    "n": 121,
+    "h": "dcf554f2"
   },
   "api-design::DESIGN:a-write-api-that-clients-will.int2": {
     "n": 63,
@@ -60,11 +60,11 @@
     "h": "b85bc407"
   },
   "api-design::SCALE:turning-an-internal-service-s-ad.int": {
-    "n": 117,
+    "n": 114,
     "h": "a75ec70b"
   },
   "api-design::SCALE:turning-an-internal-service-s-ad.int2": {
-    "n": 82,
+    "n": 80,
     "h": "17911b13"
   },
   "api-design::STRUCTURE:walk-me-through-it-a-client.int": {
@@ -492,8 +492,8 @@
     "h": "984fa203"
   },
   "circuit-breaker::CURVEBALL/recovery:your-dependency-recovers-but-the-moment.int": {
-    "n": 30,
-    "h": "adab3ed2"
+    "n": 141,
+    "h": "8c6410f4"
   },
   "circuit-breaker::CURVEBALL/slow, not failing:your-dependency-isn-t-returning-errors.int": {
     "n": 28,
@@ -1064,8 +1064,8 @@
     "h": "b7193080"
   },
   "distributed-locks::SCALE:a-scheduled-billing-run-must-execute.int": {
-    "n": 29,
-    "h": "83b127db"
+    "n": 124,
+    "h": "cdb847e0"
   },
   "distributed-locks::SCALE:a-scheduled-billing-run-must-execute.int2": {
     "n": 46,

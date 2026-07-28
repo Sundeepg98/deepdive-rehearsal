@@ -1231,6 +1231,10 @@
     "n": 63,
     "h": "edf12c33"
   },
+  "event-driven::CURVEBALL/Poison message:you-re-on-kafka-one-malformed.int2": {
+    "n": 103,
+    "h": "63588be5"
+  },
   "event-driven::CURVEBALL/Replay blast:you-replay-a-week-of-events.int": {
     "n": 71,
     "h": "2bd0ac0d"
@@ -2515,6 +2519,10 @@
     "n": 60,
     "h": "b05c9bde"
   },
+  "retries-timeouts::CURVEBALL/thundering herd:your-cache-has-a-60-second.int2": {
+    "n": 112,
+    "h": "4f44b6ad"
+  },
   "retries-timeouts::CURVEBALL/tight timeout:a-senior-engineer-set-the-timeout.int": {
     "n": 52,
     "h": "ac49a16d"
@@ -2646,6 +2654,10 @@
   "saga::CURVEBALL/Choreography black hole:nine-services-fully-choreographed-no-coordinator.int": {
     "n": 82,
     "h": "fb8e6546"
+  },
+  "saga::CURVEBALL/Choreography black hole:nine-services-fully-choreographed-no-coordinator.int2": {
+    "n": 102,
+    "h": "823ca2fa"
   },
   "saga::CURVEBALL/Compensation rejected:your-compensation-is-refund-the-card.int": {
     "n": 58,

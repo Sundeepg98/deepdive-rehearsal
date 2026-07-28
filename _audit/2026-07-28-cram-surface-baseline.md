@@ -2,7 +2,7 @@
 
 **Branch** `tool/cram-checker` off master `807b063` · **2026-07-28** · tool-only wave, deliverable byte-unchanged
 **Ships:** `test/cram_surface.cjs`, `test/cram_surface_debt.json`, a `check_all.py` registration
-**Gate:** 56/56 PASS · **Baseline:** 66 defects across 35/46 topics — *this file's §4 table is the C-fixes work-list*
+**Gate:** 55/55 PASS *(count corrected by cold-verify; post-union with the numbers harness = 56)* · **Baseline:** 66 defects across 35/46 topics — *this file's §4 table is the C-fixes work-list*
 
 ---
 
@@ -276,7 +276,7 @@ Trade-off tell, 0.525) must not.
 
 ## 7. Gate verdict and the byte-unchanged claim
 
-**`npm run build` → exit 0. Full gate → `GATE: PASS`, 56/56, 0 FAIL, 0 SKIP, exit 0.**
+**`npm run build` → exit 0. Full gate → `GATE: PASS`, 55/55, 0 FAIL, 0 SKIP, exit 0** *(count corrected by cold-verify: master registers 54, this branch adds one)*.
 Run twice: once on the working tree (`/tmp/wC_gate.log`) and again on the **freeze commit
 `017278c`** (`/tmp/wC_gate_freeze.log`), so the run of record is the tree that actually freezes.
 Verdict read from the capture file, never a piped exit code.
@@ -319,7 +319,8 @@ rather than driving the overlays, unlike `cram_scope_distinct`).
 
 ## 9. Merge note for team-lead
 
-`check_all.py` is the expected union conflict with the parallel `numbers-harness` wave — both
+`check_all.py` was predicted to union-conflict with the parallel `numbers-harness` wave (cold-verify
+measured the hunks DISJOINT — different anchor lines — so the auto-merge is clean) — both
 waves add a docstring line and a registration tuple. Mine: the `cram_surface` line after
 `cram_scope_distinct` in the module docstring, and the commented `('cram_surface',
 'test/cram_surface.cjs')` tuple after the `cram_scope_distinct` tuple. Everything else is disjoint

@@ -130,7 +130,7 @@ Speak: "The dashboard reads 100% because it only *contains* what worked --- so I
 
 A query or job is silently processing fewer rows than it should. What is the first thing you suspect?
 
-The **NULL exclusion trap**: `WHERE col = 'value'` silently excludes every row where `col IS NULL`, because in SQL `NULL = anything` is not true (it is unknown), so those rows fail the predicate and disappear. This is how a filter meant to *include* a category quietly *drops* a whole population --- in one incident it excluded 118,933 devices from a job that looked correct. Confirm by counting NULLs in the column (`COUNT(*) FILTER (WHERE col IS NULL)`); if the missing rows match the NULL count, that is your bug. The fix is `col = 'value' OR col IS NULL`, or `col IS DISTINCT FROM ...`, or making the column NOT NULL with a default so the trap cannot recur.
+The **NULL exclusion trap**: `WHERE col = 'value'` silently excludes every row where `col IS NULL`, because in SQL `NULL = anything` is not true (it is unknown), so those rows fail the predicate and disappear. This is how a filter meant to *include* a category quietly *drops* a whole population --- in one incident it excluded 118,933 devices from a job that looked correct. Confirm by counting NULLs in the column (`COUNT(*) FILTER (WHERE col IS NULL)`); if the missing rows match the NULL count, that is your bug. The fix is `col = 'value' OR col IS NULL` (equivalently `COALESCE(col,'value') = 'value'`), or making the column NOT NULL with a default so the trap cannot recur. Carry the mirror-image trap with it, because it is the same bug wearing the other sign: `WHERE col <> 'value'` *also* drops every NULL row, this time out of a filter meant to **exclude** --- and that one is fixed by `col IS DISTINCT FROM 'value'`, the null-safe *inequality*. Include-filter, `OR col IS NULL`; exclude-filter, `IS DISTINCT FROM`. They are not interchangeable: `IS DISTINCT FROM` returns the opposite population, so reaching for it here would drop the very rows you came to rescue.
 
 Follow: You patch it to `col = 'value' OR col IS NULL`. Three weeks later another engineer adds a filter and the NULLs vanish again. How do you stop the recurrence?
 Make the column `NOT NULL` with a default so the trap is *structurally* impossible, or push the include-NULL logic into a shared view the team queries. A fix that relies on every future author remembering the `OR` clause is not a fix --- it is a re-armed landmine.
@@ -138,7 +138,7 @@ Make the column `NOT NULL` with a default so the trap is *structurally* impossib
 Follow: The column is a legitimately nullable foreign key --- NULL means "unassigned." Now what?
 Then NULL carries meaning, so I decide *explicitly* whether "unassigned" belongs in the result, and reach for `col IS DISTINCT FROM 'value'` when I want "everything except value, NULLs included." The bug is *silent* exclusion; the fix is making the NULL handling a stated decision, not a side effect of `=`.
 
-Senior: Knowing *why* `NULL = 'x'` is unknown --- SQL's three-valued logic --- and reaching for `IS DISTINCT FROM`, not just "NULLs are weird," is the forensics tell.
+Senior: Knowing *why* `NULL = 'x'` is unknown --- SQL's three-valued logic --- and keeping the two traps straight (`=` drops NULLs from an *include* filter, `<>` drops them from an *exclude* filter, and `IS DISTINCT FROM` fixes only the second), not just "NULLs are weird," is the forensics tell.
 Speak: "`WHERE col = 'value'` silently drops every NULL row, because NULL compares as unknown, never equal --- so I count the NULLs, and if the missing rows match, that is the bug."
 
 ### SDE2 | intermittent 404 right after create
@@ -588,7 +588,7 @@ At the *logs, before the storage layer* --- never the success table, which by co
 
 ### A WHERE clause is dropping rows --- what is the mechanism and the one query that confirms it?
 
-The **NULL exclusion trap**: `WHERE col = 'value'` silently drops every row where `col IS NULL`, because in SQL `NULL = anything` is unknown, never true. Confirm by counting the NULLs --- `COUNT(*) FILTER (WHERE col IS NULL)` --- and if the missing rows match the NULL count, that is the bug. Fix with `col = 'value' OR col IS NULL`, or `IS DISTINCT FROM`, or a `NOT NULL` default so it cannot recur.
+The **NULL exclusion trap**: `WHERE col = 'value'` silently drops every row where `col IS NULL`, because in SQL `NULL = anything` is unknown, never true. Confirm by counting the NULLs --- `COUNT(*) FILTER (WHERE col IS NULL)` --- and if the missing rows match the NULL count, that is the bug. Fix with `col = 'value' OR col IS NULL`, or a `NOT NULL` default so it cannot recur. Mirror trap: `col <> 'value'` drops NULLs out of an **exclude** filter --- that is the one `col IS DISTINCT FROM 'value'` fixes.
 
 ### An intermittent 404 right after create --- what is it, and what is the fix?
 
@@ -1047,7 +1047,7 @@ It still expires, but jitter *desynchronizes* the expirations so they do not lan
 Task: Name the mechanism, then why wall clocks cannot order events across machines.
 Model: **Clock skew under last-write-wins**: if "newest" is decided by comparing wall-clock timestamps from two servers, and their clocks differ by even tens of milliseconds, a write that happened *later* can carry an *earlier* timestamp and lose --- so the older value wins. Wall clocks are not a reliable total order across machines. Fix: order writes by a *logical* clock --- a monotonic sequence, a version vector, or a timestamp generated by a single authority like the database --- or, if you must use wall time, bound skew with NTP and treat it as approximate. The real fix is not to derive correctness from unsynchronized clocks.
 Int: NTP keeps the clocks within a few milliseconds --- isn't that good enough?
-Not for ordering: "within a few milliseconds" still means two events milliseconds apart can be ordered backwards, and NTP can step or drift. For a total order you need a source that is *monotonic by construction* --- a single sequence generator, a Lamport or vector clock, or letting one authority stamp the order. Clocks are for timeouts and rough timing, not for deciding which write wins.
+Not for ordering: "within a few milliseconds" still means two events milliseconds apart can be ordered backwards, and NTP can step or drift. For a total order you need a source that is *monotonic by construction* --- a single sequence generator, a **Lamport clock with a node-id tiebreak**, or letting one authority stamp the order. And be precise about the other logical clock, because they are not interchangeable: a **vector clock deliberately will not** give you a total order. When neither version dominates it reports the two writes as *concurrent* --- which is the honest answer when there is no real "newer," and the reason you surface siblings instead of guessing. Clocks are for timeouts and rough timing, not for deciding which write wins.
 
 ### CURVEBALL | Poison message | One malformed message wedges your whole queue consumer --- nothing after it processes
 

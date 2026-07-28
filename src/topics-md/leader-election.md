@@ -606,7 +606,7 @@ A leader can be paused (long GC) past its lease, get replaced, then resume and a
 
 Say so honestly, then relocate the check. A **conditional write** (`If-Match`, CAS, `WHERE version = ?`) **is** a fencing token in disguise. Or put a **fencing proxy** in front. Or **STONITH** --- fence the *node*, not the request. Failing all of it: make the op **idempotent** and admit you have an *efficiency* lock, not a correctness one.
 
-### It works. Now the leader is the bottleneck --- what do you do, and what does it cost?
+### The election works. Now the leader is the bottleneck --- what do you do, and what does it cost?
 
 **Shard leadership**: one leader per partition (Kafka) or per range (Spanner, CockroachDB) --- single-leader correctness locally, horizontal scale globally. The cost people skip: a cross-shard operation now needs **2PC across two leaders**. So the real work is choosing the boundary so the **hot path stays inside one shard**.
 

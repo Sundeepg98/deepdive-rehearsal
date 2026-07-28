@@ -932,7 +932,7 @@ Kafka is a distributed **append-only commit log**: a topic is N **retained, orde
 
 #### What is the shape?
 
-Kafka is a distributed append-only commit log: a topic is N retained, ordered partitions; producers append, consumers read by offset, and records persist for replay -- which gives high throughput, many independent consumers, and per-partition ordering.
+Brokers hold **partitions**, and each partition has one **leader** replica plus followers --- every read and write for that partition goes to its leader, so the partition, not the topic, is the unit of both ordering and parallelism. Producers choose a partition by **key**; consumers join a **group**, and the group divides the partitions among its members, one owner each. The only per-consumer state the broker keeps is an **offset** per group per partition --- which is why a second group can replay the whole log from zero without costing the first one anything.
 
 #### What are the consequences?
 

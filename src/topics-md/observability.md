@@ -670,7 +670,7 @@ Always budget at scale: sample traces, cap cardinality, tier retention; "log eve
 - OpenTelemetry: vendor-neutral, one instrumentation, the backend is a config change -- but you assemble collectors and exporters yourself
 - Vendor agent: turnkey auto-instrumentation and support -- but lock-in, and re-instrumenting to switch backends
 
-Default to OpenTelemetry so the destination is config, not code --- it's what makes an APM migration an exporter flip instead of a rewrite. Take a vendor agent when its auto-instrumentation coverage and support genuinely outweigh the lock-in for your team's stage.
+Default to OpenTelemetry so the destination is config, not code --- it's what makes an APM migration an exporter flip instead of a rewrite. Take a vendor agent only where OTel genuinely has no instrumentation for a runtime you actually run, and put a review date on it, because *"their agent is better"* is a claim about this quarter and the decision outlives it. The cost you are weighing is not the licence: it is that re-instrumenting a whole fleet is a multi-quarter project nobody funds, so the lock-in falls due at precisely the moment you have already decided to leave.
 
 ### Push vs pull metrics collection
 

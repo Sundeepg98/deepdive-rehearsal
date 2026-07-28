@@ -667,7 +667,7 @@ The calls that separate "add a read replica" from reasoning about copies.
 - Sync: an acknowledged write survives node failure (no data loss on failover) -- but adds latency and a slow/failed follower stalls writes
 - Async: fast writes, unaffected by follower health -- but followers lag (stale reads) and recent writes can be lost on failover
 
-Default to semi-synchronous (sync to one follower, async to the rest) for durability without a single slow node stalling everything.
+Name the **RPO** first, as an actual number, because that is the thing the business has an opinion about: fully async means a failover loses whatever the replication lag was, so if the answer is *"we cannot lose an acknowledged write"* you are buying a round trip on every commit and you should say what it costs. Semi-synchronous --- one follower sync, the rest async --- is the usual landing spot because it buys two-copy durability for one local round trip. But say the honest caveat: where the data already lives in a quorum store, **quorum commit dominates it**, giving the same durability with no single designated follower whose stall becomes your write latency.
 
 ### Single-leader vs multi-leader vs leaderless
 
@@ -695,8 +695,8 @@ Route by the **freshness the operation needs**, never by node load. The blunt ve
 ### Last-writer-wins vs version vectors vs CRDTs
 
 - Last-writer-wins: only where losing a concurrent write is genuinely acceptable (a "last active" timestamp, a cached preference) --- it is lossy by definition, and clock skew decides the winner
-- Version vectors: when you need to know whether two writes are truly concurrent or causally ordered, so you only resolve real conflicts --- and can surface siblings to the application
-- CRDTs: when the data is naturally a merge --- a set, a counter, a cart, a collaborative document --- so concurrent updates converge deterministically with no conflict at all
+- Version vectors: you need to know whether two writes are truly concurrent or causally ordered, so you only resolve real conflicts --- and can surface siblings to the application
+- CRDTs: the data is naturally a merge --- a set, a counter, a cart, a collaborative document --- so concurrent updates converge deterministically with no conflict at all
 
 Match the resolution to the **invariant**. If the operation carries a hard invariant --- uniqueness, a non-negative balance, limited inventory --- **no merge strategy can save you**, because enforcing it requires seeing all writes together; that data needs a single ordering point and should probably never have been multi-leader. Noticing that is the real signal.
 

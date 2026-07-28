@@ -32,22 +32,46 @@
  *      section-set guard alone would not see it.
  *   3. STRING COVERAGE -- every string the mirror claims is lifted must actually appear in the
  *      rendered sheet text. A field that was re-pointed (wb.steps[].a -> .c) trips this.
+ *   4. THE CUE-LIFT -- the composed spine line (cue + arrow + answer) must appear in the
+ *      rendered sheet. Reverting the composer to lifting `.a` bare slips guards 1-3 entirely:
+ *      same sections, same <li> count, and the answer text is still there. This is the guard
+ *      that catches it, on all 46 topics x every step.
  *
  * Known limit, stated rather than papered over: a lift site added inside an existing section
  * that ALSO renders no new block and whose text the mirror happens to already carry would slip
- * all three. No such shape exists in cram-derive today.
+ * all four. No such shape exists in cram-derive today.
+ *
+ * ------------------------------------------------------------------------------------------
+ * ONE LINE, TWO UNITS -- and why that is not fussiness.
+ * A spine line is now a cue plus an answer, and the two detectors deliberately measure
+ * different things:
+ *
+ *   dangling -> the composed LINE. It asks "does what the reader meets stand alone?", and the
+ *               cue is now part of what they meet.
+ *   dup      -> the ANSWER alone. It asks "does this sentence reach two sections?", which is a
+ *               fact about the sentence, not about its neighbours.
+ *
+ * Running `dup` on the composed line would be the Goodhart move this file exists to avoid.
+ * MEASURED, before the composer changed: prepending the cue drags notifications' duplicate from
+ * 0.68 to 0.58 and rules-engine's from 0.72 to 0.57, both under DUP_MIN -- so two real
+ * duplicates would have gone quiet without one word of the duplicated text changing. The
+ * composer fix must not be able to launder a defect it did not fix.
  *
  * ------------------------------------------------------------------------------------------
  * THE FLAG CLASSES. Each one is here because the corpus or the composer's own code proves it
  * can happen -- not because it sounded plausible. Tuning receipts are in the freeze report.
  *
- *   dangling  An answer lifted AWAY FROM ITS QUESTION that opens on a back-reference the
- *             question supplied. This is structural, not stylistic: wb.steps is {c, a} -- a
- *             CUE and an answer -- and cram-derive lifts `.a` alone (cram-derive.js:91). Same
- *             for open.cards[0].items[0..1].a. So "Only the ones before the pivot." (saga)
- *             loses "which steps even need a compensation?" and becomes unreadable. Detected
- *             as a bare pro-form subject ("It evicts.", "Both ordering and load") or an
- *             elliptical fragment answer ("Because...", "Only...", "No.", "You do not,").
+ *   dangling  A lifted line that opens on a back-reference whose antecedent the sheet does not
+ *             show. Structural, not stylistic. It was created by the composer: wb.steps is
+ *             {c, a} -- a CUE and an answer -- and deriveCram used to lift `.a` alone, so
+ *             "Only the ones before the pivot." (saga) lost "which steps even need a
+ *             compensation?" and became unreadable. That was ONE defect replicated 46 times,
+ *             and it is fixed at the composer (cram-derive.js _csCueLine now lifts the cue
+ *             alongside its answer). The class stays, pointed at the composed LINE, because
+ *             open.cards[0].items[0..1].a are still lifted bare -- the section heading is
+ *             their only framing. Detected as a bare pro-form subject ("It evicts.", "Both
+ *             ordering and load") or an elliptical fragment ("Because...", "Only...", "No.",
+ *             "You do not,").
  *   dup       The same sentence lifted into TWO sections. Panes are consumed independently so
  *             cross-pane restatement is BY DESIGN -- but the sheet puts those panes on one
  *             page, where it reads as a bug and burns the scarcest space in the app.
@@ -214,6 +238,11 @@ const SELF_TEST = [
   ['dangling-NEG-the', () => detectDangling('The transactional outbox: the event row is written in the same transaction.'), false],
   ['dangling-NEG-nothing', () => detectDangling('Nothing lingers partially armed once the time-box expires.'), false],
   ['dangling-NEG-draw', () => detectDangling('Draw two boxes. Definition -- one row per attribute.'), false],
+  /* THE COMPOSER FIX'S OUTPUT SHAPE, bracketed against its own input. `dangling+only` above is
+   * this exact answer as the sheet used to lift it, and must FIRE; the cue+answer line the sheet
+   * lifts now must stay SILENT. Tighten the detector until the bare answer passes, or loosen it
+   * until the composed line trips, and one of the two fixtures aborts the run. */
+  ['dangling-NEG-cue-lifted', () => detectDangling('Step order -- which steps even need a compensation? -> Only the ones before the pivot.'), false],
   ['when-conj+when', () => detectWhenConj('when you need to know whether two writes are concurrent'), true],
   ['when-conj+When', () => detectWhenConj('When a config change must be reviewed'), true],
   ['when-conj+if', () => detectWhenConj('if the write rate exceeds the primary'), true],
@@ -311,7 +340,10 @@ function asciiFold(s) {
      * data mutation on the in-memory registry: no file is touched, no build is modified. */
     if (opts.plant) {
       const p1 = TopicRegistry.get('content-pipeline');
-      if (p1 && p1.data.wb && p1.data.wb.steps && p1.data.wb.steps[0]) p1.data.wb.steps[0].a = 'They do. And that is the whole trick.';
+      /* Target an item the composer still lifts BARE: the cue-lift made wb.steps[].a a no-op
+       * plant (the cue now fronts the line, so a planted dangling answer never opens it).
+       * open.cards[0].items[1].a has no cue prefix, so the dangling class stays plantable. */
+      if (p1 && p1.data.open && p1.data.open.cards[0] && p1.data.open.cards[0].items[1]) p1.data.open.cards[0].items[1].a = 'They do. And that is the whole trick.';
       const p2 = TopicRegistry.get('authz');
       if (p2 && p2.data.trade && p2.data.trade.decisions[0] && p2.data.trade.decisions[0].opts[1]) {
         p2.data.trade.decisions[0].opts[1].when = 'when the tenant count crosses the index cutover';
@@ -367,10 +399,19 @@ function asciiFold(s) {
       if (items[0] && items[0].a) push('one-liner', 'open.cards[0].items[0].a', items[0].a, 'detached-answer');
       else if (idn.thesis) push('one-liner', 'identity.thesis', idn.thesis, 'detached-answer');
 
-      /* 2. spine (cram-derive.js:89-97) */
+      /* 2. spine -- cram-derive's _csCueLine: the CUE, an arrow, then the answer.
+       * ONE LINE, TWO UNITS (see the header note). `text` stays the ANSWER, because that is the
+       * sentence `dup` asks about; `line` is what the reader actually meets, which is what
+       * `dangling` asks about. The line is composed HERE rather than by calling _csCueLine -- a
+       * mirror that calls the thing it mirrors proves nothing about drift; guard 4 does. */
       let spineN = 0;
       if (d.wb && d.wb.steps && d.wb.steps.length) {
-        d.wb.steps.forEach((s, i) => { push('spine', 'wb.steps[' + i + '].a', s.a, 'detached-answer'); spineN++; });
+        d.wb.steps.forEach((s, i) => {
+          push('spine', 'wb.steps[' + i + '].a', s.a, 'detached-answer');
+          lifts[lifts.length - 1].line = asText('<span>' + (s.c || '') + '</span>'
+            + (s.c ? '<span>&rarr;</span>' : '') + (s.a || ''));
+          spineN++;
+        });
       } else if (idn.spine && idn.spine.length) {
         idn.spine.forEach((s, i) => { push('spine', 'identity.spine[' + i + ']', s, 'detached-answer'); spineN++; });
       }
@@ -526,6 +567,12 @@ function asciiFold(s) {
       if (o.cramText.indexOf(L.text) === -1) {
         drift.push(id + ': ' + L.path + ' is mirrored as lifted but its text is NOT in the rendered cram sheet -- the mirror points at a field the composer no longer uses');
       }
+      // 4. THE CUE-LIFT. Guard 3 above passes on the answer alone, so reverting the composer to
+      //    lifting `.a` without its cue would slip every other guard: same sections, same <li>
+      //    count, same answer text. This is the one that catches it (46 topics x every step).
+      if (L.line && o.cramText.indexOf(L.line) === -1) {
+        drift.push(id + ': ' + L.path + ' -- the composed spine line (cue + arrow + answer) is NOT in the rendered cram sheet, so deriveCram is no longer lifting the cue alongside its answer');
+      }
     });
     o.slifts.forEach((L) => {
       if (L.absent || !L.text) return;
@@ -554,8 +601,10 @@ function asciiFold(s) {
      * structurally created. */
     o.lifts.forEach((L) => {
       if (L.kind !== 'detached-answer' || L.absent) return;
-      const why = detectDangling(L.text);
-      if (why) add(id, 'dangling', L.path, why, L.text.slice(0, 120));
+      /* On the SPINE this is the composed cue+answer line -- the unit the reader meets. */
+      const seen = L.line || L.text;
+      const why = detectDangling(seen);
+      if (why) add(id, 'dangling', L.path, why, seen.slice(0, 120));
     });
 
     /* when-conj + void-lift, over both surfaces */

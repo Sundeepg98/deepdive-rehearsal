@@ -724,7 +724,7 @@ The calls that separate "we watch uptime" from managing reliability as a budget.
 - Higher (more nines): stronger reliability promise -- but each nine costs ~10x more, shrinks the error budget (less room to ship), and past ~99.9% users can't perceive it
 - Lower: generous error budget, room to move fast -- but risks users actually feeling the failures
 
-Set the SLO at the lowest nine that keeps users genuinely happy -- achievable and meaningful, leaving real budget to work with, not aspirational.
+Start from what you actually measured last quarter, then set the target a notch below it. An SLO you already miss is a permanent freeze, and a permanent freeze gets ignored rather than obeyed; an SLO you beat by two nines has no budget in it, so it never changes a decision --- and a target that never changes a decision is documentation, not an SLO. The number worth defending in the room is the one whose error budget is large enough to spend deliberately and small enough that spending it hurts.
 
 ### SLO burn-rate alerting vs threshold alerting
 

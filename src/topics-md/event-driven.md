@@ -676,7 +676,7 @@ The calls that separate "add a queue" from a designed async system.
 - Synchronous: an immediate answer and simple flow, but the caller is coupled to the callee's availability and latency
 - Event-driven: decoupling and buffering, but eventual consistency, duplicates to handle, and harder debugging
 
-Go async where decoupling and burst absorption matter; stay synchronous where the caller needs an immediate result or a transaction across steps.
+The question is who owns the outcome. If the caller cannot proceed without the answer --- it has to render it, or decide on it --- stay synchronous; making that call async just moves the wait into a polling loop you now also have to build. Go async when the caller's job genuinely ends at *"this happened"*, and use the second-consumer test to check yourself: if you cannot name a consumer you would add later without touching the producer, you may be paying a broker's operational cost to perform a function call.
 
 ### Standard queue vs FIFO queue
 

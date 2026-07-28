@@ -894,7 +894,7 @@ Require two distinct approvers via a state machine, MFA-gated, for sensitive cha
 
 Blocking only the requester still lets the first approver be the second --- one person, two approvals. That is four-eyes in name only.
 
-Reject both the requester and the first approver at the second-approval step, so the two approvers are provably distinct.
+Blocking self-approval closes exactly one hole: requester equals approver. It leaves the other one wide open, because nothing stops the *first* approver from casting the second approval too --- one human, two clicks, a fully "approved" change. Enforce the real invariant in the state machine, on the set of approver ids rather than on the button: the change advances only once that set reaches size two.
 
 ### "Rules are data, so a rule change doesn't need review or testing"
 

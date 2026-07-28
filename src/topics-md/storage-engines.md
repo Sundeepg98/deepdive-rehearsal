@@ -707,7 +707,7 @@ The calls that separate "Postgres uses B-trees" from matching a layout to a work
 - B-tree: fast, predictable reads + range scans, in-place updates -- but write amplification (page-sized random in-place writes), so writes are costlier
 - LSM-tree: very high write throughput (sequential appends + deferred compaction), better compression -- but higher read amplification (multiple files) and space amplification (obsolete data until compaction), and compaction I/O
 
-Read-heavy / transactional -> B-tree; write-heavy / high-ingest -> LSM. It's the read-vs-write trade; match the engine to whether reads or writes dominate.
+The read/write ratio picks the default, but what decides it is the **shape of the reads**. An LSM absorbs writes by never seeking --- append, then compact in the background --- and pays on the read side with a lookup that may touch several SSTables: Bloom filters rescue that for point reads and do nothing for range scans. So high ingest with point lookups is where LSM wins outright, while high ingest with heavy range scans is where the write advantage gets eaten again. And name the cost nobody budgets for: compaction is not free, it competes with your foreground traffic, and an LSM whose compaction cannot keep up degrades into exactly the read amplification you chose it to avoid.
 
 ### Size-tiered vs leveled compaction (LSM tuning)
 
@@ -721,7 +721,7 @@ Tune compaction along the RUM triangle: size-tiered for write-saturated / rarely
 - Row store (OLTP): read/write whole rows by key fast (contiguous), transactional -- but scans read whole rows even for a few columns, and compress worse
 - Column store (OLAP): scan few columns across many rows, huge compression (homogeneous columns), vectorized aggregation -- but single-row fetch/update scatters across column files (poor OLTP)
 
-Match layout to access pattern: row store for transactional whole-row access; column store for analytical scan-and-aggregate (and separate OLTP from OLAP rather than forcing one engine to do both).
+Count the columns the query touches against the columns in the row. Reading three of forty columns across ten million rows means a column store reads under a tenth of the bytes a row store does, and compresses them far better because a column is one type --- that ratio *is* the advantage, so it collapses as the query approaches selecting everything. It also collapses on small result sets, where per-row reassembly across column files dominates, which is why a column store makes a poor transactional database. Split OLTP from OLAP rather than asking one engine to be good at both.
 
 ### fsync every commit vs group commit
 

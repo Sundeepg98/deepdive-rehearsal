@@ -635,7 +635,7 @@ Pick token bucket unless the product genuinely needs burst-free smoothness; the 
 - Local per-instance: fast, no network hop, but undercounts across a fleet
 - Shared store: correct fleet-wide rate, but a network hop and a hot-key risk
 
-Use a shared store for correctness, with a local token bucket as a fallback for when the store is unreachable.
+Count the instances, because that is the error term. Split one limit across N local buckets and a client whose requests land unevenly gets throttled below its quota --- the slop grows with N and with how bursty the client is, and it is invisible to you and obvious to them. So local-only is fine while N is small and the limit is merely protective. The moment the number is **contractual**, or N is large enough that the slop shows up in a customer's own graphs, pay for the shared counter --- and keep the local bucket underneath it as the fail-open path for when that store is unreachable.
 
 ### Fail open vs fail closed
 

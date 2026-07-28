@@ -700,14 +700,14 @@ Soft-delete referenced, recoverable, auditable data; hard-delete disposable data
 - In-place: trivial recovery and simple, but the hot table bloats with every deleted row
 - Archive table: the live table stays lean and filter-light, but a move on delete and a two-place restore
 
-Flag in place for a short reversible window; archive to keep long history without taxing live reads, often purging from soft to archive.
+The trigger is the **ratio**, not the age. While deleted rows are a small minority, the filter is nearly free and flagging in place is obviously right. Once the dead outnumber the living, every live query is scanning index entries it exists only to discard, and that cost lands on the hot path permanently --- so move history to an archive table and let the archive carry the long retention. The live table's only job is to stay small enough that the common query stays fast.
 
 ### Per-query filter vs global enforcement
 
 - Per-query filter: explicit, but one forgotten predicate silently returns deleted rows
 - Global enforcement: safe by default, but admin and restore paths must deliberately opt in to deleted rows
 
-Enforce the filter globally at one structural point, and make including deleted rows an obvious, explicit escape hatch.
+There is barely a fork here, and saying so is the senior move: a per-query filter is one forgotten `WHERE` clause away from serving deleted data, and it *will* be forgotten, because the failure is silent and looks like extra rows rather than an error. Put the filter somewhere it cannot be omitted --- a default scope, a view, a row-level policy --- and make including deleted rows a loud, explicit opt-in. The tell that a system got this wrong is a bug report about a deleted record reappearing on one screen out of forty.
 
 ### Partial unique index vs releasing the value on delete
 

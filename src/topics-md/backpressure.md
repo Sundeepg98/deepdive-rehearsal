@@ -579,7 +579,7 @@ Newest (tail), oldest (when the new supersedes the old -- a price, a gauge), low
 
 In the **thread pool, the connection pool, the pending-task set, and the socket backlog**. **Concurrency is a queue**, and unbounded concurrency is an unbounded queue. Bound in-flight calls per dependency with a semaphore or bulkhead, fail fast when full, and add a timeout.
 
-### You can neither block the producer nor drop the work. Now what?
+### The producer cannot be blocked and the work cannot be dropped. Now what?
 
 **Spill to a durable, disk-backed log** (Kafka) and let the consumer drain the backlog. But: it converts loss into **delay** (which *is* loss for data whose value decays), and the log is still bounded -- by **retention**. Lag beyond retention deletes records nobody read: silent data loss. Alarm on lag *versus retention*, and on the lag *trend*.
 
@@ -663,7 +663,7 @@ The calls that separate "we have a queue" from a pipeline stable under overload.
 - Block (wait/buffer): preserves every item, no loss -- but stalls the producer (propagating upstream) and adds latency; wrong for interactive paths
 - Shed (drop/503): keeps the system responsive, bounded latency -- but loses/rejects work; wrong when every item must be processed
 
-Shed to protect latency for interactive, loss-tolerant, retryable work; block (or spill to disk) to protect completeness for must-not-lose work -- decided by the SLO, often per-priority.
+Ask what one item is worth *after* the deadline. If it is worthless once late --- a price tick, a search ranking, a presence ping --- shed, because blocking only converts a fast failure into a slow one and you lose the item anyway. If it is worth the same an hour from now --- a payment, an audit row, a customer's upload --- it must not be dropped, so block or spill to disk and let the latency be visible. The giveaway that nobody has made this call is a system that blocks on the interactive path and drops on the durable one, which is exactly backwards.
 
 ### Small vs large buffer
 

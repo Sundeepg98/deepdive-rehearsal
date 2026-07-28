@@ -704,7 +704,7 @@ Scope in the application and let row-level security be the backstop --- defence 
 - Shared schema: one set of tables, simplest to operate and query across, but no structural separation
 - Schema per tenant: namespace-level separation inside one database, cleaner than shared rows, heavier than shared tables
 
-Prefer shared rows for scale and reach for schema-per-tenant only when a middle ground between row-scoping and full per-tenant databases is genuinely needed. Be aware of the ceiling: thousands of schemas means thousands of copies of every table in the catalog, which bloats `pg_catalog`, slows planning and autovacuum, and makes a full dump painful. It is a middle ground with a real tenant-count limit, not a free upgrade.
+The trigger is a per-tenant obligation you cannot express as a predicate on a row: restoring one tenant to its own point in time, migrating one tenant's schema on its own schedule, or handing an auditor a boundary they can see. Scale is never the reason --- shared rows scale strictly further. And the ceiling arrives sooner than people expect: thousands of schemas means thousands of copies of every table in the catalog, which bloats `pg_catalog`, slows planning and autovacuum, and makes a full dump painful. It is a middle ground with a real tenant-count limit, not a free upgrade.
 
 ### Transaction-scoped tenant context vs connection per tenant
 

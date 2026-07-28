@@ -16,6 +16,7 @@ CS_SHEET.replaceSync(`
 .cs-st{font:var(--font-weight-heavy) 10.5px -apple-system,sans-serif;letter-spacing:.7px;text-transform:uppercase;color:var(--acc);border-bottom:2px solid var(--accbg);padding-bottom:var(--space-5);margin-bottom:var(--space-10)}
 .cs-spine{margin:0;padding-left:var(--space-20)}
 .cs-spine li{font-size:var(--font-size-reading-sm);line-height:var(--line-height-airy);margin-bottom:var(--space-6);color:var(--ink)}
+.cs-cue{color:var(--mut2)}
 .cs-dec{font-size:var(--font-size-reading-sm);line-height:var(--line-height-airy);margin-bottom:var(--space-7);color:var(--ink)}
 .cs-dec b{color:var(--accink);font-weight:var(--font-weight-bold)}
 .cs-arr{color:var(--mut2);font-weight:var(--font-weight-heavy);margin:0 var(--space-5)}

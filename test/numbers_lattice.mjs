@@ -453,7 +453,11 @@ function analyze(topic) {
   };
 
   for (const p of points) consume(p, true);
-  const baseRows = consume(defaults, true);
+  // The default vector is already IN `points` (the ladder always carries the default, and the
+  // capped path pushes its index explicitly), so this evaluation is for the OAT comparison
+  // baseline only -- collecting from it again would double-count one point in `posPoints`, which
+  // is quoted verbatim in the finding text.
+  const baseRows = consume(defaults, false);
   const baseSig = baseRows ? baseRows.map(rowSignature) : null;
 
   // OAT: collect into the same sets (they are declared-range points too) and judge inputs

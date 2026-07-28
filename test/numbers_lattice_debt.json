@@ -32,7 +32,7 @@
     "nonfinite:swallowed": "at a declared bound, fmt was handed NaN/Infinity and rendered it as \"0\" -- a confident wrong number"
   },
   "real-time-delivery": {
-    "dead_flag_always_positive:6": "Write amplification -- `over` is always true across all 7500 sampled points with every assumption > 0",
+    "dead_flag_always_positive:6": "Write amplification -- `over` is always true across all 7499 sampled points with every assumption > 0",
     "nonfinite_zero:swallowed": "an emptied field makes fmt swallow NaN/Infinity into a \"0\""
   },
   "retries-timeouts": {

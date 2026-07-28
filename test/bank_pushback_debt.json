@@ -32,8 +32,6 @@
   "consistent-hashing::thin_int::SCALE:a-distributed-cache-that-must-survive.int2": "Because the removed node's keys all became misses at the same instant and stampeded the origin. The ring told you only 1",
   "consistent-hashing::thin_int::STRUCTURE:walk-me-through-it-a-key.int": "The keys. The ring holds only node tokens -- placement, not data -- which is why it's tiny and every client can hold a c",
   "consistent-hashing::thin_int::STRUCTURE:walk-me-through-it-a-key.int2": "15,000 tokens is ~14 comparisons on a cached array. It's dwarfed by the network hop that follows -- the real engineering",
-  "eav::thin_int::CURVEBALL/Cross-tenant attribute bleed:in-a-multi-tenant-deployment-a.int": "Push the tenant filter below where a developer writes queries -- row-level security in the database, or a repository lay",
-  "eav::thin_int::CURVEBALL/EAV creep / over-application:your-team-started-modeling-every-new.int": "By stability and query-frequency, measured. An attribute that's densely set, frequently filtered or sorted, and stable i",
   "multi-tenant::no_int::CURVEBALL/leak:a-bug-returned-another-tenant-s": "A bug returned another tenant's rows -- root cause and fix?",
   "multi-tenant::register_lc::CURVEBALL/leak:a-bug-returned-another-tenant-s": "a handler queried without the tenant predicate. Root cause is per-handler filtering; the fix is to move enforcement to o",
   "multi-tenant::register_lc::DESIGN:a-saas-with-free-and-enterprise": "all tenants share the scoped database; enterprise tenants that need residency or a dedicated SLA move to their own datab",

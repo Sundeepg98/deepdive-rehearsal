@@ -445,16 +445,23 @@ The coordination is **at-least-once**: an orchestrator can crash after a service
 ```sql
 -- The key is the LOGICAL operation -- (saga_id, step_id) -- never the attempt.
 BEGIN;
-  INSERT INTO processed_steps (saga_id, step_id, result)
-  VALUES ($1, $2, $3)
-  ON CONFLICT (saga_id, step_id) DO NOTHING;   -- second delivery: 0 rows
-  -- only apply the effect if THIS statement claimed the key:
+  -- Claim and effect in ONE statement, so the decrement cannot run without the claim.
+  WITH claim AS (
+    INSERT INTO processed_steps (saga_id, step_id)
+    VALUES ($1, $2)
+    ON CONFLICT (saga_id, step_id) DO NOTHING
+    RETURNING 1                                -- second delivery: no row, so no claim
+  )
   UPDATE inventory SET available = available - 1
-   WHERE sku = $4 AND available > 0;           -- atomic + conditional: no oversell
-COMMIT;                                        -- key and effect commit together
+   WHERE sku = $3 AND available > 0            -- atomic + conditional: no oversell
+     AND EXISTS (SELECT 1 FROM claim);         -- duplicate: nothing claimed, nothing decremented
+  -- Record the outcome AFTER the effect, so a replay has something to return.
+  UPDATE processed_steps SET result = $4
+   WHERE saga_id = $1 AND step_id = $2 AND result IS NULL;
+COMMIT;                                        -- key, effect and result commit together
 ```
 
-Two things are load-bearing. The key is `(saga_id, step_id)` --- the **logical operation**, never the attempt, because a key that included a retry counter would be fresh on every retry and dedupe nothing. And the key is written in the **same local transaction as the effect**, so they cannot diverge. When the effect lives at a third party, you pass that same key as *their* idempotency key (a card charge) --- or you record the intent first and, on recovery, **query them by the key** to find out what happened.
+Three things are load-bearing. The key is `(saga_id, step_id)` --- the **logical operation**, never the attempt, because a key that included a retry counter would be fresh on every retry and dedupe nothing. The effect is **gated on the claim**: `ON CONFLICT DO NOTHING` on its own only declines to insert a second row, and an ungated `UPDATE` underneath it still decrements on the second delivery --- which is exactly the double-apply this block exists to prevent, so the gate has to be in the SQL and not in the comment. And the key is written in the **same local transaction as the effect**, so they cannot diverge. When the effect lives at a third party, you pass that same key as *their* idempotency key (a card charge) --- or you record the intent first and, on recovery, **query them by the key** to find out what happened.
 
 ### Persist the saga state --- before you act, not after
 

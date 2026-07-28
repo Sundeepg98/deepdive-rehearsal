@@ -168,7 +168,7 @@ function novelty(answer, model) {
  * FNV-1a over the folded question + answer: 32 bits is ample for detecting an edit (this is a
  * change detector, not a security primitive) and it keeps the snapshot small and diffable. */
 function fingerprint(q, a) {
-  const s = plain(q) + ' ' + plain(a);
+  const s = plain(q) + '\u0000' + plain(a);
   let h = 0x811c9dc5;
   for (let i = 0; i < s.length; i++) {
     h ^= s.charCodeAt(i) & 0xff;

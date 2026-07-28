@@ -130,7 +130,7 @@ is exactly what produced N4 (see section 5).
 
 | arm | expected | observed |
 | --- | --- | --- |
-| `--plant`, echo | fires echo only | cdc SCALE Int2, run 31, **drift silent** |
+| `--plant`, echo | fires echo only | cdc SCALE Int2, run 16 *(coldverify F2: this cell originally said 31 -- record error, the arm itself is correct)*, **drift silent** |
 | `--plant`, drift | fires drift only | idempotency SCALE Int2, **echo silent** |
 | neuter `echo` | self-test aborts | 3 fixtures fail, corpus never measured |
 | neuter `drift` | self-test aborts | 2 fixtures fail, corpus never measured |
@@ -361,7 +361,7 @@ Strict ASCII verified at the **byte** level on every edited file (`ascii_guard` 
 `bank_novelty.cjs`, the snapshot, `bank_pushback.cjs`, `check_all.py`, and all five edited topic
 markdown files. `consistent-hashing.md` uses ` --- ` (508 occurrences vs 43) and the regeneration
 follows it; the four ` -- ` instances that were in the Bank belonged to the replaced Int answers
-and are gone.
+and are gone *(coldverify F3 correction: three of the four are; one survives under "### Frames", untouched by this wave)*.
 
 `npm run build` ran per cluster, six times total. Deliverable 11,983,844 -> **12,022,828** bytes.
 No `npm install`/`ci`, no `git stash`, no push, no merge.

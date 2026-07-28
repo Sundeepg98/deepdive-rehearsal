@@ -171,7 +171,26 @@ for name, cmd in [('ascii_guard', ['python3', 'test/ascii_guard.py']),
                   # A plain build-twice-and-diff would be decoration here: the flip is load-dependent
                   # so two clean builds agree ~90% of the time. Carries a negative control that
                   # aborts if the stall does not trip a default-budget tokenizer. Pure node, ~2s.
-                  ('build_determinism', ['node', 'test/build_determinism.mjs'])]:
+                  ('build_determinism', ['node', 'test/build_determinism.mjs']),
+                  # numbers_lattice: every topic's Numbers pane is a parametric calculator, and
+                  # nothing checked that moving an assumption moves anything. lambda-organization
+                  # shipped a "Lambda wins" branch that was unreachable at every legal input -- the
+                  # container was sized from AVERAGE concurrency and billed 730h, which hardcodes
+                  # 100% utilization, so its `over` flag was ALWAYS true. Found by hand in the
+                  # 2026-07-20 p0-floor audit, by RUNNING the function rather than reading it.
+                  # This drives all 46 compute() functions across their declared input lattice
+                  # (~568k evaluations, 37 topics exhaustive) and flags constant rows, dead
+                  # threshold flags, assumptions that feed no arithmetic, and NaN/Infinity at the
+                  # bounds. Two things stop it being a false-positive machine: every constancy
+                  # verdict is gated on a STATIC read of the row's source (180 of 292 `over:` sites
+                  # are the literal `false` -- those rows have no threshold and are not defects),
+                  # and fmt is INSTRUMENTED, because the pane's own _fmtN turns NaN into a
+                  # confident "0" that no output scan can see. Ships with a may-only-shrink
+                  # baseline (numbers_lattice_debt.json, parity_debt discipline: 21 findings in 15
+                  # topics). Eleven planted fixtures -- including the real pre-fix lambda source,
+                  # which the FIRST version of this check ran green on -- are re-armed every run,
+                  # and the run aborts if any is mis-detected. Pure node, no browser, ~21s.
+                  ('numbers_lattice', ['node', 'test/numbers_lattice.mjs'])]:
     r = run(cmd)
     results.append((name, 'PASS' if r.returncode == 0 else 'FAIL', report(r)))
 

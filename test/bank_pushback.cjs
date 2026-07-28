@@ -65,9 +65,24 @@
  *             idempotency's 30 non-SCALE/DESIGN Int pairs.                => min 48
  *
  * NOVEL_MAX = 20 sits inside a 11 -> 48 gap, clear of the floor by 1.8x and of the ceiling by
- * 2.4x. Both sides ship as fixtures (ANCHOR-* in SELF_TEST, corpus text verbatim), so the
- * threshold cannot drift in either direction without aborting the run: raise it past 48 and a
- * donor pair starts firing; lower it under 11 and a sweep-named defect goes quiet.
+ * 2.4x. Those four floor numbers and the donor minimum are corpus measurements at 42bf6eb and
+ * were re-measured and confirmed by the consistent-hashing wave.
+ *
+ * WHAT THE SELF-TEST ACTUALLY ENFORCES IS A DIFFERENT BRACKET, and the gap was a live doc-vs-code
+ * drift (cold-verify finding N4, re-measured here with this file's own rule before correcting):
+ *   - the shipped FLOOR fixture (ANCHOR_BAD_*) measures novelty 4, not the 5 its card measures --
+ *     because the fixture text is NOT the corpus text verbatim as this header used to claim; its
+ *     Model is a paraphrase of soft-delete's DESIGN card, not a copy of it
+ *   - the shipped CEILING fixture (ANCHOR_GOOD_*) measures 51, not 48. 48 is the DONOR
+ *     POPULATION's minimum; 51 is what this one shipped pair happens to carry
+ * So the bracket the run can actually abort on is [4, 51], not [11, 48]. Consequences, both real:
+ * raising NOVEL_MAX to 49 or 50 would start firing a donor pair in the corpus while the shipped
+ * ceiling fixture stayed silent; and lowering it to 4 does NOT silence the floor fixture (4 > 4
+ * is false, so it still fires) -- the downward abort is delivered by `thin+PAIR-restatement-fires`
+ * instead. The guarantee holds in both directions, which is what matters; the numbers above now
+ * say which fixture delivers it. A fixture that is retyped rather than extracted is exactly how a
+ * bracket stops being the bracket its header describes -- see test/bank_novelty.cjs, whose
+ * fixtures are generated from the corpus for this reason.
  *
  * A CLASS THAT WAS MEASURED AND DROPPED, on purpose. The sweep names a third tell: the old
  * generation's Model is "lowercase and semicolon-chained rather than spoken". The lowercase half
@@ -234,15 +249,18 @@ function detectRegisterLc(model) {
  * VERBATIM, one from each side of the bracket, so NOVEL_MAX cannot drift unnoticed in EITHER
  * direction. Runs before the corpus is read: a broken instrument makes every number meaningless. */
 
-/* FLOOR ANCHOR -- soft-delete's DESIGN card, one of the sweep's four named instances (novelty 5). */
+/* FLOOR ANCHOR -- modelled on soft-delete's DESIGN card, one of the sweep's four named instances.
+ * The card itself measures novelty 5; this fixture's Model is a paraphrase of it and the pair
+ * measures 4. Both are under the floor, so the fixture does its job -- but it is NOT verbatim. */
 const ANCHOR_BAD_MODEL = 'soft-delete (deleted_at) for the reversible user-facing window with the '
   + 'partial unique index and a filtered default scope; a scheduled hard-delete job past the '
   + 'retention window for genuine erasure; and crypto-shredding where the data is large or copied '
   + 'downstream, since destroying the key erases every copy at once.';
 const ANCHOR_BAD_ANSWER = 'It keeps the data; erasure requires it genuinely gone.';
 
-/* CEILING ANCHOR -- idempotency's SCALE Int2, from the donor register the brief names (novelty
- * 106). It must stay silent, or the threshold has climbed into the exemplar. */
+/* CEILING ANCHOR -- idempotency's SCALE Int2, from the donor register the brief names. This pair
+ * measures novelty 51 (an earlier comment here said 106, which was never this pair's value). It
+ * must stay silent, or the threshold has climbed into the exemplar. */
 const ANCHOR_GOOD_MODEL = 'Two numbers and a policy. Size: every request writes a key held for the '
   + 'TTL, so it is peak-rate x TTL -- 1,000 x 86,400 = ~86 million live keys, and because you '
   + 'store the response (not just a flag) at a few hundred bytes each, that is ~35 GB of hot, '

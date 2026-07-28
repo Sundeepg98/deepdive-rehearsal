@@ -12,6 +12,7 @@ This replaces per-edit manual vigilance with tooling that runs on every build:
   card_identity    a grade survives its bank being REORDERED + INSERTED into  (browser)
   topic_contract   every topic POPULATED to the depth of the hand-coded 8 (browser)
   cram_scope_distinct  no two topics RENDER the same cram/scope body       (browser)
+  cram_surface     what the cram sheet SAYS survives being read cold    (browser)
   rail_integrity   the coaching rail NEVER shows another topic's note      (browser)
   layout_static    source-level layout assertions (a regex; SEES NO PIXELS)
   visual_regression the app is RENDERED and its pixels diffed vs baselines (browser)
@@ -472,6 +473,31 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      ('card_identity', 'test/card_identity.cjs'),
                      ('topic_contract', 'test/topic_contract.cjs'),
                      ('cram_scope_distinct', 'test/cram_scope_distinct.cjs'),
+                     # cram_surface: the sibling of the check above, one layer in. That one proves
+                     # each topic renders its OWN sheet; this one is the first thing in the repo to
+                     # read WHAT THE SHEET SAYS. The cram sheet is not authored -- cram-derive.js
+                     # COMPOSES it by lifting strings verbatim out of panes written to be read
+                     # elsewhere, and the composition is where the defects are born: wb.steps is
+                     # {c, a} -- a cue and an answer -- and only `.a` is lifted, so saga's "Only the
+                     # ones before the pivot." arrives on the night-before artifact with its
+                     # question deleted and nothing to resolve "the ones" against. Flags dangling
+                     # referents, the same sentence reaching two sections, an option body that
+                     # repeats the conjunction the composer already supplies ("...when when..."),
+                     # and a non-value ceiling row at the authored defaults.
+                     # It MIRRORS the composer, so it proves the mirror is not stale three ways
+                     # (section set, per-section block counts, string coverage) -- a stale mirror
+                     # would audit strings the reader never sees and go green for the wrong reason.
+                     # RATCHET: the corpus fails it today (66 defects / 35 topics), so those are
+                     # allowlisted in test/cram_surface_debt.json and the list may only SHRINK --
+                     # same pattern as parity_debt.json. Refresh with --write-debt.
+                     # Because staleness stops protecting a detector once its class reaches an
+                     # EMPTY baseline, every detector also self-tests against fixed synthetic
+                     # fixtures ON EVERY RUN and aborts if one stops firing (or starts firing on
+                     # its own negative control) -- so this cannot become another check that
+                     # cannot fail. The duplicate threshold is bracketed by two corpus verbatims:
+                     # the sweep's own named duplicate (0.657) must fire, a Class-L "by design"
+                     # restatement (0.525) must not.
+                     ('cram_surface', 'test/cram_surface.cjs'),
                      # The rail is per (topic, view), and a MISSING note is a state the renderer has
                      # to handle -- not a state it may skip. shell.js's `if (TOPIC_CMP_NOTES[tab])`
                      # had no `else`, so a topic with no note for the active pane simply kept the

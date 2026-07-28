@@ -824,7 +824,7 @@ A lock serializes the critical section (a throughput ceiling); the TTL must outl
 - holders | Contending processes | 10 | 1 | 1
 - ttl | Lock TTL (s) | 30 | 1 | 1
 - op | Critical section (s) | 5 | 0 | 1
-- pause | Max STW/GC pause (s) | 8 | 0 | 1
+- pause | Max STW/GC pause (s) | 45 | 0 | 1
 
 ```js
 function (vals, fmt) {
@@ -835,7 +835,7 @@ function (vals, fmt) {
   var lastWait = (holders - 1) * op;
   var worstHold = op + pause;
   return [
-    { k: 'Serialized throughput', v: op > 0 ? '~' + fmt.n(r(thru, 2)) : 'n/a', u: 'ops/s (one at a time)', n: 'a lock serializes the critical section -- contenders queue rather than add throughput, so the lock caps throughput at 1 / critical-section', over: false },
+    { k: 'Serialized throughput', v: op > 0 ? '~' + (thru >= 10 ? fmt.n(thru) : r(thru, 2)) : 'n/a', u: 'ops/s (one at a time)', n: 'a lock serializes the critical section -- contenders queue rather than add throughput, so the lock caps throughput at 1 / critical-section', over: false },
     { k: 'Expiry headroom', v: fmt.n(headroom), u: 's before TTL', n: 'the lock must outlast the operation -- as the critical section (' + fmt.n(op) + 's) approaches the TTL (' + fmt.n(ttl) + 's), it can expire mid-operation and a second holder acquires', over: headroom <= 0 },
     { k: 'Op + pause vs the lease', v: worstHold >= ttl ? 'YES: expires' : 'fits (' + fmt.n(ttl - worstHold) + 's spare)', u: worstHold >= ttl ? 'unsafe' : '', n: 'a ' + fmt.n(pause) + 's pause on top of a ' + fmt.n(op) + 's op needs ' + fmt.n(worstHold) + 's of validity but the lease is ' + fmt.n(ttl) + 's -- and a pause can be arbitrarily long, so a second holder can acquire while you are frozen. FENCE regardless.', over: worstHold >= ttl },
     { k: 'Last-in-queue wait', v: '~' + fmt.n(lastWait), u: 's', n: 'with ' + fmt.n(holders) + ' contenders serialized at ' + fmt.n(op) + 's each, the last waits this long -- contention on a lock is a latency multiplier (a scale smell)', over: lastWait > 30 },

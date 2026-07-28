@@ -817,7 +817,7 @@ Back-of-envelope the space win --- a Bloom filter over an exact set (membership)
 Optimal Bloom bits are m = -n ln p / (ln 2)^2 (about 10 bits/element for 1%), a 20-50x saving over an exact set; a HyperLogLog is a FIXED ~12 KB for any cardinality, which is why distinct-count at scale is feasible at all.
 
 - n | Elements (millions) | 100 | 0 | 10
-- p | Target false-positive rate (%) | 1 | 0 | 0.1
+- p | Target false-positive rate (%) | 1 | 0.1 | 0.1
 - exbytes | Exact bytes per element (key + overhead) | 32 | 4 | 4
 - hllKB | HyperLogLog size (KB, ~1-2% error) | 12 | 1 | 1
 
@@ -825,21 +825,26 @@ Optimal Bloom bits are m = -n ln p / (ln 2)^2 (about 10 bits/element for 1%), a 
 function (vals, fmt) {
   var n = vals.n * 1e6, p = vals.p / 100, exBytes = vals.exbytes, hllBytes = vals.hllKB * 1024;
   var ln2 = Math.log(2);
-  var mBits = Math.ceil(-(n * Math.log(p)) / (ln2 * ln2));   // optimal bit count
+  /* p = 0 is not a tighter filter, it is NO filter: m = -n ln p / (ln 2)^2 diverges, so every
+     Bloom row below is undefined rather than large. p >= 100% is not a filter either (zero bits),
+     and n = 0 has nothing to hold. Guarded here so the rows say n/a instead of rendering the
+     divergence -- sz() formats its own string, so an unguarded p=0 put "~Infinity GB" on screen. */
+  var bloomOk = p > 0 && p < 1 && n > 0;
+  var mBits = bloomOk ? Math.ceil(-(n * Math.log(p)) / (ln2 * ln2)) : 0;   // optimal bit count
   var bloomBytes = mBits / 8;
-  var bitsPerEl = mBits / n;
-  var kHashes = Math.round((mBits / n) * ln2);               // optimal k
+  var bitsPerEl = bloomOk ? mBits / n : 0;
+  var kHashes = bloomOk ? Math.round((mBits / n) * ln2) : 0;               // optimal k
   var exactBytes = n * exBytes;
   var bloomSaving = bloomBytes > 0 ? exactBytes / bloomBytes : 0;
   var hllSaving = hllBytes > 0 ? exactBytes / hllBytes : 0;
   function r(x, d) { var m = Math.pow(10, d); return Math.round(x * m) / m; }
   function sz(bytes){ return bytes >= 1e9 ? r(bytes/1e9,2)+' GB' : (bytes >= 1e6 ? r(bytes/1e6,1)+' MB' : r(bytes/1e3,1)+' KB'); }
   return [
-    { k: 'Bloom bits/element', v: '~' + fmt.n(r(bitsPerEl, 1)), u: 'bits', n: 'm = -n ln p / (ln 2)^2 per element for a ' + fmt.n(vals.p) + '% false-positive rate \u2014 ~10 bits/element gives ~1%, and the rate drops exponentially as you add bits', over: false },
-    { k: 'Optimal hash functions', v: fmt.n(kHashes), u: 'k', n: 'k = (m/n) ln 2 \u2014 the sweet spot; too few checks too few bits, too many fills the array faster (NOT "more hashes = better")', over: false },
-    { k: 'Bloom filter size', v: '~' + sz(bloomBytes), u: '', n: 'the whole membership filter for ' + fmt.n(vals.n) + 'M elements at ' + fmt.n(vals.p) + '% \u2014 small enough to keep in memory / per-file', over: false },
+    { k: 'Bloom bits/element', v: bloomOk ? '~' + fmt.n(r(bitsPerEl, 1)) : 'n/a', u: 'bits', n: 'm = -n ln p / (ln 2)^2 per element for a ' + fmt.n(vals.p) + '% false-positive rate \u2014 ~10 bits/element gives ~1%, and the rate drops exponentially as you add bits', over: false },
+    { k: 'Optimal hash functions', v: bloomOk ? fmt.n(kHashes) : 'n/a', u: 'k', n: 'k = (m/n) ln 2 \u2014 the sweet spot; too few checks too few bits, too many fills the array faster (NOT "more hashes = better")', over: false },
+    { k: 'Bloom filter size', v: bloomOk ? '~' + sz(bloomBytes) : 'n/a', u: '', n: 'the whole membership filter for ' + fmt.n(vals.n) + 'M elements at ' + fmt.n(vals.p) + '% \u2014 small enough to keep in memory / per-file', over: false },
     { k: 'Exact set / distinct-count size', v: '~' + sz(exactBytes), u: '', n: fmt.n(vals.n) + 'M elements x ' + fmt.n(exBytes) + ' bytes each \u2014 what storing the actual keys (membership) or every distinct value (count) would cost, often too big for RAM / the hot path', over: exactBytes > 1e9 },
-    { k: 'Bloom vs exact saving', v: '~' + fmt.n(Math.round(bloomSaving)) + 'x', u: 'smaller', n: 'the Bloom filter uses this many times less memory than the exact set for a ' + fmt.n(vals.p) + '% false-positive rate \u2014 the trade you are making, and why it fits where exact does not', over: false },
+    { k: 'Bloom vs exact saving', v: bloomOk ? '~' + fmt.n(Math.round(bloomSaving)) + 'x' : 'n/a', u: 'smaller', n: 'the Bloom filter uses this many times less memory than the exact set for a ' + fmt.n(vals.p) + '% false-positive rate \u2014 the trade you are making, and why it fits where exact does not', over: false },
     { k: 'HyperLogLog size', v: '~' + fmt.n(vals.hllKB) + ' KB', u: '', n: 'a FIXED few KB for ANY cardinality (1M or 1T distinct), ~1-2% error \u2014 it stores a fingerprint of the count, not the elements', over: false },
     { k: 'HLL vs exact-distinct saving', v: '~' + fmt.n(Math.round(hllSaving)) + 'x', u: 'smaller', n: 'HyperLogLog vs an exact distinct-count of ' + fmt.n(vals.n) + 'M uniques \u2014 constant memory is why distinct-count at scale is feasible at all', over: false }
   ];

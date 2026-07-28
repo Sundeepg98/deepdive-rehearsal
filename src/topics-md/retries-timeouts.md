@@ -796,12 +796,16 @@ Retries multiply across a call chain and hit the deepest dependency hardest; a t
 - layers | Call-chain depth | 3 | 1 | 1
 - retries | Attempts per layer (1 try + retries) | 3 | 1 | 1
 - p99 | Dependency p99 (ms) | 200 | 0 | 10
-- deadline | Request deadline (ms) | 2000 | 0 | 100
+- deadline | Request deadline (ms) | 1000 | 0 | 100
 
 ```js
 function (vals, fmt) {
   var layers = vals.layers, attempts = vals.retries, p99 = vals.p99, deadline = vals.deadline;
   var amp = Math.pow(attempts, layers);
+  /* amp is exponential in DEPTH, so past ~1e308 it overflows a double to Infinity -- and fmt.n
+     opens with "if (!isFinite(x)) x = 0", which would print a confident "0" for the LARGEST
+     amplification this pane can describe, inverting the row's entire point. Say the exponent. */
+  var ampTxt = isFinite(amp) ? fmt.n(amp) : '10^' + Math.round(layers * Math.log10(attempts));
   var timeout = Math.round(p99 * 1.5);
   var base = 100, cap = 2000;
   var t = 0, fit = 0, wait = 0;
@@ -814,7 +818,7 @@ function (vals, fmt) {
   }
   var naive = layers * attempts * timeout;
   return [
-    { k: 'Retry amplification', v: fmt.n(amp) + '\u00D7', u: 'worst-case load on the leaf', n: attempts + ' attempts \u00D7 ' + layers + ' layers = ' + attempts + '^' + layers + ' = ' + fmt.n(amp) + '\u00D7 calls on the deepest, sickest dependency. It is exponential in DEPTH \u2014 and the worst case only arrives when everything is already failing, which is exactly why the policy passes every load test.', over: amp > 10 },
+    { k: 'Retry amplification', v: ampTxt + '\u00D7', u: 'worst-case load on the leaf', n: attempts + ' attempts \u00D7 ' + layers + ' layers = ' + attempts + '^' + layers + ' = ' + ampTxt + '\u00D7 calls on the deepest, sickest dependency. It is exponential in DEPTH \u2014 and the worst case only arrives when everything is already failing, which is exactly why the policy passes every load test.', over: amp > 10 },
     { k: 'Timeout floor', v: fmt.n(p99), u: 'ms \u2014 must sit above this', n: 'a timeout at or below the dependency p99 (' + fmt.n(p99) + 'ms) kills healthy-but-slow calls and turns each into a retry. Above p99 with margin \u2014 say ~' + fmt.n(timeout) + 'ms \u2014 so only genuinely-stuck calls trip it. Measure it CLIENT-side: the server p99 excludes the time you spent queued at its door.', over: false },
     { k: 'Attempts the deadline affords', v: fmt.n(fit), u: 'fit the budget', n: 'at a ~' + fmt.n(timeout) + 'ms timeout with exponential backoff (base ' + base + 'ms, cap ' + cap + 'ms, full jitter) only ' + fmt.n(fit) + ' attempt(s) actually fit inside a ' + fmt.n(deadline) + 'ms deadline. Configuring more than that is a policy that lies to you \u2014 the extra attempts are abandoned unfired.', over: fit < attempts },
     { k: 'Naive chain wall-clock', v: fmt.n(naive), u: 'ms if every hop retries', n: layers + ' hops \u00D7 ' + attempts + ' attempts \u00D7 ' + fmt.n(timeout) + 'ms = ' + fmt.n(naive) + 'ms against a ' + fmt.n(deadline) + 'ms budget. Per-hop timeouts that ignore the total are exactly how a chain of fast-enough calls blows the caller budget \u2014 which is what the propagated deadline fixes.', over: naive > deadline },

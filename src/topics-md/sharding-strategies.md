@@ -845,7 +845,13 @@ Shards needed = data / per-shard capacity; and naive hash mod N moves a huge fra
 ```js
 function (vals, fmt) {
   var data = vals.data, cap = vals.cap, keys = vals.keys, skew = vals.skew;
-  var shards = Math.max(1, Math.ceil(data / cap));
+  /* Every figure on this pane is derived from the shard count, and the shard count divides by
+     per-shard capacity. An emptied capacity field made shards Infinity (or NaN at 0/0), which
+     propagated: "Infinityx" on the hot-shard row and "~NaN" on usable shards both reached the
+     screen, because those two format their own strings and never pass through fmt. With no
+     capacity there is no shard count and nothing below it means anything. */
+  var capOk = cap > 0;
+  var shards = capOk ? Math.max(1, Math.ceil(data / cap)) : 0;
   var evenPerShard = data / shards;
   // RESIZE COST. Adding one shard to a `hash % N` scheme: a key keeps its home only if
   // h % N === h % (N+1). N and N+1 are coprime, so by the CRT that pair is uniform over the
@@ -857,19 +863,19 @@ function (vals, fmt) {
   // CONCENTRATION. The biggest tenant is `skew` percent of all traffic and lives on ONE shard,
   // which also carries its 1/N share of everything else. Throughput is capped by the busiest
   // shard, so only `shards / hotRatio` shards' worth of headroom is actually usable.
-  var evenShare = 100 / shards;
-  var hotShare = skew + (100 - skew) / shards;
-  var hotRatio = hotShare / evenShare;
-  var usable = shards / hotRatio;
+  var evenShare = capOk ? 100 / shards : 0;
+  var hotShare = capOk ? skew + (100 - skew) / shards : 0;
+  var hotRatio = capOk ? hotShare / evenShare : 0;
+  var usable = capOk ? shards / hotRatio : 0;
   function r(x, d) { var m = Math.pow(10, d); return Math.round(x * m) / m; }
   return [
-    { k: 'Shards needed', v: fmt.n(shards), u: 'nodes', n: 'ceil(total data / per-shard capacity) = ceil(' + fmt.n(data) + ' / ' + fmt.n(cap) + ') \u2014 plus headroom, and each shard is itself replicated for durability, so the node count is this times the replication factor', over: false },
-    { k: 'Even load / shard', v: '~' + fmt.n(r(evenPerShard, 0)) + ' GB', u: 'if the key spreads', n: 'the ideal per-shard data with an evenly-distributed key; a skewed key puts far more on one shard \u2014 the hot-shard failure', over: false },
-    { k: 'Hot shard vs average', v: r(hotRatio, 1) + 'x', u: 'load on the busiest', n: 'the biggest tenant is ' + fmt.n(skew) + '% of all traffic and lives on ONE shard, so that shard carries ~' + r(hotShare, 1) + '% of total load against a fair share of ' + r(evenShare, 1) + '%', over: hotRatio >= 2 },
-    { k: 'Usable shards', v: '~' + r(usable, 1), u: 'of ' + fmt.n(shards), n: 'throughput is capped by the BUSIEST shard, so past this point adding shards buys nothing \u2014 sharding spreads the keyspace, and can never spread a single hot key. Cache it, suffix it, or pin it to its own shard', over: usable < shards / 2 },
-    { k: 'Keys moved: hash % N resize', v: '~' + fmt.n(Math.round(modNmoved)) + 'M', u: 'of ' + fmt.n(keys) + 'M', n: 'going from ' + fmt.n(shards) + ' to ' + fmt.n(shards + 1) + ' shards, a key stays only if h%N == h%(N+1) \u2014 probability 1/(N+1) \u2014 so N/(N+1) of ALL keys move. A catastrophic migration, and why naive hashing does not scale', over: true },
-    { k: 'Keys moved: consistent hashing', v: '~' + fmt.n(Math.round(chMoved)) + 'M', u: 'of ' + fmt.n(keys) + 'M', n: 'the new node takes over one arc: ~1/(N+1) of the keyspace \u2014 exactly the fraction that mod-N happens to leave alone. A bounded, throttled, background migration', over: false },
-    { k: 'Migration reduction', v: fmt.n(shards) + 'x', u: 'less data moved', n: 'the ratio is exactly N: consistent hashing moves 1/(N+1) where mod-N moves N/(N+1) \u2014 which is the entire reason the ring (or a fixed partition count) exists as a rebalancing technique', over: false }
+    { k: 'Shards needed', v: capOk ? fmt.n(shards) : 'n/a', u: 'nodes', n: 'ceil(total data / per-shard capacity) = ceil(' + fmt.n(data) + ' / ' + fmt.n(cap) + ') \u2014 plus headroom, and each shard is itself replicated for durability, so the node count is this times the replication factor', over: false },
+    { k: 'Even load / shard', v: capOk ? '~' + fmt.n(r(evenPerShard, 0)) + ' GB' : 'n/a', u: 'if the key spreads', n: 'the ideal per-shard data with an evenly-distributed key; a skewed key puts far more on one shard \u2014 the hot-shard failure', over: false },
+    { k: 'Hot shard vs average', v: capOk ? r(hotRatio, 1) + 'x' : 'n/a', u: 'load on the busiest', n: capOk ? 'the biggest tenant is ' + fmt.n(skew) + '% of all traffic and lives on ONE shard, so that shard carries ~' + r(hotShare, 1) + '% of total load against a fair share of ' + r(evenShare, 1) + '%' : 'set a per-shard capacity to size the pool -- concentration is measured against the shard count', over: capOk && hotRatio >= 2 },
+    { k: 'Usable shards', v: capOk ? '~' + r(usable, 1) : 'n/a', u: 'of ' + fmt.n(shards), n: 'throughput is capped by the BUSIEST shard, so past this point adding shards buys nothing \u2014 sharding spreads the keyspace, and can never spread a single hot key. Cache it, suffix it, or pin it to its own shard', over: capOk && usable < shards / 2 },
+    { k: 'Keys moved: hash % N resize', v: capOk ? '~' + fmt.n(Math.round(modNmoved)) + 'M' : 'n/a', u: 'of ' + fmt.n(keys) + 'M', n: 'going from ' + fmt.n(shards) + ' to ' + fmt.n(shards + 1) + ' shards, a key stays only if h%N == h%(N+1) \u2014 probability 1/(N+1) \u2014 so N/(N+1) of ALL keys move. A catastrophic migration, and why naive hashing does not scale', over: true },
+    { k: 'Keys moved: consistent hashing', v: capOk ? '~' + fmt.n(Math.round(chMoved)) + 'M' : 'n/a', u: 'of ' + fmt.n(keys) + 'M', n: 'the new node takes over one arc: ~1/(N+1) of the keyspace \u2014 exactly the fraction that mod-N happens to leave alone. A bounded, throttled, background migration', over: false },
+    { k: 'Migration reduction', v: capOk ? fmt.n(shards) + 'x' : 'n/a', u: 'less data moved', n: 'the ratio is exactly N: consistent hashing moves 1/(N+1) where mod-N moves N/(N+1) \u2014 which is the entire reason the ring (or a fixed partition count) exists as a rebalancing technique', over: false }
   ];
 }
 ```

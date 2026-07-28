@@ -15,7 +15,7 @@ var TOPIC_NOTIF_NUM = {
   compute: function (vals, fmt) {
     var users = vals.n_users, notifs = vals.n_notifs, poll = vals.n_poll, fanout = vals.n_fanout;
     return [
-      { k: 'Poll read load', v: fmt.n(Math.round(users / poll)), u: 'reads/s', n: 'every active user hitting the unread index every ' + poll + 's \u2014 a fixed load, mostly finding nothing new', over: true },
+      { k: 'Poll read load', v: poll > 0 ? fmt.n(Math.round(users / poll)) : 'n/a', u: 'reads/s', n: 'every active user hitting the unread index every ' + poll + 's \u2014 a fixed load, mostly finding nothing new', over: true },
       { k: 'If you go real-time (1s)', v: fmt.n(users), u: 'reads/s', n: 'the same users at a 1-second interval \u2014 ' + poll + '\u00D7 the poll load, still mostly empty. The wall that pushes poll toward push.', over: users > 100000 },
       { k: 'Fan-out deliveries/day', v: fmt.n(notifs * fanout), u: '/day', n: 'one event becomes ' + fanout + ' channel deliveries \u2014 the fan-out multiplier on every downstream cost and retry', over: false },
       { k: 'Peak channel-send rate', v: fmt.n(Math.round(notifs * fanout / 86400 * 10)), u: 'sends/s', n: 'assuming a 10\u00D7 burst over average \u2014 what workers and providers must absorb during a rollout', over: false },

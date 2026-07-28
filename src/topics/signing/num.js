@@ -14,12 +14,14 @@ var TOPIC_SIGN_NUM = {
   ],
   compute: function (vals, fmt) {
     var perDay = vals.s_pkg, sizeMB = vals.s_size, hsmOps = vals.s_hsm, peakR = vals.s_peak;
-    var avg = perDay / 86400, peak = avg * peakR, util = peak / hsmOps;
+    var avg = perDay / 86400, peak = avg * peakR;
+    var hsmOk = hsmOps > 0;                 /* an emptied HSM rate divided by zero */
+    var util = hsmOk ? peak / hsmOps : 0;
     var bytesMoved = perDay * sizeMB / 1e6;     /* TB/day of package bytes the signer NEVER reads */
     return [
       { k: 'Average signing rate', v: fmt.n(avg), u: '/s', n: 'packages/day \u00F7 86,400 seconds', over: false },
       { k: 'Peak signing rate', v: fmt.n(peak), u: '/s', n: 'average \u00D7 ' + fmt.n(peakR) + ' \u2014 releases cluster, they don\u2019t arrive evenly', over: false },
-      { k: 'HSM utilization at peak', v: fmt.n(util * 100), u: '%', n: util > 1 ? 'past one HSM partition \u2014 queue the hash + batch, or add partitions' : 'within one HSM partition\u2019s throughput', over: util > 1 },
+      { k: 'HSM utilization at peak', v: hsmOk ? fmt.n(util * 100) : 'n/a', u: '%', n: !hsmOk ? 'set an HSM sign-ops rate to size utilization' : util > 1 ? 'past one HSM partition \u2014 queue the hash + batch, or add partitions' : 'within one HSM partition\u2019s throughput', over: hsmOk && util > 1 },
       { k: 'Bytes signed per package', v: '32', u: 'B', n: 'the SHA\u2011256 digest, not the ' + fmt.n(sizeMB) + ' MB package \u2014 signing time is size-independent', over: false },
       { k: 'Package bytes the signer reads', v: '0', u: '', n: fmt.tb(bytesMoved) + '/day flows past it \u2014 the pipeline already hashed it; the signer only touches the digest', over: false },
       { k: 'Device-side verify cost', v: '~1', u: 'x', n: 'RSA verify is ~100\u20131000\u00D7 cheaper than sign \u2014 the device is never the bottleneck', over: false }

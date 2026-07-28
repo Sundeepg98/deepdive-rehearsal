@@ -1,53 +1,5 @@
 {
-  "api-design": {
-    "nonfinite_zero:swallowed": "an emptied field makes fmt swallow NaN/Infinity into a \"0\""
-  },
-  "authz": {
-    "nonfinite_zero:swallowed": "an emptied field makes fmt swallow NaN/Infinity into a \"0\""
-  },
-  "desired-state": {
-    "nonfinite_zero:swallowed": "an emptied field makes fmt swallow NaN/Infinity into a \"0\""
-  },
-  "devices-dispatch": {
-    "nonfinite_zero:swallowed": "an emptied field makes fmt swallow NaN/Infinity into a \"0\""
-  },
-  "event-driven": {
-    "input_decorative:maxRecv": "Max receives -- changes only prose; feeds no figure and no flag"
-  },
-  "feature-flags": {
-    "nonfinite_zero:swallowed": "an emptied field makes fmt swallow NaN/Infinity into a \"0\""
-  },
-  "iac": {
-    "nonfinite_zero:swallowed": "an emptied field makes fmt swallow NaN/Infinity into a \"0\""
-  },
-  "load-balancing": {
-    "nonfinite_zero:1": "Utilization -- NaN/Infinity when a field is emptied",
-    "nonfinite_zero:swallowed": "an emptied field makes fmt swallow NaN/Infinity into a \"0\""
-  },
-  "notifications": {
-    "nonfinite_zero:swallowed": "an emptied field makes fmt swallow NaN/Infinity into a \"0\""
-  },
-  "probabilistic-structures": {
-    "nonfinite:2": "Bloom filter size -- NaN/Infinity at a declared bound or the defaults",
-    "nonfinite:swallowed": "at a declared bound, fmt was handed NaN/Infinity and rendered it as \"0\" -- a confident wrong number"
-  },
-  "real-time-delivery": {
-    "dead_flag_always_positive:6": "Write amplification -- `over` is always true across all 7499 sampled points with every assumption > 0",
-    "nonfinite_zero:swallowed": "an emptied field makes fmt swallow NaN/Infinity into a \"0\""
-  },
-  "retries-timeouts": {
-    "nonfinite:swallowed": "at a declared bound, fmt was handed NaN/Infinity and rendered it as \"0\" -- a confident wrong number"
-  },
-  "rules-engine": {
-    "nonfinite_zero:swallowed": "an emptied field makes fmt swallow NaN/Infinity into a \"0\""
-  },
-  "sharding-strategies": {
-    "nonfinite_zero:2": "Hot shard vs average -- NaN/Infinity when a field is emptied",
-    "nonfinite_zero:3": "Usable shards -- NaN/Infinity when a field is emptied",
-    "nonfinite_zero:swallowed": "an emptied field makes fmt swallow NaN/Infinity into a \"0\""
-  },
   "signing": {
-    "input_decorative:s_size": "Avg package (MB) -- changes only prose; feeds no figure and no flag",
-    "nonfinite_zero:swallowed": "an emptied field makes fmt swallow NaN/Infinity into a \"0\""
+    "input_decorative:s_size": "Avg package (MB) -- changes only prose; feeds no figure and no flag"
   }
 }

@@ -863,7 +863,7 @@ function (vals, fmt) {
     { k: 'Dedup lookups', v: fmt.n(msgRate), u: 'ops/s', n: 'one dedup check per message \u2014 the standing cost of effectively-once; it sizes the dedup store, so keep the record small and TTL it', over: msgRate > 50000 },
     { k: 'Dedup keys retained', v: fmt.n(keys), u: 'keys', n: 'every processed id kept for ' + dedupDays + ' day(s). The TTL must outlive the LONGEST redelivery path \u2014 a DLQ redrive days after the incident \u2014 not just the visibility timeout, or a late duplicate finds an expired record and re-executes', over: false },
     { k: 'Dedup store size', v: fmt.n(Math.round(dedupGB)), u: 'GB', n: 'at ~50 bytes per record (id + timestamp). This is the standing price of effectively-once, and it is why the record is a small key with a TTL rather than a copy of the message \u2014 and why a long TTL is not free', over: dedupGB > 100 },
-    { k: 'To DLQ after ' + maxRecv + ' tries', v: 'bounded', u: '', n: 'a message is retried at most ' + maxRecv + ' times before it is dead-lettered \u2014 bounded, so a poison message can never cycle forever and jam the queue', over: false }
+    { k: 'To DLQ after ' + maxRecv + ' tries', v: 'bounded', u: '', n: 'a message is retried at most ' + maxRecv + ' times before it is dead-lettered \u2014 bounded, so a poison message can never cycle forever and jam the queue' + (maxRecv > 10 ? ' \u2014 but ' + maxRecv + ' receives is a long time to keep re-running a message that is already failing: the typical maxReceiveCount is 3-5, and every extra attempt is consumer capacity spent on a message that is headed for the DLQ anyway.' : ''), over: maxRecv > 10 }
   ];
 }
 ```

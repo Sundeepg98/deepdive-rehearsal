@@ -340,7 +340,10 @@ function asciiFold(s) {
      * data mutation on the in-memory registry: no file is touched, no build is modified. */
     if (opts.plant) {
       const p1 = TopicRegistry.get('content-pipeline');
-      if (p1 && p1.data.wb && p1.data.wb.steps && p1.data.wb.steps[0]) p1.data.wb.steps[0].a = 'They do. And that is the whole trick.';
+      /* Target an item the composer still lifts BARE: the cue-lift made wb.steps[].a a no-op
+       * plant (the cue now fronts the line, so a planted dangling answer never opens it).
+       * open.cards[0].items[1].a has no cue prefix, so the dangling class stays plantable. */
+      if (p1 && p1.data.open && p1.data.open.cards[0] && p1.data.open.cards[0].items[1]) p1.data.open.cards[0].items[1].a = 'They do. And that is the whole trick.';
       const p2 = TopicRegistry.get('authz');
       if (p2 && p2.data.trade && p2.data.trade.decisions[0] && p2.data.trade.decisions[0].opts[1]) {
         p2.data.trade.decisions[0].opts[1].when = 'when the tenant count crosses the index cutover';

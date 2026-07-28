@@ -699,7 +699,7 @@ Use an outbox whenever the effect is externally visible and a rolled-back move m
 - Orchestration: one coordinator owns the lifecycle and drives each service; the state is visible and controllable -- but it's a central component
 - Choreography: services react to events and emit the next, no central owner; decoupled and resilient -- but the state is smeared across services and hard to observe
 
-Default to orchestration when the flow has real business logic or an operator must see the state; choreography for simple, high-scale, few-step flows where decoupling wins.
+Ask whether anyone will ever have to answer *"where is this one, and why is it stuck?"* --- and for anything with a customer attached, they will. That question needs one durable row you can query, which is what an orchestrator is; a chain of events does not have one, so answering it means reconstructing the flow from logs during an incident. Choreograph where the steps really are independent reactions and nobody owns the end state. The threshold in practice is a support ticket: the first time someone asks you to explain a single instance, you needed the orchestrator.
 
 ### Explicit intermediate states vs a guarded counter
 

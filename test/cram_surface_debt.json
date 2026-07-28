@@ -1,3 +1,1 @@
-{
-  "backpressure::dup::open.cards[0].items[1].a + trade.decisions[0].tell": "Shed to protect latency for interactive, loss-tolerant, retryable work; block (or spill to disk) to protect completeness"
-}
+{}

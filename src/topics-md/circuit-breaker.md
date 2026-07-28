@@ -684,7 +684,7 @@ The calls that separate "add a breaker" from graceful degradation.
 - Sensitive (low threshold, short window): protects fast, trips early on trouble -- but flaps on transient noise, cutting off healthy dependencies
 - Conservative (high threshold, long window): stable, few false trips -- but lets a dying dependency take traffic too long before protecting
 
-Tune to the dependency's real failure behavior: trip fast enough to protect, with a minimum request volume so noise doesn't flap it. The asymmetry to remember is that a flapping breaker is *worse than no breaker* --- it manufactures degradation on a healthy dependency, during normal operation, where no breaker at all would simply have served the request.
+Size the window from the dependency's own traffic rather than the library's default, and trip on the **rate**, never the count: a dependency taking ten calls a minute needs a window measured in minutes, because the ten-second default window fills with two calls and one of them failing is a 50% error rate. Then let the asymmetry break every remaining tie --- a flapping breaker is *worse than no breaker*, since it manufactures degradation on a healthy dependency, during normal operation, where no breaker at all would simply have served the request. So when the tuning is genuinely uncertain, trip later.
 
 ### Local vs shared breaker state
 

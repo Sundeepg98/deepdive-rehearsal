@@ -652,7 +652,7 @@ The calls that separate "add a boolean" from a designed flag system.
 - Flag: deploy dark and release later with a reversible flip, at the cost of a flag and its cleanup
 - Ship-and-release together: no flag overhead, but the deploy *is* the release, so a bad change needs a rollback deploy
 
-Flag anything risky or worth a gradual rollout; ship trivial, low-risk changes directly to avoid flag debt.
+Flag it when you would want it off **without a deploy** --- so the real question is how fast your rollback already is. If a revert-and-redeploy is fifteen minutes and the blast radius is one internal screen, ship it directly and keep the codebase clean. If the rollback is an hour, or the change touches money, data, or a partner, flag it. And file the removal ticket when you create the flag, because flag debt is not untidiness: a stale flag is an untested code path that is still reachable, and one day something takes it.
 
 ### Server-side vs client-side evaluation
 

@@ -648,7 +648,7 @@ Use a saga for long-running cross-service workflows that tolerate visible interm
 - Choreography (events): decoupled, no coordinator, resilient -- but the flow is implicit, hard to trace/debug, and grows unwieldy with steps
 - Orchestration (coordinator): explicit, centralized, observable, easy to change -- but a durable component you must build, own, and make HA
 
-Use choreography for simple, few-step sagas where decoupling wins; orchestration for complex sagas with intricate failure handling where explicit, observable flow matters.
+Choreography for **reactions**, orchestration for **transactions** --- that line is sharper than counting steps, and it is the one to say. Where each service is independently reacting to something that happened, events are right and the decoupling is real. Where there is one business outcome that has to reach a terminal state, somebody must own it, and *"the event graph"* is not an owner: the moment you need to answer *"where is order 12345, and what is it waiting on"*, you need a coordinator with durable state you can query. Compensations are the tell --- if a step has an undo, that flow has an outcome, so it wants an owner.
 
 ### Bare saga vs TCC (Try-Confirm-Cancel)
 

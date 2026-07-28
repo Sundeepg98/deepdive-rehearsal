@@ -675,7 +675,7 @@ Exhaust replicas, caching, archiving, and vertical scaling first; shard only whe
 - Co-locate under one key: common entity-scoped queries and transactions stay single-shard (fast, local) -- but cross-entity queries fan out and a huge entity risks a hot shard
 - Global secondary index (partitioned by the indexed attribute): fast lookups on a non-partition-key attribute (one index shard + one data shard) -- but the index is remote from its data, so it is updated asynchronously and is eventually consistent
 
-Co-locate by the entity the workload is dominated by (keeping the hot path single-shard), and add a global index (or a CDC-fed search store) for the specific non-key attributes you query often -- accepting its eventual consistency.
+These are not alternatives, so the decision that actually costs something is *which queries earn a global index* --- and the answer is far fewer than get added. Co-location is chosen once, for the entity that dominates the hot path, and every other access pattern pays a scatter-gather. A global index buys one of them back at the price of a second copy that is eventually consistent and can silently diverge, so add one where the fan-out is **measured** and hurting, never on the suspicion that somebody will want to query by email. The test to say out loud: if you cannot name the query and its rate, you do not need the index yet.
 
 ### Consistent hashing vs fixed logical partitions
 

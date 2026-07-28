@@ -660,7 +660,7 @@ The calls that separate "add an LB" from a scalable, self-healing traffic layer.
 - Round-robin: dead simple, no per-instance state, even by count -- but blind to load, so variable request costs pin an instance
 - Least-connections: load-aware, handles variable request duration -- but needs the LB to track connection counts
 
-Use round-robin for uniform requests on identical instances; least-connections (or power-of-two-choices at scale) when request costs vary.
+Look at the *spread* of request cost, not the average. While the p99 sits close to the median every backend gets statistically the same work, and round-robin is free and stateless. Once one request in a hundred costs an order of magnitude more than the rest, round-robin will eventually park several of them on one instance, and the queue on that instance *is* your p99 --- that is the point to switch to least-connections, or to power-of-two-choices once the fleet is large enough that maintaining exact global counts costs more than the balancing buys.
 
 ### L4 vs L7
 

@@ -633,7 +633,7 @@ The calls that separate "wrap it in a retry" from a resilient call path.
 - Aggressive retries: recover more transient blips, hide brief failures from the user -- but amplify load on a struggling dependency and risk a storm
 - Fail fast: protect the dependency and the caller, surface errors quickly -- but give up on failures a retry would have recovered
 
-Retry a little for transient failures with backoff/jitter/budget; fail fast (circuit-breaker) once a dependency is clearly overloaded or down.
+Retry only what a retry can fix. A connection reset, a 503, a timeout on an idempotent call --- two or three attempts with backoff and jitter, inside the deadline. A 400, a 404 or a validation failure will fail identically forever, so retrying them is pure amplification against a service that may already be struggling. And the switch to fail-fast is not a judgement call, it is a number: once retries are more than a few percent of your traffic to that dependency, you have stopped recovering from a blip and started **being the load**.
 
 ### Per-hop timeouts vs a propagated deadline
 
@@ -647,7 +647,7 @@ Propagate a deadline for anything that spans multiple services; per-hop timeouts
 - Every layer: local resilience everywhere -- but multiplicative amplification (3 layers x 3 attempts = 27x) that hammers the deepest dependency
 - One layer: bounded amplification, predictable load -- but that layer must have the context to decide retrying is worth it
 
-Retry at as few layers as possible (often the edge or one designated layer), not at every hop; the amplification of retrying everywhere is catastrophic at scale.
+Nominate the **one** layer that owns the deadline, and make every layer beneath it fail fast and propagate the code. Retries multiply rather than add: three layers each retrying three times is twenty-seven calls to a dependency that is already in trouble. The layer that should own them is the one that knows the user's deadline, because a retry issued after the deadline has passed is work nobody is waiting for. Write it into the service contract --- everybody else's job is to return a classified error quickly.
 
 ### A count budget vs a rate budget
 

@@ -667,7 +667,7 @@ The calls that separate "add a read replica" from reasoning about copies.
 - Sync: an acknowledged write survives node failure (no data loss on failover) -- but adds latency and a slow/failed follower stalls writes
 - Async: fast writes, unaffected by follower health -- but followers lag (stale reads) and recent writes can be lost on failover
 
-Default to semi-synchronous (sync to one follower, async to the rest) for durability without a single slow node stalling everything.
+Name the **RPO** first, as an actual number, because that is the thing the business has an opinion about: fully async means a failover loses whatever the replication lag was, so if the answer is *"we cannot lose an acknowledged write"* you are buying a round trip on every commit and you should say what it costs. Semi-synchronous --- one follower sync, the rest async --- is the usual landing spot because it buys two-copy durability for one local round trip. But say the honest caveat: where the data already lives in a quorum store, **quorum commit dominates it**, giving the same durability with no single designated follower whose stall becomes your write latency.
 
 ### Single-leader vs multi-leader vs leaderless
 

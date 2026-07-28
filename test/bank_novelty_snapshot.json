@@ -307,6 +307,10 @@
     "n": 89,
     "h": "644642a2"
   },
+  "backpressure::CURVEBALL/zero goodput:during-the-incident-your-service-was.int2": {
+    "n": 98,
+    "h": "45e28d61"
+  },
   "backpressure::DESIGN:overload-handling-for-a-user-facing.int": {
     "n": 90,
     "h": "3120540c"
@@ -806,6 +810,10 @@
   "debugging::FAILURE:one-endpoint-is-logging-30-000.int": {
     "n": 24,
     "h": "647b9cca"
+  },
+  "debugging::FAILURE:one-endpoint-is-logging-30-000.int2": {
+    "n": 131,
+    "h": "c95ce5c3"
   },
   "debugging::FRAME:you-re-on-call-data-is.int": {
     "n": 31,
@@ -2262,6 +2270,10 @@
   "rate-limiting::CURVEBALL/Store outage:the-limiter-s-redis-is-down.int": {
     "n": 61,
     "h": "b300dec5"
+  },
+  "rate-limiting::CURVEBALL/Store outage:the-limiter-s-redis-is-down.int2": {
+    "n": 93,
+    "h": "e2ed983d"
   },
   "rate-limiting::DESIGN:a-public-api-with-paid-tiers.int": {
     "n": 127,

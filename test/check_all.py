@@ -215,7 +215,37 @@ for name, cmd in [('ascii_guard', ['python3', 'test/ascii_guard.py']),
                   # src/topics/_generated/ is gitignored and without that guard a missing build
                   # yields a confident "8 topics, 0 defects". Ratchet: bank_pushback_debt.json,
                   # may only shrink (parity_debt discipline). Pure node, no browser, ~1s.
-                  ('bank_pushback', ['node', 'test/bank_pushback.cjs'])]:
+                  ('bank_pushback', ['node', 'test/bank_pushback.cjs']),
+                  # bank_novelty: bank_pushback is a stateless FLOOR -- it fails an Int whose
+                  # answer adds <=20 words its Model does not have, and is content with anything
+                  # above. The regression it structurally cannot see is a GOOD Int getting WORSE:
+                  # the Bank's Class-A cards are half-refreshed (legacy Model, excellent Int2), so
+                  # a wave that rewrites Models moves content INTO the Model that the Int2 beneath
+                  # it existed to elicit. The Int2 still clears the floor; it is simply worth less,
+                  # and "this got worse but is still legal" is not something a floor can express.
+                  # Both wave-B builders hit it on their own work and neither could check it,
+                  # because the class needs a BEFORE reference and the ratchet stores evidence
+                  # text, not measurements. Two arms. `echo` is STATELESS and carries the teeth:
+                  # a Model reusing a CONTIGUOUS RUN of 9+ content words from its own answer --
+                  # the mechanism actually described ("stated the Int2's punchline almost
+                  # verbatim"), since a restatement copies a phrase while vocabulary growth
+                  # scatters words. `drift` is SNAPSHOT-based: a KEPT exchange (question and
+                  # answer byte-identical to bank_novelty_snapshot.json) whose novelty fell under
+                  # 60% of its recorded value -- the coarse net for a Model that subsumes its
+                  # answer in FRESH words, which echo cannot see. Both thresholds are BRACKETED BY
+                  # THE CORPUS from both sides and ship as fixtures: the longest run legitimate
+                  # content reaches is 8 (saga FRAME) against a real 19-word restatement this
+                  # check FOUND in state-machine SCALE that wave B and its cold verifier both
+                  # missed; and the steepest legitimate novelty loss across all 38 kept pairs of
+                  # wave B is 0.740 against a planted restatement at 0.591. Move either constant
+                  # in either direction and the self-test aborts before the corpus is read.
+                  # The snapshot is a RECORD, not a debt list: entries may appear and vanish as
+                  # cards are authored or renamed, but if the matched fraction falls under 80% it
+                  # has decoupled from the corpus and that is a hard FAIL, never a quiet green.
+                  # It states its own scope: a SHORT, REWORDED theft is caught by neither arm.
+                  # Same compiled-slice surface and same independent markdown coverage scan as
+                  # bank_pushback. Pure node, no browser, ~0.6s.
+                  ('bank_novelty', ['node', 'test/bank_novelty.cjs'])]:
     r = run(cmd)
     results.append((name, 'PASS' if r.returncode == 0 else 'FAIL', report(r)))
 

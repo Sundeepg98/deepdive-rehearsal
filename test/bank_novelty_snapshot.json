@@ -1,0 +1,3282 @@
+{
+  "api-design::CLOSE:sum-it-up-and-what-would.int": {
+    "n": 87,
+    "h": "38273a64"
+  },
+  "api-design::CURVEBALL/Enum expansion:you-add-a-new-value-to.int": {
+    "n": 73,
+    "h": "c83173a1"
+  },
+  "api-design::CURVEBALL/Enumeration leak:security-finds-that-an-attacker-with.int": {
+    "n": 101,
+    "h": "c131f897"
+  },
+  "api-design::CURVEBALL/Partial failure:your-bulk-endpoint-accepts-100-orders.int": {
+    "n": 95,
+    "h": "bfda60b3"
+  },
+  "api-design::CURVEBALL/Query cost:you-shipped-graphql-a-single-query.int": {
+    "n": 96,
+    "h": "0f5dd3ac"
+  },
+  "api-design::CURVEBALL/Retry storm / double charge:your-api-is-fine-your-client.int": {
+    "n": 98,
+    "h": "85b1ab5a"
+  },
+  "api-design::CURVEBALL/Silent skip:your-device-list-is-cursor-paginated.int": {
+    "n": 66,
+    "h": "08211d70"
+  },
+  "api-design::CURVEBALL/Webhook outage:you-push-completion-webhooks-to-customers.int": {
+    "n": 83,
+    "h": "a4cdd0f2"
+  },
+  "api-design::CURVEBALL/breaking-change:a-product-requirement-forces-a-genuinely.int": {
+    "n": 103,
+    "h": "1cb59611"
+  },
+  "api-design::DESIGN:a-write-api-that-clients-will.int": {
+    "n": 101,
+    "h": "6f024037"
+  },
+  "api-design::DESIGN:a-write-api-that-clients-will.int2": {
+    "n": 63,
+    "h": "66d239a1"
+  },
+  "api-design::FAILURE:a-customer-says-your-api-charged.int": {
+    "n": 73,
+    "h": "ba660cd1"
+  },
+  "api-design::FAILURE:a-customer-says-your-api-charged.int2": {
+    "n": 71,
+    "h": "d9e7ea60"
+  },
+  "api-design::FRAME:design-the-public-api-for-a.int": {
+    "n": 59,
+    "h": "ca9376e9"
+  },
+  "api-design::FRAME:design-the-public-api-for-a.int2": {
+    "n": 81,
+    "h": "b85bc407"
+  },
+  "api-design::SCALE:turning-an-internal-service-s-ad.int": {
+    "n": 117,
+    "h": "a75ec70b"
+  },
+  "api-design::SCALE:turning-an-internal-service-s-ad.int2": {
+    "n": 82,
+    "h": "17911b13"
+  },
+  "api-design::STRUCTURE:walk-me-through-it-a-client.int": {
+    "n": 72,
+    "h": "15ad8e1a"
+  },
+  "api-design::STRUCTURE:walk-me-through-it-a-client.int2": {
+    "n": 78,
+    "h": "c8ff2ea2"
+  },
+  "authz::CLOSE:sum-it-up-and-what-would.int": {
+    "n": 48,
+    "h": "d9ad8142"
+  },
+  "authz::CURVEBALL/Cache invalidation:you-cache-authorization-decisions-for-performance.int": {
+    "n": 38,
+    "h": "fa201a8c"
+  },
+  "authz::CURVEBALL/Confused deputy:an-authenticated-user-of-tenant-a.int": {
+    "n": 42,
+    "h": "162665f0"
+  },
+  "authz::CURVEBALL/Erasure:a-tenant-exercises-right-to-erasure.int": {
+    "n": 39,
+    "h": "f06984ba"
+  },
+  "authz::CURVEBALL/Escaped query:your-predicate-injection-is-airtight-in.int": {
+    "n": 45,
+    "h": "d4df3f07"
+  },
+  "authz::CURVEBALL/Over-broad grant:a-partner-integration-you-gave-api.int": {
+    "n": 44,
+    "h": "e8733ca2"
+  },
+  "authz::CURVEBALL/Pool leakage:your-rls-protected-app-intermittently-serves.int": {
+    "n": 30,
+    "h": "96369469"
+  },
+  "authz::CURVEBALL/Privilege abuse:your-break-glass-support-access-is.int": {
+    "n": 44,
+    "h": "2af5dc69"
+  },
+  "authz::CURVEBALL/Stale token:you-revoke-an-admin-s-access.int": {
+    "n": 47,
+    "h": "ceacb60a"
+  },
+  "authz::FAILURE:a-customer-reports-seeing-another-company.int": {
+    "n": 45,
+    "h": "8b75b879"
+  },
+  "authz::FAILURE:a-customer-reports-seeing-another-company.int2": {
+    "n": 45,
+    "h": "e405d2ba"
+  },
+  "authz::FRAME:design-multi-tenant-authorization-start-wherever.int": {
+    "n": 36,
+    "h": "f438cab3"
+  },
+  "authz::FRAME:design-multi-tenant-authorization-start-wherever.int2": {
+    "n": 27,
+    "h": "d2091d14"
+  },
+  "authz::SCALE:one-tenant-is-90-of-your.int": {
+    "n": 40,
+    "h": "4f056f8d"
+  },
+  "authz::SCALE:one-tenant-is-90-of-your.int2": {
+    "n": 37,
+    "h": "54edfee9"
+  },
+  "authz::STRUCTURE:walk-me-through-it.int": {
+    "n": 34,
+    "h": "65f4dce1"
+  },
+  "autoscaling::CLOSE:sum-it-up-and-what-would.int": {
+    "n": 55,
+    "h": "8f848232"
+  },
+  "autoscaling::CURVEBALL/cost blowup:autoscaling-was-supposed-to-save-money.int": {
+    "n": 74,
+    "h": "ea26bc46"
+  },
+  "autoscaling::CURVEBALL/crash-loop amplifier:you-push-a-bad-deploy-some.int": {
+    "n": 72,
+    "h": "5f3d4dfd"
+  },
+  "autoscaling::CURVEBALL/death spiral:your-service-calls-a-payment-provider.int": {
+    "n": 71,
+    "h": "611e8a7b"
+  },
+  "autoscaling::CURVEBALL/metrics outage:your-prometheus-stack-falls-over-during.int": {
+    "n": 74,
+    "h": "db171c2c"
+  },
+  "autoscaling::CURVEBALL/quota'd dependency:each-of-your-pods-politely-rate.int": {
+    "n": 97,
+    "h": "e2ecea81"
+  },
+  "autoscaling::CURVEBALL/scale-in outage:you-enabled-autoscaling-and-now-every.int": {
+    "n": 88,
+    "h": "0755c9a8"
+  },
+  "autoscaling::CURVEBALL/thundering herd:you-scale-from-5-pods-to.int": {
+    "n": 85,
+    "h": "c061e8fe"
+  },
+  "autoscaling::CURVEBALL/wrong-tier:your-team-enabled-autoscaling-on-the.int": {
+    "n": 42,
+    "h": "01513ad7"
+  },
+  "autoscaling::DESIGN:a-latency-critical-web-service-with.int": {
+    "n": 93,
+    "h": "4e207791"
+  },
+  "autoscaling::DESIGN:a-latency-critical-web-service-with.int2": {
+    "n": 55,
+    "h": "8b2f5bae"
+  },
+  "autoscaling::FAILURE:the-fleet-is-flapping-scaling-up.int": {
+    "n": 53,
+    "h": "32bdd8ca"
+  },
+  "autoscaling::FAILURE:the-fleet-is-flapping-scaling-up.int2": {
+    "n": 57,
+    "h": "990a25bd"
+  },
+  "autoscaling::FRAME:design-autoscaling-for-a-service-whose.int": {
+    "n": 60,
+    "h": "80a3cc5c"
+  },
+  "autoscaling::FRAME:design-autoscaling-for-a-service-whose.int2": {
+    "n": 56,
+    "h": "9d009b9e"
+  },
+  "autoscaling::SCALE:a-background-worker-fleet-draining-a.int": {
+    "n": 85,
+    "h": "40179128"
+  },
+  "autoscaling::SCALE:a-background-worker-fleet-draining-a.int2": {
+    "n": 64,
+    "h": "21a488cb"
+  },
+  "aws-hardening::CLOSE:sum-it-up-and-what-would.int": {
+    "n": 48,
+    "h": "f17df23d"
+  },
+  "aws-hardening::CURVEBALL/Confused deputy:you-let-a-logging-service-write.int": {
+    "n": 34,
+    "h": "55335794"
+  },
+  "aws-hardening::CURVEBALL/Cost blowout:your-aws-bill-spikes-it-s.int": {
+    "n": 50,
+    "h": "eb0456ec"
+  },
+  "aws-hardening::CURVEBALL/Credential exfiltration:an-attacker-has-your-delivery-service.int": {
+    "n": 38,
+    "h": "a753be86"
+  },
+  "aws-hardening::CURVEBALL/Cross-region replication:for-dr-you-replicate-the-firmware.int": {
+    "n": 45,
+    "h": "3bfee0db"
+  },
+  "aws-hardening::CURVEBALL/KMS key compromise:you-suspect-a-kms-key-that.int": {
+    "n": 38,
+    "h": "4f22e196"
+  },
+  "aws-hardening::CURVEBALL/Presigned URL leak:a-firmware-presigned-url-ends-up.int": {
+    "n": 54,
+    "h": "86b8c129"
+  },
+  "aws-hardening::CURVEBALL/Public bucket:your-firmware-bucket-is-suddenly-public.int": {
+    "n": 37,
+    "h": "8bc47f6e"
+  },
+  "aws-hardening::CURVEBALL/Silent drift:six-months-after-you-hardened-everything.int": {
+    "n": 65,
+    "h": "ccb7450e"
+  },
+  "aws-hardening::FAILURE:guardduty-alerts-a-role-is-listing.int": {
+    "n": 44,
+    "h": "270bbfbb"
+  },
+  "aws-hardening::FAILURE:guardduty-alerts-a-role-is-listing.int2": {
+    "n": 48,
+    "h": "cd17c90a"
+  },
+  "aws-hardening::FRAME:design-the-storage-layer-that-holds.int": {
+    "n": 47,
+    "h": "c0c88ac1"
+  },
+  "aws-hardening::FRAME:design-the-storage-layer-that-holds.int2": {
+    "n": 47,
+    "h": "b62d6f28"
+  },
+  "aws-hardening::SCALE:a-rollout-fires-and-50-000.int": {
+    "n": 48,
+    "h": "0e264910"
+  },
+  "aws-hardening::SCALE:a-rollout-fires-and-50-000.int2": {
+    "n": 44,
+    "h": "9db26f59"
+  },
+  "aws-hardening::STRUCTURE:walk-me-through-it.int": {
+    "n": 30,
+    "h": "97c69e2c"
+  },
+  "backpressure::CLOSE:sum-it-up-and-what-would.int": {
+    "n": 74,
+    "h": "02d6d28e"
+  },
+  "backpressure::CURVEBALL/deep queue:you-bounded-the-queue-like-you.int": {
+    "n": 70,
+    "h": "648ab343"
+  },
+  "backpressure::CURVEBALL/drop-oldest:to-keep-data-fresh-under-load.int": {
+    "n": 62,
+    "h": "8d43ec62"
+  },
+  "backpressure::CURVEBALL/hidden queue:service-a-calls-slow-service-b.int": {
+    "n": 79,
+    "h": "f34d675b"
+  },
+  "backpressure::CURVEBALL/metastable:an-overloaded-service-returns-errors-all.int": {
+    "n": 91,
+    "h": "bdfe905e"
+  },
+  "backpressure::CURVEBALL/silent loss:your-kafka-consumer-has-been-lagging.int": {
+    "n": 104,
+    "h": "eb0b9c45"
+  },
+  "backpressure::CURVEBALL/streams:a-colleague-replaces-pipeline-src-dst.int": {
+    "n": 124,
+    "h": "6e413d88"
+  },
+  "backpressure::CURVEBALL/thundering herd:you-shed-perfectly-a-fast-429.int": {
+    "n": 89,
+    "h": "93e99ee1"
+  },
+  "backpressure::CURVEBALL/zero goodput:during-the-incident-your-service-was.int": {
+    "n": 89,
+    "h": "644642a2"
+  },
+  "backpressure::DESIGN:overload-handling-for-a-user-facing.int": {
+    "n": 90,
+    "h": "3120540c"
+  },
+  "backpressure::DESIGN:overload-handling-for-a-user-facing.int2": {
+    "n": 82,
+    "h": "07b9f065"
+  },
+  "backpressure::FRAME:your-consumer-can-t-keep-up.int": {
+    "n": 44,
+    "h": "08ad2740"
+  },
+  "backpressure::FRAME:your-consumer-can-t-keep-up.int2": {
+    "n": 58,
+    "h": "58e55d76"
+  },
+  "backpressure::SCALE:a-pipeline-where-events-arrive-faster.int": {
+    "n": 108,
+    "h": "e3962f8c"
+  },
+  "backpressure::SCALE:a-pipeline-where-events-arrive-faster.int2": {
+    "n": 75,
+    "h": "34022c38"
+  },
+  "backpressure::STRUCTURE:walk-me-through-it-producer-to.int": {
+    "n": 66,
+    "h": "039014b7"
+  },
+  "backpressure::STRUCTURE:walk-me-through-it-producer-to.int2": {
+    "n": 59,
+    "h": "869713e8"
+  },
+  "caching::CLOSE:sum-it-up-and-what-would.int": {
+    "n": 50,
+    "h": "85fc3fc8"
+  },
+  "caching::CURVEBALL/Stale after a correct invalidation:your-write-path-definitely-deleted-the.int": {
+    "n": 60,
+    "h": "2356dfb7"
+  },
+  "caching::CURVEBALL/cold cache:you-flush-redis-at-3am-to.int": {
+    "n": 89,
+    "h": "ec04c1fa"
+  },
+  "caching::CURVEBALL/eviction thrash:your-hit-ratio-drifted-from-95.int": {
+    "n": 91,
+    "h": "35ba6e57"
+  },
+  "caching::CURVEBALL/failover:redis-fails-over-to-a-replica.int": {
+    "n": 85,
+    "h": "5b84014b"
+  },
+  "caching::CURVEBALL/hot key:one-redis-node-is-at-100.int": {
+    "n": 92,
+    "h": "6692b0e0"
+  },
+  "caching::CURVEBALL/lost update:two-writers-one-key-the-database.int": {
+    "n": 84,
+    "h": "10e18b87"
+  },
+  "caching::CURVEBALL/penetration:a-scraper-requests-ten-million-product.int": {
+    "n": 86,
+    "h": "ffcedba1"
+  },
+  "caching::CURVEBALL/stampede:a-celebrity-s-profile-is-cached.int": {
+    "n": 71,
+    "h": "16225d19"
+  },
+  "caching::FAILURE:redis-is-down-walk-the-incident.int": {
+    "n": 46,
+    "h": "302d2f48"
+  },
+  "caching::FAILURE:redis-is-down-walk-the-incident.int2": {
+    "n": 72,
+    "h": "51641285"
+  },
+  "caching::FRAME:a-read-heavy-endpoint-that-must.int": {
+    "n": 44,
+    "h": "71b9abfa"
+  },
+  "caching::FRAME:a-read-heavy-endpoint-that-must.int2": {
+    "n": 49,
+    "h": "f02c4d70"
+  },
+  "caching::SCALE:half-a-million-reads-a-day.int": {
+    "n": 42,
+    "h": "1d55a55f"
+  },
+  "caching::SCALE:half-a-million-reads-a-day.int2": {
+    "n": 70,
+    "h": "913ffc26"
+  },
+  "caching::STRUCTURE:walk-me-through-a-read-and.int": {
+    "n": 43,
+    "h": "09458794"
+  },
+  "cdc::CLOSE:sum-it-up-and-what-s.int": {
+    "n": 66,
+    "h": "ef429a1b"
+  },
+  "cdc::CURVEBALL/Exactly-once at the sink:your-architect-says-we-use-kafka.int": {
+    "n": 70,
+    "h": "8b7e868c"
+  },
+  "cdc::CURVEBALL/Invalidated slot:you-set-max-slot-wal-keep.int": {
+    "n": 79,
+    "h": "048737b7"
+  },
+  "cdc::CURVEBALL/Referential break:your-consumer-mirrors-orders-and-order.int": {
+    "n": 79,
+    "h": "25851b54"
+  },
+  "cdc::CURVEBALL/Schema rename:a-developer-renames-a-column-in.int": {
+    "n": 66,
+    "h": "075da95c"
+  },
+  "cdc::CURVEBALL/Sequence gap:your-outbox-relay-polls-where-id.int": {
+    "n": 64,
+    "h": "211c49fb"
+  },
+  "cdc::CURVEBALL/Snapshot gap:you-bootstrapped-a-new-index-snapshot.int": {
+    "n": 73,
+    "h": "5d743977"
+  },
+  "cdc::CURVEBALL/Soft-delete phantom:legal-asks-you-to-prove-that.int": {
+    "n": 85,
+    "h": "7446d2be"
+  },
+  "cdc::CURVEBALL/TOAST corruption:your-cdc-pipeline-mirrors-a-documents.int": {
+    "n": 76,
+    "h": "e370d859"
+  },
+  "cdc::FAILURE:the-search-index-is-40-minutes.int": {
+    "n": 77,
+    "h": "338395e0"
+  },
+  "cdc::FAILURE:the-search-index-is-40-minutes.int2": {
+    "n": 74,
+    "h": "4317194f"
+  },
+  "cdc::FRAME:keep-a-search-index-in-sync.int": {
+    "n": 46,
+    "h": "1bd5c0c5"
+  },
+  "cdc::FRAME:keep-a-search-index-in-sync.int2": {
+    "n": 48,
+    "h": "51248e13"
+  },
+  "cdc::SCALE:2-000-writes-a-second-three.int": {
+    "n": 64,
+    "h": "17a42183"
+  },
+  "cdc::SCALE:2-000-writes-a-second-three.int2": {
+    "n": 63,
+    "h": "49ea47c7"
+  },
+  "cdc::STRUCTURE:walk-me-through-it-from-the.int": {
+    "n": 48,
+    "h": "38383aef"
+  },
+  "cdc::STRUCTURE:walk-me-through-it-from-the.int2": {
+    "n": 60,
+    "h": "36e04578"
+  },
+  "circuit-breaker::CLOSE:sum-it-up-and-what-would.int": {
+    "n": 22,
+    "h": "d24d7971"
+  },
+  "circuit-breaker::CLOSE:sum-it-up-and-what-would.int2": {
+    "n": 24,
+    "h": "2b02af8e"
+  },
+  "circuit-breaker::CURVEBALL/breaker cascade:every-service-in-your-graph-has.int": {
+    "n": 30,
+    "h": "fa270a14"
+  },
+  "circuit-breaker::CURVEBALL/flapping:your-breaker-on-a-healthy-dependency.int": {
+    "n": 107,
+    "h": "6ea6ee8a"
+  },
+  "circuit-breaker::CURVEBALL/low traffic:a-dependency-that-gets-two-calls.int": {
+    "n": 26,
+    "h": "984fa203"
+  },
+  "circuit-breaker::CURVEBALL/recovery:your-dependency-recovers-but-the-moment.int": {
+    "n": 30,
+    "h": "adab3ed2"
+  },
+  "circuit-breaker::CURVEBALL/slow, not failing:your-dependency-isn-t-returning-errors.int": {
+    "n": 28,
+    "h": "557ce34e"
+  },
+  "circuit-breaker::CURVEBALL/the lying status code:your-grpc-dependency-returns-http-200.int": {
+    "n": 46,
+    "h": "77d23277"
+  },
+  "circuit-breaker::CURVEBALL/the protection is the dependency:you-moved-breaker-state-into-redis.int": {
+    "n": 42,
+    "h": "99afe5ba"
+  },
+  "circuit-breaker::CURVEBALL/the untested fallback:the-breaker-trips-exactly-as-designed.int": {
+    "n": 34,
+    "h": "69522cf0"
+  },
+  "circuit-breaker::FAILURE:the-whole-site-is-down-your.int": {
+    "n": 24,
+    "h": "1bb3da52"
+  },
+  "circuit-breaker::FAILURE:the-whole-site-is-down-your.int2": {
+    "n": 97,
+    "h": "9b3427f7"
+  },
+  "circuit-breaker::FRAME:your-checkout-calls-a-third-party.int": {
+    "n": 26,
+    "h": "3a6fce2f"
+  },
+  "circuit-breaker::FRAME:your-checkout-calls-a-third-party.int2": {
+    "n": 104,
+    "h": "ab8bbcbb"
+  },
+  "circuit-breaker::SCALE:a-dependency-many-services-depend-on.int": {
+    "n": 102,
+    "h": "1673a087"
+  },
+  "circuit-breaker::SCALE:a-dependency-many-services-depend-on.int2": {
+    "n": 25,
+    "h": "ed32a91a"
+  },
+  "circuit-breaker::STRUCTURE:walk-me-through-one-request-the.int": {
+    "n": 104,
+    "h": "3a39db94"
+  },
+  "circuit-breaker::STRUCTURE:walk-me-through-one-request-the.int2": {
+    "n": 37,
+    "h": "5f99d78a"
+  },
+  "consistency-models::CLOSE:two-sentences-sell-me-your-consistency.int": {
+    "n": 53,
+    "h": "df2babca"
+  },
+  "consistency-models::CURVEBALL/clock skew:your-production-lww-store-has-been.int": {
+    "n": 46,
+    "h": "0b024732"
+  },
+  "consistency-models::CURVEBALL/clock skew:your-production-lww-store-has-been.int2": {
+    "n": 63,
+    "h": "f7220f43"
+  },
+  "consistency-models::CURVEBALL/cross-shard:you-sharded-to-escape-the-single.int": {
+    "n": 57,
+    "h": "ad58d237"
+  },
+  "consistency-models::CURVEBALL/monotonic-reads:a-user-refreshes-a-page-and.int": {
+    "n": 38,
+    "h": "823cf298"
+  },
+  "consistency-models::CURVEBALL/read-repair:you-are-told-a-write-failed.int": {
+    "n": 55,
+    "h": "15db8963"
+  },
+  "consistency-models::CURVEBALL/split-brain:during-a-partition-both-sides-of.int": {
+    "n": 43,
+    "h": "a5fe7812"
+  },
+  "consistency-models::CURVEBALL/the cache:your-system-is-strongly-consistent-verified.int": {
+    "n": 56,
+    "h": "5eb1ef6a"
+  },
+  "consistency-models::CURVEBALL/the invariant:the-team-wants-a-crdt-for.int": {
+    "n": 56,
+    "h": "8792b518"
+  },
+  "consistency-models::CURVEBALL/the lock:your-distributed-lock-is-backed-by.int": {
+    "n": 61,
+    "h": "ef45b7d9"
+  },
+  "consistency-models::DESIGN:read-your-writes-on-a-primary.int": {
+    "n": 106,
+    "h": "ab2aef8c"
+  },
+  "consistency-models::DESIGN:read-your-writes-on-a-primary.int2": {
+    "n": 64,
+    "h": "1c295237"
+  },
+  "consistency-models::FAILURE:overnight-a-batch-job-double-charged.int": {
+    "n": 43,
+    "h": "d0393eae"
+  },
+  "consistency-models::FAILURE:overnight-a-batch-job-double-charged.int2": {
+    "n": 66,
+    "h": "c53fc519"
+  },
+  "consistency-models::FRAME:design-the-consistency-story-for-a.int": {
+    "n": 38,
+    "h": "7a1dfe20"
+  },
+  "consistency-models::FRAME:design-the-consistency-story-for-a.int2": {
+    "n": 38,
+    "h": "a6ad6b1e"
+  },
+  "consistency-models::SCALE:a-globally-replicated-store-serving-both.int": {
+    "n": 123,
+    "h": "c5369cb4"
+  },
+  "consistency-models::SCALE:a-globally-replicated-store-serving-both.int2": {
+    "n": 73,
+    "h": "8da4453e"
+  },
+  "consistent-hashing::CLOSE:sum-it-up-and-tell-me.int": {
+    "n": 16,
+    "h": "64697bdc"
+  },
+  "consistent-hashing::CLOSE:sum-it-up-and-tell-me.int2": {
+    "n": 21,
+    "h": "7a826e5c"
+  },
+  "consistent-hashing::CURVEBALL/Adversarial keys:your-public-api-caches-by-a.int": {
+    "n": 13,
+    "h": "2ce21e29"
+  },
+  "consistent-hashing::CURVEBALL/Balanced but hot:your-key-counts-are-perfectly-even.int": {
+    "n": 11,
+    "h": "02dafb63"
+  },
+  "consistent-hashing::CURVEBALL/Balanced but hot:your-key-counts-are-perfectly-even.int2": {
+    "n": 7,
+    "h": "323a1548"
+  },
+  "consistent-hashing::CURVEBALL/Flapping node:a-node-s-health-check-is.int": {
+    "n": 12,
+    "h": "b5f082d4"
+  },
+  "consistent-hashing::CURVEBALL/Kafka's modulo:you-just-told-me-modulo-hashing.int": {
+    "n": 16,
+    "h": "71b6feb3"
+  },
+  "consistent-hashing::CURVEBALL/Silent RF=1:you-configured-replication-factor-3-a.int": {
+    "n": 10,
+    "h": "1757ce10"
+  },
+  "consistent-hashing::CURVEBALL/Split ring:two-of-your-cache-clients-were.int": {
+    "n": 18,
+    "h": "84a59481"
+  },
+  "consistent-hashing::CURVEBALL/The 'free' rebalance:you-add-a-node-during-peak.int": {
+    "n": 12,
+    "h": "23056a29"
+  },
+  "consistent-hashing::CURVEBALL/The 4096-token cluster:your-team-set-virtual-nodes-to.int": {
+    "n": 15,
+    "h": "f51f23f8"
+  },
+  "consistent-hashing::CURVEBALL/The stateless ring:a-team-hashes-requests-to-your.int": {
+    "n": 7,
+    "h": "2f255903"
+  },
+  "consistent-hashing::DESIGN:partitioning-for-a-dynamo-style-key.int": {
+    "n": 7,
+    "h": "1d07bc75"
+  },
+  "consistent-hashing::DESIGN:partitioning-for-a-dynamo-style-key.int2": {
+    "n": 16,
+    "h": "c9f23e9e"
+  },
+  "consistent-hashing::FRAME:you-need-to-spread-a-keyspace.int": {
+    "n": 14,
+    "h": "d527248f"
+  },
+  "consistent-hashing::FRAME:you-need-to-spread-a-keyspace.int2": {
+    "n": 12,
+    "h": "83012311"
+  },
+  "consistent-hashing::SCALE:a-distributed-cache-that-must-survive.int": {
+    "n": 3,
+    "h": "c47e49e6"
+  },
+  "consistent-hashing::SCALE:a-distributed-cache-that-must-survive.int2": {
+    "n": 12,
+    "h": "e2e26d38"
+  },
+  "consistent-hashing::STRUCTURE:walk-me-through-it-a-key.int": {
+    "n": 11,
+    "h": "dfb8cbbe"
+  },
+  "consistent-hashing::STRUCTURE:walk-me-through-it-a-key.int2": {
+    "n": 15,
+    "h": "218621bf"
+  },
+  "content-pipeline::CLOSE:sum-it-up-and-what-would.int": {
+    "n": 37,
+    "h": "592f36dd"
+  },
+  "content-pipeline::CURVEBALL/Backfill:you-shipped-a-new-thumbnail-size.int": {
+    "n": 38,
+    "h": "6c5df8a7"
+  },
+  "content-pipeline::CURVEBALL/Cost:finance-says-this-pipeline-s-aws.int": {
+    "n": 42,
+    "h": "f68e3a39"
+  },
+  "content-pipeline::CURVEBALL/Deploy under load:there-s-a-bug-in-the.int": {
+    "n": 37,
+    "h": "8569fa37"
+  },
+  "content-pipeline::CURVEBALL/Exactly-once:guarantee-exactly-once-processing.int": {
+    "n": 25,
+    "h": "c95c0706"
+  },
+  "content-pipeline::CURVEBALL/Multi-region:this-runs-in-one-region-the.int": {
+    "n": 50,
+    "h": "ebe0aac5"
+  },
+  "content-pipeline::CURVEBALL/Ordering:these-files-must-be-processed-in.int": {
+    "n": 49,
+    "h": "90a0c3ef"
+  },
+  "content-pipeline::CURVEBALL/Security:a-user-uploads-a-file-crafted.int": {
+    "n": 35,
+    "h": "99e386e8"
+  },
+  "content-pipeline::CURVEBALL/Silent failure:an-operator-swears-they-uploaded-a.int": {
+    "n": 35,
+    "h": "f1213c10"
+  },
+  "content-pipeline::FAILURE:the-db-write-fails-after-s3.int": {
+    "n": 29,
+    "h": "221af8a8"
+  },
+  "content-pipeline::FAILURE:the-db-write-fails-after-s3.int2": {
+    "n": 26,
+    "h": "a639d034"
+  },
+  "content-pipeline::FRAME:design-the-content-pipeline-start-wherever.int": {
+    "n": 37,
+    "h": "29f7ac42"
+  },
+  "content-pipeline::FRAME:design-the-content-pipeline-start-wherever.int2": {
+    "n": 34,
+    "h": "fd7839fc"
+  },
+  "content-pipeline::SCALE:10-000-objects-land-in-one.int": {
+    "n": 22,
+    "h": "9478cdb9"
+  },
+  "content-pipeline::SCALE:10-000-objects-land-in-one.int2": {
+    "n": 36,
+    "h": "7c53a026"
+  },
+  "content-pipeline::STRUCTURE:walk-me-through-it.int": {
+    "n": 25,
+    "h": "da43575a"
+  },
+  "debugging::CLOSE:sum-it-up-and-what-would.int": {
+    "n": 36,
+    "h": "8ee2e59e"
+  },
+  "debugging::CURVEBALL/Clock skew:two-servers-disagree-about-which-of.int": {
+    "n": 50,
+    "h": "41abc23f"
+  },
+  "debugging::CURVEBALL/Heisenbug:the-bug-vanishes-the-moment-you.int": {
+    "n": 23,
+    "h": "498688a2"
+  },
+  "debugging::CURVEBALL/Poison message:one-malformed-message-wedges-your-whole.int": {
+    "n": 32,
+    "h": "3f6e97c7"
+  },
+  "debugging::CURVEBALL/Pool exhaustion:under-load-requests-time-out-waiting.int": {
+    "n": 27,
+    "h": "0261de25"
+  },
+  "debugging::CURVEBALL/Silent truncation:a-column-silently-stores-only-the.int": {
+    "n": 28,
+    "h": "56629f37"
+  },
+  "debugging::CURVEBALL/Thundering herd:you-add-a-cache-and-latency.int": {
+    "n": 25,
+    "h": "a0a1b65e"
+  },
+  "debugging::CURVEBALL/Timezone:a-daily-report-includes-the-wrong.int": {
+    "n": 26,
+    "h": "3aa0bd2c"
+  },
+  "debugging::CURVEBALL/apm-blind:your-apm-dashboard-shows-a-0.int": {
+    "n": 95,
+    "h": "227db16e"
+  },
+  "debugging::DESIGN:a-runbook-for-a-silent-failure.int": {
+    "n": 104,
+    "h": "e678102f"
+  },
+  "debugging::DESIGN:a-runbook-for-a-silent-failure.int2": {
+    "n": 108,
+    "h": "343fc302"
+  },
+  "debugging::FAILURE:one-endpoint-is-logging-30-000.int": {
+    "n": 24,
+    "h": "647b9cca"
+  },
+  "debugging::FRAME:you-re-on-call-data-is.int": {
+    "n": 31,
+    "h": "8561dae6"
+  },
+  "debugging::FRAME:you-re-on-call-data-is.int2": {
+    "n": 24,
+    "h": "be207b6c"
+  },
+  "debugging::SCALE:a-pipeline-where-customers-report-missing.int": {
+    "n": 97,
+    "h": "2c467f10"
+  },
+  "debugging::SCALE:a-pipeline-where-customers-report-missing.int2": {
+    "n": 104,
+    "h": "ad8731f8"
+  },
+  "debugging::STRUCTURE:walk-me-through-your-diagnostic-loop.int": {
+    "n": 26,
+    "h": "e30b780d"
+  },
+  "desired-state::CLOSE:two-sentences-sell-me-the-design.int": {
+    "n": 31,
+    "h": "57054cd3"
+  },
+  "desired-state::CURVEBALL/Device won't confirm:you-deployed-to-a-device-but.int": {
+    "n": 40,
+    "h": "56457315"
+  },
+  "desired-state::CURVEBALL/Fleet-wide bad config:a-config-change-went-out-and.int": {
+    "n": 38,
+    "h": "05c0e2d8"
+  },
+  "desired-state::CURVEBALL/Lock contention at scale:one-tenant-has-a-massive-fleet.int": {
+    "n": 30,
+    "h": "802c4882"
+  },
+  "desired-state::CURVEBALL/Non-deterministic render:your-fleet-shows-drifted-even-though.int": {
+    "n": 27,
+    "h": "721cd229"
+  },
+  "desired-state::CURVEBALL/Reconciler crash mid-deploy:the-reconciler-crashes-after-pushing-to.int": {
+    "n": 34,
+    "h": "d4e6156e"
+  },
+  "desired-state::CURVEBALL/Stuck device / blind redeploy:a-device-keeps-failing-to-converge.int": {
+    "n": 46,
+    "h": "6f7f0b05"
+  },
+  "desired-state::CURVEBALL/Template refactor = false drift:someone-refactored-a-config-template-renamed.int": {
+    "n": 30,
+    "h": "369ca4f4"
+  },
+  "desired-state::CURVEBALL/Why not just use Terraform:this-has-desired-state-and-drift.int": {
+    "n": 50,
+    "h": "6f996c88"
+  },
+  "desired-state::FAILURE:a-config-change-went-out-and.int": {
+    "n": 37,
+    "h": "f8c06138"
+  },
+  "desired-state::FAILURE:a-config-change-went-out-and.int2": {
+    "n": 34,
+    "h": "b991c625"
+  },
+  "desired-state::FRAME:design-a-system-to-keep-a.int": {
+    "n": 41,
+    "h": "d36155e7"
+  },
+  "desired-state::FRAME:design-a-system-to-keep-a.int2": {
+    "n": 36,
+    "h": "fcbec577"
+  },
+  "desired-state::SCALE:10-000-devices-per-tenant-many.int": {
+    "n": 37,
+    "h": "50c261f1"
+  },
+  "desired-state::SCALE:10-000-devices-per-tenant-many.int2": {
+    "n": 35,
+    "h": "e6cc6b2a"
+  },
+  "desired-state::STRUCTURE:walk-me-through-the-loop-config.int": {
+    "n": 35,
+    "h": "fc6f4ca4"
+  },
+  "developer-platform::CLOSE:sum-it-up-and-what-would.int": {
+    "n": 58,
+    "h": "45e30983"
+  },
+  "developer-platform::CURVEBALL/Guardrail masquerading as a boundary:your-platform-blocks-prod-writes-by.int": {
+    "n": 53,
+    "h": "bf43329d"
+  },
+  "developer-platform::CURVEBALL/attribution:the-dba-pulls-the-database-s.int": {
+    "n": 72,
+    "h": "bb4e19db"
+  },
+  "developer-platform::CURVEBALL/knowledge rot:six-months-after-you-leave-every.int": {
+    "n": 83,
+    "h": "a60fc80e"
+  },
+  "developer-platform::CURVEBALL/open side door:you-ve-built-a-beautiful-audited.int": {
+    "n": 85,
+    "h": "2790d610"
+  },
+  "developer-platform::CURVEBALL/override decay:you-add-allowexpensive-as-an-escape.int": {
+    "n": 81,
+    "h": "a4bdbb41"
+  },
+  "developer-platform::CURVEBALL/platform as SPOF:your-platform-is-now-the-only.int": {
+    "n": 93,
+    "h": "245d9f82"
+  },
+  "developer-platform::CURVEBALL/premature:a-three-person-team-with-two.int": {
+    "n": 75,
+    "h": "d96f6194"
+  },
+  "developer-platform::CURVEBALL/supply chain:your-platform-s-cli-runs-on.int": {
+    "n": 71,
+    "h": "d0a36698"
+  },
+  "developer-platform::CURVEBALL/ticket queue:your-platform-team-is-drowning-every.int": {
+    "n": 104,
+    "h": "a3b601f1"
+  },
+  "developer-platform::FAILURE:the-bastion-for-production-restarts-at.int": {
+    "n": 64,
+    "h": "5d88051e"
+  },
+  "developer-platform::FRAME:design-the-internal-tooling-that-lets.int": {
+    "n": 45,
+    "h": "a4780db3"
+  },
+  "developer-platform::FRAME:design-the-internal-tooling-that-lets.int2": {
+    "n": 61,
+    "h": "0bb735fb"
+  },
+  "developer-platform::SAFETY:an-engineer-runs-a-delete-against.int": {
+    "n": 49,
+    "h": "a8e9409d"
+  },
+  "developer-platform::STRUCTURE:walk-me-through-one-query-end.int": {
+    "n": 48,
+    "h": "e57aa3a9"
+  },
+  "devices-dispatch::CLOSE:sum-it-up-and-what-s.int": {
+    "n": 68,
+    "h": "035cacfc"
+  },
+  "devices-dispatch::CURVEBALL/Concurrent sweepers:for-availability-you-run-two-instances.int": {
+    "n": 79,
+    "h": "560cc204"
+  },
+  "devices-dispatch::CURVEBALL/Lost report, double apply:a-terminal-applies-a-config-but.int": {
+    "n": 70,
+    "h": "0b9ad247"
+  },
+  "devices-dispatch::CURVEBALL/Payload version skew:you-add-a-new-field-to.int": {
+    "n": 66,
+    "h": "710c3ba4"
+  },
+  "devices-dispatch::CURVEBALL/Poison rollout:a-config-change-bricks-every-device.int": {
+    "n": 60,
+    "h": "0ebb15df"
+  },
+  "devices-dispatch::CURVEBALL/Superseded change:a-terminal-is-offline-for-three.int": {
+    "n": 72,
+    "h": "e3dcb2a8"
+  },
+  "devices-dispatch::CURVEBALL/The offline tail:your-rollout-dashboard-says-99-2.int": {
+    "n": 87,
+    "h": "11315029"
+  },
+  "devices-dispatch::CURVEBALL/The slow-but-alive device:your-stale-sweep-expires-in-progress.int": {
+    "n": 65,
+    "h": "b8615656"
+  },
+  "devices-dispatch::CURVEBALL/Thundering herd:your-fleet-polls-beautifully-in-the.int": {
+    "n": 70,
+    "h": "1343e17b"
+  },
+  "devices-dispatch::FAILURE:a-rollout-is-at-70-success.int": {
+    "n": 63,
+    "h": "fd4dea4e"
+  },
+  "devices-dispatch::FAILURE:a-rollout-is-at-70-success.int2": {
+    "n": 74,
+    "h": "5dc5cc05"
+  },
+  "devices-dispatch::FRAME:design-a-system-to-roll-config.int": {
+    "n": 55,
+    "h": "fb336106"
+  },
+  "devices-dispatch::FRAME:design-a-system-to-roll-config.int2": {
+    "n": 45,
+    "h": "2ca5938c"
+  },
+  "devices-dispatch::SCALE:fifty-thousand-terminals-on-one-dispatch.int": {
+    "n": 51,
+    "h": "444f44ed"
+  },
+  "devices-dispatch::SCALE:fifty-thousand-terminals-on-one-dispatch.int2": {
+    "n": 70,
+    "h": "c1f6d68d"
+  },
+  "devices-dispatch::STRUCTURE:walk-me-through-it-a-config.int": {
+    "n": 49,
+    "h": "dfcc1a21"
+  },
+  "distributed-locks::CLOSE:sum-it-up-and-what-would.int": {
+    "n": 50,
+    "h": "318c7d5c"
+  },
+  "distributed-locks::CURVEBALL/async failover:single-redis-for-locks-with-a.int": {
+    "n": 56,
+    "h": "ee009f0a"
+  },
+  "distributed-locks::CURVEBALL/clock drift:your-5-node-redlock-is-running.int": {
+    "n": 42,
+    "h": "b725e100"
+  },
+  "distributed-locks::CURVEBALL/connection exhaustion:you-used-select-for-update-as.int": {
+    "n": 52,
+    "h": "bef25945"
+  },
+  "distributed-locks::CURVEBALL/distributed deadlock:two-workflows-each-need-a-user.int": {
+    "n": 55,
+    "h": "9cf88d4d"
+  },
+  "distributed-locks::CURVEBALL/efficiency-vs-correctness:your-teammate-protects-a-deduct-from.int": {
+    "n": 59,
+    "h": "2d3d0bf8"
+  },
+  "distributed-locks::CURVEBALL/network partition:a-partition-cuts-the-holder-off.int": {
+    "n": 83,
+    "h": "9b80214c"
+  },
+  "distributed-locks::CURVEBALL/process pause:your-lock-has-a-30-second.int": {
+    "n": 60,
+    "h": "241c4c79"
+  },
+  "distributed-locks::CURVEBALL/thundering herd:a-popular-lock-is-released-and.int": {
+    "n": 61,
+    "h": "c70198de"
+  },
+  "distributed-locks::FAILURE:two-processes-both-held-the-lock.int": {
+    "n": 36,
+    "h": "dfd674a1"
+  },
+  "distributed-locks::FRAME:you-need-only-one-process-across.int": {
+    "n": 38,
+    "h": "50926809"
+  },
+  "distributed-locks::FRAME:you-need-only-one-process-across.int2": {
+    "n": 33,
+    "h": "b7193080"
+  },
+  "distributed-locks::SCALE:a-scheduled-billing-run-must-execute.int": {
+    "n": 29,
+    "h": "83b127db"
+  },
+  "distributed-locks::SCALE:a-scheduled-billing-run-must-execute.int2": {
+    "n": 46,
+    "h": "15916980"
+  },
+  "distributed-locks::STRUCTURE:walk-me-through-a-safe-distributed.int": {
+    "n": 29,
+    "h": "99068157"
+  },
+  "eav::CLOSE:two-sentences-sell-me-the-design.int": {
+    "n": 29,
+    "h": "4c0cdd38"
+  },
+  "eav::CURVEBALL/CSV poisoning / bad bulk import:an-operator-pasted-a-csv-that.int": {
+    "n": 30,
+    "h": "8a3573a2"
+  },
+  "eav::CURVEBALL/Concurrent override writes:two-operators-set-the-same-device.int": {
+    "n": 32,
+    "h": "84c77b1b"
+  },
+  "eav::CURVEBALL/Cross-tenant attribute bleed:in-a-multi-tenant-deployment-a.int": {
+    "n": 110,
+    "h": "9dc54c4e"
+  },
+  "eav::CURVEBALL/Default-change blast radius:someone-changed-a-definition-default-and.int": {
+    "n": 26,
+    "h": "f216b76e"
+  },
+  "eav::CURVEBALL/EAV creep / over-application:your-team-started-modeling-every-new.int": {
+    "n": 121,
+    "h": "3d562a5b"
+  },
+  "eav::CURVEBALL/Multi-attribute query explosion:product-wants-to-filter-devices-by.int": {
+    "n": 30,
+    "h": "1713f824"
+  },
+  "eav::CURVEBALL/Schema evolution / type change:you-need-to-change-an-attribute.int": {
+    "n": 29,
+    "h": "2ddaf209"
+  },
+  "eav::CURVEBALL/Secret leak:a-secret-attribute-an-api-key.int": {
+    "n": 24,
+    "h": "c769b8c5"
+  },
+  "eav::FAILURE:a-stringly-typed-comparison-silently-returned.int": {
+    "n": 30,
+    "h": "d89b2a6d"
+  },
+  "eav::FAILURE:a-stringly-typed-comparison-silently-returned.int2": {
+    "n": 25,
+    "h": "b568c757"
+  },
+  "eav::FRAME:design-a-per-device-attribute-store.int": {
+    "n": 28,
+    "h": "998b4312"
+  },
+  "eav::FRAME:design-a-per-device-attribute-store.int2": {
+    "n": 31,
+    "h": "e92edc8f"
+  },
+  "eav::SCALE:50-000-devices-200-attributes-where.int": {
+    "n": 29,
+    "h": "1befd428"
+  },
+  "eav::SCALE:50-000-devices-200-attributes-where.int2": {
+    "n": 33,
+    "h": "00c3499a"
+  },
+  "eav::STRUCTURE:walk-me-through-it-definition-to.int": {
+    "n": 27,
+    "h": "c768d9e9"
+  },
+  "error-propagation::CLOSE:sum-it-up-and-what-would.int": {
+    "n": 52,
+    "h": "6d074f73"
+  },
+  "error-propagation::CURVEBALL/Contract evolution:a-downstream-service-needs-to-start.int": {
+    "n": 57,
+    "h": "478068fa"
+  },
+  "error-propagation::CURVEBALL/Cross-team taxonomy:two-teams-independently-invented-overlapping-error.int": {
+    "n": 58,
+    "h": "d7cec660"
+  },
+  "error-propagation::CURVEBALL/Leaked internals:a-user-pastes-you-a-screenshot.int": {
+    "n": 80,
+    "h": "3f2ff844"
+  },
+  "error-propagation::CURVEBALL/Non-idempotent retry:your-contract-marks-packager-timeout-as.int": {
+    "n": 73,
+    "h": "3dafd728"
+  },
+  "error-propagation::CURVEBALL/Partial fan-out:a-request-fans-out-to-four.int": {
+    "n": 38,
+    "h": "0775a3c8"
+  },
+  "error-propagation::CURVEBALL/Timeout ambiguity:your-packager-self-times-out-at.int": {
+    "n": 54,
+    "h": "095f6cc8"
+  },
+  "error-propagation::CURVEBALL/Timeout inversion:every-deep-failure-in-your-system.int": {
+    "n": 64,
+    "h": "1c503c44"
+  },
+  "error-propagation::CURVEBALL/Unclassified flood:a-dependency-ships-an-update-and.int": {
+    "n": 60,
+    "h": "79c0ecff"
+  },
+  "error-propagation::FAILURE:users-report-something-went-wrong-with.int": {
+    "n": 46,
+    "h": "42c213e7"
+  },
+  "error-propagation::FAILURE:users-report-something-went-wrong-with.int2": {
+    "n": 58,
+    "h": "ce720b71"
+  },
+  "error-propagation::FRAME:design-error-handling-for-a-request.int": {
+    "n": 41,
+    "h": "6e8b93eb"
+  },
+  "error-propagation::FRAME:design-error-handling-for-a-request.int2": {
+    "n": 41,
+    "h": "2cc87f63"
+  },
+  "error-propagation::SCALE:one-dependency-starts-failing-and-every.int": {
+    "n": 42,
+    "h": "39cb1aee"
+  },
+  "error-propagation::SCALE:one-dependency-starts-failing-and-every.int2": {
+    "n": 44,
+    "h": "300c18d9"
+  },
+  "error-propagation::STRUCTURE:walk-me-through-it-a-failure.int": {
+    "n": 43,
+    "h": "11eb6538"
+  },
+  "event-driven::CLOSE:anything-you-d-change-or-anything.int": {
+    "n": 66,
+    "h": "dfab44e7"
+  },
+  "event-driven::CURVEBALL/Backpressure:the-queue-is-backing-up-you.int": {
+    "n": 65,
+    "h": "69094611"
+  },
+  "event-driven::CURVEBALL/Competing consumers:you-add-an-analytics-consumer-to.int": {
+    "n": 66,
+    "h": "d8a83c79"
+  },
+  "event-driven::CURVEBALL/Dedup expiry:you-redrive-40-000-messages-out.int": {
+    "n": 95,
+    "h": "af8283ef"
+  },
+  "event-driven::CURVEBALL/Poison message:you-re-on-kafka-one-malformed.int": {
+    "n": 63,
+    "h": "edf12c33"
+  },
+  "event-driven::CURVEBALL/Replay blast:you-replay-a-week-of-events.int": {
+    "n": 71,
+    "h": "2bd0ac0d"
+  },
+  "event-driven::CURVEBALL/Silent loss:your-consumers-are-healthy-the-queue.int": {
+    "n": 59,
+    "h": "5dad5aad"
+  },
+  "event-driven::CURVEBALL/Stale state:a-consumer-applies-orderupdated-with-a.int": {
+    "n": 67,
+    "h": "e385f72a"
+  },
+  "event-driven::CURVEBALL/ordering:events-for-one-device-must-be.int": {
+    "n": 97,
+    "h": "da550149"
+  },
+  "event-driven::DESIGN:a-dispatch-pipeline-that-must-not.int": {
+    "n": 121,
+    "h": "2c0c2f14"
+  },
+  "event-driven::DESIGN:a-dispatch-pipeline-that-must-not.int2": {
+    "n": 97,
+    "h": "b61ac7f8"
+  },
+  "event-driven::FAILURE:customers-were-charged-twice-walk-the.int": {
+    "n": 46,
+    "h": "e1fc1b22"
+  },
+  "event-driven::FAILURE:customers-were-charged-twice-walk-the.int2": {
+    "n": 60,
+    "h": "3d4cfa51"
+  },
+  "event-driven::FRAME:design-the-async-backbone-between-these.int": {
+    "n": 54,
+    "h": "7d37562d"
+  },
+  "event-driven::FRAME:design-the-async-backbone-between-these.int2": {
+    "n": 53,
+    "h": "6e16dbd6"
+  },
+  "event-driven::SCALE:five-thousand-events-a-second-through.int": {
+    "n": 67,
+    "h": "2a759956"
+  },
+  "event-driven::SCALE:five-thousand-events-a-second-through.int2": {
+    "n": 80,
+    "h": "30de0bb9"
+  },
+  "event-driven::STRUCTURE:walk-me-through-it-emit-to.int": {
+    "n": 56,
+    "h": "6333cf53"
+  },
+  "event-driven::STRUCTURE:walk-me-through-it-emit-to.int2": {
+    "n": 53,
+    "h": "71807bb2"
+  },
+  "feature-flags::CLOSE:sum-it-up-and-what-would.int": {
+    "n": 61,
+    "h": "792c4e4c"
+  },
+  "feature-flags::CURVEBALL/Cold-start fallback:your-flag-provider-has-a-total.int": {
+    "n": 51,
+    "h": "63623364"
+  },
+  "feature-flags::CURVEBALL/Cold-start fallback:your-flag-provider-has-a-total.int2": {
+    "n": 50,
+    "h": "4db2ddbc"
+  },
+  "feature-flags::CURVEBALL/Delete-the-flag-first:a-cleanup-pr-deletes-40-stale.int": {
+    "n": 51,
+    "h": "22066254"
+  },
+  "feature-flags::CURVEBALL/Delete-the-flag-first:a-cleanup-pr-deletes-40-stale.int2": {
+    "n": 58,
+    "h": "cc36906b"
+  },
+  "feature-flags::CURVEBALL/Flag as rollback:you-put-a-new-write-path.int": {
+    "n": 46,
+    "h": "d97fc6b8"
+  },
+  "feature-flags::CURVEBALL/Flag as rollback:you-put-a-new-write-path.int2": {
+    "n": 59,
+    "h": "52d1aa88"
+  },
+  "feature-flags::CURVEBALL/Polarity trap:it-s-3am-the-on-call.int": {
+    "n": 52,
+    "h": "913427b8"
+  },
+  "feature-flags::CURVEBALL/Polarity trap:it-s-3am-the-on-call.int2": {
+    "n": 56,
+    "h": "b6d7e3b2"
+  },
+  "feature-flags::CURVEBALL/Sample ratio mismatch:your-50-50-experiment-reports-52.int": {
+    "n": 65,
+    "h": "ca84647c"
+  },
+  "feature-flags::CURVEBALL/Sample ratio mismatch:your-50-50-experiment-reports-52.int2": {
+    "n": 72,
+    "h": "94f4d84a"
+  },
+  "feature-flags::CURVEBALL/Sticky bucketing:roll-it-out-to-10-percent.int": {
+    "n": 46,
+    "h": "e4efb75f"
+  },
+  "feature-flags::CURVEBALL/Sticky bucketing:roll-it-out-to-10-percent.int2": {
+    "n": 54,
+    "h": "cff70373"
+  },
+  "feature-flags::CURVEBALL/The salt change:someone-renames-a-flag-key-mid.int": {
+    "n": 65,
+    "h": "5cf09954"
+  },
+  "feature-flags::CURVEBALL/The salt change:someone-renames-a-flag-key-mid.int2": {
+    "n": 61,
+    "h": "1e76b63d"
+  },
+  "feature-flags::CURVEBALL/Torn request:one-request-checks-the-same-flag.int": {
+    "n": 65,
+    "h": "8e1a4ce6"
+  },
+  "feature-flags::CURVEBALL/Torn request:one-request-checks-the-same-flag.int2": {
+    "n": 49,
+    "h": "deacd07f"
+  },
+  "feature-flags::FAILURE:a-flag-flip-took-down-checkout.int": {
+    "n": 54,
+    "h": "39f53f0b"
+  },
+  "feature-flags::FAILURE:a-flag-flip-took-down-checkout.int2": {
+    "n": 64,
+    "h": "c3591c16"
+  },
+  "feature-flags::FRAME:design-a-feature-flag-and-dynamic.int": {
+    "n": 47,
+    "h": "c6a38dfd"
+  },
+  "feature-flags::FRAME:design-a-feature-flag-and-dynamic.int2": {
+    "n": 52,
+    "h": "6e4df6e1"
+  },
+  "feature-flags::SCALE:twenty-thousand-requests-a-second-eight.int": {
+    "n": 55,
+    "h": "ccdd3273"
+  },
+  "feature-flags::SCALE:twenty-thousand-requests-a-second-eight.int2": {
+    "n": 56,
+    "h": "c8ce098c"
+  },
+  "feature-flags::STRUCTURE:walk-me-through-it-a-developer.int": {
+    "n": 43,
+    "h": "30079c9a"
+  },
+  "feature-flags::STRUCTURE:walk-me-through-it-a-developer.int2": {
+    "n": 49,
+    "h": "f779ba44"
+  },
+  "iac::CLOSE:two-sentences-sell-me-the-setup.int": {
+    "n": 34,
+    "h": "f2501240"
+  },
+  "iac::CURVEBALL/Concurrent-apply corruption:two-engineers-applied-at-the-same.int": {
+    "n": 43,
+    "h": "5a025726"
+  },
+  "iac::CURVEBALL/Console-change drift:a-security-group-was-changed-in.int": {
+    "n": 47,
+    "h": "2b6dc118"
+  },
+  "iac::CURVEBALL/Deleted state file:someone-deleted-the-state-file-to.int": {
+    "n": 43,
+    "h": "2286ac0f"
+  },
+  "iac::CURVEBALL/Leaky abstraction wall:you-used-a-high-level-module.int": {
+    "n": 46,
+    "h": "fe76f292"
+  },
+  "iac::CURVEBALL/Plan destroys the prod DB:a-routine-config-change-s-plan.int": {
+    "n": 42,
+    "h": "eb1a7c37"
+  },
+  "iac::CURVEBALL/Secrets in committed state:your-security-team-found-that-your.int": {
+    "n": 38,
+    "h": "23b569cc"
+  },
+  "iac::CURVEBALL/Why not IaC for the fleet:you-built-a-custom-reconciler-for.int": {
+    "n": 37,
+    "h": "3869f56e"
+  },
+  "iac::CURVEBALL/Why this tool:why-did-you-pick-terraform-over.int": {
+    "n": 60,
+    "h": "5b7bb938"
+  },
+  "iac::FAILURE:your-state-file-got-corrupted-two.int": {
+    "n": 46,
+    "h": "9c264bcd"
+  },
+  "iac::FAILURE:your-state-file-got-corrupted-two.int2": {
+    "n": 38,
+    "h": "2771b56b"
+  },
+  "iac::FRAME:design-how-a-team-manages-its.int": {
+    "n": 34,
+    "h": "bf11cc01"
+  },
+  "iac::FRAME:design-how-a-team-manages-its.int2": {
+    "n": 42,
+    "h": "6ba9b5d7"
+  },
+  "iac::SCALE:you-have-dev-staging-and-prod.int": {
+    "n": 37,
+    "h": "4ee8d5a1"
+  },
+  "iac::SCALE:you-have-dev-staging-and-prod.int2": {
+    "n": 28,
+    "h": "02a8c186"
+  },
+  "iac::STRUCTURE:walk-me-through-plan-and-apply.int": {
+    "n": 30,
+    "h": "fd1ee8fb"
+  },
+  "idempotency::CLOSE:sum-it-up-and-what-would.int": {
+    "n": 64,
+    "h": "c9f67201"
+  },
+  "idempotency::CURVEBALL/Cached error:you-store-the-response-under-the.int": {
+    "n": 69,
+    "h": "47995a79"
+  },
+  "idempotency::CURVEBALL/Crash window:you-claim-the-key-then-charge.int": {
+    "n": 82,
+    "h": "f9657152"
+  },
+  "idempotency::CURVEBALL/Expired guarantee:your-idempotency-keys-expire-after-24.int": {
+    "n": 94,
+    "h": "93f03a32"
+  },
+  "idempotency::CURVEBALL/Kafka EOS:the-team-lead-says-we-don.int": {
+    "n": 68,
+    "h": "265efcb1"
+  },
+  "idempotency::CURVEBALL/Ordering:retries-arrive-out-of-order-and.int": {
+    "n": 85,
+    "h": "fb64ac38"
+  },
+  "idempotency::CURVEBALL/Same key, new body:a-client-sends-the-same-idempotency.int": {
+    "n": 82,
+    "h": "3eaaef26"
+  },
+  "idempotency::CURVEBALL/Store split:you-put-the-idempotency-key-in.int": {
+    "n": 79,
+    "h": "f000a268"
+  },
+  "idempotency::CURVEBALL/Two at once:your-idempotency-check-works-perfectly-in.int": {
+    "n": 69,
+    "h": "982281b3"
+  },
+  "idempotency::CURVEBALL/Wedged key:your-keys-have-a-24-hour.int": {
+    "n": 99,
+    "h": "08f2c9b6"
+  },
+  "idempotency::FAILURE:your-ledger-says-one-charge-stripe.int": {
+    "n": 59,
+    "h": "0446f852"
+  },
+  "idempotency::FAILURE:your-ledger-says-one-charge-stripe.int2": {
+    "n": 72,
+    "h": "af12f7af"
+  },
+  "idempotency::FRAME:this-payment-endpoint-gets-retried-and.int": {
+    "n": 50,
+    "h": "4df6f0de"
+  },
+  "idempotency::FRAME:this-payment-endpoint-gets-retried-and.int2": {
+    "n": 69,
+    "h": "7a829828"
+  },
+  "idempotency::SCALE:a-thousand-writes-a-second-24.int": {
+    "n": 70,
+    "h": "57cc7c6d"
+  },
+  "idempotency::SCALE:a-thousand-writes-a-second-24.int2": {
+    "n": 62,
+    "h": "0d88f4a0"
+  },
+  "idempotency::STRUCTURE:walk-me-through-it-the-request.int": {
+    "n": 61,
+    "h": "b2861d91"
+  },
+  "idempotency::STRUCTURE:walk-me-through-it-the-request.int2": {
+    "n": 58,
+    "h": "137cdb66"
+  },
+  "kafka-internals::CLOSE:sum-it-up-and-what-s.int": {
+    "n": 71,
+    "h": "5c2a1f6b"
+  },
+  "kafka-internals::CLOSE:sum-it-up-and-what-s.int2": {
+    "n": 87,
+    "h": "ea907b51"
+  },
+  "kafka-internals::CURVEBALL/Partition expansion:your-topic-was-at-capacity-so.int": {
+    "n": 100,
+    "h": "a4098700"
+  },
+  "kafka-internals::CURVEBALL/delivery:your-queue-guarantees-at-least-once.int": {
+    "n": 77,
+    "h": "39d4ab3d"
+  },
+  "kafka-internals::CURVEBALL/durability:you-set-acks-all-you-have.int": {
+    "n": 78,
+    "h": "e0214d6a"
+  },
+  "kafka-internals::CURVEBALL/exactly-once:you-enabled-exactly-once-semantics-with.int": {
+    "n": 90,
+    "h": "57c447d8"
+  },
+  "kafka-internals::CURVEBALL/ordering:you-keyed-a-kafka-topic-by.int": {
+    "n": 71,
+    "h": "c4cc6909"
+  },
+  "kafka-internals::CURVEBALL/poison pill:one-record-in-the-middle-of.int": {
+    "n": 90,
+    "h": "134c71e1"
+  },
+  "kafka-internals::CURVEBALL/rebalancing:you-scale-your-consumer-group-from.int": {
+    "n": 110,
+    "h": "4ea5132c"
+  },
+  "kafka-internals::CURVEBALL/retention:your-team-took-the-consumer-down.int": {
+    "n": 102,
+    "h": "35b28887"
+  },
+  "kafka-internals::FAILURE:consumers-are-being-kicked-out-of.int": {
+    "n": 74,
+    "h": "695af46c"
+  },
+  "kafka-internals::FAILURE:consumers-are-being-kicked-out-of.int2": {
+    "n": 67,
+    "h": "7414cec7"
+  },
+  "kafka-internals::FRAME:design-an-event-streaming-backbone-several.int": {
+    "n": 56,
+    "h": "1fde65d6"
+  },
+  "kafka-internals::FRAME:design-an-event-streaming-backbone-several.int2": {
+    "n": 52,
+    "h": "4ed96fa0"
+  },
+  "kafka-internals::SCALE:a-high-throughput-event-stream-that.int": {
+    "n": 55,
+    "h": "8da00125"
+  },
+  "kafka-internals::SCALE:a-high-throughput-event-stream-that.int2": {
+    "n": 97,
+    "h": "114d858a"
+  },
+  "kafka-internals::STRUCTURE:walk-me-through-it-a-record.int": {
+    "n": 67,
+    "h": "cb382d10"
+  },
+  "kafka-internals::STRUCTURE:walk-me-through-it-a-record.int2": {
+    "n": 60,
+    "h": "69663059"
+  },
+  "lambda-organization::CLOSE:sum-it-up-and-what-would.int": {
+    "n": 95,
+    "h": "e9aef0a0"
+  },
+  "lambda-organization::CURVEBALL/The 2018 fact:a-senior-engineer-on-the-panel.int": {
+    "n": 90,
+    "h": "6dbff2c0"
+  },
+  "lambda-organization::CURVEBALL/The alias that lied:you-canary-a-new-version-behind.int": {
+    "n": 120,
+    "h": "7e0684ed"
+  },
+  "lambda-organization::CURVEBALL/The cap that dead-lettered production:you-cap-an-sqs-triggered-function.int": {
+    "n": 97,
+    "h": "20939a95"
+  },
+  "lambda-organization::CURVEBALL/The idempotency that was not:your-queue-triggered-function-is-idempotent.int": {
+    "n": 98,
+    "h": "c49eecb6"
+  },
+  "lambda-organization::CURVEBALL/The invisible dependency:team-a-s-function-has-a.int": {
+    "n": 93,
+    "h": "c63add73"
+  },
+  "lambda-organization::CURVEBALL/The migration that made it worse:costs-are-up-you-find-a.int": {
+    "n": 126,
+    "h": "a825127d"
+  },
+  "lambda-organization::CURVEBALL/The p99 that is not there:a-request-fans-out-through-six.int": {
+    "n": 96,
+    "h": "d1b0c3b3"
+  },
+  "lambda-organization::CURVEBALL/The reservation that starved the estate:you-are-proud-of-your-concurrency.int": {
+    "n": 103,
+    "h": "24a5163f"
+  },
+  "lambda-organization::FAILURE:every-function-in-the-account-is.int": {
+    "n": 88,
+    "h": "4fc21c2a"
+  },
+  "lambda-organization::FAILURE:every-function-in-the-account-is.int2": {
+    "n": 97,
+    "h": "987110e5"
+  },
+  "lambda-organization::FRAME:you-have-a-hundred-plus-lambdas.int": {
+    "n": 66,
+    "h": "acfca118"
+  },
+  "lambda-organization::FRAME:you-have-a-hundred-plus-lambdas.int2": {
+    "n": 80,
+    "h": "8229cb22"
+  },
+  "lambda-organization::SCALE:a-rollout-fires-fifty-thousand-devices.int": {
+    "n": 82,
+    "h": "b62351c2"
+  },
+  "lambda-organization::SCALE:a-rollout-fires-fifty-thousand-devices.int2": {
+    "n": 80,
+    "h": "ca99f346"
+  },
+  "lambda-organization::STRUCTURE:walk-me-through-one-invocation-event.int": {
+    "n": 66,
+    "h": "8bb2315d"
+  },
+  "leader-election::CLOSE:sum-it-up-and-what-would.int": {
+    "n": 66,
+    "h": "1aa349f2"
+  },
+  "leader-election::CURVEBALL/flapping:leadership-is-bouncing-every-40-seconds.int": {
+    "n": 73,
+    "h": "496f4967"
+  },
+  "leader-election::CURVEBALL/membership:you-grow-the-cluster-from-3.int": {
+    "n": 61,
+    "h": "628c2659"
+  },
+  "leader-election::CURVEBALL/pause:your-leader-passes-its-is-my.int": {
+    "n": 71,
+    "h": "643bd572"
+  },
+  "leader-election::CURVEBALL/quorum loss:two-of-your-three-etcd-nodes.int": {
+    "n": 75,
+    "h": "6c558635"
+  },
+  "leader-election::CURVEBALL/redis:your-team-already-runs-redis-just.int": {
+    "n": 63,
+    "h": "aa3544ac"
+  },
+  "leader-election::CURVEBALL/stale read:your-leader-is-partitioned-from-its.int": {
+    "n": 74,
+    "h": "587af9a0"
+  },
+  "leader-election::CURVEBALL/term inflation:a-node-was-partitioned-away-for.int": {
+    "n": 57,
+    "h": "98fba749"
+  },
+  "leader-election::CURVEBALL/unfenceable:the-protected-resource-is-a-payment.int": {
+    "n": 64,
+    "h": "e97658c4"
+  },
+  "leader-election::FAILURE:database-primary-failover-without-split-brain.int": {
+    "n": 99,
+    "h": "d33612b5"
+  },
+  "leader-election::FAILURE:database-primary-failover-without-split-brain.int2": {
+    "n": 53,
+    "h": "b752ec7e"
+  },
+  "leader-election::FRAME:you-have-a-job-that-must.int": {
+    "n": 41,
+    "h": "97dcb60e"
+  },
+  "leader-election::FRAME:you-have-a-job-that-must.int2": {
+    "n": 56,
+    "h": "d8e3182b"
+  },
+  "leader-election::SCALE:it-works-now-the-single-leader.int": {
+    "n": 51,
+    "h": "89f8fc7a"
+  },
+  "leader-election::SCALE:it-works-now-the-single-leader.int2": {
+    "n": 52,
+    "h": "7e167d54"
+  },
+  "leader-election::STRUCTURE:an-ha-service-where-only-one.int": {
+    "n": 106,
+    "h": "110770b5"
+  },
+  "leader-election::STRUCTURE:an-ha-service-where-only-one.int2": {
+    "n": 55,
+    "h": "700c7d2b"
+  },
+  "load-balancing::CLOSE:sum-it-up-and-what-would.int": {
+    "n": 47,
+    "h": "5cc7d36b"
+  },
+  "load-balancing::CLOSE:sum-it-up-and-what-would.int2": {
+    "n": 49,
+    "h": "51c92a77"
+  },
+  "load-balancing::CURVEBALL/bad-deploy:half-your-requests-start-returning-502.int": {
+    "n": 49,
+    "h": "7a55bddf"
+  },
+  "load-balancing::CURVEBALL/bad-deploy:half-your-requests-start-returning-502.int2": {
+    "n": 49,
+    "h": "09508ecb"
+  },
+  "load-balancing::CURVEBALL/cold-start-loop:traffic-spikes-autoscaling-adds-ten-instances.int": {
+    "n": 49,
+    "h": "8c6b3fdd"
+  },
+  "load-balancing::CURVEBALL/cold-start-loop:traffic-spikes-autoscaling-adds-ten-instances.int2": {
+    "n": 69,
+    "h": "fbdb3d39"
+  },
+  "load-balancing::CURVEBALL/deep-check:your-health-check-pings-the-database.int": {
+    "n": 59,
+    "h": "8820aadd"
+  },
+  "load-balancing::CURVEBALL/deep-check:your-health-check-pings-the-database.int2": {
+    "n": 79,
+    "h": "4c62e36f"
+  },
+  "load-balancing::CURVEBALL/dns-failover:your-active-passive-lb-pair-fails.int": {
+    "n": 61,
+    "h": "e5bc70b7"
+  },
+  "load-balancing::CURVEBALL/dns-failover:your-active-passive-lb-pair-fails.int2": {
+    "n": 69,
+    "h": "da22227d"
+  },
+  "load-balancing::CURVEBALL/l4-keepalive:four-backends-an-l4-load-balancer.int": {
+    "n": 60,
+    "h": "fbd2002f"
+  },
+  "load-balancing::CURVEBALL/l4-keepalive:four-backends-an-l4-load-balancer.int2": {
+    "n": 51,
+    "h": "f48d4dee"
+  },
+  "load-balancing::CURVEBALL/lb-saturation:every-backend-is-healthy-and-nearly.int": {
+    "n": 54,
+    "h": "0418e6b8"
+  },
+  "load-balancing::CURVEBALL/lb-saturation:every-backend-is-healthy-and-nearly.int2": {
+    "n": 72,
+    "h": "d7283a48"
+  },
+  "load-balancing::CURVEBALL/retry-storm:one-backend-gets-slow-your-lb.int": {
+    "n": 53,
+    "h": "5941aee3"
+  },
+  "load-balancing::CURVEBALL/retry-storm:one-backend-gets-slow-your-lb.int2": {
+    "n": 58,
+    "h": "8a56e037"
+  },
+  "load-balancing::CURVEBALL/sticky-death:you-use-sticky-sessions-one-instance.int": {
+    "n": 74,
+    "h": "5b8a0a85"
+  },
+  "load-balancing::CURVEBALL/sticky-death:you-use-sticky-sessions-one-instance.int2": {
+    "n": 72,
+    "h": "a1b39adf"
+  },
+  "load-balancing::DESIGN:a-load-balanced-self-healing-service.int": {
+    "n": 107,
+    "h": "3b53c549"
+  },
+  "load-balancing::DESIGN:a-load-balanced-self-healing-service.int2": {
+    "n": 45,
+    "h": "e3f3fd3f"
+  },
+  "load-balancing::FRAME:design-the-traffic-layer-for-a.int": {
+    "n": 44,
+    "h": "31b8848e"
+  },
+  "load-balancing::FRAME:design-the-traffic-layer-for-a.int2": {
+    "n": 44,
+    "h": "8c1cad54"
+  },
+  "load-balancing::SCALE:a-pool-sized-so-losing-one.int": {
+    "n": 113,
+    "h": "579d5295"
+  },
+  "load-balancing::SCALE:a-pool-sized-so-losing-one.int2": {
+    "n": 57,
+    "h": "5857c521"
+  },
+  "load-balancing::STRUCTURE:walk-me-through-it-one-request.int": {
+    "n": 61,
+    "h": "d25e008d"
+  },
+  "load-balancing::STRUCTURE:walk-me-through-it-one-request.int2": {
+    "n": 53,
+    "h": "e3eea448"
+  },
+  "microfrontend::CLOSE:sum-it-up-and-what-would.int": {
+    "n": 70,
+    "h": "372a20d4"
+  },
+  "microfrontend::CURVEBALL/Auth in five places:each-of-your-five-apps-handles.int": {
+    "n": 79,
+    "h": "363dc926"
+  },
+  "microfrontend::CURVEBALL/Distributed monolith:your-five-microfrontends-have-a-release.int": {
+    "n": 80,
+    "h": "834e027e"
+  },
+  "microfrontend::CURVEBALL/Singleton collision:two-teams-both-on-react-search.int": {
+    "n": 85,
+    "h": "810464ed"
+  },
+  "microfrontend::CURVEBALL/Stale session:you-deploy-checkout-v2-and-prune.int": {
+    "n": 79,
+    "h": "c92c8a03"
+  },
+  "microfrontend::CURVEBALL/The fat shell:your-shell-started-at-40-lines.int": {
+    "n": 64,
+    "h": "206a7456"
+  },
+  "microfrontend::CURVEBALL/The performance regression:you-finished-the-migration-deploy-frequency.int": {
+    "n": 68,
+    "h": "b626a00d"
+  },
+  "microfrontend::CURVEBALL/The style leak:every-app-s-visual-tests-are.int": {
+    "n": 90,
+    "h": "70c39302"
+  },
+  "microfrontend::CURVEBALL/The unversioned event:cart-publishes-a-cart-updated-event.int": {
+    "n": 73,
+    "h": "1687c11f"
+  },
+  "microfrontend::FAILURE:checkout-shipped-20-minutes-ago-some.int": {
+    "n": 53,
+    "h": "505a6f3b"
+  },
+  "microfrontend::FAILURE:checkout-shipped-20-minutes-ago-some.int2": {
+    "n": 78,
+    "h": "3009b030"
+  },
+  "microfrontend::FRAME:your-frontend-is-one-react-app.int": {
+    "n": 36,
+    "h": "e7805aaa"
+  },
+  "microfrontend::FRAME:your-frontend-is-one-react-app.int2": {
+    "n": 69,
+    "h": "307626d4"
+  },
+  "microfrontend::SCALE:you-re-now-at-twelve-feature.int": {
+    "n": 65,
+    "h": "2246d305"
+  },
+  "microfrontend::SCALE:you-re-now-at-twelve-feature.int2": {
+    "n": 71,
+    "h": "f2576489"
+  },
+  "microfrontend::STRUCTURE:walk-me-through-it-how-does.int": {
+    "n": 61,
+    "h": "78e18bf3"
+  },
+  "microfrontend::STRUCTURE:walk-me-through-it-how-does.int2": {
+    "n": 62,
+    "h": "0c21ee24"
+  },
+  "multi-region::CLOSE:sum-it-up-and-what-s.int": {
+    "n": 58,
+    "h": "7b9c8fd2"
+  },
+  "multi-region::CURVEBALL/Capacity:active-active-across-two-regions-each.int": {
+    "n": 55,
+    "h": "be2e4124"
+  },
+  "multi-region::CURVEBALL/Clock skew:your-active-active-store-uses-last.int": {
+    "n": 64,
+    "h": "52880d8a"
+  },
+  "multi-region::CURVEBALL/Corruption:a-bad-migration-wipes-a-column.int": {
+    "n": 78,
+    "h": "cbc8db0b"
+  },
+  "multi-region::CURVEBALL/DNS failover:you-set-a-30-second-dns.int": {
+    "n": 70,
+    "h": "d2880344"
+  },
+  "multi-region::CURVEBALL/Failback:you-failed-over-cleanly-to-the.int": {
+    "n": 53,
+    "h": "8cf4bd2d"
+  },
+  "multi-region::CURVEBALL/Read-your-writes:a-user-updates-their-profile-in.int": {
+    "n": 66,
+    "h": "2acef1a2"
+  },
+  "multi-region::CURVEBALL/Residency:your-active-active-global-service-must.int": {
+    "n": 52,
+    "h": "4fb4ca56"
+  },
+  "multi-region::CURVEBALL/Split-brain:your-monitoring-says-the-primary-is.int": {
+    "n": 51,
+    "h": "4196c7cf"
+  },
+  "multi-region::DESIGN:add-disaster-recovery-to-a-business.int": {
+    "n": 43,
+    "h": "94e25bb5"
+  },
+  "multi-region::DESIGN:add-disaster-recovery-to-a-business.int2": {
+    "n": 55,
+    "h": "7f367d31"
+  },
+  "multi-region::FAILURE:your-primary-region-just-went-dark.int": {
+    "n": 58,
+    "h": "a9fd4816"
+  },
+  "multi-region::FAILURE:your-primary-region-just-went-dark.int2": {
+    "n": 57,
+    "h": "dabf70f3"
+  },
+  "multi-region::FRAME:take-this-single-region-service-global.int": {
+    "n": 34,
+    "h": "f906a288"
+  },
+  "multi-region::FRAME:take-this-single-region-service-global.int2": {
+    "n": 63,
+    "h": "c7571e4b"
+  },
+  "multi-region::STRUCTURE:walk-me-through-what-happens-to.int": {
+    "n": 48,
+    "h": "b3b7eec4"
+  },
+  "multi-region::STRUCTURE:walk-me-through-what-happens-to.int2": {
+    "n": 56,
+    "h": "dc341cbb"
+  },
+  "multi-tenant::CLOSE:sum-it-up-and-what-would.int": {
+    "n": 62,
+    "h": "63e5d616"
+  },
+  "multi-tenant::CURVEBALL/RLS + pooling:rls-is-on-you-forced-it.int": {
+    "n": 58,
+    "h": "094897fc"
+  },
+  "multi-tenant::CURVEBALL/erasure:a-tenant-invokes-their-right-to.int": {
+    "n": 85,
+    "h": "0c54e1bf"
+  },
+  "multi-tenant::CURVEBALL/leak:a-bug-returned-another-tenant-s.int": {
+    "n": 155,
+    "h": "3442c0bc"
+  },
+  "multi-tenant::CURVEBALL/residency:a-large-customer-will-sign-only.int": {
+    "n": 93,
+    "h": "39013ec7"
+  },
+  "multi-tenant::CURVEBALL/the background job:a-nightly-job-that-emails-each.int": {
+    "n": 63,
+    "h": "08f9b1f2"
+  },
+  "multi-tenant::CURVEBALL/the cache:your-database-predicate-is-perfect-rls.int": {
+    "n": 69,
+    "h": "ffca7468"
+  },
+  "multi-tenant::CURVEBALL/the safety control:you-shipped-per-tenant-rate-limits.int": {
+    "n": 83,
+    "h": "cdf1ab28"
+  },
+  "multi-tenant::CURVEBALL/the whale:one-tenant-is-40-of-your.int": {
+    "n": 78,
+    "h": "c7a7af69"
+  },
+  "multi-tenant::DESIGN:a-saas-with-free-and-enterprise.int": {
+    "n": 121,
+    "h": "c3842394"
+  },
+  "multi-tenant::DESIGN:a-saas-with-free-and-enterprise.int2": {
+    "n": 64,
+    "h": "dfabbfed"
+  },
+  "multi-tenant::FAILURE:a-customer-says-they-can-see.int": {
+    "n": 62,
+    "h": "8b6ec1a7"
+  },
+  "multi-tenant::FAILURE:a-customer-says-they-can-see.int2": {
+    "n": 84,
+    "h": "01e5d937"
+  },
+  "multi-tenant::FRAME:design-multi-tenant-isolation-for-a.int": {
+    "n": 57,
+    "h": "f9dcc681"
+  },
+  "multi-tenant::FRAME:design-multi-tenant-isolation-for-a.int2": {
+    "n": 50,
+    "h": "5af6159e"
+  },
+  "multi-tenant::SCALE:five-thousand-tenants-on-one-platform.int": {
+    "n": 131,
+    "h": "93808057"
+  },
+  "multi-tenant::SCALE:five-thousand-tenants-on-one-platform.int2": {
+    "n": 57,
+    "h": "60388f1f"
+  },
+  "multi-tenant::STRUCTURE:walk-me-through-it-request-to.int": {
+    "n": 61,
+    "h": "14e57b83"
+  },
+  "multi-tenant::STRUCTURE:walk-me-through-it-request-to.int2": {
+    "n": 65,
+    "h": "55712134"
+  },
+  "notifications::CLOSE:sum-it-up-and-what-would.int": {
+    "n": 43,
+    "h": "1069f285"
+  },
+  "notifications::CURVEBALL/Bounce / reputation:your-transactional-emails-password-resets-receipts.int": {
+    "n": 62,
+    "h": "511d3560"
+  },
+  "notifications::CURVEBALL/Cross-tenant leak:a-multi-tenant-saas-an-admin.int": {
+    "n": 62,
+    "h": "96de1c77"
+  },
+  "notifications::CURVEBALL/Double-send / retry:your-queue-guarantees-at-least-once.int": {
+    "n": 51,
+    "h": "4d1f8ad5"
+  },
+  "notifications::CURVEBALL/Fallback race:your-smart-fallback-sends-in-app.int": {
+    "n": 71,
+    "h": "1e08ba6b"
+  },
+  "notifications::CURVEBALL/Notification storm:a-bug-upstream-emits-the-same.int": {
+    "n": 69,
+    "h": "7c984038"
+  },
+  "notifications::CURVEBALL/Offline user:you-add-websocket-push-for-instant.int": {
+    "n": 47,
+    "h": "77c83196"
+  },
+  "notifications::CURVEBALL/Ordering anomaly:a-user-gets-your-order-has.int": {
+    "n": 61,
+    "h": "5736f9c7"
+  },
+  "notifications::CURVEBALL/Polling meltdown:your-in-app-notifications-work-great.int": {
+    "n": 59,
+    "h": "453647f5"
+  },
+  "notifications::FAILURE:users-report-getting-the-same-notification.int": {
+    "n": 40,
+    "h": "f1622078"
+  },
+  "notifications::FAILURE:users-report-getting-the-same-notification.int2": {
+    "n": 60,
+    "h": "518fb65c"
+  },
+  "notifications::FRAME:design-a-multi-channel-notification-system.int": {
+    "n": 41,
+    "h": "e0d44c42"
+  },
+  "notifications::FRAME:design-a-multi-channel-notification-system.int2": {
+    "n": 41,
+    "h": "64125cc4"
+  },
+  "notifications::SCALE:a-rollout-fires-and-50-000.int": {
+    "n": 40,
+    "h": "8edbce79"
+  },
+  "notifications::SCALE:a-rollout-fires-and-50-000.int2": {
+    "n": 50,
+    "h": "71b0db99"
+  },
+  "notifications::STRUCTURE:walk-me-through-it-event-to.int": {
+    "n": 36,
+    "h": "ce13feb3"
+  },
+  "observability::CLOSE:sum-it-up-and-what-would.int": {
+    "n": 46,
+    "h": "4dd59000"
+  },
+  "observability::CURVEBALL/alert-fatigue:your-on-call-gets-200-pages.int": {
+    "n": 39,
+    "h": "1e0d5c62"
+  },
+  "observability::CURVEBALL/broken-trace:your-traces-look-complete-in-the.int": {
+    "n": 39,
+    "h": "27276eff"
+  },
+  "observability::CURVEBALL/cardinality:you-added-a-customer-id-label.int": {
+    "n": 42,
+    "h": "a3a0d160"
+  },
+  "observability::CURVEBALL/clock-skew:in-a-trace-a-child-span.int": {
+    "n": 39,
+    "h": "1dd8bd97"
+  },
+  "observability::CURVEBALL/lying-dashboard:every-dashboard-is-green-no-alert.int": {
+    "n": 38,
+    "h": "2f75c857"
+  },
+  "observability::CURVEBALL/pii-leak:a-security-review-finds-auth-tokens.int": {
+    "n": 51,
+    "h": "8775e35d"
+  },
+  "observability::CURVEBALL/sampling-miss:you-head-sample-traces-at-1.int": {
+    "n": 44,
+    "h": "849c1402"
+  },
+  "observability::CURVEBALL/telemetry-outage:your-tracing-collector-goes-down-within.int": {
+    "n": 35,
+    "h": "fe1fad11"
+  },
+  "observability::FAILURE:an-incident-s-on-latency-is.int": {
+    "n": 25,
+    "h": "f49babd6"
+  },
+  "observability::FAILURE:an-incident-s-on-latency-is.int2": {
+    "n": 37,
+    "h": "1ab8750e"
+  },
+  "observability::FRAME:make-this-multi-service-system-observable.int": {
+    "n": 30,
+    "h": "d22c45b2"
+  },
+  "observability::FRAME:make-this-multi-service-system-observable.int2": {
+    "n": 33,
+    "h": "31c186c8"
+  },
+  "observability::SCALE:ten-thousand-requests-a-second-each.int": {
+    "n": 29,
+    "h": "12b5c3bf"
+  },
+  "observability::SCALE:ten-thousand-requests-a-second-each.int2": {
+    "n": 44,
+    "h": "6f7e35f6"
+  },
+  "observability::STRUCTURE:walk-me-through-it-a-request.int": {
+    "n": 38,
+    "h": "e359051d"
+  },
+  "observability::STRUCTURE:walk-me-through-it-a-request.int2": {
+    "n": 40,
+    "h": "573f16de"
+  },
+  "probabilistic-structures::CLOSE:sum-it-up-and-what-would.int": {
+    "n": 52,
+    "h": "74d99c5f"
+  },
+  "probabilistic-structures::CURVEBALL/capacity:you-sized-a-bloom-filter-for.int": {
+    "n": 62,
+    "h": "c8ecf987"
+  },
+  "probabilistic-structures::CURVEBALL/collision:your-count-min-based-trending-list.int": {
+    "n": 58,
+    "h": "9fd43587"
+  },
+  "probabilistic-structures::CURVEBALL/error-safety:you-rate-limit-abusive-ips-by.int": {
+    "n": 133,
+    "h": "ecc58aee"
+  },
+  "probabilistic-structures::CURVEBALL/expected error:your-hyperloglog-reports-1-000-000.int": {
+    "n": 52,
+    "h": "7f0269ad"
+  },
+  "probabilistic-structures::CURVEBALL/false-positive cost:you-dedupe-a-stream-with-a.int": {
+    "n": 31,
+    "h": "f5806555"
+  },
+  "probabilistic-structures::CURVEBALL/incompatible sketches:two-teams-merge-their-hyperloglogs-and.int": {
+    "n": 45,
+    "h": "a7377a5c"
+  },
+  "probabilistic-structures::CURVEBALL/mutable set:you-keep-a-bloom-filter-of.int": {
+    "n": 40,
+    "h": "dfdf6a26"
+  },
+  "probabilistic-structures::CURVEBALL/trust the \"no\":you-use-a-bloom-filter-to.int": {
+    "n": 33,
+    "h": "c1660b0b"
+  },
+  "probabilistic-structures::FAILURE:in-prod-reads-through-your-bloom.int": {
+    "n": 39,
+    "h": "b9a3825b"
+  },
+  "probabilistic-structures::FRAME:you-need-to-count-uniques-dedup.int": {
+    "n": 39,
+    "h": "78616794"
+  },
+  "probabilistic-structures::FRAME:you-need-to-count-uniques-dedup.int2": {
+    "n": 34,
+    "h": "59d8d204"
+  },
+  "probabilistic-structures::SCALE:count-unique-visitors-across-100-shards.int": {
+    "n": 35,
+    "h": "ad64fd07"
+  },
+  "probabilistic-structures::SCALE:count-unique-visitors-across-100-shards.int2": {
+    "n": 39,
+    "h": "79049d67"
+  },
+  "probabilistic-structures::STRUCTURE:walk-me-through-how-you-d.int": {
+    "n": 38,
+    "h": "1cc63ec1"
+  },
+  "rate-limiting::CLOSE:sum-it-up-and-what-would.int": {
+    "n": 46,
+    "h": "2e55b1e3"
+  },
+  "rate-limiting::CURVEBALL/Clock skew:two-gateway-instances-have-wall-clocks.int": {
+    "n": 56,
+    "h": "c8d3cc51"
+  },
+  "rate-limiting::CURVEBALL/Distributed overcount:ten-servers-each-keep-their-own.int": {
+    "n": 67,
+    "h": "da973445"
+  },
+  "rate-limiting::CURVEBALL/Fail-open blindness:you-fail-open-the-redis-outage.int": {
+    "n": 95,
+    "h": "27d064ac"
+  },
+  "rate-limiting::CURVEBALL/IP keying and NAT:you-key-the-limit-on-ip.int": {
+    "n": 73,
+    "h": "48cff193"
+  },
+  "rate-limiting::CURVEBALL/Multi-region doubling:your-global-limit-is-1000-a.int": {
+    "n": 66,
+    "h": "8dfd561f"
+  },
+  "rate-limiting::CURVEBALL/Retry-After self-DDoS:you-return-429-but-no-retry.int": {
+    "n": 76,
+    "h": "d8e402b1"
+  },
+  "rate-limiting::CURVEBALL/Sliding-log memory bomb:your-precise-sliding-window-stores-a.int": {
+    "n": 51,
+    "h": "47ba3255"
+  },
+  "rate-limiting::CURVEBALL/Store outage:the-limiter-s-redis-is-down.int": {
+    "n": 61,
+    "h": "b300dec5"
+  },
+  "rate-limiting::DESIGN:a-public-api-with-paid-tiers.int": {
+    "n": 127,
+    "h": "870a8fdd"
+  },
+  "rate-limiting::DESIGN:a-public-api-with-paid-tiers.int2": {
+    "n": 129,
+    "h": "4f3ce5ae"
+  },
+  "rate-limiting::FAILURE:customers-who-shouldn-t-be-throttled.int": {
+    "n": 40,
+    "h": "8e6cddce"
+  },
+  "rate-limiting::FRAME:design-rate-limiting-for-a-public.int": {
+    "n": 48,
+    "h": "6302f590"
+  },
+  "rate-limiting::FRAME:design-rate-limiting-for-a-public.int2": {
+    "n": 44,
+    "h": "59f6cda8"
+  },
+  "rate-limiting::SCALE:fifty-thousand-requests-a-second-across.int": {
+    "n": 104,
+    "h": "7d1a688d"
+  },
+  "rate-limiting::SCALE:fifty-thousand-requests-a-second-across.int2": {
+    "n": 134,
+    "h": "0953a05d"
+  },
+  "real-time-delivery::CLOSE:sum-it-up-and-what-would.int": {
+    "n": 66,
+    "h": "64542e4d"
+  },
+  "real-time-delivery::CLOSE:sum-it-up-and-what-would.int2": {
+    "n": 74,
+    "h": "8f30f416"
+  },
+  "real-time-delivery::CURVEBALL/Persist vs push:your-design-pushes-the-message-over.int": {
+    "n": 71,
+    "h": "ce69634d"
+  },
+  "real-time-delivery::CURVEBALL/cswsh:your-websocket-authenticates-from-the-session.int": {
+    "n": 94,
+    "h": "e7b4c426"
+  },
+  "real-time-delivery::CURVEBALL/lossy-bus:everything-works-in-staging-in-production.int": {
+    "n": 98,
+    "h": "7463e30d"
+  },
+  "real-time-delivery::CURVEBALL/ordering:a-user-has-your-app-open.int": {
+    "n": 68,
+    "h": "8c6fe077"
+  },
+  "real-time-delivery::CURVEBALL/presence-storm:a-celebrity-with-40-million-followers.int": {
+    "n": 97,
+    "h": "006e9187"
+  },
+  "real-time-delivery::CURVEBALL/slow-consumer:one-user-is-on-a-terrible.int": {
+    "n": 93,
+    "h": "ac99b30c"
+  },
+  "real-time-delivery::CURVEBALL/the-port-myth:your-tech-lead-says-one-box.int": {
+    "n": 77,
+    "h": "4f453456"
+  },
+  "real-time-delivery::CURVEBALL/thundering-herd:a-deploy-restarts-your-connection-servers.int": {
+    "n": 55,
+    "h": "2a595c76"
+  },
+  "real-time-delivery::FAILURE:users-report-that-messages-sometimes-just.int": {
+    "n": 52,
+    "h": "47e674e5"
+  },
+  "real-time-delivery::FAILURE:users-report-that-messages-sometimes-just.int2": {
+    "n": 49,
+    "h": "e4299187"
+  },
+  "real-time-delivery::FRAME:design-real-time-message-delivery-for.int": {
+    "n": 58,
+    "h": "e2fe4a63"
+  },
+  "real-time-delivery::FRAME:design-real-time-message-delivery-for.int2": {
+    "n": 57,
+    "h": "1d68ef32"
+  },
+  "real-time-delivery::SCALE:five-million-concurrent-connections-what-is.int": {
+    "n": 56,
+    "h": "786bb252"
+  },
+  "real-time-delivery::SCALE:five-million-concurrent-connections-what-is.int2": {
+    "n": 80,
+    "h": "e6009618"
+  },
+  "real-time-delivery::STRUCTURE:walk-me-through-it-a-message.int": {
+    "n": 52,
+    "h": "e0b04544"
+  },
+  "real-time-delivery::STRUCTURE:walk-me-through-it-a-message.int2": {
+    "n": 51,
+    "h": "637f4f33"
+  },
+  "replication::CLOSE:two-sentences-sell-me-the-design.int": {
+    "n": 26,
+    "h": "38e5db29"
+  },
+  "replication::CURVEBALL/clock skew:two-regions-both-edited-the-same.int": {
+    "n": 31,
+    "h": "94e5fdc6"
+  },
+  "replication::CURVEBALL/clock skew:two-regions-both-edited-the-same.int2": {
+    "n": 33,
+    "h": "131e5804"
+  },
+  "replication::CURVEBALL/lost update:a-user-s-account-balance-is.int": {
+    "n": 22,
+    "h": "d3183fb7"
+  },
+  "replication::CURVEBALL/lost update:a-user-s-account-balance-is.int2": {
+    "n": 30,
+    "h": "8152248c"
+  },
+  "replication::CURVEBALL/metastable failure:under-load-your-followers-lag-so.int": {
+    "n": 39,
+    "h": "250a61fb"
+  },
+  "replication::CURVEBALL/metastable failure:under-load-your-followers-lag-so.int2": {
+    "n": 30,
+    "h": "14008f04"
+  },
+  "replication::CURVEBALL/region loss:your-primary-region-goes-dark-you.int": {
+    "n": 40,
+    "h": "314ccc55"
+  },
+  "replication::CURVEBALL/region loss:your-primary-region-goes-dark-you.int2": {
+    "n": 23,
+    "h": "38db2d00"
+  },
+  "replication::CURVEBALL/split-brain:after-a-network-partition-two-of.int": {
+    "n": 128,
+    "h": "797080d8"
+  },
+  "replication::CURVEBALL/the backfill:an-engineer-ran-a-one-off.int": {
+    "n": 39,
+    "h": "35ea5478"
+  },
+  "replication::CURVEBALL/the backfill:an-engineer-ran-a-one-off.int2": {
+    "n": 29,
+    "h": "1b56de17"
+  },
+  "replication::CURVEBALL/the lying metric:your-dashboard-shows-replication-lag-at.int": {
+    "n": 35,
+    "h": "e77d3ee5"
+  },
+  "replication::CURVEBALL/the lying metric:your-dashboard-shows-replication-lag-at.int2": {
+    "n": 150,
+    "h": "11525746"
+  },
+  "replication::CURVEBALL/the paused leader:your-leader-had-a-20-second.int": {
+    "n": 48,
+    "h": "30d454f4"
+  },
+  "replication::CURVEBALL/the paused leader:your-leader-had-a-20-second.int2": {
+    "n": 30,
+    "h": "c5a1f5c3"
+  },
+  "replication::DESIGN:a-highly-available-data-store-with.int": {
+    "n": 115,
+    "h": "2f0d1cad"
+  },
+  "replication::DESIGN:a-highly-available-data-store-with.int2": {
+    "n": 154,
+    "h": "9df44aea"
+  },
+  "replication::FAILURE:after-a-failover-support-reports-that.int": {
+    "n": 30,
+    "h": "1996c117"
+  },
+  "replication::FAILURE:after-a-failover-support-reports-that.int2": {
+    "n": 28,
+    "h": "c68b64ea"
+  },
+  "replication::FRAME:design-the-replication-for-a-database.int": {
+    "n": 22,
+    "h": "6918b6b6"
+  },
+  "replication::FRAME:design-the-replication-for-a-database.int2": {
+    "n": 31,
+    "h": "7948894b"
+  },
+  "replication::SCALE:a-read-heavy-store-replicated-across.int": {
+    "n": 122,
+    "h": "5e55c1fa"
+  },
+  "replication::SCALE:a-read-heavy-store-replicated-across.int2": {
+    "n": 113,
+    "h": "cd64396b"
+  },
+  "replication::STRUCTURE:walk-me-through-it-one-write.int": {
+    "n": 26,
+    "h": "984d799f"
+  },
+  "replication::STRUCTURE:walk-me-through-it-one-write.int2": {
+    "n": 38,
+    "h": "095bde91"
+  },
+  "retries-timeouts::CLOSE:we-re-nearly-out-of-time.int": {
+    "n": 46,
+    "h": "f6d77ffc"
+  },
+  "retries-timeouts::CLOSE:we-re-nearly-out-of-time.int2": {
+    "n": 41,
+    "h": "06efbeb1"
+  },
+  "retries-timeouts::CURVEBALL/Retry storm:your-retry-logic-is-textbook-exponential.int": {
+    "n": 55,
+    "h": "dd18500f"
+  },
+  "retries-timeouts::CURVEBALL/ambiguity:the-charge-request-to-the-payment.int": {
+    "n": 54,
+    "h": "cf88e402"
+  },
+  "retries-timeouts::CURVEBALL/correlated failure:your-dependency-is-failing-30-of.int": {
+    "n": 57,
+    "h": "b8ddb602"
+  },
+  "retries-timeouts::CURVEBALL/deadline leak:every-hop-in-your-chain-has.int": {
+    "n": 66,
+    "h": "2cecb384"
+  },
+  "retries-timeouts::CURVEBALL/overload:your-dependency-is-overloaded-and-everything.int": {
+    "n": 65,
+    "h": "9d96baae"
+  },
+  "retries-timeouts::CURVEBALL/retry-after:the-dependency-is-returning-429-with.int": {
+    "n": 69,
+    "h": "bb18e6eb"
+  },
+  "retries-timeouts::CURVEBALL/thundering herd:your-cache-has-a-60-second.int": {
+    "n": 60,
+    "h": "b05c9bde"
+  },
+  "retries-timeouts::CURVEBALL/tight timeout:a-senior-engineer-set-the-timeout.int": {
+    "n": 52,
+    "h": "ac49a16d"
+  },
+  "retries-timeouts::FAILURE:the-dependency-recovered-ten-minutes-ago.int": {
+    "n": 46,
+    "h": "ee2793f9"
+  },
+  "retries-timeouts::FAILURE:the-dependency-recovered-ten-minutes-ago.int2": {
+    "n": 52,
+    "h": "1bc33da6"
+  },
+  "retries-timeouts::FRAME:your-service-calls-a-third-party.int": {
+    "n": 50,
+    "h": "f074cea0"
+  },
+  "retries-timeouts::FRAME:your-service-calls-a-third-party.int2": {
+    "n": 36,
+    "h": "5b36e104"
+  },
+  "retries-timeouts::SCALE:a-deep-call-chain-where-every.int": {
+    "n": 45,
+    "h": "d3429d41"
+  },
+  "retries-timeouts::SCALE:a-deep-call-chain-where-every.int2": {
+    "n": 53,
+    "h": "9a804835"
+  },
+  "retries-timeouts::STRUCTURE:design-the-client-walk-me-through.int": {
+    "n": 46,
+    "h": "0c05fd85"
+  },
+  "retries-timeouts::STRUCTURE:design-the-client-walk-me-through.int2": {
+    "n": 41,
+    "h": "1b7672ec"
+  },
+  "rules-engine::CLOSE:sum-it-up-and-what-would.int": {
+    "n": 70,
+    "h": "3df7ba85"
+  },
+  "rules-engine::CLOSE:sum-it-up-and-what-would.int2": {
+    "n": 54,
+    "h": "e8cde99c"
+  },
+  "rules-engine::CURVEBALL/blast radius:the-four-eyes-control-worked-two.int": {
+    "n": 49,
+    "h": "b293d6c5"
+  },
+  "rules-engine::CURVEBALL/blast radius:the-four-eyes-control-worked-two.int2": {
+    "n": 68,
+    "h": "0a781d62"
+  },
+  "rules-engine::CURVEBALL/dashboards:the-health-rollup-refresh-is-stalling.int": {
+    "n": 126,
+    "h": "c5da59d1"
+  },
+  "rules-engine::CURVEBALL/emergency:it-s-3am-a-bad-rule.int": {
+    "n": 106,
+    "h": "0a596aaa"
+  },
+  "rules-engine::CURVEBALL/expressiveness:a-tenant-needs-a-rule-your.int": {
+    "n": 142,
+    "h": "af67fca9"
+  },
+  "rules-engine::CURVEBALL/precedence:two-rules-match-the-same-device.int": {
+    "n": 112,
+    "h": "b9086489"
+  },
+  "rules-engine::CURVEBALL/stale policy:half-your-engine-workers-are-evaluating.int": {
+    "n": 96,
+    "h": "ca5fe27f"
+  },
+  "rules-engine::CURVEBALL/the race:your-four-eyes-check-is-correct.int": {
+    "n": 110,
+    "h": "c08c8676"
+  },
+  "rules-engine::CURVEBALL/two accounts:four-eyes-is-enforced-an-engineer.int": {
+    "n": 122,
+    "h": "c905f87a"
+  },
+  "rules-engine::DESIGN:govern-a-high-stakes-config-change.int": {
+    "n": 120,
+    "h": "2e72b1ad"
+  },
+  "rules-engine::DESIGN:govern-a-high-stakes-config-change.int2": {
+    "n": 47,
+    "h": "76f04f17"
+  },
+  "rules-engine::FAILURE:a-compliance-rule-stopped-firing-three.int": {
+    "n": 41,
+    "h": "d5126161"
+  },
+  "rules-engine::FAILURE:a-compliance-rule-stopped-firing-three.int2": {
+    "n": 52,
+    "h": "c32b46f6"
+  },
+  "rules-engine::FRAME:design-a-rules-engine-with-governed.int": {
+    "n": 41,
+    "h": "b9de496a"
+  },
+  "rules-engine::FRAME:design-a-rules-engine-with-governed.int2": {
+    "n": 44,
+    "h": "93dddfbe"
+  },
+  "rules-engine::SCALE:fifty-rules-across-five-hundred-tenants.int": {
+    "n": 122,
+    "h": "5370d84a"
+  },
+  "rules-engine::SCALE:fifty-rules-across-five-hundred-tenants.int2": {
+    "n": 37,
+    "h": "054650c5"
+  },
+  "rules-engine::STRUCTURE:walk-me-through-it.int": {
+    "n": 43,
+    "h": "5dbd38cd"
+  },
+  "rules-engine::STRUCTURE:walk-me-through-it.int2": {
+    "n": 52,
+    "h": "02c09a4b"
+  },
+  "saga::CLOSE:sum-it-up-and-what-would.int": {
+    "n": 66,
+    "h": "a98328fe"
+  },
+  "saga::CURVEBALL/Ambiguous outcome:your-payment-step-times-out-you.int": {
+    "n": 82,
+    "h": "41113c8d"
+  },
+  "saga::CURVEBALL/Choreography black hole:nine-services-fully-choreographed-no-coordinator.int": {
+    "n": 82,
+    "h": "fb8e6546"
+  },
+  "saga::CURVEBALL/Compensation rejected:your-compensation-is-refund-the-card.int": {
+    "n": 58,
+    "h": "7a747eaa"
+  },
+  "saga::CURVEBALL/Irreversible step:step-3-hands-the-parcel-to.int": {
+    "n": 60,
+    "h": "72156322"
+  },
+  "saga::CURVEBALL/Non-idempotent compensation:your-compensation-for-reserve-1-unit.int": {
+    "n": 59,
+    "h": "e85886ab"
+  },
+  "saga::CURVEBALL/Poison saga:a-malformed-event-makes-step-2.int": {
+    "n": 70,
+    "h": "fde22271"
+  },
+  "saga::CURVEBALL/Split-brain orchestrator:you-run-two-orchestrator-instances-for.int": {
+    "n": 48,
+    "h": "1110f87c"
+  },
+  "saga::CURVEBALL/isolation:two-concurrent-sagas-both-act-on.int": {
+    "n": 64,
+    "h": "5485931c"
+  },
+  "saga::DESIGN:choosing-choreography-vs-orchestration-for-a.int": {
+    "n": 74,
+    "h": "0cfab8a5"
+  },
+  "saga::DESIGN:choosing-choreography-vs-orchestration-for-a.int2": {
+    "n": 108,
+    "h": "c8b55e03"
+  },
+  "saga::FAILURE:an-order-has-been-sitting-in.int": {
+    "n": 52,
+    "h": "699d4406"
+  },
+  "saga::FAILURE:an-order-has-been-sitting-in.int2": {
+    "n": 64,
+    "h": "74106eb8"
+  },
+  "saga::FRAME:design-checkout-placing-an-order-reserves.int": {
+    "n": 58,
+    "h": "b2b75ce5"
+  },
+  "saga::FRAME:design-checkout-placing-an-order-reserves.int2": {
+    "n": 53,
+    "h": "57aedd9c"
+  },
+  "saga::SCALE:an-order-placement-flow-across-inventory.int": {
+    "n": 81,
+    "h": "408bdb12"
+  },
+  "saga::SCALE:an-order-placement-flow-across-inventory.int2": {
+    "n": 89,
+    "h": "08919bf9"
+  },
+  "saga::STRUCTURE:walk-me-through-it-the-happy.int": {
+    "n": 51,
+    "h": "fd6838f1"
+  },
+  "sharding-strategies::CLOSE:sum-it-up-and-what-would.int": {
+    "n": 51,
+    "h": "607a69b4"
+  },
+  "sharding-strategies::CLOSE:sum-it-up-and-what-would.int2": {
+    "n": 44,
+    "h": "4be5ded4"
+  },
+  "sharding-strategies::CURVEBALL/cross-shard write:a-transfer-moves-money-from-account.int": {
+    "n": 53,
+    "h": "abd8093a"
+  },
+  "sharding-strategies::CURVEBALL/emergent hot key:a-key-that-was-cold-yesterday.int": {
+    "n": 49,
+    "h": "2580ee18"
+  },
+  "sharding-strategies::CURVEBALL/fan-out tail:every-shard-reports-a-healthy-p99.int": {
+    "n": 74,
+    "h": "27427a37"
+  },
+  "sharding-strategies::CURVEBALL/hot tenant:you-shard-by-tenant-id-it.int": {
+    "n": 54,
+    "h": "263ba785"
+  },
+  "sharding-strategies::CURVEBALL/hot tenant:you-shard-by-tenant-id-it.int2": {
+    "n": 57,
+    "h": "251e9ea3"
+  },
+  "sharding-strategies::CURVEBALL/id collision:you-sharded-and-now-two-rows.int": {
+    "n": 52,
+    "h": "e4ea082f"
+  },
+  "sharding-strategies::CURVEBALL/migration rollback:you-are-60-through-cutting-reads.int": {
+    "n": 61,
+    "h": "831098d2"
+  },
+  "sharding-strategies::CURVEBALL/mod-N:you-are-on-8-shards-using.int": {
+    "n": 54,
+    "h": "01bb0b5f"
+  },
+  "sharding-strategies::CURVEBALL/wrong-key:a-team-sharded-their-orders-table.int": {
+    "n": 103,
+    "h": "5965aebf"
+  },
+  "sharding-strategies::DESIGN:resharding-a-live-production-shard-with.int": {
+    "n": 110,
+    "h": "8ae1e249"
+  },
+  "sharding-strategies::DESIGN:resharding-a-live-production-shard-with.int2": {
+    "n": 44,
+    "h": "e77395f8"
+  },
+  "sharding-strategies::FRAME:your-database-has-outgrown-a-single.int": {
+    "n": 40,
+    "h": "92dae8a3"
+  },
+  "sharding-strategies::FRAME:your-database-has-outgrown-a-single.int2": {
+    "n": 30,
+    "h": "418076eb"
+  },
+  "sharding-strategies::SCALE:a-write-bound-oltp-database-that.int": {
+    "n": 112,
+    "h": "d2a90bc0"
+  },
+  "sharding-strategies::SCALE:a-write-bound-oltp-database-that.int2": {
+    "n": 51,
+    "h": "b9a873fe"
+  },
+  "sharding-strategies::STRUCTURE:walk-me-through-it-the-key.int": {
+    "n": 34,
+    "h": "2871820b"
+  },
+  "sharding-strategies::STRUCTURE:walk-me-through-it-the-key.int2": {
+    "n": 42,
+    "h": "34edff7c"
+  },
+  "shared-definition::CLOSE:two-sentences-sell-me-the-design.int": {
+    "n": 34,
+    "h": "eb281267"
+  },
+  "shared-definition::CURVEBALL/adding a level:product-wants-a-device-group-between.int": {
+    "n": 28,
+    "h": "6d9d194d"
+  },
+  "shared-definition::CURVEBALL/cache eviction:you-cache-resolved-values-a-site.int": {
+    "n": 31,
+    "h": "f3928878"
+  },
+  "shared-definition::CURVEBALL/default blast radius:someone-edited-one-definition-row-and.int": {
+    "n": 33,
+    "h": "2bc0b8b5"
+  },
+  "shared-definition::CURVEBALL/integrity:the-polymorphic-key-has-no-foreign.int": {
+    "n": 29,
+    "h": "3c9171c3"
+  },
+  "shared-definition::CURVEBALL/non-deterministic resolution:a-device-is-in-two-tags.int": {
+    "n": 32,
+    "h": "57db659b"
+  },
+  "shared-definition::CURVEBALL/over-application:your-team-now-models-every-new.int": {
+    "n": 33,
+    "h": "e7ed7585"
+  },
+  "shared-definition::CURVEBALL/tenant scope:a-resolution-query-returned-one-tenant.int": {
+    "n": 41,
+    "h": "c85365c8"
+  },
+  "shared-definition::CURVEBALL/the null override:an-entity-sets-a-value-to.int": {
+    "n": 35,
+    "h": "4533ff44"
+  },
+  "shared-definition::FAILURE:a-device-kept-ignoring-a-config.int": {
+    "n": 27,
+    "h": "f989a24f"
+  },
+  "shared-definition::FAILURE:a-device-kept-ignoring-a-config.int2": {
+    "n": 25,
+    "h": "d3b62d56"
+  },
+  "shared-definition::FRAME:store-a-setting-that-has-a.int": {
+    "n": 33,
+    "h": "5528fa99"
+  },
+  "shared-definition::FRAME:store-a-setting-that-has-a.int2": {
+    "n": 29,
+    "h": "0f7fa9a5"
+  },
+  "shared-definition::SCALE:two-hundred-attributes-across-fifty-thousand.int": {
+    "n": 31,
+    "h": "54599cc7"
+  },
+  "shared-definition::SCALE:two-hundred-attributes-across-fifty-thousand.int2": {
+    "n": 24,
+    "h": "c58b2bef"
+  },
+  "shared-definition::STRUCTURE:walk-me-through-it-definition-to.int": {
+    "n": 29,
+    "h": "c16bc787"
+  },
+  "signing::CLOSE:sum-it-up-and-what-would.int": {
+    "n": 56,
+    "h": "0dff9c05"
+  },
+  "signing::CURVEBALL/Cost:finance-says-the-signing-infrastructure-bill.int": {
+    "n": 28,
+    "h": "44b4a00e"
+  },
+  "signing::CURVEBALL/Downgrade:an-attacker-re-pushes-an-old.int": {
+    "n": 31,
+    "h": "743f5adf"
+  },
+  "signing::CURVEBALL/Multi-region:your-signing-service-and-its-hsm.int": {
+    "n": 33,
+    "h": "58a69da3"
+  },
+  "signing::CURVEBALL/Offline fleet:you-need-to-rotate-a-signing.int": {
+    "n": 45,
+    "h": "c777a23a"
+  },
+  "signing::CURVEBALL/Silent failure:a-library-upgrade-quietly-changed-your.int": {
+    "n": 30,
+    "h": "cca9ca64"
+  },
+  "signing::CURVEBALL/Supply chain:how-do-you-know-the-build.int": {
+    "n": 21,
+    "h": "fbc86a0d"
+  },
+  "signing::CURVEBALL/Tenant isolation:tenant-a-s-key-signed-a.int": {
+    "n": 36,
+    "h": "c7cbe0f3"
+  },
+  "signing::CURVEBALL/Version concurrency:two-releases-for-the-same-tenant.int": {
+    "n": 33,
+    "h": "90f9e891"
+  },
+  "signing::FAILURE:a-signing-key-leaks-now-what.int": {
+    "n": 44,
+    "h": "502718c1"
+  },
+  "signing::FAILURE:a-signing-key-leaks-now-what.int2": {
+    "n": 39,
+    "h": "9123e552"
+  },
+  "signing::FRAME:design-package-signing-start-wherever-you.int": {
+    "n": 42,
+    "h": "6af19ef2"
+  },
+  "signing::FRAME:design-package-signing-start-wherever-you.int2": {
+    "n": 38,
+    "h": "521fafbf"
+  },
+  "signing::SCALE:a-release-drops-to-50-000.int": {
+    "n": 34,
+    "h": "c6df4538"
+  },
+  "signing::SCALE:a-release-drops-to-50-000.int2": {
+    "n": 31,
+    "h": "ee1421c7"
+  },
+  "signing::STRUCTURE:walk-me-through-it.int": {
+    "n": 39,
+    "h": "15d9032b"
+  },
+  "slos::CLOSE:sum-it-up-and-what-would.int": {
+    "n": 82,
+    "h": "f67ba0be"
+  },
+  "slos::CURVEBALL/Green SLI, angry users:your-slo-dashboard-is-green-all.int": {
+    "n": 66,
+    "h": "bf416f98"
+  },
+  "slos::CURVEBALL/dependency-ceiling:your-team-commits-to-a-99.int": {
+    "n": 81,
+    "h": "e9ce5600"
+  },
+  "slos::CURVEBALL/gamed-denominator:a-team-s-slo-went-from.int": {
+    "n": 91,
+    "h": "a9d9b2a1"
+  },
+  "slos::CURVEBALL/low-traffic:an-internal-service-handles-10-requests.int": {
+    "n": 79,
+    "h": "1492a061"
+  },
+  "slos::CURVEBALL/maintenance-exemption:your-sla-excludes-announced-maintenance-windows.int": {
+    "n": 66,
+    "h": "c83f3df7"
+  },
+  "slos::CURVEBALL/measurement-blind-spot:your-api-was-hard-down-for.int": {
+    "n": 81,
+    "h": "9ca03ac7"
+  },
+  "slos::CURVEBALL/no-teeth:your-slo-dashboard-is-beautiful-burn.int": {
+    "n": 83,
+    "h": "306fdf29"
+  },
+  "slos::CURVEBALL/over-delivery:your-service-has-held-99-99.int": {
+    "n": 86,
+    "h": "063a40a8"
+  },
+  "slos::DESIGN:on-call-alerting-for-a-service.int": {
+    "n": 166,
+    "h": "058b61e4"
+  },
+  "slos::DESIGN:on-call-alerting-for-a-service.int2": {
+    "n": 65,
+    "h": "f7efa9cd"
+  },
+  "slos::FAILURE:one-incident-just-burned-90-of.int": {
+    "n": 55,
+    "h": "9ecd7c60"
+  },
+  "slos::FAILURE:one-incident-just-burned-90-of.int2": {
+    "n": 94,
+    "h": "811afd30"
+  },
+  "slos::FRAME:make-this-service-reliable-start-wherever.int": {
+    "n": 44,
+    "h": "e5fac7db"
+  },
+  "slos::FRAME:make-this-service-reliable-start-wherever.int2": {
+    "n": 53,
+    "h": "50ea3336"
+  },
+  "slos::SCALE:a-payment-service-that-needs-a.int": {
+    "n": 168,
+    "h": "d1272d90"
+  },
+  "slos::SCALE:a-payment-service-that-needs-a.int2": {
+    "n": 72,
+    "h": "5dbcb762"
+  },
+  "slos::STRUCTURE:walk-me-through-it-from-a.int": {
+    "n": 39,
+    "h": "c7250c76"
+  },
+  "soft-delete::CLOSE:two-sentences-sell-me-the-design.int": {
+    "n": 39,
+    "h": "b14147f9"
+  },
+  "soft-delete::CURVEBALL/aggregates:finance-says-the-active-customers-number.int": {
+    "n": 41,
+    "h": "2e5ae7d5"
+  },
+  "soft-delete::CURVEBALL/bloat:the-table-is-80-tombstones-a.int": {
+    "n": 49,
+    "h": "7d4125fc"
+  },
+  "soft-delete::CURVEBALL/cascade:deleting-a-team-is-timing-out.int": {
+    "n": 48,
+    "h": "704a4c71"
+  },
+  "soft-delete::CURVEBALL/constraint:a-user-deletes-their-account-then.int": {
+    "n": 46,
+    "h": "825ecb31"
+  },
+  "soft-delete::CURVEBALL/escape hatch:an-engineer-added-unscoped-to-fix.int": {
+    "n": 61,
+    "h": "9b102e0c"
+  },
+  "soft-delete::CURVEBALL/escape hatch:an-engineer-added-unscoped-to-fix.int2": {
+    "n": 51,
+    "h": "d0fa69c0"
+  },
+  "soft-delete::CURVEBALL/purge:your-purge-job-ran-and-took.int": {
+    "n": 63,
+    "h": "0baa969f"
+  },
+  "soft-delete::CURVEBALL/referential integrity:your-foreign-keys-are-all-intact.int": {
+    "n": 85,
+    "h": "13368da2"
+  },
+  "soft-delete::CURVEBALL/referential integrity:your-foreign-keys-are-all-intact.int2": {
+    "n": 59,
+    "h": "d16704b5"
+  },
+  "soft-delete::CURVEBALL/restore conflict:a-deleted-user-asks-to-come.int": {
+    "n": 52,
+    "h": "b33d6b1c"
+  },
+  "soft-delete::CURVEBALL/restore conflict:a-deleted-user-asks-to-come.int2": {
+    "n": 37,
+    "h": "549761fe"
+  },
+  "soft-delete::CURVEBALL/revocation:you-revoke-a-user-s-access.int": {
+    "n": 62,
+    "h": "78cbd146"
+  },
+  "soft-delete::DESIGN:deletes-that-must-be-undoable-but.int": {
+    "n": 123,
+    "h": "8555781d"
+  },
+  "soft-delete::DESIGN:deletes-that-must-be-undoable-but.int2": {
+    "n": 48,
+    "h": "81071854"
+  },
+  "soft-delete::FAILURE:a-deleted-user-is-still-appearing.int": {
+    "n": 40,
+    "h": "814bd59c"
+  },
+  "soft-delete::FAILURE:a-deleted-user-is-still-appearing.int2": {
+    "n": 33,
+    "h": "5930f3cb"
+  },
+  "soft-delete::FRAME:design-deletes-for-a-system-where.int": {
+    "n": 39,
+    "h": "8b10317a"
+  },
+  "soft-delete::FRAME:design-deletes-for-a-system-where.int2": {
+    "n": 43,
+    "h": "c02f1f20"
+  },
+  "soft-delete::SCALE:ten-million-rows-a-fifth-soft.int": {
+    "n": 135,
+    "h": "3a3d7c70"
+  },
+  "soft-delete::SCALE:ten-million-rows-a-fifth-soft.int2": {
+    "n": 39,
+    "h": "50facb6b"
+  },
+  "soft-delete::STRUCTURE:walk-me-through-it-the-delete.int": {
+    "n": 35,
+    "h": "7a67d116"
+  },
+  "soft-delete::STRUCTURE:walk-me-through-it-the-delete.int2": {
+    "n": 26,
+    "h": "db66a616"
+  },
+  "state-machine::CLOSE:sum-it-up-and-what-would.int": {
+    "n": 32,
+    "h": "e5b25e4e"
+  },
+  "state-machine::CURVEBALL/Concurrency:two-admins-approve-the-same-document.int": {
+    "n": 24,
+    "h": "fef29c4b"
+  },
+  "state-machine::CURVEBALL/distributed:the-lifecycle-now-spans-three-services.int": {
+    "n": 40,
+    "h": "e561338d"
+  },
+  "state-machine::CURVEBALL/evolution:you-must-remove-a-state-that.int": {
+    "n": 24,
+    "h": "2ec3cb7f"
+  },
+  "state-machine::CURVEBALL/exactly-once:the-transition-charges-a-card-and.int": {
+    "n": 30,
+    "h": "93531ae7"
+  },
+  "state-machine::CURVEBALL/explosion:the-machine-has-grown-to-40.int": {
+    "n": 29,
+    "h": "08cece2a"
+  },
+  "state-machine::CURVEBALL/hot-entity:one-tenant-s-entity-takes-30.int": {
+    "n": 122,
+    "h": "e68b911c"
+  },
+  "state-machine::CURVEBALL/overkill:the-interviewer-pushes-isn-t-a.int": {
+    "n": 155,
+    "h": "14f7c5f4"
+  },
+  "state-machine::CURVEBALL/retry:a-processing-step-fails-intermittently-and.int": {
+    "n": 139,
+    "h": "7e1fb297"
+  },
+  "state-machine::DESIGN:a-two-approver-mfa-gated-document.int": {
+    "n": 122,
+    "h": "e700a236"
+  },
+  "state-machine::DESIGN:a-two-approver-mfa-gated-document.int2": {
+    "n": 29,
+    "h": "8f273ed1"
+  },
+  "state-machine::FRAME:model-an-order-or-document-lifecycle.int": {
+    "n": 34,
+    "h": "3ee2a0db"
+  },
+  "state-machine::FRAME:model-an-order-or-document-lifecycle.int2": {
+    "n": 24,
+    "h": "6ee17295"
+  },
+  "state-machine::SCALE:an-eight-state-lifecycle-with-several.int": {
+    "n": 137,
+    "h": "5fa1ed5e"
+  },
+  "state-machine::SCALE:an-eight-state-lifecycle-with-several.int2": {
+    "n": 75,
+    "h": "ed6b5425"
+  },
+  "state-machine::STRUCTURE:walk-me-through-it-entry-to.int": {
+    "n": 24,
+    "h": "a4caafe6"
+  },
+  "storage-engines::CLOSE:sum-it-up-and-what-would.int": {
+    "n": 48,
+    "h": "3718cf15"
+  },
+  "storage-engines::CURVEBALL/endurance burn:your-fleet-s-ssds-are-wearing.int": {
+    "n": 50,
+    "h": "43a14922"
+  },
+  "storage-engines::CURVEBALL/fsync durability:your-database-fsyncs-the-wal-on.int": {
+    "n": 42,
+    "h": "4b8f13dd"
+  },
+  "storage-engines::CURVEBALL/hardware pushback:you-justified-the-lsm-with-sequential.int": {
+    "n": 58,
+    "h": "baad0df3"
+  },
+  "storage-engines::CURVEBALL/one failure, two names:you-are-a-postgres-shop-so.int": {
+    "n": 46,
+    "h": "274cba26"
+  },
+  "storage-engines::CURVEBALL/rum:you-re-told-just-add-more.int": {
+    "n": 119,
+    "h": "cd597c6a"
+  },
+  "storage-engines::CURVEBALL/space deadlock:your-lsm-store-s-disk-is.int": {
+    "n": 41,
+    "h": "704b5165"
+  },
+  "storage-engines::CURVEBALL/the RAM cliff:the-database-is-fast-in-staging.int": {
+    "n": 48,
+    "h": "9b1b7f3e"
+  },
+  "storage-engines::CURVEBALL/tombstone graveyard:you-built-a-job-queue-on.int": {
+    "n": 51,
+    "h": "def5c8fb"
+  },
+  "storage-engines::DESIGN:a-system-needing-both-fast-transactional.int": {
+    "n": 136,
+    "h": "26cbbff9"
+  },
+  "storage-engines::DESIGN:a-system-needing-both-fast-transactional.int2": {
+    "n": 141,
+    "h": "9df0ac0e"
+  },
+  "storage-engines::FAILURE:write-latency-was-fine-for-weeks.int": {
+    "n": 33,
+    "h": "7415af25"
+  },
+  "storage-engines::FAILURE:write-latency-was-fine-for-weeks.int2": {
+    "n": 47,
+    "h": "a4534b7e"
+  },
+  "storage-engines::FRAME:design-the-storage-layer-for-a.int": {
+    "n": 38,
+    "h": "236f278b"
+  },
+  "storage-engines::SCALE:a-high-ingest-time-series-event.int": {
+    "n": 116,
+    "h": "e5c6302a"
+  },
+  "storage-engines::SCALE:a-high-ingest-time-series-event.int2": {
+    "n": 137,
+    "h": "28025fbc"
+  },
+  "storage-engines::STRUCTURE:walk-me-through-it-a-write.int": {
+    "n": 34,
+    "h": "4b2228a0"
+  },
+  "storage-engines::STRUCTURE:walk-me-through-it-a-write.int2": {
+    "n": 57,
+    "h": "79297fc3"
+  },
+  "stream-batch-processing::CLOSE:sum-it-up-and-what-would.int": {
+    "n": 60,
+    "h": "ed8e572b"
+  },
+  "stream-batch-processing::CLOSE:sum-it-up-and-what-would.int2": {
+    "n": 42,
+    "h": "1826c583"
+  },
+  "stream-batch-processing::CURVEBALL/Backpressure vs drop:under-a-traffic-spike-your-job.int": {
+    "n": 69,
+    "h": "0eb91af6"
+  },
+  "stream-batch-processing::CURVEBALL/Duplicate under retry:a-consumer-reads-a-record-updates.int": {
+    "n": 44,
+    "h": "85862d95"
+  },
+  "stream-batch-processing::CURVEBALL/Exactly-once illusion:your-flink-job-is-configured-for.int": {
+    "n": 50,
+    "h": "f4dac3d9"
+  },
+  "stream-batch-processing::CURVEBALL/Hot key skew:one-key-a-single-celebrity-user.int": {
+    "n": 41,
+    "h": "97d36cd4"
+  },
+  "stream-batch-processing::CURVEBALL/Late-data flood:a-mobile-client-was-offline-for.int": {
+    "n": 41,
+    "h": "097213d5"
+  },
+  "stream-batch-processing::CURVEBALL/Reprocessing cost:kappa-you-need-to-reprocess-two.int": {
+    "n": 50,
+    "h": "95b40ebe"
+  },
+  "stream-batch-processing::CURVEBALL/Small files:your-streaming-job-writes-results-to.int": {
+    "n": 43,
+    "h": "ce51810c"
+  },
+  "stream-batch-processing::CURVEBALL/reprocessing:a-bug-in-your-streaming-aggregation.int": {
+    "n": 159,
+    "h": "31b8eca4"
+  },
+  "stream-batch-processing::DESIGN:choosing-an-architecture-for-a-metric.int": {
+    "n": 33,
+    "h": "fa175fb2"
+  },
+  "stream-batch-processing::DESIGN:choosing-an-architecture-for-a-metric.int2": {
+    "n": 140,
+    "h": "78158582"
+  },
+  "stream-batch-processing::FAILURE:your-per-minute-metric-suddenly-stops.int": {
+    "n": 46,
+    "h": "85ae944d"
+  },
+  "stream-batch-processing::FAILURE:your-per-minute-metric-suddenly-stops.int2": {
+    "n": 32,
+    "h": "f8326236"
+  },
+  "stream-batch-processing::FRAME:design-a-system-to-compute-a.int": {
+    "n": 38,
+    "h": "6b9cedae"
+  },
+  "stream-batch-processing::FRAME:design-a-system-to-compute-a.int2": {
+    "n": 41,
+    "h": "e3723d25"
+  },
+  "stream-batch-processing::SCALE:a-real-time-analytics-pipeline-computing.int": {
+    "n": 35,
+    "h": "ebfb23fc"
+  },
+  "stream-batch-processing::SCALE:a-real-time-analytics-pipeline-computing.int2": {
+    "n": 145,
+    "h": "3b7bad94"
+  },
+  "stream-batch-processing::STRUCTURE:walk-me-through-a-streaming-pipeline.int": {
+    "n": 31,
+    "h": "00cde5fc"
+  },
+  "stream-batch-processing::STRUCTURE:walk-me-through-a-streaming-pipeline.int2": {
+    "n": 27,
+    "h": "1c3477de"
+  }
+}

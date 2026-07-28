@@ -260,7 +260,7 @@ Ordered by what the fix wave should do first.
 
 | Topic | Finding | What it means |
 |---|---|---|
-| `real-time-delivery` | `dead_flag_always_positive:6` | "Write amplification" — the breach flag is on for **every follower count the pane can be given**. Verified: `over` is false only below 1 follower. |
+| `real-time-delivery` | `dead_flag_always_positive:6` | "Write amplification" — the breach flag is on for **every follower count the pane can be given**. Verified: `over` is false only below 1,000 followers (the input is in thousands; corrected by cold-verify F5). |
 | `event-driven` | `input_decorative:maxRecv` | "Max receives" is a user-settable assumption that moves **only note prose** (row 6's key and note). It feeds no figure and no flag. |
 | `signing` | `input_decorative:s_size` | "Avg package (MB)" likewise — moves only the notes on rows 3 and 4. |
 
@@ -295,7 +295,7 @@ GATE: PASS
 GATE EXIT=0
 ```
 
-**57 of 57 checks PASS. Zero FAIL, zero SKIP** — the browser was present, so this is the full gate
+**55 of 55 checks PASS. Zero FAIL, zero SKIP** *(count corrected by cold-verify: master registers 54, this branch adds exactly one; post-union with the cram checker = 56)* — the browser was present, so this is the full gate
 including the pixel-diffing `visual_regression`, not the CI-safe subset. The new row:
 
 ```
@@ -352,7 +352,8 @@ that edits a `compute()` — it is the audit of whether the cap has started cost
   has already written by the time it runs (and the check fails with an explicit "run `npm run
   build`" message rather than a confusing error if the directory is ever absent).
 - **The one expected merge collision** is the `check_all.py` registration tuple, which the parallel
-  cram-checker wave also appends to. My change is one tuple plus its comment; the union is
+  cram-checker wave also appends to (cold-verify measured the hunks DISJOINT — different anchor
+  lines — so the predicted conflict does not materialize; auto-merge is clean). My change is one tuple plus its comment; the union is
   mechanical.
 - Nothing else is shared. `test/numbers_lattice.mjs` and `test/numbers_lattice_debt.json` are new
   files no other wave touches.

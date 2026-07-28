@@ -789,15 +789,16 @@ function main() {
     + evaluations.toLocaleString('en-US') + ' evaluations (' + exhaustiveN + ' exhaustive), '
     + totalFindings + ' defect(s) in ' + Object.keys(detected).length + ' topic(s), all allowlisted';
 
-  if (VERBOSE || isNew.length || stale.length) {
-    if (skipped.length) {
-      console.log('\nSKIPPED (' + skipped.length + ') -- not driven, and not counted as clean:');
-      skipped.forEach(([id, why]) => console.log('  - ' + toAscii(id) + ': ' + toAscii(why)));
-    }
-    if (noteLines.length) {
-      console.log('\nPARTIAL COVERAGE (' + noteLines.length + '):');
-      noteLines.forEach((l) => console.log('  - ' + toAscii(l)));
-    }
+  /* Honesty surfaces print UNCONDITIONALLY (cold-verify F4): the freeze report promises the
+     partial-coverage note "on every run", and a coverage caveat gated behind VERBOSE is a
+     caveat nobody reads. */
+  if (skipped.length) {
+    console.log('\nSKIPPED (' + skipped.length + ') -- not driven, and not counted as clean:');
+    skipped.forEach(([id, why]) => console.log('  - ' + toAscii(id) + ': ' + toAscii(why)));
+  }
+  if (noteLines.length) {
+    console.log('\nPARTIAL COVERAGE (' + noteLines.length + '):');
+    noteLines.forEach((l) => console.log('  - ' + toAscii(l)));
   }
   if (VERBOSE) {
     console.log('\nDETECTED (' + totalFindings + '):');

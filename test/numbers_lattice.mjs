@@ -98,6 +98,7 @@ const HERE = path.dirname(url.fileURLToPath(import.meta.url));
 const ROOT = path.dirname(HERE);
 const TOPICS = path.join(ROOT, 'src', 'topics');
 const GENERATED = path.join(TOPICS, '_generated');
+const MD_DIR = path.join(ROOT, 'src', 'topics-md');   // the INDEPENDENT coverage reference
 const DEBT_FILE = path.join(HERE, 'numbers_lattice_debt.json');
 
 const WRITE_DEBT = process.argv.includes('--write-debt');
@@ -717,6 +718,23 @@ function main() {
   const targets = discover();
   if (!targets.length) {
     console.log('NUMBERS LATTICE: FAIL (no num slices found -- run `npm run build` to write src/topics/_generated/)');
+    process.exit(1);
+  }
+
+  /* COVERAGE IS ASSERTED AGAINST AN INDEPENDENT REFERENCE, because the interesting failure is not
+   * an empty run -- it is a SHORT one that still reads like a full one. src/topics/_generated/ is
+   * gitignored build output; the 8 hand-coded slices are committed. So with the generated tree
+   * absent this check happily drove 8 topics and reported "8/8 topics driven", which is a true
+   * sentence and a completely misleading one. On an empty baseline it would have printed PASS
+   * while covering 8 of 46. The reference is the authored markdown -- files this check does not
+   * write, parse, or otherwise depend on -- and a shortfall is a HARNESS fault, not a defect. */
+  const authored = fs.existsSync(MD_DIR)
+    ? fs.readdirSync(MD_DIR).filter((f) => f.endsWith('.md')).length : 0;
+  const compiled = targets.filter((t) => t.origin === 'compiled').length;
+  if (compiled < authored) {
+    console.log('NUMBERS LATTICE: FAIL (' + compiled + ' compiled num slices for ' + authored
+      + ' authored topics in src/topics-md/ -- ' + (authored - compiled) + ' missing. This is a '
+      + 'COVERAGE SHORTFALL, not a clean corpus: run `npm run build` to write src/topics/_generated/.)');
     process.exit(1);
   }
 

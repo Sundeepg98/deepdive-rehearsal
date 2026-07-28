@@ -649,21 +649,21 @@ The calls that separate "folders in one repo" from a microfrontend architecture 
 ### Microfrontends vs a modular monolith
 
 - Modular monolith: the **default**. One build, one deploy, clear module boundaries, lint-enforced, code-split per route. You get ownership, lazy loading, one React, whole-program optimization, and a fast page --- everything except an independent release.
-- Microfrontends: when **release contention is measurably hurting you** --- teams batching into a weekly train, blocked by each other's failures, unable to roll back without reverting someone else's work. The only thing that fixes it, and the only reason to pay for it.
+- Microfrontends: **release contention is measurably hurting you** --- teams batching into a weekly train, blocked by each other's failures, unable to roll back without reverting someone else's work. The only thing that fixes it, and the only reason to pay for it.
 
 Default to the modular monolith and mean it. The one thing it cannot give you is a separate *release*, so measure that first --- deploy frequency per team, blocked releases, coordination time --- and only then split. Adopting for "the codebase is big" buys a slower page and a permanent coordination surface for a problem you don't have.
 
 ### Run-time composition (single-spa) vs build-time contracts (Module Federation)
 
-- single-spa + import maps: when **deployment independence** is what you're maximizing. Apps agree on a URL and a lifecycle and nothing else, so you can mix build tools and frameworks, and a deploy is one pointer. You wire dependency sharing yourself.
-- Module Federation: when apps **share heavily** (same framework, a big design system) and a **platform team owns the build config**. `shared`/`exposes`/`remotes` and shared-scope negotiation beat hand-rolling it --- at the cost of a build contract coordinated across teams.
+- single-spa + import maps: **deployment independence** is what you're maximizing. Apps agree on a URL and a lifecycle and nothing else, so you can mix build tools and frameworks, and a deploy is one pointer. You wire dependency sharing yourself.
+- Module Federation: apps **share heavily** (same framework, a big design system) and a **platform team owns the build config**. `shared`/`exposes`/`remotes` and shared-scope negotiation beat hand-rolling it --- at the cost of a build contract coordinated across teams.
 
 Both load at runtime; what differs is **where the contract lives** --- a URL and a lifecycle, or a build config. Federation if sharing is the hard part and someone owns the build; single-spa if decoupling is. And they're not exclusive: plenty of shops run single-spa as the router with federation doing the sharing underneath.
 
 ### Sharing dependencies vs full independence
 
 - Shared singletons: **almost always**. One copy of the framework and the design system for the whole page. The bill is a single version everyone must satisfy, so the shared graph becomes a coordination surface.
-- Fully independent bundles: when apps are genuinely **isolated trees** that never pass components, context, or hooks across the seam --- or **temporarily**, during a shared-major migration, to let apps upgrade on their own schedule.
+- Fully independent bundles: apps are genuinely **isolated trees** that never pass components, context, or hooks across the seam --- or **temporarily**, during a shared-major migration, to let apps upgrade on their own schedule.
 
 Share the heavy common dependencies and accept the version-alignment coupling; the payload cost of not sharing dwarfs the autonomy you'd gain. But know the escape hatch: **deliberately un-sharing during a React major upgrade** --- eating duplicate bytes for a window so apps can move independently --- is the move that turns a flag day into a rolling migration.
 
@@ -690,7 +690,7 @@ The architecture *permits* framework diversity and you should *use* that permiss
 
 ### Shadow DOM vs build-time scoped CSS
 
-- Shadow DOM: when you genuinely **cannot trust the code you're mounting** (third-party or legacy apps). It is the only *hard* guarantee --- a rogue global selector physically cannot reach in.
+- Shadow DOM: you genuinely **cannot trust the code you're mounting** (third-party or legacy apps). It is the only *hard* guarantee --- a rogue global selector physically cannot reach in.
 - Scoped CSS (CSS Modules, hashed classes, an app prefix): the **pragmatic default** for first-party apps. No integration friction, and it scopes everything you author.
 
 Shadow DOM's isolation is a wall, not a filter: portals (modals, tooltips, dropdowns) **escape it**, and global stylesheets don't reach in --- though inherited properties and custom properties do, which is what keeps token theming working. Scoping is only a *convention*, so back it with a **lint rule that fails the build** on global selectors, plus visual regression **on the composed page** --- a single-app test structurally cannot see a leak.

@@ -37,12 +37,12 @@ var TOPIC_EAV_TRADE = {
     { q:'One generic value column <span class="vs">vs</span> per-type columns',
       opts:[
         { n:'One value column (text / JSONB)', when:'Simplest &mdash; a single column holds the coerced value; typing is enforced in the app via the definition&rsquo;s data_type, and JSONB can carry typed values.' },
-        { n:'Per-type columns (value_int, value_str, value_json)', when:'When you want the database to type and index values natively &mdash; numeric ranges, typed indexes &mdash; at the cost of a wider, sparser value table.' }
+        { n:'Per-type columns (value_int, value_str, value_json)', when:'you want the database to type and index values natively &mdash; numeric ranges, typed indexes &mdash; at the cost of a wider, sparser value table.' }
       ],
       tell:'Trade DB-native typing/indexing against schema simplicity. One column is simpler; per-type columns give real numeric ordering and typed indexes but complicate reads and writes. Either way the definition stays the source of truth for an attribute&rsquo;s type.' },
     { q:'Staged write + promote <span class="vs">vs</span> direct write',
       opts:[
-        { n:'Staged, then atomic promote', when:'When a config change must be reviewed, or applied as a consistent set, so the device never runs a half-applied configuration.' },
+        { n:'Staged, then atomic promote', when:'a config change must be reviewed, or applied as a consistent set, so the device never runs a half-applied configuration.' },
         { n:'Direct write (live immediately)', when:'For low-risk, single-value changes where immediate effect is fine and there&rsquo;s nothing to review or batch together.' }
       ],
       tell:'Match ceremony to risk. A reviewed, multi-value change wants staging + atomic promote (like a deploy); a one-off flag toggle doesn&rsquo;t need the workflow. Staging&rsquo;s value is the all-or-nothing cutover, not the write itself.' }

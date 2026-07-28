@@ -712,7 +712,7 @@ Choose by what a lost write costs. LWW only when losing one is genuinely accepta
 ### Strict quorum vs sloppy quorum
 
 - Strict quorum: the W acknowledging nodes always come from the key's home replica set, so R + W > N really does guarantee overlap and a fresh read -- but if enough home replicas are unreachable, the write is simply refused
-- Sloppy quorum (hinted handoff): when the home replicas are down, any available node accepts the write and hands it off later, so writes keep succeeding through a failure -- but the acking nodes may have zero overlap with the read set, so the R + W > N guarantee is void until the hints drain
+- Sloppy quorum (hinted handoff): the home replicas are down and writes must keep succeeding through the failure -- any available node accepts and hands it off later, but the acking nodes may have zero overlap with the read set, so the R + W > N guarantee is void until the hints drain
 
 This is a real fork and most people do not know they have taken it. Strict when a read must not miss an acknowledged write (anything on a correctness path). Sloppy when write **availability** is the product requirement and a temporarily-invisible write is survivable (a shopping cart, telemetry, a session). The unforgivable version is running sloppy while *claiming* R + W > N --- the arithmetic still holds and the guarantee does not.
 

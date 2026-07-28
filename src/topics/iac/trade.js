@@ -24,8 +24,8 @@ var TOPIC_IAC_TRADE = {
       tell:'State is the unit of blast radius, locking, and plan time. Split at real seams (env, risk, ownership, change-rate) and wire via published outputs &mdash; but don&rsquo;t over-split, since each boundary is a cross-state dependency you must apply in order.' },
     { q:'Config DSL (HCL) <span class="vs">vs</span> general-purpose language (CDK / Pulumi)',
       opts:[
-        { n:'Config DSL', when:'When you want the config to stay close to declarative and legible &mdash; the plan reflects the code, and reviewers read intent without running a program.' },
-        { n:'General-purpose language', when:'When infrastructure genuinely needs real abstraction &mdash; loops over complex data, typed constructs, unit tests, reuse of team language skills.' }
+        { n:'Config DSL', when:'you want the config to stay close to declarative and legible &mdash; the plan reflects the code, and reviewers read intent without running a program.' },
+        { n:'General-purpose language', when:'infrastructure genuinely needs real abstraction &mdash; loops over complex data, typed constructs, unit tests, reuse of team language skills.' }
       ],
       tell:'Match the tool to the need. A DSL&rsquo;s constraint keeps infra reviewable (config = intent); a real language adds power but invites cleverness that hides what gets created. If you use a language, keep the logic thin so the synthesized infra stays legible.' },
     { q:'Managed state (CloudFormation) <span class="vs">vs</span> self-owned state (Terraform)',

@@ -656,16 +656,16 @@
     "h": "4f7592fb"
   },
   "consistent-hashing::CURVEBALL/The 4096-token cluster:your-team-set-virtual-nodes-to.int": {
-    "n": 130,
-    "h": "ede2f5c1"
+    "n": 166,
+    "h": "9a8f5dd3"
   },
   "consistent-hashing::CURVEBALL/The stateless ring:a-team-hashes-requests-to-your.int": {
     "n": 105,
     "h": "51184b25"
   },
   "consistent-hashing::DESIGN:partitioning-for-a-dynamo-style-key.int": {
-    "n": 94,
-    "h": "47ca8231"
+    "n": 95,
+    "h": "6c665cfd"
   },
   "consistent-hashing::DESIGN:partitioning-for-a-dynamo-style-key.int2": {
     "n": 102,

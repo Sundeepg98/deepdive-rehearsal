@@ -25,7 +25,7 @@
 
    Sources, per cram section:
      one-liner   <- open.cards[0].items[0].a  ("one breath")   | fallback identity.thesis
-     spine       <- wb.steps[].a              (what you draw)  | fallback identity.spine
+     spine       <- wb.steps[].c + .a         (cue -> what you draw) | fallback identity.spine
      decisions   <- trade.decisions[].opts    (the switch condition)
      ceilings    <- num.compute(canonical inputs)              (the authored arithmetic)
      traps       <- rf.flags[].bad -> .fix
@@ -60,6 +60,25 @@ function _csEmpty(what) {
     'showing you <b>another topic&rsquo;s</b> ' + what + ' would be worse than showing you nothing.</div>';
 }
 
+/* One spine line: the whiteboard CUE as a muted prompt, then its answer.
+
+   WHY THE CUE IS LIFTED TOO. wb.steps is {c, a} -- a cue and an answer -- and this composer
+   used to lift `.a` alone, dropping the question that gave it meaning. "Only the ones before
+   the pivot." (saga) reached the sheet with nothing for "the ones" to attach to. That was not
+   an authoring defect in 46 places; it was ONE composition defect replicated 46 times, and
+   test/cram_surface.cjs measured it: 46 of the corpus's spine lines opened on a back-reference
+   to a question the sheet never showed. The sheet is read five minutes before a loop with zero
+   repair context, so a prompt -> recall pair both stands alone AND rehearses better than a bare
+   spine line does.
+
+   A step with no cue degrades to the answer alone rather than rendering a stray arrow. No topic
+   is in that state today (all 415 steps carry a cue), so this is a guard, not a code path. */
+function _csCueLine(step) {
+  var a = (step && step.a) || '', c = (step && step.c) || '';
+  if (!c) return a;
+  return '<span class="cs-cue">' + c + '</span><span class="cs-arr">&rarr;</span>' + a;
+}
+
 /* Evaluate the topic's authored compute() at its canonical (authored default)
    inputs -> the same rows the Numbers pane shows on first paint. */
 function _cramNumRows(num) {
@@ -84,11 +103,11 @@ function deriveCram(topic) {
   var one = (items[0] && items[0].a) || idn.thesis || '';
   if (one) out += '<div class="cs-one"><span class="cs-one-l">The one-liner</span>' + one + '</div>';
 
-  /* 2. the spine -- the whiteboard answers ARE what you draw */
+  /* 2. the spine -- the whiteboard cue and its answer ARE what you draw (see _csCueLine) */
   var spine = '';
   if (d.wb && d.wb.steps && d.wb.steps.length) {
     spine = '<ol class="cs-spine">';
-    for (var s = 0; s < d.wb.steps.length; s++) spine += '<li>' + d.wb.steps[s].a + '</li>';
+    for (var s = 0; s < d.wb.steps.length; s++) spine += '<li>' + _csCueLine(d.wb.steps[s]) + '</li>';
     spine += '</ol>';
   } else if (idn.spine && idn.spine.length) {
     spine = '<ol class="cs-spine">';

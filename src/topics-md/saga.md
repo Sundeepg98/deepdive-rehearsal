@@ -554,7 +554,7 @@ Per instance: completed steps, current step, whether it is compensating --- in t
 
 Because they are **two writes**, and a crash between them either stalls the saga (committed, no event, nobody advancing it) or corrupts it (event, no commit). The fix: write the event to an **outbox table in the same local transaction** as the step, and let a relay (polling, or CDC on the WAL) publish it. Deliberately at-least-once --- which is why consumers are idempotent.
 
-### No isolation --- what actually breaks, and what do you do?
+### Without isolation --- what actually breaks, and what do you do?
 
 Intermediate states are committed and **visible**: lost updates, dirty reads of a charge about to be refunded, non-repeatable reads. The fix is per-anomaly, never a global lock --- first the free one, an **atomic conditional update** (`SET available = available - 1 WHERE available > 0`) which kills the oversell outright; then a **semantic lock** (mark the row `PENDING`, with an owner and a lease) only where a *visible* intermediate state would drive a wrong decision.
 

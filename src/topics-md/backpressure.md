@@ -579,7 +579,7 @@ Newest (tail), oldest (when the new supersedes the old -- a price, a gauge), low
 
 In the **thread pool, the connection pool, the pending-task set, and the socket backlog**. **Concurrency is a queue**, and unbounded concurrency is an unbounded queue. Bound in-flight calls per dependency with a semaphore or bulkhead, fail fast when full, and add a timeout.
 
-### You can neither block the producer nor drop the work. Now what?
+### The producer cannot be blocked and the work cannot be dropped. Now what?
 
 **Spill to a durable, disk-backed log** (Kafka) and let the consumer drain the backlog. But: it converts loss into **delay** (which *is* loss for data whose value decays), and the log is still bounded -- by **retention**. Lag beyond retention deletes records nobody read: silent data loss. Alarm on lag *versus retention*, and on the lag *trend*.
 

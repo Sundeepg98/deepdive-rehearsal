@@ -284,6 +284,70 @@ against the donor register, not audit the number.
 
 ---
 
+## 5b. The kept-Int regression check (raised by wB2 mid-wave, measured here)
+
+wB2-fixer caught a cross-wave hazard in its own first cluster and it was relayed to me: **rewriting
+a card's Model can silently degrade a GOOD pre-existing Int2 beneath it.** Its first sharding
+DESIGN Model restated the existing Int2's punchline almost verbatim, pushing that Int2's overlap
+from 0.284 to 0.486. The half-refreshed cards -- old Model, excellent newer Int2 -- are exactly
+where this bites, and they are exactly the cards this wave rewrites.
+
+So I measured it across every Model I rewrote, rather than asserting I hadn't done it. Method: the
+authored markdown at master `42bf6eb` versus `HEAD`, scanned as raw lines with no compiler
+involved; cards matched by heading; an Int counts as **kept** only if its question text is
+byte-identical. For each, the answer's novelty against its OLD Model and against its NEW one.
+
+**22 kept Int/Int2 pairs sit beneath a rewritten Model. 17 lost novelty, 5 were flat. Zero crossed
+the NOVEL_MAX floor** -- the lowest post-rewrite novelty is 25 (circuit-breaker SCALE Int2),
+against a floor of 20.
+
+The five largest movements:
+
+| card | field | novelty before -> after | overlap before -> after |
+| --- | --- | --- | --- |
+| event-driven SCALE | Int2 | 106 -> 80 | 0.028 -> 0.266 |
+| api-design DESIGN | Int2 | 79 -> 63 | 0.194 -> 0.357 |
+| leader-election FAILURE | Int2 | 68 -> 53 | 0.181 -> 0.361 |
+| api-design SCALE | Int2 | 96 -> 82 | 0.094 -> 0.226 |
+| load-balancing SCALE | Int2 | 70 -> 57 | 0.157 -> 0.313 |
+
+**The systemic cause is not the one wB2 hit, and the distinction matters.** Every old Model here
+was a short lowercase checklist -- event-driven SCALE's was a *single sentence* -- and every new
+one is substantive spoken prose several times longer. A longer Model contains more vocabulary, so
+**any** kept answer overlaps it more, whether or not a single idea was taken. That is a mechanical
+consequence of the Model becoming worth reading, and it is a different phenomenon from restating
+an Int2's punchline.
+
+I checked the two most exposed cases by reading rather than trusting that reasoning:
+
+- **event-driven SCALE** (the largest drop) -- the Int2's payload is the 3-billion-key arithmetic
+  and the insight that the dedup TTL is floored by the longest redelivery path, not by storage
+  budget. The new Model contains neither; the overlap is shared vocabulary (dedup, message, rate,
+  store, critical path). Intact.
+- **api-design DESIGN** -- the closest thing to a real hit. The new Model now says the claim is "an
+  atomic claim, not a check-then-act -- a unique insert, so exactly one of two simultaneous
+  duplicates wins," which does pre-state the Int2's opening sentence. But the Int2's actual value
+  is downstream of that setup: what the **loser** receives (a 409 versus waiting and replaying),
+  the `in_progress` state people forget, and the wedged-key lease when the winner dies mid-flight.
+  None of that is in the Model. Left as-is deliberately: a Model that declines to say the claim is
+  atomic would be a worse Model, and a setup that the pushback then goes past is the shape these
+  cards are supposed to have.
+
+**On making this a check class** -- wB2's suggestion, and it is a good one that I am deliberately
+not building at freeze. The obstacle is that this class needs a **before** reference and the check
+is stateless; the ratchet stores evidence text, not measurements. The clean design is a second
+artifact -- a `bank_pushback_novelty.json` snapshot of every Int's novelty, not just the flagged
+ones (~880 entries), with the check failing when a *non-flagged* Int's novelty falls by more than
+some fraction. That is genuinely worth having, because it catches the one regression this wave's
+existing classes structurally cannot see. It is not in this wave for two reasons: it is a new
+concept rather than a tightening (a novelty record is not a defect, so it cannot live in a
+may-only-shrink defect list without muddling what that file means), and adding a class after the
+gate has run means re-gating a frozen branch. **Recommended for whoever takes the
+consistent-hashing wave**, which will rewrite 14 Models under existing Ints and is the single
+highest-risk instance of this hazard in the corpus.
+
+---
+
 ## 6. Gate
 
 Full `python3 test/check_all.py`, verdict quoted from the capture file `_gate_freeze.txt`, not
@@ -361,7 +425,7 @@ vanish.
 
 ## 8. Handoff
 
-- Branch `content/bank-alpha`, 9 commits, not pushed, not merged.
+- Branch `content/bank-alpha`, 11 commits, not pushed, not merged.
 - `test/bank_pushback.cjs` + `test/bank_pushback_debt.json` (107 entries) + `check_all.py` row 57.
 - `_audit/2026-07-28-bank-prepass.md` -- the derived work-list, both halves.
 - This file.

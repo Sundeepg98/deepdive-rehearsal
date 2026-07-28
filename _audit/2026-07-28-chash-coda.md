@@ -11,6 +11,41 @@ findings at any step. Gate **58 rows, 58 PASS, 0 FAIL, 0 SKIP**, exit 0.
 
 ---
 
+## 0. RECORD CORRECTIONS to two prior wave-B records
+
+Filed here deliberately, because a verdict chain stays honest only if corrections land where the
+next reader will look. Both were surfaced by the measurement in section 1; neither changes any
+shipped card, and neither is a criticism of a judgement call -- both are cases where a **number
+was read as meaning something it did not**.
+
+**C1 -- `_audit/2026-07-28-bank-coldverify.md` section A3, the `sharding-strategies` DESIGN Int2
+row, rests on a false premise.** The row reads *"(omega's self-caught case, 58 -> 44) ... omega's
+mid-wave rewrite of its first draft evidently worked."* There was no second draft. **58 -> 44 is
+the measurement of the SHIPPED card** -- confirmed three ways in section 1.1, including omega's own
+freeze table which records `int2=44` as its after-value. The verifier read the shipped Model and
+Int2 and concluded the Int2's payload survives; **that verdict stands and I re-read the card and
+agree with it.** What does not stand is the reasoning attached to it: the number it cites as
+evidence of a repair is in fact the number as shipped, so A3 credits a fix that never happened.
+The practical consequence is the one this wave hit -- anyone building an instrument anchored on
+"the case omega caught" is anchoring on a card that two readers passed.
+
+**C2 -- `_audit/2026-07-28-bank-alpha.md` section 5b's designated anchor is unanchorable as
+specified.** 5b proposes a novelty-snapshot check and, by implication, an anchor: the sharding case
+fires, the measured-acceptable pairs stay silent. Measured over the full 38-pair kept population
+across both halves, **three pairs lose novelty faster than the designated must-fire case** --
+rules-engine SCALE Int2 at 0.740, soft-delete SCALE Int2 at 0.750 and event-driven SCALE Int2 at
+0.755, against sharding's 0.759 -- and event-driven SCALE Int2 is itself explicitly read and passed
+in the coldverify's own A3 table. No threshold on that axis separates them. 5b's *diagnosis* was
+correct and important (the stateless floor cannot see a good Int getting worse, and the class needs
+a before-reference); its proposed *discriminator* was not, for the reason 5b itself identified one
+paragraph earlier -- Model growth mechanically raises overlap on any kept answer. Section 1.3
+records the axis that does separate.
+
+Neither correction retracts a shipped fix. Wave B's cards are unaffected, and the coldverify's
+CLEAN verdict is unaffected.
+
+---
+
 ## 1. The guard -- and the design that did not survive measurement
 
 The brief asked for 5b's design: a novelty snapshot plus a check that fails when a non-flagged

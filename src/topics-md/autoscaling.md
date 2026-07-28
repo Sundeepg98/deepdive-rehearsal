@@ -877,7 +877,7 @@ Derive the max from the **downstream**: `max x per-instance connections` must fi
 
 A hard kill drops every in-flight request and loses every in-progress job -- so the system throws user-visible errors *every time it saves money*, which is worse than not autoscaling at all.
 
-Drain, then terminate: stop sending new work, **wait for the deregistration to propagate**, finish in-flight work, then exit. In Kubernetes, endpoint removal and SIGTERM fire concurrently -- so a `preStop` sleep is what keeps the pod serving while the load balancers stop routing to it.
+Termination is a **protocol**, not a signal. The instance has to leave the pool *before* it stops serving, and exit only once its last in-flight request is done. The trap is that Kubernetes fires endpoint removal and SIGTERM **concurrently**, so a shutdown you configured as graceful still drops live traffic unless an explicit `preStop` sleep holds the pod open while the routing change propagates.
 
 ### "We scale up and down aggressively so we never pay for idle capacity"
 

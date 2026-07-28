@@ -952,7 +952,7 @@ A three-state machine (closed, open, half-open) that fails fast when a dependenc
 
 #### What's the real value?
 
-Not recovering a single call, but containing the blast radius: paired with a fallback, one dependency's outage degrades one feature gracefully instead of cascading into a system-wide failure.
+The point is containing the blast radius, not recovering a single call: paired with a fallback, one dependency's outage degrades one feature gracefully instead of cascading into a system-wide failure.
 
 #### What would you name before they ask?
 

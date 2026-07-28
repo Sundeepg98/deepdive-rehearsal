@@ -1,10 +1,3 @@
 {
-  "autoscaling::dup::rf.flags[4].fix + wb.steps[6].a": "Drain, then terminate. Stop sending it new work, wait for the deregistration to propagate, let it finish in-flight work,",
-  "backpressure::dup::open.cards[0].items[1].a + trade.decisions[0].tell": "Shed to protect latency for interactive, loss-tolerant, retryable work; block (or spill to disk) to protect completeness",
-  "circuit-breaker::dangling::open.cards[0].items[1].a": "Not recovering a single call, but containing the blast radius: paired with a fallback, one dependency's outage degrades",
-  "kafka-internals::dup::open.cards[0].items[0].a + open.cards[0].items[1].a": "Kafka is a distributed append-only commit log: a topic is N retained, ordered partitions, producers append and consumers",
-  "multi-region::dup::rf.flags[5].fix + trade.decisions[4].tell": "Automate only when detection is confident (multiple failed checks, multiple vantage points, a real request path), failov",
-  "notifications::dup::trade.decisions[5].opts[1].when + wb.steps[7].a": "In-app first; if unseen in a window, cascade to email; if opened in time, cancel the pending email. Reach the user once,",
-  "rules-engine::dup::rf.flags[2].fix + wb.steps[4].a": "Two provably distinct approvers -- the second-approval step rejects both the requester and the first approver, not just t",
-  "saga::dangling::open.cards[0].items[1].a": "It's ACD without isolation -- you trade atomicity for eventual consistency, so intermediate states are visible and compen"
+  "backpressure::dup::open.cards[0].items[1].a + trade.decisions[0].tell": "Shed to protect latency for interactive, loss-tolerant, retryable work; block (or spill to disk) to protect completeness"
 }

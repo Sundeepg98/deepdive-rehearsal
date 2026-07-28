@@ -904,7 +904,7 @@ Break the cross-service operation into a sequence of local transactions, each wi
 
 #### What's the key trade?
 
-It's ACD without isolation -- you trade atomicity for eventual consistency, so intermediate states are visible and compensations are semantic undos (not rollbacks); design for that with idempotency, a transactional outbox, and semantic locks.
+A saga is ACD without isolation -- you trade atomicity for eventual consistency, so intermediate states are visible and compensations are semantic undos (not rollbacks); design for that with idempotency, a transactional outbox, and semantic locks.
 
 ##### Hooks
 

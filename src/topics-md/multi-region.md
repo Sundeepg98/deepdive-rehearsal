@@ -850,7 +850,7 @@ A DR plan that has never been **exercised** is an assumption, not a capability -
 
 Automatic failover on a **twitchy trigger** is dangerous: a transient blip, or a partition between your monitor and the region, looks identical to a region failure, so you fail over on a false positive --- an outage *you* caused --- and if the "failed" primary is alive, you get split-brain. The interviewer hears *"would flap and self-inflict outages, and hasn't weighed the cost of a wrong failover."*
 
-Automate only when detection is **confident** (multiple failed checks, multiple vantage points, a real request path), failover is **reversible**, and you can **fence** the old primary; otherwise use **assisted failover** --- automation detects and prepares, a human approves the disruptive part. The cost of a wrong failover is comparable to the outage you are protecting against, so optimize for *not* failing over when you should not, with conservative thresholds and anti-flap hysteresis.
+Give the trigger a **confidence bar** it must clear before it is allowed to act: several consecutive failures, seen from several vantage points, on a real request path rather than a ping --- plus hysteresis, so a recovering region cannot flap it. Below that bar the automation escalates instead of acting. Then make the act itself survivable: **fence** the old primary so it cannot keep writing, and rehearse the way back, because the thing that turns a false positive into an incident is discovering you cannot undo it.
 
 ### "We use geo-DNS, so failover is basically instant"
 

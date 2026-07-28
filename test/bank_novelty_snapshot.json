@@ -616,24 +616,24 @@
     "h": "8da4453e"
   },
   "consistent-hashing::CLOSE:sum-it-up-and-tell-me.int": {
-    "n": 16,
-    "h": "64697bdc"
+    "n": 117,
+    "h": "4bb0caae"
   },
   "consistent-hashing::CLOSE:sum-it-up-and-tell-me.int2": {
-    "n": 21,
-    "h": "7a826e5c"
+    "n": 112,
+    "h": "908d5f25"
   },
   "consistent-hashing::CURVEBALL/Adversarial keys:your-public-api-caches-by-a.int": {
     "n": 13,
     "h": "2ce21e29"
   },
   "consistent-hashing::CURVEBALL/Balanced but hot:your-key-counts-are-perfectly-even.int": {
-    "n": 11,
-    "h": "02dafb63"
+    "n": 121,
+    "h": "f24aa1b0"
   },
   "consistent-hashing::CURVEBALL/Balanced but hot:your-key-counts-are-perfectly-even.int2": {
-    "n": 7,
-    "h": "323a1548"
+    "n": 98,
+    "h": "d7a6dec2"
   },
   "consistent-hashing::CURVEBALL/Flapping node:a-node-s-health-check-is.int": {
     "n": 12,
@@ -664,36 +664,36 @@
     "h": "2f255903"
   },
   "consistent-hashing::DESIGN:partitioning-for-a-dynamo-style-key.int": {
-    "n": 7,
-    "h": "1d07bc75"
+    "n": 94,
+    "h": "47ca8231"
   },
   "consistent-hashing::DESIGN:partitioning-for-a-dynamo-style-key.int2": {
-    "n": 16,
-    "h": "c9f23e9e"
+    "n": 102,
+    "h": "e3fa62ac"
   },
   "consistent-hashing::FRAME:you-need-to-spread-a-keyspace.int": {
-    "n": 14,
-    "h": "d527248f"
+    "n": 98,
+    "h": "3b76358e"
   },
   "consistent-hashing::FRAME:you-need-to-spread-a-keyspace.int2": {
-    "n": 12,
-    "h": "83012311"
+    "n": 92,
+    "h": "7721cbed"
   },
   "consistent-hashing::SCALE:a-distributed-cache-that-must-survive.int": {
-    "n": 3,
-    "h": "c47e49e6"
+    "n": 106,
+    "h": "f1c768a7"
   },
   "consistent-hashing::SCALE:a-distributed-cache-that-must-survive.int2": {
-    "n": 12,
-    "h": "e2e26d38"
+    "n": 96,
+    "h": "681508fb"
   },
   "consistent-hashing::STRUCTURE:walk-me-through-it-a-key.int": {
-    "n": 11,
-    "h": "dfb8cbbe"
+    "n": 90,
+    "h": "dae2cae0"
   },
   "consistent-hashing::STRUCTURE:walk-me-through-it-a-key.int2": {
-    "n": 15,
-    "h": "218621bf"
+    "n": 103,
+    "h": "d5af121b"
   },
   "content-pipeline::CLOSE:sum-it-up-and-what-would.int": {
     "n": 37,
@@ -3120,8 +3120,8 @@
     "h": "5fa1ed5e"
   },
   "state-machine::SCALE:an-eight-state-lifecycle-with-several.int2": {
-    "n": 75,
-    "h": "ed6b5425"
+    "n": 85,
+    "h": "926b8736"
   },
   "state-machine::STRUCTURE:walk-me-through-it-entry-to.int": {
     "n": 24,

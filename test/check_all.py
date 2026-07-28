@@ -190,7 +190,32 @@ for name, cmd in [('ascii_guard', ['python3', 'test/ascii_guard.py']),
                   # topics). Eleven planted fixtures -- including the real pre-fix lambda source,
                   # which the FIRST version of this check ran green on -- are re-armed every run,
                   # and the run aborts if any is mis-detected. Pure node, no browser, ~21s.
-                  ('numbers_lattice', ['node', 'test/numbers_lattice.mjs'])]:
+                  ('numbers_lattice', ['node', 'test/numbers_lattice.mjs']),
+                  # bank_pushback: the Bank is the ONLY surface in the app where the candidate's
+                  # own model answer gets attacked -- every card carries a Model and an Int, and
+                  # the Int is the attack. Several checks count those fields; none read whether
+                  # the attack LANDS. The 2026-07-20 catalog sweep found that it frequently does
+                  # not: ~18 topics ship an Int that is ANSWERED BY ITS OWN MODEL (soft-delete's
+                  # "It keeps the data; erasure requires it genuinely gone." -- seven words, a
+                  # definition, and the Model directly above already contains it), and ~11 ship
+                  # curveballs with no Int at all (developer-platform's eight hardest scenarios
+                  # all end on the candidate's own monologue). This is the measurement, and it
+                  # disagrees with the estimate, upward: 170 findings across 27 of 46 topics.
+                  # The threshold is BRACKETED BY THE CORPUS, not chosen: the four Int pairs the
+                  # sweep names as defective have 5-11 content words their Model does not already
+                  # contain, the 30 donor pairs it names as exemplary have 48 or more, and
+                  # NOVEL_MAX sits at 20 inside that gap. Both sides ship as fixtures, so the
+                  # threshold cannot drift in either direction without aborting the run.
+                  # It states its own scope: novelty is a proxy over VOCABULARY, so a long answer
+                  # restating its Model in fresh words is NOT caught, and whether a question is
+                  # GOOD stays human judgment -- the other three classes (no Int, no Int2 on a
+                  # SCALE/DESIGN card, a Model opening lowercase) carry no threshold and are exact.
+                  # Reads the compiled bank slices, and asserts coverage against an INDEPENDENT
+                  # line scan of src/topics-md/*.md -- per topic AND per field, because
+                  # src/topics/_generated/ is gitignored and without that guard a missing build
+                  # yields a confident "8 topics, 0 defects". Ratchet: bank_pushback_debt.json,
+                  # may only shrink (parity_debt discipline). Pure node, no browser, ~1s.
+                  ('bank_pushback', ['node', 'test/bank_pushback.cjs'])]:
     r = run(cmd)
     results.append((name, 'PASS' if r.returncode == 0 else 'FAIL', report(r)))
 

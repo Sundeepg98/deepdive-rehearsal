@@ -44,7 +44,10 @@ const KIT_CSS = [
   '.vz .badge.warn { background: #8a6d1d; color: #fff; }',
   '.vz label { display: block; font-size: 11px; color: #8b949e; margin-bottom: 2px; }',
   '.vz .ctl { min-width: 140px; }',
-  '.vz input[type=range] { width: 100%; }',
+  // height (W2 / audit P3-5): a bare range input is 16px tall, so the kafka viz slider measured
+  // 140x16 -- a genuine WCAG 2.5.8 AA (24px) failure, and the only pointer control in the sim.
+  // The THUMB is what a finger aims at, so the track box is what has to grow; the thumb rides it.
+  '.vz input[type=range] { width: 100%; height: 24px; }',
   '.vz button { background: #21262d; color: #c9d1d9; border: 1px solid #30363d;',
   '  border-radius: 6px; padding: 5px 10px; margin: 2px 4px 2px 0; cursor: pointer; }',
   '.vz button:hover { background: #30363d; }',

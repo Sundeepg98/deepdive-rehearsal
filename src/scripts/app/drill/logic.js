@@ -10,7 +10,29 @@ var DRILL_TIER_NOTES = {};  /* per-topic; renderTopic sets this from the topic d
    immutable originals) are declared + owned by topic-protocol.js (foundation) and
    seeded by publishBanks() from topics/content-pipeline/drill.js's bank. SHARED:
    mixed-fire.js reads _allCards to assemble its probe set; drill reads them as before. */
-var DRILL_HTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-12)">
+/* ===== THE DRILL SETUP DISCLOSURE (W2 / audit P1-1) =====
+   The mode toggle, the FOCUS BY LEVEL filter and its explainer are SET-ONCE controls that
+   cost 214px of a 667px phone band, directly above the question the pane exists to ask.
+   On a phone they collapse behind this one row, which states its own current value ("Study
+   . All 20") so the collapse hides nothing the user needs to KNOW -- only what they need to
+   REACH, and that is one tap away.
+   ZERO DESKTOP FOOTPRINT BY CONSTRUCTION. This is an added SIBLING with display:none above
+   920px -- not a wrapper -- specifically so the desktop DOM keeps its existing sibling chain
+   and its margin collapsing. drill-light / drill-dark are committed VR baselines this wave
+   is not authorised to touch, and a wrapper element is exactly how a "layout-neutral"
+   refactor moves a pixel in one of them. */
+var DRILL_HTML = `<button type="button" class="dsu-tog" id="dsutog" aria-expanded="true" aria-controls="dmoderow tierrow tiernote">
+      <span class="dsu-l">Drill setup</span><span class="dsu-v" id="dsuval"></span><span class="dsu-c" aria-hidden="true">&#9662;</span></button>
+    <!-- NO BACKTICKS IN THIS COMMENT EITHER: it lives inside DRILL_HTML, which is a template
+         literal exactly like DRILL_STYLE. And note what a backtick here costs -- npm run build
+         printed a clean success both times, because a bundler does not EXECUTE the module; the
+         only witness is test/syntax_check.py and, at runtime, a drill pane with no shadow root.
+         The layout moved from this element's inline style into DRILL_STYLE's .dmoderow rule,
+         unchanged. It had to: an inline display:flex outranks every selector in the sheet, so
+         the :host(.dsu-closed) collapse matched and did nothing -- measured, the row kept
+         painting its 66px while the two blocks below it correctly vanished. The alternative was
+         !important, which would have been a second lie about which rule is in charge. -->
+    <div class="dmoderow" id="dmoderow">
       <div class="modetog" id="modetog">
         <button type="button" class="on" data-m="study">Study</button>
         <button type="button" data-m="mock">Mock round</button>
@@ -25,7 +47,7 @@ var DRILL_HTML = `<div style="display:flex;justify-content:space-between;align-i
            can query the timer whenever they want. Announcing it is the part that was wrong. -->
       <div class="timer" id="timer" role="timer" aria-label="Mock round time remaining" style="display:none">22:00</div>
     </div>
-    <div class="tierrow"><span class="tierlab">Focus by level</span><div class="modetog" id="tiertog"><button class="on" data-tier="all" type="button">All 20</button><button data-tier="SDE2" type="button">SDE2</button><button data-tier="SDE3" type="button">SDE3</button><button data-tier="Staff" type="button">Staff</button></div></div>
+    <div class="tierrow" id="tierrow"><span class="tierlab">Focus by level</span><div class="modetog" id="tiertog"><button class="on" data-tier="all" type="button">All 20</button><button data-tier="SDE2" type="button">SDE2</button><button data-tier="SDE3" type="button">SDE3</button><button data-tier="Staff" type="button">Staff</button></div></div>
     <div class="tiernote" id="tiernote"><b>All four levels, mixed</b> &mdash; the way a real loop actually comes at you.</div>
     <div class="dbar"><i id="dfill"></i></div>
     <div class="score-cap">This run</div>
@@ -312,7 +334,97 @@ var DRILL_STYLE = `/* @keyframes pop moved to BASE_SHEET. Five shadow scopes ref
    outline or :focus rule today, so (0,2,0) is unopposed -- and :focus-visible at (0,3,0)
    beats the :focus reset regardless. Verified with getComputedStyle, not assumed. */
 .thread[tabindex],.ans[tabindex],.fu[tabindex],.senior[tabindex],.debrief[tabindex]{outline:none}
-.thread[tabindex]:focus-visible,.ans[tabindex]:focus-visible,.fu[tabindex]:focus-visible,.senior[tabindex]:focus-visible,.debrief[tabindex]:focus-visible{outline:2px solid var(--acc);outline-offset:3px;border-radius:10px}`;
+.thread[tabindex]:focus-visible,.ans[tabindex]:focus-visible,.fu[tabindex]:focus-visible,.senior[tabindex]:focus-visible,.debrief[tabindex]:focus-visible{outline:2px solid var(--acc);outline-offset:3px;border-radius:10px}
+/* ===================== THE PHONE'S FOLD BUDGET, INSIDE THE SHADOW ROOT =====================
+   (W2 / audit P1-1, P2-8. styles.css handles the light-DOM half; a rule written there matches
+   NOTHING in here, which is a mistake this repo has shipped four times -- see shadow_css_guard.)
+
+   329 of the 702px between the band top and the question were spent inside this root:
+
+       66px  the mode row     Study / Mock round / Quick 5   -- set once per round
+       92px  .tierrow         FOCUS BY LEVEL + four filters  -- set once per round, if ever
+       56px  .tiernote        the explainer for the filter above it
+      115px  the scoreboard   bar + "This run" + three 63.5px pills, at 0 / 0 / 20
+       58px  .qrow            probe number, signal, tier badge
+
+   None of it is wrong; all of it is the sidebar material a phone has nowhere else to put. So
+   the set-once controls go behind ONE row that states its own current value, the scoreboard
+   keeps every tile and every number on a single line instead of three stacked cards, and the
+   card head stops wrapping. Nothing is deleted and nothing becomes unreachable.
+
+   EVERY RULE IS INSIDE A max-width:919px QUERY. Above that the drill is byte-identical: the
+   disclosure row is display:none, the pills keep their stacked shape, and drill-light /
+   drill-dark (committed VR baselines, NOT in this wave's authorised rebaseline set) cannot
+   move. Media queries inside a shadow sheet evaluate against the viewport exactly as they do
+   outside it -- .dnav already relies on that. */
+.dmoderow{display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-12)}
+/* font:inherit is UNCONDITIONAL, not inside the media query below, and test/latent_arial.cjs is
+   why: a <button> that never declares a family renders in the UA control font (Arial here), not
+   the app stack -- and the check walks the DECLARATION, at desktop width, where this button is
+   display:none. Declaring the family only where the button happens to be visible today leaves a
+   latent re-facing armed for whoever next shows it. That check caught this on its first run. */
+.dsu-tog{display:none;font:inherit}
+@media (max-width:919px){
+  .dsu-tog{display:flex;align-items:center;gap:var(--space-9);width:100%;min-height:44px;box-sizing:border-box;
+    margin-bottom:var(--space-12);padding:var(--space-8) var(--space-12);border:1px solid var(--bd);
+    border-radius:10px;background:var(--card);cursor:pointer;text-align:left}
+  .dsu-tog:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+  .dsu-l{flex:none;font:var(--font-weight-heavy) 9.5px -apple-system,sans-serif;letter-spacing:.5px;text-transform:uppercase;color:var(--mut2)}
+  /* The VALUE is the whole point of collapsing rather than hiding: "Study . All 20" says what
+     the two buried controls are currently set to, so the row answers the question the controls
+     would have been read for, and only the ACT of changing them costs a tap. */
+  .dsu-v{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+    font:var(--font-weight-bold) 12px -apple-system,sans-serif;color:var(--acc)}
+  .dsu-c{flex:none;color:var(--mut2);line-height:1;transition:transform var(--duration-base) var(--ease-base)}
+  .dsu-tog[aria-expanded="true"] .dsu-c{transform:rotate(180deg)}
+  :host(.dsu-closed) .dmoderow,:host(.dsu-closed) .tierrow,:host(.dsu-closed) .tiernote{display:none}
+  /* the scoreboard, on one line -- same three tiles, same numbers, same fill-vs-outline verdict
+     encoding (which is an AREA+LUMINANCE contrast and survives the reshape; hue is still not
+     doing the work). scoreboard_salience measures at 1440 and is untouched by this. */
+  .dbar{height:5px;margin-bottom:var(--space-8)}
+  .score-cap{margin-bottom:var(--space-3)}
+  .score{gap:var(--space-6);margin-bottom:var(--space-10)}
+  .pill{display:flex;align-items:baseline;justify-content:center;gap:var(--space-6);padding:var(--space-7) var(--space-8);border-radius:10px}
+  .pill .v{font-size:var(--font-size-subhead)}
+  .pill .l{margin-top:0}
+  .thread{padding:var(--space-14)}
+  .qrow{align-items:center;gap:var(--space-8)}
+  .sigtag{margin-top:var(--space-2)}
+  /* ===== SCROLL-MARGIN: THE FIXED CHROME IS INVISIBLE TO scrollIntoView =====
+     NO BACKTICKS IN THIS COMMENT -- DRILL_STYLE is a JS template literal (see the two warnings
+     above). Writing one around a method name here terminated the string, the rest of the sheet
+     parsed as JS, and customElements.define('deep-drill') never ran: the whole pane silently
+     failed to upgrade, no shadow root, no probes. Caught by test/syntax_check.py, which is the
+     third time this exact character has done it.
+     .seg is fixed over 0-61 and .mockcta over the last 72px, and the browser counts BOTH bands
+     as visible scrollport -- so focus() on a freshly revealed block was satisfied while the
+     block sat underneath the mock bar. That is the mechanism behind P2-8's "scrollY unchanged":
+     nothing was broken, the browser simply had a different idea of the viewport than the user
+     did. scroll-margin is the standard way to tell it, and it costs no layout. */
+  .thread,.ans,.fu,.senior,.debrief,.judge{scroll-margin-top:69px;scroll-margin-bottom:88px}
+}
+@media (max-width:919px) and (max-height:480px){
+  .thread,.ans,.fu,.senior,.debrief,.judge{scroll-margin-top:59px;scroll-margin-bottom:76px}
+  /* min-height stays 44 -- NOT reduced to buy fold pixels. It was 40 for one revision and that is
+     exactly the trade this wave exists to refuse: the tap floor is a physical-finger constant, and
+     a wave that raises three targets to 44 while quietly shipping a fourth at 40 has not fixed
+     anything, it has moved the defect. The 4px came back out of the padding below instead. */
+  .dsu-tog{min-height:44px;margin-bottom:var(--space-6)}
+  .dbar{margin-bottom:var(--space-4)}
+  .score{margin-bottom:var(--space-6)}
+  .pill{padding:var(--space-4) var(--space-8)}
+  .pill .v{font-size:var(--font-size-body)}
+  .thread{padding:var(--space-12)}
+  .dnav-wrap{margin-top:var(--space-14)}
+  /* THE CARD HEAD SPENDS THE AXIS IT HAS. The probe number and the signal are stacked because at
+     360px wide they have to be -- "Probe 1 / 22" and "signal . idempotent worker design" do not
+     share a 360px line. In landscape there are 844px and 390 of height, so the same two facts go
+     side by side and the head costs one line instead of two. This is the audit's actual complaint
+     about landscape ("the 844px of width is spent on nothing") answered in the one place it buys
+     the question a visible line. */
+  .qrow>div:first-child{display:flex;align-items:baseline;gap:var(--space-10);min-width:0}
+  .sigtag{margin-top:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+}`;
 
 /* Fisher-Yates shuffle of [0..count). SHARED: mixed-fire.js calls it too,
    so it stays a module-level global rather than a component method. */
@@ -375,6 +487,35 @@ class DeepDrill extends TopicPane {
       if (btn) self.setTier(btn.getAttribute('data-tier'));
     });
     root.getElementById('revdrill').addEventListener('click', function () { self.drillRevset(); });
+    /* ===== THE SETUP DISCLOSURE (W2 / audit P1-1) =====
+       Open state is DOM state, not a stylable property, so the phone/desktop default has to be
+       set here. It is keyed off the SAME 919px boundary the sheet uses, and re-synced only when
+       that boundary is actually CROSSED -- so rotating a phone (both sides of the query are
+       still "phone") never discards a choice the user made, while resizing a desktop window
+       down to phone width gets the phone default it now needs. */
+    this._dsutog = root.getElementById('dsutog');
+    this._dsuval = root.getElementById('dsuval');
+    this._dsuMq = window.matchMedia('(max-width:919px)');
+    this._dsuSync = function () { self._setSetupOpen(!self._dsuMq.matches); };
+    this._dsuSync();
+    try { this._dsuMq.addEventListener('change', this._dsuSync); } catch (e) { this._dsuMq.addListener(this._dsuSync); }
+    this._dsutog.addEventListener('click', function () { self._setSetupOpen(self.classList.contains('dsu-closed')); });
+  }
+  /* The class rides the HOST, not a wrapper -- see the DRILL_HTML note: adding a wrapper element
+     to collapse three siblings would have changed the desktop DOM to buy a phone-only behaviour. */
+  _setSetupOpen(open) {
+    this.classList.toggle('dsu-closed', !open);
+    if (this._dsutog) this._dsutog.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  /* What the collapsed row says it is set to. Recomputed wherever mode or tier moves (setMode is
+     the single funnel -- setTier delegates to it), so the row can never state a stale value. */
+  _setupSummary() {
+    if (!this._dsuval) return;
+    const mode = this.mode === 'mock' ? 'Mock round' : (this.mode === 'quick' ? 'Quick 5' : 'Study');
+    const tier = (this.tierFilter && this.tierFilter !== 'all') ? this.tierFilter : ('All ' + cards.length);
+    /* The middot is an ESCAPE, never the byte: test/ascii_guard.py holds every source file
+       to 7-bit, and a literal U+00B7 here would fail the gate before it ever rendered. */
+    this._dsuval.textContent = mode + ' \u00B7 ' + tier;
   }
   renderTopic(d) {
     /* registry already reseeded cards / _allCards via publishBanks before this fires */
@@ -667,7 +808,25 @@ class DeepDrill extends TopicPane {
        A live region is for terse transient status (the score); FOCUS is for content you have to
        read. The drill previously got both of those backwards -- it announced neither and focused
        nothing. */
-    if (land) this._focusNew(this._newBlock(stage));
+    if (land) {
+      const nb = this._focusNew(this._newBlock(stage));
+      /* ===== "PUSH FURTHER" MUST MOVE THE SCREEN (W2 / audit P2-8) =====
+         Tapping "Interviewer pushes further" grew the card by 273px and left scrollY UNCHANGED:
+         the new follow-up rendered off the bottom, and the grade row it pushed down landed 205px
+         BELOW the fixed bar, with the bar showing "Mock run . Tools" -- no grade affordance
+         anywhere on screen at the judgment point. The user's read of that is "the app ignored me".
+         focus() alone did not fix it, and the reason is in the scroll-margin note in DRILL_STYLE:
+         the browser counts the fixed chrome as visible scrollport, so it was already satisfied.
+         `block:'start'` + that scroll-margin seats the block the user ASKED FOR at the top of the
+         live band, which puts the judge row a readable distance below it instead of past the fold.
+         PHONE ONLY, and stage >= 2 only: a reveal (stage 1) puts the answer directly under the
+         question that is still being answered, and seating THAT at the top would scroll the probe
+         off its own screen. Desktop has no fixed chrome and no fold problem -- it is untouched, so
+         drill-light / drill-dark and every desktop behaviour check see byte-identical behaviour. */
+      if (nb && stage >= 2 && this._dsuMq && this._dsuMq.matches) {
+        try { nb.scrollIntoView({ block: 'start', inline: 'nearest' }); } catch (e) { nb.scrollIntoView(true); }
+      }
+    }
     const advBtn = this._root.getElementById('adv');
     if (advBtn) { advBtn.onclick = function () { self.drawCard(stage + 1, true); }; }
     const missBtn = this._root.getElementById('jm');
@@ -925,6 +1084,12 @@ class DeepDrill extends TopicPane {
     const modeBtns = this._modetog.children;
     for (let z = 0; z < modeBtns.length; z++) modeBtns[z].classList.toggle('on', modeBtns[z].getAttribute('data-m') === m);
     if (m === 'mock') this.startTimer(); else this.stopTimer();
+    /* W2: the collapsed setup row restates mode + tier, so it is refreshed at the ONE funnel both
+       of them pass through (setTier delegates here). And a mock round FORCES the row open, because
+       the countdown clock lives inside it -- collapsing a running timer out of sight would trade
+       the P1 for a worse one. */
+    this._setupSummary();
+    if (m === 'mock') this._setSetupOpen(true);
     this.renderD(moveFocus);
   }
   recLevel(pct, depthOk) {

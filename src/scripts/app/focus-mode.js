@@ -20,7 +20,28 @@
     st.id = '_focus-style';
     st.textContent =
       '.app._focus-mode .sidebar,.app._focus-mode .companion{opacity:0;visibility:hidden;width:0;min-width:0;padding:0;margin:0;border:0;overflow:hidden;transition:opacity var(--duration-slow) var(--ease-base),width var(--duration-slow) var(--ease-base)}' +
-      '@media(prefers-reduced-motion:reduce){.app._focus-mode .sidebar,.app._focus-mode .companion{transition:none}}';
+      '@media(prefers-reduced-motion:reduce){.app._focus-mode .sidebar,.app._focus-mode .companion{transition:none}}' +
+      /* ===== W2 / audit P1-1: ICON-ONLY ON A PHONE =====
+         The mobile identity block is now ONE row, and this button was 66px of it -- against a
+         topic title that had 102px left and rendered "Production Debugging and Incident
+         Diagnosis" at 31%. As a 44px square it gives 22px back to the title and keeps the full
+         tap target.
+         The label survives because it never came from the text: aria-label="Toggle focus mode"
+         is the accessible name, and it is untouched (the visible word "Focus" was always
+         redundant with it). aria-pressed still carries the state.
+         AND THIS RULE LIVES HERE, NOT IN styles.css, FOR TWO REASONS. (1) This <style> is
+         injected into <head> UNLAYERED, and unlayered author styles beat everything in
+         styles.css's @layer app no matter the source order -- a mobile override written over
+         there could not win. (2) The button's own base look is set INLINE by createButton(), and
+         an inline declaration beats any stylesheet rule that is not !important; the two
+         properties that have to change (font-size and padding) are therefore moved out of that
+         inline style and set here, so nothing in this file needs !important to beat itself.
+         That is the same trap the `display` note in createButton() records. */
+      '#_focus-toggle{font-size:var(--font-size-nano);padding:var(--space-4) var(--space-12)}' +
+      '@media(max-width:919px){' +
+      '#_focus-toggle{font-size:0;min-width:44px;padding-left:0;padding-right:0;justify-content:center}' +
+      '#_focus-toggle::before{content:"\\25A3";font-size:var(--font-size-subhead);line-height:1;color:var(--acc)}' +
+      '}';
     document.head.appendChild(st);
   }
 
@@ -39,7 +60,11 @@
        inline style beats a stylesheet rule -- which pinned this button at 60x20 and made the
        mobile tap floor in styles.css (#_focus-toggle{min-height:44px;display:inline-flex}) a
        silent no-op on the one property that could centre its label. Leave display to CSS. */
-    btnEl.style.cssText = 'font-size:var(--font-size-nano);font-weight:var(--font-weight-bold);letter-spacing:.5px;text-transform:uppercase;color:var(--mut);background:var(--accbg);border:1px solid var(--acc-a12);padding:var(--space-4) var(--space-12);border-radius:8px;cursor:pointer;margin-top:var(--space-10);transition:all var(--duration-base) var(--ease-base)';
+    /* font-size and padding are NOT set here any more -- they moved into injectStyle()'s sheet so
+       the mobile icon rule can override them without !important (an inline declaration beats every
+       non-important stylesheet rule, which is the same trap the `display` note above records).
+       Everything else stays inline and unchanged, so the desktop button is byte-identical. */
+    btnEl.style.cssText = 'font-weight:var(--font-weight-bold);letter-spacing:.5px;text-transform:uppercase;color:var(--mut);background:var(--accbg);border:1px solid var(--acc-a12);border-radius:8px;cursor:pointer;margin-top:var(--space-10);transition:all var(--duration-base) var(--ease-base)';
     btnEl.addEventListener('click', toggle);
     hdr.appendChild(btnEl);
   }
@@ -125,7 +150,16 @@
     toggle();
   });
 
-  function init() { createButton(); createExit(); }
+  /* injectStyle() USED TO BE LAZY -- called only from toggle(), because everything in the sheet was
+     an `.app._focus-mode` rule that could not matter until focus mode was first switched on. That
+     stopped being true when the sheet gained the button's OWN base look (see injectStyle): a rule
+     the button needs at first paint cannot be installed on first use.
+     MEASURED, and this is why it is called here now: with the sheet still lazy, the desktop toggle
+     rendered at the UA default 13.33px with padding 0 instead of 9px/4px 12px -- 20px tall became
+     17px, .hdr lost 1px, and every element below it in the sidebar moved up one pixel. That is
+     14 of 16 VR baselines red (walk, wb, num, all five rooms, both mobile walks), from a change
+     that was supposed to be mobile-only. injectStyle is idempotent, so calling it twice is free. */
+  function init() { injectStyle(); createButton(); createExit(); }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {

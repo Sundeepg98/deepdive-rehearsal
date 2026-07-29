@@ -1,0 +1,5 @@
+ROOM BROWSER: FAIL
+  - [light/home] .hm-brand is rgb(150, 61, 134), not the brand indigo rgb(83, 74, 183) that the .ix-panel neutralisation carries
+  - [light/home] .hm-brand (rgb(150, 61, 134)) is room ink for [architecture-apis] -- the brand mark must claim NO room (this is the boot constant from index.html, which means nothing on a topic-less route)
+  - [dark/home] .hm-brand is rgb(218, 141, 202), not the brand indigo rgb(157, 147, 240) that the .ix-panel neutralisation carries
+  - [dark/home] .hm-brand (rgb(218, 141, 202)) is room ink for [architecture-apis] -- the brand mark must claim NO room (this is the boot constant from index.html, which means nothing on a topic-less route)

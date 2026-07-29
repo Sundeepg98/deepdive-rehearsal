@@ -1461,8 +1461,21 @@ body.is-hidden,body.is-hidden *,body.is-hidden *::before,body.is-hidden *::after
    (Search is built with INLINE styles in JS, which does not matter: an inline var(--acc) still
    resolves against the custom property inherited from this container.)
    NOT included, deliberately: .tn-trigger / .tn-step / .tn-chev -- the nav bar itself. That control
-   names the CURRENT topic, so wearing the current room is correct there, not a bug. */
-.ix-panel,.xd-panel,#_search-overlay,.tn-menu{
+   names the CURRENT topic, so wearing the current room is correct there, not a bug.
+
+   W15 ADDS A FIFTH MEMBER FOR THE SECOND REASON, so read the rule as "must not claim a room",
+   which is what these five have in common -- not "enumerates rooms", which is only why the first
+   four are here:
+     #home .hm-brand   the brand mark, on the home route -- it names the PRODUCT, not a topic
+   Its case is the opposite of .tn-trigger's. The nav bar names the current topic, so it should
+   wear that topic's room; the brand mark names no topic at all, and on the home route there IS no
+   current topic -- index.html hard-codes data-group for first paint and applyIdentity does not run
+   at boot, so what the brand was actually wearing was a BOOT CONSTANT (architecture-apis magenta).
+   After W3 gave the hero its destination's room, the first screen carried two real room colours
+   130px apart and only one of them meant anything. Brand claims brand. The literals below are
+   already the badge colour and the roomless default, so this costs no new value -- and the topic
+   route is untouched, because #home only exists there. Asserted by test/room_browser.cjs arm 3. */
+.ix-panel,.xd-panel,#_search-overlay,.tn-menu,#home .hm-brand{
   --topic-ink:#534AB7;--topic-solid:#534AB7;--topic-wash:#EFEDFA;--topic-edge:#CFC7F0;
   --acc:var(--topic-ink);--acc2:var(--topic-solid);--accbg:var(--topic-wash);
   --accink:color-mix(in oklab,var(--topic-ink) 82%,var(--ink));
@@ -1493,7 +1506,7 @@ body.is-hidden,body.is-hidden *,body.is-hidden *::before,body.is-hidden *::after
 }
 /* dark only needs the four inks: --acc and every rung above are declared ON this element and
    re-substitute against whichever --topic-ink wins the cascade here. */
-html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-theme="dark"] #_search-overlay,html[data-theme="dark"] .tn-menu{
+html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-theme="dark"] #_search-overlay,html[data-theme="dark"] .tn-menu,html[data-theme="dark"] #home .hm-brand{
   --topic-ink:#9D93F0;--topic-solid:#9D93F0;--topic-wash:#24223C;--topic-edge:#3A3552;
 }
 

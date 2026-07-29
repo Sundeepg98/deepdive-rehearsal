@@ -516,7 +516,30 @@ class DeepDrill extends TopicPane {
     const land = !!moveFocus || this._focusDoomed();
     this._sGot.textContent = this.got; this._sGot.parentNode.classList.toggle('z', this.got === 0);
     this._sShk.textContent = this.shk; this._sShk.parentNode.classList.toggle('z', this.shk === 0);
-    this._sLeft.textContent = cards.length - this.di; this._sLeft.parentNode.classList.toggle('z', cards.length - this.di === 0);
+    /* ONE BASIS FOR ALL THREE TILES (audit P3-2, prior #22 re-opened sharper). LEFT was
+       `cards.length - this.di` -- a POSITION fact (how many cards sit ahead of the cursor) rendered
+       into a TALLY row whose other two tiles count THIS RUN's grading. The two bases coincide on a
+       clean sequential run, because judge() pushes a result and advances di together -- which is why
+       this survived. They diverge the moment di moves without a grade, and there are two such paths:
+         - RESUME. The cursor is restored from pos.<id> but got/shk start at 0, so at probe 4 of 21
+           the board read 0 SOLID / 0 REVISIT / 18 LEFT. 0+0+18 = 18, not 21: the row silently
+           claimed three probes had been graded while showing none of them.
+         - THE PROBE NAV (:367). Jumping to probe 15 does the same thing on a FRESH run, no reload
+           needed -- so this was never only a resume defect.
+       Counting the remainder over `results.length` puts LEFT on the same basis as SOLID and REVISIT:
+       all three now tally THIS RUN, they sum to the working set by construction, and the "This run"
+       caption above them is true of the whole row rather than two thirds of it. Re-grading merges by
+       content-id, so "21 left" on a resumed run is not a threat to the record -- those probes really
+       are all still available to grade.
+       WHAT DELIBERATELY DID NOT CHANGE: `di` still drives the progress bar, the probe nav and the
+       debrief terminal, because those ask "where am I", which is the question it answers. And the
+       tiles are still not seeded from the canonical record -- that would put a record-derived number
+       in front of the microtask-freshness law (renderD runs BEFORE drillgraded fires the snapshot,
+       so the tiles would lag one grade behind every grade) and would break the this-run denominator
+       the debrief's own pct depends on. The cumulative picture stays where it already lives: the
+       dock, the pip and the session panel, all reading the record. */
+    const left = cards.length - this.results.length;
+    this._sLeft.textContent = left; this._sLeft.parentNode.classList.toggle('z', left === 0);
     this._dfill.style.width = (this.di / cards.length * 100) + '%';
     this.renderNav();
     if (this.di >= cards.length) {
@@ -724,7 +747,11 @@ class DeepDrill extends TopicPane {
        they do not know is the next question. Polite exists precisely so a confirmation can
        arrive without interrupting. (And the mock clock no longer sits in front of this in the
        polite queue -- see the timer in the skeleton above.) */
-    const left = cards.length - this.di;
+    /* The SAME basis the tiles use (see renderD). The comment above promises that "the spoken score
+       and the visible score can never disagree", and it was kept -- but both were reading a
+       position as a tally, so on a resumed or jumped-to run they agreed with each other and
+       contradicted themselves. results.length keeps the promise AND makes the sentence add up. */
+    const left = cards.length - this.results.length;
     const outcome = (level >= 3) ? 'Solid' : (level === 2 ? 'Shaky' : 'Missed');
     const msg = (this.di >= cards.length)
       ? this._roundEndMsg(outcome)                    /* shared with the clock-expiry exit */

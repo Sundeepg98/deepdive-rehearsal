@@ -173,5 +173,23 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:var(--font-size-micro);b
    drill scope. Outward, not the -2px inset .mock-body uses, because an inset accent ring would paint
    accent-on-accent over this button's own gradient (invisible); outward it lands on the pane bg. */
 .flow-go:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+/* #20, GENERALISED TO THE PATTERN (audit P2-3). The rule above fixed ONE class, and the same defect
+   was still live on every other shadow control -- because the cause is structural, not per-class:
+   a DOCUMENT rule cannot cross a shadow boundary, and a spot fix leaves the next control to
+   rediscover that. Dumping the drill root's adoptedStyleSheets found exactly four :focus-visible
+   rules in it (.flow-go, .revset-b, two focus landing pads) and NO generic one, so #jm / #js / #jg
+   (Missed / Shaky / Solid), #adv (Reveal answer) and the mode toggles all computed Chrome's UA
+   fallback: outline-style auto, ~0.7-0.8px rgb(16,16,16) at offset 0. (NO BACKTICKS -- see the
+   warning at the top of this sheet; quoting that value in backticks ended the template literal and
+   took the whole stylesheet with it -- twice while writing THIS comment.) Measured against the
+   light-DOM control on the same page and the same instrument, .seg button -> solid 1.6px
+   rgb(0,107,99) at 2.4px offset. A keyboard-driven trainer that ships 1/2/3 grading gave a hairline to
+   precisely the controls that matter most -- and weakest of all in dark mode, on a near-black card.
+   BASE_SHEET is adopted by all 17 shadow hosts, so this one rule reaches every shadow control the
+   app has today and every one it gains later. It is deliberately the SAME declaration as the
+   document rule at styles.css:53, so focus looks identical either side of the boundary. The
+   per-class rules above and in the drill are now redundant rather than load-bearing; they are left
+   in place because they are harmless and their comments carry the history. */
+button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
 .flow-rcpt{font-size:var(--font-size-micro);color:var(--mut2);font-weight:var(--font-weight-semibold);letter-spacing:.2px}
 `);

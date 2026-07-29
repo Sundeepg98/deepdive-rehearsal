@@ -71,6 +71,8 @@ const HTML = process.argv[2] ||
       b2: P({ missed: ['step'], dDone: 22, dTot: 22, wbDone: 5 }),
       b3: P({ mScore: 2, dDone: 22, dTot: 22, wbDone: 5, mRuns: 1, mixTot: 1 }),
       b4: P({ dDone: 10, dTot: 22 }),
+      b4a: P({ dDone: 0, dTot: 22 }),                    /* W1/P3-1: first run is not a return */
+      b4z: P({ dDone: 0, dTot: 0, wbDone: 0 }),          /* empty bank: must NOT claim a drill */
       b5: P({ dDone: 22, dTot: 22, wbDone: 0 }),
       b6: P({ dDone: 22, dTot: 22, wbDone: 5, mRuns: 0 }),
       b65: P({ mScore: 5, dDone: 22, dTot: 22, wbDone: 5, mRuns: 1, mixWeak: [], mixTot: 0 }),
@@ -82,6 +84,18 @@ const HTML = process.argv[2] ||
   ok('ladder 2: missed steps -> re-draw missed', ladder.b2.tab === 'wb' && /Re-draw missed steps/.test(ladder.b2.btn), JSON.stringify(ladder.b2));
   ok('ladder 3: weak mock -> run the round again', ladder.b3.tab === '__mock__' && /Run the round again/.test(ladder.b3.btn), JSON.stringify(ladder.b3));
   ok('ladder 4: drill unfinished -> back to the drill', ladder.b4.tab === 'drill' && /Back to the drill/.test(ladder.b4.btn), JSON.stringify(ladder.b4));
+  /* W1/P3-1 (prior #14). Rung 4 was unconditional on dDone<dTot, so on a brand-new topic it said
+     "Back to the drill" -- asserting a return that never happened, beside a receipt reading "0 of 21
+     graded" that contradicted it. 4a is a strict refinement of rung 4 (same tab, same colours,
+     honest copy), which is why rung 4 above must STILL fire at dDone=10: the pair proves the split
+     is a refinement and not a replacement. */
+  ok('ladder 4a (NEW RUNG): a cold topic -> START the drill, not "back" to it',
+    ladder.b4a.tab === 'drill' && /Start the drill/.test(ladder.b4a.btn) && !/Back to the drill/.test(ladder.b4a.btn),
+    JSON.stringify(ladder.b4a));
+  ok('ladder 4a does not swallow rung 4 (dDone=10 still reads "Back to the drill")',
+    /Back to the drill/.test(ladder.b4.btn), JSON.stringify({ b4: ladder.b4.btn, b4a: ladder.b4a.btn }));
+  ok('ladder 4a is gated on dTot>0: an EMPTY bank must not be handed a drill it has no probes for',
+    ladder.b4z.tab !== 'drill', JSON.stringify(ladder.b4z));
   ok('ladder 5: no whiteboard -> try the whiteboard', ladder.b5.tab === 'wb' && /Try the whiteboard/.test(ladder.b5.btn), JSON.stringify(ladder.b5));
   ok('ladder 6: no mock -> start a mock run', ladder.b6.tab === '__mock__' && /Start a mock run/.test(ladder.b6.btn), JSON.stringify(ladder.b6));
   ok('ladder 6.5 (THE NEW RUNG): mixTot===0 -> run mixed fire', ladder.b65.tab === '__mix__' && /Run mixed fire/.test(ladder.b65.btn) && /haven/.test(ladder.b65.text), JSON.stringify(ladder.b65));
@@ -284,6 +298,11 @@ const HTML = process.argv[2] ||
   await FRESH();
   await B.enterApp(page);
 
+  /* The view a hash resolves to. Both URL shapes are legal and both appear here: a bare `#drill` on
+     the boot topic, `#<topic>/drill` on any other (router.js keeps the boot topic's URLs bare so
+     they round-trip). Comparing the VIEW is the assertion; the prefix is not. */
+  const hashView = (h) => String(h || '').replace(/^#/, '').split('/').pop();
+
   const before = await page.evaluate(() => ({ hash: location.hash, title: document.title, len: history.length }));
   const dockTab = await page.evaluate(() => {
     const n = (typeof nextUp === 'function') ? nextUp() : null;
@@ -306,7 +325,7 @@ const HTML = process.argv[2] ||
   ok('7a `n` moves the PANE (unchanged behaviour)', afterN.on === dockTab.tab,
     JSON.stringify({ expected: dockTab.tab, got: afterN.on }));
   ok('7a `n` moves the URL HASH to the target pane (pre-fix it froze -- reload landed on the pane you left)',
-    afterN.hash !== before.hash && new RegExp('(^|/)' + dockTab.tab + '$').test(afterN.hash),
+    afterN.hash !== before.hash && hashView(afterN.hash) === dockTab.tab,
     JSON.stringify({ before: before.hash, after: afterN.hash, target: dockTab.tab }));
   ok('7a `n` updates the document TITLE (deep links and bookmarks read correctly)',
     afterN.title !== before.title && /Probe Drill|Whiteboard|System Map|Trade|Model|Numbers|Red Flags|30-Second|Visualize|Walkthrough/.test(afterN.title),
@@ -331,7 +350,8 @@ const HTML = process.argv[2] ||
      read differently for that reason. Walk is also OFF both targets, so neither flowGo below can be
      a no-op that fakes a pass. */
   await page.evaluate(() => { window.Router.navigate('walk'); });
-  await B.until(page, () => /(^|\/)walk$/.test(location.hash), null, B.ACT_MS, 'reset to the walk route before the ordering pin');
+  await B.until(page, () => String(location.hash).replace(/^#/, '').split('/').pop() === 'walk',
+    null, B.ACT_MS, 'reset to the walk route before the ordering pin');
   await B.settle(page);
 
   const order = await page.evaluate(() => {
@@ -367,12 +387,12 @@ const HTML = process.argv[2] ||
     ok('7b flowGo(rec.wbreset) reaches the whiteboard\'s rerunMissed() side effect', !!wbSnap, JSON.stringify(order.seen));
     if (weakSnap) {
       ok('7b ORDERING: by the time drill.weak() fires, the ROUTER has already landed on #drill (navigate -> switchTab -> side effect)',
-        /(^|\/)drill$/.test(weakSnap.hash) && weakSnap.on === 'drill',
+        hashView(weakSnap.hash) === 'drill' && weakSnap.on === 'drill',
         JSON.stringify(weakSnap) + ' -- an async navigation would show the OLD hash here, and the pane flush would then wipe the weak set on its way in');
     }
     if (wbSnap) {
       ok('7b ORDERING: by the time wb.rerunMissed() fires, the ROUTER has already landed on #wb',
-        /(^|\/)wb$/.test(wbSnap.hash) && wbSnap.on === 'wb', JSON.stringify(wbSnap));
+        hashView(wbSnap.hash) === 'wb' && wbSnap.on === 'wb', JSON.stringify(wbSnap));
     }
   }
 

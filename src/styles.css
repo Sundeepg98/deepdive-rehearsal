@@ -1380,6 +1380,31 @@ body.is-hidden,body.is-hidden *,body.is-hidden *::before,body.is-hidden *::after
 .tn-step{flex:0 0 auto;display:flex;align-items:center;justify-content:center;min-width:var(--space-32);border:1px solid var(--bd);background:var(--card);border-radius:11px;color:var(--acc);font:inherit;font-size:var(--font-size-body);line-height:var(--line-height-none);cursor:pointer;transition:border-color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base)}
 .tn-step:hover{border-color:#cfc7f0;background:var(--accbg)}
 .tn-step:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+/* ===== THE DESKTOP SWITCHER SHOWS ITS VALUE (P2-4) ============================================
+   .tn-current measured clientWidth 18px against scrollWidth 146px -- 12% of the topic name -- and
+   IDENTICALLY at 1024/1280/1440/1600/1920, because the sidebar is fixed-width: .tn-trigger is
+   ~132px at all of them, the "REHEARSING" eyebrow takes its full natural width and the chevron
+   takes its, leaving flex:1 with the remainder. The control rendered as
+   [REHEARSING S: v] and read as a rendering glitch on all 46 topics at every desktop width.
+
+   Same mechanism the <=600px block used to carry: let the row WRAP and give the eyebrow its own
+   line, so the name owns the full width. The eyebrow is KEPT, not deleted -- it labels the
+   control for everyone including AT, and deleting it would "fix" the measurement by destroying
+   the label.
+
+   WRITTEN HERE RATHER THAN LIFTED, and that is a correction to the audit's premise. The audit
+   said "the remedy is already written, it is just gated to @media(max-width:600px)". It is no
+   longer a remedy anywhere: W2's phone-budget wave added `.side-id .tn-trigger{flex-wrap:nowrap}`
+   plus a 1px clip of .tn-eyebrow/.tn-current under @media(max-width:919px), which is both LATER
+   and more specific ((0,2,0) vs (0,1,0)). Measured on the pre-fix build at 360/500/600/919px:
+   flex-wrap computes `nowrap` and .tn-current clientWidth is 1px at every one of them -- the
+   <=600px wrap has been dead code since W2 merged. So it could not be lifted; the desktop rule
+   below is new, and the dead pair has been removed from the <=600px block rather than left to
+   read as live. */
+@media(min-width:920px){
+  .sidebar .tn-trigger{flex-wrap:wrap;row-gap:var(--space-1)}
+  .sidebar .tn-eyebrow{flex:0 0 100%}
+}
 .topic-nav.tn-open .tn-chev{transform:rotate(180deg)}
 .tn-menu{position:absolute;left:0;right:0;top:calc(100% + var(--space-5));z-index:var(--z-dropdown);background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:var(--space-5);box-shadow:0 12px 34px rgba(30,28,24,.18);max-height:56vh;overflow-y:auto}
 .tn-item{display:grid;font:inherit;grid-template-columns:1fr;grid-template-rows:auto auto;column-gap:var(--space-9);width:100%;border:0;background:none;border-radius:9px;padding:var(--space-8) var(--space-10);cursor:pointer;text-align:left;transition:background var(--duration-fast) var(--ease-base)}
@@ -1743,9 +1768,18 @@ h1,h2,h3,h4,h5,h6{text-wrap:balance}
      (The <h1> above already renders the full name, so this was never a total LOSS of the
      information -- measured, not assumed: 04-reflow.mjs asserts the h1 shows it in full, and
      flips #tncurrent to a reported failure the moment that h1 is hidden. But a switcher whose
-     current value is unreadable is still a bad control, and 91px -> 6px of clipping is real.) */
-  .tn-trigger{min-height:44px;flex-wrap:wrap;row-gap:var(--space-1)}
-  .tn-eyebrow{flex:0 0 100%}
+     current value is unreadable is still a bad control, and 91px -> 6px of clipping is real.)
+
+     THE WRAP PAIR THAT LIVED HERE IS DELETED (W4/P2-4), because it had already stopped doing
+     anything. W2's phone budget added `.side-id .tn-trigger{flex-wrap:nowrap}` and a 1px clip of
+     .tn-eyebrow/.tn-current under @media(max-width:919px) -- later in the file and more specific
+     ((0,2,0) beats (0,1,0)) -- which turns the switcher into a chevron beside the name it would
+     otherwise repeat. Measured on the pre-fix build at 360/500/600/919px: computed flex-wrap is
+     `nowrap` and .tn-current clientWidth is 1px at every width, so these two declarations were
+     dead in every viewport they were written for. The paragraph above is kept because it is the
+     history; the rule it describes now lives, live, in the >=920px block beside .tn-current.
+     min-height:44px stays -- that IS still live, and it is the tap floor. */
+  .tn-trigger{min-height:44px}
 }
 .tn-home{font-size:var(--font-size-subhead)}
 

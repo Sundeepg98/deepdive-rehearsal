@@ -80,12 +80,18 @@
   function build() {
     var sidebar = document.querySelector('.sidebar');
     if (!sidebar || document.getElementById('textzoom')) return;
-    /* Anchor on .seg, not .mockbar. This widget paints BETWEEN the mock CTA and the pane
-       switcher, and it held that spot only because .mockbar carried `order:2` -- with the
-       sidebar's `order` gone (it desynced tab order from paint: WCAG 2.4.3, see styles.css),
-       DOM position IS paint position, so inserting before .seg is what keeps this above the
-       switcher. Inserting before .mockbar would now drop it BELOW the switcher. */
-    var anchor = sidebar.querySelector('.seg');
+    /* ANCHOR ON .mockbar, so this paints BELOW the pane switcher (P2-6).
+       It used to anchor on .seg, i.e. above the switcher. At 1280x800 that put 614px of chrome
+       over the nav and only 4 of 9 tabs above the fold -- over half the app's surfaces invisible
+       on landing -- and the two widgets doing the pushing were a font-size control and a
+       pomodoro: set-once controls sitting above a nav used every few seconds.
+       This is a DOM move, NOT flex `order`, and that is deliberate: styles.css:628 records that
+       `order` in this column reorders PAINT and never TAB ORDER, which is how the app's primary
+       navigation once became tab stop 25 of 48 (WCAG 2.4.3). Moving the DOM moves both, in the
+       right direction -- the nav is reached EARLIER by keyboard now, not later.
+       pomodoro.js anchors the same way and runs after this, so the pair keeps its relative order:
+       switcher, then text zoom, then pomodoro. */
+    var anchor = sidebar.querySelector('.mockbar');
 
     var wrap = document.createElement('div');
     wrap.id = 'textzoom';

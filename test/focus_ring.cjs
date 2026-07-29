@@ -160,9 +160,43 @@ const RING = (sel) => {
     await page.evaluate(RING, '.cmp-reopen'));
   await page.evaluate(() => { if (document.body) document.body.classList.remove('cmp-collapsed'); });
 
+  /* ---------- 6. .piv-jump -- the System Map's pivot jump, the FOURTH member of the P3-6 class.
+     Found by the W1 verifier, fixed in W4. It is a SHADOW button (deep-system-map) whose rule was
+     `.piv-jump:hover,.piv-jump:focus{...outline:none}` -- (0,2,0), so it outranked BASE_SHEET's
+     generic button:focus-visible, and what survived was a background swap byte-identical to its
+     own :hover. It lives inside <details class="piv">, which must be OPEN for the button to be
+     rendered and therefore focusable. ---------- */
+  await page.evaluate(() => { if (typeof switchTab === 'function') switchTab('sys'); });
+  await B.until(page, () => {
+    const h = document.querySelector('deep-system-map');
+    const r = h && h.shadowRoot;
+    if (!r) return false;
+    const d = r.querySelector('details.piv');
+    if (d) d.open = true;
+    const b = r.querySelector('.piv-jump');
+    return !!b && b.getClientRects().length > 0;
+  }, null, B.ACT_MS, 'the System Map renders a .piv-jump inside an open pivot');
+  judge('.piv-jump shows the app ring on keyboard focus (system-map.js wrote :focus{outline:none}; its (0,2,0) outranked the BASE_SHEET rule)',
+    await page.evaluate(() => {
+      const root = document.querySelector('deep-system-map').shadowRoot;
+      const el = root.querySelector('.piv-jump');
+      if (!el) return { err: '.piv-jump not present in the system-map shadow root' };
+      if (!el.getClientRects().length) return { err: '.piv-jump is not rendered' };
+      el.focus({ focusVisible: true });
+      if (root.activeElement !== el) return { err: '.piv-jump did not take focus' };
+      const cs = getComputedStyle(el);
+      const probe = document.createElement('span');
+      probe.style.color = 'var(--acc)';
+      el.appendChild(probe);
+      const accRgb = getComputedStyle(probe).color;
+      probe.remove();
+      return { fv: el.matches(':focus-visible'), width: cs.outlineWidth, style: cs.outlineStyle,
+               color: cs.outlineColor, offset: cs.outlineOffset, accRgb: accRgb };
+    }));
+
   await browser.close();
   notes.forEach((n) => console.log(n));
   if (fails.length) { fails.forEach((f) => console.log('  - ' + f)); return B.finish(1, 'FOCUS RING: FAIL (' + fails.length + ')'); }
-  console.log('FOCUS RING: PASS  (' + notes.length + ' assertions: 3 light-DOM chrome buttons kept their ring; the shadow #adv and #jg get the BASE_SHEET ring)');
+  console.log('FOCUS RING: PASS  (' + notes.length + ' assertions: 3 light-DOM chrome buttons kept their ring; the shadow #adv, #jg and .piv-jump get the BASE_SHEET ring)');
   return B.finish(0);
 })().catch((e) => { console.error(e && e.stack || e); return B.finish(1, 'FOCUS RING: FAIL (harness error: ' + (e && e.message) + ')'); });

@@ -68,8 +68,12 @@
        app's primary navigation was the 25th of 48 tab stops, reached only after walking all
        13 tool buttons that sit visually BELOW it (WCAG 2.4.3). Both `order` declarations are
        now gone and the DOM carries the order, so paint and focus cannot drift apart again.
-       text-zoom.js and pomodoro.js inject their widgets immediately before this element,
-       which is what keeps them painting between .mockcta and the switcher. -->
+       W4/P2-6: text-zoom.js and pomodoro.js now inject their widgets immediately before
+       .mockbar, i.e. BELOW this switcher. They used to inject immediately before this element,
+       which put 614px of chrome over the nav and left only 4 of 9 tabs above the fold at
+       1280x800 -- a font-size control and a pomodoro, both set-once, above a nav used every few
+       seconds. Because DOM position is both paint order and tab order here, that move also
+       pulls the nav EARLIER in the tab sequence. -->
   <!-- QW3: each tab wears its jump key. The .seg-key badge is aria-hidden (the binding is
        exposed to AT via aria-keyshortcuts on the button, not by polluting its name) and is
        absolutely positioned by styles.css so it adds ZERO layout -- click_drift asserts the

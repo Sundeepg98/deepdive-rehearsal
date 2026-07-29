@@ -98,12 +98,13 @@
   function build() {
     var sidebar = document.querySelector('.sidebar');
     if (!sidebar || document.getElementById('pomodoro')) return;
-    /* Anchor on .seg, not .mockbar -- same reason as text-zoom.js: the sidebar's flex `order`
-       is gone (it desynced tab order from paint, WCAG 2.4.3), so DOM position now IS paint
-       position and this widget must be inserted before the pane switcher to stay above it.
-       text-zoom.js runs first and inserts before .seg too, so the pair keeps its order:
-       text zoom, then pomodoro, then the switcher. */
-    var anchor = sidebar.querySelector('.seg');
+    /* Anchor on .mockbar -- same reason as text-zoom.js: DOM position IS paint position here
+       (the sidebar's flex `order` is gone because it desynced tab order from paint, WCAG 2.4.3),
+       so this inserts AFTER the pane switcher to sit below it. A focus timer is a set-once
+       control; it does not belong above a nav used every few seconds (P2-6).
+       text-zoom.js runs first and anchors the same way, so the pair keeps its order:
+       the switcher, then text zoom, then pomodoro. */
+    var anchor = sidebar.querySelector('.mockbar');
 
     var wrap = document.createElement('div');
     wrap.id = 'pomodoro'; wrap.className = 'pomodoro';

@@ -100,8 +100,20 @@ landing blocks — plus a `block:'start'` seat on `stage >= 2`, which is exactly
 
 | | before | after |
 |---|---|---|
-| grade row after "push further" | 933 (**205px below** the bar) | 474 (**254px above** it) |
-| scrollY response to the tap | unchanged | seats the new follow-up at the band top |
+| grade row after the FIRST "push further" | 933 (**205px below** the bar) | 474 (**254px above** it) |
+| grade row after the TERMINAL push | 1299 (**571px below**) | 959 (**231px below**) |
+| scrollY response to the tap | unchanged, at every stage | seats the new follow-up at the band top, at every stage |
+
+**Qualifier, cold-verify F4 — read the two rows together.** The 933 → 474 figure is the **first**
+push. On the terminal push of a 2–3 link chain the seated follow-up is itself taller than the band,
+so the grade row below it is again past the fold (959, 231px below the bar) — better than base's
+571px, but not on screen. **What is fixed at every stage is the defect as diagnosed:** "scrollY
+unchanged, the app ignored me". The screen now responds to every push, the block the user asked for
+is seated at the top of the band every time, and the result is strictly better than base at every
+stage. The audit's phrasing was "once per follow-up, on a chain of 2–3", so a reader of the
+single-row version could reasonably have concluded more was fixed than is. Seating the requested
+content at the top remains the right behaviour: the alternative is to seat a grade control the user
+has not yet earned the information to use.
 
 **Why this and not the bar swap** (the brief offered either): I built the sticky-judge option first
 and it cannot work as specified. `.judge` is the **last child** of `.card`, and a sticky element can
@@ -206,15 +218,35 @@ whose diff is 4 lines: the timestamp and the three hashes. No sub-tolerance jitt
 | `m-walk-dark` | 175,946 (53.5%) | 390×703 at (0,67) | same translation, dark |
 | `num-light` | 66,153 (6.5%) | 581×531 at (338,269) | **+4px per input**, ×2 rows = +8px |
 
-**m-walk is a translation, not a reflow.** Element-level, before → after:
+**m-walk is a translation, not a reflow — but it is TWO translations, not one.** Element-level,
+before → after:
 
 ```
 .side-id   188.3 -> 67.0     .hdr        73.8 -> 54.0    (focus toggle beside the title)
 .locator   148.8 -> 78.5     .topic-nav  187.3 -> 67.0   (own rows -> the same row)
-.mcomp     262.3 -> 141.0    .pane       332.3 -> 197.0  (both exactly -121.3)
-.pane HEIGHT 1142.8 -> 1142.8  (unchanged: the walk pane's own content did not reflow)
-document   1705 -> 1570      overflowX   0 -> 0
+.mcomp     262.3 -> 141.0   (-121.3)     the identity block's reclaim, and nothing else
+.pane      332.3 -> 197.0   (-135.3)     that reclaim PLUS the companion's own 14px
+.pane HEIGHT unchanged        document 1705 -> 1570      overflowX 0 -> 0
 ```
+
+**Correction, cold-verify F2.** An earlier revision of this section said `.mcomp` and `.pane` moved
+"both exactly −121.3" and headlined the baseline as "a pure 121.3px upward translation". `.pane`
+moved **−135.3**. The arithmetic error was mine, made against my own attribution data, and it made
+this table contradict the budget table twenty lines above it: the extra 14px is precisely the
+companion row of that table (`.mcomp` collapsed + margin, 70 → 56 = 14 reclaimed, from the new
+`.mcomp{margin-bottom:var(--space-10)}`). So everything above the companion shifts −121.3 and
+everything from its bottom margin down shifts −135.3. Nothing unexplained changed and the
+rebaseline is correct; the sentence was.
+
+The verifier confirmed both shifts **in the pixels**, with a tolerant row-alignment scan (per-row
+luminance profile, MAD against candidate `dy`): the identity region minimises sharply at `dy=121`
+and the pane region at `dy=136`, in both themes. Their note that an *exact* row-signature scan is
+useless here is worth keeping — a 121.3px shift is fractional and re-hints every row, which failed
+their first differ's own negative control.
+
+*Framing note for the next reader:* the verifier reads `.pane` height as 1281.5 where this report
+reads 1142.8. That is a `.pane` vs `.pane.on` selector difference, not a disagreement — the
+load-bearing claim, **unchanged across the wave**, reproduces on both framings.
 
 The diff box starting at y=67 is the first painted row below the fixed seg, which is where a
 translation of everything beneath the identity block would start. `num-light`: the four assumption
@@ -323,3 +355,92 @@ showed it. Fixed unconditionally; the debt list is unchanged at 15 known compone
   on every run so a regression arrives as "the margin shrank", not as a surprise red.
 - **P2-12 absolutes are upper bounds**, per the audit's standing rule. Only the paired deltas above
   are load-cancelling; do not quote the absolutes as a baseline.
+
+---
+
+# Round-2 addendum — the honesty round
+
+Cold verify (`w2-verifier`, independent) returned **CLEAN: 0 blocking, 6 non-blocking**, all
+precision-of-claim or instrument-documentation. Verdict committed verbatim at
+`_audit/2026-07-29-w2-phone-coldverify.md`. All six are addressed; two corrections (F2, F4) are
+folded into the body above rather than quarantined here, because a correction filed in an appendix
+is a correction most readers will not see.
+
+| # | disposition |
+|---|---|
+| F1 | `fold_budget`'s header claimed 37px landscape headroom; the check prints **20**. Comment corrected to the measured number, with its provenance and the fact that the check itself never printed 37. |
+| F2 | VR attribution rewritten as **two** translations (−121.3 / −135.3) and reconciled with the budget table. `.pane` vs `.pane.on` framing difference noted. |
+| F3 | `fold_budget`'s return-path precondition made real — and it found a second bug. See below. |
+| F4 | P2-8 receipt qualified with the terminal-push row and the exact scope of the fix. |
+| F5 | `capture-pairs.cjs` now asserts the raw `data-theme` attribute. The two wall-clock waits stay, with a comment stating why they are acceptable here and what would have to change first. |
+| F6 | **Decided (a): chips raised to 44px.** Reasoning below. |
+| gaps | Both disclosed plant gaps **closed** rather than left disclosed — they were each about ten lines. |
+
+## F6 — the decision, and why it went this way
+
+The cram jump chips shipped at 36px under a comment claiming the app's 44px floor while the
+assertion used the 24px AA floor. Comment and assertion disagreed, and the gap between them was the
+whole question.
+
+**Chips raised to 44px; the assertion now reads 44 too.** The argument that settled it is this
+wave's own: `.dsu-tog` was briefly 40px in the landscape block to buy fold pixels, and I put it back
+with the note that *"a wave that raises three targets to 44 while quietly shipping a fourth at 40
+has not fixed anything, it has moved the defect."* A dense secondary strip has a real case for the
+AA floor — but not in the wave whose thesis is the app floor, and not for a control the wave itself
+added. The cost is bounded and one-directional: the strip scrolls **horizontally**, so the extra 8px
+buys nothing back except 8px of a panel that already scrolls vertically.
+
+Blast radius checked, not assumed: the cram overlay is closed at rest, so it appears in **no** VR
+baseline — `m-walk-*` capture the walk pane with the sheet shut. Confirmed by the gate's
+`visual_regression` passing against the committed pixels after the change, with no rebaseline.
+
+## F3 found a second bug, in my own instrument
+
+The ruling was to make the return-path precondition real, because `scrollTo(0,700)` under
+`html{scroll-behavior:smooth}` (styles.css:36) had not actually scrolled before the assertion ran.
+It did — and the first repair was **also wrong**, in a way worth recording:
+
+- A rest test of "two consecutive equal samples 100ms apart" is **not** a rest proof under a smooth
+  scroll. A single stalled frame satisfies it. The poll returned early, the pane switch fired into a
+  still-settling scroll, and the return-path arm then measured `scrollY 189` on a build that
+  genuinely rests at 0.
+- Repaired properly, both waits now have definite end states: the precondition polls until scrollY
+  **reaches its clamped target**, and the post-switch wait demands **three** consecutive agreeing
+  samples.
+- Independently confirmed with a standalone probe on both builds: with a fully rested scroll the
+  return path lands at `scrollY 0`, `.qq` **415**, in band — and on base at `scrollY 0`, `.qq`
+  **763**, out of band. The original conclusion was right; only its premise was unproven.
+
+The arm is now red on base **with its precondition passing**, so it is exercised rather than
+vacuously red.
+
+## Plant coverage after this round
+
+| plant | before | now |
+|---|---|---|
+| `fold_budget` portrait | present | present (band-unchanged guard intact) |
+| `fold_budget` landscape | disclosed gap | **present** — plant refactored to a function, run at both viewports, each anchored to its own pre-fix number (763 / 701) |
+| `touch_floor` 44px arm | present | present |
+| `touch_floor` 24px AA arm | disclosed gap | **present** — reverts the skip-label fix and requires the arm to notice |
+
+All four abort rather than pass if their control fails to fire. Both guards re-verified watched-red
+on the extracted `2c74cb7` build after every change in this round.
+
+## What the verifier corroborated that I could not have
+
+Recorded because it is stronger evidence than anything in the original freeze:
+
+- **The band is live, not typed.** Their T1 grew only the fixed bottom bar by 400px, leaving `.qq`
+  unmoved, and all six band assertions went red. T5 made the plant move the chrome as well as the
+  card and the band-unchanged guard **aborted**, proving that guard is real rather than prose.
+- **The at-rest polling is load-bearing.** Their T4 replaced it with a single sample and
+  manufactured **two false failures on a compliant build** — cram × at 42.2, `#scrolltop` at 41.5
+  under `matrix(0.943…)`. They also hit the artifact by hand twice before adding their own poll.
+- **The accessible name survives the title trade.** Asked of Chromium itself via CDP
+  `Accessibility.getPartialAXTree`, not by reading `aria-*`: the trigger's computed name is
+  `"REHEARSING Production Debugging and Incident Diagnosis"`, `ignored=false`.
+- **All three alternate topic paths work on a phone**, driven with hit-tested clicks and verified by
+  `TopicRegistry.current().id` changing — and the `[` / `]` keys still work there too, which this
+  report understated: adjacency is not lost even for a keyboard user, only its on-screen affordance.
+- **`#scrolltop` adjudicated independently:** `39.6 / 44 = 0.9000` exactly. The control was never
+  short.

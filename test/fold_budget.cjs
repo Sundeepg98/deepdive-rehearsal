@@ -26,9 +26,11 @@
  * no wall clock in any assertion and no reliance on a screenshot. It is not fully font-metric-free
  * (the app's body face is a system stack, so .qq's line box differs between this box and a CI
  * runner) -- so the assertion is stated with the margin it actually has, and both margins are
- * PRINTED on every run. Measured headroom at the time of writing: 287px portrait, 11px landscape
- * -> after the landscape card-head fix, 37px. A font that renders 10% taller moves .qq's line box
- * by ~2.6px, so both sides carry an order of magnitude more room than the metric can consume.
+ * PRINTED on every run. Measured on the shipped build: 287px portrait and 20px landscape (the
+ * landscape figure was 11px before the card-head fix; an earlier draft of this comment projected
+ * 37px, which the check itself never printed -- read the run, not this paragraph). .qq's measured
+ * line box is 26.1px, so a font rendering 10% taller costs ~2.6px: ~7.7x headroom on the tighter
+ * of the two sides, and two orders more on the other.
  *
  * ENTERED AS A USER DOES. A real hit-tested page.mouse.click on the "Probe Drill" seg button,
  * from the Walkthrough -- never location.hash and never el.click(). The audit's own receipt was
@@ -55,10 +57,11 @@ const HTML = process.argv[2] || path.join(__dirname, '..', 'deepdive_content_pip
  * turns that from a belief into a measurement. */
 const TOPICS = ['content-pipeline', 'notifications', 'debugging'];
 
-/* The audit's own pre-fix measurement on this box, kept as the anchor for the self-test below.
-   The plant must push .qq at least this far back down: a control that merely nudges it proves
-   the probe is sensitive, not that it is calibrated to the defect it was written for. */
-const PREFIX_QQ_TOP = 763;
+/* The pre-fix measurements on this box, kept as the anchors for the self-tests below -- one per
+   viewport. The plant must push .qq at least this far back down: a control that merely nudges it
+   proves the probe is sensitive, not that it is calibrated to the defect it was written for. */
+const PREFIX_QQ_TOP = 763;             /* 360x800, measured on 2c74cb7 */
+const PREFIX_QQ_TOP_LANDSCAPE = 701;   /* 844x390, measured on 2c74cb7 */
 
 /* The measurement. Everything here is live layout; nothing is a constant. */
 const FOLD = () => {
@@ -109,6 +112,46 @@ async function tapPane(page, tab) {
   await B.settle(page);
 }
 
+/* ===== A PROGRAMMATIC SCROLL HERE IS ANIMATED, SO "I SCROLLED" IS NOT A GIVEN =====
+   styles.css:36 sets html{scroll-behavior:smooth}, which makes window.scrollTo() an ANIMATION. A
+   scrollTo() followed by the usual two-rAF settle therefore reads the page mid-flight -- and for a
+   short hop, before it has visibly moved at all. That matters for exactly one arm below: the RETURN
+   PATH exists to prove the fold budget is not a first-visit tax, and its premise is that the user
+   was genuinely scrolled away from the top when they left the pane. An earlier version asserted
+   that premise with scrollTo(0,700) + settle and never actually left scrollY 0 -- the conclusion
+   held (the assertion passes from a real scroll and fails on base either way), but the check was
+   not demonstrating what its comment said it was.
+   So: wait for the scroll to REACH ITS TARGET, and separately for the page to stop moving after a
+   pane switch. Condition, not duration -- either one failing to settle times out into a real
+   failure rather than being quietly accepted.
+
+   AND "TWO EQUAL SAMPLES" IS NOT A REST PROOF HERE, which cost a revision to learn. The first
+   version of this helper polled until two consecutive reads 100ms apart agreed -- and a smooth
+   scroll that stalls for one frame produces exactly that, mid-animation. It returned early, the
+   pane switch fired into a still-settling scroll, and the return-path arm then measured scrollY
+   189 on a build that genuinely rests at 0. So the precondition polls for a DEFINITE END STATE
+   (the clamped target), and the post-switch wait demands three consecutive agreeing samples, not
+   two. */
+async function scrollToRest(page, y) {
+  const want = await page.evaluate((t) => {
+    window.scrollTo(0, t);
+    return Math.min(t, document.documentElement.scrollHeight - window.innerHeight);
+  }, y);
+  await B.pollFor(() => page.evaluate(() => Math.round(window.scrollY)),
+    (v) => Math.abs(v - want) <= 2, B.ACT_MS, 'the smooth scroll to reach ' + want);
+  return want;
+}
+
+/* Rest with no known target -- used after a pane switch, which can move the scroll on its own. */
+async function settleScroll(page) {
+  const seen = [];
+  return B.pollFor(async () => {
+    seen.push(await page.evaluate(() => Math.round(window.scrollY)));
+    if (seen.length > 3) seen.shift();
+    return (seen.length === 3 && seen[0] === seen[1] && seen[1] === seen[2]) ? seen[2] : null;
+  }, (v) => v !== null, B.ACT_MS, 'the page to stop scrolling after a pane switch');
+}
+
 /* A viewport this check BELIEVES. The audit lost 59 of 60 rows to a page whose viewport override
    was silently reset, and named "assert innerWidth on every measurement" as the standing lesson. */
 async function pinViewport(page, w, h) {
@@ -157,10 +200,14 @@ async function pinViewport(page, w, h) {
      re-paid on every return (drill @700 -> whiteboard -> drill -> qVisible 0 again). A fix that
      only seated the question on first entry would leave the defect intact for the other 20 visits
      of a round, so the same assertion is re-taken after a round trip through another pane. */
-  await page.evaluate(() => window.scrollTo(0, 700));
-  await B.settle(page);
+  const away = await scrollToRest(page, 700);
+  /* The precondition is asserted, not assumed -- see scrollToRest. If the user was never actually
+     scrolled away, the arm below is testing a fresh entry a second time and says so. */
+  ok('[360x800] RETURN PATH precondition: the user really was scrolled away from the top before leaving the pane',
+    away > 400, 'scrollY came to rest at ' + away + ' after asking for 700');
   await tapPane(page, 'wb');
   await tapPane(page, 'drill');
+  await settleScroll(page);
   const back = await page.evaluate(FOLD);
   ok('[360x800] RETURN PATH: drill -> whiteboard -> drill still lands with the question in the band, at scrollY 0, with no manual scroll',
     back.ready && back.scrollY === 0 && back.firstLineIn === true, JSON.stringify(back));
@@ -185,7 +232,7 @@ async function pinViewport(page, w, h) {
     land.ready && land.bandPx > 257, JSON.stringify({ bandPx: land.bandPx }));
   if (land.ready) console.log('       .qq top=' + land.qqTop + '  band=' + JSON.stringify(land.band) + '  margin=' + land.marginPx + 'px');
 
-  /* ===================== THE PLANT =====================
+  /* ===================== THE PLANT, AT BOTH VIEWPORTS =====================
      Put the reclaimed pixels back and require the assertion to notice.
      ONE VARIABLE, DELIBERATELY. The first version of this plant re-created the pre-fix CSS by
      un-clipping .tn-current -- and that reintroduced a DIFFERENT, older bug: the un-ellipsised
@@ -193,45 +240,60 @@ async function pinViewport(page, w, h) {
      then sized by the widened layout viewport. The bar's top moved 728 -> 777, the band grew to
      716px, and the plant "passed" for a reason that had nothing to do with the fold. A negative
      control that perturbs the thing it is measured against proves nothing.
-     So: the REAL mechanism (the setup disclosure comes back, +214px) plus an inert spacer for the
+     So: the REAL mechanism (the setup disclosure comes back) plus an inert spacer for the
      light-DOM half. The spacer moves nothing but the card's start position, which is exactly the
-     variable under test, and the assertion below anchors it to the pre-fix 763 so the control is
-     calibrated to the measured defect rather than to any nudge at all. */
-  await pinViewport(page, 360, 800);
-  await page.evaluate((id) => { location.hash = '#' + id + '/walk'; }, TOPICS[0]);
-  await B.settle(page);
-  await tapPane(page, 'drill');
-  const planted = await page.evaluate((target) => {
-    const host = document.querySelector('#drill deep-drill');
-    host.classList.remove('dsu-closed');                   /* the 214px of setup comes back */
-    const root = host.shadowRoot;
-    const qq = root.querySelector('.qq');
-    /* size the spacer from the LIVE gap, so the plant lands on the pre-fix number on any box */
-    const need = Math.max(0, target - Math.round(qq.getBoundingClientRect().top));
-    const sp = document.createElement('div');
-    sp.id = '_foldplant';
-    sp.style.cssText = 'height:' + need + 'px';
-    root.insertBefore(sp, root.firstChild);
-    return { need: need };
-  }, PREFIX_QQ_TOP);
-  await B.settle(page);
-  const plantedFold = await page.evaluate(FOLD);
-  await page.evaluate(() => {
-    const host = document.querySelector('#drill deep-drill');
-    const s = host.shadowRoot.getElementById('_foldplant');
-    if (s) s.remove();
-    host.classList.add('dsu-closed');
-  });
-  const sane = plantedFold.ready && plantedFold.qqTop >= PREFIX_QQ_TOP - 4 && plantedFold.band[1] === back.band[1];
-  if (!sane || plantedFold.firstLineIn !== false) {
-    console.log('  ABORT the pre-fix fold did NOT turn this check red, or the plant moved the chrome instead of the card.');
-    console.log('     -> planted=' + JSON.stringify(plantedFold) + ' spacer=' + planted.need + ' fixedBand=' + JSON.stringify(back.band));
+     variable under test, and each call anchors to that viewport's own pre-fix number, so the
+     control is calibrated to the measured defect rather than to any nudge at all.
+     RUN AT BOTH VIEWPORTS. It was portrait-only for one revision, with the landscape gap merely
+     disclosed. The landscape arm shares this FOLD() probe and does go red on the base build, so it
+     was never a check that could not fail -- but a disclosure is not a control, and the plant was
+     already a function's worth of code. */
+  const runPlant = async (w, h, target, label) => {
+    await pinViewport(page, w, h);
+    await page.evaluate((id) => { location.hash = '#' + id + '/walk'; }, TOPICS[0]);
+    await B.settle(page);
+    await tapPane(page, 'drill');
+    const ref = await page.evaluate(FOLD);          /* this viewport's own healthy band */
+    const spacer = await page.evaluate((t) => {
+      const host = document.querySelector('#drill deep-drill');
+      host.classList.remove('dsu-closed');          /* the setup rows come back */
+      const root = host.shadowRoot;
+      const qq = root.querySelector('.qq');
+      /* size the spacer from the LIVE gap, so the plant lands on the pre-fix number on any box */
+      const need = Math.max(0, t - Math.round(qq.getBoundingClientRect().top));
+      const sp = document.createElement('div');
+      sp.id = '_foldplant';
+      sp.style.cssText = 'height:' + need + 'px';
+      root.insertBefore(sp, root.firstChild);
+      return need;
+    }, target);
+    await B.settle(page);
+    const planted = await page.evaluate(FOLD);
+    await page.evaluate(() => {
+      const host = document.querySelector('#drill deep-drill');
+      const s = host.shadowRoot.getElementById('_foldplant');
+      if (s) s.remove();
+      host.classList.add('dsu-closed');
+    });
+    const moved = planted.ready && planted.qqTop >= target - 4;
+    const chromeStill = planted.ready && ref.ready && planted.band[0] === ref.band[0] && planted.band[1] === ref.band[1];
+    if (!moved || !chromeStill || planted.firstLineIn !== false) {
+      console.log('  ABORT ' + label + ': the pre-fix fold did NOT turn this check red, or the plant moved the chrome instead of the card.');
+      console.log('     -> planted=' + JSON.stringify(planted) + ' spacer=' + spacer + ' healthyBand=' + JSON.stringify(ref.band));
+      return false;
+    }
+    ok('[plant] ' + label + ': restoring the pre-fix fold pushes the question back out of the band, with the chrome untouched', true, '');
+    console.log('       planted .qq top=' + planted.qqTop + ' vs fixed ' + ref.qqTop + '  (spacer ' + spacer + 'px, band ' + JSON.stringify(planted.band) + ' unchanged)');
+    return true;
+  };
+  if (!(await runPlant(360, 800, PREFIX_QQ_TOP, '360x800'))) {
     await browser.close();
-    return B.finish(1, 'FOLD BUDGET: ABORTED (self-test failed: the check cannot fail)');
+    return B.finish(1, 'FOLD BUDGET: ABORTED (self-test failed: the portrait check cannot fail)');
   }
-  ok('[plant] restoring the pre-fix fold (setup expanded + the reclaimed light-DOM height) pushes the question back out of the band, with the chrome untouched',
-    true, '');
-  console.log('       planted .qq top=' + plantedFold.qqTop + ' vs fixed ' + back.qqTop + '  (spacer ' + planted.need + 'px, band unchanged)');
+  if (!(await runPlant(844, 390, PREFIX_QQ_TOP_LANDSCAPE, '844x390'))) {
+    await browser.close();
+    return B.finish(1, 'FOLD BUDGET: ABORTED (self-test failed: the landscape check cannot fail)');
+  }
 
   ok('zero console/page errors', errs.length === 0, errs.slice(0, 4).join(' | '));
 

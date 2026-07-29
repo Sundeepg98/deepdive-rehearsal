@@ -24,6 +24,14 @@
  * Walkthrough, never location.hash. The defect was measured on the user path, so the evidence for
  * fixing it is taken on the user path.
  *
+ * TWO WALL-CLOCK WAITS ARE DELIBERATE, AND THEY ARE THE REASON THIS IS NOT A GATE CHECK. The two
+ * waitForTimeout calls below settle the pane's entry animation before the shutter opens; the gate's
+ * rule is "wait for a CONDITION, never a DURATION" (test/_boot.cjs), and the correct primitive here
+ * is the proven-rest gate test/visual_regression.cjs already owns. This script produces REVIEW
+ * IMAGES for a human, not assertions, so a slow box costs a slightly-early screenshot rather than a
+ * false red -- and every load-bearing number in it is asserted from computed layout, not from the
+ * pixels. If this ever becomes a gate check, the sleeps have to go first.
+ *
  * Usage:
  *   node _audit/w2-phone-before-after/capture-pairs.cjs <deliverable.html> before|after [outDir]
  * Writes: <prefix>-360-light.png, <prefix>-360-dark.png, <prefix>-844-light.png
@@ -65,7 +73,11 @@ const FRAMING = () => {
   }
   return {
     innerW: window.innerWidth, innerH: window.innerHeight,
-    theme: document.documentElement.dataset.theme || 'light',
+    /* THE RAW ATTRIBUTE, not `|| 'light'`. Defaulting the missing case to "light" made the light
+       assertion vacuous: a run where the theme was never applied at all reported exactly what a
+       correctly-themed light run reports, so two of the three shots were checking nothing. The
+       dark shots were genuinely asserted the whole time, which is what hid it. */
+    themeAttr: document.documentElement.getAttribute('data-theme'),
     activeTab: active ? active.getAttribute('data-tab') : null,
     drewQq: !!qq, qqTop: qqTop, lineH: lineH && Math.round(lineH), firstLineIn: firstLineIn,
     band: [Math.round(bandTop), Math.round(bandBot)],
@@ -111,7 +123,9 @@ const FRAMING = () => {
     const f = await page.evaluate(FRAMING);
     const bad = [];
     if (f.innerW !== s.w || f.innerH !== s.h) bad.push('viewport is ' + f.innerW + 'x' + f.innerH + ', asked ' + s.w + 'x' + s.h);
-    if (f.theme !== s.theme) bad.push('theme is ' + f.theme + ', asked ' + s.theme);
+    /* An EXPLICIT match on the attribute the app actually stamps -- so "no theme applied" fails
+       for light exactly as loudly as it does for dark. */
+    if (f.themeAttr !== s.theme) bad.push('data-theme is ' + JSON.stringify(f.themeAttr) + ', asked ' + s.theme);
     if (f.activeTab !== 'drill') bad.push('active pane is ' + f.activeTab + ', not drill');
     if (!f.drewQq) bad.push('the drill never drew a .qq (shadow root missing or not upgraded)');
     if (f.scrollY !== 0) bad.push('scrollY is ' + f.scrollY + ', not 0');
@@ -121,7 +135,7 @@ const FRAMING = () => {
       const file = path.join(OUT, PREFIX + '-' + s.name + '.png');
       await page.screenshot({ path: file });
       console.log('WROTE ' + path.basename(file) +
-        '  ' + f.innerW + 'x' + f.innerH + ' ' + f.theme +
+        '  ' + f.innerW + 'x' + f.innerH + ' ' + f.themeAttr +
         '  .qq top=' + f.qqTop + ' band=' + JSON.stringify(f.band) +
         ' firstLineInBand=' + f.firstLineIn + ' scrollY=' + f.scrollY + ' overflowX=' + f.overflowX);
     }

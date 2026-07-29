@@ -2066,7 +2066,15 @@ html[data-view="home"] .cmp-reopen{display:none}
     flex:none;padding:var(--space-8) var(--space-14);background:var(--card);
     border-bottom:1px solid var(--bd);scrollbar-width:none}
   .cram-jump::-webkit-scrollbar{display:none}
-  .cram-jump button{flex:none;min-height:36px;white-space:nowrap;border:1px solid var(--bd);
+  /* 44px, not the 36 this shipped at for one revision, and not the 24px WCAG 2.5.8 AA floor a
+     dense secondary strip could have argued for. THE REASON IS THIS WAVE'S OWN LANDSCAPE RULE:
+     .dsu-tog was briefly 40px there to buy fold pixels and was put back with the note that "a wave
+     that raises three targets to 44 while quietly shipping a fourth at 40 has not fixed anything,
+     it has moved the defect." A wave whose thesis is the 44px floor cannot ship a new control
+     under it and call the difference a category. The strip scrolls HORIZONTALLY, so the extra 8px
+     costs one thing only -- 8px of a panel that already scrolls vertically -- and buys consistency
+     with every other control the app added here. */
+  .cram-jump button{flex:none;min-height:44px;white-space:nowrap;border:1px solid var(--bd);
     border-radius:999px;background:var(--surf);color:var(--mut);cursor:pointer;
     font:var(--font-weight-bold) 11.5px -apple-system,sans-serif;padding:var(--space-6) var(--space-12)}
   .cram-jump button.on{border-color:var(--acc);background:var(--accbg);color:var(--accink)}

@@ -132,8 +132,13 @@ async function atRest(page, fn, arg, label) {
     const hs = btns.map((b) => +b.getBoundingClientRect().height.toFixed(1));
     return { count: btns.length, min: hs.length ? Math.min(...hs) : null, stripH: +s.getBoundingClientRect().height.toFixed(1) };
   }, null, 'the cram jump strip to populate and settle');
-  ok('the cram jump strip rendered chips, and every chip clears the WCAG 2.5.8 AA floor',
-    !jump.missing && jump.count >= 2 && jump.min >= AA_FLOOR, JSON.stringify(jump));
+  /* THE APP FLOOR, NOT THE AA FLOOR. This assertion read AA_FLOOR for one revision while its own
+     comment said "hold it to the same floor" -- prose one floor above the assertion, which is the
+     shape of a check that quietly grades on a curve. Both now say 44: this strip is a control
+     surface the wave ADDED, and the wave's own rule is that a new control does not get a softer
+     floor than the ones it is raising. */
+  ok('the cram jump strip rendered chips, and every chip clears the app\'s own 44px floor -- a control this wave added does not get a softer floor than the ones it raised',
+    !jump.missing && jump.count >= 2 && jump.min >= APP_FLOOR, JSON.stringify(jump));
   await page.evaluate(() => { const b = document.getElementById('cramx'); if (b) b.click(); });
   await page.waitForFunction(() => !document.querySelector('.cram-ov.open'), null, { timeout: B.ACT_MS }).catch(() => {});
   await B.settle(page);
@@ -184,6 +189,29 @@ async function atRest(page, fn, arg, label) {
   });
   ok('the home "Skip the home" label clears WCAG 2.5.8 AA (it was an 18px text line inside a 44px row)',
     !skip.missing && skip.h >= AA_FLOOR, JSON.stringify(skip));
+
+  /* ---- THE AA PLANT ----
+     The 44px arm has carried a plant since it was written; the 24px arm did not, and this header
+     disclosed the gap. Both AA targets are additionally proven red on the base build, so the arm
+     was never incapable of failing -- but a disclosure is not a control, and closing this one costs
+     ten lines. It reverts the wave's own fix (align-self:stretch) on the label and requires the
+     measured height to fall back under the AA floor. */
+  const aaPlant = await page.evaluate(() => {
+    const l = document.querySelector('.hm-skip label');
+    if (!l) return { ran: false };
+    const prev = { a: l.style.alignSelf, m: l.style.minHeight, d: l.style.display };
+    l.style.alignSelf = 'center'; l.style.minHeight = '0px'; l.style.display = 'inline';
+    const h = l.getBoundingClientRect().height;
+    l.style.alignSelf = prev.a; l.style.minHeight = prev.m; l.style.display = prev.d;
+    return { ran: true, hUnderPlant: +h.toFixed(1) };
+  });
+  if (!(aaPlant.ran && aaPlant.hUnderPlant < AA_FLOOR)) {
+    console.log('  ABORT reverting the skip-label fix did NOT drop it under the 24px AA floor -- the AA arm is not reading this control.');
+    console.log('     -> ' + JSON.stringify(aaPlant));
+    await browser.close();
+    return B.finish(1, 'TOUCH FLOOR: ABORTED (self-test failed: the AA arm cannot fail)');
+  }
+  ok('[plant] reverting the skip-label fix drops it back under the 24px AA floor (the AA arm is live too)', true, '');
 
   /* ---- THE PLANT: shrink a control and require the 44px arm to notice ---- */
   await page.evaluate(() => { location.hash = '#content-pipeline/num'; });

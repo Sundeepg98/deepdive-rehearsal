@@ -17,7 +17,7 @@ Changing behavior at runtime without a deploy --- a flag or config value resolve
 
 ## Spine
 
-- Flags decouple **release from deploy** --- code ships dark behind a flag, and turning it on is a config change, not a deployment, so release is a runtime decision you can stage and reverse instantly.
+- Flags decouple **release from deploy** --- code ships dark behind a flag, and turning it on is a config change, not a deployment, so release is a runtime decision you can stage and reverse in seconds rather than in a deploy cycle.
 - A flag resolves against a **hierarchy** --- a global default overridden per environment, tenant, or user, the most-specific match winning; it is the shared-definition-plus-overrides pattern applied to behavior.
 - **Gradual rollout and targeting** are the point --- turn a flag on for 1 percent, then 10, then everyone, or for a specific cohort, watching metrics, so a bad change reaches few before you halt.
 - The system must be **safe by default** --- if the flag service is unreachable or a flag is unknown, evaluation falls back to a safe default and reads the locally cached config, so an outage can't take the app down.
@@ -542,11 +542,11 @@ Sketch the resolution and the rollout, and mark the safe default.
 
 ### How does a flag get its value?
 
-A hierarchy resolved most-specific-first --- user targeting beats tenant beats environment beats the global default.
+**Per request, against that request's own context** --- the SDK resolves the flag's rules using the user, tenant and environment on the call and returns a variation. Nothing is decided at deploy time, so the same code returns different values for different requests.
 
 ### What keeps a percentage rollout stable?
 
-A consistent hash of the user id, so the same user stays in or out and the feature doesn't flicker between requests.
+A **consistent hash**, never a per-request random draw --- the bucket is computed from the caller's identity, so the same user lands in the same bucket every time and the feature cannot flicker between requests.
 
 ### Where does the value physically come from on the hot path?
 
@@ -703,7 +703,7 @@ Not a choice --- you want both, because they catch different failures. A breaker
 The decoupling to lead with --- and what it does and doesn't buy.
 
 - FRAME | frame | I'd frame it as **decoupling release from deploy**. Deploying is putting code on servers; releasing is making a feature visible. A flag splits them: the code ships **dark**, and turning it on later is a config change, not a deployment.
-- WHAT IT BUYS | head | Three things fall out immediately: a **gradual ramp** (1, 10, 50, 100 percent, watching metrics), **targeting** (on for this cohort, this tenant, this user), and an **instant kill switch** --- so a bad feature is a flip, not a rollback deploy.
+- WHAT IT BUYS | head | Three things fall out immediately: a **gradual ramp** (1, 10, 50, 100 percent, watching metrics), **targeting** (on for this cohort, this tenant, this user), and a **kill switch** that lands within the refresh window (seconds on a stream, up to the poll interval on a poll) --- so a bad feature is a flip, not a rollback deploy.
 - BE PRECISE | sub | But I'd be precise about what it de-risks. Shipping dark de-risks the **deployment** completely --- build, migration, startup path, all proven in prod. It de-risks the **feature** not at all, because nobody has run its code. **The ramp is what de-risks the feature; the flag just makes the ramp possible.**
 - THE MECHANICS | sub | Mechanically it's a **runtime lookup, not a network call**: the SDK holds the whole ruleset in memory, refreshed by a stream or a poll, and the call site passes its own default. That's what makes it safe on a hot path and safe when the provider is down.
 - NAME THE RISK | risk | The risk I'd name unprompted is **flag debt** --- every flag is a fork in the code, and dark code rots because nobody executes it. So the dark window is measured in **days, not quarters**, and release flags get an owner and an expiry at creation.
@@ -907,7 +907,7 @@ A runtime switch resolved per request against a most-specific-wins hierarchy, so
 
 #### What is the payoff?
 
-Gradual, targeted, reversible rollout with an instant kill switch --- release decoupled from deploy, safe by default.
+Gradual, targeted, reversible rollout with a kill switch measured in seconds, not instant --- release decoupled from deploy, safe by default.
 
 #### What is the mechanism, in one breath?
 

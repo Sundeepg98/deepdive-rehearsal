@@ -888,11 +888,11 @@ Echoing internals -- a stack trace, an internal hostname, the raw HSM response, 
 
 Split the error: a secret-scrubbed rich error to the logs (redacted before the log call, not just the response), keyed by a correlation id, and a safe, actionable message to the user -- rich internally, sanitized at the edge.
 
-### "If a send fails, we just log it and move on"
+### "If the signing call fails, we just log it and move on"
 
-Log-and-move-on silently *drops* the failure -- no propagation, no retry, no user signal -- so a transient blip that would have recovered is lost and a permanent failure never surfaces to be fixed.
+Log-and-move-on silently *drops* the failure: the packager catches the signing service's code, writes a log line, and returns as though nothing happened, so nothing crosses the boundary -- no code reaches the edge, no retry fires, no user signal. A SIGNING_SERVICE_ERROR that one capped retry would have cleared is lost, and a SIGNING_KEY_NOT_FOUND -- permanent, and fixed only by a human who is told about it -- never surfaces at all.
 
-Propagate a classified code every time: transient goes to a bounded retry, permanent surfaces to the user or a dead-letter queue -- a failure is parked, visible, and recoverable, never silently swallowed.
+Propagate the classified code every time and let transient-versus-permanent route it: SIGNING_SERVICE_ERROR into a capped retry with backoff, reaching a dead-letter or an alert only once that cap is spent; SIGNING_KEY_NOT_FOUND straight to the edge as an escalate action. A log line is where a failure is *recorded*, never where it is handled.
 
 ### "We just wait for the signing service -- it'll respond eventually"
 

@@ -404,12 +404,12 @@ function parseSys(toks) {
       } else if (!piv && !sawPivSub) { heads.pivSub = proseLine(raw); sawPivSub = true; }
       else if (!piv) fail('System', t, 'a second paragraph before the first "#### <question>" -- it belongs to no pivot');
       else {
-        const m = /^(->|→)\s*/.exec(raw.trim());
+        const m = /^(->|\u2192)\s*/.exec(raw.trim());
         if (m && !piv.chip) {
           // F2: chip line + answer line arrive as ONE paragraph. Keep them apart.
           const rest = raw.trim().slice(m[0].length);
           const nl = rest.indexOf('\n');
-          piv.chip = '→ ' + oneLine(nl === -1 ? rest : rest.slice(0, nl));
+          piv.chip = '\u2192 ' + oneLine(nl === -1 ? rest : rest.slice(0, nl));
           if (nl !== -1) piv.a = proseLine(rest.slice(nl + 1));
         } else if (m) fail('System', t, 'a second "-> chip" line on one pivot -- the first would be destroyed');
         else if (!piv.a) piv.a = proseLine(raw);

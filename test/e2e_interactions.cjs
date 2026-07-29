@@ -203,7 +203,7 @@ const HTML = process.argv[2] ||
        Decode ALL entities on the authored cue (the compiler smart-quotes prose, so a cue can
        carry &ldquo;/&rdquo;/&ndash;/&amp; etc.) before matching the rendered prompt -- a two-entity
        replace silently failed once cues used curly quotes, as the hand-coded 8 do. */
-    const ENT = { '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&mdash;': '—', '&ndash;': '–', '&rsquo;': '’', '&lsquo;': '‘', '&ldquo;': '“', '&rdquo;': '”', '&hellip;': '…', '&rarr;': '→', '&middot;': '·', '&nbsp;': ' ', '&times;': '×' };
+    const ENT = { '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&mdash;': '\u2014', '&ndash;': '\u2013', '&rsquo;': '\u2019', '&lsquo;': '\u2018', '&ldquo;': '\u201c', '&rdquo;': '\u201d', '&hellip;': '\u2026', '&rarr;': '\u2192', '&middot;': '\u00b7', '&nbsp;': '\u00a0', '&times;': '\u00d7' };
     // strip inline HTML first (a cue may carry <i>..</i>, which the DOM renders and .qq textContent
     // drops), then decode entities -- so we compare rendered plain text against rendered plain text.
     const decode = (s) => s.replace(/<[^>]+>/g, '').replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16))).replace(/&#(\d+);/g, (_, d) => String.fromCodePoint(+d)).replace(/&[a-z]+;/gi, (e) => ENT[e] || e);

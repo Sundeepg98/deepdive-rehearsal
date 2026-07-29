@@ -422,3 +422,53 @@ State this plainly, because the coverage claim is easy to over-read.
 - **No pane-length, reading-time, or difficulty-calibration measurement.** "Above standard" is a claim about correctness and pushback quality, not about whether the topic is the right size.
 - **One reader per topic, no adversarial second pass.** Per the standing rule, a verifier must be independent of the fixer — that applies here too: whoever fixes Wave A should not be the one who certifies it. The 305 findings are single-instrument observations; the P0s are individually well-evidenced (each cites the contradicting text) and should survive, but the P2/P3 tails are one reader's judgment.
 - **`saga`'s own status is now ambiguous and should be resolved deliberately.** It is the certified reference *and* it came back at_standard with a P0. Either the 2026-07-19 certification stands and this sweep's instrument is stricter (in which case say so and keep saga as the anchor), or the P0 is real and the anchor needs the fix before it can anchor anything. Decide that before Wave A merges, because 28 verdicts are expressed relative to it.
+
+---
+
+## ERRATUM (appended 2026-07-29 by wR-fixer, residuals wave) — Class J, cdc, second clause
+
+**Corrects one clause of one entry. The record is amended in place rather than rewritten,
+because a sweep that quietly edits its own findings cannot be audited.**
+
+Section 4, Class J, reads:
+
+> **cdc**: per-key ordering guaranteed by hashing -- true only for a fixed partition count; and
+> "without ever losing a change" with `acks` never mentioned in the file.
+
+**The second clause is a FALSE POSITIVE and was NOT acted on. `cdc.md` is unedited.**
+
+The string lives at `src/topics-md/cdc.md:1094`, inside `### Frames`, and it is an
+**interviewer's design brief, not a guarantee the topic asserts**. All four bullets in that
+block are quoted imperatives addressed to the candidate -- "Design a pipeline... without ever
+losing a change.", "...Fix it.", "...Diagnose and redesign.", "...Walk me through it." It is
+the requirement the candidate is handed, which is the opposite of a claim they volunteered.
+
+That distinction is load-bearing for this class specifically. Class J is defined as *"A
+guarantee asserted without the precondition that makes it true"* and justified as *"the highest-
+value class for interview outcome, because these are precisely the claims an interviewer pushes
+on -- and the candidate has volunteered them."* Here the interviewer said it. An interviewer
+does not push back on their own brief, so the finding's own rationale does not reach this site.
+
+The file also does not behave like one that over-claims durability. It teaches at-least-once
+delivery with idempotent consumers (line 23), the transactional outbox, the mark-then-publish
+inversion that "leaves a row marked `published = true` that was never published" (line 241),
+the partition-count break in per-key ordering (line 260), and an entire curveball -- "Exactly-
+once at the sink" (line 1085) -- whose stated Task is *"Grant what's true, then locate precisely
+where the guarantee stops."* A topic carrying that card is not the topic this finding describes.
+
+**On the supporting evidence.** "`acks` never mentioned in the file" is true of the Kafka
+producer setting and only that; the token does appear, at line 116, as an ordinary verb ("hold
+the write until the consumer acks"). More to the point, `acks` is not the missing precondition
+for the sentence in question, because that sentence sets a requirement rather than making a
+claim -- and the file's own durability mechanism is the outbox, which it covers at length.
+
+**Scope of this erratum, stated so it is not over-read.** It corrects the second clause ONLY.
+The first clause -- per-key ordering versus a changing partition count -- is **not adjudicated
+here** and stands as written. Noted for whoever does take it up: the drill card at line 260
+already carries the precondition explicitly, while the Spine bullet at line 23 states per-key
+order without it, so that clause needs a per-site reading rather than a single verdict, and it
+was outside this wave's brief.
+
+Method: read the site and its surrounding block, traced both clauses with `git log -S` (both
+date to the original authoring commit `d4e8527`, so neither was silently fixed by a later
+wave), and checked the `### Frames` convention against sibling topics.

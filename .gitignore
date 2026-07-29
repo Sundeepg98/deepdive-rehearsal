@@ -40,6 +40,11 @@ src/scripts/visuals/
 _probe/
 _audit/shots/
 
+# full stdout+stderr of a failing check, written by check_all.py's fail_dump so a
+# crash's stack survives the one-line summary. Regenerated every gate run; deleted
+# by the check that stops failing.
+test/_last_fail_*.txt
+
 # team-lead <-> agent coordination artifacts (never part of a build)
 _TEAM_LEAD_*.md
 _W2_DRILL_BLOCKED.md

@@ -70,7 +70,7 @@ const chk = (name, ok, detail) => { notes.push((ok ? '  PASS  ' : '  FAIL  ') + 
   await sleep(200);
   const a = await page.evaluate(() => {
     const d = document.getElementById('ndock');
-    const label = d && d.querySelector('.nd-go') ? d.querySelector('.nd-go').textContent.replace(/\s*→\s*$/, '').replace(/\s+/g, ' ').trim() : null;
+    const label = d && d.querySelector('.nd-go') ? d.querySelector('.nd-go').textContent.replace(/\s*\u2192\s*$/, '').replace(/\s+/g, ' ').trim() : null;
     const regions = window.__liveText();
     return { label, regions, announced: label ? regions.some((t) => t.indexOf(label) !== -1) : false };
   });

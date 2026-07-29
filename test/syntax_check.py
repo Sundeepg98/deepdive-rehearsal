@@ -2,7 +2,7 @@
 """GUARD: every editable .js module parses (node --check).
 
 Files containing a `@build:include` marker are aggregators (their job is to pull
-partials together at build time), not standalone modules — they are not valid
+partials together at build time), not standalone modules -- they are not valid
 JS on their own, so they are skipped by design.
 """
 import os, sys, subprocess

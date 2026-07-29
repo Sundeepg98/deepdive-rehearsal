@@ -812,8 +812,8 @@
     "h": "647b9cca"
   },
   "debugging::FAILURE:one-endpoint-is-logging-30-000.int2": {
-    "n": 131,
-    "h": "c95ce5c3"
+    "n": 162,
+    "h": "12416d70"
   },
   "debugging::FRAME:you-re-on-call-data-is.int": {
     "n": 31,
@@ -1232,8 +1232,8 @@
     "h": "edf12c33"
   },
   "event-driven::CURVEBALL/Poison message:you-re-on-kafka-one-malformed.int2": {
-    "n": 103,
-    "h": "63588be5"
+    "n": 137,
+    "h": "030b21cd"
   },
   "event-driven::CURVEBALL/Replay blast:you-replay-a-week-of-events.int": {
     "n": 71,
@@ -2520,8 +2520,8 @@
     "h": "b05c9bde"
   },
   "retries-timeouts::CURVEBALL/thundering herd:your-cache-has-a-60-second.int2": {
-    "n": 112,
-    "h": "4f44b6ad"
+    "n": 116,
+    "h": "f6e411a1"
   },
   "retries-timeouts::CURVEBALL/tight timeout:a-senior-engineer-set-the-timeout.int": {
     "n": 52,
@@ -2656,8 +2656,8 @@
     "h": "fb8e6546"
   },
   "saga::CURVEBALL/Choreography black hole:nine-services-fully-choreographed-no-coordinator.int2": {
-    "n": 102,
-    "h": "823ca2fa"
+    "n": 104,
+    "h": "595ac455"
   },
   "saga::CURVEBALL/Compensation rejected:your-compensation-is-refund-the-card.int": {
     "n": 58,

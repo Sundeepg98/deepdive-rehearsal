@@ -30,10 +30,20 @@
  *                          says so instead of reporting a green it did not earn.
  *
  * THE RATCHET (test/latent_arial_debt.json), copied from parity_debt.json's proven pattern.
- * The defect is app-wide -- the sidebar's topic-nav, cram bar, companion and timer controls
- * carry it too -- but those surfaces are W4's, and re-facing them moves pixels in seven
- * committed VR baselines. So the known offenders outside W3's scope are ALLOWLISTED BY
- * COMPONENT, and the check fails on:
+ *
+ * THE LIST IS NOW EMPTY, and that is the end state, not a missing file. W3 fixed home and
+ * allowlisted the 15 components it could not reach without moving pixels in seven committed VR
+ * baselines (topic-nav, cram bar, companion, focus mode, sidebar tools, the search overlay's
+ * inline-styled result rows). W4 owned those surfaces, fixed all 15, and took the list to zero
+ * with a reviewed rebaseline -- so every <button> the app mounts across the four surfaces below
+ * (253 of them) now renders in the app stack. From here the check is a pure ratchet: ANY new
+ * UA-default button is a NEW failure with nothing to hide behind.
+ *
+ * An empty baseline is exactly where a broken detector would go green forever, so note that
+ * controls A/B/C below run on EVERY invocation and ABORT rather than pass -- that is what makes
+ * the zero meaningful rather than merely quiet.
+ *
+ * The check fails on:
  *     NEW      a UA-default button whose component is not in the debt file  -- the real guard
  *     STALE    a debt entry whose component no longer offends -- fixed, so delete the line
  * The list can only shrink. Refresh it deliberately with:  node test/latent_arial.cjs --write-debt

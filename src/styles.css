@@ -428,14 +428,14 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
      is invisible until flowDock un-hides it on meso/macro; the mobile show + look live in the
      max-width:919px block by the fixed bottom bar. Quiet by contract: accent on the kicker only,
      never a second loud primary (the mock CTA keeps that). */
-  .nd-m{display:none}
+  .nd-m{font:inherit;display:none}
   .mockbtn{display:flex;align-items:center;justify-content:center;gap:var(--space-9);width:100%;font:var(--font-weight-heavy) 13.5px -apple-system,sans-serif;letter-spacing:.2px;padding:var(--space-14) var(--space-16);border-radius:13px;border:0;background:linear-gradient(135deg,var(--acc),var(--acc2));color:var(--on-slab);cursor:pointer;transition:transform var(--duration-base) var(--ease-glide),box-shadow var(--duration-moderate) var(--ease-base);box-shadow:0 6px 18px var(--acc-a30),inset 0 1px 0 rgba(255,255,255,.14);position:relative;overflow:hidden}
 .mockbtn::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);transform:translateX(-100%);transition:none}
 .mockbtn:hover::after{animation:btnShimmer var(--duration-slowest) var(--ease-base)}
 .mockbtn .mb-ic{font-size:var(--font-size-caption);flex:none;line-height:var(--line-height-none)}
   .mockbtn:hover{box-shadow:0 9px 26px var(--acc-a40),inset 0 1px 0 rgba(255,255,255,.14);transform:translateY(-1px)}
   .mockbtn:active{transform:translateY(0);box-shadow:0 3px 10px var(--acc-a25),inset 0 1px 0 rgba(255,255,255,.12)}
-  .crambtn{display:flex;align-items:center;gap:var(--space-11);width:100%;text-align:left;font-size:var(--font-size-caption);padding:var(--space-12) var(--space-15);border-radius:11px;border:1px solid var(--bd);background:var(--surf);box-shadow:var(--surf-sh);cursor:pointer;transition:transform var(--duration-base) var(--ease-glide),box-shadow var(--duration-base) var(--ease-base),border-color var(--duration-base) var(--ease-base),background var(--duration-base) var(--ease-base)}
+  .crambtn{display:flex;align-items:center;gap:var(--space-11);width:100%;text-align:left;font:inherit;font-size:var(--font-size-caption);padding:var(--space-12) var(--space-15);border-radius:11px;border:1px solid var(--bd);background:var(--surf);box-shadow:var(--surf-sh);cursor:pointer;transition:transform var(--duration-base) var(--ease-glide),box-shadow var(--duration-base) var(--ease-base),border-color var(--duration-base) var(--ease-base),background var(--duration-base) var(--ease-base)}
 .crambtn:not(.cram-tog)::after{content:"\203A";margin-left:auto;font:var(--font-weight-regular) 19px -apple-system,sans-serif;color:var(--mut);opacity:.5;transition:var(--duration-fast);flex:none;padding-left:var(--space-6)}
 .mb-tx{flex:1;min-width:0;line-height:var(--line-height-normal)}
 .mb-t{font-weight:var(--font-weight-bold);color:var(--ink);letter-spacing:.1px}
@@ -461,7 +461,7 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
   .mock-ov.open{display:flex;align-items:flex-start;justify-content:center;overflow:hidden}
   .mock-panel{background:linear-gradient(180deg,rgba(250,249,245,.97),rgba(248,245,239,.97));width:100%;max-width:var(--space-560);border-radius:18px;box-shadow:0 8px 32px -8px var(--acc-a20),0 28px 64px -18px rgba(0,0,0,.34),0 0 80px -20px var(--acc-a15);margin:0 auto;overflow:hidden;border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(24px) saturate(1.3);-webkit-backdrop-filter:blur(24px) saturate(1.3);display:flex;flex-direction:column;max-height:calc(100vh - var(--space-36));transform-origin:center top}
   .mock-top{display:flex;align-items:center;gap:var(--space-12);padding:var(--space-13) var(--space-18);border-bottom:1px solid var(--bd);background:var(--card);position:sticky;top:0;z-index:2}
-  .mock-x{flex:none;width:var(--space-32);height:var(--space-32);border-radius:9px;border:1px solid var(--bd);background:var(--card);color:var(--mut);font-size:var(--font-size-title);line-height:var(--line-height-none);cursor:pointer;transition:transform var(--duration-fast) var(--ease-spring),background var(--duration-base) var(--ease-base),color var(--duration-base) var(--ease-base),border-color var(--duration-base) var(--ease-base),box-shadow var(--duration-base) var(--ease-base);display:flex;align-items:center;justify-content:center}
+  .mock-x{flex:none;width:var(--space-32);height:var(--space-32);border-radius:9px;border:1px solid var(--bd);background:var(--card);color:var(--mut);font:inherit;font-size:var(--font-size-title);line-height:var(--line-height-none);cursor:pointer;transition:transform var(--duration-fast) var(--ease-spring),background var(--duration-base) var(--ease-base),color var(--duration-base) var(--ease-base),border-color var(--duration-base) var(--ease-base),box-shadow var(--duration-base) var(--ease-base);display:flex;align-items:center;justify-content:center}
   .mock-x:hover{border-color:var(--red);color:var(--red);background:var(--redbg);transform:scale(1.1) rotate(90deg);box-shadow:0 0 0 3px rgba(239,68,68,.1)}
   .mock-title{flex:1;font:var(--font-weight-heavy) 12px -apple-system,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:var(--accink)}
   .mock-clock{flex:none;font:var(--font-weight-heavy) 16px ui-monospace,Menlo,monospace;color:var(--acc);background:var(--accbg);border-radius:8px;padding:var(--space-4) var(--space-12)}
@@ -711,7 +711,7 @@ html[data-theme="dark"] .sidebar .seg button.on .seg-key{color:var(--acc);border
   /* Floating ambient particles in the stage */
 
 .rail{display:none}
-.tools-fab{display:none}
+.tools-fab{font:inherit;display:none}
 @media(max-width:919px){
   .app{flex-direction:column;min-height:0;padding-top:56px;padding-bottom:calc(80px + env(safe-area-inset-bottom,0px))}
   .sidebar{width:auto;height:auto;position:static;flex-direction:column;gap:0;padding:0;border-right:none;background:transparent;overflow:visible}
@@ -733,7 +733,7 @@ html[data-theme="dark"] .sidebar .seg button.on .seg-key{color:var(--acc);border
   /* 44px is the a11y floor (WCAG 2.5.8); raw px on purpose -- a physical-finger constant, not a
      layout token. The padding alone left this at 67x40. Set here, not in the <=600px polish
      block, because the button is on-screen across this whole <=919px range. */
-  .tools-fab{order:0;position:static;flex:none;display:inline-flex;align-items:center;gap:var(--space-6);flex:none;min-height:44px;font-size:var(--font-size-caption);font-weight:var(--font-weight-bold);letter-spacing:.3px;color:var(--acc);background:var(--accbg);border:1px solid var(--acc);border-radius:999px;padding:var(--space-12) var(--space-16);box-shadow:none;cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),box-shadow var(--duration-base) var(--ease-base),border-color var(--duration-base) var(--ease-base)}
+  .tools-fab{order:0;position:static;flex:none;display:inline-flex;align-items:center;gap:var(--space-6);flex:none;min-height:44px;font:inherit;font-size:var(--font-size-caption);font-weight:var(--font-weight-bold);letter-spacing:.3px;color:var(--acc);background:var(--accbg);border:1px solid var(--acc);border-radius:999px;padding:var(--space-12) var(--space-16);box-shadow:none;cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),box-shadow var(--duration-base) var(--ease-base),border-color var(--duration-base) var(--ease-base)}
   .tools-fab:active{transform:scale(.95)}
   .sidebar .mockcta{order:2;position:fixed;bottom:0;left:0;right:0;z-index:40;display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;gap:var(--space-8) var(--space-10);margin:0;background:var(--card);border-top:1px solid var(--bd);box-shadow:0 -8px 24px rgba(0,0,0,.14);padding:var(--space-12) var(--space-15);padding-bottom:calc(var(--space-12) + env(safe-area-inset-bottom,0px))}
   .sidebar .mockcta .mockbtn{order:0;flex:1 1 0;min-width:0;margin:0}
@@ -745,7 +745,7 @@ html[data-theme="dark"] .sidebar .seg button.on .seg-key{color:var(--acc);border
      the fixed bar across the micro<->meso boundary). Quiet: a neutral hairline pill, accent only on
      the kicker + arrow -- clearly a tier below the filled mock CTA, and distinct from the
      accent-outlined Tools FAB. */
-  .sidebar .mockcta .nd-m:not([hidden]){order:1;flex:none;display:inline-flex;align-items:center;gap:var(--space-6);min-height:44px;box-sizing:border-box;padding:var(--space-7) var(--space-13);border:1px solid var(--bd);border-radius:999px;background:var(--card);cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),border-color var(--duration-base) var(--ease-base),background var(--duration-base) var(--ease-base)}
+  .sidebar .mockcta .nd-m:not([hidden]){order:1;flex:none;display:inline-flex;align-items:center;gap:var(--space-6);min-height:44px;font:inherit;box-sizing:border-box;padding:var(--space-7) var(--space-13);border:1px solid var(--bd);border-radius:999px;background:var(--card);cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),border-color var(--duration-base) var(--ease-base),background var(--duration-base) var(--ease-base)}
   .sidebar .mockcta .nd-m:not([hidden]):hover{border-color:var(--acc);background:var(--accbg)}
   .sidebar .mockcta .nd-m:not([hidden]):active{transform:scale(.96)}
   .nd-m-k{font:var(--font-weight-heavy) var(--font-size-caption) -apple-system,sans-serif;letter-spacing:.2px;color:var(--accink);white-space:nowrap}
@@ -1184,7 +1184,7 @@ button,summary{-webkit-user-select:none;user-select:none}
 .cmp-thesis::before{content:"";display:block;width:var(--space-26);height:var(--space-2);border-radius:2px;margin-bottom:var(--space-11);background:linear-gradient(90deg,var(--acc),var(--acc2))}
 .cmp-h{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.12em;text-transform:uppercase;color:var(--mut);margin:0 0 var(--space-11)}
 .cmp-rel-list{display:flex;flex-direction:column;gap:var(--space-6)}
-.cmp-rel{display:flex;flex-direction:column;align-items:flex-start;gap:var(--space-1);width:100%;text-align:left;padding:var(--space-8) var(--space-11);border:1px solid var(--bd);border-radius:9px;background:var(--surf);box-shadow:var(--surf-sh);cursor:pointer;transition:background var(--duration-fast) var(--ease-base),border-color var(--duration-fast) var(--ease-base),transform var(--duration-fast) var(--ease-base)}
+.cmp-rel{display:flex;flex-direction:column;align-items:flex-start;gap:var(--space-1);width:100%;text-align:left;font:inherit;padding:var(--space-8) var(--space-11);border:1px solid var(--bd);border-radius:9px;background:var(--surf);box-shadow:var(--surf-sh);cursor:pointer;transition:background var(--duration-fast) var(--ease-base),border-color var(--duration-fast) var(--ease-base),transform var(--duration-fast) var(--ease-base)}
 .cmp-rel:hover{background:var(--accbg);border-color:var(--acc)}
 .cmp-rel:active{transform:translateY(1px)}
 .cmp-rel-t{font-size:var(--font-size-caption);font-weight:var(--font-weight-semibold);color:var(--ink)}
@@ -1316,7 +1316,7 @@ button{cursor:pointer}
 .pomodoro-meta{flex:1;min-width:0;display:flex;flex-direction:column;line-height:var(--line-height-tight)}
 .pomodoro-time{font-family:var(--mono);font-size:var(--font-size-body);font-weight:var(--font-weight-bold);color:var(--ink)}
 .pomodoro-phase{font-size:var(--font-size-nano);font-weight:var(--font-weight-bold);letter-spacing:.4px;text-transform:uppercase;color:var(--mut2)}
-.pomodoro-btn{flex:none;border:0;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;line-height:var(--line-height-none)}
+.pomodoro-btn{flex:none;border:0;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;font:inherit;line-height:var(--line-height-none)}
 .pomodoro-play{width:var(--space-28);height:var(--space-28);background:var(--teal);color:var(--on-slab);font-size:var(--font-size-caption);transition:filter var(--duration-base) var(--ease-base)}
 .pomodoro-reset{width:var(--space-24);height:var(--space-24);background:var(--bd);color:var(--mut);font-size:var(--font-size-micro)}
 @media(hover:hover){.pomodoro-play:hover{filter:brightness(1.08)}}
@@ -1336,7 +1336,7 @@ button{cursor:pointer}
    The `visibility 0s linear var(--vis-delay)` step keeps the fade-out: --vis-delay holds
    visibility ON for the length of the transition while opacity/transform animate out, and
    .show flips it to 0s so the button appears instantly on the way in. */
-.scrolltop{--vis-delay:var(--duration-slow);position:fixed;left:50%;bottom:var(--space-24);width:var(--space-44);height:var(--space-44);border-radius:50%;border:0;background:linear-gradient(135deg,var(--acc),var(--acc2));color:var(--on-slab);font-size:var(--font-size-heading);line-height:var(--line-height-none);cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px var(--acc-a30),0 0 0 1px var(--acc-a15);opacity:0;visibility:hidden;transform:translateX(-50%) translateY(16px) scale(.9);pointer-events:none;transition:opacity var(--duration-moderate) var(--ease-base),transform var(--duration-slow) var(--ease-glide),visibility 0s linear var(--vis-delay);z-index:var(--z-sticky)}
+.scrolltop{--vis-delay:var(--duration-slow);position:fixed;left:50%;bottom:var(--space-24);width:var(--space-44);height:var(--space-44);border-radius:50%;border:0;background:linear-gradient(135deg,var(--acc),var(--acc2));color:var(--on-slab);font:inherit;font-size:var(--font-size-heading);line-height:var(--line-height-none);cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px var(--acc-a30),0 0 0 1px var(--acc-a15);opacity:0;visibility:hidden;transform:translateX(-50%) translateY(16px) scale(.9);pointer-events:none;transition:opacity var(--duration-moderate) var(--ease-base),transform var(--duration-slow) var(--ease-glide),visibility 0s linear var(--vis-delay);z-index:var(--z-sticky)}
 .scrolltop.show{--vis-delay:0s;opacity:1;visibility:visible;transform:translateX(-50%) translateY(0) scale(1);pointer-events:auto}
 @media(hover:hover){.scrolltop.show:hover{box-shadow:0 9px 26px var(--acc-a40),0 0 0 1px var(--acc-a25)}}
 /* Fix 2 (audit #5): on mobile the scroll-top FAB (centered, bottom:24px, z-sticky) sat ON the fixed
@@ -1360,8 +1360,8 @@ button{cursor:pointer}
    trap, recorded in focus-mode.js). Kept below the overlay layer (z-sticky 150 < z-popup 1000) so an
    open dialog covers it and its own Escape closes the dialog first. 44px tap floor on BOTH viewports;
    the accent-CTA treatment matches the app's other primary floating control (.scrolltop). */
-#_focus-exit{display:none}
-.app._focus-mode #_focus-exit{position:fixed;top:calc(var(--space-16) + env(safe-area-inset-top,0px));right:var(--space-16);z-index:var(--z-sticky);display:inline-flex;align-items:center;gap:var(--space-7);min-height:44px;padding:var(--space-10) var(--space-18);font:var(--font-weight-bold) var(--font-size-caption) -apple-system,sans-serif;letter-spacing:.3px;color:var(--on-slab);background:linear-gradient(135deg,var(--acc),var(--acc2));border:0;border-radius:999px;box-shadow:0 6px 18px var(--acc-a30),0 0 0 1px var(--acc-a15);cursor:pointer;transition:box-shadow var(--duration-base) var(--ease-base),transform var(--duration-fast) var(--ease-base)}
+#_focus-exit{font:inherit;display:none}
+.app._focus-mode #_focus-exit{position:fixed;top:calc(var(--space-16) + env(safe-area-inset-top,0px));right:var(--space-16);z-index:var(--z-sticky);display:inline-flex;align-items:center;gap:var(--space-7);min-height:44px;padding:var(--space-10) var(--space-18);font:inherit;font-size:var(--font-size-caption);font-weight:var(--font-weight-bold);letter-spacing:.3px;color:var(--on-slab);background:linear-gradient(135deg,var(--acc),var(--acc2));border:0;border-radius:999px;box-shadow:0 6px 18px var(--acc-a30),0 0 0 1px var(--acc-a15);cursor:pointer;transition:box-shadow var(--duration-base) var(--ease-base),transform var(--duration-fast) var(--ease-base)}
 @media(hover:hover){.app._focus-mode #_focus-exit:hover{box-shadow:0 9px 26px var(--acc-a40),0 0 0 1px var(--acc-a25);transform:translateY(-1px)}}
 .app._focus-mode #_focus-exit:active{transform:translateY(0) scale(.98)}
 .app._focus-mode #_focus-exit:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
@@ -1371,18 +1371,18 @@ body.is-hidden,body.is-hidden *,body.is-hidden *::before,body.is-hidden *::after
 
 /* ===== Topic switcher (the topic axis, above the view tabs) ===== */
 .topic-nav{position:relative;margin:var(--space-2) 0 -2px;display:flex;align-items:stretch;gap:var(--space-6)}
-.tn-trigger{display:flex;align-items:center;gap:var(--space-9);flex:1;min-width:0;border:1px solid var(--bd);background:var(--card);border-radius:11px;padding:var(--space-8) var(--space-12);cursor:pointer;transition:border-color var(--duration-fast) var(--ease-base),box-shadow var(--duration-fast) var(--ease-base);text-align:left}
+.tn-trigger{display:flex;align-items:center;gap:var(--space-9);flex:1;min-width:0;font:inherit;border:1px solid var(--bd);background:var(--card);border-radius:11px;padding:var(--space-8) var(--space-12);cursor:pointer;transition:border-color var(--duration-fast) var(--ease-base),box-shadow var(--duration-fast) var(--ease-base);text-align:left}
 .tn-trigger:hover{border-color:#cfc7f0;box-shadow:0 4px 12px var(--acc-a12)}
 .tn-trigger:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
 .tn-eyebrow{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:1px;text-transform:uppercase;color:var(--mut2)}
 .tn-current{flex:1;font-size:var(--font-size-small);font-weight:var(--font-weight-bold);color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tn-chev{color:var(--acc);font-size:var(--font-size-nano);transition:transform var(--duration-base) var(--ease-base)}
-.tn-step{flex:0 0 auto;display:flex;align-items:center;justify-content:center;min-width:var(--space-32);border:1px solid var(--bd);background:var(--card);border-radius:11px;color:var(--acc);font-size:var(--font-size-body);line-height:var(--line-height-none);cursor:pointer;transition:border-color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base)}
+.tn-step{flex:0 0 auto;display:flex;align-items:center;justify-content:center;min-width:var(--space-32);border:1px solid var(--bd);background:var(--card);border-radius:11px;color:var(--acc);font:inherit;font-size:var(--font-size-body);line-height:var(--line-height-none);cursor:pointer;transition:border-color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base)}
 .tn-step:hover{border-color:#cfc7f0;background:var(--accbg)}
 .tn-step:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
 .topic-nav.tn-open .tn-chev{transform:rotate(180deg)}
 .tn-menu{position:absolute;left:0;right:0;top:calc(100% + var(--space-5));z-index:var(--z-dropdown);background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:var(--space-5);box-shadow:0 12px 34px rgba(30,28,24,.18);max-height:56vh;overflow-y:auto}
-.tn-item{display:grid;grid-template-columns:1fr;grid-template-rows:auto auto;column-gap:var(--space-9);width:100%;border:0;background:none;border-radius:9px;padding:var(--space-8) var(--space-10);cursor:pointer;text-align:left;transition:background var(--duration-fast) var(--ease-base)}
+.tn-item{display:grid;font:inherit;grid-template-columns:1fr;grid-template-rows:auto auto;column-gap:var(--space-9);width:100%;border:0;background:none;border-radius:9px;padding:var(--space-8) var(--space-10);cursor:pointer;text-align:left;transition:background var(--duration-fast) var(--ease-base)}
 .tn-item+.tn-item{margin-top:var(--space-2)}
 .tn-item:hover{background:var(--acc-a08)}
 .tn-item.on{background:var(--accbg)}
@@ -1592,13 +1592,13 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
 .ix-undo.show{display:flex;opacity:1;transform:translateX(-50%) translateY(0)}
 .ix-undo-btn{border:0;background:var(--acc);color:var(--on-slab);font:inherit;font-size:var(--font-size-caption);font-weight:var(--font-weight-bold);padding:var(--space-6) var(--space-13);border-radius:8px;cursor:pointer;transition:filter var(--duration-fast) var(--ease-base)}
 .ix-undo-btn:hover{filter:brightness(1.1)}
-.cmp-fold{position:absolute;top:var(--space-12);right:var(--space-12);width:var(--space-24);height:var(--space-24);display:flex;align-items:center;justify-content:center;border:1px solid var(--bd);border-radius:7px;background:var(--card);color:var(--mut);font-size:var(--font-size-body);line-height:var(--line-height-none);cursor:pointer;opacity:.45;transition:opacity var(--duration-fast) var(--ease-base),color var(--duration-fast) var(--ease-base),border-color var(--duration-fast) var(--ease-base);z-index:2;padding:0}
+.cmp-fold{position:absolute;top:var(--space-12);right:var(--space-12);width:var(--space-24);height:var(--space-24);display:flex;align-items:center;justify-content:center;border:1px solid var(--bd);border-radius:7px;background:var(--card);color:var(--mut);font:inherit;font-size:var(--font-size-body);line-height:var(--line-height-none);cursor:pointer;opacity:.45;transition:opacity var(--duration-fast) var(--ease-base),color var(--duration-fast) var(--ease-base),border-color var(--duration-fast) var(--ease-base);z-index:2;padding:0}
 /* Same fix, same reason, as .ix-c-reset above -- and NOTE THE SPECIFICITY, which is why this one
    could not be repaired by adding a generic rule elsewhere: `.cmp-fold:focus` is (0,2,0) and
    OUTRANKS `button:focus-visible` (0,1,1), so its `outline:none` beat the app's ring no matter what
    was added at :53. The declaration had to be removed HERE. */
 .cmp-fold:hover,.cmp-fold:focus-visible{opacity:1;color:var(--acc);border-color:var(--acc)}
-.cmp-reopen{position:fixed;right:0;top:50%;transform:translateY(-50%);display:none;flex-direction:column;align-items:center;gap:var(--space-7);padding:var(--space-13) var(--space-7);border:1px solid var(--bd);border-right:0;border-radius:9px 0 0 9px;background:var(--panel);color:var(--mut);font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.04em;cursor:pointer;box-shadow:-5px 0 16px -9px rgba(0,0,0,.18);z-index:var(--z-dropdown);transition:color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base)}
+.cmp-reopen{position:fixed;right:0;top:50%;transform:translateY(-50%);display:none;flex-direction:column;align-items:center;gap:var(--space-7);padding:var(--space-13) var(--space-7);border:1px solid var(--bd);border-right:0;border-radius:9px 0 0 9px;background:var(--panel);color:var(--mut);font:inherit;font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.04em;cursor:pointer;box-shadow:-5px 0 16px -9px rgba(0,0,0,.18);z-index:var(--z-dropdown);transition:color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base)}
 .cmp-reopen:hover,.cmp-reopen:focus-visible{color:var(--acc);background:var(--accbg)}
 .cmp-reopen-ic{font-size:var(--font-size-body);line-height:var(--line-height-none)}
 .cmp-reopen-t{writing-mode:vertical-rl;text-orientation:mixed}
@@ -1674,7 +1674,7 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
 .xd-end{text-align:center;padding:var(--space-30) var(--space-10)}
 .xd-end-pct{font-size:var(--font-size-display-xl);font-weight:var(--font-weight-heavy);color:var(--acc);letter-spacing:-.02em}
 .xd-end-sub{font-size:var(--font-size-small);color:var(--mut2);margin:var(--space-8) 0 var(--space-22)}
-.xd-again{border:1.5px solid var(--acc);background:var(--bg);color:var(--acc);font:var(--font-weight-bold) 13px -apple-system,system-ui,sans-serif;padding:var(--space-12) var(--space-22);border-radius:10px;cursor:pointer;transition:background var(--duration-fast) var(--ease-base)}
+.xd-again{border:1.5px solid var(--acc);background:var(--bg);color:var(--acc);font:inherit;font-size:var(--font-size-caption);font-weight:var(--font-weight-bold);padding:var(--space-12) var(--space-22);border-radius:10px;cursor:pointer;transition:background var(--duration-fast) var(--ease-base)}
 .xd-again:hover{background:var(--accbg)}
 /* THE CROSS-TOPIC DRILL SHOWS ALL SIX ROOMS, because it draws its probes from all six. The
    stripe is built from the FLAT --room-* map, which does not vary with the current topic, so

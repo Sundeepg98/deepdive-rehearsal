@@ -1,17 +1,1 @@
-{
-  "#_focus-exit": "Focus-mode exit pill. Its family is declared only inside the .app._focus-mode branch (styles.css:1308), so in the default state -- which is what this walk measures -- it carries no author family at all. Sidebar/chrome family, W4.",
-  "#_focus-toggle": "Focus-mode toggle in the sidebar. W4 (sidebar geometry) owns this surface; re-facing it moves pixels in the seven baselines the sidebar appears in.",
-  "(unclassed)@body": "The six search-overlay result buttons, built with inline styles in search-overlay.js. Real, and outside a home-identity wave: the fix belongs with whoever next opens that file.",
-  "cmp-fold": "Companion fold control. Sidebar/companion family -- W4.",
-  "cmp-rel": "Companion related-topic buttons. Sidebar/companion family -- W4.",
-  "cmp-reopen": "Companion reopen tab. Sidebar/companion family -- W4.",
-  "crambtn": "Cram-sheet buttons, 14 of them, visible on every topic route. The single largest remaining surface -- and the reason this is a ratchet and not a big-bang fix: it is present in most of the 16 VR baselines, so it needs its own reviewed rebaseline. W4.",
-  "mock-x": "Mock-run close buttons (7, all inside closed overlays). Mock/cram family.",
-  "nd-m": "Continue-dock Missed/Shaky/Solid slot. Dock family -- W1/W4 touched this dock; the family declaration was never part of it.",
-  "pomodoro-btn": "Focus-timer play/reset. Sidebar tools -- W4.",
-  "scrolltop": "Scroll-to-top FAB. Its glyph is an arrow, so the visible effect is small, but the declaration is the same defect. W4.",
-  "tn-item": "Topic-nav dropdown items, 46 of them (0-size until the menu opens). Topic-nav family -- W4.",
-  "tn-step": "Topic-nav prev/next stepper. Topic-nav family -- W4.",
-  "tn-trigger": "The topic-nav trigger itself. Topic-nav family -- W4.",
-  "tools-fab": "Tools floating action button. Sidebar tools -- W4."
-}
+{}

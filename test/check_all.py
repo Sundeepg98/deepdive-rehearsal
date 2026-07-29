@@ -2,7 +2,7 @@
 """THE GATE. One command runs every correctness check; non-zero exit if any fail.
 
 This replaces per-edit manual vigilance with tooling that runs on every build:
-  ascii_guard      source is ASCII-only            (encoding invariant)
+  ascii_guard      src + corpus + checks are 7-bit  (encoding invariant)
   syntax_check     every editable module parses
   build_integrity  build resolves + deliverable consistent + structure present
   render           panes/overlays render, no JS/ref errors, no overflow  (browser)
@@ -78,6 +78,36 @@ def report(r):
     if msg:
         return msg
     return '(no output; the check died silently -- exit=%s. This is a HARNESS fault, not a flake.)' % r.returncode
+
+def fail_dump(name, r, status):
+    """Keep the WHOLE output of a failing check; return a pointer to it.
+
+    report() above deliberately prints one line, because a summary of 58 rows is
+    only readable if each row is one line. But when a check CRASHES, its last
+    line is the tail of a runtime's death notice -- `overlay_deadzone` once
+    failed with a summary consisting entirely of `Node.js v25.2.1`. That is the
+    last line of a stack dump whose actual exception, and the assertion that
+    provoked it, had already scrolled past into a pipe nobody kept. The evidence
+    that would say whether it was a flake or a real defect is destroyed at the
+    exact moment it is needed, which leaves re-running until green as the only
+    available move -- the reflex this harness exists to make unnecessary.
+
+    So a FAIL now spills everything to test/_last_fail_<name>.txt and the
+    summary row says where. PASS behaviour is untouched, with one exception that
+    is part of the point: a check that now passes DELETES its old dump, so a
+    stale file from last week's crash can never be read as today's evidence.
+    """
+    p = os.path.join('test', '_last_fail_%s.txt' % name)
+    if status != 'FAIL':
+        if os.path.exists(p):
+            os.remove(p)
+        return ''
+    with open(p, 'w', encoding='utf-8', errors='replace', newline='\n') as fh:
+        fh.write('check   : %s\ncommand : %s\nexit    : %s\n'
+                 % (name, ' '.join(getattr(r, 'args', []) or []), r.returncode))
+        fh.write('\n----- stdout -----\n%s\n' % (r.stdout or '(empty)'))
+        fh.write('\n----- stderr -----\n%s\n' % (r.stderr or '(empty)'))
+    return '  (full output: %s)' % p.replace(os.sep, '/')
 
 def browser():
     """Locate Chromium via Playwright itself -- portable across OSes once
@@ -247,7 +277,8 @@ for name, cmd in [('ascii_guard', ['python3', 'test/ascii_guard.py']),
                   # bank_pushback. Pure node, no browser, ~0.6s.
                   ('bank_novelty', ['node', 'test/bank_novelty.cjs'])]:
     r = run(cmd)
-    results.append((name, 'PASS' if r.returncode == 0 else 'FAIL', report(r)))
+    st = 'PASS' if r.returncode == 0 else 'FAIL'
+    results.append((name, st, report(r) + fail_dump(name, r, st)))
 
 chrome = browser()
 deliverable = os.path.join(ROOT, 'deepdive_content_pipeline_rehearsal.html')
@@ -633,6 +664,7 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # deleting the baselines must not turn the gate green.)
                      ('visual_regression', 'test/visual_regression.cjs')]:
     if not chrome:
+        fail_dump(name, None, 'SKIP')   # clear any dump from a run that DID have a browser
         results.append((name, 'SKIP', 'no Playwright/Chrome (npm install && npx playwright install chromium)'))
         continue
     env = dict(os.environ, CHROME=chrome)
@@ -641,7 +673,7 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
     # not a defect and not a pass, so it gets the same SKIP the missing-browser branch gets. Any
     # other non-zero is a real failure. A check must never be able to buy a green with an exit code.
     st = 'PASS' if r.returncode == 0 else ('SKIP' if r.returncode == 2 else 'FAIL')
-    results.append((name, st, report(r)))
+    results.append((name, st, report(r) + fail_dump(name, r, st)))
 
 w = max(len(n) for n, _, _ in results)
 print('=' * 64)

@@ -32,7 +32,7 @@
  *      section-set guard alone would not see it.
  *   3. STRING COVERAGE -- every string the mirror claims is lifted must actually appear in the
  *      rendered sheet text. A field that was re-pointed (wb.steps[].a -> .c) trips this.
- *   4. THE CUE-LIFT -- the composed spine line (cue + arrow + answer) must appear in the
+ *   4. THE CUE-LIFT -- the composed spine line (cue, then answer) must appear in the
  *      rendered sheet. Reverting the composer to lifting `.a` bare slips guards 1-3 entirely:
  *      same sections, same <li> count, and the answer text is still there. This is the guard
  *      that catches it, on all 46 topics x every step.
@@ -399,17 +399,22 @@ function asciiFold(s) {
       if (items[0] && items[0].a) push('one-liner', 'open.cards[0].items[0].a', items[0].a, 'detached-answer');
       else if (idn.thesis) push('one-liner', 'identity.thesis', idn.thesis, 'detached-answer');
 
-      /* 2. spine -- cram-derive's _csCueLine: the CUE, an arrow, then the answer.
+      /* 2. spine -- cram-derive's _csCueLine: the CUE, then the answer.
        * ONE LINE, TWO UNITS (see the header note). `text` stays the ANSWER, because that is the
        * sentence `dup` asks about; `line` is what the reader actually meets, which is what
        * `dangling` asks about. The line is composed HERE rather than by calling _csCueLine -- a
-       * mirror that calls the thing it mirrors proves nothing about drift; guard 4 does. */
+       * mirror that calls the thing it mirrors proves nothing about drift; guard 4 does.
+       *
+       * W4/P2-5: the separator changed from an inline arrow to a SPACE, because .cs-cue became a
+       * block (the pair must separate so the reader can cover the answer). The mirror follows the
+       * composer, which is the whole point of a mirror -- and guard 4 is exactly what would have
+       * caught this edit had it been made in only one of the two files. */
       let spineN = 0;
       if (d.wb && d.wb.steps && d.wb.steps.length) {
         d.wb.steps.forEach((s, i) => {
           push('spine', 'wb.steps[' + i + '].a', s.a, 'detached-answer');
           lifts[lifts.length - 1].line = asText('<span>' + (s.c || '') + '</span>'
-            + (s.c ? '<span>&rarr;</span>' : '') + (s.a || ''));
+            + (s.c ? ' ' : '') + (s.a || ''));
           spineN++;
         });
       } else if (idn.spine && idn.spine.length) {
@@ -571,7 +576,7 @@ function asciiFold(s) {
       //    lifting `.a` without its cue would slip every other guard: same sections, same <li>
       //    count, same answer text. This is the one that catches it (46 topics x every step).
       if (L.line && o.cramText.indexOf(L.line) === -1) {
-        drift.push(id + ': ' + L.path + ' -- the composed spine line (cue + arrow + answer) is NOT in the rendered cram sheet, so deriveCram is no longer lifting the cue alongside its answer');
+        drift.push(id + ': ' + L.path + ' -- the composed spine line (cue, then answer) is NOT in the rendered cram sheet, so deriveCram is no longer lifting the cue alongside its answer');
       }
     });
     o.slifts.forEach((L) => {

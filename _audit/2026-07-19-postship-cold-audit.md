@@ -98,6 +98,7 @@ The `CPR1.` code carries date + drill/wb/mock/mixed tallies but **no topic id** 
 On first activation, half the panes exceed the 100ms "feels instant" bar: trade-offs 217, model 186, whiteboard 153, numbers 150, system 144 ms (the fast half at first visit: viz 32, red-flags 80, walkthrough 83, open 98; drill measured separately — see #2). All are one-time-per-pane build costs; subsequent switches are fast.
 *Why it matters:* the first tour of a topic — exactly when a new user is judging responsiveness — is the slowest it ever is. No single pane is egregious (drill aside), but the *pattern* is a first-visit tax across the whole tab strip.
 *Direction:* pre-build the next-likely pane during idle time after topic-open, so first activation is a display toggle rather than a synchronous render.
+*Erratum (2026-07-29 · frontend-audit P3-13):* the "fast half" figures for red-flags and open do **not reproduce** on the build they were taken from — matched-load paired A/B against extracted `1770c99` re-measured rf **~138** and open **~242** (pane scrollHeight identical across builds; matched deltas sign-incoherent = noise). Current truth: **7 of 10** panes exceed 100ms on first visit. Never diff a future perf run against these recorded absolutes — use a matched-load paired A/B (`_perf/ab.cjs`) against an extracted historical build.
 
 **9. Topic open is a variable 180–332ms, tail exceeds 250ms** · FRESH
 *Lens: perf-midrange · Measured live (4× CPU throttle).*

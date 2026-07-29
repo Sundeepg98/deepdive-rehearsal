@@ -1795,10 +1795,22 @@ html[data-view="home"] .cmp-reopen{display:none}
    was 6.93:1 light / 6.66:1 dark, so dark improves and light stays well above the 4.5 floor. */
 .hm-cta{display:flex;width:100%;align-items:center;gap:var(--space-14);text-align:left;
   padding:var(--space-18) var(--space-20);margin:0 auto var(--space-26);max-width:var(--space-980);
-  border:1px solid var(--rm);border-radius:14px;background:var(--rm);color:var(--on-slab);cursor:pointer;
-  font:inherit;min-height:44px;box-shadow:0 10px 30px -12px var(--rm)}
+  border:1px solid var(--rm,var(--acc));border-radius:14px;background:var(--rm,var(--acc));color:var(--on-slab);cursor:pointer;
+  font:inherit;min-height:44px;box-shadow:0 10px 30px -12px var(--rm,var(--acc))}
 .hm-cta:hover{filter:brightness(1.06)}
-.hm-cta:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+/* ROUND 2. This button carries data-autofocus and is FOCUSED ON PAINT, so :focus-visible is its
+   rest state -- the state every screenshot and every real first view actually shows. The generic
+   button:focus-visible (:53) has specificity (0,1,1) and so beat .hm-cta's (0,1,0) for box-shadow:
+   the halo was var(--acc-a15)/var(--acc-a20), which inside .ix-panel is the RETIRED INDIGO, and
+   the room-coloured drop shadow above only ever painted while blurred. Measured on the shipped
+   round-1 build: a #534AB7 ring hugging a #006B63 fill, byte-identical to pre-wave at x=147-149
+   on scanline y=233 -- the wave had made an old incoherence newly visible instead of removing it.
+   Same geometry as the generic rule, same colour-mixing mechanism the --acc-a* tokens use
+   (styles.css:106), sourced from --rm. The outline stays var(--ink): it is already neutral by
+   intent and reads against every room. The global rule at :53 is untouched. */
+.hm-cta:focus-visible{outline:3px solid var(--ink);outline-offset:3px;
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--rm,var(--acc)) 15%,transparent),
+    0 0 16px -4px color-mix(in srgb,var(--rm,var(--acc)) 20%,transparent)}
 .hm-cta-k{display:block;font-size:var(--font-size-micro,11px);text-transform:uppercase;
   letter-spacing:.1em;font-weight:var(--font-weight-bold);opacity:.85}
 /* W3/P3-12: both of these sized themselves from var(--font-size-h3,20px) -- and --font-size-h3

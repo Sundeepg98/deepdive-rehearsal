@@ -168,14 +168,26 @@ helper.
 
 | | light | dark |
 |---|---|---|
-| hero fill + border + shadow | `#006B63` | `#13BAAC` |
+| hero fill + border | `#006B63` | `#13BAAC` |
 | messaging-events room ink | `#006B63` | `#13BAAC` |
 | match | **yes** | **yes** |
-| retired indigo `#534AB7` / `#9D93F0` still on the hero | no | no |
+| hero drop shadow (declared; paints only when blurred) | `#006B63` | `#13BAAC` |
+| hero **focus halo** -- the state that actually ships | **round 1: `#534AB7` / `#9D93F0`** -- see below | |
+| retired indigo anywhere on the hero, **after round 2** | no | no |
+
+> **CORRECTED IN ROUND 2.** As first written, two rows of this table said "hero fill + border +
+> **shadow**" and "retired indigo still on the hero: **no / no**". Both were **false as written**,
+> and the cold verify caught it (finding N1). The hero carries `data-autofocus` and is focused on
+> paint, so `button:focus-visible` (`styles.css:53`, specificity (0,1,1)) beat `.hm-cta` (0,1,0)
+> for `box-shadow` and painted a halo in `--acc-a15`/`--acc-a20` -- the retired indigo, inside
+> `.ix-panel`. The room-coloured drop shadow this wave declared only ever painted while blurred,
+> which is a state no screenshot and no arriving user ever sees. **Round 2 fixes it** rather than
+> only correcting the prose; the full receipt is in the addendum at the end of this report.
 
 The six room inks for reference -- light `#006B63 #315BB4 #924E00 #694EB0 #963D86 #A73A57`,
 dark `#13BAAC #7DA6F3 #E19556 #AD9AEE #DA8DCA #EE8CA4`. The dark hero matches room 1 exactly;
-pre-fix it matched none of the six.
+pre-fix it matched none of the six. (Fill and border only, as first shipped -- the halo took until
+round 2.)
 
 **Ink contract unchanged, and checked across ALL SIX rooms, not just the one on screen.**
 `--on-slab` still supplies the ink (`#fff` light, `#1A1622` dark -- fixed per theme, not
@@ -410,3 +422,100 @@ the newly committed home baselines, not a skip for want of a platform match.
 4. **`.hm-cta-t` tracking** -- `.sh-name` pairs this exact size and face with `letter-spacing:-.5px`.
    Not copied; P3-10 is parked.
 5. **`.xd-again`'s bespoke font stack** -- same defect as `.ix-io`, on the cross-drill panel.
+
+
+---
+
+# ROUND 2 -- the cold verify's two findings
+
+Verdict in the tree: `_audit/2026-07-29-w3-home-coldverify.md` (author: w3-verifier, verbatim).
+It returned **CLEAN with two NON-BLOCKING findings**. Both are fixed here rather than merely
+recorded, at the team-lead's ruling. Every number below was re-measured independently before any
+edit -- the round-1 report's error was trusting a declaration instead of the painted pixel, and
+repeating that by trusting a verdict instead of the painted pixel would have been the same mistake
+wearing a different hat.
+
+## N1 -- the hero's halo was still the retired indigo
+
+**The defect.** `.hm-cta` carries `data-autofocus="1"` and `home-view.js` focuses it on paint, so
+**`:focus-visible` is the hero's rest state** -- what every VR capture photographs and what every
+arriving user sees. The generic `button:focus-visible` (`styles.css:53`) has specificity **(0,1,1)**
+and beat `.hm-cta`'s **(0,1,0)** for `box-shadow`, painting `0 0 0 3px var(--acc-a15), 0 0 16px -4px
+var(--acc-a20)`. Inside `.ix-panel`, `--acc` is the neutralised **retired indigo**. So the
+room-coloured drop shadow round 1 declared **never painted in the observed state**.
+
+Re-measured on the round-1 build before touching anything (`activeElement === .hm-cta`,
+`matches(':focus-visible') === true`, both themes):
+
+```
+light  focused  color(srgb 0.32549 0.290196 0.717647 / 0.15)   -> 83,74,183   = #534AB7
+       blurred  rgb(0,107,99) 0 10px 30px -12px                 -> the --rm shadow, unobserved
+dark   focused  color(srgb 0.615686 0.576471 0.941176 / 0.15)  -> 157,147,240 = #9D93F0
+```
+
+**The fix.** A `.hm-cta:focus-visible` rule -- specificity **(0,2,0)**, which legitimately outranks
+the generic (0,1,1) -- carrying the *same geometry* as the global rule and the *same colour-mixing
+mechanism* the `--acc-a*` tokens use (`color-mix(in srgb, X N%, transparent)`, `styles.css:106`),
+sourced from `--rm`. **The global rule at `:53` is untouched, and the autofocus behaviour is
+unchanged.** The outline was measured first and left alone: it computes `var(--ink)`
+(`rgb(42,40,35)` light / `rgb(236,234,228)` dark), which is neutral by intent and reads against
+every room -- only the glow was ever the problem.
+
+**Receipt -- scanline y=233, x=144..152, read out of the committed baseline PNGs.** x=144-146 is the
+`--ink` outline, x=147-149 is the glow, x=150+ is the fill:
+
+| build | x=144-146 (outline) | x=147-149 (glow) | x=150+ (fill) |
+|---|---|---|---|
+| light, pre-wave | `42,40,35` | `219,216,233` | `83,74,183` |
+| light, round 1 | `42,40,35` | `219,216,233` **byte-identical** | `0,107,99` |
+| **light, round 2** | `42,40,35` | **`203,223,218`** | `0,107,99` |
+| dark, pre-wave | `236,234,228` | `42,38,60` | `157,147,240` |
+| dark, round 1 | `236,234,228` | `42,38,60` **byte-identical** | `19,186,172` |
+| **dark, round 2** | `236,234,228` | **`16,46,47`** | `19,186,172` |
+
+The middle rows are the finding: round 1 moved the fill and left the halo exactly as it was. The
+computed shadow after the fix is `color(srgb 0 0.419608 0.388235 / 0.15)` = **`#006B63`** in light
+and `color(srgb 0.0745098 0.729412 0.67451 / 0.15)` = **`#13BAAC`** in dark -- the destination
+room, in the state that ships.
+
+**Why this mattered more than "non-blocking" suggests.** P2-16 exists because *the largest, most
+saturated object on the first screen was the one whose colour meant nothing*. Round 1 recoloured
+the fill and left a retired-indigo ring hugging it -- converting an invisible incoherence into a
+**visible** one. The verifier was right to call the receipt false rather than let it stand.
+
+## N2 -- `--rm` had no CSS-level fallback
+
+`.hm-cta` hung its border, background and box-shadow entirely on an inline custom property emitted
+by JS. Unreachable today, but the failure mode is an invisible hero. Measured by removing the
+attribute from the shipped build:
+
+| | round 1 (no fallback) | round 2 (`var(--rm,var(--acc))`) |
+|---|---|---|
+| light, `--rm` absent | `background: rgba(0,0,0,0)`, `border: rgb(255,255,255)` -- **invisible** | `rgb(83,74,183)` -- the pre-wave accent |
+| dark, `--rm` absent | `background: rgba(0,0,0,0)`, `border: rgb(26,22,34)` -- **invisible** | `rgb(157,147,240)` -- the pre-wave accent |
+
+Four sites now read `var(--rm,var(--acc))` (border, background, drop shadow, and both halo layers).
+**Zero pixel change by construction** -- the fallback is only consulted when `--rm` is absent, which
+it never is on the shipped build. The token fallback keeps `phantom_tokens.py` airtight: the
+fallback is a `var()`, not a literal, and `--rm` is a genuinely defined token (the guard counts the
+inline `style="--rm:..."` JS emits), so no new phantom shape was introduced.
+
+## Re-photographed
+
+`home-light` **6,552 px** changed in a 986x116 box at (147,175); `home-dark` **8,640 px** in a
+994x124 box at (143,171) -- the halo ring and nothing else, which is what a box-shadow-only change
+should look like. **The other 14 baselines measured 0 changed pixels again**, and `vr:update`
+again rewrote `walk-dark` and `wb-light` with sub-tolerance jitter, which was again restored rather
+than baked in. Verify run after the rebaseline: **16/16 PASS**.
+
+`after-light.png` / `after-dark.png` refreshed from the new baselines. The library pair was
+re-captured and compared: **0 changed pixels, same scrollY 692** -- a box-shadow moves no layout,
+so that frame is genuinely unaffected and the committed pair stands.
+
+## What round 2 did not touch
+
+Per the ruling's scope guard: `.hm-brand` (still the operator's taste call), the latent-Arial debt
+(W4's), and the 198-vs-4 display-face discrepancy. The global `button:focus-visible` rule at
+`styles.css:53` is also untouched -- every other button in the app still gets the accent glow it
+always had, which is correct for them, because they are not nested inside a neutralised panel while
+naming one topic.

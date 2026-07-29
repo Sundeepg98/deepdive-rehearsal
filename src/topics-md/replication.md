@@ -572,7 +572,7 @@ Route by the **freshness the operation needs**, not by node load. Draw two arrow
 
 ### Why does R + W > N guarantee a fresh read?
 
-Because a write set of W nodes and a read set of R nodes, together exceeding N, must overlap in at least one node --- so the read includes a node holding the latest **completed** write. Write the qualifier on the board, because it is the whole guarantee: anything that stopped short of W is outside the overlap and this diagram promises nothing about it.
+Because a write set of W nodes and a read set of R nodes, together exceeding N, must overlap in at least one node --- so the read includes a node holding the latest **completed** write. Write the qualifier on the board, because it is the whole guarantee: a write that stopped short of W is outside the argument entirely --- it was never rolled back, so it can still surface on a later read as though it had succeeded.
 
 ### The leader dies: which follower do you promote, and what do you lose?
 

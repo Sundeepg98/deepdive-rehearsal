@@ -255,6 +255,127 @@ const HTML = process.argv[2] ||
   ok('migration is idempotent across reloads (keys stay gone, re-run reports nothing to do)',
     mig2.mockLast === null && mig2.mixLog === null && mig2.mockMig === 'none' && mig2.mixMig === 'none', JSON.stringify(mig2));
 
+  /* ===================== 7. THE FLOW SPINE NAVIGATES THROUGH THE ROUTER (W1 / G2) =====================
+   *
+   * flowGo() -- the ONE executor behind every forward affordance (the Continue dock CTA, the `n`
+   * key, all four terminal .flow-go strips, the mobile NextUp chip, the session panel's #ssgo) --
+   * called switchTab(rec.tab) DIRECTLY, bypassing the contract stated two files over in shell.js:
+   *
+   *     Intent -> Router.navigate (URL hash + history + title) -> ViewManager -> switchTab
+   *
+   * The seg buttons and the Q..O hotkeys honour it; flowGo was the outlier, and it is the funnel
+   * six affordances share. Measured pre-fix: press `n` -> the pane moves to the drill, the hash
+   * stays #<topic>/walk, the title stays "Walkthrough". Downstream, all four user-facing guarantees
+   * the router exists to provide were silently void on the whole flow spine: RELOAD landed back on
+   * walk (the app discarded the pane it had just sent you to), BACK skipped the navigation entirely,
+   * and #copylink copied the wrong pane.
+   *
+   * 7a -- the USER PATH. A real `n` keypress must move the hash, the title and history.
+   * 7b -- the ORDERING PIN, which is the part that could regress silently. flowGo has SIDE EFFECTS
+   *       after the switch (rec.weak -> drill.weak(indices); rec.wbreset -> whiteboard.rerunMissed()),
+   *       and they must run AFTER the navigation has landed, not before. Router.navigate() is
+   *       synchronous today -- it pushState()s and emit()s in the same tick rather than waiting on a
+   *       hashchange -- so the ordering is preserved by construction; this pins that it STAYS that
+   *       way. The pin works by spying on the side-effect itself and recording what the world looked
+   *       like AT THE MOMENT IT FIRED: if navigation ever becomes asynchronous, the spy sees the old
+   *       hash and a pane that is not yet on, and this goes red instead of the app going subtly
+   *       wrong (a re-render from the pane flush would wipe the weak set on its way in).
+   */
+  await FRESH();
+  await B.enterApp(page);
+
+  const before = await page.evaluate(() => ({ hash: location.hash, title: document.title, len: history.length }));
+  const dockTab = await page.evaluate(() => {
+    const n = (typeof nextUp === 'function') ? nextUp() : null;
+    return n && n.rec ? { tier: n.tier, tab: n.rec.tab, btn: n.rec.btn } : null;
+  });
+  ok('a fresh topic offers a forward target (`n` is armed), so 7a is not vacuous',
+    !!dockTab && (dockTab.tier === 'meso' || dockTab.tier === 'macro') && !!dockTab.tab,
+    JSON.stringify(dockTab));
+
+  await page.evaluate(() => { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); });
+  await page.keyboard.press('n');
+  await page.waitForFunction((h) => location.hash !== h, before.hash, { timeout: B.ACT_MS }).catch(() => {});
+  await B.settle(page);
+  const afterN = await page.evaluate(() => ({
+    hash: location.hash, title: document.title, len: history.length,
+    on: (document.querySelector('.seg button.on') || {}).getAttribute
+      ? document.querySelector('.seg button.on').getAttribute('data-tab') : null,
+  }));
+
+  ok('7a `n` moves the PANE (unchanged behaviour)', afterN.on === dockTab.tab,
+    JSON.stringify({ expected: dockTab.tab, got: afterN.on }));
+  ok('7a `n` moves the URL HASH to the target pane (pre-fix it froze -- reload landed on the pane you left)',
+    afterN.hash !== before.hash && new RegExp('(^|/)' + dockTab.tab + '$').test(afterN.hash),
+    JSON.stringify({ before: before.hash, after: afterN.hash, target: dockTab.tab }));
+  ok('7a `n` updates the document TITLE (deep links and bookmarks read correctly)',
+    afterN.title !== before.title && /Probe Drill|Whiteboard|System Map|Trade|Model|Numbers|Red Flags|30-Second|Visualize|Walkthrough/.test(afterN.title),
+    JSON.stringify({ before: before.title, after: afterN.title }));
+  ok('7a `n` pushes a HISTORY entry, so Back returns to where you were',
+    afterN.len > before.len, JSON.stringify({ before: before.len, after: afterN.len }));
+
+  await page.goBack();
+  await page.waitForFunction((h) => location.hash === h, before.hash, { timeout: B.ACT_MS }).catch(() => {});
+  await B.settle(page);
+  const backState = await page.evaluate(() => ({
+    hash: location.hash,
+    on: document.querySelector('.seg button.on') ? document.querySelector('.seg button.on').getAttribute('data-tab') : null,
+  }));
+  ok('7a Back after `n` returns to the pane you came from (hash AND pane, not one or the other)',
+    backState.hash === before.hash && backState.on !== dockTab.tab,
+    JSON.stringify({ expected: before.hash, got: backState }));
+
+  /* ---- 7b: the side effects fire AFTER the navigation has landed ----
+     Start from a KNOWN route rather than wherever 7a's Back left us: pre-fix `n` pushes no history
+     entry, so goBack() lands somewhere different than it will post-fix, and an ordering pin must not
+     read differently for that reason. Walk is also OFF both targets, so neither flowGo below can be
+     a no-op that fakes a pass. */
+  await page.evaluate(() => { window.Router.navigate('walk'); });
+  await B.until(page, () => /(^|\/)walk$/.test(location.hash), null, B.ACT_MS, 'reset to the walk route before the ordering pin');
+  await B.settle(page);
+
+  const order = await page.evaluate(() => {
+    const snap = (which) => ({
+      which: which,
+      hash: location.hash,
+      title: document.title,
+      /* was the destination pane already the active one when the side effect fired? */
+      on: document.querySelector('.seg button.on') ? document.querySelector('.seg button.on').getAttribute('data-tab') : null,
+    });
+    const seen = [];
+    const dr = document.querySelector('#drill deep-drill');
+    const wb = document.querySelector('#wb deep-whiteboard');
+    if (!dr || !wb) return { err: 'drill or whiteboard element missing' };
+    const realWeak = dr.weak, realRerun = wb.rerunMissed;
+    dr.weak = function () { seen.push(snap('drill.weak')); return realWeak.apply(this, arguments); };
+    wb.rerunMissed = function () { seen.push(snap('wb.rerunMissed')); return realRerun.apply(this, arguments); };
+    try {
+      if (location.hash.indexOf('drill') === -1) { /* start off-target so a no-op cannot fake a pass */ }
+      flowGo({ tab: 'drill', weak: true });
+      flowGo({ tab: 'wb', wbreset: true });
+    } finally {
+      delete dr.weak; delete wb.rerunMissed;
+    }
+    return { seen: seen };
+  });
+
+  if (order.err) ok('7b the flow side-effect spies attach', false, order.err);
+  else {
+    const weakSnap = order.seen.find((s) => s.which === 'drill.weak');
+    const wbSnap = order.seen.find((s) => s.which === 'wb.rerunMissed');
+    ok('7b flowGo(rec.weak) reaches the drill\'s weak() side effect', !!weakSnap, JSON.stringify(order.seen));
+    ok('7b flowGo(rec.wbreset) reaches the whiteboard\'s rerunMissed() side effect', !!wbSnap, JSON.stringify(order.seen));
+    if (weakSnap) {
+      ok('7b ORDERING: by the time drill.weak() fires, the ROUTER has already landed on #drill (navigate -> switchTab -> side effect)',
+        /(^|\/)drill$/.test(weakSnap.hash) && weakSnap.on === 'drill',
+        JSON.stringify(weakSnap) + ' -- an async navigation would show the OLD hash here, and the pane flush would then wipe the weak set on its way in');
+    }
+    if (wbSnap) {
+      ok('7b ORDERING: by the time wb.rerunMissed() fires, the ROUTER has already landed on #wb',
+        /(^|\/)wb$/.test(wbSnap.hash) && wbSnap.on === 'wb', JSON.stringify(wbSnap));
+    }
+  }
+
   ok('zero console/page errors across the whole run', errs.length === 0, errs.slice(0, 5).join(' | '));
 
   await browser.close();

@@ -630,6 +630,40 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # plants a known-dead rule on every run and aborts if it cannot see it, so it
                      # is not the seventh check here that cannot fail.
                      ('shadow_css_guard', 'test/shadow_css_guard.mjs'),
+                     # ===== W1 spot-fix wave: four guards for defect classes nothing here could see =====
+                     # THE BUG CLASS VR AND THE CONSOLE ARE BOTH BLIND TO. `--ease-spring:var(--ease-spring)`
+                     # is a var() cycle: invalid at computed-value time, so the token computes to the
+                     # EMPTY STRING -- and an invalid var() inside a SHORTHAND resolves the WHOLE
+                     # declaration to `unset`. The toggle knob and the overlay close button therefore
+                     # had NO transitions at all, not merely a wrong curve. VR captures at rest, where a
+                     # transition that never runs looks identical; the console is silent, because it is
+                     # valid CSS that resolves to garbage later; stylelint sees well-formed text. The
+                     # only witness is the engine, so this asks it: every --ease-*/--duration- computes
+                     # non-empty AND survives a `transition` shorthand, in both themes.
+                     ('token_liveness', 'test/token_liveness.cjs'),
+                     # The nine pane tabs told AT nothing: switchTab toggled a CLASS and stopped, so all
+                     # nine returned ariaCurrent null. A user could hear which pane was RECOMMENDED (the
+                     # pip's aria-describedby, guarded in flow_a11y) but never which one they were IN.
+                     # Guarded per-tab, driven through the real router, because the whole risk is that a
+                     # future edit keeps the class and drops the attribute -- invisible to VR by design
+                     # (zero visual change) and to every behaviour check (the pane still switches).
+                     ('seg_state', 'test/seg_state.cjs'),
+                     # ONE QUESTION, TWO MECHANISMS: does keyboard focus look like this app? Three light-DOM
+                     # chrome buttons deleted the ring outright with `:focus{outline:none}` (what survived
+                     # was an opacity change byte-identical to their own :hover -- focus and hover were the
+                     # same event), and in the shadow roots the document's button:focus-visible could not
+                     # reach at all, so the 1/2/3 grade buttons -- the most-pressed controls in the app --
+                     # got Chrome's ~0.7px near-black hairline. Note .cmp-fold:focus is (0,2,0) and outranks
+                     # button:focus-visible (0,1,1): this reads the COMPUTED outline, so a fix that loses
+                     # the cascade cannot pass.
+                     ('focus_ring', 'test/focus_ring.cjs'),
+                     # A deep light-DOM + all-shadow-root scan of a topic route returned renderedHeadings:
+                     # 1 -- the topic name the user had just chosen. Across 46 topics x 9 panes of
+                     # deliberately-structured content, the rotor and the H key returned that one item.
+                     # The positive control (#home -> h1 + two h2s) is wired in permanently, because a
+                     # heading scanner that has quietly stopped finding headings is indistinguishable from
+                     # a page that has none.
+                     ('heading_tree', 'test/heading_tree.cjs'),
                      # THE CHECK THAT ACTUALLY LOOKS AT THE SCREEN. Everything above this line reads the
                      # DOM, the source, or a computed style; none of them can tell you what was PAINTED.
                      # The old `visual_regression.py` claimed to and could not -- it was a regex over CSS

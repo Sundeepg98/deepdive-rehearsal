@@ -56,6 +56,18 @@ function pickRec(revisit, missed, mScore, dDone, dTot, wbDone, mRuns, mixWeak, m
   if(revisit.length&&dDone>=dTot)return {kicker:'Focus next',text:'You flagged <b>'+revisit.length+'</b> probe'+(revisit.length===1?'':'s')+' to revisit. Re-drill '+(revisit.length===1?'it':'them')+' until the signal comes automatically.',btn:'Re-drill weak spots \u2192',tab:'drill',weak:true,bd:'#e8c5c0',bg:'var(--redbg)',ink:'var(--red)'};
   if(missed.length)return {kicker:'Focus next',text:'You missed <b>'+missed.length+'</b> step'+(missed.length===1?'':'s')+' on the whiteboard. Re-draw '+(missed.length===1?'it':'them')+' from a blank page.',btn:'Re-draw missed steps \u2192',tab:'wb',wbreset:true,bd:'#e8c5c0',bg:'var(--redbg)',ink:'var(--red)'};
   if(mScore!==null&&!mockIsStrong(mScore,mOutOf))return {kicker:'Focus next',text:'Your last mock landed at <b>'+mScore+' / '+mOutOf+'</b>. Run the arc again and target the beats that wobbled.',btn:'Run the round again \u2192',tab:'__mock__',bd:'#e8c5c0',bg:'var(--redbg)',ink:'var(--red)'};
+  /* 3.5 -- FIRST RUN IS NOT A RETURN (audit P3-1, prior #14, verified genuinely cold: localStorage
+     cleared, "0 of 46 started"). The rung below is the right DESTINATION at dDone===0 but the wrong
+     SENTENCE: "Back to the drill" asserts a return that never happened, "You've graded 0 of 21
+     probes" narrates an absence as an achievement, and both sat beside a receipt reading "0 of 21
+     graded" that contradicted the button. Same tab, same colours, honest copy -- "Start" is the
+     app's own cold-start verb (the home CTA's kicker is Start vs Resume, home-view.js:107).
+     A STRICT REFINEMENT of the rung below (dDone===0 implies dDone<dTot whenever dTot>0), so no
+     other rung's reachability changes and the golden ladder pins for rows 1-8 are untouched -- but
+     dTot>0 is load-bearing: a topic with an empty bank has dDone===0 too, and pre-fix it fell
+     through to the whiteboard rung, which is still where it belongs. Pinned as row 4a in
+     test/flow_data.cjs. */
+  if(dDone===0&&dTot>0)return {kicker:'Start here',text:'Nothing graded on this topic yet. Work the <b>'+dTot+'</b> probes once \u2014 that is what turns the walkthrough you just read into something you can defend under follow-ups.',btn:'Start the drill \u2192',tab:'drill',bd:'#cfc7f0',bg:'var(--accbg)',ink:'var(--accink)'};
   if(dDone<dTot)return {kicker:'Keep going',text:'You\u2019ve graded <b>'+dDone+' of '+dTot+'</b> probes. Clear the rest so nothing in the round is a surprise.',btn:'Back to the drill \u2192',tab:'drill',bd:'#cfc7f0',bg:'var(--accbg)',ink:'var(--accink)'};
   if(wbDone===0)return {kicker:'Keep going',text:'You haven\u2019t tried the <b>whiteboard recall</b> yet \u2014 rebuild the whole design from cues alone.',btn:'Try the whiteboard \u2192',tab:'wb',bd:'#cfc7f0',bg:'var(--accbg)',ink:'var(--accink)'};
   if(mRuns===0)return {kicker:'Keep going',text:'Drill and whiteboard are clean. Now pressure-test the <b>whole arc</b> on the clock.',btn:'Start a mock run \u2192',tab:'__mock__',bd:'#cfc7f0',bg:'var(--accbg)',ink:'var(--accink)'};
@@ -167,7 +179,21 @@ function flowGo(rec) {
   if (rec.tab === '__mock__') { if (typeof openMock === 'function') openMock(); return; }
   if (rec.tab === '__mix__') { if (typeof openMix === 'function') openMix(); return; }
   if (rec.tab === '__topic__') { try { if (rec.nextTopic && typeof TopicRegistry !== 'undefined' && TopicRegistry.setTopic) TopicRegistry.setTopic(rec.nextTopic); } catch (e) {} return; }
-  switchTab(rec.tab);
+  /* THROUGH THE ROUTER, NOT AROUND IT (audit P2-1). This was a bare switchTab(rec.tab), which
+     skipped the contract stated verbatim in shell.js:71-73 -- intent -> Router.navigate (hash +
+     history + title) -> ViewManager -> switchTab. The seg buttons and the Q..O hotkeys honour it;
+     flowGo was the outlier, and it is the ONE funnel behind six affordances: the Continue dock CTA,
+     the `n` key, all four terminal .flow-go strips, and the mobile NextUp chip. Measured pre-fix:
+     `n` moved the pane while the hash stayed #<topic>/walk and the title stayed "Walkthrough", so
+     RELOAD landed back on the pane you had just left, BACK skipped the navigation entirely, and
+     #copylink copied the wrong pane -- four user-facing guarantees, void on the whole flow spine.
+     ORDERING IS PRESERVED, and it matters because the two side effects below must run AFTER the
+     pane is up: Router.navigate() pushState()s and emit()s in the SAME TICK (it does not wait on a
+     hashchange, which pushState does not fire anyway), so applyRoute -> switchTab completes before
+     this function continues, exactly as the direct call did. If that ever becomes asynchronous, the
+     drill's weak set would be applied and then wiped by the pane flush on its way in -- so
+     test/flow_data.cjs section 7b pins the ordering by spying on the side effects themselves. */
+  goView(rec.tab);
   if (rec.weak) {
     var dr = drillEl(), widx = [];
     try { if (typeof Progress !== 'undefined' && Progress.weakIdx) widx = Progress.weakIdx(sessTopicId()); } catch (e) {}
@@ -304,18 +330,36 @@ function flowDockDesktop(d, n) {
   if (!d) return;
   /* MICRO -- you are on the recommended pane. Quiet mid-read; at a JUDGMENT POINT the dock arms the
      pane's native grade keys (the judges' amendment). Never a CTA, never louder than the pane. */
+  /* __ndLast is cleared on every non-CTA state, so returning to the SAME recommendation after the
+     dock went quiet still replays the entrance -- the dock coming back IS a change. */
   if (n.tier === 'micro') {
     var armed = dockArmedKeys();
+    d.__ndLast = null; d.classList.remove('nd-swap');
     d.innerHTML = armed; d.hidden = !armed;
     return;
   }
-  if (!n.rec || n.tier !== 'meso' && n.tier !== 'macro' || !n.rec.btn) { d.hidden = true; d.innerHTML = ''; return; }
+  if (!n.rec || n.tier !== 'meso' && n.tier !== 'macro' || !n.rec.btn) { d.hidden = true; d.innerHTML = ''; d.__ndLast = null; d.classList.remove('nd-swap'); return; }
   var rec = n.rec, receipt = rec.receipt ? '<span class="nd-rcpt">' + rec.receipt + '</span>' : '';
-  d.innerHTML = '<span class="nd-k" style="color:' + rec.ink + '">' + rec.kicker + '</span>' +
+  var html = '<span class="nd-k" style="color:' + rec.ink + '">' + rec.kicker + '</span>' +
     '<button class="nd-go" type="button" aria-keyshortcuts="N">' + rec.btn + '</button>' + receipt;
+  /* P3-9 -- THE GUIDANCE SWAP MUST BE VISIBLE. The dock is the element whose whole job is "the
+     situation changed", and it was the least responsive control in the app: it had no transition and
+     no animation at all, so a new recommendation replaced the old one by instantaneous substitution,
+     in peripheral vision, while the user's eyes were on the pane. Replay a short entrance ONLY when
+     the rendered content actually differs -- recomputing the same CTA on every pane switch (flowDock
+     listens to flowstatechange) must not twitch. Compared against the string WE wrote, not
+     d.innerHTML, which the parser normalises and would report as changed every time. The
+     remove -> reflow -> add idiom is the app's established replay (shell.js's .headin,
+     topic-protocol's .topicswap); the forced reflow costs one layout on a real change only.
+     The MICRO armed-keys legend above is deliberately excluded: it is a quiet key legend by
+     contract, never a CTA, and must not announce itself at a judgment point. */
+  var changed = (d.__ndLast !== html);
+  d.__ndLast = html;
+  d.innerHTML = html;
   var b = d.querySelector('.nd-go');
   if (b) b.onclick = function () { if (typeof flowGo === 'function') flowGo(rec); };
   d.hidden = false;
+  if (changed) { d.classList.remove('nd-swap'); void d.offsetWidth; d.classList.add('nd-swap'); }
   dockAnnounce(rec.kicker, rec.btn);   /* #18 (D4): speak the CTA to AT via the body-level live region.
      Runs on mobile too -- #ndock is display:none there, but dockAnnounce writes to a separate
      aria-live region (not #ndock), so the SAME next-step is announced for the touch chip; the chip

@@ -71,6 +71,8 @@ const HTML = process.argv[2] ||
       b2: P({ missed: ['step'], dDone: 22, dTot: 22, wbDone: 5 }),
       b3: P({ mScore: 2, dDone: 22, dTot: 22, wbDone: 5, mRuns: 1, mixTot: 1 }),
       b4: P({ dDone: 10, dTot: 22 }),
+      b4a: P({ dDone: 0, dTot: 22 }),                    /* W1/P3-1: first run is not a return */
+      b4z: P({ dDone: 0, dTot: 0, wbDone: 0 }),          /* empty bank: must NOT claim a drill */
       b5: P({ dDone: 22, dTot: 22, wbDone: 0 }),
       b6: P({ dDone: 22, dTot: 22, wbDone: 5, mRuns: 0 }),
       b65: P({ mScore: 5, dDone: 22, dTot: 22, wbDone: 5, mRuns: 1, mixWeak: [], mixTot: 0 }),
@@ -82,6 +84,18 @@ const HTML = process.argv[2] ||
   ok('ladder 2: missed steps -> re-draw missed', ladder.b2.tab === 'wb' && /Re-draw missed steps/.test(ladder.b2.btn), JSON.stringify(ladder.b2));
   ok('ladder 3: weak mock -> run the round again', ladder.b3.tab === '__mock__' && /Run the round again/.test(ladder.b3.btn), JSON.stringify(ladder.b3));
   ok('ladder 4: drill unfinished -> back to the drill', ladder.b4.tab === 'drill' && /Back to the drill/.test(ladder.b4.btn), JSON.stringify(ladder.b4));
+  /* W1/P3-1 (prior #14). Rung 4 was unconditional on dDone<dTot, so on a brand-new topic it said
+     "Back to the drill" -- asserting a return that never happened, beside a receipt reading "0 of 21
+     graded" that contradicted it. 4a is a strict refinement of rung 4 (same tab, same colours,
+     honest copy), which is why rung 4 above must STILL fire at dDone=10: the pair proves the split
+     is a refinement and not a replacement. */
+  ok('ladder 4a (NEW RUNG): a cold topic -> START the drill, not "back" to it',
+    ladder.b4a.tab === 'drill' && /Start the drill/.test(ladder.b4a.btn) && !/Back to the drill/.test(ladder.b4a.btn),
+    JSON.stringify(ladder.b4a));
+  ok('ladder 4a does not swallow rung 4 (dDone=10 still reads "Back to the drill")',
+    /Back to the drill/.test(ladder.b4.btn), JSON.stringify({ b4: ladder.b4.btn, b4a: ladder.b4a.btn }));
+  ok('ladder 4a is gated on dTot>0: an EMPTY bank must not be handed a drill it has no probes for',
+    ladder.b4z.tab !== 'drill', JSON.stringify(ladder.b4z));
   ok('ladder 5: no whiteboard -> try the whiteboard', ladder.b5.tab === 'wb' && /Try the whiteboard/.test(ladder.b5.btn), JSON.stringify(ladder.b5));
   ok('ladder 6: no mock -> start a mock run', ladder.b6.tab === '__mock__' && /Start a mock run/.test(ladder.b6.btn), JSON.stringify(ladder.b6));
   ok('ladder 6.5 (THE NEW RUNG): mixTot===0 -> run mixed fire', ladder.b65.tab === '__mix__' && /Run mixed fire/.test(ladder.b65.btn) && /haven/.test(ladder.b65.text), JSON.stringify(ladder.b65));
@@ -254,6 +268,133 @@ const HTML = process.argv[2] ||
   }));
   ok('migration is idempotent across reloads (keys stay gone, re-run reports nothing to do)',
     mig2.mockLast === null && mig2.mixLog === null && mig2.mockMig === 'none' && mig2.mixMig === 'none', JSON.stringify(mig2));
+
+  /* ===================== 7. THE FLOW SPINE NAVIGATES THROUGH THE ROUTER (W1 / G2) =====================
+   *
+   * flowGo() -- the ONE executor behind every forward affordance (the Continue dock CTA, the `n`
+   * key, all four terminal .flow-go strips, the mobile NextUp chip, the session panel's #ssgo) --
+   * called switchTab(rec.tab) DIRECTLY, bypassing the contract stated two files over in shell.js:
+   *
+   *     Intent -> Router.navigate (URL hash + history + title) -> ViewManager -> switchTab
+   *
+   * The seg buttons and the Q..O hotkeys honour it; flowGo was the outlier, and it is the funnel
+   * six affordances share. Measured pre-fix: press `n` -> the pane moves to the drill, the hash
+   * stays #<topic>/walk, the title stays "Walkthrough". Downstream, all four user-facing guarantees
+   * the router exists to provide were silently void on the whole flow spine: RELOAD landed back on
+   * walk (the app discarded the pane it had just sent you to), BACK skipped the navigation entirely,
+   * and #copylink copied the wrong pane.
+   *
+   * 7a -- the USER PATH. A real `n` keypress must move the hash, the title and history.
+   * 7b -- the ORDERING PIN, which is the part that could regress silently. flowGo has SIDE EFFECTS
+   *       after the switch (rec.weak -> drill.weak(indices); rec.wbreset -> whiteboard.rerunMissed()),
+   *       and they must run AFTER the navigation has landed, not before. Router.navigate() is
+   *       synchronous today -- it pushState()s and emit()s in the same tick rather than waiting on a
+   *       hashchange -- so the ordering is preserved by construction; this pins that it STAYS that
+   *       way. The pin works by spying on the side-effect itself and recording what the world looked
+   *       like AT THE MOMENT IT FIRED: if navigation ever becomes asynchronous, the spy sees the old
+   *       hash and a pane that is not yet on, and this goes red instead of the app going subtly
+   *       wrong (a re-render from the pane flush would wipe the weak set on its way in).
+   */
+  await FRESH();
+  await B.enterApp(page);
+
+  /* The view a hash resolves to. Both URL shapes are legal and both appear here: a bare `#drill` on
+     the boot topic, `#<topic>/drill` on any other (router.js keeps the boot topic's URLs bare so
+     they round-trip). Comparing the VIEW is the assertion; the prefix is not. */
+  const hashView = (h) => String(h || '').replace(/^#/, '').split('/').pop();
+
+  const before = await page.evaluate(() => ({ hash: location.hash, title: document.title, len: history.length }));
+  const dockTab = await page.evaluate(() => {
+    const n = (typeof nextUp === 'function') ? nextUp() : null;
+    return n && n.rec ? { tier: n.tier, tab: n.rec.tab, btn: n.rec.btn } : null;
+  });
+  ok('a fresh topic offers a forward target (`n` is armed), so 7a is not vacuous',
+    !!dockTab && (dockTab.tier === 'meso' || dockTab.tier === 'macro') && !!dockTab.tab,
+    JSON.stringify(dockTab));
+
+  await page.evaluate(() => { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); });
+  await page.keyboard.press('n');
+  await page.waitForFunction((h) => location.hash !== h, before.hash, { timeout: B.ACT_MS }).catch(() => {});
+  await B.settle(page);
+  const afterN = await page.evaluate(() => ({
+    hash: location.hash, title: document.title, len: history.length,
+    on: (document.querySelector('.seg button.on') || {}).getAttribute
+      ? document.querySelector('.seg button.on').getAttribute('data-tab') : null,
+  }));
+
+  ok('7a `n` moves the PANE (unchanged behaviour)', afterN.on === dockTab.tab,
+    JSON.stringify({ expected: dockTab.tab, got: afterN.on }));
+  ok('7a `n` moves the URL HASH to the target pane (pre-fix it froze -- reload landed on the pane you left)',
+    afterN.hash !== before.hash && hashView(afterN.hash) === dockTab.tab,
+    JSON.stringify({ before: before.hash, after: afterN.hash, target: dockTab.tab }));
+  ok('7a `n` updates the document TITLE (deep links and bookmarks read correctly)',
+    afterN.title !== before.title && /Probe Drill|Whiteboard|System Map|Trade|Model|Numbers|Red Flags|30-Second|Visualize|Walkthrough/.test(afterN.title),
+    JSON.stringify({ before: before.title, after: afterN.title }));
+  ok('7a `n` pushes a HISTORY entry, so Back returns to where you were',
+    afterN.len > before.len, JSON.stringify({ before: before.len, after: afterN.len }));
+
+  await page.goBack();
+  await page.waitForFunction((h) => location.hash === h, before.hash, { timeout: B.ACT_MS }).catch(() => {});
+  await B.settle(page);
+  const backState = await page.evaluate(() => ({
+    hash: location.hash,
+    on: document.querySelector('.seg button.on') ? document.querySelector('.seg button.on').getAttribute('data-tab') : null,
+  }));
+  ok('7a Back after `n` returns to the pane you came from (hash AND pane, not one or the other)',
+    backState.hash === before.hash && backState.on !== dockTab.tab,
+    JSON.stringify({ expected: before.hash, got: backState }));
+
+  /* ---- 7b: the side effects fire AFTER the navigation has landed ----
+     Start from a KNOWN route rather than wherever 7a's Back left us: pre-fix `n` pushes no history
+     entry, so goBack() lands somewhere different than it will post-fix, and an ordering pin must not
+     read differently for that reason. Walk is also OFF both targets, so neither flowGo below can be
+     a no-op that fakes a pass. */
+  await page.evaluate(() => { window.Router.navigate('walk'); });
+  await B.until(page, () => String(location.hash).replace(/^#/, '').split('/').pop() === 'walk',
+    null, B.ACT_MS, 'reset to the walk route before the ordering pin');
+  await B.settle(page);
+
+  const order = await page.evaluate(() => {
+    const snap = (which) => ({
+      which: which,
+      hash: location.hash,
+      title: document.title,
+      /* was the destination pane already the active one when the side effect fired? */
+      on: document.querySelector('.seg button.on') ? document.querySelector('.seg button.on').getAttribute('data-tab') : null,
+    });
+    const seen = [];
+    const dr = document.querySelector('#drill deep-drill');
+    const wb = document.querySelector('#wb deep-whiteboard');
+    if (!dr || !wb) return { err: 'drill or whiteboard element missing' };
+    const realWeak = dr.weak, realRerun = wb.rerunMissed;
+    dr.weak = function () { seen.push(snap('drill.weak')); return realWeak.apply(this, arguments); };
+    wb.rerunMissed = function () { seen.push(snap('wb.rerunMissed')); return realRerun.apply(this, arguments); };
+    try {
+      if (location.hash.indexOf('drill') === -1) { /* start off-target so a no-op cannot fake a pass */ }
+      flowGo({ tab: 'drill', weak: true });
+      flowGo({ tab: 'wb', wbreset: true });
+    } finally {
+      delete dr.weak; delete wb.rerunMissed;
+    }
+    return { seen: seen };
+  });
+
+  if (order.err) ok('7b the flow side-effect spies attach', false, order.err);
+  else {
+    const weakSnap = order.seen.find((s) => s.which === 'drill.weak');
+    const wbSnap = order.seen.find((s) => s.which === 'wb.rerunMissed');
+    ok('7b flowGo(rec.weak) reaches the drill\'s weak() side effect', !!weakSnap, JSON.stringify(order.seen));
+    ok('7b flowGo(rec.wbreset) reaches the whiteboard\'s rerunMissed() side effect', !!wbSnap, JSON.stringify(order.seen));
+    if (weakSnap) {
+      ok('7b ORDERING: by the time drill.weak() fires, the ROUTER has already landed on #drill (navigate -> switchTab -> side effect)',
+        hashView(weakSnap.hash) === 'drill' && weakSnap.on === 'drill',
+        JSON.stringify(weakSnap) + ' -- an async navigation would show the OLD hash here, and the pane flush would then wipe the weak set on its way in');
+    }
+    if (wbSnap) {
+      ok('7b ORDERING: by the time wb.rerunMissed() fires, the ROUTER has already landed on #wb',
+        hashView(wbSnap.hash) === 'wb' && wbSnap.on === 'wb', JSON.stringify(wbSnap));
+    }
+  }
 
   ok('zero console/page errors across the whole run', errs.length === 0, errs.slice(0, 5).join(' | '));
 

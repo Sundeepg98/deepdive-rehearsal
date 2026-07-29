@@ -51,7 +51,20 @@ function switchTab(t) {
   for (var _pc = target.firstElementChild; _pc; _pc = _pc.nextElementSibling) {
     if (typeof _pc.__tpFlush === 'function') _pc.__tpFlush();
   }
-  for (let i = 0; i < segBtns.length; i++) segBtns[i].classList.toggle('on', segBtns[i].getAttribute('data-tab') === t);
+  /* THE SAME LOOP NOW TELLS AT WHERE YOU ARE (audit P2-10). This was a class toggle and nothing
+     else, so all nine tabs returned ariaSelected/ariaCurrent/ariaPressed null: a screen-reader user
+     could hear which pane was RECOMMENDED (the flow pip's aria-describedby) but never which one they
+     were IN. aria-current is the app's own established answer -- panels.js:239 and topic-nav.js:29
+     both emit it -- so the strip was the outlier, not the pattern. REMOVED, not set to "false", on
+     the inactive tabs: aria-current="false" is a defined value meaning "not current", which AT
+     announces as noise on every tab; absence is the correct encoding. Zero visual change by
+     construction (guarded by test/seg_state.cjs, which walks every tab). */
+  for (let i = 0; i < segBtns.length; i++) {
+    const on = segBtns[i].getAttribute('data-tab') === t;
+    segBtns[i].classList.toggle('on', on);
+    if (on) segBtns[i].setAttribute('aria-current', 'true');
+    else segBtns[i].removeAttribute('aria-current');
+  }
   if (railEl) railEl.style.width = railPos[t] + '%';
   current = t;
   markViewSeen(t);
@@ -69,8 +82,28 @@ function switchTab(t) {
 }
 window.switchTab = switchTab;
 /* Intent -> Router.navigate (updates the URL hash + history) -> ViewManager ->
-   switchTab. Falls back to a direct switchTab if the router has not loaded. */
-function goView(t) { if (window.Router) window.Router.navigate(t); else switchTab(t); }
+   switchTab. Falls back to a direct switchTab if the router has not loaded.
+
+   AND THEN FOCUS MOVES TO THE PANE (audit P2-9). Pressing `w` used to update the hash and the live
+   region while document.activeElement stayed on BODY -- so an SR user heard "Probe Drill" while
+   focus sat 34 tab stops upstream, and the first control inside the drill's shadow root was tab
+   stop #36 (28 when re-measured after the jump). skipCandidates was []: there is no skip link. For
+   the panes with a single-key action (Space/1/2/3 work straight from BODY) the jump was fine; for
+   every other pane it bought nothing.
+   #stagehead is the right landing pad because it is the pane title the route already paints, it
+   sits at the top of <main>, and Tab from it goes straight into the content. This is not a new
+   idiom: topic-protocol.js:198 already focuses exactly this element on every TOPIC switch -- P2-9
+   is that same move extended to VIEW switches, which is the axis the user drives far more often.
+   preventScroll, because switchTab has just pinned the stage to the top and a focus-induced scroll
+   would fight it. The home is excluded: it has no stage (.app is display:none there), so the focus
+   would be a silent no-op on an invisible element. The body-level hotkeys are unaffected -- the
+   global keymap gates on KeyGuard.isTyping, and a role="heading" div consumes no keys. */
+function goView(t) {
+  if (window.Router) window.Router.navigate(t); else switchTab(t);
+  if (document.documentElement.dataset.view === 'home') return;
+  const head = document.getElementById('stagehead');
+  if (head) { try { head.focus({ preventScroll: true }); } catch (e) {} }
+}
 for (let i = 0; i < segBtns.length; i++) {
   segBtns[i].onclick = function () { goView(this.getAttribute('data-tab')); };
 }

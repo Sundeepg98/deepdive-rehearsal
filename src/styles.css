@@ -72,7 +72,17 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
     --mix-surf:color-mix(in oklab,var(--bg) 92%,var(--acc));
     --mix-surf-2:color-mix(in oklab,var(--bg) 85%,var(--acc));
     --ease-out:var(--ease-glide);
-    --ease-spring:var(--ease-spring);
+    /* `--ease-spring:var(--ease-spring)` was HERE, and it was a self-reference: a var() cycle is
+       INVALID AT COMPUTED-VALUE TIME, so the token resolved to the empty string and shadowed the
+       real cubic-bezier(.34,1.56,.64,1) in tokens.generated.css. The damage was not a wrong curve.
+       An invalid var() inside a SHORTHAND resolves the WHOLE declaration to `unset`, so every rule
+       that wrote `transition: ... var(--ease-spring)` got NO TRANSITION AT ALL -- measured, the
+       toggle knob (.inttog-dot::after) teleported while its track animated over 250ms, and .mock-x
+       lost all five of its transitions. Deleting the line is the entire fix: the token then
+       resolves from tokens.generated.css as it always should have. Do not re-add an alias here --
+       --ease-out above is legitimate because it points at a DIFFERENT token. Guarded by
+       test/token_liveness.cjs, which is the only instrument that can see this class of bug (VR
+       captures at rest; the console reports nothing). */
    --glow-hover:0 0 0 1px var(--acc-a10),0 2px 4px rgba(40,34,28,.05),0 12px 28px -8px rgba(40,34,28,.14),0 32px 72px -24px rgba(40,34,28,.22);
    --chip-sh:0 1px 2px var(--acc-a08),0 2px 6px -2px var(--acc-a12);
     --dot-glow:0 0 0 3px var(--acc-a12);
@@ -381,8 +391,28 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
   /* overflow:visible + flex:none are LOAD-BEARING: the global button{overflow:hidden} (styles.css,
      the ripple clip) makes a flex item's automatic minimum size 0 (CSS Flexbox 4.5), so the button
      collapsed to height:0 in this column. Restoring visible overflow gives it back its content height. */
-  .nd-go{flex:none;overflow:visible;border:0;background:transparent;padding:0;font:var(--font-weight-heavy) var(--font-size-caption) -apple-system,sans-serif;color:var(--accink);cursor:pointer;text-align:left;line-height:1.2}
+  /* THE DOCK WAS THE LEAST RESPONSIVE CONTROL IN THE APP (audit P3-9), which is a strange thing for
+     the element whose entire job is "the situation changed". Measured: #ndock and .nd-go both
+     computed `transition: all` at 0s and `animation: none`, and a regex found no .nd-go:active
+     anywhere -- while its two neighbours in the same rail, #mockopen and .crambtn, each carry full
+     transform + shadow transitions and a press state. So the CTA the `n` key fires took a click and
+     said nothing back.
+     .nd-go is a TEXT button (no fill, no border, no shadow), so it gets the text-button form of the
+     same contract its peers have -- a press that moves and dims, over the app's own tokens -- not a
+     copy of .crambtn's box treatment it has no box for. */
+  .nd-go{flex:none;overflow:visible;border:0;background:transparent;padding:0;font:var(--font-weight-heavy) var(--font-size-caption) -apple-system,sans-serif;color:var(--accink);cursor:pointer;text-align:left;line-height:1.2;transition:transform var(--duration-fast) var(--ease-glide),color var(--duration-fast) var(--ease-base),opacity var(--duration-fast) var(--ease-base)}
   .nd-go:hover{text-decoration:underline}
+  .nd-go:active{transform:translateY(1px);opacity:.75}
+  /* THE GUIDANCE SWAP. flowDock replaces the dock's innerHTML, so the recommendation changed by
+     INSTANTANEOUS SUBSTITUTION -- in peripheral vision, on the far side of the screen from where the
+     user is working, which is a change that reads as "nothing happened". A transition cannot animate
+     a text replacement, so this is a replayed entrance, stamped by flowDockDesktop only when the
+     rendered content actually differs (the remove -> reflow -> add idiom the app already uses for
+     .stage-head.headin and .stage.topicswap). Token-driven, so the global reduced-motion rule
+     (:1648 collapses every duration token to .01ms) neutralises it for free. No fill:forwards, so
+     the resting style -- and every VR baseline -- is untouched. */
+  .dock.nd-swap{animation:ndswap var(--duration-moderate) var(--ease-glide)}
+  @keyframes ndswap{from{opacity:.35;transform:translateY(-2px)}to{opacity:1;transform:none}}
   .nd-rcpt{font-size:var(--font-size-nano);color:var(--mut2)}
   /* micro armed-keys (beat 3): a QUIET key legend on the recommended pane at a judgment point --
      muted, no CTA weight, never louder than the pane's own [1][2][3] buttons. */
@@ -616,7 +646,17 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
    detached. Re-top it to sit against the label as a leading marker (left stays in the gutter).
    Desktop-only: the horizontal strip (<920px) keeps the base top-left dot. Density-safe (space token
    scales with the padding it tracks). */
-@media(min-width:920px){ .sidebar .seg button.flow-pip:not(.on)::before{top:var(--space-14)} }
+/* ...and the SAME inheritance left `left` wrong too (audit P3-3). The re-top above fixed the
+   vertical centering and stopped there, so the pip kept the horizontal strip's `left:var(--space-5)`
+   -- a value chosen for a CORNER dot, where nothing sits beside it. On the vertical list it lands
+   directly against the label: measured at 1440px, the pip spans x=5..11px inside the button and the
+   text starts at 12px, so the marker and the word it marks are ONE PIXEL apart and read as a
+   rendering artifact rather than a signal. Same failure mode as the orphaning this rule replaced --
+   the signal does not land -- just in the other axis.
+   space-2 puts the pip at x=2..8: 2px off the button edge, 4px clear of the text, so it reads as a
+   leading marker in the gutter. It stays inside the 12px gutter the button's own padding creates, so
+   nothing reflows and the zero-box-delta contract above is untouched. */
+@media(min-width:920px){ .sidebar .seg button.flow-pip:not(.on)::before{top:var(--space-14);left:var(--space-2)} }
 /* ===== QW3: the pane tabs wear their jump keys (desktop only) =====
    Every tab has had a single-letter shortcut since the QWERTY keymap shipped (shell.js
    tabKeys) and NOTHING on screen said so. The badge is the .kbd-hint kbd recipe -- the
@@ -842,10 +882,24 @@ html[data-theme="dark"] .sidebar .seg button.on .seg-key{color:var(--acc);border
    through. This is exactly the reasoning `.sidebar{animation:railin}` below already followed --
    "opacity only -> sticky-safe" -- and the same reasoning that deleted meshA/meshB and
    headingShift: a precision instrument is still until YOU move it. */
-.pane.on{animation:panein var(--duration-slowest) var(--ease-glide)}
-@keyframes panein{from{opacity:0;filter:blur(3px)}to{opacity:1;filter:blur(0)}}
+/* MOTION HIERARCHY (audit P2-13). This was `--duration-slowest` (500ms) -- the app's LONGEST
+   transition, spent on its MOST-REPEATED navigation action, while a whole topic switch (new title,
+   new room, new content behind all nine tabs) took 150ms via `stagefade`. The bigger context change
+   was four times faster than the smaller one. 500ms also sits outside the 150-250ms band every
+   other surface in the app uses, including its own overlays, and .stage-head.headin is 250ms -- so
+   the header settled while the body was still arriving and the screen read half-loaded rather than
+   as one movement. --duration-moderate puts the pane switch in the same band as the header it
+   travels with.
+   THE BLUR IS GONE, and it, not the opacity, was what made the first ~100ms unreadable: per-frame
+   sampling caught op=0.50 at blur(0.99px) at 98ms and a still-blurred frame at 482ms. Fading text
+   is legible; smeared text is not, and halving the duration would have kept the smear over a larger
+   fraction of the animation. Dropping it also drops a full-pane filter pass on every pane switch.
+   At rest the keyframes' end state was already opacity:1 / blur(0) and nothing uses fill:forwards,
+   so the resting style -- and therefore every VR baseline -- is byte-identical. */
+.pane.on{animation:panein var(--duration-moderate) var(--ease-glide)}
+@keyframes panein{from{opacity:0}to{opacity:1}}
 html[data-theme="dark"] .pane.on{animation-name:paneinDark}
-@keyframes paneinDark{from{opacity:0;filter:blur(2px)}to{opacity:1;filter:blur(0)}}
+@keyframes paneinDark{from{opacity:0}to{opacity:1}}
 /* ===== QW1: THE TOPIC SWAP FADES TOO. =====
    A pane switch re-toggles `.on`, so panein replays -- but a TOPIC switch repaints the pane's
    shadow content IN PLACE (setTopic never touches `.on`; pane.getAnimations() is empty either
@@ -1243,8 +1297,10 @@ button{cursor:pointer}
 .textzoom{display:flex;align-items:center;gap:var(--space-6);padding:var(--space-9) var(--space-11);margin-top:var(--space-4);border-top:1px solid var(--bd)}
 .textzoom-lbl{flex:1;min-width:0;font-size:var(--font-size-micro);font-weight:var(--font-weight-semibold);color:var(--mut)}
 .textzoom-btn{flex:none;width:var(--space-28);height:var(--space-28);border-radius:7px;border:1px solid var(--bd);background:var(--surf);color:var(--ink);font:var(--font-weight-bold) 13px -apple-system,sans-serif;line-height:var(--line-height-none);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;transition:border-color var(--duration-fast) var(--ease-base),box-shadow var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base)}
-.textzoom-btn:disabled{opacity:.4;cursor:default}
-@media(hover:hover){.textzoom-btn:not(:disabled):hover{border-color:var(--acc);box-shadow:0 0 0 2px var(--acc-a10)}}
+/* [aria-disabled], not :disabled -- the control now stays in the tab order at its bounds (P3-7,
+   text-zoom.js). Same dimmed treatment, so the look is unchanged; only the AT semantics moved. */
+.textzoom-btn[aria-disabled="true"]{opacity:.4;cursor:default}
+@media(hover:hover){.textzoom-btn:not([aria-disabled="true"]):hover{border-color:var(--acc);box-shadow:0 0 0 2px var(--acc-a10)}}
 
 /* pomodoro: standalone sidebar focus timer */
 .pomodoro{padding:var(--space-10) var(--space-11);margin-top:var(--space-4);border-top:1px solid var(--bd)}
@@ -1472,7 +1528,14 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
 .ix-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:var(--space-8)}
 .ix-cell{position:relative}
 .ix-c-reset{position:absolute;top:var(--space-9);right:var(--space-9);width:var(--space-22);height:var(--space-22);display:flex;align-items:center;justify-content:center;border:1px solid var(--bd);border-radius:6px;background:var(--card);color:var(--mut);font-size:var(--font-size-caption);line-height:var(--line-height-none);cursor:pointer;opacity:.3;transition:opacity var(--duration-fast) var(--ease-base),color var(--duration-fast) var(--ease-base),border-color var(--duration-fast) var(--ease-base);padding:0}
-.ix-cell:hover .ix-c-reset,.ix-c-reset:focus{opacity:1;color:var(--red);border-color:var(--red);outline:none}
+/* THE REVEAL IS :focus-visible, AND THE RING IS NOT DELETED (audit P3-6). This was
+   `.ix-c-reset:focus{...;outline:none}`: the outline was removed outright, and what remained was an
+   opacity change BYTE-IDENTICAL to the :hover beside it -- so focus and hover were literally the
+   same event, and a keyboard user got no "you are here" at all. Dropping `outline:none` lets the
+   app's own `button:focus-visible` ring (:53) reach it; switching :focus to :focus-visible keeps a
+   mouse press from lighting the control up as if it were focused, which is what the sibling
+   :hover clause is already for. Guarded by test/focus_ring.cjs, which reads the COMPUTED outline. */
+.ix-cell:hover .ix-c-reset,.ix-c-reset:focus-visible{opacity:1;color:var(--red);border-color:var(--red)}
 .ix-card{display:flex;flex-direction:column;align-items:flex-start;text-align:left;border:1px solid var(--bd);background:var(--bg);border-radius:11px;padding:var(--space-11) var(--space-13);cursor:pointer;transition:border-color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base),transform var(--duration-fast) var(--ease-base);position:relative}
 .ix-c-badge{position:absolute;top:var(--space-10);right:var(--space-11);display:inline-flex;align-items:center;gap:var(--space-4);font-size:var(--font-size-nano);font-weight:var(--font-weight-bold);letter-spacing:.02em;color:var(--mut2);white-space:nowrap}
 .ix-c-badge i{width:var(--space-6);height:var(--space-6);border-radius:50%;flex:none}
@@ -1525,9 +1588,13 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
 .ix-undo-btn{border:0;background:var(--acc);color:var(--on-slab);font:var(--font-weight-bold) 12px -apple-system,system-ui,sans-serif;padding:var(--space-6) var(--space-13);border-radius:8px;cursor:pointer;transition:filter var(--duration-fast) var(--ease-base)}
 .ix-undo-btn:hover{filter:brightness(1.1)}
 .cmp-fold{position:absolute;top:var(--space-12);right:var(--space-12);width:var(--space-24);height:var(--space-24);display:flex;align-items:center;justify-content:center;border:1px solid var(--bd);border-radius:7px;background:var(--card);color:var(--mut);font-size:var(--font-size-body);line-height:var(--line-height-none);cursor:pointer;opacity:.45;transition:opacity var(--duration-fast) var(--ease-base),color var(--duration-fast) var(--ease-base),border-color var(--duration-fast) var(--ease-base);z-index:2;padding:0}
-.cmp-fold:hover,.cmp-fold:focus{opacity:1;color:var(--acc);border-color:var(--acc);outline:none}
+/* Same fix, same reason, as .ix-c-reset above -- and NOTE THE SPECIFICITY, which is why this one
+   could not be repaired by adding a generic rule elsewhere: `.cmp-fold:focus` is (0,2,0) and
+   OUTRANKS `button:focus-visible` (0,1,1), so its `outline:none` beat the app's ring no matter what
+   was added at :53. The declaration had to be removed HERE. */
+.cmp-fold:hover,.cmp-fold:focus-visible{opacity:1;color:var(--acc);border-color:var(--acc)}
 .cmp-reopen{position:fixed;right:0;top:50%;transform:translateY(-50%);display:none;flex-direction:column;align-items:center;gap:var(--space-7);padding:var(--space-13) var(--space-7);border:1px solid var(--bd);border-right:0;border-radius:9px 0 0 9px;background:var(--panel);color:var(--mut);font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.04em;cursor:pointer;box-shadow:-5px 0 16px -9px rgba(0,0,0,.18);z-index:var(--z-dropdown);transition:color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base)}
-.cmp-reopen:hover,.cmp-reopen:focus{color:var(--acc);background:var(--accbg);outline:none}
+.cmp-reopen:hover,.cmp-reopen:focus-visible{color:var(--acc);background:var(--accbg)}
 .cmp-reopen-ic{font-size:var(--font-size-body);line-height:var(--line-height-none)}
 .cmp-reopen-t{writing-mode:vertical-rl;text-orientation:mixed}
 .ix-io:hover{color:var(--ink);border-color:var(--acc)}

@@ -24,11 +24,42 @@
   try { var _sv = (typeof Store !== 'undefined' && Store.get) ? Store.get(KEY, null) : null; if (typeof _sv === 'number' && _sv >= 0 && _sv < LEVELS.length) idx = _sv; } catch (e) {}
   var stage = null, decBtn = null, incBtn = null;
 
+  /* aria-disabled, NOT disabled (audit P3-7). A `disabled` button is removed from the tab sequence
+     entirely, so at either end of the range the control SILENTLY VANISHED from under a keyboard
+     user's fingers -- they tab to "A+", press it to the ceiling, and the next Tab has moved
+     somewhere else with nothing said. aria-disabled keeps it focusable and announced as unavailable,
+     which is the honest state: the button is still there, it just has nowhere further to go. The
+     click handler is already a no-op at the bounds (Math.min/Math.max clamp), so nothing needs to
+     guard the press; and .textzoom-btn[disabled] in styles.css becomes [aria-disabled] so the dimmed
+     look is unchanged. */
+  function setLimit(btn, atLimit) {
+    if (!btn) return;
+    btn.disabled = false;
+    if (atLimit) btn.setAttribute('aria-disabled', 'true');
+    else btn.removeAttribute('aria-disabled');
+  }
   function apply() {
     if (!stage) stage = document.querySelector('.stage');
     if (stage) stage.style.setProperty('--read-zoom', String(LEVELS[idx]));
-    if (decBtn) decBtn.disabled = (idx === 0);
-    if (incBtn) incBtn.disabled = (idx === LEVELS.length - 1);
+    setLimit(decBtn, idx === 0);
+    setLimit(incBtn, idx === LEVELS.length - 1);
+  }
+  /* SPEAK THE RESULT (audit P3-7). Eight presses produced ZERO live-region utterances: the control
+     changed the reading size of the whole work surface and said nothing, and there is no
+     aria-valuenow/valuetext to read either, so a screen-reader user pressing A+ had no way to know
+     whether anything happened -- or that they had hit the ceiling. ViewManager.announce is the app's
+     own announcer (the same polite region the pane switch and the drill grade speak through); this
+     is a discrete, user-initiated action, so unlike the dock's CTA it cannot collide with a burst on
+     the same microtask and needs no dedicated region. The percentage is the number the user is
+     actually changing, and the bound is named when it is reached, because "nothing happened" and
+     "you are at the largest size" are different facts. */
+  function announce() {
+    try {
+      if (!(window.ViewManager && ViewManager.announce)) return;
+      var pct = Math.round(LEVELS[idx] * 100);
+      var bound = (idx === LEVELS.length - 1) ? ', largest' : (idx === 0 ? ', smallest' : '');
+      ViewManager.announce('Text size ' + pct + '%' + bound);
+    } catch (e) {}
   }
 
   function makeBtn(txt, aria, step) {
@@ -40,6 +71,7 @@
     b.addEventListener('click', function () {
       idx = Math.min(LEVELS.length - 1, Math.max(0, idx + step));
       apply();
+      announce();
       try { if (typeof Store !== 'undefined' && Store.set) Store.set(KEY, idx); } catch (e) {}
     });
     return b;

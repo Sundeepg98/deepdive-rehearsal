@@ -193,7 +193,104 @@ Ratchets and receipts I verified myself, at `4b44752`:
   kept, cram `{}` mirror-verified on 46, lattice 46/46 1 allowlisted, topic_contract 46/46,
   VR 16/16 matched committed pixels, GATE: PASS.
 
-**My own full gate at `4b44752`: _[see §G-RESULT below]_**
+**My own full gate, pinned at `4b44752`: 58 PASS, 0 FAIL, 0 SKIP, exit 0 — GATE: PASS.**
+
+- `build_integrity` PASS at **12040254 bytes** with "COMMITTED deliverable == fresh build of HEAD"
+  — matching the shipped deliverable exactly.
+- `overlay_deadzone` **PASS** (35 assertions) — no flake on my run.
+- `bank_pushback` 613 cards / `{}` · `bank_novelty` 826, run 8 < 9, 826 kept · `cram_surface` `{}`
+  mirror-verified on 46 · `numbers_lattice` 46/46, 1 allowlisted · `topic_contract` 46/46 ·
+  `build_determinism` PASS · **VR 16/16 matched its committed pixels**.
+- The tip advanced to `f5cad6d` *during* this run — docs-only, see §H.
+
+---
+
+## H. §F IS CLOSED — and the receipt is blob identity, not another gate run
+
+The tip moved twice more after my pin (`f5cad6d`, then `2af2616`), the second time *during* my gate
+run. Both are `_audit/` prose only. **I verified the builder's byte-identity claim rather than
+taking it:**
+
+| check | result |
+|---|---|
+| `git diff 4b44752..HEAD -- src/ test/` | **empty** |
+| deliverable git blob at `4b44752` | `11da2f55f930b50a015fb000a1c52a20ef27c7b7` |
+| deliverable git blob at `2af2616` | `11da2f55f930b50a015fb000a1c52a20ef27c7b7` — **identical object** |
+| files touched since my pin | `_audit/2026-07-29-wave-e.md`, `_audit/2026-07-29-wave-e-gate.txt` |
+
+**So my pinned gate at `4b44752` is a valid receipt for the artifact shipping at `2af2616`.** Blob
+identity is a *better* answer than a re-run: a re-run proves a build, whereas an identical blob
+proves there is nothing new to build.
+
+**The stale-capture finding is fixed.** `_audit/2026-07-29-wave-e-gate.txt` now records
+**12040254 bytes**, matching the shipped deliverable byte-for-byte (was 12040237, the `8b76039`
+run). Both halves of §F are resolved, and the builder has declared `2af2616` its last commit.
+
+**The `overlay_deadzone` flake fired on the builder's final run too — and was handled correctly.**
+It returned the same `Node.js v25.2.1` crash-tail signature. Rather than re-running until green,
+the builder ran the check **standalone first** (35/35 PASS, exit 0) and only then re-ran the full
+gate. That is a diagnosis, not a retry, and it is the distinction that keeps a real defect from
+being laundered into a green gate. Recorded in the freeze §9. Mine passed outright, so the check now
+has **six** independent greens against one crash — and zero assertion failures, ever.
+
+## I. Answers to the builder's two invited push-backs — I DECLINE BOTH; the fix stands as written
+
+1. *"It is one word **plus one grounding clause**, not one word."* **Agreed, and that is better than
+   what I asked for.** My Class-H finding was "no bound, no 'completed write', no failure edges";
+   the bare qualifier answers only the middle third, and the clause answers the rest. I asked for
+   the minimum; the fix delivered the whole finding. No objection.
+2. *"That step is pre-existing — fixing it inside a bounce widens scope."* **Ruled KEEP in §E**, on
+   the merits: real defect, found independently twice, sitting on the cram spine, and it was the
+   topic's own named worst flag. Declared and revertible is the right way to widen a bounce.
+
+**On the count difference:** the builder measured **39** sites for the `completed`/`acknowledged`
+qualifier; my regex counted **44** occurrences of `(completed|acknowledged) writes?`. Different
+method (sites vs occurrences), same conclusion — the file overwhelmingly qualifies and the
+Whiteboard step was the outlier. Not material, and not worth reconciling.
+
+---
+
+## J. POST-MERGE — the train already ran, and it raced the builder's last two commits
+
+Checked after the fact: master merged `content/wave-e` at **`d29579e`**, and my two verdict files
+were committed at **`78ef6ab`**. The merge caught the branch at **`f5cad6d`**. Two later commits
+**did not merge**:
+
+| commit | contents | in master? |
+|---|---|---|
+| `8e5f82b` | overlay_deadzone flake diagnosis (9 lines) + **gate-capture refresh** | **NO** |
+| `2af2616` | builder's blob-identity answer note (2 lines) | **NO** |
+
+**THE SHIPPED ARTIFACT IS CORRECT — this is a record gap, not a content gap.** Verified:
+
+    git diff 4b44752 master -- src/ test/ deepdive_content_pipeline_rehearsal.html   ->  EMPTY
+
+Master's deliverable blob is `11da2f55`, byte-identical to the tip I gated 58/58. Nothing
+user-facing is wrong, and no re-gate is needed.
+
+**What master is missing is audit record — including, ironically, the fix for my own §F finding.**
+Master's `_audit/2026-07-29-wave-e-gate.txt` still records **12040237 bytes** while master's own
+deliverable is **12040254** — the stale capture I raised in §F. The builder fixed it in `8e5f82b`;
+that fix is on the branch and not on master. Also lost: the flake-diagnosis paragraph, which is the
+most reusable forensic note in the wave.
+
+**Recommendation (non-blocking, zero artifact risk):** cherry-pick `8e5f82b` and `2af2616` onto
+master. Both touch `_audit/` only. I did not do it — my brief is read-only and master is not mine to
+mutate.
+
+**The pattern, third occurrence in one wave:** `8b76039` moved under my re-check, `f5cad6d` moved
+under my gate run, and now the merge closed under the builder's last two commits. Nothing was
+damaged any of the three times, because the artifact stabilised early — but "frozen" kept meaning
+"probably still moving," and the only reason that was safe is that someone measured blob identity
+each time instead of assuming it. **Pin first, and let the freezer declare the freeze.**
+
+---
+
+## FINAL VERDICT — CLEAN on content and artifact. One record gap (§J), non-blocking.
+
+Content correct, arithmetic adjudicated, scope-widening blessed, mechanicals green on an
+independently pinned run, and both §F process findings closed *on the branch*. The train has already
+run and shipped the right bytes; the only outstanding item is two unmerged `_audit/` commits.
 
 ---
 

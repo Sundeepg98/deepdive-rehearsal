@@ -23,7 +23,7 @@
         "channelTol": 2,
         "maxChanged": 32
       },
-      "generated": "2026-07-29T16:31:06.641Z",
+      "generated": "2026-07-29T17:00:43.425Z",
       "baselines": {
         "home-light": {
           "file": "home-light-win32-chromium149.png",
@@ -65,7 +65,7 @@
           "file": "drill-light-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "4ba249fbef623fe4",
+          "sha256": "70561f7ebb54b080",
           "hash": "#event-driven/drill",
           "theme": "light",
           "vp": "desktop"
@@ -74,7 +74,7 @@
           "file": "drill-dark-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "d68a043e041d241a",
+          "sha256": "12044c514000196f",
           "hash": "#event-driven/drill",
           "theme": "dark",
           "vp": "desktop"
@@ -155,7 +155,7 @@
           "file": "m-walk-light-win32-chromium149.png",
           "w": 390,
           "h": 844,
-          "sha256": "8f2472d6a533c5bc",
+          "sha256": "05e9f391837afdc3",
           "hash": "#event-driven/walk",
           "theme": "light",
           "vp": "mobile"
@@ -164,7 +164,7 @@
           "file": "m-walk-dark-win32-chromium149.png",
           "w": 390,
           "h": 844,
-          "sha256": "6e3255517a689e5d",
+          "sha256": "6710844abaad568a",
           "hash": "#event-driven/walk",
           "theme": "dark",
           "vp": "mobile"

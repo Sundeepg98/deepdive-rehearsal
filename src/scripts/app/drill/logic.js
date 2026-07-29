@@ -358,11 +358,16 @@ var DRILL_STYLE = `/* @keyframes pop moved to BASE_SHEET. Five shadow scopes ref
    move. Media queries inside a shadow sheet evaluate against the viewport exactly as they do
    outside it -- .dnav already relies on that. */
 .dmoderow{display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-12)}
-.dsu-tog{display:none}
+/* font:inherit is UNCONDITIONAL, not inside the media query below, and test/latent_arial.cjs is
+   why: a <button> that never declares a family renders in the UA control font (Arial here), not
+   the app stack -- and the check walks the DECLARATION, at desktop width, where this button is
+   display:none. Declaring the family only where the button happens to be visible today leaves a
+   latent re-facing armed for whoever next shows it. That check caught this on its first run. */
+.dsu-tog{display:none;font:inherit}
 @media (max-width:919px){
   .dsu-tog{display:flex;align-items:center;gap:var(--space-9);width:100%;min-height:44px;box-sizing:border-box;
     margin-bottom:var(--space-12);padding:var(--space-8) var(--space-12);border:1px solid var(--bd);
-    border-radius:10px;background:var(--card);cursor:pointer;font:inherit;text-align:left}
+    border-radius:10px;background:var(--card);cursor:pointer;text-align:left}
   .dsu-tog:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
   .dsu-l{flex:none;font:var(--font-weight-heavy) 9.5px -apple-system,sans-serif;letter-spacing:.5px;text-transform:uppercase;color:var(--mut2)}
   /* The VALUE is the whole point of collapsing rather than hiding: "Study . All 20" says what

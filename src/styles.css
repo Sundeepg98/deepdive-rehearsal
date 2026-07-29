@@ -1788,9 +1788,11 @@ html[data-view="home"] .cmp-reopen{display:none}
 /* --rm, not --acc: the hero is painted by the room of the topic it OPENS, which home-view.js
    stamps on the element (roomStyle(), and see its note). --acc here is .ix-panel's deliberate
    all-rooms neutral -- correct for the six room cards and the 46-topic library below, wrong for
-   a control that names one topic. --on-slab is unchanged and still the contract ink: white on
-   the six light room inks measures 6.3-6.4:1, and the dark near-black on the six dark inks
-   7.3-7.7:1, both clear of AA (room_contrast.py owns the token side of that). */
+   a control that names one topic. --on-slab is unchanged and still the contract ink: computed
+   over all six rooms it is 6.20-6.40:1 in light (white) and 7.29-7.55:1 in dark (#1A1622), so
+   whichever room the hero wears it clears AA with room to spare -- the palette is contrast-tuned
+   and room_contrast.py owns the token side of that. For reference the retired indigo it replaces
+   was 6.93:1 light / 6.66:1 dark, so dark improves and light stays well above the 4.5 floor. */
 .hm-cta{display:flex;width:100%;align-items:center;gap:var(--space-14);text-align:left;
   padding:var(--space-18) var(--space-20);margin:0 auto var(--space-26);max-width:var(--space-980);
   border:1px solid var(--rm);border-radius:14px;background:var(--rm);color:var(--on-slab);cursor:pointer;

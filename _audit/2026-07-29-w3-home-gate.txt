@@ -6,7 +6,7 @@
   ascii_guard               PASS  ASCII GUARD: PASS  (811 files strict 7-bit ASCII: src 686, src/topics-md 38, test 62, tools 25)
   syntax_check              PASS  SYNTAX CHECK: PASS  (612 modules parse; 52 aggregator files skipped)
   global_collisions         PASS  GLOBAL COLLISIONS: PASS  (683 top-level globals, each declared in exactly one module)
-  build_integrity           PASS  BUILD INTEGRITY: PASS  (12046399 bytes, 0 unresolved, 9 panes + 7 overlays, build SYNCED the deliverable, COMMITTED deliverable == fresh build of HEAD)
+  build_integrity           PASS  BUILD INTEGRITY: PASS  (12047537 bytes, 0 unresolved, 9 panes + 7 overlays, build SYNCED the deliverable, COMMITTED deliverable == fresh build of HEAD)
   css_syntax                PASS    PASS All checks passed (17 keyframes validated)
   room_static               PASS  ROOM STATIC: PASS  (codemod=0, styles.css infinite=0, 6 room blocks + rebind, boot stamped)
   room_contrast             PASS  ROOM CONTRAST: PASS  (12 rooms: ink/bg >= 4.5, on-slab/solid >= 5.0)

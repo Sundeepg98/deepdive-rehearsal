@@ -378,8 +378,8 @@ rest of the app already uses. The result reads calmer than the pre-fix home, not
 
 ## Gate
 
-Captured verbatim: `_audit/2026-07-29-w3-home-gate.txt`. Run on the **committed** tree
-(`146b626`), after the commit, so `build_integrity` had no untracked files to defer on.
+Captured verbatim: `_audit/2026-07-29-w3-home-gate.txt`. **The capture is the ROUND-2 run**, on
+the committed tree at `43e195e`; the round-1 run (tip `9c58a82`) was also 60/60 and is superseded.
 
 **60 checks, 60 PASS, 0 FAIL, 0 SKIP** -- the 58 that were there plus the two this wave adds.
 

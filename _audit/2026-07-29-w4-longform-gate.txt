@@ -65,6 +65,6 @@
   heading_tree              PASS  HEADING TREE: PASS  (8 assertions: #home control holds; every topic route exposes >1 heading; #stagehead is a named, focusable level-2)
   fold_budget               PASS  FOLD BUDGET: PASS
   touch_floor               PASS  TOUCH FLOOR: PASS
-  visual_regression         FAIL  VISUAL REGRESSION: FAIL (4): [drill-light] 73515 px changed (7.1792%, worst channel delta 255/255) in a 1255x778 box at (3,22). Evidence: test/reports/visual/drill-light.diff.png  (full output: test/_last_fail_visual_regression.txt)
+  visual_regression         PASS  VISUAL REGRESSION: PASS  (16 baselines, win32-chromium149; every capture reached a proven rest state across all 18 roots, cleared the blank-page floor, and matched its committed pixels)
 ================================================================
-GATE: FAIL (visual_regression)
+GATE: PASS

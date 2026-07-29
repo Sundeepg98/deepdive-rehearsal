@@ -13,6 +13,7 @@ This replaces per-edit manual vigilance with tooling that runs on every build:
   topic_contract   every topic POPULATED to the depth of the hand-coded 8 (browser)
   cram_scope_distinct  no two topics RENDER the same cram/scope body       (browser)
   cram_surface     what the cram sheet SAYS survives being read cold    (browser)
+  sidebar_geometry the switcher shows its value; the nav clears the fold  (browser)
   rail_integrity   the coaching rail NEVER shows another topic's note      (browser)
   layout_static    source-level layout assertions (a regex; SEES NO PIXELS)
   visual_regression the app is RENDERED and its pixels diffed vs baselines (browser)
@@ -683,6 +684,22 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # button:focus-visible (0,1,1): this reads the COMPUTED outline, so a fix that loses
                      # the cascade cannot pass.
                      ('focus_ring', 'test/focus_ring.cjs'),
+                     # ===== W4: the two desktop measurements nothing else in the gate could see =====
+                     # sidebar_geometry (audit P2-4 + P2-6). Both defects are invisible to every other
+                     # check by construction: the controls WORK -- the switcher switches, the tabs
+                     # switch panes -- so no behaviour check moves, and VR captures the sidebar at rest
+                     # where a clipped switcher looks like a deliberately short label. What was wrong is
+                     # how much of each you could SEE. .tn-current measured clientWidth 18px against
+                     # scrollWidth 146px (12% of the topic name) IDENTICALLY at 1024/1280/1440/1600/1920,
+                     # because the sidebar is fixed-width -- the primary topic-switching control never
+                     # showed what it was set to, on all 46 topics, at every desktop width. And at
+                     # 1280x800 only 4 of 9 pane tabs cleared the fold, with a font-size control and a
+                     # pomodoro doing the pushing. Thresholds are anchored on two measured populations
+                     # that do not overlap (ratio: pre-fix 0.063-0.243, fixed 0.365-1.000 -> floor 0.30;
+                     # plus a name-independent clientWidth floor, 18px -> 103px on every topic). Both
+                     # arms run a negative control every invocation and the check ABORTS rather than
+                     # report a green it did not earn. 6 contexts, ~50s.
+                     ('sidebar_geometry', 'test/sidebar_geometry.cjs'),
                      # A deep light-DOM + all-shadow-root scan of a topic route returned renderedHeadings:
                      # 1 -- the topic name the user had just chosen. Across 46 topics x 9 panes of
                      # deliberately-structured content, the rotor and the H key returned that one item.

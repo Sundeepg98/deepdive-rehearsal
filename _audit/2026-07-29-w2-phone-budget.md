@@ -372,7 +372,7 @@ is a correction most readers will not see.
 | F2 | VR attribution rewritten as **two** translations (−121.3 / −135.3) and reconciled with the budget table. `.pane` vs `.pane.on` framing difference noted. |
 | F3 | `fold_budget`'s return-path precondition made real — and it found a second bug. See below. |
 | F4 | P2-8 receipt qualified with the terminal-push row and the exact scope of the fix. |
-| F5 | `capture-pairs.cjs` now asserts the raw `data-theme` attribute. The two wall-clock waits stay, with a comment stating why they are acceptable here and what would have to change first. |
+| F5 | `capture-pairs.cjs` now asserts the raw `data-theme` attribute, and the fix was **proven non-vacuous** rather than assumed — see below. The two wall-clock waits stay, with a comment stating why they are acceptable here and what would have to change first. |
 | F6 | **Decided (a): chips raised to 44px.** Reasoning below. |
 | gaps | Both disclosed plant gaps **closed** rather than left disclosed — they were each about ten lines. |
 
@@ -393,6 +393,20 @@ buys nothing back except 8px of a panel that already scrolls vertically.
 Blast radius checked, not assumed: the cram overlay is closed at rest, so it appears in **no** VR
 baseline — `m-walk-*` capture the walk pane with the sheet shut. Confirmed by the gate's
 `visual_regression` passing against the committed pixels after the change, with no rebaseline.
+
+## F5 — the fix proven, not asserted
+
+A repair to a vacuous assertion is worth exactly as much as its own negative control, so this one
+got two:
+
+- **Remove the theme injection entirely.** The app still stamps `data-theme="light"` as its default,
+  so the light shots legitimately remain light shots and only the **dark** shot fails
+  (`data-theme is "light", asked dark`) and refuses to write. Correct behaviour, but not the case
+  F5 named.
+- **Remove the attribute itself**, which is the case F5 named — "the light shots pass even if no
+  theme was applied". All three shots now fail (`data-theme is null, asked light` / `asked dark`)
+  and **nothing is written**. Under the old `dataset.theme || 'light'` the two light shots would
+  have passed silently, which is precisely the defect.
 
 ## F3 found a second bug, in my own instrument
 

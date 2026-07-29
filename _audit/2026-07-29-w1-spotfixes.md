@@ -386,3 +386,52 @@ taken with a clean tree and the capture written outside it, then committed.
 ffcbd80  frontend(w1): five gate guards, all watched RED on the pre-fix build
 51496c9  frontend(w1): the 13 spot fixes -- router spine, focus rings, AT state, motion
 ```
+
+---
+
+## Addendum — team-lead ruling executed · 2026-07-29 ~13:30 IST
+
+**Ruling received** (`_TEAM_LEAD_W11_RULING.md`, 13:25 IST): VR attribution **accepted**, **P3-1 and
+P3-3 stay**, rebaseline of the 12 **approved**. Its stated sample (tip `f060cf3`, clean tree, gate
+61/62 with `visual_regression` the only red) matched disk exactly, so its condition 1 held and the
+work proceeded.
+
+### Rebaseline — condition 2 verified, and it verified more than it asked
+
+`npm run vr:update` rewrote **all 16** baselines, which turned the ruling's condition into a
+determinism check the tool ran on itself. md5 before/after:
+
+| | count | files |
+|---|---|---|
+| **changed** | **12** | walk-light, walk-dark, sys-light, num-light, wb-light, room-{architecture-apis, data-storage, platform-infra, reliability-observability, security-tenancy}, m-walk-light, m-walk-dark |
+| **byte-unchanged** | **4** | drill-light, drill-dark, home-light, home-dark |
+
+Exactly the 12 the gate had flagged, and exactly the 4 predicted structurally blind. The four
+surviving a full re-render **and** re-encode byte-for-byte is stronger than "they did not churn":
+it says the capture pipeline is reproducible on this box, so the 12 that did change cannot be
+written off as encoder noise.
+
+`test/baselines/manifest.json` also changed. It is baseline **metadata**, not a 13th baseline, and
+necessarily moves whenever any PNG does — recorded here so it is not read as an unexplained extra.
+
+**Reviewed, not regenerated blind** (the tool's own warning, and the point of the exercise): the new
+`walk-light` shows `START HERE / Start the drill ->` above a receipt that now agrees with its own
+button, and the recommendation pip sitting clear of the "Probe Drill" label. Both are the fixes;
+nothing else in the frame moved.
+
+### Gate
+
+**62/62 PASS** — `_audit/2026-07-29-w1-spotfixes-gate.txt`, re-run on the committed rebaselined tree
+with the capture written outside the worktree, so `build_integrity` reports the full
+`COMMITTED deliverable == fresh build of HEAD` rather than deferring on its own output.
+`visual_regression`: 16 baselines, every capture reached a proven rest state across all 18 roots and
+matched its committed pixels.
+
+The **61/62** capture — the red that justified the rebaseline — remains readable in history at
+`f060cf3`, per the ruling.
+
+### Untouched, per the ruling
+
+The two residuals (`.piv-jump:focus{outline:none}` in `system-map.js:44`; the dead
+`.piv .chip.chip-link` rule at `:61`) were **not** acted on. They stay ledgered above for a later
+wave.

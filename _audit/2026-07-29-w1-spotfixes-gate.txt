@@ -60,6 +60,6 @@
   seg_state                 PASS  SEG STATE: PASS  (31 assertions across 10 tabs: one active, aria-current="true" on it, none stale)
   focus_ring                PASS  FOCUS RING: PASS  (5 assertions: 3 light-DOM chrome buttons kept their ring; the shadow #adv and #jg get the BASE_SHEET ring)
   heading_tree              PASS  HEADING TREE: PASS  (8 assertions: #home control holds; every topic route exposes >1 heading; #stagehead is a named, focusable level-2)
-  visual_regression         FAIL  VISUAL REGRESSION: FAIL (12): [walk-light] 1182 px changed (0.1154%, worst channel delta 211/255) in a 257x446 box at (20,239). Evidence: test/reports/visual/walk-light.diff.png (c  (full output: test/_last_fail_visual_regression.txt)
+  visual_regression         PASS  VISUAL REGRESSION: PASS  (16 baselines, win32-chromium149; every capture reached a proven rest state across all 18 roots, cleared the blank-page floor, and matched its committed pixels)
 ================================================================
-GATE: FAIL (visual_regression)
+GATE: PASS

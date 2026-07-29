@@ -41,7 +41,16 @@ var SYS_STYLE = `
 .piv summary{list-style:none;cursor:pointer;padding:var(--space-14) var(--space-16);display:flex;align-items:flex-start;gap:var(--space-12);transition:background var(--duration-base) var(--ease-base)}
 .piv summary:hover{background:var(--acc2-a04)}
 .piv-jump{margin-top:var(--space-12);font:var(--font-weight-bold) 12px -apple-system,sans-serif;color:var(--acc);background:var(--accbg);border:1px solid var(--acc-a20);border-radius:8px;padding:var(--space-7) var(--space-12);cursor:pointer;transition:background var(--duration-fast) var(--ease-base),border-color var(--duration-fast) var(--ease-base)}
-.piv-jump:hover,.piv-jump:focus{background:var(--acc);color:var(--on-slab);border-color:var(--acc);outline:none}
+/* P3-6's class, the fourth instance -- found by the W1 verifier while generalising P2-3, and left
+   then only because it sat outside that wave's 13-item scope. A :focus rule with outline:none deleted the
+   ring outright, and what survived was a background swap byte-identical to this rule's own
+   :hover -- i.e. focus and hover were the same event, and a keyboard user got no focus signal at
+   all. The :focus selector is (0,2,0) and outranks BASE_SHEET's button:focus-visible (0,1,1), so the
+   generic ring W1 added could not reach it.
+   Same in-place edit the other three got: :focus -> :focus-visible, outline:none removed. The
+   ring now comes from BASE_SHEET (this pane adopts it) and paints 2px OUTSIDE the button, on the
+   card, not on the accent fill this rule sets -- so the two do not cancel. */
+.piv-jump:hover,.piv-jump:focus-visible{background:var(--acc);color:var(--on-slab);border-color:var(--acc)}
 .piv summary::-webkit-details-marker{display:none}
 .piv .pq{font-size:var(--font-size-body);max-width:var(--measure);font-weight:var(--font-weight-semibold);color:var(--ink);line-height:var(--line-height-normal)}
 /* The chip was white-space:nowrap inside .piv{overflow:hidden}: it could not wrap, so a long chip
@@ -57,8 +66,12 @@ var SYS_STYLE = `
 .piv .chip{flex:none;max-width:55%;font-size:var(--font-size-micro);font-weight:var(--font-weight-heavy);letter-spacing:.3px;color:var(--mut2);background:transparent;border:1px solid var(--bd);border-radius:6px;padding:var(--space-3) var(--space-9);white-space:normal;overflow-wrap:anywhere;margin-top:var(--space-1);margin-left:auto}
 /* a pivot that lands in another room glows that room's ink -- wayfinding, not decoration */
 .piv .chip.chip-dest{color:var(--dest);border-color:color-mix(in srgb,var(--dest) 35%,var(--bd));background:color-mix(in srgb,var(--dest) 7%,transparent)}
-.piv .chip.chip-link{cursor:pointer;transition:border-color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base),color var(--duration-fast) var(--ease-base)}
-.piv .chip.chip-link:hover,.piv .chip.chip-link:focus-visible{border-color:var(--acc);color:var(--acc);background:linear-gradient(135deg,var(--accbg) 0%,var(--acc-a06) 100%);outline:none}
+/* The two '.piv .chip.chip-link' rules that lived here are DELETED: the class had ZERO emitters
+   anywhere in src/ -- no renderer in this file or any other ever wrote it -- so they styled
+   nothing, including the outline:none that would have been a real a11y hole the day someone
+   did emit it. (W1 verifier, 2026-07-29. shadow_css_guard would not have caught this: it flags
+   styles.css selectors reaching shadow-only classes, not a shadow-sheet selector with no emitter
+   at all.) The .piv .chip.chip-dest rule above is NOT dead -- pivotHtml emits it. */
 .piv .pa{padding:var(--space-2) var(--space-17) var(--space-16) var(--space-43);font-size:var(--font-size-body);max-width:var(--measure);color:var(--sm-pa-fg);line-height:var(--line-height-spacious)}
 .piv .pa b{color:var(--accink);font-weight:var(--font-weight-bold)}
 .piv[open] summary .pq::after{content:" \\2014 bridge:";color:var(--mut2);font-weight:var(--font-weight-bold)}

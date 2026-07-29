@@ -190,7 +190,13 @@
   function makeResultItem(d, i, q) {
     var item = document.createElement('button');
     item.type = 'button';
-    item.style.cssText = 'display:flex;flex-direction:column;align-items:flex-start;width:100%;text-align:left;padding:var(--space-10) var(--space-14);border:0;border-radius:10px;background:' + (i === 0 ? 'var(--accbg)' : 'transparent') + ';cursor:pointer;transition:background var(--duration-fast) var(--ease-base);margin-bottom:var(--space-2);color:var(--ink)';
+    /* `font:inherit` FIRST: these six result rows are <button>s built entirely from inline
+       styles, so they declared no family and rendered in the UA control font while every result
+       they list is app-stack text. (W3 ledgered this as "(unclassed)@body" -- the only debt entry
+       whose fix lives in a .js inline style rather than styles.css.) It leads the declaration
+       because the `font` shorthand resets size/weight/line-height; the child .title/.sub spans
+       set their own sizes after this, so nothing here is clobbered. */
+    item.style.cssText = 'font:inherit;display:flex;flex-direction:column;align-items:flex-start;width:100%;text-align:left;padding:var(--space-10) var(--space-14);border:0;border-radius:10px;background:' + (i === 0 ? 'var(--accbg)' : 'transparent') + ';cursor:pointer;transition:background var(--duration-fast) var(--ease-base);margin-bottom:var(--space-2);color:var(--ink)';
     var top = document.createElement('span');
     top.style.cssText = 'display:flex;align-items:center;gap:var(--space-8);width:100%';
     var title = document.createElement('span');
@@ -228,7 +234,7 @@
       var id = bkt.ids[0], t = TopicRegistry.get(id), idn = (t && t.identity) || {};
       var item = document.createElement('button');
       item.type = 'button';
-      item.style.cssText = 'display:flex;flex-direction:column;align-items:flex-start;width:100%;text-align:left;padding:var(--space-9) var(--space-14);border:0;border-radius:10px;background:transparent;cursor:pointer;transition:background var(--duration-fast) var(--ease-base);margin-bottom:var(--space-2);color:var(--ink)';
+      item.style.cssText = 'font:inherit;display:flex;flex-direction:column;align-items:flex-start;width:100%;text-align:left;padding:var(--space-9) var(--space-14);border:0;border-radius:10px;background:transparent;cursor:pointer;transition:background var(--duration-fast) var(--ease-base);margin-bottom:var(--space-2);color:var(--ink)';
       var g = document.createElement('span');
       g.style.cssText = 'font-size:var(--font-size-caption);font-weight:var(--font-weight-bold);color:var(--ink)';
       g.textContent = decodeEnt(bkt.group.label);
@@ -325,7 +331,7 @@
       var b = document.createElement('button');
       b.type = 'button';
       b.setAttribute('data-sys-topic', id);
-      b.style.cssText = 'display:flex;align-items:baseline;gap:var(--space-8);width:100%;text-align:left;padding:var(--space-9) var(--space-14);border:0;border-radius:10px;background:transparent;cursor:pointer;color:var(--ink);font-size:var(--font-size-small)';
+      b.style.cssText = 'font:inherit;display:flex;align-items:baseline;gap:var(--space-8);width:100%;text-align:left;padding:var(--space-9) var(--space-14);border:0;border-radius:10px;background:transparent;cursor:pointer;color:var(--ink);font-size:var(--font-size-small)';
       var tt = document.createElement('span');
       tt.style.cssText = 'font-weight:var(--font-weight-semibold)';
       tt.textContent = decodeEnt(idn.title || id);
@@ -363,7 +369,7 @@
           near.forEach(function (nm) {
             var sug = document.createElement('button');
             sug.type = 'button';
-            sug.style.cssText = 'display:flex;align-items:center;gap:var(--space-8);width:100%;text-align:left;padding:var(--space-9) var(--space-14);border:0;border-radius:10px;background:transparent;cursor:pointer;color:var(--ink);font-size:var(--font-size-small)';
+            sug.style.cssText = 'font:inherit;display:flex;align-items:center;gap:var(--space-8);width:100%;text-align:left;padding:var(--space-9) var(--space-14);border:0;border-radius:10px;background:transparent;cursor:pointer;color:var(--ink);font-size:var(--font-size-small)';
             sug.textContent = nm.label + (nm.kind === 'view' ? '  (view)' : '');
             sug.addEventListener('mouseenter', function () { sug.style.background = 'var(--accbg)'; });
             sug.addEventListener('mouseleave', function () { sug.style.background = 'transparent'; });

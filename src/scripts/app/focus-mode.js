@@ -37,7 +37,14 @@
          properties that have to change (font-size and padding) are therefore moved out of that
          inline style and set here, so nothing in this file needs !important to beat itself.
          That is the same trap the `display` note in createButton() records. */
-      '#_focus-toggle{font-size:var(--font-size-nano);padding:var(--space-4) var(--space-12)}' +
+      /* W4/P2-15 class: this <button> declared no family, so it rendered in the UA control font
+         (Arial on Windows) beside a sidebar in the app stack. It is `font-family:inherit`, NOT
+         the `font:inherit` the rest of this wave uses, and the reason is the trap documented
+         above: the `font` shorthand would set font-size, and this rule's font-size is exactly
+         what the @media(max-width:919px) icon rule below has to override. Setting the family
+         alone leaves that override intact. It also cannot go in createButton()'s inline cssText
+         for the same reason -- inline beats both rules. */
+      '#_focus-toggle{font-family:inherit;font-size:var(--font-size-nano);padding:var(--space-4) var(--space-12)}' +
       '@media(max-width:919px){' +
       '#_focus-toggle{font-size:0;min-width:44px;padding-left:0;padding-right:0;justify-content:center}' +
       '#_focus-toggle::before{content:"\\25A3";font-size:var(--font-size-subhead);line-height:1;color:var(--acc)}' +

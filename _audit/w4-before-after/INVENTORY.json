@@ -1,0 +1,190 @@
+{
+  "pairs": [
+    {
+      "name": "cram-flagship",
+      "surface": "cram",
+      "topic": "content-pipeline",
+      "theme": "light",
+      "w": 1280,
+      "h": 800
+    },
+    {
+      "name": "cram-worstcase",
+      "surface": "cram",
+      "topic": "sharding-strategies",
+      "theme": "light",
+      "w": 1280,
+      "h": 800
+    },
+    {
+      "name": "cram-tallest",
+      "surface": "cram",
+      "topic": "consistency-models",
+      "theme": "light",
+      "w": 1280,
+      "h": 800
+    },
+    {
+      "name": "dectell-multiregion",
+      "surface": "trade",
+      "topic": "multi-region",
+      "theme": "light",
+      "w": 1280,
+      "h": 800
+    },
+    {
+      "name": "dectell-flagship",
+      "surface": "trade",
+      "topic": "content-pipeline",
+      "theme": "light",
+      "w": 1280,
+      "h": 800
+    },
+    {
+      "name": "sidebar",
+      "surface": "sidebar",
+      "topic": "event-driven",
+      "theme": "light",
+      "w": 1280,
+      "h": 800
+    },
+    {
+      "name": "sidebar-dark",
+      "surface": "sidebar",
+      "topic": "event-driven",
+      "theme": "dark",
+      "w": 1280,
+      "h": 800
+    }
+  ],
+  "shots": [
+    {
+      "pair": "cram-flagship",
+      "side": "before",
+      "file": "cram-flagship.before.png",
+      "clip": "560x764@360,18",
+      "theme": "light",
+      "topic": "content-pipeline",
+      "bytes": 164815
+    },
+    {
+      "pair": "cram-flagship",
+      "side": "after",
+      "file": "cram-flagship.after.png",
+      "clip": "560x764@360,18",
+      "theme": "light",
+      "topic": "content-pipeline",
+      "bytes": 147807
+    },
+    {
+      "pair": "cram-worstcase",
+      "side": "before",
+      "file": "cram-worstcase.before.png",
+      "clip": "560x764@360,18",
+      "theme": "light",
+      "topic": "sharding-strategies",
+      "bytes": 176541
+    },
+    {
+      "pair": "cram-worstcase",
+      "side": "after",
+      "file": "cram-worstcase.after.png",
+      "clip": "560x764@360,18",
+      "theme": "light",
+      "topic": "sharding-strategies",
+      "bytes": 175484
+    },
+    {
+      "pair": "cram-tallest",
+      "side": "before",
+      "file": "cram-tallest.before.png",
+      "clip": "560x764@360,18",
+      "theme": "light",
+      "topic": "consistency-models",
+      "bytes": 168798
+    },
+    {
+      "pair": "cram-tallest",
+      "side": "after",
+      "file": "cram-tallest.after.png",
+      "clip": "560x764@360,18",
+      "theme": "light",
+      "topic": "consistency-models",
+      "bytes": 168782
+    },
+    {
+      "pair": "dectell-multiregion",
+      "side": "before",
+      "file": "dectell-multiregion.before.png",
+      "clip": "664x800@296,0",
+      "theme": "light",
+      "topic": "multi-region",
+      "bytes": 267738
+    },
+    {
+      "pair": "dectell-multiregion",
+      "side": "after",
+      "file": "dectell-multiregion.after.png",
+      "clip": "664x800@296,0",
+      "theme": "light",
+      "topic": "multi-region",
+      "bytes": 278945
+    },
+    {
+      "pair": "dectell-flagship",
+      "side": "before",
+      "file": "dectell-flagship.before.png",
+      "clip": "664x800@296,0",
+      "theme": "light",
+      "topic": "content-pipeline",
+      "bytes": 242336
+    },
+    {
+      "pair": "dectell-flagship",
+      "side": "after",
+      "file": "dectell-flagship.after.png",
+      "clip": "664x800@296,0",
+      "theme": "light",
+      "topic": "content-pipeline",
+      "bytes": 245246
+    },
+    {
+      "pair": "sidebar",
+      "side": "before",
+      "file": "sidebar.before.png",
+      "clip": "308x800@0,0",
+      "theme": "light",
+      "topic": "event-driven",
+      "bytes": 79290
+    },
+    {
+      "pair": "sidebar",
+      "side": "after",
+      "file": "sidebar.after.png",
+      "clip": "308x800@0,0",
+      "theme": "light",
+      "topic": "event-driven",
+      "bytes": 78769
+    },
+    {
+      "pair": "sidebar-dark",
+      "side": "before",
+      "file": "sidebar-dark.before.png",
+      "clip": "308x800@0,0",
+      "theme": "dark",
+      "topic": "event-driven",
+      "bytes": 64012
+    },
+    {
+      "pair": "sidebar-dark",
+      "side": "after",
+      "file": "sidebar-dark.after.png",
+      "clip": "308x800@0,0",
+      "theme": "dark",
+      "topic": "event-driven",
+      "bytes": 62484
+    }
+  ],
+  "framesMatched": true,
+  "frameProblems": []
+}

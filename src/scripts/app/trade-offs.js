@@ -18,7 +18,21 @@ var TRADE_STYLE = `
    ambient decoration behind dense trade-off text. Consistent with the spec's motion kill. */
 .dec-q{font-size:var(--font-size-body);font-weight:var(--font-weight-heavy);color:var(--ink);letter-spacing:-.2px;margin-bottom:var(--space-10);line-height:var(--line-height-normal)}
 .dec-q .vs{color:var(--mut2);font-weight:var(--font-weight-bold);font-size:var(--font-size-micro);padding:0 var(--space-4)}
-.dec-tell{margin-top:var(--space-14);padding-top:var(--space-12);border-top:1px dashed var(--bd);font-size:var(--font-size-body);max-width:var(--measure);color:var(--teal);font-weight:var(--font-weight-bold);line-height:var(--line-height-airy)}
+/* THE TELL STOPS SHOUTING, AND ITS OWN <b> SPANS START WORKING.
+   This was font-weight:bold (700) on the whole block. That was sized for the flagship, where a
+   tell is 1-2 lines -- a punchline. The campaign's authored tells run to 14 lines (multi-region:
+   [5,5,7,10,6,6,5]; 324 tells across 46 topics, corpus p90 = 8 lines), and a 10-line paragraph
+   set entirely in 700-weight saturated green is a shout, not an emphasis. (2026-07-29 frontend
+   audit, P3-4 -- same root as P2-5: a style sized for the flagship carrying 2-6.5x the prose.)
+   The load-bearing half: the .dec-tell b rule below is ALSO 700, so while the base was 700 the authored
+   <b> spans were byte-identical in weight to the text around them and carried nothing but a
+   colour shift -- 324 tells' worth of authored emphasis rendering as no emphasis at all. Medium
+   (500) keeps the block a notch above body prose and gives those <b> spans a real 200-step to
+   land on. Colour is untouched, deliberately: --teal IS the tell's identity, and the AA
+   requirement here does not move with weight (body size is under the 18.66px large-text
+   threshold at either weight, so the 4.5:1 floor applies before and after -- measured, not
+   assumed, in the freeze report). */
+.dec-tell{margin-top:var(--space-14);padding-top:var(--space-12);border-top:1px dashed var(--bd);font-size:var(--font-size-body);max-width:var(--measure);color:var(--teal);font-weight:var(--font-weight-medium);line-height:var(--line-height-airy)}
 .dec-tell::before{content:"\\2605";font-size:var(--font-size-body);margin-right:var(--space-8)}
 .dec-tell b{color:var(--dec-tell-b-fg);font-weight:var(--font-weight-bold)}
 `;

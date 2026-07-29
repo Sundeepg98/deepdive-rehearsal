@@ -72,11 +72,24 @@ function _csEmpty(what) {
    spine line does.
 
    A step with no cue degrades to the answer alone rather than rendering a stray arrow. No topic
-   is in that state today (all 415 steps carry a cue), so this is a guard, not a code path. */
+   is in that state today (all 415 steps carry a cue), so this is a guard, not a code path.
+
+   THE ARROW IS GONE, and the cue is a BLOCK (content-sheet.js .cs-cue). An inline arrow is the
+   right glyph for an inline relation -- it still renders in .cs-dec's "A -> B when ..." below,
+   which IS one. It was the wrong glyph here: it announced a continuation, on the one composition
+   in this file whose contract is that the two halves SEPARATE so the reader can cover the answer
+   and self-test. The line break now carries that, so the arrow was saying the opposite of what
+   the layout means.
+
+   The literal space before the answer is deliberate and is NOT cosmetic: .cs-cue is display:block,
+   so a leading space starts an anonymous block box and collapses to nothing on screen (verified in
+   the built deliverable, not assumed) -- but it survives in textContent, which is what
+   test/cram_surface.cjs, copy-paste and every text extraction of this sheet actually read.
+   Without it the two halves serialise jammed together as "cueanswer". */
 function _csCueLine(step) {
   var a = (step && step.a) || '', c = (step && step.c) || '';
   if (!c) return a;
-  return '<span class="cs-cue">' + c + '</span><span class="cs-arr">&rarr;</span>' + a;
+  return '<span class="cs-cue">' + c + '</span> ' + a;
 }
 
 /* Evaluate the topic's authored compute() at its canonical (authored default)

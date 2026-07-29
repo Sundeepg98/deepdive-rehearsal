@@ -93,11 +93,27 @@ async function realClick(page, sel) {
       } catch (e) {}
     });
     await page.addInitScript(RECORDER);
-    /* an rAF poller from document_start: the frame the fade begins. A stopwatch would be a bet. */
+    /* an rAF poller from document_start: the frame the fade begins. A stopwatch would be a bet.
+     *
+     * THE SECOND EXIT IS NOT OPTIONAL, and its absence was a 60-SECOND HANG. This loop used to end
+     * only on "splash exists AND carries _bs-done". If the splash is REMOVED before any frame
+     * catches that class, `sp` is null on every subsequent tick, __fading never flips, and the
+     * waitForFunction below burns its full timeout and takes the check down with a bare
+     * `Node.js v25.2.1` -- no stdout, no reason. The removed-splash case is the one the comment at
+     * the `if (css)` branch below already calls "a pass by construction"; the wait simply could not
+     * REACH it. So: splash absent and the document finished loading -> there is nothing left to
+     * fade, exit and let that branch do its job. An element that is not in the DOM cannot hit-test,
+     * so the assertion this skips is vacuous, and the original branch is untouched for every case
+     * where the splash IS present -- this widens the exit, it does not weaken the assertion.
+     *
+     * MEASURED (2026-07-29, W4): byte-identical deliverable, in-gate PASS then FAIL then FAIL,
+     * while the same command standalone passed 3/3 -- a frame-scheduling race that only surfaces
+     * under gate concurrency. */
     await page.addInitScript(() => {
       const tick = () => {
         const sp = document.getElementById('_bootsplash');
         if (sp && sp.classList.contains('_bs-done')) { window.__fading = true; return; }
+        if (!sp && document.readyState === 'complete') { window.__fading = true; return; }
         requestAnimationFrame(tick);
       };
       requestAnimationFrame(tick);

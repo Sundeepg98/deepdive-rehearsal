@@ -32,7 +32,7 @@
  *      section-set guard alone would not see it.
  *   3. STRING COVERAGE -- every string the mirror claims is lifted must actually appear in the
  *      rendered sheet text. A field that was re-pointed (wb.steps[].a -> .c) trips this.
- *   4. THE CUE-LIFT -- the composed spine line (cue + arrow + answer) must appear in the
+ *   4. THE CUE-LIFT -- the composed spine line (cue, then answer) must appear in the
  *      rendered sheet. Reverting the composer to lifting `.a` bare slips guards 1-3 entirely:
  *      same sections, same <li> count, and the answer text is still there. This is the guard
  *      that catches it, on all 46 topics x every step.
@@ -399,17 +399,22 @@ function asciiFold(s) {
       if (items[0] && items[0].a) push('one-liner', 'open.cards[0].items[0].a', items[0].a, 'detached-answer');
       else if (idn.thesis) push('one-liner', 'identity.thesis', idn.thesis, 'detached-answer');
 
-      /* 2. spine -- cram-derive's _csCueLine: the CUE, an arrow, then the answer.
+      /* 2. spine -- cram-derive's _csCueLine: the CUE, then the answer.
        * ONE LINE, TWO UNITS (see the header note). `text` stays the ANSWER, because that is the
        * sentence `dup` asks about; `line` is what the reader actually meets, which is what
        * `dangling` asks about. The line is composed HERE rather than by calling _csCueLine -- a
-       * mirror that calls the thing it mirrors proves nothing about drift; guard 4 does. */
+       * mirror that calls the thing it mirrors proves nothing about drift; guard 4 does.
+       *
+       * W4/P2-5: the separator changed from an inline arrow to a SPACE, because .cs-cue became a
+       * block (the pair must separate so the reader can cover the answer). The mirror follows the
+       * composer, which is the whole point of a mirror -- and guard 4 is exactly what would have
+       * caught this edit had it been made in only one of the two files. */
       let spineN = 0;
       if (d.wb && d.wb.steps && d.wb.steps.length) {
         d.wb.steps.forEach((s, i) => {
           push('spine', 'wb.steps[' + i + '].a', s.a, 'detached-answer');
           lifts[lifts.length - 1].line = asText('<span>' + (s.c || '') + '</span>'
-            + (s.c ? '<span>&rarr;</span>' : '') + (s.a || ''));
+            + (s.c ? ' ' : '') + (s.a || ''));
           spineN++;
         });
       } else if (idn.spine && idn.spine.length) {
@@ -536,6 +541,109 @@ function asciiFold(s) {
     return { ids, out };
   }, { plant: PLANT });
 
+  /* ===================== THE HEIGHT CEILING (W4 / audit P2-5) ==============================
+   * Everything above reads the sheet as TEXT. This arm renders it and measures how tall it is,
+   * because P2-5's second half is not about what the sheet says -- it is about how much of it
+   * there is. The cram sheet is "everything that matters, on a card", read five minutes before
+   * a loop; at 46 topics it ran 3194 to 7793px against a 704px body, i.e. 4.5 to 11.1 screens
+   * of scrolling on an artifact whose own design note calls it a summary.
+   *
+   * This is a CEILING, not a target. The wave that added it did not shrink the corpus -- the
+   * first-sentence slice that would have was measured and declined (it guts 122 of 366 answers
+   * to under a quarter of their authored length; see the freeze report). What it does is stop
+   * the number getting worse without anyone noticing, which nothing in the gate did before.
+   *
+   * ANCHORED ON THE CORPUS, NOT PICKED. All 46 post-fix, 1280x800:
+   *     min 3194   p50 5442   p75 5964   p90 6462   p95 7018   max 7793 (consistency-models)
+   * CEILING = 9000 is max x1.155. The headroom is sized on a real event, not a round number:
+   * a topic gaining a TENTH authored whiteboard step grows its sheet by about 1/9 = 11%, and
+   * that is authoring, not regression -- so the worst topic in the corpus can take one more step
+   * and still pass. A structural regression (the block cue reverting to something taller, a
+   * double render, a lift site duplicated) is far larger than 15% and trips immediately.
+   *
+   * MEASURED IN THE REAL OVERLAY at a pinned 1280x800, not derived from string lengths: the
+   * defect is a rendered height, and a proxy for it would be the Goodhart move this file exists
+   * to avoid. The overlay is opened ONCE and topics are switched underneath it -- the live
+   * re-render path -- waiting on `deeptopicchange` rather than a stopwatch (cram_scope_distinct
+   * proved a fixed sleep races the view transition and reads the previous topic's body).
+   */
+  const CRAM_CEILING = 9000;
+  const heights = await (async () => {
+    const ctx2 = await browser.newContext({
+      viewport: { width: 1280, height: 800 }, deviceScaleFactor: 1,
+      reducedMotion: 'reduce', forcedColors: 'none', locale: 'en-US', timezoneId: 'UTC',
+    });
+    const p2 = await ctx2.newPage();
+    await B.gotoApp(p2, HTML, { hash: '#event-driven/walk' });
+    await B.until(p2, () => !document.getElementById('_bootsplash'), null, B.ACT_MS, 'boot splash');
+    const r = await p2.evaluate(async (opts) => {
+      const raf2 = () => new Promise((res) => requestAnimationFrame(() => requestAnimationFrame(res)));
+      const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
+      const ix = document.querySelector('.ix-x'); if (ix) ix.click();
+      await sleep(200);
+      /* WATCHED-RED PLANT for the ceiling. No topic exceeds it today and none did on the
+         pre-fix build either (max 7724 then, 7793 now), so there is no naturally-occurring red
+         to watch -- the honest substitute is to MANUFACTURE one and prove the arm reports it.
+         Doubling the tallest topic's authored steps is the shape of the regression this guards:
+         more lifted content on one sheet. Pure in-memory mutation; no file is touched. */
+      if (opts.plant) {
+        const t = TopicRegistry.get('consistency-models');
+        if (t && t.data && t.data.wb && t.data.wb.steps) {
+          t.data.wb.steps = t.data.wb.steps.concat(t.data.wb.steps.map(function (x) {
+            return { c: x.c, a: x.a };
+          }));
+        }
+      }
+      const host = document.querySelector('deep-cram');
+      const body = document.querySelector('.cram-body');
+      if (!host || !body) return { err: 'deep-cram / .cram-body not in the DOM' };
+      document.getElementById('cramopen').click();
+      await sleep(250);
+      await raf2();
+      const switchTo = async (id) => {
+        const cur = TopicRegistry.current();
+        if (cur && cur.id === id) return;
+        await new Promise((res) => {
+          let done = false;
+          const on = () => { if (done) return; done = true; window.removeEventListener('deeptopicchange', on); res(); };
+          window.addEventListener('deeptopicchange', on);
+          if (!TopicRegistry.setTopic(id)) { on(); return; }
+          setTimeout(on, 3000);
+        });
+        await raf2();
+      };
+      const out = {};
+      for (const id of TopicRegistry.ids()) { await switchTo(id); out[id] = host.scrollHeight || 0; }
+      /* NEGATIVE CONTROL: the probe must be able to SEE a sheet grow. Append a 400px block to the
+         rendered body and require the measured height to rise.
+         WHAT IT PROVES AND WHAT IT DOES NOT (2026-07-29 W4 cold verify, F-9): it proves the probe
+         is reading a LIVE, ATTACHED node -- a detached or stale handle reports every topic
+         identical and passes forever. It does NOT by itself prove the 46 readings are of 46
+         DIFFERENT sheets: nothing here asserts the heights VARY, and switchTo() falls back
+         silently if a topic id is unknown. That half is covered in the same run by
+         cram_scope_distinct, which proves 46/46 distinct cram bodies -- so the pair is complete,
+         but only as a pair, and a future edit that retires that check would leave this one
+         half-blind. */
+      const before = host.scrollHeight;
+      const sr = host.shadowRoot;
+      let grew = null;
+      if (sr) {
+        const clone = document.createElement('div');
+        clone.setAttribute('data-height-probe', '1');
+        clone.style.height = '400px';
+        sr.appendChild(clone);
+        await raf2();
+        grew = host.scrollHeight;
+        clone.remove();
+        await raf2();
+      }
+      return { out, bodyClient: body.clientHeight, innerWidth: window.innerWidth,
+               control: { before: before, withProbe: grew, restored: host.scrollHeight } };
+    }, { plant: PLANT });
+    await ctx2.close();
+    return r;
+  })();
+
   await browser.close();
   if (rep.fatal) { console.log('CRAM SURFACE: FAIL (' + rep.fatal + ')'); process.exit(1); }
   if (perr.length) { console.log('CRAM SURFACE: FAIL (page errors: ' + perr.join('; ') + ')'); process.exit(1); }
@@ -571,7 +679,7 @@ function asciiFold(s) {
       //    lifting `.a` without its cue would slip every other guard: same sections, same <li>
       //    count, same answer text. This is the one that catches it (46 topics x every step).
       if (L.line && o.cramText.indexOf(L.line) === -1) {
-        drift.push(id + ': ' + L.path + ' -- the composed spine line (cue + arrow + answer) is NOT in the rendered cram sheet, so deriveCram is no longer lifting the cue alongside its answer');
+        drift.push(id + ': ' + L.path + ' -- the composed spine line (cue, then answer) is NOT in the rendered cram sheet, so deriveCram is no longer lifting the cue alongside its answer');
       }
     });
     o.slifts.forEach((L) => {
@@ -693,11 +801,39 @@ function asciiFold(s) {
     + '   ' + padL(Object.keys(DEBT).length, 6));
   console.log('');
 
-  const fatal = drift.length || isNew.length || stale.length;
+  /* ---------------- the height ceiling verdict ---------------- */
+  const tall = [], hErr = [];
+  if (!heights || heights.err) {
+    hErr.push('the height arm could not measure the sheet: ' + ((heights && heights.err) || 'no result'));
+  } else if (heights.innerWidth !== 1280) {
+    hErr.push('the height arm ran at ' + heights.innerWidth + 'px, not the pinned 1280 -- a viewport that did not apply turns this red into a green');
+  } else {
+    const c = heights.control || {};
+    /* The probe must be able to SEE a sheet grow, or every topic reads identical forever. */
+    if (!(c.withProbe > c.before)) {
+      hErr.push('NEGATIVE CONTROL: a 400px block appended to the rendered sheet did not raise its measured height ('
+        + c.before + ' -> ' + c.withProbe + ') -- the height probe is not reading the live node, so every height it reports is meaningless');
+    }
+    const hs = Object.keys(heights.out || {});
+    if (hs.length < rep.ids.length) hErr.push('the height arm measured ' + hs.length + ' topics but the corpus has ' + rep.ids.length);
+    hs.forEach((id) => { if (heights.out[id] > CRAM_CEILING) tall.push({ id: id, h: heights.out[id] }); });
+    tall.sort((a, b) => b.h - a.h);
+  }
+  if (heights && heights.out && !hErr.length) {
+    const vals = Object.keys(heights.out).map((k) => heights.out[k]).sort((a, b) => a - b);
+    const q = (f) => vals[Math.min(vals.length - 1, Math.floor(vals.length * f))];
+    console.log('  cram sheet height @1280x800 (body ' + heights.bodyClient + 'px):  min ' + vals[0]
+      + '   p50 ' + q(0.5) + '   p90 ' + q(0.9) + '   max ' + vals[vals.length - 1]
+      + '   ceiling ' + CRAM_CEILING + '   over: ' + tall.length);
+    console.log('');
+  }
+
+  const fatal = drift.length || isNew.length || stale.length || tall.length || hErr.length;
   if (!fatal) {
     console.log('CRAM SURFACE: PASS  (' + rep.ids.length + ' topics, ' + defects.length
       + ' known cram-surface defect(s) allowlisted in cram_surface_debt.json across '
-      + allTopics.size + ' topics; mirror verified against deriveCram on all ' + rep.ids.length + ')');
+      + allTopics.size + ' topics; mirror verified against deriveCram on all ' + rep.ids.length
+      + '; every sheet under the ' + CRAM_CEILING + 'px ceiling, height probe armed)');
     process.exit(0);
   }
 
@@ -717,10 +853,23 @@ function asciiFold(s) {
     stale.slice(0, 20).forEach((k) => console.log('    - ' + k));
     if (stale.length > 20) console.log('    ... and ' + (stale.length - 20) + ' more');
   }
+  if (hErr.length) {
+    console.log('\n  the height arm cannot be trusted on this run:');
+    hErr.forEach((e) => console.log('    - ' + e));
+  }
+  if (tall.length) {
+    console.log('\n  ' + tall.length + ' cram sheet(s) OVER the ' + CRAM_CEILING + 'px ceiling at 1280x800:');
+    tall.forEach((t) => console.log('    - ' + t.id + '  ' + t.h + 'px  ('
+      + (t.h / (heights.bodyClient || 704)).toFixed(1) + ' screens, ' + (t.h - CRAM_CEILING) + 'px over)'));
+    console.log('  The ceiling is anchored on the corpus (post-W4 max 7793px + ~15%, the room one extra');
+    console.log('  authored whiteboard step needs). A sheet past it is either a lift site that grew');
+    console.log('  without review or a style regression -- both are worth a look before it ships.');
+  }
 
   /* The LAST line is what THE GATE prints in its summary row (check_all.py:last_line). */
   console.log('\nCRAM SURFACE: FAIL  (' + drift.length + ' mirror-drift, ' + isNew.length
-    + ' new defect(s), ' + stale.length + ' stale baseline entr(ies); ' + defects.length
+    + ' new defect(s), ' + stale.length + ' stale baseline entr(ies), ' + tall.length
+    + ' over the height ceiling' + (hErr.length ? ', height arm UNTRUSTED' : '') + '; ' + defects.length
     + ' live defects across ' + allTopics.size + '/' + rep.ids.length + ' topics)');
   process.exit(1);
 })();

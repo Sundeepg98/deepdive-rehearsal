@@ -1,0 +1,51 @@
+=== LATENT ARIAL -- <button> rendering in the UA form-control default ===
+    UA control font : [Arial]
+    app stack       : [-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif]
+    font:inherit    : [-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif]
+    buttons walked  : 252 (max over 4 surfaces)
+    self-test       : bare probe detected, font:inherit probe clean, UA != app stack
+
+    components in UA default : 19   allowlisted: 0   NEW: 19   STALE: 0
+      NEW     1 x .#_focus-exit   (visible 0)  [home, walk, index-overlay, search-overlay]
+      NEW     1 x .#_focus-toggle   (visible 1)  [home, walk, index-overlay, search-overlay]
+      NEW     6 x .(unclassed)@body   (visible 6)  [search-overlay]
+      NEW     1 x .cmp-fold   (visible 1)  [home, walk, index-overlay, search-overlay]
+      NEW     3 x .cmp-rel   (visible 3)  [walk, index-overlay, search-overlay]
+      NEW     1 x .cmp-reopen   (visible 0)  [home, walk, index-overlay, search-overlay]
+      NEW    14 x .crambtn   (visible 14)  [home, walk, index-overlay, search-overlay]
+      NEW    46 x .ix-card   (visible 46)  [home, index-overlay]
+      NEW     1 x .ix-cross   (visible 1)  [home, index-overlay]
+      NEW     6 x .ix-g-cram   (visible 6)  [home, index-overlay]
+      NEW     1 x .ix-x   (visible 1)  [index-overlay]
+      NEW     7 x .mock-x   (visible 0)  [home, walk, index-overlay, search-overlay]
+      NEW     1 x .nd-m   (visible 0)  [home, walk, index-overlay, search-overlay]
+      NEW     2 x .pomodoro-btn   (visible 2)  [home, walk, index-overlay, search-overlay]
+      NEW     1 x .scrolltop   (visible 1)  [home, walk, index-overlay, search-overlay]
+      NEW    46 x .tn-item   (visible 0)  [home, walk, index-overlay, search-overlay]
+      NEW     3 x .tn-step   (visible 3)  [home, walk, index-overlay, search-overlay]
+      NEW     1 x .tn-trigger   (visible 1)  [home, walk, index-overlay, search-overlay]
+      NEW     1 x .tools-fab   (visible 0)  [home, walk, index-overlay, search-overlay]
+
+  19 NEW latent-Arial component(s) -- a <button> with no author font-family renders in the UA control font, not the app stack:
+    .#_focus-exit   1 element(s), 0 visible, on [home, walk, index-overlay, search-overlay]
+    .#_focus-toggle   1 element(s), 1 visible, on [home, walk, index-overlay, search-overlay]
+    .(unclassed)@body   6 element(s), 6 visible, on [search-overlay]
+    .cmp-fold   1 element(s), 1 visible, on [home, walk, index-overlay, search-overlay]
+    .cmp-rel   3 element(s), 3 visible, on [walk, index-overlay, search-overlay]
+    .cmp-reopen   1 element(s), 0 visible, on [home, walk, index-overlay, search-overlay]
+    .crambtn   14 element(s), 14 visible, on [home, walk, index-overlay, search-overlay]
+    .ix-card   46 element(s), 46 visible, on [home, index-overlay]
+    .ix-cross   1 element(s), 1 visible, on [home, index-overlay]
+    .ix-g-cram   6 element(s), 6 visible, on [home, index-overlay]
+    .ix-x   1 element(s), 1 visible, on [index-overlay]
+    .mock-x   7 element(s), 0 visible, on [home, walk, index-overlay, search-overlay]
+    .nd-m   1 element(s), 0 visible, on [home, walk, index-overlay, search-overlay]
+    .pomodoro-btn   2 element(s), 2 visible, on [home, walk, index-overlay, search-overlay]
+    .scrolltop   1 element(s), 1 visible, on [home, walk, index-overlay, search-overlay]
+    .tn-item   46 element(s), 0 visible, on [home, walk, index-overlay, search-overlay]
+    .tn-step   3 element(s), 3 visible, on [home, walk, index-overlay, search-overlay]
+    .tn-trigger   1 element(s), 1 visible, on [home, walk, index-overlay, search-overlay]
+    .tools-fab   1 element(s), 0 visible, on [home, walk, index-overlay, search-overlay]
+  Fix: declare `font:inherit` on the button (see .hm-room / .hm-cta / .hm-act).
+
+LATENT ARIAL: FAIL

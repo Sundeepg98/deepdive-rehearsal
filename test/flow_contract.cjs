@@ -123,7 +123,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     flowRec = orig; document.dispatchEvent(new CustomEvent('flowstatechange'));
     return { label };
   });
-  ok('dock is data-driven: forcing flowRec moves its label to the forced target', moved.label === 'Forced target →', JSON.stringify(moved));
+  ok('dock is data-driven: forcing flowRec moves its label to the forced target', moved.label === 'Forced target \u2192', JSON.stringify(moved));
 
   /* ---- NEGATIVE CONTROL: flowRec with no forward target -> the dock must go dark (check can go red) ---- */
   await fresh(); await pane('sys');
@@ -165,7 +165,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     flowRec = orig; if (typeof closeSession === 'function') closeSession();
     return { label };
   });
-  ok('session overlay never button-less: #ssgo renders the terminal __topic__ hand-off', term.label === 'Next: Topic X →', JSON.stringify(term));
+  ok('session overlay never button-less: #ssgo renders the terminal __topic__ hand-off', term.label === 'Next: Topic X \u2192', JSON.stringify(term));
 
   /* ---- W3 fix (audit #6): the drill DEBRIEF is a TERMINAL (meso), not a judgment point (micro).
    *      Grade EVERY probe with >=1 Shaky so a revisit exists -> flowRec loops back to 'drill'

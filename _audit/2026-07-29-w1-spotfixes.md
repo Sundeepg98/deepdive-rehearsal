@@ -3,10 +3,17 @@
 **Branch** `frontend/w1-spotfixes` · **base** `437564c` · **builder** w11-builder · **2026-07-29**
 **Roadmap** `_audit/2026-07-29-frontend-audit.md` (W1) · **brief** `_TEAM_LEAD_W11_BRIEF.md`
 
-**Status: 13/13 fixes landed, 5/5 guards watched RED then green, gate 61/62.**
-The one red is `visual_regression`, and it is **not a regression** — see
-[VR churn](#vr-churn-12-of-16-baselines-and-why-zero-diff-was-never-reachable). Every changed
-pixel belongs to two of the thirteen fixes, which change what the screen says by design.
+**FINAL STATUS: 13/13 fixes landed, 5/5 guards watched RED then green, gate 62/62, cold verify
+CLEAN (zero blocking).**
+
+*This line is the state after two follow-up rounds; the body below is written as of the original
+freeze and is corrected in place where it was wrong.* The freeze originally stood at **61/62**, the
+one red being `visual_regression` — not a regression, but two of the thirteen fixes changing what
+the screen says by design. The team lead accepted the attribution and approved the rebaseline
+([addendum 1](#addendum--team-lead-ruling-executed--2026-07-29-1330-ist)); cold verification then
+returned CLEAN with two findings **in this report's accuracy, not in the code**, both amended in
+place and summarised in [addendum 2](#addendum-2--cold-verify-and-the-report-corrections-it-forced--2026-07-29-1430-ist).
+Where a boxed **⚠️ correction** appears below, it supersedes the claim beside it.
 
 ---
 
@@ -189,14 +196,27 @@ The actual mixed basis is **LEFT**: `cards.length - this.di` is a *position* fac
 *tally* row whose other two tiles count this run. The two coincide on a clean sequential run —
 `judge()` pushes a result and advances `di` together — which is exactly why this survived.
 
-Fix: count the remainder over `results.length`, in both places that computed it (the tile at `:519`
-and the **spoken** readout at `:729`, which had the identical defect while its comment promised the
-two could never disagree — they agreed with each other and contradicted themselves).
+Fix: count the remainder over `results.length`, in both places that computed it — the tile
+(pre-fix `logic.js:519`, shipped `:542`) and the **spoken** readout (pre-fix `:729`, shipped `:754`),
+which had the identical defect while its comment promised the two could never disagree; they agreed
+with each other and contradicted themselves. *(Line numbers amended after cold verify: the report
+originally cited only the pre-fix positions, which no longer resolve in the shipped tree — my own
+explanatory comments shifted them.)*
 
-| at probe 4/21 after a mid-drill reload | before | after |
+Measured live on the drill's real bank of **22** — the audit's illustrative "probe 4/21" numbers are
+replaced here by the values actually observed, since 21 contradicted this report's own P3-1 row
+("0 of 22 graded"):
+
+| case | before (`cards − di`) | after (`cards − results.length`) |
 |---|---|---|
-| tiles | `0 SOLID · 0 REVISIT · 18 LEFT` -> **18 ≠ 21** | sum equals the working set |
-| clean sequential run | — | **byte-identical** (`di === results.length`) |
+| clean sequential run | `2 + 1 + 19 = 22` | **byte-identical** (`di === results.length`) |
+| mid-drill reload at probe 4 | `0 + 0 + 19` -> **19 ≠ 22** | `0 + 0 + 22 = 22` |
+| fresh-run probe-nav jump to 14 | `0 + 0 + 8` -> **8 ≠ 22** | `0 + 0 + 22 = 22` |
+
+The third row is the one a record-derived fix would not have closed: no reload is involved. The
+spoken readout now says `"Solid. 1 solid, 0 revisit, 21 left."` — agreeing with the tiles digit for
+digit and summing to 22, where pre-fix it said `7 left`. The `This run` caption is untouched, so the
+prior-#22 contract still holds.
 
 Verified live both before and after a real mid-drill reload. `scoreboard_resume` still passes
 untouched, and `di` still drives the progress bar, the probe nav and the debrief terminal — the
@@ -219,9 +239,51 @@ zero-box-delta contract on the seg strip is untouched.
 
 ## The five guards — watched RED, then green
 
-All reds were captured against `437564c` **before** any fix existed; the guards were committed in
-`ffcbd80`, one commit ahead of the fixes, so the red is reproducible from history. No red depends on
-fonts, wall-clock or load — every assertion is a computed-style, attribute or structural read.
+All reds were captured against `437564c` **before** any fix existed, and the guards were committed in
+`ffcbd80`, one commit ahead of the fixes. No red depends on fonts, wall-clock or load — every
+assertion is a computed-style, attribute or structural read.
+
+> ### ⚠️ Provenance correction — amended 2026-07-29 after cold verify (finding 1)
+> **This section originally claimed "so the red is reproducible from history." That was false for
+> `flow_data` 7b, and the claim has been withdrawn.** Four of the five guards do replay from
+> `ffcbd80`; `flow_data` does not.
+>
+> **The defect, verified on disk.** `ffcbd80:test/flow_data.cjs:334` asserts
+> `/(^|\/)walk$/.test(location.hash)`. That regex **cannot match the bare `#walk`** the boot topic
+> uses (`router.js` `topicPrefix()` keeps the boot topic's URLs bare), so the committed instrument
+> dies at its own reset step and **never reaches 7b**:
+> ```
+> Error: timed out after 30000ms waiting for: reset to the walk route before the ordering pin
+>     at flow_data.cjs:334
+> ```
+> Commit `51496c9` — the *fix* commit — repaired it to the `hashView()` comparison the tip carries.
+> A test-only repair rode along in a source-fix commit, which is how it escaped notice.
+>
+> **How the wrong quote got here.** I captured 7b's red, *then* added the walk-reset block to make
+> 7b deterministic, *then* committed. So the block quoted below was transcribed from an
+> intermediate working copy that had no reset step — which is why it shows `hash:"#home"` (where
+> `goBack()` had landed) and an ASCII hyphen in a title the app writes with an em dash
+> (`view-manager.js`, `label + ' — ' + BASE_TITLE`). It was presented as a verbatim capture and
+> was not one.
+>
+> **The substance stands, and is now independently receipted.** The property that matters — *the
+> shipped instrument goes red on the pre-fix build* — was reproduced by the cold verifier running
+> the tip instrument against the `437564c` deliverable: `FAIL (7)`, the six section-7 arms plus the
+> ladder-4a pin added in `51496c9`. The true 7b lines are:
+> ```
+> FAIL 7b ORDERING: by the time drill.weak() fires, the ROUTER has already landed on #drill
+>      -> {"which":"drill.weak","hash":"#walk","title":"Walkthrough — Deep Rehearsal","on":"drill"}
+> FAIL 7b ORDERING: by the time wb.rerunMissed() fires, the ROUTER has already landed on #wb
+>      -> {"which":"wb.rerunMissed","hash":"#walk","title":"Walkthrough — Deep Rehearsal","on":"wb"}
+> ```
+> `hash:"#walk"` with `on:"drill"` / `on:"wb"` is the same diagnosis the wrong quote carried —
+> `switchTab` had run, the router had not — measured from the instrument that actually ships.
+> Receipts: `red-flow_data-AS-COMMITTED-ffcbd80.txt` (dies at the reset),
+> `red-flow_data.txt` (tip instrument, 7 red), both in the verifier's scratch directory.
+>
+> **The lesson worth keeping:** a watched-red capture is only evidence of what the *committed*
+> instrument does. Capture the red, then commit **that byte-identical file** — any edit between the
+> capture and the commit silently voids the receipt.
 
 ### G1 `token_liveness` (new) — RED 8, now PASS 10
 ```
@@ -238,20 +300,33 @@ the audit measured dead; all of it again in dark. The registry-non-empty arm pas
 which is what proves the walk was finding tokens rather than finding nothing.
 
 ### G2 `flow_data` §7 (extended) — RED 6, now PASS
+**Quoted from the SHIPPED instrument run against the pre-fix build** (see the provenance correction
+above — the version originally quoted here came from an uncommitted working copy). The tip
+instrument reports `FAIL (7)`: these six, plus the ladder-4a pin that arrived with `51496c9`.
 ```
 FAIL 7a `n` moves the URL HASH to the target pane
 FAIL 7a `n` updates the document TITLE
 FAIL 7a `n` pushes a HISTORY entry, so Back returns to where you were
 FAIL 7a Back after `n` returns to the pane you came from
 FAIL 7b ORDERING: by the time drill.weak() fires, the ROUTER has already landed on #drill
-     -> {"which":"drill.weak","hash":"#home","title":"Home - Deep Rehearsal","on":"drill"}
+     -> {"which":"drill.weak","hash":"#walk","title":"Walkthrough — Deep Rehearsal","on":"drill"}
 FAIL 7b ORDERING: by the time wb.rerunMissed() fires, the ROUTER has already landed on #wb
+     -> {"which":"wb.rerunMissed","hash":"#walk","title":"Walkthrough — Deep Rehearsal","on":"wb"}
 ```
 `7a` drives a real `n` keypress. `7b` is the ordering pin: it spies on the side effects themselves
 and records the hash **at the moment they fire**, so if navigation ever becomes asynchronous the spy
 sees the old hash and this goes red instead of the drill's weak set being silently wiped by the pane
-flush on its way in. The pre-fix detail above shows exactly that shape — `on:"drill"` (switchTab had
-run) with `hash:"#home"` (the router had not).
+flush on its way in. The pre-fix detail above shows exactly that shape — `on:"drill"` / `on:"wb"`
+(switchTab had run) with `hash:"#walk"` (the router had not).
+
+**The pin is not merely plausible — a negative control was executed.** The cold verifier wrapped
+`Router.navigate` to defer via `setTimeout(…,0)` and re-ran the same spy shape:
+```
+SYNCHRONOUS (real): [{"which":"drill.weak","hash":"#drill","on":"drill"}, {"which":"wb.rerunMissed","hash":"#wb","on":"wb"}]
+ASYNC (control):    [{"which":"drill.weak","hash":"#walk","on":"walk"},  {"which":"wb.rerunMissed","hash":"#walk","on":"walk"}]
+```
+Under an async navigation the spy sees the stale hash and 7b goes red — which is the regression this
+guard exists to catch, demonstrated rather than argued.
 
 ### G3 `seg_state` (new) — RED 20, now PASS 31
 ```
@@ -320,7 +395,7 @@ right about the other eleven and wrong about these two.
 
 | | baselines | changed px | region |
 |---|---|---|---|
-| desktop (walk-light/dark, sys-light, num-light, wb-light, 5x room-*) | 10 | ~1180 each (0.115%) | one box at (20,239) — the sidebar dock **and** the pip on the Probe Drill tab |
+| desktop (walk-light/dark, sys-light, num-light, wb-light, 5x room-*) | 10 | ~1180 each (0.115%) | **three disjoint clusters** — see the geometry correction below |
 | mobile (m-walk-light/dark) | 2 | 2800 / 2058 | (44,779) — the NextUp chip's kicker, plus its bottom-bar neighbour shifting as the chip's width changed |
 | **clean** | **4** — drill-light, drill-dark, home-light, home-dark | 0 | — |
 
@@ -329,17 +404,49 @@ right about the other eleven and wrong about these two.
 (hidden) — neither changed surface renders. `home-*` has no sidebar and no dock at all. Exactly the
 baselines that cannot show the change are the ones that don't.
 
-Both diff images were read directly. The desktop diff shows red in precisely two places: overlapping
-`KEEP GOING`/`START HERE` + `Back to the drill`/`Start the drill` in the dock, and a small dot at
-the left edge of the Probe Drill tab. The rest of the 1280x800 frame is untouched. Nothing else
-moved — no focus ring appeared at rest, no layout shifted from the ARIA attributes, and the
-`.pane.on` motion change contributed nothing (as predicted: it is invisible at rest).
+Both diff images were read directly. The desktop diff shows red in the dock (overlapping
+`KEEP GOING`/`START HERE` + `Back to the drill`/`Start the drill`) and at the left edge of the Probe
+Drill tab.
 
-The 1182 px also *adds up*: two lines of small dock text plus a 6px dot moved 3px, against a
-114,622 px bounding box that is 99% unchanged. A wholesale repaint would not look like this.
+> ### ⚠️ Geometry correction — amended 2026-07-29 after cold verify (finding 2)
+> **This section originally described the desktop churn as "one box at (20,239)" and claimed "the
+> rest of the 1280x800 frame is untouched. Nothing else moved." Both are corrected below.**
+>
+> `(20,239)` is only the **top-left corner of a bounding box**, and quoting it as "one box" reads as
+> one surface when it is two well-separated ones — the pip sits **~400px below** the dock. The
+> verifier's differ (Chromium's own `canvas.getImageData`, sharing no code with `test/_pixels.cjs`)
+> clusters changed pixels into connected regions and hit-tests each centroid in the live app.
+> Re-read from its raw `vr-diff.json` rather than transcribed from its prose:
+>
+> | `walk-light` cluster | px | hit-test | attribution |
+> |---|---|---|---|
+> | `[16,224,160,288]` | 1055 | `button.nd-go` < `div#ndock.dock` | **P3-1** dock copy |
+> | `[16,672,48,688]` | 130 | `button.flow-pip` < `div.seg` | **P3-3** pip |
+> | `[272,272,288,288]` | 6 | the dock card's own rounded corner | antialiasing, max channel delta **6/255** |
+>
+> **"Nothing else moved" is two pixels too strong.** On `walk-dark` — and only there — a third
+> cluster `[16,368,32,384]` holds **2 pixels** at **delta 1 in a single channel**
+> (`rgb(30,27,37)` -> `rgb(30,28,37)`), hit-testing to `div.mockcta` / `button#inttog`: outside both
+> attributed surfaces. `m-walk-dark` likewise carries two **1-pixel** stragglers
+> (`[0,784,16,800]`, `[0,816,16,832]`) beside its 2729px chip cluster — so the verdict's
+> "`m-walk` is a single cluster" is exact for `m-walk-light` only.
+>
+> **Why the conclusion survives.** Every straggler is sub-perceptual curve antialiasing (delta ≤ 6
+> of 255, most of them 1), and `visual_regression` now passes **16/16** against the committed
+> baselines — which proves they are a *deterministic* consequence of the change, not encoder noise
+> or a flaky capture. The attribution conclusion is unchanged: every perceptible changed pixel
+> traces to P3-1 or P3-3, and no focus ring appeared at rest, no layout shifted from the ARIA
+> attributes, and the `.pane.on` motion change contributed nothing (as predicted: invisible at rest).
+>
+> **On the two pixel counts.** This report's `1182` is the **gate's** figure, which counts a pixel
+> as changed only above its `>2/255` tolerance. The verifier's differ counts any non-zero delta and
+> reports `1191` for the same baseline. Both are correct under their own threshold; the gap is the
+> sub-perceptual tail described above. Neither number was wrong — but quoting one without its
+> tolerance invited exactly the "nothing else moved" overstatement.
 
 **Decision needed from the team lead:** approve `npm run vr:update` for these 12, or drop P3-1/P3-3.
-The builder did not rebaseline.
+The builder did not rebaseline. — **RESOLVED: rebaseline approved and executed; see the addendum
+below.**
 
 ---
 
@@ -435,3 +542,47 @@ The **61/62** capture — the red that justified the rebaseline — remains read
 The two residuals (`.piv-jump:focus{outline:none}` in `system-map.js:44`; the dead
 `.piv .chip.chip-link` rule at `:61`) were **not** acted on. They stay ledgered above for a later
 wave.
+
+---
+
+## Addendum 2 — cold verify, and the report corrections it forced · 2026-07-29 ~14:30 IST
+
+**Cold verification returned CLEAN — zero blocking findings.** Full verdict, committed verbatim and
+credited to its author: `_audit/2026-07-29-w1-spotfixes-coldverify.md`. It confirms all 13 fixes are
+real and live on the shipped build, all five guards genuinely falsifiable, the gate 62/62 reproduced
+independently, and the VR attribution correct.
+
+**Both of its findings were defects in THIS REPORT, not in the code.** That distinction is the point
+of the round, so it is worth stating plainly rather than burying: the wave shipped correct; the
+account of the wave did not. Both are amended in place above, in boxed corrections next to the
+claims they replace rather than only here at the end — a correction a reader has to go looking for
+is not much of a correction.
+
+| # | what this report claimed | what is true |
+|---|---|---|
+| 1 | "the red is reproducible from history" | False for `flow_data` 7b. The `ffcbd80` instrument dies at its own reset (`:334`, a regex that cannot match the boot topic's bare `#walk`); `51496c9` silently repaired it. The 7b block quoted here was transcribed from an **uncommitted working copy**. Re-quoted from the shipped instrument's pre-fix run. |
+| 2 | "one box at (20,239)"; "nothing else moved" | The desktop churn is **three disjoint clusters** (dock 1055px, pip 130px ~400px below it, 6px corner antialiasing), and `walk-dark` carries a **2-pixel delta-1** straggler at `div.mockcta`/`#inttog` outside both attributed surfaces. |
+
+Neither changes the merge decision, and neither weakens the wave's substance: the property that
+matters for finding 1 — *the shipped instrument goes red on the pre-fix build* — is independently
+receipted, and for finding 2 every straggler is sub-perceptual (delta ≤ 6/255) and provably
+deterministic, since `visual_regression` passes 16/16 against the committed baselines.
+
+Also corrected while here, both flagged by the verifier as cosmetic:
+
+- The P3-2 table cited the audit's illustrative "probe 4/21" while the measured bank is **22** —
+  contradicting this report's own P3-1 row. Replaced with the three cases measured live, including
+  the **probe-nav jump** case that no reload is involved in and that a record-derived fix would not
+  have closed.
+- The P3-2 line citations (`:519`, `:729`) were the **pre-fix** positions, which no longer resolve
+  in the shipped tree — my own explanatory comments shifted them to `:542` and `:754`. Both forms
+  now given.
+
+**Verifier findings deliberately NOT acted on**, per the ruling: the `.piv-jump` residual and the
+dead `.chip-link` rule (adjudicated exact, and left for a later wave), and the two stale
+cross-reference comments the verifier noticed in `topic-protocol.js:307` and
+`session-progress.js:91` — both pre-existing, neither behavioural. Recorded here so they are not
+lost: they are cheap to fold into whichever wave next touches those files.
+
+**No code changed in this round. No rebaseline. No gate re-run** — the merge train re-gates the
+merged tree. The tree's last gate of record remains 62/62 at `1ddd568`.

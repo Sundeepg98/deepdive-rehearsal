@@ -369,7 +369,31 @@ rest of the app already uses. The result reads calmer than the pre-fix home, not
 Captured verbatim: `_audit/2026-07-29-w3-home-gate.txt`. Run on the **committed** tree
 (`146b626`), after the commit, so `build_integrity` had no untracked files to defer on.
 
-GATE_SUMMARY_PLACEHOLDER
+**60 checks, 60 PASS, 0 FAIL, 0 SKIP** -- the 58 that were there plus the two this wave adds.
+
+```
+build_integrity     PASS  12046399 bytes, 0 unresolved, 9 panes + 7 overlays, build SYNCED the
+                          deliverable, COMMITTED deliverable == fresh build of HEAD
+phantom_tokens      PASS  3 known phantom(s) allowlisted; no new one, none left stale     [NEW]
+latent_arial        PASS  15 known component(s) allowlisted; no new latent-Arial button,
+                          no fixed entry left stale                                       [NEW]
+visual_regression   PASS  16 baselines, win32-chromium149; every capture reached a proven rest
+                          state across all 18 roots and matched its committed pixels
+build_determinism   PASS  88 Shiki blocks render identically under a simulated 600ms/line stall
+ascii_guard         PASS  811 files strict 7-bit ASCII (src 686, topics-md 38, test 62, tools 25)
+cta_contrast        PASS  36 CTA x room x theme, every core glyph pixel >= 5.0:1
+room_contrast       PASS  the six rooms' ink/bg + on-solid contrast re-derived and clearing AA
+```
+
+`build_integrity`'s **committed-pair assertion was EARNED, not deferred** -- that check defers on
+a dirty tree, and the deferral is the easy way to ship a gate that proves less than it looks like
+it proves. Two things were done to avoid it: everything was committed first, and the gate's own
+output was written OUTSIDE the repo and copied in afterwards (redirecting into `_audit/` creates
+an untracked file at the instant the run starts, which is enough to make the tree dirty and defer
+the assertion -- an earlier run was stopped and redone for exactly this reason).
+
+Zero SKIPs: every browser check actually ran. `visual_regression` in particular is a PASS against
+the newly committed home baselines, not a skip for want of a platform match.
 
 ---
 

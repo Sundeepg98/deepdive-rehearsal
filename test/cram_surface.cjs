@@ -614,9 +614,16 @@ function asciiFold(s) {
       };
       const out = {};
       for (const id of TopicRegistry.ids()) { await switchTo(id); out[id] = host.scrollHeight || 0; }
-      /* NEGATIVE CONTROL: the probe must be able to SEE a sheet grow. Duplicate the rendered
-         body once and require the measured height to rise -- a height probe stuck on a stale or
-         detached node reports every topic identical and passes forever. */
+      /* NEGATIVE CONTROL: the probe must be able to SEE a sheet grow. Append a 400px block to the
+         rendered body and require the measured height to rise.
+         WHAT IT PROVES AND WHAT IT DOES NOT (2026-07-29 W4 cold verify, F-9): it proves the probe
+         is reading a LIVE, ATTACHED node -- a detached or stale handle reports every topic
+         identical and passes forever. It does NOT by itself prove the 46 readings are of 46
+         DIFFERENT sheets: nothing here asserts the heights VARY, and switchTo() falls back
+         silently if a topic id is unknown. That half is covered in the same run by
+         cram_scope_distinct, which proves 46/46 distinct cram bodies -- so the pair is complete,
+         but only as a pair, and a future edit that retires that check would leave this one
+         half-blind. */
       const before = host.scrollHeight;
       const sr = host.shadowRoot;
       let grew = null;

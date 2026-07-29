@@ -63,9 +63,17 @@
  * ---------------------------------------------------------------------------------------------
  * SELF-TEST, because a geometry probe that silently stops finding its element reports a perfect
  * score. Both arms run a NEGATIVE CONTROL on every invocation: the switcher arm re-measures with
- * the wrap rule forced off and must see the ratio COLLAPSE, and the fold arm re-counts with the
- * viewport's own fold line moved up and must see the count DROP. If either control fails to move
- * the number, this check cannot see its own defect and it ABORTS instead of passing.
+ * the wrap rule forced off and must see the ratio collapse to UNDER HALF OF LIVE, and the fold arm
+ * re-counts with the viewport's own fold line moved up and must see the count DROP. If either
+ * control fails to move the number, this check cannot see its own defect and it ABORTS instead of
+ * passing.
+ *
+ * BOTH CONTROLS ARE RELATIVE, AND BOTH WERE ABSOLUTE ONCE. The switcher control asserted
+ * `off.ratio < MIN_RATIO`, which passes vacuously on a build already under the floor -- it
+ * reported PASS on the pre-fix build, inside an 11-of-13 red (2026-07-29 W4 cold verify, F-5).
+ * The fold control derived its shift from MIN_TABS, which went NEGATIVE on that same build and
+ * failed for a reason unrelated to the app. A control anchored on a threshold rather than on what
+ * the build in front of it actually shows will mislead on exactly the builds that matter.
  *
  * Exit: 0 = pass, 1 = FAIL, 2 = SKIP (no browser).
  */
@@ -180,13 +188,21 @@ async function ctx(browser, w, h) {
       else await c.close();
     }
 
-    /* NEGATIVE CONTROL 1: force the wrap off and require the ratio to collapse. */
+    /* NEGATIVE CONTROL 1: force the wrap off and require the ratio to COLLAPSE RELATIVE TO LIVE.
+       It used to assert `off.ratio < MIN_RATIO` -- an absolute floor -- which passes VACUOUSLY on
+       any build already below that floor, without the forced-off style having done anything. That
+       is exactly what happened on the pre-fix build, where it reported PASS inside an 11-of-13 red
+       (2026-07-29 W4 cold verify, F-5). A control that reports success on the very build it is
+       meant to characterise is not measuring the rule. Relative is the honest form: whatever the
+       live ratio is, removing the wrap must at least halve it. */
     if (control) {
       const off = await control.page.evaluate(SWITCHER, true);
-      const collapsed = off && off.ratio !== null && off.ratio < MIN_RATIO;
-      chk('[negative control] with the >=920px wrap forced off, the ratio COLLAPSES below the floor',
+      const live = control.r.ratio;
+      const collapsed = off && off.ratio !== null && live !== null && off.ratio < live * 0.5;
+      chk('[negative control] with the >=920px wrap forced off, the ratio COLLAPSES to under half of live',
         collapsed, 'forced-off ratio ' + (off && off.ratio !== null ? off.ratio.toFixed(3) : 'n/a')
-        + ' vs live ' + control.r.ratio.toFixed(3)
+        + ' vs live ' + (live === null ? 'n/a' : live.toFixed(3))
+        + ' (needs < ' + (live === null ? 'n/a' : (live * 0.5).toFixed(3)) + ')'
         + '  (if this does not move, the probe is not measuring the rule and its greens mean nothing)');
       await control.c.close();
     }

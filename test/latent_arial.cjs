@@ -18,16 +18,33 @@
  * The check does NOT hardcode "Arial". It PLANTS a bare <button> in the live document and
  * reads what the UA gives it -- so the reference is whatever this platform's control font is
  * (Arial on Windows, something else on the ubuntu-latest runner), and the comparison
- * "does this button render in the UA default" is the same question everywhere. Two controls
- * run on every invocation, because a check that cannot fail is this repo's defining bug:
+ * "does this button render in the UA default" is the same question everywhere. FOUR controls
+ * run on every invocation AND ON EVERY SURFACE, because a check that cannot fail is this repo's
+ * defining bug:
  *
- *   CONTROL A (negative): the planted bare button MUST be detected. If it is not, the
- *                         detector is broken and the check ABORTS rather than passing.
- *   CONTROL B (positive): a planted button carrying `font:inherit` MUST NOT be detected.
- *                         If it is, the detector flags everything and its greens are worthless.
+ *   CONTROL A (detection): a planted bare button MUST be flagged BY THE WALK -- keyed into
+ *                          `found` under its own component name, through the same detector,
+ *                          shadow walk and keyOf every real button goes through. If it is not,
+ *                          the check ABORTS rather than passing.
+ *   CONTROL B (positive):  a planted button carrying `font:inherit` MUST NOT be detected.
+ *                          If it is, the detector flags everything and its greens are worthless.
  *   CONTROL C (blindness): the UA family must DIFFER from the app family. If a platform ever
  *                          makes them equal, this check cannot see the defect at all, and it
  *                          says so instead of reporting a green it did not earn.
+ *   NON-EMPTY WALK:        each surface must enumerate at least one APPLICATION button. An empty
+ *                          walk is the one way this ratchet reports a clean zero without having
+ *                          looked at anything.
+ *
+ * CONTROL A WAS A TAUTOLOGY UNTIL 2026-07-29 (W4 cold verify, F-6), and the fix is worth
+ * recording because the shape recurs: it read `A_bareDetected: UA === UA`, then re-stated itself
+ * as `getComputedStyle(bare).fontFamily === UA` where `UA` had been read from `bare` -- an
+ * element compared against a value taken from that same element. It could not fail. And because
+ * the walker SKIPS `[data-latent-probe]`, the probe never reached the detection path, so nothing
+ * proved the WALK could flag anything. `buttonsSeen` was likewise printed and never asserted.
+ * Both are now real: breaking the detector so it skips the plant, and breaking the walk so it
+ * enumerates no application buttons, each turn this check red on all four surfaces (demonstrated
+ * 2026-07-29). The controls are also adjudicated PER SURFACE now -- they used to be overwritten
+ * each pass, so three of four surfaces' readings were collected and discarded (F-9).
  *
  * THE RATCHET (test/latent_arial_debt.json), copied from parity_debt.json's proven pattern.
  *
@@ -90,8 +107,26 @@ const SCAN = () => {
 
   const APP = getComputedStyle(document.body).fontFamily;
 
+  /* CONTROL A'S SUBJECT, and why it is a THIRD element rather than the `bare` probe above.
+     Control A used to read `A_bareDetected: UA === UA` -- an element compared against a value
+     read from that same element, i.e. a check that could not fail -- and it was then re-stated
+     below as `getComputedStyle(bare).fontFamily === UA`, which is the same tautology spelled
+     longer. Worse, the walker SKIPS every `[data-latent-probe]`, so the planted probe never
+     reached the detection path at all: nothing proved the WALK could flag a real button.
+     This element carries a different marker, so the walker DOES enumerate it and must key it
+     into `found` like any other offender. That makes control A end-to-end -- keyOf, the shadow
+     walk, the family comparison and the bookkeeping all have to work or it fails. It is removed
+     from `found` immediately after adjudication so it can never reach the ratchet, and it is
+     deliberately NOT counted in `buttons`, so it cannot satisfy the non-empty-walk assertion
+     on its own. (2026-07-29 W4 cold verify, F-6.) */
+  const ctlA = document.createElement('button');
+  ctlA.textContent = 'x';
+  ctlA.className = '__latent_control_a';
+  ctlA.setAttribute('data-latent-ctrl', 'a');
+  document.body.appendChild(ctlA);
+
   const controls = {
-    A_bareDetected: UA === UA,                    /* trivially true; the real test is C + the walk */
+    A_bareDetected: false,                        /* set by the WALK below, not by construction */
     B_inheritClean: INHERITED !== UA,
     C_uaDiffersFromApp: UA !== APP,
     UA, APP, INHERITED,
@@ -118,7 +153,9 @@ const SCAN = () => {
       if (el.shadowRoot && roots.indexOf(el.shadowRoot) === -1) roots.push(el.shadowRoot);
       if (el.tagName !== 'BUTTON') continue;
       if (el.hasAttribute('data-latent-probe')) { probes++; continue; }
-      buttons++;
+      /* the control-A plant is WALKED (that is the point) but never counted as an application
+         button, so it cannot by itself satisfy the non-empty-walk assertion */
+      if (!el.hasAttribute('data-latent-ctrl')) buttons++;
       if (getComputedStyle(el).fontFamily !== UA) continue;
       const k = keyOf(el);
       if (!found[k]) found[k] = { n: 0, visible: 0 };
@@ -127,15 +164,17 @@ const SCAN = () => {
       if (r.width > 0 && r.height > 0) found[k].visible++;
     }
   }
-  /* CONTROL A: the walker must have SEEN the bare probe as a UA-default button. Re-run the
-     exact predicate over it -- if the detector cannot flag a button that is definitionally
-     the defect, nothing it reports means anything. */
-  controls.A_bareDetected = getComputedStyle(bare).fontFamily === UA;
+  /* CONTROL A, END-TO-END: the WALK -- not a re-read of a probe -- must have flagged the planted
+     bare button and keyed it under its own component name. If the detector, the shadow walk or
+     keyOf stops working, this is false and the check aborts instead of reporting a green. */
+  controls.A_bareDetected = !!found.__latent_control_a;
+  delete found.__latent_control_a;               /* never let the control reach the ratchet */
   /* CONTROL B, re-stated against the same predicate */
   controls.B_inheritClean = getComputedStyle(inh).fontFamily !== UA;
 
   bare.remove();
   inh.remove();
+  ctlA.remove();
   return { controls, found, buttons, probes, roots: roots.length };
 };
 
@@ -179,11 +218,17 @@ async function scanSurface(browser, s) {
   const per = {};
   const live = {};
   let controls = null, buttonsSeen = 0;
+  const perSurfaceControls = [];
   try {
     for (const s of SURFACES) {
       const r = await scanSurface(browser, s);
       per[s.label] = r;
       controls = r.controls;
+      /* EVERY surface's controls are adjudicated, not just the last one's. This used to
+         overwrite `controls` on each pass, so three of the four surfaces' control readings were
+         collected and then discarded -- a control that is not adjudicated is not a control.
+         (2026-07-29 W4 cold verify, F-9.) */
+      perSurfaceControls.push({ surface: s.label, c: r.controls, buttons: r.buttons });
       buttonsSeen = Math.max(buttonsSeen, r.buttons);
       for (const [k, v] of Object.entries(r.found)) {
         if (!live[k]) live[k] = { n: 0, visible: 0, where: [] };
@@ -203,9 +248,17 @@ async function scanSurface(browser, s) {
   console.log('    buttons walked  : ' + buttonsSeen + ' (max over ' + SURFACES.length + ' surfaces)');
 
   const ctlFails = [];
-  if (!controls.A_bareDetected) ctlFails.push('CONTROL A: a planted bare <button> was NOT detected -- the detector is blind, so every green it reports is meaningless');
-  if (!controls.B_inheritClean) ctlFails.push('CONTROL B: a planted `font:inherit` <button> WAS detected -- the detector flags everything');
-  if (!controls.C_uaDiffersFromApp) ctlFails.push('CONTROL C: the UA control font equals the app stack on this platform -- this check cannot see the defect here');
+  for (const ps of perSurfaceControls) {
+    const c = ps.c, w = ' [' + ps.surface + ']';
+    if (!c.A_bareDetected) ctlFails.push('CONTROL A' + w + ': the WALK did not flag a planted bare <button> -- the detector, the shadow walk or keyOf is broken, so every green it reports is meaningless');
+    if (!c.B_inheritClean) ctlFails.push('CONTROL B' + w + ': a planted `font:inherit` <button> WAS detected -- the detector flags everything');
+    if (!c.C_uaDiffersFromApp) ctlFails.push('CONTROL C' + w + ': the UA control font equals the app stack on this platform -- this check cannot see the defect here');
+    /* THE NON-EMPTY WALK. `buttons` was printed and never asserted, so a run that enumerated ZERO
+       application buttons -- a boot that silently failed, a selector that stopped matching -- would
+       still print PASS at 0 offenders. An empty walk is the one way this ratchet can be green
+       without having looked at anything. (2026-07-29 W4 cold verify, F-6.) */
+    if (!(ps.buttons > 0)) ctlFails.push('NON-EMPTY WALK' + w + ': ZERO application <button>s were enumerated on this surface -- the walk found nothing, so a green here would mean nothing');
+  }
   if (ctlFails.length) {
     console.log('\nSELF-TEST ABORT:');
     for (const f of ctlFails) console.log('  ' + f);

@@ -1699,7 +1699,12 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
 .xd-end{text-align:center;padding:var(--space-30) var(--space-10)}
 .xd-end-pct{font-size:var(--font-size-display-xl);font-weight:var(--font-weight-heavy);color:var(--acc);letter-spacing:-.02em}
 .xd-end-sub{font-size:var(--font-size-small);color:var(--mut2);margin:var(--space-8) 0 var(--space-22)}
-.xd-again{border:1.5px solid var(--acc);background:var(--bg);color:var(--acc);font:inherit;font-size:var(--font-size-caption);font-weight:var(--font-weight-bold);padding:var(--space-12) var(--space-22);border-radius:10px;cursor:pointer;transition:background var(--duration-fast) var(--ease-base)}
+/* --font-size-small is 13px, which is what this rule's folded bespoke stack
+   (`font:var(--font-weight-bold) 13px -apple-system,...`) already rendered at. The first fold used
+   --font-size-caption (12px) and quietly cost the button a pixel of type -- the only VALUE change
+   in an otherwise purely-additive font:inherit commit, and the one thing that made "only adds
+   font:inherit" untrue. Caught by the W4 cold verify (F-7); size-neutral now. */
+.xd-again{border:1.5px solid var(--acc);background:var(--bg);color:var(--acc);font:inherit;font-size:var(--font-size-small);font-weight:var(--font-weight-bold);padding:var(--space-12) var(--space-22);border-radius:10px;cursor:pointer;transition:background var(--duration-fast) var(--ease-base)}
 .xd-again:hover{background:var(--accbg)}
 /* THE CROSS-TOPIC DRILL SHOWS ALL SIX ROOMS, because it draws its probes from all six. The
    stripe is built from the FLAT --room-* map, which does not vary with the current topic, so
@@ -1775,8 +1780,13 @@ h1,h2,h3,h4,h5,h6{text-wrap:balance}
      .tn-eyebrow/.tn-current under @media(max-width:919px) -- later in the file and more specific
      ((0,2,0) beats (0,1,0)) -- which turns the switcher into a chevron beside the name it would
      otherwise repeat. Measured on the pre-fix build at 360/500/600/919px: computed flex-wrap is
-     `nowrap` and .tn-current clientWidth is 1px at every width, so these two declarations were
-     dead in every viewport they were written for. The paragraph above is kept because it is the
+     `nowrap` and .tn-current clientWidth is 1px at every width, so these declarations were dead in
+     every viewport they were written for. THREE went, not two, and the third was dead a different
+     way: `flex-wrap:wrap` and `.tn-eyebrow{flex:0 0 100%}` were OVERRIDDEN, while
+     `row-gap:var(--space-1)` was INERT -- row-gap separates flex LINES, and nowrap guarantees there
+     is only ever one, so it had nothing to act on rather than something outranking it. Same
+     deletion, two different proofs; enumerating only the overridden pair understated it
+     (2026-07-29 W4 cold verify, F-3). The paragraph above is kept because it is the
      history; the rule it describes now lives, live, in the >=920px block beside .tn-current.
      min-height:44px stays -- that IS still live, and it is the tap floor. */
   .tn-trigger{min-height:44px}

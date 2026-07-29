@@ -24,7 +24,9 @@
  * matched, so a ring that appears for some other reason cannot green it.
  *
  * Pure computed-style reads after a scripted focus() -- no clock, no fonts, no pixels.
- * WATCHED RED: all five arms fail on the pre-fix build.
+ * WATCHED RED: all SIX arms fail on the pre-fix build -- the original five (P2-3/P3-6), plus
+ * .piv-jump, the fourth member of the P3-6 class, added by W4 (2026-07-29). The count said
+ * "five" for one wave after the sixth arm landed; corrected on the cold verify's F-9.
  *
  * Usage: node test/focus_ring.cjs [deliverable.html]   (CHROME=<path>)
  */

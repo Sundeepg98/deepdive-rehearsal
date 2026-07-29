@@ -25,7 +25,12 @@ var NUM_STYLE = `.numlead{font-size:var(--font-size-body);max-width:var(--measur
 .num-reset:hover{color:var(--acc);border-color:var(--acc)}
 .ninp{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-12)}
 .ninp label{display:flex;flex-direction:column;gap:var(--space-6);font:var(--font-weight-bold) 11px -apple-system,sans-serif;color:var(--mut);letter-spacing:.2px}
-.ninp input{font:var(--font-weight-bold) 15px ui-monospace,Menlo,monospace;color:var(--accink);background:linear-gradient(135deg,var(--accbg) 0%,var(--acc-a04) 100%);border:1.5px solid var(--ninp-bd);border-radius:9px;padding:var(--space-10) var(--space-12);width:100%;-moz-appearance:textfield;transition:border-color var(--duration-base) var(--ease-base),box-shadow var(--duration-base) var(--ease-base),transform var(--duration-fast) var(--ease-base)}
+/* min-height (W2 / audit P3-5): SYSTEMATIC, not a one-off -- every assumption input across all
+   six Numbers topics measured 136.2x40, because this rule sets padding and never a floor, and a
+   text input's intrinsic height is its font's line box. 40 clears WCAG 2.5.8 AA (24px) but misses
+   the 44px floor the rest of this app meets, on ~25 controls the pane exists to be typed into.
+   Raw px, like every other tap floor here: a physical-finger constant, not a layout token. */
+.ninp input{font:var(--font-weight-bold) 15px ui-monospace,Menlo,monospace;color:var(--accink);background:linear-gradient(135deg,var(--accbg) 0%,var(--acc-a04) 100%);border:1.5px solid var(--ninp-bd);border-radius:9px;padding:var(--space-10) var(--space-12);width:100%;min-height:44px;box-sizing:border-box;-moz-appearance:textfield;transition:border-color var(--duration-base) var(--ease-base),box-shadow var(--duration-base) var(--ease-base),transform var(--duration-fast) var(--ease-base)}
 .ninp input::-webkit-outer-spin-button,.ninp input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .ninp input:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px var(--acc-a12),0 2px 8px -2px var(--acc-a10);transform:translateY(-1px)}
 .ninp input:hover:not(:focus){border-color:var(--acc-a30)}

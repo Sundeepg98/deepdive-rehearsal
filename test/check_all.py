@@ -690,6 +690,50 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # heading scanner that has quietly stopped finding headings is indistinguishable from
                      # a page that has none.
                      ('heading_tree', 'test/heading_tree.cjs'),
+                     # ===== W2 phone-budget wave: the two guards for a class nothing here could see =====
+                     # THE FOLD IS A BUDGET, AND NOTHING WAS MEASURING IT. At 360x800 the Probe Drill
+                     # opened with ZERO PIXELS of the probe visible: fixed .seg took 0-61, fixed
+                     # .mockcta 728-800, and .qq sat at top 762.7 in a 667px band -- 702px of scrolling
+                     # to reach the question the pane exists to ask, re-paid on EVERY return to the pane
+                     # (not a first-visit tax). The root was structural: `@media ... max-height` returned
+                     # ZERO hits in 1827 lines of styles.css, so every mobile rule in the app was a FIT
+                     # decision (does it overflow sideways?) and not one was a BUDGET decision (what may
+                     # occupy the one scarce axis?).
+                     # No existing check could see it, and not by accident. VR captures the WALK pane on
+                     # mobile, so a baseline of a drill whose question is off-screen would have certified
+                     # the defect; every behaviour check passes, because the pane switches, the question
+                     # renders, and nothing errors. The only witness is geometry RELATIVE TO THE FIXED
+                     # CHROME -- which is what this reads, from live layout at a pinned + asserted
+                     # viewport (the audit lost 59 of 60 rows to a page whose viewport was silently
+                     # reset, and named that the standing lesson). Entered by a REAL hit-tested tap on
+                     # the seg button, never location.hash, and re-asserted on the RETURN path. Three
+                     # topics, including the longest title in the corpus. Its plant puts the reclaimed
+                     # pixels back and aborts if the assertion does not go red -- and it is a
+                     # single-variable plant on purpose: the first version re-created the pre-fix CSS,
+                     # which reintroduced the old nowrap-title document overflow, widened the fixed bar
+                     # and moved the very band it was measuring against. RED on the pre-fix build at
+                     # both viewports (.qq 746 / 781 / 701 against bands ending at 728 / 318).
+                     ('fold_budget', 'test/fold_budget.cjs'),
+                     # The tap floor, in the two sizes the app actually owes -- kept separate because
+                     # conflating them nearly mis-triaged the finding. 44px is THIS APP'S promise,
+                     # written three times in styles.css ("a physical-finger constant"): every Numbers
+                     # assumption input missed it at 136.2x40 (~25 controls over six topics -- padding,
+                     # never a floor) and the cram close button at 32 WIDE, because the <=919px
+                     # `button{min-height:44px}` rule is height-only and cannot see a control short in
+                     # the other axis. 24px is WCAG 2.5.8 AA, an actual conformance failure, and two
+                     # controls were under it: the kafka viz range (a bare 16px UA slider, the sim's
+                     # only pointer control) and the home "Skip the home" label (272x18, inside a row
+                     # that had already reserved 44px for it).
+                     # IT MEASURES AT REST. getBoundingClientRect on a TRANSFORMED element returns the
+                     # transformed box, and three targets here arrive under a transform still running
+                     # two rAFs after their state flips. That is not hypothetical: #scrolltop was FILED
+                     # at 39.6x39.6, which is 44 x the .9 scale of its own fade-out -- the control was
+                     # never short, the sample was early. This check polls for two consecutive agreeing
+                     # reads before asserting, and consequently PASSES #scrolltop on the pre-fix build,
+                     # which is the correct answer and the reason that finding did not become a "fix"
+                     # to a compliant control. Plants a shrunken input every run and aborts if the 44px
+                     # arm does not fire. RED on the pre-fix build for the four genuine offenders.
+                     ('touch_floor', 'test/touch_floor.cjs'),
                      # THE CHECK THAT ACTUALLY LOOKS AT THE SCREEN. Everything above this line reads the
                      # DOM, the source, or a computed style; none of them can tell you what was PAINTED.
                      # The old `visual_regression.py` claimed to and could not -- it was a regex over CSS

@@ -1915,10 +1915,167 @@ html[data-view="home"] .cmp-reopen{display:none}
 .hm-skip{display:flex;align-items:center;gap:var(--space-8);max-width:var(--space-980);
   margin:0 auto var(--space-20);font-size:var(--font-size-caption);color:var(--mut);min-height:44px}
 .hm-skip input{width:16px;height:16px;accent-color:var(--acc);cursor:pointer}
-.hm-skip label{cursor:pointer}
+/* W2 / audit P3-5: the ROW already reserved 44px, but the <label> -- the actual click target,
+   and the only one carrying the sentence -- was a bare 272x18 text line inside it, i.e. a genuine
+   WCAG 2.5.8 (AA, 24px) failure sitting in a box that had the height to spare all along.
+   `align-self:stretch` spends that reserve on the target instead of on whitespace; the inner
+   flex re-centres the text at exactly the y it already had, so the hit area grows 18 -> 44 and
+   NOT ONE PIXEL MOVES. That property is load-bearing here: home-light/home-dark are committed VR
+   baselines and this wave is not authorised to rebaseline them. Verified byte-identical. */
+.hm-skip label{cursor:pointer;align-self:stretch;display:flex;align-items:center;min-height:24px}
 
 @media(max-width:919px){
   #home{padding:var(--space-16) var(--space-14) 80px}
   .hm-room-grid{grid-template-columns:1fr}
   .hm-cta{padding:var(--space-14) var(--space-16)}
+}
+
+/* ===================================================================================
+   THE PHONE GETS A VERTICAL BUDGET   (W2 / audit P1-1, P2-7)
+   ===================================================================================
+   THE DEFECT. At 360x800 the Probe Drill opened with ZERO PIXELS of the probe visible.
+   Fixed .seg holds 0-61 and fixed .mockcta 728-800, so the live band is 667px -- and
+   .qq measured top=762.7, i.e. 702px of scrolling to seat the question the pane exists
+   to ask. Re-paid on EVERY return to the drill (measured: drill -> whiteboard -> drill,
+   qVisible 0 again), because pane entry legitimately resets scroll.
+
+   THE ROOT, and why no single element is to blame. `@media ... max-height` returned ZERO
+   hits in this file before this block: every mobile decision here was a FIT decision (does
+   it overflow sideways?) and never a BUDGET decision (what may occupy the one scarce axis?).
+   On desktop everything above the card lives in a 296px sidebar COLUMN and costs the
+   content nothing. Below 920px that column is unstacked onto the vertical axis and the
+   costs land end to end. Measured at 360x800, band-top to .qq:
+
+       188px  .side-id      identity block (locator row + h1 + topic-nav row)
+        18px  .stage        padding-top
+        70px  .mcomp        companion accordion (collapsed) + its 24px margin
+       214px  drill setup   mode toggle 66 + FOCUS BY LEVEL 92 + the tier explainer 56
+       115px  scoreboard    progress bar 23 + "This run" cap 15 + the three pills 77
+        23px  .thread       card padding + border
+        58px  .qrow         probe number / signal / tier badge
+       ------
+       702px  of chrome, in a 667px band, above the first character of the question.
+
+   WHAT THIS BLOCK DOES. Nothing is deleted and no control becomes unreachable: the
+   identity block collapses to ONE row, and the drill's setup (mode + level + explainer)
+   goes behind a disclosure that states its own current value. Both are recoverable in one
+   tap. The two shadow-root halves live where they can reach -- drill/logic.js's own sheet
+   -- because a rule in this file matches nothing inside <deep-drill>.
+
+   WHY max-width AND NOT max-height FOR THE MAIN FIX. The P1 is at 360x800, which is not a
+   short viewport by any threshold; the scarcity comes from the SINGLE-COLUMN STACK, not
+   from the pixel height. So the budget applies across the whole mobile range, and the
+   genuinely short viewport (landscape) gets an ADDITIONAL block below. Gating the P1 fix
+   on max-height would have left the P1 unfixed on every phone held upright. */
+@media(max-width:919px){
+  /* ---- the identity block: three rows -> one ------------------------------------
+     Order is DOM order here (the earlier mobile block's `order:2`/`order:3` are undone).
+     This file's own standing rule: flex `order` reorders PAINT and never TAB ORDER, and
+     the sidebar already paid for that lesson once. */
+  .side-id{flex-wrap:nowrap;gap:var(--space-8);padding:var(--space-6) var(--space-12)}
+  /* The room chip keeps its LETTERS (the CVD/greyscale-safe marker) and drops the gloss
+     tail. applyIdentity() writes `<span class="loc-key">ARC</span>` + a bare TEXT NODE, and
+     a text node has no box to hide -- font-size:0 on the parent is what reaches it. The
+     full name is untouched in the aria-label, so nothing is lost to AT. */
+  .side-id .locator{order:0;flex:none;flex-basis:auto;width:auto;margin:0;font-size:0;
+    padding:var(--space-4) var(--space-6);line-height:var(--line-height-none)}
+  .side-id .locator .loc-key{font-size:var(--font-size-micro)}
+  /* The h1 stays VISIBLE and stays the topic's name -- one line, ellipsised. It is the
+     page's h1 and the app's heading tree is thin enough already (P1-2); hiding it to buy
+     pixels would have been the wrong 20px. */
+  /* .hdr is a COLUMN by construction (h1 over .sub over .kbd-hint), and focus-mode.js appends its
+     44px "Focus" button as a fourth child -- so on a phone, where .sub and .kbd-hint are both
+     display:none, the block measured 71.6px to render a 17.6px title: a full-width button stacked
+     under a one-line heading. Laying the row out horizontally puts the toggle BESIDE the title it
+     was already sharing a box with, at its full 44px tap target, for 44px instead of 71.6. */
+  .side-id .hdr{order:0;flex:1 1 auto;min-width:0;margin:0;display:flex;align-items:center;
+    gap:var(--space-8)}
+  .side-id .hdr>#_focus-toggle{flex:none;margin-top:0}
+  .side-id h1{font-size:var(--font-size-subhead);line-height:var(--line-height-tight);
+    flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .side-id .topic-nav{order:0;flex:none;flex-basis:auto;margin:0;gap:var(--space-4)}
+  /* ===== SEVEN CONTROLS DO NOT FIT ON A 360px ROW, AND THE TITLE LOSES =====
+     Collapsing the identity block to one line put the room chip, the title, the Focus toggle and
+     FOUR nav buttons (home / prev / trigger / next) in the same 360px. The nav buttons are 44px
+     tap targets and the title is the only flexible item, so the title absorbed the entire
+     shortfall: MEASURED, the h1 rendered as the single character "C". That is P2-4's defect --
+     "a switcher whose current value is unreadable is still a bad control" -- re-created one
+     breakpoint down, and it is not an acceptable price for the fold.
+     The prev/next STEPPERS are what give way. They are an adjacency affordance whose real home is
+     the keyboard ([ and ]), which is hidden on this viewport anyway (.kbd-hint, .seg-key and the
+     shortcuts panel are all desktop-gated) -- and every destination they reach is still reachable
+     here three other ways: the trigger's full topic menu, Topic index in Tools, and search. So no
+     topic becomes unreachable; one shortcut to an adjacent one does, on the viewport where it was
+     least usable. That buys 96px, and the title reads. */
+  .side-id .topic-nav #tnprev,.side-id .topic-nav #tnnext{display:none}
+  /* The switcher becomes a chevron BESIDE the name it would otherwise repeat. Its label is
+     CLIPPED, never display:none -- the accessible name must still read "Rehearsing <topic>"
+     (WCAG 4.1.2), and display:none would delete it from the name computation. */
+  .side-id .tn-trigger{flex:none;min-width:44px;min-height:44px;justify-content:center;
+    flex-wrap:nowrap;padding:0 var(--space-8)}
+  .side-id .tn-eyebrow,.side-id .tn-current{position:absolute;width:1px;height:1px;padding:0;
+    margin:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0;flex:none}
+  /* ---- the companion accordion keeps its place, at a quieter cost ---------------- */
+  .mcomp{margin-bottom:var(--space-10)}
+  /* ---- the cram sheet's close button was 32 WIDE (audit P3-5) --------------------
+     The <=919px `button{min-height:44px}` floor above is height-only, so a square control
+     that is short in the OTHER axis walks straight through it. */
+  .mock-x{min-width:44px}
+}
+
+/* ===== LANDSCAPE EXISTS  (audit P2-7) -- the codebase's FIRST short-viewport query =====
+   At 844x390 the fixed chrome was 133px of a 390px viewport (34%), the identity block was
+   still 185px, and .pane top measured 329 against a band ending at 318 -- so the first
+   screen carried ZERO pixels of the pane. Landscape is what a user turns the phone for when
+   they want MORE room to read a long answer, and it delivered less than portrait.
+
+   Height, not width, is the whole constraint here, so this is the one place a max-height
+   query is the honest instrument. 480px is the standard phone-landscape ceiling (a Pixel 7
+   is 390 tall, an iPhone 15 Pro Max 430); pairing it with max-width:919px keeps it off
+   short desktop windows, which have the sidebar column and do not need it.
+
+   It spends the reclaimed height on the ONE thing landscape is for: the content band. The
+   fixed chrome gives back 22px WITHOUT touching the 44px tap floor (the padding around the
+   controls shrinks, never the controls), and the coaching accordion -- which is metadata,
+   not the task -- stands down until the phone is upright again. */
+@media (max-width:919px) and (max-height:480px){
+  .app{padding-top:51px;padding-bottom:calc(64px + env(safe-area-inset-bottom,0px))}
+  .sidebar .seg{padding:var(--space-3) var(--space-12)}
+  .sidebar .mockcta{padding:var(--space-6) var(--space-12);
+    padding-bottom:calc(var(--space-6) + env(safe-area-inset-bottom,0px))}
+  .side-id{padding:var(--space-3) var(--space-12)}
+  .stage{padding:var(--space-4) var(--space-15) var(--space-70)}
+  /* Coaching is the first thing to yield when the axis is this scarce -- it is still one
+     tap away on the Companion in portrait, and every word of it is duplicated in the
+     desktop rail. Nothing that GRADES or NAVIGATES is hidden here. */
+  .mcomp{display:none}
+  .scrolltop{bottom:calc(64px + env(safe-area-inset-bottom,0px) + var(--space-10))}
+}
+
+/* ===== THE CRAM SHEET ON A PHONE  (audit P2-5, mobile half) =====
+   11.5 screens of scroll (6.98 on the flagship, the SHORTEST sheet in the corpus) whose
+   entire control surface was `x` and Print -- `querySelector('nav,[class*=toc],[class*=jump]')`
+   returned null. The sheet's premise is a glanceable last look on the way in, and the one
+   affordance it shipped was the one a phone cannot use.
+   The strip is built by cram-sheet.js from the sheet's OWN rendered section titles (it reads
+   <deep-cram>'s shadow root), so it can never drift out of sync with a corpus that authors
+   sections per topic -- there is no second list to maintain. */
+.cram-jump{display:none}
+@media (max-width:919px){
+  .cram-jump{display:flex;gap:var(--space-6);overflow-x:auto;-webkit-overflow-scrolling:touch;
+    flex:none;padding:var(--space-8) var(--space-14);background:var(--card);
+    border-bottom:1px solid var(--bd);scrollbar-width:none}
+  .cram-jump::-webkit-scrollbar{display:none}
+  .cram-jump button{flex:none;min-height:36px;white-space:nowrap;border:1px solid var(--bd);
+    border-radius:999px;background:var(--surf);color:var(--mut);cursor:pointer;
+    font:var(--font-weight-bold) 11.5px -apple-system,sans-serif;padding:var(--space-6) var(--space-12)}
+  .cram-jump button.on{border-color:var(--acc);background:var(--accbg);color:var(--accink)}
+  .cram-panel{max-width:none;max-height:100vh;border-radius:0}
+}
+/* Print is the least useful action on a touch device and it sat in the sheet's only control
+   row, beside the close button, at the top of an 11-screen artifact. Demoted on COARSE
+   POINTERS specifically -- not on width -- because that is the property that actually
+   predicts "there is no printer at the end of this gesture"; a small desktop window keeps it. */
+@media (pointer:coarse){
+  .cram-print{display:none}
 }

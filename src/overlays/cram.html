@@ -5,6 +5,11 @@
       <div class="cram-title" id="cramtitle">Cram sheet &middot; Content Pipeline</div>
       <button class="cram-print" id="cramprint" type="button">Print</button>
     </div>
+    <!-- W2 / audit P2-5 (mobile half): 7-11.5 screens of sheet whose entire control surface was
+         "x" and Print. Populated by cram-sheet.js from <deep-cram>'s OWN rendered section titles,
+         so there is no second list to drift; empty (and display:none) above 920px, where the sheet
+         is 4.6 screens and the scrollbar is already a position cue. -->
+    <nav class="cram-jump" id="cramjump" aria-label="Jump to a section"></nav>
     <div class="cram-body" id="cram" tabindex="0" role="region" aria-label="Cram sheet content">
       <deep-cram></deep-cram>
     </div>

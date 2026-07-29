@@ -97,13 +97,38 @@
       '</div>';
   }
 
+  /* THE HERO WEARS ITS DESTINATION'S ROOM (W3 / audit P2-16).
+     It used to paint in #534AB7 -- the RETIRED brand indigo, which styles.css:63 says "lives only
+     in the favicon + badge now" and which belongs to none of the six rooms. The cause: .hm-cta is
+     nested inside .ix-panel, and .ix-panel deliberately re-binds --topic-ink to that neutral for
+     surfaces that ENUMERATE rooms. That rule is correct and stays exactly as it is -- the six room
+     cards and all 46 topic cards below still wear it.
+
+     The hero is not one of those surfaces: it names ONE topic. The same comment block that
+     installs the neutral already reasons that .tn-trigger should wear the current room because
+     "that control names the CURRENT topic"; this is that principle, one element over.
+
+     WHY --rm AND NOT THE INHERITED ACCENT. Re-scoping the neutral so the hero inherits the
+     document's accent does NOT give the destination's room. On this route there IS no current
+     topic: index.html:2 hard-codes data-group="architecture-apis" for first paint and
+     applyIdentity deliberately does not run at boot (see topic-protocol.js), so the root accent
+     on a cold home is a boot constant. Measured 2026-07-29: root --acc #963D86
+     (architecture-apis) while the Start CTA points at event-driven, a messaging-events topic
+     (#006B63). Inheriting would have swapped one meaningless colour for another. --rm is the
+     app's own per-element room binding -- .hm-room and .ix-group are emitted the same way -- so
+     the hero is painted by the topic it will actually open. */
+  function roomStyle(topic) {
+    var g = (topic && topic.identity && topic.identity.group) || '';
+    return ' style="--rm:' + (g ? 'var(--room-' + g + ')' : 'var(--acc)') + '"';
+  }
+
   /* EXACTLY ONE PRIMARY ACTION, autofocused on paint -- so Enter resumes and the daily loop costs
      zero clicks. Cold: start (and its URL now round-trips, per router.js). */
   function ctaHtml() {
     if (!Panels.engaged()) {
       var ids = TopicRegistry.ids();
       var first = TopicRegistry.get(ids[0]);
-      return '<button class="hm-cta" type="button" data-topic="' + ids[0] + '" data-autofocus="1">' +
+      return '<button class="hm-cta" type="button" data-topic="' + ids[0] + '" data-autofocus="1"' + roomStyle(first) + '>' +
         '<span><span class="hm-cta-k">Start</span>' +
         '<span class="hm-cta-t">' + (first ? first.identity.title : ids[0]) + '</span>' +
         '<span class="hm-cta-d">Drill the interviewer\'s follow-ups, rebuild the design from memory, then run a timed mock.</span></span>' +
@@ -117,7 +142,7 @@
        where Enter lands. A pane with no cursor (or none stored) keeps the plain copy. */
     var cur = resumeCursorLine(r.id, lastView());
     var sub = cur ? (vt + ' &middot; ' + cur) : ((vt ? vt + ' &middot; ' : '') + 'pick up where you left off');
-    return '<button class="hm-cta" type="button" ' + (r.hash ? 'data-hash="' + r.hash + '"' : 'data-topic="' + r.id + '"') + ' data-autofocus="1">' +
+    return '<button class="hm-cta" type="button" ' + (r.hash ? 'data-hash="' + r.hash + '"' : 'data-topic="' + r.id + '"') + ' data-autofocus="1"' + roomStyle(r.topic) + '>' +
       '<span><span class="hm-cta-k">Resume</span>' +
       '<span class="hm-cta-t">' + r.topic.identity.title + '</span>' +
       '<span class="hm-cta-d">' + sub + '</span></span>' +

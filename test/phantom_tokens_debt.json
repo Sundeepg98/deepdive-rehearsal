@@ -1,0 +1,5 @@
+{
+  "--rx": "styles.css button::after -- cursor coordinates for the radial spotlight whose setter was DELETED with card-spotlight.js (see base-styles.js). No setter exists anywhere in src/, so the gradient is permanently centred on the 50% fallback. Fixing it means editing a global button:: rule; W3 is the home-identity wave and its contract is zero pixel churn outside home, so it is recorded here rather than done in passing.",
+  "--ry": "styles.css button::after -- the other half of --rx. Same rule, same dead setter, same reason for deferring.",
+  "--tx-dim": "visual-pane.js #vzempty -- the WebGL pane's empty-state text colour, falling back to #8b949e, a grey belonging to no palette in this app. The honest fix points it at --mut2, which CHANGES that surface's colour; the viz pane is excluded from VR by construction (WebGL screenshots return transparent), so the change would ship unphotographed. Out of scope for a home wave."
+}

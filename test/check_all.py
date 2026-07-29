@@ -141,6 +141,18 @@ for name, cmd in [('ascii_guard', ['python3', 'test/ascii_guard.py']),
                   # and unlike the browser check it reaches the :hover, :focus and ::selection
                   # rules no smoke test can navigate to. 0.6s.
                   ('slab_ink', ['python3', 'test/slab_ink.py']),
+                  # phantom_tokens (W3 / audit P3-12): var(--x, <literal>) where --x is defined
+                  # NOWHERE. It renders the fallback, forever, so nothing ever looks wrong -- the
+                  # declaration reads as if it sat on the design scale while it is in fact a magic
+                  # number. Measured pre-fix: --font-size-h3 (0 definitions) sized the LARGEST TYPE
+                  # ON THE HOME SCREEN to a 20 the scale does not contain, and --space-980 (0
+                  # definitions) set nine home max-widths. Renaming a real token is caught by review;
+                  # a token that was never real is caught by nothing, because every consumer already
+                  # carries its own answer. Generous about what counts as defined (any --x:, an
+                  # @property, an inline style attribute, a setProperty at runtime) and blind to
+                  # prose, since styles.css is inlined verbatim and a comment quoting a token is not
+                  # a reference to it. Ratcheted through phantom_tokens_debt.json. Static, ~1s.
+                  ('phantom_tokens', ['python3', 'test/phantom_tokens.py']),
                   ('file_integrity', ['python3', 'test/file_integrity.py']),
                   ('unit_tests', ['python3', 'test/unit_tests.py']),
                   # The visual sim's invariants ARE the teaching points its modes exist to
@@ -465,6 +477,20 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # ever been painted.) room_contrast pins the token; this proves the BUTTON.
                      # 6 rooms x 2 themes x 3 CTAs. ~1m40s.
                      ('cta_contrast', 'test/cta_contrast.cjs'),
+                     # latent_arial (W3 / audit P2-15): a <button> that never re-declares
+                     # font-family does not inherit the app stack -- the UA stylesheet gives form
+                     # controls their own, and every <span> inside the button inherits THAT. So one
+                     # missing declaration re-faces a whole card, invisibly to a code reader. The
+                     # home screen measured 147 of 210 text-bearing elements -- 70.0% -- in Arial,
+                     # with six room cards in the app stack sitting directly above 46 topic cards
+                     # that were not. It does not hardcode "Arial": it PLANTS a bare button and
+                     # reads what the UA gives it, so the same question is asked on the ubuntu
+                     # runner. Three controls run every invocation (a bare probe must be detected,
+                     # a font:inherit probe must not, and the UA font must differ from the app
+                     # stack) and abort rather than pass blind. Ratcheted through
+                     # latent_arial_debt.json -- the sidebar/topic-nav family is W4's, and re-facing
+                     # it moves pixels in seven baselines. 4 surfaces, ~40s.
+                     ('latent_arial', 'test/latent_arial.cjs'),
                      # dock_contrast (D4 #3): the dark Continue dock was flattened from the accent
                      # wash to a recessed --panel so it stops reading as the twin of the accent-
                      # bordered Mock CTA. Its MICRO tier still renders the armed grade legend, whose

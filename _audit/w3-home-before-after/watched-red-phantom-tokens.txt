@@ -1,0 +1,29 @@
+=== PHANTOM TOKENS -- var(--x) where --x is defined nowhere ===
+    scanned       : deepdive_content_pipeline_rehearsal.html (12042684 bytes)
+    tokens defined: 289   referenced: 277
+    self-test     : 2 planted phantoms found; defined / @property / inline-style / setProperty / JS-concatenation all clean
+    phantoms      : 5   allowlisted: 0   NEW: 5   STALE: 0
+      NEW   --font-size-h3         2 use site(s), 2 with a hardcoded fallback
+      NEW   --rx                   1 use site(s), 1 with a hardcoded fallback
+      NEW   --ry                   1 use site(s), 1 with a hardcoded fallback
+      NEW   --space-980            9 use site(s), 9 with a hardcoded fallback
+      NEW   --tx-dim               1 use site(s), 1 with a hardcoded fallback
+
+  5 NEW phantom token(s):
+    --font-size-h3           2 use site(s), 2 with a hardcoded fallback
+        line 2055    ...:.85} .hm-cta-t{display:block;font-size:var(--font-size-h3,20px);font-weight:var(--font-weight-bold)...
+    --rx                     1 use site(s), 1 with a hardcoded fallback
+        line 1163    ...:0;background:radial-gradient(circle at var(--rx,50%) var(--ry,50%),rgba(255,255,255,.28) 0%,transpa...
+    --ry                     1 use site(s), 1 with a hardcoded fallback
+        line 1163    ...radial-gradient(circle at var(--rx,50%) var(--ry,50%),rgba(255,255,255,.28) 0%,transparent 55%);opac...
+    --space-980              9 use site(s), 9 with a hardcoded fallback
+        line 2016    ...*/ #home .ix-panel{width:100%;max-width:var(--space-980,980px);margin:0 auto;max-height:none;border:...
+    --tx-dim                 1 use site(s), 1 with a hardcoded fallback
+        line 75896   ...display:block}' +       '#vzempty{color:var(--tx-dim,#8b949e);font-size:14px;padding:24px 8px}';   }...
+
+  A var() fallback is for a token that MIGHT be absent, not for one
+  that never existed. Point the declaration at a real scale token, or
+  add the token to design-tokens/tokens.json (it is generated -- never
+  hand-edit src/tokens.generated.css).
+
+PHANTOM TOKENS: FAIL

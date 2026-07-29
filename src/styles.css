@@ -967,7 +967,12 @@ button:active::after,.inttog:active::after{opacity:1;transition:opacity var(--du
 <!--@build:include fonts.css-->
 :root{--display:'Space Grotesk',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
 /* v78: distinctive display face on titles only (body + mono coords unchanged) */
-.side-id h1,.stage-head .sh-name,.sr-h{font-family:var(--display)}
+/* W3/P2-14: .hm-cta-t and .hm-h join the registry. A deep traversal counted 198 live
+   display-face elements on a topic route and ZERO on #home -- the one surface every user
+   sees first was the one with no typographic identity, its largest type (.hm-cta-t) sitting
+   at 20px of system UI. The craft was already twelve pixels away; this is a placement fix,
+   not a new face. Nothing here changes colour, weight or motion. */
+.side-id h1,.stage-head .sh-name,.sr-h,.hm-cta-t,.hm-h{font-family:var(--display)}
 /* v79: engineering-canvas dot grid on the work surface (stage) */
 :root{--grid:var(--acc-a08);--canvas:radial-gradient(130% 90% at 50% -25%,#FDFCFA 0%,#FAF9F5 42%,#F5F2EB 100%)}
 html[data-theme="dark"]{--grid:var(--acc-a08);--canvas:radial-gradient(130% 90% at 50% -25%,#19181F 0%,#15141A 42%,#121118 100%)}
@@ -1505,7 +1510,7 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
 .ix-head{display:flex;align-items:flex-start;justify-content:space-between;padding:var(--space-18) var(--space-20) var(--space-14);border-bottom:1px solid var(--bd);flex:0 0 auto}
 .ix-title{font-size:var(--font-size-subhead);font-weight:var(--font-weight-heavy);color:var(--ink);letter-spacing:-.2px}
 .ix-sub{font-size:var(--font-size-micro);color:var(--mut);margin-top:var(--space-2);text-transform:uppercase;letter-spacing:.4px}
-.ix-x{border:0;background:none;font-size:var(--font-size-heading);line-height:var(--line-height-none);color:var(--mut);cursor:pointer;padding:var(--space-2) var(--space-7);border-radius:8px}
+.ix-x{border:0;background:none;font:inherit;font-size:var(--font-size-heading);line-height:var(--line-height-none);color:var(--mut);cursor:pointer;padding:var(--space-2) var(--space-7);border-radius:8px}
 .ix-x:hover{background:var(--accbg);color:var(--acc)}
 .ix-scroll{overflow-y:auto;padding:var(--space-6) var(--space-20) var(--space-20)}
 .ix-group{margin-top:var(--space-16)}
@@ -1523,11 +1528,11 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
    44px (0,0,1, <=919px) at EVERY width, so that block re-asserts 44 on this class by name --
    round 1 shipped without the re-assert and silently shrank a live touch target 44->24px at
    360x740 (pills-r1.json vs pills-parent.json, _audit/2026-07-18-nit-css). */
-.ix-g-cram{margin-left:auto;display:inline-flex;align-items:center;justify-content:center;min-height:24px;font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.02em;text-transform:none;color:var(--acc);background:transparent;border:1px solid var(--bd);border-radius:20px;padding:var(--space-3) var(--space-11);cursor:pointer;transition:background var(--duration-fast) var(--ease-base),border-color var(--duration-fast) var(--ease-base)}
+.ix-g-cram{margin-left:auto;display:inline-flex;align-items:center;justify-content:center;min-height:24px;font:inherit;font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.02em;text-transform:none;color:var(--acc);background:transparent;border:1px solid var(--bd);border-radius:20px;padding:var(--space-3) var(--space-11);cursor:pointer;transition:background var(--duration-fast) var(--ease-base),border-color var(--duration-fast) var(--ease-base)}
 .ix-g-cram:hover{background:var(--accbg);border-color:var(--acc)}
 .ix-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:var(--space-8)}
 .ix-cell{position:relative}
-.ix-c-reset{position:absolute;top:var(--space-9);right:var(--space-9);width:var(--space-22);height:var(--space-22);display:flex;align-items:center;justify-content:center;border:1px solid var(--bd);border-radius:6px;background:var(--card);color:var(--mut);font-size:var(--font-size-caption);line-height:var(--line-height-none);cursor:pointer;opacity:.3;transition:opacity var(--duration-fast) var(--ease-base),color var(--duration-fast) var(--ease-base),border-color var(--duration-fast) var(--ease-base);padding:0}
+.ix-c-reset{position:absolute;top:var(--space-9);right:var(--space-9);width:var(--space-22);height:var(--space-22);display:flex;align-items:center;justify-content:center;border:1px solid var(--bd);border-radius:6px;background:var(--card);color:var(--mut);font:inherit;font-size:var(--font-size-caption);line-height:var(--line-height-none);cursor:pointer;opacity:.3;transition:opacity var(--duration-fast) var(--ease-base),color var(--duration-fast) var(--ease-base),border-color var(--duration-fast) var(--ease-base);padding:0}
 /* THE REVEAL IS :focus-visible, AND THE RING IS NOT DELETED (audit P3-6). This was
    `.ix-c-reset:focus{...;outline:none}`: the outline was removed outright, and what remained was an
    opacity change BYTE-IDENTICAL to the :hover beside it -- so focus and hover were literally the
@@ -1536,7 +1541,7 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
    mouse press from lighting the control up as if it were focused, which is what the sibling
    :hover clause is already for. Guarded by test/focus_ring.cjs, which reads the COMPUTED outline. */
 .ix-cell:hover .ix-c-reset,.ix-c-reset:focus-visible{opacity:1;color:var(--red);border-color:var(--red)}
-.ix-card{display:flex;flex-direction:column;align-items:flex-start;text-align:left;border:1px solid var(--bd);background:var(--bg);border-radius:11px;padding:var(--space-11) var(--space-13);cursor:pointer;transition:border-color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base),transform var(--duration-fast) var(--ease-base);position:relative}
+.ix-card{display:flex;flex-direction:column;align-items:flex-start;text-align:left;border:1px solid var(--bd);background:var(--bg);border-radius:11px;padding:var(--space-11) var(--space-13);cursor:pointer;font:inherit;transition:border-color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base),transform var(--duration-fast) var(--ease-base);position:relative}
 .ix-c-badge{position:absolute;top:var(--space-10);right:var(--space-11);display:inline-flex;align-items:center;gap:var(--space-4);font-size:var(--font-size-nano);font-weight:var(--font-weight-bold);letter-spacing:.02em;color:var(--mut2);white-space:nowrap}
 .ix-c-badge i{width:var(--space-6);height:var(--space-6);border-radius:50%;flex:none}
 .ix-c-wb{margin-left:var(--space-4);color:var(--acc);font-weight:var(--font-weight-black);font-style:normal;font-size:var(--font-size-micro);line-height:var(--line-height-none)}
@@ -1552,7 +1557,7 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
 .ix-goal{flex:1 1 100%;display:flex;flex-direction:column;justify-content:center}
 .ix-goal-top{display:flex;align-items:center;justify-content:space-between;gap:var(--space-10);margin-bottom:var(--space-6)}
 .ix-goal-set{display:inline-flex;align-items:center;gap:var(--space-8)}
-.ix-goal-b{display:inline-flex;align-items:center;justify-content:center;width:var(--space-20);height:var(--space-20);padding:0;border:1px solid var(--bd);border-radius:6px;background:var(--bg);color:var(--ink);font-size:var(--font-size-body);font-weight:var(--font-weight-bold);line-height:var(--line-height-none);cursor:pointer;transition:border-color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base)}
+.ix-goal-b{display:inline-flex;align-items:center;justify-content:center;width:var(--space-20);height:var(--space-20);padding:0;border:1px solid var(--bd);border-radius:6px;background:var(--bg);color:var(--ink);font:inherit;font-size:var(--font-size-body);font-weight:var(--font-weight-bold);line-height:var(--line-height-none);cursor:pointer;transition:border-color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base)}
 .ix-goal-b:hover{border-color:var(--acc);background:var(--accbg)}
 .ix-goal-t{min-width:var(--space-16);text-align:center;font-size:var(--font-size-small);font-weight:var(--font-weight-heavy);color:var(--ink);font-variant-numeric:tabular-nums}
 .ix-goal-bar{height:var(--space-6);background:var(--bd);border-radius:6px;overflow:hidden;margin-bottom:var(--space-7)}
@@ -1566,26 +1571,26 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
    three dead lines nobody noticed for months. */
 .ix-due{display:flex;flex-direction:column;justify-content:center;min-width:var(--space-150)}
 .ix-due-list{display:flex;flex-wrap:wrap;gap:var(--space-6)}
-.ix-due-b{display:inline-flex;align-items:center;gap:var(--space-6);padding:var(--space-5) var(--space-10);border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--ink);font-size:var(--font-size-micro);font-weight:var(--font-weight-semibold);cursor:pointer;transition:border-color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base)}
+.ix-due-b{display:inline-flex;align-items:center;gap:var(--space-6);padding:var(--space-5) var(--space-10);border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit;font-size:var(--font-size-micro);font-weight:var(--font-weight-semibold);cursor:pointer;transition:border-color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base)}
 .ix-due-b:hover{border-color:#d97706;background:rgba(217,119,6,.06)}
 .ix-due-n{display:inline-flex;align-items:center;justify-content:center;padding:0 var(--space-5);height:var(--space-16);border-radius:9px;background:rgba(217,119,6,.14);color:#b45309;font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);font-variant-numeric:tabular-nums}
-.ix-home-btn{display:inline-flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:var(--space-2);padding:var(--space-9) var(--space-15);border:1px solid var(--acc);border-radius:10px;background:var(--bg);color:var(--ink);font-size:var(--font-size-small);font-weight:var(--font-weight-semibold);cursor:pointer;transition:background var(--duration-fast) var(--ease-base),transform var(--duration-fast) var(--ease-base);white-space:nowrap}
+.ix-home-btn{display:inline-flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:var(--space-2);padding:var(--space-9) var(--space-15);border:1px solid var(--acc);border-radius:10px;background:var(--bg);color:var(--ink);font:inherit;font-size:var(--font-size-small);font-weight:var(--font-weight-semibold);cursor:pointer;transition:background var(--duration-fast) var(--ease-base),transform var(--duration-fast) var(--ease-base);white-space:nowrap}
 .ix-home-btn:hover{background:var(--accbg)}
 .ix-home-btn:active{transform:translateY(1px)}
 .ix-home-btn-k{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.09em;text-transform:uppercase;color:var(--acc)}
 .ix-weak{display:flex;flex-direction:column;justify-content:center;min-width:var(--space-150)}
 .ix-weak-list{display:flex;flex-wrap:wrap;gap:var(--space-6)}
-.ix-weak-b{display:inline-flex;align-items:center;gap:var(--space-6);padding:var(--space-5) var(--space-10);border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--ink);font-size:var(--font-size-micro);font-weight:var(--font-weight-semibold);cursor:pointer;transition:border-color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base)}
+.ix-weak-b{display:inline-flex;align-items:center;gap:var(--space-6);padding:var(--space-5) var(--space-10);border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit;font-size:var(--font-size-micro);font-weight:var(--font-weight-semibold);cursor:pointer;transition:border-color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base)}
 .ix-weak-b:hover{border-color:var(--acc);background:var(--accbg)}
 .ix-weak-n{display:inline-flex;align-items:center;justify-content:center;min-width:var(--space-16);height:var(--space-16);padding:0 var(--space-4);border-radius:9px;background:#dc2626;color:#fff;font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy)}
 .ix-weak-concepts{margin-top:var(--space-8);display:flex;flex-wrap:wrap;gap:var(--space-5)}
 .ix-wc{font-size:var(--font-size-nano);color:var(--mut);background:var(--bg);border:1px solid var(--bd);border-radius:5px;padding:var(--space-2) var(--space-7);line-height:var(--line-height-snug)}
 .ix-foot{padding:var(--space-11) var(--space-16) var(--space-3);text-align:center;border-top:1px solid var(--bd);margin-top:var(--space-6)}
-.ix-reset{font-size:var(--font-size-micro);font-weight:var(--font-weight-semibold);color:var(--mut);background:none;border:none;cursor:pointer;padding:var(--space-6) var(--space-12);border-radius:7px;transition:color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base)}
-.ix-io{font:var(--font-weight-semibold) 11px -apple-system,system-ui,sans-serif;color:var(--mut);background:transparent;border:1px solid var(--bd);border-radius:7px;padding:var(--space-5) var(--space-11);cursor:pointer;transition:color var(--duration-fast) var(--ease-base),border-color var(--duration-fast) var(--ease-base)}
+.ix-reset{font:inherit;font-size:var(--font-size-micro);font-weight:var(--font-weight-semibold);color:var(--mut);background:none;border:none;cursor:pointer;padding:var(--space-6) var(--space-12);border-radius:7px;transition:color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base)}
+.ix-io{font:inherit;font-size:var(--font-size-micro);font-weight:var(--font-weight-semibold);color:var(--mut);background:transparent;border:1px solid var(--bd);border-radius:7px;padding:var(--space-5) var(--space-11);cursor:pointer;transition:color var(--duration-fast) var(--ease-base),border-color var(--duration-fast) var(--ease-base)}
 .ix-undo{position:fixed;left:50%;bottom:var(--space-24);transform:translateX(-50%) translateY(12px);z-index:var(--z-popup);display:none;align-items:center;gap:var(--space-14);padding:var(--space-11) var(--space-14) var(--space-11) var(--space-18);background:var(--ink);color:var(--card);border-radius:11px;box-shadow:0 12px 30px -8px rgba(20,18,40,.5);font-size:var(--font-size-caption);font-weight:var(--font-weight-medium);opacity:0;transition:opacity var(--duration-base) var(--ease-base),transform var(--duration-base) var(--ease-base)}
 .ix-undo.show{display:flex;opacity:1;transform:translateX(-50%) translateY(0)}
-.ix-undo-btn{border:0;background:var(--acc);color:var(--on-slab);font:var(--font-weight-bold) 12px -apple-system,system-ui,sans-serif;padding:var(--space-6) var(--space-13);border-radius:8px;cursor:pointer;transition:filter var(--duration-fast) var(--ease-base)}
+.ix-undo-btn{border:0;background:var(--acc);color:var(--on-slab);font:inherit;font-size:var(--font-size-caption);font-weight:var(--font-weight-bold);padding:var(--space-6) var(--space-13);border-radius:8px;cursor:pointer;transition:filter var(--duration-fast) var(--ease-base)}
 .ix-undo-btn:hover{filter:brightness(1.1)}
 .cmp-fold{position:absolute;top:var(--space-12);right:var(--space-12);width:var(--space-24);height:var(--space-24);display:flex;align-items:center;justify-content:center;border:1px solid var(--bd);border-radius:7px;background:var(--card);color:var(--mut);font-size:var(--font-size-body);line-height:var(--line-height-none);cursor:pointer;opacity:.45;transition:opacity var(--duration-fast) var(--ease-base),color var(--duration-fast) var(--ease-base),border-color var(--duration-fast) var(--ease-base);z-index:2;padding:0}
 /* Same fix, same reason, as .ix-c-reset above -- and NOTE THE SPECIFICITY, which is why this one
@@ -1675,7 +1680,7 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
    stripe is built from the FLAT --room-* map, which does not vary with the current topic, so
    this button looks identical from every room in the app -- and now says what it does instead
    of impersonating whichever topic you happened to come from. */
-.ix-cross{display:flex;align-items:center;gap:var(--space-12);width:100%;text-align:left;padding:var(--space-13) var(--space-16) var(--space-13) var(--space-22);margin:0 0 var(--space-12);border:1px solid var(--acc);border-radius:12px;background:linear-gradient(135deg,var(--accbg) 0%,var(--acc-a03) 100%);cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),box-shadow var(--duration-base) var(--ease-base);position:relative;overflow:hidden}
+.ix-cross{display:flex;align-items:center;gap:var(--space-12);width:100%;text-align:left;padding:var(--space-13) var(--space-16) var(--space-13) var(--space-22);margin:0 0 var(--space-12);border:1px solid var(--acc);border-radius:12px;background:linear-gradient(135deg,var(--accbg) 0%,var(--acc-a03) 100%);cursor:pointer;font:inherit;transition:transform var(--duration-fast) var(--ease-base),box-shadow var(--duration-base) var(--ease-base);position:relative;overflow:hidden}
 .ix-cross::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(180deg,var(--room-messaging-events) 0 16.66%,var(--room-data-storage) 16.66% 33.33%,var(--room-reliability-observability) 33.33% 50%,var(--room-platform-infra) 50% 66.66%,var(--room-architecture-apis) 66.66% 83.33%,var(--room-security-tenancy) 83.33% 100%)}
 .ix-cross:hover{transform:translateY(-1px);box-shadow:0 6px 18px -6px var(--acc-a30)}
 .ix-cross-tx{flex:1}
@@ -1816,7 +1821,7 @@ html[data-view="home"] .cmp-reopen{display:none}
    own border, shadow, transform and an inner scroller. On a page it gets the document scroll and
    the whole viewport instead -- which is the entire point. On a phone the modal showed ONE of 46
    topic cards; the page shows the library with a single document scroll. */
-#home .ix-panel{width:100%;max-width:var(--space-980,980px);margin:0 auto;max-height:none;border:0;
+#home .ix-panel{width:100%;max-width:var(--space-980);margin:0 auto;max-height:none;border:0;
   box-shadow:none;background:transparent;transform:none;overflow:visible;display:block}
 #home .ix-scroll{overflow:visible;max-height:none}
 #home .ix-foot{border-top:1px solid var(--bd);margin-top:var(--space-28)}
@@ -1824,7 +1829,7 @@ html[data-view="home"] .cmp-reopen{display:none}
 /* the home's own header -- the sidebar is hidden on this route, so Search / Shortcuts / Theme /
    Tools need a home of their own or they are simply gone. */
 .hm-top{display:flex;align-items:center;justify-content:space-between;gap:var(--space-14);
-  max-width:var(--space-980,980px);margin:0 auto var(--space-24);flex-wrap:wrap}
+  max-width:var(--space-980);margin:0 auto var(--space-24);flex-wrap:wrap}
 .hm-brand{display:inline-flex;align-items:center;gap:var(--space-10);font-weight:var(--font-weight-bold);
   letter-spacing:.04em;text-transform:uppercase;font-size:var(--font-size-caption);color:var(--acc)}
 .hm-acts{display:flex;gap:var(--space-8);flex-wrap:wrap}
@@ -1838,29 +1843,54 @@ html[data-view="home"] .cmp-reopen{display:none}
 /* audit #13 -- the cold-open value prop: a quiet identity line with the key phrase in ink, so it
    reads at a glance without shouting. Cold users only (home-view.js gates it), so it never taxes a
    returning user's one-line-of-state, one-decision home. */
-.hm-lead{max-width:var(--space-980,980px);margin:0 auto var(--space-16);font-size:var(--font-size-body);
+.hm-lead{max-width:var(--space-980);margin:0 auto var(--space-16);font-size:var(--font-size-body);
   color:var(--mut);line-height:var(--line-height-normal)}
 .hm-lead b{color:var(--ink);font-weight:var(--font-weight-semibold)}
 
 /* ONE line of state, then ONE decision. Telemetry (goal / streak / trend / due) sits BELOW the
    decision, not above it: on the old surface it was ~40-45% of everything above a single choice. */
-.hm-state{max-width:var(--space-980,980px);margin:0 auto var(--space-18)}
+.hm-state{max-width:var(--space-980);margin:0 auto var(--space-18)}
 .hm-h{font-size:var(--font-size-caption);text-transform:uppercase;letter-spacing:.08em;
   color:var(--mut);font-weight:var(--font-weight-bold);margin:0 0 var(--space-12)}
+/* --rm, not --acc: the hero is painted by the room of the topic it OPENS, which home-view.js
+   stamps on the element (roomStyle(), and see its note). --acc here is .ix-panel's deliberate
+   all-rooms neutral -- correct for the six room cards and the 46-topic library below, wrong for
+   a control that names one topic. --on-slab is unchanged and still the contract ink: computed
+   over all six rooms it is 6.20-6.40:1 in light (white) and 7.29-7.55:1 in dark (#1A1622), so
+   whichever room the hero wears it clears AA with room to spare -- the palette is contrast-tuned
+   and room_contrast.py owns the token side of that. For reference the retired indigo it replaces
+   was 6.93:1 light / 6.66:1 dark, so dark improves and light stays well above the 4.5 floor. */
 .hm-cta{display:flex;width:100%;align-items:center;gap:var(--space-14);text-align:left;
-  padding:var(--space-18) var(--space-20);margin:0 auto var(--space-26);max-width:var(--space-980,980px);
-  border:1px solid var(--acc);border-radius:14px;background:var(--acc);color:var(--on-slab);cursor:pointer;
-  font:inherit;min-height:44px;box-shadow:0 10px 30px -12px var(--acc)}
+  padding:var(--space-18) var(--space-20);margin:0 auto var(--space-26);max-width:var(--space-980);
+  border:1px solid var(--rm,var(--acc));border-radius:14px;background:var(--rm,var(--acc));color:var(--on-slab);cursor:pointer;
+  font:inherit;min-height:44px;box-shadow:0 10px 30px -12px var(--rm,var(--acc))}
 .hm-cta:hover{filter:brightness(1.06)}
-.hm-cta:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+/* ROUND 2. This button carries data-autofocus and is FOCUSED ON PAINT, so :focus-visible is its
+   rest state -- the state every screenshot and every real first view actually shows. The generic
+   button:focus-visible (:53) has specificity (0,1,1) and so beat .hm-cta's (0,1,0) for box-shadow:
+   the halo was var(--acc-a15)/var(--acc-a20), which inside .ix-panel is the RETIRED INDIGO, and
+   the room-coloured drop shadow above only ever painted while blurred. Measured on the shipped
+   round-1 build: a #534AB7 ring hugging a #006B63 fill, byte-identical to pre-wave at x=147-149
+   on scanline y=233 -- the wave had made an old incoherence newly visible instead of removing it.
+   Same geometry as the generic rule, same colour-mixing mechanism the --acc-a* tokens use
+   (styles.css:106), sourced from --rm. The outline stays var(--ink): it is already neutral by
+   intent and reads against every room. The global rule at :53 is untouched. */
+.hm-cta:focus-visible{outline:3px solid var(--ink);outline-offset:3px;
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--rm,var(--acc)) 15%,transparent),
+    0 0 16px -4px color-mix(in srgb,var(--rm,var(--acc)) 20%,transparent)}
 .hm-cta-k{display:block;font-size:var(--font-size-micro,11px);text-transform:uppercase;
   letter-spacing:.1em;font-weight:var(--font-weight-bold);opacity:.85}
-.hm-cta-t{display:block;font-size:var(--font-size-h3,20px);font-weight:var(--font-weight-bold)}
+/* W3/P3-12: both of these sized themselves from var(--font-size-h3,20px) -- and --font-size-h3
+   has NEVER been defined, so the largest type on the home screen was its own hardcoded fallback,
+   at a 20 the scale does not contain (18 -> 21 -> 24). On the real scale: the title takes
+   --font-size-display (24px, the same rung .sh-name and .cmp-topic wear), the arrow
+   --font-size-heading (21px). Guarded by test/phantom_tokens.py. */
+.hm-cta-t{display:block;font-size:var(--font-size-display);font-weight:var(--font-weight-bold)}
 .hm-cta-d{display:block;font-size:var(--font-size-caption);opacity:.85;margin-top:2px}
-.hm-cta-ar{margin-left:auto;font-size:var(--font-size-h3,20px)}
+.hm-cta-ar{margin-left:auto;font-size:var(--font-size-heading)}
 
 /* THE SIX ROOMS. A cold user asks "what is in here?" -- six rooms answers that; 46 tiles does not. */
-.hm-rooms{max-width:var(--space-980,980px);margin:0 auto var(--space-30)}
+.hm-rooms{max-width:var(--space-980);margin:0 auto var(--space-30)}
 .hm-room-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:var(--space-12)}
 .hm-room{display:flex;flex-direction:column;gap:var(--space-8);align-items:stretch;text-align:left;
   padding:var(--space-14) var(--space-16);border:1px solid var(--bd);border-radius:12px;background:var(--card);
@@ -1878,11 +1908,11 @@ html[data-view="home"] .cmp-reopen{display:none}
   font-size:var(--font-size-caption);color:var(--mut)}
 .hm-room-weak{color:#dc2626;font-weight:var(--font-weight-bold)}
 
-.hm-sec{max-width:var(--space-980,980px);margin:0 auto var(--space-26)}
+.hm-sec{max-width:var(--space-980);margin:0 auto var(--space-26)}
 /* below the fold: the telemetry the old surface put ABOVE the decision */
-.hm-tele{max-width:var(--space-980,980px);margin:0 auto var(--space-26);padding-top:var(--space-20);
+.hm-tele{max-width:var(--space-980);margin:0 auto var(--space-26);padding-top:var(--space-20);
   border-top:1px solid var(--bd)}
-.hm-skip{display:flex;align-items:center;gap:var(--space-8);max-width:var(--space-980,980px);
+.hm-skip{display:flex;align-items:center;gap:var(--space-8);max-width:var(--space-980);
   margin:0 auto var(--space-20);font-size:var(--font-size-caption);color:var(--mut);min-height:44px}
 .hm-skip input{width:16px;height:16px;accent-color:var(--acc);cursor:pointer}
 .hm-skip label{cursor:pointer}

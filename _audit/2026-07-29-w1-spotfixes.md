@@ -1,0 +1,388 @@
+# W1 — "Finish the spot fixes" · freeze report
+
+**Branch** `frontend/w1-spotfixes` · **base** `437564c` · **builder** w11-builder · **2026-07-29**
+**Roadmap** `_audit/2026-07-29-frontend-audit.md` (W1) · **brief** `_TEAM_LEAD_W11_BRIEF.md`
+
+**Status: 13/13 fixes landed, 5/5 guards watched RED then green, gate 61/62.**
+The one red is `visual_regression`, and it is **not a regression** — see
+[VR churn](#vr-churn-12-of-16-baselines-and-why-zero-diff-was-never-reachable). Every changed
+pixel belongs to two of the thirteen fixes, which change what the screen says by design.
+
+---
+
+## The headline
+
+Three things in this wave are worth a reader's attention before the item list:
+
+1. **The brief's ordering risk on P2-1 was discharged by construction, not by luck.**
+   `Router.navigate()` `pushState()`s and `emit()`s **in the same tick** — it never waits on a
+   `hashchange` (which `pushState` does not fire anyway). So `goView` completes `switchTab` before
+   `flowGo` continues, and `rec.weak` / `rec.wbreset` keep their original ordering exactly. That is
+   a property of today's router, not a law, so `flow_data` 7b now **pins** it by spying on the side
+   effects and recording the hash at the moment they fire.
+
+2. **P3-2 diverges from the brief's prescribed mechanism.** The brief said to derive all three
+   scoreboard tiles from the restored record. Disk disagreed in three independent ways, so the same
+   defect was closed from the other side. [Full reasoning below.](#p3-2--scoreboard-tiles-one-basis)
+
+3. **Two audit receipts are wrong, and were corrected against disk while building the instruments.**
+   Neither changes a finding; both change what the fix had to be.
+   [Details.](#receipt-corrections)
+
+---
+
+## The 13 fixes, with before -> after receipts
+
+Every "before" is a measurement of `437564c`; every "after" is a measurement of the built
+deliverable at this branch's tip.
+
+### P2-1 · router bypass — rank-1 value/effort
+`src/scripts/app/session-progress.js` `flowGo()` called `switchTab(rec.tab)` directly, skipping the
+contract written two files over at `shell.js:71-73`. It is the **one funnel** behind six
+affordances: the dock CTA, the `n` key, all four terminal `.flow-go` strips, and the mobile NextUp
+chip. Now calls `goView(rec.tab)`.
+
+| after pressing `n` on a fresh topic | before | after |
+|---|---|---|
+| `location.hash` | `#walk` (frozen) | `#drill` |
+| `document.title` | `Walkthrough — …` (frozen) | `Probe Drill — Deep Rehearsal` |
+| `history.length` | unchanged | +1 |
+| Back | skipped the navigation | returns to `#walk`, pane follows |
+| **reload** | landed back on `walk` | lands on `drill` |
+| **`#copylink`** | copied the pane you left | copies `…#drill` |
+
+The last two are the audit's named downstream guarantees; both verified live, not inferred.
+
+### P2-2 · the dead ease token
+`src/styles.css:75` was literally `--ease-spring:var(--ease-spring)`. A var() cycle is invalid at
+computed-value time, so it resolved to the **empty string** and shadowed the real curve in
+`tokens.generated.css:154`. The damage was not a wrong curve: an invalid `var()` inside a
+**shorthand** resolves the whole declaration to `unset`.
+
+| computed | before | after |
+|---|---|---|
+| `--ease-spring` on `:root` | `""` | `cubic-bezier(.34,1.56,.64,1)` |
+| `.mock-x` `transition` | `all 0s` (all five declarations dead) | `transform .15s spring, background .2s, color .2s, border-color .2s, box-shadow .2s` |
+| `.inttog-dot::after` (the toggle knob) | `all 0s` — the knob **teleported** while its track animated over 250ms | `left .25s spring, transform .25s spring` |
+
+Both themes, before and after. Line 74 (`--ease-out:var(--ease-glide)`) is a legitimate alias and
+was kept.
+
+### P2-3 · the shadow focus ring, generalised
+Added `button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}` to `BASE_SHEET`
+(`base-styles.js`), which all 17 shadow hosts adopt. Prior #20 had fixed this for one class; the
+cause is structural, so the fix belongs to the pattern.
+
+| computed under `:focus-visible` | before | after |
+|---|---|---|
+| `#adv` (Reveal answer) | `1px auto rgb(16,16,16)` @ offset 0 | `2px solid var(--acc)` @ offset 2px |
+| `#jg` (Solid — the most-pressed control in the app) | `1px auto rgb(16,16,16)` @ offset 0 | `2px solid var(--acc)` @ offset 2px |
+
+### P2-10 · seg strip AT state
+`shell.js` switchTab loop now writes `aria-current` alongside the class. **Removed**, not set to
+`"false"`, on inactive tabs — `aria-current="false"` is a defined value that AT announces as noise
+on every tab. Before: `ariaCurrent: null` on all 10 tabs. After: exactly one `aria-current="true"`,
+verified on all 10 tabs driven through the real router. Zero visual change.
+
+### P2-13 · motion hierarchy
+`.pane.on` was the app's **longest** transition (500ms) on its **most-repeated** action, while a
+whole topic switch took 150ms. Now `var(--duration-moderate)`; computed `panein 0.25s`.
+
+**The blur is gone too.** Per-frame sampling in the audit caught opacity 0.50 at `blur(0.99px)` at
+98ms and a still-blurred frame at 482ms — blur, not opacity, is what made the first ~100ms
+unreadable, and halving the duration alone would have concentrated the smear over a *larger*
+fraction of the animation. Fading text is legible; smeared text is not. It also drops a full-pane
+filter pass per switch. At rest the keyframes already ended at `opacity:1 / blur(0)` and nothing
+uses `fill:forwards`, so the resting style is byte-identical — this item contributes **zero** VR
+churn, confirmed.
+
+### P1-2 + P2-9 · the stage head becomes a heading, and focus goes there
+`src/index.html:122` is now
+`<div class="stage-head" id="stagehead" role="heading" aria-level="2" tabindex="-1">`, and
+`goView()` focuses it after navigating (`preventScroll`, because `switchTab` has just pinned the
+stage to the top).
+
+| | before | after |
+|---|---|---|
+| `renderedHeadings` on a topic route | **1** (the sidebar `h1`) | 2 |
+| `#stagehead` role / aria-level | `null` / `null` | `heading` / `2` |
+| `document.activeElement` after a pane jump | `BODY`, 28–35 tab stops upstream | `#stagehead`, at the top of the content |
+
+**The hotkey risk was checked, not assumed.** With focus parked on `#stagehead`: `q`/`w`/`e`/`r`/`o`
+all still jump panes, `Space` still reveals in the drill, and `3` still grades. The global keymap
+gates on `KeyGuard.isTyping`, and a `role="heading"` div consumes no keys.
+
+This is not a new idiom — `topic-protocol.js:198` already focuses this exact element on every
+**topic** switch. P2-9 extends that to **view** switches, the axis users drive far more often.
+
+### P3-6 · the three chrome buttons that deleted the ring
+`.ix-c-reset`, `.cmp-fold`, `.cmp-reopen` each wrote `:focus{outline:none}`. What survived was an
+opacity change **byte-identical to their own `:hover`** — focus and hover were the same event. All
+three are now `:focus-visible` with the `outline:none` removed, so the app's own
+`button:focus-visible` (`styles.css:53`) reaches them.
+
+The specificity trap was real and is why a generic rule alone could not have fixed it:
+`.cmp-fold:focus` is (0,2,0) and **outranks** `button:focus-visible` (0,1,1). The declaration had
+to be removed in place. Before: computed `outline-style: none` on all three. After: `2px solid
+var(--acc)` @ 2px on all three.
+
+### P3-8 · landmark names
+`<aside class="sidebar">` -> `aria-label="Topic controls"`; `<main class="stage">` ->
+`aria-label="Study content"`. Matches the app's existing landmark voice (`nav#topicnav` is "Switch
+topic", the companion aside is "Rehearsal companion"). Before: both unnamed — two complementary
+landmarks with only one named, which is worse than none named.
+
+### P3-7 · the text-size control
+Announces through `ViewManager.announce` (the app's own polite region — this is a discrete user
+action, so unlike the dock CTA it cannot collide on a microtask and needs no dedicated region), and
+its bounds use `aria-disabled` so the control **stays in the tab order**.
+
+| | before | after |
+|---|---|---|
+| utterances across 8 presses | **0** | `Text size 108%` … `Text size 116%, largest` … `Text size 85%, smallest` |
+| at the ceiling | `disabled` — silently left the tab order | `aria-disabled="true"`, `disabled=false`, still focusable and tabbable |
+
+`.textzoom-btn:disabled` -> `[aria-disabled="true"]` in CSS, so the dimmed look is unchanged.
+
+### P3-9 · the dock motion contract
+The element whose whole job is "the situation changed" was the least responsive control in the app.
+
+| computed | before | after |
+|---|---|---|
+| `.nd-go` `transition` | `all 0s` | `transform .15s glide, color .15s, opacity .15s` |
+| `.nd-go:active` | **did not exist** | `translateY(1px)`, `opacity .75` |
+| dock guidance swap | instantaneous substitution | `.nd-swap` entrance, replayed **only** when the rendered CTA actually differs |
+
+The swap uses the app's established remove -> reflow -> add replay (as `.stage-head.headin` and
+`.stage.topicswap` do) and is compared against the string *we* wrote, not `innerHTML`, which the
+parser normalises and would report as changed every time. Token-driven, so the global
+reduced-motion rule neutralises it for free. `__ndLast` is cleared whenever the dock goes quiet, so
+returning to the same recommendation still animates — the dock coming back *is* a change.
+
+### P3-1 · first-run dock copy
+New `pickRec` rung **4a**, a strict refinement of rung 4. At `dDone===0` on a brand-new topic:
+
+- before: `KEEP GOING / Back to the drill -> / 0 of 21 graded` — asserting a return that never
+  happened, beside a receipt that contradicted the button.
+- after: `START HERE / Start the drill -> / 0 of 22 graded` — and the receipt now agrees.
+
+"Start" is the app's own cold-start verb (`home-view.js:107`, the home CTA's kicker is Start vs
+Resume). **Gated on `dTot>0`**: a topic with an empty bank also has `dDone===0`, and pre-fix it fell
+through to the whiteboard rung, which is still where it belongs. All three cases pinned in
+`flow_data` (4a fires cold; rung 4 still fires at `dDone=10`; an empty bank is not handed a drill).
+
+### P3-2 · scoreboard tiles, one basis
+**This is the item that diverges from the brief, deliberately.** The brief said to derive all three
+tiles from the restored record. Three things on disk say otherwise:
+
+1. **`test/scoreboard_resume.cjs` already pins the opposite** — it asserts the tiles read `0`/`0` on
+   resume under a "This run" caption, and `drill/logic.js:126-131` documents *choosing* relabelling
+   over seeding, in prose, as the audit #22 fix.
+2. **It would walk straight into the microtask freshness law.** `renderD` runs *before* the drill
+   dispatches `drillgraded`, which is what fires `Progress.snapshot`. Record-derived tiles would
+   therefore lag **one grade behind every grade** — a fresh, visible regression.
+3. **It is not a resume defect.** The probe nav (`drill/logic.js:367`) sets `this.di` directly, so
+   jumping to probe 15 breaks the sum on a **fresh** run, no reload involved. A record-based fix
+   would not have closed that at all.
+
+The actual mixed basis is **LEFT**: `cards.length - this.di` is a *position* fact rendered into a
+*tally* row whose other two tiles count this run. The two coincide on a clean sequential run —
+`judge()` pushes a result and advances `di` together — which is exactly why this survived.
+
+Fix: count the remainder over `results.length`, in both places that computed it (the tile at `:519`
+and the **spoken** readout at `:729`, which had the identical defect while its comment promised the
+two could never disagree — they agreed with each other and contradicted themselves).
+
+| at probe 4/21 after a mid-drill reload | before | after |
+|---|---|---|
+| tiles | `0 SOLID · 0 REVISIT · 18 LEFT` -> **18 ≠ 21** | sum equals the working set |
+| clean sequential run | — | **byte-identical** (`di === results.length`) |
+
+Verified live both before and after a real mid-drill reload. `scoreboard_resume` still passes
+untouched, and `di` still drives the progress bar, the probe nav and the debrief terminal — the
+questions it actually answers.
+
+### P3-3 · pip offset
+The vertical sidebar list inherited `left:var(--space-5)` from the horizontal strip, where the pip
+sits in a corner with nothing beside it.
+
+| measured at 1440px | before | after |
+|---|---|---|
+| pip span inside the button | x = 5–11px | x = 2–8px |
+| label starts at | x = 12px | x = 12px |
+| **gap** | **1px** | **4px** |
+
+Stays inside the 12px gutter the button's own padding creates, so nothing reflows and the
+zero-box-delta contract on the seg strip is untouched.
+
+---
+
+## The five guards — watched RED, then green
+
+All reds were captured against `437564c` **before** any fix existed; the guards were committed in
+`ffcbd80`, one commit ahead of the fixes, so the red is reproducible from history. No red depends on
+fonts, wall-clock or load — every assertion is a computed-style, attribute or structural read.
+
+### G1 `token_liveness` (new) — RED 8, now PASS 10
+```
+FAIL [light] arm 1: --ease-spring -> "" (empty: invalid at computed-value time, e.g. a var() cycle)
+FAIL [light] arm 2: --ease-spring -> transition 0s ease (expected 0.25s)
+FAIL [light] arm 3: .mock-x           -- transition-property=all duration=0s timing=ease
+FAIL [light] arm 3: .inttog-dot::after -- transition-property=all duration=0s timing=ease
+FAIL [dark]  ... the same four
+```
+Four arms: every declared token computes non-empty; every token survives a `transition` **shorthand**
+(the arm that models the real damage — and written so a legitimately-0ms token cannot fake a pass:
+ease tokens are checked by duration, duration tokens by timing-function); the two shipped elements
+the audit measured dead; all of it again in dark. The registry-non-empty arm passed in the red run,
+which is what proves the walk was finding tokens rather than finding nothing.
+
+### G2 `flow_data` §7 (extended) — RED 6, now PASS
+```
+FAIL 7a `n` moves the URL HASH to the target pane
+FAIL 7a `n` updates the document TITLE
+FAIL 7a `n` pushes a HISTORY entry, so Back returns to where you were
+FAIL 7a Back after `n` returns to the pane you came from
+FAIL 7b ORDERING: by the time drill.weak() fires, the ROUTER has already landed on #drill
+     -> {"which":"drill.weak","hash":"#home","title":"Home - Deep Rehearsal","on":"drill"}
+FAIL 7b ORDERING: by the time wb.rerunMissed() fires, the ROUTER has already landed on #wb
+```
+`7a` drives a real `n` keypress. `7b` is the ordering pin: it spies on the side effects themselves
+and records the hash **at the moment they fire**, so if navigation ever becomes asynchronous the spy
+sees the old hash and this goes red instead of the drill's weak set being silently wiped by the pane
+flush on its way in. The pre-fix detail above shows exactly that shape — `on:"drill"` (switchTab had
+run) with `hash:"#home"` (the router had not).
+
+### G3 `seg_state` (new) — RED 20, now PASS 31
+```
+FAIL [walk]  the active tab exposes aria-current="true" to AT -- aria-current = null
+FAIL [drill] ... and so on, for all 10 tabs
+```
+Walks every tab through the real router. Walking all of them is the anti-vacuous arm: an attribute
+hardcoded on one button would pass there and fail on the other nine.
+
+### G4 `focus_ring` (new) — RED 5/5, now PASS 5
+```
+FAIL #adv          -- outline=1px auto rgb(16, 16, 16) offset=0px  vs --acc rgb(150, 61, 134)
+FAIL #jg           -- outline=1px auto rgb(16, 16, 16) offset=0px  vs --acc rgb(150, 61, 134)
+FAIL .ix-c-reset   -- outline=3px none rgb(107, 104, 98) offset=2px
+FAIL .cmp-fold     -- outline=3px none rgb(107, 104, 98) offset=2px
+FAIL .cmp-reopen   -- outline=3px none rgb(107, 104, 98) offset=2px
+```
+Asserts the **app's** ring (solid, >=2px, `var(--acc)` resolved in-page), not merely
+`outline-style !== none` — the weaker form would pass on the very UA hairline this exists to
+eliminate. Every arm also asserts `:focus-visible` genuinely matched.
+
+### G5 `heading_tree` (new) — RED 6, now PASS 8
+```
+PASS POSITIVE CONTROL: the scanner finds the home screen's section headings (2 rendered h2s)
+FAIL [event-driven/walk]  renderedHeadings = 1: [{"tag":"h1","text":"Event-Driven Backbone"}]
+FAIL [event-driven/drill] renderedHeadings = 1
+FAIL [notifications/walk] renderedHeadings = 1
+FAIL [notifications/drill] renderedHeadings = 1
+FAIL #stagehead is exposed as a level-2 heading -- role=null aria-level=null name="MECHANICSWalkthrough"
+FAIL #stagehead's role/aria-level/tabindex are STATIC in the shipped markup
+     -> the shipped HTML declares: "<div class=\"stage-head\" id=\"stagehead\">"
+```
+The control passing while the topic routes failed is the shape of evidence that says *the app is
+wrong, not the instrument* — and it stays wired in permanently, because a heading scanner that has
+quietly stopped finding headings is indistinguishable from a page that has none.
+
+---
+
+## Receipt corrections
+
+Two audit claims did not survive contact with disk. Neither changes a finding; both changed what
+the fix had to be, so they are recorded here and in the guards' own comments.
+
+1. **`#stagehead` DOES carry `tabindex="-1"` at runtime.** The audit's erratum said it was absent
+   "anywhere". `topic-protocol.js:198` (`applyIdentity`) sets it and focuses the element on every
+   **topic** switch. Only the **static markup** lacked it — which still matters, because a
+   runtime-only attribute does not exist until the first `applyIdentity`, and `goView` can fire
+   first. So the attribute was added to `src/index.html` and G5 pins the **shipped markup**, not the
+   runtime value. Consequence for P2-9: its "prerequisite" was already half-built, and the fix is an
+   extension of an existing idiom rather than a new mechanism.
+2. **The `#home` positive control is TWO rendered `h2`s, not "h1 + two h2s".** The home renders no
+   `h1` at all (`home-view.js` emits `<h2 class="hm-h">` section heads only), and `.app` is
+   `display:none` on `#home` so the sidebar `h1` has no layout boxes. The control's job is unchanged
+   and it still does it.
+
+---
+
+## VR churn: 12 of 16 baselines, and why "zero-diff" was never reachable
+
+**Not rebaselined.** Per the brief, this stops here and reports.
+
+The wave was predicted zero-diff. That prediction cannot hold, because **two of the thirteen fixes
+change what the screen says**: P3-1 rewrites the first-run recommendation copy, and P3-3 moves a
+painted marker 3px. You cannot move a pixel and also not move it. The zero-diff expectation was
+right about the other eleven and wrong about these two.
+
+| | baselines | changed px | region |
+|---|---|---|---|
+| desktop (walk-light/dark, sys-light, num-light, wb-light, 5x room-*) | 10 | ~1180 each (0.115%) | one box at (20,239) — the sidebar dock **and** the pip on the Probe Drill tab |
+| mobile (m-walk-light/dark) | 2 | 2800 / 2058 | (44,779) — the NextUp chip's kicker, plus its bottom-bar neighbour shifting as the chip's width changed |
+| **clean** | **4** — drill-light, drill-dark, home-light, home-dark | 0 | — |
+
+**The four clean baselines are corroborating evidence, not luck.** On `drill-*` the recommendation
+*is* the drill, so the pip is suppressed on the active tab and the dock is in its MICRO tier
+(hidden) — neither changed surface renders. `home-*` has no sidebar and no dock at all. Exactly the
+baselines that cannot show the change are the ones that don't.
+
+Both diff images were read directly. The desktop diff shows red in precisely two places: overlapping
+`KEEP GOING`/`START HERE` + `Back to the drill`/`Start the drill` in the dock, and a small dot at
+the left edge of the Probe Drill tab. The rest of the 1280x800 frame is untouched. Nothing else
+moved — no focus ring appeared at rest, no layout shifted from the ARIA attributes, and the
+`.pane.on` motion change contributed nothing (as predicted: it is invisible at rest).
+
+The 1182 px also *adds up*: two lines of small dock text plus a 6px dot moved 3px, against a
+114,622 px bounding box that is 99% unchanged. A wholesale repaint would not look like this.
+
+**Decision needed from the team lead:** approve `npm run vr:update` for these 12, or drop P3-1/P3-3.
+The builder did not rebaseline.
+
+---
+
+## Gate
+
+`python3 test/check_all.py` on the committed tree — capture:
+`_audit/2026-07-29-w1-spotfixes-gate.txt`.
+
+**61 PASS / 1 FAIL (`visual_regression`, attributed above). Registry 58 -> 62 checks.**
+
+Notably green, given what this wave touched:
+`scoreboard_resume` (the prior-#22 contract P3-2 was accused of breaking — it does not),
+`flow_handoff` / `flow_evidence` / `flow_contract` / `flow_cursor` (the flow spine, after rerouting
+its one funnel), `transition_deadzone` and `click_drift` (real clicks and keys keep landing through
+every pane and topic switch, after the focus move), `overlay_keyboard` (47 assertions across 7
+dialogs, after the focus-ring rescoping), `shadow_css_guard`, and `build_determinism`.
+
+**On the check count:** the brief estimated 63. The five guards land at **62**, because G2 extends
+`flow_data.cjs` (as the brief itself specifies for that guard) rather than adding a sixth file.
+58 + 4 new files = 62. Nothing was dropped.
+
+**One caveat on the capture:** `build_integrity` reports `HEAD-match DEFERRED` if the gate capture
+file is itself uncommitted while the gate runs — it is the run's own output. The run of record was
+taken with a clean tree and the capture written outside it, then committed.
+
+---
+
+## Residuals for a later wave
+
+- **`.piv-jump:focus{outline:none}` (`system-map.js:44`) is the same defect class as P3-6 and is
+  still live.** It is a real `<button>`, and its `:focus` is (0,2,0), so it outranks the new generic
+  `button:focus-visible` — it needs the same in-place edit the other three got. Found while
+  generalising P2-3; left alone as outside the 13-item scope.
+- **`.piv .chip.chip-link:focus-visible{...outline:none}` (`system-map.js:61`) is DEAD CSS** — the
+  class has **zero** emitters anywhere in `src/`. Worth deleting, but it is not an a11y hole today.
+  (`shadow_css_guard` would not catch this: it flags `styles.css` selectors reaching shadow-only
+  classes, not a shadow-sheet selector with no emitter at all.)
+- The per-class `:focus-visible` rules that P2-3 made redundant (`.flow-go`, `.revset-b`) were left
+  in place deliberately — harmless, and their comments carry the history.
+
+## Commits
+
+```
+ffcbd80  frontend(w1): five gate guards, all watched RED on the pre-fix build
+51496c9  frontend(w1): the 13 spot fixes -- router spine, focus rings, AT state, motion
+```

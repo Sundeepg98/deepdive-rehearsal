@@ -1232,8 +1232,8 @@
     "h": "edf12c33"
   },
   "event-driven::CURVEBALL/Poison message:you-re-on-kafka-one-malformed.int2": {
-    "n": 129,
-    "h": "136e1cfa"
+    "n": 137,
+    "h": "030b21cd"
   },
   "event-driven::CURVEBALL/Replay blast:you-replay-a-week-of-events.int": {
     "n": 71,

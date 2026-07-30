@@ -812,9 +812,20 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # So this asserts the RELATIONSHIP, not a number: what the app reserves == what the
                      # bar takes, in both orientations, for all five consumers, with the authored gaps
                      # (8/4px above the bar, 16px for the drill's seat, 24/14px for the FAB) stated as
-                     # themselves. It also strips the inline style and requires styles.css's FALLBACK
-                     # pair to equal the measured truth -- those two pairs are the last constants left,
-                     # and a fallback nobody checks is a constant with a better name.
+                     # themselves. It also strips the inline style and checks styles.css's FALLBACK pair
+                     # against measured -- those two pairs are the last constants left, and a fallback
+                     # nobody checks is a constant with a better name. That arm asks for CLOSENESS
+                     # (8px band), not equality: `measured` carries a font-metric term, so one hardcoded
+                     # pair can be exactly right on at most ONE platform. It first shipped demanding
+                     # equality, passed here and FAILED THE UBUNTU GATE at both viewports, blocking a
+                     # deploy -- this check contradicting its own wave's thesis. Measured cause: both
+                     # bars are padding + border + max(44px tap floor, tallest control's line box), and
+                     # the only cross-platform term is the OVERSHOOT of that floor. `.seg`'s child sits
+                     # AT 44 on both (delta 0); `.mockcta`'s `.mockbtn` is 47 on Windows and 44 on Linux
+                     # (delta 3, both orientations, same button). Band = 8px: 2.7x the measured delta,
+                     # room for a ~20%-taller-metric face, and far below a restructured bar. Two mutants
+                     # every run, aborting if either misbehaves: +3px (the exact delta that failed CI)
+                     # must PASS, +20px (gross drift) must FAIL.
                      # Its plant makes the bar taller by the mechanism the landscape block itself uses
                      # (padding: 61 -> 73px, which is exactly what WebKit reported) and aborts unless
                      # every derived value follows. That plant earned its keep immediately: it caught a

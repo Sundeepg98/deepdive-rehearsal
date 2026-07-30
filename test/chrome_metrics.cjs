@@ -17,11 +17,14 @@
  * live band, and this check deliberately computes "how much chrome steals" the same way it does:
  * only a POSITION:FIXED, rendered bar costs the content anything.
  *
- * WHAT IS STILL A CONSTANT, AND THEREFORE ASSERTED. styles.css declares --chrome-top/--chrome-bot
- * in both media blocks as the FALLBACK for the frame before chrome-metrics.js runs and for JS off
- * entirely. Those two pairs are the last constants in the system, so arm 5 strips the inline style
- * and requires the stylesheet's own value to equal the measured truth. A fallback nobody checks is
- * just a constant with a better name.
+ * WHAT IS STILL A CONSTANT, AND THEREFORE ASSERTED -- WITHIN A BAND. styles.css declares
+ * --chrome-top/--chrome-bot in both media blocks as the FALLBACK for the frame before
+ * chrome-metrics.js runs and for JS off entirely. Those two pairs are the last constants in the
+ * system, so arm 5 strips the inline style and checks the stylesheet's own value against the
+ * measured truth. It asks for CLOSENESS, not equality, and the reason is this check's own subject
+ * matter: `measured` carries a font-metric term, so one hardcoded pair can be exactly right on at
+ * most one platform. Demanding equality is what broke the Ubuntu gate and blocked a deploy. The
+ * band, its anchoring measurement, and its two mutants are documented at arm 5.
  *
  * THE GAPS ARE NOT CONSTANTS OF THIS CLASS and are asserted as themselves: the app reserves the
  * bar PLUS an authored gap (8px above the bottom bar upright, 4px on its side, 16px for the
@@ -181,11 +184,64 @@ async function tapPane(page, tab) {
       '  .app pad=' + m.padTop + '/' + m.padBot + '  seat=' + m.seatTop + '/' + m.seatBot + '  fab=' + m.fabBottom);
   }
 
-  /* ===================== 5. THE LAST CONSTANTS ALIVE =====================
-     styles.css's fallback pair must equal the measured truth. Strip the inline style the module
-     wrote, read what the stylesheet alone says, then hand it back. */
-  for (const [w, h] of [[360, 844], [844, 390]]) {
-    await pinViewport(page, w, h);
+  /* ===================== 5. THE LAST CONSTANTS ALIVE, AND WHAT THEY CAN HONESTLY PROMISE
+     =====================
+
+     THIS ARM SHIPPED OVER-STRICT AND BROKE CI, AND IT BROKE IT BY CONTRADICTING ITS OWN WAVE.
+     It demanded `fallback === measured`. But `measured` contains a font-metric term, so a single
+     hardcoded fallback can be exactly right on at most ONE platform -- which is the entire thesis
+     of the wave this check belongs to, applied to the check itself. It passed on the Windows box
+     it was anchored on and failed the Ubuntu gate at both viewports, blocking a deploy.
+
+     WHERE THE VARIANCE ACTUALLY LIVES -- measured, not reasoned about. Both bars are
+     `padding + border + max(44px tap floor, the tallest control's line box)`. The only term that
+     can move across platforms is how far a control OVERSHOOTS the 44px floor; where the floor
+     clamps, there is no font term at all. Same commit, same context (360x844 / 844x390,
+     isMobile, dSF2):
+
+       | tallest child            | Windows Chromium 149 | Linux Chromium (pw v1.61.1-noble) |
+       | .seg    -> BUTTON.on     | 44 (AT the floor)    | 44 (AT the floor)                 |
+       | .mockcta-> BUTTON.mockbtn| 47 (3 OVER)          | 44 (AT the floor)                 |
+       | --chrome-top  (portrait/landscape) | 61 / 51    | 61 / 51   -> delta 0              |
+       | --chrome-bot  (portrait/landscape) | 72 / 60    | 69 / 57   -> delta 3              |
+
+     So the whole cross-platform delta is 3px, all of it in `--chrome-bot`, all of it one button's
+     line box clearing the tap floor on one platform and not the other -- the same 3px in both
+     orientations, because it is the same button.
+
+     THE CONTRACT, RESTATED HONESTLY. The fallback is a BEST-EFFORT PRE-JS APPROXIMATION. It is
+     used for one frame before chrome-metrics.js runs, and for JS off entirely. Being a few px
+     stale there costs a few px of gap or overlap in a frame nobody interacts with. Its job is to
+     catch GROSS DRIFT -- somebody restructures a bar and leaves the fallback describing the old
+     one -- not to be cross-platform exact, which it cannot be. So: a band.
+
+     THE BAND IS 8px, ANCHORED:
+       - 2.7x the 3px delta actually measured between two real platforms;
+       - covers a face with ~20% taller metrics than the Windows one (~3px more overshoot at this
+         font size) with room to spare;
+       - and stays far below any structural change to a bar. Adding a control row costs at least
+         the 44px tap floor; the mutant below plants 20px and must go red.
+     It does NOT distinguish a one-token padding edit (2-4px) from font variance, and that is
+     accepted deliberately: such an edit leaves the app CORRECT (the measured arms above are exact
+     and platform-relative, so `--chrome-*` and every consumer follow it), and makes the fallback
+     merely a few px stale for one pre-JS frame. Gating a deploy on that would be the same mistake
+     in the other direction.
+
+     WHY BOTH VARS ARE BANDED even though `--chrome-top` measured identical on both platforms:
+     `.seg`'s tallest child happens to sit AT the floor today. That is a property of the current
+     labels and font sizes, not a guarantee -- exactly the kind of platform-anchored reasoning
+     that produced this defect. Both bars have the same `max(floor, line box)` shape, so both get
+     the same treatment.
+
+     A NOTE ON DIRECTION, recorded rather than asserted: a fallback that is too LOW under-reserves
+     and puts content under the bar (the defect this wave exists to remove), while one that is too
+     HIGH merely leaves a gap. The committed pair (61/72, 51/60) is the Windows measurement, which
+     is the HIGH side of the two platforms measured -- the safe direction. Kept for that reason. */
+  const FALLBACK_BAND_PX = 8;
+
+  /* Read the stylesheet's own value by stripping the inline style the module wrote, then hand it
+     back. derive() short-circuits when nothing changed, so the restore is done explicitly. */
+  const readFallback = async (page) => {
     const f = await page.evaluate(() => {
       const de = document.documentElement;
       const live = {
@@ -198,23 +254,72 @@ async function tapPane(page, tab) {
         top: parseFloat(getComputedStyle(de).getPropertyValue('--chrome-top')),
         bot: parseFloat(getComputedStyle(de).getPropertyValue('--chrome-bot')),
       };
-      if (window.ChromeMetrics) window.ChromeMetrics.derive();
       return { live: live, cssOnly: cssOnly };
     });
-    /* derive() short-circuits when nothing changed, so put the inline style back for real. */
     await page.evaluate(() => {
       const de = document.documentElement;
-      if (!de.style.getPropertyValue('--chrome-top') && window.ChromeMetrics) {
+      if (!de.style.getPropertyValue('--chrome-top')) {
         const seg = document.querySelector('.sidebar .seg'), bar = document.querySelector('.sidebar .mockcta');
         de.style.setProperty('--chrome-top', Math.ceil(seg.getBoundingClientRect().height) + 'px');
         de.style.setProperty('--chrome-bot', Math.ceil(bar.getBoundingClientRect().height) + 'px');
       }
     });
     await B.settle(page);
-    ok('[' + w + 'x' + h + '] the stylesheet FALLBACK pair equals the measured truth (JS off, or the frame before it runs)',
-      f.cssOnly.top === f.live.top && f.cssOnly.bot === f.live.bot,
-      JSON.stringify(f));
+    return f;
+  };
+  const withinBand = (f) =>
+    isFinite(f.cssOnly.top) && isFinite(f.cssOnly.bot) &&
+    Math.abs(f.cssOnly.top - f.live.top) <= FALLBACK_BAND_PX &&
+    Math.abs(f.cssOnly.bot - f.live.bot) <= FALLBACK_BAND_PX;
+
+  for (const [w, h] of [[360, 844], [844, 390]]) {
+    await pinViewport(page, w, h);
+    const f = await readFallback(page);
+    ok('[' + w + 'x' + h + '] the stylesheet FALLBACK pair is within ' + FALLBACK_BAND_PX + 'px of measured -- close enough for the pre-JS frame, not claiming cross-platform equality',
+      withinBand(f),
+      JSON.stringify(Object.assign({ band: FALLBACK_BAND_PX }, f,
+        { driftTop: f.cssOnly.top - f.live.top, driftBot: f.cssOnly.bot - f.live.bot })));
+    console.log('       fallback ' + f.cssOnly.top + '/' + f.cssOnly.bot + '  vs measured ' +
+      f.live.top + '/' + f.live.bot + '  drift ' + (f.cssOnly.top - f.live.top) + '/' + (f.cssOnly.bot - f.live.bot) + 'px');
   }
+
+  /* ===== THE TWO MUTANTS: the band must absorb the real thing and still catch the gross thing.
+     A stylesheet appended late outranks the media-block declaration by order, so this plants a
+     genuine FALLBACK drift and re-reads it through the same path the arm uses. */
+  const plantFallback = async (page, dTop, dBot) => {
+    const f0 = await readFallback(page);
+    await page.evaluate((d) => {
+      const s = document.createElement('style');
+      s.id = '_fbplant';
+      s.textContent = ':root{--chrome-top:' + (d.top + d.dTop) + 'px;--chrome-bot:' + (d.bot + d.dBot) + 'px}';
+      document.head.appendChild(s);
+    }, { top: f0.cssOnly.top, bot: f0.cssOnly.bot, dTop: dTop, dBot: dBot });
+    await B.settle(page);
+    const f = await readFallback(page);
+    await page.evaluate(() => { const s = document.getElementById('_fbplant'); if (s) s.remove(); });
+    await B.settle(page);
+    return f;
+  };
+
+  await pinViewport(page, 360, 844);
+  /* (a) THE CI FAILURE ITSELF, reproduced: Linux measured --chrome-bot 3px under the fallback.
+         This is the case that must now be GREEN -- if it is not, the fix does not fix CI. */
+  const mReal = await plantFallback(page, 0, 3);
+  /* (b) GROSS DRIFT: 20px, well inside "somebody restructured the bar". Must be RED. */
+  const mGross = await plantFallback(page, 0, 20);
+  const restoredFb = await readFallback(page);
+  if (!(withinBand(mReal) && !withinBand(mGross) && withinBand(restoredFb))) {
+    console.log('  ABORT [fallback mutants]: the band does not do what it claims.');
+    console.log('     -> +3px (the measured Linux delta) should PASS: ' + withinBand(mReal) + ' ' + JSON.stringify(mReal));
+    console.log('     -> +20px (gross drift) should FAIL: ' + !withinBand(mGross) + ' ' + JSON.stringify(mGross));
+    console.log('     -> and the plant must leave nothing behind: ' + withinBand(restoredFb) + ' ' + JSON.stringify(restoredFb));
+    await browser.close();
+    return B.finish(1, 'CHROME METRICS: ABORTED (fallback band self-test failed)');
+  }
+  ok('[mutant] the band ABSORBS the 3px delta that actually failed CI on Ubuntu (fallback ' +
+    mReal.cssOnly.bot + ' vs measured ' + mReal.live.bot + ')', true, '');
+  ok('[mutant] and still CATCHES a 20px gross drift (fallback ' + mGross.cssOnly.bot +
+    ' vs measured ' + mGross.live.bot + ') -- the band cannot swallow a restructured bar', true, '');
 
   /* ===================== 6. DESKTOP IS NOT IN THIS SYSTEM =====================
      Above 919px neither bar is fixed, so neither steals anything and no rule consumes the pair.

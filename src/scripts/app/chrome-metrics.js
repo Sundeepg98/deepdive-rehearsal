@@ -65,7 +65,11 @@
    THE FALLBACKS STAY IN THE STYLESHEET. styles.css declares --chrome-top/--chrome-bot in both
    media blocks so the app lays out correctly before this runs and with JS off entirely; the inline
    style written here always wins over them. They are the last two constants in the system, so
-   test/chrome_metrics.cjs asserts they equal the measured truth rather than trusting them.
+   test/chrome_metrics.cjs checks them against the measured truth rather than trusting them -- but
+   for CLOSENESS, not equality. A hardcoded fallback cannot equal a measurement that carries a
+   font-metric term on more than one platform, which is this file's own thesis turned on the check
+   that guards it: `.mockcta` measures 72px here and 69px on Linux, because one button's line box
+   clears the 44px tap floor on one platform and is clamped by it on the other.
 
    Offline-safe: no network, storage, or permission calls. */
 (function () {

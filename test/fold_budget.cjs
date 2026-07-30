@@ -372,13 +372,25 @@ async function pinViewport(page, w, h) {
     () => document.documentElement.style.scrollBehavior !== 'auto',
     null, { timeout: B.ACT_MS });
 
+  /* ===== ONE WAY IN, SHARED BY THE ARMS AND THE PLANT =====
+     The plant had its own three lines of this and they were missing the topic-switch wait. It
+     therefore tapped Reveal while the switch was still settling, and view-manager.js:87's
+     scrollTo(0,0) on a pane switch undid the seat -- so the plant's own "seated" reference was
+     never seated, and the self-test aborted a run whose six real arms had all passed. It aborted
+     only under gate load, which is the worst way for a harness to be wrong. Same reason as the
+     router pin above: a seat is only observable once the thing that resets scroll has finished. */
+  async function enterDrillOn(page, topic) {
+    await page.evaluate((id) => { location.hash = '#' + id + '/walk'; }, topic);
+    await page.waitForFunction((id) => TopicRegistry.current().id === id, topic, { timeout: B.ACT_MS }).catch(() => {});
+    await B.settle(page);
+    await tapPane(page, 'drill');
+    await settleScroll(page);
+  }
+
   await pinViewport(page, 360, 800);
   for (let i = 0; i < TOPICS.length; i++) {
     const t = TOPICS[i];
-    await page.evaluate((id) => { location.hash = '#' + id + '/walk'; }, t);
-    await page.waitForFunction((id) => TopicRegistry.current().id === id, t, { timeout: B.ACT_MS }).catch(() => {});
-    await B.settle(page);
-    await tapPane(page, 'drill');
+    await enterDrillOn(page, t);
     if (!(await tapAdv(page))) { ok('[360x800] ' + t + ': the drill offers a forward control to press', false, 'no #adv at stage 0'); continue; }
     const a = await page.evaluate(ADV);
     ok('[360x800] ' + t + ': after Reveal, the drill\'s forward control is inside the live band',
@@ -392,9 +404,7 @@ async function pinViewport(page, w, h) {
      and require both arms to notice. Forcing the scroll back to where the reveal left it is
      exactly the state the shipped build rests in, so this is calibrated to the measured defect
      rather than to any perturbation. */
-  await page.evaluate((id) => { location.hash = '#' + id + '/walk'; }, TOPICS[0]);
-  await B.settle(page);
-  await tapPane(page, 'drill');
+  await enterDrillOn(page, TOPICS[0]);
   await tapAdv(page);
   const seated = await page.evaluate(ADV);
   await scrollToRest(page, 0);

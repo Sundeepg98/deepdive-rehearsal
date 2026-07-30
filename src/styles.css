@@ -59,12 +59,16 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
 
   :root{
     /* THE APP STACK, and the only place it is written. It used to be spelled out at body and
-       then re-spelled, WRONG, in 89 other rules as `-apple-system,sans-serif`: a list whose
-       first entry resolves on Apple platforms and nowhere else, so off Apple the generic won
-       and 48 buttons -- all nine .seg pane tabs among them -- rasterised in ARIAL while the
-       stylesheet read as if a system face had been chosen. Ledgered by the W4 cold verify as
-       F-2, confirmed byte-identical in WebKit and Firefox by the 2026-07-30 audit: a platform
-       truth, not an engine bug. One definition means the truncated form has nowhere to regrow;
+       then re-spelled, WRONG, in 89 other rules -- 83 of them as the truncated
+       `-apple-system,sans-serif`, 6 as other partial spellings. `-apple-system` resolves on
+       Apple platforms and nowhere else, so off Apple the generic won and SIXTEEN buttons per
+       topic surface -- all nine .seg pane tabs among them -- rasterised in ARIAL while the
+       stylesheet read as if a system face had been chosen. (Those 16 walked across three topic
+       surfaces are the "48" the freeze reports; it is 16 buttons, not 48. W4's ledgered "26" is
+       not reconcilable from its text and is superseded by the measurement in
+       _audit/2026-07-30-w21-typeface.md section 4.) Ledgered by the W4 cold verify as F-2,
+       confirmed byte-identical in WebKit and Firefox by the 2026-07-30 audit: a platform truth,
+       not an engine bug. One definition means the truncated form has nowhere to regrow;
        test/typeface_census.py holds the line. */
     --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     --mono:ui-monospace,"SFMono-Regular",Menlo,"Cascadia Mono","Segoe UI Mono",Consolas,"Liberation Mono",monospace;

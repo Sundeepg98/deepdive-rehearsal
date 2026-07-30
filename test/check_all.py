@@ -160,9 +160,11 @@ for name, cmd in [('ascii_guard', ['python3', 'test/ascii_guard.py']),
                   # the type that renders". 89 rules spelled the app stack as
                   # `-apple-system,sans-serif` -- a list whose first entry resolves on Apple
                   # platforms and NOWHERE else, so off Apple the generic wins and on Windows that
-                  # is ARIAL. Measured on the pre-fix build with CDP getPlatformFontsForNode: 48
-                  # buttons with real label text rasterised in Arial/Arial Black, among them all
-                  # nine .seg pane tabs this campaign lifted above the fold. WebKit and Firefox
+                  # is ARIAL. Measured on the pre-fix build with CDP getPlatformFontsForNode:
+                  # SIXTEEN buttons with real label text rasterised in Arial/Arial Black on each
+                  # topic surface (the freeze's "48" is those 16 walked across three surfaces),
+                  # among them all nine .seg pane tabs this campaign lifted above the fold. The
+                  # home surface was already clean. WebKit and Firefox
                   # measured byte-identical to Chromium, so it is a platform truth, not an engine
                   # bug. latent_arial CANNOT see it: that guard asks "does this button carry NO
                   # author family", and these carry one -- which is why "latent Arial is at zero"

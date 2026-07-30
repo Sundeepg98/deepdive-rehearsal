@@ -52,10 +52,14 @@ stylesheet frozen inside the cached diagram SVGs, and minified vendor code. See
 collect() for why that is a git question and not a path-pattern skip.
 
 SELF-TEST, every run. This repo has shipped four checks that could not fail, so
-the analyser runs over a synthetic fixture first: five legitimate shapes and
-four planted defects (the truncated stack, a partial system-ui stack, an
-undeclared face, and a drifted print literal). It must flag exactly the four.
-If it does not, the check ABORTS rather than report a green it did not earn.
+the analyser runs over synthetic fixtures first: the legitimate shapes (plus an
+@font-face descriptor and comment prose) must stay clean, and NINE planted
+defects must each be flagged -- the truncated stack, a partial system-ui stack,
+an undeclared face, an UPPERCASE property name, a truncated stack hidden behind
+a `pt` size, a CSS-wide reset keyword, a shorthand whose family cannot be read,
+a real rule sitting beside an @font-face block, and a declaration wrapped across
+two lines -- plus the drifted print literal. If any is missed, or any legitimate
+shape is flagged, the check ABORTS rather than report a green it did not earn.
 
 Usage:  python3 test/typeface_census.py [--verbose]
 Exit:   0 = pass, 1 = FAIL
@@ -70,18 +74,50 @@ SRC = os.path.join(ROOT, 'src')
 VERBOSE = '--verbose' in sys.argv
 
 # --- what a declaration looks like -------------------------------------------
+# CSS property names are CASE-INSENSITIVE and these regexes were not, so
+# `FONT-FAMILY:` was invisible (cold verify F-E.3). re.I on both.
 # font-family:<list>   -- the list runs to the terminator, quotes may hold ';'
-FAMILY_RE = re.compile(r'\bfont-family\s*:\s*([^;{}!`]+)')
+FAMILY_RE = re.compile(r'\bfont-family\s*:\s*([^;{}!`\r\n]*)', re.I)
 # font:<shorthand>     -- `(?<![-\w])` keeps it off `font-family` / `--x-font`
-SHORTHAND_RE = re.compile(r'(?<![-\w])font\s*:\s*([^;{}!`]+)')
-# the font-size slot of the shorthand, with its optional /line-height. The
-# family is whatever follows it.
+SHORTHAND_RE = re.compile(r'(?<![-\w])font\s*:\s*([^;{}!`\r\n]*)', re.I)
+# The font-size slot of the shorthand, with its optional /line-height. The family
+# is whatever follows it.
+#
+# The unit list USED to be `px|rem|em|%` only, which made
+# `font:var(--font-weight-bold) 12pt -apple-system,sans-serif` invisible -- and
+# invisible SILENTLY, because an unparsed family was skipped without being
+# counted (cold verify F-E.1). `pt` is the conventional print-stylesheet unit and
+# this app has a print path. Every CSS length unit is enumerated now, plus the
+# absolute-size keywords, and see UNPARSED_SHORTHAND for what happens when the
+# family still cannot be read.
+_UNIT = (r'px|rem|em|ex|ch|cap|ic|lh|rlh|vw|vh|vi|vb|vmin|vmax'
+         r'|svw|svh|lvw|lvh|dvw|dvh|cm|mm|q|in|pt|pc|%')
+_ABS_SIZE = (r'xx-small|x-small|small|medium|large|x-large|xx-large|xxx-large'
+             r'|smaller|larger')
 SIZE_RE = re.compile(
-    r'(?:^|\s)(?:[\d.]+(?:px|rem|em|%)|var\(\s*--font-size-[a-z0-9-]+\s*\))'
-    r'(?:\s*/\s*(?:[\d.]+[a-z%]*|var\([^()]*\)))?\s+(?=\S)')
+    r'(?:^|\s)(?:[\d.]+(?:' + _UNIT + r')|(?:' + _ABS_SIZE + r')'
+    r'|var\(\s*--font-size-[a-z0-9-]+\s*\))'
+    r'(?:\s*/\s*(?:[\d.]+[a-z%]*|var\([^()]*\)))?\s+(?=\S)', re.I)
 COMMENT_RE = re.compile(r'/\*.*?\*/', re.S)
+# `@font-face{ ... }` -- the descriptors inside DEFINE a face, they do not choose
+# one. Previously the whole of src/fonts.css was skipped by filename, so a real
+# rule planted in that file passed (cold verify F-D). Now the skip is the BLOCK,
+# in any file, which is the thing that was actually meant.
+FONTFACE_RE = re.compile(r'@font-face\s*\{[^{}]*\}', re.I | re.S)
 # `--sans:<value>` wherever it is declared
 SANS_DEF_RE = re.compile(r'--sans\s*:\s*([^;}]+)')
+
+# A `font:` shorthand is REQUIRED to end in a family. When the parser cannot find
+# one, that is reported rather than skipped -- a declaration this check cannot
+# read must never be indistinguishable from one it read and found clean.
+UNPARSED_SHORTHAND = ('a `font:` shorthand whose family this check COULD NOT '
+                      'PARSE. Unreadable is not clean. If the size uses a unit '
+                      'SIZE_RE does not list, add it; if the declaration is '
+                      'split across lines, join it')
+# `inherit` is the honest form. The other CSS-wide keywords reset the family to
+# the UA default -- which on a <button> in Chrome/Windows is ARIAL, i.e. exactly
+# the latent-Arial defect wearing a keyword instead of an omission.
+RESET_KEYWORDS = ('initial', 'unset', 'revert', 'revert-layer')
 
 TOKEN_DEFS = ('--sans:', '--display:', '--mono:')
 
@@ -145,12 +181,21 @@ def family_of(kind, value):
 
 
 def declarations(text):
-    """Yield (lineno, kind, raw_value) for every font declaration."""
-    for lineno, line in enumerate(strip_comments(text).splitlines(), 1):
-        for m in FAMILY_RE.finditer(line):
-            yield lineno, 'font-family', m.group(1)
-        for m in SHORTHAND_RE.finditer(line):
-            yield lineno, 'font', m.group(1)
+    """Yield (lineno, kind, raw_value, in_face) for every font declaration.
+
+    Offset-based rather than line-based, so an `@font-face` block can be located
+    and its descriptors excluded by POSITION instead of by filename. The line
+    number is derived from the match offset, so reports still point at the real
+    file."""
+    clean = strip_comments(text)
+    faces = [(m.start(), m.end()) for m in FONTFACE_RE.finditer(clean)]
+    hits = []
+    for kind, rx in (('font-family', FAMILY_RE), ('font', SHORTHAND_RE)):
+        for m in rx.finditer(clean):
+            in_face = any(a <= m.start() < b for a, b in faces)
+            hits.append((m.start(), kind, m.group(1), in_face))
+    for start, kind, raw, in_face in sorted(hits):
+        yield clean.count('\n', 0, start) + 1, kind, raw, in_face
 
 
 def classify(rel, fam):
@@ -158,6 +203,10 @@ def classify(rel, fam):
     n = norm(fam)
     if n in LEGIT_TOKENS:
         return 'ok'
+    if n.lower() in RESET_KEYWORDS:
+        return ('a CSS-wide reset keyword. It does not inherit -- it puts the '
+                'family back to the UA default, which on a <button> in '
+                'Chrome/Windows is ARIAL. `inherit` is the honest form')
     if n.split(',')[-1].strip() == 'monospace':
         return 'ok'
     if (rel, unquote_tail(fam)) in EXCEPTIONS:
@@ -182,18 +231,22 @@ def scan(files):
     """(findings, exceptions_seen, total) over (rel_path, text) pairs."""
     findings, seen, total = [], [], 0
     for rel, text in files:
-        clean = strip_comments(text)
-        for lineno, kind, raw in declarations(text):
-            fam = family_of(kind, raw)
-            if fam is None:
+        lines = strip_comments(text).splitlines()
+        for lineno, kind, raw, in_face in declarations(text):
+            if in_face:          # an @font-face descriptor NAMES the face it defines
                 continue
             # the token DEFINITIONS themselves carry real family lists
-            line = clean.splitlines()[lineno - 1] if lineno <= len(clean.splitlines()) else ''
+            line = lines[lineno - 1] if lineno <= len(lines) else ''
             if any(d in line for d in TOKEN_DEFS) and kind == 'font-family':
                 continue
-            if rel.endswith('fonts.css'):     # @font-face descriptor, not a use
-                continue
             total += 1
+            fam = family_of(kind, raw)
+            if fam is None:
+                # Only a shorthand can be unreadable (a font-family value IS the
+                # family). Reported, never skipped -- see UNPARSED_SHORTHAND.
+                findings.append((rel, lineno, kind, raw.strip()[:60] or '(empty)',
+                                 UNPARSED_SHORTHAND))
+                continue
             verdict = classify(rel, fam)
             if verdict == 'ok':
                 continue
@@ -262,12 +315,32 @@ FIXTURE_OK = ('src/fixture-ok.css', '''
 .d{font:var(--font-weight-heavy) 16px ui-monospace,Menlo,monospace}
 .e{font-family:var(--display)}
 .f{font:italic var(--font-size-body)/1.55 var(--sans)}
+@font-face{font-family:'Space Grotesk';src:url(x.woff2) format("woff2")}
 /* prose: this rule used to say -apple-system,sans-serif -- not a declaration */
 ''')
 FIXTURE_BAD = ('src/fixture-bad.css', '''
 .g{font:var(--font-weight-semibold) 10.5px -apple-system,sans-serif}
 .h{font:var(--font-weight-bold) 13px -apple-system,system-ui,sans-serif}
 .i{font-family:Verdana,sans-serif}
+.j{FONT-FAMILY:Tahoma,sans-serif}
+.k{font:var(--font-weight-bold) 12pt -apple-system,sans-serif}
+.l{font-family:initial}
+.m{font:menu}
+''')
+# A real rule living in the file that also defines the face. The skip used to be
+# `rel.endswith('fonts.css')` -- the whole FILE -- so this planted rule passed
+# (cold verify F-D). The descriptor above it must still be ignored.
+FIXTURE_FONTS = ('src/fonts.css', '''
+@font-face{font-family:'Space Grotesk';src:url(x.woff2) format("woff2")}
+.evil-in-fonts{font:var(--font-weight-bold) 12px -apple-system,sans-serif}
+''')
+# One declaration, two physical lines. Nothing in the tree does this today, and
+# the parser reads one line at a time -- but the FRAGMENT it reads cannot match a
+# legitimate token exactly, so the declaration is still caught rather than
+# silently passed. That is the property being asserted.
+FIXTURE_WRAPPED = ('src/fixture-wrapped.css', '''
+.n{font-family:var(--sans),
+   Verdana}
 ''')
 FIXTURE_DRIFT = ('src/scripts/app/print-qa.js',
                  '''body{font:14px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}''')
@@ -285,16 +358,52 @@ def self_test():
 
     findings, _, _ = scan([FIXTURE_BAD])
     fams = [f[3] for f in findings]
+    whys = [f[4] for f in findings]
     for want, why in (('-apple-system,sans-serif', 'the truncated stack'),
                       ('-apple-system,system-ui,sans-serif', 'a partial system-ui stack'),
-                      ('Verdana,sans-serif', 'a face the app does not own')):
+                      ('Verdana,sans-serif', 'a face the app does not own'),
+                      ('Tahoma,sans-serif', 'an UPPERCASE font-family property')):
         if want not in fams:
             problems.append('missed %s (%s)' % (why, want))
+    if fams.count('-apple-system,sans-serif') != 2:
+        problems.append('missed the truncated stack behind a `pt` size -- SIZE_RE '
+                        'does not enumerate every CSS length unit')
+    if not any('reset keyword' in w for w in whys):
+        problems.append('missed `font-family:initial` -- a CSS-wide reset puts the '
+                        'family back to the UA default, it does not inherit')
+    if UNPARSED_SHORTHAND not in whys:
+        problems.append('a `font:` shorthand with no readable family was skipped '
+                        'silently instead of reported')
+
+    # F-D: a real rule in the file that also defines the face must be caught, and
+    # the @font-face descriptor beside it must not be.
+    findings, _, total_f = scan([FIXTURE_FONTS])
+    if not any(f[3] == '-apple-system,sans-serif' for f in findings):
+        problems.append('missed a real font rule in a file containing @font-face '
+                        '-- the skip is the BLOCK, not the file')
+    if total_f != 1:
+        problems.append('counted %d declarations in the @font-face fixture, expected '
+                        '1 (the descriptor is being counted as a use, or the rule '
+                        'is not)' % total_f)
+
+    # F-E.2: a declaration wrapped across two lines is still caught, because the
+    # fragment the line-based scan reads cannot match a legit token exactly.
+    findings, _, _ = scan([FIXTURE_WRAPPED])
+    if not findings:
+        problems.append('a font-family split across two lines passed unflagged')
 
     # the drift arm: a print literal that no longer matches --sans must fail
     drifted = norm(FIXTURE_DRIFT[1].split('1.6 ')[1].rstrip('}'))
-    pinned = norm(SANS_DEF_RE.search(FIXTURE_OK[1]).group(1))
-    if drifted == pinned:
+    # Bound and asserted rather than chained. `.search(...).group(1)` was the file's
+    # ONLY static-analysis diagnostic (cold verify section 9,
+    # reportOptionalMemberAccess) -- unreachable on a hardcoded fixture, but an edit
+    # to FIXTURE_OK that dropped --sans would have failed here with an
+    # AttributeError instead of saying what was wrong.
+    sans_in_fixture = SANS_DEF_RE.search(FIXTURE_OK[1])
+    if sans_in_fixture is None:
+        problems.append('FIXTURE_OK no longer declares --sans, so the drift arm has '
+                        'nothing to pin against')
+    elif drifted == norm(sans_in_fixture.group(1)):
         problems.append('the drift fixture does not actually differ from --sans, '
                         'so the drift arm proves nothing')
     return problems
@@ -327,9 +436,13 @@ def main():
     print('                   topic compiler and esbuild; their families are emitted by')
     print('                   mermaid and by vendored code, not authored here')
     print('    declarations : %d font-family / font-shorthand family lists' % total)
-    print('    self-test    : 4 planted defects found (truncated stack, partial')
-    print('                   system-ui stack, undeclared face, drifted print')
-    print('                   literal); 6 legitimate shapes + comment-prose clean')
+    print('    self-test    : 9 planted defects found (truncated stack; partial')
+    print('                   system-ui stack; undeclared face; UPPERCASE property;')
+    print('                   truncated stack behind a `pt` size; a CSS-wide reset')
+    print('                   keyword; an unreadable shorthand; a real rule beside')
+    print('                   an @font-face; a two-line declaration) + the drifted')
+    print('                   print literal. 6 legitimate shapes, an @font-face')
+    print('                   descriptor and comment-prose all stayed clean')
 
     fails = list(findings)
 

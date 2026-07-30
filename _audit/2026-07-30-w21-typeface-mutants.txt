@@ -73,3 +73,97 @@ TYPEFACE CENSUS: FAIL
 TYPEFACE CENSUS: PASS  (180 declarations, 0 orphans, 2 documented exception(s), both pinned to --sans or argued in place)
  src/styles.css | 68 ++++++++++++++++++++++++++++++++++++----------------------
  1 file changed, 42 insertions(+), 26 deletions(-)
+
+################################################################
+# ROUND 2 -- the blind spots the COLD VERIFY found, now closed  #
+################################################################
+
+=== W21 ROUND 2 -- COLD-VERIFY BLIND SPOTS, EACH PLANTED AND SHOWN RED ===
+Every plant is applied to the real worktree, the SHIPPED check is run, and the
+tree restored. Each of these returned PASS before this round (verifier receipts:
+_audit/2026-07-30-w21-typeface-coldverify.md, findings F-D and F-E).
+
+--- CONTROL: unmutated tree ---
+    declarations : 180 font-family / font-shorthand family lists
+    orphans      : 0
+TYPEFACE CENSUS: PASS  (180 declarations, 0 orphans, 2 documented exception(s), both pinned to --sans or argued in place)
+
+--- P1 (F-D): a REAL rule planted in src/fonts.css ---
+    was PASS: the check skipped the whole FILE by name. Now it skips the
+    @font-face BLOCK, so the descriptor is still ignored and the rule is not.
+    declarations : 181 font-family / font-shorthand family lists
+    orphans      : 1
+  1 orphan declaration(s):
+    -apple-system,sans-serif                             1 site(s)
+        a TRUNCATED -apple-system stack. -apple-system resolves on Apple platforms and nowhere else, so off Apple the generic wins -- on Windows that is ARIAL. Use var(--sans)
+        src/fonts.css:2
+
+TYPEFACE CENSUS: FAIL
+
+--- P2 (F-E.1): the truncated stack behind a 'pt' size ---
+    was PASS and SILENT -- SIZE_RE listed only px|rem|em|%, so the family was
+    never parsed and the declaration was not even counted.
+    declarations : 181 font-family / font-shorthand family lists
+    orphans      : 1
+  1 orphan declaration(s):
+    -apple-system,sans-serif                             1 site(s)
+        a TRUNCATED -apple-system stack. -apple-system resolves on Apple platforms and nowhere else, so off Apple the generic wins -- on Windows that is ARIAL. Use var(--sans)
+        src/styles.css:505
+
+TYPEFACE CENSUS: FAIL
+
+--- P3 (F-E.3): an UPPERCASE property name ---
+    was PASS: CSS property names are case-insensitive, the regexes were not.
+    declarations : 181 font-family / font-shorthand family lists
+    orphans      : 1
+  1 orphan declaration(s):
+    Tahoma,sans-serif                                    1 site(s)
+        a family the app does not own, and no documented exception
+        src/styles.css:505
+
+TYPEFACE CENSUS: FAIL
+
+--- P4 (F-E.4): a shorthand whose family cannot be parsed ---
+    was PASS and silent. Unreadable must not be indistinguishable from clean.
+    declarations : 181 font-family / font-shorthand family lists
+    orphans      : 1
+  1 orphan declaration(s):
+    menu                                                 1 site(s)
+        a `font:` shorthand whose family this check COULD NOT PARSE. Unreadable is not clean. If the size uses a unit SIZE_RE does not list, add it; if the declaration is split across lines, join it
+        src/styles.css:505
+
+TYPEFACE CENSUS: FAIL
+
+--- P5 (new arm): a CSS-wide reset keyword ---
+    font-family:initial does NOT inherit -- it restores the UA default, which
+    on a <button> in Chrome/Windows is Arial. The defect wearing a keyword.
+    declarations : 181 font-family / font-shorthand family lists
+    orphans      : 1
+  1 orphan declaration(s):
+    initial                                              1 site(s)
+        a CSS-wide reset keyword. It does not inherit -- it puts the family back to the UA default, which on a <button> in Chrome/Windows is ARIAL. `inherit` is the honest form
+        src/styles.css:505
+
+TYPEFACE CENSUS: FAIL
+
+--- P6 (F-E.2): one declaration wrapped across two lines ---
+    the parser still reads a line at a time, but the FRAGMENT it reads cannot
+    match a legitimate token exactly, so the declaration is caught anyway.
+    declarations : 181 font-family / font-shorthand family lists
+    orphans      : 1
+  1 orphan declaration(s):
+    var(--sans),                                         1 site(s)
+        a family the app does not own, and no documented exception
+        src/styles.css:505
+
+TYPEFACE CENSUS: FAIL
+
+--- NEGATIVE CONTROL: the @font-face descriptor itself must stay unflagged ---
+    src/fonts.css untouched; its font-family:'Space Grotesk' descriptor DEFINES
+    a face rather than choosing one, and must not be counted as a use.
+    declarations : 180 font-family / font-shorthand family lists
+    orphans      : 0
+TYPEFACE CENSUS: PASS  (180 declarations, 0 orphans, 2 documented exception(s), both pinned to --sans or argued in place)
+
+--- RESTORED ---
+(styles.css shows only this wave's own committed work; fonts.css must be absent)

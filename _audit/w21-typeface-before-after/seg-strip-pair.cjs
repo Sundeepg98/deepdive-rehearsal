@@ -19,6 +19,9 @@
  *   - the strip box has not moved between the measuring pass and the capture pass
  *   - window.innerWidth is really 1280 (a devtools/scrollbar surprise would silently reframe)
  *   - scrollY is 0, so the page-coordinate clip means what it says
+ *   - and THE PAIR IS A PAIR: the two deliverables differ in bytes AND render the strip at
+ *     different heights. Every assertion above is about framing, and framing assertions pass
+ *     perfectly on the same build photographed twice.
  *
  * Usage: node _audit/w21-typeface-before-after/seg-strip-pair.cjs
  *        (reads the committed HEAD deliverable for BEFORE via git, and the working tree for AFTER)
@@ -37,11 +40,17 @@ const VW = 1280, VH = 800;
 const PAD = 12;                     /* breathing room around the strip in the crop */
 const HASH = '#event-driven/walk';
 
-/* The BEFORE build is the deliverable as committed at the branch point. Materialise it from git
-   rather than keeping a binary copy around, so the pair cannot drift from the record. */
+/* The BEFORE build is the deliverable as committed at the BRANCH POINT, and that rev is PINNED.
+   It used to resolve `git rev-parse HEAD`, which was the branch point only while the wave was
+   uncommitted. Once the wave landed, HEAD became the AFTER build -- so re-running the committed
+   script produced four PNGs, exited 0, fired no assertion, and silently overwrote the committed
+   evidence with a BEFORE that was byte-identical to the AFTER. Evidence-shaped and evidence-free,
+   one level up from the hazard this file's own header warns about (cold verify F-B). */
+const BASE_REV = process.env.W21_BASE_REV || 'f7eb2dd';
+
 function beforeHtml() {
   const tmp = path.join(OUTDIR, '_before.tmp.html');
-  const base = execFileSync('git', ['-C', ROOT, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
+  const base = execFileSync('git', ['-C', ROOT, 'rev-parse', BASE_REV], { encoding: 'utf8' }).trim();
   const buf = execFileSync('git',
     ['-C', ROOT, 'show', base + ':deepdive_content_pipeline_rehearsal.html'],
     { maxBuffer: 1 << 30 });
@@ -132,6 +141,24 @@ async function segBox(page, label) {
       }
     }
     const every = Object.keys(boxes).map((k) => boxes[k]);
+
+    /* THE PAIR MUST BE A PAIR. Pinning BASE_REV fixes the default, but any override -- or a
+       future rebase that moves what that rev names -- could still hand this script the same
+       build twice, and every framing assertion above would happily pass on it. So assert the
+       two builds are actually different, at the two levels that matter: different BYTES, and
+       a different rendered strip. The strip heights are already measured (420 vs 456); a pair
+       whose two halves render identically is not evidence of a typeface change. */
+    const beforeBytes = fs.statSync(before.file).size;
+    const afterBytes = fs.statSync(AFTER_HTML).size;
+    if (beforeBytes === afterBytes) {
+      throw new Error('PAIR ASSERT: BEFORE and AFTER deliverables are the same size ('
+        + beforeBytes + ' bytes) -- this is almost certainly the same build twice. BASE_REV='
+        + BASE_REV + ' resolved to ' + before.rev.slice(0, 7));
+    }
+    if (boxes['before/light'].h === boxes['after/light'].h) {
+      throw new Error('PAIR ASSERT: the strip renders at the same height ('
+        + boxes['before/light'].h + 'px) in both builds. There is no typeface change to show.');
+    }
     const x0 = Math.floor(Math.min.apply(null, every.map((b) => b.x)) - PAD);
     const y0 = Math.floor(Math.min.apply(null, every.map((b) => b.y)) - PAD);
     const x1 = Math.ceil(Math.max.apply(null, every.map((b) => b.x + b.w)) + PAD);

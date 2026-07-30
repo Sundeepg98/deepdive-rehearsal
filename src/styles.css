@@ -745,7 +745,11 @@ html[data-theme="dark"] .sidebar .seg button.on .seg-key{color:var(--acc);border
      scripts/app/chrome-metrics.js writes --chrome-top / --chrome-bot from the live .seg and
      .mockcta boxes and re-derives on a ResizeObserver; the values below are the FALLBACK for the
      frame before it runs and for JS off entirely. They are the last two constants in this system,
-     so test/chrome_metrics.cjs asserts them equal to the measured truth rather than trusting them.
+     so test/chrome_metrics.cjs checks them against the measured truth rather than trusting them --
+     within an 8px band, because measured height carries a font-metric term and one hardcoded pair
+     can be exact on at most one platform (demanding equality failed the Ubuntu gate). These values
+     are the Windows measurement, deliberately: of the platforms measured it is the HIGH side, and a
+     fallback that over-reserves leaves a gap while one that under-reserves hides content.
      Read the module header for why a constant here cannot survive: `padding-top:56px` against a
      .seg that measures 61 buried 5px of .side-id under the bar in CHROMIUM, on the shipped build,
      before any cross-engine question was asked. */

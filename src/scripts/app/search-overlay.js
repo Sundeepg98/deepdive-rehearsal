@@ -409,6 +409,12 @@
   function navigateTo(d) {
     close();
     if (d && d.kind === 'topic') {
+      /* A TOPIC RESULT PICKED FROM THE HOME HAS TO NAVIGATE, TOO. setTopic alone switches the
+         registry and moves nobody on a topic-less route (Router.setTopic no-ops there by design),
+         so the user stayed on #home and their pick vanished -- silently, with no console error.
+         Same rule, same call, as the home's own cards and the Topic index: LastVisit owns it.
+         Before setTopic, matching the order Panels.bind fires onPick in. */
+      if (typeof LastVisit !== 'undefined' && LastVisit.navigateAfterPick) LastVisit.navigateAfterPick('topic');
       if (typeof TopicRegistry !== 'undefined' && TopicRegistry.setTopic) TopicRegistry.setTopic(d.id);
     } else if (d && window.Router) {
       window.Router.navigate(d.id);

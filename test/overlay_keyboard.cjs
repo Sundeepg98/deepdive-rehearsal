@@ -39,6 +39,28 @@
  * IT FAILS ON THE PRE-FIX BUILD -- verified against all four mechanisms independently, each
  * reverted on its own, each watched going red. See the header of the commit.
  *
+ * ===== W17/X4: THE SCROLL-REGION CENSUS =====
+ * The contract above is "every focusable element is reachable". It is exactly satisfied by a dialog
+ * whose only focusable element is Close -- and that is how the keyboard-shortcuts overlay passed for
+ * months while clipping 206px of itself with no keyboard path to the clipped part. #keybody was the
+ * one of four `.cram-body` scroll regions shipped WITHOUT `tabindex="0" role="region"`, so it was
+ * never IN the focusable set the loop above compares against. The check could not see the hole
+ * because the hole was in its own denominator.
+ *
+ * The census closes the CLASS, not the instance: it enumerates every scroll body of every
+ * [role=dialog][aria-modal=true] FROM THE DOM and requires each to be focusable, named, and a real
+ * overflow container -- so a fifth overlay added tomorrow is covered the day it lands, and no future
+ * omission can hide behind a focusable set it was excluded from.
+ *
+ * It is guarded against being a check that cannot fail: it asserts the census is non-empty and
+ * covers every dialog that has a scroll body (a selector that silently matches nothing would
+ * otherwise report a clean sweep of zero elements), and the functional arm first asserts that
+ * #keybody genuinely OVERFLOWS before demanding that the keyboard can scroll it.
+ *
+ * Watched RED against the pre-fix deliverable: #keybody reports tabindex null / role null / no
+ * accessible name; it is absent from the tab ring across 12 real presses; and End leaves scrollTop
+ * at 0 with 208px unreachable.
+ *
  * Usage: node test/overlay_keyboard.cjs <deliverable.html>   (CHROME=<path> for the browser) */
 'use strict';
 const path = require('path');
@@ -274,6 +296,124 @@ const PROBE = () => {
     await closeOv(d);
   }
 
+  /* ================= W17/X4: EVERY DIALOG SCROLL REGION IS A KEYBOARD SURFACE ================= */
+  /* Enumerated from the DOM, never from a list -- a list is what let one of the four be forgotten. */
+  const census = await page.evaluate(() => Array.prototype.map.call(
+    document.querySelectorAll('[role="dialog"][aria-modal="true"] .cram-body'), (b) => {
+      const cs = getComputedStyle(b);
+      const dlg = b.closest('[role="dialog"]');
+      return {
+        dialog: '#' + (dlg ? dlg.id : '?'),
+        body: '#' + b.id,
+        tabindex: b.getAttribute('tabindex'),
+        role: b.getAttribute('role'),
+        name: b.getAttribute('aria-label') || '',
+        overflowY: cs.overflowY,
+      };
+    }));
+  const dialogsWithBody = await page.evaluate(() => Array.prototype.filter.call(
+    document.querySelectorAll('[role="dialog"][aria-modal="true"]'), (d) => !!d.querySelector('.cram-body')).length);
+
+  /* NEGATIVE CONTROL FOR THE CENSUS ITSELF. Without these two, a selector that matched nothing would
+     report a spotless sweep, and this whole section would be decoration. */
+  chk('[census] the scroll-region census actually found the scroll regions (>=4, one per dialog that has one)',
+    census.length >= 4 && census.length === dialogsWithBody,
+    'found ' + census.length + ' bodies across ' + dialogsWithBody + ' dialogs -- if this is 0 the census selector is dead and every arm below is vacuous');
+
+  const unfocusable = census.filter((c) => c.tabindex !== '0');
+  chk('[census] EVERY dialog scroll region is focusable (tabindex="0") -- ' + census.map((c) => c.body).join(', '),
+    unfocusable.length === 0,
+    'not focusable: ' + unfocusable.map((c) => c.body + ' in ' + c.dialog + ' (tabindex ' + c.tabindex + ')').join(', ') +
+    ' -- its content is unreachable by keyboard the moment it overflows');
+  const unroled = census.filter((c) => c.role !== 'region');
+  chk('[census] EVERY dialog scroll region declares role="region"',
+    unroled.length === 0, 'missing role=region: ' + unroled.map((c) => c.body).join(', '));
+  const unnamed = census.filter((c) => !c.name.trim());
+  chk('[census] EVERY dialog scroll region carries an accessible name',
+    unnamed.length === 0, 'unnamed: ' + unnamed.map((c) => c.body).join(', ') +
+    ' -- a named region is what lets a screen-reader user find it in the landmark list');
+  const notScrollers = census.filter((c) => c.overflowY !== 'auto' && c.overflowY !== 'scroll');
+  chk('[census] ...and each really is an overflow container, so the rule above is about scrolling and not decoration',
+    notScrollers.length === 0, 'overflow-y: ' + notScrollers.map((c) => c.body + '=' + c.overflowY).join(', '));
+
+  /* ---- THE FUNCTIONAL ARM, on the one measured to overflow: #keybody clips 206-208px ---- */
+  const KEY = DIALOGS.find((d) => d.name === 'keyboard');
+  await openOv(KEY);
+  const geom = await page.evaluate(() => {
+    const b = document.getElementById('keybody');
+    return { scrollHeight: b.scrollHeight, clientHeight: b.clientHeight, clipped: b.scrollHeight - b.clientHeight };
+  });
+  chk('[keyboard] #keybody genuinely overflows, so the arms below are not vacuous (' + geom.clipped + 'px below the fold)',
+    geom.clipped > 0, JSON.stringify(geom) + ' -- nothing is clipped at this viewport; the scroll arms would pass for free');
+
+  /* Tab to it like a user would. Bounded by the dialog's own focusable count, not by a magic number. */
+  const keyWant = await page.evaluate((s) => window.__K.focusables(s).length, KEY.sel);
+  let reachedBody = false;
+  const keyRing = [];
+  for (let i = 0; i < keyWant + 3; i++) {
+    await page.keyboard.press('Tab');
+    await B.settle(page);
+    const f = await page.evaluate(() => window.__K.focus());
+    keyRing.push(f);
+    if (f === 'div#keybody') { reachedBody = true; break; }
+  }
+  chk('[keyboard] Tab REACHES the shortcuts body itself, not just its close button',
+    reachedBody, 'the ring was ' + [...new Set(keyRing)].join(' -> ') +
+    ' -- the body is not a tab stop, so the clipped rows have no keyboard path at all');
+
+  /* With it focused, the arrow/End keys must move it. On the pre-fix build scrollTop never left 0.
+     CHROMIUM ANIMATES KEYBOARD SCROLLING HERE (the browser's own smooth step -- .cram-body sets no
+     scroll-behavior), so "press, settle two rAFs, read once" samples a value MID-FLIGHT: it reports
+     whatever the animation happens to have reached, and its greenness rides on the animation having
+     started by then. Measured margin on this box was as little as 2px. That is the stopwatch bet
+     _boot.cjs exists to abolish -- so poll for the CONDITION (it moved) instead, and separately poll
+     to REST so the number this arm reports is the settled one rather than an intermediate. Slow only
+     costs time; a genuinely dead ArrowDown still times out and fails honestly. */
+  const scrolled = reachedBody ? await (async () => {
+    const readTop = () => page.evaluate(() => document.getElementById('keybody').scrollTop);
+    const before = await readTop();
+    await page.keyboard.press('ArrowDown');
+    let afterArrow = before;
+    try {
+      afterArrow = await B.pollFor(readTop, (v) => v > before, 5000,
+        'ArrowDown moves #keybody off its resting scrollTop');
+    } catch (e) { afterArrow = (typeof e.last === 'number') ? e.last : before; }
+    /* to rest: two consecutive equal samples, so the receipt is not another mid-flight number */
+    let prev = -1, settledArrow = afterArrow;
+    for (let i = 0; i < 25; i++) {
+      const v = await readTop();
+      if (v === prev) { settledArrow = v; break; }
+      prev = v; settledArrow = v;
+      await B.settle(page);
+    }
+    await page.keyboard.press('End');
+    await page.waitForFunction(() => {
+      const b = document.getElementById('keybody');
+      return b.scrollTop >= b.scrollHeight - b.clientHeight - 2;
+    }, null, { timeout: 3000 }).catch(() => {});
+    const afterEnd = await page.evaluate(() => {
+      const b = document.getElementById('keybody');
+      return { top: b.scrollTop, max: b.scrollHeight - b.clientHeight };
+    });
+    return { before, afterArrow, settledArrow, afterEnd };
+  })() : null;
+  chk('[keyboard] ArrowDown on the focused body SCROLLS it (the key the user reaches for first)',
+    !!scrolled && scrolled.afterArrow > scrolled.before,
+    'scrollTop never left ' + (scrolled ? scrolled.before : 'n/a') + ' within the poll budget ' + JSON.stringify(scrolled));
+  chk('[keyboard] End reaches the BOTTOM, so every clipped row is keyboard-reachable',
+    !!scrolled && scrolled.afterEnd.top >= scrolled.afterEnd.max - 2,
+    'End left ' + (scrolled ? (scrolled.afterEnd.max - scrolled.afterEnd.top) : geom.clipped) +
+    'px still unreachable ' + JSON.stringify(scrolled));
+
+  /* THE NAME AS AN AT ACTUALLY COMPUTES IT -- read through the accessibility tree, not off the
+     attribute the census already read. Two instruments, so a stray aria-hidden cannot pass both. */
+  const namedRegion = await page.locator('#keyov [role="region"]').count();
+  const byRole = await page.getByRole('region', { name: /keyboard shortcuts/i }).count();
+  chk('[keyboard] the body resolves as a NAMED region in the accessibility tree',
+    namedRegion === 1 && byRole >= 1,
+    JSON.stringify({ regionsInKeyov: namedRegion, matchedByAccessibleName: byRole }));
+  await closeOv(KEY);
+
   /* ================= THE MOCK RUN'S OWN CONTRACT ================= */
   /* The three properties that had to hold SIMULTANEOUSLY, and which no one-line fix could give:
      the run keys still drive the run, and no control's key is ever stolen from it. */
@@ -354,7 +494,8 @@ const PROBE = () => {
   console.log('OVERLAY KEYBOARD: PASS  (' + notes.length +
     ' assertions across ' + DIALOGS.length + ' dialogs: every focusable is Tab-reachable through the' +
     ' shadow boundary; focus never escapes; Enter AND Space on the focused close button close it;' +
-    ' focus restores to the trigger; the mock run opens on its surface and keeps Space-to-reveal)');
+    ' focus restores to the trigger; every dialog scroll region is a focusable, named, scrollable' +
+    ' keyboard surface; the mock run opens on its surface and keeps Space-to-reveal)');
   return B.finish(0, null);
 })().catch(async (e) => {
   console.error(e && e.stack || e);

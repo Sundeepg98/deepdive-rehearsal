@@ -35,13 +35,12 @@
     try { return (typeof Store !== 'undefined' && Store.get('home.landing', '') === 'resume'); } catch (e) { return false; }
   }
 
-  /* the view the resume pointer names, so Resume lands in the drill they were in, not on walk */
+  /* the view the resume pointer names, so Resume lands in the drill they were in, not on walk.
+     ONE implementation, in the module that owns the pointer (last-visit.js) -- this used to be a
+     private copy here, and the Search and Topic-index overlays, which needed the same answer, each
+     shipped without one. Same body, same fallback. */
   function lastView() {
-    try {
-      var v = (typeof Store !== 'undefined') ? Store.get('nav.last', null) : null;
-      if (v && v.view && window.Router && Router.ROUTES[v.view] && v.view !== 'home') return v.view;
-    } catch (e) {}
-    return 'walk';
+    return (typeof LastVisit !== 'undefined' && LastVisit.resumeView) ? LastVisit.resumeView() : 'walk';
   }
   function lastViewTitle() {
     var v = lastView();
@@ -215,8 +214,11 @@
       /* See Panels.bind's contract. A 'hash' pick assigns location.hash, which routes away from
          #home by itself -- navigating as well would push a junk entry and break Back. A 'topic'
          (or 'cross') pick goes through TopicRegistry.setTopic, whose Router.setTopic is a NO-OP on
-         a topic-less route, so the home MUST navigate itself or nothing happens at all. */
-      onPick: function (kind) { if (kind !== 'hash' && window.Router) Router.navigate(lastView()); },
+         a topic-less route, so the home MUST navigate itself or nothing happens at all.
+         That rule now lives in ONE place (LastVisit.navigateAfterPick) because the two overlays
+         that pick topics needed it too and neither had it. Identical behaviour here: this callback
+         only ever fires while the home is the route, which is precisely the condition it tests. */
+      onPick: function (kind) { if (typeof LastVisit !== 'undefined' && LastVisit.navigateAfterPick) LastVisit.navigateAfterPick(kind); },
       /* A room is a place in the library, not a new view -- scroll to it and land the focus on its
          first card, so the keyboard user is exactly where the mouse user is looking. */
       onRoom: function (gid) {

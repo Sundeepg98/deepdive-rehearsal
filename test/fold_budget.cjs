@@ -295,6 +295,120 @@ async function pinViewport(page, w, h) {
     return B.finish(1, 'FOLD BUDGET: ABORTED (self-test failed: the landscape check cannot fail)');
   }
 
+  /* ===================== THE WAY FORWARD, AT STAGE 1 (W19 / audit X7) =====================
+     The budget above is about the QUESTION being on screen when the drill opens. This is its
+     other half: after the user answers it and presses Reveal, the drill's only forward control
+     must be somewhere they can press. On the shipped build it was not -- measured here at
+     360x800, fresh context, real hit-tested tap, scroll at rest: #adv finished at [723.7,767.7],
+     [737.2,781.2] and [1330.1,1374.1] against a band ending at 728, i.e. 90%, 121% and 1468%
+     occluded, and a hit test at its centre returned BUTTON#mockopen / SPAN.mb-lbl -- the Mock-run
+     bar. The app seated the content it had just revealed and abandoned the control.
+
+     WHY IT BELONGS IN THIS FILE. It is the same measurement: geometry relative to the live fixed
+     chrome, invisible to every behaviour check (the button renders, the DOM is correct, nothing
+     errors) and invisible to VR (no baseline captures a revealed drill). The band is computed by
+     the same FOLD() probe, from the same two bars.
+
+     THE HIT TEST IS THE ASSERTION, not the rectangle. "Below the fold" is normal web layout; what
+     is not normal is a control whose centre belongs to another widget. elementFromPoint is what
+     the audit used to file this, so it is what settles it. */
+  const ADV = () => {
+    const host = document.querySelector('#drill deep-drill'), root = host && host.shadowRoot;
+    if (!root) return { ready: false, why: 'no shadow root' };
+    const seg = document.querySelector('.sidebar .seg'), bar = document.querySelector('.sidebar .mockcta');
+    const sr = seg.getBoundingClientRect(), br = bar.getBoundingClientRect();
+    const bandTop = getComputedStyle(seg).position === 'fixed' ? sr.bottom : 0;
+    const bandBot = getComputedStyle(bar).position === 'fixed' ? br.top : window.innerHeight;
+    const adv = root.getElementById('adv');
+    if (!adv) return { ready: false, why: 'no #adv (this probe has no follow-up -- the judgment row is next)' };
+    const r = adv.getBoundingClientRect();
+    const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    /* elementFromPoint stops at the shadow HOST, so walk in -- otherwise every in-band answer
+       reads as DEEP-DRILL and the arm can neither pass nor fail honestly. */
+    let hit = document.elementFromPoint(cx, cy), guard = 0;
+    while (hit && hit.shadowRoot && guard++ < 8) {
+      const inner = hit.shadowRoot.elementFromPoint(cx, cy);
+      if (!inner || inner === hit) break;
+      hit = inner;
+    }
+    const occ = Math.max(0, r.bottom - bandBot) + Math.max(0, bandTop - r.top);
+    return {
+      ready: true, scrollY: Math.round(window.scrollY),
+      label: (adv.textContent || '').trim(),
+      rect: [+r.top.toFixed(1), +r.bottom.toFixed(1)],
+      band: [Math.round(bandTop), Math.round(bandBot)],
+      occludedPx: +occ.toFixed(1), occludedPct: Math.round(occ / r.height * 100),
+      inBand: r.top >= bandTop - 0.5 && r.bottom <= bandBot + 0.5,
+      hit: hit ? (hit.tagName + (hit.id ? '#' + hit.id : '') + (typeof hit.className === 'string' && hit.className ? '.' + hit.className.trim().split(/\s+/).join('.') : '')) : 'null',
+      hitIsAdv: hit === adv,
+    };
+  };
+
+  /* Tap the forward control the way a thumb does -- at its painted centre, hit-tested. */
+  async function tapAdv(page) {
+    const c = await page.evaluate(() => {
+      const root = document.querySelector('#drill deep-drill').shadowRoot;
+      const a = root.getElementById('adv');
+      if (!a) return null;
+      const r = a.getBoundingClientRect();
+      return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+    });
+    if (!c) return false;
+    await page.mouse.click(c.x, c.y);
+    await B.settle(page);
+    await settleScroll(page);     /* the seat is a SMOOTH scroll -- wait for it to stop moving */
+    return true;
+  }
+
+  /* ===== THE ROUTER PINS THE PAGE TO THE TOP FOR 400ms AFTER BOOT, AND IT WILL EAT THIS SEAT.
+     router.js:234-246 forces scroll-behavior:auto and re-runs scrollTo(0,0) on a timer chain for
+     400ms, so the browser's on-load "scroll to fragment" step cannot leave the phone header
+     off-screen. A reveal inside that window has its seat silently undone. That is not a product
+     defect -- no thumb reaches Reveal within 400ms of boot -- but it IS a harness trap, and it
+     cost a full measurement round: the same viewport and topic passed or failed depending on how
+     fast the box happened to boot. Wait for the CONDITION (the router handing scroll-behavior
+     back), never a duration. */
+  await page.waitForFunction(
+    () => document.documentElement.style.scrollBehavior !== 'auto',
+    null, { timeout: B.ACT_MS });
+
+  await pinViewport(page, 360, 800);
+  for (let i = 0; i < TOPICS.length; i++) {
+    const t = TOPICS[i];
+    await page.evaluate((id) => { location.hash = '#' + id + '/walk'; }, t);
+    await page.waitForFunction((id) => TopicRegistry.current().id === id, t, { timeout: B.ACT_MS }).catch(() => {});
+    await B.settle(page);
+    await tapPane(page, 'drill');
+    if (!(await tapAdv(page))) { ok('[360x800] ' + t + ': the drill offers a forward control to press', false, 'no #adv at stage 0'); continue; }
+    const a = await page.evaluate(ADV);
+    ok('[360x800] ' + t + ': after Reveal, the drill\'s forward control is inside the live band',
+      a.ready && a.inBand === true, JSON.stringify(a));
+    ok('[360x800] ' + t + ': and a tap at its centre lands on IT, not on the fixed Mock-run bar',
+      a.ready && a.hitIsAdv === true, JSON.stringify({ hit: a.hit, rect: a.rect, band: a.band }));
+    if (a.ready) console.log('       #adv "' + a.label + '" ' + JSON.stringify(a.rect) + ' band=' + JSON.stringify(a.band) + ' occluded=' + a.occludedPct + '%');
+  }
+
+  /* THE PLANT. Put the pre-fix behaviour back -- the app did NOT move the screen on a reveal --
+     and require both arms to notice. Forcing the scroll back to where the reveal left it is
+     exactly the state the shipped build rests in, so this is calibrated to the measured defect
+     rather than to any perturbation. */
+  await page.evaluate((id) => { location.hash = '#' + id + '/walk'; }, TOPICS[0]);
+  await B.settle(page);
+  await tapPane(page, 'drill');
+  await tapAdv(page);
+  const seated = await page.evaluate(ADV);
+  await scrollToRest(page, 0);
+  const unseated = await page.evaluate(ADV);
+  if (!(seated.ready && seated.inBand === true && unseated.ready && unseated.inBand === false && unseated.hitIsAdv === false)) {
+    console.log('  ABORT [X7 plant]: undoing the seat did NOT turn these arms red -- they cannot fail.');
+    console.log('     -> seated=' + JSON.stringify(seated) + '\n     -> unseated=' + JSON.stringify(unseated));
+    await browser.close();
+    return B.finish(1, 'FOLD BUDGET: ABORTED (self-test failed: the X7 arms cannot fail)');
+  }
+  ok('[plant] 360x800: undoing the seat puts the forward control back under the bar, and the hit test back on it', true, '');
+  console.log('       seated ' + JSON.stringify(seated.rect) + ' hit ' + seated.hit +
+    '  ->  unseated ' + JSON.stringify(unseated.rect) + ' hit ' + unseated.hit);
+
   ok('zero console/page errors', errs.length === 0, errs.slice(0, 4).join(' | '));
 
   await browser.close();

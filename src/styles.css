@@ -506,9 +506,37 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
     body{background:#fff !important}
     .app, .mock-ov, .rail, .badge, .rail .fill::after{display:none !important}
     body:not(.print-session) .cram-ov{display:block !important;position:static !important;background:#fff !important;padding:0 !important;backdrop-filter:none !important;-webkit-backdrop-filter:none !important;overflow:visible !important}
-    .cram-panel{box-shadow:none !important;max-width:none !important;border-radius:0 !important;margin:0 !important}
-    .cram-top{display:none !important}
-    .cram-body{padding:0 !important}
+    /* THE TWO RESETS THAT DECIDE WHETHER PAPER GETS THE ARTIFACT. This rule used to reset four
+       properties -- box-shadow, max-width, border-radius, margin -- and it read as complete,
+       because all four are unmistakably screen chrome. But the panel's screen geometry at :474 is
+       `overflow:hidden` + `max-height:calc(100vh - var(--space-36))`, and on paper THERE IS NO
+       SCROLLBAR: a height-capped, overflow-hidden box does not paginate, it TRUNCATES. The Print
+       button emitted ONE A4 page and dropped most of the sheet, in Firefox 151, Chromium 149 and
+       WebKit 26.5 identically -- the cross-engine measurement is the audit's, 1456px of 2218 gone
+       on the flagship and 3059px of 3821 on consistency-models, taken at 1280x800. In the layout a
+       PRINTER actually uses (the 681px A4 content box, chromium) the same defect costs 1828px of
+       2774 and 5122px of 6068. The print stylesheet was 90% right; two missing resets on one
+       selector cost most of the artifact.
+       max-height:none must be !important to beat BOTH caps: `calc(100vh - var(--space-36))` at
+       :474 and the bare `100vh` the <=919px block sets at :2163 -- and :2163 is the one that
+       actually applies here, because the A4 content box is 680px wide, which is INSIDE that
+       breakpoint. Every printer lays this sheet out in the app's MOBILE layout.
+       (Every line number in this block indexes THIS file, post-fix.)
+       Isolated as the SOLE cause before it was fixed: injecting only these two declarations took
+       the flagship 1 page -> 3 and consistency-models 1 -> 7, and additionally clearing the inline
+       body{overflow:hidden} that openCram() sets changed nothing. */
+    .cram-panel{box-shadow:none !important;max-width:none !important;border-radius:0 !important;margin:0 !important;max-height:none !important;overflow:visible !important}
+    /* NEITHER CONTROL SURFACE PRINTS. .cram-top (close + Print) was already handled. .cram-jump was
+       not -- and it is display:none only on DESKTOP (:2145); the <=919px block at :2147 turns it
+       into a 7-button scrollable nav strip, so at the 680px A4 content box it printed a dead row of
+       tappable section buttons across the top of page 1 for the app's whole life. Same class as the
+       walkthrough's Prev/Next pair that base-styles.js hides. */
+    .cram-top, .cram-jump{display:none !important}
+    /* The scrollport, one layer in. Un-capping the panel is not enough while the body it contains
+       is still `overflow-y:auto` (:479) -- an auto scrollport inside an un-capped parent stops
+       clipping in practice, but it remains a fragmentation container, and stating the intent costs
+       nothing and cannot regress. */
+    .cram-body{padding:0 !important;overflow:visible !important}
     body.print-session .cram-ov{display:none !important}
     body.print-session #sessreport{display:block !important;padding:var(--space-6)}
     .sr-sec{break-inside:avoid}

@@ -13,6 +13,7 @@ This replaces per-edit manual vigilance with tooling that runs on every build:
   topic_contract   every topic POPULATED to the depth of the hand-coded 8 (browser)
   cram_scope_distinct  no two topics RENDER the same cram/scope body       (browser)
   cram_surface     what the cram sheet SAYS survives being read cold    (browser)
+  print_truth      the printable sheet reaches PAPER whole -- real A4 page.pdf  (browser)
   sidebar_geometry the switcher shows its value; the nav clears the fold  (browser)
   rail_integrity   the coaching rail NEVER shows another topic's note      (browser)
   layout_static    source-level layout assertions (a regex; SEES NO PIXELS)
@@ -630,6 +631,33 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # the sweep's own named duplicate (0.657) must fire, a Class-L "by design"
                      # restatement (0.525) must not.
                      ('cram_surface', 'test/cram_surface.cjs'),
+                     # THE FIRST CHECK IN THIS REPO THAT LOOKS AT PRINT MEDIA. The two above prove
+                     # the cram sheet is per-topic and that it READS correctly. Neither -- nor any
+                     # of the other 65 -- had ever asked whether it PRINTS, and it did not: the
+                     # print stylesheet reset four properties on .cram-panel and not the two that
+                     # matter, so on paper the sheet stayed a height-capped, overflow-hidden box
+                     # with no scrollbar. The Print button emitted ONE A4 page and silently dropped
+                     # 66-84% of the artifact, identically in Firefox 151, Chromium 149 and WebKit
+                     # 26.5. Measured on the pre-fix build: flagship 1828px of 2774 gone,
+                     # consistency-models 5122px of 6068.
+                     # It settles the question against REAL PAPER -- a Chromium page.pdf at A4 --
+                     # not against a DOM proxy for it, and the page-count band is ARITHMETIC,
+                     # derived from a content height measured in the same run (a count someone once
+                     # observed and typed in is the anti-pattern). It then reads the LAST section's
+                     # heading back OUT OF THE PDF BYTES, because "the last section is missing from
+                     # the paper" was the whole defect and a page count alone cannot see it.
+                     # Also covers the app's SECOND print surface: "Print Q&A" is a separate
+                     # window.open document, so the app's :root never reached it and every design
+                     # token resolved undefined -- h1 and h2 computed 14px/400, identical to body
+                     # copy, on the document that Ctrl/Cmd+P has always produced.
+                     # THREE NEGATIVE CONTROLS, and two of them ABORT the run rather than fail an
+                     # arm: print media is asserted live in-page; a planted class-less div must
+                     # still read break-inside:auto while the cram units read avoid; and the PDF
+                     # text extractor must find the FIRST heading before it is allowed to report on
+                     # the last. A dead extractor must not be able to buy a green OR a red.
+                     # RED on 36 assertions on the pre-fix build, captured verbatim in
+                     # _audit/2026-07-30-w16-print-truth.md.
+                     ('print_truth', 'test/print_truth.cjs'),
                      # The rail is per (topic, view), and a MISSING note is a state the renderer has
                      # to handle -- not a state it may skip. shell.js's `if (TOPIC_CMP_NOTES[tab])`
                      # had no `else`, so a topic with no note for the active pane simply kept the

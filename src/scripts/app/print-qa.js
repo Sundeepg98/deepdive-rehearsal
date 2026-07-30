@@ -26,13 +26,50 @@
     "code{font-family:'SF Mono',Menlo,Consolas,monospace;font-size:.9em;background:#f3f3f3;padding:var(--space-1) var(--space-4);border-radius:3px}" +
     "@media print{body{padding:0}}";
 
+  /* THE TOKENS THIS DOCUMENT NEVER HAD. The CSS above is authored in the app's design tokens, but
+     it is injected into a window.open() document whose only content is that one <style> -- there is
+     no :root anywhere in it, so EVERY var() above resolved to nothing. Measured in the shipped
+     artifact: --space-760, --space-40, --font-size-display, --font-weight-heavy and
+     --line-height-spacious all (UNDEFINED); h1 computed 14px/400 and h2 14px -- byte-identical to
+     body copy, so a 22-probe sheet printed with NO typographic hierarchy at all, and no measure
+     (body max-width:none -> 1280px lines) and no gap between Q&A blocks (article margin 0).
+     It is a second print surface and it owns Ctrl/Cmd+P (see wire() below), so this is what the
+     keyboard shortcut has always produced.
+
+     Harvest the values from the LIVE app document rather than hardcoding them here. The token names
+     are read back out of the CSS string itself, so a token added to that string tomorrow is carried
+     across automatically and this cannot rot into a stale hardcoded list -- the failure mode that
+     produced the bug in the first place was a copy of the design system that nobody kept in sync.
+     The tokens are @property-registered with a <length>/<number> syntax, so getComputedStyle
+     returns them fully resolved (--font-size-display -> "24px", not "var(--size-font-24)"), and a
+     one-level copy is therefore complete. It also means the printed sheet follows the reader's own
+     density setting: html[data-density=compact] and =cozy redefine the whole space scale. */
+  function tokenBlock() {
+    /* Matches var(--x) AND var(--x, fallback) -- the closing paren is deliberately NOT required.
+       Requiring it dropped any token written with a fallback, silently, which is the same class of
+       quiet omission this whole function exists to fix. There are none today (45 of 45 references
+       in the CSS above are bare), so this is guarding the next edit, not a live bug. */
+    var refs = CSS.match(/var\(\s*(--[a-z0-9-]+)\s*[,)]/g) || [];
+    var root = document.documentElement;
+    var cs = window.getComputedStyle(root);
+    var seen = {}, decls = [];
+    for (var i = 0; i < refs.length; i++) {
+      var name = refs[i].replace(/^var\(\s*/, '').replace(/\s*[,)]$/, '');
+      if (seen[name]) continue;
+      seen[name] = 1;
+      var v = cs.getPropertyValue(name).trim();
+      if (v) decls.push(name + ':' + v);
+    }
+    return decls.length ? ':root{' + decls.join(';') + '}' : '';
+  }
+
   function curTopic() { return (typeof TopicRegistry !== 'undefined' && TopicRegistry.current) ? TopicRegistry.current() : null; }
 
   function buildHtml() {
     var r = curTopic();
     if (!r || !r.data || !r.data.bank || !r.data.bank.cards) return null;
     var idn = r.identity, cards = r.data.bank.cards;
-    var h = '<!doctype html><html lang="en"><head><meta charset="utf-8"><title>' + idn.title + ' \u2014 Q&A</title><style>' + CSS + '</style></head><body>';
+    var h = '<!doctype html><html lang="en"><head><meta charset="utf-8"><title>' + idn.title + ' \u2014 Q&A</title><style>' + tokenBlock() + CSS + '</style></head><body>';
     h += '<header><h1>' + idn.title + '</h1>' + (idn.h1 ? '<p class="sub">' + idn.h1 + '</p>' : '') + '<p class="meta">' + cards.length + ' interview probes &middot; Deep Rehearsal Q&amp;A</p></header>';
     cards.forEach(function (c, i) {
       h += '<article><div class="sig">' + (c.signal || '') + '</div><h2><span class="qn">Q' + (i + 1) + '.</span> ' + c.q + '</h2><div class="a">' + c.a + '</div>';

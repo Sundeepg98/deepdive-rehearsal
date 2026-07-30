@@ -10,3 +10,11 @@
 # on somebody else's machine, surfacing as "the pixel check is flaky" rather than as what it is.
 # Be explicit. (`binary` = `-text -diff`.)
 *.png binary
+
+# Same argument, same trap, a second file type. The W-X1 print wave commits real A4 page.pdf
+# output as its review artifact (_audit/w16-print-before-after/), and a PDF carries FlateDecode
+# streams -- arbitrary bytes, CR and LF among them. EOL-normalising one produces a file whose
+# stream lengths no longer match its /Length entries: a corrupt PDF that git checks out silently
+# on the next Windows clone. text=auto's heuristic is not a guarantee, so do not rely on it
+# noticing.
+*.pdf binary

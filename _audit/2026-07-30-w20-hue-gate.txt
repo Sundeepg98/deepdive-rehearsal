@@ -2,9 +2,9 @@
   ascii_guard               PASS  ASCII GUARD: PASS  (822 files strict 7-bit ASCII: src 687, src/topics-md 38, test 72, tools 25)
   syntax_check              PASS  SYNTAX CHECK: PASS  (613 modules parse; 52 aggregator files skipped)
   global_collisions         PASS  GLOBAL COLLISIONS: PASS  (688 top-level globals, each declared in exactly one module)
-  build_integrity           PASS  BUILD INTEGRITY: PASS  (12148641 bytes, 0 unresolved, 9 panes + 7 overlays, build SYNCED the deliverable, HEAD-match DEFERRED -- 1 uncommitted path(s) [_audit/2026-07-30-w20-hue-gate.txt]: commit src/ AND the rebuilt deliverable together, or CI will reject the pair)
+  build_integrity           PASS  BUILD INTEGRITY: PASS  (12148978 bytes, 0 unresolved, 9 panes + 7 overlays, build SYNCED the deliverable, HEAD-match DEFERRED -- 1 uncommitted path(s) [_audit/2026-07-30-w20-hue-gate.txt]: commit src/ AND the rebuilt deliverable together, or CI will reject the pair)
   css_syntax                PASS    PASS All checks passed (18 keyframes validated)
-  room_static               FAIL    - 1 hardcoded indigo rgba literal(s) regrew -- use an --acc-aNN rung  (full output: test/_last_fail_room_static.txt)
+  room_static               PASS  ROOM STATIC: PASS  (codemod=0, styles.css infinite=0, 6 room blocks + rebind, boot stamped)
   room_contrast             PASS  ROOM CONTRAST: PASS  (12 rooms: ink/bg >= 4.5, on-slab/solid >= 5.0)
   slab_ink                  PASS  SLAB INK: PASS
   phantom_tokens            PASS  PHANTOM TOKENS: PASS  (3 known phantom(s) allowlisted in phantom_tokens_debt.json; no new one, none left stale)
@@ -70,4 +70,4 @@
   touch_floor               PASS  TOUCH FLOOR: PASS
   visual_regression         PASS  VISUAL REGRESSION: PASS  (16 baselines, win32-chromium149; every capture reached a proven rest state across all 18 roots, cleared the blank-page floor, and matched its committed pixels)
 ================================================================
-GATE: FAIL (room_static)
+GATE: PASS

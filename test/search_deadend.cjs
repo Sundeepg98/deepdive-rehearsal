@@ -160,7 +160,9 @@ const PICK_VIA_INDEX = async (page, want) => {
 
 (async () => {
   const fails = [], errs = [];
+  let ran = 0;
   const ok = (name, cond, detail) => {
+    ran++;
     console.log((cond ? '  PASS ' : '  FAIL ') + name + (cond || !detail ? '' : '\n     -> ' + detail));
     if (!cond) fails.push(name);
   };
@@ -339,6 +341,13 @@ const PICK_VIA_INDEX = async (page, want) => {
 
   await browser.close();
   const pass = fails.length === 0;
-  console.log('SEARCH DEADEND: ' + (pass ? 'PASS' : 'FAIL (' + fails.join('; ') + ')'));
+  /* Report the COUNT, like every other check in the gate does. The bare "PASS" made two gate
+     captures taken a coverage change apart byte-identical -- so the run of record carried no
+     evidence that the arms had grown at all, and a reviewer could not tell the runs apart. */
+  console.log('SEARCH DEADEND: ' + (pass
+    ? 'PASS  (' + ran + ' assertions: the whole-system prompts route to real component topics; a ' +
+      'topic picked from #home in Search or the Topic index actually lands on it; navigateAfterPick ' +
+      'refuses off the home route; and a cross-drill pick from #home exits too)'
+    : 'FAIL (' + fails.join('; ') + ')'));
   process.exit(pass ? 0 : 1);
 })();

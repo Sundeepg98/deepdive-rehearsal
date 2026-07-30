@@ -69,13 +69,57 @@ const DOCK = () => {
   return d ? { exists: true, armed: !!d.querySelector('.nd-armed') } : { exists: false };
 };
 
-/* the Solid/Missed button's painted-centre viewport coords, for a real trusted click (assumes scrollJudge ran) */
-const BTN_BOX = (id) => {
-  const r = document.querySelector('#drill deep-drill').shadowRoot, b = r && r.getElementById(id);
-  if (!b) return null;
-  const rect = b.getBoundingClientRect();
-  return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
-};
+/* ===== A TRUSTED CLICK MUST LAND ON THE BUTTON, NOT WHERE IT USED TO BE =====
+ * This replaces a BTN_BOX helper that read the button's rect ONCE, after scrollTo()'s two rAFs,
+ * and then fired page.mouse.click at those coordinates blind. That is the single-sample pattern
+ * _boot.cjs's pollFor and touch_floor's atRest both exist to kill, and it is why the reveal-grade
+ * arm went red twice on loaded CI runners (2026-07-29 residuals, 2026-07-30 W16) and was clean on
+ * every rerun. Two ways the sample goes stale between the read and the click, both load-scaled:
+ * the judge row arrives under the shared `pop` keyframe, so a rect read mid-animation is the
+ * ANIMATION and not the control (touch_floor's header records the same trap reading 43.2px for a
+ * 44px button); and scrollIntoView's layout can lag the settle, which is exactly the lag that made
+ * the SIBLING reachability arm flake at [360] and got it converted to a poll at lines below.
+ * A missed click records no grade, so the arm fails reading `undefined !== 1` -- a real red with a
+ * harness cause.
+ *
+ * NOTE WHAT THIS DOES NOT DO: it does not soften the assertion, widen a tolerance, or add a retry
+ * around the GRADE. The recorded-level assertion downstream is byte-identical. It gates the click
+ * on the same two-sided hit-test the sibling arm already demands, and takes the click coordinates
+ * from THE SAME sample that proved them reachable -- so the check now asserts strictly MORE than
+ * before (previously: "a rect existed"; now: "the click was delivered onto a still, unoccluded
+ * #jm"). On the pre-fix deliverable #jm does not exist at reveal, so this times out and the arm is
+ * still RED -- the watched-red is preserved, it just names the reason instead of missing silently. */
+function btnProbe(page, id) {
+  return page.evaluate((i) => {
+    const host = document.querySelector('#drill deep-drill'), r = host && host.shadowRoot, b = r && r.getElementById(i);
+    if (!b) return { ok: false, why: 'no #' + i + ' at this stage' };
+    b.scrollIntoView({ block: 'center', behavior: 'instant' });
+    const rect = b.getBoundingClientRect();
+    if (!rect.width || !rect.height) return { ok: false, why: 'zero box' };
+    const cx = Math.round(rect.left + rect.width / 2), cy = Math.round(rect.top + rect.height / 2);
+    const lightHit = document.elementFromPoint(cx, cy), shadowHit = r.elementFromPoint(cx, cy), drill = document.getElementById('drill');
+    return {
+      ok: !!lightHit && !!drill && drill.contains(lightHit) && !!shadowHit && (shadowHit === b || b.contains(shadowHit)),
+      cx, cy, w: +rect.width.toFixed(1), h: +rect.height.toFixed(1),
+      light: lightHit && lightHit.tagName, shadow: shadowHit && (shadowHit.id || shadowHit.tagName),
+    };
+  }, id);
+}
+/* Poll until the target is BOTH reachable and AT REST -- two consecutive samples agreeing on the
+   box, the same "two identical frames" rest proof touch_floor and visual_regression use -- then
+   click the coordinates from that sample. Condition, not duration: a button that never settles or
+   never becomes reachable times out into a real failure. */
+async function clickWhenReachable(page, id) {
+  let prev = null;
+  const s = await B.pollFor(async () => {
+    const cur = await btnProbe(page, id);
+    const same = prev && prev.ok && cur.ok && prev.cx === cur.cx && prev.cy === cur.cy && prev.w === cur.w && prev.h === cur.h;
+    prev = cur;
+    return same ? cur : null;
+  }, (v) => v !== null, B.ACT_MS, 'the #' + id + ' button to come to rest and be reachable at its painted centre');
+  await page.mouse.click(s.cx, s.cy);
+  return s;
+}
 
 /* A GUARANTEED fresh session: clear storage, then page.reload() -- which re-runs the JS. A same-file
    hash goto is a SAME-DOCUMENT navigation that keeps the drill's live state (e.g. a prior re-drill's
@@ -195,15 +239,15 @@ const REC = (page, tid) => page.evaluate((t) => { const p = localStorage.getItem
   await freshSession(page);
   await toDrillReveal(page);
   const id0 = await page.evaluate(() => { const d = document.querySelector('#drill deep-drill'); const card = cards[d.di]; return CardId.forCards(_allCards)[_allCards.indexOf(card)]; });
-  await scrollTo(page, 'jm');
-  const missBox = await page.evaluate(BTN_BOX, 'jm');
+  let missBox = null, missWhy = '';
+  try { missBox = await clickWhenReachable(page, 'jm'); }
+  catch (e) { missWhy = e.last ? JSON.stringify(e.last) : e.message; }
   if (missBox) {
-    await page.mouse.click(missBox.x, missBox.y);
     /* poll the record until the grade lands -- the drillgraded snapshot can lag the click under load */
     await page.waitForFunction((a) => { const p = localStorage.getItem('ddr.v1.progress.' + a.t); if (!p) return false; const r = JSON.parse(p); return !!(r.cards && r.cards[a.id] === 1); }, { t: topicId, id: id0 }, { timeout: B.ACT_MS }).catch(() => {});
   }
   const recMiss = await REC(page, topicId);
-  ok('reveal: a real click on Missed at the reveal moment records the grade (level 1) under the probe content id', !!missBox && !!recMiss && recMiss.cards[id0] === 1 && recMiss.done === 1, JSON.stringify({ hadButton: !!missBox, level: recMiss && recMiss.cards[id0], done: recMiss && recMiss.done }));
+  ok('reveal: a real click on Missed at the reveal moment records the grade (level 1) under the probe content id', !!missBox && !!recMiss && recMiss.cards[id0] === 1 && recMiss.done === 1, JSON.stringify({ clicked: missBox || missWhy, level: recMiss && recMiss.cards[id0], done: recMiss && recMiss.done }));
 
   /* re-drill JUST that probe (bank index 0), push through its follow-ups, re-grade SOLID */
   await page.evaluate(() => document.querySelector('#drill deep-drill').drillBank([0]));

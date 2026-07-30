@@ -14,6 +14,7 @@ This replaces per-edit manual vigilance with tooling that runs on every build:
   cram_scope_distinct  no two topics RENDER the same cram/scope body       (browser)
   cram_surface     what the cram sheet SAYS survives being read cold    (browser)
   print_truth      the printable sheet reaches PAPER whole -- real A4 page.pdf  (browser)
+  cram_fit         the sheet FITS the phone, and its index paints with it  (browser)
   sidebar_geometry the switcher shows its value; the nav clears the fold  (browser)
   rail_integrity   the coaching rail NEVER shows another topic's note      (browser)
   layout_static    source-level layout assertions (a regex; SEES NO PIXELS)
@@ -658,6 +659,36 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # RED on 36 assertions on the pre-fix build, captured verbatim in
                      # _audit/2026-07-30-w16-print-truth.md.
                      ('print_truth', 'test/print_truth.cjs'),
+                     # THE SAME SHEET, ON A PHONE, IN THE FIRST SECOND. Both defects here were
+                     # found by driving WebKit 26.5 -- and neither is a WebKit bug, which is the
+                     # point: both reproduce byte-for-byte in Chromium, so they are guarded in the
+                     # gate's own engine rather than filed as an engine difference.
+                     # FIT: the <=919px override said max-height:100vh while .cram-ov keeps an 18px
+                     # inset on every side, so the panel was handed the whole viewport inside a box
+                     # inset from it and hung 18px below the fold in BOTH orientations. The desktop
+                     # rule has carried calc(100vh - var(--space-36)) the whole time. Nothing became
+                     # unreachable -- the body scrolls -- which is exactly why no DOM or a11y check
+                     # ever saw it, and why the sheet's bottom edge was simply never on screen.
+                     # FIRST OPEN: the jump strip is built from <deep-cram>'s rendered titles, and
+                     # <deep-cram> renders lazily from an IntersectionObserver. The retry that
+                     # waited for it ran on requestAnimationFrame -- and animation-frame callbacks
+                     # run BEFORE intersection observations are delivered, so the retry was
+                     # structurally guaranteed to sample the frame ahead of the render and paint
+                     # the index one frame behind the sections. Measured on a84d68a: sections on
+                     # screen with an EMPTY strip for exactly one frame, then a 44px relayout of the
+                     # body -- in Chromium too. Only the COST of that frame is engine-specific
+                     # (~30ms Chromium, ~140ms WebKit, where it reads as the sheet lurching).
+                     # The assertion is therefore FRAME-RELATIVE, not a millisecond budget: zero
+                     # frames may show sections with an empty index, and the body's LAYOUT offset
+                     # (#cram.offsetTop -- no transform can move it) may not travel. Nothing here
+                     # needs retuning on a slower runner.
+                     # BOTH ARMS PLANT, and both plants ABORT the run rather than fail an arm:
+                     # max-height:100vh is restored and the overflow must come back, and the strip's
+                     # MutationObserver is deferred by one frame -- reconstructing the pre-fix
+                     # timing exactly -- and the frame arm must go red.
+                     # RED on 4 assertions on the pre-fix build (18px over in both orientations;
+                     # 1 racing frame; 44px relayout), captured in _audit/2026-07-30-w18-webkit.md.
+                     ('cram_fit', 'test/cram_fit.cjs'),
                      # The rail is per (topic, view), and a MISSING note is a state the renderer has
                      # to handle -- not a state it may skip. shell.js's `if (TOPIC_CMP_NOTES[tab])`
                      # had no `else`, so a topic with no note for the active pane simply kept the

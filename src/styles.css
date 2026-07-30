@@ -798,7 +798,27 @@ html[data-theme="dark"] .sidebar .seg button.on .seg-key{color:var(--acc);border
      removing it drifts the strip 39.6-59.4px per switch, landing taps on the wrong view. Do not
      un-pin this to "simplify" the mobile layout -- the v90 edge scrims below also depend on it
      (they are position:fixed to these left:0/right:0 viewport edges). */
-  .sidebar .seg{order:1;position:fixed;top:0;left:0;right:0;z-index:var(--z-seg);flex-direction:row;overflow-x:auto;gap:var(--space-6);background:var(--bg);border-bottom:1px solid var(--bd);padding:var(--space-8) var(--space-12);-webkit-overflow-scrolling:touch}
+  .sidebar .seg{order:1;position:fixed;top:0;left:0;right:0;z-index:var(--z-seg);flex-direction:row;overflow-x:auto;gap:var(--space-6);background:var(--bg);border-bottom:1px solid var(--bd);padding:var(--space-8) var(--space-12);-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  /* ===== THE SCROLLBAR THIS STRIP RESERVES OUT OF ITS OWN TAP TARGETS =====
+     The overflow above is real and wanted (9 tabs, scrollWidth 977 in a clientWidth of 390), but a
+     real scrollbar is what `overflow-x:auto` buys -- and the global ::-webkit-scrollbar below gives
+     it a 12px cross-size. WebKit spends those 12px out of the BAND rather than over it: measured at
+     390x844, offsetHeight 73 vs clientHeight 60 (Chromium and Firefox: 61/60, i.e. the 1px border
+     and nothing else). The strip is position:fixed, so the cost lands on the controls underneath --
+     #homeBtn and #tntrigger are 44x44 boxes measuring 38px EFFECTIVE, and a hit-test at the band's
+     top row returns DIV.seg instead of the button that is painted there. This app spent a whole
+     wave raising controls to a 44px floor; a scrollbar is not allowed to quietly take 6 of them
+     back. It is the whole sub-920 tier, not one breakpoint (measured 360/390/414/600/768/900/919).
+     The suppression the app ALREADY ships on both sibling scrollers -- .sidebar (:45) and the
+     analogous horizontal .cram-jump chip strip (in the cram block below) -- was simply never put on
+     .seg. `.sidebar::-webkit-scrollbar` does not reach here: the pseudo addresses that element's
+     own scrollbar, not a descendant's.
+     WHICH HALF DOES THE WORK, measured by runtime injection: the PSEUDO (73/g13 -> 61/g1 in
+     WebKit). `scrollbar-width:none` ALONE moved nothing in WebKit 26.5 -- it rides along for the
+     day WebKit implements the standard property, exactly as .cram-jump carries both. Chromium is
+     unchanged by either (61/g1 before and after, and it paints nothing in this band at rest), which
+     is why the VR baselines are the acceptance test rather than a casualty. */
+  .sidebar .seg::-webkit-scrollbar{display:none}
   .sidebar .seg button{flex:none;width:auto;white-space:nowrap;align-items:center;min-height:44px;padding:var(--space-11) var(--space-14);border-radius:9px;transition:background var(--duration-base) var(--ease-base),box-shadow var(--duration-base) var(--ease-base),transform var(--duration-fast) var(--ease-base)}
   .sidebar .seg button>span:first-child{font-size:var(--font-size-small);font-weight:var(--font-weight-semibold)}
   .sidebar .seg button .n{display:none}
@@ -2163,7 +2183,16 @@ html[data-view="home"] .cmp-reopen{display:none}
     border-radius:999px;background:var(--surf);color:var(--mut);cursor:pointer;
     font:var(--font-weight-bold) 11.5px -apple-system,sans-serif;padding:var(--space-6) var(--space-12)}
   .cram-jump button.on{border-color:var(--acc);background:var(--accbg);color:var(--accink)}
-  .cram-panel{max-width:none;max-height:100vh;border-radius:0}
+  /* The phone override used to say max-height:100vh, which DROPPED the padding correction the
+     desktop rule at :474 carries (calc(100vh - var(--space-36))) -- while .cram-ov keeps its 18px
+     inset on every side. So the panel was handed the whole viewport inside a box inset 18px from
+     it, and hung 18px below the fold in both orientations: measured at 390x844, panel [18, 862]
+     against an innerHeight of 844, with #cram's scrollport bottom at 861 -- 17px of a scroll
+     region permanently off screen. Nothing became unreachable (the body scrolls), but the sheet's
+     bottom edge was never once on screen. Engine-independent -- byte-identical in Chromium, so
+     this is a gate blind spot, not a WebKit difference. var(--space-36) IS that 18px inset
+     doubled, which is why the two stay in step. */
+  .cram-panel{max-width:none;max-height:calc(100vh - var(--space-36));border-radius:0}
 }
 /* Print is the least useful action on a touch device and it sat in the sheet's only control
    row, beside the close button, at the top of an 11-screen artifact. Demoted on COARSE

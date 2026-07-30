@@ -33,8 +33,10 @@ the print block's `.cram-panel` reset; `:536` gives `.cram-body` its `overflow:v
 `max-height` needs `!important` to beat **both** caps, and the one that actually applies is not the
 one the audit named: the A4 content box is **680px** wide, which is inside the app's `<=919px`
 breakpoint, so **every printer lays this sheet out in the app's MOBILE layout** and the operative
-cap is the bare `max-height:100vh` at `:2139`, not the desktop `calc()` at `:474`. Measured
+cap is the bare `max-height:100vh` at `:2163`, not the desktop `calc()` at `:474`. Measured
 pre-fix at the A4 box: `.cram-panel` computed `max-height: 1009px`.
+*(Line numbers in this section index the POST-FIX file. Round 1 cited `:2139` for that rule, which
+was wrong in both frames - base is `:2138`, HEAD is `:2163`. Corrected per section 9, finding 4.)*
 
 | | flagship `content-pipeline` | `consistency-models` (tallest) |
 |---|---|---|
@@ -54,7 +56,7 @@ existed.** They were also predicted independently, ahead of the fix, by arithmet
 measured 2774px and 6068px at the A4 content-box width, and `ceil(H / 1009.13)` gives 3 and 7.
 
 **One defect found while measuring, not in the audit.** Because the printer uses the mobile layout,
-`.cram-jump` - `display:none` on desktop (`:2120`), `display:flex` under `<=919px` (`:2122`) -
+`.cram-jump` - `display:none` on desktop (`:2145`), `display:flex` under `<=919px` (`:2147`) -
 rendered a **7-button scrollable nav strip** across the top of page 1. A dead control surface on
 paper, the same class as the walkthrough's Prev/Next pair that `base-styles.js` already hides. Now
 in the print block's hide list alongside `.cram-top` (`:531`).
@@ -82,7 +84,8 @@ what the keyboard shortcut has always produced.
 Every AFTER value matches the audit's "with app tokens injected" control exactly.
 
 **The values are harvested from the live app, not hardcoded.** The token *names* are read back out
-of the CSS string itself (`CSS.match(/var\((--[a-z0-9-]+)\)/g)`), so a token added to that string
+of the CSS string itself (`CSS.match(/var\(\s*(--[a-z0-9-]+)\s*[,)]/g)` - the closing paren is not
+required, so a `var(--x, fallback)` is carried across too), so a token added to that string
 tomorrow is carried across automatically - the list cannot rot into a stale copy of the design
 system, which is the failure mode that produced the bug. The tokens are `@property`-registered with
 a `<length>`/`<number>` syntax, so `getComputedStyle` returns them fully resolved
@@ -104,8 +107,9 @@ to say about the cram sheet.
 .cs-st{break-after:avoid}
 ```
 
-**`.cs-sec` is deliberately excluded.** A whole section is not an atom - the tallest measures 1289px
-against a ~1009px A4 content box, so `break-inside:avoid` on it is a constraint the fragmenter must
+**`.cs-sec` is deliberately excluded.** A whole section is not an atom - measured in the print
+layout the tallest is **2173px**, more than two full pages, against a ~1009px A4 content box, so
+`break-inside:avoid` on it is a constraint the fragmenter must
 ignore (a box that cannot fit on an empty page is split anyway) and the only thing it can buy is a
 page-sized hole before the split. What is genuinely atomic is one cue-and-answer, one decision, one
 trap, one number row; a section head is kept with what follows by `break-after`, not by being welded
@@ -118,8 +122,9 @@ gate's upper page-count bound is what would catch it if a later edit got greedy.
 
 `test/print_truth.cjs`, registered at `test/check_all.py:660`. **67 -> 68.**
 
-Five arms: geometry, real A4 pagination, last-section-on-the-final-page, Print Q&A tokens, and
-page-break control - run against both the flagship and the tallest topic.
+Six arms: geometry, real A4 pagination, last-section-on-the-final-page, Print Q&A tokens,
+page-break control, and (added in round 2) the native File -> Print path with the sheet never
+opened - run against both the flagship and the tallest topic.
 
 **The page-count band is arithmetic, derived from a height measured in the same run** - a count
 someone once observed and typed in is the anti-pattern this avoids.
@@ -235,6 +240,10 @@ print_truth: 36 FAILED -- [content-pipeline] .cram-panel has NO height cap on pa
 EXIT=1
 ```
 
+> **`"print-qa":{"pages":8}` in the line above is WRONG and is left here as printed.** That file is
+> **11** pages. It is the counting bug of round-2 BLOCKING 2, reproduced in this very capture; the
+> transcript is the record of what the check said, so it is not edited. See §9.
+
 *(Two arms legitimately passed pre-fix and are kept honest rather than tuned to fail: the upper
 page-count bound - 1 page is not "too many" - and Print Q&A's inline `code`, which is sized in `em`
 and so survived the token collapse. `.cram-top` also already hid correctly. The final-page arm
@@ -289,14 +298,172 @@ Commits on `xb/x1-print-truth`:
 - **X8 is still open and is adjacent.** The audit's X8 (the panel is 18px taller than the space it
   is given, `:2139` vs `:2144`) lives in the same `<=919px` block this wave had to reason about.
   Untouched here - it is a screen defect and would churn baselines.
-- **The audit reported Print Q&A at 11 A4 pages; this wave measures 8** (114,633 B vs the audit's
-  114,518 B - essentially the same document). The difference is margins: the popup declares no
-  `@page`, so under `preferCSSPageSize` it paginates at Playwright's default margin rather than the
-  1.5cm the app's own stylesheet gives the cram path. Nothing asserts a page count for print-qa, so
-  no arm depends on this, but the discrepancy is real and named rather than quietly reconciled.
-  Giving that document its own `@page` is a reasonable follow-up.
+- ~~**The audit reported Print Q&A at 11 A4 pages; this wave measures 8.** The difference is
+  margins...~~ **THIS WAS FALSE AND IS RETRACTED - see the round-2 addendum, §9.** The audit's 11
+  was right; the 8 was a bug in this wave's own page counter, and the "margins" story was an
+  explanation invented for it. Caught by w16-verifier. Giving that document its own `@page` may
+  still be a reasonable follow-up, but it is not what this discrepancy was.
 - **`test/print_truth.cjs` exports `parsePdf` / `norm` / `pdfPageCount`** and guards its run on
   `require.main`, so the PDF reader can be pointed at any committed artifact without a browser.
 - **Regenerating the artifact pair:** `node _audit/w16-print-before-after/make-pdfs.cjs [before|after]`.
   It drives the gate check rather than re-implementing it, so producing the BEFORE pair exits
   non-zero - correct, since the before build is the broken one.
+
+---
+
+# 9. ROUND-2 ADDENDUM - the check, not the product (2026-07-30, after cold verify)
+
+An independent cold verification (**w16-verifier**, verdict committed verbatim at
+`_audit/2026-07-30-w16-print-coldverify.md`) confirmed X1 / X6 / X9 exact and reproduced every
+load-bearing number in section 2 - and found **2 BLOCKING defects in `test/print_truth.cjs`**, the
+check this wave added. Both are mine. The product CSS/JS was correct and is unchanged except where a
+non-blocking finding named it.
+
+The verdict's own summary is the fairest statement of it: *"The product change is sound and I could
+not break it... What should not merge as-is is `test/print_truth.cjs`."*
+
+## BLOCKING 1 - the extractor was a coin flip on a correct build
+
+`textOf()` merged the **inherited** XObject map into every recursion and then iterated the merged
+map, so a form re-descended into its own siblings and `depth` counted path length through a
+**cross-product of resource maps**, not nesting depth. Past the cap of 4 the decoder never reached a
+`Tf`, `cur` stayed null, and whole pages decoded to nothing. Chromium emits a **variable number of
+Form XObjects for byte-identical input**, so which way it fell depended on the machine.
+
+Reproduced here before changing anything, against the verifier's own preserved renders:
+
+| artifact | Form XObjects | shipped reader | after the fix |
+|---|---|---|---|
+| committed `after-content-pipeline.pdf` | 5 | `[1657,1664,1468]` | `[1657,1664,1468]` |
+| verifier `after-consistency-models.pdf` | 9 | `[2330,...,1020]` healthy | unchanged |
+| verifier `flake/run4/r4-content-pipeline.pdf` | 20 | **`[1657,0,0]`** | **`[1657,1664,1468]`** |
+| verifier `pdfs/after-content-pipeline.pdf` | 24 | **`[0,0,0]`** | **`[1657,1664,1468]`** |
+
+The 20-form case is the one that matters: not an abort, a **false failure reported as an app
+defect** on a build that was fine.
+
+**Fix.** A form's children are the XObjects **its own** `/Resources` name, and nothing else. The
+page supplies the map exactly once, at the top, for its content stream - which has no resources of
+its own and must resolve the page's forms. Below that, nothing is propagated. `depth` is now true
+nesting depth and `seen` is what guards cycles, which is what the cap was standing in for.
+
+## BLOCKING 2 - two page readers that shared one failure mode
+
+The page tree is a **tree**. `before-print-qa.pdf` has three `/Type /Pages` nodes - `/Count 8`,
+`/Count 3`, and the ROOT `/Count 11` whose two kids are the other two. `pdfPageCount` took the first
+node in byte order (8). `parsePdf` took the most-kids node (also 8). So the arm whose entire job was
+to cross-check them **could not catch it**: both readers were wrong in the same way.
+
+Reproduced exactly: `allPagesNodes=[8,3,11] rawLeafObjs=11`.
+
+**Fix.** Resolve the root properly - trailer `/Root` to catalog `/Pages`, falling back to the
+`/Pages` node that is no other node's kid - then walk to the leaves. And `pdfPageCount` now counts
+`/Type /Page` **leaf objects** and never looks at the tree, so the two readers fail differently.
+(The old function's own unused fallback branch was that count, and it would have been right.)
+
+| file | before | after |
+|---|---|---|
+| `before-print-qa.pdf` | 8 | **11** (the audit was right) |
+| `after-print-qa.pdf` | 8 | **12** |
+| cram PDFs (single-node trees) | 1 / 3 / 7 | unchanged |
+
+**Sections 7 and 4 of this report published that wrong number, and section 7 explained it away as a
+margin difference.** That reconciliation was invented to fit a number I had not verified - in the one
+section that congratulated itself on naming a discrepancy "rather than quietly reconciling" it. Both
+are corrected above, with the original text struck rather than deleted.
+
+## The control gap: partial death bought a red
+
+Control 3 only asked whether page 1 contained the first heading, so a reader that decoded page 1 and
+nothing else **passed the control and then delivered a verdict on pages it could not read**. The
+stated principle - a dead extractor must not buy a green *or* a red - held only for total death.
+
+**Added: a coverage control.** It measures characters recovered from the PDF against the sheet's
+**own rendered text**, read from the DOM through an entirely different code path - two independent
+readings of the same content, rather than the PDF reader vouching for itself. Floor **0.70**,
+anchored on measured healthy coverage (0.938 flagship, 0.981 consistency-models) with room beneath,
+and far above what it must catch (0.32 partial, 0.00 total).
+
+**It is gated on clipping, and that gate is load-bearing.** Ungated, it fired on the re-cap mutant -
+the canonical app defect - and aborted with *"the extractor is partially dead"* while pointing at
+the one artifact whose truncation is the entire finding. A clipped sheet genuinely is missing its
+text; the reader is fine. So the control fires only when the sheet is **whole** and the reader still
+came back short. With coverage proven, an empty page is the **document's** fault - so "no printed
+page is blank" is an arm, not a control.
+
+## Mutant battery - and one place the verdict is itself wrong
+
+Rebuilt from the current deliverable and re-run against the fixed check. **All four redden, and now
+they redden for the stated reason:**
+
+| mutant | result |
+|---|---|
+| re-cap (revert the two resets) | **14 FAIL**, led by `.cram-panel has NO height cap on paper max-height=1009px` - the real geometry defect, correctly attributed (pre-gate it mis-aborted on coverage) |
+| trailing blank page | **5 FAIL** - `no printed page is blank pages=4 blank=[4]` **and** `the LAST section is printed ON THE FINAL PAGE ... appears on page(s) [3]` |
+| blanket `*{break-inside:avoid}` | **control 2 ABORTS** - "the arm below cannot fail, so it is not run" |
+| hidden first heading | **control 3 ABORTS** - "the FIRST heading is not in the extracted text (4770 chars over 3 pages)" |
+
+**The verdict's M4 result was wrong, and it was wrong because of BLOCKING 1.** Its selector,
+`.cs-sec:first-of-type .cs-st`, matches **zero elements**: the first `div` child of the cram shadow
+root is `div.cs-one` (the one-liner), so no `.cs-sec` is ever the first div of its type. Measured on
+the mutant build: `matches_cs_sec_first_of_type = 0`, first head `visibility: visible`, and the
+mutant PDF **byte-identical** to the clean one (403,453 B). The verifier's own M4 capture shows
+`per-page 1657/0/0` and the liveness control **finding** the first heading - that is the BLOCKING-1
+flake signature, not a hidden heading. The mutation never did anything; the flake supplied the red.
+Repaired to `.cs-one + .cs-sec .cs-st`, which matches, and it now aborts control 3 for real.
+
+This does not weaken the verdict - it is the same defect the verdict is about, caught one layer
+further in.
+
+## Stability - 8/8, not vibes
+
+`print_truth` run **standalone 8 times** on the committed tree, mixed load:
+
+| runs | conditions | outcome | per-page chars |
+|---|---|---|---|
+| 1-4 | **loaded** - a concurrent `npm run build` loop | **4/4 PASS** | `1657/1664/1468` |
+| 5-8 | quiet box | **4/4 PASS** | `1657/1664/1468` |
+
+**8/8 PASS**, identical per-page counts every run. (Before the fix: 5 failures in 8, in two distinct
+modes.)
+
+## The non-blocking findings
+
+1. **`1289px` was a 1280x800 number in an argument about the 1009px A4 box - and it was in shipped
+   source.** Corrected in `base-styles.js`: measured **in the print layout** the tallest `.cs-sec`
+   is **2173px**, more than two full pages, which strengthens the case for excluding `.cs-sec`
+   rather than weakening it. My own measurement reproduces the verifier's exactly
+   (`consistency-models`: 2173/516/584/1031/905/453/153).
+2. **Clipped-px vs the audit, now reconciled explicitly** in the `styles.css` comment: the
+   cross-engine figures are the audit's **1456px of 2218** and **3059px of 3821** at 1280x800; this
+   wave's **1828/2774** and **5122/6068** are the same defect measured at the 681px A4 box - the
+   layout a printer actually uses. A refinement, not a contradiction.
+3. **The three-engine attribution corrected** in the same comment: 1828/5122 are chromium at the A4
+   box; the engine-universality evidence is the audit's.
+4. **Line citations** now consistently index the post-fix file and say so: `:2163` (the `<=919px`
+   `max-height:100vh`, previously cited as `:2139`), `:2145` / `:2147` for `.cram-jump`. The bogus
+   `:2144` is gone.
+5. **The File to Print path is now guarded - ARM F.** `styles.css:508` has no `.open` requirement,
+   so a native File to Print from any view emits the cram sheet for a user who never opened it -
+   the reason X1 was P1 rather than P2, and the one path no arm touched. ARM F drives it on a
+   **fresh page** that never touches `#cramopen` (an open-then-close would leave the lazily-rendered
+   sheet already mounted and quietly test something easier). Result: never opened, 7 sections still
+   reach paper, `max-height: none`, clipped **0**, **3 pages**, last section on the final page.
+   Committed as `after-file-print-never-opened.pdf`.
+6. **`.cs-30` is now probed** by ARM E alongside the other seven units.
+7. **Both latent fragilities closed.** ARM C asks the **final page directly** instead of taking the
+   first page that carries the heading (a repeated heading would have false-redded a correct
+   document), and reports every page the heading appears on. The token harvester now matches
+   `var(--x, fallback)` as well as `var(--x)` - none exist today (45 of 45 references are bare), so
+   this guards the next edit rather than a live bug.
+
+## Round-2 state
+
+- Gate **68/68 PASS**, fresh capture at `_audit/2026-07-30-w16-print-gate.txt` (regenerated on the
+  round-2 tree; the round-1 capture it replaces was also 68/68).
+- VR **16/16 byte-identical to base `d481901`** - `git diff` over `test/baselines/` still empty, no
+  `--update` ever run. Nothing in round 2 touched screen media either: the changes are
+  `test/print_truth.cjs`, comments, and one regex in the popup's token harvester.
+- AFTER PDFs regenerated from the round-2 build so the review artifact matches what ships;
+  `after-file-print-never-opened.pdf` added. The BEFORE set is untouched - it is from base
+  `d481901` and must stay that way.

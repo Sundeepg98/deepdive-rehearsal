@@ -361,12 +361,31 @@ const PROBE = () => {
     reachedBody, 'the ring was ' + [...new Set(keyRing)].join(' -> ') +
     ' -- the body is not a tab stop, so the clipped rows have no keyboard path at all');
 
-  /* With it focused, the arrow/End keys must move it. On the pre-fix build scrollTop never left 0. */
+  /* With it focused, the arrow/End keys must move it. On the pre-fix build scrollTop never left 0.
+     CHROMIUM ANIMATES KEYBOARD SCROLLING HERE (the browser's own smooth step -- .cram-body sets no
+     scroll-behavior), so "press, settle two rAFs, read once" samples a value MID-FLIGHT: it reports
+     whatever the animation happens to have reached, and its greenness rides on the animation having
+     started by then. Measured margin on this box was as little as 2px. That is the stopwatch bet
+     _boot.cjs exists to abolish -- so poll for the CONDITION (it moved) instead, and separately poll
+     to REST so the number this arm reports is the settled one rather than an intermediate. Slow only
+     costs time; a genuinely dead ArrowDown still times out and fails honestly. */
   const scrolled = reachedBody ? await (async () => {
-    const before = await page.evaluate(() => document.getElementById('keybody').scrollTop);
+    const readTop = () => page.evaluate(() => document.getElementById('keybody').scrollTop);
+    const before = await readTop();
     await page.keyboard.press('ArrowDown');
-    await B.settle(page);
-    const afterArrow = await page.evaluate(() => document.getElementById('keybody').scrollTop);
+    let afterArrow = before;
+    try {
+      afterArrow = await B.pollFor(readTop, (v) => v > before, 5000,
+        'ArrowDown moves #keybody off its resting scrollTop');
+    } catch (e) { afterArrow = (typeof e.last === 'number') ? e.last : before; }
+    /* to rest: two consecutive equal samples, so the receipt is not another mid-flight number */
+    let prev = -1, settledArrow = afterArrow;
+    for (let i = 0; i < 25; i++) {
+      const v = await readTop();
+      if (v === prev) { settledArrow = v; break; }
+      prev = v; settledArrow = v;
+      await B.settle(page);
+    }
     await page.keyboard.press('End');
     await page.waitForFunction(() => {
       const b = document.getElementById('keybody');
@@ -376,11 +395,11 @@ const PROBE = () => {
       const b = document.getElementById('keybody');
       return { top: b.scrollTop, max: b.scrollHeight - b.clientHeight };
     });
-    return { before, afterArrow, afterEnd };
+    return { before, afterArrow, settledArrow, afterEnd };
   })() : null;
   chk('[keyboard] ArrowDown on the focused body SCROLLS it (the key the user reaches for first)',
     !!scrolled && scrolled.afterArrow > scrolled.before,
-    'scrollTop stayed at ' + (scrolled ? scrolled.before : 'n/a') + JSON.stringify(scrolled));
+    'scrollTop never left ' + (scrolled ? scrolled.before : 'n/a') + ' within the poll budget ' + JSON.stringify(scrolled));
   chk('[keyboard] End reaches the BOTTOM, so every clipped row is keyboard-reachable',
     !!scrolled && scrolled.afterEnd.top >= scrolled.afterEnd.max - 2,
     'End left ' + (scrolled ? (scrolled.afterEnd.max - scrolled.afterEnd.top) : geom.clipped) +

@@ -40,7 +40,7 @@
   back_deadend              PASS  BACK DEADEND: PASS
   no_dead_ends              PASS  NO DEAD ENDS: PASS
   mobile_nextup             PASS  MOBILE NEXTUP: PASS
-  search_deadend            PASS  SEARCH DEADEND: PASS
+  search_deadend            PASS  SEARCH DEADEND: PASS  (29 assertions: the whole-system prompts route to real component topics; a topic picked from #home in Search or the Topic index actually lands on it; navigateAfterPick refuses off the home route; and a cross-drill pick from #home exits too)
   cold_open                 PASS  COLD OPEN: PASS
   cta_contrast              PASS  CTA CONTRAST: PASS  (36 CTA x room x theme, every core glyph pixel >= 5.0:1)
   latent_arial              PASS  LATENT ARIAL: PASS  (0 known component(s) allowlisted in latent_arial_debt.json; no new latent-Arial button, no fixed entry left stale)

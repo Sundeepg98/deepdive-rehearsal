@@ -13,7 +13,7 @@
 var WB_STYLE = `
 .dgm{display:flex;flex-direction:column;align-items:center;gap:0;padding:var(--space-4) 0 var(--space-6)}
 .dgm-node{background:var(--accbg);border:1.5px solid var(--acc2);border-radius:9px;padding:var(--space-8) var(--space-14);text-align:center;max-width:var(--space-290);width:100%;box-sizing:border-box}
-.dgm-t{font:var(--font-weight-bold) 12.5px -apple-system,sans-serif;color:var(--accink);line-height:var(--line-height-snug)}
+.dgm-t{font:var(--font-weight-bold) 12.5px var(--sans);color:var(--accink);line-height:var(--line-height-snug)}
 .dgm-t code{font-family:'Courier New',monospace;font-size:var(--font-size-micro);color:var(--accink);background:none;padding:0}
 .dgm-s{font-size:var(--font-size-micro);color:var(--mut);margin-top:var(--space-2);line-height:var(--line-height-normal)}
 .dgm-s code{font-family:'Courier New',monospace;font-size:var(--font-size-micro);color:var(--mut);background:none;padding:0}
@@ -49,7 +49,7 @@ var WB_STYLE = `
 .wb-ans code{font-size:var(--font-size-micro)}
 .wb-ans b{color:var(--accink);font-weight:var(--font-weight-bold)}
 .wb-act{display:flex;gap:var(--space-9);margin:var(--space-11) 0 0 var(--space-42)}
-.wb-rev,.wb-got,.wb-miss{font:var(--font-weight-bold) 11.5px -apple-system,sans-serif;padding:var(--space-7) var(--space-14);border-radius:8px;border:1px solid var(--bd);background:var(--card);color:var(--mut);cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),box-shadow var(--duration-base) var(--ease-base),border-color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base)}
+.wb-rev,.wb-got,.wb-miss{font:var(--font-weight-bold) 11.5px var(--sans);padding:var(--space-7) var(--space-14);border-radius:8px;border:1px solid var(--bd);background:var(--card);color:var(--mut);cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),box-shadow var(--duration-base) var(--ease-base),border-color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base)}
 .wb-rev:not(:disabled):hover,.wb-got:not(:disabled):hover,.wb-miss:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 4px 12px -3px var(--acc-a15)}
 .wb-rev{color:var(--accink);border-color:#cfc7f0;background:linear-gradient(135deg,var(--accbg) 0%,var(--acc-a03) 100%)}
 .wb-rev:disabled{opacity:.5;cursor:default}
@@ -69,7 +69,7 @@ var WB_STYLE = `
 .wb-verdict.ok{background:linear-gradient(135deg,var(--tealbg) 0%,rgba(10,133,100,.04) 100%);color:var(--wb-ok-fg);border-left:3px solid var(--teal);box-shadow:0 1px 4px -2px rgba(10,133,100,.08)}
 .wb-verdict.ok::before{content:"\\2714";margin-right:var(--space-6);font-size:var(--font-size-body)}
 .wb-verdict.ok b{color:var(--wb-ok-b-fg)}
-#wbrerun{display:block;margin-top:var(--space-12);font:var(--font-weight-bold) 12px -apple-system,sans-serif;padding:var(--space-8) var(--space-16);border-radius:8px;border:1.5px solid var(--amber);background:linear-gradient(135deg,#fff 0%,var(--amberbg) 100%);color:var(--amber);cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),box-shadow var(--duration-base) var(--ease-base)}
+#wbrerun{display:block;margin-top:var(--space-12);font:var(--font-weight-bold) 12px var(--sans);padding:var(--space-8) var(--space-16);border-radius:8px;border:1.5px solid var(--amber);background:linear-gradient(135deg,#fff 0%,var(--amberbg) 100%);color:var(--amber);cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),box-shadow var(--duration-base) var(--ease-base)}
 #wbrerun:hover{background:linear-gradient(135deg,var(--amber) 0%,#d4902a 100%);color:var(--on-slab);box-shadow:0 4px 14px -4px rgba(176,108,20,.25);transform:translateY(-1px)}
 #wbrerun:active{transform:translateY(1px) scale(.98)}
 .wb-foot{margin-top:var(--space-18);font-size:var(--font-size-body);max-width:var(--measure);color:var(--wb-foot-fg);background:linear-gradient(135deg,var(--wb-foot-bg) 0%,var(--acc-a03) 100%);border-left:3px solid var(--acc);border-radius:9px;padding:var(--space-13) var(--space-16);line-height:var(--line-height-spacious)}

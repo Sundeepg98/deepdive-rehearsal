@@ -58,6 +58,15 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
 
 
   :root{
+    /* THE APP STACK, and the only place it is written. It used to be spelled out at body and
+       then re-spelled, WRONG, in 89 other rules as `-apple-system,sans-serif`: a list whose
+       first entry resolves on Apple platforms and nowhere else, so off Apple the generic won
+       and 48 buttons -- all nine .seg pane tabs among them -- rasterised in ARIAL while the
+       stylesheet read as if a system face had been chosen. Ledgered by the W4 cold verify as
+       F-2, confirmed byte-identical in WebKit and Firefox by the 2026-07-30 audit: a platform
+       truth, not an engine bug. One definition means the truncated form has nowhere to regrow;
+       test/typeface_census.py holds the line. */
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     --mono:ui-monospace,"SFMono-Regular",Menlo,"Cascadia Mono","Segoe UI Mono",Consolas,"Liberation Mono",monospace;
     /* --acc/--acc2/--accbg/--accink are supplied by THE SIX ROOMS rebind (below) -- the
        room's ink/solid/wash. The indigo brand colour lives only in the favicon + badge now. */
@@ -290,7 +299,7 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
      `backwards` fill supplies from{opacity:0} during the delay, so the normal fade is visually
      unchanged; when the animation is stripped there is no fill and the base opacity:1 shows
      through. Failure mode is now "no fade", never "invisible app". */
-  body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:var(--line-height-loose);-webkit-font-smoothing:antialiased;padding:0 0 var(--space-70);opacity:1;animation:bodyIn var(--duration-slowest) var(--ease-glide) var(--duration-fast) backwards}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:var(--line-height-loose);-webkit-font-smoothing:antialiased;padding:0 0 var(--space-70);opacity:1;animation:bodyIn var(--duration-slowest) var(--ease-glide) var(--duration-fast) backwards}
   @keyframes bodyIn{from{opacity:0}to{opacity:1}}
 
   .rail{position:sticky;top:0;height:var(--space-4);background:#ECE8E0;z-index:var(--z-surface)}
@@ -317,7 +326,7 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
   .kbd-hint kbd{font-family:ui-monospace,monospace;font-size:var(--font-size-nano);background:#EEEAE1;border:1px solid #DBD5CB;border-bottom-width:2px;border-radius:4px;padding:var(--space-1) var(--space-5);color:#4a463f}
 
   .seg{display:grid;grid-template-columns:repeat(9,1fr);gap:var(--space-4);background:#F0ECE4;border:1px solid var(--bd);border-radius:12px;padding:var(--space-5);margin-bottom:var(--space-20)}
-  .seg button{min-width:0;white-space:nowrap;border:0;background:transparent;color:var(--mut);font:var(--font-weight-semibold) 10.5px -apple-system,sans-serif;padding:var(--space-10) var(--space-3);border-radius:9px;cursor:pointer;transition:var(--duration-fast);display:flex;flex-direction:column;align-items:center;gap:var(--space-2)}
+  .seg button{min-width:0;white-space:nowrap;border:0;background:transparent;color:var(--mut);font:var(--font-weight-semibold) 10.5px var(--sans);padding:var(--space-10) var(--space-3);border-radius:9px;cursor:pointer;transition:var(--duration-fast);display:flex;flex-direction:column;align-items:center;gap:var(--space-2)}
   @media(max-width:600px){ .seg{grid-template-columns:repeat(3,1fr)} }
   .seg button .n{font-size:var(--font-size-nano);color:var(--mut2);font-weight:var(--font-weight-bold);letter-spacing:.4px}
   .seg button.on{background:var(--card);color:var(--acc);font-weight:var(--font-weight-heavy);box-shadow:0 0 0 1px var(--acc-a32),0 4px 12px var(--acc-a20)}
@@ -387,7 +396,7 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
   html[data-theme="dark"]{--dock-bg:var(--panel);--dock-bd:var(--bd)}
   .dock{flex:none;max-height:64px;overflow:hidden;box-sizing:border-box;margin:var(--space-10) 0 0;padding:var(--space-7) var(--space-10);border:1px solid var(--dock-bd);border-radius:11px;background:var(--dock-bg);display:flex;flex-direction:column;gap:var(--space-1);align-items:flex-start}
   .dock[hidden]{display:none}
-  .nd-k{font:var(--font-weight-heavy) var(--font-size-nano)/1 -apple-system,sans-serif;letter-spacing:.6px;text-transform:uppercase}
+  .nd-k{font:var(--font-weight-heavy) var(--font-size-nano)/1 var(--sans);letter-spacing:.6px;text-transform:uppercase}
   /* overflow:visible + flex:none are LOAD-BEARING: the global button{overflow:hidden} (styles.css,
      the ripple clip) makes a flex item's automatic minimum size 0 (CSS Flexbox 4.5), so the button
      collapsed to height:0 in this column. Restoring visible overflow gives it back its content height. */
@@ -400,7 +409,7 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
      .nd-go is a TEXT button (no fill, no border, no shadow), so it gets the text-button form of the
      same contract its peers have -- a press that moves and dims, over the app's own tokens -- not a
      copy of .crambtn's box treatment it has no box for. */
-  .nd-go{flex:none;overflow:visible;border:0;background:transparent;padding:0;font:var(--font-weight-heavy) var(--font-size-caption) -apple-system,sans-serif;color:var(--accink);cursor:pointer;text-align:left;line-height:1.2;transition:transform var(--duration-fast) var(--ease-glide),color var(--duration-fast) var(--ease-base),opacity var(--duration-fast) var(--ease-base)}
+  .nd-go{flex:none;overflow:visible;border:0;background:transparent;padding:0;font:var(--font-weight-heavy) var(--font-size-caption) var(--sans);color:var(--accink);cursor:pointer;text-align:left;line-height:1.2;transition:transform var(--duration-fast) var(--ease-glide),color var(--duration-fast) var(--ease-base),opacity var(--duration-fast) var(--ease-base)}
   .nd-go:hover{text-decoration:underline}
   .nd-go:active{transform:translateY(1px);opacity:.75}
   /* THE GUIDANCE SWAP. flowDock replaces the dock's innerHTML, so the recommendation changed by
@@ -429,14 +438,14 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
      max-width:919px block by the fixed bottom bar. Quiet by contract: accent on the kicker only,
      never a second loud primary (the mock CTA keeps that). */
   .nd-m{font:inherit;display:none}
-  .mockbtn{display:flex;align-items:center;justify-content:center;gap:var(--space-9);width:100%;font:var(--font-weight-heavy) 13.5px -apple-system,sans-serif;letter-spacing:.2px;padding:var(--space-14) var(--space-16);border-radius:13px;border:0;background:linear-gradient(135deg,var(--acc),var(--acc2));color:var(--on-slab);cursor:pointer;transition:transform var(--duration-base) var(--ease-glide),box-shadow var(--duration-moderate) var(--ease-base);box-shadow:0 6px 18px var(--acc-a30),inset 0 1px 0 rgba(255,255,255,.14);position:relative;overflow:hidden}
+  .mockbtn{display:flex;align-items:center;justify-content:center;gap:var(--space-9);width:100%;font:var(--font-weight-heavy) 13.5px var(--sans);letter-spacing:.2px;padding:var(--space-14) var(--space-16);border-radius:13px;border:0;background:linear-gradient(135deg,var(--acc),var(--acc2));color:var(--on-slab);cursor:pointer;transition:transform var(--duration-base) var(--ease-glide),box-shadow var(--duration-moderate) var(--ease-base);box-shadow:0 6px 18px var(--acc-a30),inset 0 1px 0 rgba(255,255,255,.14);position:relative;overflow:hidden}
 .mockbtn::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);transform:translateX(-100%);transition:none}
 .mockbtn:hover::after{animation:btnShimmer var(--duration-slowest) var(--ease-base)}
 .mockbtn .mb-ic{font-size:var(--font-size-caption);flex:none;line-height:var(--line-height-none)}
   .mockbtn:hover{box-shadow:0 9px 26px var(--acc-a40),inset 0 1px 0 rgba(255,255,255,.14);transform:translateY(-1px)}
   .mockbtn:active{transform:translateY(0);box-shadow:0 3px 10px var(--acc-a25),inset 0 1px 0 rgba(255,255,255,.12)}
   .crambtn{display:flex;align-items:center;gap:var(--space-11);width:100%;text-align:left;font:inherit;font-size:var(--font-size-caption);padding:var(--space-12) var(--space-15);border-radius:11px;border:1px solid var(--bd);background:var(--surf);box-shadow:var(--surf-sh);cursor:pointer;transition:transform var(--duration-base) var(--ease-glide),box-shadow var(--duration-base) var(--ease-base),border-color var(--duration-base) var(--ease-base),background var(--duration-base) var(--ease-base)}
-.crambtn:not(.cram-tog)::after{content:"\203A";margin-left:auto;font:var(--font-weight-regular) 19px -apple-system,sans-serif;color:var(--mut);opacity:.5;transition:var(--duration-fast);flex:none;padding-left:var(--space-6)}
+.crambtn:not(.cram-tog)::after{content:"\203A";margin-left:auto;font:var(--font-weight-regular) 19px var(--sans);color:var(--mut);opacity:.5;transition:var(--duration-fast);flex:none;padding-left:var(--space-6)}
 .mb-tx{flex:1;min-width:0;line-height:var(--line-height-normal)}
 .mb-t{font-weight:var(--font-weight-bold);color:var(--ink);letter-spacing:.1px}
 .mb-d{font-weight:var(--font-weight-medium);color:var(--mut)}
@@ -463,7 +472,7 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
   .mock-top{display:flex;align-items:center;gap:var(--space-12);padding:var(--space-13) var(--space-18);border-bottom:1px solid var(--bd);background:var(--card);position:sticky;top:0;z-index:2}
   .mock-x{flex:none;width:var(--space-32);height:var(--space-32);border-radius:9px;border:1px solid var(--bd);background:var(--card);color:var(--mut);font:inherit;font-size:var(--font-size-title);line-height:var(--line-height-none);cursor:pointer;transition:transform var(--duration-fast) var(--ease-spring),background var(--duration-base) var(--ease-base),color var(--duration-base) var(--ease-base),border-color var(--duration-base) var(--ease-base),box-shadow var(--duration-base) var(--ease-base);display:flex;align-items:center;justify-content:center}
   .mock-x:hover{border-color:var(--red);color:var(--red);background:var(--redbg);transform:scale(1.1) rotate(90deg);box-shadow:0 0 0 3px rgba(239,68,68,.1)}
-  .mock-title{flex:1;font:var(--font-weight-heavy) 12px -apple-system,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:var(--accink)}
+  .mock-title{flex:1;font:var(--font-weight-heavy) 12px var(--sans);letter-spacing:.6px;text-transform:uppercase;color:var(--accink)}
   .mock-clock{flex:none;font:var(--font-weight-heavy) 16px ui-monospace,Menlo,monospace;color:var(--acc);background:var(--accbg);border-radius:8px;padding:var(--space-4) var(--space-12)}
 
   /* cram sheet -- same frame, same width, same open-state layout as the six .mock-ov dialogs
@@ -473,14 +482,14 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
   .cram-ov.open{display:flex;align-items:flex-start;justify-content:center;overflow:hidden}
   .cram-panel{background:linear-gradient(180deg,rgba(250,249,245,.97),rgba(248,245,239,.97));width:100%;max-width:var(--space-560);border-radius:18px;box-shadow:0 8px 32px -8px var(--acc-a20),0 28px 64px -18px rgba(0,0,0,.34),0 0 80px -20px var(--acc-a15);margin:0 auto;overflow:hidden;border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(24px) saturate(1.3);-webkit-backdrop-filter:blur(24px) saturate(1.3);display:flex;flex-direction:column;max-height:calc(100vh - var(--space-36));transform-origin:center top}
   .cram-top{display:flex;align-items:center;gap:var(--space-12);padding:var(--space-13) var(--space-18);border-bottom:1px solid var(--bd);background:var(--card);position:sticky;top:0;z-index:2}
-  .cram-title{flex:1;font:var(--font-weight-heavy) 12px -apple-system,sans-serif;letter-spacing:.5px;text-transform:uppercase;color:var(--accink)}
-  .cram-print{flex:none;font:var(--font-weight-bold) 11.5px -apple-system,sans-serif;padding:var(--space-6) var(--space-14);border-radius:8px;border:1px solid #cfc7f0;background:var(--accbg);color:var(--accink);cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),background var(--duration-base) var(--ease-base),color var(--duration-base) var(--ease-base),border-color var(--duration-base) var(--ease-base),box-shadow var(--duration-base) var(--ease-base)}
+  .cram-title{flex:1;font:var(--font-weight-heavy) 12px var(--sans);letter-spacing:.5px;text-transform:uppercase;color:var(--accink)}
+  .cram-print{flex:none;font:var(--font-weight-bold) 11.5px var(--sans);padding:var(--space-6) var(--space-14);border-radius:8px;border:1px solid #cfc7f0;background:var(--accbg);color:var(--accink);cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),background var(--duration-base) var(--ease-base),color var(--duration-base) var(--ease-base),border-color var(--duration-base) var(--ease-base),box-shadow var(--duration-base) var(--ease-base)}
   .cram-print:hover{background:var(--acc);color:var(--on-slab);border-color:var(--acc);transform:translateY(-1px);box-shadow:0 4px 12px -3px var(--acc-a20)}
   .cram-body{padding:var(--space-18) var(--space-20) var(--space-24);overflow-y:auto;flex:1;min-height:0}
 
   /* session progress */
   /* mock interruptions */
-  .inttog{width:100%;display:flex;align-items:center;gap:var(--space-10);font:var(--font-weight-semibold) 11.5px -apple-system,sans-serif;color:var(--mut);background:transparent;border:1.5px dashed var(--bd);border-radius:10px;padding:var(--space-12) var(--space-14);cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),border-color var(--duration-base) var(--ease-base),color var(--duration-base) var(--ease-base),background var(--duration-base) var(--ease-base),box-shadow var(--duration-base) var(--ease-base);text-align:left}
+  .inttog{width:100%;display:flex;align-items:center;gap:var(--space-10);font:var(--font-weight-semibold) 11.5px var(--sans);color:var(--mut);background:transparent;border:1.5px dashed var(--bd);border-radius:10px;padding:var(--space-12) var(--space-14);cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),border-color var(--duration-base) var(--ease-base),color var(--duration-base) var(--ease-base),background var(--duration-base) var(--ease-base),box-shadow var(--duration-base) var(--ease-base);text-align:left}
 .inttog:hover{transform:translateY(-1px);box-shadow:0 4px 12px -4px var(--acc-a08);border-color:var(--acc);color:var(--ink)}
   .inttog-dot{width:var(--space-30);height:var(--space-17);border-radius:9px;background:#D8D2C8;position:relative;flex:none;transition:background var(--duration-moderate) var(--ease-glide),box-shadow var(--duration-moderate) var(--ease-base)}
 .inttog:hover .inttog-dot{box-shadow:0 0 8px var(--acc-a15)}
@@ -495,10 +504,10 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
   .sr-ttl{font:var(--font-weight-heavy) 19px Georgia,'Times New Roman',serif;color:var(--ink)}
   .sr-when{font-size:var(--font-size-caption);color:var(--mut);margin-top:var(--space-3)}
   .sr-rec{border:1px solid #cfcfcf;border-left:4px solid var(--acc);border-radius:6px;padding:var(--space-11) var(--space-13);margin-bottom:var(--space-16)}
-  .sr-rk{font:var(--font-weight-heavy) 10px -apple-system,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:var(--acc);margin-bottom:var(--space-4)}
+  .sr-rk{font:var(--font-weight-heavy) 10px var(--sans);letter-spacing:.6px;text-transform:uppercase;color:var(--acc);margin-bottom:var(--space-4)}
   .sr-rt{font-size:var(--font-size-small);color:var(--ink);line-height:var(--line-height-loose)}
   .sr-sec{margin-bottom:var(--space-13);padding-bottom:var(--space-12);border-bottom:1px solid #e6e6e6}
-  .sr-h{font:var(--font-weight-heavy) 14px -apple-system,sans-serif;color:var(--ink);margin-bottom:var(--space-5)}
+  .sr-h{font:var(--font-weight-heavy) 14px var(--sans);color:var(--ink);margin-bottom:var(--space-5)}
   .sr-stat{font-size:var(--font-size-small);color:#2c2c2c;line-height:var(--line-height-loose)}
   .sr-list{font-size:var(--font-size-caption);color:#454545;line-height:var(--line-height-airy);margin-top:var(--space-5)}
   .sr-foot{font-size:var(--font-size-micro);color:var(--mut);margin-top:var(--space-18);font-style:italic}
@@ -794,7 +803,7 @@ html[data-theme="dark"] .sidebar .seg button.on .seg-key{color:var(--acc);border
   .sidebar .mockcta .nd-m:not([hidden]){order:1;flex:none;display:inline-flex;align-items:center;gap:var(--space-6);min-height:44px;font:inherit;box-sizing:border-box;padding:var(--space-7) var(--space-13);border:1px solid var(--bd);border-radius:999px;background:var(--card);cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),border-color var(--duration-base) var(--ease-base),background var(--duration-base) var(--ease-base)}
   .sidebar .mockcta .nd-m:not([hidden]):hover{border-color:var(--acc);background:var(--accbg)}
   .sidebar .mockcta .nd-m:not([hidden]):active{transform:scale(.96)}
-  .nd-m-k{font:var(--font-weight-heavy) var(--font-size-caption) -apple-system,sans-serif;letter-spacing:.2px;color:var(--accink);white-space:nowrap}
+  .nd-m-k{font:var(--font-weight-heavy) var(--font-size-caption) var(--sans);letter-spacing:.2px;color:var(--accink);white-space:nowrap}
   .nd-m-ar{font-size:var(--font-size-body);line-height:var(--line-height-none);color:var(--acc);flex:none;font-weight:var(--font-weight-heavy)}
   .sidebar .mockcta .tools-fab{order:2;flex:none}
   /* The "Interviewer cuts in mid-answer" toggle is a mock-run SETTING, not a global
@@ -893,7 +902,7 @@ html[data-theme="dark"] .sidebar .seg button.on .seg-key{color:var(--acc);border
     content:"\25BE";
     position:fixed;left:0;right:0;bottom:0;z-index:2;pointer-events:none;
     display:grid;justify-items:center;align-items:end;overflow:hidden;
-    font:var(--font-weight-regular) 13px -apple-system,sans-serif;color:var(--mut2);
+    font:var(--font-weight-regular) 13px var(--sans);color:var(--mut2);
     padding-bottom:var(--space-3);
     background:linear-gradient(to bottom,transparent,var(--card) 72%);
     height:min(calc(var(--fb,0px) * 100),var(--space-36));
@@ -1031,7 +1040,7 @@ button:active::after,.inttog:active::after{opacity:1;transition:opacity var(--du
    (with the collapsed bottom bar) unclips the drill question. (Spec Phase 5 #2.) */
 @media(max-width:919px){.stage-head{display:none}}
 <!--@build:include fonts.css-->
-:root{--display:'Space Grotesk',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+:root{--display:'Space Grotesk',var(--sans)}
 /* v78: distinctive display face on titles only (body + mono coords unchanged) */
 /* W3/P2-14: .hm-cta-t and .hm-h join the registry. A deep traversal counted 198 live
    display-face elements on a topic route and ZERO on #home -- the one surface every user
@@ -1071,7 +1080,7 @@ html[data-theme="dark"] .sidebar{background:linear-gradient(180deg,rgba(30,28,38
     position:fixed;top:0;z-index:2;pointer-events:none;   /* z:2 rides above the tabs (z:auto) inside .seg's z:25 context; none -> taps fall through */
     height:calc(44px + var(--space-8) * 2);      /* the strip's content box: 44px tap-target floor + 8/8 vertical padding */
     display:grid;align-items:center;overflow:hidden;      /* overflow:hidden clips the chevron when the scrim collapses to width 0 */
-    font:var(--font-weight-regular) 20px -apple-system,sans-serif;color:var(--mut2);
+    font:var(--font-weight-regular) 20px var(--sans);color:var(--mut2);
     width:0;transition:width var(--duration-base) var(--ease-base);  /* transition neutralised under prefers-reduced-motion by the global rule */
   }
   /* WIDTH is the gate: shell.js's v80 --fl/--fr is 24px when this side has hidden tabs, else 0px.
@@ -1367,7 +1376,7 @@ button{cursor:pointer}
 .stage .pane{zoom:var(--read-zoom,1)}
 .textzoom{display:flex;align-items:center;gap:var(--space-6);padding:var(--space-9) var(--space-11);margin-top:var(--space-4);border-top:1px solid var(--bd)}
 .textzoom-lbl{flex:1;min-width:0;font-size:var(--font-size-micro);font-weight:var(--font-weight-semibold);color:var(--mut)}
-.textzoom-btn{flex:none;width:var(--space-28);height:var(--space-28);border-radius:7px;border:1px solid var(--bd);background:var(--surf);color:var(--ink);font:var(--font-weight-bold) 13px -apple-system,sans-serif;line-height:var(--line-height-none);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;transition:border-color var(--duration-fast) var(--ease-base),box-shadow var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base)}
+.textzoom-btn{flex:none;width:var(--space-28);height:var(--space-28);border-radius:7px;border:1px solid var(--bd);background:var(--surf);color:var(--ink);font:var(--font-weight-bold) 13px var(--sans);line-height:var(--line-height-none);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;transition:border-color var(--duration-fast) var(--ease-base),box-shadow var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base)}
 /* [aria-disabled], not :disabled -- the control now stays in the tab order at its bounds (P3-7,
    text-zoom.js). Same dimmed treatment, so the look is unchanged; only the AT semantics moved. */
 .textzoom-btn[aria-disabled="true"]{opacity:.4;cursor:default}
@@ -1732,16 +1741,16 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
 .nt-sub{font-size:var(--font-size-caption);color:var(--mut2);margin-top:var(--space-3)}
 .nt-x{flex:none;width:var(--space-30);height:var(--space-30);border:1px solid var(--bd);background:var(--bg);border-radius:8px;color:var(--mut);font-size:var(--font-size-title);line-height:var(--line-height-none);cursor:pointer;transition:background var(--duration-fast) var(--ease-base),color var(--duration-fast) var(--ease-base)}
 .nt-x:hover{background:var(--accbg);color:var(--ink)}
-.nt-ta{flex:1;min-height:var(--space-240);margin:var(--space-14) var(--space-18) var(--space-4);padding:var(--space-14) var(--space-16);border:1px solid var(--bd);border-radius:11px;background:var(--bg);color:var(--ink);font:14px/1.65 -apple-system,BlinkMacSystemFont,system-ui,sans-serif;resize:vertical;outline:none;transition:border-color var(--duration-fast) var(--ease-base),box-shadow var(--duration-fast) var(--ease-base)}
+.nt-ta{flex:1;min-height:var(--space-240);margin:var(--space-14) var(--space-18) var(--space-4);padding:var(--space-14) var(--space-16);border:1px solid var(--bd);border-radius:11px;background:var(--bg);color:var(--ink);font:14px/1.65 var(--sans);resize:vertical;outline:none;transition:border-color var(--duration-fast) var(--ease-base),box-shadow var(--duration-fast) var(--ease-base)}
 .nt-ta:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--accbg)}
 .nt-foot{padding:var(--space-8) var(--space-18) var(--space-16);font-size:var(--font-size-micro);color:var(--mut)}
 .nt-htxt{flex:1 1 auto;min-width:0}
 .nt-tabs{display:flex;gap:var(--space-4);flex:none;background:var(--bg);border:1px solid var(--bd);border-radius:9px;padding:var(--space-3)}
-.nt-tab{border:0;background:transparent;color:var(--mut);font:var(--font-weight-semibold) 11.5px -apple-system,system-ui,sans-serif;padding:var(--space-5) var(--space-11);border-radius:7px;cursor:pointer;transition:background var(--duration-fast) var(--ease-base),color var(--duration-fast) var(--ease-base);white-space:nowrap}
+.nt-tab{border:0;background:transparent;color:var(--mut);font:var(--font-weight-semibold) 11.5px var(--sans);padding:var(--space-5) var(--space-11);border-radius:7px;cursor:pointer;transition:background var(--duration-fast) var(--ease-base),color var(--duration-fast) var(--ease-base);white-space:nowrap}
 .nt-tab.on{background:var(--acc);color:var(--on-slab)}
 .nt-tab:not(.on):hover{color:var(--ink);background:var(--accbg)}
 .nt-all{flex:1;display:flex;flex-direction:column;min-height:0;margin:var(--space-14) var(--space-18) var(--space-4)}
-.nt-search{flex:none;padding:var(--space-10) var(--space-13);border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--ink);font:13px -apple-system,system-ui,sans-serif;outline:none;margin-bottom:var(--space-10);transition:border-color var(--duration-fast) var(--ease-base)}
+.nt-search{flex:none;padding:var(--space-10) var(--space-13);border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--ink);font:13px var(--sans);outline:none;margin-bottom:var(--space-10);transition:border-color var(--duration-fast) var(--ease-base)}
 .nt-search:focus{border-color:var(--acc)}
 .nt-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:var(--space-8);padding-right:var(--space-2)}
 .nt-item{display:flex;flex-direction:column;align-items:flex-start;gap:var(--space-4);text-align:left;border:1px solid var(--bd);border-radius:10px;background:var(--bg);padding:var(--space-11) var(--space-13);cursor:pointer;transition:border-color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base)}
@@ -1763,7 +1772,7 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
 .xd-prog{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.09em;text-transform:uppercase;color:var(--mut)}
 .xd-from{font-size:var(--font-size-micro);font-weight:var(--font-weight-bold);color:var(--accink);background:var(--accbg);border-radius:20px;padding:var(--space-3) var(--space-11);white-space:nowrap}
 .xd-q{font-size:var(--font-size-subhead);font-weight:var(--font-weight-semibold);line-height:var(--line-height-loose);color:var(--ink);margin-bottom:var(--space-14)}
-.xd-reveal{display:block;width:100%;border:1.5px solid var(--acc);background:var(--bg);color:var(--acc);font:var(--font-weight-bold) 13px -apple-system,system-ui,sans-serif;padding:var(--space-12);border-radius:10px;cursor:pointer;transition:background var(--duration-fast) var(--ease-base),transform var(--duration-fast) var(--ease-base)}
+.xd-reveal{display:block;width:100%;border:1.5px solid var(--acc);background:var(--bg);color:var(--acc);font:var(--font-weight-bold) 13px var(--sans);padding:var(--space-12);border-radius:10px;cursor:pointer;transition:background var(--duration-fast) var(--ease-base),transform var(--duration-fast) var(--ease-base)}
 .xd-reveal:hover{background:var(--accbg)}
 .xd-reveal:active{transform:translateY(1px)}
 .xd-ans{font-size:var(--font-size-small);line-height:var(--line-height-spacious);color:var(--ink);background:var(--accbg);border-left:3px solid var(--acc);border-radius:9px;padding:var(--space-14) var(--space-16);margin-bottom:var(--space-12)}
@@ -1774,7 +1783,7 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
 .xd-senior{margin-top:var(--space-4);font-size:var(--font-size-caption);line-height:var(--line-height-airy);color:var(--ink);background:var(--tealbg);border:1px solid var(--teal);border-radius:9px;padding:var(--space-12) var(--space-14)}
 .xd-senior-l{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.06em;text-transform:uppercase;color:var(--teal);margin-bottom:var(--space-5)}
 .xd-judge{display:flex;gap:var(--space-10);margin-top:var(--space-16)}
-.xd-got,.xd-shk{flex:1;border:1.5px solid var(--bd);background:var(--card);border-radius:11px;padding:var(--space-12);font:var(--font-weight-bold) 13px -apple-system,system-ui,sans-serif;cursor:pointer;transition:border-color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base),transform var(--duration-fast) var(--ease-base)}
+.xd-got,.xd-shk{flex:1;border:1.5px solid var(--bd);background:var(--card);border-radius:11px;padding:var(--space-12);font:var(--font-weight-bold) 13px var(--sans);cursor:pointer;transition:border-color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base),transform var(--duration-fast) var(--ease-base)}
 .xd-got{color:var(--teal)}
 .xd-got:hover{border-color:var(--teal);background:var(--tealbg)}
 .xd-shk{color:var(--red)}
@@ -1829,7 +1838,7 @@ html[data-theme="dark"] .tn-item:hover{background:rgba(170,157,245,.13)}
 
 .storage-notice{position:fixed;top:0;left:0;right:0;display:flex;align-items:center;gap:var(--space-12);padding:var(--space-9) var(--space-16);background:var(--amberbg);border-bottom:1px solid var(--amber);color:var(--amber);font-size:var(--font-size-caption);font-weight:var(--font-weight-semibold);box-shadow:0 2px 8px -2px rgba(0,0,0,.12)}
 .storage-notice-t{flex:1;line-height:var(--line-height-normal)}
-.storage-notice-exp{flex:none;font:var(--font-weight-semibold) 11px -apple-system,sans-serif;color:var(--amber);background:transparent;border:1px solid var(--amber);border-radius:6px;padding:var(--space-4) var(--space-11);cursor:pointer}
+.storage-notice-exp{flex:none;font:var(--font-weight-semibold) 11px var(--sans);color:var(--amber);background:transparent;border:1px solid var(--amber);border-radius:6px;padding:var(--space-4) var(--space-11);cursor:pointer}
 .storage-notice-exp:hover{background:var(--amber);color:var(--on-slab)}
 .storage-notice-x{flex:none;background:transparent;border:0;color:var(--amber);font-size:var(--font-size-title);line-height:var(--line-height-none);cursor:pointer;padding:0 var(--space-4)}
 @media (prefers-reduced-motion:reduce){:root{--duration-instant:0ms;--duration-fast:.01ms;--duration-base:.01ms;--duration-moderate:.01ms;--duration-slow:.01ms;--duration-slowest:.01ms}*,::before,::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
@@ -2040,8 +2049,15 @@ html[data-view="home"] .cmp-reopen{display:none}
    ENUMERATES rooms must not advertise one -- but a room CARD names exactly one room, its own, which
    is why the outline already wears var(--rm). The grid around it stays roomless; only each card's
    own ring speaks for itself. Same treatment .hm-cta got at :2007: same alpha steps, the same
-   color-mix mechanism the --acc-a* rungs use (:116), and the same var(--rm,var(--acc)) fallback,
-   which is what keeps phantom_tokens.py honest about a token no stylesheet declares.
+   color-mix mechanism the --acc-a* rungs use (:116), and the same var(--rm,var(--acc)) fallback.
+   That fallback is hero-parity plus a genuine runtime safety net -- and NOTHING MORE. It was
+   documented here as "what keeps phantom_tokens.py honest about a token no stylesheet declares",
+   and that was FALSIFIED by experiment: --rm is already defined for that check by the inline
+   `--rm:` panels.js:282 emits, which is the exact shape phantom_tokens.py:36-37 names as
+   legitimate and its self-test asserts must not be flagged. A deliverable built with this
+   fallback stripped to a bare var(--rm) runs the shipped check BYTE-IDENTICAL (NEW: 0, PASS).
+   Proof and provenance: _audit/2026-07-30-w20-hue-coldverify.md F-1. The code is right; only
+   the reason was wrong, and a wrong reason in the file is the copy a future wave reads.
 
    THE INSET STRIPE IS RE-DECLARED, and it is not decoration. box-shadow is ONE property, so the
    generic rule was REPLACING .hm-room's `inset 3px 0 0 var(--rm)` (:2026) outright -- a focused
@@ -2247,7 +2263,7 @@ html[data-view="home"] .cmp-reopen{display:none}
      with every other control the app added here. */
   .cram-jump button{flex:none;min-height:44px;white-space:nowrap;border:1px solid var(--bd);
     border-radius:999px;background:var(--surf);color:var(--mut);cursor:pointer;
-    font:var(--font-weight-bold) 11.5px -apple-system,sans-serif;padding:var(--space-6) var(--space-12)}
+    font:var(--font-weight-bold) 11.5px var(--sans);padding:var(--space-6) var(--space-12)}
   .cram-jump button.on{border-color:var(--acc);background:var(--accbg);color:var(--accink)}
   /* The phone override used to say max-height:100vh, which DROPPED the padding correction the
      desktop rule at :474 carries (calc(100vh - var(--space-36))) -- while .cram-ov keeps its 18px

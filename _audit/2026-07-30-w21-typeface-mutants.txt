@@ -1,0 +1,75 @@
+=== W21 typeface_census -- MUTANT BATTERY ===
+Each mutant is applied to the working tree, the check is run, and the tree restored.
+A guard whose arms are not individually sensitive is two arms riding one signal.
+
+--- CONTROL: the unmutated tree ---
+    orphans      : 0
+
+TYPEFACE CENSUS: PASS  (180 declarations, 0 orphans, 2 documented exception(s), both pinned to --sans or argued in place)
+
+--- MUTANT A: one rule regrows the truncated stack (.seg button) ---
+    the founding defect, planted back into a single rule
+    --sans       : -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif
+    drift arm    : 1 literal copy of the app stack, 0 drifted
+    orphans      : 1
+  1 orphan declaration(s):
+    -apple-system,sans-serif                             1 site(s)
+        a TRUNCATED -apple-system stack. -apple-system resolves on Apple platforms and nowhere else, so off Apple the generic wins -- on Windows that is ARIAL. Use var(--sans)
+        src/styles.css:329
+
+TYPEFACE CENSUS: FAIL
+
+--- MUTANT B: the print literal DRIFTS from --sans (Helvetica dropped) ---
+    the stack quietly acquires a second answer; the orphan arm cannot see this
+    --sans       : -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif
+    drift arm    : 0 literal copies of the app stack, 0 drifted
+    orphans      : 1
+  1 orphan declaration(s):
+    -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,A 1 site(s)
+        a SECOND spelling of the app stack. It resolves correctly off Apple (system-ui / Segoe UI catches it), so no glyph moves -- but the stack now has more than one answer, which is how the truncated form was born. Use var(--sans)
+        src/scripts/app/print-qa.js:9
+
+TYPEFACE CENSUS: FAIL
+
+--- MUTANT C: the --sans definition is deleted ---
+    every var(--sans) becomes invalid-at-computed-value-time; nothing else changes
+    drift arm    : 1 literal copy of the app stack, 0 drifted
+    orphans      : 0
+  1 orphan declaration(s):
+    --sans                                               1 site(s)
+        expected exactly ONE --sans definition, found 0
+        src/styles.css:0
+
+TYPEFACE CENSUS: FAIL
+
+--- MUTANT D: a face the app does not own (Verdana) ---
+    --sans       : -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif
+    drift arm    : 1 literal copy of the app stack, 0 drifted
+    orphans      : 1
+  1 orphan declaration(s):
+    Verdana,sans-serif                                   1 site(s)
+        a family the app does not own, and no documented exception
+        src/styles.css:505
+
+TYPEFACE CENSUS: FAIL
+
+--- MUTANT E: --sans CHANGES and the print literal is left behind ---
+    the ONLY mutant the drift arm alone can catch: the exception still matches its
+    key byte-for-byte, so the orphan arm sees nothing -- but the app stack and its
+    pinned copy now disagree, which is the whole reason the copy is allowed to exist
+    --sans       : -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif
+    drift arm    : 1 literal copy of the app stack, 1 drifted
+    orphans      : 0
+  1 orphan declaration(s):
+    -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,H 1 site(s)
+        a pinned literal copy of the app stack that has DRIFTED from --sans -- the stack now has two answers
+        src/scripts/app/print-qa.js:9
+
+TYPEFACE CENSUS: FAIL
+
+--- RESTORED: the tree is back to the committed state ---
+    orphans      : 0
+
+TYPEFACE CENSUS: PASS  (180 declarations, 0 orphans, 2 documented exception(s), both pinned to --sans or argued in place)
+ src/styles.css | 68 ++++++++++++++++++++++++++++++++++++----------------------
+ 1 file changed, 42 insertions(+), 26 deletions(-)

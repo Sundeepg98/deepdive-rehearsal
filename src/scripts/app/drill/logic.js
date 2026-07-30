@@ -68,12 +68,12 @@ var DRILL_STYLE = `/* @keyframes pop moved to BASE_SHEET. Five shadow scopes ref
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
 
 .modetog{display:inline-flex;gap:var(--space-4);background:var(--modetog-bg);border:1px solid var(--modetog-bd);border-radius:9px;padding:var(--space-4)}
-.modetog button{border:0;background:transparent;color:var(--mut);font:var(--font-weight-bold) 12px -apple-system,sans-serif;padding:var(--space-13) var(--space-14);border-radius:8px;cursor:pointer;transition:color var(--duration-base) var(--ease-base),background var(--duration-base) var(--ease-base),transform var(--duration-fast) var(--ease-base)}
+.modetog button{border:0;background:transparent;color:var(--mut);font:var(--font-weight-bold) 12px var(--sans);padding:var(--space-13) var(--space-14);border-radius:8px;cursor:pointer;transition:color var(--duration-base) var(--ease-base),background var(--duration-base) var(--ease-base),transform var(--duration-fast) var(--ease-base)}
 .modetog button.on{background:var(--card);color:var(--acc);font-weight:var(--font-weight-heavy);box-shadow:0 0 0 1px var(--acc-a32),0 4px 12px var(--acc-a20)}
 .modetog button:not(.on):hover{background:var(--modetog-hover-bg);color:var(--ink)}
 .tierrow{display:flex;align-items:center;gap:var(--space-9);margin:var(--space-2) 0 var(--space-16);flex-wrap:wrap}
-.tierlab{font:var(--font-weight-bold) 9.5px -apple-system,sans-serif;letter-spacing:.5px;text-transform:uppercase;color:var(--mut2)}
-.tiernote{font:italic var(--font-size-body)/1.55 -apple-system,sans-serif;color:var(--mut);margin:-6px 0 var(--space-18);max-width:62ch}
+.tierlab{font:var(--font-weight-bold) 9.5px var(--sans);letter-spacing:.5px;text-transform:uppercase;color:var(--mut2)}
+.tiernote{font:italic var(--font-size-body)/1.55 var(--sans);color:var(--mut);margin:-6px 0 var(--space-18);max-width:62ch}
 .tiernote b{color:var(--acc);font-style:normal;font-weight:var(--font-weight-heavy)}
 .timer{font:var(--font-weight-heavy) 15px ui-monospace,Menlo,monospace;color:var(--acc);background:var(--accbg);border:1px solid #cfc7f0;border-radius:8px;padding:var(--space-6) var(--space-13)}
 .timer.low{color:var(--red);background:var(--redbg);border-color:#e8c5c0;animation:pulse var(--duration-slowest) infinite}
@@ -152,7 +152,7 @@ var DRILL_STYLE = `/* @keyframes pop moved to BASE_SHEET. Five shadow scopes ref
    Seeding the tiles from the record would corrupt that this-run denominator from the other side, so
    the honest fix is to LABEL them: this caption scopes the board to the current run, so 0/0 reads as
    "nothing graded THIS load yet" and the record's larger count is understood as a different number. */
-.score-cap{font:var(--font-weight-bold) var(--font-size-nano)/1 -apple-system,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:var(--mut2);margin:0 0 var(--space-6)}
+.score-cap{font:var(--font-weight-bold) var(--font-size-nano)/1 var(--sans);letter-spacing:.6px;text-transform:uppercase;color:var(--mut2);margin:0 0 var(--space-6)}
 .score{display:flex;gap:var(--space-9);margin-bottom:var(--space-14)}
 .pill{flex:1;text-align:center;border:1.5px solid var(--bd);border-radius:12px;padding:var(--space-10);background:var(--card);transition:box-shadow var(--duration-moderate) var(--ease-base),transform var(--duration-base) var(--ease-base),border-color var(--duration-base) var(--ease-base)}
 .pill:hover{box-shadow:0 4px 16px -4px var(--acc-a15);transform:translateY(-2px)}
@@ -220,7 +220,7 @@ var DRILL_STYLE = `/* @keyframes pop moved to BASE_SHEET. Five shadow scopes ref
 .pill.g:not(.z) .v,.pill.g:not(.z) .l{color:HighlightText}
 }
 .revset{display:flex;align-items:center;gap:var(--space-11);flex-wrap:wrap;margin:var(--space-2) 0 var(--space-18)}
-.revset-b{font:var(--font-weight-semibold) 13px -apple-system,system-ui,sans-serif;color:var(--accink);background:var(--accbg);border:1px solid var(--acc);border-radius:8px;padding:var(--space-7) var(--space-13);cursor:pointer;transition:background var(--duration-fast),color var(--duration-fast),transform var(--duration-instant);display:inline-flex;align-items:center;gap:var(--space-6)}
+.revset-b{font:var(--font-weight-semibold) 13px var(--sans);color:var(--accink);background:var(--accbg);border:1px solid var(--acc);border-radius:8px;padding:var(--space-7) var(--space-13);cursor:pointer;transition:background var(--duration-fast),color var(--duration-fast),transform var(--duration-instant);display:inline-flex;align-items:center;gap:var(--space-6)}
 .revset-b:hover{background:var(--acc);color:var(--bg)}
 .revset-b:active{transform:translateY(1px)}
 .revset-b:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
@@ -254,8 +254,8 @@ var DRILL_STYLE = `/* @keyframes pop moved to BASE_SHEET. Five shadow scopes ref
 /* :not(.flow-go) -- the W1 hand-off CTA is a BASE_SHEET .flow-go (gradient); this generic
    debrief-button rule (specificity 0,1,1) would otherwise beat it (0,1,0) and flatten it to the
    plain white/acc outline, so the drill strip would look nothing like the wb/mock strips. */
-.debrief button:not(.flow-go){margin-top:var(--space-18);display:block;width:100%;border:1.5px solid var(--acc);background:#fff;color:var(--acc);font:var(--font-weight-bold) 13px -apple-system,sans-serif;padding:var(--space-12);border-radius:10px;cursor:pointer}
-.debrief .btn-sec{margin-top:var(--space-14);display:block;width:100%;border:1.5px solid var(--teal);background:linear-gradient(135deg,var(--tealbg) 0%,rgba(10,133,100,.04) 100%);color:var(--fb-t-fg);font:var(--font-weight-bold) 13px -apple-system,sans-serif;padding:var(--space-12);border-radius:10px;cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),box-shadow var(--duration-base) var(--ease-base),filter var(--duration-base) var(--ease-base)}
+.debrief button:not(.flow-go){margin-top:var(--space-18);display:block;width:100%;border:1.5px solid var(--acc);background:#fff;color:var(--acc);font:var(--font-weight-bold) 13px var(--sans);padding:var(--space-12);border-radius:10px;cursor:pointer}
+.debrief .btn-sec{margin-top:var(--space-14);display:block;width:100%;border:1.5px solid var(--teal);background:linear-gradient(135deg,var(--tealbg) 0%,rgba(10,133,100,.04) 100%);color:var(--fb-t-fg);font:var(--font-weight-bold) 13px var(--sans);padding:var(--space-12);border-radius:10px;cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),box-shadow var(--duration-base) var(--ease-base),filter var(--duration-base) var(--ease-base)}
 .debrief .btn-sec:hover{transform:translateY(-1px);box-shadow:0 4px 14px -4px rgba(10,133,100,.2);filter:brightness(1.02)}
 .debrief .btn-sec:active{transform:translateY(1px) scale(.98)}
 .debrief .btn-sec:hover{background:var(--btnsec-hover-bg)}
@@ -287,7 +287,7 @@ var DRILL_STYLE = `/* @keyframes pop moved to BASE_SHEET. Five shadow scopes ref
 @media (max-width:400px){.dnav{grid-template-columns:1fr}}
 .dn-step{display:flex;align-items:center;gap:var(--space-10);text-align:left;padding:var(--space-10) var(--space-12);border-radius:11px;border:1px solid var(--bd);background:linear-gradient(135deg,var(--surf) 0%,var(--acc-a02) 100%);box-shadow:var(--surf-sh);cursor:pointer;transition:transform var(--duration-base) var(--ease-glide),box-shadow var(--duration-base) var(--ease-base),border-color var(--duration-base) var(--ease-base),background var(--duration-base) var(--ease-base);font-family:inherit;min-width:0;position:relative;overflow:hidden}
 .dn-step:hover{transform:translateY(-2px) scale(1.01);box-shadow:0 6px 20px -6px var(--acc-a15);border-color:var(--acc-a20);background:linear-gradient(135deg,var(--mix-surf) 0%,var(--acc-a04) 100%)}
-.dn-n{flex:none;width:var(--space-22);height:var(--space-22);border-radius:7px;display:grid;place-items:center;font:var(--font-weight-bold) 10.5px -apple-system,sans-serif;background:var(--accbg);color:var(--accink);transition:background var(--duration-base) var(--ease-base),color var(--duration-base) var(--ease-base),box-shadow var(--duration-base) var(--ease-base),transform var(--duration-base) var(--ease-spring)}
+.dn-n{flex:none;width:var(--space-22);height:var(--space-22);border-radius:7px;display:grid;place-items:center;font:var(--font-weight-bold) 10.5px var(--sans);background:var(--accbg);color:var(--accink);transition:background var(--duration-base) var(--ease-base),color var(--duration-base) var(--ease-base),box-shadow var(--duration-base) var(--ease-base),transform var(--duration-base) var(--ease-spring)}
 .dn-t{font-size:var(--font-size-micro);font-weight:var(--font-weight-semibold);color:var(--ink);line-height:var(--line-height-snug);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
 .dn-step.on{border-color:var(--acc);background:linear-gradient(135deg,var(--accbg) 0%,var(--acc-a06) 100%);box-shadow:0 0 0 1px var(--acc),0 4px 14px -4px var(--acc-a12);transform:translateY(-1px)}
 .dn-step.on .dn-n{background:linear-gradient(135deg,var(--acc),var(--acc2));color:var(--on-slab);box-shadow:0 2px 6px -2px var(--acc-a30)}
@@ -295,8 +295,8 @@ var DRILL_STYLE = `/* @keyframes pop moved to BASE_SHEET. Five shadow scopes ref
 .dn-step.flag .dn-n{background:linear-gradient(135deg,var(--amber),#d4902a);color:var(--on-slab)}
 .dn-step:active{transform:translateY(0) scale(.99)}
 .mhp{margin-top:var(--space-14);border:1px solid var(--bd);border-radius:12px;padding:var(--space-14) var(--space-16);background:linear-gradient(135deg,var(--accbg) 0%,var(--acc-a02) 100%);animation:pop var(--duration-moderate) var(--ease-base)}
-.mhp-h{font:var(--font-weight-heavy) 10px -apple-system,sans-serif;letter-spacing:.5px;text-transform:uppercase;color:var(--acc)}
-.mhp-h .mhp-sub{display:block;margin-top:var(--space-3);font:var(--font-weight-semibold) 11px -apple-system,sans-serif;letter-spacing:0;text-transform:none;color:var(--mut2)}
+.mhp-h{font:var(--font-weight-heavy) 10px var(--sans);letter-spacing:.5px;text-transform:uppercase;color:var(--acc)}
+.mhp-h .mhp-sub{display:block;margin-top:var(--space-3);font:var(--font-weight-semibold) 11px var(--sans);letter-spacing:0;text-transform:none;color:var(--mut2)}
 .mhp-list{display:flex;flex-direction:column;gap:var(--space-7);margin-top:var(--space-10)}
 .mhp-i{display:flex;align-items:flex-start;gap:var(--space-10);width:100%;text-align:left;border:1px solid var(--bd);background:var(--card);border-radius:9px;padding:var(--space-9) var(--space-11);cursor:pointer;font:inherit;transition:border-color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base)}
 .mhp-i:hover{border-color:var(--acc-a30)}
@@ -312,7 +312,7 @@ var DRILL_STYLE = `/* @keyframes pop moved to BASE_SHEET. Five shadow scopes ref
    the self-grade discoverable-by-ignorance without shouting -- quiet-by-default -- and adds no motion,
    so it is reduced-motion safe with nothing to suppress. */
 .judge-lead{margin-top:var(--space-15)}
-.judge-lead .jl-h{font:var(--font-weight-heavy) 12px -apple-system,sans-serif;color:var(--ink)}
+.judge-lead .jl-h{font:var(--font-weight-heavy) 12px var(--sans);color:var(--ink)}
 .judge-lead .jl-s{margin-top:var(--space-3);font-size:var(--font-size-caption);color:var(--mut);font-style:italic}
 .judge-lead+.judge{margin-top:var(--space-9)}
 .sigdrop{font-size:var(--font-size-micro);color:var(--fb-a-fg);font-weight:var(--font-weight-semibold);margin-top:var(--space-2)}
@@ -369,12 +369,12 @@ var DRILL_STYLE = `/* @keyframes pop moved to BASE_SHEET. Five shadow scopes ref
     margin-bottom:var(--space-12);padding:var(--space-8) var(--space-12);border:1px solid var(--bd);
     border-radius:10px;background:var(--card);cursor:pointer;text-align:left}
   .dsu-tog:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
-  .dsu-l{flex:none;font:var(--font-weight-heavy) 9.5px -apple-system,sans-serif;letter-spacing:.5px;text-transform:uppercase;color:var(--mut2)}
+  .dsu-l{flex:none;font:var(--font-weight-heavy) 9.5px var(--sans);letter-spacing:.5px;text-transform:uppercase;color:var(--mut2)}
   /* The VALUE is the whole point of collapsing rather than hiding: "Study . All 20" says what
      the two buried controls are currently set to, so the row answers the question the controls
      would have been read for, and only the ACT of changing them costs a tap. */
   .dsu-v{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-    font:var(--font-weight-bold) 12px -apple-system,sans-serif;color:var(--acc)}
+    font:var(--font-weight-bold) 12px var(--sans);color:var(--acc)}
   .dsu-c{flex:none;color:var(--mut2);line-height:1;transition:transform var(--duration-base) var(--ease-base)}
   .dsu-tog[aria-expanded="true"] .dsu-c{transform:rotate(180deg)}
   :host(.dsu-closed) .dmoderow,:host(.dsu-closed) .tierrow,:host(.dsu-closed) .tiernote{display:none}

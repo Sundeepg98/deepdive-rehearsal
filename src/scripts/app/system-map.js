@@ -40,7 +40,7 @@ var SYS_STYLE = `
 .piv[open]{border-color:var(--acc-a20);box-shadow:0 0 0 1px var(--acc-a06),0 6px 20px -8px var(--acc-a15)}
 .piv summary{list-style:none;cursor:pointer;padding:var(--space-14) var(--space-16);display:flex;align-items:flex-start;gap:var(--space-12);transition:background var(--duration-base) var(--ease-base)}
 .piv summary:hover{background:var(--acc2-a04)}
-.piv-jump{margin-top:var(--space-12);font:var(--font-weight-bold) 12px -apple-system,sans-serif;color:var(--acc);background:var(--accbg);border:1px solid var(--acc-a20);border-radius:8px;padding:var(--space-7) var(--space-12);cursor:pointer;transition:background var(--duration-fast) var(--ease-base),border-color var(--duration-fast) var(--ease-base)}
+.piv-jump{margin-top:var(--space-12);font:var(--font-weight-bold) 12px var(--sans);color:var(--acc);background:var(--accbg);border:1px solid var(--acc-a20);border-radius:8px;padding:var(--space-7) var(--space-12);cursor:pointer;transition:background var(--duration-fast) var(--ease-base),border-color var(--duration-fast) var(--ease-base)}
 /* P3-6's class, the fourth instance -- found by the W1 verifier while generalising P2-3, and left
    then only because it sat outside that wave's 13-item scope. A :focus rule with outline:none deleted the
    ring outright, and what survived was a background swap byte-identical to this rule's own

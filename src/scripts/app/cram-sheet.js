@@ -36,21 +36,74 @@ function cramSections() {
 /* <deep-cram> renders LAZILY, and not on the open path: _maybeRender() runs at connectedCallback
    (when .cram-ov is not open yet, so it arms an IntersectionObserver instead) and on
    deeptopicchange. So the first openCram() adds `.open` SYNCHRONOUSLY and the sheet's body is
-   still empty for another frame or two while the observer fires. Building the strip in that gap
-   indexed an empty shadow root and rendered nothing -- silently, on the first open of every
-   session, which is the only open most users get. MEASURED: 0 chips, a 16.7px empty strip.
-   So: retry on animation frames until the sections exist, with a hard cap so a sheet that
-   genuinely has none (or a future render failure) costs a few frames and then stops, rather than
-   spinning. rAF, not setTimeout -- it is the same clock the render is waiting on. */
+   still empty when the strip is built. Indexing that gap rendered nothing -- silently, on the
+   first open of every session, which is the only open most users get.
+
+   THE rAF RETRY THAT USED TO LIVE HERE COULD NOT WIN, AND NOT BECAUSE THE MACHINE WAS SLOW.
+   It re-ran on animation frames "because it is the same clock the render is waiting on" -- but it
+   is the same clock running EARLIER IN THE STEP. <deep-cram> renders from an IntersectionObserver
+   callback (cram-overlay.js), and in the HTML rendering steps animation-frame callbacks run BEFORE
+   intersection observations are delivered. So every retry sampled the shadow root in the frame
+   just ahead of the render that would have filled it, and the strip was structurally guaranteed to
+   paint ONE FRAME after the sections it indexes. Measured, and it is exactly one frame in BOTH
+   engines: sections 7 / chips 0, then chips 7 on the very next frame -- Chromium included. What
+   differs is only what a frame COSTS while a 7-section, 7619px sheet renders synchronously under a
+   backdrop-filter over a 12MB document: ~30ms in Chromium, ~140ms in WebKit 26.5. That is the
+   whole engine split. WebKit measured 0 chips for ~860ms from the tap, then the strip growing
+   16.4 -> 61px and shoving the first section 41.7px DOWN THE PAGE, under a reader who by the
+   sheet's own premise started reading immediately.
+
+   SO WATCH THE RENDER INSTEAD OF RACING IT. A MutationObserver on the shadow root delivers as a
+   MICROTASK at the end of the task that mutated it -- i.e. inside _renderNow()'s own task, before
+   that frame paints -- so the chips and the sections land in the SAME frame. No empty strip, no
+   late shift, and no dependence on frame cadence, which is the property that made this engine-
+   specific in the first place.
+
+   WHY NOT BUILD FROM deriveCram()'s OUTPUT, the other fix the audit offered: because it would be
+   the one thing this strip was designed not to be. The chips are the titles <deep-cram> ACTUALLY
+   RENDERED (see cramSections above) -- there is no second list, so an index cannot drift from a
+   corpus that authors different sections per topic. Deriving them separately buys the same timing
+   by construction and pays for it with exactly that drift risk, plus a second derive of the
+   heaviest content in the app. The observer keeps "it reads the sheet, it does not describe it"
+   intact and fixes the mechanism anyway, so there is nothing to trade. */
+let cramJumpWatch = null;
+function stopCramJumpWatch() {
+  if (cramJumpWatch) { cramJumpWatch.disconnect(); cramJumpWatch = null; }
+}
 function buildCramJump(tries) {
   const strip = document.getElementById('cramjump');
   const body = document.getElementById('cram');
   if (!strip || !body) return;
   const secs = cramSections();
-  if (!secs.length && (tries || 0) < 30) {
-    requestAnimationFrame(function () { buildCramJump((tries || 0) + 1); });
+  if (secs.length) { stopCramJumpWatch(); renderCramJump(secs); return; }
+  const host = cramov.querySelector('deep-cram');
+  const root = host && host.shadowRoot;
+  if (!root) {
+    /* No shadow root means the element has not been UPGRADED yet -- there is nothing to observe,
+       so acquiring it is the one thing still on a frame clock. Bounded exactly as before, and on
+       giving up it clears the strip rather than leaving stale chips, which is the same terminal
+       state the old retry reached. */
+    if ((tries || 0) < 30) { requestAnimationFrame(function () { buildCramJump((tries || 0) + 1); }); return; }
+    renderCramJump(secs);
     return;
   }
+  if (cramJumpWatch) return;                 /* already watching this open */
+  cramJumpWatch = new MutationObserver(function () {
+    const rendered = cramSections();
+    /* An empty root means the render has not landed yet -- keep watching. Once anything is in
+       there the sheet has rendered, so index it if it carried sections and clear if it genuinely
+       carried none; either way stop watching. A sheet with no sections costs one mutation and
+       stops, where the old loop cost 30 frames. */
+    if (!rendered.length && !root.firstElementChild) return;
+    stopCramJumpWatch();
+    renderCramJump(rendered);
+  });
+  cramJumpWatch.observe(root, { childList: true, subtree: true });
+}
+function renderCramJump(secs) {
+  const strip = document.getElementById('cramjump');
+  const body = document.getElementById('cram');
+  if (!strip || !body) return;
   /* Fewer than two sections is not an index, it is decoration -- render nothing rather than a
      one-chip strip that costs a row and answers no question. */
   if (secs.length < 2) { strip.textContent = ''; return; }
@@ -103,6 +156,9 @@ function closeCram() {
   ovHide(cramov);
   cramov.setAttribute('aria-hidden', 'true');
   document.body.style.overflow = '';
+  /* A sheet closed before it ever rendered would otherwise leave the watcher attached to a shadow
+     root nobody is looking at; the next open re-arms it. */
+  stopCramJumpWatch();
 }
 document.getElementById('cramopen').onclick = openCram;
 document.getElementById('cramx').onclick = closeCram;

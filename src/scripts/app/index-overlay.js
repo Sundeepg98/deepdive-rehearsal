@@ -51,10 +51,17 @@
     overlayEl.setAttribute('aria-modal', 'true');
     overlayEl.setAttribute('aria-label', 'Topic index');
     document.body.appendChild(overlayEl);
-    /* ONE handler, shared with the home. Picking a topic closes the switcher; the home stays put. */
+    /* ONE handler, shared with the home. Picking a topic closes the switcher -- and, if the switcher
+       was opened FROM the home, navigates: on a topic-less route Router.setTopic is a no-op by
+       design, so closing was all that happened and the pick was silently lost (the panel shut, the
+       hero still named the old topic, no error). From a topic route this is a no-op and the view you
+       were in is preserved, exactly as before. Same rule the home's own cards use. */
     Panels.bind(overlayEl, {
       rerender: function () { overlayEl.innerHTML = panelHtml(); },
-      onPick: close,
+      onPick: function (kind) {
+        close();
+        if (typeof LastVisit !== 'undefined' && LastVisit.navigateAfterPick) LastVisit.navigateAfterPick(kind);
+      },
       onClose: close,
     });
   }

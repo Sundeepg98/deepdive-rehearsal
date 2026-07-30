@@ -396,15 +396,29 @@ var DRILL_STYLE = `/* @keyframes pop moved to BASE_SHEET. Five shadow scopes ref
      parsed as JS, and customElements.define('deep-drill') never ran: the whole pane silently
      failed to upgrade, no shadow root, no probes. Caught by test/syntax_check.py, which is the
      third time this exact character has done it.
-     .seg is fixed over 0-61 and .mockcta over the last 72px, and the browser counts BOTH bands
-     as visible scrollport -- so focus() on a freshly revealed block was satisfied while the
-     block sat underneath the mock bar. That is the mechanism behind P2-8's "scrollY unchanged":
-     nothing was broken, the browser simply had a different idea of the viewport than the user
-     did. scroll-margin is the standard way to tell it, and it costs no layout. */
-  .thread,.ans,.fu,.senior,.debrief,.judge{scroll-margin-top:69px;scroll-margin-bottom:88px}
+     .seg is fixed over the top of the viewport and .mockcta over the bottom, and the browser
+     counts BOTH bands as visible scrollport -- so focus() on a freshly revealed block was
+     satisfied while the block sat underneath the mock bar. That is the mechanism behind P2-8's
+     "scrollY unchanged": nothing was broken, the browser simply had a different idea of the
+     viewport than the user did. scroll-margin is the standard way to tell it, and it costs no
+     layout.
+
+     W19/X2b -- THE FOUR NUMBERS THAT USED TO BE HERE ARE GONE, AND THE PROOF IS THAT THIS RULE
+     NOW REPRODUCES ALL FOUR. They were 69/88 portrait and 59/76 landscape, and the difference
+     between the pairs was never a design decision: it was the same 8px and 16px gaps measured
+     against a bar that re-pads itself in the short-viewport block. --chrome-top/--chrome-bot
+     (scripts/app/chrome-metrics.js, inherited across this shadow boundary) carry the bar, so one
+     expression yields 61+8=69 / 72+16=88 upright and 51+8=59 / 60+16=76 on its side -- exactly
+     the values that were typed, now derived. The landscape override this block used to carry is
+     DELETED, not re-expressed: there is nothing left in it that differs.
+
+     #adv IS IN THE LIST NOW (audit X7). Everything above is a block of CONTENT; #adv is the
+     drill's only way FORWARD, and it was the one element the seat had no margin for -- so a
+     scrollIntoView that "worked" still left the button flush against a viewport edge the browser
+     believes is at 844 and the user sees as the top of the mock bar. */
+  .thread,.ans,.fu,.senior,.debrief,.judge,#adv{scroll-margin-top:calc(var(--chrome-top) + var(--space-8));scroll-margin-bottom:calc(var(--chrome-bot) + var(--space-16))}
 }
 @media (max-width:919px) and (max-height:480px){
-  .thread,.ans,.fu,.senior,.debrief,.judge{scroll-margin-top:59px;scroll-margin-bottom:76px}
   /* min-height stays 44 -- NOT reduced to buy fold pixels. It was 40 for one revision and that is
      exactly the trade this wave exists to refuse: the tap floor is a physical-finger constant, and
      a wave that raises three targets to 44 while quietly shipping a fourth at 40 has not fixed
@@ -822,9 +836,51 @@ class DeepDrill extends TopicPane {
          PHONE ONLY, and stage >= 2 only: a reveal (stage 1) puts the answer directly under the
          question that is still being answered, and seating THAT at the top would scroll the probe
          off its own screen. Desktop has no fixed chrome and no fold problem -- it is untouched, so
-         drill-light / drill-dark and every desktop behaviour check see byte-identical behaviour. */
-      if (nb && stage >= 2 && this._dsuMq && this._dsuMq.matches) {
-        try { nb.scrollIntoView({ block: 'start', inline: 'nearest' }); } catch (e) { nb.scrollIntoView(true); }
+         drill-light / drill-dark and every desktop behaviour check see byte-identical behaviour.
+
+         ===== W19 / audit X7: THE SEAT REACHED STAGE 2 AND ABANDONED THE WAY FORWARD =====
+         W2's stage-1 reasoning above is CORRECT and is kept verbatim -- seating .ans at the top of
+         the band really would scroll the probe off its own screen. What it did not cover is that
+         the block and the CONTROL are different elements with different needs. Measured on the
+         shipped build at Chromium 149, immediately after Reveal, across three topics and four
+         phone viewports: #adv finished BELOW the live band in 9 of 12 portrait cases (360x800
+         all three topics; 360/390/414 wide on two more), by 39 to 171px -- and a hit test at its
+         centre returned SPAN.mb-lbl or BUTTON#mockopen, i.e. the Mock-run bar. The drill's only
+         forward control, under the bar, the moment it appears.
+
+         So stage 1 gets a seat too, but a DIFFERENT one: block:'nearest' on #adv, which scrolls
+         only if the control is actually out of the band and only as far as needed. That is what
+         preserves W2's constraint rather than trading it away -- the minimum scroll keeps the
+         maximum of the just-revealed answer (and as much of the probe as still fits) on screen,
+         where block:'start' on .ans would have thrown the question away by construction. It works
+         at all only because X2b just gave #adv a scroll-margin-bottom: without one the browser
+         seats it flush against a viewport edge it believes is at 844 and the user sees as the top
+         of the mock bar. The two halves of this wave are one mechanism.
+
+         WHY stage >= 1 AND NOT stage >= 0. renderD() calls drawCard(0, land) with land TRUE
+         whenever a redraw destroyed the focused element -- jumping to a probe from the nav, or
+         grading -- so a stage-0 seat would fire on a FRESH PROBE and scroll past the question the
+         pane exists to ask, undoing W2's entire fold budget. Stage 0 is a new probe; stage >= 1 is
+         the user advancing within one, which is the only place a forward control has been earned.
+
+         MEASURED AND DELIBERATELY NOT FIXED HERE: in landscape (844x390) on two of three topics
+         the control is already under the bar at stage 0, before any interaction, because the band
+         is 279px tall. That is a BUDGET problem, not a seat problem -- it arrives on entry, where
+         a scroll would fight fold_budget's guarantee that the question's first line is on screen
+         at scrollY 0. Below the fold on arrival is normal web layout; buried after the app moved
+         the screen for you is not. Note this is also why the audit's suggested `stage >= 2` ->
+         `stage >= 1` alone would not have covered it: stage 0 is not >= 1 either way.
+         Likewise the judgment row, which the audit recorded and pointedly did not file: reading
+         the senior-signal block before grading is plausibly the intent. */
+      if (this._dsuMq && this._dsuMq.matches) {
+        if (nb && stage >= 2) {
+          try { nb.scrollIntoView({ block: 'start', inline: 'nearest' }); } catch (e) { nb.scrollIntoView(true); }
+        } else if (stage >= 1) {
+          const fwd = this._root.getElementById('adv');
+          /* No #adv at stage 1 means this probe has no follow-ups and the judgment row is the
+             next thing -- the case above, left alone on purpose. */
+          if (fwd) { try { fwd.scrollIntoView({ block: 'nearest', inline: 'nearest' }); } catch (e) {} }
+        }
       }
     }
     const advBtn = this._root.getElementById('adv');

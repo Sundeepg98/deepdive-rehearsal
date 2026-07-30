@@ -789,7 +789,40 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # which reintroduced the old nowrap-title document overflow, widened the fixed bar
                      # and moved the very band it was measuring against. RED on the pre-fix build at
                      # both viewports (.qq 746 / 781 / 701 against bands ending at 728 / 318).
+                     # W19/X7 EXTENSION -- the budget's other half. The fold arms above ask whether the
+                     # QUESTION is on screen when the drill opens; these ask whether the WAY FORWARD is
+                     # reachable after the user answers it. On the shipped build, 360x800, fresh
+                     # context, real hit-tested tap, scroll at rest: #adv finished 90% / 121% / 389%
+                     # occluded by the fixed bar on the three topics, and a hit test at its centre
+                     # returned BUTTON#mockopen / SPAN.mb-lbl / null -- the drill's only forward control,
+                     # under the Mock-run bar, the moment it appeared. Its plant undoes the seat (which
+                     # IS the pre-fix resting state) and aborts if the arms stay green. The arms also
+                     # wait out router.js's 400ms boot scroll-pin as a CONDITION: a reveal inside that
+                     # window has its seat silently undone, which made an earlier measurement round pass
+                     # or fail on how fast the box happened to boot.
                      ('fold_budget', 'test/fold_budget.cjs'),
+                     # ===== W19: the fixed chrome measures itself (cross-browser audit X2, half 2) =====
+                     # TEN NUMBERS WERE HAND-TUNED TO A BAR THE APP NEVER MEASURED -- five per
+                     # orientation: .app's padding-top/-bottom, .scrolltop's lift over the bar, and the
+                     # drill's scroll-margin-top/-bottom. In CHROMIUM, on the shipped build,
+                     # .app{padding-top:56px} sat against a .seg measuring 61: 5px of .side-id lived
+                     # under the fixed strip at every phone width, and nothing in the gate could see it.
+                     # The cross-browser audit then found the same constants 12px out in WebKit 26.5,
+                     # where a classic scrollbar reserved height INSIDE the strip.
+                     # So this asserts the RELATIONSHIP, not a number: what the app reserves == what the
+                     # bar takes, in both orientations, for all five consumers, with the authored gaps
+                     # (8/4px above the bar, 16px for the drill's seat, 24/14px for the FAB) stated as
+                     # themselves. It also strips the inline style and requires styles.css's FALLBACK
+                     # pair to equal the measured truth -- those two pairs are the last constants left,
+                     # and a fallback nobody checks is a constant with a better name.
+                     # Its plant makes the bar taller by the mechanism the landscape block itself uses
+                     # (padding: 61 -> 73px, which is exactly what WebKit reported) and aborts unless
+                     # every derived value follows. That plant earned its keep immediately: it caught a
+                     # ResizeObserver left on its default CONTENT box, which never fires for a padding
+                     # change because these bars are sized by a 44px tap floor that padding sits outside
+                     # of -- the draft passed every other arm here. RED on the pre-fix build: 17 of 20
+                     # arms, and the plant reproduces WebKit's .side-id hiddenTop of 17px in Chromium.
+                     ('chrome_metrics', 'test/chrome_metrics.cjs'),
                      # The tap floor, in the two sizes the app actually owes -- kept separate because
                      # conflating them nearly mis-triaged the finding. 44px is THIS APP'S promise,
                      # written three times in styles.css ("a physical-finger constant"): every Numbers

@@ -63,3 +63,5 @@
 <!--@build:include scripts/app/pomodoro.js-->
 <!--@build:include scripts/app/scroll-to-top.js-->
 <!--@build:include scripts/app/companion-fold.js-->
+<!-- W19/X2b: last on purpose, so it measures the two fixed bars after every module that can add a control to one of them has run. ONE LINE: this list is inlined into a <script>, where <!-- comments to end of line only -- a wrapped one parses as JS (it did, "Unexpected identifier"). -->
+<!--@build:include scripts/app/chrome-metrics.js-->

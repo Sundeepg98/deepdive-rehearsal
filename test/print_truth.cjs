@@ -77,18 +77,25 @@ function ok(cond, label, detail) {
   return false;
 }
 
-/* ===== PDF text extraction =====
+/* ===== PDF text extraction, PER PAGE =====
  * Chromium writes page content as Type0/Identity-H subset fonts, so a content stream carries GLYPH
- * IDS, not characters: `<0037> Tj` is whatever glyph 0x37 is in THAT font's subset. The mapping
- * back to text is the font's /ToUnicode CMap, which Chromium does emit. So: inflate every stream,
+ * IDS, not characters: a `<0037> Tj` is whatever glyph 0x37 is in THAT font's subset. The mapping
+ * back to text is the font's /ToUnicode CMap, which Chromium does emit. So: inflate the stream,
  * build a per-font glyph->unicode map, track the current font through the `Tf` operator, and decode.
+ *
+ * PER PAGE, not per document, because "the last section is on the paper" and "the last section is
+ * on the LAST page" are different claims and only the second one is the acceptance test. The page
+ * tree gives the order directly -- /Type /Pages carries /Kids in page order, and each /Page names
+ * its /Contents. Chromium then puts the actual marking operators in a Form XObject that the page's
+ * content stream merely invokes, so a page's text is its content stream PLUS the forms named in
+ * its /Resources /XObject; each form may carry its own /Resources /Font, which shadows the page's.
  *
  * Two things this deliberately does NOT do, because the assertion does not need them and each
  * would add a way to be subtly wrong: it does not reconstruct spatial layout (no line/word
  * reordering from Td/Tm), and it does not decode `TJ` arrays. Chromium emits one `Tj` per glyph
  * with a `Td` advance between, which is what this reads. The assertion is PRESENCE of a heading's
- * letters in order, and control 3 above proves on every run that the reading works at all. */
-function extractPdfText(buf) {
+ * letters in order, on a named page, and control 3 proves on every run that the reading works. */
+function parsePdf(buf) {
   const s = buf.toString('latin1');
   const objs = new Map();
   const objRe = /(\d+)\s+\d+\s+obj([\s\S]*?)endobj/g;
@@ -146,38 +153,91 @@ function extractPdfText(buf) {
     fontMap.set(num, map);
   }
 
-  let out = '';
-  for (const [, body] of objs) {
-    const head = dictHead(body);
-    /* Chromium wraps PAGE CONTENT in Form XObjects, so XObjects must NOT be skipped wholesale --
-     * only images (binary) and the font objects themselves. */
-    if (/\/Type\s*\/Font/.test(head) || /\/Subtype\s*\/Image/.test(head)) continue;
-    const data = streamOf(body);
-    if (!data) continue;
-    const txt = data.toString('latin1');
-    if (!/\bT[Jj]\b/.test(txt)) continue;
-    /* resource name -> font object, from this stream's own /Resources /Font dict */
-    const res = {};
-    const fd = head.match(/\/Font\s*<<([\s\S]*?)>>/);
-    if (fd) {
-      const fr = /\/(\w+)\s+(\d+)\s+\d+\s+R/g;
-      let f;
-      while ((f = fr.exec(fd[1]))) res[f[1]] = Number(f[2]);
-    }
+  /* name -> object number, out of a /Resources sub-dictionary */
+  const subRes = (head, key) => {
+    const d = head.match(new RegExp('/' + key + '\\s*<<([\\s\\S]*?)>>'));
+    const out = {};
+    if (!d) return out;
+    const r = /\/(\w+)\s+(\d+)\s+\d+\s+R/g;
+    let f;
+    while ((f = r.exec(d[1]))) out[f[1]] = Number(f[2]);
+    return out;
+  };
+
+  const decode = (txt, fonts) => {
+    let out = '';
     let cur = null;
     const tok = /\/(\w+)\s+[\d.]+\s+Tf|<([0-9A-Fa-f]+)>\s*Tj/g;
     let t;
     while ((t = tok.exec(txt))) {
-      if (t[1] !== undefined) { cur = fontMap.get(res[t[1]]) || null; continue; }
+      if (t[1] !== undefined) { cur = fontMap.get(fonts[t[1]]) || null; continue; }
       const hx = t[2];
       for (let i = 0; i + 4 <= hx.length; i += 4) {
         const g = parseInt(hx.slice(i, i + 4), 16);
         if (cur && cur.has(g)) out += cur.get(g);
       }
     }
-    out += '\n';
+    return out;
+  };
+
+  /* text of one content-bearing object, following the Form XObjects it names */
+  const textOf = (objNum, fonts, xobjs, depth, seen) => {
+    if (objNum == null || depth > 4 || seen.has(objNum)) return '';
+    seen.add(objNum);
+    const body = objs.get(objNum);
+    if (!body) return '';
+    const head = dictHead(body);
+    const myFonts = Object.assign({}, fonts, subRes(head, 'Font'));
+    const myX = Object.assign({}, xobjs, subRes(head, 'XObject'));
+    let out = '';
+    const data = streamOf(body);
+    if (data) out += decode(data.toString('latin1'), myFonts);
+    for (const name of Object.keys(myX)) {
+      const n = myX[name];
+      const b = objs.get(n);
+      if (!b) continue;
+      if (/\/Subtype\s*\/Image/.test(dictHead(b))) continue;
+      out += textOf(n, myFonts, myX, depth + 1, seen);
+    }
+    return out;
+  };
+
+  /* page order straight out of the page tree */
+  let kids = [];
+  let declaredCount = null;
+  for (const [, body] of objs) {
+    const head = dictHead(body);
+    if (!/\/Type\s*\/Pages\b/.test(head)) continue;
+    const c = head.match(/\/Count\s+(\d+)/);
+    const k = head.match(/\/Kids\s*\[([\s\S]*?)\]/);
+    if (!k) continue;
+    const list = [];
+    const r = /(\d+)\s+\d+\s+R/g;
+    let f;
+    while ((f = r.exec(k[1]))) list.push(Number(f[1]));
+    /* take the richest node -- a single-level tree is what Chromium emits */
+    if (list.length > kids.length) { kids = list; declaredCount = c ? Number(c[1]) : null; }
   }
-  return out;
+
+  const pages = kids.map((pn) => {
+    const body = objs.get(pn);
+    if (!body) return '';
+    const head = dictHead(body);
+    const fonts = subRes(head, 'Font');
+    const xobjs = subRes(head, 'XObject');
+    const cm = head.match(/\/Contents\s+(\d+)\s+\d+\s+R/);
+    const seen = new Set();
+    let out = cm ? textOf(Number(cm[1]), fonts, xobjs, 0, seen) : '';
+    /* a page whose content stream only invokes its form still owns that form's text */
+    for (const name of Object.keys(xobjs)) {
+      const b = objs.get(xobjs[name]);
+      if (!b || /\/Subtype\s*\/Image/.test(dictHead(b))) continue;
+      out += textOf(xobjs[name], fonts, xobjs, 1, seen);
+    }
+    return out;
+  });
+
+  return { pages, count: declaredCount != null ? declaredCount : pages.length };
 }
 
 /* Compare on letters only. The heading passes through HTML entities, a text-transform:uppercase,
@@ -287,6 +347,15 @@ async function readBreakControl(page) {
   });
 }
 
+/* The PDF reader is exported so it can be pointed at a COMMITTED artifact without launching a
+ * browser -- which is how the pre-fix red for the final-page arm was demonstrated against
+ * _audit/w16-print-before-after/before-*.pdf. Guarding the run on require.main keeps the gate's
+ * `node test/print_truth.cjs <deliverable>` invocation behaving exactly as before. */
+module.exports = { parsePdf, norm, pdfPageCount };
+
+if (require.main === module) main();
+
+function main() {
 (async () => {
   if (!fs.existsSync(HTML)) {
     console.log('deliverable not found: ' + HTML);
@@ -380,8 +449,10 @@ async function readBreakControl(page) {
     ok(pages <= hiCeil, tag + ' A4 page count is not inflated by runaway fragmentation',
       'pages=' + pages + ' ceiling=ceil(' + H + '/' + BOX_H.toFixed(2) + ')+2=' + hiCeil);
 
-    /* ---------- ARM C: the last section is ON THE PAPER ---------- */
-    const text = norm(extractPdfText(pdf));
+    /* ---------- ARM C: the last section is ON THE FINAL PAGE ---------- */
+    const parsed = parsePdf(pdf);
+    const pageText = parsed.pages.map(norm);
+    const whole = pageText.join('');
     const first = norm(g.firstHead);
     const last = norm(g.lastHead);
     /* CONTROL 3 -- the extractor works on THIS pdf. A dead extractor must not be able to report
@@ -391,17 +462,30 @@ async function readBreakControl(page) {
       await browser.close();
       return B.finish(1, 'print_truth: could not read the section headings from the DOM (first="' + g.firstHead + '" last="' + g.lastHead + '")');
     }
-    if (text.indexOf(first) < 0) {
+    if (whole.indexOf(first) < 0) {
       console.log(notes.join('\n'));
       await browser.close();
       return B.finish(1, 'print_truth: PDF text extractor is DEAD -- the FIRST heading "' + g.firstHead +
-        '" is not in the extracted text (' + text.length + ' chars). Refusing to report on the last heading with a broken instrument.');
+        '" is not in the extracted text (' + whole.length + ' chars over ' + pageText.length + ' pages). ' +
+        'Refusing to report on the last heading with a broken instrument.');
     }
-    notes.push('  ctrl  ' + tag + ' extractor liveness: FIRST heading "' + g.firstHead + '" found in PDF text (' + text.length + ' chars)');
-    ok(text.indexOf(last) >= 0, tag + ' the LAST section reaches the paper',
-      'last heading="' + g.lastHead + '" pages=' + pages);
+    ok(parsed.pages.length === pages, tag + ' the page tree agrees with the page count',
+      'kids=' + parsed.pages.length + ' count=' + pages);
+    notes.push('  ctrl  ' + tag + ' extractor liveness: FIRST heading "' + g.firstHead + '" found on page ' +
+      (pageText.findIndex((t) => t.indexOf(first) >= 0) + 1) + ' of ' + pageText.length +
+      ' (' + whole.length + ' chars extracted; per-page ' + pageText.map((t) => t.length).join('/') + ')');
+    /* THE ACCEPTANCE TEST. Not "somewhere in the document" -- on the LAST sheet of paper. The
+     * defect put it nowhere at all; a half-fix that grew the page count without carrying the tail
+     * across would still fail here. */
+    const lastPageIdx = pageText.length - 1;
+    const foundOn = pageText.findIndex((t) => t.indexOf(last) >= 0);
+    ok(foundOn === lastPageIdx, tag + ' the LAST section is printed ON THE FINAL PAGE',
+      'heading="' + g.lastHead + '" found on page ' + (foundOn + 1) + ' of ' + pageText.length);
 
-    pdfMeta[topic] = { pages, band: [loFloor, hiCeil], H, bytes: pdf.length, clipped, lastHead: g.lastHead };
+    pdfMeta[topic] = {
+      pages, band: [loFloor, hiCeil], H, bytes: pdf.length, clipped,
+      lastHead: g.lastHead, lastHeadPage: foundOn + 1, chars: whole.length,
+    };
 
     await page.emulateMedia({ media: null });
     await B.settle(page);
@@ -499,3 +583,4 @@ async function readBreakControl(page) {
   console.log('print_truth: threw -- ' + (e && e.stack ? e.stack : e));
   return B.finish(1, 'print_truth: threw -- ' + (e && e.message ? e.message : e));
 });
+}

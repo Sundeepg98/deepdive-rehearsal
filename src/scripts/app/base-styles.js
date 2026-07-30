@@ -50,6 +50,24 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:var(--font-size-micro);b
    never had page-break control -- a card could split across a page at any point. BASE_SHEET
    is adopted by all 17 shadow hosts, so one rule here reaches every printable surface. */
 @media print{.card,.thread,.dec,.rf,.piv,details.model[open]{break-inside:avoid}.card{box-shadow:none;border:1px solid #ddd}
+/* THE CRAM SHEET'S OWN VOCABULARY -- the surface that actually owns a Print button, and the one
+   this block never named. The selector list above and cram-derive.js's .cs-* classes were
+   DISJOINT: measured under print emulation across 17 shadow hosts, .card/.thread/.dec/.rf/.piv all
+   computed "avoid" while .cs-sec/.cs-cue/.cs-one/.cs-dec/.cs-trap/.cs-ha all computed "auto".
+   BASE_SHEET was reaching every shadow root correctly -- it simply had nothing to say about the
+   cram sheet. The irony is eleven lines up: this block exists because "the shipped Print Q&A tool
+   has therefore never had page-break control", and it was then written for the pane classes only.
+   It cost nothing while the sheet printed one truncated page; the moment styles.css stopped
+   clipping it (3 pages on the flagship, 7 on consistency-models) it started splitting sections at
+   arbitrary points.
+   ATOMIC UNITS ONLY, and .cs-sec IS DELIBERATELY NOT HERE. A whole section is not an atom: the
+   tallest measures 1289px against a ~1009px A4 content box, so break-inside:avoid on it is a
+   constraint the fragmenter must ignore (a box that cannot fit on an empty page is split anyway)
+   and the only thing it can buy is a page-sized hole before the split happens. What is genuinely
+   atomic is one cue-and-answer, one decision, one trap, one number row -- and a section HEAD, which
+   is kept with what follows by break-after rather than by being welded to the whole section. */
+.cs-one,.cs-dec,.cs-num,.cs-trap,.cs-ha,.cs-30,.cs-tells li,.cs-spine li{break-inside:avoid}
+.cs-st{break-after:avoid}
 /* NO BACKTICKS ANYWHERE IN THIS SHEET, INCLUDING IN COMMENTS. BASE_SHEET is a JS template literal,
    so one backtick TERMINATES THE STRING and the rest of the CSS is parsed as JavaScript. Quoting
    ".nav button" in backticks here did exactly that: "missing ) after argument list", BASE_SHEET

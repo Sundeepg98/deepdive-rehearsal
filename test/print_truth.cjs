@@ -1,0 +1,501 @@
+'use strict';
+/* ===== print_truth -- THE GATE'S FIRST PRINT CHECK =====
+ *
+ * WHY THIS EXISTS. The cram sheet is the app's one printable artifact -- "read five minutes before
+ * a loop" -- and its Print button emitted ONE A4 page and silently dropped 66-80% of the sheet, in
+ * Firefox 151, Chromium 149 and WebKit 26.5 alike. The print stylesheet reset four properties on
+ * .cram-panel (box-shadow / max-width / border-radius / margin) and not the two that decide whether
+ * paper gets the content: the screen rule carries `overflow:hidden` and
+ * `max-height:calc(100vh - var(--space-36))`, so on paper the sheet stayed a height-capped,
+ * overflow-hidden scroll box. There is no scrollbar on paper. The remainder was simply gone.
+ *
+ * Sixty-seven checks did not see it, because not one of them had ever looked at print media. This
+ * is the first. It measures the two things a printed artifact can be wrong about -- IS THE CONTENT
+ * IN THE LAYOUT, and DOES IT REACH THE PAPER -- and it settles the second one against a real
+ * Chromium `page.pdf`, not against a DOM proxy for it.
+ *
+ * WHAT IT ASSERTS (five arms; every one was RED on the pre-fix build -- captured verbatim in
+ * _audit/2026-07-30-w16-print-truth.md):
+ *   A GEOMETRY   under print media the panel has no height cap and no hidden overflow, the body
+ *                clips nothing (scrollHeight == clientHeight), and no CONTROL surface prints.
+ *   B PAGINATION a real A4 page.pdf yields a page count at or above the arithmetic floor implied
+ *                by the measured content height, and not wildly above it.
+ *   C ON PAPER   the LAST section's heading is extractable FROM THE PDF BYTES -- the whole defect
+ *                was that it was not.
+ *   D TOKENS     the Ctrl/Cmd+P "Print Q&A" document -- a SEPARATE document, which the app's :root
+ *                does not reach -- computes a real typographic hierarchy instead of collapsing
+ *                every heading to 14px/400.
+ *   E BREAKS     the cram sheet's atomic units carry break-inside:avoid inside the shadow root.
+ *
+ * PLATFORM-DETERMINISTIC. No wall clock, no sleep-then-assert, no font-metric assertion beyond
+ * "these sizes differ". Page counts are compared against a floor DERIVED FROM A MEASUREMENT taken
+ * in this same run, never against a number someone once observed and typed in.
+ *
+ * THREE NEGATIVE CONTROLS, because this repo has shipped checks that could not fail:
+ *   1. print media is asserted live in-page (matchMedia('print').matches) before anything is read;
+ *   2. a planted class-less div in the cram shadow root must compute break-inside:auto while the
+ *      cram units compute avoid -- so "everything reads avoid" cannot pass for a fix;
+ *   3. the PDF text extractor must find the FIRST section's heading. If it cannot, the extractor
+ *      is dead and the run ABORTS -- a broken extractor must never be able to buy a green, and it
+ *      must never be able to buy a red either.
+ */
+const path = require('path');
+const fs = require('fs');
+const zlib = require('zlib');
+const { chromium } = require('playwright');
+const B = require('./_boot.cjs');
+
+const HTML = process.argv[2] || 'deepdive_content_pipeline_rehearsal.html';
+/* Write the review PDFs only when asked; the gate run stays read-only. */
+const PDF_DIR = process.env.PRINT_TRUTH_PDF_DIR || '';
+const LABEL = process.env.PRINT_TRUTH_LABEL || 'after';
+
+/* A4 in CSS px. The print box is 96dpi by definition (1in = 96 CSS px), and the app's own
+ * `@page{margin:1.5cm}` (styles.css, inside the print block) is what page.pdf honours via
+ * preferCSSPageSize -- so these are the app's real numbers, not this file's opinion. */
+const MM = 96 / 25.4;
+const PAGE_W = 210 * MM;                 /* 793.70 */
+const PAGE_H = 297 * MM;                 /* 1122.52 */
+const MARGIN = 15 * MM;                  /* 56.69 -- 1.5cm */
+const BOX_W = PAGE_W - 2 * MARGIN;       /* 680.31 */
+const BOX_H = PAGE_H - 2 * MARGIN;       /* 1009.13 */
+/* Measure content at a viewport at least as wide as the real print box. A NARROWER measurement
+ * would report a TALLER document and inflate the floor into a false red; ceil() keeps the floor a
+ * genuine lower bound. */
+const MEASURE_W = Math.ceil(BOX_W);      /* 681 */
+const MEASURE_H = Math.round(BOX_H);     /* 1009 */
+
+const FLAGSHIP = 'content-pipeline';
+const TALLEST = 'consistency-models';
+
+const fails = [];
+const notes = [];
+function ok(cond, label, detail) {
+  if (cond) { notes.push('  PASS  ' + label + (detail ? '  ' + detail : '')); return true; }
+  fails.push(label + (detail ? '  ' + detail : ''));
+  notes.push('  FAIL  ' + label + (detail ? '  ' + detail : ''));
+  return false;
+}
+
+/* ===== PDF text extraction =====
+ * Chromium writes page content as Type0/Identity-H subset fonts, so a content stream carries GLYPH
+ * IDS, not characters: `<0037> Tj` is whatever glyph 0x37 is in THAT font's subset. The mapping
+ * back to text is the font's /ToUnicode CMap, which Chromium does emit. So: inflate every stream,
+ * build a per-font glyph->unicode map, track the current font through the `Tf` operator, and decode.
+ *
+ * Two things this deliberately does NOT do, because the assertion does not need them and each
+ * would add a way to be subtly wrong: it does not reconstruct spatial layout (no line/word
+ * reordering from Td/Tm), and it does not decode `TJ` arrays. Chromium emits one `Tj` per glyph
+ * with a `Td` advance between, which is what this reads. The assertion is PRESENCE of a heading's
+ * letters in order, and control 3 above proves on every run that the reading works at all. */
+function extractPdfText(buf) {
+  const s = buf.toString('latin1');
+  const objs = new Map();
+  const objRe = /(\d+)\s+\d+\s+obj([\s\S]*?)endobj/g;
+  let m;
+  while ((m = objRe.exec(s))) objs.set(Number(m[1]), m[2]);
+
+  const dictHead = (body) => {
+    const i = body.indexOf('stream');
+    return i < 0 ? body : body.slice(0, i);
+  };
+  const streamOf = (body) => {
+    const i = body.indexOf('stream');
+    if (i < 0) return null;
+    let j = i + 6;
+    if (body[j] === '\r') j++;
+    if (body[j] === '\n') j++;
+    const k = body.lastIndexOf('endstream');
+    if (k < 0) return null;
+    const raw = Buffer.from(body.slice(j, k), 'latin1');
+    /* Always TRY to inflate: gating on a /FlateDecode string in the dict silently returns the
+     * compressed bytes for anything phrased differently, and compressed bytes contain no `Tj`, so
+     * the extractor would report "no text" for a PDF full of text. */
+    try { return zlib.inflateSync(raw); } catch (e) { return raw; }
+  };
+
+  /* glyph -> unicode, per font object */
+  const fontMap = new Map();
+  for (const [num, body] of objs) {
+    const head = dictHead(body);
+    if (!/\/Type\s*\/Font/.test(head)) continue;
+    const r = head.match(/\/ToUnicode\s+(\d+)\s+\d+\s+R/);
+    if (!r) continue;
+    const cm = objs.get(Number(r[1]));
+    if (!cm) continue;
+    const data = streamOf(cm);
+    if (!data) continue;
+    const txt = data.toString('latin1');
+    const map = new Map();
+    let blk;
+    const bfchar = /beginbfchar([\s\S]*?)endbfchar/g;
+    while ((blk = bfchar.exec(txt))) {
+      const pr = /<([0-9A-Fa-f]+)>\s*<([0-9A-Fa-f]+)>/g;
+      let p;
+      while ((p = pr.exec(blk[1]))) map.set(parseInt(p[1], 16), String.fromCharCode(parseInt(p[2].slice(0, 4), 16)));
+    }
+    const bfrange = /beginbfrange([\s\S]*?)endbfrange/g;
+    while ((blk = bfrange.exec(txt))) {
+      const pr = /<([0-9A-Fa-f]+)>\s*<([0-9A-Fa-f]+)>\s*<([0-9A-Fa-f]+)>/g;
+      let p;
+      while ((p = pr.exec(blk[1]))) {
+        const lo = parseInt(p[1], 16), hi = parseInt(p[2], 16), u = parseInt(p[3].slice(0, 4), 16);
+        for (let g = lo; g <= hi && g - lo < 4096; g++) map.set(g, String.fromCharCode(u + (g - lo)));
+      }
+    }
+    fontMap.set(num, map);
+  }
+
+  let out = '';
+  for (const [, body] of objs) {
+    const head = dictHead(body);
+    /* Chromium wraps PAGE CONTENT in Form XObjects, so XObjects must NOT be skipped wholesale --
+     * only images (binary) and the font objects themselves. */
+    if (/\/Type\s*\/Font/.test(head) || /\/Subtype\s*\/Image/.test(head)) continue;
+    const data = streamOf(body);
+    if (!data) continue;
+    const txt = data.toString('latin1');
+    if (!/\bT[Jj]\b/.test(txt)) continue;
+    /* resource name -> font object, from this stream's own /Resources /Font dict */
+    const res = {};
+    const fd = head.match(/\/Font\s*<<([\s\S]*?)>>/);
+    if (fd) {
+      const fr = /\/(\w+)\s+(\d+)\s+\d+\s+R/g;
+      let f;
+      while ((f = fr.exec(fd[1]))) res[f[1]] = Number(f[2]);
+    }
+    let cur = null;
+    const tok = /\/(\w+)\s+[\d.]+\s+Tf|<([0-9A-Fa-f]+)>\s*Tj/g;
+    let t;
+    while ((t = tok.exec(txt))) {
+      if (t[1] !== undefined) { cur = fontMap.get(res[t[1]]) || null; continue; }
+      const hx = t[2];
+      for (let i = 0; i + 4 <= hx.length; i += 4) {
+        const g = parseInt(hx.slice(i, i + 4), 16);
+        if (cur && cur.has(g)) out += cur.get(g);
+      }
+    }
+    out += '\n';
+  }
+  return out;
+}
+
+/* Compare on letters only. The heading passes through HTML entities, a text-transform:uppercase,
+ * a font subset and a CMap; punctuation and spacing are the parts of that journey that legitimately
+ * differ, and the letters are the part that cannot. */
+const norm = (s) => (s || '').toUpperCase().replace(/[^A-Z0-9]+/g, '');
+
+function pdfPageCount(buf) {
+  const s = buf.toString('latin1');
+  const m = s.match(/\/Type\s*\/Pages[\s\S]{0,400}?\/Count\s+(\d+)/);
+  if (m) return Number(m[1]);
+  return (s.match(/\/Type\s*\/Page[^s]/g) || []).length;
+}
+
+/* ---------- in-page helpers ---------- */
+async function showCram(page, topicId) {
+  await page.evaluate(async (tid) => {
+    const raf2 = () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    const cur = window.TopicRegistry.current();
+    if (!cur || cur.id !== tid) {
+      await new Promise((res) => {
+        let done = false;
+        const on = () => { if (done) return; done = true; window.removeEventListener('deeptopicchange', on); res(); };
+        window.addEventListener('deeptopicchange', on);
+        if (!window.TopicRegistry.setTopic(tid)) { on(); return; }
+        setTimeout(on, 3000);
+      });
+    }
+    const ov = document.getElementById('cramov');
+    if (!ov.classList.contains('open')) document.getElementById('cramopen').click();
+    await raf2();
+  }, topicId);
+  /* the sheet renders lazily on `.cram-ov.open`; wait for the CONTENT, never for a duration */
+  await B.until(page, () => {
+    const h = document.querySelector('deep-cram');
+    return !!(h && h.shadowRoot && h.shadowRoot.querySelectorAll('.cs-sec').length > 0);
+  }, null, null, 'deep-cram renders its sections');
+  await B.settle(page);
+}
+
+async function readPrintGeometry(page) {
+  return page.evaluate(() => {
+    const cs = (el) => getComputedStyle(el);
+    const panel = document.querySelector('.cram-panel');
+    const body = document.getElementById('cram');
+    const jump = document.getElementById('cramjump');
+    const top = document.querySelector('.cram-top');
+    const host = document.querySelector('deep-cram');
+    const sr = host && host.shadowRoot;
+    const secs = sr ? Array.from(sr.querySelectorAll('.cs-sec')) : [];
+    const headText = (sec) => {
+      const st = sec.querySelector('.cs-st');
+      return st ? (st.textContent || '').trim() : '';
+    };
+    return {
+      printMedia: window.matchMedia('print').matches,
+      iw: window.innerWidth,
+      ih: window.innerHeight,
+      panelMaxH: cs(panel).maxHeight,
+      panelOverflowY: cs(panel).overflowY,
+      panelOverflowX: cs(panel).overflowX,
+      bodyOverflowY: cs(body).overflowY,
+      bodyClient: body.clientHeight,
+      bodyScroll: body.scrollHeight,
+      jumpDisplay: cs(jump).display,
+      topDisplay: cs(top).display,
+      docScroll: document.documentElement.scrollHeight,
+      secCount: secs.length,
+      firstHead: secs.length ? headText(secs[0]) : '',
+      lastHead: secs.length ? headText(secs[secs.length - 1]) : '',
+    };
+  });
+}
+
+async function readBreakControl(page) {
+  return page.evaluate(() => {
+    const host = document.querySelector('deep-cram');
+    const sr = host && host.shadowRoot;
+    if (!sr) return { err: 'no deep-cram shadow root' };
+    const one = (sel) => {
+      const el = sr.querySelector(sel);
+      if (!el) return null;
+      const c = getComputedStyle(el);
+      return { inside: c.breakInside, after: c.breakAfter };
+    };
+    /* NEGATIVE CONTROL: a div with no cram class, in the same shadow root, under the same print
+     * emulation. It must read `auto`. If it reads `avoid`, something is blanket-applying the
+     * property and the arm below would pass without the rule existing. */
+    const plant = document.createElement('div');
+    plant.setAttribute('data-print-truth-control', '1');
+    plant.textContent = 'negative control';
+    sr.appendChild(plant);
+    const control = getComputedStyle(plant).breakInside;
+    const out = {
+      control,
+      st: one('.cs-st'),
+      one: one('.cs-one'),
+      ha: one('.cs-ha'),
+      trap: one('.cs-trap'),
+      dec: one('.cs-dec'),
+      num: one('.cs-num'),
+      tellsLi: one('.cs-tells li'),
+      spineLi: one('.cs-spine li'),
+    };
+    plant.remove();
+    return out;
+  });
+}
+
+(async () => {
+  if (!fs.existsSync(HTML)) {
+    console.log('deliverable not found: ' + HTML);
+    return B.finish(1, null);
+  }
+  if (PDF_DIR) fs.mkdirSync(PDF_DIR, { recursive: true });
+
+  const browser = await chromium.launch(B.launchOpts());
+  /* One isolated context; innerWidth is asserted on every read below. */
+  const ctx = await browser.newContext({ viewport: { width: MEASURE_W, height: MEASURE_H } });
+  const page = await ctx.newPage();
+  const consoleErrs = [];
+  page.on('pageerror', (e) => consoleErrs.push(String(e && e.message ? e.message : e)));
+
+  await B.gotoApp(page, HTML, { hash: '#walk' });
+  await B.enterApp(page);
+
+  const pdfMeta = {};
+
+  for (const topic of [FLAGSHIP, TALLEST]) {
+    await showCram(page, topic);
+    await page.emulateMedia({ media: 'print' });
+    await B.settle(page);
+
+    const g = await readPrintGeometry(page);
+    const tag = '[' + topic + ']';
+
+    /* CONTROL 1 -- print media really is active. Everything below is meaningless otherwise. */
+    if (!ok(g.printMedia === true, tag + ' print media emulation is ACTIVE', 'matchMedia(print)=' + g.printMedia)) {
+      console.log(notes.join('\n'));
+      await browser.close();
+      return B.finish(1, 'print_truth: print emulation never engaged -- the instrument is dead, not the app');
+    }
+    ok(g.iw === MEASURE_W, tag + ' viewport is the A4 content box', 'innerWidth=' + g.iw + ' expected=' + MEASURE_W);
+    ok(g.secCount > 0, tag + ' the cram sheet rendered sections', 'sections=' + g.secCount);
+
+    /* ---------- ARM A: geometry ---------- */
+    ok(g.panelMaxH === 'none', tag + ' .cram-panel has NO height cap on paper', 'max-height=' + g.panelMaxH);
+    ok(g.panelOverflowY !== 'hidden' && g.panelOverflowX !== 'hidden',
+      tag + ' .cram-panel does NOT hide overflow on paper', 'overflow=' + g.panelOverflowX + '/' + g.panelOverflowY);
+    ok(g.bodyOverflowY === 'visible', tag + ' #cram overflow is visible on paper', 'overflow-y=' + g.bodyOverflowY);
+    const clipped = g.bodyScroll - g.bodyClient;
+    ok(clipped <= 1, tag + ' #cram clips NOTHING', 'scrollH=' + g.bodyScroll + ' clientH=' + g.bodyClient + ' clipped=' + clipped + 'px');
+    /* Control surfaces must not print. .cram-top was already handled; .cram-jump was not -- and the
+     * A4 content box is 680px, which is INSIDE the app's <=919px mobile breakpoint, so the jump nav
+     * is display:flex in exactly the layout the printer uses. */
+    ok(g.topDisplay === 'none', tag + ' .cram-top (close/print controls) does not print', 'display=' + g.topDisplay);
+    ok(g.jumpDisplay === 'none', tag + ' .cram-jump (section nav) does not print', 'display=' + g.jumpDisplay);
+
+    /* ---------- ARM E: page-break control ---------- */
+    const bc = await readBreakControl(page);
+    if (bc.err) {
+      ok(false, tag + ' break-control probe reached the shadow root', bc.err);
+    } else {
+      /* CONTROL 2 */
+      if (!ok(bc.control === 'auto', tag + ' NEGATIVE CONTROL: a class-less div still reads break-inside:auto',
+        'control=' + bc.control)) {
+        console.log(notes.join('\n'));
+        await browser.close();
+        return B.finish(1, 'print_truth: the break-inside control read "' + bc.control + '" -- the arm below cannot fail, so it is not run');
+      }
+      for (const [sel, v] of [['.cs-one', bc.one], ['.cs-ha', bc.ha], ['.cs-trap', bc.trap],
+        ['.cs-dec', bc.dec], ['.cs-num', bc.num], ['.cs-tells li', bc.tellsLi], ['.cs-spine li', bc.spineLi]]) {
+        if (v === null) continue;   /* not every topic renders every unit; absent is not a failure */
+        ok(v.inside === 'avoid', tag + ' ' + sel + ' avoids splitting across a page', 'break-inside=' + v.inside);
+      }
+      if (bc.st) ok(bc.st.after === 'avoid', tag + ' .cs-st keeps its section head with what follows', 'break-after=' + bc.st.after);
+    }
+
+    /* ---------- ARM B: real A4 pagination ---------- */
+    /* H is the height of the document Chromium is about to paginate, measured in the same layout.
+     * The band is ARITHMETIC, derived from H in this run -- not a count someone once observed:
+     *
+     *   LOWER  ceil(H / PAGE_H)  -- content of height H cannot fit in fewer pages than this, and
+     *          PAGE_H is the FULL A4 height, so the bound holds whatever margin the printer
+     *          applies. Deliberately the weaker of the two available floors: the tighter one
+     *          (H / BOX_H) would be asserting the 1.5cm margin as well as the pagination, and a
+     *          margin assumption is not what this arm is for.
+     *   UPPER  ceil(H / BOX_H) + 2 -- the tight floor plus honest headroom, since fragmentation
+     *          (a break-inside:avoid unit pushed to the next page) can only ADD pages. It catches
+     *          runaway page-per-item, which is the way an over-eager X9 would fail. */
+    const H = Math.max(g.docScroll, g.bodyScroll);
+    const loFloor = Math.ceil(H / PAGE_H);
+    const hiCeil = Math.ceil(H / BOX_H) + 2;
+    const pdf = await page.pdf({ format: 'A4', preferCSSPageSize: true, printBackground: true });
+    const pages = pdfPageCount(pdf);
+    if (PDF_DIR) fs.writeFileSync(path.join(PDF_DIR, LABEL + '-' + topic + '.pdf'), pdf);
+
+    ok(pages >= loFloor, tag + ' A4 page count reaches the floor implied by the content',
+      'pages=' + pages + ' floor=ceil(' + H + '/' + PAGE_H.toFixed(2) + ')=' + loFloor);
+    ok(pages <= hiCeil, tag + ' A4 page count is not inflated by runaway fragmentation',
+      'pages=' + pages + ' ceiling=ceil(' + H + '/' + BOX_H.toFixed(2) + ')+2=' + hiCeil);
+
+    /* ---------- ARM C: the last section is ON THE PAPER ---------- */
+    const text = norm(extractPdfText(pdf));
+    const first = norm(g.firstHead);
+    const last = norm(g.lastHead);
+    /* CONTROL 3 -- the extractor works on THIS pdf. A dead extractor must not be able to report
+     * either verdict, so this aborts rather than failing the arm. */
+    if (!first || !last) {
+      console.log(notes.join('\n'));
+      await browser.close();
+      return B.finish(1, 'print_truth: could not read the section headings from the DOM (first="' + g.firstHead + '" last="' + g.lastHead + '")');
+    }
+    if (text.indexOf(first) < 0) {
+      console.log(notes.join('\n'));
+      await browser.close();
+      return B.finish(1, 'print_truth: PDF text extractor is DEAD -- the FIRST heading "' + g.firstHead +
+        '" is not in the extracted text (' + text.length + ' chars). Refusing to report on the last heading with a broken instrument.');
+    }
+    notes.push('  ctrl  ' + tag + ' extractor liveness: FIRST heading "' + g.firstHead + '" found in PDF text (' + text.length + ' chars)');
+    ok(text.indexOf(last) >= 0, tag + ' the LAST section reaches the paper',
+      'last heading="' + g.lastHead + '" pages=' + pages);
+
+    pdfMeta[topic] = { pages, band: [loFloor, hiCeil], H, bytes: pdf.length, clipped, lastHead: g.lastHead };
+
+    await page.emulateMedia({ media: null });
+    await B.settle(page);
+  }
+
+  /* ---------- ARM D: the Print Q&A document's design tokens ---------- */
+  /* This is a SECOND print surface and it owns Ctrl/Cmd+P. It is a separate document built by
+   * print-qa.js, so the app's :root never reached it and every token resolved (UNDEFINED): h1 and
+   * h2 computed 14px/400, identical to body copy, across 22 probes and 11 A4 pages.
+   *
+   * window.print() is neutralised in the popup before it opens: the real openPrint() calls it on a
+   * timer, and a headless print is not the thing under test here -- the DOCUMENT is. Nothing else
+   * about the popup is stubbed; it is built and opened by the app's own button. */
+  await ctx.addInitScript(() => { window.print = function () {}; });
+  await showCram(page, FLAGSHIP);
+  await page.evaluate(() => { const x = document.getElementById('cramx'); if (x) x.click(); });
+  await B.settle(page);
+
+  const popupPromise = ctx.waitForEvent('page', { timeout: B.ACT_MS });
+  await page.evaluate(() => { document.getElementById('printqa').click(); });
+  let popup = null;
+  try { popup = await popupPromise; } catch (e) { /* reported below */ }
+
+  if (!ok(!!popup, 'Print Q&A opens its document', popup ? '' : 'no popup page appeared')) {
+    /* fall through -- the remaining arms cannot be measured */
+  } else {
+    await popup.waitForLoadState('domcontentloaded').catch(() => {});
+    await popup.waitForFunction(() => !!document.querySelector('article h2'), null, { timeout: B.ACT_MS })
+      .catch(() => {});
+    await popup.emulateMedia({ media: 'print' });
+    await popup.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
+
+    const t = await popup.evaluate(() => {
+      const px = (el, p) => (el ? parseFloat(getComputedStyle(el)[p]) : NaN);
+      const h1 = document.querySelector('h1');
+      const h2 = document.querySelector('article h2');
+      const a = document.querySelector('article .a');
+      const sig = document.querySelector('article .sig');
+      /* a code span may not exist in every topic's answers -- plant one INSIDE a real answer so the
+       * measurement is of this document's cascade, not of a detached node */
+      let code = a ? a.querySelector('code') : null;
+      let planted = false;
+      if (!code && a) { code = document.createElement('code'); code.textContent = 'x'; a.appendChild(code); planted = true; }
+      const out = {
+        printMedia: window.matchMedia('print').matches,
+        articles: document.querySelectorAll('article').length,
+        bodyMaxWidth: getComputedStyle(document.body).maxWidth,
+        bodyFont: px(document.body, 'fontSize'),
+        h1Font: px(h1, 'fontSize'),
+        h1Weight: getComputedStyle(h1).fontWeight,
+        h2Font: px(h2, 'fontSize'),
+        h2Weight: getComputedStyle(h2).fontWeight,
+        aFont: px(a, 'fontSize'),
+        sigFont: px(sig, 'fontSize'),
+        codeFont: px(code, 'fontSize'),
+        articleMarginBottom: px(document.querySelector('article'), 'marginBottom'),
+        title: document.title,
+      };
+      if (planted && code) code.remove();
+      return out;
+    });
+
+    ok(t.printMedia === true, 'Print Q&A: print media emulation is ACTIVE', 'matchMedia(print)=' + t.printMedia);
+    ok(t.articles > 0, 'Print Q&A: the probe bank rendered', 'articles=' + t.articles);
+    /* The defect, stated as the assertion: a heading must not be the same size as body copy. */
+    ok(t.h1Font > t.h2Font, 'Print Q&A: h1 is larger than h2', 'h1=' + t.h1Font + 'px h2=' + t.h2Font + 'px');
+    ok(t.h2Font > t.aFont, 'Print Q&A: h2 is larger than the answer body', 'h2=' + t.h2Font + 'px answer=' + t.aFont + 'px');
+    ok(new Set([t.h1Font, t.h2Font, t.aFont, t.sigFont]).size === 4,
+      'Print Q&A: title / question / answer / signal are four DISTINCT sizes',
+      'h1=' + t.h1Font + ' h2=' + t.h2Font + ' a=' + t.aFont + ' sig=' + t.sigFont);
+    ok(Number(t.h1Weight) >= 700, 'Print Q&A: the title is actually bold', 'font-weight=' + t.h1Weight);
+    ok(t.codeFont > 0 && t.codeFont !== t.aFont, 'Print Q&A: inline code is distinguishable from prose',
+      'code=' + t.codeFont + 'px answer=' + t.aFont + 'px');
+    ok(t.bodyMaxWidth !== 'none', 'Print Q&A: the page has a measure (body max-width resolves)',
+      'max-width=' + t.bodyMaxWidth);
+    ok(t.articleMarginBottom > 0, 'Print Q&A: Q&A blocks are separated', 'article margin-bottom=' + t.articleMarginBottom + 'px');
+
+    if (PDF_DIR) {
+      const qa = await popup.pdf({ format: 'A4', preferCSSPageSize: true, printBackground: true });
+      fs.writeFileSync(path.join(PDF_DIR, LABEL + '-print-qa.pdf'), qa);
+      pdfMeta['print-qa'] = { pages: pdfPageCount(qa), bytes: qa.length };
+    }
+    await popup.close().catch(() => {});
+  }
+
+  ok(consoleErrs.length === 0, 'no page errors during the print run', consoleErrs.slice(0, 3).join(' | '));
+
+  console.log(notes.join('\n'));
+  console.log('  ----  pdf summary: ' + JSON.stringify(pdfMeta));
+  await browser.close();
+
+  if (fails.length) return B.finish(1, 'print_truth: ' + fails.length + ' FAILED -- ' + fails[0]);
+  return B.finish(0, null);
+})().catch(async (e) => {
+  console.log('print_truth: threw -- ' + (e && e.stack ? e.stack : e));
+  return B.finish(1, 'print_truth: threw -- ' + (e && e.message ? e.message : e));
+});

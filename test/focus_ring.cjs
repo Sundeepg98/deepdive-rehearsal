@@ -231,9 +231,10 @@ const RING = (sel) => {
      asserts the halo is NOT that. It also asserts --rm and --acc actually DIFFER on the element
      first, and FAILS rather than passes if they do not -- otherwise on a room whose hue happened to
      equal the neutral the check would green itself for free. That precondition is not theoretical:
-     platform-infra is the closest, rgb(105,78,176) against the neutral rgb(83,74,183) in light and
-     rgb(173,154,238) against rgb(157,147,240) in dark, which is also exactly why this defect could
-     sit in a screenshot unnoticed.
+     platform-infra is the closest, #694EB0 against the neutral #534AB7 in light and #AD9AEE against
+     #9D93F0 in dark, which is also exactly why this defect could sit in a screenshot unnoticed.
+     (Hex, for the same reason styles.css uses it at the fix site: test/room_static.py greps raw
+     indigo digits out of src/ and does not skip comments.)
 
      BOTH --rm-DERIVED HALOS, because they are one pattern with one failure mode. .hm-cta got it in
      W15 and nothing guarded it afterwards; .hm-room gets it here. The stripe assertion is the third

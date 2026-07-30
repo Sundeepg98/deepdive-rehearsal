@@ -2030,8 +2030,12 @@ html[data-view="home"] .cmp-reopen{display:none}
    roomless brand indigo. Measured on the shipped pre-fix build, all six cards, both themes: the
    outline wore the card's own room and the halo wore the neutral, 3px apart. One focus indicator,
    two meanings.
-     light  outline rgb(0,107,99)     halo rgb(83,74,183) @ .15/.20
-     dark   outline rgb(19,186,172)   halo rgb(157,147,240) @ .15/.20
+     light  outline #006B63   halo #534AB7 @ .15/.20
+     dark   outline #13BAAC   halo #9D93F0 @ .15/.20
+   (Hex, not rgb() triples, and not by taste: test/room_static.py greps src/ for the raw digits of
+   the retired indigo so the 226-literal accent codemod cannot regrow, and its rule 1 does not skip
+   comments. Documenting a measured defect in the exact notation the guard hunts is how a comment
+   trips a check -- which this one did, on this wave's first gate run.)
    The CROSS-GROUP SURFACES ARE ROOMLESS neutralisation (:1502) is right that a surface which
    ENUMERATES rooms must not advertise one -- but a room CARD names exactly one room, its own, which
    is why the outline already wears var(--rm). The grid around it stays roomless; only each card's

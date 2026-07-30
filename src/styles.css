@@ -2025,7 +2025,36 @@ html[data-view="home"] .cmp-reopen{display:none}
   padding:var(--space-14) var(--space-16);border:1px solid var(--bd);border-radius:12px;background:var(--card);
   cursor:pointer;font:inherit;color:var(--ink);box-shadow:inset 3px 0 0 var(--rm);min-height:44px}
 .hm-room:hover{border-color:var(--rm)}
-.hm-room:focus-visible{outline:2px solid var(--rm);outline-offset:2px}
+/* W-X8 / X10. This rule declared OUTLINE ONLY, so box-shadow fell through to the generic
+   button:focus-visible (:53) -- var(--acc-a15)/var(--acc-a20), which inside .ix-panel is the
+   roomless brand indigo. Measured on the shipped pre-fix build, all six cards, both themes: the
+   outline wore the card's own room and the halo wore the neutral, 3px apart. One focus indicator,
+   two meanings.
+     light  outline rgb(0,107,99)     halo rgb(83,74,183) @ .15/.20
+     dark   outline rgb(19,186,172)   halo rgb(157,147,240) @ .15/.20
+   The CROSS-GROUP SURFACES ARE ROOMLESS neutralisation (:1502) is right that a surface which
+   ENUMERATES rooms must not advertise one -- but a room CARD names exactly one room, its own, which
+   is why the outline already wears var(--rm). The grid around it stays roomless; only each card's
+   own ring speaks for itself. Same treatment .hm-cta got at :2007: same alpha steps, the same
+   color-mix mechanism the --acc-a* rungs use (:116), and the same var(--rm,var(--acc)) fallback,
+   which is what keeps phantom_tokens.py honest about a token no stylesheet declares.
+
+   THE INSET STRIPE IS RE-DECLARED, and it is not decoration. box-shadow is ONE property, so the
+   generic rule was REPLACING .hm-room's `inset 3px 0 0 var(--rm)` (:2026) outright -- a focused
+   card silently lost the room stripe that is its edge identity, in every room, both themes. That
+   half of the defect is not in the audit; it is measured in _audit/2026-07-30-w20-hue.md. Declaring
+   box-shadow here makes the omission MINE rather than the cascade's, so the stripe comes back. The
+   hero had nothing to preserve -- its rest shadow is a drop-glow under a --rm-filled button -- which
+   is why :2007 carries no inset and this does.
+
+   The halo is DECORATIVE: the 2px solid var(--rm) outline is what carries WCAG 2.4.7 focus
+   visibility and it is unchanged, so no contrast threshold moves. The global rule at :53 is
+   untouched. Guarded by test/focus_ring.cjs, the box-shadow arms it did not have until W-X8:
+   halo 9-10, stripe 11-12, both watched red on the pre-fix build. */
+.hm-room:focus-visible{outline:2px solid var(--rm);outline-offset:2px;
+  box-shadow:inset 3px 0 0 var(--rm),
+    0 0 0 3px color-mix(in srgb,var(--rm,var(--acc)) 15%,transparent),
+    0 0 16px -4px color-mix(in srgb,var(--rm,var(--acc)) 20%,transparent)}
 .hm-room-k{display:flex;align-items:center;gap:var(--space-8);font-weight:var(--font-weight-bold)}
 .hm-room-n{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;
   border-radius:5px;background:var(--rm);color:#fff;font-size:var(--font-size-micro,11px);

@@ -1,0 +1,16 @@
+===== MUTANT: .hm-cta (styles.css:2007, W15) -- removed box-shadow from `.hm-cta:focus-visible` (1 rule(s) hit) =====
+  BEFORE  halo verdict = PASS   stripe verdict = FAIL
+          halo    : [color(srgb 0 0.419608 0.388235 / 0.15) | color(srgb 0 0.419608 0.388235 / 0.2)]
+          inset   : []
+  AFTER   halo verdict = FAIL   stripe verdict = FAIL
+          halo    : [color(srgb 0.32549 0.290196 0.717647 / 0.15) | color(srgb 0.32549 0.290196 0.717647 / 0.2)]   (the roomless --acc paints [color(srgb 0.32549 0.290196 0.717647 / 0.15) | color(srgb 0.32549 0.290196 0.717647 / 0.2)])
+          inset   : []   want [rgb(0, 107, 99)]
+  => the arm FLIPS PASS -> FAIL, so it can fail
+===== MUTANT: .hm-room (styles.css:2029, W-X8) -- removed box-shadow from `.hm-room:focus-visible` (1 rule(s) hit) =====
+  BEFORE  halo verdict = PASS   stripe verdict = PASS
+          halo    : [color(srgb 0 0.419608 0.388235 / 0.15) | color(srgb 0 0.419608 0.388235 / 0.2)]
+          inset   : [rgb(0, 107, 99)]
+  AFTER   halo verdict = FAIL   stripe verdict = FAIL
+          halo    : [color(srgb 0.32549 0.290196 0.717647 / 0.15) | color(srgb 0.32549 0.290196 0.717647 / 0.2)]   (the roomless --acc paints [color(srgb 0.32549 0.290196 0.717647 / 0.15) | color(srgb 0.32549 0.290196 0.717647 / 0.2)])
+          inset   : []   want [rgb(0, 107, 99)]
+  => the arm FLIPS PASS -> FAIL, so it can fail

@@ -45,12 +45,16 @@
      one-level copy is therefore complete. It also means the printed sheet follows the reader's own
      density setting: html[data-density=compact] and =cozy redefine the whole space scale. */
   function tokenBlock() {
-    var refs = CSS.match(/var\((--[a-z0-9-]+)\)/g) || [];
+    /* Matches var(--x) AND var(--x, fallback) -- the closing paren is deliberately NOT required.
+       Requiring it dropped any token written with a fallback, silently, which is the same class of
+       quiet omission this whole function exists to fix. There are none today (45 of 45 references
+       in the CSS above are bare), so this is guarding the next edit, not a live bug. */
+    var refs = CSS.match(/var\(\s*(--[a-z0-9-]+)\s*[,)]/g) || [];
     var root = document.documentElement;
     var cs = window.getComputedStyle(root);
     var seen = {}, decls = [];
     for (var i = 0; i < refs.length; i++) {
-      var name = refs[i].slice(4, -1);
+      var name = refs[i].replace(/^var\(\s*/, '').replace(/\s*[,)]$/, '');
       if (seen[name]) continue;
       seen[name] = 1;
       var v = cs.getPropertyValue(name).trim();

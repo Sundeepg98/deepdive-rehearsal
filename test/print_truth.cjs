@@ -67,6 +67,9 @@ const MEASURE_H = Math.round(BOX_H);     /* 1009 */
 
 const FLAGSHIP = 'content-pipeline';
 const TALLEST = 'consistency-models';
+/* See CONTROL 3b. Anchored on measured healthy coverage (0.94 / 0.98) with room beneath it, and
+ * far above the two death modes it exists to catch (0.35 partial, 0.00 total). */
+const COVERAGE_FLOOR = 0.70;
 
 const fails = [];
 const notes = [];
@@ -180,44 +183,100 @@ function parsePdf(buf) {
     return out;
   };
 
-  /* text of one content-bearing object, following the Form XObjects it names */
-  const textOf = (objNum, fonts, xobjs, depth, seen) => {
-    if (objNum == null || depth > 4 || seen.has(objNum)) return '';
+  /* Text of one content-bearing object, descending into the Form XObjects IT names.
+   *
+   * THE BUG THIS SHAPE EXISTS TO PREVENT (cold verify, 2026-07-30, BLOCKING 1). The first version
+   * merged the INHERITED XObject map into every level (`Object.assign({}, xobjs, own)`) and then
+   * iterated the merged map, so a form re-descended into its own siblings and `depth` counted path
+   * length through a CROSS-PRODUCT of the resource maps rather than nesting depth. Past a cap of 4
+   * the decoder never reached a `Tf`, `cur` stayed null, and whole pages decoded to nothing --
+   * silently, on a provably correct artifact. Chromium emits a VARIABLE number of Form XObjects for
+   * byte-identical input, so this was a coin flip: measured 5 forms -> [1657,1664,1468] (healthy),
+   * 20 forms -> [1657,0,0] (a FALSE FAILURE reported as an app defect), 24 forms -> [0,0,0].
+   *
+   * So: a form's children are the XObjects ITS OWN /Resources name, and nothing else. The page
+   * supplies the map exactly once, at the top, for its content stream -- which has no /Resources of
+   * its own and must resolve the page's forms. Below that, `null`. `depth` is now true nesting
+   * depth, and `seen` (not the cap) is what guards cycles -- which is what the cap was standing in
+   * for. The cap survives only as a stack guard and is set where it cannot bind: `seen` already
+   * bounds the walk by the object count.
+   *
+   * FONT resources ARE still merged down, because that inheritance is real and harmless -- a form
+   * that names no font of its own draws with the enclosing scope's. */
+  const MAX_FORM_DEPTH = 64;
+  const textOf = (objNum, fonts, childX, depth, seen) => {
+    if (objNum == null || depth > MAX_FORM_DEPTH || seen.has(objNum)) return '';
     seen.add(objNum);
     const body = objs.get(objNum);
     if (!body) return '';
     const head = dictHead(body);
     const myFonts = Object.assign({}, fonts, subRes(head, 'Font'));
-    const myX = Object.assign({}, xobjs, subRes(head, 'XObject'));
+    const own = subRes(head, 'XObject');
+    const kids = Object.keys(own).length ? own : (childX || {});
     let out = '';
     const data = streamOf(body);
     if (data) out += decode(data.toString('latin1'), myFonts);
-    for (const name of Object.keys(myX)) {
-      const n = myX[name];
+    for (const name of Object.keys(kids)) {
+      const n = kids[name];
       const b = objs.get(n);
       if (!b) continue;
       if (/\/Subtype\s*\/Image/.test(dictHead(b))) continue;
-      out += textOf(n, myFonts, myX, depth + 1, seen);
+      out += textOf(n, myFonts, null, depth + 1, seen);
     }
     return out;
   };
 
-  /* page order straight out of the page tree */
-  let kids = [];
-  let declaredCount = null;
-  for (const [, body] of objs) {
+  /* ===== page order, from the ROOT of the page tree =====
+   *
+   * THE BUG THIS REPLACES (cold verify, 2026-07-30, BLOCKING 2). The page tree is a TREE, not a
+   * list, and Chromium splits it once a document gets long enough. The Print Q&A document has
+   * three /Type /Pages nodes -- /Count 8 (8 kids), /Count 3 (3 kids), and /Count 11 (2 kids, the
+   * two above). The ROOT is the 11. The first version took the node with the MOST KIDS, which is
+   * the 8 -- an intermediate node -- so an 11-page document was read as 8 pages, and the last three
+   * pages were never examined at all. pdfPageCount took the FIRST /Type /Pages node in byte order,
+   * which is also the 8, so the arm that exists to cross-check the two readers COULD NOT CATCH IT:
+   * both shared the failure mode. That is how a wrong number reached the freeze report, where it
+   * was then explained away as a margin difference. It was not; it was this.
+   *
+   * Resolve the root properly: trailer /Root -> catalog /Pages, and failing that, the /Pages node
+   * that is no other node's kid. Then walk it, descending through intermediate nodes, and collect
+   * the LEAVES in order. */
+  const pagesNodes = new Map();
+  for (const [num, body] of objs) {
     const head = dictHead(body);
     if (!/\/Type\s*\/Pages\b/.test(head)) continue;
-    const c = head.match(/\/Count\s+(\d+)/);
     const k = head.match(/\/Kids\s*\[([\s\S]*?)\]/);
-    if (!k) continue;
     const list = [];
-    const r = /(\d+)\s+\d+\s+R/g;
-    let f;
-    while ((f = r.exec(k[1]))) list.push(Number(f[1]));
-    /* take the richest node -- a single-level tree is what Chromium emits */
-    if (list.length > kids.length) { kids = list; declaredCount = c ? Number(c[1]) : null; }
+    if (k) {
+      const r = /(\d+)\s+\d+\s+R/g;
+      let f;
+      while ((f = r.exec(k[1]))) list.push(Number(f[1]));
+    }
+    pagesNodes.set(num, list);
   }
+  let root = null;
+  const rootRef = s.match(/\/Root\s+(\d+)\s+\d+\s+R/);
+  if (rootRef) {
+    const cat = objs.get(Number(rootRef[1]));
+    if (cat) {
+      const p = dictHead(cat).match(/\/Pages\s+(\d+)\s+\d+\s+R/);
+      if (p && pagesNodes.has(Number(p[1]))) root = Number(p[1]);
+    }
+  }
+  if (root == null) {
+    const referenced = new Set();
+    for (const list of pagesNodes.values()) for (const k of list) referenced.add(k);
+    for (const num of pagesNodes.keys()) if (!referenced.has(num)) { root = num; break; }
+  }
+  const kids = [];
+  const walk = (num, guard) => {
+    if (num == null || guard.has(num)) return;
+    guard.add(num);
+    if (pagesNodes.has(num)) { for (const k of pagesNodes.get(num)) walk(k, guard); return; }
+    const b = objs.get(num);
+    if (b && /\/Type\s*\/Page(?![s])/.test(dictHead(b))) kids.push(num);
+  };
+  walk(root, new Set());
 
   const pages = kids.map((pn) => {
     const body = objs.get(pn);
@@ -232,12 +291,12 @@ function parsePdf(buf) {
     for (const name of Object.keys(xobjs)) {
       const b = objs.get(xobjs[name]);
       if (!b || /\/Subtype\s*\/Image/.test(dictHead(b))) continue;
-      out += textOf(xobjs[name], fonts, xobjs, 1, seen);
+      out += textOf(xobjs[name], fonts, null, 1, seen);
     }
     return out;
   });
 
-  return { pages, count: declaredCount != null ? declaredCount : pages.length };
+  return { pages, root };
 }
 
 /* Compare on letters only. The heading passes through HTML entities, a text-transform:uppercase,
@@ -245,11 +304,15 @@ function parsePdf(buf) {
  * differ, and the letters are the part that cannot. */
 const norm = (s) => (s || '').toUpperCase().replace(/[^A-Z0-9]+/g, '');
 
+/* THE SECOND, INDEPENDENT READER. It counts /Type /Page LEAF OBJECTS in the file and never looks
+ * at the page tree at all, so it cannot fail the way parsePdf's tree walk fails, which is the whole
+ * point of having it: the previous version read a /Count off a /Type /Pages node, and since
+ * parsePdf also picked a node, the two agreed on the same wrong answer and the cross-check arm was
+ * decorative. (The old function's own unused fallback branch was this count, and it would have been
+ * right: 11, where the node-based read said 8.) Two readers that share a failure mode are one
+ * reader. */
 function pdfPageCount(buf) {
-  const s = buf.toString('latin1');
-  const m = s.match(/\/Type\s*\/Pages[\s\S]{0,400}?\/Count\s+(\d+)/);
-  if (m) return Number(m[1]);
-  return (s.match(/\/Type\s*\/Page[^s]/g) || []).length;
+  return (buf.toString('latin1').match(/\/Type\s*\/Page(?![s])/g) || []).length;
 }
 
 /* ---------- in-page helpers ---------- */
@@ -308,6 +371,9 @@ async function readPrintGeometry(page) {
       secCount: secs.length,
       firstHead: secs.length ? headText(secs[0]) : '',
       lastHead: secs.length ? headText(secs[secs.length - 1]) : '',
+      /* the sheet's own rendered text -- the independent yardstick the PDF reader is measured
+       * against, so PARTIAL extractor death has something to be caught by */
+      sheetText: sr ? (sr.textContent || '') : '',
     };
   });
 }
@@ -339,6 +405,7 @@ async function readBreakControl(page) {
       trap: one('.cs-trap'),
       dec: one('.cs-dec'),
       num: one('.cs-num'),
+      thirty: one('.cs-30'),
       tellsLi: one('.cs-tells li'),
       spineLi: one('.cs-spine li'),
     };
@@ -418,7 +485,8 @@ function main() {
         return B.finish(1, 'print_truth: the break-inside control read "' + bc.control + '" -- the arm below cannot fail, so it is not run');
       }
       for (const [sel, v] of [['.cs-one', bc.one], ['.cs-ha', bc.ha], ['.cs-trap', bc.trap],
-        ['.cs-dec', bc.dec], ['.cs-num', bc.num], ['.cs-tells li', bc.tellsLi], ['.cs-spine li', bc.spineLi]]) {
+        ['.cs-dec', bc.dec], ['.cs-num', bc.num], ['.cs-30', bc.thirty],
+        ['.cs-tells li', bc.tellsLi], ['.cs-spine li', bc.spineLi]]) {
         if (v === null) continue;   /* not every topic renders every unit; absent is not a failure */
         ok(v.inside === 'avoid', tag + ' ' + sel + ' avoids splitting across a page', 'break-inside=' + v.inside);
       }
@@ -469,26 +537,124 @@ function main() {
         '" is not in the extracted text (' + whole.length + ' chars over ' + pageText.length + ' pages). ' +
         'Refusing to report on the last heading with a broken instrument.');
     }
-    ok(parsed.pages.length === pages, tag + ' the page tree agrees with the page count',
-      'kids=' + parsed.pages.length + ' count=' + pages);
+    /* The two readers must AGREE, and they now fail differently: this one walks the page tree from
+     * its root, pdfPageCount counts leaf objects and never looks at the tree. */
+    ok(parsed.pages.length === pages, tag + ' the two page readers agree',
+      'treeWalk=' + parsed.pages.length + ' leafObjects=' + pages);
+
+    /* CONTROL 3b -- PARTIAL extractor death. Control 3 above only asks about page 1, and a reader
+     * that decodes page 1 and nothing else passes it while delivering a verdict on pages it cannot
+     * read. That is not hypothetical: it shipped, and it produced a FALSE FAILURE reported as an
+     * app defect (`per-page 1657/0/0`, "found on page 0 of 3") on a provably correct build.
+     * The yardstick is the sheet's OWN rendered text, measured in the DOM through a different code
+     * path entirely -- so this compares two independent readings of the same content rather than
+     * asking the PDF reader to vouch for itself. Healthy coverage measured 0.94 (flagship,
+     * 4789/5104) and 0.98 (consistency-models, 16088/16405); the shortfall is punctuation and the
+     * handful of glyphs no /ToUnicode entry covers. The floor is 0.70 -- far below the worst
+     * healthy reading, far above the failures it must catch (0.35 partial, 0.00 total). */
+    const domChars = norm(g.sheetText).length;
+    const coverage = domChars ? whole.length / domChars : 0;
+    /* GATED ON THE GEOMETRY, or it blames the reader for the app's defect. A CLIPPED sheet is
+     * genuinely missing most of its text on paper, so coverage collapses -- 0.32 on the re-cap
+     * mutant -- and an ungated control would abort with "the extractor is partially dead" while
+     * pointing at the one artifact whose truncation is the entire finding. When ARM A has already
+     * reported clipping, the low coverage is EXPLAINED, ARM C's red is the correct verdict, and
+     * this control has nothing to add. It fires only when the sheet is whole and the reader still
+     * came back short -- which is exactly the case it was built for. */
+    const truncated = clipped > 1;
+    if (!truncated && coverage < COVERAGE_FLOOR) {
+      console.log(notes.join('\n'));
+      await browser.close();
+      return B.finish(1, 'print_truth: PDF text extractor is PARTIALLY DEAD -- the sheet is NOT clipped (' +
+        clipped + 'px) yet the reader recovered only ' + whole.length + ' of ' + domChars +
+        ' rendered characters (' + coverage.toFixed(2) + ' < ' + COVERAGE_FLOOR + '), per-page ' +
+        pageText.map((t) => t.length).join('/') +
+        '. Refusing to deliver a verdict on pages it cannot read.');
+    }
+    if (truncated) {
+      notes.push('  ctrl  ' + tag + ' coverage ' + coverage.toFixed(2) + ' is LOW but the sheet is clipped ' +
+        clipped + 'px -- the document is short, not the reader; ARM A owns this failure');
+    }
     notes.push('  ctrl  ' + tag + ' extractor liveness: FIRST heading "' + g.firstHead + '" found on page ' +
       (pageText.findIndex((t) => t.indexOf(first) >= 0) + 1) + ' of ' + pageText.length +
-      ' (' + whole.length + ' chars extracted; per-page ' + pageText.map((t) => t.length).join('/') + ')');
+      '; coverage ' + whole.length + '/' + domChars + ' = ' + coverage.toFixed(2) +
+      ' (floor ' + COVERAGE_FLOOR + '); per-page ' + pageText.map((t) => t.length).join('/'));
+
+    /* With coverage proven, an EMPTY page is the document's fault, not the reader's -- so it is an
+     * arm, not a control. A blank sheet of paper in the middle of a cram sheet is a real defect,
+     * and it is the failure mode an over-eager break-inside:avoid would produce. */
+    const blanks = pageText.map((t, i) => (t.length ? null : i + 1)).filter((x) => x !== null);
+    ok(blanks.length === 0, tag + ' no printed page is blank',
+      'pages=' + pageText.length + ' blank=[' + blanks.join(',') + ']');
+
     /* THE ACCEPTANCE TEST. Not "somewhere in the document" -- on the LAST sheet of paper. The
      * defect put it nowhere at all; a half-fix that grew the page count without carrying the tail
-     * across would still fail here. */
+     * across would still fail here. Asked of the final page DIRECTLY rather than by searching for
+     * the first page that carries the heading: if that text ever also appeared earlier, a
+     * first-match search would report the early page and false-red a correct document. */
     const lastPageIdx = pageText.length - 1;
-    const foundOn = pageText.findIndex((t) => t.indexOf(last) >= 0);
-    ok(foundOn === lastPageIdx, tag + ' the LAST section is printed ON THE FINAL PAGE',
-      'heading="' + g.lastHead + '" found on page ' + (foundOn + 1) + ' of ' + pageText.length);
+    const onFinal = lastPageIdx >= 0 && pageText[lastPageIdx].indexOf(last) >= 0;
+    const alsoOn = pageText.map((t, i) => (t.indexOf(last) >= 0 ? i + 1 : null)).filter((x) => x !== null);
+    ok(onFinal, tag + ' the LAST section is printed ON THE FINAL PAGE',
+      'heading="' + g.lastHead + '" pages=' + pageText.length + ' appears on page(s) [' + alsoOn.join(',') + ']');
 
     pdfMeta[topic] = {
       pages, band: [loFloor, hiCeil], H, bytes: pdf.length, clipped,
-      lastHead: g.lastHead, lastHeadPage: foundOn + 1, chars: whole.length,
+      lastHead: g.lastHead, lastHeadPage: lastPageIdx + 1, chars: whole.length,
+      coverage: Number(coverage.toFixed(3)),
     };
 
     await page.emulateMedia({ media: null });
     await B.settle(page);
+  }
+
+  /* ---------- ARM F: the path that made X1 a P1, which the arms above never touch ----------
+   * Every arm so far opens the sheet with #cramopen first. But the reason X1 was filed P1 rather
+   * than P2 is that `styles.css:508` has NO `.open` requirement, so `body:not(.print-session)
+   * .cram-ov` goes display:none -> block on print REGARDLESS -- a native File -> Print from any
+   * view emits the cram sheet, for a user who never opened it. That is the path most likely to be
+   * hit by accident and the one nothing was guarding. Measured pre-fix on a walkthrough view with
+   * the sheet never opened: clipped 1784px, 1 page, last heading absent. */
+  {
+    /* A FRESH page that never touches #cramopen -- not an open-then-close, which would leave the
+     * lazily-rendered sheet already mounted and quietly test something easier. */
+    const fresh = await ctx.newPage();
+    await B.gotoApp(fresh, HTML, { hash: '#walk' });
+    await B.enterApp(fresh);
+    const screenState = await fresh.evaluate(() => ({
+      open: document.getElementById('cramov').classList.contains('open'),
+      display: getComputedStyle(document.getElementById('cramov')).display,
+    }));
+    ok(screenState.open === false && screenState.display === 'none',
+      '[file-print] precondition: the cram sheet was NEVER opened and is hidden on screen',
+      'open=' + screenState.open + ' display=' + screenState.display);
+
+    await fresh.emulateMedia({ media: 'print' });
+    await B.settle(fresh);
+    const fg = await readPrintGeometry(fresh);
+    ok(fg.printMedia === true, '[file-print] print media emulation is ACTIVE', 'matchMedia(print)=' + fg.printMedia);
+    /* The sheet materialises on paper without ever having been opened -- that is the app's design,
+     * and it is exactly why the clamp mattered so much. Assert it still arrives WHOLE. */
+    ok(fg.secCount > 0, '[file-print] a never-opened sheet still renders to paper', 'sections=' + fg.secCount);
+    ok(fg.panelMaxH === 'none', '[file-print] .cram-panel has NO height cap on paper', 'max-height=' + fg.panelMaxH);
+    const fClipped = fg.bodyScroll - fg.bodyClient;
+    ok(fClipped <= 1, '[file-print] #cram clips NOTHING',
+      'scrollH=' + fg.bodyScroll + ' clientH=' + fg.bodyClient + ' clipped=' + fClipped + 'px');
+
+    const fPdf = await fresh.pdf({ format: 'A4', preferCSSPageSize: true, printBackground: true });
+    const fParsed = parsePdf(fPdf);
+    const fPages = pdfPageCount(fPdf);
+    const fText = fParsed.pages.map(norm);
+    const fLast = norm(fg.lastHead);
+    const fFloor = Math.ceil(Math.max(fg.docScroll, fg.bodyScroll) / PAGE_H);
+    ok(fPages >= fFloor, '[file-print] A4 page count reaches the floor implied by the content',
+      'pages=' + fPages + ' floor=' + fFloor);
+    ok(fText.length > 0 && fText[fText.length - 1].indexOf(fLast) >= 0,
+      '[file-print] the LAST section is printed ON THE FINAL PAGE',
+      'heading="' + fg.lastHead + '" pages=' + fText.length + ' per-page ' + fText.map((t) => t.length).join('/'));
+    if (PDF_DIR) fs.writeFileSync(path.join(PDF_DIR, LABEL + '-file-print-never-opened.pdf'), fPdf);
+    pdfMeta['file-print-never-opened'] = { pages: fPages, clipped: fClipped, bytes: fPdf.length };
+    await fresh.close();
   }
 
   /* ---------- ARM D: the Print Q&A document's design tokens ---------- */

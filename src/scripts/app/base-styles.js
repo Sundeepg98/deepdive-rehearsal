@@ -60,9 +60,10 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:var(--font-size-micro);b
    It cost nothing while the sheet printed one truncated page; the moment styles.css stopped
    clipping it (3 pages on the flagship, 7 on consistency-models) it started splitting sections at
    arbitrary points.
-   ATOMIC UNITS ONLY, and .cs-sec IS DELIBERATELY NOT HERE. A whole section is not an atom: the
-   tallest measures 1289px against a ~1009px A4 content box, so break-inside:avoid on it is a
-   constraint the fragmenter must ignore (a box that cannot fit on an empty page is split anyway)
+   ATOMIC UNITS ONLY, and .cs-sec IS DELIBERATELY NOT HERE. A whole section is not an atom: measured
+   IN THE PRINT LAYOUT (the 681px A4 content box, which is where this matters -- not at 1280px), the
+   tallest is 2173px against a ~1009px content box. More than two full pages. So break-inside:avoid
+   on it is a constraint the fragmenter must ignore (a box that cannot fit on an empty page is split anyway)
    and the only thing it can buy is a page-sized hole before the split happens. What is genuinely
    atomic is one cue-and-answer, one decision, one trap, one number row -- and a section HEAD, which
    is kept with what follows by break-after rather than by being welded to the whole section. */

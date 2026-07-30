@@ -156,6 +156,25 @@ for name, cmd in [('ascii_guard', ['python3', 'test/ascii_guard.py']),
                   # prose, since styles.css is inlined verbatim and a comment quoting a token is not
                   # a reference to it. Ratcheted through phantom_tokens_debt.json. Static, ~1s.
                   ('phantom_tokens', ['python3', 'test/phantom_tokens.py']),
+                  # typeface_census (W-X6): the family half of "the type the CSS declares is not
+                  # the type that renders". 89 rules spelled the app stack as
+                  # `-apple-system,sans-serif` -- a list whose first entry resolves on Apple
+                  # platforms and NOWHERE else, so off Apple the generic wins and on Windows that
+                  # is ARIAL. Measured on the pre-fix build with CDP getPlatformFontsForNode:
+                  # SIXTEEN buttons with real label text rasterised in Arial/Arial Black on each
+                  # topic surface (the freeze's "48" is those 16 walked across three surfaces),
+                  # among them all nine .seg pane tabs this campaign lifted above the fold. The
+                  # home surface was already clean. WebKit and Firefox
+                  # measured byte-identical to Chromium, so it is a platform truth, not an engine
+                  # bug. latent_arial CANNOT see it: that guard asks "does this button carry NO
+                  # author family", and these carry one -- which is why "latent Arial is at zero"
+                  # was true of its ledger and false of the screen (W4 cold verify, F-2). This
+                  # check asks the other question -- is the family one the app OWNS -- and holds
+                  # every declaration in src/ to var(--sans) / var(--display) / a mono stack /
+                  # inherit / a documented exception. The two exceptions are argued in place, and
+                  # print-qa.js's literal copy of the stack is COMPARED against --sans so the
+                  # stack cannot quietly acquire a second answer. Static, ~1s.
+                  ('typeface_census', ['python3', 'test/typeface_census.py']),
                   ('file_integrity', ['python3', 'test/file_integrity.py']),
                   ('unit_tests', ['python3', 'test/unit_tests.py']),
                   # The visual sim's invariants ARE the teaching points its modes exist to

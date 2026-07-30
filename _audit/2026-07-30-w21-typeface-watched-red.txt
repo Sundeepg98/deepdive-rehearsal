@@ -1,0 +1,61 @@
+W21 / W-X6 TYPEFACE TRUTH -- WATCHED-RED CAPTURE
+
+The SHIPPED test/typeface_census.py, run against the DEFECTIVE tree.
+
+METHOD. The base tree is exported with `git archive f7eb2dd` into a scratch directory and
+git init-ed there, because the check scopes itself to what git TRACKS and needs a git that
+answers. The check file is then copied in from the tip UNMODIFIED. So this is the guard that
+ships, reading the source that carried the defect -- not an earlier revision of either.
+
+  RE-CAPTURED for round 2. The round-1 capture came from an earlier revision of the check
+  (its header lacked the 'not scanned' block and it sorted styles.css first) -- every number
+  in it was correct, but the artifact was not a byte-reproducible run of the committed code.
+  Cold verify F-F. This capture is.
+
+  The 'not scanned: 0' line below is honest and expected: a fresh git-archive export has
+  never been built, so src/ holds no build artefacts to skip. On the real worktree, after a
+  build, that number is 498.
+
+Captured 2026-07-30T18:15:02Z. Base f7eb2dd. Guard as committed on xb/x6-typeface-truth.
+
+=== TYPEFACE CENSUS -- every declared family must be one the app owns ===
+    scanned      : 189 AUTHORED (git-tracked) files under src/
+    not scanned  : 0 build artefact(s) under src/ -- gitignored output of the
+                   topic compiler and esbuild; their families are emitted by
+                   mermaid and by vendored code, not authored here
+    declarations : 180 font-family / font-shorthand family lists
+    self-test    : 9 planted defects found (truncated stack; partial
+                   system-ui stack; undeclared face; UPPERCASE property;
+                   truncated stack behind a `pt` size; a CSS-wide reset
+                   keyword; an unreadable shorthand; a real rule beside
+                   an @font-face; a two-line declaration) + the drifted
+                   print literal. 6 legitimate shapes, an @font-face
+                   descriptor and comment-prose all stayed clean
+    exceptions   : 2 documented (src/scripts/app/print-qa.js; src/styles.css)
+    drift arm    : 1 literal copy of the app stack, 0 drifted
+    orphans      : 90
+
+  91 orphan declaration(s):
+    -apple-system,sans-serif                             83 site(s)
+        a TRUNCATED -apple-system stack. -apple-system resolves on Apple platforms and nowhere else, so off Apple the generic wins -- on Windows that is ARIAL. Use var(--sans)
+        src/scripts/app/base-styles.js:182, src/scripts/app/base-styles.js:186, src/scripts/app/content-sheet.js:14, src/scripts/app/content-sheet.js:16, src/scripts/app/drill/logic.js:71, src/scripts/app/drill/logic.js:75 ... +77 more
+    -apple-system,system-ui,sans-serif                   5 site(s)
+        a SECOND spelling of the app stack. It resolves correctly off Apple (system-ui / Segoe UI catches it), so no glyph moves -- but the stack now has more than one answer, which is how the truncated form was born. Use var(--sans)
+        src/scripts/app/drill/logic.js:223, src/styles.css:1740, src/styles.css:1744, src/styles.css:1766, src/styles.css:1777
+    -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,H 1 site(s)
+        a SECOND spelling of the app stack. It resolves correctly off Apple (system-ui / Segoe UI catches it), so no glyph moves -- but the stack now has more than one answer, which is how the truncated form was born. Use var(--sans)
+        src/styles.css:293
+    -apple-system,BlinkMacSystemFont,system-ui,sans-seri 1 site(s)
+        a SECOND spelling of the app stack. It resolves correctly off Apple (system-ui / Segoe UI catches it), so no glyph moves -- but the stack now has more than one answer, which is how the truncated form was born. Use var(--sans)
+        src/styles.css:1735
+    --sans                                               1 site(s)
+        expected exactly ONE --sans definition, found 0
+        src/styles.css:0
+
+  Point the declaration at var(--sans), var(--display), var(--mono),
+  or `inherit` where the cascade already carries the family. A family
+  the app genuinely wants needs a line in EXCEPTIONS with a reason.
+
+TYPEFACE CENSUS: FAIL
+
+EXIT=1 (expected: the guard must be RED on the tree that carries the defect)

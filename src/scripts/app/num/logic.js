@@ -20,11 +20,11 @@
    canonical button restores the reference scenario. Offline-safe: no network/permission. */
 var NUM_STYLE = `.numlead{font-size:var(--font-size-body);max-width:var(--measure);line-height:var(--line-height-loose);color:var(--ink);margin:var(--space-2) var(--space-2) var(--space-18)}
 .numlead b{color:var(--accink);font-weight:var(--font-weight-bold)}
-.num-h{font:var(--font-weight-heavy) 10px -apple-system,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:var(--mut2);margin-bottom:var(--space-12);display:flex;align-items:center;justify-content:space-between;gap:var(--space-10)}
-.num-reset{font:var(--font-weight-semibold) 10px -apple-system,sans-serif;color:var(--mut);background:transparent;border:1px solid var(--bd);border-radius:6px;padding:var(--space-3) var(--space-9);cursor:pointer;text-transform:none;letter-spacing:.2px;transition:color var(--duration-fast) var(--ease-base),border-color var(--duration-fast) var(--ease-base)}
+.num-h{font:var(--font-weight-heavy) 10px var(--sans);letter-spacing:.6px;text-transform:uppercase;color:var(--mut2);margin-bottom:var(--space-12);display:flex;align-items:center;justify-content:space-between;gap:var(--space-10)}
+.num-reset{font:var(--font-weight-semibold) 10px var(--sans);color:var(--mut);background:transparent;border:1px solid var(--bd);border-radius:6px;padding:var(--space-3) var(--space-9);cursor:pointer;text-transform:none;letter-spacing:.2px;transition:color var(--duration-fast) var(--ease-base),border-color var(--duration-fast) var(--ease-base)}
 .num-reset:hover{color:var(--acc);border-color:var(--acc)}
 .ninp{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-12)}
-.ninp label{display:flex;flex-direction:column;gap:var(--space-6);font:var(--font-weight-bold) 11px -apple-system,sans-serif;color:var(--mut);letter-spacing:.2px}
+.ninp label{display:flex;flex-direction:column;gap:var(--space-6);font:var(--font-weight-bold) 11px var(--sans);color:var(--mut);letter-spacing:.2px}
 /* min-height (W2 / audit P3-5): SYSTEMATIC, not a one-off -- every assumption input across all
    six Numbers topics measured 136.2x40, because this rule sets padding and never a floor, and a
    text input's intrinsic height is its font's line box. 40 clears WCAG 2.5.8 AA (24px) but misses

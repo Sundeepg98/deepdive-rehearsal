@@ -131,7 +131,7 @@ var WALK_HTML = `<div class="dots" id="wdots"></div>
     </div>
     <div class="wflow-r" id="wflowr" aria-live="polite"></div>
     <details class="model">
-      <summary>What a complete answer sounds like <span class="nsep">. </span><span class="sub">model script &middot; the full arc, not just the opener</span></summary>
+      <summary>What a complete answer sounds like <span class="nsep">, </span><span class="sub">model script &middot; the full arc, not just the opener</span></summary>
       <div class="mbody" id="wmbody"></div>
     </details>
 

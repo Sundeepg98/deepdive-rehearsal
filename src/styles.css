@@ -325,9 +325,15 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
      heuristic -- is invisible to the reader that found the bug. A real text node is in both.
      And it must be NON-whitespace: the walkthrough's model-script summary already authored a
      literal space there and was still heard as "sounds likemodel script", because whitespace at a
-     block boundary is collapsed away. A comma is not, and NVDA does not speak it at the default
-     symbol level -- proven in the same logs, where the card title "Retries, Timeouts, Deadlines"
-     reads with pauses and no spoken "comma".
+     block boundary is collapsed away.
+
+     AND THE CHARACTER IS A COMMA, AT EVERY SITE, NOT A PERIOD. This wave's first re-drive shipped
+     a period at the kicker/description seam because it reads better on the page, and NVDA SPOKE
+     it: "ATTRIBUTE BOUNDARY dot A schema-flexible", on every card. NVDA substitutes the word "dot"
+     for a period that is not followed by whitespace, and NVDA's flattened text does not carry the
+     space this separator holds -- so the fix for one glue defect reproduced its sibling (the audit
+     counted 64 spoken "dot"s in the cram sheet). The comma was spoken ZERO times in that same
+     capture. One character, everywhere; do not make it prettier.
 
      ZERO REFLOW BY CONSTRUCTION: position:absolute takes it out of flow, so it never becomes a
      flex or grid item and never contributes to `gap`; 1x1 + clip means nothing is painted.

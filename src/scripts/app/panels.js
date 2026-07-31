@@ -239,15 +239,19 @@
        case-splitter only ever repaired the ones whose next word happened to start
        upper-then-lower. The audible failures were "ATTRIBUTE BOUNDARYA schema-flexible" and
        "THE CONSISTENCY SPECTRUMA consistency model" -- 2 of 20 cards, and the other 18 were
-       being repaired by accident, not by markup. A period at the kicker/description seam
-       because that is where a heading meets a sentence; commas elsewhere. */
+       being repaired by accident, not by markup. ONE character, a comma, at all three: a
+       period reads better on the page but NVDA SPEAKS it -- it substitutes the word "dot" for a
+       period that is not followed by whitespace, and NVDA's flattened text does not carry the
+       space this separator holds. The first re-drive of this wave heard "ATTRIBUTE BOUNDARY dot A
+       schema-flexible" on every card, which is the audit's own F7b defect wearing the fix for its
+       sibling. The comma was spoken zero times in that same capture. */
     return '<div class="ix-cell"><button class="ix-card' + (on ? ' on' : '') + '" type="button" data-topic="' + id + '" data-filter="' + filt + '" style="box-shadow:inset 3px 0 0 var(--room-' + groupId + ')"' +
       (on ? ' aria-current="true"' : '') + '>' +
       /* conditional: _bdg is empty on an untouched topic (the common case), and an unconditional
          separator opened every such card with a stray ", " -- measured on the built deliverable. */
       (_bdg ? _bdg + '<span class="nsep">, </span>' : '') +
       '<span class="ix-c-name">' + idn.title + '</span><span class="nsep">, </span>' +
-      '<span class="ix-c-tail">' + idn.locatorTail + '</span><span class="nsep">. </span>' +
+      '<span class="ix-c-tail">' + idn.locatorTail + '</span><span class="nsep">, </span>' +
       (th ? '<span class="ix-c-thesis">' + th + '</span>' : '') + '</button>' + resetBtn + '</div>';
   }
 

@@ -1,0 +1,93 @@
+W24 -- the audit's binding LAYOUT condition, verified with a negative control
+==============================================================================
+date   : 2026-07-31 (round 2)
+probe  : test/at_name_layout_probe.cjs -- reads the FLATTENING path (innerText), which is
+         the path the glue lived on, at two viewport widths and at the app's own 116% text
+         ceiling. --read-zoom is read back and the run ABORTS unless it measured 1.16.
+why    : audit P2-4 -- "any 'glue fixed' check that runs at a single viewport and text size
+         proves nothing. Verify at two widths at minimum ... text zoom goes to 116 percent."
+         Not a gate arm: once the separator is an authored character the layout dependence is
+         gone by construction, and the ongoing guard is arm A of test/at_name_hygiene.cjs.
+
+RESULT: BASE 0/21 separated (all glued) -> TIP 21/21 separated. The base run is the negative
+        control: it proves these assertions can fail.
+
+=== BASE 8b2599b (pre-wave) -- authored separator across the audit's binding layout conditions ===
+
+room button (numeral / name)
+  GLUE  1440x900            "1Messaging & Events"
+  GLUE  1024x768            "1Messaging & Events"
+  GLUE  1440x900 @116% text  "1Messaging & Events"
+
+topic card (title / kicker / description)
+  GLUE  1440x900            "Event-Driven Backboneasync backboneDecoupling producers from consumers through a durable q"
+  GLUE  1024x768            "Event-Driven Backboneasync backboneDecoupling producers from consumers through a durable q"
+  GLUE  1440x900 @116% text  "Event-Driven Backboneasync backboneDecoupling producers from consumers through a durable q"
+
+companion relation (title / tail)
+  GLUE  1440x900            "Notifications delivery boundary"
+  GLUE  1024x768            "Notificationsdelivery boundary"
+  GLUE  1440x900 @116% text  "Notifications delivery boundary"
+
+focus timer (value / phase)
+  GLUE  1440x900            "25:00 FOCUS"
+  GLUE  1024x768            "25:00 FOCUS"
+  GLUE  1440x900 @116% text  "25:00 FOCUS"
+
+walkthrough arc step (numeral / title)
+  GLUE  1440x900            "1 The producer emits and moves on"
+  GLUE  1024x768            "1 The producer emits and moves on"
+  GLUE  1440x900 @116% text  "1 The producer emits and moves on"
+
+model-script summary (label / sub)
+  GLUE  1440x900            "What a complete answer sounds like model script * the full arc, not just the opener"
+  GLUE  1024x768            "What a complete answer sounds like model script * the full arc, not just the opener"
+  GLUE  1440x900 @116% text  "What a complete answer sounds like model script * the full arc, not just the opener"
+
+drill probe nav (numeral / signal)
+  GLUE  1440x900            "1what event-driven is"
+  GLUE  1024x768            "1what event-driven is"
+  GLUE  1440x900 @116% text  "1what event-driven is"
+
+--read-zoom measured: 1440x900 -> 1 (default) | 1024x768 -> 1 (default) | 1440x900 @116% text -> 1.16
+sites x conditions: 21   separator present: 0   GLUED: 21   not rendered: 0
+
+=== TIP (round 2) -- authored separator across the audit's binding layout conditions ===
+
+room button (numeral / name)
+  SEP   1440x900            "1, Messaging & Events"
+  SEP   1024x768            "1, Messaging & Events"
+  SEP   1440x900 @116% text  "1, Messaging & Events"
+
+topic card (title / kicker / description)
+  SEP   1440x900            "Event-Driven Backbone, async backbone, Decoupling producers from consumers through a durab"
+  SEP   1024x768            "Event-Driven Backbone, async backbone, Decoupling producers from consumers through a durab"
+  SEP   1440x900 @116% text  "Event-Driven Backbone, async backbone, Decoupling producers from consumers through a durab"
+
+companion relation (title / tail)
+  SEP   1440x900            "Notifications , delivery boundary"
+  SEP   1024x768            "Notifications, delivery boundary"
+  SEP   1440x900 @116% text  "Notifications , delivery boundary"
+
+focus timer (value / phase)
+  SEP   1440x900            "25:00 , FOCUS"
+  SEP   1024x768            "25:00 , FOCUS"
+  SEP   1440x900 @116% text  "25:00 , FOCUS"
+
+walkthrough arc step (numeral / title)
+  SEP   1440x900            "1 , The producer emits and moves on"
+  SEP   1024x768            "1 , The producer emits and moves on"
+  SEP   1440x900 @116% text  "1 , The producer emits and moves on"
+
+model-script summary (label / sub)
+  SEP   1440x900            "What a complete answer sounds like , model script * the full arc, not just the opener"
+  SEP   1024x768            "What a complete answer sounds like , model script * the full arc, not just the opener"
+  SEP   1440x900 @116% text  "What a complete answer sounds like , model script * the full arc, not just the opener"
+
+drill probe nav (numeral / signal)
+  SEP   1440x900            "1, what event-driven is"
+  SEP   1024x768            "1, what event-driven is"
+  SEP   1440x900 @116% text  "1, what event-driven is"
+
+--read-zoom measured: 1440x900 -> 1 (default) | 1024x768 -> 1 (default) | 1440x900 @116% text -> 1.16
+sites x conditions: 21   separator present: 21   GLUED: 0   not rendered: 0

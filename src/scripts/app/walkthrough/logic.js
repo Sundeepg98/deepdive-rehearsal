@@ -80,7 +80,7 @@ details.model{margin-top:var(--space-18);background:linear-gradient(135deg,var(-
 details.model[open]{box-shadow:0 0 0 1px var(--acc-a08),var(--surf-sh)}
 details.model>summary{cursor:pointer;list-style:none;padding:var(--space-15) var(--space-18);font:var(--font-weight-heavy) 13.5px var(--sans);color:var(--accink);display:flex;align-items:baseline;gap:var(--space-10);user-select:none;transition:background var(--duration-base) var(--ease-base),padding var(--duration-base) var(--ease-base)}
 details.model>summary::-webkit-details-marker{display:none}
-details.model>summary::before{content:"\\25B8";color:var(--acc);transition:transform var(--duration-moderate) var(--ease-spring);font-size:var(--font-size-caption);flex:none;display:inline-flex;align-items:center;justify-content:center;width:var(--space-18);height:var(--space-18);border-radius:5px;background:var(--accbg)}
+details.model>summary::before{content:"\\25B8";content:"\\25B8" / "";color:var(--acc);transition:transform var(--duration-moderate) var(--ease-spring);font-size:var(--font-size-caption);flex:none;display:inline-flex;align-items:center;justify-content:center;width:var(--space-18);height:var(--space-18);border-radius:5px;background:var(--accbg)}
 details.model[open]>summary::before{transform:rotate(90deg)}
 details.model>summary .sub{font-weight:var(--font-weight-semibold);color:var(--mut);font-size:var(--font-size-micro);letter-spacing:var(--track-px-0-3)}
 details.model>summary:hover{background:var(--acc2-a07);padding-left:var(--space-20)}
@@ -119,7 +119,7 @@ details.model>summary:hover{background:var(--acc2-a07);padding-left:var(--space-
 .arc-step.on{border-color:var(--acc);background:linear-gradient(135deg,var(--accbg) 0%,var(--acc-a06) 100%);box-shadow:0 0 0 1px var(--acc),0 0 20px -6px var(--acc-a18),var(--surf-sh);transform:translateY(-2px)}
 .arc-step.on .arc-n{background:linear-gradient(135deg,var(--acc),var(--acc2));color:var(--on-slab);box-shadow:0 2px 8px -2px var(--acc-a40)}
 .arc-step.done .arc-n{background:transparent;color:var(--acc);box-shadow:inset 0 0 0 1.5px var(--acc)}
-.arc-step.done .arc-n::after{content:"\\2713";font-size:var(--font-size-nano);margin-left:var(--space-1)}
+.arc-step.done .arc-n::after{content:"\\2713";content:"\\2713" / "";font-size:var(--font-size-nano);margin-left:var(--space-1)}
 .arc-step:active{background:var(--accbg)}
 `;
 var WALK_HTML = `<div class="dots" id="wdots"></div>

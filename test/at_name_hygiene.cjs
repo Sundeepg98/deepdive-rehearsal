@@ -26,7 +26,8 @@
  *
  * FOUR ARMS:
  *   A  every Wave-A composition site carries an AUTHORED separator between its parts -- and the
- *      separator primitive is genuinely off-screen and genuinely non-whitespace.
+ *      separator primitive is genuinely off-screen and its text is EXACTLY ", ", at all twelve
+ *      sites including the one built through the DOM rather than authored in markup.
  *   B  every decorative glyph in the H1/H2/H3 inventory is out of the nameable subtree.
  *   C  the two families the audit found colliding (home header, per-group Cram) carry
  *      per-instance names.
@@ -121,12 +122,18 @@ const SEP_SITES = [
     re: gapped([lit('complete answer sounds like'), lit('nsep')], [60]) },
 ];
 
-/* The separator PRIMITIVE itself. Two properties, both load-bearing:
-   - it must be genuinely off-screen, or every one of the sites above paints a comma; and
-   - its text must contain a NON-WHITESPACE character. A whitespace-only separator is exactly the
-     bug the model-script summary already shipped: `sounds like <span class="sub">` authored a real
-     space and it was still heard as "likemodel", because whitespace at a block boundary is
-     collapsed away. Only a real character survives. */
+/* The separator PRIMITIVE itself. Three properties, all load-bearing:
+   - it must be genuinely off-screen, or every one of the sites above paints a comma;
+   - its text must be EXACTLY ", ". Not "non-whitespace" -- that was the first version of this
+     assertion and a cold verify broke it in one line: a period is non-whitespace, so drive 1's
+     defect (NVDA speaking the word "dot" on every card) could be reintroduced at all twelve sites
+     with the gate still green. The one finding this wave turns on has to be the one thing the
+     gate pins hardest. A space is rejected for the older reason: the model-script summary already
+     authored a literal space at exactly this seam and was still heard as "likemodel", because
+     whitespace at a block boundary is collapsed away; and
+   - the check must reach the DOM-API site too. Eleven separators are authored in markup and one
+     is built with createElement (the focus timer), and a scan of `class="nsep"...>text<` cannot
+     see the twelfth -- so the timer's separator could be set to a bare space and pass. */
 function armA(m) {
   const out = [];
   const css = m['src/styles.css'];
@@ -138,16 +145,23 @@ function armA(m) {
   out.push(['[nsep] the shadow-root primitive is declared (BASE_SHEET reaches all 17 hosts)',
     hidden.test(base) && clipped.test(base), 'base-styles.js has no off-screen .nsep rule']);
 
-  let nonWs = 0, wsOnly = [];
+  const SEP = ', ';
+  let found = 0;
+  const wrong = [];
   for (const f of FILES) {
     const re = /class="nsep"[^>]*>([^<]*)</g;
     let mm;
-    while ((mm = re.exec(m[f]))) { if (/\S/.test(mm[1])) nonWs++; else wsOnly.push(f + ' -> ' + JSON.stringify(mm[1])); }
+    while ((mm = re.exec(m[f]))) { found++; if (mm[1] !== SEP) wrong.push(f + ' -> ' + JSON.stringify(mm[1])); }
   }
-  out.push(['[nsep] every authored separator carries a NON-WHITESPACE character',
-    nonWs > 0 && wsOnly.length === 0,
-    wsOnly.length ? 'whitespace-only separators (they get collapsed): ' + wsOnly.join(', ')
-      : 'no authored separator found at all']);
+  /* the twelfth separator is built through the DOM, so it is invisible to the scan above */
+  const pom = m['src/scripts/app/pomodoro.js'];
+  const domSep = /className = 'nsep';[\s\S]{0,120}?textContent = ('[^']*')/.exec(pom);
+  if (!domSep) wrong.push('pomodoro.js -> no DOM-API separator found at all');
+  else { found++; if (domSep[1] !== "', '") wrong.push('pomodoro.js -> ' + domSep[1]); }
+  out.push(['[nsep] every separator is EXACTLY ", " -- markup AND the DOM-API site',
+    found === 12 && wrong.length === 0,
+    wrong.length ? 'wrong separator text (a period is SPOKEN, a space is collapsed): ' + wrong.join(', ')
+      : 'expected 12 separators, found ' + found]);
 
   for (const s of SEP_SITES) {
     out.push(['[sep] ' + s.id, s.re.test(m[s.file]),
@@ -216,6 +230,20 @@ const GLYPHS = [
     re: gapped([lit('id="ssgo"'), lit('aria-hidden="true"')], [120]) },
   { id: 'session panel print button (#ssprint)', file: 'src/scripts/app/session-progress.js',
     re: gapped([lit('id="ssprint"'), lit('aria-hidden="true"')], [90]) },
+  /* Three more CSS-generated glyphs, and the reason they were missed is worth keeping. All three
+     are in a STATE or on a ROLE the first pass never instantiated: the completed walkthrough step
+     only exists after you finish one, and Chromium reports a <summary> as DisclosureTriangle, not
+     button -- which is the role filter the wave's own runtime sweep used. So the sweep that caught
+     #wnext could not have caught these. The completed step was found by the cold verify and heard
+     as "check"; the two triangles were found by widening the sweep to every generated-content
+     glyph in the source and then measuring their names, and they are heard as "filled
+     right-pointing small triangle" in at1-d4 and at1-d5. */
+  { id: 'completed walkthrough step U+2713 (heard as "check")', file: 'src/scripts/app/walkthrough/logic.js',
+    re: /\.arc-step\.done \.arc-n::after\{[\s\S]{0,140}?content:"\\\\2713" \/ ""/ },
+  { id: 'model-script disclosure triangle U+25B8', file: 'src/scripts/app/walkthrough/logic.js',
+    re: /details\.model>summary::before\{[\s\S]{0,140}?content:"\\\\25B8" \/ ""/ },
+  { id: 'inline disclosure triangle U+25B8 (Go deeper / See the code)', file: 'src/scripts/app/shared-sheets.js',
+    re: /details\.disc summary::before\{[\s\S]{0,140}?content:"\\\\25B8" \/ ""/ },
 ];
 
 /* P3-8: all four toggles must say their state ONCE, through aria-pressed. Two of them shipped the
@@ -313,6 +341,25 @@ const MUTANTS = [
   ['A', 'make the separator whitespace-only (the likemodel bug)', (m) => {
     const o = Object.assign({}, m);
     for (const f of FILES) o[f] = o[f].replace(/(class="nsep"[^>]*>)[^<]*(<)/g, '$1 $2');
+    return o;
+  }],
+  /* Drive 1's exact defect, at one site and at all twelve. The first version of arm A asserted
+     only "non-whitespace" and passed both of these 47/47. */
+  ['A', 'a period at ONE separator site (drive 1s exact defect)', (m) => {
+    const o = Object.assign({}, m);
+    o['src/scripts/app/panels.js'] = o['src/scripts/app/panels.js']
+      .replace('<span class="nsep">, </span>', '<span class="nsep">. </span>');
+    return o;
+  }],
+  ['A', 'a period at EVERY separator site', (m) => {
+    const o = Object.assign({}, m);
+    for (const f of FILES) o[f] = o[f].replace(/(class="nsep"[^>]*>), (<)/g, '$1. $2');
+    return o;
+  }],
+  ['A', 'a bare space at the DOM-API separator (invisible to a markup scan)', (m) => {
+    const o = Object.assign({}, m);
+    o['src/scripts/app/pomodoro.js'] = o['src/scripts/app/pomodoro.js']
+      .replace("sep.textContent = ', ';", "sep.textContent = ' ';");
     return o;
   }],
   ['A', 'let the separator primitive paint (drop position:absolute)', (m) => {

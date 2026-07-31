@@ -1,0 +1,52 @@
+W23 WATCHED-RED CAPTURES -- ledger L2 'Residuals'
+Base 96deb28. Every red below is on a build this wave did not author.
+
+================================================================================
+(1) room_static, WIDENED rule 1, run against src/ EXACTLY as committed at 96deb28
+    (i.e. before this wave's tw.css fix). The H-1 blind spot, made visible.
+================================================================================
+ROOM STATIC: FAIL
+  - 1 hardcoded indigo literal(s) regrew -- use an --acc-aNN rung, or color-mix(in srgb, var(--color-acc) N%, transparent) for a brand-fixed rung
+  -   at src/tw.css:49  rgba(83, 74, 183
+exit=1
+
+  ...and the SAME tree under the OLD rule (bare unspaced triple only):
+  ROOM STATIC (old rule 1): PASS -- the escapee is invisible to it
+
+================================================================================
+(2) sidebar_geometry, NEW strict arm, run against the W4 PRE-FIX deliverable
+    (git show e13217c:deepdive_content_pipeline_rehearsal.html)
+================================================================================
+=== SIDEBAR GEOMETRY -- the switcher shows its value, the nav clears the fold ===
+  FAIL  .tn-current shows the topic name at 1024px (ratio >= 0.3)  -- clientWidth 18 / scrollWidth 146 = 0.123  name="Event-Driven Backbone"
+  FAIL  .tn-current is a real box at 1024px (clientWidth >= 60px, name-independent)  -- clientWidth 18px  (18px pre-fix, 103px fixed, on every topic -- the sidebar is fixed-width)
+  FAIL  .tn-current shows the topic name at 1280px (ratio >= 0.3)  -- clientWidth 18 / scrollWidth 146 = 0.123  name="Event-Driven Backbone"
+  FAIL  .tn-current is a real box at 1280px (clientWidth >= 60px, name-independent)  -- clientWidth 18px  (18px pre-fix, 103px fixed, on every topic -- the sidebar is fixed-width)
+  FAIL  .tn-current shows the topic name at 1440px (ratio >= 0.3)  -- clientWidth 18 / scrollWidth 146 = 0.123  name="Event-Driven Backbone"
+  FAIL  .tn-current is a real box at 1440px (clientWidth >= 60px, name-independent)  -- clientWidth 18px  (18px pre-fix, 103px fixed, on every topic -- the sidebar is fixed-width)
+  FAIL  .tn-current shows the topic name at 1600px (ratio >= 0.3)  -- clientWidth 18 / scrollWidth 146 = 0.123  name="Event-Driven Backbone"
+  FAIL  .tn-current is a real box at 1600px (clientWidth >= 60px, name-independent)  -- clientWidth 18px  (18px pre-fix, 103px fixed, on every topic -- the sidebar is fixed-width)
+  FAIL  .tn-current shows the topic name at 1920px (ratio >= 0.3)  -- clientWidth 18 / scrollWidth 146 = 0.123  name="Event-Driven Backbone"
+  FAIL  .tn-current is a real box at 1920px (clientWidth >= 60px, name-independent)  -- clientWidth 18px  (18px pre-fix, 103px fixed, on every topic -- the sidebar is fixed-width)
+  FAIL  [negative control] with the >=920px wrap forced off, the ratio COLLAPSES to under half of live  -- forced-off ratio 0.123 vs live 0.123 (needs < 0.062)  (if this does not move, the probe is not measuring the rule and its greens mean nothing)
+  FAIL  at least 7 of the 9 pane tabs are above the fold at 1280x800  -- 4 above the fold (3 of them FULLY), .seg top=617, sidebar scrollHeight=1650  [below: trade, model, num, rf, open]
+  FAIL  at least 6 of the 9 pane tabs are FULLY above the fold at 1280x800  -- 3 fully above; first cut off is `sys` at bottom=802, 2px past the fold
+  PASS  [negative control] raising the fold line by 44px DROPS the above-fold count
+  PASS  [negative control] raising the fold line by 47px DROPS the FULLY-above count
+
+  - .tn-current shows the topic name at 1024px (ratio >= 0.3)
+  - .tn-current is a real box at 1024px (clientWidth >= 60px, name-independent)
+  - .tn-current shows the topic name at 1280px (ratio >= 0.3)
+  - .tn-current is a real box at 1280px (clientWidth >= 60px, name-independent)
+  - .tn-current shows the topic name at 1440px (ratio >= 0.3)
+  - .tn-current is a real box at 1440px (clientWidth >= 60px, name-independent)
+  - .tn-current shows the topic name at 1600px (ratio >= 0.3)
+  - .tn-current is a real box at 1600px (clientWidth >= 60px, name-independent)
+  - .tn-current shows the topic name at 1920px (ratio >= 0.3)
+  - .tn-current is a real box at 1920px (clientWidth >= 60px, name-independent)
+  - [negative control] with the >=920px wrap forced off, the ratio COLLAPSES to under half of live
+  - at least 7 of the 9 pane tabs are above the fold at 1280x800
+  - at least 6 of the 9 pane tabs are FULLY above the fold at 1280x800
+
+SIDEBAR GEOMETRY: FAIL  (13 of 15 assertion(s))
+exit=1

@@ -54,11 +54,28 @@
  *
  * MIN_TABS = 7 is the audit's own line ("7-8 tabs above the fold at 800px"), and the count here
  * uses the audit's own definition -- a tab with ANY part above the fold, which is what its
- * "Visible: walk, drill, wb, sys" = 4 counted. The stricter fully-above count is REPORTED beside
- * it, deliberately unasserted: at the time of writing it is 6, because the 7th tab misses by 3px.
- * Asserting the strict count at 6 would have meant either shaving a spacing token to buy 3px --
- * gaming the measurement rather than improving the app -- or writing a threshold that says less
- * than the audit asked for. Reporting both numbers says the true thing instead.
+ * "Visible: walk, drill, wb, sys" = 4 counted.
+ *
+ * THE STRICT (fully-above) COUNT IS NOW ASSERTED, at MIN_TABS_FULL -- and the distance between the
+ * two thresholds is a real thing, not a rounding story. W4 left it unasserted because the 7th tab
+ * missed full visibility "by 3px", and declined to shave a spacing token to buy those 3px (gaming
+ * the measurement rather than improving the app; the team-lead ratified the refusal). Re-measured
+ * at 1280x800 on the deliverable committed at 96deb28, that tab (`num`) sits at bottom 829.6 and
+ * misses by 29.6px -- TEN TIMES the figure on record. Nothing regressed: the tabs themselves grew.
+ * 7*height + 6*gap was 326px when W4 measured and is 354px now, i.e. the tab box went 44px -> 48px
+ * between the two waves. The 3px trade that was declined no longer exists to take.
+ *
+ * So 7-fully-above is not one spacing token away, and reaching it would mean deleting live chrome
+ * from the column. What IS true of this build is a floor of SIX, and asserting that pins the whole
+ * of W4's sub-scope B against regrowth from above: a new block in the column, or another growth
+ * spurt in the tab box, drops the count to 5 and goes red. It asks no one to trim the thing being
+ * measured. A guard that asserts the true smaller number beats one that asserts the false bigger
+ * one -- and beats reporting a number nothing depends on, which is what this was.
+ *
+ * (Where the headroom was said to be, there is none: W4's next-pass note pointed at `.side-id`'s
+ * `.sub` and `.kbd-hint` as "the two largest blocks above the nav". Both are display:none at every
+ * width -- styles.css:628, unconditional, and present since the initial commit 8fe3077, so it was
+ * already true at W4's own base e13217c. They render 0px and there is nothing there to reclaim.)
  *
  * ---------------------------------------------------------------------------------------------
  * SELF-TEST, because a geometry probe that silently stops finding its element reports a perfect
@@ -91,6 +108,7 @@ const WIDTHS = [1024, 1280, 1440, 1600, 1920];
 const MIN_RATIO = 0.30;   /* anchored above: fixed corpus 0.365-1.000, pre-fix defect 0.063-0.243 */
 const MIN_PX = 60;        /* clientWidth is name-independent: 18px pre-fix, 103px fixed, on all 46 */
 const MIN_TABS = 7;       /* the audit's line; pre-fix 4 */
+const MIN_TABS_FULL = 6;  /* the strict count this build stands on; pre-fix 3 (W4's own scoreboard) */
 const FOLD_W = 1280, FOLD_H = 800;
 
 const fails = [], notes = [];
@@ -220,6 +238,18 @@ async function ctx(browser, w, h) {
         + ', sidebar scrollHeight=' + f.sidebarScrollH
         + '  [below: ' + (f.tabs.filter((t) => !t.anyAbove).map((t) => t.tab).join(', ') || 'none') + ']');
 
+      /* The strict arm. Reports the first tab that is NOT fully above and by how much, because
+         "6" on its own tells the next reader nothing about whether the 7th is 3px or 30px away --
+         and a stale answer to exactly that question is what this arm was written to retire. */
+      const firstCut = f.tabs.find((t) => !t.fullyAbove);
+      chk('at least ' + MIN_TABS_FULL + ' of the ' + f.total + ' pane tabs are FULLY above the fold at '
+        + FOLD_W + 'x' + FOLD_H,
+        f.fullyAbove >= MIN_TABS_FULL,
+        f.fullyAbove + ' fully above' + (firstCut
+          ? '; first cut off is `' + firstCut.tab + '` at bottom=' + firstCut.bottom
+            + ', ' + (firstCut.bottom - f.innerHeight) + 'px past the fold'
+          : '; every tab clears the fold'));
+
       /* NEGATIVE CONTROL 2: move the fold line up past the LAST tab that is currently above it;
          the count MUST drop. Anchored on what this build actually shows, NOT on MIN_TABS -- a
          shift derived from the threshold goes NEGATIVE on a build with fewer tabs above the fold
@@ -241,6 +271,25 @@ async function ctx(browser, w, h) {
           'shifted count ' + g.anyAbove + ' vs live ' + f.anyAbove
           + '  (if this does not move, the counter is not reading the fold and its greens mean nothing)');
       }
+
+      /* NEGATIVE CONTROL 3, for the strict arm, and it needs its OWN anchor. Control 2's shift is
+         derived from the last ANY-above tab's top, which on this build lands the fold at 780 --
+         still below the last fully-above tab's bottom (778.6), so the strict count does not move
+         and control 2 says nothing about it. An arm sharing another arm's control is an arm with
+         no control. This one anchors on the last FULLY-above tab's bottom, so the strict count
+         must drop by construction. */
+      const fully = f.tabs.filter((t) => t.fullyAbove);
+      if (!fully.length) {
+        chk('[negative control] the strict fold counter responds to the fold line', false,
+          'no tab is fully above the fold, so the control cannot be armed');
+      } else {
+        const shiftF = f.innerHeight - fully[fully.length - 1].bottom + 2;
+        const gf = await page.evaluate(FOLD, shiftF);
+        chk('[negative control] raising the fold line by ' + shiftF + 'px DROPS the FULLY-above count',
+          gf.fullyAbove < f.fullyAbove,
+          'shifted count ' + gf.fullyAbove + ' vs live ' + f.fullyAbove
+          + '  (if this does not move, the strict arm is not reading the fold either)');
+      }
     }
     await c.close();
   } finally {
@@ -257,7 +306,8 @@ async function ctx(browser, w, h) {
   }
   console.log('\nSIDEBAR GEOMETRY: PASS  (' + notes.length + ' assertions: .tn-current readable at '
     + WIDTHS.length + ' desktop widths, ' + MIN_TABS + '+ pane tabs above the '
-    + FOLD_W + 'x' + FOLD_H + ' fold; both negative controls moved)');
+    + FOLD_W + 'x' + FOLD_H + ' fold and ' + MIN_TABS_FULL + '+ of them fully; all three negative '
+    + 'controls moved)');
   process.exit(0);
 })().catch((e) => {
   console.log('SIDEBAR GEOMETRY: FAIL -- ' + (e && e.message ? e.message : String(e)));

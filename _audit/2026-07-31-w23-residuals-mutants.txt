@@ -1,0 +1,18 @@
+=== W23 MUTANTS -- room_static rule 1, H-1 widening ===
+tree: 96deb28 + working changes; target for injection: src/styles.css
+
+  BASELINE (no mutant, tw.css escapee already fixed):
+    clean tree                                   OLD=green    NEW=green   
+
+  MUTANTS -- each must be caught by NEW; the ones OLD misses are the H-1 gap:
+  A spaced legacy   rgba(83, 74, 183, .2)        OLD=green    NEW=RED (1)   want OLD=green  NEW=RED     OK
+  B modern slash    rgb(83 74 183 / 20%)         OLD=green    NEW=RED (1)   want OLD=green  NEW=RED     OK
+  C spaced, 2nd hue rgba(109, 95, 214, .3)       OLD=green    NEW=RED (1)   want OLD=green  NEW=RED     OK
+  D uppercase       RGBA(83,74,183,.2)           OLD=RED (1)  NEW=RED (1)   want OLD=RED    NEW=RED     OK
+
+  CONTROLS -- the widening must not narrow, and must not over-match:
+  E bare triple in a comment (OLD's catch)       OLD=RED (1)  NEW=RED (1)   want OLD=RED    NEW=RED     OK
+  F near-miss colour rgba(83, 74, 184, .2)       OLD=green    NEW=green     want OLD=green  NEW=green   OK
+  G unrelated rgba   rgba(125, 110, 210, .1)     OLD=green    NEW=green     want OLD=green  NEW=green   OK
+
+  tree restored: 0 pending change(s) to src/styles.css (want 0)

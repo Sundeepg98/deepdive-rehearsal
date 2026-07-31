@@ -46,7 +46,12 @@
     font-weight:var(--font-weight-heavy);
     letter-spacing: var(--track-px-1-6);
     background: linear-gradient(135deg, var(--color-acc) 0%, var(--color-acc2) 60%, #8B7FE8 100%);
-    box-shadow: var(--chip-sh), 0 0 20px -4px rgba(83, 74, 183, .2);
+    /* The glow is the brand indigo at 20%, and it used to say so in raw digits -- the literal form
+       of the very token the gradient above uses by name. color-mix on --color-acc is the same
+       colour by construction (sRGB, 20% against transparent), so nothing repaints; it just stops
+       the value drifting from the token if the brand ever moves. Brand-FIXED on purpose: this chip
+       does not retint per room, which is why it is not an --acc-aNN rung. */
+    box-shadow: var(--chip-sh), 0 0 20px -4px color-mix(in srgb, var(--color-acc) 20%, transparent);
   }
   .badge::after {
     content: "";

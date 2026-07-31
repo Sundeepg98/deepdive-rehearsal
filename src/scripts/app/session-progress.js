@@ -171,6 +171,14 @@ function flowRec(stats) {
   return rec;
 }
 
+/* THE FORWARD ARROW IS DECORATION, AND IT WAS BEING SPOKEN: "Start the drill right arrow,
+   button, N" (at1-d3, verbatim). Every renderer of rec.btn strips it here and re-adds it inside an
+   aria-hidden span, so the paint is byte-identical and the accessible name is not.
+   BOTH ENCODINGS, deliberately: pickRec writes the literal U+2192, while rec.btn is inserted with
+   innerHTML and test/flow_contract.cjs injects the &rarr; entity -- the same glyph, two spellings,
+   and a strip that knew only one silently doubled the arrow on the forced-rec path. */
+function flowBtnText(s) { return String(s == null ? '' : s).replace(/\s*(?:\u2192|&rarr;)\s*$/, ''); }
+
 /* Execute a rec's forward navigation. Extracted VERBATIM from the session panel's #ssgo onclick
    so the two can never drift (one-compute): the panel now calls this. Every future terminal calls
    it too. Boundaries are never auto-crossed -- flowGo runs only from a real press. */
@@ -341,7 +349,12 @@ function flowDockDesktop(d, n) {
   if (!n.rec || n.tier !== 'meso' && n.tier !== 'macro' || !n.rec.btn) { d.hidden = true; d.innerHTML = ''; d.__ndLast = null; d.classList.remove('nd-swap'); return; }
   var rec = n.rec, receipt = rec.receipt ? '<span class="nd-rcpt">' + rec.receipt + '</span>' : '';
   var html = '<span class="nd-k" style="color:' + rec.ink + '">' + rec.kicker + '</span>' +
-    '<button class="nd-go" type="button" aria-keyshortcuts="N">' + rec.btn + '</button>' + receipt;
+    /* rec.btn ends in a rightwards arrow, which was SPOKEN: "Start the drill right arrow, button, N"
+     (at1-d3). .nd-go is a flex item, not a flex container, so the wrapper is an inert inline box
+     and the rendered text is unchanged. The mobile chip already solved this its own way
+     (flowDockMobile strips the same arrow out of its aria-label). */
+    '<button class="nd-go" type="button" aria-keyshortcuts="N">' + flowBtnText(rec.btn) +
+    '<span aria-hidden="true"> &rarr;</span></button>' + receipt;
   /* P3-9 -- THE GUIDANCE SWAP MUST BE VISIBLE. The dock is the element whose whole job is "the
      situation changed", and it was the least responsive control in the app: it had no transition and
      no animation at all, so a new recommendation replaced the old one by instantaneous substitution,
@@ -378,7 +391,7 @@ function flowDockMobile(dm, n) {
   if (!n.rec || n.tier !== 'meso' && n.tier !== 'macro' || !n.rec.btn) { dm.hidden = true; dm.innerHTML = ''; dm.onclick = null; return; }
   var rec = n.rec;
   dm.innerHTML = '<span class="nd-m-k">' + rec.kicker + '</span><span class="nd-m-ar" aria-hidden="true">\u2192</span>';
-  dm.setAttribute('aria-label', rec.kicker + ' \u2014 ' + rec.btn.replace(/\s*\u2192\s*$/, ''));
+  dm.setAttribute('aria-label', rec.kicker + ' \u2014 ' + flowBtnText(rec.btn));
   dm.onclick = function () { if (typeof flowGo === 'function') flowGo(rec); };
   dm.hidden = false;
 }
@@ -757,7 +770,8 @@ function renderSession() {
   html += '<div class="ss-rec" style="border-color:' + rec.bd + ';background:' + rec.bg + '">' +
        '<div class="ss-rk" style="color:' + rec.ink + '">' + rec.kicker + '</div>' +
        '<div class="ss-rt" style="color:' + rec.ink + '">' + rec.text + '</div>' +
-       (rec.btn ? '<button class="ss-go" id="ssgo" type="button">' + rec.btn + '</button>' : '') +
+       (rec.btn ? '<button class="ss-go" id="ssgo" type="button">' + flowBtnText(rec.btn) +
+      '<span aria-hidden="true"> &rarr;</span></button>' : '') +
      '</div>';
   /* One boolean per card decides BOTH the track and the copy -- see ssBar(). */
   const dStarted = dDone > 0, wbStarted = wbDone > 0;
@@ -800,7 +814,7 @@ function renderSession() {
      scrolled, so the button did not go below the fold -- it ceased to exist. Out here their
      position does not depend on the content at all, so they cannot be pushed anywhere. */
   sessactions.innerHTML =
-    '<button class="ss-print" id="ssprint" type="button">Save this session as a PDF &rarr;</button>' +
+    '<button class="ss-print" id="ssprint" type="button">Save this session as a PDF <span aria-hidden="true">&rarr;</span></button>' +
     '<button class="ss-clear" id="ssclear" type="button">Clear this session &amp; start fresh</button>';
 
   /* "do this next" button: close, then jump to the relevant tab/overlay (and

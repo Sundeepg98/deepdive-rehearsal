@@ -33,7 +33,7 @@ ANS_SHEET.replaceSync(`
 .ans b{color:inherit;font-weight:var(--font-weight-semibold)}
 .fu{margin-top:var(--space-14);animation:pop var(--duration-moderate) var(--ease-base)}
 .fu .lab{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:var(--track-px-0-8);text-transform:uppercase;color:var(--amber);display:flex;align-items:center;gap:var(--space-7);margin-bottom:var(--space-7)}
-.fu .lab::before{content:"\\21B3";font-size:var(--font-size-body)}
+.fu .lab::before{content:"\\21B3";content:"\\21B3" / "";font-size:var(--font-size-body)}
 .fu .fq{font-size:var(--font-size-body);max-width:var(--measure);font-weight:var(--font-weight-semibold);color:var(--ink);line-height:var(--line-height-relaxed)}
 .fu .fa{font-size:var(--font-size-body);max-width:var(--measure);color:var(--ans-fg);margin-top:var(--space-10);padding:var(--space-12) var(--space-16);background:linear-gradient(135deg,var(--fa-bg) 0%,rgba(176,108,20,.03) 100%);border-left:3px solid var(--amber);border-radius:9px;line-height:var(--line-height-spacious)}
 .fu .fa b{color:var(--fa-b-fg);font-weight:var(--font-weight-bold)}
@@ -90,7 +90,7 @@ details.disc{margin-top:var(--space-12);border:1px solid var(--bd);border-radius
 details.disc[open]{border-color:var(--acc-a20);box-shadow:0 0 0 1px var(--acc-a06),var(--surf-sh)}
 details.disc summary{cursor:pointer;font:var(--font-weight-bold) 12px var(--sans);color:var(--acc);padding:var(--space-11) var(--space-15);list-style:none;display:flex;align-items:center;gap:var(--space-8);transition:background var(--duration-base) var(--ease-base),padding var(--duration-base) var(--ease-base)}
 details.disc summary::-webkit-details-marker{display:none}
-details.disc summary::before{content:"\\25B8";transition:transform var(--duration-moderate) var(--ease-spring);font-size:var(--font-size-micro);display:inline-flex;align-items:center;justify-content:center;width:var(--space-18);height:var(--space-18);border-radius:5px;background:var(--accbg)}
+details.disc summary::before{content:"\\25B8";content:"\\25B8" / "";transition:transform var(--duration-moderate) var(--ease-spring);font-size:var(--font-size-micro);display:inline-flex;align-items:center;justify-content:center;width:var(--space-18);height:var(--space-18);border-radius:5px;background:var(--accbg)}
 details.disc[open] summary::before{transform:rotate(90deg)}
 details.disc summary:hover{background:var(--acc2-a07);padding-left:var(--space-17)}
 details.disc .body{padding:var(--space-2) var(--space-16) var(--space-14);font-size:var(--font-size-body);max-width:var(--measure);color:var(--disc-body-fg);line-height:var(--line-height-spacious)}

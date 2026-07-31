@@ -312,6 +312,33 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
   
 
   /* (the badgeShimmer keyframes deleted -- referenced by nothing.) */
+  /* ===================== THE NAME SEPARATOR (Real-AT wave A) =====================
+     One primitive, used at every site where two visible pieces sit side by side and the ONLY
+     thing between them is CSS gap/margin -- which is not in any string an assistive tech reads.
+     NVDA heard those sites glued: "1Messaging and Events", "ATTRIBUTE BOUNDARYA schema-flexible",
+     "25:00FOCUS", "Infrastructure as Codeprovisioning boundary" (at1-d1/d4/d5b, verbatim).
+
+     WHY A REAL CHARACTER AND NOT A SPACE, AND NOT AN aria-label. Measured on this app, the two
+     name paths disagree: Chromium's accessible name for a room button already reads
+     "1 Messaging & Events ..." (its own block-boundary heuristic supplies that space) while NVDA
+     spoke "1Messaging". So a fix that only lands in the accname -- an aria-label, or trusting the
+     heuristic -- is invisible to the reader that found the bug. A real text node is in both.
+     And it must be NON-whitespace: the walkthrough's model-script summary already authored a
+     literal space there and was still heard as "sounds likemodel script", because whitespace at a
+     block boundary is collapsed away.
+
+     AND THE CHARACTER IS A COMMA, AT EVERY SITE, NOT A PERIOD. This wave's first re-drive shipped
+     a period at the kicker/description seam because it reads better on the page, and NVDA SPOKE
+     it: "ATTRIBUTE BOUNDARY dot A schema-flexible", on every card. NVDA substitutes the word "dot"
+     for a period that is not followed by whitespace, and NVDA's flattened text does not carry the
+     space this separator holds -- so the fix for one glue defect reproduced its sibling (the audit
+     counted 64 spoken "dot"s in the cram sheet). The comma was spoken ZERO times in that same
+     capture. One character, everywhere; do not make it prettier.
+
+     ZERO REFLOW BY CONSTRUCTION: position:absolute takes it out of flow, so it never becomes a
+     flex or grid item and never contributes to `gap`; 1x1 + clip means nothing is painted.
+     Verified against the 16 VR baselines. */
+  .nsep{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
   .locator{display:inline-block;font-family:var(--mono);font-size:var(--font-size-nano);font-weight:var(--font-weight-bold);letter-spacing:var(--track-px-0-2);text-transform:uppercase;color:var(--acc);background:var(--accbg);border:1px solid var(--topic-edge);border-radius:6px;padding:var(--space-3) var(--space-9);margin:0 0 var(--space-11) var(--space-7)}
   /* the room's 2-3 letter code -- the CVD/greyscale-safe room marker (colour alone,
      across six hues, fails; the letters do not). A hairline divider sets it off. */
@@ -449,7 +476,7 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
   .mockbtn:hover{box-shadow:0 9px 26px var(--acc-a40),inset 0 1px 0 rgba(255,255,255,.14);transform:translateY(-1px)}
   .mockbtn:active{transform:translateY(0);box-shadow:0 3px 10px var(--acc-a25),inset 0 1px 0 rgba(255,255,255,.12)}
   .crambtn{display:flex;align-items:center;gap:var(--space-11);width:100%;text-align:left;font:inherit;font-size:var(--font-size-caption);padding:var(--space-12) var(--space-15);border-radius:11px;border:1px solid var(--bd);background:var(--surf);box-shadow:var(--surf-sh);cursor:pointer;transition:transform var(--duration-base) var(--ease-glide),box-shadow var(--duration-base) var(--ease-base),border-color var(--duration-base) var(--ease-base),background var(--duration-base) var(--ease-base)}
-.crambtn:not(.cram-tog)::after{content:"\203A";margin-left:auto;font:var(--font-weight-regular) 19px var(--sans);color:var(--mut);opacity:.5;transition:var(--duration-fast);flex:none;padding-left:var(--space-6)}
+.crambtn:not(.cram-tog)::after{content:"\203A";content:"\203A" / "";margin-left:auto;font:var(--font-weight-regular) 19px var(--sans);color:var(--mut);opacity:.5;transition:var(--duration-fast);flex:none;padding-left:var(--space-6)}
 .mb-tx{flex:1;min-width:0;line-height:var(--line-height-normal)}
 .mb-t{font-weight:var(--font-weight-bold);color:var(--ink);letter-spacing:var(--track-px-0-1)}
 .mb-d{font-weight:var(--font-weight-medium);color:var(--mut)}
@@ -1731,7 +1758,7 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
 .ix-io[disabled]:hover{color:var(--mut);border-color:var(--bd)}
 .ix-reset:hover{color:#dc2626;background:rgba(220,38,38,.07)}
 .crambtn.starred .mb-t{color:var(--acc)}
-.crambtn.starred .mb-t::after{content:" \2605";color:#f59e0b}
+.crambtn.starred .mb-t::after{content:" \2605";content:" \2605" / "";color:#f59e0b}
 .ix-starred{margin-bottom:var(--space-14)}
 .ix-star-row{display:flex;flex-wrap:wrap;gap:var(--space-7);margin-top:var(--space-2)}
 .ix-star-pill{display:inline-flex;align-items:center;gap:var(--space-6);padding:var(--space-7) var(--space-12);border:1px solid var(--bd);background:var(--bg);border-radius:9px;color:var(--ink);font-size:var(--font-size-caption);font-weight:var(--font-weight-semibold);cursor:pointer;transition:border-color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base)}
@@ -1762,7 +1789,7 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
 .nt-item-t{font-size:var(--font-size-caption);font-weight:var(--font-weight-bold);color:var(--acc)}
 .nt-item-x{font-size:var(--font-size-caption);color:var(--mut2);line-height:var(--line-height-loose);white-space:pre-wrap;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .nt-empty{font-size:var(--font-size-caption);color:var(--mut);line-height:var(--line-height-spacious);padding:var(--space-20) var(--space-4);text-align:center}
-.crambtn.has-notes .mb-t::after{content:" \25CF";color:var(--acc);font-size:var(--font-size-nano);vertical-align:middle}
+.crambtn.has-notes .mb-t::after{content:" \25CF";content:" \25CF" / "";color:var(--acc);font-size:var(--font-size-nano);vertical-align:middle}
 .xd-ov{position:fixed;inset:0;z-index:var(--z-popup);display:none;align-items:flex-start;justify-content:center;background:rgba(30,28,24,.45);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:6vh var(--space-16) var(--space-16);opacity:0;transition:opacity var(--duration-base) var(--ease-base)}
 .xd-ov.open{display:flex;opacity:1}
 .xd-panel{background:var(--card);border:1px solid var(--bd);border-radius:16px;width:min(var(--space-680),100%);max-height:86vh;display:flex;flex-direction:column;box-shadow:0 24px 60px -12px rgba(20,18,40,.4)}

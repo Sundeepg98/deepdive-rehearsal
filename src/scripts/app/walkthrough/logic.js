@@ -80,7 +80,7 @@ details.model{margin-top:var(--space-18);background:linear-gradient(135deg,var(-
 details.model[open]{box-shadow:0 0 0 1px var(--acc-a08),var(--surf-sh)}
 details.model>summary{cursor:pointer;list-style:none;padding:var(--space-15) var(--space-18);font:var(--font-weight-heavy) 13.5px var(--sans);color:var(--accink);display:flex;align-items:baseline;gap:var(--space-10);user-select:none;transition:background var(--duration-base) var(--ease-base),padding var(--duration-base) var(--ease-base)}
 details.model>summary::-webkit-details-marker{display:none}
-details.model>summary::before{content:"\\25B8";color:var(--acc);transition:transform var(--duration-moderate) var(--ease-spring);font-size:var(--font-size-caption);flex:none;display:inline-flex;align-items:center;justify-content:center;width:var(--space-18);height:var(--space-18);border-radius:5px;background:var(--accbg)}
+details.model>summary::before{content:"\\25B8";content:"\\25B8" / "";color:var(--acc);transition:transform var(--duration-moderate) var(--ease-spring);font-size:var(--font-size-caption);flex:none;display:inline-flex;align-items:center;justify-content:center;width:var(--space-18);height:var(--space-18);border-radius:5px;background:var(--accbg)}
 details.model[open]>summary::before{transform:rotate(90deg)}
 details.model>summary .sub{font-weight:var(--font-weight-semibold);color:var(--mut);font-size:var(--font-size-micro);letter-spacing:var(--track-px-0-3)}
 details.model>summary:hover{background:var(--acc2-a07);padding-left:var(--space-20)}
@@ -119,19 +119,19 @@ details.model>summary:hover{background:var(--acc2-a07);padding-left:var(--space-
 .arc-step.on{border-color:var(--acc);background:linear-gradient(135deg,var(--accbg) 0%,var(--acc-a06) 100%);box-shadow:0 0 0 1px var(--acc),0 0 20px -6px var(--acc-a18),var(--surf-sh);transform:translateY(-2px)}
 .arc-step.on .arc-n{background:linear-gradient(135deg,var(--acc),var(--acc2));color:var(--on-slab);box-shadow:0 2px 8px -2px var(--acc-a40)}
 .arc-step.done .arc-n{background:transparent;color:var(--acc);box-shadow:inset 0 0 0 1.5px var(--acc)}
-.arc-step.done .arc-n::after{content:"\\2713";font-size:var(--font-size-nano);margin-left:var(--space-1)}
+.arc-step.done .arc-n::after{content:"\\2713";content:"\\2713" / "";font-size:var(--font-size-nano);margin-left:var(--space-1)}
 .arc-step:active{background:var(--accbg)}
 `;
 var WALK_HTML = `<div class="dots" id="wdots"></div>
     <div class="card" id="wcard"></div>
     <div class="nav">
-      <button type="button" id="wprev" aria-keyshortcuts="ArrowLeft">&larr; Prev</button>
+      <button type="button" id="wprev" aria-keyshortcuts="ArrowLeft"><span aria-hidden="true">&larr;</span> Prev</button>
       <span class="ctr" id="wctr"></span>
-      <button type="button" id="wnext" aria-keyshortcuts="ArrowRight">Next &rarr;</button>
+      <button type="button" id="wnext" aria-keyshortcuts="ArrowRight">Next <span aria-hidden="true">&rarr;</span></button>
     </div>
     <div class="wflow-r" id="wflowr" aria-live="polite"></div>
     <details class="model">
-      <summary>What a complete answer sounds like <span class="sub">model script &middot; the full arc, not just the opener</span></summary>
+      <summary>What a complete answer sounds like <span class="nsep">, </span><span class="sub">model script &middot; the full arc, not just the opener</span></summary>
       <div class="mbody" id="wmbody"></div>
     </details>
 
@@ -191,7 +191,7 @@ class DeepWalkthrough extends TopicPane {
       btn.type = 'button';
       btn.className = 'arc-step';
       btn.setAttribute('data-i', j);
-      btn.innerHTML = '<span class="arc-n">' + (j + 1) + '</span><span class="arc-t">' + this._steps[j].t + '</span>';
+      btn.innerHTML = '<span class="arc-n">' + (j + 1) + '</span><span class="nsep">, </span><span class="arc-t">' + this._steps[j].t + '</span>';
       this._arc.appendChild(btn);
     }
     /* model-script is data now (was a baked blob); .mbeat.ans stays LAST. */
@@ -235,13 +235,19 @@ class DeepWalkthrough extends TopicPane {
       this._flowRec = frec;
       this._next.disabled = false;
       this._next.classList.add('flow-cta');
-      this._next.innerHTML = frec.btn || 'Next &rarr;';
+      /* RUNTIME OVERWRITES THE MARKUP FIX. #wnext's innerHTML is rewritten on every step, so
+         aria-hidden authored in the template above does not survive -- measured on the built
+         deliverable, where the static fix was green and the rendered name still said "Next right
+         arrow". Every writer of this node has to carry the hider. */
+      this._next.innerHTML = frec.btn
+        ? flowBtnText(frec.btn) + '<span aria-hidden="true"> &rarr;</span>'
+        : 'Next <span aria-hidden="true">&rarr;</span>';
       if (this._flowr) this._flowr.textContent = frec.receipt || '';
     } else {
       this._flowRec = null;
       this._next.disabled = isLast;                 /* no flowRec -> the old dead-end behavior */
       this._next.classList.remove('flow-cta');
-      this._next.innerHTML = 'Next &rarr;';
+      this._next.innerHTML = 'Next <span aria-hidden="true">&rarr;</span>';
       if (this._flowr) this._flowr.textContent = '';
     }
   }

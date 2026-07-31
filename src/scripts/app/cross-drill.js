@@ -50,7 +50,7 @@
     el.querySelector('#_xd-rev').innerHTML = html;
     var rb = el.querySelector('#_xd-reveal'); if (rb) rb.style.display = 'none';
     var jr = document.createElement('div'); jr.className = 'xd-judge';
-    jr.innerHTML = '<button class="xd-got" id="_xd-got" type="button">&#10003; Handled it <span class="xd-hint">[1]</span></button><button class="xd-shk" id="_xd-shk" type="button">&#126; Shaky <span class="xd-hint">[2]</span></button>';
+    jr.innerHTML = '<button class="xd-got" id="_xd-got" type="button"><span aria-hidden="true">&#10003;</span> Handled it <span class="xd-hint">[1]</span></button><button class="xd-shk" id="_xd-shk" type="button"><span aria-hidden="true">&#126;</span> Shaky <span class="xd-hint">[2]</span></button>';
     body.appendChild(jr);
     revealed = true;
     el.querySelector('#_xd-got').onclick = function () { grade(true); };

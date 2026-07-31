@@ -18,6 +18,7 @@ This replaces per-edit manual vigilance with tooling that runs on every build:
   sidebar_geometry the switcher shows its value; the nav clears the fold  (browser)
   rail_integrity   the coaching rail NEVER shows another topic's note      (browser)
   layout_static    source-level layout assertions (a regex; SEES NO PIXELS)
+  at_name_hygiene  composed control NAMES carry authored separators; glyphs are hidden
   visual_regression the app is RENDERED and its pixels diffed vs baselines (browser)
 
 A NOTE ON WHAT A GREEN GATE MEANS (learned the hard way, 2026-07-11).
@@ -349,7 +350,40 @@ for name, cmd in [('ascii_guard', ['python3', 'test/ascii_guard.py']),
                   # It states its own scope: a SHORT, REWORDED theft is caught by neither arm.
                   # Same compiled-slice surface and same independent markdown coverage scan as
                   # bank_pushback. Pure node, no browser, ~0.6s.
-                  ('bank_novelty', ['node', 'test/bank_novelty.cjs'])]:
+                  ('bank_novelty', ['node', 'test/bank_novelty.cjs']),
+                  # THE NAME-HYGIENE RATCHET (Real-AT wave A). The first check in this gate written
+                  # against what a real screen reader SAID rather than what an attribute contains.
+                  # It is a SOURCE check on purpose, and the reason is the one thing this round
+                  # measured that no static pass could: the two name paths disagree. Chromium's own
+                  # accessible name for a room button already reads "1 Messaging & Events ..." --
+                  # its block-boundary heuristic supplies that space -- while NVDA spoke
+                  # "1Messaging". A browser check asserting on the accname would therefore have
+                  # certified these controls GREEN while a real reader glued them: a check whose
+                  # reference comes from the system under test, which is exactly the failure this
+                  # gate's own header warns about. What survives BOTH paths is a real character in
+                  # a real text node, and that is a property of the source.
+                  # Four arms: every one of the 12 composition sites carries a separator that is
+                  # EXACTLY ", " (markup and the one built through the DOM alike); the decorative-
+                  # glyph inventory out of every nameable subtree; the two families that collided
+                  # (home header, per-group Cram) named per instance; and an ACCIDENTAL-REPAIR guard
+                  # that fails if anyone "fixes" the glue by editing the two topic descriptions NVDA
+                  # happened to expose instead of the markup -- the audit's binding rule, made
+                  # mechanical. RED on 47 of 50 assertions against the pre-wave source; the 3 green
+                  # are that guard, which is correctly green before the wave.
+                  # ELEVEN mutants every run, and it ABORTS unless every one is detected: strip the
+                  # separators; make one whitespace-only; a period at ONE site and at ALL twelve; a
+                  # bare space at the DOM-API site; let the primitive paint; un-hide the glyphs;
+                  # collapse the Cram names; put the header keys back in the name; rewrite the
+                  # corpus; leak a separator into it. The four period/space mutants exist because a
+                  # cold verify broke the first version of arm A with them: it asserted only
+                  # "non-whitespace", and a period is non-whitespace -- so the single defect this
+                  # wave discovered by ear (NVDA speaking the word "dot" on every card) could be
+                  # reintroduced at all twelve sites with the gate still green.
+                  # Pure node, no browser, no fonts, no pixels -- so it is platform-deterministic
+                  # and never SKIPs. The as-heard half is an acceptance receipt, not a gate check:
+                  # _audit/2026-07-31-w24-names.md, with the independent cold verify beside it in
+                  # _audit/2026-07-31-w24-names-coldverify.md.
+                  ('at_name_hygiene', ['node', 'test/at_name_hygiene.cjs'])]:
     r = run(cmd)
     st = 'PASS' if r.returncode == 0 else 'FAIL'
     results.append((name, st, report(r) + fail_dump(name, r, st)))

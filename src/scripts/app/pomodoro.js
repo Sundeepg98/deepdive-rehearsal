@@ -131,10 +131,15 @@
     timeText = document.createElement('span');
     timeText.className = 'pomodoro-time';
     timeText.textContent = fmt(WORK);
+    /* "25:00FOCUS" (at1-d5b B1-arrow-read-24). The value and its phase are two block-level
+       children of a column flex box, so nothing separates them in any string a reader gets. */
+    var sep = document.createElement('span');
+    sep.className = 'nsep';
+    sep.textContent = ', ';
     phaseText = document.createElement('span');
     phaseText.className = 'pomodoro-phase';
     phaseText.textContent = 'Focus';
-    meta.appendChild(timeText); meta.appendChild(phaseText);
+    meta.appendChild(timeText); meta.appendChild(sep); meta.appendChild(phaseText);
 
     playBtn = document.createElement('button');
     playBtn.type = 'button';

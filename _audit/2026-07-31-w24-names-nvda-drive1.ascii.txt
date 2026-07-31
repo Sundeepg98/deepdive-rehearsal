@@ -1,0 +1,687 @@
+[focus-gate-attempt-1]  PASS
+    | Home -- Deep Rehearsal - Google Chrome
+
+[A1-reload-f5]  (action 1930ms)
+    | Content Pipeline -- Deep Rehearsal, document. Topic controls, complementary landmark, DEEP REHEARSAL. main landmark, clickable, START Event-Driven Backbone Drill the interviewer's follow-ups, rebuild the design from memory, then run a timed mock., button. Start here: Start the drill. Home
+
+[focus-gate-attempt-1]  PASS
+    | Home -- Deep Rehearsal - Google Chrome
+
+[A2-arrival]  (action 0ms)
+    (silence)
+
+[B1-ctrl-home]  (action 1273ms)
+    | DEEP REHEARSAL
+
+[B2-first-tab-stop]  (action 1327ms)
+    | Search, button, slash Control plus K Meta plus, K
+
+[B3-second-tab-stop]  (action 1321ms)
+    | Topic index, button, backslash
+
+[C-home-tab-01]  (action 1313ms)
+    | Shortcuts, button, question
+
+[C-home-tab-02]  (action 1316ms)
+    | Theme, button
+
+[C-home-tab-03]  (action 1322ms)
+    | START Event-Driven Backbone Drill the interviewer's follow-ups, rebuild the design from memory, then run a timed mock., button
+
+[C-home-tab-04]  (action 1318ms)
+    | 1,Messaging and Events 7 topics 0 of 7 started 0 percent drilled, button
+
+[C-home-tab-05]  (action 1320ms)
+    | 2,Data and Storage 10 topics 0 of 10 started 0 percent drilled, button
+
+[C-home-tab-06]  (action 1309ms)
+    | 3,Reliability and Observability 8 topics 0 of 8 started 0 percent drilled, button
+
+[C-home-tab-07]  (action 1324ms)
+    | 4,Platform and Infra 11 topics 0 of 11 started 0 percent drilled, button
+
+[C-home-tab-08]  (action 1315ms)
+    | 5,Architecture and AP Is 7 topics 0 of 7 started 0 percent drilled, button
+
+[C-home-tab-09]  (action 1319ms)
+    | 6,Security and Tenancy 3 topics 0 of 3 started 0 percent drilled, button
+
+[C-home-tab-10]  (action 1332ms)
+    | Cross-topic drill Random probes from every topic -- the interview shuffle, button
+
+[C-home-tab-11]  (action 1363ms)
+    | Filter topics, edit, Filter topics by name or idea..., blank
+
+[C-home-tab-12]  (action 1342ms)
+    | Cram: Messaging and Events, button
+
+[C-home-tab-13]  (action 1333ms)
+    | Event-Driven Backbone,ASYNC BACKBONE dot Decoupling producers from consumers through a durable queue -- a producer emits an event and moves on, the queue buffers and absorbs bursts, a consumer pulls at its own pace -- where the delivery guarantee is at-least-once, so the consumer must be idempotent and the inevitable duplicates become harmless rather than a second charge or a double-shipped order., button
+
+[C-home-tab-14]  (action 1326ms)
+    | Notifications,DELIVERY BOUNDARY dot The stage that turns an event into a notification the right user actually sees -- dual-channel in-app and email, idempotent so a retry never double-sends, with a fallback when a channel is missed., button
+
+[C-home-tab-15]  (action 1350ms)
+    | Real-Time Delivery,PUSHING TO CONNECTED CLIENTS dot Real-time delivery is pushing data to connected clients the moment it changes -- a chat message, a live feed update, a presence change, a score -- which inverts the usual request slash response model: the server must push rather than wait to be asked, so you need a persistent connection (Web Socket, SSE, or long-poll) and a fan-out strategy to route each event to the right connections. The two hard problems are the transport choice (bidirectional Web Socket versus server-push SSE versus a long-poll fallback, each trading capability against simplicity) and fan-out (on-write: push to every interested connection when an event happens, versus on-read: let clients pull and merge -- the classic timeline trade), layered on the operational reality of managing millions of stateful connections: a connection registry, graceful drains (a deploy is a mass reconnect -- you cannot migrate a live socket), presence, reconnection with resume, and backpressure when a client cannot keep up., button
+
+[C-home-tab-16]  (action 1345ms)
+    | Change Data Capture,CHANGE STREAM dot Reliably propagating every committed change in a database to other systems -- a search index, a cache, a warehouse, another service -- without the dual-write problem, by making the database's own commit the single source of change events: either a transactional outbox written in the same transaction and relayed, or log-based capture that tails the write-ahead log., button
+
+[C-home-tab-17]  (action 1354ms)
+    | Kafka Internals,THE DISTRIBUTED LOG dot Kafka is a distributed, append-only commit log -- topics split into partitions, each an ordered, immutable sequence of records that consumers read by tracking an offset -- and that log model is what gives it its properties: high throughput (sequential disk writes, partitioned parallelism), durability and replay (records are retained, not deleted on read), and per-partition ordering; the design consequences to understand are how partitions enable parallelism (and the ordering-vs-parallelism trade), how consumer groups distribute partitions and how consumer lag signals a slow consumer, how replication (ISR) provides durability, and how the log model delivers at-least-once with a path to exactly-once., button
+
+[C-home-tab-18]  (action 1337ms)
+    | Stream and Batch Processing,PROCESSING DATA IN MOTION AND AT REST dot Stream and batch are the two models for computing over large data: batch processes a bounded, finite dataset all at once (high throughput, high latency -- a job over yesterday's data), while stream processes an unbounded, continuous flow record-by-record or in small windows as data arrives (low latency, but results are always so far ). The core distinction is bounded versus unbounded data, and it forces different mental models: batch has a natural end, so aggregations are simple and correctness is easy; streaming has no end, so you compute over windows of time, must handle out-of-order and late data (via watermarks), and must define what exactly-once means when records can be reprocessed across failures. The design decisions are which model fits the requirement (latency versus throughput versus correctness), how to window and cope with event-time skew, and the architecture that reconciles both -- lambda (run batch and stream in parallel and merge) versus kappa (stream-only, reprocess history by replaying the log)., button
+
+[C-home-tab-19]  (action 1331ms)
+    | The Saga Pattern,DISTRIBUTED TRANSACTIONS dot Managing a transaction that spans multiple services -- where you can't hold one ACID transaction across service boundaries -- by breaking it into a sequence of local transactions, each with a compensating action that semantically undoes it, so that if a later step fails you run the compensations in reverse to unwind the work -- trading atomicity for eventual consistency, because a distributed lock across services (two-phase commit) doesn't scale., button
+
+[C-home-tab-20]  (action 1339ms)
+    | Cram: Data and Storage, button
+
+[C-home-tab-21]  (action 1357ms)
+    | Caching Strategies,CACHE LAYER dot Serving reads from a fast store in front of the source of truth to cut latency and load -- where the hard part is not the lookup but keeping the cache consistent with the source, which is why cache-aside with explicit invalidation and a TTL safety net is the default, and the failure modes you design for are the stampede, the stale read, and the cache going down., button
+
+[C-home-tab-22]  (action 1338ms)
+    | Soft Deletes,LOGICAL DELETE dot Marking a row deleted with a flag or timestamp instead of physically removing it -- so a delete is reversible, history and references survive, and an audit trail stays intact -- at the cost that every query must now exclude the deleted rows, unique constraints and foreign keys need rethinking, and the data eventually has to be purged for real., button
+
+[C-home-tab-23]  (action 1340ms)
+    | Attribute Store,ATTRIBUTE BOUNDARY dot A schema-flexible attribute store -- per-device config as rows, not columns -- so a new setting is a definition row, not a migration; typed and JSON-Schema-validated at write, resolved as override-over-default., button
+
+[C-home-tab-24]  (action 1349ms)
+    | Shared Definition and Overrides,OVERRIDE WATERFALL dot One shared definition holding the contract and default exactly once, plus a per-entity values table holding only the deviations -- resolved with a LEFT JOIN and COALESCE, and for a hierarchy a DISTINCT ON with ORDER BY specificity so the narrowest override wins in one pass. It is the keystone a rule catalog, a feature-flag hierarchy, and an EAV model all reduce to., button
+
+[C-home-tab-25]  (action 1343ms)
+    | Replication and Quorums,THE COPIES SEAM dot Keeping copies of data on multiple nodes -- so the system survives a node failing, reads scale across replicas, and data lives near its users -- via a leader that accepts writes and followers that copy them (synchronously for safety or asynchronously for speed), or a leaderless scheme where quorums of nodes agree; with the central tension that replication buys availability and throughput at the cost of consistency between the copies., button
+
+[C-home-tab-26]  (action 1340ms)
+    | Consistency Models,THE CONSISTENCY SPECTRUM dot A consistency model is the contract a distributed data store gives you about what a read is allowed to observe after writes -- because once data is replicated and accessed concurrently, a read can see a stale value, an out-of-order value, or one of two conflicting values unless the system promises otherwise. The models form a spectrum from strong (linearizable: every read sees the latest committed write, as if there were a single copy) to weak (eventual: replicas converge given enough quiet time, and reads may be stale in the meantime), with genuinely useful middle points -- read-your-writes, monotonic reads, causal. Stronger consistency costs latency and availability (CAP under a partition, PACELC even without one), so the design skill is not make everything strong -- it is choosing the weakest model that still satisfies each operation, and often tuning it per read (a strong balance check, an eventual like count)., button
+
+[C-home-tab-27]  (action 1332ms)
+    | Sharding and Partitioning,SPLITTING DATA ACROSS NODES dot Sharding is horizontally partitioning data across multiple nodes when one node can no longer hold the data or serve the write load -- and it is primarily a design decision dominated by two choices: the partition key and the partitioning scheme. The key determines everything downstream: a good key spreads data and load evenly and keeps the common queries on a single shard, while a bad key creates a hot shard (a celebrity, a monotonically-increasing key) or forces every query to scatter-gather across all shards. The scheme (range, hash, or directory) trades range-query support against even distribution. And the genuinely hard part is operational -- resharding a live system without downtime, queries and transactions that span shards, rebalancing when shards grow uneven -- which is exactly why sharding is a last resort you defer until read replicas, caching, and vertical scaling are exhausted., button
+
+[C-home-tab-28]  (action 1323ms)
+    | Consistent Hashing,THE HASH RING dot Distributing keys across a changing set of nodes so that adding or removing one node remaps only a small fraction of keys (about K slash N) instead of nearly all of them -- by mapping both keys and nodes onto a hash ring and assigning each key to the next node clockwise, with virtual nodes to keep the distribution even -- because naive modulo hashing reshuffles almost everything whenever the node count changes, which is catastrophic for caches and sharded stores., button
+
+[C-home-tab-29]  (action 1344ms)
+    | Storage Engines,HOW DATA IS STORED ON DISK dot How a database physically lays out data on disk to make reads and writes fast -- the choice of storage engine -- which comes down mostly to two families: B-trees (update in place, keep data sorted in fixed pages; read-optimized, the default for relational databases) and LSM-trees (buffer writes in memory, flush sorted immutable files, merge them in the background; write-optimized, used by Cassandra, Rocks DB, and column stores); the engine determines the fundamental trade-offs in read, write, and space amplification, so choosing (or understanding) it is choosing where your workload pays -- reads vs writes vs storage., button
+
+[C-home-tab-30]  (action 1336ms)
+    | Probabilistic Data Structures,APPROXIMATE ANSWERS AT SCALE dot Probabilistic data structures answer questions about massive datasets approximately, in a tiny fraction of the memory an exact answer would need, by trading a small, bounded, tunable error for enormous space savings. The three canonical ones each answer a different question: Bloom filters -- set membership ( have I seen this? ), with no false negatives but a tunable false-positive rate; Hyper Log Log -- cardinality ( how many distinct? ), in a few kilobytes regardless of set size; Count-Min Sketch -- frequency ( how many times, and who are the heavy hitters? ), in sublinear space. The core idea is that many real questions at scale -- deduplication, does this key exist before I pay for a disk read, unique visitors, top-K, rate slash frequency estimation -- do not need an exact answer, and hashing-based sketches deliver a good-enough answer in constant or logarithmic memory where an exact structure (a hash set of every element, a counter per key) would need gigabytes. The design skill is recognizing when approximate-but-tiny beats exact-but-huge, choosing the structure by the question, and sizing it to an acceptable error., button
+
+[C-home-tab-31]  (action 1348ms)
+    | Cram: Reliability and Observability, button
+
+[C-home-tab-32]  (action 1340ms)
+    | Retries, Timeouts, Deadlines,THE WAITING BOUND dot Bounding how long you wait and how you re-attempt when a dependency is slow or failing -- a timeout so one call can't hang forever, a retry with backoff and jitter so a transient failure recovers without stampeding, and a deadline propagated across the call chain so the whole request shares one time budget -- because unbounded waits and naive retries are exactly how one slow dependency becomes a system-wide outage., button
+
+[C-home-tab-33]  (action 1334ms)
+    | Idempotency,THE RETRY-SAFE SEAM dot Making an operation safe to apply more than once -- so a retried request, a redelivered message, or a double-clicked button produces the same result as a single application, not a double charge or a duplicate record -- by giving each operation a stable identity the system records and deduplicates, because exactly-once delivery doesn't exist in a distributed system and at-least-once plus idempotency is how you get an exactly-once effect., button
+
+[C-home-tab-34]  (action 1342ms)
+    | Circuit Breaker,THE FAIL-FAST SWITCH dot Stopping calls to a dependency that's clearly failing -- tripping open once errors cross a threshold so requests fail fast instead of piling onto a struggling service, then probing half-open to detect recovery before closing again -- so a failing dependency degrades one feature gracefully rather than exhausting the caller and cascading into a system-wide outage., button
+
+[D0-ctrl-home]  (action 1282ms)
+    | DEEP REHEARSAL
+
+[D-find-hero-01]  (action 1321ms)
+    | Search, button, slash Control plus K Meta plus, K
+
+[D-find-hero-02]  (action 1319ms)
+    | Topic index, button, backslash
+
+[D-find-hero-03]  (action 1314ms)
+    | Shortcuts, button, question
+
+[D-find-hero-04]  (action 1311ms)
+    | Theme, button
+
+[D-find-hero-05]  (action 1311ms)
+    | START Event-Driven Backbone Drill the interviewer's follow-ups, rebuild the design from memory, then run a timed mock., button
+
+[D1-enter-topic]  (action 1731ms)
+    | Study content, main landmark, MECHANICS, Walkthrough, heading, level 2. Messaging and Events: Event-Driven Backbone
+
+[focus-gate-attempt-1]  PASS
+    | Walkthrough -- Deep Rehearsal - Google Chrome
+
+[E0-ctrl-home]  (action 1276ms)
+    | Topic controls, complementary landmark, DEEP REHEARSAL
+
+[E-arrow-01]  (action 1273ms)
+    | graphic, Messaging and Events -- async backbone
+
+[E-arrow-02]  (action 1284ms)
+    | heading, level 1, Event-Driven Backbone
+
+[E-arrow-03]  (action 1268ms)
+    | toggle button, not pressed, F, Toggle focus mode
+
+[E-arrow-04]  (action 1271ms)
+    | Switch topic, navigation landmark, button, H, Home -- topic index
+
+[E-arrow-05]  (action 1278ms)
+    | button, left bracket, Previous topic
+
+[E-arrow-06]  (action 1287ms)
+    | menu button, collapsed, sub Menu, REHEARSING Event-Driven Backbone
+
+[E-arrow-07]  (action 1274ms)
+    | button, right bracket, Next topic
+
+[E-arrow-08]  (action 1270ms)
+    | START HERE
+
+[E-arrow-09]  (action 1278ms)
+    | button, N, Start the drill
+
+[E-arrow-10]  (action 1279ms)
+    | 0 of 21 graded
+
+[E-arrow-11]  (action 1272ms)
+    | button, Mock run -- the full round, on the clock
+
+[E-arrow-12]  (action 1272ms)
+    | toggle button, not pressed, Interviewer cuts in mid-answer
+
+[E-arrow-13]  (action 1271ms)
+    | Rehearsal sections, grouping, button, current, Q, Walkthrough MECHANICS
+
+[E-arrow-14]  (action 1272ms)
+    | button, W, Probe Drill GRADED
+
+[E-arrow-15]  (action 1284ms)
+    | button, E, Whiteboard RECONSTRUCT
+
+[E-arrow-16]  (action 1291ms)
+    | button, R, System Map ZOOM OUT
+
+[E-arrow-17]  (action 1282ms)
+    | button, T, Trade-offs DECISIONS
+
+[E-arrow-18]  (action 1280ms)
+    | button, Y, Model Answers SCRIPTS
+
+[E-arrow-19]  (action 1273ms)
+    | button, U, Numbers ESTIMATE
+
+[E-arrow-20]  (action 1272ms)
+    | button, I, Red Flags ANTI-PATTERNS
+
+[E-arrow-21]  (action 1276ms)
+    | button, O, 30-Second OPEN and CLOSE
+
+[E-arrow-22]  (action 1273ms)
+    | out of grouping, Recommended next
+
+[E-arrow-23]  (action 1265ms)
+    | Text size
+
+[E-arrow-24]  (action 1277ms)
+    | button, Decrease text size
+
+[E-arrow-25]  (action 1279ms)
+    | button, Increase text size
+
+[E-arrow-26]  (action 1278ms)
+    | FOCUS TIMER
+
+[E-arrow-27]  (action 1270ms)
+    | 25:00,FOCUS
+
+[F0-ctrl-home]  (action 1274ms)
+    | DEEP REHEARSAL
+
+[F-topic-tab-01]  (action 1330ms)
+    | Toggle focus mode, toggle button, not pressed, F
+
+[F-topic-tab-02]  (action 1323ms)
+    | Switch topic, navigation landmark, Home -- topic index, button, H
+
+[F-topic-tab-03]  (action 1312ms)
+    | Previous topic, button, left bracket
+
+[F-topic-tab-04]  (action 1326ms)
+    | REHEARSING Event-Driven Backbone, menu button, collapsed, sub Menu
+
+[F-topic-tab-05]  (action 1328ms)
+    | Next topic, button, right bracket
+
+[F-topic-tab-06]  (action 1320ms)
+    | Start the drill, button, N
+
+[F-topic-tab-07]  (action 1309ms)
+    | Mock run -- the full round, on the clock, button
+
+[F-topic-tab-08]  (action 1305ms)
+    | Interviewer cuts in mid-answer, toggle button, not pressed
+
+[F-topic-tab-09]  (action 1334ms)
+    | Rehearsal sections, grouping, Walkthrough MECHANICS, button, current, Q
+
+[F-topic-tab-10]  (action 1324ms)
+    | Probe Drill GRADED, button, Recommended next, W
+
+[F-topic-tab-11]  (action 1323ms)
+    | Whiteboard RECONSTRUCT, button, E
+
+[F-topic-tab-12]  (action 1314ms)
+    | System Map ZOOM OUT, button, R
+
+[F-topic-tab-13]  (action 1311ms)
+    | Trade-offs DECISIONS, button, T
+
+[F-topic-tab-14]  (action 1344ms)
+    | Model Answers SCRIPTS, button, Y
+
+[F-topic-tab-15]  (action 1322ms)
+    | Numbers ESTIMATE, button, U
+
+[F-topic-tab-16]  (action 1329ms)
+    | Red Flags ANTI-PATTERNS, button, I
+
+[F-topic-tab-17]  (action 1321ms)
+    | 30-Second OPEN and CLOSE, button, O
+
+[F-topic-tab-18]  (action 1327ms)
+    | Decrease text size, button
+
+[F-topic-tab-19]  (action 1317ms)
+    | Increase text size, button
+
+[F-topic-tab-20]  (action 1341ms)
+    | Start focus timer, button
+
+[F-topic-tab-21]  (action 1321ms)
+    | Reset focus timer, button
+
+[F-topic-tab-22]  (action 1327ms)
+    | clickable, Topic index, button, backslash
+
+[F-topic-tab-23]  (action 1327ms)
+    | Search, button, slash Control plus K Meta plus, K
+
+[F-topic-tab-24]  (action 1324ms)
+    | Copy link, button
+
+[F-topic-tab-25]  (action 1321ms)
+    | Star this topic, toggle button, not pressed
+
+[F-topic-tab-26]  (action 1319ms)
+    | Your notes, button
+
+[POSITIVE-CONTROL-G1-window-title]  FAIL
+    WHY: Capture is live AND aimed at the app, not at another window.
+    PATTERN: /Deep Rehearsal/i
+    | Search, button, slash Control plus K Meta plus, K
+    | Topic index, button, backslash
+    | Shortcuts, button, question
+    | Theme, button
+    | START Event-Driven Backbone Drill the interviewer's follow-ups, rebuild the design from memory, then run a timed mock., button
+    | 1,Messaging and Events 7 topics 0 of 7 started 0 percent drilled, button
+    | 2,Data and Storage 10 topics 0 of 10 started 0 percent drilled, button
+    | 3,Reliability and Observability 8 topics 0 of 8 started 0 percent drilled, button
+    | 4,Platform and Infra 11 topics 0 of 11 started 0 percent drilled, button
+    | 5,Architecture and AP Is 7 topics 0 of 7 started 0 percent drilled, button
+    | 6,Security and Tenancy 3 topics 0 of 3 started 0 percent drilled, button
+    | Cross-topic drill Random probes from every topic -- the interview shuffle, button
+    | Filter topics, edit, Filter topics by name or idea..., blank
+    | Cram: Messaging and Events, button
+    | Event-Driven Backbone,ASYNC BACKBONE dot Decoupling producers from consumers through a durable queue -- a producer emits an event and moves on, the queue buffers and absorbs bursts, a consumer pulls at its own pace -- where the delivery guarantee is at-least-once, so the consumer must be idempotent and the inevitable duplicates become harmless rather than a second charge or a double-shipped order., button
+    | Notifications,DELIVERY BOUNDARY dot The stage that turns an event into a notification the right user actually sees -- dual-channel in-app and email, idempotent so a retry never double-sends, with a fallback when a channel is missed., button
+    | Real-Time Delivery,PUSHING TO CONNECTED CLIENTS dot Real-time delivery is pushing data to connected clients the moment it changes -- a chat message, a live feed update, a presence change, a score -- which inverts the usual request slash response model: the server must push rather than wait to be asked, so you need a persistent connection (Web Socket, SSE, or long-poll) and a fan-out strategy to route each event to the right connections. The two hard problems are the transport choice (bidirectional Web Socket versus server-push SSE versus a long-poll fallback, each trading capability against simplicity) and fan-out (on-write: push to every interested connection when an event happens, versus on-read: let clients pull and merge -- the classic timeline trade), layered on the operational reality of managing millions of stateful connections: a connection registry, graceful drains (a deploy is a mass reconnect -- you cannot migrate a live socket), presence, reconnection with resume, and backpressure when a client cannot keep up., button
+    | Change Data Capture,CHANGE STREAM dot Reliably propagating every committed change in a database to other systems -- a search index, a cache, a warehouse, another service -- without the dual-write problem, by making the database's own commit the single source of change events: either a transactional outbox written in the same transaction and relayed, or log-based capture that tails the write-ahead log., button
+    | Kafka Internals,THE DISTRIBUTED LOG dot Kafka is a distributed, append-only commit log -- topics split into partitions, each an ordered, immutable sequence of records that consumers read by tracking an offset -- and that log model is what gives it its properties: high throughput (sequential disk writes, partitioned parallelism), durability and replay (records are retained, not deleted on read), and per-partition ordering; the design consequences to understand are how partitions enable parallelism (and the ordering-vs-parallelism trade), how consumer groups distribute partitions and how consumer lag signals a slow consumer, how replication (ISR) provides durability, and how the log model delivers at-least-once with a path to exactly-once., button
+    | Stream and Batch Processing,PROCESSING DATA IN MOTION AND AT REST dot Stream and batch are the two models for computing over large data: batch processes a bounded, finite dataset all at once (high throughput, high latency -- a job over yesterday's data), while stream processes an unbounded, continuous flow record-by-record or in small windows as data arrives (low latency, but results are always so far ). The core distinction is bounded versus unbounded data, and it forces different mental models: batch has a natural end, so aggregations are simple and correctness is easy; streaming has no end, so you compute over windows of time, must handle out-of-order and late data (via watermarks), and must define what exactly-once means when records can be reprocessed across failures. The design decisions are which model fits the requirement (latency versus throughput versus correctness), how to window and cope with event-time skew, and the architecture that reconciles both -- lambda (run batch and stream in parallel and merge) versus kappa (stream-only, reprocess history by replaying the log)., button
+    | The Saga Pattern,DISTRIBUTED TRANSACTIONS dot Managing a transaction that spans multiple services -- where you can't hold one ACID transaction across service boundaries -- by breaking it into a sequence of local transactions, each with a compensating action that semantically undoes it, so that if a later step fails you run the compensations in reverse to unwind the work -- trading atomicity for eventual consistency, because a distributed lock across services (two-phase commit) doesn't scale., button
+    | Cram: Data and Storage, button
+    | Caching Strategies,CACHE LAYER dot Serving reads from a fast store in front of the source of truth to cut latency and load -- where the hard part is not the lookup but keeping the cache consistent with the source, which is why cache-aside with explicit invalidation and a TTL safety net is the default, and the failure modes you design for are the stampede, the stale read, and the cache going down., button
+    | Soft Deletes,LOGICAL DELETE dot Marking a row deleted with a flag or timestamp instead of physically removing it -- so a delete is reversible, history and references survive, and an audit trail stays intact -- at the cost that every query must now exclude the deleted rows, unique constraints and foreign keys need rethinking, and the data eventually has to be purged for real., button
+    | Attribute Store,ATTRIBUTE BOUNDARY dot A schema-flexible attribute store -- per-device config as rows, not columns -- so a new setting is a definition row, not a migration; typed and JSON-Schema-validated at write, resolved as override-over-default., button
+    | Shared Definition and Overrides,OVERRIDE WATERFALL dot One shared definition holding the contract and default exactly once, plus a per-entity values table holding only the deviations -- resolved with a LEFT JOIN and COALESCE, and for a hierarchy a DISTINCT ON with ORDER BY specificity so the narrowest override wins in one pass. It is the keystone a rule catalog, a feature-flag hierarchy, and an EAV model all reduce to., button
+    | Replication and Quorums,THE COPIES SEAM dot Keeping copies of data on multiple nodes -- so the system survives a node failing, reads scale across replicas, and data lives near its users -- via a leader that accepts writes and followers that copy them (synchronously for safety or asynchronously for speed), or a leaderless scheme where quorums of nodes agree; with the central tension that replication buys availability and throughput at the cost of consistency between the copies., button
+    | Consistency Models,THE CONSISTENCY SPECTRUM dot A consistency model is the contract a distributed data store gives you about what a read is allowed to observe after writes -- because once data is replicated and accessed concurrently, a read can see a stale value, an out-of-order value, or one of two conflicting values unless the system promises otherwise. The models form a spectrum from strong (linearizable: every read sees the latest committed write, as if there were a single copy) to weak (eventual: replicas converge given enough quiet time, and reads may be stale in the meantime), with genuinely useful middle points -- read-your-writes, monotonic reads, causal. Stronger consistency costs latency and availability (CAP under a partition, PACELC even without one), so the design skill is not make everything strong -- it is choosing the weakest model that still satisfies each operation, and often tuning it per read (a strong balance check, an eventual like count)., button
+    | Sharding and Partitioning,SPLITTING DATA ACROSS NODES dot Sharding is horizontally partitioning data across multiple nodes when one node can no longer hold the data or serve the write load -- and it is primarily a design decision dominated by two choices: the partition key and the partitioning scheme. The key determines everything downstream: a good key spreads data and load evenly and keeps the common queries on a single shard, while a bad key creates a hot shard (a celebrity, a monotonically-increasing key) or forces every query to scatter-gather across all shards. The scheme (range, hash, or directory) trades range-query support against even distribution. And the genuinely hard part is operational -- resharding a live system without downtime, queries and transactions that span shards, rebalancing when shards grow uneven -- which is exactly why sharding is a last resort you defer until read replicas, caching, and vertical scaling are exhausted., button
+    | Consistent Hashing,THE HASH RING dot Distributing keys across a changing set of nodes so that adding or removing one node remaps only a small fraction of keys (about K slash N) instead of nearly all of them -- by mapping both keys and nodes onto a hash ring and assigning each key to the next node clockwise, with virtual nodes to keep the distribution even -- because naive modulo hashing reshuffles almost everything whenever the node count changes, which is catastrophic for caches and sharded stores., button
+    | Storage Engines,HOW DATA IS STORED ON DISK dot How a database physically lays out data on disk to make reads and writes fast -- the choice of storage engine -- which comes down mostly to two families: B-trees (update in place, keep data sorted in fixed pages; read-optimized, the default for relational databases) and LSM-trees (buffer writes in memory, flush sorted immutable files, merge them in the background; write-optimized, used by Cassandra, Rocks DB, and column stores); the engine determines the fundamental trade-offs in read, write, and space amplification, so choosing (or understanding) it is choosing where your workload pays -- reads vs writes vs storage., button
+    | Probabilistic Data Structures,APPROXIMATE ANSWERS AT SCALE dot Probabilistic data structures answer questions about massive datasets approximately, in a tiny fraction of the memory an exact answer would need, by trading a small, bounded, tunable error for enormous space savings. The three canonical ones each answer a different question: Bloom filters -- set membership ( have I seen this? ), with no false negatives but a tunable false-positive rate; Hyper Log Log -- cardinality ( how many distinct? ), in a few kilobytes regardless of set size; Count-Min Sketch -- frequency ( how many times, and who are the heavy hitters? ), in sublinear space. The core idea is that many real questions at scale -- deduplication, does this key exist before I pay for a disk read, unique visitors, top-K, rate slash frequency estimation -- do not need an exact answer, and hashing-based sketches deliver a good-enough answer in constant or logarithmic memory where an exact structure (a hash set of every element, a counter per key) would need gigabytes. The design skill is recognizing when approximate-but-tiny beats exact-but-huge, choosing the structure by the question, and sizing it to an acceptable error., button
+    | Cram: Reliability and Observability, button
+    | Retries, Timeouts, Deadlines,THE WAITING BOUND dot Bounding how long you wait and how you re-attempt when a dependency is slow or failing -- a timeout so one call can't hang forever, a retry with backoff and jitter so a transient failure recovers without stampeding, and a deadline propagated across the call chain so the whole request shares one time budget -- because unbounded waits and naive retries are exactly how one slow dependency becomes a system-wide outage., button
+    | Idempotency,THE RETRY-SAFE SEAM dot Making an operation safe to apply more than once -- so a retried request, a redelivered message, or a double-clicked button produces the same result as a single application, not a double charge or a duplicate record -- by giving each operation a stable identity the system records and deduplicates, because exactly-once delivery doesn't exist in a distributed system and at-least-once plus idempotency is how you get an exactly-once effect., button
+    | Circuit Breaker,THE FAIL-FAST SWITCH dot Stopping calls to a dependency that's clearly failing -- tripping open once errors cross a threshold so requests fail fast instead of piling onto a struggling service, then probing half-open to detect recovery before closing again -- so a failing dependency degrades one feature gracefully rather than exhausting the caller and cascading into a system-wide outage., button
+    | START Event-Driven Backbone Drill the interviewer's follow-ups, rebuild the design from memory, then run a timed mock., button
+    | graphic, Messaging and Events -- async backbone
+    | heading, level 1, Event-Driven Backbone
+    | toggle button, not pressed, F, Toggle focus mode
+    | Switch topic, navigation landmark, button, H, Home -- topic index
+    | button, left bracket, Previous topic
+    | menu button, collapsed, sub Menu, REHEARSING Event-Driven Backbone
+    | button, right bracket, Next topic
+    | START HERE
+    | button, N, Start the drill
+    | 0 of 21 graded
+    | button, Mock run -- the full round, on the clock
+    | toggle button, not pressed, Interviewer cuts in mid-answer
+    | Rehearsal sections, grouping, button, current, Q, Walkthrough MECHANICS
+    | button, W, Probe Drill GRADED
+    | button, E, Whiteboard RECONSTRUCT
+    | button, R, System Map ZOOM OUT
+    | button, T, Trade-offs DECISIONS
+    | button, Y, Model Answers SCRIPTS
+    | button, U, Numbers ESTIMATE
+    | button, I, Red Flags ANTI-PATTERNS
+    | button, O, 30-Second OPEN and CLOSE
+    | out of grouping, Recommended next
+    | Text size
+    | button, Decrease text size
+    | button, Increase text size
+    | FOCUS TIMER
+    | 25:00,FOCUS
+    | Toggle focus mode, toggle button, not pressed, F
+    | Switch topic, navigation landmark, Home -- topic index, button, H
+    | Previous topic, button, left bracket
+    | REHEARSING Event-Driven Backbone, menu button, collapsed, sub Menu
+    | Next topic, button, right bracket
+    | Start the drill, button, N
+    | Mock run -- the full round, on the clock, button
+    | Interviewer cuts in mid-answer, toggle button, not pressed
+    | Rehearsal sections, grouping, Walkthrough MECHANICS, button, current, Q
+    | Probe Drill GRADED, button, Recommended next, W
+    | Whiteboard RECONSTRUCT, button, E
+    | System Map ZOOM OUT, button, R
+    | Trade-offs DECISIONS, button, T
+    | Model Answers SCRIPTS, button, Y
+    | Numbers ESTIMATE, button, U
+    | Red Flags ANTI-PATTERNS, button, I
+    | 30-Second OPEN and CLOSE, button, O
+    | Decrease text size, button
+    | Increase text size, button
+    | Start focus timer, button
+    | Reset focus timer, button
+    | clickable, Topic index, button, backslash
+    | Search, button, slash Control plus K Meta plus, K
+    | Copy link, button
+    | Star this topic, toggle button, not pressed
+    | Your notes, button
+
+[POSITIVE-CONTROL-G2-button-role]  PASS
+    WHY: Role reporting works, so a missing role elsewhere would be a finding and not a dead channel.
+    PATTERN: /button/i
+    | Search, button, slash Control plus K Meta plus, K
+    | Topic index, button, backslash
+    | Shortcuts, button, question
+    | Theme, button
+    | START Event-Driven Backbone Drill the interviewer's follow-ups, rebuild the design from memory, then run a timed mock., button
+    | 1,Messaging and Events 7 topics 0 of 7 started 0 percent drilled, button
+    | 2,Data and Storage 10 topics 0 of 10 started 0 percent drilled, button
+    | 3,Reliability and Observability 8 topics 0 of 8 started 0 percent drilled, button
+    | 4,Platform and Infra 11 topics 0 of 11 started 0 percent drilled, button
+    | 5,Architecture and AP Is 7 topics 0 of 7 started 0 percent drilled, button
+    | 6,Security and Tenancy 3 topics 0 of 3 started 0 percent drilled, button
+    | Cross-topic drill Random probes from every topic -- the interview shuffle, button
+    | Filter topics, edit, Filter topics by name or idea..., blank
+    | Cram: Messaging and Events, button
+    | Event-Driven Backbone,ASYNC BACKBONE dot Decoupling producers from consumers through a durable queue -- a producer emits an event and moves on, the queue buffers and absorbs bursts, a consumer pulls at its own pace -- where the delivery guarantee is at-least-once, so the consumer must be idempotent and the inevitable duplicates become harmless rather than a second charge or a double-shipped order., button
+    | Notifications,DELIVERY BOUNDARY dot The stage that turns an event into a notification the right user actually sees -- dual-channel in-app and email, idempotent so a retry never double-sends, with a fallback when a channel is missed., button
+    | Real-Time Delivery,PUSHING TO CONNECTED CLIENTS dot Real-time delivery is pushing data to connected clients the moment it changes -- a chat message, a live feed update, a presence change, a score -- which inverts the usual request slash response model: the server must push rather than wait to be asked, so you need a persistent connection (Web Socket, SSE, or long-poll) and a fan-out strategy to route each event to the right connections. The two hard problems are the transport choice (bidirectional Web Socket versus server-push SSE versus a long-poll fallback, each trading capability against simplicity) and fan-out (on-write: push to every interested connection when an event happens, versus on-read: let clients pull and merge -- the classic timeline trade), layered on the operational reality of managing millions of stateful connections: a connection registry, graceful drains (a deploy is a mass reconnect -- you cannot migrate a live socket), presence, reconnection with resume, and backpressure when a client cannot keep up., button
+    | Change Data Capture,CHANGE STREAM dot Reliably propagating every committed change in a database to other systems -- a search index, a cache, a warehouse, another service -- without the dual-write problem, by making the database's own commit the single source of change events: either a transactional outbox written in the same transaction and relayed, or log-based capture that tails the write-ahead log., button
+    | Kafka Internals,THE DISTRIBUTED LOG dot Kafka is a distributed, append-only commit log -- topics split into partitions, each an ordered, immutable sequence of records that consumers read by tracking an offset -- and that log model is what gives it its properties: high throughput (sequential disk writes, partitioned parallelism), durability and replay (records are retained, not deleted on read), and per-partition ordering; the design consequences to understand are how partitions enable parallelism (and the ordering-vs-parallelism trade), how consumer groups distribute partitions and how consumer lag signals a slow consumer, how replication (ISR) provides durability, and how the log model delivers at-least-once with a path to exactly-once., button
+    | Stream and Batch Processing,PROCESSING DATA IN MOTION AND AT REST dot Stream and batch are the two models for computing over large data: batch processes a bounded, finite dataset all at once (high throughput, high latency -- a job over yesterday's data), while stream processes an unbounded, continuous flow record-by-record or in small windows as data arrives (low latency, but results are always so far ). The core distinction is bounded versus unbounded data, and it forces different mental models: batch has a natural end, so aggregations are simple and correctness is easy; streaming has no end, so you compute over windows of time, must handle out-of-order and late data (via watermarks), and must define what exactly-once means when records can be reprocessed across failures. The design decisions are which model fits the requirement (latency versus throughput versus correctness), how to window and cope with event-time skew, and the architecture that reconciles both -- lambda (run batch and stream in parallel and merge) versus kappa (stream-only, reprocess history by replaying the log)., button
+    | The Saga Pattern,DISTRIBUTED TRANSACTIONS dot Managing a transaction that spans multiple services -- where you can't hold one ACID transaction across service boundaries -- by breaking it into a sequence of local transactions, each with a compensating action that semantically undoes it, so that if a later step fails you run the compensations in reverse to unwind the work -- trading atomicity for eventual consistency, because a distributed lock across services (two-phase commit) doesn't scale., button
+    | Cram: Data and Storage, button
+    | Caching Strategies,CACHE LAYER dot Serving reads from a fast store in front of the source of truth to cut latency and load -- where the hard part is not the lookup but keeping the cache consistent with the source, which is why cache-aside with explicit invalidation and a TTL safety net is the default, and the failure modes you design for are the stampede, the stale read, and the cache going down., button
+    | Soft Deletes,LOGICAL DELETE dot Marking a row deleted with a flag or timestamp instead of physically removing it -- so a delete is reversible, history and references survive, and an audit trail stays intact -- at the cost that every query must now exclude the deleted rows, unique constraints and foreign keys need rethinking, and the data eventually has to be purged for real., button
+    | Attribute Store,ATTRIBUTE BOUNDARY dot A schema-flexible attribute store -- per-device config as rows, not columns -- so a new setting is a definition row, not a migration; typed and JSON-Schema-validated at write, resolved as override-over-default., button
+    | Shared Definition and Overrides,OVERRIDE WATERFALL dot One shared definition holding the contract and default exactly once, plus a per-entity values table holding only the deviations -- resolved with a LEFT JOIN and COALESCE, and for a hierarchy a DISTINCT ON with ORDER BY specificity so the narrowest override wins in one pass. It is the keystone a rule catalog, a feature-flag hierarchy, and an EAV model all reduce to., button
+    | Replication and Quorums,THE COPIES SEAM dot Keeping copies of data on multiple nodes -- so the system survives a node failing, reads scale across replicas, and data lives near its users -- via a leader that accepts writes and followers that copy them (synchronously for safety or asynchronously for speed), or a leaderless scheme where quorums of nodes agree; with the central tension that replication buys availability and throughput at the cost of consistency between the copies., button
+    | Consistency Models,THE CONSISTENCY SPECTRUM dot A consistency model is the contract a distributed data store gives you about what a read is allowed to observe after writes -- because once data is replicated and accessed concurrently, a read can see a stale value, an out-of-order value, or one of two conflicting values unless the system promises otherwise. The models form a spectrum from strong (linearizable: every read sees the latest committed write, as if there were a single copy) to weak (eventual: replicas converge given enough quiet time, and reads may be stale in the meantime), with genuinely useful middle points -- read-your-writes, monotonic reads, causal. Stronger consistency costs latency and availability (CAP under a partition, PACELC even without one), so the design skill is not make everything strong -- it is choosing the weakest model that still satisfies each operation, and often tuning it per read (a strong balance check, an eventual like count)., button
+    | Sharding and Partitioning,SPLITTING DATA ACROSS NODES dot Sharding is horizontally partitioning data across multiple nodes when one node can no longer hold the data or serve the write load -- and it is primarily a design decision dominated by two choices: the partition key and the partitioning scheme. The key determines everything downstream: a good key spreads data and load evenly and keeps the common queries on a single shard, while a bad key creates a hot shard (a celebrity, a monotonically-increasing key) or forces every query to scatter-gather across all shards. The scheme (range, hash, or directory) trades range-query support against even distribution. And the genuinely hard part is operational -- resharding a live system without downtime, queries and transactions that span shards, rebalancing when shards grow uneven -- which is exactly why sharding is a last resort you defer until read replicas, caching, and vertical scaling are exhausted., button
+    | Consistent Hashing,THE HASH RING dot Distributing keys across a changing set of nodes so that adding or removing one node remaps only a small fraction of keys (about K slash N) instead of nearly all of them -- by mapping both keys and nodes onto a hash ring and assigning each key to the next node clockwise, with virtual nodes to keep the distribution even -- because naive modulo hashing reshuffles almost everything whenever the node count changes, which is catastrophic for caches and sharded stores., button
+    | Storage Engines,HOW DATA IS STORED ON DISK dot How a database physically lays out data on disk to make reads and writes fast -- the choice of storage engine -- which comes down mostly to two families: B-trees (update in place, keep data sorted in fixed pages; read-optimized, the default for relational databases) and LSM-trees (buffer writes in memory, flush sorted immutable files, merge them in the background; write-optimized, used by Cassandra, Rocks DB, and column stores); the engine determines the fundamental trade-offs in read, write, and space amplification, so choosing (or understanding) it is choosing where your workload pays -- reads vs writes vs storage., button
+    | Probabilistic Data Structures,APPROXIMATE ANSWERS AT SCALE dot Probabilistic data structures answer questions about massive datasets approximately, in a tiny fraction of the memory an exact answer would need, by trading a small, bounded, tunable error for enormous space savings. The three canonical ones each answer a different question: Bloom filters -- set membership ( have I seen this? ), with no false negatives but a tunable false-positive rate; Hyper Log Log -- cardinality ( how many distinct? ), in a few kilobytes regardless of set size; Count-Min Sketch -- frequency ( how many times, and who are the heavy hitters? ), in sublinear space. The core idea is that many real questions at scale -- deduplication, does this key exist before I pay for a disk read, unique visitors, top-K, rate slash frequency estimation -- do not need an exact answer, and hashing-based sketches deliver a good-enough answer in constant or logarithmic memory where an exact structure (a hash set of every element, a counter per key) would need gigabytes. The design skill is recognizing when approximate-but-tiny beats exact-but-huge, choosing the structure by the question, and sizing it to an acceptable error., button
+    | Cram: Reliability and Observability, button
+    | Retries, Timeouts, Deadlines,THE WAITING BOUND dot Bounding how long you wait and how you re-attempt when a dependency is slow or failing -- a timeout so one call can't hang forever, a retry with backoff and jitter so a transient failure recovers without stampeding, and a deadline propagated across the call chain so the whole request shares one time budget -- because unbounded waits and naive retries are exactly how one slow dependency becomes a system-wide outage., button
+    | Idempotency,THE RETRY-SAFE SEAM dot Making an operation safe to apply more than once -- so a retried request, a redelivered message, or a double-clicked button produces the same result as a single application, not a double charge or a duplicate record -- by giving each operation a stable identity the system records and deduplicates, because exactly-once delivery doesn't exist in a distributed system and at-least-once plus idempotency is how you get an exactly-once effect., button
+    | Circuit Breaker,THE FAIL-FAST SWITCH dot Stopping calls to a dependency that's clearly failing -- tripping open once errors cross a threshold so requests fail fast instead of piling onto a struggling service, then probing half-open to detect recovery before closing again -- so a failing dependency degrades one feature gracefully rather than exhausting the caller and cascading into a system-wide outage., button
+    | START Event-Driven Backbone Drill the interviewer's follow-ups, rebuild the design from memory, then run a timed mock., button
+    | graphic, Messaging and Events -- async backbone
+    | heading, level 1, Event-Driven Backbone
+    | toggle button, not pressed, F, Toggle focus mode
+    | Switch topic, navigation landmark, button, H, Home -- topic index
+    | button, left bracket, Previous topic
+    | menu button, collapsed, sub Menu, REHEARSING Event-Driven Backbone
+    | button, right bracket, Next topic
+    | START HERE
+    | button, N, Start the drill
+    | 0 of 21 graded
+    | button, Mock run -- the full round, on the clock
+    | toggle button, not pressed, Interviewer cuts in mid-answer
+    | Rehearsal sections, grouping, button, current, Q, Walkthrough MECHANICS
+    | button, W, Probe Drill GRADED
+    | button, E, Whiteboard RECONSTRUCT
+    | button, R, System Map ZOOM OUT
+    | button, T, Trade-offs DECISIONS
+    | button, Y, Model Answers SCRIPTS
+    | button, U, Numbers ESTIMATE
+    | button, I, Red Flags ANTI-PATTERNS
+    | button, O, 30-Second OPEN and CLOSE
+    | out of grouping, Recommended next
+    | Text size
+    | button, Decrease text size
+    | button, Increase text size
+    | FOCUS TIMER
+    | 25:00,FOCUS
+    | Toggle focus mode, toggle button, not pressed, F
+    | Switch topic, navigation landmark, Home -- topic index, button, H
+    | Previous topic, button, left bracket
+    | REHEARSING Event-Driven Backbone, menu button, collapsed, sub Menu
+    | Next topic, button, right bracket
+    | Start the drill, button, N
+    | Mock run -- the full round, on the clock, button
+    | Interviewer cuts in mid-answer, toggle button, not pressed
+    | Rehearsal sections, grouping, Walkthrough MECHANICS, button, current, Q
+    | Probe Drill GRADED, button, Recommended next, W
+    | Whiteboard RECONSTRUCT, button, E
+    | System Map ZOOM OUT, button, R
+    | Trade-offs DECISIONS, button, T
+    | Model Answers SCRIPTS, button, Y
+    | Numbers ESTIMATE, button, U
+    | Red Flags ANTI-PATTERNS, button, I
+    | 30-Second OPEN and CLOSE, button, O
+    | Decrease text size, button
+    | Increase text size, button
+    | Start focus timer, button
+    | Reset focus timer, button
+    | clickable, Topic index, button, backslash
+    | Search, button, slash Control plus K Meta plus, K
+    | Copy link, button
+    | Star this topic, toggle button, not pressed
+    | Your notes, button
+
+[POSITIVE-CONTROL-G3-reached-the-cards]  PASS
+    WHY: The sweep actually reached the card the audit heard glued; without this, silence on it proves nothing.
+    PATTERN: /ATTRIBUTE BOUNDARY/i
+    | Search, button, slash Control plus K Meta plus, K
+    | Topic index, button, backslash
+    | Shortcuts, button, question
+    | Theme, button
+    | START Event-Driven Backbone Drill the interviewer's follow-ups, rebuild the design from memory, then run a timed mock., button
+    | 1,Messaging and Events 7 topics 0 of 7 started 0 percent drilled, button
+    | 2,Data and Storage 10 topics 0 of 10 started 0 percent drilled, button
+    | 3,Reliability and Observability 8 topics 0 of 8 started 0 percent drilled, button
+    | 4,Platform and Infra 11 topics 0 of 11 started 0 percent drilled, button
+    | 5,Architecture and AP Is 7 topics 0 of 7 started 0 percent drilled, button
+    | 6,Security and Tenancy 3 topics 0 of 3 started 0 percent drilled, button
+    | Cross-topic drill Random probes from every topic -- the interview shuffle, button
+    | Filter topics, edit, Filter topics by name or idea..., blank
+    | Cram: Messaging and Events, button
+    | Event-Driven Backbone,ASYNC BACKBONE dot Decoupling producers from consumers through a durable queue -- a producer emits an event and moves on, the queue buffers and absorbs bursts, a consumer pulls at its own pace -- where the delivery guarantee is at-least-once, so the consumer must be idempotent and the inevitable duplicates become harmless rather than a second charge or a double-shipped order., button
+    | Notifications,DELIVERY BOUNDARY dot The stage that turns an event into a notification the right user actually sees -- dual-channel in-app and email, idempotent so a retry never double-sends, with a fallback when a channel is missed., button
+    | Real-Time Delivery,PUSHING TO CONNECTED CLIENTS dot Real-time delivery is pushing data to connected clients the moment it changes -- a chat message, a live feed update, a presence change, a score -- which inverts the usual request slash response model: the server must push rather than wait to be asked, so you need a persistent connection (Web Socket, SSE, or long-poll) and a fan-out strategy to route each event to the right connections. The two hard problems are the transport choice (bidirectional Web Socket versus server-push SSE versus a long-poll fallback, each trading capability against simplicity) and fan-out (on-write: push to every interested connection when an event happens, versus on-read: let clients pull and merge -- the classic timeline trade), layered on the operational reality of managing millions of stateful connections: a connection registry, graceful drains (a deploy is a mass reconnect -- you cannot migrate a live socket), presence, reconnection with resume, and backpressure when a client cannot keep up., button
+    | Change Data Capture,CHANGE STREAM dot Reliably propagating every committed change in a database to other systems -- a search index, a cache, a warehouse, another service -- without the dual-write problem, by making the database's own commit the single source of change events: either a transactional outbox written in the same transaction and relayed, or log-based capture that tails the write-ahead log., button
+    | Kafka Internals,THE DISTRIBUTED LOG dot Kafka is a distributed, append-only commit log -- topics split into partitions, each an ordered, immutable sequence of records that consumers read by tracking an offset -- and that log model is what gives it its properties: high throughput (sequential disk writes, partitioned parallelism), durability and replay (records are retained, not deleted on read), and per-partition ordering; the design consequences to understand are how partitions enable parallelism (and the ordering-vs-parallelism trade), how consumer groups distribute partitions and how consumer lag signals a slow consumer, how replication (ISR) provides durability, and how the log model delivers at-least-once with a path to exactly-once., button
+    | Stream and Batch Processing,PROCESSING DATA IN MOTION AND AT REST dot Stream and batch are the two models for computing over large data: batch processes a bounded, finite dataset all at once (high throughput, high latency -- a job over yesterday's data), while stream processes an unbounded, continuous flow record-by-record or in small windows as data arrives (low latency, but results are always so far ). The core distinction is bounded versus unbounded data, and it forces different mental models: batch has a natural end, so aggregations are simple and correctness is easy; streaming has no end, so you compute over windows of time, must handle out-of-order and late data (via watermarks), and must define what exactly-once means when records can be reprocessed across failures. The design decisions are which model fits the requirement (latency versus throughput versus correctness), how to window and cope with event-time skew, and the architecture that reconciles both -- lambda (run batch and stream in parallel and merge) versus kappa (stream-only, reprocess history by replaying the log)., button
+    | The Saga Pattern,DISTRIBUTED TRANSACTIONS dot Managing a transaction that spans multiple services -- where you can't hold one ACID transaction across service boundaries -- by breaking it into a sequence of local transactions, each with a compensating action that semantically undoes it, so that if a later step fails you run the compensations in reverse to unwind the work -- trading atomicity for eventual consistency, because a distributed lock across services (two-phase commit) doesn't scale., button
+    | Cram: Data and Storage, button
+    | Caching Strategies,CACHE LAYER dot Serving reads from a fast store in front of the source of truth to cut latency and load -- where the hard part is not the lookup but keeping the cache consistent with the source, which is why cache-aside with explicit invalidation and a TTL safety net is the default, and the failure modes you design for are the stampede, the stale read, and the cache going down., button
+    | Soft Deletes,LOGICAL DELETE dot Marking a row deleted with a flag or timestamp instead of physically removing it -- so a delete is reversible, history and references survive, and an audit trail stays intact -- at the cost that every query must now exclude the deleted rows, unique constraints and foreign keys need rethinking, and the data eventually has to be purged for real., button
+    | Attribute Store,ATTRIBUTE BOUNDARY dot A schema-flexible attribute store -- per-device config as rows, not columns -- so a new setting is a definition row, not a migration; typed and JSON-Schema-validated at write, resolved as override-over-default., button
+    | Shared Definition and Overrides,OVERRIDE WATERFALL dot One shared definition holding the contract and default exactly once, plus a per-entity values table holding only the deviations -- resolved with a LEFT JOIN and COALESCE, and for a hierarchy a DISTINCT ON with ORDER BY specificity so the narrowest override wins in one pass. It is the keystone a rule catalog, a feature-flag hierarchy, and an EAV model all reduce to., button
+    | Replication and Quorums,THE COPIES SEAM dot Keeping copies of data on multiple nodes -- so the system survives a node failing, reads scale across replicas, and data lives near its users -- via a leader that accepts writes and followers that copy them (synchronously for safety or asynchronously for speed), or a leaderless scheme where quorums of nodes agree; with the central tension that replication buys availability and throughput at the cost of consistency between the copies., button
+    | Consistency Models,THE CONSISTENCY SPECTRUM dot A consistency model is the contract a distributed data store gives you about what a read is allowed to observe after writes -- because once data is replicated and accessed concurrently, a read can see a stale value, an out-of-order value, or one of two conflicting values unless the system promises otherwise. The models form a spectrum from strong (linearizable: every read sees the latest committed write, as if there were a single copy) to weak (eventual: replicas converge given enough quiet time, and reads may be stale in the meantime), with genuinely useful middle points -- read-your-writes, monotonic reads, causal. Stronger consistency costs latency and availability (CAP under a partition, PACELC even without one), so the design skill is not make everything strong -- it is choosing the weakest model that still satisfies each operation, and often tuning it per read (a strong balance check, an eventual like count)., button
+    | Sharding and Partitioning,SPLITTING DATA ACROSS NODES dot Sharding is horizontally partitioning data across multiple nodes when one node can no longer hold the data or serve the write load -- and it is primarily a design decision dominated by two choices: the partition key and the partitioning scheme. The key determines everything downstream: a good key spreads data and load evenly and keeps the common queries on a single shard, while a bad key creates a hot shard (a celebrity, a monotonically-increasing key) or forces every query to scatter-gather across all shards. The scheme (range, hash, or directory) trades range-query support against even distribution. And the genuinely hard part is operational -- resharding a live system without downtime, queries and transactions that span shards, rebalancing when shards grow uneven -- which is exactly why sharding is a last resort you defer until read replicas, caching, and vertical scaling are exhausted., button
+    | Consistent Hashing,THE HASH RING dot Distributing keys across a changing set of nodes so that adding or removing one node remaps only a small fraction of keys (about K slash N) instead of nearly all of them -- by mapping both keys and nodes onto a hash ring and assigning each key to the next node clockwise, with virtual nodes to keep the distribution even -- because naive modulo hashing reshuffles almost everything whenever the node count changes, which is catastrophic for caches and sharded stores., button
+    | Storage Engines,HOW DATA IS STORED ON DISK dot How a database physically lays out data on disk to make reads and writes fast -- the choice of storage engine -- which comes down mostly to two families: B-trees (update in place, keep data sorted in fixed pages; read-optimized, the default for relational databases) and LSM-trees (buffer writes in memory, flush sorted immutable files, merge them in the background; write-optimized, used by Cassandra, Rocks DB, and column stores); the engine determines the fundamental trade-offs in read, write, and space amplification, so choosing (or understanding) it is choosing where your workload pays -- reads vs writes vs storage., button
+    | Probabilistic Data Structures,APPROXIMATE ANSWERS AT SCALE dot Probabilistic data structures answer questions about massive datasets approximately, in a tiny fraction of the memory an exact answer would need, by trading a small, bounded, tunable error for enormous space savings. The three canonical ones each answer a different question: Bloom filters -- set membership ( have I seen this? ), with no false negatives but a tunable false-positive rate; Hyper Log Log -- cardinality ( how many distinct? ), in a few kilobytes regardless of set size; Count-Min Sketch -- frequency ( how many times, and who are the heavy hitters? ), in sublinear space. The core idea is that many real questions at scale -- deduplication, does this key exist before I pay for a disk read, unique visitors, top-K, rate slash frequency estimation -- do not need an exact answer, and hashing-based sketches deliver a good-enough answer in constant or logarithmic memory where an exact structure (a hash set of every element, a counter per key) would need gigabytes. The design skill is recognizing when approximate-but-tiny beats exact-but-huge, choosing the structure by the question, and sizing it to an acceptable error., button
+    | Cram: Reliability and Observability, button
+    | Retries, Timeouts, Deadlines,THE WAITING BOUND dot Bounding how long you wait and how you re-attempt when a dependency is slow or failing -- a timeout so one call can't hang forever, a retry with backoff and jitter so a transient failure recovers without stampeding, and a deadline propagated across the call chain so the whole request shares one time budget -- because unbounded waits and naive retries are exactly how one slow dependency becomes a system-wide outage., button
+    | Idempotency,THE RETRY-SAFE SEAM dot Making an operation safe to apply more than once -- so a retried request, a redelivered message, or a double-clicked button produces the same result as a single application, not a double charge or a duplicate record -- by giving each operation a stable identity the system records and deduplicates, because exactly-once delivery doesn't exist in a distributed system and at-least-once plus idempotency is how you get an exactly-once effect., button
+    | Circuit Breaker,THE FAIL-FAST SWITCH dot Stopping calls to a dependency that's clearly failing -- tripping open once errors cross a threshold so requests fail fast instead of piling onto a struggling service, then probing half-open to detect recovery before closing again -- so a failing dependency degrades one feature gracefully rather than exhausting the caller and cascading into a system-wide outage., button
+    | START Event-Driven Backbone Drill the interviewer's follow-ups, rebuild the design from memory, then run a timed mock., button
+    | graphic, Messaging and Events -- async backbone
+    | heading, level 1, Event-Driven Backbone
+    | toggle button, not pressed, F, Toggle focus mode
+    | Switch topic, navigation landmark, button, H, Home -- topic index
+    | button, left bracket, Previous topic
+    | menu button, collapsed, sub Menu, REHEARSING Event-Driven Backbone
+    | button, right bracket, Next topic
+    | START HERE
+    | button, N, Start the drill
+    | 0 of 21 graded
+    | button, Mock run -- the full round, on the clock
+    | toggle button, not pressed, Interviewer cuts in mid-answer
+    | Rehearsal sections, grouping, button, current, Q, Walkthrough MECHANICS
+    | button, W, Probe Drill GRADED
+    | button, E, Whiteboard RECONSTRUCT
+    | button, R, System Map ZOOM OUT
+    | button, T, Trade-offs DECISIONS
+    | button, Y, Model Answers SCRIPTS
+    | button, U, Numbers ESTIMATE
+    | button, I, Red Flags ANTI-PATTERNS
+    | button, O, 30-Second OPEN and CLOSE
+    | out of grouping, Recommended next
+    | Text size
+    | button, Decrease text size
+    | button, Increase text size
+    | FOCUS TIMER
+    | 25:00,FOCUS
+    | Toggle focus mode, toggle button, not pressed, F
+    | Switch topic, navigation landmark, Home -- topic index, button, H
+    | Previous topic, button, left bracket
+    | REHEARSING Event-Driven Backbone, menu button, collapsed, sub Menu
+    | Next topic, button, right bracket
+    | Start the drill, button, N
+    | Mock run -- the full round, on the clock, button
+    | Interviewer cuts in mid-answer, toggle button, not pressed
+    | Rehearsal sections, grouping, Walkthrough MECHANICS, button, current, Q
+    | Probe Drill GRADED, button, Recommended next, W
+    | Whiteboard RECONSTRUCT, button, E
+    | System Map ZOOM OUT, button, R
+    | Trade-offs DECISIONS, button, T
+    | Model Answers SCRIPTS, button, Y
+    | Numbers ESTIMATE, button, U
+    | Red Flags ANTI-PATTERNS, button, I
+    | 30-Second OPEN and CLOSE, button, O
+    | Decrease text size, button
+    | Increase text size, button
+    | Start focus timer, button
+    | Reset focus timer, button
+    | clickable, Topic index, button, backslash
+    | Search, button, slash Control plus K Meta plus, K
+    | Copy link, button
+    | Star this topic, toggle button, not pressed
+    | Your notes, button
+
+[POSITIVE-CONTROL-G4-build-fingerprint]  PASS
+    WHY: BUILD FINGERPRINT: only the FIXED build names a Cram button after its room. If this fails the capture came from some other window running the pre-wave build and every result here is void.
+    PATTERN: /Cram:/i
+    | Search, button, slash Control plus K Meta plus, K
+    | Topic index, button, backslash
+    | Shortcuts, button, question
+    | Theme, button
+    | START Event-Driven Backbone Drill the interviewer's follow-ups, rebuild the design from memory, then run a timed mock., button
+    | 1,Messaging and Events 7 topics 0 of 7 started 0 percent drilled, button
+    | 2,Data and Storage 10 topics 0 of 10 started 0 percent drilled, button
+    | 3,Reliability and Observability 8 topics 0 of 8 started 0 percent drilled, button
+    | 4,Platform and Infra 11 topics 0 of 11 started 0 percent drilled, button
+    | 5,Architecture and AP Is 7 topics 0 of 7 started 0 percent drilled, button
+    | 6,Security and Tenancy 3 topics 0 of 3 started 0 percent drilled, button
+    | Cross-topic drill Random probes from every topic -- the interview shuffle, button
+    | Filter topics, edit, Filter topics by name or idea..., blank
+    | Cram: Messaging and Events, button
+    | Event-Driven Backbone,ASYNC BACKBONE dot Decoupling producers from consumers through a durable queue -- a producer emits an event and moves on, the queue buffers and absorbs bursts, a consumer pulls at its own pace -- where the delivery guarantee is at-least-once, so the consumer must be idempotent and the inevitable duplicates become harmless rather than a second charge or a double-shipped order., button
+    | Notifications,DELIVERY BOUNDARY dot The stage that turns an event into a notification the right user actually sees -- dual-channel in-app and email, idempotent so a retry never double-sends, with a fallback when a channel is missed., button
+    | Real-Time Delivery,PUSHING TO CONNECTED CLIENTS dot Real-time delivery is pushing data to connected clients the moment it changes -- a chat message, a live feed update, a presence change, a score -- which inverts the usual request slash response model: the server must push rather than wait to be asked, so you need a persistent connection (Web Socket, SSE, or long-poll) and a fan-out strategy to route each event to the right connections. The two hard problems are the transport choice (bidirectional Web Socket versus server-push SSE versus a long-poll fallback, each trading capability against simplicity) and fan-out (on-write: push to every interested connection when an event happens, versus on-read: let clients pull and merge -- the classic timeline trade), layered on the operational reality of managing millions of stateful connections: a connection registry, graceful drains (a deploy is a mass reconnect -- you cannot migrate a live socket), presence, reconnection with resume, and backpressure when a client cannot keep up., button
+    | Change Data Capture,CHANGE STREAM dot Reliably propagating every committed change in a database to other systems -- a search index, a cache, a warehouse, another service -- without the dual-write problem, by making the database's own commit the single source of change events: either a transactional outbox written in the same transaction and relayed, or log-based capture that tails the write-ahead log., button
+    | Kafka Internals,THE DISTRIBUTED LOG dot Kafka is a distributed, append-only commit log -- topics split into partitions, each an ordered, immutable sequence of records that consumers read by tracking an offset -- and that log model is what gives it its properties: high throughput (sequential disk writes, partitioned parallelism), durability and replay (records are retained, not deleted on read), and per-partition ordering; the design consequences to understand are how partitions enable parallelism (and the ordering-vs-parallelism trade), how consumer groups distribute partitions and how consumer lag signals a slow consumer, how replication (ISR) provides durability, and how the log model delivers at-least-once with a path to exactly-once., button
+    | Stream and Batch Processing,PROCESSING DATA IN MOTION AND AT REST dot Stream and batch are the two models for computing over large data: batch processes a bounded, finite dataset all at once (high throughput, high latency -- a job over yesterday's data), while stream processes an unbounded, continuous flow record-by-record or in small windows as data arrives (low latency, but results are always so far ). The core distinction is bounded versus unbounded data, and it forces different mental models: batch has a natural end, so aggregations are simple and correctness is easy; streaming has no end, so you compute over windows of time, must handle out-of-order and late data (via watermarks), and must define what exactly-once means when records can be reprocessed across failures. The design decisions are which model fits the requirement (latency versus throughput versus correctness), how to window and cope with event-time skew, and the architecture that reconciles both -- lambda (run batch and stream in parallel and merge) versus kappa (stream-only, reprocess history by replaying the log)., button
+    | The Saga Pattern,DISTRIBUTED TRANSACTIONS dot Managing a transaction that spans multiple services -- where you can't hold one ACID transaction across service boundaries -- by breaking it into a sequence of local transactions, each with a compensating action that semantically undoes it, so that if a later step fails you run the compensations in reverse to unwind the work -- trading atomicity for eventual consistency, because a distributed lock across services (two-phase commit) doesn't scale., button
+    | Cram: Data and Storage, button
+    | Caching Strategies,CACHE LAYER dot Serving reads from a fast store in front of the source of truth to cut latency and load -- where the hard part is not the lookup but keeping the cache consistent with the source, which is why cache-aside with explicit invalidation and a TTL safety net is the default, and the failure modes you design for are the stampede, the stale read, and the cache going down., button
+    | Soft Deletes,LOGICAL DELETE dot Marking a row deleted with a flag or timestamp instead of physically removing it -- so a delete is reversible, history and references survive, and an audit trail stays intact -- at the cost that every query must now exclude the deleted rows, unique constraints and foreign keys need rethinking, and the data eventually has to be purged for real., button
+    | Attribute Store,ATTRIBUTE BOUNDARY dot A schema-flexible attribute store -- per-device config as rows, not columns -- so a new setting is a definition row, not a migration; typed and JSON-Schema-validated at write, resolved as override-over-default., button
+    | Shared Definition and Overrides,OVERRIDE WATERFALL dot One shared definition holding the contract and default exactly once, plus a per-entity values table holding only the deviations -- resolved with a LEFT JOIN and COALESCE, and for a hierarchy a DISTINCT ON with ORDER BY specificity so the narrowest override wins in one pass. It is the keystone a rule catalog, a feature-flag hierarchy, and an EAV model all reduce to., button
+    | Replication and Quorums,THE COPIES SEAM dot Keeping copies of data on multiple nodes -- so the system survives a node failing, reads scale across replicas, and data lives near its users -- via a leader that accepts writes and followers that copy them (synchronously for safety or asynchronously for speed), or a leaderless scheme where quorums of nodes agree; with the central tension that replication buys availability and throughput at the cost of consistency between the copies., button
+    | Consistency Models,THE CONSISTENCY SPECTRUM dot A consistency model is the contract a distributed data store gives you about what a read is allowed to observe after writes -- because once data is replicated and accessed concurrently, a read can see a stale value, an out-of-order value, or one of two conflicting values unless the system promises otherwise. The models form a spectrum from strong (linearizable: every read sees the latest committed write, as if there were a single copy) to weak (eventual: replicas converge given enough quiet time, and reads may be stale in the meantime), with genuinely useful middle points -- read-your-writes, monotonic reads, causal. Stronger consistency costs latency and availability (CAP under a partition, PACELC even without one), so the design skill is not make everything strong -- it is choosing the weakest model that still satisfies each operation, and often tuning it per read (a strong balance check, an eventual like count)., button
+    | Sharding and Partitioning,SPLITTING DATA ACROSS NODES dot Sharding is horizontally partitioning data across multiple nodes when one node can no longer hold the data or serve the write load -- and it is primarily a design decision dominated by two choices: the partition key and the partitioning scheme. The key determines everything downstream: a good key spreads data and load evenly and keeps the common queries on a single shard, while a bad key creates a hot shard (a celebrity, a monotonically-increasing key) or forces every query to scatter-gather across all shards. The scheme (range, hash, or directory) trades range-query support against even distribution. And the genuinely hard part is operational -- resharding a live system without downtime, queries and transactions that span shards, rebalancing when shards grow uneven -- which is exactly why sharding is a last resort you defer until read replicas, caching, and vertical scaling are exhausted., button
+    | Consistent Hashing,THE HASH RING dot Distributing keys across a changing set of nodes so that adding or removing one node remaps only a small fraction of keys (about K slash N) instead of nearly all of them -- by mapping both keys and nodes onto a hash ring and assigning each key to the next node clockwise, with virtual nodes to keep the distribution even -- because naive modulo hashing reshuffles almost everything whenever the node count changes, which is catastrophic for caches and sharded stores., button
+    | Storage Engines,HOW DATA IS STORED ON DISK dot How a database physically lays out data on disk to make reads and writes fast -- the choice of storage engine -- which comes down mostly to two families: B-trees (update in place, keep data sorted in fixed pages; read-optimized, the default for relational databases) and LSM-trees (buffer writes in memory, flush sorted immutable files, merge them in the background; write-optimized, used by Cassandra, Rocks DB, and column stores); the engine determines the fundamental trade-offs in read, write, and space amplification, so choosing (or understanding) it is choosing where your workload pays -- reads vs writes vs storage., button
+    | Probabilistic Data Structures,APPROXIMATE ANSWERS AT SCALE dot Probabilistic data structures answer questions about massive datasets approximately, in a tiny fraction of the memory an exact answer would need, by trading a small, bounded, tunable error for enormous space savings. The three canonical ones each answer a different question: Bloom filters -- set membership ( have I seen this? ), with no false negatives but a tunable false-positive rate; Hyper Log Log -- cardinality ( how many distinct? ), in a few kilobytes regardless of set size; Count-Min Sketch -- frequency ( how many times, and who are the heavy hitters? ), in sublinear space. The core idea is that many real questions at scale -- deduplication, does this key exist before I pay for a disk read, unique visitors, top-K, rate slash frequency estimation -- do not need an exact answer, and hashing-based sketches deliver a good-enough answer in constant or logarithmic memory where an exact structure (a hash set of every element, a counter per key) would need gigabytes. The design skill is recognizing when approximate-but-tiny beats exact-but-huge, choosing the structure by the question, and sizing it to an acceptable error., button
+    | Cram: Reliability and Observability, button
+    | Retries, Timeouts, Deadlines,THE WAITING BOUND dot Bounding how long you wait and how you re-attempt when a dependency is slow or failing -- a timeout so one call can't hang forever, a retry with backoff and jitter so a transient failure recovers without stampeding, and a deadline propagated across the call chain so the whole request shares one time budget -- because unbounded waits and naive retries are exactly how one slow dependency becomes a system-wide outage., button
+    | Idempotency,THE RETRY-SAFE SEAM dot Making an operation safe to apply more than once -- so a retried request, a redelivered message, or a double-clicked button produces the same result as a single application, not a double charge or a duplicate record -- by giving each operation a stable identity the system records and deduplicates, because exactly-once delivery doesn't exist in a distributed system and at-least-once plus idempotency is how you get an exactly-once effect., button
+    | Circuit Breaker,THE FAIL-FAST SWITCH dot Stopping calls to a dependency that's clearly failing -- tripping open once errors cross a threshold so requests fail fast instead of piling onto a struggling service, then probing half-open to detect recovery before closing again -- so a failing dependency degrades one feature gracefully rather than exhausting the caller and cascading into a system-wide outage., button
+    | START Event-Driven Backbone Drill the interviewer's follow-ups, rebuild the design from memory, then run a timed mock., button
+    | graphic, Messaging and Events -- async backbone
+    | heading, level 1, Event-Driven Backbone
+    | toggle button, not pressed, F, Toggle focus mode
+    | Switch topic, navigation landmark, button, H, Home -- topic index
+    | button, left bracket, Previous topic
+    | menu button, collapsed, sub Menu, REHEARSING Event-Driven Backbone
+    | button, right bracket, Next topic
+    | START HERE
+    | button, N, Start the drill
+    | 0 of 21 graded
+    | button, Mock run -- the full round, on the clock
+    | toggle button, not pressed, Interviewer cuts in mid-answer
+    | Rehearsal sections, grouping, button, current, Q, Walkthrough MECHANICS
+    | button, W, Probe Drill GRADED
+    | button, E, Whiteboard RECONSTRUCT
+    | button, R, System Map ZOOM OUT
+    | button, T, Trade-offs DECISIONS
+    | button, Y, Model Answers SCRIPTS
+    | button, U, Numbers ESTIMATE
+    | button, I, Red Flags ANTI-PATTERNS
+    | button, O, 30-Second OPEN and CLOSE
+    | out of grouping, Recommended next
+    | Text size
+    | button, Decrease text size
+    | button, Increase text size
+    | FOCUS TIMER
+    | 25:00,FOCUS
+    | Toggle focus mode, toggle button, not pressed, F
+    | Switch topic, navigation landmark, Home -- topic index, button, H
+    | Previous topic, button, left bracket
+    | REHEARSING Event-Driven Backbone, menu button, collapsed, sub Menu
+    | Next topic, button, right bracket
+    | Start the drill, button, N
+    | Mock run -- the full round, on the clock, button
+    | Interviewer cuts in mid-answer, toggle button, not pressed
+    | Rehearsal sections, grouping, Walkthrough MECHANICS, button, current, Q
+    | Probe Drill GRADED, button, Recommended next, W
+    | Whiteboard RECONSTRUCT, button, E
+    | System Map ZOOM OUT, button, R
+    | Trade-offs DECISIONS, button, T
+    | Model Answers SCRIPTS, button, Y
+    | Numbers ESTIMATE, button, U
+    | Red Flags ANTI-PATTERNS, button, I
+    | 30-Second OPEN and CLOSE, button, O
+    | Decrease text size, button
+    | Increase text size, button
+    | Start focus timer, button
+    | Reset focus timer, button
+    | clickable, Topic index, button, backslash
+    | Search, button, slash Control plus K Meta plus, K
+    | Copy link, button
+    | Star this topic, toggle button, not pressed
+    | Your notes, button

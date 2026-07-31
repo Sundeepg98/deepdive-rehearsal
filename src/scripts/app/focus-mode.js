@@ -71,7 +71,7 @@
        the mobile icon rule can override them without !important (an inline declaration beats every
        non-important stylesheet rule, which is the same trap the `display` note above records).
        Everything else stays inline and unchanged, so the desktop button is byte-identical. */
-    btnEl.style.cssText = 'font-weight:var(--font-weight-bold);letter-spacing:.5px;text-transform:uppercase;color:var(--mut);background:var(--accbg);border:1px solid var(--acc-a12);border-radius:8px;cursor:pointer;margin-top:var(--space-10);transition:all var(--duration-base) var(--ease-base)';
+    btnEl.style.cssText = 'font-weight:var(--font-weight-bold);letter-spacing:var(--track-px-0-5);text-transform:uppercase;color:var(--mut);background:var(--accbg);border:1px solid var(--acc-a12);border-radius:8px;cursor:pointer;margin-top:var(--space-10);transition:all var(--duration-base) var(--ease-base)';
     btnEl.addEventListener('click', toggle);
     hdr.appendChild(btnEl);
   }

@@ -11,9 +11,9 @@ var CS_SHEET = new CSSStyleSheet();
 CS_SHEET.replaceSync(`
 .cs-one{background:linear-gradient(135deg,var(--accbg) 0%,var(--acc-a04) 100%);border-radius:12px;padding:var(--space-14) var(--space-17);font-size:var(--font-size-small);line-height:var(--line-height-airy);color:var(--ink);box-shadow:0 1px 6px -2px var(--acc-a06)}
 .cs-one b{color:var(--accink);font-weight:var(--font-weight-bold)}
-.cs-one-l{display:block;font:var(--font-weight-heavy) 9.5px var(--sans);letter-spacing:.7px;text-transform:uppercase;color:var(--acc);margin-bottom:var(--space-6)}
+.cs-one-l{display:block;font:var(--font-weight-heavy) 9.5px var(--sans);letter-spacing:var(--track-px-0-7);text-transform:uppercase;color:var(--acc);margin-bottom:var(--space-6)}
 .cs-sec{margin-top:var(--space-18)}
-.cs-st{font:var(--font-weight-heavy) 10.5px var(--sans);letter-spacing:.7px;text-transform:uppercase;color:var(--acc);border-bottom:2px solid var(--accbg);padding-bottom:var(--space-5);margin-bottom:var(--space-10)}
+.cs-st{font:var(--font-weight-heavy) 10.5px var(--sans);letter-spacing:var(--track-px-0-7);text-transform:uppercase;color:var(--acc);border-bottom:2px solid var(--accbg);padding-bottom:var(--space-5);margin-bottom:var(--space-10)}
 .cs-spine{margin:0;padding-left:var(--space-20)}
 .cs-spine li{font-size:var(--font-size-reading-sm);line-height:var(--line-height-airy);margin-bottom:var(--space-6);color:var(--ink)}
 /* THE PROMPT->RECALL PAIR IS A PAIR, STRUCTURALLY -- not one paragraph with a colour shift.

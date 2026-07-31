@@ -1,0 +1,307 @@
+W22 WATCHED-RED CAPTURE -- the two new gate arms, run on the PRE-FIX tree
+captured : 2026-07-31T01:57:35Z UTC
+branch   : ledger/l1-token-structure
+tree     : 92aa8d09b5d3275a42a2023eacfc56c1cdef1493  (working tree carries the two new guards ONLY --
+           no token file change, no call-site migration; git status below proves it)
+
+git status --short:
+ M test/check_all.py
+?? _audit/2026-07-31-w22-census-tracking.md
+?? test/home_rhythm.py
+?? test/tracking_census.py
+
+This is the negative control. Both arms are shown FAILING against the exact tree
+the audit measured, with their self-tests green -- i.e. the analyser proves it can
+distinguish right from wrong BEFORE it is asked to certify anything. This repo has
+shipped four checks that could not fail; a green from an arm never seen red is not
+evidence.
+
+================================================================================
+ARM 1/2  tracking_census   (audit P3-10)   EXPECT: FAIL
+================================================================================
+=== TRACKING CENSUS -- every letter-spacing comes from the token layer ===
+    scanned      : 189 AUTHORED (git-tracked) files under src/
+    not scanned  : 498 build artefact(s) under src/ -- gitignored output of
+                   the topic compiler and esbuild
+    declarations : 110 live letter-spacing values
+    token layer  : 0 --track-* tokens in design-tokens/tokens.json
+    self-test    : 6 planted defects found (px literal; em literal;
+                   no-leading-zero literal; spaced literal; foreign
+                   token; drifted fallback). Bare token, pinned
+                   fallback, normal, inherit and comment-prose stayed
+                   clean; px/em never collapsed
+    @property arm: 0 --track-* token(s) registered in the deliverable (must be 0)
+    use sites    : 0 token(s) used, 0 orphan(s)
+    violations   : 110
+
+  110 violation(s):
+    .5px                           17 site(s)
+        a RAW TRACKING LITERAL. At 9-10px uppercase this is the craft variable, and an untokenised one is how the app reached ~29 values for one role. Use a var(--track-*) token
+        src/scripts/app/copy-code.js:15, src/scripts/app/drill/logic.js:75, src/scripts/app/drill/logic.js:161, src/scripts/app/drill/logic.js:298, src/scripts/app/drill/logic.js:372, src/scripts/app/focus-mode.js:74 ... +11 more
+    .2px                           10 site(s)
+        a RAW TRACKING LITERAL. At 9-10px uppercase this is the craft variable, and an untokenised one is how the app reached ~29 values for one role. Use a var(--track-*) token
+        src/scripts/app/base-styles.js:213, src/scripts/app/drill/logic.js:233, src/scripts/app/mock-run/logic.js:230, src/scripts/app/num/logic.js:24, src/scripts/app/num/logic.js:27, src/scripts/app/walkthrough/logic.js:78 ... +4 more
+    .6px                           9 site(s)
+        a RAW TRACKING LITERAL. At 9-10px uppercase this is the craft variable, and an untokenised one is how the app reached ~29 values for one role. Use a var(--track-*) token
+        src/scripts/app/drill/logic.js:155, src/scripts/app/mock-run/logic.js:219, src/scripts/app/mock-run/logic.js:220, src/scripts/app/mock-run/logic.js:228, src/scripts/app/num/logic.js:23, src/scripts/app/system-map.js:35 ... +3 more
+    .3px                           9 site(s)
+        a RAW TRACKING LITERAL. At 9-10px uppercase this is the craft variable, and an untokenised one is how the app reached ~29 values for one role. Use a var(--track-*) token
+        src/scripts/app/mixed-fire.js:338, src/scripts/app/shared-sheets.js:23, src/scripts/app/system-map.js:66, src/scripts/app/walkthrough/logic.js:85, src/scripts/app/whiteboard.js:36, src/styles.css:795 ... +3 more
+    .4px                           7 site(s)
+        a RAW TRACKING LITERAL. At 9-10px uppercase this is the craft variable, and an untokenised one is how the app reached ~29 values for one role. Use a var(--track-*) token
+        src/scripts/app/base-styles.js:16, src/scripts/app/drill/logic.js:232, src/scripts/app/mixed-fire.js:357, src/scripts/app/model-answers/logic.js:32, src/styles.css:335, src/styles.css:1397 ... +1 more
+    .7px                           7 site(s)
+        a RAW TRACKING LITERAL. At 9-10px uppercase this is the craft variable, and an untokenised one is how the app reached ~29 values for one role. Use a var(--track-*) token
+        src/scripts/app/base-styles.js:182, src/scripts/app/content-sheet.js:14, src/scripts/app/content-sheet.js:16, src/scripts/app/search-overlay.js:186, src/scripts/app/session-progress.js:891, src/styles.css:1504 ... +1 more
+    .8px                           5 site(s)
+        a RAW TRACKING LITERAL. At 9-10px uppercase this is the craft variable, and an untokenised one is how the app reached ~29 values for one role. Use a var(--track-*) token
+        src/scripts/app/drill/logic.js:235, src/scripts/app/drill/logic.js:241, src/scripts/app/shared-sheets.js:35, src/scripts/app/shared-sheets.js:41, src/scripts/app/system-map.js:36
+    .1em                           5 site(s)
+        a RAW TRACKING LITERAL. At 9-10px uppercase this is the craft variable, and an untokenised one is how the app reached ~29 values for one role. Use a var(--track-*) token
+        src/scripts/app/drill/logic.js:273, src/scripts/app/keyboard-overlay.js:16, src/scripts/app/walkthrough/logic.js:93, src/styles.css:386, src/styles.css:2024
+    -.2px                          3 site(s)
+        a RAW TRACKING LITERAL. At 9-10px uppercase this is the craft variable, and an untokenised one is how the app reached ~29 values for one role. Use a var(--track-*) token
+        src/scripts/app/base-styles.js:18, src/scripts/app/trade-offs.js:19, src/styles.css:1634
+    -.3px                          3 site(s)
+        a RAW TRACKING LITERAL. At 9-10px uppercase this is the craft variable, and an untokenised one is how the app reached ~29 values for one role. Use a var(--track-*) token
+        src/scripts/app/drill/logic.js:265, src/scripts/app/model-answers/logic.js:30, src/scripts/app/tour-guide.js:103
+    .06em                          3 site(s)
+        a RAW TRACKING LITERAL. At 9-10px uppercase this is the craft variable, and an untokenised one is how the app reached ~29 values for one role. Use a var(--track-*) token
+        src/scripts/app/print-qa.js:15, src/styles.css:1784, src/styles.css:1788
+    .01em                          2 site(s)
+        a RAW TRACKING LITERAL. At 9-10px uppercase this is the craft variable, and an untokenised one is how the app reached ~29 values for one role. Use a var(--track-*) token
+        src/scripts/app/drill/logic.js:274, src/scripts/app/walkthrough/logic.js:94
+    -.01em                         2 site(s)
+        a RAW TRACKING LITERAL. At 9-10px uppercase this is the craft variable, and an untokenised one is how the app reached ~29 values for one role. Use a var(--track-*) token
+        src/scripts/app/print-qa.js:11, src/scripts/app/shared-sheets.js:31
+    1px                            2 site(s)
+        a RAW TRACKING LITERAL. At 9-10px uppercase this is the craft variable, and an untokenised one is how the app reached ~29 values for one role. Use a var(--track-*) token
+        src/scripts/app/session-progress.js:938, src/styles.css:1462
+    -.5px                          2 site(s)
+        a RAW TRACKING LITERAL. At 9-10px uppercase this is the craft variable, and an untokenised one is how the app reached ~29 values for one role. Use a var(--track-*) token
+        src/styles.css:1041, src/styles.css:1304
+    .12em                          2 site(s)
+        a RAW TRACKING LITERAL. At 9-10px uppercase this is the craft variable, and an untokenised one is how the app reached ~29 values for one role. Use a var(--track-*) token
+        src/styles.css:1259, src/styles.css:1264
+    .02em                          2 site(s)
+        a RAW TRACKING LITERAL. At 9-10px uppercase this is the craft variable, and an untokenised one is how the app reached ~29 values for one role. Use a var(--track-*) token
+        src/styles.css:1654, src/styles.css:1668
+    .09em                          2 site(s)
+        a RAW TRACKING LITERAL. At 9-10px uppercase this is the craft variable, and an untokenised one is how the app reached ~29 values for one role. Use a var(--track-*) token
+        src/styles.css:1703, src/styles.css:1776
+    .04em                          2 site(s)
+        a RAW TRACKING LITERAL. At 9-10px uppercase this is the craft variable, and an untokenised one is how the app reached ~29 values for one role. Use a var(--track-*) token
+        src/styles.css:1724, src/styles.css:1976
+    0                              1 site(s)
+        a letter-spacing value this check COULD NOT PARSE. Unreadable is not clean -- if this is a legitimate shape, teach the parser about it
+        src/scripts/app/drill/logic.js:299
+    -1px                           1 site(s)
+        a RAW TRACKING LITERAL. At 9-10px uppercase this is the craft variable, and an untokenised one is how the app reached ~29 values for one role. Use a var(--track-*) token
+        src/scripts/app/mixed-fire.js:347
+    .07em                          1 site(s)
+        a RAW TRACKING LITERAL. At 9-10px uppercase this is the craft variable, and an untokenised one is how the app reached ~29 values for one role. Use a var(--track-*) token
+        src/scripts/app/print-qa.js:13
+    .9px                           1 site(s)
+        a RAW TRACKING LITERAL. At 9-10px uppercase this is the craft variable, and an untokenised one is how the app reached ~29 values for one role. Use a var(--track-*) token
+        src/scripts/app/walkthrough/logic.js:88
+    -.7px                          1 site(s)
+        a RAW TRACKING LITERAL. At 9-10px uppercase this is the craft variable, and an untokenised one is how the app reached ~29 values for one role. Use a var(--track-*) token
+        src/styles.css:323
+    .1px                           1 site(s)
+        a RAW TRACKING LITERAL. At 9-10px uppercase this is the craft variable, and an untokenised one is how the app reached ~29 values for one role. Use a var(--track-*) token
+        src/styles.css:454
+    -.4px                          1 site(s)
+        a RAW TRACKING LITERAL. At 9-10px uppercase this is the craft variable, and an untokenised one is how the app reached ~29 values for one role. Use a var(--track-*) token
+        src/styles.css:627
+    1.8px                          1 site(s)
+        a RAW TRACKING LITERAL. At 9-10px uppercase this is the craft variable, and an untokenised one is how the app reached ~29 values for one role. Use a var(--track-*) token
+        src/styles.css:1039
+    .13em                          1 site(s)
+        a RAW TRACKING LITERAL. At 9-10px uppercase this is the craft variable, and an untokenised one is how the app reached ~29 values for one role. Use a var(--track-*) token
+        src/styles.css:1201
+    -.014em                        1 site(s)
+        a RAW TRACKING LITERAL. At 9-10px uppercase this is the craft variable, and an untokenised one is how the app reached ~29 values for one role. Use a var(--track-*) token
+        src/styles.css:1261
+    1.2px                          1 site(s)
+        a RAW TRACKING LITERAL. At 9-10px uppercase this is the craft variable, and an untokenised one is how the app reached ~29 values for one role. Use a var(--track-*) token
+        src/styles.css:1391
+    .11em                          1 site(s)
+        a RAW TRACKING LITERAL. At 9-10px uppercase this is the craft variable, and an untokenised one is how the app reached ~29 values for one role. Use a var(--track-*) token
+        src/styles.css:1673
+    1.5px                          1 site(s)
+        a RAW TRACKING LITERAL. At 9-10px uppercase this is the craft variable, and an untokenised one is how the app reached ~29 values for one role. Use a var(--track-*) token
+        src/styles.css:1690
+    -.02em                         1 site(s)
+        a RAW TRACKING LITERAL. At 9-10px uppercase this is the craft variable, and an untokenised one is how the app reached ~29 values for one role. Use a var(--track-*) token
+        src/styles.css:1798
+    .08em                          1 site(s)
+        a RAW TRACKING LITERAL. At 9-10px uppercase this is the craft variable, and an untokenised one is how the app reached ~29 values for one role. Use a var(--track-*) token
+        src/styles.css:1995
+    1.6px                          1 site(s)
+        a RAW TRACKING LITERAL. At 9-10px uppercase this is the craft variable, and an untokenised one is how the app reached ~29 values for one role. Use a var(--track-*) token
+        src/tw.css:47
+
+  Tracking values live in design-tokens/tokens.json under `track`, and
+  reach the app through the generator. Never hand-edit
+  src/tokens.generated.css.
+
+TRACKING CENSUS: FAIL
+[exit 1]
+
+================================================================================
+ARM 2/2  home_rhythm       (audit P3-11)   EXPECT: FAIL
+================================================================================
+=== HOME RHYTHM -- home stack gaps and measure come from the semantic layer ===
+    scanned      : src/styles.css, rules naming #home or .hm-*
+    scope        : blocks that declare the content measure, i.e. members
+                   of the home centred column. On those: the measure, and
+                   the stack-rhythm gap (non-zero margin-top/bottom, incl.
+                   shorthand slots). A home block with NO measure is
+                   component-internal and out of scope, as are padding
+                   and inner gap -- see the SCOPE BOUNDARY note in this file.
+    rhythm gaps  : 8 discovered
+    measures     : 9 discovered
+    registry     : 8 slot(s)
+    self-test    : 6 planted defects found (raw gap; bare-primitive gap;
+                   raw measure; bare-primitive measure; a gap inside
+                   @media; an unregistered NEW home block) + shorthand
+                   slot arithmetic asserted. Legitimate shapes,
+                   component-internal gap/padding, a zero margin slot
+                   and comment-prose all stayed clean
+    cross-check  : 0 NEW, 0 STALE
+
+  17 violation(s):
+    #home .ix-panel          max-width      var(--space-980)         styles.css:1966
+        the home content measure written as a bare primitive. It is the same width nine blocks share; var(--measure-home) says so, var(--space-980) says "980, for reasons unrecorded"
+    .hm-cta                  margin-bottom  var(--space-26)          styles.css:2005
+        a home stack gap written as a bare pixel primitive. The primitive carries a number and no intent -- var(--space-26) looks like a scale decision and is not one. Use the var(--gap-home-*) slot for this block
+    .hm-cta                  max-width      var(--space-980)         styles.css:2005
+        the home content measure written as a bare primitive. It is the same width nine blocks share; var(--measure-home) says so, var(--space-980) says "980, for reasons unrecorded"
+    .hm-lead                 margin-bottom  var(--space-16)          styles.css:1988
+        a home stack gap written as a bare pixel primitive. The primitive carries a number and no intent -- var(--space-26) looks like a scale decision and is not one. Use the var(--gap-home-*) slot for this block
+    .hm-lead                 max-width      var(--space-980)         styles.css:1988
+        the home content measure written as a bare primitive. It is the same width nine blocks share; var(--measure-home) says so, var(--space-980) says "980, for reasons unrecorded"
+    .hm-rooms                margin-bottom  var(--space-30)          styles.css:2035
+        a home stack gap written as a bare pixel primitive. The primitive carries a number and no intent -- var(--space-26) looks like a scale decision and is not one. Use the var(--gap-home-*) slot for this block
+    .hm-rooms                max-width      var(--space-980)         styles.css:2035
+        the home content measure written as a bare primitive. It is the same width nine blocks share; var(--measure-home) says so, var(--space-980) says "980, for reasons unrecorded"
+    .hm-sec                  margin-bottom  var(--space-26)          styles.css:2093
+        a home stack gap written as a bare pixel primitive. The primitive carries a number and no intent -- var(--space-26) looks like a scale decision and is not one. Use the var(--gap-home-*) slot for this block
+    .hm-sec                  max-width      var(--space-980)         styles.css:2093
+        the home content measure written as a bare primitive. It is the same width nine blocks share; var(--measure-home) says so, var(--space-980) says "980, for reasons unrecorded"
+    .hm-skip                 margin-bottom  var(--space-20)          styles.css:2097
+        a home stack gap written as a bare pixel primitive. The primitive carries a number and no intent -- var(--space-26) looks like a scale decision and is not one. Use the var(--gap-home-*) slot for this block
+    .hm-skip                 max-width      var(--space-980)         styles.css:2097
+        the home content measure written as a bare primitive. It is the same width nine blocks share; var(--measure-home) says so, var(--space-980) says "980, for reasons unrecorded"
+    .hm-state                margin-bottom  var(--space-18)          styles.css:1994
+        a home stack gap written as a bare pixel primitive. The primitive carries a number and no intent -- var(--space-26) looks like a scale decision and is not one. Use the var(--gap-home-*) slot for this block
+    .hm-state                max-width      var(--space-980)         styles.css:1994
+        the home content measure written as a bare primitive. It is the same width nine blocks share; var(--measure-home) says so, var(--space-980) says "980, for reasons unrecorded"
+    .hm-tele                 margin-bottom  var(--space-26)          styles.css:2095
+        a home stack gap written as a bare pixel primitive. The primitive carries a number and no intent -- var(--space-26) looks like a scale decision and is not one. Use the var(--gap-home-*) slot for this block
+    .hm-tele                 max-width      var(--space-980)         styles.css:2095
+        the home content measure written as a bare primitive. It is the same width nine blocks share; var(--measure-home) says so, var(--space-980) says "980, for reasons unrecorded"
+    .hm-top                  margin-bottom  var(--space-24)          styles.css:1973
+        a home stack gap written as a bare pixel primitive. The primitive carries a number and no intent -- var(--space-26) looks like a scale decision and is not one. Use the var(--gap-home-*) slot for this block
+    .hm-top                  max-width      var(--space-980)         styles.css:1973
+        the home content measure written as a bare primitive. It is the same width nine blocks share; var(--measure-home) says so, var(--space-980) says "980, for reasons unrecorded"
+
+  Home stack roles live in design-tokens/tokens.json under `gap.home` and
+  `measure.home`, and reach the app through the generator. Never hand-edit
+  src/tokens.generated.css.
+
+HOME RHYTHM: FAIL
+[exit 1]
+
+################################################################################
+SECOND NEGATIVE CONTROL -- token layer landed, ZERO call sites migrated
+captured : 2026-07-31T02:03:58Z UTC
+################################################################################
+
+Why a second capture exists. The first was taken on the pristine pre-fix tree
+(guards only). Two things happened after it, and both need their own red:
+
+  1. home_rhythm gained a SLOT-IDENTITY arm. Checking the token FAMILY is not
+     enough here -- three home slots resolve to the same 26px, so
+     --gap-home-section sitting on the decision hero would render
+     byte-identically and read as correct forever. The arm pins each slot to
+     its registry entry. Proven by self-test; a swapped name is rejected and
+     the correct name is not.
+  2. design-tokens/tokens.json gained the 35 --track-*, 8 --gap-home-* and 1
+     --measure-home token. This is the ONLY moment the MINT-ON-USE arm can be
+     seen firing: every one of the 35 tracking tokens now exists and NOTHING
+     uses one yet, so all 35 must report as orphans. If that arm were inert,
+     this is where it would show, and it is the arm that makes this tier
+     something --space-19 is not.
+
+git status --short:
+ M design-tokens/tokens.json
+ M test/check_all.py
+?? _audit/2026-07-31-w22-census-gaps.md
+?? _audit/2026-07-31-w22-census-tracking.md
+?? _audit/2026-07-31-w22-tokens-watched-red.txt
+?? test/home_rhythm.py
+?? test/tracking_census.py
+
+================================================================================
+tracking_census   EXPECT: FAIL -- 110 literals AND 35 orphans
+================================================================================
+=== TRACKING CENSUS -- every letter-spacing comes from the token layer ===
+    scanned      : 189 AUTHORED (git-tracked) files under src/
+    not scanned  : 498 build artefact(s) under src/ -- gitignored output of
+                   the topic compiler and esbuild
+    declarations : 110 live letter-spacing values
+    token layer  : 35 --track-* tokens in design-tokens/tokens.json
+    self-test    : 6 planted defects found (px literal; em literal;
+                   no-leading-zero literal; spaced literal; foreign
+                   token; drifted fallback). Bare token, pinned
+                   fallback, normal, inherit and comment-prose stayed
+                   clean; px/em never collapsed
+    @property arm: 0 --track-* token(s) registered in the deliverable (must be 0)
+    use sites    : 0 token(s) used, 35 orphan(s)
+    violations   : 110
+
+  145 violation(s):
+    .5px                           17 site(s)
+        a RAW TRACKING LITERAL. At 9-10px uppercase this is the craft variable, and an untokenised one is how the app reached ~29 values for one role. Use a var(--track-*) token
+        src/scripts/app/copy-code.js:15, src/scripts/app/drill/logic.js:75, src/scripts/app/drill/logic.js:161, src/scripts/app/drill/logic.js:298, src/scripts/app/drill/logic.js:372, src/scripts/app/focus-mode.js:74 ... +11 more
+    .2px                           10 site(s)
+        a RAW TRACKING LITERAL. At 9-10px uppercase this is the craft variable, and an untokenised one is how the app reached ~29 values for one role. Use a var(--track-*) token
+        src/scripts/app/base-styles.js:213, src/scripts/app/drill/logic.js:233, src/scripts/app/mock-run/logic.js:230, src/scripts/app/num/logic.js:24, src/scripts/app/num/logic.js:27, src/scripts/app/walkthrough/logic.js:78 ... +4 more
+    .6px                           9 site(s)
+        a RAW TRACKING LITERAL. At 9-10px uppercase this is the craft variable, and an untokenised one is how the app reached ~29 values for one role. Use a var(--track-*) token
+        src/scripts/app/drill/logic.js:155, src/scripts/app/mock-run/logic.js:219, src/scripts/app/mock-run/logic.js:220, src/scripts/app/mock-run/logic.js:228, src/scripts/app/num/logic.js:23, src/scripts/app/system-map.js:35 ... +3 more
+    .3px                           9 site(s)
+        a RAW TRACKING LITERAL. At 9-10px uppercase this is the craft variable, and an untokenised one is how the app reached ~29 values for one role. Use a var(--track-*) token
+        src/scripts/app/mixed-fire.js:338, src/scripts/app/shared-sheets.js:23, src/scripts/app/system-map.js:66, src/scripts/app/walkthrough/logic.js:85, src/scripts/app/whiteboard.js:36, src/styles.css:795 ... +3 more
+    .4px                           7 site(s)
+        a RAW TRACKING LITERAL. At 9-10px uppercase this is the craft variable, and an untokenised one is how the app reached ~29 values for one role. Use a var(--track-*) token
+        src/scripts/app/base-styles.js:16, src/scripts/app/drill/logic.js:232, src/scripts/app/mixed-fire.js:357, src/scripts/app/model-answers/logic.js:32, src/styles.css:335, src/styles.css:1397 ... +1 more
+    .7px                           7 site(s)
+[exit 1]
+  ... literal detail elided; the full per-value listing is in the first capture
+
+================================================================================
+home_rhythm       EXPECT: FAIL -- 8 gaps + 9 measures still on bare primitives
+================================================================================
+=== HOME RHYTHM -- home stack gaps and measure come from the semantic layer ===
+    scanned      : src/styles.css, rules naming #home or .hm-*
+    scope        : blocks that declare the content measure, i.e. members
+                   of the home centred column. On those: the measure, and
+                   the stack-rhythm gap (non-zero margin-top/bottom, incl.
+                   shorthand slots). A home block with NO measure is
+                   component-internal and out of scope, as are padding
+                   and inner gap -- see the SCOPE BOUNDARY note in this file.
+    rhythm gaps  : 8 discovered
+    measures     : 9 discovered
+    registry     : 8 slot(s)
+    self-test    : 6 planted defects found (raw gap; bare-primitive gap;
+                   raw measure; bare-primitive measure; a gap inside
+                   @media; an unregistered NEW home block) + shorthand
+                   slot arithmetic asserted. Legitimate shapes,
+                   component-internal gap/padding, a zero margin slot
+                   and comment-prose all stayed clean
+    cross-check  : 0 NEW, 0 STALE
+
+  17 violation(s):
+[exit 1]

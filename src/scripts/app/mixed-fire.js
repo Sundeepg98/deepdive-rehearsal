@@ -335,8 +335,8 @@ document.getElementById('mockx').onclick = closeMock;
    open/close, and the mock-run render below (still light) stay as they are. */
 var MIX_STYLE = `
 .mx-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-12);gap:var(--space-10)}
-.mx-prog{font:var(--font-weight-bold) 12px var(--sans);color:var(--mut2);letter-spacing:.3px}
-.mx-kind{font:var(--font-weight-heavy) 10.5px var(--sans);letter-spacing:.5px;text-transform:uppercase;padding:var(--space-5) var(--space-12);border-radius:20px;white-space:nowrap;box-shadow:0 1px 4px -2px var(--acc-a08)}
+.mx-prog{font:var(--font-weight-bold) 12px var(--sans);color:var(--mut2);letter-spacing:var(--track-px-0-3)}
+.mx-kind{font:var(--font-weight-heavy) 10.5px var(--sans);letter-spacing:var(--track-px-0-5);text-transform:uppercase;padding:var(--space-5) var(--space-12);border-radius:20px;white-space:nowrap;box-shadow:0 1px 4px -2px var(--acc-a08)}
 .mxb-probe{background:linear-gradient(135deg,var(--accbg) 0%,var(--acc-a04) 100%);color:var(--accink)}
 .mxb-curve{background:linear-gradient(135deg,var(--mxb-curve-bg) 0%,rgba(176,108,20,.04) 100%);color:var(--amber)}
 .mxb-trade{background:linear-gradient(135deg,var(--tealbg) 0%,rgba(10,133,100,.04) 100%);color:var(--mxb-trade-fg)}
@@ -344,7 +344,7 @@ var MIX_STYLE = `
 .mx-task{display:block;margin-top:var(--space-10);font:var(--font-weight-semibold) 13.5px var(--sans);font-style:italic;color:var(--mut)}
 .mx-end{text-align:center;padding:var(--space-10) var(--space-4)}
 .mx-end-h{font:var(--font-weight-heavy) 17px var(--sans);color:var(--ink);margin-bottom:var(--space-5)}
-.mx-end-pct{font:var(--font-weight-heavy) 44px var(--sans);color:var(--acc);line-height:var(--line-height-none);margin:var(--space-10) 0;text-shadow:0 2px 24px var(--acc-a20),0 0 40px var(--acc-a08);letter-spacing:-1px}
+.mx-end-pct{font:var(--font-weight-heavy) 44px var(--sans);color:var(--acc);line-height:var(--line-height-none);margin:var(--space-10) 0;text-shadow:0 2px 24px var(--acc-a20),0 0 40px var(--acc-a08);letter-spacing:var(--track-px-neg-1)}
 .mx-end-v{font:var(--font-weight-semibold) 14px var(--sans);color:var(--mut);margin:0 auto var(--space-18);line-height:var(--line-height-loose);max-width:var(--space-300)}
 .mx-bd{display:flex;flex-wrap:wrap;justify-content:center;gap:var(--space-9) var(--space-18);margin-bottom:var(--space-20);font:var(--font-weight-semibold) 13px var(--sans);color:var(--mut)}
 .mx-bd b{color:var(--ink);font-weight:var(--font-weight-heavy)}
@@ -354,7 +354,7 @@ var MIX_STYLE = `
 .mx-edot{flex:none;width:var(--space-10);height:var(--space-10);border-radius:50%;box-shadow:0 0 0 2px rgba(255,255,255,.5)}
 .mx-edot.ok{background:linear-gradient(135deg,var(--teal),#2dd4a8)}
 .mx-edot.no{background:linear-gradient(135deg,var(--amber),#d4902a)}
-.mx-ek{flex:none;font:var(--font-weight-heavy) 9.5px var(--sans);text-transform:uppercase;letter-spacing:.4px;color:var(--mut2);width:var(--space-74)}
+.mx-ek{flex:none;font:var(--font-weight-heavy) 9.5px var(--sans);text-transform:uppercase;letter-spacing:var(--track-px-0-4);color:var(--mut2);width:var(--space-74)}
 .mx-el{font:var(--font-weight-semibold) 13px var(--sans);color:var(--ink)}
 .mx-end-btns{display:flex;flex-direction:column;gap:var(--space-10)}
 .mx-end-btns button{margin-top:0}

@@ -216,8 +216,8 @@ function closeMock() {
    and openMock's keyboard shortcuts target it via the mockbody global / mockRoot.
    The frame, clock, open/close, and the shared ovShow/ovHide stay light. */
 var MOCK_STYLE = `
-.mb-prog{font:var(--font-weight-heavy) 11px var(--sans);letter-spacing:.6px;color:var(--mut2)}
-.mb-tag{display:inline-block;margin-left:var(--space-9);font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.6px;color:var(--acc);background:var(--accbg);border-radius:5px;padding:var(--space-2) var(--space-9);vertical-align:middle}
+.mb-prog{font:var(--font-weight-heavy) 11px var(--sans);letter-spacing:var(--track-px-0-6);color:var(--mut2)}
+.mb-tag{display:inline-block;margin-left:var(--space-9);font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:var(--track-px-0-6);color:var(--acc);background:var(--accbg);border-radius:5px;padding:var(--space-2) var(--space-9);vertical-align:middle}
 .mb-cue{font-size:var(--font-size-subhead);font-weight:var(--font-weight-bold);color:var(--ink);line-height:var(--line-height-normal);margin:var(--space-13) 0 0}
 .mb-task{font-size:var(--font-size-small);color:var(--mut);line-height:var(--line-height-airy);margin:var(--space-10) 0 0;font-style:italic}
 .mb-task b{color:var(--accink);font-style:normal}
@@ -225,9 +225,9 @@ var MOCK_STYLE = `
 .mb-model.show{display:block;animation:pop var(--duration-moderate) var(--ease-base)}
 .mb-model b{color:var(--accink);font-weight:var(--font-weight-bold)}
 .mb-model code{font-size:var(--font-size-micro)}
-.mb-ml{font:var(--font-weight-heavy) 10px var(--sans);letter-spacing:.6px;color:var(--acc);text-transform:uppercase;margin-bottom:var(--space-7)}
+.mb-ml{font:var(--font-weight-heavy) 10px var(--sans);letter-spacing:var(--track-px-0-6);color:var(--acc);text-transform:uppercase;margin-bottom:var(--space-7)}
 .mb-act{display:flex;gap:var(--space-9);align-items:center;margin:var(--space-17) 0 0}
-.mb-keys{margin-top:var(--space-13);font-size:var(--font-size-micro);color:var(--mut2);text-align:center;letter-spacing:.2px}
+.mb-keys{margin-top:var(--space-13);font-size:var(--font-size-micro);color:var(--mut2);text-align:center;letter-spacing:var(--track-px-0-2)}
 .mb-rev,.mb-next{font:var(--font-weight-bold) 12.5px var(--sans);padding:var(--space-9) var(--space-16);border-radius:9px;cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),box-shadow var(--duration-base) var(--ease-base),border-color var(--duration-base) var(--ease-base),background var(--duration-base) var(--ease-base)}
 .mb-rev:hover,.mb-next:hover{transform:translateY(-1px);box-shadow:0 4px 12px -3px var(--acc-a12)}
 .mb-rev:active,.mb-next:active{transform:translateY(1px) scale(.98)}
@@ -258,7 +258,7 @@ var MOCK_STYLE = `
 .mb-end-int b{font-weight:var(--font-weight-heavy)}
 .mb-int{display:none;margin:var(--space-14) 0 0;padding:var(--space-14) var(--space-17);background:linear-gradient(135deg,var(--redbg) 0%,rgba(239,68,68,.04) 100%);border:1px solid #e8c5c0;border-left:3px solid var(--red);border-radius:12px;box-shadow:0 1px 6px -2px rgba(239,68,68,.1)}
 .mb-int.show{display:block;animation:pop var(--duration-moderate) var(--ease-base)}
-.mb-int-h{font:var(--font-weight-heavy) 10px var(--sans);letter-spacing:.5px;color:var(--red);text-transform:uppercase;margin-bottom:var(--space-7)}
+.mb-int-h{font:var(--font-weight-heavy) 10px var(--sans);letter-spacing:var(--track-px-0-5);color:var(--red);text-transform:uppercase;margin-bottom:var(--space-7)}
 .mb-int-q{font-size:var(--font-size-body);font-weight:var(--font-weight-bold);color:var(--mb-intq-fg);line-height:var(--line-height-relaxed)}
 .mb-irev{margin-top:var(--space-12);border:1.5px solid var(--mb-irev-bd);background:linear-gradient(135deg,var(--mb-irev-bg) 0%,rgba(239,68,68,.04) 100%);color:var(--red);font:var(--font-weight-bold) 11.5px var(--sans);padding:var(--space-8) var(--space-14);border-radius:9px;cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base),color var(--duration-fast) var(--ease-base),border-color var(--duration-fast) var(--ease-base)}
 .mb-irev:hover{background:var(--red);color:var(--on-slab);border-color:var(--red);transform:translateY(-1px)}
@@ -267,9 +267,9 @@ var MOCK_STYLE = `
 .mb-int-a{display:none;margin-top:var(--space-12);padding-top:var(--space-12);border-top:1px dashed #e3bdb8;font-size:var(--font-size-small);color:var(--ink);line-height:var(--line-height-spacious)}
 .mb-int2{display:none;margin-top:var(--space-13);padding-top:var(--space-13);border-top:1px solid #e8c5c0}
 .mb-int2.show{display:block;animation:pop var(--duration-moderate) var(--ease-base)}
-.mb-int-h2{font:var(--font-weight-heavy) 10px var(--sans);letter-spacing:.5px;color:var(--red);text-transform:uppercase;margin-bottom:var(--space-7)}
+.mb-int-h2{font:var(--font-weight-heavy) 10px var(--sans);letter-spacing:var(--track-px-0-5);color:var(--red);text-transform:uppercase;margin-bottom:var(--space-7)}
 .mb-int-a.show{display:block}
-.mb-int-al{font:var(--font-weight-heavy) 9.5px var(--sans);letter-spacing:.5px;color:var(--teal);text-transform:uppercase;margin-bottom:var(--space-6)}
+.mb-int-al{font:var(--font-weight-heavy) 9.5px var(--sans);letter-spacing:var(--track-px-0-5);color:var(--teal);text-transform:uppercase;margin-bottom:var(--space-6)}
 .mb-rev{transition:filter var(--duration-fast) var(--ease-base)}
 .mb-rev:hover{filter:brightness(.96)}
 .mb-rev:active,.mb-next:active,.mb-again:active,.pri:active{transform:translateY(1px);filter:brightness(.96)}`;

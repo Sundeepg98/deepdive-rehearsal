@@ -183,7 +183,7 @@
   }
   function sectionHeader(text) {
     var h = document.createElement('div');
-    h.style.cssText = 'font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.7px;text-transform:uppercase;color:var(--mut2);padding:var(--space-8) var(--space-14) var(--space-4)';
+    h.style.cssText = 'font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:var(--track-px-0-7);text-transform:uppercase;color:var(--mut2);padding:var(--space-8) var(--space-14) var(--space-4)';
     h.textContent = text;
     return h;
   }
@@ -204,7 +204,7 @@
     highlightInto(title, d.label, q);
     var tag = document.createElement('span');
     tag.textContent = (d.kind === 'topic') ? 'TOPIC' : 'VIEW';
-    tag.style.cssText = 'font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.5px;padding:var(--space-2) var(--space-6);border-radius:5px;font-family:var(--mono,monospace);' + ((d.kind === 'topic') ? 'color:var(--acc);background:var(--accbg)' : 'color:var(--mut);background:var(--bg);border:1px solid var(--bd)');
+    tag.style.cssText = 'font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:var(--track-px-0-5);padding:var(--space-2) var(--space-6);border-radius:5px;font-family:var(--mono,monospace);' + ((d.kind === 'topic') ? 'color:var(--acc);background:var(--accbg)' : 'color:var(--mut);background:var(--bg);border:1px solid var(--bd)');
     top.appendChild(title); top.appendChild(tag);
     var sub = document.createElement('span');
     sub.style.cssText = 'font-size:var(--font-size-micro);color:var(--mut);margin-top:var(--space-3)';

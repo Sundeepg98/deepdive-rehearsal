@@ -175,6 +175,46 @@ for name, cmd in [('ascii_guard', ['python3', 'test/ascii_guard.py']),
                   # print-qa.js's literal copy of the stack is COMPARED against --sans so the
                   # stack cannot quietly acquire a second answer. Static, ~1s.
                   ('typeface_census', ['python3', 'test/typeface_census.py']),
+                  # tracking_census (W22 / audit P3-10): the SPACE half of the same story
+                  # typeface_census tells about type. Type and colour are contract-enforced
+                  # pillars here; space was the hollow one -- nothing could tell you how many
+                  # tracking values the app had, so the answer grew one declaration at a time
+                  # and nobody was ever wrong. Measured pre-fix: 110 letter-spacing
+                  # declarations across 21 files, 0 tokenised, with the 9-10px uppercase label
+                  # -- ONE role -- rendered ~29 ways. At that size tracking IS the craft
+                  # variable. W22 named every value in use AS-IS (zero pixels moved; VR 16/16
+                  # byte-identical) and this holds the line: a raw literal fails, so does a
+                  # var() from any other token family, and a pinned fallback that disagrees
+                  # with its own token. The arm that matters is MINT-ON-USE -- a --track-*
+                  # token nothing uses is a FAILURE, which is precisely the property
+                  # --space-19/39/43 never had. One more arm is a zero-pixel tripwire: an
+                  # @property registration on a --track-em-* token would resolve em against
+                  # :root once and silently stop every uppercase label tracking its own type
+                  # size, so widening postprocess-tokens.mjs cannot move pixels in a build
+                  # whose token file did not change. Static, ~1s.
+                  ('tracking_census', ['python3', 'test/tracking_census.py']),
+                  # home_rhythm (W22 / audit P3-11): the spacing layer is a 1:1 pixel
+                  # passthrough, so a spacing token carries a NUMBER and no INTENT --
+                  # `var(--space-13)` "looks disciplined and means 13px, chosen ad hoc".
+                  # Measured pre-fix: home's stacked sections used a different gap each
+                  # (24/16/18/26/30/26/26/20) and all nine repeated max-width:var(--space-980),
+                  # every one reading like a scale decision and none of them being one. W22 gave
+                  # each stack slot a ROLE name aliasing the exact primitive it already used, so
+                  # the eight gaps scattered over 140 lines are now one block in one token file
+                  # that a future normalisation pass can read whole. It does NOT collapse the
+                  # values -- that judgement is the audit's parked design call, and three slots
+                  # deliberately keep three names for one 26px value because "three roles landed
+                  # on the same number independently" is the fact such a pass needs and a shared
+                  # primitive hides. Scope is DERIVED, not listed: a block is in scope exactly
+                  # when it declares the content measure, i.e. when it is a member of the home
+                  # centred column, which is why the population of the two arms is one
+                  # population. That boundary was corrected BY this check on its first run --
+                  # selector-only scoping dragged in .hm-h's heading gap and a 2px optical nudge
+                  # inside the hero button, and demanding a role name for those is the noise an
+                  # all-src gap ratchet would have been. Exhaustive by DISCOVERY inside the
+                  # boundary, so a new home section cannot ship unguarded by being absent from a
+                  # list; the registry is cross-checked both ways. Static, ~1s.
+                  ('home_rhythm', ['python3', 'test/home_rhythm.py']),
                   ('file_integrity', ['python3', 'test/file_integrity.py']),
                   ('unit_tests', ['python3', 'test/unit_tests.py']),
                   # The visual sim's invariants ARE the teaching points its modes exist to

@@ -32,8 +32,8 @@ var SYS_STYLE = `
 .stg.cur .dot{background:linear-gradient(135deg,var(--acc),var(--acc2));border-color:var(--acc);color:var(--on-slab);box-shadow:0 0 0 5px var(--accbg),0 2px 10px -2px var(--acc-a30)}
 /* curPulse (2s endless) removed -- the "you are here" dot's fill + ring IS the state. */
 .stg.cur .nm{color:var(--accink);font-weight:var(--font-weight-bold)}
-.stg.cur .here{display:inline-block;font-size:var(--font-size-micro);font-weight:var(--font-weight-heavy);letter-spacing:.6px;text-transform:uppercase;color:var(--sm-here-fg);background:linear-gradient(135deg,var(--acc),var(--acc2));border-radius:5px;padding:var(--space-2) var(--space-8);margin-left:var(--space-8);vertical-align:middle;box-shadow:0 2px 6px -2px var(--acc-a25)}
-.piv-k{font-size:var(--font-size-micro);font-weight:var(--font-weight-heavy);letter-spacing:.8px;text-transform:uppercase;color:var(--acc);margin-bottom:var(--space-4)}
+.stg.cur .here{display:inline-block;font-size:var(--font-size-micro);font-weight:var(--font-weight-heavy);letter-spacing:var(--track-px-0-6);text-transform:uppercase;color:var(--sm-here-fg);background:linear-gradient(135deg,var(--acc),var(--acc2));border-radius:5px;padding:var(--space-2) var(--space-8);margin-left:var(--space-8);vertical-align:middle;box-shadow:0 2px 6px -2px var(--acc-a25)}
+.piv-k{font-size:var(--font-size-micro);font-weight:var(--font-weight-heavy);letter-spacing:var(--track-px-0-8);text-transform:uppercase;color:var(--acc);margin-bottom:var(--space-4)}
 .piv-sub{font-size:var(--font-size-body);max-width:var(--measure);color:var(--mut);margin-bottom:var(--space-16)}
 .piv{border:1px solid var(--bd);border-radius:12px;margin-bottom:var(--space-10);overflow:hidden;background:linear-gradient(135deg,var(--sm-card-bg) 0%,var(--acc-a02) 100%);transition:border-color var(--duration-base) var(--ease-base),box-shadow var(--duration-moderate) var(--ease-base),transform var(--duration-base) var(--ease-base)}
 .piv:hover{border-color:var(--acc);box-shadow:0 6px 20px -8px var(--acc-a20);transform:translateY(-1px)}
@@ -63,7 +63,7 @@ var SYS_STYLE = `
    max-width caps only the long ones, and white-space:normal lets a capped chip WRAP rather than
    be cropped. Content the author wrote is not silently cut off by the layout -- the same rule the
    compiler now obeys, one layer down. */
-.piv .chip{flex:none;max-width:55%;font-size:var(--font-size-micro);font-weight:var(--font-weight-heavy);letter-spacing:.3px;color:var(--mut2);background:transparent;border:1px solid var(--bd);border-radius:6px;padding:var(--space-3) var(--space-9);white-space:normal;overflow-wrap:anywhere;margin-top:var(--space-1);margin-left:auto}
+.piv .chip{flex:none;max-width:55%;font-size:var(--font-size-micro);font-weight:var(--font-weight-heavy);letter-spacing:var(--track-px-0-3);color:var(--mut2);background:transparent;border:1px solid var(--bd);border-radius:6px;padding:var(--space-3) var(--space-9);white-space:normal;overflow-wrap:anywhere;margin-top:var(--space-1);margin-left:auto}
 /* a pivot that lands in another room glows that room's ink -- wayfinding, not decoration */
 .piv .chip.chip-dest{color:var(--dest);border-color:color-mix(in srgb,var(--dest) 35%,var(--bd));background:color-mix(in srgb,var(--dest) 7%,transparent)}
 /* The two '.piv .chip.chip-link' rules that lived here are DELETED: the class had ZERO emitters

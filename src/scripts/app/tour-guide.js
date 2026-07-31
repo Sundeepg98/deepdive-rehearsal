@@ -100,7 +100,7 @@
       dots += '<span style="display:inline-block;width:var(--space-8);height:var(--space-8);border-radius:50%;margin:0 var(--space-4);background:' + (i === index ? 'var(--acc)' : 'var(--bd)') + ';transition:background var(--duration-slow) var(--ease-base)"></span>';
     }
     tooltipEl.innerHTML =
-      '<div style="font:var(--font-weight-heavy) 15px var(--sans);color:var(--ink);margin-bottom:var(--space-8);letter-spacing:-.3px">' + step.title + '</div>' +
+      '<div style="font:var(--font-weight-heavy) 15px var(--sans);color:var(--ink);margin-bottom:var(--space-8);letter-spacing:var(--track-px-neg-0-3)">' + step.title + '</div>' +
       '<div style="font-size:var(--font-size-small);color:var(--mut);line-height:var(--line-height-airy);margin-bottom:var(--space-16)">' + step.text + '</div>' +
       '<div style="display:flex;align-items:center;justify-content:space-between">' +
         '<div style="display:flex;align-items:center">' + dots + '</div>' +

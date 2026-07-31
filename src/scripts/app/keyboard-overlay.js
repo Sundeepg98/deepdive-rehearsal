@@ -13,7 +13,7 @@
 var KBD_STYLE = `
 .ks-sec{margin-bottom:var(--space-18)}
 .ks-sec:last-of-type{margin-bottom:0}
-.ks-h{font-size:var(--font-size-micro);font-weight:var(--font-weight-heavy);letter-spacing:.1em;text-transform:uppercase;color:var(--acc);margin:0 0 var(--space-12)}
+.ks-h{font-size:var(--font-size-micro);font-weight:var(--font-weight-heavy);letter-spacing:var(--track-em-0-1);text-transform:uppercase;color:var(--acc);margin:0 0 var(--space-12)}
 .ks-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-9) var(--space-18)}
 /* Narrow phones: two columns, not three. At 360px the panel body is ~322px wide and the
    3-track grid's min-content is ~339px (kbd chip + "Walkthrough"-class labels do not shrink),

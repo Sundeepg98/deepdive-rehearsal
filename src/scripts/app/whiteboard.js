@@ -33,7 +33,7 @@ var WB_STYLE = `
 .dgm-recon{border-color:var(--teal);background:var(--tealbg)}
 .dgm-recon .dgm-t{color:var(--teal)}
 .dgm-foot{margin-top:var(--space-9);border-top:1px dashed var(--bd);padding-top:var(--space-8)}
-.wb-count{font-family:var(--mono);font-size:var(--font-size-micro);font-weight:var(--font-weight-heavy);color:var(--acc);letter-spacing:.3px;margin-bottom:var(--space-14)}
+.wb-count{font-family:var(--mono);font-size:var(--font-size-micro);font-weight:var(--font-weight-heavy);color:var(--acc);letter-spacing:var(--track-px-0-3);margin-bottom:var(--space-14)}
 .wb{list-style:none;counter-reset:wb}
 .wb li{counter-increment:wb;display:block;padding:var(--space-15) 0;border-bottom:1px solid var(--wb-li-bd);transition:padding var(--duration-base) var(--ease-base)}
 .wb li:last-child{border-bottom:0}

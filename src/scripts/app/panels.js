@@ -111,7 +111,7 @@
     due.sort(function (a, b) { return b.days - a.days; });
     var pills = due.slice(0, 4).map(function (d) {
       var t = TopicRegistry.get(d.id);
-      return '<button class="ix-due-b" type="button" data-topic="' + d.id + '">' + (t ? t.identity.title : d.id) + '<span class="ix-due-n">' + d.days + 'd</span></button>';
+      return '<button class="ix-due-b" type="button" data-topic="' + d.id + '">' + (t ? t.identity.title : d.id) + '<span class="nsep">, </span><span class="ix-due-n">' + d.days + 'd</span></button>';
     }).join('');
     return '<div class="ix-due"><div class="ix-home-k">Refresh &middot; drilled clean a while ago</div><div class="ix-due-list">' + pills + '</div></div>';
   }
@@ -163,7 +163,7 @@
     var sum = Progress.summary();
     var weak = sum.weakest.slice(0, n || 3).map(function (w) {
       var t = TopicRegistry.get(w.id);
-      return '<button class="ix-weak-b" type="button" data-topic="' + w.id + '">' + (t ? t.identity.title : w.id) + (w.shk ? '<span class="ix-weak-n">' + w.shk + '</span>' : '') + '</button>';
+      return '<button class="ix-weak-b" type="button" data-topic="' + w.id + '">' + (t ? t.identity.title : w.id) + (w.shk ? '<span class="nsep">, </span><span class="ix-weak-n">' + w.shk + '</span>' : '') + '</button>';
     }).join('');
     var concepts = [];
     sum.weakest.slice(0, n || 3).forEach(function (w) {
@@ -187,11 +187,11 @@
   function weakDrillBar() {
     var n = weakCount();
     if (!n) return '';
-    return '<button class="ix-cross ix-cross-weak" type="button" data-cross="weak"><span class="ix-cross-tx"><span class="ix-cross-k">Weak-spot review</span><span class="ix-cross-d">Drill probes from the ' + n + ' topic' + (n === 1 ? '' : 's') + ' you have been shaky on</span></span><span class="ix-cross-ar">&rarr;</span></button>';
+    return '<button class="ix-cross ix-cross-weak" type="button" data-cross="weak"><span class="ix-cross-tx"><span class="ix-cross-k">Weak-spot review</span><span class="ix-cross-d">Drill probes from the ' + n + ' topic' + (n === 1 ? '' : 's') + ' you have been shaky on</span></span><span class="ix-cross-ar" aria-hidden="true">&rarr;</span></button>';
   }
   function crossDrillBar() {
     if (typeof TopicRegistry === 'undefined' || !TopicRegistry.ids().length) return '';
-    return '<button class="ix-cross" type="button" data-cross="1"><span class="ix-cross-tx"><span class="ix-cross-k">Cross-topic drill</span><span class="ix-cross-d">Random probes from every topic &mdash; the interview shuffle</span></span><span class="ix-cross-ar">&rarr;</span></button>';
+    return '<button class="ix-cross" type="button" data-cross="1"><span class="ix-cross-tx"><span class="ix-cross-k">Cross-topic drill</span><span class="ix-cross-d">Random probes from every topic &mdash; the interview shuffle</span></span><span class="ix-cross-ar" aria-hidden="true">&rarr;</span></button>';
   }
   function actionsHtml() { return crossDrillBar() + weakDrillBar(); }
 
@@ -213,7 +213,7 @@
     if (!ids.length) return '';
     var pills = ids.map(function (id) {
       var t = TopicRegistry.get(id);
-      return '<button class="ix-star-pill" type="button" data-topic="' + id + '" style="box-shadow:inset 3px 0 0 ' + groupColorFor(id) + '"><span class="ix-star-ic">&#9733;</span>' + t.identity.title + '</button>';
+      return '<button class="ix-star-pill" type="button" data-topic="' + id + '" style="box-shadow:inset 3px 0 0 ' + groupColorFor(id) + '"><span class="ix-star-ic" aria-hidden="true">&#9733;</span>' + t.identity.title + '</button>';
     }).join('');
     return '<section class="ix-starred"><div class="ix-g-head"><span class="ix-g-dot" style="background:#f59e0b"></span>Starred <span class="ix-g-n">' + ids.length + '</span></div><div class="ix-star-row">' + pills + '</div></section>';
   }
@@ -235,10 +235,19 @@
     else if (_wbSome) _bdg = '<span class="ix-c-badge"><i style="background:var(--acc)"></i>recalled</span>';
     var filt = ((idn.title || '') + ' ' + (idn.locatorTail || '') + ' ' + th).toLowerCase().replace(/&[a-z#0-9]+;/g, ' ').replace(/"/g, '');
     var resetBtn = (_st !== 'untouched') ? '<button class="ix-c-reset" type="button" data-reset="' + id + '" title="Reset progress for this topic" aria-label="Reset progress for ' + idn.title + '">&#8635;</button>' : '';
+    /* Three authored separators, because a topic card fuses at three seams and NVDA's own
+       case-splitter only ever repaired the ones whose next word happened to start
+       upper-then-lower. The audible failures were "ATTRIBUTE BOUNDARYA schema-flexible" and
+       "THE CONSISTENCY SPECTRUMA consistency model" -- 2 of 20 cards, and the other 18 were
+       being repaired by accident, not by markup. A period at the kicker/description seam
+       because that is where a heading meets a sentence; commas elsewhere. */
     return '<div class="ix-cell"><button class="ix-card' + (on ? ' on' : '') + '" type="button" data-topic="' + id + '" data-filter="' + filt + '" style="box-shadow:inset 3px 0 0 var(--room-' + groupId + ')"' +
-      (on ? ' aria-current="true"' : '') + '>' + _bdg +
-      '<span class="ix-c-name">' + idn.title + '</span>' +
-      '<span class="ix-c-tail">' + idn.locatorTail + '</span>' +
+      (on ? ' aria-current="true"' : '') + '>' +
+      /* conditional: _bdg is empty on an untouched topic (the common case), and an unconditional
+         separator opened every such card with a stray ", " -- measured on the built deliverable. */
+      (_bdg ? _bdg + '<span class="nsep">, </span>' : '') +
+      '<span class="ix-c-name">' + idn.title + '</span><span class="nsep">, </span>' +
+      '<span class="ix-c-tail">' + idn.locatorTail + '</span><span class="nsep">. </span>' +
       (th ? '<span class="ix-c-thesis">' + th + '</span>' : '') + '</button>' + resetBtn + '</div>';
   }
 
@@ -257,7 +266,7 @@
       var cards = b.ids.map(function (id) { return topicCard(id, b.group.id, curId); }).join('');
       return '<section class="ix-group" data-group="' + b.group.id + '" style="--rm:var(--room-' + b.group.id + ')"><div class="ix-g-head"><span class="ix-g-dot" style="background:var(--rm)"></span>' + b.group.label +
         ' <span class="ix-g-n">' + b.ids.length + '</span>' +
-        '<button class="ix-g-cram" type="button" data-cross="group:' + b.group.id + '">Cram &rarr;</button></div>' +
+        '<button class="ix-g-cram" type="button" aria-label="Cram: ' + b.group.label + '" data-cross="group:' + b.group.id + '">Cram &rarr;</button></div>' +
         (b.group.desc ? '<div class="ix-g-desc">' + b.group.desc + '</div>' : '') +
         '<div class="ix-grid">' + cards + '</div></section>';
     }).join('');
@@ -280,7 +289,7 @@
       var meta = d.touched + ' of ' + b.ids.length + ' started';
       var weakHtml = weak ? '<span class="hm-room-weak">' + weak + ' weak</span>' : '';
       return '<button class="hm-room" type="button" data-room="' + g.id + '" style="--rm:var(--room-' + g.id + ')">' +
-        '<span class="hm-room-k"><span class="hm-room-n">' + (i + 1) + '</span>' + g.label + '</span>' +
+        '<span class="hm-room-k"><span class="hm-room-n">' + (i + 1) + '</span><span class="nsep">, </span>' + g.label + '</span>' +
         '<span class="hm-room-c">' + b.ids.length + ' topics &middot; ' + meta + '</span>' +
         '<span class="hm-room-bar"><i style="width:' + pc + '%"></i></span>' +
         '<span class="hm-room-f"><span class="hm-room-pct">' + pc + '% drilled</span>' + weakHtml + '</span>' +

@@ -211,4 +211,9 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:var(--font-size-micro);b
    in place because they are harmless and their comments carry the history. */
 button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
 .flow-rcpt{font-size:var(--font-size-micro);color:var(--mut2);font-weight:var(--font-weight-semibold);letter-spacing:var(--track-px-0-2)}
+/* The name separator, mirrored from styles.css because global CSS does not cross the shadow
+   boundary and three composition sites live inside shadow roots (the drill's probe nav, the
+   walkthrough's arc steps, the model-script summary). Same declaration, deliberately -- see the
+   long rationale at its light-DOM twin. BASE_SHEET is adopted by all 17 shadow hosts. */
+.nsep{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
 `);

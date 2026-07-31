@@ -114,7 +114,7 @@ function deriveCram(topic) {
 
   /* 1. the one-liner -- the "one breath" answer; else the companion thesis */
   var one = (items[0] && items[0].a) || idn.thesis || '';
-  if (one) out += '<div class="cs-one"><span class="cs-one-l">The one-liner</span>' + one + '</div>';
+  if (one) out += '<div class="cs-one"><span class="cs-one-l">The one-liner</span><span class="nsep">. </span>' + one + '</div>';
 
   /* 2. the spine -- the whiteboard cue and its answer ARE what you draw (see _csCueLine) */
   var spine = '';

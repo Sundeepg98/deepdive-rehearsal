@@ -142,7 +142,7 @@ function applyIdentity(idn) {
     if (_sibs.length) {
       var _links = _sibs.slice(0, 3).map(function (x) {
         var _tp = TopicRegistry.get(x), _ti = _tp ? _tp.identity : null;
-        return '<button class="cmp-rel" type="button" data-topic="' + x + '"><span class="cmp-rel-t">' + (_ti ? _ti.title : x) + '</span><span class="cmp-rel-d">' + (_ti && _ti.locatorTail ? _ti.locatorTail : '') + '</span></button>';
+        return '<button class="cmp-rel" type="button" data-topic="' + x + '"><span class="cmp-rel-t">' + (_ti ? _ti.title : x) + '</span><span class="nsep">, </span><span class="cmp-rel-d">' + (_ti && _ti.locatorTail ? _ti.locatorTail : '') + '</span></button>';
       }).join('');
       rel.innerHTML = '<div class="cmp-h">More in <span style="color:var(--room-' + _bkt.group.id + ')">' + _bkt.group.label + '</span></div><div class="cmp-rel-list">' + _links + '</div>';
       rel.hidden = false;

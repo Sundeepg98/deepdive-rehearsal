@@ -33,7 +33,7 @@ ANS_SHEET.replaceSync(`
 .ans b{color:inherit;font-weight:var(--font-weight-semibold)}
 .fu{margin-top:var(--space-14);animation:pop var(--duration-moderate) var(--ease-base)}
 .fu .lab{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:var(--track-px-0-8);text-transform:uppercase;color:var(--amber);display:flex;align-items:center;gap:var(--space-7);margin-bottom:var(--space-7)}
-.fu .lab::before{content:"\\21B3";font-size:var(--font-size-body)}
+.fu .lab::before{content:"\\21B3";content:"\\21B3" / "";font-size:var(--font-size-body)}
 .fu .fq{font-size:var(--font-size-body);max-width:var(--measure);font-weight:var(--font-weight-semibold);color:var(--ink);line-height:var(--line-height-relaxed)}
 .fu .fa{font-size:var(--font-size-body);max-width:var(--measure);color:var(--ans-fg);margin-top:var(--space-10);padding:var(--space-12) var(--space-16);background:linear-gradient(135deg,var(--fa-bg) 0%,rgba(176,108,20,.03) 100%);border-left:3px solid var(--amber);border-radius:9px;line-height:var(--line-height-spacious)}
 .fu .fa b{color:var(--fa-b-fg);font-weight:var(--font-weight-bold)}

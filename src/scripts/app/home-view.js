@@ -75,9 +75,15 @@
     return '<header class="hm-top">' +
       '<span class="hm-brand">Deep rehearsal</span>' +
       '<div class="hm-acts">' +
-      '<button class="hm-act" type="button" data-act="search">Search <kbd>/</kbd></button>' +
-      '<button class="hm-act" type="button" data-act="index">Topic index <kbd>\\</kbd></button>' +
-      '<button class="hm-act" type="button" data-act="keys">Shortcuts <kbd>?</kbd></button>' +
+      /* THE KEY BELONGS IN THE SHORTCUT SLOT, NOT IN THE NAME (P3-3). These <kbd> glyphs were
+         inside the accessible name, and NVDA renders a name-embedded symbol it does not speak as
+         an EMPTY field: "Topic index, , button" and "Shortcuts, , button" against "Search, slash,
+         button" (at1-d1 stops 2/3 vs 1) -- three states of one slot, two of them a stutter. The
+         topic route already does this correctly ("Topic index >, button, backslash"), because
+         index.html declares aria-keyshortcuts there. Same keys, same declaration, here. */
+      '<button class="hm-act" type="button" data-act="search" aria-keyshortcuts="/ Control+K Meta+K">Search <kbd aria-hidden="true">/</kbd></button>' +
+      '<button class="hm-act" type="button" data-act="index" aria-keyshortcuts="\\">Topic index <kbd aria-hidden="true">\\</kbd></button>' +
+      '<button class="hm-act" type="button" data-act="keys" aria-keyshortcuts="?">Shortcuts <kbd aria-hidden="true">?</kbd></button>' +
       '<button class="hm-act" type="button" data-act="theme">Theme</button>' +
       '</div></header>';
   }
@@ -131,7 +137,7 @@
         '<span><span class="hm-cta-k">Start</span>' +
         '<span class="hm-cta-t">' + (first ? first.identity.title : ids[0]) + '</span>' +
         '<span class="hm-cta-d">Drill the interviewer\'s follow-ups, rebuild the design from memory, then run a timed mock.</span></span>' +
-        '<span class="hm-cta-ar">&rarr;</span></button>';
+        '<span class="hm-cta-ar" aria-hidden="true">&rarr;</span></button>';
     }
     var r = Panels.resumeTarget();
     if (!r) return '';
@@ -145,7 +151,7 @@
       '<span><span class="hm-cta-k">Resume</span>' +
       '<span class="hm-cta-t">' + r.topic.identity.title + '</span>' +
       '<span class="hm-cta-d">' + sub + '</span></span>' +
-      '<span class="hm-cta-ar">&rarr;</span></button>';
+      '<span class="hm-cta-ar" aria-hidden="true">&rarr;</span></button>';
   }
 
   /* THE SECOND DECISION, and the one a returning user actually wants: not "where was I" but

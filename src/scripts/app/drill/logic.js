@@ -560,7 +560,7 @@ class DeepDrill extends TopicPane {
     let html = '';
     for (let k = 0; k < cards.length; k++) {
       const card = cards[k], originalIdx = _allCards.indexOf(card), flagged = this.revisit[originalIdx];
-      html += '<button type="button" class="dn-step' + (k === this.di ? ' on' : '') + (flagged ? ' flag' : '') + '" data-i="' + k + '"><span class="dn-n">' + (k + 1) + '</span><span class="dn-t">' + card.signal + '</span></button>';
+      html += '<button type="button" class="dn-step' + (k === this.di ? ' on' : '') + (flagged ? ' flag' : '') + '" data-i="' + k + '"><span class="dn-n">' + (k + 1) + '</span><span class="nsep">, </span><span class="dn-t">' + card.signal + '</span></button>';
     }
     nav.innerHTML = html;
   }
@@ -773,12 +773,16 @@ class DeepDrill extends TopicPane {
     /* The ONE grade control -- Missed/Shaky/Solid. Rendered both at the reveal moment (below) and at
        the full judgment point: same ids, same handlers, same judge(). One decision engine, surfaced
        earlier -- never a second one. */
-    const judgeRow = '<div class="judge"><button type="button" class="miss" id="jm" aria-keyshortcuts="1">&#10007; Missed <span class="hint">[1]</span></button>' +
-      '<button type="button" class="shk" id="js" aria-keyshortcuts="2">&#126; Shaky <span class="hint">[2]</span></button>' +
-      '<button type="button" class="got" id="jg" aria-keyshortcuts="3">&#10003; Solid <span class="hint">[3]</span></button></div>';
+    /* The three verdict glyphs are decoration and were being SPOKEN -- "x-shaped bullet Missed 1"
+       and "check Solid 3", while the middle button said plain "Shaky 2" (at1-d3). Two of three
+       verdicts prefixed with a symbol name and one not is worse than either. .judge button is a
+       flex ITEM, not a flex container, so a wrapper span here is an inert inline box. */
+    const judgeRow = '<div class="judge"><button type="button" class="miss" id="jm" aria-keyshortcuts="1"><span aria-hidden="true">&#10007;</span> Missed <span class="hint">[1]</span></button>' +
+      '<button type="button" class="shk" id="js" aria-keyshortcuts="2"><span aria-hidden="true">&#126;</span> Shaky <span class="hint">[2]</span></button>' +
+      '<button type="button" class="got" id="jg" aria-keyshortcuts="3"><span aria-hidden="true">&#10003;</span> Solid <span class="hint">[3]</span></button></div>';
     if (stage < maxStage) {
       html += '<button type="button" class="push' + (stage >= 1 ? ' more' : '') + '" id="adv" aria-keyshortcuts="Space Enter">' +
-        (stage < 1 ? 'Reveal answer' : '&#8627; Interviewer pushes further') + '</button>';
+        (stage < 1 ? 'Reveal answer' : '<span aria-hidden="true">&#8627;</span> Interviewer pushes further') + '</button>';
       /* ===================== GRADE AT THE REVEAL MOMENT (audit #4) =====================
          The judge row used to render ONLY at the full judgment point (stage >= maxStage) -- i.e.
          after the user clicked through the ENTIRE follow-up chain. Every probe here carries 2-3
@@ -805,7 +809,7 @@ class DeepDrill extends TopicPane {
       if (this._mhp.length) {
         let items = '';
         for (let i = 0; i < this._mhp.length; i++) {
-          items += '<button type="button" class="mhp-i" data-i="' + i + '" aria-pressed="false"><span class="mhp-box">&#10003;</span><span class="mhp-t">' + this._mhp[i] + '</span></button>';
+          items += '<button type="button" class="mhp-i" data-i="' + i + '" aria-pressed="false"><span class="mhp-box" aria-hidden="true">&#10003;</span><span class="mhp-t">' + this._mhp[i] + '</span></button>';
         }
         html += '<div class="mhp"><div class="mhp-h">Must-hit points<span class="mhp-sub">tick what you actually said &middot; your score reflects coverage</span></div>' +
           '<div class="mhp-list">' + items + '</div>' +
@@ -1070,6 +1074,12 @@ class DeepDrill extends TopicPane {
       box.style.display = '';
       this._root.getElementById('revn').textContent = count;
       this._root.getElementById('revw').textContent = (count === 1 ? 'probe' : 'probes');
+      /* The leading U+21BB is decoration, but .revset-b is a flex CONTAINER -- wrapping the glyph
+         would make it a flex item and replace the literal space beside it with a 6px gap, i.e. a
+         visual change for an accessibility fix. Name the control instead; the name has to be
+         rebuilt here anyway because the count is what changes. */
+      var _rb = this._root.getElementById('revdrill');
+      if (_rb) _rb.setAttribute('aria-label', 'Drill my ' + count + ' flagged ' + (count === 1 ? 'probe' : 'probes'));
     } else {
       box.style.display = 'none';
     }

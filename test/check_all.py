@@ -18,6 +18,7 @@ This replaces per-edit manual vigilance with tooling that runs on every build:
   sidebar_geometry the switcher shows its value; the nav clears the fold  (browser)
   rail_integrity   the coaching rail NEVER shows another topic's note      (browser)
   layout_static    source-level layout assertions (a regex; SEES NO PIXELS)
+  at_name_hygiene  composed control NAMES carry authored separators; glyphs are hidden
   visual_regression the app is RENDERED and its pixels diffed vs baselines (browser)
 
 A NOTE ON WHAT A GREEN GATE MEANS (learned the hard way, 2026-07-11).
@@ -349,7 +350,31 @@ for name, cmd in [('ascii_guard', ['python3', 'test/ascii_guard.py']),
                   # It states its own scope: a SHORT, REWORDED theft is caught by neither arm.
                   # Same compiled-slice surface and same independent markdown coverage scan as
                   # bank_pushback. Pure node, no browser, ~0.6s.
-                  ('bank_novelty', ['node', 'test/bank_novelty.cjs'])]:
+                  ('bank_novelty', ['node', 'test/bank_novelty.cjs']),
+                  # THE NAME-HYGIENE RATCHET (Real-AT wave A). The first check in this gate written
+                  # against what a real screen reader SAID rather than what an attribute contains.
+                  # It is a SOURCE check on purpose, and the reason is the one thing this round
+                  # measured that no static pass could: the two name paths disagree. Chromium's own
+                  # accessible name for a room button already reads "1 Messaging & Events ..." --
+                  # its block-boundary heuristic supplies that space -- while NVDA spoke
+                  # "1Messaging". A browser check asserting on the accname would therefore have
+                  # certified these controls GREEN while a real reader glued them: a check whose
+                  # reference comes from the system under test, which is exactly the failure this
+                  # gate's own header warns about. What survives BOTH paths is a real character in
+                  # a real text node, and that is a property of the source.
+                  # Four arms: authored separators at the 12 audited composition sites; the
+                  # H1/H2/H3 decorative-glyph inventory out of every nameable subtree; the two
+                  # families that collided (home header, per-group Cram) named per instance; and an
+                  # ACCIDENTAL-REPAIR guard that fails if anyone "fixes" the glue by editing the two
+                  # topic descriptions NVDA happened to expose instead of the markup -- the audit's
+                  # binding rule, made mechanical. RED on 41 of 44 assertions before the wave.
+                  # Eight mutants every run (strip the separators, make one whitespace-only, let the
+                  # primitive paint, un-hide the glyphs, collapse the Cram names, put the header keys
+                  # back in the name, rewrite the corpus, leak a separator into it) and it ABORTS
+                  # unless every one is detected. Pure node, no browser, no fonts, no pixels -- so it
+                  # is platform-deterministic and never SKIPs. The as-heard half is an acceptance
+                  # receipt, not a gate check: _audit/2026-07-31-w24-names.md.
+                  ('at_name_hygiene', ['node', 'test/at_name_hygiene.cjs'])]:
     r = run(cmd)
     st = 'PASS' if r.returncode == 0 else 'FAIL'
     results.append((name, st, report(r) + fail_dump(name, r, st)))

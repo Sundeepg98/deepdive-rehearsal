@@ -341,7 +341,12 @@ function flowDockDesktop(d, n) {
   if (!n.rec || n.tier !== 'meso' && n.tier !== 'macro' || !n.rec.btn) { d.hidden = true; d.innerHTML = ''; d.__ndLast = null; d.classList.remove('nd-swap'); return; }
   var rec = n.rec, receipt = rec.receipt ? '<span class="nd-rcpt">' + rec.receipt + '</span>' : '';
   var html = '<span class="nd-k" style="color:' + rec.ink + '">' + rec.kicker + '</span>' +
-    '<button class="nd-go" type="button" aria-keyshortcuts="N">' + rec.btn + '</button>' + receipt;
+    /* rec.btn ends in a rightwards arrow, which was SPOKEN: "Start the drill right arrow, button, N"
+     (at1-d3). .nd-go is a flex item, not a flex container, so the wrapper is an inert inline box
+     and the rendered text is unchanged. The mobile chip already solved this its own way
+     (flowDockMobile strips the same arrow out of its aria-label). */
+    '<button class="nd-go" type="button" aria-keyshortcuts="N">' + rec.btn.replace(/\s*\u2192\s*$/, '') +
+    '<span aria-hidden="true"> \u2192</span></button>' + receipt;
   /* P3-9 -- THE GUIDANCE SWAP MUST BE VISIBLE. The dock is the element whose whole job is "the
      situation changed", and it was the least responsive control in the app: it had no transition and
      no animation at all, so a new recommendation replaced the old one by instantaneous substitution,
@@ -757,7 +762,7 @@ function renderSession() {
   html += '<div class="ss-rec" style="border-color:' + rec.bd + ';background:' + rec.bg + '">' +
        '<div class="ss-rk" style="color:' + rec.ink + '">' + rec.kicker + '</div>' +
        '<div class="ss-rt" style="color:' + rec.ink + '">' + rec.text + '</div>' +
-       (rec.btn ? '<button class="ss-go" id="ssgo" type="button">' + rec.btn + '</button>' : '') +
+       (rec.btn ? '<button class="ss-go" id="ssgo" type="button">' + rec.btn.replace(/\s*\u2192\s*$/, '') + '<span aria-hidden="true"> &rarr;</span></button>' : '') +
      '</div>';
   /* One boolean per card decides BOTH the track and the copy -- see ssBar(). */
   const dStarted = dDone > 0, wbStarted = wbDone > 0;
@@ -800,7 +805,7 @@ function renderSession() {
      scrolled, so the button did not go below the fold -- it ceased to exist. Out here their
      position does not depend on the content at all, so they cannot be pushed anywhere. */
   sessactions.innerHTML =
-    '<button class="ss-print" id="ssprint" type="button">Save this session as a PDF &rarr;</button>' +
+    '<button class="ss-print" id="ssprint" type="button">Save this session as a PDF <span aria-hidden="true">&rarr;</span></button>' +
     '<button class="ss-clear" id="ssclear" type="button">Clear this session &amp; start fresh</button>';
 
   /* "do this next" button: close, then jump to the relevant tab/overlay (and

@@ -125,13 +125,13 @@ details.model>summary:hover{background:var(--acc2-a07);padding-left:var(--space-
 var WALK_HTML = `<div class="dots" id="wdots"></div>
     <div class="card" id="wcard"></div>
     <div class="nav">
-      <button type="button" id="wprev" aria-keyshortcuts="ArrowLeft">&larr; Prev</button>
+      <button type="button" id="wprev" aria-keyshortcuts="ArrowLeft"><span aria-hidden="true">&larr;</span> Prev</button>
       <span class="ctr" id="wctr"></span>
-      <button type="button" id="wnext" aria-keyshortcuts="ArrowRight">Next &rarr;</button>
+      <button type="button" id="wnext" aria-keyshortcuts="ArrowRight">Next <span aria-hidden="true">&rarr;</span></button>
     </div>
     <div class="wflow-r" id="wflowr" aria-live="polite"></div>
     <details class="model">
-      <summary>What a complete answer sounds like <span class="sub">model script &middot; the full arc, not just the opener</span></summary>
+      <summary>What a complete answer sounds like <span class="nsep">. </span><span class="sub">model script &middot; the full arc, not just the opener</span></summary>
       <div class="mbody" id="wmbody"></div>
     </details>
 
@@ -191,7 +191,7 @@ class DeepWalkthrough extends TopicPane {
       btn.type = 'button';
       btn.className = 'arc-step';
       btn.setAttribute('data-i', j);
-      btn.innerHTML = '<span class="arc-n">' + (j + 1) + '</span><span class="arc-t">' + this._steps[j].t + '</span>';
+      btn.innerHTML = '<span class="arc-n">' + (j + 1) + '</span><span class="nsep">, </span><span class="arc-t">' + this._steps[j].t + '</span>';
       this._arc.appendChild(btn);
     }
     /* model-script is data now (was a baked blob); .mbeat.ans stays LAST. */
@@ -235,13 +235,19 @@ class DeepWalkthrough extends TopicPane {
       this._flowRec = frec;
       this._next.disabled = false;
       this._next.classList.add('flow-cta');
-      this._next.innerHTML = frec.btn || 'Next &rarr;';
+      /* RUNTIME OVERWRITES THE MARKUP FIX. #wnext's innerHTML is rewritten on every step, so
+         aria-hidden authored in the template above does not survive -- measured on the built
+         deliverable, where the static fix was green and the rendered name still said "Next right
+         arrow". Every writer of this node has to carry the hider. */
+      this._next.innerHTML = frec.btn
+        ? frec.btn.replace(/\s*\u2192\s*$/, '') + '<span aria-hidden="true"> &rarr;</span>'
+        : 'Next <span aria-hidden="true">&rarr;</span>';
       if (this._flowr) this._flowr.textContent = frec.receipt || '';
     } else {
       this._flowRec = null;
       this._next.disabled = isLast;                 /* no flowRec -> the old dead-end behavior */
       this._next.classList.remove('flow-cta');
-      this._next.innerHTML = 'Next &rarr;';
+      this._next.innerHTML = 'Next <span aria-hidden="true">&rarr;</span>';
       if (this._flowr) this._flowr.textContent = '';
     }
   }

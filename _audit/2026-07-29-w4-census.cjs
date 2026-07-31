@@ -76,16 +76,41 @@ const MEASURE_CRAM = async () => {
   await sleep(250);                                   /* lazy IntersectionObserver render */
   await raf2();
 
-  /* Count the visual lines of one element the way a reader does: client rects of a Range over
-     its text. Distinct rect TOPS (rounded) = distinct lines. Height/line-height division gets
-     this wrong the moment line-height changes, which is exactly what this wave changes. */
+  /* Count the visual lines of one element the way a reader does: client rects of a Range over its
+     text, CLUSTERED INTO LINE BOXES. Height/line-height division gets this wrong the moment
+     line-height changes, which is exactly what W4 changed.
+
+     W23 CORRECTION (ledger L2 "Residuals"). This counted DISTINCT ROUNDED RECT TOPS, and that
+     over-counts any element holding an inline <code>: the code span carries its own font-size
+     (11px) and line-height (17.05px) inside 14px/21.7px prose, plus 1px 5px of padding, so its
+     fragments land at tops that are neither the line tops nor a line-height apart -- and each one
+     scored as another "line". Measured over all 324 .dec-tell in 46 topics on the deliverable
+     committed at 96deb28: the old counter disagreed with the block's own height on 28 tells, and
+     those 28 are EXACTLY the 28 tells containing an inline <code>. No disagreement anywhere else,
+     and not one code-bearing tell agreed -- a clean double implication, not a correlation.
+
+     This is the counter that reported cdc's third tell as 9 lines and put a ragged-break defect
+     into the W4 freeze that the rendering does not contain: that block is 108px of 21.7px line
+     boxes, which is FIVE -- the same as four of its six siblings. Rects are now grouped by the
+     element's own line-height, so an inline box of any size counts as part of the line it sits
+     on. Corpus totals move 1532 -> 1435 for the same 324 tells. */
   const lineCount = (el) => {
     if (!el) return 0;
     const r = document.createRange();
     r.selectNodeContents(el);
     const rects = Array.from(r.getClientRects()).filter((q) => q.width > 0.5 && q.height > 0.5);
-    const tops = new Set(rects.map((q) => Math.round(q.top * 2) / 2));
-    return tops.size;
+    if (!rects.length) return 0;
+    /* Half a line box is the widest gap that can still be the SAME line: a smaller inline box is
+       offset from its line's top by at most its own leading. A `normal` line-height falls back to
+       a 4px quantum rather than silently collapsing the element to one line. */
+    const lh = parseFloat(getComputedStyle(el).lineHeight);
+    const quantum = lh > 0 ? lh / 2 : 4;
+    const tops = rects.map((q) => q.top).sort((a, b) => a - b);
+    let lines = 1, anchor = tops[0];
+    for (let i = 1; i < tops.length; i++) {
+      if (tops[i] - anchor > quantum) { lines++; anchor = tops[i]; }
+    }
+    return lines;
   };
 
   for (const id of TopicRegistry.ids()) {
@@ -146,12 +171,35 @@ const MEASURE_TELL = async () => {
   const ix = document.querySelector('.ix-x'); if (ix) ix.click();
   await sleep(150);
 
+  /* Same counter, same correction as MEASURE_CRAM's -- the two run in separate page.evaluate
+     calls, so they cannot share a closure. See the note there for the 28-of-324 measurement. */
   const lineCount = (el) => {
     if (!el) return 0;
     const r = document.createRange();
     r.selectNodeContents(el);
     const rects = Array.from(r.getClientRects()).filter((q) => q.width > 0.5 && q.height > 0.5);
-    return new Set(rects.map((q) => Math.round(q.top * 2) / 2)).size;
+    if (!rects.length) return 0;
+    const lh = parseFloat(getComputedStyle(el).lineHeight);
+    const quantum = lh > 0 ? lh / 2 : 4;
+    const tops = rects.map((q) => q.top).sort((a, b) => a - b);
+    let lines = 1, anchor = tops[0];
+    for (let i = 1; i < tops.length; i++) {
+      if (tops[i] - anchor > quantum) { lines++; anchor = tops[i]; }
+    }
+    return lines;
+  };
+
+  /* THE SECOND OPINION, and the one that caught the defect above. A .dec-tell's height is nothing
+     but its line boxes stacked, so (clientHeight - padding) / line-height IS the line count --
+     arrived at through the box model rather than through Range rects, sharing no mechanism with
+     the counter it checks. The runner FAILS the census if the two ever disagree, because a line
+     counter that silently miscounts is how a rendering defect gets recorded that does not exist. */
+  const boxLines = (el) => {
+    const cs = getComputedStyle(el);
+    const lh = parseFloat(cs.lineHeight);
+    if (!(lh > 0)) return null;
+    const inner = el.clientHeight - (parseFloat(cs.paddingTop) || 0) - (parseFloat(cs.paddingBottom) || 0);
+    return Math.round(inner / lh);
   };
 
   const switchTo = async (id) => {
@@ -215,6 +263,7 @@ const MEASURE_TELL = async () => {
     out.topics[id] = {
       count: tells.length,
       lines: tells.map(lineCount),
+      linesByBox: tells.map(boxLines),
       heights: tells.map((t) => Math.round(t.getBoundingClientRect().height)),
       chars: tells.map((t) => (t.textContent || '').replace(/\s+/g, ' ').trim().length),
       weight: t0 ? t0.fontWeight : null,
@@ -338,6 +387,26 @@ async function withCtx(browser, w, h, fn, opts) {
   try {
     rep.cram = await withCtx(browser, 1280, 800, MEASURE_CRAM, { hash: '#event-driven/walk' });
     rep.tell = await withCtx(browser, 1280, 800, MEASURE_TELL, { hash: '#event-driven/trade' });
+    /* CROSS-CHECK, every run. Two independent line counts over the same 324 blocks must agree;
+       if they do not, this instrument cannot be trusted to report a line count at all and it says
+       so rather than printing a number someone will quote in a freeze report. (W23: the old rect-
+       top counter failed exactly here, on the 28 tells that contain an inline <code>.) */
+    const disagree = [];
+    Object.keys(rep.tell.topics || {}).forEach((id) => {
+      const t = rep.tell.topics[id];
+      (t.lines || []).forEach((n, i) => {
+        const b = (t.linesByBox || [])[i];
+        if (b !== null && b !== undefined && b !== n) disagree.push(id + ' #' + i + ': rects=' + n + ' box=' + b);
+      });
+    });
+    rep.tellLineCrossCheck = { disagreements: disagree.length, detail: disagree.slice(0, 20) };
+    if (disagree.length) {
+      /* Thrown, not exited: the `finally` below owns the browser, and process.exit would skip it
+         and leave a Chromium behind on the very run that already went wrong. */
+      throw new Error('the two line counters disagree on ' + disagree.length + ' of '
+        + Object.keys(rep.tell.topics).reduce((n, k) => n + rep.tell.topics[k].lines.length, 0)
+        + ' tells, so no line number here can be trusted -- ' + disagree.slice(0, 6).join('; '));
+    }
     rep.switcher = {};
     for (const w of DESKTOP_WIDTHS) {
       rep.switcher[w] = await withCtx(browser, w, 900, MEASURE_SWITCHER, { hash: '#event-driven/walk' });
@@ -380,7 +449,9 @@ async function withCtx(browser, w, h, fn, opts) {
   console.log('');
   console.log('  DEC-TELL (' + Object.keys(tt).length + ' topics, ' + allLines.length + ' tells)');
   console.log('    lines  min ' + allLines[0] + '  p50 ' + pct(allLines, 0.5) + '  p90 ' + pct(allLines, 0.9) + '  max ' + allLines[allLines.length - 1]);
-  ['content-pipeline', 'multi-region'].forEach((k) => {
+  console.log('    cross-check (rect clusters vs box height): '
+    + rep.tellLineCrossCheck.disagreements + ' disagreement(s) -- must be 0 or the run aborts');
+  ['content-pipeline', 'multi-region', 'cdc'].forEach((k) => {
     if (tt[k]) console.log('    ' + k.padEnd(22) + ' [' + tt[k].lines.join(',') + ']  weight=' + tt[k].weight
       + '/' + tt[k].bWeight + '  b=' + tt[k].bSpans + '  size=' + tt[k].fontSize
       + '  contrast=' + tt[k].contrast + ' (b ' + tt[k].bContrast + ')');

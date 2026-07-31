@@ -1,26 +1,35 @@
-W24 -- Real-AT wave A gate capture (run of record)
-==================================================
+W24 -- Real-AT wave A gate capture (run of record, ROUND 2)
+===========================================================
 branch : at/a-name-hygiene
-commit : a7712be3ce352a290ef2b533305556ad0cc06bb7   (the committed tree, built deliverable included)
+commit : c9cce21d24f98adc012dc75daa3d73228ffb5272   (the committed tree, built deliverable included)
 date   : 2026-07-31
-count  : 74 checks -- 73 inherited from base 8b2599b, plus at_name_hygiene (new this wave)
+count  : 74 checks -- 73 inherited from base 8b2599b, plus at_name_hygiene
 result : PASS, 0 FAIL, 0 SKIP
 
-at_name_hygiene is the wave's static ratchet. It was RED on 44 of its 47 assertions
-against the pre-wave tree; the 3 green there are its accidental-repair guards, whose
-job is to stay green. It carries no browser dependency, so it never SKIPs.
+Round 2 executed the independent cold verify's six findings, plus one same-class site
+its F6 dismissed on a basis that measurement contradicts. The count is unchanged at 74:
+the round's new instrument, test/at_name_layout_probe.cjs, is a RECEIPT reproducer and is
+deliberately not registered -- once the separator is an authored character the layout
+dependence is gone by construction, and arm A of at_name_hygiene is the ongoing guard.
+Its output, with the pre-wave build as a negative control, is committed at
+_audit/2026-07-31-w24-names-layout.txt.
 
-visual_regression: 16 of 16 baselines byte-identical. The wave's pre-authorised
-home-light/home-dark churn was not needed and not used.
+at_name_hygiene grew from 47 assertions to 50 and from 8 mutants to 11. It is RED on 47
+of its 50 assertions against the pre-wave source; the 3 green are its accidental-repair
+guards, whose job is to stay green. Still no browser dependency, so it never SKIPs.
 
-The as-heard NVDA receipt is NOT in this gate by design -- it is an acceptance
-receipt and lives in _audit/2026-07-31-w24-names.md with its logs.
+visual_regression: 16 of 16 baselines byte-identical, unchanged across both rounds. The
+wave's pre-authorised home-light/home-dark churn was never needed and never used.
+
+The as-heard NVDA receipts are NOT in this gate by design -- they are acceptance receipts:
+_audit/2026-07-31-w24-names.md, with the cold verify filed verbatim beside it in
+_audit/2026-07-31-w24-names-coldverify.md.
 
 ================================================================
-  ascii_guard               PASS  ASCII GUARD: PASS  (826 files strict 7-bit ASCII: src 687, src/topics-md 38, test 76, tools 25)
+  ascii_guard               PASS  ASCII GUARD: PASS  (827 files strict 7-bit ASCII: src 687, src/topics-md 38, test 77, tools 25)
   syntax_check              PASS  SYNTAX CHECK: PASS  (613 modules parse; 52 aggregator files skipped)
   global_collisions         PASS  GLOBAL COLLISIONS: PASS  (689 top-level globals, each declared in exactly one module)
-  build_integrity           PASS  BUILD INTEGRITY: PASS  (12161297 bytes, 0 unresolved, 9 panes + 7 overlays, build SYNCED the deliverable, COMMITTED deliverable == fresh build of HEAD)
+  build_integrity           PASS  BUILD INTEGRITY: PASS  (12161363 bytes, 0 unresolved, 9 panes + 7 overlays, build SYNCED the deliverable, COMMITTED deliverable == fresh build of HEAD)
   css_syntax                PASS    PASS All checks passed (18 keyframes validated)
   room_static               PASS  ROOM STATIC: PASS  (codemod=0, styles.css infinite=0, 6 room blocks + rebind, boot stamped)
   room_contrast             PASS  ROOM CONTRAST: PASS  (12 rooms: ink/bg >= 4.5, on-slab/solid >= 5.0)
@@ -46,7 +55,7 @@ receipt and lives in _audit/2026-07-31-w24-names.md with its logs.
   numbers_lattice           PASS  NUMBERS LATTICE: PASS  (46/46 topics driven across 567,131 evaluations (37 exhaustive), 1 defect(s) in 1 topic(s), all allowlisted)
   bank_pushback             PASS  BANK PUSHBACK: PASS  (46 topics, 613 cards, 0 known pushback defect(s) allowlisted in bank_pushback_debt.json across 0 topics)
   bank_novelty              PASS  BANK NOVELTY: PASS  (46 topics, 826 Int exchanges, longest shared run 8 < 9; 826 kept exchange(s) held their novelty against the snapshot)
-  at_name_hygiene           PASS  at_name_hygiene: 47/47 assertions, 6 + 2 mutants all detected
+  at_name_hygiene           PASS  at_name_hygiene: 50/50 assertions, 9 + 2 mutants all detected
   render                    PASS  RENDER TEST: PASS
   entity_leak               PASS  ENTITY LEAK: PASS  (no HTML entity reaches visible text; 3/3 overlay bodies opened + inspected)
   overlay_deadzone          PASS  OVERLAY DEADZONE: PASS  (35 assertions: the first real click lands; no layer hit-tests while fading; focus leaves a closing dialog; the keymap stays suppressed under an open one; no unrequested modal at first paint)
@@ -78,7 +87,7 @@ receipt and lives in _audit/2026-07-31-w24-names.md with its logs.
   topic_contract            PASS  TOPIC CONTRACT: PASS  (46 topics: population, parity, tiers, cards conform)
   cram_scope_distinct       PASS  CRAM/SCOPE DISTINCT: PASS  (46 topics: 46/46 distinct cram bodies, 46/46 distinct scope bodies; shortest 2960 chars)
   cram_surface              PASS  CRAM SURFACE: PASS  (46 topics, 0 known cram-surface defect(s) allowlisted in cram_surface_debt.json across 0 topics; mirror verified against deriveCram on all 46; every sheet under the 9000px ceiling, height probe armed)
-  print_truth               PASS    ----  pdf summary: {"content-pipeline":{"pages":3,"band":[3,5],"H":2768,"bytes":390220,"clipped":0,"lastHead":"If they say \u201cquickly\u201d \u2014 the 30 seconds","lastHeadPage":3,"chars":4789,"coverage":0.938},"consistency-models":{"pages":7,"band":[6,9],"H":6062,"bytes":740697,"clipped":0,"lastHead":"If they say \u201cquickly\u201d \u2014 the 30 seconds","lastHeadPage":7,"chars":16088,"coverage":0.981},"file-print-never-opened":{"pages":3,"clipped":0,"bytes":391494}}
+  print_truth               PASS    ----  pdf summary: {"content-pipeline":{"pages":3,"band":[3,5],"H":2768,"bytes":390220,"clipped":0,"lastHead":"If they say \u201cquickly\u201d \u2014 the 30 seconds","lastHeadPage":3,"chars":4789,"coverage":0.938},"consistency-models":{"pages":7,"band":[6,9],"H":6062,"bytes":740697,"clipped":0,"lastHead":"If they say \u201cquickly\u201d \u2014 the 30 seconds","lastHeadPage":7,"chars":16088,"coverage":0.981},"file-print-never-opened":{"pages":3,"clipped":0,"bytes":390220}}
   cram_fit                  PASS  CRAM FIT: PASS
   rail_integrity            PASS  rail_integrity: PASS -- 414 combos, 0 leaks, 0 empty boxes, all 414 authored notes render
   shadow_css_guard          PASS    PASS: every class styles.css selects is reachable from the light DOM.

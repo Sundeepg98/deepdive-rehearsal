@@ -47,6 +47,7 @@
 <!--@build:include scripts/app/cross-drill.js-->
 <!--@build:include scripts/app/print-qa.js-->
 <!--@build:include scripts/app/last-visit.js-->
+<!--@build:include scripts/app/altitude.js-->
 <!--@build:include scripts/app/panels.js-->
 <!--@build:include scripts/app/home-view.js-->
 <!--@build:include scripts/app/index-overlay.js-->

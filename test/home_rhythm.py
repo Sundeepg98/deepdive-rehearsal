@@ -115,17 +115,38 @@ COMMENT_RE = re.compile(r'/\*.*?\*/', re.S)
 HOME_SEL_RE = re.compile(r'(^|[\s,>+~])(#home\b|\.hm-[A-Za-z0-9_-]+)')
 GAP_TOKEN_RE = re.compile(r'^var\(\s*--gap-home-[a-z0-9-]+\s*\)$')
 MEASURE_TOKEN_RE = re.compile(r'^var\(\s*--measure-home\s*\)$')
+# THE SECOND MEASURE (appeal/home-instrument). --measure-display is a different KIND of measure:
+# it is the rule that display type takes a shorter line than body type, and it lands on the hero
+# question INSIDE a block, not on the block. So a rule whose only max-width is the display measure
+# is component-internal -- the same category as .hm-cta-d's 2px nudge -- and is NOT a member of the
+# centred column, which is what this check's scope boundary is derived from. It is still JUDGED, so
+# a raw `41ch` cannot ride in under the new name.
+DISPLAY_TOKEN_RE = re.compile(r'^var\(\s*--measure-display\s*\)$')
 ZERO_RE = re.compile(r'^0[a-z%]*$', re.I)
 
 # THE REGISTRY. Cross-checked both ways against what DISCOVERY finds: an entry
 # nothing matches is STALE, a discovered site with no entry is NEW. Both fail.
 # This is not the enforcement mechanism -- discovery is -- it is the record that
 # makes a change to the home stack's shape deliberate and reviewable.
+# RE-ANCHORED by appeal/home-instrument, via the procedure this file documents above
+# ("a new section joining the stack is exactly the moment its rhythm should be a
+# decision"). The home joined the app shell, so the stack's membership changed:
+#   GONE  .hm-state    the one-line state moved into the status census bar
+#   GONE  .hm-cta      the decision hero is now a COMPONENT inside .hm-continue and no
+#                      longer declares the content measure, so it is component-internal
+#                      and correctly out of scope -- exactly like .hm-cta-d already was
+#   GONE  .hm-top      the home header moved into the rail; same exit, same reason
+#   NEW   .hm-continue the hero: the probe question, the resume line, the one action
+#   NEW   .hm-alt      the altitude gauge
+#   NEW   .hm-duo      the paired still-shaky / this-week row
+# All three departed tokens are deleted from design-tokens/tokens.json in the same commit;
+# leaving them would be an orphan the cross-check cannot see (it reads the stylesheet,
+# not the token file), which is why they go together.
 REGISTRY = {
-    ('.hm-top', 'margin-bottom'): '--gap-home-header',
     ('.hm-lead', 'margin-bottom'): '--gap-home-lead',
-    ('.hm-state', 'margin-bottom'): '--gap-home-state',
-    ('.hm-cta', 'margin-bottom'): '--gap-home-decision',
+    ('.hm-continue', 'margin-bottom'): '--gap-home-continue',
+    ('.hm-alt', 'margin-bottom'): '--gap-home-altitude',
+    ('.hm-duo', 'margin-bottom'): '--gap-home-duo',
     ('.hm-rooms', 'margin-bottom'): '--gap-home-rooms',
     ('.hm-sec', 'margin-bottom'): '--gap-home-section',
     ('.hm-tele', 'margin-bottom'): '--gap-home-telemetry',
@@ -264,6 +285,12 @@ def sites(text):
         if measure is None or ZERO_RE.match(measure) \
                 or measure in ('none', 'auto', 'inherit', '100%'):
             continue          # not a column member: component-internal, out of scope
+        if DISPLAY_TOKEN_RE.match(measure):
+            # a DISPLAY measure does not put a block in the centred column. Report the measure
+            # so its token form is still judged; take no rhythm gaps from it, because the
+            # margins around a hero question are internal spacing, not stack rhythm.
+            found.append((lineno, sel, 'max-width', measure, at))
+            continue
         for prop, val in sorted(slots.items()):
             if ZERO_RE.match(val) or val in ('auto', 'inherit'):
                 continue
@@ -283,14 +310,16 @@ def judge(prop, val, expect=None):
     A semantic layer whose names can be swapped without consequence is not a
     semantic layer."""
     if prop == 'max-width':
-        if MEASURE_TOKEN_RE.match(val):
+        if MEASURE_TOKEN_RE.match(val) or DISPLAY_TOKEN_RE.match(val):
             return None
         if val.startswith('var('):
-            return ('the home content measure written as a bare primitive. It is the '
-                    'same width nine blocks share; var(--measure-home) says so, '
-                    'var(--space-980) says "980, for reasons unrecorded"')
-        return ('a RAW home content measure. Nine blocks share this width and none '
-                'of them said so. Use var(--measure-home)')
+            return ('a home measure written as a bare primitive. The column is '
+                    'var(--measure-home) and the hero line length is '
+                    'var(--measure-display); var(--space-980) says "980, for reasons '
+                    'unrecorded"')
+        return ('a RAW home measure. Use var(--measure-home) for the content column, or '
+                'var(--measure-display) for display type, which takes a shorter line '
+                'than body type -- a raw 41ch says the number and not the rule')
     if GAP_TOKEN_RE.match(val):
         if expect and val != 'var(%s)' % expect:
             return ('the WRONG semantic slot: this block is %s, but the declaration '
@@ -323,6 +352,7 @@ FIXTURE_OK = '''
 .hm-cta-d{margin-top:2px}
 #home .ix-foot{margin-top:var(--space-28)}
 #home .ix-panel{width:100%;max-width:var(--measure-home);margin:0 auto}
+.hm-q{max-width:var(--measure-display);margin:var(--space-10) 0 var(--space-12)}
 /* prose: this rule used to say margin:0 auto var(--space-24) -- not a declaration */
 '''
 # The three OUT-OF-SCOPE shapes above are the correction this check made to its own
@@ -339,6 +369,7 @@ FIXTURE_BAD = '''
   .hm-tele{max-width:var(--measure-home);margin:0 auto 12px}
 }
 .hm-brandnew{max-width:var(--measure-home);margin:0 auto var(--gap-home-brandnew)}
+.hm-rawdisplay{max-width:41ch;margin:var(--space-10) 0}
 '''
 
 
@@ -382,6 +413,19 @@ def self_test():
         problems.append('a zero margin slot was treated as a rhythm gap')
     # the boundary correction, pinned: a home block with a margin but NO measure is
     # not a member of the centred column and carries no stack rhythm
+    # THE DISPLAY MEASURE, pinned both ways (appeal/home-instrument): a block carrying only the
+    # display measure must be JUDGED (so a raw 41ch cannot ride in) but must NOT be pulled into
+    # the centred column and asked for a stack-rhythm role name.
+    if any(s == '.hm-q' and p != 'max-width' for _, s, p, _, _ in found):
+        problems.append('.hm-q was asked for a stack-rhythm role. A block whose only measure is '
+                        'the DISPLAY measure is component-internal -- the margins around a hero '
+                        'question are internal spacing, not column rhythm')
+    if not any(s == '.hm-q' and p == 'max-width' for _, s, p, _, _ in found):
+        problems.append('the display measure was not judged at all -- a raw 41ch could then '
+                        'ship under the new token name with nothing looking at it')
+    if judge('max-width', 'var(--measure-display)') is not None:
+        problems.append('the display measure token was rejected as a measure')
+
     for sel, what in (('.hm-h', "a heading's gap to its own body"),
                       ('.hm-cta-d', 'a 2px optical nudge inside the hero button'),
                       ('#home .ix-foot', 'an override of the shared panel component')):
@@ -397,12 +441,14 @@ def self_test():
                             'a raw px gap'),
                            (('.hm-cta', 'margin-bottom'), 'bare pixel primitive',
                             'a gap left on the bare primitive'),
-                           (('.hm-rooms', 'max-width'), 'RAW home content measure',
+                           (('.hm-rooms', 'max-width'), 'RAW home measure',
                             'a raw px measure'),
                            (('.hm-sec', 'max-width'), 'bare primitive',
                             'a measure left on the bare primitive'),
                            (('.hm-tele', 'margin-bottom'), 'RAW home stack gap',
-                            'a rhythm gap inside an @media block')):
+                            'a rhythm gap inside an @media block'),
+                           (('.hm-rawdisplay', 'max-width'), 'RAW home measure',
+                            'a raw 41ch display measure')):
         if key not in whys or not whys[key]:
             problems.append('missed %s (%s %s)' % (why, key[0], key[1]))
         elif want not in whys[key]:
@@ -455,10 +501,12 @@ def main():
     print('    rhythm gaps  : %d discovered' % len(gaps))
     print('    measures     : %d discovered' % len(measures))
     print('    registry     : %d slot(s)' % len(REGISTRY))
-    print('    self-test    : 6 planted defects found (raw gap; bare-primitive gap;')
+    print('    self-test    : 7 planted defects found (raw gap; bare-primitive gap;')
     print('                   raw measure; bare-primitive measure; a gap inside')
-    print('                   @media; an unregistered NEW home block) + shorthand')
-    print('                   slot arithmetic asserted. Legitimate shapes,')
+    print('                   @media; an unregistered NEW home block; a RAW display')
+    print('                   measure) + shorthand slot arithmetic asserted, and the')
+    print('                   display measure pinned BOTH ways -- judged, but never')
+    print('                   pulled into the centred column. Legitimate shapes,')
     print('                   component-internal gap/padding, a zero margin slot')
     print('                   and comment-prose all stayed clean')
 

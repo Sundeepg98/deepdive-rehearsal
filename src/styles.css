@@ -1578,7 +1578,12 @@ body.is-hidden,body.is-hidden *,body.is-hidden *::before,body.is-hidden *::after
    W15 ADDS A FIFTH MEMBER FOR THE SECOND REASON, so read the rule as "must not claim a room",
    which is what these five have in common -- not "enumerates rooms", which is only why the first
    four are here:
-     #home .hm-brand   the brand mark, on the home route -- it names the PRODUCT, not a topic
+     .hm-rail .hm-brand  the brand mark, on the home route -- it names the PRODUCT, not a
+                       topic. It lives in the sidebar's home tenant since appeal/home-instrument;
+                       it was scoped to the #home element while the home replaced the app rather than
+                       joining it, and moving the element without moving this selector would
+                       have handed the product mark a room accent -- the exact W15 defect
+                       test/room_browser.cjs guards
    Its case is the opposite of .tn-trigger's. The nav bar names the current topic, so it should
    wear that topic's room; the brand mark names no topic at all, and on the home route there IS no
    current topic -- index.html hard-codes data-group for first paint and applyIdentity does not run
@@ -1587,7 +1592,7 @@ body.is-hidden,body.is-hidden *,body.is-hidden *::before,body.is-hidden *::after
    130px apart and only one of them meant anything. Brand claims brand. The literals below are
    already the badge colour and the roomless default, so this costs no new value -- and the topic
    route is untouched, because #home only exists there. Asserted by test/room_browser.cjs arm 3. */
-.ix-panel,.xd-panel,#_search-overlay,.tn-menu,#home .hm-brand{
+.ix-panel,.xd-panel,#_search-overlay,.tn-menu,.hm-rail .hm-brand{
   --topic-ink:#534AB7;--topic-solid:#534AB7;--topic-wash:#EFEDFA;--topic-edge:#CFC7F0;
   --acc:var(--topic-ink);--acc2:var(--topic-solid);--accbg:var(--topic-wash);
   --accink:color-mix(in oklab,var(--topic-ink) 82%,var(--ink));
@@ -1618,7 +1623,7 @@ body.is-hidden,body.is-hidden *,body.is-hidden *::before,body.is-hidden *::after
 }
 /* dark only needs the four inks: --acc and every rung above are declared ON this element and
    re-substitute against whichever --topic-ink wins the cascade here. */
-html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-theme="dark"] #_search-overlay,html[data-theme="dark"] .tn-menu,html[data-theme="dark"] #home .hm-brand{
+html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-theme="dark"] #_search-overlay,html[data-theme="dark"] .tn-menu,html[data-theme="dark"] .hm-rail .hm-brand{
   --topic-ink:#9D93F0;--topic-solid:#9D93F0;--topic-wash:#24223C;--topic-edge:#3A3552;
 }
 
@@ -1981,10 +1986,40 @@ h1,h2,h3,h4,h5,h6{text-wrap:balance}
 html[data-view="home"] #home{display:block;animation:homein var(--duration-fast) var(--ease-glide)}
 @keyframes homein{from{opacity:0}to{opacity:1}}
 @media(prefers-reduced-motion:reduce){html[data-view="home"] #home,.tn-menu:not([hidden]){animation:none}}
-html[data-view="home"] .app,
+/* ===== THE HOME JOINS THE SHELL  (appeal/home-instrument) =====================================
+   `.app` used to be listed here, and that one declaration WAS the operator's complaint: entering
+   the home switched the whole application off and painted a centred column on --bg. The topic
+   routes already ship a three-column app, measured fixed phone chrome and a docked verdict bar;
+   only this route was a styled document.
+   So the frame stays up, and the ROUTE swaps tenants inside it: the sidebar's topic block, the
+   stage and the companion's coach hide; the home's rail, library and status bar appear. One
+   element per slot, one geometry, one set of scroll and sticky behaviours -- extending the
+   grammar the app already has rather than standing a second shell beside it. */
 html[data-view="home"] .rail,
 html[data-view="home"] .cmp-reopen{display:none}
-#home{padding:var(--space-28) var(--space-20) 80px;min-height:100vh;background:var(--bg)}
+/* the TOPIC tenants, hidden on this route. .textzoom and .pomodoro are INJECTED into the
+   sidebar at runtime by their own modules (text-zoom.js, pomodoro.js) rather than authored in
+   index.html, so they have to be named here explicitly -- they are topic-surface controls
+   (the zoom scales .stage, and there is no session to time on a lobby) and without this they
+   ride onto the home and land on top of the weekly goal. */
+html[data-view="home"] .side-id,
+html[data-view="home"] .sidebar .seg,
+html[data-view="home"] .sidebar .mockbar,
+html[data-view="home"] .sidebar .mockcta,
+html[data-view="home"] .sidebar .dock,
+html[data-view="home"] .sidebar .textzoom,
+html[data-view="home"] .sidebar .pomodoro,
+html[data-view="home"] .stage,
+html[data-view="home"] .companion .cmp-inner{display:none}
+/* the HOME tenants: dark by default so they never paint on a topic route */
+.hm-rail,.hm-tabs,.hm-lib,.hm-status{display:none}
+html[data-view="home"] .hm-rail{display:flex;flex-direction:column;gap:var(--space-20);min-height:0}
+html[data-view="home"] .hm-lib{display:flex;flex-direction:column;min-height:0;flex:1}
+html[data-view="home"] .hm-status{display:flex}
+/* the home IS the work column now: a flex sibling of .stage, taking its slot */
+html[data-view="home"] #home{display:flex;flex-direction:column;flex:1;min-width:0}
+html[data-view="home"] .companion{padding:0}
+#home{padding:var(--space-28) var(--space-20) 80px;background:var(--bg)}
 
 /* UNBOX THE PANEL. These renderers were built for a modal: .ix-panel carried max-height:84vh, its
    own border, shadow, transform and an inner scroller. On a page it gets the document scroll and
@@ -1997,8 +2032,17 @@ html[data-view="home"] .cmp-reopen{display:none}
 
 /* the home's own header -- the sidebar is hidden on this route, so Search / Shortcuts / Theme /
    Tools need a home of their own or they are simply gone. */
-.hm-top{display:flex;align-items:center;justify-content:space-between;gap:var(--space-14);
-  max-width:var(--measure-home);margin:0 auto var(--gap-home-header);flex-wrap:wrap}
+/* The home's header moved INTO the rail (appeal/home-instrument), so it is no longer a member of
+   the centred column: no content measure, no stack-rhythm margin, and therefore correctly out of
+   home_rhythm's scope -- the same exit .hm-cta made, for the same reason. On the phone the rail
+   IS this row, fixed to the top, and chrome-metrics measures it.
+   In a 296px column the old pill buttons wrapped into three rows of chrome above the fold; in
+   the rail they are ROWS, which is what every other destination in this column already is. */
+.hm-top{display:flex;flex-direction:column;align-items:stretch;gap:var(--space-10)}
+.hm-top .hm-acts{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-6)}
+.hm-top .hm-act{justify-content:center;padding:var(--space-8) var(--space-8);border-radius:9px;
+  font-size:var(--font-size-micro)}
+.hm-top .hm-act:last-child{grid-column:1 / -1}
 .hm-brand{display:inline-flex;align-items:center;gap:var(--space-10);font-weight:var(--font-weight-bold);
   letter-spacing:var(--track-em-0-04);text-transform:uppercase;font-size:var(--font-size-caption);color:var(--acc)}
 .hm-acts{display:flex;gap:var(--space-8);flex-wrap:wrap}
@@ -2018,7 +2062,9 @@ html[data-view="home"] .cmp-reopen{display:none}
 
 /* ONE line of state, then ONE decision. Telemetry (goal / streak / trend / due) sits BELOW the
    decision, not above it: on the old surface it was ~40-45% of everything above a single choice. */
-.hm-state{max-width:var(--measure-home);margin:0 auto var(--gap-home-state)}
+/* .hm-state is RETIRED. Its one line of state -- percent of curriculum, probes drilled,
+   topics started -- is now the status census bar, which says the same numbers on every
+   home paint without spending a stack slot on them. Its token went with it. */
 .hm-h{font-size:var(--font-size-caption);text-transform:uppercase;letter-spacing:var(--track-em-0-08);
   color:var(--mut);font-weight:var(--font-weight-bold);margin:0 0 var(--space-12)}
 /* --rm, not --acc: the hero is painted by the room of the topic it OPENS, which home-view.js
@@ -2029,8 +2075,11 @@ html[data-view="home"] .cmp-reopen{display:none}
    whichever room the hero wears it clears AA with room to spare -- the palette is contrast-tuned
    and room_contrast.py owns the token side of that. For reference the retired indigo it replaces
    was 6.93:1 light / 6.66:1 dark, so dark improves and light stays well above the 4.5 floor. */
+/* The decision hero is now a COMPONENT inside .hm-continue, not a member of the home stack:
+   it no longer declares the content measure or a stack-rhythm margin, which is what takes it
+   out of home_rhythm's scope -- correctly, and for the same reason .hm-cta-d always was. */
 .hm-cta{display:flex;width:100%;align-items:center;gap:var(--space-14);text-align:left;
-  padding:var(--space-18) var(--space-20);margin:0 auto var(--gap-home-decision);max-width:var(--measure-home);
+  padding:var(--space-18) var(--space-20);
   border:1px solid var(--rm,var(--acc));border-radius:14px;background:var(--rm,var(--acc));color:var(--on-slab);cursor:pointer;
   font:inherit;min-height:44px;box-shadow:0 10px 30px -12px var(--rm,var(--acc))}
 .hm-cta:hover{filter:brightness(1.06)}
@@ -2121,9 +2170,246 @@ html[data-view="home"] .cmp-reopen{display:none}
 /* below the fold: the telemetry the old surface put ABOVE the decision */
 .hm-tele{max-width:var(--measure-home);margin:0 auto var(--gap-home-telemetry);padding-top:var(--space-20);
   border-top:1px solid var(--bd)}
+/* ============================================================================================
+   THE HOME AS AN INSTRUMENT  (appeal/home-instrument)
+   Every colour, size and space below comes from the layers this stylesheet already has: the
+   room palette for identity, --st-* for verdicts, the space/font-size scale for everything
+   else. The only NEW token is --measure-display, and it exists to state one rule.
+   THE SIGNAL RULE, and it is the one thing here that must not be relaxed: FILL AND OUTLINE
+   carry the grade, never hue -- hue already means WHICH ROOM, and a second meaning on the same
+   channel makes both unreadable. Solid is filled, part-solid is a partial fill, untouched keeps
+   an empty outline so the honest denominator is never hidden, and a flagged item wears a keel.
+   That survives greyscale, both themes and all six room tints. ==================================*/
+
+/* ---- the shared panel primitive ---------------------------------------------------------- */
+.hm-panel{background:var(--card);border:1px solid var(--bd);border-radius:14px}
+.hm-phead{display:flex;align-items:center;flex-wrap:wrap;gap:var(--space-6) var(--space-12);
+  padding:var(--space-10) var(--space-16);border-bottom:1px solid var(--bd)}
+.hm-pbody{padding:var(--space-16)}
+.hm-lbl{font-size:var(--font-size-nano);font-weight:var(--font-weight-bold);text-transform:uppercase;
+  letter-spacing:var(--track-em-0-08);color:var(--mut2);line-height:1}
+.hm-sp{flex:1}
+.hm-fig{font-variant-numeric:tabular-nums;color:var(--mut)}
+.hm-fig b{color:var(--ink);font-weight:var(--font-weight-bold)}
+
+/* ---- CONTINUE: the hero is the QUESTION ---------------------------------------------------
+   The home used to hero a topic NAME, exactly as a table of contents does. It heroes the probe
+   you were being interrogated on instead -- in curly quotes, at display size, on the DISPLAY
+   measure. That last part is the whole reason --measure-display exists: on a body measure the
+   same sentence runs one long thin line and reads as a heading rather than as something a
+   person asked you. */
+.hm-continue{max-width:var(--measure-home);margin:0 auto var(--gap-home-continue)}
+.hm-ask{padding:var(--space-24) var(--space-24) var(--space-20)}
+.hm-q{font-family:var(--display);font-size:var(--font-size-heading);font-weight:var(--font-weight-semibold);
+  line-height:var(--line-height-snug);letter-spacing:var(--track-em-neg-0-014);color:var(--ink);
+  max-width:var(--measure-display);text-wrap:balance;margin:var(--space-10) 0 var(--space-12)}
+/* the second-person line: REASON, RECENCY, REMAINDER -- not a cursor */
+.hm-since{font-size:var(--font-size-caption);color:var(--mut);line-height:var(--line-height-normal);
+  max-width:var(--measure-display)}
+.hm-since b{color:var(--ink);font-weight:var(--font-weight-semibold)}
+/* The action sits UNDER the question and stays quieter than it. The hero of this screen is the
+   sentence someone asked you; a full-bleed slab with a drop shadow would take that back. */
+.hm-act{padding:0 var(--space-24) var(--space-24)}
+/* :not(:focus-visible) IS LOAD-BEARING. The focus HALO on this button is delivered as a
+   box-shadow, and .hm-cta:focus-visible has the same specificity as this rule -- so a blanket
+   `box-shadow:none` here wins by source order and silently DELETES the halo. Caught by
+   test/focus_ring.cjs in both themes, which is exactly the regression that arm was written for.
+   What this rule means to remove is the RESTING drop shadow, and now that is all it removes. */
+.hm-act .hm-cta:not(:focus-visible){box-shadow:none}
+.hm-act .hm-cta{width:auto;border-radius:11px;padding:var(--space-12) var(--space-18);min-height:44px}
+.hm-act .hm-cta-t{font-size:var(--font-size-title)}
+.hm-act .hm-cta-ar{margin-left:var(--space-16)}
+
+/* ---- THE ALTITUDE GAUGE -- the signature ---------------------------------------------------
+   Three rails, one per interview tier, high band on top. Each rail is one segment per topic and
+   a segment's FILL is that topic's Solid share at that tier, ordered strongest-first so the lit
+   mass is contiguous: scattered lit cells do not communicate a quantity, a contiguous run does,
+   and the taper between the three rails is the finding the home exists to deliver. */
+.hm-alt{max-width:var(--measure-home);margin:0 auto var(--gap-home-altitude)}
+.hm-gauge{display:flex;flex-direction:column;gap:var(--space-8)}
+.hm-gr{display:grid;grid-template-columns:44px minmax(0,1fr) auto;align-items:center;gap:var(--space-12)}
+.hm-gr-l{font-size:var(--font-size-micro);font-weight:var(--font-weight-bold);text-transform:uppercase;
+  letter-spacing:var(--track-em-0-08);color:var(--mut);text-align:right}
+.hm-gr.thin .hm-gr-l{color:var(--ink)}
+.hm-gr-t{display:flex;gap:2px;height:32px;padding:3px;border:1px solid var(--bd);border-radius:8px;background:var(--side)}
+.hm-seg{position:relative;flex:1 1 0;min-width:3px;border-radius:2px;overflow:hidden;
+  box-shadow:inset 0 0 0 1px var(--bd)}
+/* the fill. --lv is the Solid share in four steps; brightness reads at 46 segments where a 3px
+   difference in bar height does not. */
+.hm-seg::after{content:"";position:absolute;inset:0;background:var(--ink);opacity:var(--lv,0)}
+.hm-seg.open{background:var(--bd);box-shadow:none}
+/* the keel: something here is flagged. One channel, two values, never competing with the fill. */
+.hm-seg.keel::before{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;
+  background:var(--st-warn);z-index:2}
+.hm-seg.keel-m::before{background:var(--st-warn-edge)}
+.hm-gr-n{font-size:var(--font-size-micro);font-variant-numeric:tabular-nums;color:var(--mut2);white-space:nowrap}
+.hm-gr-n b{color:var(--ink);font-weight:var(--font-weight-bold)}
+.hm-verdict{margin-top:var(--space-16);padding-top:var(--space-12);border-top:1px solid var(--bd);
+  font-size:var(--font-size-body);color:var(--mut);line-height:var(--line-height-normal)}
+.hm-verdict b{color:var(--ink);font-weight:var(--font-weight-semibold)}
+.hm-key{display:flex;align-items:center;flex-wrap:wrap;gap:var(--space-14);margin-top:var(--space-10)}
+.hm-k{display:flex;align-items:center;gap:var(--space-6)}
+/* the key states the three marks the gauge actually paints: filled, part-filled, hollow -- plus
+   the keel. Fill, not hue, exactly as the segments do it. */
+.hm-k i{position:relative;width:9px;height:15px;border-radius:2px;background:var(--bd);flex:none;overflow:hidden}
+.hm-k i::after{content:"";position:absolute;inset:0;background:var(--ink)}
+.hm-k.full i::after{opacity:1}
+.hm-k.part i::after{opacity:.55}
+.hm-k.none i{background:transparent;box-shadow:inset 0 0 0 1px var(--bd)}
+.hm-k.none i::after{opacity:0}
+.hm-k.flag i::after{opacity:0}
+.hm-k.flag i{box-shadow:inset 0 -2px 0 var(--st-warn)}
+
+/* ---- the paired row ------------------------------------------------------------------------ */
+.hm-duo{max-width:var(--measure-home);margin:0 auto var(--gap-home-duo);
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:var(--space-16)}
+
+/* STILL SHAKY. The chip carries what you re-drill: the topic, how many probes, how long since
+   you worked it, and the CONCEPTS -- which are the signal strings the record already stores and
+   the old chip threw away. Age is TOPIC-scoped and the copy says so; there is no per-probe
+   timestamp in the store and this does not pretend otherwise. */
+.hm-chips{display:flex;flex-wrap:wrap;gap:var(--space-8)}
+.hm-chip{display:inline-flex;align-items:center;gap:var(--space-8);min-height:44px;
+  padding:var(--space-6) var(--space-12);background:var(--side);border:1px solid var(--bd);
+  border-radius:10px;font:inherit;font-size:var(--font-size-caption);color:var(--ink);cursor:pointer;
+  text-align:left}
+.hm-chip:hover{border-color:var(--acc)}
+.hm-chip-n{font-variant-numeric:tabular-nums;font-weight:var(--font-weight-bold);color:var(--st-warn)}
+.hm-chip-age{font-size:var(--font-size-micro);color:var(--mut2);font-variant-numeric:tabular-nums}
+.hm-cons{display:flex;flex-wrap:wrap;gap:var(--space-6);margin-top:var(--space-12)}
+.hm-con{font-size:var(--font-size-micro);color:var(--mut);background:var(--side);
+  border:1px solid var(--bd);border-radius:999px;padding:2px var(--space-10)}
+.hm-note{margin-top:var(--space-12);font-size:var(--font-size-micro);color:var(--mut2);line-height:var(--line-height-normal)}
+
+/* ---- COVERAGE BY ROOM ----------------------------------------------------------------------
+   The six room cards are the app's OWN renderer (Panels.roomsHtml -> .hm-room), kept rather than
+   replaced: test/focus_ring.cjs asserts that all six focus halos derive from their own room, in
+   both themes, each against a live negative control. Re-rendering them under new class names
+   would have quietly retired that assertion. Only the density changes. */
+.hm-rooms .hm-room-grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:var(--space-10)}
+.hm-rooms .hm-room{padding:var(--space-12) var(--space-14);gap:var(--space-6)}
+
+/* ---- THE RAIL TENANT ----------------------------------------------------------------------- */
+.hm-mk{display:grid;gap:2px;width:18px;flex:none}
+.hm-mk i{display:block;height:3px;background:var(--ink);border-radius:1px}
+.hm-mk i:nth-child(1){width:38%}
+.hm-mk i:nth-child(2){width:68%}
+.hm-mk i:nth-child(3){width:100%}
+.hm-wm{font-family:var(--display);font-size:var(--font-size-caption);font-weight:var(--font-weight-bold);
+  letter-spacing:var(--track-em-0-08);text-transform:uppercase;color:var(--ink)}
+.hm-rsec{display:flex;flex-direction:column;gap:2px}
+.hm-rsec>.hm-lbl{padding:0 var(--space-8) var(--space-6)}
+.hm-rrow{display:grid;grid-template-columns:12px minmax(0,1fr) auto;align-items:center;gap:var(--space-8);
+  min-height:44px;padding:0 var(--space-8);border-radius:9px;font:inherit;font-size:var(--font-size-caption);
+  color:var(--mut);cursor:pointer;text-align:left;background:none;border:0;width:100%}
+.hm-rrow:hover{background:var(--card);color:var(--ink)}
+.hm-rdot{width:7px;height:7px;border-radius:2px;background:var(--rm,transparent);justify-self:center}
+.hm-rt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hm-rn{font-size:var(--font-size-micro);color:var(--mut2);font-variant-numeric:tabular-nums}
+.hm-goalbar{height:6px;background:var(--bd);border-radius:3px;overflow:hidden;margin:var(--space-6) 0}
+.hm-goalbar i{display:block;height:100%;background:var(--ink)}
+
+/* ---- THE LIBRARY TENANT (the companion column on the home route) ---------------------------
+   The library is Panels.libraryHtml() -- the SAME renderer the topic switcher uses, so a topic
+   card is one thing in one place and clicking one means one thing. Nothing is re-implemented
+   here; the column just gives it the sticky full-height rail it always wanted. */
+.hm-lib-t{flex:none;padding:var(--space-16) var(--space-12) 0}
+.hm-lib .ix-filter-row{flex:none;padding:var(--space-10) var(--space-12) var(--space-10);
+  margin:0;border-bottom:1px solid var(--bd)}
+.hm-lib .ix-filter{width:100%;min-height:44px}
+.hm-lib .ix-scroll{flex:1;min-height:0;overflow-y:auto;max-height:none;
+  padding:var(--space-10) var(--space-10) var(--space-24)}
+.hm-lib .ix-grid{grid-template-columns:minmax(0,1fr)}
+.hm-lib .ix-g-head{position:sticky;top:0;z-index:2;background:var(--panel);padding-top:var(--space-6)}
+.hm-lib .ix-g-desc{display:none}
+
+/* ---- THE STATUS CENSUS --------------------------------------------------------------------
+   HOME ROUTE ONLY in this wave. New furniture on a topic route would move fourteen VR
+   baselines this wave is forbidden to touch, so it is scoped by html[data-view="home"] and a
+   topic route never renders it. */
+.hm-status{position:fixed;left:0;right:0;bottom:0;z-index:var(--z-bottombar,45);
+  align-items:center;gap:var(--space-12);min-height:28px;padding:var(--space-6) var(--space-16);
+  background:var(--side);border-top:1px solid var(--bd);overflow:hidden;
+  font-size:var(--font-size-micro);color:var(--mut)}
+.hm-st-i{display:flex;align-items:center;gap:var(--space-6);flex:none}
+.hm-st-i b{color:var(--ink);font-weight:var(--font-weight-bold);font-variant-numeric:tabular-nums}
+.hm-st-sep{width:1px;height:11px;background:var(--bd);flex:none}
+.hm-st-sp{flex:1}
+.hm-st-dim{color:var(--mut2);flex:none}
+
+/* ---- THE MOBILE TAB BAR -------------------------------------------------------------------- */
+.hm-tabs{align-items:stretch;gap:0;background:var(--card);border-top:1px solid var(--bd)}
+.hm-tab{flex:1;display:grid;place-items:center;gap:3px;min-height:44px;padding:var(--space-8) 2px;
+  font:inherit;background:none;border:0;color:var(--mut2);cursor:pointer;position:relative;min-width:0}
+.hm-tab[aria-current="true"]{color:var(--ink)}
+.hm-tab[aria-current="true"]::before{content:"";position:absolute;top:0;width:22px;height:2px;background:var(--ink)}
+.hm-tab-t{font-size:var(--font-size-nano);font-weight:var(--font-weight-bold);text-transform:uppercase;
+  letter-spacing:var(--track-em-0-06,.06em);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+
 .hm-skip{display:flex;align-items:center;gap:var(--space-8);max-width:var(--measure-home);
   margin:0 auto var(--gap-home-skip);font-size:var(--font-size-caption);color:var(--mut);min-height:44px}
 .hm-skip input{width:16px;height:16px;accent-color:var(--acc);cursor:pointer}
+
+/* ---- the library's MOBILE twin ------------------------------------------------------------
+   .companion is display:none below 1280, so #homelib goes with it. The app already solves this
+   exact problem the same way: <details class="mcomp"> mirrors the companion's coaching for the
+   phone with its own mCmp* ids. This is that pattern, one surface over -- one renderer, two
+   mount points, exactly one of them displayed at any width. */
+.hm-libm{display:none}
+@media(max-width:1279px){
+  html[data-view="home"] .hm-libm{display:block}
+}
+
+/* ---- the home's fixed phone chrome ---------------------------------------------------------
+   Both bars are position:fixed here, which is precisely what chrome-metrics.js measures --
+   stolen() returns 0 for anything not fixed and not rendered, so the module's sum picks up the
+   home pair on this route and the topic pair on a topic route with no branch and no route
+   knowledge. The fallback constants in the block above stay the TOPIC measurement; the home's
+   bars are built to the same 44px tap floor, so they land inside the same 8px band. */
+@media(max-width:919px){
+  html[data-view="home"] .hm-rail{position:fixed;top:0;left:0;right:0;z-index:var(--z-seg,40);
+    flex-direction:row;align-items:center;gap:var(--space-10);min-height:52px;
+    padding:var(--space-6) var(--space-14);background:var(--side);border-bottom:1px solid var(--bd)}
+  /* On the phone the rail is a BAR: identity plus the actions in ONE row, handing its
+     destinations to the tab bar rather than stacking fourteen rows above the fold. The
+     desktop column layout must be undone explicitly -- left alone it stacks the brand over a
+     two-column action grid and the bar measures 135px, which chrome-metrics then faithfully
+     reserves out of a 844px viewport. */
+  html[data-view="home"] .hm-rail .hm-rsec,
+  html[data-view="home"] .hm-rail .hm-goal{display:none}
+  html[data-view="home"] .hm-rail .hm-top{flex-direction:row;align-items:center;
+    justify-content:space-between;gap:var(--space-8);flex:1;min-width:0}
+  html[data-view="home"] .hm-rail .hm-acts{display:flex;gap:var(--space-6);flex:none}
+  html[data-view="home"] .hm-rail .hm-act{min-height:38px;padding:var(--space-6) var(--space-10)}
+  html[data-view="home"] .hm-rail .hm-act:last-child{grid-column:auto}
+  /* The shortcut hints are keyboard affordances and this is a touch bar, so they go first --
+     before the buttons themselves are allowed to leave the screen. The wordmark truncates
+     rather than pushing them off: a fixed bar CLIPS its overflow instead of scrolling it, so
+     nothing that leaves this row is reachable, and documentElement.scrollWidth cannot see it. */
+  html[data-view="home"] .hm-rail .hm-act kbd{display:none}
+  html[data-view="home"] .hm-rail .hm-wm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+  html[data-view="home"] .hm-rail .hm-brand{min-width:0;flex:0 1 auto;overflow:hidden}
+}
+@media(max-width:419px){
+  /* below this the wordmark is the last thing worth its width; the mark still identifies the
+     product and the h1 text is not the mark's job on this route */
+  html[data-view="home"] .hm-rail .hm-wm{display:none}
+  html[data-view="home"] .hm-tabs{display:flex;position:fixed;bottom:0;left:0;right:0;
+    z-index:var(--z-bottombar,45);padding-bottom:env(safe-area-inset-bottom,0px)}
+  /* the census is a desktop readout; on the phone its budget goes to the tab bar */
+  html[data-view="home"] .hm-status{display:none}
+  html[data-view="home"] .companion{display:none}
+  .hm-gr{grid-template-columns:40px minmax(0,1fr);grid-template-areas:"l t" ". n";row-gap:4px}
+  .hm-gr-l{grid-area:l}
+  .hm-gr-t{grid-area:t}
+  .hm-gr-n{grid-area:n;text-align:left}
+  .hm-rooms .hm-room-grid{grid-template-columns:minmax(0,1fr)}
+}
+/* Below 480 the tab labels are the first thing to give, and they give TEXT, never the target:
+   the 44px tap floor and the accessible name both survive. */
+@media(max-width:479px){
+  .hm-tab-t{font-size:8px;letter-spacing:var(--track-px-0-2)}
+}
 /* W2 / audit P3-5: the ROW already reserved 44px, but the <label> -- the actual click target,
    and the only one carrying the sentence -- was a bare 272x18 text line inside it, i.e. a genuine
    WCAG 2.5.8 (AA, 24px) failure sitting in a box that had the height to spare all along.

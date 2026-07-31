@@ -100,6 +100,7 @@ const CLOSE = (page) => page.evaluate(() => { if (window.SearchOverlay && Search
    reads only the topic (or only the hash) cannot tell a fixed build from a broken one. */
 const ROUTE = (page) => page.evaluate(() => {
   const app = document.querySelector('.app');
+  const stage = document.querySelector('.stage');
   const rc = (window.Router && Router.current) ? Router.current() : null;
   return {
     hash: location.hash,
@@ -107,7 +108,13 @@ const ROUTE = (page) => page.evaluate(() => {
     view: rc ? rc.view : null,
     onHome: document.documentElement.dataset.view === 'home',
     topic: (typeof TopicRegistry !== 'undefined') ? TopicRegistry.current().id : null,
+    /* appVisible was the "did you leave the home" proxy while entering the home HID the app.
+       Since appeal/home-instrument the shell stays up on every route, so that flag is true
+       everywhere and would silently weaken four arms. The thing that still means exactly what
+       it used to is the topic STAGE: down on the home, up on a topic route. Both are reported --
+       appVisible is now the assertion that the frame never leaves. */
     appVisible: !!(app && getComputedStyle(app).display !== 'none'),
+    stageVisible: !!(stage && getComputedStyle(stage).display !== 'none'),
   };
 });
 
@@ -216,12 +223,12 @@ const PICK_VIA_INDEX = async (page, want) => {
   /* ---------- A. from #home, a SEARCH pick lands on the topic ---------- */
   await GO_HOME(page);
   const homeA = await ROUTE(page);
-  ok('[X3] the arms below start on the #home route', homeA.onHome === true && homeA.hash === '#home' && homeA.appVisible === false, JSON.stringify(homeA));
+  ok('[X3] the arms below start on the #home route', homeA.onHome === true && homeA.hash === '#home' && homeA.stageVisible === false && homeA.appVisible === true, JSON.stringify(homeA));
   const hitA = await PICK_VIA_SEARCH(page, 'kafka');
   const afterA = await ROUTE(page);
   const canonA = await CANON(page);
   ok('[X3] picking a search result from #home LEAVES the home (hash + title + .app, not just the registry)',
-    afterA.onHome === false && afterA.hash !== '#home' && afterA.appVisible === true && afterA.title !== homeA.title,
+    afterA.onHome === false && afterA.hash !== '#home' && afterA.stageVisible === true && afterA.appVisible === true && afterA.title !== homeA.title,
     'committed "' + hitA + '" and the app stayed put: ' + JSON.stringify(afterA) +
     (afterA.topic !== homeA.topic ? '   THE TOPIC MOVED AND THE USER DID NOT -- the pick is silently lost' : ''));
   ok('[X3] ...on a coherent route: the hash names the switched topic and a real view',
@@ -235,7 +242,7 @@ const PICK_VIA_INDEX = async (page, want) => {
   const afterB = await ROUTE(page);
   const canonB = await CANON(page);
   ok('[X3] picking a topic in the Topic index from #home LEAVES the home',
-    !!pickedB && afterB.onHome === false && afterB.hash !== '#home' && afterB.appVisible === true && afterB.title !== homeB.title,
+    !!pickedB && afterB.onHome === false && afterB.hash !== '#home' && afterB.stageVisible === true && afterB.appVisible === true && afterB.title !== homeB.title,
     'clicked the card for "' + pickedB + '" and the app stayed put: ' + JSON.stringify(afterB));
   ok('[X3] ...on the topic the card names, at a coherent hash',
     afterB.topic === pickedB && afterB.hash === canonB && afterB.view !== 'home',
@@ -249,7 +256,7 @@ const PICK_VIA_INDEX = async (page, want) => {
   const pickedC = await PICK_VIA_INDEX(page, sameId);
   const afterC = await ROUTE(page);
   ok('[plant/X3] from #home, picking the topic ALREADY current still leaves the home (setTopic no-ops; the caller must not depend on it)',
-    pickedC === sameId && afterC.onHome === false && afterC.hash !== '#home' && afterC.appVisible === true && afterC.topic === sameId,
+    pickedC === sameId && afterC.onHome === false && afterC.hash !== '#home' && afterC.stageVisible === true && afterC.appVisible === true && afterC.topic === sameId,
     JSON.stringify({ picked: pickedC, after: afterC }));
 
   /* ---------- D. PLANT: from a TOPIC route, both picks PRESERVE the view ---------- */
@@ -314,7 +321,7 @@ const PICK_VIA_INDEX = async (page, want) => {
   const afterF = await ROUTE(page);
   const crossOpen = await page.evaluate(() => !!(window.CrossDrill && CrossDrill.isOpen && CrossDrill.isOpen()));
   ok('[X3/F] a cross-drill pick in the Topic index from #home ALSO leaves the home, and still opens the drill',
-    hasCross && afterF.onHome === false && afterF.hash !== '#home' && afterF.appVisible === true && crossOpen === true,
+    hasCross && afterF.onHome === false && afterF.hash !== '#home' && afterF.stageVisible === true && afterF.appVisible === true && crossOpen === true,
     JSON.stringify({ crossBarPresent: hasCross, before: homeF, after: afterF, crossDrillOpen: crossOpen }));
   await page.evaluate(() => { if (window.CrossDrill && CrossDrill.close) CrossDrill.close(); });
   await B.settle(page);

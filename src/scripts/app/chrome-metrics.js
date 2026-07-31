@@ -76,7 +76,7 @@
   'use strict';
 
   var root = document.documentElement;
-  var seg = null, bar = null;
+  var seg = null, bar = null, hmTop = null, hmBot = null;
   var lastTop = null, lastBot = null;
 
   /* How much of the viewport this bar takes away from the content. See the header: only a fixed,
@@ -88,10 +88,20 @@
     return Math.ceil(el.getBoundingClientRect().height);
   }
 
+  /* TWO PAIRS OF BARS, ONE SUM, NO ROUTE CONDITIONAL  (appeal/home-instrument).
+     The home joined the shell and brought its own fixed phone chrome: a top bar (.hm-rail on
+     the phone) and a bottom tab bar (.hm-tabs). Exactly one pair is ever rendered -- the route
+     hides the other with display:none -- and stolen() already returns 0 for a bar that is not
+     rendered or not fixed, which the header calls out by name for "the #home route". So the
+     answer is the SUM, and this module needs to know nothing about routes: adding a branch here
+     would put a second source of truth about which route is live next to the one in the
+     stylesheet, and they would drift. */
   function derive() {
     if (!seg) seg = document.querySelector('.sidebar .seg');
     if (!bar) bar = document.querySelector('.sidebar .mockcta');
-    var t = stolen(seg), b = stolen(bar);
+    if (!hmTop) hmTop = document.querySelector('.sidebar .hm-rail');
+    if (!hmBot) hmBot = document.querySelector('.sidebar .hm-tabs');
+    var t = stolen(seg) + stolen(hmTop), b = stolen(bar) + stolen(hmBot);
     if (t === lastTop && b === lastBot) return;   /* nothing moved -- touch no style */
     lastTop = t; lastBot = b;
     root.style.setProperty('--chrome-top', t + 'px');
@@ -101,7 +111,9 @@
   function start() {
     seg = document.querySelector('.sidebar .seg');
     bar = document.querySelector('.sidebar .mockcta');
-    if (!seg && !bar) return;                     /* not this document */
+    hmTop = document.querySelector('.sidebar .hm-rail');
+    hmBot = document.querySelector('.sidebar .hm-tabs');
+    if (!seg && !bar && !hmTop && !hmBot) return;  /* not this document */
     derive();
     try {
       var ro = new ResizeObserver(derive);
@@ -117,6 +129,10 @@
          what the padding actually lands in, so that is what this watches. */
       if (seg) ro.observe(seg, { box: 'border-box' });
       if (bar) ro.observe(bar, { box: 'border-box' });
+      /* the home pair is watched on the same terms -- a route change flips both pairs between
+         rendered and display:none, and a ResizeObserver reports that as a size change to 0 */
+      if (hmTop) ro.observe(hmTop, { box: 'border-box' });
+      if (hmBot) ro.observe(hmBot, { box: 'border-box' });
     } catch (e) {
       /* No ResizeObserver: fall back to the events that at least catch the orientation and
          zoom cases. Strictly weaker -- a font-driven reflow at a steady viewport is missed --

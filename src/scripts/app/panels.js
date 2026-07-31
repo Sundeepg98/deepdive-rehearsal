@@ -176,6 +176,53 @@
     };
   }
 
+  /* weakChips, with the two things the old chip threw away (appeal/home-instrument).
+     A chip that reads "Kafka Internals 6" is a label. The three fields that make it an
+     INSTRUCTION are all already in the record:
+       COUNT    pr.shk
+       AGE      pr.ts, via the caller's formatter -- TOPIC-scoped, and the surrounding copy
+                says so, because there is no per-card timestamp in the store to age a probe
+       CONCEPT  pr.revisit, which holds SIGNAL STRINGS (see this file's header) -- the actual
+                thing you re-drill, not the topic it lives in
+     The caller passes the age formatter rather than this module reaching for a clock, so the
+     one place that knows what `ts` can honestly claim stays the one place that knows it. */
+  function weakChipsAged(n, ageFn) {
+    if (typeof Progress === 'undefined' || typeof TopicRegistry === 'undefined') {
+      return { chips: '', concepts: '', n: 0 };
+    }
+    var sum = Progress.summary(), take = sum.weakest.slice(0, n || 6), total = 0, i;
+    for (i = 0; i < sum.weakest.length; i++) total += (sum.weakest[i].shk || 0);
+
+    var chips = take.map(function (w) {
+      var t = TopicRegistry.get(w.id);
+      var age = ageFn ? ageFn(w.id) : '';
+      return '<button class="hm-chip" type="button" data-topic="' + w.id + '">' +
+        (t ? t.identity.title : w.id) +
+        (w.shk ? '<span class="nsep">, </span><span class="hm-chip-n">' + w.shk + '</span>' : '') +
+        (age ? '<span class="nsep">, </span><span class="hm-chip-age">' + age + '</span>' : '') +
+        '</button>';
+    }).join('');
+
+    var seen = {}, cons = [];
+    take.forEach(function (w) {
+      var pr = Progress.get(w.id);
+      if (!pr || !pr.revisit) return;
+      for (var ci = 0; ci < pr.revisit.length && cons.length < 6; ci++) {
+        var c = pr.revisit[ci];
+        if (!c || seen[c]) continue;
+        seen[c] = 1; cons.push(c);
+      }
+    });
+
+    return {
+      chips: chips,
+      n: total,
+      concepts: cons.length
+        ? '<div class="hm-cons">' + cons.map(function (c) { return '<span class="hm-con">' + c + '</span>'; }).join('') + '</div>'
+        : '',
+    };
+  }
+
   /* ---- the actions ---------------------------------------------------------------------- */
 
   function weakCount() {
@@ -522,6 +569,9 @@
     studyStreak: studyStreak,
     resumeTarget: resumeTarget,
     weakChips: weakChips,
+    weakChipsAged: weakChipsAged,
+    weakCount: weakCount,
+    weeklyGoal: weeklyGoal,
     downloadBackup: downloadBackup,
   };
 })();

@@ -240,7 +240,7 @@ class DeepWalkthrough extends TopicPane {
          deliverable, where the static fix was green and the rendered name still said "Next right
          arrow". Every writer of this node has to carry the hider. */
       this._next.innerHTML = frec.btn
-        ? frec.btn.replace(/\s*\u2192\s*$/, '') + '<span aria-hidden="true"> &rarr;</span>'
+        ? flowBtnText(frec.btn) + '<span aria-hidden="true"> &rarr;</span>'
         : 'Next <span aria-hidden="true">&rarr;</span>';
       if (this._flowr) this._flowr.textContent = frec.receipt || '';
     } else {

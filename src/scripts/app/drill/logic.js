@@ -72,7 +72,7 @@ var DRILL_STYLE = `/* @keyframes pop moved to BASE_SHEET. Five shadow scopes ref
 .modetog button.on{background:var(--card);color:var(--acc);font-weight:var(--font-weight-heavy);box-shadow:0 0 0 1px var(--acc-a32),0 4px 12px var(--acc-a20)}
 .modetog button:not(.on):hover{background:var(--modetog-hover-bg);color:var(--ink)}
 .tierrow{display:flex;align-items:center;gap:var(--space-9);margin:var(--space-2) 0 var(--space-16);flex-wrap:wrap}
-.tierlab{font:var(--font-weight-bold) 9.5px var(--sans);letter-spacing:.5px;text-transform:uppercase;color:var(--mut2)}
+.tierlab{font:var(--font-weight-bold) 9.5px var(--sans);letter-spacing:var(--track-px-0-5);text-transform:uppercase;color:var(--mut2)}
 .tiernote{font:italic var(--font-size-body)/1.55 var(--sans);color:var(--mut);margin:-6px 0 var(--space-18);max-width:62ch}
 .tiernote b{color:var(--acc);font-style:normal;font-weight:var(--font-weight-heavy)}
 .timer{font:var(--font-weight-heavy) 15px ui-monospace,Menlo,monospace;color:var(--acc);background:var(--accbg);border:1px solid #cfc7f0;border-radius:8px;padding:var(--space-6) var(--space-13)}
@@ -152,13 +152,13 @@ var DRILL_STYLE = `/* @keyframes pop moved to BASE_SHEET. Five shadow scopes ref
    Seeding the tiles from the record would corrupt that this-run denominator from the other side, so
    the honest fix is to LABEL them: this caption scopes the board to the current run, so 0/0 reads as
    "nothing graded THIS load yet" and the record's larger count is understood as a different number. */
-.score-cap{font:var(--font-weight-bold) var(--font-size-nano)/1 var(--sans);letter-spacing:.6px;text-transform:uppercase;color:var(--mut2);margin:0 0 var(--space-6)}
+.score-cap{font:var(--font-weight-bold) var(--font-size-nano)/1 var(--sans);letter-spacing:var(--track-px-0-6);text-transform:uppercase;color:var(--mut2);margin:0 0 var(--space-6)}
 .score{display:flex;gap:var(--space-9);margin-bottom:var(--space-14)}
 .pill{flex:1;text-align:center;border:1.5px solid var(--bd);border-radius:12px;padding:var(--space-10);background:var(--card);transition:box-shadow var(--duration-moderate) var(--ease-base),transform var(--duration-base) var(--ease-base),border-color var(--duration-base) var(--ease-base)}
 .pill:hover{box-shadow:0 4px 16px -4px var(--acc-a15);transform:translateY(-2px)}
 .pill .v{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:24px;font-weight:var(--font-weight-heavy);line-height:var(--line-height-none);color:var(--ink)}
 /* .pill:hover .v scale deleted -- a scoreboard figure must not jump when you point at it. */
-.pill .l{display:flex;align-items:center;justify-content:center;gap:var(--space-5);font-size:var(--font-size-nano);font-weight:var(--font-weight-bold);text-transform:uppercase;letter-spacing:.5px;color:var(--mut2);margin-top:var(--space-4)}
+.pill .l{display:flex;align-items:center;justify-content:center;gap:var(--space-5);font-size:var(--font-size-nano);font-weight:var(--font-weight-bold);text-transform:uppercase;letter-spacing:var(--track-px-0-5);color:var(--mut2);margin-top:var(--space-4)}
 .pill .l::before{font-family:var(--mono);font-weight:var(--font-weight-black);line-height:1}
 /* NOTE THE DOUBLE BACKSLASH. DRILL_STYLE is a JS TEMPLATE LITERAL, so a lone \\2713 is read by
    the JS parser as an octal escape, not by CSS as a codepoint -- and octal escapes are ILLEGAL
@@ -229,16 +229,16 @@ var DRILL_STYLE = `/* @keyframes pop moved to BASE_SHEET. Five shadow scopes ref
 .thread{border:1.5px solid var(--bd);border-radius:14px;padding:var(--space-20);background:linear-gradient(135deg,var(--thread-bg) 0%,var(--acc-a02) 100%);box-shadow:var(--surf-sh);transition:box-shadow var(--duration-moderate) var(--ease-base)}
 .thread:hover{box-shadow:var(--surf-sh),0 0 30px -8px var(--acc-a06)}
 .qrow{display:flex;justify-content:space-between;align-items:flex-start;gap:var(--space-12);margin-bottom:var(--space-4)}
-.qk{font-family:var(--mono);font-size:var(--font-size-micro);font-weight:var(--font-weight-heavy);letter-spacing:.4px;text-transform:uppercase;color:var(--acc)}
-.sigtag{font-size:var(--font-size-micro);color:var(--mut2);font-weight:var(--font-weight-bold);margin-top:var(--space-5);letter-spacing:.2px}
+.qk{font-family:var(--mono);font-size:var(--font-size-micro);font-weight:var(--font-weight-heavy);letter-spacing:var(--track-px-0-4);text-transform:uppercase;color:var(--acc)}
+.sigtag{font-size:var(--font-size-micro);color:var(--mut2);font-weight:var(--font-weight-bold);margin-top:var(--space-5);letter-spacing:var(--track-px-0-2)}
 .sigtag b{color:var(--acc)}
-.tier{display:inline-block;font-size:var(--font-size-micro);font-weight:var(--font-weight-heavy);letter-spacing:.8px;text-transform:uppercase;padding:var(--space-3) var(--space-8);border-radius:5px;border:1px solid;white-space:nowrap}
+.tier{display:inline-block;font-size:var(--font-size-micro);font-weight:var(--font-weight-heavy);letter-spacing:var(--track-px-0-8);text-transform:uppercase;padding:var(--space-3) var(--space-8);border-radius:5px;border:1px solid;white-space:nowrap}
 .tier.t2{color:var(--teal);background:var(--tealbg);border-color:var(--senior-bd)}
 .tier.t3{color:var(--accink);background:var(--accbg);border-color:#cfc7f0}
 .tier.tS{color:var(--red);background:var(--redbg);border-color:#e8c5c0}
 .tier.tX{color:var(--on-slab);background:var(--indigo);border-color:var(--indigo)}
 .speak{margin-top:var(--space-11);font-size:var(--font-size-body);max-width:var(--measure);color:var(--speak-fg);background:var(--accbg);border:1px solid #cfc7f0;border-radius:9px;padding:var(--space-12) var(--space-14);animation:pop var(--duration-moderate) var(--ease-base)}
-.speak .sl{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.8px;text-transform:uppercase;color:var(--acc);display:flex;align-items:center;gap:var(--space-6);margin-bottom:var(--space-5)}
+.speak .sl{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:var(--track-px-0-8);text-transform:uppercase;color:var(--acc);display:flex;align-items:center;gap:var(--space-6);margin-bottom:var(--space-5)}
 .speak .sl::before{content:"\\1F5E3"}
 .speak b{color:var(--accink)}
 .debrief .big{font-size:var(--font-size-display);font-weight:var(--font-weight-heavy);text-align:center;margin-bottom:var(--space-4)}
@@ -262,7 +262,7 @@ var DRILL_STYLE = `/* @keyframes pop moved to BASE_SHEET. Five shadow scopes ref
 /* .flow-strip / .flow-go / .flow-rcpt now live in BASE_SHEET (adopted by every terminal scope). */
 .btn-sec:active{transform:translateY(1px);filter:brightness(.96)}
 .rec{text-align:center;margin-bottom:var(--space-6)}
-.rec .lvl{display:inline-block;font-size:var(--font-size-heading);font-weight:var(--font-weight-heavy);letter-spacing:-.3px;padding:var(--space-10) var(--space-24);border-radius:12px;border:2px solid;box-shadow:0 2px 8px -2px var(--acc-a10);transition:transform var(--duration-base) var(--ease-spring),box-shadow var(--duration-moderate) var(--ease-base)}
+.rec .lvl{display:inline-block;font-size:var(--font-size-heading);font-weight:var(--font-weight-heavy);letter-spacing:var(--track-px-neg-0-3);padding:var(--space-10) var(--space-24);border-radius:12px;border:2px solid;box-shadow:0 2px 8px -2px var(--acc-a10);transition:transform var(--duration-base) var(--ease-spring),box-shadow var(--duration-moderate) var(--ease-base)}
 .rec.sh .lvl{color:#0a5240;background:linear-gradient(135deg,var(--tealbg) 0%,rgba(10,133,100,.08) 100%);border-color:var(--teal);box-shadow:0 2px 8px -2px rgba(10,133,100,.15)}
 .rec.h .lvl{color:var(--accink);background:linear-gradient(135deg,var(--accbg) 0%,var(--acc-a06) 100%);border-color:var(--acc);box-shadow:0 2px 8px -2px var(--acc-a15)}
 .rec.lh .lvl{color:var(--fb-a-fg);background:linear-gradient(135deg,var(--amberbg) 0%,rgba(176,108,20,.06) 100%);border-color:var(--amber);box-shadow:0 2px 8px -2px rgba(176,108,20,.15)}
@@ -270,8 +270,8 @@ var DRILL_STYLE = `/* @keyframes pop moved to BASE_SHEET. Five shadow scopes ref
 .rec .tu{font-size:var(--font-size-caption);color:var(--mut2);margin-top:var(--space-10);font-weight:var(--font-weight-bold)}
 .cbump{animation:cbump var(--duration-slow) var(--ease-base)}
 .dnav-wrap{margin-top:var(--space-22)}
-.dnav-h{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin-bottom:var(--space-12);display:flex;align-items:baseline;gap:var(--space-9);flex-wrap:wrap}
-.dnav-h .sub{font-size:var(--font-size-micro);font-weight:var(--font-weight-semibold);letter-spacing:.01em;text-transform:none;color:var(--mut2)}
+.dnav-h{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:var(--track-em-0-1);text-transform:uppercase;color:var(--mut);margin-bottom:var(--space-12);display:flex;align-items:baseline;gap:var(--space-9);flex-wrap:wrap}
+.dnav-h .sub{font-size:var(--font-size-micro);font-weight:var(--font-weight-semibold);letter-spacing:var(--track-em-0-01);text-transform:none;color:var(--mut2)}
 /* ===== THREE COLUMNS DO NOT FIT ON A PHONE (WCAG 1.4.10, loss of content) =====
    repeat(3,1fr) had no breakpoint, so at 320px each probe chip is ~91px -- and after the number
    badge (23px), the gap and the padding, the TITLE gets 33px. "Observability & operability" is one
@@ -295,8 +295,8 @@ var DRILL_STYLE = `/* @keyframes pop moved to BASE_SHEET. Five shadow scopes ref
 .dn-step.flag .dn-n{background:linear-gradient(135deg,var(--amber),#d4902a);color:var(--on-slab)}
 .dn-step:active{transform:translateY(0) scale(.99)}
 .mhp{margin-top:var(--space-14);border:1px solid var(--bd);border-radius:12px;padding:var(--space-14) var(--space-16);background:linear-gradient(135deg,var(--accbg) 0%,var(--acc-a02) 100%);animation:pop var(--duration-moderate) var(--ease-base)}
-.mhp-h{font:var(--font-weight-heavy) 10px var(--sans);letter-spacing:.5px;text-transform:uppercase;color:var(--acc)}
-.mhp-h .mhp-sub{display:block;margin-top:var(--space-3);font:var(--font-weight-semibold) 11px var(--sans);letter-spacing:0;text-transform:none;color:var(--mut2)}
+.mhp-h{font:var(--font-weight-heavy) 10px var(--sans);letter-spacing:var(--track-px-0-5);text-transform:uppercase;color:var(--acc)}
+.mhp-h .mhp-sub{display:block;margin-top:var(--space-3);font:var(--font-weight-semibold) 11px var(--sans);letter-spacing:var(--track-none);text-transform:none;color:var(--mut2)}
 .mhp-list{display:flex;flex-direction:column;gap:var(--space-7);margin-top:var(--space-10)}
 .mhp-i{display:flex;align-items:flex-start;gap:var(--space-10);width:100%;text-align:left;border:1px solid var(--bd);background:var(--card);border-radius:9px;padding:var(--space-9) var(--space-11);cursor:pointer;font:inherit;transition:border-color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base)}
 .mhp-i:hover{border-color:var(--acc-a30)}
@@ -369,7 +369,7 @@ var DRILL_STYLE = `/* @keyframes pop moved to BASE_SHEET. Five shadow scopes ref
     margin-bottom:var(--space-12);padding:var(--space-8) var(--space-12);border:1px solid var(--bd);
     border-radius:10px;background:var(--card);cursor:pointer;text-align:left}
   .dsu-tog:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
-  .dsu-l{flex:none;font:var(--font-weight-heavy) 9.5px var(--sans);letter-spacing:.5px;text-transform:uppercase;color:var(--mut2)}
+  .dsu-l{flex:none;font:var(--font-weight-heavy) 9.5px var(--sans);letter-spacing:var(--track-px-0-5);text-transform:uppercase;color:var(--mut2)}
   /* The VALUE is the whole point of collapsing rather than hiding: "Study . All 20" says what
      the two buried controls are currently set to, so the row answers the question the controls
      would have been read for, and only the ACT of changing them costs a tap. */

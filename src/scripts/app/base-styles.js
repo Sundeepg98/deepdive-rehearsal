@@ -13,9 +13,9 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:var(--font-size-micro);b
 :host{display:block;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 .card{position:relative;background:var(--surf);border:1px solid var(--card-bd);border-radius:14px;padding:var(--space-22);box-shadow:var(--card-sh)}
 .card::before{content:"";position:absolute;left:var(--space-14);right:var(--space-14);top:0;height:var(--space-2);border-radius:2px;background:var(--topic-edge);opacity:1}
-.step-k{display:inline-flex;align-items:center;gap:var(--space-7);font-family:var(--mono);font-size:var(--font-size-micro);font-weight:var(--font-weight-heavy);letter-spacing:.4px;text-transform:uppercase;color:var(--acc)}
+.step-k{display:inline-flex;align-items:center;gap:var(--space-7);font-family:var(--mono);font-size:var(--font-size-micro);font-weight:var(--font-weight-heavy);letter-spacing:var(--track-px-0-4);text-transform:uppercase;color:var(--acc)}
 .step-k::before{content:"";width:var(--space-14);height:var(--space-2);border-radius:2px;background:linear-gradient(90deg,var(--acc),var(--acc2))}
-.step-t{font-size:var(--font-size-title);font-weight:var(--font-weight-bold);margin:var(--space-3) 0 var(--space-5);letter-spacing:-.2px;text-wrap:balance}
+.step-t{font-size:var(--font-size-title);font-weight:var(--font-weight-bold);margin:var(--space-3) 0 var(--space-5);letter-spacing:var(--track-px-neg-0-2);text-wrap:balance}
 .step-sub{font-size:var(--font-size-body);max-width:var(--measure);color:var(--mut);margin-bottom:var(--space-6)}
 .step-t,.dec-q,.num-h,.debrief .big,.mscript-h,.rec .lvl,.sr-h,.cs-ha-l,.side-id h1,.stage-head .sh-name{font-family:var(--display)}
 ::selection{background:var(--acc);color:var(--on-slab)}
@@ -179,7 +179,7 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:var(--font-size-micro);b
    on the strip itself -- the hit surface never moves (the binding click-surface invariant); the
    button lifts on hover only, and the * reduced-motion rule above compresses it to instant. */
 .flow-strip{margin-top:var(--space-16);border:1.5px solid;border-radius:12px;padding:var(--space-14) var(--space-16);box-shadow:0 2px 8px -3px var(--acc-a08)}
-.flow-strip .flow-k{font:var(--font-weight-heavy) 9.5px var(--sans);letter-spacing:.7px;text-transform:uppercase;margin:0 0 var(--space-6)}
+.flow-strip .flow-k{font:var(--font-weight-heavy) 9.5px var(--sans);letter-spacing:var(--track-px-0-7);text-transform:uppercase;margin:0 0 var(--space-6)}
 .flow-strip .flow-t{font-size:var(--font-size-small);line-height:var(--line-height-loose);font-weight:var(--font-weight-semibold);margin:0 0 var(--space-11)}
 .flow-strip .flow-t b{font-weight:var(--font-weight-heavy)}
 .flow-act{display:flex;align-items:center;gap:var(--space-12);flex-wrap:wrap}
@@ -210,5 +210,5 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:var(--font-size-micro);b
    per-class rules above and in the drill are now redundant rather than load-bearing; they are left
    in place because they are harmless and their comments carry the history. */
 button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
-.flow-rcpt{font-size:var(--font-size-micro);color:var(--mut2);font-weight:var(--font-weight-semibold);letter-spacing:.2px}
+.flow-rcpt{font-size:var(--font-size-micro);color:var(--mut2);font-weight:var(--font-weight-semibold);letter-spacing:var(--track-px-0-2)}
 `);

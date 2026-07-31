@@ -312,15 +312,15 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
   
 
   /* (the badgeShimmer keyframes deleted -- referenced by nothing.) */
-  .locator{display:inline-block;font-family:var(--mono);font-size:var(--font-size-nano);font-weight:var(--font-weight-bold);letter-spacing:.2px;text-transform:uppercase;color:var(--acc);background:var(--accbg);border:1px solid var(--topic-edge);border-radius:6px;padding:var(--space-3) var(--space-9);margin:0 0 var(--space-11) var(--space-7)}
+  .locator{display:inline-block;font-family:var(--mono);font-size:var(--font-size-nano);font-weight:var(--font-weight-bold);letter-spacing:var(--track-px-0-2);text-transform:uppercase;color:var(--acc);background:var(--accbg);border:1px solid var(--topic-edge);border-radius:6px;padding:var(--space-3) var(--space-9);margin:0 0 var(--space-11) var(--space-7)}
   /* the room's 2-3 letter code -- the CVD/greyscale-safe room marker (colour alone,
      across six hues, fails; the letters do not). A hairline divider sets it off. */
-  .loc-key{font-weight:var(--font-weight-black);letter-spacing:.5px;padding-right:var(--space-7);margin-right:var(--space-7);border-right:1px solid var(--topic-edge)}
+  .loc-key{font-weight:var(--font-weight-black);letter-spacing:var(--track-px-0-5);padding-right:var(--space-7);margin-right:var(--space-7);border-right:1px solid var(--topic-edge)}
   .hdr{border-left:5px solid var(--acc);padding:var(--space-5) 0 var(--space-7) var(--space-17);margin-bottom:var(--space-18)}
   /* 700, not 800. Space Grotesk's variable wght axis is 300-700 (see fonts.css); 800 is
      off the end of it, so the browser SYNTHESISED a fake bold. The two display headings
      have rendered faux-bold for the app's whole life. Ask for a weight the face has. */
-  .hdr h1{font-size:clamp(25px,7.2vw,30px);font-weight:var(--font-weight-bold);letter-spacing:-.7px;line-height:var(--line-height-tight);position:relative;color:var(--ink)}
+  .hdr h1{font-size:clamp(25px,7.2vw,30px);font-weight:var(--font-weight-bold);letter-spacing:var(--track-px-neg-0-7);line-height:var(--line-height-tight);position:relative;color:var(--ink)}
 /* headingShift (6s endlessly-looping animated lavender-on-cream gradient text -- the
    app's LOWEST-contrast text, and it never stopped moving) DELETED. The title is a solid
    high-contrast anchor now; the room lives in the wall/locator/masthead/edges. */
@@ -332,7 +332,7 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
   .seg{display:grid;grid-template-columns:repeat(9,1fr);gap:var(--space-4);background:#F0ECE4;border:1px solid var(--bd);border-radius:12px;padding:var(--space-5);margin-bottom:var(--space-20)}
   .seg button{min-width:0;white-space:nowrap;border:0;background:transparent;color:var(--mut);font:var(--font-weight-semibold) 10.5px var(--sans);padding:var(--space-10) var(--space-3);border-radius:9px;cursor:pointer;transition:var(--duration-fast);display:flex;flex-direction:column;align-items:center;gap:var(--space-2)}
   @media(max-width:600px){ .seg{grid-template-columns:repeat(3,1fr)} }
-  .seg button .n{font-size:var(--font-size-nano);color:var(--mut2);font-weight:var(--font-weight-bold);letter-spacing:.4px}
+  .seg button .n{font-size:var(--font-size-nano);color:var(--mut2);font-weight:var(--font-weight-bold);letter-spacing:var(--track-px-0-4)}
   .seg button.on{background:var(--card);color:var(--acc);font-weight:var(--font-weight-heavy);box-shadow:0 0 0 1px var(--acc-a32),0 4px 12px var(--acc-a20)}
   .seg button.on .n{color:var(--acc)}
 .seg button:not(.on):hover{background:var(--acc-a08);color:var(--ink)}
@@ -383,7 +383,7 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
   /* mock run */
   .mockbar{display:flex;flex-direction:column;gap:var(--space-8);margin:0 0 var(--space-16)}
 .mb-sep{height:var(--space-1);background:var(--bd);opacity:.5;margin:var(--space-2) var(--space-8);flex:0 0 auto}
-.mb-sec{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.1em;text-transform:uppercase;color:var(--mut);padding:var(--space-7) var(--space-8) var(--space-1);margin-top:var(--space-3)}
+.mb-sec{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:var(--track-em-0-1);text-transform:uppercase;color:var(--mut);padding:var(--space-7) var(--space-8) var(--space-1);margin-top:var(--space-3)}
 .mb-sec:first-child{margin-top:0;padding-top:var(--space-1)}
   /* W2 -- the NextUp CONTINUE DOCK: a compact forward CTA between the topic id and the mock CTA.
      HARD height cap (the doc's <=64px condition; fold-measured at 1280x800 + 1536x864 before merge)
@@ -400,7 +400,7 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
   html[data-theme="dark"]{--dock-bg:var(--panel);--dock-bd:var(--bd)}
   .dock{flex:none;max-height:64px;overflow:hidden;box-sizing:border-box;margin:var(--space-10) 0 0;padding:var(--space-7) var(--space-10);border:1px solid var(--dock-bd);border-radius:11px;background:var(--dock-bg);display:flex;flex-direction:column;gap:var(--space-1);align-items:flex-start}
   .dock[hidden]{display:none}
-  .nd-k{font:var(--font-weight-heavy) var(--font-size-nano)/1 var(--sans);letter-spacing:.6px;text-transform:uppercase}
+  .nd-k{font:var(--font-weight-heavy) var(--font-size-nano)/1 var(--sans);letter-spacing:var(--track-px-0-6);text-transform:uppercase}
   /* overflow:visible + flex:none are LOAD-BEARING: the global button{overflow:hidden} (styles.css,
      the ripple clip) makes a flex item's automatic minimum size 0 (CSS Flexbox 4.5), so the button
      collapsed to height:0 in this column. Restoring visible overflow gives it back its content height. */
@@ -430,7 +430,7 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
   /* micro armed-keys (beat 3): a QUIET key legend on the recommended pane at a judgment point --
      muted, no CTA weight, never louder than the pane's own [1][2][3] buttons. */
   .nd-armk{color:var(--mut2)}
-  .nd-armed{font-size:var(--font-size-caption);color:var(--mut);letter-spacing:.2px;line-height:1.2}
+  .nd-armed{font-size:var(--font-size-caption);color:var(--mut);letter-spacing:var(--track-px-0-2);line-height:1.2}
   .nd-armed b{display:inline-block;min-width:var(--space-14);text-align:center;margin-right:var(--space-2);color:var(--acc);font-weight:var(--font-weight-heavy)}
   /* Desktop-only: the mobile bottom dock (absorbing #toolsfab) is W2's SEVERABLE TAIL with its own
      merge condition; until it lands, the sidebar dock is hidden below the app's 920px boundary so it
@@ -442,7 +442,7 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
      max-width:919px block by the fixed bottom bar. Quiet by contract: accent on the kicker only,
      never a second loud primary (the mock CTA keeps that). */
   .nd-m{font:inherit;display:none}
-  .mockbtn{display:flex;align-items:center;justify-content:center;gap:var(--space-9);width:100%;font:var(--font-weight-heavy) 13.5px var(--sans);letter-spacing:.2px;padding:var(--space-14) var(--space-16);border-radius:13px;border:0;background:linear-gradient(135deg,var(--acc),var(--acc2));color:var(--on-slab);cursor:pointer;transition:transform var(--duration-base) var(--ease-glide),box-shadow var(--duration-moderate) var(--ease-base);box-shadow:0 6px 18px var(--acc-a30),inset 0 1px 0 rgba(255,255,255,.14);position:relative;overflow:hidden}
+  .mockbtn{display:flex;align-items:center;justify-content:center;gap:var(--space-9);width:100%;font:var(--font-weight-heavy) 13.5px var(--sans);letter-spacing:var(--track-px-0-2);padding:var(--space-14) var(--space-16);border-radius:13px;border:0;background:linear-gradient(135deg,var(--acc),var(--acc2));color:var(--on-slab);cursor:pointer;transition:transform var(--duration-base) var(--ease-glide),box-shadow var(--duration-moderate) var(--ease-base);box-shadow:0 6px 18px var(--acc-a30),inset 0 1px 0 rgba(255,255,255,.14);position:relative;overflow:hidden}
 .mockbtn::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);transform:translateX(-100%);transition:none}
 .mockbtn:hover::after{animation:btnShimmer var(--duration-slowest) var(--ease-base)}
 .mockbtn .mb-ic{font-size:var(--font-size-caption);flex:none;line-height:var(--line-height-none)}
@@ -451,7 +451,7 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
   .crambtn{display:flex;align-items:center;gap:var(--space-11);width:100%;text-align:left;font:inherit;font-size:var(--font-size-caption);padding:var(--space-12) var(--space-15);border-radius:11px;border:1px solid var(--bd);background:var(--surf);box-shadow:var(--surf-sh);cursor:pointer;transition:transform var(--duration-base) var(--ease-glide),box-shadow var(--duration-base) var(--ease-base),border-color var(--duration-base) var(--ease-base),background var(--duration-base) var(--ease-base)}
 .crambtn:not(.cram-tog)::after{content:"\203A";margin-left:auto;font:var(--font-weight-regular) 19px var(--sans);color:var(--mut);opacity:.5;transition:var(--duration-fast);flex:none;padding-left:var(--space-6)}
 .mb-tx{flex:1;min-width:0;line-height:var(--line-height-normal)}
-.mb-t{font-weight:var(--font-weight-bold);color:var(--ink);letter-spacing:.1px}
+.mb-t{font-weight:var(--font-weight-bold);color:var(--ink);letter-spacing:var(--track-px-0-1)}
 .mb-d{font-weight:var(--font-weight-medium);color:var(--mut)}
 .cram-tog{color:var(--mut2);font-weight:var(--font-weight-semibold);gap:var(--space-8)}
 .cram-tog .mb-ic{font-size:var(--font-size-small);flex:none;line-height:var(--line-height-none)}
@@ -476,7 +476,7 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
   .mock-top{display:flex;align-items:center;gap:var(--space-12);padding:var(--space-13) var(--space-18);border-bottom:1px solid var(--bd);background:var(--card);position:sticky;top:0;z-index:2}
   .mock-x{flex:none;width:var(--space-32);height:var(--space-32);border-radius:9px;border:1px solid var(--bd);background:var(--card);color:var(--mut);font:inherit;font-size:var(--font-size-title);line-height:var(--line-height-none);cursor:pointer;transition:transform var(--duration-fast) var(--ease-spring),background var(--duration-base) var(--ease-base),color var(--duration-base) var(--ease-base),border-color var(--duration-base) var(--ease-base),box-shadow var(--duration-base) var(--ease-base);display:flex;align-items:center;justify-content:center}
   .mock-x:hover{border-color:var(--red);color:var(--red);background:var(--redbg);transform:scale(1.1) rotate(90deg);box-shadow:0 0 0 3px rgba(239,68,68,.1)}
-  .mock-title{flex:1;font:var(--font-weight-heavy) 12px var(--sans);letter-spacing:.6px;text-transform:uppercase;color:var(--accink)}
+  .mock-title{flex:1;font:var(--font-weight-heavy) 12px var(--sans);letter-spacing:var(--track-px-0-6);text-transform:uppercase;color:var(--accink)}
   .mock-clock{flex:none;font:var(--font-weight-heavy) 16px ui-monospace,Menlo,monospace;color:var(--acc);background:var(--accbg);border-radius:8px;padding:var(--space-4) var(--space-12)}
 
   /* cram sheet -- same frame, same width, same open-state layout as the six .mock-ov dialogs
@@ -486,7 +486,7 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
   .cram-ov.open{display:flex;align-items:flex-start;justify-content:center;overflow:hidden}
   .cram-panel{background:linear-gradient(180deg,rgba(250,249,245,.97),rgba(248,245,239,.97));width:100%;max-width:var(--space-560);border-radius:18px;box-shadow:0 8px 32px -8px var(--acc-a20),0 28px 64px -18px rgba(0,0,0,.34),0 0 80px -20px var(--acc-a15);margin:0 auto;overflow:hidden;border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(24px) saturate(1.3);-webkit-backdrop-filter:blur(24px) saturate(1.3);display:flex;flex-direction:column;max-height:calc(100vh - var(--space-36));transform-origin:center top}
   .cram-top{display:flex;align-items:center;gap:var(--space-12);padding:var(--space-13) var(--space-18);border-bottom:1px solid var(--bd);background:var(--card);position:sticky;top:0;z-index:2}
-  .cram-title{flex:1;font:var(--font-weight-heavy) 12px var(--sans);letter-spacing:.5px;text-transform:uppercase;color:var(--accink)}
+  .cram-title{flex:1;font:var(--font-weight-heavy) 12px var(--sans);letter-spacing:var(--track-px-0-5);text-transform:uppercase;color:var(--accink)}
   .cram-print{flex:none;font:var(--font-weight-bold) 11.5px var(--sans);padding:var(--space-6) var(--space-14);border-radius:8px;border:1px solid #cfc7f0;background:var(--accbg);color:var(--accink);cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),background var(--duration-base) var(--ease-base),color var(--duration-base) var(--ease-base),border-color var(--duration-base) var(--ease-base),box-shadow var(--duration-base) var(--ease-base)}
   .cram-print:hover{background:var(--acc);color:var(--on-slab);border-color:var(--acc);transform:translateY(-1px);box-shadow:0 4px 12px -3px var(--acc-a20)}
   .cram-body{padding:var(--space-18) var(--space-20) var(--space-24);overflow-y:auto;flex:1;min-height:0}
@@ -508,7 +508,7 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
   .sr-ttl{font:var(--font-weight-heavy) 19px Georgia,'Times New Roman',serif;color:var(--ink)}
   .sr-when{font-size:var(--font-size-caption);color:var(--mut);margin-top:var(--space-3)}
   .sr-rec{border:1px solid #cfcfcf;border-left:4px solid var(--acc);border-radius:6px;padding:var(--space-11) var(--space-13);margin-bottom:var(--space-16)}
-  .sr-rk{font:var(--font-weight-heavy) 10px var(--sans);letter-spacing:.6px;text-transform:uppercase;color:var(--acc);margin-bottom:var(--space-4)}
+  .sr-rk{font:var(--font-weight-heavy) 10px var(--sans);letter-spacing:var(--track-px-0-6);text-transform:uppercase;color:var(--acc);margin-bottom:var(--space-4)}
   .sr-rt{font-size:var(--font-size-small);color:var(--ink);line-height:var(--line-height-loose)}
   .sr-sec{margin-bottom:var(--space-13);padding-bottom:var(--space-12);border-bottom:1px solid #e6e6e6}
   .sr-h{font:var(--font-weight-heavy) 14px var(--sans);color:var(--ink);margin-bottom:var(--space-5)}
@@ -624,7 +624,7 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
 .sidebar{flex:none;width:var(--space-296);display:flex;flex-direction:column;gap:var(--space-16);background:var(--panel);border-right:1px solid var(--bd);padding:var(--space-22) var(--space-16);position:sticky;top:0;height:100vh;overflow-y:auto;z-index:var(--z-sidebar)}
 .side-id{order:0}
 .side-id .hdr{border-left:none;padding:0;margin:var(--space-6) 0 0}
-.side-id h1{font-size:var(--font-size-heading);letter-spacing:-.4px;line-height:var(--line-height-tight)}
+.side-id h1{font-size:var(--font-size-heading);letter-spacing:var(--track-px-neg-0-4);line-height:var(--line-height-tight)}
 .side-id .sub,.side-id .kbd-hint{display:none}
 /* ===== THE PANE TABS MUST NOT MOVE WHEN THE TOPIC DOES =====
    .seg -- the nine pane tabs, the app's PRIMARY navigation -- sits directly below .side-id in the
@@ -676,7 +676,7 @@ html[data-theme="dark"] .kbd-hint kbd{color:#B4AEA4}
 .sidebar .seg{display:flex;flex-direction:column;gap:var(--space-3);background:none;border:none;border-radius:0;padding:0;margin:0;grid-template-columns:none}
 .sidebar .seg button{display:flex;flex-direction:column;align-items:flex-start;gap:var(--space-1);width:100%;text-align:left;padding:var(--space-8) var(--space-11);border:1px solid transparent;border-radius:10px;background:none;cursor:pointer;transition:background var(--duration-fast) var(--ease-base),box-shadow var(--duration-fast) var(--ease-base)}
 .sidebar .seg button>span:first-child{font-size:var(--font-size-small);font-weight:var(--font-weight-bold);color:var(--ink)}
-.sidebar .seg button .n{font-size:var(--font-size-nano);font-weight:var(--font-weight-bold);letter-spacing:.5px;color:var(--mut2)}
+.sidebar .seg button .n{font-size:var(--font-size-nano);font-weight:var(--font-weight-bold);letter-spacing:var(--track-px-0-5);color:var(--mut2)}
 .sidebar .seg button:not(.on):hover{background:rgba(125,110,210,.10)}
 .sidebar .seg button.on{background:var(--accbg);box-shadow:inset 3px 0 0 var(--acc)}
 .sidebar .seg button.on>span:first-child{color:var(--accink)}
@@ -792,7 +792,7 @@ html[data-theme="dark"] .sidebar .seg button.on .seg-key{color:var(--acc);border
   /* 44px is the a11y floor (WCAG 2.5.8); raw px on purpose -- a physical-finger constant, not a
      layout token. The padding alone left this at 67x40. Set here, not in the <=600px polish
      block, because the button is on-screen across this whole <=919px range. */
-  .tools-fab{order:0;position:static;flex:none;display:inline-flex;align-items:center;gap:var(--space-6);flex:none;min-height:44px;font:inherit;font-size:var(--font-size-caption);font-weight:var(--font-weight-bold);letter-spacing:.3px;color:var(--acc);background:var(--accbg);border:1px solid var(--acc);border-radius:999px;padding:var(--space-12) var(--space-16);box-shadow:none;cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),box-shadow var(--duration-base) var(--ease-base),border-color var(--duration-base) var(--ease-base)}
+  .tools-fab{order:0;position:static;flex:none;display:inline-flex;align-items:center;gap:var(--space-6);flex:none;min-height:44px;font:inherit;font-size:var(--font-size-caption);font-weight:var(--font-weight-bold);letter-spacing:var(--track-px-0-3);color:var(--acc);background:var(--accbg);border:1px solid var(--acc);border-radius:999px;padding:var(--space-12) var(--space-16);box-shadow:none;cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),box-shadow var(--duration-base) var(--ease-base),border-color var(--duration-base) var(--ease-base)}
   .tools-fab:active{transform:scale(.95)}
   .sidebar .mockcta{order:2;position:fixed;bottom:0;left:0;right:0;z-index:40;display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;gap:var(--space-8) var(--space-10);margin:0;background:var(--card);border-top:1px solid var(--bd);box-shadow:0 -8px 24px rgba(0,0,0,.14);padding:var(--space-12) var(--space-15);padding-bottom:calc(var(--space-12) + env(safe-area-inset-bottom,0px))}
   .sidebar .mockcta .mockbtn{order:0;flex:1 1 0;min-width:0;margin:0}
@@ -807,7 +807,7 @@ html[data-theme="dark"] .sidebar .seg button.on .seg-key{color:var(--acc);border
   .sidebar .mockcta .nd-m:not([hidden]){order:1;flex:none;display:inline-flex;align-items:center;gap:var(--space-6);min-height:44px;font:inherit;box-sizing:border-box;padding:var(--space-7) var(--space-13);border:1px solid var(--bd);border-radius:999px;background:var(--card);cursor:pointer;transition:transform var(--duration-fast) var(--ease-base),border-color var(--duration-base) var(--ease-base),background var(--duration-base) var(--ease-base)}
   .sidebar .mockcta .nd-m:not([hidden]):hover{border-color:var(--acc);background:var(--accbg)}
   .sidebar .mockcta .nd-m:not([hidden]):active{transform:scale(.96)}
-  .nd-m-k{font:var(--font-weight-heavy) var(--font-size-caption) var(--sans);letter-spacing:.2px;color:var(--accink);white-space:nowrap}
+  .nd-m-k{font:var(--font-weight-heavy) var(--font-size-caption) var(--sans);letter-spacing:var(--track-px-0-2);color:var(--accink);white-space:nowrap}
   .nd-m-ar{font-size:var(--font-size-body);line-height:var(--line-height-none);color:var(--acc);flex:none;font-weight:var(--font-weight-heavy)}
   .sidebar .mockcta .tools-fab{order:2;flex:none}
   /* The "Interviewer cuts in mid-answer" toggle is a mock-run SETTING, not a global
@@ -1036,9 +1036,9 @@ button:active::after,.inttog:active::after{opacity:1;transition:opacity var(--du
 .stage-head::before{content:"";position:absolute;left:0;top:var(--space-3);bottom:var(--space-14);width:var(--space-3);border-radius:2px;background:var(--topic-solid);box-shadow:0 0 8px -1px var(--acc-a30)}
 /* accentGlow (endless pulse) removed -- a masthead that breathes is a masthead that
    distracts. The room's solid bar is the anchor; its glow is static. */
-.stage-head .sh-kick{font-family:var(--mono);font-size:var(--font-size-nano);font-weight:var(--font-weight-bold);letter-spacing:1.8px;color:var(--acc);text-transform:uppercase;line-height:var(--line-height-normal)}
+.stage-head .sh-kick{font-family:var(--mono);font-size:var(--font-size-nano);font-weight:var(--font-weight-bold);letter-spacing:var(--track-px-1-8);color:var(--acc);text-transform:uppercase;line-height:var(--line-height-normal)}
 /* 700, not 800 -- see .hdr h1 above. This is the app's other display-face heading. */
-.stage-head .sh-name{font-size:var(--font-size-display);font-weight:var(--font-weight-bold);letter-spacing:-.5px;color:var(--ink);margin-top:var(--space-4);line-height:var(--line-height-tight)}
+.stage-head .sh-name{font-size:var(--font-size-display);font-weight:var(--font-weight-bold);letter-spacing:var(--track-px-neg-0-5);color:var(--ink);margin-top:var(--space-4);line-height:var(--line-height-tight)}
 /* On mobile the view is already named twice above the fold (the seg tab + the companion),
    so the big .stage-head masthead is redundant chrome -- delete it to reclaim ~70px, which
    (with the collapsed bottom bar) unclips the drill question. (Spec Phase 5 #2.) */
@@ -1198,7 +1198,7 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover{background:rgba(150,140,
 .mcomp-sum{list-style:none;cursor:pointer;display:flex;align-items:center;gap:var(--space-10);padding:var(--space-13) var(--space-16);-webkit-user-select:none;user-select:none;transition:background var(--duration-base) var(--ease-base),padding var(--duration-base) var(--ease-base)}
 .mcomp-sum:hover{padding-left:var(--space-18)}
 .mcomp-sum::-webkit-details-marker{display:none}
-.mcomp-eyebrow{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.13em;text-transform:uppercase;color:var(--acc)}
+.mcomp-eyebrow{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:var(--track-em-0-13);text-transform:uppercase;color:var(--acc)}
 .mcomp-cue{font-size:var(--font-size-micro);color:var(--mut2);flex:1}
 .mcomp-chev{font-size:var(--font-size-nano);color:var(--mut);transition:transform var(--duration-base)}
 .mcomp[open] .mcomp-chev{transform:rotate(180deg)}
@@ -1256,12 +1256,12 @@ button,summary{-webkit-user-select:none;user-select:none}
    (the [hidden]-integrity guard below) makes the attribute the single, authoritative
    hiding mechanism -- so :not([hidden]) is an exact proxy for "is rendered". */
 .cmp-block:not([hidden])~.cmp-block:not([hidden]){border-top:1px solid var(--bd)}
-.cmp-eyebrow{display:inline-flex;align-items:center;gap:var(--space-7);align-self:flex-start;font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.12em;text-transform:uppercase;color:var(--acc);background:var(--accbg);border:1px solid var(--bd);padding:var(--space-4) var(--space-10) var(--space-4) var(--space-9);border-radius:999px}
+.cmp-eyebrow{display:inline-flex;align-items:center;gap:var(--space-7);align-self:flex-start;font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:var(--track-em-0-12);text-transform:uppercase;color:var(--acc);background:var(--accbg);border:1px solid var(--bd);padding:var(--space-4) var(--space-10) var(--space-4) var(--space-9);border-radius:999px}
 .cmp-eyebrow::before{content:"";width:var(--space-5);height:var(--space-5);border-radius:50%;background:var(--acc);box-shadow:0 0 0 3px color-mix(in srgb,var(--acc) 18%,transparent)}
-.cmp-topic{font-family:var(--display);font-size:var(--font-size-display);font-weight:var(--font-weight-semibold);line-height:var(--line-height-tight);letter-spacing:-.014em;color:var(--ink);margin-top:var(--space-13)}
+.cmp-topic{font-family:var(--display);font-size:var(--font-size-display);font-weight:var(--font-weight-semibold);line-height:var(--line-height-tight);letter-spacing:var(--track-em-neg-0-014);color:var(--ink);margin-top:var(--space-13)}
 .cmp-thesis{margin:var(--space-13) 0 0;font-size:var(--font-size-body);line-height:var(--line-height-spacious);color:var(--mut2)}
 .cmp-thesis::before{content:"";display:block;width:var(--space-26);height:var(--space-2);border-radius:2px;margin-bottom:var(--space-11);background:linear-gradient(90deg,var(--acc),var(--acc2))}
-.cmp-h{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.12em;text-transform:uppercase;color:var(--mut);margin:0 0 var(--space-11)}
+.cmp-h{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:var(--track-em-0-12);text-transform:uppercase;color:var(--mut);margin:0 0 var(--space-11)}
 .cmp-rel-list{display:flex;flex-direction:column;gap:var(--space-6)}
 .cmp-rel{display:flex;flex-direction:column;align-items:flex-start;gap:var(--space-1);width:100%;text-align:left;font:inherit;padding:var(--space-8) var(--space-11);border:1px solid var(--bd);border-radius:9px;background:var(--surf);box-shadow:var(--surf-sh);cursor:pointer;transition:background var(--duration-fast) var(--ease-base),border-color var(--duration-fast) var(--ease-base),transform var(--duration-fast) var(--ease-base)}
 .cmp-rel:hover{background:var(--accbg);border-color:var(--acc)}
@@ -1301,7 +1301,7 @@ button,summary{-webkit-user-select:none;user-select:none}
 .rail .fill::after{content:"";position:absolute;right:0;top:-1px;bottom:-1px;width:var(--space-2);border-radius:2px;background:var(--acc2);box-shadow:0 0 8px 1px var(--acc2)}
 
 /* brand wordmark: tighter optical rhythm */
-.side-id h1{letter-spacing:-.5px}
+.side-id h1{letter-spacing:var(--track-px-neg-0-5)}
 
 /* desktop sidebar nav: the active view becomes a lit, current destination */
 @media(min-width:920px){
@@ -1388,13 +1388,13 @@ button{cursor:pointer}
 
 /* pomodoro: standalone sidebar focus timer */
 .pomodoro{padding:var(--space-10) var(--space-11);margin-top:var(--space-4);border-top:1px solid var(--bd)}
-.pomodoro-h{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:1.2px;text-transform:uppercase;color:var(--mut);margin-bottom:var(--space-8)}
+.pomodoro-h{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:var(--track-px-1-2);text-transform:uppercase;color:var(--mut);margin-bottom:var(--space-8)}
 .pomodoro-row{display:flex;align-items:center;gap:var(--space-10)}
 .pomodoro-ring{flex:none;width:var(--space-36);height:var(--space-36);transform:rotate(-90deg)}
 .pomodoro-ring circle{transition:stroke-dashoffset var(--duration-slowest) var(--ease-base),stroke var(--duration-slow) var(--ease-base)}
 .pomodoro-meta{flex:1;min-width:0;display:flex;flex-direction:column;line-height:var(--line-height-tight)}
 .pomodoro-time{font-family:var(--mono);font-size:var(--font-size-body);font-weight:var(--font-weight-bold);color:var(--ink)}
-.pomodoro-phase{font-size:var(--font-size-nano);font-weight:var(--font-weight-bold);letter-spacing:.4px;text-transform:uppercase;color:var(--mut2)}
+.pomodoro-phase{font-size:var(--font-size-nano);font-weight:var(--font-weight-bold);letter-spacing:var(--track-px-0-4);text-transform:uppercase;color:var(--mut2)}
 .pomodoro-btn{flex:none;border:0;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;font:inherit;line-height:var(--line-height-none)}
 .pomodoro-play{width:var(--space-28);height:var(--space-28);background:var(--teal);color:var(--on-slab);font-size:var(--font-size-caption);transition:filter var(--duration-base) var(--ease-base)}
 .pomodoro-reset{width:var(--space-24);height:var(--space-24);background:var(--bd);color:var(--mut);font-size:var(--font-size-micro)}
@@ -1446,7 +1446,7 @@ button{cursor:pointer}
    open dialog covers it and its own Escape closes the dialog first. 44px tap floor on BOTH viewports;
    the accent-CTA treatment matches the app's other primary floating control (.scrolltop). */
 #_focus-exit{font:inherit;display:none}
-.app._focus-mode #_focus-exit{position:fixed;top:calc(var(--space-16) + env(safe-area-inset-top,0px));right:var(--space-16);z-index:var(--z-sticky);display:inline-flex;align-items:center;gap:var(--space-7);min-height:44px;padding:var(--space-10) var(--space-18);font:inherit;font-size:var(--font-size-caption);font-weight:var(--font-weight-bold);letter-spacing:.3px;color:var(--on-slab);background:linear-gradient(135deg,var(--acc),var(--acc2));border:0;border-radius:999px;box-shadow:0 6px 18px var(--acc-a30),0 0 0 1px var(--acc-a15);cursor:pointer;transition:box-shadow var(--duration-base) var(--ease-base),transform var(--duration-fast) var(--ease-base)}
+.app._focus-mode #_focus-exit{position:fixed;top:calc(var(--space-16) + env(safe-area-inset-top,0px));right:var(--space-16);z-index:var(--z-sticky);display:inline-flex;align-items:center;gap:var(--space-7);min-height:44px;padding:var(--space-10) var(--space-18);font:inherit;font-size:var(--font-size-caption);font-weight:var(--font-weight-bold);letter-spacing:var(--track-px-0-3);color:var(--on-slab);background:linear-gradient(135deg,var(--acc),var(--acc2));border:0;border-radius:999px;box-shadow:0 6px 18px var(--acc-a30),0 0 0 1px var(--acc-a15);cursor:pointer;transition:box-shadow var(--duration-base) var(--ease-base),transform var(--duration-fast) var(--ease-base)}
 @media(hover:hover){.app._focus-mode #_focus-exit:hover{box-shadow:0 9px 26px var(--acc-a40),0 0 0 1px var(--acc-a25);transform:translateY(-1px)}}
 .app._focus-mode #_focus-exit:active{transform:translateY(0) scale(.98)}
 .app._focus-mode #_focus-exit:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
@@ -1459,7 +1459,7 @@ body.is-hidden,body.is-hidden *,body.is-hidden *::before,body.is-hidden *::after
 .tn-trigger{display:flex;align-items:center;gap:var(--space-9);flex:1;min-width:0;font:inherit;border:1px solid var(--bd);background:var(--card);border-radius:11px;padding:var(--space-8) var(--space-12);cursor:pointer;transition:border-color var(--duration-fast) var(--ease-base),box-shadow var(--duration-fast) var(--ease-base);text-align:left}
 .tn-trigger:hover{border-color:#cfc7f0;box-shadow:0 4px 12px var(--acc-a12)}
 .tn-trigger:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
-.tn-eyebrow{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:1px;text-transform:uppercase;color:var(--mut2)}
+.tn-eyebrow{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:var(--track-px-1);text-transform:uppercase;color:var(--mut2)}
 .tn-current{flex:1;font-size:var(--font-size-small);font-weight:var(--font-weight-bold);color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tn-chev{color:var(--acc);font-size:var(--font-size-nano);transition:transform var(--duration-base) var(--ease-base)}
 .tn-step{flex:0 0 auto;display:flex;align-items:center;justify-content:center;min-width:var(--space-32);border:1px solid var(--bd);background:var(--card);border-radius:11px;color:var(--acc);font:inherit;font-size:var(--font-size-body);line-height:var(--line-height-none);cursor:pointer;transition:border-color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base)}
@@ -1500,8 +1500,8 @@ body.is-hidden,body.is-hidden *,body.is-hidden *::before,body.is-hidden *::after
 .tn-item.on .tn-i-idx{background:var(--acc);color:var(--on-slab)}
 .tn-i-name{font-size:var(--font-size-small);font-weight:var(--font-weight-bold);color:var(--ink);align-self:end}
 .tn-item.on .tn-i-name{color:var(--acc)}
-.tn-i-tail{font-size:var(--font-size-nano);color:var(--mut2);text-transform:uppercase;letter-spacing:.3px;align-self:start}
-.tn-group{padding:var(--space-10) var(--space-10) var(--space-3) var(--space-11);font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);text-transform:uppercase;letter-spacing:.7px;color:var(--mut2);opacity:.8}
+.tn-i-tail{font-size:var(--font-size-nano);color:var(--mut2);text-transform:uppercase;letter-spacing:var(--track-px-0-3);align-self:start}
+.tn-group{padding:var(--space-10) var(--space-10) var(--space-3) var(--space-11);font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);text-transform:uppercase;letter-spacing:var(--track-px-0-7);color:var(--mut2);opacity:.8}
 .tn-menu>.tn-group:first-child{padding-top:var(--space-5)}
 /* QW1: the dropdown POPPED (hidden toggles display -- measured flat opacity 1 on its first
    painted frame). Opening now replays `menuin` each time the box is created, the same
@@ -1631,13 +1631,13 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
 .ix-panel{width:var(--space-760);max-width:94vw;background:var(--card);border:1px solid var(--bd);border-radius:16px;box-shadow:0 24px 80px -16px rgba(0,0,0,.4);transform:scale(.97) translateY(10px);transition:transform var(--duration-slow) var(--ease-glide);overflow:hidden;max-height:84vh;display:flex;flex-direction:column}
 .ix-ov.vis .ix-panel{transform:none}
 .ix-head{display:flex;align-items:flex-start;justify-content:space-between;padding:var(--space-18) var(--space-20) var(--space-14);border-bottom:1px solid var(--bd);flex:0 0 auto}
-.ix-title{font-size:var(--font-size-subhead);font-weight:var(--font-weight-heavy);color:var(--ink);letter-spacing:-.2px}
-.ix-sub{font-size:var(--font-size-micro);color:var(--mut);margin-top:var(--space-2);text-transform:uppercase;letter-spacing:.4px}
+.ix-title{font-size:var(--font-size-subhead);font-weight:var(--font-weight-heavy);color:var(--ink);letter-spacing:var(--track-px-neg-0-2)}
+.ix-sub{font-size:var(--font-size-micro);color:var(--mut);margin-top:var(--space-2);text-transform:uppercase;letter-spacing:var(--track-px-0-4)}
 .ix-x{border:0;background:none;font:inherit;font-size:var(--font-size-heading);line-height:var(--line-height-none);color:var(--mut);cursor:pointer;padding:var(--space-2) var(--space-7);border-radius:8px}
 .ix-x:hover{background:var(--accbg);color:var(--acc)}
 .ix-scroll{overflow-y:auto;padding:var(--space-6) var(--space-20) var(--space-20)}
 .ix-group{margin-top:var(--space-16)}
-.ix-g-head{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);text-transform:uppercase;letter-spacing:.7px;color:var(--mut2);margin-bottom:var(--space-8);display:flex;align-items:center;gap:var(--space-7)}
+.ix-g-head{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);text-transform:uppercase;letter-spacing:var(--track-px-0-7);color:var(--mut2);margin-bottom:var(--space-8);display:flex;align-items:center;gap:var(--space-7)}
 .ix-g-n{font-family:var(--mono);font-size:var(--font-size-nano);color:var(--acc);background:var(--accbg);border-radius:5px;padding:var(--space-1) var(--space-6);font-weight:var(--font-weight-heavy)}
 /* THE INDEX IS THE MAP -- all six rooms visible at once. index-overlay sets --rm per
    group section, so each group head/dot/card wears ITS OWN room's ink here. */
@@ -1651,7 +1651,7 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
    44px (0,0,1, <=919px) at EVERY width, so that block re-asserts 44 on this class by name --
    round 1 shipped without the re-assert and silently shrank a live touch target 44->24px at
    360x740 (pills-r1.json vs pills-parent.json, _audit/2026-07-18-nit-css). */
-.ix-g-cram{margin-left:auto;display:inline-flex;align-items:center;justify-content:center;min-height:24px;font:inherit;font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.02em;text-transform:none;color:var(--acc);background:transparent;border:1px solid var(--bd);border-radius:20px;padding:var(--space-3) var(--space-11);cursor:pointer;transition:background var(--duration-fast) var(--ease-base),border-color var(--duration-fast) var(--ease-base)}
+.ix-g-cram{margin-left:auto;display:inline-flex;align-items:center;justify-content:center;min-height:24px;font:inherit;font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:var(--track-em-0-02);text-transform:none;color:var(--acc);background:transparent;border:1px solid var(--bd);border-radius:20px;padding:var(--space-3) var(--space-11);cursor:pointer;transition:background var(--duration-fast) var(--ease-base),border-color var(--duration-fast) var(--ease-base)}
 .ix-g-cram:hover{background:var(--accbg);border-color:var(--acc)}
 .ix-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:var(--space-8)}
 .ix-cell{position:relative}
@@ -1665,12 +1665,12 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
    :hover clause is already for. Guarded by test/focus_ring.cjs, which reads the COMPUTED outline. */
 .ix-cell:hover .ix-c-reset,.ix-c-reset:focus-visible{opacity:1;color:var(--red);border-color:var(--red)}
 .ix-card{display:flex;flex-direction:column;align-items:flex-start;text-align:left;border:1px solid var(--bd);background:var(--bg);border-radius:11px;padding:var(--space-11) var(--space-13);cursor:pointer;font:inherit;transition:border-color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base),transform var(--duration-fast) var(--ease-base);position:relative}
-.ix-c-badge{position:absolute;top:var(--space-10);right:var(--space-11);display:inline-flex;align-items:center;gap:var(--space-4);font-size:var(--font-size-nano);font-weight:var(--font-weight-bold);letter-spacing:.02em;color:var(--mut2);white-space:nowrap}
+.ix-c-badge{position:absolute;top:var(--space-10);right:var(--space-11);display:inline-flex;align-items:center;gap:var(--space-4);font-size:var(--font-size-nano);font-weight:var(--font-weight-bold);letter-spacing:var(--track-em-0-02);color:var(--mut2);white-space:nowrap}
 .ix-c-badge i{width:var(--space-6);height:var(--space-6);border-radius:50%;flex:none}
 .ix-c-wb{margin-left:var(--space-4);color:var(--acc);font-weight:var(--font-weight-black);font-style:normal;font-size:var(--font-size-micro);line-height:var(--line-height-none)}
 .ix-c-ready{color:var(--acc);font-weight:var(--font-weight-heavy)}
 .ix-home{display:flex;flex-wrap:wrap;align-items:stretch;gap:var(--space-12) var(--space-18);padding:var(--space-14) var(--space-16);margin:0 0 var(--space-10);background:linear-gradient(135deg,var(--accbg) 0%,var(--acc-a02) 100%);border:1px solid var(--bd);border-radius:12px}
-.ix-home-k{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.11em;text-transform:uppercase;color:var(--mut);margin-bottom:var(--space-6)}
+.ix-home-k{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:var(--track-em-0-11);text-transform:uppercase;color:var(--mut);margin-bottom:var(--space-6)}
 .ix-home-prog{flex:1 1 200px;display:flex;flex-direction:column;justify-content:center}
 .ix-home-bar{height:var(--space-6);background:var(--bd);border-radius:6px;overflow:hidden;margin-bottom:var(--space-7)}
 .ix-home-bar span{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));border-radius:6px;transition:width var(--duration-slow) var(--ease-base)}
@@ -1687,7 +1687,7 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
 .ix-goal-bar span{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));border-radius:6px;transition:width var(--duration-slow) var(--ease-base)}
 .ix-goal-bar.met span{background:linear-gradient(90deg,var(--teal),#34d399)}
 .ix-trend{display:flex;flex-direction:column;justify-content:center;gap:var(--space-4);min-width:var(--space-120)}
-.ix-trend-s{font-family:ui-monospace,Menlo,monospace;font-size:var(--font-size-subhead);letter-spacing:1.5px;color:var(--acc);line-height:var(--line-height-tight)}
+.ix-trend-s{font-family:ui-monospace,Menlo,monospace;font-size:var(--font-size-subhead);letter-spacing:var(--track-px-1-5);color:var(--acc);line-height:var(--line-height-tight)}
 .ix-trend-v{font-size:var(--font-size-nano);color:var(--mut2);line-height:var(--line-height-snug)}
 /* .ix-groups / .ix-grp-* REMOVED with groupBars(): the six room cards (.hm-room) supersede the
    "By area" bars outright. Leaving the rules behind would be dead CSS -- this file already carried
@@ -1700,7 +1700,7 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
 .ix-home-btn{display:inline-flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:var(--space-2);padding:var(--space-9) var(--space-15);border:1px solid var(--acc);border-radius:10px;background:var(--bg);color:var(--ink);font:inherit;font-size:var(--font-size-small);font-weight:var(--font-weight-semibold);cursor:pointer;transition:background var(--duration-fast) var(--ease-base),transform var(--duration-fast) var(--ease-base);white-space:nowrap}
 .ix-home-btn:hover{background:var(--accbg)}
 .ix-home-btn:active{transform:translateY(1px)}
-.ix-home-btn-k{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.09em;text-transform:uppercase;color:var(--acc)}
+.ix-home-btn-k{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:var(--track-em-0-09);text-transform:uppercase;color:var(--acc)}
 .ix-weak{display:flex;flex-direction:column;justify-content:center;min-width:var(--space-150)}
 .ix-weak-list{display:flex;flex-wrap:wrap;gap:var(--space-6)}
 .ix-weak-b{display:inline-flex;align-items:center;gap:var(--space-6);padding:var(--space-5) var(--space-10);border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit;font-size:var(--font-size-micro);font-weight:var(--font-weight-semibold);cursor:pointer;transition:border-color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base)}
@@ -1721,7 +1721,7 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
    OUTRANKS `button:focus-visible` (0,1,1), so its `outline:none` beat the app's ring no matter what
    was added at :53. The declaration had to be removed HERE. */
 .cmp-fold:hover,.cmp-fold:focus-visible{opacity:1;color:var(--acc);border-color:var(--acc)}
-.cmp-reopen{position:fixed;right:0;top:50%;transform:translateY(-50%);display:none;flex-direction:column;align-items:center;gap:var(--space-7);padding:var(--space-13) var(--space-7);border:1px solid var(--bd);border-right:0;border-radius:9px 0 0 9px;background:var(--panel);color:var(--mut);font:inherit;font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.04em;cursor:pointer;box-shadow:-5px 0 16px -9px rgba(0,0,0,.18);z-index:var(--z-dropdown);transition:color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base)}
+.cmp-reopen{position:fixed;right:0;top:50%;transform:translateY(-50%);display:none;flex-direction:column;align-items:center;gap:var(--space-7);padding:var(--space-13) var(--space-7);border:1px solid var(--bd);border-right:0;border-radius:9px 0 0 9px;background:var(--panel);color:var(--mut);font:inherit;font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:var(--track-em-0-04);cursor:pointer;box-shadow:-5px 0 16px -9px rgba(0,0,0,.18);z-index:var(--z-dropdown);transition:color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base)}
 .cmp-reopen:hover,.cmp-reopen:focus-visible{color:var(--acc);background:var(--accbg)}
 .cmp-reopen-ic{font-size:var(--font-size-body);line-height:var(--line-height-none)}
 .cmp-reopen-t{writing-mode:vertical-rl;text-orientation:mixed}
@@ -1773,7 +1773,7 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
 .xd-x:hover{background:var(--accbg);color:var(--ink)}
 .xd-body{overflow-y:auto;flex:1;min-height:0;padding:var(--space-18) var(--space-20) var(--space-24)}
 .xd-top{display:flex;align-items:center;justify-content:space-between;gap:var(--space-10);margin-bottom:var(--space-12)}
-.xd-prog{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.09em;text-transform:uppercase;color:var(--mut)}
+.xd-prog{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:var(--track-em-0-09);text-transform:uppercase;color:var(--mut)}
 .xd-from{font-size:var(--font-size-micro);font-weight:var(--font-weight-bold);color:var(--accink);background:var(--accbg);border-radius:20px;padding:var(--space-3) var(--space-11);white-space:nowrap}
 .xd-q{font-size:var(--font-size-subhead);font-weight:var(--font-weight-semibold);line-height:var(--line-height-loose);color:var(--ink);margin-bottom:var(--space-14)}
 .xd-reveal{display:block;width:100%;border:1.5px solid var(--acc);background:var(--bg);color:var(--acc);font:var(--font-weight-bold) 13px var(--sans);padding:var(--space-12);border-radius:10px;cursor:pointer;transition:background var(--duration-fast) var(--ease-base),transform var(--duration-fast) var(--ease-base)}
@@ -1781,11 +1781,11 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
 .xd-reveal:active{transform:translateY(1px)}
 .xd-ans{font-size:var(--font-size-small);line-height:var(--line-height-spacious);color:var(--ink);background:var(--accbg);border-left:3px solid var(--acc);border-radius:9px;padding:var(--space-14) var(--space-16);margin-bottom:var(--space-12)}
 .xd-fu{border:1px solid var(--bd);border-radius:9px;padding:var(--space-12) var(--space-14);margin-bottom:var(--space-10);background:var(--bg)}
-.xd-fu-l{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin-bottom:var(--space-5)}
+.xd-fu-l{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:var(--track-em-0-06);text-transform:uppercase;color:var(--mut);margin-bottom:var(--space-5)}
 .xd-fu-q{font-size:var(--font-size-small);font-weight:var(--font-weight-semibold);color:var(--ink);margin-bottom:var(--space-5)}
 .xd-fu-a{font-size:var(--font-size-caption);line-height:var(--line-height-airy);color:var(--mut2)}
 .xd-senior{margin-top:var(--space-4);font-size:var(--font-size-caption);line-height:var(--line-height-airy);color:var(--ink);background:var(--tealbg);border:1px solid var(--teal);border-radius:9px;padding:var(--space-12) var(--space-14)}
-.xd-senior-l{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.06em;text-transform:uppercase;color:var(--teal);margin-bottom:var(--space-5)}
+.xd-senior-l{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:var(--track-em-0-06);text-transform:uppercase;color:var(--teal);margin-bottom:var(--space-5)}
 .xd-judge{display:flex;gap:var(--space-10);margin-top:var(--space-16)}
 .xd-got,.xd-shk{flex:1;border:1.5px solid var(--bd);background:var(--card);border-radius:11px;padding:var(--space-12);font:var(--font-weight-bold) 13px var(--sans);cursor:pointer;transition:border-color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base),transform var(--duration-fast) var(--ease-base)}
 .xd-got{color:var(--teal)}
@@ -1795,7 +1795,7 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
 .xd-got:active,.xd-shk:active{transform:translateY(1px)}
 .xd-hint{font-size:var(--font-size-nano);opacity:.6;font-weight:var(--font-weight-semibold)}
 .xd-end{text-align:center;padding:var(--space-30) var(--space-10)}
-.xd-end-pct{font-size:var(--font-size-display-xl);font-weight:var(--font-weight-heavy);color:var(--acc);letter-spacing:-.02em}
+.xd-end-pct{font-size:var(--font-size-display-xl);font-weight:var(--font-weight-heavy);color:var(--acc);letter-spacing:var(--track-em-neg-0-02)}
 .xd-end-sub{font-size:var(--font-size-small);color:var(--mut2);margin:var(--space-8) 0 var(--space-22)}
 /* --font-size-small is 13px, which is what this rule's folded bespoke stack
    (`font:var(--font-weight-bold) 13px -apple-system,...`) already rendered at. The first fold used
@@ -1822,7 +1822,7 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
 .ix-card.on{border-color:var(--acc);background:var(--accbg)}
 .ix-c-name{font-size:var(--font-size-small);font-weight:var(--font-weight-bold);color:var(--ink);padding-right:var(--space-50)}
 .ix-card.on .ix-c-name{color:var(--acc)}
-.ix-c-tail{font-size:var(--font-size-nano);color:var(--mut2);text-transform:uppercase;letter-spacing:.3px;margin-top:var(--space-3)}
+.ix-c-tail{font-size:var(--font-size-nano);color:var(--mut2);text-transform:uppercase;letter-spacing:var(--track-px-0-3);margin-top:var(--space-3)}
 .ix-c-thesis{font-size:var(--font-size-micro);color:var(--mut);line-height:var(--line-height-normal);margin-top:var(--space-6);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .ix-g-desc{font-size:var(--font-size-micro);color:var(--mut);line-height:var(--line-height-normal);margin:-4px 0 var(--space-10)}
 .ix-filter-row{flex:0 0 auto;padding:var(--space-10) var(--space-20) var(--space-4);display:flex;align-items:center;gap:var(--space-10)}
@@ -1963,7 +1963,7 @@ html[data-view="home"] .cmp-reopen{display:none}
    own border, shadow, transform and an inner scroller. On a page it gets the document scroll and
    the whole viewport instead -- which is the entire point. On a phone the modal showed ONE of 46
    topic cards; the page shows the library with a single document scroll. */
-#home .ix-panel{width:100%;max-width:var(--space-980);margin:0 auto;max-height:none;border:0;
+#home .ix-panel{width:100%;max-width:var(--measure-home);margin:0 auto;max-height:none;border:0;
   box-shadow:none;background:transparent;transform:none;overflow:visible;display:block}
 #home .ix-scroll{overflow:visible;max-height:none}
 #home .ix-foot{border-top:1px solid var(--bd);margin-top:var(--space-28)}
@@ -1971,9 +1971,9 @@ html[data-view="home"] .cmp-reopen{display:none}
 /* the home's own header -- the sidebar is hidden on this route, so Search / Shortcuts / Theme /
    Tools need a home of their own or they are simply gone. */
 .hm-top{display:flex;align-items:center;justify-content:space-between;gap:var(--space-14);
-  max-width:var(--space-980);margin:0 auto var(--space-24);flex-wrap:wrap}
+  max-width:var(--measure-home);margin:0 auto var(--gap-home-header);flex-wrap:wrap}
 .hm-brand{display:inline-flex;align-items:center;gap:var(--space-10);font-weight:var(--font-weight-bold);
-  letter-spacing:.04em;text-transform:uppercase;font-size:var(--font-size-caption);color:var(--acc)}
+  letter-spacing:var(--track-em-0-04);text-transform:uppercase;font-size:var(--font-size-caption);color:var(--acc)}
 .hm-acts{display:flex;gap:var(--space-8);flex-wrap:wrap}
 .hm-act{min-height:44px;padding:var(--space-8) var(--space-14);border:1px solid var(--bd);border-radius:10px;
   background:var(--card);color:var(--ink);font:inherit;font-size:var(--font-size-caption);
@@ -1985,14 +1985,14 @@ html[data-view="home"] .cmp-reopen{display:none}
 /* audit #13 -- the cold-open value prop: a quiet identity line with the key phrase in ink, so it
    reads at a glance without shouting. Cold users only (home-view.js gates it), so it never taxes a
    returning user's one-line-of-state, one-decision home. */
-.hm-lead{max-width:var(--space-980);margin:0 auto var(--space-16);font-size:var(--font-size-body);
+.hm-lead{max-width:var(--measure-home);margin:0 auto var(--gap-home-lead);font-size:var(--font-size-body);
   color:var(--mut);line-height:var(--line-height-normal)}
 .hm-lead b{color:var(--ink);font-weight:var(--font-weight-semibold)}
 
 /* ONE line of state, then ONE decision. Telemetry (goal / streak / trend / due) sits BELOW the
    decision, not above it: on the old surface it was ~40-45% of everything above a single choice. */
-.hm-state{max-width:var(--space-980);margin:0 auto var(--space-18)}
-.hm-h{font-size:var(--font-size-caption);text-transform:uppercase;letter-spacing:.08em;
+.hm-state{max-width:var(--measure-home);margin:0 auto var(--gap-home-state)}
+.hm-h{font-size:var(--font-size-caption);text-transform:uppercase;letter-spacing:var(--track-em-0-08);
   color:var(--mut);font-weight:var(--font-weight-bold);margin:0 0 var(--space-12)}
 /* --rm, not --acc: the hero is painted by the room of the topic it OPENS, which home-view.js
    stamps on the element (roomStyle(), and see its note). --acc here is .ix-panel's deliberate
@@ -2003,7 +2003,7 @@ html[data-view="home"] .cmp-reopen{display:none}
    and room_contrast.py owns the token side of that. For reference the retired indigo it replaces
    was 6.93:1 light / 6.66:1 dark, so dark improves and light stays well above the 4.5 floor. */
 .hm-cta{display:flex;width:100%;align-items:center;gap:var(--space-14);text-align:left;
-  padding:var(--space-18) var(--space-20);margin:0 auto var(--space-26);max-width:var(--space-980);
+  padding:var(--space-18) var(--space-20);margin:0 auto var(--gap-home-decision);max-width:var(--measure-home);
   border:1px solid var(--rm,var(--acc));border-radius:14px;background:var(--rm,var(--acc));color:var(--on-slab);cursor:pointer;
   font:inherit;min-height:44px;box-shadow:0 10px 30px -12px var(--rm,var(--acc))}
 .hm-cta:hover{filter:brightness(1.06)}
@@ -2021,7 +2021,7 @@ html[data-view="home"] .cmp-reopen{display:none}
   box-shadow:0 0 0 3px color-mix(in srgb,var(--rm,var(--acc)) 15%,transparent),
     0 0 16px -4px color-mix(in srgb,var(--rm,var(--acc)) 20%,transparent)}
 .hm-cta-k{display:block;font-size:var(--font-size-micro,11px);text-transform:uppercase;
-  letter-spacing:.1em;font-weight:var(--font-weight-bold);opacity:.85}
+  letter-spacing:var(--track-em-0-1);font-weight:var(--font-weight-bold);opacity:.85}
 /* W3/P3-12: both of these sized themselves from var(--font-size-h3,20px) -- and --font-size-h3
    has NEVER been defined, so the largest type on the home screen was its own hardcoded fallback,
    at a 20 the scale does not contain (18 -> 21 -> 24). On the real scale: the title takes
@@ -2032,7 +2032,7 @@ html[data-view="home"] .cmp-reopen{display:none}
 .hm-cta-ar{margin-left:auto;font-size:var(--font-size-heading)}
 
 /* THE SIX ROOMS. A cold user asks "what is in here?" -- six rooms answers that; 46 tiles does not. */
-.hm-rooms{max-width:var(--space-980);margin:0 auto var(--space-30)}
+.hm-rooms{max-width:var(--measure-home);margin:0 auto var(--gap-home-rooms)}
 .hm-room-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:var(--space-12)}
 .hm-room{display:flex;flex-direction:column;gap:var(--space-8);align-items:stretch;text-align:left;
   padding:var(--space-14) var(--space-16);border:1px solid var(--bd);border-radius:12px;background:var(--card);
@@ -2090,12 +2090,12 @@ html[data-view="home"] .cmp-reopen{display:none}
   font-size:var(--font-size-caption);color:var(--mut)}
 .hm-room-weak{color:#dc2626;font-weight:var(--font-weight-bold)}
 
-.hm-sec{max-width:var(--space-980);margin:0 auto var(--space-26)}
+.hm-sec{max-width:var(--measure-home);margin:0 auto var(--gap-home-section)}
 /* below the fold: the telemetry the old surface put ABOVE the decision */
-.hm-tele{max-width:var(--space-980);margin:0 auto var(--space-26);padding-top:var(--space-20);
+.hm-tele{max-width:var(--measure-home);margin:0 auto var(--gap-home-telemetry);padding-top:var(--space-20);
   border-top:1px solid var(--bd)}
-.hm-skip{display:flex;align-items:center;gap:var(--space-8);max-width:var(--space-980);
-  margin:0 auto var(--space-20);font-size:var(--font-size-caption);color:var(--mut);min-height:44px}
+.hm-skip{display:flex;align-items:center;gap:var(--space-8);max-width:var(--measure-home);
+  margin:0 auto var(--gap-home-skip);font-size:var(--font-size-caption);color:var(--mut);min-height:44px}
 .hm-skip input{width:16px;height:16px;accent-color:var(--acc);cursor:pointer}
 /* W2 / audit P3-5: the ROW already reserved 44px, but the <label> -- the actual click target,
    and the only one carrying the sentence -- was a bare 272x18 text line inside it, i.e. a genuine

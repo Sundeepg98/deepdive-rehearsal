@@ -27,9 +27,9 @@ var MODEL_STYLE = `
 .msel button.on::after{content:"";position:absolute;right:var(--space-8);top:50%;transform:translateY(-50%);width:var(--space-6);height:var(--space-6);border-radius:50%;background:var(--acc);box-shadow:0 0 8px var(--acc-a40)}
 /* activePulse (2s endless) removed -- the filled dot marks the active register; no loop. */
 @media(max-width:560px){.msel{grid-template-columns:repeat(2,minmax(0,1fr))}}
-.mscript-h{font-size:var(--font-size-subhead);font-weight:var(--font-weight-heavy);color:var(--ink);letter-spacing:-.3px;margin-bottom:var(--space-5)}
+.mscript-h{font-size:var(--font-size-subhead);font-weight:var(--font-weight-heavy);color:var(--ink);letter-spacing:var(--track-px-neg-0-3);margin-bottom:var(--space-5)}
 .mscript-sub{font-size:var(--font-size-body);max-width:var(--measure);color:var(--mut);line-height:var(--line-height-airy);margin-bottom:var(--space-8);padding-bottom:var(--space-14);border-bottom:2px solid var(--accbg)}
-.mbeat-l{flex:none;width:var(--space-76);font:var(--font-weight-heavy) var(--font-size-micro) var(--sans);letter-spacing:.4px;text-transform:uppercase;padding-top:var(--space-4);line-height:var(--line-height-snug);color:var(--acc)}
+.mbeat-l{flex:none;width:var(--space-76);font:var(--font-weight-heavy) var(--font-size-micro) var(--sans);letter-spacing:var(--track-px-0-4);text-transform:uppercase;padding-top:var(--space-4);line-height:var(--line-height-snug);color:var(--acc)}
 .mbeat-t{flex:1;font-size:var(--font-size-reading);max-width:var(--measure);line-height:var(--line-height-spacious);color:var(--ink)}
 .mbeat-t b{color:var(--accink);font-weight:var(--font-weight-bold)}
 `;

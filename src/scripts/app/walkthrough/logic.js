@@ -75,23 +75,23 @@ pre.code .c{color:#9b95c9} pre.code .k{color:#C9A2F0} pre.code .s{color:#9DD9B6}
    gradient under it, so it looks borderless. Geometry is now locked on BOTH axes. */
 .nav button#wnext.flow-cta{border:1.5px solid transparent;color:var(--on-slab);background:linear-gradient(135deg,var(--acc),var(--acc2));box-shadow:0 4px 14px -4px var(--acc-a25)}
 .nav button#wnext.flow-cta:hover:not(:disabled){color:var(--on-slab);background:linear-gradient(135deg,var(--accink),var(--acc));box-shadow:0 6px 20px -4px var(--acc-a30);transform:translateY(-2px)}
-.wflow-r{margin-top:var(--space-8);font-size:var(--font-size-micro);color:var(--mut2);font-weight:var(--font-weight-semibold);text-align:right;letter-spacing:.2px}
+.wflow-r{margin-top:var(--space-8);font-size:var(--font-size-micro);color:var(--mut2);font-weight:var(--font-weight-semibold);text-align:right;letter-spacing:var(--track-px-0-2)}
 details.model{margin-top:var(--space-18);background:linear-gradient(135deg,var(--card) 0%,var(--acc-a02) 100%);box-shadow:var(--surf-sh);border:1px solid var(--bd);border-left:4px solid var(--acc);border-radius:12px;overflow:hidden;transition:box-shadow var(--duration-moderate) var(--ease-base)}
 details.model[open]{box-shadow:0 0 0 1px var(--acc-a08),var(--surf-sh)}
 details.model>summary{cursor:pointer;list-style:none;padding:var(--space-15) var(--space-18);font:var(--font-weight-heavy) 13.5px var(--sans);color:var(--accink);display:flex;align-items:baseline;gap:var(--space-10);user-select:none;transition:background var(--duration-base) var(--ease-base),padding var(--duration-base) var(--ease-base)}
 details.model>summary::-webkit-details-marker{display:none}
 details.model>summary::before{content:"\\25B8";color:var(--acc);transition:transform var(--duration-moderate) var(--ease-spring);font-size:var(--font-size-caption);flex:none;display:inline-flex;align-items:center;justify-content:center;width:var(--space-18);height:var(--space-18);border-radius:5px;background:var(--accbg)}
 details.model[open]>summary::before{transform:rotate(90deg)}
-details.model>summary .sub{font-weight:var(--font-weight-semibold);color:var(--mut);font-size:var(--font-size-micro);letter-spacing:.3px}
+details.model>summary .sub{font-weight:var(--font-weight-semibold);color:var(--mut);font-size:var(--font-size-micro);letter-spacing:var(--track-px-0-3)}
 details.model>summary:hover{background:var(--acc2-a07);padding-left:var(--space-20)}
 .mbody{padding:var(--space-6) var(--space-20) var(--space-20);border-top:1px solid var(--bd)}
-.mbeat .ml{display:block;font-size:var(--font-size-micro);font-weight:var(--font-weight-heavy);letter-spacing:.9px;text-transform:uppercase;color:var(--acc);margin-bottom:var(--space-4)}
+.mbeat .ml{display:block;font-size:var(--font-size-micro);font-weight:var(--font-weight-heavy);letter-spacing:var(--track-px-0-9);text-transform:uppercase;color:var(--acc);margin-bottom:var(--space-4)}
 .mq{margin:var(--space-17) 0 0;padding:var(--space-11) var(--space-13);background:var(--mq-bg);border-radius:9px;font-size:var(--font-size-body);max-width:var(--measure);color:var(--mut);font-style:italic}
 .mbeat.ans{background:var(--accbg);border-radius:9px;padding:var(--space-11) var(--space-14);margin-top:var(--space-7)}
 .mbeat.ans:last-child{padding-bottom:var(--space-11)}/* the answer box keeps its own padding; the shared .mbeat:last-child reduction (now in MBEAT_SHEET, so it cascades after this inline rule at equal specificity) is meant only for plain beats */
 .arc-wrap{margin-top:var(--space-24)}
-.arc-h{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin-bottom:var(--space-12);display:flex;align-items:baseline;gap:var(--space-9);flex-wrap:wrap}
-.arc-h .sub{font-size:var(--font-size-micro);font-weight:var(--font-weight-semibold);letter-spacing:.01em;text-transform:none;color:var(--mut2)}
+.arc-h{font-size:var(--font-size-nano);font-weight:var(--font-weight-heavy);letter-spacing:var(--track-em-0-1);text-transform:uppercase;color:var(--mut);margin-bottom:var(--space-12);display:flex;align-items:baseline;gap:var(--space-9);flex-wrap:wrap}
+.arc-h .sub{font-size:var(--font-size-micro);font-weight:var(--font-weight-semibold);letter-spacing:var(--track-em-0-01);text-transform:none;color:var(--mut2)}
 /* ===== THREE COLUMNS DO NOT FIT ON A PHONE (WCAG 1.4.10, loss of content) =====
    Same defect as the drill's .dnav, one pane over: repeat(3,1fr) with no breakpoint. At 320px each
    step is ~91px, and after the number badge + gap + padding the LABEL gets ~33px -- so the step

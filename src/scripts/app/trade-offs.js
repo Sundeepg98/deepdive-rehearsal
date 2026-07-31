@@ -16,7 +16,7 @@ var TRADE_STYLE = `
 .dec:hover{box-shadow:var(--surf-sh),0 6px 24px -8px var(--acc-a12);transform:translateY(-1px);border-color:var(--acc-a15)}
 /* .dec::after shineSweep (5s endless diagonal shine over every decision card) deleted --
    ambient decoration behind dense trade-off text. Consistent with the spec's motion kill. */
-.dec-q{font-size:var(--font-size-body);font-weight:var(--font-weight-heavy);color:var(--ink);letter-spacing:-.2px;margin-bottom:var(--space-10);line-height:var(--line-height-normal)}
+.dec-q{font-size:var(--font-size-body);font-weight:var(--font-weight-heavy);color:var(--ink);letter-spacing:var(--track-px-neg-0-2);margin-bottom:var(--space-10);line-height:var(--line-height-normal)}
 .dec-q .vs{color:var(--mut2);font-weight:var(--font-weight-bold);font-size:var(--font-size-micro);padding:0 var(--space-4)}
 /* THE TELL STOPS SHOUTING, AND ITS OWN <b> SPANS START WORKING.
    This was font-weight:bold (700) on the whole block. That was sized for the flagship, where a

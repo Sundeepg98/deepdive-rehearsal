@@ -45,6 +45,16 @@ _audit/shots/
 # by the check that stops failing.
 test/_last_fail_*.txt
 
+# gate-runtime instrumentation scratch: raw per-check browser-lifecycle traces and the raw
+# --profile dumps they are folded into. The DISTILLED result is committed -- test/gate_cost.json
+# and _audit/2026-08-01-gate-profile.md -- and these are the working bytes behind it.
+test/_trace*/
+test/_profile_run*.json
+test/_gate_*.log
+test/_acc*.log
+test/_verdicts*.json
+test/_acceptance/
+
 # team-lead <-> agent coordination artifacts (never part of a build)
 _TEAM_LEAD_*.md
 _W2_DRILL_BLOCKED.md

@@ -39,8 +39,9 @@
   'use strict';
 
   var el = null, rail = null, lib = null, tabs = null, status = null, bound = false, tabObs = null;
-  /* session-scoped on purpose: once a key is pressed the ring is never quieted again */
-  var keyboardSeen = false;
+  /* session-scoped on purpose: once a key is pressed the ring is never quieted again, and only
+     the FIRST paint may move focus without scrolling it into view */
+  var keyboardSeen = false, firstPaintDone = false;
 
   function landingPref() {
     try { return (typeof Store !== 'undefined' && Store.get('home.landing', '') === 'resume'); } catch (e) { return false; }
@@ -102,6 +103,14 @@
      satisfied the test: a record holding only `{drill:10}` printed "you stopped at step 1 of 9"
      about a walkthrough it had no evidence the user ever opened. The field itself is now the
      gate, so an absent field yields no claim rather than a fabricated one. */
+  /* A cursor is an INDEX: a whole number inside the collection. `2.7` passed a range test, passed
+     posRestore's, and printed "stopped at probe 3.7 of 21" over a hero of `cards[2.7]` --
+     undefined, so the hero fell back to card 0, a probe the record had already graded. The app's
+     own writers store integers; a fractional one arrives through Import a backup, which validates
+     nothing. The import surface is a storage-integrity follow-up; this predicate is the cheap
+     half, and it also routes the hero back to firstUngraded() where it belongs. */
+  function isIndex(v, n) { return typeof v === 'number' && Number.isInteger(v) && v >= 0 && v < n; }
+
   function cursor(id, view) {
     try {
       if (typeof posRestore !== 'function' || typeof posGet !== 'function') return null;
@@ -115,12 +124,12 @@
          first ungraded probe instead of heroing probe 1. */
       if (view === 'drill' && t && t.data && t.data.bank && t.data.bank.cards && t.data.bank.cards.length) {
         var nb = t.data.bank.cards.length;
-        if (p.drill < 0 || p.drill >= nb) return null;
+        if (!isIndex(p.drill, nb)) return null;
         return { kind: 'drill', i: posRestore('drill', nb, id), n: nb, unit: 'probe' };
       }
       if (view === 'walk' && t && t.data && t.data.walk && t.data.walk.steps && t.data.walk.steps.length) {
         var ns = t.data.walk.steps.length;
-        if (p.walk < 0 || p.walk >= ns) return null;
+        if (!isIndex(p.walk, ns)) return null;
         return { kind: 'walk', i: posRestore('walk', ns, id), n: ns, unit: 'step' };
       }
       return null;
@@ -223,24 +232,11 @@
       '<span class="hm-rt">Topic index</span><span class="hm-rn"><kbd>\\</kbd></span></button>' +
       '</nav>' +
       (g ? '<div class="hm-goal"><span class="hm-lbl">This week</span>' +
-        '<div class="hm-goalbar" role="img" aria-label="' + goalPhrase(g) +
+        /* Panels.goalPhrase, not a local copy: this fact renders on two surfaces and the
+           previous round fixed only this one. */
+        '<div class="hm-goalbar" role="img" aria-label="' + Panels.goalPhrase(g) +
         ' this week"><i style="width:' + g.pct + '%"></i></div>' +
-        '<span class="hm-rn">' + goalPhrase(g, true) + '</span></div>' : '');
-  }
-
-  /* "46 of 5 topics" is not a fraction. Once the week's goal is met the numerator can pass the
-     denominator, and a ratio that can invert is a claim the record does not support -- so past the
-     goal the phrasing stops being a ratio and states what it actually knows: met, and by how much.
-     `bold` renders the figure for the rail; the plain form is the accessible name. */
-  function goalPhrase(g, bold) {
-    var n = bold ? function (v) { return '<b>' + v + '</b>'; } : function (v) { return String(v); };
-    if (g.done >= g.target) {
-      var over = g.done - g.target;
-      return over > 0
-        ? n(g.done) + ' topics drilled, ' + g.target + '-topic goal met with ' + over + ' to spare'
-        : n(g.done) + ' topics drilled, goal met';
-    }
-    return n(g.done) + ' of ' + g.target + ' topics';
+        '<span class="hm-rn">' + Panels.goalPhrase(g, true) + '</span></div>' : '');
   }
 
   /* ---- the phone's tab bar. Navigation WITHIN the home -- never a second router. ------------ */
@@ -261,7 +257,11 @@
     var t = model.totals, graded = t.solid + t.shaky + t.missed;
     return '<span class="hm-st-i"><span class="hm-lbl">Record</span></span>' +
       '<span class="hm-st-i"><b>' + graded + '</b> of ' + t.n + ' probes graded</span>' +
-      '<span class="hm-st-sep"></span>' +
+      /* EACH SEPARATOR IS NAMED FOR THE ITEM IT PRECEDES, so the shedding ladder takes the pair
+         together. Pairing on the FOLLOWING sibling (`#st-3 + .hm-st-sep`) matched nothing --
+         st-3's next sibling is the flex spacer -- so every width from 420 to 759 ended the bar on
+         an orphan hairline separating a figure from nothing. */
+      '<span class="hm-st-sep" id="sep-2"></span>' +
       /* THE IDS THE STYLESHEET ALREADY ADDRESSES. The priority ladder that "sheds by priority"
          targeted #st-2 and #st-3 -- and this function emitted neither, so two of its four rungs
          matched zero elements and the bar went on clipping itself mid-word through the 420-492
@@ -269,7 +269,7 @@
          as solved. */
       '<span class="hm-st-i" id="st-2"><b>' + t.solid + '</b> solid &middot; <b>' + t.shaky +
       '</b> shaky &middot; <b>' + t.missed + '</b> missed</span>' +
-      '<span class="hm-st-sep"></span>' +
+      '<span class="hm-st-sep" id="sep-3"></span>' +
       '<span class="hm-st-i" id="st-3"><b>' + t.started + '</b> of ' + model.nTopics + ' topics started</span>' +
       '<span class="hm-st-sp"></span>' +
       '<span class="hm-st-i hm-st-dim">Offline &middot; nothing leaves this file</span>';
@@ -315,7 +315,13 @@
        graded." The bank knows the denominator whether or not the record does. */
     var bank = (t.data && t.data.bank && t.data.bank.cards) || [];
     var flagged = pr.shk || 0;
-    var tot = pr.tot || bank.length;
+    /* THE LIVE BANK IS THE DENOMINATOR, not the stored aggregate. The comment above has always
+       said the bank knows the denominator whether or not the record does, and the code consulted
+       the bank only when the record carried no `tot` at all -- so after a content release, where a
+       stored `tot:18` survives against a live bank of 21, `left` came from the aggregate while
+       firstUngraded() walked the bank, and the panel printed both answers: "Up next" over "Every
+       probe here is graded". Same disease as the rest of this round -- one fact, two sources. */
+    var tot = bank.length || pr.tot || 0;
     var left = Math.max(0, tot - (pr.done || 0));
     var age = ageOf(r.id);
     var when = !age ? '' : (age === 'today' ? ' earlier today'
@@ -495,9 +501,14 @@
       '<span class="hm-k part"><i></i><span class="hm-lbl">Part solid</span></span>' +
       '<span class="hm-k flag"><i></i><span class="hm-lbl">Flagged</span></span>' +
       '<span class="hm-k none"><i></i><span class="hm-lbl">Untouched</span></span>' +
-      (model.offLadder.n ? '<span class="hm-lbl hm-offladder">+ ' + model.offLadder.n +
-        ' probe' + (model.offLadder.n === 1 ? '' : 's') + ' outside the three tiers, on no rail</span>' : '') +
-      '</div></div></section>';
+      '</div>' +
+      /* OUTSIDE .hm-key, which is aria-hidden. This note is what reconciles the panel's 971 with
+         the census's 972, and a descendant cannot override an ancestor's aria-hidden -- so the one
+         sentence that explains the seam was the one sentence no screen reader could reach. The key
+         is decorative and stays hidden; this is content, and now sits beside it. */
+      (model.offLadder.n ? '<p class="hm-lbl hm-offladder">+ ' + model.offLadder.n +
+        ' probe' + (model.offLadder.n === 1 ? '' : 's') + ' outside the three tiers, on no rail</p>' : '') +
+      '</div></section>';
   }
 
   /* ---- STILL SHAKY + the trend ------------------------------------------------------------- */
@@ -624,11 +635,26 @@
          Quiet while nobody has touched a key; the moment anyone does, never quiet again -- that is
          both the coherence ruling at rest and the trap closed for the reset-rerender path. */
       var quiet = !keyboardSeen;
+      /* preventScroll IS RIGHT ON FIRST PAINT AND WRONG ON EVERY RE-RENDER. At boot the CTA is
+         already on screen and suppressing the scroll avoids a jump. After a re-render -- which is
+         what the per-card reset triggers, from deep in the library -- the CTA can be 145px above
+         the viewport on the desktop and 1502px above it on the phone, so restoring the ring
+         restored its PAINT and not its VISIBILITY: the keyboard user still cannot tell where
+         focus went, which is the outcome the item was written against. */
+      var revealed = firstPaintDone;
+      firstPaintDone = true;
       setTimeout(function () {
         try {
           if (quiet) el.classList.add('hm-quiet-focus');
           else el.classList.remove('hm-quiet-focus');
-          cta.focus({ preventScroll: true });
+          /* PREVENTSCROLL ONLY ON FIRST PAINT. The home autofocuses its primary action, and on the
+             very first paint suppressing the scroll is right -- the user has not moved yet and the
+             page should open at the top. On every LATER render the user is somewhere down the page
+             and focus is being moved for them: suppressing the scroll there leaves the ring painted
+             above the viewport (measured at -845 on the desktop, -1502 on the phone), which is a
+             keyboard user with no way to tell where focus went. Guarded by focus_ring's visibility
+             arm, which reads top -845 / onScreen false the moment this becomes unconditional. */
+          cta.focus({ preventScroll: !revealed });
         } catch (e) {}
       }, 0);
     }
@@ -732,34 +758,70 @@
      while reading something else. An IntersectionObserver marks whichever target owns the
      viewport; a tap still wins immediately because onTab sets it directly and the observer will
      agree the moment the scroll settles. */
+  /* A MONOTONE CROSSING POINTER, which is what two rounds of comments described and neither
+     implementation did. Both left most of the page unowned:
+       r3  a -45%/-45% band observed a tenth of the viewport, so ~600px belonged to no target and
+           the bar held whichever mark was last set through all of it;
+       r4  the band became a 169px top strip and the selector kept the last target still
+           INTERSECTING it, falling back to the first block when none did -- so the bar read
+           "Today" from mid-page to the bottom (34% of sampled positions named a block that was
+           not on screen), and .hm-libm could never enter the band at all: it needed scrollY 2076
+           against a maxScroll of 1809.
+     The rule now is a POINTER, not a hit test: the owner is the LAST target whose top has crossed
+     the band, so the last target owns everything below it and no scroll position is unowned. At
+     the document's very bottom the final target owns outright -- otherwise a block that cannot
+     physically reach the band can never be named, which is what made "Library" unreachable by
+     scrolling at all. Driven by scroll rather than by IntersectionObserver because the question is
+     "where is the page", not "is this element visible", and a rAF-throttled read answers exactly
+     that. */
   function watchTabs() {
-    if (tabObs) { tabObs.disconnect(); tabObs = null; }
-    if (!el || !tabs || typeof IntersectionObserver === 'undefined') return;
+    if (tabObs) { tabObs(); tabObs = null; }
+    if (!el || !tabs) return;
     var map = [['top', '.hm-continue'], ['alt', '.hm-alt'], ['lib', '.hm-libm']];
     var nodes = [];
-    map.forEach(function (m) { var n = el.querySelector(m[1]); if (n) nodes.push({ key: m[0], node: n }); });
+    /* A TARGET THAT IS NOT RENDERED HAS NOT CROSSED ANYTHING. `.hm-libm` is the in-stage library
+       mount and it is display:none above the phone breakpoint, where the library lives in its own
+       column instead -- and a display:none element reports a rect of all zeros, so its top read as
+       0, which is above the band, which made it the last crossed target at EVERY scroll position.
+       The bar is itself hidden at those widths so nothing showed the user a wrong answer, but the
+       pointer was reading "Library" from the top of the page down, and it would have surfaced the
+       moment the bar earned a wider breakpoint. */
+    map.forEach(function (m) {
+      var n = el.querySelector(m[1]);
+      if (n && n.offsetParent !== null) nodes.push({ key: m[0], node: n });
+    });
     if (!nodes.length) return;
-    var seen = {};
-    tabObs = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        for (var i = 0; i < nodes.length; i++) if (nodes[i].node === en.target) seen[nodes[i].key] = en.isIntersecting;
-      });
-      /* the FIRST target that is on screen, in column order -- so a block scrolled past hands
-         the mark forward rather than several claiming it at once */
-      /* the LAST target in column order that has crossed the band, so scrolling forward hands the
-         mark on and scrolling back hands it return; before the first crossing the first block owns
-         it, which is what makes "Today" reachable again */
-      var live = null;
-      for (var j = 0; j < nodes.length; j++) if (seen[nodes[j].key]) live = nodes[j].key;
-      if (!live) live = nodes[0].key;
+
+    var ticking = false;
+    function recompute() {
+      ticking = false;
+      if (!HomeView.isOpen()) return;
+      var doc = document.documentElement;
+      if ((window.scrollY + window.innerHeight) >= (doc.scrollHeight - 2)) {
+        markTab(nodes[nodes.length - 1].key);
+        return;
+      }
+      var top = parseFloat(getComputedStyle(doc).getPropertyValue('--chrome-top')) || 0;
+      var band = top + 24;
+      var live = nodes[0].key;
+      for (var j = 0; j < nodes.length; j++) {
+        if (nodes[j].node.getBoundingClientRect().top <= band) live = nodes[j].key;
+      }
       markTab(live);
-      /* A -45%/-45% band observes about a tenth of the viewport, so roughly 600px of this page
-         belonged to no target at all and the bar held a stale mark right through it -- and
-         "Today" could never be current once .hm-continue cleared that sliver. The band is now the
-         top of the viewport downward, which PARTITIONS the page: whichever target most recently
-         crossed the top edge owns the mark, and every scroll position has exactly one owner. */
-    }, { rootMargin: '0px 0px -80% 0px', threshold: 0 });
-    nodes.forEach(function (n) { tabObs.observe(n.node); });
+    }
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      if (window.requestAnimationFrame) window.requestAnimationFrame(recompute);
+      else setTimeout(recompute, 16);
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    tabObs = function () {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+    recompute();
   }
 
   function markTab(key) {

@@ -2329,8 +2329,9 @@ html[data-view="home"] .companion{padding:0}
 .hm-k.none i::after{opacity:0}
 .hm-k.flag i::after{opacity:0}
 .hm-k.flag i{box-shadow:inset 0 -2px 0 var(--st-warn)}
-/* the probes that are on no rail, named rather than folded into a total the rails contradict */
-.hm-offladder{margin-left:auto;color:var(--mut2)}
+/* the probes that are on no rail, named rather than folded into a total the rails contradict.
+   A SIBLING of .hm-key, not a child: the key is aria-hidden and this is content. */
+.hm-offladder{display:block;margin-top:var(--space-8);color:var(--mut2)}
 
 /* ---- the paired row ------------------------------------------------------------------------ */
 .hm-duo{max-width:var(--measure-home);margin:0 auto var(--gap-home-duo);
@@ -2436,8 +2437,8 @@ html[data-view="home"] .companion{padding:0}
    Priority, lowest first: the offline note, then topics-started, then the solid/shaky/missed
    breakdown. The probes-graded figure never leaves. */
 @media(max-width:1023px){ .hm-status .hm-st-dim{display:none} }
-@media(max-width:759px){ #st-3,#st-3 + .hm-st-sep{display:none} }
-@media(max-width:559px){ #st-2,#st-2 + .hm-st-sep{display:none} }
+@media(max-width:759px){ #st-3,#sep-3{display:none} }
+@media(max-width:559px){ #st-2,#sep-2{display:none} }
 /* the "RECORD" eyebrow is the last thing to go: below this the bar is the probes-graded figure
    and nothing else, which is the one number the census exists to carry */
 @media(max-width:519px){ .hm-status > .hm-st-i:first-child{display:none} }

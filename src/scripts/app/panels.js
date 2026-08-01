@@ -130,6 +130,24 @@
     try { if (typeof Progress !== 'undefined') { var a = Progress.all(), ws = weekStartMs(); for (var id in a) { if (a[id] && a[id].done > 0 && a[id].ts >= ws) done++; } } } catch (e) {}
     return { target: target, done: done, pct: target > 0 ? Math.min(100, Math.round(done / target * 100)) : 0, met: done >= target };
   }
+  /* THE ONE PLACE THE WEEK'S GOAL IS PUT INTO WORDS.
+     "46 of 5 topics" is not a fraction -- a ratio whose numerator can pass its denominator is a
+     claim the record does not support. Past the goal the phrasing stops being a ratio and says
+     what it knows: met, and by how much. This lives here, beside the data, because two surfaces
+     render this fact (the home rail and the telemetry strip) and round 4 fixed only one of them.
+     `bold` renders the figure for a surface that wants emphasis; the plain form is what an
+     accessible name should say. */
+  function goalPhrase(g, bold) {
+    var n = bold ? function (v) { return '<b>' + v + '</b>'; } : function (v) { return String(v); };
+    if (g.done >= g.target) {
+      var over = g.done - g.target;
+      return over > 0
+        ? n(g.done) + ' topics drilled, ' + g.target + '-topic goal met with ' + over + ' to spare'
+        : n(g.done) + ' topics drilled, goal met';
+    }
+    return n(g.done) + ' of ' + g.target + ' topics';
+  }
+
   function goalStrip() {
     var g = weeklyGoal(), left = g.target - g.done;
     var note = g.met ? 'Goal met &mdash; nice work.' : left + ' more to go';
@@ -137,8 +155,9 @@
       '<span class="ix-goal-set"><button type="button" class="ix-goal-b" data-goal="dec" aria-label="Lower the weekly goal">&minus;</button>' +
       '<span class="ix-goal-t" aria-live="polite">' + g.target + '</span>' +
       '<button type="button" class="ix-goal-b" data-goal="inc" aria-label="Raise the weekly goal">+</button></span></div>' +
-      '<div class="ix-goal-bar' + (g.met ? ' met' : '') + '"><span style="width:' + g.pct + '%"></span></div>' +
-      '<div class="ix-home-v"><b>' + g.done + '</b> of ' + g.target + ' topics drilled this week &middot; ' + note + '</div></div>';
+      '<div class="ix-goal-bar' + (g.met ? ' met' : '') + '" role="img" aria-label="' +
+      goalPhrase(g) + ' this week"><span style="width:' + g.pct + '%"></span></div>' +
+      '<div class="ix-home-v">' + goalPhrase(g, true) + ' drilled this week &middot; ' + note + '</div></div>';
   }
 
   /* WHERE THE USER LEFT OFF. LastVisit (topic+view) first; the most recently graded topic as a
@@ -590,6 +609,7 @@
     weakChipsAged: weakChipsAged,
     weakCount: weakCount,
     weeklyGoal: weeklyGoal,
+    goalPhrase: goalPhrase,
     downloadBackup: downloadBackup,
   };
 })();

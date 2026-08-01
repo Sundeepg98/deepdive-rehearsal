@@ -37,7 +37,7 @@ this is CI-safe; locally (or in CI after `npm install && npx playwright install
 chromium`), with a browser present, it is the full gate. Chromium is located via
 Playwright itself, so there are no hardcoded paths.
 """
-import os, sys, subprocess
+import os, sys, subprocess, time, json, threading
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 os.chdir(ROOT)
 
@@ -121,8 +121,128 @@ def browser():
     p = (r.stdout or '').strip()
     return p if r.returncode == 0 and p and os.path.exists(p) else None
 
-results = []
-for name, cmd in [('ascii_guard', ['python3', 'test/ascii_guard.py']),
+# ===== PROFILING (opt-in; --profile) ==========================================================
+# The gate's runtime was an estimate before this existed. --profile writes a machine-readable
+# record of where the time actually went: per-check wall time from out here, and -- via the
+# NODE_OPTIONS preload in test/_gate_trace.cjs -- the browser lifecycle from inside each check,
+# which is the only place the boot tax is visible. OFF by default and observational when on:
+# it adds env vars and reads a clock. It changes no command, no order, and no verdict.
+PROFILE = '--profile' in sys.argv
+PROFILE_OUT = os.environ.get('GATE_PROFILE_OUT') or os.path.join('test', '_profile.json')
+TRACE_DIR = os.path.join('test', '_trace')
+# The measured cost of each check, committed, so --fast packs its lanes the same way on any box
+# and in any checkout. Regenerated from a --profile run by test/_profile_report.py; a check that
+# is missing from it sorts FIRST (see run_fast) rather than being assumed cheap.
+COST_FILE = os.path.join('test', 'gate_cost.json')
+if PROFILE:
+    if not os.path.isdir(TRACE_DIR):
+        os.makedirs(TRACE_DIR)
+    for f in os.listdir(TRACE_DIR):      # a stale trace read as today's evidence is the bug
+        os.remove(os.path.join(TRACE_DIR, f))   # fail_dump() guards against for failures
+
+SHARED = '--shared-browser' in sys.argv
+SHARE_TERMS = {}          # filled in by start_browser_server() when --shared-browser is on
+
+def trace_env(name):
+    """The environment one check runs in. Identical to os.environ unless instrumented."""
+    env = dict(os.environ)
+    if PROFILE or SHARED:
+        env['GATE_CHECK'] = name
+        # Relative to ROOT, which is cwd -- NODE_OPTIONS is shell-quoted by node, and an absolute
+        # Windows path would need escaping this avoids entirely.
+        env['NODE_OPTIONS'] = (env.get('NODE_OPTIONS', '') + ' --require ./test/_gate_runtime.cjs').strip()
+    if PROFILE:
+        env['GATE_TRACE_DIR'] = os.path.abspath(TRACE_DIR)
+    if SHARED and SHARE_TERMS:
+        env['GATE_BROWSER_WS'] = SHARE_TERMS['ws']
+        env['GATE_BROWSER_ARGS'] = SHARE_TERMS['args']
+        env['GATE_BROWSER_EXE'] = SHARE_TERMS['executablePath']
+    return env
+
+def start_browser_server(chrome_path):
+    """One Chromium for every check whose launch options match it. Returns the Popen, or None.
+
+    MEASURED FIRST, KEPT ANYWAY. The profile put every chromium.launch() in a whole gate run at
+    2.3% of its wall time -- so this saves ~19 seconds of 14 minutes, which is not on its own a
+    reason to add a server to a correctness gate. It stays OFF by default for exactly that reason.
+    What earns it a flag is the second-order effect the profile could not measure: under --fast
+    the box holds several browsers at once, and one browser serving N contexts is a materially
+    smaller machine load than N browsers. Whether that buys stability is settled by the acceptance
+    battery, not by this comment.
+
+    The server publishes the terms it was started with; the shim compares them per launch. Sharing
+    is therefore refused mechanically wherever it would be a lie, rather than by a list someone
+    has to remember to update."""
+    if not chrome_path:
+        return None
+    env = dict(os.environ, CHROME=chrome_path)
+    env.setdefault('PYTHONIOENCODING', 'utf-8')
+    p = subprocess.Popen(['node', 'test/_gate_browser_server.cjs'], cwd=ROOT, env=env,
+                         stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                         text=True, encoding='utf-8', errors='replace')
+    line = p.stdout.readline()
+    try:
+        terms = json.loads(line)
+    except ValueError:
+        terms = {}
+    if 'ws' not in terms:
+        # A shared browser that did not start is not a reason to run a DIFFERENT gate than the one
+        # that was asked for -- but it is also not a reason to fail: every check falls back to its
+        # own cold launch, which is the default path anyway. Say so and carry on.
+        print('shared browser: UNAVAILABLE (%s) -- every check will launch its own'
+              % (terms.get('error') or line.strip() or 'no handshake')[:120])
+        try:
+            p.kill()
+        except Exception:
+            pass
+        return None
+    SHARE_TERMS.update(terms)
+    print('shared browser: up (pid %s)' % terms.get('pid'))
+    return p
+
+def write_profile():
+    if not PROFILE:
+        return
+    rows_t = [timings[n] for n in ORDER if n in timings]
+    for row in rows_t:
+        evs = []
+        p = os.path.join(TRACE_DIR, row['check'] + '.jsonl')
+        if os.path.exists(p):
+            with open(p, encoding='utf-8', errors='replace') as fh:
+                for line in fh:
+                    line = line.strip()
+                    if line:
+                        try:
+                            evs.append(json.loads(line))
+                        except ValueError:
+                            pass
+        launches = [e for e in evs if e.get('ev') in ('launch', 'connect', 'connectOverCDP',
+                                                      'launchPersistentContext')]
+        ctxs = [e for e in evs if e.get('ev') == 'newContext']
+        pages = [e for e in evs if e.get('ev') in ('newPage', 'browser.newPage')]
+        starts = [e for e in evs if e.get('ev') == 'node_start']
+        # The tax has two parts and they are removed by different things: the ENGINE cost (every
+        # chromium.launch, which a shared browser deletes) and the RUNTIME cost (node boot plus
+        # require('playwright') before the first launch, which it does not). Reporting one number
+        # would overstate whatever Phase 2 can win.
+        first_launch_at = min([e['t_ms'] for e in launches], default=None)
+        row['launches'] = len(launches)
+        row['contexts'] = len(ctxs)
+        row['pages'] = len(pages)
+        row['procs'] = len(starts)
+        row['launch_ms'] = sum(e.get('ms', 0) for e in launches)
+        row['context_ms'] = sum(e.get('ms', 0) for e in ctxs)
+        row['runtime_boot_ms'] = first_launch_at
+        # Which path each launch took, so "it shared" is a receipt rather than an assumption.
+        row['shared'] = len([e for e in launches if e.get('path') == 'shared'])
+        row['cold'] = len([e for e in launches if e.get('path') == 'cold'])
+    with open(PROFILE_OUT, 'w', encoding='utf-8', newline='\n') as fh:
+        json.dump({'generated': time.strftime('%Y-%m-%dT%H:%M:%S'),
+                   'total_wall_s': round(sum(r['wall_s'] for r in rows_t), 3),
+                   'checks': rows_t}, fh, indent=1)
+    print('profile: %s' % PROFILE_OUT.replace(os.sep, '/'))
+
+NATIVE_CHECKS = [('ascii_guard', ['python3', 'test/ascii_guard.py']),
                   ('syntax_check', ['python3', 'test/syntax_check.py']),
                   ('global_collisions', ['python3', 'test/global_collisions.py']),
                   ('build_integrity', ['python3', 'test/build_integrity.py']),
@@ -383,14 +503,9 @@ for name, cmd in [('ascii_guard', ['python3', 'test/ascii_guard.py']),
                   # and never SKIPs. The as-heard half is an acceptance receipt, not a gate check:
                   # _audit/2026-07-31-w24-names.md, with the independent cold verify beside it in
                   # _audit/2026-07-31-w24-names-coldverify.md.
-                  ('at_name_hygiene', ['node', 'test/at_name_hygiene.cjs'])]:
-    r = run(cmd)
-    st = 'PASS' if r.returncode == 0 else 'FAIL'
-    results.append((name, st, report(r) + fail_dump(name, r, st)))
+                  ('at_name_hygiene', ['node', 'test/at_name_hygiene.cjs'])]
 
-chrome = browser()
-deliverable = os.path.join(ROOT, 'deepdive_content_pipeline_rehearsal.html')
-for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity_leak.cjs'),
+BROWSER_CHECKS = [('render', 'test/render.cjs'), ('entity_leak', 'test/entity_leak.cjs'),
                      # THE FIRST CLICK MUST LAND. Every layer this app paints over the viewport --
                      # the boot splash and the three overlays -- kept HIT-TESTING while invisible
                      # or fading, and swallowed the user's input. A real trusted click at
@@ -1005,24 +1120,281 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # and never a red nobody can act on. To cover CI: run `npm run vr:update` ON the
                      # runner and commit test/baselines/. (A MISSING MANIFEST is still a hard FAIL --
                      # deleting the baselines must not turn the gate green.)
-                     ('visual_regression', 'test/visual_regression.cjs')]:
-    if not chrome:
-        fail_dump(name, None, 'SKIP')   # clear any dump from a run that DID have a browser
-        results.append((name, 'SKIP', 'no Playwright/Chrome (npm install && npx playwright install chromium)'))
-        continue
-    env = dict(os.environ, CHROME=chrome)
-    r = run(['node', script, deliverable], env=env)
-    # exit 2 = "this check has no baselines for THIS platform". That is a genuine environment fact,
-    # not a defect and not a pass, so it gets the same SKIP the missing-browser branch gets. Any
-    # other non-zero is a real failure. A check must never be able to buy a green with an exit code.
-    st = 'PASS' if r.returncode == 0 else ('SKIP' if r.returncode == 2 else 'FAIL')
-    results.append((name, st, report(r) + fail_dump(name, r, st)))
+                     ('visual_regression', 'test/visual_regression.cjs')]
 
-w = max(len(n) for n, _, _ in results)
+# ===== THE RUNNER =============================================================================
+# Everything above is the CHECK REGISTRY -- what the gate asserts. Everything below is
+# ORCHESTRATION -- how those checks are dispatched. The split exists so the second question can
+# be answered differently (profiled, parallelised, filtered) without the first being touched:
+# no assertion, no threshold and no exemption may live below this line.
+#
+# THE SERIAL PATH IS THE DEFAULT AND IS THE CAPTURE OF RECORD. With no flags this file dispatches
+# exactly what it dispatched before the registry split: native checks in order, then browser
+# checks in order, one subprocess at a time.
+
+ORDER = [n for n, _ in NATIVE_CHECKS] + [n for n, _ in BROWSER_CHECKS]
+BROWSER_SET = set(n for n, _ in BROWSER_CHECKS)
+results = {}
+timings = {}
+_lock = threading.Lock()
+
+def dispatch(name, cmd, env=None, browser_check=False):
+    """Run one check, time it, and record its row. The ONLY place a check is executed.
+
+    Thread-safe because --fast runs several of these at once. Note what is NOT shared: each
+    check is its own OS process with its own stdout, and fail_dump writes a file named after the
+    check, so two lanes cannot interleave a diagnostic or overwrite each other's evidence."""
+    t0 = time.perf_counter()
+    r = run(cmd, env=env)
+    wall = time.perf_counter() - t0
+    if browser_check:
+        # exit 2 = "this check has no baselines for THIS platform". That is a genuine environment
+        # fact, not a defect and not a pass, so it gets the same SKIP the missing-browser branch
+        # gets. Any other non-zero is a real failure. A check must never be able to buy a green
+        # with an exit code.
+        st = 'PASS' if r.returncode == 0 else ('SKIP' if r.returncode == 2 else 'FAIL')
+    else:
+        st = 'PASS' if r.returncode == 0 else 'FAIL'
+    row = report(r) + fail_dump(name, r, st)
+    with _lock:
+        results[name] = (st, row)
+        timings[name] = {'check': name, 'status': st, 'wall_s': round(wall, 3),
+                         'browser': browser_check, 'exit': r.returncode}
+    return st
+
+def skip(name, msg):
+    fail_dump(name, None, 'SKIP')   # clear any dump from a run that DID have a browser
+    with _lock:
+        results[name] = ('SKIP', msg)
+        timings[name] = {'check': name, 'status': 'SKIP', 'wall_s': 0.0,
+                         'browser': True, 'exit': None}
+
+chrome = browser()
+deliverable = os.path.join(ROOT, 'deepdive_content_pipeline_rehearsal.html')
+srv = start_browser_server(chrome) if SHARED else None
+
+def job(name):
+    """The closure that runs check `name`, whichever lane it lands in."""
+    if name in BROWSER_SET:
+        if not chrome:
+            return skip(name, 'no Playwright/Chrome (npm install && npx playwright install chromium)')
+        script = dict(BROWSER_CHECKS)[name]
+        return dispatch(name, ['node', script, deliverable],
+                        env=dict(trace_env(name), CHROME=chrome), browser_check=True)
+    return dispatch(name, dict(NATIVE_CHECKS)[name], env=trace_env(name))
+
+# ===== LANES (--fast only) ====================================================================
+# THE BARRIER. build_integrity runs `npm run build`, which REWRITES dist/index.html, the
+# deliverable at the repo root, and src/topics/_generated/. Every other check in this file reads
+# at least one of those. Run it beside anything and that check is reading a tree being rewritten
+# underneath it -- so it does not merely go first, it goes ALONE. This is not a performance
+# choice and it is not tunable.
+BARRIER = ['build_integrity']
+
+# THE SERIAL TAIL. Checks whose verdict depends on TIMING -- animation frames, transition
+# windows, rasterised pixels, a tokenizer's wall-clock budget -- and which therefore measure the
+# BOX as much as the app when a sibling is competing with them. Membership is MEASURED, not
+# guessed: the first five are named by the wave brief, and anything the two baseline profile runs
+# showed swinging is added on the evidence in _audit/2026-08-01-gate-profile.md.
+#
+# A check in this list is not "slow", it is LOAD-SENSITIVE. Moving one out to buy wall time
+# trades a correctness signal for seconds, which is the trade this whole gate exists to refuse.
+SERIAL_TAIL = ['build_determinism', 'visual_regression', 'chrome_metrics', 'touch_floor',
+               'grade_reveal', 'click_drift', 'transition_deadzone', 'overlay_deadzone',
+               'fold_budget', 'cram_fit', 'visual_pane_smoke', 'mobile_nextup',
+               'no_dead_ends', 'home_reflow', 'sidebar_geometry']
+
+def run_serial(sel):
+    for n in ORDER:
+        if n in sel:
+            job(n)
+
+def run_fast(jobs, sel):
+    from concurrent.futures import ThreadPoolExecutor
+    tail = [n for n in ORDER if n in SERIAL_TAIL and n in sel]
+    pool = [n for n in ORDER if n not in SERIAL_TAIL and n not in BARRIER and n in sel]
+    for n in BARRIER:                      # alone, first, always
+        if n in sel:
+            job(n)
+    # Longest-first: with a fixed set of jobs and N workers, starting the long ones last is how a
+    # pool ends up with one straggler and three idle workers. Order comes from the profile, and a
+    # check the profile has never seen sorts first rather than last -- a new check is more likely
+    # to be expensive than free, and guessing "free" is the guess that costs a whole lane.
+    cost = {}
+    if os.path.exists(COST_FILE):
+        try:
+            with open(COST_FILE, encoding='utf-8') as fh:
+                cost = json.load(fh)
+        except Exception:
+            cost = {}
+    pool.sort(key=lambda n: -cost.get(n, 1e9))
+    with ThreadPoolExecutor(max_workers=jobs) as ex:
+        list(ex.map(job, pool))
+    for n in tail:                         # one at a time, on a quiet box
+        job(n)
+
+# ===== --changed: THE FAST LANE, AND IT IS NOT A CERTIFICATION ================================
+# Runs only the checks a diff could plausibly have broken. This is a DEVELOPMENT convenience for
+# the inner loop, and it is the one part of this file that can tell you a lie of omission: a green
+# --changed run means "the checks I selected passed", and the checks it did not select are the
+# ones nobody looked at. It therefore says so in a banner, prints ONLY the checks it ran (a table
+# of 76 rows with 60 of them blank is exactly how a partial run gets read as a full one), and
+# stamps certifying:false into any --verdicts file it writes.
+#
+# THE MAP IS DELIBERATELY COARSE AND FAILS TOWARDS RUNNING MORE. Each entry is a path prefix and
+# the checks that read from it. A path matching NOTHING here selects the WHOLE gate, because the
+# honest answer to "what could this file have broken?" for an unrecognised file is "anything".
+# Adding a precise rule is a way to make the fast lane faster; forgetting to add one only ever
+# makes it slower, never blinder. That asymmetry is the whole safety argument.
+CHANGED_MAP = [
+    # source of truth for content -> the compiler and everything that reads a compiled topic
+    ('src/topics-md/', ['compiler_conservation', 'compiler_doc_examples', 'compiler_md',
+                        'compiler_prose', 'compiler_flow', 'compiler_code', 'topic_contract',
+                        'cram_scope_distinct', 'cram_surface', 'bank_pushback', 'bank_novelty',
+                        'numbers_lattice', 'rail_integrity', 'at_name_hygiene', 'ascii_guard']),
+    ('tools/compiler/', ['compiler_conservation', 'compiler_doc_examples', 'compiler_md',
+                         'compiler_emit_serializer', 'compiler_legacy_topic', 'compiler_prose',
+                         'compiler_flow', 'compiler_code', 'build_determinism', 'topic_contract',
+                         'numbers_lattice', 'cram_surface']),
+    # the stylesheet reaches every painted surface, so its blast radius is the visual family
+    ('src/styles.css', ['css_syntax', 'room_static', 'room_contrast', 'slab_ink',
+                        'phantom_tokens', 'typeface_census', 'tracking_census', 'home_rhythm',
+                        'layout_static', 'shadow_css_guard', 'token_liveness', 'focus_ring',
+                        'cta_contrast', 'dock_contrast', 'scoreboard_salience', 'latent_arial',
+                        'visual_regression', 'touch_floor', 'chrome_metrics', 'fold_budget',
+                        'home_reflow', 'cram_fit', 'sidebar_geometry', 'at_name_hygiene']),
+    ('design-tokens/', ['css_syntax', 'room_static', 'room_contrast', 'slab_ink',
+                        'phantom_tokens', 'tracking_census', 'token_liveness', 'visual_regression',
+                        'cta_contrast', 'dock_contrast']),
+]
+
+def changed_files():
+    """Paths that differ from HEAD, working tree and index alike. Untracked included: a check or
+    a source file that exists only in the working tree is still a change this run must cover."""
+    out = set()
+    for args in (['git', 'diff', '--name-only', 'HEAD'],
+                 ['git', 'ls-files', '--others', '--exclude-standard']):
+        r = run(args)
+        if r.returncode == 0:
+            out.update(x.strip().replace('\\', '/') for x in (r.stdout or '').split('\n') if x.strip())
+    return sorted(out)
+
+def select_changed(files):
+    """(selected check names, reason). Empty diff -> nothing to check but the spine."""
+    sel, unmapped = set(), []
+    for f in files:
+        # test/<name>.<ext> is that check's own source: run it, plus nothing else it implies.
+        base = f.rsplit('/', 1)[-1]
+        stem = base.rsplit('.', 1)[0]
+        if f.startswith('test/') and stem in set(ORDER):
+            sel.add(stem)
+            continue
+        if f.startswith('test/') or f.startswith('_audit/') or f.endswith('.md'):
+            continue                      # harness scratch and prose: no app surface
+        hit = False
+        for prefix, checks in CHANGED_MAP:
+            if f.startswith(prefix):
+                sel.update(checks)
+                hit = True
+        if not hit:
+            unmapped.append(f)
+    if unmapped:
+        return set(ORDER), 'unmapped path(s), e.g. %s -- running EVERYTHING' % unmapped[0]
+    # build_integrity is not optional: it is what puts a current deliverable on disk for every
+    # browser check to read. A --changed run without it would test the PREVIOUS build.
+    sel.update(BARRIER)
+    return sel, '%d file(s) changed' % len(files)
+
+FAST = '--fast' in sys.argv
+CHANGED = '--changed' in sys.argv
+JOBS = 4
+for i, a in enumerate(sys.argv):
+    if a == '--jobs' and i + 1 < len(sys.argv):
+        JOBS = int(sys.argv[i + 1])
+
+selected, why = (select_changed(changed_files()) if CHANGED else (set(ORDER), ''))
+
+# THE BANNER IS PART OF THE CONTRACT. A non-default run's transcript must never be mistakable for
+# the serial capture of record -- in a train log, in an audit file, or six months from now.
+if CHANGED:
+    print('=' * 64)
+    print('  FAST LANE -- NOT A CERTIFICATION')
+    print('  --changed selected %d of %d checks (%s).' % (len(selected), len(ORDER), why))
+    print('  The %d checks it did NOT select were not run and are not claimed.'
+          % (len(ORDER) - len(selected)))
+    print('  A gate capture of record is `python3 test/check_all.py` with NO flags.')
+    print('=' * 64)
+elif FAST:
+    print('=' * 64)
+    print('  FAST LANE -- %d parallel workers + a %d-check serial tail' % (JOBS, len(SERIAL_TAIL)))
+    print('  Every check runs; only the ORDER and CONCURRENCY differ from the serial gate.')
+    print('  The SERIAL gate (no flags) remains the capture of record for trains and CI.')
+    print('=' * 64)
+
+if '--dry-run' in sys.argv:
+    # What WOULD run, without running it. The point of a selective lane is that you can see what
+    # it decided to skip before you trust it.
+    for n in ORDER:
+        print('  %-24s %s' % (n, 'RUN' if n in selected else 'not selected'))
+    print('  %d of %d selected' % (len(selected), len(ORDER)))
+    sys.exit(0)
+
+t_gate = time.perf_counter()
+if FAST:
+    run_fast(JOBS, selected)
+else:
+    run_serial(selected)
+gate_wall = time.perf_counter() - t_gate
+
+if srv:
+    # Closing stdin is the server's shutdown signal; it closes the browser and exits. Kill only
+    # if it will not go, because a leaked Chromium outlives the gate and poisons the next run's
+    # measurements -- and, on this box, sits in the operator's process list.
+    try:
+        srv.stdin.close()
+        srv.wait(timeout=20)
+    except Exception:
+        try:
+            srv.kill()
+        except Exception:
+            pass
+
+write_profile()
+
+rows = [(n, results[n][0], results[n][1]) for n in ORDER if n in results]
+w = max(len(n) for n, _, _ in rows)
 print('=' * 64)
-for n, st, msg in results:
+for n, st, msg in rows:
     print('  %-*s  %-4s  %s' % (w, n, st, ascii_safe(msg)))
 print('=' * 64)
-failed = [n for n, st, _ in results if st == 'FAIL']
+tag = ''
+if CHANGED:
+    tag = '   [FAST LANE -- NOT A CERTIFICATION: %d of %d checks NOT RUN]' % (
+        len(ORDER) - len(rows), len(ORDER))
+elif FAST:
+    tag = '   [parallel -- not the capture of record]'
+print('  %d checks in %.1fs (%.1f min)%s' % (len(rows), gate_wall, gate_wall / 60.0, tag))
+failed = [n for n, st, _ in rows if st == 'FAIL']
+
+# --verdicts PATH: the run's per-check verdicts as JSON. The acceptance work compares a fast run
+# against a serial one check by check, and scraping that out of the aligned summary text would
+# make the comparison depend on column widths -- so the runner states it outright. Observational:
+# writing this file cannot change a verdict, and no flag is needed for the gate's own exit code.
+for i, a in enumerate(sys.argv):
+    if a == '--verdicts' and i + 1 < len(sys.argv):
+        with open(sys.argv[i + 1], 'w', encoding='utf-8', newline='\n') as fh:
+            json.dump({'mode': 'fast' if FAST else 'serial', 'jobs': JOBS if FAST else 1,
+                       'shared_browser': bool(srv),
+                       # A --changed run covers a SUBSET, so its verdicts are not a gate result and
+                       # must not be readable as one by anything downstream.
+                       'certifying': not CHANGED,
+                       'selected': len(rows), 'registry': len(ORDER),
+                       'wall_s': round(gate_wall, 2),
+                       'verdicts': dict((n, st) for n, st, _ in rows)}, fh, indent=1)
+
+if CHANGED:
+    print('FAST LANE (%d/%d checks): %s -- NOT A GATE CERTIFICATION'
+          % (len(rows), len(ORDER), ('FAIL (%s)' % ', '.join(failed)) if failed else 'clean'))
+    sys.exit(1 if failed else 0)
 print('GATE: FAIL (%s)' % ', '.join(failed) if failed else 'GATE: PASS')
 sys.exit(1 if failed else 0)

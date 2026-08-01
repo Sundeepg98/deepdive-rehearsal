@@ -87,16 +87,31 @@ const goRoute = async (page, hash) => {
 
   /* ---------- the POSITIVE CONTROL first: if this fails, nothing below means anything ----------
      RECEIPT CORRECTION (measured here, 2026-07-29): the audit recorded this control as "h1 + two
-     visible h2s" = 3. The home renders NO h1 -- home-view.js emits `<h2 class="hm-h">` section
-     heads only, and the sidebar h1 has no layout boxes on #home because .app is display:none there.
-     The real control is the TWO rendered h2s ("Choose a room", "All topics"). The control's job is
-     unchanged and still does it: it proves the scanner finds headings when they exist, so a topic
-     route's "1" is a fact about the app rather than a broken instrument. */
+     visible h2s" = 3. At that time the home rendered NO h1 -- home-view.js emitted `<h2>` section
+     heads only, and the sidebar h1 had no layout boxes on #home because .app was display:none.
+     The control was therefore the TWO rendered h2s. Its job is to prove the scanner finds headings
+     when they exist, so a topic route's "1" is a fact about the app rather than a broken
+     instrument. */
   await goRoute(page, '#home');
   const home = await page.evaluate(SCAN);
-  chk('POSITIVE CONTROL: the scanner finds the home screen\'s section headings (2 rendered h2s)',
+  chk('POSITIVE CONTROL: the scanner finds the home screen\'s section headings (2+ rendered)',
     home.length >= 2, 'found ' + home.length + ': ' + JSON.stringify(home) +
     ' -- if this is low the INSTRUMENT is broken, not the app, and every arm below is worthless');
+
+  /* THE HOME'S OWN h1 -- an ACCEPTANCE CRITERION, so it gets an arm that can fail (appeal/
+     home-instrument round 2). A cold verify measured the home at ZERO rendered h1s and this file
+     could not say so: the control above asserts `>= 2 headings`, which a page of h2s satisfies
+     forever. The home is a route with its own subject, it is now the app's landing surface on
+     every open, and a landing surface with no h1 gives heading navigation nothing to land on.
+     Exactly one, and it must be RENDERED -- the document also carries the sidebar's topic h1,
+     which is display:none here, and counting that one was the original receipt error. */
+  const h1s = await page.evaluate(() => [...document.querySelectorAll('h1')]
+    .filter((h) => h.getClientRects().length)
+    .map((h) => (h.textContent || '').replace(/\s+/g, ' ').trim()));
+  chk('the home renders EXACTLY ONE h1', h1s.length === 1,
+    'found ' + h1s.length + ': ' + JSON.stringify(h1s) +
+    ' -- zero leaves heading navigation with no landing point on the app\'s own landing screen; '
+    + 'two means the topic h1 is rendering on a route that has no topic');
 
   /* ---------- the topic routes ---------- */
   const topics = await page.evaluate(() => TopicRegistry.ids().slice(0, 2));

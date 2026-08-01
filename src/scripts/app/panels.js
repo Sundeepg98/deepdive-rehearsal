@@ -277,7 +277,13 @@
     if (_st === 'in-progress' && _pr) _bdg = '<span class="ix-c-badge"><i style="background:var(--acc)"></i>' + _pr.done + '/' + _pr.tot + _wbMark + '</span>';
     else if (_st === 'weak') { var _wn = (_pr ? _pr.shk : 0) + ((typeof Progress !== 'undefined' && Progress.shakyMarks) ? Progress.shakyMarks(id) : 0); _bdg = '<span class="ix-c-badge"><i style="background:#dc2626"></i>' + _wn + ' weak' + _wbMark + '</span>'; }
     else if (_st === 'solid') _bdg = _wbFull
-      ? '<span class="ix-c-badge ix-c-ready"><i style="background:var(--acc)"></i>ready</span>'
+      /* "drilled + recalled", not "ready". The evidence behind this badge is two COMPLETION
+         counts (done === tot, and the whiteboard fully recalled) -- that is coverage, and
+         coverage is SHAPE, never VERDICT. It also sat a few hundred pixels under an instrument
+         whose whole sentence is "the level you are interviewing for is the one you have
+         rehearsed least", so the screen said both things at once. The badge now names what it
+         actually counted and lets the gauge keep the readiness question. */
+      ? '<span class="ix-c-badge ix-c-ready"><i style="background:var(--acc)"></i>drilled + recalled</span>'
       : '<span class="ix-c-badge"><i style="background:#0d9488"></i>done' + _wbMark + '</span>';
     else if (_wbSome) _bdg = '<span class="ix-c-badge"><i style="background:var(--acc)"></i>recalled</span>';
     var filt = ((idn.title || '') + ' ' + (idn.locatorTail || '') + ' ' + th).toLowerCase().replace(/&[a-z#0-9]+;/g, ' ').replace(/"/g, '');
@@ -346,7 +352,12 @@
         '<span class="hm-room-f"><span class="hm-room-pct">' + pc + '% drilled</span>' + weakHtml + '</span>' +
         '</button>';
     }).join('');
-    return '<section class="hm-rooms"><h2 class="hm-h">Choose a room</h2><div class="hm-room-grid">' + cards + '</div></section>';
+    /* "Coverage by room", not "Choose a room": on the home this block reports SHAPE, and the
+       navigation verb belongs to the rail's room rows, which are the actual chooser. The heading
+       is also the spec's own label. Panel grammar so it stops being the only block in the column
+       outside it. */
+    return '<section class="hm-rooms hm-panel"><div class="hm-phead"><h2 class="hm-lbl">Coverage by room</h2></div>' +
+      '<div class="hm-pbody"><div class="hm-room-grid">' + cards + '</div></div></section>';
   }
 
   /* ---- the footer ---------------------------------------------------------------------- */

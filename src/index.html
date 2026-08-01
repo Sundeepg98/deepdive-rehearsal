@@ -195,7 +195,10 @@
        WHY IT MOVED (appeal/home-instrument): as a sibling of .app it could only be shown by
        hiding .app, which is why the home route was the one surface with no application frame
        -- styles.css said `html[data-view="home"] .app{display:none}` in as many words. -->
-  <main class="homev" id="home"></main>
+  <!-- aria-label: this main had no accessible name, so the AX tree offered "main" with nothing to
+       distinguish it. tabindex="-1" makes it the skip link's target (a skip link that cannot move
+       focus is decoration); focusable, never a tab stop. -->
+  <main class="homev" id="home" aria-label="Your rehearsal record" tabindex="-1"></main>
   <aside class="companion" aria-label="Rehearsal companion">
     <div class="cmp-inner" tabindex="0" role="region" aria-label="Coaching for this view">
       <button class="cmp-fold" type="button" aria-label="Hide companion panel" title="Hide companion">&#8250;</button>

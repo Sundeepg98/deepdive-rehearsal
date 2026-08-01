@@ -1697,7 +1697,14 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
    :hover clause is already for. Guarded by test/focus_ring.cjs, which reads the COMPUTED outline. */
 .ix-cell:hover .ix-c-reset,.ix-c-reset:focus-visible{opacity:1;color:var(--red);border-color:var(--red)}
 .ix-card{display:flex;flex-direction:column;align-items:flex-start;text-align:left;border:1px solid var(--bd);background:var(--bg);border-radius:11px;padding:var(--space-11) var(--space-13);cursor:pointer;font:inherit;transition:border-color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base),transform var(--duration-fast) var(--ease-base);position:relative}
+/* The badge and the per-card reset button were BOTH pinned to the same top-right corner
+   unconditionally -- badge x1227.8-1258 against reset x1239-1261, 19px of overlap, with source
+   order printing the word "weak" across a 22px button. It was survivable while the library lived
+   behind a keystroke in an overlay; this wave made the library the permanent companion column, so
+   it is on the first screen of every card carrying progress. The reset owns the corner (it is the
+   control); the badge sits inboard of it on any card that has one. */
 .ix-c-badge{position:absolute;top:var(--space-10);right:var(--space-11);display:inline-flex;align-items:center;gap:var(--space-4);font-size:var(--font-size-nano);font-weight:var(--font-weight-bold);letter-spacing:var(--track-em-0-02);color:var(--mut2);white-space:nowrap}
+.ix-cell:has(.ix-c-reset) .ix-c-badge{right:var(--space-36)}
 .ix-c-badge i{width:var(--space-6);height:var(--space-6);border-radius:50%;flex:none}
 .ix-c-wb{margin-left:var(--space-4);color:var(--acc);font-weight:var(--font-weight-black);font-style:normal;font-size:var(--font-size-micro);line-height:var(--line-height-none)}
 .ix-c-ready{color:var(--acc);font-weight:var(--font-weight-heavy)}
@@ -2200,12 +2207,23 @@ html[data-view="home"] .companion{padding:0}
    person asked you. */
 .hm-continue{max-width:var(--measure-home);margin:0 auto var(--gap-home-continue)}
 .hm-ask{padding:var(--space-24) var(--space-24) var(--space-20)}
+/* THE HERO IS CLAMPED. It is a pointer back into the interrogation, not the interrogation: the
+   whole question is one keystroke away, and an unbounded hero can push the signature off the
+   screen entirely (measured at 103% of a 1280x800 viewport before the fallback was fixed). Four
+   lines covers every probe in the bank at this measure with room to spare, and bounds the worst
+   case whatever a future bank does. */
 .hm-q{font-family:var(--display);font-size:var(--font-size-heading);font-weight:var(--font-weight-semibold);
   line-height:var(--line-height-snug);letter-spacing:var(--track-em-neg-0-014);color:var(--ink);
-  max-width:var(--measure-display);text-wrap:balance;margin:var(--space-10) 0 var(--space-12)}
-/* the second-person line: REASON, RECENCY, REMAINDER -- not a cursor */
+  max-width:var(--measure-display);text-wrap:balance;margin:var(--space-10) 0 var(--space-12);
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;overflow:hidden}
+/* The second-person line: REASON, RECENCY, REMAINDER -- not a cursor.
+   It takes the BODY measure. It shipped on --measure-display, and because `ch` is font-relative
+   that resolved to 265px at 12px against the hero's 556px at 21px -- so the one pair the display
+   token was minted to govern had the rule applied backwards, and the sentence wrapped to two
+   short lines with 360px of empty column beside it. Display type takes a shorter measure than
+   body type, in CHARACTERS: 41ch here, 68ch there. */
 .hm-since{font-size:var(--font-size-caption);color:var(--mut);line-height:var(--line-height-normal);
-  max-width:var(--measure-display)}
+  max-width:var(--measure-body)}
 .hm-since b{color:var(--ink);font-weight:var(--font-weight-semibold)}
 /* ===== THE ACCESSORY THAT CAME OFF (the Chanel cut, team-lead coherence ruling rule 5) =======
    This button used to be a full-saturation room-coloured slab with a drop shadow -- and on the
@@ -2219,15 +2237,29 @@ html[data-view="home"] .companion{padding:0}
    .hm-cta:focus-visible has the same specificity as this rule, so a blanket `box-shadow:none`
    wins by source order and silently DELETES the halo -- caught by test/focus_ring.cjs in both
    themes, which is exactly the regression that arm exists for. Only the RESTING shadow goes. */
-.hm-act{padding:0 var(--space-24) var(--space-24)}
-.hm-act .hm-cta:not(:focus-visible){box-shadow:none}
-.hm-act .hm-cta{width:auto;border-radius:11px;padding:var(--space-12) var(--space-18);
+/* .hm-do, NOT .hm-act. The wrapper reused .hm-act -- which is the rail's PILL BUTTON class -- and
+   overrode only its padding, so a non-interactive <div> kept the border, the card fill, the 10px
+   radius, the 44px floor, cursor:pointer and the accent hover. The result was a phantom bordered
+   card sharing two edges with the panel 1px away, terminating in mid-air on the third, lighting
+   its border to brand indigo when you hovered dead space, and amputating the CTA's focus halo on
+   its top edge. One control, one affordance: the wrapper is now layout and nothing else. */
+.hm-do{padding:0 var(--space-24) var(--space-24)}
+.hm-do .hm-cta:not(:focus-visible){box-shadow:none}
+.hm-do .hm-cta{width:auto;border-radius:11px;padding:var(--space-12) var(--space-18);
   min-height:44px;background:transparent;color:var(--ink);border:1.5px solid var(--rm,var(--acc))}
-.hm-act .hm-cta:hover{filter:none;background:var(--side)}
-.hm-act .hm-cta-k{color:var(--rm,var(--acc))}
-.hm-act .hm-cta-t{font-size:var(--font-size-title)}
-.hm-act .hm-cta-d{color:var(--mut);opacity:1}
-.hm-act .hm-cta-ar{margin-left:var(--space-16);color:var(--rm,var(--acc))}
+.hm-do .hm-cta:hover{filter:none;background:var(--side)}
+.hm-do .hm-cta-k{color:var(--rm,var(--acc))}
+.hm-do .hm-cta-t{font-size:var(--font-size-title)}
+.hm-do .hm-cta-d{color:var(--mut);opacity:1}
+.hm-do .hm-cta-ar{margin-left:var(--space-16);color:var(--rm,var(--acc))}
+
+/* THE SKIP LINK. Off-screen until focused, then a real, visible, first-in-tab-order control --
+   ~20 rail controls precede the work column in DOM order, which is the whole use case. */
+.hm-skiplink{position:absolute;left:-10000px;top:0;z-index:var(--z-popup,70);
+  padding:var(--space-10) var(--space-16);background:var(--card);color:var(--ink);
+  border:1px solid var(--acc);border-radius:9px;font-size:var(--font-size-caption);
+  font-weight:var(--font-weight-bold);text-decoration:none;white-space:nowrap}
+.hm-skiplink:focus{left:var(--space-8);top:var(--space-8);position:fixed}
 
 /* ---- THE ALTITUDE GAUGE -- the signature ---------------------------------------------------
    Three rails, one per interview tier, high band on top. Each rail is one segment per topic and
@@ -2297,6 +2329,14 @@ html[data-view="home"] .companion{padding:0}
    would have quietly retired that assertion. Only the density changes. */
 .hm-rooms .hm-room-grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:var(--space-10)}
 .hm-rooms .hm-room{padding:var(--space-12) var(--space-14);gap:var(--space-6)}
+/* Quieted so it stops being the loudest colour mass in the work column. Its titles were 16px/700
+   -- the largest type on the page after the hero -- and its six saturated hue chips plus six
+   saturated bars out-shouted the instrument they sit under. The room hue survives where it
+   carries identity (the numeral, the bar) and leaves the type alone. */
+.hm-rooms .hm-room-k{font-size:var(--font-size-caption);font-weight:var(--font-weight-semibold)}
+.hm-rooms .hm-room-n{width:15px;height:15px;font-size:var(--font-size-nano)}
+.hm-rooms .hm-room-bar{height:4px}
+.hm-rooms .hm-room-c,.hm-rooms .hm-room-f{font-size:var(--font-size-micro)}
 
 /* ---- THE RAIL TENANT ----------------------------------------------------------------------- */
 .hm-mk{display:grid;gap:2px;width:18px;flex:none}
@@ -2340,6 +2380,11 @@ html[data-view="home"] .companion{padding:0}
   align-items:center;gap:var(--space-12);min-height:28px;padding:var(--space-6) var(--space-16);
   background:var(--side);border-top:1px solid var(--bd);overflow:hidden;
   font-size:var(--font-size-micro);color:var(--mut)}
+/* The scroll-top disc sits at bottom:24px and predates this bar, so the new fixed foot furniture
+   arrived UNDERNEATH it: measured a 5.5px overlap at 1280x800, the saturated disc straddling the
+   census hairline and washing its surface. The phone case was already solved this way through
+   --chrome-bot; this is the desktop half, home-scoped so no topic route moves. */
+html[data-view="home"] .scrolltop{bottom:calc(var(--space-30) + var(--space-24))}
 .hm-st-i{display:flex;align-items:center;gap:var(--space-6);flex:none}
 .hm-st-i b{color:var(--ink);font-weight:var(--font-weight-bold);font-variant-numeric:tabular-nums}
 .hm-st-sep{width:1px;height:11px;background:var(--bd);flex:none}
@@ -2359,14 +2404,31 @@ html[data-view="home"] .companion{padding:0}
   margin:0 auto var(--gap-home-skip);font-size:var(--font-size-caption);color:var(--mut);min-height:44px}
 .hm-skip input{width:16px;height:16px;accent-color:var(--acc);cursor:pointer}
 
-/* ---- the library's MOBILE twin ------------------------------------------------------------
+/* ---- the library's MOBILE twin, COLLAPSED --------------------------------------------------
    .companion is display:none below 1280, so #homelib goes with it. The app already solves this
    exact problem the same way: <details class="mcomp"> mirrors the companion's coaching for the
-   phone with its own mCmp* ids. This is that pattern, one surface over -- one renderer, two
-   mount points, exactly one of them displayed at any width. */
+   phone with its own mCmp* ids -- and the load-bearing half of that pattern is that .mcomp is a
+   CLOSED disclosure. Shipped open, this block was 62% of the home's scroll height at 1024, 64% at
+   900 and 70% on the phone: the shelf back inside the decision's vertical budget, at the very
+   figure the library rule was written to kill. Closed, the shelf is always available and costs
+   the decision one row. */
 .hm-libm{display:none}
+.hm-libm-s{display:flex;align-items:center;gap:var(--space-10);cursor:pointer;list-style:none;
+  min-height:44px;padding:var(--space-8) var(--space-12);background:var(--card);
+  border:1px solid var(--bd);border-radius:12px}
+.hm-libm-s::-webkit-details-marker{display:none}
+.hm-libm[open] .hm-libm-s{border-radius:12px 12px 0 0;border-bottom:0}
+.hm-libm-n{margin-left:auto;font-size:var(--font-size-micro);color:var(--mut2)}
+.hm-libm-c{color:var(--mut2)}
+.hm-libm[open] .hm-libm-c{transform:rotate(180deg)}
+.hm-libm[open] .ix-filter-row,.hm-libm[open] .ix-scroll{border:1px solid var(--bd);border-top:0}
+.hm-libm[open] .ix-scroll{border-radius:0 0 12px 12px;padding:var(--space-10)}
+.hm-practicem{display:none}
 @media(max-width:1279px){
   html[data-view="home"] .hm-libm{display:block}
+}
+@media(max-width:919px){
+  html[data-view="home"] .hm-practicem{display:block}
 }
 
 /* ---- the home's fixed phone chrome ---------------------------------------------------------
@@ -2389,7 +2451,10 @@ html[data-view="home"] .companion{padding:0}
   html[data-view="home"] .hm-rail .hm-top{flex-direction:row;align-items:center;
     justify-content:space-between;gap:var(--space-8);flex:1;min-width:0}
   html[data-view="home"] .hm-rail .hm-acts{display:flex;gap:var(--space-6);flex:none}
-  html[data-view="home"] .hm-rail .hm-act{min-height:38px;padding:var(--space-6) var(--space-10)}
+  /* 44px is the tap floor (WCAG 2.5.8) and it is not negotiable for a bar that only exists on
+     touch. An earlier pass shrank it to 38 to buy bar height; visual_pane_smoke is the arm that
+     says no, and it is right. The bar grows instead, and chrome-metrics reserves the truth. */
+  html[data-view="home"] .hm-rail .hm-act{min-height:44px;padding:var(--space-6) var(--space-10)}
   html[data-view="home"] .hm-rail .hm-act:last-child{grid-column:auto}
   /* The shortcut hints are keyboard affordances and this is a touch bar, so they go first --
      before the buttons themselves are allowed to leave the screen. The wordmark truncates
@@ -2398,11 +2463,18 @@ html[data-view="home"] .companion{padding:0}
   html[data-view="home"] .hm-rail .hm-act kbd{display:none}
   html[data-view="home"] .hm-rail .hm-wm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
   html[data-view="home"] .hm-rail .hm-brand{min-width:0;flex:0 1 auto;overflow:hidden}
+  /* THE THREE-BAR MARK IS OFF ON THE PHONE. Clipped to 18x13 in the top-left corner of a fixed
+     bar it reads as a hamburger -- the canonical position, the canonical glyph -- and it is a
+     <span> that does nothing when tapped. A false affordance is worse than no mark, and the
+     wordmark says what the mark was there to say. Product name or nothing. */
+  html[data-view="home"] .hm-rail .hm-mk{display:none}
 }
 @media(max-width:419px){
-  /* below this the wordmark is the last thing worth its width; the mark still identifies the
-     product and the h1 text is not the mark's job on this route */
-  html[data-view="home"] .hm-rail .hm-wm{display:none}
+  /* The wordmark STAYS -- it is the only product identity on the phone now that the three-bar
+     mark is off, and "the product name appears nowhere" was half of the hamburger finding. What
+     gives at this width is its size, not its presence. */
+  html[data-view="home"] .hm-rail .hm-wm{font-size:var(--font-size-micro)}
+  html[data-view="home"] .hm-rail .hm-act{padding:var(--space-6) var(--space-8)}
   html[data-view="home"] .hm-tabs{display:flex;position:fixed;bottom:0;left:0;right:0;
     z-index:var(--z-bottombar,45);padding-bottom:env(safe-area-inset-bottom,0px)}
   /* the census is a desktop readout; on the phone its budget goes to the tab bar */

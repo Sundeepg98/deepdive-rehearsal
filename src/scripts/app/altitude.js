@@ -76,13 +76,24 @@ var Altitude = (function () {
       });
     }
 
-    /* the THIN rail: lowest solid share. This is what the verdict sentence names, and it is
-       computed rather than authored so it cannot go stale against the record. */
-    var thin = null;
+    /* THE THIN RAIL -- and it is null unless the record actually earns the accusation.
+       The verdict sentence ("Staff is the thin rail -- the level you are interviewing for is the
+       one you have rehearsed least") is the signature's punchline, and a punchline that can be
+       provably false is worse than no punchline. A strict `<` alone cannot say that: on a TIE it
+       silently keeps whichever tier it looked at first, so an all-zero record printed "Staff is
+       the thin rail. 0 solid of 310 probes" -- an accusation derived from nothing -- and a PERFECT
+       record printed the same sentence about a tier the user has fully banked. Both are ties.
+       So the rule is evidence, not ordering: a rail is thin only when it is STRICTLY thinner than
+       every other rail. Ties (including all-zero and all-perfect) yield null, and the consumer
+       says what it actually knows instead. */
+    var shares = [], thin = null;
     for (i = 0; i < TIERS.length; i++) {
       var a = tiers[TIERS[i]];
-      if (!a.n) continue;
-      if (thin === null || (a.solid / a.n) < (tiers[thin].solid / tiers[thin].n)) thin = TIERS[i];
+      if (a.n) shares.push({ tier: TIERS[i], share: a.solid / a.n });
+    }
+    if (shares.length > 1) {
+      shares.sort(function (x, y) { return x.share - y.share; });
+      if (shares[0].share < shares[1].share) thin = shares[0].tier;
     }
     return { order: TIERS.slice(), tiers: tiers, totals: totals, rows: rows,
              thin: thin, nTopics: rows.length };

@@ -171,3 +171,125 @@ moved: the prose face, the reading measure and the answer surfaces are untouched
 - Age is topic-granular (section 3).
 - Follow-up waves are recorded in `CHOSEN.md` section 9: the `_mustHit()` correctness fix, pushes
   as spoken lines, chain depth as count only, a designed pre-reveal state, and per-probe recency.
+
+---
+---
+
+# ROUND-2 ADDENDUM -- 2026-08-01
+
+Round 1 was judged by three appeal-register judges (all FIXABLE) and an independent cold verify
+(PASS with findings, one FAIL item). All four are preserved verbatim, with their authors credited,
+at `_audit/2026-08-01-w1-judge-the-complaint.md`,
+`_audit/2026-08-01-w1-judge-direction-fidelity.md`,
+`_audit/2026-08-01-w1-judge-map-conformance.md` and `_audit/2026-08-01-w1-coldverify.md`.
+Those four are copied UNEDITED, so they carry the typography their authors wrote;
+`test/ascii_guard.py` scopes to `src`, `src/topics-md`, `test` and `tools`, and verbatim wins
+inside `_audit`.
+
+The headline: *"The complaint is answered and it is not a close call."* This addendum is the
+distance from that to zone-clean.
+
+## A. THE CORRECTION FIRST -- section 7b was wrong
+
+Section 7b of this freeze says **"Nothing else was cut."** That sentence is false and it is
+withdrawn.
+
+`CHOSEN.md` section 6.4 specifies *"COVERAGE BY ROOM. Six dense rows, four-state proportion bar."*
+Round 1 shipped the pre-existing `Panels.roomsHtml()` card grid instead, and section 5 of this
+freeze does not record the deviation. The engineering reason was good and is unchanged --
+`test/focus_ring.cjs` asserts that all six `.hm-room` focus halos derive from their own room, in
+both themes, each against a live negative control, and re-rendering the rooms under new class names
+would have quietly retired that assertion. What was missing was the disclosure. It is made here.
+
+**The deviation is KEPT, and the judge's four costs are addressed rather than argued with:**
+
+| cost | answer |
+|---|---|
+| the only block below the hero outside the panel grammar | it is now `.hm-panel` + `.hm-phead`, like every other block |
+| the loudest colour mass in the work column | titles down from 16px/700 to caption weight, room numerals 18px to 15px, bars 5px to 4px; the room hue survives only where it carries identity |
+| heading in the navigation register | "Choose a room" becomes **"Coverage by room"**, which is the spec's own label; the rail's room rows are the actual chooser |
+| the third presentation of the same six rooms | acknowledged and NOT fixed. Three surfaces still name the rooms (rail rows, these cards, library group heads). Collapsing one is a real design call about what the rail is for, and it belongs to a wave that can price it, not to a bounce fix. Recorded here rather than quietly left. |
+
+## B. The ten bounce items
+
+1. **THE HERO holds on every resume path.** It read the probe only when the resume cursor was a
+   DRILL cursor; `LastVisit.resumeView()` defaults to `walk`, so the majority path quoted the topic
+   THESIS -- median 435 characters, 0 of 46 ending in a question mark -- and at worst grew the panel
+   to 103% of a 1280x800 viewport, pushing the signature off-screen. Now `heroQuestion()` reads the
+   bank on every path: the probe the drill cursor sits on, else the first ungraded probe, else the
+   first. Only a topic with no bank falls through, and that path drops the quotes and the framing
+   rather than quoting prose nobody spoke. `.hm-q` is clamped to four lines. Measured on `walk`,
+   `drill`, `sys` and `model`: every hero ends in a question mark, every one is at most 130px, and
+   every panel is under 700px.
+2. **The phantom `.hm-act` wrapper is gone.** The CTA's wrapper reused the rail's PILL BUTTON class
+   and overrode only its padding, so a non-interactive `div` kept the border, the card fill, the
+   10px radius, the 44px floor, `cursor:pointer` and an accent hover on dead space -- and clipped
+   the CTA's own focus halo. It is `.hm-do` now: layout and nothing else. One control, one
+   affordance.
+3. **`--measure-display` came off `.hm-since`, and the check that could not see it can now.** `ch`
+   is font-relative, so the display token resolved to 265px on 12px body copy against the hero's
+   556px -- the rule it was minted to state, applied backwards, on the one pair it governs. A new
+   `--measure-body` (68ch) takes the body copy. `home_rhythm` gained a VALUE arm: a measure is now
+   judged against the TYPE TIER of the rule it lands on, both directions are planted as fixtures,
+   and the arm was mutant-tested by restoring the judge's exact defect in `styles.css` and watching
+   it go RED. The form arm alone passed that same mutant.
+4. **One truth about position.** The cursor is stated once, in the resume sentence, beside a
+   remainder that names its own denominator: *"...and stopped at probe 11 of 21. 9 still
+   ungraded."* The CTA sub-line names the destination only. Walk steps are STEPS -- "probe" is what
+   the census and the gauge are denominated in.
+5. **Spec 6.4** -- see section A.
+6. **Census vs scroll-top disc**, desktop: one home-scoped `bottom` on `.scrolltop`, the same
+   mechanism the phone case already used. Measured: overlap 5.5px to 0.
+7. **Map conformance.** The in-column library is a COLLAPSED `details` -- the load-bearing half of
+   the `.mcomp` pattern round 1 cited and then dropped; it was 62/64/70% of the home's scroll height
+   at 1024/900/390, now under 25% at all three. Cross-topic drill and Weak-spot review are restored
+   below 920px as an in-column twin (they were rail-only, and the phone rail hides its sections --
+   a regression against master). The `ready` badge reads **"drilled + recalled"**: coverage is
+   SHAPE, never VERDICT.
+8. **Complaint-lens extras.** The gauge accuses only on evidence -- `Altitude.compute()` returns
+   `thin: null` unless one rail is STRICTLY thinnest, so all-zero, level and perfect records each
+   get a sentence that is true instead of an accusation the record cannot support. The
+   absent-record resume contradiction is gone (the remainder falls back to the BANK length, not 0).
+   The library badge no longer paints over the per-card reset button. The phone's three-bar mark is
+   off -- it sat in the canonical hamburger position, did nothing when tapped, and was not a menu;
+   the wordmark stays, so the product is still named.
+9. **Born-accessible.** Exactly one RENDERED h1 on the home (the Continue block's own heading);
+   `role="banner"` declared on the rail's identity row -- declared, not implicit, because `header`
+   does not map to banner inside another landmark; a real skip link, off-screen until focused, first
+   in tab order, targeting a now-focusable `main#home` that also gained an accessible name; and the
+   sidebar is renamed "Home controls" on this route with the symmetric restore in `view-manager.js`.
+   `heading_tree` gained an arm asserting exactly one rendered h1, so the criterion can fail.
+   **One correction to the bounce, on disk evidence:** item 9 records card names as "the one met
+   criterion". The cold verify measured the opposite -- 46 library cards computing their accessible
+   name from their whole contents, median 481 characters, zero `aria-describedby` (verdict 4d). The
+   INSTRUCTION (leave them alone this round) is followed either way, and it is the right call:
+   `topicCard()` is shared with the topic-index overlay and the switcher, and `at_name_hygiene` pins
+   its separators. But it is unbuilt, not met, and it should be scheduled rather than closed.
+10. **Record-keeping** -- this addendum, the four verbatim verdicts, a fresh full-gate capture, and
+    re-shot receipt pairs.
+
+## C. What this round introduced, and what caught it
+
+Recorded for the same reason round 1 recorded its two: the arms that caught them are the ones worth
+keeping.
+
+1. **A 38px tap target.** Shrinking the rail's actions to buy phone bar height put them under the
+   44px floor. `visual_pane_smoke` said no. The bar grows instead, and `chrome-metrics` reserves the
+   truth.
+2. **Two checks left pointing at addresses that had moved.** `visual_pane_smoke` measured
+   `#home .hm-act` (the actions live in the rail now) and `flow_cursor` read the cursor from the CTA
+   sub-line (it lives in the resume sentence now). Both re-anchored to the new address with the
+   invariant unchanged; neither was weakened, and `flow_cursor` still proves the same thing -- what
+   the home ADVERTISES is what `posRestore` will land on.
+
+## D. Gate and VR
+
+**75/75 PASS**, capture at `_audit/2026-07-31-appeal-home-gate.txt` (rewritten this round; written
+outside the repo during the run and copied in). Registration delta against `1c533d7` remains exactly
+`+home_reflow`; nothing deleted, nothing skipped.
+
+VR: `home-light` and `home-dark` rebaselined again under the standing authorization, pair kept,
+manifest updated. **The other 14 baselines remain byte-identical to `1c533d7`** -- `git diff --stat
+1c533d7 HEAD -- test/baselines/` is exactly three changed files.
+
+Receipts re-shot after the round-2 changes: `_audit/appeal-home-receipts/`.

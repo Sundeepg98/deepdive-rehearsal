@@ -2207,18 +2207,27 @@ html[data-view="home"] .companion{padding:0}
 .hm-since{font-size:var(--font-size-caption);color:var(--mut);line-height:var(--line-height-normal);
   max-width:var(--measure-display)}
 .hm-since b{color:var(--ink);font-weight:var(--font-weight-semibold)}
-/* The action sits UNDER the question and stays quieter than it. The hero of this screen is the
-   sentence someone asked you; a full-bleed slab with a drop shadow would take that back. */
+/* ===== THE ACCESSORY THAT CAME OFF (the Chanel cut, team-lead coherence ruling rule 5) =======
+   This button used to be a full-saturation room-coloured slab with a drop shadow -- and on the
+   returning home it was the loudest object on the screen, out-shouting the altitude gauge in both
+   size and saturation. Rule 1 of that ruling is that ONE thing is the signature and nothing
+   competes with it, so the fill came off. What is left still reads as the single primary action:
+   it is the only bordered control in the column, it wears the room it will open, it carries the
+   arrow, and it is autofocused so Enter is the whole daily loop. It no longer competes with the
+   instrument, and it no longer competes with the question above it either.
+   :not(:focus-visible) IS LOAD-BEARING. The focus HALO is delivered as a box-shadow and
+   .hm-cta:focus-visible has the same specificity as this rule, so a blanket `box-shadow:none`
+   wins by source order and silently DELETES the halo -- caught by test/focus_ring.cjs in both
+   themes, which is exactly the regression that arm exists for. Only the RESTING shadow goes. */
 .hm-act{padding:0 var(--space-24) var(--space-24)}
-/* :not(:focus-visible) IS LOAD-BEARING. The focus HALO on this button is delivered as a
-   box-shadow, and .hm-cta:focus-visible has the same specificity as this rule -- so a blanket
-   `box-shadow:none` here wins by source order and silently DELETES the halo. Caught by
-   test/focus_ring.cjs in both themes, which is exactly the regression that arm was written for.
-   What this rule means to remove is the RESTING drop shadow, and now that is all it removes. */
 .hm-act .hm-cta:not(:focus-visible){box-shadow:none}
-.hm-act .hm-cta{width:auto;border-radius:11px;padding:var(--space-12) var(--space-18);min-height:44px}
+.hm-act .hm-cta{width:auto;border-radius:11px;padding:var(--space-12) var(--space-18);
+  min-height:44px;background:transparent;color:var(--ink);border:1.5px solid var(--rm,var(--acc))}
+.hm-act .hm-cta:hover{filter:none;background:var(--side)}
+.hm-act .hm-cta-k{color:var(--rm,var(--acc))}
 .hm-act .hm-cta-t{font-size:var(--font-size-title)}
-.hm-act .hm-cta-ar{margin-left:var(--space-16)}
+.hm-act .hm-cta-d{color:var(--mut);opacity:1}
+.hm-act .hm-cta-ar{margin-left:var(--space-16);color:var(--rm,var(--acc))}
 
 /* ---- THE ALTITUDE GAUGE -- the signature ---------------------------------------------------
    Three rails, one per interview tier, high band on top. Each rail is one segment per topic and

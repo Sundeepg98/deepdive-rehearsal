@@ -115,10 +115,36 @@ its negative control is demonstrated, not asserted.
 `test/baselines/` shows exactly three changed files. The new baselines were reviewed before
 committing, which is what surfaced the cold-verdict copy defect in section 3.
 
+## 7b. The Chanel cut -- what came off before the receipts
+
+Per the team-lead coherence ruling (rule 5), one accessory was removed before capturing receipts,
+and rule 1 named the offender: **the Resume CTA's saturated slab**.
+
+It was a full-saturation room-coloured block with a drop shadow, inherited from the old home where
+it was the only thing on the screen worth looking at. On the new home it was the loudest object in
+the column -- it beat the altitude gauge on both size and saturation, which is precisely what rule 1
+forbids, and it also out-shouted the question sitting directly above it. The fill came off. What
+remains still reads as the single primary action: it is the only bordered control in the column, it
+wears the room it will open, it carries the arrow, and it is autofocused so Enter is the whole daily
+loop. It simply stopped competing with the signature.
+
+Nothing else was cut. Checked against the ruling's other rules: the question-as-hero is set at
+`--font-size-heading` inside the Continue strip, not as a second monument (rule 2); the measure
+rule, the age stamps, the second-person copy and the fill-vs-outline grade marks all build silently
+as craft floor with no feature surface of their own (rule 3); no steal was found fighting the
+spine's grammar, so nothing went to the wave-2 list on coherence grounds (rule 4).
+
+The optional cherry-pick note (`be360c0`, room hues named by surface) was declined and the file
+deleted: this wave consumes `--room-*` unchanged and adds no colour tokens, so there was nothing
+for that refactor to attach to. That is the "if your plan structures tokens differently, ignore
+this" branch of the note, not an oversight.
+
 ## 8. Appearance receipts
 
 `_audit/appeal-home-receipts/` -- before (master tip `1c533d7`) and after, at 1280x800 and 390x844,
 on the SAME seeded returning-user record, so each pair differs by design and nothing else.
+
+Captured AFTER the Chanel cut, so the receipts show what actually ships.
 
 **The note, in the appeal's own register.** The before shot is the operator's sentence made
 literal: a centred column on cream, a wordmark and four pill buttons floating with nothing to

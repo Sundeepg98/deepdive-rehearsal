@@ -51,6 +51,7 @@ test/_last_fail_*.txt
 test/_trace*/
 test/_profile_run*.json
 test/_gate_*.log
+test/_acc*.log
 test/_verdicts*.json
 test/_acceptance/
 

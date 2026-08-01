@@ -162,6 +162,23 @@ def save(name, obj):
         json.dump(obj, fh, indent=1)
 
 
+def load_rows(name):
+    p = os.path.join(OUT, name)
+    if not os.path.exists(p):
+        return []
+    try:
+        with open(p, encoding='utf-8') as fh:
+            v = json.load(fh)
+    except Exception:
+        return []
+    # A finished phase saves a dict with the rows under 'runs'; an interrupted one leaves the
+    # bare list it was appending to. Resume has to read both, or resuming after a COMPLETED
+    # phase would silently start over.
+    if isinstance(v, dict):
+        return v.get('runs', [])
+    return v if isinstance(v, list) else []
+
+
 def red(v):
     return sorted(n for n, s in v.items() if s == 'FAIL')
 
@@ -200,9 +217,14 @@ def do_green(fast_args):
     return not d
 
 
-def do_mutants(fast_args):
-    res = []
-    for m in MUTANTS:
+def do_mutants(fast_args, only_ids=None):
+    """RESUMABLE, and it had to become so the hard way: this battery is hours long, and a run that
+    is killed at mutant 4 must not throw away mutants 1-3 NOR silently re-run them into a
+    truncated file. Existing rows are loaded and merged by id, so a resumed run adds to the
+    receipt rather than replacing it."""
+    res = load_rows('mutants.json')
+    todo = [m for m in MUTANTS if not only_ids or m['id'] in only_ids]
+    for m in todo:
         hits = apply_mutant(m)
         s, sw, _ = gate([], 'mut_%s_serial' % m['id'])
         f, fw, _ = gate(fast_args, 'mut_%s_fast' % m['id'])
@@ -212,7 +234,8 @@ def do_mutants(fast_args):
                'serial_red': red(s), 'fast_red': red(f), 'disagreements': d,
                'target_red_serial': s.get(m['want']) == 'FAIL',
                'target_red_fast': f.get(m['want']) == 'FAIL'}
-        res.append(row)
+        res = [x for x in res if x['id'] != m['id']] + [row]
+        res.sort(key=lambda x: [y['id'] for y in MUTANTS].index(x['id']))
         save('mutants.json', res)          # incremental: a battery that dies keeps its receipts
         print('  %-12s serial red=%-2d fast red=%-2d target(%s) s=%s f=%s | disagreements: %s'
               % (m['id'], len(red(s)), len(red(f)), m['want'],
@@ -223,8 +246,12 @@ def do_mutants(fast_args):
 
 
 def do_stability(fast_args, n):
-    runs = []
-    for i in range(n):
+    """RESUMABLE, for the same reason do_mutants is: this environment killed two multi-hour
+    background runs outright, and a stability battery that starts from zero every time it is
+    interrupted never finishes. Runs are appended until there are `n` of them."""
+    runs = list(load_rows('stability.json'))
+    while len(runs) < n:
+        i = len(runs)
         v, w, x = gate(fast_args, 'stab_%d' % (i + 1))
         runs.append({'run': i + 1, 'wall_s': round(w, 1), 'exit': x,
                      'red': red(v), 'verdicts': v})
@@ -259,8 +286,12 @@ if __name__ == '__main__':
         print('\n== GREEN TREE: serial vs fast ==')
         ok &= do_green(FAST)
     if mode in ('mutants', 'all'):
+        only_ids = None
+        for i, a in enumerate(sys.argv):
+            if a == '--mutant' and i + 1 < len(sys.argv):
+                only_ids = set(sys.argv[i + 1].split(','))
         print('\n== PLANTED-BROKEN TREES: serial vs fast, one mutant per class ==')
-        ok &= do_mutants(FAST)
+        ok &= do_mutants(FAST, only_ids)
     if mode in ('stability', 'all'):
         n = 8
         for i, a in enumerate(sys.argv):

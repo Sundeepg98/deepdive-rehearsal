@@ -1171,7 +1171,9 @@ def skip(name, msg):
 
 chrome = browser()
 deliverable = os.path.join(ROOT, 'deepdive_content_pipeline_rehearsal.html')
-srv = start_browser_server(chrome) if SHARED else None
+# --dry-run answers a question about SELECTION and runs no check, so it must not start a browser
+# it will never use -- and it exits before the teardown below, which would leak the server.
+srv = start_browser_server(chrome) if (SHARED and '--dry-run' not in sys.argv) else None
 
 def job(name):
     """The closure that runs check `name`, whichever lane it lands in."""
@@ -1382,6 +1384,11 @@ if srv:
 write_profile()
 
 rows = [(n, results[n][0], results[n][1]) for n in ORDER if n in results]
+if not rows:
+    # Reachable only via a selective lane that matched nothing. Saying so is the whole point:
+    # "0 checks ran" must never render as a clean summary and an exit 0.
+    print('NO CHECKS RAN -- the selection matched nothing. This is not a pass.')
+    sys.exit(1)
 w = max(len(n) for n, _, _ in rows)
 print('=' * 64)
 for n, st, msg in rows:

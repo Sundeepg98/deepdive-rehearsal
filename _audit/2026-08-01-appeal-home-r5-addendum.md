@@ -27,8 +27,8 @@ and the regex `\d+\s+of\s+5\s+topics` matches **nothing** in rendered text at ei
 
 **2. Focus lands off-screen.** `preventScroll` is now true only on FIRST paint; every later render
 lets the browser reveal the control it just moved focus to. This item cost the most and the honest
-account is below under COVERAGE -- the fix is one line, but the arm guarding it took four attempts
-to make capable of failing, and two of those attempts were green against the unfixed build.
+account is below under COVERAGE -- the fix is one line, but the arm guarding it took FIVE attempts
+to make capable of failing, and the first four were green against a deliberately broken build.
 
 **3. Tab bar: the monotone crossing pointer.** Implemented as the comment had described for two
 rounds: the owner is the LAST target whose top has crossed the band, so the last target owns
@@ -75,9 +75,10 @@ and disclosed rather than smuggled. It was **not** on the bounce list.
 
 ## COVERAGE -- WHAT IS GUARDED, AND WHAT IS NOT
 
-**Item 2's arm, and three failures to earn it.** `focus_ring` gained a visibility arm and now runs
-18 assertions. The arm as first written **passed against both mutants**, and the reasons are worth
-recording because each one is a way an assertion can be true for free:
+**Item 2's arm, and four failures to earn it.** `focus_ring` gained a visibility arm and now runs
+18 assertions. Four successive versions of it **passed against both mutants** -- including against
+`preventScroll: true` restored outright, the exact defect it exists to catch. Each version was
+wrong in a different way, and every one of them is a way an assertion can be true for free:
 
 - It ran on `hp`, a FRESH INSTALL, where the home is 1349px tall against an 800px viewport --
   a maxScroll of 549. The focused control is on screen there no matter what the focus call does.

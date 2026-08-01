@@ -124,7 +124,7 @@ def browser():
 # ===== PROFILING (opt-in; --profile) ==========================================================
 # The gate's runtime was an estimate before this existed. --profile writes a machine-readable
 # record of where the time actually went: per-check wall time from out here, and -- via the
-# NODE_OPTIONS preload in test/_gate_trace.cjs -- the browser lifecycle from inside each check,
+# NODE_OPTIONS preload in test/_gate_runtime.cjs -- the browser lifecycle from inside each check,
 # which is the only place the boot tax is visible. OFF by default and observational when on:
 # it adds env vars and reads a clock. It changes no command, no order, and no verdict.
 PROFILE = '--profile' in sys.argv

@@ -4,7 +4,7 @@
  * unless its env var is set, and NEITHER may change what a check asserts.
  *
  *   GATE_TRACE_DIR   -- record the browser lifecycle (Phase 1, the profile).
- *   GATE_BROWSER_WS  -- redirect chromium.launch() to a shared server (Phase 2).
+ *   GATE_BROWSER_CDP -- redirect chromium.launch() to a shared browser (Phase 2).
  *
  * WHY A PRELOAD AND NOT 41 EDITS. Every browser check in the gate has exactly one launch site and
  * spells it the same way: `chromium.launch(B.launchOpts())`. Editing all of them would put a
@@ -26,17 +26,22 @@
  * gets a real cold browser, silently and correctly. A future check that adds a flag is exempted
  * the moment it is written, by nobody.
  *
- * ===== AND THE SERVER MUST SURVIVE ITS CLIENTS =====
- * A connected browser's close() would tear down the shared browser for everyone behind it. Every
- * check calls close(). So on the shared path close() is redefined to mean what the check actually
- * wants -- drop MY contexts -- and the connection is left for process exit to reap.
+ * ===== AND THE SERVER MUST SURVIVE ITS CLIENTS, WITHOUT HANGING THEM =====
+ * Every check calls browser.close(). Over chromium.connect() that would tear down the shared
+ * browser for every check queued behind -- so the first version overrode close() to drop only the
+ * check's own contexts. That override left the WebSocket open, an open socket keeps Node's event
+ * loop alive, and any check that exits NATURALLY (rather than through B.finish()'s process.exit())
+ * then hung forever. Measured: room_browser finished its work and was killed at 100s (exit 124),
+ * while seg_state, which force-exits, was fine. Three gate checks exit naturally.
+ * connectOverCDP removes the dilemma: Playwright does not own a browser it reached over CDP, so
+ * close() terminates the connection and leaves the browser up. No override, no hang.
  */
 'use strict';
 
 const TRACE_DIR = process.env.GATE_TRACE_DIR;
-const SHARE_WS = process.env.GATE_BROWSER_WS;
+const SHARE_CDP = process.env.GATE_BROWSER_CDP;
 
-if (TRACE_DIR || SHARE_WS) {
+if (TRACE_DIR || SHARE_CDP) {
   const Module = require('module');
 
   /* ---- tracing ---------------------------------------------------------------------------- */
@@ -115,23 +120,20 @@ if (TRACE_DIR || SHARE_WS) {
         time(b, 'newContext', 'newContext');
         return b;
       }
+      /* connectOverCDP, NOT connect(), and close() is deliberately left ALONE.
+         Playwright does not own a browser it reached over CDP, so a check's browser.close()
+         terminates the connection and leaves the shared browser running -- which is exactly the
+         semantics needed, with no override.
+         The first version used connect() and DID override close() (it had to: over connect(),
+         close() would tear down the browser for every check queued behind). That left the socket
+         open, an open socket keeps Node's event loop alive, and any check that exits naturally
+         instead of through B.finish()'s process.exit() HUNG FOREVER. Measured: room_browser
+         finished its work and was killed at 100s; seg_state, which force-exits, was fine. Three
+         gate checks exit naturally, so the shared browser would have hung the gate. */
       const t = Date.now();
-      const b = await chromium.connect(SHARE_WS);
+      const b = await chromium.connectOverCDP(SHARE_CDP);
       emit({ ev: 'connect', ms: Date.now() - t, path: 'shared' });
       time(b, 'newContext', 'newContext');
-
-      /* THE SERVER MUST SURVIVE. close() here would close the shared browser for every check
-         behind this one. What the check means by close() is "I am done with my pages", and every
-         context it made is its own -- so honour that and leave the connection to process exit. */
-      const realClose = b.close.bind(b);
-      b.close = async function () {
-        try {
-          await Promise.all(b.contexts().map((c) => c.close().catch(() => {})));
-        } catch (e) { /* a context already gone is not an error */ }
-        emit({ ev: 'close', path: 'shared' });
-        return undefined;
-      };
-      b.__gateRealClose = realClose;
       return b;
     };
     shared.__gateShared = true;
@@ -141,7 +143,7 @@ if (TRACE_DIR || SHARE_WS) {
   /* ---- install ---------------------------------------------------------------------------- */
   const hook = (pw) => {
     try {
-      if (SHARE_WS && pw && pw.chromium) {
+      if (SHARE_CDP && pw && pw.chromium) {
         shareLaunch(pw.chromium);
       } else if (pw) {
         for (const engine of ['chromium', 'firefox', 'webkit']) {

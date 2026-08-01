@@ -35,9 +35,17 @@ via a `NODE_OPTIONS` preload (`test/_gate_runtime.cjs`) that wraps Playwright in
 file was edited. Inert unless asked; every hook degrades to a missing trace line rather than a
 red.
 
-**Phase 2 -- `--shared-browser`. Built, proven, OFF by default.** One `launchServer` Chromium;
-checks reach it by connect instead of launch (`seg_state`: 34ms against 450ms cold). It is off
-because 2.3% does not buy a persistent server in a correctness gate.
+**Phase 2 -- `--shared-browser`. Built, measured BOTH WAYS as ruled, and DISABLED on the
+evidence.** One shared Chromium reached over CDP; checks connect instead of launching
+(`seg_state`: 34ms against 450ms cold). Off for two independent reasons, either of which is
+sufficient: 2.3% does not buy a persistent server inside a correctness gate, and the battery the
+ruling required came back **negative, not neutral** -- 3/3 shared runs red against 8/8 clean
+without it, on `connectOverCDP` handshake timeouts when four workers contend on one
+browser-level CDP endpoint. It fails hardest under exactly the concurrency it exists to serve.
+And the hypothesis cannot be rescued: with a baseline of 0 red in 8 runs there is no flake rate
+left to lower, so a fixed shared browser could at best draw level -- never *measurably lower*,
+which is the condition the ruling set. Full receipts, including the earlier `launchServer` design
+that would have HUNG the gate on three natural-exit checks, are in the acceptance document.
 Its one genuinely interesting property is the safety mechanism: **sharing is refused
 mechanically, not by a list.** The server publishes the launch terms it was started with, and the
 shim compares every intercepted `launch()` against them, sharing only on an exact match.
@@ -83,6 +91,13 @@ pixels, a wall-clock tokenize budget, geometry "at rest") -- and arbitrated **by
 acceptance battery. What decides membership is whether a check's VERDICT moves, and no amount of
 timing data answers that.
 
+**VERDICT-STABILITY-UNDER-LOAD IS THEREFORE THE METHOD OF RECORD** for serial-tail membership in
+this repo (team-lead ruling, 2026-08-01), superseding the wall-time-spread instrument the brief
+proposed. The doctrine floor stands on top of it and is not subject to measurement at all:
+`grade_reveal`, `touch_floor`, `visual_regression`, `chrome_metrics` and the determinism/build
+checks stay in the tail regardless of what any spread or battery says, because doctrine and this
+repo's flake history outrank a small number of samples.
+
 ---
 ## What acceptance proved
 
@@ -93,7 +108,8 @@ Full receipts: `_audit/2026-08-01-gate-runtime-acceptance.md`.
 | are the six planted defects real? | **6/6** turn their target check red (two were re-aimed after the preflight caught them landing on nothing) |
 | green tree, serial vs fast | **76/76 both ways, zero disagreements**, 692.4s -> 480.5s (1.44x) |
 | six planted-broken trees, one per check class | **5/6 zero disagreements**; the 6th disagrees on one check, twice |
-| repeated runs, full parallel configuration | **8/8 verdicts identical**, zero red |
+| repeated runs, full parallel configuration | **8/8 verdicts identical**, zero red (raw AND excluding the known-nondeterministic check -- nothing went red either way) |
+| the same battery WITH `--shared-browser` (ruled: Phase 2's only path to shipping) | **3/3 runs red** -- a measured regression, so Phase 2 stays disabled |
 
 **The one disagreement is a check that disagrees with itself.** `touch_floor` was measured alone,
 serially, on a quiet box, 30 times: **4 false reds, 13.3%**, every one of them the identical
@@ -127,20 +143,66 @@ development convenience that certifies nothing, and it says so itself.
 
 ## Follow-ups this wave deliberately did not do
 
-1. **Fix `touch_floor`'s sampling** (see acceptance, "two pre-existing defects"). Removing a 13%
-   false red from a 76-check gate is worth more than anything this wave shipped: a check that
-   cries wolf teaches the team that red means "run it again", and this repo has already paid for
-   that lesson once. Not done here because it changes a check's semantics inside a wave scoped to
-   runtime orchestration, and an adversarial verify follows.
+1. **Fix `touch_floor`'s sampling. RULED (team-lead, 2026-08-01) as a separate CHECK-HYGIENE
+   MICRO-WAVE immediately after this wave's train**, bundled with the two already-queued
+   family-list coverage holes (`.nt-ov`/`.xd-ov` in `visual_regression` and `overlay_deadzone`) --
+   same class, one small train. Its scope, as ruled: the at-rest guard design (poll until
+   genuinely still -- compare against the untransformed box, or require N agreeing reads separated
+   by a rAF plus a non-identity-transform precondition), and the acceptance it deserves -- a
+   planted SLOW animation the new guard must hold against, a genuinely short control that must
+   still FAIL, and a 30-run soak with the observed rate stated, target 0/30.
+   The arc to state plainly in that wave's record: **protocol -> measurement -> root cause -> fix
+   -> protocol retired.** The conductor's standing-order flake entry for `touch_floor` is the
+   symptom record and should be cited as this defect's provenance; once the soak is clean, that
+   entry RETIRES and the standing order is amended. Removing a 13% false red from a 76-check gate
+   is worth more than anything this wave shipped: a check that cries wolf teaches the team that
+   red means "run it again", and this repo has already paid for that lesson once.
 2. **Fix `home_claims.judgeQuotedFigures`'s blind spot** on the single-thin-rail sentence.
+   Received and **routed to W1.5** (the home's staged refinement wave, which already carries
+   check-arm work). The mutant definition in `test/gate_acceptance.py` is the regression proof for
+   whoever fixes it.
 3. **Trim the serial tail.** It is the wall-clock floor and it holds 15 checks, only 5 of which
    the brief named. Trimming needs per-check evidence that a verdict does not move under load --
    the same 30-run treatment `touch_floor` got -- not an assumption.
 4. **Tune `--jobs`.** 4 was frozen before the battery so that what was measured is what ships.
    The profile projects modest gains at 6; nothing here tested it.
-5. **Decide the shared browser's fate.** Built, proven, off. 2.3% does not justify a persistent
-   server in a correctness gate; if it is ever wanted, the argument would have to be machine load
-   under `--fast`, and that argument needs its own battery.
+4b. **`syntax_check`'s 48-78s internals are OUT OF SCOPE** for this wave by ruling, and correctly
+   so -- parallelising browserless checks across lanes addresses it structurally rather than by
+   optimising one check. Named here only because the profile makes it the single largest check in
+   the gate and the next person to look at gate wall time will find it first. No trivially safe
+   internal win was identified, so nothing was built.
+5. ~~**Decide the shared browser's fate.**~~ **DECIDED, by the both-ways battery the ruling
+   required: it stays disabled.** Not "we did not measure a benefit" -- a measured regression
+   (3/3 red vs 8/8 clean). Reopening it would need a reason other than stability, because
+   stability is the one argument the evidence has now closed: there is no flake rate left to
+   lower. The code remains as a documented, disabled artifact with its failure mode written down,
+   so the next person to have this idea starts from the measurement instead of the intuition.
+
+---
+
+## Operational hazard the cold verifier should know about
+
+**This environment killed three long background runs outright during this wave**, with no signal
+the harness could catch. Each time the acceptance battery died mid-mutant, leaving a planted
+defect applied to the working tree -- and once with the deliverable already rebuilt from mutated
+source. Nothing was lost, because the recovery rule held every time: **check `git status` and the
+deliverable hash BEFORE doing anything else**, then revert and rebuild. Every recorded receipt was
+written before its run died, so no result was corrupted.
+
+Three permanent consequences:
+
+- `do_mutants` and `do_stability` are RESUMABLE, merging by id rather than overwriting. An
+  interrupted battery adds to its receipt instead of restarting or, worse, truncating it.
+- Long phases run in sub-30-minute chunks, never as one unattended block.
+- `test/_gate_browser_server.cjs` carries a PID watchdog on top of its stdin-EOF shutdown, because
+  a killed parent on Windows delivered neither EOF nor a signal and left a server plus five
+  Chromium processes on the box.
+
+Browser cleanup throughout was done by PATH filter (`ms-playwright` in the command line), by PID,
+never by image name. The operator's own ~35 Chrome processes were confirmed untouched after every
+sweep. One caution learned here: Git Bash `pkill -f` does NOT reliably reach Windows processes --
+a server it reported killing was still running, and was briefly mistaken for a teardown defect in
+the runner before the PID was checked against the one the run had reported.
 
 ---
 

@@ -245,23 +245,29 @@ def do_mutants(fast_args, only_ids=None):
                for r in res)
 
 
-def do_stability(fast_args, n):
+def do_stability(fast_args, n, tag=''):
     """RESUMABLE, for the same reason do_mutants is: this environment killed two multi-hour
     background runs outright, and a stability battery that starts from zero every time it is
-    interrupted never finishes. Runs are appended until there are `n` of them."""
-    runs = list(load_rows('stability.json'))
+    interrupted never finishes. Runs are appended until there are `n` of them.
+
+    `tag` gives a configuration its own receipt file. The ruling is that the shared browser's one
+    path to shipping is a MEASURED stability delta, which means running this battery twice --
+    once per configuration -- and the two sets of runs must not land in the same file, or the
+    comparison the ruling asks for is impossible to make afterwards."""
+    fname = 'stability%s.json' % (('_' + tag) if tag else '')
+    runs = list(load_rows(fname))
     while len(runs) < n:
         i = len(runs)
-        v, w, x = gate(fast_args, 'stab_%d' % (i + 1))
+        v, w, x = gate(fast_args, 'stab%s_%d' % (('_' + tag) if tag else '', i + 1))
         runs.append({'run': i + 1, 'wall_s': round(w, 1), 'exit': x,
                      'red': red(v), 'verdicts': v})
-        save('stability.json', runs)
+        save(fname, runs)
         print('  run %d/%d: %.1fs exit=%d red=%s' % (i + 1, n, w, x, red(v) or 'none'))
     base = runs[0]['verdicts']
     drift = [{'run': r['run'], 'diff': diff_verdicts(base, r['verdicts'])} for r in runs[1:]]
     unstable = [d for d in drift if d['diff']]
-    save('stability.json', {'runs': runs, 'drift': drift,
-                            'stable': not unstable, 'n': n})
+    save(fname, {'runs': runs, 'drift': drift, 'stable': not unstable, 'n': n,
+                 'config': ' '.join(fast_args)})
     print('stability: %d/%d runs identical to run 1%s'
           % (n - len(unstable), n, '' if not unstable else '  UNSTABLE: %s' % unstable))
     return not unstable
@@ -297,7 +303,12 @@ if __name__ == '__main__':
         for i, a in enumerate(sys.argv):
             if a == '--runs' and i + 1 < len(sys.argv):
                 n = int(sys.argv[i + 1])
-        print('\n== STABILITY: %d repeated --fast runs ==' % n)
-        ok &= do_stability(FAST, n)
+        # The two configurations get separate receipt files. The ruling is that the shared
+        # browser's only path to shipping is a MEASURED stability delta, and a delta needs two
+        # sets of runs that can still be told apart afterwards.
+        tag = 'shared' if shared else ''
+        print('\n== STABILITY: %d repeated --fast runs%s =='
+              % (n, ' (SHARED BROWSER)' if shared else ''))
+        ok &= do_stability(FAST, n, tag)
     print('\nACCEPTANCE: %s' % ('PASS' if ok else 'FAIL'))
     sys.exit(0 if ok else 1)

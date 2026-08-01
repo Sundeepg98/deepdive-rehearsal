@@ -154,7 +154,7 @@ def trace_env(name):
     if PROFILE:
         env['GATE_TRACE_DIR'] = os.path.abspath(TRACE_DIR)
     if SHARED and SHARE_TERMS:
-        env['GATE_BROWSER_WS'] = SHARE_TERMS['ws']
+        env['GATE_BROWSER_CDP'] = SHARE_TERMS['cdp']
         env['GATE_BROWSER_ARGS'] = SHARE_TERMS['args']
         env['GATE_BROWSER_EXE'] = SHARE_TERMS['executablePath']
     return env
@@ -175,7 +175,7 @@ def start_browser_server(chrome_path):
     has to remember to update."""
     if not chrome_path:
         return None
-    env = dict(os.environ, CHROME=chrome_path)
+    env = dict(os.environ, CHROME=chrome_path, GATE_OWNER_PID=str(os.getpid()))
     env.setdefault('PYTHONIOENCODING', 'utf-8')
     p = subprocess.Popen(['node', 'test/_gate_browser_server.cjs'], cwd=ROOT, env=env,
                          stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
@@ -185,7 +185,7 @@ def start_browser_server(chrome_path):
         terms = json.loads(line)
     except ValueError:
         terms = {}
-    if 'ws' not in terms:
+    if 'cdp' not in terms:
         # A shared browser that did not start is not a reason to run a DIFFERENT gate than the one
         # that was asked for -- but it is also not a reason to fail: every check falls back to its
         # own cold launch, which is the default path anyway. Say so and carry on.

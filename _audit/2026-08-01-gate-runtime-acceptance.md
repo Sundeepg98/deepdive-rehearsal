@@ -53,6 +53,12 @@ misses were informative rather than clerical.
 Both misses are recorded in the mutant definitions in `test/gate_acceptance.py` rather than
 quietly repaired, because how a mutant was aimed is part of what the mutant proves.
 
+**THE PREFLIGHT IS STANDING LITURGY FOR ACCEPTANCE BATTERIES FROM HERE ON** (team-lead ruling,
+2026-08-01). Any battery that argues from planted defects must first prove each defect lands, by
+running the check it targets and watching it go red. A battery without that step cannot
+distinguish "both configurations agreed" from "neither configuration had anything to disagree
+about", and the second is indistinguishable from success right up until it matters.
+
 ---
 
 ## The finding that matters more than the speedup
@@ -162,6 +168,81 @@ Every red set, in full, so the comparison can be re-read rather than trusted:
 **8 of 8 runs reached verdicts identical to run 1.**
 
 Wall time across the 8 runs: min 563.2 s, max 937.9 s, mean 665.4 s (spread 56.3% of mean -- TIMING varies, verdicts did not).
+
+---
+
+### Stability reported BOTH ways
+
+The ruling asks for stability raw and with the known-nondeterministic check excluded, because
+they answer different questions -- "would this configuration have held up a train?" and "is the
+ARRANGEMENT stable?".
+
+On this battery the two answers coincide: **8/8 identical raw, and 8/8 identical excluding
+`touch_floor`, because zero checks went red in any of the eight runs.** `touch_floor` passed all
+eight times, which at its measured 13.3% solo rate is unremarkable (0/8 has probability ~0.33).
+That is worth stating plainly rather than as a clean 8/8 with no caveat: the battery did not
+demonstrate that `touch_floor` is stable under `--fast`; it happened not to fire.
+
+---
+
+## Phase 2 measured BOTH WAYS, as ruled -- and it is worse, not neutral
+
+The ruling gave the shared browser exactly one path to shipping: run the parallel battery both
+ways, and if fewer concurrent Chromium processes produce a **measurably lower** flake rate, it may
+ship as part of the parallel configuration only. It does not, and the measurement is not close.
+
+| configuration | runs | runs with any red | verdict |
+|---------------|-----:|------------------:|---------|
+| `--fast --jobs 4` | 8 | **0** | 8/8 identical |
+| `--fast --jobs 4 --shared-browser` | 3 | **3** | every run red |
+
+The shared battery was stopped at 3 runs. 3/3 is decisive against, and the remaining five would
+have bought nothing but an hour of a contended box.
+
+**Failures, and the mechanism.** `dock_contrast` failed in all three runs; `overlay_keyboard` in
+two; `room_browser` in one. Every one is the same crash, and the stack names this wave's own shim:
+
+```
+browserType.connectOverCDP: Timeout 30000ms exceeded.
+  - <ws preparing> retrieving websocket url from http://127.0.0.1:9411
+  - <ws connecting> ws://127.0.0.1:9411/devtools/browser/f86e18ae-...
+  - <ws connected>  ws://127.0.0.1:9411/devtools/browser/f86e18ae-...
+```
+
+The socket opens and the CDP handshake never completes. Four parallel workers contend on a single
+browser-level CDP endpoint, which is not built to serve several Playwright clients at once -- so
+the shared browser fails hardest under exactly the concurrency it exists to support.
+
+**And no amount of further engineering can change the answer, which is the part worth stating.**
+The baseline is 0 red in 8 runs. A hypothesis of the form "this lowers the flake rate" is not
+falsifiable upward against a baseline with no flakes in it: the best possible outcome of a fixed
+shared browser is to draw level with 8/8 clean, which is not a *measurably lower* rate and
+therefore never satisfies the ruling's condition. The shared browser could be made to work; it
+could not be made to win.
+
+**Disposition: ships DISABLED, documented, exactly as the ruling's fallback specifies.**
+
+### What the earlier design cost, recorded because it is the more useful half
+
+The first implementation used `chromium.launchServer()` + `chromium.connect()`, and it did not
+merely underperform -- **it would have hung the gate.** A connected Playwright client holds an open
+WebSocket, an open socket keeps Node's event loop alive, and the shim could not let a check's
+`browser.close()` through (over `connect()` that closes the browser for every check queued
+behind). Overriding `close()` to drop only the check's own contexts left the socket open.
+Measured: `room_browser` completed all of its work and was killed at 100s (exit 124), while
+`seg_state` exited 0 -- the difference being that `seg_state` routes its exit through
+`B.finish()`, which calls `process.exit()` and force-exits past the live handle. **Three gate
+checks exit naturally** (`room_browser`, `topic_contract`, `cold_open`), so the gate would have
+hung on the first one it reached.
+
+`connectOverCDP` removed that dilemma -- Playwright does not own a browser it reached over CDP, so
+`close()` terminates the connection and leaves the browser up, with no override and no hang. It is
+what made the both-ways measurement possible at all, and it is why the measurement is a clean
+statement about contention rather than about a hang.
+
+The safety property survived every configuration: `visual_regression` refused to share in all of
+them, automatically, on its `--force-color-profile=srgb --disable-lcd-text` mismatch
+(`shared=0, cold=1` in the trace, `reason: "args"`).
 
 ---
 

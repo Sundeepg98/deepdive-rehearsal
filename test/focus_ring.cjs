@@ -333,6 +333,152 @@ const RING = (sel) => {
       null, B.ACT_MS, 'the home renders its hero and all six room cards');
 
     /* 7-8. the hero -- W15's fix at styles.css:2007, previously guarded by nothing. */
+    /* THE QUIET-FOCUS WINDOW, and why this arm now presses a key first.
+       The home autofocuses its one primary action so Enter is the whole daily loop (Z1's hard
+       floor). Chromium matches :focus-visible on that LOAD-TIME programmatic focus, so with zero
+       user interaction the button wore the highest-contrast edge on the screen -- measured 14.72:1
+       against the panel -- which is the accessory the coherence ruling's one-signature rule exists
+       to keep quiet. The decision (round 3 item 11) was to keep the autofocus and quiet only its
+       ring until the first real keystroke, which is also what Firefox does natively.
+       So this arm asks its own question more faithfully than before: "does keyboard focus in this
+       app look like this app?" is a question about a KEYBOARD USER, and a keyboard user has by
+       definition pressed a key. The keystroke below puts the page in that state; the halo
+       assertion is unchanged and still measures --rm against a live negative control.
+       The quiet state itself is not taken on trust -- it gets its own arm immediately after, so
+       the design decision can fail too rather than merely being asserted in a freeze. */
+    const quiet = await hp.evaluate(() => {
+      const c = document.querySelector('#home .hm-cta[data-autofocus]');
+      if (!c) return { err: 'no autofocused CTA' };
+      const cs = getComputedStyle(c);
+      return { focused: document.activeElement === c, outline: cs.outlineStyle, shadow: cs.boxShadow };
+    });
+    chk('[' + theme + '] the autofocused CTA is focused but paints NO ring before any keystroke',
+      !quiet.err && quiet.focused && quiet.outline === 'none' && quiet.shadow === 'none',
+      JSON.stringify(quiet));
+
+    /* THE QUIET WINDOW IS ONCE PER SESSION, AND THIS ARM REACHES PAST FIRST PAINT.
+       It shipped re-adding the quiet class and re-focusing on EVERY render -- and render() is the
+       rerender callback Panels.bind holds, which the per-card reset control calls. A keyboard user
+       who reset a topic therefore had focus moved to the CTA with NO indicator at all: focus on a
+       control with nothing to show for it, which is the defect the whole file exists to prevent.
+       Pressing a key and then forcing a re-render is the state that was broken; asserting the ring
+       SURVIVES it is what makes the once-per-session rule falsifiable. */
+    await hp.keyboard.press('Shift');          /* a real keystroke -- the ring re-arms for good */
+    const afterRerender = await hp.evaluate(async () => {
+      if (window.HomeView && HomeView.render) HomeView.render();
+      await new Promise((r) => setTimeout(r, 60));
+      const c = document.querySelector('#home .hm-cta[data-autofocus]');
+      const host = document.getElementById('home');
+      return {
+        quietClass: !!(host && host.classList.contains('hm-quiet-focus')),
+        focused: document.activeElement === c,
+      };
+    });
+    chk('[' + theme + '] a RE-RENDER after any keystroke never re-quiets the ring (the reset '
+      + 'control calls render(), and focus with no indicator is a trap)',
+      afterRerender.quietClass === false, JSON.stringify(afterRerender));
+
+    /* A RING THE USER CANNOT SEE IS NOT AN INDICATOR. The arm above asserts the ring is PAINTED;
+       it re-rendered at scrollY 0, the one scroll position at which the CTA is guaranteed to be on
+       screen, so it passed on every broken row a judge measured -- focus restored to a control
+       145px above the viewport on the desktop and 1502px above it on the phone, because
+       `focus({preventScroll:true})` suppressed the scroll that would reveal it. The user-facing
+       outcome the whole item was written against is "a keyboard user cannot tell where focus
+       went", and only this assertion measures that: re-render from DEEP in the page, then require
+       the focused rect to intersect the viewport. */
+    /* ITS OWN PAGE, AND A MATURE RECORD ON IT. The arm above ran on `hp`, a FRESH INSTALL, where
+       the home is 1349px tall against an 800px viewport -- a maxScroll of 549. Scrolling to the
+       bottom of that page and re-rendering leaves the CTA at top 220: on screen, always, whatever
+       the focus call does. So the assertion was measuring a page too SHORT to stage the defect,
+       and passed against BOTH mutants (the reveal pass deleted, and `preventScroll:true` restored).
+       The rows the judge measured -- focus 145px above the desktop viewport, 1502px above the
+       phone's -- were a POPULATED home, which is the state a user is in on every day but the
+       first. Seeded the same way home_reflow seeds, and on a separate page so the halo arms above
+       keep the fresh-install state their own expectations are written against. */
+    const vp = await ctx.newPage();
+    /* A PARTIAL record, which is what makes this page tall enough to stage the defect. A FULLY
+       graded seed collapses the home -- every "up next" is spent, the weak chips are empty -- to
+       668px of scroll against an 800px viewport, and `onScreen` is then true for free. Eight cards
+       graded per topic with a revisit flag is a mid-campaign user: the continue block, the weak
+       chips and the full library are all present, the page runs past 1000px of scroll, and it is
+       the shape the judge measured focus 145px above the desktop viewport on. */
+    await B.gotoApp(vp, HTML, { hash: '#home' });
+    await vp.evaluate(() => {
+      try {
+        localStorage.clear();
+        TopicRegistry.ids().forEach((id) => {
+          const cards = TopicRegistry.get(id).data.bank.cards;
+          const keys = CardId.forCards(cards); const map = {};
+          cards.forEach((c, i) => { if (i < 8) map[keys[i]] = (i % 3) ? 3 : 2; });
+          localStorage.setItem('ddr.v1.progress.' + id, JSON.stringify({
+            got: 5, shk: 3, done: 8, tot: cards.length,
+            revisit: [keys[0]], cards: map, cv: 1, ts: Date.now() }));
+        });
+      } catch (e) {}
+    });
+    await B.gotoApp(vp, HTML, { hash: '#home' });
+    await B.until(vp, () => !!document.querySelector('#home .hm-cta'), null, B.ACT_MS,
+      'the seeded home renders its primary action');
+    /* the same keystroke the arms above press: this is a question about a KEYBOARD user */
+    await vp.keyboard.press('Tab');
+
+    const revealed = await vp.evaluate(async () => {
+      /* THE ORDER IS THE WHOLE TEST, and it is the order a user experiences: they are reading
+         somewhere down the page when something re-renders the home -- the reset control, a grade
+         landing, a theme flip. Focus goes to the primary action at the top. With the scroll
+         suppressed it stays there, off screen, and the keyboard user has no idea where they are.
+
+         Two things had to be true before this could fail at all, and both cost a round to find:
+           - the page must be TALL. Seeded fully-graded, or not seeded at all, the home is 549-668px
+             of scroll against an 800px viewport and the control is on screen no matter what the
+             focus call does -- which is why the first version of this arm passed against every
+             mutant it was given.
+           - the scroll must SURVIVE. The home restores its own scroll position shortly after load,
+             and a scrollTo issued before that lands is silently undone (measured: scrollY back to
+             0). Hence the settle below, and hence `scrolledTo` is REPORTED rather than assumed --
+             the caller refuses to grade a run in which the page never actually scrolled. */
+      await new Promise((r) => setTimeout(r, 600));
+      window.scrollTo(0, document.documentElement.scrollHeight);
+      await new Promise((r) => setTimeout(r, 200));
+      const scrolledTo = Math.round(window.scrollY);
+      if (window.HomeView && HomeView.render) HomeView.render();
+      await new Promise((r) => setTimeout(r, 500));
+      const el2 = document.activeElement;
+      const r2 = el2 ? el2.getBoundingClientRect() : null;
+      return {
+        scrolledTo,
+        afterY: Math.round(window.scrollY),
+        focused: el2 ? (el2.className || el2.tagName).toString().split(' ')[0] : null,
+        top: r2 ? Math.round(r2.top) : null,
+        vh: window.innerHeight,
+        maxScroll: Math.round(document.documentElement.scrollHeight - window.innerHeight),
+        onScreen: !!r2 && r2.bottom > 0 && r2.top < window.innerHeight,
+      };
+    });
+
+    await vp.close();
+    /* A PAGE THAT CANNOT STRAND FOCUS CANNOT JUDGE IT. If the seeded home is not appreciably
+       taller than the viewport, `onScreen` is true for free and a green here is unearned -- which
+       is exactly the state that let two mutants through. Fail loudly rather than pass cheaply. */
+    /* A RUN THAT COULD NOT STAGE THE DEFECT MUST NOT REPORT A PASS. Both preconditions are
+       measured, not assumed: a page tall enough to put the control off screen, and a scroll that
+       actually survived to the moment of the re-render. Either one missing and `onScreen` is true
+       for free -- the exact state in which this assertion once passed against a restored
+       `preventScroll: true`. Verified by mutant: with the scroll suppressed this row reads
+       top -845, onScreen false. */
+    if (!(revealed.maxScroll > revealed.vh) || !(revealed.scrolledTo > revealed.vh / 2)) {
+      chk('[' + theme + '] the visibility arm could stage the defect it judges', false,
+        'maxScroll ' + revealed.maxScroll + ' / viewport ' + revealed.vh +
+        ' / scrolled to ' + revealed.scrolledTo +
+        ' -- the page was too short, or the scroll did not survive, so this assertion could not fail');
+    } else {
+      chk('[' + theme + '] after a re-render from deep in the page, the focused control is ON SCREEN '
+        + '(a ring painted 1500px above the viewport is not an indicator)',
+        revealed.onScreen === true, JSON.stringify(revealed));
+    }
+
+    await hp.evaluate(() => { const c = document.querySelector('#home .hm-cta'); if (c) c.blur(); });
+
     judgeHalo('[' + theme + '] .hm-cta focus halo derives from the room it will OPEN (--rm), not the roomless --acc -- W15 regression guard',
       await hp.evaluate(HALO, '#home .hm-cta'));
 

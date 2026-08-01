@@ -87,7 +87,15 @@
       try { window.scrollTo(0, 0); } catch (e) {}
       return;
     }
-    if (document.documentElement.dataset.view === 'home') delete document.documentElement.dataset.view;
+    if (document.documentElement.dataset.view === 'home') {
+      delete document.documentElement.dataset.view;
+      /* The sidebar is one element with two tenants and its accessible NAME follows the tenant --
+         HomeView.render() sets "Home controls" on the way in, and leaving is the only place that
+         can put the topic name back. A landmark whose name describes the other route is worse
+         than an unnamed one, and this is the symmetric half of that rename. */
+      var _sb = document.querySelector('.sidebar');
+      if (_sb) _sb.setAttribute('aria-label', 'Topic controls');
+    }
 
     /* Topic axis: a deep link / back-forward to a DIFFERENT topic switches it BEFORE the
        view shows, so panes are on the right topic (no topic-1-then-flip flash). In the

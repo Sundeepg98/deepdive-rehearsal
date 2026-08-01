@@ -947,6 +947,32 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # to a compliant control. Plants a shrunken input every run and aborts if the 44px
                      # arm does not fire. RED on the pre-fix build for the four genuine offenders.
                      ('touch_floor', 'test/touch_floor.cjs'),
+                     # REFLOW, MEASURED AS CLIPPING RATHER THAN AS SCROLL (appeal/home-instrument).
+                     # The usual predicate -- documentElement.scrollWidth > clientWidth -- is BLIND in
+                     # a fixed shell: a position:fixed bar with overflow:hidden does not grow the
+                     # document when its contents are too wide, it CLIPS them, so the document stays
+                     # exactly viewport-width and the predicate stays green while a control sits off
+                     # screen. Measured on this wave before this file existed: at 390px the home's
+                     # Theme button painted its right edge at 394 inside a 390px bar, unreachable at
+                     # any scroll position, with scrollWidth reporting 390 and every arm green. This
+                     # compares each element's painted box against its nearest CLIPPING ancestor
+                     # instead, and treats a horizontally-scrollable clipper as reachable rather than
+                     # lost. Two mutants every run -- one in the fixed bar (the case scrollWidth
+                     # cannot see) and one in the flow -- and it ABORTS if either goes undetected.
+                     ('home_reflow', 'test/home_reflow.cjs'),
+                     # THE HOME MAY NOT PRINT A CLAIM IT CANNOT DERIVE. Three consecutive rounds of
+                     # judgment found the same class in different clothes -- the gauge naming a thin
+                     # rail on an all-zero record, then "Every rail is full" printed above two
+                     # visibly empty rails, then "stopped at step 1 of 9" fabricated from a field the
+                     # record never stored -- and every instance rode in on a CORRECT fix. None was
+                     # catchable: grep across test/ found ZERO references to hm-verdict, "thin rail"
+                     # or Altitude, so the signature's punchline had no arm that could fail. This
+                     # drives nine edge records (empty / one-solid / two tiers tied under a higher
+                     # third, both directions / level / perfect / absent-field / mixed-position /
+                     # no-record) at two viewports and asserts each rendered claim against the
+                     # NUMERALS RENDERED BESIDE IT. Four planted mutants, each a defect a judge
+                     # found on a shipped build; aborts if any goes undetected.
+                     ('home_claims', 'test/home_claims.cjs'),
                      # THE CHECK THAT ACTUALLY LOOKS AT THE SCREEN. Everything above this line reads the
                      # DOM, the source, or a computed style; none of them can tell you what was PAINTED.
                      # The old `visual_regression.py` claimed to and could not -- it was a regex over CSS

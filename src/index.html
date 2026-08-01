@@ -26,7 +26,13 @@
      one named, is worse than none named. The voice matches the app's existing landmark names
      (nav#topicnav is "Switch topic"). This matters more here than it would elsewhere: landmarks are
      the fallback route when the heading list is empty, which on a topic route it very nearly is. -->
-<div class="app"><aside class="sidebar" aria-label="Topic controls"><div class="side-id">
+<!-- THE SIDEBAR HAS TWO TENANTS, ONE ELEMENT (appeal/home-instrument).
+     The topic tenant is everything below .side-id and is UNTOUCHED. The home tenant is
+     #homerail + #hometabs, rendered by home-view.js and shown only by
+     html[data-view="home"]. Two tenants rather than a second sidebar because the geometry,
+     the sticky/scroll behaviour and the mobile fixed-chrome accounting are already solved
+     here -- a parallel shell would have to re-solve all three and then be kept in sync. -->
+<div class="app"><aside class="sidebar" aria-label="Topic controls"><div class="hm-rail" id="homerail"></div><div class="side-id">
   <!-- .locator role="img": ARIA prohibits aria-label on a roleless <span>, and the name IS
        needed (visible text is only "ARCingestion layer"). Rationale + the matching runtime
        rewrite live in topic-protocol.js applyIdentity() -- KEEP THE TWO IN SYNC. -->
@@ -127,6 +133,10 @@
          irreversible action does not belong on the screen the app opens on. Wired by panels.js. -->
     <button class="crambtn" id="resetall" type="button"><span class="mb-tx"><span class="mb-t">Reset all saved progress</span><span class="mb-d"> &mdash; clears every topic, permanently</span></span></button></div>
 
+  <!-- The home tenant's BOTTOM chrome. On the phone this is the bottom tab bar and it is
+       position:fixed, so chrome-metrics.js measures it exactly as it measures .mockcta --
+       see the sum in that module. On desktop it is display:none and steals nothing. -->
+  <nav class="hm-tabs" id="hometabs" aria-label="Home sections"></nav>
   </aside>
     <main class="stage" role="main" aria-label="Study content">
     <!-- role/aria-level: this is the pane title the app already paints on every route (shell.js
@@ -174,6 +184,21 @@
   <!--@build:include panes/open.html-->
   <!--@build:include panes/viz.html-->
 </main>
+  <!-- THE HOME, now a TENANT OF THE SHELL rather than a replacement for it.
+       It sits in the .stage slot (a sibling of .stage, not a child) and takes flex:1 on the
+       home route while .stage is hidden. It is still NOT a .pane: shell.js captures a STATIC
+       NodeList of .pane at parse, and an element that is a .pane but arrives later never
+       receives .on -- so the class is deliberately .homev and switchTab's NodeList remains
+       structurally unable to contain it. Empty here; home-view.js fills it. Visibility is
+       CSS-only via html[data-view="home"] -- never the `hidden` attribute, which any author
+       `display` rule silently beats.
+       WHY IT MOVED (appeal/home-instrument): as a sibling of .app it could only be shown by
+       hiding .app, which is why the home route was the one surface with no application frame
+       -- styles.css said `html[data-view="home"] .app{display:none}` in as many words. -->
+  <!-- aria-label: this main had no accessible name, so the AX tree offered "main" with nothing to
+       distinguish it. tabindex="-1" makes it the skip link's target (a skip link that cannot move
+       focus is decoration); focusable, never a tab stop. -->
+  <main class="homev" id="home" aria-label="Your rehearsal record" tabindex="-1"></main>
   <aside class="companion" aria-label="Rehearsal companion">
     <div class="cmp-inner" tabindex="0" role="region" aria-label="Coaching for this view">
       <button class="cmp-fold" type="button" aria-label="Hide companion panel" title="Hide companion">&#8250;</button>
@@ -206,18 +231,18 @@
       </div>
       <div class="cmp-block cmp-related" id="cmpRelated" hidden></div>
     </div>
+    <!-- The companion's HOME tenant: the 46-topic library, on its own scroll, in the column
+         that already knows how to be a sticky full-height rail. -->
+    <div class="hm-lib" id="homelib"></div>
   </aside>
   <button class="cmp-reopen" type="button" aria-label="Show companion panel"><span class="cmp-reopen-ic" aria-hidden="true">&#8249;</span><span class="cmp-reopen-t">Coaching</span></button>
+  <!-- The status census. A direct child of .app so it is out of the flex row (position:fixed),
+       and rendered ONLY on the home route in this wave: new furniture on a topic route would
+       move fourteen VR baselines this wave is forbidden to touch. -->
+  <footer class="hm-status" id="homestatus"></footer>
 </div>
 
-<!-- THE HOME. A SIBLING of .app, deliberately NOT a .pane and NOT inside .stage.
-     shell.js:34 does `const panes = document.querySelectorAll('.pane')` -- a STATIC NodeList
-     captured at parse. An element that is a .pane but arrives later never receives .on, and
-     .pane{display:none} keeps it dark forever: a fully-populated DOM that paints nothing. Being a
-     sibling makes switchTab's NodeList structurally unable to contain it. Empty here; home-view.js
-     fills it, exactly as the overlays do. Visibility is CSS-only via html[data-view="home"] -- NOT
-     the `hidden` attribute, which any author `display` rule silently beats. -->
-<main class="homev" id="home"></main>
+<!-- (THE HOME now lives INSIDE .app, in the .stage slot -- see the block above .companion.) -->
 
 <!--@build:include overlays/mock-run.html-->
 

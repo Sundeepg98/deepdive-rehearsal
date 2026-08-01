@@ -73,12 +73,12 @@ const URL = 'file:///' + path.resolve(HTML).replace(/\\/g, '/');
     const page = await ctx.newPage();
     await page.addInitScript((t) => { try { localStorage.setItem('ddr.v1.theme', JSON.stringify(t)); } catch (e) {} }, theme);
     await B.gotoApp(page, HTML, { hash: '' });
-    await B.until(page, () => !!document.querySelector('#home .hm-brand'),
+    await B.until(page, () => !!document.querySelector('.hm-rail .hm-brand'),
       null, B.ACT_MS, 'home brand mark mounted');
     const r = await page.evaluate((rooms) => {
-      const brand = document.querySelector('#home .hm-brand');
+      const brand = document.querySelector('.hm-rail .hm-brand');
       const panel = document.querySelector('#home .ix-panel');
-      if (!brand) return { err: 'no #home .hm-brand' };
+      if (!brand) return { err: 'no .hm-rail .hm-brand (the home brand mark)' };
       if (!panel) return { err: 'no #home .ix-panel to read the brand neutral from' };
       const norm = (s) => (s || '').trim().toLowerCase();
       /* resolve a colour token to what it actually PAINTS, so a hex and an rgb() of the

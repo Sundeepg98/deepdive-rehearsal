@@ -91,9 +91,13 @@ header, which is component-internal, not stack rhythm.
 
 SELF-TEST, every run. This repo has shipped four checks that could not fail, so
 the analyser runs over synthetic fixtures first: the legitimate shapes must stay
-clean, and SIX planted defects must each be flagged -- a raw px gap, a bare
+clean, and NINE planted defects must each be flagged -- a raw px gap, a bare
 primitive gap, a raw measure, a bare primitive measure, a rhythm gap inside an
-@media block, and a NEW home block that no registry entry covers. The shorthand
+@media block, a NEW home block that no registry entry covers, a raw display
+measure, and BOTH directions of type-measure misuse (the display measure on body
+copy, the body measure on display type). Those last two are the VALUE arm, added
+2026-08-01 after a judge proved the form arm could not fail: the token spelling
+was impeccable and the rule it states was applied backwards. The shorthand
 slot arithmetic is asserted separately (a 3-value margin's bottom is its third
 slot, a 2-value margin's bottom is its first). If any is missed, or any
 legitimate shape is flagged, the check ABORTS rather than report a green it did
@@ -115,17 +119,54 @@ COMMENT_RE = re.compile(r'/\*.*?\*/', re.S)
 HOME_SEL_RE = re.compile(r'(^|[\s,>+~])(#home\b|\.hm-[A-Za-z0-9_-]+)')
 GAP_TOKEN_RE = re.compile(r'^var\(\s*--gap-home-[a-z0-9-]+\s*\)$')
 MEASURE_TOKEN_RE = re.compile(r'^var\(\s*--measure-home\s*\)$')
+# THE SECOND MEASURE (appeal/home-instrument). --measure-display is a different KIND of measure:
+# it is the rule that display type takes a shorter line than body type, and it lands on the hero
+# question INSIDE a block, not on the block. So a rule whose only max-width is the display measure
+# is component-internal -- the same category as .hm-cta-d's 2px nudge -- and is NOT a member of the
+# centred column, which is what this check's scope boundary is derived from. It is still JUDGED, so
+# a raw `41ch` cannot ride in under the new name.
+DISPLAY_TOKEN_RE = re.compile(r'^var\(\s*--measure-display\s*\)$')
+BODY_MEASURE_RE = re.compile(r'^var\(\s*--measure-body\s*\)$')
 ZERO_RE = re.compile(r'^0[a-z%]*$', re.I)
+
+# THE VALUE ARM -- because the form arm could not fail (proved by a judge, 2026-08-01).
+# `ch` is font-relative, so `--measure-display` and `--measure-body` are not two names for one
+# idea; they resolve to different physical widths ON THE SAME RULE depending on its font-size.
+# Shipping the DISPLAY measure on 12px body copy resolved to 265px against the hero's 556px --
+# the rule the display token was minted to state, applied backwards, on the one pair it governs --
+# and the form-only arm passed it, because the token spelling was impeccable. So a measure is now
+# checked against the TYPE TIER of the rule it lands on.
+#
+# The tiers are the app's own font-size roles, read from the same declaration.
+DISPLAY_SIZES = {'--font-size-heading', '--font-size-display', '--font-size-display-xl',
+                 '--font-size-title', '--font-size-subhead'}
+BODY_SIZES = {'--font-size-nano', '--font-size-micro', '--font-size-caption', '--font-size-small',
+              '--font-size-body', '--font-size-reading-sm', '--font-size-reading'}
+FONT_TOKEN_RE = re.compile(r'var\(\s*(--font-size-[a-z0-9-]+)\s*\)')
 
 # THE REGISTRY. Cross-checked both ways against what DISCOVERY finds: an entry
 # nothing matches is STALE, a discovered site with no entry is NEW. Both fail.
 # This is not the enforcement mechanism -- discovery is -- it is the record that
 # makes a change to the home stack's shape deliberate and reviewable.
+# RE-ANCHORED by appeal/home-instrument, via the procedure this file documents above
+# ("a new section joining the stack is exactly the moment its rhythm should be a
+# decision"). The home joined the app shell, so the stack's membership changed:
+#   GONE  .hm-state    the one-line state moved into the status census bar
+#   GONE  .hm-cta      the decision hero is now a COMPONENT inside .hm-continue and no
+#                      longer declares the content measure, so it is component-internal
+#                      and correctly out of scope -- exactly like .hm-cta-d already was
+#   GONE  .hm-top      the home header moved into the rail; same exit, same reason
+#   NEW   .hm-continue the hero: the probe question, the resume line, the one action
+#   NEW   .hm-alt      the altitude gauge
+#   NEW   .hm-duo      the paired still-shaky / this-week row
+# All three departed tokens are deleted from design-tokens/tokens.json in the same commit;
+# leaving them would be an orphan the cross-check cannot see (it reads the stylesheet,
+# not the token file), which is why they go together.
 REGISTRY = {
-    ('.hm-top', 'margin-bottom'): '--gap-home-header',
     ('.hm-lead', 'margin-bottom'): '--gap-home-lead',
-    ('.hm-state', 'margin-bottom'): '--gap-home-state',
-    ('.hm-cta', 'margin-bottom'): '--gap-home-decision',
+    ('.hm-continue', 'margin-bottom'): '--gap-home-continue',
+    ('.hm-alt', 'margin-bottom'): '--gap-home-altitude',
+    ('.hm-duo', 'margin-bottom'): '--gap-home-duo',
     ('.hm-rooms', 'margin-bottom'): '--gap-home-rooms',
     ('.hm-sec', 'margin-bottom'): '--gap-home-section',
     ('.hm-tele', 'margin-bottom'): '--gap-home-telemetry',
@@ -254,6 +295,7 @@ def sites(text):
             continue
         slots = {}
         measure = None
+        size = None
         for prop, val in declarations(body):
             if prop == 'margin':
                 slots.update(margin_slots(val))
@@ -261,18 +303,29 @@ def sites(text):
                 slots[prop] = val
             elif prop == 'max-width':
                 measure = val
+            elif prop in ('font-size', 'font'):
+                m = FONT_TOKEN_RE.search(val)
+                if m:
+                    size = m.group(1)
         if measure is None or ZERO_RE.match(measure) \
                 or measure in ('none', 'auto', 'inherit', '100%'):
             continue          # not a column member: component-internal, out of scope
+        if DISPLAY_TOKEN_RE.match(measure) or BODY_MEASURE_RE.match(measure):
+            # neither the DISPLAY nor the BODY measure puts a block in the centred column: both
+            # land on type INSIDE a block. Report the measure so its token form is judged, carry
+            # the rule's own font-size so its VALUE can be judged too, and take no rhythm gaps --
+            # the margins around a hero question are internal spacing, not stack rhythm.
+            found.append((lineno, sel, 'max-width', measure, at, size))
+            continue
         for prop, val in sorted(slots.items()):
             if ZERO_RE.match(val) or val in ('auto', 'inherit'):
                 continue
-            found.append((lineno, sel, prop, val, at))
-        found.append((lineno, sel, 'max-width', measure, at))
+            found.append((lineno, sel, prop, val, at, size))
+        found.append((lineno, sel, 'max-width', measure, at, size))
     return found
 
 
-def judge(prop, val, expect=None):
+def judge(prop, val, expect=None, size=None):
     """None if the declaration is compliant, else why it is not.
 
     `expect` is the token the REGISTRY assigns to this exact slot. Checking the
@@ -283,14 +336,34 @@ def judge(prop, val, expect=None):
     A semantic layer whose names can be swapped without consequence is not a
     semantic layer."""
     if prop == 'max-width':
+        # THE VALUE ARM. The two type measures are not interchangeable, and the form arm cannot
+        # see the difference: `ch` is font-relative, so the same token spelled correctly resolves
+        # to 265px on 12px copy and 556px on 21px copy. Judge the measure against the TYPE TIER of
+        # the rule it lands on, which is the thing the rule is actually about.
+        if DISPLAY_TOKEN_RE.match(val):
+            if size in BODY_SIZES:
+                return ('the DISPLAY measure on BODY type (%s). `ch` is font-relative, so this '
+                        'resolves to a much narrower line than the same token on display type -- '
+                        'the rule --measure-display exists to state is that display takes a '
+                        'SHORTER measure than body, and putting it here applies that rule '
+                        'backwards. Use var(--measure-body)' % size)
+            return None
+        if BODY_MEASURE_RE.match(val):
+            if size in DISPLAY_SIZES:
+                return ('the BODY measure on DISPLAY type (%s). Display type takes a shorter '
+                        'measure than body type; 68 characters of display is the long thin line '
+                        'this pair of tokens exists to prevent. Use var(--measure-display)' % size)
+            return None
         if MEASURE_TOKEN_RE.match(val):
             return None
         if val.startswith('var('):
-            return ('the home content measure written as a bare primitive. It is the '
-                    'same width nine blocks share; var(--measure-home) says so, '
-                    'var(--space-980) says "980, for reasons unrecorded"')
-        return ('a RAW home content measure. Nine blocks share this width and none '
-                'of them said so. Use var(--measure-home)')
+            return ('a home measure written as a bare primitive. The column is '
+                    'var(--measure-home) and the hero line length is '
+                    'var(--measure-display); var(--space-980) says "980, for reasons '
+                    'unrecorded"')
+        return ('a RAW home measure. Use var(--measure-home) for the content column, or '
+                'var(--measure-display) for display type, which takes a shorter line '
+                'than body type -- a raw 41ch says the number and not the rule')
     if GAP_TOKEN_RE.match(val):
         if expect and val != 'var(%s)' % expect:
             return ('the WRONG semantic slot: this block is %s, but the declaration '
@@ -323,6 +396,8 @@ FIXTURE_OK = '''
 .hm-cta-d{margin-top:2px}
 #home .ix-foot{margin-top:var(--space-28)}
 #home .ix-panel{width:100%;max-width:var(--measure-home);margin:0 auto}
+.hm-q{font-size:var(--font-size-heading);max-width:var(--measure-display);margin:var(--space-10) 0 var(--space-12)}
+.hm-since{font-size:var(--font-size-caption);max-width:var(--measure-body)}
 /* prose: this rule used to say margin:0 auto var(--space-24) -- not a declaration */
 '''
 # The three OUT-OF-SCOPE shapes above are the correction this check made to its own
@@ -339,6 +414,9 @@ FIXTURE_BAD = '''
   .hm-tele{max-width:var(--measure-home);margin:0 auto 12px}
 }
 .hm-brandnew{max-width:var(--measure-home);margin:0 auto var(--gap-home-brandnew)}
+.hm-rawdisplay{max-width:41ch;margin:var(--space-10) 0}
+.hm-swapped{font-size:var(--font-size-caption);max-width:var(--measure-display)}
+.hm-swapped2{font-size:var(--font-size-heading);max-width:var(--measure-body)}
 '''
 
 
@@ -369,46 +447,65 @@ def self_test():
         problems.append('the correct slot for a block was rejected')
 
     found = sites(FIXTURE_OK)
-    bad = [(s, p, v, judge(p, v)) for _, s, p, v, _ in found if judge(p, v)]
+    bad = [(s, p, v, judge(p, v, None, sz)) for _, s, p, v, _, sz in found if judge(p, v, None, sz)]
     if bad:
         problems.append('false positive on a legitimate shape: %s'
                         % ', '.join('%s %s:%s' % (b[0], b[1], b[2]) for b in bad))
-    if not any(s == '.hm-top' and p == 'margin-bottom' for _, s, p, _, _ in found):
+    if not any(s == '.hm-top' and p == 'margin-bottom' for _, s, p, _, _, _ in found):
         problems.append('missed the rhythm gap in a 3-value margin shorthand')
-    if any(s == '.hm-room' for _, s, _, _, _ in found):
+    if any(s == '.hm-room' for _, s, _, _, _, _ in found):
         problems.append('component-internal padding/gap was pulled INTO scope '
                         '(.hm-room) -- the boundary is the point')
-    if any(p == 'margin-top' and s == '#home .ix-panel' for _, s, p, _, _ in found):
+    if any(p == 'margin-top' and s == '#home .ix-panel' for _, s, p, _, _, _ in found):
         problems.append('a zero margin slot was treated as a rhythm gap')
     # the boundary correction, pinned: a home block with a margin but NO measure is
     # not a member of the centred column and carries no stack rhythm
+    # THE DISPLAY MEASURE, pinned both ways (appeal/home-instrument): a block carrying only the
+    # display measure must be JUDGED (so a raw 41ch cannot ride in) but must NOT be pulled into
+    # the centred column and asked for a stack-rhythm role name.
+    if any(s == '.hm-q' and p != 'max-width' for _, s, p, _, _, _ in found):
+        problems.append('.hm-q was asked for a stack-rhythm role. A block whose only measure is '
+                        'the DISPLAY measure is component-internal -- the margins around a hero '
+                        'question are internal spacing, not column rhythm')
+    if not any(s == '.hm-q' and p == 'max-width' for _, s, p, _, _, _ in found):
+        problems.append('the display measure was not judged at all -- a raw 41ch could then '
+                        'ship under the new token name with nothing looking at it')
+    if judge('max-width', 'var(--measure-display)') is not None:
+        problems.append('the display measure token was rejected as a measure')
+
     for sel, what in (('.hm-h', "a heading's gap to its own body"),
                       ('.hm-cta-d', 'a 2px optical nudge inside the hero button'),
                       ('#home .ix-foot', 'an override of the shared panel component')):
-        if any(s == sel for _, s, _, _, _ in found):
+        if any(s == sel for _, s, _, _, _, _ in found):
             problems.append('%s (%s) was pulled INTO scope -- a home block that does '
                             'not declare the content measure is not a member of the '
                             'stack, and demanding a role name for it is the noise the '
                             'scope note exists to prevent' % (sel, what))
 
     found = sites(FIXTURE_BAD)
-    whys = dict(((s, p), judge(p, v)) for _, s, p, v, _ in found)
+    whys = dict(((s, p), judge(p, v, None, sz)) for _, s, p, v, _, sz in found)
     for key, want, why in ((('.hm-state', 'margin-bottom'), 'RAW home stack gap',
                             'a raw px gap'),
                            (('.hm-cta', 'margin-bottom'), 'bare pixel primitive',
                             'a gap left on the bare primitive'),
-                           (('.hm-rooms', 'max-width'), 'RAW home content measure',
+                           (('.hm-rooms', 'max-width'), 'RAW home measure',
                             'a raw px measure'),
                            (('.hm-sec', 'max-width'), 'bare primitive',
                             'a measure left on the bare primitive'),
                            (('.hm-tele', 'margin-bottom'), 'RAW home stack gap',
-                            'a rhythm gap inside an @media block')):
+                            'a rhythm gap inside an @media block'),
+                           (('.hm-rawdisplay', 'max-width'), 'RAW home measure',
+                            'a raw 41ch display measure'),
+                           (('.hm-swapped', 'max-width'), 'DISPLAY measure on BODY type',
+                            'the display measure applied to body copy'),
+                           (('.hm-swapped2', 'max-width'), 'BODY measure on DISPLAY type',
+                            'the body measure applied to display type')):
         if key not in whys or not whys[key]:
             problems.append('missed %s (%s %s)' % (why, key[0], key[1]))
         elif want not in whys[key]:
             problems.append('caught %s but blamed the wrong thing: %s'
                             % (why, whys[key]))
-    if not any(s == '.hm-tele' and at for _, s, _, _, at in found):
+    if not any(s == '.hm-tele' and at for _, s, _, _, at, _ in found):
         problems.append('a rule inside @media lost its at-rule context')
     # a NEW home block must be discovered even though no registry entry covers it
     if ('.hm-brandnew', 'margin-bottom') not in whys:
@@ -434,8 +531,8 @@ def main():
 
     found = sites(text)
     fails, seen = [], set()
-    for lineno, sel, prop, val, at in found:
-        why = judge(prop, val, REGISTRY.get((sel, prop)))
+    for lineno, sel, prop, val, at, _sz in found:
+        why = judge(prop, val, REGISTRY.get((sel, prop)), _sz)
         if prop != 'max-width':
             seen.add((sel, prop))
         if why:
@@ -455,10 +552,14 @@ def main():
     print('    rhythm gaps  : %d discovered' % len(gaps))
     print('    measures     : %d discovered' % len(measures))
     print('    registry     : %d slot(s)' % len(REGISTRY))
-    print('    self-test    : 6 planted defects found (raw gap; bare-primitive gap;')
+    print('    self-test    : 9 planted defects found (raw gap; bare-primitive gap;')
     print('                   raw measure; bare-primitive measure; a gap inside')
-    print('                   @media; an unregistered NEW home block) + shorthand')
-    print('                   slot arithmetic asserted. Legitimate shapes,')
+    print('                   @media; an unregistered NEW home block; a RAW display')
+    print('                   measure; and BOTH directions of type-measure misuse --')
+    print('                   display measure on body copy, body measure on display')
+    print('                   type) + shorthand slot arithmetic asserted, and the')
+    print('                   display measure pinned BOTH ways -- judged, but never')
+    print('                   pulled into the centred column. Legitimate shapes,')
     print('                   component-internal gap/padding, a zero margin slot')
     print('                   and comment-prose all stayed clean')
 
@@ -479,7 +580,7 @@ def main():
     print('    cross-check  : %d NEW, %d STALE' % (len(new), len(stale)))
 
     if VERBOSE:
-        for lineno, sel, prop, val, at in found:
+        for lineno, sel, prop, val, at, _sz in found:
             print('      %-22s %-14s %-26s %s'
                   % (sel[:22], prop, val[:26], ('[' + at + ']') if at else ''))
 

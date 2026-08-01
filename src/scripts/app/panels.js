@@ -130,6 +130,24 @@
     try { if (typeof Progress !== 'undefined') { var a = Progress.all(), ws = weekStartMs(); for (var id in a) { if (a[id] && a[id].done > 0 && a[id].ts >= ws) done++; } } } catch (e) {}
     return { target: target, done: done, pct: target > 0 ? Math.min(100, Math.round(done / target * 100)) : 0, met: done >= target };
   }
+  /* THE ONE PLACE THE WEEK'S GOAL IS PUT INTO WORDS.
+     "46 of 5 topics" is not a fraction -- a ratio whose numerator can pass its denominator is a
+     claim the record does not support. Past the goal the phrasing stops being a ratio and says
+     what it knows: met, and by how much. This lives here, beside the data, because two surfaces
+     render this fact (the home rail and the telemetry strip) and round 4 fixed only one of them.
+     `bold` renders the figure for a surface that wants emphasis; the plain form is what an
+     accessible name should say. */
+  function goalPhrase(g, bold) {
+    var n = bold ? function (v) { return '<b>' + v + '</b>'; } : function (v) { return String(v); };
+    if (g.done >= g.target) {
+      var over = g.done - g.target;
+      return over > 0
+        ? n(g.done) + ' topics drilled, ' + g.target + '-topic goal met with ' + over + ' to spare'
+        : n(g.done) + ' topics drilled, goal met';
+    }
+    return n(g.done) + ' of ' + g.target + ' topics';
+  }
+
   function goalStrip() {
     var g = weeklyGoal(), left = g.target - g.done;
     var note = g.met ? 'Goal met &mdash; nice work.' : left + ' more to go';
@@ -137,8 +155,9 @@
       '<span class="ix-goal-set"><button type="button" class="ix-goal-b" data-goal="dec" aria-label="Lower the weekly goal">&minus;</button>' +
       '<span class="ix-goal-t" aria-live="polite">' + g.target + '</span>' +
       '<button type="button" class="ix-goal-b" data-goal="inc" aria-label="Raise the weekly goal">+</button></span></div>' +
-      '<div class="ix-goal-bar' + (g.met ? ' met' : '') + '"><span style="width:' + g.pct + '%"></span></div>' +
-      '<div class="ix-home-v"><b>' + g.done + '</b> of ' + g.target + ' topics drilled this week &middot; ' + note + '</div></div>';
+      '<div class="ix-goal-bar' + (g.met ? ' met' : '') + '" role="img" aria-label="' +
+      goalPhrase(g) + ' this week"><span style="width:' + g.pct + '%"></span></div>' +
+      '<div class="ix-home-v">' + goalPhrase(g, true) + ' drilled this week &middot; ' + note + '</div></div>';
   }
 
   /* WHERE THE USER LEFT OFF. LastVisit (topic+view) first; the most recently graded topic as a
@@ -173,6 +192,53 @@
     return {
       chips: weak,
       concepts: concepts.length ? '<div class="ix-weak-concepts">' + concepts.map(function (c) { return '<span class="ix-wc">' + c + '</span>'; }).join('') + '</div>' : '',
+    };
+  }
+
+  /* weakChips, with the two things the old chip threw away (appeal/home-instrument).
+     A chip that reads "Kafka Internals 6" is a label. The three fields that make it an
+     INSTRUCTION are all already in the record:
+       COUNT    pr.shk
+       AGE      pr.ts, via the caller's formatter -- TOPIC-scoped, and the surrounding copy
+                says so, because there is no per-card timestamp in the store to age a probe
+       CONCEPT  pr.revisit, which holds SIGNAL STRINGS (see this file's header) -- the actual
+                thing you re-drill, not the topic it lives in
+     The caller passes the age formatter rather than this module reaching for a clock, so the
+     one place that knows what `ts` can honestly claim stays the one place that knows it. */
+  function weakChipsAged(n, ageFn) {
+    if (typeof Progress === 'undefined' || typeof TopicRegistry === 'undefined') {
+      return { chips: '', concepts: '', n: 0 };
+    }
+    var sum = Progress.summary(), take = sum.weakest.slice(0, n || 6), total = 0, i;
+    for (i = 0; i < sum.weakest.length; i++) total += (sum.weakest[i].shk || 0);
+
+    var chips = take.map(function (w) {
+      var t = TopicRegistry.get(w.id);
+      var age = ageFn ? ageFn(w.id) : '';
+      return '<button class="hm-chip" type="button" data-topic="' + w.id + '">' +
+        (t ? t.identity.title : w.id) +
+        (w.shk ? '<span class="nsep">, </span><span class="hm-chip-n">' + w.shk + '</span>' : '') +
+        (age ? '<span class="nsep">, </span><span class="hm-chip-age">' + age + '</span>' : '') +
+        '</button>';
+    }).join('');
+
+    var seen = {}, cons = [];
+    take.forEach(function (w) {
+      var pr = Progress.get(w.id);
+      if (!pr || !pr.revisit) return;
+      for (var ci = 0; ci < pr.revisit.length && cons.length < 6; ci++) {
+        var c = pr.revisit[ci];
+        if (!c || seen[c]) continue;
+        seen[c] = 1; cons.push(c);
+      }
+    });
+
+    return {
+      chips: chips,
+      n: total,
+      concepts: cons.length
+        ? '<div class="hm-cons">' + cons.map(function (c) { return '<span class="hm-con">' + c + '</span>'; }).join('') + '</div>'
+        : '',
     };
   }
 
@@ -230,7 +296,20 @@
     if (_st === 'in-progress' && _pr) _bdg = '<span class="ix-c-badge"><i style="background:var(--acc)"></i>' + _pr.done + '/' + _pr.tot + _wbMark + '</span>';
     else if (_st === 'weak') { var _wn = (_pr ? _pr.shk : 0) + ((typeof Progress !== 'undefined' && Progress.shakyMarks) ? Progress.shakyMarks(id) : 0); _bdg = '<span class="ix-c-badge"><i style="background:#dc2626"></i>' + _wn + ' weak' + _wbMark + '</span>'; }
     else if (_st === 'solid') _bdg = _wbFull
-      ? '<span class="ix-c-badge ix-c-ready"><i style="background:var(--acc)"></i>ready</span>'
+      /* "drilled + recalled", not "ready". The evidence behind this badge is two COMPLETION
+         counts (done === tot, and the whiteboard fully recalled) -- that is coverage, and
+         coverage is SHAPE, never VERDICT. It also sat a few hundred pixels under an instrument
+         whose whole sentence is "the level you are interviewing for is the one you have
+         rehearsed least", so the screen said both things at once. The badge now names what it
+         actually counted and lets the gauge keep the readiness question.
+         SHORTENED again in round 3: "drilled + recalled" measured 88.4px, and with the badge
+         pushed 36px inboard to clear the reset button it needed 124px of a card whose title
+         reserve was 50px -- so it printed across 28 of 46 topic names, worst case 88px, and worse
+         still in the 234px Topic-index cards. Two fixes had landed on the same corner in one round
+         without being measured against each other. The reserve is now sized for the badge AND the
+         badge says the shorter true thing: the whiteboard was recalled, on a card whose grade
+         state already says the drill is done. */
+      ? '<span class="ix-c-badge ix-c-ready"><i style="background:var(--acc)"></i>recalled</span>'
       : '<span class="ix-c-badge"><i style="background:#0d9488"></i>done' + _wbMark + '</span>';
     else if (_wbSome) _bdg = '<span class="ix-c-badge"><i style="background:var(--acc)"></i>recalled</span>';
     var filt = ((idn.title || '') + ' ' + (idn.locatorTail || '') + ' ' + th).toLowerCase().replace(/&[a-z#0-9]+;/g, ' ').replace(/"/g, '');
@@ -299,7 +378,12 @@
         '<span class="hm-room-f"><span class="hm-room-pct">' + pc + '% drilled</span>' + weakHtml + '</span>' +
         '</button>';
     }).join('');
-    return '<section class="hm-rooms"><h2 class="hm-h">Choose a room</h2><div class="hm-room-grid">' + cards + '</div></section>';
+    /* "Coverage by room", not "Choose a room": on the home this block reports SHAPE, and the
+       navigation verb belongs to the rail's room rows, which are the actual chooser. The heading
+       is also the spec's own label. Panel grammar so it stops being the only block in the column
+       outside it. */
+    return '<section class="hm-rooms hm-panel"><div class="hm-phead"><h2 class="hm-lbl">Coverage by room</h2></div>' +
+      '<div class="hm-pbody"><div class="hm-room-grid">' + cards + '</div></div></section>';
   }
 
   /* ---- the footer ---------------------------------------------------------------------- */
@@ -522,6 +606,10 @@
     studyStreak: studyStreak,
     resumeTarget: resumeTarget,
     weakChips: weakChips,
+    weakChipsAged: weakChipsAged,
+    weakCount: weakCount,
+    weeklyGoal: weeklyGoal,
+    goalPhrase: goalPhrase,
     downloadBackup: downloadBackup,
   };
 })();

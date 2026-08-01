@@ -350,7 +350,10 @@ const mb = await m.evaluate(() => {
     vizW: document.querySelector('button[data-tab="viz"]').offsetWidth,
     ctaBox: box(document.querySelector('#home .hm-cta')),
     roomBox: box(document.querySelector('#home .hm-room')),
-    actBox: box(document.querySelector('#home .hm-act')),
+    /* the home's header actions moved into the sidebar's home tenant (.hm-rail) when the home
+       joined the app shell -- on the phone that rail IS the fixed top bar. Same three controls,
+       same 44px floor, new address. */
+    actBox: box(document.querySelector('.hm-rail .hm-act')),
     cards: document.querySelectorAll('#home .ix-card').length,
   };
 });

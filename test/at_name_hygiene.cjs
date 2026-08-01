@@ -102,6 +102,15 @@ const SEP_SITES = [
   { id: 'refresh pill title / days', file: 'src/scripts/app/panels.js',
     heard: 'H18 worst case "Caching12d"',
     re: gapped([lit('ix-due-b'), lit('nsep'), lit('ix-due-n')], [220, 60]) },
+  /* appeal/home-instrument: the home's weakness chip gained a third field, so it gained a second
+     seam. Both are pinned here rather than left to the count alone -- the count says "someone
+     decided", these say "and here is the decision". */
+  { id: 'aged weak chip title / count', file: 'src/scripts/app/panels.js',
+    heard: 'without it, "Notifications5"',
+    re: gapped([lit('hm-chip"'), lit('nsep'), lit('hm-chip-n')], [260, 60]) },
+  { id: 'aged weak chip count / age', file: 'src/scripts/app/panels.js',
+    heard: 'without it, "51d" -- the count and the age fuse into one number',
+    re: gapped([lit('hm-chip-n'), lit('nsep'), lit('hm-chip-age')], [200, 60]) },
   { id: 'companion relation title / tail', file: 'src/scripts/app/topic-protocol.js',
     heard: 'Infrastructure as Codeprovisioning boundary (at1-d4 S1-shortcuts-find-15..17)',
     re: gapped([lit('cmp-rel-t'), lit('nsep'), lit('cmp-rel-d')], [140, 80]) },
@@ -158,10 +167,18 @@ function armA(m) {
   const domSep = /className = 'nsep';[\s\S]{0,120}?textContent = ('[^']*')/.exec(pom);
   if (!domSep) wrong.push('pomodoro.js -> no DOM-API separator found at all');
   else { found++; if (domSep[1] !== "', '") wrong.push('pomodoro.js -> ' + domSep[1]); }
+  /* 12 -> 14 (appeal/home-instrument). The count is a RATCHET, not a fact about the design: it
+     exists so a new fused name cannot ship without someone deciding what NVDA should hear at the
+     seam. Two seams were added, both in Panels.weakChipsAged, and both were decided:
+        "Notifications, 5, 1d"   title / count  and  count / age
+     The age is a new field on the weakness chip -- how long since you last worked that topic --
+     and without a separator NVDA fuses it onto the count and speaks "51d". Raising the number
+     without adding the separators is the failure mode this assertion is guarding against, so the
+     two new sites are pinned by SEP_SITES below as well as counted here. */
   out.push(['[nsep] every separator is EXACTLY ", " -- markup AND the DOM-API site',
-    found === 12 && wrong.length === 0,
+    found === 14 && wrong.length === 0,
     wrong.length ? 'wrong separator text (a period is SPOKEN, a space is collapsed): ' + wrong.join(', ')
-      : 'expected 12 separators, found ' + found]);
+      : 'expected 14 separators, found ' + found]);
 
   for (const s of SEP_SITES) {
     out.push(['[sep] ' + s.id, s.re.test(m[s.file]),

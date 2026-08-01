@@ -4,7 +4,10 @@ Builder: appeal-d1 (the direction's author, carried through build and five round
 Branch `appeal/home-instrument`, worktree `D:\claude-workspace\_worktrees\deepdive-rehearsal\appeal-home-i`.
 Judged against: `_audit/2026-08-01-w1r4-judge-{direction-fidelity,map-conformance,the-complaint}.md`
 (all three copied in verbatim with their provenance headers).
-Gate: **76/76 PASS**, capture `_audit/2026-08-01-appeal-home-r5-gate.txt`.
+Gate: **76/76 PASS**, capture `_audit/2026-08-01-appeal-home-r5-gate.txt` -- taken on the
+COMMITTED tree, so `build_integrity` reads *"COMMITTED deliverable == fresh build of HEAD"* rather
+than deferring the HEAD-match. (The pre-commit run was green too, but with 8 uncommitted paths that
+check can only defer, and a capture that defers it is a weaker claim than the one filed here.)
 Deliverable md5 `3e7ec0836beb5263874eaf01df0708de`, byte-identical to `dist/index.html`, 12249669 bytes.
 
 The round's named pattern held up as a diagnosis: **a fact with two render paths is a fact with two

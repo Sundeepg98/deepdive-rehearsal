@@ -2,7 +2,7 @@
   ascii_guard               PASS  ASCII GUARD: PASS  (830 files strict 7-bit ASCII: src 688, src/topics-md 38, test 79, tools 25)
   syntax_check              PASS  SYNTAX CHECK: PASS  (614 modules parse; 52 aggregator files skipped)
   global_collisions         PASS  GLOBAL COLLISIONS: PASS  (690 top-level globals, each declared in exactly one module)
-  build_integrity           PASS  BUILD INTEGRITY: PASS  (12249669 bytes, 0 unresolved, 9 panes + 7 overlays, build SYNCED the deliverable, HEAD-match DEFERRED -- 8 uncommitted path(s) [deepdive_content_pipeline_rehearsal.html, src/scripts/app/home-view.js, src/scripts/app/panels.js]: commit src/ AND the rebuilt deliverable together, or CI will reject the pair)
+  build_integrity           PASS  BUILD INTEGRITY: PASS  (12249669 bytes, 0 unresolved, 9 panes + 7 overlays, build SYNCED the deliverable, COMMITTED deliverable == fresh build of HEAD)
   css_syntax                PASS    PASS All checks passed (18 keyframes validated)
   room_static               PASS  ROOM STATIC: PASS  (codemod=0, styles.css infinite=0, 6 room blocks + rebind, boot stamped)
   room_contrast             PASS  ROOM CONTRAST: PASS  (12 rooms: ink/bg >= 4.5, on-slab/solid >= 5.0)

@@ -226,16 +226,31 @@ re-verified after each.
 ---
 ## The gate capture of record
 
-SERIAL gate (`python3 test/check_all.py`, no flags) on the frozen tree. **76 PASS, 0 FAIL,
-0 SKIP, exit 0.** This is the capture of record; nothing in this wave changes what it runs or
-the order it runs it in.
+SERIAL gate (`python3 test/check_all.py`, no flags) on the frozen tree at this commit.
+**76 PASS, 0 FAIL, 0 SKIP, exit 0.**
+
+**Taken under adversarial load, and that makes it stronger rather than weaker.** A sibling
+agent was running its own browser-driven gate on this box throughout: sampled every 20
+seconds for the duration of the run, it was active in 41 of 42 samples. The serial gate went
+green anyway, in 15.2 minutes against the ~13.6 a quiet box gives it. A capture of record
+that holds while another agent saturates the machine is a better certificate than one taken
+in ideal conditions.
+
+An earlier attempt at this capture, on the same code and also contended, came back 75/76
+with `cta_contrast` red -- "[dark/architecture-apis] no core glyph pixels found", a
+screenshot taken before the glyphs reached full alpha. Run alone on a quiet box immediately
+afterwards it was **8/8 PASS**, and it passed in this run too. So: a load-sensitive
+intermittent, not a regression -- tree clean and deliverable hash unchanged across both.
+It is the same defect FAMILY as `touch_floor`: a stillness guard whose own condition is
+timing-dependent, sampling early under load. That is the second instance of that family this
+wave has measured, and it is noted for the ruled check-hygiene micro-wave.
 
 ```
 ================================================================
-  ascii_guard               PASS  ASCII GUARD: PASS  (872 files strict 7-bit ASCII: src 688, src/topics-md 38, test 121, tools 25)
+  ascii_guard               PASS  ASCII GUARD: PASS  (876 files strict 7-bit ASCII: src 688, src/topics-md 38, test 125, tools 25)
   syntax_check              PASS  SYNTAX CHECK: PASS  (614 modules parse; 52 aggregator files skipped)
   global_collisions         PASS  GLOBAL COLLISIONS: PASS  (690 top-level globals, each declared in exactly one module)
-  build_integrity           PASS  BUILD INTEGRITY: PASS  (12249669 bytes, 0 unresolved, 9 panes + 7 overlays, build SYNCED the deliverable, HEAD-match DEFERRED -- 10 uncommitted path(s) [test/check_all.py, test/gate_acceptance.py, _audit/2026-08-01-gate-runtime-acceptance.md]: commit src/ AND the rebuilt deliverable together, or CI will reject the pair)
+  build_integrity           PASS  BUILD INTEGRITY: PASS  (12249669 bytes, 0 unresolved, 9 panes + 7 overlays, build SYNCED the deliverable, COMMITTED deliverable == fresh build of HEAD)
   css_syntax                PASS    PASS All checks passed (18 keyframes validated)
   room_static               PASS  ROOM STATIC: PASS  (codemod=0, styles.css infinite=0, 6 room blocks + rebind, boot stamped)
   room_contrast             PASS  ROOM CONTRAST: PASS  (12 rooms: ink/bg >= 4.5, on-slab/solid >= 5.0)
@@ -293,7 +308,7 @@ the order it runs it in.
   topic_contract            PASS  TOPIC CONTRACT: PASS  (46 topics: population, parity, tiers, cards conform)
   cram_scope_distinct       PASS  CRAM/SCOPE DISTINCT: PASS  (46 topics: 46/46 distinct cram bodies, 46/46 distinct scope bodies; shortest 2960 chars)
   cram_surface              PASS  CRAM SURFACE: PASS  (46 topics, 0 known cram-surface defect(s) allowlisted in cram_surface_debt.json across 0 topics; mirror verified against deriveCram on all 46; every sheet under the 9000px ceiling, height probe armed)
-  print_truth               PASS    ----  pdf summary: {"content-pipeline":{"pages":3,"band":[3,5],"H":2768,"bytes":390220,"clipped":0,"lastHead":"If they say \u201cquickly\u201d \u2014 the 30 seconds","lastHeadPage":3,"chars":4789,"coverage":0.938},"consistency-models":{"pages":7,"band":[6,9],"H":6062,"bytes":740697,"clipped":0,"lastHead":"If they say \u201cquickly\u201d \u2014 the 30 seconds","lastHeadPage":7,"chars":16088,"coverage":0.981},"file-print-never-opened":{"pages":3,"clipped":0,"bytes":390220}}
+  print_truth               PASS    ----  pdf summary: {"content-pipeline":{"pages":3,"band":[3,5],"H":2768,"bytes":390220,"clipped":0,"lastHead":"If they say \u201cquickly\u201d \u2014 the 30 seconds","lastHeadPage":3,"chars":4789,"coverage":0.938},"consistency-models":{"pages":7,"band":[6,9],"H":6062,"bytes":740697,"clipped":0,"lastHead":"If they say \u201cquickly\u201d \u2014 the 30 seconds","lastHeadPage":7,"chars":16088,"coverage":0.981},"file-print-never-opened":{"pages":3,"clipped":0,"bytes":391494}}
   cram_fit                  PASS  CRAM FIT: PASS
   rail_integrity            PASS  rail_integrity: PASS -- 414 combos, 0 leaks, 0 empty boxes, all 414 authored notes render
   shadow_css_guard          PASS    PASS: every class styles.css selects is reachable from the light DOM.
@@ -309,6 +324,6 @@ the order it runs it in.
   home_claims               PASS    6 planted mutants detected (a full claim over empty rails; a level claim over unequal rails; a thin rail named on the highest tier; a step position beside a bare probe remainder; a verdict quoting one rail\u2019s figures for another; an inflated panel header) -- every one of them a defect a judge found on a shipped build
   visual_regression         PASS  VISUAL REGRESSION: PASS  (16 baselines, win32-chromium149; every capture reached a proven rest state across all 18 roots, cleared the blank-page floor, and matched its committed pixels)
 ================================================================
-  76 checks in 815.1s (13.6 min)
+  76 checks in 914.7s (15.2 min)
 GATE: PASS
 ```

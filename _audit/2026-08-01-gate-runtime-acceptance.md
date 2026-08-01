@@ -311,6 +311,18 @@ independent verifier can see what this wave did and did not touch.
    poll, both samples agree at the same intermediate scale and the guard passes. A fix would
    compare against the untransformed box, or require agreement across a rAF with an
    identity-transform precondition.
+1b. **`cta_contrast` is the SECOND member of `touch_floor`'s family**, found while taking the
+   freeze capture. Under cross-agent load it failed with `[dark/architecture-apis] no core glyph
+   pixels found` -- a screenshot taken before the glyphs reached full alpha, so the check found
+   nothing to measure. Run alone on a quiet box immediately afterwards: **8/8 PASS**. It also
+   passed in a second, equally contended full run. So it is load-sensitive, not broken, and not a
+   regression -- tree clean and deliverable hash unchanged throughout.
+   The pattern is now worth naming, because it is the same shape twice: **a stillness guard whose
+   own condition is timing-dependent.** `touch_floor` waits for two agreeing reads and gets two
+   agreeing reads of a mid-transform box; `cta_contrast` waits for effective opacity ~1 and then
+   samples pixels that have not reached alpha 0.95. Both degrade in exactly the conditions they
+   exist to defend against. The ruled check-hygiene micro-wave should treat this as a CLASS rather
+   than fix one instance.
 2. **`home_claims.judgeQuotedFigures` is structurally blind to the single-thin-rail sentence.**
    Its regex allows `[^.;]{0,40}` between a tier name and its figures, and the rendered sentence
    puts a period there ("Staff is the thin rail. 4 solid of 10"). A wrong figure in that

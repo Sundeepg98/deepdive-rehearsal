@@ -449,3 +449,161 @@ VR: the two home baselines rebaselined under the standing authorization, pair ke
 updated. **The other 14 remain byte-identical to `1c533d7`.**
 
 Receipts re-shot after the round-3 changes: `_audit/appeal-home-receipts/`.
+
+---
+---
+
+# ROUND-4 ADDENDUM -- 2026-08-01
+
+Round 3 was judged FIXABLE / FIXABLE / BLOCKING. Most items closed and were verified; what remained
+clustered on two chronic objects and one structural gap. All three verdicts are preserved verbatim
+with their authors credited at `_audit/2026-08-01-w1r3-judge-*.md`.
+
+This round is about exits, not patches.
+
+## A. THE GAP THAT MATTERED: a retrospective seed list cannot cover what has not been found
+
+Round 3 built `test/home_claims.cjs` to kill the "prints a claim it cannot derive" class, and a
+judge proved the analyser was right and the inputs were not. He copied the file, **added one
+record** -- one probe of 971 graded Shaky -- changed nothing else, and the check **failed on the
+shipped build**: *"claims every rail is full while the rails render 970 solid of 971."*
+
+The nine records were the nine defects three judges had already found. None of them sat in the band
+where `Math.round` and equality disagree, which is exactly where the fourth instance of the class
+was living. A list built from what has been found cannot cover what has not.
+
+**So the battery is now GENERATIVE.** A deterministic PRNG (mulberry32 off a fixed seed, so the
+gate stays reproducible byte-for-byte) builds **24 randomized records per viewport**, deliberately
+biased toward the boundaries -- all-empty, all-full, and the 99.5-100% band -- because a uniform
+sampler almost never lands where the absolutes live. The property is **entailment**: every sentence
+and every numeral the home prints must be derivable from the record's exact integers.
+
+The pinned records stay as cheap regression pins, and four were added, including the judge's
+`oneShort` and its mirror `nearlyFull`.
+
+**Teeth, demonstrated on the product rather than asserted.** I restored round 3's own
+`full = (min === 100)` into `altitude.js`, rebuilt, and ran the check:
+
+```
+FAIL [1280/oneShort]   the verdict agrees with the numbers beside it
+     -- claims every rail is full while the rails render 970 solid of 971
+FAIL [1280/oneShort]   the entailment agrees with the numbers beside it
+     -- uses the absolute "every rail is full" on a record with 970 of 971 ladder probes solid
+FAIL [1280/nearlyFull] ... 968 solid of 971
+```
+
+Then restored. The arms the round-3 teeth-test found toothless were also hardened: `judgeVerdict`
+now returns RED on an unrecognised verdict instead of silent green; every `N of M` inside a verdict
+must equal the `N / M` on the rail whose tier name precedes it (one rule that covers a whole family
+of quoted-figure defects at once); the panel header and the census are **judged**, not merely read;
+the h1 arm asserts **identity** (the h1 IS the hero question) rather than cardinality; and
+`judgePosition` validates the numeral against the **stored record**, not against the pane name.
+
+**And the hero census moved into the gate.** The named records render ~10 distinct questions of 972,
+so the hero arm could not fail on the clamp regression it was written to guard. A new arm clones the
+live `.hm-q` box and measures **every question in the bank** at the width in hand.
+
+## B. THE GAUGE, fourth round -- exact integers compared, rounded integers displayed
+
+The remaining lie was one line: `full = (min === 100)` on **rounded** percentages. Every rail at
+99.5% or above renders "100%", so one Shaky probe among 971 licensed *"Every rail is full... there
+is no thin rail left to name"* while Staff was thin **and flagged** on the same screen. The
+consumer's own comment, twenty lines away, had specified the right rule.
+
+**Every comparison in `Altitude.compute` and the sentence chooser now derives from exact integers.
+Rounded values are displayed and never compared.** Level is decided by integer cross-multiplication
+(`a.solid * b.n === b.solid * a.n`), so no float is involved anywhere.
+
+| class | decided by | condition (exact where it licenses an absolute) | sentence |
+|---|---|---|---|
+| **cold** | exact | `graded === 0` | *"Nothing graded yet..."* -- explains the instrument, claims nothing |
+| **full** | **EXACT** | `ladder.n > 0 && ladder.solid === ladder.n` | *"Every rail is full. Solid on all `ladder.n` probes across all three tiers -- there is no thin rail left to name."* The only absolute on the panel. |
+| **level** | **EXACT** | every rail's share exactly equal, by integer cross-multiplication | *"The rails are level. All three tiers sit at `minPct`% solid..."* |
+| **tied at this precision** | rounded | all rails render the same percent, NOT exactly equal | *"The rails are within a point of each other, all rendering `minPct`% solid -- nothing separates the levels at this precision yet."* A new class: "level" would be an absolute the record does not support, while this is exactly what the reader can see. |
+| **thin, one** | rounded | one rail renders the lowest percent | *"`T` is the thin rail. `solid` solid of `n` probes..."* -- its own figures |
+| **thin, several** | rounded | two rails render the lowest percent | names both, each quoting its own figures |
+
+Rounded is correct for `thin`/`tied` and **only** there: the claim is about which rail *looks*
+lowest, the sentence quotes each rail's own exact figures, and singling one out on a 0.046-point
+difference the instrument does not draw was itself a charged defect in round 2.
+
+**The header seam is closed.** The panel header counted the BANK (972) while its own rails and
+verdict counted the LADDER (971) -- both judges hit it independently. One panel, one denominator:
+the header reads *"N solid of 971 on the rails"*, and any probe on no rail is **named** in the
+legend (*"+ 1 probe outside the three tiers, on no rail"*) rather than folded into a total its own
+rails contradict.
+
+## C. THE CENSUS, third round -- the ladder had two dead rungs
+
+The priority-shedding CSS targeted `#st-2` and `#st-3`. `statusHtml()` emitted **neither**, so two of
+four rungs matched zero elements and the bar went on clipping itself mid-word through the 420-492 and
+520-544 bands. A documented ladder with dead rungs is worse than no ladder: it reads as solved.
+
+The ids are emitted now. Verified by **1px sweep**, not by sampling: on the widest census the bar can
+hold (three-digit counts everywhere, 46 of 46 topics started) there is **no clipping at any width
+from 400 to 1000**.
+
+And `home_reflow` was fixed at the input as well as the sample list. It drove a **fresh install** --
+where every census figure is a single `0`, the narrowest the bar will ever be -- so the arm was
+sampling the one record on which the bar cannot clip. It now seeds a mature record first, and its
+widths went from {320, 390, 500, 700, 900} to {320, 390, **430**, **460**, 500, **530**, **560**,
+700, 900}, because 430 and 530 are where the two bands actually lived and the previous list cleared
+them by 6.8px.
+
+## D. The mechanical seven
+
+4. **Cursor validity.** An out-of-range stored cursor (`{drill:24}` on a 21-bank) was clamped to 0
+   and asserted as *"stopped at probe 1"* -- a place the record was never in. Out of range is now
+   treated as an **absent field**: no claim at all, which also lets the hero fall through to the
+   first ungraded probe. Pinned as the `staleCursor` record.
+5. **The `firstUngraded` sentinel.** `0` meant both "the first probe is ungraded" and "none are", so
+   a fully graded topic heroed probe 1 under **"Up next"** while the sentence below said every probe
+   was graded. It returns **-1** for none, and that case gets its own eyebrow (*"Worth another pass"*).
+   A sentinel that collides with a valid index is not a sentinel.
+6. **The cold home's h1** is its question, the same tag swap round 3 made on the engaged path.
+7. **THE FOCUS TRAP (must-fix, an a11y regression this wave introduced).** `render()` re-added
+   `hm-quiet-focus` and re-focused on **every** render -- and `render()` is the `rerender` callback
+   `Panels.bind` holds, which the per-card reset control calls. A keyboard user who reset a topic had
+   focus moved to the CTA with **no indicator at all**. The quiet window now belongs to the session,
+   not the render, and any keydown ever closes it for good. `focus_ring` gained an arm that presses a
+   key, forces a re-render, and asserts the ring **survives** it -- mutant-tested by restoring the
+   shipped behaviour and watching it go red in both themes. 14 assertions -> **16**.
+   *Correction to my own first attempt:* I initially also latched on "has autofocused once", which
+   was wrong -- the home legitimately renders more than once on a single load, so the second render
+   un-quieted the ring at first paint. My own round-3 probe caught it. The keydown is the only signal
+   that means anything here.
+8. **Tab-bar truth.** The scrollspy's `-45%/-45%` band observed about a tenth of the viewport, so
+   ~600px of the page belonged to no target and the bar held a stale mark through it -- and "Today"
+   could never be current once `.hm-continue` cleared that sliver. The band is now the top of the
+   viewport downward, which **partitions** the page: every scroll position has exactly one owner.
+9. **The goal fraction.** *"46 of 5 topics"* -- a ratio whose numerator can pass its denominator is
+   not a ratio. Past the goal the phrasing states what it knows: *"46 topics drilled, 5-topic goal
+   met with 41 to spare."* Visible text and `aria-label` both, because the bar is `role="img"`.
+
+## E. Claims at the strength of my own coverage
+
+- **Battery:** 13 pinned records + **24 generated per viewport**, 2 viewports, **206 assertions**,
+  6 planted mutants. Negative control demonstrated by restoring round 3's own defect into the
+  product and watching two arms fail on two records.
+- **Hero:** censused over **all 972 probes at both gate viewports, in the gate** -- 0 clipped. The
+  earlier one-off builder measurement (8 widths) is superseded by an arm that can fail.
+- **Census:** 1px sweep, 400-1000, widest possible record -- 0 clipping. `home_reflow` now seeds a
+  mature record and samples 9 widths.
+- **Not covered, stated plainly:** no real-device test (the safe-area inset is injected, as the
+  judge's own was); no screen-reader pass; the generative arm explores the LADDER's shape and the
+  resume pointer, not the whole record space (whiteboard state, bookmarks and trend history are
+  untouched by it); the 420-919px band still has no room-nav or Topic-index affordance beyond the
+  `\` key, which is pre-existing and disclosed as uncharged since round 2; and the third
+  presentation of the six rooms remains deliberately unfixed.
+
+## F. Gate and VR
+
+**76/76 PASS** -- capture at `_audit/2026-07-31-appeal-home-gate.txt`, written outside the repo
+during the run and copied in. Registration delta against `1c533d7` is `+home_reflow +home_claims`;
+**nothing removed, nothing skipped, nothing weakened.** `focus_ring` 14 -> 16 assertions,
+`home_claims` 72 -> 206, `home_reflow` 5 widths -> 9 on a seeded record.
+
+VR: the two home baselines rebaselined under the standing authorization, pair kept, manifest
+updated. **The other 14 remain byte-identical to `1c533d7`.**
+
+Receipts re-shot after the round-4 changes: `_audit/appeal-home-receipts/`.

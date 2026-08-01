@@ -39,6 +39,8 @@
   'use strict';
 
   var el = null, rail = null, lib = null, tabs = null, status = null, bound = false, tabObs = null;
+  /* session-scoped on purpose: once a key is pressed the ring is never quieted again */
+  var keyboardSeen = false;
 
   function landingPref() {
     try { return (typeof Store !== 'undefined' && Store.get('home.landing', '') === 'resume'); } catch (e) { return false; }
@@ -106,12 +108,19 @@
       var p = posGet(id);
       if (!p || typeof p[view] !== 'number') return null;
       var t = TopicRegistry.get(id);
+      /* AN OUT-OF-RANGE CURSOR IS NOT A POSITION. posRestore clamps a stale index to 0, which is
+         right for a pane restoring itself and wrong for a sentence: a {drill:24} left over from a
+         longer bank asserted "stopped at probe 1", a place the record was never in. Out of range
+         is treated as an absent field -- no claim -- which also lets the hero fall through to the
+         first ungraded probe instead of heroing probe 1. */
       if (view === 'drill' && t && t.data && t.data.bank && t.data.bank.cards && t.data.bank.cards.length) {
         var nb = t.data.bank.cards.length;
+        if (p.drill < 0 || p.drill >= nb) return null;
         return { kind: 'drill', i: posRestore('drill', nb, id), n: nb, unit: 'probe' };
       }
       if (view === 'walk' && t && t.data && t.data.walk && t.data.walk.steps && t.data.walk.steps.length) {
         var ns = t.data.walk.steps.length;
+        if (p.walk < 0 || p.walk >= ns) return null;
         return { kind: 'walk', i: posRestore('walk', ns, id), n: ns, unit: 'step' };
       }
       return null;
@@ -139,20 +148,31 @@
       var at = cards[cur.i] || cards[0];
       if (at && at.q) return { q: plain(at.q), mode: 'stopped' };
     }
-    var nx = cards[firstUngraded(t, cards)] || cards[0];
+    var fi = firstUngraded(t, cards);
+    if (fi < 0) {
+      /* nothing left to serve: the topic is fully graded. Hero the probe the cursor last sat on
+         if there is one, and say REVIEW rather than "up next" -- there is no next. */
+      var last = (cur && cards[cur.i]) || cards[0];
+      return (last && last.q) ? { q: plain(last.q), mode: 'done' } : null;
+    }
+    var nx = cards[fi];
     return (nx && nx.q) ? { q: plain(nx.q), mode: 'next' } : null;
   }
 
-  /* the first probe with no grade on the record -- the one the drill would put in front of you */
+  /* The first probe with no grade -- the one the drill would put in front of you.
+     RETURNS -1 WHEN THERE IS NONE. Returning 0 made the sentinel ambiguous: "the first probe is
+     ungraded" and "no probe is ungraded" were the same value, so a fully graded topic heroed
+     probe 1 under "Up next" while the sentence beneath it said every probe here is graded. A
+     sentinel that collides with a valid index is not a sentinel. */
   function firstUngraded(t, cards) {
     try {
-      if (typeof CardId === 'undefined') return 0;
+      if (typeof CardId === 'undefined') return -1;
       var pr = (Progress.get ? Progress.get(t.id) : null) || {};
       var map = pr.cards || {};
       var keys = CardId.forCards(cards);
       for (var i = 0; i < cards.length; i++) if (!CardId.level(map, keys[i])) return i;
-    } catch (e) {}
-    return 0;
+    } catch (e) { return -1; }
+    return -1;
   }
 
   /* THE HERO WEARS ITS DESTINATION'S ROOM. --rm, not --acc: on this route there is no current
@@ -203,9 +223,24 @@
       '<span class="hm-rt">Topic index</span><span class="hm-rn"><kbd>\\</kbd></span></button>' +
       '</nav>' +
       (g ? '<div class="hm-goal"><span class="hm-lbl">This week</span>' +
-        '<div class="hm-goalbar" role="img" aria-label="' + g.done + ' of ' + g.target +
-        ' topics drilled this week"><i style="width:' + g.pct + '%"></i></div>' +
-        '<span class="hm-rn"><b>' + g.done + '</b> of ' + g.target + ' topics</span></div>' : '');
+        '<div class="hm-goalbar" role="img" aria-label="' + goalPhrase(g) +
+        ' this week"><i style="width:' + g.pct + '%"></i></div>' +
+        '<span class="hm-rn">' + goalPhrase(g, true) + '</span></div>' : '');
+  }
+
+  /* "46 of 5 topics" is not a fraction. Once the week's goal is met the numerator can pass the
+     denominator, and a ratio that can invert is a claim the record does not support -- so past the
+     goal the phrasing stops being a ratio and states what it actually knows: met, and by how much.
+     `bold` renders the figure for the rail; the plain form is the accessible name. */
+  function goalPhrase(g, bold) {
+    var n = bold ? function (v) { return '<b>' + v + '</b>'; } : function (v) { return String(v); };
+    if (g.done >= g.target) {
+      var over = g.done - g.target;
+      return over > 0
+        ? n(g.done) + ' topics drilled, ' + g.target + '-topic goal met with ' + over + ' to spare'
+        : n(g.done) + ' topics drilled, goal met';
+    }
+    return n(g.done) + ' of ' + g.target + ' topics';
   }
 
   /* ---- the phone's tab bar. Navigation WITHIN the home -- never a second router. ------------ */
@@ -227,10 +262,15 @@
     return '<span class="hm-st-i"><span class="hm-lbl">Record</span></span>' +
       '<span class="hm-st-i"><b>' + graded + '</b> of ' + t.n + ' probes graded</span>' +
       '<span class="hm-st-sep"></span>' +
-      '<span class="hm-st-i"><b>' + t.solid + '</b> solid &middot; <b>' + t.shaky +
+      /* THE IDS THE STYLESHEET ALREADY ADDRESSES. The priority ladder that "sheds by priority"
+         targeted #st-2 and #st-3 -- and this function emitted neither, so two of its four rungs
+         matched zero elements and the bar went on clipping itself mid-word through the 420-492
+         and 520-544 bands. A documented ladder with dead rungs is worse than no ladder: it reads
+         as solved. */
+      '<span class="hm-st-i" id="st-2"><b>' + t.solid + '</b> solid &middot; <b>' + t.shaky +
       '</b> shaky &middot; <b>' + t.missed + '</b> missed</span>' +
       '<span class="hm-st-sep"></span>' +
-      '<span class="hm-st-i"><b>' + t.started + '</b> of ' + model.nTopics + ' topics started</span>' +
+      '<span class="hm-st-i" id="st-3"><b>' + t.started + '</b> of ' + model.nTopics + ' topics started</span>' +
       '<span class="hm-st-sp"></span>' +
       '<span class="hm-st-i hm-st-dim">Offline &middot; nothing leaves this file</span>';
   }
@@ -243,8 +283,11 @@
       var ids = TopicRegistry.ids();
       var first = TopicRegistry.get(ids[0]);
       return '<section class="hm-continue hm-panel" aria-labelledby="hm-ask-h">' +
-        '<div class="hm-ask"><h1 class="hm-lbl" id="hm-ask-h">Start here</h1>' +
-        '<p class="hm-q">&ldquo;Walk me through how you would design this.&rdquo;</p>' +
+        /* the cold path gets the same treatment as the engaged one: the QUESTION is the h1 and
+           the eyebrow is the label it looks like. It shipped the other way round, so a cold
+           screen-reader user still got a 9px eyebrow as the page's only heading. */
+        '<div class="hm-ask"><p class="hm-lbl hm-eyebrow">Start here</p>' +
+        '<h1 class="hm-q" id="hm-ask-h">&ldquo;Walk me through how you would design this.&rdquo;</h1>' +
         '<p class="hm-since">That is the sentence the round opens on. You answer out loud, they ' +
         'push back, and you grade yourself on what you actually said.</p></div>' +
         '<div class="hm-do">' +
@@ -322,8 +365,9 @@
        topic name, while the question the direction calls the hero appeared in no heading list at
        all. The QUESTION is the h1. The eyebrow is the label it looks like. If a topic somehow has
        no bank, the eyebrow carries the h1 instead, so the page always has exactly one. */
-    var eyebrow = (hero && hero.mode === 'next' ? 'Up next &middot; ' : 'Where you stopped &middot; ')
-      + esc(t.identity.title);
+    var eyebrow = (hero && hero.mode === 'next' ? 'Up next &middot; '
+      : hero && hero.mode === 'done' ? 'Worth another pass &middot; '
+      : 'Where you stopped &middot; ') + esc(t.identity.title);
     return '<section class="hm-continue hm-panel" aria-labelledby="hm-ask-h">' +
       '<div class="hm-ask">' +
       (hero
@@ -371,24 +415,27 @@
      forbids, so the classes are enumerated rather than inferred, and the battery in
      test/home_claims.cjs drives every one of them. */
   function verdictFor(model) {
-    var t = model.totals;
-
     if (model.graded === 0) {
       return 'Nothing graded yet. Each rail is one interview tier and each mark is one probe ' +
         '&mdash; they fill as you grade yourself, and the shortest rail is the level you are ' +
         'least ready for.';
     }
+    /* THE ONLY ABSOLUTE ON THIS PANEL, and it is licensed by an EXACT count. */
     if (model.full) {
-      /* the ladder's own figure, not the bank's -- the bank carries an EXTEND tier that is not a
-         rail, so "all N probes across all three tiers" must count the three tiers */
       return '<b>Every rail is full.</b> Solid on all ' + model.ladder.n + ' probes across all ' +
         'three tiers &mdash; there is no thin rail left to name.';
     }
+    /* exactly equal shares -- the only record that earns the word "level" */
     if (model.level) {
       return '<b>The rails are level.</b> All three tiers sit at ' + model.minPct + '% solid, so ' +
         'no one level is behind the others yet &mdash; keep drilling and the shape will separate.';
     }
-    /* one or more tiers share the lowest rendered percentage, under a higher one */
+    /* same rendered percent, NOT exactly equal. The reader cannot see the difference, so the
+       sentence does not claim there is none -- it says what the precision can carry. */
+    if (model.tiedDisplay) {
+      return '<b>The rails are within a point of each other</b>, all rendering ' + model.minPct +
+        '% solid &mdash; nothing separates the levels at this precision yet.';
+    }
     var set = model.thinSet.slice();
     var figs = set.map(function (tier) {
       var a = model.tiers[tier];
@@ -400,8 +447,6 @@
         ' probes, across ' + a1.topics + ' of ' + model.nTopics + ' topics &mdash; the level you ' +
         'are interviewing for is the one you have rehearsed least.';
     }
-    /* set.length is 2 here in every reachable record -- three equal rails are `level` and return
-       above -- but the wording is written so it stays true if a fourth tier ever exists. */
     var joined = set.slice(0, -1).join(', ') + ' and ' + set[set.length - 1];
     return '<b>' + joined + ' are the thin rails.</b> ' +
       (set.length === 2 ? 'Both' : 'All ' + set.length) + ' sit at ' + model.minPct +
@@ -437,7 +482,12 @@
     return '<section class="hm-alt hm-panel" aria-labelledby="hm-alt-h">' +
       '<div class="hm-phead"><h2 class="hm-lbl" id="hm-alt-h">Altitude &mdash; solid probes by interview tier</h2>' +
       '<span class="hm-sp"></span>' +
-      '<span class="hm-lbl hm-fig"><b>' + model.totals.solid + '</b> solid of ' + model.totals.n + '</span></div>' +
+      /* ONE PANEL, ONE DENOMINATOR. This header counted the BANK (972) while every rail and the
+         verdict beneath it count the LADDER (971) -- the EXTEND tier is not a rung. Two judges hit
+         the seam independently. The header now quotes the rails it sits on, and any probe that is
+         on no rail is NAMED below rather than silently folded into a total. */
+      '<span class="hm-lbl hm-fig"><b>' + model.ladder.solid + '</b> solid of ' + model.ladder.n +
+      ' on the rails</span></div>' +
       '<div class="hm-pbody"><div class="hm-gauge">' + rails + '</div>' +
       '<p class="hm-verdict">' + verdict + '</p>' +
       '<div class="hm-key" aria-hidden="true">' +
@@ -445,6 +495,8 @@
       '<span class="hm-k part"><i></i><span class="hm-lbl">Part solid</span></span>' +
       '<span class="hm-k flag"><i></i><span class="hm-lbl">Flagged</span></span>' +
       '<span class="hm-k none"><i></i><span class="hm-lbl">Untouched</span></span>' +
+      (model.offLadder.n ? '<span class="hm-lbl hm-offladder">+ ' + model.offLadder.n +
+        ' probe' + (model.offLadder.n === 1 ? '' : 's') + ' outside the three tiers, on no rail</span>' : '') +
       '</div></div></section>';
   }
 
@@ -559,9 +611,23 @@
        instrument. Nothing about focus ORDER or the keystroke changes -- only the paint. */
     var cta = el.querySelector('[data-autofocus]');
     if (cta) {
+      /* THE QUIET RING IS ONCE PER SESSION, NOT ONCE PER RENDER. This re-added the class and
+         re-focused on EVERY render -- and render() is the `rerender` callback Panels.bind holds,
+         which the per-card reset control calls. So a keyboard user who reset a topic had focus
+         moved to the CTA with NO indicator at all: a focus trap in the literal sense, and an a11y
+         regression this wave introduced. The quiet window belongs to the FIRST programmatic focus
+         of a session, and any keydown ever closes it for good. */
+      /* THE KEYDOWN IS THE ONLY SIGNAL. A first attempt also latched on "has autofocused once",
+         which was wrong twice over: the home legitimately renders more than once on a single load
+         (boot, then the route settling), so the SECOND render un-quieted the ring at first paint;
+         and it said nothing about whether a keyboard is in play, which is the actual question.
+         Quiet while nobody has touched a key; the moment anyone does, never quiet again -- that is
+         both the coherence ruling at rest and the trap closed for the reset-rerender path. */
+      var quiet = !keyboardSeen;
       setTimeout(function () {
         try {
-          el.classList.add('hm-quiet-focus');
+          if (quiet) el.classList.add('hm-quiet-focus');
+          else el.classList.remove('hm-quiet-focus');
           cta.focus({ preventScroll: true });
         } catch (e) {}
       }, 0);
@@ -600,6 +666,7 @@
 
     /* the first real keystroke re-arms the focus ring for the rest of the session */
     document.addEventListener('keydown', function () {
+      keyboardSeen = true;
       if (el) el.classList.remove('hm-quiet-focus');
     }, { capture: true });
 
@@ -679,11 +746,19 @@
       });
       /* the FIRST target that is on screen, in column order -- so a block scrolled past hands
          the mark forward rather than several claiming it at once */
+      /* the LAST target in column order that has crossed the band, so scrolling forward hands the
+         mark on and scrolling back hands it return; before the first crossing the first block owns
+         it, which is what makes "Today" reachable again */
       var live = null;
-      for (var j = 0; j < nodes.length; j++) if (seen[nodes[j].key]) { live = nodes[j].key; break; }
-      if (!live) return;
+      for (var j = 0; j < nodes.length; j++) if (seen[nodes[j].key]) live = nodes[j].key;
+      if (!live) live = nodes[0].key;
       markTab(live);
-    }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
+      /* A -45%/-45% band observes about a tenth of the viewport, so roughly 600px of this page
+         belonged to no target at all and the bar held a stale mark right through it -- and
+         "Today" could never be current once .hm-continue cleared that sliver. The band is now the
+         top of the viewport downward, which PARTITIONS the page: whichever target most recently
+         crossed the top edge owns the mark, and every scroll position has exactly one owner. */
+    }, { rootMargin: '0px 0px -80% 0px', threshold: 0 });
     nodes.forEach(function (n) { tabObs.observe(n.node); });
   }
 

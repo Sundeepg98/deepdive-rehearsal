@@ -2329,6 +2329,8 @@ html[data-view="home"] .companion{padding:0}
 .hm-k.none i::after{opacity:0}
 .hm-k.flag i::after{opacity:0}
 .hm-k.flag i{box-shadow:inset 0 -2px 0 var(--st-warn)}
+/* the probes that are on no rail, named rather than folded into a total the rails contradict */
+.hm-offladder{margin-left:auto;color:var(--mut2)}
 
 /* ---- the paired row ------------------------------------------------------------------------ */
 .hm-duo{max-width:var(--measure-home);margin:0 auto var(--gap-home-duo);

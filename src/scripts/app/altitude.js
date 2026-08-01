@@ -76,30 +76,46 @@ var Altitude = (function () {
       });
     }
 
-    /* ===== THE SHAPE OF THE RECORD, not a nullable name ==================================
-       This is the third round on this function, and both earlier versions failed the same way:
-       they returned ONE tier and left the consumer to infer everything else from its absence.
-         Round 1 returned the first-seen minimum, so a TIE silently named whichever tier the loop
-           reached first -- an all-zero record was told "Staff is the thin rail".
-         Round 2 returned null on any tie for last, and the consumer read null as "the rails are
-           level" and took its percentage from Staff alone. On a record with Staff at 100% and the
-           other two empty, the gauge printed "Every rail is full. Solid on all 972 probes" above
-           two visibly empty rails and its own header reading "310 SOLID OF 972".
-       An accusation the reader can discount is survivable; a statement of fact the reader can
-       check against the picture directly above it is not. So this function now returns the SHAPE
-       -- the thin SET, whether the rails are genuinely level, whether the board is full -- and the
-       consumer has a distinct sentence per class with nothing left to infer.
+    /* ===== THE SHAPE OF THE RECORD, decided on EXACT INTEGERS =========================
+       Fourth round on this function. The standing rule for this route, arrived at the hard way:
+       EXACT INTEGERS ARE COMPARED, ROUNDED INTEGERS ARE DISPLAYED, NEVER THE REVERSE -- and no
+       sentence may use an absolute ("all", "every", "no ... left") unless the exact integer
+       condition for it holds.
+         r1  returned the first-seen minimum: a tie named whichever tier the loop reached first.
+         r2  returned null on any tie for LAST, and the consumer read that as "the rails are
+             level", quoting Staff's percentage for all three.
+         r3  returned the shape, but decided `full` on ROUNDED percentages -- `min === 100` --
+             so one Shaky probe among 971 rendered three rails at "100%" and licensed
+             "Every rail is full ... there is no thin rail left to name" while Staff was thin
+             AND flagged on the same screen. A comparison at rendered precision licensed an
+             absolute about exact counts. The consumer's own comment had specified the right
+             rule twenty lines away and the implementation followed the weaker one.
 
-       COMPARE AT THE RENDERED PRECISION. The rails print integer percents, so two rails at
-       59.98% and 60.02% are identical to every reader and a raw-float `<` would name one of them
-       thin on a difference the instrument does not draw. `pct` is what the rail shows; `pct` is
-       what decides. */
+       So each class below states which precision decides it, and why that is the honest one:
+
+         full        EXACT   ladder.solid === ladder.n. An absolute, so nothing but the exact
+                             count may license it.
+         level       EXACT   every rail's share exactly equal, compared by cross-multiplying
+                             integers (a.solid * b.n === b.solid * a.n) so no float is involved.
+         tiedDisplay ROUNDED every rail renders the same percent WITHOUT being exactly equal.
+                             A separate class because "the rails are level" would be an absolute
+                             the record does not support, while "nothing separates them at this
+                             precision" is exactly what the reader can see.
+         thinSet     ROUNDED the rails rendering the lowest percent. Rounded is correct HERE and
+                             only here: the claim is about which rail looks lowest, the sentence
+                             quotes each rail's own exact figures, and singling one out on a
+                             0.046-point difference the instrument does not draw was itself a
+                             charged defect. */
     var shares = [];
     for (i = 0; i < TIERS.length; i++) {
       var a = tiers[TIERS[i]];
-      if (a.n) shares.push({ tier: TIERS[i], pct: Math.round(a.solid / a.n * 100) });
+      if (a.n) shares.push({ tier: TIERS[i], solid: a.solid, n: a.n, pct: Math.round(a.solid / a.n * 100) });
     }
-    var thin = null, thinSet = [], level = false, min = null, max = null;
+    /* the ladder is not the bank: the bank carries an EXTEND tier that is not a rung */
+    var ladder = { solid: 0, n: 0 };
+    for (i = 0; i < TIERS.length; i++) { ladder.solid += tiers[TIERS[i]].solid; ladder.n += tiers[TIERS[i]].n; }
+
+    var thin = null, thinSet = [], level = false, tiedDisplay = false, min = null, max = null;
     if (shares.length) {
       min = shares[0].pct; max = shares[0].pct;
       for (i = 1; i < shares.length; i++) {
@@ -107,23 +123,27 @@ var Altitude = (function () {
         if (shares[i].pct > max) max = shares[i].pct;
       }
       for (i = 0; i < shares.length; i++) if (shares[i].pct === min) thinSet.push(shares[i].tier);
-      level = (min === max);                       /* EVERY rail equal -- not "two of them" */
-      if (!level && thinSet.length === 1) thin = thinSet[0];
+      /* EXACT equality, by integer cross-multiplication -- never solid/n as a float */
+      var exactEqual = true;
+      for (i = 1; i < shares.length; i++) {
+        if (shares[i].solid * shares[0].n !== shares[0].solid * shares[i].n) { exactEqual = false; break; }
+      }
+      level = exactEqual;
+      tiedDisplay = !exactEqual && (min === max);
+      if (min !== max && thinSet.length === 1) thin = thinSet[0];
     }
-    /* THE LADDER IS NOT THE BANK, and the sentence that says "all three tiers" has to count the
-       three tiers. `totals` spans every probe including the EXTEND tier, which is not a ladder
-       rung -- 972 in the bank against 971 on the rails. Round 3's own claim check caught the
-       gauge printing "Solid on all 972 probes across all three tiers" over rails totalling 971,
-       which is the same class this round exists to close, one probe wide.
-       So `full` is a property of the RAILS (every rendered rail at 100%), and `ladder` carries
-       the figures any sentence about the rails is allowed to quote. */
-    var ladder = { solid: 0, n: 0 };
-    for (i = 0; i < TIERS.length; i++) { ladder.solid += tiers[TIERS[i]].solid; ladder.n += tiers[TIERS[i]].n; }
-    var full = shares.length > 0 && min === 100;
+    /* THE ONE ABSOLUTE, AND IT IS EXACT. Not `min === 100`: every rail at >= 99.5% renders
+       "100%", so a rounded test licensed "all 971 solid" on records with 968. */
+    var full = ladder.n > 0 && ladder.solid === ladder.n;
 
     return {
       order: TIERS.slice(), tiers: tiers, totals: totals, rows: rows, nTopics: rows.length,
+      /* the three rungs only -- the bank total lives on `totals` and the two are never mixed */
       ladder: ladder,
+      /* rails render the same percent but are NOT exactly equal */
+      tiedDisplay: tiedDisplay,
+      /* probes in the bank that are on no rail (the EXTEND tier), named on screen when nonzero */
+      offLadder: { solid: totals.solid - ladder.solid, n: totals.n - ladder.n },
       /* the ONE strictly-thinnest tier, or null when several share the minimum */
       thin: thin,
       /* every tier at the minimum -- length 1, 2 or 3; empty only when no tier has probes */

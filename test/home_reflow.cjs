@@ -91,11 +91,31 @@ const OVERSPILL = () => {
   const out = [];
   let aborted = null;
 
-  for (const w of [320, 390, 500, 700, 900]) {
+  /* 430 and 530 are where the two clip bands lived (420-492 and 520-544) -- the previous list
+     cleared them by 6.8px, which is how a widened check still missed the thing it was widened for */
+  for (const w of [320, 390, 430, 460, 500, 530, 560, 700, 900]) {
     for (const theme of ['light', 'dark']) {
       const page = await ctx.newPage();
       await page.setViewportSize({ width: w, height: 720 });
       await page.addInitScript((t) => { try { localStorage.setItem('ddr.v1.theme', JSON.stringify(t)); } catch (e) {} }, theme);
+      /* SEED BEFORE MEASURING. This drove a FRESH INSTALL, where every figure on the census is a
+         single `0` -- the narrowest the bar will ever be -- so the arm was sampling the one record
+         on which the bar cannot clip. The census is widest on a mature record with three-digit
+         counts, which is the state a six-week user is in for most of the six weeks. */
+      await B.gotoApp(page, HTML, { hash: '#home' });
+      await page.evaluate(() => {
+        try {
+          localStorage.clear();
+          TopicRegistry.ids().forEach((id) => {
+            const cards = TopicRegistry.get(id).data.bank.cards;
+            const keys = CardId.forCards(cards); const map = {};
+            cards.forEach((c, i) => { map[keys[i]] = (i % 3 === 0) ? 3 : (i % 3 === 1 ? 2 : 1); });
+            localStorage.setItem('ddr.v1.progress.' + id, JSON.stringify({
+              got: 0, shk: 0, done: cards.length, tot: cards.length,
+              revisit: [], cards: map, cv: 1, ts: Date.now() }));
+          });
+        } catch (e) {}
+      });
       await B.gotoApp(page, HTML, { hash: '#home' });
       await B.until(page, () => !!document.querySelector('#home .hm-continue'), null, B.ACT_MS, 'home rendered');
 

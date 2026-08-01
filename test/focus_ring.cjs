@@ -356,7 +356,28 @@ const RING = (sel) => {
       !quiet.err && quiet.focused && quiet.outline === 'none' && quiet.shadow === 'none',
       JSON.stringify(quiet));
 
+    /* THE QUIET WINDOW IS ONCE PER SESSION, AND THIS ARM REACHES PAST FIRST PAINT.
+       It shipped re-adding the quiet class and re-focusing on EVERY render -- and render() is the
+       rerender callback Panels.bind holds, which the per-card reset control calls. A keyboard user
+       who reset a topic therefore had focus moved to the CTA with NO indicator at all: focus on a
+       control with nothing to show for it, which is the defect the whole file exists to prevent.
+       Pressing a key and then forcing a re-render is the state that was broken; asserting the ring
+       SURVIVES it is what makes the once-per-session rule falsifiable. */
     await hp.keyboard.press('Shift');          /* a real keystroke -- the ring re-arms for good */
+    const afterRerender = await hp.evaluate(async () => {
+      if (window.HomeView && HomeView.render) HomeView.render();
+      await new Promise((r) => setTimeout(r, 60));
+      const c = document.querySelector('#home .hm-cta[data-autofocus]');
+      const host = document.getElementById('home');
+      return {
+        quietClass: !!(host && host.classList.contains('hm-quiet-focus')),
+        focused: document.activeElement === c,
+      };
+    });
+    chk('[' + theme + '] a RE-RENDER after any keystroke never re-quiets the ring (the reset '
+      + 'control calls render(), and focus with no indicator is a trap)',
+      afterRerender.quietClass === false, JSON.stringify(afterRerender));
+
     await hp.evaluate(() => { const c = document.querySelector('#home .hm-cta'); if (c) c.blur(); });
 
     judgeHalo('[' + theme + '] .hm-cta focus halo derives from the room it will OPEN (--rm), not the roomless --acc -- W15 regression guard',

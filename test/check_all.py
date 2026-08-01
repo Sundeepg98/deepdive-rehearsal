@@ -1282,22 +1282,28 @@ def changed_files():
 def select_changed(files):
     """(selected check names, reason). Empty diff -> nothing to check but the spine."""
     sel, unmapped = set(), []
+    names = set(ORDER)
     for f in files:
         # test/<name>.<ext> is that check's own source: run it, plus nothing else it implies.
-        base = f.rsplit('/', 1)[-1]
-        stem = base.rsplit('.', 1)[0]
-        if f.startswith('test/') and stem in set(ORDER):
+        stem = f.rsplit('/', 1)[-1].rsplit('.', 1)[0]
+        if f.startswith('test/') and stem in names:
             sel.add(stem)
             continue
-        if f.startswith('test/') or f.startswith('_audit/') or f.endswith('.md'):
-            continue                      # harness scratch and prose: no app surface
+        # THE MAP IS CONSULTED BEFORE ANY SKIP RULE, and the order is the whole correctness of
+        # this function. The corpus this app is built from is markdown -- src/topics-md/*.md and
+        # the format spec at tools/compiler/TOPIC_MARKDOWN_FORMAT.md -- so a ".md is just prose"
+        # rule evaluated first would silently select NOTHING for a content edit, which is the one
+        # failure mode a selective lane must not have.
         hit = False
         for prefix, checks in CHANGED_MAP:
             if f.startswith(prefix):
                 sel.update(checks)
                 hit = True
-        if not hit:
-            unmapped.append(f)
+        if hit:
+            continue
+        if f.startswith('test/') or f.startswith('_audit/'):
+            continue                      # harness scratch: no app surface
+        unmapped.append(f)
     if unmapped:
         return set(ORDER), 'unmapped path(s), e.g. %s -- running EVERYTHING' % unmapped[0]
     # build_integrity is not optional: it is what puts a current deliverable on disk for every
@@ -1313,6 +1319,20 @@ for i, a in enumerate(sys.argv):
         JOBS = int(sys.argv[i + 1])
 
 selected, why = (select_changed(changed_files()) if CHANGED else (set(ORDER), ''))
+
+# --only a,b,c: run exactly these checks. Not a lane and not a certification -- it exists so the
+# acceptance harness can ask "does this planted defect turn THIS check red?" without paying for a
+# whole gate, and so a human debugging one check does not have to either. It reuses --changed's
+# "not a certification" banner because it is the same kind of partial answer.
+ONLY = None
+for i, a in enumerate(sys.argv):
+    if a == '--only' and i + 1 < len(sys.argv):
+        ONLY = [x for x in sys.argv[i + 1].split(',') if x]
+if ONLY:
+    unknown = [n for n in ONLY if n not in set(ORDER)]
+    if unknown:
+        sys.exit('--only: no such check: %s' % ', '.join(unknown))
+    selected, why, CHANGED = set(ONLY), '--only %s' % ','.join(ONLY), True
 
 # THE BANNER IS PART OF THE CONTRACT. A non-default run's transcript must never be mistakable for
 # the serial capture of record -- in a train log, in an audit file, or six months from now.

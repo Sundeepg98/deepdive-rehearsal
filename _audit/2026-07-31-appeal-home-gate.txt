@@ -1,8 +1,8 @@
 ================================================================
-  ascii_guard               PASS  ASCII GUARD: PASS  (829 files strict 7-bit ASCII: src 688, src/topics-md 38, test 78, tools 25)
+  ascii_guard               PASS  ASCII GUARD: PASS  (830 files strict 7-bit ASCII: src 688, src/topics-md 38, test 79, tools 25)
   syntax_check              PASS  SYNTAX CHECK: PASS  (614 modules parse; 52 aggregator files skipped)
   global_collisions         PASS  GLOBAL COLLISIONS: PASS  (690 top-level globals, each declared in exactly one module)
-  build_integrity           PASS  BUILD INTEGRITY: PASS  (12220211 bytes, 0 unresolved, 9 panes + 7 overlays, build SYNCED the deliverable, HEAD-match DEFERRED -- 20 uncommitted path(s) [_audit/2026-07-31-appeal-home-freeze.md, deepdive_content_pipeline_rehearsal.html, design-tokens/tokens.json]: commit src/ AND the rebuilt deliverable together, or CI will reject the pair)
+  build_integrity           PASS  BUILD INTEGRITY: PASS  (12237125 bytes, 0 unresolved, 9 panes + 7 overlays, build SYNCED the deliverable, HEAD-match DEFERRED -- 13 uncommitted path(s) [deepdive_content_pipeline_rehearsal.html, src/scripts/app/altitude.js, src/scripts/app/chrome-metrics.js]: commit src/ AND the rebuilt deliverable together, or CI will reject the pair)
   css_syntax                PASS    PASS All checks passed (18 keyframes validated)
   room_static               PASS  ROOM STATIC: PASS  (codemod=0, styles.css infinite=0, 6 room blocks + rebind, boot stamped)
   room_contrast             PASS  ROOM CONTRAST: PASS  (12 rooms: ink/bg >= 4.5, on-slab/solid >= 5.0)
@@ -66,13 +66,14 @@
   shadow_css_guard          PASS    PASS: every class styles.css selects is reachable from the light DOM.
   token_liveness            PASS  TOKEN LIVENESS: PASS  (10 assertions: every --ease-*/--duration-* resolves, survives a shorthand, and the two audited elements animate -- both themes)
   seg_state                 PASS  SEG STATE: PASS  (31 assertions across 10 tabs: one active, aria-current="true" on it, none stale)
-  focus_ring                PASS  FOCUS RING: PASS  (12 assertions: 3 light-DOM chrome buttons kept their ring; the shadow #adv, #jg and .piv-jump get the BASE_SHEET ring; and in both themes the .hm-cta and all six .hm-room focus HALOS derive from their own room, each against a live negative control)
+  focus_ring                PASS  FOCUS RING: PASS  (14 assertions: 3 light-DOM chrome buttons kept their ring; the shadow #adv, #jg and .piv-jump get the BASE_SHEET ring; and in both themes the .hm-cta and all six .hm-room focus HALOS derive from their own room, each against a live negative control)
   sidebar_geometry          PASS  SIDEBAR GEOMETRY: PASS  (15 assertions: .tn-current readable at 5 desktop widths, 7+ pane tabs above the 1280x800 fold and 6+ of them fully; all three negative controls moved)
   heading_tree              PASS  HEADING TREE: PASS  (9 assertions: #home control holds; every topic route exposes >1 heading; #stagehead is a named, focusable level-2)
   fold_budget               PASS  FOLD BUDGET: PASS
   chrome_metrics            PASS  CHROME METRICS: PASS
   touch_floor               PASS  TOUCH FLOOR: PASS
   home_reflow               PASS    2 planted mutants detected (a wide child in the FIXED bar -- invisible to documentElement.scrollWidth -- and a wide child in the flow)
+  home_claims               PASS    4 planted mutants detected (a full claim over empty rails; a level claim over unequal rails; a thin rail named on the highest tier; a step position beside a bare probe remainder) -- every one of them a defect a judge found on a shipped build
   visual_regression         PASS  VISUAL REGRESSION: PASS  (16 baselines, win32-chromium149; every capture reached a proven rest state across all 18 roots, cleared the blank-page floor, and matched its committed pixels)
 ================================================================
 GATE: PASS

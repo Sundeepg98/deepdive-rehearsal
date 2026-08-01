@@ -960,6 +960,19 @@ for name, script in [('render', 'test/render.cjs'), ('entity_leak', 'test/entity
                      # lost. Two mutants every run -- one in the fixed bar (the case scrollWidth
                      # cannot see) and one in the flow -- and it ABORTS if either goes undetected.
                      ('home_reflow', 'test/home_reflow.cjs'),
+                     # THE HOME MAY NOT PRINT A CLAIM IT CANNOT DERIVE. Three consecutive rounds of
+                     # judgment found the same class in different clothes -- the gauge naming a thin
+                     # rail on an all-zero record, then "Every rail is full" printed above two
+                     # visibly empty rails, then "stopped at step 1 of 9" fabricated from a field the
+                     # record never stored -- and every instance rode in on a CORRECT fix. None was
+                     # catchable: grep across test/ found ZERO references to hm-verdict, "thin rail"
+                     # or Altitude, so the signature's punchline had no arm that could fail. This
+                     # drives nine edge records (empty / one-solid / two tiers tied under a higher
+                     # third, both directions / level / perfect / absent-field / mixed-position /
+                     # no-record) at two viewports and asserts each rendered claim against the
+                     # NUMERALS RENDERED BESIDE IT. Four planted mutants, each a defect a judge
+                     # found on a shipped build; aborts if any goes undetected.
+                     ('home_claims', 'test/home_claims.cjs'),
                      # THE CHECK THAT ACTUALLY LOOKS AT THE SCREEN. Everything above this line reads the
                      # DOM, the source, or a computed style; none of them can tell you what was PAINTED.
                      # The old `visual_regression.py` claimed to and could not -- it was a regex over CSS

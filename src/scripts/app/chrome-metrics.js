@@ -76,7 +76,7 @@
   'use strict';
 
   var root = document.documentElement;
-  var seg = null, bar = null, hmTop = null, hmBot = null;
+  var seg = null, bar = null, hmTop = null, hmBot = null, hmStatus = null;
   var lastTop = null, lastBot = null;
 
   /* How much of the viewport this bar takes away from the content. See the header: only a fixed,
@@ -101,7 +101,14 @@
     if (!bar) bar = document.querySelector('.sidebar .mockcta');
     if (!hmTop) hmTop = document.querySelector('.sidebar .hm-rail');
     if (!hmBot) hmBot = document.querySelector('.sidebar .hm-tabs');
-    var t = stolen(seg) + stolen(hmTop), b = stolen(bar) + stolen(hmBot);
+    if (!hmStatus) hmStatus = document.querySelector('.hm-status');
+    /* THE CENSUS IS BOTTOM CHROME TOO. It is position:fixed at the frame's foot on the home, so
+       by this module's own definition it steals from the bottom of the viewport -- and the
+       floating scroll-top disc has to dodge it exactly as it dodges the phone's tab bar. Adding
+       it here is what let the disc go back to tracking a MEASURED value instead of the constant
+       that stopped listening on the phone. On a topic route it is display:none and stolen()
+       returns 0, so nothing about the topic routes changes. */
+    var t = stolen(seg) + stolen(hmTop), b = stolen(bar) + stolen(hmBot) + stolen(hmStatus);
     if (t === lastTop && b === lastBot) return;   /* nothing moved -- touch no style */
     lastTop = t; lastBot = b;
     root.style.setProperty('--chrome-top', t + 'px');
@@ -113,7 +120,8 @@
     bar = document.querySelector('.sidebar .mockcta');
     hmTop = document.querySelector('.sidebar .hm-rail');
     hmBot = document.querySelector('.sidebar .hm-tabs');
-    if (!seg && !bar && !hmTop && !hmBot) return;  /* not this document */
+    hmStatus = document.querySelector('.hm-status');
+    if (!seg && !bar && !hmTop && !hmBot && !hmStatus) return;   /* not this document */
     derive();
     try {
       var ro = new ResizeObserver(derive);
@@ -133,6 +141,7 @@
          rendered and display:none, and a ResizeObserver reports that as a size change to 0 */
       if (hmTop) ro.observe(hmTop, { box: 'border-box' });
       if (hmBot) ro.observe(hmBot, { box: 'border-box' });
+      if (hmStatus) ro.observe(hmStatus, { box: 'border-box' });
     } catch (e) {
       /* No ResizeObserver: fall back to the events that at least catch the orientation and
          zoom cases. Strictly weaker -- a font-driven reflow at a steady viewport is missed --

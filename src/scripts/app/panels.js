@@ -282,8 +282,15 @@
          coverage is SHAPE, never VERDICT. It also sat a few hundred pixels under an instrument
          whose whole sentence is "the level you are interviewing for is the one you have
          rehearsed least", so the screen said both things at once. The badge now names what it
-         actually counted and lets the gauge keep the readiness question. */
-      ? '<span class="ix-c-badge ix-c-ready"><i style="background:var(--acc)"></i>drilled + recalled</span>'
+         actually counted and lets the gauge keep the readiness question.
+         SHORTENED again in round 3: "drilled + recalled" measured 88.4px, and with the badge
+         pushed 36px inboard to clear the reset button it needed 124px of a card whose title
+         reserve was 50px -- so it printed across 28 of 46 topic names, worst case 88px, and worse
+         still in the 234px Topic-index cards. Two fixes had landed on the same corner in one round
+         without being measured against each other. The reserve is now sized for the badge AND the
+         badge says the shorter true thing: the whiteboard was recalled, on a card whose grade
+         state already says the drill is done. */
+      ? '<span class="ix-c-badge ix-c-ready"><i style="background:var(--acc)"></i>recalled</span>'
       : '<span class="ix-c-badge"><i style="background:#0d9488"></i>done' + _wbMark + '</span>';
     else if (_wbSome) _bdg = '<span class="ix-c-badge"><i style="background:var(--acc)"></i>recalled</span>';
     var filt = ((idn.title || '') + ' ' + (idn.locatorTail || '') + ' ' + th).toLowerCase().replace(/&[a-z#0-9]+;/g, ' ').replace(/"/g, '');

@@ -293,3 +293,159 @@ manifest updated. **The other 14 baselines remain byte-identical to `1c533d7`** 
 1c533d7 HEAD -- test/baselines/` is exactly three changed files.
 
 Receipts re-shot after the round-2 changes: `_audit/appeal-home-receipts/`.
+
+---
+---
+
+# ROUND-3 ADDENDUM -- 2026-08-01
+
+Round 2 was judged by the same three lenses: FIXABLE / FIXABLE / BLOCKING. Thirteen closures were
+verified on the live page, several re-measured better than asked, and one judge reproduced this
+wave's new `home_rhythm` arm's negative control himself. All three verdicts are preserved verbatim
+with their authors credited at `_audit/2026-08-01-w1r2-judge-*.md`.
+
+Then all three named the same thing, independently, and it is the third round on that module.
+
+## A. THE CLASS, and the rule that now governs this route
+
+**The home printed claims the record could not support.** Three rounds, three costumes, and every
+instance rode in on a CORRECT fix:
+
+| round | the claim | the record |
+|---|---|---|
+| 1 | "Staff is the thin rail" | nothing graded at any tier |
+| 2 | "Every rail is full. Solid on all 972 probes across all three tiers" | two rails visibly empty, the panel's own header reading "310 SOLID OF 972" |
+| 2 | "you stopped at step 1 of 9" | no walk position stored, ever |
+| 2 | "every hero ends in a question mark" (the addendum) | four renders of one topic; 52 of 972 are imperatives |
+
+**The standing rule for this route, now enforced rather than intended: the home may not print a
+claim it cannot derive -- where evidence is absent, it says less.**
+
+Three rounds of judgment found this class and the gate never could. `grep` across `test/` for
+`hm-verdict`, `"thin rail"`, `Altitude.` or `hm-seg` returned **zero** before this round: the
+signature's punchline, the hero's completeness and the position sentence -- the three things this
+wave is *about* -- had no arm that could fail. That is the actual defect behind all four rows above,
+and it is what round 3 fixes first.
+
+**`test/home_claims.cjs` is new and it is the class-killer.** Nine edge records (empty, one-solid,
+two tiers tied under a higher third in both directions, genuinely level, perfect, absent-field,
+mixed-position, no-record) driven at 1280 and 390, asserting each rendered claim **against the
+numerals rendered beside it** -- not against taste. Four planted mutants, each one a defect a judge
+actually found on a shipped build; the check ABORTS if any goes undetected. **72 assertions.**
+
+It earned its keep on its first run, on my own code: it caught the new gauge printing *"Solid on
+all 972 probes across all three tiers"* while the three rails totalled **971**. The bank carries an
+EXTEND tier that is not a ladder rung. Same class, one probe wide, caught by the arm written to
+catch it rather than by a fourth judge.
+
+## B. The gauge: record class -> exact sentence
+
+`Altitude.compute()` no longer returns a nullable name for the consumer to infer from. It returns
+the SHAPE -- `thinSet`, `level`, `full`, `minPct`, `ladder` -- and comparison is at the **rendered
+precision** (integer percent), because a raw-float `<` named a thin rail on a 0.046-point
+difference the instrument does not draw.
+
+| class | condition | sentence, and every number in it |
+|---|---|---|
+| **cold** | `graded === 0` | *"Nothing graded yet. Each rail is one interview tier and each mark is one probe -- they fill as you grade yourself, and the shortest rail is the level you are least ready for."* No verdict; it explains the instrument. |
+| **full** | every rail at 100% | *"Every rail is full. Solid on all `ladder.n` probes across all three tiers -- there is no thin rail left to name."* `ladder.n`, not the bank total. |
+| **level** | all three rails at ONE rendered pct | *"The rails are level. All three tiers sit at `minPct`% solid..."* -- and `minPct` is the number every rail shows. |
+| **thin, one** | exactly one rail lowest | *"`T` is the thin rail. `solid` solid of `n` probes, across `topics` of 46 topics..."* -- that rail's own figures. |
+| **thin, several** | two rails share the lowest pct | *"`A` and `B` are the thin rails. Both sit at `minPct`% solid -- `A x of y`, `B x of y` -- under a rail that is further along."* Each rail quotes itself; no rail's number is asserted of another. |
+
+The fifth row is the one round 2 did not enumerate, and it is where the false sentence lived.
+
+## C. The remaining eleven items
+
+2. **The hero is never truncated.** The 4-line clamp cut the question mark off 1 of 972 probes at
+   1280 and **63 of 972 at 390** -- and what a clamp removes is always the end, which is always
+   where the question is. Fixed by fitting rather than by hiding: the narrow column takes a display
+   step down (21px -> 18px below 860) and the line budget is sized from a **census of all 972
+   probes at every breakpoint**. Measured after the fix: **0 of 972 clipped at 1440, 1280, 1024,
+   860, 430, 390, 360 and 320.** `home_claims` asserts the rendered hero is unclipped on every
+   record it drives.
+3. **The outline heroes what the pixels hero.** Round 2 minted the home's first h1 and pointed it
+   at the 9px eyebrow carrying the TOPIC NAME -- so the pixels stopped being a table of contents and
+   the document's outline started being one. The **question is the h1** now; the eyebrow is the
+   label it looks like; `aria-labelledby` names the panel by the question. A no-bank topic gives the
+   eyebrow the h1, so the page always has exactly one.
+4. **Position honesty.** `cursor()` gated on `posGet(id)` being truthy and then read a field that
+   might not exist -- `posRestore` returns 0 for an absent field, which is right for a pane
+   restoring itself and wrong for a sentence claiming where you stopped. The **field** is the gate
+   now. The hero matches the pane Enter opens: a stored DRILL cursor earns "Where you stopped" and
+   the probe it sits on; any other resume pane heroes the probe the drill would serve **next**,
+   under **"Up next"**. That also makes `firstUngraded()` reachable, which it provably was not. And
+   the remainder keeps its denominator whenever the position is denominated in something else.
+5. **(BLOCKING) The room controls work again.** `scrollToRoom` looked up `#homelib` first with a
+   `||` fallback -- but `#homelib` is rendered unconditionally, so the query always returned a node
+   and the fallback could never fire. Below 1280 every room control called `scrollIntoView` and
+   `focus` inside a `display:none` subtree: six styled, focusable buttons and the 1-6 hotkeys doing
+   nothing, a regression against master. Resolution now prefers the **visible** mount (`offsetParent`)
+   and opens the drawer if that is the host. Measured moving the page at 1280, 1024, 900 and 390.
+6. **The LIBRARY tab delivers the library** -- it opens the drawer before scrolling.
+7. **The badge never overprints a title.** Two round-2 fixes landed on the same 36px of corner
+   without being measured against each other: the badge moved 25px inboard and its longest string
+   more than doubled, against a title reserve that was a constant 50px -- 28 of 46 cards
+   overprinted, worst case 88px, and worse in the 234px Topic-index cards. The reserve is sized for
+   the badge (92px) **and** the badge says the shorter true thing (`recalled`). Measured by TEXT INK
+   across all 46 cards: 0 overlaps.
+8. **The census sheds by priority instead of clipping itself.** It was a fixed 719px in an
+   `overflow:hidden` bar and cut itself mid-word between 420 and 790px -- first casualty *"Offline
+   -- nothing leaves this file"*, the one claim on the bar that is not a number. Segments now drop
+   lowest-priority-first; the probes-graded figure never leaves. And `home_reflow` was extended from
+   {320, 390} to {320, 390, 500, 700, 900}: **the only bar in the app that actually clipped was
+   `display:none` at both widths the fixed-bar clipping check sampled.** The widened check found a
+   residual 13px at 500 that this fix then closed.
+9. **The disc tracks the measurement again.** Round 2's home-scoped constant at specificity (0,2,1)
+   outranked the app's measured rule at (0,1,0), so on a phone with a home-indicator inset
+   `--chrome-bot` correctly re-measured 45 -> 79 and the disc stayed at 54: **25px inside the tab
+   bar it was dodging.** The census now feeds `--chrome-bot` through `chrome-metrics.js` like every
+   other fixed bar, and the disc's offset is the measurement plus the authored gap at every width.
+   Verified by growing the bar at runtime and watching the disc move with it.
+10. **The tab bar tells the truth.** `aria-current` was set on tap only, so it read "Today" for the
+    whole length of the page -- and it is announced. An IntersectionObserver marks whichever target
+    owns the viewport. Destinations also gained `scroll-margin-top`, because a tab that scrolls its
+    target to y=0 parked it under the 57px fixed rail: you arrived at the gauge with its title and
+    headline figure hidden by the bar you navigated from.
+11. **The autofocus ring -- the design call, decided.** Z1's hard floor is *"1 keystroke, 0 clicks,
+    autofocused... any direction that costs this loop is a regression regardless of what it buys"*,
+    so removing the autofocus was not available: Enter would land on `<body>`. But Chromium matches
+    `:focus-visible` on a load-time PROGRAMMATIC focus, so at rest the accessory wore the
+    highest-contrast edge on the screen (14.72:1) -- exactly what the coherence ruling's
+    one-signature rule exists to prevent, and it got louder *because* removing the phantom wrapper
+    stopped clipping it. **Decision: keep the autofocus, quiet only its ring until the first real
+    keystroke** -- which is also what Firefox does natively. A keyboard user re-arms it with their
+    first Tab, before they could need it; a mouse user never sees it; at rest the loudest object is
+    the instrument. `focus_ring` is re-anchored to press a key first -- a fairer reading of its own
+    question, since a keyboard user has by definition pressed a key -- and **gained an arm** that
+    the quiet state is genuinely quiet, so the decision can fail rather than merely being asserted
+    here. 12 assertions -> 14.
+
+## D. Claims at measured strength
+
+Round 2's addendum said *"every hero ends in a question mark"*; a judge measured 52 of 972 probes
+as imperatives (*"Defend the choice."*). The substance held -- those are still sentences an
+interviewer speaks -- but the stated invariant did not, and it was generalised from four renders of
+one topic. Round 3 states coverage instead of invariants:
+
+- **Hero completeness:** censused over **all 972 probes at 8 widths** (1440 / 1280 / 1024 / 860 /
+  430 / 390 / 360 / 320): **0 clipped**. Not "every hero is a question" -- the claim is that no
+  rendered hero is cut off.
+- **Claims battery:** **9 records x 2 viewports, 72 assertions**, all green, 4 mutants detected.
+- **Round-3 acceptance probe:** 16 assertions over items 3, 5, 6, 7, 9, 10, 11 at four viewports.
+- **Not covered, stated plainly:** no real-device test (the safe-area inset is injected, as the
+  judge's own was); no screen-reader pass; the 420-919px band still has no room nav or Topic-index
+  affordance beyond the `\` key, which is pre-existing and named by the map judge as uncharged; and
+  the third presentation of the six rooms is still deliberately unfixed from round 2.
+
+## E. Gate and VR
+
+**76/76 PASS** -- capture at `_audit/2026-07-31-appeal-home-gate.txt`, written outside the repo
+during the run and copied in. Registration delta against `1c533d7` is `+home_reflow` and
+`+home_claims`; **nothing removed, nothing skipped, nothing weakened.** `focus_ring` gained an
+assertion; `home_rhythm` and `home_reflow` both grew their coverage.
+
+VR: the two home baselines rebaselined under the standing authorization, pair kept, manifest
+updated. **The other 14 remain byte-identical to `1c533d7`.**
+
+Receipts re-shot after the round-3 changes: `_audit/appeal-home-receipts/`.

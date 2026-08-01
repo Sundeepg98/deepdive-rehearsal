@@ -76,27 +76,64 @@ var Altitude = (function () {
       });
     }
 
-    /* THE THIN RAIL -- and it is null unless the record actually earns the accusation.
-       The verdict sentence ("Staff is the thin rail -- the level you are interviewing for is the
-       one you have rehearsed least") is the signature's punchline, and a punchline that can be
-       provably false is worse than no punchline. A strict `<` alone cannot say that: on a TIE it
-       silently keeps whichever tier it looked at first, so an all-zero record printed "Staff is
-       the thin rail. 0 solid of 310 probes" -- an accusation derived from nothing -- and a PERFECT
-       record printed the same sentence about a tier the user has fully banked. Both are ties.
-       So the rule is evidence, not ordering: a rail is thin only when it is STRICTLY thinner than
-       every other rail. Ties (including all-zero and all-perfect) yield null, and the consumer
-       says what it actually knows instead. */
-    var shares = [], thin = null;
+    /* ===== THE SHAPE OF THE RECORD, not a nullable name ==================================
+       This is the third round on this function, and both earlier versions failed the same way:
+       they returned ONE tier and left the consumer to infer everything else from its absence.
+         Round 1 returned the first-seen minimum, so a TIE silently named whichever tier the loop
+           reached first -- an all-zero record was told "Staff is the thin rail".
+         Round 2 returned null on any tie for last, and the consumer read null as "the rails are
+           level" and took its percentage from Staff alone. On a record with Staff at 100% and the
+           other two empty, the gauge printed "Every rail is full. Solid on all 972 probes" above
+           two visibly empty rails and its own header reading "310 SOLID OF 972".
+       An accusation the reader can discount is survivable; a statement of fact the reader can
+       check against the picture directly above it is not. So this function now returns the SHAPE
+       -- the thin SET, whether the rails are genuinely level, whether the board is full -- and the
+       consumer has a distinct sentence per class with nothing left to infer.
+
+       COMPARE AT THE RENDERED PRECISION. The rails print integer percents, so two rails at
+       59.98% and 60.02% are identical to every reader and a raw-float `<` would name one of them
+       thin on a difference the instrument does not draw. `pct` is what the rail shows; `pct` is
+       what decides. */
+    var shares = [];
     for (i = 0; i < TIERS.length; i++) {
       var a = tiers[TIERS[i]];
-      if (a.n) shares.push({ tier: TIERS[i], share: a.solid / a.n });
+      if (a.n) shares.push({ tier: TIERS[i], pct: Math.round(a.solid / a.n * 100) });
     }
-    if (shares.length > 1) {
-      shares.sort(function (x, y) { return x.share - y.share; });
-      if (shares[0].share < shares[1].share) thin = shares[0].tier;
+    var thin = null, thinSet = [], level = false, min = null, max = null;
+    if (shares.length) {
+      min = shares[0].pct; max = shares[0].pct;
+      for (i = 1; i < shares.length; i++) {
+        if (shares[i].pct < min) min = shares[i].pct;
+        if (shares[i].pct > max) max = shares[i].pct;
+      }
+      for (i = 0; i < shares.length; i++) if (shares[i].pct === min) thinSet.push(shares[i].tier);
+      level = (min === max);                       /* EVERY rail equal -- not "two of them" */
+      if (!level && thinSet.length === 1) thin = thinSet[0];
     }
-    return { order: TIERS.slice(), tiers: tiers, totals: totals, rows: rows,
-             thin: thin, nTopics: rows.length };
+    /* THE LADDER IS NOT THE BANK, and the sentence that says "all three tiers" has to count the
+       three tiers. `totals` spans every probe including the EXTEND tier, which is not a ladder
+       rung -- 972 in the bank against 971 on the rails. Round 3's own claim check caught the
+       gauge printing "Solid on all 972 probes across all three tiers" over rails totalling 971,
+       which is the same class this round exists to close, one probe wide.
+       So `full` is a property of the RAILS (every rendered rail at 100%), and `ladder` carries
+       the figures any sentence about the rails is allowed to quote. */
+    var ladder = { solid: 0, n: 0 };
+    for (i = 0; i < TIERS.length; i++) { ladder.solid += tiers[TIERS[i]].solid; ladder.n += tiers[TIERS[i]].n; }
+    var full = shares.length > 0 && min === 100;
+
+    return {
+      order: TIERS.slice(), tiers: tiers, totals: totals, rows: rows, nTopics: rows.length,
+      ladder: ladder,
+      /* the ONE strictly-thinnest tier, or null when several share the minimum */
+      thin: thin,
+      /* every tier at the minimum -- length 1, 2 or 3; empty only when no tier has probes */
+      thinSet: thinSet,
+      /* true only when ALL rails share one rendered percentage */
+      level: level,
+      full: full,
+      minPct: min, maxPct: max,
+      graded: totals.solid + totals.shaky + totals.missed,
+    };
   }
 
   /* One rail's segments, ORDERED STRONGEST-FIRST. Scattered lit cells do not communicate a

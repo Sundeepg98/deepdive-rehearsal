@@ -333,6 +333,32 @@ const RING = (sel) => {
       null, B.ACT_MS, 'the home renders its hero and all six room cards');
 
     /* 7-8. the hero -- W15's fix at styles.css:2007, previously guarded by nothing. */
+    /* THE QUIET-FOCUS WINDOW, and why this arm now presses a key first.
+       The home autofocuses its one primary action so Enter is the whole daily loop (Z1's hard
+       floor). Chromium matches :focus-visible on that LOAD-TIME programmatic focus, so with zero
+       user interaction the button wore the highest-contrast edge on the screen -- measured 14.72:1
+       against the panel -- which is the accessory the coherence ruling's one-signature rule exists
+       to keep quiet. The decision (round 3 item 11) was to keep the autofocus and quiet only its
+       ring until the first real keystroke, which is also what Firefox does natively.
+       So this arm asks its own question more faithfully than before: "does keyboard focus in this
+       app look like this app?" is a question about a KEYBOARD USER, and a keyboard user has by
+       definition pressed a key. The keystroke below puts the page in that state; the halo
+       assertion is unchanged and still measures --rm against a live negative control.
+       The quiet state itself is not taken on trust -- it gets its own arm immediately after, so
+       the design decision can fail too rather than merely being asserted in a freeze. */
+    const quiet = await hp.evaluate(() => {
+      const c = document.querySelector('#home .hm-cta[data-autofocus]');
+      if (!c) return { err: 'no autofocused CTA' };
+      const cs = getComputedStyle(c);
+      return { focused: document.activeElement === c, outline: cs.outlineStyle, shadow: cs.boxShadow };
+    });
+    chk('[' + theme + '] the autofocused CTA is focused but paints NO ring before any keystroke',
+      !quiet.err && quiet.focused && quiet.outline === 'none' && quiet.shadow === 'none',
+      JSON.stringify(quiet));
+
+    await hp.keyboard.press('Shift');          /* a real keystroke -- the ring re-arms for good */
+    await hp.evaluate(() => { const c = document.querySelector('#home .hm-cta'); if (c) c.blur(); });
+
     judgeHalo('[' + theme + '] .hm-cta focus halo derives from the room it will OPEN (--rm), not the roomless --acc -- W15 regression guard',
       await hp.evaluate(HALO, '#home .hm-cta'));
 

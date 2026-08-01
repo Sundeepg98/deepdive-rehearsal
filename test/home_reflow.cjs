@@ -27,8 +27,16 @@
  * If either goes undetected the check ABORTS rather than report a green it did not earn. Mutant 1
  * is the one the scrollWidth predicate cannot see, and it is planted first for that reason.
  *
- * SCOPE: the #home route, at 320 and 390 CSS px, both themes. The topic routes have their own
- * geometry guards (fold_budget, chrome_metrics, sidebar_geometry, click_drift).
+ * SCOPE: the #home route, at 320 / 390 / 500 / 700 / 900 CSS px, both themes. The topic routes
+ * have their own geometry guards (fold_budget, chrome_metrics, sidebar_geometry, click_drift).
+ *
+ * WHY THE WIDTH LIST GREW (2026-08-01). The original list was 320 and 390 -- and the status
+ * census, the one bar in this app that actually clipped, is `display:none` at BOTH of them. So
+ * the check was right about the mechanism and blind about the instance: it tested a fixed-bar
+ * clipping rule at the only two widths where the fixed bar in question does not exist, while the
+ * census silently cut "Offline -- nothing leaves this file" off itself everywhere between 420 and
+ * 790. A check has to be sampled where the thing it guards is alive; 500/700/900 are the band the
+ * census renders in, and 900 also covers the widest layout that still has fixed phone chrome.
  *
  * Usage: node test/home_reflow.cjs [file]
  * Exit:  0 = pass, 1 = FAIL */
@@ -83,7 +91,7 @@ const OVERSPILL = () => {
   const out = [];
   let aborted = null;
 
-  for (const w of [320, 390]) {
+  for (const w of [320, 390, 500, 700, 900]) {
     for (const theme of ['light', 'dark']) {
       const page = await ctx.newPage();
       await page.setViewportSize({ width: w, height: 720 });
@@ -102,6 +110,17 @@ const OVERSPILL = () => {
       const doc = await page.evaluate(() => ({ dw: document.documentElement.scrollWidth, ww: innerWidth }));
       out.push(['[' + w + '/' + theme + '] the document does not scroll horizontally',
         doc.dw <= doc.ww + 1, 'document ' + doc.dw + ' vs viewport ' + doc.ww]);
+
+      /* the census is the bar this check was written for and could not previously see */
+      if (w >= 420) {
+        const cen = await page.evaluate(() => {
+          const s = document.querySelector('.hm-status');
+          if (!s || !s.getClientRects().length) return null;
+          return { over: Math.round(s.scrollWidth - s.clientWidth), w: Math.round(s.clientWidth) };
+        });
+        out.push(['[' + w + '/' + theme + '] the status census fits the bar it is painted in',
+          !cen || cen.over <= 1, cen ? cen.over + 'px of content clipped inside a ' + cen.w + 'px bar' : 'not rendered']);
+      }
 
       /* ---- MUTANT 1: the one scrollWidth cannot see ---- */
       if (w === 320 && theme === 'light') {

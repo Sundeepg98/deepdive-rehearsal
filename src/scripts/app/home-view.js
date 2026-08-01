@@ -38,7 +38,7 @@
 (function () {
   'use strict';
 
-  var el = null, rail = null, lib = null, tabs = null, status = null, bound = false;
+  var el = null, rail = null, lib = null, tabs = null, status = null, bound = false, tabObs = null;
 
   function landingPref() {
     try { return (typeof Store !== 'undefined' && Store.get('home.landing', '') === 'resume'); } catch (e) { return false; }
@@ -93,51 +93,54 @@
 
   /* the resume CURSOR, through the SAME clamp the pane restores with, so nothing rendered here
      can promise a probe that Resume will not actually land on */
+  /* A POSITION IS ASSERTED ONLY WHEN THE RECORD STORES ONE, for that pane.
+     `posRestore` returns 0 for an ABSENT field -- that is correct for a pane restoring itself
+     (start at the top) and wrong for a sentence claiming where you stopped. Gating on
+     `posGet(id)` being truthy meant ANY stored position, including a walkthrough scroll offset,
+     satisfied the test: a record holding only `{drill:10}` printed "you stopped at step 1 of 9"
+     about a walkthrough it had no evidence the user ever opened. The field itself is now the
+     gate, so an absent field yields no claim rather than a fabricated one. */
   function cursor(id, view) {
     try {
-      if (typeof posRestore !== 'function' || typeof posGet !== 'function' || !posGet(id)) return null;
+      if (typeof posRestore !== 'function' || typeof posGet !== 'function') return null;
+      var p = posGet(id);
+      if (!p || typeof p[view] !== 'number') return null;
       var t = TopicRegistry.get(id);
       if (view === 'drill' && t && t.data && t.data.bank && t.data.bank.cards && t.data.bank.cards.length) {
         var nb = t.data.bank.cards.length;
-        return { kind: 'drill', i: posRestore('drill', nb, id), n: nb };
+        return { kind: 'drill', i: posRestore('drill', nb, id), n: nb, unit: 'probe' };
       }
       if (view === 'walk' && t && t.data && t.data.walk && t.data.walk.steps && t.data.walk.steps.length) {
         var ns = t.data.walk.steps.length;
-        return { kind: 'walk', i: posRestore('walk', ns, id), n: ns };
+        return { kind: 'walk', i: posRestore('walk', ns, id), n: ns, unit: 'step' };
       }
       return null;
     } catch (e) { return null; }
   }
 
-  /* THE HERO IS ALWAYS A QUESTION SOMEONE ACTUALLY ASKED, on every resume path.
-     The first cut read the probe only when the resume cursor was a DRILL cursor and otherwise
-     fell back to the topic's thesis. That fallback was not an edge -- LastVisit.resumeView()
-     defaults to 'walk', which is the app's own default pane -- so the majority path put a
-     declarative topic summary in curly quotes under "Where you stopped" and presented it as
-     something an interviewer said. Nobody said it: 0 of 46 theses is a question, their median is
-     435 characters, and at the worst case the panel grew to 103% of a 1280x800 viewport and
-     pushed the signature off-screen entirely.
-     The topic's own bank is the honest source, and every topic has one (test/topic_contract.cjs
-     requires >= 18 cards). So: the probe the drill cursor sits on if there is one -- whichever
-     pane the resume pointer names -- else the first probe not yet graded, else the first. Only a
-     topic with no bank at all falls through, and that path drops the quotes and the framing
-     rather than quoting prose nobody spoke. */
-  function heroQuestion(t, cur) {
+  /* THE HERO IS A QUESTION SOMEONE ACTUALLY ASKED, AND IT MATCHES THE PANE ENTER OPENS.
+     Round 1's hero fell back to the topic THESIS -- a declarative summary nobody spoke, 0 of 46
+     ending in a question mark. Round 2 fixed the source and broke the claim: it read the DRILL
+     cursor on every path, so a walk resume quoted probe 11 of 21 under the heading "Where you
+     stopped" while the sentence below it named step 5 of 9 and the button opened the walkthrough.
+     Two positions, in two different collections, in one block.
+     Both halves matter, so both are answered:
+       - the SOURCE is always the topic's own bank (every topic has one; topic_contract requires
+         >= 18 cards), so the hero is always a real interview sentence;
+       - the CLAIM follows the record. Only a stored DRILL cursor earns "Where you stopped" and
+         the probe it sits on. Any other resume pane heroes the probe the drill would serve NEXT
+         -- the first ungraded one -- under a heading that says so.
+     That also makes firstUngraded() reachable, which it was not: posRestore returns 0 for an
+     absent field and never a negative, so the middle rung of the old chain could never run. */
+  function heroFor(t, cur) {
     var cards = (t && t.data && t.data.bank && t.data.bank.cards) || [];
     if (!cards.length) return null;
-    var i = -1;
-    if (cur && cur.kind === 'drill') i = cur.i;
-    if (i < 0) {
-      /* a stored drill position counts even when the resume pointer names another pane */
-      try {
-        if (typeof posGet === 'function' && typeof posRestore === 'function' && posGet(t.id)) {
-          i = posRestore('drill', cards.length, t.id);
-        }
-      } catch (e) { i = -1; }
+    if (cur && cur.kind === 'drill') {
+      var at = cards[cur.i] || cards[0];
+      if (at && at.q) return { q: plain(at.q), mode: 'stopped' };
     }
-    if (i < 0) i = firstUngraded(t, cards);
-    var card = cards[i] || cards[0];
-    return (card && card.q) ? plain(card.q) : null;
+    var nx = cards[firstUngraded(t, cards)] || cards[0];
+    return (nx && nx.q) ? { q: plain(nx.q), mode: 'next' } : null;
   }
 
   /* the first probe with no grade on the record -- the one the drill would put in front of you */
@@ -257,8 +260,8 @@
     var t = r.topic, cur = cursor(r.id, lastView());
     var pr = (Progress.get ? Progress.get(r.id) : null) || {};
 
-    /* THE HERO: the probe you were being asked, not the topic's name. */
-    var q = heroQuestion(t, cur);
+    /* THE HERO: the probe you were being asked, or the one you are about to be. */
+    var hero = heroFor(t, cur);
 
     /* THE LINE: second person, carrying REASON, RECENCY and REMAINDER. Every field is already in
        the record -- this is a copy change, not a feature. Recency is topic-scoped and the wording
@@ -283,10 +286,7 @@
        denominated in and spending it on a different countable is how an instrument loses its
        units. */
     var where = '';
-    if (cur) {
-      where = ' at ' + (cur.kind === 'drill' ? 'probe' : 'step') +
-        ' <b>' + (cur.i + 1) + '</b> of ' + cur.n;
-    }
+    if (cur) where = ' at ' + cur.unit + ' <b>' + (cur.i + 1) + '</b> of ' + cur.n;
     var why;
     if (flagged > 0) {
       why = 'You marked <b>' + flagged + '</b> probe' + (flagged === 1 ? '' : 's') +
@@ -296,10 +296,16 @@
     } else {
       why = 'You opened this topic' + when + ' and have not graded a probe in it yet.';
     }
-    /* the remainder does not repeat the denominator the position just stated */
+    /* THE REMAINDER KEEPS ITS DENOMINATOR UNLESS THE POSITION JUST STATED THE SAME ONE.
+       Dropping "of its 21 probes" is only safe when the position was denominated in probes too.
+       On a walk resume the number just stated counts STEPS, so a bare "9 still ungraded" sits
+       four words from a 9 that counts something else, and the reader's parse -- "9 of the 9 steps
+       are ungraded" -- is both false and un-gradeable. Walk steps run 9-10 and banks run 21-24,
+       so that collision lands on 41 of 46 topics at a mid-progress record. */
+    var sameUnit = !!cur && cur.unit === 'probe';
     var rest = left > 0
-      ? (where ? ' <b>' + left + '</b> still ungraded.'
-               : ' <b>' + left + '</b> of its ' + tot + ' probes still ungraded.')
+      ? (sameUnit ? ' <b>' + left + '</b> still ungraded.'
+                  : ' <b>' + left + '</b> of its ' + tot + ' probes still ungraded.')
       : ' Every probe here is graded.';
 
     /* THE CTA SUB-LINE NAMES THE DESTINATION AND NOTHING ELSE.
@@ -309,10 +315,21 @@
        word "probe" for every pane, so the walk path read "Walkthrough, probe 5 of 9" -- spending
        the census and the gauge's own denominator on a different countable. Walk steps are steps. */
     var vt = lastViewTitle();
+    /* THE HEADING STRUCTURE HEROES WHAT THE PIXELS HERO.
+       Round 2 minted the home's first h1 and pointed it at the eyebrow -- the 9px line carrying
+       the TOPIC NAME. So the pixels stopped being a table of contents and the document's outline
+       started being one: navigate by headings and the answer to "what is this page about" was a
+       topic name, while the question the direction calls the hero appeared in no heading list at
+       all. The QUESTION is the h1. The eyebrow is the label it looks like. If a topic somehow has
+       no bank, the eyebrow carries the h1 instead, so the page always has exactly one. */
+    var eyebrow = (hero && hero.mode === 'next' ? 'Up next &middot; ' : 'Where you stopped &middot; ')
+      + esc(t.identity.title);
     return '<section class="hm-continue hm-panel" aria-labelledby="hm-ask-h">' +
       '<div class="hm-ask">' +
-      '<h1 class="hm-lbl" id="hm-ask-h">Where you stopped &middot; ' + esc(t.identity.title) + '</h1>' +
-      (q ? '<p class="hm-q">&ldquo;' + esc(q) + '&rdquo;</p>' : '') +
+      (hero
+        ? '<p class="hm-lbl hm-eyebrow">' + eyebrow + '</p>' +
+          '<h1 class="hm-q" id="hm-ask-h">&ldquo;' + esc(hero.q) + '&rdquo;</h1>'
+        : '<h1 class="hm-lbl hm-eyebrow" id="hm-ask-h">' + eyebrow + '</h1>') +
       '<p class="hm-since">' + why + rest + '</p></div>' +
       '<div class="hm-do">' +
       '<button class="hm-cta" type="button" ' +
@@ -330,6 +347,68 @@
      its FILL is that topic's Solid share there. Fill and outline carry the grade; hue never does,
      because hue already means WHICH ROOM. Untouched topics keep an empty outline so the honest
      denominator is never hidden. */
+  /* ===== THE VERDICT: one record class, one sentence, nothing inferred ======================
+     THE STANDING RULE, and this function is where the home is most tempted to break it: the home
+     may not print a claim it cannot derive. Every sentence below states only what the rails
+     directly beneath it visibly show, and every number in it is read from the same numerals the
+     reader can see on the rails.
+
+       class            condition                              what it may say
+       ---------------- ------------------------------------- ------------------------------------
+       cold             nothing graded anywhere                what the instrument IS; no verdict
+       full             every probe in the bank is solid       "Every rail is full" -- the only
+                                                               sentence that may claim all three,
+                                                               and only on totals.solid === n
+       level            all three rails at ONE rendered pct    "The rails are level" + that pct
+       thin (one)       exactly one rail lowest                "<T> is the thin rail" + its own
+                                                               solid/n and topics
+       thin (several)   two rails share the lowest pct         names BOTH, with each rail's own
+                                                               figures -- never one rail's number
+                                                               asserted of the others
+
+     The two earlier versions each collapsed two of these classes into one and then read a
+     percentage from a tier that was not in the class. That is exactly the shape the class rule
+     forbids, so the classes are enumerated rather than inferred, and the battery in
+     test/home_claims.cjs drives every one of them. */
+  function verdictFor(model) {
+    var t = model.totals;
+
+    if (model.graded === 0) {
+      return 'Nothing graded yet. Each rail is one interview tier and each mark is one probe ' +
+        '&mdash; they fill as you grade yourself, and the shortest rail is the level you are ' +
+        'least ready for.';
+    }
+    if (model.full) {
+      /* the ladder's own figure, not the bank's -- the bank carries an EXTEND tier that is not a
+         rail, so "all N probes across all three tiers" must count the three tiers */
+      return '<b>Every rail is full.</b> Solid on all ' + model.ladder.n + ' probes across all ' +
+        'three tiers &mdash; there is no thin rail left to name.';
+    }
+    if (model.level) {
+      return '<b>The rails are level.</b> All three tiers sit at ' + model.minPct + '% solid, so ' +
+        'no one level is behind the others yet &mdash; keep drilling and the shape will separate.';
+    }
+    /* one or more tiers share the lowest rendered percentage, under a higher one */
+    var set = model.thinSet.slice();
+    var figs = set.map(function (tier) {
+      var a = model.tiers[tier];
+      return tier + ' ' + a.solid + ' of ' + a.n;
+    });
+    if (set.length === 1) {
+      var a1 = model.tiers[set[0]];
+      return '<b>' + set[0] + ' is the thin rail.</b> ' + a1.solid + ' solid of ' + a1.n +
+        ' probes, across ' + a1.topics + ' of ' + model.nTopics + ' topics &mdash; the level you ' +
+        'are interviewing for is the one you have rehearsed least.';
+    }
+    /* set.length is 2 here in every reachable record -- three equal rails are `level` and return
+       above -- but the wording is written so it stays true if a fourth tier ever exists. */
+    var joined = set.slice(0, -1).join(', ') + ' and ' + set[set.length - 1];
+    return '<b>' + joined + ' are the thin rails.</b> ' +
+      (set.length === 2 ? 'Both' : 'All ' + set.length) + ' sit at ' + model.minPct +
+      '% solid &mdash; ' + figs.join(', ') + ' &mdash; under a rail that is further along. Those ' +
+      'are the levels you have rehearsed least.';
+  }
+
   function gaugeHtml(model) {
     if (!model || !model.tiers) return '';
     var rails = model.order.map(function (tier) {
@@ -353,30 +432,7 @@
         '<span class="hm-gr-n"><b>' + a.solid + '</b> / ' + a.n + ' &middot; ' + pct + '%</span></div>';
     }).join('');
 
-    /* THE VERDICT ONLY ACCUSES ON EVIDENCE, and "evidence" means one rail is STRICTLY thinnest.
-       Altitude.compute() returns thin=null on any tie, which covers the three cases where the
-       accusation would be unearned: nothing graded (all rails 0%), a record where the rails are
-       genuinely level, and a perfect record (all rails 100%) where the sentence would name a tier
-       the user has fully banked. The accusation IS the signature; unearned it is noise. */
-    var graded = model.totals.solid + model.totals.shaky + model.totals.missed;
-    var verdict;
-    if (graded === 0) {
-      verdict = 'Nothing graded yet. Each rail is one interview tier and each mark is one probe ' +
-        '&mdash; they fill as you grade yourself, and the shortest rail is the level you are ' +
-        'least ready for.';
-    } else if (!model.thin) {
-      var lvl = Math.round(model.tiers[model.order[0]].solid / model.tiers[model.order[0]].n * 100);
-      verdict = lvl >= 100
-        ? '<b>Every rail is full.</b> Solid on all ' + model.totals.n + ' probes across all three ' +
-          'tiers &mdash; there is no thin rail left to name.'
-        : '<b>The rails are level.</b> All three tiers sit at ' + lvl + '% solid, so no one level ' +
-          'is behind the others yet &mdash; keep drilling and the shape will separate.';
-    } else {
-      var ta = model.tiers[model.thin];
-      verdict = '<b>' + model.thin + ' is the thin rail.</b> ' + ta.solid + ' solid of ' + ta.n +
-        ' probes, across ' + ta.topics + ' of ' + model.nTopics + ' topics &mdash; the level you ' +
-        'are interviewing for is the one you have rehearsed least.';
-    }
+    var verdict = verdictFor(model);
 
     return '<section class="hm-alt hm-panel" aria-labelledby="hm-alt-h">' +
       '<div class="hm-phead"><h2 class="hm-lbl" id="hm-alt-h">Altitude &mdash; solid probes by interview tier</h2>' +
@@ -487,10 +543,29 @@
 
     if (!bound) { bind(); bound = true; }
 
-    /* AUTOFOCUS THE ONE PRIMARY ACTION. This is what makes Enter the entire daily loop, and what
-       makes the home operable from the keyboard the instant it paints. */
+    watchTabs();
+
+    /* AUTOFOCUS STAYS; ITS RING WAITS FOR A REAL KEY. (Design call, round 3 item 11.)
+       Z1's hard floor is "1 keystroke, 0 clicks, autofocused, landing on the exact cursor -- any
+       direction that costs this loop is a regression regardless of what it buys", so removing the
+       autofocus was not available: Enter would land on <body> and the daily loop would cost a
+       click. But Chromium matches :focus-visible on a load-time PROGRAMMATIC focus, so with zero
+       user interaction the resume button wore the highest-contrast edge on the screen (measured
+       14.72:1 against the panel) -- and the coherence ruling says one signature, the gauge. The
+       ring got louder because of a good fix: removing the phantom wrapper stopped clipping it.
+       So: focus without the ring at first paint, and restore the ring the instant the user
+       touches a key. A keyboard user's first Tab, arrow or Enter re-arms it before they could
+       need it; a mouse user never sees it; the screen at rest has one loud object and it is the
+       instrument. Nothing about focus ORDER or the keystroke changes -- only the paint. */
     var cta = el.querySelector('[data-autofocus]');
-    if (cta) setTimeout(function () { try { cta.focus({ preventScroll: true }); } catch (e) {} }, 0);
+    if (cta) {
+      setTimeout(function () {
+        try {
+          el.classList.add('hm-quiet-focus');
+          cta.focus({ preventScroll: true });
+        } catch (e) {}
+      }, 0);
+    }
   }
 
   function bind() {
@@ -523,6 +598,11 @@
       if (tb) onTab(tb);
     });
 
+    /* the first real keystroke re-arms the focus ring for the rest of the session */
+    document.addEventListener('keydown', function () {
+      if (el) el.classList.remove('hm-quiet-focus');
+    }, { capture: true });
+
     document.addEventListener('change', function (e) {
       if (e.target && e.target.id === 'hm-skip-cb') {
         try { if (typeof Store !== 'undefined') Store.set('home.landing', e.target.checked ? 'resume' : 'home'); } catch (er) {}
@@ -535,28 +615,85 @@
   function onTab(btn) {
     var key = btn.getAttribute('data-tab');
     if (key === 'idx') { if (window.IndexOverlay) IndexOverlay.open(); return; }
-    if (tabs) {
-      var all = tabs.querySelectorAll('.hm-tab');
-      for (var i = 0; i < all.length; i++) all[i].removeAttribute('aria-current');
-    }
-    btn.setAttribute('aria-current', 'true');
+    markTab(key);
     var sel = { top: '.hm-continue', alt: '.hm-alt', lib: '.hm-libm' }[key];
     var node = sel && el ? el.querySelector(sel) : null;
     if (!node) return;
+    /* the tab named LIBRARY has to DELIVER the library. Closing the drawer (which is what took
+       the phone home from 8151px to 2756px) left this tab marking itself current and parking a
+       collapsed summary mid-screen -- the destination named, not delivered. */
+    if (node.tagName === 'DETAILS' && !node.open) node.open = true;
     var reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
     node.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
   }
 
   /* A room is a place in the library, not a new view -- scroll to it and land focus on its first
      card, so the keyboard user is exactly where the mouse user is looking. */
+  /* RESOLVE IN THE VISIBLE MOUNT. The library is rendered into TWO places -- the companion
+     (#homelib) and the in-column twin -- and exactly one is displayed at any width. This looked
+     up the companion FIRST and fell back with `||`, but #homelib is rendered unconditionally, so
+     the query always returned a node and the fallback could never fire. Below 1280 the companion
+     is display:none, so every room control on the home called scrollIntoView() and focus() inside
+     a hidden subtree: both no-ops. Six styled, focusable buttons -- and the 1-6 room hotkeys --
+     did nothing at every width the receipts did not cover, which is a regression against master
+     and the same false-affordance class this wave charged its own phone hamburger with.
+     `offsetParent` is null for anything in a display:none subtree, so it is the cheap test for
+     "actually rendered". The in-column twin is a CLOSED <details>, so it is opened first --
+     otherwise the scroll lands on a collapsed summary and the focus still fails. */
   function scrollToRoom(gid) {
-    var host = (lib && lib.querySelector('.ix-group[data-group="' + gid + '"]')) ||
-      (el && el.querySelector('.ix-group[data-group="' + gid + '"]'));
+    var sel = '.ix-group[data-group="' + gid + '"]';
+    var host = null;
+    var mounts = [lib, el];
+    for (var m = 0; m < mounts.length; m++) {
+      var node = mounts[m] && mounts[m].querySelector(sel);
+      if (!node) continue;
+      var drawer = node.closest ? node.closest('details') : null;
+      if (drawer && !drawer.open && drawer.offsetParent) drawer.open = true;
+      if (node.offsetParent) { host = node; break; }
+    }
     if (!host) return;
     var reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
     host.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
     var first = host.querySelector('.ix-card');
     if (first) setTimeout(function () { try { first.focus({ preventScroll: true }); } catch (e) {} }, reduce ? 0 : 260);
+  }
+
+  /* THE TAB BAR TELLS THE TRUTH ABOUT WHERE YOU ARE.
+     aria-current was set on TAP only, so scrolling with a thumb -- which is how phones are used --
+     left the bar reading "Today" for the whole length of the page, including while the library
+     filled the screen. It is also announced, so a screen-reader user was told they were on Today
+     while reading something else. An IntersectionObserver marks whichever target owns the
+     viewport; a tap still wins immediately because onTab sets it directly and the observer will
+     agree the moment the scroll settles. */
+  function watchTabs() {
+    if (tabObs) { tabObs.disconnect(); tabObs = null; }
+    if (!el || !tabs || typeof IntersectionObserver === 'undefined') return;
+    var map = [['top', '.hm-continue'], ['alt', '.hm-alt'], ['lib', '.hm-libm']];
+    var nodes = [];
+    map.forEach(function (m) { var n = el.querySelector(m[1]); if (n) nodes.push({ key: m[0], node: n }); });
+    if (!nodes.length) return;
+    var seen = {};
+    tabObs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        for (var i = 0; i < nodes.length; i++) if (nodes[i].node === en.target) seen[nodes[i].key] = en.isIntersecting;
+      });
+      /* the FIRST target that is on screen, in column order -- so a block scrolled past hands
+         the mark forward rather than several claiming it at once */
+      var live = null;
+      for (var j = 0; j < nodes.length; j++) if (seen[nodes[j].key]) { live = nodes[j].key; break; }
+      if (!live) return;
+      markTab(live);
+    }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
+    nodes.forEach(function (n) { tabObs.observe(n.node); });
+  }
+
+  function markTab(key) {
+    if (!tabs) return;
+    var all = tabs.querySelectorAll('.hm-tab');
+    for (var i = 0; i < all.length; i++) {
+      if (all[i].getAttribute('data-tab') === key) all[i].setAttribute('aria-current', 'true');
+      else all[i].removeAttribute('aria-current');
+    }
   }
 
   /* the six rooms by number: 1-6. Safe -- the 1/2/3 grade keys are scoped to `current === 'drill'`

@@ -1705,6 +1705,13 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
    control); the badge sits inboard of it on any card that has one. */
 .ix-c-badge{position:absolute;top:var(--space-10);right:var(--space-11);display:inline-flex;align-items:center;gap:var(--space-4);font-size:var(--font-size-nano);font-weight:var(--font-weight-bold);letter-spacing:var(--track-em-0-02);color:var(--mut2);white-space:nowrap}
 .ix-cell:has(.ix-c-reset) .ix-c-badge{right:var(--space-36)}
+/* THE TITLE'S RESERVE HAS TO CLEAR THE BADGE THAT SITS IN IT. The badge is absolutely positioned
+   with a TRANSPARENT background, so anything it overlaps is overprinted -- text on text. Round 2
+   moved it 25px further inboard (to clear the reset button) and, in the same round, widened its
+   longest string; the title's reserve was a constant 50px through both, so 28 of 46 cards had the
+   badge printed across the topic name, worst case 88px. A constant reserve against a
+   variable-width absolutely-positioned label is the same shape of bug as pinning two things to
+   one corner. The reserve is now sized from the widest badge at its inboard offset. */
 .ix-c-badge i{width:var(--space-6);height:var(--space-6);border-radius:50%;flex:none}
 .ix-c-wb{margin-left:var(--space-4);color:var(--acc);font-weight:var(--font-weight-black);font-style:normal;font-size:var(--font-size-micro);line-height:var(--line-height-none)}
 .ix-c-ready{color:var(--acc);font-weight:var(--font-weight-heavy)}
@@ -1859,7 +1866,7 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
 .ix-cross-weak .ix-cross-ar{color:var(--amber)}
 .ix-card:hover{border-color:var(--acc);background:var(--accbg);transform:translateY(-1px)}
 .ix-card.on{border-color:var(--acc);background:var(--accbg)}
-.ix-c-name{font-size:var(--font-size-small);font-weight:var(--font-weight-bold);color:var(--ink);padding-right:var(--space-50)}
+.ix-c-name{font-size:var(--font-size-small);font-weight:var(--font-weight-bold);color:var(--ink);padding-right:var(--space-92)}
 .ix-card.on .ix-c-name{color:var(--acc)}
 .ix-c-tail{font-size:var(--font-size-nano);color:var(--mut2);text-transform:uppercase;letter-spacing:var(--track-px-0-3);margin-top:var(--space-3)}
 .ix-c-thesis{font-size:var(--font-size-micro);color:var(--mut);line-height:var(--line-height-normal);margin-top:var(--space-6);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
@@ -2215,7 +2222,24 @@ html[data-view="home"] .companion{padding:0}
 .hm-q{font-family:var(--display);font-size:var(--font-size-heading);font-weight:var(--font-weight-semibold);
   line-height:var(--line-height-snug);letter-spacing:var(--track-em-neg-0-014);color:var(--ink);
   max-width:var(--measure-display);text-wrap:balance;margin:var(--space-10) 0 var(--space-12);
-  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;overflow:hidden}
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:6;overflow:hidden}
+.hm-eyebrow{display:block}
+/* THE HERO IS NEVER TRUNCATED, and the clamp is sized by CENSUS rather than by taste.
+   Round 2 clamped it to 4 lines against the desktop measure only: 1 of 972 probes overflowed at
+   1280 and 63 of 972 at 390, and what a clamp removes is always the END -- which is always where
+   the question is. A hero that stops mid-word is not a question, which is the one thing this
+   direction says it must be.
+   So the narrow column takes a DISPLAY STEP DOWN (the same rule the measure tokens state: display
+   type is set shorter, and here also smaller when the column is), and the line budget is set from
+   the measured worst case in the bank. test/home_claims.cjs asserts the rendered hero is not
+   clipped on every record it drives, and the census that sized these numbers is in the addendum. */
+@media(max-width:860px){
+  .hm-q{font-size:var(--font-size-title);-webkit-line-clamp:7}
+}
+/* the narrowest column the app supports still has to carry the longest probe in the bank whole */
+@media(max-width:419px){
+  .hm-q{-webkit-line-clamp:9}
+}
 /* The second-person line: REASON, RECENCY, REMAINDER -- not a cursor.
    It takes the BODY measure. It shipped on --measure-display, and because `ch` is font-relative
    that resolved to 265px at 12px against the hero's 556px at 21px -- so the one pair the display
@@ -2255,6 +2279,11 @@ html[data-view="home"] .companion{padding:0}
 
 /* THE SKIP LINK. Off-screen until focused, then a real, visible, first-in-tab-order control --
    ~20 rail controls precede the work column in DOM order, which is the whole use case. */
+/* The quiet-focus window: the load-time programmatic focus paints no ring, the first real
+   keystroke removes this class and every ring behaves normally for the rest of the session.
+   Scoped to the autofocused CTA only -- every other control, and this same control after any
+   keypress, keeps the app's standard indicator. */
+#home.hm-quiet-focus .hm-cta[data-autofocus]:focus-visible{outline:none;box-shadow:none}
 .hm-skiplink{position:absolute;left:-10000px;top:0;z-index:var(--z-popup,70);
   padding:var(--space-10) var(--space-16);background:var(--card);color:var(--ink);
   border:1px solid var(--acc);border-radius:9px;font-size:var(--font-size-caption);
@@ -2380,16 +2409,36 @@ html[data-view="home"] .companion{padding:0}
   align-items:center;gap:var(--space-12);min-height:28px;padding:var(--space-6) var(--space-16);
   background:var(--side);border-top:1px solid var(--bd);overflow:hidden;
   font-size:var(--font-size-micro);color:var(--mut)}
-/* The scroll-top disc sits at bottom:24px and predates this bar, so the new fixed foot furniture
-   arrived UNDERNEATH it: measured a 5.5px overlap at 1280x800, the saturated disc straddling the
-   census hairline and washing its surface. The phone case was already solved this way through
-   --chrome-bot; this is the desktop half, home-scoped so no topic route moves. */
-html[data-view="home"] .scrolltop{bottom:calc(var(--space-30) + var(--space-24))}
+/* THE DISC TRACKS THE MEASUREMENT, IT DOES NOT REPLACE IT.
+   Round 2 fixed the desktop overlap with a home-scoped CONSTANT at specificity (0,2,1), which
+   outranked the app's own measured rule `@media(max-width:919px){.scrolltop{bottom:calc(
+   var(--chrome-bot) + var(--space-24))}}` at (0,1,0) -- so on the phone the disc stopped
+   listening to chrome-metrics. With a 34px home-indicator inset --chrome-bot correctly re-measured
+   45px -> 79px and the disc stayed at 54px: 25px INSIDE the tab bar it was dodging. That is this
+   file's own documented anti-pattern (see the .scrolltop note above), re-introduced.
+   The census is bottom chrome on the home, so it now feeds --chrome-bot through chrome-metrics
+   like every other fixed bar, and the disc's offset is the measurement plus the authored gap at
+   EVERY width. The fallback keeps the pre-JS/no-JS case identical to before. */
+.scrolltop{bottom:calc(var(--chrome-bot, 0px) + var(--space-24))}
 .hm-st-i{display:flex;align-items:center;gap:var(--space-6);flex:none}
 .hm-st-i b{color:var(--ink);font-weight:var(--font-weight-bold);font-variant-numeric:tabular-nums}
 .hm-st-sep{width:1px;height:11px;background:var(--bd);flex:none}
 .hm-st-sp{flex:1}
 .hm-st-dim{color:var(--mut2);flex:none}
+/* THE CENSUS SHEDS BY PRIORITY RATHER THAN CLIPPING ITSELF.
+   Its content is a fixed ~719px and the bar is position:fixed with overflow:hidden, so between
+   420 and 790px it silently cut itself off mid-word -- no ellipsis, no wrap, no scroll, and
+   documentElement.scrollWidth cannot see it because a fixed bar CLIPS rather than growing the
+   document. The first thing lost was "Offline -- nothing leaves this file", which is the one
+   claim on the bar that is about the product rather than a number.
+   Priority, lowest first: the offline note, then topics-started, then the solid/shaky/missed
+   breakdown. The probes-graded figure never leaves. */
+@media(max-width:1023px){ .hm-status .hm-st-dim{display:none} }
+@media(max-width:759px){ #st-3,#st-3 + .hm-st-sep{display:none} }
+@media(max-width:559px){ #st-2,#st-2 + .hm-st-sep{display:none} }
+/* the "RECORD" eyebrow is the last thing to go: below this the bar is the probes-graded figure
+   and nothing else, which is the one number the census exists to carry */
+@media(max-width:519px){ .hm-status > .hm-st-i:first-child{display:none} }
 
 /* ---- THE MOBILE TAB BAR -------------------------------------------------------------------- */
 .hm-tabs{align-items:stretch;gap:0;background:var(--card);border-top:1px solid var(--bd)}
@@ -2477,6 +2526,13 @@ html[data-view="home"] .scrolltop{bottom:calc(var(--space-30) + var(--space-24))
   html[data-view="home"] .hm-rail .hm-act{padding:var(--space-6) var(--space-8)}
   html[data-view="home"] .hm-tabs{display:flex;position:fixed;bottom:0;left:0;right:0;
     z-index:var(--z-bottombar,45);padding-bottom:env(safe-area-inset-bottom,0px)}
+  /* A tab that scrolls its target to y=0 parks it UNDER the fixed rail: measured 57px of the
+     gauge's own header -- its title and its headline figure -- hidden by the bar you navigated
+     from. scroll-margin-top is the one declaration that makes scrollIntoView respect fixed
+     chrome, and it reads the same measured value the frame reserves. */
+  html[data-view="home"] .hm-continue,
+  html[data-view="home"] .hm-alt,
+  html[data-view="home"] .hm-libm{scroll-margin-top:calc(var(--chrome-top, 0px) + var(--space-12))}
   /* the census is a desktop readout; on the phone its budget goes to the tab bar */
   html[data-view="home"] .hm-status{display:none}
   html[data-view="home"] .companion{display:none}

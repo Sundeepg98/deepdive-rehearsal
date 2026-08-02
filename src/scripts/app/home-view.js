@@ -239,8 +239,14 @@
        both paths to call goalPhrase() so they would agree; agreeing twice is still twice. Below
        920 the rail collapses to a 52px bar and this block was display:none anyway, so the phone
        already had exactly one goal surface and the desktop had two. Now every viewport has one:
-       goalStrip(), inside "Recent sessions". goalPhrase() stays exported as the single source any
-       future surface must call rather than re-derive. */
+       goalStrip(), inside "This week". goalPhrase() stays exported as the single source any
+       future surface must call rather than re-derive.
+       CORRECTED IN CYCLE 2: deleting this block left the ENGAGED home with one goal and the COLD
+       home with none, because goalStrip() sat inside telemetryHtml()'s engaged() gate -- so "every
+       viewport has one" was true of one record class and false of the other, and the cold VR
+       baselines recorded the removal as intended. The goal is hoisted out of that gate (panels.js)
+       rather than the claim being narrowed; test/home_claims.cjs now asserts exactly one visible
+       goal surface per viewport for EVERY pinned record, cold ones included. */
   }
 
   /* ---- the phone's tab bar. Navigation WITHIN the home -- never a second router. ------------ */
@@ -516,8 +522,13 @@
   }
 
   /* ---- STILL SHAKY + the trend ------------------------------------------------------------- */
+  /* THE ROW RENDERS FOR EVERY RECORD CLASS, and the `engaged()` early return that used to open it
+     is gone. It was doing two jobs: gating Still-shaky (which a cold record cannot fill anyway --
+     weakChipsAged returns no chips when nothing is graded, and the `!w.chips` test below already
+     drops that panel) and, incidentally, gating the WEEKLY GOAL out of the cold home entirely.
+     The second was never intended: the goal is a target, not a report on the past. See
+     Panels.telemetryHtml(). A cold home now renders this row with the goal alone. */
   function duoHtml() {
-    if (!Panels.engaged()) return '';
     var w = Panels.weakChipsAged(6, ageShort);
     var tele = Panels.telemetryHtml();
     if (!w.chips && !tele) return '';
@@ -532,8 +543,16 @@
         'automatically.</p></div></section>' : '') +
       /* .hm-tele keeps its class and therefore its stack slot: the telemetry is still a member
          of the home column, it just shares a row with Still shaky now instead of owning one. */
+      /* THE HEAD NAMES WHAT THE PANEL ALWAYS CARRIES. It read "Recent sessions", which is the
+         heading for two of its three children -- and both of those are conditional: the trend
+         needs two logged sessions and the refresh list needs a topic drilled clean a week ago, so
+         a one-session record already got "Recent sessions" over nothing but a goal, and a COLD
+         record now would too. The goal is the only unconditional member, and it is about the week
+         ahead. The trend keeps its own "Recent sessions" kicker inside the panel (panels.js
+         trendSparkHome), so the string is not lost -- it just stops being asserted of a record
+         that has no sessions. The id stays `hm-week-h`, which is what it was always called. */
       (tele ? '<section class="hm-panel hm-tele" aria-labelledby="hm-week-h">' +
-        '<div class="hm-phead"><h2 class="hm-lbl" id="hm-week-h">Recent sessions</h2></div>' +
+        '<div class="hm-phead"><h2 class="hm-lbl" id="hm-week-h">This week</h2></div>' +
         '<div class="hm-pbody">' + tele + '</div></section>' : '') +
       '</div>';
   }

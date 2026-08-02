@@ -2181,9 +2181,20 @@ html[data-view="home"] .companion{padding:0}
 .hm-room-weak{color:#dc2626;font-weight:var(--font-weight-bold)}
 
 .hm-sec{max-width:var(--measure-home);margin:0 auto var(--gap-home-section)}
-/* below the fold: the telemetry the old surface put ABOVE the decision */
-.hm-tele{max-width:var(--measure-home);margin:0 auto var(--gap-home-telemetry);padding-top:var(--space-20);
-  border-top:1px solid var(--bd)}
+/* below the fold: the telemetry the old surface put ABOVE the decision.
+   IT STOPPED BEING A STANDALONE STACK MEMBER AND KEPT THE DECORATION. When this block owned a row
+   of the column it was right for it to centre itself in the measure and open with a hairline rule
+   and 20px of air. It is now a PANEL inside .hm-duo -- a grid row it shares with Still shaky --
+   and in that context `margin:0 auto` is not centring, it is SIZING: auto side margins make a grid
+   item shrink to max-content. MEASURED at 1280 on the cold record: the panel rendered 248px wide,
+   centred, in a 624px column -- a lone island in a row it was supposed to fill -- and it wore two
+   top edges, its own .hm-panel border plus this rule, with 20px of dead space between them and its
+   heading. Both are leftovers, and both go. The bottom gap stays on its --gap-home-* token, which
+   is the layer test/home_rhythm.py enforces. Found while reviewing the new cold-home VR capture:
+   the defect was already live on the ENGAGED home (where the narrow panel sat beside a full-width
+   sibling and read as a design), and restoring the cold goal put it alone in the row where there
+   was nothing left for it to hide behind. */
+.hm-tele{max-width:var(--measure-home);margin:0 0 var(--gap-home-telemetry)}
 /* ============================================================================================
    THE HOME AS AN INSTRUMENT  (appeal/home-instrument)
    Every colour, size and space below comes from the layers this stylesheet already has: the
@@ -2339,8 +2350,20 @@ html[data-view="home"] .companion{padding:0}
    the Still-shaky CHIP LIST -- the record's own triage, the one surface that says which topics
    to re-drill -- began at 825: off the first screen. Moving the two practice acts up under the
    decision (home-view.js html()) is right and costs another 92px, which would have pushed the
-   chips to 917. This block pays for both: the panel comes back to 277px and the chips open at
-   782, inside the band, with the practice acts above them.
+   chips to 917. This block pays for both: the panel comes back to 288px on a single-thin-rail
+   record (306 on a two-thin one, whose verdict is a line longer) and the chip list OPENS at 769
+   / 787, inside the band, with the practice acts above it.
+
+   WHAT THIS BLOCK DOES NOT DO, stated because the cycle that wrote the paragraph above rounded it
+   up. The chip list's TOP is inside the band on those two shapes; its FIRST CHIP is not -- it ends
+   14px past the fold on the roomiest of them. And the chip list's position is a function of three
+   independent things, only one of which is this block: hero wrap (23px on the shortest probe in
+   the bank, 164px on the longest), verdict class, and whether the record has one practice bar or
+   two. Across all nine measured combinations the chips run from 769 to 1006. So the FIRST SCREEN'S
+   CONTRACT is not "the chips fit" -- it is that the first screen carries the record's triage
+   either as the chip list or as the drill act addressed to that record, and the act is what carries
+   it in every shape. That contract is asserted by test/home_fold.cjs, which is also the only thing
+   in the gate that can see this block at all.
 
    NOTHING HERE IS A PIXEL PICKED PER SITE. The rails lose height because a rail's information is
    HORIZONTAL -- 46 segments, one per topic, and the SIGNAL RULE two blocks up puts the grade in
@@ -2357,20 +2380,31 @@ html[data-view="home"] .companion{padding:0}
   html[data-view="home"] .hm-alt .hm-pbody{padding:var(--space-10) var(--space-14) var(--space-12)}
   html[data-view="home"] .hm-alt .hm-gauge{gap:var(--space-6)}
   html[data-view="home"] .hm-alt .hm-gr-t{height:16px}
-  html[data-view="home"] .hm-alt .hm-verdict{margin-top:var(--space-10);padding-top:var(--space-8)}
+  /* THE VERDICT'S LEADING AND ITS RULE, TIGHTENED -- and this is what pays for the key that the
+     420-and-below block used to delete (ruled W1.5 cycle 2). MEASURED at 390x844, not estimated:
+     the verdict box goes 68 -> 62px on the single-thin-rail sentence and 87 -> 80px on the
+     two-thin one (line-height 1.4 -> 1.3 at three and four lines, plus 2px off the rule's
+     padding), and the 4px off its margin brings the PANEL down 10px / 11px. The SENTENCE KEEPS
+     ITS SIZE: it is the one claim the whole instrument exists to deliver, and a phone is the
+     worst place to read 13px prose -- so the pixels come from leading and from the rule, never
+     from the type. (Recorded honestly: ~20px is not available from this element without deleting
+     a line of the sentence. It is 68-87px tall in total. 10px is what the compaction is worth,
+     which is 5x what the tightest measured shape needed.) */
+  html[data-view="home"] .hm-alt .hm-verdict{margin-top:var(--space-6);padding-top:var(--space-6);
+    line-height:var(--line-height-snug)}
   html[data-view="home"] .hm-alt .hm-key{margin-top:var(--space-6);gap:var(--space-10)}
 }
 @media(max-width:419px){
   /* the two-row rail (label over figure) is already this width's answer to a 44px label column
      it cannot afford; it only needed the row gap to stop being a whole space token. */
   html[data-view="home"] .hm-alt .hm-gr{row-gap:2px}
-  /* THE KEY LEAVES AT THE PHONE BREAKPOINT, AND ONLY THERE. It is aria-hidden="true" -- the app
-     has already ruled it decoration, and a screen reader has never been told about it -- and this
-     is the width where the status census leaves for exactly the same reason (:2543). 420-919 keep
-     it. What it labels is still readable without it: the rails carry fill, the verdict names the
-     thin one in words, and the off-ladder note (which is NOT decoration, and stays) reconciles
-     the denominator. */
-  html[data-view="home"] .hm-alt .hm-key{display:none}
+  /* THE KEY DOES NOT LEAVE. A `html[data-view="home"] .hm-alt .hm-key{display:none}` lived here
+     for one cycle and is RULED OUT (W1.5 cycle 2). MEASURED: the hide bought 21px of a 742px
+     band -- 2.8% -- and flipped no fold outcome in any record class, so it was 21px of instrument
+     sold for nothing. The gauge paints four marks (filled, part-filled, hollow, keel) and this is
+     their only legend at any width; aria-hidden makes it decoration for a SCREEN READER, which is
+     not an argument for deleting it from the screen where the marks are. If a future record class
+     ever needs those 21px, they come out of the two-row rail block above, not out of the key. */
 }
 
 /* ---- the paired row ------------------------------------------------------------------------ */

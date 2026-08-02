@@ -24,13 +24,23 @@
  * NUMERALS RENDERED BESIDE IT. Every arm reads the page's own figures and checks the sentence
  * against them, so it fails on exactly the class above and stays quiet on wording.
  *
- * THE BATTERY. Fourteen records driven at 1280 and 390: empty, one-solid, two-tiers-tied-under-a-
+ * THE BATTERY. Fifteen records driven at 1280 and 390: empty, one-solid, two-tiers-tied-under-a-
  * higher-third (both directions), genuinely level, perfect, mixed-position (drill cursor with a
  * walk resume), absent-field (a stored drill position, resume pointer on walk), one-short,
  * nearly-full, stale-cursor, topic-done, ONE-THIN (a strict unique minimum -- the single-thin-rail
  * sentence, added by W1.5 because every other pinned record lands on a tie, a level/within-a-point
- * or a full, so the class this home prints most often was pinned by nothing), and no-record.
+ * or a full, so the class this home prints most often was pinned by nothing), WEAK-TOPICS (twelve
+ * topics drilled to the end with a shaky probe left in them -- the only class where BOTH practice
+ * acts render and the rails carry keel marks, added in W1.5 cycle 2 because the ordering rule and
+ * the gauge legend had no record that could exercise them), and no-record.
  * The judges kept finding defects on seeds the builder had not run; this is that list, run.
+ *
+ * THREE ARMS THAT ARE NOT ABOUT A NUMERAL (W1.5 cycle 2). Same class -- one fact, two answers --
+ * where the fact is a RENDERER: exactly one visible weekly-goal surface per viewport in EVERY
+ * record class (cold included); the record-addressed practice act above the generic one in all
+ * three surfaces that render the pair; and the gauge's four-state key present wherever the rails
+ * paint the keel mark it is the legend for. All three shipped in cycle 1 with nothing in test/
+ * that so much as mentioned them.
  *
  * ROUND 4: THE RETROSPECTIVE SEED LIST WAS THE GAP, AND IT IS NOW THE SMALLER HALF.
  * A judge copied this file, added ONE record -- one probe of 971 graded Shaky -- changed nothing
@@ -53,8 +63,11 @@
  * SELF-TEST, every run: planted mutants must each be caught -- a verdict naming a thin rail that
  * is not the minimum, a "level" claim over unequal rails, a "full" claim with unsolid probes, a
  * position asserted from an absent field, a verdict quoting one rail's figures for another, an
- * inflated panel header, and an inflated figure inside the SINGLE-THIN-RAIL sentence. If any goes
- * undetected the check ABORTS.
+ * inflated panel header, an inflated figure inside the SINGLE-THIN-RAIL sentence, a duplicated
+ * weekly-goal surface on the COLD record, the two practice acts inverted in the phone's practice
+ * block, and the gauge's key hidden while its rails still paint keel marks. If any goes undetected
+ * the check ABORTS -- and so does a run in which no record painted a keel at all, because a
+ * conditional arm nothing satisfies is decoration.
  *
  * THAT LAST ONE IS THE ONE THIS FILE GOT WRONG. The quoted-figures gap was written `[^.;]{0,40}`,
  * the rendered thin-rail sentence puts a period between the tier name and its figures, and so the
@@ -228,6 +241,26 @@ const SEEDS = {
     });
   },
 
+  /* TOPICS THE RECORD CALLS WEAK -- the class that makes BOTH practice acts render, and the one
+     the pinned list had no record for. `Panels.weakCount()` counts topics whose drill is COMPLETE
+     and still carries a shaky probe (progress.js status()), which is a stricter thing than
+     "appears in the weakest list": every seed above either leaves a topic unfinished
+     (in-progress) or finishes it clean (solid), so `Panels.actionsHtml()` rendered ONE bar on all
+     fourteen and the ordering rule below had nothing to order. Twelve topics drilled to the end,
+     one probe in seven graded Shaky -- which also puts keel marks on the rails, so the gauge's
+     four-state key has something to label. */
+  weakTopics: () => {
+    TopicRegistry.ids().slice(0, 12).forEach((id) => {
+      const cards = TopicRegistry.get(id).data.bank.cards;
+      const keys = CardId.forCards(cards); const map = {};
+      cards.forEach((c, i) => { map[keys[i]] = (i % 7 === 0) ? 2 : 3; });
+      const shk = Object.keys(map).filter((k) => map[k] < 3).length;
+      localStorage.setItem('ddr.v1.progress.' + id, JSON.stringify({
+        got: cards.length - shk, shk: shk, done: cards.length, tot: cards.length,
+        revisit: ['idempotency', 'backpressure'], cards: map, cv: 1, ts: Date.now() }));
+    });
+  },
+
   /* a stale cursor past the end of a shorter bank -- must produce NO position claim */
   staleCursor: () => {
     const id = TopicRegistry.ids()[0];
@@ -343,6 +376,41 @@ const READ = () => {
     eyebrow: txt(document.querySelector('.hm-eyebrow')),
     ctaSub: txt(document.querySelector('.hm-cta-d')),
     hero: q ? { text: txt(q), clipped: q.scrollHeight > q.clientHeight + 1 } : null,
+    /* ---- THREE STRUCTURAL FACTS THIS HOME KEEPS GETTING WRONG IN THE SAME WAY --------------
+       Same class as the sentences above -- one fact, two answers -- but the fact is a RENDERER
+       rather than a numeral, so no arm above could see it. All three shipped in W1.5 cycle 1 with
+       nothing in test/ that mentioned them (`grep -rl` over test/ returned NOTHING for hm-key,
+       hm-goal, ix-goal, goalStrip, weeklyGoal, hm-practicem or actionsHtml), which made three of
+       that wave's five build items silently revertible at a green 76/76. */
+    /* (1) the weekly goal. One renderer, one surface, per viewport, in every record class. */
+    goals: [...document.querySelectorAll('.ix-goal, .hm-goal')].filter((e) => e.getClientRects().length).length,
+    /* (2) the two practice acts, in DOM order, in each of the three surfaces that render the pair.
+       `lead` is what the topic switcher puts at the top of its scroller -- Panels.actionsHtml()
+       itself -- so the switcher's copy is judged without having to open the overlay. */
+    order: (() => {
+      const seq = (root) => (root
+        ? [...root.querySelectorAll('[data-cross="weak"],[data-cross="1"]')]
+          .filter((e) => e.getClientRects().length)
+          .map((e) => e.getAttribute('data-cross'))
+        : []);
+      let lead = [];
+      try {
+        const d = document.createElement('div');
+        d.innerHTML = Panels.actionsHtml();
+        lead = [...d.querySelectorAll('[data-cross]')].map((e) => e.getAttribute('data-cross'));
+      } catch (e) { lead = []; }
+      return {
+        rail: seq(document.getElementById('homerail')),
+        column: seq(document.querySelector('#home .hm-practicem')),
+        lead,
+      };
+    })(),
+    /* (3) the gauge's only legend, against the marks it is the legend FOR */
+    keel: document.querySelectorAll('.hm-alt .hm-seg.keel').length,
+    keyVisible: (() => {
+      const k = document.querySelector('.hm-alt .hm-key');
+      return !!k && k.getClientRects().length > 0;
+    })(),
     h1s: [...document.querySelectorAll('h1')].filter((h) => h.getClientRects().length).map(txt),
     /* IDENTITY: the visible h1 must BE the hero question, not merely be unique */
     h1IsHero: !!q && q.tagName === 'H1' && q.getClientRects().length > 0
@@ -550,6 +618,53 @@ function judgeHero(r) {
   return null;
 }
 
+/* EXACTLY ONE WEEKLY-GOAL SURFACE, PER VIEWPORT, IN EVERY RECORD CLASS.
+   Round 5 found the goal rendered twice (the home rail and the telemetry strip) and taught both
+   paths to call goalPhrase() so they would agree; W1.5 deleted the rail's copy, which left the
+   ENGAGED home with one and the COLD home with none -- under a commit that stated "now every
+   viewport has one". Both failures are the same rule broken in opposite directions, so the rule is
+   asserted as a COUNT, on every record this battery drives, cold ones included. Nothing in test/
+   referenced .ix-goal, .hm-goal or goalStrip before this line existed. */
+function judgeGoal(r) {
+  if (r.goals === 1) return null;
+  return 'the home renders ' + r.goals + ' visible weekly-goal surfaces (.ix-goal / .hm-goal); '
+    + 'the rule is exactly one per viewport, and it holds for a cold record as well as an engaged one';
+}
+
+/* THE RULED ORDER IS WEAK-SPOT FIRST, IN ALL THREE SURFACES THAT RENDER THE PAIR.
+   Both acts are cross-topic, but only one is addressed to THIS record ("the 16 topics you have
+   been shaky on") while the other is the same offer for everybody, so the specific act goes above
+   the generic one wherever the pair renders: the home rail (desktop), .hm-practicem (phone) and
+   the switcher's lead. W1.5 swapped all three and cited two checks as its coverage -- neither of
+   which contains the string "Cross-topic", "Weak-spot" or any ordering assertion -- so the swap
+   could invert silently. A surface that renders only ONE act is not judged: there is no order. */
+function judgeActOrder(r) {
+  const o = r.order || {};
+  for (const where of ['rail', 'column', 'lead']) {
+    const seq = o[where] || [];
+    const w = seq.indexOf('weak'), c = seq.indexOf('1');
+    if (w === -1 || c === -1) continue;            /* only one act here -- nothing to order */
+    if (w > c) {
+      return 'the ' + where + ' renders the generic act above the record-addressed one: '
+        + seq.map((x) => (x === 'weak' ? 'Weak-spot' : 'Cross-topic')).join(' then ');
+    }
+  }
+  return null;
+}
+
+/* THE GAUGE KEEPS ITS LEGEND WHEREVER IT PAINTS THE MARK THE LEGEND EXPLAINS.
+   The key is the only place the four marks are named (filled / part-filled / hollow / keel), and
+   a `display:none` at <=419px deleted it on the phone for one cycle -- measured worth 21px of a
+   742px band, and it flipped no fold outcome, so it was instrument sold for nothing. The keel is
+   the mark with no other explanation on the panel, so it is what this arm keys on: a rail that
+   paints a keel must render the legend that says what a keel is. */
+function judgeKey(r) {
+  if (!r.keel) return null;                        /* no keel painted -- the legend is not owed */
+  if (r.keyVisible) return null;
+  return 'the gauge paints ' + r.keel + ' keel segment(s) and renders no visible four-state key '
+    + 'at this width -- the only legend those marks have';
+}
+
 /* one place that names every arm, so a new judge cannot be written and then never called --
    which is how judgeHeader and judgeCensus would otherwise have stayed decorative */
 const ALL_JUDGES = (r) => [
@@ -559,6 +674,9 @@ const ALL_JUDGES = (r) => [
   ['census', judgeCensus(r)],
   ['position', judgePosition(r)],
   ['hero', judgeHero(r)],
+  ['goal', judgeGoal(r)],
+  ['act order', judgeActOrder(r)],
+  ['gauge key', judgeKey(r)],
 ];
 
 /* THE HERO CENSUS, IN THE GATE. The named records render ~10 distinct questions of 972, so the
@@ -594,6 +712,10 @@ const GEN_N = 24;
   const browser = await chromium.launch(B.launchOpts());
   const out = [];
   let aborted = null;
+  /* NO SILENT GREEN ON THE LEGEND ARM. judgeKey is conditional on a keel being painted, so a
+     battery whose records never paint one would report it green forever without ever running it.
+     Counted, and asserted non-zero below. */
+  let keelChecked = 0;
 
   for (const [w, h] of [[1280, 800], [390, 844]]) {
     const ctx = await browser.newContext({ viewport: { width: w, height: h } });
@@ -653,7 +775,8 @@ const GEN_N = 24;
       }
       /* ---- MUTANT 7: THE SENTENCE THIS ARM COULD NOT SEE ------------------------------------
          `oneThin` is the record that renders the SINGLE-thin-rail verdict -- "Staff is the thin
-         rail. 62 solid of 310 probes" -- and the period after "rail" is what the old
+         rail. 47 solid of 310 probes" (the seed takes Math.round PER TOPIC, so the 20% share
+         lands on 47, not on 310 x 0.2) -- and the period after "rail" is what the old
          `[^.;]{0,40}` gap could not cross, so an inflated figure in exactly this sentence was
          invisible. This is the mutant the gate-runtime acceptance battery aimed here and watched
          come back NOT DETECTED; it is adopted verbatim as the regression proof.
@@ -708,6 +831,84 @@ const GEN_N = 24;
           aborted = aborted || 'MUTANT 4 UNDETECTED: a step position beside a bare probe remainder was accepted -- round 2 verbatim.';
         }
       }
+
+      /* ---- MUTANT 8: A SECOND GOAL RENDERER, ON THE COLD RECORD ----------------------------
+         Planted on `empty` on purpose. Round 5's defect was TWO goal surfaces; W1.5's was ZERO on
+         a cold record; both are the same rule broken, so the mutant duplicates the live one -- and
+         the plant CANNOT LAND if the cold record has no goal to duplicate, which is exactly the
+         W1.5 regression reporting itself. */
+      if (name === 'empty') {
+        const planted = await page.evaluate(() => {
+          const g = document.querySelector('.ix-goal');
+          if (!g) return false;
+          g.parentNode.appendChild(g.cloneNode(true));
+          return true;
+        });
+        if (!planted) {
+          aborted = aborted || 'MUTANT 8 CANNOT LAND: the COLD home renders no weekly-goal surface '
+            + 'at all, so there is nothing to duplicate. That is the W1.5 regression itself -- the '
+            + 'goal sat inside the engaged() gate in telemetryHtml().';
+        } else {
+          const bad8 = await page.evaluate(READ);
+          if (!judgeGoal(bad8)) {
+            aborted = aborted || 'MUTANT 8 UNDETECTED: two visible weekly-goal surfaces were accepted.';
+          }
+          await page.evaluate(() => {
+            const all = [...document.querySelectorAll('.ix-goal')];
+            if (all.length > 1) all[all.length - 1].remove();
+          });
+        }
+      }
+
+      /* ---- MUTANTS 9 + 10: THE PHONE'S PRACTICE BLOCK AND THE GAUGE'S LEGEND ---------------
+         Both planted on `weakTopics` at 390, which is the only record and the only width where
+         the pair of acts renders in the column AND the rails carry keel marks. */
+      if (w === 390 && name === 'weakTopics') {
+        const swapped = await page.evaluate(() => {
+          const host = document.querySelector('#home .hm-practicem');
+          const weak = host && host.querySelector('[data-cross="weak"]');
+          const cross = host && host.querySelector('[data-cross="1"]');
+          if (!weak || !cross) return false;
+          host.insertBefore(cross, weak);                 /* the inversion, verbatim */
+          return true;
+        });
+        if (!swapped) {
+          aborted = aborted || 'MUTANT 9 CANNOT LAND: `weakTopics` does not render BOTH practice '
+            + 'acts in .hm-practicem at 390, so the ordering arm is untested on the surface it '
+            + 'guards.';
+        } else {
+          const bad9 = await page.evaluate(READ);
+          if (!judgeActOrder(bad9)) {
+            aborted = aborted || 'MUTANT 9 UNDETECTED: Cross-topic rendered above Weak-spot in the '
+              + 'phone practice block and the ordering arm accepted it.';
+          }
+          await page.evaluate(() => {
+            const host = document.querySelector('#home .hm-practicem');
+            const weak = host.querySelector('[data-cross="weak"]');
+            host.insertBefore(weak, host.firstChild);
+          });
+        }
+
+        const hid = await page.evaluate(() => {
+          const k = document.querySelector('.hm-alt .hm-key');
+          if (!k || !document.querySelector('.hm-alt .hm-seg.keel')) return false;
+          k.style.display = 'none';                        /* the deleted rule, verbatim */
+          return true;
+        });
+        if (!hid) {
+          aborted = aborted || 'MUTANT 10 CANNOT LAND: at 390 the gauge either paints no keel or '
+            + 'renders no key, so the legend arm is untested at the width where the key was cut.';
+        } else {
+          const bad10 = await page.evaluate(READ);
+          if (!judgeKey(bad10)) {
+            aborted = aborted || 'MUTANT 10 UNDETECTED: the four-state key was hidden while the '
+              + 'rails still painted keel marks, and the legend arm accepted it -- the <=419px '
+              + 'display:none is back.';
+          }
+          await page.evaluate(() => { document.querySelector('.hm-alt .hm-key').style.display = ''; });
+        }
+      }
+      if (r.keel > 0 && r.keyVisible) keelChecked++;
       await page.close();
     }
 
@@ -743,6 +944,12 @@ const GEN_N = 24;
   }
   await browser.close();
 
+  if (!keelChecked) {
+    aborted = aborted || 'THE LEGEND ARM NEVER RAN: no pinned or generated record painted a keel '
+      + 'segment, so judgeKey could not fail on any of them. A conditional arm with no record that '
+      + 'meets its condition is decoration.';
+  }
+
   if (aborted) {
     console.log('=== HOME CLAIMS ===');
     console.log('SELF-TEST ABORT -- the analyser does not do what it claims:');
@@ -752,11 +959,14 @@ const GEN_N = 24;
 
   const bad = out.filter((o) => !o[1]);
   for (const [label, pass, detail] of out) console.log((pass ? '  PASS  ' : '  FAIL  ') + label + (pass ? '' : '  -- ' + detail));
-  console.log('\n  7 planted mutants detected (a full claim over empty rails; a level claim over '
+  console.log('\n  the legend arm was exercised on ' + keelChecked + ' record(s) that actually paint a keel');
+  console.log('  10 planted mutants detected (a full claim over empty rails; a level claim over '
     + 'unequal rails; a thin rail named on the highest tier; a step position beside a bare probe '
     + 'remainder; a verdict quoting one rail\u2019s figures for another; an inflated panel header; '
     + 'an inflated figure inside the single-thin-rail sentence, checked against its own negative '
-    + 'control) -- every one of them a defect a judge or a battery found on a shipped build');
+    + 'control; a SECOND weekly-goal surface on the cold record; Cross-topic rendered above '
+    + 'Weak-spot in the phone practice block; the four-state key hidden while the rails still paint '
+    + 'keel marks) -- every one of them a defect a judge or a battery found on a shipped build');
   if (bad.length) return B.finish(1, 'HOME CLAIMS: FAIL (' + bad.length + ')');
   return B.finish(0, 'HOME CLAIMS: PASS  (' + out.length + ' assertions: '
     + Object.keys(SEEDS).length + ' pinned records + ' + GEN_N + ' generated from a fixed PRNG, '

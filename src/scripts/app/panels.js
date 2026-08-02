@@ -270,9 +270,20 @@
      ABOVE the single choice on offer -- roughly 40-45% of the surface, all of it a report on the
      past. The home renders this BELOW the decision. The old "By area" bars (groupBars) are GONE,
      not moved: roomsHtml() supersedes them outright -- it shows all six rooms, not just the ones
-     you happen to have touched, with honest coverage, a weak count and a started count. */
+     you happen to have touched, with honest coverage, a weak count and a started count.
+
+     THE WEEKLY GOAL IS NOT TELEMETRY, AND THAT IS WHY IT SITS OUTSIDE THE GATE.
+     Everything else here is a REPORT ON THE PAST -- a trend across logged sessions, topics drilled
+     clean a while ago -- and a cold record has no past, so `engaged()` is the right gate for those
+     two. The goal is the opposite kind of fact: a TARGET the user owns and nudges (`goal.weekly`,
+     default 5), and a cold record has one exactly as a mature one does. Deleting the rail's second
+     goal renderer (round 5, W1.5 item 3) left the engaged home with one and the COLD home with
+     ZERO, under a commit that claimed "now every viewport has one" -- true of one record class and
+     false of the other, and the two home VR baselines are captured COLD, so the pixels recorded
+     the removal as intended. Hoisted here rather than amended in prose: the invariant is now true
+     for EVERY record class, asserted per class by test/home_claims.cjs. */
   function telemetryHtml() {
-    if (!engaged()) return '';
+    if (!engaged()) return goalStrip();
     return goalStrip() + trendSparkHome() + dueReview();
   }
 

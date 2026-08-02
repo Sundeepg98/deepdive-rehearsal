@@ -1075,6 +1075,23 @@ BROWSER_CHECKS = [('render', 'test/render.cjs'), ('entity_leak', 'test/entity_le
                      # lost. Two mutants every run -- one in the fixed bar (the case scrollWidth
                      # cannot see) and one in the flow -- and it ABORTS if either goes undetected.
                      ('home_reflow', 'test/home_reflow.cjs'),
+                     # THE PHONE'S FIRST SCREEN CARRIES THE RECORD'S TRIAGE (W1.5 cycle 2). The
+                     # ruled contract: at 390x844 the home's first screen always holds, fully inside
+                     # the live band, either the Still-shaky chip list or one drill act -- Weak-spot
+                     # review when the record has weak topics, Cross-topic drill when it does not.
+                     # W1.5 moved the practice acts from under the six room cards (measured top
+                     # 2136 against a 57-799 band -- 1337px below the first screen) to directly
+                     # beneath the decision, in the DOM rather than with CSS `order`, and NOTHING in
+                     # test/ mentioned `hm-practicem` or `actionsHtml` afterwards: the VR manifest's
+                     # only two mobile baselines are both the walkthrough pane, so the whole
+                     # below-920 home had neither a geometry arm nor a pixel one and the move could
+                     # be reverted at a green gate. The outcome is not one number -- the chip list's
+                     # top moves with hero wrap (23px to 164px), verdict class (62px vs 80px) and
+                     # bar count (66px vs 144px), landing anywhere from 30px inside the band to
+                     # 251px below it -- so the contract is a DISJUNCTION and this asserts it on all
+                     # nine combinations, against a band read from the live fixed chrome. Plants the
+                     # pre-fix DOM position every run and ABORTS if the arm does not go red.
+                     ('home_fold', 'test/home_fold.cjs'),
                      # THE HOME MAY NOT PRINT A CLAIM IT CANNOT DERIVE. Three consecutive rounds of
                      # judgment found the same class in different clothes -- the gauge naming a thin
                      # rail on an all-zero record, then "Every rail is full" printed above two
@@ -1217,7 +1234,7 @@ BARRIER = ['build_integrity']
 SERIAL_TAIL = ['build_determinism', 'visual_regression', 'chrome_metrics', 'touch_floor',
                'grade_reveal', 'click_drift', 'transition_deadzone', 'overlay_deadzone',
                'fold_budget', 'cram_fit', 'visual_pane_smoke', 'mobile_nextup',
-               'no_dead_ends', 'home_reflow', 'sidebar_geometry', 'focus_ring']
+               'no_dead_ends', 'home_reflow', 'home_fold', 'sidebar_geometry', 'focus_ring']
 
 def run_serial(sel):
     for n in ORDER:
@@ -1253,7 +1270,7 @@ def run_fast(jobs, sel):
 # the inner loop, and it is the one part of this file that can tell you a lie of omission: a green
 # --changed run means "the checks I selected passed", and the checks it did not select are the
 # ones nobody looked at. It therefore says so in a banner, prints ONLY the checks it ran (a table
-# of 76 rows with 60 of them blank is exactly how a partial run gets read as a full one), and
+# of 77 rows with 60 of them blank is exactly how a partial run gets read as a full one), and
 # stamps full_coverage:false (and capture_of_record:false) into any --verdicts file it writes.
 #
 # THE MAP IS DELIBERATELY COARSE AND FAILS TOWARDS RUNNING MORE. Each entry is a path prefix and
@@ -1277,7 +1294,8 @@ CHANGED_MAP = [
                         'layout_static', 'shadow_css_guard', 'token_liveness', 'focus_ring',
                         'cta_contrast', 'dock_contrast', 'scoreboard_salience', 'latent_arial',
                         'visual_regression', 'touch_floor', 'chrome_metrics', 'fold_budget',
-                        'home_reflow', 'cram_fit', 'sidebar_geometry', 'at_name_hygiene']),
+                        'home_reflow', 'home_fold', 'cram_fit', 'sidebar_geometry',
+                        'at_name_hygiene']),
     ('design-tokens/', ['css_syntax', 'room_static', 'room_contrast', 'slab_ink',
                         'phantom_tokens', 'tracking_census', 'token_liveness', 'visual_regression',
                         'cta_contrast', 'dock_contrast']),

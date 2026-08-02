@@ -1,0 +1,175 @@
+name: ci-exec (universal runner -- any agent, any probe, any platform)
+
+# The KERNEL of agent self-serve CI. Agents do not write YAML; they push a
+# probe script on their branch and dispatch this with a command line. The
+# kernel guarantees the HOW: checkout of the requested ref, toolchain, caches,
+# sharding, artifact + summary conventions, injection-safe env indirection,
+# contents:read only, no secrets. The agent-facing interface is
+# `python test/ci.py` -- see it for dispatch/wait/fetch ergonomics.
+#
+# Contract for commands: run from repo root under bash; SHARD and SHARDS env
+# vars identify the slice; anything written to _ci_out/ comes back as an
+# artifact; exit code is the shard verdict.
+
+run-name: 'ci-exec ${{ inputs.tag }} (${{ inputs.runner }} x${{ inputs.shards }})'
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'client correlation id (ci.py generates one)'
+        required: true
+      cmd:
+        description: 'command to run from repo root (bash; sees SHARD/SHARDS)'
+        required: true
+      ref:
+        description: 'branch or sha to check out'
+        default: 'master'
+        required: true
+      runner:
+        description: 'runner platform'
+        type: choice
+        default: 'ubuntu-latest'
+        options:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+      shards:
+        description: 'number of parallel shards (1-16)'
+        default: '1'
+        required: true
+      install:
+        description: 'toolchain: chromium|firefox|webkit|all|none'
+        type: choice
+        default: 'chromium'
+        options:
+          - chromium
+          - firefox
+          - webkit
+          - all
+          - none
+      timeout_minutes:
+        description: 'per-shard timeout'
+        default: '30'
+        required: true
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      shards: ${{ steps.m.outputs.shards }}
+    steps:
+      - id: m
+        env:
+          SHARDS: ${{ inputs.shards }}
+        run: |
+          python3 -c "
+          import json, os
+          n = max(1, min(16, int(os.environ['SHARDS'])))
+          print('shards=' + json.dumps(list(range(1, n + 1))))
+          " >> $GITHUB_OUTPUT
+
+  run:
+    needs: plan
+    runs-on: ${{ inputs.runner }}
+    timeout-minutes: ${{ fromJSON(inputs.timeout_minutes) }}
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: ${{ fromJSON(needs.plan.outputs.shards) }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            ~/AppData/Local/npm-cache
+          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/ms-playwright
+            ~/AppData/Local/ms-playwright
+            ~/Library/Caches/ms-playwright
+          key: ${{ runner.os }}-pw-${{ hashFiles('package-lock.json') }}
+
+      - name: Toolchain (${{ inputs.install }})
+        env:
+          INSTALL: ${{ inputs.install }}
+        run: |
+          if [ "$INSTALL" != "none" ]; then
+            npm ci
+            if [ "$INSTALL" = "all" ]; then
+              npx playwright install --with-deps chromium firefox webkit
+            else
+              npx playwright install --with-deps "$INSTALL"
+            fi
+          fi
+
+      - name: Run shard ${{ matrix.shard }}/${{ inputs.shards }}
+        # env indirection everywhere: cmd is agent-authored text, never spliced
+        # into this script's source.
+        env:
+          CMD: ${{ inputs.cmd }}
+          SHARD: ${{ matrix.shard }}
+          SHARDS: ${{ inputs.shards }}
+        run: |
+          mkdir -p _ci_out
+          START=$(date +%s)
+          set +e
+          bash -c "$CMD" 2>&1 | tee "_ci_out/shard_${SHARD}.log"
+          CODE=${PIPESTATUS[0]}
+          set -e
+          END=$(date +%s)
+          echo "{\"shard\":$SHARD,\"exit\":$CODE,\"seconds\":$((END-START))}" > "_ci_out/result_${SHARD}.json"
+          echo "shard $SHARD/$SHARDS: exit $CODE after $((END-START))s"
+          exit $CODE
+
+      - name: Ship _ci_out (always)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: exec-${{ inputs.tag }}-shard-${{ matrix.shard }}
+          path: _ci_out/
+          if-no-files-found: ignore
+
+  summary:
+    needs: run
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: _all
+      - env:
+          TAG: ${{ inputs.tag }}
+          CMDLINE: ${{ inputs.cmd }}
+        run: |
+          echo "## ci-exec $TAG" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "$CMDLINE" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          for f in _all/*/result_*.json; do
+            [ -f "$f" ] && cat "$f" >> $GITHUB_STEP_SUMMARY && echo >> $GITHUB_STEP_SUMMARY
+          done

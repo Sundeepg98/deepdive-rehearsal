@@ -24,9 +24,12 @@
  * NUMERALS RENDERED BESIDE IT. Every arm reads the page's own figures and checks the sentence
  * against them, so it fails on exactly the class above and stays quiet on wording.
  *
- * THE BATTERY. Nine records driven at 1280 and 390: empty, one-solid, two-tiers-tied-under-a-
+ * THE BATTERY. Fourteen records driven at 1280 and 390: empty, one-solid, two-tiers-tied-under-a-
  * higher-third (both directions), genuinely level, perfect, mixed-position (drill cursor with a
- * walk resume), absent-field (a stored drill position, resume pointer on walk), and no-record.
+ * walk resume), absent-field (a stored drill position, resume pointer on walk), one-short,
+ * nearly-full, stale-cursor, topic-done, ONE-THIN (a strict unique minimum -- the single-thin-rail
+ * sentence, added by W1.5 because every other pinned record lands on a tie, a level/within-a-point
+ * or a full, so the class this home prints most often was pinned by nothing), and no-record.
  * The judges kept finding defects on seeds the builder had not run; this is that list, run.
  *
  * ROUND 4: THE RETROSPECTIVE SEED LIST WAS THE GAP, AND IT IS NOW THE SMALLER HALF.
@@ -44,13 +47,21 @@
  * that really happened -- but they are no longer what makes this check the class-killer.
  *
  * A separate arm censuses the hero over the WHOLE bank at the widths the design claims, because
- * the nine named records only ever render ~10 distinct questions of 972 and could not fail on the
+ * the named records only ever render ~10 distinct questions of 972 and could not fail on the
  * clamp regression they were written to guard.
  *
  * SELF-TEST, every run: planted mutants must each be caught -- a verdict naming a thin rail that
  * is not the minimum, a "level" claim over unequal rails, a "full" claim with unsolid probes, a
- * position asserted from an absent field, a verdict quoting one rail's figures for another, and an
- * inflated panel header. If any goes undetected the check ABORTS.
+ * position asserted from an absent field, a verdict quoting one rail's figures for another, an
+ * inflated panel header, and an inflated figure inside the SINGLE-THIN-RAIL sentence. If any goes
+ * undetected the check ABORTS.
+ *
+ * THAT LAST ONE IS THE ONE THIS FILE GOT WRONG. The quoted-figures gap was written `[^.;]{0,40}`,
+ * the rendered thin-rail sentence puts a period between the tier name and its figures, and so the
+ * arm was blind to the exact sentence it was written for -- proven by a mutant that came back NOT
+ * DETECTED, and recorded as a defect rather than fixed, by the gate-runtime acceptance battery
+ * (_audit/2026-08-01-gate-runtime-acceptance.md). Fixed at judgeQuotedFigures; the mutant is
+ * MUTANT 7 and now runs every gate.
  *
  * Usage: node test/home_claims.cjs [file]
  * Exit:  0 = pass, 1 = FAIL */
@@ -191,6 +202,32 @@ const SEEDS = {
     });
   },
 
+  /* EXACTLY ONE STRICT MINIMUM -- the record that renders the SINGLE-thin-rail sentence, which is
+     the one verdict class the pinned list did not cover. Every other seed here lands on a tie
+     (oneSolid, staffOnly, sde2Only), on level/within-a-point (level, oneShort, nearlyFull), on
+     full (perfect) or on cold. So the sentence the home is MOST likely to print for a real
+     mid-campaign user -- and the one judgeQuotedFigures was blind to -- was reaching this battery
+     only through the generative arm, where no mutant could be aimed at it. Three distinct shares,
+     one per tier, so the rendered percentages cannot round together. */
+  oneThin: () => {
+    const share = { Staff: 0.2, SDE3: 0.5, SDE2: 0.8 };
+    TopicRegistry.ids().forEach((id) => {
+      const cards = TopicRegistry.get(id).data.bank.cards;
+      const keys = CardId.forCards(cards); const map = {};
+      const byTier = {};
+      cards.forEach((c, i) => { (byTier[c.tier] = byTier[c.tier] || []).push(i); });
+      Object.keys(byTier).forEach((tier) => {
+        const idx = byTier[tier];
+        const take = Math.round(idx.length * (share[tier] === undefined ? 0.5 : share[tier]));
+        idx.slice(0, take).forEach((i) => { map[keys[i]] = 3; });
+      });
+      const n = Object.keys(map).length;
+      if (!n) return;
+      localStorage.setItem('ddr.v1.progress.' + id, JSON.stringify({
+        got: n, shk: 0, done: n, tot: cards.length, revisit: [], cards: map, cv: 1, ts: Date.now() }));
+    });
+  },
+
   /* a stale cursor past the end of a shorter bank -- must produce NO position claim */
   staleCursor: () => {
     const id = TopicRegistry.ids()[0];
@@ -326,8 +363,25 @@ const READ = () => {
 /* Every `N of M` inside a verdict must equal the N / M on the rail whose tier name precedes it.
    This single rule covers a whole family the earlier arm could not see: a thin-rail sentence
    quoting another rail's figures, inflating its own, or quoting a percentage no rail renders. */
+/* THE GAP MAY CROSS A FULL STOP; IT MAY NOT CROSS ANOTHER TIER NAME.
+   The first version wrote the gap as `[^.;]{0,40}` -- and the home's single-thin-rail sentence
+   puts a PERIOD exactly there: "Staff is the thin rail. 4 solid of 10 probes". `[^.;]` cannot
+   reach across it, so THE ARM WAS STRUCTURALLY BLIND TO THE ONE SENTENCE THIS CHECK EXISTS FOR,
+   and an inflated figure in it was invisible. That was found by a mutant the gate-runtime
+   acceptance battery aimed here, watched NOT DETECTED, and recorded rather than fixed
+   (_audit/2026-08-01-gate-runtime-acceptance.md, pre-existing defects #2). It is fixed here, and
+   that same mutant is now planted every run as MUTANT 7 below.
+
+   The period was never the rule worth enforcing -- it was a cheap proxy for one. What actually
+   makes an attribution wrong is ANOTHER TIER NAME standing between a name and the figures being
+   read as its own, so that is what the gap forbids now, character by character. This is strictly
+   stronger than the old form: it still refuses to attribute "SDE3 ... . Staff shows 4 of 10" to
+   SDE3 (the gap would have to swallow "Staff"), it now reads the thin-rail sentence, and on the
+   two-thin sentence -- "SDE3 and SDE2 are the thin rails. Both sit at 12% solid -- SDE3 18 of
+   359, SDE2 192 of 302" -- the leading names cannot reach past each other to the figures, so each
+   pair still binds to the name immediately before it. */
 function judgeQuotedFigures(v, rails) {
-  const re = /\b(Staff|SDE3|SDE2)\b[^.;]{0,40}?(\d+)\s+(?:solid\s+)?of\s+(\d+)/g;
+  const re = /\b(Staff|SDE3|SDE2)\b(?:(?!\b(?:Staff|SDE3|SDE2)\b)[\s\S]){0,40}?(\d+)\s+(?:solid\s+)?of\s+(\d+)/g;
   let m;
   while ((m = re.exec(v))) {
     const rail = rails.find((x) => x.tier === m[1]);
@@ -597,6 +651,54 @@ const GEN_N = 24;
         const bad6 = await page.evaluate(READ);
         if (!judgeHeader(bad6)) aborted = aborted || 'MUTANT 6 UNDETECTED: an inflated panel header was accepted.';
       }
+      /* ---- MUTANT 7: THE SENTENCE THIS ARM COULD NOT SEE ------------------------------------
+         `oneThin` is the record that renders the SINGLE-thin-rail verdict -- "Staff is the thin
+         rail. 62 solid of 310 probes" -- and the period after "rail" is what the old
+         `[^.;]{0,40}` gap could not cross, so an inflated figure in exactly this sentence was
+         invisible. This is the mutant the gate-runtime acceptance battery aimed here and watched
+         come back NOT DETECTED; it is adopted verbatim as the regression proof.
+
+         It is planted from the LIVE sentence, not from a literal, so it cannot drift away from
+         what the app actually renders -- and it carries a NEGATIVE CONTROL, because a mutant that
+         fails for the wrong reason proves nothing: the same sentence with the TRUE figure must
+         come back clean, and the caught reason must be the quoted-figures one. Without that
+         control an unrecognised-verdict-class red, or a wrong thin-rail name, would read as
+         success. */
+      if (w === 1280 && name === 'oneThin') {
+        const seen = await page.evaluate(() => {
+          const v = document.querySelector('.hm-verdict');
+          return v ? { html: v.innerHTML, text: (v.textContent || '').replace(/\s+/g, ' ').trim() } : null;
+        });
+        const single = seen && /\bis the thin rail\./.test(seen.text) &&
+          /(\d+)\s+solid\s+of\s+(\d+)/.test(seen.text);
+        if (!single) {
+          aborted = aborted || 'MUTANT 7 CANNOT LAND: `oneThin` no longer renders a single '
+            + 'thin-rail sentence with quoted figures, so the arm it proves is untested here: "'
+            + (seen ? seen.text.slice(0, 120) : 'no verdict') + '"';
+        } else {
+          /* the control first: the untouched sentence must be clean */
+          const clean = await page.evaluate(READ);
+          if (judgeQuotedFigures(clean.verdict, clean.rails.filter((x) => x.pct !== null))) {
+            aborted = aborted || 'MUTANT 7 CONTROL FAILED: the SHIPPED thin-rail sentence is '
+              + 'already rejected by the quoted-figures arm, so a red on the mutant would prove '
+              + 'nothing: ' + judgeQuotedFigures(clean.verdict, clean.rails.filter((x) => x.pct !== null));
+          }
+          await page.evaluate((h) => {
+            document.querySelector('.hm-verdict').innerHTML =
+              h.replace(/(\d+)(\s+solid\s+of\s+)/, (s, n, tail) => (+n + 1) + tail);
+          }, seen.html);
+          const bad7 = await page.evaluate(READ);
+          const why = judgeQuotedFigures(bad7.verdict, bad7.rails.filter((x) => x.pct !== null));
+          if (!why) {
+            aborted = aborted || 'MUTANT 7 UNDETECTED: the single-thin-rail sentence quoted an '
+              + 'inflated solid count and the quoted-figures arm accepted it -- the period-blind '
+              + 'regex is back: "' + (bad7.verdict || '').slice(0, 120) + '"';
+          } else if (!judgeVerdict(bad7)) {
+            aborted = aborted || 'MUTANT 7 LEAKED: judgeQuotedFigures caught it but judgeVerdict '
+              + 'returned clean, so the battery would never see it.';
+          }
+        }
+      }
       if (w === 1280 && name === 'absentField') {
         await page.evaluate(() => {
           document.querySelector('.hm-since').innerHTML = 'You worked this topic, and stopped at step 1 of 9. <b>9</b> still ungraded.';
@@ -650,10 +752,11 @@ const GEN_N = 24;
 
   const bad = out.filter((o) => !o[1]);
   for (const [label, pass, detail] of out) console.log((pass ? '  PASS  ' : '  FAIL  ') + label + (pass ? '' : '  -- ' + detail));
-  console.log('\n  6 planted mutants detected (a full claim over empty rails; a level claim over '
+  console.log('\n  7 planted mutants detected (a full claim over empty rails; a level claim over '
     + 'unequal rails; a thin rail named on the highest tier; a step position beside a bare probe '
-    + 'remainder; a verdict quoting one rail\u2019s figures for another; an inflated panel header) '
-    + '-- every one of them a defect a judge found on a shipped build');
+    + 'remainder; a verdict quoting one rail\u2019s figures for another; an inflated panel header; '
+    + 'an inflated figure inside the single-thin-rail sentence, checked against its own negative '
+    + 'control) -- every one of them a defect a judge or a battery found on a shipped build');
   if (bad.length) return B.finish(1, 'HOME CLAIMS: FAIL (' + bad.length + ')');
   return B.finish(0, 'HOME CLAIMS: PASS  (' + out.length + ' assertions: '
     + Object.keys(SEEDS).length + ' pinned records + ' + GEN_N + ' generated from a fixed PRNG, '

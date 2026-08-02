@@ -251,7 +251,15 @@ document.addEventListener('keydown', function (event) {
       return;
     }
     if (key === '[' || key === ']') return;               /* stepping topics invisibly: no. */
-    const homeTabKeys = { q: 'walk', w: 'drill', e: 'wb', r: 'sys', t: 'trade', y: 'model', u: 'num', i: 'rf', o: 'open', v: 'viz' };
+    /* p opens the PER-TOPIC session panel (:290). On the home there is no current topic, so the
+       panel opened on the BOOT constant -- measured: `p` on a fresh home opened Session progress
+       for content-pipeline, a topic the user never chose. That is the same silent wrong-topic
+       action `w` was measured doing, and the reason `n` carries `&& !onHome` at :280; `p` simply
+       fell through this block. It gets no retarget: the panel reports ONE topic's grading, and the
+       home's own record surfaces (the gauge, the status census, Still shaky) already state that
+       for every topic -- so, like `n`, it does nothing here. */
+    if (key === 'p') return;
+    const homeTabKeys ={ q: 'walk', w: 'drill', e: 'wb', r: 'sys', t: 'trade', y: 'model', u: 'num', i: 'rf', o: 'open', v: 'viz' };
     if (homeTabKeys[key]) {
       const rid = (window.LastVisit && LastVisit.topicId) ? LastVisit.topicId() : null;
       if (!rid || typeof TopicRegistry === 'undefined' || !TopicRegistry.get(rid)) return;   /* no topic to mean */

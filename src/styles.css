@@ -2333,6 +2333,46 @@ html[data-view="home"] .companion{padding:0}
    A SIBLING of .hm-key, not a child: the key is aria-hidden and this is content. */
 .hm-offladder{display:block;margin-top:var(--space-8);color:var(--mut2)}
 
+/* ---- THE GAUGE IS COMPACT BELOW 920 --------------------------------------------------------
+   WHAT THIS BUYS, MEASURED. At 390x844 the live band is 57-799 (fixed rail above, fixed tab bar
+   below). Shipped, the altitude panel ran 370-752 at 382px tall and .hm-duo opened at 778, so
+   the Still-shaky CHIP LIST -- the record's own triage, the one surface that says which topics
+   to re-drill -- began at 825: off the first screen. Moving the two practice acts up under the
+   decision (home-view.js html()) is right and costs another 92px, which would have pushed the
+   chips to 917. This block pays for both: the panel comes back to 277px and the chips open at
+   782, inside the band, with the practice acts above them.
+
+   NOTHING HERE IS A PIXEL PICKED PER SITE. The rails lose height because a rail's information is
+   HORIZONTAL -- 46 segments, one per topic, and the SIGNAL RULE two blocks up puts the grade in
+   the fill, never in the size -- so track height is the cheapest 48px on the page and the only
+   one that costs the instrument nothing. The stack roles are re-VALUED rather than re-picked:
+   one block, the same --gap-home-* layer home_rhythm.py enforces, phone only.
+
+   ABOVE 920 NOT ONE DECLARATION APPLIES, which is why the desktop VR baselines do not move for
+   this item. */
+@media(max-width:919px){
+  html[data-view="home"] #home{--gap-home-continue:var(--space-16);
+    --gap-home-altitude:var(--space-16);--gap-home-section:var(--space-16)}
+  html[data-view="home"] .hm-alt .hm-phead{padding:var(--space-8) var(--space-14)}
+  html[data-view="home"] .hm-alt .hm-pbody{padding:var(--space-10) var(--space-14) var(--space-12)}
+  html[data-view="home"] .hm-alt .hm-gauge{gap:var(--space-6)}
+  html[data-view="home"] .hm-alt .hm-gr-t{height:16px}
+  html[data-view="home"] .hm-alt .hm-verdict{margin-top:var(--space-10);padding-top:var(--space-8)}
+  html[data-view="home"] .hm-alt .hm-key{margin-top:var(--space-6);gap:var(--space-10)}
+}
+@media(max-width:419px){
+  /* the two-row rail (label over figure) is already this width's answer to a 44px label column
+     it cannot afford; it only needed the row gap to stop being a whole space token. */
+  html[data-view="home"] .hm-alt .hm-gr{row-gap:2px}
+  /* THE KEY LEAVES AT THE PHONE BREAKPOINT, AND ONLY THERE. It is aria-hidden="true" -- the app
+     has already ruled it decoration, and a screen reader has never been told about it -- and this
+     is the width where the status census leaves for exactly the same reason (:2543). 420-919 keep
+     it. What it labels is still readable without it: the rails carry fill, the verdict names the
+     thin one in words, and the off-ladder note (which is NOT decoration, and stays) reconciles
+     the denominator. */
+  html[data-view="home"] .hm-alt .hm-key{display:none}
+}
+
 /* ---- the paired row ------------------------------------------------------------------------ */
 .hm-duo{max-width:var(--measure-home);margin:0 auto var(--gap-home-duo);
   display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:var(--space-16)}
@@ -2387,8 +2427,10 @@ html[data-view="home"] .companion{padding:0}
 .hm-rdot{width:7px;height:7px;border-radius:2px;background:var(--rm,transparent);justify-self:center}
 .hm-rt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .hm-rn{font-size:var(--font-size-micro);color:var(--mut2);font-variant-numeric:tabular-nums}
-.hm-goalbar{height:6px;background:var(--bd);border-radius:3px;overflow:hidden;margin:var(--space-6) 0}
-.hm-goalbar i{display:block;height:100%;background:var(--ink)}
+/* .hm-goal / .hm-goalbar are GONE with the rail's second goal renderer (home-view.js railHtml).
+   The weekly goal has one renderer now -- Panels.goalStrip(), in the telemetry panel -- so the
+   rules that painted the duplicate go with it rather than waiting for a stylesheet to be audited
+   for orphans. */
 
 /* ---- THE LIBRARY TENANT (the companion column on the home route) ---------------------------
    The library is Panels.libraryHtml() -- the SAME renderer the topic switcher uses, so a topic
@@ -2498,8 +2540,7 @@ html[data-view="home"] .companion{padding:0}
      desktop column layout must be undone explicitly -- left alone it stacks the brand over a
      two-column action grid and the bar measures 135px, which chrome-metrics then faithfully
      reserves out of a 844px viewport. */
-  html[data-view="home"] .hm-rail .hm-rsec,
-  html[data-view="home"] .hm-rail .hm-goal{display:none}
+  html[data-view="home"] .hm-rail .hm-rsec{display:none}
   html[data-view="home"] .hm-rail .hm-top{flex-direction:row;align-items:center;
     justify-content:space-between;gap:var(--space-8);flex:1;min-width:0}
   html[data-view="home"] .hm-rail .hm-acts{display:flex;gap:var(--space-6);flex:none}

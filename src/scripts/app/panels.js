@@ -259,7 +259,12 @@
     if (typeof TopicRegistry === 'undefined' || !TopicRegistry.ids().length) return '';
     return '<button class="ix-cross" type="button" data-cross="1"><span class="ix-cross-tx"><span class="ix-cross-k">Cross-topic drill</span><span class="ix-cross-d">Random probes from every topic &mdash; the interview shuffle</span></span><span class="ix-cross-ar" aria-hidden="true">&rarr;</span></button>';
   }
-  function actionsHtml() { return crossDrillBar() + weakDrillBar(); }
+  /* THE RULED ORDER IS WEAK-SPOT FIRST. Both acts are cross-topic, but only one of them is
+     ADDRESSED TO THIS RECORD: "the 16 topics you have been shaky on" is a triage the record
+     derived, and "random probes from every topic" is the same offer for everybody. The specific
+     act goes above the generic one wherever the pair renders -- here (the phone's practice
+     section and the switcher's lead) and in the home rail, which repeated the inversion. */
+  function actionsHtml() { return weakDrillBar() + crossDrillBar(); }
 
   /* THE TELEMETRY, as its own surface. On the old entry screen goal + streak + trend + refresh sat
      ABOVE the single choice on offer -- roughly 40-45% of the surface, all of it a report on the

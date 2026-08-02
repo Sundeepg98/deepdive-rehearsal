@@ -23,6 +23,12 @@
  *
  * THE INVARIANT, one line:  `.open` = PRESENT.  `.open:not(.closing)` = INTERACTIVE.
  *
+ * AND ITS MIRROR, added by W1.5 as section 5: a layer must not OPEN where it has nothing to mean.
+ * Section 2 already asserts the global keymap stays suppressed UNDER an open modal; the same key
+ * map must stay suppressed ON THE HOME, which has no current topic -- `p` was measured opening the
+ * per-topic Session progress panel on the BOOT constant there. Same question, same instrument, one
+ * route over.
+ *
  * HOW IT MEASURES -- this is the part that matters.
  * This repo has shipped FIVE checks that could not fail. The reason this one can:
  *   - It dispatches REAL, HIT-TESTED input. `el.click()` bypasses hit-testing entirely and reports
@@ -365,6 +371,96 @@ async function realClick(page, sel) {
     await ctx.close();
   }
 
+  /* ================= 5. THE GLOBAL KEYMAP MUST NOT OPEN A PER-TOPIC PANEL ON THE HOME =========
+   * The sibling of section 2's suppression arm, one route over. There the global keymap must stay
+   * quiet UNDER an open modal; here it must stay quiet on a route that has no topic for it to
+   * mean. shell.js's own titled rule ("THE HOME IS A DESTINATION, NOT A MODAL") says it: on the
+   * home there is no current topic view, so the topic keys "must not silently act on the BOOT
+   * topic -- they retarget to the resume topic, or do nothing". `w` was gated when it was measured
+   * opening the drill of a topic the user never chose, and `n` carries `&& !onHome` for the same
+   * reason. `p` FELL THROUGH. Measured on the shipped build at 390x844, home route, seeded
+   * resume topic: one press opened #sessov -- "Session progress" for the BOOT constant.
+   *
+   * WHY THIS FILE. It already owns the question "did a layer act when it had no business acting",
+   * it already drives trusted keys and reads dialog open-state, and its section-2 arm is the same
+   * assertion in the other context. No new instrument is built for a defect an existing one is
+   * shaped for.
+   *
+   * THREE ARMS, and the second two are what keep the first from being free:
+   *   a) on the home, `p` opens nothing and moves no route;
+   *   b) THE PROBE CAN SEE AN OPEN PANEL -- the same reader, on the same page, must report the
+   *      panel when it IS open, or (a) is a green from a blind probe;
+   *   c) `p` STILL WORKS off the home, so the guard cannot be "fixed" by deleting the shortcut.
+   * Watched RED with the guard removed: (a) fails with sessov open on the boot topic. */
+  {
+    const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+    const page = await ctx.newPage();
+    /* a RETURNING user whose resume topic is NOT the boot topic -- so "it opened on the boot
+       constant" is distinguishable from "it opened on the topic I was in" */
+    await page.addInitScript(() => {
+      try {
+        localStorage.setItem('ddr.v1.progress.saga', JSON.stringify(
+          { got: 14, shk: 7, done: 21, tot: 21, revisit: ['x'], cards: {}, cv: 2, ts: Date.now() }));
+        localStorage.setItem('ddr.v1.nav.last', JSON.stringify({ id: 'saga', view: 'drill' }));
+      } catch (e) {}
+    });
+    await B.gotoApp(page, HTML, { hash: '#home' });
+    await B.settle(page);
+
+    const OPEN = () => ({
+      view: document.documentElement.dataset.view,
+      hash: location.hash,
+      dialogs: [...document.querySelectorAll('[role="dialog"][aria-modal="true"]')]
+        .filter((d) => d.classList.contains('open') && !d.classList.contains('closing'))
+        .map((d) => d.id || d.className),
+      topic: (typeof TopicRegistry !== 'undefined' && TopicRegistry.current())
+        ? TopicRegistry.current().id : null,
+    });
+
+    const home0 = await page.evaluate(OPEN);
+    chk('[home keymap] the arm starts on the #home route with nothing open',
+      home0.view === 'home' && home0.dialogs.length === 0, JSON.stringify(home0));
+
+    await page.evaluate(() => { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); });
+    await page.keyboard.press('p');
+    await B.settle(page);
+    await page.waitForTimeout(250);          /* the panel's own open animation, given room to lose */
+    const afterP = await page.evaluate(OPEN);
+    chk('[home keymap] `p` on the home opens NO per-topic panel (it opened Session progress on the boot topic)',
+      afterP.dialogs.length === 0,
+      'opened ' + afterP.dialogs.join(',') + ' with TopicRegistry.current()=' + afterP.topic +
+      ' -- a topic the user never chose; the resume topic is saga');
+    chk('[home keymap] ...and `p` on the home does not move the route either',
+      afterP.view === 'home' && afterP.hash === home0.hash,
+      JSON.stringify({ before: home0.hash, after: afterP.hash, view: afterP.view }));
+
+    /* (b) THE PROBE IS NOT BLIND. Open the panel by its own control and read it with the same
+       reader; a green above is worth nothing if this comes back empty too. */
+    await page.evaluate(() => { const b = document.getElementById('sessopen'); if (b) b.click(); });
+    await B.settle(page);
+    await page.waitForTimeout(250);
+    const planted = await page.evaluate(OPEN);
+    chk('[home keymap/control] the same probe DOES report the panel when it is genuinely open',
+      planted.dialogs.length > 0,
+      'the reader saw nothing after #sessopen was clicked -- every assertion above is free');
+    await ctx.close();
+
+    /* (c) THE SHORTCUT STILL WORKS WHERE IT MEANS SOMETHING. */
+    const ctx2 = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+    const page2 = await ctx2.newPage();
+    await B.gotoApp(page2, HTML, { hash: '#saga/drill' });
+    await B.settle(page2);
+    await page2.evaluate(() => { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); });
+    await page2.keyboard.press('p');
+    await B.settle(page2);
+    await page2.waitForTimeout(250);
+    const onTopic = await page2.evaluate(OPEN);
+    chk('[home keymap] `p` STILL opens the session panel on a TOPIC route (the guard is a scope, not a deletion)',
+      onTopic.view !== 'home' && onTopic.dialogs.length > 0,
+      JSON.stringify(onTopic));
+    await ctx2.close();
+  }
+
   await browser.close();
 
   notes.forEach((n) => console.log(n));
@@ -375,6 +471,7 @@ async function realClick(page, sel) {
   }
   console.log('OVERLAY DEADZONE: PASS  (' + notes.length +
     ' assertions: the first real click lands; no layer hit-tests while fading; focus leaves a closing' +
-    ' dialog; the keymap stays suppressed under an open one; no unrequested modal at first paint)');
+    ' dialog; the keymap stays suppressed under an open one and on the home, where it has no topic' +
+    ' to mean; no unrequested modal at first paint)');
   return B.finish(0, null);
 })();

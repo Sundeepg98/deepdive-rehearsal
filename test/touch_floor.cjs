@@ -71,10 +71,12 @@ async function pinViewport(page, w, h) {
  * catching the animation in motion, it was catching it before it moved.
  *
  * The rest condition now lives in _boot.cjs as B.atRest, shared with cta_contrast and
- * dock_contrast, and it demands transform-identity as well as agreement -- see the long comment
- * there for why "two reads agree" was the wrong predicate rather than a mistuned one. Each call
- * below names the element it measures as `scope`, because stillness is a question about the thing
- * being measured, not about the whole document. */
+ * dock_contrast. It requires that NOTHING IS IN FLIGHT -- no unfinished animation or transition up
+ * the chain, via getAnimations() -- as well as full alpha and rAF-separated confirmation. It does
+ * NOT require the transform to be identity: that was the first design, and it hung on a resting
+ * hover lift. See the long comment there for why "two reads agree" was the wrong predicate rather
+ * than a mistuned one. Each call below names the element it measures as `scope`, because stillness
+ * is a question about the thing being measured, not about the whole document. */
 
 (async () => {
   const fails = [], errs = [];

@@ -309,7 +309,16 @@ const REST_STATE = function (elOrSel) {
       try { anims = node.getAnimations(); } catch (e) { anims = []; }
       for (var i = 0; i < anims.length; i++) {
         var a = anims[i], st = a.playState;
-        if (st !== 'running' && st !== 'pending') continue;
+        /* PAUSED IS IN FLIGHT. It was skipped in the first version, and the cold verify planted the
+           hole: a 44px control parked at scale(.961) by animation-play-state:paused reads 42.3px,
+           reports still=true with alpha 1, and the rAF chain-compare is blind to it BECAUSE a
+           paused transform is identical across frames. That is the 42.2 defect through a different
+           door -- and the one door the ruled identity predicate would have closed, which is worth
+           recording: dropping identity bought a real false-hang fix and cost this, until now.
+           A paused animation holds its element mid-flight indefinitely, so "paused" is the one
+           playState most obviously not at rest. Infinite animations are still excluded below, so
+           this adds no hang risk that was not already accepted. */
+        if (st !== 'running' && st !== 'pending' && st !== 'paused') continue;
         var iters = 1;
         try { iters = a.effect.getComputedTiming().iterations; } catch (e) { iters = 1; }
         if (iters === Infinity) continue;
@@ -392,30 +401,31 @@ async function atRest(page, probe, arg, opts) {
     }
     return null;                            /* null = nothing is moving */
   };
-  let why = null;
-  try {
-    return await pollFor(
-      async () => {
-        why = await stillNow();
-        if (why) return null;
-        const a = await page.evaluate(probe, arg);
-        await settle(page);                 /* rAF-separated confirmation */
-        why = await stillNow();
-        if (why) return null;
-        const b = await page.evaluate(probe, arg);
-        why = (JSON.stringify(a) === JSON.stringify(b)) ? null : { moving: 'the probe value changed across a frame', a: a, b: b };
-        return why ? null : b;
-      },
-      (x) => x !== null,
-      o.ms || ACT_MS,
-      (o.label || 'the measured subtree to come to rest') +
-        (scope.length ? '  [scope: ' + scope.join(', ') + ']' : ''));
-  } catch (e) {
-    /* Say WHAT was still moving. A timeout that reports only "condition never held" is the blank
-       red this primitive was built to abolish -- it must not produce one itself. */
-    e.message += '  |  still moving: ' + JSON.stringify(why);
-    throw e;
-  }
+  /* THE PROBE RETURNS THE STATE, NEVER null -- the same rule waitPainted follows, and for the same
+     reason. The first version returned null on "not yet", so pollFor's timeout printed `last=null`
+     and the cold verify's paused mutant produced exactly that: a blank diagnostic on the page-level
+     entry point while the element-level one named its cause. The catch below recovered it, but a
+     recovery is not the same as the probe telling the truth, and the freeze document claimed the
+     latter. Now both entry points report state. */
+  const out = await pollFor(
+    async () => {
+      let why = await stillNow();
+      if (why) return { ok: false, why: why };
+      const a = await page.evaluate(probe, arg);
+      await settle(page);                   /* rAF-separated confirmation */
+      why = await stillNow();
+      if (why) return { ok: false, why: why };
+      const b = await page.evaluate(probe, arg);
+      if (JSON.stringify(a) !== JSON.stringify(b)) {
+        return { ok: false, why: { moving: 'the probe value changed across a frame', a: a, b: b } };
+      }
+      return { ok: true, value: b };
+    },
+    (x) => x && x.ok,
+    o.ms || ACT_MS,
+    (o.label || 'the measured subtree to come to rest') +
+      (scope.length ? '  [scope: ' + scope.join(', ') + ']' : ''));
+  return out.value;
 }
 
 /* A check that dies without saying why is the single most corrosive thing in a gate: the gate

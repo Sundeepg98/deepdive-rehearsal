@@ -572,3 +572,57 @@ One note for the record: the first `vr:update` attempt DIED mid-run (`browser.ne
 page, context or browser has been closed`) under load from a sibling wave's measurement job, and
 the check REFUSED to write baselines from a bad capture -- which is the behaviour that guard exists
 for. Re-run clean.
+
+---
+
+## GATE, CYCLE 2 -- 77/77 PASS
+
+```
+  77 checks in 931.3s (15.5 min)
+GATE: PASS
+```
+
+Full serial run (`python3 test/check_all.py`, no `--fast`, no `--shared-browser`), exit 0, **zero
+FAIL lines and zero SKIPs**. Capture: **`_audit/2026-08-02-w15-cycle2-gate.txt`**. Taken on the
+**COMMITTED** tree (`6a23237`), which is why `build_integrity` reads the strong form:
+
+```
+BUILD INTEGRITY: PASS  (12261034 bytes, 0 unresolved, 9 panes + 7 overlays,
+build SYNCED the deliverable, COMMITTED deliverable == fresh build of HEAD)
+```
+
+The count is **77**, up one from cycle 1's 76: `home_fold` registers separately, as the freeze
+states. The five lines that carry this cycle's work:
+
+```
+home_fold          PASS  (36 assertions across 9 records at 390x844 -- verdict class x bar
+                          count x hero wrap, each asserted against a band computed from the
+                          live fixed chrome rather than a typed number)
+home_claims        PASS  10 planted mutants detected (... a SECOND weekly-goal surface on the
+                          cold record; Cross-topic rendered above Weak-spot in the phone
+                          practice block; the four-state key hidden while the rails still
+                          paint keel marks)
+visual_regression  PASS  (17 baselines, win32-chromium149; every capture reached a proven rest
+                          state ... and matched its committed pixels)
+home_rhythm        PASS  (8 rhythm gaps + 11 measures, registry matches discovery exactly)
+home_reflow        PASS  (2 planted mutants detected)
+```
+
+Standalone runs during the cycle, all green: `ascii_guard`, `syntax_check`, `css_syntax`,
+`layout_static`, `home_rhythm`, `home_reflow`, `home_fold`, `home_claims`, `cold_open`,
+`heading_tree`, `at_name_hygiene`, `focus_ring`, `touch_floor`, `visual_regression`.
+
+---
+
+## STILL OPEN AFTER CYCLE 2
+
+Nothing from this cycle's brief. Two things are RECORDED rather than open, so a later wave does not
+rediscover them as findings:
+
+1. **The chip list is never the FULL-containment carrier at 390x844.** Its top is inside the band on
+   the two tight shapes; its first chip ends 14px past the fold on the roomiest of them. The ruled
+   contract holds in all nine shapes via the ACT. Closing the chip half would need the `.ix-cross`
+   bars compacted, which R1 explicitly forbade.
+2. **`m-home-dark` does not exist.** Cycle 2 added the light phone home only, which is what the
+   named fix asked for. The dark phone home is still unguarded by pixels; `home_reflow` and
+   `home_fold` cover its geometry in both themes and at 390 respectively.

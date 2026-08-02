@@ -1,0 +1,105 @@
+name: Battery (offloaded soak / stability runs)
+
+# Free parallel compute for the batteries that used to eat the local box:
+# soak a single check N times, or run repeated full gates, sharded across runners.
+# Dispatch:  gh workflow run battery.yml -f check=touch_floor -f runs_per_shard=6
+# Results:   per-shard artifacts + an aggregate line in the run summary.
+# HONEST LIMIT: these measure the checks on ubuntu-latest. Timing-sensitive rates
+# (the at-rest family) are platform-shaped; a win32-specific rate still needs a
+# local run. CI batteries answer "is the check's logic sound under load/repetition"
+# at zero local cost -- they complement, not replace, the local capture of record.
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'branch or sha to test'
+        default: 'master'
+        required: true
+      check:
+        description: 'check name for --only (ignored in fullgate mode)'
+        default: 'touch_floor'
+        required: true
+      runs_per_shard:
+        description: 'iterations per shard (5 shards total)'
+        default: '6'
+        required: true
+      mode:
+        description: 'solo = --only <check>; fullgate = whole serial gate each run'
+        default: 'solo'
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  shard:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4, 5]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Playwright + Chromium
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: Run the battery shard
+        run: |
+          mkdir -p _battery
+          PASS=0; FAIL=0
+          for i in $(seq 1 ${{ inputs.runs_per_shard }}); do
+            if [ "${{ inputs.mode }}" = "fullgate" ]; then
+              CMD="python test/check_all.py"
+            else
+              CMD="python test/check_all.py --only ${{ inputs.check }}"
+            fi
+            if $CMD > "_battery/run_${{ matrix.shard }}_$i.log" 2>&1; then
+              PASS=$((PASS+1))
+            else
+              FAIL=$((FAIL+1))
+              grep -E "FAIL|Error" "_battery/run_${{ matrix.shard }}_$i.log" | head -5 > "_battery/fail_${{ matrix.shard }}_$i.txt" || true
+            fi
+          done
+          echo "{\"shard\": ${{ matrix.shard }}, \"pass\": $PASS, \"fail\": $FAIL}" > "_battery/shard_${{ matrix.shard }}.json"
+          echo "shard ${{ matrix.shard }}: $PASS pass / $FAIL fail"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: battery-${{ inputs.check }}-shard-${{ matrix.shard }}
+          path: _battery/
+
+  aggregate:
+    needs: shard
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: _all
+
+      - name: Aggregate
+        run: |
+          TOTAL_PASS=0; TOTAL_FAIL=0
+          for f in _all/*/shard_*.json; do
+            P=$(python3 -c "import json;print(json.load(open('$f'))['pass'])")
+            F=$(python3 -c "import json;print(json.load(open('$f'))['fail'])")
+            TOTAL_PASS=$((TOTAL_PASS+P)); TOTAL_FAIL=$((TOTAL_FAIL+F))
+          done
+          N=$((TOTAL_PASS+TOTAL_FAIL))
+          echo "## Battery: ${{ inputs.check }} (${{ inputs.mode }}) @ ${{ inputs.ref }}" >> $GITHUB_STEP_SUMMARY
+          echo "**$TOTAL_FAIL fail / $N runs** (ubuntu-latest; platform caveat applies)" >> $GITHUB_STEP_SUMMARY
+          ls _all/*/fail_*.txt 2>/dev/null && echo "failure signatures in shard artifacts" >> $GITHUB_STEP_SUMMARY || true

@@ -7,8 +7,10 @@ name: Branch previews (every wave build gets a phone-lookable URL)
 # design: this is the instant-look channel; gate.yml runs on the same push in
 # parallel and carries the correctness verdict. Additive-only publishing (a
 # preview can never touch the production root of gh-pages). Branch deletion
-# prunes its preview. Shares the gh-pages concurrency group with the deploy
-# workflow so pushes to the branch never race.
+# prunes its preview. Deliberately NOT in the deploy's concurrency group:
+# GitHub keeps only the newest PENDING run per group, so sharing would let a
+# preview cancel a queued production deploy. Races against the deploy's
+# gh-pages push are handled by the rebase-retry loop instead.
 
 on:
   push:
@@ -24,7 +26,7 @@ defaults:
     shell: bash
 
 concurrency:
-  group: gh-pages-deploy
+  group: gh-pages-previews-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:

@@ -2062,3 +2062,12 @@ same reason one layer down. Recorded rather than quietly re-run.
 
 Freeze document: `_audit/2026-08-02-w15-freeze.md`. Gate of record:
 `_audit/2026-08-02-w15-gate.txt`. VR receipt pairs: `_audit/w15-receipts/`.
+
+Pushed: `2696291..9676596  appeal/w15-refinements`. **No CI run fired, and it is
+structural**: a `push` event resolves workflow definitions from the pushed REF, and this
+branch was cut 11 master commits before `gate.yml` existed (`99e72d0`), so its
+`.github/workflows/` holds only `deploy-pages.yml`, which triggers on master alone.
+`gh workflow run gate.yml --ref appeal/w15-refinements` fails HTTP 422 for the same
+reason. Nothing was imported to force one -- master's gate arrives free on the first push
+after its workflows are in this tree, which is the merge, and its own doctrine puts
+certification at the conductor's local win32 gate anyway. Full receipt: freeze doc, S8.

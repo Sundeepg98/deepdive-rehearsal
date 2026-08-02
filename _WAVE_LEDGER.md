@@ -234,11 +234,38 @@ above 919px and every compaction declaration is inside a `max-width` query.
 
 ---
 
-## GATE
+## GATE -- 76/76 PASS
 
-Full serial gate for this cycle: see the capture noted in the follow-up commit
-(`_audit/2026-08-02-w15-cycle1-gate.txt`), taken on the COMMITTED tree so `build_integrity` reads
-the HEAD match rather than deferring it.
+```
+  76 checks in 800.4s (13.3 min)
+GATE: PASS
+```
+
+Full serial run (`python3 test/check_all.py`, no `--fast`, no `--shared-browser`), exit 0, zero
+FAIL lines. Capture: **`_audit/2026-08-02-w15-cycle1-gate.txt`** (and, as the brief asked, the
+scratch copy at `%TEMP%\claude\D--claude-workspace-deepdive-rehearsal\<session>\scratchpad\
+w15-cycle1-gate.txt`). Taken on the **COMMITTED** tree (`cc2a7f2`), which is why
+`build_integrity` reads the strong form rather than deferring it:
+
+```
+BUILD INTEGRITY: PASS  (12255051 bytes, 0 unresolved, 9 panes + 7 overlays,
+build SYNCED the deliverable, COMMITTED deliverable == fresh build of HEAD)
+```
+
+The two lines that carry this cycle's new work:
+
+```
+overlay_deadzone   PASS  (40 assertions: ... the keymap stays suppressed under an open one
+                          and on the home, where it has no topic to mean ...)
+home_claims        PASS  7 planted mutants detected (... an inflated figure inside the
+                          single-thin-rail sentence, checked against its own negative control)
+visual_regression  PASS  (16 baselines, win32-chromium149; every capture reached a proven rest
+                          state ... and matched its committed pixels)
+build_determinism  PASS  (88 Shiki blocks render identically under a simulated 600ms/line stall)
+```
+
+Count is **76**, as the freeze states -- both new arms extend existing checks, so nothing
+registered separately.
 
 Standalone runs during the cycle, all green: `ascii_guard`, `syntax_check`, `css_syntax`,
 `home_rhythm`, `home_reflow`, `home_claims`, `overlay_deadzone`, `at_name_hygiene`,

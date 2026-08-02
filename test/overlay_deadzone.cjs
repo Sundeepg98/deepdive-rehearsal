@@ -847,19 +847,23 @@ async function realClick(page, sel) {
           + 'build (expected exactly 1), so the mutant below is not the mutant this arm claims.';
       } else {
         mutDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ddr-deadzone-'));
-        const mutant = path.join(mutDir, 'boot-gate-removed.html');
-        fs.writeFileSync(mutant, src.replace(BOOT_GATE, 'if (false) return;'), 'utf8');
-        const mp = await held(mutant, 'p');
-        const mw = await held(mutant, 'w');
-        if (!(mp.after.dialogs.length > 0 && mp.after.topic === 'content-pipeline')) {
-          aborted = 'MUTANT (boot gate removed) NOT DETECTED for `p`: with the gate deleted, a press '
-            + 'inside the boot window opened ' + JSON.stringify(mp.after.dialogs) + ' -- the arm cannot '
-            + 'see the leak it exists for. ' + JSON.stringify(mp.after);
-        } else if (mw.after.hash === mw.before.hash) {
-          aborted = aborted || 'MUTANT (boot gate removed) NOT DETECTED for `w`: the route stayed at '
-            + mw.after.hash + ' inside the boot window, so the incidental half of this gate is untested.';
+        try {
+          const mutant = path.join(mutDir, 'boot-gate-removed.html');
+          fs.writeFileSync(mutant, src.replace(BOOT_GATE, 'if (false) return;'), 'utf8');
+          const mp = await held(mutant, 'p');
+          const mw = await held(mutant, 'w');
+          if (!(mp.after.dialogs.length > 0 && mp.after.topic === 'content-pipeline')) {
+            aborted = 'MUTANT (boot gate removed) NOT DETECTED for `p`: with the gate deleted, a press '
+              + 'inside the boot window opened ' + JSON.stringify(mp.after.dialogs) + ' -- the arm cannot '
+              + 'see the leak it exists for. ' + JSON.stringify(mp.after);
+          } else if (mw.after.hash === mw.before.hash) {
+            aborted = aborted || 'MUTANT (boot gate removed) NOT DETECTED for `w`: the route stayed at '
+              + mw.after.hash + ' inside the boot window, so the incidental half of this gate is untested.';
+          }
+        } finally {
+          /* a 12MB copy of the build: removed on the way out whether the arm passed, failed or threw */
+          fs.rmSync(mutDir, { recursive: true, force: true });
         }
-        fs.rmSync(mutDir, { recursive: true, force: true });
       }
       chk('[boot window] the seeded mutant reproduces the leak -- gate deleted, `p` opens Session '
         + 'progress on the BOOT topic and `w` moves the route', !aborted, aborted || '');

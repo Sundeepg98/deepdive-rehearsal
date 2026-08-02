@@ -259,10 +259,16 @@ async function pinViewport(page, w, h) {
     return B.finish(1, 'TOUCH FLOOR: ABORTED (self-test failed: the goal-stepper arm cannot fail)');
   }
   ok('[plant] restoring the stepper\'s 20px box is detected by the 44px arm', true, '');
-  await page.evaluate(() => {
+  /* PUT THE DENSITY BACK, AND ASSERT IT. Everything below this line measures at the default scale;
+     an arm that silently ran at compact would be measuring a different app than its message says.
+     compact -> cozy -> default is two more cycles. */
+  const restored = await page.evaluate(() => {
     if (window.Density && window.Density.cycle) { window.Density.cycle(); window.Density.cycle(); }
+    return document.documentElement.dataset.density || 'default';
   });
   await B.settle(page);
+  ok('the density is back to default before the remaining arms measure (they are not compact-scale assertions)',
+    restored === 'default', 'density is ' + restored);
 
   /* ---- THE AA PLANT ----
      The 44px arm has carried a plant since it was written; the 24px arm did not, and this header

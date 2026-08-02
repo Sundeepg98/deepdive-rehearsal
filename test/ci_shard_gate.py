@@ -17,6 +17,7 @@ the assignment shape ever drifts, the sanity checks fail loudly instead of
 silently running a subset.
 """
 import ast
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -59,6 +60,21 @@ def main():
           'stamps false by design) ===' % (i, n, len(mine), len(order)))
     print('    ' + ','.join(mine))
     sys.stdout.flush()
+
+    # Serial-gate world parity: in the full ORDER, build_integrity's fresh
+    # `npm run build` materializes src/topics/_generated/** for every later
+    # check. A shard that did not draw build_integrity starves without this
+    # (first sharded run: numbers_lattice and bank_novelty red on exactly the
+    # shards without it). The build is deterministic, so this is idempotent.
+    print('=== materializing build outputs (npm run build) ===')
+    sys.stdout.flush()
+    npm = shutil.which('npm')
+    if not npm:
+        sys.exit('npm not on PATH -- shard cannot materialize the generated corpus')
+    rc = subprocess.call([npm, 'run', 'build'], cwd=str(REPO))
+    if rc != 0:
+        sys.exit('npm run build failed (%d) -- shard cannot materialize '
+                 'the generated corpus' % rc)
     code = subprocess.call(
         [sys.executable, str(CHECK_ALL), '--only', ','.join(mine)], cwd=str(REPO))
     sys.exit(code)

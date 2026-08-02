@@ -59,3 +59,7 @@ test/_primitive/
 # team-lead <-> agent coordination artifacts (never part of a build)
 _TEAM_LEAD_*.md
 _W2_DRILL_BLOCKED.md
+
+# CI harness surfaces -- never tracked, never dirt (build_integrity asserts a clean tree)
+_ci_out/
+_ci_results/

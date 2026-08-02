@@ -87,9 +87,12 @@ jobs:
           npm ci
           npx playwright install --with-deps chromium
 
+      # Logs live in the runner temp dir -- a workspace _battery/ made
+      # build_integrity (rightly) refuse fullgate runs on a dirty tree.
       - name: Run the battery shard
         run: |
-          mkdir -p _battery
+          B="$RUNNER_TEMP/_battery"
+          mkdir -p "$B"
           PASS=0; FAIL=0
           for i in $(seq 1 ${{ inputs.runs_per_shard }}); do
             if [ "${{ inputs.mode }}" = "fullgate" ]; then
@@ -97,20 +100,20 @@ jobs:
             else
               CMD="python test/check_all.py --only ${{ inputs.check }}"
             fi
-            if $CMD > "_battery/run_${{ matrix.shard }}_$i.log" 2>&1; then
+            if $CMD > "$B/run_${{ matrix.shard }}_$i.log" 2>&1; then
               PASS=$((PASS+1))
             else
               FAIL=$((FAIL+1))
-              grep -E "FAIL|Error" "_battery/run_${{ matrix.shard }}_$i.log" | head -5 > "_battery/fail_${{ matrix.shard }}_$i.txt" || true
+              grep -E "FAIL|Error" "$B/run_${{ matrix.shard }}_$i.log" | head -5 > "$B/fail_${{ matrix.shard }}_$i.txt" || true
             fi
           done
-          echo "{\"shard\": ${{ matrix.shard }}, \"pass\": $PASS, \"fail\": $FAIL}" > "_battery/shard_${{ matrix.shard }}.json"
+          echo "{\"shard\": ${{ matrix.shard }}, \"pass\": $PASS, \"fail\": $FAIL}" > "$B/shard_${{ matrix.shard }}.json"
           echo "shard ${{ matrix.shard }}: $PASS pass / $FAIL fail"
 
       - uses: actions/upload-artifact@v4
         with:
           name: battery-${{ inputs.check }}-${{ inputs.runner }}-shard-${{ matrix.shard }}
-          path: _battery/
+          path: ${{ runner.temp }}/_battery/
 
   aggregate:
     needs: shard

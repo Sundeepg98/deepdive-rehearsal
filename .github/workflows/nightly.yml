@@ -55,14 +55,25 @@ jobs:
         run: |
           npm ci
           npx playwright install --with-deps chromium
+      # Log goes to the runner's temp dir, NEVER the workspace: build_integrity
+      # rightly refuses to certify a dirty tree (it caught gate.log as dirt on
+      # the first branch-gate run). Windows runs the gate MINUS visual_regression:
+      # the win32 baselines legitimately RUN there but measure the runner's
+      # rasterization delta vs the capture box -- a permanent, information-free
+      # red. The exclusion self-labels (full_coverage:false).
       - name: Full serial gate (${{ matrix.os }} run ${{ matrix.run }})
-        run: python test/check_all.py 2>&1 | tee gate_${{ matrix.run }}.log
+        run: |
+          if [ "${{ matrix.os }}" = "windows-latest" ]; then
+            python test/ci_shard_gate.py --shard 1/1 --except visual_regression 2>&1 | tee "$RUNNER_TEMP/gate_${{ matrix.run }}.log"
+          else
+            python test/check_all.py 2>&1 | tee "$RUNNER_TEMP/gate_${{ matrix.run }}.log"
+          fi
       - name: Preserve log on failure
         if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: nightly-fail-${{ matrix.os }}-run${{ matrix.run }}
-          path: gate_${{ matrix.run }}.log
+          path: ${{ runner.temp }}/gate_${{ matrix.run }}.log
 
   live-drift:
     runs-on: ubuntu-latest

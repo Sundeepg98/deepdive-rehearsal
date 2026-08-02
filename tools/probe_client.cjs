@@ -185,12 +185,19 @@ async function isUp() {
 /* OPT-IN AUTOSTART. Spawns a detached server and waits for it to answer.
    The idle timeout is NOT optional here: a server nobody remembers starting is a server nobody
    remembers stopping, and an orphaned Chromium poisons the next run's measurements and sits in the
-   operator's process list. An autostarted one dies by itself. */
+   operator's process list. An autostarted one dies by itself -- the server's idle TTL is ON BY
+   DEFAULT (20 minutes), so nothing has to be passed for that to hold; {idle_ttl_min} or
+   {idle_exit_ms} override it, and 0 disables it.
+
+   NOTE, and it is the reason to think before calling this: ensureUp ADOPTS a server that is already
+   answering on this port. Two agents on the default port share one browser and one world -- see the
+   world-token note in tools/PROBE_SERVER_COLDVERIFY.md. Give each agent its own port. */
 async function ensureUp(opts) {
   const o = opts || {};
   if (await isUp()) return { started: false, port: cfg.port };
-  const args = [path.resolve(__dirname, 'probe_server.cjs'), '--port', String(cfg.port),
-    '--idle-exit-ms', String(o.idle_exit_ms || 1800000), '--quiet'];
+  const args = [path.resolve(__dirname, 'probe_server.cjs'), '--port', String(cfg.port), '--quiet'];
+  if (o.idle_exit_ms !== undefined) args.push('--idle-exit-ms', String(o.idle_exit_ms));
+  else if (o.idle_ttl_min !== undefined) args.push('--idle-ttl', String(o.idle_ttl_min));
   if (o.html) args.push('--html', o.html);
   if (o.url) args.push('--url', o.url);
   if (o.viewport) args.push('--viewport', o.viewport);

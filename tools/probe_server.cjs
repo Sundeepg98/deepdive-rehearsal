@@ -93,9 +93,22 @@
  * Requests are SERIALISED -- one page, one probe at a time -- because two concurrent probes against
  * one page is the contamination hazard again, wearing a race condition.
  *
+ * ===== THE IDLE TTL (on by default) =============================================================
+ * This process holds a Chromium. A Chromium nobody is talking to is a Chromium nobody remembers,
+ * and the agent that started it can die -- crash, be killed, be swept -- without ever reaching
+ * /shutdown. What is left behind is not a tidy leak: it is a browser holding hundreds of megabytes
+ * AND a listening port, and the next agent that calls ensureUp() finds that port answered and
+ * silently adopts a stranger's world.
+ *
+ * So the server DIES ON ITS OWN after N minutes with no requests (default 20). The timer is reset
+ * by every request, at arrival and again at completion, so a long /reload never counts as idle.
+ * When it fires the browser is closed and the process exits, which is what makes the browser go
+ * with it. Set --idle-ttl 0 (or --idle-exit-ms 0) to disable, e.g. for a long headed debug session.
+ *
  * USAGE
  *   node tools/probe_server.cjs [--port 9377] [--html PATH] [--url URL] [--headed]
- *                              [--viewport 1280x800] [--idle-exit-ms N] [--quiet]
+ *                              [--viewport 1280x800] [--idle-ttl MINUTES] [--idle-exit-ms N]
+ *                              [--quiet]
  * See tools/PROBE_SERVER.md.
  */
 'use strict';
@@ -114,6 +127,10 @@ const B = require('../test/_boot.cjs');
 const DEFAULT_HTML = path.resolve(__dirname, '..', 'deepdive_content_pipeline_rehearsal.html');
 const DEFAULT_PORT = 9377;
 const DEFAULT_VIEWPORT = { w: 1280, h: 800 };
+/* ADDED BY THE COLD VERIFIER, per the adoption gate. An orphaned server must take its browser with
+   it; 20 minutes is long enough that no working session notices and short enough that a dead
+   agent's chromium does not outlive the wave. */
+const DEFAULT_IDLE_TTL_MS = 20 * 60 * 1000;
 
 /* ---------- argv ------------------------------------------------------------------------------ */
 
@@ -133,6 +150,26 @@ function parseArgs(argv) {
     out[k.replace(/-/g, '_')] = v;
   }
   return out;
+}
+
+/* THE IDLE BUDGET, resolved in one place so the two spellings cannot disagree. --idle-exit-ms is
+   the older, exact one and still wins when both are given; --idle-ttl is minutes because that is
+   the unit the operator of a fleet thinks in. Either at 0 disables the timer. A flag with no value
+   is an ERROR rather than a guessed default: a server that silently ran forever because a flag was
+   mistyped is the exact failure this timer exists to prevent. */
+function resolveIdleMs(a) {
+  const bad = (k, v, unit) => { throw new Error('bad --' + k + ' "' + v + '" (' + unit + '; 0 disables)'); };
+  if (a.idle_exit_ms !== undefined) {
+    const n = Number(a.idle_exit_ms);
+    if (a.idle_exit_ms === true || !isFinite(n) || n < 0) bad('idle-exit-ms', a.idle_exit_ms, 'milliseconds');
+    return Math.round(n);
+  }
+  if (a.idle_ttl !== undefined) {
+    const n = Number(a.idle_ttl);
+    if (a.idle_ttl === true || !isFinite(n) || n < 0) bad('idle-ttl', a.idle_ttl, 'minutes');
+    return Math.round(n * 60000);
+  }
+  return DEFAULT_IDLE_TTL_MS;
 }
 
 function parseViewport(s, fallback) {
@@ -335,6 +372,9 @@ const state = {
   launchArgs: [],
   reloadMode: 'context',
   quiet: false,
+  idleTtlMs: 0,
+  lastActivityAt: 0,
+  idleMsBeforeLastRequest: 0,
 };
 
 function log() {
@@ -706,6 +746,14 @@ function doStatus() {
     residual_mutations_per_frame: state.ambient,
     mutation_attribution: state.attributable ? 'exact' : 'uncertain (page never went quiet)',
     reload_mode: state.reloadMode,
+    /* THE DEAD-MAN SWITCH, on the record. A verifier (or the agent that inherited this port) can
+       see how long this server will outlive the last thing anyone asked it. idle_ms is the gap
+       BEFORE the request being answered right now -- reporting "0" because /status itself just
+       reset the timer would be a number that cannot ever be interesting. */
+    idle_ttl_ms: state.idleTtlMs,
+    idle_ttl_min: state.idleTtlMs ? +(state.idleTtlMs / 60000).toFixed(2) : 0,
+    idle_ms: state.idleMsBeforeLastRequest,
+    idle_exit_in_ms: state.idleTtlMs ? Math.max(0, state.idleTtlMs - (Date.now() - state.lastActivityAt)) : null,
     /* PUBLISHED LAUNCH TERMS, for the same reason test/_gate_browser_server.cjs publishes them:
        --force-color-profile and friends are PROCESS-level and change how text rasterises, so a
        measurement taken here is only comparable to a measurement taken elsewhere if the terms
@@ -807,12 +855,23 @@ async function handle(req, res) {
 
 let closing = false;
 let server = null;
-async function bye(code) {
+async function bye(code, why) {
   if (closing) return;
   closing = true;
-  log('shutting down after', state.probesServed, 'probes and', state.worldId, 'worlds');
+  log('shutting down after', state.probesServed, 'probes and', state.worldId, 'worlds'
+    + (why ? ' -- ' + why : ''));
   try { if (server) server.close(); } catch (e) { /* not listening */ }
+  /* A WEDGED RENDERER MUST NOT BUY THE BROWSER A LONGER LIFE THAN THE SERVER. A probe that left an
+     infinite loop running in the page can make browser.close() hang, and a shutdown path that can
+     hang is not a shutdown path -- it is the orphan again, wearing a graceful-close costume. So:
+     close politely, but exit regardless. Chromium is a child of this process and its pipe dies with
+     us, which is what actually takes the browser down. */
+  const hard = setTimeout(() => {
+    log('browser.close() did not return in 8s -- exiting anyway; the browser pipe dies with us');
+    process.exit(code || 0);
+  }, 8000);
   try { if (state.browser) await state.browser.close(); } catch (e) { /* already gone */ }
+  clearTimeout(hard);
   process.exit(code || 0);
 }
 
@@ -824,6 +883,9 @@ async function main() {
   state.url = args.url ? String(args.url) : B.fileUrl(state.html);
   state.viewport = parseViewport(args.viewport, DEFAULT_VIEWPORT);
   const port = Number(args.port || process.env.PROBE_PORT || DEFAULT_PORT);
+  /* RESOLVED BEFORE THE BROWSER IS LAUNCHED, so a mistyped flag costs a message rather than a
+     chromium launch and an 11.7 MiB parse first. */
+  const idleMs = resolveIdleMs(args);
 
   await launch(args);
   const first = await reload({});
@@ -838,14 +900,40 @@ async function main() {
     });
   });
 
-  /* IDLE EXIT, opt-in. A server that is autostarted by a client shim must be able to die on its own
-     -- an orphaned Chromium poisons the next run's measurements and sits in the operator's process
-     list, which is exactly the failure the gate's browser server had to grow three layers to stop. */
-  const idleMs = Number(args.idle_exit_ms || 0);
+  /* ===== THE IDLE TTL, ON BY DEFAULT (verifier-added per the adoption gate) ======================
+   * A server that is autostarted by a client shim must be able to die on its own. The agent that
+   * started it can be killed mid-wave and never reach /shutdown -- proven in this repo's own cold
+   * verify: kill the client and the server keeps the port and the browser indefinitely. An orphan
+   * costs a chromium's memory, poisons the next measurement (ensureUp() ADOPTS whatever is already
+   * answering on the port), and lands in the operator's process list.
+   *
+   * ON BY DEFAULT, because opt-in is exactly what fails here: the agent that forgets to pass the
+   * flag is the same agent that forgets to shut down. The timer is reset when a request ARRIVES and
+   * again when its response COMPLETES, so a 1.3s /reload or a slow screenshot can never be mistaken
+   * for silence. The poll is a quarter of the budget (capped at 5s) so a small TTL is still honest
+   * rather than rounded up to the poll interval. */
+  state.idleTtlMs = idleMs;
+  state.lastActivityAt = Date.now();
   if (idleMs > 0) {
-    let last = Date.now();
-    server.on('request', () => { last = Date.now(); });
-    setInterval(() => { if (Date.now() - last > idleMs) { log('idle for', idleMs + 'ms'); bye(0); } }, 5000).unref();
+    const bump = () => { state.lastActivityAt = Date.now(); };
+    server.on('request', (req, res) => {
+      state.idleMsBeforeLastRequest = Date.now() - state.lastActivityAt;
+      bump();
+      res.on('finish', bump);
+      res.on('close', bump);
+    });
+    const tick = Math.max(250, Math.min(5000, Math.floor(idleMs / 4)));
+    const timer = setInterval(() => {
+      const idle = Date.now() - state.lastActivityAt;
+      if (idle >= idleMs) {
+        clearInterval(timer);
+        bye(0, 'idle for ' + idle + 'ms (--idle-ttl ' + (idleMs / 60000) + ' min); the browser goes with me');
+      }
+    }, tick);
+    timer.unref();
+    log('idle ttl', idleMs + 'ms (' + (idleMs / 60000) + ' min), checked every ' + tick + 'ms');
+  } else {
+    log('idle ttl DISABLED -- this server will outlive its client. Remember to /shutdown.');
   }
 
   server.listen(port, '127.0.0.1', () => {
@@ -854,6 +942,7 @@ async function main() {
     process.stdout.write(JSON.stringify({
       probe_server: 'up', port: port, url: state.url, pid: process.pid,
       viewport: state.viewport, world_id: state.worldId, boot_ms: first.ms,
+      idle_ttl_ms: state.idleTtlMs,
     }) + '\n');
   });
   server.on('error', (e) => {
@@ -873,7 +962,9 @@ const HELP = [
   '  --url URL           load this URL instead of --html',
   '  --viewport WxH      initial viewport (default 1280x800)',
   '  --headed            show the browser (debugging)',
-  '  --idle-exit-ms N    exit after N ms with no requests (default: never)',
+  '  --idle-ttl MIN      exit after MIN minutes with no requests (default '
+    + (DEFAULT_IDLE_TTL_MS / 60000) + '; 0 disables)',
+  '  --idle-exit-ms N    the same budget in milliseconds; wins over --idle-ttl if both are given',
   '  --quiet             no chatter on stdout beyond the ready line',
   '',
   'endpoints: /eval /reload /goto /viewport /screenshot /status /shutdown',
@@ -887,7 +978,7 @@ const HELP = [
    shared definition tests the thing it claims to test -- warm versus cold. */
 module.exports = {
   contextOpts, wrapExpression, DOC_REST, INSTALL_LEDGER, settleDoc, waitReady, parseViewport,
-  DEFAULT_PORT, DEFAULT_HTML,
+  resolveIdleMs, DEFAULT_PORT, DEFAULT_HTML, DEFAULT_IDLE_TTL_MS,
 };
 
 if (require.main === module) {

@@ -14,6 +14,9 @@ node tools/probe_client.cjs --eval 'document.title' --fresh
 node tools/probe_client.cjs --shutdown           # stop it, and its browser
 ```
 
+It also stops itself: **the server exits after 20 idle minutes and takes its browser with it**
+(`--idle-ttl MINUTES`, `0` disables). See "The dead-man switch" below.
+
 ---
 
 ## The measured win
@@ -57,7 +60,9 @@ This is enforced by default, not documented and hoped for:
    pristine. Measuring a dirty world means passing `mode: "explore"` and saying so on the record.
 2. **A MutationObserver attributes DOM mutations to the probe that caused them.** An assert-mode
    probe that mutates anything flips the world to dirty, so the *next* assert probe is refused. The
-   discipline survives an author who believed their expression was a pure read and was wrong.
+   discipline survives an author who believed their expression was a pure read and was wrong --
+   **for anything that produces a DOM mutation record.** It is a DOM-mutation instrument, and four
+   ways of spending a world are not DOM mutations: see Limits.
 3. **`/viewport` dirties the world on purpose.** An app that booted at 1280 and was resized to 390
    is not the app a phone gets -- one-shot boot measurements and cached layout decisions still hold
    the desktop's answer. Use `/reload {"viewport":"390x844"}`, which builds the world at that size.
@@ -130,6 +135,32 @@ expression threw".
 | `/status` | url, uptime, probes served, pristine, published launch args |
 | `/shutdown` | stop the server and its browser |
 
+### The dead-man switch
+
+*Added by the independent cold verify, as an adoption gate; proven in
+`tools/PROBE_SERVER_COLDVERIFY.md` section H.*
+
+This process holds a Chromium, and the agent that started it can die without ever reaching
+`/shutdown` -- killed mid-wave, swept, crashed. Measured: kill the client and the server keeps the
+port and the browser **indefinitely**. That orphan is not just wasted memory; `ensureUp()` **adopts**
+whatever is already answering on the port, so the next agent silently inherits a stranger's world.
+
+So the server dies on its own after **20 minutes with no requests**, closes the browser and exits.
+
+| flag | |
+|---|---|
+| `--idle-ttl MINUTES` | the budget in minutes (default `20`; `0` disables) |
+| `--idle-exit-ms N` | the same budget in milliseconds; wins if both are given |
+
+- The timer is reset when a request **arrives** and again when its response **completes**, so a
+  1.3s `/reload` or a slow screenshot is never mistaken for silence.
+- `/status` publishes `idle_ttl_ms`, `idle_ms` (the gap before the request being answered) and
+  `idle_exit_in_ms`, so an inherited port can be interrogated rather than guessed at.
+- Shutdown closes the browser but **exits regardless** after 8s: a probe that left an infinite loop
+  running can wedge `browser.close()`, and a shutdown path that can hang is the orphan again in a
+  graceful-close costume. Chromium is a child of this process and dies with its pipe.
+- Disable it for a long headed debug session (`--idle-ttl 0`) and the server says so at startup.
+
 ### Returning values
 
 The expression's value crosses the wire as JSON, normalised **in the page** so `getBoundingClientRect()`
@@ -144,7 +175,8 @@ width is the most believable wrong answer a layout probe can give.
 
 ```
 node tools/probe_server.cjs --port 9377 &
-node tools/probe_server_test.cjs --port 9377 --cold-repeats 3
+node tools/probe_server_test.cjs --port 9377 --cold-repeats 3   # the builder's parity proof
+node tools/probe_coldverify.cjs --port 9377                     # the cold verifier's battery
 ```
 
 Measures 15 representative values **twice** -- once through the server behind `/reload`, once
@@ -167,6 +199,28 @@ tool was being built:
 
 ## Limits
 
+*The four below were measured by the independent cold verify; each is reproducible with
+`node tools/probe_coldverify.cjs` (sections D and E), and each has a named fix in
+`tools/PROBE_SERVER_COLDVERIFY.md`. They are the gap between what the guard MECHANISM is -- a
+MutationObserver on `document.documentElement` -- and what a reader might assume it covers.*
+
+- **The contamination guard sees DOM mutations, and only those.** Measured to escape it silently,
+  leaving `pristine: true` and the next assert-mode probe served: `styleSheets[n].insertRule(...)`
+  (CSSOM restyles nothing observes), a write **inside a shadow root** (this app has 17 hosts and
+  ~107 nodes in each), a `localStorage` write, and **a probe that navigates the page away**
+  (`location.href = ...` -- the document, and the ledger with it, are replaced; the server keeps
+  reporting the old world as pristine). Scroll position is likewise not a mutation. Until those are
+  closed: drive navigation through `/goto`, and treat a probe that writes anything as `explore`.
+- **"Single client" is a convention, not a mechanism.** Requests are serialised (verified: a fast
+  probe waits behind a 900ms one, so nothing interleaves and no mutation is misattributed), but
+  there is no client identity and no lease. A second client's `/reload` **replaces the first
+  client's world mid-sequence**, and the first client's next probe is answered against it with
+  `pristine: true` -- at the other client's viewport. The stamp carries `world_id` and `viewport`,
+  so it is auditable after the fact; nothing checks it for you. **Give each agent its own port**,
+  and compare `world_id` against the one `/reload` returned if a verdict rests on it.
+- **The viewport is sticky.** `/viewport 390x844` changes `state.viewport`, so a later bare
+  `/reload` boots at 390 rather than at the size the session started with. Pass the viewport
+  explicitly to `/reload` when it matters (the stamp reports it either way).
 - Loopback only, single client, no auth. `/eval` runs arbitrary JavaScript in the page **by design**
   -- that is what a probe server is. Do not bind it to anything but 127.0.0.1.
 - Parity is proven for 15 representative measurements on a quiet box, not for all measurements

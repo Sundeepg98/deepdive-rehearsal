@@ -1749,12 +1749,20 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
    record class at every viewport, including the first-run home of every new user, where it did not
    exist at all before.
 
-   THE BOX IS THE BUTTON, NOT A PSEUDO-ELEMENT. A 20px chip with a 44px ::after hit area paints
-   identically and measures the same on the finger -- but the two buttons sit 8px apart, so two
-   44px areas would OVERLAP by 16px and a finger aimed at `-` could land on `+`. Reserving the box
-   in layout is the only form of this fix that keeps the targets disjoint. The 20px chip moves to
-   .ix-goal-g, so nothing about the painted control changes except that it is now centred in a box
-   a finger can hit.
+   THE BOX IS THE BUTTON, NOT A PSEUDO-ELEMENT, and the reason is measurement rather than geometry.
+   A 20px chip with a 44px ::after hit area paints identically and a finger meets the same region.
+   What it does NOT do is reserve layout or move the border box, so (a) the arm this fix ships with
+   -- a getBoundingClientRect over every `#home [data-goal]`, in the file that already owns this
+   question -- cannot see it, and anything that could would be a bespoke hit-probe rather than the
+   existing instrument; and (b) `button:focus-visible` (:53) draws its ring on the BORDER box, so a
+   keyboard user would get a 20px ring around a 44px target. The 20px chip moves to .ix-goal-g, so
+   nothing about the painted control changes except that it is now centred in a box a finger can
+   hit.
+   (An earlier draft of this comment justified the choice by claiming two 44px pseudo areas would
+   OVERLAP. Re-derived, they do not: the chips sit 52px apart centre to centre -- 20 + 8 + 16 + 8 --
+   so the areas land at [839,883] and [891,935] at 1280, 8px APART. The claim was wrong and is
+   struck; touch_floor still asserts non-overlap, because that guards the real boxes' spacing, but
+   it is not why the box is the button.)
 
    RAW 44px, NOT var(--space-44), and the deviation is measured: the space scale is re-valued by
    density, so var(--space-44) resolves to 36px under html[data-density=compact] -- 8px under this

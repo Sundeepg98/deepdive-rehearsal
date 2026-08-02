@@ -1337,12 +1337,23 @@ all 16 pinned records and all 24 generated ones at both viewports; MUTANT 13 is 
 span inside it, so nothing about the painted control changes except that it is now centred in a box
 a finger can hit. `panels.js` renders the span; `styles.css` carries both rules.
 
-**THE BOX IS THE BUTTON, NOT A PSEUDO-ELEMENT -- and that is a measurement, not a preference.** The
-named fix offered "keep the 20px glyph box and add a 44px padded/pseudo hit area". It paints
-identically and measures the same on the finger, but the two buttons sit 8px apart: two 44px areas
-centred 28px apart **overlap by 16px**, so a finger aimed at `-` lands on `+`. Reserving the box in
-layout is the only form of this fix that keeps the targets disjoint, and the check asserts
-`overlap === 0` for exactly that reason.
+**THE BOX IS THE BUTTON, NOT A PSEUDO-ELEMENT -- and the first reason I wrote down was WRONG.** The
+named fix offered "keep the 20px glyph box and add a 44px padded/pseudo hit area". I justified
+rejecting it by claiming two such areas would overlap. **Re-derived from the measured pre-change
+geometry, they do not**: the chips sit 52px apart centre to centre (20 + 8 + the 16px figure + 8),
+so 44px areas land at `[839,883]` and `[891,935]` at 1280 -- **8px APART**. The claim is struck from
+all four places it had been written into (`styles.css`, `panels.js`, `touch_floor.cjs`'s header and
+its assertion message) rather than softened, in the cycle whose own item 2 is about a receipt that
+outran its measurement.
+
+**The reasons that DO survive** are about measurement, not geometry: a pseudo hit area moves no
+border box, so (a) the arm the ruling named -- a `getBoundingClientRect` over every
+`#home [data-goal]`, in the file that already owns this question -- cannot see it, and anything that
+could would be a bespoke hit-probe rather than the existing instrument; and (b) `button:focus-visible`
+(`styles.css:53`) draws its ring on the BORDER box, so a keyboard user would get a 20px ring around a
+44px target. The `overlap === 0` assertion stays -- it guards the real boxes' spacing against a
+future edit that shrinks the gap or positions one absolutely -- but it is no longer offered as the
+reason for the design choice.
 
 **RAW `44px`, NOT `var(--space-44)` -- a deviation from the named fix, and it is PROVED rather than
 argued.** The space scale is re-valued per density. Built with the token and measured at compact:
@@ -1417,3 +1428,35 @@ Verified twice after the write, each a fresh capture:
 18 baselines compared; worst = 0 px (home-light), budget 32 px.
 VISUAL REGRESSION: PASS  (18 baselines, win32-chromium149)
 ```
+
+---
+
+## STILL OPEN AFTER CYCLE 4
+
+Nothing from this cycle's brief -- R5, R6 and all six judges' items are closed with receipts above.
+Four things are RECORDED rather than open, so a later wave does not rediscover them as findings:
+
+1. **The phone home paints ~57px scrolled for a beat on some loads.** Unchanged from cycle 3: the
+   Resume CTA's `data-autofocus="1"` scrolls it into view before layout settles, and the page
+   returns to 0 within a second. It bit this cycle too, from the other side -- a scratch probe that
+   clicked the goal stepper by raw coordinates hit the page background after the first press,
+   because the app had pinned the scroll back to 0 under it (`router.js`'s `pinTop` timers at 0 /
+   120 / 400ms). That was a PROBE defect, not an app one, and it was chased to the bottom before
+   anything was concluded: re-driven with `locator.click()` (which scrolls the target into view
+   itself) all five presses land. Recorded because the next person to drive the home by coordinates
+   will meet the same thing.
+2. **The chip list is still never the full-containment carrier in any shape this repo measures** --
+   22 cells across 390x844 and 360x844. The ruled contract holds in every one of them via the ACT.
+   Unchanged by this cycle: the stepper grew the "This week" panel by 18px on the DESKTOP only (the
+   phone row was already 44px tall under the `<=919px` element floor), and `home_fold` re-ran green
+   at 88 assertions.
+3. **`q` and `n` are not separately driven in the boot window.** One gate closes every key, so one
+   arm is aimed at the gate (`p`, plus `w` as the highest-signal navigator) rather than four at the
+   keys. Stated rather than implied: if a future edit made the gate per-key again, this arm would
+   still pass for `q`.
+4. **The boot-window arm's shipping form holds the window open.** The natural window is driven too,
+   but as EVIDENCE (3 real boots, bounded at 4s, count printed) rather than as the assertion --
+   because it lands 4 times in 6 and a miss under the ruling's own predicate costs a 120s timeout.
+   The measurement behind that choice is in R6 above. If a future change widens the natural window
+   (any deferral of `Router.init`, say), the honest move is to promote the natural arm and retire
+   the hold, not to add a second hold.

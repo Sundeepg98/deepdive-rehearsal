@@ -202,11 +202,12 @@ async function pinViewport(page, w, h) {
      at every viewport -- including the COLD home, where it did not exist at all before. This arm is
      therefore driven on a COLD record: no seed, nothing in localStorage, which is the first screen
      of a brand-new user.
-     THREE THINGS, because the box alone is not the target:
+     THREE THINGS, because a box that clears the floor is not yet a usable pair of targets:
        (a) both buttons clear 44 in BOTH axes;
-       (b) their hit areas do not OVERLAP -- 44px boxes 8px apart would, and a finger aimed at `-`
-           would land on `+`. This is the reason the box is the BUTTON and not a 44px pseudo-element
-           behind a 20px chip, which would paint identically and measure the same on the finger;
+       (b) the two boxes do not OVERLAP. They are 44px wide with the 16px figure between them, so
+           they clear each other by that figure's width -- but the whole point of RESERVING the box
+           is that its neighbours are pushed apart rather than painted over, and this is what would
+           notice a future edit that shrinks the gap or absolutely-positions one of them;
        (c) the floor survives a DENSITY change. The fix spells 44 in raw px rather than
            var(--space-44) precisely because the space scale is re-valued per density -- the token
            is 36px under html[data-density=compact] -- and `d` is an advertised shortcut, so
@@ -232,7 +233,7 @@ async function pinViewport(page, w, h) {
   const goal = await goalBox();
   ok('the weekly-goal stepper clears the app\'s own 44px floor in BOTH axes on a COLD home (it was 20x44 here and 20x20 at 1280 -- the height-only floor could not see the width)',
     goal.count === 2 && goal.min >= APP_FLOOR, JSON.stringify(goal));
-  ok('the two stepper targets do not overlap (44px hit areas 8px apart would, and a finger aimed at "-" would land on "+")',
+  ok('the two stepper targets do not overlap -- reserving the box is what keeps its neighbours pushed apart rather than painted over',
     goal.count === 2 && goal.overlap === 0, JSON.stringify(goal));
   await page.evaluate(() => { if (window.Density && window.Density.cycle) window.Density.cycle(); });
   await B.settle(page);

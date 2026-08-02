@@ -191,12 +191,13 @@
      goalLine() owns both channels of the sentence, and the one place that puts this fact into words
      stays one place.
 
-     THE STEPPER IS A FINGER TARGET. Its two buttons paint a 20px chip and reserve a 44px box --
-     the app's own floor, and the reason the box is the BUTTON rather than a pseudo-element is that
-     two 44px hit areas 8px apart would OVERLAP, so a finger aimed at `-` could land on `+`. Cycles
-     2-3 hoisted this strip out of the engaged() gate, which put it on the first-run home of every
-     new user; at 20x20 (1280) and 20x44 (phone) it was under WCAG 2.5.8 AA in one axis and under
-     this app's 44px promise in both. Guarded by test/touch_floor.cjs. */
+     THE STEPPER IS A FINGER TARGET. Its two buttons paint a 20px chip (.ix-goal-g) and RESERVE a
+     44px box -- the app's own floor. The box is the button rather than a pseudo-element because a
+     pseudo hit area moves no border box: the rect arm in test/touch_floor.cjs could not see it, and
+     the app's own focus ring would draw at 20px around a 44px target. Cycles 2-3 hoisted this strip
+     out of the engaged() gate, which put it on the first-run home of every new user; at 20x20
+     (1280) and 20x44 (phone) it was under WCAG 2.5.8 AA in one axis and under this app's 44px
+     promise in both. See styles.css for the full note. */
   function goalStrip() {
     var g = weeklyGoal(), left = g.target - g.done;
     var note = g.met ? 'Goal met &mdash; nice work.' : left + ' more to go';

@@ -1457,7 +1457,9 @@ GATE: PASS
 Full serial run (`python3 test/check_all.py`, no `--fast`, no `--shared-browser`), exit 0, **zero
 FAIL lines and zero SKIPs**. Capture: **`_audit/2026-08-02-w15-cycle4-gate.txt`** (scratch copy at
 `%TEMP%\claude\D--claude-workspace-deepdive-rehearsal\<session>\scratchpad\w15-cycle4-gate.txt`).
-Taken on the **COMMITTED** tree (`1eeced6`), which is why `build_integrity` reads the strong form:
+Taken on the **COMMITTED** tree (`1eeced6`), which is why `build_integrity` reads the strong form.
+Every commit after `1eeced6` on this branch is DOCS ONLY -- this file and `_audit/` -- so the
+capture still describes the code at the branch tip; `npm run build` on the tip produces no diff.
 
 ```
 BUILD INTEGRITY: PASS  (12277559 bytes, 0 unresolved, 9 panes + 7 overlays,

@@ -2020,5 +2020,45 @@ than decided in a closing pass. The four items recorded-not-open after cycle 4 s
 recorded-not-open belong to whoever picks up the home next, with the measurements they need already
 taken.
 
+## GATE, TAIL FIXES -- 77/77 PASS
+
+```
+  77 checks in 998.3s (16.6 min)
+GATE: PASS
+```
+
+Full serial run (`python test/check_all.py`, no `--fast`, no `--shared-browser`), exit 0, **zero
+FAIL lines and zero skipped checks**. Capture: **`_audit/2026-08-02-w15-gate.txt`**. Taken on the
+**COMMITTED** tree (`08cae96`), `git status --porcelain` empty before and after, which is why
+`build_integrity` reads the strong form:
+
+```
+BUILD INTEGRITY: PASS  (12285811 bytes, 0 unresolved, 9 panes + 7 overlays,
+build SYNCED the deliverable, COMMITTED deliverable == fresh build of HEAD)
+```
+
+The count is **77**, unchanged since cycle 2: both tail arms extend existing checks.
+
+```
+overlay_deadzone   PASS  (74 assertions: ... Ctrl+P ... leaves the browser's own print alone on
+                          the home -- and what that print PRODUCES is measured too, on a home
+                          seeded with a visited-then-closed cram sheet: the record paints, the
+                          closed sheet does not)
+home_claims        PASS  13 planted mutants detected (... and the goal bar given an accessible
+                          name of its own again, so the fact is announced off the bar and again
+                          off the line beneath it)
+print_truth        PASS  file-print-never-opened {"pages":3,"clipped":0,"bytes":390220}
+                          -- the topic-route substitution T1 deliberately did NOT touch
+visual_regression  PASS  (18 baselines, win32-chromium149, worst 0 px)
+```
+
+**Two full runs were spent and the first was mine to avoid** -- it passed 77/77 but
+`build_integrity` fell to `HEAD-match DEFERRED -- 1 uncommitted path(s) [_audit/w15-receipts/]`,
+because the receipts directory was created one minute after the run started. That is cycle 4's own
+rule broken in the pass that quotes it. A third run was started and STOPPED deliberately for the
+same reason one layer down. Recorded rather than quietly re-run.
+
+---
+
 Freeze document: `_audit/2026-08-02-w15-freeze.md`. Gate of record:
 `_audit/2026-08-02-w15-gate.txt`. VR receipt pairs: `_audit/w15-receipts/`.

@@ -1,0 +1,121 @@
+name: warm-pool (sub-minute verdicts -- a runner that stays booted)
+
+# The latency floor of a cold CI job is its setup ritual (~4 min: boot,
+# toolchain, npm ci, browsers, build). This workflow pays that ritual ONCE,
+# then holds the built world warm and polls a git-refs queue for work,
+# executing any probe within seconds of arrival. Git is the message bus:
+# ci.py pushes a commit (tree = the exact working state, message = the job
+# JSON) to refs/ci-jobs/<id>; the executor checks it out, runs it, pushes the
+# log + exit code to refs/ci-results/<id>. No third-party service, fully
+# auditable in the ref history, TTL-bounded.
+#
+# Scope honesty: this is the INSTANT PROBE lane for active build sessions --
+# it certifies nothing (the serial win32 gate remains certification, the
+# sharded cold gate remains the full advisory verdict). It tests THIS repo's
+# code only, bounded by ttl_minutes, one executor by default -- comfortably
+# inside Actions' CI purpose and concurrency limits.
+#
+# Interface: python test/ci.py warm start|run|status|stop
+
+run-name: 'warm-pool (ttl ${{ inputs.ttl_minutes }}m)'
+
+on:
+  workflow_dispatch:
+    inputs:
+      ttl_minutes:
+        description: 'how long the executor stays warm'
+        default: '45'
+        required: true
+
+permissions:
+  contents: write
+
+defaults:
+  run:
+    shell: bash
+
+# One pool at a time; a new start supersedes a dying one only after it exits.
+concurrency:
+  group: warm-pool
+  cancel-in-progress: false
+
+jobs:
+  executor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-pw-${{ hashFiles('package-lock.json') }}
+
+      - name: Warm the world (the one-time ritual)
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+          npm run build
+          echo "world warm: $(git rev-parse --short HEAD)"
+
+      - name: Execute jobs until TTL
+        env:
+          TTL_MINUTES: ${{ inputs.ttl_minutes }}
+        run: |
+          cat > /tmp/executor.sh <<'EXEC'
+          set -u
+          END=$(( $(date +%s) + TTL_MINUTES * 60 ))
+          git config user.name 'warm-pool'
+          git config user.email 'warm-pool@users.noreply.github.com'
+          echo "executor live; polling refs/ci-jobs/* every 4s for ${TTL_MINUTES}m"
+          while [ "$(date +%s)" -lt "$END" ]; do
+            git fetch --quiet --prune origin '+refs/ci-jobs/*:refs/remotes/jobs/*' '+refs/ci-control/*:refs/remotes/ctl/*' 2>/dev/null || true
+            if git show-ref --quiet refs/remotes/ctl/stop; then
+              echo "stop requested"; git push --quiet origin :refs/ci-control/stop || true; break
+            fi
+            JOB=$(git for-each-ref 'refs/remotes/jobs/*' --format='%(refname)' | sort | head -1)
+            if [ -z "$JOB" ]; then sleep 4; continue; fi
+            ID=${JOB##*/}
+            SHA=$(git rev-parse "$JOB")
+            MSG=$(git log -1 --format=%B "$SHA")
+            CMD=$(printf '%s' "$MSG" | python -c 'import json,sys; print(json.load(sys.stdin)["cmd"])' 2>/dev/null || true)
+            BUILD=$(printf '%s' "$MSG" | python -c 'import json,sys; print(1 if json.load(sys.stdin).get("build") else 0)' 2>/dev/null || echo 0)
+            if [ -z "$CMD" ]; then
+              echo "job $ID: unparseable payload, dropping"
+              git push --quiet origin ":refs/ci-jobs/$ID" || true
+              continue
+            fi
+            echo "=== job $ID @ ${SHA:0:9}: $CMD"
+            T0=$(date +%s)
+            git checkout --quiet --detach "$SHA" 2>/dev/null || { echo "checkout failed"; git push --quiet origin ":refs/ci-jobs/$ID" || true; continue; }
+            [ "$BUILD" = "1" ] && npm run build > /tmp/build.log 2>&1
+            set +e
+            bash -c "$CMD" > /tmp/out.log 2>&1
+            CODE=$?
+            set -e 2>/dev/null || true
+            T1=$(date +%s)
+            BLOB=$(git hash-object -w /tmp/out.log)
+            TREE=$(printf '100644 blob %s\tout.log\n' "$BLOB" | git mktree)
+            RES=$(git commit-tree "$TREE" -m "{\"exit\":$CODE,\"seconds\":$((T1-T0))}")
+            for a in 1 2 3; do git push --quiet origin "$RES:refs/ci-results/$ID" && break; sleep 2; done
+            git push --quiet origin ":refs/ci-jobs/$ID" || true
+            echo "=== job $ID: exit $CODE in $((T1-T0))s"
+          done
+          echo "executor retiring"
+          EXEC
+          bash /tmp/executor.sh

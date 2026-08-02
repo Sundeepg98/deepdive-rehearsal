@@ -16,6 +16,18 @@ them here. Requires: gh CLI authenticated (it is, on this box).
   python test/ci.py fetch <run-id>
       -> downloads shard artifacts to _ci_results/<run-id>/ and prints verdicts.
 
+  python test/ci.py warm start [--ttl 45]   -> boot the warm executor (one-time
+      ~5 min ritual; it then holds the built world for ttl minutes)
+  python test/ci.py warm run --cmd "python test/check_all.py --only touch_floor"
+      [--build]  -> execute on the warm pool in SECONDS. Snapshots your exact
+      working tree (committed or not, via stash-create) so it tests what you
+      have, not what you pushed. --build if your change alters build inputs.
+  python test/ci.py warm status | warm stop
+
+Lanes, honestly labeled: local --changed = instant, partial, non-certifying.
+warm run = seconds, targeted, non-certifying. gate (sharded cold) = minutes,
+all 76, advisory. The local win32 serial gate = the certification.
+
 Discipline: dispatch EARLY (before you need the answer), keep building, consume
 at your next natural boundary -- pipelined CI has effectively zero latency.
 Block on --wait only when the verdict IS the task.
@@ -117,6 +129,75 @@ def fetch(run_id):
     return 1 if fails else 0
 
 
+def warm_snapshot():
+    """A commit of the EXACT current working tree, touching nothing."""
+    r = sh(['git', 'stash', 'create'])
+    sha = r.stdout.strip()
+    if sha:
+        return sha
+    return sh(['git', 'rev-parse', 'HEAD']).stdout.strip()
+
+
+def warm_run(cmd, build):
+    job_id = uuid.uuid4().hex[:8]
+    snap = warm_snapshot()
+    payload = json.dumps({'cmd': cmd, 'build': bool(build)})
+    tree = sh(['git', 'rev-parse', snap + '^{tree}']).stdout.strip()
+    r = sh(['git', 'commit-tree', tree, '-p', snap, '-m', payload])
+    if r.returncode != 0:
+        die('commit-tree failed: ' + r.stderr.strip())
+    job_sha = r.stdout.strip()
+    t0 = time.time()
+    if sh(['git', 'push', '--quiet', 'origin',
+           '%s:refs/ci-jobs/%s' % (job_sha, job_id)]).returncode != 0:
+        die('could not push the job ref')
+    print('job %s submitted (tree %s) -- polling for the result...'
+          % (job_id, snap[:9]))
+    result_ref = 'refs/ci-results/' + job_id
+    for _ in range(150):
+        time.sleep(2)
+        r = sh(['git', 'ls-remote', 'origin', result_ref])
+        if r.stdout.strip():
+            res_sha = r.stdout.split()[0]
+            sh(['git', 'fetch', '--quiet', 'origin', res_sha])
+            meta = json.loads(sh(['git', 'log', '-1', '--format=%B',
+                                  res_sha]).stdout.strip())
+            log = sh(['git', 'show', res_sha + ':out.log']).stdout
+            sh(['git', 'push', '--quiet', 'origin', ':' + result_ref])
+            dt = time.time() - t0
+            print('--- result (round-trip %.1fs; execution %ss) ---'
+                  % (dt, meta.get('seconds')))
+            tail = log.splitlines()[-25:]
+            print('\n'.join(tail))
+            sys.exit(meta.get('exit', 1))
+    # Leave the job ref for a future executor; tell the human what happened.
+    die('no result after 300s -- is the pool running? (ci.py warm status; '
+        'ci.py warm start if not)')
+
+
+def warm(a):
+    if a.warm_op == 'start':
+        r = sh(['gh', 'workflow', 'run', 'warm-pool.yml',
+                '-f', 'ttl_minutes=' + str(a.ttl)])
+        if r.returncode != 0:
+            die('start failed: ' + r.stderr.strip())
+        print('warm pool starting (ttl %dm) -- the one-time ritual takes '
+              '~5 min; warm runs are seconds after that.' % a.ttl)
+    elif a.warm_op == 'run':
+        warm_run(a.cmd, a.build)
+    elif a.warm_op == 'status':
+        subprocess.run(['gh', 'run', 'list', '--workflow=warm-pool.yml',
+                        '--limit', '3'], cwd=str(REPO))
+        r = sh(['git', 'ls-remote', 'origin', 'refs/ci-jobs/*'])
+        n = len([l for l in r.stdout.splitlines() if l.strip()])
+        print('queued jobs: %d' % n)
+    elif a.warm_op == 'stop':
+        head = sh(['git', 'rev-parse', 'HEAD']).stdout.strip()
+        sh(['git', 'push', '--quiet', 'origin',
+            '%s:refs/ci-control/stop' % head])
+        print('stop signal pushed; the executor exits on its next poll.')
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__,
                                 formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -149,7 +230,22 @@ def main():
     sp = sub.add_parser('fetch', help='download artifacts + print verdicts')
     sp.add_argument('run_id')
 
+    sp = sub.add_parser('warm', help='the sub-minute lane: a runner held warm')
+    wsub = sp.add_subparsers(dest='warm_op', required=True)
+    w = wsub.add_parser('start')
+    w.add_argument('--ttl', type=int, default=45)
+    w = wsub.add_parser('run')
+    w.add_argument('--cmd', required=True)
+    w.add_argument('--build', action='store_true',
+                   help='rebuild on the pool first (your change touches build inputs)')
+    wsub.add_parser('status')
+    wsub.add_parser('stop')
+
     a = p.parse_args()
+
+    if a.op == 'warm':
+        warm(a)
+        return
 
     if a.op == 'status':
         args = ['gh', 'run', 'view', a.run_id] if a.run_id else \

@@ -1822,5 +1822,203 @@ statement rather than a silence:
   (R8), and a plant-companion assertion whose FAIL message named the wrong cause on a reverted
   build (R8, "a true FAIL with a false reason").
 
-**THE WAVE IS FROZEN HERE.** Four cycles, one closing pass; the four items recorded-not-open above
-belong to whoever picks up the home next, with the measurements they need already taken.
+*(SUPERSEDED BY THE MARSHAL LOOP: the freeze was held open for two more judged items. See TAIL
+FIXES below. Everything above stands unchanged.)*
+
+---
+
+## TAIL FIXES -- THE MARSHAL LOOP'S LAST TWO -- 2026-08-02
+
+The marshal loop closed with exactly two judged items, and the wave freezes after them. Both are
+this wave's OWN work coming back one layer down: cycle 4's R5 handed the home's print to the
+browser without asking what the browser prints there, and cycle 4's channel fix made two
+renderings agree so exactly that a screen reader read the sentence twice. **Both closed.** One
+thing was found while verifying and is RECORDED as carried rather than fixed, per the ruling.
+
+---
+
+### T1 -- THE HOME PRINT -- CLOSED
+
+**THE DEFECT, MEASURED, and it is worse than the blank page the judge reported.** Driven at
+1280x900, A4, `preferCSSPageSize`, on the shipped build:
+
+| state | what the home printed |
+|---|---|
+| home, fresh (no cram ever opened) | **3 pages / 391,415 bytes** -- the BOOT topic's cram sheet |
+| home, after visiting `saga`'s sheet and closing it | **6 pages / 872,924 bytes** -- SAGA's sheet |
+
+Nothing of the home on either. Two causes, one line apart in `@media print`:
+`.app{display:none !important}` (right for a topic route -- its panes are shadow DOM and print
+blank, which is the entire reason the cram substitution exists) and the cram force-show carrying
+**no `.open` requirement**, so a CLOSED dialog printed, wearing whichever topic the user last
+looked at. `print-qa.js:109`'s home early-return is untouched, as ruled: Ctrl+P still hands the
+home to the browser's own print, and that print now produces the record.
+
+**AFTER: 2 pages / 143,721 bytes of the home** -- the intro line, the Start-here hero and its CTA,
+the Cross-topic act, the Altitude gauge with all three rails and its four-state key, the This-week
+panel, all six room cards, the topic list, the census, and no cram sheet anywhere.
+
+**A DELIBERATE DEVIATION FROM THE NAMED FIX, with the measurement that forced it.** The named form
+was `body:not(.print-session) .cram-ov.open` -- the right sentence, one scope too wide. On a TOPIC
+route the never-opened sheet IS the printable artifact, and `test/print_truth.cjs` ARM F owns that
+as a P1 ("a native File -> Print from any view emits the cram sheet, for a user who never opened
+it... the path most likely to be hit by accident"). Built with the wider form and measured rather
+than argued:
+
+```
+#walk, cram never opened:  3 pages / 391,447 bytes  ->  1 page / 1,048 bytes
+print_truth:  FAIL  [file-print] a never-opened sheet still renders to paper  sections=0
+              (exactly that one arm; every other arm in the file stayed green)
+```
+
+So the rule is scoped to the home instead: `html[data-view="home"] .cram-ov:not(.open)`.
+`:not(.open)` is kept rather than flattened because **an OPEN sheet on the home is a reachable
+state, not a hypothetical** -- driven both ways, by `location.hash` and by the Home button, a topic
+left with the sheet up lands on `#home` with `.cram-ov.open` still true and on screen. Print
+follows the screen.
+
+**THE CHROME HIDDEN WITH IT WAS DERIVED FROM THE PAGE, not assumed.** The A4 content box is 680px
+wide -- INSIDE the `<=919px` breakpoint -- so `.hm-rail` and `.hm-tabs` are `position:fixed` bars
+there and would repeat on every sheet; `.hm-skip` is the "skip the home next time" checkbox, a
+preference control. Two more elements paint and were each decided on their own reading:
+
+- **`#scrolltop` was checked and LEFT ALONE.** `opacity:0`, `visibility:hidden` until you scroll,
+  and it is a child of `<body>` rather than of `.app` -- so it never depended on the hide and adds
+  no rule.
+- **`.hm-status` is the one member of the home's chrome that is not chrome.** It carries
+  "0 of 972 probes graded, 0 solid / 0 shaky / 0 missed", and the shaky-and-missed split is on no
+  other surface of the printed page. But it is `position:fixed` below 920px, so on paper it painted
+  OVER the flow at the foot of EVERY sheet -- extracted from the 2-page PDF with print_truth's own
+  parser, "probes graded" came back on pages **[1,2]**. Un-fixed rather than hidden: it flows once,
+  after the record it summarises. (`.app` is `display:block` here, not its screen flex row, so a
+  static footer lands under `#home` rather than beside it.) Re-measured after: pages **[2]**.
+
+**THE ARM, and what it replaces.** `test/overlay_deadzone.cjs` section 6's CTRL+P row asserted
+`window.open === 0` and `defaultPrevented === false` -- necessary, and it says who OWNS the print,
+never what comes out of it. Three assertions now, on a page seeded into the exact defect state
+(open a cram sheet on `#saga/drill`, wait for its shadow root to render `.cs-sec` sections,
+Escape, navigate `#home`, emulate print media):
+
+1. **the seed is real** -- the sheet's own section count and shadow-root text are read while it is
+   open, and the route/closed state after. Asserted FIRST, because "no cram painted" is free on a
+   page that never rendered one;
+2. the HOME paints its own content column (live client rects + >1000 chars of its own text);
+3. and the CLOSED sheet paints nothing beside it -- read over **every** `.cram-ov`, so a second
+   one could not slip past a single `querySelector`.
+
+**WATCHED RED, one half at a time, each on a real rebuild:**
+
+```
+cram rule deleted:  FAIL [anywhere] CTRL+P outcome: and the CLOSED cram sheet paints nothing
+                         beside it -- painted .cram-ov heights [3260]
+                    OVERLAY DEADZONE: FAIL  (1 of 74 assertions)
+
+.app rule deleted:  FAIL [anywhere] CTRL+P outcome: under print media the HOME paints its own
+                         content column
+                         -- {"printMedia":true,"home":{"w":0,"h":0,"rects":0,...},"homeChars":26756}
+                    OVERLAY DEADZONE: FAIL  (1 of 74 assertions)
+```
+
+One failure each, and the right one each time. Note `homeChars: 26756` beside `rects: 0` in the
+second: the record is all there in the DOM and paints nothing, which is the defect in two numbers.
+Restored: `OVERLAY DEADZONE: PASS (74 assertions)`, up from 71.
+
+---
+
+### T2 -- THE DOUBLE ANNOUNCEMENT -- CLOSED
+
+**THE DEFECT IS CYCLE 4'S OWN FIX, ONE LAYER DOWN.** Cycle 4's item 5 closed a DIVERGENCE -- the
+bar's accessible name and the visible line were two different sentences -- by composing both from
+`goalLine()`. That was right, and making them identical is what made the real defect audible: the
+bar sits directly above the line, so a screen reader announces the same sentence twice in a row.
+Read off the CDP accessibility tree on the cold home, at 1280:
+
+```
+image       "0 of 5 topics drilled this week, 5 more to go"    <- .ix-goal-bar, role="img"
+StaticText  " of 5 topics drilled this week . 5 more to go"    <- .ix-home-v, right beneath it
+```
+
+**THE FIX.** The bar is a picture OF that line and adds no fact: `role="img"` and `aria-label` are
+gone, `aria-hidden="true"` is on. The AX tree after, same page, same record -- the fact appears
+exactly once:
+
+```
+button      "Lower the weekly goal"
+button      "Raise the weekly goal"
+StaticText  " of 5 topics drilled this week . 5 more to go"
+```
+
+Nothing is lost. The line is in the tree as text, the two stepper buttons keep their own names
+(which is where the words "weekly goal" are still said), and `.ix-goal-t` keeps its `aria-live`.
+
+**THE ARM WAS RE-POINTED, NOT DELETED, and the re-pointing is the interesting part.**
+`judgeGoalSentence` rule 1 read *"the accessible name IS the visible line, character for
+character"* -- which cycle 4 made TRUE. So **the arm was GREEN on the defect it is now named for**:
+the old form went red only on a name that DIVERGED. It reads "the bar carries no accessible name of
+its own", which is strictly stronger -- any name at all is a red. `goalName` reads `aria-label`,
+`aria-labelledby` **and** `title`, so re-labelling the bar by a different route is the same red;
+`role` and `aria-hidden` are read alongside it so the FAIL message names what to remove.
+
+**THE MUTANT PLUMBING IS INVERTED TO MATCH, and it had to be.** Cycle 4's plants wrote BOTH
+channels because rule 1 demanded a match; under the new rule, writing a name at all IS the rule-1
+defect, so 11 and 12 would have fired on rule 1 and rules 3-5 would have become unreachable -- the
+exact "four rules of decoration behind one" the block's own header warns against. So **11 and 12
+touch only the visible line** (their rules are about that line) and **13 touches only the bar**:
+it restores `role="img"` plus a `goalPhrase`-built label and clears `aria-hidden`, i.e. the whole
+pre-cycle-4 divergence class AND the cycle-4 duplication in one plant.
+
+**A LATENT DEFECT IN THE RESTORE, found while re-pointing.** `goalMutant`'s cleanup called
+`setAttribute('aria-label', b.aria)` -- and `b.aria` is now `null` on a bar that carries no label,
+so it would have written the literal string **"null"** onto the bar for every judge after that
+mutant. It restores by attribute STATE now (`removeAttribute` when the attribute was absent). The
+plant's own defect, left behind by its cleanup, in the wave whose standard is that a receipt must
+survive re-derivation.
+
+**WATCHED RED on a real source reversion** (`role="img"` + `aria-label` put back, rebuilt):
+
+```
+80 FAILs -- every pinned and generated record, at BOTH viewports, all on rule 1:
+FAIL [1280/empty] the goal sentence agrees with the numbers beside it
+  -- the goal bar carries an accessible name of its own (aria-label="0 of 5 topics drilled this
+     week, 5 more to go", role=img, aria-hidden=absent), so the fact is announced twice in a row
+```
+
+That is the CYCLE-4 state going red -- the one where the two channels matched perfectly, which the
+old rule 1 passed. Restored: `HOME CLAIMS` exit 0, zero FAILs, **13 planted mutants detected**.
+
+---
+
+### VR CONTRACT, TAIL FIXES -- NOTHING MOVED
+
+No rebaseline, and none was expected: T1 lives entirely inside `@media print`, and T2 changes ARIA
+attributes, which move no pixel. Verified rather than assumed:
+
+```
+18 baselines compared; worst = 0 px (home-light), budget 32 px.
+VISUAL REGRESSION: PASS  (18 baselines, win32-chromium149)
+```
+
+`git status test/baselines/` is empty. The manifest stays at **18**.
+
+---
+
+### CARRIED TO THE NEXT WAVE -- ONE, and it is a consequence of T1
+
+**A cram sheet can be left OPEN on the home, and the home now prints itself underneath it.**
+Measured, both doors: leaving `#saga/drill` with the sheet up -- by `location.hash` and by the
+Home button -- lands on `#home` with `.cram-ov.open` true and the sheet on screen. Before T1 that
+state printed the sheet alone (the home was hidden); after T1 it prints the home AND the sheet,
+because `:not(.open)` deliberately leaves an open dialog alone and the `.app` exemption is
+unconditional. Neither is obviously right: the screen shows a modal OVER the home, and paper has no
+modality. **What print should do when a dialog is open over a route that prints fine on its own is
+a product call, not a bug fix** -- which is why it is recorded here with its measurement rather
+than decided in a closing pass. The four items recorded-not-open after cycle 4 stand unchanged.
+
+---
+
+**THE WAVE IS FROZEN HERE.** Four cycles, one closing pass, two tail fixes; the five items
+recorded-not-open belong to whoever picks up the home next, with the measurements they need already
+taken.
+
+Freeze document: `_audit/2026-08-02-w15-freeze.md`. Gate of record:
+`_audit/2026-08-02-w15-gate.txt`. VR receipt pairs: `_audit/w15-receipts/`.

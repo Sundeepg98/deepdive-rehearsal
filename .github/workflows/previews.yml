@@ -65,8 +65,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Remove the deleted branch's preview
+        # env indirection, never template substitution: a branch name is
+        # user-controlled text and must not be spliced into the script source.
+        env:
+          REF: ${{ github.event.ref }}
         run: |
-          SLUG=$(echo "${{ github.event.ref }}" | tr '/' '-')
+          SLUG=$(echo "$REF" | tr '/' '-')
+          [[ "$SLUG" =~ ^[A-Za-z0-9._-]+$ ]] || { echo "refusing suspicious slug: $SLUG"; exit 1; }
           git fetch origin gh-pages
           git worktree add /tmp/ghp origin/gh-pages
           cd /tmp/ghp

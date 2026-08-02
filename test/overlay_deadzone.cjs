@@ -54,11 +54,19 @@
  * Usage: node test/overlay_deadzone.cjs <deliverable.html>   (CHROME=<path> for the browser) */
 'use strict';
 const path = require('path');
+const fs = require('fs');
+const os = require('os');
 const { chromium } = require('playwright');
 const B = require('./_boot.cjs');
 const PX = require('./_pixels.cjs');
 
 const HTML = process.argv[2] || path.join(__dirname, '..', 'deepdive_content_pipeline_rehearsal.html');
+
+/* THE BOOT-WINDOW GATE, verbatim from src/scripts/app/shell.js. Section 6's boot arm seeds a
+   mutant by deleting it from a COPY of the build; the copy is written to the OS temp dir, used,
+   and removed in the same run. If this string ever stops matching the shipped source the seed
+   cannot land, and the check ABORTS rather than reporting a green it did not earn. */
+const BOOT_GATE = 'if (!(window.ViewManager && window.ViewManager.routed && window.ViewManager.routed())) return;';
 const TARGET = '.seg button[data-tab="drill"]';   /* a real thing a user taps at first paint */
 
 const fails = [];
@@ -493,13 +501,51 @@ async function realClick(page, sel) {
    * excuse: each relocated key must be DEAD on the home AND ALIVE on a topic route. A qualifier
    * attached to a key that works everywhere is just as false as "Anywhere" on one that does not.
    *
-   * OUT OF SCOPE, DECLARED RATHER THAN SKIPPED: Ctrl+P. It is a CHORD, which shell.js's map
-   * deliberately does not own (its MODIFIER GUARD blocks every Ctrl-without-Alt combination), and
-   * print-qa.js serves it from its own listener that opens a popup window. Its claim is recorded
-   * as 'chord' so the cross-check still sees the row; driving it would be measuring another
-   * module through a window this browser context has no business opening. */
+   * CTRL+P IS NOW DRIVEN, NOT DECLARED. Cycle 3 recorded it as a 'chord' and skipped it: it is
+   * served by print-qa.js's own listener rather than by shell.js's map (whose MODIFIER GUARD
+   * blocks every Ctrl-without-Alt), and driving it opens a popup window. But an undriven claim is
+   * a claim nobody checked, and the thing cycle 3 recorded UNDER that claim was a live defect --
+   * openPrint() reads TopicRegistry.current(), the BOOT constant on a route with no topic, so
+   * Ctrl+P on the home suppressed the user's own browser print and built a printable Q&A for a
+   * topic they never chose. Cycle 4 fixed the module and moved the row in with the other
+   * topic-scoped keys, so the row is now driven BOTH WAYS like the rest: window.open is stubbed on
+   * every page this section creates (the popup becomes a STRING this check can read) and a
+   * window-level listener records defaultPrevented after every document handler has seen the event
+   * (window bubble runs last), so "the browser's own print is left alone on the home" is measured
+   * rather than assumed.
+   *
+   * AND THE BOOT WINDOW, at the end of this section: the same question one moment earlier. */
   {
     const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+
+    /* Stubs window.open into a recorder and watches what happens to the Ctrl+P event's default.
+       Installed on EVERY page this section drives, so the other rows additionally prove they open
+       no print window either. Nothing else in src/ calls window.open (grep: one call site, in
+       print-qa.js), so the stub is inert for every claim but this one. */
+    const PRINT_PROBE = () => {
+      window.__print = { opens: 0, title: null, len: 0, prevented: null };
+      window.open = function () {
+        window.__print.opens++;
+        var buf = '';
+        return {
+          document: {
+            open: function () {},
+            write: function (s) { buf += s; },
+            close: function () {
+              window.__print.len = buf.length;
+              var m = /<title>([\s\S]*?)<\/title>/i.exec(buf);
+              window.__print.title = m ? m[1] : null;
+            },
+          },
+          focus: function () {}, print: function () {}, close: function () {},
+        };
+      };
+      window.addEventListener('keydown', function (e) {
+        if ((e.ctrlKey || e.metaKey) && (e.key === 'p' || e.key === 'P')) {
+          window.__print.prevented = e.defaultPrevented;
+        }
+      }, false);
+    };
 
     const SNAP = () => ({
       view: document.documentElement.dataset.view || null,
@@ -519,12 +565,21 @@ async function realClick(page, sel) {
         .filter((d) => d.getClientRects().length && !d.classList.contains('closing')
           && getComputedStyle(d).display !== 'none')
         .map((d) => d.id || String(d.className).split(' ')[0]),
+      print: window.__print
+        ? { opens: window.__print.opens, title: window.__print.title, len: window.__print.len,
+          prevented: window.__print.prevented }
+        : null,
+      /* what a printable sheet built HERE would have to be titled, read off the app rather than
+         typed, so "the CURRENT topic's sheet" is checked against the current topic */
+      topicTitle: (typeof TopicRegistry !== 'undefined' && TopicRegistry.current())
+        ? TopicRegistry.current().identity.title : null,
     });
 
     /* one fresh page per key: density lands on documentElement, focus mode on .app and the tour
        latches, so a shared page would let one key's effect answer for the next one's */
     const drive = async (press, opts) => {
       const p = await ctx.newPage();
+      await p.addInitScript(PRINT_PROBE);
       await B.gotoApp(p, HTML, { hash: (opts && opts.hash) || '#home' });
       await B.settle(p);
       if (opts && opts.pre) {
@@ -589,13 +644,17 @@ async function realClick(page, sel) {
         G: { press: 'g', expect: 'tour', what: 'starts the guided tour' },
         D: { press: 'd', expect: 'density', what: 'cycles spacing density' },
         ESC: { press: 'Escape', expect: 'closes', pre: '\\', what: 'closes an open panel -- driven WITH one open, since that is the whole claim' },
-        'CTRL+P': { press: null, expect: 'chord', what: 'a chord; shell.js\'s map owns plain keys only and print-qa.js serves this one' },
       };
-      /* the three rows the fix moved, and what each must do where it now says it works */
+      /* the FOUR rows the fix moved, and what each must do where it now says it works. Ctrl+P
+         joined them in cycle 4: the row is identical in kind to P one line above it -- it names
+         "this topic's probes" on a route that has no topic -- and it is now driven rather than
+         declared. */
       const SCOPED = {
         '[+]': { press: '[', expect: 'route', hash: '#event-driven/walk', what: 'steps to the previous topic' },
         N: { press: 'n', expect: 'route', hash: '#event-driven/walk', what: 'goes to the next step the dock is pointing at' },
         P: { press: 'p', expect: 'dialog', hash: '#saga/drill', what: 'opens Session progress for the topic you are in' },
+        'CTRL+P': { press: 'Control+p', expect: 'print', hash: '#saga/drill',
+          what: 'builds the printable Q&A for the topic you are in' },
       };
 
       const rows = anywhere.length ? anywhere[0].rows : [];
@@ -608,7 +667,7 @@ async function realClick(page, sel) {
 
       const scopedIds = scoped.length ? scoped[0].rows.map((r) => r.id) : [];
       const strayed = Object.keys(SCOPED).filter((k) => scopedIds.indexOf(k) === -1);
-      chk('[anywhere] the three keys that need a topic are listed under the topic-scoped head, not under "Anywhere"',
+      chk('[anywhere] the four keys that need a topic are listed under the topic-scoped head, not under "Anywhere"',
         strayed.length === 0 && Object.keys(SCOPED).every((k) => ids.indexOf(k) === -1),
         'not in the topic section: ' + JSON.stringify(strayed) + '  still under Anywhere: '
         + JSON.stringify(Object.keys(SCOPED).filter((k) => ids.indexOf(k) !== -1)));
@@ -649,7 +708,7 @@ async function realClick(page, sel) {
       chk('[anywhere] the claims were actually driven, not merely declared',
         driven >= 8, 'only ' + driven + ' of ' + ids.length + ' rows were pressed');
 
-      /* ---- DRIVE the three relocated keys BOTH WAYS ---- */
+      /* ---- DRIVE the four relocated keys BOTH WAYS ---- */
       for (const id of Object.keys(SCOPED)) {
         const s = SCOPED[id];
         const dead = await drive(s.press, {});                       /* on #home */
@@ -658,14 +717,216 @@ async function realClick(page, sel) {
           && dead.after.view === 'home',
           JSON.stringify({ before: dead.before, after: dead.after }));
 
+        /* DEAD MEANS TWO THINGS FOR A CHORD, and the second one is the user's. A print binding
+           that merely built nothing while still calling preventDefault() would leave the home with
+           NO print at all -- worse than the defect. So the home must show both: no sheet built,
+           and the browser's own default left alone. */
+        if (s.expect === 'print') {
+          const dp = dead.after.print || {};
+          chk('[anywhere] ' + id + ' on #home builds NO print DOM and does NOT take the browser\'s own print',
+            dp.opens === 0 && dp.prevented === false,
+            'window.open calls ' + dp.opens + ', defaultPrevented ' + dp.prevented
+            + ' -- on a route with no current topic openPrint() reads the BOOT constant, and the'
+            + ' home is ordinary light DOM that prints fine on its own');
+        }
+
         const live = await drive(s.press, { hash: s.hash });          /* on a topic route */
-        const okLive = s.expect === 'dialog'
-          ? live.after.dialogs.length > live.before.dialogs.length
-          : live.after.hash !== live.before.hash;
+        let okLive, sawLive;
+        if (s.expect === 'dialog') {
+          okLive = live.after.dialogs.length > live.before.dialogs.length;
+          sawLive = JSON.stringify({ dialogs: live.after.dialogs });
+        } else if (s.expect === 'print') {
+          const lp = live.after.print || {};
+          /* THE SHEET IS TITLED FOR THE TOPIC YOU ARE IN. print-qa builds "<topic title> -- Q&A",
+             so the current topic's own title -- read off the page, never typed -- must be its
+             prefix. That is what separates "it printed" from "it printed the BOOT topic", which is
+             the whole defect this row was moved for. */
+          const wantTitle = String(live.after.topicTitle || '(no current topic)');
+          okLive = lp.opens === 1 && lp.prevented === true && lp.len > 0
+            && !!live.after.topicTitle
+            && String(lp.title || '').indexOf(wantTitle) === 0 && /Q&A$/.test(String(lp.title || ''));
+          sawLive = JSON.stringify({ opens: lp.opens, prevented: lp.prevented, bytes: lp.len,
+            title: lp.title, currentTopic: live.after.topicTitle });
+        } else {
+          okLive = live.after.hash !== live.before.hash;
+          sawLive = JSON.stringify({ hash: live.before.hash + ' -> ' + live.after.hash });
+        }
         chk('[anywhere] ' + id + ' still ' + s.what + ' on a topic route (the qualifier is earned, not an alibi)',
-          okLive, JSON.stringify({ hash: live.before.hash + ' -> ' + live.after.hash,
-            dialogs: live.after.dialogs }));
+          okLive, sawLive);
       }
+    }
+
+    /* ============ THE BOOT WINDOW: A KEYMAP WITH NO ROUTE TO MEAN ANYTHING AGAINST ============
+     * Section 5's question one moment earlier, and the moment is the whole point. shell.js
+     * registers its global keymap at PARSE time; Router.init() runs at DOMContentLoaded. In
+     * between, every binding is live while documentElement.dataset.view is still UNDEFINED -- so
+     * `onHome` reads FALSE on a load that is landing on the home and the topic keys act on the
+     * BOOT topic. Cycle 1 fixed `p` for the ROUTED home; this is the same defect arriving through
+     * the door underneath that fix, and it is not only `p`: on the shipped build `w` leaked in 6
+     * of 6 attempts and `n` in 2 of 6, and `q` leaked at a rate nobody recorded. One gate at the
+     * top of the handler closes all of them, so one arm is aimed at the gate rather than four at
+     * the keys.
+     *
+     * WHY THE WINDOW IS HELD OPEN RATHER THAN RACED. Driving the NATURAL window was measured
+     * first, exactly as the ruling described it (goto waitUntil:'commit', then press once goView
+     * exists, #sessopen exists and dataset.view is not yet 'home'): it lands 4 times in 6, and the
+     * two misses are not cheap -- the predicate never becomes true, so the wait runs to its
+     * timeout. A 2-in-6 timeout in a gate check is the flake this repo has already paid for once.
+     * The window is therefore HELD OPEN by a TEST-ONLY hook that wraps Router.init through an
+     * addInitScript accessor, delaying the FIRST emit and nothing else: every module loads exactly
+     * as it does in a real boot, and the state under test -- keymap live, ViewManager present, no
+     * route applied -- is byte-identical to the state the natural runs actually landed in
+     * (`hasGoView:true, routed:false, view:null`). Then the hold is RELEASED on the same page and
+     * the same key is pressed again, so the arm proves it was measuring a window and not a dead
+     * app. The natural window is still driven below, as evidence rather than as the assertion.
+     *
+     * PREFLIGHTED ON A SEEDED MUTANT, which is the acceptance bar the ruling set: the gate line is
+     * deleted from a COPY of the build (written to the OS temp dir and removed in the same run)
+     * and the identical arm is run against it. The mutant must go red -- `p` must open Session
+     * progress on the BOOT topic and `w` must move the route -- and this check FAILS if it does
+     * not, because an arm that stays green on the pre-fix build is not an arm. */
+    {
+      const HOLD = () => {
+        var real;
+        Object.defineProperty(window, 'Router', {
+          configurable: true,
+          get: function () { return real; },
+          set: function (v) {
+            real = v;
+            if (v && typeof v.init === 'function' && !v.__held) {
+              var orig = v.init;
+              v.__held = true;
+              v.init = function () {
+                window.__releaseRouter = function () { window.__releaseRouter = null; orig.call(v); };
+              };
+            }
+          },
+        });
+      };
+      const BSNAP = () => ({
+        routed: !!(window.ViewManager && window.ViewManager.routed && window.ViewManager.routed()),
+        view: document.documentElement.dataset.view || null,
+        hash: location.hash,
+        held: typeof window.__releaseRouter === 'function',
+        dialogs: [...document.querySelectorAll('[role="dialog"][aria-modal="true"]')]
+          .filter((d) => d.getClientRects().length && !d.classList.contains('closing')
+            && getComputedStyle(d).display !== 'none')
+          .map((d) => d.id || String(d.className).split(' ')[0]),
+        topic: (typeof TopicRegistry !== 'undefined' && TopicRegistry.current())
+          ? TopicRegistry.current().id : null,
+      });
+
+      /* one page, one key: a dialog opened by the first press suppresses the second (the keymap
+         bails under an open modal), so a shared page would let `p`'s leak hide `w`'s */
+      const held = async (html, key) => {
+        const p = await ctx.newPage();
+        await p.addInitScript(HOLD);
+        await p.goto(B.fileUrl(html, '#home'), { timeout: B.NAV_MS, waitUntil: 'load' });
+        await p.waitForFunction(B.APP_READY, null, { timeout: B.READY_MS });
+        await B.settle(p);
+        const before = await p.evaluate(BSNAP);
+        await p.evaluate(() => { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); });
+        await p.keyboard.press(key);
+        await B.settle(p);
+        await p.waitForTimeout(250);
+        const after = await p.evaluate(BSNAP);
+        await p.evaluate(() => { if (window.__releaseRouter) window.__releaseRouter(); });
+        await B.settle(p);
+        await p.waitForTimeout(250);
+        const released = await p.evaluate(BSNAP);
+        await p.close();
+        return { before, after, released };
+      };
+
+      /* ---- (a) the seeded mutant FIRST: an arm that cannot fail proves nothing about the fix ---- */
+      let mutDir = null, aborted = null;
+      const src = fs.readFileSync(HTML, 'utf8');
+      const hits = src.split(BOOT_GATE).length - 1;
+      if (hits !== 1) {
+        aborted = 'THE BOOT-GATE SEED CANNOT LAND: the gate line appears ' + hits + ' times in the '
+          + 'build (expected exactly 1), so the mutant below is not the mutant this arm claims.';
+      } else {
+        mutDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ddr-deadzone-'));
+        const mutant = path.join(mutDir, 'boot-gate-removed.html');
+        fs.writeFileSync(mutant, src.replace(BOOT_GATE, 'if (false) return;'), 'utf8');
+        const mp = await held(mutant, 'p');
+        const mw = await held(mutant, 'w');
+        if (!(mp.after.dialogs.length > 0 && mp.after.topic === 'content-pipeline')) {
+          aborted = 'MUTANT (boot gate removed) NOT DETECTED for `p`: with the gate deleted, a press '
+            + 'inside the boot window opened ' + JSON.stringify(mp.after.dialogs) + ' -- the arm cannot '
+            + 'see the leak it exists for. ' + JSON.stringify(mp.after);
+        } else if (mw.after.hash === mw.before.hash) {
+          aborted = aborted || 'MUTANT (boot gate removed) NOT DETECTED for `w`: the route stayed at '
+            + mw.after.hash + ' inside the boot window, so the incidental half of this gate is untested.';
+        }
+        fs.rmSync(mutDir, { recursive: true, force: true });
+      }
+      chk('[boot window] the seeded mutant reproduces the leak -- gate deleted, `p` opens Session '
+        + 'progress on the BOOT topic and `w` moves the route', !aborted, aborted || '');
+
+      /* ---- (b) the same arm on the shipped build ---- */
+      const gp = await held(HTML, 'p');
+      chk('[boot window] the arm really is inside the window -- keymap live, ViewManager present, no route applied',
+        gp.before.routed === false && gp.before.view === null && gp.before.held === true,
+        JSON.stringify(gp.before));
+      chk('[boot window] `p` before the first applied route opens NO per-topic panel on the boot topic',
+        gp.after.dialogs.length === 0,
+        'opened ' + gp.after.dialogs.join(',') + ' with TopicRegistry.current()=' + gp.after.topic);
+      const gw = await held(HTML, 'w');
+      chk('[boot window] `w` before the first applied route does not navigate to the boot topic\'s drill either (one gate, every key)',
+        gw.after.hash === gw.before.hash && gw.after.view === null,
+        JSON.stringify({ hash: gw.before.hash + ' -> ' + gw.after.hash, view: gw.after.view }));
+
+      /* ---- (c) THE GATE IS A WINDOW, NOT A DELETION ---- */
+      chk('[boot window] releasing the hold applies the route and turns the keymap back on',
+        gp.released.routed === true && gp.released.view === 'home' && gw.released.routed === true,
+        JSON.stringify({ p: gp.released, w: gw.released }));
+      const after = await drive('p', { hash: '#saga/drill' });
+      chk('[boot window/control] and `p` still opens Session progress on a topic route, so the gate scoped a moment rather than a key',
+        after.after.dialogs.length > after.before.dialogs.length, JSON.stringify(after.after.dialogs));
+
+      /* ---- (d) THE NATURAL WINDOW, driven as evidence ----
+         Bounded and non-fatal by design: it lands roughly 4 times in 6 and the assertion is the
+         same either way ("nothing that arrived before the first applied route did anything"), so a
+         miss costs a logged 0 rather than a red. How many landed is printed, so a run where the
+         window closed entirely is visible rather than silent. */
+      const REC = () => {
+        window.__k = [];
+        window.addEventListener('keydown', (e) => {
+          window.__k.push({ key: e.key,
+            routed: !!(window.ViewManager && window.ViewManager.routed && window.ViewManager.routed()),
+            hasKeymap: typeof goView === 'function' });
+        }, false);
+      };
+      let landed = 0, leaked = null;
+      for (let i = 0; i < 3 && !leaked; i++) {
+        const p = await ctx.newPage();
+        await p.addInitScript(REC);
+        await p.goto(B.fileUrl(HTML, '#home'), { timeout: B.NAV_MS, waitUntil: 'commit' });
+        await p.waitForFunction(
+          () => typeof goView === 'function' && !!document.getElementById('sessopen')
+            && document.documentElement.dataset.view !== 'home',
+          null, { timeout: 4000 }).catch(() => {});
+        await p.keyboard.press('p').catch(() => {});
+        await p.waitForFunction(B.APP_READY, null, { timeout: B.READY_MS });
+        await B.settle(p);
+        await p.waitForTimeout(250);
+        const r = await p.evaluate(() => ({
+          pre: (window.__k || []).filter((k) => !k.routed && k.hasKeymap).length,
+          state: (function () {
+            const d = [...document.querySelectorAll('[role="dialog"][aria-modal="true"]')]
+              .filter((x) => x.getClientRects().length && !x.classList.contains('closing')
+                && getComputedStyle(x).display !== 'none').map((x) => x.id || '');
+            return { dialogs: d, hash: location.hash, view: document.documentElement.dataset.view || null };
+          })(),
+        }));
+        landed += r.pre;
+        if (r.state.dialogs.length || r.state.hash !== '#home') leaked = JSON.stringify(r);
+        await p.close();
+      }
+      chk('[boot window] on ' + 3 + ' REAL boots (no hold), a `p` that arrived before the first applied '
+        + 'route left the app on #home with nothing open -- ' + landed + ' press(es) landed inside the window',
+        !leaked, leaked || '');
     }
     await ctx.close();
   }
@@ -680,9 +941,12 @@ async function realClick(page, sel) {
   }
   console.log('OVERLAY DEADZONE: PASS  (' + notes.length +
     ' assertions: the first real click lands; no layer hit-tests while fading; focus leaves a closing' +
-    ' dialog; the keymap stays suppressed under an open one and on the home, where it has no topic' +
-    ' to mean; every key the shortcuts overlay advertises under "Anywhere" was driven ON the home' +
-    ' and did what the row says, and the three that need a topic are dead there and live in one;' +
+    ' dialog; the keymap stays suppressed under an open one, on the home, where it has no topic' +
+    ' to mean, and BEFORE THE FIRST APPLIED ROUTE, where it has no route to mean anything against' +
+    ' -- that one preflighted on a build with the gate line deleted; every key the shortcuts overlay' +
+    ' advertises under "Anywhere" was driven ON the home and did what the row says, and the four' +
+    ' that need a topic are dead there and live in one, Ctrl+P included (it builds the CURRENT' +
+    " topic's sheet in a topic and leaves the browser's own print alone on the home);" +
     ' no unrequested modal at first paint)');
   return B.finish(0, null);
 })();

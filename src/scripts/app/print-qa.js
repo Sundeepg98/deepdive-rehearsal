@@ -94,7 +94,20 @@
     /* Native browser print of a topic view comes out blank -- the shadow-DOM panes
        don't render to print -- so route Ctrl/Cmd+P to the working printable Q&A. */
     document.addEventListener('keydown', function (e) {
-      if ((e.metaKey || e.ctrlKey) && !e.altKey && (e.key === 'p' || e.key === 'P')) { e.preventDefault(); openPrint(); }
+      if (!((e.metaKey || e.ctrlKey) && !e.altKey && (e.key === 'p' || e.key === 'P'))) return;
+      /* ---- NOT ON THE HOME. THE USER'S OWN PRINT IS NOT OURS TO TAKE THERE ----
+         curTopic() is TopicRegistry.current(), which on a route with no current topic is the BOOT
+         constant -- so Ctrl+P on the home preventDefault()ed the browser's print and opened a
+         printable Q&A for a topic the user never chose. That is the exact class W1.5 cycle 1 fixed
+         for plain `p` (shell.js: "THE HOME IS A DESTINATION, NOT A MODAL" -- the topic keys "must
+         not silently act on the BOOT topic"), one module over; it was recorded there and is fixed
+         here. The substitution above is only justified where there IS a topic view whose shadow
+         panes print blank: the home is ordinary light DOM and prints fine, so this returns WITHOUT
+         preventDefault and the user's own browser print does what they asked for. Same precedent as
+         shell.js:262, same reader (documentElement.dataset.view, which applyRoute is the single
+         authority for). Guarded both ways by test/overlay_deadzone.cjs section 6. */
+      if (document.documentElement.dataset.view === 'home') return;
+      e.preventDefault(); openPrint();
     });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wire); else wire();

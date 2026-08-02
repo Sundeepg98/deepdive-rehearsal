@@ -4,10 +4,11 @@
 **Branch** `appeal/w15-refinements`, cut from master tip `2696291`.
 **Gate expectation** **77/77 from cycle 3** (cycle 1 was 76/76; cycle 2 registers ONE new check,
 `home_fold`, taking it to 77; cycle 3 registers NONE -- every arm it adds extends
-`overlay_deadzone`, `home_fold` or `visual_regression`).
+`overlay_deadzone`, `home_fold` or `visual_regression`; cycle 4 registers NONE either -- its arms
+extend `overlay_deadzone`, `home_claims` and `touch_floor`).
 **VR contract** home baselines REBASELINE AUTHORIZED; non-home baselines must not move. Cycle 2
 adds ONE baseline, `m-home-light` at 390x844 -- the manifest goes 16 -> 17. Cycle 3 adds its dark
-twin, `m-home-dark` -- 17 -> 18.
+twin, `m-home-dark` -- 17 -> 18. Cycle 4 adds none: 18, with the two desktop home PNGs re-captured.
 
 ---
 
@@ -670,7 +671,14 @@ from source):
 | cold 390x844 | This week | **absent** | 0 of 5 topics drilled this week &middot; 5 more to go |
 | engaged 390x844 | This week | **absent** | 12 topics drilled this week &middot; Goal met -- nice work. |
 
-No repeated word between the head and its content on any of the four.
+**No repeated LABEL on any of the four**: the head names the period once, and the fact sentence's
+own "this week" is part of the claim, not a second label. *(Restated in cycle 4. The line here read
+"no repeated WORD between the head and its content", which is false as written and the table two
+columns over prints the counterexample: the head is "This week" and the line under the bar ends
+"...drilled this week". The FIX is right and verified -- kicker count 0 in every render path,
+including the stepper's in-place re-render -- and this is the distinction `panels.js:151-156`
+already draws in its own comment; only the summary sentence claimed more than the measurement
+supported, in a wave whose standard is that a figure quoted must survive re-derivation.)*
 
 **One declaration went with it, and it is not cosmetic.** `.ix-goal-top` was
 `justify-content:space-between` for a row holding a kicker on the left and the stepper on the
@@ -1056,6 +1064,10 @@ Three things are RECORDED rather than open, so a later wave does not rediscover 
    driving it in a check needs its own decision), and what Ctrl+P *should* do on the home is a
    product call, not a bug fix. The overlay's row is honest as written ("this topic's probes") and
    is declared out of section 6's scope rather than silently skipped.
+   *(**RULED AND CLOSED IN CYCLE 4 as R5** -- the product call was made: the home returns WITHOUT
+   preventDefault, so the user's own browser print works there and no boot-topic sheet is built.
+   The row moved in with the other topic-scoped keys and the popup is now driven through a stubbed
+   `window.open`. See cycle 4, R5.)*
 2. **The phone home paints ~57px scrolled for a beat on some loads.** The Resume CTA carries
    `data-autofocus="1"`; focusing it scrolls it into view before the layout has settled, and the
    page returns to 0 within a second. Transient, self-correcting, pre-existing, and measured at 2
@@ -1066,3 +1078,342 @@ Three things are RECORDED rather than open, so a later wave does not rediscover 
    now 22 cells across 390x844 and 360x844 rather than nine at one width. The ruled contract holds
    in every one of them via the ACT. Closing the chip half would need the `.ix-cross` bars
    compacted, which R1 explicitly forbade.
+
+---
+
+## CYCLE 4 -- 2026-08-02
+
+Two team-lead rulings on the cycle-3 escalation (R5 / R6) plus the judges' six non-escalated items.
+**All eight closed.** The through-line is one sentence and one moment: five of the six judges' items
+are the SAME weekly-goal strip -- the surface cycles 2-3 promoted onto every record class -- and
+between them they show what "promoted" costs when nothing reads the thing you promoted. `grep -rn
+'drilled this week|Goal met|goalPhrase|ix-home-v' test/` returned ONE hit in the whole tree before
+this cycle, and it was a prose comment.
+
+---
+
+### R5 -- CTRL+P ON THE HOME -- CLOSED
+
+**The fix, as named.** `src/scripts/app/print-qa.js` -- the keydown handler now returns WITHOUT
+`preventDefault()` when `document.documentElement.dataset.view === 'home'`, on the shell.js:262
+precedent and reading the same authority (`applyRoute` stamps `data-view`; nothing else does).
+
+Both halves of "dead" matter and the check asserts both. `openPrint()` reads
+`TopicRegistry.current()`, which on a route with no current topic is the BOOT constant -- so before
+this the home built a printable Q&A for a topic the user never chose. But a guard that merely
+returned *after* `preventDefault()` would have left the home with NO print at all, which is worse
+than the defect: the home is ordinary light DOM and prints correctly on its own. The substitution
+print-qa performs is only justified where there IS a topic view whose shadow panes print blank.
+
+**The surface.** `keyboard-overlay.js` -- the `Ctrl` `P` row moves out of "Anywhere" into "While
+you're in a topic", beside the `P`, `N` and `[` `]` rows cycle 3 moved for the identical reason. The
+head now covers four keys instead of three.
+
+**THE ARM, and the undriven claim it replaces.** Cycle 3 gave this row the declared claim `'chord'`
+so the cross-check would still see it, and drove nothing. `test/overlay_deadzone.cjs` section 6 now
+drives it BOTH WAYS in the SCOPED table like every other relocated key:
+
+- **dead on `#home`**: `window.open` call count **0** and `defaultPrevented` **false** -- no sheet
+  built, and the browser's own print left alone;
+- **live on `#saga/drill`**: exactly **one** `window.open`, `defaultPrevented` **true**, and the
+  written document's `<title>` begins with the CURRENT topic's title, read off the page rather than
+  typed -- which is what separates "it printed" from "it printed the boot topic".
+
+The popup is not opened: `window.open` is stubbed into a recorder on every page this section
+drives, so the sheet becomes a STRING the check reads. `defaultPrevented` is read by a
+**window-level** listener, which bubbles after every document-level handler, so it observes the
+event's final state rather than a guess about listener order. (`grep -rn 'window.open' src/`: one
+call site, in print-qa.js -- so the stub is inert for the other eight rows and additionally proves
+they open no print window either.)
+
+**WATCHED RED, twice, each on a real rebuild:**
+
+```
+guard reverted (`if (false && ... === 'home')`):
+  FAIL  [anywhere] CTRL+P on #home builds NO print DOM and does NOT take the browser's own print
+        -- window.open calls 1, defaultPrevented true
+  OVERLAY DEADZONE: FAIL  (1 of 68 assertions)
+
+row moved back under "Anywhere":
+  FAIL  [anywhere] every row under "Anywhere" has a declared claim here ... undeclared rows: ["CTRL+P"]
+  FAIL  [anywhere] the four keys that need a topic are listed under the topic-scoped head ...
+  OVERLAY DEADZONE: FAIL  (2 of 68 assertions)
+```
+
+Only those arms, in each case.
+
+---
+
+### R6 -- THE BOOT WINDOW -- CLOSED
+
+**The mechanism, exactly as ruled: one gate on the whole keymap, not a patch per key.**
+
+- `src/scripts/app/view-manager.js` -- a module-level `routeApplied` flag, set where `applyRoute`
+  COMPLETES an application (both branches: the home return and the end of the function), exposed as
+  `ViewManager.routed()`. A function, not a property, so no reader can latch a stale copy.
+- `src/scripts/app/shell.js` -- `if (!(window.ViewManager && window.ViewManager.routed &&
+  window.ViewManager.routed())) return;` at the TOP of the keydown handler, beside the typing and
+  dialog guards. Before the first applied route the map is a no-op for EVERY key.
+
+`data-view` is NOT stamped at parse time, per the ruling: that would be a second derivation of route
+truth and could disagree with the first. `applyRoute` remains the single authority; the keymap asks
+it one bit. `ViewManager` is defined AFTER shell.js in load order, so the `window.ViewManager &&`
+term is also literally what holds the gate closed through the earliest part of the window.
+
+**THE ARM, and a deviation from the ruling's own preferred shape, disclosed with the measurement
+that forced it.** The ruling asked for the natural window (`goto waitUntil:'commit'`, press once
+`goView` exists, `#sessopen` exists and `dataset.view !== 'home'`) and authorised a test-only
+boot-delay hook *if* the natural window is too narrow to hit deterministically. It is. Measured, six
+boots per mode, before any arm was written:
+
+| how the press was timed | landed inside the window | cost of a miss |
+|---|---|---|
+| pressed immediately after `commit` | **1 of 6**, and that one arrived before shell.js had even run (`hasGoView:false`) -- so it never reached the keymap | none |
+| pressed on the ruling's predicate | **4 of 6** with the keymap fully live (`hasGoView:true, routed:false, view:null`) | the other **2 of 6** never saw a pre-route state at all, so the wait ran to its full `NAV_MS` -- **120 seconds** |
+
+A 2-in-6 two-minute hang in a gate check is the flake this repo has already paid for once. So the
+window is **HELD OPEN** by a test-only `addInitScript` accessor that wraps `Router.init` and defers
+the first `emit` -- nothing else. Every module loads exactly as in a real boot, and the state under
+test is byte-identical to the state the natural runs actually landed in. The hold is then RELEASED
+on the same page and the route is asserted to apply, so the arm proves it measured a window rather
+than a dead app.
+
+**And the natural window is still driven, as evidence rather than as the assertion**: 3 real boots,
+bounded at 4s (not `NAV_MS`), asserting the same thing either way -- nothing that arrived before the
+first applied route did anything -- and PRINTING how many presses landed, so a run where the window
+closed entirely is visible rather than silent. Observed 2/3 and 3/3 on the two runs since.
+
+**PREFLIGHTED ON THE SEEDED MUTANT, which is the acceptance bar the ruling set.** The gate line is
+deleted from a COPY of the build (OS temp, removed in the same run) and the identical arm runs
+against it. Transcript, from the check's own probe:
+
+```
+FIXED   inWindow  {"routed":false,"view":null,"hash":"#home","held":true,"dialogs":[],"topic":"content-pipeline"}
+FIXED   after p   {"routed":false,"view":null,"hash":"#home","held":true,"dialogs":[],"topic":"content-pipeline"}
+MUTANT  after p   {"routed":false,"view":null,"hash":"#home","held":true,"dialogs":["sessov"],"topic":"content-pipeline"}
+```
+
+`sessov` -- Session progress for `content-pipeline`, the BOOT constant -- is cycle 1's defect
+arriving through the door underneath its fix. The mutant is required to reproduce it for `p` AND to
+move the route for `w`, and the check FAILS if either stays clean. It runs every gate, so this stays
+proven rather than merely recorded.
+
+**Incidental coverage, authorized and asserted.** `w` is driven in the window too (it leaked 6/6 on
+the shipped build, straight to the drill of a topic nobody chose). `q` and `n` are the same key
+class through the same gate and are not separately driven -- one gate, one arm, stated rather than
+implied. (The escalation gave rates for `w` (6/6) and `n` (2/6) and none for `q`; the source
+comments say exactly that rather than rounding `q` up to its neighbour's number.)
+
+**VR: no visual change, as predicted.** Neither R5 nor R6 moves a pixel; the two home baselines that
+did move this cycle moved for item 6 alone (below).
+
+---
+
+### JUDGES' ITEM 1 + ITEM 3 -- THE MET SENTENCE HAD NO ARM -- CLOSED
+
+Both items name the same hole from two directions, and both named fixes are applied: `judgeGoal` is
+extended in kind (a new judge beside it) and a `judgeGoalSentence` arm is registered in
+`ALL_JUDGES`, so it cannot be written and never called.
+
+**What `test/home_claims.cjs` READS now** -- `.ix-goal .ix-home-v` (the visible line), its `<b>`
+(the emphasised figure), the goal bar's `aria-label`, and `Panels.weeklyGoal()` -- so the sentence is
+checked against the record's own arithmetic rather than against another rendering of itself.
+
+**FIVE RULES**, in the order a reader would notice them breaking:
+
+1. **one sentence, two channels** -- the accessible name IS the visible line with a comma where the
+   eye gets a middle dot, character for character, and nothing else;
+2. the emphasised figure equals `weeklyGoal().done`;
+3. the met state is named ONCE (`/goal met/i` at most once);
+4. and not mid-clause ("drilled this week" never follows "goal met");
+5. every noun agrees with the figure immediately before it, **in both channels** (a hyphenated
+   compound -- "5-topic goal met" -- is skipped on purpose: that is an adjective).
+
+**THREE PLANTED MUTANTS, each isolating one rule.** Every plant writes BOTH channels, deliberately:
+a plant that rewrote only the visible line would trip rule 1 every time and rules 3-5 would be
+unreachable -- four rules of decoration behind one.
+
+| # | record | the reverted code, verbatim | the rule that must fire |
+|---|---|---|---|
+| **11** | `perfect` | `goalPhrase(g,true) + ' drilled this week'` -- goalStrip() before cycle 3 | 3 (met named twice) |
+| **12** | `goalOfOne` | `'</b> topics drilled this week'` -- the hard-coded plural | 5 (noun vs figure) |
+| **13** | `goalOfOne` | `aria-label = goalPhrase(g) + ' this week'` -- the state cycle 3 shipped | 1 (two sentences) |
+
+Each is composed from the LIVE `Panels` API rather than pasted, so a mutant cannot drift away from
+the defect it names, and each ABORTS the check if it CANNOT LAND. `home_claims` reports **13 planted
+mutants detected**, up from 10.
+
+**A NEW PINNED RECORD, `goalOfOne`, and it is the reason 12 and 13 can exist.** Every other seed is
+either unmet (where the noun counts the TARGET, 5) or met with many, so the singular branch of both
+channels was rendered by NOTHING in this battery. `goalOfOne` writes one drilled topic and
+`goal.weekly = 1` -- the state item 4 reached through the UI by pressing `-` four times.
+
+**EACH WATCHED RED BY REVERTING THE CORRESPONDING LINE**, one at a time, on real rebuilds:
+
+| reverted | what went red |
+|---|---|
+| `goalLine()` -> `goalPhrase(g, bold) + ' drilled this week'` | `FAIL ... the met state is named 2 times in one sentence: "46 topics drilled, 5-topic goal met with 41 to spare drilled this week ... Goal met -- nice work."` -> `HOME CLAIMS: FAIL (56)` |
+| `topicWord()` -> always `' topics'` | `FAIL [1280/goalOfOne] the visible line reads "1 topics" -- the noun does not agree with the figure it counts` + the 390 twin -> `HOME CLAIMS: FAIL (2)` |
+| `aria-label` -> `goalPhrase(g) + ' this week'` | `FAIL ... the eye and the screen reader are given the same fact in two different sentences` -> `HOME CLAIMS: FAIL (80)` |
+
+Note the middle row: **2 failures, not 56.** That is the point of `goalOfOne` -- without it the
+pluralisation reversion is green everywhere.
+
+---
+
+### JUDGES' ITEM 2 -- R4's RECEIPT OVERSTATED BY ONE SENTENCE -- CLOSED
+
+Restated in place, in the R4 section above, with a dated parenthesis so the change is visible rather
+than silent: "no repeated LABEL: the head names the period once, and the fact sentence's own 'this
+week' is part of the claim, not a second label" -- the distinction `panels.js:151-156` already draws
+in its own comment. The fix itself was right and stays; only the summary sentence claimed more than
+the measurement supported.
+
+---
+
+### JUDGES' ITEM 4 -- "1 topics drilled this week" -- CLOSED
+
+`src/scripts/app/panels.js` -- one helper, `topicWord(n)`, called from every site that puts a count
+next to that noun, so a fourth caller cannot invent a fourth answer:
+
+- `goalStrip()`'s met figure (`'1 topic drilled this week'`);
+- **both** `goalPhrase()` met branches, which own the accessible name;
+- **and the unmet ratio's denominator**, which the named fix did not list and which is reachable:
+  `goalTarget()` clamps to **1..20**, so a goal of 1 with nothing drilled printed "0 of 1 topics".
+  Disclosed as scope beyond the named fix; it is the same defect one branch over, and the noun there
+  counts the TARGET rather than `done`.
+
+**DRIVEN THROUGH THE UI, the way the judge reached it** -- one topic drilled this week, then five
+trusted clicks on `-` at 390x844 (Playwright `locator.click()`, so each is a real hit-tested click
+on the live control):
+
+```
+start   1 of 5 topics drilled this week . 4 more to go
+click1  1 of 4 topics drilled this week . 3 more to go
+click2  1 of 3 topics drilled this week . 2 more to go
+click3  1 of 2 topics drilled this week . 1 more to go
+click4  1 topic  drilled this week . Goal met -- nice work.      <- was "1 topics"
+click5  1 topic  drilled this week . Goal met -- nice work.      <- the clamp at 1 holds
+```
+
+The in-place re-render path is exercised five times over by this (`panels.js:603` replaces the whole
+`.ix-goal`), so both channels are regenerated together on every press rather than only on a full
+render, and `[data-goal]` still resolves through the new `.ix-goal-g` span via `closest`.
+
+Arm: rule 5 above, on `goalOfOne`, at both viewports. Watched red (table above).
+
+---
+
+### JUDGES' ITEM 5 -- THE BAR SAID IT DIFFERENTLY -- CLOSED
+
+`goalPhrase` grew a third form, `goalLine(g, bold)`, and it is now the ONLY place the sentence is
+composed. `goalStrip()` builds the visible line from `goalLine(g, true)` and the bar's `aria-label`
+from `goalLine(g)` -- `bold` is the only difference between the channels.
+
+**Measured before, on a 12-topic week at 390:**
+
+```
+visible     12 topics drilled this week . Goal met -- nice work.
+accessible  12 topics drilled, 5-topic goal met with 7 to spare this week
+```
+
+**And after, both viewports, both record classes** (read from the live DOM, not asserted from
+source):
+
+| record | visible line | accessible name |
+|---|---|---|
+| cold | `0 of 5 topics drilled this week . 5 more to go` | `0 of 5 topics drilled this week, 5 more to go` |
+| engaged (12) | `12 topics drilled this week . Goal met -- nice work.` | `12 topics drilled this week, Goal met -- nice work.` |
+
+The unmet channel had diverged too, more quietly: the line said "0 of 5 topics **drilled** this
+week", the name said "0 of 5 topics this week". Both are one sentence now. Arm: rule 1, asserted on
+all 16 pinned records and all 24 generated ones at both viewports; MUTANT 13 is its reversion.
+
+---
+
+### JUDGES' ITEM 6 -- THE GOAL STEPPER WAS A 20px FINGER TARGET -- CLOSED
+
+**The fix.** `.ix-goal-b` reserves a **44x44** box; the 20px painted chip moves to a `.ix-goal-g`
+span inside it, so nothing about the painted control changes except that it is now centred in a box
+a finger can hit. `panels.js` renders the span; `styles.css` carries both rules.
+
+**THE BOX IS THE BUTTON, NOT A PSEUDO-ELEMENT -- and that is a measurement, not a preference.** The
+named fix offered "keep the 20px glyph box and add a 44px padded/pseudo hit area". It paints
+identically and measures the same on the finger, but the two buttons sit 8px apart: two 44px areas
+centred 28px apart **overlap by 16px**, so a finger aimed at `-` lands on `+`. Reserving the box in
+layout is the only form of this fix that keeps the targets disjoint, and the check asserts
+`overlap === 0` for exactly that reason.
+
+**RAW `44px`, NOT `var(--space-44)` -- a deviation from the named fix, and it is PROVED rather than
+argued.** The space scale is re-valued per density. Built with the token and measured at compact:
+
+```
+{"boxes":[{"d":"dec","w":36,"h":44},{"d":"inc","w":36,"h":44}],"min":36,"density":"compact"}
+FAIL ...and it still clears 44px at COMPACT density
+```
+
+**36px** -- 8px under this app's own floor, for any reader who has pressed `d` twice, and `d` is an
+advertised shortcut. 44 is a physical-finger constant, not a layout rhythm token, which is why
+`.tn-step`, `.ix-x`, `.crambtn` and the `<=919px` element floor all spell it in raw px too.
+
+**TWO DECLARATIONS WENT WITH IT, and they are taste, disclosed as such.** A 20px chip centred in a
+44px box already carries 12px of optical padding, so `.ix-goal-top`'s `margin-bottom:var(--space-6)`
+put **18px** between the stepper and the bar it sets, where the 20px control had 6; and at
+`.ix-goal-set{gap:var(--space-8)}` the three 44px boxes read as three floating glyphs rather than one
+`- 5 +` control (the chips end up 20px from the figure they set, against 8 before). Both were looked
+at as rendered screenshots, in four variants, before choosing. Measured at 1280: chip-bottom to
+bar-top **6px before, 12px after**; the panel grows **18px rather than 24**; the group is 104px wide
+rather than 72.
+
+**THE ARM: `test/touch_floor.cjs`, a new section 6** -- the file whose subject is already "a control
+short in the OTHER axis walks through a height-only floor", and whose header already names this
+exact class (the cram close button, 32 WIDE). Driven on a **COLD** record at 390, which is the
+record class cycles 2-3 promoted this strip onto. Three assertions plus a plant:
+
+- both `#home [data-goal]` buttons clear **44 in both axes**;
+- their boxes **do not overlap**;
+- and the floor **survives a density change** (driven through `Density.cycle()` to compact, with the
+  density read back and asserted, so a check that silently stayed on default cannot report this);
+- **[plant]** restoring the 20px box must drop the measured minimum below 44, or the check ABORTS.
+
+**WATCHED RED** by putting `var(--space-20)` back on a real rebuild:
+
+```
+FAIL the weekly-goal stepper clears the app's own 44px floor in BOTH axes on a COLD home
+FAIL ...and it still clears 44px at COMPACT density
+TOUCH FLOOR: FAIL
+```
+
+**Why this is W1.5's to fix although the geometry is byte-identical to master 2696291:** the REACH
+changed. Cycles 2-3 hoisted `goalStrip()` out of `telemetryHtml()`'s `engaged()` gate and deleted
+`duoHtml()`'s own early return, so the strip renders for every record class at every viewport --
+including the first-run home of every new user, where it did not exist at all.
+
+---
+
+## VR CONTRACT, CYCLE 4 -- HONOURED
+
+`git diff --stat test/baselines/` lists exactly three paths: the two DESKTOP home PNGs and
+`manifest.json` (two sha256 values + the generated timestamp). **The other 16 baselines rewrote
+byte-identical** under `npm run vr:update` -- including `m-home-light` and `m-home-dark`, which is
+the informative pair: the goal strip sits below the 844px viewport on the cold phone home, so the
+stepper change is genuinely invisible there rather than merely unphotographed.
+
+**The diffs were reviewed BEFORE regenerating**, and the attribution is exact:
+
+```
+home-light   8568 px changed (0.8367%, worst channel delta 220/255) in a 590x51 box at (333,720)
+home-dark    8568 px changed (0.8367%, worst channel delta 206/255) in a 590x51 box at (333,720)
+```
+
+Both diff images were opened and read: the red region is the stepper row and the 18px downward shift
+of the bar and the line beneath it, inside the "This week" panel. Nothing else in either capture
+moved -- the box is 51px tall, which is the 44px row plus the shift, and 590px wide because the bar
+spans the panel. Both new baselines were reviewed **as images** after regenerating, in both themes.
+
+Verified twice after the write, each a fresh capture:
+
+```
+18 baselines compared; worst = 0 px (home-light), budget 32 px.
+VISUAL REGRESSION: PASS  (18 baselines, win32-chromium149)
+```

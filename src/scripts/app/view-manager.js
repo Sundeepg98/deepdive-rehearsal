@@ -22,6 +22,22 @@
   var liveRegion = null;
   var pending = null;
   var lastView = null;
+  /* ===== HAS A ROUTE BEEN APPLIED YET? =====
+     THE BOOT WINDOW. shell.js registers its global keymap at PARSE time; Router.init() does not
+     run until DOMContentLoaded, and only then does applyRoute() stamp documentElement.dataset.view.
+     Between those two moments every key in that map is live while `dataset.view` is undefined --
+     so `onHome` reads FALSE on a load that is landing on the home, and a keypress that arrives in
+     the gap acts on the BOOT topic. Measured on the shipped build: `w` leaked in 6 of 6 attempts
+     (it navigated to the drill of a topic the user never chose) and `n` in 2 of 6; `q` leaked too,
+     at a rate nobody recorded; and `p` opened Session progress for the boot constant -- the very
+     defect cycle 1 fixed for the ROUTED case, arriving through the door underneath it.
+
+     THE FLAG IS HERE, NOT AT PARSE TIME. Stamping data-view early from location.hash would be a
+     SECOND derivation of route truth, and this file is the single authority for the first: the
+     keymap asks "has applyRoute applied a route yet", which is one bit that cannot disagree with
+     anything. It is set where an application COMPLETES -- both branches -- and never cleared: the
+     window is a boot condition, not a state. */
+  var routeApplied = false;
 
   /* THE ANNOUNCER. One visually-hidden polite region, shared by every caller.
      It is the app's ONLY channel for "something changed that you cannot see", so it has to
@@ -85,6 +101,7 @@
       document.title = 'Home \u2014 ' + BASE_TITLE;
       if (lastView !== 'home') { announce('Home'); lastView = 'home'; }
       try { window.scrollTo(0, 0); } catch (e) {}
+      routeApplied = true;
       return;
     }
     if (document.documentElement.dataset.view === 'home') {
@@ -116,6 +133,7 @@
       announce(label);
       lastView = view;
     }
+    routeApplied = true;
   }
 
   if (window.Router) window.Router.subscribe(applyRoute);
@@ -123,7 +141,10 @@
   window.ViewManager = {
     currentView: function () { return lastView; },
     announce: announce,
-    refreshTitle: refreshTitle
+    refreshTitle: refreshTitle,
+    /* THE BOOT-WINDOW GATE, read at the top of shell.js's keydown handler. See routeApplied above.
+       It is a function rather than a property so a reader cannot latch a stale copy of the bit. */
+    routed: function () { return routeApplied; }
   };
 
 })();

@@ -191,6 +191,79 @@ async function pinViewport(page, w, h) {
   ok('the home "Skip the home" label clears WCAG 2.5.8 AA (it was an 18px text line inside a 44px row)',
     !skip.missing && skip.h >= AA_FLOOR, JSON.stringify(skip));
 
+  /* ---- 6. THE WEEKLY-GOAL STEPPER -- 20x20, ON THE FIRST-RUN HOME OF EVERY NEW USER ----
+     The same class as the cram close button above: `.ix-goal-b` set width AND height explicitly to
+     var(--space-20), so the <=919px `button{min-height:44px}` floor reached the height and the
+     explicit width walked straight through it -- 20x20 at 1280, 20x44 here. Under WCAG 2.5.8 AA in
+     one axis and under this app's own 44px promise in both.
+     WHY IT IS THIS WAVE'S TO FIX EVEN THOUGH THE GEOMETRY IS BYTE-IDENTICAL TO master 2696291: the
+     REACH changed. W1.5 cycles 2-3 hoisted goalStrip() out of telemetryHtml()'s engaged() gate and
+     deleted duoHtml()'s own engaged() early return, so the strip now renders for EVERY record class
+     at every viewport -- including the COLD home, where it did not exist at all before. This arm is
+     therefore driven on a COLD record: no seed, nothing in localStorage, which is the first screen
+     of a brand-new user.
+     THREE THINGS, because the box alone is not the target:
+       (a) both buttons clear 44 in BOTH axes;
+       (b) their hit areas do not OVERLAP -- 44px boxes 8px apart would, and a finger aimed at `-`
+           would land on `+`. This is the reason the box is the BUTTON and not a 44px pseudo-element
+           behind a 20px chip, which would paint identically and measure the same on the finger;
+       (c) the floor survives a DENSITY change. The fix spells 44 in raw px rather than
+           var(--space-44) precisely because the space scale is re-valued per density -- the token
+           is 36px under html[data-density=compact] -- and `d` is an advertised shortcut, so
+           "compact" is one keypress from every reader. A token here would have shipped an 8px
+           regression that only a reader who changed density could feel. */
+  const goalBox = async () => page.evaluate(() => {
+    const bs = [...document.querySelectorAll('#home [data-goal]')];
+    const boxes = bs.map((b) => {
+      const r = b.getBoundingClientRect();
+      return { d: b.getAttribute('data-goal'), w: +r.width.toFixed(1), h: +r.height.toFixed(1),
+        l: +r.left.toFixed(1), rt: +r.right.toFixed(1) };
+    });
+    let overlap = 0;
+    for (let i = 1; i < boxes.length; i++) {
+      if (boxes[i].l < boxes[i - 1].rt) overlap = +(boxes[i - 1].rt - boxes[i].l).toFixed(1);
+    }
+    return { count: boxes.length, boxes, overlap,
+      min: boxes.length ? Math.min(...boxes.map((b) => Math.min(b.w, b.h))) : null,
+      density: document.documentElement.dataset.density || 'default' };
+  });
+  await page.waitForFunction(() => !!document.querySelector('#home [data-goal]'), null, { timeout: B.ACT_MS }).catch(() => {});
+  await B.settle(page);
+  const goal = await goalBox();
+  ok('the weekly-goal stepper clears the app\'s own 44px floor in BOTH axes on a COLD home (it was 20x44 here and 20x20 at 1280 -- the height-only floor could not see the width)',
+    goal.count === 2 && goal.min >= APP_FLOOR, JSON.stringify(goal));
+  ok('the two stepper targets do not overlap (44px hit areas 8px apart would, and a finger aimed at "-" would land on "+")',
+    goal.count === 2 && goal.overlap === 0, JSON.stringify(goal));
+  await page.evaluate(() => { if (window.Density && window.Density.cycle) window.Density.cycle(); });
+  await B.settle(page);
+  const goalC = await goalBox();
+  ok('...and it still clears 44px at COMPACT density, where var(--space-44) resolves to 36 (the floor is a finger, not a spacing token)',
+    goalC.density === 'compact' && goalC.count === 2 && goalC.min >= APP_FLOOR, JSON.stringify(goalC));
+
+  /* THE PLANT for this arm: put the 20px box back and require the measurement to notice. */
+  const goalPlant = await page.evaluate(() => {
+    const bs = [...document.querySelectorAll('#home [data-goal]')];
+    if (bs.length !== 2) return { ran: false };
+    const prev = bs.map((b) => ({ w: b.style.width, h: b.style.height }));
+    bs.forEach((b) => { b.style.width = '20px'; b.style.height = '20px'; });
+    const min = Math.min(...bs.map((b) => {
+      const r = b.getBoundingClientRect(); return Math.min(r.width, r.height);
+    }));
+    bs.forEach((b, i) => { b.style.width = prev[i].w; b.style.height = prev[i].h; });
+    return { ran: true, minUnderPlant: +min.toFixed(1) };
+  });
+  if (!(goalPlant.ran && goalPlant.minUnderPlant < APP_FLOOR)) {
+    console.log('  ABORT restoring the stepper to its 20px box did NOT drop the measured minimum below 44 -- the goal arm is not reading these controls.');
+    console.log('     -> ' + JSON.stringify(goalPlant));
+    await browser.close();
+    return B.finish(1, 'TOUCH FLOOR: ABORTED (self-test failed: the goal-stepper arm cannot fail)');
+  }
+  ok('[plant] restoring the stepper\'s 20px box is detected by the 44px arm', true, '');
+  await page.evaluate(() => {
+    if (window.Density && window.Density.cycle) { window.Density.cycle(); window.Density.cycle(); }
+  });
+  await B.settle(page);
+
   /* ---- THE AA PLANT ----
      The 44px arm has carried a plant since it was written; the 24px arm did not, and this header
      disclosed the gap. Both AA targets are additionally proven red on the base build, so the arm

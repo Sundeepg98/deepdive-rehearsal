@@ -261,6 +261,24 @@ const SEEDS = {
     });
   },
 
+  /* A WEEK OF ONE, WITH A GOAL OF ONE -- the record that makes the goal sentence say "1".
+     Reached through the UI alone on the shipped build: drill one topic, then press the goal
+     stepper's `-` four times (it clamps at 1) and the line walks 1 of 5 -> 1 of 4 -> ... -> met,
+     where the noun was hard-coded plural: "1 topics drilled this week". Every other pinned record
+     is either unmet (where the noun counts the TARGET) or met with many, so the singular branch of
+     both the visible line and the bar's accessible name was rendered by nothing in this battery.
+     goal.weekly is written directly rather than clicked because a seed is a RECORD, not a
+     rehearsal of the gesture -- Store clamps it to 1..20 and 1 is inside that range. */
+  goalOfOne: () => {
+    const id = TopicRegistry.ids()[0];
+    const cards = TopicRegistry.get(id).data.bank.cards;
+    const keys = CardId.forCards(cards); const map = {};
+    for (let i = 0; i < 4; i++) map[keys[i]] = 3;
+    localStorage.setItem('ddr.v1.progress.' + id, JSON.stringify({
+      got: 4, shk: 0, done: 4, tot: cards.length, revisit: [], cards: map, cv: 1, ts: Date.now() }));
+    localStorage.setItem('ddr.v1.goal.weekly', JSON.stringify(1));
+  },
+
   /* a stale cursor past the end of a shorter bank -- must produce NO position claim */
   staleCursor: () => {
     const id = TopicRegistry.ids()[0];
@@ -384,6 +402,23 @@ const READ = () => {
        that wave's five build items silently revertible at a green 76/76. */
     /* (1) the weekly goal. One renderer, one surface, per viewport, in every record class. */
     goals: [...document.querySelectorAll('.ix-goal, .hm-goal')].filter((e) => e.getClientRects().length).length,
+    /* (1b) THE SENTENCE INSIDE THAT SURFACE, IN BOTH CHANNELS.
+       A COUNT of goal surfaces cannot see a word of what the surface says, and until this line
+       existed nothing in test/ could: `grep -rn "drilled this week|Goal met|goalPhrase|ix-home-v"
+       test/` returned exactly one hit in the whole tree, and it was a PROSE COMMENT. Every home VR
+       baseline is the COLD record (the matrix seeds theme + RNG only), so weeklyGoal().done is 0
+       in all 18 captures and the MET branch is in no baseline either -- which made cycle 3's
+       item-7 fix silently revertible at a green 77/77. `line` is what the eye reads, `aria` is what
+       a screen reader reads off the bar, `bold` is the figure the line emphasises, and `g` is the
+       record's own arithmetic, so the sentence is checked against the numbers rather than against
+       another rendering of itself. */
+    goalLine: txt(document.querySelector('.ix-goal .ix-home-v')),
+    goalBold: txt(document.querySelector('.ix-goal .ix-home-v b')),
+    goalAria: (() => {
+      const b = document.querySelector('.ix-goal .ix-goal-bar');
+      return b ? (b.getAttribute('aria-label') || '').replace(/\s+/g, ' ').trim() : null;
+    })(),
+    g: (() => { try { return Panels.weeklyGoal(); } catch (e) { return null; } })(),
     /* (2) the two practice acts, in DOM order, in each of the three surfaces that render the pair.
        `lead` is what the topic switcher puts at the top of its scroller -- Panels.actionsHtml()
        itself -- so the switcher's copy is judged without having to open the overlay. */
@@ -631,6 +666,70 @@ function judgeGoal(r) {
     + 'the rule is exactly one per viewport, and it holds for a cold record as well as an engaged one';
 }
 
+/* AND WHAT THAT ONE SURFACE SAYS, IN BOTH CHANNELS, AGAINST THE RECORD'S OWN ARITHMETIC.
+   judgeGoal above is a COUNT -- it cannot see a word -- and until this arm existed nothing else
+   could either, so three separate defects lived in this sentence at a green 77/77:
+     (a) the met clause was CONCATENATED onto a phrase that already ended in "goal met", so a
+         41-topic week rendered "41 topics drilled, 5-topic goal met with 36 to spare drilled this
+         week . Goal met -- nice work." Cycle 3 fixed it with no arm that could fail on its
+         reversion, which is the exact class cycle 2's judges raised.
+     (b) the noun was hard-coded plural, so a one-topic week printed "1 topics drilled this week".
+     (c) the bar's aria-label was still built from goalPhrase's raw met branch, so the eye and a
+         screen reader were given the SAME fact in two different sentences -- this home's own
+         named failure mode, landed in the surface cycle 3 had just consolidated.
+   FIVE RULES, in the order a reader would notice them breaking:
+     1. one sentence, two channels -- the accessible name IS the visible line with the separator
+        that a reader would say instead of the one the eye reads, and nothing else;
+     2. the emphasised figure is the record's own `done`;
+     3. the met state is named ONCE ("goal met" at most once);
+     4. and it is not named mid-clause ("drilled this week" never follows "goal met");
+     5. every noun agrees with the figure standing immediately before it, in BOTH channels.
+   Rule 5 skips a hyphenated compound ("5-topic goal met") on purpose: that is an adjective, and it
+   is singular whatever the number is. */
+function judgeGoalSentence(r) {
+  if (r.goalLine === null) return null;          /* judgeGoal owns "there must be a surface" */
+  if (!r.g) return 'the page renders a weekly-goal sentence but Panels.weeklyGoal() is unreadable, '
+    + 'so nothing can be checked against the record';
+  const line = r.goalLine, aria = r.goalAria;
+  if (!aria) return 'the goal bar renders no accessible name, so the sentence has one channel';
+
+  /* 1. the two channels are the same sentence. The eye gets a middle dot between the fact and its
+     note; a reader gets a comma, because "middle dot" is what a screen reader would say out loud.
+     Everything either side of it must be identical, character for character. */
+  const MIDDOT = ' ' + String.fromCharCode(0xB7) + ' ';   /* spelled, not pasted: test/ is ASCII */
+  const spoken = line.replace(MIDDOT, ', ');
+  if (aria !== spoken) {
+    return 'the eye and the screen reader are given the same fact in two different sentences:\n'
+      + '        visible: "' + line + '"\n     accessible: "' + aria + '"';
+  }
+  /* 2. the emphasised figure is the record's own count */
+  if (r.goalBold === null || +r.goalBold !== r.g.done) {
+    return 'the line emphasises "' + r.goalBold + '" while the record has ' + r.g.done
+      + ' topic(s) drilled this week';
+  }
+  /* 3 + 4. the met state is named once, and not mid-clause */
+  const met = line.match(/goal met/gi) || [];
+  if (met.length > 1) {
+    return 'the met state is named ' + met.length + ' times in one sentence: "' + line + '"';
+  }
+  if (/goal met[\s\S]*drilled this week/i.test(line)) {
+    return '"drilled this week" follows "goal met", which is the pre-cycle-3 concatenation: "' + line + '"';
+  }
+  /* 5. the noun agrees with the figure before it, in both channels */
+  for (const [where, s] of [['visible line', line], ['accessible name', aria]]) {
+    const re = /(\d+) (topics?)\b/g;
+    let m;
+    while ((m = re.exec(s))) {
+      const want = +m[1] === 1 ? 'topic' : 'topics';
+      if (m[2] !== want) {
+        return 'the ' + where + ' reads "' + m[1] + ' ' + m[2] + '" -- the noun does not agree with '
+          + 'the figure it counts: "' + s + '"';
+      }
+    }
+  }
+  return null;
+}
+
 /* THE RULED ORDER IS WEAK-SPOT FIRST, IN ALL THREE SURFACES THAT RENDER THE PAIR.
    Both acts are cross-topic, but only one is addressed to THIS record ("the 16 topics you have
    been shaky on") while the other is the same offer for everybody, so the specific act goes above
@@ -675,6 +774,7 @@ const ALL_JUDGES = (r) => [
   ['position', judgePosition(r)],
   ['hero', judgeHero(r)],
   ['goal', judgeGoal(r)],
+  ['goal sentence', judgeGoalSentence(r)],
   ['act order', judgeActOrder(r)],
   ['gauge key', judgeKey(r)],
 ];
@@ -860,6 +960,85 @@ const GEN_N = 24;
         }
       }
 
+      /* ---- MUTANTS 11, 12, 13: THE THREE DEFECTS THAT LIVED IN ONE SENTENCE ----------------
+         EACH PLANT WRITES BOTH CHANNELS, so the rule under test is the one that fires. A plant that
+         only rewrote the visible line would trip rule 1 (the two channels must be the same
+         sentence) every time, and rules 3-5 would be unreachable -- an arm whose later rules can
+         never be the reason it went red is four rules of decoration behind one. */
+      const plantGoal = async (which) => page.evaluate((kind) => {
+        const v = document.querySelector('.ix-goal .ix-home-v');
+        const bar = document.querySelector('.ix-goal .ix-goal-bar');
+        const g = (typeof Panels !== 'undefined') ? Panels.weeklyGoal() : null;
+        if (!v || !bar || !g || !g.met) return null;
+        const EM = String.fromCharCode(0x2014), DOT = String.fromCharCode(0xB7);
+        const NOTE = 'Goal met ' + EM + ' nice work.';
+        let out = null;
+        /* each case is the REVERTED CODE'S OWN OUTPUT, composed from the live Panels API rather
+           than from a pasted literal, so a mutant cannot drift away from the defect it names */
+        if (kind === 'concat') {
+          out = { line: Panels.goalPhrase(g, true) + ' drilled this week &middot; ' + NOTE,
+            aria: Panels.goalPhrase(g) + ' drilled this week, ' + NOTE };
+        } else if (kind === 'plural') {
+          if (g.done !== 1) return null;
+          out = { line: '<b>' + g.done + '</b> topics drilled this week &middot; ' + NOTE,
+            aria: g.done + ' topics drilled this week, ' + NOTE };
+        } else if (kind === 'aria') {
+          out = { line: v.innerHTML, aria: Panels.goalPhrase(g) + ' this week' };
+        }
+        if (!out) return null;
+        const before = { html: v.innerHTML, aria: bar.getAttribute('aria-label') };
+        v.innerHTML = out.line;
+        bar.setAttribute('aria-label', out.aria);
+        return { before, after: (v.textContent || '').replace(/\s+/g, ' ').trim(),
+          spoken: bar.getAttribute('aria-label'), dot: DOT };
+      }, which);
+      const goalMutant = async (n, which, cannot, undetected) => {
+        const planted = await plantGoal(which);
+        if (!planted) { aborted = aborted || 'MUTANT ' + n + ' CANNOT LAND: ' + cannot; return; }
+        const bad = await page.evaluate(READ);
+        if (!judgeGoalSentence(bad)) {
+          aborted = aborted || 'MUTANT ' + n + ' UNDETECTED: ' + undetected + ' -- visible "'
+            + planted.after + '" / accessible "' + planted.spoken + '"';
+        }
+        await page.evaluate((b) => {
+          document.querySelector('.ix-goal .ix-home-v').innerHTML = b.html;
+          document.querySelector('.ix-goal .ix-goal-bar').setAttribute('aria-label', b.aria);
+        }, planted.before);
+      };
+
+      /* 11: THE PRE-CYCLE-3 CONCATENATION. Planted on `perfect`, which drills all 46 topics with
+         ts = Date.now(), so weeklyGoal() reports 46 >= 5 and the MET branch renders. Composed from
+         the LIVE Panels API rather than from a literal, so it is the reverted code's own output:
+         goalStrip() said `goalPhrase(g, true) + ' drilled this week'` before cycle 3. */
+      if (name === 'perfect') {
+        await goalMutant(11, 'concat',
+          '`perfect` does not render the MET branch of the weekly-goal sentence, so the '
+          + 'concatenation cycle 3 removed cannot be planted and the goal-sentence arm is untested '
+          + 'on the branch it was written for.',
+          'the met state was named three times in one sentence and the arm accepted it');
+      }
+
+      /* 12: THE HARD-CODED PLURAL, on the one pinned record whose met figure is 1. Without
+         `goalOfOne` this rule has no record to fail on: every other seed is unmet (where the noun
+         counts the TARGET, 5) or met with many. */
+      if (name === 'goalOfOne') {
+        await goalMutant(12, 'plural',
+          '`goalOfOne` no longer renders a MET week with exactly one topic drilled, so the singular '
+          + 'branch of the goal sentence is rendered by no pinned record and the noun rule cannot '
+          + 'fail on any of them.',
+          '"1 topics" was accepted -- the noun does not have to agree with the figure it counts');
+
+        /* 13: THE ACCESSIBLE NAME BUILT FROM THE OTHER BRANCH -- the state cycle 3 shipped, where
+           the eye read the composed sentence and a screen reader got goalPhrase's raw met clause
+           ("1 topic drilled, goal met this week"). The visible line is left EXACTLY as the app
+           renders it, so only rule 1 can catch this. */
+        await goalMutant(13, 'aria',
+          '`goalOfOne` is not a met week, so the accessible name cannot be pointed at the met '
+          + 'branch and rule 1 is untested.',
+          'the accessible name stated the same fact in a different sentence from the '
+          + 'visible line and the arm accepted it');
+      }
+
       /* ---- MUTANTS 9 + 10: THE PHONE'S PRACTICE BLOCK AND THE GAUGE'S LEGEND ---------------
          Both planted on `weakTopics` at 390, which is the only record and the only width where
          the pair of acts renders in the column AND the rails carry keel marks. */
@@ -960,13 +1139,16 @@ const GEN_N = 24;
   const bad = out.filter((o) => !o[1]);
   for (const [label, pass, detail] of out) console.log((pass ? '  PASS  ' : '  FAIL  ') + label + (pass ? '' : '  -- ' + detail));
   console.log('\n  the legend arm was exercised on ' + keelChecked + ' record(s) that actually paint a keel');
-  console.log('  10 planted mutants detected (a full claim over empty rails; a level claim over '
+  console.log('  13 planted mutants detected (a full claim over empty rails; a level claim over '
     + 'unequal rails; a thin rail named on the highest tier; a step position beside a bare probe '
     + 'remainder; a verdict quoting one rail\u2019s figures for another; an inflated panel header; '
     + 'an inflated figure inside the single-thin-rail sentence, checked against its own negative '
     + 'control; a SECOND weekly-goal surface on the cold record; Cross-topic rendered above '
     + 'Weak-spot in the phone practice block; the four-state key hidden while the rails still paint '
-    + 'keel marks) -- every one of them a defect a judge or a battery found on a shipped build');
+    + 'keel marks; the pre-cycle-3 goal concatenation, which named the met state three times in one '
+    + 'sentence; "1 topics drilled this week" on a week of one; and an accessible name built from '
+    + 'the other branch, so the eye and a screen reader got the same fact in two different '
+    + 'sentences) -- every one of them a defect a judge or a battery found on a shipped build');
   if (bad.length) return B.finish(1, 'HOME CLAIMS: FAIL (' + bad.length + ')');
   return B.finish(0, 'HOME CLAIMS: PASS  (' + out.length + ' assertions: '
     + Object.keys(SEEDS).length + ' pinned records + ' + GEN_N + ' generated from a fixed PRNG, '

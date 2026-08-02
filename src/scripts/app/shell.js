@@ -207,6 +207,23 @@ window.KeyGuard = (function () {
   };
 })();
 document.addEventListener('keydown', function (event) {
+  /* ---- THE BOOT WINDOW: NO ROUTE YET MEANS NO KEYMAP YET ----
+     This listener is registered at PARSE time. Router.init() does not run until DOMContentLoaded,
+     so between those two moments every binding below is live while documentElement.dataset.view is
+     still UNDEFINED -- which makes `onHome` read false on a load that is landing on the home, and
+     sends the topic keys at the BOOT topic. Measured on the shipped build: `w` leaked in 6 of 6
+     attempts (straight to the drill of a topic the user never chose) and `n` in 2 of 6; `q` leaked
+     too, at a rate nobody recorded; and `p` opened Session progress on the boot constant --
+     cycle 1's defect arriving through the door underneath its fix.
+     ONE GATE, NOT A PATCH PER KEY: before the first APPLIED route this map has no route to mean
+     anything against, so it is a no-op for EVERY key rather than for the three that were caught.
+     The bit comes from ViewManager -- the single authority that stamps data-view -- rather than
+     from a second reading of location.hash at parse time, which would be a second derivation of
+     route truth and could disagree with the first. It sits with the typing and dialog guards
+     because it is the same kind of thing: a condition under which this map does not act.
+     ViewManager is defined AFTER this file in load order, so the `window.ViewManager &&` term is
+     also literally what makes the gate closed during the earliest part of the window. */
+  if (!(window.ViewManager && window.ViewManager.routed && window.ViewManager.routed())) return;
   /* THE typing guard. Reads through shadow roots -- see KeyGuard above. */
   if (window.KeyGuard.isTyping(event)) return;
   /* THE MODIFIER GUARD (QW3). Every binding in this map is a PLAIN key; a chord is the

@@ -130,6 +130,15 @@
     try { if (typeof Progress !== 'undefined') { var a = Progress.all(), ws = weekStartMs(); for (var id in a) { if (a[id] && a[id].done > 0 && a[id].ts >= ws) done++; } } } catch (e) {}
     return { target: target, done: done, pct: target > 0 ? Math.min(100, Math.round(done / target * 100)) : 0, met: done >= target };
   }
+  /* THE NOUN AGREES WITH THE FIGURE IT IS COUNTING.
+     "1 topics drilled this week" was reachable through the UI alone -- drill one topic, then press
+     the stepper's `-` four times (it clamps at 1) and the line walks 1 of 5 -> ... -> 1 of 2 ->
+     met. Hard-coded plurals sat in three places: the met sentence here, the met accessible name,
+     and the unmet ratio's denominator (target clamps to 1..20, so "0 of 1 topics" is reachable
+     too -- and there the noun counts the TARGET, not `done`). One helper, so a fourth caller
+     cannot re-invent a fourth answer. */
+  function topicWord(nn) { return nn === 1 ? ' topic' : ' topics'; }
+
   /* THE ONE PLACE THE WEEK'S GOAL IS PUT INTO WORDS.
      "46 of 5 topics" is not a fraction -- a ratio whose numerator can pass its denominator is a
      claim the record does not support. Past the goal the phrasing stops being a ratio and says
@@ -142,10 +151,25 @@
     if (g.done >= g.target) {
       var over = g.done - g.target;
       return over > 0
-        ? n(g.done) + ' topics drilled, ' + g.target + '-topic goal met with ' + over + ' to spare'
-        : n(g.done) + ' topics drilled, goal met';
+        ? n(g.done) + topicWord(g.done) + ' drilled, ' + g.target + '-topic goal met with ' + over + ' to spare'
+        : n(g.done) + topicWord(g.done) + ' drilled, goal met';
     }
-    return n(g.done) + ' of ' + g.target + ' topics';
+    return n(g.done) + ' of ' + g.target + topicWord(g.target);
+  }
+
+  /* ONE SENTENCE, TWO CHANNELS. The visible line and the bar's accessible name state the SAME
+     fact, so they are composed from the same parts rather than from two different branches --
+     which is this home's own named failure mode, and it had landed here: cycle 3 rewrote the
+     visible met clause precisely because `goalPhrase(g, true) + ' drilled this week'` read badly
+     past the target, and left the bar's aria-label as the raw `goalPhrase(g) + ' this week'`. On a
+     12-topic week that meant the eye read "12 topics drilled this week . Goal met -- nice work."
+     while a screen reader read "12 topics drilled, 5-topic goal met with 7 to spare this week" --
+     the concatenated clause the cycle had just judged unacceptable. (The unmet branch diverged too,
+     more quietly: the line said "0 of 5 topics DRILLED this week", the name said "0 of 5 topics
+     this week".) `bold` is the only difference between the two channels now. */
+  function goalLine(g, bold) {
+    var n = bold ? function (v) { return '<b>' + v + '</b>'; } : function (v) { return String(v); };
+    return (g.met ? n(g.done) + topicWord(g.done) : goalPhrase(g, bold)) + ' drilled this week';
   }
 
   /* A LABEL LABELS ONCE, so this strip carries no kicker.
@@ -163,21 +187,26 @@
      &middot; Goal met -- nice work." A broken clause with "goal met" three times. That defect is
      byte-identical at master 2696291 -- W1.5 did not create it, it made this the app's ONE goal
      surface on every record class, which is what put it in front of every user. Past the target the
-     figure is the whole fact and `note` carries the state; goalPhrase() still owns the unmet ratio
-     and the accessible name, so the one place that puts this fact into words stays one place. */
+     figure is the whole fact and `note` carries the state; goalPhrase() still owns the unmet ratio,
+     goalLine() owns both channels of the sentence, and the one place that puts this fact into words
+     stays one place.
+
+     THE STEPPER IS A FINGER TARGET. Its two buttons paint a 20px chip and reserve a 44px box --
+     the app's own floor, and the reason the box is the BUTTON rather than a pseudo-element is that
+     two 44px hit areas 8px apart would OVERLAP, so a finger aimed at `-` could land on `+`. Cycles
+     2-3 hoisted this strip out of the engaged() gate, which put it on the first-run home of every
+     new user; at 20x20 (1280) and 20x44 (phone) it was under WCAG 2.5.8 AA in one axis and under
+     this app's 44px promise in both. Guarded by test/touch_floor.cjs. */
   function goalStrip() {
     var g = weeklyGoal(), left = g.target - g.done;
     var note = g.met ? 'Goal met &mdash; nice work.' : left + ' more to go';
-    var line = g.met
-      ? '<b>' + g.done + '</b> topics drilled this week'
-      : goalPhrase(g, true) + ' drilled this week';
     return '<div class="ix-goal"><div class="ix-goal-top">' +
-      '<span class="ix-goal-set"><button type="button" class="ix-goal-b" data-goal="dec" aria-label="Lower the weekly goal">&minus;</button>' +
+      '<span class="ix-goal-set"><button type="button" class="ix-goal-b" data-goal="dec" aria-label="Lower the weekly goal"><span class="ix-goal-g">&minus;</span></button>' +
       '<span class="ix-goal-t" aria-live="polite">' + g.target + '</span>' +
-      '<button type="button" class="ix-goal-b" data-goal="inc" aria-label="Raise the weekly goal">+</button></span></div>' +
+      '<button type="button" class="ix-goal-b" data-goal="inc" aria-label="Raise the weekly goal"><span class="ix-goal-g">+</span></button></span></div>' +
       '<div class="ix-goal-bar' + (g.met ? ' met' : '') + '" role="img" aria-label="' +
-      goalPhrase(g) + ' this week"><span style="width:' + g.pct + '%"></span></div>' +
-      '<div class="ix-home-v">' + line + ' &middot; ' + note + '</div></div>';
+      goalLine(g) + ', ' + note + '"><span style="width:' + g.pct + '%"></span></div>' +
+      '<div class="ix-home-v">' + goalLine(g, true) + ' &middot; ' + note + '</div></div>';
   }
 
   /* WHERE THE USER LEFT OFF. LastVisit (topic+view) first; the most recently graded topic as a
@@ -646,6 +675,10 @@
     weakCount: weakCount,
     weeklyGoal: weeklyGoal,
     goalPhrase: goalPhrase,
+    /* exported for the same reason goalPhrase is: it is the single source any future surface must
+       call instead of re-deriving the sentence -- and it is what test/home_claims.cjs's
+       goal sentence arm compares the rendered line and the bar's accessible name against */
+    goalLine: goalLine,
     downloadBackup: downloadBackup,
   };
 })();

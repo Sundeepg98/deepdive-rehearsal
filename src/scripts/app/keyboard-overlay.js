@@ -47,15 +47,22 @@ kbd.ks-mini{min-width:var(--space-18);height:var(--space-18);font-size:var(--fon
      N   `&& !onHome` (shell.js:280), pre-existing and the same shape.
      [ ] `if (key === '[' || key === ']') return;` on the home (shell.js:253) -- "previous / next
          topic" has no referent on a route with no current topic.
-   All three need a topic, so they live with the other keys that need one and the section head
+     Ctrl+P  the printable Q&A. Cycle 3 left this row under "Anywhere" and declared it out of
+         scope -- it is a CHORD, which shell.js's map deliberately does not own (see its MODIFIER
+         GUARD), so it is print-qa.js's own listener -- while recording that openPrint() reads
+         TopicRegistry.current(), the BOOT constant on a route with no topic. Cycle 4 fixed the
+         module (print-qa.js returns WITHOUT preventDefault on the home, so the user's own browser
+         print works there and no boot-topic sheet is built), which makes this row the same false
+         promise as the three above and moves it here with them.
+   All four need a topic, so they live with the other keys that need one and the section head
    says so. "Anywhere" now holds only keys that act on every route -- this repo's own rule that a
    surface may not print a claim it cannot derive, applied to its own keyboard help.
    GUARDED, both directions, by test/overlay_deadzone.cjs section 6: every row under "Anywhere"
    must have a declared claim in that check's table (a new row with no entry ABORTS it) and every
-   claim is DRIVEN on #home; the three rows moved here must be dead on the home AND live on a
-   topic route, so the qualifier is earned rather than used as an excuse.
-   OUT OF SCOPE, recorded rather than silently skipped: Ctrl+P is a CHORD, which shell.js's map
-   deliberately does not own (see its MODIFIER GUARD), and it is served by print-qa.js. */
+   claim is DRIVEN on #home; the four rows moved here must be dead on the home AND live on a
+   topic route, so the qualifier is earned rather than used as an excuse. Ctrl+P is driven like the
+   rest now rather than carrying an undriven 'chord' claim: the check stubs window.open, so the
+   sheet is read as a string instead of a popup this browser context has no business opening. */
 var KBD_HTML = `<div class="ks-sec">
         <div class="ks-h">Jump straight to any view</div>
         <div class="ks-grid">
@@ -80,6 +87,7 @@ var KBD_HTML = `<div class="ks-sec">
           <div class="ks-row2"><span class="ks-keys"><kbd>[</kbd><kbd>]</kbd></span><span>Previous &middot; next topic</span></div>
           <div class="ks-row2"><span class="ks-keys"><kbd>N</kbd></span><span>Go to your next step &mdash; the drill, whiteboard or mock the app points you at</span></div>
           <div class="ks-row2"><span class="ks-keys"><kbd>P</kbd></span><span>Session progress &mdash; where you&rsquo;re weak, what to drill next</span></div>
+          <div class="ks-row2"><span class="ks-keys"><kbd>Ctrl</kbd><kbd>P</kbd></span><span>Printable Q&amp;A of this topic&rsquo;s probes</span></div>
         </div>
       </div>
       <div class="ks-sec">
@@ -89,7 +97,6 @@ var KBD_HTML = `<div class="ks-sec">
           <div class="ks-row2"><span class="ks-keys"><kbd>\\</kbd></span><span>Open the Topic index</span></div>
           <div class="ks-row2"><span class="ks-keys"><kbd>H</kbd></span><span>Home &mdash; every topic, your bookmarks, where you left off</span></div>
           <div class="ks-row2"><span class="ks-keys"><kbd>F</kbd></span><span>Focus mode &mdash; hide the side panels</span></div>
-          <div class="ks-row2"><span class="ks-keys"><kbd>Ctrl</kbd><kbd>P</kbd></span><span>Printable Q&amp;A of this topic&rsquo;s probes</span></div>
           <div class="ks-row2"><span class="ks-keys"><kbd>G</kbd></span><span>Start the guided tour</span></div>
           <div class="ks-row2"><span class="ks-keys"><kbd>D</kbd></span><span>Cycle spacing density &mdash; compact &middot; cozy &middot; default</span></div>
           <div class="ks-row2"><span class="ks-keys"><kbd>Esc</kbd></span><span>Close any open panel</span></div>

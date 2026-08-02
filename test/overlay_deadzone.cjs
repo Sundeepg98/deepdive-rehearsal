@@ -65,7 +65,7 @@ const RECORDER = () => {
       id: t.id || '',
       cls: String(t.className || '').split(' ')[0],
       tab: t.getAttribute ? t.getAttribute('data-tab') : null,
-      inOverlay: !!(t.closest && t.closest('.ix-ov,.mock-ov,.cram-ov')) || t.id === '_bootsplash',
+      inOverlay: !!(t.closest && t.closest('.ix-ov,.mock-ov,.cram-ov,.nt-ov,.xd-ov')) || t.id === '_bootsplash',
     };
   }, true);
 };
@@ -327,7 +327,7 @@ async function realClick(page, sel) {
     await page.waitForTimeout(250);          /* the old gate opened the overlay at +30ms */
 
     const modal = await page.evaluate(() => {
-      const ov = document.querySelector('.ix-ov.open,.mock-ov.open,.cram-ov.open,.nt-ov.open');
+      const ov = document.querySelector('.ix-ov.open,.mock-ov.open,.cram-ov.open,.nt-ov.open,.xd-ov.open');
       return ov ? (ov.id || ov.className) : null;
     });
     chk('[arrival: ' + a.name + '] nothing modal is in front of first paint',

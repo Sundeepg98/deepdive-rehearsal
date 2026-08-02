@@ -70,8 +70,10 @@
  * a picture of nothing, and visual_pane_smoke already reads its drawing buffer directly).
  *
  * ===== WHAT THIS COVERS, AND WHAT IT DOES NOT (read this before trusting it) ================
- * COVERS   16 baselines: home + walk/drill/sys/num/wb panes, light+dark, desktop 1280x800; the
- *          accent rebind across ALL SIX rooms (walk, light); and mobile 390x844 (walk, light+dark).
+ * COVERS   18 baselines: home + walk/drill/sys/num/wb panes, light+dark, desktop 1280x800; the
+ *          accent rebind across ALL SIX rooms (walk, light); and mobile 390x844 (walk light+dark,
+ *          and the HOME light+dark -- a layout path that shares almost nothing with its desktop
+ *          twin).
  * DOES NOT the `viz` pane (WebGL, see above); the overlays (mock/cram/index) -- they are stateful
  *          and shuffled, and overlay_deadzone owns their input behaviour; hover/focus/active states;
  *          and every topic except the six named ones (46 topics x 10 panes is not a baseline set, it
@@ -185,6 +187,21 @@ const MATRIX = [
   /* mobile is a genuinely different layout path (off-canvas mockbar, fixed seg rail) */
   { key: 'm-walk-light', hash: '#' + T0 + '/walk', theme: 'light', vp: 'mobile' },
   { key: 'm-walk-dark', hash: '#' + T0 + '/walk', theme: 'dark', vp: 'mobile' },
+  /* THE PHONE HOME. Added W1.5 cycle 2, and its absence was a real hole: the two mobile baselines
+     above are BOTH the walkthrough pane, so the entire below-920 home -- a layout path with its
+     own fixed top bar, its own tab bar, a collapsed rail, an in-column library twin, a compacted
+     gauge and a practice block that exists at no other width -- had no pixel guard at all. A wave
+     rebuilt that surface (the practice move, the gauge compaction, the key) and every baseline in
+     this file stayed byte-identical, which is exactly what a blind spot looks like from inside.
+     BOTH THEMES, from W1.5 cycle 3. Cycle 2 added the light one only, which left the below-920
+     home the single captured surface in this file with a light baseline and no dark twin -- at
+     exactly the width the wave re-laid-out. The @media(max-width:919px) home block changes
+     padding, gaps, the rail track height, the verdict's leading AND its border-top, and a border
+     is painted from --bd, which is a THEME token: so the one declaration in that block most
+     likely to break on a palette change was the one nothing photographed. Every other pane in
+     this matrix that is captured at all is captured in both themes; the phone home now is too. */
+  { key: 'm-home-light', hash: '', theme: 'light', vp: 'mobile' },
+  { key: 'm-home-dark', hash: '', theme: 'dark', vp: 'mobile' },
 ];
 
 /* =============================== IN-PAGE: THE STILLNESS GATE ===============================

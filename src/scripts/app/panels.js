@@ -130,34 +130,158 @@
     try { if (typeof Progress !== 'undefined') { var a = Progress.all(), ws = weekStartMs(); for (var id in a) { if (a[id] && a[id].done > 0 && a[id].ts >= ws) done++; } } } catch (e) {}
     return { target: target, done: done, pct: target > 0 ? Math.min(100, Math.round(done / target * 100)) : 0, met: done >= target };
   }
+  /* THE NOUN AGREES WITH THE FIGURE IT IS COUNTING.
+     "1 topics drilled this week" was reachable through the UI alone -- drill one topic, then press
+     the stepper's `-` four times (it clamps at 1) and the line walks 1 of 5 -> ... -> 1 of 2 ->
+     met. Hard-coded plurals sat in three places: the met sentence here, the met accessible name,
+     and the unmet ratio's denominator (target clamps to 1..20, so "0 of 1 topics" is reachable
+     too -- and there the noun counts the TARGET, not `done`). One helper, so a fourth caller
+     cannot re-invent a fourth answer. */
+  function topicWord(nn) { return nn === 1 ? ' topic' : ' topics'; }
+
   /* THE ONE PLACE THE WEEK'S GOAL IS PUT INTO WORDS.
      "46 of 5 topics" is not a fraction -- a ratio whose numerator can pass its denominator is a
      claim the record does not support. Past the goal the phrasing stops being a ratio and says
      what it knows: met, and by how much. This lives here, beside the data, because two surfaces
      render this fact (the home rail and the telemetry strip) and round 4 fixed only one of them.
      `bold` renders the figure for a surface that wants emphasis; the plain form is what an
-     accessible name should say. */
+     accessible name should say.
+
+     !! THE MET BRANCH BELOW IS UNREACHABLE FROM THE APP, AND IT IS NOT DEAD CODE. `goalLine()` is
+     the only caller and it calls this on the UNMET branch alone, so `if (g.done >= g.target)` can
+     no longer render on any record -- a cold verify drove 20 combinations of target x done and
+     never produced it. It stays because it is the SURFACE two of this wave's thirteen planted
+     mutants are composed from: `home_claims.cjs` builds MUTANT 11 (the pre-cycle-3 concatenation)
+     and MUTANT 13 (the bar re-acquiring a name) by calling this branch through the live Panels
+     API rather than by pasting a literal, so the mutants cannot drift away from the defect they
+     name. Deleting it as dead code makes both plants report CANNOT LAND and ABORTS `home_claims`
+     -- i.e. tidying it away would delete the regression proof for the fix it is tidying after.
+     If it must go, the mutants have to be re-based on literals in the same commit. */
   function goalPhrase(g, bold) {
     var n = bold ? function (v) { return '<b>' + v + '</b>'; } : function (v) { return String(v); };
     if (g.done >= g.target) {
       var over = g.done - g.target;
       return over > 0
-        ? n(g.done) + ' topics drilled, ' + g.target + '-topic goal met with ' + over + ' to spare'
-        : n(g.done) + ' topics drilled, goal met';
+        ? n(g.done) + topicWord(g.done) + ' drilled, ' + g.target + '-topic goal met with ' + over + ' to spare'
+        : n(g.done) + topicWord(g.done) + ' drilled, goal met';
     }
-    return n(g.done) + ' of ' + g.target + ' topics';
+    return n(g.done) + ' of ' + g.target + topicWord(g.target);
   }
 
+  /* ONE SENTENCE, ONE CHANNEL -- and the second channel is gone rather than synchronised.
+     THE HISTORY, because the ending only makes sense with it. Cycle 3 rewrote the visible met
+     clause (`goalPhrase(g, true) + ' drilled this week'` read badly past the target) and left the
+     bar's aria-label as the raw `goalPhrase(g) + ' this week'`, so on a 12-topic week the eye read
+     "12 topics drilled this week . Goal met -- nice work." while a screen reader read "12 topics
+     drilled, 5-topic goal met with 7 to spare this week" -- the clause the cycle had just judged
+     unacceptable. The unmet branch diverged too, more quietly. Cycle 4 fixed the DIVERGENCE by
+     composing both channels here, and that is when the real defect became audible: the bar's name
+     and the line beneath it were then identical CHARACTER FOR CHARACTER, adjacent in the tree, so
+     a screen reader announced the same sentence twice in a row. Measured on the cold home:
+
+       image  "0 of 5 topics drilled this week, 5 more to go"     <- .ix-goal-bar, role=img
+       text   "0 of 5 topics drilled this week . 5 more to go"    <- .ix-home-v, right beneath it
+
+     Two renderings that AGREE are still two renderings. The bar is a picture OF the sentence under
+     it -- it adds no fact, and a decorative graphic with a name is a graphic that gets read. It is
+     `aria-hidden="true"` now, with no role and no name, and goalLine() composes the one channel
+     that is left. `bold` stays a parameter: it is what separates the emphasised figure the eye
+     gets from the plain string test/home_claims.cjs composes its mutants against. */
+  function goalLine(g, bold) {
+    var n = bold ? function (v) { return '<b>' + v + '</b>'; } : function (v) { return String(v); };
+    return (g.met ? n(g.done) + topicWord(g.done) : goalPhrase(g, bold)) + ' drilled this week';
+  }
+
+  /* A LABEL LABELS ONCE, so this strip carries no kicker.
+     telemetryHtml() is goalStrip()'s only consumer and it renders inside the panel whose head
+     already reads "This week" -- so a "This week's goal" line directly under that head named the
+     same period twice in EVERY render path, cold and engaged. The head names the period; the line
+     under the bar states the fact ("0 of 5 topics drilled this week"). The stepper keeps its place
+     at the right edge of its row (.ix-goal-top is justify-content:flex-end now that it holds one
+     child) and keeps its own accessible names -- "Lower/Raise the weekly goal" is where the words
+     "weekly goal" are still said, for the reader who needs them said.
+
+     AND THE MET SENTENCE IS COMPOSED, NOT CONCATENATED. goalPhrase()'s met branch already ENDS in
+     "...goal met", so appending " drilled this week &middot; Goal met" to it rendered, verbatim, on
+     a 41-topic week: "41 topics drilled, 5-topic goal met with 36 to spare drilled this week
+     &middot; Goal met -- nice work." A broken clause with "goal met" three times. That defect is
+     byte-identical at master 2696291 -- W1.5 did not create it, it made this the app's ONE goal
+     surface on every record class, which is what put it in front of every user. Past the target the
+     figure is the whole fact and `note` carries the state; goalPhrase() still owns the unmet ratio,
+     goalLine() owns the sentence, and the one place that puts this fact into words stays one place.
+
+     THE BAR IS DECORATION AND SAYS SO. It carried role="img" plus an aria-label that -- once cycle
+     4 made both channels agree -- repeated the line beneath it word for word, so the fact was
+     announced twice in a row. `aria-hidden="true"`, no role, no name. Nothing is lost: the visible
+     line directly under it carries the whole fact, in the accessibility tree as text, and the two
+     stepper buttons keep their own names ("Lower/Raise the weekly goal") and the target keeps its
+     aria-live. Guarded by test/home_claims.cjs's judgeGoalSentence rule 1, which now asserts the
+     bar carries NO independent accessible name rather than one that matches.
+
+     THE STEPPER IS A FINGER TARGET. Its two buttons paint a 20px chip (.ix-goal-g) and RESERVE a
+     44px box -- the app's own floor. The box is the button rather than a pseudo-element because a
+     pseudo hit area moves no border box: the rect arm in test/touch_floor.cjs could not see it, and
+     the app's own focus ring would draw at 20px around a 44px target. Cycles 2-3 hoisted this strip
+     out of the engaged() gate, which put it on the first-run home of every new user; at 20x20
+     (1280) and 20x44 (phone) it was under WCAG 2.5.8 AA in one axis and under this app's 44px
+     promise in both. See styles.css for the full note. */
+  /* THE SENTENCE UNDER THE BAR, IN ONE PLACE, so the first render and every press cannot drift.
+     goalStrip() builds it and syncGoalStrip() rewrites it; if this were composed twice, a press
+     would be a second renderer of the fact the whole wave spent four cycles collapsing to one.
+     EVERY PART OF THIS STRING IS A NUMBER OR A LITERAL -- `g.done` and `g.target` are integers
+     (`weeklyGoal()` COUNTS records, it never renders a key; `goalTarget()` clamps to 1..20), and
+     the rest is fixed prose plus `topicWord()`. No stored string reaches it, which is why it is
+     assembled as markup rather than escaped: the `<b>` around the figure is the point. The cold
+     verify drove the import door with `nav.last.id = "<img src=x onerror=alert(1)>"` and measured
+     0 script and 0 img nodes injected into #home. If a stored STRING is ever added to this
+     sentence, it must be escaped at that call site or this must stop being innerHTML. */
+  function goalBodyHtml(g) {
+    return goalLine(g, true) + ' &middot; '
+      + (g.met ? 'Goal met &mdash; nice work.' : (g.target - g.done) + ' more to go');
+  }
+  /* aria-disabled, NOT disabled -- text-zoom.js's setLimit(), one control over, same reason. */
+  function setGoalLimit(btn, atLimit) {
+    if (!btn) return;
+    btn.disabled = false;
+    if (atLimit) btn.setAttribute('aria-disabled', 'true');
+    else btn.removeAttribute('aria-disabled');
+  }
   function goalStrip() {
-    var g = weeklyGoal(), left = g.target - g.done;
-    var note = g.met ? 'Goal met &mdash; nice work.' : left + ' more to go';
-    return '<div class="ix-goal"><div class="ix-goal-top"><span class="ix-home-k">This week&rsquo;s goal</span>' +
-      '<span class="ix-goal-set"><button type="button" class="ix-goal-b" data-goal="dec" aria-label="Lower the weekly goal">&minus;</button>' +
+    var g = weeklyGoal();
+    /* the bounds are stamped on the FIRST render too, not only after a press: a stored goal of 1
+       or 20 arrives at the bound already, and a control that only becomes honest once you press
+       it is dishonest for exactly the reader who cannot see it is stuck. */
+    var dLim = g.target <= 1 ? ' aria-disabled="true"' : '';
+    var iLim = g.target >= 20 ? ' aria-disabled="true"' : '';
+    return '<div class="ix-goal"><div class="ix-goal-top">' +
+      '<span class="ix-goal-set"><button type="button" class="ix-goal-b" data-goal="dec" aria-label="Lower the weekly goal"' + dLim + '><span class="ix-goal-g">&minus;</span></button>' +
       '<span class="ix-goal-t" aria-live="polite">' + g.target + '</span>' +
-      '<button type="button" class="ix-goal-b" data-goal="inc" aria-label="Raise the weekly goal">+</button></span></div>' +
-      '<div class="ix-goal-bar' + (g.met ? ' met' : '') + '" role="img" aria-label="' +
-      goalPhrase(g) + ' this week"><span style="width:' + g.pct + '%"></span></div>' +
-      '<div class="ix-home-v">' + goalPhrase(g, true) + ' drilled this week &middot; ' + note + '</div></div>';
+      '<button type="button" class="ix-goal-b" data-goal="inc" aria-label="Raise the weekly goal"' + iLim + '><span class="ix-goal-g">+</span></button></span></div>' +
+      '<div class="ix-goal-bar' + (g.met ? ' met' : '') + '" aria-hidden="true">' +
+      '<span style="width:' + g.pct + '%"></span></div>' +
+      '<div class="ix-home-v">' + goalBodyHtml(g) + '</div></div>';
+  }
+  /* THE PRESS PATH. Every write here lands on a node that already exists, so the aria-live region
+     on .ix-goal-t is UPDATED rather than replaced -- which is the whole point (see the [data-goal]
+     branch for the measurement). Returns false when there is no strip on the page, so a caller
+     cannot mistake "nothing to update" for "updated". */
+  function syncGoalStrip(scope) {
+    var el = (scope || document).querySelector('.ix-goal');
+    if (!el) return false;
+    var g = weeklyGoal();
+    var t = el.querySelector('.ix-goal-t');
+    if (t) t.textContent = g.target;                       /* the live region, mutated in place */
+    var bar = el.querySelector('.ix-goal-bar');
+    if (bar) {
+      bar.classList.toggle('met', !!g.met);
+      var fill = bar.querySelector('span');
+      if (fill) fill.style.width = g.pct + '%';
+    }
+    var v = el.querySelector('.ix-home-v');
+    if (v) v.innerHTML = goalBodyHtml(g);
+    setGoalLimit(el.querySelector('[data-goal="dec"]'), g.target <= 1);
+    setGoalLimit(el.querySelector('[data-goal="inc"]'), g.target >= 20);
+    return true;
   }
 
   /* WHERE THE USER LEFT OFF. LastVisit (topic+view) first; the most recently graded topic as a
@@ -259,15 +383,31 @@
     if (typeof TopicRegistry === 'undefined' || !TopicRegistry.ids().length) return '';
     return '<button class="ix-cross" type="button" data-cross="1"><span class="ix-cross-tx"><span class="ix-cross-k">Cross-topic drill</span><span class="ix-cross-d">Random probes from every topic &mdash; the interview shuffle</span></span><span class="ix-cross-ar" aria-hidden="true">&rarr;</span></button>';
   }
-  function actionsHtml() { return crossDrillBar() + weakDrillBar(); }
+  /* THE RULED ORDER IS WEAK-SPOT FIRST. Both acts are cross-topic, but only one of them is
+     ADDRESSED TO THIS RECORD: "the 16 topics you have been shaky on" is a triage the record
+     derived, and "random probes from every topic" is the same offer for everybody. The specific
+     act goes above the generic one wherever the pair renders -- here (the phone's practice
+     section and the switcher's lead) and in the home rail, which repeated the inversion. */
+  function actionsHtml() { return weakDrillBar() + crossDrillBar(); }
 
   /* THE TELEMETRY, as its own surface. On the old entry screen goal + streak + trend + refresh sat
      ABOVE the single choice on offer -- roughly 40-45% of the surface, all of it a report on the
      past. The home renders this BELOW the decision. The old "By area" bars (groupBars) are GONE,
      not moved: roomsHtml() supersedes them outright -- it shows all six rooms, not just the ones
-     you happen to have touched, with honest coverage, a weak count and a started count. */
+     you happen to have touched, with honest coverage, a weak count and a started count.
+
+     THE WEEKLY GOAL IS NOT TELEMETRY, AND THAT IS WHY IT SITS OUTSIDE THE GATE.
+     Everything else here is a REPORT ON THE PAST -- a trend across logged sessions, topics drilled
+     clean a while ago -- and a cold record has no past, so `engaged()` is the right gate for those
+     two. The goal is the opposite kind of fact: a TARGET the user owns and nudges (`goal.weekly`,
+     default 5), and a cold record has one exactly as a mature one does. Deleting the rail's second
+     goal renderer (round 5, W1.5 item 3) left the engaged home with one and the COLD home with
+     ZERO, under a commit that claimed "now every viewport has one" -- true of one record class and
+     false of the other, and the two home VR baselines are captured COLD, so the pixels recorded
+     the removal as intended. Hoisted here rather than amended in prose: the invariant is now true
+     for EVERY record class, asserted per class by test/home_claims.cjs. */
   function telemetryHtml() {
-    if (!engaged()) return '';
+    if (!engaged()) return goalStrip();
     return goalStrip() + trendSparkHome() + dueReview();
   }
 
@@ -528,15 +668,38 @@
         return;
       }
 
+      /* THE STRIP IS MUTATED IN PLACE, NOT SWAPPED -- because the live region has to survive.
+         This branch used to rebuild the whole strip and `replaceWith` it, which DESTROYED and
+         recreated the `aria-live="polite"` node on `.ix-goal-t` on every press. A live region
+         must already be in the accessibility tree BEFORE its content changes, or the change is
+         not an update to a known region -- it is a new subtree appearing, and NVDA/JAWS commonly
+         miss it. That is `view-manager.js`'s own rule, verbatim, and this control broke it.
+
+         It matters more here than it looks, because this is the ONLY channel left. Cycle 4
+         stripped the bar's role="img" + aria-label (it duplicated the line beneath it) and named
+         this aria-live as the compensation -- so the compensation was a region that could never
+         fire. Measured before, one real press of `+` on the cold home:
+             liveRegionMutations 0 | sameNode false | stillAttached false | parentChildList 1
+         and after, the same probe: mutations > 0, sameNode true. The visible line and the bar
+         follow the same mutation, so the eye and the reader are still one sentence.
+
+         AND THE CLAMP SPEAKS. `goalTarget()` clamps to 1..20, so three of seven presses on `-`
+         did nothing and nothing said so (`aria-disabled` was null at every step, both widths).
+         This app has a ruled pattern for exactly this control shape in `text-zoom.js` (audit
+         P3-7): aria-disabled, NOT disabled -- `disabled` removes the button from the tab sequence,
+         so at the bound the control silently vanishes from under a keyboard user's fingers.
+         aria-disabled keeps it focusable and announced as unavailable, which is the honest state.
+         The press is already a no-op at the bound via Math.min/Math.max, so nothing guards it.
+
+         No re-focus is needed now: the button is never destroyed, so focus never left it -- which
+         also removes the focus-restore round trip the swap required. */
       var goalBtn = e.target.closest ? e.target.closest('[data-goal]') : null;
       if (goalBtn) {
         var gdir = goalBtn.getAttribute('data-goal');
         var gcur = goalTarget();
         gcur = gdir === 'inc' ? Math.min(20, gcur + 1) : Math.max(1, gcur - 1);
         try { if (typeof Store !== 'undefined') Store.set('goal.weekly', gcur); } catch (e3) {}
-        var gEl = root.querySelector('.ix-goal');
-        if (gEl) { var _gt = document.createElement('div'); _gt.innerHTML = goalStrip(); if (_gt.firstChild) gEl.replaceWith(_gt.firstChild); }
-        var _nb = root.querySelector('[data-goal="' + gdir + '"]'); if (_nb) _nb.focus();
+        syncGoalStrip(root);
         return;
       }
 
@@ -610,6 +773,10 @@
     weakCount: weakCount,
     weeklyGoal: weeklyGoal,
     goalPhrase: goalPhrase,
+    /* exported for the same reason goalPhrase is: it is the single source any future surface must
+       call instead of re-deriving the sentence -- and it is what test/home_claims.cjs's
+       goal sentence arm compares the rendered line and the bar's accessible name against */
+    goalLine: goalLine,
     downloadBackup: downloadBackup,
   };
 })();

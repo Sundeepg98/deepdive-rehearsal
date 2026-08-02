@@ -169,9 +169,17 @@ REGISTRY = {
     ('.hm-duo', 'margin-bottom'): '--gap-home-duo',
     ('.hm-rooms', 'margin-bottom'): '--gap-home-rooms',
     ('.hm-sec', 'margin-bottom'): '--gap-home-section',
-    ('.hm-tele', 'margin-bottom'): '--gap-home-telemetry',
     ('.hm-skip', 'margin-bottom'): '--gap-home-skip',
 }
+# GONE (W1.5 cycle 3)  ('.hm-tele', 'margin-bottom'): '--gap-home-telemetry'
+#   .hm-tele stopped being a standalone stack member when it became a PANEL inside .hm-duo's grid
+#   row. A bottom margin on a grid item is not stack rhythm -- it is subtracted from the cell, so
+#   the two panels in that row ended 26px apart (measured at 1280 on a 12-weak-topic record:
+#   Still-shaky bottom 1078, This-week 1052), and where the tele was the row's only child the row
+#   rendered 26px taller than its content. Intra-row spacing is .hm-duo's `gap`; row-to-next-block
+#   is --gap-home-duo. The declaration, this entry and the --gap-home-telemetry token all go in the
+#   same commit, which is what the STALE message below asks for. .hm-tele stays IN SCOPE via its
+#   measure -- discovery still judges max-width:var(--measure-home) on it.
 
 
 def strip_comments(text):

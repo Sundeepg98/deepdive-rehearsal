@@ -191,6 +191,174 @@ async function pinViewport(page, w, h) {
   ok('the home "Skip the home" label clears WCAG 2.5.8 AA (it was an 18px text line inside a 44px row)',
     !skip.missing && skip.h >= AA_FLOOR, JSON.stringify(skip));
 
+  /* ---- 6. THE WEEKLY-GOAL STEPPER -- 20x20, ON THE FIRST-RUN HOME OF EVERY NEW USER ----
+     The same class as the cram close button above: `.ix-goal-b` set width AND height explicitly to
+     var(--space-20), so the <=919px `button{min-height:44px}` floor reached the height and the
+     explicit width walked straight through it -- 20x20 at 1280, 20x44 here. Under WCAG 2.5.8 AA in
+     one axis and under this app's own 44px promise in both.
+     WHY IT IS THIS WAVE'S TO FIX EVEN THOUGH THE GEOMETRY IS BYTE-IDENTICAL TO master 2696291: the
+     REACH changed. W1.5 cycles 2-3 hoisted goalStrip() out of telemetryHtml()'s engaged() gate and
+     deleted duoHtml()'s own engaged() early return, so the strip now renders for EVERY record class
+     at every viewport -- including the COLD home, where it did not exist at all before. This arm is
+     therefore driven on a COLD record: no seed, nothing in localStorage, which is the first screen
+     of a brand-new user.
+     THREE THINGS, because a box that clears the floor is not yet a usable pair of targets:
+       (a) both buttons clear 44 in BOTH axes;
+       (b) the two boxes do not OVERLAP. They are 44px wide with the 16px figure between them, so
+           they clear each other by that figure's width -- but the whole point of RESERVING the box
+           is that its neighbours are pushed apart rather than painted over, and this is what would
+           notice a future edit that shrinks the gap or absolutely-positions one of them;
+       (c) the floor survives a DENSITY change. The fix spells 44 in raw px rather than
+           var(--space-44) precisely because the space scale is re-valued per density -- the token
+           is 36px under html[data-density=compact] -- and `d` is an advertised shortcut, so
+           "compact" is one keypress from every reader. A token here would have shipped an 8px
+           regression that only a reader who changed density could feel. */
+  const goalBox = async () => page.evaluate(() => {
+    const bs = [...document.querySelectorAll('#home [data-goal]')];
+    const boxes = bs.map((b) => {
+      const r = b.getBoundingClientRect();
+      return { d: b.getAttribute('data-goal'), w: +r.width.toFixed(1), h: +r.height.toFixed(1),
+        l: +r.left.toFixed(1), rt: +r.right.toFixed(1) };
+    });
+    let overlap = 0;
+    for (let i = 1; i < boxes.length; i++) {
+      if (boxes[i].l < boxes[i - 1].rt) overlap = +(boxes[i - 1].rt - boxes[i].l).toFixed(1);
+    }
+    return { count: boxes.length, boxes, overlap,
+      min: boxes.length ? Math.min(...boxes.map((b) => Math.min(b.w, b.h))) : null,
+      density: document.documentElement.dataset.density || 'default' };
+  });
+  await page.waitForFunction(() => !!document.querySelector('#home [data-goal]'), null, { timeout: B.ACT_MS }).catch(() => {});
+  await B.settle(page);
+  const goal = await goalBox();
+  ok('the weekly-goal stepper clears the app\'s own 44px floor in BOTH axes on a COLD home (it was 20x44 here and 20x20 at 1280 -- the height-only floor could not see the width)',
+    goal.count === 2 && goal.min >= APP_FLOOR, JSON.stringify(goal));
+  ok('the two stepper targets do not overlap -- reserving the box is what keeps its neighbours pushed apart rather than painted over',
+    goal.count === 2 && goal.overlap === 0, JSON.stringify(goal));
+  await page.evaluate(() => { if (window.Density && window.Density.cycle) window.Density.cycle(); });
+  await B.settle(page);
+  const goalC = await goalBox();
+  ok('...and it still clears 44px at COMPACT density, where var(--space-44) resolves to 36 (the floor is a finger, not a spacing token)',
+    goalC.density === 'compact' && goalC.count === 2 && goalC.min >= APP_FLOOR, JSON.stringify(goalC));
+
+  /* THE PLANT for this arm: put the 20px box back and require the measurement to notice. */
+  const goalPlant = await page.evaluate(() => {
+    const bs = [...document.querySelectorAll('#home [data-goal]')];
+    if (bs.length !== 2) return { ran: false };
+    const prev = bs.map((b) => ({ w: b.style.width, h: b.style.height }));
+    bs.forEach((b) => { b.style.width = '20px'; b.style.height = '20px'; });
+    const min = Math.min(...bs.map((b) => {
+      const r = b.getBoundingClientRect(); return Math.min(r.width, r.height);
+    }));
+    bs.forEach((b, i) => { b.style.width = prev[i].w; b.style.height = prev[i].h; });
+    return { ran: true, minUnderPlant: +min.toFixed(1) };
+  });
+  if (!(goalPlant.ran && goalPlant.minUnderPlant < APP_FLOOR)) {
+    console.log('  ABORT restoring the stepper to its 20px box did NOT drop the measured minimum below 44 -- the goal arm is not reading these controls.');
+    console.log('     -> ' + JSON.stringify(goalPlant));
+    await browser.close();
+    return B.finish(1, 'TOUCH FLOOR: ABORTED (self-test failed: the goal-stepper arm cannot fail)');
+  }
+  ok('[plant] restoring the stepper\'s 20px box is detected by the 44px arm', true, '');
+
+  /* PUT THE DENSITY BACK, AND ASSERT IT. Everything below this line measures at the default scale;
+     an arm that silently ran at compact would be measuring a different app than its message says.
+     compact -> cozy -> default is two more cycles. */
+  const restored = await page.evaluate(() => {
+    if (window.Density && window.Density.cycle) { window.Density.cycle(); window.Density.cycle(); }
+    return document.documentElement.dataset.density || 'default';
+  });
+  await B.settle(page);
+  ok('the density is back to default before the remaining arms measure (they are not compact-scale assertions)',
+    restored === 'default', 'density is ' + restored);
+
+  /* ---- 6b. THE SAME CONTROL AT 1280x800 -- the width the arm above cannot see ----
+     Everything in this file runs in ONE 390x844 mobile context, which is right for a touch floor
+     and wrong for this control specifically: `.ix-goal-b` was 20x44 at 390 and 20x20 at 1280, so
+     the DESKTOP was the worse of the two and the arm above measures the better one. It passes at
+     390 for a reason it does not own -- the `<=919px` `button{min-height:44px}` floor supplies the
+     height there. Above 919 nothing does, and the fix's explicit `width:44px;height:44px` is the
+     only thing holding the box up. A future `@media(min-width:920px)` rule could shrink it back to
+     the shipped-before geometry and every arm in this file would stay green.
+     So it is measured at BOTH widths, in a desktop context (not a viewport switch: the mobile
+     context above carries isMobile/hasTouch/deviceScaleFactor 2, and re-sizing it would measure a
+     1280px phone rather than a desktop).
+     THE PLANT IS A MEDIA QUERY, and that is the point -- it is the exact shape of the regression
+     this arm exists for. `@media(min-width:920px){.ix-goal-b{width:20px;height:20px}}` is injected
+     into BOTH pages: the desktop measurement must go RED and the phone measurement must stay
+     GREEN, which is a stronger self-test than a plain shrink because it proves this arm caught
+     something the 390 arm structurally could not. */
+  const GOAL_BOX = () => {
+    const bs = [...document.querySelectorAll('#home [data-goal]')];
+    const boxes = bs.map((b) => {
+      const r = b.getBoundingClientRect();
+      return { d: b.getAttribute('data-goal'), w: +r.width.toFixed(1), h: +r.height.toFixed(1),
+        l: +r.left.toFixed(1), rt: +r.right.toFixed(1) };
+    });
+    let overlap = 0;
+    for (let i = 1; i < boxes.length; i++) {
+      if (boxes[i].l < boxes[i - 1].rt) overlap = +(boxes[i - 1].rt - boxes[i].l).toFixed(1);
+    }
+    return { count: boxes.length, boxes, overlap, vw: window.innerWidth,
+      min: boxes.length ? Math.min(...boxes.map((b) => Math.min(b.w, b.h))) : null,
+      density: document.documentElement.dataset.density || 'default' };
+  };
+  const NARROW_PLANT = '@media(min-width:920px){.ix-goal-b{width:20px;height:20px}}';
+  const plantCss = (css) => {
+    const s = document.createElement('style');
+    s.id = '__goal_mq_plant';
+    s.textContent = css;
+    document.head.appendChild(s);
+  };
+  const unplantCss = () => { const s = document.getElementById('__goal_mq_plant'); if (s) s.remove(); };
+
+  const dctx = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+  const dpage = await dctx.newPage();
+  const derrs = [];
+  dpage.on('pageerror', (e) => derrs.push('pageerror: ' + e.message));
+  dpage.on('console', (m) => { if (m.type() === 'error') derrs.push('console: ' + m.text()); });
+  await B.gotoApp(dpage, HTML, { hash: '#home' });
+  await dpage.waitForFunction(() => document.querySelectorAll('#home [data-goal]').length === 2,
+    null, { timeout: B.ACT_MS }).catch(() => {});
+  await B.settle(dpage);
+  const goalD = await dpage.evaluate(GOAL_BOX);
+  ok('the weekly-goal stepper clears the app\'s own 44px floor at 1280x800 too -- above 919 the element floor does not apply, so the explicit 44px box is the only thing holding it up (it was 20x20 here)',
+    goalD.vw === 1280 && goalD.count === 2 && goalD.min >= APP_FLOOR, JSON.stringify(goalD));
+  ok('the two stepper targets do not overlap at 1280x800 either',
+    goalD.count === 2 && goalD.overlap === 0, JSON.stringify(goalD));
+
+  /* the media-query plant, driven at BOTH widths from one declaration */
+  await dpage.evaluate(plantCss, NARROW_PLANT);
+  await B.settle(dpage);
+  const mqDesk = await dpage.evaluate(GOAL_BOX);
+  await dpage.evaluate(unplantCss);
+  await B.settle(dpage);
+  const mqRestoredDesk = await dpage.evaluate(GOAL_BOX);
+
+  await page.evaluate(plantCss, NARROW_PLANT);
+  await B.settle(page);
+  const mqPhone = await page.evaluate(GOAL_BOX);
+  await page.evaluate(unplantCss);
+  await B.settle(page);
+
+  if (!(mqDesk.count === 2 && mqDesk.min < APP_FLOOR)) {
+    console.log('  ABORT a min-width:920px rule shrinking .ix-goal-b to 20px did NOT drop the measured minimum below 44 at 1280 -- the desktop arm is not reading these controls.');
+    console.log('     -> ' + JSON.stringify(mqDesk));
+    await browser.close();
+    return B.finish(1, 'TOUCH FLOOR: ABORTED (self-test failed: the 1280 goal-stepper arm cannot fail)');
+  }
+  if (!(mqPhone.count === 2 && mqPhone.min >= APP_FLOOR)) {
+    console.log('  ABORT the min-width:920px plant also changed the 390 measurement -- it is not the width-scoped mutant this arm claims, so a red at 1280 would not be attributable to the desktop.');
+    console.log('     -> ' + JSON.stringify(mqPhone));
+    await browser.close();
+    return B.finish(1, 'TOUCH FLOOR: ABORTED (self-test failed: the goal-stepper plant is not width-scoped)');
+  }
+  ok('[plant] a @media(min-width:920px) rule shrinking the stepper to 20px goes RED at 1280 (min ' + mqDesk.min + ') and stays GREEN at 390 (min ' + mqPhone.min + ') -- the desktop arm catches what the phone arm structurally cannot', true, '');
+  ok('the desktop plant was lifted before the context closed', mqRestoredDesk.min >= APP_FLOOR, JSON.stringify(mqRestoredDesk));
+  ok('zero console/page errors on the desktop home', derrs.length === 0, derrs.slice(0, 4).join(' | '));
+  await dctx.close();
+
+
   /* ---- THE AA PLANT ----
      The 44px arm has carried a plant since it was written; the 24px arm did not, and this header
      disclosed the gap. Both AA targets are additionally proven red on the base build, so the arm

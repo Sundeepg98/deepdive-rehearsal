@@ -544,8 +544,88 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
   .sr-foot{font-size:var(--font-size-micro);color:var(--mut);margin-top:var(--space-18);font-style:italic}
   @media print {@page{margin:1.5cm}
     body{background:#fff !important}
-    .app, .mock-ov, .rail, .badge, .rail .fill::after{display:none !important}
+    /* `.ix-ov` JOINED THIS LIST, and the asymmetry that left it off was incidental rather than
+       reasoned. `#keyov` carries `mock-ov`, so the shortcuts overlay was already covered here;
+       the Topic index is `.ix-ov` (`#_index-overlay`), a <body> child at `position:fixed;inset:0`,
+       and it was in no hide list at all. `\` opens it on EVERY route. Measured on A4:
+         #home       nothing open 143,818 B / 1,305 extracted chars
+                     index open   550,261 B / 2,760 chars   <- the overlay AND the record
+         #saga/walk  nothing open 872,952 B / 14,255 chars
+                     index open 1,806,013 B / 16,350 chars  <- the overlay AND the cram sheet
+       So it prints OVER the artifact on both routes, which is why it belongs on the unconditional
+       line beside `.mock-ov` rather than in the home block beside `.cram-ov:not(.open)`. The cram
+       rule is home-scoped because a closed cram sheet IS the topic route's printable artifact;
+       an open index is nobody's artifact anywhere. */
+    .app, .mock-ov, .ix-ov, .rail, .badge, .rail .fill::after{display:none !important}
     body:not(.print-session) .cram-ov{display:block !important;position:static !important;background:#fff !important;padding:0 !important;backdrop-filter:none !important;-webkit-backdrop-filter:none !important;overflow:visible !important}
+    /* ============ THE HOME PRINTS ITSELF ============
+       Two rules, one defect, and the defect is this wave's own. W1.5 cycle 4 (R5) stopped
+       print-qa.js from taking Ctrl+P on the home -- correctly: openPrint() read the BOOT topic, so
+       the home built a printable Q&A for a topic the user never chose. But handing the route back
+       to the browser's own print was only half an answer, because nobody asked what the browser
+       prints THERE. Measured at 1280x900, A4, on the shipped build:
+
+         home, fresh                        3 pages / 391,415 bytes -- the BOOT topic's cram sheet
+         home, after visiting saga's sheet  6 pages / 872,924 bytes -- SAGA's cram sheet
+
+       Nothing of the home on either. `.app` is display:none one line above (right for a topic
+       route: its panes are shadow DOM and print blank, which is the whole reason the cram
+       substitution exists), and the force-show above has no `.open` requirement, so a CLOSED
+       dialog printed -- carrying whichever topic the user last looked at.
+
+       (1) A CLOSED SHEET DOES NOT PRINT ON THE HOME. Scoped to the home rather than written as
+       `.cram-ov.open`, which is the same sentence one scope too wide: on a TOPIC route the
+       never-opened sheet IS the printable artifact, and print_truth.cjs ARM F ("a never-opened
+       sheet still renders to paper") owns that as a P1. Measured with the wider form built:
+       #walk went 3 pages / 391,447 bytes -> 1 page / 1,048 bytes and print_truth reported exactly
+       that one arm red (`sections=0`). `:not(.open)` rather than a flat hide because an OPEN sheet
+       on the home is a REACHABLE state, not a hypothetical: leaving a topic with the sheet up --
+       by hash and by the Home button, both driven -- lands on #home with `.cram-ov.open` still
+       true and on screen. Print follows the screen.
+
+       (2) THE HOME IS NOT HIDDEN FROM ITS OWN PRINT. `#home` is ordinary light DOM and needs no
+       substitution; what it needs is not to be inside a blanket hide written for the topic shell.
+       Its CHROME goes instead -- and the A4 content box is 680px wide, INSIDE the <=919px
+       breakpoint, so the rail and the tab bar are `position:fixed` bars there and would repeat on
+       every printed page. .hm-skip is the "skip the home next time" checkbox: a preference
+       control, not a record. The library (.hm-lib) and the companion are already display:none at
+       that width and need no rule.
+       THE SCROLL-TO-TOP DISC WAS CHECKED AND LEFT ALONE ONCE, AND THAT WAS WRONG. The reasoning
+       was "opacity:0 / visibility:hidden until you scroll, and a child of <body> rather than of
+       .app, so it never depended on the hide above". The second clause is exactly why nothing
+       hides it; the first is true only at scroll 0. `scroll-to-top.js` adds `.show` past
+       THRESHOLD=400 and `.scrolltop.show` is opacity:1 / visibility:visible / position:fixed --
+       and cycle 4 deliberately handed Ctrl+P on the home back to the browser, so the print a
+       reader takes is the print of the page they were READING, after scrolling. Measured on an
+       engaged record scrolled to max, A4, with the same page's `.show` lifted as the control:
+         1280x800 (scrollY 712)  148,466 B, U+2191 per page [1,0]   control 142,923 B, [0,0]
+         680x900  (scrollY 725)  148,466 B, U+2191 per page [1,0]   control 142,923 B, [0,0]
+       +5,543 bytes and the arrow glyph, on the first sheet. Max scroll on #home is 371px cold at
+       1280x800 (under the threshold) but 712px once the record has content, and 1326px cold on
+       the phone -- so it is reachable as soon as the home has anything to show.
+       SCOPED TO THE HOME because that is where it was measured, and the topic route was measured
+       NOT to have it: at #saga/wb the disc is shown on screen at scrollY 1090, but switching to
+       print media collapses the scroll to 0 (the flow content stops being .app and becomes the
+       static cram sheet), `scroll-to-top.js` un-shows the disc on that scroll event, and the sheet
+       comes back U+2191 x0 with its byte count unmoved. That is a scroll-state accident rather
+       than a structural impossibility, so if a topic-route case is ever measured the honest move
+       is to promote this to the unconditional line above, not to add a second scoped rule.
+       The census (.hm-status) is the one member of the home's chrome that is not chrome -- it
+       carries "0 of 972 probes graded, 0 solid / 0 shaky / 0 missed", and the shaky-and-missed
+       split is on no other surface of the printed page. It is `position:fixed` at the viewport
+       foot below 920px, though, so on paper it painted OVER the flow at the bottom of EVERY sheet:
+       extracted from the 2-page PDF, "probes graded" came back on pages [1,2]. So it is un-fixed
+       rather than hidden -- it flows once, after the record it summarises. .app is display:block
+       here (not its screen flex row), so a static footer lands under #home rather than beside it.
+       Guarded by test/overlay_deadzone.cjs section 6 (the CTRL+P row), which drives the closed-
+       sheet state and asserts the outcome: the content column paints, no .cram-ov does. */
+    html[data-view="home"] .app{display:block !important}
+    html[data-view="home"] .cram-ov:not(.open){display:none !important}
+    html[data-view="home"] .hm-rail,
+    html[data-view="home"] .hm-tabs,
+    html[data-view="home"] .scrolltop,
+    html[data-view="home"] .hm-skip{display:none !important}
+    html[data-view="home"] .hm-status{position:static !important}
     /* THE TWO RESETS THAT DECIDE WHETHER PAPER GETS THE ARTIFACT. This rule used to reset four
        properties -- box-shadow, max-width, border-radius, margin -- and it read as complete,
        because all four are unmistakably screen chrome. But the panel's screen geometry at :474 is
@@ -1724,10 +1804,82 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
 .ix-streak{display:inline-flex;align-items:center;gap:var(--space-5);margin-top:var(--space-8);padding:var(--space-3) var(--space-9);border-radius:20px;background:rgba(217,119,6,.1);color:#b45309;font-size:var(--font-size-micro);font-weight:var(--font-weight-semibold);align-self:flex-start}
 .ix-streak b{font-size:var(--font-size-caption);font-weight:var(--font-weight-heavy)}
 .ix-goal{flex:1 1 100%;display:flex;flex-direction:column;justify-content:center}
-.ix-goal-top{display:flex;align-items:center;justify-content:space-between;gap:var(--space-10);margin-bottom:var(--space-6)}
-.ix-goal-set{display:inline-flex;align-items:center;gap:var(--space-8)}
-.ix-goal-b{display:inline-flex;align-items:center;justify-content:center;width:var(--space-20);height:var(--space-20);padding:0;border:1px solid var(--bd);border-radius:6px;background:var(--bg);color:var(--ink);font:inherit;font-size:var(--font-size-body);font-weight:var(--font-weight-bold);line-height:var(--line-height-none);cursor:pointer;transition:border-color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base)}
-.ix-goal-b:hover{border-color:var(--acc);background:var(--accbg)}
+/* flex-end, not space-between: the row held a kicker on the left and the stepper on the right
+   until the kicker was dropped (W1.5 cycle 3 -- the panel head one line above already says
+   "This week"). With one child, space-between resolves to flex-start and the bare -/5/+ control
+   would slide under the head and read as its content. The stepper stays at the edge of the bar
+   it sets.
+   AND ITS 6px BOTTOM MARGIN IS GONE with the same edit that made the buttons 44px: a 20px chip
+   centred in a 44px box already carries 12px of optical padding under it, so keeping the margin
+   put 18px between the stepper and the bar it sets, where the 20px control had 6. The row's own
+   box is the spacing now. Measured at 1280: chip bottom -> bar top 6px before, 12px after, and the
+   panel grows 18px rather than 24. */
+.ix-goal-top{display:flex;align-items:center;justify-content:flex-end;gap:var(--space-10)}
+/* gap:0 for the same reason. At 8px the three 44px boxes read as three floating glyphs instead of
+   one -/5/+ control (the chips end up 20px from the figure they set, against 8 before); with the
+   boxes touching, the painted chips sit 12px from it and the group still reads as one thing. */
+.ix-goal-set{display:inline-flex;align-items:center;gap:0}
+/* ===== THE STEPPER IS A FINGER TARGET, AND IT WAS 20x20 =====
+   .ix-goal-b was width/height:var(--space-20) -- 20x20 at 1280 and 20x44 below 920, where the
+   `button{min-height:44px}` floor above reaches the height and the explicit `width` defeats it in
+   the other axis. That is the class test/touch_floor.cjs was written for (the cram sheet's close
+   button was 32 WIDE and walked straight through a height-only floor). The geometry is
+   byte-identical to master 2696291, so it is not new -- what is new is its REACH: cycles 2-3
+   hoisted goalStrip() out of telemetryHtml()'s engaged() gate, so the strip now renders for every
+   record class at every viewport, including the first-run home of every new user, where it did not
+   exist at all before.
+
+   THE BOX IS THE BUTTON, NOT A PSEUDO-ELEMENT, and the reason is measurement rather than geometry.
+   A 20px chip with a 44px ::after hit area paints identically and a finger meets the same region.
+   What it does NOT do is reserve layout or move the border box, so (a) the arm this fix ships with
+   -- a getBoundingClientRect over every `#home [data-goal]`, in the file that already owns this
+   question -- cannot see it, and anything that could would be a bespoke hit-probe rather than the
+   existing instrument; and (b) `button:focus-visible` (:53) draws its ring on the BORDER box, so a
+   keyboard user would get a 20px ring around a 44px target. The 20px chip moves to .ix-goal-g, so
+   nothing about the painted control changes except that it is now centred in a box a finger can
+   hit.
+   (An earlier draft of this comment justified the choice by claiming two 44px pseudo areas would
+   OVERLAP. Re-derived, they do not: the chips sit 52px apart centre to centre -- 20 + 8 + 16 + 8 --
+   so the areas land at [839,883] and [891,935] at 1280, 8px APART. The claim was wrong and is
+   struck; touch_floor still asserts non-overlap, because that guards the real boxes' spacing, but
+   it is not why the box is the button.)
+
+   RAW 44px, NOT var(--space-44), and the deviation is measured: the space scale is re-valued by
+   density, so var(--space-44) resolves to 36px under html[data-density=compact] -- 8px under this
+   app's own floor for any reader who has pressed `d` twice. 44 is a physical-finger constant, not
+   a layout rhythm token, which is the same reason .tn-step, .ix-x, .crambtn and the <=919px
+   element floor above all spell it in raw px. */
+.ix-goal-b{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;padding:0;border:0;background:none;color:var(--ink);font:inherit;font-size:var(--font-size-body);font-weight:var(--font-weight-bold);line-height:var(--line-height-none);cursor:pointer}
+.ix-goal-g{display:inline-flex;align-items:center;justify-content:center;width:var(--space-20);height:var(--space-20);border:1px solid var(--bd);border-radius:6px;background:var(--bg);transition:border-color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base)}
+.ix-goal-b:hover .ix-goal-g{border-color:var(--acc);background:var(--accbg)}
+/* ===== THE RING FOLLOWS THE CHIP, NOT THE RESERVED BOX =====
+   Reserving 44x44 for the finger left the keyboard indicator on the WRONG rect. `button:focus-visible`
+   (:53) paints outline 2px at offset 2px plus a 3px halo on the BORDER box, so the ring inflated the
+   44px box by 4px in every direction -- and that box has neighbours flush against it on two sides:
+   .ix-goal-set carries gap:0, so .ix-goal-t (the figure) begins exactly at the button's edge, and
+   .ix-goal-top's bottom margin came off with the same edit, so .ix-goal-bar begins exactly at the
+   row's. The ring therefore drew THROUGH the number it sets and THROUGH the bar it fills: a focus
+   indicator that reads as a box around the wrong thing.
+   The fix moves the indicator onto .ix-goal-g -- the 20px chip, which IS the painted control -- and
+   turns it off on the button. Same 2px/2px outline and the same accent halo, on the rect the user
+   sees; the 44px hit box is untouched, so the finger target this cycle just won is unchanged. At
+   4px of extent around a 20px chip centred in a 44px box, the indicator clears both neighbours by
+   8px, and test/focus_ring.cjs asserts that intersection at 1280x800 and 390x844 rather than
+   trusting the arithmetic.
+   `box-shadow:none` on the button is load-bearing, not tidiness: box-shadow is one property, so
+   without it the generic rule's halo would keep painting on the 44px box while the outline moved. */
+/* AT THE BOUND, AND VISIBLY SO. `text-zoom.js`'s ruled pattern (audit P3-7) is aria-disabled +
+   `.textzoom-btn[aria-disabled="true"]{opacity:.4;cursor:default}` -- the attribute is what a
+   screen reader hears, this is what everyone else sees, and shipping only the attribute would
+   have left the clamp perceivable to the smaller audience. It dims the painted CHIP rather than
+   the button for the same reason the focus ring moved there: the button is a transparent 44px
+   box that paints nothing, so dimming it would dim nothing. The press stays a no-op via
+   Math.min/Math.max, and the control stays focusable and in the tab sequence -- which is the
+   whole reason the pattern is aria-disabled and not `disabled`. */
+.ix-goal-b[aria-disabled="true"] .ix-goal-g{opacity:.4}
+.ix-goal-b[aria-disabled="true"]{cursor:default}
+.ix-goal-b:focus-visible{outline:none;box-shadow:none}
+.ix-goal-b:focus-visible .ix-goal-g{outline:2px solid var(--acc);outline-offset:2px;box-shadow:0 0 0 3px var(--acc-a15)}
 .ix-goal-t{min-width:var(--space-16);text-align:center;font-size:var(--font-size-small);font-weight:var(--font-weight-heavy);color:var(--ink);font-variant-numeric:tabular-nums}
 .ix-goal-bar{height:var(--space-6);background:var(--bd);border-radius:6px;overflow:hidden;margin-bottom:var(--space-7)}
 .ix-goal-bar span{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));border-radius:6px;transition:width var(--duration-slow) var(--ease-base)}
@@ -2181,9 +2333,32 @@ html[data-view="home"] .companion{padding:0}
 .hm-room-weak{color:#dc2626;font-weight:var(--font-weight-bold)}
 
 .hm-sec{max-width:var(--measure-home);margin:0 auto var(--gap-home-section)}
-/* below the fold: the telemetry the old surface put ABOVE the decision */
-.hm-tele{max-width:var(--measure-home);margin:0 auto var(--gap-home-telemetry);padding-top:var(--space-20);
-  border-top:1px solid var(--bd)}
+/* below the fold: the telemetry the old surface put ABOVE the decision.
+   IT STOPPED BEING A STANDALONE STACK MEMBER AND KEPT THE DECORATION. When this block owned a row
+   of the column it was right for it to centre itself in the measure and open with a hairline rule
+   and 20px of air. It is now a PANEL inside .hm-duo -- a grid row it shares with Still shaky --
+   and in that context `margin:0 auto` is not centring, it is SIZING: auto side margins make a grid
+   item shrink to max-content. MEASURED at 1280 on the cold record: the panel rendered 248px wide,
+   centred, in a 624px column -- a lone island in a row it was supposed to fill -- and it wore two
+   top edges, its own .hm-panel border plus this rule, with 20px of dead space between them and its
+   heading. Both are leftovers, and both go. The bottom gap stays on its --gap-home-* token, which
+   is the layer test/home_rhythm.py enforces. Found while reviewing the new cold-home VR capture:
+   the defect was already live on the ENGAGED home (where the narrow panel sat beside a full-width
+   sibling and read as a design), and restoring the cold goal put it alone in the row where there
+   was nothing left for it to hide behind.
+   AND THE BOTTOM GAP WAS THE SAME RELIC, kept one cycle too long (fixed W1.5 cycle 3). Inside
+   .hm-duo's grid row a 26px bottom margin is not rhythm -- it is 26px subtracted from the cell,
+   so the two panels sharing that row end on different lines. MEASURED on the built page, engaged
+   record (12 weak topics) at 1280: Still-shaky ended at 1078 and This-week at 1052, two panels
+   side by side with their bottom edges 26px apart. Cold at 1280 and at 390 the tele is the row's
+   ONLY child, so .hm-duo rendered 26px taller than its content (144 vs 118; 168 vs 142) and the
+   gap on to .hm-rooms was --gap-home-telemetry + --gap-home-duo = 52px where the rhythm layer
+   says 26. Intra-row spacing is already .hm-duo's own `gap`, and row-to-next-block is already
+   --gap-home-duo; this margin was a third answer to a question two layers had answered. It goes,
+   its registry entry in test/home_rhythm.py goes with it, and --gap-home-telemetry is deleted from
+   design-tokens/tokens.json in the same commit -- exactly what home_rhythm's STALE-entry message
+   prescribes, and what keeps the token file from carrying a role nothing plays. */
+.hm-tele{max-width:var(--measure-home)}
 /* ============================================================================================
    THE HOME AS AN INSTRUMENT  (appeal/home-instrument)
    Every colour, size and space below comes from the layers this stylesheet already has: the
@@ -2333,6 +2508,82 @@ html[data-view="home"] .companion{padding:0}
    A SIBLING of .hm-key, not a child: the key is aria-hidden and this is content. */
 .hm-offladder{display:block;margin-top:var(--space-8);color:var(--mut2)}
 
+/* ---- THE GAUGE IS COMPACT BELOW 920 --------------------------------------------------------
+   WHAT THIS BUYS, MEASURED. At 390x844 the live band is 57-799 (fixed rail above, fixed tab bar
+   below). Shipped, the altitude panel ran 370-752 at 382px tall and .hm-duo opened at 778, so
+   the Still-shaky CHIP LIST -- the record's own triage, the one surface that says which topics
+   to re-drill -- began at 825: off the first screen. Moving the two practice acts up under the
+   decision (home-view.js html()) is right and costs another 92px, which would have pushed the
+   chips to 917. This block pays for both: the panel comes back to 288px on a single-thin-rail
+   record (306 on a two-thin one, whose verdict is a line longer) and the chip list OPENS at 769
+   / 787, inside the band, with the practice acts above it.
+
+   WHAT THIS BLOCK DOES NOT DO, stated because the cycle that wrote the paragraph above rounded it
+   up. The chip list's TOP is inside the band on those two shapes; its FIRST CHIP is not -- it ends
+   14px past the fold on the roomiest of them. And the chip list's position is a function of three
+   independent things, only one of which is this block: hero wrap (23px on the shortest probe in
+   the bank, 164px on the longest), verdict class, and whether the record has one practice bar or
+   two. Across the ten chip-bearing cells this check pins AT 390x844 the chips run from 769 to
+   1006 (and from 856 to 1087 at 360x844, which the check also drives) -- "nine combinations" was
+   this line until 2026-08-02, and the check has asserted 22 cells since cycle 3. So the FIRST SCREEN'S
+   CONTRACT is not "the chips fit" -- it is that the first screen carries the record's triage
+   either as the chip list or as the drill act addressed to that record, and the act is what carries
+   it in every shape. That contract is asserted by test/home_fold.cjs, which is also the only thing
+   in the gate that can see this block at all.
+
+   NOTHING HERE IS A PIXEL PICKED PER SITE. The rails lose height because a rail's information is
+   HORIZONTAL -- 46 segments, one per topic, and the SIGNAL RULE two blocks up puts the grade in
+   the fill, never in the size -- so track height is the cheapest 48px on the page and the only
+   one that costs the instrument nothing. The stack roles are re-VALUED rather than re-picked:
+   one block, the same --gap-home-* layer home_rhythm.py enforces, phone only.
+
+   ABOVE 920 NOT ONE DECLARATION APPLIES, which is why the desktop VR baselines do not move for
+   this item. */
+@media(max-width:919px){
+  html[data-view="home"] #home{--gap-home-continue:var(--space-16);
+    --gap-home-altitude:var(--space-16);--gap-home-section:var(--space-16)}
+  html[data-view="home"] .hm-alt .hm-phead{padding:var(--space-8) var(--space-14)}
+  html[data-view="home"] .hm-alt .hm-pbody{padding:var(--space-10) var(--space-14) var(--space-12)}
+  html[data-view="home"] .hm-alt .hm-gauge{gap:var(--space-6)}
+  html[data-view="home"] .hm-alt .hm-gr-t{height:16px}
+  /* THE VERDICT'S LEADING AND ITS RULE, TIGHTENED -- and this is what pays for the key that the
+     420-and-below block used to delete (ruled W1.5 cycle 2). MEASURED at 390x844, not estimated:
+     the verdict box goes 68 -> 62px on the single-thin-rail sentence and 87 -> 80px on the
+     two-thin one (line-height 1.4 -> 1.3 at three and four lines, plus 2px off the rule's
+     padding), and the 4px off its margin brings the PANEL down 10px / 11px. The SENTENCE KEEPS
+     ITS SIZE: it is the one claim the whole instrument exists to deliver, and a phone is the
+     worst place to read 13px prose -- so the pixels come from leading and from the rule, never
+     from the type. (Recorded honestly: ~20px is not available from this element without deleting
+     a line of the sentence. It is 68-87px tall in total. 10px is what the compaction is worth,
+     which is 5x what the tightest measured shape needed.) */
+  html[data-view="home"] .hm-alt .hm-verdict{margin-top:var(--space-6);padding-top:var(--space-6);
+    line-height:var(--line-height-snug)}
+  html[data-view="home"] .hm-alt .hm-key{margin-top:var(--space-6);gap:var(--space-10)}
+}
+@media(max-width:419px){
+  /* the two-row rail (label over figure) is already this width's answer to a 44px label column
+     it cannot afford; it only needed the row gap to stop being a whole space token. */
+  html[data-view="home"] .hm-alt .hm-gr{row-gap:2px}
+  /* THE KEY DOES NOT LEAVE. A `html[data-view="home"] .hm-alt .hm-key{display:none}` lived here
+     for one cycle and is RULED OUT (W1.5 cycle 2). The gauge paints four marks (filled,
+     part-filled, hollow, keel) and this is their only legend at any width; aria-hidden makes it
+     decoration for a SCREEN READER, which is not an argument for deleting it from the screen where
+     the marks are. If a future record class ever needs those pixels, they come out of the two-row
+     rail block above, not out of the key.
+     WHAT THE HIDE COST, MEASURED ACROSS THE WHOLE BAND THIS BLOCK GOVERNS -- not at one width.
+     Cycle 2 recorded "21px of a 742px band, 2.8%" from a 390-only measurement and let it stand for
+     everything at or below 419; it is 2.2x that at the narrow end. Swept width by width: the key
+     is ONE row of 15px from 364px up, and TWO rows of 40px at 363 and below, where "Untouched"
+     orphans onto a second line. With its 6px margin-top the hide was therefore worth 21px at
+     364-419 and 46px at 320-363 -- 2.8% and 6.2% of the 742px band that percentage is quoted
+     against (390x844). It still flipped no fold outcome at either end, and that is structural
+     rather than lucky: the practice act sits ABOVE the gauge in home-view.js html(), so nothing
+     the gauge does to its own height can push the act out of the band. Driven at
+     320/360/375/390/412 to confirm it, and test/home_fold.cjs now drives 360x844 alongside
+     390x844 so the narrow half of this block's band is measured every gate rather than
+     extrapolated from the wide half. */
+}
+
 /* ---- the paired row ------------------------------------------------------------------------ */
 .hm-duo{max-width:var(--measure-home);margin:0 auto var(--gap-home-duo);
   display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:var(--space-16)}
@@ -2387,8 +2638,10 @@ html[data-view="home"] .companion{padding:0}
 .hm-rdot{width:7px;height:7px;border-radius:2px;background:var(--rm,transparent);justify-self:center}
 .hm-rt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .hm-rn{font-size:var(--font-size-micro);color:var(--mut2);font-variant-numeric:tabular-nums}
-.hm-goalbar{height:6px;background:var(--bd);border-radius:3px;overflow:hidden;margin:var(--space-6) 0}
-.hm-goalbar i{display:block;height:100%;background:var(--ink)}
+/* .hm-goal / .hm-goalbar are GONE with the rail's second goal renderer (home-view.js railHtml).
+   The weekly goal has one renderer now -- Panels.goalStrip(), in the telemetry panel -- so the
+   rules that painted the duplicate go with it rather than waiting for a stylesheet to be audited
+   for orphans. */
 
 /* ---- THE LIBRARY TENANT (the companion column on the home route) ---------------------------
    The library is Panels.libraryHtml() -- the SAME renderer the topic switcher uses, so a topic
@@ -2498,8 +2751,7 @@ html[data-view="home"] .companion{padding:0}
      desktop column layout must be undone explicitly -- left alone it stacks the brand over a
      two-column action grid and the bar measures 135px, which chrome-metrics then faithfully
      reserves out of a 844px viewport. */
-  html[data-view="home"] .hm-rail .hm-rsec,
-  html[data-view="home"] .hm-rail .hm-goal{display:none}
+  html[data-view="home"] .hm-rail .hm-rsec{display:none}
   html[data-view="home"] .hm-rail .hm-top{flex-direction:row;align-items:center;
     justify-content:space-between;gap:var(--space-8);flex:1;min-width:0}
   html[data-view="home"] .hm-rail .hm-acts{display:flex;gap:var(--space-6);flex:none}

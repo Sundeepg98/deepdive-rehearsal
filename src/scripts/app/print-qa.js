@@ -94,7 +94,41 @@
     /* Native browser print of a topic view comes out blank -- the shadow-DOM panes
        don't render to print -- so route Ctrl/Cmd+P to the working printable Q&A. */
     document.addEventListener('keydown', function (e) {
-      if ((e.metaKey || e.ctrlKey) && !e.altKey && (e.key === 'p' || e.key === 'P')) { e.preventDefault(); openPrint(); }
+      if (!((e.metaKey || e.ctrlKey) && !e.altKey && (e.key === 'p' || e.key === 'P'))) return;
+      /* ---- NOT ON THE HOME. THE USER'S OWN PRINT IS NOT OURS TO TAKE THERE ----
+         curTopic() is TopicRegistry.current(), which on a route with no current topic is the BOOT
+         constant -- so Ctrl+P on the home preventDefault()ed the browser's print and opened a
+         printable Q&A for a topic the user never chose. That is the exact class W1.5 cycle 1 fixed
+         for plain `p` (shell.js: "THE HOME IS A DESTINATION, NOT A MODAL" -- the topic keys "must
+         not silently act on the BOOT topic"), one module over; it was recorded there and is fixed
+         here. The substitution above is only justified where there IS a topic view whose shadow
+         panes print blank: the home is ordinary light DOM and prints fine, so this returns WITHOUT
+         preventDefault and the user's own browser print does what they asked for. Same precedent as
+         shell.js's home block. Guarded both ways by test/overlay_deadzone.cjs section 6.
+
+         ---- AND THE SAME BOOT GATE THE KEYMAP READS, FAIL-CLOSED ----
+         The line below used to be the only guard, and its comment claimed it was "the same reader"
+         as shell.js. They stopped being the same in the cycle that wrote it: shell.js now returns
+         until `ViewManager.routed()` -- ONE gate for every key, explicitly chosen over a patch per
+         key -- and `dataset.view` is `undefined` in exactly the window that gate exists for. So the
+         chord failed OPEN where the map failed CLOSED. Measured with the same Router.init hold
+         `overlay_deadzone` section 6 uses: in the held window, `Control+p` on #home opened a print
+         window ONCE, titled "Content Pipeline -- Q&A" (the BOOT topic, 50,368 bytes) with
+         defaultPrevented true, while plain `p` on the same held page opened nothing. That is the
+         exact sentence this guard was written to prevent, one module over.
+         Latent rather than reachable today -- this listener is attached during the DOMContentLoaded
+         dispatch and `Router.init()` runs later in the SAME synchronous dispatch, so no input can
+         interleave (4 real boots: 0 frames with the listener wired and the route unapplied). It
+         becomes reachable the moment anything defers `Router.init()` past that dispatch: a
+         `type=module` script, an `await`, an rAF, or a throw in `window._hideBootSplash()`, which
+         index.html's `boot()` calls immediately before it with no guard. A guard held up by script
+         ordering rather than by a condition is the precise thing the one-gate argument rejected.
+         Fail-closed toward the BROWSER's own print, which is the safe direction here: doing nothing
+         leaves the user with a real print of a real page, while acting builds a sheet for a topic
+         nobody chose. */
+      if (!(window.ViewManager && window.ViewManager.routed && window.ViewManager.routed())) return;
+      if (document.documentElement.dataset.view === 'home') return;
+      e.preventDefault(); openPrint();
     });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wire); else wire();

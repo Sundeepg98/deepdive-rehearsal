@@ -23,13 +23,13 @@
         "channelTol": 2,
         "maxChanged": 32
       },
-      "generated": "2026-08-01T10:41:07.662Z",
+      "generated": "2026-08-02T11:32:47.593Z",
       "baselines": {
         "home-light": {
           "file": "home-light-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "688d2b3d8478b97c",
+          "sha256": "5462c9bac1365ceb",
           "hash": "",
           "theme": "light",
           "vp": "desktop"
@@ -38,7 +38,7 @@
           "file": "home-dark-win32-chromium149.png",
           "w": 1280,
           "h": 800,
-          "sha256": "e1008c5e53356460",
+          "sha256": "78a26ba07d21280e",
           "hash": "",
           "theme": "dark",
           "vp": "desktop"
@@ -166,6 +166,24 @@
           "h": 844,
           "sha256": "6267dfc565e31ca1",
           "hash": "#event-driven/walk",
+          "theme": "dark",
+          "vp": "mobile"
+        },
+        "m-home-light": {
+          "file": "m-home-light-win32-chromium149.png",
+          "w": 390,
+          "h": 844,
+          "sha256": "8366132cceed4815",
+          "hash": "",
+          "theme": "light",
+          "vp": "mobile"
+        },
+        "m-home-dark": {
+          "file": "m-home-dark-win32-chromium149.png",
+          "w": 390,
+          "h": 844,
+          "sha256": "15028f9437c8ec2e",
+          "hash": "",
           "theme": "dark",
           "vp": "mobile"
         }

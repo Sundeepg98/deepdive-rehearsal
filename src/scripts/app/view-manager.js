@@ -22,6 +22,36 @@
   var liveRegion = null;
   var pending = null;
   var lastView = null;
+  /* ===== HAS A ROUTE BEEN APPLIED YET? =====
+     THE BOOT WINDOW. shell.js registers its global keymap at PARSE time; Router.init() does not
+     run until DOMContentLoaded, and only then does applyRoute() stamp documentElement.dataset.view.
+     Between those two moments every key in that map is live while `dataset.view` is undefined --
+     so `onHome` reads FALSE on a load that is landing on the home, and a keypress that arrives in
+     the gap acts on the BOOT topic. Measured on the shipped build: `w` leaked in 6 of 6 attempts
+     (it navigated to the drill of a topic the user never chose) and `n` in 2 of 6; `q` leaked too,
+     at a rate nobody recorded; and `p` opened Session progress for the boot constant -- the very
+     defect cycle 1 fixed for the ROUTED case, arriving through the door underneath it.
+
+     THE FLAG IS HERE, NOT AT PARSE TIME. Stamping data-view early from location.hash would be a
+     SECOND derivation of route truth, and this file is the single authority for the first: the
+     keymap asks "has applyRoute applied a route yet", which is one bit that cannot disagree with
+     anything. It is never cleared: the window is a boot condition, not a state.
+
+     AND IT IS SET AT THE TOP, NOT AT THE END OF EACH BRANCH. It shipped as two assignments, one
+     at the close of the home branch and one at the close of the function -- which made the bit
+     mean "an application RAN TO COMPLETION" rather than "a route has arrived", and those differ
+     on exactly one path: a throw. `HomeView.render()` is called from this function and nowhere
+     else, Router.emit() wraps every subscriber in `try {} catch (e) {}` (router.js:87), and the
+     home branch stamps `dataset.view = 'home'` BEFORE it renders. So one exception anywhere in
+     render left the app on a home whose data-view said 'home' while routeApplied stayed false --
+     and the gate above turns the WHOLE keymap off, permanently, for every key: no `d`, no `/`,
+     no `?`, no `h`, silently, with the error swallowed by the router. A rendering bug would have
+     taken the entire keyboard with it.
+     The window this flag exists to close is "the map has no route to mean anything against", and
+     that ends the moment a route ARRIVES with a view -- not when its side effects finish.
+     applyRoute is synchronous and has no awaits, so nothing can interleave between this line and
+     the end of the call; setting it here changes the bit on no path except the throwing one. */
+  var routeApplied = false;
 
   /* THE ANNOUNCER. One visually-hidden polite region, shared by every caller.
      It is the app's ONLY channel for "something changed that you cannot see", so it has to
@@ -71,6 +101,10 @@
 
   function applyRoute(route) {
     if (!route || !route.view) return;
+    /* A ROUTE HAS ARRIVED. See routeApplied above: this is the boot-window bit, and it is set
+       here -- past the guard, before any side effect -- so that a throw inside a render cannot
+       leave the global keymap switched off forever. */
+    routeApplied = true;
 
     /* THE HOME IS NOT A TAB. This branch runs BEFORE switchTab, and never calls it.
        switchTab('home') would find getElementById('home') (the container is a real element), then:
@@ -123,7 +157,10 @@
   window.ViewManager = {
     currentView: function () { return lastView; },
     announce: announce,
-    refreshTitle: refreshTitle
+    refreshTitle: refreshTitle,
+    /* THE BOOT-WINDOW GATE, read at the top of shell.js's keydown handler. See routeApplied above.
+       It is a function rather than a property so a reader cannot latch a stale copy of the bit. */
+    routed: function () { return routeApplied; }
   };
 
 })();

@@ -515,9 +515,185 @@ const RING = (sel) => {
     await ctx.close();
   }
 
+  /* ============ 13-16. THE RING IS ON THE CHIP, NOT ON THE RESERVED HIT BOX ============
+     THE THIRD PLACE THIS FILE'S ONE QUESTION SHOWS UP, and it is neither a removal (P3-6) nor a
+     boundary (P2-3) nor a hue (X10): it is a RECT. W1.5 cycle 4 gave the weekly-goal stepper a
+     44x44 border box so a finger could hit it, and left the 20px painted chip inside as
+     `.ix-goal-g`. `button:focus-visible` (styles.css:53) draws on the BORDER box, so the keyboard
+     indicator moved with the hit box and not with the control: outline 2px at offset 2px inflates
+     44 to 52 in every direction, and that box has neighbours FLUSH against it on two sides --
+     `.ix-goal-set{gap:0}` puts `.ix-goal-t` (the figure the stepper sets) exactly at its edge, and
+     the same cycle removed `.ix-goal-top`'s bottom margin, putting `.ix-goal-bar` exactly at the
+     row's. So a keyboard user got a ring drawn THROUGH the number and THROUGH the bar.
+
+     WHAT THIS ASKS. Not "is there an outline" -- there always was one, on the wrong rect. It
+     computes the PAINTED INDICATOR'S extent from the live computed style (outline offset+width,
+     and every non-inset box-shadow layer's offset+blur+spread) on the focused button AND on every
+     descendant, unions the boxes that actually paint, and asserts that union intersects neither
+     `.ix-goal-t` nor `.ix-goal-bar`. Reading the whole subtree rather than the button is what makes
+     it indifferent to WHICH element carries the ring -- it measures where the paint lands, which is
+     the only thing the user can see.
+
+     IT CANNOT PASS BY PAINTING NOTHING. A deleted indicator intersects nothing at all, so the arm
+     would green on the worst possible outcome. `painted` is therefore asserted first: at least one
+     element in the subtree must draw, and `:focus-visible` must really have matched.
+
+     BOTH WIDTHS, because the geometry differs on each and only one of them is a media query away
+     from changing: at 1280 the button is 44x44 from its own rule, at 390 the `<=919px`
+     `button{min-height:44px}` floor is also in play. The neighbours are flush at both.
+
+     THE PLANT RESTORES THE SHIPPED-BEFORE STATE rather than deleting the fix: the generic ring is
+     put back ON the button and taken OFF the chip, which is exactly what the cascade did before
+     these two rules existed. It is required to produce an intersection, at both viewports, or the
+     check ABORTS -- an arm that cannot see the defect it was written for is decoration. */
+  const RING_BOX = (sel) => {
+    const btn = document.querySelector(sel);
+    if (!btn) return { err: 'selector not found: ' + sel };
+    if (!btn.getClientRects().length) return { err: sel + ' is not rendered' };
+    btn.focus({ focusVisible: true });
+    if (document.activeElement !== btn) return { err: sel + ' did not take focus' };
+
+    /* Split a computed box-shadow into layers WITHOUT breaking on the commas inside rgb()/color(). */
+    const layers = (s) => {
+      const out = []; let d = 0, cur = '';
+      for (const ch of s) {
+        if (ch === '(') d++; else if (ch === ')') d--;
+        if (ch === ',' && d === 0) { out.push(cur.trim()); cur = ''; } else cur += ch;
+      }
+      if (cur.trim()) out.push(cur.trim());
+      return out;
+    };
+    /* How far past its own border box does this element's focus paint reach? */
+    const extentOf = (el) => {
+      const cs = getComputedStyle(el);
+      let e = 0;
+      if (cs.outlineStyle !== 'none' && parseFloat(cs.outlineWidth) > 0) {
+        e = Math.max(e, parseFloat(cs.outlineOffset || '0') + parseFloat(cs.outlineWidth));
+      }
+      if (cs.boxShadow && cs.boxShadow !== 'none') {
+        layers(cs.boxShadow).filter((L) => !/\binset\b/.test(L)).forEach((L) => {
+          const n = (L.match(/-?\d*\.?\d+px/g) || []).map(parseFloat);
+          if (n.length >= 3) {
+            /* offset + blur + spread: the outermost pixel this layer can tint */
+            e = Math.max(e, Math.max(Math.abs(n[0]), Math.abs(n[1])) + n[2] + (n[3] || 0));
+          }
+        });
+      }
+      return e;
+    };
+
+    const painted = [];
+    [btn, ...btn.querySelectorAll('*')].forEach((el) => {
+      const e = extentOf(el);
+      if (e <= 0) return;
+      const r = el.getBoundingClientRect();
+      painted.push({ on: String(el.className || el.tagName).split(' ')[0], e: +e.toFixed(1),
+        l: r.left - e, t: r.top - e, r: r.right + e, b: r.bottom + e });
+    });
+
+    const rectOf = (s) => {
+      const el = document.querySelector(s);
+      if (!el || !el.getClientRects().length) return null;
+      const r = el.getBoundingClientRect();
+      return { l: r.left, t: r.top, r: r.right, b: r.bottom };
+    };
+    const neighbours = { '.ix-goal-t': rectOf('.ix-goal .ix-goal-t'), '.ix-goal-bar': rectOf('.ix-goal .ix-goal-bar') };
+    const overlaps = (a, o) => !!o && a.l < o.r && a.r > o.l && a.t < o.b && a.b > o.t;
+    const hits = [];
+    painted.forEach((p) => Object.keys(neighbours).forEach((k) => {
+      if (overlaps(p, neighbours[k])) hits.push(p.on + ' (+' + p.e + 'px) -> ' + k);
+    }));
+    const bb = btn.getBoundingClientRect();
+    return {
+      fv: btn.matches(':focus-visible'),
+      missingNeighbour: Object.keys(neighbours).filter((k) => !neighbours[k]),
+      box: { w: +bb.width.toFixed(1), h: +bb.height.toFixed(1) },
+      painted: painted.map((p) => p.on + ' +' + p.e + 'px [' +
+        [p.l, p.t, p.r, p.b].map((v) => +v.toFixed(1)).join(',') + ']'),
+      hits: hits,
+    };
+  };
+
+  /* The cascade as it stood BEFORE the fix: the generic ring on the 44px border box, nothing on
+     the chip. Same specificity as the shipped rules and later in the sheet, so it wins. */
+  const PRE_FIX = '.ix-goal-b:focus-visible{outline:2px solid var(--acc);outline-offset:2px;'
+    + 'box-shadow:0 0 0 3px var(--acc-a15),0 0 16px -4px var(--acc-a20)}'
+    + '.ix-goal-b:focus-visible .ix-goal-g{outline:none;box-shadow:none}';
+
+  for (const [vw, vh] of [[1280, 800], [390, 844]]) {
+    const gctx = await browser.newContext({ viewport: { width: vw, height: vh } });
+    const gp = await gctx.newPage();
+    await B.gotoApp(gp, HTML, { hash: '#home' });
+    await B.until(gp, () => document.querySelectorAll('#home [data-goal]').length === 2,
+      null, B.ACT_MS, 'the home renders both weekly-goal stepper buttons');
+    await B.settle(gp);
+
+    const at = vw + 'x' + vh;
+    const read = async () => {
+      const out = {};
+      for (const d of ['dec', 'inc']) {
+        out[d] = await gp.evaluate(RING_BOX, '#home [data-goal=' + d + ']');
+        await gp.evaluate(() => { if (document.activeElement) document.activeElement.blur(); });
+      }
+      return out;
+    };
+
+    const r = await read();
+    const bad = ['dec', 'inc'].filter((d) => {
+      const x = r[d];
+      return x.err || !x.fv || x.missingNeighbour.length || !x.painted.length || x.hits.length;
+    });
+    chk('[' + at + '] the weekly-goal stepper paints its focus ring on the 20px chip, clear of the '
+      + 'figure it sets and the bar it fills (the 44px hit box has both flush against it)',
+      bad.length === 0,
+      ['dec', 'inc'].map((d) => d + ': ' + JSON.stringify(r[d])).join('  //  '));
+
+    /* ---- the plant ---- */
+    await gp.evaluate((css) => {
+      const s = document.createElement('style');
+      s.id = '__prefix_ring';
+      s.textContent = css;
+      document.head.appendChild(s);
+    }, PRE_FIX);
+    await B.settle(gp);
+    const planted = await read();
+    await gp.evaluate(() => { const s = document.getElementById('__prefix_ring'); if (s) s.remove(); });
+    await B.settle(gp);
+
+    const caught = ['dec', 'inc'].filter((d) => !planted[d].err && planted[d].hits.length > 0);
+    if (caught.length !== 2) {
+      chk('[' + at + '] [plant] the pre-fix ring (on the 44px box) is DETECTED as overlapping its '
+        + 'neighbours -- the arm above can fail', false,
+        'only ' + caught.length + ' of 2 buttons reported an intersection under the plant, so this '
+        + 'measurement is not reading the indicator it claims to: '
+        + ['dec', 'inc'].map((d) => d + ': ' + JSON.stringify(planted[d])).join('  //  '));
+    } else {
+      chk('[' + at + '] [plant] the pre-fix ring (on the 44px box) is DETECTED as overlapping its '
+        + 'neighbours -- the arm above can fail', true,
+        planted.dec.hits.join(' + '));
+    }
+
+    /* THE PLANT WAS LIFTED -- asserted against the PRE-PLANT reading, not against zero.
+       "hits.length === 0" would have been wrong here in a way worth naming: on a build where the
+       fix itself is reverted, the plant IS lifted and the ring overlaps anyway, and this arm would
+       have reported "the plant was not lifted" for a defect that has nothing to do with the plant.
+       Comparing to the reading this context started with says exactly what it means -- the page is
+       back where it was -- and stays silent when the failure belongs to the arm above. */
+    const after = await read();
+    const lifted = ['dec', 'inc'].every((d) => !after[d].err
+      && JSON.stringify(after[d].painted) === JSON.stringify(r[d].painted)
+      && JSON.stringify(after[d].hits) === JSON.stringify(r[d].hits));
+    chk('[' + at + '] the plant was lifted -- the indicator measures exactly what it did before the '
+      + 'plant went in, so nothing below this line reads a poisoned page', lifted,
+      ['dec', 'inc'].map((d) => d + ': ' + JSON.stringify(after[d].painted)
+        + ' vs pre-plant ' + JSON.stringify(r[d].painted)).join('  //  '));
+
+    await gctx.close();
+  }
+
   await browser.close();
   notes.forEach((n) => console.log(n));
   if (fails.length) { fails.forEach((f) => console.log('  - ' + f)); return B.finish(1, 'FOCUS RING: FAIL (' + fails.length + ')'); }
-  console.log('FOCUS RING: PASS  (' + notes.length + ' assertions: 3 light-DOM chrome buttons kept their ring; the shadow #adv, #jg and .piv-jump get the BASE_SHEET ring; and in both themes the .hm-cta and all six .hm-room focus HALOS derive from their own room, each against a live negative control)');
+  console.log('FOCUS RING: PASS  (' + notes.length + ' assertions: 3 light-DOM chrome buttons kept their ring; the shadow #adv, #jg and .piv-jump get the BASE_SHEET ring; in both themes the .hm-cta and all six .hm-room focus HALOS derive from their own room, each against a live negative control; and at 1280x800 and 390x844 the weekly-goal stepper draws its indicator on the 20px chip rather than on the 44px hit box, clear of the figure and the bar, with the pre-fix ring planted and caught at each width)');
   return B.finish(0);
 })().catch((e) => { console.error(e && e.stack || e); return B.finish(1, 'FOCUS RING: FAIL (harness error: ' + (e && e.message) + ')'); });

@@ -1724,7 +1724,12 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
 .ix-streak{display:inline-flex;align-items:center;gap:var(--space-5);margin-top:var(--space-8);padding:var(--space-3) var(--space-9);border-radius:20px;background:rgba(217,119,6,.1);color:#b45309;font-size:var(--font-size-micro);font-weight:var(--font-weight-semibold);align-self:flex-start}
 .ix-streak b{font-size:var(--font-size-caption);font-weight:var(--font-weight-heavy)}
 .ix-goal{flex:1 1 100%;display:flex;flex-direction:column;justify-content:center}
-.ix-goal-top{display:flex;align-items:center;justify-content:space-between;gap:var(--space-10);margin-bottom:var(--space-6)}
+/* flex-end, not space-between: the row held a kicker on the left and the stepper on the right
+   until the kicker was dropped (W1.5 cycle 3 -- the panel head one line above already says
+   "This week"). With one child, space-between resolves to flex-start and the bare -/5/+ control
+   would slide under the head and read as its content. The stepper stays at the edge of the bar
+   it sets. */
+.ix-goal-top{display:flex;align-items:center;justify-content:flex-end;gap:var(--space-10);margin-bottom:var(--space-6)}
 .ix-goal-set{display:inline-flex;align-items:center;gap:var(--space-8)}
 .ix-goal-b{display:inline-flex;align-items:center;justify-content:center;width:var(--space-20);height:var(--space-20);padding:0;border:1px solid var(--bd);border-radius:6px;background:var(--bg);color:var(--ink);font:inherit;font-size:var(--font-size-body);font-weight:var(--font-weight-bold);line-height:var(--line-height-none);cursor:pointer;transition:border-color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base)}
 .ix-goal-b:hover{border-color:var(--acc);background:var(--accbg)}
@@ -2193,8 +2198,20 @@ html[data-view="home"] .companion{padding:0}
    is the layer test/home_rhythm.py enforces. Found while reviewing the new cold-home VR capture:
    the defect was already live on the ENGAGED home (where the narrow panel sat beside a full-width
    sibling and read as a design), and restoring the cold goal put it alone in the row where there
-   was nothing left for it to hide behind. */
-.hm-tele{max-width:var(--measure-home);margin:0 0 var(--gap-home-telemetry)}
+   was nothing left for it to hide behind.
+   AND THE BOTTOM GAP WAS THE SAME RELIC, kept one cycle too long (fixed W1.5 cycle 3). Inside
+   .hm-duo's grid row a 26px bottom margin is not rhythm -- it is 26px subtracted from the cell,
+   so the two panels sharing that row end on different lines. MEASURED on the built page, engaged
+   record (12 weak topics) at 1280: Still-shaky ended at 1078 and This-week at 1052, two panels
+   side by side with their bottom edges 26px apart. Cold at 1280 and at 390 the tele is the row's
+   ONLY child, so .hm-duo rendered 26px taller than its content (144 vs 118; 168 vs 142) and the
+   gap on to .hm-rooms was --gap-home-telemetry + --gap-home-duo = 52px where the rhythm layer
+   says 26. Intra-row spacing is already .hm-duo's own `gap`, and row-to-next-block is already
+   --gap-home-duo; this margin was a third answer to a question two layers had answered. It goes,
+   its registry entry in test/home_rhythm.py goes with it, and --gap-home-telemetry is deleted from
+   design-tokens/tokens.json in the same commit -- exactly what home_rhythm's STALE-entry message
+   prescribes, and what keeps the token file from carrying a role nothing plays. */
+.hm-tele{max-width:var(--measure-home)}
 /* ============================================================================================
    THE HOME AS AN INSTRUMENT  (appeal/home-instrument)
    Every colour, size and space below comes from the layers this stylesheet already has: the
@@ -2399,12 +2416,23 @@ html[data-view="home"] .companion{padding:0}
      it cannot afford; it only needed the row gap to stop being a whole space token. */
   html[data-view="home"] .hm-alt .hm-gr{row-gap:2px}
   /* THE KEY DOES NOT LEAVE. A `html[data-view="home"] .hm-alt .hm-key{display:none}` lived here
-     for one cycle and is RULED OUT (W1.5 cycle 2). MEASURED: the hide bought 21px of a 742px
-     band -- 2.8% -- and flipped no fold outcome in any record class, so it was 21px of instrument
-     sold for nothing. The gauge paints four marks (filled, part-filled, hollow, keel) and this is
-     their only legend at any width; aria-hidden makes it decoration for a SCREEN READER, which is
-     not an argument for deleting it from the screen where the marks are. If a future record class
-     ever needs those 21px, they come out of the two-row rail block above, not out of the key. */
+     for one cycle and is RULED OUT (W1.5 cycle 2). The gauge paints four marks (filled,
+     part-filled, hollow, keel) and this is their only legend at any width; aria-hidden makes it
+     decoration for a SCREEN READER, which is not an argument for deleting it from the screen where
+     the marks are. If a future record class ever needs those pixels, they come out of the two-row
+     rail block above, not out of the key.
+     WHAT THE HIDE COST, MEASURED ACROSS THE WHOLE BAND THIS BLOCK GOVERNS -- not at one width.
+     Cycle 2 recorded "21px of a 742px band, 2.8%" from a 390-only measurement and let it stand for
+     everything at or below 419; it is 2.2x that at the narrow end. Swept width by width: the key
+     is ONE row of 15px from 364px up, and TWO rows of 40px at 363 and below, where "Untouched"
+     orphans onto a second line. With its 6px margin-top the hide was therefore worth 21px at
+     364-419 and 46px at 320-363 -- 2.8% and 6.2% of the 742px band that percentage is quoted
+     against (390x844). It still flipped no fold outcome at either end, and that is structural
+     rather than lucky: the practice act sits ABOVE the gauge in home-view.js html(), so nothing
+     the gauge does to its own height can push the act out of the band. Driven at
+     320/360/375/390/412 to confirm it, and test/home_fold.cjs now drives 360x844 alongside
+     390x844 so the narrow half of this block's band is measured every gate rather than
+     extrapolated from the wide half. */
 }
 
 /* ---- the paired row ------------------------------------------------------------------------ */

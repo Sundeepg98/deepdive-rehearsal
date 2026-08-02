@@ -2,10 +2,12 @@
 
 **Worktree** `D:\claude-workspace\_worktrees\deepdive-rehearsal\w15-home`
 **Branch** `appeal/w15-refinements`, cut from master tip `2696291`.
-**Gate expectation** **77/77 from cycle 2** (cycle 1 was 76/76; cycle 2 registers ONE new check,
-`home_fold`, and its other five arms extend existing checks).
+**Gate expectation** **77/77 from cycle 3** (cycle 1 was 76/76; cycle 2 registers ONE new check,
+`home_fold`, taking it to 77; cycle 3 registers NONE -- every arm it adds extends
+`overlay_deadzone`, `home_fold` or `visual_regression`).
 **VR contract** home baselines REBASELINE AUTHORIZED; non-home baselines must not move. Cycle 2
-adds ONE baseline, `m-home-light` at 390x844 -- the manifest goes 16 -> 17.
+adds ONE baseline, `m-home-light` at 390x844 -- the manifest goes 16 -> 17. Cycle 3 adds its dark
+twin, `m-home-dark` -- 17 -> 18.
 
 ---
 
@@ -387,11 +389,16 @@ first chip at 846, both outside the band -- the arm goes red.
 The check ABORTS if the plant lands and the assertion survives it.
 
 **MEASURED AND DISCLOSED, because cycle 1 rounded this up.** Under the ruling's own word --
-**FULLY** above the fold -- the chip list is NEVER the carrier at 390x844. Its TOP is inside the
-band on the two tight shapes (769 and 787 against a fold at 799), but its FIRST CHIP ends at 813 on
-the roomiest of them: **14px out**. The contract holds in all nine shapes, and in all nine it is
-the ACT that carries it. That is what R1(b) anticipated ("chips below the fold are acceptable ONLY
-when such an act is above it"); it is now the measured norm rather than the exception.
+**FULLY** above the fold -- the chip list is never the full-containment carrier **in the nine
+shapes `home_fold` pins**. Its TOP is inside the band on the two tight shapes (769 and 787 against
+a fold at 799), but its FIRST CHIP ends at 813 on the roomiest of them: **14px out**. The contract
+holds in all nine shapes, and in all nine it is the ACT that carries it. That is what R1(b)
+anticipated ("chips below the fold are acceptable ONLY when such an act is above it"); it is now
+the measured norm rather than the exception.
+
+*(Scoped in cycle 3. Nine samples cannot establish an absolute over the record space, and the
+sentence was written as one. Cycle 3 raised the matrix to 22 cells across 390 and 360 and found the
+chip list out in every one -- but the word is still "in the shapes this check pins", not "never".)*
 
 `home_fold: PASS (36 assertions across 9 records at 390x844)`.
 
@@ -619,10 +626,379 @@ Standalone runs during the cycle, all green: `ascii_guard`, `syntax_check`, `css
 Nothing from this cycle's brief. Two things are RECORDED rather than open, so a later wave does not
 rediscover them as findings:
 
-1. **The chip list is never the FULL-containment carrier at 390x844.** Its top is inside the band on
-   the two tight shapes; its first chip ends 14px past the fold on the roomiest of them. The ruled
-   contract holds in all nine shapes via the ACT. Closing the chip half would need the `.ix-cross`
-   bars compacted, which R1 explicitly forbade.
+1. **The chip list is never the full-containment carrier in the nine shapes `home_fold` pins.**
+   *(Scoped in cycle 3 -- it read "never ... at 390x844", which is an absolute over the whole
+   record space asserted from nine samples.)* Its top is inside the band on the two tight shapes;
+   its first chip ends 14px past the fold on the roomiest of them. The ruled contract holds in all
+   nine shapes via the ACT. Closing the chip half would need the `.ix-cross` bars compacted, which
+   R1 explicitly forbade.
 2. **`m-home-dark` does not exist.** Cycle 2 added the light phone home only, which is what the
    named fix asked for. The dark phone home is still unguarded by pixels; `home_reflow` and
    `home_fold` cover its geometry in both themes and at 390 respectively.
+   *(BOTH of these were carried into cycle 3's brief as judges' items and are CLOSED below --
+   item 1 scopes the sentence, item 6 adds the baseline.)*
+
+---
+
+## CYCLE 3 -- 2026-08-02
+
+One team-lead ruling on the cycle-2 escalation (R4) plus the judges' eight non-escalated items.
+**All nine closed.** Two things were found while building the arms and are disclosed at the end
+rather than folded into an item: `home_fold`'s measurements were a **57px coin flip**, and the
+escalation's own "worth 57px" figure did **not** survive an isolated re-derivation. Both are
+receipts against the same lesson -- a number quoted from one draw of a random variable is not a
+measurement, and this cycle produced one of each: the check's numbers were random and nobody knew,
+and a judge's number was one draw and read as a fact.
+
+---
+
+### R4 -- THE KICKER -- CLOSED
+
+`src/scripts/app/panels.js` -- `goalStrip()` no longer renders
+`<span class="ix-home-k">This week's goal</span>`. `telemetryHtml()` is its only consumer and it
+renders inside the panel whose head reads **"This week"**, so the kicker named the same period twice
+directly under that head, in every render path, cold and engaged. The head names the period; the
+line under the bar states the fact.
+
+**MEASURED, all four records, on the built page** (`kicker` is read from the live DOM, not asserted
+from source):
+
+| record | head | kicker | the line under the bar |
+|---|---|---|---|
+| cold 1280x800 | This week | **absent** | 0 of 5 topics drilled this week &middot; 5 more to go |
+| engaged 1280x800 | This week | **absent** | 12 topics drilled this week &middot; Goal met -- nice work. |
+| cold 390x844 | This week | **absent** | 0 of 5 topics drilled this week &middot; 5 more to go |
+| engaged 390x844 | This week | **absent** | 12 topics drilled this week &middot; Goal met -- nice work. |
+
+No repeated word between the head and its content on any of the four.
+
+**One declaration went with it, and it is not cosmetic.** `.ix-goal-top` was
+`justify-content:space-between` for a row holding a kicker on the left and the stepper on the
+right. With one child left, `space-between` resolves to `flex-start` and the bare `- 5 +` control
+slides under the head and reads as its content. It is `flex-end` now, so the stepper holds the
+right edge of the bar it sets. Verified on the built page: `justifyContent: flex-end` at both
+viewports, stepper box unchanged.
+
+**No assertion pinned the kicker text.** `grep -rn "This week" test/` returns nothing; the only
+source hits are `home-view.js:555` (the panel head, which stays) and the deleted line itself.
+
+**VR re-captured, as authorized** -- see the VR section: the ENTIRE diff is a **101x7 box** holding
+the kicker's glyphs. The row's height never depended on it (the 20px stepper is the taller child),
+so nothing below it moved, and the pixel evidence is exactly the duplicate label disappearing.
+
+---
+
+### JUDGES' ITEM 1 -- AN ABSOLUTE ASSERTED FROM NINE SAMPLES -- CLOSED
+
+Both sites now read "in the nine shapes `home_fold` pins" instead of "never ... at 390x844"
+(the R1 disclosure and the cycle-2 STILL-OPEN note, edited in place above with a dated parenthesis
+so the change is visible rather than silent).
+
+**The cited counterexample was re-derived, and it does not stand -- for a reason that matters more
+than the sentence.** The judge measured the ruled `two-thin x 1 bar x short hero` shape on a
+record-less resume topic and got the first chip at **730-774 inside a 57-799 band**. Driven twelve
+times on that exact cell, it comes back **787-831 (32px OUT)** or **730-774 (25px IN)** with
+*nothing else changed*: the home's Resume CTA carries `data-autofocus="1"`, focusing it scrolls it
+into view, and on roughly one load in six the page is still sitting at `scrollY` **57** -- exactly
+the fixed rail's height -- when the measurement runs, drifting back to 0 within a second. Every box
+then reads 57px higher while the band, computed from `position:fixed` chrome, does not move at all.
+So the judge's 730-774 and cycle 2's 787 are **two draws of the same coin, not two record shapes**.
+Fixed in the check (see FOUND WHILE MEASURING); with the scroll pinned, the chip list is out in
+**all 22** measured cells. The scoping edit is applied anyway, because it was always right: nine
+samples cannot license "never".
+
+---
+
+### JUDGES' ITEM 2 -- THE FOURTH TERM -- CLOSED, AND IT WAS WORSE THAN MISSING
+
+The judge reported that `home_fold` documents the fold as "a function of THREE independent things"
+while a fourth of comparable size -- which `.hm-since` sentence the resume topic earns -- was held
+constant. **Measured, it was not held constant. It was CONFOUNDED with the first term.** Reading
+the resume shape back off all eight seeded rows:
+
+```
+short hero -> resumes `slos`             -> has-record   (all four short rows)
+LONG  hero -> resumes `content-pipeline` -> no-record    (all four long rows)
+```
+
+Every row sat on the diagonal. The two crossed cells had never been measured, and any difference
+the matrix attributed to hero wrap was carrying an unknown share of the since-sentence -- which is
+the check's own "sampling one arbitrary question would be measuring luck", one term over.
+
+**The fix.** `cfg.resume` (`'has-record' | 'no-record'`) is a **declared field on every row**, is
+**read back off the rendered page** like the other three, and is asserted in the row-shape arm --
+so a term that stops varying now fails the check instead of quietly riding along. The eight
+originals are pinned to the shape they always rendered, so cycle 2's table is preserved exactly
+(769 / 787 / 847 / 865 reproduce to the pixel), and the two crossed cells are added:
+`two-thin x 2 bars x LONG hero x has-record` and `one-thin x 1 bar x short hero x no-record`.
+
+**A deliberate deviation from the named fix, and the reason.** The fix said to point the hero cursor
+at a topic the percentage fill did touch versus one it did not. That re-aims the cursor, which moves
+the hero question at the same time -- i.e. it would have rebuilt the exact confound this item exists
+to remove. The term is instead forced **on the topic the hero already points at** (delete its record,
+or write a small three-card one), so the hero is byte-identical across a resume pair and the two
+terms are genuinely independent. The write is never `done === tot`, so it cannot make a topic weak
+and change the bar count out from under the row.
+
+**AND THE MEASURED ANSWER, which is not the escalation's.** With the pair isolated and the scroll
+pinned, the resume shape is worth **0px** -- on every one of the 11 records, at 390 **and** 360:
+
+```
+390  two-thin x 2 bars x LONG hero  : no-record chips 1006 | has-record chips 1006
+390  one-thin x 1 bar x short hero  : has-record chips  769 | no-record  chips  769
+360  two-thin x 2 bars x LONG hero  : no-record chips 1087 | has-record chips 1087
+360  one-thin x 1 bar x short hero  : has-record chips  856 | no-record  chips  856
+```
+
+`.hm-since` measures **34px in both branches** at both widths -- the shorter sentence still wraps to
+two lines. The escalation's "measured worth 57px" is the scroll coin above, not the since-sentence:
+57 is the rail's height, and it appears in the data wherever a scrolled sample met an unscrolled one.
+**The coverage hole was real and is closed; its geometric cost on the pinned records is nil**, and
+that is a stronger statement than the one the item asked for, because it comes from a controlled
+pair rather than two differently-seeded records.
+
+The header comment reads "FOUR independent things", names the since-sentence, and records the
+confound and how the term is set.
+
+---
+
+### JUDGES' ITEM 3 -- `.hm-tele`'s BOTTOM MARGIN -- CLOSED
+
+`src/styles.css` is now `.hm-tele{max-width:var(--measure-home)}`. The registry entry at
+`test/home_rhythm.py:172` is deleted (with the reason left in place of it) and
+`gap.home.telemetry` is deleted from `design-tokens/tokens.json` with the `$description` amended --
+exactly what `home_rhythm`'s own STALE-entry message prescribes, in one commit.
+
+**MEASURED on the built page, before and after:**
+
+| | before | after |
+|---|---|---|
+| engaged @1280, the two `.hm-duo` panels | Still-shaky bottom **1078**, This-week **1052** -- 26px apart | **both end on the same line** |
+| cold @1280, `.hm-duo` height vs its content | 144 vs 118 -- 26px of empty row | **118 vs 118, slack 0** |
+| cold @390, `.hm-duo` height vs its content | 168 vs 142 | **142 vs 142, slack 0** |
+| `.hm-duo` bottom -> `.hm-rooms` top | 52px (`--gap-home-telemetry` + `--gap-home-duo`) | **26px**, at all four records |
+
+Intra-row spacing was already `.hm-duo`'s own `gap:var(--space-16)` and row-to-next-block was
+already `--gap-home-duo`; this margin was a third answer to a question two layers had answered, and
+inside a grid row it is not rhythm at all -- it is 26px subtracted from the cell.
+
+`HOME RHYTHM: PASS (7 rhythm gap(s) + 11 measure(s) ... registry matches discovery exactly)` --
+**0 NEW, 0 STALE**, gaps 8 -> 7 as the named fix predicted. `.hm-tele` stays IN SCOPE via its
+measure, so discovery still judges it. `PHANTOM TOKENS: PASS` -- the deleted token left no orphan.
+
+No pixels moved in any baseline: `.hm-rooms` sits below the fold at both captured viewports, which
+is why a 26px gap change is invisible to VR and why `home_rhythm` -- a static token check whose
+bidirectional registry actively REQUIRED the margin -- was the one thing that could never have
+found it.
+
+---
+
+### JUDGES' ITEM 4 -- "ANYWHERE" WAS A CLAIM THE HOME COULD NOT KEEP -- CLOSED
+
+`src/scripts/app/keyboard-overlay.js`: the `P` row, the `N` row **and** the `[` `]` row move out of
+the section headed "Anywhere" into the topic section, whose head is re-titled from "Move through the
+one you're on" to **"While you're in a topic"** so it honestly covers stepping *between* topics as
+well as within one.
+
+**`[` / `]` is disclosed scope the item did not name, and it is the same defect.** shell.js's home
+block returns on it verbatim (`if (key === '[' || key === ']') return;`), and "Previous / next
+topic" has no referent on a route with no current topic. Fixing two of three and leaving the third
+under a head that says "Anywhere" would have left the check needing an exemption list -- which is
+the thing that rots.
+
+**Ctrl+P is declared OUT OF SCOPE rather than skipped.** It is a chord, which shell.js's map
+deliberately does not own (its MODIFIER GUARD blocks every Ctrl-without-Alt), it is served by
+`print-qa.js`, and driving it opens a popup window. It carries an explicit `'chord'` claim so the
+cross-check still sees its row. **Recorded for a later wave, not fixed here:** `openPrint()` reads
+`TopicRegistry.current()`, which on the home is the BOOT constant -- so Ctrl+P on the home builds a
+printable Q&A for a topic the user never chose. That is the exact class W1.5 cycle 1 fixed for `p`,
+one module over, pre-existing, and it needs its own decision about what Ctrl+P should do on a route
+with no topic.
+
+**THE ARM: `test/overlay_deadzone.cjs`, new section 6** (the file the named fix specified, whose
+subject is already "did a layer act when it had no business acting"). It does **not** assert "every
+advertised key does something", which is wrong in both directions -- `H` does nothing observable on
+the home because you are already there, `Esc` does nothing because nothing is open, and neither is
+a broken promise. Instead:
+
+- every row under "Anywhere" carries a **declared claim** in the check, and the table is
+  cross-checked against the **rendered overlay both ways** -- an undeclared row fails, a claim with
+  no row fails;
+- **each claim is then DRIVEN with trusted keys on `#home`**: `/` and `\` and `?` must open a
+  dialog, `F` must toggle focus mode, `G` must start the tour, `D` must change the density
+  attribute, `Esc` is driven **with a panel actually open** (that is the whole claim), and `H` is
+  proved from a topic route as well, since on the home its destination is where you already are;
+- the three relocated keys are proved **both ways** -- dead on `#home` AND live on a topic route --
+  so the qualifier is earned rather than used as an alibi;
+- a `driven >= 8` counter, because a claims table whose rows are all skips is decoration.
+
+**A BLIND PROBE, CAUGHT BY ITS OWN SHAPE.** The first run failed on `/` alone while `\` and `?`
+passed beside it. The search overlay is built in JS and driven by an **inline display**, with no
+`.open` class anywhere, so the class-based reader section 5 uses comes back empty while that dialog
+is on screen. The section-6 reader reads the element instead of the convention (live client rects,
+`display !== 'none'`, not `.closing`). One green failing while its two siblings pass is the shape of
+a blind probe, not a broken app -- recorded because the opposite mistake would have been to "fix"
+the app.
+
+**MUTANT-TESTED.** The `P` row moved back under "Anywhere", rebuilt, re-run:
+
+```
+- [anywhere] every row under "Anywhere" has a declared claim here, and every claim still has a row
+    [undeclared rows: ["P"]  claims with no row: []]
+- [anywhere] the three keys that need a topic are listed under the topic-scoped head, not under "Anywhere"
+    [not in the topic section: ["P"]  still under Anywhere: ["P"]]
+OVERLAY DEADZONE: FAIL  (2 of 58 assertions)
+```
+
+Both arms red, and only those two. Restored: `OVERLAY DEADZONE: PASS (58 assertions)`, up from 40.
+`flow_a11y`'s `#10` arm still finds its `N` row (it searches the whole overlay, not one section):
+`FLOW A11Y: PASS (6 assertions)`.
+
+---
+
+### JUDGES' ITEM 5 -- ONE WIDTH LICENSING A WHOLE BAND -- CLOSED
+
+**Swept width by width rather than restated.** The `<=419px` comment now reads what the band
+actually does:
+
+```
+320 340 355 360 361 362 363 -> h=40  (two rows; "Untouched" orphans onto a second line)  => 46px
+364 365 366 367 368 375 390 400 412 419 -> h=15  (one row)                               => 21px
+```
+
+The wrap boundary is **364px**, bisected, not estimated -- so the escalation's "320-368" is wrong at
+its top end and cycle 2's flat "21px, 2.8%" is wrong below 364. With the 6px margin-top the hide was
+worth **21px at 364-419 and 46px at 320-363**: 2.8% and **6.2%** of the same 742px band.
+
+The comment also states **why** no fold outcome flipped, which cycle 2 asserted and did not explain:
+the practice act sits ABOVE the gauge in `home-view.js html()`, so nothing the gauge does to its own
+height can push the act out of the band. That is structural, not lucky.
+
+**And the band is now measured every gate instead of extrapolated.** `test/home_fold.cjs` loops its
+whole SHAPES array over `[[390,844],[360,844]]` -- 360 is inside the two-row half, 390 inside the
+one-row half. `HOME FOLD: PASS (88 assertions across 11 records x 390x844 + 360x844)`, with the
+practice-block mutant planted and watched red **at each viewport** (the check now ABORTS if the
+plant is proved at fewer viewports than it runs, so a self-test at one width can never be reported
+for two). The contract holds in all 22 cells; `actIn` is true in every one.
+
+---
+
+### JUDGES' ITEM 6 -- THE DARK PHONE HOME -- CLOSED
+
+`{ key: 'm-home-dark', hash: '', theme: 'dark', vp: 'mobile' }` added to the MATRIX beside
+`m-home-light`; COVERS header **17 -> 18**. The new baseline was reviewed as an image before being
+committed: the fixed rail, the hero, the practice act directly under the decision, the gauge and the
+fixed tab bar all render correctly in dark.
+
+The hole was worth closing on its own terms: the `@media(max-width:919px)` home block changes
+padding, gaps, the rail track height, the verdict's leading **and its `border-top`** -- and a border
+is painted from `--bd`, a THEME token. The one declaration in that block most likely to break on a
+palette change was the one nothing photographed.
+
+---
+
+### JUDGES' ITEM 7 -- THE MET SENTENCE -- CLOSED (attribution kept)
+
+`goalPhrase()`'s met branch already ENDS in "...goal met", so `goalStrip()` gluing
+`' drilled this week &middot; ' + note` onto it rendered, verbatim:
+
+```
+41 topics drilled, 5-topic goal met with 36 to spare drilled this week - Goal met - nice work.
+```
+
+A broken clause with "goal met" three times. Past the target the figure is the whole fact and `note`
+carries the state, so the line is now composed rather than concatenated. **Driven on a 12-topic
+week, both viewports:** `12 topics drilled this week &middot; Goal met -- nice work.`
+`goalPhrase()` still owns the unmet ratio (`0 of 5 topics drilled this week &middot; 5 more to go`)
+and the `role=img` accessible name, which is left exactly as the fix specified
+(`12 topics drilled, 5-topic goal met with 7 to spare this week`).
+
+**Attribution kept, as the item asked:** `git show 2696291:src/scripts/app/panels.js` is
+byte-identical here, so W1.5 did not create this. What W1.5 did was make this the app's ONE goal
+surface on every record class, which is what put the sentence in front of every user.
+
+---
+
+### JUDGES' ITEM 8 -- THE DESTROYED SPACE -- CLOSED
+
+`src/scripts/app/shell.js:262` reads `const homeTabKeys = {` again. Rebuilt; `SYNTAX CHECK: PASS`.
+
+---
+
+### FOUND WHILE MEASURING -- `home_fold` WAS A COIN FLIP, AND IT IS FIXED
+
+Not in the brief, disclosed rather than filed, because the alternative was leaving a brand-new
+check publishing random numbers that two separate parties had already quoted as facts.
+
+**The defect.** `FOLD()` measured whatever scroll position the page happened to be at. The home's
+Resume CTA carries `data-autofocus="1"`; focusing it scrolls it into view, and on **2 of 12** loads
+the page was still at `scrollY 57` -- the fixed rail's height -- when the measurement ran, settling
+back to 0 within 1.5s. Every box then read 57px higher while the band, computed from `position:fixed`
+chrome, stayed `[57,799]`. Measured on one record, twelve times:
+
+```
+TWO1/short/no  #0  chip1=787-831 chipIn=false      <- cycle 2's recorded number
+TWO1/short/no  #1  chip1=787-831 chipIn=false
+TWO1/short/no  #2  chip1=730-774 chipIn=TRUE       <- the judge's "counterexample"
+```
+
+Same config, same build, opposite verdict on containment.
+
+**The fix.** `FOLD()` now scrolls to the top before it measures anything --
+`window.scrollTo({top:0,left:0,behavior:'instant'})`, where `behavior:'instant'` is load-bearing
+because `styles.css` sets `html{scroll-behavior:smooth}` and a plain `scrollTo` would animate under
+the rects read on the next line -- and the scroll is **read back and asserted** in the row-shape
+arm, so a scroll the check cannot undo fails it loudly instead of silently shifting every number in
+it. A fold check measures the FIRST screen, and the first screen is by definition the unscrolled one.
+
+**Proof it is fixed:** three consecutive full runs now produce **byte-identical** measurement lines
+(`md5sum` of every `hero ...` line, three runs, one hash), and every number reproduces cycle 2's
+recorded table exactly.
+
+**The verdict was never wrong, only the numbers.** `actIn` is true in all 22 cells in both scroll
+states -- the act clears the fold by 216-410px, so a 57px displacement cannot flip it. The contract
+this check exists for held throughout; what was unreliable was every chip figure it printed, and
+both the ledger's table and the escalation against it drew from that.
+
+**The app-side finding, recorded not fixed:** the phone home paints ~57px scrolled for a beat on
+some loads before settling back. It is transient, self-correcting, pre-existing, and out of this
+cycle's brief; the honest fix is a decision about whether `data-autofocus` should scroll at all on
+a route whose first screen is the deliverable, which is its own item. VR is not exposed: `stableShot`
+requires two consecutive byte-identical frames, and 18/18 baselines verified clean twice after the
+rebaseline.
+
+---
+
+## VR CONTRACT, CYCLE 3 -- HONOURED
+
+`git status test/baselines/` lists exactly four paths: the two home PNGs (modified), `manifest.json`
+(two sha256 values, the new key, the generated timestamp) and the new
+`m-home-dark-win32-chromium149.png`. **The other 15 baselines rewrote byte-identical** under
+`npm run vr:update` -- including `m-home-light`, which is the interesting one: the phone home's
+kicker and the `.hm-tele` gap both sit below the 844px viewport on the cold record, so the change
+is genuinely invisible there rather than merely unphotographed.
+
+**The diff was reviewed BEFORE regenerating**, and it is the cleanest attribution this wave has
+produced:
+
+```
+home-light   492 px changed (0.048%, worst channel delta 157/255) in a 101x7 box at (332,723)
+home-dark    492 px changed (0.048%, worst channel delta 137/255) in a 101x7 box at (332,723)
+m-home-dark  the manifest declares no baseline for this key -- the matrix grew but the baselines did not
+```
+
+101x7 is the kicker's glyphs and nothing else. Both diff images were opened and read; the red region
+sits directly under the panel head "THIS WEEK", which is the duplication R4 named. Nothing else moved
+because the row's height never depended on the kicker -- the 20px stepper is the taller child.
+
+Both new home baselines and the new `m-home-dark` were reviewed **as images** after regenerating.
+Verified twice after the write, each a fresh capture:
+
+```
+18 baselines compared; worst = 0 px (home-light), budget 32 px.
+VISUAL REGRESSION: PASS  (18 baselines, win32-chromium149)
+```
+
+Two clean verifies rather than one, deliberately: this cycle found a 57px non-determinism in a
+sibling check, and a baseline written from a bad capture is the one failure mode that turns a
+regression into the new reference.

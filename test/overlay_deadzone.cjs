@@ -29,6 +29,12 @@
  * per-topic Session progress panel on the BOOT constant there. Same question, same instrument, one
  * route over.
  *
+ * AND THE OTHER HALF OF IT, added by W1.5 cycle 3 as section 6: a surface must not PRINT a promise
+ * the route it is printed on cannot keep. Guarding the key left the shortcuts overlay advertising
+ * `P` under a head that reads "Anywhere", on the one route where it now does nothing -- and the
+ * home is where that overlay is opened from. Same instrument again: real keys, real routes, and
+ * the app's own rendered rows as the list of what has to be true.
+ *
  * HOW IT MEASURES -- this is the part that matters.
  * This repo has shipped FIVE checks that could not fail. The reason this one can:
  *   - It dispatches REAL, HIT-TESTED input. `el.click()` bypasses hit-testing entirely and reports
@@ -461,6 +467,209 @@ async function realClick(page, sel) {
     await ctx2.close();
   }
 
+  /* ================= 6. "ANYWHERE" IS A CLAIM, AND THE HOME HAS TO HONOUR IT ==================
+   * Section 5 guards the KEY. This guards the SENTENCE the app prints about the key, which is a
+   * different thing and was left false by the fix above.
+   *
+   * THE DEFECT. keyboard-overlay.js rendered, under a section headed "Anywhere":
+   *     P -- Session progress -- where you're weak, what to drill next
+   * The Keys action in the home's own rail opens that overlay, and `?` opens it too, so the home
+   * both PRINTS the promise and -- since W1.5 cycle 1 guarded `p` there -- is the one route that
+   * cannot keep it. `N` sat one row above in the same state (`&& !onHome`, pre-existing) and
+   * `[` / `]` two rows above that (`if (key === '[' || key === ']') return;` on the home). This
+   * repo's own rule is that a surface may not print a claim it cannot derive; three rows of its
+   * keyboard help were doing exactly that. All three now live under "While you're in a topic".
+   *
+   * WHY THE ARM IS BUILT THIS WAY. "Read the rows and assert each advertised key does something"
+   * is the obvious form and it is wrong in both directions: `H` does nothing observable on the
+   * home because you are ALREADY home, `Esc` does nothing because nothing is open, and neither is
+   * a broken promise. So every row under "Anywhere" carries a DECLARED CLAIM here, the table is
+   * cross-checked against the rendered overlay BOTH WAYS -- a new row with no claim ABORTS the
+   * check, a claim no row matches ABORTS it -- and each claim is then DRIVEN with trusted keys on
+   * the #home route. A row cannot be added to "Anywhere" without someone stating what it does
+   * there, and a row cannot be moved out of it without this noticing.
+   *
+   * AND THE MOVE IS PROVED IN BOTH DIRECTIONS, so "in a topic" is earned rather than used as an
+   * excuse: each relocated key must be DEAD on the home AND ALIVE on a topic route. A qualifier
+   * attached to a key that works everywhere is just as false as "Anywhere" on one that does not.
+   *
+   * OUT OF SCOPE, DECLARED RATHER THAN SKIPPED: Ctrl+P. It is a CHORD, which shell.js's map
+   * deliberately does not own (its MODIFIER GUARD blocks every Ctrl-without-Alt combination), and
+   * print-qa.js serves it from its own listener that opens a popup window. Its claim is recorded
+   * as 'chord' so the cross-check still sees the row; driving it would be measuring another
+   * module through a window this browser context has no business opening. */
+  {
+    const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+
+    const SNAP = () => ({
+      view: document.documentElement.dataset.view || null,
+      hash: location.hash,
+      density: document.documentElement.dataset.density || 'default',
+      focusMode: !!(document.querySelector('.app')
+        && document.querySelector('.app').classList.contains('_focus-mode')),
+      tour: !!(window.TourGuide && window.TourGuide.isActive && window.TourGuide.isActive()),
+      /* WHAT COUNTS AS OPEN HERE, and why it is not the `.open:not(.closing)` reader section 5
+         uses. The search overlay is BUILT IN JS and driven by an INLINE display, with no `.open`
+         class anywhere (search-overlay.js: overlayEl.style.display = 'flex') -- so the class reader
+         comes back empty while that dialog is on screen and `/` reads as dead when it is not. This
+         reads the element instead of a convention: a [role=dialog][aria-modal] with live client
+         rects that is not mid-close. Caught by this arm going red on `/` alone while `\` and `?`
+         passed beside it, which is the shape of a blind probe rather than a broken app. */
+      dialogs: [...document.querySelectorAll('[role="dialog"][aria-modal="true"]')]
+        .filter((d) => d.getClientRects().length && !d.classList.contains('closing')
+          && getComputedStyle(d).display !== 'none')
+        .map((d) => d.id || String(d.className).split(' ')[0]),
+    });
+
+    /* one fresh page per key: density lands on documentElement, focus mode on .app and the tour
+       latches, so a shared page would let one key's effect answer for the next one's */
+    const drive = async (press, opts) => {
+      const p = await ctx.newPage();
+      await B.gotoApp(p, HTML, { hash: (opts && opts.hash) || '#home' });
+      await B.settle(p);
+      if (opts && opts.pre) {
+        await p.evaluate(() => { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); });
+        await p.keyboard.press(opts.pre);
+        await B.settle(p);
+        await p.waitForTimeout(250);
+      }
+      const before = await p.evaluate(SNAP);
+      if (!opts || !opts.pre) {
+        await p.evaluate(() => { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); });
+      }
+      await p.keyboard.press(press);
+      await B.settle(p);
+      await p.waitForTimeout(250);
+      const after = await p.evaluate(SNAP);
+      await p.close();
+      return { before, after };
+    };
+
+    /* ---- what the overlay actually renders, read FROM THE HOME ---- */
+    const page = await ctx.newPage();
+    await B.gotoApp(page, HTML, { hash: '#home' });
+    await B.settle(page);
+    const ov = await page.evaluate(async () => {
+      if (typeof openKeys === 'function') openKeys();
+      await new Promise((r) => setTimeout(r, 250));
+      const host = document.querySelector('#keyov deep-keyboard');
+      const root = host && host.shadowRoot;
+      if (!root) return { err: 'the shortcuts overlay did not open on the #home route' };
+      return {
+        secs: [...root.querySelectorAll('.ks-sec')].map((s) => ({
+          head: ((s.querySelector('.ks-h') || {}).textContent || '').replace(/\s+/g, ' ').trim(),
+          rows: [...s.querySelectorAll('.ks-row, .ks-row2')].map((r) => {
+            const kbds = [...r.querySelectorAll('kbd')].map((k) => k.textContent.trim());
+            /* an "or" row lists ALTERNATIVES for one act, so it is identified by its first key */
+            const ks = r.querySelector('.ks-or') ? kbds.slice(0, 1) : kbds;
+            return { id: ks.join('+').toUpperCase(),
+              text: (r.textContent || '').replace(/\s+/g, ' ').trim() };
+          }),
+        })),
+      };
+    });
+    await page.close();
+
+    if (ov.err) {
+      chk('[anywhere] the shortcuts overlay opens on the home, where its Keys action lives', false, ov.err);
+    } else {
+      const anywhere = ov.secs.filter((s) => /^anywhere$/i.test(s.head));
+      const scoped = ov.secs.filter((s) => /\bin a topic\b/i.test(s.head));
+      chk('[anywhere] the overlay still has exactly one "Anywhere" section and one topic-scoped section',
+        anywhere.length === 1 && scoped.length === 1,
+        JSON.stringify(ov.secs.map((s) => s.head)));
+
+      /* THE DECLARED CLAIMS. `expect` names what the HOME must show after the key is pressed. */
+      const CLAIMS = {
+        '/': { press: '/', expect: 'dialog', what: 'opens the search overlay' },
+        '\\': { press: '\\', expect: 'dialog', what: 'opens the Topic index' },
+        '?': { press: '?', expect: 'dialog', what: 'brings up the shortcuts list itself' },
+        H: { press: 'h', expect: 'home', what: 'goes home -- on the home you are already there, so this is proved FROM a topic route too' },
+        F: { press: 'f', expect: 'focusMode', what: 'toggles focus mode' },
+        G: { press: 'g', expect: 'tour', what: 'starts the guided tour' },
+        D: { press: 'd', expect: 'density', what: 'cycles spacing density' },
+        ESC: { press: 'Escape', expect: 'closes', pre: '\\', what: 'closes an open panel -- driven WITH one open, since that is the whole claim' },
+        'CTRL+P': { press: null, expect: 'chord', what: 'a chord; shell.js\'s map owns plain keys only and print-qa.js serves this one' },
+      };
+      /* the three rows the fix moved, and what each must do where it now says it works */
+      const SCOPED = {
+        '[+]': { press: '[', expect: 'route', hash: '#event-driven/walk', what: 'steps to the previous topic' },
+        N: { press: 'n', expect: 'route', hash: '#event-driven/walk', what: 'goes to the next step the dock is pointing at' },
+        P: { press: 'p', expect: 'dialog', hash: '#saga/drill', what: 'opens Session progress for the topic you are in' },
+      };
+
+      const rows = anywhere.length ? anywhere[0].rows : [];
+      const ids = rows.map((r) => r.id);
+      const missing = ids.filter((i) => !CLAIMS[i]);
+      const stale = Object.keys(CLAIMS).filter((k) => ids.indexOf(k) === -1);
+      chk('[anywhere] every row under "Anywhere" has a declared claim here, and every claim still has a row',
+        missing.length === 0 && stale.length === 0,
+        'undeclared rows: ' + JSON.stringify(missing) + '  claims with no row: ' + JSON.stringify(stale));
+
+      const scopedIds = scoped.length ? scoped[0].rows.map((r) => r.id) : [];
+      const strayed = Object.keys(SCOPED).filter((k) => scopedIds.indexOf(k) === -1);
+      chk('[anywhere] the three keys that need a topic are listed under the topic-scoped head, not under "Anywhere"',
+        strayed.length === 0 && Object.keys(SCOPED).every((k) => ids.indexOf(k) === -1),
+        'not in the topic section: ' + JSON.stringify(strayed) + '  still under Anywhere: '
+        + JSON.stringify(Object.keys(SCOPED).filter((k) => ids.indexOf(k) !== -1)));
+
+      /* ---- DRIVE every Anywhere claim on #home ---- */
+      let driven = 0;
+      for (const id of ids) {
+        const c = CLAIMS[id];
+        if (!c || !c.press) continue;                       /* the declared chord */
+        const { before, after } = await drive(c.press, { pre: c.pre });
+        let ok = false, saw = '';
+        if (c.expect === 'dialog') {
+          ok = after.dialogs.length > before.dialogs.length;
+          saw = 'dialogs ' + JSON.stringify(before.dialogs) + ' -> ' + JSON.stringify(after.dialogs);
+        } else if (c.expect === 'closes') {
+          ok = before.dialogs.length > 0 && after.dialogs.length === 0;
+          saw = 'opened ' + JSON.stringify(before.dialogs) + ', after Escape ' + JSON.stringify(after.dialogs);
+        } else if (c.expect === 'focusMode') {
+          ok = after.focusMode !== before.focusMode;
+          saw = 'focus mode ' + before.focusMode + ' -> ' + after.focusMode;
+        } else if (c.expect === 'tour') {
+          ok = after.tour && !before.tour;
+          saw = 'tour active ' + before.tour + ' -> ' + after.tour;
+        } else if (c.expect === 'density') {
+          ok = after.density !== before.density;
+          saw = 'density ' + before.density + ' -> ' + after.density;
+        } else if (c.expect === 'home') {
+          const away = await drive('h', { hash: '#event-driven/walk' });
+          ok = after.view === 'home' && after.dialogs.length === 0
+            && away.before.view !== 'home' && away.after.view === 'home';
+          saw = 'on the home it stays home (' + after.view + '); from #event-driven/walk it lands on '
+            + away.after.view;
+        }
+        driven++;
+        chk('[anywhere] ' + id + ' on #home -- ' + c.what, ok, saw);
+      }
+      /* a table whose rows are all skips is decoration */
+      chk('[anywhere] the claims were actually driven, not merely declared',
+        driven >= 8, 'only ' + driven + ' of ' + ids.length + ' rows were pressed');
+
+      /* ---- DRIVE the three relocated keys BOTH WAYS ---- */
+      for (const id of Object.keys(SCOPED)) {
+        const s = SCOPED[id];
+        const dead = await drive(s.press, {});                       /* on #home */
+        chk('[anywhere] ' + id + ' is genuinely dead on #home, which is why it left "Anywhere"',
+          dead.after.dialogs.length === 0 && dead.after.hash === dead.before.hash
+          && dead.after.view === 'home',
+          JSON.stringify({ before: dead.before, after: dead.after }));
+
+        const live = await drive(s.press, { hash: s.hash });          /* on a topic route */
+        const okLive = s.expect === 'dialog'
+          ? live.after.dialogs.length > live.before.dialogs.length
+          : live.after.hash !== live.before.hash;
+        chk('[anywhere] ' + id + ' still ' + s.what + ' on a topic route (the qualifier is earned, not an alibi)',
+          okLive, JSON.stringify({ hash: live.before.hash + ' -> ' + live.after.hash,
+            dialogs: live.after.dialogs }));
+      }
+    }
+    await ctx.close();
+  }
+
   await browser.close();
 
   notes.forEach((n) => console.log(n));
@@ -472,6 +681,8 @@ async function realClick(page, sel) {
   console.log('OVERLAY DEADZONE: PASS  (' + notes.length +
     ' assertions: the first real click lands; no layer hit-tests while fading; focus leaves a closing' +
     ' dialog; the keymap stays suppressed under an open one and on the home, where it has no topic' +
-    ' to mean; no unrequested modal at first paint)');
+    ' to mean; every key the shortcuts overlay advertises under "Anywhere" was driven ON the home' +
+    ' and did what the row says, and the three that need a topic are dead there and live in one;' +
+    ' no unrequested modal at first paint)');
   return B.finish(0, null);
 })();

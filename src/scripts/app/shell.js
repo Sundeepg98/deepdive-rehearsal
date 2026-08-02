@@ -259,7 +259,7 @@ document.addEventListener('keydown', function (event) {
        home's own record surfaces (the gauge, the status census, Still shaky) already state that
        for every topic -- so, like `n`, it does nothing here. */
     if (key === 'p') return;
-    const homeTabKeys ={ q: 'walk', w: 'drill', e: 'wb', r: 'sys', t: 'trade', y: 'model', u: 'num', i: 'rf', o: 'open', v: 'viz' };
+    const homeTabKeys = { q: 'walk', w: 'drill', e: 'wb', r: 'sys', t: 'trade', y: 'model', u: 'num', i: 'rf', o: 'open', v: 'viz' };
     if (homeTabKeys[key]) {
       const rid = (window.LastVisit && LastVisit.topicId) ? LastVisit.topicId() : null;
       if (!rid || typeof TopicRegistry === 'undefined' || !TopicRegistry.get(rid)) return;   /* no topic to mean */

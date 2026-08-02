@@ -38,6 +38,24 @@ kbd.ks-mini{min-width:var(--space-18);height:var(--space-18);font-size:var(--fon
 .ks-note{margin-top:var(--space-14);font-size:var(--font-size-micro);line-height:var(--line-height-airy);color:var(--mut2);padding:var(--space-10) var(--space-13);background:linear-gradient(135deg,var(--accbg) 0%,var(--acc-a02) 100%);border-radius:8px}
 .ks-foot{margin-top:var(--space-18);padding-top:var(--space-14);border-top:1px solid var(--bd);font-size:var(--font-size-micro);line-height:var(--line-height-airy);color:var(--mut)}
 `;
+/* "ANYWHERE" IS A CLAIM, AND THE HOME IS A PLACE (W1.5 cycle 3).
+   This overlay is opened FROM the home -- by the rail's own Keys action and by `?` -- and it
+   rendered three rows under the head "Anywhere" that the home route cannot honour:
+     P   the per-topic Session progress panel. W1.5 cycle 1 guarded it on the home (shell.js:261)
+         because it was opening on the BOOT constant, a topic the user never chose. Correct fix,
+         and it made the row above dead on the surface printing it.
+     N   `&& !onHome` (shell.js:280), pre-existing and the same shape.
+     [ ] `if (key === '[' || key === ']') return;` on the home (shell.js:253) -- "previous / next
+         topic" has no referent on a route with no current topic.
+   All three need a topic, so they live with the other keys that need one and the section head
+   says so. "Anywhere" now holds only keys that act on every route -- this repo's own rule that a
+   surface may not print a claim it cannot derive, applied to its own keyboard help.
+   GUARDED, both directions, by test/overlay_deadzone.cjs section 6: every row under "Anywhere"
+   must have a declared claim in that check's table (a new row with no entry ABORTS it) and every
+   claim is DRIVEN on #home; the three rows moved here must be dead on the home AND live on a
+   topic route, so the qualifier is earned rather than used as an excuse.
+   OUT OF SCOPE, recorded rather than silently skipped: Ctrl+P is a CHORD, which shell.js's map
+   deliberately does not own (see its MODIFIER GUARD), and it is served by print-qa.js. */
 var KBD_HTML = `<div class="ks-sec">
         <div class="ks-h">Jump straight to any view</div>
         <div class="ks-grid">
@@ -54,11 +72,14 @@ var KBD_HTML = `<div class="ks-sec">
         <div class="ks-note"><kbd class="ks-mini">Q</kbd> to <kbd class="ks-mini">O</kbd> run left-to-right across the top row, in pane order &mdash; just reach, no memorizing. Topics with a visual mode add <kbd class="ks-mini">V</kbd> &mdash; Visualize.</div>
       </div>
       <div class="ks-sec">
-        <div class="ks-h">Move through the one you&rsquo;re on</div>
+        <div class="ks-h">While you&rsquo;re in a topic</div>
         <div class="ks-list">
           <div class="ks-row2"><span class="ks-keys"><kbd>&larr;</kbd><kbd>&rarr;</kbd></span><span>Step back &amp; forward through the walkthrough</span></div>
           <div class="ks-row2"><span class="ks-keys"><kbd>Space</kbd><span class="ks-or">/</span><kbd>Enter</kbd></span><span>Reveal the answer &middot; advance the next beat</span></div>
           <div class="ks-row2"><span class="ks-keys"><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd></span><span>In the drill, grade yourself &mdash; Missed &middot; Shaky &middot; Solid</span></div>
+          <div class="ks-row2"><span class="ks-keys"><kbd>[</kbd><kbd>]</kbd></span><span>Previous &middot; next topic</span></div>
+          <div class="ks-row2"><span class="ks-keys"><kbd>N</kbd></span><span>Go to your next step &mdash; the drill, whiteboard or mock the app points you at</span></div>
+          <div class="ks-row2"><span class="ks-keys"><kbd>P</kbd></span><span>Session progress &mdash; where you&rsquo;re weak, what to drill next</span></div>
         </div>
       </div>
       <div class="ks-sec">
@@ -67,9 +88,6 @@ var KBD_HTML = `<div class="ks-sec">
           <div class="ks-row2"><span class="ks-keys"><kbd>/</kbd><span class="ks-or">or</span><kbd>Ctrl</kbd><kbd>K</kbd></span><span>Search topics, concepts &amp; views</span></div>
           <div class="ks-row2"><span class="ks-keys"><kbd>\\</kbd></span><span>Open the Topic index</span></div>
           <div class="ks-row2"><span class="ks-keys"><kbd>H</kbd></span><span>Home &mdash; every topic, your bookmarks, where you left off</span></div>
-          <div class="ks-row2"><span class="ks-keys"><kbd>[</kbd><kbd>]</kbd></span><span>Previous &middot; next topic</span></div>
-          <div class="ks-row2"><span class="ks-keys"><kbd>N</kbd></span><span>Go to your next step &mdash; the drill, whiteboard or mock the app points you at</span></div>
-          <div class="ks-row2"><span class="ks-keys"><kbd>P</kbd></span><span>Session progress &mdash; where you&rsquo;re weak, what to drill next</span></div>
           <div class="ks-row2"><span class="ks-keys"><kbd>F</kbd></span><span>Focus mode &mdash; hide the side panels</span></div>
           <div class="ks-row2"><span class="ks-keys"><kbd>Ctrl</kbd><kbd>P</kbd></span><span>Printable Q&amp;A of this topic&rsquo;s probes</span></div>
           <div class="ks-row2"><span class="ks-keys"><kbd>G</kbd></span><span>Start the guided tour</span></div>

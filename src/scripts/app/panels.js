@@ -148,16 +148,36 @@
     return n(g.done) + ' of ' + g.target + ' topics';
   }
 
+  /* A LABEL LABELS ONCE, so this strip carries no kicker.
+     telemetryHtml() is goalStrip()'s only consumer and it renders inside the panel whose head
+     already reads "This week" -- so a "This week's goal" line directly under that head named the
+     same period twice in EVERY render path, cold and engaged. The head names the period; the line
+     under the bar states the fact ("0 of 5 topics drilled this week"). The stepper keeps its place
+     at the right edge of its row (.ix-goal-top is justify-content:flex-end now that it holds one
+     child) and keeps its own accessible names -- "Lower/Raise the weekly goal" is where the words
+     "weekly goal" are still said, for the reader who needs them said.
+
+     AND THE MET SENTENCE IS COMPOSED, NOT CONCATENATED. goalPhrase()'s met branch already ENDS in
+     "...goal met", so appending " drilled this week &middot; Goal met" to it rendered, verbatim, on
+     a 41-topic week: "41 topics drilled, 5-topic goal met with 36 to spare drilled this week
+     &middot; Goal met -- nice work." A broken clause with "goal met" three times. That defect is
+     byte-identical at master 2696291 -- W1.5 did not create it, it made this the app's ONE goal
+     surface on every record class, which is what put it in front of every user. Past the target the
+     figure is the whole fact and `note` carries the state; goalPhrase() still owns the unmet ratio
+     and the accessible name, so the one place that puts this fact into words stays one place. */
   function goalStrip() {
     var g = weeklyGoal(), left = g.target - g.done;
     var note = g.met ? 'Goal met &mdash; nice work.' : left + ' more to go';
-    return '<div class="ix-goal"><div class="ix-goal-top"><span class="ix-home-k">This week&rsquo;s goal</span>' +
+    var line = g.met
+      ? '<b>' + g.done + '</b> topics drilled this week'
+      : goalPhrase(g, true) + ' drilled this week';
+    return '<div class="ix-goal"><div class="ix-goal-top">' +
       '<span class="ix-goal-set"><button type="button" class="ix-goal-b" data-goal="dec" aria-label="Lower the weekly goal">&minus;</button>' +
       '<span class="ix-goal-t" aria-live="polite">' + g.target + '</span>' +
       '<button type="button" class="ix-goal-b" data-goal="inc" aria-label="Raise the weekly goal">+</button></span></div>' +
       '<div class="ix-goal-bar' + (g.met ? ' met' : '') + '" role="img" aria-label="' +
       goalPhrase(g) + ' this week"><span style="width:' + g.pct + '%"></span></div>' +
-      '<div class="ix-home-v">' + goalPhrase(g, true) + ' drilled this week &middot; ' + note + '</div></div>';
+      '<div class="ix-home-v">' + line + ' &middot; ' + note + '</div></div>';
   }
 
   /* WHERE THE USER LEFT OFF. LastVisit (topic+view) first; the most recently graded topic as a

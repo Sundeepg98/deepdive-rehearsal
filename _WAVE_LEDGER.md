@@ -1431,6 +1431,61 @@ VISUAL REGRESSION: PASS  (18 baselines, win32-chromium149)
 
 ---
 
+## GATE, CYCLE 4 -- 77/77 PASS
+
+```
+  77 checks in 917.6s (15.3 min)
+GATE: PASS
+```
+
+Full serial run (`python3 test/check_all.py`, no `--fast`, no `--shared-browser`), exit 0, **zero
+FAIL lines and zero SKIPs**. Capture: **`_audit/2026-08-02-w15-cycle4-gate.txt`** (scratch copy at
+`%TEMP%\claude\D--claude-workspace-deepdive-rehearsal\<session>\scratchpad\w15-cycle4-gate.txt`).
+Taken on the **COMMITTED** tree (`1eeced6`), which is why `build_integrity` reads the strong form:
+
+```
+BUILD INTEGRITY: PASS  (12277559 bytes, 0 unresolved, 9 panes + 7 overlays,
+build SYNCED the deliverable, COMMITTED deliverable == fresh build of HEAD)
+```
+
+The count is **77**, unchanged from cycles 2 and 3: every arm this cycle adds extends an existing
+check, so nothing registered separately. The five lines that carry this cycle's work:
+
+```
+overlay_deadzone   PASS  (68 assertions: ... the keymap stays suppressed under an open one, on
+                          the home, and BEFORE THE FIRST APPLIED ROUTE, where it has no route to
+                          mean anything against -- that one preflighted on a build with the gate
+                          line deleted; ... the four that need a topic are dead there and live
+                          in one, Ctrl+P included)
+home_claims        PASS  13 planted mutants detected (... the pre-cycle-3 goal concatenation,
+                          which named the met state three times in one sentence; "1 topics
+                          drilled this week" on a week of one; and an accessible name built from
+                          the other branch, so the eye and a screen reader got the same fact in
+                          two different sentences)
+touch_floor        PASS  (the weekly-goal stepper clears 44 in both axes on a COLD home, its two
+                          targets do not overlap, the floor survives a density change, and
+                          restoring the 20px box is detected)
+visual_regression  PASS  (18 baselines, win32-chromium149; every capture reached a proven rest
+                          state across all 18 roots and matched its committed pixels)
+home_fold          PASS  (88 assertions across 11 records x 390x844 + 360x844 -- unmoved by the
+                          18px the stepper added to the desktop panel)
+```
+
+**FOUR full gate runs were spent on this cycle, and three of them were mine to avoid.** The first
+was a working-tree pre-flight (77/77, 19.4 min). The second and third were each invalidated as
+runs of record because I edited a checked file WHILE they ran -- once to add `touch_floor`'s
+density-restore assertion, once to strike the overlap claim. A run of record has to be reproducible
+from the commit it names; an edit mid-run means the capture describes a tree that no longer exists.
+Recorded rather than quietly re-run: the rule is finish every edit, commit, THEN start the gate.
+
+Standalone runs during the cycle, all green: `ascii_guard`, `syntax_check`, `css_syntax`,
+`home_rhythm`, `phantom_tokens`, `overlay_deadzone` (x4, plus two deliberate reds under reverted
+fixes), `home_claims` (x5, three of them deliberate reds), `touch_floor` (x4, two deliberate reds),
+`home_fold`, `home_reflow`, `focus_ring`, `flow_a11y`, `at_name_hygiene`, `overlay_keyboard`,
+`visual_regression` (one update + four verifies).
+
+---
+
 ## STILL OPEN AFTER CYCLE 4
 
 Nothing from this cycle's brief -- R5, R6 and all six judges' items are closed with receipts above.

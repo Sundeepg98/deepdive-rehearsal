@@ -266,7 +266,7 @@ const SEEDS = {
      stepper's `-` four times (it clamps at 1) and the line walks 1 of 5 -> 1 of 4 -> ... -> met,
      where the noun was hard-coded plural: "1 topics drilled this week". Every other pinned record
      is either unmet (where the noun counts the TARGET) or met with many, so the singular branch of
-     both the visible line and the bar's accessible name was rendered by nothing in this battery.
+     the goal sentence was rendered by nothing in this battery.
      goal.weekly is written directly rather than clicked because a seed is a RECORD, not a
      rehearsal of the gesture -- Store clamps it to 1..20 and 1 is inside that range. */
   goalOfOne: () => {
@@ -402,21 +402,42 @@ const READ = () => {
        that wave's five build items silently revertible at a green 76/76. */
     /* (1) the weekly goal. One renderer, one surface, per viewport, in every record class. */
     goals: [...document.querySelectorAll('.ix-goal, .hm-goal')].filter((e) => e.getClientRects().length).length,
-    /* (1b) THE SENTENCE INSIDE THAT SURFACE, IN BOTH CHANNELS.
+    /* (1b) THE SENTENCE INSIDE THAT SURFACE, AND THE ONE CHANNEL IT IS ALLOWED TO HAVE.
        A COUNT of goal surfaces cannot see a word of what the surface says, and until this line
        existed nothing in test/ could: `grep -rn "drilled this week|Goal met|goalPhrase|ix-home-v"
        test/` returned exactly one hit in the whole tree, and it was a PROSE COMMENT. Every home VR
        baseline is the COLD record (the matrix seeds theme + RNG only), so weeklyGoal().done is 0
        in all 18 captures and the MET branch is in no baseline either -- which made cycle 3's
-       item-7 fix silently revertible at a green 77/77. `line` is what the eye reads, `aria` is what
-       a screen reader reads off the bar, `bold` is the figure the line emphasises, and `g` is the
-       record's own arithmetic, so the sentence is checked against the numbers rather than against
-       another rendering of itself. */
+       item-7 fix silently revertible at a green 77/77. `line` is what the eye reads, `bold` is the
+       figure it emphasises, and `g` is the record's own arithmetic, so the sentence is checked
+       against the numbers rather than against another rendering of itself.
+       `goalName` is EVERY way the bar could acquire an accessible name of its own -- aria-label,
+       aria-labelledby, title -- not just the attribute the defect happened to use, so re-labelling
+       it by a different route is the same red. null means the bar names nothing, which is the
+       ruled state: it is a picture of the line beneath it, and a picture that is read is the
+       sentence announced twice. */
     goalLine: txt(document.querySelector('.ix-goal .ix-home-v')),
     goalBold: txt(document.querySelector('.ix-goal .ix-home-v b')),
-    goalAria: (() => {
+    goalName: (() => {
       const b = document.querySelector('.ix-goal .ix-goal-bar');
-      return b ? (b.getAttribute('aria-label') || '').replace(/\s+/g, ' ').trim() : null;
+      if (!b) return null;
+      const clean = (s) => (s || '').replace(/\s+/g, ' ').trim();
+      const lb = b.getAttribute('aria-labelledby');
+      const from = [
+        b.getAttribute('aria-label') ? 'aria-label="' + clean(b.getAttribute('aria-label')) + '"' : null,
+        lb ? 'aria-labelledby="' + clean(lb) + '"' : null,
+        b.getAttribute('title') ? 'title="' + clean(b.getAttribute('title')) + '"' : null,
+      ].filter(Boolean);
+      return from.length ? from.join(' + ') : null;
+    })(),
+    /* read alongside it so a FAIL can say WHY the bar is exposed, not merely that it is */
+    goalBarRole: (() => {
+      const b = document.querySelector('.ix-goal .ix-goal-bar');
+      return b ? (b.getAttribute('role') || null) : null;
+    })(),
+    goalBarHidden: (() => {
+      const b = document.querySelector('.ix-goal .ix-goal-bar');
+      return b ? b.getAttribute('aria-hidden') : null;
     })(),
     g: (() => { try { return Panels.weeklyGoal(); } catch (e) { return null; } })(),
     /* (2) the two practice acts, in DOM order, in each of the three surfaces that render the pair.
@@ -678,29 +699,40 @@ function judgeGoal(r) {
          screen reader were given the SAME fact in two different sentences -- this home's own
          named failure mode, landed in the surface cycle 3 had just consolidated.
    FIVE RULES, in the order a reader would notice them breaking:
-     1. one sentence, two channels -- the accessible name IS the visible line with the separator
-        that a reader would say instead of the one the eye reads, and nothing else;
+     1. one sentence, ONE channel -- the bar carries no accessible name of its own;
      2. the emphasised figure is the record's own `done`;
      3. the met state is named ONCE ("goal met" at most once);
      4. and it is not named mid-clause ("drilled this week" never follows "goal met");
-     5. every noun agrees with the figure standing immediately before it, in BOTH channels.
+     5. every noun agrees with the figure standing immediately before it.
    Rule 5 skips a hyphenated compound ("5-topic goal met") on purpose: that is an adjective, and it
-   is singular whatever the number is. */
+   is singular whatever the number is.
+
+   RULE 1 WAS RE-POINTED, and the reason is the fix that closing pass shipped. It used to read
+   "the accessible name IS the visible line, character for character" -- which cycle 4 made TRUE,
+   and true is what made it audible: the bar sat directly above the line, so a screen reader
+   announced the same sentence twice in a row. Measured on the cold home:
+
+     image  "0 of 5 topics drilled this week, 5 more to go"     <- .ix-goal-bar, role=img
+     text   "0 of 5 topics drilled this week . 5 more to go"    <- .ix-home-v, right beneath it
+
+   The bar is a picture OF that line and adds no fact, so it is aria-hidden with no role and no
+   name. The rule that guards that is therefore the ABSENCE of an independent name, not a match --
+   and it is strictly stronger than what it replaces: the old form went red only on a name that
+   DIVERGED, so it was green on the defect it is named for. It still fails the whole pre-cycle-4
+   divergence class, because any name at all is now a red (MUTANT 13 plants exactly that). */
 function judgeGoalSentence(r) {
   if (r.goalLine === null) return null;          /* judgeGoal owns "there must be a surface" */
   if (!r.g) return 'the page renders a weekly-goal sentence but Panels.weeklyGoal() is unreadable, '
     + 'so nothing can be checked against the record';
-  const line = r.goalLine, aria = r.goalAria;
-  if (!aria) return 'the goal bar renders no accessible name, so the sentence has one channel';
+  const line = r.goalLine;
 
-  /* 1. the two channels are the same sentence. The eye gets a middle dot between the fact and its
-     note; a reader gets a comma, because "middle dot" is what a screen reader would say out loud.
-     Everything either side of it must be identical, character for character. */
-  const MIDDOT = ' ' + String.fromCharCode(0xB7) + ' ';   /* spelled, not pasted: test/ is ASCII */
-  const spoken = line.replace(MIDDOT, ', ');
-  if (aria !== spoken) {
-    return 'the eye and the screen reader are given the same fact in two different sentences:\n'
-      + '        visible: "' + line + '"\n     accessible: "' + aria + '"';
+  /* 1. ONE CHANNEL. The bar may not name itself -- by any route, and a role that takes a name is
+     reported with it so the message says what to remove. */
+  if (r.goalName !== null) {
+    return 'the goal bar carries an accessible name of its own (' + r.goalName + ', role='
+      + (r.goalBarRole || 'none') + ', aria-hidden=' + (r.goalBarHidden === null ? 'absent' : r.goalBarHidden)
+      + '), so the fact is announced twice in a row -- once off the bar and again off the line\n'
+      + '        directly beneath it: "' + line + '"';
   }
   /* 2. the emphasised figure is the record's own count */
   if (r.goalBold === null || +r.goalBold !== r.g.done) {
@@ -715,8 +747,9 @@ function judgeGoalSentence(r) {
   if (/goal met[\s\S]*drilled this week/i.test(line)) {
     return '"drilled this week" follows "goal met", which is the pre-cycle-3 concatenation: "' + line + '"';
   }
-  /* 5. the noun agrees with the figure before it, in both channels */
-  for (const [where, s] of [['visible line', line], ['accessible name', aria]]) {
+  /* 5. the noun agrees with the figure before it. One channel now, and rule 1 above guarantees
+     there is no second one to walk. */
+  for (const [where, s] of [['visible line', line]]) {
     const re = /(\d+) (topics?)\b/g;
     let m;
     while ((m = re.exec(s))) {
@@ -961,10 +994,14 @@ const GEN_N = 24;
       }
 
       /* ---- MUTANTS 11, 12, 13: THE THREE DEFECTS THAT LIVED IN ONE SENTENCE ----------------
-         EACH PLANT WRITES BOTH CHANNELS, so the rule under test is the one that fires. A plant that
-         only rewrote the visible line would trip rule 1 (the two channels must be the same
-         sentence) every time, and rules 3-5 would be unreachable -- an arm whose later rules can
-         never be the reason it went red is four rules of decoration behind one. */
+         EACH PLANT WRITES EXACTLY THE CHANNEL ITS RULE IS ABOUT, so the rule under test is the one
+         that fires -- an arm whose later rules can never be the reason it went red is four rules
+         of decoration behind one. That means something different now than it did in cycle 4. Then
+         the bar had a name and rule 1 demanded the two channels MATCH, so a plant had to write
+         both or rule 1 fired first. The closing pass made the bar aria-hidden, so rule 1 is now
+         "the bar names nothing" -- and writing an aria-label at all IS the rule-1 defect. So 11
+         and 12 touch only the visible line (their rules are about that line), and 13 touches only
+         the bar (its rule is about that bar). Same principle, inverted plumbing. */
       const plantGoal = async (which) => page.evaluate((kind) => {
         const v = document.querySelector('.ix-goal .ix-home-v');
         const bar = document.querySelector('.ix-goal .ix-goal-bar');
@@ -976,19 +1013,26 @@ const GEN_N = 24;
         /* each case is the REVERTED CODE'S OWN OUTPUT, composed from the live Panels API rather
            than from a pasted literal, so a mutant cannot drift away from the defect it names */
         if (kind === 'concat') {
-          out = { line: Panels.goalPhrase(g, true) + ' drilled this week &middot; ' + NOTE,
-            aria: Panels.goalPhrase(g) + ' drilled this week, ' + NOTE };
+          out = { line: Panels.goalPhrase(g, true) + ' drilled this week &middot; ' + NOTE };
         } else if (kind === 'plural') {
           if (g.done !== 1) return null;
-          out = { line: '<b>' + g.done + '</b> topics drilled this week &middot; ' + NOTE,
-            aria: g.done + ' topics drilled this week, ' + NOTE };
+          out = { line: '<b>' + g.done + '</b> topics drilled this week &middot; ' + NOTE };
         } else if (kind === 'aria') {
-          out = { line: v.innerHTML, aria: Panels.goalPhrase(g) + ' this week' };
+          /* the state cycle 4 shipped: the bar re-acquires a name of its own. Composed from the
+             live API, and it does not matter whether it MATCHES the line -- the defect rule 1
+             names is a second channel existing at all, and the cycle-4 form (which matched
+             exactly) is the one that made the duplication audible. */
+          out = { aria: Panels.goalPhrase(g) + ' this week', role: 'img' };
         }
         if (!out) return null;
-        const before = { html: v.innerHTML, aria: bar.getAttribute('aria-label') };
-        v.innerHTML = out.line;
-        bar.setAttribute('aria-label', out.aria);
+        const before = { html: v.innerHTML, aria: bar.getAttribute('aria-label'),
+          role: bar.getAttribute('role'), hidden: bar.getAttribute('aria-hidden') };
+        if (out.line !== undefined) v.innerHTML = out.line;
+        if (out.aria !== undefined) {
+          bar.setAttribute('aria-label', out.aria);
+          if (out.role) bar.setAttribute('role', out.role);
+          bar.removeAttribute('aria-hidden');
+        }
         return { before, after: (v.textContent || '').replace(/\s+/g, ' ').trim(),
           spoken: bar.getAttribute('aria-label'), dot: DOT };
       }, which);
@@ -1000,9 +1044,18 @@ const GEN_N = 24;
           aborted = aborted || 'MUTANT ' + n + ' UNDETECTED: ' + undetected + ' -- visible "'
             + planted.after + '" / accessible "' + planted.spoken + '"';
         }
+        /* RESTORE BY ATTRIBUTE STATE, not by re-setting a value. `setAttribute('aria-label', null)`
+           writes the literal string "null" onto a bar that had no label, which would leave every
+           judge after this mutant reading a name the app never rendered -- the plant's own defect,
+           left behind by its cleanup. */
         await page.evaluate((b) => {
-          document.querySelector('.ix-goal .ix-home-v').innerHTML = b.html;
-          document.querySelector('.ix-goal .ix-goal-bar').setAttribute('aria-label', b.aria);
+          const v = document.querySelector('.ix-goal .ix-home-v');
+          const bar = document.querySelector('.ix-goal .ix-goal-bar');
+          v.innerHTML = b.html;
+          const put = (k, val) => { if (val === null) bar.removeAttribute(k); else bar.setAttribute(k, val); };
+          put('aria-label', b.aria);
+          put('role', b.role);
+          put('aria-hidden', b.hidden);
         }, planted.before);
       };
 
@@ -1028,15 +1081,19 @@ const GEN_N = 24;
           + 'fail on any of them.',
           '"1 topics" was accepted -- the noun does not have to agree with the figure it counts');
 
-        /* 13: THE ACCESSIBLE NAME BUILT FROM THE OTHER BRANCH -- the state cycle 3 shipped, where
-           the eye read the composed sentence and a screen reader got goalPhrase's raw met clause
-           ("1 topic drilled, goal met this week"). The visible line is left EXACTLY as the app
-           renders it, so only rule 1 can catch this. */
+        /* 13: THE BAR SPEAKS AGAIN -- the whole pre-cycle-4 divergence class AND the cycle-4
+           duplication, in one plant, because rule 1 no longer cares whether the name matches. It
+           restores role="img" + an aria-label built from goalPhrase's raw met branch (the state
+           cycle 3 shipped, where the eye read the composed sentence and a screen reader got "1
+           topic drilled, goal met this week") and clears aria-hidden. The visible line is left
+           EXACTLY as the app renders it, so only rule 1 can catch this -- and if rule 1 had been
+           left as "the two channels must MATCH", the cycle-4 state (they matched perfectly, and
+           the sentence was read twice) would have been GREEN. */
         await goalMutant(13, 'aria',
           '`goalOfOne` is not a met week, so the accessible name cannot be pointed at the met '
           + 'branch and rule 1 is untested.',
-          'the accessible name stated the same fact in a different sentence from the '
-          + 'visible line and the arm accepted it');
+          'the goal bar was given an accessible name of its own -- role=img with the sentence '
+          + 'already carried by the line beneath it -- and the arm accepted it');
       }
 
       /* ---- MUTANTS 9 + 10: THE PHONE'S PRACTICE BLOCK AND THE GAUGE'S LEGEND ---------------
@@ -1146,9 +1203,9 @@ const GEN_N = 24;
     + 'control; a SECOND weekly-goal surface on the cold record; Cross-topic rendered above '
     + 'Weak-spot in the phone practice block; the four-state key hidden while the rails still paint '
     + 'keel marks; the pre-cycle-3 goal concatenation, which named the met state three times in one '
-    + 'sentence; "1 topics drilled this week" on a week of one; and an accessible name built from '
-    + 'the other branch, so the eye and a screen reader got the same fact in two different '
-    + 'sentences) -- every one of them a defect a judge or a battery found on a shipped build');
+    + 'sentence; "1 topics drilled this week" on a week of one; and the goal bar given an '
+    + 'accessible name of its own again, so the fact is announced off the bar and again off the '
+    + 'line beneath it) -- every one of them a defect a judge or a battery found on a shipped build');
   if (bad.length) return B.finish(1, 'HOME CLAIMS: FAIL (' + bad.length + ')');
   return B.finish(0, 'HOME CLAIMS: PASS  (' + out.length + ' assertions: '
     + Object.keys(SEEDS).length + ' pinned records + ' + GEN_N + ' generated from a fixed PRNG, '

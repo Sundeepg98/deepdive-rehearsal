@@ -157,16 +157,25 @@
     return n(g.done) + ' of ' + g.target + topicWord(g.target);
   }
 
-  /* ONE SENTENCE, TWO CHANNELS. The visible line and the bar's accessible name state the SAME
-     fact, so they are composed from the same parts rather than from two different branches --
-     which is this home's own named failure mode, and it had landed here: cycle 3 rewrote the
-     visible met clause precisely because `goalPhrase(g, true) + ' drilled this week'` read badly
-     past the target, and left the bar's aria-label as the raw `goalPhrase(g) + ' this week'`. On a
-     12-topic week that meant the eye read "12 topics drilled this week . Goal met -- nice work."
-     while a screen reader read "12 topics drilled, 5-topic goal met with 7 to spare this week" --
-     the concatenated clause the cycle had just judged unacceptable. (The unmet branch diverged too,
-     more quietly: the line said "0 of 5 topics DRILLED this week", the name said "0 of 5 topics
-     this week".) `bold` is the only difference between the two channels now. */
+  /* ONE SENTENCE, ONE CHANNEL -- and the second channel is gone rather than synchronised.
+     THE HISTORY, because the ending only makes sense with it. Cycle 3 rewrote the visible met
+     clause (`goalPhrase(g, true) + ' drilled this week'` read badly past the target) and left the
+     bar's aria-label as the raw `goalPhrase(g) + ' this week'`, so on a 12-topic week the eye read
+     "12 topics drilled this week . Goal met -- nice work." while a screen reader read "12 topics
+     drilled, 5-topic goal met with 7 to spare this week" -- the clause the cycle had just judged
+     unacceptable. The unmet branch diverged too, more quietly. Cycle 4 fixed the DIVERGENCE by
+     composing both channels here, and that is when the real defect became audible: the bar's name
+     and the line beneath it were then identical CHARACTER FOR CHARACTER, adjacent in the tree, so
+     a screen reader announced the same sentence twice in a row. Measured on the cold home:
+
+       image  "0 of 5 topics drilled this week, 5 more to go"     <- .ix-goal-bar, role=img
+       text   "0 of 5 topics drilled this week . 5 more to go"    <- .ix-home-v, right beneath it
+
+     Two renderings that AGREE are still two renderings. The bar is a picture OF the sentence under
+     it -- it adds no fact, and a decorative graphic with a name is a graphic that gets read. It is
+     `aria-hidden="true"` now, with no role and no name, and goalLine() composes the one channel
+     that is left. `bold` stays a parameter: it is what separates the emphasised figure the eye
+     gets from the plain string test/home_claims.cjs composes its mutants against. */
   function goalLine(g, bold) {
     var n = bold ? function (v) { return '<b>' + v + '</b>'; } : function (v) { return String(v); };
     return (g.met ? n(g.done) + topicWord(g.done) : goalPhrase(g, bold)) + ' drilled this week';
@@ -188,8 +197,15 @@
      byte-identical at master 2696291 -- W1.5 did not create it, it made this the app's ONE goal
      surface on every record class, which is what put it in front of every user. Past the target the
      figure is the whole fact and `note` carries the state; goalPhrase() still owns the unmet ratio,
-     goalLine() owns both channels of the sentence, and the one place that puts this fact into words
-     stays one place.
+     goalLine() owns the sentence, and the one place that puts this fact into words stays one place.
+
+     THE BAR IS DECORATION AND SAYS SO. It carried role="img" plus an aria-label that -- once cycle
+     4 made both channels agree -- repeated the line beneath it word for word, so the fact was
+     announced twice in a row. `aria-hidden="true"`, no role, no name. Nothing is lost: the visible
+     line directly under it carries the whole fact, in the accessibility tree as text, and the two
+     stepper buttons keep their own names ("Lower/Raise the weekly goal") and the target keeps its
+     aria-live. Guarded by test/home_claims.cjs's judgeGoalSentence rule 1, which now asserts the
+     bar carries NO independent accessible name rather than one that matches.
 
      THE STEPPER IS A FINGER TARGET. Its two buttons paint a 20px chip (.ix-goal-g) and RESERVE a
      44px box -- the app's own floor. The box is the button rather than a pseudo-element because a
@@ -205,8 +221,8 @@
       '<span class="ix-goal-set"><button type="button" class="ix-goal-b" data-goal="dec" aria-label="Lower the weekly goal"><span class="ix-goal-g">&minus;</span></button>' +
       '<span class="ix-goal-t" aria-live="polite">' + g.target + '</span>' +
       '<button type="button" class="ix-goal-b" data-goal="inc" aria-label="Raise the weekly goal"><span class="ix-goal-g">+</span></button></span></div>' +
-      '<div class="ix-goal-bar' + (g.met ? ' met' : '') + '" role="img" aria-label="' +
-      goalLine(g) + ', ' + note + '"><span style="width:' + g.pct + '%"></span></div>' +
+      '<div class="ix-goal-bar' + (g.met ? ' met' : '') + '" aria-hidden="true">' +
+      '<span style="width:' + g.pct + '%"></span></div>' +
       '<div class="ix-home-v">' + goalLine(g, true) + ' &middot; ' + note + '</div></div>';
   }
 

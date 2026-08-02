@@ -756,6 +756,102 @@ async function realClick(page, sel) {
       }
     }
 
+    /* ---- CTRL+P's OUTCOME ON THE HOME, not just who owns the event ------------------------
+     * The row above proves the home does NOT take the browser's print: window.open 0,
+     * defaultPrevented false. That is necessary and it is not sufficient -- it says who owns the
+     * print, never what comes out of it. Measured on the build that shipped that guard, what came
+     * out was wrong in BOTH record states, at 1280x900, A4:
+     *
+     *   home, fresh                        3 pages /  391,415 bytes -- the BOOT topic's cram sheet
+     *   home, after visiting saga's sheet  6 pages /  872,924 bytes -- SAGA's cram sheet
+     *
+     * Nothing of the home on either. Two causes, one line apart in the print block: `.app` was
+     * display:none (right for a topic route, whose panes are shadow DOM and print blank -- that is
+     * the whole reason the cram substitution exists) and the cram force-show carried no `.open`
+     * requirement, so a CLOSED dialog printed, carrying whichever topic was last looked at.
+     *
+     * So this arm drives the SECOND state -- open a cram sheet on a topic, close it, walk to the
+     * home -- emulates print media, and asserts both halves of the outcome: the home's own content
+     * column paints, and no cram overlay does.
+     *
+     * THE SEED IS ASSERTED FIRST, because "no cram painted" is free on a page where the sheet was
+     * never rendered: the check reads the sheet's own shadow-root text while it is open, so a
+     * green below is a green about a sheet that genuinely existed and genuinely closed. */
+    {
+      const pg = await ctx.newPage();
+      await pg.addInitScript(PRINT_PROBE);
+      await B.gotoApp(pg, HTML, { hash: '#saga/drill' });
+      await B.enterApp(pg);
+      await pg.evaluate(() => { const el = document.getElementById('cramopen'); if (el) el.click(); });
+      await B.until(pg, () => !!document.querySelector('.cram-ov.open'), null, B.ACT_MS,
+        'the cram sheet to open on #saga/drill');
+      await B.until(pg, () => {
+        const h = document.querySelector('deep-cram');
+        return !!(h && h.shadowRoot && h.shadowRoot.querySelectorAll('.cs-sec').length);
+      }, null, B.ACT_MS, 'the cram sheet to render its sections');
+      await B.settle(pg);
+      const sheet = await pg.evaluate(() => {
+        const h = document.querySelector('deep-cram'), sr = h && h.shadowRoot;
+        return { secs: sr ? sr.querySelectorAll('.cs-sec').length : 0,
+          chars: sr ? (sr.textContent || '').replace(/\s+/g, ' ').trim().length : 0,
+          topic: (typeof TopicRegistry !== 'undefined' && TopicRegistry.current())
+            ? TopicRegistry.current().id : null };
+      });
+      await pg.keyboard.press('Escape');
+      await B.until(pg, () => !document.querySelector('.cram-ov.open'), null, B.ACT_MS,
+        'the cram sheet to close');
+      await pg.evaluate(() => { location.hash = '#home'; });
+      await B.until(pg, () => document.documentElement.dataset.view === 'home', null, B.ACT_MS,
+        'the home route to apply');
+      await B.settle(pg);
+
+      const seed = await pg.evaluate(() => {
+        const ov = document.querySelector('.cram-ov');
+        return { view: document.documentElement.dataset.view || null,
+          present: !!ov, open: !!(ov && ov.classList.contains('open')) };
+      });
+      chk('[anywhere] CTRL+P outcome: the seed is real -- a rendered cram sheet was visited, CLOSED, '
+        + 'and the route is the home',
+        sheet.secs > 0 && sheet.chars > 1000 && seed.present && !seed.open && seed.view === 'home',
+        JSON.stringify({ sheetTopic: sheet.topic, sheetSections: sheet.secs, sheetChars: sheet.chars,
+          cramPresent: seed.present, cramOpen: seed.open, view: seed.view }));
+
+      await pg.emulateMedia({ media: 'print' });
+      await B.settle(pg);
+      const paper = await pg.evaluate(() => {
+        const painted = (el) => {
+          if (!el) return null;
+          const r = el.getBoundingClientRect(), c = getComputedStyle(el);
+          return { w: Math.round(r.width), h: Math.round(r.height), rects: el.getClientRects().length,
+            display: c.display, visibility: c.visibility };
+        };
+        const home = document.querySelector('#home');
+        return {
+          printMedia: matchMedia('print').matches,
+          home: painted(home),
+          /* the record's own words, not a proxy: what a reader would find on the sheet */
+          homeText: home ? (home.textContent || '').replace(/\s+/g, ' ').trim().length : 0,
+          /* EVERY cram overlay, so a second one could not slip past a single querySelector */
+          cramPainted: [...document.querySelectorAll('.cram-ov')]
+            .filter((o) => o.getClientRects().length && getComputedStyle(o).display !== 'none')
+            .map((o) => Math.round(o.getBoundingClientRect().height)),
+        };
+      });
+      chk('[anywhere] CTRL+P outcome: under print media the HOME paints its own content column',
+        paper.printMedia === true && !!paper.home && paper.home.rects > 0
+        && paper.home.w > 0 && paper.home.h > 0 && paper.homeText > 1000,
+        JSON.stringify({ printMedia: paper.printMedia, home: paper.home, homeChars: paper.homeText })
+        + ' -- `.app` is display:none in @media print for the topic shell; the home is ordinary'
+        + ' light DOM and has to be exempted from that hide or it prints nothing');
+      chk('[anywhere] CTRL+P outcome: and the CLOSED cram sheet paints nothing beside it',
+        paper.cramPainted.length === 0,
+        'painted .cram-ov heights ' + JSON.stringify(paper.cramPainted)
+        + ' -- the print force-show must require `.open` on the home, or the last sheet the user'
+        + ' visited prints instead of the record they asked for');
+      await pg.emulateMedia({ media: null });
+      await pg.close();
+    }
+
     /* ============ THE BOOT WINDOW: A KEYMAP WITH NO ROUTE TO MEAN ANYTHING AGAINST ============
      * Section 5's question one moment earlier, and the moment is the whole point. shell.js
      * registers its global keymap at PARSE time; Router.init() runs at DOMContentLoaded. In
@@ -1034,7 +1130,9 @@ async function realClick(page, sel) {
     ' -- that one preflighted on a build with the gate line deleted; every key the shortcuts overlay' +
     ' advertises under "Anywhere" was driven ON the home and did what the row says, and the four' +
     ' that need a topic are dead there and live in one, Ctrl+P included (it builds the CURRENT' +
-    " topic's sheet in a topic and leaves the browser's own print alone on the home);" +
+    " topic's sheet in a topic and leaves the browser's own print alone on the home -- and what" +
+    ' that print PRODUCES is measured too, on a home seeded with a visited-then-closed cram sheet:' +
+    ' the record paints, the closed sheet does not);' +
     ' no unrequested modal at first paint)');
   return B.finish(0, null);
 })();

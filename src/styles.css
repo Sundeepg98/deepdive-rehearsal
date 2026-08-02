@@ -546,6 +546,55 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
     body{background:#fff !important}
     .app, .mock-ov, .rail, .badge, .rail .fill::after{display:none !important}
     body:not(.print-session) .cram-ov{display:block !important;position:static !important;background:#fff !important;padding:0 !important;backdrop-filter:none !important;-webkit-backdrop-filter:none !important;overflow:visible !important}
+    /* ============ THE HOME PRINTS ITSELF ============
+       Two rules, one defect, and the defect is this wave's own. W1.5 cycle 4 (R5) stopped
+       print-qa.js from taking Ctrl+P on the home -- correctly: openPrint() read the BOOT topic, so
+       the home built a printable Q&A for a topic the user never chose. But handing the route back
+       to the browser's own print was only half an answer, because nobody asked what the browser
+       prints THERE. Measured at 1280x900, A4, on the shipped build:
+
+         home, fresh                        3 pages / 391,415 bytes -- the BOOT topic's cram sheet
+         home, after visiting saga's sheet  6 pages / 872,924 bytes -- SAGA's cram sheet
+
+       Nothing of the home on either. `.app` is display:none one line above (right for a topic
+       route: its panes are shadow DOM and print blank, which is the whole reason the cram
+       substitution exists), and the force-show above has no `.open` requirement, so a CLOSED
+       dialog printed -- carrying whichever topic the user last looked at.
+
+       (1) A CLOSED SHEET DOES NOT PRINT ON THE HOME. Scoped to the home rather than written as
+       `.cram-ov.open`, which is the same sentence one scope too wide: on a TOPIC route the
+       never-opened sheet IS the printable artifact, and print_truth.cjs ARM F ("a never-opened
+       sheet still renders to paper") owns that as a P1. Measured with the wider form built:
+       #walk went 3 pages / 391,447 bytes -> 1 page / 1,048 bytes and print_truth reported exactly
+       that one arm red (`sections=0`). `:not(.open)` rather than a flat hide because an OPEN sheet
+       on the home is a REACHABLE state, not a hypothetical: leaving a topic with the sheet up --
+       by hash and by the Home button, both driven -- lands on #home with `.cram-ov.open` still
+       true and on screen. Print follows the screen.
+
+       (2) THE HOME IS NOT HIDDEN FROM ITS OWN PRINT. `#home` is ordinary light DOM and needs no
+       substitution; what it needs is not to be inside a blanket hide written for the topic shell.
+       Its CHROME goes instead -- and the A4 content box is 680px wide, INSIDE the <=919px
+       breakpoint, so the rail and the tab bar are `position:fixed` bars there and would repeat on
+       every printed page. .hm-skip is the "skip the home next time" checkbox: a preference
+       control, not a record. The library (.hm-lib) and the companion are already display:none at
+       that width and need no rule. #scrolltop was checked and left alone: it is opacity:0 /
+       visibility:hidden until you scroll, and it is a child of <body> rather than of .app, so it
+       never depended on the hide above.
+       The census (.hm-status) is the one member of the home's chrome that is not chrome -- it
+       carries "0 of 972 probes graded, 0 solid / 0 shaky / 0 missed", and the shaky-and-missed
+       split is on no other surface of the printed page. It is `position:fixed` at the viewport
+       foot below 920px, though, so on paper it painted OVER the flow at the bottom of EVERY sheet:
+       extracted from the 2-page PDF, "probes graded" came back on pages [1,2]. So it is un-fixed
+       rather than hidden -- it flows once, after the record it summarises. .app is display:block
+       here (not its screen flex row), so a static footer lands under #home rather than beside it.
+       Guarded by test/overlay_deadzone.cjs section 6 (the CTRL+P row), which drives the closed-
+       sheet state and asserts the outcome: the content column paints, no .cram-ov does. */
+    html[data-view="home"] .app{display:block !important}
+    html[data-view="home"] .cram-ov:not(.open){display:none !important}
+    html[data-view="home"] .hm-rail,
+    html[data-view="home"] .hm-tabs,
+    html[data-view="home"] .hm-skip{display:none !important}
+    html[data-view="home"] .hm-status{position:static !important}
     /* THE TWO RESETS THAT DECIDE WHETHER PAPER GETS THE ARTIFACT. This rule used to reset four
        properties -- box-shadow, max-width, border-radius, margin -- and it read as complete,
        because all four are unmistakably screen chrome. But the panel's screen geometry at :474 is

@@ -1373,8 +1373,24 @@ put **18px** between the stepper and the bar it sets, where the 20px control had
 `.ix-goal-set{gap:var(--space-8)}` the three 44px boxes read as three floating glyphs rather than one
 `- 5 +` control (the chips end up 20px from the figure they set, against 8 before). Both were looked
 at as rendered screenshots, in four variants, before choosing. Measured at 1280: chip-bottom to
-bar-top **6px before, 12px after**; the panel grows **18px rather than 24**; the group is 104px wide
-rather than 72.
+bar-top **6px before, 12px after**, and the group is 104px wide rather than 72.
+
+**And the panel's height, measured on both viewports against a faithful "before"** -- the
+pre-cycle-4 declarations restored WITHOUT overriding `min-height`, so the `<=919px`
+`button{min-height:44px}` floor still applies on the phone, which is what made the control 20x44
+there:
+
+| | button | `.ix-goal-top` | `.hm-tele` |
+|---|---|---|---|
+| 1280 before | 20x20 | 20 | **118.4** |
+| 1280 after | 44x44 | 44 | **136.4** (**+18**) |
+| 390 before | 20x44 | 44 | **142.4** |
+| 390 after | 44x44 | 44 | **136.4** (**-6**) |
+
+So the phone panel gets SMALLER, not larger: its row was already 44px tall under the element floor,
+so the only change there is the width and the 6px margin coming off. Stated because the desktop
+figure alone would have read as "the panel grew", which is false on the viewport this wave spent
+three cycles on.
 
 **THE ARM: `test/touch_floor.cjs`, a new section 6** -- the file whose subject is already "a control
 short in the OTHER axis walks through a height-only floor", and whose header already names this
@@ -1502,9 +1518,11 @@ Four things are RECORDED rather than open, so a later wave does not rediscover t
    will meet the same thing.
 2. **The chip list is still never the full-containment carrier in any shape this repo measures** --
    22 cells across 390x844 and 360x844. The ruled contract holds in every one of them via the ACT.
-   Unchanged by this cycle: the stepper grew the "This week" panel by 18px on the DESKTOP only (the
-   phone row was already 44px tall under the `<=919px` element floor), and `home_fold` re-ran green
-   at 88 assertions.
+   Unchanged by this cycle in VERDICT, and the geometry moved in the helpful direction on the
+   viewport that matters: the stepper added 18px to the "This week" panel at 1280 but took 6px OFF
+   it at 390 (its row was already 44px tall under the `<=919px` element floor, so only the width and
+   the removed 6px margin changed there). `home_fold` re-ran green at 88 assertions across all 22
+   cells.
 3. **`q` and `n` are not separately driven in the boot window.** One gate closes every key, so one
    arm is aimed at the gate (`p`, plus `w` as the highest-signal navigator) rather than four at the
    keys. Stated rather than implied: if a future edit made the gate per-key again, this arm would

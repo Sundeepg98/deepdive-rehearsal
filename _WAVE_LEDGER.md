@@ -5,10 +5,12 @@
 **Gate expectation** **77/77 from cycle 3** (cycle 1 was 76/76; cycle 2 registers ONE new check,
 `home_fold`, taking it to 77; cycle 3 registers NONE -- every arm it adds extends
 `overlay_deadzone`, `home_fold` or `visual_regression`; cycle 4 registers NONE either -- its arms
-extend `overlay_deadzone`, `home_claims` and `touch_floor`).
+extend `overlay_deadzone`, `home_claims` and `touch_floor`, and its CLOSING pass (R7-R10) extends
+`focus_ring`, `overlay_deadzone` and `touch_floor`).
 **VR contract** home baselines REBASELINE AUTHORIZED; non-home baselines must not move. Cycle 2
 adds ONE baseline, `m-home-light` at 390x844 -- the manifest goes 16 -> 17. Cycle 3 adds its dark
 twin, `m-home-dark` -- 17 -> 18. Cycle 4 adds none: 18, with the two desktop home PNGs re-captured.
+The closing pass (R7-R10) moves NO pixel and re-captures nothing: 18, verified at worst 0 px.
 
 ---
 
@@ -1276,8 +1278,13 @@ the measurement supported.
 `src/scripts/app/panels.js` -- one helper, `topicWord(n)`, called from every site that puts a count
 next to that noun, so a fourth caller cannot invent a fourth answer:
 
-- `goalStrip()`'s met figure (`'1 topic drilled this week'`);
-- **both** `goalPhrase()` met branches, which own the accessible name;
+- `goalStrip()`'s met figure (`'1 topic drilled this week'`) -- which reaches both channels through
+  `goalLine(g, bold)`, the composer `goalStrip()` calls for the visible line and again for the bar's
+  `aria-label`, so the met figure and its noun are produced in exactly one place;
+- **both** `goalPhrase()` met branches, which own the accessible name *(restated in cycle 4: the
+  `goalPhrase` met branches no longer own the accessible name -- item 5 moved both channels to
+  `goalLine()`, which calls `goalPhrase` only on the UNMET branch; the branches survive as the
+  surface `home_claims` composes MUTANTs 11 and 13 from)*;
 - **and the unmet ratio's denominator**, which the named fix did not list and which is reachable:
   `goalTarget()` clamps to **1..20**, so a goal of 1 with nothing drilled printed "0 of 1 topics".
   Disclosed as scope beyond the named fix; it is the same defect one branch over, and the noun there
@@ -1504,10 +1511,216 @@ fixes), `home_claims` (x5, three of them deliberate reds), `touch_floor` (x4, tw
 
 ---
 
+## CYCLE 4, CLOSING PASS (R7-R10) -- 2026-08-02
+
+The team-lead ruling on the max-cycles escalation made this the FINAL cycle: fix exactly R7-R10 per
+their named fixes, judges verify exactly those four, and the wave freezes regardless. **All four
+closed.** Nothing new was opened -- the two things this pass found are consequences of the fixes
+themselves and are disclosed inside their items rather than filed.
+
+The through-line is one sentence: **cycle 4's own fixes each moved something to a new rect or a new
+lifetime, and two of them left a second thing behind at the old one.** The 44px hit box moved the
+finger target and left the focus ring on the reserved box; the boot gate moved the keymap's
+authority to a flag and left that flag meaning "finished" rather than "arrived".
+
+---
+
+### R7 -- THE RECEIPT -- CLOSED
+
+Restated in place in JUDGES' ITEM 4 above, with the dated parenthesis as the judge drafted it and
+the branches left where they are. Two changes, both verified against the code rather than accepted:
+
+- the met-figure bullet now attributes the figure to **`goalLine(g, bold)`, called by `goalStrip()`
+  for the visible line and again for the bar's `aria-label`** -- which is what item 5 built and what
+  makes "one place" true rather than aspirational;
+- the `goalPhrase` bullet carries the correction: `panels.js:172` reads
+  `(g.met ? n(g.done) + topicWord(g.done) : goalPhrase(g, bold)) + ' drilled this week'`, so
+  **`goalPhrase` is called only on the UNMET branch**. Its met branches own neither channel now.
+
+**They are NOT dead code, and the ruling was right to say so.** `home_claims` composes MUTANT 11
+(`goalPhrase(g,true) + ' drilled this week'`) and MUTANT 13 (`aria-label = goalPhrase(g) + ' this
+week'`) from those exact branches, live off the `Panels` API rather than from pasted strings.
+Deleting them would have deleted the surface two of this wave's thirteen mutants are built from --
+i.e. "tidying" would have removed the regression proof for the fix it was tidying after.
+
+---
+
+### R8 -- THE STEPPER FOCUS RING -- CLOSED
+
+**The fix, adopted verbatim** (`src/styles.css`, beside the rules item 6 added):
+
+```css
+.ix-goal-b:focus-visible{outline:none;box-shadow:none}
+.ix-goal-b:focus-visible .ix-goal-g{outline:2px solid var(--acc);outline-offset:2px;box-shadow:0 0 0 3px var(--acc-a15)}
+```
+
+The 44px hit/border box is byte-unchanged, as ruled -- only the paint moves.
+
+**THE DEFECT, MEASURED, and it is worse than "a ring around the wrong box".** `button:focus-visible`
+(`styles.css:53`) paints outline 2px at offset 2px **plus** `0 0 0 3px var(--acc-a15), 0 0 16px -4px
+var(--acc-a20)`. The outermost of those layers reaches `0 + 16 + (-4)` = **12px** past the border
+box, so the indicator on a 44x44 button spans 68x68 -- and that box has neighbours FLUSH against it
+on two sides, both of them put there by cycle 4's own item 6: `.ix-goal-set{gap:0}` puts
+`.ix-goal-t` exactly at the button's edge, and removing `.ix-goal-top`'s bottom margin puts
+`.ix-goal-bar` exactly at the row's. Read off the built page at 1280x800:
+
+```
+BEFORE  dec  painted ix-goal-b +12px [807,707.8,875,775.8]
+             hits .ix-goal-t (863-879) and .ix-goal-bar (top 763.8)   <- both
+AFTER   dec  painted ix-goal-g  +4px [827,727.8,855,755.8]
+             clear of .ix-goal-t by 8px and of .ix-goal-bar by 8px
+```
+
+Same shape at 390x844. So a keyboard user's indicator was drawn **through the number the stepper
+sets and through the bar it fills** -- and this was NOT on master: it is the cost of the 44px box,
+introduced by this cycle and closed in the same cycle.
+
+**GUARD, as ruled: `test/focus_ring.cjs`'s probe family extended to `#home [data-goal=dec]` and
+`[data-goal=inc]`, at BOTH 1280x800 and 390x844.** The file already owns the question "does keyboard
+focus in this app look like this app?" in three mechanisms; this is the fourth and it is a RECT
+rather than a removal, a boundary or a hue. `RING_BOX` computes the painted indicator's extent from
+the live computed style -- outline `offset + width`, and every non-inset box-shadow layer's
+`max(|dx|,|dy|) + blur + spread` -- over the focused button **and every descendant**, unions the
+elements that actually paint, and asserts the union intersects neither `.ix-goal-t` nor
+`.ix-goal-bar`. Reading the subtree rather than the button is what makes the arm indifferent to
+which element carries the ring: it measures where paint lands, which is all the user can see.
+
+**It cannot pass by painting nothing** -- a deleted indicator intersects nothing, so `painted`
+non-empty and `:focus-visible` matched are asserted first.
+
+**TWO PROOFS, not one.**
+
+1. **The plant, running every gate:** the pre-fix cascade is re-injected (`generic ring back ON the
+   button, off the chip`) and required to produce an intersection at BOTH widths, or the arm reports
+   that it cannot fail. It restores the shipped-before state rather than deleting the fix, so it is
+   the regression rather than a proxy for it.
+2. **WATCHED RED on a real source reversion** -- both rules deleted from `styles.css`, rebuilt:
+
+```
+FAIL  [1280x800] the weekly-goal stepper paints its focus ring on the 20px chip, clear of the
+      figure it sets and the bar it fills
+      -- painted ["ix-goal-b +12px [807,707.8,875,775.8]"]
+         hits ["ix-goal-b (+12px) -> .ix-goal-t","ix-goal-b (+12px) -> .ix-goal-bar"]
+FAIL  [390x844]  ...the same, at [243,387.6,311,455.6]
+FOCUS RING: FAIL (2)
+```
+
+Exactly two failures, one per width. `FOCUS RING: PASS (24 assertions)` restored, up from 18.
+
+**AND A MESSAGE THAT WOULD HAVE LIED WAS FIXED WHILE WATCHING IT.** The plant's companion arm first
+read "the plant was lifted -- hits.length === 0". On the reverted build the plant IS lifted and the
+ring overlaps anyway, so that arm went red saying "the plant was not lifted" about a defect that had
+nothing to do with the plant -- a true FAIL with a false reason, in a wave whose whole standard is
+that a receipt must survive re-derivation. It now compares against the **pre-plant reading on the
+same page**, which says exactly what it means and stays silent when the failure belongs to the arm
+above. Re-watched: 2 failures, not 4.
+
+---
+
+### R9 -- THE routed() FLAG -- CLOSED
+
+**The fix, the simpler named one.** `src/scripts/app/view-manager.js` -- `routeApplied = true;`
+immediately after `if (!route || !route.view) return;`; the two end-of-branch assignments are
+deleted. One assignment now, at `:107`, and `grep -n routeApplied` shows exactly the declaration,
+that assignment, and the `routed()` reader.
+
+**WHY IT MATTERED, and every ingredient was already in the repo:**
+
+- `applyRoute` is the **only** caller of `HomeView.render` (`view-manager.js:114`; `grep -rn
+  "HomeView.render" src/` returns that line and one prose comment);
+- `Router.emit` wraps every subscriber in `try {} catch (e) {}` (`router.js:87`) -- so the exception
+  is swallowed with **no console error**;
+- the home branch stamps `dataset.view = 'home'` **before** it renders.
+
+So one throw anywhere in the home render left the app on a page whose `data-view` said `home` while
+`routeApplied` stayed **false** -- and R6's gate turns the WHOLE keymap off for EVERY key. R6's own
+fix would have converted any rendering bug into a **total, silent, permanent keyboard outage**: no
+`d`, no `/`, no `?`, no `g`, no `h`, no room keys, for the rest of the session. The window the flag
+exists to close is "the map has no route to mean anything against", and that ends when a route
+ARRIVES, not when its side effects finish. `applyRoute` is synchronous with no awaits, so the move
+changes the bit on no path except the throwing one.
+
+**THE GUARD, as ruled: one arm in `overlay_deadzone.cjs`'s boot-window block.** `HomeView.render` is
+made to throw ONCE through an `addInitScript` accessor -- the same mechanism the hold already uses on
+`Router.init`, so no build is modified -- then the hold is released and two questions are asked:
+did the route register, and is the keyboard alive? `d` is the probe because its effect is a stamped
+attribute that can be READ rather than inferred. Three assertions, and the first one is the honesty
+check: **the throw is counted and asserted** (`threw === 1`), because an arm in which render never
+threw would be testing the ordinary path under a frightening name.
+
+**WATCHED RED by restoring the two end-of-branch assignments and rebuilding:**
+
+```
+PASS  [boot window] the throwing-render arm really staged its defect -- the hold held, and
+      HomeView.render threw exactly once, inside applyRoute (its only caller)
+FAIL  [boot window] a route whose render THROWS still counts as applied
+      -- {"threw":1,"routed":false,"view":"home","density":"default"}
+FAIL  [boot window] ...and the keyboard is still alive after it: `d` cycles the density attribute
+      -- density default -> default
+OVERLAY DEADZONE: FAIL  (2 of 71 assertions)
+```
+
+`routed:false` on a page whose `view` is already `home`, and `d` dead: the outage, reproduced.
+Only those two arms went red -- the six pre-existing boot-window arms stayed green, so the red is
+specific to the flag's placement rather than to the hold or the gate. Restored:
+`OVERLAY DEADZONE: PASS (71 assertions)`, up from 68.
+
+---
+
+### R10 -- THE ARM'S SECOND WIDTH -- CLOSED
+
+**The hole was real and structural.** Every arm in `touch_floor.cjs` runs in ONE 390x844 mobile
+context -- right for a touch floor, wrong for this control specifically. `.ix-goal-b` was 20x44 at
+390 and **20x20 at 1280**, so the DESKTOP was the worse of the two and cycle 4's arm measured the
+better one. Worse, it passes at 390 for a reason it does not own: the `<=919px`
+`button{min-height:44px}` floor supplies the height there. **Above 919 nothing does** -- the fix's
+explicit `width:44px;height:44px` is the only thing holding the box up, and a future
+`min-width:920px` rule could take it away with every arm in the file still green.
+
+**Section 6b**, in a **desktop context** rather than a viewport switch (the mobile context carries
+`isMobile`/`hasTouch`/`deviceScaleFactor:2`; resizing it would measure a 1280px phone). Placed AFTER
+the density restore, so the 390 half of the comparison is read at the default scale like every other
+arm rather than at compact.
+
+**PREFLIGHTED ON THE EXACT MUTANT THE RULING NAMED**, injected into BOTH pages from one declaration:
+
+```
+[plant] a @media(min-width:920px) rule shrinking the stepper to 20px goes RED at 1280 (min 20)
+        and stays GREEN at 390 (min 44) -- the desktop arm catches what the phone arm
+        structurally cannot
+```
+
+That is a stronger self-test than a plain shrink: it aborts the check both ways -- if the plant does
+NOT drop the desktop minimum below 44 (the arm is not reading these controls), **and** if it DOES
+move the 390 measurement (the plant is not width-scoped, so a red at 1280 would not be attributable
+to the desktop). The plant is lifted and the lift is asserted before the context closes.
+
+`TOUCH FLOOR: PASS`, with the desktop stepper measured at 44x44, non-overlapping, zero console
+errors on the desktop home.
+
+---
+
+### VR CONTRACT, CLOSING PASS -- NOTHING MOVED
+
+No rebaseline, and none was expected: R8 adds only `:focus-visible` rules (VR never focuses the
+stepper -- the home's one autofocus is `.hm-cta`, and `focus_ring` separately asserts it paints
+nothing before a keystroke), and R9 moves one assignment inside a function that runs identically on
+every non-throwing path. Verified rather than assumed:
+
+```
+18 baselines compared; worst = 0 px (home-light), budget 32 px.
+VISUAL REGRESSION: PASS  (18 baselines, win32-chromium149)
+```
+
+`git status test/baselines/` is empty. The manifest stays at **18**.
+
+---
+
 ## STILL OPEN AFTER CYCLE 4
 
-Nothing from this cycle's brief -- R5, R6 and all six judges' items are closed with receipts above.
-Four things are RECORDED rather than open, so a later wave does not rediscover them as findings:
+Nothing from this cycle's brief -- R5, R6, R7-R10 and all six judges' items are closed with receipts
+above. Four things are RECORDED rather than open, so a later wave does not rediscover them as
+findings:
 
 1. **The phone home paints ~57px scrolled for a beat on some loads.** Unchanged from cycle 3: the
    Resume CTA's `data-autofocus="1"` scrolls it into view before layout settles, and the page
@@ -1535,3 +1748,27 @@ Four things are RECORDED rather than open, so a later wave does not rediscover t
    The measurement behind that choice is in R6 above. If a future change widens the natural window
    (any deferral of `Router.init`, say), the honest move is to promote the natural arm and retire
    the hold, not to add a second hold.
+
+---
+
+## CARRIED ITEMS FOR THE NEXT WAVE -- NONE
+
+The closing ruling made this the final cycle and said any NEW finding beyond R7-R10 is RECORDED
+here as a carried item rather than reopening the wave. **There are none**, and that is a measured
+statement rather than a silence:
+
+- **The ring-on-the-wrong-rect class (R8) reaches exactly one control in this app.** The defect
+  needs a button that RESERVES a box it does not PAINT -- transparent, borderless, with the visible
+  control as a child -- because only then does `button:focus-visible`'s border-box ring land
+  somewhere the user is not looking. Swept: `grep -nE "background:none" src/styles.css | grep 44px`
+  returns **one line**, `.ix-goal-b` (`styles.css:1772`), and it is the same line under the
+  `border:0` sweep. The other raw-44px controls the fix's comment names -- `.tn-step`, `.ix-x`,
+  `.crambtn`, the `<=919px` element floor -- all paint their own box, so their ring is already on
+  the rect the user sees. Nothing to carry.
+- **The two things this pass found are consequences of its own fixes, not new defects**, and both
+  are fixed and disclosed inside their items: the 12px halo reach that made R8's overlap two-sided
+  (R8), and a plant-companion assertion whose FAIL message named the wrong cause on a reverted
+  build (R8, "a true FAIL with a false reason").
+
+**THE WAVE IS FROZEN HERE.** Four cycles, one closing pass; the four items recorded-not-open above
+belong to whoever picks up the home next, with the measurements they need already taken.

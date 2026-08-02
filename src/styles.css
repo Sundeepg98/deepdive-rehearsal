@@ -1772,6 +1772,24 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
 .ix-goal-b{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;padding:0;border:0;background:none;color:var(--ink);font:inherit;font-size:var(--font-size-body);font-weight:var(--font-weight-bold);line-height:var(--line-height-none);cursor:pointer}
 .ix-goal-g{display:inline-flex;align-items:center;justify-content:center;width:var(--space-20);height:var(--space-20);border:1px solid var(--bd);border-radius:6px;background:var(--bg);transition:border-color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base)}
 .ix-goal-b:hover .ix-goal-g{border-color:var(--acc);background:var(--accbg)}
+/* ===== THE RING FOLLOWS THE CHIP, NOT THE RESERVED BOX =====
+   Reserving 44x44 for the finger left the keyboard indicator on the WRONG rect. `button:focus-visible`
+   (:53) paints outline 2px at offset 2px plus a 3px halo on the BORDER box, so the ring inflated the
+   44px box by 4px in every direction -- and that box has neighbours flush against it on two sides:
+   .ix-goal-set carries gap:0, so .ix-goal-t (the figure) begins exactly at the button's edge, and
+   .ix-goal-top's bottom margin came off with the same edit, so .ix-goal-bar begins exactly at the
+   row's. The ring therefore drew THROUGH the number it sets and THROUGH the bar it fills: a focus
+   indicator that reads as a box around the wrong thing.
+   The fix moves the indicator onto .ix-goal-g -- the 20px chip, which IS the painted control -- and
+   turns it off on the button. Same 2px/2px outline and the same accent halo, on the rect the user
+   sees; the 44px hit box is untouched, so the finger target this cycle just won is unchanged. At
+   4px of extent around a 20px chip centred in a 44px box, the indicator clears both neighbours by
+   8px, and test/focus_ring.cjs asserts that intersection at 1280x800 and 390x844 rather than
+   trusting the arithmetic.
+   `box-shadow:none` on the button is load-bearing, not tidiness: box-shadow is one property, so
+   without it the generic rule's halo would keep painting on the 44px box while the outline moved. */
+.ix-goal-b:focus-visible{outline:none;box-shadow:none}
+.ix-goal-b:focus-visible .ix-goal-g{outline:2px solid var(--acc);outline-offset:2px;box-shadow:0 0 0 3px var(--acc-a15)}
 .ix-goal-t{min-width:var(--space-16);text-align:center;font-size:var(--font-size-small);font-weight:var(--font-weight-heavy);color:var(--ink);font-variant-numeric:tabular-nums}
 .ix-goal-bar{height:var(--space-6);background:var(--bd);border-radius:6px;overflow:hidden;margin-bottom:var(--space-7)}
 .ix-goal-bar span{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));border-radius:6px;transition:width var(--duration-slow) var(--ease-base)}

@@ -889,7 +889,91 @@ async function realClick(page, sel) {
       chk('[boot window/control] and `p` still opens Session progress on a topic route, so the gate scoped a moment rather than a key',
         after.after.dialogs.length > after.before.dialogs.length, JSON.stringify(after.after.dialogs));
 
-      /* ---- (d) THE NATURAL WINDOW, driven as evidence ----
+      /* ---- (d) THE GATE MUST NOT LATCH SHUT ON A RENDER THAT THREW ----
+       * The flag shipped as TWO assignments, one at the close of each applyRoute branch -- so the
+       * bit meant "an application RAN TO COMPLETION", not "a route arrived". Those differ on
+       * exactly one path, and every ingredient of it is already in this repo:
+       *   - applyRoute is the ONLY caller of HomeView.render (view-manager.js:100; grep confirms);
+       *   - Router.emit wraps every subscriber in `try {} catch (e) {}` (router.js:87), so the
+       *     exception is swallowed with no console error and no visible failure;
+       *   - the home branch stamps dataset.view = 'home' BEFORE it renders.
+       * So one throw anywhere in the home render left the app on a page whose data-view said
+       * 'home' while routed() stayed false -- and the gate this section exists to prove turns the
+       * WHOLE keymap off for EVERY key. A rendering bug would have silently taken `d`, `/`, `?`,
+       * `g`, `h` and the six room keys with it, permanently, for the rest of the session. The
+       * boot-window fix would have converted a render bug into a total keyboard outage.
+       * Now the flag is set immediately past applyRoute's `if (!route || !route.view) return;`
+       * guard: it records that a route ARRIVED, which is the only thing the keymap needs to know,
+       * and applyRoute is synchronous so nothing can interleave before the side effects run.
+       *
+       * THE ARM makes HomeView.render throw ONCE through an addInitScript accessor -- the same
+       * mechanism the hold above uses on Router.init, so no build is modified -- then releases the
+       * hold and asks the two questions that matter: did the route register, and is the keyboard
+       * still alive? `d` is the probe because its effect is a stamped attribute rather than a
+       * dialog, so it is read rather than inferred. The throw is COUNTED and asserted: an arm in
+       * which render never threw would be testing the ordinary path under a scary name. */
+      {
+        const THROW_ONCE = () => {
+          window.__renderThrew = 0;
+          var real;
+          Object.defineProperty(window, 'HomeView', {
+            configurable: true,
+            get: function () { return real; },
+            set: function (v) {
+              real = v;
+              if (v && typeof v.render === 'function' && !v.__throwWrapped) {
+                var orig = v.render;
+                v.__throwWrapped = true;
+                v.render = function () {
+                  if (!window.__renderThrew) {
+                    window.__renderThrew = 1;
+                    throw new Error('test-only: HomeView.render throws on its first call');
+                  }
+                  return orig.apply(this, arguments);
+                };
+              }
+            },
+          });
+        };
+        const tp = await ctx.newPage();
+        /* the page WILL log a swallowed-render error path; this arm is about survival, not silence */
+        await tp.addInitScript(HOLD);
+        await tp.addInitScript(THROW_ONCE);
+        await tp.goto(B.fileUrl(HTML, '#home'), { timeout: B.NAV_MS, waitUntil: 'load' });
+        await tp.waitForFunction(B.APP_READY, null, { timeout: B.READY_MS });
+        await B.settle(tp);
+        const tBefore = await tp.evaluate(BSNAP);
+        await tp.evaluate(() => { if (window.__releaseRouter) window.__releaseRouter(); });
+        await B.settle(tp);
+        await tp.waitForTimeout(250);
+        const tAfter = await tp.evaluate(() => ({
+          threw: window.__renderThrew || 0,
+          routed: !!(window.ViewManager && window.ViewManager.routed && window.ViewManager.routed()),
+          view: document.documentElement.dataset.view || null,
+          density: document.documentElement.dataset.density || 'default',
+        }));
+        await tp.evaluate(() => { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); });
+        await tp.keyboard.press('d');
+        await B.settle(tp);
+        await tp.waitForTimeout(250);
+        const tKey = await tp.evaluate(() => document.documentElement.dataset.density || 'default');
+        await tp.close();
+
+        chk('[boot window] the throwing-render arm really staged its defect -- the hold held, and '
+          + 'HomeView.render threw exactly once, inside applyRoute (its only caller)',
+          tBefore.routed === false && tBefore.held === true && tAfter.threw === 1,
+          JSON.stringify({ before: tBefore, after: tAfter }));
+        chk('[boot window] a route whose render THROWS still counts as applied -- the gate records '
+          + 'that a route arrived, not that its side effects finished, so a swallowed render error '
+          + 'cannot latch the whole keymap shut',
+          tAfter.routed === true, JSON.stringify(tAfter));
+        chk('[boot window] ...and the keyboard is still alive after it: `d` cycles the density '
+          + 'attribute (default -> compact) on a home whose render threw',
+          tAfter.density === 'default' && tKey === 'compact',
+          'density ' + tAfter.density + ' -> ' + tKey);
+      }
+
+      /* ---- (e) THE NATURAL WINDOW, driven as evidence ----
          Bounded and non-fatal by design: it lands roughly 4 times in 6 and the assertion is the
          same either way ("nothing that arrived before the first applied route did anything"), so a
          miss costs a logged 0 rather than a red. How many landed is printed, so a run where the

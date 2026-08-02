@@ -24,8 +24,14 @@
  * SENTENCE the resume topic earns -- the "you marked N probes shaky ... and stopped at probe X of
  * Y" branch when that topic holds a progress record of its own, the much shorter "you opened this
  * topic and have not graded a probe in it yet" branch when it does not. Across those the chip list
- * lands anywhere from 30px inside the band to 188px below it, and no compaction closes the far end
- * without deleting content. So the contract names a DISJUNCTION: the record's triage is on the
+ * moves a long way, and no compaction closes the far end without deleting content. MEASURED BY THIS
+ * CHECK, printed in its own output every run, and reconciled here after the cold verify found three
+ * different ranges recorded in three files and all three exceeded by the arm's own log:
+ *     390x844   chips top 769-1006   first chip OUT by  14-251px   act clears the fold by 256-397px
+ *     360x844   chips top 856-1087   first chip OUT by 101-332px   act clears the fold by 216-353px
+ * 20 of the 22 cells render a chip list and the first chip is OUT in all 20; the act is IN in all
+ * 22. The stale figures were "188px" here and "251px ... nine combinations" in check_all.py: both
+ * were written at cycle 2 and never updated when cycle 3 added the crossed cells and the 360 width. So the contract names a DISJUNCTION: the record's triage is on the
  * first screen either as the chip list or as the act addressed to that record, and this file
  * asserts exactly that, on every combination.
  *

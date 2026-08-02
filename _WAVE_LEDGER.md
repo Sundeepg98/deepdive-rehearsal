@@ -33,7 +33,7 @@ keys "must not silently act on the BOOT topic -- they retarget to the resume top
 nothing"). `w` was gated when it was caught doing this; `n` carries `&& !onHome` for the same
 reason; `p` fell through the block.
 
-**The fix.** `src/scripts/app/shell.js:261` -- `if (key === 'p') return;`, inside the existing
+**The fix.** `src/scripts/app/shell.js:278` -- `if (key === 'p') return;`, inside the existing
 `if (onHome)` block, beside the `[` / `]` no-op. No retarget: the panel reports ONE topic's
 grading, and the home's own record surfaces (the gauge, the status census, Still shaky) already
 state that for every topic. So it does what `n` does on the home: nothing.
@@ -99,10 +99,10 @@ waiting to be found by an orphan audit: `.hm-goalbar` and `.hm-goalbar i` are re
 
 **grep-verified.** `grep -rn "hm-goal" src/` returns **two hits, both prose** (the explanatory
 comment in `home-view.js:236` and the stylesheet note at `styles.css:2430`). No renderer remains.
-The weekly goal now has exactly one: `Panels.goalStrip()` (`panels.js:151`), consumed once by
-`telemetryHtml()` (`panels.js:276`) and refreshed IN PLACE after a +/- press (`panels.js:543`,
+The weekly goal now has exactly one: `Panels.goalStrip()` (`panels.js:217`), consumed once by
+`telemetryHtml()` (`panels.js:351`) and refreshed IN PLACE after a +/- press (`syncGoalStrip()`,
 which replaces the one `.ix-goal` element rather than being a second path to the fact).
-`goalPhrase()` stays exported (`panels.js:617`) deliberately -- it is the single source any future
+`goalPhrase()` stays exported (defined `panels.js:149`, exported `:694`) deliberately -- it is the single source any future
 surface must call instead of re-deriving the sentence.
 
 Note the shape of what was wrong: below 920 the rail collapses and `.hm-goal` was already
@@ -341,16 +341,25 @@ html[data-view="home"] .hm-alt .hm-verdict{margin-top:var(--space-6);padding-top
   line-height:var(--line-height-snug)}
 ```
 
-| | before | after |
-|---|---|---|
-| `.hm-verdict`, single-thin-rail sentence (3 lines) | 68px | **62px** |
-| `.hm-verdict`, two-thin-rails sentence (4 lines) | 87px | **80px** |
-| `.hm-alt` panel, one-thin record | 277px + 21 (key restored) = 298 | **288px** |
-| `.hm-alt` panel, two-thin record | 296px + 21 (key restored) = 317 | **306px** |
+*(FIGURE CORRECTED after the cold verify, 2026-08-02 -- and the correction runs in the fix's
+favour. The BEFORE column below was a RECONSTRUCTION built from a cycle-1 measurement of a
+different record ("277px + 21 (key restored) = 298"), and it omitted half the rule: the
+declaration takes `margin-top` from 16 to 6 as well as the padding and the leading, and
+`getBoundingClientRect` on `.hm-verdict` never sees a margin -- the PANEL does. The verifier built
+the counterfactual instead of reconstructing it, planting the pre-change declaration back into a
+mirror of the frozen build and running one probe against both. Their numbers, adopted:)*
 
-So the compaction is worth **10px / 11px of panel**, not 20. Recorded rather than rounded: the
-element is 68-87px tall in total and 3-4 lines, and there is no 20px in it that is not a line of
-the sentence. **The SENTENCE KEEPS ITS SIZE** -- dropping it to `--font-size-small` was measured
+| record | `.hm-verdict` before | after | delta | `.hm-alt` before | after | delta |
+|---|---|---|---|---|---|---|
+| one-thin | **71.8** | **61.6** | **-10.2** | **307.8** | **287.6** | **-20.2** |
+| two-thin | **91.4** | **79.8** | **-11.6** | **327.4** | **305.8** | **-21.6** |
+| cold | **91.4** | **79.8** | **-11.6** | **327.4** | **305.8** | **-21.6** |
+
+So the compaction is worth **20.2px / 21.6px of panel** -- `10px of margin + 10.2px of padding and
+leading` -- not the 10px / 11px this section claimed. The element-level halves (62 / 80 after) and
+the panel-level AFTER halves (288 / 306) reproduce exactly; only the BEFORE reconstruction was
+wrong, and it understated the fix by about half. The paragraph that argued against "20" was
+arguing against its own measurement. **The SENTENCE KEEPS ITS SIZE** -- dropping it to `--font-size-small` was measured
 (it buys another 4-5px) and refused: it is the one claim the whole instrument exists to deliver and
 a phone is the worst place to read 13px prose. The pixels come from leading and from the rule.
 `.ix-cross` was not touched, per the ruling.
@@ -427,7 +436,10 @@ FAIL  [390/weakTopics] the gauge key agrees with the numbers beside it
          this width -- the only legend those marks have
 ```
 
-(and 2 more pinned records, plus 20 of the 24 generated ones). The arm is conditional, so the check
+(and 2 more pinned records, plus 20 of the 24 generated ones -- *re-measured on the frozen tree
+by the cold verify: **3 pinned + 23 generated = 26 reds**. The cycle-2 figure was taken against a
+build that has since changed; the finding is unaffected and the coverage is wider than stated*).
+The arm is conditional, so the check
 also counts how many records actually painted a keel and ABORTS at zero -- a conditional arm nothing
 satisfies is decoration. It reports **6 pinned records** exercising it.
 
@@ -931,7 +943,7 @@ surface on every record class, which is what put the sentence in front of every 
 
 ### JUDGES' ITEM 8 -- THE DESTROYED SPACE -- CLOSED
 
-`src/scripts/app/shell.js:262` reads `const homeTabKeys = {` again. Rebuilt; `SYNTAX CHECK: PASS`.
+`src/scripts/app/shell.js:279` reads `const homeTabKeys = {` again. Rebuilt; `SYNTAX CHECK: PASS`.
 
 ---
 
@@ -1097,7 +1109,7 @@ this cycle, and it was a prose comment.
 ### R5 -- CTRL+P ON THE HOME -- CLOSED
 
 **The fix, as named.** `src/scripts/app/print-qa.js` -- the keydown handler now returns WITHOUT
-`preventDefault()` when `document.documentElement.dataset.view === 'home'`, on the shell.js:262
+`preventDefault()` when `document.documentElement.dataset.view === 'home'`, on the shell.js:279
 precedent and reading the same authority (`applyRoute` stamps `data-view`; nothing else does).
 
 Both halves of "dead" matter and the check asserts both. `openPrint()` reads
@@ -1327,7 +1339,15 @@ accessible  12 topics drilled, 5-topic goal met with 7 to spare this week
 **And after, both viewports, both record classes** (read from the live DOM, not asserted from
 source):
 
-| record | visible line | accessible name |
+*(SUPERSEDED IN THE TAIL FIXES, and annotated here rather than only there -- this is the one place
+in the wave where a receipt describes a state the tip does not have. The "accessible name" column
+below is the state cycle 4 shipped; **T2 deleted that channel entirely**, because once the two
+channels matched character for character the bar and the line beneath it announced the same
+sentence twice in a row. On the frozen tree the bar carries no role, no name and `aria-hidden`,
+and the fact is in the tree once, as the visible line's text. The table stands as the record of
+what cycle 4 fixed; read T2 for what the tip does.)*
+
+| record | visible line | accessible name *(cycle 4 only -- removed in T2)* |
 |---|---|---|
 | cold | `0 of 5 topics drilled this week . 5 more to go` | `0 of 5 topics drilled this week, 5 more to go` |
 | engaged (12) | `12 topics drilled this week . Goal met -- nice work.` | `12 topics drilled this week, Goal met -- nice work.` |
@@ -1813,7 +1833,7 @@ statement rather than a silence:
   needs a button that RESERVES a box it does not PAINT -- transparent, borderless, with the visible
   control as a child -- because only then does `button:focus-visible`'s border-box ring land
   somewhere the user is not looking. Swept: `grep -nE "background:none" src/styles.css | grep 44px`
-  returns **one line**, `.ix-goal-b` (`styles.css:1772`), and it is the same line under the
+  returns **one line**, `.ix-goal-b` (`styles.css:1821`), and it is the same line under the
   `border:0` sweep. The other raw-44px controls the fix's comment names -- `.tn-step`, `.ix-x`,
   `.crambtn`, the `<=919px` element floor -- all paint their own box, so their ring is already on
   the rect the user sees. Nothing to carry.
@@ -2047,7 +2067,7 @@ overlay_deadzone   PASS  (74 assertions: ... Ctrl+P ... leaves the browser's own
 home_claims        PASS  13 planted mutants detected (... and the goal bar given an accessible
                           name of its own again, so the fact is announced off the bar and again
                           off the line beneath it)
-print_truth        PASS  file-print-never-opened {"pages":3,"clipped":0,"bytes":390220}
+print_truth        PASS  file-print-never-opened {"pages":3,"clipped":0}
                           -- the topic-route substitution T1 deliberately did NOT touch
 visual_regression  PASS  (18 baselines, win32-chromium149, worst 0 px)
 ```
@@ -2071,3 +2091,201 @@ branch was cut 11 master commits before `gate.yml` existed (`99e72d0`), so its
 reason. Nothing was imported to force one -- master's gate arrives free on the first push
 after its workflows are in this tree, which is the merge, and its own doctrine puts
 certification at the conductor's local win32 gate anyway. Full receipt: freeze doc, S8.
+
+---
+
+## POST-VERIFY FIXES -- WHAT THE DOUBLED COLD VERIFY FOUND -- 2026-08-02
+
+Two independent cold agents ran against frozen tip `9421057`: a **fix verification** (every one of
+the 34 items re-measured with its own stated method, 17 negative controls planted) and a **hostile
+hunt** (mandate: find what is broken, arms hunted as hard as the app). The verification returned
+**34/34 VERIFIED, 0 items disputing a fix**, with 4 disputed FIGURES and 2 documentation defects.
+The hunt returned **8 findings**: two moderate defects, one moderate arm gap around a latent
+defect, three low, two observations.
+
+**Four fixed here, three carried, six receipts corrected.** The through-line of all four fixes is
+one sentence: **this wave changed what the home is FOR, and three of its own guards were still
+looking at the old thing.** The print block reasoned about what it hid and never enumerated what
+was left; the goal strip's compensation for a removed name was a live region the press path
+destroyed; the boot gate was put at the top of the keymap and the chord that keeps its own listener
+was left reading the bit the gate exists to replace.
+
+---
+
+### F1 -- THE SCROLL-TO-TOP DISC PRINTS ON THE RECORD -- FIXED
+
+T1's own comment examined `#scrolltop` and left it alone, on the ground that it is
+"opacity:0 / visibility:hidden until you scroll". True at scroll 0, and cycle 4 handed the home's
+Ctrl+P to the browser precisely so a reader prints **the page they were reading** -- after
+scrolling. `scroll-to-top.js` adds `.show` past 400px and `.scrolltop.show` is
+opacity:1 / visibility:visible / position:fixed, which survives `emulateMedia({media:'print'})`
+unchanged. Re-measured here on an engaged record scrolled to max, with the same page's `.show`
+lifted as the control:
+
+```
+1280x800 (scrollY 712)   148,466 B, U+2191 per page [1,0]    control 142,923 B, [0,0]
+680x900  (scrollY 725)   148,466 B, U+2191 per page [1,0]    control 142,923 B, [0,0]
+AFTER    both widths     142,923 B, U+2191 per page [0,0]  -- byte-identical to the control
+```
+
+**Scoped to the home, and the topic route was measured rather than assumed.** At `#saga/wb` the
+disc IS up on screen at scrollY 1090, but switching to print media collapses the scroll to 0 (the
+flow content stops being `.app` and becomes the static cram sheet), `scroll-to-top.js` un-shows it
+on that scroll event, and the sheet comes back **U+2191 x0** with its byte count unmoved. That is
+a scroll-state accident rather than a structural impossibility, and the rule's comment says so: if
+a topic-route case is ever measured, promote it to the unconditional line.
+
+**A probe defect worth recording, because it is the third time.** My first attempt to reproduce
+this came back clean -- the disc unshown at scrollY 712 -- because the scroll was taken inside
+`router.js`'s `pinTop` window (0/120/400ms) and silently undone. Cycle 3 met this timer as
+`home_fold`'s 57px coin flip, cycle 4 met it as a coordinate-click probe hitting the background,
+and this pass met it as a false negative on a real defect. The arm now waits it out explicitly and
+**reads the scroll back**.
+
+---
+
+### F2 -- THE STEPPER'S ONLY ANNOUNCEMENT CHANNEL COULD NOT FIRE -- FIXED
+
+Cycle 4 removed the goal bar's `role="img"` + `aria-label` (T2) and named three compensations in
+source. Two held. The third -- "the target keeps its `aria-live`" -- **did not survive
+measurement**: the `[data-goal]` handler rebuilt the strip and `replaceWith`-ed it, so the
+`aria-live="polite"` node was destroyed and recreated on every press and never mutated. This repo
+documents that exact failure mode verbatim in `view-manager.js`: *"A live region must already be in
+the accessibility tree BEFORE its content changes, or the change is not an update to a known region
+-- it is just a new subtree appearing, and NVDA/JAWS commonly miss it."*
+
+Measured, one real hit-tested press of `+` on the cold home, before and after:
+
+```
+BEFORE   regionMutations 0   sameNode false   attached false   parentChildList 1
+AFTER    regionMutations 1   sameNode true    attached true    parentChildList 0
+```
+
+**And the clamp says so now.** `goalTarget()` clamps to 1..20 and nothing announced it: seven
+presses of `-` walked `5 4 3 2 1 1 1` with `aria-disabled` null at every step, at both widths.
+It now follows `text-zoom.js`'s ruled pattern (audit P3-7) -- **aria-disabled, not `disabled`**, so
+the control stays focusable and in the tab sequence instead of vanishing from under a keyboard
+user's fingers -- and the bound is stamped on the FIRST render too, not only after a press, because
+a stored goal of 1 or 20 arrives at the bound already. Measured after, both widths:
+
+```
+7x dec   5 -> 4 -> 3 -> 2 -> 1[dec-ad] -> 1[dec-ad] -> 1[dec-ad]
+         at the clamp: disabled=false, tabIndex=0, line "0 of 1 topic drilled this week"
+21x inc  20[inc-ad], dec no longer marked
+```
+
+**The dim went with it**, which the named fix did not list: text-zoom's ruled pattern is the
+attribute PLUS `opacity:.4`, and shipping only the attribute would have left the clamp perceivable
+to the smaller audience. It dims the painted 20px chip rather than the transparent 44px button, for
+the same reason R8 moved the focus ring there.
+
+**THE ROOT CAUSE WAS THE GATE, and that is fixed too.** `grep -rn "data-goal" test/` returned two
+files, both geometry-only: **nothing in 77 checks pressed this control.** The whole `[data-goal]`
+interaction path -- clamp, re-render, focus, announcement -- was unguarded, on a control this wave
+rebuilt and put in front of every new user. `home_claims.cjs` now presses it (see the arms below).
+
+---
+
+### F3 -- THE CHORD FAILED OPEN WHERE THE MAP FAILED CLOSED -- FIXED
+
+R6 put ONE gate at the top of shell.js's keymap, explicitly over a patch per key. `print-qa.js`'s
+Ctrl+P guard, written in the same cycle, kept reading `dataset.view` -- and its comment asserted
+the two were "the same reader". They stopped being the same in that cycle: `dataset.view` is
+`undefined` in exactly the window the gate exists for. Measured with the check's own hold:
+
+| state | result |
+|---|---|
+| held boot window, `Control+p` | **window.open 1x, "Content Pipeline -- Q&A" (the BOOT topic), 50,368 B, defaultPrevented true** |
+| same held page, plain `p` | nothing -- the shell gate holds |
+| routed `#home`, `Control+p` | opens 0, prevented false -- correct |
+
+`print-qa.js` reads `ViewManager.routed()` first and fails **toward the browser's own print**,
+which is the safe direction: doing nothing leaves the user with a real print of a real page.
+
+**Latent, not reachable today, and recorded as such.** The listener is attached during the
+DOMContentLoaded dispatch and `Router.init()` runs later in the same synchronous dispatch, so no
+input can interleave (4 real boots, 0 frames with the listener wired and no route applied). It
+becomes reachable the moment anything defers `Router.init()` past that dispatch -- a `type=module`
+script, an `await`, an rAF, or a throw in `window._hideBootSplash()`, which `boot()` calls
+immediately before it with no guard. A guard held up by script ordering rather than by a condition
+is the precise thing the one-gate argument rejected.
+
+---
+
+### F8 -- AN OPEN TOPIC INDEX PRINTS OVER THE ARTIFACT -- FIXED, ON BOTH ROUTES
+
+`.ix-ov` (`#_index-overlay`) is a `<body>` child at `position:fixed;inset:0` and was in no print
+hide list. `\` opens it on every route. The asymmetry that hid this was incidental: `#keyov`
+carries `mock-ov`, which the unconditional hide already covered. Measured, A4, extracted chars:
+
+| | closed | index open | after |
+|---|---|---|---|
+| `#home` | 143,818 B / 1,305 chars | **550,261 B / 2,760 chars** | 1,306 chars |
+| `#saga/walk` | 872,952 B / 14,255 chars | **1,806,013 B / 16,350 chars** | 14,255 chars, byte-identical |
+
+The hunt measured the home only and offered the home block; the topic-route measurement is this
+pass's, and it is why `.ix-ov` went on the **unconditional** line beside `.mock-ov` rather than
+beside `.cram-ov:not(.open)`. The cram rule is home-scoped because a closed cram sheet IS the topic
+route's printable artifact; an open index is nobody's artifact anywhere.
+
+---
+
+### THE ARMS, AND THE MUTANT THAT PROVES EACH
+
+`overlay_deadzone` **74 -> 82 assertions**, `home_claims` **+7 assertions incl. a self-test**.
+Both extend existing checks, so the gate count does not move.
+
+| arm | proof it can fail |
+|---|---|
+| the print outcome is read on a **SCROLLED** home, and asserts a **POSITIVE LIST** -- the body-level paint set is exactly `['div.app']` -- instead of one named absence | F1 reverted -> **2 reds**: `painted at body level ["div.app","button#scrolltop.scrolltop"]` and `elements painting U+2191 ["button#scrolltop.scrolltop"]` |
+| ...and the same reader is run again with the **Topic index OPEN**, seeded by a real `\` press that is itself asserted | F8 reverted -> **1 red**: `painted at body level ["div.app","div#_index-overlay.ix-ov.open.vis"]` |
+| `Control+p` is driven **in the boot window**, with the print recorder armed, asserting both halves (no sheet, and the browser's default left alone) | F3 reverted -> **2 reds**: the shipped-build chord arm, AND the anchor-integrity arm, which now aborts because the gate line no longer appears twice |
+| the goal stepper is **PRESSED** -- live region updated in place, sentence still entailed after the press, both clamps announced while staying focusable | F2's live-region half reverted -> **1 red** (`regionMutations 0, sameNode false, attached false`); F2's clamp half reverted -> **2 reds** |
+
+**The seeded boot-gate mutant had to be rebuilt, and the rebuild is an upgrade.** There are two
+gate lines now and they are the SAME EXPRESSION on purpose, so the old anchor matched twice and an
+anchor that lands twice cannot be planted blindly. The check now locates both, tells them apart by
+the CODE that follows them (never a comment, which drifts; never indentation, which a reformat
+eats), asserts **exactly one of each**, and plants each **by index** -- so a mutant aimed at the
+keymap cannot silently also disarm the chord. "Both gates still exist" is now an invariant rather
+than an assumption.
+
+**One arm was written, run, and found to be measuring the wrong thing before it shipped.** The
+positive list first reported two anonymous `<div>`s on the paper. They are the app's polite
+announcers, parked at 1x1 absolute -- they hold a client rect and put no ink on the page, and
+hiding them would break what they exist for. The exclusion is NAMED (`aria-live` at <= 2px) rather
+than sized away, so the allow-list stays exactly one entry and a genuinely thin stray still fails.
+
+---
+
+### CARRIED, NOT FIXED -- THREE MORE, AND WHY EACH STAYS
+
+1. **F4 -- `goalPhrase()`'s met branch is unreachable from the app and MUST NOT be tidied away.**
+   `goalLine()` is its only caller and calls it on the UNMET branch alone, so the
+   `if (g.done >= g.target)` block cannot render on any record (20 combinations of target x done
+   driven, never produced). It stays because it is the surface `home_claims` composes MUTANT 11 and
+   MUTANT 13 from, live off the `Panels` API rather than from pasted literals -- so a routine
+   dead-code removal makes both plants report CANNOT LAND and ABORTS the check. **Now documented at
+   the function itself**, which is where a reader deleting it would be standing; if it ever must
+   go, the mutants have to be re-based on literals in the same commit.
+2. **F5 -- the one goal surface will state a figure the record cannot support.** `weeklyGoal()`
+   counts every key in `Progress.all()` without intersecting the registry and accepts future
+   timestamps, so an imported backup of 300 fake keys renders **"301 topics drilled this week"** on
+   a 46-topic app, and one bogus key moves `done` from 0 to 1. `judgeGoalSentence` rule 2 compares
+   the rendered figure to `weeklyGoal().done` -- the same function that produced it -- so it is
+   structurally blind to a wrong MODEL and can only catch a renderer that diverges from one. The
+   arithmetic is pre-existing and byte-identical to master; what this wave changed is that this is
+   now the app's ONE goal surface on every record class. It belongs with the **record-lifecycle /
+   import-validation** class (W4), which is where "Import a backup validates nothing" already sits
+   -- fixing the counter here without fixing the door would be treating one symptom of an
+   unvalidated import.
+3. **F7 -- `home_fold`'s disjunction is carried by one disjunct in 22 of 22 cells.** The chip list
+   is OUT in all 20 chip-bearing cells and the act is IN in all 22, so `actIn || chipIn` is never
+   satisfied by `chipIn` and the self-test only proves the arm reds when BOTH carriers leave. The
+   contract is written as a disjunction and is being enforced as a single term. Observation only:
+   the measured margins make the crossed case remote (the act clears the fold by 216-397px), and
+   the honest fix is a decision about whether the contract should still be a disjunction at all --
+   which is a ruling, not a repair.
+
+The five items recorded-not-open after cycle 4 and the tail fixes stand unchanged, so the carried
+list is now **eight**.

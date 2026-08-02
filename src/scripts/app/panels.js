@@ -145,7 +145,18 @@
      what it knows: met, and by how much. This lives here, beside the data, because two surfaces
      render this fact (the home rail and the telemetry strip) and round 4 fixed only one of them.
      `bold` renders the figure for a surface that wants emphasis; the plain form is what an
-     accessible name should say. */
+     accessible name should say.
+
+     !! THE MET BRANCH BELOW IS UNREACHABLE FROM THE APP, AND IT IS NOT DEAD CODE. `goalLine()` is
+     the only caller and it calls this on the UNMET branch alone, so `if (g.done >= g.target)` can
+     no longer render on any record -- a cold verify drove 20 combinations of target x done and
+     never produced it. It stays because it is the SURFACE two of this wave's thirteen planted
+     mutants are composed from: `home_claims.cjs` builds MUTANT 11 (the pre-cycle-3 concatenation)
+     and MUTANT 13 (the bar re-acquiring a name) by calling this branch through the live Panels
+     API rather than by pasting a literal, so the mutants cannot drift away from the defect they
+     name. Deleting it as dead code makes both plants report CANNOT LAND and ABORTS `home_claims`
+     -- i.e. tidying it away would delete the regression proof for the fix it is tidying after.
+     If it must go, the mutants have to be re-based on literals in the same commit. */
   function goalPhrase(g, bold) {
     var n = bold ? function (v) { return '<b>' + v + '</b>'; } : function (v) { return String(v); };
     if (g.done >= g.target) {
@@ -214,16 +225,63 @@
      out of the engaged() gate, which put it on the first-run home of every new user; at 20x20
      (1280) and 20x44 (phone) it was under WCAG 2.5.8 AA in one axis and under this app's 44px
      promise in both. See styles.css for the full note. */
+  /* THE SENTENCE UNDER THE BAR, IN ONE PLACE, so the first render and every press cannot drift.
+     goalStrip() builds it and syncGoalStrip() rewrites it; if this were composed twice, a press
+     would be a second renderer of the fact the whole wave spent four cycles collapsing to one.
+     EVERY PART OF THIS STRING IS A NUMBER OR A LITERAL -- `g.done` and `g.target` are integers
+     (`weeklyGoal()` COUNTS records, it never renders a key; `goalTarget()` clamps to 1..20), and
+     the rest is fixed prose plus `topicWord()`. No stored string reaches it, which is why it is
+     assembled as markup rather than escaped: the `<b>` around the figure is the point. The cold
+     verify drove the import door with `nav.last.id = "<img src=x onerror=alert(1)>"` and measured
+     0 script and 0 img nodes injected into #home. If a stored STRING is ever added to this
+     sentence, it must be escaped at that call site or this must stop being innerHTML. */
+  function goalBodyHtml(g) {
+    return goalLine(g, true) + ' &middot; '
+      + (g.met ? 'Goal met &mdash; nice work.' : (g.target - g.done) + ' more to go');
+  }
+  /* aria-disabled, NOT disabled -- text-zoom.js's setLimit(), one control over, same reason. */
+  function setGoalLimit(btn, atLimit) {
+    if (!btn) return;
+    btn.disabled = false;
+    if (atLimit) btn.setAttribute('aria-disabled', 'true');
+    else btn.removeAttribute('aria-disabled');
+  }
   function goalStrip() {
-    var g = weeklyGoal(), left = g.target - g.done;
-    var note = g.met ? 'Goal met &mdash; nice work.' : left + ' more to go';
+    var g = weeklyGoal();
+    /* the bounds are stamped on the FIRST render too, not only after a press: a stored goal of 1
+       or 20 arrives at the bound already, and a control that only becomes honest once you press
+       it is dishonest for exactly the reader who cannot see it is stuck. */
+    var dLim = g.target <= 1 ? ' aria-disabled="true"' : '';
+    var iLim = g.target >= 20 ? ' aria-disabled="true"' : '';
     return '<div class="ix-goal"><div class="ix-goal-top">' +
-      '<span class="ix-goal-set"><button type="button" class="ix-goal-b" data-goal="dec" aria-label="Lower the weekly goal"><span class="ix-goal-g">&minus;</span></button>' +
+      '<span class="ix-goal-set"><button type="button" class="ix-goal-b" data-goal="dec" aria-label="Lower the weekly goal"' + dLim + '><span class="ix-goal-g">&minus;</span></button>' +
       '<span class="ix-goal-t" aria-live="polite">' + g.target + '</span>' +
-      '<button type="button" class="ix-goal-b" data-goal="inc" aria-label="Raise the weekly goal"><span class="ix-goal-g">+</span></button></span></div>' +
+      '<button type="button" class="ix-goal-b" data-goal="inc" aria-label="Raise the weekly goal"' + iLim + '><span class="ix-goal-g">+</span></button></span></div>' +
       '<div class="ix-goal-bar' + (g.met ? ' met' : '') + '" aria-hidden="true">' +
       '<span style="width:' + g.pct + '%"></span></div>' +
-      '<div class="ix-home-v">' + goalLine(g, true) + ' &middot; ' + note + '</div></div>';
+      '<div class="ix-home-v">' + goalBodyHtml(g) + '</div></div>';
+  }
+  /* THE PRESS PATH. Every write here lands on a node that already exists, so the aria-live region
+     on .ix-goal-t is UPDATED rather than replaced -- which is the whole point (see the [data-goal]
+     branch for the measurement). Returns false when there is no strip on the page, so a caller
+     cannot mistake "nothing to update" for "updated". */
+  function syncGoalStrip(scope) {
+    var el = (scope || document).querySelector('.ix-goal');
+    if (!el) return false;
+    var g = weeklyGoal();
+    var t = el.querySelector('.ix-goal-t');
+    if (t) t.textContent = g.target;                       /* the live region, mutated in place */
+    var bar = el.querySelector('.ix-goal-bar');
+    if (bar) {
+      bar.classList.toggle('met', !!g.met);
+      var fill = bar.querySelector('span');
+      if (fill) fill.style.width = g.pct + '%';
+    }
+    var v = el.querySelector('.ix-home-v');
+    if (v) v.innerHTML = goalBodyHtml(g);
+    setGoalLimit(el.querySelector('[data-goal="dec"]'), g.target <= 1);
+    setGoalLimit(el.querySelector('[data-goal="inc"]'), g.target >= 20);
+    return true;
   }
 
   /* WHERE THE USER LEFT OFF. LastVisit (topic+view) first; the most recently graded topic as a
@@ -610,15 +668,38 @@
         return;
       }
 
+      /* THE STRIP IS MUTATED IN PLACE, NOT SWAPPED -- because the live region has to survive.
+         This branch used to rebuild the whole strip and `replaceWith` it, which DESTROYED and
+         recreated the `aria-live="polite"` node on `.ix-goal-t` on every press. A live region
+         must already be in the accessibility tree BEFORE its content changes, or the change is
+         not an update to a known region -- it is a new subtree appearing, and NVDA/JAWS commonly
+         miss it. That is `view-manager.js`'s own rule, verbatim, and this control broke it.
+
+         It matters more here than it looks, because this is the ONLY channel left. Cycle 4
+         stripped the bar's role="img" + aria-label (it duplicated the line beneath it) and named
+         this aria-live as the compensation -- so the compensation was a region that could never
+         fire. Measured before, one real press of `+` on the cold home:
+             liveRegionMutations 0 | sameNode false | stillAttached false | parentChildList 1
+         and after, the same probe: mutations > 0, sameNode true. The visible line and the bar
+         follow the same mutation, so the eye and the reader are still one sentence.
+
+         AND THE CLAMP SPEAKS. `goalTarget()` clamps to 1..20, so three of seven presses on `-`
+         did nothing and nothing said so (`aria-disabled` was null at every step, both widths).
+         This app has a ruled pattern for exactly this control shape in `text-zoom.js` (audit
+         P3-7): aria-disabled, NOT disabled -- `disabled` removes the button from the tab sequence,
+         so at the bound the control silently vanishes from under a keyboard user's fingers.
+         aria-disabled keeps it focusable and announced as unavailable, which is the honest state.
+         The press is already a no-op at the bound via Math.min/Math.max, so nothing guards it.
+
+         No re-focus is needed now: the button is never destroyed, so focus never left it -- which
+         also removes the focus-restore round trip the swap required. */
       var goalBtn = e.target.closest ? e.target.closest('[data-goal]') : null;
       if (goalBtn) {
         var gdir = goalBtn.getAttribute('data-goal');
         var gcur = goalTarget();
         gcur = gdir === 'inc' ? Math.min(20, gcur + 1) : Math.max(1, gcur - 1);
         try { if (typeof Store !== 'undefined') Store.set('goal.weekly', gcur); } catch (e3) {}
-        var gEl = root.querySelector('.ix-goal');
-        if (gEl) { var _gt = document.createElement('div'); _gt.innerHTML = goalStrip(); if (_gt.firstChild) gEl.replaceWith(_gt.firstChild); }
-        var _nb = root.querySelector('[data-goal="' + gdir + '"]'); if (_nb) _nb.focus();
+        syncGoalStrip(root);
         return;
       }
 

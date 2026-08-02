@@ -66,7 +66,37 @@ const HTML = process.argv[2] || path.join(__dirname, '..', 'deepdive_content_pip
    mutant by deleting it from a COPY of the build; the copy is written to the OS temp dir, used,
    and removed in the same run. If this string ever stops matching the shipped source the seed
    cannot land, and the check ABORTS rather than reporting a green it did not earn. */
+/* THE BOOT GATE, AND THERE ARE TWO OF THEM ON PURPOSE.
+   shell.js gates its whole keymap on `ViewManager.routed()`; print-qa.js gates the Ctrl+P chord on
+   the same bit, because the chord is served by its own listener rather than by that map. They are
+   the SAME EXPRESSION deliberately -- they read one bit from one authority -- which means the
+   string below matches TWICE in the build, and an anchor that lands twice cannot be planted
+   blindly. So the two are told apart by the CODE that follows them (never by a comment, which
+   drifts, and never by indentation, which a reformat eats): print-qa's is the one immediately
+   followed by its home return. The check asserts exactly one of each and ABORTS otherwise, which
+   also makes "both gates still exist" an invariant rather than an assumption. */
 const BOOT_GATE = 'if (!(window.ViewManager && window.ViewManager.routed && window.ViewManager.routed())) return;';
+const PRINT_GATE_TAIL = "\n      if (document.documentElement.dataset.view === 'home') return;";
+/* -> { shell: index, print: index } or a string explaining why the seed cannot land */
+function locateBootGates(src) {
+  const at = [];
+  for (let i = src.indexOf(BOOT_GATE); i !== -1; i = src.indexOf(BOOT_GATE, i + 1)) at.push(i);
+  if (at.length !== 2) {
+    return 'the boot-gate line appears ' + at.length + ' times in the build (expected exactly 2: '
+      + 'one in shell.js for the keymap, one in print-qa.js for the Ctrl+P chord), so the seeded '
+      + 'mutants below are not the mutants this arm claims.';
+  }
+  const isPrint = at.map((i) => src.startsWith(PRINT_GATE_TAIL, i + BOOT_GATE.length));
+  if (isPrint.filter(Boolean).length !== 1) {
+    return 'the two boot-gate lines could not be told apart: ' + JSON.stringify(isPrint)
+      + ' matched print-qa\'s home return as their next statement (expected exactly one).';
+  }
+  return { print: at[isPrint.indexOf(true)], shell: at[isPrint.indexOf(false)] };
+}
+/* replace ONE occurrence, by index, so a plant aimed at one gate cannot silently take both */
+function plantAt(src, index, replacement) {
+  return src.slice(0, index) + replacement + src.slice(index + BOOT_GATE.length);
+}
 const TARGET = '.seg button[data-tab="drill"]';   /* a real thing a user taps at first paint */
 
 const fails = [];
@@ -816,9 +846,35 @@ async function realClick(page, sel) {
         JSON.stringify({ sheetTopic: sheet.topic, sheetSections: sheet.secs, sheetChars: sheet.chars,
           cramPresent: seed.present, cramOpen: seed.open, view: seed.view }));
 
-      await pg.emulateMedia({ media: 'print' });
-      await B.settle(pg);
-      const paper = await pg.evaluate(() => {
+      /* SCROLLED, because a fold-height page is not the page a reader prints. Cycle 4 handed the
+         home's Ctrl+P back to the browser, so what gets printed is the page they were READING --
+         and `scroll-to-top.js` adds `.show` past 400px, which put a 44px floating disc and its
+         U+2191 on the first sheet (measured: 148,466 B / one glyph, against 142,923 B / none with
+         the same page's `.show` lifted). The scroll is taken AFTER the router's pinTop timers
+         (0/120/400ms) have run, because a scroll inside that window is undone under the probe --
+         that trap has now cost this repo three separate probes, so it is waited out explicitly
+         rather than raced -- and the scroll is READ BACK, so a page that refused to scroll cannot
+         report this arm as green. */
+      await pg.waitForTimeout(600);
+      const scrolled = await pg.evaluate(() => {
+        window.scrollTo({ top: document.documentElement.scrollHeight, left: 0, behavior: 'instant' });
+        return { y: Math.round(window.scrollY),
+          max: Math.round(document.documentElement.scrollHeight - window.innerHeight) };
+      });
+      await pg.waitForTimeout(450);
+      const disc = await pg.evaluate(() => {
+        const b = document.getElementById('scrolltop');
+        return b ? { shown: b.classList.contains('show'), y: Math.round(window.scrollY) } : null;
+      });
+      chk('[anywhere] CTRL+P outcome: the paper state is the READING state -- the home is scrolled '
+        + 'and the scroll-to-top disc is actually up, so its absence below is a fix and not an accident',
+        !!disc && disc.shown === true && disc.y > 400,
+        JSON.stringify({ scrolled, disc })
+        + ' -- if the disc will not show, this arm cannot prove the print block hides it');
+
+      /* ONE reader, used for both paper states below, so the second measurement cannot quietly
+         become a weaker instrument than the first. */
+      const PAPER = () => {
         const painted = (el) => {
           if (!el) return null;
           const r = el.getBoundingClientRect(), c = getComputedStyle(el);
@@ -826,6 +882,21 @@ async function realClick(page, sel) {
             display: c.display, visibility: c.visibility };
         };
         const home = document.querySelector('#home');
+        /* PAINTS = puts ink on the sheet. The one exclusion is named rather than sized away: the
+           app's polite announcers are `aria-live` <div>s parked at 1x1 absolute, so they hold a
+           client rect while contributing nothing a reader can see -- and hiding them would break
+           the thing they exist for. Anything else with a box is on the paper. */
+        const paints = (el) => {
+          const c = getComputedStyle(el);
+          if (!(el.getClientRects().length > 0 && c.display !== 'none'
+            && c.visibility !== 'hidden' && parseFloat(c.opacity) > 0)) return false;
+          const r = el.getBoundingClientRect();
+          if (el.hasAttribute('aria-live') && r.width <= 2 && r.height <= 2) return false;
+          return true;
+        };
+        const sig = (el) => el.tagName.toLowerCase() + (el.id ? '#' + el.id : '')
+          + (typeof el.className === 'string' && el.className.trim()
+            ? '.' + el.className.trim().split(/\s+/).join('.') : '');
         return {
           printMedia: matchMedia('print').matches,
           home: painted(home),
@@ -835,8 +906,27 @@ async function realClick(page, sel) {
           cramPainted: [...document.querySelectorAll('.cram-ov')]
             .filter((o) => o.getClientRects().length && getComputedStyle(o).display !== 'none')
             .map((o) => Math.round(o.getBoundingClientRect().height)),
+          /* THE POSITIVE LIST. The old form was "#home is present and .cram-ov is absent", which is
+             one named absence and cannot see the NEXT thing that lands on the paper -- and two did:
+             the scroll-to-top disc and an open Topic index, neither of them a .cram-ov. So this
+             enumerates what actually paints at the layer floating chrome lives on (every direct
+             child of <body>) and the caller asserts the SET, not a membership. */
+          bodyPainted: [...document.body.children].filter(paints).map(sig),
+          /* and the arrow itself, wherever it lives: an element that paints and whose own text is
+             the glyph. This is the DOM condition that produced the PDF measurement (U+2191 x1 on
+             sheet 1); the byte-level count lives in the freeze receipt, not in every gate run. */
+          upGlyph: [...document.querySelectorAll('*')].filter((el) => paints(el)
+            && (el.textContent || '').indexOf(String.fromCharCode(0x2191)) !== -1
+            && el.children.length === 0).map(sig),
         };
-      });
+      };
+      /* THE SET, not a membership. `.app` is the record; anything else at this layer is chrome that
+         has arrived on the paper, and naming it here is cheaper than discovering it in a PDF. */
+      const ALLOWED_ON_PAPER = ['div.app'];
+
+      await pg.emulateMedia({ media: 'print' });
+      await B.settle(pg);
+      const paper = await pg.evaluate(PAPER);
       chk('[anywhere] CTRL+P outcome: under print media the HOME paints its own content column',
         paper.printMedia === true && !!paper.home && paper.home.rects > 0
         && paper.home.w > 0 && paper.home.h > 0 && paper.homeText > 1000,
@@ -848,6 +938,50 @@ async function realClick(page, sel) {
         'painted .cram-ov heights ' + JSON.stringify(paper.cramPainted)
         + ' -- the print force-show must require `.open` on the home, or the last sheet the user'
         + ' visited prints instead of the record they asked for');
+      const strays = paper.bodyPainted.filter((s) => ALLOWED_ON_PAPER.indexOf(s) === -1);
+      chk('[anywhere] CTRL+P outcome: and NOTHING ELSE reaches the paper -- the body-level paint set '
+        + 'is exactly the record',
+        strays.length === 0 && paper.bodyPainted.length === ALLOWED_ON_PAPER.length,
+        'painted at body level ' + JSON.stringify(paper.bodyPainted) + ', unexpected '
+        + JSON.stringify(strays) + ' -- floating chrome (the scroll-to-top disc, an open Topic '
+        + 'index) is a <body> child, so it survives every hide written for .app');
+      chk('[anywhere] CTRL+P outcome: and the scroll-to-top arrow is not on the sheet',
+        paper.upGlyph.length === 0,
+        'elements painting U+2191 ' + JSON.stringify(paper.upGlyph)
+        + ' -- measured at 148,466 B with the glyph against 142,923 B without it');
+
+      /* ---- AND WITH THE TOPIC INDEX OPEN, which is the same class one overlay over ----
+       * `\` opens `.ix-ov` (`#_index-overlay`) right there on the home. It is a <body> child at
+       * position:fixed;inset:0 and it was in NO print hide list, so it printed OVER the record:
+       * measured 143,818 B / 1,305 extracted chars closed against 550,261 B / 2,760 chars open,
+       * and on a topic route 872,952 B / 14,255 chars against 1,806,013 B / 16,350 chars -- the
+       * overlay AND the artifact, on both routes. The asymmetry that hid it was incidental:
+       * `#keyov` carries `mock-ov`, which the unconditional hide already covered.
+       * The index is OPENED here rather than assumed absent, because the closed state is exactly
+       * what the arm above already measures and would go on measuring forever. */
+      await pg.emulateMedia({ media: null });
+      await B.settle(pg);
+      await pg.evaluate(() => { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); });
+      await pg.keyboard.press('\\');
+      await B.settle(pg);
+      await pg.waitForTimeout(300);
+      const ixOpen = await pg.evaluate(() => {
+        const o = document.querySelector('.ix-ov');
+        return o ? { open: o.classList.contains('open'), rects: o.getClientRects().length,
+          display: getComputedStyle(o).display } : null;
+      });
+      chk('[anywhere] CTRL+P outcome: the index seed is real -- `\\` opened the Topic index ON the home',
+        !!ixOpen && ixOpen.open === true && ixOpen.rects > 0 && ixOpen.display !== 'none',
+        JSON.stringify(ixOpen) + ' -- if it did not open, the assertion below is free');
+      await pg.emulateMedia({ media: 'print' });
+      await B.settle(pg);
+      const paper2 = await pg.evaluate(PAPER);
+      chk('[anywhere] CTRL+P outcome: an OPEN Topic index still reaches no paper -- the record prints, '
+        + 'the overlay over it does not',
+        paper2.bodyPainted.filter((s) => ALLOWED_ON_PAPER.indexOf(s) === -1).length === 0
+        && paper2.home && paper2.home.rects > 0 && paper2.homeText > 1000,
+        'painted at body level ' + JSON.stringify(paper2.bodyPainted)
+        + ', home ' + JSON.stringify(paper2.home));
       await pg.emulateMedia({ media: null });
       await pg.close();
     }
@@ -910,12 +1044,19 @@ async function realClick(page, sel) {
           .map((d) => d.id || String(d.className).split(' ')[0]),
         topic: (typeof TopicRegistry !== 'undefined' && TopicRegistry.current())
           ? TopicRegistry.current().id : null,
+        print: window.__print
+          ? { opens: window.__print.opens, title: window.__print.title, len: window.__print.len,
+            prevented: window.__print.prevented }
+          : null,
       });
 
       /* one page, one key: a dialog opened by the first press suppresses the second (the keymap
          bails under an open modal), so a shared page would let `p`'s leak hide `w`'s */
       const held = async (html, key) => {
         const p = await ctx.newPage();
+        /* the print recorder goes on EVERY held page: it is inert for `p` and `w` (nothing else in
+           src/ calls window.open), and it is what lets the chord row below read a real outcome */
+        await p.addInitScript(PRINT_PROBE);
         await p.addInitScript(HOLD);
         await p.goto(B.fileUrl(html, '#home'), { timeout: B.NAV_MS, waitUntil: 'load' });
         await p.waitForFunction(B.APP_READY, null, { timeout: B.READY_MS });
@@ -934,35 +1075,55 @@ async function realClick(page, sel) {
         return { before, after, released };
       };
 
-      /* ---- (a) the seeded mutant FIRST: an arm that cannot fail proves nothing about the fix ---- */
+      /* ---- (a) the seeded mutants FIRST: an arm that cannot fail proves nothing about the fix ----
+       * TWO gates now, so TWO plants, each aimed by INDEX at one occurrence so a mutant for the
+       * keymap cannot silently also disarm the chord (which would make the chord row below prove
+       * nothing about its own gate). */
       let mutDir = null, aborted = null;
       const src = fs.readFileSync(HTML, 'utf8');
-      const hits = src.split(BOOT_GATE).length - 1;
-      if (hits !== 1) {
-        aborted = 'THE BOOT-GATE SEED CANNOT LAND: the gate line appears ' + hits + ' times in the '
-          + 'build (expected exactly 1), so the mutant below is not the mutant this arm claims.';
+      const gates = locateBootGates(src);
+      if (typeof gates === 'string') {
+        aborted = 'THE BOOT-GATE SEED CANNOT LAND: ' + gates;
       } else {
         mutDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ddr-deadzone-'));
         try {
-          const mutant = path.join(mutDir, 'boot-gate-removed.html');
-          fs.writeFileSync(mutant, src.replace(BOOT_GATE, 'if (false) return;'), 'utf8');
-          const mp = await held(mutant, 'p');
-          const mw = await held(mutant, 'w');
+          const shellMut = path.join(mutDir, 'shell-gate-removed.html');
+          fs.writeFileSync(shellMut, plantAt(src, gates.shell, 'if (false) return;'), 'utf8');
+          const mp = await held(shellMut, 'p');
+          const mw = await held(shellMut, 'w');
           if (!(mp.after.dialogs.length > 0 && mp.after.topic === 'content-pipeline')) {
-            aborted = 'MUTANT (boot gate removed) NOT DETECTED for `p`: with the gate deleted, a press '
+            aborted = 'MUTANT (shell boot gate removed) NOT DETECTED for `p`: with the gate deleted, a press '
               + 'inside the boot window opened ' + JSON.stringify(mp.after.dialogs) + ' -- the arm cannot '
               + 'see the leak it exists for. ' + JSON.stringify(mp.after);
           } else if (mw.after.hash === mw.before.hash) {
-            aborted = aborted || 'MUTANT (boot gate removed) NOT DETECTED for `w`: the route stayed at '
+            aborted = aborted || 'MUTANT (shell boot gate removed) NOT DETECTED for `w`: the route stayed at '
               + mw.after.hash + ' inside the boot window, so the incidental half of this gate is untested.';
           }
+          /* the chord's own gate, planted alone. Its leak is not a dialog and not a route -- it is
+             a print WINDOW built for the boot topic while the user's own print is taken, so it is
+             read off the recorder rather than off the DOM. */
+          const printMut = path.join(mutDir, 'print-gate-removed.html');
+          fs.writeFileSync(printMut, plantAt(src, gates.print, 'if (false) return;'), 'utf8');
+          const mcp = await held(printMut, 'Control+p');
+          const mprint = mcp.after.print || {};
+          if (!(mprint.opens === 1 && mprint.prevented === true)) {
+            aborted = aborted || 'MUTANT (print-qa boot gate removed) NOT DETECTED for `Control+p`: '
+              + 'with that gate deleted a chord inside the boot window produced '
+              + JSON.stringify(mprint) + ' -- expected one window.open with the default taken. The '
+              + 'chord row below therefore proves nothing about its own gate.';
+          } else if (mcp.after.topic !== 'content-pipeline') {
+            aborted = aborted || 'MUTANT (print-qa boot gate removed) landed but not on the defect: '
+              + 'the sheet was built for TopicRegistry.current()=' + mcp.after.topic + ', and the '
+              + 'defect this gate exists for is a sheet built for the BOOT topic.';
+          }
         } finally {
-          /* a 12MB copy of the build: removed on the way out whether the arm passed, failed or threw */
+          /* 12MB copies of the build: removed on the way out whether the arm passed, failed or threw */
           fs.rmSync(mutDir, { recursive: true, force: true });
         }
       }
-      chk('[boot window] the seeded mutant reproduces the leak -- gate deleted, `p` opens Session '
-        + 'progress on the BOOT topic and `w` moves the route', !aborted, aborted || '');
+      chk('[boot window] the seeded mutants reproduce both leaks -- shell gate deleted, `p` opens Session '
+        + 'progress on the BOOT topic and `w` moves the route; print-qa gate deleted, `Control+p` builds '
+        + 'a sheet for the BOOT topic and takes the browser\'s print', !aborted, aborted || '');
 
       /* ---- (b) the same arm on the shipped build ---- */
       const gp = await held(HTML, 'p');
@@ -976,6 +1137,31 @@ async function realClick(page, sel) {
       chk('[boot window] `w` before the first applied route does not navigate to the boot topic\'s drill either (one gate, every key)',
         gw.after.hash === gw.before.hash && gw.after.view === null,
         JSON.stringify({ hash: gw.before.hash + ' -> ' + gw.after.hash, view: gw.after.view }));
+
+      /* ---- (b2) THE CHORD, in the same window, and it is not served by the map above ----
+       * Ctrl+P is print-qa.js's own listener; shell.js's MODIFIER GUARD blocks every
+       * Ctrl-without-Alt, so the gate proved by `p` and `w` says NOTHING about this key. Its guard
+       * used to be `dataset.view === 'home'` alone -- and `dataset.view` is undefined in exactly
+       * this window, so the chord failed OPEN where the map failed CLOSED: measured on the build
+       * before this fix, one window.open titled "Content Pipeline -- Q&A" (the BOOT topic, 50,368
+       * bytes) with defaultPrevented true, on a page where plain `p` opened nothing.
+       * BOTH halves are asserted because both are the user's: no sheet built for a topic they never
+       * chose, AND their own browser print left alone. */
+      const gcp = await held(HTML, 'Control+p');
+      const cp = gcp.after.print || {};
+      chk('[boot window] the chord arm really is inside the window too, with the recorder armed',
+        gcp.before.routed === false && gcp.before.view === null && gcp.before.held === true
+        && cp.opens !== undefined,
+        JSON.stringify({ before: gcp.before, recorder: cp }));
+      chk('[boot window] `Control+p` before the first applied route builds NO sheet for the boot topic '
+        + 'and does NOT take the browser\'s own print (the chord reads the same gate as the map)',
+        cp.opens === 0 && cp.prevented === false,
+        'window.open calls ' + cp.opens + ', defaultPrevented ' + cp.prevented
+        + ', TopicRegistry.current()=' + gcp.after.topic);
+      chk('[boot window] and releasing the hold turns the chord back on for a topic route -- the gate '
+        + 'scoped a moment, not the key',
+        gcp.released.routed === true && gcp.released.view === 'home',
+        JSON.stringify(gcp.released));
 
       /* ---- (c) THE GATE IS A WINDOW, NOT A DELETION ---- */
       chk('[boot window] releasing the hold applies the route and turns the keymap back on',
@@ -1131,8 +1317,11 @@ async function realClick(page, sel) {
     ' advertises under "Anywhere" was driven ON the home and did what the row says, and the four' +
     ' that need a topic are dead there and live in one, Ctrl+P included (it builds the CURRENT' +
     " topic's sheet in a topic and leaves the browser's own print alone on the home -- and what" +
-    ' that print PRODUCES is measured too, on a home seeded with a visited-then-closed cram sheet:' +
-    ' the record paints, the closed sheet does not);' +
+    ' that print PRODUCES is measured too, on a SCROLLED home seeded with a visited-then-closed' +
+    ' cram sheet: the record paints and the body-level paint set is exactly the record, so the' +
+    ' scroll-to-top disc and an open Topic index are both off the paper rather than merely' +
+    ' unnamed); the Ctrl+P chord reads the same boot gate the map does, preflighted on a build' +
+    ' with THAT gate deleted;' +
     ' no unrequested modal at first paint)');
   return B.finish(0, null);
 })();

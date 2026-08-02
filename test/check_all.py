@@ -1087,10 +1087,14 @@ BROWSER_CHECKS = [('render', 'test/render.cjs'), ('entity_leak', 'test/entity_le
                      # below-920 home had neither a geometry arm nor a pixel one and the move could
                      # be reverted at a green gate. The outcome is not one number -- the chip list's
                      # top moves with hero wrap (23px to 164px), verdict class (62px vs 80px) and
-                     # bar count (66px vs 144px), landing anywhere from 30px inside the band to
-                     # 251px below it -- so the contract is a DISJUNCTION and this asserts it on all
-                     # nine combinations, against a band read from the live fixed chrome. Plants the
-                     # pre-fix DOM position every run and ABORTS if the arm does not go red.
+                     # bar count (66px vs 144px). Measured range, from the check's own log: the
+                     # chip list's first chip is OUT by 14-251px at 390x844 and by 101-332px at
+                     # 360x844, in all 20 chip-bearing cells, while the act clears the fold by
+                     # 216-397px in all 22 -- so the contract is a DISJUNCTION carried by the act,
+                     # and this asserts it on ALL 22 CELLS (11 records x 2 viewports, not the nine
+                     # combinations this line claimed until 2026-08-02), against a band read from
+                     # the live fixed chrome. Plants the pre-fix DOM position every run, at EACH
+                     # viewport, and ABORTS if the arm does not go red.
                      ('home_fold', 'test/home_fold.cjs'),
                      # THE HOME MAY NOT PRINT A CLAIM IT CANNOT DERIVE. Three consecutive rounds of
                      # judgment found the same class in different clothes -- the gauge naming a thin

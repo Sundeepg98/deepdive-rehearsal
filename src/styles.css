@@ -544,7 +544,19 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
   .sr-foot{font-size:var(--font-size-micro);color:var(--mut);margin-top:var(--space-18);font-style:italic}
   @media print {@page{margin:1.5cm}
     body{background:#fff !important}
-    .app, .mock-ov, .rail, .badge, .rail .fill::after{display:none !important}
+    /* `.ix-ov` JOINED THIS LIST, and the asymmetry that left it off was incidental rather than
+       reasoned. `#keyov` carries `mock-ov`, so the shortcuts overlay was already covered here;
+       the Topic index is `.ix-ov` (`#_index-overlay`), a <body> child at `position:fixed;inset:0`,
+       and it was in no hide list at all. `\` opens it on EVERY route. Measured on A4:
+         #home       nothing open 143,818 B / 1,305 extracted chars
+                     index open   550,261 B / 2,760 chars   <- the overlay AND the record
+         #saga/walk  nothing open 872,952 B / 14,255 chars
+                     index open 1,806,013 B / 16,350 chars  <- the overlay AND the cram sheet
+       So it prints OVER the artifact on both routes, which is why it belongs on the unconditional
+       line beside `.mock-ov` rather than in the home block beside `.cram-ov:not(.open)`. The cram
+       rule is home-scoped because a closed cram sheet IS the topic route's printable artifact;
+       an open index is nobody's artifact anywhere. */
+    .app, .mock-ov, .ix-ov, .rail, .badge, .rail .fill::after{display:none !important}
     body:not(.print-session) .cram-ov{display:block !important;position:static !important;background:#fff !important;padding:0 !important;backdrop-filter:none !important;-webkit-backdrop-filter:none !important;overflow:visible !important}
     /* ============ THE HOME PRINTS ITSELF ============
        Two rules, one defect, and the defect is this wave's own. W1.5 cycle 4 (R5) stopped
@@ -577,9 +589,27 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
        breakpoint, so the rail and the tab bar are `position:fixed` bars there and would repeat on
        every printed page. .hm-skip is the "skip the home next time" checkbox: a preference
        control, not a record. The library (.hm-lib) and the companion are already display:none at
-       that width and need no rule. #scrolltop was checked and left alone: it is opacity:0 /
-       visibility:hidden until you scroll, and it is a child of <body> rather than of .app, so it
-       never depended on the hide above.
+       that width and need no rule.
+       THE SCROLL-TO-TOP DISC WAS CHECKED AND LEFT ALONE ONCE, AND THAT WAS WRONG. The reasoning
+       was "opacity:0 / visibility:hidden until you scroll, and a child of <body> rather than of
+       .app, so it never depended on the hide above". The second clause is exactly why nothing
+       hides it; the first is true only at scroll 0. `scroll-to-top.js` adds `.show` past
+       THRESHOLD=400 and `.scrolltop.show` is opacity:1 / visibility:visible / position:fixed --
+       and cycle 4 deliberately handed Ctrl+P on the home back to the browser, so the print a
+       reader takes is the print of the page they were READING, after scrolling. Measured on an
+       engaged record scrolled to max, A4, with the same page's `.show` lifted as the control:
+         1280x800 (scrollY 712)  148,466 B, U+2191 per page [1,0]   control 142,923 B, [0,0]
+         680x900  (scrollY 725)  148,466 B, U+2191 per page [1,0]   control 142,923 B, [0,0]
+       +5,543 bytes and the arrow glyph, on the first sheet. Max scroll on #home is 371px cold at
+       1280x800 (under the threshold) but 712px once the record has content, and 1326px cold on
+       the phone -- so it is reachable as soon as the home has anything to show.
+       SCOPED TO THE HOME because that is where it was measured, and the topic route was measured
+       NOT to have it: at #saga/wb the disc is shown on screen at scrollY 1090, but switching to
+       print media collapses the scroll to 0 (the flow content stops being .app and becomes the
+       static cram sheet), `scroll-to-top.js` un-shows the disc on that scroll event, and the sheet
+       comes back U+2191 x0 with its byte count unmoved. That is a scroll-state accident rather
+       than a structural impossibility, so if a topic-route case is ever measured the honest move
+       is to promote this to the unconditional line above, not to add a second scoped rule.
        The census (.hm-status) is the one member of the home's chrome that is not chrome -- it
        carries "0 of 972 probes graded, 0 solid / 0 shaky / 0 missed", and the shaky-and-missed
        split is on no other surface of the printed page. It is `position:fixed` at the viewport
@@ -593,6 +623,7 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
     html[data-view="home"] .cram-ov:not(.open){display:none !important}
     html[data-view="home"] .hm-rail,
     html[data-view="home"] .hm-tabs,
+    html[data-view="home"] .scrolltop,
     html[data-view="home"] .hm-skip{display:none !important}
     html[data-view="home"] .hm-status{position:static !important}
     /* THE TWO RESETS THAT DECIDE WHETHER PAPER GETS THE ARTIFACT. This rule used to reset four
@@ -1837,6 +1868,16 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
    trusting the arithmetic.
    `box-shadow:none` on the button is load-bearing, not tidiness: box-shadow is one property, so
    without it the generic rule's halo would keep painting on the 44px box while the outline moved. */
+/* AT THE BOUND, AND VISIBLY SO. `text-zoom.js`'s ruled pattern (audit P3-7) is aria-disabled +
+   `.textzoom-btn[aria-disabled="true"]{opacity:.4;cursor:default}` -- the attribute is what a
+   screen reader hears, this is what everyone else sees, and shipping only the attribute would
+   have left the clamp perceivable to the smaller audience. It dims the painted CHIP rather than
+   the button for the same reason the focus ring moved there: the button is a transparent 44px
+   box that paints nothing, so dimming it would dim nothing. The press stays a no-op via
+   Math.min/Math.max, and the control stays focusable and in the tab sequence -- which is the
+   whole reason the pattern is aria-disabled and not `disabled`. */
+.ix-goal-b[aria-disabled="true"] .ix-goal-g{opacity:.4}
+.ix-goal-b[aria-disabled="true"]{cursor:default}
 .ix-goal-b:focus-visible{outline:none;box-shadow:none}
 .ix-goal-b:focus-visible .ix-goal-g{outline:2px solid var(--acc);outline-offset:2px;box-shadow:0 0 0 3px var(--acc-a15)}
 .ix-goal-t{min-width:var(--space-16);text-align:center;font-size:var(--font-size-small);font-weight:var(--font-weight-heavy);color:var(--ink);font-variant-numeric:tabular-nums}
@@ -2482,7 +2523,9 @@ html[data-view="home"] .companion{padding:0}
    14px past the fold on the roomiest of them. And the chip list's position is a function of three
    independent things, only one of which is this block: hero wrap (23px on the shortest probe in
    the bank, 164px on the longest), verdict class, and whether the record has one practice bar or
-   two. Across all nine measured combinations the chips run from 769 to 1006. So the FIRST SCREEN'S
+   two. Across the ten chip-bearing cells this check pins AT 390x844 the chips run from 769 to
+   1006 (and from 856 to 1087 at 360x844, which the check also drives) -- "nine combinations" was
+   this line until 2026-08-02, and the check has asserted 22 cells since cycle 3. So the FIRST SCREEN'S
    CONTRACT is not "the chips fit" -- it is that the first screen carries the record's triage
    either as the chip list or as the drill act addressed to that record, and the act is what carries
    it in every shape. That contract is asserted by test/home_fold.cjs, which is also the only thing

@@ -1178,6 +1178,137 @@ const GEN_N = 24;
 
     await ctx.close();
   }
+
+  /* ================== THE STEPPER IS PRESSED, AND NOTHING ELSE IN THE GATE PRESSES IT ==========
+   * THE GAP THIS CLOSES, stated plainly because it is the root cause of the defect it guards:
+   * `grep -rn "data-goal" test/` returned TWO files before this section -- touch_floor.cjs
+   * (getBoundingClientRect only) and focus_ring.cjs (programmatic .focus() only). Across 77 checks
+   * NOTHING PRESSED THIS CONTROL. So the whole [data-goal] interaction path -- clamp, re-render,
+   * focus, announcement -- was unguarded, on a control this wave rebuilt to 44px and, by hoisting
+   * goalStrip() out of the engaged() gate, put on the first-run home of every new user.
+   *
+   * WHAT SHIPPED THROUGH THAT GAP. The handler rebuilt the strip and `replaceWith`-ed it, which
+   * DESTROYED and recreated the aria-live node on every press -- so the region never fired. That
+   * matters here more than anywhere: cycle 4 removed the bar's role="img" + aria-label (it
+   * duplicated the line beneath it) and named this very aria-live as the compensation. The
+   * compensation was a region that could not fire. And `goalTarget()` clamps to 1..20 while
+   * nothing said so: three of seven presses on `-` did nothing, aria-disabled null throughout.
+   *
+   * This lives in home_claims rather than touch_floor because the oracle is judgeGoalSentence --
+   * the sentence must still be entailed by the record AFTER each press, which is exactly this
+   * file's subject. touch_floor's subject is the 44px box, and it still owns that.
+   *
+   * aria-disabled is ADVISORY, so the presses use force:true: a real user can still press a
+   * clamped button and the press is a no-op by Math.min/Math.max, not by the attribute --
+   * Playwright's actionability check is the only thing that treats it as disabled, and asserting
+   * through it would be asserting Playwright's opinion instead of the app's behaviour. */
+  {
+    const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+    const page = await ctx.newPage();
+    await B.gotoApp(page, HTML, { hash: '#home' });
+    await B.settle(page);
+    const ARM = () => {
+      window.__lm = { region: 0 };
+      const t = document.querySelector('.ix-goal .ix-goal-t');
+      if (!t) return false;
+      window.__node = t;
+      new MutationObserver((m) => { window.__lm.region += m.length; })
+        .observe(t, { childList: true, characterData: true, subtree: true, attributes: true });
+      return true;
+    };
+    const STEP = () => {
+      const el = document.querySelector('.ix-goal');
+      const t = el && el.querySelector('.ix-goal-t');
+      const dec = el && el.querySelector('[data-goal=dec]');
+      const inc = el && el.querySelector('[data-goal=inc]');
+      return {
+        target: t ? t.textContent.trim() : null,
+        ariaLive: t ? t.getAttribute('aria-live') : null,
+        regionMutations: window.__lm ? window.__lm.region : -1,
+        sameNode: window.__node === t,
+        attached: !!(window.__node && document.contains(window.__node)),
+        decAD: dec ? dec.getAttribute('aria-disabled') : null,
+        incAD: inc ? inc.getAttribute('aria-disabled') : null,
+        decNativeDisabled: dec ? dec.disabled : null,
+        decTabIndex: dec ? dec.tabIndex : null,
+        goal: (typeof Panels !== 'undefined') ? Panels.weeklyGoal() : null,
+      };
+    };
+    const armed = await page.evaluate(ARM);
+    out.push(['[stepper] the press arm found a weekly-goal strip to press', armed,
+      'no .ix-goal-t on the cold home -- nothing to observe, so every assertion below would be free']);
+
+    if (armed) {
+      await page.locator('#home [data-goal="inc"]').click();
+      await B.settle(page);
+      await page.waitForTimeout(150);
+      const s1 = await page.evaluate(STEP);
+      /* (1) THE LIVE REGION SURVIVES THE PRESS. This is the whole fix: a region must already be in
+         the accessibility tree BEFORE its content changes (view-manager.js's own rule). */
+      out.push(['[stepper] one press UPDATES the aria-live target in place rather than replacing it',
+        s1.sameNode === true && s1.attached === true && s1.regionMutations > 0
+        && s1.ariaLive === 'polite',
+        JSON.stringify(s1) + ' -- sameNode false / regionMutations 0 is the replaceWith swap, '
+        + 'where the region is destroyed and recreated and therefore never announces']);
+      /* (2) and the sentence still follows the record -- the file's own judge, re-applied */
+      const r1 = await page.evaluate(READ);
+      out.push(['[stepper] and the sentence is still entailed by the record after the press',
+        !judgeGoalSentence(r1), judgeGoalSentence(r1) || '']);
+
+      /* (3) THE CLAMP SAYS SO, at both ends, and stays reachable while it does */
+      const down = [];
+      for (let i = 0; i < 7; i++) {
+        await page.locator('#home [data-goal="dec"]').click({ force: true });
+        await page.waitForTimeout(70);
+        down.push(await page.evaluate(STEP));
+      }
+      const low = down[down.length - 1];
+      out.push(['[stepper] at the lower clamp the control says it is at the bound, and is still '
+        + 'focusable while saying it (aria-disabled, NOT disabled -- text-zoom.js\'s ruled pattern)',
+        low.target === '1' && low.decAD === 'true' && low.incAD === null
+        && low.decNativeDisabled === false && low.decTabIndex === 0,
+        'walk ' + down.map((d) => d.target + (d.decAD ? '[ad]' : '')).join(' -> ')
+        + ' final ' + JSON.stringify(low)]);
+      /* "0 of 1 topic drilled this week" -- the clamped target is where rule 5's singular branch
+         is reachable through the UI, which is how the judge found it in the first place. */
+      const rLow = await page.evaluate(READ);
+      out.push(['[stepper] and the sentence agrees with the clamped target, singular noun included',
+        !judgeGoalSentence(rLow) && / 1 topic\b/.test(rLow.goalLine || ''),
+        judgeGoalSentence(rLow) || ('line reads "' + (rLow.goalLine || '') + '"')]);
+      for (let i = 0; i < 21; i++) {
+        await page.locator('#home [data-goal="inc"]').click({ force: true });
+        await page.waitForTimeout(25);
+      }
+      const high = await page.evaluate(STEP);
+      out.push(['[stepper] at the upper clamp the other end says so, and the lower end stops saying it',
+        high.target === '20' && high.incAD === 'true' && high.decAD === null,
+        JSON.stringify(high)]);
+
+      /* (4) THE SELF-TEST. The probe must be able to SEE the pre-fix state, or every green above
+         is a green about an instrument that cannot tell "updated" from "swapped". So the strip is
+         swapped here the way the handler used to swap it, and the same reader is required to
+         report a detached, different node. */
+      const swapped = await page.evaluate(() => {
+        const g = document.querySelector('.ix-goal');
+        if (!g) return null;
+        const holder = document.createElement('div');
+        holder.innerHTML = g.outerHTML;
+        g.replaceWith(holder.firstChild);
+        return {
+          sameNode: window.__node === document.querySelector('.ix-goal .ix-goal-t'),
+          attached: document.contains(window.__node),
+        };
+      });
+      out.push(['[stepper][self-test] the probe can see the pre-fix swap -- replacing the strip '
+        + 'reports a DETACHED, different live region',
+        !!swapped && swapped.sameNode === false && swapped.attached === false,
+        JSON.stringify(swapped) + ' -- if this stays "same node", the arm above cannot fail and '
+        + 'the replaceWith regression would ship green']);
+    }
+    await page.close();
+    await ctx.close();
+  }
+
   await browser.close();
 
   if (!keelChecked) {
@@ -1210,5 +1341,7 @@ const GEN_N = 24;
   return B.finish(0, 'HOME CLAIMS: PASS  (' + out.length + ' assertions: '
     + Object.keys(SEEDS).length + ' pinned records + ' + GEN_N + ' generated from a fixed PRNG, '
     + 'x 2 viewports, plus a 972-probe hero census at each -- every printed claim entailed by the '
-    + 'record\u2019s exact integers)');
+    + 'record\u2019s exact integers; and the weekly-goal stepper is PRESSED, which nothing in the '
+    + 'gate did before: the aria-live target is updated in place rather than swapped, the sentence '
+    + 'still follows the record after the press, and both clamps say so while staying focusable)');
 })();

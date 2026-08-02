@@ -1732,7 +1732,9 @@ w15-cycle4-closing-gate.txt`).
 
 Taken on the **COMMITTED** tree (`4807316`) -- every edit finished and committed BEFORE the run
 started, which is the rule cycle 4 wrote down after spending three gate runs on trees that no longer
-existed. `build_integrity` therefore reads the strong form:
+existed. The one commit after it is **DOCS ONLY** (`_WAVE_LEDGER.md` + `_audit/`, verified by
+`git diff --stat 4807316..HEAD`), so this capture still describes the code at the branch tip, and
+`npm run build` on the tip leaves the tree clean. `build_integrity` reads the strong form:
 
 ```
 BUILD INTEGRITY: PASS  (12280625 bytes, 0 unresolved, 9 panes + 7 overlays,

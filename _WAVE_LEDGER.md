@@ -1002,3 +1002,67 @@ VISUAL REGRESSION: PASS  (18 baselines, win32-chromium149)
 Two clean verifies rather than one, deliberately: this cycle found a 57px non-determinism in a
 sibling check, and a baseline written from a bad capture is the one failure mode that turns a
 regression into the new reference.
+
+---
+
+## GATE, CYCLE 3 -- 77/77 PASS
+
+```
+  77 checks in 1058.5s (17.6 min)
+GATE: PASS
+```
+
+Full serial run (`python3 test/check_all.py`, no `--fast`, no `--shared-browser`), exit 0, **zero
+FAIL lines and zero SKIPs**. Capture: **`_audit/2026-08-02-w15-cycle3-gate.txt`**. Taken on the
+**COMMITTED** tree (`ccca422`), which is why `build_integrity` reads the strong form:
+
+```
+BUILD INTEGRITY: PASS  (12266522 bytes, 0 unresolved, 9 panes + 7 overlays,
+build SYNCED the deliverable, COMMITTED deliverable == fresh build of HEAD)
+```
+
+The count is **77**, unchanged from cycle 2: every arm this cycle adds extends an existing check,
+so nothing registered separately. The five lines that carry this cycle's work:
+
+```
+overlay_deadzone   PASS  (58 assertions: ... every key the shortcuts overlay advertises under
+                          "Anywhere" was driven ON the home and did what the row says, and the
+                          three that need a topic are dead there and live in one ...)
+home_fold          PASS  (88 assertions across 11 records x 390x844 + 360x844 -- verdict class
+                          x bar count x hero wrap x resume shape, each asserted against a band
+                          computed from the live fixed chrome rather than a typed number)
+visual_regression  PASS  (18 baselines, win32-chromium149; every capture reached a proven rest
+                          state across all 18 roots ... and matched its committed pixels)
+home_rhythm        PASS  (7 rhythm gap(s) + 11 measure(s) ... registry matches discovery exactly)
+phantom_tokens     PASS  (3 known phantom(s) allowlisted; no new one, none left stale)
+```
+
+Standalone runs during the cycle, all green: `ascii_guard`, `syntax_check`, `css_syntax`,
+`home_rhythm`, `phantom_tokens`, `home_fold` (x5, three of them a byte-identical reproducibility
+check), `home_claims`, `overlay_deadzone` (plus one deliberate red under the planted mutant),
+`flow_a11y`, `visual_regression` (one update + two verifies).
+
+---
+
+## STILL OPEN AFTER CYCLE 3
+
+Nothing from this cycle's brief -- R4 and all eight judges' items are closed with receipts above.
+Three things are RECORDED rather than open, so a later wave does not rediscover them as findings:
+
+1. **Ctrl+P on the home builds a printable Q&A for the BOOT topic.** `print-qa.js`'s `openPrint()`
+   reads `TopicRegistry.current()`, which on a route with no current topic is the boot constant --
+   the exact class W1.5 cycle 1 fixed for `p`, one module over and pre-existing. Not fixed here: it
+   is a CHORD outside shell.js's map by that map's own titled rule, it opens a popup window (so
+   driving it in a check needs its own decision), and what Ctrl+P *should* do on the home is a
+   product call, not a bug fix. The overlay's row is honest as written ("this topic's probes") and
+   is declared out of section 6's scope rather than silently skipped.
+2. **The phone home paints ~57px scrolled for a beat on some loads.** The Resume CTA carries
+   `data-autofocus="1"`; focusing it scrolls it into view before the layout has settled, and the
+   page returns to 0 within a second. Transient, self-correcting, pre-existing, and measured at 2
+   of 12 loads. `home_fold` is now immune (it pins the scroll and asserts it) and VR is not exposed
+   (`stableShot` needs two consecutive byte-identical frames). The honest fix is a decision about
+   whether autofocus should scroll at all on a route whose first screen IS the deliverable.
+3. **The chip list is still never the full-containment carrier in any shape this repo measures** --
+   now 22 cells across 390x844 and 360x844 rather than nine at one width. The ruled contract holds
+   in every one of them via the ACT. Closing the chip half would need the `.ix-cross` bars
+   compacted, which R1 explicitly forbade.

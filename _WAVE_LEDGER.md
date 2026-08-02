@@ -1716,6 +1716,56 @@ VISUAL REGRESSION: PASS  (18 baselines, win32-chromium149)
 
 ---
 
+## GATE, CYCLE 4 CLOSING PASS -- 77/77 PASS
+
+```
+  77 checks in 679.1s (11.3 min)
+GATE: PASS
+```
+
+Full serial run (`python3 test/check_all.py`, no `--fast`, no `--shared-browser`), exit 0, **zero
+FAIL lines and zero skipped checks** -- the file's only match for "skip" is `syntax_check`'s own
+PASS text ("52 aggregator files skipped"), which is its aggregators, not a check. Capture:
+**`_audit/2026-08-02-w15-cycle4-closing-gate.txt`** (scratch copy at
+`%TEMP%\claude\D--claude-workspace-deepdive-rehearsal\<session>\scratchpad\
+w15-cycle4-closing-gate.txt`).
+
+Taken on the **COMMITTED** tree (`4807316`) -- every edit finished and committed BEFORE the run
+started, which is the rule cycle 4 wrote down after spending three gate runs on trees that no longer
+existed. `build_integrity` therefore reads the strong form:
+
+```
+BUILD INTEGRITY: PASS  (12280625 bytes, 0 unresolved, 9 panes + 7 overlays,
+build SYNCED the deliverable, COMMITTED deliverable == fresh build of HEAD)
+```
+
+The count is **77**, unchanged from cycles 2, 3 and 4: all three arms extend existing checks. The
+lines that carry this pass:
+
+```
+focus_ring         PASS  (24 assertions: ... and at 1280x800 and 390x844 the weekly-goal stepper
+                          draws its indicator on the 20px chip rather than on the 44px hit box,
+                          clear of the figure and the bar, with the pre-fix ring planted and
+                          caught at each width)
+overlay_deadzone   PASS  (71 assertions: ... BEFORE THE FIRST APPLIED ROUTE, where it has no
+                          route to mean anything against -- that one preflighted on a build with
+                          the gate line deleted ...)
+touch_floor        PASS  (the stepper clears 44 in both axes on a COLD home at 390 AND at 1280,
+                          its targets do not overlap at either, the floor survives a density
+                          change, and a min-width:920px shrink is caught at 1280 while 390
+                          stays green)
+visual_regression  PASS  (18 baselines, win32-chromium149; every capture reached a proven rest
+                          state across all 18 roots and matched its committed pixels)
+```
+
+Standalone runs during the pass, all green: `ascii_guard` (x3), `syntax_check`, `css_syntax`,
+`focus_ring` (x4, two of them deliberate reds under a reverted `styles.css`), `overlay_deadzone`
+(x2, one a deliberate red under the restored flag placement), `touch_floor` (x2),
+`visual_regression`. Three rebuilds were spent on the two watch-reds and their restorations; each
+one was a full `npm run build` so the arm read the same artefact the gate does.
+
+---
+
 ## STILL OPEN AFTER CYCLE 4
 
 Nothing from this cycle's brief -- R5, R6, R7-R10 and all six judges' items are closed with receipts

@@ -2,12 +2,14 @@ name: Battery (offloaded soak / stability runs)
 
 # Free parallel compute for the batteries that used to eat the local box:
 # soak a single check N times, or run repeated full gates, sharded across runners.
-# Dispatch:  gh workflow run battery.yml -f check=touch_floor -f runs_per_shard=6
+# Dispatch:  gh workflow run battery.yml -f check=touch_floor -f runs_per_shard=6 -f runner=windows-latest
 # Results:   per-shard artifacts + an aggregate line in the run summary.
-# HONEST LIMIT: these measure the checks on ubuntu-latest. Timing-sensitive rates
-# (the at-rest family) are platform-shaped; a win32-specific rate still needs a
-# local run. CI batteries answer "is the check's logic sound under load/repetition"
-# at zero local cost -- they complement, not replace, the local capture of record.
+# PLATFORM: runner is an input. windows-latest IS win32 -- the platform of
+# record's rates can be soaked here at scale (a runner is still not the
+# operator's exact box: fonts/GPU rasterization can differ, so VR-baseline
+# reds are render-delta data, not instant defects). ubuntu = fastest setup,
+# macos = the WebKit-adjacent host (concurrency cap 5). What genuinely stays
+# local: VR byte-baselines, absolute perf calibration, NVDA.
 
 on:
   workflow_dispatch:
@@ -28,13 +30,26 @@ on:
         description: 'solo = --only <check>; fullgate = whole serial gate each run'
         default: 'solo'
         required: true
+      runner:
+        description: 'runner platform'
+        type: choice
+        default: 'ubuntu-latest'
+        options:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
 
 permissions:
   contents: read
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
   shard:
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runner }}
+    timeout-minutes: 120
     strategy:
       fail-fast: false
       matrix:
@@ -51,6 +66,21 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            ~/AppData/Local/npm-cache
+          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/ms-playwright
+            ~/AppData/Local/ms-playwright
+            ~/Library/Caches/ms-playwright
+          key: ${{ runner.os }}-pw-${{ hashFiles('package-lock.json') }}
 
       - name: Install Playwright + Chromium
         run: |
@@ -79,7 +109,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: battery-${{ inputs.check }}-shard-${{ matrix.shard }}
+          name: battery-${{ inputs.check }}-${{ inputs.runner }}-shard-${{ matrix.shard }}
           path: _battery/
 
   aggregate:
@@ -100,6 +130,6 @@ jobs:
             TOTAL_PASS=$((TOTAL_PASS+P)); TOTAL_FAIL=$((TOTAL_FAIL+F))
           done
           N=$((TOTAL_PASS+TOTAL_FAIL))
-          echo "## Battery: ${{ inputs.check }} (${{ inputs.mode }}) @ ${{ inputs.ref }}" >> $GITHUB_STEP_SUMMARY
-          echo "**$TOTAL_FAIL fail / $N runs** (ubuntu-latest; platform caveat applies)" >> $GITHUB_STEP_SUMMARY
+          echo "## Battery: ${{ inputs.check }} (${{ inputs.mode }}) @ ${{ inputs.ref }} on ${{ inputs.runner }}" >> $GITHUB_STEP_SUMMARY
+          echo "**$TOTAL_FAIL fail / $N runs** (${{ inputs.runner }}; runner != the operator box for render-shaped checks)" >> $GITHUB_STEP_SUMMARY
           ls _all/*/fail_*.txt 2>/dev/null && echo "failure signatures in shard artifacts" >> $GITHUB_STEP_SUMMARY || true

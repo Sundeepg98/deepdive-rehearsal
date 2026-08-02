@@ -1,0 +1,68 @@
+name: Branch gate (advisory CI on every wave push)
+
+# Fires on every push to any non-master branch: the full serial gate, on ubuntu
+# AND windows-latest. This takes the mid-cycle gate off the builder's critical
+# path AND off the local box entirely -- the builder pushes its cycle commit and
+# keeps working; the verdict arrives async (gh run list --branch <wave>, or the
+# marshal's judge consumes it). ADVISORY by doctrine: certification remains the
+# conductor's local win32 serial gate at freeze and the merged-tree run at
+# train. A red here is an early tripwire, not a veto; a green here is strong
+# but not the record.
+
+on:
+  push:
+    branches-ignore: [master]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+# A newer push to the same branch supersedes the previous verdict-in-flight.
+concurrency:
+  group: branch-gate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gate:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            ~/AppData/Local/npm-cache
+          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/ms-playwright
+            ~/AppData/Local/ms-playwright
+          key: ${{ runner.os }}-pw-${{ hashFiles('package-lock.json') }}
+      - name: Install Playwright + Chromium
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+      - name: Full serial gate (${{ matrix.os }})
+        run: python test/check_all.py 2>&1 | tee gate.log
+      - name: Preserve log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: branch-gate-fail-${{ matrix.os }}-${{ github.sha }}
+          path: gate.log

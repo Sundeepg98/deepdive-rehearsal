@@ -1,10 +1,14 @@
 name: Nightly gate (free continuous flake + regression telemetry)
 
-# Three full serial gates on master every night while everyone sleeps.
-# Cost: zero (public repo). Yield: a standing time series of gate health on
-# ubuntu -- regressions and emergent flakes surface in the morning summary
-# instead of mid-wave. Platform caveat as always: ubuntu telemetry complements
-# the local win32 capture of record.
+# Six full serial gates on master every night while everyone sleeps -- three on
+# ubuntu, three on windows-latest (win32: the platform the certification runs
+# on, so the nightly series now speaks for the record platform too). Plus a
+# live-site drift check: the deployed page must stay byte-identical to master.
+# Cost: zero (public repo). Yield: a per-check pass-rate time series on BOTH
+# platforms -- regressions and emergent flakes surface in the morning summary
+# instead of mid-wave. Caveat: a windows-latest runner is still not the
+# operator's exact box (fonts/GPU rasterization can differ) -- triage a
+# VR-class red as render-delta data, not as an instant defect.
 
 on:
   schedule:
@@ -14,12 +18,18 @@ on:
 permissions:
   contents: read
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
   gate:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 90
     strategy:
       fail-fast: false
       matrix:
+        os: [ubuntu-latest, windows-latest]
         run: [1, 2, 3]
     steps:
       - uses: actions/checkout@v4
@@ -29,15 +39,43 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            ~/AppData/Local/npm-cache
+          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/ms-playwright
+            ~/AppData/Local/ms-playwright
+          key: ${{ runner.os }}-pw-${{ hashFiles('package-lock.json') }}
       - name: Install Playwright + Chromium
         run: |
           npm ci
           npx playwright install --with-deps chromium
-      - name: Full serial gate (run ${{ matrix.run }})
+      - name: Full serial gate (${{ matrix.os }} run ${{ matrix.run }})
         run: python test/check_all.py 2>&1 | tee gate_${{ matrix.run }}.log
       - name: Preserve log on failure
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: nightly-fail-run${{ matrix.run }}
+          name: nightly-fail-${{ matrix.os }}-run${{ matrix.run }}
           path: gate_${{ matrix.run }}.log
+
+  live-drift:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Live page must be byte-identical to master
+        run: |
+          curl -fsSL "https://sundeepg98.github.io/deepdive-rehearsal/deepdive_content_pipeline_rehearsal.html" -o live.html
+          LIVE=$(sha256sum live.html | cut -d' ' -f1)
+          REPO=$(sha256sum deepdive_content_pipeline_rehearsal.html | cut -d' ' -f1)
+          echo "live  $LIVE"
+          echo "repo  $REPO"
+          # A train that pushed within ~30 min can legitimately race the Pages
+          # deploy; at 03:00 IST that window is practically always empty.
+          [ "$LIVE" = "$REPO" ]

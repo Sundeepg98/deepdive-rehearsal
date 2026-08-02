@@ -1,0 +1,85 @@
+name: Branch previews (every wave build gets a phone-lookable URL)
+
+# Every push to a wave branch publishes that branch's deliverable to
+#   https://sundeepg98.github.io/deepdive-rehearsal/previews/<branch-with-dashes>/
+# so a look happens on ANY device -- including the operator's actual phone,
+# which is the real-device instrument the campaign never had. UNGATED by
+# design: this is the instant-look channel; gate.yml runs on the same push in
+# parallel and carries the correctness verdict. Additive-only publishing (a
+# preview can never touch the production root of gh-pages). Branch deletion
+# prunes its preview. Shares the gh-pages concurrency group with the deploy
+# workflow so pushes to the branch never race.
+
+on:
+  push:
+    branches-ignore: [master]
+  delete:
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+defaults:
+  run:
+    shell: bash
+
+concurrency:
+  group: gh-pages-deploy
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Publish this branch to its preview path (additive only)
+        run: |
+          SLUG=$(echo "${GITHUB_REF_NAME}" | tr '/' '-')
+          git fetch origin gh-pages
+          git worktree add /tmp/ghp origin/gh-pages
+          cd /tmp/ghp
+          git checkout -B gh-pages origin/gh-pages
+          mkdir -p "previews/$SLUG"
+          cp "$GITHUB_WORKSPACE/deepdive_content_pipeline_rehearsal.html" "previews/$SLUG/index.html"
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add "previews/$SLUG"
+          if git diff --cached --quiet; then
+            echo "preview unchanged -- nothing to publish"
+          else
+            git commit -m "preview: $SLUG @ ${GITHUB_SHA:0:9} (ungated instant-look)"
+            for attempt in 1 2 3; do
+              if git push origin gh-pages; then break; fi
+              git pull --rebase origin gh-pages
+            done
+          fi
+          echo "## Preview live" >> $GITHUB_STEP_SUMMARY
+          echo "https://sundeepg98.github.io/deepdive-rehearsal/previews/$SLUG/" >> $GITHUB_STEP_SUMMARY
+
+  prune:
+    if: github.event_name == 'delete' && github.event.ref_type == 'branch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Remove the deleted branch's preview
+        run: |
+          SLUG=$(echo "${{ github.event.ref }}" | tr '/' '-')
+          git fetch origin gh-pages
+          git worktree add /tmp/ghp origin/gh-pages
+          cd /tmp/ghp
+          git checkout -B gh-pages origin/gh-pages
+          if [ -d "previews/$SLUG" ]; then
+            git config user.name 'github-actions[bot]'
+            git config user.email 'github-actions[bot]@users.noreply.github.com'
+            git rm -r "previews/$SLUG"
+            git commit -m "preview: prune $SLUG (branch deleted)"
+            for attempt in 1 2 3; do
+              if git push origin gh-pages; then break; fi
+              git pull --rebase origin gh-pages
+            done
+          else
+            echo "no preview for $SLUG -- nothing to prune"
+          fi

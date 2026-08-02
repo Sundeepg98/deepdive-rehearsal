@@ -46,6 +46,18 @@ jobs:
         with:
           node-version: '20'
 
+      # Warm caches cut ~5-8 min of setup per run -- the train-to-live latency
+      # drops accordingly. Cache miss just means the old (slower) behavior.
+      - uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-pw-${{ hashFiles('package-lock.json') }}
+
       - name: Install Playwright + Chromium (so THE GATE runs its browser checks)
         run: |
           npm ci

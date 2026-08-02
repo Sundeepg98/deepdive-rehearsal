@@ -1,0 +1,95 @@
+name: Cross-engine smoke (Firefox / WebKit -- the browsers the box never runs)
+
+# The gate is Chromium-wired; engine diversity was parked as a coda item because
+# the local box can't afford three more browser installs under fleet load. CI
+# can: free Firefox + WebKit on ubuntu, and WebKit on macos-latest -- the
+# closest free approximation to real Safari. Runs on every master push and
+# nightly. SMOKE, not the gate: boots the real deliverable, fails on any
+# runtime error, asserts the page actually rendered, and keeps a screenshot
+# per engine for eyeballing. Engine-specific breakage now surfaces the day it
+# lands instead of at coda.
+
+on:
+  push:
+    branches: [master]
+    paths-ignore:
+      - '_audit/**'
+      - '**.md'
+      - '.gitignore'
+      - '.gitattributes'
+  schedule:
+    - cron: '0 22 * * *'   # 03:30 IST nightly, offset from the gate nightly
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  smoke:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            engine: firefox
+          - os: ubuntu-latest
+            engine: webkit
+          - os: macos-latest
+            engine: webkit   # WebKit on its native host: nearest-to-Safari signal available for free
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            ~/AppData/Local/npm-cache
+          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/ms-playwright
+            ~/Library/Caches/ms-playwright
+          key: ${{ runner.os }}-pw-${{ matrix.engine }}-${{ hashFiles('package-lock.json') }}
+      - name: Install Playwright + ${{ matrix.engine }}
+        run: |
+          npm ci
+          npx playwright install --with-deps ${{ matrix.engine }}
+      - name: Boot the deliverable in ${{ matrix.engine }}
+        run: |
+          cat > _engines_smoke.mjs <<'EOF'
+          import { firefox, webkit, chromium } from 'playwright';
+          const engine = { firefox, webkit, chromium }[process.env.ENGINE];
+          const url = 'file://' + process.cwd().replace(/\\/g, '/') + '/deepdive_content_pipeline_rehearsal.html';
+          const browser = await engine.launch();
+          const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+          const errors = [];
+          page.on('pageerror', e => errors.push('pageerror: ' + e.message));
+          page.on('console', m => { if (m.type() === 'error') errors.push('console.error: ' + m.text()); });
+          await page.goto(url, { waitUntil: 'load', timeout: 120000 });
+          await page.waitForTimeout(15000); // generous boot + settle for cold engines
+          const textLen = await page.evaluate(() => document.body.innerText.length);
+          const buttons = await page.evaluate(() => document.querySelectorAll('button, [role="button"]').length);
+          await page.screenshot({ path: 'smoke-' + process.env.ENGINE + '-' + process.platform + '.png' });
+          console.log(JSON.stringify({ engine: process.env.ENGINE, platform: process.platform, textLen, buttons, errorCount: errors.length, errors: errors.slice(0, 20) }, null, 2));
+          await browser.close();
+          if (errors.length) { console.error(errors.length + ' runtime errors'); process.exit(1); }
+          if (textLen < 2000) { console.error('page text suspiciously small -- boot failure?'); process.exit(1); }
+          if (buttons < 5) { console.error('too few interactive elements -- render failure?'); process.exit(1); }
+          EOF
+          ENGINE=${{ matrix.engine }} node _engines_smoke.mjs
+      - name: Keep the screenshot (always -- it is the eyeball record)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-${{ matrix.engine }}-${{ matrix.os }}
+          path: smoke-*.png
+          if-no-files-found: ignore

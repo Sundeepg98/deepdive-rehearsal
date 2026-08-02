@@ -138,6 +138,9 @@ def main():
     add_common(sp)
 
     sp = sub.add_parser('gate', help='fast advisory gate: 76 checks sharded')
+    sp.add_argument('--except', dest='except_', default=None,
+                    help='comma list of checks to drop (windows auto-drops '
+                         'visual_regression; pass --except "" to override)')
     add_common(sp)
 
     sp = sub.add_parser('status', help='show a run (or recent ci-exec runs)')
@@ -161,7 +164,14 @@ def main():
 
     if a.op == 'gate':
         shards = a.shards if a.shards > 1 else 6
-        cmd = 'python test/ci_shard_gate.py --shard $SHARD/$SHARDS'
+        excepts = a.except_
+        if excepts is None and a.runner == 'windows-latest':
+            excepts = 'visual_regression'
+            print('windows gate: auto-excluding visual_regression (the runner '
+                  'rasterizes differently from the win32 capture box; '
+                  'pass --except "" to force it)')
+        cmd = ('python test/ci_shard_gate.py --shard $SHARD/$SHARDS'
+               + (' --except ' + excepts if excepts else ''))
     else:
         shards, cmd = a.shards, a.cmd
 

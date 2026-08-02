@@ -335,6 +335,24 @@ NATIVE_CHECKS = [('ascii_guard', ['python3', 'test/ascii_guard.py']),
                   # all-src gap ratchet would have been. Exhaustive by DISCOVERY inside the
                   # boundary, so a new home section cannot ship unguarded by being absent from a
                   # list; the registry is cross-checked both ways. Static, ~1s.
+                  # craft_hygiene (W-ADDRESSES): the third census in this family. typeface_census
+                  # asks whether the app owns the FACE it declares and tracking_census whether it
+                  # owns the SPACE; this asks whether it owns the MARKS it prints -- a straight
+                  # apostrophe where the typeset form is a right single quote, three periods where
+                  # an ellipsis belongs, a spaced hyphen doing an em dash's job, and a codepoint no
+                  # face in --sans carries so the PLATFORM picks the typeface. None of these can
+                  # fail a correctness panel: every one renders and every one is legible, which is
+                  # exactly why the class grows one string at a time. It is a SOURCE check for a
+                  # measured reason -- the shipped 12.3MB deliverable holds 2,840 characters in real
+                  # HTML text nodes and everything else inside <script>, so a text-node walk would
+                  # have swept 0.02% of the copy and called it clean. It reads string literals with
+                  # a real JS scanner (comments are not copy: a bare `>...<` regex reported 523
+                  # straight quotes that were all design commentary) and judges only PROSE -- code
+                  # samples are exempt on principle, since `SELECT count(*) ... WHERE` is an
+                  # elision in SQL rather than a trailing-off sentence. Ratcheted through
+                  # craft_hygiene_allow.json, where a STALE entry is itself a failure. Five planted
+                  # defects and two negative controls run every invocation. Static, ~2s.
+                  ('craft_hygiene', ['python3', 'test/craft_hygiene.py']),
                   ('home_rhythm', ['python3', 'test/home_rhythm.py']),
                   ('file_integrity', ['python3', 'test/file_integrity.py']),
                   ('unit_tests', ['python3', 'test/unit_tests.py']),

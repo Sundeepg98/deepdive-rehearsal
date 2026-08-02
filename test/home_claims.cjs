@@ -471,6 +471,45 @@ const READ = () => {
     /* IDENTITY: the visible h1 must BE the hero question, not merely be unique */
     h1IsHero: !!q && q.tagName === 'H1' && q.getClientRects().length > 0
       && [...document.querySelectorAll('h1')].filter((h) => h.getClientRects().length).length === 1,
+    /* ---- THE DOOR'S ROOM ------------------------------------------------------------------
+       `door` is the room the page is LIT in (the data-group on <html>, which rebinds --acc and
+       therefore every focus ring, hover border and Cram button on the surface). `doorWant` is the
+       room the home is ABOUT -- the resume target's, or the first topic's when there is nothing to
+       resume, which is exactly what the START card points at. Read from the REGISTRY rather than
+       from any rendering, so the judge compares the page against the record and not against
+       another rendering of the record. */
+    door: document.documentElement.getAttribute('data-group'),
+    doorWant: (() => {
+      try {
+        const r = Panels.resumeTarget && Panels.resumeTarget();
+        let t = (r && r.topic) || null;
+        if (!t) { const ids = TopicRegistry.ids(); t = ids.length ? TopicRegistry.get(ids[0]) : null; }
+        return (t && t.identity && t.identity.group) || null;
+      } catch (e) { return null; }
+    })(),
+    /* the room the CTA is gelled in, so a FAIL can say whether the two disagree */
+    ctaRoom: (() => {
+      const c = document.querySelector('#home .hm-cta');
+      return c ? (c.getAttribute('style') || '') : null;
+    })(),
+    /* ---- ARRIVAL ORDER --------------------------------------------------------------------
+       The rendered top-level sections of the home column, in DOM order, filtered to the ones that
+       actually paint. DOM order is the thing that matters: it is what the keyboard, the screen
+       reader and the phone tab bar's crossing pointer all read, which is why the practice block
+       was moved in html() rather than with CSS `order`. */
+    arrival: [...document.querySelectorAll('#home > .ix-panel > *')]
+      .filter((e) => e.getClientRects().length)
+      .map((e) => {
+        const c = (e.className || e.tagName).toString().split(/\s+/);
+        for (const k of ['hm-continue', 'hm-practicem', 'hm-duo', 'hm-alt', 'hm-rooms', 'hm-libm', 'hm-skip', 'ix-foot', 'hm-lead']) {
+          if (c.indexOf(k) !== -1) return k;
+        }
+        return c[0] || 'unknown';
+      }),
+    /* and the duo's own two cells, in DOM order -- "This week" leads */
+    duoOrder: [...document.querySelectorAll('#home .hm-duo > section')]
+      .filter((e) => e.getClientRects().length)
+      .map((e) => (e.classList.contains('hm-tele') ? 'week' : 'shaky')),
     /* the record as stored, so a position claim is checked against the field it claims to read */
     stored: (() => {
       try {
@@ -797,6 +836,51 @@ function judgeKey(r) {
     + 'at this width -- the only legend those marks have';
 }
 
+/* THE DOOR LIGHTS IN THE ROOM YOU ARE RETURNING TO.
+   `applyIdentity()` stamps data-group on every topic switch and NOTHING EVER CLEARED IT, so the
+   home wore either index.html's hard-coded boot room or whatever room you last visited -- never
+   its own. MEASURED on the shipped build with a resume pointer at Event-Driven Backbone
+   (Messaging & Events): data-group read `architecture-apis` and --acc was #963D86 MAGENTA, which
+   is what lit the focus ring on all 46 topic cards, both Cram buttons and every hover border,
+   while the Resume CTA next to them was correctly teal because it uses --rm. One page, two
+   answers about which room the user is in, and the one with 688 consumers had the wrong one.
+   The judge compares the stamp against the REGISTRY's group for the resume target, so it cannot
+   be satisfied by re-deriving the stamp from the stamp. */
+function judgeDoor(r) {
+  if (!r.doorWant) return null;              /* no topics registered -- nothing to be lit as */
+  if (r.door === r.doorWant) return null;
+  return 'the home is lit in room "' + r.door + '" while the act it is about is in "' + r.doorWant
+    + '" -- every var(--acc) consumer on this surface (focus rings, Cram, hover borders) is '
+    + 'wearing a room the user is not going to';
+}
+
+/* THE ARRIVAL ORDER, AS DOM ORDER.
+   The engaged home opened with the decision and then, immediately, the audit: the gauge, whose
+   verdict is the largest sentence on the page and is an accusation, then a panel headed
+   STILL SHAKY -- 41 FLAGGED. The cold home, by contrast, opens with an invitation. So the app was
+   most hospitable to the person who had done nothing. This pins the fixed sequence rather than a
+   vague "acts before audit": ONE order for every record class, with absent members skipped, so a
+   later wave cannot restore the inversion one panel at a time. `hm-lead` (cold only) and the two
+   phone-only members are allowed wherever they render; what is asserted is the RELATIVE order of
+   the four that carry the argument. */
+const ARRIVAL_RANK = { 'hm-continue': 0, 'hm-practicem': 1, 'hm-duo': 2, 'hm-alt': 3, 'hm-rooms': 4 };
+function judgeArrival(r) {
+  const seq = (r.arrival || []).filter((k) => k in ARRIVAL_RANK);
+  for (let i = 1; i < seq.length; i++) {
+    if (ARRIVAL_RANK[seq[i]] < ARRIVAL_RANK[seq[i - 1]]) {
+      return 'the home arrives in the order ' + seq.join(' then ') + ' -- the audit (hm-alt) must '
+        + 'sit below the acts and the week, not above them';
+    }
+  }
+  /* and within the paired row, the week's shape leads the triage */
+  const d = r.duoOrder || [];
+  if (d.length === 2 && d[0] !== 'week') {
+    return 'the paired row renders ' + d.join(' then ') + ' -- the deficit panel is first, which is '
+      + 'the inversion this order exists to fix';
+  }
+  return null;
+}
+
 /* one place that names every arm, so a new judge cannot be written and then never called --
    which is how judgeHeader and judgeCensus would otherwise have stayed decorative */
 const ALL_JUDGES = (r) => [
@@ -810,6 +894,8 @@ const ALL_JUDGES = (r) => [
   ['goal sentence', judgeGoalSentence(r)],
   ['act order', judgeActOrder(r)],
   ['gauge key', judgeKey(r)],
+  ['door room', judgeDoor(r)],
+  ['arrival order', judgeArrival(r)],
 ];
 
 /* THE HERO CENSUS, IN THE GATE. The named records render ~10 distinct questions of 972, so the
@@ -990,6 +1076,78 @@ const GEN_N = 24;
             const all = [...document.querySelectorAll('.ix-goal')];
             if (all.length > 1) all[all.length - 1].remove();
           });
+        }
+      }
+
+      /* ---- MUTANT 14: THE DOOR LIT IN A ROOM THE USER IS NOT IN --------------------------
+         Planted as the SHIPPED DEFECT, not as an arbitrary wrong value: index.html's hard-coded
+         boot group, which is what the home wore on every load before the resume room was stamped.
+         Planted on `mixedPosition`, whose resume topic has a room of its own to disagree with.
+         The control matters as much as the plant here -- if the resume topic happened to BE in
+         architecture-apis the plant would be a no-op and the mutant would report a false green,
+         so the check aborts rather than pretending it landed. */
+      if (w === 1280 && name === 'mixedPosition') {
+        const clean14 = await page.evaluate(READ);
+        if (clean14.doorWant === 'architecture-apis') {
+          aborted = aborted || 'MUTANT 14 CANNOT LAND: this seed\'s resume topic is itself in '
+            + 'architecture-apis, so the boot constant and the correct room are the same string '
+            + 'and the plant proves nothing. Point the seed at a topic in another room.';
+        } else if (judgeDoor(clean14)) {
+          aborted = aborted || 'MUTANT 14 CONTROL FAILED: the SHIPPED home is already lit in the '
+            + 'wrong room before anything was planted: ' + judgeDoor(clean14);
+        } else {
+          await page.evaluate(() => document.documentElement.setAttribute('data-group', 'architecture-apis'));
+          const bad14 = await page.evaluate(READ);
+          if (!judgeDoor(bad14)) {
+            aborted = aborted || 'MUTANT 14 UNDETECTED: the home lit in the BOOT CONSTANT room '
+              + '(architecture-apis) while its resume act is in ' + bad14.doorWant + ' was '
+              + 'accepted. That is the shipped defect verbatim.';
+          }
+          await page.evaluate((g) => document.documentElement.setAttribute('data-group', g), clean14.door);
+        }
+      }
+
+      /* ---- MUTANT 15: THE AUDIT BACK ON TOP ----------------------------------------------
+         The arrival inversion, replanted by moving the gauge above the paired row exactly as it
+         shipped. Planted on `weakTopics`, the one seed that renders BOTH duo cells -- on a record
+         with no chips the row has one cell and the second half of the judge has nothing to order,
+         so the plant would only exercise half the rule. */
+      if (w === 1280 && name === 'weakTopics') {
+        const clean15 = await page.evaluate(READ);
+        if (clean15.duoOrder.length !== 2) {
+          aborted = aborted || 'MUTANT 15 CANNOT LAND: `weakTopics` renders ' + clean15.duoOrder.length
+            + ' duo cell(s), so the paired-row half of the arrival rule is untested. This seed is '
+            + 'the one that must render both.';
+        } else if (judgeArrival(clean15)) {
+          aborted = aborted || 'MUTANT 15 CONTROL FAILED: the SHIPPED arrival order is already '
+            + 'wrong before anything was planted: ' + judgeArrival(clean15);
+        } else {
+          const moved = await page.evaluate(() => {
+            const alt = document.querySelector('#home .hm-alt');
+            const duo = document.querySelector('#home .hm-duo');
+            if (!alt || !duo) return false;
+            duo.parentNode.insertBefore(alt, duo);       /* the shipped order */
+            return true;
+          });
+          const bad15 = await page.evaluate(READ);
+          if (!moved) {
+            aborted = aborted || 'MUTANT 15 CANNOT LAND: no .hm-alt / .hm-duo on this record.';
+          } else if (!judgeArrival(bad15)) {
+            aborted = aborted || 'MUTANT 15 UNDETECTED: the gauge restored above the paired row -- '
+              + 'the shipped arrival -- was accepted: ' + bad15.arrival.join(' then ');
+          }
+          /* and the second half, on its own, so one rule cannot cover for the other */
+          await page.evaluate(() => {
+            const duo = document.querySelector('#home .hm-duo');
+            const alt = document.querySelector('#home .hm-alt');
+            if (alt && duo) duo.parentNode.insertBefore(duo, alt);          /* order restored */
+            if (duo && duo.children.length === 2) duo.insertBefore(duo.children[1], duo.children[0]);
+          });
+          const bad15b = await page.evaluate(READ);
+          if (!judgeArrival(bad15b)) {
+            aborted = aborted || 'MUTANT 15b UNDETECTED: the paired row with the deficit panel '
+              + 'first was accepted: ' + bad15b.duoOrder.join(' then ');
+          }
         }
       }
 
@@ -1202,6 +1360,84 @@ const GEN_N = 24;
    * clamped button and the press is a no-op by Math.min/Math.max, not by the attribute --
    * Playwright's actionability check is the only thing that treats it as disabled, and asserting
    * through it would be asserting Playwright's opinion instead of the app's behaviour. */
+
+  /* ===== THE 138 MARKS ARE REACHABLE BY SOMETHING OTHER THAN A MOUSE ==========================
+   * WHAT WAS WRONG, and it is stronger than the audit's "title is mouse-only". Each altitude
+   * capsule names its topic through a `title` attribute -- which does not fire on touch and is not
+   * reachable by keyboard -- but the TRACK above it carries `role="img"`, and role="img" makes its
+   * descendants PRESENTATIONAL. So the 138 titles were removed from the accessibility tree by
+   * construction: not awkward to reach, unreachable. Measured on the shipped build: segHasTitle
+   * true, segTabbable false, and no description anywhere on the rail.
+   *
+   * IT IS ASSERTED ON THE ACCESSIBILITY TREE, not on the attribute, because the attribute is the
+   * thing that was already there and already useless. What has to be true is that a reader landing
+   * on the rail can get at what the picture says -- so the rail's own AX node must carry a
+   * DESCRIPTION, and that description must name the topics the marks stand for.
+   *
+   * THE ORACLE IS THE REGISTRY, not the rendering: the description has to contain the titles of
+   * topics that are really on this rail, so a description built from the wrong tier -- or an empty
+   * one -- cannot pass. And the mutant removes the tie and requires this to go red, because an AX
+   * assertion that cannot fail is the most flattering kind of green there is. */
+  {
+    const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+    const page = await ctx.newPage();
+    await B.gotoApp(page, HTML, { hash: '#home' });
+    await page.evaluate(() => { try { localStorage.clear(); } catch (e) {} });
+    await page.evaluate(SEEDS.weakTopics);
+    await B.gotoApp(page, HTML, { hash: '#home' });
+    await B.until(page, () => !!document.querySelector('#home .hm-alt .hm-seg'), null, B.ACT_MS, 'the gauge');
+    await B.settle(page);
+
+    /* READ THROUGH CDP, not through page.accessibility -- that helper is gone from current
+       Playwright, and the protocol is the tree itself rather than a wrapper's view of it. */
+    const cdp = await page.context().newCDPSession(page);
+    await cdp.send('DOM.enable');
+    await cdp.send('Accessibility.enable');
+    const axFor = async (sel) => {
+      const doc = await cdp.send('DOM.getDocument', { depth: -1 });
+      const { nodeId } = await cdp.send('DOM.querySelector', { nodeId: doc.root.nodeId, selector: sel });
+      if (!nodeId) return null;
+      const { nodes } = await cdp.send('Accessibility.getPartialAXTree', { nodeId, fetchRelatives: false });
+      const n = (nodes || []).find((x) => x.ignored !== true) || (nodes || [])[0];
+      if (!n) return null;
+      const val = (p) => (n[p] && n[p].value !== undefined ? String(n[p].value) : '');
+      return { role: val('role'), name: val('name'), description: val('description') };
+    };
+    const ax = await axFor('.hm-alt .hm-gr-t');
+    const desc = ax ? ax.description.replace(/\s+/g, ' ').trim() : '';
+    const want = await page.evaluate(() => {
+      const m = Altitude.compute();
+      const tier = m.order[0];
+      return { tier, titles: Altitude.rail(m, tier).slice(0, 3).map((s) => s.title) };
+    });
+
+    out.push(['[gauge names] the rail carries an accessible NAME (the summary it always had)',
+      !!(ax && ax.name && ax.name.trim()), JSON.stringify(ax && ax.name)]);
+    out.push(['[gauge names] ...and a DESCRIPTION, which is the only path the 138 marks have to '
+      + 'anything that is not a mouse (role="img" makes their titles presentational)',
+      desc.length > 0, 'the rail\'s AX node carries no description: ' + JSON.stringify(ax)]);
+    const named = want.titles.filter((t) => desc.indexOf(t) !== -1);
+    out.push(['[gauge names] ...and it names the topics THIS rail draws, read from the registry '
+      + 'rather than from the rendering',
+      named.length === want.titles.length,
+      'the ' + want.tier + ' rail describes ' + named.length + ' of ' + want.titles.length
+      + ' sampled topics (' + want.titles.join(', ') + '); description was: ' + desc.slice(0, 160)]);
+
+    /* MUTANT 16: the tie removed -- the shipped state, where the marks had a title and no path */
+    await page.evaluate(() => {
+      document.querySelectorAll('.hm-alt .hm-gr-t').forEach((t) => t.removeAttribute('aria-describedby'));
+    });
+    await B.settle(page);
+    const ax2 = await axFor('.hm-alt .hm-gr-t');
+    const desc2 = ax2 ? ax2.description.trim() : '';
+    if (desc2.length > 0) {
+      aborted = aborted || 'MUTANT 16 UNDETECTED: aria-describedby stripped from every rail and the '
+        + 'accessibility tree STILL reported a description (' + JSON.stringify(desc2.slice(0, 80))
+        + '). The arm above is reading something other than the tie it claims to guard.';
+    }
+    await ctx.close();
+  }
+
   {
     const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
     const page = await ctx.newPage();
@@ -1327,16 +1563,21 @@ const GEN_N = 24;
   const bad = out.filter((o) => !o[1]);
   for (const [label, pass, detail] of out) console.log((pass ? '  PASS  ' : '  FAIL  ') + label + (pass ? '' : '  -- ' + detail));
   console.log('\n  the legend arm was exercised on ' + keelChecked + ' record(s) that actually paint a keel');
-  console.log('  13 planted mutants detected (a full claim over empty rails; a level claim over '
+  console.log('  17 planted mutants detected (a full claim over empty rails; a level claim over '
     + 'unequal rails; a thin rail named on the highest tier; a step position beside a bare probe '
     + 'remainder; a verdict quoting one rail\u2019s figures for another; an inflated panel header; '
     + 'an inflated figure inside the single-thin-rail sentence, checked against its own negative '
     + 'control; a SECOND weekly-goal surface on the cold record; Cross-topic rendered above '
     + 'Weak-spot in the phone practice block; the four-state key hidden while the rails still paint '
     + 'keel marks; the pre-cycle-3 goal concatenation, which named the met state three times in one '
-    + 'sentence; "1 topics drilled this week" on a week of one; and the goal bar given an '
+    + 'sentence; "1 topics drilled this week" on a week of one; the goal bar given an '
     + 'accessible name of its own again, so the fact is announced off the bar and again off the '
-    + 'line beneath it) -- every one of them a defect a judge or a battery found on a shipped build');
+    + 'line beneath it; THE HOME LIT IN THE BOOT CONSTANT\'S ROOM while its resume act is in '
+    + 'another, which is what every var(--acc) consumer on the surface wore before this wave; and '
+    + 'the arrival inverted in both of its halves -- the gauge restored above the paired row, and '
+    + 'the paired row restored with the deficit panel first; and the rails\' aria-describedby tie '
+    + 'stripped, which is the state in which 138 marks name their topics to a mouse and to nothing '
+    + 'else) -- every one of them a defect a judge or a battery found on a shipped build');
   if (bad.length) return B.finish(1, 'HOME CLAIMS: FAIL (' + bad.length + ')');
   return B.finish(0, 'HOME CLAIMS: PASS  (' + out.length + ' assertions: '
     + Object.keys(SEEDS).length + ' pinned records + ' + GEN_N + ' generated from a fixed PRNG, '

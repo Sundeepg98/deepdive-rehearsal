@@ -82,8 +82,23 @@ const WRITE_DEBT = process.argv.includes('--write-debt');
 /* The surfaces to walk. Between them they mount every <button> the app has: the home route
    carries the library + the whole hidden topic chrome, a topic route carries it live, and the
    two overlays mount controls that exist nowhere else. */
+/* `seed` runs BEFORE the measured load, in a first page-load on the same context, so the surface
+   under test boots with a record rather than being mutated after it rendered. */
 const SURFACES = [
+  /* THE HOME IS DRIVEN TWICE, COLD AND STARRED, AND THE SECOND ONE IS NOT REDUNDANT.
+     The cold home does not render the STARRED block (Panels.starredHtml returns nothing with no
+     bookmarks), so `.ix-star-pill` -- a <button> that declared a size and a weight and never a
+     family -- was never enumerated by this walk. The debt file read `{}` while the home rasterised
+     two controls in the UA control font, and the delight audit found them by photographing the
+     page instead. A ratchet is only clean about what it RENDERED; this is the same blind spot
+     home_claims has with `revisit: []`, and the same fix: seed the state the control needs. */
   { label: 'home', hash: '', open: null },
+  { label: 'home-starred', hash: '', open: null, seed: () => {
+    try {
+      const ids = TopicRegistry.ids();
+      localStorage.setItem('ddr.v1.bookmarks', JSON.stringify([ids[1], ids[2]]));
+    } catch (e) {}
+  } },
   { label: 'walk', hash: '#event-driven/walk', open: null },
   { label: 'index-overlay', hash: '#event-driven/walk', open: 'index' },
   { label: 'search-overlay', hash: '#event-driven/walk', open: 'search' },
@@ -186,6 +201,11 @@ async function scanSurface(browser, s) {
   });
   const page = await ctx.newPage();
   await B.gotoApp(page, HTML, { hash: s.hash });
+  if (s.seed) {
+    await B.until(page, () => !document.getElementById('_bootsplash'), null, B.ACT_MS, 'boot splash (seed pass, ' + s.label + ')');
+    await page.evaluate(s.seed);
+    await B.gotoApp(page, HTML, { hash: s.hash });   /* boot WITH the record, not mutate after */
+  }
   await B.until(page, () => !document.getElementById('_bootsplash'), null, B.ACT_MS, 'boot splash (' + s.label + ')');
   if (s.open === 'index') {
     await page.evaluate(() => { if (window.IndexOverlay) IndexOverlay.open(); });

@@ -344,6 +344,81 @@ const PICK_VIA_INDEX = async (page, want) => {
   await page.evaluate(() => { if (window.CrossDrill && CrossDrill.close) CrossDrill.close(); });
   await B.settle(page);
 
+  /* ---------- G. THE WEAK CHIP IS A CONTROL, AND IT LANDS ON THE TOPIC IT NAMES ----------
+     GAP-3 part 2 of the e2e journey-coverage audit. `.hm-chip` had ONE reference in the entire
+     test tree -- at_name_hygiene, a SOURCE check on accessible names -- so nothing in the gate had
+     ever clicked the home's own triage. That matters more than a missing click: STILL SHAKY is the
+     panel a returning user reads second, every session, and the whole journey it opens ("these are
+     the topics to re-drill") was unwalked end to end. This file already owns the question the arm
+     asks -- "does this control land you where it says" -- with a real trusted click at the painted
+     centre and a negative control beside it, so the arm belongs here rather than in a new check.
+
+     THREE THINGS, and the third is the one the audit asked for: the route LEAVES the home; it
+     lands on the chip's OWN topic (matched by id, not by "something moved"); and the topic it
+     landed on really is the one the record says is weak -- the chip's printed integer equals that
+     topic's stored `shk`, so a chip that names the right topic with the wrong number, or the wrong
+     topic with a plausible number, both fail. The oracle is localStorage, not another rendering.
+
+     THE MUTANT IS THE RECORD, NOT THE MARKUP: with `revisit`/`shk` cleared the panel must not
+     render a chip at all, so an arm that "passed" by finding some other button goes red. */
+  await GO_HOME(page);
+  const SEED_WEAK = () => {
+    localStorage.clear();
+    const ids = TopicRegistry.ids();
+    /* three topics, DIFFERENT shk counts, none of them the first id -- so a chip that silently
+       lands on the boot topic cannot pass */
+    [ids[4], ids[7], ids[9]].forEach((id, k) => {
+      const cards = TopicRegistry.get(id).data.bank.cards;
+      const keys = CardId.forCards(cards); const map = {};
+      cards.forEach((c, i) => { map[keys[i]] = (i <= k + 1) ? 2 : 3; });
+      const shk = Object.keys(map).filter((x) => map[x] < 3).length;
+      localStorage.setItem('ddr.v1.progress.' + id, JSON.stringify({
+        got: cards.length - shk, shk: shk, done: cards.length, tot: cards.length,
+        revisit: ['idempotency'], cards: map, cv: 1, ts: Date.now() - k * 86400000 }));
+    });
+  };
+  await page.evaluate(SEED_WEAK);
+  await B.gotoApp(page, HTML, { hash: '#home' });
+  await B.until(page, () => !!document.querySelector('#home .hm-chip'), null, 8000, 'the Still shaky panel with chips');
+  await B.settle(page);
+
+  const chip = await page.evaluate(() => {
+    const c = document.querySelector('#home .hm-chip');
+    if (!c) return null;
+    const id = c.getAttribute('data-topic');
+    const n = c.querySelector('.hm-chip-n');
+    let stored = null;
+    try { stored = JSON.parse(localStorage.getItem('ddr.v1.progress.' + id) || 'null'); } catch (e) {}
+    return { id, printed: n ? parseInt(n.textContent, 10) : null, shk: stored ? stored.shk : null,
+      label: (c.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 44) };
+  });
+  const beforeG = await ROUTE(page);
+  ok('[G] the home renders a Still-shaky chip to click at all (nothing in the gate had ever '
+    + 'rendered this panel with content)', !!chip, JSON.stringify(chip));
+  if (chip) {
+    ok('[G] the chip\'s printed count IS that topic\'s stored shk -- the chip does not lie about '
+      + 'the record it is a triage of', chip.printed === chip.shk,
+      JSON.stringify(chip) + '  the panel printed ' + chip.printed + ' against a stored ' + chip.shk);
+    await page.locator('#home .hm-chip').first().click();
+    await B.settle(page); await B.settle(page);
+    const afterG = await ROUTE(page);
+    ok('[G] a real click on a Still-shaky chip LEAVES the home and lands on the topic it names '
+      + '(GAP-3 part 2: the returning user\'s triage, walked end to end)',
+      afterG.onHome === false && afterG.hash !== '#home' && afterG.stageVisible === true
+      && afterG.topic === chip.id,
+      JSON.stringify({ chip, before: beforeG, after: afterG }));
+  }
+
+  /* the plant: no weak record, no chip. An arm that found something else to click goes red. */
+  await GO_HOME(page);
+  await page.evaluate(() => { try { localStorage.clear(); } catch (e) {} });
+  await B.gotoApp(page, HTML, { hash: '#home' });
+  await B.settle(page); await B.settle(page);
+  const noChip = await page.evaluate(() => document.querySelectorAll('#home .hm-chip').length);
+  ok('[plant/G] ...and with the record cleared the panel renders NO chip, so the arm above was '
+    + 'clicking the triage rather than whatever button happened to be there',
+    noChip === 0, noChip + ' chip(s) rendered on an empty record');
+
   ok('zero console/page errors', errs.length === 0, errs.slice(0, 4).join(' | '));
 
   await browser.close();
@@ -354,7 +429,9 @@ const PICK_VIA_INDEX = async (page, want) => {
   console.log('SEARCH DEADEND: ' + (pass
     ? 'PASS  (' + ran + ' assertions: the whole-system prompts route to real component topics; a ' +
       'topic picked from #home in Search or the Topic index actually lands on it; navigateAfterPick ' +
-      'refuses off the home route; and a cross-drill pick from #home exits too)'
+      'refuses off the home route; a cross-drill pick from #home exits too; and a real click on a ' +
+      'Still-shaky chip leaves the home for the topic it names, with its printed count checked ' +
+      'against that topic\'s stored shk and a cleared record proving the panel goes empty)'
     : 'FAIL (' + fails.join('; ') + ')'));
   process.exit(pass ? 0 : 1);
 })();

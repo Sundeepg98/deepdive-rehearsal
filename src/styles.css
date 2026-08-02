@@ -283,6 +283,73 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
   html{--st-ok:#1D6F3F;--st-ok-on:#FFFFFF;--st-warn:#9A5B0B;--st-warn-edge:#D2A059}
   html[data-theme="dark"]{--st-ok:#5BD08A;--st-ok-on:#1A1622;--st-warn:#E5A24A;--st-warn-edge:#7E5C31}
 
+  /* ===================== THE KEEL PAIR: SEVERITY IS AN ORDERING =====================
+     THE DEFECT THESE TWO NAMES EXIST TO MAKE UNSAYABLE. The altitude gauge draws a 2px foot
+     under any capsule with flagged probes, in two values: one for SHAKY, one for MISSED. Grades
+     run `lv >= 3` solid, `lv === 2` shaky, `lv === 1` missed (altitude.js:58), so MISSED IS THE
+     WORST. The gauge wired MISSED to `--st-warn-EDGE` and SHAKY to `--st-warn`, and
+     `--st-warn-edge` is plainly designed as the subdued BORDER companion of `--st-warn` -- it
+     was being used off-label as the fill of a primary signal. MEASURED against the trough it is
+     drawn on (`--side`), on the shipped build, both schemes:
+
+         SHAKY  (middle grade)   4.64:1 light   8.21:1 dark
+         MISSED (worst grade)    2.02:1 light   2.96:1 dark      floor 3:1
+
+     -- the worst grade drawn 2.30x quieter than the middle one in light and 2.77x quieter in
+     dark, and the ONLY one of the two below the non-text floor, in BOTH schemes. Visual severity
+     ran backwards to actual severity. Confirmed by eye as well as by arithmetic: four topics with
+     missed probes wore a mud-brown foot at nearly the value of the capsule above it, while the one
+     shaky-only topic wore the brightest mark in the panel.
+
+     No correctness panel could catch it: both states DO paint, both DO differ, and nothing
+     asserted an ORDER between them. So the order is now carried by the NAMES, and asserted from
+     the rendered pixels by test/scoreboard_salience.cjs -- the same instrument, and the same
+     "never inverted" contract, that guards the drill scoreboard one screen over.
+
+     THE CONTRACT, and it is the whole reason there are two tokens rather than two literals:
+       --keel-missed is NEVER quieter than --keel-shaky, and BOTH clear 3:1 on --side.
+     --keel-missed IS --st-warn (the loud primary); --keel-shaky is a mid rung solved for ~3.4:1,
+     derived by scaling --st-warn in LINEAR LIGHT (multiply all three linear-RGB channels by one
+     constant), which preserves chromaticity exactly and scales luminance -- literally the same
+     colour dimmed, so the pair reads as one channel at two strengths rather than as two hues.
+     That matters here more than usual: the gauge's own SIGNAL RULE says hue means WHICH ROOM and
+     may not also mean a grade.
+       light  #B1690E on #F1EDE4 = 3.67:1     dark  #94672D on #17161D = 3.62:1
+     THE NOMINAL IS NOT THE FLOOR, and the first solve of this pair learned it the way this repo
+     usually learns things -- by being measured. Solved to a nominal 3.41 / 3.40, the mark
+     RASTERISED at 3.16 / 3.28: a 2px band inset into a rounded capsule loses several percent to
+     antialiasing at both of its edges, so a pair solved to the arithmetic floor lands UNDER it on
+     the screen. These are solved so the RASTERISED minimum clears, swept over all four --lv steps,
+     and that measured minimum is what the arm asserts -- not this arithmetic.
+     --st-warn-edge keeps its ONE on-label consumer (.pill.s's border, drill/logic.js:178). */
+  html{--keel-shaky:#B1690E;--keel-missed:var(--st-warn)}
+  html[data-theme="dark"]{--keel-shaky:#94672D}
+
+  /* ===================== THE GAUGE'S DENOMINATOR =====================
+     "Untouched keeps an empty outline so the honest denominator is never hidden" is the altitude
+     panel's own stated law. It was drawn with `--bd`, which against the trough it sits in
+     measures 1.09:1 (light) and 1.46:1 (dark) -- so at 46 segments the lattice DISSOLVED into a
+     single beige trough and the pre-attentive read became "a progress bar, about 15% full",
+     which is precisely the generic form the mark was invented to escape. The design declared a
+     denominator; the pixels did not carry one.
+
+     --bd is the app-wide hairline and has ~200 consumers, so it cannot be moved for this. The
+     lattice gets its own rule instead, solved to ~3.75:1 on --side in BOTH schemes -- 25% clear
+     of the 3:1 non-text floor rather than the coincidence-width margins this repo has shipped
+     before. It stays well under the SOLID fill (--ink on --side is 11.8:1 light), so the ordering
+     that carries the grade is untouched: a hollow slot is countable and still visibly less than
+     any lit one.
+       light  #7E786E on #F1EDE4 = 3.75:1     dark  #74707C on #17161D = 3.72:1
+     Two consumers, and they must move together or the legend stops labelling the mark: the
+     capsule's own inset rule (.hm-seg) and the key's "Untouched" swatch (.hm-k.none i).
+     THE BINDING GROUND DIFFERS BY SCHEME, so both are solved rather than one and a hope: the
+     capsules sit on --side, the key's swatches sit on --card, and in light the trough is the
+     tighter pair while in dark it is the card. Measured, all four:
+       light  #76726A   4.10:1 on --side   4.79:1 on --card
+       dark   #7D7985   4.23:1 on --side   3.49:1 on --card (the lifted home surface, item 8) */
+  html{--gauge-rule:#76726A}
+  html[data-theme="dark"]{--gauge-rule:#7D7985}
+
   *{margin:0;padding:0;box-sizing:border-box}
   ::selection{background:var(--acc-a12);color:var(--accink)}
   ::-moz-selection{background:var(--acc-a12);color:var(--accink)}
@@ -339,6 +406,18 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
      flex or grid item and never contributes to `gap`; 1x1 + clip means nothing is painted.
      Verified against the 16 VR baselines. */
   .nsep{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
+  /* THE SAME RECIPE, A SECOND NAME, AND THE DUPLICATION IS FORCED -- not an oversight.
+     `.nsep` is a PINNED LITERAL: test/at_name_hygiene.cjs arm A matches a regex anchored on the
+     `.nsep` rule opener and the `position:absolute` inside it, against this file -- so folding a
+     second selector into that rule would break the guard that keeps twelve composed names from
+     fusing. THE REGEX IS QUOTED THERE AND DELIBERATELY NOT HERE: this file is brace-counted by
+     test/css_syntax.py and by unit_tests' balance assertion, both of which read comments too, and
+     a quoted character class carrying braces unbalances the file by two without breaking a single
+     rule -- which is exactly how it reaches a browser green and a gate red. `.hm-vh` is the
+     general off-screen primitive for TEXT EQUIVALENTS -- content that is real for a screen reader
+     and absent from the screen. `white-space:normal`, because unlike a two-character separator
+     these are sentences. */
+  .hm-vh{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:normal;border:0}
   .locator{display:inline-block;font-family:var(--mono);font-size:var(--font-size-nano);font-weight:var(--font-weight-bold);letter-spacing:var(--track-px-0-2);text-transform:uppercase;color:var(--acc);background:var(--accbg);border:1px solid var(--topic-edge);border-radius:6px;padding:var(--space-3) var(--space-9);margin:0 0 var(--space-11) var(--space-7)}
   /* the room's 2-3 letter code -- the CVD/greyscale-safe room marker (colour alone,
      across six hues, fails; the letters do not). A hairline divider sets it off. */
@@ -1932,9 +2011,37 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
 .crambtn.starred .mb-t::after{content:" \2605";content:" \2605" / "";color:#f59e0b}
 .ix-starred{margin-bottom:var(--space-14)}
 .ix-star-row{display:flex;flex-wrap:wrap;gap:var(--space-7);margin-top:var(--space-2)}
-.ix-star-pill{display:inline-flex;align-items:center;gap:var(--space-6);padding:var(--space-7) var(--space-12);border:1px solid var(--bd);background:var(--bg);border-radius:9px;color:var(--ink);font-size:var(--font-size-caption);font-weight:var(--font-weight-semibold);cursor:pointer;transition:border-color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base)}
+/* `font-family:inherit` IS THE FIX, AND IT IS THE WHOLE OF THE HOME'S ARIAL LEAK.
+   The delight audit's census read the home's only two non-system-face text nodes as
+   "Arial 12px/600 [ix-star-ic] x2" and called them the star GLYPHS. They are not: this is a
+   <button> that declares a size and a weight and never re-declares a FAMILY, so the UA
+   form-control stylesheet keeps it -- Arial 13.333px on Chrome/Windows -- and the star span and
+   the topic title inside it inherit that. Exactly the class test/latent_arial.cjs ratchets, and
+   its debt file reads `{}`, because that check drives the home on a COLD record and the STARRED
+   block only renders when something is bookmarked. Same blind spot the claims battery has on
+   `revisit: []`: the ratchet was clean about a control it had never rendered. The check now seeds
+   a bookmark on its home surface, so this cannot go back to being invisible. */
+.ix-star-pill{display:inline-flex;align-items:center;gap:var(--space-6);padding:var(--space-7) var(--space-12);border:1px solid var(--bd);background:var(--bg);border-radius:9px;color:var(--ink);font-family:inherit;font-size:var(--font-size-caption);font-weight:var(--font-weight-semibold);cursor:pointer;transition:border-color var(--duration-fast) var(--ease-base),background var(--duration-fast) var(--ease-base)}
 .ix-star-pill:hover{border-color:var(--acc);background:var(--accbg)}
-.ix-star-ic{color:#f59e0b;font-size:var(--font-size-caption);line-height:var(--line-height-none)}
+/* THE STAR IS A SHAPE, NOT A CHARACTER, and that is a font-ownership fix rather than a style
+   preference. --sans is `-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+   sans-serif` and NOT ONE of those faces carries U+2605, so Chromium fell through the whole list
+   and picked a face per glyph from the system. MEASURED per codepoint on the shipped build: the
+   home's two star marks rasterised outside the app's stack (Segoe UI Symbol here; the delight
+   audit measured the same two nodes as ARIAL on the build it ran against -- which face you get is
+   the platform's choice, and that IS the defect: the app did not make it). A `font-family` on this
+   rule would only move the choice from the platform to a documented exception in typeface_census,
+   and the ledger's bar for this item is ZERO new exceptions. So the mark stops being text.
+   clip-path takes no font, cannot substitute, and is identical on every platform; the box is sized
+   in `em` so it still tracks the pill's type. The polygon is the standard five-point star.
+   THE REST OF THE CLASS IS NAMED, NOT SILENTLY LEFT: nine more codepoints in this app resolve
+   outside the stack (the reset arc and the command key to Cambria Math, the house glyph in the
+   frame to Arial, six more to Segoe UI Symbol). They sit in the app FRAME and on topic routes,
+   whose VR baselines this wave is not authorised to move, so they are ratcheted as declared debt
+   by test/craft_hygiene.py rather than fixed here -- the class cannot grow, and the app-wide fix
+   has somewhere to land. */
+.ix-star-ic{width:.85em;height:.85em;flex:none;background:#f59e0b;
+  clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)}
 .nt-ov{position:fixed;inset:0;z-index:var(--z-popup);display:none;align-items:center;justify-content:center;background:rgba(30,28,24,.45);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:8vh var(--space-16) var(--space-16);opacity:0;transition:opacity var(--duration-base) var(--ease-base)}
 .nt-ov.open{display:flex;opacity:1}
 .nt-panel{background:var(--card);border:1px solid var(--bd);border-radius:16px;width:min(var(--space-660),100%);max-height:78vh;display:flex;flex-direction:column;box-shadow:0 24px 60px -12px rgba(20,18,40,.4)}
@@ -2185,7 +2292,49 @@ html[data-view="home"] .hm-status{display:flex}
 /* the home IS the work column now: a flex sibling of .stage, taking its slot */
 html[data-view="home"] #home{display:flex;flex-direction:column;flex:1;min-width:0}
 html[data-view="home"] .companion{padding:0}
-#home{padding:var(--space-28) var(--space-20) 80px;background:var(--bg)}
+/* ===== CHEAP DEPTH: THE PANELS BECOME SURFACES, AND THE GROUND STOPS GLARING =====
+   MEASURED on the shipped build: card vs page ground 1.053:1 (light) and 1.142:1 (dark). At
+   1.05:1 the five panels are not surfaces resting on a ground -- they are REGIONS OF ONE FLAT
+   PLANE with a 1px rule between them, which is why the inhabitant pass counted 154 hairlines and
+   called the result RULED PAPER rather than a room. And the light field sat at mean luminance
+   0.941 with 94.8% of its pixels in the top value band, carrying body text at 14.72:1: WCAG-
+   excellent and tiring, which is the one thing a surface designed to receive someone between two
+   hard drills must not be. Contrast floors set a MINIMUM; comfort also has a MAXIMUM.
+
+   EACH SCHEME MOVES THE LAYER IT CAN AFFORD TO MOVE, and that asymmetry is the design rather
+   than an inconsistency: in LIGHT the surface is already #fff and cannot be brightened, so the
+   depth comes out of the ground; in DARK the ground is already the house black (Y 0.0046) and
+   cannot be darkened -- 1.3:1 there would need a NEGATIVE luminance -- so it comes out of the
+   surface. Both land on the same step.
+
+   SCOPED TO THE HOME, DELIBERATELY. --bg and --card are app-wide; moving either would repaint
+   every route and move every VR baseline. The rebaseline authorised for this wave is the HOME's,
+   so the ground is a property of #home and the surface a property of .hm-panel, and no topic
+   route sees either. Measured after, from the panel's own pixels by test/scoreboard_salience.cjs,
+   which asserts this pair rather than trusting it:
+     LIGHT  ground #E4DFD4   surface #fff       1.329:1
+     DARK   ground #0F0E13   surface #292632    1.298:1
+   THE GROUND DROP HAS A BINDING FLOOR AND IT IS NAMED. Three text elements sit on the bare ground
+   rather than on a panel -- the skip-the-home label, the backup buttons and the lead line, all
+   --mut at 11-14px, all 5.27:1 before. A ground at Y 0.740 would put them at 4.18:1, under AA. So
+   --mut is deepened ON THIS ROUTE by the same linear-light factor the ground moved, which keeps
+   every --mut/ground ratio by construction instead of re-checking it by hand, and IMPROVES every
+   --mut/surface pair.
+   MEASURED, NOT ARGUED, AND MEASURED AS A DELTA: _audit/w-addresses-home-before-after/
+   text-floor-sweep.txt sweeps every text node under #home on BOTH builds -- master 0aba404 and
+   this one -- in both schemes and both record classes, each node's colour against its first
+   non-transparent ancestor ground composited in sRGB. The three bare-ground elements go
+   5.27 -> 4.93 and CLEAR the 4.5 floor; no node that cleared its floor before is under it after.
+   It is a before/after on purpose: the home already carries three nodes that miss AA in DARK (the
+   room-count badges at 2.35:1, white on a saturated room fill, and .hm-room-weak at 3.48:1), they
+   are identical to the decimal on master, and a single-build sweep would have billed them to this
+   wave. They are CARRIED in the ledger, not fixed here -- the badges are the six rooms' own
+   pigments, which is a palette decision and not a home-ground one. */
+html{--home-ground:#E4DFD4;--home-surface:#fff}
+html[data-theme="dark"]{--home-ground:var(--bg);--home-surface:#292632}
+#home{padding:var(--space-28) var(--space-20) 80px;background:var(--home-ground)}
+html[data-view="home"] #home{--mut:#605D58}
+html[data-theme="dark"][data-view="home"] #home{--mut:#A7A29A}
 
 /* UNBOX THE PANEL. These renderers were built for a modal: .ix-panel carried max-height:84vh, its
    own border, shadow, transform and an inner scroller. On a page it gets the document scroll and
@@ -2371,7 +2520,7 @@ html[data-view="home"] .companion{padding:0}
    That survives greyscale, both themes and all six room tints. ==================================*/
 
 /* ---- the shared panel primitive ---------------------------------------------------------- */
-.hm-panel{background:var(--card);border:1px solid var(--bd);border-radius:14px}
+.hm-panel{background:var(--home-surface);border:1px solid var(--bd);border-radius:14px}
 .hm-phead{display:flex;align-items:center;flex-wrap:wrap;gap:var(--space-6) var(--space-12);
   padding:var(--space-10) var(--space-16);border-bottom:1px solid var(--bd)}
 .hm-pbody{padding:var(--space-16)}
@@ -2478,32 +2627,85 @@ html[data-view="home"] .companion{padding:0}
 .hm-gr.thin .hm-gr-l{color:var(--ink)}
 .hm-gr-t{display:flex;gap:2px;height:32px;padding:3px;border:1px solid var(--bd);border-radius:8px;background:var(--side)}
 .hm-seg{position:relative;flex:1 1 0;min-width:3px;border-radius:2px;overflow:hidden;
-  box-shadow:inset 0 0 0 1px var(--bd)}
-/* the fill. --lv is the Solid share in four steps; brightness reads at 46 segments where a 3px
-   difference in bar height does not. */
-.hm-seg::after{content:"";position:absolute;inset:0;background:var(--ink);opacity:var(--lv,0)}
-.hm-seg.open{background:var(--bd);box-shadow:none}
-/* the keel: something here is flagged. One channel, two values, never competing with the fill. */
-.hm-seg.keel::before{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;
-  background:var(--st-warn);z-index:2}
-.hm-seg.keel-m::before{background:var(--st-warn-edge)}
+  box-shadow:inset 0 0 0 1px var(--gauge-rule)}
+/* ---- THE WATERLINE: THE KEEL GETS ONE GROUND, AND THAT IS WHAT MAKES ITS ORDERING REAL -------
+   FOUND BY LOOKING AT THE PLATE AFTER THE TOKEN FIX, WHICH IS WHY IT IS HERE. Swapping the two
+   keel tokens fixes the ordering measured against the TROUGH -- which is what the delight audit
+   measured, and it is a stable reference. It does NOT fix what the eye sees, because a keel is
+   never drawn on the trough: a topic with flagged probes has necessarily been graded, so its
+   capsule is `.open` and the keel's actual neighbour is the capsule's own FILL, which runs from
+   the pale rule up to full --ink. And the two keel values STRADDLE that range, so their loudness
+   ORDER FLIPS WITH THE GROUND. Measured on the rendered mark, both schemes, after the swap:
+
+       light, keel on a fully-lit capsule (--ink #2A2823)   missed 2.60:1   shaky 3.54:1
+       dark,  keel on a fully-lit capsule (--ink #ECEAE4)   missed 1.82:1   shaky 4.40:1
+
+   -- still inverted, and invisible in the middle of the fill range besides (1.13:1 on a
+   part-filled capsule in light). No pair of colours can order correctly against a ground that
+   sweeps from Y 0.85 to Y 0.02; the mark needed a ground, not a better hue.
+
+   So the fill STOPS SHORT of the bottom 2px and the keel paints into the gap, on the trough,
+   always. The hard-stop gradient is what gives `.open` a base that does the same -- one
+   declaration, no extra element, and `overflow:hidden` + the 2px radius keep the corner clean.
+   The keel is now literally a keel: the hull sits in the channel and the mark is below the
+   waterline. Two consequences worth stating: the ordering the token pair encodes is now the
+   ordering the pixels have (4.64 vs 3.41 light, 8.21 vs 3.40 dark, on a CONSTANT ground), and the
+   fill loses 2 of 26px -- which costs it nothing, because the SIGNAL RULE puts the grade in
+   lightness and never in size. --keel-h is one number so the fill and the mark cannot drift. */
+.hm-seg{--keel-h:2px}
+.hm-seg::after{content:"";position:absolute;inset:0 0 var(--keel-h);background:var(--ink);opacity:var(--lv,0)}
+/* A STARTED CAPSULE TAKES THE SAME VALUE AS THE RULE, NOT --bd, and that is not tidiness.
+   Raising the untouched capsule's rule to --gauge-rule while leaving this at --bd (1.09:1) would
+   have drawn a topic you HAVE started at 0% solid QUIETER than one you have never opened -- a
+   second inversion, in the same panel, created by the fix for the first. Sharing the value makes
+   the whole non-ink layer one step, so the ramp is monotone by construction: hollow slot < filled
+   slot < part-lit < solid, and only the ink (--lv) carries the grade. */
+.hm-seg.open{background:linear-gradient(to top,transparent var(--keel-h),var(--gauge-rule) var(--keel-h));box-shadow:none}
+/* the keel: something here is flagged. One channel, two values, never competing with the fill.
+   The two values are an ORDERING -- see THE KEEL PAIR. The worst grade takes the loud mark, and
+   it sits in the waterline above, so "loud" means the same thing on every capsule. */
+.hm-seg.keel::before{content:"";position:absolute;left:0;right:0;bottom:0;height:var(--keel-h);
+  background:var(--keel-shaky);z-index:2}
+.hm-seg.keel-m::before{background:var(--keel-missed)}
 .hm-gr-n{font-size:var(--font-size-micro);font-variant-numeric:tabular-nums;color:var(--mut2);white-space:nowrap}
 .hm-gr-n b{color:var(--ink);font-weight:var(--font-weight-bold)}
+/* THE ONE SENTENCE THE INSTRUMENT EXISTS TO DELIVER, SET AT A READABLE MEASURE. It ran the full
+   panel width -- 590px, MEASURED at 78 characters per line -- and comfortable prose is 45-75ch,
+   so the page's most important sentence was set past the comfortable ceiling. `ch` resolves
+   against THIS element's font, so the cap is 68 of its own characters, not of the root's. It
+   binds only above ~514px: the phone was already inside it and no phone pixel moves.
+   THE TOKEN IS --measure-BODY, NOT THE APP-WIDE --measure, AND THE DIFFERENCE IS LOAD-BEARING
+   EVEN THOUGH BOTH ARE 68ch. `--measure` is a hand-declared literal (styles.css:258); `measure.body`
+   is the SEMANTIC role, and it is the half of a pair whose whole content is "body copy takes 68
+   characters, display takes 41". home_rhythm judges a home measure against the TYPE TIER of the
+   rule it lands on, and this rule sets --font-size-body, so the body measure is the one that is
+   actually argued here rather than the one that merely matches. It also decides SCOPE correctly:
+   a block whose measure is --measure-home is a member of the centred column and owes the registry
+   a named gap role, while the body measure marks type INSIDE a block -- which is what a verdict
+   line in a panel is. Spelling it --measure claimed column membership for a panel's last line. */
 .hm-verdict{margin-top:var(--space-16);padding-top:var(--space-12);border-top:1px solid var(--bd);
+  max-width:var(--measure-body);
   font-size:var(--font-size-body);color:var(--mut);line-height:var(--line-height-normal)}
 .hm-verdict b{color:var(--ink);font-weight:var(--font-weight-semibold)}
 .hm-key{display:flex;align-items:center;flex-wrap:wrap;gap:var(--space-14);margin-top:var(--space-10)}
 .hm-k{display:flex;align-items:center;gap:var(--space-6)}
 /* the key states the three marks the gauge actually paints: filled, part-filled, hollow -- plus
    the keel. Fill, not hue, exactly as the segments do it. */
-.hm-k i{position:relative;width:9px;height:15px;border-radius:2px;background:var(--bd);flex:none;overflow:hidden}
-.hm-k i::after{content:"";position:absolute;inset:0;background:var(--ink)}
+/* THE SWATCHES TAKE THE MARKS' OWN VALUES, or the legend stops labelling the thing it names.
+   These four sit on --card while the marks sit on --side, so --gauge-rule is solved against BOTH
+   grounds (see its block): light 4.10:1 on the trough / 4.79:1 on the card, dark 4.23 / 3.49. */
+/* the swatches carry the WATERLINE too -- a legend that draws the mark differently from the mark
+   is a legend for something else. Same --keel-h, so the two cannot drift. */
+.hm-k i{position:relative;width:9px;height:15px;border-radius:2px;--keel-h:2px;
+  background:linear-gradient(to top,transparent var(--keel-h),var(--gauge-rule) var(--keel-h));flex:none;overflow:hidden}
+.hm-k i::after{content:"";position:absolute;inset:0 0 var(--keel-h);background:var(--ink)}
 .hm-k.full i::after{opacity:1}
 .hm-k.part i::after{opacity:.55}
-.hm-k.none i{background:transparent;box-shadow:inset 0 0 0 1px var(--bd)}
+.hm-k.none i{background:transparent;box-shadow:inset 0 0 0 1px var(--gauge-rule)}
 .hm-k.none i::after{opacity:0}
 .hm-k.flag i::after{opacity:0}
-.hm-k.flag i{box-shadow:inset 0 -2px 0 var(--st-warn)}
+/* the loud form of the mark, so the legend shows the keel at the strength the worst grade wears */
+.hm-k.flag i{box-shadow:inset 0 calc(-1 * var(--keel-h)) 0 var(--keel-missed)}
 /* the probes that are on no rail, named rather than folded into a total the rails contradict.
    A SIBLING of .hm-key, not a child: the key is aria-hidden and this is content. */
 .hm-offladder{display:block;margin-top:var(--space-8);color:var(--mut2)}
@@ -2584,9 +2786,20 @@ html[data-view="home"] .companion{padding:0}
      extrapolated from the wide half. */
 }
 
-/* ---- the paired row ------------------------------------------------------------------------ */
+/* ---- the paired row ------------------------------------------------------------------------
+   `align-items:start` IS THE WHOLE FIX FOR A 325-367px HOLE, and it is worth one paragraph
+   because the hole was the largest single piece of empty space on the home and it was a bug.
+   MEASURED on the shipped build, engaged record, 1280x800, identical in both schemes: every panel
+   on the home is content-fitted to within 1px -- Where you stopped 251/250, Altitude 286/285,
+   Still shaky 546/545, Coverage 381/380 -- except this row's second cell, which ran 520px tall
+   over 153px of content. Grid items STRETCH by default, so the taller sibling set the row height
+   and the telemetry panel was stretched to match it. It is layout, not missing data: the panel
+   renders whatever `tele` produces and that content is present and correct.
+   It read as generous rest and it was not designed; the inhabitant pass named it exactly --
+   "the only visual rest the home offers is a layout bug". */
 .hm-duo{max-width:var(--measure-home);margin:0 auto var(--gap-home-duo);
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:var(--space-16)}
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:var(--space-16);
+  align-items:start}
 
 /* STILL SHAKY. The chip carries what you re-drill: the topic, how many probes, how long since
    you worked it, and the CONCEPTS -- which are the signal strings the record already stores and

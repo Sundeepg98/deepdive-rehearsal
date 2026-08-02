@@ -419,7 +419,10 @@
     if (!ids.length) return '';
     var pills = ids.map(function (id) {
       var t = TopicRegistry.get(id);
-      return '<button class="ix-star-pill" type="button" data-topic="' + id + '" style="box-shadow:inset 3px 0 0 ' + groupColorFor(id) + '"><span class="ix-star-ic" aria-hidden="true">&#9733;</span>' + t.identity.title + '</button>';
+      /* THE STAR IS DRAWN, NOT TYPESET -- see .ix-star-ic in styles.css. The glyph is gone from
+         the markup because no font in the app's stack carries U+2605, so the platform chose the
+         face and the home rasterised its two star marks in a typeface the app does not own. */
+      return '<button class="ix-star-pill" type="button" data-topic="' + id + '" style="box-shadow:inset 3px 0 0 ' + groupColorFor(id) + '"><span class="ix-star-ic" aria-hidden="true"></span>' + t.identity.title + '</button>';
     }).join('');
     return '<section class="ix-starred"><div class="ix-g-head"><span class="ix-g-dot" style="background:#f59e0b"></span>Starred <span class="ix-g-n">' + ids.length + '</span></div><div class="ix-star-row">' + pills + '</div></section>';
   }
@@ -484,7 +487,7 @@
     var bks = buckets();
     var cur = (typeof TopicRegistry !== 'undefined' && TopicRegistry.current) ? TopicRegistry.current() : null;
     var curId = cur ? cur.id : null;
-    var filter = '<div class="ix-filter-row"><input class="ix-filter" type="text" placeholder="Filter topics by name or idea..." aria-label="Filter topics"><span class="ix-nores" hidden>No topics match.</span></div>';
+    var filter = '<div class="ix-filter-row"><input class="ix-filter" type="text" placeholder="Filter topics by name or idea&hellip;" aria-label="Filter topics"><span class="ix-nores" hidden>No topics match.</span></div>';
     var body = bks.map(function (b) {
       var cards = b.ids.map(function (id) { return topicCard(id, b.group.id, curId); }).join('');
       return '<section class="ix-group" data-group="' + b.group.id + '" style="--rm:var(--room-' + b.group.id + ')"><div class="ix-g-head"><span class="ix-g-dot" style="background:var(--rm)"></span>' + b.group.label +

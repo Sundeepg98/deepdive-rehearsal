@@ -63,10 +63,22 @@
  * home rail above, the tab bar below), read from live layout, so a change to either bar moves the
  * target automatically instead of silently invalidating a hardcoded number.
  *
- * SELF-TEST, every run: .hm-practicem is moved back to the END of the column -- the pre-fix DOM
- * position, verbatim -- on the record where that genuinely pushes BOTH carriers out of the band,
- * and the check ABORTS unless the assertion goes red under it. A fold check that cannot fail is
- * the tenth check in this repo that cannot fail.
+ * SELF-TEST, every run: the PRE-WAVE ARRIVAL ORDER is restored verbatim -- .hm-practicem back to
+ * the END of the column AND .hm-duo back BELOW the gauge -- on the record where that genuinely
+ * pushes BOTH carriers out of the band, and the check ABORTS unless the assertion goes red under
+ * it. A fold check that cannot fail is the tenth check in this repo that cannot fail.
+ *
+ * THE PLANT GREW A SECOND HALF IN W-ADDRESSES, AND THE REASON IS THE CONTRACT'S SHAPE. The arm is
+ * a DISJUNCTION -- the first screen carries the triage if EITHER the act or the chip list is in
+ * the band -- and a negative control for a disjunction has to negate every disjunct. Through W1.5
+ * it did so by accident: the chip list was OUT in all 20 chip-bearing cells, so moving the act
+ * alone emptied the band, and W1.5's own ledger recorded the hazard (F7: "the disjunction is
+ * carried by one disjunct in 22 of 22 cells ... the arm reds only when BOTH carriers leave").
+ * W-ADDRESSES' arrival reorder lifted .hm-duo above the gauge, which put the first chip at 676 in
+ * a band ending at 799 -- so the second disjunct became live, the one-move plant stopped emptying
+ * the band, and the self-test correctly reported UNDETECTED. That is the arm working: it refused
+ * to certify itself the moment its negative control stopped being one. The fix is to plant the
+ * whole pre-wave order rather than half of it.
  *
  * Usage: node test/home_fold.cjs [file]        (CHROME=<path>)
  * Exit:  0 = pass, 1 = FAIL
@@ -378,37 +390,50 @@ const MUTANT_SHAPE = 'two-thin x 2 bars x LONG hero x no-record';
       + '  |  chips ' + (f.chips ? 'top ' + f.chipsTop + ', first chip '
         + (f.chipIn ? 'IN by ' + f.chipMargin + 'px' : 'OUT by ' + (-f.chipMargin) + 'px') : 'not rendered'));
 
-    /* ---- THE SELF-TEST: put the practice block back where it was before W1.5 ---- */
+    /* ---- THE SELF-TEST: restore the PRE-WAVE arrival order, both halves ----
+       Half 1 (W1.5): .hm-practicem back to the END of the column, below the six room cards.
+       Half 2 (W-ADDRESSES): .hm-duo back BELOW the gauge, which is where it rendered before the
+       arrival reorder. Both are required because the arm is a disjunction -- see the header. The
+       plant ABORTS if either anchor is missing rather than negating half the contract quietly. */
     if (shapeName === MUTANT_SHAPE) {
       const planted = await page.evaluate(() => {
         const panel = document.querySelector('#home .ix-panel');
         const host = document.querySelector('#home .hm-practicem');
-        if (!panel || !host) return false;
+        const duo = document.querySelector('#home .hm-duo');
+        const gauge = document.querySelector('#home .hm-alt');
+        if (!panel || !host) return 'no #home .hm-practicem to move';
+        if (!duo) return 'no #home .hm-duo to move';
+        if (!gauge) return 'no #home .hm-alt to move it below';
         panel.appendChild(host);            /* the pre-fix position: below the six room cards */
+        gauge.after(duo);                   /* the pre-reorder position: the paired row under the gauge */
         return true;
       });
-      if (!planted) {
-        aborted = aborted || 'THE PLANT COULD NOT LAND at ' + vpName + ': there is no '
-          + '#home .hm-practicem to move, so the contract above was asserted about a block that '
-          + 'does not exist.';
+      if (planted !== true) {
+        aborted = aborted || 'THE PLANT COULD NOT LAND at ' + vpName + ': ' + planted + ', so the '
+          + 'contract above was asserted about a block that does not exist.';
       } else {
         const bad = await page.evaluate(FOLD);
         await page.evaluate(() => {
           const panel = document.querySelector('#home .ix-panel');
           const host = document.querySelector('#home .hm-practicem');
           const cont = document.querySelector('#home .hm-continue');
+          const duo = document.querySelector('#home .hm-duo');
+          const gauge = document.querySelector('#home .hm-alt');
           if (panel && host && cont) panel.insertBefore(host, cont.nextSibling);
+          if (duo && gauge) gauge.before(duo);
         });
         if (bad.actIn || bad.chipIn) {
-          aborted = aborted || 'SELF-TEST UNDETECTED at ' + vpName + ': with .hm-practicem returned '
-            + 'to the END of the column -- the position it occupied before W1.5, measured at top '
-            + '2136 -- the assertion still passed. act ' + JSON.stringify(bad.actBox) + ' in='
+          aborted = aborted || 'SELF-TEST UNDETECTED at ' + vpName + ': with the PRE-WAVE arrival '
+            + 'order restored -- .hm-practicem at the END of the column (its pre-W1.5 position, '
+            + 'measured at top 2136) and .hm-duo back below the gauge (its pre-W-ADDRESSES '
+            + 'position) -- the assertion still passed. act ' + JSON.stringify(bad.actBox) + ' in='
             + bad.actIn + ', first chip ' + JSON.stringify(bad.chip1) + ' in=' + bad.chipIn
             + ', band ' + JSON.stringify(bad.band)
             + '. Either the plant no longer reproduces the defect or the arm cannot fail.';
         } else {
           mutants++;
-          console.log('        SELF-TEST: moving the practice block back below the rooms puts the act at '
+          console.log('        SELF-TEST: restoring the pre-wave order (practice block below the rooms, '
+            + 'paired row below the gauge) puts the act at '
             + (bad.actBox ? bad.actBox.top : '(unrendered)') + ' and the first chip at '
             + (bad.chip1 ? bad.chip1.top : '(unrendered)') + ', both outside the band -- the arm goes red.');
         }

@@ -1,0 +1,30 @@
+W-ADDRESSES item 8 -- HOME TEXT FLOORS, BEFORE vs AFTER THE GROUND MOVE
+taken: 2026-08-02T23:45:06.422Z
+  master  0aba404  D:/claude-workspace/deepdive-rehearsal/deepdive_content_pipeline_rehearsal.html  (12297055 bytes)
+  w-addresses  D:\claude-workspace\_worktrees\deepdive-rehearsal\w-addresses\deepdive_content_pipeline_rehearsal.html  (12322642 bytes)
+
+method: computed sweep, every text node under #home, own colour vs first non-transparent
+        ancestor background composited in sRGB. AA floors: 4.5:1 normal, 3.0:1 large.
+        Keyed by selector; worst instance per selector. 1280x900, both schemes, both records.
+
+cell             sel-groups   min CR before   min CR after   delta   under before / after
+---------------  -----------  -------------   ------------   -----   --------------------
+light/engaged             30           4.64           4.64   + 0.00   0 / 0
+light/cold                25           5.27           4.93   -0.34   0 / 0
+dark/engaged              30           2.35           2.35   + 0.00   2 / 2
+dark/cold                 25           2.35           2.35   + 0.00   1 / 1
+
+--- THE TWO ELEMENTS THAT SIT ON THE BARE GROUND (the reason --mut is deepened on this route)
+    light/cold    label         5.27 on rgb(250,249,245)   ->   4.93 on rgb(228,223,212)   floor 4.5  CLEARS
+    light/cold    button.ix-io  5.27 on rgb(250,249,245)   ->   4.93 on rgb(228,223,212)   floor 4.5  CLEARS
+    light/cold    div.hm-lead   5.27 on rgb(250,249,245)   ->   4.93 on rgb(228,223,212)   floor 4.5  CLEARS
+    light/engaged label         5.27 on rgb(250,249,245)   ->   4.93 on rgb(228,223,212)   floor 4.5  CLEARS
+    light/engaged button.ix-io  5.27 on rgb(250,249,245)   ->   4.93 on rgb(228,223,212)   floor 4.5  CLEARS
+
+--- CARRIED, PRE-EXISTING ON MASTER, NOT THIS WAVE (identical to the decimal in both builds)
+    dark/cold     span.hm-room-n      2.35 -> 2.35   rgb(255, 255, 255) on rgb(238,140,164)
+    dark/engaged  span.hm-room-n      2.35 -> 2.35   rgb(255, 255, 255) on rgb(238,140,164)
+    dark/engaged  span.hm-room-weak   3.48 -> 3.48   rgb(220, 38, 38) on rgb(30,28,37)
+
+VERDICT: NO REGRESSION -- the ground move breaks no floor it did not already break.
+         Every node under floor after is under floor before, at the same ratio.

@@ -1,2291 +1,428 @@
-# W1.5 WAVE LEDGER -- the home's refinements
+# W-ADDRESSES WAVE LEDGER -- the home delight verdict, worked
 
-**Worktree** `D:\claude-workspace\_worktrees\deepdive-rehearsal\w15-home`
-**Branch** `appeal/w15-refinements`, cut from master tip `2696291`.
-**Gate expectation** **77/77 from cycle 3** (cycle 1 was 76/76; cycle 2 registers ONE new check,
-`home_fold`, taking it to 77; cycle 3 registers NONE -- every arm it adds extends
-`overlay_deadzone`, `home_fold` or `visual_regression`; cycle 4 registers NONE either -- its arms
-extend `overlay_deadzone`, `home_claims` and `touch_floor`, and its CLOSING pass (R7-R10) extends
-`focus_ring`, `overlay_deadzone` and `touch_floor`).
-**VR contract** home baselines REBASELINE AUTHORIZED; non-home baselines must not move. Cycle 2
-adds ONE baseline, `m-home-light` at 390x844 -- the manifest goes 16 -> 17. Cycle 3 adds its dark
-twin, `m-home-dark` -- 17 -> 18. Cycle 4 adds none: 18, with the two desktop home PNGs re-captured.
-The closing pass (R7-R10) moves NO pixel and re-captures nothing: 18, verified at worst 0 px.
+**Worktree** `D:\claude-workspace\_worktrees\deepdive-rehearsal\w-addresses`
+**Branch** `fix/w-addresses`, cut from master tip `0aba404`.
+**Sources of record** the home-delight verdict `appeal-directions/_ia/home-delight-check.md`
+(including its INHABITANT READING, section 13); the coverage audit
+`_audit/2026-08-02-e2e-journey-coverage.md` (GAP-3 part 2); the zone amendments in the tail of
+`appeal-directions/_ia/ADOPTED.md`.
+**Gate expectation** **78/78**. Master was 77; this wave registers exactly ONE new check,
+`craft_hygiene` (item 9). Every other arm extends an existing check -- `home_claims`,
+`scoreboard_salience`, `home_reflow`, `latent_arial`, `search_deadend`, `home_fold` -- so nothing
+else moves the count.
+**VR contract** the FOUR home baselines are REBASELINE AUTHORIZED (items 7 and 8 move pixels by
+construction); the other fourteen must not move. Manifest stays at **18** -- no baseline is added
+or removed. Receipt pairs kept in `_audit/w-addresses-home-before-after/`.
 
----
-
-## CYCLE 1 -- 2026-08-02
-
-Six items opened. **Five closed by build, one closed on arrival** (item 5 had already landed on
-master and is verified rather than re-done). One item's stated OUTCOME is met on one record shape
-and missed on the other; that half stays open and is stated with its number rather than rounded up.
-
----
-
-### 1. P-KEY GUARD -- CLOSED
-
-**The defect, measured before the fix.** On the `#home` route, with a seeded record whose resume
-topic was `saga`, one press of `p` opened `#sessov` -- the per-topic Session progress panel -- and
-`TopicRegistry.current()` read **`content-pipeline`**, the BOOT constant. A topic the user never
-chose, reporting its grading, on a route that has no current topic. That is the exact class
-`shell.js`'s own titled rule was written for ("THE HOME IS A DESTINATION, NOT A MODAL": the topic
-keys "must not silently act on the BOOT topic -- they retarget to the resume topic, or do
-nothing"). `w` was gated when it was caught doing this; `n` carries `&& !onHome` for the same
-reason; `p` fell through the block.
-
-**The fix.** `src/scripts/app/shell.js:278` -- `if (key === 'p') return;`, inside the existing
-`if (onHome)` block, beside the `[` / `]` no-op. No retarget: the panel reports ONE topic's
-grading, and the home's own record surfaces (the gauge, the status census, Still shaky) already
-state that for every topic. So it does what `n` does on the home: nothing.
-
-**The arm, and which check it extends.** `test/overlay_deadzone.cjs`, new **section 5** (4
-assertions). That file is the one whose subject is already "did a layer act when it had no
-business acting"; it already drives trusted `page.keyboard.press` and reads
-`[role=dialog][aria-modal].open`; and its section-2 arm is the same assertion one context over
-(the global keymap must stay suppressed UNDER an open modal). No new instrument was built for a
-defect an existing one is shaped for.
-
-Three arms so the first one is not free:
-- `p` on the home opens no dialog and moves no route;
-- **the probe is not blind** -- the same reader must report the panel when `#sessopen` is
-  genuinely clicked (a green above is worthless if this comes back empty too);
-- `p` **still works** on a topic route, so the guard cannot be "fixed" by deleting the shortcut.
-
-**MUTANT-TESTED.** Guard removed (`if (false && key === 'p')`), rebuilt, re-run:
-
-```
-FAIL  [home keymap] `p` on the home opens NO per-topic panel
-      -- opened sessov with TopicRegistry.current()=content-pipeline
-         -- a topic the user never chose; the resume topic is saga
-OVERLAY DEADZONE: FAIL  (1 of 40 assertions)
-```
-
-The other three arms stayed green, so the red is specific to the guard. Guard restored:
-`OVERLAY DEADZONE: PASS (40 assertions)`.
+**Predecessor note, recorded because it changed what this cycle did.** The build work for all ten
+items was already on disk, uncommitted, when this cycle opened -- a stalled earlier instance. It
+was audited item by item against the tree rather than trusted, and the audit found five defects in
+it that a gate would have caught and a hand-off would not have. They are listed under THE AUDIT OF
+THE INHERITED TREE below, because "the work was already done" is exactly the claim that needs
+receipts.
 
 ---
 
-### 2. CROSS-ACT ORDINAL SWAP -- CLOSED
+## CYCLE 1 -- 2026-08-03
 
-`src/scripts/app/panels.js:267` -- `actionsHtml()` is now `weakDrillBar() + crossDrillBar()`.
-`src/scripts/app/home-view.js` `railHtml()` -- the Practice nav renders Weak-spot review, then
-Cross-topic drill, then Topic index. Both carry the same one-line reason: both acts are
-cross-topic, but only one is addressed to THIS record ("the 16 topics you have been shaky on")
-while the other is the same offer for everybody, so the specific act goes above the generic one
-wherever the pair renders.
-
-**COVERAGE SENTENCE CORRECTED IN CYCLE 2 -- the two checks cited here do not carry this swap.**
-The original text read "the swap is carried by source, at_name_hygiene (52/52) and rail_integrity
-(414 combos)". Both ran green and neither could have gone red on an inversion:
-`rail_integrity.cjs`'s own header is "THE COMPANION RAIL MAY NEVER SHOW ANOTHER TOPIC'S COACHING"
-and its 414 are (topic, view) combos of the per-topic coaching rail -- a different rail entirely --
-while `at_name_hygiene.cjs` is a source-level accessible-NAME string ratchet. Neither file contains
-the string "Cross-topic", "Weak-spot", or any ordering assertion. Desktop VR could not see it
-either: the captured record is cold, `weakCount()` is 0, so the weak row does not render and there
-is nothing to reorder. **For cycle 1 this item shipped with NO arm that could fail on its
-reversion.** It has one now -- `home_claims.cjs`'s `act order` judge, asserted on the new
-`weakTopics` record in all three surfaces that render the pair, and watched red in each. See
-cycle 2, item 2.
+Ten items opened. **Ten closed.** One deliberately closed at HALF its named scope, with the reason
+and the blocking wave named (item 10). One item's own class is partly deferred behind a ratchet
+rather than fixed, with the argument recorded (item 9).
 
 ---
 
-### 3. GOAL SINGLE-SOURCE COMPLETION -- CLOSED
+### 1. THE DOOR LIGHTS IN THE ROOM YOU ARE RETURNING TO -- CLOSED
 
-The rail's `.hm-goal` block is deleted from `railHtml()`, together with its now-unused
-`var g = Panels.weeklyGoal()`. Its stylesheet rules go with it in the same commit rather than
-waiting to be found by an orphan audit: `.hm-goalbar` and `.hm-goalbar i` are removed, and
-`.hm-goal` is dropped from the phone's `display:none` pair at `src/styles.css` (the rule now names
-`.hm-rail .hm-rsec` alone).
+**The defect.** `applyIdentity()` stamps `data-group` on `<html>` on every topic switch
+(`topic-protocol.js:82`) and nothing ever clears it; `index.html` hard-codes
+`data-group="architecture-apis"` for first paint. So on a seeded record whose resume topic was
+Event-Driven Backbone (Messaging & Events) the home rendered with `--acc` = `#963D86` MAGENTA --
+the BOOT CONSTANT -- while the Resume CTA's border was correctly teal, because it alone uses
+`--rm`. The one element that had been fixed knew the right room; the focus ring on all 46 topic
+cards, both Cram buttons, every hover border, the boot ring and the skip link did not.
 
-**grep-verified.** `grep -rn "hm-goal" src/` returns **two hits, both prose** (the explanatory
-comment in `home-view.js:236` and the stylesheet note at `styles.css:2430`). No renderer remains.
-The weekly goal now has exactly one: `Panels.goalStrip()` (`panels.js:217`), consumed once by
-`telemetryHtml()` (`panels.js:351`) and refreshed IN PLACE after a +/- press (`syncGoalStrip()`,
-which replaces the one `.ix-goal` element rather than being a second path to the fact).
-`goalPhrase()` stays exported (defined `panels.js:149`, exported `:694`) deliberately -- it is the single source any future
-surface must call instead of re-deriving the sentence.
+**The fix.** `home-view.js` -- `doorRoom()` reads `Panels.resumeTarget()`, the SAME function the
+resume act renders from, and falls back to the first topic when there is no resume target (which
+is what the cold START card points at, so the rule is read off the act in both record classes).
+`stampDoorRoom()` sets the attribute BEFORE `innerHTML`, so the first paint is already in the room
+and there is no magenta-then-teal flip. It needs no teardown: leaving a topic re-stamps through
+`applyIdentity`, and arriving at the resume topic without a switch leaves the group where this put
+it -- which is that topic's own room. The two writers cannot disagree because they agree.
 
-Note the shape of what was wrong: below 920 the rail collapses and `.hm-goal` was already
-`display:none`, so the PHONE always had one goal surface and the DESKTOP had two. Now every
-viewport has one.
-
----
-
-### 4. PHONE FIRST SCREEN -- CLOSED for the move; the chip-list outcome is MET on one record
-###    shape and MISSED by 61px on the other. Read the numbers.
-
-**4a. The move -- done, in `html()`, not with CSS `order`.** `.hm-practicem` now renders directly
-below `continueHtml()`. Measured at 390x844 against the live band **57-799**:
-
-| | before | after |
-|---|---|---|
-| `.hm-practicem` (the two practice acts) | top **2136** | top **360** |
-| `.hm-alt` (the gauge panel) | 370-752, h **382** | 442-719, h **277** |
-| `.hm-duo` | top **778** | top **735** |
-| `.hm-chips` (Still shaky) | top **825** -- OUT | top **782** -- **IN** |
-
-The practice acts were 1337px below the first screen, reachable only past the gauge, both panels
-and all six room cards. The adjudicator's prohibition on `order` is honoured: the DOM sequence --
-which is what the keyboard, the screen reader and the tab bar's crossing pointer all read -- is
-what moved.
-
-**4b. The gauge compaction, below 920 only.** `src/styles.css`, one block: the rail tracks go
-32px -> 16px (a rail's information is horizontal -- 46 segments, and the stylesheet's own SIGNAL
-RULE puts the grade in the FILL, never in the size, so height is the only dimension that costs the
-instrument nothing), tighter panel head/body padding, a tighter verdict rule, and at <=419px the
-row gap drops to 2px and the `aria-hidden="true"` key folds away -- the same width where the
-status census already leaves for the same reason. The three stack roles above the duo are
-**re-valued, not re-picked**: one `--gap-home-*` declaration block on `#home`, phone only, so
-`home_rhythm.py` still sees the semantic layer (`HOME RHYTHM: PASS -- 8 rhythm gaps + 11 measures,
-registry matches discovery exactly`).
-
-**Disclosed:** re-valuing `--gap-home-continue/-altitude/-section` on the phone is slightly wider
-than "compact the gauge". It is 30px **on top of** the panel's own 105px, for 135px recovered
-against 92px spent -- the two do not overlap: the 105px is the panel's own shrink (382 -> 277, all
-of it from padding / track / verdict / key declarations INSIDE the panel box) and the 30px is three
-inter-panel gaps going 26 -> 16, which is outside it. 135 - 92 = 43 net, and 825 - 43 = 782, which
-is the figure the table above reports. And the outcome does not close without it: at 26px gaps the
-chips land at 812, 13px out. (Arithmetic corrected in cycle 2; the original read "30 of the 105px
-recovered", which double-counts. The claim that follows it measured true and stands.)
-
-**4c. RESTATED IN CYCLE 2 WITH THE JUDGE'S MEASURED SPLIT, and one sentence of it DELETED.**
-
-The fold outcome is not one number. It is a function of **(hero-wrap x verdict-class x
-bar-count)**, and across that space the chip list's top lands anywhere in a **57-799 band at
-390x844**: a two-bar record put the chips at **860, out by 61**; a one-bar record whose verdict is
-the two-thin-rails sentence put them at **801, out by 2**; and the shapes that pass clear the fold
-by only **17-41px**. A wave that measured one record and generalised was measuring one cell.
-
-**The deleted sentence.** Cycle 1 closed the paragraph with: *"What the first screen does contain
-on that record is the Weak-spot review act ... so the record's triage is on the first screen in
-both shapes."* That is FALSE whenever `weakCount() == 0` -- there is no Weak-spot act to render,
-and on a record with no weak topics the first screen carries the Cross-topic act instead, which is
-the generic offer rather than this record's triage. The sentence is struck rather than softened.
-
-**THE RULED CONTRACT, now binding (and now guarded).** At 390x844 the home's first screen always
-carries, FULLY INSIDE THE LIVE BAND, either the Still-shaky chip list or ONE drill act -- Weak-spot
-review when `weakCount() > 0`, Cross-topic drill when it is 0. Chips below the fold are acceptable
-ONLY when such an act is above it. Cycle 2 applies the ruled compaction, builds the arm, and
-measures all nine combinations: see cycle 2, item R1.
-
-`home_reflow: PASS` (320/390/430/460/500/530/560/700/900 x 2 themes, nothing clipped, no
-horizontal scroll, 2 planted mutants detected).
+**The arm + its mutant.** `home_claims` -- the home's `data-group` must equal the resume target's
+group on seeded records. MUTANT: stamp the boot constant while the resume act is in another room
+-- **RED**, and it is the exact state every `var(--acc)` consumer wore before this wave.
 
 ---
 
-### 5. CURSOR INTEGER GUARD -- CLOSED ON ARRIVAL, no change made this cycle
+### 2. SEVERITY IS AN ORDERING -- CLOSED, AND THE FIRST FIX WAS NOT ENOUGH
 
-The guard the ledger asks for is already on the tree and was already on master tip `2696291`:
-`src/scripts/app/home-view.js:112`
-`function isIndex(v, n) { return typeof v === 'number' && Number.isInteger(v) && v >= 0 && v < n; }`
-used at `:127` (`p.drill`) and `:132` (`p.walk`) -- an out-of-range OR fractional stored cursor
-returns `null`, i.e. no field and no claim. `firstUngraded()` (`:176`) returns `-1` when there is
-none, so the hero chain reaches it instead of dying on a sentinel that collides with a valid index.
+**The defect.** Grades run `lv >= 3` solid, `lv === 2` shaky, `lv === 1` missed
+(`altitude.js:58`), so MISSED IS THE WORST. The gauge wired MISSED to `--st-warn-edge` and SHAKY
+to `--st-warn`, and `--st-warn-edge` is the subdued BORDER companion of `--st-warn` -- used
+off-label as the fill of a primary signal. Against the trough: SHAKY 4.64:1 light / 8.21:1 dark,
+MISSED 2.02:1 / 2.96:1. The worst grade drawn 2.30x quieter than the middle one, and the only one
+of the two below the 3:1 floor, in both schemes.
 
-Provenance: `git log -S "Number.isInteger(v) && v >= 0"` -> `2e3aff6 fix(home): round 5 -- one
-fact, one renderer, and an arm that can finally fail`, and the round-5 addendum records it under
-"ALSO IN THIS COMMIT" as the authorised cursor guard. Re-implementing it would have been churn;
-the item is closed by verification, and the receipt is above so a reader can check rather than
-trust.
+**The fix, and the second half of it is the interesting part.** `--keel-missed` is `--st-warn`
+(the loud primary); `--keel-shaky` is a mid rung derived by scaling `--st-warn` in LINEAR LIGHT,
+which preserves chromaticity exactly -- the same colour dimmed, so the pair reads as one channel
+at two strengths rather than two hues. That matters because the gauge's own SIGNAL RULE forbids
+hue from carrying a grade.
 
-Its named follow-up from that round is NOT in scope and stays where round 5 left it: **Import a
-backup validates nothing**, which is the real defect behind fractional cursors and belongs to a
-storage-integrity item with its own schema and migration story.
+Swapping the tokens fixed the ordering **against the trough** and did NOT fix what the eye sees,
+because a keel is never drawn on the trough: a topic with flagged probes has necessarily been
+graded, so its capsule is `.open` and the keel's real neighbour is the capsule's own FILL, which
+runs from the pale rule to full `--ink`. The two values STRADDLE that range, so their order FLIPS
+WITH THE GROUND -- measured after the swap: light missed 2.60 vs shaky 3.54, dark missed 1.82 vs
+shaky 4.40, still inverted, and 1.13:1 in the middle of the fill range. **No pair of colours can
+order correctly against a ground that sweeps Y 0.85 to Y 0.02.** So the fill now stops short of
+the bottom 2px and the keel paints into that gap, on the trough, always -- a hard-stop gradient
+gives `.open` the same base. The mark is literally a keel now: the hull sits in the channel and
+the mark is below the waterline. `--keel-h` is one number, so fill and mark cannot drift.
+
+**Measured after, off the panel's own pixels** (`scoreboard_salience`, `--lv` swept over all four
+fill steps):
+
+| | MISSED | SHAKY | floor |
+|---|---|---|---|
+| light | **4.64** | 3.67 | 3.0 |
+| dark | **8.21** | 3.62 | 3.0 |
+
+**The mutant:** the shipped keel wiring restored -> `missed 2.02 vs 4.64 (INVERTED, caught)` light,
+`2.96 vs 8.21` dark.
+
+**A named consequence, solved rather than discovered later.** Raising the untouched capsule's rule
+(item 3) while leaving `.open`'s at `--bd` would have drawn a topic you HAVE started at 0% solid
+QUIETER than one you never opened -- a second inversion created by the fix for the first. Both take
+`--gauge-rule`, so the ramp is monotone by construction.
 
 ---
 
-### 6. HOME_CLAIMS PERIOD-BLINDNESS -- CLOSED
+### 3. THE GAUGE'S DENOMINATOR -- CLOSED
 
-**The defect.** `judgeQuotedFigures` wrote its gap as `[^.;]{0,40}` while the rendered
-single-thin-rail sentence puts a PERIOD exactly there ("Staff is the thin rail. 47 solid of 310
-probes"), so the arm was structurally blind to the one sentence it exists for. (The figure read
-"62" until cycle 2. 62 is 310 x 0.2 -- the 20% share applied to the TIER TOTAL -- but the `oneThin`
-seed takes `Math.round` PER TOPIC, which lands on 47. Re-derived against the live seed and
-corrected here and in the comment at `test/home_claims.cjs`; the mutant transcript quoted below,
-which reads 48, was always exact because it was captured from the running check.) Found by a mutant
-the gate-runtime acceptance battery aimed at it and watched come back NOT DETECTED, then recorded
-rather than fixed (`_audit/2026-08-01-gate-runtime-acceptance.md`, pre-existing defects #2).
+**The defect.** "Untouched keeps an empty outline so the honest denominator is never hidden" is the
+panel's own stated law. Drawn with `--bd` it measured **1.09:1** light / 1.46:1 dark against the
+trough, so at 46 segments the lattice dissolved into a beige trough and the pre-attentive read
+became "a progress bar, about 15% full" -- the generic form the mark was invented to escape.
 
-**The fix.** The period was never the rule worth enforcing -- it was a cheap proxy for one. What
-makes an attribution wrong is ANOTHER TIER NAME standing between a name and the figures being read
-as its own, so that is what the gap forbids now, character by character:
+**The fix.** `--bd` is the app-wide hairline with ~200 consumers and cannot move for this, so the
+lattice gets its own rule. Solved against BOTH grounds, because the capsules sit on `--side` and
+the legend's swatches sit on `--card`, and which pair is tighter flips by scheme.
 
-```
-/\b(Staff|SDE3|SDE2)\b(?:(?!\b(?:Staff|SDE3|SDE2)\b)[\s\S]){0,40}?(\d+)\s+(?:solid\s+)?of\s+(\d+)/g
-```
+**Measured after (rasterised):** untouched rule **4.10:1** light / **4.23:1** dark, floor 3.0.
+**MUTANT:** rule back to `--bd` -> **1.09:1 light / 1.46:1 dark, under floor, caught.**
 
-Strictly stronger than the old form: it still refuses to attribute "SDE3 ... . Staff shows 4 of
-10" to SDE3, it now reads the thin-rail sentence, and on the two-thin sentence each figure pair
-still binds to the name immediately before it because the leading names cannot reach past each
-other.
+The legend's four swatches take the same values and the same `--keel-h`, or a legend would be
+drawing something other than the mark it names.
 
-**The regression proof is gr-builder's own mutant, adopted.** New **MUTANT 7** in
-`test/home_claims.cjs`: take the LIVE thin-rail sentence and inflate its quoted solid count by
-one. It is planted from the rendered sentence rather than a literal, and it carries a NEGATIVE
-CONTROL (the untouched sentence must come back clean) plus a leak check (`judgeVerdict` must also
-see it), because a mutant that fails for the wrong reason proves nothing.
+---
 
-**A coverage gap found while aiming it, and closed.** The first attempt planted on `oneShort` and
-the check ABORTED with `MUTANT 7 CANNOT LAND: oneShort no longer renders a single thin-rail
-sentence` -- correct behaviour, and it exposed that **no pinned record produced the single-thin-rail
-verdict at all**. Every other seed lands on a tie, on level/within-a-point, on full or on cold, so
-the class this home prints most often for a real mid-campaign user was reaching the battery only
-through the generative arm, where no mutant can be aimed. New seed **`oneThin`** (three distinct
-per-tier shares, 20/50/80, so the rendered percentages cannot round together) pins it.
+### 4. THE 138 MARKS GET A TEXT EQUIVALENT -- CLOSED
 
-**MUTANT-TESTED.** Matcher reverted to `[^.;]{0,40}`, check re-run:
+**The defect is stronger than "title is mouse-only".** Each capsule names its topic through a
+`title` attribute, which does not fire on touch and is not reachable by keyboard -- but the track
+above it carries `role="img"`, and **role="img" makes its descendants PRESENTATIONAL**: the 138
+titles are removed from the accessibility tree BY CONSTRUCTION, not merely awkward to reach.
 
-```
-SELF-TEST ABORT -- the analyser does not do what it claims:
-  MUTANT 7 UNDETECTED: the single-thin-rail sentence quoted an inflated solid count and the
-  quoted-figures arm accepted it -- the period-blind regex is back:
-  "Staff is the thin rail. 48 solid of 310 probes, across 46 of 46 topics ..."
-HOME CLAIMS: FAIL (self-test)
-```
+**The fix, and why it is a description rather than 138 names.** Dropping `role="img"` would put 46
+unlabelled spans per rail into browse mode; naming each would announce 138 marks before the reader
+reached the verdict. The app already has a ruled pattern for "this visual carries something the
+name cannot" (`session-progress.js:247`): an `aria-describedby` pointing at a real off-screen text
+node. The NAME is unchanged, so nothing regresses; the DESCRIPTION is the lattice read out in the
+order it is drawn, every segment contributing its own clause from the same `s` the mark is drawn
+from -- so the text cannot drift from the picture, and there is no cap to get wrong. The `<p>` sits
+OUTSIDE the `role="img"` subtree, because a descendant of it could not be referenced out of
+presentational-ness.
 
-Matcher restored: `7 planted mutants detected`, all `oneThin` arms PASS at both viewports.
+`.hm-vh` is a second off-screen primitive rather than a fold into `.nsep`, and the duplication is
+FORCED: `at_name_hygiene` arm A pins the `.nsep` rule by a regex, so folding a selector into it
+breaks that guard. `.hm-vh` takes `white-space:normal` because these are sentences.
 
-`test/gate_acceptance.py`'s `claims` mutant is deliberately LEFT AIMED at `judgeVerdict`. Re-aiming
-it would invalidate the acceptance run its audit document reports; the blindness it recorded is
-closed here, and the standing regression proof now runs every gate rather than only when that
-battery is invoked.
+**The arm + mutant.** `home_claims` asserts the rail's AX node carries a description AND that it
+names the topics THAT rail draws, read from the registry rather than from the rendering. MUTANT:
+strip the tie -> **RED**.
+
+---
+
+### 5. THE 367px VOID -- CLOSED
+
+**The defect.** Every panel on the home is content-fitted to within 1px -- Where you stopped
+251/250, Altitude 286/285, Still shaky 546/545, Coverage 381/380 -- except the paired row's second
+cell, which ran **520px tall over 153px of content**. Grid items stretch by default, so the taller
+sibling set the row height. Layout, not missing data.
+
+**The fix.** `align-items:start` on `.hm-duo`. One declaration.
+
+**The arm + mutant.** `home_reflow` -- "no home panel is a hollow card (content-fitted within
+40px)" at 700 and 900. MUTANT: `align-items:stretch` put back -> **RED**, checked against its own
+negative control.
+
+The inhabitant pass named this exactly: *"the only visual rest the home offers is a layout bug."*
+
+---
+
+### 6. THE TWO ARIAL LEAKS -- CLOSED, AND THE AUDIT'S DIAGNOSIS WAS WRONG
+
+The delight census read the home's only two non-system-face nodes as "Arial 12px/600 [ix-star-ic]
+x2" and called them the star GLYPHS. **They are two separate defects, and neither is what was
+named.**
+
+**(a) The PILL, not the glyph.** `.ix-star-pill` is a `<button>` that declares a size and a weight
+and never re-declares a FAMILY, so the UA form-control stylesheet keeps Arial and both the star
+span and the topic title inherit it. `font-family:inherit` fixes it. This is exactly the class
+`latent_arial` ratchets -- and its debt file read `{}`, because that check drives a COLD record
+and the STARRED block only renders when something is bookmarked. The check now seeds a bookmark on
+its home surface, so the blind spot cannot come back.
+
+**(b) The STAR IS A SHAPE, NOT A CHARACTER.** `--sans` is `-apple-system, BlinkMacSystemFont,
+"Segoe UI", Roboto, Helvetica, Arial, sans-serif` and **not one of those faces carries U+2605**, so
+Chromium fell through the whole list and the PLATFORM picked the face per glyph (Segoe UI Symbol
+here; Arial on the build the audit ran). That IS the defect -- the app did not make the choice. A
+`font-family` on the rule would only move the choice from the platform to a documented exception,
+and this item's bar is ZERO new exceptions. So the mark stops being text: a `clip-path` polygon,
+which takes no font, cannot substitute, and is identical on every platform, sized in `em` so it
+still tracks the pill's type. The glyph is gone from the markup too.
+
+**Measured after:** `latent_arial` **0 components in UA default, 0 new, 0 stale**;
+`typeface_census` **2 documented exceptions -- the same two as master**, so zero new.
+
+**The rest of the class is NAMED, not silently left:** nine more codepoints resolve outside the
+stack (the reset arc and command key to Cambria Math, the house glyph to Arial, six to Segoe UI
+Symbol). They sit in the app FRAME and on topic routes, whose VR baselines this wave may not move,
+so they are ratcheted as declared debt in `craft_hygiene_allow.json` -- the class cannot grow, and
+the app-wide fix has somewhere to land.
+
+---
+
+### 7. ARRIVAL ORDER: THE ACTS LEAD, THE AUDIT RECEDES -- CLOSED
+
+**The inversion this fixes.** The COLD home opens with an invitation -- *"Walk me through how you
+would design this"*. The ENGAGED home opened with what you got wrong: the decision, then
+immediately the gauge, whose verdict is the largest sentence on the page and is an accusation
+(*"the level you are interviewing for is the one you have rehearsed least"*), then a panel headed
+**STILL SHAKY -- 41 FLAGGED**. The app was at its most hospitable to the person who has done
+nothing and least hospitable to the person who has done the work -- on a surface whose one
+inhabited moment is the gap between two hard rounds.
+
+**The fix is ORDER, NOT COPY. Not one string moved and the reserved voice is untouched.**
+`.hm-duo` comes up under the acts and the gauge goes below it, so the arrival runs: where you
+stopped -> your week, and what to re-drill -> your altitude -> the rooms. The audit moves from
+second to fourth. Within the duo the WEEK leads, so the first panel after the decision carries
+*"6-topic goal met with 1 to spare"* -- the only genuinely happy fact this product ever tells
+anyone, which was rendered second, to the right of STILL SHAKY.
+
+**One order for every record class, deliberately** -- a cold record renders the same sequence with
+the shaky panel absent, so there is no engaged/cold branch to keep in sync.
+
+**It HELPS the phone fold rather than costing it:** the chip list ran 769..1006 at 390x844 against
+a live band ending at 799; lifting the duo above a 288-306px gauge moves it up by that whole panel.
+
+**The arm + mutant.** `home_claims`' `arrival` judge, DOM order, on every seed it drives. MUTANT,
+both halves: the gauge restored above the paired row, and the paired row restored with the deficit
+panel first -> **RED**.
+
+---
+
+### 8. CHEAP DEPTH, AND A GROUND THAT STOPS GLARING -- CLOSED
+
+**The defect.** Card vs page ground measured **1.053:1** light and 1.142:1 dark. At 1.05:1 the five
+panels are not surfaces on a ground; they are regions of one flat plane with a 1px rule between
+them -- which is why the inhabitant pass counted 154 hairlines and called it RULED PAPER. And the
+light field sat at mean luminance 0.941 with 94.8% of its pixels in the top band, carrying body
+text at 14.72:1: WCAG-excellent and tiring. **Contrast floors set a MINIMUM; comfort also has a
+MAXIMUM.**
+
+**The fix, and its asymmetry is the design.** In LIGHT the surface is already `#fff` and cannot be
+brightened, so depth comes out of the ground; in DARK the ground is already the house black
+(Y 0.0046) and cannot be darkened -- 1.3:1 there would need a NEGATIVE luminance -- so it comes out
+of the surface. Both land on the same step. Scoped to `#home` so no topic route repaints and only
+the authorised baselines move.
+
+**Measured after, from the panel's own pixels:** light **1.329:1**, dark **1.298:1**.
+
+Also here: the verdict is capped at the app's own body measure (it ran 590px = 78ch, and
+comfortable prose is 45-75ch).
+
+**Floors hold, and it is measured as a DELTA rather than asserted.**
+`_audit/w-addresses-home-before-after/text-floor-sweep.txt` sweeps every text node under `#home` on
+**both builds** -- master `0aba404` and this one -- in both schemes and both record classes:
+
+| cell | min CR before | after | under before / after |
+|---|---|---|---|
+| light/engaged | 4.64 | 4.64 | 0 / 0 |
+| light/cold | 5.27 | **4.93** | 0 / 0 |
+| dark/engaged | 2.35 | 2.35 | 2 / 2 |
+| dark/cold | 2.35 | 2.35 | 1 / 1 |
+
+The three elements that sit on the BARE ground (the skip-the-home label, the backup buttons, the
+lead line) go **5.27 -> 4.93 and CLEAR the 4.5 floor** -- which is what `--mut` being deepened on
+this route by the same linear-light factor was for; without it the ground drop would have taken
+them to 4.18:1. **VERDICT: NO REGRESSION.** It is a before/after ON PURPOSE: the home already
+carries text that misses AA in dark, and a single-build sweep would have billed it to this wave.
+See CARRIED below.
+
+---
+
+### 9. THE CRAFT SWEEP, AND ONE NEW CHECK -- CLOSED
+
+`craft_hygiene` is the third census in its family: `typeface_census` asks whether the app owns the
+FACE it declares, `tracking_census` whether it owns the SPACE, and this asks whether it owns the
+MARKS it prints -- a straight apostrophe where the typeset form is `&rsquo;`, three periods where
+an ellipsis belongs, a spaced hyphen doing an em dash's job, and a codepoint no face in `--sans`
+carries so the platform picks the typeface. None can fail a correctness panel: every one renders
+and every one is legible, which is exactly why the class grows one string at a time.
+
+**It is a SOURCE check, and the brief said "the built deliverable's text nodes". The deviation is
+measured, not preferred.** The shipped 12.3MB deliverable is **99.73% `<script>`/`<style>` by
+bytes**; real HTML text nodes hold about **5.1k characters, 0.04% of the file** (verified this
+cycle, independently of the check). A text-node walk would have swept a rounding error of the copy
+and reported clean. So it reads string literals with a real JS scanner -- comments are not copy: a
+bare `>...<` regex reported 523 straight quotes that were all design commentary -- and judges only
+PROSE, since `SELECT count(*) ... WHERE` is an elision in SQL, not a trailing-off sentence.
+
+**Result: the app CHROME is at ZERO for prose.** The three instances the sweep found there -- the
+library filter placeholder, the Print Q&A description, the cold home CTA -- are now typeset.
+
+**77 ruled exceptions remain, and what they are matters:** 73 are the topic CORPUS and 4 are app
+scripts. Typesetting 57 apostrophes across 46 authored topics is a **content pass with its own
+review**, not a side effect of a chrome wave; the glyph entries sit on surfaces whose VR baselines
+this wave may not move. A stale entry (one matching nothing) FAILS the check, so the list may be
+shortened without ceremony and lengthened only with an argument.
+
+**Self-test every invocation:** five planted defects (three periods, a straight apostrophe,
+straight quotes, a hyphen doing a dash's job, a codepoint outside the stack) plus two negative
+controls including a design comment that must NOT be judged.
+
+**Gate count: 77 -> 78.**
+
+---
+
+### 10. THE CHIP IS A CONTROL, AND IT LANDS -- CLOSED AT HALF ITS NAMED SCOPE, DELIBERATELY
+
+GAP-3 part 2. `.hm-chip` had ONE reference in the whole test tree -- `at_name_hygiene`, a SOURCE
+check on accessible names -- so nothing in the gate had ever clicked the home's own triage.
+
+**Three things asserted** in `search_deadend` (which already owns "does this control land you where
+it says", with hit-tested clicks): the route LEAVES the home; it lands on the chip's OWN topic,
+matched by id; and the chip's printed integer equals that topic's STORED `shk`. The oracle is
+localStorage, not another rendering. Seeds three topics with DIFFERENT counts, none of them the
+first id, so a chip that silently lands on the boot topic cannot pass.
+
+**MUTANT:** the record cleared -> the panel must render NO chip, so an arm that "passed" by finding
+some other button goes red. **Proven.**
+
+**THE HALF THAT IS NOT DONE, AND WHY IT MUST NOT BE.** The coverage audit's part 2 also asks that
+"the landing drill's flagged set matches the chip's count". That is **GAP-2**, which the same audit
+assigns to **W2 room**, and it is UNFIXED TODAY: `drill/logic.js:552-556` blanks `this.revisit` on
+teardown and `:563` draws the flag class from it rather than from the stored record, so a returning
+user sees 0 of 31 tiles flagged. Asserting that leg now would red on another wave's open defect,
+not on this one's work. The audit says as much -- *"part 2 composes with GAP-2's arm"*. This wave
+ships the half whose oracle is the record; the composition becomes available the moment W2 lands.
+
+---
+
+## THE AUDIT OF THE INHERITED TREE -- five defects found in work that was already written
+
+Recorded in full because the tempting move was to run the gate on it and call it done.
+
+1. **Thirty raw non-ASCII bytes in three checks** (`home_claims`, `scoreboard_salience`,
+   `search_deadend`) -- ten U+2019 right single quotes inside assertion strings. `test/` is in
+   `ascii_guard`'s SCOPE, so this was a certain gate red. Replaced with escaped ASCII apostrophes;
+   the block-comment instances were left alone, since a bare `'` in a comment is legal and needs no
+   escape. **The first repair pass was itself wrong** -- it wrote bare apostrophes into
+   single-quoted JS strings, which `node --check` caught as a syntax error on all three files. The
+   scripted second pass carried an ABORT on any anchor matching a count other than 1, and that
+   abort fired on a phrase that appears twice, once in a comment and once in a string -- which is
+   the only reason the comment was not corrupted.
+2. **`src/styles.css` was two closing braces out of balance** -- `css_syntax` FAIL and one
+   `unit_tests` FAIL. A new comment quoted a regex containing `\{[^}]*...[^}]*\}`: one `{`, three
+   `}`. It broke no rule and no browser, which is exactly how it reached a green build and a red
+   gate. The comment now describes the anchor instead of quoting it, and says why.
+3. **`home_rhythm` FAIL, caused by item 8's measure cap.** `.hm-verdict` was given
+   `max-width:var(--measure)` -- the hand-declared app-wide literal. Declaring a measure is how
+   that check decides a block is a member of the home's centred column, so the rule was pulled into
+   scope and dragged two more violations with it (a bare-primitive gap, and a registry entry it did
+   not have). `var(--measure-body)` is the right answer on every axis: it is the SEMANTIC role, it
+   is the half of a pair whose whole content is "body copy takes 68 characters", it is judged
+   against the rule's own type tier (`--font-size-body`), and it correctly marks the rule as type
+   INSIDE a block rather than a column member. Same 68ch, three violations gone.
+4. **`home_fold` SELF-TEST ABORT** -- and this one is the wave's best receipt for the arms, because
+   the check refused to certify itself. The fold contract is a DISJUNCTION (the first screen
+   carries the triage if EITHER the act or the chip list is in the band) and its negative control
+   moved only the act. Through W1.5 that emptied the band by accident -- the chip list was OUT in
+   all 20 chip-bearing cells, a hazard W1.5's own ledger recorded as carried item F7. Item 7's
+   reorder lifted `.hm-duo` above the gauge and put the first chip at 676 in a band ending at 799,
+   so the second disjunct went live and the one-move plant stopped being a negative control. The
+   plant now restores the WHOLE pre-wave order -- practice block to the end AND the paired row back
+   below the gauge -- and aborts if either anchor is missing. Measured under the new plant: act at
+   2267/2367, first chip at 998/1046, **both outside the band -- the arm goes red.** W1.5's F7 is
+   closed as a side effect.
+5. **A claim in shipped source with no receipt behind it.** The depth comment asserted the floors
+   were "proven by a rasterised sweep of every text node on the route, both schemes, in the wave
+   receipt" -- and no such receipt existed anywhere on disk. The sweep was then actually run (item
+   8), which is how the pre-existing dark unders were found and correctly attributed instead of
+   being blamed on this wave. The comment now states the real method (a COMPUTED sweep, ancestor
+   grounds composited in sRGB), names the file, and states the carried exceptions.
 
 ---
 
 ## VR CONTRACT -- HONOURED
 
-Rebaselined: **`home-light` and `home-dark` only**. Attribution: **2101 px each (0.2052%), both in
-the SAME 261x51 box at (18,613)** -- the deleted rail goal block ("This week", the bar, "0 of 5
-topics") and nothing else. Both diff images were reviewed before regenerating, and the new
-`home-light` baseline was reviewed as an image after.
-
-`git diff --stat -- test/baselines/` lists exactly three paths: the two home PNGs and
-`manifest.json` (two sha256 values + the generated timestamp). **The other 14 baselines rewrote
-byte-identical** under `npm run vr:update`, so the non-home contract holds by rewrite, not merely
-by abstention. Item 4 moves no desktop pixel by construction: `.hm-practicem` is `display:none`
-above 919px and every compaction declaration is inside a `max-width` query.
-
----
-
-## GATE -- 76/76 PASS
+Rebaselined: **the four home baselines only** -- `home-light`, `home-dark`, `m-home-light`,
+`m-home-dark`. Watched red before regenerating, captured at
+`_audit/w-addresses-home-before-after/watched-red-visual-regression.txt`:
 
 ```
-  76 checks in 800.4s (13.3 min)
-GATE: PASS
+home-light     227229 px (22.1903%)  in a 1249x771 box at (0,0)
+home-dark      404672 px (39.5187%)  in a 1249x771 box at (0,0)
+m-home-light   117253 px (35.6219%)  in a 390x742 box at (0,57)
+m-home-dark    199616 px (60.6441%)  in a 362x670 box at (14,129)
+18 baselines compared; the other 14 at 0 px.
 ```
 
-Full serial run (`python3 test/check_all.py`, no `--fast`, no `--shared-browser`), exit 0, zero
-FAIL lines. Capture: **`_audit/2026-08-02-w15-cycle1-gate.txt`** (and, as the brief asked, the
-scratch copy at `%TEMP%\claude\D--claude-workspace-deepdive-rehearsal\<session>\scratchpad\
-w15-cycle1-gate.txt`). Taken on the **COMMITTED** tree (`cc2a7f2`), which is why
-`build_integrity` reads the strong form rather than deferring it:
+`git diff --stat -- test/baselines/` lists exactly **five** paths: the four home PNGs and
+`manifest.json`. **The other fourteen rewrote byte-identical** under `npm run vr:update`, so the
+non-home half of the contract holds by REWRITE, not by abstention. Manifest stays at **18**.
 
-```
-BUILD INTEGRITY: PASS  (12255051 bytes, 0 unresolved, 9 panes + 7 overlays,
-build SYNCED the deliverable, COMMITTED deliverable == fresh build of HEAD)
-```
-
-The two lines that carry this cycle's new work:
-
-```
-overlay_deadzone   PASS  (40 assertions: ... the keymap stays suppressed under an open one
-                          and on the home, where it has no topic to mean ...)
-home_claims        PASS  7 planted mutants detected (... an inflated figure inside the
-                          single-thin-rail sentence, checked against its own negative control)
-visual_regression  PASS  (16 baselines, win32-chromium149; every capture reached a proven rest
-                          state ... and matched its committed pixels)
-build_determinism  PASS  (88 Shiki blocks render identically under a simulated 600ms/line stall)
-```
-
-Count is **76**, as the freeze states -- both new arms extend existing checks, so nothing
-registered separately.
-
-Standalone runs during the cycle, all green: `ascii_guard`, `syntax_check`, `css_syntax`,
-`home_rhythm`, `home_reflow`, `home_claims`, `overlay_deadzone`, `at_name_hygiene`,
-`rail_integrity`, `cold_open`, `heading_tree`, `sidebar_geometry`, `flow_a11y`, `fold_budget`,
-`chrome_metrics`, `visual_regression`.
+Both desktop plates were reviewed as images before regenerating and after. The four visible
+changes are the four items that were supposed to move pixels: the ground stands off the panels,
+the arrival leads with the act and the week, the 46-capsule lattice is countable where it was a
+beige trough, and the verdict wraps at a shorter measure. Receipt pairs (`before-*.png` /
+`after-*.png`) kept alongside.
 
 ---
 
-## STILL OPEN AFTER CYCLE 1 -- ALL CLOSED IN CYCLE 2
+## GATE -- 78/78 PASS
 
-1. **Item 4c** -- escalated, ruled (R1), and closed below.
+Full serial run (`python3 test/check_all.py`, no `--fast`, no `--shared-browser`) on the
+**COMMITTED** tree, which is why `build_integrity` reads its strong form. Capture:
+`_audit/2026-08-03-w-addresses-cycle1-gate.txt`.
 
----
+The count is **78**, as the freeze states: one new registered check (`craft_hygiene`); every other
+arm extends an existing one.
 
-## CYCLE 2 -- 2026-08-02
-
-Three team-lead rulings on the cycle-1 escalation (R1 / R2 / R3) plus the judges' two non-escalated
-open items. **All five closed.** One adjacent defect was found while reviewing a new VR capture and
-fixed in the same commit; it is disclosed at the end rather than folded into an item.
-
-The through-line: cycle 1 shipped three build items with NO arm that could fail on their reversion,
-and cited two checks for one of them that are structurally incapable of catching it. `grep -rl`
-over `test/` returned NOTHING for `hm-key`, `hm-goal`, `ix-goal`, `goalStrip`, `weeklyGoal`,
-`hm-practicem` or `actionsHtml`, and the VR manifest's only two mobile baselines were both the
-walkthrough pane -- so the entire below-920 home had neither a geometry arm nor a pixel one. Cycle 2
-is mostly instrument.
+**The run before it was a FAIL, and it is worth keeping in the record**: 78 checks, five red --
+`css_syntax`, `home_rhythm`, `unit_tests`, `home_fold`, `visual_regression`. Four were the
+inherited-tree defects above and one was the authorised rebaseline. That run is the reason this
+ledger can say the arms work: `home_fold` red-flagged its own negative control rather than passing.
 
 ---
 
-### R1 -- THE FOLD CONTRACT -- CLOSED
-
-**(a) Restated.** Section 4c above now carries the judge's measured split and the ruled contract,
-and the false sentence is deleted rather than softened. Done in place, above.
-
-**(c) The compaction, MEASURED, and it is not 20px.** `src/styles.css`, inside the EXISTING
-`max-width:919px` gauge block:
-
-```css
-html[data-view="home"] .hm-alt .hm-verdict{margin-top:var(--space-6);padding-top:var(--space-6);
-  line-height:var(--line-height-snug)}
-```
-
-*(FIGURE CORRECTED after the cold verify, 2026-08-02 -- and the correction runs in the fix's
-favour. The BEFORE column below was a RECONSTRUCTION built from a cycle-1 measurement of a
-different record ("277px + 21 (key restored) = 298"), and it omitted half the rule: the
-declaration takes `margin-top` from 16 to 6 as well as the padding and the leading, and
-`getBoundingClientRect` on `.hm-verdict` never sees a margin -- the PANEL does. The verifier built
-the counterfactual instead of reconstructing it, planting the pre-change declaration back into a
-mirror of the frozen build and running one probe against both. Their numbers, adopted:)*
-
-| record | `.hm-verdict` before | after | delta | `.hm-alt` before | after | delta |
-|---|---|---|---|---|---|---|
-| one-thin | **71.8** | **61.6** | **-10.2** | **307.8** | **287.6** | **-20.2** |
-| two-thin | **91.4** | **79.8** | **-11.6** | **327.4** | **305.8** | **-21.6** |
-| cold | **91.4** | **79.8** | **-11.6** | **327.4** | **305.8** | **-21.6** |
-
-So the compaction is worth **20.2px / 21.6px of panel** -- `10px of margin + 10.2px of padding and
-leading` -- not the 10px / 11px this section claimed. The element-level halves (62 / 80 after) and
-the panel-level AFTER halves (288 / 306) reproduce exactly; only the BEFORE reconstruction was
-wrong, and it understated the fix by about half. The paragraph that argued against "20" was
-arguing against its own measurement. **The SENTENCE KEEPS ITS SIZE** -- dropping it to `--font-size-small` was measured
-(it buys another 4-5px) and refused: it is the one claim the whole instrument exists to deliver and
-a phone is the worst place to read 13px prose. The pixels come from leading and from the rule.
-`.ix-cross` was not touched, per the ruling.
-
-**What it bought, against the key that R2 restored (+21px), measured at 390x844:**
-
-| shape (short hero) | chips top, cycle 1 | chips top, cycle 2 | fold |
-|---|---|---|---|
-| one-thin x 1 bar | 758 (41px in) | **769 (30px in)** | in |
-| two-thin x 1 bar | 778 (21px in) | **787 (12px in)** | in |
-| one-thin x 2 bars | 836 (37px out) | 847 | out; act carries |
-| two-thin x 2 bars | 836 (37px out) | 865 | out; act carries |
-
-**No fold outcome flipped in any of the nine measured combinations** -- which is exactly what R2
-predicted of the key's 21px, now checked rather than assumed.
-
-**(b/d) THE ARM: `test/home_fold.cjs`, a NEW registered check. Gate 76 -> 77.**
-Registered separately rather than grafted on: `fold_budget.cjs` owns the same question for the
-drill pane and never visits the home, and `home_reflow.cjs` measures HORIZONTAL clipping at a 720px
-viewport and cannot see a fold. It drives **nine records at 390x844** -- the four ruled shapes
-(verdict class x bar count) each at BOTH hero extremes (the shortest and the longest question in
-the 972-probe bank, 23px vs 164px of hero), plus the cold record -- and asserts four things on
-each: the row really is the shape it is named for (a matrix whose rows have silently collapsed onto
-one cell reports four greens for one measurement), the ruled disjunction, that the act on offer is
-the one the record earned, and that the practice block sits between the decision and the gauge **in
-the DOM** with no CSS `order` doing the work (the adjudicator's explicit prohibition, now a check).
-
-The band is COMPUTED from the live fixed chrome, never typed.
-
-**PREFLIGHTED ON THE SEEDED MUTANT the ruling asked for**, planted every run: `.hm-practicem` is
-moved back to the END of the column -- the pre-fix DOM position, where cycle 1 measured it at top
-2136 -- on the one shape where that genuinely pushes BOTH carriers out. Transcript:
-
-```
-SELF-TEST: moving the practice block back below the rooms puts the act at 2314 and the
-first chip at 846, both outside the band -- the arm goes red.
-```
-
-The check ABORTS if the plant lands and the assertion survives it.
-
-**MEASURED AND DISCLOSED, because cycle 1 rounded this up.** Under the ruling's own word --
-**FULLY** above the fold -- the chip list is never the full-containment carrier **in the nine
-shapes `home_fold` pins**. Its TOP is inside the band on the two tight shapes (769 and 787 against
-a fold at 799), but its FIRST CHIP ends at 813 on the roomiest of them: **14px out**. The contract
-holds in all nine shapes, and in all nine it is the ACT that carries it. That is what R1(b)
-anticipated ("chips below the fold are acceptable ONLY when such an act is above it"); it is now
-the measured norm rather than the exception.
-
-*(Scoped in cycle 3. Nine samples cannot establish an absolute over the record space, and the
-sentence was written as one. Cycle 3 raised the matrix to 22 cells across 390 and 360 and found the
-chip list out in every one -- but the word is still "in the shapes this check pins", not "never".)*
-
-`home_fold: PASS (36 assertions across 9 records at 390x844)`.
-
----
-
-### R2 -- THE GAUGE LEGEND -- CLOSED
-
-The `html[data-view="home"] .hm-alt .hm-key{display:none}` rule is DELETED from the
-`max-width:419px` home block. The comment that replaces it records the ruling and the measurement
-so the rule cannot come back as a fresh idea: the hide bought **21px of a 742px band (2.8%)**,
-flipped no fold outcome in any record class (now checked across nine shapes, above), and the key is
-the only legend the gauge's four marks have at any width. `aria-hidden` makes it decoration for a
-SCREEN READER; that is not an argument for deleting it from the screen where the marks are. If a
-future record class needs those 21px they come out of the two-row rail block, as ruled.
-
-**Guarded**, which it was not before: `home_claims.cjs`'s new `gauge key` judge -- a rail that
-paints a keel segment must render a visible four-state key. Keyed on the keel because that is the
-mark with no other explanation on the panel. WATCHED RED by putting the deleted rule back:
-
-```
-FAIL  [390/weakTopics] the gauge key agrees with the numbers beside it
-      -- the gauge paints 34 keel segment(s) and renders no visible four-state key at
-         this width -- the only legend those marks have
-```
-
-(and 2 more pinned records, plus 20 of the 24 generated ones -- *re-measured on the frozen tree
-by the cold verify: **3 pinned + 23 generated = 26 reds**. The cycle-2 figure was taken against a
-build that has since changed; the finding is unaffected and the coverage is wider than stated*).
-The arm is conditional, so the check
-also counts how many records actually painted a keel and ABORTS at zero -- a conditional arm nothing
-satisfies is decoration. It reports **6 pinned records** exercising it.
-
----
-
-### R3 -- THE COLD GOAL -- CLOSED
-
-`goalStrip()` is hoisted out of `telemetryHtml()`'s `engaged()` gate, and `duoHtml()`'s own
-`engaged()` early return is deleted. The reason is stated where the code is: **the weekly goal is
-not telemetry.** Everything else in that panel is a report on the past -- a trend across logged
-sessions, topics drilled clean a week ago -- and a cold record has no past, so `engaged()` is right
-for those two. The goal is a TARGET the user owns and nudges (`goal.weekly`, default 5), and a cold
-record has one exactly as a mature one does. The invariant is now TRUE for every record class
-instead of the claim being narrowed.
-
-**One thing more than the ruling asked, and it is a correctness fix, not a preference.** The panel
-head read "Recent sessions" -- which is the heading for two of its three children, and both of
-those are conditional. A one-session record already got "Recent sessions" over nothing but a goal;
-a cold record now would too. It reads **"This week"**, which is what its `id` (`hm-week-h`) always
-called it and what its only unconditional member is about. The trend keeps its own "Recent
-sessions" kicker inside the panel, so the string is not lost -- it stops being asserted of a record
-that has no sessions.
-
-**Guarded**: `home_claims.cjs`'s new `goal` judge -- exactly ONE visible `.ix-goal | .hm-goal` per
-viewport, asserted on **all 15 pinned records and all 24 generated ones, at both viewports**, which
-is strictly more than the ruling's "cold and engaged". Round 5's defect was TWO goal surfaces and
-W1.5's was ZERO; a COUNT catches both directions. Plus **MUTANT 8**, planted on the cold record: it
-duplicates the live goal and requires the arm to fire -- and if the plant CANNOT LAND, that is the
-W1.5 regression reporting itself. WATCHED RED by reverting the hoist:
-
-```
-SELF-TEST ABORT -- the analyser does not do what it claims:
-  MUTANT 8 CANNOT LAND: the COLD home renders no weekly-goal surface at all, so there is
-  nothing to duplicate. That is the W1.5 regression itself.
-```
-
-**VR RE-CAPTURED, as authorized.** `home-light` and `home-dark`: **41,462 / 41,486 px (4.05%),
-both in the SAME 624x98 box at (316,673)** -- the restored "This week" panel on the cold home and
-nothing else. Both diff images were reviewed before regenerating and both new baselines were
-reviewed as images after. The receipt pair from cycle 1 (the 2101px delta at (18,613) that recorded
-the accidental removal as intended) is kept; this is its correction.
-
----
-
-### JUDGES' ITEM 1 -- TWO FIGURES THAT DID NOT SURVIVE RE-DERIVATION -- CLOSED
-
-**(1) "62 solid of 310" -> "47 solid of 310".** Re-derived against the live seed rather than taken
-on trust -- the `oneThin` record was driven and its rendered verdict read back:
-
-```
-"Staff is the thin rail. 47 solid of 310 probes, across 46 of 46 topics -- the level you
- are interviewing for is the one you have rehearsed least."
-rails: Staff 47 / 310 - 15%   SDE3 201 / 359 - 56%   SDE2 256 / 302 - 85%
-```
-
-62 is 310 x 0.2, the share applied to the tier TOTAL; the seed takes `Math.round` per topic, which
-lands on 47. Corrected in section 6 above AND in the comment at `test/home_claims.cjs` (the MUTANT
-7 block), so the check's own prose matches what its seed renders.
-
-**(2) The `--gap-home-*` arithmetic.** Section 4b above now reads "30px on top of the panel's own
-105px, for 135px recovered against 92px spent" -- 135 - 92 = 43, and 825 - 43 = 782, which is the
-figure the table reports. The sentence after it ("the outcome does not close without it") measured
-true and stands.
-
----
-
-### JUDGES' ITEM 2 -- THREE ITEMS WITH NO ARM, AND A FALSE COVERAGE CLAIM -- CLOSED
-
-**The coverage sentence is corrected in place** (section 2 above): `rail_integrity` and
-`at_name_hygiene` do not carry the ordinal swap, and cycle 1 shipped it with no arm at all.
-
-**Three arms added to `test/home_claims.cjs`** -- the file whose subject is already "a fact with two
-render paths is a fact with two answers", and which already drives pinned records at 1280 and 390.
-Same class as its existing arms; the fact is a RENDERER rather than a numeral, which is why nothing
-above them could see it. Each is registered in `ALL_JUDGES`, so it cannot be written and never
-called.
-
-1. **`goal`** -- exactly one visible goal surface per viewport per record class. (R3, above.)
-2. **`act order`** -- wherever both practice acts render, `data-cross="weak"` precedes
-   `data-cross="1"`. Asserted in all three surfaces: the home rail at 1280, `.hm-practicem` at 390,
-   and the switcher's lead (judged by evaluating `Panels.actionsHtml()` directly, so the switcher's
-   copy is covered without opening the overlay). A surface rendering only ONE act is not judged --
-   there is no order.
-3. **`gauge key`** -- the legend where the keel is painted. (R2, above.)
-
-**A NEW PINNED RECORD was required and is the reason this could not be bolted on.** `weakCount()`
-counts topics whose drill is COMPLETE and still carries a shaky probe, which is stricter than
-"appears in the weakest list" -- and **not one of the fourteen pinned records satisfied it**. Every
-seed either left a topic unfinished (`in-progress`) or finished it clean (`solid`), so
-`actionsHtml()` rendered ONE bar on all fourteen and the ordering rule had nothing to order.
-`weakTopics` (twelve topics drilled to the end, one probe in seven graded Shaky) is that record; it
-also puts keel marks on the rails, which is what gives the legend arm something to label.
-
-**EACH WATCHED RED BY REVERTING THE CORRESPONDING LINE**, one at a time, on a real rebuild:
-
-| reverted | what went red |
-|---|---|
-| `telemetryHtml()` -> `if (!engaged()) return '';` | `MUTANT 8 CANNOT LAND` -> `HOME CLAIMS: FAIL (self-test)` |
-| `actionsHtml()` -> `crossDrillBar() + weakDrillBar()` | `FAIL [1280/weakTopics] ... the lead renders the generic act above the record-addressed one` + `FAIL [390/weakTopics] ... the column ...` |
-| `railHtml()` order inverted | `FAIL [1280/weakTopics] ... the rail renders the generic act above the record-addressed one` |
-| `.hm-key{display:none}` restored at <=419 | `FAIL [390/absentField]`, `[390/oneShort]`, `[390/weakTopics]` + 20 generated records |
-
-Three more planted mutants now run every gate (8, 9, 10), so the arms stay proven rather than
-merely written: **`home_claims` reports 10 planted mutants detected**, up from 7.
-
-**`m-home-light` VR baseline added at 390x844**, so the below-920 home has a pixel guard at all.
-The manifest goes 16 -> 17. The hole was real: the two existing mobile baselines are BOTH the
-walkthrough pane, so a wave rebuilt the phone home -- the practice move, the gauge compaction, the
-key -- and every baseline in the file stayed byte-identical.
-
----
-
-### ADJACENT DEFECT FOUND WHILE REVIEWING THE NEW CAPTURE -- FIXED
-
-Restoring the cold goal put the "This week" panel ALONE in the `.hm-duo` row, and it rendered
-**248px wide, centred, in a 624px column** -- a lone island in a row it was supposed to fill --
-wearing two top edges (its own `.hm-panel` border plus a second hairline) with 20px of dead space
-between them and its heading.
-
-The cause is not new. `.hm-tele` carried `margin:0 auto var(--gap-home-telemetry)` plus
-`padding-top:var(--space-20)` and `border-top` from when it owned a row of the stack. As a GRID
-item, `margin:0 auto` is not centring -- it is SIZING: auto side margins make a grid item shrink to
-max-content. The defect was already live on the ENGAGED home, where the narrow panel sat beside a
-full-width sibling and read as a design. It is on master.
-
-Fixed to `.hm-tele{max-width:var(--measure-home);margin:0 0 var(--gap-home-telemetry)}`. The bottom
-gap stays on its `--gap-home-*` token, which is the layer `home_rhythm.py` enforces:
-`HOME RHYTHM: PASS (8 rhythm gap(s) + 11 measure(s) ... registry matches discovery exactly,
-0 NEW, 0 STALE)`. Measured after: the panel fills the row at 624px on the desktop and 362px on the
-phone.
-
-**Disclosed as scope this cycle was not asked for.** It is fixed rather than filed because the
-alternative was writing a lone 248px island into a brand-new VR baseline -- which is the check's
-own stated failure mode ("regenerating without looking is how a regression becomes the new
-reference").
-
----
-
-## VR CONTRACT, CYCLE 2 -- HONOURED
-
-`git status test/baselines/` lists exactly four paths: the two home PNGs (modified), `manifest.json`
-(two sha256 values, the new key, the generated timestamp) and the new
-`m-home-light-win32-chromium149.png`. **The other 14 baselines rewrote byte-identical** under
-`npm run vr:update`, so the non-home contract holds by rewrite, not by abstention. Verify run after:
-
-```
-17 baselines compared; worst = 0 px (home-light), budget 32 px.
-VISUAL REGRESSION: PASS  (17 baselines, win32-chromium149)
-```
-
-One note for the record: the first `vr:update` attempt DIED mid-run (`browser.newContext: Target
-page, context or browser has been closed`) under load from a sibling wave's measurement job, and
-the check REFUSED to write baselines from a bad capture -- which is the behaviour that guard exists
-for. Re-run clean.
-
----
-
-## GATE, CYCLE 2 -- 77/77 PASS
-
-```
-  77 checks in 931.3s (15.5 min)
-GATE: PASS
-```
-
-Full serial run (`python3 test/check_all.py`, no `--fast`, no `--shared-browser`), exit 0, **zero
-FAIL lines and zero SKIPs**. Capture: **`_audit/2026-08-02-w15-cycle2-gate.txt`**. Taken on the
-**COMMITTED** tree (`6a23237`), which is why `build_integrity` reads the strong form:
-
-```
-BUILD INTEGRITY: PASS  (12261034 bytes, 0 unresolved, 9 panes + 7 overlays,
-build SYNCED the deliverable, COMMITTED deliverable == fresh build of HEAD)
-```
-
-The count is **77**, up one from cycle 1's 76: `home_fold` registers separately, as the freeze
-states. The five lines that carry this cycle's work:
-
-```
-home_fold          PASS  (36 assertions across 9 records at 390x844 -- verdict class x bar
-                          count x hero wrap, each asserted against a band computed from the
-                          live fixed chrome rather than a typed number)
-home_claims        PASS  10 planted mutants detected (... a SECOND weekly-goal surface on the
-                          cold record; Cross-topic rendered above Weak-spot in the phone
-                          practice block; the four-state key hidden while the rails still
-                          paint keel marks)
-visual_regression  PASS  (17 baselines, win32-chromium149; every capture reached a proven rest
-                          state ... and matched its committed pixels)
-home_rhythm        PASS  (8 rhythm gaps + 11 measures, registry matches discovery exactly)
-home_reflow        PASS  (2 planted mutants detected)
-```
-
-Standalone runs during the cycle, all green: `ascii_guard`, `syntax_check`, `css_syntax`,
-`layout_static`, `home_rhythm`, `home_reflow`, `home_fold`, `home_claims`, `cold_open`,
-`heading_tree`, `at_name_hygiene`, `focus_ring`, `touch_floor`, `visual_regression`.
-
----
-
-## STILL OPEN AFTER CYCLE 2
-
-Nothing from this cycle's brief. Two things are RECORDED rather than open, so a later wave does not
-rediscover them as findings:
-
-1. **The chip list is never the full-containment carrier in the nine shapes `home_fold` pins.**
-   *(Scoped in cycle 3 -- it read "never ... at 390x844", which is an absolute over the whole
-   record space asserted from nine samples.)* Its top is inside the band on the two tight shapes;
-   its first chip ends 14px past the fold on the roomiest of them. The ruled contract holds in all
-   nine shapes via the ACT. Closing the chip half would need the `.ix-cross` bars compacted, which
-   R1 explicitly forbade.
-2. **`m-home-dark` does not exist.** Cycle 2 added the light phone home only, which is what the
-   named fix asked for. The dark phone home is still unguarded by pixels; `home_reflow` and
-   `home_fold` cover its geometry in both themes and at 390 respectively.
-   *(BOTH of these were carried into cycle 3's brief as judges' items and are CLOSED below --
-   item 1 scopes the sentence, item 6 adds the baseline.)*
-
----
-
-## CYCLE 3 -- 2026-08-02
-
-One team-lead ruling on the cycle-2 escalation (R4) plus the judges' eight non-escalated items.
-**All nine closed.** Two things were found while building the arms and are disclosed at the end
-rather than folded into an item: `home_fold`'s measurements were a **57px coin flip**, and the
-escalation's own "worth 57px" figure did **not** survive an isolated re-derivation. Both are
-receipts against the same lesson -- a number quoted from one draw of a random variable is not a
-measurement, and this cycle produced one of each: the check's numbers were random and nobody knew,
-and a judge's number was one draw and read as a fact.
-
----
-
-### R4 -- THE KICKER -- CLOSED
-
-`src/scripts/app/panels.js` -- `goalStrip()` no longer renders
-`<span class="ix-home-k">This week's goal</span>`. `telemetryHtml()` is its only consumer and it
-renders inside the panel whose head reads **"This week"**, so the kicker named the same period twice
-directly under that head, in every render path, cold and engaged. The head names the period; the
-line under the bar states the fact.
-
-**MEASURED, all four records, on the built page** (`kicker` is read from the live DOM, not asserted
-from source):
-
-| record | head | kicker | the line under the bar |
-|---|---|---|---|
-| cold 1280x800 | This week | **absent** | 0 of 5 topics drilled this week &middot; 5 more to go |
-| engaged 1280x800 | This week | **absent** | 12 topics drilled this week &middot; Goal met -- nice work. |
-| cold 390x844 | This week | **absent** | 0 of 5 topics drilled this week &middot; 5 more to go |
-| engaged 390x844 | This week | **absent** | 12 topics drilled this week &middot; Goal met -- nice work. |
-
-**No repeated LABEL on any of the four**: the head names the period once, and the fact sentence's
-own "this week" is part of the claim, not a second label. *(Restated in cycle 4. The line here read
-"no repeated WORD between the head and its content", which is false as written and the table two
-columns over prints the counterexample: the head is "This week" and the line under the bar ends
-"...drilled this week". The FIX is right and verified -- kicker count 0 in every render path,
-including the stepper's in-place re-render -- and this is the distinction `panels.js:151-156`
-already draws in its own comment; only the summary sentence claimed more than the measurement
-supported, in a wave whose standard is that a figure quoted must survive re-derivation.)*
-
-**One declaration went with it, and it is not cosmetic.** `.ix-goal-top` was
-`justify-content:space-between` for a row holding a kicker on the left and the stepper on the
-right. With one child left, `space-between` resolves to `flex-start` and the bare `- 5 +` control
-slides under the head and reads as its content. It is `flex-end` now, so the stepper holds the
-right edge of the bar it sets. Verified on the built page: `justifyContent: flex-end` at both
-viewports, stepper box unchanged.
-
-**No assertion pinned the kicker text.** `grep -rn "This week" test/` returns nothing; the only
-source hits are `home-view.js:555` (the panel head, which stays) and the deleted line itself.
-
-**VR re-captured, as authorized** -- see the VR section: the ENTIRE diff is a **101x7 box** holding
-the kicker's glyphs. The row's height never depended on it (the 20px stepper is the taller child),
-so nothing below it moved, and the pixel evidence is exactly the duplicate label disappearing.
-
----
-
-### JUDGES' ITEM 1 -- AN ABSOLUTE ASSERTED FROM NINE SAMPLES -- CLOSED
-
-Both sites now read "in the nine shapes `home_fold` pins" instead of "never ... at 390x844"
-(the R1 disclosure and the cycle-2 STILL-OPEN note, edited in place above with a dated parenthesis
-so the change is visible rather than silent).
-
-**The cited counterexample was re-derived, and it does not stand -- for a reason that matters more
-than the sentence.** The judge measured the ruled `two-thin x 1 bar x short hero` shape on a
-record-less resume topic and got the first chip at **730-774 inside a 57-799 band**. Driven twelve
-times on that exact cell, it comes back **787-831 (32px OUT)** or **730-774 (25px IN)** with
-*nothing else changed*: the home's Resume CTA carries `data-autofocus="1"`, focusing it scrolls it
-into view, and on roughly one load in six the page is still sitting at `scrollY` **57** -- exactly
-the fixed rail's height -- when the measurement runs, drifting back to 0 within a second. Every box
-then reads 57px higher while the band, computed from `position:fixed` chrome, does not move at all.
-So the judge's 730-774 and cycle 2's 787 are **two draws of the same coin, not two record shapes**.
-Fixed in the check (see FOUND WHILE MEASURING); with the scroll pinned, the chip list is out in
-**all 22** measured cells. The scoping edit is applied anyway, because it was always right: nine
-samples cannot license "never".
-
----
-
-### JUDGES' ITEM 2 -- THE FOURTH TERM -- CLOSED, AND IT WAS WORSE THAN MISSING
-
-The judge reported that `home_fold` documents the fold as "a function of THREE independent things"
-while a fourth of comparable size -- which `.hm-since` sentence the resume topic earns -- was held
-constant. **Measured, it was not held constant. It was CONFOUNDED with the first term.** Reading
-the resume shape back off all eight seeded rows:
-
-```
-short hero -> resumes `slos`             -> has-record   (all four short rows)
-LONG  hero -> resumes `content-pipeline` -> no-record    (all four long rows)
-```
-
-Every row sat on the diagonal. The two crossed cells had never been measured, and any difference
-the matrix attributed to hero wrap was carrying an unknown share of the since-sentence -- which is
-the check's own "sampling one arbitrary question would be measuring luck", one term over.
-
-**The fix.** `cfg.resume` (`'has-record' | 'no-record'`) is a **declared field on every row**, is
-**read back off the rendered page** like the other three, and is asserted in the row-shape arm --
-so a term that stops varying now fails the check instead of quietly riding along. The eight
-originals are pinned to the shape they always rendered, so cycle 2's table is preserved exactly
-(769 / 787 / 847 / 865 reproduce to the pixel), and the two crossed cells are added:
-`two-thin x 2 bars x LONG hero x has-record` and `one-thin x 1 bar x short hero x no-record`.
-
-**A deliberate deviation from the named fix, and the reason.** The fix said to point the hero cursor
-at a topic the percentage fill did touch versus one it did not. That re-aims the cursor, which moves
-the hero question at the same time -- i.e. it would have rebuilt the exact confound this item exists
-to remove. The term is instead forced **on the topic the hero already points at** (delete its record,
-or write a small three-card one), so the hero is byte-identical across a resume pair and the two
-terms are genuinely independent. The write is never `done === tot`, so it cannot make a topic weak
-and change the bar count out from under the row.
-
-**AND THE MEASURED ANSWER, which is not the escalation's.** With the pair isolated and the scroll
-pinned, the resume shape is worth **0px** -- on every one of the 11 records, at 390 **and** 360:
-
-```
-390  two-thin x 2 bars x LONG hero  : no-record chips 1006 | has-record chips 1006
-390  one-thin x 1 bar x short hero  : has-record chips  769 | no-record  chips  769
-360  two-thin x 2 bars x LONG hero  : no-record chips 1087 | has-record chips 1087
-360  one-thin x 1 bar x short hero  : has-record chips  856 | no-record  chips  856
-```
-
-`.hm-since` measures **34px in both branches** at both widths -- the shorter sentence still wraps to
-two lines. The escalation's "measured worth 57px" is the scroll coin above, not the since-sentence:
-57 is the rail's height, and it appears in the data wherever a scrolled sample met an unscrolled one.
-**The coverage hole was real and is closed; its geometric cost on the pinned records is nil**, and
-that is a stronger statement than the one the item asked for, because it comes from a controlled
-pair rather than two differently-seeded records.
-
-The header comment reads "FOUR independent things", names the since-sentence, and records the
-confound and how the term is set.
-
----
-
-### JUDGES' ITEM 3 -- `.hm-tele`'s BOTTOM MARGIN -- CLOSED
-
-`src/styles.css` is now `.hm-tele{max-width:var(--measure-home)}`. The registry entry at
-`test/home_rhythm.py:172` is deleted (with the reason left in place of it) and
-`gap.home.telemetry` is deleted from `design-tokens/tokens.json` with the `$description` amended --
-exactly what `home_rhythm`'s own STALE-entry message prescribes, in one commit.
-
-**MEASURED on the built page, before and after:**
-
-| | before | after |
-|---|---|---|
-| engaged @1280, the two `.hm-duo` panels | Still-shaky bottom **1078**, This-week **1052** -- 26px apart | **both end on the same line** |
-| cold @1280, `.hm-duo` height vs its content | 144 vs 118 -- 26px of empty row | **118 vs 118, slack 0** |
-| cold @390, `.hm-duo` height vs its content | 168 vs 142 | **142 vs 142, slack 0** |
-| `.hm-duo` bottom -> `.hm-rooms` top | 52px (`--gap-home-telemetry` + `--gap-home-duo`) | **26px**, at all four records |
-
-Intra-row spacing was already `.hm-duo`'s own `gap:var(--space-16)` and row-to-next-block was
-already `--gap-home-duo`; this margin was a third answer to a question two layers had answered, and
-inside a grid row it is not rhythm at all -- it is 26px subtracted from the cell.
-
-`HOME RHYTHM: PASS (7 rhythm gap(s) + 11 measure(s) ... registry matches discovery exactly)` --
-**0 NEW, 0 STALE**, gaps 8 -> 7 as the named fix predicted. `.hm-tele` stays IN SCOPE via its
-measure, so discovery still judges it. `PHANTOM TOKENS: PASS` -- the deleted token left no orphan.
-
-No pixels moved in any baseline: `.hm-rooms` sits below the fold at both captured viewports, which
-is why a 26px gap change is invisible to VR and why `home_rhythm` -- a static token check whose
-bidirectional registry actively REQUIRED the margin -- was the one thing that could never have
-found it.
-
----
-
-### JUDGES' ITEM 4 -- "ANYWHERE" WAS A CLAIM THE HOME COULD NOT KEEP -- CLOSED
-
-`src/scripts/app/keyboard-overlay.js`: the `P` row, the `N` row **and** the `[` `]` row move out of
-the section headed "Anywhere" into the topic section, whose head is re-titled from "Move through the
-one you're on" to **"While you're in a topic"** so it honestly covers stepping *between* topics as
-well as within one.
-
-**`[` / `]` is disclosed scope the item did not name, and it is the same defect.** shell.js's home
-block returns on it verbatim (`if (key === '[' || key === ']') return;`), and "Previous / next
-topic" has no referent on a route with no current topic. Fixing two of three and leaving the third
-under a head that says "Anywhere" would have left the check needing an exemption list -- which is
-the thing that rots.
-
-**Ctrl+P is declared OUT OF SCOPE rather than skipped.** It is a chord, which shell.js's map
-deliberately does not own (its MODIFIER GUARD blocks every Ctrl-without-Alt), it is served by
-`print-qa.js`, and driving it opens a popup window. It carries an explicit `'chord'` claim so the
-cross-check still sees its row. **Recorded for a later wave, not fixed here:** `openPrint()` reads
-`TopicRegistry.current()`, which on the home is the BOOT constant -- so Ctrl+P on the home builds a
-printable Q&A for a topic the user never chose. That is the exact class W1.5 cycle 1 fixed for `p`,
-one module over, pre-existing, and it needs its own decision about what Ctrl+P should do on a route
-with no topic.
-
-**THE ARM: `test/overlay_deadzone.cjs`, new section 6** (the file the named fix specified, whose
-subject is already "did a layer act when it had no business acting"). It does **not** assert "every
-advertised key does something", which is wrong in both directions -- `H` does nothing observable on
-the home because you are already there, `Esc` does nothing because nothing is open, and neither is
-a broken promise. Instead:
-
-- every row under "Anywhere" carries a **declared claim** in the check, and the table is
-  cross-checked against the **rendered overlay both ways** -- an undeclared row fails, a claim with
-  no row fails;
-- **each claim is then DRIVEN with trusted keys on `#home`**: `/` and `\` and `?` must open a
-  dialog, `F` must toggle focus mode, `G` must start the tour, `D` must change the density
-  attribute, `Esc` is driven **with a panel actually open** (that is the whole claim), and `H` is
-  proved from a topic route as well, since on the home its destination is where you already are;
-- the three relocated keys are proved **both ways** -- dead on `#home` AND live on a topic route --
-  so the qualifier is earned rather than used as an alibi;
-- a `driven >= 8` counter, because a claims table whose rows are all skips is decoration.
-
-**A BLIND PROBE, CAUGHT BY ITS OWN SHAPE.** The first run failed on `/` alone while `\` and `?`
-passed beside it. The search overlay is built in JS and driven by an **inline display**, with no
-`.open` class anywhere, so the class-based reader section 5 uses comes back empty while that dialog
-is on screen. The section-6 reader reads the element instead of the convention (live client rects,
-`display !== 'none'`, not `.closing`). One green failing while its two siblings pass is the shape of
-a blind probe, not a broken app -- recorded because the opposite mistake would have been to "fix"
-the app.
-
-**MUTANT-TESTED.** The `P` row moved back under "Anywhere", rebuilt, re-run:
-
-```
-- [anywhere] every row under "Anywhere" has a declared claim here, and every claim still has a row
-    [undeclared rows: ["P"]  claims with no row: []]
-- [anywhere] the three keys that need a topic are listed under the topic-scoped head, not under "Anywhere"
-    [not in the topic section: ["P"]  still under Anywhere: ["P"]]
-OVERLAY DEADZONE: FAIL  (2 of 58 assertions)
-```
-
-Both arms red, and only those two. Restored: `OVERLAY DEADZONE: PASS (58 assertions)`, up from 40.
-`flow_a11y`'s `#10` arm still finds its `N` row (it searches the whole overlay, not one section):
-`FLOW A11Y: PASS (6 assertions)`.
-
----
-
-### JUDGES' ITEM 5 -- ONE WIDTH LICENSING A WHOLE BAND -- CLOSED
-
-**Swept width by width rather than restated.** The `<=419px` comment now reads what the band
-actually does:
-
-```
-320 340 355 360 361 362 363 -> h=40  (two rows; "Untouched" orphans onto a second line)  => 46px
-364 365 366 367 368 375 390 400 412 419 -> h=15  (one row)                               => 21px
-```
-
-The wrap boundary is **364px**, bisected, not estimated -- so the escalation's "320-368" is wrong at
-its top end and cycle 2's flat "21px, 2.8%" is wrong below 364. With the 6px margin-top the hide was
-worth **21px at 364-419 and 46px at 320-363**: 2.8% and **6.2%** of the same 742px band.
-
-The comment also states **why** no fold outcome flipped, which cycle 2 asserted and did not explain:
-the practice act sits ABOVE the gauge in `home-view.js html()`, so nothing the gauge does to its own
-height can push the act out of the band. That is structural, not lucky.
-
-**And the band is now measured every gate instead of extrapolated.** `test/home_fold.cjs` loops its
-whole SHAPES array over `[[390,844],[360,844]]` -- 360 is inside the two-row half, 390 inside the
-one-row half. `HOME FOLD: PASS (88 assertions across 11 records x 390x844 + 360x844)`, with the
-practice-block mutant planted and watched red **at each viewport** (the check now ABORTS if the
-plant is proved at fewer viewports than it runs, so a self-test at one width can never be reported
-for two). The contract holds in all 22 cells; `actIn` is true in every one.
-
----
-
-### JUDGES' ITEM 6 -- THE DARK PHONE HOME -- CLOSED
-
-`{ key: 'm-home-dark', hash: '', theme: 'dark', vp: 'mobile' }` added to the MATRIX beside
-`m-home-light`; COVERS header **17 -> 18**. The new baseline was reviewed as an image before being
-committed: the fixed rail, the hero, the practice act directly under the decision, the gauge and the
-fixed tab bar all render correctly in dark.
-
-The hole was worth closing on its own terms: the `@media(max-width:919px)` home block changes
-padding, gaps, the rail track height, the verdict's leading **and its `border-top`** -- and a border
-is painted from `--bd`, a THEME token. The one declaration in that block most likely to break on a
-palette change was the one nothing photographed.
-
----
-
-### JUDGES' ITEM 7 -- THE MET SENTENCE -- CLOSED (attribution kept)
-
-`goalPhrase()`'s met branch already ENDS in "...goal met", so `goalStrip()` gluing
-`' drilled this week &middot; ' + note` onto it rendered, verbatim:
-
-```
-41 topics drilled, 5-topic goal met with 36 to spare drilled this week - Goal met - nice work.
-```
-
-A broken clause with "goal met" three times. Past the target the figure is the whole fact and `note`
-carries the state, so the line is now composed rather than concatenated. **Driven on a 12-topic
-week, both viewports:** `12 topics drilled this week &middot; Goal met -- nice work.`
-`goalPhrase()` still owns the unmet ratio (`0 of 5 topics drilled this week &middot; 5 more to go`)
-and the `role=img` accessible name, which is left exactly as the fix specified
-(`12 topics drilled, 5-topic goal met with 7 to spare this week`).
-
-**Attribution kept, as the item asked:** `git show 2696291:src/scripts/app/panels.js` is
-byte-identical here, so W1.5 did not create this. What W1.5 did was make this the app's ONE goal
-surface on every record class, which is what put the sentence in front of every user.
-
----
-
-### JUDGES' ITEM 8 -- THE DESTROYED SPACE -- CLOSED
-
-`src/scripts/app/shell.js:279` reads `const homeTabKeys = {` again. Rebuilt; `SYNTAX CHECK: PASS`.
-
----
-
-### FOUND WHILE MEASURING -- `home_fold` WAS A COIN FLIP, AND IT IS FIXED
-
-Not in the brief, disclosed rather than filed, because the alternative was leaving a brand-new
-check publishing random numbers that two separate parties had already quoted as facts.
-
-**The defect.** `FOLD()` measured whatever scroll position the page happened to be at. The home's
-Resume CTA carries `data-autofocus="1"`; focusing it scrolls it into view, and on **2 of 12** loads
-the page was still at `scrollY 57` -- the fixed rail's height -- when the measurement ran, settling
-back to 0 within 1.5s. Every box then read 57px higher while the band, computed from `position:fixed`
-chrome, stayed `[57,799]`. Measured on one record, twelve times:
-
-```
-TWO1/short/no  #0  chip1=787-831 chipIn=false      <- cycle 2's recorded number
-TWO1/short/no  #1  chip1=787-831 chipIn=false
-TWO1/short/no  #2  chip1=730-774 chipIn=TRUE       <- the judge's "counterexample"
-```
-
-Same config, same build, opposite verdict on containment.
-
-**The fix.** `FOLD()` now scrolls to the top before it measures anything --
-`window.scrollTo({top:0,left:0,behavior:'instant'})`, where `behavior:'instant'` is load-bearing
-because `styles.css` sets `html{scroll-behavior:smooth}` and a plain `scrollTo` would animate under
-the rects read on the next line -- and the scroll is **read back and asserted** in the row-shape
-arm, so a scroll the check cannot undo fails it loudly instead of silently shifting every number in
-it. A fold check measures the FIRST screen, and the first screen is by definition the unscrolled one.
-
-**Proof it is fixed:** three consecutive full runs now produce **byte-identical** measurement lines
-(`md5sum` of every `hero ...` line, three runs, one hash), and every number reproduces cycle 2's
-recorded table exactly.
-
-**The verdict was never wrong, only the numbers.** `actIn` is true in all 22 cells in both scroll
-states -- the act clears the fold by 216-410px, so a 57px displacement cannot flip it. The contract
-this check exists for held throughout; what was unreliable was every chip figure it printed, and
-both the ledger's table and the escalation against it drew from that.
-
-**The app-side finding, recorded not fixed:** the phone home paints ~57px scrolled for a beat on
-some loads before settling back. It is transient, self-correcting, pre-existing, and out of this
-cycle's brief; the honest fix is a decision about whether `data-autofocus` should scroll at all on
-a route whose first screen is the deliverable, which is its own item. VR is not exposed: `stableShot`
-requires two consecutive byte-identical frames, and 18/18 baselines verified clean twice after the
-rebaseline.
-
----
-
-## VR CONTRACT, CYCLE 3 -- HONOURED
-
-`git status test/baselines/` lists exactly four paths: the two home PNGs (modified), `manifest.json`
-(two sha256 values, the new key, the generated timestamp) and the new
-`m-home-dark-win32-chromium149.png`. **The other 15 baselines rewrote byte-identical** under
-`npm run vr:update` -- including `m-home-light`, which is the interesting one: the phone home's
-kicker and the `.hm-tele` gap both sit below the 844px viewport on the cold record, so the change
-is genuinely invisible there rather than merely unphotographed.
-
-**The diff was reviewed BEFORE regenerating**, and it is the cleanest attribution this wave has
-produced:
-
-```
-home-light   492 px changed (0.048%, worst channel delta 157/255) in a 101x7 box at (332,723)
-home-dark    492 px changed (0.048%, worst channel delta 137/255) in a 101x7 box at (332,723)
-m-home-dark  the manifest declares no baseline for this key -- the matrix grew but the baselines did not
-```
-
-101x7 is the kicker's glyphs and nothing else. Both diff images were opened and read; the red region
-sits directly under the panel head "THIS WEEK", which is the duplication R4 named. Nothing else moved
-because the row's height never depended on the kicker -- the 20px stepper is the taller child.
-
-Both new home baselines and the new `m-home-dark` were reviewed **as images** after regenerating.
-Verified twice after the write, each a fresh capture:
-
-```
-18 baselines compared; worst = 0 px (home-light), budget 32 px.
-VISUAL REGRESSION: PASS  (18 baselines, win32-chromium149)
-```
-
-Two clean verifies rather than one, deliberately: this cycle found a 57px non-determinism in a
-sibling check, and a baseline written from a bad capture is the one failure mode that turns a
-regression into the new reference.
-
----
-
-## GATE, CYCLE 3 -- 77/77 PASS
-
-```
-  77 checks in 1058.5s (17.6 min)
-GATE: PASS
-```
-
-Full serial run (`python3 test/check_all.py`, no `--fast`, no `--shared-browser`), exit 0, **zero
-FAIL lines and zero SKIPs**. Capture: **`_audit/2026-08-02-w15-cycle3-gate.txt`**. Taken on the
-**COMMITTED** tree (`ccca422`), which is why `build_integrity` reads the strong form:
-
-```
-BUILD INTEGRITY: PASS  (12266522 bytes, 0 unresolved, 9 panes + 7 overlays,
-build SYNCED the deliverable, COMMITTED deliverable == fresh build of HEAD)
-```
-
-The count is **77**, unchanged from cycle 2: every arm this cycle adds extends an existing check,
-so nothing registered separately. The five lines that carry this cycle's work:
-
-```
-overlay_deadzone   PASS  (58 assertions: ... every key the shortcuts overlay advertises under
-                          "Anywhere" was driven ON the home and did what the row says, and the
-                          three that need a topic are dead there and live in one ...)
-home_fold          PASS  (88 assertions across 11 records x 390x844 + 360x844 -- verdict class
-                          x bar count x hero wrap x resume shape, each asserted against a band
-                          computed from the live fixed chrome rather than a typed number)
-visual_regression  PASS  (18 baselines, win32-chromium149; every capture reached a proven rest
-                          state across all 18 roots ... and matched its committed pixels)
-home_rhythm        PASS  (7 rhythm gap(s) + 11 measure(s) ... registry matches discovery exactly)
-phantom_tokens     PASS  (3 known phantom(s) allowlisted; no new one, none left stale)
-```
-
-Standalone runs during the cycle, all green: `ascii_guard`, `syntax_check`, `css_syntax`,
-`home_rhythm`, `phantom_tokens`, `home_fold` (x5, three of them a byte-identical reproducibility
-check), `home_claims`, `overlay_deadzone` (plus one deliberate red under the planted mutant),
-`flow_a11y`, `visual_regression` (one update + two verifies).
-
----
-
-## STILL OPEN AFTER CYCLE 3
-
-Nothing from this cycle's brief -- R4 and all eight judges' items are closed with receipts above.
-Three things are RECORDED rather than open, so a later wave does not rediscover them as findings:
-
-1. **Ctrl+P on the home builds a printable Q&A for the BOOT topic.** `print-qa.js`'s `openPrint()`
-   reads `TopicRegistry.current()`, which on a route with no current topic is the boot constant --
-   the exact class W1.5 cycle 1 fixed for `p`, one module over and pre-existing. Not fixed here: it
-   is a CHORD outside shell.js's map by that map's own titled rule, it opens a popup window (so
-   driving it in a check needs its own decision), and what Ctrl+P *should* do on the home is a
-   product call, not a bug fix. The overlay's row is honest as written ("this topic's probes") and
-   is declared out of section 6's scope rather than silently skipped.
-   *(**RULED AND CLOSED IN CYCLE 4 as R5** -- the product call was made: the home returns WITHOUT
-   preventDefault, so the user's own browser print works there and no boot-topic sheet is built.
-   The row moved in with the other topic-scoped keys and the popup is now driven through a stubbed
-   `window.open`. See cycle 4, R5.)*
-2. **The phone home paints ~57px scrolled for a beat on some loads.** The Resume CTA carries
-   `data-autofocus="1"`; focusing it scrolls it into view before the layout has settled, and the
-   page returns to 0 within a second. Transient, self-correcting, pre-existing, and measured at 2
-   of 12 loads. `home_fold` is now immune (it pins the scroll and asserts it) and VR is not exposed
-   (`stableShot` needs two consecutive byte-identical frames). The honest fix is a decision about
-   whether autofocus should scroll at all on a route whose first screen IS the deliverable.
-3. **The chip list is still never the full-containment carrier in any shape this repo measures** --
-   now 22 cells across 390x844 and 360x844 rather than nine at one width. The ruled contract holds
-   in every one of them via the ACT. Closing the chip half would need the `.ix-cross` bars
-   compacted, which R1 explicitly forbade.
-
----
-
-## CYCLE 4 -- 2026-08-02
-
-Two team-lead rulings on the cycle-3 escalation (R5 / R6) plus the judges' six non-escalated items.
-**All eight closed.** The through-line is one sentence and one moment: five of the six judges' items
-are the SAME weekly-goal strip -- the surface cycles 2-3 promoted onto every record class -- and
-between them they show what "promoted" costs when nothing reads the thing you promoted. `grep -rn
-'drilled this week|Goal met|goalPhrase|ix-home-v' test/` returned ONE hit in the whole tree before
-this cycle, and it was a prose comment.
-
----
-
-### R5 -- CTRL+P ON THE HOME -- CLOSED
-
-**The fix, as named.** `src/scripts/app/print-qa.js` -- the keydown handler now returns WITHOUT
-`preventDefault()` when `document.documentElement.dataset.view === 'home'`, on the shell.js:279
-precedent and reading the same authority (`applyRoute` stamps `data-view`; nothing else does).
-
-Both halves of "dead" matter and the check asserts both. `openPrint()` reads
-`TopicRegistry.current()`, which on a route with no current topic is the BOOT constant -- so before
-this the home built a printable Q&A for a topic the user never chose. But a guard that merely
-returned *after* `preventDefault()` would have left the home with NO print at all, which is worse
-than the defect: the home is ordinary light DOM and prints correctly on its own. The substitution
-print-qa performs is only justified where there IS a topic view whose shadow panes print blank.
-
-**The surface.** `keyboard-overlay.js` -- the `Ctrl` `P` row moves out of "Anywhere" into "While
-you're in a topic", beside the `P`, `N` and `[` `]` rows cycle 3 moved for the identical reason. The
-head now covers four keys instead of three.
-
-**THE ARM, and the undriven claim it replaces.** Cycle 3 gave this row the declared claim `'chord'`
-so the cross-check would still see it, and drove nothing. `test/overlay_deadzone.cjs` section 6 now
-drives it BOTH WAYS in the SCOPED table like every other relocated key:
-
-- **dead on `#home`**: `window.open` call count **0** and `defaultPrevented` **false** -- no sheet
-  built, and the browser's own print left alone;
-- **live on `#saga/drill`**: exactly **one** `window.open`, `defaultPrevented` **true**, and the
-  written document's `<title>` begins with the CURRENT topic's title, read off the page rather than
-  typed -- which is what separates "it printed" from "it printed the boot topic".
-
-The popup is not opened: `window.open` is stubbed into a recorder on every page this section
-drives, so the sheet becomes a STRING the check reads. `defaultPrevented` is read by a
-**window-level** listener, which bubbles after every document-level handler, so it observes the
-event's final state rather than a guess about listener order. (`grep -rn 'window.open' src/`: one
-call site, in print-qa.js -- so the stub is inert for the other eight rows and additionally proves
-they open no print window either.)
-
-**WATCHED RED, twice, each on a real rebuild:**
-
-```
-guard reverted (`if (false && ... === 'home')`):
-  FAIL  [anywhere] CTRL+P on #home builds NO print DOM and does NOT take the browser's own print
-        -- window.open calls 1, defaultPrevented true
-  OVERLAY DEADZONE: FAIL  (1 of 68 assertions)
-
-row moved back under "Anywhere":
-  FAIL  [anywhere] every row under "Anywhere" has a declared claim here ... undeclared rows: ["CTRL+P"]
-  FAIL  [anywhere] the four keys that need a topic are listed under the topic-scoped head ...
-  OVERLAY DEADZONE: FAIL  (2 of 68 assertions)
-```
-
-Only those arms, in each case.
-
----
-
-### R6 -- THE BOOT WINDOW -- CLOSED
-
-**The mechanism, exactly as ruled: one gate on the whole keymap, not a patch per key.**
-
-- `src/scripts/app/view-manager.js` -- a module-level `routeApplied` flag, set where `applyRoute`
-  COMPLETES an application (both branches: the home return and the end of the function), exposed as
-  `ViewManager.routed()`. A function, not a property, so no reader can latch a stale copy.
-- `src/scripts/app/shell.js` -- `if (!(window.ViewManager && window.ViewManager.routed &&
-  window.ViewManager.routed())) return;` at the TOP of the keydown handler, beside the typing and
-  dialog guards. Before the first applied route the map is a no-op for EVERY key.
-
-`data-view` is NOT stamped at parse time, per the ruling: that would be a second derivation of route
-truth and could disagree with the first. `applyRoute` remains the single authority; the keymap asks
-it one bit. `ViewManager` is defined AFTER shell.js in load order, so the `window.ViewManager &&`
-term is also literally what holds the gate closed through the earliest part of the window.
-
-**THE ARM, and a deviation from the ruling's own preferred shape, disclosed with the measurement
-that forced it.** The ruling asked for the natural window (`goto waitUntil:'commit'`, press once
-`goView` exists, `#sessopen` exists and `dataset.view !== 'home'`) and authorised a test-only
-boot-delay hook *if* the natural window is too narrow to hit deterministically. It is. Measured, six
-boots per mode, before any arm was written:
-
-| how the press was timed | landed inside the window | cost of a miss |
-|---|---|---|
-| pressed immediately after `commit` | **1 of 6**, and that one arrived before shell.js had even run (`hasGoView:false`) -- so it never reached the keymap | none |
-| pressed on the ruling's predicate | **4 of 6** with the keymap fully live (`hasGoView:true, routed:false, view:null`) | the other **2 of 6** never saw a pre-route state at all, so the wait ran to its full `NAV_MS` -- **120 seconds** |
-
-A 2-in-6 two-minute hang in a gate check is the flake this repo has already paid for once. So the
-window is **HELD OPEN** by a test-only `addInitScript` accessor that wraps `Router.init` and defers
-the first `emit` -- nothing else. Every module loads exactly as in a real boot, and the state under
-test is byte-identical to the state the natural runs actually landed in. The hold is then RELEASED
-on the same page and the route is asserted to apply, so the arm proves it measured a window rather
-than a dead app.
-
-**And the natural window is still driven, as evidence rather than as the assertion**: 3 real boots,
-bounded at 4s (not `NAV_MS`), asserting the same thing either way -- nothing that arrived before the
-first applied route did anything -- and PRINTING how many presses landed, so a run where the window
-closed entirely is visible rather than silent. Observed 2/3 and 3/3 on the two runs since.
-
-**PREFLIGHTED ON THE SEEDED MUTANT, which is the acceptance bar the ruling set.** The gate line is
-deleted from a COPY of the build (OS temp, removed in the same run) and the identical arm runs
-against it. Transcript, from the check's own probe:
-
-```
-FIXED   inWindow  {"routed":false,"view":null,"hash":"#home","held":true,"dialogs":[],"topic":"content-pipeline"}
-FIXED   after p   {"routed":false,"view":null,"hash":"#home","held":true,"dialogs":[],"topic":"content-pipeline"}
-MUTANT  after p   {"routed":false,"view":null,"hash":"#home","held":true,"dialogs":["sessov"],"topic":"content-pipeline"}
-```
-
-`sessov` -- Session progress for `content-pipeline`, the BOOT constant -- is cycle 1's defect
-arriving through the door underneath its fix. The mutant is required to reproduce it for `p` AND to
-move the route for `w`, and the check FAILS if either stays clean. It runs every gate, so this stays
-proven rather than merely recorded.
-
-**Incidental coverage, authorized and asserted.** `w` is driven in the window too (it leaked 6/6 on
-the shipped build, straight to the drill of a topic nobody chose). `q` and `n` are the same key
-class through the same gate and are not separately driven -- one gate, one arm, stated rather than
-implied. (The escalation gave rates for `w` (6/6) and `n` (2/6) and none for `q`; the source
-comments say exactly that rather than rounding `q` up to its neighbour's number.)
-
-**VR: no visual change, as predicted.** Neither R5 nor R6 moves a pixel; the two home baselines that
-did move this cycle moved for item 6 alone (below).
-
----
-
-### JUDGES' ITEM 1 + ITEM 3 -- THE MET SENTENCE HAD NO ARM -- CLOSED
-
-Both items name the same hole from two directions, and both named fixes are applied: `judgeGoal` is
-extended in kind (a new judge beside it) and a `judgeGoalSentence` arm is registered in
-`ALL_JUDGES`, so it cannot be written and never called.
-
-**What `test/home_claims.cjs` READS now** -- `.ix-goal .ix-home-v` (the visible line), its `<b>`
-(the emphasised figure), the goal bar's `aria-label`, and `Panels.weeklyGoal()` -- so the sentence is
-checked against the record's own arithmetic rather than against another rendering of itself.
-
-**FIVE RULES**, in the order a reader would notice them breaking:
-
-1. **one sentence, two channels** -- the accessible name IS the visible line with a comma where the
-   eye gets a middle dot, character for character, and nothing else;
-2. the emphasised figure equals `weeklyGoal().done`;
-3. the met state is named ONCE (`/goal met/i` at most once);
-4. and not mid-clause ("drilled this week" never follows "goal met");
-5. every noun agrees with the figure immediately before it, **in both channels** (a hyphenated
-   compound -- "5-topic goal met" -- is skipped on purpose: that is an adjective).
-
-**THREE PLANTED MUTANTS, each isolating one rule.** Every plant writes BOTH channels, deliberately:
-a plant that rewrote only the visible line would trip rule 1 every time and rules 3-5 would be
-unreachable -- four rules of decoration behind one.
-
-| # | record | the reverted code, verbatim | the rule that must fire |
-|---|---|---|---|
-| **11** | `perfect` | `goalPhrase(g,true) + ' drilled this week'` -- goalStrip() before cycle 3 | 3 (met named twice) |
-| **12** | `goalOfOne` | `'</b> topics drilled this week'` -- the hard-coded plural | 5 (noun vs figure) |
-| **13** | `goalOfOne` | `aria-label = goalPhrase(g) + ' this week'` -- the state cycle 3 shipped | 1 (two sentences) |
-
-Each is composed from the LIVE `Panels` API rather than pasted, so a mutant cannot drift away from
-the defect it names, and each ABORTS the check if it CANNOT LAND. `home_claims` reports **13 planted
-mutants detected**, up from 10.
-
-**A NEW PINNED RECORD, `goalOfOne`, and it is the reason 12 and 13 can exist.** Every other seed is
-either unmet (where the noun counts the TARGET, 5) or met with many, so the singular branch of both
-channels was rendered by NOTHING in this battery. `goalOfOne` writes one drilled topic and
-`goal.weekly = 1` -- the state item 4 reached through the UI by pressing `-` four times.
-
-**EACH WATCHED RED BY REVERTING THE CORRESPONDING LINE**, one at a time, on real rebuilds:
-
-| reverted | what went red |
-|---|---|
-| `goalLine()` -> `goalPhrase(g, bold) + ' drilled this week'` | `FAIL ... the met state is named 2 times in one sentence: "46 topics drilled, 5-topic goal met with 41 to spare drilled this week ... Goal met -- nice work."` -> `HOME CLAIMS: FAIL (56)` |
-| `topicWord()` -> always `' topics'` | `FAIL [1280/goalOfOne] the visible line reads "1 topics" -- the noun does not agree with the figure it counts` + the 390 twin -> `HOME CLAIMS: FAIL (2)` |
-| `aria-label` -> `goalPhrase(g) + ' this week'` | `FAIL ... the eye and the screen reader are given the same fact in two different sentences` -> `HOME CLAIMS: FAIL (80)` |
-
-Note the middle row: **2 failures, not 56.** That is the point of `goalOfOne` -- without it the
-pluralisation reversion is green everywhere.
-
----
-
-### JUDGES' ITEM 2 -- R4's RECEIPT OVERSTATED BY ONE SENTENCE -- CLOSED
-
-Restated in place, in the R4 section above, with a dated parenthesis so the change is visible rather
-than silent: "no repeated LABEL: the head names the period once, and the fact sentence's own 'this
-week' is part of the claim, not a second label" -- the distinction `panels.js:151-156` already draws
-in its own comment. The fix itself was right and stays; only the summary sentence claimed more than
-the measurement supported.
-
----
-
-### JUDGES' ITEM 4 -- "1 topics drilled this week" -- CLOSED
-
-`src/scripts/app/panels.js` -- one helper, `topicWord(n)`, called from every site that puts a count
-next to that noun, so a fourth caller cannot invent a fourth answer:
-
-- `goalStrip()`'s met figure (`'1 topic drilled this week'`) -- which reaches both channels through
-  `goalLine(g, bold)`, the composer `goalStrip()` calls for the visible line and again for the bar's
-  `aria-label`, so the met figure and its noun are produced in exactly one place;
-- **both** `goalPhrase()` met branches, which own the accessible name *(restated in cycle 4: the
-  `goalPhrase` met branches no longer own the accessible name -- item 5 moved both channels to
-  `goalLine()`, which calls `goalPhrase` only on the UNMET branch; the branches survive as the
-  surface `home_claims` composes MUTANTs 11 and 13 from)*;
-- **and the unmet ratio's denominator**, which the named fix did not list and which is reachable:
-  `goalTarget()` clamps to **1..20**, so a goal of 1 with nothing drilled printed "0 of 1 topics".
-  Disclosed as scope beyond the named fix; it is the same defect one branch over, and the noun there
-  counts the TARGET rather than `done`.
-
-**DRIVEN THROUGH THE UI, the way the judge reached it** -- one topic drilled this week, then five
-trusted clicks on `-` at 390x844 (Playwright `locator.click()`, so each is a real hit-tested click
-on the live control):
-
-```
-start   1 of 5 topics drilled this week . 4 more to go
-click1  1 of 4 topics drilled this week . 3 more to go
-click2  1 of 3 topics drilled this week . 2 more to go
-click3  1 of 2 topics drilled this week . 1 more to go
-click4  1 topic  drilled this week . Goal met -- nice work.      <- was "1 topics"
-click5  1 topic  drilled this week . Goal met -- nice work.      <- the clamp at 1 holds
-```
-
-The in-place re-render path is exercised five times over by this (`panels.js:603` replaces the whole
-`.ix-goal`), so both channels are regenerated together on every press rather than only on a full
-render, and `[data-goal]` still resolves through the new `.ix-goal-g` span via `closest`.
-
-Arm: rule 5 above, on `goalOfOne`, at both viewports. Watched red (table above).
-
----
-
-### JUDGES' ITEM 5 -- THE BAR SAID IT DIFFERENTLY -- CLOSED
-
-`goalPhrase` grew a third form, `goalLine(g, bold)`, and it is now the ONLY place the sentence is
-composed. `goalStrip()` builds the visible line from `goalLine(g, true)` and the bar's `aria-label`
-from `goalLine(g)` -- `bold` is the only difference between the channels.
-
-**Measured before, on a 12-topic week at 390:**
-
-```
-visible     12 topics drilled this week . Goal met -- nice work.
-accessible  12 topics drilled, 5-topic goal met with 7 to spare this week
-```
-
-**And after, both viewports, both record classes** (read from the live DOM, not asserted from
-source):
-
-*(SUPERSEDED IN THE TAIL FIXES, and annotated here rather than only there -- this is the one place
-in the wave where a receipt describes a state the tip does not have. The "accessible name" column
-below is the state cycle 4 shipped; **T2 deleted that channel entirely**, because once the two
-channels matched character for character the bar and the line beneath it announced the same
-sentence twice in a row. On the frozen tree the bar carries no role, no name and `aria-hidden`,
-and the fact is in the tree once, as the visible line's text. The table stands as the record of
-what cycle 4 fixed; read T2 for what the tip does.)*
-
-| record | visible line | accessible name *(cycle 4 only -- removed in T2)* |
-|---|---|---|
-| cold | `0 of 5 topics drilled this week . 5 more to go` | `0 of 5 topics drilled this week, 5 more to go` |
-| engaged (12) | `12 topics drilled this week . Goal met -- nice work.` | `12 topics drilled this week, Goal met -- nice work.` |
-
-The unmet channel had diverged too, more quietly: the line said "0 of 5 topics **drilled** this
-week", the name said "0 of 5 topics this week". Both are one sentence now. Arm: rule 1, asserted on
-all 16 pinned records and all 24 generated ones at both viewports; MUTANT 13 is its reversion.
-
----
-
-### JUDGES' ITEM 6 -- THE GOAL STEPPER WAS A 20px FINGER TARGET -- CLOSED
-
-**The fix.** `.ix-goal-b` reserves a **44x44** box; the 20px painted chip moves to a `.ix-goal-g`
-span inside it, so nothing about the painted control changes except that it is now centred in a box
-a finger can hit. `panels.js` renders the span; `styles.css` carries both rules.
-
-**THE BOX IS THE BUTTON, NOT A PSEUDO-ELEMENT -- and the first reason I wrote down was WRONG.** The
-named fix offered "keep the 20px glyph box and add a 44px padded/pseudo hit area". I justified
-rejecting it by claiming two such areas would overlap. **Re-derived from the measured pre-change
-geometry, they do not**: the chips sit 52px apart centre to centre (20 + 8 + the 16px figure + 8),
-so 44px areas land at `[839,883]` and `[891,935]` at 1280 -- **8px APART**. The claim is struck from
-all four places it had been written into (`styles.css`, `panels.js`, `touch_floor.cjs`'s header and
-its assertion message) rather than softened, in the cycle whose own item 2 is about a receipt that
-outran its measurement.
-
-**The reasons that DO survive** are about measurement, not geometry: a pseudo hit area moves no
-border box, so (a) the arm the ruling named -- a `getBoundingClientRect` over every
-`#home [data-goal]`, in the file that already owns this question -- cannot see it, and anything that
-could would be a bespoke hit-probe rather than the existing instrument; and (b) `button:focus-visible`
-(`styles.css:53`) draws its ring on the BORDER box, so a keyboard user would get a 20px ring around a
-44px target. The `overlap === 0` assertion stays -- it guards the real boxes' spacing against a
-future edit that shrinks the gap or positions one absolutely -- but it is no longer offered as the
-reason for the design choice.
-
-**RAW `44px`, NOT `var(--space-44)` -- a deviation from the named fix, and it is PROVED rather than
-argued.** The space scale is re-valued per density. Built with the token and measured at compact:
-
-```
-{"boxes":[{"d":"dec","w":36,"h":44},{"d":"inc","w":36,"h":44}],"min":36,"density":"compact"}
-FAIL ...and it still clears 44px at COMPACT density
-```
-
-**36px** -- 8px under this app's own floor, for any reader who has pressed `d` twice, and `d` is an
-advertised shortcut. 44 is a physical-finger constant, not a layout rhythm token, which is why
-`.tn-step`, `.ix-x`, `.crambtn` and the `<=919px` element floor all spell it in raw px too.
-
-**TWO DECLARATIONS WENT WITH IT, and they are taste, disclosed as such.** A 20px chip centred in a
-44px box already carries 12px of optical padding, so `.ix-goal-top`'s `margin-bottom:var(--space-6)`
-put **18px** between the stepper and the bar it sets, where the 20px control had 6; and at
-`.ix-goal-set{gap:var(--space-8)}` the three 44px boxes read as three floating glyphs rather than one
-`- 5 +` control (the chips end up 20px from the figure they set, against 8 before). Both were looked
-at as rendered screenshots, in four variants, before choosing. Measured at 1280: chip-bottom to
-bar-top **6px before, 12px after**, and the group is 104px wide rather than 72.
-
-**And the panel's height, measured on both viewports against a faithful "before"** -- the
-pre-cycle-4 declarations restored WITHOUT overriding `min-height`, so the `<=919px`
-`button{min-height:44px}` floor still applies on the phone, which is what made the control 20x44
-there:
-
-| | button | `.ix-goal-top` | `.hm-tele` |
-|---|---|---|---|
-| 1280 before | 20x20 | 20 | **118.4** |
-| 1280 after | 44x44 | 44 | **136.4** (**+18**) |
-| 390 before | 20x44 | 44 | **142.4** |
-| 390 after | 44x44 | 44 | **136.4** (**-6**) |
-
-So the phone panel gets SMALLER, not larger: its row was already 44px tall under the element floor,
-so the only change there is the width and the 6px margin coming off. Stated because the desktop
-figure alone would have read as "the panel grew", which is false on the viewport this wave spent
-three cycles on.
-
-**THE ARM: `test/touch_floor.cjs`, a new section 6** -- the file whose subject is already "a control
-short in the OTHER axis walks through a height-only floor", and whose header already names this
-exact class (the cram close button, 32 WIDE). Driven on a **COLD** record at 390, which is the
-record class cycles 2-3 promoted this strip onto. Three assertions plus a plant:
-
-- both `#home [data-goal]` buttons clear **44 in both axes**;
-- their boxes **do not overlap**;
-- and the floor **survives a density change** (driven through `Density.cycle()` to compact, with the
-  density read back and asserted, so a check that silently stayed on default cannot report this);
-- **[plant]** restoring the 20px box must drop the measured minimum below 44, or the check ABORTS.
-
-**WATCHED RED** by putting `var(--space-20)` back on a real rebuild:
-
-```
-FAIL the weekly-goal stepper clears the app's own 44px floor in BOTH axes on a COLD home
-FAIL ...and it still clears 44px at COMPACT density
-TOUCH FLOOR: FAIL
-```
-
-**Why this is W1.5's to fix although the geometry is byte-identical to master 2696291:** the REACH
-changed. Cycles 2-3 hoisted `goalStrip()` out of `telemetryHtml()`'s `engaged()` gate and deleted
-`duoHtml()`'s own early return, so the strip renders for every record class at every viewport --
-including the first-run home of every new user, where it did not exist at all.
-
----
-
-## VR CONTRACT, CYCLE 4 -- HONOURED
-
-`git diff --stat test/baselines/` lists exactly three paths: the two DESKTOP home PNGs and
-`manifest.json` (two sha256 values + the generated timestamp). **The other 16 baselines rewrote
-byte-identical** under `npm run vr:update` -- including `m-home-light` and `m-home-dark`, which is
-the informative pair: the goal strip sits below the 844px viewport on the cold phone home, so the
-stepper change is genuinely invisible there rather than merely unphotographed.
-
-**The diffs were reviewed BEFORE regenerating**, and the attribution is exact:
-
-```
-home-light   8568 px changed (0.8367%, worst channel delta 220/255) in a 590x51 box at (333,720)
-home-dark    8568 px changed (0.8367%, worst channel delta 206/255) in a 590x51 box at (333,720)
-```
-
-Both diff images were opened and read: the red region is the stepper row and the 18px downward shift
-of the bar and the line beneath it, inside the "This week" panel. Nothing else in either capture
-moved -- the box is 51px tall, which is the 44px row plus the shift, and 590px wide because the bar
-spans the panel. Both new baselines were reviewed **as images** after regenerating, in both themes.
-
-Verified twice after the write, each a fresh capture:
-
-```
-18 baselines compared; worst = 0 px (home-light), budget 32 px.
-VISUAL REGRESSION: PASS  (18 baselines, win32-chromium149)
-```
-
----
-
-## GATE, CYCLE 4 -- 77/77 PASS
-
-```
-  77 checks in 917.6s (15.3 min)
-GATE: PASS
-```
-
-Full serial run (`python3 test/check_all.py`, no `--fast`, no `--shared-browser`), exit 0, **zero
-FAIL lines and zero SKIPs**. Capture: **`_audit/2026-08-02-w15-cycle4-gate.txt`** (scratch copy at
-`%TEMP%\claude\D--claude-workspace-deepdive-rehearsal\<session>\scratchpad\w15-cycle4-gate.txt`).
-Taken on the **COMMITTED** tree (`1eeced6`), which is why `build_integrity` reads the strong form.
-Every commit after `1eeced6` on this branch is DOCS ONLY -- this file and `_audit/` -- so the
-capture still describes the code at the branch tip; `npm run build` on the tip produces no diff.
-
-```
-BUILD INTEGRITY: PASS  (12277559 bytes, 0 unresolved, 9 panes + 7 overlays,
-build SYNCED the deliverable, COMMITTED deliverable == fresh build of HEAD)
-```
-
-The count is **77**, unchanged from cycles 2 and 3: every arm this cycle adds extends an existing
-check, so nothing registered separately. The five lines that carry this cycle's work:
-
-```
-overlay_deadzone   PASS  (68 assertions: ... the keymap stays suppressed under an open one, on
-                          the home, and BEFORE THE FIRST APPLIED ROUTE, where it has no route to
-                          mean anything against -- that one preflighted on a build with the gate
-                          line deleted; ... the four that need a topic are dead there and live
-                          in one, Ctrl+P included)
-home_claims        PASS  13 planted mutants detected (... the pre-cycle-3 goal concatenation,
-                          which named the met state three times in one sentence; "1 topics
-                          drilled this week" on a week of one; and an accessible name built from
-                          the other branch, so the eye and a screen reader got the same fact in
-                          two different sentences)
-touch_floor        PASS  (the weekly-goal stepper clears 44 in both axes on a COLD home, its two
-                          targets do not overlap, the floor survives a density change, and
-                          restoring the 20px box is detected)
-visual_regression  PASS  (18 baselines, win32-chromium149; every capture reached a proven rest
-                          state across all 18 roots and matched its committed pixels)
-home_fold          PASS  (88 assertions across 11 records x 390x844 + 360x844 -- unmoved by the
-                          18px the stepper added to the desktop panel)
-```
-
-**FOUR full gate runs were spent on this cycle, and three of them were mine to avoid.** The first
-was a working-tree pre-flight (77/77, 19.4 min). The second and third were each invalidated as
-runs of record because I edited a checked file WHILE they ran -- once to add `touch_floor`'s
-density-restore assertion, once to strike the overlap claim. A run of record has to be reproducible
-from the commit it names; an edit mid-run means the capture describes a tree that no longer exists.
-Recorded rather than quietly re-run: the rule is finish every edit, commit, THEN start the gate.
-
-Standalone runs during the cycle, all green: `ascii_guard`, `syntax_check`, `css_syntax`,
-`home_rhythm`, `phantom_tokens`, `overlay_deadzone` (x4, plus two deliberate reds under reverted
-fixes), `home_claims` (x5, three of them deliberate reds), `touch_floor` (x4, two deliberate reds),
-`home_fold`, `home_reflow`, `focus_ring`, `flow_a11y`, `at_name_hygiene`, `overlay_keyboard`,
-`visual_regression` (one update + four verifies).
-
----
-
-## CYCLE 4, CLOSING PASS (R7-R10) -- 2026-08-02
-
-The team-lead ruling on the max-cycles escalation made this the FINAL cycle: fix exactly R7-R10 per
-their named fixes, judges verify exactly those four, and the wave freezes regardless. **All four
-closed.** Nothing new was opened -- the two things this pass found are consequences of the fixes
-themselves and are disclosed inside their items rather than filed.
-
-The through-line is one sentence: **cycle 4's own fixes each moved something to a new rect or a new
-lifetime, and two of them left a second thing behind at the old one.** The 44px hit box moved the
-finger target and left the focus ring on the reserved box; the boot gate moved the keymap's
-authority to a flag and left that flag meaning "finished" rather than "arrived".
-
----
-
-### R7 -- THE RECEIPT -- CLOSED
-
-Restated in place in JUDGES' ITEM 4 above, with the dated parenthesis as the judge drafted it and
-the branches left where they are. Two changes, both verified against the code rather than accepted:
-
-- the met-figure bullet now attributes the figure to **`goalLine(g, bold)`, called by `goalStrip()`
-  for the visible line and again for the bar's `aria-label`** -- which is what item 5 built and what
-  makes "one place" true rather than aspirational;
-- the `goalPhrase` bullet carries the correction: `panels.js:172` reads
-  `(g.met ? n(g.done) + topicWord(g.done) : goalPhrase(g, bold)) + ' drilled this week'`, so
-  **`goalPhrase` is called only on the UNMET branch**. Its met branches own neither channel now.
-
-**They are NOT dead code, and the ruling was right to say so.** `home_claims` composes MUTANT 11
-(`goalPhrase(g,true) + ' drilled this week'`) and MUTANT 13 (`aria-label = goalPhrase(g) + ' this
-week'`) from those exact branches, live off the `Panels` API rather than from pasted strings.
-Deleting them would have deleted the surface two of this wave's thirteen mutants are built from --
-i.e. "tidying" would have removed the regression proof for the fix it was tidying after.
-
----
-
-### R8 -- THE STEPPER FOCUS RING -- CLOSED
-
-**The fix, adopted verbatim** (`src/styles.css`, beside the rules item 6 added):
-
-```css
-.ix-goal-b:focus-visible{outline:none;box-shadow:none}
-.ix-goal-b:focus-visible .ix-goal-g{outline:2px solid var(--acc);outline-offset:2px;box-shadow:0 0 0 3px var(--acc-a15)}
-```
-
-The 44px hit/border box is byte-unchanged, as ruled -- only the paint moves.
-
-**THE DEFECT, MEASURED, and it is worse than "a ring around the wrong box".** `button:focus-visible`
-(`styles.css:53`) paints outline 2px at offset 2px **plus** `0 0 0 3px var(--acc-a15), 0 0 16px -4px
-var(--acc-a20)`. The outermost of those layers reaches `0 + 16 + (-4)` = **12px** past the border
-box, so the indicator on a 44x44 button spans 68x68 -- and that box has neighbours FLUSH against it
-on two sides, both of them put there by cycle 4's own item 6: `.ix-goal-set{gap:0}` puts
-`.ix-goal-t` exactly at the button's edge, and removing `.ix-goal-top`'s bottom margin puts
-`.ix-goal-bar` exactly at the row's. Read off the built page at 1280x800:
-
-```
-BEFORE  dec  painted ix-goal-b +12px [807,707.8,875,775.8]
-             hits .ix-goal-t (863-879) and .ix-goal-bar (top 763.8)   <- both
-AFTER   dec  painted ix-goal-g  +4px [827,727.8,855,755.8]
-             clear of .ix-goal-t by 8px and of .ix-goal-bar by 8px
-```
-
-Same shape at 390x844. So a keyboard user's indicator was drawn **through the number the stepper
-sets and through the bar it fills** -- and this was NOT on master: it is the cost of the 44px box,
-introduced by this cycle and closed in the same cycle.
-
-**GUARD, as ruled: `test/focus_ring.cjs`'s probe family extended to `#home [data-goal=dec]` and
-`[data-goal=inc]`, at BOTH 1280x800 and 390x844.** The file already owns the question "does keyboard
-focus in this app look like this app?" in three mechanisms; this is the fourth and it is a RECT
-rather than a removal, a boundary or a hue. `RING_BOX` computes the painted indicator's extent from
-the live computed style -- outline `offset + width`, and every non-inset box-shadow layer's
-`max(|dx|,|dy|) + blur + spread` -- over the focused button **and every descendant**, unions the
-elements that actually paint, and asserts the union intersects neither `.ix-goal-t` nor
-`.ix-goal-bar`. Reading the subtree rather than the button is what makes the arm indifferent to
-which element carries the ring: it measures where paint lands, which is all the user can see.
-
-**It cannot pass by painting nothing** -- a deleted indicator intersects nothing, so `painted`
-non-empty and `:focus-visible` matched are asserted first.
-
-**TWO PROOFS, not one.**
-
-1. **The plant, running every gate:** the pre-fix cascade is re-injected (`generic ring back ON the
-   button, off the chip`) and required to produce an intersection at BOTH widths, or the arm reports
-   that it cannot fail. It restores the shipped-before state rather than deleting the fix, so it is
-   the regression rather than a proxy for it.
-2. **WATCHED RED on a real source reversion** -- both rules deleted from `styles.css`, rebuilt:
-
-```
-FAIL  [1280x800] the weekly-goal stepper paints its focus ring on the 20px chip, clear of the
-      figure it sets and the bar it fills
-      -- painted ["ix-goal-b +12px [807,707.8,875,775.8]"]
-         hits ["ix-goal-b (+12px) -> .ix-goal-t","ix-goal-b (+12px) -> .ix-goal-bar"]
-FAIL  [390x844]  ...the same, at [243,387.6,311,455.6]
-FOCUS RING: FAIL (2)
-```
-
-Exactly two failures, one per width. `FOCUS RING: PASS (24 assertions)` restored, up from 18.
-
-**AND A MESSAGE THAT WOULD HAVE LIED WAS FIXED WHILE WATCHING IT.** The plant's companion arm first
-read "the plant was lifted -- hits.length === 0". On the reverted build the plant IS lifted and the
-ring overlaps anyway, so that arm went red saying "the plant was not lifted" about a defect that had
-nothing to do with the plant -- a true FAIL with a false reason, in a wave whose whole standard is
-that a receipt must survive re-derivation. It now compares against the **pre-plant reading on the
-same page**, which says exactly what it means and stays silent when the failure belongs to the arm
-above. Re-watched: 2 failures, not 4.
-
----
-
-### R9 -- THE routed() FLAG -- CLOSED
-
-**The fix, the simpler named one.** `src/scripts/app/view-manager.js` -- `routeApplied = true;`
-immediately after `if (!route || !route.view) return;`; the two end-of-branch assignments are
-deleted. One assignment now, at `:107`, and `grep -n routeApplied` shows exactly the declaration,
-that assignment, and the `routed()` reader.
-
-**WHY IT MATTERED, and every ingredient was already in the repo:**
-
-- `applyRoute` is the **only** caller of `HomeView.render` (`view-manager.js:114`; `grep -rn
-  "HomeView.render" src/` returns that line and one prose comment);
-- `Router.emit` wraps every subscriber in `try {} catch (e) {}` (`router.js:87`) -- so the exception
-  is swallowed with **no console error**;
-- the home branch stamps `dataset.view = 'home'` **before** it renders.
-
-So one throw anywhere in the home render left the app on a page whose `data-view` said `home` while
-`routeApplied` stayed **false** -- and R6's gate turns the WHOLE keymap off for EVERY key. R6's own
-fix would have converted any rendering bug into a **total, silent, permanent keyboard outage**: no
-`d`, no `/`, no `?`, no `g`, no `h`, no room keys, for the rest of the session. The window the flag
-exists to close is "the map has no route to mean anything against", and that ends when a route
-ARRIVES, not when its side effects finish. `applyRoute` is synchronous with no awaits, so the move
-changes the bit on no path except the throwing one.
-
-**THE GUARD, as ruled: one arm in `overlay_deadzone.cjs`'s boot-window block.** `HomeView.render` is
-made to throw ONCE through an `addInitScript` accessor -- the same mechanism the hold already uses on
-`Router.init`, so no build is modified -- then the hold is released and two questions are asked:
-did the route register, and is the keyboard alive? `d` is the probe because its effect is a stamped
-attribute that can be READ rather than inferred. Three assertions, and the first one is the honesty
-check: **the throw is counted and asserted** (`threw === 1`), because an arm in which render never
-threw would be testing the ordinary path under a frightening name.
-
-**WATCHED RED by restoring the two end-of-branch assignments and rebuilding:**
-
-```
-PASS  [boot window] the throwing-render arm really staged its defect -- the hold held, and
-      HomeView.render threw exactly once, inside applyRoute (its only caller)
-FAIL  [boot window] a route whose render THROWS still counts as applied
-      -- {"threw":1,"routed":false,"view":"home","density":"default"}
-FAIL  [boot window] ...and the keyboard is still alive after it: `d` cycles the density attribute
-      -- density default -> default
-OVERLAY DEADZONE: FAIL  (2 of 71 assertions)
-```
-
-`routed:false` on a page whose `view` is already `home`, and `d` dead: the outage, reproduced.
-Only those two arms went red -- the six pre-existing boot-window arms stayed green, so the red is
-specific to the flag's placement rather than to the hold or the gate. Restored:
-`OVERLAY DEADZONE: PASS (71 assertions)`, up from 68.
-
----
-
-### R10 -- THE ARM'S SECOND WIDTH -- CLOSED
-
-**The hole was real and structural.** Every arm in `touch_floor.cjs` runs in ONE 390x844 mobile
-context -- right for a touch floor, wrong for this control specifically. `.ix-goal-b` was 20x44 at
-390 and **20x20 at 1280**, so the DESKTOP was the worse of the two and cycle 4's arm measured the
-better one. Worse, it passes at 390 for a reason it does not own: the `<=919px`
-`button{min-height:44px}` floor supplies the height there. **Above 919 nothing does** -- the fix's
-explicit `width:44px;height:44px` is the only thing holding the box up, and a future
-`min-width:920px` rule could take it away with every arm in the file still green.
-
-**Section 6b**, in a **desktop context** rather than a viewport switch (the mobile context carries
-`isMobile`/`hasTouch`/`deviceScaleFactor:2`; resizing it would measure a 1280px phone). Placed AFTER
-the density restore, so the 390 half of the comparison is read at the default scale like every other
-arm rather than at compact.
-
-**PREFLIGHTED ON THE EXACT MUTANT THE RULING NAMED**, injected into BOTH pages from one declaration:
-
-```
-[plant] a @media(min-width:920px) rule shrinking the stepper to 20px goes RED at 1280 (min 20)
-        and stays GREEN at 390 (min 44) -- the desktop arm catches what the phone arm
-        structurally cannot
-```
-
-That is a stronger self-test than a plain shrink: it aborts the check both ways -- if the plant does
-NOT drop the desktop minimum below 44 (the arm is not reading these controls), **and** if it DOES
-move the 390 measurement (the plant is not width-scoped, so a red at 1280 would not be attributable
-to the desktop). The plant is lifted and the lift is asserted before the context closes.
-
-`TOUCH FLOOR: PASS`, with the desktop stepper measured at 44x44, non-overlapping, zero console
-errors on the desktop home.
-
----
-
-### VR CONTRACT, CLOSING PASS -- NOTHING MOVED
-
-No rebaseline, and none was expected: R8 adds only `:focus-visible` rules (VR never focuses the
-stepper -- the home's one autofocus is `.hm-cta`, and `focus_ring` separately asserts it paints
-nothing before a keystroke), and R9 moves one assignment inside a function that runs identically on
-every non-throwing path. Verified rather than assumed:
-
-```
-18 baselines compared; worst = 0 px (home-light), budget 32 px.
-VISUAL REGRESSION: PASS  (18 baselines, win32-chromium149)
-```
-
-`git status test/baselines/` is empty. The manifest stays at **18**.
-
----
-
-## GATE, CYCLE 4 CLOSING PASS -- 77/77 PASS
-
-```
-  77 checks in 679.1s (11.3 min)
-GATE: PASS
-```
-
-Full serial run (`python3 test/check_all.py`, no `--fast`, no `--shared-browser`), exit 0, **zero
-FAIL lines and zero skipped checks** -- the file's only match for "skip" is `syntax_check`'s own
-PASS text ("52 aggregator files skipped"), which is its aggregators, not a check. Capture:
-**`_audit/2026-08-02-w15-cycle4-closing-gate.txt`** (scratch copy at
-`%TEMP%\claude\D--claude-workspace-deepdive-rehearsal\<session>\scratchpad\
-w15-cycle4-closing-gate.txt`).
-
-Taken on the **COMMITTED** tree (`4807316`) -- every edit finished and committed BEFORE the run
-started, which is the rule cycle 4 wrote down after spending three gate runs on trees that no longer
-existed. The one commit after it is **DOCS ONLY** (`_WAVE_LEDGER.md` + `_audit/`, verified by
-`git diff --stat 4807316..HEAD`), so this capture still describes the code at the branch tip, and
-`npm run build` on the tip leaves the tree clean. `build_integrity` reads the strong form:
-
-```
-BUILD INTEGRITY: PASS  (12280625 bytes, 0 unresolved, 9 panes + 7 overlays,
-build SYNCED the deliverable, COMMITTED deliverable == fresh build of HEAD)
-```
-
-The count is **77**, unchanged from cycles 2, 3 and 4: all three arms extend existing checks. The
-lines that carry this pass:
-
-```
-focus_ring         PASS  (24 assertions: ... and at 1280x800 and 390x844 the weekly-goal stepper
-                          draws its indicator on the 20px chip rather than on the 44px hit box,
-                          clear of the figure and the bar, with the pre-fix ring planted and
-                          caught at each width)
-overlay_deadzone   PASS  (71 assertions: ... BEFORE THE FIRST APPLIED ROUTE, where it has no
-                          route to mean anything against -- that one preflighted on a build with
-                          the gate line deleted ...)
-touch_floor        PASS  (the stepper clears 44 in both axes on a COLD home at 390 AND at 1280,
-                          its targets do not overlap at either, the floor survives a density
-                          change, and a min-width:920px shrink is caught at 1280 while 390
-                          stays green)
-visual_regression  PASS  (18 baselines, win32-chromium149; every capture reached a proven rest
-                          state across all 18 roots and matched its committed pixels)
-```
-
-Standalone runs during the pass, all green: `ascii_guard` (x3), `syntax_check`, `css_syntax`,
-`focus_ring` (x4, two of them deliberate reds under a reverted `styles.css`), `overlay_deadzone`
-(x2, one a deliberate red under the restored flag placement), `touch_floor` (x2),
-`visual_regression`. Three rebuilds were spent on the two watch-reds and their restorations; each
-one was a full `npm run build` so the arm read the same artefact the gate does.
-
----
-
-## STILL OPEN AFTER CYCLE 4
-
-Nothing from this cycle's brief -- R5, R6, R7-R10 and all six judges' items are closed with receipts
-above. Four things are RECORDED rather than open, so a later wave does not rediscover them as
-findings:
-
-1. **The phone home paints ~57px scrolled for a beat on some loads.** Unchanged from cycle 3: the
-   Resume CTA's `data-autofocus="1"` scrolls it into view before layout settles, and the page
-   returns to 0 within a second. It bit this cycle too, from the other side -- a scratch probe that
-   clicked the goal stepper by raw coordinates hit the page background after the first press,
-   because the app had pinned the scroll back to 0 under it (`router.js`'s `pinTop` timers at 0 /
-   120 / 400ms). That was a PROBE defect, not an app one, and it was chased to the bottom before
-   anything was concluded: re-driven with `locator.click()` (which scrolls the target into view
-   itself) all five presses land. Recorded because the next person to drive the home by coordinates
-   will meet the same thing.
-2. **The chip list is still never the full-containment carrier in any shape this repo measures** --
-   22 cells across 390x844 and 360x844. The ruled contract holds in every one of them via the ACT.
-   Unchanged by this cycle in VERDICT, and the geometry moved in the helpful direction on the
-   viewport that matters: the stepper added 18px to the "This week" panel at 1280 but took 6px OFF
-   it at 390 (its row was already 44px tall under the `<=919px` element floor, so only the width and
-   the removed 6px margin changed there). `home_fold` re-ran green at 88 assertions across all 22
-   cells.
-3. **`q` and `n` are not separately driven in the boot window.** One gate closes every key, so one
-   arm is aimed at the gate (`p`, plus `w` as the highest-signal navigator) rather than four at the
-   keys. Stated rather than implied: if a future edit made the gate per-key again, this arm would
-   still pass for `q`.
-4. **The boot-window arm's shipping form holds the window open.** The natural window is driven too,
-   but as EVIDENCE (3 real boots, bounded at 4s, count printed) rather than as the assertion --
-   because it lands 4 times in 6 and a miss under the ruling's own predicate costs a 120s timeout.
-   The measurement behind that choice is in R6 above. If a future change widens the natural window
-   (any deferral of `Router.init`, say), the honest move is to promote the natural arm and retire
-   the hold, not to add a second hold.
-
----
-
-## CARRIED ITEMS FOR THE NEXT WAVE -- NONE
-
-The closing ruling made this the final cycle and said any NEW finding beyond R7-R10 is RECORDED
-here as a carried item rather than reopening the wave. **There are none**, and that is a measured
-statement rather than a silence:
-
-- **The ring-on-the-wrong-rect class (R8) reaches exactly one control in this app.** The defect
-  needs a button that RESERVES a box it does not PAINT -- transparent, borderless, with the visible
-  control as a child -- because only then does `button:focus-visible`'s border-box ring land
-  somewhere the user is not looking. Swept: `grep -nE "background:none" src/styles.css | grep 44px`
-  returns **one line**, `.ix-goal-b` (`styles.css:1821`), and it is the same line under the
-  `border:0` sweep. The other raw-44px controls the fix's comment names -- `.tn-step`, `.ix-x`,
-  `.crambtn`, the `<=919px` element floor -- all paint their own box, so their ring is already on
-  the rect the user sees. Nothing to carry.
-- **The two things this pass found are consequences of its own fixes, not new defects**, and both
-  are fixed and disclosed inside their items: the 12px halo reach that made R8's overlap two-sided
-  (R8), and a plant-companion assertion whose FAIL message named the wrong cause on a reverted
-  build (R8, "a true FAIL with a false reason").
-
-*(SUPERSEDED BY THE MARSHAL LOOP: the freeze was held open for two more judged items. See TAIL
-FIXES below. Everything above stands unchanged.)*
-
----
-
-## TAIL FIXES -- THE MARSHAL LOOP'S LAST TWO -- 2026-08-02
-
-The marshal loop closed with exactly two judged items, and the wave freezes after them. Both are
-this wave's OWN work coming back one layer down: cycle 4's R5 handed the home's print to the
-browser without asking what the browser prints there, and cycle 4's channel fix made two
-renderings agree so exactly that a screen reader read the sentence twice. **Both closed.** One
-thing was found while verifying and is RECORDED as carried rather than fixed, per the ruling.
-
----
-
-### T1 -- THE HOME PRINT -- CLOSED
-
-**THE DEFECT, MEASURED, and it is worse than the blank page the judge reported.** Driven at
-1280x900, A4, `preferCSSPageSize`, on the shipped build:
-
-| state | what the home printed |
-|---|---|
-| home, fresh (no cram ever opened) | **3 pages / 391,415 bytes** -- the BOOT topic's cram sheet |
-| home, after visiting `saga`'s sheet and closing it | **6 pages / 872,924 bytes** -- SAGA's sheet |
-
-Nothing of the home on either. Two causes, one line apart in `@media print`:
-`.app{display:none !important}` (right for a topic route -- its panes are shadow DOM and print
-blank, which is the entire reason the cram substitution exists) and the cram force-show carrying
-**no `.open` requirement**, so a CLOSED dialog printed, wearing whichever topic the user last
-looked at. `print-qa.js:109`'s home early-return is untouched, as ruled: Ctrl+P still hands the
-home to the browser's own print, and that print now produces the record.
-
-**AFTER: 2 pages / 143,721 bytes of the home** -- the intro line, the Start-here hero and its CTA,
-the Cross-topic act, the Altitude gauge with all three rails and its four-state key, the This-week
-panel, all six room cards, the topic list, the census, and no cram sheet anywhere.
-
-**A DELIBERATE DEVIATION FROM THE NAMED FIX, with the measurement that forced it.** The named form
-was `body:not(.print-session) .cram-ov.open` -- the right sentence, one scope too wide. On a TOPIC
-route the never-opened sheet IS the printable artifact, and `test/print_truth.cjs` ARM F owns that
-as a P1 ("a native File -> Print from any view emits the cram sheet, for a user who never opened
-it... the path most likely to be hit by accident"). Built with the wider form and measured rather
-than argued:
-
-```
-#walk, cram never opened:  3 pages / 391,447 bytes  ->  1 page / 1,048 bytes
-print_truth:  FAIL  [file-print] a never-opened sheet still renders to paper  sections=0
-              (exactly that one arm; every other arm in the file stayed green)
-```
-
-So the rule is scoped to the home instead: `html[data-view="home"] .cram-ov:not(.open)`.
-`:not(.open)` is kept rather than flattened because **an OPEN sheet on the home is a reachable
-state, not a hypothetical** -- driven both ways, by `location.hash` and by the Home button, a topic
-left with the sheet up lands on `#home` with `.cram-ov.open` still true and on screen. Print
-follows the screen.
-
-**THE CHROME HIDDEN WITH IT WAS DERIVED FROM THE PAGE, not assumed.** The A4 content box is 680px
-wide -- INSIDE the `<=919px` breakpoint -- so `.hm-rail` and `.hm-tabs` are `position:fixed` bars
-there and would repeat on every sheet; `.hm-skip` is the "skip the home next time" checkbox, a
-preference control. Two more elements paint and were each decided on their own reading:
-
-- **`#scrolltop` was checked and LEFT ALONE.** `opacity:0`, `visibility:hidden` until you scroll,
-  and it is a child of `<body>` rather than of `.app` -- so it never depended on the hide and adds
-  no rule.
-- **`.hm-status` is the one member of the home's chrome that is not chrome.** It carries
-  "0 of 972 probes graded, 0 solid / 0 shaky / 0 missed", and the shaky-and-missed split is on no
-  other surface of the printed page. But it is `position:fixed` below 920px, so on paper it painted
-  OVER the flow at the foot of EVERY sheet -- extracted from the 2-page PDF with print_truth's own
-  parser, "probes graded" came back on pages **[1,2]**. Un-fixed rather than hidden: it flows once,
-  after the record it summarises. (`.app` is `display:block` here, not its screen flex row, so a
-  static footer lands under `#home` rather than beside it.) Re-measured after: pages **[2]**.
-
-**THE ARM, and what it replaces.** `test/overlay_deadzone.cjs` section 6's CTRL+P row asserted
-`window.open === 0` and `defaultPrevented === false` -- necessary, and it says who OWNS the print,
-never what comes out of it. Three assertions now, on a page seeded into the exact defect state
-(open a cram sheet on `#saga/drill`, wait for its shadow root to render `.cs-sec` sections,
-Escape, navigate `#home`, emulate print media):
-
-1. **the seed is real** -- the sheet's own section count and shadow-root text are read while it is
-   open, and the route/closed state after. Asserted FIRST, because "no cram painted" is free on a
-   page that never rendered one;
-2. the HOME paints its own content column (live client rects + >1000 chars of its own text);
-3. and the CLOSED sheet paints nothing beside it -- read over **every** `.cram-ov`, so a second
-   one could not slip past a single `querySelector`.
-
-**WATCHED RED, one half at a time, each on a real rebuild:**
-
-```
-cram rule deleted:  FAIL [anywhere] CTRL+P outcome: and the CLOSED cram sheet paints nothing
-                         beside it -- painted .cram-ov heights [3260]
-                    OVERLAY DEADZONE: FAIL  (1 of 74 assertions)
-
-.app rule deleted:  FAIL [anywhere] CTRL+P outcome: under print media the HOME paints its own
-                         content column
-                         -- {"printMedia":true,"home":{"w":0,"h":0,"rects":0,...},"homeChars":26756}
-                    OVERLAY DEADZONE: FAIL  (1 of 74 assertions)
-```
-
-One failure each, and the right one each time. Note `homeChars: 26756` beside `rects: 0` in the
-second: the record is all there in the DOM and paints nothing, which is the defect in two numbers.
-Restored: `OVERLAY DEADZONE: PASS (74 assertions)`, up from 71.
-
----
-
-### T2 -- THE DOUBLE ANNOUNCEMENT -- CLOSED
-
-**THE DEFECT IS CYCLE 4'S OWN FIX, ONE LAYER DOWN.** Cycle 4's item 5 closed a DIVERGENCE -- the
-bar's accessible name and the visible line were two different sentences -- by composing both from
-`goalLine()`. That was right, and making them identical is what made the real defect audible: the
-bar sits directly above the line, so a screen reader announces the same sentence twice in a row.
-Read off the CDP accessibility tree on the cold home, at 1280:
-
-```
-image       "0 of 5 topics drilled this week, 5 more to go"    <- .ix-goal-bar, role="img"
-StaticText  " of 5 topics drilled this week . 5 more to go"    <- .ix-home-v, right beneath it
-```
-
-**THE FIX.** The bar is a picture OF that line and adds no fact: `role="img"` and `aria-label` are
-gone, `aria-hidden="true"` is on. The AX tree after, same page, same record -- the fact appears
-exactly once:
-
-```
-button      "Lower the weekly goal"
-button      "Raise the weekly goal"
-StaticText  " of 5 topics drilled this week . 5 more to go"
-```
-
-Nothing is lost. The line is in the tree as text, the two stepper buttons keep their own names
-(which is where the words "weekly goal" are still said), and `.ix-goal-t` keeps its `aria-live`.
-
-**THE ARM WAS RE-POINTED, NOT DELETED, and the re-pointing is the interesting part.**
-`judgeGoalSentence` rule 1 read *"the accessible name IS the visible line, character for
-character"* -- which cycle 4 made TRUE. So **the arm was GREEN on the defect it is now named for**:
-the old form went red only on a name that DIVERGED. It reads "the bar carries no accessible name of
-its own", which is strictly stronger -- any name at all is a red. `goalName` reads `aria-label`,
-`aria-labelledby` **and** `title`, so re-labelling the bar by a different route is the same red;
-`role` and `aria-hidden` are read alongside it so the FAIL message names what to remove.
-
-**THE MUTANT PLUMBING IS INVERTED TO MATCH, and it had to be.** Cycle 4's plants wrote BOTH
-channels because rule 1 demanded a match; under the new rule, writing a name at all IS the rule-1
-defect, so 11 and 12 would have fired on rule 1 and rules 3-5 would have become unreachable -- the
-exact "four rules of decoration behind one" the block's own header warns against. So **11 and 12
-touch only the visible line** (their rules are about that line) and **13 touches only the bar**:
-it restores `role="img"` plus a `goalPhrase`-built label and clears `aria-hidden`, i.e. the whole
-pre-cycle-4 divergence class AND the cycle-4 duplication in one plant.
-
-**A LATENT DEFECT IN THE RESTORE, found while re-pointing.** `goalMutant`'s cleanup called
-`setAttribute('aria-label', b.aria)` -- and `b.aria` is now `null` on a bar that carries no label,
-so it would have written the literal string **"null"** onto the bar for every judge after that
-mutant. It restores by attribute STATE now (`removeAttribute` when the attribute was absent). The
-plant's own defect, left behind by its cleanup, in the wave whose standard is that a receipt must
-survive re-derivation.
-
-**WATCHED RED on a real source reversion** (`role="img"` + `aria-label` put back, rebuilt):
-
-```
-80 FAILs -- every pinned and generated record, at BOTH viewports, all on rule 1:
-FAIL [1280/empty] the goal sentence agrees with the numbers beside it
-  -- the goal bar carries an accessible name of its own (aria-label="0 of 5 topics drilled this
-     week, 5 more to go", role=img, aria-hidden=absent), so the fact is announced twice in a row
-```
-
-That is the CYCLE-4 state going red -- the one where the two channels matched perfectly, which the
-old rule 1 passed. Restored: `HOME CLAIMS` exit 0, zero FAILs, **13 planted mutants detected**.
-
----
-
-### VR CONTRACT, TAIL FIXES -- NOTHING MOVED
-
-No rebaseline, and none was expected: T1 lives entirely inside `@media print`, and T2 changes ARIA
-attributes, which move no pixel. Verified rather than assumed:
-
-```
-18 baselines compared; worst = 0 px (home-light), budget 32 px.
-VISUAL REGRESSION: PASS  (18 baselines, win32-chromium149)
-```
-
-`git status test/baselines/` is empty. The manifest stays at **18**.
-
----
-
-### CARRIED TO THE NEXT WAVE -- ONE, and it is a consequence of T1
-
-**A cram sheet can be left OPEN on the home, and the home now prints itself underneath it.**
-Measured, both doors: leaving `#saga/drill` with the sheet up -- by `location.hash` and by the
-Home button -- lands on `#home` with `.cram-ov.open` true and the sheet on screen. Before T1 that
-state printed the sheet alone (the home was hidden); after T1 it prints the home AND the sheet,
-because `:not(.open)` deliberately leaves an open dialog alone and the `.app` exemption is
-unconditional. Neither is obviously right: the screen shows a modal OVER the home, and paper has no
-modality. **What print should do when a dialog is open over a route that prints fine on its own is
-a product call, not a bug fix** -- which is why it is recorded here with its measurement rather
-than decided in a closing pass. The four items recorded-not-open after cycle 4 stand unchanged.
-
----
-
-**THE WAVE IS FROZEN HERE.** Four cycles, one closing pass, two tail fixes; the five items
-recorded-not-open belong to whoever picks up the home next, with the measurements they need already
-taken.
-
-## GATE, TAIL FIXES -- 77/77 PASS
-
-```
-  77 checks in 998.3s (16.6 min)
-GATE: PASS
-```
-
-Full serial run (`python test/check_all.py`, no `--fast`, no `--shared-browser`), exit 0, **zero
-FAIL lines and zero skipped checks**. Capture: **`_audit/2026-08-02-w15-gate.txt`**. Taken on the
-**COMMITTED** tree (`08cae96`), `git status --porcelain` empty before and after, which is why
-`build_integrity` reads the strong form:
-
-```
-BUILD INTEGRITY: PASS  (12285811 bytes, 0 unresolved, 9 panes + 7 overlays,
-build SYNCED the deliverable, COMMITTED deliverable == fresh build of HEAD)
-```
-
-The count is **77**, unchanged since cycle 2: both tail arms extend existing checks.
-
-```
-overlay_deadzone   PASS  (74 assertions: ... Ctrl+P ... leaves the browser's own print alone on
-                          the home -- and what that print PRODUCES is measured too, on a home
-                          seeded with a visited-then-closed cram sheet: the record paints, the
-                          closed sheet does not)
-home_claims        PASS  13 planted mutants detected (... and the goal bar given an accessible
-                          name of its own again, so the fact is announced off the bar and again
-                          off the line beneath it)
-print_truth        PASS  file-print-never-opened {"pages":3,"clipped":0}
-                          -- the topic-route substitution T1 deliberately did NOT touch
-visual_regression  PASS  (18 baselines, win32-chromium149, worst 0 px)
-```
-
-**Two full runs were spent and the first was mine to avoid** -- it passed 77/77 but
-`build_integrity` fell to `HEAD-match DEFERRED -- 1 uncommitted path(s) [_audit/w15-receipts/]`,
-because the receipts directory was created one minute after the run started. That is cycle 4's own
-rule broken in the pass that quotes it. A third run was started and STOPPED deliberately for the
-same reason one layer down. Recorded rather than quietly re-run.
-
----
-
-Freeze document: `_audit/2026-08-02-w15-freeze.md`. Gate of record:
-`_audit/2026-08-02-w15-gate.txt`. VR receipt pairs: `_audit/w15-receipts/`.
-
-Pushed: `2696291..9676596  appeal/w15-refinements`. **No CI run fired, and it is
-structural**: a `push` event resolves workflow definitions from the pushed REF, and this
-branch was cut 11 master commits before `gate.yml` existed (`99e72d0`), so its
-`.github/workflows/` holds only `deploy-pages.yml`, which triggers on master alone.
-`gh workflow run gate.yml --ref appeal/w15-refinements` fails HTTP 422 for the same
-reason. Nothing was imported to force one -- master's gate arrives free on the first push
-after its workflows are in this tree, which is the merge, and its own doctrine puts
-certification at the conductor's local win32 gate anyway. Full receipt: freeze doc, S8.
-
----
-
-## POST-VERIFY FIXES -- WHAT THE DOUBLED COLD VERIFY FOUND -- 2026-08-02
-
-Two independent cold agents ran against frozen tip `9421057`: a **fix verification** (every one of
-the 34 items re-measured with its own stated method, 17 negative controls planted) and a **hostile
-hunt** (mandate: find what is broken, arms hunted as hard as the app). The verification returned
-**34/34 VERIFIED, 0 items disputing a fix**, with 4 disputed FIGURES and 2 documentation defects.
-The hunt returned **8 findings**: two moderate defects, one moderate arm gap around a latent
-defect, three low, two observations.
-
-**Four fixed here, three carried, six receipts corrected.** The through-line of all four fixes is
-one sentence: **this wave changed what the home is FOR, and three of its own guards were still
-looking at the old thing.** The print block reasoned about what it hid and never enumerated what
-was left; the goal strip's compensation for a removed name was a live region the press path
-destroyed; the boot gate was put at the top of the keymap and the chord that keeps its own listener
-was left reading the bit the gate exists to replace.
-
----
-
-### F1 -- THE SCROLL-TO-TOP DISC PRINTS ON THE RECORD -- FIXED
-
-T1's own comment examined `#scrolltop` and left it alone, on the ground that it is
-"opacity:0 / visibility:hidden until you scroll". True at scroll 0, and cycle 4 handed the home's
-Ctrl+P to the browser precisely so a reader prints **the page they were reading** -- after
-scrolling. `scroll-to-top.js` adds `.show` past 400px and `.scrolltop.show` is
-opacity:1 / visibility:visible / position:fixed, which survives `emulateMedia({media:'print'})`
-unchanged. Re-measured here on an engaged record scrolled to max, with the same page's `.show`
-lifted as the control:
-
-```
-1280x800 (scrollY 712)   148,466 B, U+2191 per page [1,0]    control 142,923 B, [0,0]
-680x900  (scrollY 725)   148,466 B, U+2191 per page [1,0]    control 142,923 B, [0,0]
-AFTER    both widths     142,923 B, U+2191 per page [0,0]  -- byte-identical to the control
-```
-
-**Scoped to the home, and the topic route was measured rather than assumed.** At `#saga/wb` the
-disc IS up on screen at scrollY 1090, but switching to print media collapses the scroll to 0 (the
-flow content stops being `.app` and becomes the static cram sheet), `scroll-to-top.js` un-shows it
-on that scroll event, and the sheet comes back **U+2191 x0** with its byte count unmoved. That is
-a scroll-state accident rather than a structural impossibility, and the rule's comment says so: if
-a topic-route case is ever measured, promote it to the unconditional line.
-
-**A probe defect worth recording, because it is the third time.** My first attempt to reproduce
-this came back clean -- the disc unshown at scrollY 712 -- because the scroll was taken inside
-`router.js`'s `pinTop` window (0/120/400ms) and silently undone. Cycle 3 met this timer as
-`home_fold`'s 57px coin flip, cycle 4 met it as a coordinate-click probe hitting the background,
-and this pass met it as a false negative on a real defect. The arm now waits it out explicitly and
-**reads the scroll back**.
-
----
-
-### F2 -- THE STEPPER'S ONLY ANNOUNCEMENT CHANNEL COULD NOT FIRE -- FIXED
-
-Cycle 4 removed the goal bar's `role="img"` + `aria-label` (T2) and named three compensations in
-source. Two held. The third -- "the target keeps its `aria-live`" -- **did not survive
-measurement**: the `[data-goal]` handler rebuilt the strip and `replaceWith`-ed it, so the
-`aria-live="polite"` node was destroyed and recreated on every press and never mutated. This repo
-documents that exact failure mode verbatim in `view-manager.js`: *"A live region must already be in
-the accessibility tree BEFORE its content changes, or the change is not an update to a known region
--- it is just a new subtree appearing, and NVDA/JAWS commonly miss it."*
-
-Measured, one real hit-tested press of `+` on the cold home, before and after:
-
-```
-BEFORE   regionMutations 0   sameNode false   attached false   parentChildList 1
-AFTER    regionMutations 1   sameNode true    attached true    parentChildList 0
-```
-
-**And the clamp says so now.** `goalTarget()` clamps to 1..20 and nothing announced it: seven
-presses of `-` walked `5 4 3 2 1 1 1` with `aria-disabled` null at every step, at both widths.
-It now follows `text-zoom.js`'s ruled pattern (audit P3-7) -- **aria-disabled, not `disabled`**, so
-the control stays focusable and in the tab sequence instead of vanishing from under a keyboard
-user's fingers -- and the bound is stamped on the FIRST render too, not only after a press, because
-a stored goal of 1 or 20 arrives at the bound already. Measured after, both widths:
-
-```
-7x dec   5 -> 4 -> 3 -> 2 -> 1[dec-ad] -> 1[dec-ad] -> 1[dec-ad]
-         at the clamp: disabled=false, tabIndex=0, line "0 of 1 topic drilled this week"
-21x inc  20[inc-ad], dec no longer marked
-```
-
-**The dim went with it**, which the named fix did not list: text-zoom's ruled pattern is the
-attribute PLUS `opacity:.4`, and shipping only the attribute would have left the clamp perceivable
-to the smaller audience. It dims the painted 20px chip rather than the transparent 44px button, for
-the same reason R8 moved the focus ring there.
-
-**THE ROOT CAUSE WAS THE GATE, and that is fixed too.** `grep -rn "data-goal" test/` returned two
-files, both geometry-only: **nothing in 77 checks pressed this control.** The whole `[data-goal]`
-interaction path -- clamp, re-render, focus, announcement -- was unguarded, on a control this wave
-rebuilt and put in front of every new user. `home_claims.cjs` now presses it (see the arms below).
-
----
-
-### F3 -- THE CHORD FAILED OPEN WHERE THE MAP FAILED CLOSED -- FIXED
-
-R6 put ONE gate at the top of shell.js's keymap, explicitly over a patch per key. `print-qa.js`'s
-Ctrl+P guard, written in the same cycle, kept reading `dataset.view` -- and its comment asserted
-the two were "the same reader". They stopped being the same in that cycle: `dataset.view` is
-`undefined` in exactly the window the gate exists for. Measured with the check's own hold:
-
-| state | result |
-|---|---|
-| held boot window, `Control+p` | **window.open 1x, "Content Pipeline -- Q&A" (the BOOT topic), 50,368 B, defaultPrevented true** |
-| same held page, plain `p` | nothing -- the shell gate holds |
-| routed `#home`, `Control+p` | opens 0, prevented false -- correct |
-
-`print-qa.js` reads `ViewManager.routed()` first and fails **toward the browser's own print**,
-which is the safe direction: doing nothing leaves the user with a real print of a real page.
-
-**Latent, not reachable today, and recorded as such.** The listener is attached during the
-DOMContentLoaded dispatch and `Router.init()` runs later in the same synchronous dispatch, so no
-input can interleave (4 real boots, 0 frames with the listener wired and no route applied). It
-becomes reachable the moment anything defers `Router.init()` past that dispatch -- a `type=module`
-script, an `await`, an rAF, or a throw in `window._hideBootSplash()`, which `boot()` calls
-immediately before it with no guard. A guard held up by script ordering rather than by a condition
-is the precise thing the one-gate argument rejected.
-
----
-
-### F8 -- AN OPEN TOPIC INDEX PRINTS OVER THE ARTIFACT -- FIXED, ON BOTH ROUTES
-
-`.ix-ov` (`#_index-overlay`) is a `<body>` child at `position:fixed;inset:0` and was in no print
-hide list. `\` opens it on every route. The asymmetry that hid this was incidental: `#keyov`
-carries `mock-ov`, which the unconditional hide already covered. Measured, A4, extracted chars:
-
-| | closed | index open | after |
-|---|---|---|---|
-| `#home` | 143,818 B / 1,305 chars | **550,261 B / 2,760 chars** | 1,306 chars |
-| `#saga/walk` | 872,952 B / 14,255 chars | **1,806,013 B / 16,350 chars** | 14,255 chars, byte-identical |
-
-The hunt measured the home only and offered the home block; the topic-route measurement is this
-pass's, and it is why `.ix-ov` went on the **unconditional** line beside `.mock-ov` rather than
-beside `.cram-ov:not(.open)`. The cram rule is home-scoped because a closed cram sheet IS the topic
-route's printable artifact; an open index is nobody's artifact anywhere.
-
----
-
-### THE ARMS, AND THE MUTANT THAT PROVES EACH
-
-`overlay_deadzone` **74 -> 82 assertions**, `home_claims` **+7 assertions incl. a self-test**.
-Both extend existing checks, so the gate count does not move.
-
-| arm | proof it can fail |
-|---|---|
-| the print outcome is read on a **SCROLLED** home, and asserts a **POSITIVE LIST** -- the body-level paint set is exactly `['div.app']` -- instead of one named absence | F1 reverted -> **2 reds**: `painted at body level ["div.app","button#scrolltop.scrolltop"]` and `elements painting U+2191 ["button#scrolltop.scrolltop"]` |
-| ...and the same reader is run again with the **Topic index OPEN**, seeded by a real `\` press that is itself asserted | F8 reverted -> **1 red**: `painted at body level ["div.app","div#_index-overlay.ix-ov.open.vis"]` |
-| `Control+p` is driven **in the boot window**, with the print recorder armed, asserting both halves (no sheet, and the browser's default left alone) | F3 reverted -> **2 reds**: the shipped-build chord arm, AND the anchor-integrity arm, which now aborts because the gate line no longer appears twice |
-| the goal stepper is **PRESSED** -- live region updated in place, sentence still entailed after the press, both clamps announced while staying focusable | F2's live-region half reverted -> **1 red** (`regionMutations 0, sameNode false, attached false`); F2's clamp half reverted -> **2 reds** |
-
-**The seeded boot-gate mutant had to be rebuilt, and the rebuild is an upgrade.** There are two
-gate lines now and they are the SAME EXPRESSION on purpose, so the old anchor matched twice and an
-anchor that lands twice cannot be planted blindly. The check now locates both, tells them apart by
-the CODE that follows them (never a comment, which drifts; never indentation, which a reformat
-eats), asserts **exactly one of each**, and plants each **by index** -- so a mutant aimed at the
-keymap cannot silently also disarm the chord. "Both gates still exist" is now an invariant rather
-than an assumption.
-
-**One arm was written, run, and found to be measuring the wrong thing before it shipped.** The
-positive list first reported two anonymous `<div>`s on the paper. They are the app's polite
-announcers, parked at 1x1 absolute -- they hold a client rect and put no ink on the page, and
-hiding them would break what they exist for. The exclusion is NAMED (`aria-live` at <= 2px) rather
-than sized away, so the allow-list stays exactly one entry and a genuinely thin stray still fails.
-
----
-
-### CARRIED, NOT FIXED -- THREE MORE, AND WHY EACH STAYS
-
-1. **F4 -- `goalPhrase()`'s met branch is unreachable from the app and MUST NOT be tidied away.**
-   `goalLine()` is its only caller and calls it on the UNMET branch alone, so the
-   `if (g.done >= g.target)` block cannot render on any record (20 combinations of target x done
-   driven, never produced). It stays because it is the surface `home_claims` composes MUTANT 11 and
-   MUTANT 13 from, live off the `Panels` API rather than from pasted literals -- so a routine
-   dead-code removal makes both plants report CANNOT LAND and ABORTS the check. **Now documented at
-   the function itself**, which is where a reader deleting it would be standing; if it ever must
-   go, the mutants have to be re-based on literals in the same commit.
-2. **F5 -- the one goal surface will state a figure the record cannot support.** `weeklyGoal()`
-   counts every key in `Progress.all()` without intersecting the registry and accepts future
-   timestamps, so an imported backup of 300 fake keys renders **"301 topics drilled this week"** on
-   a 46-topic app, and one bogus key moves `done` from 0 to 1. `judgeGoalSentence` rule 2 compares
-   the rendered figure to `weeklyGoal().done` -- the same function that produced it -- so it is
-   structurally blind to a wrong MODEL and can only catch a renderer that diverges from one. The
-   arithmetic is pre-existing and byte-identical to master; what this wave changed is that this is
-   now the app's ONE goal surface on every record class. It belongs with the **record-lifecycle /
-   import-validation** class (W4), which is where "Import a backup validates nothing" already sits
-   -- fixing the counter here without fixing the door would be treating one symptom of an
-   unvalidated import.
-3. **F7 -- `home_fold`'s disjunction is carried by one disjunct in 22 of 22 cells.** The chip list
-   is OUT in all 20 chip-bearing cells and the act is IN in all 22, so `actIn || chipIn` is never
-   satisfied by `chipIn` and the self-test only proves the arm reds when BOTH carriers leave. The
-   contract is written as a disjunction and is being enforced as a single term. Observation only:
-   the measured margins make the crossed case remote (the act clears the fold by 216-397px), and
-   the honest fix is a decision about whether the contract should still be a disjunction at all --
-   which is a ruling, not a repair.
-
-The five items recorded-not-open after cycle 4 and the tail fixes stand unchanged, so the carried
-list is now **eight**.
+## CARRIED -- not fixed here, each with the reason and the wave that owns it
+
+1. **Three text nodes miss AA in DARK, pre-existing on master and identical to the decimal**:
+   `.hm-room-n`, the six room-count badges, white on a saturated room fill at **2.35-2.44:1**; and
+   `.hm-room-weak` at **3.48:1**. Measured on BOTH builds in the item-8 receipt. They are the six
+   rooms' own pigments, so this is a PALETTE decision (`room_contrast`'s territory, which currently
+   asserts ink/bg and on-slab/solid but not the badge pair) and not a home-ground one. Fixing it
+   inside a home wave would either restate a room pigment or special-case the badge.
+2. **GAP-2, the landing drill's flagged set** -- item 10's other half. Owned by **W2 room**.
+3. **73 corpus prose spans + 4 app-script glyph spans** ratcheted in `craft_hygiene_allow.json`.
+   The corpus is a content pass with its own review; the app-script glyphs sit on surfaces whose VR
+   baselines this wave may not move. The list cannot grow silently -- a stale entry fails.
+4. **The delight verdict's remaining candidates, none of them in this wave's ten**: the three rails
+   sorted independently so columns carry no topic identity (the audit's own "one candidate risk");
+   the per-room focus gel not carried from the six room buttons to the topic cards inside them; the
+   arrival as ORDERED POSITIONS rather than three simultaneous fades; a display register for the
+   probe question. All four are design calls, not repairs.

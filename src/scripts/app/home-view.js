@@ -193,6 +193,51 @@
     return ' style="--rm:' + (g ? 'var(--room-' + g + ')' : 'var(--acc)') + '"';
   }
 
+  /* ---- THE DOOR LIGHTS IN THE ROOM YOU ARE RETURNING TO --------------------------------------
+     THE DEFECT, MEASURED. `applyIdentity()` stamps `data-group` on <html> on every topic switch
+     (topic-protocol.js:82) and NOTHING EVER CLEARS IT -- a repo-wide grep for a matching
+     removeAttribute returns nothing. index.html hard-codes `data-group="architecture-apis"` for
+     first paint. So on a seeded record whose resume topic was Event-Driven Backbone (Messaging &
+     Events), the home rendered with:
+         --acc = #963D86 MAGENTA (architecture-apis, the BOOT CONSTANT)
+         the Resume CTA's border = teal, correctly, because it uses --rm
+     -- i.e. the one element that had been fixed knew the right room, and every var(--acc) consumer
+     on the page did not: the focus ring on all 46 topic cards, both Cram buttons, every hover
+     border, the boot ring, the skip link. The front door was permanently lit in the room of
+     whatever topic you last visited, or in a constant nobody chose, and never in its own.
+
+     THE FIX IS TO POINT AN EXISTING MECHANISM AT THE RIGHT ROOM, not to build one. The six-room
+     accent system already ships and is already threaded through 688 sites: `--acc` is rebound
+     from `--topic-ink`, which `html[data-group=...]` selects. The home simply has to say which
+     room it is. It is the resume target's -- the room you are about to walk back into -- which is
+     the same topic the hero, the CTA and the position sentence are all already about. Cold, there
+     is no resume target and the START card points at the first topic, so the door lights in that
+     one: the same rule, read off the same act.
+
+     IT NEEDS NO TEARDOWN, and that is why it is safe. Leaving a topic re-stamps through
+     applyIdentity; ARRIVING at the resume topic without a switch (Back, or the CTA to the topic
+     you are already on) leaves the group where this put it -- which is that topic's own room, so
+     it is already right. The two writers cannot disagree because they agree on the answer.
+
+     STAMPED BEFORE innerHTML, so the first paint of the home is already in the room and there is
+     no magenta-then-teal flip. */
+  function doorRoom() {
+    var r = Panels.resumeTarget && Panels.resumeTarget();
+    var t = (r && r.topic) || null;
+    if (!t) {
+      var ids = TopicRegistry.ids();
+      t = ids.length ? TopicRegistry.get(ids[0]) : null;
+    }
+    return (t && t.identity && t.identity.group) || '';
+  }
+
+  function stampDoorRoom() {
+    try {
+      var g = doorRoom();
+      if (g) document.documentElement.setAttribute('data-group', g);
+    } catch (e) {}
+  }
+
   /* ---- THE RAIL: where to go ---------------------------------------------------------------
      The sidebar's home tenant. On the phone this same element is the fixed top bar and keeps only
      its identity row -- the destinations move to the tab bar rather than stacking fourteen rows
@@ -304,7 +349,7 @@
         '<button class="hm-cta" type="button" data-topic="' + ids[0] + '" data-autofocus="1"' + roomStyle(first) + '>' +
         '<span><span class="hm-cta-k">Start</span>' +
         '<span class="hm-cta-t">' + (first ? first.identity.title : ids[0]) + '</span>' +
-        '<span class="hm-cta-d">Drill the interviewer\'s follow-ups, rebuild the design from memory, then run a timed mock.</span></span>' +
+        '<span class="hm-cta-d">Drill the interviewer&rsquo;s follow-ups, rebuild the design from memory, then run a timed mock.</span></span>' +
         '<span class="hm-cta-ar" aria-hidden="true">&rarr;</span></button></div></section>';
     }
 
@@ -470,27 +515,62 @@
       'are the levels you have rehearsed least.';
   }
 
+  /* ---- THE 138 MARKS GET A TEXT EQUIVALENT ---------------------------------------------------
+     WHAT WAS WRONG, and it is stronger than "title is mouse-only". Each capsule names its topic
+     through a `title` attribute -- "Kafka Internals -- 5 solid of 9 Staff probes" -- which does
+     not fire on touch and is not reachable by keyboard. But the track above it carries
+     `role="img"`, and role="img" makes its DESCENDANTS PRESENTATIONAL: the 138 titles are removed
+     from the accessibility tree BY CONSTRUCTION, not merely awkward to reach. The single most
+     delightful property of the lattice -- point at any cell and it tells you which topic it is --
+     existed for exactly one input method, a mouse on a desktop.
+
+     WHY A DESCRIPTION AND NOT 138 NAMES. Dropping role="img" would put 46 unlabelled spans per
+     rail into browse mode and announce nothing useful; naming each one would announce 138 marks
+     before the reader reached the verdict. The app already has a ruled pattern for "this visual
+     carries something the name cannot": session-progress.js:247 hangs an `aria-describedby` on a
+     visual-only pip pointing at a real off-screen text node. Same shape here. The NAME stays
+     exactly what it was (the rail's summary, unchanged, so nothing regresses); the DESCRIPTION is
+     the lattice read out in the order it is drawn.
+
+     IT IS LOSSLESS AND IT IS DERIVED. Every segment contributes its own clause, from the same
+     `s` the mark is drawn from -- so the text cannot drift from the picture, and there is no cap
+     to get wrong and no residue to under-count. Real characters in a real text node is also the
+     one form at_name_hygiene establishes survives BOTH the accessibility API and the flattened
+     virtual buffer. */
+  function railDescId(tier) { return 'hm-gr-d-' + String(tier).toLowerCase().replace(/[^a-z0-9]+/g, ''); }
+
+  function segLabel(s, tier) {
+    return s.title + ' -- ' + (s.done
+      ? s.solid + ' solid of ' + s.n + ' ' + tier + ' probes'
+      : 'not started at ' + tier) +
+      (s.missed ? ', missed probes flagged' : (s.shaky ? ', shaky probes flagged' : ''));
+  }
+
   function gaugeHtml(model) {
     if (!model || !model.tiers) return '';
     var rails = model.order.map(function (tier) {
       var a = model.tiers[tier];
       if (!a.n) return '';
-      var segs = Altitude.rail(model, tier).map(function (s) {
+      var row = Altitude.rail(model, tier);
+      var segs = row.map(function (s) {
         var cls = 'hm-seg' + (s.done ? ' open' : '') +
           (s.missed ? ' keel keel-m' : (s.shaky ? ' keel' : ''));
-        var lab = s.title + ' -- ' + (s.done
-          ? s.solid + ' solid of ' + s.n + ' ' + tier + ' probes'
-          : 'not started at ' + tier);
         return '<span class="' + cls + '" style="--lv:' + Altitude.level(s.share) +
-          '" title="' + esc(lab) + '"></span>';
+          '" title="' + esc(segLabel(s, tier)) + '"></span>';
       }).join('');
+      var desc = row.map(function (s) { return esc(segLabel(s, tier)); }).join('. ');
+      var did = railDescId(tier);
       var pct = Math.round(a.solid / a.n * 100);
       return '<div class="hm-gr' + (tier === model.thin ? ' thin' : '') + '">' +
         '<span class="hm-gr-l">' + tier + '</span>' +
-        '<span class="hm-gr-t" role="img" aria-label="' + tier + ': ' + a.solid +
+        '<span class="hm-gr-t" role="img" aria-describedby="' + did + '" aria-label="' + tier + ': ' + a.solid +
         ' probes solid out of ' + a.n + ', across ' + a.topics + ' of ' + model.nTopics +
         ' topics">' + segs + '</span>' +
-        '<span class="hm-gr-n"><b>' + a.solid + '</b> / ' + a.n + ' &middot; ' + pct + '%</span></div>';
+        '<span class="hm-gr-n"><b>' + a.solid + '</b> / ' + a.n + ' &middot; ' + pct + '%</span>' +
+        /* OUTSIDE the role="img" subtree -- a descendant of it could not be referenced out of
+           presentational-ness, which is the same trap the off-ladder note hit under aria-hidden. */
+        '<p class="hm-vh" id="' + did + '">' + tier + ', topic by topic. ' + desc + '.</p>' +
+        '</div>';
     }).join('');
 
     var verdict = verdictFor(model);
@@ -532,15 +612,14 @@
     var w = Panels.weakChipsAged(6, ageShort);
     var tele = Panels.telemetryHtml();
     if (!w.chips && !tele) return '';
+    /* THE WEEK LEADS THE ROW. Both cells are the same panel treatment and the same stack slot;
+       what changes is which one the eye and the reader reach first. "6-topic goal met with 1 to
+       spare" is the only genuinely happy fact this app ever tells anyone, and it was rendered
+       second, to the right of a panel headed STILL SHAKY -- 41 FLAGGED, on a row that was itself
+       below the audit. It is content order, and it is half of the arrival fix in html(): the
+       first thing after the decision is the week's shape, and the triage sits beside it rather
+       than in front of it. Both panels keep every word they had. */
     return '<div class="hm-duo">' +
-      (w.chips ? '<section class="hm-panel" aria-labelledby="hm-shaky-h">' +
-        '<div class="hm-phead"><h2 class="hm-lbl" id="hm-shaky-h">Still shaky</h2>' +
-        '<span class="hm-sp"></span>' +
-        '<span class="hm-lbl hm-fig"><b>' + w.n + '</b> flagged</span></div>' +
-        '<div class="hm-pbody"><div class="hm-chips">' + w.chips + '</div>' + w.concepts +
-        '<p class="hm-note">The age is how long since you last worked that topic. These are the ' +
-        'probes you graded Missed or Shaky &mdash; re-drill them until the signal comes ' +
-        'automatically.</p></div></section>' : '') +
       /* .hm-tele keeps its class and therefore its stack slot: the telemetry is still a member
          of the home column, it just shares a row with Still shaky now instead of owning one. */
       /* THE HEAD NAMES WHAT THE PANEL ALWAYS CARRIES. It read "Recent sessions", which is the
@@ -554,6 +633,14 @@
       (tele ? '<section class="hm-panel hm-tele" aria-labelledby="hm-week-h">' +
         '<div class="hm-phead"><h2 class="hm-lbl" id="hm-week-h">This week</h2></div>' +
         '<div class="hm-pbody">' + tele + '</div></section>' : '') +
+      (w.chips ? '<section class="hm-panel" aria-labelledby="hm-shaky-h">' +
+        '<div class="hm-phead"><h2 class="hm-lbl" id="hm-shaky-h">Still shaky</h2>' +
+        '<span class="hm-sp"></span>' +
+        '<span class="hm-lbl hm-fig"><b>' + w.n + '</b> flagged</span></div>' +
+        '<div class="hm-pbody"><div class="hm-chips">' + w.chips + '</div>' + w.concepts +
+        '<p class="hm-note">The age is how long since you last worked that topic. These are the ' +
+        'probes you graded Missed or Shaky &mdash; re-drill them until the signal comes ' +
+        'automatically.</p></div></section>' : '') +
       '</div>';
   }
 
@@ -594,8 +681,38 @@
          the eye sees. Above 920 .hm-practicem is display:none, so this moves no desktop pixel;
          the rail renders the same two acts there, in the same ruled order. */
       '<section class="hm-sec hm-practicem">' + Panels.actionsHtml() + '</section>' +
-      gaugeHtml(model) +
+      /* ---- ARRIVAL ORDER: THE ACTS LEAD, THE AUDIT RECEDES -------------------------------
+         THE INVERSION THIS FIXES, and it is about the arrival rather than any one panel. The
+         COLD home opens with an invitation -- "Walk me through how you would design this",
+         "that is the sentence the round opens on". The ENGAGED home opened with what you got
+         wrong: the decision, and then immediately the gauge, whose verdict is the largest
+         sentence on the page and is an accusation ("the level you are interviewing for is the
+         one you have rehearsed least"), and then a panel headed STILL SHAKY -- 41 FLAGGED. So
+         the app was at its most hospitable to the person who has done nothing and at its least
+         hospitable to the person who has done the work, on a surface whose one inhabited moment
+         is the gap between two hard rounds. For a door, that is backwards.
+
+         THE FIX IS ORDER, NOT COPY. Not one string moves and the reserved voice is untouched --
+         the sentences the inhabitant pass praised are the same sentences, read in a different
+         sequence. `.hm-duo` comes up under the acts and the gauge goes below it, so the arrival
+         runs: where you stopped (the act) -> your week, and what to re-drill (the shape, and the
+         triage, which is an invitation to act rather than a verdict) -> your altitude (the
+         audit) -> the rooms. The audit moves from second to fourth. Within the duo the WEEK
+         leads -- see duoHtml() -- so the first panel after the decision carries the only
+         genuinely happy fact this product ever tells anyone.
+
+         ONE ORDER FOR EVERY RECORD CLASS, deliberately. A cold record renders the same sequence
+         with the shaky panel absent (weakChipsAged returns no chips), so there is no engaged/cold
+         branch to keep in sync and no second answer to the question "what does the home open
+         with". Asserted by home_claims' `arrival` judge on every seed it drives.
+
+         IT HELPS THE PHONE FOLD RATHER THAN COSTING IT. The chip list -- the record's own
+         triage -- ran 769..1006 at 390x844 against a live band ending at 799; lifting the duo
+         above a gauge that is 288-306px tall on the shapes home_fold pins moves it up by that
+         whole panel. Nothing the gauge does to its own height can push the practice act out of
+         the band either, because the act still sits above both. */
       duoHtml() +
+      gaugeHtml(model) +
       Panels.roomsHtml() +
       /* THE LIBRARY'S PHONE TWIN IS COLLAPSED, not expanded. Fully open it was 62-70% of the
          home's scroll height -- the exact figure the library rule was written to kill -- so the
@@ -621,6 +738,8 @@
     if (!TopicRegistry.ids().length) return;
 
     var model = (typeof Altitude !== 'undefined') ? Altitude.compute() : null;
+
+    stampDoorRoom();
 
     el.innerHTML = html(model);
     if (rail) rail.innerHTML = railHtml();

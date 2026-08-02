@@ -43,6 +43,48 @@
 const { chromium } = require('playwright');
 const B = require('./_boot.cjs');
 const HTML = process.argv[2] || process.cwd() + '/dist/index.html';
+const SLACK_MAX = 40;   /* see SLACK below: 2.5x a panel's own bottom padding */
+
+/* ===== THE PANEL SLACK: A CARD THAT IS 70% EMPTY IS A DEFECT, AND NOTHING COULD SEE IT =====
+   This file measures the horizontal axis because that is where clipping lives. The home's largest
+   single piece of empty space was VERTICAL and no check in the gate had an opinion about it.
+   MEASURED on the shipped build, engaged record, 1280x800, identical in both schemes:
+
+       Where you stopped   251px tall, content ends at 250      slack   1
+       Altitude            286                      285                 1
+       Still shaky         546                      545                 1
+       Coverage by room    381                      380                 1
+       Recent sessions     520                      153                367
+
+   Four panels content-fitted to within a pixel and one 70% empty -- because `.hm-duo` is a grid
+   and grid items STRETCH by default, so the taller sibling set the row height and the telemetry
+   panel was inflated to match it. It read as generous rest and it was a bug, which is the whole
+   of the inhabitant pass's cozy finding: the only visual relief the home offered was accidental.
+
+   THE THRESHOLD IS A REAL BOUND, NOT A ROUND NUMBER. A panel's honest slack is its own bottom
+   padding (--space-16 = 16px on .hm-pbody) plus sub-pixel rounding. 40px is 2.5x that and still
+   an order of magnitude under the defect, so it cannot be satisfied by the stretch coming back at
+   half strength. Reported with the worst panel named, so a FAIL says which card is hollow. */
+const SLACK = () => {
+  const out = [];
+  for (const p of document.querySelectorAll('#home .hm-panel')) {
+    const r = p.getBoundingClientRect();
+    if (!r.height) continue;
+    let low = r.top;
+    for (const k of p.querySelectorAll('*')) {
+      if (!k.getClientRects().length) continue;
+      if (getComputedStyle(k).position === 'absolute') continue;   /* the off-screen text equivalents */
+      const kr = k.getBoundingClientRect();
+      if (kr.bottom > low) low = kr.bottom;
+    }
+    out.push({
+      sel: (p.className || '').toString().trim().split(/\s+/).slice(0, 2).join('.'),
+      head: ((p.querySelector('.hm-lbl') || {}).textContent || '').replace(/\s+/g, ' ').trim().slice(0, 24),
+      h: Math.round(r.height), slack: Math.round(r.bottom - low),
+    });
+  }
+  return out.sort((a, b) => b.slack - a.slack);
+};
 
 /* Returns every element whose painted right edge escapes its nearest clipping ancestor.
    Runs in the page. Deliberately geometric: no scroll, no overflow heuristics on the document. */
@@ -101,7 +143,18 @@ const OVERSPILL = () => {
       /* SEED BEFORE MEASURING. This drove a FRESH INSTALL, where every figure on the census is a
          single `0` -- the narrowest the bar will ever be -- so the arm was sampling the one record
          on which the bar cannot clip. The census is widest on a mature record with three-digit
-         counts, which is the state a six-week user is in for most of the six weeks. */
+         counts, which is the state a six-week user is in for most of the six weeks.
+
+         THE AGGREGATE NOW AGREES WITH THE CARD MAP, and that is a real widening rather than
+         tidying. The seed graded two probes in three below Solid in `cards` and then wrote
+         `got: 0, shk: 0` in the aggregate beside it -- and `Panels.weakChipsAged` reads the
+         AGGREGATE, so `Progress.summary().weakest` came back empty, STILL SHAKY never rendered,
+         and `.hm-duo` had exactly ONE cell at every width this file drives. A one-cell auto-fit
+         grid has nothing to stretch against, so the whole paired row -- its chips, its concept
+         pills, and the panel-slack defect that lived in it -- was outside this check's reach
+         while the check reported nine widths x two themes green. Same blind-spot class the
+         coverage audit found in home_claims' `revisit: []`: a battery clean about a surface it
+         had never rendered. */
       await B.gotoApp(page, HTML, { hash: '#home' });
       await page.evaluate(() => {
         try {
@@ -110,9 +163,10 @@ const OVERSPILL = () => {
             const cards = TopicRegistry.get(id).data.bank.cards;
             const keys = CardId.forCards(cards); const map = {};
             cards.forEach((c, i) => { map[keys[i]] = (i % 3 === 0) ? 3 : (i % 3 === 1 ? 2 : 1); });
+            const solid = Object.keys(map).filter((k) => map[k] >= 3).length;
             localStorage.setItem('ddr.v1.progress.' + id, JSON.stringify({
-              got: 0, shk: 0, done: cards.length, tot: cards.length,
-              revisit: [], cards: map, cv: 1, ts: Date.now() }));
+              got: solid, shk: cards.length - solid, done: cards.length, tot: cards.length,
+              revisit: ['idempotency', 'backpressure'], cards: map, cv: 1, ts: Date.now() }));
           });
         } catch (e) {}
       });
@@ -140,6 +194,52 @@ const OVERSPILL = () => {
         });
         out.push(['[' + w + '/' + theme + '] the status census fits the bar it is painted in',
           !cen || cen.over <= 1, cen ? cen.over + 'px of content clipped inside a ' + cen.w + 'px bar' : 'not rendered']);
+      }
+
+      /* ---- THE VERTICAL AXIS: no panel is a hollow card ----
+         Only at widths where .hm-duo is actually a TWO-COLUMN row -- its
+         `repeat(auto-fit,minmax(300px,1fr))` collapses to one column below ~620px, and a single
+         column cannot stretch against a sibling, so a green at 320px would be free. */
+      if (w >= 700) {
+        const slack = await page.evaluate(SLACK);
+        const worst = slack[0];
+        out.push(['[' + w + '/' + theme + '] no home panel is a hollow card (content-fitted within 40px)',
+          !worst || worst.slack <= SLACK_MAX,
+          slack.filter((s) => s.slack > SLACK_MAX)
+            .map((s) => s.sel + ' "' + s.head + '" is ' + s.h + 'px tall over content ending '
+              + s.slack + 'px short of its own bottom').join(' | ')]);
+      }
+
+      /* ---- MUTANT 3: THE STRETCH, PUT BACK ----
+         The defect verbatim -- `align-items` off .hm-duo is `normal`, which for a grid item is
+         stretch. If the slack arm cannot see the row's own default behaviour restored, it is not
+         measuring what it says it measures. */
+      if (w === 900 && theme === 'light') {
+        const before = await page.evaluate(SLACK);
+        const cleanWorst = before.length ? before[0].slack : 0;
+        await page.evaluate(() => {
+          const d = document.querySelector('#home .hm-duo');
+          if (d) d.style.alignItems = 'stretch';
+        });
+        const after = await page.evaluate(SLACK);
+        await page.evaluate(() => {
+          const d = document.querySelector('#home .hm-duo');
+          if (d) d.style.alignItems = '';
+        });
+        const caught = after.length && after[0].slack > SLACK_MAX;
+        if (cleanWorst > SLACK_MAX) {
+          aborted = aborted || 'SLACK CONTROL FAILED: the SHIPPED home already has a hollow panel '
+            + 'before the stretch was planted (' + before[0].sel + ' ' + cleanWorst + 'px).';
+        } else if ((await page.evaluate(() => document.querySelectorAll('#home .hm-duo > section').length)) < 2) {
+          aborted = aborted || 'MUTANT 3 CANNOT LAND: .hm-duo rendered fewer than two panels on '
+            + 'this record, so there is no taller sibling to stretch against and the plant is a '
+            + 'no-op. The seed must fill BOTH cells -- see the aggregate/card-map note above.';
+        } else if (!caught) {
+          aborted = aborted || 'MUTANT 3 UNDETECTED: `align-items:stretch` restored on .hm-duo -- '
+            + 'the shipped default, which inflated the telemetry panel to 520px over 153px of '
+            + 'content -- produced a worst slack of ' + (after.length ? after[0].slack : 0)
+            + 'px and was accepted.';
+        }
       }
 
       /* ---- MUTANT 1: the one scrollWidth cannot see ---- */
@@ -192,9 +292,12 @@ const OVERSPILL = () => {
 
   const bad = out.filter((o) => !o[1]);
   for (const [label, pass, detail] of out) console.log((pass ? '  PASS  ' : '  FAIL  ') + label + (pass ? '' : '  -- ' + detail));
-  console.log('\n  2 planted mutants detected (a wide child in the FIXED bar -- invisible to '
-    + 'documentElement.scrollWidth -- and a wide child in the flow)');
+  console.log('\n  3 planted mutants detected (a wide child in the FIXED bar -- invisible to '
+    + 'documentElement.scrollWidth -- a wide child in the flow, and `align-items:stretch` put back '
+    + 'on .hm-duo, which is the grid default that inflated one panel to 520px over 153px of '
+    + 'content, checked against its own negative control)');
   if (bad.length) return B.finish(1, 'HOME REFLOW: FAIL (' + bad.length + ')');
-  return B.finish(0, 'HOME REFLOW: PASS  (' + out.length + ' assertions across 320/390 x light/dark, '
-    + 'measured as clipping geometry rather than document scroll)');
+  return B.finish(0, 'HOME REFLOW: PASS  (' + out.length + ' assertions across nine widths x '
+    + 'light/dark, measured as clipping geometry rather than document scroll -- plus the VERTICAL '
+    + 'axis at 700/900, where a panel taller than its own content is a hollow card)');
 })();

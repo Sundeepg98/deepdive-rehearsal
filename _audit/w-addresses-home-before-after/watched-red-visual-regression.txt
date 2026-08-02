@@ -1,0 +1,32 @@
+=== VISUAL REGRESSION -- pixel diff vs committed baselines === win32-chromium149 / 149.0.7827.55
+    tolerance: a pixel is CHANGED at >2/255 on any channel; budget 32 changed px per baseline
+
+baseline                      viewport      ink%  cols gripped naive roots frames  changed px
+--------------------------------------------------------------------------------------------------------
+home-light                    1280x800     19.43    43       1     1    18      1  227229  <-- OVER BUDGET (32)
+home-dark                     1280x800        64    49       0     0    18      1  404672  <-- OVER BUDGET (32)
+walk-light                    1280x800     13.58    60       0     0    18      1  0
+walk-dark                     1280x800     54.22    72       0     0    18      1  0
+drill-light                   1280x800     15.55    60       0     0    18      1  0
+drill-dark                    1280x800     45.51    77       0     0    18      1  0
+sys-light                     1280x800     12.47    60       0     0    18      1  0
+num-light                     1280x800     12.81    74       0     0    18      1  0
+wb-light                      1280x800     11.53    61       1     1    18      1  0
+room-data-storage             1280x800     13.13    80       0     0    18      1  0
+room-reliability-observability1280x800     13.24    68       1     1    18      1  0
+room-platform-infra           1280x800     13.81    74       0     0    18      1  0
+room-architecture-apis        1280x800     11.97    55       1     1    18      1  0
+room-security-tenancy         1280x800     13.91    73       0     0    18      1  0
+m-walk-light                  390x844      12.27    40       1     1    18      1  0
+m-walk-dark                   390x844      56.69    46       0     0    18      1  0
+m-home-light                  390x844         30    53       1     1    18      1  117253  <-- OVER BUDGET (32)
+m-home-dark                   390x844      44.27    53       1     1    18      1  199616  <-- OVER BUDGET (32)
+
+18 baselines compared; worst = 404672 px (home-dark), budget 32 px.
+
+VISUAL REGRESSION: FAIL 4
+  - [home-light] 227229 px changed (22.1903%, worst channel delta 220/255) in a 1249x771 box at (0,0). Evidence: test/reports/visual/home-light.diff.png (changed pixels in red)
+  - [home-dark] 404672 px changed (39.5187%, worst channel delta 221/255) in a 1249x771 box at (0,0). Evidence: test/reports/visual/home-dark.diff.png (changed pixels in red)
+  - [m-home-light] 117253 px changed (35.6219%, worst channel delta 220/255) in a 390x742 box at (0,57). Evidence: test/reports/visual/m-home-light.diff.png (changed pixels in red)
+  - [m-home-dark] 199616 px changed (60.6441%, worst channel delta 221/255) in a 362x670 box at (14,129). Evidence: test/reports/visual/m-home-dark.diff.png (changed pixels in red)
+VISUAL REGRESSION: FAIL (4): [home-light] 227229 px changed (22.1903%, worst channel delta 220/255) in a 1249x771 box at (0,0). Evidence: test/reports/visual/home-light.diff.png (

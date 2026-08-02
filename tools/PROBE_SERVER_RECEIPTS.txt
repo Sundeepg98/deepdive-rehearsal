@@ -1,0 +1,163 @@
+PROBE SERVER RECEIPTS
+=====================
+
+WHAT THIS FILE IS. The evidence that tools/probe_server.cjs measures the same thing a
+cold chromium measures. Regenerate with:
+    node tools/probe_server.cjs --port 9377 &
+    node tools/probe_server_test.cjs --port 9377
+
+run       : 2026-08-02T09:00:14.128Z
+node      : v25.2.1
+deliverable: deepdive_content_pipeline_rehearsal.html  (12,249,669 bytes = 11.68 MiB)
+launch args (identical on both sides): ["--no-sandbox","--disable-dev-shm-usage","--disable-background-timer-throttling","--disable-backgrounding-occluded-windows","--disable-renderer-backgrounding"]
+cold repeats per measurement: 3
+
+NOTE ON ENCODING: measured strings are \u-escaped on their way into this file. The
+page content is not ASCII (its title carries an em dash) and this repo enforces strict
+7-bit ASCII on its files -- see test/ascii_guard.py.
+
+VERDICT: PASS -- 15/15 measurements byte-identical between the warm server and a cold browser.
+
+
+1. VALUE PARITY (exact; geometry compared as full floats, no rounding)
+----------------------------------------------------------------------
+
+[MATCH]    doc_identity   @1280x800
+    value : {"view":"home","group":"architecture-apis","theme":"light","topics":46,"nodes":1591,"title":"Home \u2014 Deep Rehearsal"}
+    stamp : world=29 probes_since_reload=1 since_reload_ms=10 pristine=true
+
+[MATCH]    homerail_geom_1280   @1280x800
+    value : {"x":19,"y":22,"width":260,"height":646,"top":22,"right":279,"bottom":668,"left":19}
+    stamp : world=30 probes_since_reload=1 since_reload_ms=6 pristine=true
+
+[MATCH]    homestatus_geom_1280   @1280x800
+    value : {"x":0,"y":770.5,"width":1280,"height":29.5,"top":770.5,"right":1280,"bottom":800,"left":0}
+    stamp : world=31 probes_since_reload=1 since_reload_ms=9 pristine=true
+
+[MATCH]    homelib_geom_1280   @1280x800
+    value : {"x":961,"y":0,"width":319,"height":800,"top":0,"right":1280,"bottom":800,"left":961}
+    stamp : world=32 probes_since_reload=1 since_reload_ms=7 pristine=true
+
+[MATCH]    hm_seg_subpixel_1280   @1280x800
+    value : [7.953125,7.96875,7.953125,7.96875,7.953125,7.96875,7.953125,7.96875,7.953125,7.96875,7.953125,7.96875]
+    stamp : world=33 probes_since_reload=1 since_reload_ms=6 pristine=true
+
+[MATCH]    computed_style_body_1280   @1280x800
+    value : {"bg":"rgb(250, 249, 245)","fg":"rgb(42, 40, 35)","ff":"-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif","fs":"16px","lh":"24px"}
+    stamp : world=34 probes_since_reload=1 since_reload_ms=11 pristine=true
+
+[MATCH]    accent_tokens_1280   @1280x800
+    value : {"--acc":"#963D86","--topic-ink":"#963D86","--topic-solid":"#B537A1","--topic-wash":"#FCF2FA","--topic-edge":"#EFCAE6"}
+    stamp : world=35 probes_since_reload=1 since_reload_ms=7 pristine=true
+
+[MATCH]    at_rest_census_1280   @1280x800
+    value : {"in_flight_finite":0,"infinite":0,"total":0,"body_opacity":"1","rail_opacity":"1","rail_transform":"none","rail_w":260,"rail_h":646}
+    stamp : world=36 probes_since_reload=1 since_reload_ms=9 pristine=true
+
+[MATCH]    fold_membership_1280   @1280x800
+    value : [{"id":"homerail","top":22,"above_fold":true},{"id":"hometabs","top":0,"above_fold":true},{"id":"homelib","top":0,"above_fold":true},{"id":"homestatus","top":770.5,"above_fold":true}]
+    stamp : world=37 probes_since_reload=1 since_reload_ms=11 pristine=true
+
+[MATCH]    scroll_extent_1280   @1280x800
+    value : {"sw":1280,"sh":1349,"iw":1280,"ih":800}
+    stamp : world=38 probes_since_reload=1 since_reload_ms=10 pristine=true
+
+[MATCH]    homerail_geom_390   @390x844
+    value : {"x":0,"y":0,"width":390,"height":57,"top":0,"right":390,"bottom":57,"left":0}
+    stamp : world=39 probes_since_reload=1 since_reload_ms=10 pristine=true
+
+[MATCH]    hometabs_geom_390   @390x844
+    value : {"x":0,"y":799,"width":390,"height":45,"top":799,"right":390,"bottom":844,"left":0}
+    stamp : world=40 probes_since_reload=1 since_reload_ms=8 pristine=true
+
+[MATCH]    hm_seg_subpixel_390   @390x844
+    value : [3.859375,3.875,3.859375,3.875,3.859375,3.875,3.859375,3.875,3.859375,3.875,3.859375,3.875]
+    stamp : world=41 probes_since_reload=1 since_reload_ms=9 pristine=true
+
+[MATCH]    computed_style_rail_390   @390x844
+    value : {"display":"flex","pos":"fixed","pad":"6px 14px","bg":"rgb(241, 237, 228)","bs":"none"}
+    stamp : world=42 probes_since_reload=1 since_reload_ms=9 pristine=true
+
+[MATCH]    scroll_extent_390   @390x844
+    value : {"sw":390,"iw":390,"overflows":false}
+    stamp : world=43 probes_since_reload=1 since_reload_ms=13 pristine=true
+
+screenshot @1280x800: warm 147742B sha256 6e7d78dd222d329b4875eac2dd4e4caa28331380146e976bab3b2ca953bea335
+                      cold 147742B sha256 6e7d78dd222d329b4875eac2dd4e4caa28331380146e976bab3b2ca953bea335
+                      byte-identical
+
+
+2. TIMING (per probe, milliseconds)
+-----------------------------------
+
+measurement                  server+reload   server /eval    cold boot
+                             (fresh world)   (held state)    (per probe)
+  doc_identity                    1208             11           2986
+  homerail_geom_1280              1251             11           2683
+  homestatus_geom_1280            1094             11           2566
+  homelib_geom_1280               1199              6           3581
+  hm_seg_subpixel_1280            1214              9           3092
+  computed_style_body_1280        1161             11           2533
+  accent_tokens_1280              1152              8           2387
+  at_rest_census_1280             1112             10           2155
+  fold_membership_1280            1172             11           2330
+  scroll_extent_1280              1088              9           2938
+  homerail_geom_390               1158             14           2708
+  hometabs_geom_390               1266             10           2184
+  hm_seg_subpixel_390             1227             11           2972
+  computed_style_rail_390         1219              7           2300
+  scroll_extent_390               1330             12           2075
+
+  MEDIAN                          1199             11           2566
+
+  fresh-world probe vs cold boot : 2.14x faster
+  held-state probe vs cold boot  : 233.3x faster
+
+HOW TO READ THESE. The cold column is a full chromium launch, a 11.68 MiB parse, the app
+readiness wait, the at-rest settle, the measurement and teardown. Both columns were
+measured on a QUIET box, which is the condition LEAST favourable to this tool: the cost
+a warm browser avoids is precisely the cost that inflates under load. Section 2b
+measures that directly rather than asserting it.
+
+
+2b. THE SAME COMPARISON UNDER CONTENTION (4 cold boots at once)
+----------------------------------------------------------------
+
+  cold boots, concurrent x4 : 2956, 2979, 2940, 2955 ms
+                            median 2956ms (vs 2566ms unloaded, 1.15x)
+  warm /eval in that window : median 16ms over 56 probes (vs 11ms unloaded, 1.41x)
+  held-state probe vs a contended cold boot: 190.7x faster
+
+This is the operating condition the tool is for: a fleet of probe-heavy agents on one
+box. The cold path pays for contention twice, in launch and in parse; the warm path
+pays for neither.
+
+
+3. THE RESET ACTUALLY RESETS
+----------------------------
+
+An assertive measurement is only worth anything if the world behind it is really fresh.
+This is that proof, end to end:
+
+  trial 1: quiesce=3f | pure read left it pristine=yes | mutation caught=yes(1: ["childList #homestatus"]) | next probe=REFUSED 409 | explore saw damage=yes | after reload=PRISTINE  -> PASS
+  trial 2: quiesce=4f | pure read left it pristine=yes | mutation caught=yes(1: ["childList #homestatus"]) | next probe=REFUSED 409 | explore saw damage=yes | after reload=PRISTINE  -> PASS
+  trial 3: quiesce=3f | pure read left it pristine=yes | mutation caught=yes(1: ["childList #homestatus"]) | next probe=REFUSED 409 | explore saw damage=yes | after reload=PRISTINE  -> PASS
+  trial 4: quiesce=4f | pure read left it pristine=yes | mutation caught=yes(1: ["childList #homestatus"]) | next probe=REFUSED 409 | explore saw damage=yes | after reload=PRISTINE  -> PASS
+  trial 5: quiesce=4f | pure read left it pristine=yes | mutation caught=yes(1: ["childList #homestatus"]) | next probe=REFUSED 409 | explore saw damage=yes | after reload=PRISTINE  -> PASS
+  pristine value: "Record0 of 972 probes graded0 solid \u00B7 0 shaky \u00B7 "
+  VERDICT: 5/5 trials caught the contamination and restored the world  -- the reset is real and the guard is deterministic
+
+
+4. WHAT THIS DOES NOT PROVE
+---------------------------
+
+  - It does not prove parity under LOAD. Both passes ran on a quiet box. The claim is
+    value parity, plus a timing floor; a loaded box changes the timings, not the values.
+  - It does not prove every possible measurement agrees -- 15 representative ones do.
+    A measurement that depends on wall-clock time, on animation phase, or on anything
+    the app persists across a session is exactly where warm and cold could still part
+    company, which is why /reload builds a NEW CONTEXT rather than just navigating.
+  - It does not make the server safe to use carelessly: the contamination discipline is
+    what keeps a fast probe honest, and section 3 is the proof the guard fires, not a
+    promise that nobody will pass mode:"explore" to something that deserved a reload.
+

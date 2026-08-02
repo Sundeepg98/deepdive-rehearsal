@@ -1201,10 +1201,23 @@ BARRIER = ['build_integrity']
 #
 # A check in this list is not "slow", it is LOAD-SENSITIVE. Moving one out to buy wall time
 # trades a correctness signal for seconds, which is the trade this whole gate exists to refuse.
+#
+# focus_ring JOINED THE TAIL ON EVIDENCE, not on suspicion (check-hygiene wave, 2026-08-02).
+# The gate-runtime cold verify found it red once under --fast against 0/52 serial (p = 0.119) and
+# recommended a 30-run treatment before anyone promoted the fast lane. Measured here, pooled with
+# the verify across two independent observers:
+#     concurrent (--fast --jobs 4):  2 red / 37  = 5.4%
+#     serial:                        0 red / 82  = 0.0%   (rule of three: true rate < 3.7%)
+#     Fisher exact two-sided p = 0.0949 -- suggestive, NOT significant
+# The wave's own criterion was "0/30 means rare flake, leave it in the pool". It measured 1/30, so
+# it moves. The statistics do not prove load-sensitivity and are not claimed to; what settles it is
+# the asymmetry: moving it costs ~12s of tail, and leaving it costs an unexplainable red in the
+# lane people are being asked to trust. A check that has now produced a fast-only red for two
+# independent observers, and a serial red for neither in 82 trials, does not belong in the pool.
 SERIAL_TAIL = ['build_determinism', 'visual_regression', 'chrome_metrics', 'touch_floor',
                'grade_reveal', 'click_drift', 'transition_deadzone', 'overlay_deadzone',
                'fold_budget', 'cram_fit', 'visual_pane_smoke', 'mobile_nextup',
-               'no_dead_ends', 'home_reflow', 'sidebar_geometry']
+               'no_dead_ends', 'home_reflow', 'sidebar_geometry', 'focus_ring']
 
 def run_serial(sel):
     for n in ORDER:
@@ -1241,7 +1254,7 @@ def run_fast(jobs, sel):
 # --changed run means "the checks I selected passed", and the checks it did not select are the
 # ones nobody looked at. It therefore says so in a banner, prints ONLY the checks it ran (a table
 # of 76 rows with 60 of them blank is exactly how a partial run gets read as a full one), and
-# stamps certifying:false into any --verdicts file it writes.
+# stamps full_coverage:false (and capture_of_record:false) into any --verdicts file it writes.
 #
 # THE MAP IS DELIBERATELY COARSE AND FAILS TOWARDS RUNNING MORE. Each entry is a path prefix and
 # the checks that read from it. A path matching NOTHING here selects the WHOLE gate, because the
@@ -1410,11 +1423,22 @@ failed = [n for n, st, _ in rows if st == 'FAIL']
 for i, a in enumerate(sys.argv):
     if a == '--verdicts' and i + 1 < len(sys.argv):
         with open(sys.argv[i + 1], 'w', encoding='utf-8', newline='\n') as fh:
+            # TWO SEPARATE QUESTIONS, TWO SEPARATE FIELDS. This used to be one field called
+            # `certifying`, set to `not CHANGED` -- so a --fast run stamped `certifying: true`
+            # while its own summary line printed "[parallel -- not the capture of record]" and both
+            # audit documents said the fast lane certifies nothing. The value was defensible (it
+            # tracked COVERAGE) and the NAME was the defect: any consumer reading `certifying`
+            # would have read a parallel run as a certification, which is precisely the "partial
+            # run mistaken for a full one" failure the --changed banner exists to prevent. Caught
+            # by the gate-runtime cold verify; a field whose name outruns its meaning is a lie the
+            # code will tell on your behalf later.
+            #   full_coverage      -- every registered check ran (false only under --changed/--only)
+            #   capture_of_record  -- this run may stand as THE gate result: full coverage, serial,
+            #                         no shared browser. Only a no-flag run can set it.
             json.dump({'mode': 'fast' if FAST else 'serial', 'jobs': JOBS if FAST else 1,
                        'shared_browser': bool(srv),
-                       # A --changed run covers a SUBSET, so its verdicts are not a gate result and
-                       # must not be readable as one by anything downstream.
-                       'certifying': not CHANGED,
+                       'full_coverage': not CHANGED,
+                       'capture_of_record': (not CHANGED) and (not FAST) and (not srv),
                        'selected': len(rows), 'registry': len(ORDER),
                        'wall_s': round(gate_wall, 2),
                        'verdicts': dict((n, st) for n, st, _ in rows)}, fh, indent=1)

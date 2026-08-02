@@ -219,19 +219,213 @@ async function pollFor(probe, ok, ms, label) {
  * element the hop clause is reached exactly once, at <html>, where getRootNode() is the document
  * and .host is undefined -- the chain walked, the product, and the poll cadence are identical to
  * the old walk, so existing light-DOM callers see the same behaviour to the frame. */
-async function waitPainted(locator, ms) {
-  return pollFor(
-    () => locator.evaluate((el) => {
-      let o = 1, n = el;
-      while (n && n.nodeType === 1) {
-        const v = parseFloat(getComputedStyle(n).opacity); if (!isNaN(v)) o *= v;
-        n = n.parentElement || n.getRootNode().host || null;
+/* ===== THE AT-REST PRIMITIVE ======================================================================
+ *
+ * ONE definition of "genuinely still", called by every check that measures a pixel or a box.
+ * It exists because the same defect was found twice, in two checks, each with its own home-grown
+ * stillness guard, and BOTH guards failed the same way.
+ *
+ * WHAT WENT WRONG, measured rather than reasoned (gate-runtime wave + its cold verify):
+ *   touch_floor  polled until TWO CONSECUTIVE READS AGREED, then asserted on the box. It false-red
+ *                at ~20% (18/90 pooled, two authors, two volumes) with a byte-identical
+ *                {"w":42.2,"h":42.2} against a 44px floor. 42.2 is 44 x 0.96, and .96 is the
+ *                LITERAL `from` scale of the panelIn keyframe (styles.css) under a monotonic
+ *                cubic-bezier with no `perspective` anywhere for translateZ to act through. So the
+ *                sample was not caught mid-flight at some arbitrary scale -- IT WAS CAUGHT AT THE
+ *                ANIMATION'S FIRST KEYFRAME, BEFORE IT HAD ADVANCED AT ALL, twice, 100ms apart.
+ *   cta_contrast waited for EFFECTIVE OPACITY ~= 1 and then screenshotted. It reported "no core
+ *                glyph pixels found" under load: opacity had arrived, the transform had not, and a
+ *                scaled glyph rasterises to antialiased edges where no pixel is the pure text
+ *                colour.
+ *
+ * THE LESSON, and the reason this is a primitive rather than two patches: **both guards were
+ * anti-correlated with the thing they tested.** "Two reads agree" is EASIEST before an animation
+ * starts. "Opacity is 1" is satisfied by a fade that finished while a transform still runs. A
+ * stillness condition that is cheapest to satisfy at the exact moment the page is least still is
+ * not a weak guard, it is an inverted one, and no amount of re-tuning a threshold fixes that.
+ *
+ * WHAT REST MEANS HERE, all three required:
+ *   1. NOTHING IS IN FLIGHT -- no unfinished CSS animation or transition anywhere up the ancestor
+ *      chain, across shadow boundaries. This is the arm the 42.2 proof demands, and it is stated
+ *      as "in flight" rather than "transform is identity" for a measured reason: see the note
+ *      above restOk, where identity was tried, shipped into the battery, and refuted by a resting
+ *      hover lift in one run.
+ *   2. EFFECTIVE ALPHA ~= 1, the product of computed opacity up the same chain (the old
+ *      waitPainted contract, kept verbatim -- it was necessary, just not sufficient).
+ *   3. rAF-SEPARATED CONFIRMATION: the condition holds, a frame passes, it still holds, and the
+ *      transform chain is unchanged between the two samples.
+ *
+ * It stays a CONDITION, never a duration: a target that never comes to rest times out into a real
+ * failure NAMING what was still moving. (The first version of this file returned null from its
+ * poll probe and produced `last=null` -- a timeout that could not say why. A guard built to
+ * abolish blank reds does not get to emit one.) Slow must not be reportable as broken, and broken
+ * must not be reportable as slow.
+ *
+ * ESCAPE HATCH, deliberately narrow: `allowMotion: true` for a caller that genuinely wants to
+ * measure mid-flight. No current caller uses it; it exists so that a future one does not have to
+ * reinvent a private stillness guard, which is how this repo got two inverted ones.
+ */
+
+/* Runs IN PAGE. Self-contained by necessity: page.evaluate serialises this function's TEXT, so it
+ * cannot close over anything in this module. Accepts an ELEMENT (locator.evaluate hands one in) or
+ * a SELECTOR STRING (page.evaluate passes the arg), so one definition serves both entry points. */
+const REST_STATE = function (elOrSel) {
+  var EPS = 1e-3;
+  var el = (typeof elOrSel === 'string') ? document.querySelector(elOrSel) : elOrSel;
+  /* A target that is not there YET is not "moving" -- callers poll for their own element and
+     assert on its absence themselves (touch_floor returns {missing:true} and fails on it). Making
+     absence block here would convert a clean, specific FAIL into an unhelpful timeout. */
+  if (!el) return { alpha: 1, still: true, moving: null, missing: true };
+
+  function identity(t) {
+    if (!t || t === 'none') return true;
+    var m = /^matrix(3d)?\(([^)]*)\)$/.exec(String(t).trim());
+    if (!m) return true;                    /* a form this does not model: never block on it */
+    var n = m[2].split(',').map(function (x) { return parseFloat(x); });
+    var want = m[1] ? [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1] : [1, 0, 0, 1, 0, 0];
+    if (n.length !== want.length) return true;
+    for (var i = 0; i < n.length; i++) if (!(Math.abs(n[i] - want[i]) <= EPS)) return false;
+    return true;
+  }
+
+  var alpha = 1, moving = null, tf = [], node = el;
+  while (node && node.nodeType === 1) {
+    var cs = getComputedStyle(node);
+    var o = parseFloat(cs.opacity);
+    if (!isNaN(o)) alpha *= o;
+    /* The transform CHAIN, recorded as a signature the caller compares across a frame. Identity is
+       reported for diagnostics but is NOT required -- see the note above restOk. */
+    if (!identity(cs.transform)) {
+      tf.push((node.id ? '#' + node.id : node.tagName.toLowerCase()) + '=' + cs.transform);
+    }
+    /* IS ANYTHING ACTUALLY IN FLIGHT? getAnimations() covers CSS animations AND CSS transitions,
+       and it is the only signal that separates "resting at a non-identity transform" from "parked
+       at an animation's first keyframe" -- the two states that look identical to a geometry read
+       and that a stillness guard must not confuse. INFINITE animations are excluded deliberately:
+       the boot spinner never finishes, so waiting on it would hang rather than settle (the pixel
+       gate in visual_regression PINS those to a fixed phase for the same reason). */
+    if (moving === null && node.getAnimations) {
+      var anims = [];
+      try { anims = node.getAnimations(); } catch (e) { anims = []; }
+      for (var i = 0; i < anims.length; i++) {
+        var a = anims[i], st = a.playState;
+        /* PAUSED IS IN FLIGHT. It was skipped in the first version, and the cold verify planted the
+           hole: a 44px control parked at scale(.961) by animation-play-state:paused reads 42.3px,
+           reports still=true with alpha 1, and the rAF chain-compare is blind to it BECAUSE a
+           paused transform is identical across frames. That is the 42.2 defect through a different
+           door -- and the one door the ruled identity predicate would have closed, which is worth
+           recording: dropping identity bought a real false-hang fix and cost this, until now.
+           A paused animation holds its element mid-flight indefinitely, so "paused" is the one
+           playState most obviously not at rest. Infinite animations are still excluded below, so
+           this adds no hang risk that was not already accepted. */
+        if (st !== 'running' && st !== 'pending' && st !== 'paused') continue;
+        var iters = 1;
+        try { iters = a.effect.getComputedTiming().iterations; } catch (e) { iters = 1; }
+        if (iters === Infinity) continue;
+        moving = (node.id ? '#' + node.id : node.tagName.toLowerCase()) + ' <- ' +
+          ((a.animationName || (a.transitionProperty ? 'transition:' + a.transitionProperty : 'animation')) +
+           ' [' + st + ']');
+        break;
       }
-      return o;
-    }).catch(() => 0),
-    (o) => o >= 0.995,
+    }
+    /* THE WALK CROSSES SHADOW BOUNDARIES. At the top of a shadow tree parentElement is null (the
+       parent is a ShadowRoot, a fragment), so a parentElement-only walk silently EXEMPTS every
+       shadow-DOM target from the ancestors that actually fade and move it -- bodyIn animates
+       <body>, which sits ABOVE the host. For a light-DOM element the hop clause is reached exactly
+       once, at <html>, where getRootNode() is the document and .host is undefined. */
+    node = node.parentElement || node.getRootNode().host || null;
+  }
+  return { alpha: alpha, still: moving === null, moving: moving, tf: tf.join(' '), missing: false };
+};
+
+/* WHY THIS IS "NOTHING IS IN FLIGHT" AND NOT "TRANSFORM IS IDENTITY".
+ *
+ * Identity was the first design, and it is what the 42.2 proof appears to ask for -- panelIn's
+ * first keyframe is scale(.96), so demanding identity does defeat that specific defect. It was
+ * built, and the battery in test/primitive_battery.py refuted it in one run: `cta_contrast` began
+ * FAILING ON A CLEAN TREE, timing out with
+ *     moving: "button transform=matrix(1, 0, 0, 1, 0, -1)"
+ * which is `.mockbtn:hover{transform:translateY(-1px)}` (styles.css:476). Playwright's cursor
+ * rests over the CTA it is measuring, so the button sits -- permanently, correctly, at rest --
+ * one pixel high. Identity would never arrive, and a guard that hangs on a compliant control is a
+ * worse defect than the one it replaced: a false red is loud, a false timeout is a red nobody can
+ * act on.
+ *
+ * "Nothing is in flight" is the predicate that actually separates the two cases. A hover lift has
+ * no unfinished animation once its transition completes; a panel parked at its first keyframe has
+ * a `running`/`pending` animation the whole time it sits there. Both look like a static
+ * non-identity transform to getBoundingClientRect, and only getAnimations() can tell them apart.
+ *
+ * The transform CHAIN is still compared across the rAF gap (`tf`), so a transform that is quietly
+ * changing without an Animation object backing it is caught too. Identity itself is required by
+ * nothing.
+ */
+const restOk = (s, o) => !!(s && s.alpha >= 0.995 && (o.allowMotion || s.still));
+
+/* Element-level: wait until this locator's chain is painted AND unmoving. */
+async function waitPainted(locator, ms, opts) {
+  const o = opts || {};
+  const gone = () => ({ alpha: 0, still: false, moving: '(element detached)' });
+  /* THE PROBE RETURNS THE STATE, NEVER null, and `ok` judges it. That is not a style choice:
+     pollFor reports its LAST PROBE VALUE in the timeout message, so a probe that returns null on
+     "not yet" produces `last=null` -- a timeout that cannot say what was still moving. This guard
+     exists to replace a blank red with a named cause; it does not get to be blank itself. */
+  return pollFor(
+    async () => {
+      const a = await locator.evaluate(REST_STATE).catch(gone);
+      if (!restOk(a, o)) return a;
+      await locator.page().evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
+      const b = await locator.evaluate(REST_STATE).catch(gone);
+      /* rAF-separated confirmation: still at rest a frame later, AND the transform chain did not
+         move between the two samples. */
+      b.confirmed = restOk(b, o) && b.tf === a.tf;
+      if (!b.confirmed && restOk(b, o)) b.moving = 'transform chain changed across a frame: ' + a.tf + ' -> ' + b.tf;
+      return b;
+    },
+    (s) => !!(s && s.confirmed),
     ms || ACT_MS,
-    'paint-settle: effective opacity ~= 1');
+    'at rest (painted, nothing in flight, unchanged across a frame)');
+}
+
+/* Page-level: run `probe` and return its value only once the measured subtree is genuinely at
+ * rest. `opts.scope` names the element(s) being measured -- scoping matters, because demanding
+ * stillness of the WHOLE document would hang on any unrelated element that legitimately rests
+ * under a transform. */
+async function atRest(page, probe, arg, opts) {
+  const o = (typeof opts === 'string') ? { label: opts } : (opts || {});
+  const scope = o.scope ? (Array.isArray(o.scope) ? o.scope : [o.scope]) : [];
+  const stillNow = async () => {
+    for (const sel of scope) {
+      const s = await page.evaluate(REST_STATE, sel).catch(() => null);
+      if (!restOk(s, o)) return s || { moving: '(evaluate failed)' };
+    }
+    return null;                            /* null = nothing is moving */
+  };
+  /* THE PROBE RETURNS THE STATE, NEVER null -- the same rule waitPainted follows, and for the same
+     reason. The first version returned null on "not yet", so pollFor's timeout printed `last=null`
+     and the cold verify's paused mutant produced exactly that: a blank diagnostic on the page-level
+     entry point while the element-level one named its cause. The catch below recovered it, but a
+     recovery is not the same as the probe telling the truth, and the freeze document claimed the
+     latter. Now both entry points report state. */
+  const out = await pollFor(
+    async () => {
+      let why = await stillNow();
+      if (why) return { ok: false, why: why };
+      const a = await page.evaluate(probe, arg);
+      await settle(page);                   /* rAF-separated confirmation */
+      why = await stillNow();
+      if (why) return { ok: false, why: why };
+      const b = await page.evaluate(probe, arg);
+      if (JSON.stringify(a) !== JSON.stringify(b)) {
+        return { ok: false, why: { moving: 'the probe value changed across a frame', a: a, b: b } };
+      }
+      return { ok: true, value: b };
+    },
+    (x) => x && x.ok,
+    o.ms || ACT_MS,
+    (o.label || 'the measured subtree to come to rest') +
+      (scope.length ? '  [scope: ' + scope.join(', ') + ']' : ''));
+  return out.value;
 }
 
 /* A check that dies without saying why is the single most corrosive thing in a gate: the gate
@@ -245,5 +439,9 @@ async function finish(code, label) {
 
 module.exports = {
   NAV_MS, READY_MS, ACT_MS, LAUNCH_ARGS,
-  launchOpts, fileUrl, APP_READY, gotoApp, enterApp, closeIndex, waitIndexOpen, settle, until, pollFor, waitPainted, finish,
+  launchOpts, fileUrl, APP_READY, gotoApp, enterApp, closeIndex, waitIndexOpen, settle, until, pollFor,
+  /* the at-rest family: REST_STATE is exported so a check can assert on rest DIRECTLY (and so a
+     battery can prove the primitive sees motion) rather than only waiting for it */
+  waitPainted, atRest, REST_STATE,
+  finish,
 };

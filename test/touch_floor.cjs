@@ -64,18 +64,19 @@ async function pinViewport(page, w, h) {
  * manufactures failures for compliant controls and would have had this wave "fix" a button that
  * was never broken.
  *
- * So: poll until two consecutive reads AGREE, which is the same "two identical frames" rest proof
- * test/visual_regression.cjs uses before it captures. Condition, not duration -- a box that never
- * settles times out into a real failure rather than being silently accepted. */
-async function atRest(page, fn, arg, label) {
-  let prev = null;
-  return B.pollFor(async () => {
-    const cur = await page.evaluate(fn, arg);
-    const same = prev !== null && JSON.stringify(prev) === JSON.stringify(cur);
-    prev = cur;
-    return same ? cur : null;
-  }, (v) => v !== null, B.ACT_MS, label || 'geometry to come to rest');
-}
+ * THIS FILE USED TO OWN THAT GUARD, AND ITS GUARD WAS INVERTED. It polled until two consecutive
+ * reads AGREED -- and agreement is EASIEST before an animation starts. Measured at ~20% false red
+ * (18/90 pooled across two authors and two scratch volumes), every one of them the byte-identical
+ * {"w":42.2,"h":42.2}: 44 x 0.96, which is panelIn's LITERAL first keyframe. The check was not
+ * catching the animation in motion, it was catching it before it moved.
+ *
+ * The rest condition now lives in _boot.cjs as B.atRest, shared with cta_contrast and
+ * dock_contrast. It requires that NOTHING IS IN FLIGHT -- no unfinished animation or transition up
+ * the chain, via getAnimations() -- as well as full alpha and rAF-separated confirmation. It does
+ * NOT require the transform to be identity: that was the first design, and it hung on a resting
+ * hover lift. See the long comment there for why "two reads agree" was the wrong predicate rather
+ * than a mistuned one. Each call below names the element it measures as `scope`, because stillness
+ * is a question about the thing being measured, not about the whole document. */
 
 (async () => {
   const fails = [], errs = [];
@@ -111,12 +112,12 @@ async function atRest(page, fn, arg, label) {
   await page.evaluate(() => { const b = document.getElementById('cramopen'); if (b) b.click(); });
   await page.waitForFunction(() => !!document.querySelector('.cram-ov.open'), null, { timeout: B.ACT_MS }).catch(() => {});
   await B.settle(page);
-  const cramX = await atRest(page, () => {
+  const cramX = await B.atRest(page, () => {
     const x = document.getElementById('cramx');
     if (!x) return { missing: true };
     const r = x.getBoundingClientRect();
     return { w: +r.width.toFixed(1), h: +r.height.toFixed(1) };
-  }, null, 'the cram close button to stop scaling (panelIn)');
+  }, null, { scope: '#cramx', label: 'the cram close button to stop scaling (panelIn)' });
   ok('the cram sheet\'s close button clears 44px in BOTH axes (it was 32 wide -- the height-only floor could not see it)',
     !cramX.missing && cramX.w >= APP_FLOOR && cramX.h >= APP_FLOOR, JSON.stringify(cramX));
 
@@ -125,13 +126,13 @@ async function atRest(page, fn, arg, label) {
   /* The strip is built from <deep-cram>'s LAZILY rendered sections, so it legitimately arrives a
      few frames after the panel does -- poll for it rather than sampling once (that single sample
      is how this first read 0 chips against a strip that populates correctly). */
-  const jump = await atRest(page, () => {
+  const jump = await B.atRest(page, () => {
     const s = document.getElementById('cramjump');
     if (!s) return { missing: true };
     const btns = [...s.querySelectorAll('button')];
     const hs = btns.map((b) => +b.getBoundingClientRect().height.toFixed(1));
     return { count: btns.length, min: hs.length ? Math.min(...hs) : null, stripH: +s.getBoundingClientRect().height.toFixed(1) };
-  }, null, 'the cram jump strip to populate and settle');
+  }, null, { scope: '#cramjump', label: 'the cram jump strip to populate and settle' });
   /* THE APP FLOOR, NOT THE AA FLOOR. This assertion read AA_FLOOR for one revision while its own
      comment said "hold it to the same floor" -- prose one floor above the assertion, which is the
      shape of a check that quietly grades on a curve. Both now say 44: this strip is a control
@@ -150,12 +151,12 @@ async function atRest(page, fn, arg, label) {
   await page.evaluate(() => window.scrollTo(0, 1400));
   await page.waitForFunction(() => { const b = document.getElementById('scrolltop'); return !!(b && b.classList.contains('show')); }, null, { timeout: B.ACT_MS }).catch(() => {});
   await B.settle(page);
-  const st = await atRest(page, () => {
+  const st = await B.atRest(page, () => {
     const b = document.getElementById('scrolltop');
     if (!b) return { missing: true };
     const r = b.getBoundingClientRect(), cs = getComputedStyle(b);
     return { shown: b.classList.contains('show'), w: +r.width.toFixed(1), h: +r.height.toFixed(1), vis: cs.visibility, transform: cs.transform };
-  }, null, 'the scroll-top FAB to finish its 500ms reveal transition');
+  }, null, { scope: '#scrolltop', label: 'the scroll-top FAB to finish its 500ms reveal transition' });
   ok('#scrolltop clears 44px in the state a finger meets it (its 39.6 filing measured the hidden state\'s scale(.9))',
     !st.missing && st.shown === true && st.w >= APP_FLOOR && st.h >= APP_FLOOR, JSON.stringify(st));
   await page.evaluate(() => window.scrollTo(0, 0));

@@ -244,7 +244,7 @@ const NEUTRALISE = () => {
     running: rest.filter((a) => a.playState === 'running').length,
     splash: !!document.getElementById('_bootsplash'),
     /* THE CLASS, never the API -- the 220ms zombie (trap 3) */
-    openOverlay: !!document.querySelector('.ix-ov.open, .mock-ov.open, .cram-ov.open'),
+    openOverlay: !!document.querySelector('.ix-ov.open, .mock-ov.open, .cram-ov.open, .nt-ov.open, .xd-ov.open'),
   };
 };
 
@@ -303,7 +303,7 @@ async function settle(page) {
   /* the splash is waited OUT, never photographed: its spinner is infinite and freezes at a
      random angle (boot.js:18). It self-removes 400ms after _hideBootSplash(). */
   await B.until(page, () => !document.getElementById('_bootsplash'), null, B.ACT_MS, 'boot splash to clear');
-  await B.until(page, () => !document.querySelector('.ix-ov.open, .mock-ov.open, .cram-ov.open'),
+  await B.until(page, () => !document.querySelector('.ix-ov.open, .mock-ov.open, .cram-ov.open, .nt-ov.open, .xd-ov.open'),
     null, B.ACT_MS, 'no overlay carrying .open (the 220ms zombie)');
   try { await page.evaluate(() => document.fonts && document.fonts.ready); } catch (e) { /* non-fatal */ }
   return page.evaluate(NEUTRALISE);

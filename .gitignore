@@ -54,6 +54,7 @@ test/_gate_*.log
 test/_acc*.log
 test/_verdicts*.json
 test/_acceptance/
+test/_primitive/
 
 # team-lead <-> agent coordination artifacts (never part of a build)
 _TEAM_LEAD_*.md

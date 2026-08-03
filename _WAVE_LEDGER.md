@@ -1776,3 +1776,160 @@ the whole statement or not (so a **prose** fixture in a far branch was added -- 
 terminal mark, reachable by no other channel); the bare-literal word bound had no control that could
 fail; and two press plants of my own were malformed JavaScript, which the scanner correctly refused
 to guess past.
+
+---
+
+## CYCLE 4 -- VR CONTRACT
+
+```
+VISUAL REGRESSION: PASS  (18 baselines, win32-chromium149; every capture reached a proven
+rest state across all 18 roots, cleared the blank-page floor, and matched its committed pixels)
+```
+
+*(Quoted from the gate capture verbatim. The first draft of this block reproduced cycle 3's
+"18 baselines compared; worst = 0 px (home-light), budget 32 px" from memory -- a line this run
+never printed. Caught by grepping the capture for it. In a cycle whose whole subject is claims that
+were true where they were measured, a receipt copied from a previous receipt is the same defect in
+its smallest form.)*
+
+**HONOURED BY ABSTENTION, and this cycle had a real reason to check rather than assume.** No
+baseline was regenerated and the manifest is unchanged at 18. R10, R12 and judge items 2/4/5 are
+instrument-only. R11 is NOT: it changed four rendered strings in `drill/logic.js`, turning a
+straight apostrophe into `&rsquo;` in the drill and mock debrief verdicts -- a different GLYPH on
+the screen, and `drill-light` / `drill-dark` are two of the eighteen roots. Measured rather than
+argued: all 18 matched their committed pixels, because those roots capture the drill's ENTRY state
+and the debrief is written only after a round completes. A glyph change that happens to be
+invisible to every baseline is still a glyph change, and the only honest way to know is to run the
+comparison.
+
+## CYCLE 4 -- GATE: 78/78 PASS
+
+Full serial run (`python test/check_all.py`, no `--fast`, no `--shared-browser`) on the
+**COMMITTED** tree (`24d8163`, the tree this branch ends on), exit 0, zero FAIL lines. Capture:
+`_audit/2026-08-03-w-addresses-cycle4-gate.txt`.
+
+```
+  78 checks in 812.5s (13.5 min)
+GATE: PASS
+```
+
+**THE COUNT IS STILL 78, and that is the point of R10 and R11 rather than an omission.** Widening a
+channel does not add a check: `craft_hygiene` reads more of the same tree and reports more of the
+same class, so there is no new number to register and no new cost line. The same holds for R12 and
+judge item 5, which are conditions and a mutant inside `scoreboard_salience`, and for judge items 2
+and 4, which are a second arm and a repaired control inside `print_truth`. **Cycle 4 registered no
+new check and every widening is inside a check the gate already ran.**
+
+The lines that carry this cycle's work:
+
+```
+build_integrity     PASS  (12342763 bytes, 0 unresolved, 9 panes + 7 overlays,
+                          build SYNCED the deliverable, COMMITTED deliverable == fresh build of HEAD)
+craft_hygiene       PASS  (23683 rendered-copy spans; the glyph rule CHANNEL-FREE over every
+                          string literal and the four typeset rules on six bounded prose
+                          channels; 237 ruled exceptions, every one still matching something,
+                          each excused only from the rules it declares, only in the file it
+                          names, and only as many times as it declares)
+scoreboard_salience PASS  ... and the panels stand off their ground, pressed by painting the
+                          panel at that ground's own colour. EVERY GAUGE READING IS GATED ON THE
+                          SHOT BEING UNVEILED: the entrance fade must be idle before any shot is
+                          taken, the trough must equal the colour the track itself declares
+                          within 0.002 in the SAME shot, and the COLD first reading -- the only
+                          one a CI runner ever takes -- must reproduce a warm re-read later in
+                          the same run
+print_truth         PASS  "lattice":{"exact":301713,"economy":176712,"delta":125001,"noise":0,
+                          "ratio":1.707}
+                          "latticeProp":{"exact":6,"of":6,"control":"economy/economy/economy"}
+visual_regression   PASS  (18 baselines, win32-chromium149; every capture reached a proven rest
+                          state across all 18 roots, cleared the blank-page floor, and matched
+                          its committed pixels)
+```
+
+**Independent cross-check, free:** the branch CI gate (`python test/ci.py gate --nowait`, run
+`30819255688`, 6 shards on `ubuntu-latest`) came back **success on every shard** (79/64/77/134/140/176s) -- green on a second platform as well as on the certifying win32 serial run. It was fired on `1f6fd7e`, the commit that carries every code change in this cycle; `24d8163` is a comment in the gate registry and changes no check's behaviour.
+
+---
+
+## CYCLE 4 -- THE FREEZE
+
+### What is now part of `scoreboard_salience`'s CONTRACT, not merely of its current behaviour
+
+Three conditions, all enforced on every gauge cell at both widths and in both schemes, all pressed:
+
+1. **THE SHOT MUST BE UNVEILED BEFORE IT IS TAKEN.** Every element from `.hm-alt` to the document
+   root at computed opacity 1, with no animation still running on that chain. Not a duration.
+2. **THE GROUND MUST BE ITSELF, IN THE SAME SHOT.** The trough band must equal the colour the track
+   declares -- read off the page, converted in node -- within 0.002, and must be uniform
+   (min == max). A veil moves it; a slipped box breaks the uniformity first.
+3. **THE COLD READING MUST REPRODUCE THE WARM ONE.** The fill strip is read at the start of the
+   cell and again at the end, five `readMarks()` calls later, and every step must agree to the same
+   epsilon. **A CI RUNNER IS ALWAYS COLD, so an arm that is only true warm is not CI-honest** --
+   this is the clause that makes the first reading of a fresh profile a first-class subject rather
+   than the one nobody re-checks.
+
+Plus the alignment guard, which now anchors on the GEOMETRY READ (not on the first shot) and
+compares x as well as y -- the two defects that made "the guard never fired" uninformative.
+
+### THE RETRACTION LEDGER -- every sentence this cycle took back, and what replaced it
+
+| where | retracted | restated |
+|---|---|---|
+| ledger R7 | "the chrome's FOUR un-owned glyphs" | 53 sites / 38 entries / 29 distinct marks over 14 files. Four was the SINK channel's count. |
+| ledger R7 | "38 chrome sites" | 38 was the ENTRY count. Sites and entries are different numbers; `count` is what separates them. |
+| ledger R7 | "0 ellipsis / 0 apostrophe / 0 quote / 0 dash across markup, tails, sinks, CSS content: and markdown" | FALSE of the app: four straight apostrophes were live in the drill and mock debrief verdicts. All four typeset; 0/0/0/0/0 now holds across the channel-free glyph rule and six bounded prose channels. |
+| ledger R7 | "52 apostrophes, 2 dashes and 2 quotes remain, all corpus" | 111 apostrophes, 49 quotes, 2 dashes. The same debt through wider channels, not a bigger one. |
+| ledger judge item 3 | "3,034 tail runs in the tracked corpus; nine carry an unowned mark" | 3,034 literals END at a tail position, 2,135 with a non-empty run; the nine sit in the 2,135. |
+| ledger R6 (b079b95) | "an instrument that measures colours must return the same numbers -- and it now does" | TRUE of the keel and rule readings (removal diffs, six independent re-runs byte-identical). FALSE of the fill strip until R12: one of those six runs read 1.179:1 against a 1.15 floor. |
+| ledger R6 | "the fill-strip figures likewise reproduce an independent probe's to four decimals" | struck. They reproduce when the shot is unveiled, which is now a precondition rather than an assumption. |
+| `craft_hygiene.py:56` | "NO ABSOLUTE BYTE COUNT IS QUOTED HERE" (while quoting two) | "NO CURRENT BUILD'S BYTE COUNT IS QUOTED HERE". Both historical figures verified against git and kept as frozen history. |
+| `craft_hygiene.py` docstring | the four-glyph inventory and the 0/0/0/0 sentence | a RETRACTION block naming both, with the measured replacements. |
+| `styles.css` ASSERTED-NOT-ARGUED | "test/print_truth.cjs measures the PDF BYTES ... and a build that has lost them comes back the same size" (of all twelve selectors) | the byte arm claims the gauge and its legend; ARM F2 asserts the six grade-bearing selectors on a computed property. The bytes were worth 14 of 125,089 on those six. |
+| `scoreboard_salience.cjs` | "the floor leaves 10.6% of headroom on the worst of them" | conditional on the three guards, with the worst reading ever observed in the wild (1.179:1) named beside it. |
+| `check_all.py` registry | "It reads FOUR channels" / "Twelve planted defects and five negative controls" | two channels by KIND (channel-free glyph, bounded prose), 19 plants and 6 negative controls. |
+
+Eleven sentences, and not one of them was wrong about the app when it was written -- every one was
+right about the instrument that measured it. That is the class this cycle exists to name.
+
+---
+
+## CARRIED OUT OF CYCLE 4 -- each with the reason and the wave that owns it
+
+1. **The app-wide GLYPH pass**, now **77 entries over 163 sites and 36 distinct marks** -- 38/53 in
+   the chrome across 14 files, 39/110 in the corpus. Cycle 4 did not grow the debt; it grew the
+   SIGHT of it for the second cycle running, and this time the channel that was widened was the
+   last one with a bound on it. The class is closed in five directions now (codepoint, file, count,
+   channel and CARRIER), so it can only shrink without an argument. Three entries are NOT shape
+   problems and should be split out when that wave runs: **U+2318** names a physical key (its
+   substitute is a platform-conditional label, and it is now ruled in TWO files, individually);
+   **U+2581..U+2588** is a sparkline, whose substitute is a different WIDGET with its own layout;
+   and **U+2212** is one half of a two-button control whose other half is ASCII, so the fix is a
+   typographic decision about the PAIR.
+2. **The corpus prose pass** -- **111 apostrophes, 49 quotes, 2 dashes**, all in `src/topics`, over
+   18 files. The quotes are almost all the walkthroughs' spoken lines (`Interviewer: "..."`), which
+   the head and tagless channels are what finally read. A content pass with its own review. The
+   markdown half of the corpus is still NOT in this debt: the compiler's typographer typesets it.
+3. **A per-room WASH token.** Unchanged from cycle 2.
+4. **The three dark text nodes under AA** (`.hm-room-n` at 2.35:1, `.hm-room-weak` at 3.48:1).
+   Still a PALETTE decision, still `room_contrast`'s territory.
+5. **GAP-2, the landing drill's flagged set** -- item 10's other half. Still owned by **W2 room**.
+6. **THE VEIL CLASS IS STILL OPEN OUTSIDE THESE TWO CHECKS, AND CYCLE 4 FOUND ITS SECOND MEMBER.**
+   Cycle 3 named `#_bootsplash`; cycle 4 found `body{animation:bodyIn}` sitting right behind it,
+   live at shot time in **4 of 8 cold profiles**. Two veils, one after the other, both invisible to
+   `test/_boot.cjs`'s shared readiness -- which every browser check in the gate depends on. The
+   general fix belongs there and the two worked examples now exist: the splash condition
+   (`!document.getElementById('_bootsplash')`) and the fade condition (every element from the
+   subject to the document root at opacity 1 with no animation running on that chain). **Named for
+   whichever wave next touches the gate's boot primitives.** Any check that screenshots, samples
+   pixels or prints shortly after boot is still exposed; `scoreboard_salience` and `print_truth`
+   are fixed, and they are two of many.
+7. **ABSOLUTE THRESHOLDS TAKEN ON ONE PLATFORM.** Unchanged from cycle 3, and cycle 4 adds a
+   COROLLARY it proved the hard way: an absolute threshold is safe exactly when it is compared
+   against a value the DOCUMENT declares in the same run. The gauge's ground invariant (0.002
+   against the track's own `background-color`) and `print_truth`'s ARM F2 (a computed property, no
+   threshold at all) are both instances. The sweep for raw byte/pixel/millisecond constants is
+   still owed.
+8. **THE FIRST-RUN-OF-A-FRESH-PROFILE QUESTION IS BIGGER THAN ONE ARM.** `scoreboard_salience` now
+   carries a cold-run identity requirement; nothing else in the gate does, and every check in it
+   runs cold on `ubuntu-latest` six shards at a time. The cheap general form is the one written
+   here: take the reading twice, once at the start of the cell and once at the end, and demand
+   they agree. **Owed by whichever wave next audits the browser checks as a family.**

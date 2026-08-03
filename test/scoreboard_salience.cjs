@@ -224,9 +224,21 @@ const GAUGE_SEED = () => {
     const bad = (Math.floor(j / 4) % 2) ? 1 : 2;     /* MISSED and SHAKY, four topics at a time */
     cards.forEach((c, i) => { map[keys[i]] = (i / cards.length < share) ? 3 : bad; });
     const solid = Object.keys(map).filter((x) => map[x] >= 3).length;
+    /* THE TIMESTAMP IS PUSHED THREE HOURS BACK. With `ts: Date.now()` the home's chip ages render
+       "just now" and can TICK OVER during a run -- and at 390 every panel is stacked, so one age
+       string growing a character rewraps the chip list and moves the gauge. Measured across
+       loads, the track's y was 1159.188 on five and 1162.797 on one. Geometry is read ONCE and
+       three screenshots are taken against it, so a panel that moves between them would make the
+       removal diff a comparison of misaligned images.
+       HONESTLY: this was written as the diagnosis of the 390 flake and the measurement then
+       REFUTED it -- the drift guard in shoot() below never fired, and the real cause was the boot
+       splash (see the wait above). It is kept because the hazard is real, it is silent, and a
+       backdated record costs nothing; it is not kept as the explanation of anything. Three hours
+       renders a stable string for the whole run and stays inside the current week, so
+       weeklyGoal is unchanged. */
     localStorage.setItem('ddr.v1.progress.' + id, JSON.stringify({
       got: solid, shk: cards.length - solid, done: cards.length, tot: cards.length,
-      revisit: ['idempotency'], cards: map, cv: 1, ts: Date.now() }));
+      revisit: ['idempotency'], cards: map, cv: 1, ts: Date.now() - 3 * 3600 * 1000 }));
   });
 };
 
@@ -405,6 +417,24 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
     await B.gotoApp(page, HTML, { hash: '#home' });
     await B.until(page, () => !!document.querySelector('#home .hm-alt .hm-seg.keel'), null, B.ACT_MS,
       'a gauge with keel marks on it');
+    /* ---- THE BOOT SPLASH MUST BE GONE, NOT MERELY FADING -------------------------------------
+       #_bootsplash is `position:fixed; inset:0; z-index:9999` filled with var(--bg), and
+       `_bs-done` starts a 400ms opacity fade before app.js removes it. Every reading in this
+       section is a screenshot of the whole viewport, so while that overlay is anywhere between
+       1 and 0 it composites --bg over EVERY pixel sampled, at an alpha nobody controls.
+       MEASURED at the exact moment this section used to start measuring, five loads at 390:
+       opacity 1.000, 0.294, 0.075, 0.355, 0.198 -- present every time, and a different veil each
+       time. That is why the trough (the denominator of every ratio here) read 4.10 / 3.98 / 3.93
+       / 4.13 for the untouched rule across runs, and why FAR() -- which picks the pixel FURTHEST
+       from that trough -- then chose the wrong side of the mark on some capsules and not others,
+       producing MISSED 7.24..10.28 where every stable cell reports min == max exactly.
+       THIS IS A PRE-EXISTING HAZARD IN THIS CHECK, not a 390 one: the same race exists at 1280
+       and simply resolved in time there, so the arm has been reading through a veil whenever the
+       machine was slow enough. Waiting on the ELEMENT rather than on a duration is the fix this
+       file's own doctrine already prescribes -- and the splash cannot come back once removed, so
+       one wait covers all three shots of every readMarks() call. */
+    await B.until(page, () => !document.getElementById('_bootsplash'), null, B.ACT_MS,
+      'the boot splash to be REMOVED (not merely fading: it veils every pixel until it is gone)');
     await B.settle(page);
 
     /* SCROLL FIRST, THEN MEASURE, THEN SHOOT. `elementHandle.screenshot()` scrolls the element
@@ -437,6 +467,8 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
       const o = panel.getBoundingClientRect();
       /* VIEWPORT coordinates, because the shot is the whole viewport at scrollY 0 */
       const rel = (e) => { const r = e.getBoundingClientRect(); return { x: r.x, y: r.y, w: r.width, h: r.height }; };
+      const tcs = getComputedStyle(track);
+      const pxOf = (v) => parseFloat(v) || 0;
       const segCs = getComputedStyle(document.querySelector('.hm-alt .hm-seg'));
       const keelH = parseFloat(segCs.getPropertyValue('--keel-h')) || 2;
       const keelGap = parseFloat(segCs.getPropertyValue('--keel-gap')) || 0;
@@ -449,7 +481,11 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
         lv: parseFloat(getComputedStyle(s).getPropertyValue('--lv')) || 0,
       }));
       return { keelH, keelGap, rad, track: rel(track), segs, panel: rel(panel),
-        trackH: segCs.height };
+        trackH: segCs.height,
+        bdT: pxOf(tcs.borderTopWidth), bdL: pxOf(tcs.borderLeftWidth),
+        bdR: pxOf(tcs.borderRightWidth), padT: pxOf(tcs.paddingTop),
+        padL: pxOf(tcs.paddingLeft), padR: pxOf(tcs.paddingRight),
+        radL: pxOf(tcs.borderTopLeftRadius), radR: pxOf(tcs.borderTopRightRadius) };
     });
     const S = (n) => n * G.dsf;
     const boxes = [];
@@ -482,9 +518,30 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
     }, { i: id, c: css });
     /* the whole viewport, every time, at scrollY 0 -- so A and B are pixel-aligned by construction
        and the diff is the mark rather than a translation */
+    /* EVERY SHOT RE-READS THE TRACK'S y AND THE SECTION FAILS IF IT MOVED. Geometry is measured
+       ONCE and three screenshots are taken against it, so a panel that shifts between them makes
+       the removal diff a comparison of misaligned images -- and the failure is SILENT and looks
+       like a design defect: min stops equalling max, and the SHAKY keel starts reporting the
+       untouched rule's own number. The stacked 390 layout really does move -- 1159.188 on five
+       loads and 1162.797 on one -- so the hazard is not hypothetical, even though it turned out
+       NOT to be the cause of the flake this was written to chase (that was the boot splash; this
+       guard never fired). It stays because a silent misalignment is the worst thing that can
+       happen to a removal diff, and because a guard that has never fired is exactly the kind
+       this file exists to add BEFORE it is needed. */
+    let shotY = null;
     const shoot = async () => {
       await page.evaluate(() => window.scrollTo(0, 0));
       await B.settle(page);
+      const y = await page.evaluate(() =>
+        document.querySelector('.hm-alt .hm-gr-t').getBoundingClientRect().y);
+      if (shotY === null) shotY = y;
+      else if (Math.abs(y - shotY) > 0.01) {
+        fails.push('[' + theme + '/gauge@' + G.w + '] THE PANEL MOVED BETWEEN SHOTS: the track '
+          + 'was at y=' + shotY.toFixed(3) + ' when the geometry was measured and is at y='
+          + y.toFixed(3) + ' now. Every box below was computed against the first, so the removal '
+          + 'diff is comparing misaligned images and nothing it reports is a measurement.');
+        shotY = y;
+      }
       return (await page.screenshot()).toString('base64');
     };
 
@@ -509,7 +566,48 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
       await style('_grm', '.hm-seg{box-shadow:none!important}');
       const shotRule = await shoot();
       await style('_grm', '');
-      const troughBox = [{ x: S(geo.track.x + 60), y: S(geo.track.y + 2), w: S(50), h: S(1) }];
+      /* ---- THE TROUGH, DERIVED FROM THE TRACK'S OWN BOX INSTEAD OF FROM CONSTANTS ---------
+         This was `x: track.x + 60, w: 50, y: track.y + 2, h: 1` -- four numbers picked at 1280,
+         and every one of them broke when the section was pointed at 390. The x range RAN OFF
+         THE TRACK's right edge (the phone track is ~280 CSS px wide with a label column beside
+         it, not ~880), so the strip averaged --side with the white panel behind it and reported
+         the trough at Y 0.8568 where the track computes rgb(241,237,228) = 0.8487 at BOTH
+         widths -- verified by reading the computed background, so it was the sampler and not the
+         app. And the 1-CSS-px strip at +2 sat close enough to the 1px border that the phone
+         panel's fractional y -- which MOVES between runs, because everything above it stacks --
+         could slide it onto --bd. `t` is the denominator of every ratio in this section, so a
+         contaminated trough does not just shift the numbers: FAR() picks the extremum FURTHEST
+         FROM t, so a wrong t makes it pick the wrong side of the mark on SOME capsules and not
+         others. That is the tell, and it is what the failing run showed -- the untouched rule
+         read 3.68/3.73/3.81/4.10 across four runs where every other cell reports min == max
+         exactly, and MISSED spread 4.20..8.49 inside one run.
+         The box is now the track's PADDING BAND: vertically from inside the top border to the
+         top of the capsules, horizontally its content box INSET BY THE CORNER RADIUS, and one
+         device row/column off every edge with ceil/floor -- so it is strictly interior at any
+         sub-pixel phase, at any width, and it needs no constant that a second viewport can
+         falsify.
+         THE RADIUS IS NOT TIDINESS. `.hm-gr-t` has `border-radius:8px` on a 16px-tall track, so
+         inside the top 8 rows the leftmost and rightmost 8 columns of the CONTENT box are
+         outside the rounded rect and show the PANEL, not the track. At 1280 that is ~16 of ~870
+         columns and the mean absorbs it invisibly; at 390 the content box is ~272 wide, so it is
+         6% -- and in DARK the denominator (t + 0.05) is dominated by the constant, which makes
+         every ratio hypersensitive to it. Measured over six loads with the radius NOT insetted:
+         the band's min was a clean 0.00463 but its max reached 0.0354, and the untouched rule
+         read 4.23 / 4.21 / 4.13 where it should be one number. With the radius insetted the band
+         is uniform. (Recorded because it is not obvious: the panel's y at 390 is not even stable
+         between loads -- 1159.188 on five and 1162.797 on one -- so a box derived from geometry
+         is the only kind that can be correct twice.) */
+      const trX0 = Math.ceil((geo.track.x + Math.max(geo.bdL + geo.padL, geo.radL)) * G.dsf) + 1;
+      const trX1 = Math.floor((geo.track.x + geo.track.w
+        - Math.max(geo.bdR + geo.padR, geo.radR)) * G.dsf) - 1;
+      const trY0 = Math.ceil((geo.track.y + geo.bdT) * G.dsf) + 1;
+      const trY1 = Math.floor((geo.track.y + geo.bdT + geo.padT) * G.dsf) - 1;
+      if (trX1 - trX0 < 2 || trY1 - trY0 < 1) {
+        fails.push('[' + theme + '/gauge@' + G.w + '] the trough band is ' + (trX1 - trX0) + 'x'
+          + (trY1 - trY0) + ' device px after insetting one row a side -- there is no strictly '
+          + 'interior sample, so the reference every ratio below divides by cannot be trusted.');
+      }
+      const troughBox = [{ x: trX0, y: trY0, w: Math.max(1, trX1 - trX0), h: Math.max(1, trY1 - trY0) }];
       /* the trough is read from A against A: no pixel differs, so MARK_Y would return null --
          it is measured with the plain reader instead */
       const [tb] = await scratch.evaluate(BOX_Y, { shot: shotA, boxes: troughBox });

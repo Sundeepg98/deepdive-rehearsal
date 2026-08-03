@@ -1001,16 +1001,53 @@ four cells: **1.001 / 1.000 / 1.033 / 1.005:1 adjacent**, against a 1.15 floor. 
 every other arm in the file (keels, rule and depth are untouched by it), which is why it is worth
 having.
 
-**A REAL INSTRUMENT DEFECT WAS FOUND BY BUILDING THIS, and it is the reason the numbers above are
-trustworthy.** The first draft insetted the fill box by the capsule's `border-radius` to keep
-rounded pixels out -- correct at 1280, and at 390 it makes the box THE STRIP'S BOTTOM HALF, sitting
-on the fill's own antialiased bottom edge where the transparent channel blends through at full
-width. Measured that way, light read **0.2825 at --lv 0 where `--gauge-rule`'s own luminance is
-0.176**, and the top pair compressed to **1.074:1** -- a reading about an EDGE, reported as a
-reading about a grade, and it would have condemned a design that is fine. (The radius cannot be
-insetted away at that width in any case: 2 x radius is 4px and the capsule is 3.95px wide.) One
-device row at top and bottom instead; the corrected arm reproduces an independent probe's numbers
-to four decimals, which is the cross-check that says the instrument is measuring the strip.
+**FOUR INSTRUMENT DEFECTS WERE FOUND BY POINTING THIS SECTION AT A SECOND WIDTH, and three of them
+were already there.** They are recorded in full because the tempting move was to re-roll the run.
+
+1. **The fill box insetted by `border-radius`** -- correct at 1280, and at 390 it makes the box THE
+   STRIP'S BOTTOM HALF, sitting on the fill's own antialiased bottom edge where the transparent
+   channel blends through at full width. Measured that way, light read **0.2825 at --lv 0 where
+   `--gauge-rule`'s own luminance is 0.176**, and the top pair compressed to **1.074:1** -- a
+   reading about an EDGE reported as a reading about a grade, which would have condemned a design
+   that is fine. (The radius cannot be insetted away at that width in any case: 2 x radius is 4px
+   and the capsule is 3.95px wide.) One device row at top and bottom instead.
+2. **The TROUGH box was four constants picked at 1280** -- `x: track.x + 60, w: 50, y: track.y + 2,
+   h: 1`. At 390 the track is ~280 CSS px wide with a label column beside it, so the x range ran
+   OFF the track and averaged `--side` with the white panel behind it: the trough read Y 0.8568
+   where the track computes `rgb(241,237,228)` = **0.8487 at both widths** (verified by reading the
+   computed background, so it was the sampler and not the app).
+3. **`.hm-gr-t` has `border-radius:8px`**, so inside the top 8 rows the leftmost and rightmost 8
+   columns of the CONTENT box are outside the rounded rect and show the panel. At 1280 that is ~16
+   of ~870 columns and the mean absorbs it; at 390 it is 6% of a 272px band. The box is derived
+   from the track's own geometry now -- content box inset by the radius, top border to capsule
+   top, one device row/column off every edge with ceil/floor -- so it is strictly interior at any
+   phase and at any width, and needs no constant a third viewport could falsify.
+4. **THE BOOT SPLASH WAS STILL FADING OVER EVERY SAMPLE, and this was the big one.**
+   `#_bootsplash` is `position:fixed; inset:0; z-index:9999` filled with `var(--bg)`, and `_bs-done`
+   starts a 400ms opacity fade before app.js removes it. Measured at the exact moment this section
+   used to begin measuring, five loads at 390: **opacity 1.000, 0.294, 0.075, 0.355, 0.198** --
+   present every time, a different veil each time. `t` is the denominator of every ratio here, so a
+   tinted trough does not merely shift the numbers: `FAR()` picks the pixel FURTHEST FROM t, so a
+   wrong t makes it choose the wrong side of the mark on SOME capsules and not others. That is the
+   signature the failing runs showed -- the untouched rule reading 4.10 / 3.98 / 3.93 / 4.13 across
+   runs where every stable cell reports **min == max exactly**, and MISSED spreading 7.24..10.28
+   inside one run. **This is a PRE-EXISTING hazard, not a 390 one:** the same race exists at 1280
+   and simply resolved in time there, so this arm has been reading through a veil whenever the
+   machine was slow enough. The section now waits on the ELEMENT BEING GONE, which is the
+   condition-not-duration rule the file already states.
+
+**The proof it is fixed is not a green, it is an IDENTITY.** With the splash wait in, four
+consecutive runs return **4.64 / 3.67 / 4.10 in light and 8.21 / 3.62 / 4.23 in dark AT 390,
+byte-identical to 1280 and to each other**, with min == max on every variant. The two widths draw
+the same colours, so an instrument that measures colours must return the same numbers -- and it now
+does. The fill-strip figures likewise reproduce an independent probe's to four decimals.
+
+**One guard was added on a hypothesis the measurement then REFUTED, and is kept anyway:** the
+stacked 390 layout really does move between loads (track y 1159.188 on five, 1162.797 on one), and
+geometry is read once against three later screenshots, so `shoot()` now re-reads the track's y and
+FAILS if it moved. It never fired. It stays because a silent misalignment is the worst thing that
+can happen to a removal diff, and `GAUGE_SEED` backdates its record three hours so a ticking age
+string cannot rewrap the phone's chip list mid-run.
 
 ---
 

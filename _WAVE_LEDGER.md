@@ -1148,6 +1148,20 @@ of a rasteriser, needing no baseline image. `print_truth` ARM F renders the seed
 `printBackground:false` (the reader default; at `true` the browser prints backgrounds whatever the
 stylesheet says, and the arm would measure nothing):
 
+> **RESTATED, CYCLE 4: THE BYTE ARM COVERS THE GAUGE LATTICE AND NOTHING ELSE.** ~~The survey's
+> three grade-bearing fixes are asserted by this arm~~ -- they are not. Pressed on the committed
+> deliverable with `.hm-room-n`, `.hm-room-bar`, `.hm-room-bar i`, `.ix-goal-bar`,
+> `.ix-goal-bar span` and `.hm-gr-t` dropped from the OFF override, the delta moves **14 bytes of
+> 125,089 -- 0.011%**, against a 100,000-byte floor with 25% headroom, and the arm still reads
+> **PASS**. So every selector this survey contributed could have been deleted with the gate green,
+> including `.hm-room-n`, the survey's own "worst case". That is judge item 6's defect class
+> committed inside the cycle that closed item 6. **ASSERTED NOW, by a second instrument rather
+> than a bigger budget:** ARM F2 reads `getComputedStyle().printColorAdjust` under
+> `emulateMedia({media:'print'})` -- a property of the document, deterministic, no threshold -- for
+> all six, with a discrimination control (the surfaces styles.css DECLARED must read `economy`) and
+> a liveness control (an economy override must flip all six). Pressed: deleting the six leaves the
+> byte arm **PASS** and turns ARM F2 **RED**. See CYCLE 4 / judge items 2 and 4.
+
 ```
 [lattice] CONTROL: exact 301686/301686, economy 176597/176597 -- worst pair differs 0 bytes (max 3000)
 [lattice] exact - economy = 125089 bytes (floor 100000)

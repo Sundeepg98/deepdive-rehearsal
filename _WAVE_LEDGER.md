@@ -2415,11 +2415,16 @@ visual_regression   PASS  (18 baselines, win32-chromium149; ... matched its comm
 
 ```
 CERTIFIED TREE        b0f99598c96cfadda057b24a4ab9491dbcfddc06   (the tree of a42fc55)
-BRANCH TIP AT FREEZE  the commit that carries this section
-THE DIFF BETWEEN THEM: docs only --
+BRANCH TIP AT FREEZE  3102625bae07cf9ca4f6c515688cacb1dc0e6e5f   tree b2019af843a263fe5fcb...
+THE DIFF BETWEEN THEM: docs only, verified by `git diff --name-only a42fc55 HEAD` --
     _WAVE_LEDGER.md                                this section
     _audit/2026-08-03-w-addresses-cycle5-gate.txt  the capture quoted above
 ```
+
+*(The tip and its tree are filled in by the commit AFTER the one that carries this block, which is
+the structural point R13 makes: the freeze can name the tree it certifies exactly, and can only
+ever name its own tip in arrears. Both are recorded here rather than left as "the commit this
+branch ends on", and the docs-only diff above is the whole difference between them.)*
 
 No source file, no test file and no deliverable byte differs between the certified tree and the
 tip. **No gate is retaken for that**, and the push-triggered Branch gate on `a42fc55` covers the

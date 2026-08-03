@@ -1128,10 +1128,29 @@ stylesheet says, and the arm would measure nothing):
 [lattice] exact - economy = 125089 bytes (floor 100000)
 ```
 
-**Both halves of the judges' method assert.** The negative control measured **0 bytes** across
-three pairs -- once a WARM-UP render is taken first: the first `page.pdf()` of a page differs from
-every later one by ~7k, a font-cache artefact that this arm's first draft mistook for signal and
-that would have made a byte comparison flake at exactly the threshold it cares about.
+**Both halves of the judges' method assert, but ONE OF THEIR CONSTANTS DID NOT SURVIVE A SECOND
+PLATFORM -- and the free CI gate falsified it on the first run.** The negative control shipped as
+"two identical baselines differ <= ~3k", which is what three pairs measured here: **exactly 0
+bytes, every time**. On `ubuntu-latest` the same pair measured
+`exact 315723/291886, economy 168507/167418` -- **23,837 bytes of run-to-run wobble**, 7.5% of the
+render. The SIGNAL was never in doubt there either (123,379 bytes, clearing the 100k floor by 23%);
+only the control's constant was. **A constant that is 0 on one platform and 23k on another is not a
+threshold, it is a local observation**, and this whole wave is about claims that were true where
+they were measured and nowhere else.
+
+Two fixes, and the first is the same class as R6's fourth instrument defect:
+
+1. **THE BOOT SPLASH IS CONTENT IN A PDF.** ARM F waited on the keel and then rendered; on a slow
+   runner one render of a pair can carry a half-faded `#_bootsplash` and the next cannot, and that
+   difference is real paint. It waits for the element to be GONE now. **That is the second arm in
+   this cycle found to have been reading through it.**
+2. **THE CONTROL IS RELATIVE:** the effect must be at least **3x the reproducibility the SAME RUN
+   measured on the SAME machine** -- and a DIMENSIONLESS form is asserted beside the absolute one,
+   `exact / economy >= 1.35` (measured **1.707** on win32 and **1.732** on ubuntu-latest), so a
+   platform whose PDFs are simply bigger or smaller cannot buy a pass or manufacture a failure.
+
+A WARM-UP render is taken first regardless: the first `page.pdf()` of a page differs from every
+later one by ~7k, a font-cache artefact this arm's first draft mistook for signal.
 
 **THE CHECK-NOT-FIX SURVEY, run rather than reasoned.** Every painted background under print media
 on the seeded home, with its computed `print-color-adjust`: 24 selectors remained after the
@@ -1374,11 +1393,21 @@ copy of the desktop's, is a cycle that measured something.
    `.hm-room-n`'s background survive to PAPER, where the ground is white rather than the dark
    theme's -- the print case is fine and the dark screen case is untouched.
 5. **GAP-2, the landing drill's flagged set** -- item 10's other half. Still owned by **W2 room**.
-6. **THE BOOT-SPLASH VEIL IS A CLASS, NOT AN INCIDENT.** `#_bootsplash` covers the whole viewport
-   with `var(--bg)` at an uncontrolled alpha for 400ms after the app is otherwise ready, and
-   `scoreboard_salience` was reading through it at BOTH widths whenever the box was slow enough.
-   Any check that screenshots or samples pixels shortly after boot is exposed to the same race.
-   Fixed here for this check only, deliberately: the general fix belongs in `test/_boot.cjs`'s
-   shared readiness, which every browser check in the gate depends on, and that is not a change to
-   make inside a home wave on the last day of a cycle. **Named for whichever wave next touches the
-   gate's boot primitives** -- the one-line condition is `!document.getElementById('_bootsplash')`.
+6. **THE BOOT-SPLASH VEIL IS A CLASS, NOT AN INCIDENT, AND THIS CYCLE FOUND TWO ARMS INSIDE IT.**
+   `#_bootsplash` covers the whole viewport with `var(--bg)` at an uncontrolled alpha for 400ms
+   after the app is otherwise ready. `scoreboard_salience` was reading pixels through it at BOTH
+   widths whenever the box was slow enough (measured opacities 1.000 / 0.294 / 0.075 / 0.355 /
+   0.198 at the moment it began measuring), and `print_truth`'s new lattice arm was rendering it
+   INTO the PDF on `ubuntu-latest`, which is where its 23,837-byte run-to-run wobble came from.
+   Two independent arms, two different symptoms, one cause -- so any check that screenshots,
+   samples pixels, or prints shortly after boot is exposed. Fixed in those two only, deliberately:
+   the general fix belongs in `test/_boot.cjs`'s shared readiness, which every browser check in
+   the gate depends on, and that is not a change to make inside a home wave at the end of a cycle.
+   **Named for whichever wave next touches the gate's boot primitives** -- the one-line condition
+   is `!document.getElementById('_bootsplash')`, and the two call sites added here are the
+   worked examples.
+7. **ABSOLUTE THRESHOLDS TAKEN ON ONE PLATFORM.** The lattice arm's noise control shipped as a byte
+   count measured here (0 on win32) and the CI gate returned 23,837 on ubuntu. It is relative now.
+   Worth a sweep: any check whose threshold is a raw byte count, pixel count or millisecond taken
+   from one machine is carrying the same assumption, and the free branch CI is the instrument that
+   finds them -- it found this one on the first run after the arm existed.

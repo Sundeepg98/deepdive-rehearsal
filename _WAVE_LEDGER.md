@@ -1650,6 +1650,27 @@ direction; it does not prove that run 3 was this exact alpha, and no claim is ma
    every step must return the same number within the same epsilon. Measured: **identical in all four
    cells.** **Press P6: force the warm re-read to differ -> FAILS.**
 
+**AND THE ACROSS-RUN FORM WAS MEASURED TOO, BECAUSE THE IN-RUN ONE IS A PROXY FOR IT.** Three
+independent runs of the shipped file on the committed tree, each a fresh browser:
+
+```
+390/light   0.1765 0.1136 0.0772 0.0496 0.0275   IDENTICAL 3/3
+390/dark    0.1941 0.3270 0.4633 0.6260 0.8097   IDENTICAL 3/3
+1280/light  0.1697 ... 0.0216  |  run 3: 0.1694 ... 0.0213     max drift 0.0005
+1280/dark   0.1972 ... 0.8226  |  run 2: 0.1971 ... 0.8220     max drift 0.0006
+```
+
+**The two phone cells are exactly reproducible; the two desktop ones are reproducible to three
+decimal places and not beyond.** That split is not mysterious and it is the file's own note: 1280
+runs at `GAUGE_DSF` 2 and 390 at 3, and this file already records that at DSF 2 the marks "have no
+interior pixel that a sub-pixel phase shift cannot reach". The residual is 3x SMALLER than the
+0.002 epsilon and does not move a single reported margin at three decimals (1280/light's tightest
+pair is 1.2598 and 1.2609 across the two, both printing 1.261). **Recorded rather than smoothed
+over: the honest claim is "identical at DSF 3, and stable to 3dp at DSF 2 with a bounded residual
+of 0.0006", not "identical".** The epsilon is now a measured quantity with a defect four times
+above it and noise three times below it, which is the only shape in which a tolerance is not a
+guess.
+
 **AND THE SHOT-ALIGNMENT GUARD HAD TWO DEFECTS IN ONE LINE.** It compared **y only**, and it
 anchored `shotY` on **the first shot** rather than on the geometry read -- so the one window in
 which every box is computed against a layout that no longer exists was invisible by construction.

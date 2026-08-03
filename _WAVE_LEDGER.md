@@ -1883,7 +1883,7 @@ visual_regression   PASS  (18 baselines, win32-chromium149; every capture reache
 ```
 
 **Independent cross-check, free:** the branch CI gate (`python test/ci.py gate --nowait`, run
-`30819255688` then `30821836898`, 6 shards each on `ubuntu-latest`) came back **success on every shard both times** (79/64/77/134/140/176s on the first) -- green on a second platform as well as on the certifying win32 serial run.
+6 shards on `ubuntu-latest`) was fired after every push and came back **success on every shard, every time**: `30819255688` on `1f6fd7e`, `30821836898` on `336b5cf`, and `30823962544` on `973480a` -- the last of which is this branch's final commit, so the free gate covers the tree the certifying win32 run could not (a serial gate is taken before the commit that records it, and the commit that records it is docs). 79/69/78/115/169/178s on the final run. Green on a second platform as well as on the certifying one.
 
 ---
 

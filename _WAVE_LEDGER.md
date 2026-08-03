@@ -2845,3 +2845,197 @@ applied to a cycle with a better excuse for skipping it: `boot.js`'s classifier 
 a malformed or mixed-case hash lights, and all four home baselines boot at `#home` on a cold
 record, where the old and new branches agree; the `styles.css` edits are comments; the rest is test
 code. All 18 matched their committed pixels in both full gate runs.
+
+## CYCLE 6 -- GATE: 78/78 PASS
+
+Full serial run (`python test/check_all.py`, no `--fast`, no `--shared-browser`) on the
+**COMMITTED** tree, exit 0, **zero FAIL lines**.
+
+**IT CERTIFIES A TREE (R13), NOT A COMMIT.** Certified tree:
+**`54fa2c11b853117f4a43a0426dae77ca66809084`** -- the tree of commit `8b82586`, with
+`git status --porcelain` empty when the run started.
+
+```
+  78 checks in 756.4s (12.6 min)
+GATE: PASS
+```
+
+**THE CAPTURE IS KEPT OUTSIDE THE REPOSITORY THIS CYCLE**, at
+`%TEMP%\claude\D--claude-workspace-deepdive-rehearsal\bfc4e186-9eb0-4148-a383-84020244f407\
+scratchpad\w6\cycle6-gate.txt`, which is a deliberate change from cycles 1-5 (they committed the
+capture into `_audit/`). The reason is R13's own regress: a committed capture is a docs tail, a
+docs tail moves the tip, and the tip it moves to can never be named by the document that moved it.
+So the load-bearing lines are quoted verbatim below -- in the repository, on the certified tree --
+and the raw file is named rather than committed. Nothing in the argument depends on the raw file:
+the gate's own verdict lines are here, and the free push-triggered run below re-derives them on two
+other platforms.
+
+**THE COUNT IS STILL 78. Cycle 6 registered no new check** -- R15, R16 and judge items 1, 2, 4 and
+5 all extend arms inside checks the gate already ran, or correct prose and a committed data file.
+
+The lines that carry this cycle's work:
+
+```
+build_integrity     PASS  (12351331 bytes, 0 unresolved, 9 panes + 7 overlays, build SYNCED
+                          the deliverable, COMMITTED deliverable == fresh build of HEAD)
+scoreboard_salience PASS  ... the worst grade is drawn at least 1.15x louder than the middle
+                          one -- a MARGIN and not an ordering, so a COLLAPSE of the two
+                          severities into one mark fails here as surely as an inversion does
+                          ... that strip is sampled on a box built strictly interior at every
+                          sub-pixel phase (ceil/floor of the device edge, never a rounded
+                          fraction) with a same-shot control that re-reads it one device row
+                          further in, because the previous box was phase-dependent and its
+                          drift was billed to a veil for a whole cycle ... the pixel at the
+                          track's centre is read twice over -- the hit stack, so nothing that
+                          is not the gauge's own may be in front of it, and a geometric sweep
+                          for painted out-of-flow boxes covering that point, which is the half
+                          that reaches a pointer-events:none overlay ... that arm now PRICES
+                          ITSELF per cell on the LARGEST lever the panel offers rather than on
+                          the trough's
+home_claims         PASS  21 planted mutants detected
+room_static         PASS  (codemod=0, styles.css infinite=0, 6 room blocks + rebind, boot
+                          derives the door room first and no constant is hard-coded)
+craft_hygiene       PASS  (23731 rendered-copy spans ... 237 ruled exceptions)
+home_fold           PASS  (88 assertions across 11 records x 390x844 + 360x844)
+visual_regression   PASS  (18 baselines, win32-chromium149; every capture reached a proven rest
+                          state across all 18 roots, cleared the blank-page floor, and matched
+                          its committed pixels)
+```
+
+**THE FREE LANES, BOTH GREEN.**
+
+* **The PUSH-triggered Branch gate, run `30859382885`, `head_sha`
+  `8b82586fc6ef87544d203c169b4544087e25356e`** -- the full serial gate on **ubuntu-latest AND
+  windows-latest**, both `success`. This is the citation R13 prefers: the run records the sha it
+  actually checked out. It names the same commit the certified tree belongs to.
+* **The dispatched `python test/ci.py gate --nowait`, run `30859396495`**, 6 shards on
+  ubuntu-latest, all six `exit 0` (77 / 65 / 78 / 135 / 178 / 178 s). Cited as "6/6 shards green on
+  the ref supplied at dispatch time", per R13's ledger note: a `workflow_dispatch` run records the
+  workflow's own ref and the branch it tested is an INPUT.
+* Branch previews on the same sha: `success`.
+
+---
+
+## CYCLE 6 -- THE FREEZE
+
+```
+CERTIFIED TREE        54fa2c11b853117f4a43a0426dae77ca66809084   (the tree of 8b82586)
+BRANCH TIP AT FREEZE  the commit that carries THIS section, in arrears -- see R13
+THE DIFF BETWEEN THEM: docs only -- _WAVE_LEDGER.md, this section
+```
+
+The gate capture is not in that diff this cycle, because it is not in the repository. No source
+file, no test file, no committed data file and no deliverable byte differs between the certified
+tree and the tip. **No gate is retaken for that**, and the push-triggered Branch gate on `8b82586`
+covers the code tree on two platforms independently.
+
+### What is now part of `scoreboard_salience`'s CONTRACT
+
+Cycle 5 froze four conditions. All four stand; three are widened and one is repriced, and a fifth
+is added.
+
+1. **THE SHOT IS MEASURED FOR A VEIL, AT THE SHOT -- IN THE CHAIN AND IN THE PIXELS.** Every
+   element from `.hm-alt` to the document root at computed opacity exactly `'1'`, with `filter`,
+   `backdrop-filter` and `mix-blend-mode` all `none`/`normal` and nothing `running` on that chain;
+   AND, at the track's centre, nothing in front of `.hm-alt` that is not `.hm-alt`'s own -- read
+   BOTH as a hit stack (which reaches a pseudo-element backdrop and is authoritative about paint
+   order) and as a geometric sweep for painted out-of-flow boxes (which reaches a
+   `pointer-events:none` overlay the hit test skips). All of it in the same `page.evaluate` as the
+   screenshot and again immediately after. No epsilon, no scheme dependence. This is the
+   load-bearing guard: deleting the pixel half leaves MUTANT G undetected, and nothing else in the
+   file can see it.
+2. **THE GROUND INVARIANT, AS A BACKSTOP PRICED ON THE PANEL'S BIGGEST LEVER.** The trough band
+   must equal the colour the track declares, within 0.002, in the SAME shot, and be uniform. Its
+   reach is computed from the LARGEST declared-colour gap the cell has against the canvas --
+   `--home-surface` at 0.01625 in dark, 4.3x the trough's 0.00382 -- both are printed, and the
+   INERT failure fires only when the best of them is inert. A guard's reach is part of its result,
+   and pricing it on the weaker of two levers understates that result.
+3. **THE COLD READING MUST REPRODUCE THE WARM ONE.** Unchanged, with its limit still on the record:
+   a veil spanning both reads satisfies it.
+4. **THE LEGEND'S SWATCHES ARE READ.** Unchanged from cycle 5.
+5. **NEW -- THE SAMPLER MUST BE ABLE TO REPORT ITSELF.** The fill strip is sampled on a box that is
+   the same integer box at every sub-pixel phase (`ceil(edge*dsf)+1` / `floor(edge*dsf)-1`) and
+   that contains no corner-arc pixel, and it is re-read in the SAME shot one device row further in;
+   the ramp must stay monotone and the tightest adjacent pair and every step mean must agree within
+   0.010 and 0.002. A box whose reading depends on where exactly its edges fall is reading an edge.
+
+Plus: **the two severities are separated by a 1.15 MARGIN, not by an ordering** -- the same
+discriminability floor the fill strip applies to two adjacent steps, on both grounds, with the
+COLLAPSE planted beside the inversion.
+
+### What is now part of `home_claims`'s CONTRACT
+
+* **THE ROUTE x RECORD MATRIX HAS FOUR ROUTE SHAPES.** A bare view (`#walk`, `#drill`), a
+  MIXED-CASE view (`#Walk`) and a MALFORMED hash (`#Nonsense`) are all lit in the room of the topic
+  the app actually shows; `#home` and `#HOME` take the resume target's room. The classifier's two
+  lookups follow the router's own case rules -- topic case-SENSITIVE, view case-INSENSITIVE -- and
+  the `#HOME` cell exists so that "anything unparsed is a bare view" cannot pass as the fix.
+
+### THE RETRACTION LEDGER -- every sentence this cycle took back, and what replaced it
+
+| where | retracted | restated |
+|---|---|---|
+| ledger cycle-4 R12 + `scoreboard_salience.cjs` head + `styles.css` | the 390 fill-strip drift is "a VEIL, not a design property" -- a least-squares fit of b = 0.9101*a with residual 0.0004, "which is a pure compositing veil" | **A SAMPLER ARTEFACT.** The box was built on FRACTIONAL device coordinates and resolved with `Math.round()`, so the strip's top edge landed on a different device row with the panel's fractional y -- 9 of 9 instrumented runs follow trackY. A blend toward the near-black trough fits the same five numbers identically, and the light twin falsifies the veil reading: its trough reads its declared colour to 0.00000 in the same shot, where alpha 0.910 would have moved it 0.0088 = 4.4x the epsilon. |
+| ledger cycle-4/5 + `scoreboard_salience.cjs` x2 | "GIVEN those, the worst adjacent pair is 1.272:1 and the floor leaves 10.6% of headroom on it" | On the committed tree the pair was BIMODAL -- 1.276:1 and 1.179:1, the second 2.5% over the floor. On the corrected sampler it is **1.260:1 light / 1.266:1 dark, 9.6% and 10.1% clear, at BOTH widths**. |
+| `styles.css` gauge-channel block + `scoreboard_salience.cjs` header | the four-cell table "1.261/1.266 at 1280 and 1.276/1.272 at 390 ... the four cells sit within 0.015 of each other" | **The four figures were the BOX's, not the design's**: reverting the sampling box alone, with the stylesheet untouched, reproduces all four to three decimals (press P3). Corrected the table reads the SAME PAIR at both widths -- 1.260 light, 1.266 dark, identical to four decimals -- which is what "the grade is carried in the opacity" actually predicts. |
+| `scoreboard_salience.cjs` fill-box comment | the capsule's rounded top corners are "a handful of pixels of a constant trough ... so they cannot manufacture or hide an ORDER" | True of the ORDER and false of the MARGIN, which is what the arm reports: at 390/light those pixels moved the tightest pair 0.0406 under a one-row inset. Found by this cycle's own new control, on this cycle's own first fix. |
+| `scoreboard_salience.cjs` ordering arms x2 + `styles.css` contract line | "--keel-missed is NEVER quieter than --keel-shaky" -- asserted as `M.min >= K.max` | **"at least 1.15x LOUDER"**, on both grounds. A bare `>=` fails only on an INVERSION; the COLLAPSE of the two severities onto one mark passed the `1280 dark` cell with ZERO failures, and none of the six mutants could see it because every one of them restores the inverted wiring. |
+| `check_all.py` scoreboard_salience entry | "The gate prints no per-check timing, so no in-gate figure is quoted here" | True of stdout, false of the repository: `test/gate_cost.json` is a COMMITTED per-check cost table that `run_fast` packs lanes from, and it carried **44.775** for a check that measures **101.873**. Regenerated from two warm `--profile` runs; the entry names the file and quotes both it and a re-measured **102.7s** standalone. |
+| `test/gate_cost.json` | 76 entries, presented as the gate's cost table | **78.** `craft_hygiene` and `home_fold` were absent entirely, and a check missing from that file sorts FIRST under `--fast` -- so this wave's own new check had been packing lanes as an unknown since cycle 1. |
+| `styles.css` keel-pair block | the linear-light scale "preserves chromaticity **exactly**" | **To 8-bit quantisation.** Per-channel linear ratios 1.36056/1.35030/1.31224 light and 0.37795/0.37540/0.38321 dark; spread (max-min)/min = 3.7% and 2.1%, nearly all on blue. The shipped blue codes 14 and 45 are the NEAREST 8-bit codes to an exact scale by the red channel's constant, and one step moves that ratio 8% / 4%, so the residual is the quantum. |
+| the ruling's own replacement text for the line above | "per-channel linear ratio spread **0.8% dark, 3.7% light**" | Two statistics in one sentence: 3.7% is `(max-min)/min` and reproduces; 0.8% is `sd/mean` (0.86%), and under the first definition dark is **2.1%**. One definition, both numbers. |
+| R15's own predicate, before it was applied | "FAIL if any element ABOVE `.hm-alt` in that stack is not one of `.hm-alt`'s own ANCESTORS" | **CONTAINMENT, not ancestry.** At the track's centre the elements in front of the panel ARE its descendants, and an ancestor in front is the defect (`body::after` is reported as `body`). The literal predicate reddens every clean shot and passes the planted backdrop. |
+| R15's own MUTANT G declaration | `html[data-theme='dark'] body::after{position:fixed;inset:0;background:var(--bg);opacity:.10}` | Needs `content:""`. Without it the pseudo generates no box, nothing composites, and the plant reports a clean shot -- a mutant that cannot land, reported as a guard that works. |
+
+Ten sentences and two of them are the ruling's own, corrected on the bench rather than argued
+before it. Cycle 5's ten were "claims that were true where they were measured and false of the
+thing they named". These are narrower and worse: **six of the ten are cases where the SUBJECT was
+real, the WRITING was careful, and the INSTRUMENT was the author of the number.** A retraction
+ledger is cheap; the only thing that closed any of these was a control that could fail, and the
+one this cycle added failed on its own first build.
+
+---
+
+## CARRIED OUT OF CYCLE 6 -- each with the reason and the wave that owns it
+
+1. **The app-wide GLYPH pass** -- unchanged from cycle 5 (77 entries / 163 sites / 36 marks; 38/53
+   in the chrome over 16 files, 39/110 in the corpus over 29).
+2. **The corpus prose pass** -- unchanged (111 apostrophes, 49 quotes, 2 dashes over 20 files).
+3. **A per-room WASH token.** Unchanged since cycle 2.
+4. **The three dark text nodes under AA** (`.hm-room-n` 2.35:1, `.hm-room-weak` 3.48:1). Still a
+   PALETTE decision, still `room_contrast`'s territory.
+5. **GAP-2, the landing drill's flagged set.** Still owned by **W2 room**.
+6. **THE VEIL CLASS OUTSIDE THESE TWO CHECKS, AND THE PORTABLE FORM IS NOW TWO READS, NOT ONE.**
+   Cycle 5 named the ancestor-chain opacity read as the cheap portable fix for `test/_boot.cjs`.
+   This cycle found that read is blind to a SIBLING overlay and to `pointer-events:none`, which is
+   what the app's own `#_bootsplash._bs-done` is -- so the portable primitive is the chain read
+   (widened to filter / backdrop-filter / mix-blend-mode) PLUS a hit-stack-and-covering-box read at
+   the pixel being measured. Still owed by whichever wave next touches the gate's boot primitives,
+   and it now has a worked implementation to lift rather than a description.
+7. **ABSOLUTE THRESHOLDS TAKEN ON ONE PLATFORM.** Unchanged, and this cycle adds the sharper
+   corollary: the sweep for raw byte/pixel/millisecond constants should also look for SAMPLING
+   BOXES built from fractional device coordinates. `S(x)+1 / S(w)-2` is not a threshold and it is
+   the same defect class -- a number whose value depends on something that is not the subject. The
+   trough box was correct since R12 and the two beside it were not, in the same file, for three
+   cycles.
+8. **THE FIRST-RUN-OF-A-FRESH-PROFILE QUESTION.** Unchanged.
+9. **THE OTHER `.hm-k`-SHAPED HOLES** -- a scan of every `test/...` reference inside a
+   `src/styles.css` comment, resolved against the file it names. Unchanged, and this cycle is a
+   second argument for it: the four-cell table in that stylesheet was attributed to an arm whose
+   sampling box did not support it.
+10. **THE 138 MARKS' OWN COPY IS GATE-COUPLED.** Unchanged from cycle 5.
+11. **NEW: NO OTHER SAMPLING BOX IN THE GATE HAS A PHASE CONTROL.** This cycle gave one to the fill
+    strip, because that is where the drift was found. The neighbour band, the keel boxes, the key
+    swatches and the depth pair are all built from geometry too -- the keel and key boxes are
+    removal diffs, which are phase-immune by construction (the box only has to CONTAIN the mark),
+    but the neighbour band and the depth pair are plain means over a box and neither is controlled.
+    The neighbour band is strictly interior as of this cycle; the depth pair is still `S(x-2)`,
+    `S(inside-2)`, 4x4 CSS px, on 6.3% and 3.8% of headroom. **Owed by whichever wave next touches
+    the depth arm** -- it has a mutant (E) but not a control, and this cycle is the receipt for the
+    difference between those two things.
+12. **NEW: THE GATE CAPTURE IS NOW OUTSIDE THE REPOSITORY.** Cycles 1-5 committed it; this cycle
+    quotes it and names its path. That closes R13's regress (a committed capture is a tail commit
+    that its own citation cannot name) at the price of a receipt that lives only on this box. The
+    two free push-triggered platform runs are what make that affordable -- they record their own
+    sha and are durable. **Whichever convention the next cycle wants, it should be stated once
+    rather than alternated.**

@@ -810,3 +810,70 @@ No baseline regenerated, manifest unchanged at 18. The four home baselines were 
 and did not need to: they boot cold, so no capsule is `.open` and no keel paints -- the waterline
 geometry is invisible to them by construction. The ring colours are focus and hover states, and the
 boot stamp settles to the value the constant had.
+
+---
+
+## CYCLE 2 -- GATE: 78/78 PASS
+
+Full serial run (`python test/check_all.py`, no `--fast`, no `--shared-browser`) on the
+**COMMITTED** tree (`00f1962`), exit 0, zero FAIL lines. Capture:
+`_audit/2026-08-03-w-addresses-cycle2-gate.txt`.
+
+```
+  78 checks in 1306.5s (21.8 min)
+GATE: PASS
+```
+
+Taken on the committed tree, which is why `build_integrity` reads the strong form:
+
+```
+BUILD INTEGRITY: PASS  (12334544 bytes, 0 unresolved, 9 panes + 7 overlays,
+build SYNCED the deliverable, COMMITTED deliverable == fresh build of HEAD)
+```
+
+The count is still **78** -- cycle 2 registered no new check. R1/R2 and judge items 2 and 4 are
+inside `craft_hygiene`; R3 and judge items 1 and 3c are inside `scoreboard_salience`; R4 is split
+across `home_claims` and `room_static`; R5 is inside `room_browser`.
+
+The lines that carry this cycle's work:
+
+```
+craft_hygiene       PASS  (9290 rendered-copy spans, 117 ruled exceptions, every one still
+                           matching something, each excused only from the rules it declares,
+                           only in the file it names, and only as many times as it declares)
+scoreboard_salience PASS  ... the worst grade is never drawn quieter than the middle one, and
+                           both keel marks clear the 3:1 non-text floor, against TWO grounds --
+                           the stable trough AND the band each mark actually abuts -- with each
+                           variant swept over all four fill steps ...
+home_claims         PASS  19 planted mutants detected (... THE BOOT CONSTANT RESTORED through
+                           boot.js's own derivation, and the door stamp DELETED, both caught on
+                           the animation frames rather than after the home has already
+                           corrected them)
+room_static         PASS  (... boot derives the door room first and no constant is hard-coded)
+room_browser        PASS  (... a focused topic card wears ITS OWN section's room -- three
+                           sections, three rings, three distinct colours)
+visual_regression   PASS  (18 baselines, win32-chromium149; ... matched its committed pixels)
+```
+
+**Independent cross-check, free:** the branch CI gate (`python test/ci.py gate --nowait`, run
+`30781499203`, 6 shards on `ubuntu-latest`) came back **exit 0 on every shard** -- green on a
+second platform as well as on the certifying win32 serial run.
+
+---
+
+## CARRIED OUT OF CYCLE 2 -- each with the reason and the wave that owns it
+
+1. **The app-wide GLYPH pass.** 21 distinct spans across the frame, the app scripts, the
+   stylesheet and the corpus, ratcheted per file with a count. Each needs a DRAWN substitute and
+   they are shared marks, so it is one wave, not 21 edits -- and every surface but the home has a
+   VR baseline this wave may not move. The class is now closed in three directions (codepoint,
+   file, count), so it can only shrink without an argument.
+2. **The corpus prose pass** -- 73 spans, unchanged from cycle 1. A content pass with its own
+   review.
+3. **A per-room WASH token.** `.ix-card:hover` still takes `--accbg`, the document's wash, under a
+   `--rm` border. Inventing `--room-<id>-wash` is a palette decision with six values to solve and
+   its own contrast pass; named here rather than left silent.
+4. **The three dark text nodes under AA** (`.hm-room-n` at 2.35:1, `.hm-room-weak` at 3.48:1),
+   re-confirmed identical on both builds by the re-derived text-floor sweep. Still a PALETTE
+   decision, still `room_contrast`'s territory.
+5. **GAP-2, the landing drill's flagged set** -- item 10's other half. Still owned by **W2 room**.

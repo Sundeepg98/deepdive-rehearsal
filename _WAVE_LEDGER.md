@@ -1327,13 +1327,26 @@ four home baselines are `#home` roots.
 ## CYCLE 3 -- GATE: 78/78 PASS
 
 Full serial run (`python test/check_all.py`, no `--fast`, no `--shared-browser`) on the
-**COMMITTED** tree (`b079b95`), exit 0, zero FAIL lines. Capture:
+**COMMITTED** tree (`83c178e`, the tree this branch ends on), exit 0, zero FAIL lines. Capture:
 `_audit/2026-08-03-w-addresses-cycle3-gate.txt`.
 
 ```
-  78 checks in 940.8s (15.7 min)
+  78 checks in 958.3s (16.0 min)
 GATE: PASS
 ```
+
+**Taken on the FINAL tree, not the first one that went green.** An earlier full run passed at
+78/78 on `b079b95`, and the lattice arm's negative control was then rewritten because the CI cross-
+check falsified its constant -- so that capture described a `print_truth` that no longer exists.
+The run above is the retake. (Cycle 2 established this discipline for a PRINT STRING that had
+changed; the same rule holds a fortiori for an assertion.)
+
+**Independent cross-check, free:** the branch CI gate (`python test/ci.py gate --nowait`, run
+`30804536382`, 6 shards on `ubuntu-latest`) came back **success on every shard** -- green on a
+second platform as well as on the certifying win32 serial run. The run before it,
+`30803979529`, was RED on shard 3, and that red is the reason the lattice control is relative: see
+R9. **The free gate earned its keep this cycle** -- it found a platform assumption the certifying
+run structurally could not.
 
 Taken on the committed tree, which is why `build_integrity` reads the strong form:
 

@@ -349,17 +349,29 @@ NATIVE_CHECKS = [('ascii_guard', ['python3', 'test/ascii_guard.py']),
                   # the copy and called it clean. (This line read "2,840 characters ... 0.02%"
                   # through cycle 2 -- a figure that reproduces under NONE of the methods the
                   # check documents; it is craft_hygiene.py's own re-derivation now, and no
-                  # absolute byte count is quoted in either place, because that is the only part
-                  # of the sentence a rebuild can falsify.) It reads FOUR channels with a real JS
-                  # scanner -- markup between two tags, the run after the LAST tag, the text sinks
-                  # (.textContent/.innerText/.placeholder/.value and setAttribute), and CSS
-                  # content: -- plus markdown for the glyph rule alone, since the compiler's
-                  # typographer owns the corpus's apostrophes. Comments are not copy: a bare
-                  # `>...<` regex reported 523 straight quotes that were all design commentary.
-                  # The four typeset rules judge only PROSE -- code samples are exempt on
-                  # principle, since `SELECT count(*) ... WHERE` is an elision in SQL rather than a
+                  # CURRENT BUILD's byte count is quoted in either place, because that is the only
+                  # part of the sentence a rebuild can falsify. Two HISTORICAL byte counts stay in
+                  # craft_hygiene.py, dated and tied to their commits: they are frozen history and
+                  # cannot go stale, which is a different thing from an attribution.)
+                  # TWO CHANNELS, NOT FOUR, and cycle 4 is where that stopped being a list of
+                  # places and became a rule about what each kind of claim is ABOUT. FONT
+                  # OWNERSHIP is a fact about a codepoint, so the glyph rule is CHANNEL-FREE: it
+                  # reads every contiguous non-ASCII run of every string literal, every CSS
+                  # content: string, every markdown line and every HTML text/attribute run, keyed
+                  # at the MARK and bound to its FILE. (Cycle 3 ran it over four bounded span
+                  # channels, and three shipped ternary text sinks -- `x.textContent = c ? 'a' :
+                  # 'b'` -- printed five unowned marks straight through the gap, with three more
+                  # sitting in a const, a concatenation and a call argument that no bounded
+                  # channel could reach at all.) The FOUR TYPESET RULES are claims about prose and
+                  # keep their bounds: markup between two tags, the HEAD run before a literal's
+                  # first tag, title|aria-label|placeholder|alt, a text sink's literals (the whole
+                  # statement, not its first token), a TAGLESS whole sentence, and CSS content:.
+                  # Markdown is out of those four -- the compiler's typographer owns the corpus's
+                  # apostrophes. Comments are not copy: a bare `>...<` regex reported 523 straight
+                  # quotes that were all design commentary. Code samples are exempt on principle,
+                  # since `SELECT count(*) ... WHERE` is an elision in SQL rather than a
                   # trailing-off sentence. Ratcheted through craft_hygiene_allow.json, where a
-                  # STALE entry is itself a failure. Twelve planted defects and five negative
+                  # STALE entry is itself a failure. NINETEEN planted defects and six negative
                   # controls run every invocation -- including the ratchet's own machinery
                   # (rules intersected, count enforced both ways, stale and over-declared caught),
                   # every one of which was unguarded and green-when-deleted before cycle 3.

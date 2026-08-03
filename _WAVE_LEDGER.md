@@ -2257,6 +2257,21 @@ plants (`' -- '`, `'...'`) and one control fixture.
 The sweep admits 48 more spans and reports zero new findings, so the widening costs nothing and the
 tree had exactly one member of this class.
 
+**AND THE INSTANCE, CLOSED WITH THE JUDGES' OWN METRIC ON THE SHIPPED DELIVERABLE.** Same page,
+same graded record, `#home` innerText:
+
+```
+\S -{1,2} \S  in #home innerText        0   (was 138)
+U+2014        in #home innerText      142   -- 138 of them the rail clauses in .hm-vh
+.hm-seg[title]                         138   all 138 carrying U+2014, none carrying a spaced hyphen
+sample title: "Kafka Internals - 2 solid of 7 Staff probes, shaky probes flagged" (with U+2014)
+```
+
+The four remaining em dashes are the panel's own copy. The judges counted five on their record;
+that figure is seed-dependent (the single-thin-rail verdict carries an `&mdash;` only on some
+shapes), so it is not restated here as a measurement of mine -- which is the discipline this whole
+item is about.
+
 ---
 
 ### JUDGE ITEM 8 -- THE LEGEND'S SWATCHES WERE ASSERTED BY NOTHING: CLOSED, AND THE GROUND WAS MISNAMED

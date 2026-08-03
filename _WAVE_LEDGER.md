@@ -396,8 +396,46 @@ beige trough, and the verdict wraps at a shorter measure. Receipt pairs (`before
 ## GATE -- 78/78 PASS
 
 Full serial run (`python3 test/check_all.py`, no `--fast`, no `--shared-browser`) on the
-**COMMITTED** tree, which is why `build_integrity` reads its strong form. Capture:
+**COMMITTED** tree (`72e8f28`), exit 0, zero FAIL lines. Capture:
 `_audit/2026-08-03-w-addresses-cycle1-gate.txt`.
+
+```
+  78 checks in 802.0s (13.4 min)
+GATE: PASS
+```
+
+Taken on the committed tree, which is why `build_integrity` reads the strong form rather than
+deferring it:
+
+```
+BUILD INTEGRITY: PASS  (12323503 bytes, 0 unresolved, 9 panes + 7 overlays,
+build SYNCED the deliverable, COMMITTED deliverable == fresh build of HEAD)
+```
+
+The lines that carry this cycle's work:
+
+```
+craft_hygiene       PASS  (9280 rendered-copy spans, 77 ruled exceptions, all of them
+                           still matching something)
+scoreboard_salience PASS  ... the worst grade is never drawn quieter than the middle one
+                           across the whole fill range, both keel marks and the untouched
+                           capsule's rule clear the 3:1 non-text floor on the pixels, and
+                           the panels stand off their ground
+home_claims         PASS  17 planted mutants detected (... THE HOME LIT IN THE BOOT
+                           CONSTANT'S ROOM ...; the arrival inverted in both of its
+                           halves ...; the rails' aria-describedby tie stripped ...)
+home_fold           PASS  (88 assertions across 11 records x 390x844 + 360x844)
+search_deadend      PASS  (33 assertions: ... a real click on a Still-shaky chip leaves
+                           the home for the topic it names ...)
+latent_arial        PASS  (0 known component(s) allowlisted; no new latent-Arial button)
+typeface_census     PASS  (186 declarations, 0 orphans, 2 documented exception(s))
+visual_regression   PASS  (18 baselines, win32-chromium149; ... matched its committed pixels)
+build_determinism   PASS  (88 Shiki blocks render identically under a simulated 600ms/line stall)
+```
+
+**Independent cross-check, free:** the branch CI gate (`python test/ci.py gate --nowait`, run
+`30773318052`, 6 shards on `ubuntu-latest`) came back **success on every shard** -- so the wave is
+green on a second platform as well as on the certifying win32 serial run.
 
 The count is **78**, as the freeze states: one new registered check (`craft_hygiene`); every other
 arm extends an existing one.

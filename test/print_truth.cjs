@@ -699,15 +699,35 @@ function main() {
    * property of the DOCUMENT rather than of a rasteriser, which is why it needs no baseline image
    * and cannot drift with a font or a driver.
    *
-   * TWO NEGATIVE CONTROLS, because a byte comparison is exactly the shape of check that passes on
-   * noise: (1) two IDENTICAL renders must come back within NOISE_MAX -- measured 0 bytes on
-   * win32-chromium149, three pairs, once a warm-up render has been taken (the FIRST page.pdf() of
-   * a page differs from every later one by ~7k, which is a font-cache artefact and was mistaken
-   * for signal in this arm's first draft); and (2) the delta must clear LATTICE_MIN, which is 100k
-   * against a measured 140,880 -- 41% of headroom, and an order of magnitude above the noise. */
+   * THREE CONTROLS, because a byte comparison is exactly the shape of check that passes on noise:
+   *   (1) two IDENTICAL renders must agree to within delta/NOISE_FACTOR -- a RELATIVE control,
+   *       measured in the same run on the same machine;
+   *   (2) the delta must clear LATTICE_MIN (100k);
+   *   (3) and it must clear LATTICE_RATIO as a fraction, which is the dimensionless form of the
+   *       same claim and survives a platform whose PDFs are simply bigger or smaller.
+   *
+   * THE ABSOLUTE NOISE CEILING THIS SHIPPED WITH WAS A WIN32 ASSUMPTION, AND THE FREE CI GATE
+   * FALSIFIED IT ON THE FIRST RUN. It read `noise <= 3000`, which is what three pairs measured
+   * here -- exactly 0 bytes every time. On ubuntu-latest the same pair measured
+   * `exact 315723/291886, economy 168507/167418`: 23,837 bytes of run-to-run wobble on the
+   * exact side, 7.5% of the render. The SIGNAL was never in doubt (123,379 bytes, clearing the
+   * floor by 23%) -- only the control's constant was, and a constant that is 0 on one platform
+   * and 23k on another is not a threshold, it is a local observation. A control measured in the
+   * SAME RUN and expressed as a ratio to the effect is the portable form.
+   *
+   * MOST OF THAT WOBBLE WAS THE BOOT SPLASH, which is the same defect class W-ADDRESSES cycle 3
+   * found in scoreboard_salience: #_bootsplash is a fixed, full-viewport div filled with
+   * var(--bg) that fades for 400ms after the app is otherwise ready, and while it is up it is
+   * REAL CONTENT IN THE PDF. On a slow runner one render of a pair can carry it and the next
+   * cannot. This arm waits for the element to be GONE, not merely faded.
+   *
+   * A warm-up render is taken first regardless: the FIRST page.pdf() of a page differs from every
+   * later one by ~7k, a font-cache artefact that was mistaken for signal in this arm's first
+   * draft. */
   {
-    const NOISE_MAX = 3000;
-    const LATTICE_MIN = 100000;
+    const NOISE_FACTOR = 3;      /* the effect must be at least 3x the run's own reproducibility */
+    const LATTICE_MIN = 100000;  /* measured 125,001 on win32 and 123,379 on ubuntu-latest       */
+    const LATTICE_RATIO = 1.35;  /* measured 1.707 on win32 and 1.732 on ubuntu-latest           */
     const OFF = '.hm-seg,.hm-seg::after,.hm-seg.open,.hm-seg.keel::before,.hm-k i,.hm-k i::after,'
       + '.hm-gr-t,.hm-room-n,.hm-room-bar,.hm-room-bar i,.ix-goal-bar,.ix-goal-bar span'
       + '{print-color-adjust:economy!important;-webkit-print-color-adjust:economy!important}';
@@ -717,6 +737,9 @@ function main() {
     await B.gotoApp(hp, HTML, { hash: '#home' });
     await B.until(hp, () => !!document.querySelector('#home .hm-alt .hm-seg.keel'), null, B.ACT_MS,
       'a gauge with keel marks on it');
+    /* the splash is CONTENT while it is up -- see the note above */
+    await B.until(hp, () => !document.getElementById('_bootsplash'), null, B.ACT_MS,
+      'the boot splash to be REMOVED (while it is up it is real content in the PDF)');
     await B.settle(hp);
     const shot = async (css) => {
       await hp.evaluate((c) => {
@@ -738,18 +761,22 @@ function main() {
     await hp.evaluate(() => { const o = document.getElementById('_r9'); if (o) o.remove(); });
     const noise = Math.max(Math.abs(on1 - on2), Math.abs(off1 - off2));
     const delta = Math.min(on1, on2) - Math.max(off1, off2);
-    ok(noise <= NOISE_MAX,
-      '[lattice] CONTROL: two IDENTICAL renders of the same page agree, so a delta below means '
-      + 'something and not PDF noise',
-      'exact ' + on1 + '/' + on2 + ', economy ' + off1 + '/' + off2 + ' -- worst pair differs '
-      + noise + ' bytes (max ' + NOISE_MAX + ')');
-    ok(delta >= LATTICE_MIN,
+    const ratio = Math.min(on1, on2) / Math.max(off1, off2);
+    ok(noise * NOISE_FACTOR <= delta,
+      '[lattice] CONTROL: the effect is at least ' + NOISE_FACTOR + 'x the reproducibility of the '
+      + 'renderer that measured it -- two IDENTICAL renders, in this run, on this machine',
+      'exact ' + on1 + '/' + on2 + ', economy ' + off1 + '/' + off2 + ' -- worst identical pair '
+      + 'differs ' + noise + ' bytes against a ' + delta + '-byte effect (' + NOISE_FACTOR + 'x '
+      + 'noise = ' + (noise * NOISE_FACTOR) + ')');
+    ok(delta >= LATTICE_MIN && ratio >= LATTICE_RATIO,
       '[lattice] the altitude gauge, its legend, the room bars and the room counts SURVIVE the '
       + 'reader default: forcing print-color-adjust:exact adds real paint to the PDF, where '
       + 'economy drops it and prints figures beside a blank strip',
-      'exact - economy = ' + delta + ' bytes (floor ' + LATTICE_MIN + '); a build that has lost '
-      + 'the declarations comes back at economy size, which is a page with no lattice on it');
-    pdfMeta.lattice = { exact: on1, economy: off1, delta, noise };
+      'exact - economy = ' + delta + ' bytes (floor ' + LATTICE_MIN + ') and exact/economy = '
+      + ratio.toFixed(3) + ' (floor ' + LATTICE_RATIO + ', the dimensionless form, so a platform '
+      + 'whose PDFs are simply bigger cannot buy a pass); a build that has lost the declarations '
+      + 'comes back at economy size, which is a page with no lattice on it');
+    pdfMeta.lattice = { exact: on1, economy: off1, delta, noise, ratio: Number(ratio.toFixed(3)) };
     await hp.close();
   }
 

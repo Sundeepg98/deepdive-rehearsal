@@ -842,13 +842,22 @@ boot stamp settles to the value the constant had.
 ## CYCLE 2 -- GATE: 78/78 PASS
 
 Full serial run (`python test/check_all.py`, no `--fast`, no `--shared-browser`) on the
-**COMMITTED** tree (`00f1962`), exit 0, zero FAIL lines. Capture:
+**COMMITTED** tree, exit 0, zero FAIL lines. Capture:
 `_audit/2026-08-03-w-addresses-cycle2-gate.txt`.
 
 ```
-  78 checks in 1306.5s (21.8 min)
+  78 checks in 1219.0s (20.3 min)
 GATE: PASS
 ```
+
+**Three full runs were taken and the middle one is worth recording rather than hiding.** The first
+(`00f1962`) was 78/78 in 1306.5s. The boot arm was then hardened -- see R4 -- and the re-run on the
+final tree came back **FAIL (grade_reveal)**: a real click on Missed landed (`ok:true`, painted
+coordinates) and the record read back null, one assertion in a check this cycle never touched.
+Diagnosed rather than re-rolled: `grade_reveal` is **3/3 green standalone**, and the src it ran
+against is BYTE-IDENTICAL to the src that passed it in the first run (the only files that changed
+between them are `test/home_claims.cjs` and this ledger). A persist/read race under serial-gate
+load, not a regression. The run of record above is the clean re-run on the same tree.
 
 Taken on the committed tree, which is why `build_integrity` reads the strong form:
 

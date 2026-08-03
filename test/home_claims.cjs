@@ -1828,9 +1828,10 @@ const GEN_N = 24;
     + 'the paired row restored with the deficit panel first; the rails\' aria-describedby tie '
     + 'stripped, which is the state in which 138 marks name their topics to a mouse and to nothing '
     + 'else; and the two boot-ring plants -- THE BOOT CONSTANT RESTORED through boot.js\'s own '
-    + 'derivation, and the door stamp DELETED, both caught on the animation frames rather than '
-    + 'after the home has already corrected them) -- every one of them a defect a judge or a '
-    + 'battery found on a shipped build');
+    + 'derivation, and the door stamp DELETED -- judged on the UNION of a document_start '
+    + 'MutationObserver and the painted frames, because a WRONG stamp is a value in the log while '
+    + 'a MISSING one is only a gap in the paint, and each recorder alone lets the other defect '
+    + 'through) -- every one of them a defect a judge or a battery found on a shipped build');
   if (bad.length) return B.finish(1, 'HOME CLAIMS: FAIL (' + bad.length + ')');
   return B.finish(0, 'HOME CLAIMS: PASS  (' + out.length + ' assertions: '
     + Object.keys(SEEDS).length + ' pinned records + ' + GEN_N + ' generated from a fixed PRNG, '

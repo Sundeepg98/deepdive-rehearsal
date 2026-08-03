@@ -22,8 +22,5 @@ the OVER-DECLARED detector disabled -- an entry widens to rules never argued for
 the GLYPH-BEFORE-PROSE-GATE split reverted -- a bare mark span goes unjudged (cycle 1) exit 1  SELF-TEST ABORT -- the analyser does not do what it claims: | CRAFT HYGIENE: FAIL (self-test)
 
 All plants removed.  git status:
- M src/scripts/app/search-overlay.js
- M test/craft_hygiene.py
- M test/craft_hygiene_allow.json
-?? _audit/w-addresses-cycle3/
+ M _audit/w-addresses-cycle3/press-craft-channels.txt
 

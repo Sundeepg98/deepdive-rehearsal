@@ -1840,11 +1840,13 @@ comparison.
 ## CYCLE 4 -- GATE: 78/78 PASS
 
 Full serial run (`python test/check_all.py`, no `--fast`, no `--shared-browser`) on the
-**COMMITTED** tree (`24d8163`, the tree this branch ends on), exit 0, zero FAIL lines. Capture:
+**COMMITTED** tree (`2f6be37`, the tree this branch ends on), exit 0, zero FAIL lines. Capture:
 `_audit/2026-08-03-w-addresses-cycle4-gate.txt`.
 
+**TAKEN ON THE FINAL TREE, NOT THE FIRST ONE THAT WENT GREEN.** Two earlier full runs passed at 78/78 -- on `1f6fd7e` (841.7s) and on `24d8163` (812.5s) -- and both were superseded: the first by a comment change in the gate registry, the second by judge item 1's other half, the styles.css restatement, which is comment-only in `src/` and therefore rebuilds the deliverable. Neither changed a check's behaviour and both captures described a tree this branch no longer ends on, which is the only thing that matters about a receipt. The run above is the retake, and the deliverable it certifies is the committed one (`build_integrity` reads the strong form).
+
 ```
-  78 checks in 812.5s (13.5 min)
+  78 checks in 1049.0s (17.5 min)
 GATE: PASS
 ```
 
@@ -1858,7 +1860,7 @@ new check and every widening is inside a check the gate already ran.**
 The lines that carry this cycle's work:
 
 ```
-build_integrity     PASS  (12342763 bytes, 0 unresolved, 9 panes + 7 overlays,
+build_integrity     PASS  (12344284 bytes, 0 unresolved, 9 panes + 7 overlays,
                           build SYNCED the deliverable, COMMITTED deliverable == fresh build of HEAD)
 craft_hygiene       PASS  (23683 rendered-copy spans; the glyph rule CHANNEL-FREE over every
                           string literal and the four typeset rules on six bounded prose
@@ -1881,7 +1883,7 @@ visual_regression   PASS  (18 baselines, win32-chromium149; every capture reache
 ```
 
 **Independent cross-check, free:** the branch CI gate (`python test/ci.py gate --nowait`, run
-`30819255688`, 6 shards on `ubuntu-latest`) came back **success on every shard** (79/64/77/134/140/176s) -- green on a second platform as well as on the certifying win32 serial run. It was fired on `1f6fd7e`, the commit that carries every code change in this cycle; `24d8163` is a comment in the gate registry and changes no check's behaviour.
+`30819255688` then `30821836898`, 6 shards each on `ubuntu-latest`) came back **success on every shard both times** (79/64/77/134/140/176s on the first) -- green on a second platform as well as on the certifying win32 serial run.
 
 ---
 

@@ -782,24 +782,49 @@ BROWSER_CHECKS = [('render', 'test/render.cjs'), ('entity_leak', 'test/entity_le
                      # alone carrying an ordered ramp with every adjacent pair over 1.15, the
                      # untouched capsule's rule, the four LEGEND SWATCHES against the panel's own
                      # measured ground (the binding cell of the --gauge-rule solve), and the panel
-                     # standing off the home's ground. Six planted mutants, each the shipped defect
+                     # standing off the home's ground. The two keel marks are separated by a
+                     # 1.15 MARGIN and not by a bare ordering, because a bare `>=` can only fail
+                     # on an inversion and a COLLAPSE of the two severities onto one mark passed a
+                     # whole cell clean. EIGHT planted mutants, each a shipped or reachable defect
                      # put back: the old keel wiring, the rule back to --bd, the waterline removed,
                      # two fill steps flattened, the panel painted at its ground, --gauge-rule
-                     # painted at the panel.
+                     # painted at the panel, a 10% full-viewport backdrop over the gauge (dark
+                     # only, where the arithmetic guards are weakest -- and a negative control in
+                     # light, where the plant cannot apply and the cell must report clean), and
+                     # --keel-shaky collapsed onto --st-warn.
+                     # THE FILL STRIP IS SAMPLED ON A BOX THAT IS THE SAME BOX AT EVERY SUB-PIXEL
+                     # PHASE -- ceil/floor of the device edge rather than a rounded fraction, and
+                     # inset past the capsule's corner arc -- with a same-shot control that
+                     # re-reads it one device row further in. Cycle 6: the previous box was
+                     # phase-dependent AND corner-contaminated, its drift had been attributed to a
+                     # compositing veil, and reverting the box alone reproduces the whole
+                     # published four-cell table.
                      # EVERY READING IS GATED ON THE SHOT BEING UNVEILED, which is a CONTRACT and
                      # not current behaviour -- a veil at alpha 0.91 once crossed a whole dark cell
                      # at exit 0: (1) every element from the gauge to the document root at computed
-                     # opacity 1 with nothing running on that chain, read in the same evaluate as
-                     # the shot and again after it (no epsilon, both schemes); (2) the trough must
+                     # opacity 1 with no filter, backdrop-filter or blend mode and nothing running
+                     # on that chain, AND nothing that is not the gauge's own in front of it at
+                     # the track's centre -- read as a hit stack (which reaches a pseudo-element
+                     # backdrop) and as a geometric sweep for painted out-of-flow boxes (which
+                     # reaches a pointer-events:none overlay) -- all in the same evaluate as the
+                     # shot and again after it, with no epsilon and no scheme; (2) the trough must
                      # equal the colour the track declares within 0.002 in the SAME shot, and that
-                     # arm PRICES ITSELF, failing where the trough/canvas gap is too small for any
-                     # alpha to cross the epsilon; (3) the COLD first reading -- the only one a CI
-                     # runner ever takes -- must reproduce a warm re-read later in the same run.
-                     # ~1m31s, MEASURED standalone on win32 in cycle 5 (`time node
-                     # test/scoreboard_salience.cjs`, 90.5s) with the gauge, the key arm and all
-                     # six mutants running. The gate prints no per-check timing, so no in-gate
-                     # figure is quoted here: the old "~1m50s" was pre-gauge and this file's whole
-                     # subject is numbers that name what actually produced them.
+                     # arm PRICES ITSELF on the LARGEST declared-colour lever the panel offers
+                     # (--home-surface, 4.3x the trough's in dark), failing where no alpha could
+                     # move any of them past the epsilon; (3) the COLD first reading -- the only
+                     # one a CI runner ever takes -- must reproduce a warm re-read later in the
+                     # same run.
+                     # COST: 102.7s standalone on win32 (`time node
+                     # test/scoreboard_salience.cjs`), against cycle 5's 90.5s -- the backdrop
+                     # mutant, the collapse mutant and the phase control are what the 12s buys.
+                     # THE IN-GATE FIGURE IS test/gate_cost.json, which is a committed per-check
+                     # cost table derived from a --profile run and is what run_fast packs its lanes
+                     # from: 101.873s there, regenerated in cycle 6 as max(two warm --profile runs)
+                     # of this tree. It had stood at 44.775 -- less than half the check's cost
+                     # after cycles 4 and 5 doubled it -- and craft_hygiene and home_fold were
+                     # MISSING from it entirely. Cycle 5's entry said "the gate prints no per-check
+                     # timing, so no in-gate figure is quoted here", which is true of stdout and
+                     # was not true of the repository.
                      ('scoreboard_salience', 'test/scoreboard_salience.cjs'),
                      # scoreboard_resume: the tiles (Solid/Revisit/Left) are THIS-RUN counters -- the
                      # debrief's own pct (got / results.length) and the round-end announcement both read
@@ -1187,6 +1212,26 @@ BROWSER_CHECKS = [('render', 'test/render.cjs'), ('entity_leak', 'test/entity_le
                      # no-record) at two viewports and asserts each rendered claim against the
                      # NUMERALS RENDERED BESIDE IT. Four planted mutants, each a defect a judge
                      # found on a shipped build; aborts if any goes undetected.
+                     # AND SINCE W-ADDRESSES, THE DOOR ROOM AND THE RAIL DESCRIPTIONS, which this
+                     # line described by nothing for four cycles -- the same defect judge item 4
+                     # found in the scoreboard_salience entry, one line apart. scripts/boot.js
+                     # derives the room before anything paints (index.html's hard-coded
+                     # data-group constant is gone), and it carries three registry facts it cannot
+                     # import: the id->room table, the boot topic and the cold door's topic. All
+                     # three are compared against TopicRegistry in both directions. The stamp is
+                     # watched from document_start by a MutationObserver AND by a per-frame
+                     # sampler, and judged on the UNION -- a WRONG stamp is a value in the log, a
+                     # MISSING one is a gap in the paint, and each recorder is blind to the other.
+                     # The route x record matrix drives FOUR route shapes on a seeded record, not
+                     # one: a bare view (#walk, #drill), a MIXED-CASE view (#Walk) and a MALFORMED
+                     # hash (#Nonsense) must all be lit in the room of the topic the app actually
+                     # shows, while #home and #HOME take the resume target's room -- because the
+                     # router's topic lookup is case-SENSITIVE and its view lookup is not, and a
+                     # classifier that reads a parsed topic id instead of the hash's emptiness
+                     # gets the last three wrong (cycle 6, R16). Plus the rail descriptions: every
+                     # rail the gauge renders, selected by POSITION rather than by the
+                     # aria-describedby tie, its description EQUAL character for character to an
+                     # oracle formatted from the registry, one clause per rendered segment.
                      ('home_claims', 'test/home_claims.cjs'),
                      # THE CHECK THAT ACTUALLY LOOKS AT THE SCREEN. Everything above this line reads the
                      # DOM, the source, or a computed style; none of them can tell you what was PAINTED.

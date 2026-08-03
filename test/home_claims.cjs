@@ -1867,7 +1867,11 @@ const GEN_N = 24;
          session (measured: `#walk` gives data-view=null, data-group=architecture-apis). So
          waiting for "data-view is not home" there waits forever. The topic routes announce
          themselves by mounting their pane instead. */
-      await B.until(p, (h) => (h === '#home'
+      /* THE HOME TEST IS CASE-INSENSITIVE BECAUSE THE ROUTER'S IS (router.js:50 lower-cases the
+         view id). `#HOME` renders the home, which never mounts a `.stage .pane.on`, so an
+         exact-match predicate would wait the full ACT_MS and then report the route as unrendered
+         -- a timeout dressed as a finding. */
+      await B.until(p, (h) => (String(h).toLowerCase() === '#home'
         ? document.documentElement.getAttribute('data-view') === 'home'
         : !!document.querySelector('.stage .pane.on')),
       hash, B.ACT_MS, 'the route rendered (' + hash + ')');
@@ -1944,7 +1948,16 @@ const GEN_N = 24;
          applyIdentity() runs on switches and a bare-view boot never switches. The room the
          document wears is compared against the room of the topic the app IS SHOWING, read from
          TopicRegistry.current() rather than from a constant, so this cannot drift. */
-      for (const h of ['#walk', '#drill']) {
+      /* ---- FOUR ROUTE SHAPES, NOT TWO (cycle 6, R16) ---------------------------------------
+         The two cells below drove only hashes the classifier's `/^#([a-z0-9-]+)/` could PARSE.
+         Everything it could not parse fell to the empty string and took the `!_h` branch -- the
+         DOOR's answer -- so a MIXED-CASE view (#Walk) and a MALFORMED hash (#Nonsense) were both
+         lit in the resume room while the app showed the boot topic: the exact defect mutant D
+         below plants, arriving through a shape nothing drove. The router lower-cases the view id
+         and falls back to `walk` for an unknown one (router.js:50-51), so both of these ARE bare
+         views of the boot topic and the oracle is the same one the other two cells use -- the
+         room of the topic the app is actually showing, read from TopicRegistry.current(). */
+      for (const h of ['#walk', '#drill', '#Walk', '#Nonsense']) {
         const bv = await frames(pick.id, null, { hash: h });
         const wore = bv.seen.concat(bv.frames);
         out.push(['[boot] a BARE-VIEW route (' + h + ') on a SEEDED record is lit in the room of '
@@ -1953,6 +1966,20 @@ const GEN_N = 24;
           !!bv.shown && wore.length > 0 && wore.every((v) => v === bv.shown),
           'the app shows ' + bv.shown + ' while the record resumes ' + pick.id + ' ('
           + pick.group + '); stamps [' + bv.seen.join(',') + '] / frames ' + rle(bv.frames)]);
+      }
+      /* AND THE HOME'S OWN SHAPE IS CASE-INSENSITIVE TOO, because the router's view lookup is:
+         `#HOME` must take the DOOR's answer, not the boot topic's. Without this cell the fix for
+         the two above could be written as "anything that is not exactly '#home' is a bare view",
+         which would light the wrong room on a hash the app resolves to the home. */
+      {
+        const up = await frames(pick.id, null, { hash: '#HOME' });
+        const wore = up.seen.concat(up.frames);
+        out.push(['[boot] #HOME -- the home\'s own route in the wrong case, which the router '
+          + 'resolves to the home because its view lookup is case-insensitive -- is lit in the '
+          + 'RESUME target\'s room and not the boot topic\'s',
+          wore.length > 0 && wore.every((v) => v === pick.group),
+          'the record resumes ' + pick.id + ' (' + pick.group + '); stamps [' + up.seen.join(',')
+          + '] / frames ' + rle(up.frames)]);
       }
       const mD = await frames(pick.id, 'record', { hash: '#walk' });
       out.push(['[boot][mutant] THE RECORD CONSULTED BEFORE THE ROUTE -- cycle 2\'s shipped '

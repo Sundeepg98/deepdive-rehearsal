@@ -1,0 +1,26 @@
+=== W-ADDRESSES cycle 6 / R16 -- the hash classifier, pressed ===
+
+SHIPPED (the fixed classifier):   home_claims exit 0
+   (#walk)        PASS
+   (#drill)       PASS
+   (#Walk)        PASS
+   (#Nonsense)    PASS
+   #HOME --       PASS
+
+PLANTED (the pre-fix `_h` classifier): home_claims exit 1
+   (#walk)        PASS
+   (#drill)       PASS
+   (#Walk)        FAIL
+   (#Nonsense)    FAIL
+   #HOME --       PASS
+     FAIL  [boot] a BARE-VIEW route (#Walk) on a SEEDED record is lit in the room of the topic the app actually shows, not the room of the record -- every value <html data-group> ever holds, watched from document_start  -- the app shows architecture-apis while the 
+     FAIL  [boot] a BARE-VIEW route (#Nonsense) on a SEEDED record is lit in the room of the topic the app actually shows, not the room of the record -- every value <html data-group> ever holds, watched from document_start  -- the app shows architecture-apis while 
+
+RESTORED: source identical to snapshot True; working-tree diff unchanged True ('21\t4\tsrc/scripts/boot.js' before, '21\t4\tsrc/scripts/boot.js' after); build exit 0; home_claims exit 0    21 planted mutants detected (a full claim over empty rails; a level claim over unequal rails; a thin rail named on the
+
+shipped -> planted, per cell:
+  (#walk) PASS -> PASS
+  (#drill) PASS -> PASS
+  (#Walk) PASS -> FAIL
+  (#Nonsense) PASS -> FAIL
+  #HOME -- PASS -> PASS

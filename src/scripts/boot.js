@@ -51,14 +51,31 @@ try{var _dk=matchMedia('(prefers-color-scheme:dark)').matches;document.documentE
      nothing, or #home     -> the DOOR's answer: resume pointer, else newest graded, else cold door
      any other hash        -> a BARE VIEW of the boot topic, so the BOOT topic's room
    router.js:155 states the app's own rule for the third line -- "#walk resolves to the boot
-   topic" -- and this is that sentence, at boot, before anything paints. */
+   topic" -- and this is that sentence, at boot, before anything paints.
+
+   THE CLASSIFIER READS THE HASH'S EMPTINESS, NEVER THE PARSED TOPIC (cycle 6, R16). Until this
+   line it read `_h`, a `/^#([a-z0-9-]+)/` match -- so EVERY hash the pattern refused collapsed to
+   the empty string and took the `!_h` branch, which is the DOOR's answer. "No hash" and "a hash
+   this regex cannot parse" are not the same route, and four shapes proved it on the committed
+   build: `#Walk`, `#Saga/walk`, `#/walk`, `#!walk` and `#Nonsense` are all BARE VIEWS -- the
+   router lower-cases the view id and falls back to `walk` for an unknown one (router.js:50-51) --
+   and every one of them lit the RESUME room while the app showed the boot topic, which is exactly
+   the cycle-2 defect this comment already describes, arriving through a different door.
+   SO THE TEST IS ON `_raw`, THE WHOLE HASH, and the two lookups match the router's own case rules:
+   the TOPIC lookup is case-SENSITIVE, because the router's is (`TopicRegistry.get(parts[0])`, and
+   the registry's ids are lower-case slugs), so `#Saga/walk` is NOT a topic route; the VIEW test is
+   case-INSENSITIVE, because the router's is, so `#HOME` is the home. Measured expectations:
+   `#Saga/walk` `#Walk` `#/walk` `#!walk` `#Nonsense` -> the BOOT topic's room; `#HOME` `#home` and
+   an empty hash -> the DOOR's; `#saga/walk` -> saga's room; `#walk` `#drill` `#nonsense`
+   unchanged. test/home_claims.cjs drives the mixed-case and malformed cells against the room the
+   app actually shows. */
 window.__doorRooms={'messaging-events':'cdc event-driven kafka-internals notifications real-time-delivery saga stream-batch-processing','data-storage':'caching consistency-models consistent-hashing eav probabilistic-structures replication sharding-strategies shared-definition soft-delete storage-engines','reliability-observability':'backpressure circuit-breaker debugging error-propagation idempotency observability retries-timeouts slos','platform-infra':'autoscaling aws-hardening desired-state developer-platform devices-dispatch distributed-locks iac lambda-organization leader-election load-balancing multi-region','architecture-apis':'api-design content-pipeline feature-flags microfrontend rate-limiting rules-engine state-machine','security-tenancy':'authz multi-tenant signing'};
 window.__doorBoot='content-pipeline';window.__doorCold='event-driven';
 try{
-  var _rm=function(i){if(!i)return '';for(var g in window.__doorRooms){if((' '+window.__doorRooms[g]+' ').indexOf(' '+i+' ')>-1)return g;}return '';},_h=(location.hash.match(/^#([a-z0-9-]+)/)||[])[1]||'',_nl=null,_bt=0,_bi='',_k,_p,_i;
+  var _rm=function(i){if(!i)return '';for(var g in window.__doorRooms){if((' '+window.__doorRooms[g]+' ').indexOf(' '+i+' ')>-1)return g;}return '';},_raw=(location.hash||'').replace(/^#/,''),_seg=_raw.split('/')[0]||'',_nl=null,_bt=0,_bi='',_k,_p,_i;
   try{_nl=JSON.parse(localStorage.getItem('ddr.v1.nav.last')||'null');for(_i=0;_i<localStorage.length;_i++){_k=localStorage.key(_i);if(_k&&_k.indexOf('ddr.v1.progress.')===0){_p=JSON.parse(localStorage.getItem(_k)||'null');if(_p&&_p.ts>_bt){_bt=_p.ts;_bi=_k.slice(16);}}}}catch(e2){}
-  var _hr=_rm(_h),_door=_rm(_nl&&_nl.id)||_rm(_bi)||_rm(window.__doorCold);
-  var _dg=_hr||((!_h||_h==='home')?_door:_rm(window.__doorBoot));
+  var _hr=_rm(_seg),_door=_rm(_nl&&_nl.id)||_rm(_bi)||_rm(window.__doorCold);
+  var _dg=_hr||((!_raw||_seg.toLowerCase()==='home')?_door:_rm(window.__doorBoot));
   if(_dg)document.documentElement.setAttribute('data-group',_dg);
 }catch(e){}
 /* v147: Loading splash -- removed by app.js when ready */

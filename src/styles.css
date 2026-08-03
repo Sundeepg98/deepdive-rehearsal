@@ -317,11 +317,32 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
      "never inverted" contract, that guards the drill scoreboard one screen over.
 
      THE CONTRACT, and it is the whole reason there are two tokens rather than two literals:
-       --keel-missed is NEVER quieter than --keel-shaky, and BOTH clear 3:1 on --side.
+       --keel-missed is at least 1.15x LOUDER than --keel-shaky, and BOTH clear 3:1 on --side.
+   THE MARGIN IS NOT DECORATION, and cycle 6 is why it is written as one. The arm asserted a bare
+   ORDERING (missed >= shaky), which a COLLAPSE satisfies -- set --keel-shaky to --st-warn, the
+   value --keel-missed already carries, and the two severities paint the identical mark while the
+   `1280 dark` cell reports zero failures. Two grades drawn as one mark encode no ordering at all,
+   and the legend cannot report it either (it carries a single keel swatch, .hm-k.flag, wired to
+   --keel-missed alone). 1.15 is the same discriminability floor the fill strip applies to two
+   adjacent fill steps, for the same reason. The shipped pair measures 4.638/3.671 = 1.264 in
+   light and 8.211/3.625 = 2.265 in dark; the collapse measures 1.000, and is now a planted
+   mutant (MUTANT H).
      --keel-missed IS --st-warn (the loud primary); --keel-shaky is a mid rung solved for ~3.4:1,
      derived by scaling --st-warn in LINEAR LIGHT (multiply all three linear-RGB channels by one
-     constant), which preserves chromaticity exactly and scales luminance -- literally the same
-     colour dimmed, so the pair reads as one channel at two strengths rather than as two hues.
+     constant), which preserves chromaticity TO 8-BIT QUANTISATION and scales luminance -- the
+     same colour dimmed, so the pair reads as one channel at two strengths rather than as two hues.
+     "EXACTLY" WAS A CLAIM THE NUMBERS DO NOT CARRY, and cycle 6 replaced it with the derivation.
+     The three per-channel linear ratios are 1.36056 / 1.35030 / 1.31224 in light and
+     0.37795 / 0.37540 / 0.38321 in dark -- a spread, (max - min) / min, of 3.7% and 2.1%, nearly
+     all of it on BLUE, whose linear value here is 0.0034 (light) and 0.068 (dark). It is the
+     quantum and not a design error: an exact scale by the red channel's constant wants a linear
+     blue of 0.00455 light / 0.02588 dark, and the shipped codes 14 and 45 are the NEAREST 8-bit
+     codes to both -- one step either way moves that ratio by 8% (light) and 4% (dark), so the
+     residual cannot be reduced in sRGB. The measured chromaticity move is
+     0.74957/0.24267/0.00776 -> 0.75115/0.24135/0.00750 in light. (A single figure was quoted for
+     each scheme here under TWO different definitions -- 3.7% is (max-min)/min, and the 0.8% it
+     was paired with is sd/mean; under one definition they are 3.7% and 2.1%. One definition, both
+     numbers, is the rule this block is now measured against.)
      That matters here more than usual: the gauge's own SIGNAL RULE says hue means WHICH ROOM and
      may not also mean a grade.
        light  #B1690E on #F1EDE4 = 3.67:1     dark  #94672D on #17161D = 3.62:1
@@ -2749,34 +2770,47 @@ html[data-theme="dark"][data-view="home"] #home{--mut:#A7A29A}
    SO IT IS MEASURED, on the built m-home registers, over 93 open capsules per scheme, sampling
    the fill strip alone. The ramp's TIGHTEST ADJACENT PAIR:
 
-       1280 (strip 20 of 24px)    light 1.261:1     dark 1.266:1
-        390 (strip  4 of  8px)    light 1.276:1     dark 1.272:1     floor 1.15:1
+       1280 (strip 20 of 24px)    light 1.260:1     dark 1.266:1
+        390 (strip  4 of  8px)    light 1.260:1     dark 1.266:1     floor 1.15:1
 
-   The phone's ramp is not the desktop's ramp compressed -- the four cells sit within 0.015 of
-   each other -- and it READS BECAUSE THE GRADE IS CARRIED IN THE FILL'S OPACITY: a strip presents
-   the same colour whatever its height, so shrinking it spends AREA and not VALUE. Every step is
-   monotone in --lv in both schemes, in the direction that scheme runs. What this paragraph may
-   NOT say is that the channel is free, because that is not a property anyone measured; what it
-   costs is 17% of the capsule on the desktop and 50% on the phone, and at 4px the ramp still
-   clears the discriminability floor with 10% to spare.
+   The phone's ramp is not the desktop's ramp compressed -- the two widths return the SAME PAIR TO
+   FOUR DECIMALS -- and it READS BECAUSE THE GRADE IS CARRIED IN THE FILL'S OPACITY: a strip
+   presents the same colour whatever its height, so shrinking it spends AREA and not VALUE. That
+   identity is the prediction, and it is why the table now has two identical rows instead of four
+   nearby numbers. Every step is monotone in --lv in both schemes, in the direction that scheme
+   runs. What this paragraph may NOT say is that the channel is free, because that is not a
+   property anyone measured; what it costs is 17% of the capsule on the desktop and 50% on the
+   phone, and at 4px the ramp still clears the discriminability floor by 9.6% (light) and 10.1%
+   (dark).
 
-   THOSE FOUR FIGURES ARE CONDITIONAL, AND CYCLE 4 IS WHERE THE CONDITION GOT WRITTEN DOWN.
-   They were taken from runs that agreed, and the arm could not tell those from the ones that did
-   not: six back-to-back runs of the committed tree returned this table five times and, once, a
-   whole ramp lifted toward the light ground with a tightest pair of 1.179:1 -- inside the floor's
-   15% by 2.5%. The cause was not the design. `body{animation:bodyIn}` fades the document in AFTER
-   the boot splash is gone, and it was still running when the shot was taken in FOUR of eight cold
-   browser profiles; held at a measured 0.9117 it turns the 390/light row into
-   0.2168/0.1504/0.1104/0.0770/0.0502 and the tightest pair into 1.249:1, on a build nobody
-   touched. So the table above is what this design measures WHEN THE SHOT IS NOT VEILED, and that
-   is now a precondition the arm enforces rather than a hope: the entrance fade must be idle, the
-   trough must equal the colour .hm-gr-t itself declares within 0.002 in the same shot, and the
-   cold first reading must reproduce a warm one taken later in the same run. Re-derived under
-   those conditions the four cells are unchanged to three decimals, which is the strongest thing
-   that can be said about them and is a different claim from the one that was here.
+   THE FOUR FIGURES THAT USED TO SIT HERE -- 1.261/1.266 at 1280 and 1.276/1.272 at 390 -- ARE
+   RETRACTED, AND THE DIFFERENCE BETWEEN THEM WAS THE INSTRUMENT (cycle 6). That is not an
+   inference: reverting the sampling box alone, with every other line of the check and every byte
+   of this stylesheet untouched, reproduces all four of them to three decimals. Two defects, found
+   in that order. First, the strip was sampled on a box built from FRACTIONAL device coordinates and
+   resolved with rounding, so which device row its top edge landed on was a function of the
+   panel's own sub-pixel y -- measured over nine instrumented runs, the 390/light pair came back
+   1.276:1 six times and 1.179:1 three times, tracking trackY 1159.188 against 1162.797 with 9 of
+   9 agreement. Cycle 4 had attributed that drift to a compositing VEIL; the light trough in the
+   same shots reads its declared colour to 0.00000, which a veil at the required alpha 0.910 could
+   not do, so the attribution was wrong and is withdrawn. Second, once the box was made strictly
+   interior, its own control found that it still spanned the capsule's ROUNDED TOP CORNERS, whose
+   trough-coloured pixels dominate the darkest light steps and whose share changes with the box's
+   height (the 390/light pair moved 0.0406 under a one-row inset). The box is insetted past the
+   corner arc now, and the same control returns 0.00000 in all four cells.
 
-   ASSERTED, NOT ARGUED: the ordering and the 3:1 floor are checked against BOTH grounds AT BOTH
-   WIDTHS, the negative control is these two declarations reverted -- the arm must go red on the
+   THE FIGURES REMAIN CONDITIONAL ON AN UNVEILED SHOT, and that condition is enforced rather than
+   hoped for: `body{animation:bodyIn}` fades the document in after the boot splash is gone and was
+   still running at shot time in four of eight cold browser profiles, so the arm requires the
+   entrance fade idle, every element from the gauge to the document root at opacity 1 with no
+   filter, backdrop-filter or blend mode, nothing of another element's in front of the gauge at
+   the track's centre, the trough equal to the colour .hm-gr-t itself declares within 0.002 in the
+   same shot, and the cold first reading reproducing a warm one taken later in the same run.
+
+   ASSERTED, NOT ARGUED: the 1.15 severity margin and the 3:1 floor are checked against BOTH
+   grounds AT BOTH WIDTHS, with the COLLAPSE planted as its own mutant beside the inversion (a
+   plant that restores the inverted wiring cannot press a floor that inversion is not the only way
+   to breach); the negative control is these two declarations reverted -- the arm must go red on the
    neighbour reading, which is the sentence cycle 1 printed without carrying -- the grade ramp has
    its own control, two adjacent fill steps painted at one lightness, and the DEPTH pair has one
    too as of cycle 4: the panel painted at its ground's own colour, read off the page rather than

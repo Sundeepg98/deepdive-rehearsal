@@ -2560,3 +2560,288 @@ not close by being named; it closes one instrument at a time, and only where som
     description VERBATIM against a formatter written out in the test, so any change to segLabel's
     wording must be made twice, deliberately. That is the correct price for a text equivalent that
     claims to be lossless, and it is a cost the next wave that edits that sentence will meet.
+
+---
+
+## CYCLE 6 -- 2026-08-04
+
+Two team-lead rulings on the cycle-5 escalation and four non-escalated judge items. The shape of
+this cycle is one sentence and it is not cycle 5's: **every finding here is a claim whose SUBJECT
+was real and whose CAUSE was the instrument that measured it.** The 390 fill-strip drift is real
+and was not a veil. The severity ordering is real and the arm asserting it could not fail on the
+cheapest way to break it. The registry entry's timing sentence is true of stdout and false of the
+repository. The chromaticity claim is arithmetically wrong and the design it describes is right.
+
+---
+
+### R15. THE VEIL READS PIXELS -- CLOSED, ALL FOUR PARTS, AND ONE OF THEM INVERTED ON MEASUREMENT
+
+**(1) THE STACK AT THE TRACK'S CENTRE.** `SHOT_STATE` now reads `document.elementsFromPoint` at
+the centre of the track it is about to measure, in the same `page.evaluate` as the shot and again
+after it. Everything IN FRONT of `.hm-alt` must be `.hm-alt`'s own.
+
+> **THE RULING'S PREDICATE IS EXACTLY INVERTED, AND THE MEASUREMENT IS WHY.** It reads "FAIL if any
+> element ABOVE `.hm-alt` in that stack is not one of `.hm-alt`'s own ANCESTORS". At the track's
+> centre the elements in front of the panel ARE its own descendants -- the track, and the capsule
+> the point lands inside -- so the literal predicate reddens every shipped shot. And an ANCESTOR
+> appearing in front is precisely the defect: `body::after{position:fixed;inset:0}` is reported by
+> `elementsFromPoint` as `body`, which is an ancestor, and it is a full-viewport backdrop. The
+> literal form would have failed the clean tree and passed the planted one. The operative test is
+> CONTAINMENT BY `.hm-alt`, and MUTANT G settles it rather than an argument.
+
+**AND THE HIT TEST ALONE IS NOT ENOUGH, which is a second finding rather than a refinement.**
+`elementsFromPoint` skips `pointer-events:none` -- and this app's own known veil carries it:
+`#_bootsplash._bs-done` is a full-viewport box at `background:var(--bg)` fading over 400ms with
+pointer events off, and it is a SIBLING, so the ancestor-chain read cannot see it either. So the
+shot state carries a second, geometric read beside the hit stack: every element with an out-of-flow
+`position`, a painted background or a backdrop-filter, a non-zero opacity, and a box containing the
+sample point, that is neither `.hm-alt`'s descendant nor its ancestor. The two are complementary
+and neither covers the class alone -- the hit stack reaches PSEUDO-elements, which
+`querySelectorAll` cannot, and the sweep reaches `pointer-events:none`, which hit-testing cannot.
+
+**(2) THE CHAIN READ IS NO LONGER OPACITY-ONLY.** `filter`, `backdrop-filter` and `mix-blend-mode`
+each composite a whole subtree exactly as opacity does, and each would have been reported as clean.
+
+**(3) THE GROUND INVARIANT IS PRICED ON THE PANEL'S LARGEST LEVER.** Judge item 8's KEY arm already
+compares a measured pixel against `.hm-panel`'s declared colour at the same `GROUND_EPS`, and in
+dark that lever is **0.01625 against the trough's 0.00382 -- 4.3x** (cycle 5's press P9 found it
+catching a dark veil the trough could not). Pricing the family at the trough's number understated
+its own reach by a factor of four in the one scheme where the reach was the finding. Both are
+computed and printed per cell; the INERT failure fires only when the BEST lever is inert. Measured:
+
+```
+light   trough/canvas 0.09797 (alpha 0.980)   --home-surface/canvas 0.05332   PRICED ON the trough
+dark    trough/canvas 0.00382 (alpha 0.476)   --home-surface/canvas 0.01625   PRICED ON --home-surface, alpha 0.877
+```
+
+**(4) MUTANT G, THE DARK-ONLY BACKDROP.** `html[data-theme='dark'] body::after{position:fixed;
+inset:0;background:var(--bg);opacity:.10}` -- **plus `content:""`, which the ruling's declaration
+omits and without which the pseudo generates no box at all and the plant silently does nothing.**
+It is deliberately the one veil shape no arithmetic guard can reach: the alpha sits on a
+pseudo-element so `body` computes opacity 1, and its effective 0.90 is above the 0.877 the best
+declared-colour lever can catch. **In dark it is CAUGHT and named as a veil in front of the gauge.
+In light it is a NEGATIVE CONTROL** -- the same stylesheet is installed, the selector cannot match,
+and the cell must report clean, because a detector that fires on a plant that did not land is not a
+detector.
+
+**PRESS P1 -- the shot-time stack read deleted, leaving cycle 5's coverage exactly: MUTANT G goes
+UNDETECTED in both dark cells, exit 1, with the arm naming its own blindness.** Nothing else in the
+file can see it. Receipt: `_audit/w-addresses-cycle6/press-gauge.txt`.
+
+The PASS line and `check_all.py`'s registry entry now carry exactly this and no more.
+
+---
+
+### R16. THE HASH CLASSIFIER -- ADOPTED VERBATIM, AND THE MATRIX GAINS A THIRD CELL
+
+`boot.js` classified on the PARSED topic (`_h`, a `/^#([a-z0-9-]+)/` match), so every hash the
+pattern refused collapsed to the empty string and took the `!_h` branch -- the DOOR's answer.
+"No hash" and "a hash this regex cannot parse" are not the same route. Adopted as ruled:
+
+```js
+var _raw=(location.hash||'').replace(/^#/,''), _seg=_raw.split('/')[0]||'', _hr=_rm(_seg),
+    _dg=_hr||((!_raw||_seg.toLowerCase()==='home')?_door:_rm(window.__doorBoot));
+```
+
+The two lookups match the router's own case rules: the TOPIC lookup is case-SENSITIVE because
+`TopicRegistry.get(parts[0])` is, and the VIEW test is case-INSENSITIVE because router.js:50
+lower-cases the view id.
+
+**THE MATRIX GAINS THREE CELLS, NOT TWO.** The ruling names `#Walk` (mixed case) and `#Nonsense`
+(malformed). A third is added because without it the fix has a wrong twin: "anything unparsed is a
+bare view" satisfies both new cells and lights `#HOME` -- which the router resolves to the HOME --
+in the boot topic's room. `#HOME` is now driven and must take the DOOR's answer.
+
+**PRESSED against the pre-fix classifier** (receipt:
+`_audit/w-addresses-cycle6/press-hash-classifier.txt`; the plant is the pre-fix two lines restored
+verbatim, built, and run through the real check):
+
+| cell | shipped | pre-fix classifier |
+|---|---|---|
+| `#walk` | PASS | PASS |
+| `#drill` | PASS | PASS |
+| **`#Walk`** | PASS | **FAIL** -- the app shows architecture-apis; the document wore the resume room |
+| **`#Nonsense`** | PASS | **FAIL** -- same |
+| `#HOME` | PASS | PASS -- right by accident, which is why it is in the matrix |
+
+One mechanical note: `frames()`'s readiness predicate tested `h === '#home'` exactly, so `#HOME`
+would have waited the full `ACT_MS` for a `.stage .pane.on` the home never mounts and then reported
+the route as unrendered -- a timeout dressed as a finding. It lower-cases now, for the same reason
+the classifier does.
+
+---
+
+### JUDGE ITEM 1 -- THE VEIL ATTRIBUTION IS WITHDRAWN, AND THE SAMPLER IS THE DEFECT
+
+**THE JUDGES' MEASUREMENT STANDS AND THE LEDGER'S EXPLANATION DOES NOT.** Nine instrumented runs of
+the committed tree split 6/3 on one variable, the panel's fractional y: trackY 1159.188 gives --lv 0
+at 0.1765 and a tightest pair of 1.276:1; trackY 1162.797 gives 0.2280 and 1.179:1. It is
+deterministic in trackY, 9 of 9, in about a third of runs -- not a rare cold-start artefact.
+
+**IT IS NOT A VEIL, AND THE LIGHT TWIN FALSIFIES IT.** A least-squares fit of b = 0.9101a with
+residual 0.0004 was read as proof of a pure compositing veil. A blend toward the near-black trough
+fits the same five numbers identically -- a linear map cannot tell "composited at alpha" from
+"averaged with one more row of its own edge". And in the same shot as the drifted ramp the LIGHT
+trough reads 0.84871 with min == max and |t - tDecl| = 0.00000, while a veil moving the fill 0.0515
+needs alpha 0.910 and would move that trough 0.0088 -- 4.4x the epsilon the ground invariant was
+already applying. The guard was live, correct, and reported zero veiled shots.
+
+**WHAT IT IS: `S(x)+1` / `S(w)-2` ARE FRACTIONAL DEVICE COORDINATES AND `BOX_Y` RESOLVES A BOX WITH
+`Math.round()`.** Which device row the strip's top edge landed on was therefore a function of the
+panel's own sub-pixel y. The trough box has used `ceil(edge*dsf)+1` / `floor(edge*dsf)-1` since R12
+and its comment says in as many words that a box must not have this property; the fill and
+neighbour boxes did.
+
+**THE FIX, AND ITS OWN CONTROL FOUND A SECOND DEFECT.** Both boxes are strictly interior now. The
+named same-shot control -- the identical boxes re-read one device row further in -- then FAILED at
+390/light on the first build, moving the tightest pair 0.0406 (1.201 -> 1.241). The cause is the
+capsule's ROUNDED TOP CORNERS, which the file's own comment called harmless: they are harmless to
+an ORDER, which is what that sentence claimed, and not to the MARGIN, which is what the arm
+reports. In light the corner pixels are trough (Y 0.849) while the darkest fill steps are Y
+0.021-0.040, so a handful of them dominates the mean exactly where the ramp is tightest. The box is
+insetted past the corner arc now.
+
+**AND THE RESULT IS THE PROOF, BECAUSE OF ITS SHAPE:**
+
+| | --lv 0 | 0.3 | 0.55 | 0.78 | 1 | tightest pair | phase control |
+|---|---|---|---|---|---|---|---|
+| light, **1280 AND 390** | 0.1693 | 0.1057 | 0.0671 | 0.0399 | 0.0213 | **1.260:1** | delta 0.0000 |
+| dark, **1280 AND 390** | 0.1973 | 0.3328 | 0.4740 | 0.6395 | 0.8228 | **1.266:1** | delta 0.0000 |
+
+The two widths return the SAME FIVE FIGURES to four decimals, the phase control agrees to 0.00000
+in all four cells, and three consecutive runs are identical. That identity is the design's own
+prediction -- a strip presents the same colour whatever its height, so shrinking it spends AREA and
+not VALUE -- and it was invisible under a box that was measuring its own edges.
+
+**PRESS P3 -- the fill box reverted, nothing else touched: the published four-cell table comes
+back.** 1.261 / 1.266 at 1280 and 1.276 / 1.272 at 390, to three decimals, on today's stylesheet.
+The four figures were the box's, not the design's. The control fires at 390 in both schemes on the
+MEAN arm (0.00653 light, 0.00643 dark, floor 0.002) while the pair moves only 0.0016 and 0.0009,
+and passes at 1280 (0.00041 / 0.00056) where a 37-row box dilutes a row's share -- so the two
+floors are earned by two different defects, and both are stated where they are set.
+
+**RETRACTED, in the ledger, in `scoreboard_salience.cjs` and in `styles.css`:** the "pure
+compositing veil / least-squares b = 0.9101*a" attribution; the re-earned sentence "GIVEN those,
+the worst adjacent pair is 1.272:1 and the floor leaves 10.6% of headroom on it"; and the four-cell
+table itself. What replaces the headroom sentence is not a better number for the old box -- it is
+the measured pair on a sampler that returns one number: **1.260:1 light and 1.266:1 dark, 9.6% and
+10.1% clear of the 1.15 floor, at both widths.**
+
+---
+
+### JUDGE ITEM 2 (SEVERITY TOKENS) -- THE ORDERING ARMS GET THE MARGIN THEIR NEIGHBOUR ALREADY HAD
+
+`M.min >= K.max` is a bare `>=`, so it can only fail on an INVERSION; a COLLAPSE satisfies it. The
+judges pressed it -- `--keel-shaky: var(--st-warn)` in both schemes, so SHAKY and MISSED paint the
+identical mark -- and the **`1280 dark` cell produced ZERO failures**, both marks reading 8.21:1 at
+every one of the four --lv steps. Six planted mutants could not see it, because every one of them
+restores the INVERTED wiring; and the legend cannot report it either, because it carries a single
+keel swatch (`.hm-k.flag`, wired to `--keel-missed` alone).
+
+**THE FIX IS THE FILL STRIP'S OWN FLOOR, BOUND RATHER THAN RETYPED.** `KEEL_MARGIN = GRADE_STEP_MIN`
+= 1.15, applied on BOTH grounds (`M.min >= K.max * KEEL_MARGIN`, and the same for the neighbour
+reading). Two adjacent GRADES answer to the same discriminability floor as two adjacent fill steps,
+for the same reason. The shipped pair measures **4.64 / 3.67 = 1.264 in light and 8.21 / 3.62 =
+2.265 in dark**; the collapse measures 1.000.
+
+**MUTANT H is that collapse**, planted as `html{--keel-shaky:var(--st-warn)!important}` with its
+liveness read off the DOM first -- the two `::before` background colours must have become one
+string before any pixel is looked at. Caught in **all four cells**, 1.000 against the 1.15 floor.
+**PRESS P2 -- `KEEL_MARGIN` reverted to 1.0: MUTANT H goes UNDETECTED in all four cells**, which is
+the judges' finding reproduced through the arm rather than around it.
+
+`styles.css`'s contract line is restated with it: "--keel-missed is NEVER quieter than
+--keel-shaky" becomes "--keel-missed is at least 1.15x LOUDER than --keel-shaky".
+
+---
+
+### JUDGE ITEM 4 (THE STALE IN-GATE FIGURE) -- CLOSED, AND TWO CHECKS WERE MISSING FROM THE TABLE
+
+`test/gate_cost.json` is a COMMITTED per-check cost table that `run_fast` packs its lanes from, and
+it still carried `scoreboard_salience: 44.775` -- less than half the check's cost after cycles 4
+and 5 doubled it. Regenerated as **max(two warm `--profile` runs of this tree)**, which is the rule
+`_profile_report.py` states:
+
+```
+scoreboard_salience   44.775 -> 101.873      home_claims       77.057 -> 62.096
+syntax_check          70.198 ->  36.561      overlay_deadzone  22.985 -> 49.614
+render                36.024 ->  19.584      click_drift       64.552 -> 50.101
+table total          944.8   -> 777.0        (serial gate wall 769.5s and 757.7s)
+```
+
+**AND THE ENTRY COUNT WENT 76 -> 78, because `craft_hygiene` and `home_fold` were absent
+altogether.** A check missing from that file sorts FIRST under `--fast` (`check_all.py:135` says
+so), so this wave's own new check had been packing lanes as an unknown since cycle 1. Same class as
+the stale figure, and nobody had asked for it.
+
+The registry entry's closing sentence -- "The gate prints no per-check timing, so no in-gate figure
+is quoted here" -- is amended to name `gate_cost.json` as the in-gate record and to quote its
+regenerated figure beside a re-measured standalone one: **102.7s standalone on win32** (up from
+cycle 5's 90.5s; the backdrop mutant, the collapse mutant and the phase control are what the 12
+seconds buy) and **101.873s in the table**.
+
+**AND `home_claims`'s ENTRY DESCRIBED HALF ITS CHECK, one line away from the entry judge item 4 was
+about.** It documented the claims arm only -- nothing about the door room, the two recorders, the
+registry cross-checks or the rail descriptions, four cycles after they landed. Extended in the same
+voice, including R16's four route shapes. Not asked for; it is the same defect, and it was visible
+from where I was standing.
+
+---
+
+### JUDGE ITEM 5 (CLAIM PRECISION) -- CORRECTED, AND THE JUDGES' OWN PAIR OF FIGURES DID NOT REPRODUCE
+
+`styles.css` said `--keel-shaky` is derived from `--st-warn` by a linear-light scale "which
+preserves chromaticity **exactly**". Re-derived independently, the judges' per-channel ratios
+reproduce to the digit -- 1.36056 / 1.35030 / 1.31224 light, 0.37795 / 0.37540 / 0.38321 dark -- and
+"exactly" is indeed a claim the numbers do not carry.
+
+**BUT THE REPLACEMENT TEXT THE RULING SUPPLIED CARRIES TWO DEFINITIONS IN ONE SENTENCE.** "spread
+0.8% dark, 3.7% light": 3.7% is `(max-min)/min` and reproduces; 0.8% is **not** that statistic
+(which gives 2.1%) -- it is `sd/mean`, which gives 0.86% dark and 1.55% light. One number from each
+of two definitions, printed as a pair. Under one definition they are **3.7% and 2.1%**, and that is
+what shipped.
+
+**AND THE DERIVATION IS BETTER THAN "IT IS QUANTISATION", so it is stated instead of asserted.** An
+exact scale by the red channel's constant wants a linear blue of 0.00455 (light) and 0.02588 (dark);
+the shipped codes **14 and 45 are the NEAREST 8-bit codes to both**, and one code step either way
+moves that channel's ratio by 8% (light) and 4% (dark). The residual IS the quantum and cannot be
+reduced in sRGB. Everything else re-derived reproduced exactly: keel-shaky 3.671 / 3.625 on --side,
+keel-missed 4.638 / 8.211, and the chromaticity move 0.74957/0.24267/0.00776 ->
+0.75115/0.24135/0.00750.
+
+---
+
+## CYCLE 6 -- PRESS SUMMARY
+
+| receipt | presses | landed |
+|---|---|---|
+| `press-hash-classifier.txt` (R16) | 5 cells x 2 builds | `#Walk` and `#Nonsense` PASS -> **FAIL**; `#walk`, `#drill`, `#HOME` unchanged |
+| `press-gauge.txt` (R15, judge items 1 and 2) | 3 presses + a 3-run stability block | P1 stack read deleted -> **MUTANT G UNDETECTED x2**; P2 margin -> 1.0 -> **MUTANT H UNDETECTED x4**; P3 fill box reverted -> **PHASE-SENSITIVE x2**, and the old four-cell table reproduced |
+
+Both scripts snapshot the touched file in memory, restore it, re-run the shipped tree green as
+their last step, and print whether the restored file is byte-identical to the snapshot. **The
+restoration oracle is NOT `git diff --exit-code`**, and the first draft of the R16 press used it
+and printed "git diff clean False" on a perfectly restored file: on a working tree that already
+carries the cycle's uncommitted edits, that command compares against HEAD and is non-zero either
+way. It compares the file's `git diff --numstat` before the plant and after the restore instead.
+
+**TWO PRESSES CAME BACK OTHER THAN EXPECTED, and both were informative:**
+
+* **The phase control failed on its own first build** -- which is what a control is for. It found
+  the corner contamination that the fractional-coordinate fix did not address, at 390/light, and
+  the box was changed again before anything was committed.
+* **P3 fires on the MEAN arm, not the pair arm.** Against the pre-cycle-6 box the tightest pair
+  moves only 0.0016 while the step means move 0.0065. So the two tolerances are not one guard with
+  a spare: each is the only one that catches one of the two defects, and the constant's comment now
+  says which is which.
+
+---
+
+## CYCLE 6 -- VR CONTRACT
+
+No baseline regenerated; the manifest is unchanged at **18**. **Every source change this cycle is
+invisible by construction and the comparison was run rather than assumed**, which is cycle 5's rule
+applied to a cycle with a better excuse for skipping it: `boot.js`'s classifier changes which ROOM
+a malformed or mixed-case hash lights, and all four home baselines boot at `#home` on a cold
+record, where the old and new branches agree; the `styles.css` edits are comments; the rest is test
+code. All 18 matched their committed pixels in both full gate runs.

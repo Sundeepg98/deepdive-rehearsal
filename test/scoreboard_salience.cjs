@@ -140,9 +140,15 @@ const INK = async ({ shots, cardCss }) => {
  *                 compact block halves the track below 920). styles.css asserted that this "costs
  *                 it nothing, because the grade is in lightness and never in size" -- a sentence
  *                 written from the desktop, licensing any strip down to 1px. Measured: the
- *                 tightest adjacent pair is 1.261/1.266 at 1280 and 1.276/1.272 at 390, floor
- *                 1.15, so the phone's ramp is the desktop's ramp on a smaller area rather than a
- *                 compressed one -- which is what "the grade is in the OPACITY" actually predicts.
+ *                 tightest adjacent pair is 1.260 light / 1.266 dark, floor 1.15 -- and it is
+ *                 the SAME PAIR AT BOTH WIDTHS, to four decimals, which is the strongest form
+ *                 of "the phone's ramp is the desktop's ramp on a smaller area rather than a
+ *                 compressed one" and is exactly what "the grade is in the OPACITY" predicts.
+ *                 (Cycle 6: the four cells used to differ -- 1.261/1.266 at 1280 against
+ *                 1.276/1.272 at 390 -- and that difference was the SAMPLER, not the design.
+ *                 The strip box included the capsule's rounded top corners, whose share of a
+ *                 box changes with its height and with the panel's sub-pixel phase. Insetting
+ *                 past the arc collapses the two widths onto one reading.)
  *
  * AND WHY TWO WIDTHS AT ALL. Everything above ran at 1280 only, while two of the eighteen VR
  * baselines are m-home. The neighbour arm's minimum-width guard was written in CSS px against a
@@ -186,32 +192,93 @@ const GAUGE_WIDTHS = [
    a 1280-only constant that silently emptied the arm at every phone width. */
 const NB_MIN_DEV = 3;
 /* R6: adjacent grade steps must be tellable apart from the FILL STRIP ALONE. Measured on the
-   shipped build at 390, over 93 open capsules per scheme, the ramp's tightest adjacent pair is
-   1.272:1 (dark, --lv .78 -> 1.00) and 1.276:1 (light, .55 -> .78); a flattened pair measures
-   ~1.00:1.
-   EXACT VALUES COMPARED, ROUNDED VALUES DISPLAYED, and cycle 5 had to correct this file to its
-   own rule: the light figure was printed here and twice below as 1.277, which is what you get by
-   recomputing the ratio from the DISPLAYED row (0.0772 / 0.0496). The arm divides the full
-   precision it holds (0.07715 / 0.04963) and prints 1.276, in every run and in the cycle-4 press
-   receipts. The number quoted in a comment is now the number the instrument prints.
+   shipped build over 93 open capsules per scheme, the ramp's tightest adjacent pair is 1.260:1
+   (light) and 1.266:1 (dark), both at --lv .78 -> 1.00, AT BOTH WIDTHS to four decimals; a
+   flattened pair measures ~1.00:1.
+   EXACT VALUES COMPARED, ROUNDED VALUES DISPLAYED. Cycle 5 had to correct this file to its own
+   rule -- the light figure was printed here and twice below as 1.277, which is what you get by
+   recomputing the ratio from a DISPLAYED four-decimal row rather than from the precision the arm
+   holds -- and cycle 6 had to correct the figures themselves. The whole published four-cell table
+   (1.261 / 1.266 at 1280 and 1.276 / 1.272 at 390) was a reading of the BOX, not of the design:
+   reverting the box construction alone, changing nothing else, reproduces all four to three
+   decimals (press P3). See the retraction below.
 
-   THE HEADROOM SENTENCE THAT USED TO SIT HERE WAS RETRACTED IN CYCLE 4 AND IS RE-EARNED BELOW.
-   It read "the floor leaves 10.6% of headroom on the worst of them", and the number was true of
-   a reading the arm could not reproduce: six back-to-back runs of the committed tree returned the
-   figures above five times and, once, a whole ramp lifted toward the light ground with a tightest
-   pair of 1.179:1 -- 80% of that headroom gone, on a build nobody had touched. A margin quoted
-   from the runs that agreed is not a margin.
-   THE CONTRIBUTOR WAS FOUND AND IT IS A VEIL, not a design property: `body{animation:bodyIn}`
-   was still running when the shot was taken in FOUR of eight COLD profiles, and holding it at a
-   known alpha reproduces the symptom by construction (0.1765/0.1136/0.0772/0.0496/0.0275 becomes
-   0.2168/0.1504/0.1104/0.0770/0.0502, tightest pair 1.276 -> 1.249, both as the arm prints them).
-   So the honest statement is
-   CONDITIONAL and the condition is now enforced three ways -- the entrance fade must be idle
-   before any shot, the trough must equal its own declared colour in the SAME shot, and the cold
-   first reading must reproduce a warm one taken later in the same run. GIVEN THOSE, the worst
-   adjacent pair is 1.272:1 and the floor leaves 10.6% of headroom on it; WITHOUT them, the arm
-   has no business quoting a margin at all, and now says so instead of reporting one. */
+   ---- THE VEIL ATTRIBUTION IS RETRACTED (cycle 6, judge item 1) ----------------------------
+   THE PARAGRAPH THAT STOOD HERE BLAMED A COMPOSITING VEIL, AND IT WAS WRONG ABOUT THIS FILE'S
+   OWN SAMPLER. It read: "THE CONTRIBUTOR WAS FOUND AND IT IS A VEIL, not a design property"; the
+   drifted 390/light ramp was fitted least-squares as b = 0.9101 * a, and the fit was called a
+   pure compositing veil because its residual was 0.0004. A BLEND TOWARD THE NEAR-BLACK TROUGH
+   FITS THE SAME FIVE NUMBERS IDENTICALLY -- a linear map has no way to tell "everything
+   composited at alpha" from "every box averaged with one more row of its own edge" -- and the
+   light twin FALSIFIES the veil reading outright: in the same shot as the drifted ramp the trough
+   band reads 0.84871 with min == max and |t - tDecl| = 0.00000, while a veil moving the fill by
+   0.0515 needs alpha 0.910 and would move that trough by 0.0088, which is 4.4x the 0.002 epsilon
+   the ground invariant already applies. The guard was live and correct and reported 0 veiled
+   shots; the reading it was defending was not a reading of a veil.
+   WHAT IT IS, MEASURED: THE SAMPLER'S OWN SUB-PIXEL PHASE. Nine instrumented runs of the
+   committed tree split 6/3 on ONE variable -- the panel's fractional y. trackY 1159.188 gives
+   --lv 0 at 0.1765 and a tightest pair of 1.276:1; trackY 1162.797 gives 0.2280 and 1.179:1;
+   9 of 9 runs follow their own trackY, ~33% of them landing on the second. The fill and
+   neighbour boxes were built as S(x)+1 / S(w)-2 -- FRACTIONAL device coordinates -- and BOX_Y
+   resolves a box with Math.round(), so which device row the strip's top edge lands on is decided
+   by the panel's fractional y. That is precisely the property the trough box's own comment
+   (see readMarks) says a box must not have, and the trough box already avoids it with
+   ceil(edge * dsf) + 1 / floor(edge * dsf) - 1. Both boxes are built that way now, and a
+   same-shot control re-reads the strip one device row further in: a phase-sensitive sampler has
+   to be able to report itself, and this one could not.
+   SO THE HEADROOM SENTENCE IS RETRACTED TOO, AND NOT RE-EARNED BY ASSERTION. It read "GIVEN
+   those, the worst adjacent pair is 1.272:1 and the floor leaves 10.6% of headroom on it" -- and
+   on the committed tree the measured pair was BIMODAL, 1.276:1 at trackY 1159.188 and 1.179:1 at
+   1162.797, the second sitting 2.5% over the 1.15 floor rather than 10.6%. The conditions below
+   are still the conditions (they are what makes a reading a reading), but the margin is whatever
+   the instrument prints on the run in front of you, and the instrument now prints the same number
+   at either phase. */
 const GRADE_STEP_MIN = 1.15;
+/* ---- THE TWO SEVERITIES NEED A MARGIN, NOT AN ORDER (cycle 6) -------------------------------
+   The ordering arms were written `M.min >= K.max` -- a bare `>=`, which a COLLAPSE satisfies: the
+   arm could only ever fail on an INVERSION. Pressed by setting `--keel-shaky: var(--st-warn)` in
+   both schemes, so SHAKY and MISSED paint as one mark, the `1280 dark` cell produced ZERO
+   failures -- both marks read 8.21:1 at every one of the four --lv steps -- and the other three
+   cells reddened only through rasterisation noise on the neighbour ground. A build in which the
+   worst grade and the middle grade are the same mark passed a whole cell clean, and none of the
+   six planted mutants could see it: every one of them restores the INVERTED wiring, which is the
+   other failure. Nor could a reader: the legend carries a single keel swatch (`.hm-k.flag`, wired
+   to `--keel-missed` alone).
+   The fill strip one arm below carries a 1.15 discriminability floor on every ADJACENT fill step.
+   These two marks are adjacent GRADES and carried none. It is the same floor for the same reason
+   -- two marks a reader cannot tell apart do not encode an ordering, whatever their absolute
+   contrast -- so it is literally the same number, bound here rather than retyped. The shipped
+   pair measures 4.638 / 3.671 = 1.264 in light and 8.211 / 3.625 = 2.265 in dark; the collapse
+   measures 1.000. MUTANT H is that collapse. */
+const KEEL_MARGIN = GRADE_STEP_MIN;
+/* ---- THE PHASE CONTROL'S TWO TOLERANCES (cycle 6, judge item 1) -----------------------------
+   The fill strip is re-read from the SAME shot with its boxes inset one further device row, and
+   the two readings must agree. They are not identical by construction: the strip spans the
+   capsule's full width, so it contains the rounded top corners -- a handful of trough pixels
+   whose SHARE of the box changes when a row is dropped. That is a known, constant contribution
+   and it is why these are tolerances rather than an equality.
+   SIZED FROM THE DEFECTS, AND EACH FLOOR IS EARNED BY A DIFFERENT ONE. Three artefacts have been
+   measured through this comparison, all real, all on this tree:
+     THE PHASE ARTEFACT, on the committed cycle-5 tree -- --lv 0 moving 0.1765 -> 0.2280 (0.0515)
+     and the tightest adjacent pair 1.276 -> 1.179 (0.097) with the panel's fractional y, over
+     nine instrumented runs that split 6/3 on trackY 1159.188 against 1162.797.
+     THE PRE-CYCLE-6 BOX ITSELF, reverted in place (press P3): the control fires at 390 in BOTH
+     schemes on the MEAN arm -- 0.00653 light and 0.00643 dark -- while the tightest pair moves
+     only 0.0016 and 0.0009. At 1280 that box passes (0.00041 / 0.00056), because a 37-row box
+     dilutes a row's share. So the MEAN floor is what catches the construction that shipped.
+     THE CORNER ARTEFACT, found BY this control on the first strictly-interior box, which still
+     spanned the capsule's full height: 1280 agreed to 0.00000 in both schemes and 390/dark to
+     0.00493, while 390/light moved the PAIR 0.0406 (1.201 -> 1.241). So the PAIR floor is what
+     catches that one -- and it was caught by the control rather than by a judge.
+   On the shipped construction -- strictly interior AND inset past the corner arc -- the same
+   comparison returns 0.00000 on the pair and 0.00000 on every step mean, in all four cells, and
+   three consecutive runs return identical figures. So the floors are set below the smallest
+   measured defect rather than above the observed agreement, which is zero: 0.010 on the pair is
+   4.1x under 0.0406, and 0.002 on the means is 3.2x under 0.00643. 0.002 is deliberately
+   GROUND_EPS's own value -- this file's epsilon for a mean over a flat declared area -- written
+   as a literal only because GROUND_EPS is declared further down beside the arithmetic for it. */
+const PHASE_EPS_Y = 0.002;
+const PHASE_EPS_CR = 0.010;
 /* tall enough that the whole home fits WITHOUT SCROLLING. Every fragility this section fought --
    an element screenshot that re-scrolls before it rasterises, a clip whose origin drifts, a
    removal diff between two images taken at different offsets -- is downstream of one thing:
@@ -517,6 +584,12 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
          veiled    0.2168   0.1504   0.1104   0.0770   0.0502   1.249:1
        (both ratios as the ARM prints them, from full precision. Recomputing the top row from the
        four displayed decimals gives 1.277, which is where that figure came from.)
+       THAT TABLE WAS TAKEN THROUGH THE PRE-CYCLE-6 SAMPLER and is kept as the record of the
+       experiment rather than as a current reading: the strip box has since been insetted past the
+       capsule's corner arc, and the unveiled row of the same cell now reads
+       0.1693/0.1057/0.0671/0.0399/0.0213 with a tightest pair of 1.260:1. The FINDING is
+       untouched -- a veil lifts every step toward the ground and eats the ramp's margin -- and
+       the absolute numbers are not re-quoted anywhere as if they were today's.
        Every fill step lifted toward the light ground and the ramp's own margin fell, on a build
        nobody had touched. The condition is the ANIMATION BEING IDLE and the chain being opaque --
        not a duration, and not "the splash is gone".
@@ -668,11 +741,31 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
        page.screenshot(), and again immediately after -- because the rasteriser is not atomic and
        "opaque before" and "opaque after" are two claims, not one.
        IT IS ALSO SCHEME-INDEPENDENT, which is the whole point: an opacity is a number the page
-       reports, not a difference between two luminances that a near-black ground can swallow. */
+       reports, not a difference between two luminances that a near-black ground can swallow.
+
+       ---- AND IT READS PIXELS, NOT ONLY THE CHAIN (cycle 6, R15) --------------------------
+       An ancestor's opacity is ONE of the ways the bitmap can stop being a picture of the design,
+       and cycle 5 measured only that one. Two more are added here and neither has an epsilon:
+         THE CHAIN, WIDENED. opacity is joined by `filter`, `backdrop-filter` and
+         `mix-blend-mode` -- each of them composites the whole subtree just as opacity does, and
+         each of them would have been reported as clean.
+         THE STACK, AT THE TRACK'S CENTRE. `document.elementsFromPoint(cx, cy)` returns every
+         element under that point, front to back. Everything IN FRONT OF `.hm-alt` must be
+         `.hm-alt`'s OWN -- the track and the capsule the point is inside. Anything else is a
+         sibling overlay, a slipped box or a backdrop sitting between this panel and the
+         rasteriser, and NONE of those three is an ancestor opacity, so the chain read cannot see
+         them and the ground invariant only sees them where its luminance lever is big enough.
+       THE RULING FOR THIS ARM SAID "not one of .hm-alt's own ANCESTORS", and the measurement
+       inverts it: at the track's centre the elements in front of the panel are its own
+       DESCENDANTS (the track, a capsule), which are legitimate, while an ancestor appearing in
+       front is exactly the defect -- `body::after{position:fixed;inset:0}` is reported by
+       elementsFromPoint as `body`, an ancestor, and it is a full-viewport backdrop. The literal
+       predicate would have reddened every shipped shot and passed the planted backdrop. The
+       operative test is CONTAINMENT BY `.hm-alt`, and MUTANT G is the plant that settles it. */
     const SHOT_STATE = () => {
       const t = document.querySelector('.hm-alt .hm-gr-t');
       const el = document.querySelector('.hm-alt');
-      const b = t ? t.getBoundingClientRect() : { x: 0, y: 0 };
+      const b = t ? t.getBoundingClientRect() : { x: 0, y: 0, width: 0, height: 0 };
       const chain = [];
       for (let n = el; n; n = n.parentElement) chain.push(n);
       const name = (n) => {
@@ -681,34 +774,97 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
           ? '.' + n.className.trim().split(/\s+/)[0] : '';
         return n.tagName.toLowerCase() + (n.id ? '#' + n.id : '') + cls;
       };
-      const opa = chain.map((n) => ({ el: name(n), o: getComputedStyle(n).opacity }))
-        .filter((r) => r.o !== '1');
+      /* every compositing property an ancestor can carry, not just opacity */
+      const composits = (n) => {
+        const cs = getComputedStyle(n);
+        const out = [];
+        if (cs.opacity !== '1') out.push('opacity ' + cs.opacity);
+        if (cs.filter && cs.filter !== 'none') out.push('filter ' + cs.filter);
+        const bf = cs.backdropFilter || cs.webkitBackdropFilter;
+        if (bf && bf !== 'none') out.push('backdrop-filter ' + bf);
+        if (cs.mixBlendMode && cs.mixBlendMode !== 'normal') {
+          out.push('mix-blend-mode ' + cs.mixBlendMode);
+        }
+        return out;
+      };
+      const opa = chain.map((n) => ({ el: name(n), o: composits(n).join(' + ') }))
+        .filter((r) => r.o);
       const anim = (document.getAnimations ? document.getAnimations() : [])
         .filter((a) => a.playState === 'running' && a.effect && a.effect.target
           && chain.indexOf(a.effect.target) >= 0)
         .map((a) => (a.animationName || a.transitionProperty || 'animation')
           + ' on ' + name(a.effect.target));
-      return { x: b.x, y: b.y, found: !!t && !!el, opa, anim };
+      /* what is IN FRONT OF the gauge, at the pixel this cell measures hardest */
+      let stack = [], at = -1, deepest = '', covers = [];
+      if (t && el) {
+        const cx = b.x + b.width / 2, cy = b.y + b.height / 2;
+        if (document.elementsFromPoint) {
+          const hit = document.elementsFromPoint(cx, cy) || [];
+          deepest = hit.length ? name(hit[0]) : '(nothing hit)';
+          at = hit.indexOf(el);
+          stack = (at < 0 ? hit : hit.slice(0, at))
+            .filter((n) => !el.contains(n)).map(name);
+        }
+        /* THE HIT TEST SKIPS `pointer-events:none`, AND THIS APP'S OWN KNOWN VEIL CARRIES IT:
+           `#_bootsplash._bs-done` is a full-viewport box at `background:var(--bg)` fading over
+           400ms with pointer-events off, so elementsFromPoint would report the panel as the front
+           element while the splash was still compositing over it. The two reads are therefore
+           complementary rather than redundant -- the hit test is the authority on paint ORDER and
+           reaches PSEUDO-elements (a `body::after` backdrop is reported as `body`); this second,
+           geometric read reaches anything with a box whatever its pointer-events, and neither one
+           alone covers the class. */
+        const painted = (c) => !!c && c !== 'transparent' && !/rgba\([^)]*,\s*0\s*\)$/.test(c);
+        const all = document.querySelectorAll('*');
+        for (let i = 0; i < all.length; i++) {
+          const n = all[i];
+          if (n === el || el.contains(n) || n.contains(el)) continue;
+          const cs = getComputedStyle(n);
+          if (cs.position === 'static' || cs.position === 'relative') continue;
+          if (cs.visibility === 'hidden' || parseFloat(cs.opacity) === 0) continue;
+          const bf2 = cs.backdropFilter || cs.webkitBackdropFilter;
+          if (!painted(cs.backgroundColor) && !(bf2 && bf2 !== 'none')) continue;
+          const r = n.getBoundingClientRect();
+          if (r.width < 1 || r.height < 1) continue;
+          if (cx < r.left || cx > r.right || cy < r.top || cy > r.bottom) continue;
+          covers.push(name(n) + ' (' + cs.position + ', opacity ' + cs.opacity
+            + ', background ' + cs.backgroundColor + ')');
+          if (covers.length >= 3) break;
+        }
+      }
+      return { x: b.x, y: b.y, found: !!t && !!el, opa, anim, stack, covers,
+        inStack: at, deepest };
     };
     let shotAt = { x: geo.track.x, y: geo.track.y };
     let veiled = 0;
+    /* WHERE A VEIL FINDING GOES. Normally `fails`; MUTANT G redirects it so the plant can be
+       PRESSED without failing the run, which is the same shape every other mutant here uses. */
+    let veilOut = fails;
     const veilCheck = (s, when) => {
       if (!s.found) {
-        fails.push('[' + theme + '/gauge@' + G.w + '] the gauge was not in the document ' + when
+        veilOut.push('[' + theme + '/gauge@' + G.w + '] the gauge was not in the document ' + when
           + ' the shot, so nothing this cell reports is a reading of it.');
         return;
       }
-      if (!s.opa.length && !s.anim.length) return;
+      if (!s.opa.length && !s.anim.length && !s.stack.length && !s.covers.length
+        && s.inStack >= 0) return;
       veiled++;
       if (veiled > 1) return;   /* one report per cell: the same veil would name itself 80 times */
-      fails.push('[' + theme + '/gauge@' + G.w + '] THE SHOT WAS TAKEN THROUGH A VEIL, measured '
+      veilOut.push('[' + theme + '/gauge@' + G.w + '] THE SHOT WAS TAKEN THROUGH A VEIL, measured '
         + when + ' the bitmap: '
-        + (s.opa.length ? s.opa.map((r) => r.el + ' at opacity ' + r.o).join(', ') : 'nothing')
+        + (s.opa.length ? s.opa.map((r) => r.el + ' at ' + r.o).join(', ') : 'the chain is clean')
         + (s.anim.length ? '; still running: ' + s.anim.join(', ') : '')
-        + '. An element at opacity < 1 composites its whole subtree over the canvas and every '
-        + 'pixel this cell samples is inside that subtree, so every number below is a reading '
-        + 'through something. The pre-cell wait proves the fade was over BEFORE the cell; this '
-        + 'is the state AT the shot, and it is the claim that was missing.');
+        + (s.inStack < 0 ? '; and .hm-alt is not in the hit stack at the track\'s centre at all '
+          + '(the deepest element there is ' + s.deepest + ')' : '')
+        + (s.stack.length ? '; IN FRONT OF THE GAUGE at the track\'s centre, and not the gauge\'s '
+          + 'own: ' + s.stack.join(', ') : '')
+        + (s.covers.length ? '; and COVERING the track\'s centre with a painted out-of-flow box '
+          + '(the read that reaches pointer-events:none): ' + s.covers.join(', ') : '')
+        + '. An element at opacity < 1 -- or carrying a filter, a backdrop-filter or a blend mode '
+        + '-- composites its whole subtree over the canvas, and an element drawn IN FRONT of the '
+        + 'panel composites over it directly; every pixel this cell samples is under both, so '
+        + 'every number below is a reading through something. The pre-cell wait proves the fade '
+        + 'was over BEFORE the cell; this is the state AT the shot, and it is the claim that was '
+        + 'missing.');
     };
     const shoot = async () => {
       await page.evaluate(() => window.scrollTo(0, 0));
@@ -787,7 +943,7 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
       const trY0 = Math.ceil((geo.track.y + geo.bdT) * G.dsf) + 1;
       const trY1 = Math.floor((geo.track.y + geo.bdT + geo.padT) * G.dsf) - 1;
       if (trX1 - trX0 < 2 || trY1 - trY0 < 1) {
-        fails.push('[' + theme + '/gauge@' + G.w + '] the trough band is ' + (trX1 - trX0) + 'x'
+        veilOut.push('[' + theme + '/gauge@' + G.w + '] the trough band is ' + (trX1 - trX0) + 'x'
           + (trY1 - trY0) + ' device px after insetting one row a side -- there is no strictly '
           + 'interior sample, so the reference every ratio below divides by cannot be trusted.');
       }
@@ -813,37 +969,55 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
          caught in -- it reads 0.85683, four times the epsilon. The arm now FAILS NAMING THE
          VEIL rather than reporting a grade taken through it. */
       /* ---- ...AND WHETHER IT COULD SEE ONE AT ALL, IN THIS CELL (cycle 5, judge item 1) -----
-         The invariant's whole sensitivity to a veil is (1 - alpha) * |Y(canvas) - Y(trough)|, so
-         a cell whose trough and canvas are near-neighbours cannot be moved past the epsilon by
-         ANY alpha, and its green says nothing. Measured on this tree: light gap 0.098 (the
-         strongest catchable veil is alpha 0.980), dark gap 0.0038 (alpha 0.474). The dark cell
-         therefore carries a live guard with a real bound rather than a promise -- and the bound
-         is PRINTED, per cell, in the table below, because a guard's reach is part of its result.
-         If the gap ever falls to the epsilon the arm FAILS: at that point it is decoration, and
-         judge item 1 is the receipt for what decoration costs. */
+         The invariant's whole sensitivity to a veil is (1 - alpha) * |Y(canvas) - Y(surface)|, so
+         a cell whose surface and canvas are near-neighbours cannot be moved past the epsilon by
+         ANY alpha, and its green says nothing. If the gap ever falls to the epsilon the arm
+         FAILS: at that point it is decoration, and judge item 1 is the receipt for what
+         decoration costs.
+         ---- IT IS PRICED ON THE BIGGEST LEVER THE PANEL OFFERS, NOT ON THE TROUGH'S (cycle 6,
+         R15). The trough is not the only declared colour this cell reads off the bitmap and
+         compares against the stylesheet: judge item 8's KEY arm does the same thing with
+         `.hm-panel`'s own background, at the same GROUND_EPS, in the same shots. Measured on this
+         tree in DARK, the trough/canvas gap is 0.00382 (catchable down to alpha 0.476) while
+         --home-surface/canvas is 0.01625 (alpha 0.877) -- 4.3x the lever, and it is why press P9
+         found the key arm catching a dark veil the trough invariant could not. Pricing the family
+         at the trough's number therefore UNDERSTATED its own reach by a factor of four, in the
+         one scheme where the reach was the finding. The cell prices on the MAX and prints both,
+         and the INERT failure fires only when the best lever available is inert -- because that
+         is the condition under which the family really cannot fail. */
       const cDecl = Y_OF_CSS(geo.canvasBg);
       const tD0 = Y_OF_CSS(geo.trackBg);
-      const gap = (cDecl === null || tD0 === null) ? null : Math.abs(cDecl - tD0);
+      const pD0 = Y_OF_CSS(geo.panelBg);
+      const gapT = (cDecl === null || tD0 === null) ? null : Math.abs(cDecl - tD0);
+      const gapP = (cDecl === null || pD0 === null) ? null : Math.abs(cDecl - pD0);
+      const gap = (gapT === null && gapP === null) ? null
+        : Math.max(gapT === null ? 0 : gapT, gapP === null ? 0 : gapP);
+      const lever = (gap === null) ? 'none'
+        : ((gapP !== null && gapP >= (gapT === null ? 0 : gapT)) ? '--home-surface' : 'the trough');
       const alphaMin = (gap === null || gap <= 0) ? null : 1 - GROUND_EPS / gap;
+      const alphaT = (gapT === null || gapT <= 0) ? null : 1 - GROUND_EPS / gapT;
       if (gap === null) {
-        fails.push('[' + theme + '/gauge@' + G.w + '] the compositing ground could not be read ('
-          + geo.canvasBg + ' / ' + geo.trackBg + '), so the ground invariant cannot say whether '
-          + 'it is able to see a veil in this cell, and an unpriced guard is an unpressed one.');
+        veilOut.push('[' + theme + '/gauge@' + G.w + '] the compositing ground could not be read ('
+          + geo.canvasBg + ' / ' + geo.trackBg + ' / ' + geo.panelBg + '), so the ground '
+          + 'invariant cannot say whether it is able to see a veil in this cell, and an unpriced '
+          + 'guard is an unpressed one.');
       } else if (alphaMin === null || alphaMin <= 0) {
-        fails.push('[' + theme + '/gauge@' + G.w + '] THE GROUND INVARIANT IS INERT HERE: the '
-          + 'trough (Y ' + tD0.toFixed(5) + ') and the canvas it would be composited over (Y '
-          + cDecl.toFixed(5) + ') differ by ' + gap.toFixed(5) + ', so NO alpha can move the '
-          + 'trough past the ' + GROUND_EPS + ' epsilon and this guard cannot fail. It is not '
-          + 'reporting a clean shot, it is reporting nothing -- which is exactly how a veil at '
-          + 'alpha 0.91 crossed a whole dark cell at exit 0.');
+        veilOut.push('[' + theme + '/gauge@' + G.w + '] THE GROUND INVARIANT IS INERT HERE: the '
+          + 'largest declared-colour lever on this panel is ' + lever + ' at ' + gap.toFixed(5)
+          + ' (trough/canvas ' + (gapT === null ? 'unreadable' : gapT.toFixed(5))
+          + ', --home-surface/canvas ' + (gapP === null ? 'unreadable' : gapP.toFixed(5))
+          + ' against a canvas at Y ' + cDecl.toFixed(5) + '), so NO alpha can move ANY of them '
+          + 'past the ' + GROUND_EPS + ' epsilon and this whole family of guards cannot fail. It '
+          + 'is not reporting a clean shot, it is reporting nothing -- which is exactly how a '
+          + 'veil at alpha 0.91 crossed a whole dark cell at exit 0.');
       }
       const tDecl = Y_OF_CSS(geo.trackBg);
       if (tDecl === null) {
-        fails.push('[' + theme + '/gauge@' + G.w + '] the track declares no readable background '
+        veilOut.push('[' + theme + '/gauge@' + G.w + '] the track declares no readable background '
           + '(' + geo.trackBg + '), so the ground invariant below has no reference and every '
           + 'ratio in this cell would be unguarded.');
       } else if (Math.abs(t - tDecl) > GROUND_EPS || (tb.max - tb.min) > GROUND_EPS) {
-        fails.push('[' + theme + '/gauge@' + G.w + '] THE SHOT IS VEILED, so nothing below is a '
+        veilOut.push('[' + theme + '/gauge@' + G.w + '] THE SHOT IS VEILED, so nothing below is a '
           + 'measurement of this design: the trough band reads Y ' + t.toFixed(5) + ' (min '
           + tb.min.toFixed(5) + ', max ' + tb.max.toFixed(5) + ') where the track itself declares '
           + geo.trackBg + ' = Y ' + tDecl.toFixed(5) + ', a gap of '
@@ -864,6 +1038,18 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
          neither straddle the mark below it nor pick up the rounded ends. It is read off shot A
          with the plain reader: unlike the mark, it does not differ between A and B, so the
          removal diff would return null for it. */
+      /* ---- STRICTLY INTERIOR AT ANY SUB-PIXEL PHASE (cycle 6, judge item 1) ----------------
+         This box was `{x: S(s.x + 1), y: (...) * dsf + 1, w: S(s.w - 2), h: NB_CSS*dsf - 2}` --
+         FRACTIONAL device coordinates, resolved by BOX_Y with Math.round(). Which device row and
+         column the band lands on was therefore a function of the panel's own fractional y, and
+         the panel's y is not stable between loads (1159.188 on six runs of nine, 1162.797 on
+         three). The trough box two blocks up already solved this with ceil/floor and says in its
+         own comment that a box must not have that property; these two did.
+         SAME CONSTRUCTION NOW, WITH THE INSETS SIZED PER EDGE. Horizontally the band already
+         insets a whole CSS px a side -- 2 device columns at DSF 2, 3 at DSF 3 -- so ceil/floor of
+         that inset edge is strictly interior with a full device column to spare and needs no
+         extra margin; vertically the band is only NB_CSS px tall, so it keeps the explicit one
+         device row at top and bottom that stops it straddling the mark below or the fill above. */
       const nbrBoxes = [], nbrIdx = [];
       let narrow = 0;
       let ki = -1;
@@ -878,11 +1064,13 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
            the phone s neighbour ground unsampled behind a zero-sample FAIL. What a bitmap can
            be read off is device columns: 3.95 CSS px inset one CSS px a side is 5.85 of them at
            DSF 3, and 3.9 at DSF 2. */
-        if ((s.w - 2) * G.dsf < NB_MIN_DEV) { narrow++; continue; }
-        const yTop = (s.y + s.h - geo.keelH - NB_CSS) * G.dsf + 1;
-        const hDev = NB_CSS * G.dsf - 2;
-        if (hDev < 1) { narrow++; continue; }
-        nbrBoxes.push({ x: S(s.x + 1), y: yTop, w: S(s.w - 2), h: hDev });
+        const nx0 = Math.ceil((s.x + 1) * G.dsf);
+        const nx1 = Math.floor((s.x + s.w - 1) * G.dsf);
+        const ny0 = Math.ceil((s.y + s.h - geo.keelH - NB_CSS) * G.dsf) + 1;
+        const ny1 = Math.floor((s.y + s.h - geo.keelH) * G.dsf) - 1;
+        if (nx1 - nx0 < NB_MIN_DEV) { narrow++; continue; }
+        if (ny1 - ny0 < 1) { narrow++; continue; }
+        nbrBoxes.push({ x: nx0, y: ny0, w: nx1 - nx0, h: ny1 - ny0 });
         nbrIdx.push(ki);
       }
       const nY = nbrBoxes.length ? await scratch.evaluate(BOX_Y, { shot: shotA, boxes: nbrBoxes }) : [];
@@ -908,20 +1096,62 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
          bottom drops both boundary blends; the rounded corners that remain are a handful of
          pixels of a constant trough, identical under every capsule, so they cannot manufacture or
          hide an ORDER. */
-      const fillBoxes = [], fillLv = [];
+      /* ---- AND STRICTLY INTERIOR, LIKE THE TROUGH (cycle 6, judge item 1) -------------------
+         `{x: S(s.x) + 1, y: S(s.y) + 1, w: S(s.w) - 2, h: (...)*dsf - 2}` is a box on FRACTIONAL
+         device coordinates, and BOX_Y resolves one with Math.round() -- so whether the strip's
+         top edge included the capsule's own antialiased boundary row was decided by the panel's
+         fractional y, which is not stable between loads. Measured over nine instrumented runs of
+         the committed tree: trackY 1159.188 -> --lv 0 at 0.1765 and a tightest pair of 1.276:1
+         (six runs); trackY 1162.797 -> 0.2280 and 1.179:1 (three). 9 of 9 followed their own
+         trackY. It was read as a compositing veil for a whole cycle because a linear map fits
+         both stories -- see the retraction at the head of this file.
+         ceil(edge * dsf) + 1 and floor(edge * dsf) - 1 give the same integer box at every phase,
+         which is the construction the trough band has used since R12 and the property its comment
+         demands. */
+      /* ---- AND IT STARTS BELOW THE CORNER ARC, WHICH IS NOT THE SAME MISTAKE AS THE FIRST ----
+         Measured with the phase control above, on the strictly-interior box that spanned the
+         capsule's FULL height: 1280 agreed to 0.0000 in both schemes, 390/dark to 0.0029 -- and
+         390/light moved the tightest adjacent pair by 0.0406, from 1.201:1 to 1.241:1. The
+         mechanism is the rounded top corners the comment above called harmless. They are harmless
+         to an ORDER, which is what that sentence claimed; they are NOT harmless to the MARGIN,
+         which is what this arm reports. In light the corner pixels are trough (Y 0.849) while the
+         darkest fill steps are Y 0.025-0.040, so a handful of them dominates the mean exactly
+         where the ramp is tightest -- and how many of them a box holds changes with every row.
+         The top inset is the border-radius, so no corner pixel is in the box at all. That IS what
+         the first draft tried and it failed for a DIFFERENT reason, which is worth keeping
+         straight: that draft insetted the top by the radius AND ran the box to the fill's own
+         bottom edge, so it measured the transparent channel blending through at full width. Here
+         the bottom is still floor(edge * dsf) - 1, a whole device row clear of that edge. */
+      const fillBoxes = [], fillLv = [], fillIn = [];
       for (const s of geo.segs) {
         if (!s.open) continue;
-        const hDevF = (s.h - geo.keelH - geo.keelGap) * G.dsf - 2;
-        if (hDevF < 2 || S(s.w) - 2 < NB_MIN_DEV) continue;
-        fillBoxes.push({ x: S(s.x) + 1, y: S(s.y) + 1, w: S(s.w) - 2, h: hDevF });
+        const fx0 = Math.ceil(s.x * G.dsf) + 1;
+        const fx1 = Math.floor((s.x + s.w) * G.dsf) - 1;
+        const fy0 = Math.ceil((s.y + geo.rad) * G.dsf) + 1;
+        const fy1 = Math.floor((s.y + s.h - geo.keelH - geo.keelGap) * G.dsf) - 1;
+        /* 3 rows so the CONTROL box below (one further row a side) still has one of its own.
+           This is the binding constraint at 390: the corner-free strip there is [y+rad,
+           y+h-keel-gap] = 2 CSS px = 6 device rows, and ceil/floor plus a row a side leaves 3
+           or 4 of them. A 1-row control over a flat interior is still a comparison; a 0-row one
+           is not, which is what this number is. */
+        if (fy1 - fy0 < 3 || fx1 - fx0 < NB_MIN_DEV) continue;
+        fillBoxes.push({ x: fx0, y: fy0, w: fx1 - fx0, h: fy1 - fy0 });
+        /* THE SAME-SHOT PHASE CONTROL: the identical strip, one device row further in at top and
+           bottom. A flat interior reads the same either way; a box that is still catching a
+           boundary blend does not, and that is the whole defect this construction replaces. A
+           phase-sensitive sampler has to be able to report itself. */
+        fillIn.push({ x: fx0, y: fy0 + 1, w: fx1 - fx0, h: fy1 - fy0 - 2 });
         fillLv.push(s.lv);
       }
       const fY = fillBoxes.length ? await scratch.evaluate(BOX_Y, { shot: shotA, boxes: fillBoxes }) : [];
-      const fill = [];
+      const fI = fillIn.length ? await scratch.evaluate(BOX_Y, { shot: shotA, boxes: fillIn }) : [];
+      const fill = [], fillCtl = [];
       fY.forEach((b, i) => { if (b) fill.push({ lv: fillLv[i], y: b.mean }); });
+      fI.forEach((b, i) => { if (b) fillCtl.push({ lv: fillLv[i], y: b.mean }); });
 
-      const o = { missed: [], shaky: [], rule: [], dead: 0, narrow, fill,
-        groundGap: gap, veilAlpha: alphaMin,
+      const o = { missed: [], shaky: [], rule: [], dead: 0, narrow, fill, fillCtl,
+        groundGap: gap, groundGapT: gapT, groundGapP: gapP, lever, veilAlphaT: alphaT,
+        veilAlpha: alphaMin,
         nbrN: Object.keys(nbrFor).length };
       kY.forEach((m, i) => {
         if (!m) { o.dead++; return; }
@@ -1079,10 +1309,12 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
       return { steps, dir, mono, worst, ok: mono && worst && worst.cr >= GRADE_STEP_MIN };
     };
     const gr = grade(by.fill);
+    const grCtl = grade(by.fillCtl);
     const M = stat(by.missed), K = stat(by.shaky), R = stat(by.rule);
     const depth = d0.depth;
-    gaugeRows.push({ theme, w: G.w, M, K, R, depth, gr,
-      groundGap: by.groundGap, veilAlpha: by.veilAlpha });
+    gaugeRows.push({ theme, w: G.w, M, K, R, depth, gr, grCtl,
+      groundGap: by.groundGap, groundGapT: by.groundGapT, groundGapP: by.groundGapP,
+      lever: by.lever, veilAlphaT: by.veilAlphaT, veilAlpha: by.veilAlpha });
 
     const where = '[' + theme + '/gauge@' + G.w + '] ';
     if (!M || !K) {
@@ -1090,12 +1322,19 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
         + ' shaky keel marks -- an ordering cannot be asserted from one variant, and a green here '
         + 'would mean nothing. The seed must produce both.');
     } else {
-      /* 1. ORDERING -- every worst mark at least as loud as every middle one */
-      if (!(M.min >= K.max)) {
-        fails.push(where + 'SEVERITY INVERTED: the quietest MISSED keel is ' + M.min.toFixed(2)
-          + ':1 against the trough while the loudest SHAKY keel is ' + K.max.toFixed(2)
-          + ':1 -- the worst grade is drawn quieter than the middle one, swept over --lv '
-          + M.lvs.join('/'));
+      /* 1. ORDERING -- every worst mark at least KEEL_MARGIN louder than every middle one.
+         The bare `>=` this used to be could only fail on an INVERSION; a COLLAPSE -- the two
+         severities painted as one mark -- satisfied it, and did, in a whole cell. See
+         KEEL_MARGIN, and MUTANT H, which is that collapse. */
+      if (!(M.min >= K.max * KEEL_MARGIN)) {
+        fails.push(where + 'THE TWO SEVERITIES ARE NOT SEPARATED: the quietest MISSED keel is '
+          + M.min.toFixed(2) + ':1 against the trough while the loudest SHAKY keel is '
+          + K.max.toFixed(2) + ':1 -- a ratio of ' + (M.min / K.max).toFixed(3) + ' against the '
+          + KEEL_MARGIN + ' floor the fill strip already applies to adjacent grades. '
+          + (M.min < K.max ? 'The worst grade is drawn QUIETER than the middle one'
+            : 'The worst grade is drawn at the same strength as the middle one, so the two marks '
+              + 'do not encode an ordering at all')
+          + ', swept over --lv ' + M.lvs.join('/'));
       }
       /* 2. FLOOR -- on the marks, not on the tokens */
       for (const [name, s] of [['MISSED', M], ['SHAKY', K]]) {
@@ -1115,11 +1354,13 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
           + ' shaky marks -- with no second ground there is nothing asserting that the mark can '
           + 'be told from what it sits against, which is the whole reason the waterline exists');
       } else {
-        if (!(M.nbMin >= K.nbMax)) {
-          fails.push(where + 'SEVERITY INVERTED AGAINST THE GROUND THE MARK ABUTS: the quietest '
-            + 'MISSED keel is ' + M.nbMin.toFixed(2) + ':1 against the band immediately above it '
-            + 'while the loudest SHAKY keel is ' + K.nbMax.toFixed(2) + ':1. The trough reading is '
-            + 'not wrong, it is just not what anyone looks at: a keel abuts its own capsule.');
+        if (!(M.nbMin >= K.nbMax * KEEL_MARGIN)) {
+          fails.push(where + 'THE TWO SEVERITIES ARE NOT SEPARATED AGAINST THE GROUND THE MARK '
+            + 'ABUTS: the quietest MISSED keel is ' + M.nbMin.toFixed(2) + ':1 against the band '
+            + 'immediately above it while the loudest SHAKY keel is ' + K.nbMax.toFixed(2)
+            + ':1 -- a ratio of ' + (M.nbMin / K.nbMax).toFixed(3) + ' against the ' + KEEL_MARGIN
+            + ' floor. The trough reading is not wrong, it is just not what anyone looks at: a '
+            + 'keel abuts its own capsule.');
         }
         for (const [name, s] of [['MISSED', M], ['SHAKY', K]]) {
           if (!(s.nbMin >= NONTEXT_FLOOR)) {
@@ -1153,7 +1394,8 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
        50%. Lightness is indeed the channel -- but a lightness difference has to be READ off an
        area, and halving the area is not free by inspection. So it is measured, at both widths and
        in both schemes: the strip's own luminance per fill step, monotone, with every ADJACENT
-       pair clearing GRADE_STEP_MIN. Measured at 390 the tightest pair is 1.272:1. */
+       pair clearing GRADE_STEP_MIN. Measured, the tightest pair is 1.260:1 light and 1.266:1
+       dark -- the same at both widths, which is the claim in its strongest form. */
     if (!gr.steps.length) {
       fails.push(where + 'the fill strip was sampled on NO capsule -- with no reading there is '
         + 'nothing asserting that a grade survives the channel the waterline reserves, which at '
@@ -1177,6 +1419,32 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
           + (geo.keelH + geo.keelGap) + 'px of a ' + (geo.segs[0] || {}).h + 'px capsule here, and '
           + 'the grade has nowhere else to live -- the SIGNAL RULE puts it in lightness and never '
           + 'in size or hue.');
+      }
+    }
+    /* 5b. THE SAMPLER REPORTS ITSELF (cycle 6, judge item 1) --------------------------------
+       The same strip, in the SAME shot, read again one device row further in at top and bottom.
+       A flat interior gives the same answer either way; a box still catching a boundary blend
+       does not -- and a box on fractional device coordinates catches one at some sub-pixel
+       phases and not others, which is exactly how this arm reported a bimodal ramp for a cycle
+       and had it attributed to a compositing veil. The verdict is what is compared, not the raw
+       means: the ramp must stay monotone under the inset and the tightest adjacent pair must
+       agree, because the tightest pair IS this arm's result. */
+    if (gr.steps.length >= 3 && grCtl.steps.length >= 3 && gr.worst && grCtl.worst) {
+      const dCr = Math.abs(gr.worst.cr - grCtl.worst.cr);
+      const dY = Math.max(...gr.steps.map((s) => {
+        const c = grCtl.steps.find((x) => x.lv === s.lv);
+        return c ? Math.abs(c.y - s.y) : Infinity;
+      }));
+      if (grCtl.mono !== gr.mono || dCr > PHASE_EPS_CR || dY > PHASE_EPS_Y) {
+        fails.push(where + 'THE FILL SAMPLER IS PHASE-SENSITIVE: insetting the SAME boxes by one '
+          + 'more device row in the SAME shot moves the tightest adjacent pair from '
+          + gr.worst.cr.toFixed(3) + ':1 to ' + grCtl.worst.cr.toFixed(3) + ':1 (delta '
+          + dCr.toFixed(4) + ', floor ' + PHASE_EPS_CR + ') and the worst step mean by '
+          + dY.toFixed(5) + ' (floor ' + PHASE_EPS_Y + ')'
+          + (grCtl.mono !== gr.mono ? ', and the ramp is monotone under one inset and not the '
+            + 'other' : '') + '. A box whose reading depends on where exactly its edges fall is '
+          + 'reading an EDGE, not a grade -- and the difference is invisible in any single run, '
+          + 'because the phase is set by the panel s own fractional y.');
       }
     }
 
@@ -1383,6 +1651,102 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
       }
     }
 
+    /* ---- MUTANT G: THE DARK-ONLY OVERLAY (cycle 6, R15) -------------------------------------
+       A full-viewport backdrop at 10% -- `body::after{position:fixed;inset:0;background:var(--bg);
+       opacity:.10}`, scoped to the dark scheme, which is where cycle 5 proved a veil at alpha
+       0.91 could cross a whole cell at exit 0. It is deliberately the ONE veil shape none of the
+       arithmetic guards can reach: it is not an ancestor opacity (body's own computed opacity is
+       1, the alpha is on a PSEUDO-element), and it composites at an effective alpha of 0.90 --
+       above the 0.877 the best declared-colour lever on this panel can catch, and far above the
+       0.476 the trough alone can. Only the hit-stack read sees it, which is what R15 added and
+       what this presses.
+       THE PLANT NEEDS `content`. The ruling's declaration omits it, and without it the pseudo
+       generates no box at all, so nothing composites and the mutant would be reported as a clean
+       shot -- the CANNOT-LAND branch below is what makes that visible rather than green.
+       IN LIGHT IT IS A NEGATIVE CONTROL, not an abstention: the same stylesheet is installed, the
+       selector does not match, and the cell must report NO veil. A detector that fires on a plant
+       that did not land is not a detector. */
+    const PLANT_G = 'html[data-theme="dark"] body::after{content:"";position:fixed;inset:0;'
+      + 'background:var(--bg);opacity:.10;z-index:2147483647}';
+    await style('_gmut', PLANT_G);
+    await B.settle(page);
+    const gLive = await page.evaluate(() => {
+      const cs = getComputedStyle(document.body, '::after');
+      return { opacity: cs.opacity, position: cs.position, content: cs.content };
+    });
+    const gSink = [];
+    const veilBefore = veiled;
+    veilOut = gSink; veiled = 0;
+    const gState = await page.evaluate(SHOT_STATE);
+    veilCheck(gState, 'under MUTANT G');
+    veilOut = fails; veiled = veilBefore;
+    await style('_gmut', '');
+    await B.settle(page);
+    const gLanded = gLive.opacity === '0.1' && gLive.position === 'fixed';
+    const named = gSink.filter((f) => f.indexOf('THE SHOT WAS TAKEN THROUGH A VEIL') >= 0
+      && f.indexOf('IN FRONT OF THE GAUGE') >= 0);
+    if (theme === 'dark') {
+      if (!gLanded) {
+        fails.push(where + 'MUTANT G CANNOT LAND: the planted body::after computes position '
+          + gLive.position + ' at opacity ' + gLive.opacity + ' (content ' + gLive.content
+          + '), so no backdrop was drawn over the panel and a green below would mean nothing.');
+      } else if (!gSink.length) {
+        fails.push(where + 'MUTANT G UNDETECTED: a full-viewport backdrop at 10% over the gauge '
+          + '-- the exact shape that crossed a dark cell at exit 0 in cycle 5 -- was read as a '
+          + 'clean shot. The chain is opaque (the alpha is on a pseudo-element, so body computes '
+          + 'opacity 1) and no declared-colour lever on this panel reaches alpha 0.90, so the '
+          + 'hit-stack read is the only arm that can see this and it did not.');
+      } else if (!named.length) {
+        fails.push(where + 'MUTANT G MIS-ATTRIBUTED: the backdrop was caught, but not as a '
+          + 'backdrop -- the finding reads "' + gSink[0].slice(0, 180) + '". A red the arm cannot '
+          + 'explain is its own failure: the point of naming the intruder is that the next reader '
+          + 'does not have to re-derive what moved the pixels.');
+      }
+    } else if (gSink.length) {
+      fails.push(where + 'MUTANT G FIRED ON A PLANT THAT CANNOT APPLY: the backdrop is scoped to '
+        + 'html[data-theme="dark"] and this cell is light (the pseudo computes opacity '
+        + gLive.opacity + ', position ' + gLive.position + '), yet the shot was reported veiled: '
+        + gSink[0].slice(0, 180) + '. A detector that fires on nothing is not a detector.');
+    }
+
+    /* ---- MUTANT H: THE TWO SEVERITIES COLLAPSED INTO ONE MARK (cycle 6) ---------------------
+       `--keel-shaky: var(--st-warn)` -- which is what `--keel-missed` already is -- so SHAKY and
+       MISSED paint the identical mark in both schemes. Every other mutant here restores an
+       INVERTED wiring; this one restores no wiring at all, it deletes the distinction, and the
+       bare `>=` the ordering arms used to carry accepted it: pressed on the cycle-5 tree the
+       `1280 dark` cell produced ZERO failures. It is pressed on BOTH grounds, because the
+       ordering claim is made on both. */
+    const PLANT_H = 'html{--keel-shaky:var(--st-warn)!important}';
+    await style('_gmut', PLANT_H);
+    await B.settle(page);
+    const hLive = await page.evaluate(() => {
+      const k = document.querySelector('.hm-alt .hm-seg.keel:not(.keel-m)');
+      const m = document.querySelector('.hm-alt .hm-seg.keel-m');
+      return { shaky: k ? getComputedStyle(k, '::before').backgroundColor : null,
+        missed: m ? getComputedStyle(m, '::before').backgroundColor : null };
+    });
+    await style('_gmut', '');
+    await B.settle(page);
+    const badH = await readMarks(PLANT_H);
+    const mH = stat(badH.missed), kH = stat(badH.shaky);
+    if (!hLive.shaky || !hLive.missed || hLive.shaky !== hLive.missed) {
+      fails.push(where + 'MUTANT H CANNOT LAND: under the plant the SHAKY keel still computes '
+        + hLive.shaky + ' against MISSED at ' + hLive.missed + ' -- the two marks did not '
+        + 'collapse, so a green below would mean nothing.');
+    } else if (!mH || !kH) {
+      fails.push(where + 'MUTANT H CANNOT LAND: the collapse plant left one keel variant '
+        + 'unpainted (missed ' + (mH ? mH.n : 0) + ', shaky ' + (kH ? kH.n : 0) + ').');
+    } else if (mH.min >= kH.max * KEEL_MARGIN
+      && (!mH.nbN || !kH.nbN || mH.nbMin >= kH.nbMax * KEEL_MARGIN)) {
+      fails.push(where + 'MUTANT H UNDETECTED: with --keel-shaky set to --st-warn -- the value '
+        + '--keel-missed already carries, so the worst grade and the middle grade are ONE mark -- '
+        + 'the pair measured MISSED ' + mH.min.toFixed(2) + ':1 against SHAKY ' + kH.max.toFixed(2)
+        + ':1 on the trough and ' + (mH.nbN && kH.nbN ? mH.nbMin.toFixed(2) + ' vs '
+          + kH.nbMax.toFixed(2) : 'n/a') + ' on the neighbour ground, and was accepted. An '
+        + 'ordering arm that only fails on an INVERSION cannot see a COLLAPSE, and a legend with '
+        + 'one keel swatch cannot report it either.');
+    }
+
     /* ---- THE COLD-RUN IDENTITY REQUIREMENT (R12) --------------------------------------------
        A CI RUNNER IS ALWAYS COLD, and an arm that is only true warm is not CI-honest. Every
        reading above was taken on the FIRST pass over a page that had just booted; five more
@@ -1420,6 +1784,13 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
       E: dE.depth.toFixed(3), Ebg: dgeo.groundBg || 'n/a',
       F: bindF ? (bindF.px ? bindF.cr.toFixed(3) + ':1' : 'VANISHED (0 px differ from its ground)')
         : 'n/a', Fbg: geo.panelBg,
+      G: theme === 'dark'
+        ? (gSink.length ? 'caught, named ' + (named.length ? 'as a veil in front of the gauge'
+          : 'but NOT as a backdrop') : 'NOT CAUGHT')
+        : 'inert by construction (light) -- and the cell reported '
+          + (gSink.length ? 'VEILED' : 'clean'),
+      H: mH && kH ? mH.min.toFixed(2) + ' vs ' + kH.max.toFixed(2)
+        + ' = ' + (mH.min / kH.max).toFixed(3) : 'n/a',
       veiled: veiled,
       cold: drift.length ? 'DRIFTED' : 'identical' };
 
@@ -1455,15 +1826,23 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
         + g.keys.map((k) => k.cls.replace(/^hm-k\.?/, '') + ' ' + (k.cr === null ? '-' : k.cr.toFixed(2)))
           .join('  ') + '   vs the panel\'s own measured ground');
     }
-    /* THE GUARD'S REACH, PRINTED. See GROUND_EPS: the ground invariant can only catch a veil that
-       moves the trough past the epsilon, and its lever is the trough/canvas gap -- which is 26x
-       smaller in dark than in light. A guard whose sensitivity is not reported is a guard whose
-       green cannot be read. */
+    /* THE GUARD'S REACH, PRINTED. See GROUND_EPS: a declared-colour invariant can only catch a
+       veil that moves its reference past the epsilon, and its lever is that reference's gap from
+       the canvas -- which is 26x smaller for the TROUGH in dark than in light. Cycle 6 prices the
+       family on the LARGEST lever the panel offers (--home-surface, which the key arm reads at
+       the same epsilon) and prints both, because pricing on the trough understated the reach 4.3x
+       in the one scheme where the reach was the finding. A guard whose sensitivity is not
+       reported is a guard whose green cannot be read. */
     if (g.groundGap !== null && g.groundGap !== undefined) {
-      console.log(L('', 7) + L('', 6) + L('  ground', 12) + '  trough/canvas gap '
-        + g.groundGap.toFixed(5) + ' -> the ground invariant alone catches a veil down to alpha '
+      console.log(L('', 7) + L('', 6) + L('  ground', 12) + '  levers: trough/canvas '
+        + (g.groundGapT === null || g.groundGapT === undefined ? '-' : g.groundGapT.toFixed(5))
+        + ' (alpha ' + (g.veilAlphaT === null || g.veilAlphaT === undefined ? 'NONE'
+          : g.veilAlphaT.toFixed(3)) + '), --home-surface/canvas '
+        + (g.groundGapP === null || g.groundGapP === undefined ? '-' : g.groundGapP.toFixed(5))
+        + ' -> PRICED ON ' + g.lever + ', catching a veil down to alpha '
         + (g.veilAlpha === null ? 'NONE' : g.veilAlpha.toFixed(3))
-        + '; the shot-time opacity read catches every alpha, in both schemes');
+        + '; the shot-time read (chain opacity/filter/backdrop-filter/blend, plus what is in '
+        + 'front of the gauge) catches every alpha, in both schemes');
     }
     if (g.gr && g.gr.steps.length) {
       console.log(W + L(g.theme, 6) + L('fill strip', 12) + R(g.gr.steps.length, 5)
@@ -1472,6 +1851,16 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
           + '  tightest adjacent pair ' + g.gr.worst.a + '/' + g.gr.worst.b + ' = '
           + g.gr.worst.cr.toFixed(3) + ':1, floor ' + GRADE_STEP_MIN
           + (g.gr.mono ? ', monotone' : ', NOT MONOTONE') : ''));
+      if (g.grCtl && g.grCtl.worst && g.gr.worst) {
+        const dY = Math.max(...g.gr.steps.map((s) => {
+          const c = g.grCtl.steps.find((x) => x.lv === s.lv);
+          return c ? Math.abs(c.y - s.y) : Infinity;
+        }));
+        console.log(L('', 7) + L('', 6) + L('', 12) + '  phase control (the same boxes inset one '
+          + 'more device row, same shot): pair ' + g.grCtl.worst.cr.toFixed(3) + ':1, delta '
+          + Math.abs(g.gr.worst.cr - g.grCtl.worst.cr).toFixed(4) + ' (floor ' + PHASE_EPS_CR
+          + '); worst step mean delta ' + dY.toFixed(5) + ' (floor ' + PHASE_EPS_Y + ')');
+      }
     }
     if (g.mut) {
       console.log(W + L(g.theme, 6) + L('  mutants', 12) + '  shipped keel wiring -> missed ' + g.mut.A
@@ -1485,6 +1874,10 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
       console.log(L('', 7) + L('', 6) + L('', 12) + '  --gauge-rule repainted at the panel ('
         + g.mut.Fbg + ') -> binding key swatch ' + g.mut.F + ' (caught)'
         + ' | shots taken through a veil: ' + g.mut.veiled);
+      console.log(L('', 7) + L('', 6) + L('', 12) + '  a 10% full-viewport backdrop over the '
+        + 'gauge -> ' + g.mut.G);
+      console.log(L('', 7) + L('', 6) + L('', 12) + '  --keel-shaky collapsed onto --st-warn -> '
+        + 'missed vs shaky ' + g.mut.H + ', floor ' + KEEL_MARGIN + ' (caught)');
     }
   }
 
@@ -1496,23 +1889,34 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
   console.log('\nSCOREBOARD SALIENCE: PASS  (' + rows.length + ' room x theme x score;'
     + ' Solid is the loudest tile whenever it is non-empty, in every room, both themes, and never fills at zero'
     + ' -- plus the altitude gauge at ' + GAUGE_WIDTHS.map((g) => g.w + 'px').join(' and ')
-    + ' in both schemes: the worst grade is never drawn quieter than the'
-    + ' middle one, and both keel marks clear the 3:1 non-text floor, against TWO grounds -- the'
-    + ' stable trough AND the band each mark actually abuts -- with each variant swept over all'
-    + ' four fill steps; adjacent grades stay discriminable from the FILL STRIP ALONE, which is'
+    + ' in both schemes: the worst grade is drawn at least ' + KEEL_MARGIN + 'x louder than the'
+    + ' middle one -- a MARGIN and not an ordering, so a COLLAPSE of the two severities into one'
+    + ' mark fails here as surely as an inversion does -- and both keel marks clear the 3:1'
+    + ' non-text floor, against TWO grounds (the stable trough AND the band each mark actually'
+    + ' abuts) with each variant swept over all four fill steps; adjacent grades stay'
+    + ' discriminable from the FILL STRIP ALONE, which is'
     + ' the claim the 4px channel has to earn twice over on the phone, where it costs half the'
-    + ' capsule; the untouched capsule\'s rule clears the same floor; the LEGEND\'S FOUR SWATCHES'
+    + ' capsule, AND that strip is sampled on a box built strictly interior at every sub-pixel'
+    + ' phase (ceil/floor of the device edge, never a rounded fraction) with a same-shot control'
+    + ' that re-reads it one device row further in, because the previous box was phase-dependent'
+    + ' and its drift was billed to a veil for a whole cycle; the untouched capsule\'s rule clears'
+    + ' the same floor; the LEGEND\'S FOUR SWATCHES'
     + ' clear it too against the panel\'s own measured ground -- the binding cell of the'
     + ' --gauge-rule solve, pressed by repainting that token at the panel\'s own colour -- and the'
     + ' panels stand off their ground, pressed by painting the panel at that ground\'s own colour.'
     + ' EVERY GAUGE READING IS GATED ON THE SHOT BEING UNVEILED, and the load-bearing guard is'
-    + ' MEASURED RATHER THAN INFERRED: every element from the gauge to the document root is read'
-    + ' at computed opacity 1 with nothing animating on that chain, in the same evaluate as the'
-    + ' shot and again after it, which needs no epsilon and works in both schemes. Beside it, as a'
-    + ' backstop for compositing that is not an ancestor opacity, the trough must equal the colour'
-    + ' the track itself declares within ' + GROUND_EPS + ' in the SAME shot -- and that arm now'
-    + ' PRICES ITSELF per cell, failing where the trough/canvas gap is too small for any alpha to'
-    + ' cross the epsilon, because in dark it was inert rather than lenient. And the COLD first'
+    + ' MEASURED RATHER THAN INFERRED: in the same evaluate as the shot and again after it, every'
+    + ' element from the gauge to the document root is read at computed opacity 1 with no filter,'
+    + ' no backdrop-filter, no blend mode and nothing animating on that chain, AND the pixel at'
+    + ' the track\'s centre is read twice over -- the hit stack, so nothing that is not the'
+    + ' gauge\'s own may be in front of it, and a geometric sweep for painted out-of-flow boxes'
+    + ' covering that point, which is the half that reaches a pointer-events:none overlay. None of'
+    + ' that has an epsilon or a scheme. Beside it, as a backstop, a declared-colour ground'
+    + ' invariant: the trough must equal the colour the track itself declares within '
+    + GROUND_EPS + ' in the SAME shot -- and that arm now PRICES ITSELF per cell on the LARGEST'
+    + ' lever the panel offers rather than on the trough\'s, failing where no alpha could move any'
+    + ' of them past the epsilon, because in dark the trough alone was inert rather than lenient.'
+    + ' And the COLD first'
     + ' reading -- the only one a CI runner ever takes -- must reproduce a warm re-read later in'
     + ' the same run)');
   return B.finish(0);

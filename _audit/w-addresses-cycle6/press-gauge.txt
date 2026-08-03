@@ -1,0 +1,43 @@
+=== W-ADDRESSES cycle 6 -- the gauge arms, pressed ===
+
+--- STABILITY: three consecutive runs of the shipped tree ---
+run 1  exit 0
+   1280px/dark  0:0.1973 (n43)  0.3:0.3328 (n12)  0.55:0.4740 (n9)  0.78:0.6395 (n6)  1:0.8228 (n23)
+   1280px/light 0:0.1693 (n43)  0.3:0.1057 (n12)  0.55:0.0671 (n9)  0.78:0.0399 (n6)  1:0.0213 (n23)
+   390px/dark   0:0.1973 (n43)  0.3:0.3328 (n12)  0.55:0.4740 (n9)  0.78:0.6395 (n6)  1:0.8228 (n23)
+   390px/light  0:0.1693 (n43)  0.3:0.1057 (n12)  0.55:0.0671 (n9)  0.78:0.0399 (n6)  1:0.0213 (n23)
+run 2  exit 0
+   1280px/dark  0:0.1973 (n43)  0.3:0.3328 (n12)  0.55:0.4740 (n9)  0.78:0.6395 (n6)  1:0.8228 (n23)
+   1280px/light 0:0.1693 (n43)  0.3:0.1057 (n12)  0.55:0.0671 (n9)  0.78:0.0399 (n6)  1:0.0213 (n23)
+   390px/dark   0:0.1973 (n43)  0.3:0.3328 (n12)  0.55:0.4740 (n9)  0.78:0.6395 (n6)  1:0.8228 (n23)
+   390px/light  0:0.1693 (n43)  0.3:0.1057 (n12)  0.55:0.0671 (n9)  0.78:0.0399 (n6)  1:0.0213 (n23)
+run 3  exit 0
+   1280px/dark  0:0.1973 (n43)  0.3:0.3328 (n12)  0.55:0.4740 (n9)  0.78:0.6395 (n6)  1:0.8228 (n23)
+   1280px/light 0:0.1693 (n43)  0.3:0.1057 (n12)  0.55:0.0671 (n9)  0.78:0.0399 (n6)  1:0.0213 (n23)
+   390px/dark   0:0.1973 (n43)  0.3:0.3328 (n12)  0.55:0.4740 (n9)  0.78:0.6395 (n6)  1:0.8228 (n23)
+   390px/light  0:0.1693 (n43)  0.3:0.1057 (n12)  0.55:0.0671 (n9)  0.78:0.0399 (n6)  1:0.0213 (n23)
+all three runs identical: True
+
+P1  the shot-time stack read deleted (cycle 5 coverage)  exit 1   MUTANT G UNDETECTED                2
+     - [dark/gauge@1280] MUTANT G UNDETECTED: a full-viewport backdrop at 10% over the gauge -- the exact shape that crossed a dark cell at exit 0 in cycle 5 -- was read as a clean shot. The chain is opaqu
+     - [dark/gauge@390] MUTANT G UNDETECTED: a full-viewport backdrop at 10% over the gauge -- the exact shape that crossed a dark cell at exit 0 in cycle 5 -- was read as a clean shot. The chain is opaque
+
+P2  KEEL_MARGIN reverted to a bare >= (1.0)              exit 1   MUTANT H UNDETECTED                4
+     - [light/gauge@1280] MUTANT H UNDETECTED: with --keel-shaky set to --st-warn -- the value --keel-missed already carries, so the worst grade and the middle grade are ONE mark -- the pair measured MISSE
+     - [dark/gauge@1280] MUTANT H UNDETECTED: with --keel-shaky set to --st-warn -- the value --keel-missed already carries, so the worst grade and the middle grade are ONE mark -- the pair measured MISSED
+     - [light/gauge@390] MUTANT H UNDETECTED: with --keel-shaky set to --st-warn -- the value --keel-missed already carries, so the worst grade and the middle grade are ONE mark -- the pair measured MISSED
+     - [dark/gauge@390] MUTANT H UNDETECTED: with --keel-shaky set to --st-warn -- the value --keel-missed already carries, so the worst grade and the middle grade are ONE mark -- the pair measured MISSED 
+
+P3  the fill box reverted to fractional device coords    exit 1   THE FILL SAMPLER IS PHASE-SENSITIVE 2
+     - [light/gauge@390] THE FILL SAMPLER IS PHASE-SENSITIVE: insetting the SAME boxes by one more device row in the SAME shot moves the tightest adjacent pair from 1.276:1 to 1.275:1 (delta 0.0016, floor 
+     - [dark/gauge@390] THE FILL SAMPLER IS PHASE-SENSITIVE: insetting the SAME boxes by one more device row in the SAME shot moves the tightest adjacent pair from 1.272:1 to 1.271:1 (delta 0.0009, floor 0
+
+RESTORED: source identical to snapshot True; working-tree diff unchanged True; scoreboard_salience exit 0
+   1280px/dark  0:0.1973 (n43)  0.3:0.3328 (n12)  0.55:0.4740 (n9)  0.78:0.6395 (n6)  1:0.8228 (n23)
+   1280px/light 0:0.1693 (n43)  0.3:0.1057 (n12)  0.55:0.0671 (n9)  0.78:0.0399 (n6)  1:0.0213 (n23)
+   390px/dark   0:0.1973 (n43)  0.3:0.3328 (n12)  0.55:0.4740 (n9)  0.78:0.6395 (n6)  1:0.8228 (n23)
+   390px/light  0:0.1693 (n43)  0.3:0.1057 (n12)  0.55:0.0671 (n9)  0.78:0.0399 (n6)  1:0.0213 (n23)
+
+P1  the shot-time stack read deleted (cycle 5 coverage)  exit 1   MUTANT G UNDETECTED                2
+P2  KEEL_MARGIN reverted to a bare >= (1.0)              exit 1   MUTANT H UNDETECTED                4
+P3  the fill box reverted to fractional device coords    exit 1   THE FILL SAMPLER IS PHASE-SENSITIVE 2

@@ -1595,6 +1595,23 @@ const GEN_N = 24;
         + 'room as the cold door, so a stamp read from the record and a stamp that ignores it are '
         + 'the same string and the arm proves nothing.';
     }
+    /* a SECOND topic, in a third room -- neither pick's nor the room the app shows on a bare-view
+       boot -- so "the door followed nav.last", "the door followed the newest graded record" and
+       "the door followed the route" are three DIFFERENT strings and no cell can pass by accident */
+    const alt = !pick ? null : await probe.evaluate((p) => {
+      const bootGroup = ((((TopicRegistry.current && TopicRegistry.current()) || {}).identity)
+        || {}).group || '';
+      for (const id of TopicRegistry.ids()) {
+        const g = ((TopicRegistry.get(id) || {}).identity || {}).group;
+        if (g && g !== p.group && g !== p.cold && g !== bootGroup) return { id, group: g };
+      }
+      return null;
+    }, pick);
+    if (pick && !alt) {
+      aborted = aborted || 'THE PRECEDENCE CELL CANNOT LAND: no topic sits outside the resume '
+        + 'room, the cold-door room and the boot room all at once, so nav.last-vs-newest cannot '
+        + 'be told apart from the route\'s own answer and the cell would prove nothing.';
+    }
 
     /* 3. THE TABLE vs THE REGISTRY, and the two topic constants beside it. `__doorBoot` is read
           on a BARE-VIEW boot (#walk), because that is the route whose room is the boot topic's --
@@ -1656,10 +1673,17 @@ const GEN_N = 24;
       tab ? ('boot.js declares ' + tab.cold + ', registry ids()[0] is ' + tab.coldWant) : 'no table']);
     await probe.close();
 
-    /* one cold load, sampling every frame; `plant` runs at document_start */
-    const frames = async (seed, plant) => {
+    /* one cold load, sampling every frame; `plant` runs at document_start.
+       OPTS: `hash` drives the ROUTE SHAPE (the arm certified two of four route x record cells
+       until cycle 3 -- every load here was '#home', and the one bare-view load was run on an
+       EMPTY record, which is the single record class in which the bare-view defect cannot
+       appear). `alt` writes a SECOND, NEWER progress record on a topic in another room, so the
+       order between nav.last and newest-graded is exercised in both directions instead of being
+       hidden by seeding one id into both keys. */
+    const frames = async (seed, plant, opts) => {
+      const o = opts || {};
       const p = await ctx.newPage();
-      await p.addInitScript(({ id, pl }) => {
+      await p.addInitScript(({ id, pl, alt }) => {
         try {
           localStorage.clear();
           if (id) {
@@ -1667,8 +1691,27 @@ const GEN_N = 24;
             localStorage.setItem('ddr.v1.progress.' + id, JSON.stringify({
               got: 3, shk: 2, done: 5, tot: 12, revisit: ['x'], cards: {}, cv: 1, ts: Date.now() }));
           }
+          if (alt) {
+            /* NEWER than the nav.last topic's, so "most recently graded" and "last visited"
+               disagree. Panels.resumeTarget() puts LastVisit FIRST (panels.js:289) and boot.js
+               duplicates that order; seeding one id into both keys could not tell the two
+               orders apart, so neither could the arm. */
+            localStorage.setItem('ddr.v1.progress.' + alt, JSON.stringify({
+              got: 4, shk: 1, done: 5, tot: 9, revisit: ['x'], cards: {}, cv: 1,
+              ts: Date.now() + 60000 }));
+          }
         } catch (e) {}
-        if (pl) {
+        if (pl === 'record') {
+          /* THE BARE-VIEW MUTANT, and it is cycle 2's SHIPPED derivation rather than an invented
+             one: consult the record BEFORE the route, so a bare view is lit in the room of
+             whatever topic you last visited. Planted at the constant boot.js reads for that
+             branch, so it arrives through boot's own code path. */
+          let heldB = null;
+          Object.defineProperty(window, '__doorBoot', {
+            configurable: true, get() { return id; }, set(v) { heldB = v; },
+          });
+          void heldB;
+        } else if (pl) {
           let held = null;
           Object.defineProperty(window, '__doorRooms', {
             configurable: true,
@@ -1701,17 +1744,32 @@ const GEN_N = 24;
           if (window.__doorFrames.length < 90) requestAnimationFrame(tick);
         };
         requestAnimationFrame(tick);
-      }, { id: seed, pl: plant || null });
-      await B.gotoApp(p, HTML, { hash: '#home' });
-      await B.until(p, () => document.documentElement.getAttribute('data-view') === 'home',
-        null, B.ACT_MS, 'the home rendered');
+      }, { id: seed, pl: plant || null, alt: o.alt || null });
+      const hash = o.hash || '#home';
+      await B.gotoApp(p, HTML, { hash });
+      /* THE READINESS SIGNAL DIFFERS BY ROUTE, and it is not a choice: ViewManager stamps
+         `data-view` for the HOME only -- on a bare-view route it stays NULL for the whole
+         session (measured: `#walk` gives data-view=null, data-group=architecture-apis). So
+         waiting for "data-view is not home" there waits forever. The topic routes announce
+         themselves by mounting their pane instead. */
+      await B.until(p, (h) => (h === '#home'
+        ? document.documentElement.getAttribute('data-view') === 'home'
+        : !!document.querySelector('.stage .pane.on')),
+      hash, B.ACT_MS, 'the route rendered (' + hash + ')');
       await B.settle(p);
       const f = await p.evaluate(() => ({
-        frames: window.__doorFrames.slice(), seen: window.__doorSeen.slice() }));
+        frames: window.__doorFrames.slice(), seen: window.__doorSeen.slice(),
+        resume: (typeof Panels !== 'undefined' && Panels.resumeTarget && Panels.resumeTarget()) || null,
+        shown: ((((typeof TopicRegistry !== 'undefined' && TopicRegistry.current
+          && TopicRegistry.current()) || {}).identity) || {}).group || null,
+      }));
       await p.close();
       /* the document_start reading is ALWAYS null -- nothing has run yet -- and asserting on it
          would fail every build. Every value AFTER it is a value the document really wore. */
-      return { frames: f.frames, seen: f.seen.slice(1), first: f.seen[0] };
+      return { frames: f.frames, seen: f.seen.slice(1), first: f.seen[0],
+        resumeGroup: ((f.resume || {}).topic || {}).identity
+          ? f.resume.topic.identity.group : null,
+        resumeId: (f.resume || {}).id || null, shown: f.shown };
     };
     const rle = (f) => {
       const o = [];
@@ -1759,6 +1817,53 @@ const GEN_N = 24;
         + 'is caught -- with index.html\'s constant gone, an unstamped boot is roomless, not safe',
         everWore(mB).some((v) => v !== pick.group),
         'stamps [' + mB.seen.join(',') + '] / frames ' + rle(mB.frames)]);
+
+      /* ---- 1b. THE BARE-VIEW ROUTE, ON A RECORD -- the cell this arm did not have -----------
+         Until cycle 3 the arm drove FOUR route x record cells and certified two: every boot-ring
+         load used '#home', and the ONE bare-view load (the __doorBoot check above) ran on an
+         EMPTY record -- the single record class in which the bare-view defect cannot appear,
+         because with nothing to resume the record branch falls through to the route branch
+         anyway. So a shipped regression was invisible: cycle 2 consulted the RECORD before the
+         ROUTE, and on any bare-view route with a record the whole document was lit in the resume
+         topic's room while the app showed the boot topic -- for the entire session, since
+         applyIdentity() runs on switches and a bare-view boot never switches. The room the
+         document wears is compared against the room of the topic the app IS SHOWING, read from
+         TopicRegistry.current() rather than from a constant, so this cannot drift. */
+      for (const h of ['#walk', '#drill']) {
+        const bv = await frames(pick.id, null, { hash: h });
+        const wore = bv.seen.concat(bv.frames);
+        out.push(['[boot] a BARE-VIEW route (' + h + ') on a SEEDED record is lit in the room of '
+          + 'the topic the app actually shows, not the room of the record -- every value '
+          + '<html data-group> ever holds, watched from document_start',
+          !!bv.shown && wore.length > 0 && wore.every((v) => v === bv.shown),
+          'the app shows ' + bv.shown + ' while the record resumes ' + pick.id + ' ('
+          + pick.group + '); stamps [' + bv.seen.join(',') + '] / frames ' + rle(bv.frames)]);
+      }
+      const mD = await frames(pick.id, 'record', { hash: '#walk' });
+      out.push(['[boot][mutant] THE RECORD CONSULTED BEFORE THE ROUTE -- cycle 2\'s shipped '
+        + 'derivation, in which #walk on a record took the HOME\'s answer -- is caught',
+        !!mD.shown && mD.seen.concat(mD.frames).some((v) => v !== mD.shown),
+        'the app shows ' + mD.shown + '; stamps [' + mD.seen.join(',') + '] / frames '
+        + rle(mD.frames)]);
+
+      /* ---- 1c. nav.last vs THE NEWEST GRADED RECORD, IN DIFFERENT ROOMS ---------------------
+         frames() used to write both keys with the SAME id, so the ORDER between them -- which
+         must match Panels.resumeTarget()'s LastVisit-first rule at panels.js:289 -- was untested
+         in both directions, and boot.js's duplicate of that order was guarded by nothing. The
+         oracle is resumeTarget() READ FROM THE PAGE, not a constant: boot.js and panels.js are
+         two derivations of one rule, and the only honest assertion is that they agree. */
+      if (alt) {
+        const two = await frames(pick.id, null, { alt: alt.id });
+        const wore = two.seen.concat(two.frames);
+        out.push(['[boot] with nav.last (' + pick.id + ', ' + pick.group + ') and the NEWEST '
+          + 'graded record (' + alt.id + ', ' + alt.group + ') in DIFFERENT rooms, the door is '
+          + 'lit in the room Panels.resumeTarget() returns when read from the page -- boot.js '
+          + 'duplicates that precedence and is checked against it rather than against a constant',
+          two.resumeId === pick.id && !!two.resumeGroup && wore.length > 0
+            && wore.every((v) => v === two.resumeGroup),
+          'resumeTarget() -> ' + two.resumeId + ' (' + two.resumeGroup + '); stamps ['
+          + two.seen.join(',') + '] / frames ' + rle(two.frames)]);
+      }
     }
 
     /* 2. COLD -- the cold DOOR's room, which is not the boot topic's */
@@ -1813,7 +1918,7 @@ const GEN_N = 24;
   const bad = out.filter((o) => !o[1]);
   for (const [label, pass, detail] of out) console.log((pass ? '  PASS  ' : '  FAIL  ') + label + (pass ? '' : '  -- ' + detail));
   console.log('\n  the legend arm was exercised on ' + keelChecked + ' record(s) that actually paint a keel');
-  console.log('  19 planted mutants detected (a full claim over empty rails; a level claim over '
+  console.log('  20 planted mutants detected (a full claim over empty rails; a level claim over '
     + 'unequal rails; a thin rail named on the highest tier; a step position beside a bare probe '
     + 'remainder; a verdict quoting one rail\u2019s figures for another; an inflated panel header; '
     + 'an inflated figure inside the single-thin-rail sentence, checked against its own negative '
@@ -1831,7 +1936,17 @@ const GEN_N = 24;
     + 'derivation, and the door stamp DELETED -- judged on the UNION of a document_start '
     + 'MutationObserver and the painted frames, because a WRONG stamp is a value in the log while '
     + 'a MISSING one is only a gap in the paint, and each recorder alone lets the other defect '
-    + 'through) -- every one of them a defect a judge or a battery found on a shipped build');
+    + 'through; and THE RECORD CONSULTED BEFORE THE ROUTE -- cycle 2\'s own shipped derivation, '
+    + 'under which any bare-view route on a record lit the whole document in the resume topic\'s '
+    + 'room while the app showed the boot topic, for the entire session, on the route family the '
+    + 'gate itself drives), plus the cell that could not see it: the boot arm certified two of '
+    + 'four route x record cells, because every load was #home and the one bare-view load ran on '
+    + 'an EMPTY record -- the ONE record class in which the bare-view defect cannot appear, '
+    + 'since with nothing to resume the record branch falls through to the route branch '
+    + 'anyway. Four cells now, and the precedence between nav.last and the newest graded '
+    + 'record is driven in both directions against Panels.resumeTarget() read from the page '
+    + 'rather than against a constant)'
+    + ' -- every one of them a defect a judge or a battery found on a shipped build');
   if (bad.length) return B.finish(1, 'HOME CLAIMS: FAIL (' + bad.length + ')');
   return B.finish(0, 'HOME CLAIMS: PASS  (' + out.length + ' assertions: '
     + Object.keys(SEEDS).length + ' pinned records + ' + GEN_N + ' generated from a fixed PRNG, '

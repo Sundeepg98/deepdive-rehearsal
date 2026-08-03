@@ -557,9 +557,21 @@ judge), strips CSS comments first (a design comment that quotes a declaration is
 SKIPS the alt-text half of `content: "x" / "alt"`: that half is the accessible name, never
 rasterised, so demanding a font for it would be a category error.
 
-**Six real marks were already shipping there** and are now ratcheted per site: U+203A (two sites),
-U+2039, U+25BE, U+2605 (`.crambtn.starred .mb-t::after`, the one the escalation named), U+25CF.
-U+201C was found and NOT ratcheted -- it is in the OWNED set, which is the negative control working.
+**Nine sites across five codepoints were already shipping there** and are now ratcheted per site:
+U+203A (three sites), U+2039, U+25BE, U+2605 x2 (`.crambtn.starred .mb-t::after`, the one the
+escalation named), U+25CF x2. U+201C was found and NOT ratcheted -- it is in the OWNED set, which
+is the negative control working.
+
+> **CORRECTED IN CYCLE 3, and the correction is left visible rather than quietly applied.** This
+> paragraph said "six real marks" and "U+203A (two sites)". The allowlist R2 shipped declares
+> 3+1+1+2+2 = **nine sites over five codepoints**, and re-measuring `src/styles.css` with
+> craft_hygiene's own CSS reader returns exactly that -- so the instrument and the ratchet were
+> right and only the prose was wrong, which is the same class of defect as judge item 3 and item
+> 8. The entries' informational `lines` arrays had ALSO drifted 13-29 lines against the shipped
+> file they index (U+25BE [1092] vs 1105, U+2605 [2011] vs 2028, U+25CF [2070] vs 2099). They are
+> not part of the key and nothing enforced them -- so `--report` REGENERATES them now, and the
+> refresh moved 14 entries. Enforcing them was considered and rejected: it would red the gate for
+> inserting a line above a mark.
 
 **Press: the planted `.hm-lbl::after{content:"\2620 flagged for review"}` -> RED.** The self-test
 carries a CSS fixture too, with both halves: a clean stylesheet (an em dash, a ratcheted mark, an
@@ -758,13 +770,26 @@ of the floor), and records that a superseded solve was left standing, so the nex
 the deleted lines were.
 
 **(b) The text-node volume, measured once, method stated, used in both places.** The committed
-build (12,323,503 bytes) holds **2,799 characters of copy in 177 real HTML text nodes -- 0.023% of
-the file**. Method: `html.parser`; `<script>` and `<style>` elements dropped whole; the remaining
-character data entity-decoded, each whitespace run collapsed to one space, each node stripped.
-Raw and uncollapsed the same walk gives 4,028 (0.033%) -- the same finding, and the collapsed
-figure is the one this ledger and `craft_hygiene.py`'s docstring both now quote, with the method
-beside it. The 99.73% script-and-style-by-bytes figure is exact and unchanged: 12,290,458 /
-12,323,503.
+build holds **2,799 characters of copy in 177 real HTML text nodes -- 0.023% of the file**, and
+**99.73%** of its bytes are inside `<script>` or `<style>`. Method: `html.parser`; `<script>` and
+`<style>` elements dropped whole; the remaining character data entity-decoded, each whitespace run
+collapsed to one space, each node stripped. Raw and uncollapsed the same walk gives 4,028 (0.033%)
+-- the same finding, and the collapsed figure is the one this ledger and `craft_hygiene.py`'s
+docstring both now quote, with the method beside it.
+
+> **THE BUILD THIS WAS ATTRIBUTED TO WAS ALREADY WRONG WHEN IT WAS WRITTEN (cycle 3).** The
+> paragraph above said "the committed build (12,323,503 bytes)" and "12,290,458 of those bytes" --
+> that is the CYCLE-1 build (`git show 437fdb5:...` = 12,323,503). The cycle-2 commit that carried
+> this correction shipped a **12,334,544**-byte build, whose script+style bytes are 12,301,530, as
+> `build_integrity`'s own PASS line in this same ledger says. Re-derived by the stated method on
+> the ACTUAL committed build, every derived figure reproduces to the character -- 177 nodes, 2,799
+> collapsed, 4,028 raw, 0.023%, 99.73% -- so the FINDING survives and only the attribution was
+> stale. This is judge item 3's own defect class ("measured once, method stated, used in both
+> places") committed inside its own fix, and the same shape as the docstring confessing an earlier
+> receipt that named a build which no longer existed. **The fix is not a newer number: the
+> ABSOLUTE BYTE COUNT IS GONE from both places.** Only the derived figures are quoted, and they
+> are build-stable -- a sentence that cannot go stale on the next rebuild is worth more than a
+> sentence that is briefly right.
 
 **(c) The `--lv` sweep is now four steps for BOTH variants, and the seed is fixed rather than the
 sentence.** The cause was structural: `share` was `(k % 6) / 5` and the variant was `k % 2`, and
@@ -917,3 +942,326 @@ second platform as well as on the certifying win32 serial run.
    re-confirmed identical on both builds by the re-derived text-floor sweep. Still a PALETTE
    decision, still `room_contrast`'s territory.
 5. **GAP-2, the landing drill's flagged set** -- item 10's other half. Still owned by **W2 room**.
+
+---
+
+## CYCLE 3 -- 2026-08-03
+
+Four team-lead rulings on the cycle-2 escalation and eight judge items, opened. **Twelve closed.**
+One of them (R6) was decided by a measurement taken before any code moved, and the measurement
+went the way the geometry needed; one (item 5) was a REGRESSION THIS WAVE SHIPPED, on the route
+family the gate itself drives; and one (item 6) is a whole class of guard that could be deleted
+with the gate still green.
+
+**What cycle 3 did NOT need:** the VR rebaseline. R6's IF-NO branch (a proportional channel) was
+authorised and is not taken, because the measurement says the fixed channel reads at 390. All 18
+baselines returned **0 changed px**; manifest stays at 18. R9's declarations are print-media only
+and cannot move a screen pixel by construction.
+
+---
+
+### R6. THE PHONE KEEL -- MEASURED FIRST; THE GEOMETRY STANDS, THE SENTENCE DOES NOT
+
+**The measurement, taken before any CSS moved.** The compact block takes `.hm-gr-t` from 32px to
+16px below 920, so the capsule is **24 CSS px at 1280 and 8.00 at 390** (measured: 3.95 x 8.00),
+and `--keel-h + --keel-gap` is **4px at both** -- 4 of 24 on the desktop, **4 of 8** on the phone.
+The question is whether grade ORDER survives the 4px strip that is left. Sampled off the built
+m-home registers, 93 open capsules per scheme, the strip alone:
+
+| | --lv 0 | 0.3 | 0.55 | 0.78 | 1.0 | tightest adjacent |
+|---|---|---|---|---|---|---|
+| 390 light | .1765 | .1136 | .0772 | .0496 | .0275 | **1.276:1** (.55/.78) |
+| 390 dark | .1941 | .3270 | .4633 | .6260 | .8097 | **1.272:1** (.78/1) |
+| 1280 light | .1697 | .1061 | .0676 | .0402 | .0216 | 1.261:1 (.78/1) |
+| 1280 dark | .1971 | .3325 | .4733 | .6388 | .8220 | 1.266:1 (.78/1) |
+
+**YES: monotone in both schemes at both widths, and the four tightest pairs sit within 0.015 of
+each other.** The phone's ramp is not the desktop's ramp compressed -- it is the same ramp on a
+smaller area, which is what "the grade is carried in the fill's OPACITY" actually predicts: a
+strip presents the same colour whatever its height, so shrinking it spends AREA and not VALUE. So
+**the geometry stands and the reserved channel stays a constant**, and the ledger records that the
+IF-NO branch was authorised and declined on evidence rather than on preference.
+
+**The sentence is deleted either way, as ruled.** `styles.css` said the fill "loses 4 of 24px,
+which costs it nothing, because the SIGNAL RULE puts the grade in lightness and never in size" --
+UNCONDITIONAL, written from the desktop, and it would have licensed a 1px strip by the same
+argument. The block now derives BOTH cases with the numbers above, says what the channel actually
+costs (17% of the capsule at 1280, **50%** at 390), and says the ramp clears the floor with 10% to
+spare rather than that it costs nothing.
+
+**The arm, and it is also judge item 4's fix.** `scoreboard_salience`'s whole gauge section ran at
+1280 only, while two of the eighteen VR baselines are m-home. It now runs at **both widths** (DSF 3
+at 390, because the marks are half the size and a 2-device-row neighbour band is thinner than the
+phase noise this file already learned to fear), with a fifth claim: the fill strip's own luminance
+per step, monotone, every adjacent pair clearing **1.15:1**.
+
+**MUTANT D, the control the ruling demanded:** `opacity:min(var(--lv),.78)` paints the top two fill
+steps at ONE lightness -- the ramp still runs and two of its rungs are the same rung. Caught at all
+four cells: **1.001 / 1.000 / 1.033 / 1.005:1 adjacent**, against a 1.15 floor. It is invisible to
+every other arm in the file (keels, rule and depth are untouched by it), which is why it is worth
+having.
+
+**A REAL INSTRUMENT DEFECT WAS FOUND BY BUILDING THIS, and it is the reason the numbers above are
+trustworthy.** The first draft insetted the fill box by the capsule's `border-radius` to keep
+rounded pixels out -- correct at 1280, and at 390 it makes the box THE STRIP'S BOTTOM HALF, sitting
+on the fill's own antialiased bottom edge where the transparent channel blends through at full
+width. Measured that way, light read **0.2825 at --lv 0 where `--gauge-rule`'s own luminance is
+0.176**, and the top pair compressed to **1.074:1** -- a reading about an EDGE, reported as a
+reading about a grade, and it would have condemned a design that is fine. (The radius cannot be
+insetted away at that width in any case: 2 x radius is 4px and the capsule is 3.95px wide.) One
+device row at top and bottom instead; the corrected arm reproduces an independent probe's numbers
+to four decimals, which is the cross-check that says the instrument is measuring the strip.
+
+---
+
+### R7. THE TEXT-SINK CHANNEL -- CLOSED, AND THE "ZERO FOR PROSE" CLAIM IS NOW TRUE
+
+`copy_spans()` reads a third channel: string literals assigned to
+`.textContent` / `.innerText` / `.placeholder` / `.value`, and the value argument of
+`setAttribute('title'|'aria-label'|'placeholder'|'alt', ...)`. These put copy on the screen without
+ever passing through markup, so a scanner that reads only `>text<` and `attr="..."` was blind to
+them by construction. 53 sink spans in the tracked corpus; **six findings, and every one of them is
+app CHROME** -- the surface the wave's ZERO-for-prose claim is about.
+
+**FIXED, not ratcheted:** `search-overlay.js:99` (the overlay's own placeholder) and `:228` (its
+empty state) carried straight ellipses. Both are the house form now -- `…`, which is what the
+same file already uses at :180 and :182; `&hellip;` is the house form for MARKUP (panels.js:490)
+and a sink would print the entity literally.
+
+**RATCHETED, with an ownership argument each:** the four chrome glyphs, per file, with counts.
+U+2715 (focus-mode dismiss; substitute = two rotated rules on a ::before/::after). U+21BB (pomodoro
+reset; substitute = the arc the boot splash ring already draws). U+2191 (scroll-to-top; --sans
+carries U+2192 and U+2190 and not this one, which is the near-miss that makes a glyph inventory
+necessary). U+2318 (the search overlay's command-key hint -- **the one mark here that is not
+decoration**: it names a physical key, so the honest substitute is a platform-conditional label,
+not a shape, which is a behaviour change with its own copy decision).
+
+**THE CLAIM IS RESTATED ONLY NOW THAT IT IS TRUE ACROSS EVERY CHANNEL.** The allowlist's
+`scope_note` says so and says why cycle 1's version was true of one channel out of four. Measured:
+**0 ellipsis / 0 apostrophe / 0 quote / 0 dash** across markup, tails, sinks, CSS `content:` and
+markdown, with **zero prose exceptions ruled anywhere outside `src/topics`** (52 apostrophes, 2
+dashes and 2 quotes remain, all corpus, all carried).
+
+---
+
+### R8. THE MARKDOWN DOOR -- CLOSED, AND THE KEY IS THE MARK RATHER THAN THE LINE
+
+`.md` is in `tracked_sources()`: 38 authored files, **447 non-ASCII runs**, of which **two are
+outside OWNED** -- U+25BC x3 (multi-region.md's `dgm-v` diagram chevrons) and U+00E0 x1
+(leader-election.md, written `&agrave;` because `src/topics-md` is in `ascii_guard`'s scope). Both
+ratcheted with the same corpus argument as their js twins.
+
+**GLYPH RULE ONLY, and the reason is a fact about the pipeline rather than a preference.**
+`tools/compiler/prose.mjs:18` runs markdown-it with `typographer:true`, which converts the corpus's
+15,703 raw apostrophes into the typeset form on the way to the screen. They are therefore NOT
+defects, and a check that reported them would demand that a solved problem be solved again by hand
+in 38 files. What no typographer chooses is a FONT, so font ownership applies to markdown exactly
+as it does to a span. `judge(span, glyph_only)` carries the distinction, and the CLEAN_MD fixture
+(ellipses, apostrophes, straight quotes and a spaced hyphen, all of which must come back clean) is
+its negative control.
+
+**THE DEVIATION, recorded with its arithmetic.** The ruling says the `.md` branch feeds "the GLYPH
+rule + inline-HTML spans ONLY". The span yielded is each contiguous NON-ASCII RUN rather than the
+`>text<` span, because the ratchet key is the whole stripped span -- so a line- or span-keyed
+markdown entry would go STALE, a gate failure, the first time anyone edited a word of that
+sentence. The mark is the stable carrier, `count` already carries site multiplicity, and the
+arithmetic is identical: **3 + 1**, exactly as the ruling names.
+
+**PRESS: a fresh `&#10148;` planted in `src/topics-md/caching.md` -> RED**; removed.
+
+---
+
+### R9. PAPER CARRIES THE LATTICE -- CLOSED, AND THE SURVEY FOUND THREE MORE
+
+`print-color-adjust:exact` (+ the `-webkit-` prefix) on `.hm-seg`, `.hm-seg::after`, `.hm-seg.open`,
+`.hm-seg.keel::before`, `.hm-k i`, `.hm-k i::after`. styles.css:637's print block hands `#home` to
+the browser's own print, so the panel really does reach paper -- and every mark it draws is a
+BACKGROUND, which the reader's default (`economy`, Background graphics unticked) is free to drop.
+Stripped, the page prints "41 flagged" beside a blank strip and a legend keying four marks that are
+not there.
+
+**THE ARM IS BYTES, and that is the point:** a PDF's content stream carries one paint op per
+printed background, so removing the declarations removes the ops -- a property of the DOCUMENT, not
+of a rasteriser, needing no baseline image. `print_truth` ARM F renders the seeded home twice at
+`printBackground:false` (the reader default; at `true` the browser prints backgrounds whatever the
+stylesheet says, and the arm would measure nothing):
+
+```
+[lattice] CONTROL: exact 301686/301686, economy 176597/176597 -- worst pair differs 0 bytes (max 3000)
+[lattice] exact - economy = 125089 bytes (floor 100000)
+```
+
+**Both halves of the judges' method assert.** The negative control measured **0 bytes** across
+three pairs -- once a WARM-UP render is taken first: the first `page.pdf()` of a page differs from
+every later one by ~7k, a font-cache artefact that this arm's first draft mistook for signal and
+that would have made a byte comparison flake at exactly the threshold it cares about.
+
+**THE CHECK-NOT-FIX SURVEY, run rather than reasoned.** Every painted background under print media
+on the seeded home, with its computed `print-color-adjust`: 24 selectors remained after the
+lattice. Three are GRADE-BEARING, same class, one declaration each, so they are FIXED here:
+
+- **`.hm-room-n`** -- `background:var(--rm); color:#fff`. Stripped, the room's count is **white on
+  white**: not a figure beside a blank mark, the figure GONE. The worst case in the survey and the
+  cheapest.
+- **`.hm-room-bar i`** -- `width:<pc>%` of the room's coverage. Stripped, six rooms print an empty
+  track under the percentage the track is meant to be showing.
+- **`.ix-goal-bar span`** -- the week's goal fill. It is the one that ALSO has a text equivalent
+  (the sentence directly beneath it), so the fact survives on paper either way -- but an empty bar
+  beside "6-topic goal met with 1 to spare" is a picture contradicting its own caption.
+
+Both TRACKS take it too (a fill on a stripped track is a bar floating in space), and `.hm-gr-t` --
+the gauge's own trough, the ground every ordering in that panel is measured against.
+
+**DECLARED, NOT FIXED, and the line is drawn at GRADE-BEARING:** the panel / body / chip / button
+surfaces (`--card` and `--bg` on white paper) and the radial press-gradients on every button.
+Paper has no hover and no press, and a white panel on white paper is the correct print rendering of
+a white panel rather than a lost fact.
+
+---
+
+### JUDGE ITEM 1 -- the stale build attribution: CLOSED, by DELETING the number
+
+Recorded in place, under CYCLE 2 / judge item 3b above. The finding survives on the actual
+committed build to the character; only the attribution was stale, and the byte count is gone from
+both the ledger and `craft_hygiene.py` rather than refreshed. A sentence that cannot go stale on
+the next rebuild is worth more than one that is briefly right.
+
+### JUDGE ITEM 2 -- six marks that are nine: CLOSED, and the index regenerates itself
+
+Recorded in place, under CYCLE 2 / R2. Nine sites over five codepoints, which is what the shipped
+allowlist already declared. The `lines` arrays are regenerated by `--report` (14 entries moved on
+the first run), because an index nothing enforces will drift, and enforcing line numbers would red
+the gate for inserting a line above a mark.
+
+### JUDGE ITEM 3 -- the concatenated TAIL: CLOSED, and it is nine entries rather than 2,057
+
+`'<button ...>' + t.identity.title + '</button>'` is the commonest emit shape in this codebase, and
+`>text<` cannot see past the first literal's end. The judges planted the same U+27A4 twice in
+panels.js -- inside a `>text<` run (**RED**) and at a concatenated tail (**PASS**, span count
+unchanged). The tail run is yielded now, **glyph rule only**: a tail has no closing tag to bound it
+and routinely stops mid-sentence or mid-SQL, so the four typeset rules have nothing well-formed to
+be true of, while a codepoint is unowned wherever it sits.
+
+**The feared allowlist explosion did not happen, and the reason is the glyph-only gate.** 3,034
+tail runs in the tracked corpus; **nine** carry an unowned mark (U+2011 NON-BREAKING HYPHEN, U+2260
+NOT EQUAL TO), all in `src/topics`, all folded into the existing corpus argument. Had the four
+prose rules ridden along, the 2,057-entry ratchet the item predicted is roughly what would have
+arrived -- and every one of those entries would have been a fragment, not a defect.
+
+**PRESS, on the real tree:** the judges' own plant at the tail of panels.js:425 -> **RED**, with the
+`>text<` control beside it -> **RED**. Both in the self-test as `glyph-tail`.
+
+### JUDGE ITEM 4 -- the neighbour arm never ran at the phone: CLOSED by R6's two-width pass
+
+The guard was `s.w < 4` in CSS px, tuned to a 1280 capsule of ~7.8; the 390 capsule is 3.95, so
+pointing the section at the phone would have skipped EVERY neighbour box and reported zero samples.
+It fails safe rather than silently, which is why it was invisible. The minimum is in **DEVICE
+columns** now (`(s.w - 2) * dsf < 3`), which is the only unit in which "can this be read off a
+bitmap" is a real question -- 5.85 columns at DSF 3, 3.9 at DSF 2. Measured at 390, both grounds,
+both schemes: MISSED 4.64 / 8.21, SHAKY 3.67 / 3.62, neighbour min equal to max exactly as at 1280,
+and **MUTANT C lands at the phone too** (missed 3.15 vs 6.68 light, 1.62 vs 7.75 dark -- inverted,
+caught). The zero-sample FAIL is kept as the backstop.
+
+### JUDGE ITEM 5 -- THE SHIPPED REGRESSION: CLOSED
+
+**This wave put its own defect back, on the route family the gate drives.** `boot.js:38` consulted
+the RECORD before the ROUTE, so `__doorBoot` could only ever fire on an empty record. On any
+bare-view route with a record -- `#walk`, `#drill` -- the whole document was lit in the resume
+topic's room while the app showed the boot topic, **for the entire session**, because
+`applyIdentity()` runs on switches and a bare-view boot never switches. Driven in Chromium against
+the committed cycle-2 deliverable, seed = caching (data-storage): `#walk` gave
+`<html data-group>=data-storage` against an app showing content-pipeline (architecture-apis), and
+the MutationObserver log held that ONE value for the whole load. Master's deleted
+`data-group="architecture-apis"` constant made that route CORRECT.
+
+**The fix is the split the comment already described and the code did not do:**
+
+```js
+var _hr=_rm(_h),_door=_rm(_nl&&_nl.id)||_rm(_bi)||_rm(window.__doorCold);
+var _dg=_hr||((!_h||_h==='home')?_door:_rm(window.__doorBoot));
+```
+
+a topic hash wins; nothing or `#home` takes the door's answer; **any other hash is a bare view of
+the boot topic and takes the boot topic's room** -- which is router.js:155's own rule ("#walk
+resolves to the boot topic"), at boot, before anything paints. The uncomfortable half is recorded
+in the source: deleting a constant is only an improvement if what replaces it answers every
+question the constant was answering, and cycle 2's comment named both questions while its code
+asked one.
+
+**The arms.** `home_claims`' boot ring gains the bare-view SEEDED cells at `#walk` and `#drill`,
+judged against `TopicRegistry.current()`'s room read from the page rather than against a constant,
+on the union of the MutationObserver and the painted frames. **MUTANT: cycle 2's own derivation,
+planted through `window.__doorBoot` so it arrives by boot's real code path -> RED.** (Mutant tally
+19 -> 20.)
+
+### JUDGE ITEM 6 -- FOUR GUARDS THAT COULD BE DELETED WITH THE GATE STILL GREEN: CLOSED
+
+The rules INTERSECTION, the `count` GREW check, the STALE detector and the SHRANK check were all in
+the PASS line and none was driven by anything in the gate. The cycle-2 self-test "pressed" the
+intersection with an expression **it had written itself**
+(`[r for r,_w in judge(span) if r not in set(ent['rules'])]`), and the wave's press receipt did not
+cover it either -- plant #4 is caught 100% by the whole-span KEY, because any edit inside an
+allowlisted span changes its hash, so it produces IDENTICAL output with and without the
+intersection. **The attribution in `_audit/w-addresses-cycle2/press-craft-ratchet.txt` and in
+cycle 2's R1 paragraph is therefore wrong: that plant evidences the KEY fix, not the RULES fix.**
+
+`main()`'s per-span decision is now `decide()` and the ledger audit is `audit()`, and `self_test()`
+drives BOTH over synthetic file+allowlist pairs. Mutation-tested on the real tree, each reverted
+one at a time -- **all six SELF-TEST ABORT at exit 1**, where cycle 2 returned exit 0 and printed
+"each excused only from the rules it declares":
+
+| reverted | cycle 2 | cycle 3 |
+|---|---|---|
+| rules intersection removed (cycle 1's defect) | GREEN, exit 0 | **ABORT** |
+| count-GREW disabled | GREEN | **ABORT** |
+| count-SHRANK disabled | GREEN | **ABORT** |
+| STALE detector disabled | GREEN | **ABORT** |
+| OVER-DECLARED detector disabled | GREEN | **ABORT** |
+| glyph-before-prose-gate split reverted | ABORT | **ABORT** |
+
+Receipt: `_audit/w-addresses-cycle3/press-craft-channels.txt`, which also carries the six channel
+plants. (One method note, because it cost a real deliverable: the press's first version restored
+planted files with `git checkout` and silently deleted this cycle's own uncommitted
+search-overlay fix along with the plant. It snapshots content in memory now -- a press that
+reverts the tree to HEAD is not a press, it is a rollback.)
+
+### JUDGE ITEM 7 -- the boot arm certified two of four cells: CLOSED
+
+`frames()` wrote `ddr.v1.nav.last` and `ddr.v1.progress.<id>` with the SAME id, so the ORDER
+between them -- which must match `Panels.resumeTarget()`'s LastVisit-first rule at panels.js:289 --
+was untested in both directions; and every boot-ring load used `#home`, with the one bare-view load
+run on an EMPTY record, **the single record class in which item 5's defect cannot appear**. Both
+cells added: an `alt` seed writes a NEWER progress record on a topic in a THIRD room (so "followed
+nav.last", "followed the newest graded record" and "followed the route" are three different
+strings), and the assertion is against `Panels.resumeTarget()` **read from the page** rather than a
+constant -- boot.js and panels.js are two derivations of one rule and the only honest claim is that
+they agree. Measured: nav.last `caching` (data-storage) vs newest `retries-timeouts`
+(reliability-observability) -> the door lights data-storage, `resumeTarget()` returns `caching`.
+The arm ABORTS if no topic sits outside all three rooms at once.
+
+*(A readiness note, found by running it: `ViewManager` stamps `data-view` for the HOME ONLY -- on a
+bare-view route it stays `null` for the whole session -- so the arm waits on `.stage .pane.on`
+there instead. Waiting for "data-view is not home" waits forever.)*
+
+### JUDGE ITEM 8 -- a number that reproduces under none of its own methods: CLOSED
+
+`check_all.py:346` still carried cycle 1's "2,840 characters in real HTML text nodes" / "0.02%".
+Independently re-derived by the documented method: **177 nodes / 2,799 characters / 0.0227%**, and
+the raw uncollapsed 4,028 reproduces exactly too. 2,840 matches nothing (the nearest is 2,858 =
+non-blank, unstripped). The registry entry now carries craft_hygiene's own re-derivation, quotes
+no absolute byte count for the same reason as item 1, and names the four channels and the twelve
+plants rather than the five it used to claim.
+
+---
+
+## CYCLE 3 -- VR CONTRACT: HONOURED BY ABSTENTION
+
+```
+18 baselines compared; worst = 0 px (home-light), budget 32 px.
+VISUAL REGRESSION: PASS
+```
+
+No baseline regenerated, manifest unchanged at 18. R6's rebaseline authorisation was conditional on
+the IF-NO branch and that branch was not taken. R9 is print-media only: `print-color-adjust` cannot
+move a screen pixel by construction. Item 5 changes which room a BARE-VIEW route wears, and the
+four home baselines are `#home` roots.

@@ -124,7 +124,7 @@ const INK = async ({ shots, cardCss }) => {
  * evidence the ground is constant, and MUTANT C is the control: revert the two declarations and
  * the neighbour arm must go red.
  *
- * SIX CLAIMS, all on the panel's own screenshot:
+ * SEVEN CLAIMS, all on the panel's own screenshot, AT TWO WIDTHS:
  *   1. ORDERING   every MISSED mark is at least as loud as every SHAKY mark, against the trough
  *   1b. ...AND AGAINST THE BAND IT ABUTS, which is the reading the eye takes
  *   2. FLOOR      every keel mark clears 3:1 against the trough it is drawn on
@@ -134,6 +134,22 @@ const INK = async ({ shots, cardCss }) => {
  *                  bar, which is the generic form it was invented to escape
  *   4. DEPTH      the panel surface stands off the home ground -- 1.05:1 light / 1.14:1 dark made
  *                 five panels regions of one plane with a hairline between them
+ *   5. GRADE      adjacent fill steps are tellable apart FROM THE FILL STRIP ALONE, monotone in
+ *                 --lv. This is the claim the waterline has to earn: the channel takes 4px of the
+ *                 capsule at EVERY width, which is 4 of 24 at 1280 and 4 of EIGHT at 390 (the
+ *                 compact block halves the track below 920). styles.css asserted that this "costs
+ *                 it nothing, because the grade is in lightness and never in size" -- a sentence
+ *                 written from the desktop, licensing any strip down to 1px. Measured: the
+ *                 tightest adjacent pair is 1.261/1.266 at 1280 and 1.276/1.272 at 390, floor
+ *                 1.15, so the phone's ramp is the desktop's ramp on a smaller area rather than a
+ *                 compressed one -- which is what "the grade is in the OPACITY" actually predicts.
+ *
+ * AND WHY TWO WIDTHS AT ALL. Everything above ran at 1280 only, while two of the eighteen VR
+ * baselines are m-home. The neighbour arm's minimum-width guard was written in CSS px against a
+ * 1280 capsule (`s.w < 4`, capsule ~7.8) and the 390 capsule is 3.95 -- so had the section simply
+ * been pointed at the phone it would have skipped every neighbour box and reported zero samples.
+ * The guard is in DEVICE columns now, which is the only unit in which "can this be read off a
+ * bitmap" is a real question.
  */
 const NONTEXT_FLOOR = 3.0;
 const DEPTH_FLOOR = 1.25;
@@ -143,6 +159,37 @@ const NB_CSS = 2;
 /* the gauge's marks are 1-2 CSS px thick. At the board's DSF of 2 they have no interior pixel
    that a sub-pixel phase shift cannot reach; at 4 they do. See BOX_Y. */
 const GAUGE_DSF = 2;
+/* ---- THE GAUGE IS MEASURED AT TWO WIDTHS, AND UNTIL CYCLE 3 IT WAS MEASURED AT ONE ---------
+   The whole section ran at 1280 only. At 390 -- where two of the eighteen VR baselines live, and
+   where `.hm-gr-t{height:16px}` (styles.css, the compact block) makes the capsule EIGHT CSS px
+   tall instead of twenty-four -- nothing had ever been sampled. Two things follow, and both were
+   real:
+     THE NEIGHBOUR ARM WOULD HAVE MEASURED NOTHING. Its guard is a MINIMUM WIDTH, and it was
+     written as `s.w < 4` in CSS px against a 1280 capsule of ~7.8. At 390 the capsule is 3.95, so
+     every neighbour box would have been skipped and the arm would have reported zero samples --
+     it fails safe (zero samples is an explicit FAIL) rather than silently, but the surface the
+     eye actually meets on a phone was unmeasured. The guard is a DEVICE-pixel minimum now,
+     because "can this box be read off a bitmap" is a question about device columns and never
+     about CSS ones: at DSF 3 a 3.95px capsule inset one CSS px a side leaves 5.85 device columns.
+     THE CHANNEL COSTS FOUR OF EIGHT, NOT FOUR OF TWENTY-FOUR. --keel-h + --keel-gap is 4px at
+     both widths, so the phone spends HALF the capsule on the waterline and leaves a 4px fill
+     strip. Whether the grade is still readable off that strip is a MEASUREMENT, and it is the one
+     R6 exists to take -- see the GRADE-ORDER arm.
+   DSF 3 AT 390, not 2: the marks are half the size, and at 2 the neighbour band would be 4 device
+   rows less 2 inset = 2, which is thinner than the phase noise this section already learned to
+   fear. At 3 the band is 4 rows and the fill strip is 12. */
+const GAUGE_WIDTHS = [
+  { w: 1280, dsf: 2, vh: 2400 },
+  { w: 390, dsf: 3, vh: 2400 },
+];
+/* the neighbour box's minimum, IN DEVICE COLUMNS. See the note above: expressed in CSS px it was
+   a 1280-only constant that silently emptied the arm at every phone width. */
+const NB_MIN_DEV = 3;
+/* R6: adjacent grade steps must be tellable apart from the FILL STRIP ALONE. Measured on the
+   shipped build at 390, over 93 open capsules per scheme, the ramp's tightest adjacent pair is
+   1.272:1 (dark, --lv .78 -> 1.00) and 1.276:1 (light, .55 -> .78); the floor below leaves 10.6%
+   of headroom on the worst of them, and a flattened pair measures ~1.00:1. */
+const GRADE_STEP_MIN = 1.15;
 /* tall enough that the whole home fits WITHOUT SCROLLING. Every fragility this section fought --
    an element screenshot that re-scrolls before it rasterises, a clip whose origin drifts, a
    removal diff between two images taken at different offsets -- is downstream of one thing:
@@ -348,9 +395,9 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
     }
   }
 
-  /* ---------------- THE ALTITUDE GAUGE ---------------- */
-  for (const theme of ['light', 'dark']) {
-    const ctx = await browser.newContext({ deviceScaleFactor: GAUGE_DSF, viewport: { width: 1280, height: GAUGE_VH } });
+  /* ---------------- THE ALTITUDE GAUGE, AT BOTH WIDTHS ---------------- */
+  for (const G of GAUGE_WIDTHS) for (const theme of ['light', 'dark']) {
+    const ctx = await browser.newContext({ deviceScaleFactor: G.dsf, viewport: { width: G.w, height: G.vh } });
     const page = await ctx.newPage();
     await page.addInitScript((t) => { try { localStorage.setItem('ddr.v1.theme', JSON.stringify(t)); } catch (e) {} }, theme);
     await B.gotoApp(page, HTML, { hash: '#home' });
@@ -378,9 +425,9 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
       return { ok: r.top >= 0 && r.bottom <= window.innerHeight, bottom: Math.round(r.bottom) };
     });
     if (!fits.ok) {
-      fails.push('[' + theme + '/gauge] the gauge ends at y=' + fits.bottom + ' in a ' + GAUGE_VH
-        + 'px measuring viewport, so it can only be reached by scrolling -- and every reading '
-        + 'below would be taken at an unpinned sub-pixel phase. Raise GAUGE_VH.');
+      fails.push('[' + theme + '/gauge@' + G.w + '] the gauge ends at y=' + fits.bottom + ' in a '
+        + G.vh + 'px measuring viewport, so it can only be reached by scrolling -- and every '
+        + 'reading below would be taken at an unpinned sub-pixel phase. Raise this width s vh.');
     }
     await B.settle(page);
 
@@ -390,7 +437,10 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
       const o = panel.getBoundingClientRect();
       /* VIEWPORT coordinates, because the shot is the whole viewport at scrollY 0 */
       const rel = (e) => { const r = e.getBoundingClientRect(); return { x: r.x, y: r.y, w: r.width, h: r.height }; };
-      const keelH = parseFloat(getComputedStyle(document.querySelector('.hm-alt .hm-seg')).getPropertyValue('--keel-h')) || 2;
+      const segCs = getComputedStyle(document.querySelector('.hm-alt .hm-seg'));
+      const keelH = parseFloat(segCs.getPropertyValue('--keel-h')) || 2;
+      const keelGap = parseFloat(segCs.getPropertyValue('--keel-gap')) || 0;
+      const rad = parseFloat(segCs.borderTopLeftRadius) || 0;
       const segs = [...document.querySelectorAll('.hm-alt .hm-seg')].map((s) => ({
         ...rel(s),
         keel: s.classList.contains('keel'),
@@ -398,9 +448,10 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
         open: s.classList.contains('open'),
         lv: parseFloat(getComputedStyle(s).getPropertyValue('--lv')) || 0,
       }));
-      return { keelH, track: rel(track), segs, panel: rel(panel) };
+      return { keelH, keelGap, rad, track: rel(track), segs, panel: rel(panel),
+        trackH: segCs.height };
     });
-    const S = (n) => n * GAUGE_DSF;
+    const S = (n) => n * G.dsf;
     const boxes = [];
     const tag = [];
     /* THE TROUGH, SAMPLED WIDE AND WELL INSIDE ITS OWN BORDER (see readMarks). The track is
@@ -484,9 +535,14 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
         /* the capsules are ~7.8 CSS px wide (46 of them in a 458px track), so the x inset is one
            CSS px a side -- enough to clear the 2px corner radius, which has finished curving well
            below this band anyway, and the 2px flex gap keeps the next capsule out of reach. */
-        if (s.w < 4) { narrow++; continue; }
-        const yTop = (s.y + s.h - geo.keelH - NB_CSS) * GAUGE_DSF + 1;
-        const hDev = NB_CSS * GAUGE_DSF - 2;
+        /* THE GUARD IS IN DEVICE COLUMNS. `s.w < 4` was a CSS-px test tuned to a 1280 capsule
+           of ~7.8px; at 390 the capsule is 3.95 and it skipped EVERY box, which would have left
+           the phone s neighbour ground unsampled behind a zero-sample FAIL. What a bitmap can
+           be read off is device columns: 3.95 CSS px inset one CSS px a side is 5.85 of them at
+           DSF 3, and 3.9 at DSF 2. */
+        if ((s.w - 2) * G.dsf < NB_MIN_DEV) { narrow++; continue; }
+        const yTop = (s.y + s.h - geo.keelH - NB_CSS) * G.dsf + 1;
+        const hDev = NB_CSS * G.dsf - 2;
         if (hDev < 1) { narrow++; continue; }
         nbrBoxes.push({ x: S(s.x + 1), y: yTop, w: S(s.w - 2), h: hDev });
         nbrIdx.push(ki);
@@ -494,7 +550,40 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
       const nY = nbrBoxes.length ? await scratch.evaluate(BOX_Y, { shot: shotA, boxes: nbrBoxes }) : [];
       const nbrFor = {};
       nY.forEach((b, i) => { if (b) nbrFor[nbrIdx[i]] = b.mean; });
-      const o = { missed: [], shaky: [], rule: [], dead: 0, narrow, nbrN: Object.keys(nbrFor).length };
+
+      /* ---- THE FILL STRIP ITSELF (R6): what is LEFT of the capsule once the channel is taken --
+         The channel costs --keel-h + --keel-gap at EVERY width, so a 24px capsule keeps 20 and an
+         8px one keeps 4. Whether the grade survives that is a question about the strip ALONE, so
+         the box is the strip alone, read off shot A with the plain reader and as a MEAN: it is a
+         large flat area and there is no mark to isolate.
+
+         THE INSETS ARE ONE DEVICE ROW, NOT THE CORNER RADIUS, and the first draft got that wrong
+         in a way worth keeping. Insetting the top by border-radius is the obvious way to keep
+         rounded pixels out -- and at 1280 it is harmless, but at 390 the radius is 2px of an 8px
+         capsule, so a radius-inset box IS THE STRIP'S BOTTOM HALF, sitting directly on the fill's
+         own antialiased bottom edge where the transparent channel blends through at full width.
+         Measured that way the light ramp read 0.2825 at --lv 0 where --gauge-rule's own luminance
+         is 0.176, and its top pair compressed to 1.074:1 -- a reading about an EDGE, reported as
+         a reading about a grade, and it would have condemned a design that is fine. (The radius
+         cannot be insetted away at this width in any case: 2 x radius is 4px and the capsule is
+         3.95px wide, so there is no corner-free column at the top.) One device row at top and
+         bottom drops both boundary blends; the rounded corners that remain are a handful of
+         pixels of a constant trough, identical under every capsule, so they cannot manufacture or
+         hide an ORDER. */
+      const fillBoxes = [], fillLv = [];
+      for (const s of geo.segs) {
+        if (!s.open) continue;
+        const hDevF = (s.h - geo.keelH - geo.keelGap) * G.dsf - 2;
+        if (hDevF < 2 || S(s.w) - 2 < NB_MIN_DEV) continue;
+        fillBoxes.push({ x: S(s.x) + 1, y: S(s.y) + 1, w: S(s.w) - 2, h: hDevF });
+        fillLv.push(s.lv);
+      }
+      const fY = fillBoxes.length ? await scratch.evaluate(BOX_Y, { shot: shotA, boxes: fillBoxes }) : [];
+      const fill = [];
+      fY.forEach((b, i) => { if (b) fill.push({ lv: fillLv[i], y: b.mean }); });
+
+      const o = { missed: [], shaky: [], rule: [], dead: 0, narrow, fill,
+        nbrN: Object.keys(nbrFor).length };
       kY.forEach((m, i) => {
         if (!m) { o.dead++; return; }
         const n = nbrFor[i];
@@ -556,11 +645,38 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
         lvs: [...new Set(a.map((o) => o.lv))].sort((x, y) => x - y),
       };
     };
+    /* the fill strip's own luminance per --lv step, and the contrast between ADJACENT steps.
+       MONOTONE means the ramp still reads as a ramp; the STEP is whether two neighbours can be
+       told apart. Direction is read off the data rather than assumed, because it INVERTS with the
+       scheme: more ink is darker in light and lighter in dark, and hard-coding either one would
+       make this arm a scheme detector. */
+    const grade = (rows) => {
+      const byLv = new Map();
+      for (const f of rows) {
+        if (!byLv.has(f.lv)) byLv.set(f.lv, []);
+        byLv.get(f.lv).push(f.y);
+      }
+      const steps = [...byLv.entries()]
+        .map(([lv, ys]) => ({ lv, n: ys.length, y: ys.reduce((a, b) => a + b, 0) / ys.length,
+          spread: Math.max(...ys) - Math.min(...ys) }))
+        .sort((a, b) => a.lv - b.lv);
+      if (steps.length < 2) return { steps, ok: false, worst: null, dir: 0, mono: false };
+      const dir = Math.sign(steps[steps.length - 1].y - steps[0].y);
+      let mono = true, worst = null;
+      for (let i = 1; i < steps.length; i++) {
+        const d = Math.sign(steps[i].y - steps[i - 1].y);
+        if (d !== dir) mono = false;
+        const cr = CR(steps[i].y, steps[i - 1].y);
+        if (worst === null || cr < worst.cr) worst = { cr, a: steps[i - 1].lv, b: steps[i].lv };
+      }
+      return { steps, dir, mono, worst, ok: mono && worst && worst.cr >= GRADE_STEP_MIN };
+    };
+    const gr = grade(by.fill);
     const M = stat(by.missed), K = stat(by.shaky), R = stat(by.rule);
     const depth = CR(surfY, groundY);
-    gaugeRows.push({ theme, M, K, R, depth });
+    gaugeRows.push({ theme, w: G.w, M, K, R, depth, gr });
 
-    const where = '[' + theme + '/gauge] ';
+    const where = '[' + theme + '/gauge@' + G.w + '] ';
     if (!M || !K) {
       fails.push(where + 'the sweep painted ' + (M ? M.n : 0) + ' missed and ' + (K ? K.n : 0)
         + ' shaky keel marks -- an ordering cannot be asserted from one variant, and a green here '
@@ -619,6 +735,43 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
         }
       }
     }
+    /* 5. THE GRADE IS STILL DERIVABLE FROM THE FILL STRIP ALONE (R6) ------------------------
+       The waterline reserves --keel-h + --keel-gap = 4px at EVERY width, and the compact block
+       takes the track from 32px to 16px below 920 -- so the channel costs 4 of 24 on the desktop
+       and 4 of 8 on the phone. The claim that used to sit in styles.css was that this "costs it
+       nothing, because the SIGNAL RULE puts the grade in lightness and never in size", and that
+       sentence was UNCONDITIONAL and UNDERIVABLE: it was written from the desktop, where the
+       strip keeps 83% of the capsule, and nothing had ever looked at the phone, where it keeps
+       50%. Lightness is indeed the channel -- but a lightness difference has to be READ off an
+       area, and halving the area is not free by inspection. So it is measured, at both widths and
+       in both schemes: the strip's own luminance per fill step, monotone, with every ADJACENT
+       pair clearing GRADE_STEP_MIN. Measured at 390 the tightest pair is 1.272:1. */
+    if (!gr.steps.length) {
+      fails.push(where + 'the fill strip was sampled on NO capsule -- with no reading there is '
+        + 'nothing asserting that a grade survives the channel the waterline reserves, which at '
+        + 'this width is ' + (geo.keelH + geo.keelGap) + ' of ' + (geo.segs[0] || {}).h + ' CSS px.');
+    } else if (gr.steps.length < 3) {
+      fails.push(where + 'the fill strip carried only ' + gr.steps.length + ' distinct --lv step(s) '
+        + '(' + gr.steps.map((s) => s.lv).join('/') + ') -- ADJACENT-step discriminability cannot '
+        + 'be asserted from fewer than three. Extend GAUGE_SEED rather than lowering this.');
+    } else {
+      if (!gr.mono) {
+        fails.push(where + 'THE FILL RAMP IS NOT MONOTONE: the strip reads '
+          + gr.steps.map((s) => s.lv + '->' + s.y.toFixed(4)).join(', ') + ' -- somewhere along '
+          + 'the ramp more solid cards paint a QUIETER strip than fewer, so grade order is not '
+          + 'derivable from the fill at all.');
+      }
+      if (gr.worst && gr.worst.cr < GRADE_STEP_MIN) {
+        fails.push(where + 'ADJACENT GRADES ARE NOT DISCRIMINABLE FROM THE FILL STRIP: --lv '
+          + gr.worst.a + ' and ' + gr.worst.b + ' differ by only ' + gr.worst.cr.toFixed(3)
+          + ':1 on a strip ' + (geo.segs[0] ? (geo.segs[0].h - geo.keelH - geo.keelGap).toFixed(2) : '?')
+          + ' CSS px tall (floor ' + GRADE_STEP_MIN + '). The channel reserves '
+          + (geo.keelH + geo.keelGap) + 'px of a ' + (geo.segs[0] || {}).h + 'px capsule here, and '
+          + 'the grade has nowhere else to live -- the SIGNAL RULE puts it in lightness and never '
+          + 'in size or hue.');
+      }
+    }
+
     /* 3. DENOMINATOR */
     if (!R) {
       fails.push(where + 'no untouched capsule was rendered, so the denominator arm measured nothing');
@@ -682,9 +835,27 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
         + ':1 against their own neighbour and were accepted. The second ground is not reading '
         + 'the ground, and the waterline is still guarded by nothing.');
     }
+    /* ---- MUTANT D: TWO ADJACENT GRADE LIGHTNESSES FLATTENED (R6's negative control) --------
+       `opacity:min(var(--lv), .78)` paints the top two fill steps at the SAME lightness, which is
+       exactly the failure the arm above exists to name: the ramp still runs, still looks like a
+       ramp, and two of its rungs are the same rung. It is the cheapest way for this design to
+       break, because the whole grade is carried by one number, and it is invisible to every other
+       arm in this file -- the keels, the rule and the depth are all untouched by it. */
+    const badD = await readMarks('.hm-seg::after{opacity:min(var(--lv),.78)!important}');
+    const gD = grade(badD.fill);
+    if (gD.steps.length < 3) {
+      fails.push(where + 'MUTANT D CANNOT LAND: the flatten plant left only ' + gD.steps.length
+        + ' fill step(s), so the arm has nothing to be wrong about.');
+    } else if (gD.ok) {
+      fails.push(where + 'MUTANT D UNDETECTED: with the top two fill steps painted at the SAME '
+        + 'lightness the strip still read as an ordered ramp -- worst adjacent pair '
+        + (gD.worst ? gD.worst.cr.toFixed(3) : '?') + ':1, floor ' + GRADE_STEP_MIN + '. The grade '
+        + 'arm is not reading the grade.');
+    }
     gaugeRows[gaugeRows.length - 1].mut = { A: mA && kA ? mA.min.toFixed(2) + ' vs ' + kA.max.toFixed(2) : 'n/a',
       B: rB ? rB.min.toFixed(2) : 'n/a',
-      C: mC && kC && mC.nbN && kC.nbN ? mC.nbMin.toFixed(2) + ' vs ' + kC.nbMax.toFixed(2) : 'n/a' };
+      C: mC && kC && mC.nbN && kC.nbN ? mC.nbMin.toFixed(2) + ' vs ' + kC.nbMax.toFixed(2) : 'n/a',
+      D: gD.worst ? gD.worst.cr.toFixed(3) : 'n/a' };
 
     await ctx.close();
   }
@@ -701,22 +872,32 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
   console.log('\n=== THE ALTITUDE GAUGE -- keel severity, denominator and depth, off the panel\'s pixels ===');
   console.log('    two grounds: TROUGH is the stable reference; NEIGHBOUR is the band immediately');
   console.log('    above each mark inside its own rail -- the pixels the eye compares it against.');
-  console.log(L('theme', 6) + L('mark', 12) + R('n', 5) + R('trough', 9) + R('..max', 9)
+  console.log(L('width', 7) + L('theme', 6) + L('mark', 12) + R('n', 5) + R('trough', 9) + R('..max', 9)
     + R('nbr min', 9) + R('..max', 9) + '   --lv swept');
   for (const g of gaugeRows) {
+    const W = L(g.w + 'px', 7);
     for (const [name, s] of [['MISSED', g.M], ['SHAKY', g.K], ['untouched', g.R]]) {
-      if (!s) { console.log(L(g.theme, 6) + L(name, 12) + R(0, 5) + '   (not painted)'); continue; }
-      console.log(L(g.theme, 6) + L(name, 12) + R(s.n, 5) + R(s.min, 9, 2) + R(s.max, 9, 2)
+      if (!s) { console.log(W + L(g.theme, 6) + L(name, 12) + R(0, 5) + '   (not painted)'); continue; }
+      console.log(W + L(g.theme, 6) + L(name, 12) + R(s.n, 5) + R(s.min, 9, 2) + R(s.max, 9, 2)
         + R(s.nbMin === null || s.nbMin === undefined ? '-' : s.nbMin, 9, 2)
         + R(s.nbMax === null || s.nbMax === undefined ? '-' : s.nbMax, 9, 2)
         + '   ' + (s.lvs.filter((v) => v !== undefined).join(', ') || '-'));
     }
-    console.log(L(g.theme, 6) + L('panel/ground', 12) + R('', 5) + R(g.depth, 9, 3) + '  (depth)');
+    console.log(W + L(g.theme, 6) + L('panel/ground', 12) + R('', 5) + R(g.depth, 9, 3) + '  (depth)');
+    if (g.gr && g.gr.steps.length) {
+      console.log(W + L(g.theme, 6) + L('fill strip', 12) + R(g.gr.steps.length, 5)
+        + '  --lv ' + g.gr.steps.map((s) => s.lv + ':' + s.y.toFixed(4) + ' (n' + s.n + ')').join('  ')
+        + (g.gr.worst ? '\n' + L('', 7) + L('', 6) + L('', 12)
+          + '  tightest adjacent pair ' + g.gr.worst.a + '/' + g.gr.worst.b + ' = '
+          + g.gr.worst.cr.toFixed(3) + ':1, floor ' + GRADE_STEP_MIN
+          + (g.gr.mono ? ', monotone' : ', NOT MONOTONE') : ''));
+    }
     if (g.mut) {
-      console.log(L(g.theme, 6) + L('  mutants', 12) + '  shipped keel wiring -> missed ' + g.mut.A
+      console.log(W + L(g.theme, 6) + L('  mutants', 12) + '  shipped keel wiring -> missed ' + g.mut.A
         + ' (INVERTED, caught) | rule back to --bd -> ' + g.mut.B + ':1 (under floor, caught)');
-      console.log(L('', 6) + L('', 12) + '  waterline removed -> missed ' + g.mut.C
-        + ' on the NEIGHBOUR ground (caught)');
+      console.log(L('', 7) + L('', 6) + L('', 12) + '  waterline removed -> missed ' + g.mut.C
+        + ' on the NEIGHBOUR ground (caught) | top two fill steps flattened -> '
+        + g.mut.D + ':1 adjacent (caught)');
     }
   }
 
@@ -727,10 +908,13 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
   }
   console.log('\nSCOREBOARD SALIENCE: PASS  (' + rows.length + ' room x theme x score;'
     + ' Solid is the loudest tile whenever it is non-empty, in every room, both themes, and never fills at zero'
-    + ' -- plus the altitude gauge in both schemes: the worst grade is never drawn quieter than the'
+    + ' -- plus the altitude gauge at ' + GAUGE_WIDTHS.map((g) => g.w + 'px').join(' and ')
+    + ' in both schemes: the worst grade is never drawn quieter than the'
     + ' middle one, and both keel marks clear the 3:1 non-text floor, against TWO grounds -- the'
     + ' stable trough AND the band each mark actually abuts -- with each variant swept over all'
-    + ' four fill steps; the untouched capsule\'s rule clears the same floor; and the panels stand'
+    + ' four fill steps; adjacent grades stay discriminable from the FILL STRIP ALONE, which is'
+    + ' the claim the 4px channel has to earn twice over on the phone, where it costs half the'
+    + ' capsule; the untouched capsule\'s rule clears the same floor; and the panels stand'
     + ' off their ground)');
   return B.finish(0);
 })();

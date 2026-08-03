@@ -343,15 +343,27 @@ NATIVE_CHECKS = [('ascii_guard', ['python3', 'test/ascii_guard.py']),
                   # face in --sans carries so the PLATFORM picks the typeface. None of these can
                   # fail a correctness panel: every one renders and every one is legible, which is
                   # exactly why the class grows one string at a time. It is a SOURCE check for a
-                  # measured reason -- the shipped 12.3MB deliverable holds 2,840 characters in real
-                  # HTML text nodes and everything else inside <script>, so a text-node walk would
-                  # have swept 0.02% of the copy and called it clean. It reads string literals with
-                  # a real JS scanner (comments are not copy: a bare `>...<` regex reported 523
-                  # straight quotes that were all design commentary) and judges only PROSE -- code
-                  # samples are exempt on principle, since `SELECT count(*) ... WHERE` is an
-                  # elision in SQL rather than a trailing-off sentence. Ratcheted through
-                  # craft_hygiene_allow.json, where a STALE entry is itself a failure. Five planted
-                  # defects and two negative controls run every invocation. Static, ~2s.
+                  # measured reason -- the shipped deliverable holds 2,799 characters of copy in
+                  # 177 real HTML text nodes, 0.023% of the file, and everything else is inside
+                  # <script> or <style>, so a text-node walk would have swept a rounding error of
+                  # the copy and called it clean. (This line read "2,840 characters ... 0.02%"
+                  # through cycle 2 -- a figure that reproduces under NONE of the methods the
+                  # check documents; it is craft_hygiene.py's own re-derivation now, and no
+                  # absolute byte count is quoted in either place, because that is the only part
+                  # of the sentence a rebuild can falsify.) It reads FOUR channels with a real JS
+                  # scanner -- markup between two tags, the run after the LAST tag, the text sinks
+                  # (.textContent/.innerText/.placeholder/.value and setAttribute), and CSS
+                  # content: -- plus markdown for the glyph rule alone, since the compiler's
+                  # typographer owns the corpus's apostrophes. Comments are not copy: a bare
+                  # `>...<` regex reported 523 straight quotes that were all design commentary.
+                  # The four typeset rules judge only PROSE -- code samples are exempt on
+                  # principle, since `SELECT count(*) ... WHERE` is an elision in SQL rather than a
+                  # trailing-off sentence. Ratcheted through craft_hygiene_allow.json, where a
+                  # STALE entry is itself a failure. Twelve planted defects and five negative
+                  # controls run every invocation -- including the ratchet's own machinery
+                  # (rules intersected, count enforced both ways, stale and over-declared caught),
+                  # every one of which was unguarded and green-when-deleted before cycle 3.
+                  # Static, ~3s.
                   ('craft_hygiene', ['python3', 'test/craft_hygiene.py']),
                   ('home_rhythm', ['python3', 'test/home_rhythm.py']),
                   ('file_integrity', ['python3', 'test/file_integrity.py']),

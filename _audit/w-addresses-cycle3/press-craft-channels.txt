@@ -1,0 +1,29 @@
+=== CRAFT HYGIENE -- CYCLE 3 PRESS, on the real tree ===
+Every plant below is a defect the CYCLE-2 check passed at exit 0.
+
+BASELINE, the shipped tree                                                   exit 0  CRAFT HYGIENE: PASS  (11925 rendered-copy spans over four channels, 132 ruled exceptions, every one still matching something, each excused only from t
+
+R7  a NEW mark through a text SINK (.textContent)                            exit 1  CRAFT HYGIENE: FAIL (1 violation(s), 1 stale, 0 over-declared, 0 grew, 0 shrank)
+R7  a NEW mark through setAttribute(aria-label) -- the channel s other shape exit 1  CRAFT HYGIENE: FAIL (1 violation(s), 0 stale, 0 over-declared, 0 grew, 0 shrank)
+R7  a straight ELLIPSIS back in the placeholder this cycle typeset           exit 1  CRAFT HYGIENE: FAIL (1 violation(s), 0 stale, 0 over-declared, 0 grew, 0 shrank)
+R8  a fresh glyph in a MARKDOWN file -- 38 files tracked_sources() did not take exit 1  CRAFT HYGIENE: FAIL (1 violation(s), 0 stale, 0 over-declared, 0 grew, 0 shrank)
+J3  the same mark at the TAIL of a concatenated literal (the judges planted this: PASS) exit 1  CRAFT HYGIENE: FAIL (1 violation(s), 0 stale, 0 over-declared, 0 grew, 0 shrank)
+J3  CONTROL: the same mark between two tags, which cycle 2 already caught    exit 1  CRAFT HYGIENE: FAIL (1 violation(s), 0 stale, 0 over-declared, 0 grew, 0 shrank)
+
+--- THE RATCHET MECHANISMS, REVERTED ONE AT A TIME (judge item 6) ---
+Every one of these was GREEN at exit 0 on the cycle-2 check: the PASS line claimed them
+and nothing in the gate drove them. They run through decide()/audit() now.
+
+rules INTERSECTION removed -- an allowlisted span exempt from ALL five rules (cycle 1) exit 1  SELF-TEST ABORT -- the analyser does not do what it claims: | CRAFT HYGIENE: FAIL (self-test)
+the COUNT-GREW check disabled -- one excused mark excuses every copy in that file exit 1  SELF-TEST ABORT -- the analyser does not do what it claims: | CRAFT HYGIENE: FAIL (self-test)
+the COUNT-SHRANK check disabled -- paid debt stays on the books              exit 1  SELF-TEST ABORT -- the analyser does not do what it claims: | CRAFT HYGIENE: FAIL (self-test)
+the STALE detector disabled -- the list outlives the defects and nobody is told exit 1  SELF-TEST ABORT -- the analyser does not do what it claims: | CRAFT HYGIENE: FAIL (self-test)
+the OVER-DECLARED detector disabled -- an entry widens to rules never argued for exit 1  SELF-TEST ABORT -- the analyser does not do what it claims: | CRAFT HYGIENE: FAIL (self-test)
+the GLYPH-BEFORE-PROSE-GATE split reverted -- a bare mark span goes unjudged (cycle 1) exit 1  SELF-TEST ABORT -- the analyser does not do what it claims: | CRAFT HYGIENE: FAIL (self-test)
+
+All plants removed.  git status:
+ M src/scripts/app/search-overlay.js
+ M test/craft_hygiene.py
+ M test/craft_hygiene_allow.json
+?? _audit/w-addresses-cycle3/
+

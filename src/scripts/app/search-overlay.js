@@ -96,7 +96,7 @@
 
     inputEl = document.createElement('input');
     inputEl.type = 'text';
-    inputEl.placeholder = 'Search topics, concepts, views...';
+    inputEl.placeholder = 'Search topics, concepts, views\u2026';
     inputEl.setAttribute('aria-label', 'Search');
     inputEl.style.cssText = 'flex:1;border:0;outline:0;font-size:var(--font-size-body);background:transparent;color:var(--ink);font-family:inherit';
     inputEl.addEventListener('input', onInput);
@@ -225,7 +225,7 @@
     if (!groups.length) {
       var empty = document.createElement('div');
       empty.style.cssText = 'padding:24px;text-align:center;color:var(--mut);font-size:var(--font-size-small)';
-      empty.textContent = 'Type to search topics, concepts, and the nine views...';
+      empty.textContent = 'Type to search topics, concepts, and the nine views\u2026';
       resultsEl.appendChild(empty);
       return;
     }

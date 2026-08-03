@@ -2723,12 +2723,35 @@ html[data-theme="dark"][data-view="home"] #home{--mut:#A7A29A}
    mark is below the waterline -- and it is what makes the token pair's ordering the pixels'
    ordering rather than an intention. The hard-stop gradient gives `.open` the same base in one
    declaration, with no extra element; `overflow:hidden` plus the 2px radius keep the corner
-   clean. The fill loses 4 of 24px, which costs it nothing, because the SIGNAL RULE puts the
-   grade in lightness and never in size. Both numbers are single-sourced, so the fill, the gap and
-   the mark cannot drift apart, and the legend swatches take the same two.
-   ASSERTED, NOT ARGUED: the ordering and the 3:1 floor are checked against BOTH grounds, and the
-   negative control is these two declarations reverted -- the arm must go red on the neighbour
-   reading, which is the sentence cycle 1 printed without carrying. */
+   clean. Both numbers are single-sourced, so the fill, the gap and the mark cannot drift apart,
+   and the legend swatches take the same two.
+
+   WHAT THE CHANNEL COSTS, DERIVED AT BOTH WIDTHS RATHER THAN ASSERTED AT ONE. The sentence that
+   stood here said the fill "loses 4 of 24px, which costs it nothing, because the SIGNAL RULE puts
+   the grade in lightness and never in size". That was UNCONDITIONAL and it was written from the
+   desktop. --keel-h + --keel-gap is 4px at every width, but the compact block below takes the
+   track from 32px to 16px under 920 -- so the capsule is 24px on the desktop and EIGHT on the
+   phone, and the channel costs 4 of 24 there and 4 of 8 here. Half the capsule is not obviously
+   free, and "it is lightness, not size" does not settle it: a lightness difference still has to
+   be read off an AREA, and the argument as written would have licensed a 1px strip.
+
+   SO IT IS MEASURED, on the built m-home registers, over 93 open capsules per scheme, sampling
+   the fill strip alone. The ramp's TIGHTEST ADJACENT PAIR:
+
+       1280 (strip 20 of 24px)    light 1.261:1     dark 1.266:1
+        390 (strip  4 of  8px)    light 1.276:1     dark 1.272:1     floor 1.15:1
+
+   The phone's ramp is not the desktop's ramp compressed -- the four cells sit within 0.015 of
+   each other -- and it READS BECAUSE THE GRADE IS CARRIED IN THE FILL'S OPACITY: a strip presents
+   the same colour whatever its height, so shrinking it spends AREA and not VALUE. Every step is
+   monotone in --lv in both schemes, in the direction that scheme runs. What this paragraph may
+   NOT say is that the channel is free, because that is not a property anyone measured; what it
+   costs is 17% of the capsule on the desktop and 50% on the phone, and at 4px the ramp still
+   clears the discriminability floor with 10% to spare.
+   ASSERTED, NOT ARGUED: the ordering and the 3:1 floor are checked against BOTH grounds AT BOTH
+   WIDTHS, the negative control is these two declarations reverted -- the arm must go red on the
+   neighbour reading, which is the sentence cycle 1 printed without carrying -- and the grade ramp
+   has its own control, two adjacent fill steps painted at one lightness. */
 .hm-seg{--keel-h:2px;--keel-gap:2px}
 .hm-seg::after{content:"";position:absolute;inset:0 0 calc(var(--keel-h) + var(--keel-gap));background:var(--ink);opacity:var(--lv,0)}
 /* A STARTED CAPSULE TAKES THE SAME VALUE AS THE RULE, NOT --bd, and that is not tidiness.
@@ -2744,6 +2767,48 @@ html[data-theme="dark"][data-view="home"] #home{--mut:#A7A29A}
 .hm-seg.keel::before{content:"";position:absolute;left:0;right:0;bottom:0;height:var(--keel-h);
   background:var(--keel-shaky);z-index:2}
 .hm-seg.keel-m::before{background:var(--keel-missed)}
+/* ---- PAPER CARRIES THE LATTICE ------------------------------------------------------------
+   THE PRINTED HOME IS THE RECORD. styles.css:637's print block hands #home to the browser's own
+   print rather than to print-qa.js (which read the BOOT topic and built a sheet for a topic the
+   user never chose), so this panel really does reach paper -- and every mark it draws is a
+   BACKGROUND. Under the reader's default (`print-color-adjust: economy`, and the Background
+   graphics box unticked) the browser is free to drop background paint to save ink, and it does:
+   the capsule fill, the `.open` base, the inset rule and the keel all vanish, leaving the track's
+   outline, the figures beside it, and a LEGEND keying four marks that are not on the page.
+   That is worse than printing nothing: "41 flagged" beside a blank strip is a claim the surface
+   cannot show, and a key for absent marks is a key for something else. The grade lives in the
+   fill and nowhere else -- the SIGNAL RULE two blocks up puts it in lightness, never in size or
+   hue -- so on paper there is no fallback channel to degrade to.
+   `print-color-adjust:exact` is the one declaration that says "this background is CONTENT". Same
+   pair the star mark already carries (.ix-star-ic, styles.css:2071) and for the same reason.
+   ASSERTED, NOT ARGUED: test/print_truth.cjs measures the PDF BYTES with and without these
+   declarations, at printBackground:false -- the reader default -- and a build that has lost them
+   comes back the same size as a page with no lattice on it.
+
+   THE LATTICE WAS NOT THE ONLY ONE, and the other three were found by SURVEYING the route rather
+   than by reasoning about it: every painted background under print media on the seeded home, with
+   its computed print-color-adjust, 24 selectors after the lattice was fixed. Three of them carry a
+   GRADE and are the same class and one declaration each, so they are fixed here rather than
+   declared:
+     .hm-room-n      an 18px disc, `background:var(--rm); color:#fff`. Strip it and the room's
+                     count is WHITE ON WHITE -- not a figure beside a blank mark, the figure GONE.
+                     The worst case in the survey, and the cheapest.
+     .hm-room-bar i  `width:<pc>%` of the room's coverage. Strip it and six rooms print an empty
+                     track under a percentage the track is supposed to be showing.
+     .ix-goal-bar    the week's goal fill. It is the one that also has a text equivalent (the
+                     sentence directly beneath it), so the FACT survives on paper either way --
+                     but an empty bar beside "6-topic goal met with 1 to spare" is a picture that
+                     contradicts its own caption, which is the same defect wearing a nicer coat.
+   Both TRACKS take it too, because a fill on a stripped track is a bar floating in space.
+   .hm-gr-t is the gauge's own trough -- the ground every ordering in this panel is measured
+   against -- so it belongs with the marks it holds.
+   DECLARED, NOT FIXED, and the line is drawn at GRADE-BEARING: the panel/body/chip/button
+   surfaces (--card and --bg on white paper) and the radial press-gradients on every button are
+   affordances and grounds, not quantities. Paper has no hover and no press, and a white panel on
+   white paper is the correct print rendering of a white panel, not a lost fact. */
+.hm-seg,.hm-seg::after,.hm-seg.open,.hm-seg.keel::before,.hm-k i,.hm-k i::after,.hm-gr-t,
+.hm-room-n,.hm-room-bar,.hm-room-bar i,.ix-goal-bar,.ix-goal-bar span{
+  print-color-adjust:exact;-webkit-print-color-adjust:exact}
 .hm-gr-n{font-size:var(--font-size-micro);font-variant-numeric:tabular-nums;color:var(--mut2);white-space:nowrap}
 .hm-gr-n b{color:var(--ink);font-weight:var(--font-weight-bold)}
 /* THE ONE SENTENCE THE INSTRUMENT EXISTS TO DELIVER, SET AT A READABLE MEASURE. It ran the full

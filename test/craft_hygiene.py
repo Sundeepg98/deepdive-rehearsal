@@ -42,19 +42,25 @@ a string no font ever rasterises.
 
 WHY THIS IS A SOURCE CHECK AND NOT A BROWSER CHECK
 The obvious shape -- walk the built deliverable's text nodes -- was tried first and
-MEASURED on the committed build (12,323,503 bytes): it holds 2,799 characters of
-copy in 177 real HTML text nodes, 0.023% of the file. Everything else is inside
-<script> or <style> -- 12,290,458 of those bytes, 99.73% -- because the topic corpus
-and every panel this app draws are compiled to JavaScript and emitted as markup at
-runtime. A text-node walk would therefore have swept a rounding error of the copy
-and reported it clean. (THE METHOD, because three different numbers have been
-quoted for this: html.parser over the built file; <script> and <style> elements
-dropped whole; the remaining character data entity-decoded, each whitespace run
-collapsed to one space, each node stripped. Raw, uncollapsed, the same walk gives
-4,028 characters -- which is the same finding either way, and the collapsed figure
-is the one this file and the wave ledger both quote.) So the corpus is the SOURCE,
-and the copy is found where the copy actually lives: inside string literals that
-build markup, and inside `content:` declarations that print marks.
+MEASURED on the committed build: it holds 2,799 characters of copy in 177 real HTML
+text nodes, 0.023% of the file, and 99.73% of the bytes are inside <script> or
+<style>, because the topic corpus and every panel this app draws are compiled to
+JavaScript and emitted as markup at runtime. A text-node walk would therefore have
+swept a rounding error of the copy and reported it clean. (THE METHOD, because
+three different numbers have been quoted for this: html.parser over the built file;
+<script> and <style> elements dropped whole; the remaining character data
+entity-decoded, each whitespace run collapsed to one space, each node stripped.
+Raw, uncollapsed, the same walk gives 4,028 characters -- the same finding either
+way, and the collapsed figure is the one this file and the wave ledger both quote.)
+NO ABSOLUTE BYTE COUNT IS QUOTED HERE, and that is deliberate: cycle 2 wrote this
+paragraph against build 12,323,503 and the very commit that carried it shipped a
+12,334,544-byte build, so the sentence was stale the moment it landed -- the third
+time in this file's short life that a receipt has named a build that no longer
+existed. The derived figures (177 / 2,799 / 0.023% / 99.73%) reproduce on both
+builds to the character; the byte count is the only part that could go stale, so it
+is not in the prose. So the corpus is the SOURCE, and the copy is found where the
+copy actually lives: inside string literals that build markup, inside `content:`
+declarations that print marks, and inside the text SINKS that assign copy directly.
 
 HOW THE COPY IS FOUND, and this is the load-bearing part
 A JavaScript scanner walks each file tracking whether it is inside a line comment,
@@ -66,11 +72,59 @@ in. Only string literals are considered, and inside a literal only:
     text between a '>' and the next '<'      the content of emitted markup
     title= / aria-label= / placeholder= /    copy that is spoken or hovered
     alt= attribute values
+    the run after the LAST '>'               emitted markup's trailing copy
+                                             (GLYPH RULE ONLY -- see below)
 
 which excludes selectors, class names, storage keys and every other string that is
 addressed to the machine rather than to a person. Entities are decoded before the
 rules run, so `&mdash;` counts as an em dash and a bare `-` does not. CSS comments
 are stripped the same way and for the same reason.
+
+THE TAIL RUN, because '<tag>' + var + '</tag>' IS THE COMMONEST EMIT SHAPE HERE
+`>...<` only sees copy with a tag on BOTH sides inside ONE literal. The commonest
+way this codebase emits a labelled control is a concatenation --
+`'<button ...>' + t.identity.title + '</button>'` -- whose first literal ends in
+copy that no closing tag follows, so nothing after the last '>' was ever judged.
+Measured over the tracked js/mjs corpus: 3,034 such tail runs. A cycle-2 press
+planted the same U+27A4 twice in panels.js, inside a real `>text<` run (RED) and at
+a concatenated tail (PASS, green, span count unchanged) -- so the ledger's "the
+class cannot grow silently" was true only where the scanner looked. The tail run is
+now yielded, and it is judged BY THE GLYPH RULE ONLY: a tail run has no closing tag
+to bound it, so it routinely ends mid-sentence or mid-SQL, and putting the four
+typeset rules on a fragment that is not a whole thought is how a check starts
+demanding that half a sentence be punctuated. Font ownership needs no such bound --
+a codepoint is unowned wherever it sits. Nine tail runs in the corpus carry an
+unowned mark (U+2011 and U+2260) and are ratcheted.
+
+THE TEXT SINKS, which are the third way this app prints a string (R7)
+`el.textContent = '...'`, `.innerText`, `.placeholder`, `.value` and
+`setAttribute('title'|'aria-label'|'placeholder'|'alt', '...')` all put copy on the
+screen without ever passing through markup, so a scanner that only reads `>text<`
+and `attr="..."` is blind to them by construction. The chrome's four un-owned
+glyphs live here (U+2715 the focus-mode close, U+21BB the pomodoro reset, U+2191
+scroll-to-top, U+2318 the search overlay's command key) and so did two straight
+ellipses in the search overlay's own placeholder and empty state -- app CHROME
+copy, on the surface the wave's ZERO-for-prose claim is about. Both are typeset
+now. Only STRING LITERALS are read: `x.textContent = t.title` is a variable and is
+not copy this file can judge.
+
+THE MARKDOWN DOOR (R8), and why the four prose rules stay OUT of it
+src/topics-md/*.md is authored prose, and the compiler runs it through markdown-it
+with `typographer:true` (tools/compiler/prose.mjs:18) -- which is what converts the
+15,703 raw apostrophes in the corpus into the typeset form on the way to the
+screen. Those are therefore NOT defects, and a check that reported them would be
+demanding that a solved problem be solved twice, by hand, in 38 files. What the
+typographer does NOT do is choose a font: a codepoint outside --sans is exactly as
+unowned in markdown as it is in a span. So .md is in scope for THE GLYPH RULE ONLY.
+The span yielded is each contiguous run of non-ASCII characters after entity
+decoding, one per site -- 447 runs across 38 files, of which two are outside the
+OWNED set (U+25BC x3 in multi-region.md's diagram chevrons, U+00E0 x1 in
+leader-election.md), both ratcheted. KEYING AT THE MARK RATHER THAN AT THE LINE is
+a deliberate deviation from "inline-HTML spans": the ratchet key is the whole
+stripped span, so a line-keyed markdown entry would go STALE -- a gate failure --
+the first time anyone edited a word of that sentence. The mark is the stable
+carrier, the `count` field already carries site multiplicity, and the arithmetic is
+identical (3 + 1).
 
 THE ASCII SOURCE LAW HOLDS. test/ascii_guard.py forbids a non-ASCII byte in src/,
 so the typeset forms are written as entities or escapes exactly as the repo already
@@ -115,7 +169,27 @@ cycle-2 press found (a bare glyph span with no prose around it, and a glyph insi
 a CSS `content:` declaration). If any planted defect goes undetected the check
 ABORTS rather than report a green it did not earn.
 
+AND THE RATCHET'S OWN MACHINERY IS NOW DRIVEN THROUGH THE REAL DECISION (cycle 3).
+Cycle 2 pressed the rule INTERSECTION with an expression the self-test wrote
+itself -- `[r for r, _w in judge(span) if r not in set(ent['rules'])]` -- which is
+a test of a list comprehension, not of the check. Mutation-tested: reverting main()
+to the cycle-1 defect (skip an allowlisted span outright) left the gate GREEN and
+exit 0, still printing "each excused only from the rules it declares". The same was
+true of the `count` GREW check, the STALE detector and the SHRANK check: all three
+could be deleted without turning anything red, because the only thing that had ever
+exercised them was an out-of-band press script that is not part of the gate. The
+per-span decision and the ledger audit are now `decide()` and `audit()`, and
+`self_test()` drives BOTH over synthetic file+allowlist pairs -- so an entry
+declaring ['apostrophe'] over a span that also hits `ellipsis` must produce a
+finding, a file with two sites under a count of one must GREW, one site under a
+count of two must SHRANK, and an entry matching nothing must go STALE. Delete any
+of the four and the check aborts on itself.
+
 Usage: python3 test/craft_hygiene.py [--report]
+       --report also REWRITES craft_hygiene_allow.json's informational `lines`
+       arrays from the current tree. They are a human index, not part of the key,
+       and cycle 2's had drifted 13-29 lines against the file they index -- so the
+       instrument that reads the list is the thing that refreshes it.
 Exit:  0 = pass, 1 = FAIL
 """
 import hashlib
@@ -191,6 +265,18 @@ def js_literals(src):
 HTML_TEXT = re.compile(r'>([^<>{}\n]+)<')
 ATTR = re.compile(r'\b(?:title|aria-label|placeholder|alt)\s*=\s*(["\'])(.*?)\1', re.S)
 CSS_CONTENT = re.compile(r'\bcontent\s*:\s*([^;{}]+)', re.I)
+# the run after the LAST '>' in a literal -- `'<button ...>' + title + '</button>'` leaves copy
+# with no closing tag inside its own literal, which `>...<` cannot see. GLYPH RULE ONLY.
+TAIL_TEXT = re.compile(r'>([^<>{}\n]*)$')
+# a JS string literal, with escapes -- shared by both sink patterns below
+_STR = r"""(['"`])((?:\\.|(?!\1)[^\\])*)\1"""
+# THE THIRD CHANNEL: copy assigned straight onto a node, never passing through markup.
+SINK_ASSIGN = re.compile(r'\.(?:textContent|innerText|placeholder|value)\s*=\s*' + _STR)
+SINK_SETATTR = re.compile(
+    r"""\.setAttribute\(\s*(['"])(?:title|aria-label|placeholder|alt)\1\s*,\s*"""
+    r"""(['"`])((?:\\.|(?!\2)[^\\])*)\2""")
+# every contiguous non-ASCII run: the markdown door's span, and the stable ratchet key for a mark
+NON_ASCII = re.compile(r'[^\x00-\x7f]+')
 
 
 def unescape_js(s):
@@ -266,25 +352,100 @@ def css_marks(text):
     return out
 
 
+def blank_comments(src):
+    """The source with comments replaced by spaces, newlines and offsets preserved.
+
+    The sink patterns are matched against the SOURCE rather than against a literal, because a
+    sink is a statement shape (`x.textContent = '...'`) and js_literals() has already thrown the
+    statement away by the time it yields the string. Blanking rather than deleting keeps every
+    offset and every line number exactly where it was -- and keeps COMMENTS OUT, which is the
+    whole doctrine of this file: `/* el.placeholder = "don't do this" */` is not copy.
+    """
+    out, i, n = [], 0, len(src)
+    while i < n:
+        c = src[i]
+        if c == '/' and i + 1 < n and src[i + 1] == '/':
+            while i < n and src[i] != '\n':
+                out.append(' ')
+                i += 1
+        elif c == '/' and i + 1 < n and src[i + 1] == '*':
+            out.append('  ')
+            i += 2
+            while i + 1 < n and not (src[i] == '*' and src[i + 1] == '/'):
+                out.append('\n' if src[i] == '\n' else ' ')
+                i += 1
+            out.append('  ')
+            i += 2
+        elif c in ('"', "'", '`'):
+            q = c
+            out.append(c)
+            i += 1
+            while i < n:
+                if src[i] == '\\' and i + 1 < n:
+                    out.append(src[i:i + 2])
+                    i += 2
+                    continue
+                out.append(src[i])
+                if src[i] == q:
+                    i += 1
+                    break
+                if src[i] == '\n' and q != '`':      # unterminated: bail, do not guess
+                    i += 1
+                    break
+                i += 1
+        else:
+            out.append(c)
+            i += 1
+    return ''.join(out)
+
+
 def copy_spans(path, text):
-    """(line, span) for every run of RENDERED copy in one source file."""
+    """(line, span, glyph_only) for every run of RENDERED copy in one source file.
+
+    GLYPH_ONLY marks a span that carries a printed mark but is not a whole thought: a markdown
+    line (whose typeset forms are the compiler's job, not the author's) and a concatenated tail
+    run (which has no closing tag to bound it and routinely stops mid-sentence). Font ownership
+    is a fact about a codepoint and needs no such bound; the four typeset rules are claims about
+    prose and would fire on fragments.
+
+    EVERY SPAN COMES OUT FULLY DECODED, here and nowhere else. main() used to entity-decode
+    everything except .css, which was correct for two channels and a latent double-decode for
+    any third (`&amp;lt;` -> `&lt;` -> `<` decodes twice into a character the source never
+    printed). One decoder per channel, at the point the channel is read.
+    """
     out = []
+    dec = html.unescape
     if path.endswith('.css'):
-        return css_marks(text)
-    if path.endswith(('.html', '.md')):
+        return [(ln, s, False) for ln, s in css_marks(text)]
+    if path.endswith('.md'):
+        # GLYPH RULE ONLY, and the span is the MARK. tools/compiler/prose.mjs runs markdown-it
+        # with typographer:true, so the apostrophes and dashes in this corpus are typeset on the
+        # way to the screen and are not defects here. The font is the part no compiler chooses.
+        for i, ln in enumerate(text.split('\n'), 1):
+            for m in NON_ASCII.finditer(dec(ln)):
+                out.append((i, m.group(0), True))
+        return out
+    if path.endswith('.html'):
         body = re.sub(r'(?is)<(script|style)\b.*?</\1>', '', text)
         for i, ln in enumerate(body.split('\n'), 1):
             for m in HTML_TEXT.finditer(ln):
-                out.append((i, m.group(1)))
+                out.append((i, dec(m.group(1)), False))
             for m in ATTR.finditer(ln):
-                out.append((i, m.group(2)))
+                out.append((i, dec(m.group(2)), False))
         return out
     for line, lit in js_literals(text):
         lit = unescape_js(lit)
         for m in HTML_TEXT.finditer(lit):
-            out.append((line, m.group(1)))
+            out.append((line, dec(m.group(1)), False))
         for m in ATTR.finditer(lit):
-            out.append((line, m.group(2)))
+            out.append((line, dec(m.group(2)), False))
+        m = TAIL_TEXT.search(lit)
+        if m and m.group(1):
+            out.append((line, dec(m.group(1)), True))
+    body = blank_comments(text)
+    for rx, gi in ((SINK_ASSIGN, 2), (SINK_SETATTR, 3)):
+        for m in rx.finditer(body):
+            out.append((body.count('\n', 0, m.start()) + 1, dec(unescape_js(m.group(gi))), False))
     return out
 
 
@@ -337,7 +498,7 @@ OWNED = set(
 )
 
 
-def judge(span):
+def judge(span, glyph_only=False):
     """[(rule, matched text)] for one decoded span.
 
     THE ORDER IS THE POINT. Font ownership is a fact about the codepoint and the font stack,
@@ -346,11 +507,18 @@ def judge(span):
     each of those IS a claim about prose and would otherwise demand that the corpus's SQL be
     retypeset. Cycle 1 had all five behind the gate; a bare `<span>&#9733;</span>` therefore
     carried no letter and no space and was never judged at all.
+
+    GLYPH_ONLY is the third channel's gate, and it is a claim about the SPAN rather than about
+    the rules: a markdown line and a concatenated tail run are not whole thoughts, so the four
+    typeset rules have nothing well-formed to be true of. Markdown's typeset forms belong to
+    the compiler's typographer, and a tail run stops wherever its literal does.
     """
     hits = []
     for ch in span:
         if ord(ch) > 127 and ch not in OWNED:
             hits.append(('glyph', 'U+%04X %s' % (ord(ch), ch)))
+    if glyph_only:
+        return hits
     if not PROSE.search(span) or ' ' not in span.strip():
         return hits
     if CODE.search(span):
@@ -382,6 +550,75 @@ def key_of(path, span):
 
 
 # --------------------------------------------------------------------------- #
+# 2b. THE DECISION, EXTRACTED SO THE SELF-TEST CAN DRIVE IT                     #
+# --------------------------------------------------------------------------- #
+# WHY THIS IS A FUNCTION AND NOT FOUR LINES INSIDE main(). Cycle 2 shipped the rules
+# INTERSECTION, the `count` GREW check, the STALE detector and the SHRANK check, wrote them
+# into the PASS line, and guarded NONE of them: every one of the four could be deleted and the
+# gate stayed green at exit 0. The self-test's "ratchet press" pressed an expression it had
+# written itself, and the wave's own press receipt covered the intersection only by accident --
+# a defect planted INSIDE an allowlisted span changes that span's hash, so it is caught 100% by
+# the whole-span KEY whether the intersection exists or not. Mutation-tested both ways: with a
+# sixth rule declared, the shipped code reports 8 findings and the no-intersection code reports
+# 5, so the property is load-bearing and was simply unguarded. It is guarded now, by driving
+# THIS function -- the one main() calls -- over synthetic file+allowlist pairs.
+
+
+def decide(path, line, span, glyph_only, ruled, used):
+    """The per-span decision: judge -> key -> allow lookup -> rule intersection -> count tally.
+
+    Mutates `used` (key -> {'rules': set that fired, 'n': sites, 'lines': [line]}), which is
+    what audit() then reads. Returns this span's findings, which may be empty.
+    """
+    hits = judge(span, glyph_only)
+    if not hits:
+        return []
+    key = key_of(path, span)
+    ent = ruled.get(key)
+    if ent is not None:
+        declared = set(ent.get('rules') or [])
+        u = used.setdefault(key, {'rules': set(), 'n': 0, 'lines': []})
+        u['rules'].update(r for r, _w in hits)
+        u['n'] += 1
+        u['lines'].append(line)
+        hits = [(r, w) for r, w in hits if r not in declared]
+    return [(path, line, r, w, span.strip()[:120]) for r, w in hits]
+
+
+def sweep(files, ruled):
+    """files: iterable of (path, text). -> (findings, used, scanned)."""
+    findings, used, scanned = [], {}, 0
+    for path, text in files:
+        for line, span, glyph_only in copy_spans(path, text):
+            scanned += 1
+            findings += decide(path, line, span, glyph_only, ruled, used)
+    return findings, used, scanned
+
+
+def audit(ruled, used):
+    """The four ledger failures: an entry that matches nothing, a declared rule that no longer
+    fires, more sites than the entry excuses, fewer sites than it declares.
+
+    A stale exception is how a debt list turns into a permission slip; an uncounted new site is
+    how "the class cannot grow" stops being true inside one file.
+    """
+    stale = [k for k in ruled if k not in used]
+    over, grew, shrank = [], [], []
+    for k, ent in ruled.items():
+        if k not in used:
+            continue
+        for r in (ent.get('rules') or []):
+            if r not in used[k]['rules']:
+                over.append((k, r))
+        want, got = int(ent.get('count', 1)), used[k]['n']
+        if got > want:
+            grew.append((k, ent, want, got))
+        elif got < want:
+            shrank.append((k, ent, want, got))
+    return stale, over, grew, shrank
+
+
+# --------------------------------------------------------------------------- #
 # 3. THE SELF-TEST -- every rule must flag its own planted defect               #
 # --------------------------------------------------------------------------- #
 
@@ -408,8 +645,8 @@ PLANTS = {
     'dash':       "var h = '<p>Staff is the thin rail - the level you rehearsed least</p>';",
     'glyph':      "var h = '<p>Starred \\u2605 topics appear first</p>';",
 }
-# THE TWO THE CYCLE-2 PRESS FOUND. Both were PASSES on the shipped check, and both are the
-# exact defect the wave's own item 6b had just deleted from the source, put back.
+# THE PRESSES. Every one of these was a PASS on some shipped version of this check, and each is
+# the exact defect that version's ledger claimed was impossible, put back.
 PLANTS_PRESSED = {
     # a bare glyph span: no letter, no space -- cycle 1's prose gate skipped it outright
     'glyph-bare': ("var h = '<span class=\"ix-star-ic\" aria-hidden=\"true\">&#9733;</span>';",
@@ -419,20 +656,42 @@ PLANTS_PRESSED = {
     'glyph-new':  ("var h = '<p>Next step \\u27a4 keep going</p>';", 'fixture.js'),
     # a printed mark in a stylesheet: cycle 1's tracked_sources() took no .css at all
     'glyph-css':  (".hm-lbl::after{content:\"\\2620 flagged for review\"}", 'fixture.css'),
+    # CYCLE 3. THE TAIL RUN -- the commonest emit shape in this codebase, and a free pass until
+    # now: the same mark inside `>text<` went RED while this one went green, span count unchanged
+    'glyph-tail': ("var h = '<button class=\"t\">Next step \\u27a4' + t.title + '</button>';",
+                   'fixture.js'),
+    # CYCLE 3. THE TEXT SINK -- copy that never passes through markup at all
+    'glyph-sink': ("icon.textContent = '\\u2318';", 'fixture.js'),
+    'glyph-attr': ("el.setAttribute('aria-label', 'Reset \\u21bb this topic');", 'fixture.js'),
+    # CYCLE 3. THE MARKDOWN DOOR -- 38 authored files that tracked_sources() did not take
+    # NOTE THE FORM: markdown carries ENTITIES, not JS escapes, and ascii_guard forbids a raw
+    # non-ASCII byte in src/topics-md -- so this is how an unowned mark actually reaches the
+    # corpus, in both the shapes it takes there (inside an inline-HTML span, and in bare prose).
+    'glyph-md':   ("A diagram chevron: <span class=\"dgm-v\">&#9660;</span> and a mark &#10148; "
+                   "in plain prose.", 'fixture.md'),
 }
+# THE MARKDOWN NEGATIVE CONTROL. markdown-it runs with typographer:true, so these ARE typeset on
+# the way to the screen; reporting them would demand that a solved problem be solved again by
+# hand in 38 files, and 15,703 of them ship today.
+CLEAN_MD = (
+    "The interviewer's follow-up is the one that matters ... and the dash - it uses - is fine.\n"
+    "A \"quoted phrase\" in markdown prose, plus owned marks: a RAW em dash "
+    + chr(0x2014) + ", an ENTITY em dash &mdash;, and an arrow " + chr(0x2192) + ".\n"
+)
+
+
+def rules_of(path, src):
+    """[rule names] over one synthetic source, through the real scanner and the real judge."""
+    return [h[0] for _l, s, g in copy_spans(path, src) for h in judge(s, g)]
 
 
 def self_test():
     problems = []
-    hits = []
-    for _ln, s in copy_spans('fixture.js', CLEAN):
-        hits += judge(html.unescape(s))
+    hits = rules_of('fixture.js', CLEAN)
     if hits:
         problems.append('the CLEAN fixture was flagged: %s -- the analyser fails correct '
                         'copy, so every green below is meaningless' % hits)
-    css_hits = []
-    for _ln, s in copy_spans('fixture.css', CLEAN_CSS):
-        css_hits += judge(s)
+    css_hits = [h for _l, s, g in copy_spans('fixture.css', CLEAN_CSS) for h in judge(s, g)]
     if [h for h in css_hits if h[0] != 'glyph' or 'U+25B8' not in h[1]]:
         problems.append('the CLEAN CSS fixture was flagged beyond its one ratcheted mark: %s '
                         '-- either the comment stripper or the alt-text split is wrong, and a '
@@ -440,41 +699,50 @@ def self_test():
     if not [h for h in css_hits if 'U+25B8' in h[1]]:
         problems.append('the CLEAN CSS fixture\'s one real mark (U+25B8) was NOT seen -- the '
                         'CSS reader is not decoding escapes, so every green it reports is empty')
+    # THE MARKDOWN NEGATIVE CONTROL, and it is the whole argument for the .md door's shape: the
+    # four typeset rules must NOT fire on a corpus the typographer already typesets, or this
+    # check would report 15,703 findings and be turned off within the hour.
+    md_clean = rules_of('fixture.md', CLEAN_MD)
+    if md_clean:
+        problems.append('the CLEAN MARKDOWN fixture was flagged %s -- .md is in scope for the '
+                        'GLYPH RULE ONLY. tools/compiler/prose.mjs runs markdown-it with '
+                        'typographer:true, so the apostrophes, ellipses, quotes and hyphens in '
+                        'the corpus are typeset on the way to the screen and are not defects '
+                        'here; a check that demanded they be hand-typeset in 38 files would be '
+                        'asking for a solved problem to be solved twice.' % md_clean)
     for name, src in PLANTS.items():
-        got = []
-        for _ln, s in copy_spans('fixture.js', src):
-            got += [h[0] for h in judge(html.unescape(s))]
+        got = rules_of('fixture.js', src)
         if name not in got:
             problems.append('PLANT "%s" UNDETECTED: %r produced %s' % (name, src, got or 'nothing'))
     for name, (src, fx) in PLANTS_PRESSED.items():
-        got = []
-        for _ln, s in copy_spans(fx, src):
-            got += [h[0] for h in judge(html.unescape(s) if fx.endswith('.js') else s)]
+        got = rules_of(fx, src)
         if 'glyph' not in got:
             problems.append('PRESSED PLANT "%s" UNDETECTED: %r produced %s -- this is a defect '
                             'the shipped check passed, and it is back' % (name, src, got or 'nothing'))
     code = "var h = '<pre>-- badge: SELECT count(*) ... WHERE user_id=$1; -- seek</pre>';"
-    if any(judge(html.unescape(s)) for _l, s in copy_spans('fixture.js', code)):
+    if rules_of('fixture.js', code):
         problems.append('a CODE SAMPLE was judged as prose -- the rules would demand that the '
                         'SQL in the corpus be typeset, which is a correctness regression rather '
                         'than a craft improvement')
-    # and the comment exclusion, which is the whole reason this scans literals
+    # and the comment exclusion, which is the whole reason this scans literals -- now doubled,
+    # because the SINK channel matches statement SHAPES against the source rather than against a
+    # literal, so `/* el.placeholder = "don't ..." */` is a live way back in
     cmt = "/* the forks -- each decision, restated as the question you ask ... don't */"
-    if any(judge(html.unescape(s)) for _l, s in copy_spans('fixture.js', cmt)):
+    if rules_of('fixture.js', cmt):
         problems.append('a DESIGN COMMENT was judged as copy -- the literal scanner is not '
                         'excluding comments, which is what made the first draft report 523 '
                         'straight quotes that were all prose about the code')
-    # THE RATCHET ITSELF, PRESSED. An allowlisted span must still be judged past its 120th
-    # character, outside its declared rules, and at a file it was not excused for -- all three
-    # of those were free passes at some point in this check's two cycles.
+    scmt = "/* el.placeholder = 'Filter topics ... don\\'t'; */\n// x.textContent = 'a ... b';"
+    if rules_of('fixture.js', scmt):
+        problems.append('a SINK INSIDE A COMMENT was judged as copy -- blank_comments() is not '
+                        'blanking, so every design comment that quotes an assignment is copy now')
+
+    # ---- THE RATCHET'S OWN MACHINERY, DRIVEN THROUGH decide() AND audit() -------------------
+    # Cycle 2 pressed the intersection with an expression the test wrote itself, so all four of
+    # these could be deleted with the gate still green at exit 0. They are pressed through the
+    # REAL functions now, over synthetic file+allowlist pairs.
     long_span = 'x' * 200 + " the interviewer's question ... and then some"
     k = key_of('a.js', long_span)
-    ent = {'rules': ['apostrophe']}
-    undeclared = [r for r, _w in judge(long_span) if r not in set(ent['rules'])]
-    if 'ellipsis' not in undeclared:
-        problems.append('THE RATCHET IS NOT INTERSECTED WITH ITS DECLARED RULES: a span excused '
-                        'for "apostrophe" swallowed an ellipsis defect 200 characters in. That is '
-                        'the exact hole the 120-char prefix key left open.')
     if k == key_of('a.js', long_span[:120]):
         problems.append('THE RATCHET KEY IS NOT WHOLE-SPAN: a 120-character prefix hashes to the '
                         'same key as the full span, so everything past it is unguarded.')
@@ -482,6 +750,51 @@ def self_test():
         problems.append('THE RATCHET KEY IS SITE-BLIND: the same span in another file takes the '
                         'same key, so one ratcheted mark excuses every future copy of itself -- '
                         'which is how a CSS star quietly excused a reinstated star span in JS.')
+
+    # a DOUBLE-quoted JS literal, because long_span carries the apostrophe the fixture is about
+    # and a single-quoted one would be terminated by it -- which js_literals correctly refuses to
+    # guess past, and which silently emptied the first draft of these four fixtures
+    two = ('var a = "<p>' + long_span + '</p>";\n'
+           'var b = "<p>' + long_span + '</p>";\n')
+    one = 'var a = "<p>' + long_span + '</p>";\n'
+    kk = key_of('a.js', long_span)
+
+    # (i) RULES INTERSECTION -- excused for `apostrophe`, still judged for `ellipsis`
+    f, u, _n = sweep([('a.js', one)], {kk: {'rules': ['apostrophe'], 'count': 1}})
+    if 'ellipsis' not in [r for _f, _l, r, _w, _k in f]:
+        problems.append('THE RATCHET IS NOT INTERSECTED WITH ITS DECLARED RULES: an entry '
+                        'declaring only "apostrophe" swallowed an ellipsis defect in the same '
+                        'span, so an allowlisted span is exempt from ALL five rules -- which is '
+                        'cycle 1\'s defect, and reverting main() to it left the gate GREEN.')
+    if [r for _f, _l, r, _w, _k in f if r == 'apostrophe']:
+        problems.append('THE RATCHET DOES NOT EXCUSE WHAT IT DECLARES: the entry declares '
+                        '"apostrophe" and the sweep reported one anyway, so the list is not a '
+                        'ratchet, it is a no-op and every entry in it is noise.')
+    # (ii) THE COUNT GREW -- one entry, two sites
+    _f, u2, _n = sweep([('a.js', two)], {kk: {'rules': ['apostrophe', 'ellipsis'], 'count': 1}})
+    if not audit({kk: {'rules': ['apostrophe', 'ellipsis'], 'count': 1}}, u2)[2]:
+        problems.append('THE COUNT IS NOT ENFORCED UPWARD: two sites under an entry excusing one '
+                        'did not register as GREW, so one excused mark excuses every future copy '
+                        'of itself inside the same file and "the class cannot grow" is false.')
+    # (iii) THE DEBT SHRANK -- one entry declaring two sites, one site present
+    _f, u3, _n = sweep([('a.js', one)], {kk: {'rules': ['apostrophe', 'ellipsis'], 'count': 2}})
+    if not audit({kk: {'rules': ['apostrophe', 'ellipsis'], 'count': 2}}, u3)[3]:
+        problems.append('THE COUNT IS NOT ENFORCED DOWNWARD: one site under an entry declaring '
+                        'two did not register as SHRANK, so debt that was paid stays on the '
+                        'books and the list drifts away from the tree it describes.')
+    # (iv) STALE, and OVER-DECLARED -- an entry matching nothing, and a rule that no longer fires
+    ghost = {'zzzzzzzzzzzzzzzz': {'rules': ['glyph'], 'count': 1},
+             kk: {'rules': ['apostrophe', 'ellipsis', 'quote'], 'count': 1}}
+    _f, u4, _n = sweep([('a.js', one)], ghost)
+    st, ov, _g, _s = audit(ghost, u4)
+    if 'zzzzzzzzzzzzzzzz' not in st:
+        problems.append('THE STALE DETECTOR DOES NOT FIRE: an entry matching nothing in the tree '
+                        'survived the audit, which is how a debt list turns into a permission '
+                        'slip -- the entries outlive the defects and nobody is told.')
+    if not [r for _k, r in ov if r == 'quote']:
+        problems.append('THE OVER-DECLARED DETECTOR DOES NOT FIRE: a live entry declaring a rule '
+                        'that no longer hits anything is dead debt on a live line, and it is how '
+                        'an entry quietly widens to cover rules it was never argued for.')
     return problems
 
 
@@ -499,8 +812,11 @@ def tracked_sources():
     # reason, as typeface_census: it is a git question, not a path-pattern skip.
     # .css IS IN SCOPE: `content:` prints marks on the screen exactly as a <span> does, and
     # leaving stylesheets out let six un-ratcheted codepoints ship and a planted seventh pass.
+    # .md IS IN SCOPE FOR THE GLYPH RULE ONLY (R8): 38 authored topic files, 447 non-ASCII runs,
+    # of which two are outside OWNED. The four typeset rules stay OUT -- the compiler's
+    # typographer owns those, which is why 15,703 raw apostrophes in that corpus are not defects.
     return [f for f in files
-            if f.endswith(('.js', '.mjs', '.html', '.css'))
+            if f.endswith(('.js', '.mjs', '.html', '.css', '.md'))
             and '/_generated/' not in f
             and '.generated.' not in f
             and '/visuals/' not in f]
@@ -522,63 +838,46 @@ def main():
         allow = {'spans': {}, 'note': ''}
 
     ruled = allow.get('spans', {})
-    used = {}          # key -> {'rules': set of rules that fired, 'n': occurrences}
-    findings = []
-    scanned = 0
     sources = tracked_sources()
+    files = []
     for f in sources:
         path = os.path.join(ROOT, f.replace('/', os.sep))
         try:
-            text = open(path, encoding='utf-8', errors='replace').read()
+            files.append((f, open(path, encoding='utf-8', errors='replace').read()))
         except OSError:
             continue
-        for line, raw in copy_spans(f, text):
-            span = html.unescape(raw) if not f.endswith('.css') else raw
-            scanned += 1
-            hits = judge(span)
-            if not hits:
-                continue
-            key = key_of(f, span)
-            ent = ruled.get(key)
-            if ent is not None:
-                declared = set(ent.get('rules') or [])
-                u = used.setdefault(key, {'rules': set(), 'n': 0})
-                u['rules'].update(r for r, _w in hits)
-                u['n'] += 1
-                hits = [(r, w) for r, w in hits if r not in declared]
-                if not hits:
-                    continue
-            for rule, what in hits:
-                findings.append((f, line, rule, what, span.strip()[:120]))
+    # ONE sweep, ONE audit, and both are the functions the self-test presses -- see decide().
+    findings, used, scanned = sweep(files, ruled)
+    stale, over, grew, shrank = audit(ruled, used)
 
-    stale = [k for k in ruled if k not in used]
-    # a rule declared on a live entry that no longer fires is dead debt on a live line
-    over = []
-    for k, ent in ruled.items():
-        if k not in used:
-            continue
-        for r in (ent.get('rules') or []):
-            if r not in used[k]['rules']:
-                over.append((k, r))
-    # THE COUNT IS THE HALF THAT MAKES "the class cannot grow" TRUE. Without it, one excused
-    # mark excuses every future copy of itself inside the same file.
-    grew, shrank = [], []
-    for k, ent in ruled.items():
-        if k not in used:
-            continue
-        want, got = int(ent.get('count', 1)), used[k]['n']
-        if got > want:
-            grew.append((k, ent, want, got))
-        elif got < want:
-            shrank.append((k, ent, want, got))
+    if REPORT:
+        # THE INFORMATIONAL INDEX, REFRESHED BY THE THING THAT READS IT. `lines` is a pointer and
+        # is not part of the key (line numbers move, and that must not break a ratchet) -- so
+        # nothing enforced it, and cycle 2's had drifted 13-29 lines against the shipped file it
+        # indexes. An index that cannot be enforced has to be REGENERATED, or it is a comment
+        # that lies. Enforcing it instead was considered and rejected: it would red the gate for
+        # inserting a line above a mark, which is a check that cries wolf.
+        for k, ent in ruled.items():
+            if k in used:
+                ent['lines'] = sorted(set(used[k]['lines']))
+        with open(ALLOW_FILE, 'w', encoding='utf-8', newline='\n') as fh:
+            json.dump(allow, fh, indent=1, ensure_ascii=True)
+            fh.write('\n')
+        print('  (--report) refreshed the `lines` index of %d live entries in %s'
+              % (len(used), os.path.relpath(ALLOW_FILE, ROOT)))
 
     by_rule = {}
     for f, line, rule, what, key in findings:
         by_rule.setdefault(rule, []).append((f, line, what, key))
 
     print('=== CRAFT HYGIENE -- the typography the app prints ===')
-    print('  copy spans scanned : %d, over %d authored source files (js/mjs/html/css)'
+    print('  copy spans scanned : %d, over %d authored source files (js/mjs/html/css/md)'
           % (scanned, len(sources)))
+    print('  four channels      : markup between two tags, the run after the LAST tag (glyph '
+          'only),\n                       text sinks (.textContent/.innerText/.placeholder/'
+          '.value,\n                       setAttribute title|aria-label|placeholder|alt), CSS '
+          'content:,\n                       and markdown marks (glyph only -- the typographer '
+          'owns the rest)')
     print('  ruled exceptions   : %d (all matched, at their declared sites and counts)' % len(ruled)
           if not (stale or over or grew or shrank)
           else '  ruled exceptions   : %d, %d STALE, %d over-declared, %d GREW, %d shrank'
@@ -617,16 +916,20 @@ def main():
         print('\nCRAFT HYGIENE: FAIL (%d violation(s), %d stale, %d over-declared, %d grew, %d shrank)'
               % (len(findings), len(stale), len(over), len(grew), len(shrank)))
         return 1
-    print('\n  8 planted defects detected in the self-test (three periods, a straight '
+    print('\n  12 planted defects detected in the self-test (three periods, a straight '
           'apostrophe, straight quotes, a hyphen doing a dash\u2019s job, a codepoint outside '
           'the app\u2019s own stack, a BARE glyph span with no prose around it, an unowned '
-          'codepoint the app has never shipped, and a glyph printed from CSS content:), plus '
-          'three negative controls -- a design comment and a CSS comment that must NOT be '
-          'judged, and an allowlisted span that must still be judged past its 120th character '
-          'and outside its declared rules, and at a file it was not excused for')
-    print('CRAFT HYGIENE: PASS  (%d rendered-copy spans, %d ruled exceptions, every one still '
-          'matching something, each excused only from the rules it declares, only in the file '
-          'it names, and only as many times as it declares)'
+          'codepoint the app has never shipped, a glyph printed from CSS content:, a glyph at '
+          'the TAIL of a concatenated literal, a glyph assigned through .textContent, one '
+          'through setAttribute, and one in a markdown file), plus five negative controls -- a '
+          'design comment, a CSS comment and a COMMENTED-OUT SINK that must NOT be judged, a '
+          'markdown fixture whose ellipses and apostrophes must NOT be judged (the compiler\u2019s '
+          'typographer owns those), and the ratchet\u2019s own machinery driven through decide() '
+          'and audit(): rules intersected, count enforced in BOTH directions, stale and '
+          'over-declared entries caught, and the key whole-span and site-bound')
+    print('CRAFT HYGIENE: PASS  (%d rendered-copy spans over four channels, %d ruled exceptions, '
+          'every one still matching something, each excused only from the rules it declares, '
+          'only in the file it names, and only as many times as it declares)'
           % (scanned, len(ruled)))
     return 0
 

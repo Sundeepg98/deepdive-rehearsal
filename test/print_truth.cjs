@@ -14,8 +14,8 @@
  * IN THE LAYOUT, and DOES IT REACH THE PAPER -- and it settles the second one against a real
  * Chromium `page.pdf`, not against a DOM proxy for it.
  *
- * WHAT IT ASSERTS (five arms; every one was RED on the pre-fix build -- captured verbatim in
- * _audit/2026-07-30-w16-print-truth.md):
+ * WHAT IT ASSERTS (six arms; A-E were every one RED on the pre-fix build -- captured verbatim in
+ * _audit/2026-07-30-w16-print-truth.md -- and F was added by W-ADDRESSES cycle 3):
  *   A GEOMETRY   under print media the panel has no height cap and no hidden overflow, the body
  *                clips nothing (scrollHeight == clientHeight), and no CONTROL surface prints.
  *   B PAGINATION a real A4 page.pdf yields a page count at or above the arithmetic floor implied
@@ -26,6 +26,10 @@
  *                does not reach -- computes a real typographic hierarchy instead of collapsing
  *                every heading to 14px/400.
  *   E BREAKS     the cram sheet's atomic units carry break-inside:avoid inside the shadow root.
+ *   F LATTICE    the printed HOME still carries the marks its figures name. Measured in PDF
+ *                BYTES at printBackground:false -- the reader default -- with and without the
+ *                print-color-adjust declarations, because every mark on that panel is a
+ *                background and the reader's default is to drop background paint to save ink.
  *
  * PLATFORM-DETERMINISTIC. No wall clock, no sleep-then-assert, no font-metric assertion beyond
  * "these sizes differ". Page counts are compared against a floor DERIVED FROM A MEASUREMENT taken
@@ -67,6 +71,29 @@ const MEASURE_H = Math.round(BOX_H);     /* 1009 */
 
 const FLAGSHIP = 'content-pipeline';
 const TALLEST = 'consistency-models';
+
+/* ARM F's record. A COLD home paints no keel and no fill, so a lattice arm driven on one would
+ * measure the same bytes either way and report a green it did not earn. This is the same shape as
+ * test/scoreboard_salience.cjs's GAUGE_SEED -- two thirds of the topics graded, the solid share
+ * walking the whole --lv range so both keel variants paint at every fill step -- and the fixed
+ * `ts` keeps the record's age strings, and therefore the PDF's bytes, identical run to run. */
+const LATTICE_SEED = () => {
+  localStorage.clear();
+  let j = -1;
+  TopicRegistry.ids().forEach((id, k) => {
+    if (k % 3 === 2) return;               /* every third topic left UNGRADED: the denominator */
+    j++;
+    const cards = TopicRegistry.get(id).data.bank.cards;
+    const keys = CardId.forCards(cards); const map = {};
+    const share = (j % 4) / 4;             /* 0, .25, .5, .75 -- all keel-bearing */
+    const bad = (Math.floor(j / 4) % 2) ? 1 : 2;   /* MISSED and SHAKY, four topics at a time */
+    cards.forEach((c, i) => { map[keys[i]] = (i / cards.length < share) ? 3 : bad; });
+    const solid = Object.keys(map).filter((x) => map[x] >= 3).length;
+    localStorage.setItem('ddr.v1.progress.' + id, JSON.stringify({
+      got: solid, shk: cards.length - solid, done: cards.length, tot: cards.length,
+      revisit: ['idempotency'], cards: map, cv: 1, ts: 1750000000000 }));
+  });
+};
 /* See CONTROL 3b. Anchored on measured healthy coverage (0.94 / 0.98) with room beneath it, and
  * far above the two death modes it exists to catch (0.35 partial, 0.00 total). */
 const COVERAGE_FLOOR = 0.70;
@@ -655,6 +682,75 @@ function main() {
     if (PDF_DIR) fs.writeFileSync(path.join(PDF_DIR, LABEL + '-file-print-never-opened.pdf'), fPdf);
     pdfMeta['file-print-never-opened'] = { pages: fPages, clipped: fClipped, bytes: fPdf.length };
     await fresh.close();
+  }
+
+  /* ---------- ARM F: PAPER CARRIES THE LATTICE (W-ADDRESSES cycle 3, R9) ----------
+   * styles.css:637's print block hands #home to the BROWSER's own print rather than to
+   * print-qa.js, so the altitude gauge really does reach paper -- and every mark it draws is a
+   * BACKGROUND. Under the reader's default (`print-color-adjust:economy`, Background graphics
+   * unticked, which is what `printBackground:false` reproduces) the browser is free to drop
+   * background paint, and it does: 138 capsule fills, 70 keel marks, the `.open` bases, the inset
+   * rules and the four legend swatches all vanish, leaving "41 flagged" beside a blank strip and
+   * a legend keying four marks that are not on the page. The grade lives in the fill and nowhere
+   * else, so there is no channel to degrade to.
+   *
+   * THE MEASUREMENT IS BYTES, NOT PIXELS, and that is the point: a PDF's content stream carries
+   * one paint op per printed background, so removing the declarations removes the ops. It is a
+   * property of the DOCUMENT rather than of a rasteriser, which is why it needs no baseline image
+   * and cannot drift with a font or a driver.
+   *
+   * TWO NEGATIVE CONTROLS, because a byte comparison is exactly the shape of check that passes on
+   * noise: (1) two IDENTICAL renders must come back within NOISE_MAX -- measured 0 bytes on
+   * win32-chromium149, three pairs, once a warm-up render has been taken (the FIRST page.pdf() of
+   * a page differs from every later one by ~7k, which is a font-cache artefact and was mistaken
+   * for signal in this arm's first draft); and (2) the delta must clear LATTICE_MIN, which is 100k
+   * against a measured 140,880 -- 41% of headroom, and an order of magnitude above the noise. */
+  {
+    const NOISE_MAX = 3000;
+    const LATTICE_MIN = 100000;
+    const OFF = '.hm-seg,.hm-seg::after,.hm-seg.open,.hm-seg.keel::before,.hm-k i,.hm-k i::after,'
+      + '.hm-gr-t,.hm-room-n,.hm-room-bar,.hm-room-bar i,.ix-goal-bar,.ix-goal-bar span'
+      + '{print-color-adjust:economy!important;-webkit-print-color-adjust:economy!important}';
+    const hp = await ctx.newPage();
+    await B.gotoApp(hp, HTML, { hash: '#home' });
+    await hp.evaluate(LATTICE_SEED);
+    await B.gotoApp(hp, HTML, { hash: '#home' });
+    await B.until(hp, () => !!document.querySelector('#home .hm-alt .hm-seg.keel'), null, B.ACT_MS,
+      'a gauge with keel marks on it');
+    await B.settle(hp);
+    const shot = async (css) => {
+      await hp.evaluate((c) => {
+        const old = document.getElementById('_r9'); if (old) old.remove();
+        if (!c) return;
+        const s = document.createElement('style'); s.id = '_r9'; s.textContent = c;
+        document.head.appendChild(s);
+      }, css || '');
+      await B.settle(hp);
+      /* printBackground:false IS THE READER DEFAULT. With it true the browser prints backgrounds
+       * whatever the stylesheet says, and this arm would measure nothing at all. */
+      return (await hp.pdf({ format: 'A4', preferCSSPageSize: true, printBackground: false })).length;
+    };
+    await shot(null);                       /* warm-up -- see the note above */
+    const on1 = await shot(null);
+    const off1 = await shot(OFF);
+    const on2 = await shot(null);
+    const off2 = await shot(OFF);
+    await hp.evaluate(() => { const o = document.getElementById('_r9'); if (o) o.remove(); });
+    const noise = Math.max(Math.abs(on1 - on2), Math.abs(off1 - off2));
+    const delta = Math.min(on1, on2) - Math.max(off1, off2);
+    ok(noise <= NOISE_MAX,
+      '[lattice] CONTROL: two IDENTICAL renders of the same page agree, so a delta below means '
+      + 'something and not PDF noise',
+      'exact ' + on1 + '/' + on2 + ', economy ' + off1 + '/' + off2 + ' -- worst pair differs '
+      + noise + ' bytes (max ' + NOISE_MAX + ')');
+    ok(delta >= LATTICE_MIN,
+      '[lattice] the altitude gauge, its legend, the room bars and the room counts SURVIVE the '
+      + 'reader default: forcing print-color-adjust:exact adds real paint to the PDF, where '
+      + 'economy drops it and prints figures beside a blank strip',
+      'exact - economy = ' + delta + ' bytes (floor ' + LATTICE_MIN + '); a build that has lost '
+      + 'the declarations comes back at economy size, which is a page with no lattice on it');
+    pdfMeta.lattice = { exact: on1, economy: off1, delta, noise };
+    await hp.close();
   }
 
   /* ---------- ARM D: the Print Q&A document's design tokens ---------- */

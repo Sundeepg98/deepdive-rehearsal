@@ -29,13 +29,36 @@ try{var _dk=matchMedia('(prefers-color-scheme:dark)').matches;document.documentE
    THE HASH WINS WHEN IT NAMES A TOPIC, because a deep link names the room the browser is actually
    loading, and stamping the resume room over it would be the same defect with a nicer source.
    IF localStorage IS DENIED (private mode -- the case scripts/app/store.js already defends) the
-   inner catch leaves the record unread and the route's own fallback still answers. */
+   inner catch leaves the record unread and the route's own fallback still answers.
+
+   THE DERIVATION IS SPLIT BY ROUTE SHAPE, AND CYCLE 2 WIRED ONLY HALF OF IT -- which put this
+   wave's own defect back on the route family the gate itself drives. Cycle 2's one-line chain was
+   `_rm(_h) || _rm(nav.last) || _rm(newest) || _rm(home ? cold : boot)`: the RECORD was consulted
+   BEFORE the route was, so the __doorBoot branch could only ever fire on an EMPTY record. On any
+   BARE-VIEW route -- #walk, #drill, #wb, the routes the gate drives -- a user with a record got
+   the HOME's answer: the whole document lit in the resume topic's room while the app showed the
+   boot topic, for the entire session, because applyIdentity() runs on SWITCHES and a bare-view
+   boot never switches. MEASURED on the committed cycle-2 deliverable, seed = caching
+   (data-storage): #walk stamped data-storage while the app showed content-pipeline
+   (architecture-apis) -- --acc rgb(49,91,180) against a room-of-shown rgb(150,61,134), and the
+   MutationObserver log held that ONE value for the whole load. Master's deleted
+   data-group="architecture-apis" constant made this route CORRECT, which is the uncomfortable
+   part: deleting a constant is only an improvement if what replaces it answers every question the
+   constant was answering. The comment above names the TWO questions; the code asked one.
+
+   So the hash is resolved FIRST and alone, and the fallback is chosen by route shape:
+     a topic hash          -> that topic's room (a deep link names what is loading)
+     nothing, or #home     -> the DOOR's answer: resume pointer, else newest graded, else cold door
+     any other hash        -> a BARE VIEW of the boot topic, so the BOOT topic's room
+   router.js:155 states the app's own rule for the third line -- "#walk resolves to the boot
+   topic" -- and this is that sentence, at boot, before anything paints. */
 window.__doorRooms={'messaging-events':'cdc event-driven kafka-internals notifications real-time-delivery saga stream-batch-processing','data-storage':'caching consistency-models consistent-hashing eav probabilistic-structures replication sharding-strategies shared-definition soft-delete storage-engines','reliability-observability':'backpressure circuit-breaker debugging error-propagation idempotency observability retries-timeouts slos','platform-infra':'autoscaling aws-hardening desired-state developer-platform devices-dispatch distributed-locks iac lambda-organization leader-election load-balancing multi-region','architecture-apis':'api-design content-pipeline feature-flags microfrontend rate-limiting rules-engine state-machine','security-tenancy':'authz multi-tenant signing'};
 window.__doorBoot='content-pipeline';window.__doorCold='event-driven';
 try{
   var _rm=function(i){if(!i)return '';for(var g in window.__doorRooms){if((' '+window.__doorRooms[g]+' ').indexOf(' '+i+' ')>-1)return g;}return '';},_h=(location.hash.match(/^#([a-z0-9-]+)/)||[])[1]||'',_nl=null,_bt=0,_bi='',_k,_p,_i;
   try{_nl=JSON.parse(localStorage.getItem('ddr.v1.nav.last')||'null');for(_i=0;_i<localStorage.length;_i++){_k=localStorage.key(_i);if(_k&&_k.indexOf('ddr.v1.progress.')===0){_p=JSON.parse(localStorage.getItem(_k)||'null');if(_p&&_p.ts>_bt){_bt=_p.ts;_bi=_k.slice(16);}}}}catch(e2){}
-  var _dg=_rm(_h)||_rm(_nl&&_nl.id)||_rm(_bi)||_rm((!_h||_h==='home')?window.__doorCold:window.__doorBoot);
+  var _hr=_rm(_h),_door=_rm(_nl&&_nl.id)||_rm(_bi)||_rm(window.__doorCold);
+  var _dg=_hr||((!_h||_h==='home')?_door:_rm(window.__doorBoot));
   if(_dg)document.documentElement.setAttribute('data-group',_dg);
 }catch(e){}
 /* v147: Loading splash -- removed by app.js when ready */

@@ -665,8 +665,9 @@ on `--side`.
 - a bare-view boot is lit in the BOOT TOPIC's room, and the declared boot topic is the one the
   registry actually makes current -- the half of the old constant that was correct, kept and
   checked instead of deleted
-- **SEEDED: every sampled frame across three cold loads is the resume target's room** -- 0 frames
-  off-room, where the shipped build had 5-6 per load
+- **SEEDED: every value `<html data-group>` EVER HOLDS across three cold loads is the resume
+  target's room** -- 0 off-room stamps and 0 off-room painted frames, where the shipped build
+  wore the constant for 5-6 frames per load
 - **COLD: the first-time visitor's home is lit in the COLD DOOR's room (messaging-events) from the
   first frame, NOT the boot topic's (architecture-apis)** -- and the arm ABORTS rather than pass if
   those two ever become the same string
@@ -676,6 +677,31 @@ whose setter swallows boot's assignment, so boot derives from a table the test c
 answers `architecture-apis` for the resume topic (**the constant, restored, arriving by the honest
 route -- RED**) and one that answers nothing (**the stamp deleted -- RED**, and with index.html's
 constant gone an unstamped boot is roomless, not safe).
+
+**THE ARM WAS WEAKER THAN ITS FIRST WRITE-UP CLAIMED, AND THE WRITE-UP IS WHAT EXPOSED IT.** The
+cycle-2 commit message says "0 of 213 frames". That number was never measured. Measuring it found
+the rAF sampler catches a WILDLY variable slice -- 2, 12 and 13 frames on one run of three loads,
+31/58/55 on another -- because rAF stops once the page goes idle. A load that samples 2 late frames
+asserts almost nothing, and on a late start the sampler would only ever see the state AFTER the
+home had corrected a wrong stamp: a clean report for a broken build, which is this wave's own
+failure class committed inside its own fix.
+
+So the attribute is now watched by a **MutationObserver from document_start** as well: every value
+`data-group` ever holds, in order, whatever the frame timing does. The frame count is no longer
+quoted anywhere, because it is not a stable quantity.
+
+**And hardening the recorder immediately falsified MUTANT B.** With the stamp deleted, the mutation
+log holds exactly one entry -- the home's later corrective stamp, which is the CORRECT room -- so a
+log-only judgement read it clean and the mutant went GREEN on a broken build. What the deleted
+stamp actually costs is **eight PAINTED frames with no room at all**, and only the frames can see
+that. The two defects live in two different recorders: a WRONG stamp is a value in the log, a
+MISSING stamp is a gap in the paint. Both mutants are now judged on the UNION of the two, which is
+the only formulation under which either can fail.
+
+(The first attempt at the observer also threw: at document_start `document.documentElement` does
+not exist yet, and observing null took the rest of the init script -- including the frame sampler
+-- down with it, so the arm ERRORED rather than failed. It observes `document` with `subtree`
+instead.)
 
 `room_static`'s arm 4 is INVERTED to match: it used to REQUIRE `data-group=` hard-coded on `<html>`
 and was satisfied by a value correct for one room in six. It now fails if the constant comes back,

@@ -1677,6 +1677,24 @@ const GEN_N = 24;
           });
           void held;
         }
+        /* TWO RECORDERS, because one of them cannot be trusted about WHEN it started.
+           The rAF sampler shows what was PAINTED, but its first callback lands at whatever
+           moment the compositor gets to it -- measured across loads it caught 2 frames on one
+           and 58 on another, and on a late start it would sample only AFTER the home had already
+           corrected a wrong stamp, reporting a clean run for a broken build. So the attribute is
+           ALSO watched from document_start: a MutationObserver records every value data-group
+           ever holds, in order, whatever the frame timing does. The mutation log is the arm; the
+           frames are the corroboration. */
+        /* OBSERVE `document`, NOT `document.documentElement`. At document_start the <html>
+           element may not exist yet -- it did not here, and observing null threw, which took the
+           rest of this init script (including the frame sampler) down with it and made the whole
+           arm error rather than fail. `document` is always there, and an attribute change on
+           documentElement is in its subtree. */
+        window.__doorSeen = [document.documentElement
+          ? document.documentElement.getAttribute('data-group') : null];
+        new MutationObserver((recs) => {
+          for (const r of recs) window.__doorSeen.push(r.target.getAttribute(r.attributeName));
+        }).observe(document, { attributes: true, subtree: true, attributeFilter: ['data-group'] });
         window.__doorFrames = [];
         const tick = () => {
           window.__doorFrames.push(document.documentElement.getAttribute('data-group'));
@@ -1688,9 +1706,12 @@ const GEN_N = 24;
       await B.until(p, () => document.documentElement.getAttribute('data-view') === 'home',
         null, B.ACT_MS, 'the home rendered');
       await B.settle(p);
-      const f = await p.evaluate(() => window.__doorFrames.slice());
+      const f = await p.evaluate(() => ({
+        frames: window.__doorFrames.slice(), seen: window.__doorSeen.slice() }));
       await p.close();
-      return f;
+      /* the document_start reading is ALWAYS null -- nothing has run yet -- and asserting on it
+         would fail every build. Every value AFTER it is a value the document really wore. */
+      return { frames: f.frames, seen: f.seen.slice(1), first: f.seen[0] };
     };
     const rle = (f) => {
       const o = [];
@@ -1702,31 +1723,42 @@ const GEN_N = 24;
     };
 
     if (pick) {
-      /* 1. SEEDED -- three cold loads, zero frames in any room but the door's */
-      let offRoom = 0, sampled = 0, tape = [];
+      /* 1. SEEDED -- three cold loads, no value the attribute ever held is another room */
+      let offSeen = 0, seenN = 0, offFrame = 0, frameN = 0, tape = [];
       for (let i = 0; i < 3; i++) {
         const f = await frames(pick.id, null);
-        sampled += f.length;
-        offRoom += f.filter((v) => v !== pick.group).length;
-        tape.push(rle(f));
+        seenN += f.seen.length;
+        offSeen += f.seen.filter((v) => v !== pick.group).length;
+        frameN += f.frames.length;
+        offFrame += f.frames.filter((v) => v !== pick.group).length;
+        tape.push(f.seen.length + ' stamp(s) [' + f.seen.join(',') + '] / '
+          + f.frames.length + ' frames ' + rle(f.frames));
       }
-      out.push(['[boot] on a seeded record the door is lit in the resume target\'s room from the '
-        + 'FIRST animation frame -- three cold loads, no frame in another room and none roomless',
-        offRoom === 0 && sampled > 0,
-        offRoom + ' of ' + sampled + ' frames were not ' + pick.group + ' (cold door is '
-        + pick.cold + '): ' + tape.join(' | ')]);
+      out.push(['[boot] on a seeded record EVERY value <html data-group> ever holds is the resume '
+        + 'target\'s room -- three cold loads, watched from document_start, so no correcting '
+        + 're-stamp can hide behind a late sampler',
+        seenN > 0 && offSeen === 0 && offFrame === 0,
+        offSeen + ' of ' + seenN + ' stamps and ' + offFrame + ' of ' + frameN + ' painted frames '
+        + 'were not ' + pick.group + ' (cold door is ' + pick.cold + '): ' + tape.join(' | ')]);
 
-      /* MUTANT A -- the boot constant, restored through the real derivation */
+      /* BOTH MUTANTS ARE JUDGED ON THE UNION OF THE TWO RECORDERS, and that is not belt-and-
+         braces -- the two defects are visible in DIFFERENT recorders and judging either one
+         alone lets the other through. A WRONG stamp is a value in the mutation log. A DELETED
+         stamp writes nothing at all, so the log holds only the home's later corrective stamp and
+         reads clean; what it costs is eight PAINTED frames with no room, and only the frames can
+         see that. Mutant B was written against the log first and passed the broken build. */
+      const everWore = (f) => f.seen.concat(f.frames);
       const mA = await frames(pick.id, 'const');
       out.push(['[boot][mutant] THE BOOT CONSTANT PUT BACK: the door lit in architecture-apis '
-        + 'while the resume act is in ' + pick.group + ' is caught at the frame level',
-        mA.some((v) => v !== pick.group), rle(mA)]);
+        + 'while the resume act is in ' + pick.group + ' is caught',
+        everWore(mA).some((v) => v !== pick.group),
+        'stamps [' + mA.seen.join(',') + '] / frames ' + rle(mA.frames)]);
 
-      /* MUTANT B -- the stamp deleted outright */
       const mB = await frames(pick.id, 'none');
       out.push(['[boot][mutant] THE STAMP DELETED: a seeded record booting with no room on <html> '
         + 'is caught -- with index.html\'s constant gone, an unstamped boot is roomless, not safe',
-        mB.some((v) => v !== pick.group), rle(mB)]);
+        everWore(mB).some((v) => v !== pick.group),
+        'stamps [' + mB.seen.join(',') + '] / frames ' + rle(mB.frames)]);
     }
 
     /* 2. COLD -- the cold DOOR's room, which is not the boot topic's */
@@ -1749,13 +1781,15 @@ const GEN_N = 24;
         + 'home lights the boot topic\'s room" are the same string and the arm proves nothing.';
     } else {
       const cold = await frames(null, null);
-      const off = cold.filter((v) => v !== coldWant.door).length;
+      const off = cold.seen.filter((v) => v !== coldWant.door).length;
+      const offF = cold.frames.filter((v) => v !== coldWant.door).length;
       out.push(['[boot] a first-time visitor\'s home is lit in the COLD DOOR\'s room ('
-        + coldWant.door + ', the registry\'s first topic -- what the START card points at) from '
-        + 'the first frame, NOT in the boot topic\'s room (' + coldWant.boot + '), which is what '
-        + 'the deleted constant said',
-        cold.length > 0 && off === 0,
-        off + ' of ' + cold.length + ' frames were not ' + coldWant.door + ': ' + rle(cold)]);
+        + coldWant.door + ', the registry\'s first topic -- what the START card points at) and '
+        + 'NEVER in the boot topic\'s room (' + coldWant.boot + '), which is what the deleted '
+        + 'constant said',
+        cold.seen.length > 0 && off === 0 && offF === 0,
+        off + ' of ' + cold.seen.length + ' stamps [' + cold.seen.join(',') + '] and ' + offF
+        + ' of ' + cold.frames.length + ' frames were not ' + coldWant.door + ': ' + rle(cold.frames)]);
     }
 
     await ctx.close();

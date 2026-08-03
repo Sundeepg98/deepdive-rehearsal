@@ -2406,6 +2406,14 @@ visual_regression   PASS  (18 baselines, win32-chromium149; ... matched its comm
   ledger note demonstrated rather than argued: a `workflow_dispatch` run records the workflow's own
   ref, and the branch it tested is an INPUT. Cited here as "6/6 shards green on the ref supplied at
   dispatch time"; the push run above is the one that names a tree.
+* **AND THE CLOSING CROSS-CHECK, ON THE DOCS TAIL: run `30841998228`, `head_sha`
+  `93485f7f1659c5f617435aa224dee71079ab4d82`** -- `gate (ubuntu-latest)` and `gate
+  (windows-latest)` both `success`. This is the citation R13 asks for: the push gate covers every
+  tail commit automatically and records its own sha, so the docs tail is green on two platforms
+  without a local retake. **The regress is structural and is left standing rather than chased:**
+  the commit that WRITES this citation is itself a new tip, which gets its own free push gate, and
+  the last such run can never be cited by the document that triggers it. That is precisely why a
+  receipt names a TREE.
 
 ---
 

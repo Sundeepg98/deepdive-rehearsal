@@ -1,0 +1,55 @@
+P8  veil .9101 past the fade wait, light@390               exit 1  as expected
+     ground      trough/canvas gap 0.09797 -> the ground invariant alone catches a veil down to alpha 0.980; the shot-time opacity read catches every alpha, in both schemes
+     tightest adjacent pair 0.3/0.55 = 1.249:1, floor 1.15, monotone
+     - [light/gauge@390] THE SHOT WAS TAKEN THROUGH A VEIL, measured before the bitmap: body at opacity 0.9101. An element at opacity < 1 composites its whole subtree over the canvas and every pixel this cell samples is inside that sub
+     - [light/gauge@390] THE SHOT IS VEILED, so nothing below is a measurement of this design: the trough band reads Y 0.85683 (min 0.85683, max 0.85683) where the track itself declares rgb(241, 237, 228) = Y 0.84871, a gap of 0.00813 
+     - [light/gauge@390] THE SHOT IS VEILED, so nothing below is a measurement of this design: the trough band reads Y 0.85683 (min 0.85683, max 0.85683) where the track itself declares rgb(241, 237, 228) = Y 0.84871, a gap of 0.00813 
+     - [light/gauge@390] THE SHOT IS VEILED, so nothing below is a measurement of this design: the trough band reads Y 0.85683 (min 0.85683, max 0.85683) where the track itself declares rgb(241, 237, 228) = Y 0.84871, a gap of 0.00813 
+     - [light/gauge@390] THE SHOT IS VEILED, so nothing below is a measurement of this design: the trough band reads Y 0.85683 (min 0.85683, max 0.85683) where the track itself declares rgb(241, 237, 228) = Y 0.84871, a gap of 0.00813 
+     - [light/gauge@390] THE SHOT IS VEILED, so nothing below is a measurement of this design: the trough band reads Y 0.85683 (min 0.85683, max 0.85683) where the track itself declares rgb(241, 237, 228) = Y 0.84871, a gap of 0.00813 
+     - [light/gauge@390] THE SHOT IS VEILED, so nothing below is a measurement of this design: the trough band reads Y 0.85683 (min 0.85683, max 0.85683) where the track itself declares rgb(241, 237, 228) = Y 0.84871, a gap of 0.00813 
+P8  veil .9101 past the fade wait, DARK@390                exit 1  as expected
+     ground      trough/canvas gap 0.00382 -> the ground invariant alone catches a veil down to alpha 0.476; the shot-time opacity read catches every alpha, in both schemes
+     tightest adjacent pair 0.78/1 = 1.256:1, floor 1.15, monotone
+     - [dark/gauge@390] THE SHOT WAS TAKEN THROUGH A VEIL, measured before the bitmap: body at opacity 0.9101. An element at opacity < 1 composites its whole subtree over the canvas and every pixel this cell samples is inside that subt
+     - [dark/gauge@390] the hm-k.full swatch does not sit on the ground styles.css names: the pixels under it read Y 0.01811 while .hm-panel declares rgb(41, 38, 50) = Y 0.02088. The --gauge-rule block solves this pair by arithmetic, a
+     - [dark/gauge@390] the hm-k.part swatch does not sit on the ground styles.css names: the pixels under it read Y 0.01811 while .hm-panel declares rgb(41, 38, 50) = Y 0.02088. The --gauge-rule block solves this pair by arithmetic, a
+     - [dark/gauge@390] the hm-k.flag swatch does not sit on the ground styles.css names: the pixels under it read Y 0.01811 while .hm-panel declares rgb(41, 38, 50) = Y 0.02088. The --gauge-rule block solves this pair by arithmetic, a
+     - [dark/gauge@390] the hm-k.none swatch does not sit on the ground styles.css names: the pixels under it read Y 0.01811 while .hm-panel declares rgb(41, 38, 50) = Y 0.02088. The --gauge-rule block solves this pair by arithmetic, a
+P9  the same veil, shot-time read DELETED, light@390       exit 1  as expected
+     ground      trough/canvas gap 0.09797 -> the ground invariant alone catches a veil down to alpha 0.980; the shot-time opacity read catches every alpha, in both schemes
+     tightest adjacent pair 0.78/1 = 1.179:1, floor 1.15, monotone
+     - [light/gauge@390] THE SHOT IS VEILED, so nothing below is a measurement of this design: the trough band reads Y 0.85683 (min 0.85683, max 0.85683) where the track itself declares rgb(241, 237, 228) = Y 0.84871, a gap of 0.00813 
+     - [light/gauge@390] THE SHOT IS VEILED, so nothing below is a measurement of this design: the trough band reads Y 0.85683 (min 0.85683, max 0.85683) where the track itself declares rgb(241, 237, 228) = Y 0.84871, a gap of 0.00813 
+     - [light/gauge@390] THE SHOT IS VEILED, so nothing below is a measurement of this design: the trough band reads Y 0.85683 (min 0.85683, max 0.85683) where the track itself declares rgb(241, 237, 228) = Y 0.84871, a gap of 0.00813 
+     - [light/gauge@390] THE SHOT IS VEILED, so nothing below is a measurement of this design: the trough band reads Y 0.85683 (min 0.85683, max 0.85683) where the track itself declares rgb(241, 237, 228) = Y 0.84871, a gap of 0.00813 
+     - [light/gauge@390] THE SHOT IS VEILED, so nothing below is a measurement of this design: the trough band reads Y 0.85683 (min 0.85683, max 0.85683) where the track itself declares rgb(241, 237, 228) = Y 0.84871, a gap of 0.00813 
+     - [light/gauge@390] THE SHOT IS VEILED, so nothing below is a measurement of this design: the trough band reads Y 0.85683 (min 0.85683, max 0.85683) where the track itself declares rgb(241, 237, 228) = Y 0.84871, a gap of 0.00813 
+P9  the same veil, shot-time read DELETED, DARK@390        exit 1  as expected
+     ground      trough/canvas gap 0.00382 -> the ground invariant alone catches a veil down to alpha 0.476; the shot-time opacity read catches every alpha, in both schemes
+     tightest adjacent pair 0.78/1 = 1.256:1, floor 1.15, monotone
+     - [dark/gauge@390] the hm-k.full swatch does not sit on the ground styles.css names: the pixels under it read Y 0.01811 while .hm-panel declares rgb(41, 38, 50) = Y 0.02088. The --gauge-rule block solves this pair by arithmetic, a
+     - [dark/gauge@390] the hm-k.part swatch does not sit on the ground styles.css names: the pixels under it read Y 0.01811 while .hm-panel declares rgb(41, 38, 50) = Y 0.02088. The --gauge-rule block solves this pair by arithmetic, a
+     - [dark/gauge@390] the hm-k.flag swatch does not sit on the ground styles.css names: the pixels under it read Y 0.01811 while .hm-panel declares rgb(41, 38, 50) = Y 0.02088. The --gauge-rule block solves this pair by arithmetic, a
+     - [dark/gauge@390] the hm-k.none swatch does not sit on the ground styles.css names: the pixels under it read Y 0.01811 while .hm-panel declares rgb(41, 38, 50) = Y 0.02088. The --gauge-rule block solves this pair by arithmetic, a
+P9b BOTH cycle-5 guards deleted = cycle-4 s coverage, DARK@390 exit 0  as expected
+     ground      trough/canvas gap 0.00382 -> the ground invariant alone catches a veil down to alpha 0.476; the shot-time opacity read catches every alpha, in both schemes
+     tightest adjacent pair 0.78/1 = 1.256:1, floor 1.15, monotone
+     SCOREBOARD SALIENCE: PASS  (48 room x theme x score; Solid is the loudest tile whenever it is non-empty, in every room, both themes, and never fills at zero -- plus the altitude gauge at 390px in both schemes: the worst grade is n
+P10 compositing ground forced to the trough s own colour, light@390 exit 1  as expected
+     ground      trough/canvas gap 0.00000 -> the ground invariant alone catches a veil down to alpha NONE; the shot-time opacity read catches every alpha, in both schemes
+     tightest adjacent pair 0.55/0.78 = 1.276:1, floor 1.15, monotone
+     - [light/gauge@390] THE GROUND INVARIANT IS INERT HERE: the trough (Y 0.84871) and the canvas it would be composited over (Y 0.84871) differ by 0.00000, so NO alpha can move the trough past the 0.002 epsilon and this guard cannot 
+     - [light/gauge@390] THE GROUND INVARIANT IS INERT HERE: the trough (Y 0.84871) and the canvas it would be composited over (Y 0.84871) differ by 0.00000, so NO alpha can move the trough past the 0.002 epsilon and this guard cannot 
+     - [light/gauge@390] THE GROUND INVARIANT IS INERT HERE: the trough (Y 0.84871) and the canvas it would be composited over (Y 0.84871) differ by 0.00000, so NO alpha can move the trough past the 0.002 epsilon and this guard cannot 
+     - [light/gauge@390] THE GROUND INVARIANT IS INERT HERE: the trough (Y 0.84871) and the canvas it would be composited over (Y 0.84871) differ by 0.00000, so NO alpha can move the trough past the 0.002 epsilon and this guard cannot 
+     - [light/gauge@390] THE GROUND INVARIANT IS INERT HERE: the trough (Y 0.84871) and the canvas it would be composited over (Y 0.84871) differ by 0.00000, so NO alpha can move the trough past the 0.002 epsilon and this guard cannot 
+     - [light/gauge@390] THE GROUND INVARIANT IS INERT HERE: the trough (Y 0.84871) and the canvas it would be composited over (Y 0.84871) differ by 0.00000, so NO alpha can move the trough past the 0.002 epsilon and this guard cannot 
+
+RESTORED (identical to snapshot: True): exit 0  SCOREBOARD SALIENCE: PASS  (48 room x theme x score; Solid is the loudest tile whenever it is non-empty, in ev
+P8  veil .9101 past the fade wait, light@390               exit 1  as expected
+P8  veil .9101 past the fade wait, DARK@390                exit 1  as expected
+P9  the same veil, shot-time read DELETED, light@390       exit 1  as expected
+P9  the same veil, shot-time read DELETED, DARK@390        exit 1  as expected
+P9b BOTH cycle-5 guards deleted = cycle-4 s coverage, DARK@390 exit 0  as expected
+P10 compositing ground forced to the trough s own colour, light@390 exit 1  as expected

@@ -187,8 +187,13 @@ const GAUGE_WIDTHS = [
 const NB_MIN_DEV = 3;
 /* R6: adjacent grade steps must be tellable apart from the FILL STRIP ALONE. Measured on the
    shipped build at 390, over 93 open capsules per scheme, the ramp's tightest adjacent pair is
-   1.272:1 (dark, --lv .78 -> 1.00) and 1.277:1 (light, .55 -> .78); a flattened pair measures
+   1.272:1 (dark, --lv .78 -> 1.00) and 1.276:1 (light, .55 -> .78); a flattened pair measures
    ~1.00:1.
+   EXACT VALUES COMPARED, ROUNDED VALUES DISPLAYED, and cycle 5 had to correct this file to its
+   own rule: the light figure was printed here and twice below as 1.277, which is what you get by
+   recomputing the ratio from the DISPLAYED row (0.0772 / 0.0496). The arm divides the full
+   precision it holds (0.07715 / 0.04963) and prints 1.276, in every run and in the cycle-4 press
+   receipts. The number quoted in a comment is now the number the instrument prints.
 
    THE HEADROOM SENTENCE THAT USED TO SIT HERE WAS RETRACTED IN CYCLE 4 AND IS RE-EARNED BELOW.
    It read "the floor leaves 10.6% of headroom on the worst of them", and the number was true of
@@ -199,7 +204,8 @@ const NB_MIN_DEV = 3;
    THE CONTRIBUTOR WAS FOUND AND IT IS A VEIL, not a design property: `body{animation:bodyIn}`
    was still running when the shot was taken in FOUR of eight COLD profiles, and holding it at a
    known alpha reproduces the symptom by construction (0.1765/0.1136/0.0772/0.0496/0.0275 becomes
-   0.2168/0.1504/0.1104/0.0770/0.0502, tightest pair 1.277 -> 1.249). So the honest statement is
+   0.2168/0.1504/0.1104/0.0770/0.0502, tightest pair 1.276 -> 1.249, both as the arm prints them).
+   So the honest statement is
    CONDITIONAL and the condition is now enforced three ways -- the entrance fade must be idle
    before any shot, the trough must equal its own declared colour in the SAME shot, and the cold
    first reading must reproduce a warm one taken later in the same run. GIVEN THOSE, the worst
@@ -312,6 +318,33 @@ const Y_OF_CSS = (s) => {
    arithmetic's own rounding. The smallest veil ever caught here moved it 0.0081 (body at opacity
    0.9117), so 0.002 sits 30x above the agreement and 4x below the smallest defect. */
 const GROUND_EPS = 0.002;
+/* ---- THE GROUND INVARIANT KNOWS WHAT IT CANNOT SEE (cycle 5, judge item 1) -----------------
+   R12 closed the veil class IN LIGHT ONLY, and the freeze said "in both schemes". The judges
+   proved otherwise on the clean tree: three consecutive runs, and run 3's 390/dark fill strip
+   came back 0.1759/0.2964/0.4202/0.5688/0.7360 against runs 1-2's 0.1941/0.3270/0.4633/0.6260/
+   0.8097 -- a least-squares fit of b = 0.9101*a with max residual 0.0004, which is a pure
+   compositing veil at alpha ~0.91 over a near-black ground. Exit 0. Every removal-diff reading in
+   the same cell was byte-identical, and condition 3 printed "cold vs warm re-read: identical"
+   because the veil sat across BOTH reads. The one ABSOLUTE reading moved and nothing caught it.
+
+   THE MECHANISM IS ARITHMETIC AND IT IS THE INVARIANT'S OWN. A veil at alpha composites the
+   trough over whatever is behind the faded subtree, so it moves the trough by
+       (1 - alpha) * |Y(compositing ground) - Y(trough)|
+   In LIGHT the trough is rgb(241,237,228) (Y 0.8487) over a canvas at Y ~0.75: a gap of ~0.098,
+   so a 9% veil moves it 0.0081 -- four times the epsilon, caught (press P3). In DARK the trough
+   is rgb(23,22,29) (Y 0.00845) and the canvas is rgb(15,14,19) (Y 0.00463): a gap of 0.0038, so
+   the same veil moves it 0.00034 and NO alpha above 0.474 can ever reach the epsilon. The
+   invariant was not lenient in dark; it was INERT, and inert reads exactly like clean.
+
+   SO TWO THINGS CHANGED AND ONLY ONE OF THEM IS THIS CONSTANT.
+     THE VEIL IS MEASURED AT THE SHOT (see shoot()), which is scheme-independent, has no epsilon
+     and no arithmetic: the opacity of every element from .hm-alt to the root, read in the same
+     evaluate that takes the shot. That is what carries the class now.
+     THE GROUND INVARIANT STAYS as the same-shot backstop for compositing that is NOT an ancestor
+     opacity -- an overlay, a filter, a box that slipped -- AND IT DECLARES ITS OWN SENSITIVITY.
+     Each cell computes the gap above and the strongest veil it could still catch; if no alpha
+     could move the trough past GROUND_EPS the cell FAILS saying so, rather than passing while
+     asserting nothing. A guard that cannot fail must say that out loud. */
 /* among the mark's OWN pixels (the ones the removal diff isolated), the one furthest from the
    reference -- the mark's colour rather than its antialiased skirt */
 const FAR = (b, ref) => (Math.abs(b.max - ref) >= Math.abs(ref - b.min) ? b.max : b.min);
@@ -480,8 +513,10 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
        AND WHAT IT COSTS WHEN IT LANDS, constructed at a known alpha rather than inferred --
        `body{animation:none;opacity:.9117}`, 390/light, every other condition identical:
          --lv      0        0.3      0.55     0.78     1        tightest adjacent
-         unveiled  0.1765   0.1136   0.0772   0.0496   0.0275   1.277:1
+         unveiled  0.1765   0.1136   0.0772   0.0496   0.0275   1.276:1
          veiled    0.2168   0.1504   0.1104   0.0770   0.0502   1.249:1
+       (both ratios as the ARM prints them, from full precision. Recomputing the top row from the
+       four displayed decimals gives 1.277, which is where that figure came from.)
        Every fill step lifted toward the light ground and the ramp's own margin fell, on a build
        nobody had touched. The condition is the ANIMATION BEING IDLE and the chain being opaque --
        not a duration, and not "the splash is gone".
@@ -548,7 +583,24 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
         open: s.classList.contains('open'),
         lv: parseFloat(getComputedStyle(s).getPropertyValue('--lv')) || 0,
       }));
-      return { keelH, keelGap, rad, track: rel(track), segs, panel: rel(panel),
+      /* THE COMPOSITING GROUND: what a faded subtree is composited OVER. The canvas takes html's
+         background if it declares one and body's propagated otherwise, and it is NOT itself
+         faded by an ancestor opacity -- which is why a veil moves the trough toward it. Read so
+         the ground invariant can price its own sensitivity in this cell (see GROUND_EPS). */
+      const htmlBg = getComputedStyle(document.documentElement).backgroundColor;
+      const bodyBg = getComputedStyle(document.body).backgroundColor;
+      const opaque = (c) => c && !/rgba\(0, 0, 0, 0\)|transparent/.test(c);
+      /* THE LEGEND'S FOUR SWATCHES (cycle 5, judge item 8). styles.css solves --gauge-rule
+         against TWO grounds and calls dark-on-panel (3.49:1, 16% clear of the floor) the BINDING
+         cell -- and attributed the rasterised assertion to this file, which contained no `.hm-k`
+         selector at all. These are the boxes that make that attribution true. */
+      const keys = [...document.querySelectorAll('.hm-alt .hm-key .hm-k')].map((k) => {
+        const i = k.querySelector('i');
+        return i ? { cls: (k.className || '').replace(/\s+/g, '.'), ...rel(i) } : null;
+      }).filter(Boolean);
+      return { keelH, keelGap, rad, track: rel(track), segs, panel: rel(panel), keys,
+        canvasBg: opaque(htmlBg) ? htmlBg : bodyBg,
+        panelBg: getComputedStyle(panel).backgroundColor,
         trackH: segCs.height, trackBg: tcs.backgroundColor,
         bdT: pxOf(tcs.borderTopWidth), bdL: pxOf(tcs.borderLeftWidth),
         bdR: pxOf(tcs.borderRightWidth), padT: pxOf(tcs.paddingTop),
@@ -604,14 +656,65 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
        GEOMETRY now, and it compares x as well: a horizontal slip of one device column moves the
        fill box onto the capsule's antialiased side, which is the other candidate mechanism for
        the 390/light flake and the one this arm could not have told apart from a grade. */
+    /* ---- IS THIS SHOT VEILED? ASKED OF THE PAGE, AT THE SHOT (cycle 5, judge item 1) ---------
+       R12's fade condition is a `B.until` before the cell begins, and a wait proves a state
+       BEFORE the shot, which is a different claim from the state AT it. The judges' run 3 walked
+       through it: a veil at alpha 0.9101 sitting across a whole 390/dark cell, exit 0, because
+       the only thing looking for a veil afterwards was the ground invariant and in dark the
+       ground invariant cannot see one at any alpha (see GROUND_EPS).
+       THIS IS THE DIRECT QUESTION AND IT HAS NO EPSILON: every element from .hm-alt to the
+       document root must compute opacity exactly '1', and no animation may be `running` on that
+       chain. It is read in the SAME evaluate that reads the track's box immediately before
+       page.screenshot(), and again immediately after -- because the rasteriser is not atomic and
+       "opaque before" and "opaque after" are two claims, not one.
+       IT IS ALSO SCHEME-INDEPENDENT, which is the whole point: an opacity is a number the page
+       reports, not a difference between two luminances that a near-black ground can swallow. */
+    const SHOT_STATE = () => {
+      const t = document.querySelector('.hm-alt .hm-gr-t');
+      const el = document.querySelector('.hm-alt');
+      const b = t ? t.getBoundingClientRect() : { x: 0, y: 0 };
+      const chain = [];
+      for (let n = el; n; n = n.parentElement) chain.push(n);
+      const name = (n) => {
+        if (!n || !n.tagName) return '?';
+        const cls = (typeof n.className === 'string' && n.className.trim())
+          ? '.' + n.className.trim().split(/\s+/)[0] : '';
+        return n.tagName.toLowerCase() + (n.id ? '#' + n.id : '') + cls;
+      };
+      const opa = chain.map((n) => ({ el: name(n), o: getComputedStyle(n).opacity }))
+        .filter((r) => r.o !== '1');
+      const anim = (document.getAnimations ? document.getAnimations() : [])
+        .filter((a) => a.playState === 'running' && a.effect && a.effect.target
+          && chain.indexOf(a.effect.target) >= 0)
+        .map((a) => (a.animationName || a.transitionProperty || 'animation')
+          + ' on ' + name(a.effect.target));
+      return { x: b.x, y: b.y, found: !!t && !!el, opa, anim };
+    };
     let shotAt = { x: geo.track.x, y: geo.track.y };
+    let veiled = 0;
+    const veilCheck = (s, when) => {
+      if (!s.found) {
+        fails.push('[' + theme + '/gauge@' + G.w + '] the gauge was not in the document ' + when
+          + ' the shot, so nothing this cell reports is a reading of it.');
+        return;
+      }
+      if (!s.opa.length && !s.anim.length) return;
+      veiled++;
+      if (veiled > 1) return;   /* one report per cell: the same veil would name itself 80 times */
+      fails.push('[' + theme + '/gauge@' + G.w + '] THE SHOT WAS TAKEN THROUGH A VEIL, measured '
+        + when + ' the bitmap: '
+        + (s.opa.length ? s.opa.map((r) => r.el + ' at opacity ' + r.o).join(', ') : 'nothing')
+        + (s.anim.length ? '; still running: ' + s.anim.join(', ') : '')
+        + '. An element at opacity < 1 composites its whole subtree over the canvas and every '
+        + 'pixel this cell samples is inside that subtree, so every number below is a reading '
+        + 'through something. The pre-cell wait proves the fade was over BEFORE the cell; this '
+        + 'is the state AT the shot, and it is the claim that was missing.');
+    };
     const shoot = async () => {
       await page.evaluate(() => window.scrollTo(0, 0));
       await B.settle(page);
-      const r = await page.evaluate(() => {
-        const b = document.querySelector('.hm-alt .hm-gr-t').getBoundingClientRect();
-        return { x: b.x, y: b.y };
-      });
+      const r = await page.evaluate(SHOT_STATE);
+      veilCheck(r, 'before');
       if (Math.abs(r.y - shotAt.y) > 0.01 || Math.abs(r.x - shotAt.x) > 0.01) {
         fails.push('[' + theme + '/gauge@' + G.w + '] THE PANEL MOVED: the track was at ('
           + shotAt.x.toFixed(3) + ', ' + shotAt.y.toFixed(3) + ') when the geometry was measured '
@@ -621,7 +724,9 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
           + 'on the capsule\'s antialiased edge, which reads as a grade.');
         shotAt = r;
       }
-      return (await page.screenshot()).toString('base64');
+      const png = (await page.screenshot()).toString('base64');
+      veilCheck(await page.evaluate(SHOT_STATE), 'after');
+      return png;
     };
 
     /* one reading of the whole panel: the page, then the page with each mark's own declaration
@@ -707,6 +812,31 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
          4,740 px); with `body{opacity:.9117}` -- the state four of eight cold profiles were
          caught in -- it reads 0.85683, four times the epsilon. The arm now FAILS NAMING THE
          VEIL rather than reporting a grade taken through it. */
+      /* ---- ...AND WHETHER IT COULD SEE ONE AT ALL, IN THIS CELL (cycle 5, judge item 1) -----
+         The invariant's whole sensitivity to a veil is (1 - alpha) * |Y(canvas) - Y(trough)|, so
+         a cell whose trough and canvas are near-neighbours cannot be moved past the epsilon by
+         ANY alpha, and its green says nothing. Measured on this tree: light gap 0.098 (the
+         strongest catchable veil is alpha 0.980), dark gap 0.0038 (alpha 0.474). The dark cell
+         therefore carries a live guard with a real bound rather than a promise -- and the bound
+         is PRINTED, per cell, in the table below, because a guard's reach is part of its result.
+         If the gap ever falls to the epsilon the arm FAILS: at that point it is decoration, and
+         judge item 1 is the receipt for what decoration costs. */
+      const cDecl = Y_OF_CSS(geo.canvasBg);
+      const tD0 = Y_OF_CSS(geo.trackBg);
+      const gap = (cDecl === null || tD0 === null) ? null : Math.abs(cDecl - tD0);
+      const alphaMin = (gap === null || gap <= 0) ? null : 1 - GROUND_EPS / gap;
+      if (gap === null) {
+        fails.push('[' + theme + '/gauge@' + G.w + '] the compositing ground could not be read ('
+          + geo.canvasBg + ' / ' + geo.trackBg + '), so the ground invariant cannot say whether '
+          + 'it is able to see a veil in this cell, and an unpriced guard is an unpressed one.');
+      } else if (alphaMin === null || alphaMin <= 0) {
+        fails.push('[' + theme + '/gauge@' + G.w + '] THE GROUND INVARIANT IS INERT HERE: the '
+          + 'trough (Y ' + tD0.toFixed(5) + ') and the canvas it would be composited over (Y '
+          + cDecl.toFixed(5) + ') differ by ' + gap.toFixed(5) + ', so NO alpha can move the '
+          + 'trough past the ' + GROUND_EPS + ' epsilon and this guard cannot fail. It is not '
+          + 'reporting a clean shot, it is reporting nothing -- which is exactly how a veil at '
+          + 'alpha 0.91 crossed a whole dark cell at exit 0.');
+      }
       const tDecl = Y_OF_CSS(geo.trackBg);
       if (tDecl === null) {
         fails.push('[' + theme + '/gauge@' + G.w + '] the track declares no readable background '
@@ -791,6 +921,7 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
       fY.forEach((b, i) => { if (b) fill.push({ lv: fillLv[i], y: b.mean }); });
 
       const o = { missed: [], shaky: [], rule: [], dead: 0, narrow, fill,
+        groundGap: gap, veilAlpha: alphaMin,
         nbrN: Object.keys(nbrFor).length };
       kY.forEach((m, i) => {
         if (!m) { o.dead++; return; }
@@ -809,6 +940,49 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
       return o;
     };
     const by = await readMarks(null);
+
+    /* ---- THE LEGEND'S FOUR SWATCHES, AGAINST THE PANEL THEY ACTUALLY SIT ON ------------------
+       (cycle 5, judge item 8.) styles.css's --gauge-rule block solves the token against TWO
+       grounds and names the KEY's dark cell -- 3.49:1, 16% clear of the 3:1 floor -- as THE
+       BINDING ONE, then wrote that "the rasterised minimum, which is what
+       test/scoreboard_salience.cjs actually asserts, is read off the pixels". This file contained
+       zero occurrences of `.hm-k`. Its denominator arm reads .hm-seg's inset rule against --side,
+       which is the 4.10 / 4.23 pair -- the LOOSER one. The tightest cell in the block had 16% of
+       headroom and no instrument, in a file whose own scar note records a pair solved to
+       3.41/3.40 nominal that RASTERISED at 3.16/3.28.
+       SAME METHOD AS EVERY OTHER MARK HERE: removal diff for the mark, extremum for its colour.
+       Shot A is the legend; shot B is the legend with every swatch's own paint suppressed, so the
+       differing pixels ARE the swatch and the box only has to contain it. The GROUND is then read
+       off shot B AT THE SAME BOX -- the pixels the mark was covering, measured rather than named
+       -- and cross-checked against .hm-panel's own computed background, which is the control that
+       would have caught the block calling that ground --card when it is --home-surface. */
+    const KEY_OFF = '.hm-alt .hm-k i{background:none!important;box-shadow:none!important}'
+      + '.hm-alt .hm-k i::after{background:none!important}';
+    const readKeys = async (plantCss) => {
+      if (!geo.keys.length) return null;
+      await style('_gmut', plantCss || '');
+      const shotA = await shoot();
+      await style('_grm', KEY_OFF);
+      const shotB = await shoot();
+      await style('_grm', '');
+      const boxes = geo.keys.map((k) => ({ x: S(k.x - 1), y: S(k.y - 1), w: S(k.w + 2), h: S(k.h + 2) }));
+      const marks = await scratch.evaluate(MARK_Y, { shotA, shotB, boxes });
+      const grounds = await scratch.evaluate(BOX_Y, { shot: shotB, boxes });
+      const out = [];
+      for (let i = 0; i < geo.keys.length; i++) {
+        const m = marks[i], g = grounds[i];
+        out.push({
+          cls: geo.keys[i].cls,
+          cr: (m && g) ? CR(FAR(m, g.mean), g.mean) : null,
+          px: m ? m.n : 0,
+          groundY: g ? g.mean : null,
+          groundSpread: g ? g.max - g.min : null,
+        });
+      }
+      await style('_gmut', '');
+      return out;
+    };
+    const keys0 = await readKeys(null);
 
     /* DEPTH: the panel surface against the home's own ground, both read off pixels */
     const dshot = await shoot();
@@ -907,7 +1081,8 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
     const gr = grade(by.fill);
     const M = stat(by.missed), K = stat(by.shaky), R = stat(by.rule);
     const depth = d0.depth;
-    gaugeRows.push({ theme, w: G.w, M, K, R, depth, gr });
+    gaugeRows.push({ theme, w: G.w, M, K, R, depth, gr,
+      groundGap: by.groundGap, veilAlpha: by.veilAlpha });
 
     const where = '[' + theme + '/gauge@' + G.w + '] ';
     if (!M || !K) {
@@ -1013,6 +1188,54 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
         + 'its trough, under the ' + NONTEXT_FLOOR + ':1 floor -- the panel declares an honest '
         + 'denominator and the pixels do not carry one');
     }
+    /* 3b. THE LEGEND'S SWATCHES, ON THEIR OWN GROUND -- the binding cell of the --gauge-rule
+       solve, and until cycle 5 the one cell in that block with no instrument at all. */
+    const BINDING_KEY = 'hm-k.none';
+    /* the arm's verdict as ONE predicate, so MUTANT F presses the thing that actually gates the
+       cell rather than a re-statement of it. A swatch with NO differing pixels is a failure here
+       and not an abstention: a legend mark that is not on the screen is a key for something else. */
+    const keyPasses = (list) => !!list && list.length > 0
+      && list.every((k) => k.px > 0 && k.cr !== null && k.cr >= NONTEXT_FLOOR);
+    if (!keys0 || !keys0.length) {
+      fails.push(where + 'the legend was not rendered, so the four key swatches -- the BINDING '
+        + 'cell of the --gauge-rule solve at 3.49:1 -- were measured on nothing.');
+    } else {
+      const panelDecl = Y_OF_CSS(geo.panelBg);
+      for (const k of keys0) {
+        if (k.cr === null || !k.px) {
+          fails.push(where + 'the ' + k.cls + ' swatch changed ' + k.px + ' pixels when its own '
+            + 'paint was suppressed -- a legend mark that is not on the screen is a key for '
+            + 'something else, and the contrast beside it would be a reading of the panel.');
+          continue;
+        }
+        if (k.groundSpread > GROUND_EPS) {
+          fails.push(where + 'the ground under the ' + k.cls + ' swatch is not one flat colour '
+            + '(spread ' + k.groundSpread.toFixed(5) + ' over the removal shot), so the '
+            + 'denominator of its ratio is an average of two surfaces rather than the panel.');
+        }
+        if (panelDecl !== null && Math.abs(k.groundY - panelDecl) > GROUND_EPS) {
+          fails.push(where + 'the ' + k.cls + ' swatch does not sit on the ground styles.css '
+            + 'names: the pixels under it read Y ' + k.groundY.toFixed(5) + ' while .hm-panel '
+            + 'declares ' + geo.panelBg + ' = Y ' + panelDecl.toFixed(5) + '. The --gauge-rule '
+            + 'block solves this pair by arithmetic, and arithmetic against the wrong ground is '
+            + 'the defect that block already carried once (it said --card; it is --home-surface).');
+        }
+        if (!(k.cr >= NONTEXT_FLOOR)) {
+          fails.push(where + 'the legend swatch ' + k.cls + ' measures ' + k.cr.toFixed(3)
+            + ':1 against the panel it sits on, under the ' + NONTEXT_FLOOR + ':1 non-text floor. '
+            + 'styles.css solves --gauge-rule against this ground and calls the dark cell binding '
+            + 'at 3.49:1 nominal -- and this file has a scar for exactly this gap: a pair solved '
+            + 'to 3.41/3.40 by arithmetic rasterised at 3.16/3.28.');
+        }
+      }
+      const bind = keys0.find((k) => k.cls.indexOf(BINDING_KEY) === 0);
+      if (!bind) {
+        fails.push(where + 'the ' + BINDING_KEY + ' swatch -- the BINDING cell of the '
+          + '--gauge-rule solve -- was not among the ' + keys0.length + ' the legend rendered ('
+          + keys0.map((k) => k.cls).join(', ') + '), so the tightest pair in that block is '
+          + 'unmeasured and the looser one is standing in for it.');
+      }
+    }
     /* 4. DEPTH -- and it has a planted mutant now (MUTANT E, below): until cycle 4 this was the
        one gauge arm with nothing driving it, asserting "the panels stand off their ground" on a
        4x4 CSS-px pair with 6.3% (light) and 3.8% (dark) of headroom and no negative control. */
@@ -1116,6 +1339,50 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
         + 'PASS line\'s last clause is decoration.');
     }
 
+    /* ---- MUTANT F: --gauge-rule LOWERED TO THE SWATCHES' OWN GROUND (judge item 8) ----------
+       The plant is derived, not named: the token is repainted at the PANEL's own measured
+       background, which is "the legend's marks are the panel" -- the same shape as MUTANT E and
+       for the same reason (a token-valued plant lands in one scheme and not the other). It is
+       scoped to `.hm-k i` so the capsule rule the denominator arm reads is untouched: this must
+       press the KEY arm specifically, and a plant that reddens two arms proves neither. */
+    let keyF = null;
+    if (keys0 && keys0.length) {
+      const PLANT_F = '.hm-alt .hm-k i{--gauge-rule:' + geo.panelBg + '!important}';
+      /* THE PLANT'S LIVENESS IS READ OFF THE DOM, NOT INFERRED FROM THE PIXELS, and this arm is
+         exactly why. A swatch painted at its own ground DIFFERS IN NO PIXEL from the removal
+         shot, so "the mark vanished" and "the plant never landed" produce the identical zero and
+         the first draft of this mutant read the first as the second. The computed box-shadow on
+         the binding swatch settles it before any pixel is looked at. */
+      await style('_gmut', PLANT_F);
+      await B.settle(page);
+      const planted = await page.evaluate(() => {
+        const el = document.querySelector('.hm-alt .hm-k.none i');
+        return el ? getComputedStyle(el).boxShadow : null;
+      });
+      await style('_gmut', '');
+      await B.settle(page);
+      const shipped = await page.evaluate(() => {
+        const el = document.querySelector('.hm-alt .hm-k.none i');
+        return el ? getComputedStyle(el).boxShadow : null;
+      });
+      keyF = await readKeys(PLANT_F);
+      const bF = keyF && keyF.find((k) => k.cls.indexOf(BINDING_KEY) === 0);
+      if (!planted || !shipped || planted === shipped) {
+        fails.push(where + 'MUTANT F CANNOT LAND: repainting --gauge-rule at ' + geo.panelBg
+          + ' left the binding swatch\'s computed box-shadow at ' + planted + ', unchanged from '
+          + shipped + ' -- the plant never reached the element, so a red below would mean nothing.');
+      } else if (!bF) {
+        fails.push(where + 'MUTANT F CANNOT LAND: the ' + BINDING_KEY + ' swatch was not read '
+          + 'under the plant, so the key arm is unpressed.');
+      } else if (keyPasses(keyF)) {
+        fails.push(where + 'MUTANT F UNDETECTED: with --gauge-rule painted at the panel\'s own '
+          + 'colour (' + geo.panelBg + ') -- which IS "the legend\'s marks are the panel" -- every '
+          + 'swatch still cleared the floor, the binding one at '
+          + (bF.cr === null ? 'no reading' : bF.cr.toFixed(3)) + ':1. The key arm is not reading '
+          + 'the key.');
+      }
+    }
+
     /* ---- THE COLD-RUN IDENTITY REQUIREMENT (R12) --------------------------------------------
        A CI RUNNER IS ALWAYS COLD, and an arm that is only true warm is not CI-honest. Every
        reading above was taken on the FIRST pass over a page that had just booted; five more
@@ -1144,11 +1411,16 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
         + 'and not in the design -- and a CI runner only ever takes the cold one. A grade '
         + 'reported from a reading that changes when the page warms up is not a measurement.');
     }
+    const bindF = keyF && keyF.find((k) => k.cls.indexOf(BINDING_KEY) === 0);
+    gaugeRows[gaugeRows.length - 1].keys = keys0;
     gaugeRows[gaugeRows.length - 1].mut = { A: mA && kA ? mA.min.toFixed(2) + ' vs ' + kA.max.toFixed(2) : 'n/a',
       B: rB ? rB.min.toFixed(2) : 'n/a',
       C: mC && kC && mC.nbN && kC.nbN ? mC.nbMin.toFixed(2) + ' vs ' + kC.nbMax.toFixed(2) : 'n/a',
       D: gD.worst ? gD.worst.cr.toFixed(3) : 'n/a',
       E: dE.depth.toFixed(3), Ebg: dgeo.groundBg || 'n/a',
+      F: bindF ? (bindF.px ? bindF.cr.toFixed(3) + ':1' : 'VANISHED (0 px differ from its ground)')
+        : 'n/a', Fbg: geo.panelBg,
+      veiled: veiled,
       cold: drift.length ? 'DRIFTED' : 'identical' };
 
     await ctx.close();
@@ -1178,6 +1450,21 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
         + '   ' + (s.lvs.filter((v) => v !== undefined).join(', ') || '-'));
     }
     console.log(W + L(g.theme, 6) + L('panel/ground', 12) + R('', 5) + R(g.depth, 9, 3) + '  (depth)');
+    if (g.keys && g.keys.length) {
+      console.log(W + L(g.theme, 6) + L('key swatch', 12) + R(g.keys.length, 5) + '  '
+        + g.keys.map((k) => k.cls.replace(/^hm-k\.?/, '') + ' ' + (k.cr === null ? '-' : k.cr.toFixed(2)))
+          .join('  ') + '   vs the panel\'s own measured ground');
+    }
+    /* THE GUARD'S REACH, PRINTED. See GROUND_EPS: the ground invariant can only catch a veil that
+       moves the trough past the epsilon, and its lever is the trough/canvas gap -- which is 26x
+       smaller in dark than in light. A guard whose sensitivity is not reported is a guard whose
+       green cannot be read. */
+    if (g.groundGap !== null && g.groundGap !== undefined) {
+      console.log(L('', 7) + L('', 6) + L('  ground', 12) + '  trough/canvas gap '
+        + g.groundGap.toFixed(5) + ' -> the ground invariant alone catches a veil down to alpha '
+        + (g.veilAlpha === null ? 'NONE' : g.veilAlpha.toFixed(3))
+        + '; the shot-time opacity read catches every alpha, in both schemes');
+    }
     if (g.gr && g.gr.steps.length) {
       console.log(W + L(g.theme, 6) + L('fill strip', 12) + R(g.gr.steps.length, 5)
         + '  --lv ' + g.gr.steps.map((s) => s.lv + ':' + s.y.toFixed(4) + ' (n' + s.n + ')').join('  ')
@@ -1195,6 +1482,9 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
       console.log(L('', 7) + L('', 6) + L('', 12) + '  panel painted at its ground\'s own colour ('
         + g.mut.Ebg + ') -> depth ' + g.mut.E + ':1 (under ' + DEPTH_FLOOR + ', caught)'
         + ' | cold vs warm re-read: ' + g.mut.cold);
+      console.log(L('', 7) + L('', 6) + L('', 12) + '  --gauge-rule repainted at the panel ('
+        + g.mut.Fbg + ') -> binding key swatch ' + g.mut.F + ' (caught)'
+        + ' | shots taken through a veil: ' + g.mut.veiled);
     }
   }
 
@@ -1211,11 +1501,19 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
     + ' stable trough AND the band each mark actually abuts -- with each variant swept over all'
     + ' four fill steps; adjacent grades stay discriminable from the FILL STRIP ALONE, which is'
     + ' the claim the 4px channel has to earn twice over on the phone, where it costs half the'
-    + ' capsule; the untouched capsule\'s rule clears the same floor; and the panels stand'
-    + ' off their ground, pressed by painting the panel at that ground\'s own colour.'
-    + ' EVERY GAUGE READING IS GATED ON THE SHOT BEING UNVEILED: the entrance fade must be idle'
-    + ' before any shot is taken, the trough must equal the colour the track itself declares'
-    + ' within ' + GROUND_EPS + ' in the SAME shot, and the COLD first reading -- the only one a'
-    + ' CI runner ever takes -- must reproduce a warm re-read later in the same run)');
+    + ' capsule; the untouched capsule\'s rule clears the same floor; the LEGEND\'S FOUR SWATCHES'
+    + ' clear it too against the panel\'s own measured ground -- the binding cell of the'
+    + ' --gauge-rule solve, pressed by repainting that token at the panel\'s own colour -- and the'
+    + ' panels stand off their ground, pressed by painting the panel at that ground\'s own colour.'
+    + ' EVERY GAUGE READING IS GATED ON THE SHOT BEING UNVEILED, and the load-bearing guard is'
+    + ' MEASURED RATHER THAN INFERRED: every element from the gauge to the document root is read'
+    + ' at computed opacity 1 with nothing animating on that chain, in the same evaluate as the'
+    + ' shot and again after it, which needs no epsilon and works in both schemes. Beside it, as a'
+    + ' backstop for compositing that is not an ancestor opacity, the trough must equal the colour'
+    + ' the track itself declares within ' + GROUND_EPS + ' in the SAME shot -- and that arm now'
+    + ' PRICES ITSELF per cell, failing where the trough/canvas gap is too small for any alpha to'
+    + ' cross the epsilon, because in dark it was inert rather than lenient. And the COLD first'
+    + ' reading -- the only one a CI runner ever takes -- must reproduce a warm re-read later in'
+    + ' the same run)');
   return B.finish(0);
 })();

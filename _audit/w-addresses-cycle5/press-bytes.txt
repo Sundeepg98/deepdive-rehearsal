@@ -1,0 +1,39 @@
+W-ADDRESSES CYCLE 5 -- JUDGE ITEM 3: THE DROP, RE-RUN, WITH THE MUTATION NAMED
+=============================================================================
+Method: _audit/w-addresses-cycle5/press_bytes_c5.py -- the OFF override mutated in
+test/print_truth.cjs itself and the whole check re-run, so the delta is produced by the same
+process, the same seed, the same warm-up render and the same alternating on/off/on/off sequence
+that produces the number the PASS line quotes. Two runs per configuration.
+
+BASELINE  OFF as shipped                                   run 1  exit 0  "exact":301686,"economy":176597,"delta":125089,"noise":0,"ratio":1.708
+BASELINE  OFF as shipped                                   run 2  exit 0  "exact":301686,"economy":176597,"delta":125089,"noise":0,"ratio":1.708
+MINUS6    the six GRADE_SEL selectors dropped from OFF     run 1  exit 0  "exact":301686,"economy":176635,"delta":125051,"noise":0,"ratio":1.708
+MINUS6    the six GRADE_SEL selectors dropped from OFF     run 2  exit 0  "exact":301686,"economy":176635,"delta":125051,"noise":0,"ratio":1.708
+MINUS5    the five the code comment lists dropped from OFF run 1  exit 0  "exact":301686,"economy":176618,"delta":125068,"noise":0,"ratio":1.708
+MINUS5    the five the code comment lists dropped from OFF run 2  exit 0  "exact":301686,"economy":176618,"delta":125068,"noise":0,"ratio":1.708
+
+restored test/print_truth.cjs (identical to snapshot: True)
+
+RESULT
+  the SIX  (.hm-gr-t + .hm-room-n + .hm-room-bar + .hm-room-bar i + .ix-goal-bar
+            + .ix-goal-bar span)  ->  125089 - 125051 =  38 bytes,  0.030% of the delta
+  the FIVE (the same list without .hm-gr-t)             ->  125089 - 125068 =  21 bytes,  0.017%
+
+  Neither is 14. The baseline reproduces EXACTLY at 125,089 with noise 0 in both runs, matching the
+  quoted "exact 301686/301686, economy 176597/176597" -- so this is the same measurement basis the
+  retracted figure was taken on, and the figure simply does not come out of it.
+
+AND A METHOD NOTE THAT COST A RUN, KEPT BECAUSE IT IS THE SAME CLASS AS THE FINDING
+  The first attempt at this was a standalone re-implementation of ARM F's measurement
+  (_audit/w-addresses-cycle5/measure_byte_drop.cjs). It reads a DIFFERENT baseline entirely:
+
+      exact (no override): 311059 / 318027   noise 6968
+      FULL   economy 177097  delta 133962
+      MINUS6 economy 177156  delta 133903   -> "59 bytes"
+      MINUS5 economy 177123  delta 133936   -> "26 bytes"
+
+  Every number there is wrong for this question, and not by noise: a fresh page's CONSECUTIVE
+  `exact` renders drift ~7k, which is the font-cache artefact ARM F's warm-up render and its
+  on/off/on/off interleave exist to defeat. A drop measured beside a different baseline is a
+  different experiment. That is judge item 3's own lesson taken twice: the mutation has to be
+  named, and so does the instrument the mutation is measured through.

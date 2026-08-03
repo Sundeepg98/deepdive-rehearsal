@@ -778,12 +778,24 @@ function main() {
         + 'control demands a nonzero delta first'));
     /* THE ASSERTION IS NARROWED TO WHAT THE BYTES CAN CARRY (cycle 4, judge item 4). This line
      * used to claim the room bars and the room counts too, and the measurement beside it could
-     * not see them: with `.hm-room-n,.hm-room-bar,.hm-room-bar i,.ix-goal-bar,.ix-goal-bar span`
-     * dropped from the OFF override the delta moved by 14 bytes of 125,089 -- 0.011% against a
-     * 100,000-byte floor with 25% headroom -- so two thirds of the sentence was unfalsifiable by
-     * the number printed under it. The bytes are sensitive to the 138 capsule fills, the keel
-     * marks and the four legend swatches, and that is now all they claim. The six grade-bearing
-     * selectors are asserted by ARM F2 instead, on a property of the document. */
+     * not see them.
+     * THE FIGURE, RE-MEASURED IN CYCLE 5 AND WITH THE MUTATION NAMED, because the two sentences
+     * that quoted it described two DIFFERENT experiments and neither produced the "14 bytes" both
+     * of them printed. Re-run through this arm itself -- the same seed, the same warm-up, the same
+     * alternating on/off/on/off sequence that produces the number in the PASS line -- twice per
+     * configuration, noise 0 each time, on a baseline that reproduces exactly at delta 125,089:
+     *     the FIVE selectors listed on the next line, dropped from OFF   ->  21 bytes  (0.017%)
+     *     all SIX of GRADE_SEL (those five and .hm-gr-t), dropped from OFF ->  38 bytes  (0.030%)
+     * (A standalone re-implementation of this measurement reads a DIFFERENT baseline -- a fresh
+     * page's consecutive `exact` renders drift ~7k, which is the font-cache artefact the warm-up
+     * and the interleave exist to defeat -- so the drop has to be taken through this arm to be
+     * comparable to this arm's own number.)
+     * Either way the answer is the same: with `.hm-room-n,.hm-room-bar,.hm-room-bar i,
+     * .ix-goal-bar,.ix-goal-bar span` gone from the override the delta moves 21 bytes of 125,089
+     * against a 100,000-byte floor with 25% headroom, so two thirds of the sentence was
+     * unfalsifiable by the number printed under it. The bytes are sensitive to the 138 capsule
+     * fills, the keel marks and the four legend swatches, and that is now all they claim. The six
+     * grade-bearing selectors are asserted by ARM F2 instead, on a property of the document. */
     ok(delta >= LATTICE_MIN && ratio >= LATTICE_RATIO,
       '[lattice] the altitude gauge and its legend SURVIVE the reader default: forcing '
       + 'print-color-adjust:exact adds real paint to the PDF, where economy drops it and prints '
@@ -797,8 +809,10 @@ function main() {
     /* ---------- ARM F2: THE GRADE-BEARING SELECTORS, ASSERTED ON THE DOCUMENT ----------
      * R9's CHECK-NOT-FIX SURVEY added six selectors -- the room count disc, both room-bar tracks
      * and their fill, the week's goal bar and its fill, and the gauge's own trough -- and put
-     * them in ARM F's PASS line while the byte arm could not see them (14 bytes of 125,089). A
-     * property written into a PASS line with nothing in the gate driving it is judge item 6's
+     * them in ARM F's PASS line while the byte arm could not see them: dropping all six from the
+     * OFF override moves the delta 38 bytes of 125,089, 0.030% (re-measured in cycle 5, twice,
+     * noise 0 -- see the note on the byte assertion above for why the mutation has to be named).
+     * A property written into a PASS line with nothing in the gate driving it is judge item 6's
      * exact defect class, committed inside the cycle that closed item 6.
      *
      * The fix is not a bigger byte budget, it is a DIFFERENT INSTRUMENT. `print-color-adjust` is

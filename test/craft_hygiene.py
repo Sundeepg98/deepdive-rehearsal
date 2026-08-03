@@ -68,9 +68,15 @@ of this file is a claim that was true where it was measured and nowhere else.
   RETRACTED: "The chrome's FOUR un-owned glyphs live here (U+2715, U+21BB, U+2191,
   U+2318)." Four was the sink channel's count, not the chrome's. On the
   channel-free rule the chrome carries 53 SITES over 38 entries and 29 DISTINCT
-  MARKS, in 14 files. Cycle 3 also reported its chrome figure as "38 sites" when 38
+  MARKS, in 16 files. Cycle 3 also reported its chrome figure as "38 sites" when 38
   was the ENTRY count; sites and entries are different numbers and the `count`
   field is what separates them.
+  (CORRECTED IN CYCLE 5: this said "14 files". Fourteen is the count of .js files
+  and the chrome debt is not JS-only -- src/index.html carries 6 entries over 9
+  sites and src/styles.css 5 over 9, and both are inside the 38/53/29 the same
+  sentence quotes. Re-derived from the allowlist by bucketing on the file prefix
+  and counting distinct files: 16. A correction that carries a fresh unverified
+  number is the defect it is correcting.)
 
   RETRACTED: "0 ellipsis / 0 apostrophe / 0 quote / 0 dash ... with zero prose
   exceptions ruled anywhere outside src/topics." The second half held and still
@@ -581,9 +587,18 @@ def bare_prose(decoded):
     that matters, because a fragment that ends mid-thought is exactly what the tail channel
     refused to judge, and for the same reason. `judge()`'s prose and CODE gates still apply on
     top of all four.
+
+    AND THE ONE EXEMPTION FROM ALL FOUR (cycle 5, judge item 7): a SEPARATOR-ONLY literal. Every
+    bound above is a bound on a SENTENCE, and a joiner is not a sentence -- it is a mark with its
+    context in the concatenation instead of in the string. `' -- '` therefore satisfied none of
+    them and reached the screen 138 times from one site while this check printed `dash 0`. It is
+    admitted to the channel here and judged by SEP_ONLY in judge(), which applies the dash and
+    ellipsis rules to the mark itself and judges a lone hyphen not at all.
     """
     if any(c in decoded for c in '<>{}\n'):
         return False
+    if SEP_ONLY.match(decoded):
+        return True
     s = decoded.strip()
     if not s.endswith(('.', '!', '?', '."', ".'", '.)', '?"', '!"')):
         return False
@@ -683,6 +698,26 @@ CODE = re.compile(
     r'|[{}\[\]]\s*$|=>|\+\+|===|!==|\|\||&&'
 )
 
+# THE SEPARATOR-ONLY LITERAL (cycle 5, judge item 7). A literal that is NOTHING BUT separator
+# marks is a joiner -- `a.title + ' -- ' + rest` -- and until this cycle no channel could judge one,
+# in either direction:
+#   the TAGLESS channel refused it (four words and a terminal mark, and it has neither);
+#   the PROSE GATE refused it (no letter, no internal space after stripping);
+#   the DASH RULE refused it (its lookarounds want alphanumerics on both sides, and a joiner has
+#   its context in the CONCATENATION rather than in the string).
+# The cost was 138 spaced double hyphens rendered on the home from ONE literal in
+# src/scripts/app/home-view.js, while this file printed `dash 0` -- a claim true of the channel and
+# false of the app, which is the exact class this wave exists to close. So a separator-only literal
+# is judged on ITS OWN, by the marks it is made of, with no word count and no context:
+#   '--' (or '---')  a hyphen run doing an em dash's job                     -> dash
+#   '...'            three periods where the typeset form is an ellipsis     -> ellipsis
+#   '-'              NOT judged. A lone hyphen between two figures is a RANGE (`p50 - p99`), and a
+#                    separator-only literal carries no context to tell a range from an aside. That
+#                    is the negative control in CLEAN_SEP, and it is what bounds this rule.
+#   an em/en dash, a real ellipsis, a middot -- already typeset; nothing to say.
+SEP_ONLY = re.compile('^\\s*([-.\\u2013\\u2014\\u2026\\u00b7]{1,3})\\s*$')
+SEP_DASH = re.compile(r'^-{2,3}$')
+
 RULES = [
     ('ellipsis', re.compile(r'\.\.\.'),
      'three periods where the typeset form is an ellipsis (&hellip;)'),
@@ -728,6 +763,18 @@ def judge(span, mode='glyph'):
     if mode == 'glyph':
         return [('glyph', 'U+%04X %s' % (ord(ch), ch))
                 for ch in span if ord(ch) > 127 and ch not in OWNED]
+    # THE SEPARATOR-ONLY LITERAL, JUDGED BEFORE THE PROSE GATE AND NOT BY IT (cycle 5, item 7).
+    # It has to come first because both gates below are written for sentences and a joiner is not
+    # one: it has no letter and no internal space, so `' -- '` fell through every rule this file
+    # has while printing 138 marks on the home. See SEP_ONLY for why '-' alone is not judged.
+    sep = SEP_ONLY.match(span)
+    if sep:
+        run = sep.group(1)
+        if '...' in run:
+            return [('ellipsis', run)]
+        if SEP_DASH.match(run):
+            return [('dash', run)]
+        return []
     if not PROSE.search(span) or ' ' not in span.strip():
         return []
     if CODE.search(span):
@@ -926,6 +973,29 @@ PLANTS_SINK = {
     'attr-ternary-prose': ("el.setAttribute('title', on ? 'Pause' : 'the interviewer\\'s cue');",
                            'apostrophe'),
 }
+# CYCLE 5 (judge item 7). THE SEPARATOR-ONLY LITERAL, IN THE EXACT SHIPPED SHAPE. home-view.js's
+# segLabel() was `s.title + ' -- ' + ...` and put 138 spaced double hyphens on the home -- first
+# through a title attribute, then, this wave, through a rendered text node as well -- while this
+# file printed `dash 0`. Every bound in bare_prose() is a bound on a sentence and a joiner is not
+# one, so the mark was unreachable by construction rather than merely unnoticed.
+PLANTS_SEP = {
+    'sep-dash':     ("var s = t.title + ' -- ' + rest;", 'dash'),
+    'sep-ellipsis': ("var s = head + '...' + tail;", 'ellipsis'),
+}
+# ...AND ITS BOUND, which is the whole argument for judging the mark rather than the string: a LONE
+# hyphen between two figures is a RANGE, and a separator-only literal carries no context that could
+# tell a range from an aside. A joiner made of marks the app already owns has nothing to say either.
+CLEAN_SEP = ("var r = p50 + ' - ' + p99;\n"
+             "var a = a1 + ' \\u2014 ' + a2; var b = b1 + ' \\u00b7 ' + b2;\n"
+             "var c = lo + '.' + hi;\n")
+# EVERY CHANNEL PLANT THE SELF-TEST DRIVES, IN ONE PLACE -- because the receipt is computed from
+# THIS and the loop iterates THIS. Cycle 4's receipt was `len(PLANTS) + len(PLANTS_PRESSED) +
+# len(PLANTS_HEAD) + 1` while the loop also ran PLANTS_SINK, so emptying PLANTS_SINK left the gate
+# green and the PASS line printing the IDENTICAL count -- and those two fixtures are the only thing
+# standing between R10's widened sink and a silent revert. A receipt that cannot report the loss of
+# the plants it is a receipt for is not one.
+CHANNEL_PLANTS = (list(PLANTS_HEAD.items()) + list(PLANTS_SINK.items())
+                  + list(PLANTS_SEP.items()) + [('bare-literal', PLANT_BARE)])
 # THE MARKDOWN NEGATIVE CONTROL. markdown-it runs with typographer:true, so these ARE typeset on
 # the way to the screen; reporting them would demand that a solved problem be solved again by
 # hand in 38 files, and 15,703 of them ship today.
@@ -946,12 +1016,19 @@ def hits_of(path, src):
     return [h for _l, s, g in copy_spans(path, src) for h in judge(s, g)]
 
 
-def self_test():
+def self_test(controls=None):
+    """[problems]. `controls` (a list, if given) collects the NAME of every negative control that
+    actually ran, so the PASS line's figure is derived from the assertions rather than typed --
+    both receipts said "six" while seven ran, and a hand-typed count is the same defect class as a
+    hand-typed plant count (see CHANNEL_PLANTS)."""
     problems = []
+    ctl = controls if controls is not None else []
+    ctl.append('the CLEAN fixture')
     hits = rules_of('fixture.js', CLEAN)
     if hits:
         problems.append('the CLEAN fixture was flagged: %s -- the analyser fails correct '
                         'copy, so every green below is meaningless' % hits)
+    ctl.append('the CLEAN CSS fixture')
     css_hits = [h for _l, s, g in copy_spans('fixture.css', CLEAN_CSS) for h in judge(s, g)]
     if [h for h in css_hits if h[0] != 'glyph' or 'U+25B8' not in h[1]]:
         problems.append('the CLEAN CSS fixture was flagged beyond its one ratcheted mark: %s '
@@ -963,6 +1040,7 @@ def self_test():
     # THE MARKDOWN NEGATIVE CONTROL, and it is the whole argument for the .md door's shape: the
     # four typeset rules must NOT fire on a corpus the typographer already typesets, or this
     # check would report 15,703 findings and be turned off within the hour.
+    ctl.append('the CLEAN MARKDOWN fixture')
     md_clean = rules_of('fixture.md', CLEAN_MD)
     if md_clean:
         problems.append('the CLEAN MARKDOWN fixture was flagged %s -- .md is in scope for the '
@@ -985,14 +1063,30 @@ def self_test():
     # have to be shown to fire on it. An undetected one ABORTS: shipping a channel that carries
     # four rules while only one of them can fire there is the "check that cannot fail" class
     # this whole wave exists to close.
-    for name, (src, rule) in (list(PLANTS_HEAD.items()) + list(PLANTS_SINK.items())
-                              + [('bare-literal', PLANT_BARE)]):
+    # THE LOOP AND THE RECEIPT NOW READ THE SAME LIST. See CHANNEL_PLANTS: cycle 4's receipt was a
+    # hand-typed sum that omitted PLANTS_SINK, so deleting both sink plants left the gate green and
+    # the printed figure unchanged -- while reverting sink_bodies() to cycle 3's first-token
+    # behaviour still aborted, i.e. those two fixtures were the only guard on R10's widening and
+    # the receipt could not report their loss.
+    for name, (src, rule) in CHANNEL_PLANTS:
         got = rules_of('fixture.js', src)
         if rule not in got:
             problems.append('CHANNEL PLANT "%s" UNDETECTED: %r produced %s -- the rule %r is '
                             'declared to run on this channel and does not fire there, so the '
                             'channel carries fewer rules than its PASS line claims'
                             % (name, src, got or 'nothing', rule))
+    # THE SEPARATOR RULE'S BOUND (cycle 5, item 7): a lone hyphen between two figures is a RANGE,
+    # and marks the app already owns are already typeset. Without this control the rule would start
+    # demanding that every joiner in the codebase be re-punctuated.
+    ctl.append('the CLEAN SEPARATOR fixture (a range hyphen, an owned em dash, a middot, a dot)')
+    clean_sep = hits_of('fixture.js', CLEAN_SEP)
+    if clean_sep:
+        problems.append('THE SEPARATOR RULE IS UNBOUNDED: %s. `p50 - p99` is a RANGE, and an em '
+                        'dash, a middot and a decimal point are joiners with nothing wrong with '
+                        'them. The rule judges a hyphen RUN of two or more and three periods, and '
+                        'nothing else -- without that bound it reports every joiner in the tree.'
+                        % clean_sep)
+    ctl.append('the CLEAN BARE-LITERAL fixture')
     clean_bare = hits_of('fixture.js', CLEAN_BARE)
     if clean_bare:
         problems.append('THE BARE-LITERAL CHANNEL IS UNBOUNDED: %s. A one-word label, an '
@@ -1000,6 +1094,7 @@ def self_test():
                         '(`p50 - p99.`, where the hyphen separates two endpoints) are not '
                         'sentences. The bound is four words AND a terminal mark, and without '
                         'it this channel starts demanding that labels be typeset.' % clean_bare)
+    ctl.append('a CODE SAMPLE')
     code = "var h = '<pre>-- badge: SELECT count(*) ... WHERE user_id=$1; -- seek</pre>';"
     if rules_of('fixture.js', code):
         problems.append('a CODE SAMPLE was judged as prose -- the rules would demand that the '
@@ -1008,11 +1103,13 @@ def self_test():
     # and the comment exclusion, which is the whole reason this scans literals -- now doubled,
     # because the SINK channel matches statement SHAPES against the source rather than against a
     # literal, so `/* el.placeholder = "don't ..." */` is a live way back in
+    ctl.append('a DESIGN COMMENT')
     cmt = "/* the forks -- each decision, restated as the question you ask ... don't */"
     if rules_of('fixture.js', cmt):
         problems.append('a DESIGN COMMENT was judged as copy -- the literal scanner is not '
                         'excluding comments, which is what made the first draft report 523 '
                         'straight quotes that were all prose about the code')
+    ctl.append('a COMMENTED-OUT SINK')
     scmt = "/* el.placeholder = 'Filter topics ... don\\'t'; */\n// x.textContent = 'a ... b';"
     if rules_of('fixture.js', scmt):
         problems.append('a SINK INSIDE A COMMENT was judged as copy -- blank_comments() is not '
@@ -1104,7 +1201,8 @@ def tracked_sources():
 
 
 def main():
-    problems = self_test()
+    controls = []
+    problems = self_test(controls)
     if problems:
         print('=== CRAFT HYGIENE ===')
         print('SELF-TEST ABORT -- the analyser does not do what it claims:')
@@ -1217,6 +1315,10 @@ def main():
         print('\nCRAFT HYGIENE: FAIL (%d violation(s), %d stale, %d over-declared, %d grew, %d shrank)'
               % (len(findings), len(stale), len(over), len(grew), len(shrank)))
         return 1
+    # BOTH FIGURES ARE DERIVED, NOT TYPED (cycle 5, judge item 6). The plant count reads the same
+    # lists the self-test loops iterate -- so deleting a plant CHANGES THIS LINE, which is the one
+    # thing cycle 4's hand-typed sum could not do -- and the control count is the length of the
+    # roster self_test() appends to as each control actually runs.
     print('\n  %d planted defects detected in the self-test (three periods, a straight '
           'apostrophe, straight quotes, a hyphen doing a dash\u2019s job, a codepoint outside '
           'the app\u2019s own stack, a BARE glyph span with no prose around it, an unowned '
@@ -1224,16 +1326,18 @@ def main():
           'the TAIL of a concatenated literal, a glyph assigned through .textContent, one '
           'through setAttribute, one in a markdown file, a glyph in the FAR BRANCH of a ternary '
           'sink and one in the far branch of a ternary setAttribute -- the exact two shipped '
-          'shapes cycle 3\u2019s first-token sink could not reach -- all FOUR typeset rules '
-          'pressed on a HEAD run, and a straight apostrophe in a TAGLESS sentence), plus six '
-          'negative controls -- a design comment, a CSS comment and a COMMENTED-OUT SINK that '
-          'must NOT be judged, a markdown fixture whose ellipses and apostrophes must NOT be '
-          'judged (the compiler\u2019s typographer owns those), a one-word label and an '
-          'unpunctuated placeholder that the bare-literal channel must NOT judge, and the '
+          'shapes cycle 3\u2019s first-token sink could not reach -- a straight apostrophe in '
+          'the FAR BRANCH of a ternary text sink and another in a ternary setAttribute -- the '
+          'two PROSE fixtures, and the only ones that press the widening rather than the glyph '
+          'rule -- a spaced double hyphen and three periods in a SEPARATOR-ONLY literal, which '
+          'every sentence-shaped bound in this file refused while 138 of them rendered on the '
+          'home, all FOUR typeset rules pressed on a HEAD run, and a straight apostrophe in a '
+          'TAGLESS sentence), plus %d negative controls -- %s, and the '
           'ratchet\u2019s own machinery driven through decide() and audit(): rules intersected, '
           'count enforced in BOTH directions, stale and over-declared entries caught, and the '
           'key whole-span and site-bound'
-          % (len(PLANTS) + len(PLANTS_PRESSED) + len(PLANTS_HEAD) + 1))
+          % (len(PLANTS) + len(PLANTS_PRESSED) + len(CHANNEL_PLANTS),
+             len(controls), ', '.join(controls)))
     print('CRAFT HYGIENE: PASS  (%d rendered-copy spans; the glyph rule CHANNEL-FREE over every '
           'string literal and the four typeset rules on six bounded prose channels; %d ruled '
           'exceptions, every one still matching something, each excused only from the rules it '

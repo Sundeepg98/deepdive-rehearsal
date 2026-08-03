@@ -1,0 +1,22 @@
+CAP       description = the first three clauses only exit 1   6 gauge-names assertion(s) RED
+     FAIL  [gauge names] ...one clause per MARK on the Staff rail -- the text is lossless or it is a summary of a picture nobody can see  -- the Staff rail draws 46 capsules and its description carries 3 clauses (registry says 46)
+     FAIL  [gauge names] ...and it is the WHOLE lattice, VERBATIM and IN THE ORDER IT IS DRAWN -- Altitude.rail(Staff) formatted from the registry, compared for equality  -- the Staff rail's description is not the rail. First divergenc
+     FAIL  [gauge names] ...one clause per MARK on the SDE3 rail -- the text is lossless or it is a summary of a picture nobody can see  -- the SDE3 rail draws 46 capsules and its description carries 3 clauses (registry says 46)
+     FAIL  [gauge names] ...and it is the WHOLE lattice, VERBATIM and IN THE ORDER IT IS DRAWN -- Altitude.rail(SDE3) formatted from the registry, compared for equality  -- the SDE3 rail's description is not the rail. First divergence 
+FIRST     every rail describes the FIRST tier s rail exit 1   2 gauge-names assertion(s) RED
+     FAIL  [gauge names] ...and it is the WHOLE lattice, VERBATIM and IN THE ORDER IT IS DRAWN -- Altitude.rail(SDE3) formatted from the registry, compared for equality  -- the SDE3 rail's description is not the rail. First divergence 
+     FAIL  [gauge names] ...and it is the WHOLE lattice, VERBATIM and IN THE ORDER IT IS DRAWN -- Altitude.rail(SDE2) formatted from the registry, compared for equality  -- the SDE2 rail's description is not the rail. First divergence 
+WRONGNUM  every clause s solid figure off by one     exit 1   3 gauge-names assertion(s) RED
+     FAIL  [gauge names] ...and it is the WHOLE lattice, VERBATIM and IN THE ORDER IT IS DRAWN -- Altitude.rail(Staff) formatted from the registry, compared for equality  -- the Staff rail's description is not the rail. First divergenc
+     FAIL  [gauge names] ...and it is the WHOLE lattice, VERBATIM and IN THE ORDER IT IS DRAWN -- Altitude.rail(SDE3) formatted from the registry, compared for equality  -- the SDE3 rail's description is not the rail. First divergence 
+     FAIL  [gauge names] ...and it is the WHOLE lattice, VERBATIM and IN THE ORDER IT IS DRAWN -- Altitude.rail(SDE2) formatted from the registry, compared for equality  -- the SDE2 rail's description is not the rail. First divergence 
+SHUFFLE   the clauses emitted in reverse order       exit 1   3 gauge-names assertion(s) RED
+     FAIL  [gauge names] ...and it is the WHOLE lattice, VERBATIM and IN THE ORDER IT IS DRAWN -- Altitude.rail(Staff) formatted from the registry, compared for equality  -- the Staff rail's description is not the rail. First divergenc
+     FAIL  [gauge names] ...and it is the WHOLE lattice, VERBATIM and IN THE ORDER IT IS DRAWN -- Altitude.rail(SDE3) formatted from the registry, compared for equality  -- the SDE3 rail's description is not the rail. First divergence 
+     FAIL  [gauge names] ...and it is the WHOLE lattice, VERBATIM and IN THE ORDER IT IS DRAWN -- Altitude.rail(SDE2) formatted from the registry, compared for equality  -- the SDE2 rail's description is not the rail. First divergence 
+
+RESTORED (source identical to snapshot: True, build exit 0): home_claims exit 0    21 planted mutants detected (a full claim over empty rails; a level claim over unequal rails; a thin rail na
+CAP       description = the first three clauses only exit 1   6 gauge-names assertion(s) RED
+FIRST     every rail describes the FIRST tier s rail exit 1   2 gauge-names assertion(s) RED
+WRONGNUM  every clause s solid figure off by one     exit 1   3 gauge-names assertion(s) RED
+SHUFFLE   the clauses emitted in reverse order       exit 1   3 gauge-names assertion(s) RED

@@ -1086,7 +1086,9 @@ not this one, which is the near-miss that makes a glyph inventory necessary). U+
 overlay's command-key hint -- **the one mark here that is not decoration**: it names a physical
 key, so the honest substitute is a platform-conditional label, not a shape, which is a behaviour
 change with its own copy decision). On the channel-free rule the chrome carries **53 sites over 38
-entries and 29 distinct marks, in 14 files** -- and cycle 3's own "38 chrome sites" was the ENTRY
+entries and 29 distinct marks, in 16 files** (CORRECTED IN CYCLE 5 from "14 files", which is the
+count of .js files: `src/index.html` carries 6 entries over 9 sites and `src/styles.css` 5 over 9,
+and both are inside the 38/53/29 this sentence quotes) -- and cycle 3's own "38 chrome sites" was the ENTRY
 count wearing the word "sites". Five of the marks it never saw were printed by three ternary sinks
 this channel's pattern could not match; three more sit in a `const` and a call argument, which no
 bounded channel could reach at all. See CYCLE 4 / R10.
@@ -1151,8 +1153,10 @@ stylesheet says, and the arm would measure nothing):
 > **RESTATED, CYCLE 4: THE BYTE ARM COVERS THE GAUGE LATTICE AND NOTHING ELSE.** ~~The survey's
 > three grade-bearing fixes are asserted by this arm~~ -- they are not. Pressed on the committed
 > deliverable with `.hm-room-n`, `.hm-room-bar`, `.hm-room-bar i`, `.ix-goal-bar`,
-> `.ix-goal-bar span` and `.hm-gr-t` dropped from the OFF override, the delta moves **14 bytes of
-> 125,089 -- 0.011%**, against a 100,000-byte floor with 25% headroom, and the arm still reads
+> `.ix-goal-bar span` and `.hm-gr-t` dropped from the OFF override, the delta moves **38 bytes of
+> 125,089 -- 0.030%** (RE-MEASURED IN CYCLE 5; this said 14, and 14 is neither of the two numbers
+> the two sentences that quoted it describe -- see the cycle-5 section), against a 100,000-byte
+> floor with 25% headroom, and the arm still reads
 > **PASS**. So every selector this survey contributed could have been deleted with the gate green,
 > including `.hm-room-n`, the survey's own "worst case". That is judge item 6's defect class
 > committed inside the cycle that closed item 6. **ASSERTED NOW, by a second instrument rather
@@ -1551,11 +1555,11 @@ The inventory, measured rather than recalled:
 
 | | entries | sites | distinct marks |
 |---|---|---|---|
-| chrome (14 files) | 38 | 53 | 29 |
+| chrome (**16** files) | 38 | 53 | 29 |
 | corpus `src/topics` | 37 | 106 | 8 |
 | corpus `src/topics-md` | 2 | 4 | 2 |
 | **glyph total** | **77** | **163** | **36** |
-| corpus prose (18 files) | 160 | 111 apostrophes, 49 quotes, 2 dashes | -- |
+| corpus prose (**20** files) | 160 | 111 apostrophes, 49 quotes, 2 dashes | -- |
 
 **THE RETRACTIONS, MADE IN PLACE.** R7's "the chrome's FOUR un-owned glyphs" and its
 "0 ellipsis / 0 apostrophe / 0 quote / 0 dash" are struck through and restated above and in
@@ -1602,8 +1606,14 @@ guarded by nothing. It is guarded now (press B5 **ABORTS**).
 
 **THE MEASURED RESULT, WHICH IS WHY THE WIDENING IS AFFORDABLE.** 23,683 spans over 228 files
 (10,611 glyph, 13,072 prose), 1,841 head runs and 1,941 sink-or-bare literals. Prose findings
-**outside** `src/topics`: **exactly four**, the ones above, all fixed. Inside: 113 findings over 18
-files, ratcheted with the corpus argument. So the ledger's "zero prose exceptions ruled anywhere
+**outside** `src/topics`: **exactly four**, the ones above, all fixed. Inside: **160 sites / 162
+rule-sites / 174 rule-matches over 20 files**, ratcheted with the corpus argument. (CORRECTED IN
+CYCLE 5. This said "113 findings over 18 files" and 113 reproduces under no reading the scanner
+offers -- not sites, not rule-sites, not matches, not distinct spans, not distinct file+line, not
+the apostrophe count. Re-derived from a sweep with an EMPTY allowlist: 174 rule-matches collapse to
+160 distinct (file, key) SITES -- which is exactly the 160 ratcheted entries -- and to 162
+(file, key, rule) pairs, because two spans carry two rules each. Twenty files, from the allowlist
+by bucketing on the file prefix.) So the ledger's "zero prose exceptions ruled anywhere
 outside `src/topics`" survives the widening -- it is the half of the cycle-3 sentence that held --
 and the corpus figure moves from 52/2/2 to **111 apostrophes / 49 quotes / 2 dashes**, which is the
 same debt seen properly rather than a bigger one.
@@ -1633,7 +1643,7 @@ the exact state a cold profile was caught in -- with every other condition ident
 
 | --lv | 0 | 0.3 | 0.55 | 0.78 | 1 | tightest adjacent |
 |---|---|---|---|---|---|---|
-| unveiled | 0.1765 | 0.1136 | 0.0772 | 0.0496 | 0.0275 | **1.277:1** |
+| unveiled | 0.1765 | 0.1136 | 0.0772 | 0.0496 | 0.0275 | **1.276:1** |
 | veiled @ .9117 | 0.2168 | 0.1504 | 0.1104 | 0.0770 | 0.0502 | **1.249:1** |
 | judges' run 3 | 0.2280 | 0.1664 | 0.1305 | 0.1016 | 0.0786 | **1.179:1** |
 
@@ -1727,8 +1737,8 @@ mutant derived from a token is a mutant that can be wrong in exactly one theme.
 ### JUDGE ITEMS 2 AND 4 -- ARM F COULD NOT FAIL FOR HALF OF WHAT IT CLAIMED: CLOSED
 
 The byte arm's PASS line asserted "the altitude gauge, its legend, THE ROOM BARS AND THE ROOM
-COUNTS", and the six grade-bearing selectors R9 added were worth **14 bytes of 125,089 -- 0.011%,
-against a 100,000-byte floor with 25% headroom**. Reproduced here on the committed tree: with those
+COUNTS", and the six grade-bearing selectors R9 added were worth **38 bytes of 125,089 -- 0.030%,
+against a 100,000-byte floor with 25% headroom** (re-measured in cycle 5; this said 14). Reproduced here on the committed tree: with those
 six deleted the byte arm still reads **PASS**. That is judge item 6's defect class committed inside
 the cycle that closed item 6.
 
@@ -1911,7 +1921,7 @@ compares x as well as y -- the two defects that made "the guard never fired" uni
 
 | where | retracted | restated |
 |---|---|---|
-| ledger R7 | "the chrome's FOUR un-owned glyphs" | 53 sites / 38 entries / 29 distinct marks over 14 files. Four was the SINK channel's count. |
+| ledger R7 | "the chrome's FOUR un-owned glyphs" | 53 sites / 38 entries / 29 distinct marks over **16** files (cycle 4 wrote 14 here, which is the JS-only count -- corrected in cycle 5). Four was the SINK channel's count. |
 | ledger R7 | "38 chrome sites" | 38 was the ENTRY count. Sites and entries are different numbers; `count` is what separates them. |
 | ledger R7 | "0 ellipsis / 0 apostrophe / 0 quote / 0 dash across markup, tails, sinks, CSS content: and markdown" | FALSE of the app: four straight apostrophes were live in the drill and mock debrief verdicts. All four typeset; 0/0/0/0/0 now holds across the channel-free glyph rule and six bounded prose channels. |
 | ledger R7 | "52 apostrophes, 2 dashes and 2 quotes remain, all corpus" | 111 apostrophes, 49 quotes, 2 dashes. The same debt through wider channels, not a bigger one. |
@@ -1920,7 +1930,7 @@ compares x as well as y -- the two defects that made "the guard never fired" uni
 | ledger R6 | "the fill-strip figures likewise reproduce an independent probe's to four decimals" | struck. They reproduce when the shot is unveiled, which is now a precondition rather than an assumption. |
 | `craft_hygiene.py:56` | "NO ABSOLUTE BYTE COUNT IS QUOTED HERE" (while quoting two) | "NO CURRENT BUILD'S BYTE COUNT IS QUOTED HERE". Both historical figures verified against git and kept as frozen history. |
 | `craft_hygiene.py` docstring | the four-glyph inventory and the 0/0/0/0 sentence | a RETRACTION block naming both, with the measured replacements. |
-| `styles.css` ASSERTED-NOT-ARGUED | "test/print_truth.cjs measures the PDF BYTES ... and a build that has lost them comes back the same size" (of all twelve selectors) | the byte arm claims the gauge and its legend; ARM F2 asserts the six grade-bearing selectors on a computed property. The bytes were worth 14 of 125,089 on those six. |
+| `styles.css` ASSERTED-NOT-ARGUED | "test/print_truth.cjs measures the PDF BYTES ... and a build that has lost them comes back the same size" (of all twelve selectors) | the byte arm claims the gauge and its legend; ARM F2 asserts the six grade-bearing selectors on a computed property. The bytes were worth **38** of 125,089 on those six (cycle 4 wrote 14 -- corrected in cycle 5, with the mutation named). |
 | `scoreboard_salience.cjs` | "the floor leaves 10.6% of headroom on the worst of them" | conditional on the three guards, with the worst reading ever observed in the wild (1.179:1) named beside it. |
 | `check_all.py` registry | "It reads FOUR channels" / "Twelve planted defects and five negative controls" | two channels by KIND (channel-free glyph, bounded prose), 19 plants and 6 negative controls. |
 
@@ -1932,7 +1942,8 @@ right about the instrument that measured it. That is the class this cycle exists
 ## CARRIED OUT OF CYCLE 4 -- each with the reason and the wave that owns it
 
 1. **The app-wide GLYPH pass**, now **77 entries over 163 sites and 36 distinct marks** -- 38/53 in
-   the chrome across 14 files, 39/110 in the corpus. Cycle 4 did not grow the debt; it grew the
+   the chrome across **16** files (14 of them .js, plus `src/index.html` and `src/styles.css`),
+   39/110 in the corpus across 29. Cycle 4 did not grow the debt; it grew the
    SIGHT of it for the second cycle running, and this time the channel that was widened was the
    last one with a bound on it. The class is closed in five directions now (codepoint, file, count,
    channel and CARRIER), so it can only shrink without an argument. Three entries are NOT shape
@@ -1942,7 +1953,7 @@ right about the instrument that measured it. That is the class this cycle exists
    and **U+2212** is one half of a two-button control whose other half is ASCII, so the fix is a
    typographic decision about the PAIR.
 2. **The corpus prose pass** -- **111 apostrophes, 49 quotes, 2 dashes**, all in `src/topics`, over
-   18 files. The quotes are almost all the walkthroughs' spoken lines (`Interviewer: "..."`), which
+   **20** files (160 sites; 162 rule-sites; 174 rule-matches). The quotes are almost all the walkthroughs' spoken lines (`Interviewer: "..."`), which
    the head and tagless channels are what finally read. A content pass with its own review. The
    markdown half of the corpus is still NOT in this debt: the compiler's typographer typesets it.
 3. **A per-room WASH token.** Unchanged from cycle 2.
@@ -1970,3 +1981,316 @@ right about the instrument that measured it. That is the class this cycle exists
    runs cold on `ubuntu-latest` six shards at a time. The cheap general form is the one written
    here: take the reading twice, once at the start of the cell and once at the end, and demand
    they agree. **Owed by whichever wave next audits the browser checks as a family.**
+
+---
+
+## CYCLE 5 -- 2026-08-03
+
+Two team-lead rulings on the cycle-4 escalation and eight non-escalated judge items. The shape of
+this cycle is one sentence, and it is cycle 4's own sentence turned on cycle 4: **every finding
+here is a claim that was true where it was measured and false of the thing it named** -- and six of
+the ten are that inside the cycle whose whole subject was that class. R12's veil closed in ONE
+SCHEME while the freeze said both. Judge item 6's "a check that cannot fail" was committed in the
+receipt for the plants that press it. Judge item 3's "a figure that does not reproduce" was
+committed in the retraction table that retracts figures that do not reproduce.
+
+---
+
+### R13. RECEIPTS CERTIFY TREES -- ADOPTED AS THE FREEZE CONVENTION
+
+Settled and applied below in CYCLE 5 -- THE FREEZE. A gate receipt names the TREE HASH it
+certified, never "the commit this branch ends on": the last receipt of a cycle can never name its
+own commit, because writing it moves the tip -- the self-reference is structural, not sloppy. A
+docs-only tail cannot invalidate a tree receipt, so **no gate is retaken for a docs-only tail**.
+The free push-triggered Branch gate is the closing cross-check, because it fires on every commit
+including the docs tail and records its own `head_sha`.
+
+**AND A LEDGER NOTE THAT CHANGES HOW THE FREE GATE IS CITED.** `test/ci.py gate` dispatches a
+`workflow_dispatch` with a `-f ref` INPUT; the run it returns records THAT INPUT, not a verified
+sha of the tree the runner checked out. Where a dispatch run is cited it is now marked "inferred
+from the ref at dispatch time", and the PUSH-triggered run is preferred wherever one exists.
+
+---
+
+### R14. THE GAUGE ARM LEARNS TO FAIL -- CLOSED, AND ALL FOUR JUDGE MUTANTS ARE RED
+
+The arm shipped as one line: `axFor('.hm-alt .hm-gr-t')` -- querySelector, so the FIRST rail -- and
+asserted that THREE SAMPLED TITLES were CONTAINED in its description. Three defects in one line:
+
+* **ONE RAIL OF THREE.** Two whole rails could lose their description with this green.
+* **CONTAINMENT, NOT EQUALITY.** A description holding three clauses and stopping satisfies it. 3
+  is not 46.
+* **NO COUNT AND NO ORDER.** Clauses could be dropped, doubled or shuffled invisibly.
+
+Rebuilt to the law this wave applies everywhere else. **POPULATION FROM THE DOM**: every `.hm-gr`
+the gauge rendered, keyed by tier, and the count of nodes is itself asserted against the number of
+rail-bearing tiers in the model. **SELECTED BY POSITION, NOT BY THE TIE** -- a selector built on
+`[aria-describedby]` stops matching under the very mutant that strips it, so "no node" and "no
+description" would be one result and MUTANT 16b could pass by disappearing. **ORACLE FROM THE
+REGISTRY**: `Altitude.rail(m, tier)` formatted by a segLabel written out in the test, not read back
+off the app -- reading it back would compare the rendering with itself. **EQUALITY**: the
+description must equal `tier + ', topic by topic. ' + row.map(segLabel).join('. ') + '.'` character
+for character, and the failure message prints the index of the first divergence. **AND THE COUNT
+AGAINST THE PICTURE**: clauses == that rail's own `.hm-seg` count, 46 per rail here.
+
+**MUTANT 16b: THE TIE STRIPPED FROM EXACTLY ONE RAIL** -- the partial revert, on the rail the old
+arm never read. It also asserts the OTHER two are still described, so a plant that accidentally
+stripped everything could not stand in for it.
+
+**THE FOUR JUDGE MUTANTS, RE-PRESSED, ALL FOUR RED** (receipt:
+`_audit/w-addresses-cycle5/press-gauge-names.txt`; each is applied to `src/scripts/app/
+home-view.js`, BUILT, and run through the real check):
+
+| mutant | exit | gauge-names assertions RED |
+|---|---|---|
+| CAP -- description = the first three clauses only | 1 | **6** (count + equality, on both rails that carry three tiers' worth) |
+| FIRST -- every rail describes the FIRST tier's rail | 1 | **2** (SDE3 and SDE2; Staff is unchanged, which is exactly why the old arm was green) |
+| WRONGNUM -- every clause's `solid` figure off by one | 1 | **3** |
+| SHUFFLE -- the clauses emitted in reverse | 1 | **3** |
+
+The FIRST row is the one to read: it reddens the two rails the old arm did not look at and leaves
+the one it did look at untouched. The plants were removed and the tree rebuilt and re-run green in
+the same script, and that restoration is in the receipt.
+
+---
+
+### JUDGE ITEM 1 -- THE VEIL CLASS WAS CLOSED IN LIGHT ONLY: CLOSED IN BOTH, BY MEASURING IT
+
+**THE JUDGES' FINDING REPRODUCED, AND THEN THE MECHANISM.** Three consecutive runs of the
+committed deliverable; run 3's 390/dark fill strip read 0.1759/0.2964/0.4202/0.5688/0.7360 against
+runs 1-2's 0.1941/0.3270/0.4633/0.6260/0.8097 -- a least-squares fit of b = 0.9101*a with max
+residual 0.0004, which is a pure compositing veil, not noise. Exit 0. Every removal-diff reading in
+the same cell was byte-identical (MISSED 8.21, SHAKY 3.62, untouched 4.23, depth 1.298), because a
+veil moves an ABSOLUTE reading and cancels out of a differential one. Condition 3 printed "cold vs
+warm re-read: identical" because the veil sat across both reads.
+
+**THE ARITHMETIC IS THE INVARIANT'S OWN.** A veil at alpha moves the trough by
+`(1 - alpha) * |Y(compositing ground) - Y(trough)|`. Measured, in this run, and printed per cell:
+
+```
+light   trough 0.84871   canvas 0.75074   gap 0.09797   catches down to alpha 0.980
+dark    trough 0.00845   canvas 0.00463   gap 0.00382   catches down to alpha 0.476
+```
+
+In light a 9% veil moves the trough 0.0081, four times the epsilon -- caught. In dark the same veil
+moves it 0.00034 and no alpha above 0.474 can reach the epsilon at all. **The dark invariant was
+not lenient. It was INERT, and inert reads exactly like clean.**
+
+**SO THE LOAD-BEARING GUARD IS NOW A MEASUREMENT AND NOT AN INFERENCE.** The veil is read from the
+page in the SAME `page.evaluate` that reads the track's box immediately before `page.screenshot()`,
+and again immediately after it: every element from `.hm-alt` to the document root at computed
+opacity exactly `'1'`, and nothing `running` on that chain. No epsilon, no luminance arithmetic, no
+scheme dependence -- an opacity is a number the page reports. **A pre-cell `B.until` proves a state
+BEFORE the shot, which is a different claim from the state AT it**, and the second read exists
+because the rasteriser is not atomic.
+
+**AND THE GROUND INVARIANT STAYS, PRICED.** It is the backstop for compositing that is NOT an
+ancestor opacity -- an overlay, a filter, a box that slipped -- and it now computes the gap above,
+prints the strongest veil it could catch, and **FAILS where no alpha could cross the epsilon**
+rather than passing while asserting nothing.
+
+**PRESSED, four ways** (receipt: `_audit/w-addresses-cycle5/press-veil-dark.txt`; addendum written
+into `_audit/w-addresses-cycle4/press-gauge-veil.txt` as P8-P10 per the ruling):
+
+| press | exit | what it shows |
+|---|---|---|
+| P8 veil .9101 past the fade wait, light@390 | 1 | shot-time read names it; ground invariant beside it |
+| P8 veil .9101 past the fade wait, **dark@390** | 1 | shot-time read names it -- the claim P1-P7 did not carry |
+| P9 the same veil, shot-time read deleted, dark@390 | 1 | **the KEY ARM catches it** (see below) |
+| P9b **both cycle-5 guards deleted = cycle 4's coverage**, dark@390 | **0** | 1.256:1 reported as a measurement, through a veil |
+| P10 compositing ground forced to the trough's own colour | 1 | "THE GROUND INVARIANT IS INERT HERE" |
+
+**P9 FOUND SOMETHING NOBODY PLANTED.** With the shot-time read deleted, dark STILL fails -- and the
+arm that catches it is judge item 8's new KEY arm, whose ground cross-check compares a measured
+pixel against `.hm-panel`'s declared colour. That lever is `|Y(panel) - Y(canvas)| = 0.0163` in
+dark, **4.3x** the trough/canvas gap, so it clears the epsilon at alpha 0.91 where the trough
+cannot. Two of this cycle's items turned out to be one instrument. P9b is the honest reproduction
+of the judges' finding, and it is the row that matters: **cycle 4's coverage, on cycle 4's own
+tree, exits 0 through a veil it was declared to catch in both schemes.**
+
+---
+
+### JUDGE ITEM 2 -- THE FILE COUNTS: CLOSED, RE-DERIVED, SEVEN SITES CORRECTED
+
+Re-derived from `test/craft_hygiene_allow.json` by bucketing on the file prefix, and from a sweep
+with an EMPTY allowlist:
+
+```
+chrome        38 entries   53 sites   29 distinct marks   16 FILES   (14 of them .js)
+              src/index.html   6 entries /  9 sites
+              src/styles.css   5 entries /  9 sites
+corpus glyph  37 entries  106 sites    8 marks            27 files
+corpus-md      2 entries    4 sites    2 marks             2 files
+corpus prose 160 entries  160 sites  162 rule-sites  174 rule-matches   20 FILES
+              111 apostrophes / 49 quotes / 2 dashes
+```
+
+**"14 files" is the JS-only count** and does not match the 38/53/29 printed beside it -- both
+`src/index.html` and `src/styles.css` carry entries that are inside those three numbers. **"113
+findings over 18 files" reproduces under no reading the scanner offers**: not sites (160), not
+rule-sites (162), not matches (174), not distinct spans (160), not distinct file+line (150), not
+apostrophes (111). Every OTHER figure in that table reproduced exactly.
+
+Corrected in seven places: `test/craft_hygiene.py`'s RETRACTION block, and ledger lines 1089,
+1554, 1558, 1605, 1914(retraction table), 1934 and 1945 (the carried list) -- including the
+retraction table's own restatement, which is where a fresh unverified number is least excusable.
+
+---
+
+### JUDGE ITEM 3 -- "14 BYTES OF 125,089": CLOSED, RE-RUN, THE MUTATION NAMED
+
+The baseline reproduces EXACTLY and repeatably -- delta **125,089**, noise 0, twice -- matching the
+quoted `exact 301686/301686, economy 176597/176597`, so the figure was taken on this basis and
+simply does not come out of it. Re-run through ARM F itself (receipt:
+`_audit/w-addresses-cycle5/press-bytes.txt`):
+
+| mutation | economy | delta | the selectors are worth |
+|---|---|---|---|
+| baseline, OFF as shipped | 176,597 | 125,089 | -- |
+| the **SIX** of `GRADE_SEL` dropped from OFF (the ledger's sentence) | 176,635 | 125,051 | **38 bytes, 0.030%** |
+| the **FIVE** the code comment lists, no `.hm-gr-t` (the comment's sentence) | 176,618 | 125,068 | **21 bytes, 0.017%** |
+
+Two sentences, two different experiments, two different answers, and one number printed under both.
+**The FINDING is untouched** -- the bytes cannot see those selectors and ARM F2 can -- and the
+figure is corrected in six places with the mutation named beside it.
+
+**A METHOD NOTE, KEPT BECAUSE IT IS THE SAME CLASS AS THE FINDING.** The first attempt measured
+this standalone and got 59 / 26 bytes against a baseline of 133,962: a fresh page's CONSECUTIVE
+`exact` renders drift ~7k, which is precisely the font-cache artefact ARM F's warm-up render and
+its on/off/on/off interleave exist to defeat. A drop measured beside a different baseline is a
+different experiment. The mutation has to be named -- and so does the instrument it is measured
+through.
+
+---
+
+### JUDGE ITEM 4 -- THE REGISTRY ENTRY DESCRIBED HALF ITS CHECK: CLOSED
+
+`check_all.py`'s `scoreboard_salience` entry ended "6 rooms x 2 themes x 4 score states. ~1m50s"
+and said nothing about the altitude gauge -- in the cycle that gave that check its largest contract
+addition, and one line below the sibling `craft_hygiene` entry that cycle 4 rewrote for exactly
+this reason. A grep for `altitude gauge|keel|fill strip|unveiled|entrance fade` returned nothing.
+
+Extended, in the same voice as the craft_hygiene repair: the gauge at two widths and two schemes,
+the removal-diff method, the five reading arms including the new key one, the six planted mutants,
+and the three UNVEILED conditions **named as a contract rather than as behaviour**. Re-timed:
+**90.5s standalone on win32** (`time node test/scoreboard_salience.cjs`, with the gauge, the key
+arm and all six mutants running), against the entry's stale "~1m50s". **No in-gate figure is
+quoted, because `check_all.py` prints no per-check timing** -- the judges' "23.1 min for the
+registry as a whole" is a figure about the GATE, and this cycle's serial run came in at 15.4 min;
+a per-check number derived from either would be arithmetic wearing a measurement's clothes, which
+is the class this cycle exists to close.
+
+---
+
+### JUDGE ITEM 5 -- 1.277 AND 1.276 FOR ONE CELL: CLOSED
+
+The R12 table and three comments printed the 390/light tightest adjacent pair as **1.277:1** -- the
+value you get by recomputing the ratio from the DISPLAYED row (0.0772 / 0.0496) -- while the arm
+divides the full precision it holds (0.07715 / 0.04963) and prints **1.276:1**, in every run and in
+the cycle-4 press receipts. The same document said both. Corrected to what the instrument prints,
+in the ledger table and at `scoreboard_salience.cjs:190`, `:202` and `:483`, with the provenance of
+the 1.277 named so nobody re-derives it. **Exact values compared, rounded values displayed** -- the
+house rule, applied to the file that states it.
+
+---
+
+### JUDGE ITEM 6 -- A RECEIPT THAT COULD NOT REPORT THE LOSS OF ITS OWN PLANTS: CLOSED
+
+`craft_hygiene.py:1236` computed the printed count as `len(PLANTS) + len(PLANTS_PRESSED) +
+len(PLANTS_HEAD) + 1` = 19, while the driving loop at :988 ALSO ran `PLANTS_SINK` -- 21 plants ran.
+The two missing ones are the only fixtures that press R10's widened sink (the file's own comment
+says so: the two ternary GLYPH fixtures are satisfied whether the sink walks the whole statement or
+stops at its first literal). **Proven, and it is worse than an off-by-two:**
+
+| press | exit | receipt printed |
+|---|---|---|
+| R1 `PLANTS_SINK` emptied | 0 | **21 plants** (cycle 4 printed the identical 19) |
+| R2 `sink_bodies` reverted to cycle 3's first token, plants intact | 1 | SELF-TEST ABORT |
+| R3 both -- the widening reverted AND its only guard deleted | 0 | 21 plants, and 30 fewer spans |
+
+So under cycle 4's receipt R3 was silent, green, and printed the same sentence as a healthy tree.
+
+**BOTH FIGURES ARE DERIVED NOW.** The plant count reads `CHANNEL_PLANTS`, the one list the loop
+iterates, so deleting a plant CHANGES THE PASS LINE. The negative-control count is the length of a
+roster `self_test()` appends to as each control actually runs -- both receipts said "six" while
+seven ran, and the eighth arrived this cycle. The PASS line also now NAMES the two far-branch
+PROSE sink plants (it enumerated only the two far-branch GLYPH ones), and `check_all.py:374` is
+corrected from "NINETEEN planted defects and six negative controls" to twenty-three and eight, with
+the note that both are derived in-file.
+
+---
+
+### JUDGE ITEM 7 -- 138 SPACED DOUBLE HYPHENS ON THE HOME, UNDER `dash 0`: CLOSED, AND THE CLASS WITH IT
+
+`home-view.js:543` returned `s.title + ' -- ' + ...`, and this wave routed that string into a
+RENDERED text node as well as the pre-existing `title=`. Measured on the committed deliverable:
+**138 matches of `\S -{1,2} \S` in `#home` innerText, all 138 inside `.hm-vh`, zero outside** --
+while the same home carries 5 real em dashes elsewhere, including the Still-shaky panel's own
+`&mdash;` four elements away. Verbatim the failure mode cycle 4's own commit message names.
+
+**WHY THE CHECK COULD NOT SEE IT, WHICH IS THE PART WORTH FIXING.** `' -- '` is a SEPARATOR: a
+joiner whose context is in the concatenation and not in the string. Every bound in this file is a
+bound on a SENTENCE, so all three refused it independently -- the tagless channel wants four words
+and terminal punctuation, the prose gate wants a letter and an internal space, and the dash rule's
+lookarounds want alphanumerics on both sides. A separator-only literal was unreachable by
+construction rather than merely unnoticed.
+
+**THE INSTANCE:** a real EM DASH (`'\u2014'`), which typesets the title attribute and the new description in one
+edit. Not `&mdash;` -- the string is esc()'d into an attribute AND set as text, so an entity would
+print literally in one of the two; `\u2014` is the form `search-overlay.js:327` already uses.
+
+**THE CLASS:** a literal matching `^\s*[-.\u2013\u2014\u2026\u00b7]{1,3}\s*$` is judged by the dash
+and ellipsis rules with no word count and no prose gate. **A LONE HYPHEN IS NOT JUDGED** -- `p50 -
+p99` is a range, and a separator-only literal carries no context to tell a range from an aside;
+that bound is the negative control, beside an owned em dash, a middot and a decimal point. Two
+plants (`' -- '`, `'...'`) and one control fixture.
+
+**PRESSED ON THE LIVE TREE** (receipt: `_audit/w-addresses-cycle5/press-craft-separator.txt`):
+
+| press | exit | result |
+|---|---|---|
+| S1 segLabel reverted to `' -- '` | 1 | `dash 1` at `src/scripts/app/home-view.js:558` |
+| S2a the SEP_ONLY branch disabled, plants kept | 1 | SELF-TEST ABORT -- the rule can no longer be removed quietly |
+| S2b branch AND its plants removed = cycle 4's code | **0** | **`dash 0`** -- the blindness, reproduced |
+| S3 a RANGE label `' - '` at the same site | 0 | green; the bound holds |
+
+The sweep admits 48 more spans and reports zero new findings, so the widening costs nothing and the
+tree had exactly one member of this class.
+
+---
+
+### JUDGE ITEM 8 -- THE LEGEND'S SWATCHES WERE ASSERTED BY NOTHING: CLOSED, AND THE GROUND WAS MISNAMED
+
+`styles.css`'s `--gauge-rule` block solves the token against two grounds, calls the KEY's dark cell
+**the binding one** at 3.49:1 (16% clear of the 3:1 floor), and wrote that "the rasterised minimum,
+which is what `test/scoreboard_salience.cjs` actually asserts, is read off the pixels". That file
+contained **zero occurrences of `.hm-k`**. Its denominator arm reads `.hm-seg`'s inset rule against
+`--side` -- the 4.10 / 4.23 pair, the LOOSER one. The tightest cell in the block had 16% of
+headroom and no instrument, in a file whose own scar note records a pair solved to 3.41/3.40
+nominal that RASTERISED at 3.16/3.28.
+
+**THE ARM.** All four `.hm-k i` swatches, by the same removal diff as every other mark here: shot
+A, shot B with every swatch's own paint suppressed, and the differing pixels ARE the swatch. The
+GROUND is read off shot B **at the same box** -- the pixels the mark was covering -- and
+cross-checked against `.hm-panel`'s own computed background. Measured, and it lands on the block's
+own arithmetic to two decimals:
+
+```
+light   full 14.72   part 8.97   flag 5.42   none 4.79      (the block computes 4.79)
+dark    full 12.31   part 7.39   flag 6.77   none 3.49      (the block computes 3.49)
+```
+
+`.hm-k.none i` is declared the binding cell. **MUTANT F** repaints `--gauge-rule` at the panel's own
+MEASURED colour, scoped to `.hm-k i` so the capsule rule is untouched (a plant that reddens two
+arms proves neither): the binding swatch VANISHES -- 0 pixels differ from its ground -- in all four
+cells. Its liveness is read off the DOM, not off the pixels: **a swatch painted at its own ground
+differs in no pixel from the removal shot, so "the mark vanished" and "the plant never landed" are
+the same zero**, and the first draft of this mutant read the first as the second. The computed
+box-shadow settles it before any pixel is looked at.
+
+**AND THE GROUND WAS NAMED WRONG.** The block said the swatches sit on `--card`; they sit on
+`.hm-panel`, which is `--home-surface` (dark `#292632`, not `--card`'s `#1E1C25`). The NUMBER was
+always the panel figure, so "MEASURED ON ALL FOUR GROUNDS" named three grounds correctly and one
+incorrectly -- a solve nobody could re-derive. Corrected in both blocks, with the arm's own ground
+cross-check now failing if the swatches ever stop sitting where the arithmetic says they do. That
+cross-check is what caught the dark veil in press P9.

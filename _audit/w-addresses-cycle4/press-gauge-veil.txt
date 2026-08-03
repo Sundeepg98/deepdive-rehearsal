@@ -53,3 +53,30 @@ RESTORED -- re-running the shipped file to confirm the tree is clean
 AFTER THE PRESS: exit=0  SCOREBOARD SALIENCE: PASS  (48 room x theme x score; Solid is the loudest tile whenever it is non-em
 
 1 presses, 0 unpressed
+
+================================================================================
+ADDENDUM, W-ADDRESSES CYCLE 5 -- P8, P9, P9b, P10
+The judges reproduced this cycle's own defect on the clean tree, in the scheme this receipt never
+pressed: 390/DARK. Run 3 of three consecutive runs returned a fill strip at 0.9101x runs 1-2 with
+max residual 0.0004 -- a compositing veil over a near-black ground -- at exit 0, with condition 3
+printing "cold vs warm re-read: identical" because the veil sat across both reads.
+The presses below are run by _audit/w-addresses-cycle5/press_veil_c5.py; the full capture is
+_audit/w-addresses-cycle5/press-veil-dark.txt. Summary:
+
+  P8  veil .9101 past the fade wait, light@390                      exit 1  CAUGHT
+      "THE SHOT WAS TAKEN THROUGH A VEIL, measured before the bitmap: body at opacity 0.9101"
+      (and the ground invariant beside it: trough 0.85683 vs declared 0.84871)
+  P8  veil .9101 past the fade wait, DARK@390                       exit 1  CAUGHT
+      the same shot-time line -- which is the claim P1..P7 did not carry
+  P9  the same veil, shot-time read DELETED, light@390              exit 1  (ground invariant)
+  P9  the same veil, shot-time read DELETED, DARK@390               exit 1  (the CYCLE-5 KEY ARM:
+      the swatch ground reads Y 0.01811 where .hm-panel declares Y 0.02088 -- a 0.0163 lever,
+      4.3x the trough/canvas gap, so it clears the epsilon where the trough cannot)
+  P9b BOTH cycle-5 guards deleted = cycle-4's coverage, DARK@390    exit 0  *** THE DEFECT ***
+      tightest adjacent pair 0.78/1 = 1.256:1 reported as a measurement, through a veil
+  P10 compositing ground forced to the trough's own colour, light   exit 1  "THE GROUND INVARIANT
+      IS INERT HERE ... NO alpha can move the trough past the 0.002 epsilon"
+
+P9b is the row this addendum exists for: cycle 4's veil coverage, on cycle 4's own tree, exits 0
+through a veil it was declared to catch "in both schemes".
+================================================================================

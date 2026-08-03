@@ -1,0 +1,31 @@
+S1  segLabel reverted to " -- " (the shipped 138 marks) exit 1  as expected
+     dash           1   a spaced hyphen doing an em dash's job (&mdash;) | src/scripts/app/home-view.js:558  '--'  in  '--' | CRAFT HYGIENE: FAIL (1 violation(s), 0 stale, 0 over-declared, 0 grew, 0 shrank)
+S2a ...with the SEP_ONLY branch disabled, plants kept exit 1  as expected
+     SELF-TEST ABORT -- the analyser does not do what it claims: | CRAFT HYGIENE: FAIL (self-test)
+S2b ...branch AND its two plants removed = cycle-4 s code exit 0  as expected
+     receipt says 21 plants | 8 controls | dash           0   a spaced hyphen doing an em dash's job (&mdash;) | CRAFT HYGIENE: PASS  (23730 rendered-copy spans; the glyph rule CHANNEL-FREE over every string literal and the four type
+S3  a RANGE label " - " at the same site (the bound) exit 0  as expected
+     receipt says 23 plants | 8 controls | dash           0   a spaced hyphen doing an em dash's job (&mdash;) | CRAFT HYGIENE: PASS  (23730 rendered-copy spans; the glyph rule CHANNEL-FREE over every string literal and the four type
+R1  PLANTS_SINK emptied -- the receipt must MOVE     exit 0  as expected
+     receipt says 21 plants | 8 controls | dash           0   a spaced hyphen doing an em dash's job (&mdash;) | CRAFT HYGIENE: PASS  (23731 rendered-copy spans; the glyph rule CHANNEL-FREE over every string literal and the four type
+R2  sink_bodies reverted to first-token, plants intact exit 1  as expected
+     SELF-TEST ABORT -- the analyser does not do what it claims: | CRAFT HYGIENE: FAIL (self-test)
+R3  both: the widening reverted AND its only guard deleted exit 0  as expected
+     receipt says 21 plants | 8 controls | dash           0   a spaced hyphen doing an em dash's job (&mdash;) | CRAFT HYGIENE: PASS  (23701 rendered-copy spans; the glyph rule CHANNEL-FREE over every string literal and the four type
+
+RESTORED (craft_hygiene identical: True, home-view identical: True): exit 0
+     receipt says 23 plants | 8 controls | dash           0   a spaced hyphen doing an em dash's job (&mdash;) | CRAFT HYGIENE: PASS  (23731 rendered-copy spans; the glyph rule CHANNEL-FREE over every string literal and the four type
+S1  segLabel reverted to " -- " (the shipped 138 marks) exit 1  as expected
+     dash           1   a spaced hyphen doing an em dash's job (&mdash;) | src/scripts/app/home-view.js:558  '--'  in  '--' | CRAFT HYGIENE: FAIL (1 violation(s), 0 stale, 0 over-declared, 0 grew, 0 shrank)
+S2a ...with the SEP_ONLY branch disabled, plants kept exit 1  as expected
+     SELF-TEST ABORT -- the analyser does not do what it claims: | CRAFT HYGIENE: FAIL (self-test)
+S2b ...branch AND its two plants removed = cycle-4 s code exit 0  as expected
+     receipt says 21 plants | 8 controls | dash           0   a spaced hyphen doing an em dash's job (&mdash;) | CRAFT HYGIENE: PASS  (23730 rendered-copy spans; the glyph rule CHANNEL-FREE over every string literal and the four type
+S3  a RANGE label " - " at the same site (the bound) exit 0  as expected
+     receipt says 23 plants | 8 controls | dash           0   a spaced hyphen doing an em dash's job (&mdash;) | CRAFT HYGIENE: PASS  (23730 rendered-copy spans; the glyph rule CHANNEL-FREE over every string literal and the four type
+R1  PLANTS_SINK emptied -- the receipt must MOVE     exit 0  as expected
+     receipt says 21 plants | 8 controls | dash           0   a spaced hyphen doing an em dash's job (&mdash;) | CRAFT HYGIENE: PASS  (23731 rendered-copy spans; the glyph rule CHANNEL-FREE over every string literal and the four type
+R2  sink_bodies reverted to first-token, plants intact exit 1  as expected
+     SELF-TEST ABORT -- the analyser does not do what it claims: | CRAFT HYGIENE: FAIL (self-test)
+R3  both: the widening reverted AND its only guard deleted exit 0  as expected
+     receipt says 21 plants | 8 controls | dash           0   a spaced hyphen doing an em dash's job (&mdash;) | CRAFT HYGIENE: PASS  (23701 rendered-copy spans; the glyph rule CHANNEL-FREE over every string literal and the four type

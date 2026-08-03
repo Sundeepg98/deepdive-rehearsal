@@ -370,11 +370,21 @@ NATIVE_CHECKS = [('ascii_guard', ['python3', 'test/ascii_guard.py']),
                   # apostrophes. Comments are not copy: a bare `>...<` regex reported 523 straight
                   # quotes that were all design commentary. Code samples are exempt on principle,
                   # since `SELECT count(*) ... WHERE` is an elision in SQL rather than a
-                  # trailing-off sentence. Ratcheted through craft_hygiene_allow.json, where a
-                  # STALE entry is itself a failure. NINETEEN planted defects and six negative
-                  # controls run every invocation -- including the ratchet's own machinery
+                  # trailing-off sentence. A SEPARATOR-ONLY literal (`' -- '`) is judged by the
+                  # dash and ellipsis rules with NO word count, because every other bound here is a
+                  # bound on a SENTENCE and a joiner is not one -- one such literal put 138 spaced
+                  # double hyphens on the home while this check printed `dash 0`. A lone hyphen is
+                  # not judged: `p50 - p99` is a range. Ratcheted through craft_hygiene_allow.json,
+                  # where a STALE entry is itself a failure. TWENTY-THREE planted defects and EIGHT
+                  # negative controls run every invocation -- including the ratchet's own machinery
                   # (rules intersected, count enforced both ways, stale and over-declared caught),
                   # every one of which was unguarded and green-when-deleted before cycle 3.
+                  # BOTH FIGURES ARE DERIVED IN-FILE, from the plant lists the self-test iterates
+                  # and from a roster each control appends to as it runs. Cycle 4's were typed,
+                  # said nineteen and six where twenty-one and seven ran, and could not change when
+                  # a plant was deleted -- emptying the two sink plants left the gate green and the
+                  # count identical, while those two fixtures were the only guard on R10's widened
+                  # sink. Deleting a plant now changes the PASS line.
                   # Static, ~3s.
                   ('craft_hygiene', ['python3', 'test/craft_hygiene.py']),
                   ('home_rhythm', ['python3', 'test/home_rhythm.py']),
@@ -762,7 +772,34 @@ BROWSER_CHECKS = [('render', 'test/render.cjs'), ('entity_leak', 'test/entity_le
                      # the code did not have. This measures PAINTED INK per tile (mean |Y - Y(card)|,
                      # deliberately hue-BLIND, because hue-blindness is the property under test) and
                      # fails if Solid is ever not the loudest tile, or if it fills at zero.
-                     # 6 rooms x 2 themes x 4 score states. ~1m50s.
+                     # 6 rooms x 2 themes x 4 score states.
+                     # AND SINCE W-ADDRESSES, THE ALTITUDE GAUGE, which is now the larger half of
+                     # this check and was described here by nothing. At 1280 and 390, light and
+                     # dark, off the panel's own pixels by REMOVAL DIFF (shot, shot with the mark's
+                     # own declaration suppressed, diff -- so nothing is aimed and nothing can
+                     # miss): the two keel marks ordered and over the 3:1 non-text floor against
+                     # TWO grounds (the stable trough and the band each mark abuts), the FILL STRIP
+                     # alone carrying an ordered ramp with every adjacent pair over 1.15, the
+                     # untouched capsule's rule, the four LEGEND SWATCHES against the panel's own
+                     # measured ground (the binding cell of the --gauge-rule solve), and the panel
+                     # standing off the home's ground. Six planted mutants, each the shipped defect
+                     # put back: the old keel wiring, the rule back to --bd, the waterline removed,
+                     # two fill steps flattened, the panel painted at its ground, --gauge-rule
+                     # painted at the panel.
+                     # EVERY READING IS GATED ON THE SHOT BEING UNVEILED, which is a CONTRACT and
+                     # not current behaviour -- a veil at alpha 0.91 once crossed a whole dark cell
+                     # at exit 0: (1) every element from the gauge to the document root at computed
+                     # opacity 1 with nothing running on that chain, read in the same evaluate as
+                     # the shot and again after it (no epsilon, both schemes); (2) the trough must
+                     # equal the colour the track declares within 0.002 in the SAME shot, and that
+                     # arm PRICES ITSELF, failing where the trough/canvas gap is too small for any
+                     # alpha to cross the epsilon; (3) the COLD first reading -- the only one a CI
+                     # runner ever takes -- must reproduce a warm re-read later in the same run.
+                     # ~1m31s, MEASURED standalone on win32 in cycle 5 (`time node
+                     # test/scoreboard_salience.cjs`, 90.5s) with the gauge, the key arm and all
+                     # six mutants running. The gate prints no per-check timing, so no in-gate
+                     # figure is quoted here: the old "~1m50s" was pre-gauge and this file's whole
+                     # subject is numbers that name what actually produced them.
                      ('scoreboard_salience', 'test/scoreboard_salience.cjs'),
                      # scoreboard_resume: the tiles (Solid/Revisit/Left) are THIS-RUN counters -- the
                      # debrief's own pct (got / results.length) and the round-end announcement both read

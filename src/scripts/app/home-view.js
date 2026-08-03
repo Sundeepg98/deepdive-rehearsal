@@ -539,8 +539,22 @@
      virtual buffer. */
   function railDescId(tier) { return 'hm-gr-d-' + String(tier).toLowerCase().replace(/[^a-z0-9]+/g, ''); }
 
+  /* THE SEPARATOR IS AN EM DASH, and until cycle 5 it was ' -- ' -- 138 spaced double hyphens
+     rendered on the home, in a wave whose own commit message names "a claim true of the channel
+     and false of the app". craft_hygiene printed `dash 0` throughout, and correctly: `' -- '` is
+     a CONCATENATION FRAGMENT, and the tagless bare-literal channel requires four or more words
+     plus terminal punctuation, so a separator-only literal could never be judged by the dash rule
+     at all. This wave is what made it visible -- the string was a `title=` attribute (mouse-only,
+     and inside a role="img" subtree, so not even that) and is now also a RENDERED text node.
+     Measured on the committed deliverable at #home: 138 matches of `\S -{1,2} \S` in innerText,
+     all 138 inside .hm-vh, while the same home carries 5 real em dashes elsewhere -- including the
+     Still-shaky panel's own &mdash; four elements away.
+     A REAL EM DASH AND NOT `&mdash;`: this string is esc()'d into an attribute AND set as text, so an
+     entity would print literally in one of the two. It is the form search-overlay.js:327 already
+     uses for exactly this reason. The CLASS is closed in craft_hygiene: separator-only literals
+     are judged under the dash and ellipsis rules regardless of word count. */
   function segLabel(s, tier) {
-    return s.title + ' -- ' + (s.done
+    return s.title + ' \u2014 ' + (s.done
       ? s.solid + ' solid of ' + s.n + ' ' + tier + ' probes'
       : 'not started at ' + tier) +
       (s.missed ? ', missed probes flagged' : (s.shaky ? ', shaky probes flagged' : ''));

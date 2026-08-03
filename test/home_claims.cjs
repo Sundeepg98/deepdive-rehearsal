@@ -1377,7 +1377,27 @@ const GEN_N = 24;
    * THE ORACLE IS THE REGISTRY, not the rendering: the description has to contain the titles of
    * topics that are really on this rail, so a description built from the wrong tier -- or an empty
    * one -- cannot pass. And the mutant removes the tie and requires this to go red, because an AX
-   * assertion that cannot fail is the most flattering kind of green there is. */
+   * assertion that cannot fail is the most flattering kind of green there is.
+   *
+   * ===== R14 (cycle 5): WHAT THAT FIRST DRAFT COULD NOT SEE, AND THE WAVE'S OWN LAW APPLIED ====
+   * The arm above shipped as `axFor('.hm-alt .hm-gr-t')` -- querySelector, so the FIRST rail --
+   * asserting that THREE SAMPLED TITLES appear SOMEWHERE in its description. Three defects in one
+   * line, each of which a real regression fits through:
+   *   ONE RAIL OF THREE. Two whole rails could lose their description with this green.
+   *   SUBSTRING CONTAINMENT. A description holding the first three clauses and stopping -- a cap,
+   *   a slice, a truncation -- passes, because containment is not equality and 3 is not 46.
+   *   NO COUNT AND NO ORDER. Clauses could be dropped, doubled or shuffled invisibly.
+   * So the arm is rebuilt to the same law this wave applies everywhere else: the POPULATION comes
+   * from the DOM (every rail the gauge rendered, keyed by its tier, selected by POSITION so that
+   * stripping the tie cannot also hide the node), the ORACLE comes from the registry (Altitude
+   * .rail, formatted here rather than read back from the app), and the assertion is EQUALITY --
+   * the description must be the whole lattice, in the order it is drawn, character for character.
+   * The clause count is asserted against that rail's own `.hm-seg` count, so "the text is the
+   * picture" is a number and not a hope.
+   * THE FORMATTER IS DUPLICATED HERE ON PURPOSE. Reading segLabel back off the app would make
+   * this a comparison of the rendering with itself; writing it out means a copy change to the
+   * lattice's spoken form has to be made twice, deliberately, which is the correct price for a
+   * text equivalent that claims to be lossless. */
   {
     const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
     const page = await ctx.newPage();
@@ -1403,37 +1423,132 @@ const GEN_N = 24;
       const val = (p) => (n[p] && n[p].value !== undefined ? String(n[p].value) : '');
       return { role: val('role'), name: val('name'), description: val('description') };
     };
-    const ax = await axFor('.hm-alt .hm-gr-t');
-    const desc = ax ? ax.description.replace(/\s+/g, ' ').trim() : '';
-    const want = await page.evaluate(() => {
+    /* THE EXPECTED TEXT, BUILT FROM THE REGISTRY. Same shape as home-view.js's segLabel and
+       gaugeHtml, written out here rather than imported -- see the note above. */
+    const segLabel = (s, tier) => s.title + ' \u2014 ' + (s.done
+      ? s.solid + ' solid of ' + s.n + ' ' + tier + ' probes'
+      : 'not started at ' + tier)
+      + (s.missed ? ', missed probes flagged' : (s.shaky ? ', shaky probes flagged' : ''));
+    const railsOf = async () => page.evaluate(() => {
       const m = Altitude.compute();
-      const tier = m.order[0];
-      return { tier, titles: Altitude.rail(m, tier).slice(0, 3).map((s) => s.title) };
+      const tiers = m.order.filter((t) => m.tiers[t] && m.tiers[t].n);
+      const nodes = [...document.querySelectorAll('.hm-alt .hm-gauge > .hm-gr')];
+      return {
+        tiers,
+        nodes: nodes.length,
+        rails: tiers.map((tier, i) => ({
+          tier,
+          row: Altitude.rail(m, tier).map((s) => ({ title: s.title, done: !!s.done, solid: s.solid,
+            n: s.n, missed: !!s.missed, shaky: !!s.shaky })),
+          segs: nodes[i] ? nodes[i].querySelectorAll('.hm-seg').length : -1,
+        })),
+      };
     });
+    /* SELECTED BY POSITION, NOT BY THE TIE. A selector built on [aria-describedby] would stop
+       matching under the very mutant that strips it, so "no node" and "no description" would be
+       the same result and MUTANT 16b could pass by disappearing. */
+    const railSel = (i) => '.hm-alt .hm-gauge > .hm-gr:nth-child(' + (i + 1) + ') .hm-gr-t';
+    const model = await railsOf();
 
-    out.push(['[gauge names] the rail carries an accessible NAME (the summary it always had)',
-      !!(ax && ax.name && ax.name.trim()), JSON.stringify(ax && ax.name)]);
-    out.push(['[gauge names] ...and a DESCRIPTION, which is the only path the 138 marks have to '
-      + 'anything that is not a mouse (role="img" makes their titles presentational)',
-      desc.length > 0, 'the rail\'s AX node carries no description: ' + JSON.stringify(ax)]);
-    const named = want.titles.filter((t) => desc.indexOf(t) !== -1);
-    out.push(['[gauge names] ...and it names the topics THIS rail draws, read from the registry '
-      + 'rather than from the rendering',
-      named.length === want.titles.length,
-      'the ' + want.tier + ' rail describes ' + named.length + ' of ' + want.titles.length
-      + ' sampled topics (' + want.titles.join(', ') + '); description was: ' + desc.slice(0, 160)]);
+    out.push(['[gauge names] every rail the gauge drew was found and read (population from the '
+      + 'DOM, not one querySelector)',
+      model.nodes === model.tiers.length && model.tiers.length >= 1,
+      'the model has ' + model.tiers.length + ' rail-bearing tiers (' + model.tiers.join(', ')
+      + ') and the DOM has ' + model.nodes + ' .hm-gr nodes -- an arm that reads the first of an '
+      + 'unknown number is asserting nothing about the rest']);
+
+    for (let i = 0; i < model.rails.length; i++) {
+      const r = model.rails[i];
+      const a = await axFor(railSel(i));
+      const d = a ? a.description.replace(/\s+/g, ' ').trim() : '';
+      const clauses = r.row.map((s) => segLabel(s, r.tier));
+      const want = r.tier + ', topic by topic. ' + clauses.join('. ') + '.';
+      out.push(['[gauge names] the ' + r.tier + ' rail carries an accessible NAME (the summary it '
+        + 'always had)', !!(a && a.name && a.name.trim()), JSON.stringify(a && a.name)]);
+      out.push(['[gauge names] ...and a DESCRIPTION, which is the only path its marks have to '
+        + 'anything that is not a mouse (role="img" makes their titles presentational)',
+        d.length > 0, 'the ' + r.tier + ' rail\'s AX node carries no description: '
+        + JSON.stringify(a)]);
+      /* THE COUNT, AGAINST THE PICTURE. Split on '. ' is only meaningful while no clause contains
+         one; if a topic title ever does, the split stops being a count and says so rather than
+         reporting a wrong number. */
+      const splittable = !clauses.some((c) => c.indexOf('. ') !== -1);
+      const got = splittable && d ? d.replace(/^[^.]*\. /, '').replace(/\.$/, '').split('. ').length : -1;
+      out.push(['[gauge names] ...one clause per MARK on the ' + r.tier + ' rail -- the text is '
+        + 'lossless or it is a summary of a picture nobody can see',
+        !splittable || got === r.segs,
+        splittable
+          ? ('the ' + r.tier + ' rail draws ' + r.segs + ' capsules and its description carries '
+            + got + ' clauses (registry says ' + r.row.length + ')')
+          : 'a clause contains ". " so the split is not a count -- assert equality only']);
+      /* EQUALITY, NOT CONTAINMENT. Containment is what let three sampled titles stand in for
+         forty-six clauses; a cap, a slice or a shuffle all satisfy it. */
+      let why = 'the ' + r.tier + ' rail\'s description is not the rail.';
+      if (d !== want) {
+        let k = 0;
+        while (k < d.length && k < want.length && d[k] === want[k]) k++;
+        why += ' First divergence at character ' + k + ' of ' + want.length + ' (got '
+          + d.length + '): expected ' + JSON.stringify(want.slice(k, k + 90))
+          + ' and read ' + JSON.stringify(d.slice(k, k + 90));
+      }
+      out.push(['[gauge names] ...and it is the WHOLE lattice, VERBATIM and IN THE ORDER IT IS '
+        + 'DRAWN -- Altitude.rail(' + r.tier + ') formatted from the registry, compared for '
+        + 'equality', d === want, why]);
+    }
 
     /* MUTANT 16: the tie removed -- the shipped state, where the marks had a title and no path */
-    await page.evaluate(() => {
+    const stripAll = () => page.evaluate(() => {
       document.querySelectorAll('.hm-alt .hm-gr-t').forEach((t) => t.removeAttribute('aria-describedby'));
     });
+    await stripAll();
     await B.settle(page);
-    const ax2 = await axFor('.hm-alt .hm-gr-t');
-    const desc2 = ax2 ? ax2.description.trim() : '';
-    if (desc2.length > 0) {
-      aborted = aborted || 'MUTANT 16 UNDETECTED: aria-describedby stripped from every rail and the '
-        + 'accessibility tree STILL reported a description (' + JSON.stringify(desc2.slice(0, 80))
-        + '). The arm above is reading something other than the tie it claims to guard.';
+    for (let i = 0; i < model.rails.length; i++) {
+      const a2 = await axFor(railSel(i));
+      const d2 = a2 ? a2.description.trim() : '';
+      if (d2.length > 0) {
+        aborted = aborted || 'MUTANT 16 UNDETECTED: aria-describedby stripped from every rail and '
+          + 'the accessibility tree STILL reported a description on the '
+          + model.rails[i].tier + ' rail (' + JSON.stringify(d2.slice(0, 80))
+          + '). The arm above is reading something other than the tie it claims to guard.';
+      }
+    }
+    /* MUTANT 16b (R14): THE TIE REMOVED FROM EXACTLY ONE RAIL -- the partial revert, and the
+       mutant MUTANT 16 cannot see. Stripping EVERY tie is a mutation the old one-rail arm also
+       caught; stripping the SECOND one is the shape a real regression takes (a branch that skips
+       a tier, a thin rail rendered by another path) and the old arm was blind to it by
+       construction. It is pressed on the rail the old arm did not read. */
+    await B.gotoApp(page, HTML, { hash: '#home' });
+    await B.until(page, () => !!document.querySelector('#home .hm-alt .hm-seg'), null, B.ACT_MS,
+      'the gauge');
+    await B.settle(page);
+    const victim = Math.min(1, model.rails.length - 1);
+    if (model.rails.length < 2) {
+      aborted = aborted || 'MUTANT 16b CANNOT LAND: the seeded record rendered '
+        + model.rails.length + ' rail(s), so "the tie removed from exactly one of them" is not a '
+        + 'distinguishable state and the per-rail loop above is unpressed.';
+    } else {
+      await page.evaluate((k) => {
+        const t = document.querySelectorAll('.hm-alt .hm-gauge > .hm-gr')[k];
+        if (t) t.querySelector('.hm-gr-t').removeAttribute('aria-describedby');
+      }, victim);
+      await B.settle(page);
+      const seen = [];
+      for (let i = 0; i < model.rails.length; i++) {
+        const a3 = await axFor(railSel(i));
+        seen.push((a3 ? a3.description.trim() : '').length);
+      }
+      if (seen[victim] > 0) {
+        aborted = aborted || 'MUTANT 16b UNDETECTED: aria-describedby was stripped from the '
+          + model.rails[victim].tier + ' rail ONLY and its AX node still reported a description of '
+          + seen[victim] + ' characters. A partial revert is the shape this regression actually '
+          + 'takes, and an arm that reads one rail cannot see it -- lengths were ' + seen.join('/');
+      }
+      if (seen.filter((n) => n > 0).length !== model.rails.length - 1) {
+        aborted = aborted || 'MUTANT 16b CANNOT LAND: stripping ONE tie left '
+          + seen.filter((n) => n > 0).length + ' of ' + model.rails.length + ' rails described ('
+          + seen.join('/') + '), so the plant did not isolate a single rail and a red would not be '
+          + 'about the partial revert.';
+      }
     }
     await ctx.close();
   }
@@ -1918,7 +2033,7 @@ const GEN_N = 24;
   const bad = out.filter((o) => !o[1]);
   for (const [label, pass, detail] of out) console.log((pass ? '  PASS  ' : '  FAIL  ') + label + (pass ? '' : '  -- ' + detail));
   console.log('\n  the legend arm was exercised on ' + keelChecked + ' record(s) that actually paint a keel');
-  console.log('  20 planted mutants detected (a full claim over empty rails; a level claim over '
+  console.log('  21 planted mutants detected (a full claim over empty rails; a level claim over '
     + 'unequal rails; a thin rail named on the highest tier; a step position beside a bare probe '
     + 'remainder; a verdict quoting one rail\u2019s figures for another; an inflated panel header; '
     + 'an inflated figure inside the single-thin-rail sentence, checked against its own negative '
@@ -1932,7 +2047,10 @@ const GEN_N = 24;
     + 'the arrival inverted in both of its halves -- the gauge restored above the paired row, and '
     + 'the paired row restored with the deficit panel first; the rails\' aria-describedby tie '
     + 'stripped, which is the state in which 138 marks name their topics to a mouse and to nothing '
-    + 'else; and the two boot-ring plants -- THE BOOT CONSTANT RESTORED through boot.js\'s own '
+    + 'else, AND that tie stripped from EXACTLY ONE rail -- the partial revert, which the arm this '
+    + 'wave replaced could not see, because it read the first rail of three and asserted three '
+    + 'sampled titles were CONTAINED in its description rather than that the description WAS the '
+    + 'rail; and the two boot-ring plants -- THE BOOT CONSTANT RESTORED through boot.js\'s own '
     + 'derivation, and the door stamp DELETED -- judged on the UNION of a document_start '
     + 'MutationObserver and the painted frames, because a WRONG stamp is a value in the log while '
     + 'a MISSING one is only a gap in the paint, and each recorder alone lets the other defect '

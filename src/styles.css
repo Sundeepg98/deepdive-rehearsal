@@ -350,16 +350,27 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
      Two consumers, and they must move together or the legend stops labelling the mark: the
      capsule's own inset rule (.hm-seg) and the key's "Untouched" swatch (.hm-k.none i).
      THE BINDING GROUND DIFFERS BY SCHEME, so both are solved rather than one and a hope: the
-     capsules sit on --side, the key's swatches sit on --card, and in light the trough is the
-     tighter pair while in dark it is the card. ONE PAIR, THE ONE THAT SHIPS, MEASURED ON ALL
-     FOUR GROUNDS -- an earlier draft of this comment presented a SUPERSEDED solve (#7E786E /
-     #74707C, ~3.75:1 on --side) as the answer and then printed the shipped values four lines
-     later, so the block stated its own solve twice and disagreed with itself:
-       light  #76726A   4.10:1 on --side   4.79:1 on --card
-       dark   #7D7985   4.23:1 on --side   3.49:1 on --card (the lifted home surface, item 8)
-     The binding cell is dark-on-card at 3.49:1, 16% clear of the 3:1 non-text floor; the
-     rasterised minimum, which is what test/scoreboard_salience.cjs actually asserts, is read off
-     the pixels rather than off this arithmetic. */
+     capsules sit on --side, the key's swatches sit on --home-surface (.hm-panel's own background),
+     and in light the trough is the tighter pair while in dark it is the panel. ONE PAIR, THE ONE
+     THAT SHIPS, MEASURED ON ALL FOUR GROUNDS -- an earlier draft of this comment presented a
+     SUPERSEDED solve (#7E786E / #74707C, ~3.75:1 on --side) as the answer and then printed the
+     shipped values four lines later, so the block stated its own solve twice and disagreed with
+     itself:
+       light  #76726A   4.10:1 on --side   4.79:1 on --home-surface
+       dark   #7D7985   4.23:1 on --side   3.49:1 on --home-surface (the lifted home panel)
+     THE GROUND'S NAME WAS WRONG UNTIL CYCLE 5 AND THE NUMBERS WERE RIGHT: this said --card, and
+     the swatches sit on .hm-panel, which is `background:var(--home-surface)` (dark #292632, not
+     --card's #1E1C25) -- so "MEASURED ON ALL FOUR GROUNDS" named three grounds correctly and one
+     incorrectly, and 3.49 was always the panel figure. A pair solved against a ground it does not
+     name is a solve nobody can re-derive.
+     The binding cell is dark-on-panel at 3.49:1, 16% clear of the 3:1 non-text floor; the
+     rasterised minimum is read off the pixels rather than off this arithmetic, and it is
+     test/scoreboard_salience.cjs's KEY arm -- added in cycle 5 -- that reads it. Until then this
+     clause pointed at "what scoreboard_salience actually asserts" and that file contained no
+     `.hm-k` selector at all: its denominator arm measures .hm-seg's inset rule against --side,
+     which is the 4.10 / 4.23 pair and not this binding one. The key arm reads all four swatches
+     by removal diff against the panel's own measured ground, in both schemes, with .hm-k.none i
+     declared the binding cell and a plant that repaints --gauge-rule at that ground's own colour. */
   html{--gauge-rule:#76726A}
   html[data-theme="dark"]{--gauge-rule:#7D7985}
 
@@ -2803,9 +2814,9 @@ html[data-theme="dark"][data-view="home"] #home{--mut:#A7A29A}
    test/print_truth.cjs ARM F measures the PDF BYTES with and without these declarations, at
    printBackground:false (the reader default), and a build that has lost them comes back the same
    size as a page with no lattice on it. THAT ARM IS SENSITIVE TO THE GAUGE AND ITS LEGEND ONLY:
-   pressed on the committed deliverable with the six GRADE-BEARING selectors below removed from
-   the override, the delta moved 14 bytes of 125,089 -- 0.011%, against a 100,000-byte floor with
-   25% headroom -- so cycle 3's PASS line named the room bars and the room counts while the number
+   pressed on the committed deliverable with the six GRADE-BEARING selectors below dropped from
+   the OFF override, the delta moved 38 bytes of 125,089 -- 0.030%, against a 100,000-byte floor
+   with 25% headroom -- so cycle 3's PASS line named the room bars and the room counts while the number
    printed beside it could not have noticed their absence. CORRECTED, not re-argued: the byte arm
    claims the gauge and the legend, and ARM F2 asserts the other six on a property of the DOCUMENT
    -- getComputedStyle().printColorAdjust === 'exact' under emulateMedia('print'), deterministic,
@@ -2863,8 +2874,10 @@ html[data-theme="dark"][data-view="home"] #home{--mut:#A7A29A}
 /* the key states the three marks the gauge actually paints: filled, part-filled, hollow -- plus
    the keel. Fill, not hue, exactly as the segments do it. */
 /* THE SWATCHES TAKE THE MARKS' OWN VALUES, or the legend stops labelling the thing it names.
-   These four sit on --card while the marks sit on --side, so --gauge-rule is solved against BOTH
-   grounds (see its block): light 4.10:1 on the trough / 4.79:1 on the card, dark 4.23 / 3.49. */
+   These four sit on the PANEL (--home-surface) while the marks sit on --side, so --gauge-rule is
+   solved against BOTH grounds (see its block): light 4.10:1 on the trough / 4.79:1 on the panel,
+   dark 4.23 / 3.49. The dark-on-panel cell is the binding one, and test/scoreboard_salience.cjs's
+   KEY arm reads all four of these off the pixels against the panel's own measured ground. */
 /* the swatches carry the WATERLINE too -- a legend that draws the mark differently from the mark
    is a legend for something else. Same --keel-h AND --keel-gap, so the two cannot drift. */
 .hm-k i{position:relative;width:9px;height:15px;border-radius:2px;--keel-h:2px;--keel-gap:2px;

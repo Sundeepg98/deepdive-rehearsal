@@ -846,9 +846,14 @@ Full serial run (`python test/check_all.py`, no `--fast`, no `--shared-browser`)
 `_audit/2026-08-03-w-addresses-cycle2-gate.txt`.
 
 ```
-  78 checks in 1219.0s (20.3 min)
+  78 checks in 1202.0s (20.0 min)
 GATE: PASS
 ```
+
+Taken on **`9abb32d`**, the tree this branch ends on. The previous capture was one PASS-message
+string out of date -- `home_claims`' mutant tally, edited after that run to say how the two boot
+plants are actually judged. A print string in a green line is inert, and "inert" is what every
+claim this cycle falsified had said about itself, so the run was retaken rather than argued.
 
 **Three full runs were taken and the middle one is worth recording rather than hiding.** The first
 (`00f1962`) was 78/78 in 1306.5s. The boot arm was then hardened -- see R4 -- and the re-run on the

@@ -1,546 +1,1448 @@
 {
  "born": "2026-08-03, W-ADDRESSES cycle 1",
- "note": "CRAFT HYGIENE -- ruled exceptions. Every entry is a span the sweep found and a reason it is not being fixed in this wave. A stale entry (one that matches nothing any more) FAILS the check: a debt list that cannot shrink is a permission slip. This list may be shortened without ceremony; it may only be lengthened with an argument.",
- "scope_note": "The APP CHROME is at ZERO for prose: the three instances the sweep found -- the library filter placeholder, the Print Q&A description and the cold home CTA -- are typeset. What remains here is the topic CORPUS (a content pass) and glyphs on surfaces whose VR baselines this wave may not move.",
+ "rekeyed": "2026-08-03, W-ADDRESSES cycle 2",
+ "note": "CRAFT HYGIENE -- ruled exceptions. Every entry is a span the sweep found and a reason it is not being fixed in this wave. THE KEY IS A SHA-256 OF `file` + the whole stripped span (first 16 hex chars); `text` is that span verbatim, so the key can be recomputed from the file itself. It was a 120-character PREFIX of the span ALONE, and both halves of that were holes: 1,668 characters of corpus prose sat past the guarded prefix (a defect planted at offset 251 inside an allowlisted span went undetected), and a mark excused in one file excused every future copy of itself anywhere (a U+2605 ratcheted in styles.css silently excused a reinstated star span in panels.js). `count` is the number of sites in that file and is enforced exactly: one more is the class growing, one fewer is debt that was paid and not written down. `rules` is enforced too -- an entry is excused only from the rules it declares, a hit outside them is a finding, and a declared rule that no longer fires is stale. `lines` is a pointer, not part of the key: line numbers move and that must not break the ratchet. This list may be shortened without ceremony; it may only be lengthened with an argument.",
+ "scope_note": "The APP CHROME is at ZERO for prose: the three instances the sweep found -- the library filter placeholder, the Print Q&A description and the cold home CTA -- are typeset. What remains is the topic CORPUS (a content pass) and the app-wide GLYPH pass, which needs a drawn substitute per mark and touches surfaces whose VR baselines this wave may not move.",
  "spans": {
-  "\"my file.bin\"": {
-   "rules": [
-    "quote"
+  "22ea7f188bddd697": {
+   "file": "src/index.html",
+   "lines": [
+    47
    ],
-   "where": "src/topics/content-pipeline/walk.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
-  },
-  "'HSM sign-ops per second \u2014 and signing is size-independent, so a bigger box doesn't help.'": {
+   "count": 1,
    "rules": [
-    "apostrophe"
+    "glyph"
    ],
-   "where": "src/topics/signing/drill.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+   "text": "\u2302",
+   "why": "app glyph, W-ADDRESSES cycle 2: the app-wide glyph pass is its own wave. Each of these needs a DRAWN substitute (the .ix-star-ic treatment -- a clip-path shape takes no font and cannot substitute), and they are SHARED marks: U+25BE is the topic-nav chevron, the mobile library chevron on the home, the drill chevron and a CSS ::after, so fixing one site would leave the app drawing one chevron two ways. Every surface but the home has a VR baseline this wave may not move. The class is CLOSED rather than merely quiet: the glyph rule runs on every span unconditionally, .css is in scope, and the key binds the span to its FILE and its COUNT -- pressed with a reinstated U+2605 span, a planted U+27A4 and a planted CSS content: mark, all three RED."
   },
-  "'I hash during the upload because reading twice or buffering won't survive 500MB'": {
+  "6b67a653d270a498": {
+   "file": "src/index.html",
+   "lines": [
+    48,
+    238
+   ],
+   "count": 2,
    "rules": [
-    "apostrophe"
+    "glyph"
    ],
-   "where": "src/topics/content-pipeline/drill.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+   "text": "\u2039",
+   "why": "app glyph, W-ADDRESSES cycle 2: the app-wide glyph pass is its own wave. Each of these needs a DRAWN substitute (the .ix-star-ic treatment -- a clip-path shape takes no font and cannot substitute), and they are SHARED marks: U+25BE is the topic-nav chevron, the mobile library chevron on the home, the drill chevron and a CSS ::after, so fixing one site would leave the app drawing one chevron two ways. Every surface but the home has a VR baseline this wave may not move. The class is CLOSED rather than merely quiet: the glyph rule runs on every span unconditionally, .css is in scope, and the key binds the span to its FILE and its COUNT -- pressed with a reinstated U+2605 span, a planted U+27A4 and a planted CSS content: mark, all three RED."
   },
-  "'I'd stream it with a server-side cursor so memory stays constant'": {
+  "0f7eb4396624fd3e": {
+   "file": "src/index.html",
+   "lines": [
+    49,
+    153
+   ],
+   "count": 2,
    "rules": [
-    "apostrophe"
+    "glyph"
    ],
-   "where": "src/topics/content-pipeline/drill.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+   "text": "\u25be",
+   "why": "app glyph, W-ADDRESSES cycle 2: the app-wide glyph pass is its own wave. Each of these needs a DRAWN substitute (the .ix-star-ic treatment -- a clip-path shape takes no font and cannot substitute), and they are SHARED marks: U+25BE is the topic-nav chevron, the mobile library chevron on the home, the drill chevron and a CSS ::after, so fixing one site would leave the app drawing one chevron two ways. Every surface but the home has a VR baseline this wave may not move. The class is CLOSED rather than merely quiet: the glyph rule runs on every span unconditionally, .css is in scope, and the key binds the span to its FILE and its COUNT -- pressed with a reinstated U+2605 span, a planted U+27A4 and a planted CSS content: mark, all three RED."
   },
-  "'Lambda-per-object for this volume; I'd move to SQS the moment I need retries, a DLQ, or ordering.'": {
+  "9025713d64279f09": {
+   "file": "src/index.html",
+   "lines": [
+    50,
+    204
+   ],
+   "count": 2,
    "rules": [
-    "apostrophe"
+    "glyph"
    ],
-   "where": "src/topics/content-pipeline/drill.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+   "text": "\u203a",
+   "why": "app glyph, W-ADDRESSES cycle 2: the app-wide glyph pass is its own wave. Each of these needs a DRAWN substitute (the .ix-star-ic treatment -- a clip-path shape takes no font and cannot substitute), and they are SHARED marks: U+25BE is the topic-nav chevron, the mobile library chevron on the home, the drill chevron and a CSS ::after, so fixing one site would leave the app drawing one chevron two ways. Every surface but the home has a VR baseline this wave may not move. The class is CLOSED rather than merely quiet: the glyph rule runs on every span unconditionally, .css is in scope, and the key binds the span to its FILE and its COUNT -- pressed with a reinstated U+2605 span, a planted U+27A4 and a planted CSS content: mark, all three RED."
   },
-  "'The risk here is a dual-write \u2014 the DB rolls back but S3 doesn't'": {
+  "2a3723f834c3e925": {
+   "file": "src/index.html",
+   "lines": [
+    58
+   ],
+   "count": 1,
    "rules": [
-    "apostrophe"
+    "glyph"
    ],
-   "where": "src/topics/content-pipeline/drill.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+   "text": "\u25b6",
+   "why": "app glyph, W-ADDRESSES cycle 2: the app-wide glyph pass is its own wave. Each of these needs a DRAWN substitute (the .ix-star-ic treatment -- a clip-path shape takes no font and cannot substitute), and they are SHARED marks: U+25BE is the topic-nav chevron, the mobile library chevron on the home, the drill chevron and a CSS ::after, so fixing one site would leave the app drawing one chevron two ways. Every surface but the home has a VR baseline this wave may not move. The class is CLOSED rather than merely quiet: the glyph rule runs on every span unconditionally, .css is in scope, and the key binds the span to its FILE and its COUNT -- pressed with a reinstated U+2605 span, a planted U+27A4 and a planted CSS content: mark, all three RED."
   },
-  "'This is a one-way door \u2014 overlapping prefixes are forbidden, so I'd settle the taxonomy up front.'": {
+  "bd3239cc319cb6a1": {
+   "file": "src/index.html",
+   "lines": [
+    129
+   ],
+   "count": 1,
    "rules": [
-    "apostrophe"
+    "glyph"
    ],
-   "where": "src/topics/content-pipeline/drill.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+   "text": "\u263d",
+   "why": "app glyph, W-ADDRESSES cycle 2: the app-wide glyph pass is its own wave. Each of these needs a DRAWN substitute (the .ix-star-ic treatment -- a clip-path shape takes no font and cannot substitute), and they are SHARED marks: U+25BE is the topic-nav chevron, the mobile library chevron on the home, the drill chevron and a CSS ::after, so fixing one site would leave the app drawing one chevron two ways. Every surface but the home has a VR baseline this wave may not move. The class is CLOSED rather than merely quiet: the glyph rule runs on every span unconditionally, .css is in scope, and the key binds the span to its FILE and its COUNT -- pressed with a reinstated U+2605 span, a planted U+27A4 and a planted CSS content: mark, all three RED."
   },
-  "'at this scale it's S3 requests and transfer, not Lambda-seconds'": {
+  "5a886c040c3861e8": {
+   "file": "src/scripts/app/cross-drill.js",
+   "lines": [
+    53
+   ],
+   "count": 1,
    "rules": [
-    "apostrophe"
+    "glyph"
    ],
-   "where": "src/topics/content-pipeline/drill.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+   "text": "\u2713",
+   "why": "app glyph, W-ADDRESSES cycle 2: the app-wide glyph pass is its own wave. Each of these needs a DRAWN substitute (the .ix-star-ic treatment -- a clip-path shape takes no font and cannot substitute), and they are SHARED marks: U+25BE is the topic-nav chevron, the mobile library chevron on the home, the drill chevron and a CSS ::after, so fixing one site would leave the app drawing one chevron two ways. Every surface but the home has a VR baseline this wave may not move. The class is CLOSED rather than merely quiet: the glyph rule runs on every span unconditionally, .css is in scope, and the key binds the span to its FILE and its COUNT -- pressed with a reinstated U+2605 span, a planted U+27A4 and a planted CSS content: mark, all three RED."
   },
-  "'devices anchor to the root, not the leaf key \u2014 that's what lets a signing key rotate without a fleet-wide re-flash.'": {
+  "dc0b34950cd57e21": {
+   "file": "src/scripts/app/drill/logic.js",
+   "lines": [
+    24
+   ],
+   "count": 1,
    "rules": [
-    "apostrophe"
+    "glyph"
    ],
-   "where": "src/topics/signing/drill.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+   "text": "\u25be",
+   "why": "app glyph, W-ADDRESSES cycle 2: the app-wide glyph pass is its own wave. Each of these needs a DRAWN substitute (the .ix-star-ic treatment -- a clip-path shape takes no font and cannot substitute), and they are SHARED marks: U+25BE is the topic-nav chevron, the mobile library chevron on the home, the drill chevron and a CSS ::after, so fixing one site would leave the app drawing one chevron two ways. Every surface but the home has a VR baseline this wave may not move. The class is CLOSED rather than merely quiet: the glyph rule runs on every span unconditionally, .css is in scope, and the key binds the span to its FILE and its COUNT -- pressed with a reinstated U+2605 span, a planted U+27A4 and a planted CSS content: mark, all three RED."
   },
-  "'no tenant context -- called outside request scope'": {
+  "a4943002110d79b4": {
+   "file": "src/scripts/app/drill/logic.js",
+   "lines": [
+    24
+   ],
+   "count": 1,
+   "rules": [
+    "glyph"
+   ],
+   "text": "\u21bb Drill my",
+   "why": "app glyph on a VR-frozen surface: the drill pane and the mixed-fire overlay. W-ADDRESSES is authorised to rebaseline the HOME only, and the home is now clean -- .ix-star-ic was the last one and it is drawn rather than typeset."
+  },
+  "2ebfaf19fe1b04e8": {
+   "file": "src/scripts/app/drill/logic.js",
+   "lines": [
+    780
+   ],
+   "count": 1,
+   "rules": [
+    "glyph"
+   ],
+   "text": "\u2717",
+   "why": "app glyph, W-ADDRESSES cycle 2: the app-wide glyph pass is its own wave. Each of these needs a DRAWN substitute (the .ix-star-ic treatment -- a clip-path shape takes no font and cannot substitute), and they are SHARED marks: U+25BE is the topic-nav chevron, the mobile library chevron on the home, the drill chevron and a CSS ::after, so fixing one site would leave the app drawing one chevron two ways. Every surface but the home has a VR baseline this wave may not move. The class is CLOSED rather than merely quiet: the glyph rule runs on every span unconditionally, .css is in scope, and the key binds the span to its FILE and its COUNT -- pressed with a reinstated U+2605 span, a planted U+27A4 and a planted CSS content: mark, all three RED."
+  },
+  "4a76e5a4d0071179": {
+   "file": "src/scripts/app/drill/logic.js",
+   "lines": [
+    782,
+    812
+   ],
+   "count": 2,
+   "rules": [
+    "glyph"
+   ],
+   "text": "\u2713",
+   "why": "app glyph, W-ADDRESSES cycle 2: the app-wide glyph pass is its own wave. Each of these needs a DRAWN substitute (the .ix-star-ic treatment -- a clip-path shape takes no font and cannot substitute), and they are SHARED marks: U+25BE is the topic-nav chevron, the mobile library chevron on the home, the drill chevron and a CSS ::after, so fixing one site would leave the app drawing one chevron two ways. Every surface but the home has a VR baseline this wave may not move. The class is CLOSED rather than merely quiet: the glyph rule runs on every span unconditionally, .css is in scope, and the key binds the span to its FILE and its COUNT -- pressed with a reinstated U+2605 span, a planted U+27A4 and a planted CSS content: mark, all three RED."
+  },
+  "6c769c938caee3e9": {
+   "file": "src/scripts/app/drill/logic.js",
+   "lines": [
+    785
+   ],
+   "count": 1,
+   "rules": [
+    "glyph"
+   ],
+   "text": "\u21b3",
+   "why": "app glyph, W-ADDRESSES cycle 2: the app-wide glyph pass is its own wave. Each of these needs a DRAWN substitute (the .ix-star-ic treatment -- a clip-path shape takes no font and cannot substitute), and they are SHARED marks: U+25BE is the topic-nav chevron, the mobile library chevron on the home, the drill chevron and a CSS ::after, so fixing one site would leave the app drawing one chevron two ways. Every surface but the home has a VR baseline this wave may not move. The class is CLOSED rather than merely quiet: the glyph rule runs on every span unconditionally, .css is in scope, and the key binds the span to its FILE and its COUNT -- pressed with a reinstated U+2605 span, a planted U+27A4 and a planted CSS content: mark, all three RED."
+  },
+  "9d5979d73228fadb": {
+   "file": "src/scripts/app/home-view.js",
+   "lines": [
+    725
+   ],
+   "count": 1,
+   "rules": [
+    "glyph"
+   ],
+   "text": "\u25be",
+   "why": "app glyph, W-ADDRESSES cycle 2: the app-wide glyph pass is its own wave. Each of these needs a DRAWN substitute (the .ix-star-ic treatment -- a clip-path shape takes no font and cannot substitute), and they are SHARED marks: U+25BE is the topic-nav chevron, the mobile library chevron on the home, the drill chevron and a CSS ::after, so fixing one site would leave the app drawing one chevron two ways. Every surface but the home has a VR baseline this wave may not move. The class is CLOSED rather than merely quiet: the glyph rule runs on every span unconditionally, .css is in scope, and the key binds the span to its FILE and its COUNT -- pressed with a reinstated U+2605 span, a planted U+27A4 and a planted CSS content: mark, all three RED."
+  },
+  "9fe26d65687ff88e": {
+   "file": "src/scripts/app/keyboard-overlay.js",
+   "lines": [
+    66
+   ],
+   "count": 1,
+   "rules": [
+    "glyph"
+   ],
+   "text": "\u2318",
+   "why": "app glyph, W-ADDRESSES cycle 2: the app-wide glyph pass is its own wave. Each of these needs a DRAWN substitute (the .ix-star-ic treatment -- a clip-path shape takes no font and cannot substitute), and they are SHARED marks: U+25BE is the topic-nav chevron, the mobile library chevron on the home, the drill chevron and a CSS ::after, so fixing one site would leave the app drawing one chevron two ways. Every surface but the home has a VR baseline this wave may not move. The class is CLOSED rather than merely quiet: the glyph rule runs on every span unconditionally, .css is in scope, and the key binds the span to its FILE and its COUNT -- pressed with a reinstated U+2605 span, a planted U+27A4 and a planted CSS content: mark, all three RED."
+  },
+  "eb1d6d12ba248a17": {
+   "file": "src/scripts/app/mixed-fire.js",
+   "lines": [
+    129
+   ],
+   "count": 1,
+   "rules": [
+    "glyph"
+   ],
+   "text": "\u2713 Handled it",
+   "why": "app glyph on a VR-frozen surface: the drill pane and the mixed-fire overlay. W-ADDRESSES is authorised to rebaseline the HOME only, and the home is now clean -- .ix-star-ic was the last one and it is drawn rather than typeset."
+  },
+  "c5461b0b23245d07": {
+   "file": "src/scripts/app/mixed-fire.js",
+   "lines": [
+    225
+   ],
+   "count": 1,
+   "rules": [
+    "glyph"
+   ],
+   "text": "\ud83d\udd34\u00a0 The interviewer cuts in",
+   "why": "app glyph on a VR-frozen surface: the drill pane and the mixed-fire overlay. W-ADDRESSES is authorised to rebaseline the HOME only, and the home is now clean -- .ix-star-ic was the last one and it is drawn rather than typeset."
+  },
+  "753b6accaf8a3f52": {
+   "file": "src/scripts/app/mixed-fire.js",
+   "lines": [
+    225
+   ],
+   "count": 1,
+   "rules": [
+    "glyph"
+   ],
+   "text": "\ud83d\udd34\u00a0 And they push again",
+   "why": "app glyph on a VR-frozen surface: the drill pane and the mixed-fire overlay. W-ADDRESSES is authorised to rebaseline the HOME only, and the home is now clean -- .ix-star-ic was the last one and it is drawn rather than typeset."
+  },
+  "3173c74498f2eb8e": {
+   "file": "src/scripts/app/panels.js",
+   "lines": [
+    257
+   ],
+   "count": 1,
+   "rules": [
+    "glyph"
+   ],
+   "text": "\u2212",
+   "why": "app glyph, W-ADDRESSES cycle 2: the app-wide glyph pass is its own wave. Each of these needs a DRAWN substitute (the .ix-star-ic treatment -- a clip-path shape takes no font and cannot substitute), and they are SHARED marks: U+25BE is the topic-nav chevron, the mobile library chevron on the home, the drill chevron and a CSS ::after, so fixing one site would leave the app drawing one chevron two ways. Every surface but the home has a VR baseline this wave may not move. The class is CLOSED rather than merely quiet: the glyph rule runs on every span unconditionally, .css is in scope, and the key binds the span to its FILE and its COUNT -- pressed with a reinstated U+2605 span, a planted U+27A4 and a planted CSS content: mark, all three RED."
+  },
+  "86f2a7a2bcd4ea02": {
+   "file": "src/scripts/app/panels.js",
+   "lines": [
+    437
+   ],
+   "count": 1,
+   "rules": [
+    "glyph"
+   ],
+   "text": "\u270e",
+   "why": "app glyph, W-ADDRESSES cycle 2: the app-wide glyph pass is its own wave. Each of these needs a DRAWN substitute (the .ix-star-ic treatment -- a clip-path shape takes no font and cannot substitute), and they are SHARED marks: U+25BE is the topic-nav chevron, the mobile library chevron on the home, the drill chevron and a CSS ::after, so fixing one site would leave the app drawing one chevron two ways. Every surface but the home has a VR baseline this wave may not move. The class is CLOSED rather than merely quiet: the glyph rule runs on every span unconditionally, .css is in scope, and the key binds the span to its FILE and its COUNT -- pressed with a reinstated U+2605 span, a planted U+27A4 and a planted CSS content: mark, all three RED."
+  },
+  "b357b1c1179c100f": {
+   "file": "src/scripts/app/panels.js",
+   "lines": [
+    460
+   ],
+   "count": 1,
+   "rules": [
+    "glyph"
+   ],
+   "text": "\u21bb",
+   "why": "app glyph, W-ADDRESSES cycle 2: the app-wide glyph pass is its own wave. Each of these needs a DRAWN substitute (the .ix-star-ic treatment -- a clip-path shape takes no font and cannot substitute), and they are SHARED marks: U+25BE is the topic-nav chevron, the mobile library chevron on the home, the drill chevron and a CSS ::after, so fixing one site would leave the app drawing one chevron two ways. Every surface but the home has a VR baseline this wave may not move. The class is CLOSED rather than merely quiet: the glyph rule runs on every span unconditionally, .css is in scope, and the key binds the span to its FILE and its COUNT -- pressed with a reinstated U+2605 span, a planted U+27A4 and a planted CSS content: mark, all three RED."
+  },
+  "b9ab24dc9022d515": {
+   "file": "src/scripts/app/red-flags.js",
+   "lines": [
+    38
+   ],
+   "count": 1,
+   "rules": [
+    "glyph"
+   ],
+   "text": "\u2717",
+   "why": "app glyph, W-ADDRESSES cycle 2: the app-wide glyph pass is its own wave. Each of these needs a DRAWN substitute (the .ix-star-ic treatment -- a clip-path shape takes no font and cannot substitute), and they are SHARED marks: U+25BE is the topic-nav chevron, the mobile library chevron on the home, the drill chevron and a CSS ::after, so fixing one site would leave the app drawing one chevron two ways. Every surface but the home has a VR baseline this wave may not move. The class is CLOSED rather than merely quiet: the glyph rule runs on every span unconditionally, .css is in scope, and the key binds the span to its FILE and its COUNT -- pressed with a reinstated U+2605 span, a planted U+27A4 and a planted CSS content: mark, all three RED."
+  },
+  "5c1afea6ea91395b": {
+   "file": "src/styles.css",
+   "lines": [
+    558,
+    558,
+    1264
+   ],
+   "count": 3,
+   "rules": [
+    "glyph"
+   ],
+   "text": "\u203a",
+   "why": "app glyph, W-ADDRESSES cycle 2: the app-wide glyph pass is its own wave. Each of these needs a DRAWN substitute (the .ix-star-ic treatment -- a clip-path shape takes no font and cannot substitute), and they are SHARED marks: U+25BE is the topic-nav chevron, the mobile library chevron on the home, the drill chevron and a CSS ::after, so fixing one site would leave the app drawing one chevron two ways. Every surface but the home has a VR baseline this wave may not move. The class is CLOSED rather than merely quiet: the glyph rule runs on every span unconditionally, .css is in scope, and the key binds the span to its FILE and its COUNT -- pressed with a reinstated U+2605 span, a planted U+27A4 and a planted CSS content: mark, all three RED."
+  },
+  "8f4dfe1b36bf7111": {
+   "file": "src/styles.css",
+   "lines": [
+    1092
+   ],
+   "count": 1,
+   "rules": [
+    "glyph"
+   ],
+   "text": "\u25be",
+   "why": "app glyph, W-ADDRESSES cycle 2: the app-wide glyph pass is its own wave. Each of these needs a DRAWN substitute (the .ix-star-ic treatment -- a clip-path shape takes no font and cannot substitute), and they are SHARED marks: U+25BE is the topic-nav chevron, the mobile library chevron on the home, the drill chevron and a CSS ::after, so fixing one site would leave the app drawing one chevron two ways. Every surface but the home has a VR baseline this wave may not move. The class is CLOSED rather than merely quiet: the glyph rule runs on every span unconditionally, .css is in scope, and the key binds the span to its FILE and its COUNT -- pressed with a reinstated U+2605 span, a planted U+27A4 and a planted CSS content: mark, all three RED."
+  },
+  "6c2056ad9d04b0e3": {
+   "file": "src/styles.css",
+   "lines": [
+    1281
+   ],
+   "count": 1,
+   "rules": [
+    "glyph"
+   ],
+   "text": "\u2039",
+   "why": "app glyph, W-ADDRESSES cycle 2: the app-wide glyph pass is its own wave. Each of these needs a DRAWN substitute (the .ix-star-ic treatment -- a clip-path shape takes no font and cannot substitute), and they are SHARED marks: U+25BE is the topic-nav chevron, the mobile library chevron on the home, the drill chevron and a CSS ::after, so fixing one site would leave the app drawing one chevron two ways. Every surface but the home has a VR baseline this wave may not move. The class is CLOSED rather than merely quiet: the glyph rule runs on every span unconditionally, .css is in scope, and the key binds the span to its FILE and its COUNT -- pressed with a reinstated U+2605 span, a planted U+27A4 and a planted CSS content: mark, all three RED."
+  },
+  "f7f3ba7ca0b5717e": {
+   "file": "src/styles.css",
+   "lines": [
+    2011,
+    2011
+   ],
+   "count": 2,
+   "rules": [
+    "glyph"
+   ],
+   "text": "\u2605",
+   "why": "app glyph, W-ADDRESSES cycle 2: the app-wide glyph pass is its own wave. Each of these needs a DRAWN substitute (the .ix-star-ic treatment -- a clip-path shape takes no font and cannot substitute), and they are SHARED marks: U+25BE is the topic-nav chevron, the mobile library chevron on the home, the drill chevron and a CSS ::after, so fixing one site would leave the app drawing one chevron two ways. Every surface but the home has a VR baseline this wave may not move. The class is CLOSED rather than merely quiet: the glyph rule runs on every span unconditionally, .css is in scope, and the key binds the span to its FILE and its COUNT -- pressed with a reinstated U+2605 span, a planted U+27A4 and a planted CSS content: mark, all three RED."
+  },
+  "1b0fcc16ab4411c5": {
+   "file": "src/styles.css",
+   "lines": [
+    2070,
+    2070
+   ],
+   "count": 2,
+   "rules": [
+    "glyph"
+   ],
+   "text": "\u25cf",
+   "why": "app glyph, W-ADDRESSES cycle 2: the app-wide glyph pass is its own wave. Each of these needs a DRAWN substitute (the .ix-star-ic treatment -- a clip-path shape takes no font and cannot substitute), and they are SHARED marks: U+25BE is the topic-nav chevron, the mobile library chevron on the home, the drill chevron and a CSS ::after, so fixing one site would leave the app drawing one chevron two ways. Every surface but the home has a VR baseline this wave may not move. The class is CLOSED rather than merely quiet: the glyph rule runs on every span unconditionally, .css is in scope, and the key binds the span to its FILE and its COUNT -- pressed with a reinstated U+2605 span, a planted U+27A4 and a planted CSS content: mark, all three RED."
+  },
+  "c6aa8aa17f2bdd08": {
+   "file": "src/topics/authz/walk.js",
+   "lines": [
+    30
+   ],
+   "count": 1,
    "rules": [
     "dash"
    ],
-   "where": "src/topics/authz/walk.js",
+   "text": "'no tenant context -- called outside request scope'",
    "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
   },
-  "'per tenant, per product type, so a leak hits one company's product line, not the fleet.'": {
+  "77c1d43bc8441b09": {
+   "file": "src/topics/authz/wb.js",
+   "lines": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "count": 4,
+   "rules": [
+    "glyph"
+   ],
+   "text": "\u25bc",
+   "why": "corpus glyph, W-ADDRESSES cycle 2: the topic bank is authored content and this wave is the HOME. These are technical marks inside authored prose (a non-breaking hyphen in SHA-256, a not-equals in a walkthrough line, whiteboard arrows) -- replacing them is a content pass with its own review, exactly as the 73 prose spans are."
+  },
+  "9af18043124bfd14": {
+   "file": "src/topics/aws-hardening/wb.js",
+   "lines": [
+    17,
+    17,
+    17
+   ],
+   "count": 3,
+   "rules": [
+    "glyph"
+   ],
+   "text": "\u25bc",
+   "why": "corpus glyph, W-ADDRESSES cycle 2: the topic bank is authored content and this wave is the HOME. These are technical marks inside authored prose (a non-breaking hyphen in SHA-256, a not-equals in a walkthrough line, whiteboard arrows) -- replacing them is a content pass with its own review, exactly as the 73 prose spans are."
+  },
+  "988a06fe90d719da": {
+   "file": "src/topics/content-pipeline/drill.js",
+   "lines": [
+    13
+   ],
+   "count": 1,
    "rules": [
     "apostrophe"
    ],
-   "where": "src/topics/signing/drill.js",
+   "text": ", batch 100) piped to the response. Backpressure throttles the cursor to the client's drain rate, so memory is",
    "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
   },
-  "'the CSV sends \"30\", I coerce to the integer 30 and validate; a value that can\u2019t coerce is rejected.'": {
+  "5ad34dcad6186030": {
+   "file": "src/topics/content-pipeline/drill.js",
+   "lines": [
+    23
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": "the DB transaction rolls back, but the S3 objects don't \u2014 they're orphaned. Fix: track every created key, delete them in the",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "48c1740dc93485f0": {
+   "file": "src/topics/content-pipeline/drill.js",
+   "lines": [
+    28
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": "on a deterministic key, and the ladder's",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "f977ced774dfb4c6": {
+   "file": "src/topics/content-pipeline/drill.js",
+   "lines": [
+    65
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": ", so you can't later split",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "345f40082c8cf463": {
+   "file": "src/topics/content-pipeline/drill.js",
+   "lines": [
+    106
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": "the downstream honors (Stripe-style): same key, same charge, executed once. If the downstream can't dedupe, use a",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "3f7092624000191d": {
+   "file": "src/topics/content-pipeline/drill.js",
+   "lines": [
+    115
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": ": the file is split into parts (e.g. 8\u00a0MB), each uploaded and ack'd independently, so a failed part retries alone. The client resumes by re-sending only the missing parts; S3 assembles on",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "fb2ccd4cd3298e00": {
+   "file": "src/topics/content-pipeline/drill.js",
+   "lines": [
+    118
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": "\u2014 they consume storage but don't show in normal listings, so it's a silent bill. Fix: an",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "1c1cd3dd3dd43b0d": {
+   "file": "src/topics/content-pipeline/drill.js",
+   "lines": [
+    150
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": "Version the format \u2014 don't mutate one.",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "93de61b4a50b3cea": {
+   "file": "src/topics/content-pipeline/drill.js",
+   "lines": [
+    157
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": "to the source read \u2014 so the fast hash branch is throttled to the upload's pace. Memory stays bounded at the buffer size; unread chunks do",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "197ccfa8fe46996f": {
+   "file": "src/topics/content-pipeline/drill.js",
+   "lines": [
+    170
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": "Encrypt each user's content under a per-user key; deletion drops the key, so the backed-up ciphertext is unrecoverable without ever touching the backup. The honest alternative is a bounded",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "e5a4a3cb702a83fe": {
+   "file": "src/topics/content-pipeline/drill.js",
+   "lines": [
+    217
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": "'I'd stream it with a server-side cursor so memory stays constant'",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "f91d8d836a1ddfb4": {
+   "file": "src/topics/content-pipeline/drill.js",
+   "lines": [
+    218
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": "'The risk here is a dual-write \u2014 the DB rolls back but S3 doesn't'",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "0d26f460699ea025": {
+   "file": "src/topics/content-pipeline/drill.js",
+   "lines": [
+    219
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": "'I hash during the upload because reading twice or buffering won't survive 500MB'",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "018ae4c9d49f2895": {
+   "file": "src/topics/content-pipeline/drill.js",
+   "lines": [
+    220
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": "'Lambda-per-object for this volume; I'd move to SQS the moment I need retries, a DLQ, or ordering.'",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "489bb43134c83201": {
+   "file": "src/topics/content-pipeline/drill.js",
+   "lines": [
+    222
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": "'This is a one-way door \u2014 overlapping prefixes are forbidden, so I'd settle the taxonomy up front.'",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "c6badb5065ed057a": {
+   "file": "src/topics/content-pipeline/drill.js",
+   "lines": [
+    229
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": "'at this scale it's S3 requests and transfer, not Lambda-seconds'",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "742ccde1ab57d0c6": {
+   "file": "src/topics/content-pipeline/drill.js",
+   "lines": [
+    237
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": "\u2014 so memory stays constant and a 400\u00a0MB CSV drops to 30\u201350\u00a0MB. Then the honest boundary: skip compression on incompressible data or when you're CPU-bound, and compress",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "0395d7d10dbfc26a": {
+   "file": "src/topics/content-pipeline/open.js",
+   "lines": [
+    37
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": "The skill isn't knowing one version.",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "e5f28e2990bdc065": {
+   "file": "src/topics/content-pipeline/rf.js",
+   "lines": [
+    32
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": "\u201chasn't thought about the failure path.\u201d",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "be91e50b128e14e0": {
+   "file": "src/topics/content-pipeline/rf.js",
+   "lines": [
+    38
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": "doesn't exist \u2014 S3 and every queue are at-least-once. You",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "2cbaa6d8ddb89dd1": {
+   "file": "src/topics/content-pipeline/sys.js",
+   "lines": [
+    33
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": "\u2014 Terraform or CDK \u2014 so the bucket, functions, roles, and event wiring are versioned and reproducible instead of click-ops. And there's a clean parallel worth naming:",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "4773cf6f7549bc82": {
+   "file": "src/topics/content-pipeline/trade.js",
+   "lines": [
+    26
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": "can't share a transaction",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "f5591edfea850435": {
+   "file": "src/topics/content-pipeline/walk.js",
+   "lines": [
+    12
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": "contract, so the dispatcher's cyclomatic complexity stays",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "790c8e6aa0f62496": {
+   "file": "src/topics/content-pipeline/walk.js",
+   "lines": [
+    13
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": "\u2014 so the caller's PATCH-status logic is format-agnostic. Adding",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "c0e5f8c69a97435a": {
+   "file": "src/topics/content-pipeline/walk.js",
+   "lines": [
+    29
+   ],
+   "count": 1,
+   "rules": [
+    "glyph"
+   ],
+   "text": "\u22655MB multipart",
+   "why": "corpus glyph: a mathematical or status mark the app stack does not carry (the platform picks the face). Fixing it means either extending --sans or drawing the mark, and both move topic-route VR baselines this wave is not authorised to rebaseline."
+  },
+  "8d349794b5a7b701": {
+   "file": "src/topics/content-pipeline/walk.js",
+   "lines": [
+    34
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": "\u2192 processing must be idempotent (hash key). And prefixes can't overlap \u2014 you can't later split",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "2e37852ef7eb494d": {
+   "file": "src/topics/content-pipeline/walk.js",
+   "lines": [
+    35
+   ],
+   "count": 1,
    "rules": [
     "quote"
    ],
-   "where": "src/topics/eav/drill.js",
+   "text": "\"my file.bin\"",
    "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
   },
-  "(cert expiry) doesn't work on-device. You lean instead on the": {
-   "rules": [
-    "apostrophe"
+  "419da0fb89ddfdb1": {
+   "file": "src/topics/content-pipeline/walk.js",
+   "lines": [
+    42
    ],
-   "where": "src/topics/signing/drill.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
-  },
-  ", and the manifest's hashes transitively cover every file. It's the same \u2018sign a digest\u2019 principle one level up: the man": {
-   "rules": [
-    "apostrophe"
-   ],
-   "where": "src/topics/signing/drill.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
-  },
-  ", and verification is heavier. On a constrained device that eats flash headroom and boot time. You handle it like any de": {
-   "rules": [
-    "apostrophe"
-   ],
-   "where": "src/topics/signing/drill.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
-  },
-  ", batch 100) piped to the response. Backpressure throttles the cursor to the client's drain rate, so memory is": {
-   "rules": [
-    "apostrophe"
-   ],
-   "where": "src/topics/content-pipeline/drill.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
-  },
-  ", both of which survive the crash. A stale deployed record just means the next diff sees deployed\u2260reported (we think we ": {
+   "count": 1,
    "rules": [
     "glyph"
    ],
-   "where": "src/topics/desired-state/drill.js",
+   "text": "event (\u22651\u00d7)",
    "why": "corpus glyph: a mathematical or status mark the app stack does not carry (the platform picks the face). Fixing it means either extending --sans or drawing the mark, and both move topic-route VR baselines this wave is not authorised to rebaseline."
   },
-  ", so you can't later split": {
-   "rules": [
-    "apostrophe"
+  "921b182b4257f13c": {
+   "file": "src/topics/content-pipeline/walk.js",
+   "lines": [
+    56
    ],
-   "where": "src/topics/content-pipeline/drill.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
-  },
-  ", the cert vouches for the leaf. That's what lets you": {
-   "rules": [
-    "apostrophe"
-   ],
-   "where": "src/topics/signing/drill.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
-  },
-  ", your own key ceremony, or an algorithm KMS doesn't offer. The axis is": {
-   "rules": [
-    "apostrophe"
-   ],
-   "where": "src/topics/signing/drill.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
-  },
-  "32-byte SHA\u2011256 digest": {
+   "count": 1,
    "rules": [
     "glyph"
    ],
-   "where": "src/topics/signing/drill.js",
-   "why": "corpus glyph: a mathematical or status mark the app stack does not carry (the platform picks the face). Fixing it means either extending --sans or drawing the mark, and both move topic-route VR baselines this wave is not authorised to rebaseline."
+   "text": "dual\u2011write",
+   "why": "corpus glyph, W-ADDRESSES cycle 2: the topic bank is authored content and this wave is the HOME. These are technical marks inside authored prose (a non-breaking hyphen in SHA-256, a not-equals in a walkthrough line, whiteboard arrows) -- replacing them is a content pass with its own review, exactly as the 73 prose spans are."
   },
-  ": push a new legitimate package signed by the rotated key, and supersession (monotonic version) moves the device forward": {
+  "ca7c65889f7123b2": {
+   "file": "src/topics/content-pipeline/walk.js",
+   "lines": [
+    56
+   ],
+   "count": 1,
    "rules": [
     "apostrophe"
    ],
-   "where": "src/topics/signing/drill.js",
+   "text": ": the object is already in S3, but if the DB write fails I've got an orphan. The compensating delete covers the common case, but the real backstop is a",
    "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
   },
-  ": the anchor is burned in a controlled facility, the root generated in an HSM and never exposed. It's the one link you": {
-   "rules": [
-    "apostrophe"
+  "ad1aa448b730557b": {
+   "file": "src/topics/content-pipeline/wb.js",
+   "lines": [
+    17,
+    17,
+    17,
+    17
    ],
-   "where": "src/topics/signing/drill.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
-  },
-  ": the device only accepts the scheme(s) it's configured for and refuses": {
-   "rules": [
-    "apostrophe"
-   ],
-   "where": "src/topics/signing/drill.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
-  },
-  ": the file is split into parts (e.g. 8\u00a0MB), each uploaded and ack'd independently, so a failed part retries alone. The c": {
-   "rules": [
-    "apostrophe"
-   ],
-   "where": "src/topics/content-pipeline/drill.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
-  },
-  ": the object is already in S3, but if the DB write fails I've got an orphan. The compensating delete covers the common c": {
-   "rules": [
-    "apostrophe"
-   ],
-   "where": "src/topics/content-pipeline/walk.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
-  },
-  "Encrypt each user's content under a per-user key; deletion drops the key, so the backed-up ciphertext is unrecoverable w": {
-   "rules": [
-    "apostrophe"
-   ],
-   "where": "src/topics/content-pipeline/drill.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
-  },
-  "SHA\u2011256 digest": {
+   "count": 4,
    "rules": [
     "glyph"
    ],
-   "where": "src/topics/signing/open.js",
-   "why": "corpus glyph: a mathematical or status mark the app stack does not carry (the platform picks the face). Fixing it means either extending --sans or drawing the mark, and both move topic-route VR baselines this wave is not authorised to rebaseline."
+   "text": "\u25bc",
+   "why": "corpus glyph, W-ADDRESSES cycle 2: the topic bank is authored content and this wave is the HOME. These are technical marks inside authored prose (a non-breaking hyphen in SHA-256, a not-equals in a walkthrough line, whiteboard arrows) -- replacing them is a content pass with its own review, exactly as the 73 prose spans are."
   },
-  "The skill isn't knowing one version.": {
-   "rules": [
-    "apostrophe"
+  "605842cfbab8e66c": {
+   "file": "src/topics/content-pipeline/wb.js",
+   "lines": [
+    17
    ],
-   "where": "src/topics/content-pipeline/open.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
-  },
-  "Version the format \u2014 don't mutate one.": {
-   "rules": [
-    "apostrophe"
-   ],
-   "where": "src/topics/content-pipeline/drill.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
-  },
-  "Yes \u2014 that's the whole point of signing over online trust.": {
-   "rules": [
-    "apostrophe"
-   ],
-   "where": "src/topics/signing/drill.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
-  },
-  "and the device's": {
-   "rules": [
-    "apostrophe"
-   ],
-   "where": "src/topics/signing/drill.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
-  },
-  "binds a config address to a real resource's ID in state without recreating it \u2014 how you adopt hand-made infrastructure o": {
-   "rules": [
-    "apostrophe"
-   ],
-   "where": "src/topics/iac/drill.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
-  },
-  "can't share a transaction": {
-   "rules": [
-    "apostrophe"
-   ],
-   "where": "src/topics/content-pipeline/trade.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
-  },
-  "certifies the signing keys that sign packages, and the device's": {
-   "rules": [
-    "apostrophe"
-   ],
-   "where": "src/topics/signing/drill.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
-  },
-  "config \u2194 real IDs (locked, encrypted)": {
+   "count": 1,
    "rules": [
     "glyph"
    ],
-   "where": "src/topics/iac/wb.js",
+   "text": "\u2194",
+   "why": "corpus glyph, W-ADDRESSES cycle 2: the topic bank is authored content and this wave is the HOME. These are technical marks inside authored prose (a non-breaking hyphen in SHA-256, a not-equals in a walkthrough line, whiteboard arrows) -- replacing them is a content pass with its own review, exactly as the 73 prose spans are."
+  },
+  "7c1ac366b184f384": {
+   "file": "src/topics/content-pipeline/wb.js",
+   "lines": [
+    17
+   ],
+   "count": 1,
+   "rules": [
+    "glyph"
+   ],
+   "text": "\u25b2",
+   "why": "corpus glyph, W-ADDRESSES cycle 2: the topic bank is authored content and this wave is the HOME. These are technical marks inside authored prose (a non-breaking hyphen in SHA-256, a not-equals in a walkthrough line, whiteboard arrows) -- replacing them is a content pass with its own review, exactly as the 73 prose spans are."
+  },
+  "820e4300d7232661": {
+   "file": "src/topics/desired-state/drill.js",
+   "lines": [
+    58,
+    63
+   ],
+   "count": 2,
+   "rules": [
+    "glyph"
+   ],
+   "text": "desired \u2260 deployed",
    "why": "corpus glyph: a mathematical or status mark the app stack does not carry (the platform picks the face). Fixing it means either extending --sans or drawing the mark, and both move topic-route VR baselines this wave is not authorised to rebaseline."
   },
-  "contract, so the dispatcher's cyclomatic complexity stays": {
+  "766788ddbc34b134": {
+   "file": "src/topics/desired-state/drill.js",
+   "lines": [
+    58,
+    63,
+    88,
+    128
+   ],
+   "count": 4,
+   "rules": [
+    "glyph"
+   ],
+   "text": "deployed \u2260 reported",
+   "why": "corpus glyph: a mathematical or status mark the app stack does not carry (the platform picks the face). Fixing it means either extending --sans or drawing the mark, and both move topic-route VR baselines this wave is not authorised to rebaseline."
+  },
+  "27459c944e858af1": {
+   "file": "src/topics/desired-state/drill.js",
+   "lines": [
+    123
+   ],
+   "count": 1,
+   "rules": [
+    "glyph"
+   ],
+   "text": "(desired\u2260deployed = we owe a deploy; deployed\u2260reported = the device won\u2019t hold config \u2014 different owners, different fixes);",
+   "why": "corpus glyph, W-ADDRESSES cycle 2: the topic bank is authored content and this wave is the HOME. These are technical marks inside authored prose (a non-breaking hyphen in SHA-256, a not-equals in a walkthrough line, whiteboard arrows) -- replacing them is a content pass with its own review, exactly as the 73 prose spans are."
+  },
+  "6db8aa338ab29c1a": {
+   "file": "src/topics/desired-state/drill.js",
+   "lines": [
+    181
+   ],
+   "count": 1,
+   "rules": [
+    "glyph"
+   ],
+   "text": ", both of which survive the crash. A stale deployed record just means the next diff sees deployed\u2260reported (we think we pushed old, device reports new); the loop\u2019s response is to reconcile \u2014 recompute desired, observe reported already matches, and self-correct the deployed record (or, if it doesn\u2019t match, re-push idempotently). Worst case is a redundant re-push of config the device already runs, which is a no-op by determinism, not corruption. The three-hash model degrades gracefully because no single hash\u2019s staleness can make the loop",
+   "why": "corpus glyph: a mathematical or status mark the app stack does not carry (the platform picks the face). Fixing it means either extending --sans or drawing the mark, and both move topic-route VR baselines this wave is not authorised to rebaseline."
+  },
+  "05aa525719f8c47d": {
+   "file": "src/topics/desired-state/drill.js",
+   "lines": [
+    224
+   ],
+   "count": 1,
    "rules": [
     "apostrophe"
    ],
-   "where": "src/topics/content-pipeline/walk.js",
+   "text": "wait for the device's reported hash.",
    "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
   },
-  "declared desired state, refresh actual state, diff, converge \u2014 drift is exactly \u2018declared \u2260 actual,\u2019 and the fix is to r": {
+  "7e0c82036dc7fb5b": {
+   "file": "src/topics/desired-state/rf.js",
+   "lines": [
+    42
+   ],
+   "count": 1,
    "rules": [
     "glyph"
    ],
-   "where": "src/topics/iac/drill.js",
+   "text": "hashes \u2014 desired, deployed, reported. desired\u2260deployed means a deploy is owed (push it); deployed\u2260reported means the device drifted after a good deploy (re-apply, and flag if it recurs). The deployed hash is what disambiguates, so the reconciler takes the",
    "why": "corpus glyph: a mathematical or status mark the app stack does not carry (the platform picks the face). Fixing it means either extending --sans or drawing the mark, and both move topic-route VR baselines this wave is not authorised to rebaseline."
   },
-  "deployed \u2260 reported": {
+  "28af55975d1a9e95": {
+   "file": "src/topics/desired-state/walk.js",
+   "lines": [
+    30
+   ],
+   "count": 1,
    "rules": [
     "glyph"
    ],
-   "where": "src/topics/desired-state/walk.js",
+   "text": "desired \u2260 deployed",
    "why": "corpus glyph: a mathematical or status mark the app stack does not carry (the platform picks the face). Fixing it means either extending --sans or drawing the mark, and both move topic-route VR baselines this wave is not authorised to rebaseline."
   },
-  "desired \u2260 deployed": {
+  "6550063defe61f35": {
+   "file": "src/topics/desired-state/walk.js",
+   "lines": [
+    30
+   ],
+   "count": 1,
    "rules": [
     "glyph"
    ],
-   "where": "src/topics/desired-state/walk.js",
+   "text": "deployed \u2260 reported",
    "why": "corpus glyph: a mathematical or status mark the app stack does not carry (the platform picks the face). Fixing it means either extending --sans or drawing the mark, and both move topic-route VR baselines this wave is not authorised to rebaseline."
   },
-  "doesn't exist \u2014 S3 and every queue are at-least-once. You": {
+  "70c7d197051d9325": {
+   "file": "src/topics/desired-state/walk.js",
+   "lines": [
+    43
+   ],
+   "count": 1,
+   "rules": [
+    "glyph"
+   ],
+   "text": "reported \u2260 desired",
+   "why": "corpus glyph: a mathematical or status mark the app stack does not carry (the platform picks the face). Fixing it means either extending --sans or drawing the mark, and both move topic-route VR baselines this wave is not authorised to rebaseline."
+  },
+  "ace6c10b9f2a267c": {
+   "file": "src/topics/desired-state/wb.js",
+   "lines": [
+    17,
+    17,
+    17,
+    17
+   ],
+   "count": 4,
+   "rules": [
+    "glyph"
+   ],
+   "text": "\u25bc",
+   "why": "corpus glyph, W-ADDRESSES cycle 2: the topic bank is authored content and this wave is the HOME. These are technical marks inside authored prose (a non-breaking hyphen in SHA-256, a not-equals in a walkthrough line, whiteboard arrows) -- replacing them is a content pass with its own review, exactly as the 73 prose spans are."
+  },
+  "53c7bc8e022654cf": {
+   "file": "src/topics/eav/drill.js",
+   "lines": [
+    221
+   ],
+   "count": 1,
+   "rules": [
+    "quote"
+   ],
+   "text": "'the CSV sends \"30\", I coerce to the integer 30 and validate; a value that can\u2019t coerce is rejected.'",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "6c0bbc21f15a7fc6": {
+   "file": "src/topics/eav/wb.js",
+   "lines": [
+    17,
+    17,
+    17,
+    17
+   ],
+   "count": 4,
+   "rules": [
+    "glyph"
+   ],
+   "text": "\u25bc",
+   "why": "corpus glyph, W-ADDRESSES cycle 2: the topic bank is authored content and this wave is the HOME. These are technical marks inside authored prose (a non-breaking hyphen in SHA-256, a not-equals in a walkthrough line, whiteboard arrows) -- replacing them is a content pass with its own review, exactly as the 73 prose spans are."
+  },
+  "d7b155200a78615b": {
+   "file": "src/topics/iac/drill.js",
+   "lines": [
+    81
+   ],
+   "count": 1,
+   "rules": [
+    "glyph"
+   ],
+   "text": "declared desired state, refresh actual state, diff, converge \u2014 drift is exactly \u2018declared \u2260 actual,\u2019 and the fix is to re-apply toward declared, precisely the three-hash reconciler\u2019s job.",
+   "why": "corpus glyph: a mathematical or status mark the app stack does not carry (the platform picks the face). Fixing it means either extending --sans or drawing the mark, and both move topic-route VR baselines this wave is not authorised to rebaseline."
+  },
+  "6eeb2d39e41c45dc": {
+   "file": "src/topics/iac/drill.js",
+   "lines": [
+    201
+   ],
+   "count": 1,
+   "rules": [
+    "glyph"
+   ],
+   "text": "is declarative convergence: declare desired state, diff it against actual, and drive actual toward desired \u2014 with drift as \u2018declared \u2260 actual\u2019 and idempotent re-application. Both IaC and the reconciler are that pattern. The",
+   "why": "corpus glyph: a mathematical or status mark the app stack does not carry (the platform picks the face). Fixing it means either extending --sans or drawing the mark, and both move topic-route VR baselines this wave is not authorised to rebaseline."
+  },
+  "5b6ce261908a6888": {
+   "file": "src/topics/iac/drill.js",
+   "lines": [
+    236
+   ],
+   "count": 1,
    "rules": [
     "apostrophe"
    ],
-   "where": "src/topics/content-pipeline/rf.js",
+   "text": "\u2014 generated passwords, keys, connection strings \u2014 because it caches every resource attribute. So an unencrypted state file is a secret store: encrypt the backend, access-control it like a credential, keep it out of git. And minimize what's in it \u2014 prefer provisioning a secret",
    "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
   },
-  "emits notify(user, event) -- a domain event, no channels": {
+  "8bc50c380a77b74e": {
+   "file": "src/topics/iac/drill.js",
+   "lines": [
+    238
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": "binds a config address to a real resource's ID in state without recreating it \u2014 how you adopt hand-made infrastructure or reattach after losing state. The proof it's correct is a",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "c8359c6d8d243291": {
+   "file": "src/topics/iac/drill.js",
+   "lines": [
+    241
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": "is replace-don't-mutate \u2014 build a fresh versioned artifact and swap the instance wholesale (often blue-green) instead of patching a running box that accumulates drift and snowflakes. IaC makes it natural: change the image reference, plan shows a replacement, roll the fleet. Keep",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "b4e31755755035b7": {
+   "file": "src/topics/iac/walk.js",
+   "lines": [
+    39,
+    39
+   ],
+   "count": 2,
+   "rules": [
+    "glyph"
+   ],
+   "text": "\u2194",
+   "why": "corpus glyph, W-ADDRESSES cycle 2: the topic bank is authored content and this wave is the HOME. These are technical marks inside authored prose (a non-breaking hyphen in SHA-256, a not-equals in a walkthrough line, whiteboard arrows) -- replacing them is a content pass with its own review, exactly as the 73 prose spans are."
+  },
+  "0fde615811cbbc1c": {
+   "file": "src/topics/iac/wb.js",
+   "lines": [
+    17,
+    17,
+    17,
+    17
+   ],
+   "count": 4,
+   "rules": [
+    "glyph"
+   ],
+   "text": "\u25bc",
+   "why": "corpus glyph, W-ADDRESSES cycle 2: the topic bank is authored content and this wave is the HOME. These are technical marks inside authored prose (a non-breaking hyphen in SHA-256, a not-equals in a walkthrough line, whiteboard arrows) -- replacing them is a content pass with its own review, exactly as the 73 prose spans are."
+  },
+  "232962c19dbd5f4c": {
+   "file": "src/topics/iac/wb.js",
+   "lines": [
+    17
+   ],
+   "count": 1,
+   "rules": [
+    "glyph"
+   ],
+   "text": "config \u2194 real IDs (locked, encrypted)",
+   "why": "corpus glyph: a mathematical or status mark the app stack does not carry (the platform picks the face). Fixing it means either extending --sans or drawing the mark, and both move topic-route VR baselines this wave is not authorised to rebaseline."
+  },
+  "cb26fb6da695b775": {
+   "file": "src/topics/notifications/wb.js",
+   "lines": [
+    17
+   ],
+   "count": 1,
    "rules": [
     "dash"
    ],
-   "where": "src/topics/notifications/wb.js",
+   "text": "emits notify(user, event) -- a domain event, no channels",
    "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
   },
-  "event (\u22651\u00d7)": {
+  "13f3a57f86d63f2b": {
+   "file": "src/topics/notifications/wb.js",
+   "lines": [
+    17,
+    17,
+    17,
+    17
+   ],
+   "count": 4,
    "rules": [
     "glyph"
    ],
-   "where": "src/topics/content-pipeline/walk.js",
+   "text": "\u25bc",
+   "why": "corpus glyph, W-ADDRESSES cycle 2: the topic bank is authored content and this wave is the HOME. These are technical marks inside authored prose (a non-breaking hyphen in SHA-256, a not-equals in a walkthrough line, whiteboard arrows) -- replacing them is a content pass with its own review, exactly as the 73 prose spans are."
+  },
+  "22f87ac54cd9ce53": {
+   "file": "src/topics/signing/drill.js",
+   "lines": [
+    9
+   ],
+   "count": 1,
+   "rules": [
+    "glyph"
+   ],
+   "text": "32-byte SHA\u2011256 digest",
    "why": "corpus glyph: a mathematical or status mark the app stack does not carry (the platform picks the face). Fixing it means either extending --sans or drawing the mark, and both move topic-route VR baselines this wave is not authorised to rebaseline."
   },
-  "flashing, SHA\u2011256 the image before writing, and use": {
+  "e93394c4d5cb2484": {
+   "file": "src/topics/signing/drill.js",
+   "lines": [
+    39
+   ],
+   "count": 1,
    "rules": [
     "glyph"
    ],
-   "where": "src/topics/signing/rf.js",
+   "text": "writing: (1) recompute the payload SHA\u2011256 and",
    "why": "corpus glyph: a mathematical or status mark the app stack does not carry (the platform picks the face). Fixing it means either extending --sans or drawing the mark, and both move topic-route VR baselines this wave is not authorised to rebaseline."
   },
-  "hash payload \u2192 verify vs burned-in public key \u2192 version \u2265 current? \u2014 else": {
+  "a62495cb3f0ced00": {
+   "file": "src/topics/signing/drill.js",
+   "lines": [
+    134
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": ": the device only accepts the scheme(s) it's configured for and refuses",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "ce6a5d99259ba44c": {
+   "file": "src/topics/signing/drill.js",
+   "lines": [
+    139
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": "\u2014 a list of every file's path and",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "b93de960e15ecc71": {
+   "file": "src/topics/signing/drill.js",
+   "lines": [
+    142
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": "\u2014 it lists every file's expected hash for",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "4ad3366a5dd7d4bd": {
+   "file": "src/topics/signing/drill.js",
+   "lines": [
+    144
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": ", and the manifest's hashes transitively cover every file. It's the same \u2018sign a digest\u2019 principle one level up: the manifest",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "991ce6967a506b89": {
+   "file": "src/topics/signing/drill.js",
+   "lines": [
+    152
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": ": the anchor is burned in a controlled facility, the root generated in an HSM and never exposed. It's the one link you",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "b79f9f0f1c039623": {
+   "file": "src/topics/signing/drill.js",
+   "lines": [
+    154
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": "certifies the signing keys that sign packages, and the device's",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "7c8c3525c4a4da09": {
+   "file": "src/topics/signing/drill.js",
+   "lines": [
+    159
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": ", your own key ceremony, or an algorithm KMS doesn't offer. The axis is",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "902d2c24088912f4": {
+   "file": "src/topics/signing/drill.js",
+   "lines": [
+    162
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": "not AWS-managed. Absent a hard requirement, KMS's managed rotation and IAM scoping usually win; CloudHSM is a choice you",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "2e076f2b93ffa832": {
+   "file": "src/topics/signing/drill.js",
+   "lines": [
+    167
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": "Yes \u2014 that's the whole point of signing over online trust.",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "d8ff329b13d9f7c6": {
+   "file": "src/topics/signing/drill.js",
+   "lines": [
+    167
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": "and the device's",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "b0bc5b9fba2124a5": {
+   "file": "src/topics/signing/drill.js",
+   "lines": [
+    170
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": "(cert expiry) doesn't work on-device. You lean instead on the",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "85d3ace9c8b344d3": {
+   "file": "src/topics/signing/drill.js",
+   "lines": [
+    172
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": ": push a new legitimate package signed by the rotated key, and supersession (monotonic version) moves the device forward when it reconnects. You can't",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "b3c2f85389ec6262": {
+   "file": "src/topics/signing/drill.js",
+   "lines": [
+    177
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": "\u2014 it's math over a hash, true forever. \u2018Valid at signing time\u2019 is a separate question answered by",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "49721b482ac6d8f5": {
+   "file": "src/topics/signing/drill.js",
+   "lines": [
+    187
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": ", the cert vouches for the leaf. That's what lets you",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "57d8d111b6e52437": {
+   "file": "src/topics/signing/drill.js",
+   "lines": [
+    208
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": ", and verification is heavier. On a constrained device that eats flash headroom and boot time. You handle it like any device limit \u2014 measure signature size and verify cost against the device budget, and if a family can't afford PQ,",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "e1656b663365e80f": {
+   "file": "src/topics/signing/drill.js",
+   "lines": [
+    208
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": "that family's",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "fb9c72d68a6fe558": {
+   "file": "src/topics/signing/drill.js",
+   "lines": [
+    210
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": "the new scheme to the verifier's allowlist while still accepting the old \u2014 now devices trust both. Only once the fleet has that capability do you start",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "1ed29a363a901706": {
+   "file": "src/topics/signing/drill.js",
+   "lines": [
+    210
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": "with the new scheme; the old one is retired at the anchor last. At no point does a device meet a signature it can't verify \u2014 the",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "2439fdcdb5c79b64": {
+   "file": "src/topics/signing/drill.js",
+   "lines": [
+    212
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": "problem \u2014 algorithm id + allowlist + dual-accept rollover \u2014 instead of \u2018switch to cipher X\u2019 is the Staff answer; naming the signature-size cost and capability-before-dependency ordering shows you've thought about migrating a",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "fa81cbd4a4871338": {
+   "file": "src/topics/signing/drill.js",
+   "lines": [
+    217
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": "'per tenant, per product type, so a leak hits one company's product line, not the fleet.'",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "3ffc6b68c995d415": {
+   "file": "src/topics/signing/drill.js",
+   "lines": [
+    224
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": "'HSM sign-ops per second \u2014 and signing is size-independent, so a bigger box doesn't help.'",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "10f0eb46cffb2195": {
+   "file": "src/topics/signing/drill.js",
+   "lines": [
+    226
+   ],
+   "count": 1,
+   "rules": [
+    "apostrophe"
+   ],
+   "text": "'devices anchor to the root, not the leaf key \u2014 that's what lets a signing key rotate without a fleet-wide re-flash.'",
+   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
+  },
+  "0f7c10f32ef1ab3d": {
+   "file": "src/topics/signing/model.js",
+   "lines": [
+    46
+   ],
+   "count": 1,
    "rules": [
     "glyph"
    ],
-   "where": "src/topics/signing/wb.js",
+   "text": "SHA\u2011256",
+   "why": "corpus glyph, W-ADDRESSES cycle 2: the topic bank is authored content and this wave is the HOME. These are technical marks inside authored prose (a non-breaking hyphen in SHA-256, a not-equals in a walkthrough line, whiteboard arrows) -- replacing them is a content pass with its own review, exactly as the 73 prose spans are."
+  },
+  "3fe91942b2d9aa63": {
+   "file": "src/topics/signing/open.js",
+   "lines": [
+    20
+   ],
+   "count": 1,
+   "rules": [
+    "glyph"
+   ],
+   "text": "SHA\u2011256 digest",
    "why": "corpus glyph: a mathematical or status mark the app stack does not carry (the platform picks the face). Fixing it means either extending --sans or drawing the mark, and both move topic-route VR baselines this wave is not authorised to rebaseline."
   },
-  "hashes \u2014 desired, deployed, reported. desired\u2260deployed means a deploy is owed (push it); deployed\u2260reported means the dev": {
+  "0ac579066184d9d3": {
+   "file": "src/topics/signing/rf.js",
+   "lines": [
+    53
+   ],
+   "count": 1,
    "rules": [
     "glyph"
    ],
-   "where": "src/topics/desired-state/rf.js",
+   "text": "flashing, SHA\u2011256 the image before writing, and use",
    "why": "corpus glyph: a mathematical or status mark the app stack does not carry (the platform picks the face). Fixing it means either extending --sans or drawing the mark, and both move topic-route VR baselines this wave is not authorised to rebaseline."
   },
-  "is declarative convergence: declare desired state, diff it against actual, and drive actual toward desired \u2014 with drift ": {
+  "21515db0c69aba2e": {
+   "file": "src/topics/signing/sys.js",
+   "lines": [
+    18
+   ],
+   "count": 1,
    "rules": [
     "glyph"
    ],
-   "where": "src/topics/iac/drill.js",
+   "text": "SHA\u2011256",
+   "why": "corpus glyph, W-ADDRESSES cycle 2: the topic bank is authored content and this wave is the HOME. These are technical marks inside authored prose (a non-breaking hyphen in SHA-256, a not-equals in a walkthrough line, whiteboard arrows) -- replacing them is a content pass with its own review, exactly as the 73 prose spans are."
+  },
+  "43ded43ae779f4d1": {
+   "file": "src/topics/signing/walk.js",
+   "lines": [
+    37
+   ],
+   "count": 1,
+   "rules": [
+    "glyph"
+   ],
+   "text": "version \u2265 current?",
    "why": "corpus glyph: a mathematical or status mark the app stack does not carry (the platform picks the face). Fixing it means either extending --sans or drawing the mark, and both move topic-route VR baselines this wave is not authorised to rebaseline."
   },
-  "is replace-don't-mutate \u2014 build a fresh versioned artifact and swap the instance wholesale (often blue-green) instead of": {
-   "rules": [
-    "apostrophe"
+  "f59382c8692804bc": {
+   "file": "src/topics/signing/wb.js",
+   "lines": [
+    6
    ],
-   "where": "src/topics/iac/drill.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
-  },
-  "not AWS-managed. Absent a hard requirement, KMS's managed rotation and IAM scoping usually win; CloudHSM is a choice you": {
-   "rules": [
-    "apostrophe"
-   ],
-   "where": "src/topics/signing/drill.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
-  },
-  "on a deterministic key, and the ladder's": {
-   "rules": [
-    "apostrophe"
-   ],
-   "where": "src/topics/content-pipeline/drill.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
-  },
-  "problem \u2014 algorithm id + allowlist + dual-accept rollover \u2014 instead of \u2018switch to cipher X\u2019 is the Staff answer; naming ": {
-   "rules": [
-    "apostrophe"
-   ],
-   "where": "src/topics/signing/drill.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
-  },
-  "produces the package + its SHA\u2011256 digest": {
+   "count": 1,
    "rules": [
     "glyph"
    ],
-   "where": "src/topics/signing/wb.js",
+   "text": "SHA\u2011256",
+   "why": "corpus glyph, W-ADDRESSES cycle 2: the topic bank is authored content and this wave is the HOME. These are technical marks inside authored prose (a non-breaking hyphen in SHA-256, a not-equals in a walkthrough line, whiteboard arrows) -- replacing them is a content pass with its own review, exactly as the 73 prose spans are."
+  },
+  "a309ad17d1198f2a": {
+   "file": "src/topics/signing/wb.js",
+   "lines": [
+    16
+   ],
+   "count": 1,
+   "rules": [
+    "glyph"
+   ],
+   "text": "produces the package + its SHA\u2011256 digest",
    "why": "corpus glyph: a mathematical or status mark the app stack does not carry (the platform picks the face). Fixing it means either extending --sans or drawing the mark, and both move topic-route VR baselines this wave is not authorised to rebaseline."
   },
-  "reported \u2260 desired": {
+  "20504c5c4610f198": {
+   "file": "src/topics/signing/wb.js",
+   "lines": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "count": 4,
    "rules": [
     "glyph"
    ],
-   "where": "src/topics/desired-state/walk.js",
+   "text": "\u25bc",
+   "why": "corpus glyph, W-ADDRESSES cycle 2: the topic bank is authored content and this wave is the HOME. These are technical marks inside authored prose (a non-breaking hyphen in SHA-256, a not-equals in a walkthrough line, whiteboard arrows) -- replacing them is a content pass with its own review, exactly as the 73 prose spans are."
+  },
+  "402ba88dfd7e8480": {
+   "file": "src/topics/signing/wb.js",
+   "lines": [
+    16
+   ],
+   "count": 1,
+   "rules": [
+    "glyph"
+   ],
+   "text": "hash payload \u2192 verify vs burned-in public key \u2192 version \u2265 current? \u2014 else",
    "why": "corpus glyph: a mathematical or status mark the app stack does not carry (the platform picks the face). Fixing it means either extending --sans or drawing the mark, and both move topic-route VR baselines this wave is not authorised to rebaseline."
-  },
-  "that family's": {
-   "rules": [
-    "apostrophe"
-   ],
-   "where": "src/topics/signing/drill.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
-  },
-  "the DB transaction rolls back, but the S3 objects don't \u2014 they're orphaned. Fix: track every created key, delete them in": {
-   "rules": [
-    "apostrophe"
-   ],
-   "where": "src/topics/content-pipeline/drill.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
-  },
-  "the downstream honors (Stripe-style): same key, same charge, executed once. If the downstream can't dedupe, use a": {
-   "rules": [
-    "apostrophe"
-   ],
-   "where": "src/topics/content-pipeline/drill.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
-  },
-  "the new scheme to the verifier's allowlist while still accepting the old \u2014 now devices trust both. Only once the fleet h": {
-   "rules": [
-    "apostrophe"
-   ],
-   "where": "src/topics/signing/drill.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
-  },
-  "to the source read \u2014 so the fast hash branch is throttled to the upload's pace. Memory stays bounded at the buffer size;": {
-   "rules": [
-    "apostrophe"
-   ],
-   "where": "src/topics/content-pipeline/drill.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
-  },
-  "version \u2265 current?": {
-   "rules": [
-    "glyph"
-   ],
-   "where": "src/topics/signing/walk.js",
-   "why": "corpus glyph: a mathematical or status mark the app stack does not carry (the platform picks the face). Fixing it means either extending --sans or drawing the mark, and both move topic-route VR baselines this wave is not authorised to rebaseline."
-  },
-  "wait for the device's reported hash.": {
-   "rules": [
-    "apostrophe"
-   ],
-   "where": "src/topics/desired-state/drill.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
-  },
-  "with the new scheme; the old one is retired at the anchor last. At no point does a device meet a signature it can't veri": {
-   "rules": [
-    "apostrophe"
-   ],
-   "where": "src/topics/signing/drill.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
-  },
-  "writing: (1) recompute the payload SHA\u2011256 and": {
-   "rules": [
-    "glyph"
-   ],
-   "where": "src/topics/signing/drill.js",
-   "why": "corpus glyph: a mathematical or status mark the app stack does not carry (the platform picks the face). Fixing it means either extending --sans or drawing the mark, and both move topic-route VR baselines this wave is not authorised to rebaseline."
-  },
-  "\u2014 Terraform or CDK \u2014 so the bucket, functions, roles, and event wiring are versioned and reproducible instead of click-o": {
-   "rules": [
-    "apostrophe"
-   ],
-   "where": "src/topics/content-pipeline/sys.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
-  },
-  "\u2014 a list of every file's path and": {
-   "rules": [
-    "apostrophe"
-   ],
-   "where": "src/topics/signing/drill.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
-  },
-  "\u2014 generated passwords, keys, connection strings \u2014 because it caches every resource attribute. So an unencrypted state fi": {
-   "rules": [
-    "apostrophe"
-   ],
-   "where": "src/topics/iac/drill.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
-  },
-  "\u2014 it lists every file's expected hash for": {
-   "rules": [
-    "apostrophe"
-   ],
-   "where": "src/topics/signing/drill.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
-  },
-  "\u2014 it's math over a hash, true forever. \u2018Valid at signing time\u2019 is a separate question answered by": {
-   "rules": [
-    "apostrophe"
-   ],
-   "where": "src/topics/signing/drill.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
-  },
-  "\u2014 so memory stays constant and a 400\u00a0MB CSV drops to 30\u201350\u00a0MB. Then the honest boundary: skip compression on incompressi": {
-   "rules": [
-    "apostrophe"
-   ],
-   "where": "src/topics/content-pipeline/drill.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
-  },
-  "\u2014 so the caller's PATCH-status logic is format-agnostic. Adding": {
-   "rules": [
-    "apostrophe"
-   ],
-   "where": "src/topics/content-pipeline/walk.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
-  },
-  "\u2014 they consume storage but don't show in normal listings, so it's a silent bill. Fix: an": {
-   "rules": [
-    "apostrophe"
-   ],
-   "where": "src/topics/content-pipeline/drill.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
-  },
-  "\u201chasn't thought about the failure path.\u201d": {
-   "rules": [
-    "apostrophe"
-   ],
-   "where": "src/topics/content-pipeline/rf.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
-  },
-  "\u2192 processing must be idempotent (hash key). And prefixes can't overlap \u2014 you can't later split": {
-   "rules": [
-    "apostrophe"
-   ],
-   "where": "src/topics/content-pipeline/walk.js",
-   "why": "corpus prose, W-ADDRESSES: the topic bank is authored content and this wave is the HOME. Typesetting 57 apostrophes across 46 topics is a content pass with its own review, not a side effect of a chrome wave."
-  },
-  "\u21bb Drill my": {
-   "rules": [
-    "glyph"
-   ],
-   "where": "src/scripts/app/drill/logic.js",
-   "why": "app glyph on a VR-frozen surface: the drill pane and the mixed-fire overlay. W-ADDRESSES is authorised to rebaseline the HOME only, and the home is now clean -- .ix-star-ic was the last one and it is drawn rather than typeset."
-  },
-  "\u22655MB multipart": {
-   "rules": [
-    "glyph"
-   ],
-   "where": "src/topics/content-pipeline/walk.js",
-   "why": "corpus glyph: a mathematical or status mark the app stack does not carry (the platform picks the face). Fixing it means either extending --sans or drawing the mark, and both move topic-route VR baselines this wave is not authorised to rebaseline."
-  },
-  "\u2713 Handled it": {
-   "rules": [
-    "glyph"
-   ],
-   "where": "src/scripts/app/mixed-fire.js",
-   "why": "app glyph on a VR-frozen surface: the drill pane and the mixed-fire overlay. W-ADDRESSES is authorised to rebaseline the HOME only, and the home is now clean -- .ix-star-ic was the last one and it is drawn rather than typeset."
-  },
-  "\ud83d\udd34\u00a0 And they push again": {
-   "rules": [
-    "glyph"
-   ],
-   "where": "src/scripts/app/mixed-fire.js",
-   "why": "app glyph on a VR-frozen surface: the drill pane and the mixed-fire overlay. W-ADDRESSES is authorised to rebaseline the HOME only, and the home is now clean -- .ix-star-ic was the last one and it is drawn rather than typeset."
-  },
-  "\ud83d\udd34\u00a0 The interviewer cuts in": {
-   "rules": [
-    "glyph"
-   ],
-   "where": "src/scripts/app/mixed-fire.js",
-   "why": "app glyph on a VR-frozen surface: the drill pane and the mixed-fire overlay. W-ADDRESSES is authorised to rebaseline the HOME only, and the home is now clean -- .ix-star-ic was the last one and it is drawn rather than typeset."
   }
  }
 }

@@ -1,30 +1,81 @@
-W-ADDRESSES item 8 -- HOME TEXT FLOORS, BEFORE vs AFTER THE GROUND MOVE
-taken: 2026-08-02T23:45:06.422Z
-  master  0aba404  D:/claude-workspace/deepdive-rehearsal/deepdive_content_pipeline_rehearsal.html  (12297055 bytes)
-  w-addresses  D:\claude-workspace\_worktrees\deepdive-rehearsal\w-addresses\deepdive_content_pipeline_rehearsal.html  (12322642 bytes)
+HOME TEXT FLOORS -- BEFORE vs AFTER, every text node under #home
+taken: 2026-08-03T03:01:12.459Z
+  before  D:\claude-workspace\deepdive-rehearsal\deepdive_content_pipeline_rehearsal.html  (12297055 bytes)
+  after   D:\claude-workspace\_worktrees\deepdive-rehearsal\w-addresses\deepdive_content_pipeline_rehearsal.html  (12334544 bytes)
 
 method: computed sweep, every text node under #home, own colour vs first non-transparent
-        ancestor background composited in sRGB. AA floors: 4.5:1 normal, 3.0:1 large.
-        Keyed by selector; worst instance per selector. 1280x900, both schemes, both records.
+        ancestor background composited in sRGB. AA floors: 4.5:1 normal, 3.0:1 large
+        (>=24px, or >=18.66px at weight >=700). Keyed by tag+class; worst instance per
+        selector. 1280x900, both schemes, both record classes, ONE seed on both builds.
+        Re-run: node tools/home_text_floors.cjs <before.html> <after.html> [out.txt]
 
-cell             sel-groups   min CR before   min CR after   delta   under before / after
----------------  -----------  -------------   ------------   -----   --------------------
-light/engaged             30           4.64           4.64   + 0.00   0 / 0
-light/cold                25           5.27           4.93   -0.34   0 / 0
-dark/engaged              30           2.35           2.35   + 0.00   2 / 2
-dark/cold                 25           2.35           2.35   + 0.00   1 / 1
+cell             sel-groups     min CR before   min CR after   delta   under before / after
+---------------  -----------    -------------   ------------   -----   --------------------
+light/engaged             32           4.64           4.64    0.00       0 / 0
+light/cold                27           5.27           4.93   -0.34       0 / 0
+dark/engaged              32           2.35           2.35    0.00       2 / 2
+dark/cold                 27           2.35           2.35    0.00       1 / 1
 
---- THE TWO ELEMENTS THAT SIT ON THE BARE GROUND (the reason --mut is deepened on this route)
-    light/cold    label         5.27 on rgb(250,249,245)   ->   4.93 on rgb(228,223,212)   floor 4.5  CLEARS
-    light/cold    button.ix-io  5.27 on rgb(250,249,245)   ->   4.93 on rgb(228,223,212)   floor 4.5  CLEARS
-    light/cold    div.hm-lead   5.27 on rgb(250,249,245)   ->   4.93 on rgb(228,223,212)   floor 4.5  CLEARS
-    light/engaged label         5.27 on rgb(250,249,245)   ->   4.93 on rgb(228,223,212)   floor 4.5  CLEARS
-    light/engaged button.ix-io  5.27 on rgb(250,249,245)   ->   4.93 on rgb(228,223,212)   floor 4.5  CLEARS
+--- EVERY SELECTOR WHOSE RATIO MOVED BETWEEN THE TWO BUILDS
+    light/engaged p.hm-since            5.55 on rgb(255,255,255)   ->   6.55 on rgb(255,255,255)   floor 4.5  CLEARS
+    light/engaged span.hm-cta-d         5.55 on rgb(255,255,255)   ->   6.55 on rgb(255,255,255)   floor 4.5  CLEARS
+    light/engaged span.hm-lbl.hm-fig    5.55 on rgb(255,255,255)   ->   6.55 on rgb(255,255,255)   floor 4.5  CLEARS
+    light/engaged span.hm-gr-l          5.55 on rgb(255,255,255)   ->   6.55 on rgb(255,255,255)   floor 4.5  CLEARS
+    light/engaged p.hm-verdict          5.55 on rgb(255,255,255)   ->   6.55 on rgb(255,255,255)   floor 4.5  CLEARS
+    light/engaged span.hm-con           4.75 on rgb(241,237,228)   ->   5.61 on rgb(241,237,228)   floor 4.5  CLEARS
+    light/engaged span.hm-room-c        5.55 on rgb(255,255,255)   ->   6.55 on rgb(255,255,255)   floor 4.5  CLEARS
+    light/engaged span.hm-room-pct      5.55 on rgb(255,255,255)   ->   6.55 on rgb(255,255,255)   floor 4.5  CLEARS
+    light/engaged label                 5.27 on rgb(250,249,245)   ->   4.93 on rgb(228,223,212)   floor 4.5  CLEARS
+    light/engaged button.ix-io          5.27 on rgb(250,249,245)   ->   4.93 on rgb(228,223,212)   floor 4.5  CLEARS
+    light/cold    div.hm-lead           5.27 on rgb(250,249,245)   ->   4.93 on rgb(228,223,212)   floor 4.5  CLEARS
+    light/cold    p.hm-since            5.55 on rgb(255,255,255)   ->   6.55 on rgb(255,255,255)   floor 4.5  CLEARS
+    light/cold    span.hm-cta-d         5.55 on rgb(255,255,255)   ->   6.55 on rgb(255,255,255)   floor 4.5  CLEARS
+    light/cold    span.hm-lbl.hm-fig    5.55 on rgb(255,255,255)   ->   6.55 on rgb(255,255,255)   floor 4.5  CLEARS
+    light/cold    span.hm-gr-l          5.55 on rgb(255,255,255)   ->   6.55 on rgb(255,255,255)   floor 4.5  CLEARS
+    light/cold    p.hm-verdict          5.55 on rgb(255,255,255)   ->   6.55 on rgb(255,255,255)   floor 4.5  CLEARS
+    light/cold    span.hm-room-c        5.55 on rgb(255,255,255)   ->   6.55 on rgb(255,255,255)   floor 4.5  CLEARS
+    light/cold    span.hm-room-pct      5.55 on rgb(255,255,255)   ->   6.55 on rgb(255,255,255)   floor 4.5  CLEARS
+    light/cold    label                 5.27 on rgb(250,249,245)   ->   4.93 on rgb(228,223,212)   floor 4.5  CLEARS
+    light/cold    button.ix-io          5.27 on rgb(250,249,245)   ->   4.93 on rgb(228,223,212)   floor 4.5  CLEARS
+    dark/engaged  p.hm-lbl.hm-eyebrow   7.04 on rgb(30,28,37)   ->   6.20 on rgb(41,38,50)   floor 4.5  CLEARS
+    dark/engaged  h1.hm-q               13.99 on rgb(30,28,37)   ->   12.31 on rgb(41,38,50)   floor 4.5  CLEARS
+    dark/engaged  p.hm-since            6.63 on rgb(30,28,37)   ->   5.84 on rgb(41,38,50)   floor 4.5  CLEARS
+    dark/engaged  b                     7.04 on rgb(30,28,37)   ->   6.20 on rgb(41,38,50)   floor 4.5  CLEARS
+    dark/engaged  span.hm-cta-k         6.93 on rgb(30,28,37)   ->   6.10 on rgb(41,38,50)   floor 4.5  CLEARS
+    dark/engaged  span.hm-cta-t         13.99 on rgb(30,28,37)   ->   12.31 on rgb(41,38,50)   floor 4.5  CLEARS
+    dark/engaged  span.hm-cta-d         6.63 on rgb(30,28,37)   ->   5.84 on rgb(41,38,50)   floor 4.5  CLEARS
+    dark/engaged  span.hm-cta-ar        6.93 on rgb(30,28,37)   ->   6.10 on rgb(41,38,50)   floor 4.5  CLEARS
+    dark/engaged  h2.hm-lbl             7.04 on rgb(30,28,37)   ->   6.20 on rgb(41,38,50)   floor 4.5  CLEARS
+    dark/engaged  span.hm-lbl.hm-fig    6.63 on rgb(30,28,37)   ->   5.84 on rgb(41,38,50)   floor 4.5  CLEARS
+    dark/engaged  span.hm-gr-l          6.63 on rgb(30,28,37)   ->   5.84 on rgb(41,38,50)   floor 4.5  CLEARS
+    dark/engaged  span.hm-gr-n          7.04 on rgb(30,28,37)   ->   6.20 on rgb(41,38,50)   floor 4.5  CLEARS
+    dark/engaged  p.hm-verdict          6.63 on rgb(30,28,37)   ->   5.84 on rgb(41,38,50)   floor 4.5  CLEARS
+    dark/engaged  span.hm-lbl           7.04 on rgb(30,28,37)   ->   6.20 on rgb(41,38,50)   floor 4.5  CLEARS
+    dark/engaged  p.hm-lbl.hm-offladder 7.04 on rgb(30,28,37)   ->   6.20 on rgb(41,38,50)   floor 4.5  CLEARS
+    dark/engaged  p.hm-note             7.04 on rgb(30,28,37)   ->   6.20 on rgb(41,38,50)   floor 4.5  CLEARS
+    dark/engaged  span.ix-goal-t        13.99 on rgb(30,28,37)   ->   12.31 on rgb(41,38,50)   floor 4.5  CLEARS
+    dark/engaged  div.ix-home-v         7.04 on rgb(30,28,37)   ->   6.20 on rgb(41,38,50)   floor 4.5  CLEARS
+    dark/cold     b                     7.04 on rgb(30,28,37)   ->   6.20 on rgb(41,38,50)   floor 4.5  CLEARS
+    dark/cold     p.hm-lbl.hm-eyebrow   7.04 on rgb(30,28,37)   ->   6.20 on rgb(41,38,50)   floor 4.5  CLEARS
+    dark/cold     h1.hm-q               13.99 on rgb(30,28,37)   ->   12.31 on rgb(41,38,50)   floor 4.5  CLEARS
+    dark/cold     p.hm-since            6.63 on rgb(30,28,37)   ->   5.84 on rgb(41,38,50)   floor 4.5  CLEARS
+    dark/cold     span.hm-cta-k         6.93 on rgb(30,28,37)   ->   6.10 on rgb(41,38,50)   floor 4.5  CLEARS
+    dark/cold     span.hm-cta-t         13.99 on rgb(30,28,37)   ->   12.31 on rgb(41,38,50)   floor 4.5  CLEARS
+    dark/cold     span.hm-cta-d         6.63 on rgb(30,28,37)   ->   5.84 on rgb(41,38,50)   floor 4.5  CLEARS
+    dark/cold     span.hm-cta-ar        6.93 on rgb(30,28,37)   ->   6.10 on rgb(41,38,50)   floor 4.5  CLEARS
+    dark/cold     h2.hm-lbl             7.04 on rgb(30,28,37)   ->   6.20 on rgb(41,38,50)   floor 4.5  CLEARS
+    dark/cold     span.hm-lbl.hm-fig    6.63 on rgb(30,28,37)   ->   5.84 on rgb(41,38,50)   floor 4.5  CLEARS
+    dark/cold     span.hm-gr-l          6.63 on rgb(30,28,37)   ->   5.84 on rgb(41,38,50)   floor 4.5  CLEARS
+    dark/cold     span.hm-gr-n          7.04 on rgb(30,28,37)   ->   6.20 on rgb(41,38,50)   floor 4.5  CLEARS
+    dark/cold     p.hm-verdict          6.63 on rgb(30,28,37)   ->   5.84 on rgb(41,38,50)   floor 4.5  CLEARS
+    dark/cold     span.hm-lbl           7.04 on rgb(30,28,37)   ->   6.20 on rgb(41,38,50)   floor 4.5  CLEARS
+    dark/cold     p.hm-lbl.hm-offladder 7.04 on rgb(30,28,37)   ->   6.20 on rgb(41,38,50)   floor 4.5  CLEARS
+    dark/cold     span.ix-goal-t        13.99 on rgb(30,28,37)   ->   12.31 on rgb(41,38,50)   floor 4.5  CLEARS
+    dark/cold     div.ix-home-v         7.04 on rgb(30,28,37)   ->   6.20 on rgb(41,38,50)   floor 4.5  CLEARS
 
---- CARRIED, PRE-EXISTING ON MASTER, NOT THIS WAVE (identical to the decimal in both builds)
-    dark/cold     span.hm-room-n      2.35 -> 2.35   rgb(255, 255, 255) on rgb(238,140,164)
-    dark/engaged  span.hm-room-n      2.35 -> 2.35   rgb(255, 255, 255) on rgb(238,140,164)
-    dark/engaged  span.hm-room-weak   3.48 -> 3.48   rgb(220, 38, 38) on rgb(30,28,37)
+--- EVERY SELECTOR UNDER ITS FLOOR ON THE AFTER BUILD
+    dark/engaged  span.hm-room-n        2.35 -> 2.35   rgb(255, 255, 255) on rgb(238,140,164)   floor 4.5   (identical on both builds)
+    dark/engaged  span.hm-room-weak     3.48 -> 3.48   rgb(220, 38, 38) on rgb(30,28,37)   floor 4.5   (identical on both builds)
+    dark/cold     span.hm-room-n        2.35 -> 2.35   rgb(255, 255, 255) on rgb(238,140,164)   floor 4.5   (identical on both builds)
 
-VERDICT: NO REGRESSION -- the ground move breaks no floor it did not already break.
-         Every node under floor after is under floor before, at the same ratio.
+VERDICT: NO REGRESSION -- every selector under floor after is under floor before, at the same ratio.

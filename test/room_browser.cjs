@@ -6,11 +6,19 @@
       still RENDERS (body opacity 1, real light + shadow text), in both themes.
    3. THE HOME BRAND MARK CLAIMS NO ROOM (W15). This is the deliberate EXCEPTION to (1),
       and it belongs here because this file owns the question "what wears which room".
-      index.html hard-codes data-group for first paint and applyIdentity does not run at
-      boot, so on the topic-less home route the document accent is a BOOT CONSTANT that
-      means nothing. W3 gave the hero its destination's room; the brand mark 130px above
-      it was still painting in that boot constant -- architecture-apis magenta -- so the
-      first screen had two real room colours and only one of them meant anything.
+      index.html used to hard-code data-group for first paint, and applyIdentity runs only
+      on switches, so on the topic-less home route the document accent was a BOOT CONSTANT
+      that meant nothing. W3 gave the hero its destination's room; the brand mark 130px
+      above it was still painting in that boot constant -- architecture-apis magenta -- so
+      the first screen had two real room colours and only one of them meant anything.
+      (The constant is gone as of W-ADDRESSES cycle 2 -- scripts/boot.js derives the room
+      from the record and the route -- but the brand's contract is unchanged and arm 1
+      above is what proves the derivation still answers on a topic route.)
+   4. A FOCUSED TOPIC CARD WEARS ITS OWN SECTION'S ROOM, not the door's. The library shows
+      six rooms at once and its rest state said so; :hover and :focus-visible both took
+      --acc, one value for the whole document, so touching a card collapsed six rooms into
+      one. Pressed on three real cards through the keyboard path, and the three rings must
+      be three DIFFERENT colours or the arm cannot tell the two states apart.
       On #home the brand mark now wears the BRAND indigo: the neutral that styles.css's
       own comment calls "the app's BRAND indigo ... and the badge colour ... IT DOES NOT
       MOVE", carried by the .ix-panel neutralisation in both themes.
@@ -119,6 +127,95 @@ const URL = 'file:///' + path.resolve(HTML).replace(/\\/g, '/');
     await ctx.close();
   }
 
+  /* 4. A TOPIC CARD'S RING IS ITS OWN SECTION'S ROOM, NOT THE DOOR'S.
+     The library shows all six rooms at once and its REST state already says so -- each
+     .ix-group section carries an inline --rm and the card borders mix 25% of it. The two ACTIVE
+     states did not read it: :hover and :focus-visible both took --acc, which is ONE value for
+     the whole document. So the moment you touched a card, six rooms collapsed into one, on the
+     surface whose entire argument is that they are all visible.
+     PRESSED RATHER THAN INSPECTED: three real cards in three DIFFERENT sections are focused
+     through the keyboard path (.focus(), which is what :focus-visible answers for a scripted
+     focus on a button), and each ring's computed outline colour must equal ITS section's --rm.
+     The arm requires the three to be three DIFFERENT colours, so a build where every section
+     resolved to the same value could not pass by accident -- which is the exact failure it
+     exists to catch. */
+  {
+    const ctx = await browser.newContext({ viewport: { width: 1400, height: 1000 } });
+    const page = await ctx.newPage();
+    await B.gotoApp(page, HTML, { hash: '#home' });
+    await B.until(page, () => [...document.querySelectorAll('.ix-group')]
+      .filter((s) => s.getClientRects().length).length >= 3,
+      null, B.ACT_MS, 'the home library with at least three RENDERED room sections');
+    await B.settle(page);
+    /* the RENDERED sections only. The home renders the library TWICE -- the desktop companion
+       column (.hm-lib) and the phone's <details class="hm-libm"> mirror inside #home -- and at
+       1400px it is the mirror that is hidden. Its cards cannot take focus at all, so picking
+       blind measures an unfocusable element and reports the initial black outline as the app's
+       ring, which is what the first draft of this arm did. */
+    const groups = await page.evaluate(() => [...document.querySelectorAll('.ix-group')]
+      .filter((s) => s.getClientRects().length && s.querySelector('.ix-card')
+        && s.querySelector('.ix-card').getClientRects().length)
+      .map((s) => s.getAttribute('data-group')));
+    if (groups.length < 3) {
+      fails.push('[rings] only ' + groups.length + ' rendered room section(s) with a visible card '
+        + 'in the home library -- the arm needs three to tell one room from six');
+    }
+    const rings = [];
+    for (const g of groups.slice(0, 3)) {
+      const sel = '.hm-lib .ix-group[data-group="' + g + '"] .ix-card';
+      /* A REAL KEYBOARD FOCUS, not a scripted one. :focus-visible is a heuristic about HOW focus
+         arrived; el.focus() from script is not guaranteed to satisfy it, and an arm that reads the
+         rest-state outline would report the initial black and call the ring wrong for the wrong
+         reason. Focus the card, step off it, step back with the keyboard: the second Tab is a
+         genuine keyboard interaction landing on the card. */
+      await page.locator(sel).first().focus();
+      await page.keyboard.press('Shift+Tab');
+      await page.keyboard.press('Tab');
+      rings.push(await page.evaluate((s) => {
+        const norm = (v) => (v || '').trim().toLowerCase();
+        const paint = (value) => {
+          const probe = document.createElement('span');
+          probe.style.color = value; probe.style.display = 'none';
+          document.body.appendChild(probe);
+          const out = getComputedStyle(probe).color;
+          probe.remove();
+          return norm(out);
+        };
+        const card = document.querySelector(s);
+        const sec = card.closest('.ix-group');
+        const cs = getComputedStyle(card);
+        return {
+          group: sec.getAttribute('data-group'),
+          rm: paint(getComputedStyle(sec).getPropertyValue('--rm').trim()),
+          ring: norm(cs.outlineColor),
+          style: cs.outlineStyle,
+          acc: paint(getComputedStyle(document.documentElement).getPropertyValue('--acc').trim()),
+          focused: document.activeElement === card && card.matches(':focus-visible'),
+        };
+      }, sel));
+    }
+    for (const r of rings) {
+      if (r.err) { fails.push('[rings] ' + r.err); continue; }
+      if (!r.focused) {
+        fails.push('[rings] the ' + r.group + ' card is not :focus-visible after a keyboard step '
+          + 'onto it, so no ring was drawn and the colour below is the initial value, not the app\'s '
+          + '(outline-style ' + r.style + ')');
+      }
+      if (r.ring !== r.rm) {
+        fails.push('[rings] a focused card in ' + r.group + ' draws its ring in ' + r.ring
+          + ' while its own section is ' + r.rm + (r.ring === r.acc
+            ? ' -- that is --acc, the DOOR\'s room, worn by a card in another room' : ''));
+      }
+    }
+    const distinct = new Set(rings.filter((r) => !r.err).map((r) => r.ring));
+    if (rings.length >= 3 && distinct.size < 3) {
+      fails.push('[rings] the three sections drew only ' + distinct.size + ' distinct ring colour(s) ('
+        + [...distinct].join(', ') + ') -- with fewer than three the arm cannot tell "each card wears '
+        + 'its own room" from "every card wears one room", which is the defect it exists for');
+    }
+    await ctx.close();
+  }
+
   await browser.close();
   if (fails.length) {
     console.log('ROOM BROWSER: FAIL');
@@ -126,5 +223,7 @@ const URL = 'file:///' + path.resolve(HTML).replace(/\\/g, '/');
     process.exit(1);
   }
   console.log('ROOM BROWSER: PASS  (data-group + --topic-ink + --acc rebind at boot; reduced-motion '
-    + 'renders in both themes; the home brand mark wears the brand indigo and claims no room)');
+    + 'renders in both themes; the home brand mark wears the brand indigo and claims no room; and '
+    + 'a focused topic card wears ITS OWN section\'s room -- three sections, three rings, three '
+    + 'distinct colours)');
 })();

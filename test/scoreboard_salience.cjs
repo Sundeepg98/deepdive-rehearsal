@@ -105,17 +105,30 @@ const INK = async ({ shots, cardCss }) => {
  * both differ, and nothing asserted an ORDER. Rather than build a second ordering instrument, the
  * gauge is measured by this one.
  *
- * IT IS READ OFF PIXELS AND SWEPT ACROSS THE FILL RANGE, which is the part that matters. A keel
- * is never drawn on the trough -- a flagged topic has been graded, so its capsule is filled -- and
+ * IT IS READ OFF PIXELS, SWEPT ACROSS THE FILL RANGE, AND READ AGAINST TWO GROUNDS. A keel is
+ * never drawn on the trough -- a flagged topic has been graded, so its capsule is filled -- and
  * the two keel values STRADDLE the fill range, so their loudness order FLIPS with the ground. The
  * first fix (swap the tokens) was correct against the trough and STILL INVERTED against the
- * capsule: missed 2.60:1 vs shaky 3.54:1 on a fully-lit capsule in light, 1.82 vs 4.40 in dark.
- * The mark now reserves a 2px waterline the fill does not cover, so its ground is constant; this
- * sweep drives all four --lv steps and would go red if that waterline were removed.
+ * capsule.
  *
- * FOUR CLAIMS, all on the panel's own screenshot:
- *   1. ORDERING   every MISSED mark is at least as loud as every SHAKY mark
+ * THE SECOND GROUND EXISTS BECAUSE THIS FILE ONCE CLAIMED A GUARD IT DID NOT CARRY. It said the
+ * sweep "would go red if that waterline were removed"; reverting both declarations that reserve
+ * the waterline left every number identical and the exit code 0, because an opaque mark's own
+ * pixels do not change when the thing behind it does, and the trough is the same colour under
+ * every capsule. So each keel is also read against the band immediately above it inside its own
+ * rail. On the build that carried that sentence, the second ground measured MISSED 2.75..6.70 vs
+ * SHAKY 2.88..5.39 in light and 1.94..6.50 vs 3.11..6.59 in dark -- inverted in both schemes,
+ * three of four minima under the floor. The capsule now reserves --keel-h + --keel-gap and the
+ * mark occupies only --keel-h, so the band above the mark is the trough on every capsule at every
+ * fill level, and the neighbour reading COLLAPSES ONTO the trough reading. That collapse is the
+ * evidence the ground is constant, and MUTANT C is the control: revert the two declarations and
+ * the neighbour arm must go red.
+ *
+ * SIX CLAIMS, all on the panel's own screenshot:
+ *   1. ORDERING   every MISSED mark is at least as loud as every SHAKY mark, against the trough
+ *   1b. ...AND AGAINST THE BAND IT ABUTS, which is the reading the eye takes
  *   2. FLOOR      every keel mark clears 3:1 against the trough it is drawn on
+ *   2b. ...AND against that same neighbour band
  *   3. DENOMINATOR the untouched capsule's rule clears 3:1 -- at 1.09:1 light / 1.46:1 dark the
  *                  46-unit lattice dissolved into a beige trough and the mark read as a progress
  *                  bar, which is the generic form it was invented to escape
@@ -124,6 +137,9 @@ const INK = async ({ shots, cardCss }) => {
  */
 const NONTEXT_FLOOR = 3.0;
 const DEPTH_FLOOR = 1.25;
+/* the height, in CSS px, of the band sampled immediately ABOVE each keel -- the ground the mark
+   actually abuts. Equal to --keel-h, so the reading is symmetric with the mark it is compared to. */
+const NB_CSS = 2;
 /* the gauge's marks are 1-2 CSS px thick. At the board's DSF of 2 they have no interior pixel
    that a sub-pixel phase shift cannot reach; at 4 they do. See BOX_Y. */
 const GAUGE_DSF = 2;
@@ -138,15 +154,27 @@ const GAUGE_VH = 2400;
    SHAKY on others, so both keel variants paint at every fill step */
 const GAUGE_SEED = () => {
   localStorage.clear();
+  /* THE FILL STEP AND THE KEEL VARIANT ARE DRIVEN BY INDEPENDENT COUNTERS, and that is a coverage
+     fix rather than a style choice. Both used to be functions of the SAME index -- share was
+     `(k % 6) / 5` and the variant was `k % 2`, and `k % 2` is determined by `k % 6` -- so the
+     variant was welded to the share: SHAKY only ever landed on the even steps and MISSED only on
+     the odd ones. The file's own table said so and nobody read it: MISSED swept --lv
+     0/0.3/0.55/0.78 while SHAKY reached 0 and 0.55, two of four, under a docstring claiming the
+     sweep "drives all four". `j` counts the GRADED topics, so the share cycles every 4 and the
+     variant flips every 4 blocks of that cycle -- each variant is drawn at every step.
+     AND NO STEP IS share=1: a topic with every card solid has no flagged probes, so it paints no
+     keel at all, and a "step" that cannot carry the mark is not coverage. */
+  let j = -1;
   TopicRegistry.ids().forEach((id, k) => {
     /* EVERY THIRD TOPIC IS LEFT UNGRADED ON PURPOSE. The denominator arm measures the UNTOUCHED
        capsule's rule, and a seed that grades all 46 topics paints none -- which is how a check
        reports a clean zero without having looked at anything. This one refuses instead. */
     if (k % 3 === 2) return;
+    j++;
     const cards = TopicRegistry.get(id).data.bank.cards;
     const keys = CardId.forCards(cards); const map = {};
-    const share = (k % 6) / 5;                       /* 0, .2, .4, .6, .8, 1 */
-    const bad = (k % 2) ? 1 : 2;                     /* odd topics MISSED, even topics SHAKY */
+    const share = (j % 4) / 4;                       /* 0, .25, .5, .75 -- all keel-bearing */
+    const bad = (Math.floor(j / 4) % 2) ? 1 : 2;     /* MISSED and SHAKY, four topics at a time */
     cards.forEach((c, i) => { map[keys[i]] = (i / cards.length < share) ? 3 : bad; });
     const solid = Object.keys(map).filter((x) => map[x] >= 3).length;
     localStorage.setItem('ddr.v1.progress.' + id, JSON.stringify({
@@ -410,7 +438,18 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
     };
 
     /* one reading of the whole panel: the page, then the page with each mark's own declaration
-       suppressed, then the diffs */
+       suppressed, then the diffs.
+
+       TWO GROUNDS, AND THE SECOND ONE IS THE ONE THE EYE USES. The trough is a STABLE reference
+       and that is exactly its weakness: it is the same colour under every capsule, so a keel
+       measured against it reports the mark's own value and nothing about where the mark sits. A
+       cycle-2 press proved the cost -- reverting BOTH declarations that reserve the waterline
+       (`.hm-seg::after{inset:0 0 var(--keel-h)}` back to `inset:0`, and `.hm-seg.open`'s hard-stop
+       gradient back to a flat fill) left this section reporting the identical numbers and exiting
+       0, because an opaque keel's own pixels do not change when the thing BEHIND it does. The
+       waterline claim in the comment above was therefore a guard claim this check did not carry.
+       So each keel is now ALSO read against the band immediately above it inside its own rail --
+       the pixels it actually abuts -- and the ordering and the floor are asserted on both. */
     const readMarks = async (extraCss) => {
       await style('_gmut', extraCss || '');
       const shotA = await shoot();
@@ -431,10 +470,39 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
       }
       const kY = keelBoxes.length ? await scratch.evaluate(MARK_Y, { shotA, shotB: shotKeel, boxes: keelBoxes }) : [];
       const rY = ruleBoxes.length ? await scratch.evaluate(MARK_Y, { shotA, shotB: shotRule, boxes: ruleBoxes }) : [];
-      const o = { missed: [], shaky: [], rule: [], dead: 0 };
+      /* THE NEIGHBOUR BAND: NB_CSS px immediately above the keel, inside the capsule, inset one
+         device row at top and bottom and clear of the corner radius on both sides -- so it can
+         neither straddle the mark below it nor pick up the rounded ends. It is read off shot A
+         with the plain reader: unlike the mark, it does not differ between A and B, so the
+         removal diff would return null for it. */
+      const nbrBoxes = [], nbrIdx = [];
+      let narrow = 0;
+      let ki = -1;
+      for (const s of geo.segs) {
+        if (!s.keel) continue;
+        ki++;
+        /* the capsules are ~7.8 CSS px wide (46 of them in a 458px track), so the x inset is one
+           CSS px a side -- enough to clear the 2px corner radius, which has finished curving well
+           below this band anyway, and the 2px flex gap keeps the next capsule out of reach. */
+        if (s.w < 4) { narrow++; continue; }
+        const yTop = (s.y + s.h - geo.keelH - NB_CSS) * GAUGE_DSF + 1;
+        const hDev = NB_CSS * GAUGE_DSF - 2;
+        if (hDev < 1) { narrow++; continue; }
+        nbrBoxes.push({ x: S(s.x + 1), y: yTop, w: S(s.w - 2), h: hDev });
+        nbrIdx.push(ki);
+      }
+      const nY = nbrBoxes.length ? await scratch.evaluate(BOX_Y, { shot: shotA, boxes: nbrBoxes }) : [];
+      const nbrFor = {};
+      nY.forEach((b, i) => { if (b) nbrFor[nbrIdx[i]] = b.mean; });
+      const o = { missed: [], shaky: [], rule: [], dead: 0, narrow, nbrN: Object.keys(nbrFor).length };
       kY.forEach((m, i) => {
         if (!m) { o.dead++; return; }
-        o[keelTags[i].kind].push({ cr: CR(FAR(m, t), t), lv: keelTags[i].lv, px: m.n });
+        const n = nbrFor[i];
+        o[keelTags[i].kind].push({
+          cr: CR(FAR(m, t), t),
+          crN: (n === undefined) ? null : CR(FAR(m, n), n),
+          lv: keelTags[i].lv, px: m.n,
+        });
       });
       rY.forEach((m) => {
         if (!m) { o.dead++; return; }
@@ -477,10 +545,17 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
     /* both are large flat areas -- the mean is the honest reading and no extremum is wanted */
     const surfY = surfB ? surfB.mean : 0, groundY = groundB ? groundB.mean : 0;
 
-    const stat = (a) => (a.length ? {
-      n: a.length, min: Math.min(...a.map((o) => o.cr)), max: Math.max(...a.map((o) => o.cr)),
-      lvs: [...new Set(a.map((o) => o.lv))].sort((x, y) => x - y),
-    } : null);
+    const stat = (a) => {
+      if (!a.length) return null;
+      const nb = a.map((o) => o.crN).filter((v) => typeof v === 'number');
+      return {
+        n: a.length, min: Math.min(...a.map((o) => o.cr)), max: Math.max(...a.map((o) => o.cr)),
+        nbN: nb.length,
+        nbMin: nb.length ? Math.min(...nb) : null,
+        nbMax: nb.length ? Math.max(...nb) : null,
+        lvs: [...new Set(a.map((o) => o.lv))].sort((x, y) => x - y),
+      };
+    };
     const M = stat(by.missed), K = stat(by.shaky), R = stat(by.rule);
     const depth = CR(surfY, groundY);
     gaugeRows.push({ theme, M, K, R, depth });
@@ -505,11 +580,43 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
             + 'under the ' + NONTEXT_FLOOR + ':1 non-text floor');
         }
       }
-      /* the sweep really did cross the fill range -- one --lv step is not a sweep */
-      if (M.lvs.length + K.lvs.length < 4) {
-        fails.push(where + 'the keel sweep only reached --lv ' + M.lvs.concat(K.lvs).join('/')
-          + ' -- the whole point is that the mark is measured across the FILL RANGE, because that '
-          + 'is where the first fix was still inverted');
+      /* 1b + 2b. THE SAME TWO CLAIMS AGAINST THE GROUND THE MARK ABUTS.
+         This is the arm the waterline exists to satisfy, and until cycle 2 nothing measured it:
+         against the trough the two keel values order correctly at any fill level, because the
+         trough never moves -- but the mark is not drawn on the trough, it is drawn at the bottom
+         of a capsule whose fill sweeps Y 0.85 to 0.02. If the fill runs all the way down to the
+         mark, the two values STRADDLE its range and their order flips with the grade. */
+      if (!M.nbN || !K.nbN) {
+        fails.push(where + 'the neighbour ground was sampled on ' + M.nbN + ' missed and ' + K.nbN
+          + ' shaky marks -- with no second ground there is nothing asserting that the mark can '
+          + 'be told from what it sits against, which is the whole reason the waterline exists');
+      } else {
+        if (!(M.nbMin >= K.nbMax)) {
+          fails.push(where + 'SEVERITY INVERTED AGAINST THE GROUND THE MARK ABUTS: the quietest '
+            + 'MISSED keel is ' + M.nbMin.toFixed(2) + ':1 against the band immediately above it '
+            + 'while the loudest SHAKY keel is ' + K.nbMax.toFixed(2) + ':1. The trough reading is '
+            + 'not wrong, it is just not what anyone looks at: a keel abuts its own capsule.');
+        }
+        for (const [name, s] of [['MISSED', M], ['SHAKY', K]]) {
+          if (!(s.nbMin >= NONTEXT_FLOOR)) {
+            fails.push(where + name + ' keel measures ' + s.nbMin.toFixed(2) + ':1 against the band '
+              + 'immediately above it at its quietest, under the ' + NONTEXT_FLOOR + ':1 non-text '
+              + 'floor -- the mark clears the floor against the trough and disappears into the '
+              + 'fill it is actually drawn beside');
+          }
+        }
+      }
+      /* THE SWEEP IS ASSERTED PER VARIANT, NOT POOLED. `M.lvs.length + K.lvs.length >= 4` was
+         satisfied by MISSED reaching four steps and SHAKY reaching two, which is exactly the
+         state that shipped while the docstring claimed the sweep drove all four. A pooled count
+         cannot tell "both marks measured everywhere" from "one mark measured twice as often". */
+      for (const [name, s] of [['MISSED', M], ['SHAKY', K]]) {
+        if (s.lvs.length < 4) {
+          fails.push(where + 'the ' + name + ' keel was only drawn at --lv ' + s.lvs.join('/')
+            + ' -- fewer than four fill steps. The whole point is that the mark is measured across '
+            + 'the FILL RANGE, because that is where the first fix was still inverted; extend '
+            + 'GAUGE_SEED rather than lowering this.');
+        }
       }
     }
     /* 3. DENOMINATOR */
@@ -553,8 +660,31 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
         + 'drew the denominator at 1.09:1 light / 1.46:1 dark -- measured ' + rB.min.toFixed(2)
         + ':1 and cleared the floor. The denominator arm is not reading the rule.');
     }
+    /* ---- MUTANT C: THE WATERLINE REMOVED ---------------------------------------------------
+       The two declarations that reserve the channel, reverted to what they were before it: the
+       fill runs to the bottom of the capsule and `.open`'s hard-stop gradient becomes a flat
+       fill. This is the plant that PASSED in cycle 1 -- the check measured only against the
+       trough, and an opaque mark's own pixels do not change when the thing behind it does, so
+       the same numbers came back and the file went on claiming it "would go red if that
+       waterline were removed". The neighbour arm is what makes that sentence true, so this is
+       its negative control and it must land on the NEIGHBOUR reading specifically. */
+    const badC = await readMarks('.hm-seg::after{inset:0!important}'
+      + '.hm-seg.open{background:var(--gauge-rule)!important}');
+    const mC = stat(badC.missed), kC = stat(badC.shaky);
+    if (!mC || !kC || !mC.nbN || !kC.nbN) {
+      fails.push(where + 'MUTANT C CANNOT LAND: the waterline plant left a keel variant unpainted '
+        + 'or unsampled (missed ' + (mC ? mC.n : 0) + '/' + (mC ? mC.nbN : 0) + ', shaky '
+        + (kC ? kC.n : 0) + '/' + (kC ? kC.nbN : 0) + ').');
+    } else if (mC.nbMin >= kC.nbMax && mC.nbMin >= NONTEXT_FLOOR && kC.nbMin >= NONTEXT_FLOOR) {
+      fails.push(where + 'MUTANT C UNDETECTED: with the waterline removed -- the fill running to '
+        + 'the bottom of the capsule, exactly as it did before this wave -- the keels still '
+        + 'measured MISSED ' + mC.nbMin.toFixed(2) + ':1 and SHAKY ' + kC.nbMax.toFixed(2)
+        + ':1 against their own neighbour and were accepted. The second ground is not reading '
+        + 'the ground, and the waterline is still guarded by nothing.');
+    }
     gaugeRows[gaugeRows.length - 1].mut = { A: mA && kA ? mA.min.toFixed(2) + ' vs ' + kA.max.toFixed(2) : 'n/a',
-      B: rB ? rB.min.toFixed(2) : 'n/a' };
+      B: rB ? rB.min.toFixed(2) : 'n/a',
+      C: mC && kC && mC.nbN && kC.nbN ? mC.nbMin.toFixed(2) + ' vs ' + kC.nbMax.toFixed(2) : 'n/a' };
 
     await ctx.close();
   }
@@ -569,17 +699,24 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
   }
 
   console.log('\n=== THE ALTITUDE GAUGE -- keel severity, denominator and depth, off the panel\'s pixels ===');
-  console.log(L('theme', 6) + L('mark', 12) + R('n', 5) + R('min CR', 9) + R('max CR', 9) + '   --lv swept');
+  console.log('    two grounds: TROUGH is the stable reference; NEIGHBOUR is the band immediately');
+  console.log('    above each mark inside its own rail -- the pixels the eye compares it against.');
+  console.log(L('theme', 6) + L('mark', 12) + R('n', 5) + R('trough', 9) + R('..max', 9)
+    + R('nbr min', 9) + R('..max', 9) + '   --lv swept');
   for (const g of gaugeRows) {
     for (const [name, s] of [['MISSED', g.M], ['SHAKY', g.K], ['untouched', g.R]]) {
       if (!s) { console.log(L(g.theme, 6) + L(name, 12) + R(0, 5) + '   (not painted)'); continue; }
       console.log(L(g.theme, 6) + L(name, 12) + R(s.n, 5) + R(s.min, 9, 2) + R(s.max, 9, 2)
+        + R(s.nbMin === null || s.nbMin === undefined ? '-' : s.nbMin, 9, 2)
+        + R(s.nbMax === null || s.nbMax === undefined ? '-' : s.nbMax, 9, 2)
         + '   ' + (s.lvs.filter((v) => v !== undefined).join(', ') || '-'));
     }
     console.log(L(g.theme, 6) + L('panel/ground', 12) + R('', 5) + R(g.depth, 9, 3) + '  (depth)');
     if (g.mut) {
       console.log(L(g.theme, 6) + L('  mutants', 12) + '  shipped keel wiring -> missed ' + g.mut.A
         + ' (INVERTED, caught) | rule back to --bd -> ' + g.mut.B + ':1 (under floor, caught)');
+      console.log(L('', 6) + L('', 12) + '  waterline removed -> missed ' + g.mut.C
+        + ' on the NEIGHBOUR ground (caught)');
     }
   }
 
@@ -591,7 +728,9 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
   console.log('\nSCOREBOARD SALIENCE: PASS  (' + rows.length + ' room x theme x score;'
     + ' Solid is the loudest tile whenever it is non-empty, in every room, both themes, and never fills at zero'
     + ' -- plus the altitude gauge in both schemes: the worst grade is never drawn quieter than the'
-    + ' middle one across the whole fill range, both keel marks and the untouched capsule\'s rule'
-    + ' clear the 3:1 non-text floor on the pixels, and the panels stand off their ground)');
+    + ' middle one, and both keel marks clear the 3:1 non-text floor, against TWO grounds -- the'
+    + ' stable trough AND the band each mark actually abuts -- with each variant swept over all'
+    + ' four fill steps; the untouched capsule\'s rule clears the same floor; and the panels stand'
+    + ' off their ground)');
   return B.finish(0);
 })();

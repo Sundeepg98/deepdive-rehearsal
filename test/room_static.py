@@ -74,15 +74,34 @@ for g in GROUPS:
 if '--topic-ink' not in css or '--acc:var(--topic-ink)' not in css:
     fails.append('the --acc -> --topic-ink rebind is missing (rooms would not retint)')
 
-# 4. boot is pre-stamped (index.html <html> carries data-group)
+# 4. BOOT IS STAMPED FROM THE RECORD, NOT FROM A CONSTANT.
+#    This arm used to require the opposite -- `data-group=` hard-coded on <html> -- and it was
+#    satisfied by `data-group="architecture-apis"`, a value that is correct for one room out of
+#    six and wrong for every returning user in the other five (measured: 5-6 frames of magenta on
+#    a security-tenancy record before the home re-stamped). "Stamped" and "stamped with something
+#    true" are different claims and only the second one is worth guarding. So: the constant must
+#    be GONE from the <html> tag, and boot.js must derive the room before anything paints. The
+#    table it derives from is checked against the live registry by test/home_claims.cjs; this arm
+#    is the source half.
 html = open(os.path.join(SRC, 'index.html'), encoding='utf-8').read()
 head = html.split('<head>', 1)[0]
-if 'data-group=' not in head:
-    fails.append('index.html <html> is not stamped with data-group -- first paint boots roomless')
+if 'data-group=' in head:
+    fails.append('index.html <html> hard-codes data-group again -- a boot CONSTANT is the wrong '
+                 'room for five of the six rooms; scripts/boot.js derives it from the record')
+boot = open(os.path.join(SRC, 'scripts', 'boot.js'), encoding='utf-8').read()
+if '__doorRooms' not in boot or "setAttribute('data-group'" not in boot:
+    fails.append('scripts/boot.js no longer stamps the door room -- with no constant in '
+                 'index.html either, first paint boots roomless for everyone')
+# and it has to run first, or the frames it exists to fix are painted before it
+order = [m for m in re.findall(r'@build:include\s+(scripts/[^\s>-]+)', html)]
+if not order or order[0] != 'scripts/boot.js':
+    fails.append('scripts/boot.js is not the first script include in index.html (%s) -- the door '
+                 'room must be stamped before anything else runs' % (order[:2] or 'none found'))
 
 if fails:
     print('ROOM STATIC: FAIL')
     for f in fails:
         print('  - ' + f)
     sys.exit(1)
-print('ROOM STATIC: PASS  (codemod=0, styles.css infinite=0, 6 room blocks + rebind, boot stamped)')
+print('ROOM STATIC: PASS  (codemod=0, styles.css infinite=0, 6 room blocks + rebind, '
+      'boot derives the door room first and no constant is hard-coded)')

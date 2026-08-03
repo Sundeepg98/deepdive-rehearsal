@@ -1545,6 +1545,222 @@ const GEN_N = 24;
     await ctx.close();
   }
 
+  /* ========== THE BOOT RING: THE DOOR IS LIT BEFORE ANYTHING PAINTS ==========================
+   * judgeDoor above reads the stamp AFTER the home has rendered, which is exactly late enough to
+   * miss the defect it was written for. index.html hard-coded data-group="architecture-apis" on
+   * <html>, so on a seeded record in another room the first frames of every session were painted
+   * in the BOOT CONSTANT and only then corrected -- MEASURED on the shipped build, three cold
+   * loads on a security-tenancy record: 5 and 6 frames of architecture-apis before the home
+   * re-stamped, and one load where the sampler started late enough to see none. A post-render
+   * read reports that as clean. This arm samples <html data-group> on EVERY animation frame from
+   * document_start, so the frames themselves are the evidence.
+   *
+   * THREE THINGS ARE ASSERTED, and the third is the one that keeps boot.js honest:
+   *   1. SEEDED   every sampled frame is the resume target's room -- no wrong room, no roomless
+   *               frame, across three cold loads.
+   *   2. COLD     with no record the home boots in the COLD DOOR's room -- TopicRegistry.ids()[0],
+   *               which is what the cold START card points at -- and NOT in the boot topic's. The
+   *               two disagree (ids()[0] is event-driven, TopicRegistry.current() at boot is
+   *               content-pipeline), which is precisely why one hard-coded attribute could not
+   *               answer both questions, and the arm aborts rather than pass if they ever agree.
+   *   3. THE FACTS boot.js cannot import app modules, so it carries three things the registry
+   *               owns: the id->room table, the boot topic and the cold door's topic. All three
+   *               are compared against TopicRegistry -- the table in BOTH directions -- so a topic
+   *               added, moved between rooms or renamed reds here instead of silently lighting the
+   *               wrong door.
+   *
+   * THE MUTANTS GO THROUGH THE REAL CODE PATH. `window.__doorRooms` is redefined as an accessor
+   * whose setter swallows boot's assignment, so boot derives from a table the test controls: one
+   * that answers "architecture-apis" for the resume topic (the constant, restored, arriving by
+   * the honest route) and one that answers nothing (the stamp deleted). Both must go red. */
+  {
+    const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+    const probe = await ctx.newPage();
+    await B.gotoApp(probe, HTML, { hash: '#home' });
+
+    /* a topic whose room is NOT the cold door's room, so a stamp that ignores the record and a
+       stamp that reads it cannot agree by accident */
+    const pick = await probe.evaluate(() => {
+      const ids = TopicRegistry.ids();
+      if (!ids.length) return null;
+      const cold = ((TopicRegistry.get(ids[0]) || {}).identity || {}).group;
+      for (const id of ids) {
+        const g = ((TopicRegistry.get(id) || {}).identity || {}).group;
+        if (g && g !== cold) return { id, group: g, cold };
+      }
+      return null;
+    });
+    if (!pick) {
+      aborted = aborted || 'THE BOOT-RING ARM CANNOT LAND: every registered topic is in the same '
+        + 'room as the cold door, so a stamp read from the record and a stamp that ignores it are '
+        + 'the same string and the arm proves nothing.';
+    }
+
+    /* 3. THE TABLE vs THE REGISTRY, and the two topic constants beside it. `__doorBoot` is read
+          on a BARE-VIEW boot (#walk), because that is the route whose room is the boot topic's --
+          TopicRegistry.current() moves as you navigate, so reading it anywhere else would be
+          comparing boot.js's constant against a value that is no longer the boot value. */
+    const bootTopic = await (async () => {
+      const p2 = await ctx.newPage();
+      await B.gotoApp(p2, HTML, { hash: '#walk' });
+      const v = await p2.evaluate(() => ({
+        cur: (TopicRegistry.current && TopicRegistry.current() || {}).id || null,
+        declared: window.__doorBoot || null,
+        stamped: document.documentElement.getAttribute('data-group'),
+        curGroup: (((TopicRegistry.current && TopicRegistry.current()) || {}).identity || {}).group || null,
+      }));
+      await p2.close();
+      return v;
+    })();
+    out.push(['[boot] a bare-view boot is lit in the BOOT TOPIC\'s room, and boot.js\'s declared '
+      + 'boot topic is the one the registry actually makes current -- the half of the old constant '
+      + 'that was correct, kept and checked instead of deleted',
+      !!bootTopic.cur && bootTopic.declared === bootTopic.cur
+        && bootTopic.stamped === bootTopic.curGroup && !!bootTopic.curGroup,
+      JSON.stringify(bootTopic)]);
+
+    const tab = await probe.evaluate(() => {
+      const m = window.__doorRooms;
+      if (!m) return null;
+      const flat = {}, dupes = [];
+      for (const g in m) for (const id of String(m[g]).split(' ')) {
+        if (!id) continue;
+        if (flat[id]) dupes.push(id);
+        flat[id] = g;
+      }
+      const missing = [], wrong = [], extra = [], reg = {};
+      for (const id of TopicRegistry.ids()) {
+        const g = ((TopicRegistry.get(id) || {}).identity || {}).group || '';
+        reg[id] = g;
+        if (!flat[id]) missing.push(id);
+        else if (flat[id] !== g) wrong.push(id + ' (table ' + flat[id] + ', registry ' + g + ')');
+      }
+      for (const id in flat) if (!(id in reg)) extra.push(id);
+      const ids = TopicRegistry.ids();
+      return { n: Object.keys(flat).length, regN: Object.keys(reg).length, dupes, missing, wrong, extra,
+        cold: window.__doorCold || null, coldWant: ids[0] || null };
+    });
+    out.push(['[boot] boot.js\'s id->room table agrees with the registry entry by entry, both '
+      + 'directions -- it is a duplicate of a fact boot cannot import, so it is checked rather '
+      + 'than trusted',
+      !!tab && !tab.dupes.length && !tab.missing.length && !tab.wrong.length && !tab.extra.length
+        && tab.n === tab.regN,
+      tab ? (tab.n + ' in the table vs ' + tab.regN + ' registered; missing ' + JSON.stringify(tab.missing)
+        + ' wrong ' + JSON.stringify(tab.wrong) + ' extra ' + JSON.stringify(tab.extra)
+        + ' duplicated ' + JSON.stringify(tab.dupes))
+        : 'window.__doorRooms is not defined -- boot.js is not deriving the door room at all']);
+    out.push(['[boot] and its declared COLD DOOR is the registry\'s first topic -- the one the '
+      + 'cold home\'s START card points at, which is a different topic from the boot topic and so '
+      + 'a different answer',
+      !!tab && !!tab.cold && tab.cold === tab.coldWant,
+      tab ? ('boot.js declares ' + tab.cold + ', registry ids()[0] is ' + tab.coldWant) : 'no table']);
+    await probe.close();
+
+    /* one cold load, sampling every frame; `plant` runs at document_start */
+    const frames = async (seed, plant) => {
+      const p = await ctx.newPage();
+      await p.addInitScript(({ id, pl }) => {
+        try {
+          localStorage.clear();
+          if (id) {
+            localStorage.setItem('ddr.v1.nav.last', JSON.stringify({ id: id, view: 'drill' }));
+            localStorage.setItem('ddr.v1.progress.' + id, JSON.stringify({
+              got: 3, shk: 2, done: 5, tot: 12, revisit: ['x'], cards: {}, cv: 1, ts: Date.now() }));
+          }
+        } catch (e) {}
+        if (pl) {
+          let held = null;
+          Object.defineProperty(window, '__doorRooms', {
+            configurable: true,
+            get() { return pl === 'none' ? {} : { 'architecture-apis': id }; },
+            set(v) { held = v; },
+          });
+          void held;
+        }
+        window.__doorFrames = [];
+        const tick = () => {
+          window.__doorFrames.push(document.documentElement.getAttribute('data-group'));
+          if (window.__doorFrames.length < 90) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      }, { id: seed, pl: plant || null });
+      await B.gotoApp(p, HTML, { hash: '#home' });
+      await B.until(p, () => document.documentElement.getAttribute('data-view') === 'home',
+        null, B.ACT_MS, 'the home rendered');
+      await B.settle(p);
+      const f = await p.evaluate(() => window.__doorFrames.slice());
+      await p.close();
+      return f;
+    };
+    const rle = (f) => {
+      const o = [];
+      for (const v of f) {
+        if (o.length && o[o.length - 1][0] === v) o[o.length - 1][1]++;
+        else o.push([v, 1]);
+      }
+      return o.map(([v, n]) => (v === null ? '(no room)' : v) + ' x' + n).join(' -> ');
+    };
+
+    if (pick) {
+      /* 1. SEEDED -- three cold loads, zero frames in any room but the door's */
+      let offRoom = 0, sampled = 0, tape = [];
+      for (let i = 0; i < 3; i++) {
+        const f = await frames(pick.id, null);
+        sampled += f.length;
+        offRoom += f.filter((v) => v !== pick.group).length;
+        tape.push(rle(f));
+      }
+      out.push(['[boot] on a seeded record the door is lit in the resume target\'s room from the '
+        + 'FIRST animation frame -- three cold loads, no frame in another room and none roomless',
+        offRoom === 0 && sampled > 0,
+        offRoom + ' of ' + sampled + ' frames were not ' + pick.group + ' (cold door is '
+        + pick.cold + '): ' + tape.join(' | ')]);
+
+      /* MUTANT A -- the boot constant, restored through the real derivation */
+      const mA = await frames(pick.id, 'const');
+      out.push(['[boot][mutant] THE BOOT CONSTANT PUT BACK: the door lit in architecture-apis '
+        + 'while the resume act is in ' + pick.group + ' is caught at the frame level',
+        mA.some((v) => v !== pick.group), rle(mA)]);
+
+      /* MUTANT B -- the stamp deleted outright */
+      const mB = await frames(pick.id, 'none');
+      out.push(['[boot][mutant] THE STAMP DELETED: a seeded record booting with no room on <html> '
+        + 'is caught -- with index.html\'s constant gone, an unstamped boot is roomless, not safe',
+        mB.some((v) => v !== pick.group), rle(mB)]);
+    }
+
+    /* 2. COLD -- the cold DOOR's room, which is not the boot topic's */
+    const coldWant = await (async () => {
+      const p3 = await ctx.newPage();
+      await B.gotoApp(p3, HTML, { hash: '#home' });
+      const v = await p3.evaluate(() => {
+        const ids = TopicRegistry.ids();
+        const first = ids.length ? TopicRegistry.get(ids[0]) : null;
+        const cur = (TopicRegistry.current && TopicRegistry.current()) || null;
+        return { door: ((first || {}).identity || {}).group || null,
+          boot: ((cur || {}).identity || {}).group || null };
+      });
+      await p3.close();
+      return v;
+    })();
+    if (coldWant.door && coldWant.door === coldWant.boot) {
+      aborted = aborted || 'THE COLD-DOOR ARM CANNOT LAND: the registry\'s first topic and its '
+        + 'boot topic are in the SAME room, so "the cold home lights its own door" and "the cold '
+        + 'home lights the boot topic\'s room" are the same string and the arm proves nothing.';
+    } else {
+      const cold = await frames(null, null);
+      const off = cold.filter((v) => v !== coldWant.door).length;
+      out.push(['[boot] a first-time visitor\'s home is lit in the COLD DOOR\'s room ('
+        + coldWant.door + ', the registry\'s first topic -- what the START card points at) from '
+        + 'the first frame, NOT in the boot topic\'s room (' + coldWant.boot + '), which is what '
+        + 'the deleted constant said',
+        cold.length > 0 && off === 0,
+        off + ' of ' + cold.length + ' frames were not ' + coldWant.door + ': ' + rle(cold)]);
+    }
+
+    await ctx.close();
+  }
+
   await browser.close();
 
   if (!keelChecked) {
@@ -1563,7 +1779,7 @@ const GEN_N = 24;
   const bad = out.filter((o) => !o[1]);
   for (const [label, pass, detail] of out) console.log((pass ? '  PASS  ' : '  FAIL  ') + label + (pass ? '' : '  -- ' + detail));
   console.log('\n  the legend arm was exercised on ' + keelChecked + ' record(s) that actually paint a keel');
-  console.log('  17 planted mutants detected (a full claim over empty rails; a level claim over '
+  console.log('  19 planted mutants detected (a full claim over empty rails; a level claim over '
     + 'unequal rails; a thin rail named on the highest tier; a step position beside a bare probe '
     + 'remainder; a verdict quoting one rail\u2019s figures for another; an inflated panel header; '
     + 'an inflated figure inside the single-thin-rail sentence, checked against its own negative '
@@ -1575,9 +1791,12 @@ const GEN_N = 24;
     + 'line beneath it; THE HOME LIT IN THE BOOT CONSTANT\'S ROOM while its resume act is in '
     + 'another, which is what every var(--acc) consumer on the surface wore before this wave; and '
     + 'the arrival inverted in both of its halves -- the gauge restored above the paired row, and '
-    + 'the paired row restored with the deficit panel first; and the rails\' aria-describedby tie '
+    + 'the paired row restored with the deficit panel first; the rails\' aria-describedby tie '
     + 'stripped, which is the state in which 138 marks name their topics to a mouse and to nothing '
-    + 'else) -- every one of them a defect a judge or a battery found on a shipped build');
+    + 'else; and the two boot-ring plants -- THE BOOT CONSTANT RESTORED through boot.js\'s own '
+    + 'derivation, and the door stamp DELETED, both caught on the animation frames rather than '
+    + 'after the home has already corrected them) -- every one of them a defect a judge or a '
+    + 'battery found on a shipped build');
   if (bad.length) return B.finish(1, 'HOME CLAIMS: FAIL (' + bad.length + ')');
   return B.finish(0, 'HOME CLAIMS: PASS  (' + out.length + ' assertions: '
     + Object.keys(SEEDS).length + ' pinned records + ' + GEN_N + ' generated from a fixed PRNG, '

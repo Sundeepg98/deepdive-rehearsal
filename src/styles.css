@@ -198,6 +198,16 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
      DARK is a SEPARATE declaration and was NOT touched: there --topic-solid is a light tint, and
      the ink that sits on it is --on-slab's near-black (see --on-slab). */
   html{--topic-ink:#534AB7;--topic-solid:#534AB7;--topic-wash:#EFEDFA;--topic-edge:#CFC7F0}
+  /* THE ROOMLESS DEFAULT NOW HAS A DARK HALF, because it is now REACHABLE. index.html used to
+     hard-code data-group on <html>, so no surface could ever render without a room and the light
+     default above was the only one that could ever apply. boot.js derives the room instead, and
+     its derivation is wrapped in a catch: if localStorage is denied (private mode -- the case
+     scripts/app/store.js already defends) or the registry facts it carries ever go stale, the
+     attribute is simply not set, and this default paints the boot ring in BOTH schemes. #534AB7
+     on the dark ground #0F0E13 measures 2.77:1, under the 3:1 non-text floor, so the dark half
+     is not decoration. It is the app's own dark --indigo (#9D93F0, styles.css:765): 7.20:1 on
+     --bg, 6.73:1 on --side. Wash and edge follow the dark rooms' shape without claiming a hue. */
+  html[data-theme="dark"]{--topic-ink:#9D93F0;--topic-solid:#9D93F0;--topic-wash:#24223C;--topic-edge:#453F66}
   html[data-group="messaging-events"]         {--topic-ink:#006B63;--topic-solid:#007A70;--topic-wash:#ECF9F7;--topic-edge:#AFE4DC}
   html[data-group="data-storage"]             {--topic-ink:#315BB4;--topic-solid:#2C65E0;--topic-wash:#F1F6FF;--topic-edge:#C5D8FD}
   html[data-group="reliability-observability"]{--topic-ink:#924E00;--topic-solid:#A65900;--topic-wash:#FDF4ED;--topic-edge:#F4CFB4}
@@ -334,19 +344,22 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
      denominator; the pixels did not carry one.
 
      --bd is the app-wide hairline and has ~200 consumers, so it cannot be moved for this. The
-     lattice gets its own rule instead, solved to ~3.75:1 on --side in BOTH schemes -- 25% clear
-     of the 3:1 non-text floor rather than the coincidence-width margins this repo has shipped
-     before. It stays well under the SOLID fill (--ink on --side is 11.8:1 light), so the ordering
-     that carries the grade is untouched: a hollow slot is countable and still visibly less than
-     any lit one.
-       light  #7E786E on #F1EDE4 = 3.75:1     dark  #74707C on #17161D = 3.72:1
+     lattice gets its own rule instead. It stays well under the SOLID fill (--ink on --side is
+     11.8:1 light), so the ordering that carries the grade is untouched: a hollow slot is
+     countable and still visibly less than any lit one.
      Two consumers, and they must move together or the legend stops labelling the mark: the
      capsule's own inset rule (.hm-seg) and the key's "Untouched" swatch (.hm-k.none i).
      THE BINDING GROUND DIFFERS BY SCHEME, so both are solved rather than one and a hope: the
      capsules sit on --side, the key's swatches sit on --card, and in light the trough is the
-     tighter pair while in dark it is the card. Measured, all four:
+     tighter pair while in dark it is the card. ONE PAIR, THE ONE THAT SHIPS, MEASURED ON ALL
+     FOUR GROUNDS -- an earlier draft of this comment presented a SUPERSEDED solve (#7E786E /
+     #74707C, ~3.75:1 on --side) as the answer and then printed the shipped values four lines
+     later, so the block stated its own solve twice and disagreed with itself:
        light  #76726A   4.10:1 on --side   4.79:1 on --card
-       dark   #7D7985   4.23:1 on --side   3.49:1 on --card (the lifted home surface, item 8) */
+       dark   #7D7985   4.23:1 on --side   3.49:1 on --card (the lifted home surface, item 8)
+     The binding cell is dark-on-card at 3.49:1, 16% clear of the 3:1 non-text floor; the
+     rasterised minimum, which is what test/scoreboard_salience.cjs actually asserts, is read off
+     the pixels rather than off this arithmetic. */
   html{--gauge-rule:#76726A}
   html[data-theme="dark"]{--gauge-rule:#7D7985}
 
@@ -1533,7 +1546,11 @@ button,summary{-webkit-user-select:none;user-select:none}
    this cannot silently regrow. Everything below is verified to have light-DOM matches. */
 @media(prefers-contrast:more){.seg button.on{outline:2px solid var(--acc);outline-offset:2px}.mockbtn,.crambtn,.tools-fab,.inttog{border:1px solid var(--acc)}.mb-d,.cmp-note,.cmp-thesis,.locator{color:var(--ink)}}
 @media(prefers-reduced-transparency:reduce){.mock-panel,.cram-panel,.sidebar{backdrop-filter:none!important}}
-@media(forced-colors:active){.badge{background:Highlight!important;color:HighlightText!important}.mockbtn,.crambtn,.tools-fab,.inttog,.cmp-reopen,.tn-trigger,.tn-step,.seg button{border:1px solid ButtonText!important}.mockbtn,.seg button.on{border:2px solid Highlight!important}:focus-visible{outline:2px solid Highlight!important;outline-offset:2px}}
+/* .ix-star-ic IS IN THIS BLOCK BECAUSE IT IS A DRAWN GLYPH, NOT A DECORATION. It replaced a
+   U+2605 text node (see its rule), and in forced colours a text node is repainted CanvasText
+   while a `background` is flattened to Canvas -- measured, the star disappeared entirely. Giving
+   it CanvasText restores exactly the silhouette the character had. */
+@media(forced-colors:active){.badge{background:Highlight!important;color:HighlightText!important}.mockbtn,.crambtn,.tools-fab,.inttog,.cmp-reopen,.tn-trigger,.tn-step,.seg button{border:1px solid ButtonText!important}.mockbtn,.seg button.on{border:2px solid Highlight!important}.ix-star-ic{background:CanvasText!important}:focus-visible{outline:2px solid Highlight!important;outline-offset:2px}}
 
 /* === v157: Dark mode glow enhancements -- DELETED, dead AND redundant ===
    The four rules here (html[data-theme="dark"] .card / .card:hover / .thread / .thread:hover)
@@ -2039,8 +2056,20 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
    frame to Arial, six more to Segoe UI Symbol). They sit in the app FRAME and on topic routes,
    whose VR baselines this wave is not authorised to move, so they are ratcheted as declared debt
    by test/craft_hygiene.py rather than fixed here -- the class cannot grow, and the app-wide fix
-   has somewhere to land. */
-.ix-star-ic{width:.85em;height:.85em;flex:none;background:#f59e0b;
+   has somewhere to land.
+   A SHAPE COSTS SOMETHING A CHARACTER DOES NOT, AND BOTH HALVES OF THAT ARE PAID HERE. A text
+   node is forced to CanvasText in Windows High Contrast and prints as ink by default; a
+   `background` is neither. MEASURED with forcedColors:'active' on the visible starred pill, the
+   first draft of this rule computed its background to Canvas (rgb(255,255,255)) and the star
+   VANISHED -- a 10px gap before the topic name -- on an app that maintains its own
+   @media(forced-colors:active) block, so that was a gap against this app's stated support rather
+   than a mode it ignores. The forced-colors block re-paints the shape in CanvasText, which is
+   exactly what the U+2605 it replaced would have been forced to; print-color-adjust:exact keeps
+   it under the browser's default "no background graphics". The mark is decorative either way
+   (aria-hidden, and the pill's own text names the topic), which is why this is one declaration
+   each rather than a redesign. */
+.ix-star-ic{width:.85em;height:.85em;flex:none;background:#f59e0b;print-color-adjust:exact;
+  -webkit-print-color-adjust:exact;
   clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)}
 .nt-ov{position:fixed;inset:0;z-index:var(--z-popup);display:none;align-items:center;justify-content:center;background:rgba(30,28,24,.45);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:8vh var(--space-16) var(--space-16);opacity:0;transition:opacity var(--duration-base) var(--ease-base)}
 .nt-ov.open{display:flex;opacity:1}
@@ -2125,6 +2154,26 @@ html[data-theme="dark"] .ix-panel,html[data-theme="dark"] .xd-panel,html[data-th
 .ix-cross-weak .ix-cross-ar{color:var(--amber)}
 .ix-card:hover{border-color:var(--acc);background:var(--accbg);transform:translateY(-1px)}
 .ix-card.on{border-color:var(--acc);background:var(--accbg)}
+/* ===== A CARD'S RING IS ITS OWN ROOM'S, NOT THE DOOR'S =====
+   The rest state already does this: `.ix-group .ix-card` mixes 25% of --rm into the border, and
+   index-overlay/panels emit `--rm:var(--room-<id>)` inline on every .ix-group section, so the
+   per-section binding is already there and already paid for. The two ACTIVE states did not read
+   it -- they took --acc, which is a single value for the whole document (the room of the topic
+   you are returning to). So the library's six sections drew six rest-state colours and then, the
+   moment you touched one, one shared colour: Tab through the rooms and the ring never changed
+   room, on the one surface whose entire argument is that six rooms are visible at once.
+   These are the same declarations `.hm-room:focus-visible` already uses one screen over (:2469),
+   including the halo -- the outline is what carries WCAG 2.4.7 and the halo is decoration, but a
+   --rm outline inside an --acc glow would be two rooms on one control, which is the defect with
+   an extra step. The `var(--rm,var(--acc))` fallback is the house pattern for a card that is not
+   inside a group section.
+   THE HOVER WASH IS DELIBERATELY LEFT AS --accbg: there is no per-room wash token, and inventing
+   one is a palette decision with six values to solve and its own contrast pass -- out of scope
+   for a ring fix, and named here rather than left as a silent inconsistency. */
+.ix-group .ix-card:hover{border-color:var(--rm,var(--acc))}
+.ix-group .ix-card:focus-visible{outline-color:var(--rm,var(--acc));
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--rm,var(--acc)) 15%,transparent),
+    0 0 16px -4px color-mix(in srgb,var(--rm,var(--acc)) 20%,transparent)}
 .ix-c-name{font-size:var(--font-size-small);font-weight:var(--font-weight-bold);color:var(--ink);padding-right:var(--space-92)}
 .ix-card.on .ix-c-name{color:var(--acc)}
 .ix-c-tail{font-size:var(--font-size-nano);color:var(--mut2);text-transform:uppercase;letter-spacing:var(--track-px-0-3);margin-top:var(--space-3)}
@@ -2318,8 +2367,23 @@ html[data-view="home"] .companion{padding:0}
    rather than on a panel -- the skip-the-home label, the backup buttons and the lead line, all
    --mut at 11-14px, all 5.27:1 before. A ground at Y 0.740 would put them at 4.18:1, under AA. So
    --mut is deepened ON THIS ROUTE by the same linear-light factor the ground moved, which keeps
-   every --mut/ground ratio by construction instead of re-checking it by hand, and IMPROVES every
-   --mut/surface pair.
+   every --mut/ground ratio by construction instead of re-checking it by hand, and improves every
+   --mut/surface pair IN LIGHT (5.55 -> 6.55:1 on #fff).
+   IN DARK IT DOES NOT, AND THE FIRST DRAFT OF THIS PARAGRAPH CLAIMED OTHERWISE. The dark ground
+   did not move (--home-ground IS --bg), so --mut has nothing to follow and keeps its root value;
+   the SURFACE moved instead, and it moved UP -- Y 0.0124 -> 0.0209, a rise of 1.68x. So the dark
+   --mut/surface pair LOSES about 12%: 6.63:1 on --card becomes 5.84:1 on --home-surface. It is
+   still well clear of AA, no floor is breached and the text-floor sweep is not contradicted --
+   but "improves every pair" was a sentence the arithmetic never supported, and this route's own
+   depth argument is the reason: you cannot lift a surface toward the ink and also increase the
+   ink's distance from it.
+   THE DARK OVERRIDE BELOW IS NOT DEAD, and it reads as though it were -- it restates the dark
+   root's own #A7A29A. It is load-bearing because the LIGHT home rule beside it carries NO theme
+   qualifier: `html[data-view="home"] #home` matches in dark too, so without the dark rule the
+   dark home would inherit the LIGHT home's #605D58. MEASURED by suppressing it on the built page:
+   --mut computes #605D58, which is 2.93:1 on the dark ground and 2.26:1 on the dark surface --
+   a hard AA failure on every muted string on the route. It stays, with this note, because the
+   next reader will otherwise delete it for the same reason a reviewer flagged it.
    MEASURED, NOT ARGUED, AND MEASURED AS A DELTA: _audit/w-addresses-home-before-after/
    text-floor-sweep.txt sweeps every text node under #home on BOTH builds -- master 0aba404 and
    this one -- in both schemes and both record classes, each node's colour against its first
@@ -2628,39 +2692,52 @@ html[data-theme="dark"][data-view="home"] #home{--mut:#A7A29A}
 .hm-gr-t{display:flex;gap:2px;height:32px;padding:3px;border:1px solid var(--bd);border-radius:8px;background:var(--side)}
 .hm-seg{position:relative;flex:1 1 0;min-width:3px;border-radius:2px;overflow:hidden;
   box-shadow:inset 0 0 0 1px var(--gauge-rule)}
-/* ---- THE WATERLINE: THE KEEL GETS ONE GROUND, AND THAT IS WHAT MAKES ITS ORDERING REAL -------
-   FOUND BY LOOKING AT THE PLATE AFTER THE TOKEN FIX, WHICH IS WHY IT IS HERE. Swapping the two
-   keel tokens fixes the ordering measured against the TROUGH -- which is what the delight audit
-   measured, and it is a stable reference. It does NOT fix what the eye sees, because a keel is
-   never drawn on the trough: a topic with flagged probes has necessarily been graded, so its
-   capsule is `.open` and the keel's actual neighbour is the capsule's own FILL, which runs from
-   the pale rule up to full --ink. And the two keel values STRADDLE that range, so their loudness
-   ORDER FLIPS WITH THE GROUND. Measured on the rendered mark, both schemes, after the swap:
+/* ---- THE WATERLINE: A CHANNEL BETWEEN THE HULL AND THE MARK, AND IT HAS TO BE A REAL ONE -----
+   THE PROBLEM. Swapping the two keel tokens fixes the ordering measured against the TROUGH,
+   which is a stable reference and is what the delight audit measured. It does not fix what the
+   eye sees, because a keel is never drawn on the trough: a topic with flagged probes has
+   necessarily been graded, so its capsule is `.open` and the mark's actual neighbour is the
+   capsule's own FILL, which runs from the pale rule up to full --ink. The two keel values
+   STRADDLE that range, so their loudness order flips with the grade. No pair of colours can
+   order correctly against a ground that sweeps Y 0.85 to Y 0.02.
 
-       light, keel on a fully-lit capsule (--ink #2A2823)   missed 2.60:1   shaky 3.54:1
-       dark,  keel on a fully-lit capsule (--ink #ECEAE4)   missed 1.82:1   shaky 4.40:1
+   CYCLE 1 RESERVED TWO PIXELS AND THE MARK ATE BOTH OF THEM, which is why this paragraph is
+   rewritten rather than kept. The fill stopped 2px short and the keel was drawn 2px tall at the
+   bottom -- so the gap and the mark were the SAME two pixels, the keel is opaque, and what it
+   abutted above was still the fill. Nothing changed for a flagged capsule. It read as a fix
+   because the only instrument pointed at the trough, where an opaque mark's own colour is
+   identical either way; reverting both declarations left the check reporting the same numbers and
+   exiting 0. MEASURED, once test/scoreboard_salience.cjs was given the second ground -- the band
+   immediately above each mark inside its own rail, over 70 keel marks per scheme:
 
-   -- still inverted, and invisible in the middle of the fill range besides (1.13:1 on a
-   part-filled capsule in light). No pair of colours can order correctly against a ground that
-   sweeps from Y 0.85 to Y 0.02; the mark needed a ground, not a better hue.
+       light   MISSED 2.75 .. 6.70:1     SHAKY 2.88 .. 5.39:1     floor 3:1
+       dark    MISSED 1.94 .. 6.50:1     SHAKY 3.11 .. 6.59:1
 
-   So the fill STOPS SHORT of the bottom 2px and the keel paints into the gap, on the trough,
-   always. The hard-stop gradient is what gives `.open` a base that does the same -- one
-   declaration, no extra element, and `overflow:hidden` + the 2px radius keep the corner clean.
-   The keel is now literally a keel: the hull sits in the channel and the mark is below the
-   waterline. Two consequences worth stating: the ordering the token pair encodes is now the
-   ordering the pixels have (4.64 vs 3.41 light, 8.21 vs 3.40 dark, on a CONSTANT ground), and the
-   fill loses 2 of 26px -- which costs it nothing, because the SIGNAL RULE puts the grade in
-   lightness and never in size. --keel-h is one number so the fill and the mark cannot drift. */
-.hm-seg{--keel-h:2px}
-.hm-seg::after{content:"";position:absolute;inset:0 0 var(--keel-h);background:var(--ink);opacity:var(--lv,0)}
+   -- inverted in both schemes (the worst grade's quietest mark below the middle grade's loudest)
+   and three of the four minima under the non-text floor.
+
+   THE FIX IS GEOMETRY, NOT COLOUR: the channel is separate from the mark. The fill stops at
+   --keel-h + --keel-gap; the keel occupies only the bottom --keel-h; the --keel-gap between them
+   is left transparent, so the band the mark abuts is the TRACK'S OWN TROUGH on every capsule at
+   every fill level. That is what makes the keel a keel -- the hull sits in the channel and the
+   mark is below the waterline -- and it is what makes the token pair's ordering the pixels'
+   ordering rather than an intention. The hard-stop gradient gives `.open` the same base in one
+   declaration, with no extra element; `overflow:hidden` plus the 2px radius keep the corner
+   clean. The fill loses 4 of 24px, which costs it nothing, because the SIGNAL RULE puts the
+   grade in lightness and never in size. Both numbers are single-sourced, so the fill, the gap and
+   the mark cannot drift apart, and the legend swatches take the same two.
+   ASSERTED, NOT ARGUED: the ordering and the 3:1 floor are checked against BOTH grounds, and the
+   negative control is these two declarations reverted -- the arm must go red on the neighbour
+   reading, which is the sentence cycle 1 printed without carrying. */
+.hm-seg{--keel-h:2px;--keel-gap:2px}
+.hm-seg::after{content:"";position:absolute;inset:0 0 calc(var(--keel-h) + var(--keel-gap));background:var(--ink);opacity:var(--lv,0)}
 /* A STARTED CAPSULE TAKES THE SAME VALUE AS THE RULE, NOT --bd, and that is not tidiness.
    Raising the untouched capsule's rule to --gauge-rule while leaving this at --bd (1.09:1) would
    have drawn a topic you HAVE started at 0% solid QUIETER than one you have never opened -- a
    second inversion, in the same panel, created by the fix for the first. Sharing the value makes
    the whole non-ink layer one step, so the ramp is monotone by construction: hollow slot < filled
    slot < part-lit < solid, and only the ink (--lv) carries the grade. */
-.hm-seg.open{background:linear-gradient(to top,transparent var(--keel-h),var(--gauge-rule) var(--keel-h));box-shadow:none}
+.hm-seg.open{background:linear-gradient(to top,transparent calc(var(--keel-h) + var(--keel-gap)),var(--gauge-rule) calc(var(--keel-h) + var(--keel-gap)));box-shadow:none}
 /* the keel: something here is flagged. One channel, two values, never competing with the fill.
    The two values are an ORDERING -- see THE KEEL PAIR. The worst grade takes the loud mark, and
    it sits in the waterline above, so "loud" means the same thing on every capsule. */
@@ -2695,10 +2772,10 @@ html[data-theme="dark"][data-view="home"] #home{--mut:#A7A29A}
    These four sit on --card while the marks sit on --side, so --gauge-rule is solved against BOTH
    grounds (see its block): light 4.10:1 on the trough / 4.79:1 on the card, dark 4.23 / 3.49. */
 /* the swatches carry the WATERLINE too -- a legend that draws the mark differently from the mark
-   is a legend for something else. Same --keel-h, so the two cannot drift. */
-.hm-k i{position:relative;width:9px;height:15px;border-radius:2px;--keel-h:2px;
-  background:linear-gradient(to top,transparent var(--keel-h),var(--gauge-rule) var(--keel-h));flex:none;overflow:hidden}
-.hm-k i::after{content:"";position:absolute;inset:0 0 var(--keel-h);background:var(--ink)}
+   is a legend for something else. Same --keel-h AND --keel-gap, so the two cannot drift. */
+.hm-k i{position:relative;width:9px;height:15px;border-radius:2px;--keel-h:2px;--keel-gap:2px;
+  background:linear-gradient(to top,transparent calc(var(--keel-h) + var(--keel-gap)),var(--gauge-rule) calc(var(--keel-h) + var(--keel-gap)));flex:none;overflow:hidden}
+.hm-k i::after{content:"";position:absolute;inset:0 0 calc(var(--keel-h) + var(--keel-gap));background:var(--ink)}
 .hm-k.full i::after{opacity:1}
 .hm-k.part i::after{opacity:.55}
 .hm-k.none i{background:transparent;box-shadow:inset 0 0 0 1px var(--gauge-rule)}

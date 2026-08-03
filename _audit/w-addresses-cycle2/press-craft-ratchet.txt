@@ -1,0 +1,7 @@
+BASELINE            : exit 0  CRAFT HYGIENE: PASS  (9290 rendered-copy spans, 117 ruled exceptions, every one still matching something, each excused only from the rules it declares, only in the file it names, and only as many times as it declares)
+the reinstated U+2605 star span                      exit 1  RED (caught)   CRAFT HYGIENE: FAIL (1 violation(s), 0 stale, 0 over-declared, 0 grew, 0 shrank)
+a planted U+27A4                                     exit 1  RED (caught)   CRAFT HYGIENE: FAIL (1 violation(s), 0 stale, 0 over-declared, 0 grew, 0 shrank)
+a planted CSS content: skull (U+2620)                exit 1  RED (caught)   CRAFT HYGIENE: FAIL (1 violation(s), 0 stale, 0 over-declared, 0 grew, 0 shrank)
+an ellipsis planted deep inside an allowlisted span  exit 1  RED (caught)   CRAFT HYGIENE: FAIL (2 violation(s), 1 stale, 0 over-declared, 0 grew, 0 shrank)
+a SECOND site for a mark already excused in that file exit 1  RED (caught)   CRAFT HYGIENE: FAIL (0 violation(s), 0 stale, 0 over-declared, 1 grew, 0 shrank)
+RESTORED            : exit 0  CRAFT HYGIENE: PASS  (9290 rendered-copy spans, 117 ruled exceptions, every one still matching something, each excused only from the rules it declares, only in the file it names, and only as many times as it declares)

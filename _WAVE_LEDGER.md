@@ -1302,3 +1302,83 @@ No baseline regenerated, manifest unchanged at 18. R6's rebaseline authorisation
 the IF-NO branch and that branch was not taken. R9 is print-media only: `print-color-adjust` cannot
 move a screen pixel by construction. Item 5 changes which room a BARE-VIEW route wears, and the
 four home baselines are `#home` roots.
+
+---
+
+## CYCLE 3 -- GATE: 78/78 PASS
+
+Full serial run (`python test/check_all.py`, no `--fast`, no `--shared-browser`) on the
+**COMMITTED** tree (`b079b95`), exit 0, zero FAIL lines. Capture:
+`_audit/2026-08-03-w-addresses-cycle3-gate.txt`.
+
+```
+  78 checks in 940.8s (15.7 min)
+GATE: PASS
+```
+
+Taken on the committed tree, which is why `build_integrity` reads the strong form:
+
+```
+BUILD INTEGRITY: PASS  (12341724 bytes, 0 unresolved, 9 panes + 7 overlays,
+build SYNCED the deliverable, COMMITTED deliverable == fresh build of HEAD)
+```
+
+The count is still **78** -- cycle 3 registered no new check. R6 and judge item 4 are inside
+`scoreboard_salience`; R7, R8 and judge items 1, 2, 3 and 6 are inside `craft_hygiene`; R9 is a
+sixth arm inside the existing `print_truth`; judge items 5 and 7 are inside `home_claims`, with
+`room_static` and `room_browser` corroborating; judge item 8 is a registry line in `check_all.py`.
+
+The lines that carry this cycle's work:
+
+```
+craft_hygiene       PASS  (11925 rendered-copy spans over four channels, 132 ruled exceptions,
+                           every one still matching something, each excused only from the rules
+                           it declares, only in the file it names, and only as many times as it
+                           declares)
+scoreboard_salience PASS  ... the altitude gauge at 1280px and 390px in both schemes ... adjacent
+                           grades stay discriminable from the FILL STRIP ALONE, which is the
+                           claim the 4px channel has to earn twice over on the phone, where it
+                           costs half the capsule ...
+print_truth         PASS  "lattice":{"exact":301713,"economy":176712,"delta":125001,"noise":0}
+home_claims         PASS  20 planted mutants detected (... THE RECORD CONSULTED BEFORE THE ROUTE
+                           -- cycle 2's own shipped derivation ...), plus the cell that could not
+                           see it: the boot arm certified two of four route x record cells
+room_static         PASS  (... boot derives the door room first and no constant is hard-coded)
+visual_regression   PASS  (18 baselines, win32-chromium149; ... matched its committed pixels)
+```
+
+**The run before it was a FAIL, and it is the cycle's best receipt.** 78 checks, one red --
+`scoreboard_salience`, at `[light/gauge@390]`, on the two-width pass this cycle added. It was
+diagnosed rather than re-rolled, and the diagnosis found four instrument defects, three of them
+pre-existing and one of them (the boot splash) latent at 1280 as well. See R6 above. A cycle whose
+own new arm goes red on the first full run, and whose fix turns the phone's numbers into an exact
+copy of the desktop's, is a cycle that measured something.
+
+---
+
+## CARRIED OUT OF CYCLE 3 -- each with the reason and the wave that owns it
+
+1. **The app-wide GLYPH pass**, now **38 chrome sites + 76 corpus sites** across the frame, the app
+   scripts, the stylesheet, the markdown corpus and the concatenated tails. Cycle 3 did not grow
+   the debt -- it grew the SIGHT of it: every entry added this cycle was already shipping, and
+   three new channels are what made it visible. The class is closed in four directions now
+   (codepoint, file, count, and channel), so it can only shrink without an argument. One entry is
+   NOT a shape problem and should be split out when that wave runs: **U+2318** names a physical
+   key, so its substitute is a platform-conditional label with its own copy decision.
+2. **The corpus prose pass** -- 52 apostrophes, 2 dashes, 2 quotes, all in `src/topics`. A content
+   pass with its own review. The markdown half of the corpus is NOT in this debt: the compiler's
+   typographer already typesets it, which is why `.md` is in scope for the glyph rule only.
+3. **A per-room WASH token.** Unchanged from cycle 2.
+4. **The three dark text nodes under AA** (`.hm-room-n` at 2.35:1, `.hm-room-weak` at 3.48:1).
+   Still a PALETTE decision, still `room_contrast`'s territory. Noted here because R9 has now made
+   `.hm-room-n`'s background survive to PAPER, where the ground is white rather than the dark
+   theme's -- the print case is fine and the dark screen case is untouched.
+5. **GAP-2, the landing drill's flagged set** -- item 10's other half. Still owned by **W2 room**.
+6. **THE BOOT-SPLASH VEIL IS A CLASS, NOT AN INCIDENT.** `#_bootsplash` covers the whole viewport
+   with `var(--bg)` at an uncontrolled alpha for 400ms after the app is otherwise ready, and
+   `scoreboard_salience` was reading through it at BOTH widths whenever the box was slow enough.
+   Any check that screenshots or samples pixels shortly after boot is exposed to the same race.
+   Fixed here for this check only, deliberately: the general fix belongs in `test/_boot.cjs`'s
+   shared readiness, which every browser check in the gate depends on, and that is not a change to
+   make inside a home wave on the last day of a cycle. **Named for whichever wave next touches the
+   gate's boot primitives** -- the one-line condition is `!document.getElementById('_bootsplash')`.

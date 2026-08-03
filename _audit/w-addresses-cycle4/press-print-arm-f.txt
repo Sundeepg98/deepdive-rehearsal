@@ -1,0 +1,27 @@
+BASELINE
+  exit=0  bytes-arm=PASS  noise-ctl=PASS  prop-arm=PASS  prop-ctl=PASS
+M1 six grade selectors deleted   exit=1  bytes=PASS  noise-ctl=PASS  prop=FAIL
+      PASS  [lattice] CONTROL: there IS an effect, and it is at least 3x the reproducibility of the renderer that measured it -- two IDENTICAL renders, in this run, on this machine  exact 301657/3
+      PASS  [lattice] the altitude gauge and its legend SURVIVE the reader default: forcing print-color-adjust:exact adds real paint to the PDF, where economy drops it and prints "41 flagged" besi
+      PASS  [lattice/prop] CONTROL: the page really is under PRINT media when these properties are read -- a screen-media read would be measuring the wrong cascade  matchMedia('print').matches = t
+      FAIL  [lattice/prop] the room counts, both room-bar tracks and their fill, the week goal bar and its fill, and the gauge trough all compute print-color-adjust:exact under print media -- the 
+      PASS  [lattice/prop] CONTROL: the surfaces styles.css DECLARED rather than fixed -- the panel, a chip, the body -- come back economy, so "exact" above is a declaration and not the browser de
+      PASS  [lattice/prop] CONTROL: with the declarations overridden the same six reads FLIP to economy, so this assertion can go red  .hm-room-n=economy, .hm-room-bar=economy, .hm-room-bar i=econ
+      ----  pdf summary: {"content-pipeline":{"pages":3,"band":[3,5],"H":2768,"bytes":390173,"clipped":0,"lastHead":"If they say “quickly” — the 30 seconds","lastHeadPage":3,"chars":4789,"coverage
+      print_truth: 1 FAILED -- [lattice/prop] the room counts, both room-bar tracks and their fill, the week goal bar and its fill, and the gauge trough all compute print-color-adjust:exact under 
+M2 the whole rule deleted        exit=1  bytes=FAIL  noise-ctl=FAIL  prop=FAIL
+      FAIL  [lattice] CONTROL: there IS an effect, and it is at least 3x the reproducibility of the renderer that measured it -- two IDENTICAL renders, in this run, on this machine  exact 176597/1
+      FAIL  [lattice] the altitude gauge and its legend SURVIVE the reader default: forcing print-color-adjust:exact adds real paint to the PDF, where economy drops it and prints "41 flagged" besi
+      PASS  [lattice/prop] CONTROL: the page really is under PRINT media when these properties are read -- a screen-media read would be measuring the wrong cascade  matchMedia('print').matches = t
+      FAIL  [lattice/prop] the room counts, both room-bar tracks and their fill, the week goal bar and its fill, and the gauge trough all compute print-color-adjust:exact under print media -- the 
+      PASS  [lattice/prop] CONTROL: the surfaces styles.css DECLARED rather than fixed -- the panel, a chip, the body -- come back economy, so "exact" above is a declaration and not the browser de
+      PASS  [lattice/prop] CONTROL: with the declarations overridden the same six reads FLIP to economy, so this assertion can go red  .hm-room-n=economy, .hm-room-bar=economy, .hm-room-bar i=econ
+      ----  pdf summary: {"content-pipeline":{"pages":3,"band":[3,5],"H":2768,"bytes":378368,"clipped":0,"lastHead":"If they say “quickly” — the 30 seconds","lastHeadPage":3,"chars":4789,"coverage
+      print_truth: 3 FAILED -- [lattice] CONTROL: there IS an effect, and it is at least 3x the reproducibility of the renderer that measured it -- two IDENTICAL renders, in this run, on this mach
+
+RESTORED. rebuilding to confirm the tree is clean...
+AFTER: exit=0  bytes=PASS prop=PASS
+
+--- verdict ---
+M1 must show bytes=PASS and prop=FAIL (the byte arm cannot see those six selectors)
+M2 must show bytes=FAIL and noise-ctl=FAIL (cycle 3 the control PASSED on the null)

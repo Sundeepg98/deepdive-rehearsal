@@ -1,0 +1,24 @@
+BASELINE (clean tree): exit=0  CRAFT HYGIENE: PASS  (23683 rendered-copy spans; the glyph rule CHANNEL-FREE over every st
+
+A1 ternary sink, far branch                exit=1 FAIL   OK
+A2 ternary setAttribute, far branch        exit=1 FAIL   OK
+A3 plain const literal (no channel)        exit=1 FAIL   OK
+A4 head run, ellipsis                      exit=1 FAIL   OK
+A4 head run, apostrophe                    exit=1 FAIL   OK
+A4 head run, quote                         exit=1 FAIL   OK
+A4 head run, dash                          exit=1 FAIL   OK
+A5 tagless whole sentence                  exit=1 FAIL   OK
+A5b tagless, straight quotes               exit=1 FAIL   OK
+A6 same mark, a third file                 exit=1 FAIL   OK
+A7 one more site of a ruled mark           exit=1 FAIL   OK
+B1 glyph rule back inside its channels     exit=1 ABORT  OK
+B2 sink back to its first token            exit=1 ABORT  OK
+B3 the HEAD channel removed                exit=1 ABORT  OK
+B4 the BARE-LITERAL channel removed        exit=1 ABORT  OK
+B5 the bare-literal BOUND removed          exit=1 ABORT  OK
+B6 the mark key back to the enclosing span exit=1 FAIL   OK
+C1 cp1252 console prints stale mark        exit=1 FAIL   OK
+
+AFTER THE PRESS (tree restored): exit=0  CRAFT HYGIENE: PASS  (23683 rendered-copy spans; the glyph rule CHANNEL-FREE over every st
+
+18 presses, 0 unpressed

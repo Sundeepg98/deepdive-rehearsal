@@ -2781,9 +2781,20 @@ html[data-theme="dark"][data-view="home"] #home{--mut:#A7A29A}
    hue -- so on paper there is no fallback channel to degrade to.
    `print-color-adjust:exact` is the one declaration that says "this background is CONTENT". Same
    pair the star mark already carries (.ix-star-ic, styles.css:2071) and for the same reason.
-   ASSERTED, NOT ARGUED: test/print_truth.cjs measures the PDF BYTES with and without these
-   declarations, at printBackground:false -- the reader default -- and a build that has lost them
-   comes back the same size as a page with no lattice on it.
+   ASSERTED, NOT ARGUED -- IN TWO INSTRUMENTS, BECAUSE ONE OF THEM COULD ONLY SEE HALF OF THIS.
+   test/print_truth.cjs ARM F measures the PDF BYTES with and without these declarations, at
+   printBackground:false (the reader default), and a build that has lost them comes back the same
+   size as a page with no lattice on it. THAT ARM IS SENSITIVE TO THE GAUGE AND ITS LEGEND ONLY:
+   pressed on the committed deliverable with the six GRADE-BEARING selectors below removed from
+   the override, the delta moved 14 bytes of 125,089 -- 0.011%, against a 100,000-byte floor with
+   25% headroom -- so cycle 3's PASS line named the room bars and the room counts while the number
+   printed beside it could not have noticed their absence. CORRECTED, not re-argued: the byte arm
+   claims the gauge and the legend, and ARM F2 asserts the other six on a property of the DOCUMENT
+   -- getComputedStyle().printColorAdjust === 'exact' under emulateMedia('print'), deterministic,
+   no threshold, no rasteriser -- with two controls: the surfaces DECLARED below must read
+   'economy' (so 'exact' is a declaration and not a default), and an economy override must FLIP
+   all six (so the assertion can go red). .hm-room-n is worth 5 bytes in a PDF and is the whole
+   room count.
 
    THE LATTICE WAS NOT THE ONLY ONE, and the other three were found by SURVEYING the route rather
    than by reasoning about it: every painted background under print media on the seeded home, with

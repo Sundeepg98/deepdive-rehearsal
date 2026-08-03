@@ -187,8 +187,24 @@ const GAUGE_WIDTHS = [
 const NB_MIN_DEV = 3;
 /* R6: adjacent grade steps must be tellable apart from the FILL STRIP ALONE. Measured on the
    shipped build at 390, over 93 open capsules per scheme, the ramp's tightest adjacent pair is
-   1.272:1 (dark, --lv .78 -> 1.00) and 1.276:1 (light, .55 -> .78); the floor below leaves 10.6%
-   of headroom on the worst of them, and a flattened pair measures ~1.00:1. */
+   1.272:1 (dark, --lv .78 -> 1.00) and 1.277:1 (light, .55 -> .78); a flattened pair measures
+   ~1.00:1.
+
+   THE HEADROOM SENTENCE THAT USED TO SIT HERE WAS RETRACTED IN CYCLE 4 AND IS RE-EARNED BELOW.
+   It read "the floor leaves 10.6% of headroom on the worst of them", and the number was true of
+   a reading the arm could not reproduce: six back-to-back runs of the committed tree returned the
+   figures above five times and, once, a whole ramp lifted toward the light ground with a tightest
+   pair of 1.179:1 -- 80% of that headroom gone, on a build nobody had touched. A margin quoted
+   from the runs that agreed is not a margin.
+   THE CONTRIBUTOR WAS FOUND AND IT IS A VEIL, not a design property: `body{animation:bodyIn}`
+   was still running when the shot was taken in FOUR of eight COLD profiles, and holding it at a
+   known alpha reproduces the symptom by construction (0.1765/0.1136/0.0772/0.0496/0.0275 becomes
+   0.2168/0.1504/0.1104/0.0770/0.0502, tightest pair 1.277 -> 1.249). So the honest statement is
+   CONDITIONAL and the condition is now enforced three ways -- the entrance fade must be idle
+   before any shot, the trough must equal its own declared colour in the SAME shot, and the cold
+   first reading must reproduce a warm one taken later in the same run. GIVEN THOSE, the worst
+   adjacent pair is 1.272:1 and the floor leaves 10.6% of headroom on it; WITHOUT them, the arm
+   has no business quoting a margin at all, and now says so instead of reporting one. */
 const GRADE_STEP_MIN = 1.15;
 /* tall enough that the whole home fits WITHOUT SCROLLING. Every fragility this section fought --
    an element screenshot that re-scrolls before it rasterises, a clip whose origin drifts, a
@@ -281,6 +297,21 @@ const BOX_Y = async ({ shot, boxes }) => {
   }
   return out;
 };
+/* the relative luminance of a CSS colour string, in NODE -- so a measured pixel can be compared
+   against the value the STYLESHEET says that pixel should be. Same transfer function as BOX_Y. */
+const Y_OF_CSS = (s) => {
+  const m = /rgba?\(\s*([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)/.exec(s || '');
+  if (!m) return null;
+  const lin = (c) => { c /= 255; return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
+  return 0.2126 * lin(+m[1]) + 0.7152 * lin(+m[2]) + 0.0722 * lin(+m[3]);
+};
+/* THE GROUND INVARIANT'S EPSILON (R12). The trough band is a large flat area of one declared
+   colour, so the honest expectation is not "close" but EQUAL: measured on the committed build at
+   390/light the band returns 0.84871 over 4,740 device pixels with min == max EXACTLY, against a
+   computed `rgb(241,237,228)` whose luminance is 0.84877 -- they agree to 6e-5, which is this
+   arithmetic's own rounding. The smallest veil ever caught here moved it 0.0081 (body at opacity
+   0.9117), so 0.002 sits 30x above the agreement and 4x below the smallest defect. */
+const GROUND_EPS = 0.002;
 /* among the mark's OWN pixels (the ones the removal diff isolated), the one furthest from the
    reference -- the mark's colour rather than its antialiased skirt */
 const FAR = (b, ref) => (Math.abs(b.max - ref) >= Math.abs(ref - b.min) ? b.max : b.min);
@@ -435,6 +466,43 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
        one wait covers all three shots of every readMarks() call. */
     await B.until(page, () => !document.getElementById('_bootsplash'), null, B.ACT_MS,
       'the boot splash to be REMOVED (not merely fading: it veils every pixel until it is gone)');
+    /* ---- ...AND THE ENTRANCE FADE MUST BE OVER TOO (R12) -------------------------------------
+       THE SPLASH WAS NOT THE ONLY VEIL, and cycle 3's fix hid the second one by making it rarer.
+       `body{animation:bodyIn ...}` (styles.css) ramps opacity 0 -> 1 AFTER the splash is gone, and
+       an element with opacity < 1 composites its whole subtree over the CANVAS -- which is the
+       body's own --bg, propagated, and therefore NOT itself faded. Every pixel this section
+       samples is inside that subtree.
+       MEASURED, on eight COLD profiles (a fresh chromium.launch() each time, which is a fresh
+       user-data-dir): `bodyIn` was still `running` when the shot was taken in FOUR of the eight,
+       with the body reading opacity 0.9117 / 0.9851 / 0.9851 / 0.9851. It usually loses the race
+       to the screenshot, which is exactly why this survived a cycle: a veil that is normally over
+       by the time the bitmap lands is a check that is normally right.
+       AND WHAT IT COSTS WHEN IT LANDS, constructed at a known alpha rather than inferred --
+       `body{animation:none;opacity:.9117}`, 390/light, every other condition identical:
+         --lv      0        0.3      0.55     0.78     1        tightest adjacent
+         unveiled  0.1765   0.1136   0.0772   0.0496   0.0275   1.277:1
+         veiled    0.2168   0.1504   0.1104   0.0770   0.0502   1.249:1
+       Every fill step lifted toward the light ground and the ramp's own margin fell, on a build
+       nobody had touched. The condition is the ANIMATION BEING IDLE and the chain being opaque --
+       not a duration, and not "the splash is gone".
+       SCOPED TO THE GAUGE'S OWN ANCESTOR CHAIN on purpose: "no animation anywhere is running" is
+       a promise this app does not make (a looping ornament elsewhere would hang the wait), while
+       "nothing between the gauge and the document root is still fading" is exactly the property
+       a pixel read off this panel depends on. */
+    await B.until(page, () => {
+      const el = document.querySelector('.hm-alt');
+      if (!el) return false;
+      const chain = [];
+      for (let n = el; n; n = n.parentElement) chain.push(n);
+      if (chain.some((n) => getComputedStyle(n).opacity !== '1')) return false;
+      const running = (document.getAnimations ? document.getAnimations() : []).filter(
+        (a) => a.playState === 'running' && a.effect && a.effect.target
+          && chain.indexOf(a.effect.target) >= 0);
+      return running.length === 0;
+    }, null, B.ACT_MS,
+    'the ENTRANCE FADE to be over: every element from the gauge to the document root at opacity '
+    + '1 with no animation still running on it (bodyIn was measured live at shot time in 4 of 8 '
+    + 'cold profiles, veiling every fill reading)');
     await B.settle(page);
 
     /* SCROLL FIRST, THEN MEASURE, THEN SHOOT. `elementHandle.screenshot()` scrolls the element
@@ -481,7 +549,7 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
         lv: parseFloat(getComputedStyle(s).getPropertyValue('--lv')) || 0,
       }));
       return { keelH, keelGap, rad, track: rel(track), segs, panel: rel(panel),
-        trackH: segCs.height,
+        trackH: segCs.height, trackBg: tcs.backgroundColor,
         bdT: pxOf(tcs.borderTopWidth), bdL: pxOf(tcs.borderLeftWidth),
         bdR: pxOf(tcs.borderRightWidth), padT: pxOf(tcs.paddingTop),
         padL: pxOf(tcs.paddingLeft), padR: pxOf(tcs.paddingRight),
@@ -528,19 +596,30 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
        guard never fired). It stays because a silent misalignment is the worst thing that can
        happen to a removal diff, and because a guard that has never fired is exactly the kind
        this file exists to add BEFORE it is needed. */
-    let shotY = null;
+    /* TWO DEFECTS IN THAT GUARD, BOTH FOUND BY R12 AND BOTH IN ONE LINE. It compared y ONLY, and
+       it anchored on the FIRST SHOT rather than on the geometry read -- so `shotY` was seeded by
+       shoot() itself and a move between `geo` and shot A, the one window in which every box below
+       is computed against a layout that no longer exists, was invisible by construction. That is
+       why "the guard never fired" is not evidence that nothing moved. It is anchored at the
+       GEOMETRY now, and it compares x as well: a horizontal slip of one device column moves the
+       fill box onto the capsule's antialiased side, which is the other candidate mechanism for
+       the 390/light flake and the one this arm could not have told apart from a grade. */
+    let shotAt = { x: geo.track.x, y: geo.track.y };
     const shoot = async () => {
       await page.evaluate(() => window.scrollTo(0, 0));
       await B.settle(page);
-      const y = await page.evaluate(() =>
-        document.querySelector('.hm-alt .hm-gr-t').getBoundingClientRect().y);
-      if (shotY === null) shotY = y;
-      else if (Math.abs(y - shotY) > 0.01) {
-        fails.push('[' + theme + '/gauge@' + G.w + '] THE PANEL MOVED BETWEEN SHOTS: the track '
-          + 'was at y=' + shotY.toFixed(3) + ' when the geometry was measured and is at y='
-          + y.toFixed(3) + ' now. Every box below was computed against the first, so the removal '
-          + 'diff is comparing misaligned images and nothing it reports is a measurement.');
-        shotY = y;
+      const r = await page.evaluate(() => {
+        const b = document.querySelector('.hm-alt .hm-gr-t').getBoundingClientRect();
+        return { x: b.x, y: b.y };
+      });
+      if (Math.abs(r.y - shotAt.y) > 0.01 || Math.abs(r.x - shotAt.x) > 0.01) {
+        fails.push('[' + theme + '/gauge@' + G.w + '] THE PANEL MOVED: the track was at ('
+          + shotAt.x.toFixed(3) + ', ' + shotAt.y.toFixed(3) + ') when the geometry was measured '
+          + 'and is at (' + r.x.toFixed(3) + ', ' + r.y.toFixed(3) + ') now. Every box below was '
+          + 'computed against the first, so the removal diff is comparing misaligned images and '
+          + 'nothing it reports is a measurement -- and a one-column slip in x puts the fill box '
+          + 'on the capsule\'s antialiased edge, which reads as a grade.');
+        shotAt = r;
       }
       return (await page.screenshot()).toString('base64');
     };
@@ -612,6 +691,37 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
          it is measured with the plain reader instead */
       const [tb] = await scratch.evaluate(BOX_Y, { shot: shotA, boxes: troughBox });
       const t = tb.mean;
+      /* ---- THE SAME-SHOT GROUND INVARIANT: IS THIS SHOT VEILED? (R12) ----------------------
+         This is the guard the track-y one should have been, and unlike that one it FIRES. The
+         track's own `background-color` is a declared constant read off the page in this same
+         run, and the trough band is a large flat area of exactly that colour -- so if the
+         measured band is not that number, the bitmap is not showing what the stylesheet says,
+         and every ratio below is a reading through something. Two claims, both same-shot:
+           UNIFORM   the band is one colour, so min must equal max. A local contamination -- an
+                     edge, a corner radius, a box that slipped -- breaks this before it breaks
+                     the mean, and the mean is what would otherwise be quietly reported.
+           TRUE      the band equals its own declared colour. A GLOBAL veil (the boot splash,
+                     the entrance fade, anything with an alpha) moves every pixel including this
+                     one, so it cannot hide inside a ratio.
+         MEASURED: unveiled it is exact (0.84871 measured / 0.84877 computed, min == max over
+         4,740 px); with `body{opacity:.9117}` -- the state four of eight cold profiles were
+         caught in -- it reads 0.85683, four times the epsilon. The arm now FAILS NAMING THE
+         VEIL rather than reporting a grade taken through it. */
+      const tDecl = Y_OF_CSS(geo.trackBg);
+      if (tDecl === null) {
+        fails.push('[' + theme + '/gauge@' + G.w + '] the track declares no readable background '
+          + '(' + geo.trackBg + '), so the ground invariant below has no reference and every '
+          + 'ratio in this cell would be unguarded.');
+      } else if (Math.abs(t - tDecl) > GROUND_EPS || (tb.max - tb.min) > GROUND_EPS) {
+        fails.push('[' + theme + '/gauge@' + G.w + '] THE SHOT IS VEILED, so nothing below is a '
+          + 'measurement of this design: the trough band reads Y ' + t.toFixed(5) + ' (min '
+          + tb.min.toFixed(5) + ', max ' + tb.max.toFixed(5) + ') where the track itself declares '
+          + geo.trackBg + ' = Y ' + tDecl.toFixed(5) + ', a gap of '
+          + Math.abs(t - tDecl).toFixed(5) + ' against an epsilon of ' + GROUND_EPS + '. The band '
+          + 'is one flat declared colour, so this is not tolerance, it is a compositing layer '
+          + 'between the panel and the bitmap -- the boot splash, the entrance fade, or a box '
+          + 'that slipped off its own subject.');
+      }
       const keelBoxes = [], keelTags = [], ruleBoxes = [];
       for (let i = 0; i < boxes.length; i++) {
         if (tag[i].kind === 'rule') ruleBoxes.push(boxes[i]);
@@ -715,22 +825,47 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
       while (next && !next.getClientRects().length) next = next.nextElementSibling;
       const pr = p.getBoundingClientRect();
       const nr = next ? next.getBoundingClientRect() : null;
-      return { x: pr.x + pr.width / 2, inside: pr.y + Math.min(40, pr.height / 2),
-        gap: nr ? (pr.bottom + nr.top) / 2 : null, gapPx: nr ? Math.round(nr.top - pr.bottom) : 0 };
+      const x = pr.x + pr.width / 2;
+      const gap = nr ? (pr.bottom + nr.top) / 2 : null;
+      /* THE GROUND'S OWN COLOUR, READ FROM THE PAGE RATHER THAN NAMED (MUTANT E's plant).
+         `--bg` is the obvious guess and it is WRONG here: measured in light, the pixel under the
+         gap is rgb(228,223,212) while --bg is rgb(250,249,245), because the element at that point
+         is transparent and the paint comes from an ancestor further up. A mutant that plants a
+         TOKEN therefore plants the wrong colour and lands in dark (where they coincide) and not
+         in light -- which is what the first draft of MUTANT E did, and it reported the depth arm
+         as unpressed when it was the PLANT that was wrong. Walk to the first painted ancestor
+         and use what is actually there. */
+      let groundBg = null;
+      if (gap !== null) {
+        for (let n = document.elementFromPoint(x, gap); n; n = n.parentElement) {
+          const c = getComputedStyle(n).backgroundColor;
+          if (c && !/rgba\(0, 0, 0, 0\)|transparent/.test(c)) { groundBg = c; break; }
+        }
+      }
+      return { x, inside: pr.y + Math.min(40, pr.height / 2),
+        gap, gapPx: nr ? Math.round(nr.top - pr.bottom) : 0, groundBg };
     });
     if (!dgeo.gap || dgeo.gapPx < 10) {
       fails.push('[' + theme + '/gauge] the depth arm has no ground to sample: the gap under the '
         + 'first panel is ' + dgeo.gapPx + 'px, so the "ground" pixel would be a panel.');
     }
-    const [surfB, groundB] = dgeo.gap ? await scratch.evaluate(BOX_Y, {
-      shot: dshot,
-      boxes: [
-        { x: S(dgeo.x - 2), y: S(dgeo.inside - 2), w: S(4), h: S(4) },  /* inside the panel */
-        { x: S(dgeo.x - 2), y: S(dgeo.gap - 2), w: S(4), h: S(4) },     /* the ground below it */
-      ],
-    }) : [null, null];
-    /* both are large flat areas -- the mean is the honest reading and no extremum is wanted */
-    const surfY = surfB ? surfB.mean : 0, groundY = groundB ? groundB.mean : 0;
+    /* extracted so MUTANT E can re-take the SAME pair under a plant: an arm with no negative
+       control is an unpressed claim, and this one was the last in the section without one. */
+    const readDepth = async (shot) => {
+      if (!dgeo.gap) return { surfY: 0, groundY: 0, depth: 0 };
+      const [sB, gB] = await scratch.evaluate(BOX_Y, {
+        shot,
+        boxes: [
+          { x: S(dgeo.x - 2), y: S(dgeo.inside - 2), w: S(4), h: S(4) },  /* inside the panel */
+          { x: S(dgeo.x - 2), y: S(dgeo.gap - 2), w: S(4), h: S(4) },     /* the ground below it */
+        ],
+      });
+      /* both are large flat areas -- the mean is the honest reading and no extremum is wanted */
+      const sy = sB ? sB.mean : 0, gy = gB ? gB.mean : 0;
+      return { surfY: sy, groundY: gy, depth: CR(sy, gy) };
+    };
+    const d0 = await readDepth(dshot);
+    const surfY = d0.surfY, groundY = d0.groundY;
 
     const stat = (a) => {
       if (!a.length) return null;
@@ -771,7 +906,7 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
     };
     const gr = grade(by.fill);
     const M = stat(by.missed), K = stat(by.shaky), R = stat(by.rule);
-    const depth = CR(surfY, groundY);
+    const depth = d0.depth;
     gaugeRows.push({ theme, w: G.w, M, K, R, depth, gr });
 
     const where = '[' + theme + '/gauge@' + G.w + '] ';
@@ -878,7 +1013,9 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
         + 'its trough, under the ' + NONTEXT_FLOOR + ':1 floor -- the panel declares an honest '
         + 'denominator and the pixels do not carry one');
     }
-    /* 4. DEPTH */
+    /* 4. DEPTH -- and it has a planted mutant now (MUTANT E, below): until cycle 4 this was the
+       one gauge arm with nothing driving it, asserting "the panels stand off their ground" on a
+       4x4 CSS-px pair with 6.3% (light) and 3.8% (dark) of headroom and no negative control. */
     if (!(depth >= DEPTH_FLOOR)) {
       fails.push(where + 'the home panel stands off its ground at only ' + depth.toFixed(3)
         + ':1 -- under ' + DEPTH_FLOOR + ':1 the panels are regions of one plane and the hairlines '
@@ -950,10 +1087,69 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
         + (gD.worst ? gD.worst.cr.toFixed(3) : '?') + ':1, floor ' + GRADE_STEP_MIN + '. The grade '
         + 'arm is not reading the grade.');
     }
+    /* ---- MUTANT E: THE PANEL PAINTED AT ITS OWN GROUND (judge item 5) -----------------------
+       The DEPTH arm was the one gauge arm with no plant, on a 4x4 CSS-px pair with 6.3% of
+       headroom in light and 3.8% in dark -- the same order of margin as the fill strip whose
+       reading turned out not to reproduce. "The panels stand off their ground" was therefore an
+       unpressed claim sitting in the PASS line. This is the defect it exists to catch, stated in
+       one declaration: the panel surface painted at --bg, which IS "the panels are regions of
+       one plane". If depth still clears its floor under that, the arm is not reading depth. */
+    await style('_gmut', dgeo.groundBg
+      ? '#home .hm-panel{background:' + dgeo.groundBg + '!important;box-shadow:none!important}'
+      : '');
+    await B.settle(page);
+    const dE = await readDepth(await shoot());
+    await style('_gmut', '');
+    await B.settle(page);
+    if (!dgeo.groundBg) {
+      fails.push(where + 'MUTANT E CANNOT LAND: no painted ancestor was found under the gap, so '
+        + 'the plant has no ground colour to paint the panel at and the depth arm is unpressed.');
+    } else if (Math.abs(dE.surfY - d0.surfY) < 1e-6) {
+      fails.push(where + 'MUTANT E CANNOT LAND: painting #home .hm-panel at ' + dgeo.groundBg
+        + ' did not change the surface pixel (' + d0.surfY.toFixed(5) + '), so the plant never '
+        + 'reached the surface this arm samples and a red below would mean nothing.');
+    } else if (!(dE.depth < DEPTH_FLOOR)) {
+      fails.push(where + 'MUTANT E UNDETECTED: with #home .hm-panel painted at ' + dgeo.groundBg
+        + ' -- the panel surface set to the value of the ground it sits on, which is exactly "the '
+        + 'panels are regions of one plane" -- the pair still measured ' + dE.depth.toFixed(3)
+        + ':1 against a floor of ' + DEPTH_FLOOR + '. The depth arm is not reading depth, and the '
+        + 'PASS line\'s last clause is decoration.');
+    }
+
+    /* ---- THE COLD-RUN IDENTITY REQUIREMENT (R12) --------------------------------------------
+       A CI RUNNER IS ALWAYS COLD, and an arm that is only true warm is not CI-honest. Every
+       reading above was taken on the FIRST pass over a page that had just booted; five more
+       readMarks() calls have run since, so the page is now as warm as it gets inside one run.
+       The strip has not been touched by any of them. So take it again and demand the SAME
+       NUMBERS -- the same property the two-width pass demanded across widths, now demanded
+       across the cold/warm boundary inside one run, which is the only place a single process can
+       observe it. This is the arm that fails when the first pass was read through something the
+       later passes are not: the boot splash, the entrance fade, a font that had not landed.
+       The epsilon is the GROUND epsilon, for the same reason it was chosen: these are means over
+       large flat areas of declared colours and the honest expectation is equality. */
+    const late = grade((await readMarks(null)).fill);
+    const drift = [];
+    for (const s of gr.steps) {
+      const l = late.steps.find((x) => x.lv === s.lv);
+      if (!l) { drift.push('--lv ' + s.lv + ' vanished'); continue; }
+      if (l.n !== s.n) drift.push('--lv ' + s.lv + ' sampled n' + s.n + ' then n' + l.n);
+      if (Math.abs(l.y - s.y) > GROUND_EPS) {
+        drift.push('--lv ' + s.lv + ' read ' + s.y.toFixed(5) + ' cold and ' + l.y.toFixed(5)
+          + ' warm (' + Math.abs(l.y - s.y).toFixed(5) + ')');
+      }
+    }
+    if (drift.length) {
+      fails.push(where + 'THE COLD READING DOES NOT REPRODUCE THE WARM ONE: ' + drift.join('; ')
+        + '. The strip was not touched between the two, so the difference is in the INSTRUMENT '
+        + 'and not in the design -- and a CI runner only ever takes the cold one. A grade '
+        + 'reported from a reading that changes when the page warms up is not a measurement.');
+    }
     gaugeRows[gaugeRows.length - 1].mut = { A: mA && kA ? mA.min.toFixed(2) + ' vs ' + kA.max.toFixed(2) : 'n/a',
       B: rB ? rB.min.toFixed(2) : 'n/a',
       C: mC && kC && mC.nbN && kC.nbN ? mC.nbMin.toFixed(2) + ' vs ' + kC.nbMax.toFixed(2) : 'n/a',
-      D: gD.worst ? gD.worst.cr.toFixed(3) : 'n/a' };
+      D: gD.worst ? gD.worst.cr.toFixed(3) : 'n/a',
+      E: dE.depth.toFixed(3), Ebg: dgeo.groundBg || 'n/a',
+      cold: drift.length ? 'DRIFTED' : 'identical' };
 
     await ctx.close();
   }
@@ -996,6 +1192,9 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
       console.log(L('', 7) + L('', 6) + L('', 12) + '  waterline removed -> missed ' + g.mut.C
         + ' on the NEIGHBOUR ground (caught) | top two fill steps flattened -> '
         + g.mut.D + ':1 adjacent (caught)');
+      console.log(L('', 7) + L('', 6) + L('', 12) + '  panel painted at its ground\'s own colour ('
+        + g.mut.Ebg + ') -> depth ' + g.mut.E + ':1 (under ' + DEPTH_FLOOR + ', caught)'
+        + ' | cold vs warm re-read: ' + g.mut.cold);
     }
   }
 
@@ -1013,6 +1212,10 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
     + ' four fill steps; adjacent grades stay discriminable from the FILL STRIP ALONE, which is'
     + ' the claim the 4px channel has to earn twice over on the phone, where it costs half the'
     + ' capsule; the untouched capsule\'s rule clears the same floor; and the panels stand'
-    + ' off their ground)');
+    + ' off their ground, pressed by painting the panel at that ground\'s own colour.'
+    + ' EVERY GAUGE READING IS GATED ON THE SHOT BEING UNVEILED: the entrance fade must be idle'
+    + ' before any shot is taken, the trough must equal the colour the track itself declares'
+    + ' within ' + GROUND_EPS + ' in the SAME shot, and the COLD first reading -- the only one a'
+    + ' CI runner ever takes -- must reproduce a warm re-read later in the same run)');
   return B.finish(0);
 })();

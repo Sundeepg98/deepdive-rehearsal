@@ -762,21 +762,104 @@ function main() {
     const noise = Math.max(Math.abs(on1 - on2), Math.abs(off1 - off2));
     const delta = Math.min(on1, on2) - Math.max(off1, off2);
     const ratio = Math.min(on1, on2) / Math.max(off1, off2);
-    ok(noise * NOISE_FACTOR <= delta,
-      '[lattice] CONTROL: the effect is at least ' + NOISE_FACTOR + 'x the reproducibility of the '
-      + 'renderer that measured it -- two IDENTICAL renders, in this run, on this machine',
+    /* `noise * 3 <= delta` IS SATISFIED BY THE NULL RESULT, and cycle 3 shipped it that way.
+     * Pressed on the whole-rule-deleted mutant it printed PASS with "worst identical pair differs
+     * 0 bytes against a 0-byte effect (3x noise = 0)" -- 0 <= 0 -- so a control whose job is to
+     * prove the effect outruns the noise announced success when there was no effect at all. The
+     * `delta > 0` conjunct is the whole fix and it costs nothing. */
+    ok(delta > 0 && noise * NOISE_FACTOR <= delta,
+      '[lattice] CONTROL: there IS an effect, and it is at least ' + NOISE_FACTOR + 'x the '
+      + 'reproducibility of the renderer that measured it -- two IDENTICAL renders, in this run, '
+      + 'on this machine',
       'exact ' + on1 + '/' + on2 + ', economy ' + off1 + '/' + off2 + ' -- worst identical pair '
       + 'differs ' + noise + ' bytes against a ' + delta + '-byte effect (' + NOISE_FACTOR + 'x '
-      + 'noise = ' + (noise * NOISE_FACTOR) + ')');
+      + 'noise = ' + (noise * NOISE_FACTOR) + ')'
+      + (delta > 0 ? '' : ' -- A ZERO EFFECT SATISFIES the ratio trivially, which is why the '
+        + 'control demands a nonzero delta first'));
+    /* THE ASSERTION IS NARROWED TO WHAT THE BYTES CAN CARRY (cycle 4, judge item 4). This line
+     * used to claim the room bars and the room counts too, and the measurement beside it could
+     * not see them: with `.hm-room-n,.hm-room-bar,.hm-room-bar i,.ix-goal-bar,.ix-goal-bar span`
+     * dropped from the OFF override the delta moved by 14 bytes of 125,089 -- 0.011% against a
+     * 100,000-byte floor with 25% headroom -- so two thirds of the sentence was unfalsifiable by
+     * the number printed under it. The bytes are sensitive to the 138 capsule fills, the keel
+     * marks and the four legend swatches, and that is now all they claim. The six grade-bearing
+     * selectors are asserted by ARM F2 instead, on a property of the document. */
     ok(delta >= LATTICE_MIN && ratio >= LATTICE_RATIO,
-      '[lattice] the altitude gauge, its legend, the room bars and the room counts SURVIVE the '
-      + 'reader default: forcing print-color-adjust:exact adds real paint to the PDF, where '
-      + 'economy drops it and prints figures beside a blank strip',
+      '[lattice] the altitude gauge and its legend SURVIVE the reader default: forcing '
+      + 'print-color-adjust:exact adds real paint to the PDF, where economy drops it and prints '
+      + '"41 flagged" beside a blank strip',
       'exact - economy = ' + delta + ' bytes (floor ' + LATTICE_MIN + ') and exact/economy = '
       + ratio.toFixed(3) + ' (floor ' + LATTICE_RATIO + ', the dimensionless form, so a platform '
       + 'whose PDFs are simply bigger cannot buy a pass); a build that has lost the declarations '
       + 'comes back at economy size, which is a page with no lattice on it');
     pdfMeta.lattice = { exact: on1, economy: off1, delta, noise, ratio: Number(ratio.toFixed(3)) };
+
+    /* ---------- ARM F2: THE GRADE-BEARING SELECTORS, ASSERTED ON THE DOCUMENT ----------
+     * R9's CHECK-NOT-FIX SURVEY added six selectors -- the room count disc, both room-bar tracks
+     * and their fill, the week's goal bar and its fill, and the gauge's own trough -- and put
+     * them in ARM F's PASS line while the byte arm could not see them (14 bytes of 125,089). A
+     * property written into a PASS line with nothing in the gate driving it is judge item 6's
+     * exact defect class, committed inside the cycle that closed item 6.
+     *
+     * The fix is not a bigger byte budget, it is a DIFFERENT INSTRUMENT. `print-color-adjust` is
+     * a computed property of the document: it is deterministic, it needs no threshold, no
+     * rasteriser and no platform assumption, and under `emulateMedia({media:'print'})` it is the
+     * exact value the reader's own print path resolves. .hm-room-n is the survey's worst case --
+     * white text on a coloured disc, so dropping the background prints the room's count WHITE ON
+     * WHITE, the figure gone rather than merely unmarked -- and it is worth 5 bytes in a PDF.
+     *
+     * TWO CONTROLS, because an assertion that everything computes 'exact' is exactly the shape
+     * that passes when the read is broken:
+     *   (1) DISCRIMINATION -- the surfaces styles.css deliberately did NOT fix (the panel, the
+     *       body, a chip, a button: grounds and affordances, correct to drop on paper) must come
+     *       back 'economy'. If they read 'exact' the reader is not reading anything.
+     *   (2) LIVENESS -- with an economy override applied, the same six reads must FLIP. If they
+     *       do not, the assertion cannot go red and is decoration. */
+    const GRADE_SEL = ['.hm-room-n', '.hm-room-bar', '.hm-room-bar i', '.ix-goal-bar',
+      '.ix-goal-bar span', '.hm-gr-t'];
+    const NOT_FIXED = ['#home .hm-panel', '#home .hm-chip', 'body'];
+    const OFF_GRADE = GRADE_SEL.join(',')
+      + '{print-color-adjust:economy!important;-webkit-print-color-adjust:economy!important}';
+    await hp.emulateMedia({ media: 'print' });
+    await B.settle(hp);
+    const readPca = (sels) => hp.evaluate((ss) => ss.map((s) => {
+      const el = document.querySelector(s);
+      if (!el) return [s, 'NO ELEMENT'];
+      const cs = getComputedStyle(el);
+      return [s, cs.printColorAdjust || cs.getPropertyValue('print-color-adjust') || '(undefined)'];
+    }), sels);
+    const inPrint = await hp.evaluate(() => matchMedia('print').matches);
+    const onG = await readPca(GRADE_SEL);
+    const ctlG = await readPca(NOT_FIXED);
+    await hp.evaluate((c) => {
+      const old = document.getElementById('_r9b'); if (old) old.remove();
+      const s = document.createElement('style'); s.id = '_r9b'; s.textContent = c;
+      document.head.appendChild(s);
+    }, OFF_GRADE);
+    await B.settle(hp);
+    const offG = await readPca(GRADE_SEL);
+    await hp.evaluate(() => { const o = document.getElementById('_r9b'); if (o) o.remove(); });
+    await hp.emulateMedia({ media: null });
+    const show = (rows) => rows.map((r) => r[0] + '=' + r[1]).join(', ');
+    ok(inPrint, '[lattice/prop] CONTROL: the page really is under PRINT media when these '
+      + 'properties are read -- a screen-media read would be measuring the wrong cascade',
+      "matchMedia('print').matches = " + inPrint);
+    ok(onG.every((r) => r[1] === 'exact'),
+      '[lattice/prop] the room counts, both room-bar tracks and their fill, the week goal bar and '
+      + 'its fill, and the gauge trough all compute print-color-adjust:exact under print media -- '
+      + 'the reader default drops .hm-room-n and the count prints WHITE ON WHITE',
+      show(onG));
+    ok(ctlG.every((r) => r[1] === 'economy'),
+      '[lattice/prop] CONTROL: the surfaces styles.css DECLARED rather than fixed -- the panel, a '
+      + 'chip, the body -- come back economy, so "exact" above is a declaration and not the '
+      + 'browser default or an artefact of the read',
+      show(ctlG));
+    ok(offG.every((r) => r[1] === 'economy'),
+      '[lattice/prop] CONTROL: with the declarations overridden the same six reads FLIP to '
+      + 'economy, so this assertion can go red',
+      show(offG));
+    pdfMeta.latticeProp = { exact: onG.filter((r) => r[1] === 'exact').length,
+      of: GRADE_SEL.length, control: ctlG.map((r) => r[1]).join('/') };
     await hp.close();
   }
 

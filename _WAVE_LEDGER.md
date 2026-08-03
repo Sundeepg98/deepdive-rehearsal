@@ -1040,7 +1040,20 @@ were already there.** They are recorded in full because the tempting move was to
 consecutive runs return **4.64 / 3.67 / 4.10 in light and 8.21 / 3.62 / 4.23 in dark AT 390,
 byte-identical to 1280 and to each other**, with min == max on every variant. The two widths draw
 the same colours, so an instrument that measures colours must return the same numbers -- and it now
-does. The fill-strip figures likewise reproduce an independent probe's to four decimals.
+does. ~~The fill-strip figures likewise reproduce an independent probe's to four decimals.~~
+
+> **RESTATED, CYCLE 4 (b079b95's headline was true of PART of this section).** The identity claim
+> holds exactly as written for the KEEL and RULE readings -- those come off a removal diff over a
+> box that is the whole capsule grown by a pixel, and six independent re-runs by the cycle-3 judges
+> confirmed them byte-identical at both widths in every run. **It did NOT hold for the fill strip**,
+> which is the one absolute reading in the section: one of those six runs returned a whole ramp
+> lifted toward the light ground (0.2280 / 0.1664 / 0.1305 / 0.1016 / 0.0786 against the stable
+> 0.1765 / 0.1136 / 0.0772 / 0.0496 / 0.0275), tightest adjacent pair **1.179:1** against a floor of
+> 1.15 -- 80% of the arm's margin gone, on a clean tree, ~2.5% from red. So "an instrument that
+> measures colours must return the same numbers -- and it now does" was earned by the removal-diff
+> readings and merely assumed for the fill. **The boot-splash wait reduced that flake; it did not
+> remove it, because the splash was not the only veil.** Diagnosed, reproduced by construction and
+> fixed in CYCLE 4 / R12 -- and the fix is three conditions, not a tighter number.
 
 **One guard was added on a hypothesis the measurement then REFUTED, and is kept anyway:** the
 stacked 390 layout really does move between loads (track y 1159.188 on five, 1162.797 on one), and
@@ -1065,19 +1078,31 @@ empty state) carried straight ellipses. Both are the house form now -- `…`, wh
 same file already uses at :180 and :182; `&hellip;` is the house form for MARKUP (panels.js:490)
 and a sink would print the entity literally.
 
-**RATCHETED, with an ownership argument each:** the four chrome glyphs, per file, with counts.
-U+2715 (focus-mode dismiss; substitute = two rotated rules on a ::before/::after). U+21BB (pomodoro
-reset; substitute = the arc the boot splash ring already draws). U+2191 (scroll-to-top; --sans
-carries U+2192 and U+2190 and not this one, which is the near-miss that makes a glyph inventory
-necessary). U+2318 (the search overlay's command-key hint -- **the one mark here that is not
-decoration**: it names a physical key, so the honest substitute is a platform-conditional label,
-not a shape, which is a behaviour change with its own copy decision).
+**RATCHETED, with an ownership argument each:** ~~the four chrome glyphs~~ -- **CORRECTED,
+CYCLE 4: FOUR WAS THE SINK CHANNEL'S COUNT, NOT THE CHROME'S.** U+2715 (focus-mode dismiss;
+substitute = two rotated rules on a ::before/::after). U+21BB (pomodoro reset; substitute = the arc
+the boot splash ring already draws). U+2191 (scroll-to-top; --sans carries U+2192 and U+2190 and
+not this one, which is the near-miss that makes a glyph inventory necessary). U+2318 (the search
+overlay's command-key hint -- **the one mark here that is not decoration**: it names a physical
+key, so the honest substitute is a platform-conditional label, not a shape, which is a behaviour
+change with its own copy decision). On the channel-free rule the chrome carries **53 sites over 38
+entries and 29 distinct marks, in 14 files** -- and cycle 3's own "38 chrome sites" was the ENTRY
+count wearing the word "sites". Five of the marks it never saw were printed by three ternary sinks
+this channel's pattern could not match; three more sit in a `const` and a call argument, which no
+bounded channel could reach at all. See CYCLE 4 / R10.
 
-**THE CLAIM IS RESTATED ONLY NOW THAT IT IS TRUE ACROSS EVERY CHANNEL.** The allowlist's
-`scope_note` says so and says why cycle 1's version was true of one channel out of four. Measured:
-**0 ellipsis / 0 apostrophe / 0 quote / 0 dash** across markup, tails, sinks, CSS `content:` and
-markdown, with **zero prose exceptions ruled anywhere outside `src/topics`** (52 apostrophes, 2
-dashes and 2 quotes remain, all corpus, all carried).
+**THE CLAIM IS RESTATED ONLY NOW THAT IT IS TRUE ACROSS EVERY CHANNEL.** ~~Measured: 0 ellipsis /
+0 apostrophe / 0 quote / 0 dash across markup, tails, sinks, CSS `content:` and markdown~~ --
+**RETRACTED, CYCLE 4.** That sentence was true of the five channels cycle 3 had and false of the
+app: **four straight apostrophes were live in the drill and mock debrief verdicts**
+(`drill/logic.js:1016`, `:1018`, `:1186`, `:1189`) -- three in HEAD runs, one in a tagless literal,
+none of them reachable by any channel that existed when the sentence was written. All four are
+typeset now (`&rsquo;`, the entity form that file already uses for `&mdash;` and `&middot;`).
+**The SECOND half held and still holds:** zero prose exceptions ruled anywhere outside
+`src/topics`. RESTATED ON THE WIDENED CHANNELS: **0 / 0 / 0 / 0 / 0** across the channel-free glyph
+rule and six bounded prose channels, with the ratcheted corpus at **111 apostrophes, 49 quotes and
+2 dashes** -- also a correction, since "52 apostrophes, 2 dashes and 2 quotes" was that same corpus
+seen through narrower channels, not a smaller debt.
 
 ---
 
@@ -1198,11 +1223,19 @@ unchanged). The tail run is yielded now, **glyph rule only**: a tail has no clos
 and routinely stops mid-sentence or mid-SQL, so the four typeset rules have nothing well-formed to
 be true of, while a codepoint is unowned wherever it sits.
 
-**The feared allowlist explosion did not happen, and the reason is the glyph-only gate.** 3,034
-tail runs in the tracked corpus; **nine** carry an unowned mark (U+2011 NON-BREAKING HYPHEN, U+2260
-NOT EQUAL TO), all in `src/topics`, all folded into the existing corpus argument. Had the four
-prose rules ridden along, the 2,057-entry ratchet the item predicted is roughly what would have
-arrived -- and every one of those entries would have been a fragment, not a defect.
+**The feared allowlist explosion did not happen, and the reason is the glyph-only gate.**
+~~3,034 tail runs in the tracked corpus; nine carry an unowned mark~~ -- **CORRECTED, CYCLE 4:**
+3,034 literals END AT A TAIL POSITION, **2,135** of them with a non-empty run, and **nine** of
+those 2,135 carry an unowned mark (U+2011 NON-BREAKING HYPHEN, U+2260 NOT EQUAL TO), all in
+`src/topics`, all folded into the existing corpus argument. 3,034 counts the regex's matches
+INCLUDING the empty ones; 2,135 is the denominator the "nine" actually sits in, and quoting the
+larger number made the ratio look four times better than it is. Both figures re-derived on the
+committed tree by the scanner itself -- the same discipline judge item 8 imposed on 2,840, applied
+to a number this ledger wrote in the same breath. Had the four prose rules ridden along, the
+2,057-entry ratchet the item predicted is roughly what would have arrived -- and every one of
+those entries would have been a fragment, not a defect. *(Cycle 4 RETIRED this channel: the glyph
+rule now reads the whole literal, so a mark after the last tag is simply a mark in the literal --
+same marks, same sites, same files. See CYCLE 4 / R10.)*
 
 **PRESS, on the real tree:** the judges' own plant at the tail of panels.js:425 -> **RED**, with the
 `>text<` control beside it -> **RED**. Both in the self-test as `glyph-tail`.
@@ -1424,3 +1457,322 @@ copy of the desktop's, is a cycle that measured something.
    Worth a sweep: any check whose threshold is a raw byte count, pixel count or millisecond taken
    from one machine is carrying the same assumption, and the free branch CI is the instrument that
    finds them -- it found this one on the first run after the arm existed.
+
+---
+
+## CYCLE 4 -- 2026-08-03
+
+Three team-lead rulings on the cycle-3 escalation, and five non-escalated judge items. The shape
+of this cycle is one sentence: **every finding here is a claim that was true of the CHANNEL it was
+measured through, and false of the app.** R10 and R11 are that in the scanner, R12 is that in the
+pixels, and judge items 2 and 4 are that in a PDF.
+
+---
+
+### R10. THE GLYPH RULE GOES CHANNEL-FREE -- CLOSED, AND THE SPAN IS THE MARK
+
+`judge()` no longer takes a per-span exception flag. There are two channels and they do not
+overlap:
+
+* **GLYPH** -- every contiguous non-ASCII run of every string literal `js_literals()` yields, of
+  every CSS `content:` string, of every markdown line and of every HTML text/attribute run. No
+  bound, no prose gate, no code gate. A codepoint is a fact wherever it lives.
+* **PROSE** -- the four typeset rules, on bounded runs that are whole thoughts (see R11).
+
+**THE HOLE WAS FIVE MARKS IN THREE FILES, AND THEY WERE ALL SHIPPING.** Cycle 3's sink pattern was
+`.textContent\s*=\s*<string>` -- an opener followed IMMEDIATELY by a literal -- so the commonest
+shape this app writes matched nothing at all:
+
+```
+playBtn.textContent = running ? '\u2759\u2759' : '\u25B6';        pomodoro.js:70
+playBtn.setAttribute('aria-label', running ? 'Pause focus timer' : ...);   pomodoro.js:71
+hintEl.textContent  = dir === 'prev' ? '\u2039' : '\u203a';       touch-swipe.js:47
+b.textContent       = ok ? 'Copied' : 'Press \u2318C';         session-progress.js:855
+```
+
+The token after `=` is an identifier, so the regex never started. The sink shape is matched against
+`blank_comments(src)` now and **every literal from the opener to the terminating `;` at depth 0** is
+read -- depth tracked over `()`, `[]` and `{}` so a `;` inside a nested call cannot end the
+statement early.
+
+**AND THE WIDENED GLYPH CHANNEL FOUND THREE MORE THAT NO BOUNDED CHANNEL COULD EVER HAVE REACHED**,
+which is the part the ruling did not predict and the part that justifies its shape:
+
+```
+const blocks = '\u2581\u2582\u2583\u2584\u2585\u2586\u2587\u2588';   session-progress.js:656
+'&#9650; ' / '&#9660; '  (the compare row's delta arrows)            session-progress.js:651
+decBtn = makeBtn('A\u2212', 'Decrease text size', -1);            text-zoom.js:104
+```
+
+A `const`, a concatenation fragment and a call argument. `A\u2212` (U+2212 MINUS SIGN) is the
+sharpest of the three:
+the ASCII hyphen in the **"A+"** button beside it is owned and the MINUS SIGN in **"A-"** is not, so
+two buttons of one control are rasterised by two different faces. Corpus additions from the same
+widening: U+00F7 in three `num.js` files, U+2248 in `content-pipeline/num.js`, U+2260 in
+`desired-state/model.js` and `sys.js`, U+2011 in `signing/num.js` and `signing/walk.js`.
+
+**THE SPAN IS THE MARK, AND THAT IS NOT A DETAIL -- IT IS WHAT MAKES A CHANNEL-FREE RULE
+RATCHETABLE.** The ratchet key is the whole stripped span bound to its file, so keying a glyph on
+its enclosing literal makes the entry go STALE -- a gate FAILURE -- the first time anyone edits an
+unrelated word of that sentence. R8 met this in markdown one cycle ago and settled it; cycle 4
+generalises it. Pressed both ways: with the key back on the enclosing span the check goes **RED**
+(press B6). Two consequences worth naming:
+
+* **THE TAIL CHANNEL IS RETIRED, subsumed rather than removed.** It existed only to carry glyphs
+  past the `>text<` bound, and a codepoint after the last tag is a codepoint in the literal. Same
+  marks, same sites, same files. The cycle-3 `glyph-tail` fixture is still in the self-test and
+  still goes RED.
+* **THE FILE BOUND IS UNCHANGED AND STILL FIRES.** U+2318 is ruled in `keyboard-overlay.js` and,
+  separately, in `session-progress.js`; neither excuses the other. A press that plants the same
+  mark in a THIRD file goes **RED** (A6), and one more site of a ruled mark in the SAME file goes
+  **RED** (A7).
+
+**THE ALLOWLIST: 132 -> 237 entries, and every one of the 105 new entries was already on the screen.**
+95 entries kept their key unchanged (their span already WAS the mark); 142 were re-keyed or newly
+surfaced, and **every re-keyed entry carries its predecessor's argument verbatim** -- the migration
+was mechanical, the arguments are not. Every entry with no predecessor got a written one: nine
+per-site chrome arguments and one corpus argument each for glyph and prose.
+
+The inventory, measured rather than recalled:
+
+| | entries | sites | distinct marks |
+|---|---|---|---|
+| chrome (14 files) | 38 | 53 | 29 |
+| corpus `src/topics` | 37 | 106 | 8 |
+| corpus `src/topics-md` | 2 | 4 | 2 |
+| **glyph total** | **77** | **163** | **36** |
+| corpus prose (18 files) | 160 | 111 apostrophes, 49 quotes, 2 dashes | -- |
+
+**THE RETRACTIONS, MADE IN PLACE.** R7's "the chrome's FOUR un-owned glyphs" and its
+"0 ellipsis / 0 apostrophe / 0 quote / 0 dash" are struck through and restated above and in
+`craft_hygiene.py`'s docstring, which now carries a RETRACTION block naming both. Four was the sink
+channel's count. Cycle 3 also printed its chrome figure as "38 sites" when 38 was the ENTRY count --
+sites and entries are different numbers and the `count` field is exactly what separates them.
+
+---
+
+### R11. THE HEAD CHANNEL AND THE TAGLESS LITERAL -- CLOSED, AND THE FOUR SITES ARE TYPESET
+
+`HEAD_TEXT = ^([^<>{}\n]+)<`, applied to each unescaped literal, **`glyph_only=False`**. The tail's
+argument does not transfer and the reason is directional: a tail has no closing tag on its RIGHT
+and stops wherever its literal does, while a head run starts where the literal starts and ends at a
+markup boundary **the author wrote**. It routinely ends a complete sentence, so all four typeset
+rules are well-founded on it -- and all four are pressed there, one fixture each. A channel that
+carries four rules while only one of them can fire is the same defect class as an unguarded PASS
+line.
+
+**THE FOUR LIVE SITES, AND THEY ARE THE APP'S OWN VERDICT COPY:**
+
+```
+drill/logic.js:1016   'You're carrying the signals ... <b>senior-signal line</b> ...'
+drill/logic.js:1018   'You know the happy path; the depth isn't there yet. Work the <b>Walkthrough</b>...'
+drill/logic.js:1186   'Depth held under the Staff / EXTEND probes - that's exactly ... <b>Strong Hire</b>.'
+drill/logic.js:1189   'Below bar - the happy path isn't enough. Work Walkthrough + See-the-code, ...'
+```
+
+Three are head runs -- `>text<` saw only the two words INSIDE the bold tag. The fourth is
+**TAGLESS**: rendered copy with no markup in it at all, reaching the screen through an `innerHTML` a
+few lines later, so head, tail and `>text<` all miss it by construction. All four are typeset to
+`&rsquo;`, which is the entity form that same file already uses for `&mdash;` and `&middot;`.
+
+**THE BARE-LITERAL CHANNEL IS BOUNDED AT FOUR CONDITIONS AND EACH ONE IS LOAD-BEARING**: no markup
+characters (a literal with a tag belongs to a tag-bounded channel and would double-count), no
+newline (a template literal spanning lines is a document, not a sentence), **four or more words**,
+and a **terminal punctuation mark** -- which is the discriminator that matters, because a fragment
+ending mid-thought is exactly what the tail channel refused to judge. The negative control is a
+one-word label, an unpunctuated placeholder, a storage key and **a two-word RANGE label
+(`'p50 - p99.'`, where the hyphen separates two endpoints and is not a dash doing an em dash's
+job)** -- the last of those exists because the first draft's control could not fail: with the
+word-count bound deleted the gate stayed GREEN, so the bound was written into the PASS line and
+guarded by nothing. It is guarded now (press B5 **ABORTS**).
+
+**THE MEASURED RESULT, WHICH IS WHY THE WIDENING IS AFFORDABLE.** 23,683 spans over 228 files
+(10,611 glyph, 13,072 prose), 1,841 head runs and 1,941 sink-or-bare literals. Prose findings
+**outside** `src/topics`: **exactly four**, the ones above, all fixed. Inside: 113 findings over 18
+files, ratcheted with the corpus argument. So the ledger's "zero prose exceptions ruled anywhere
+outside `src/topics`" survives the widening -- it is the half of the cycle-3 sentence that held --
+and the corpus figure moves from 52/2/2 to **111 apostrophes / 49 quotes / 2 dashes**, which is the
+same debt seen properly rather than a bigger one.
+
+---
+
+### R12. THE COLD DRAW -- DIAGNOSED, REPRODUCED BY CONSTRUCTION, FIXED BY THREE CONDITIONS
+
+**THE DIAGNOSIS CAME FIRST AND IT NAMED THE CONTRIBUTOR.** A standalone instrument
+(`_audit/w-addresses-cycle4/colddraw.cjs`) reproduces the gauge path at 390/light on a **FRESH
+BROWSER PROFILE each iteration** -- `chromium.launch()` makes a new user-data-dir, so every
+iteration is a cold one -- and dumps the raw sampled device rows plus the state of the world at
+shot time. Eight cold profiles:
+
+```
+bodyIn STILL RUNNING when the shot was taken:  4 of 8
+body computed opacity at that moment:          0.9117, 0.9851, 0.9851, 0.9851
+```
+
+`body{animation:bodyIn var(--duration-slowest) ... backwards}` ramps opacity 0 -> 1 **after** the
+boot splash is gone, and an element at opacity < 1 composites its whole subtree over the canvas.
+Every pixel this section samples is inside that subtree. **The cycle-3 splash wait made the flake
+rarer and hid the second veil behind it.**
+
+**THEN IT WAS REPRODUCED BY CONSTRUCTION, not inferred.** `body{animation:none;opacity:.9117}` --
+the exact state a cold profile was caught in -- with every other condition identical:
+
+| --lv | 0 | 0.3 | 0.55 | 0.78 | 1 | tightest adjacent |
+|---|---|---|---|---|---|---|
+| unveiled | 0.1765 | 0.1136 | 0.0772 | 0.0496 | 0.0275 | **1.277:1** |
+| veiled @ .9117 | 0.2168 | 0.1504 | 0.1104 | 0.0770 | 0.0502 | **1.249:1** |
+| judges' run 3 | 0.2280 | 0.1664 | 0.1305 | 0.1016 | 0.0786 | **1.179:1** |
+
+Every step lifted toward the light ground and the ramp's own margin fell, on a build nobody had
+touched. The judges' outlier sits BEYOND the constructed one in the same direction, which is what a
+deeper point in the same fade looks like. **HONESTLY STATED: this reproduces the class and the
+direction; it does not prove that run 3 was this exact alpha, and no claim is made that it does.**
+
+**THE FIX IS THREE CONDITIONS, AND NOT ONE OF THEM IS A DURATION.**
+
+1. **THE ENTRANCE FADE MUST BE IDLE.** Before any shot: every element from `.hm-alt` to the
+   document root at computed opacity 1, with no animation still `running` on that chain. Scoped to
+   the gauge's own ancestor chain deliberately -- "no animation anywhere" is a promise this app does
+   not make and a looping ornament elsewhere would hang the wait. **Press P7: veil the body before
+   the wait -> the run FAILS naming the condition.**
+2. **THE SAME-SHOT GROUND INVARIANT** -- the guard the track-y one should have been. The track's own
+   `background-color` is read off the page in the same run and converted to luminance in node; the
+   trough band must EQUAL it within 0.002, and must be UNIFORM (min == max). It is not a tolerance:
+   measured unveiled at 390/light the band returns **0.84871 over 4,740 device pixels with min ==
+   max exactly**, against a computed `rgb(241,237,228)` = **0.84877** -- agreement to 6e-5, which is
+   the arithmetic's own rounding. The 0.9117 veil moves it to **0.85683**, a gap of 0.00813, four
+   times the epsilon. **Press P3 -> FAILS naming the veil; press P4, the same veil with the
+   invariant reverted -> GREEN, reporting the shifted ramp as a grade.** That pair is what makes P3
+   a press of the invariant rather than of something else.
+3. **THE COLD-RUN IDENTITY REQUIREMENT.** A CI runner is always cold, and an arm that is only true
+   warm is not CI-honest. The fill strip is read again at the END of the cell -- five `readMarks()`
+   calls later, on a page as warm as it gets inside one run, with the strip untouched between -- and
+   every step must return the same number within the same epsilon. Measured: **identical in all four
+   cells.** **Press P6: force the warm re-read to differ -> FAILS.**
+
+**AND THE SHOT-ALIGNMENT GUARD HAD TWO DEFECTS IN ONE LINE.** It compared **y only**, and it
+anchored `shotY` on **the first shot** rather than on the geometry read -- so the one window in
+which every box is computed against a layout that no longer exists was invisible by construction.
+"The guard never fired" was therefore not evidence that nothing moved. It is anchored at `geo` now
+and compares **x as well**, because a one-device-column slip puts the fill box on the capsule's
+antialiased side, which reads as a grade. **Press P5: a 3px shift injected between the geometry read
+and shot A -> FAILS** ("the track was at (81.000, 1159.188) ... and is at (81.000, 1162.188) now"),
+where cycle 3's guard could not have seen it.
+
+**THE MARGINS, RE-DERIVED.** The guarded readings reproduce cycle 3's table exactly -- 1.261 (1280
+light), 1.266 (1280 dark), 1.276 (390 light), 1.272 (390 dark) -- so nothing about the DESIGN
+changed. What changed is that the numbers are now conditional on a shot this arm will refuse to
+take through a veil. `GRADE_STEP_MIN`'s "leaves 10.6% of headroom" comment says so in those words:
+GIVEN the three conditions the worst pair is 1.272:1 and the floor leaves 10.6%; without them the
+arm has no business quoting a margin, and the worst reading ever observed in the wild was 1.179:1.
+
+**PRESS RECEIPT: `_audit/w-addresses-cycle4/press-gauge-veil.txt`, 7 mutants, 7 pressed.** P1 is the
+one to read: cycle-3's code with the constructed veil returns the shifted ramp and **exits 0**. That
+is the defect, alive, green, on a tree nobody had touched.
+
+---
+
+### JUDGE ITEM 5 -- THE DEPTH ARM HAD NO MUTANT: CLOSED, AND THE FIRST PLANT WAS WRONG
+
+MUTANT E paints the panel at its ground's own value, which IS "the panels are regions of one
+plane". Landed: **1.000:1 in all four cells**, against a floor of 1.25 and shipped readings of 1.329
+(light) / 1.298 (dark).
+
+**THE FIRST DRAFT PLANTED A TOKEN AND IT WAS THE WRONG COLOUR.** `#home .hm-panel{background:
+var(--bg)}` landed in dark (1.000) and NOT in light (1.261, still over the floor) -- and the arm
+duly reported "MUTANT E UNDETECTED", i.e. it reported the depth arm as unpressed when it was the
+PLANT that was wrong. Probed rather than reasoned about: the pixel under the gap in light is
+**rgb(228,223,212)** while `--bg` is **rgb(250,249,245)**, because the element at that point is
+transparent and the paint comes from an ancestor further up. So the plant reads the first PAINTED
+ancestor under the gap point and uses what is actually there. A mutant is a measurement too, and a
+mutant derived from a token is a mutant that can be wrong in exactly one theme.
+
+---
+
+### JUDGE ITEMS 2 AND 4 -- ARM F COULD NOT FAIL FOR HALF OF WHAT IT CLAIMED: CLOSED
+
+The byte arm's PASS line asserted "the altitude gauge, its legend, THE ROOM BARS AND THE ROOM
+COUNTS", and the six grade-bearing selectors R9 added were worth **14 bytes of 125,089 -- 0.011%,
+against a 100,000-byte floor with 25% headroom**. Reproduced here on the committed tree: with those
+six deleted the byte arm still reads **PASS**. That is judge item 6's defect class committed inside
+the cycle that closed item 6.
+
+**THE FIX IS A DIFFERENT INSTRUMENT, NOT A BIGGER BUDGET.** ARM F2 asserts
+`getComputedStyle(el).printColorAdjust === 'exact'` under `emulateMedia({media:'print'})` for
+`.hm-room-n`, `.hm-room-bar`, `.hm-room-bar i`, `.ix-goal-bar`, `.ix-goal-bar span` and `.hm-gr-t`
+-- a property of the DOCUMENT: deterministic, no threshold, no rasteriser, no platform assumption.
+Three controls, because "everything computes exact" is exactly the shape that passes when the read
+is broken:
+
+* **print media is live** (`matchMedia('print').matches`), or the whole cascade is the wrong one;
+* **DISCRIMINATION** -- the surfaces styles.css deliberately DECLARED rather than fixed (the panel,
+  a chip, the body) come back **economy**, so "exact" is a declaration and not a browser default;
+* **LIVENESS** -- with an economy override the same six reads **FLIP**, so the assertion can go red.
+
+And the byte arm's own claim is **narrowed to what bytes can carry**: the gauge and its legend.
+
+**THE NOISE CONTROL WAS SATISFIED BY THE NULL RESULT.** `noise * 3 <= delta` is trivially true at
+`0 <= 0`, so on the whole-rule-deleted mutant cycle 3's control printed **PASS** with "worst
+identical pair differs 0 bytes against a 0-byte effect". A control whose job is to prove the effect
+outruns the noise announced success when there was no effect at all. It reads `delta > 0 && noise *
+NOISE_FACTOR <= delta` now.
+
+**PRESS RECEIPT: `_audit/w-addresses-cycle4/press-print-arm-f.txt`**, two mutants built and run
+through `npm run build`:
+
+| mutant | byte arm | noise control | ARM F2 |
+|---|---|---|---|
+| six grade selectors deleted | PASS | PASS | **FAIL** |
+| the whole rule deleted | **FAIL** | **FAIL** | **FAIL** |
+
+Row 1 is the finding and the fix in one line: the bytes cannot see those six selectors, and the new
+arm can. Row 2 is the null-result fix: cycle 3's control passed there.
+
+---
+
+### JUDGE ITEM 3 -- TWO FIGURES THAT DID NOT REPRODUCE UNDER THEIR OWN METHOD: CLOSED
+
+**(a)** `craft_hygiene.py:56` opened "NO ABSOLUTE BYTE COUNT IS QUOTED HERE, and that is
+deliberate" and then quoted two. Both verified against git (437fdb5 = 12,323,503; 00f1962 =
+12,334,544) -- they are correct **frozen history**, not attributions to a current build, so the
+sentence was sound about the attribution and contradicted itself about the prose. The opener reads
+**"NO CURRENT BUILD'S BYTE COUNT IS QUOTED HERE"** and the paragraph says which two figures are
+history and why they stay. The smaller correction was the right one.
+
+**(b)** "3,034 tail runs in the tracked corpus; nine carry an unowned mark" counted the regex's
+matches INCLUDING the empty ones. Re-derived on the committed tree by the scanner itself: **3,034
+literals end at a tail position, 2,135 of them with a non-empty run**, and the nine sit in the
+2,135. Corrected in place above, in the same words judge item 8 imposed on 2,840.
+
+---
+
+### FOUND WHILE PRESSING -- THE FAILURE BRANCH COULD NOT PRINT ITS OWN FINDING
+
+`craft_hygiene`'s findings loop had an encoding guard and its STALE / GREW / SHRANK loops did not,
+so the one path that prints a ratcheted mark's own text died with a **UnicodeEncodeError traceback**
+instead of reporting -- on the win32 cp1252 console the gate actually runs on. A check whose failure
+output cannot be printed has no failure output. Fixed with one `say()` helper and **pressed on that
+console specifically** (press C1: a planted stale entry carrying U+21BB, run without `-X utf8` ->
+exit 1, the stale list printed, no traceback). Found by running the failure branch rather than by
+reading the code, which is the only way this class ever turns up.
+
+---
+
+## CYCLE 4 -- PRESS SUMMARY
+
+| receipt | mutants | pressed |
+|---|---|---|
+| `press-craft-channels.txt` (R10, R11, judge item 3a) | 18 | 18 |
+| `press-gauge-veil.txt` (R12) | 7 | 7 |
+| `press-print-arm-f.txt` (judge items 2, 4) | 2 | 2 |
+
+Every press snapshots the file in memory and restores it, and every receipt ends with the shipped
+tree re-run green. (The cycle-3 method note stands and is why: a press that reverts the tree with
+`git checkout` is not a press, it is a rollback, and it ate an uncommitted fix once.)
+
+Four presses came back UNPRESSED on their first run and each one was a real gap, not a bad plant:
+the two ternary GLYPH fixtures are satisfied by the channel-free glyph rule whether the sink walks
+the whole statement or not (so a **prose** fixture in a far branch was added -- three words, no
+terminal mark, reachable by no other channel); the bare-literal word bound had no control that could
+fail; and two press plants of my own were malformed JavaScript, which the scanner correctly refused
+to guess past.

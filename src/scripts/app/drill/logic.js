@@ -1013,9 +1013,9 @@ class DeepDrill extends TopicPane {
         '<div class="nm">' + entry.signal + drop + '</div><div class="tr"><span class="tier ' + DRILL_TIER_CLASS[entry.tier] + '">' + entry.tier + '</span></div></div>';
     }
     let verdict;
-    if (pct >= 80) verdict = 'You\'re carrying the signals a senior loop grades on. The shaky ones are polish, not gaps &mdash; re-run those threads until the <b>senior-signal line</b> comes out unprompted.';
+    if (pct >= 80) verdict = 'You&rsquo;re carrying the signals a senior loop grades on. The shaky ones are polish, not gaps &mdash; re-run those threads until the <b>senior-signal line</b> comes out unprompted.';
     else if (pct >= 50) verdict = 'Solid core, real gaps. The signals you marked <b>Revisit</b> are exactly what an interviewer probes to separate levels &mdash; drill those threads to the last layer before the real round.';
-    else verdict = 'You know the happy path; the depth isn\'t there yet. Work the <b>Walkthrough</b> + <b>See the code</b>, then re-run &mdash; the follow-up chains are where this round is won or lost.';
+    else verdict = 'You know the happy path; the depth isn&rsquo;t there yet. Work the <b>Walkthrough</b> + <b>See the code</b>, then re-run &mdash; the follow-up chains are where this round is won or lost.';
     const weakBtn = this.shk > 0 ? '<button type="button" id="dweak" class="btn-sec">Drill my ' + this.shk + ' Revisit ' + (this.shk === 1 ? 'probe' : 'probes') + ' \u2192</button>' : '';
     this._dwrap.innerHTML = '<div class="card debrief"><div class="big">' + (this.mode === 'quick' ? 'Quick 5 debrief' : 'Interviewer debrief') + '</div>' +
       '<div class="sumline">' + sumParts.join(' &middot; ') + ' &middot; ' + pct + '% ' + covLabel + '</div>' +
@@ -1183,10 +1183,10 @@ class DeepDrill extends TopicPane {
         '<div class="nm">' + entry.signal + drop + '</div><div class="tr"><span class="tier ' + DRILL_TIER_CLASS[entry.tier] + '">' + entry.tier + '</span></div></div>';
     }
     let note;
-    if (rec.c === 'sh') note = 'Depth held under the Staff / EXTEND probes &mdash; that\'s exactly what tips a packet from Hire to <b>Strong Hire</b>.';
+    if (rec.c === 'sh') note = 'Depth held under the Staff / EXTEND probes &mdash; that&rsquo;s exactly what tips a packet from Hire to <b>Strong Hire</b>.';
     else if (rec.c === 'h') note = 'Strong coverage. To reach Strong Hire, the <b>Staff-tier</b> threads have to be solid, not just attempted.';
     else if (rec.c === 'lh') note = 'Enough signal for a phone screen, not an onsite. The gap is <b>depth</b> &mdash; drill the multi-layer threads to the end.';
-    else note = 'Below bar &mdash; the happy path isn\'t enough. Work Walkthrough + See-the-code, then run the round again.';
+    else note = 'Below bar &mdash; the happy path isn&rsquo;t enough. Work Walkthrough + See-the-code, then run the round again.';
     let used = 22 * 60 - this.mockLeft;
     if (used < 0) used = 0;
     this._dwrap.innerHTML = '<div class="card debrief"><div class="rec ' + rec.c + '"><div class="lvl">' + rec.t + '</div>' +

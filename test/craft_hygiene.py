@@ -26,8 +26,63 @@ stylesheet -- it has nothing to do with whether the span reads as a sentence. Cy
 where the shape of the gate predicts: restoring the deleted
 `<span class="ix-star-ic">&#9733;</span>` -- one bare glyph, no letter, no space --
 left the check PASS while the span count rose by one. The scanner saw it and
-declined to judge it. The glyph rule now runs on EVERY span, unconditionally,
-BEFORE the prose gate; the four prose rules keep their gate.
+declined to judge it. Cycle 2's fix ran the glyph rule on EVERY SPAN before the
+prose gate; the four prose rules keep their gate.
+
+...AND CYCLE 3 SHIPPED IT AS A CHANNEL RULE, WHICH IS THE SAME MISTAKE ONE LEVEL UP
+"Every span" is only as wide as the SPAN CHANNELS, and cycle 3's were four bounded
+ones. R10 finishes the arc: THE GLYPH RULE IS CHANNEL-FREE. It runs over every
+contiguous non-ASCII run of every string literal the scanner yields, of every CSS
+`content:` string, of every markdown line and of every HTML text and attribute run.
+A codepoint is a fact wherever it lives.
+The hole this closed was not hypothetical -- five marks, three files, all shipping:
+
+    playBtn.textContent = running ? '\\u2759\\u2759' : '\\u25B6';   pomodoro.js:70
+    hintEl.textContent  = dir === 'prev' ? '\\u2039' : '\\u203a';   touch-swipe.js:47
+    b.textContent       = ok ? 'Copied' : 'Press \\u2318C';        session-progress.js:855
+    const blocks = '\\u2581\\u2582\\u2583\\u2584\\u2585\\u2586\\u2587\\u2588';  session-progress.js:656
+    decBtn = makeBtn('A\\u2212', 'Decrease text size', -1);        text-zoom.js:104
+
+The first three are TEXT SINKS whose literal is not the first token after the
+opener, so cycle 3's `.textContent\\s*=\\s*<string>` matched nothing at all (R10
+widened that pattern too -- see sink_bodies). The last two are not sinks, not
+markup, not attributes: a `const` and a call argument, which no bounded channel
+could ever reach. `A\\u2212` is the sharpest of them -- the ASCII hyphen in the
+"A+" button beside it is owned and the MINUS SIGN in "A-" is not, so two buttons of
+one control are rasterised by two different faces.
+
+AND THE SPAN IS THE MARK, WHICH IS WHAT MAKES A CHANNEL-FREE RULE RATCHETABLE.
+Keying a glyph on its enclosing literal would make the entry STALE -- a gate
+FAILURE -- the first time anyone edited an unrelated word of that sentence. R8 met
+this in markdown and settled it: the mark is the stable carrier and `count` carries
+site multiplicity. Generalising that RETIRES the tail channel, which existed only
+to carry glyphs past the `>text<` bound and is now subsumed; the same marks, at the
+same sites, in the same files. It also means a span is judged by the glyph rule OR
+by the four typeset rules and never by both, so the ratchet's per-site arithmetic
+stays honest.
+
+RETRACTION -- TWO SENTENCES CYCLE 3 PRINTED HERE WERE TRUE OF ITS CHANNELS ONLY
+Both are corrected in place rather than quietly rewritten, because the whole subject
+of this file is a claim that was true where it was measured and nowhere else.
+
+  RETRACTED: "The chrome's FOUR un-owned glyphs live here (U+2715, U+21BB, U+2191,
+  U+2318)." Four was the sink channel's count, not the chrome's. On the
+  channel-free rule the chrome carries 53 SITES over 38 entries and 29 DISTINCT
+  MARKS, in 14 files. Cycle 3 also reported its chrome figure as "38 sites" when 38
+  was the ENTRY count; sites and entries are different numbers and the `count`
+  field is what separates them.
+
+  RETRACTED: "0 ellipsis / 0 apostrophe / 0 quote / 0 dash ... with zero prose
+  exceptions ruled anywhere outside src/topics." The second half held and still
+  holds -- 160 prose exceptions, every one in src/topics. The first half did not:
+  FOUR straight apostrophes were live in the drill and mock debrief verdicts
+  (drill/logic.js:1016, :1018, :1186, :1189), in head runs and in one tagless
+  literal, which no channel cycle 3 had could read. RESTATED ON THE WIDENED
+  CHANNELS: all four are typeset, and the sweep now reports 0 / 0 / 0 / 0 / 0
+  across the channel-free glyph rule and six bounded prose channels, with the
+  ratcheted corpus standing at 111 apostrophes, 49 quotes and 2 dashes -- which is
+  also a correction, since cycle 3's "52 apostrophes, 2 dashes, 2 quotes" was the
+  same figure taken through narrower channels.
 
 IT READS CSS TOO, FOR THE SAME REASON
 `content:" \\2605"` prints a star on the screen exactly as a `<span>` does, and
@@ -52,13 +107,19 @@ three different numbers have been quoted for this: html.parser over the built fi
 entity-decoded, each whitespace run collapsed to one space, each node stripped.
 Raw, uncollapsed, the same walk gives 4,028 characters -- the same finding either
 way, and the collapsed figure is the one this file and the wave ledger both quote.)
-NO ABSOLUTE BYTE COUNT IS QUOTED HERE, and that is deliberate: cycle 2 wrote this
-paragraph against build 12,323,503 and the very commit that carried it shipped a
-12,334,544-byte build, so the sentence was stale the moment it landed -- the third
-time in this file's short life that a receipt has named a build that no longer
-existed. The derived figures (177 / 2,799 / 0.023% / 99.73%) reproduce on both
-builds to the character; the byte count is the only part that could go stale, so it
-is not in the prose. So the corpus is the SOURCE, and the copy is found where the
+NO CURRENT BUILD'S BYTE COUNT IS QUOTED HERE, and that is deliberate: cycle 2 wrote
+this paragraph against build 12,323,503 and the very commit that carried it shipped
+a 12,334,544-byte build (both figures verified against git: 437fdb5 and 00f1962), so
+the sentence was stale the moment it landed -- the third time in this file's short
+life that a receipt has named a build that no longer existed. Those two numbers are
+FROZEN HISTORY and stay; what is gone is any figure attributed to the build this
+check is looking at. (Cycle 3 wrote the opener as "NO ABSOLUTE BYTE COUNT IS QUOTED
+HERE" while quoting two, so the sentence contradicted its own next clause -- a
+finding that was sound about the attribution and wrong about the prose. Corrected
+here rather than deleted, because the correction is the smaller claim.) The derived
+figures (177 / 2,799 / 0.023% / 99.73%) reproduce on both builds to the character;
+the byte count is the only part that could go stale, so no live one is in the prose.
+So the corpus is the SOURCE, and the copy is found where the
 copy actually lives: inside string literals that build markup, inside `content:`
 declarations that print marks, and inside the text SINKS that assign copy directly.
 
@@ -67,46 +128,57 @@ A JavaScript scanner walks each file tracking whether it is inside a line commen
 a block comment, or a single/double/backtick string. COMMENTS ARE NOT COPY -- a
 first attempt used a bare `>...<` regex over whole files and reported 523 straight
 quotes, nearly all of them inside the long design comments this repo is written
-in. Only string literals are considered, and inside a literal only:
+in. Only string literals are considered. The GLYPH rule then takes the literal
+WHOLE (see above); the four TYPESET rules take only these bounded runs:
 
     text between a '>' and the next '<'      the content of emitted markup
+    the run BEFORE the literal's first '<'   a sentence that opens a literal (R11)
     title= / aria-label= / placeholder= /    copy that is spoken or hovered
     alt= attribute values
-    the run after the LAST '>'               emitted markup's trailing copy
-                                             (GLYPH RULE ONLY -- see below)
+    a text sink's literals                   copy assigned straight onto a node
+    a TAGLESS whole sentence                 copy with no markup in it at all (R11)
 
 which excludes selectors, class names, storage keys and every other string that is
 addressed to the machine rather than to a person. Entities are decoded before the
 rules run, so `&mdash;` counts as an em dash and a bare `-` does not. CSS comments
 are stripped the same way and for the same reason.
 
-THE TAIL RUN, because '<tag>' + var + '</tag>' IS THE COMMONEST EMIT SHAPE HERE
-`>...<` only sees copy with a tag on BOTH sides inside ONE literal. The commonest
-way this codebase emits a labelled control is a concatenation --
-`'<button ...>' + t.identity.title + '</button>'` -- whose first literal ends in
-copy that no closing tag follows, so nothing after the last '>' was ever judged.
-Measured over the tracked js/mjs corpus: 3,034 such tail runs. A cycle-2 press
-planted the same U+27A4 twice in panels.js, inside a real `>text<` run (RED) and at
-a concatenated tail (PASS, green, span count unchanged) -- so the ledger's "the
-class cannot grow silently" was true only where the scanner looked. The tail run is
-now yielded, and it is judged BY THE GLYPH RULE ONLY: a tail run has no closing tag
-to bound it, so it routinely ends mid-sentence or mid-SQL, and putting the four
-typeset rules on a fragment that is not a whole thought is how a check starts
-demanding that half a sentence be punctuated. Font ownership needs no such bound --
-a codepoint is unowned wherever it sits. Nine tail runs in the corpus carry an
-unowned mark (U+2011 and U+2260) and are ratcheted.
+THE HEAD RUN AND THE TAGLESS LITERAL (R11), and why the tail's argument does NOT
+transfer to them. `>...<` only sees copy with a tag on BOTH sides inside ONE
+literal, and cycle 3 added the TAIL run -- the copy after the last '>' -- for the
+GLYPH rule only, on the ground that a tail has no closing tag to bound it and
+routinely stops mid-sentence or mid-SQL. That argument is about the RIGHT-HAND
+bound, so it says nothing about a head run, which starts where the literal starts
+and stops at a markup boundary the author wrote. Measured on the real tree: the
+four live sites are debrief verdicts,
 
-THE TEXT SINKS, which are the third way this app prints a string (R7)
+    verdict = 'You&rsquo;re carrying the signals ... <b>senior-signal line</b> ...'
+
+where the whole sentence sits before the first tag and `>text<` saw only the two
+words INSIDE the bold. All four typeset rules are pressed on this channel, one
+fixture each -- a channel that carries four rules while only one of them can fire
+there is a check that cannot fail.
+The TAGLESS literal is the residual: `drill/logic.js:1189` is rendered copy with an
+apostrophe in it and no markup at all, so head, tail and `>text<` all miss it by
+construction. It is bounded at four conditions -- no markup characters, no newline,
+four or more words, and a TERMINAL punctuation mark -- because "every literal" is
+how a prose check starts demanding that identifiers be punctuated, and because a
+fragment that ends mid-thought is exactly what the tail channel refused to judge.
+All four sites are TYPESET now, not ratcheted; the negative control is a one-word
+label, an unpunctuated placeholder and a storage key, none of which may be judged.
+
+THE TEXT SINKS, which are the third way this app prints a string (R7, widened R10)
 `el.textContent = '...'`, `.innerText`, `.placeholder`, `.value` and
 `setAttribute('title'|'aria-label'|'placeholder'|'alt', '...')` all put copy on the
 screen without ever passing through markup, so a scanner that only reads `>text<`
-and `attr="..."` is blind to them by construction. The chrome's four un-owned
-glyphs live here (U+2715 the focus-mode close, U+21BB the pomodoro reset, U+2191
-scroll-to-top, U+2318 the search overlay's command key) and so did two straight
-ellipses in the search overlay's own placeholder and empty state -- app CHROME
-copy, on the surface the wave's ZERO-for-prose claim is about. Both are typeset
-now. Only STRING LITERALS are read: `x.textContent = t.title` is a variable and is
-not copy this file can judge.
+and `attr="..."` is blind to them by construction. Two straight ellipses were
+shipping in the search overlay's own placeholder and empty state and are typeset
+now. CYCLE 3 MATCHED THE FIRST TOKEN AFTER THE OPENER AND R10 MATCHES THE WHOLE
+STATEMENT: `running ? '\\u2759\\u2759' : '\\u25B6'` begins with an identifier, so
+the shipped pattern matched none of the three ternary sinks listed above. Every
+literal from the opener to the terminating ';' at depth 0 is read now. Only STRING
+LITERALS are read: `x.textContent = t.title` is a variable and is not copy this
+file can judge.
 
 THE MARKDOWN DOOR (R8), and why the four prose rules stay OUT of it
 src/topics-md/*.md is authored prose, and the compiler runs it through markdown-it
@@ -166,8 +238,12 @@ SELF-TEST, EVERY RUN. This repo has shipped checks that could not fail, so the
 analyser runs over synthetic fixtures first: the typeset forms must come back
 clean, and every rule must flag its own planted defect -- including the two the
 cycle-2 press found (a bare glyph span with no prose around it, and a glyph inside
-a CSS `content:` declaration). If any planted defect goes undetected the check
-ABORTS rather than report a green it did not earn.
+a CSS `content:` declaration), the two SHIPPED TERNARY SINKS cycle 3's first-token
+pattern could not reach, all four typeset rules on a HEAD run, and an apostrophe in
+a TAGLESS sentence. If any planted defect goes undetected the check ABORTS rather
+than report a green it did not earn. THE TERNARY FIXTURES CARRY THEIR MARK IN THE
+FAR BRANCH deliberately: a scanner that walked to the first literal after the
+opener and stopped would go green on both.
 
 AND THE RATCHET'S OWN MACHINERY IS NOW DRIVEN THROUGH THE REAL DECISION (cycle 3).
 Cycle 2 pressed the rule INTERSECTION with an expression the self-test wrote
@@ -265,18 +341,26 @@ def js_literals(src):
 HTML_TEXT = re.compile(r'>([^<>{}\n]+)<')
 ATTR = re.compile(r'\b(?:title|aria-label|placeholder|alt)\s*=\s*(["\'])(.*?)\1', re.S)
 CSS_CONTENT = re.compile(r'\bcontent\s*:\s*([^;{}]+)', re.I)
-# the run after the LAST '>' in a literal -- `'<button ...>' + title + '</button>'` leaves copy
-# with no closing tag inside its own literal, which `>...<` cannot see. GLYPH RULE ONLY.
-TAIL_TEXT = re.compile(r'>([^<>{}\n]*)$')
+# THE HEAD RUN (R11), the mirror of the tail and NOT its twin. `'You&rsquo;re carrying the
+# signals a senior loop grades on ... <b>senior-signal line</b>'` opens with a whole sentence
+# that `>...<` cannot see, because its first tag is on the RIGHT. Unlike a tail, a head run is
+# BOUNDED ON THE RIGHT BY ITS OWN TAG -- it starts where the literal starts and stops at a
+# markup boundary the author wrote -- so it routinely ends a complete sentence and the four
+# typeset rules are well-founded on it. The tail's glyph-only argument does not transfer.
+HEAD_TEXT = re.compile(r'^([^<>{}\n]+)<')
 # a JS string literal, with escapes -- shared by both sink patterns below
 _STR = r"""(['"`])((?:\\.|(?!\1)[^\\])*)\1"""
-# THE THIRD CHANNEL: copy assigned straight onto a node, never passing through markup.
-SINK_ASSIGN = re.compile(r'\.(?:textContent|innerText|placeholder|value)\s*=\s*' + _STR)
-SINK_SETATTR = re.compile(
-    r"""\.setAttribute\(\s*(['"])(?:title|aria-label|placeholder|alt)\1\s*,\s*"""
-    r"""(['"`])((?:\\.|(?!\2)[^\\])*)\2""")
-# every contiguous non-ASCII run: the markdown door's span, and the stable ratchet key for a mark
+# THE SINK SHAPE: copy assigned straight onto a node, never passing through markup. These match
+# the STATEMENT OPENER only; every literal from the match to the statement's terminating ';' at
+# depth 0 is the sink's copy -- see sink_bodies().
+SINK_ASSIGN = re.compile(r'\.(?:textContent|innerText|placeholder|value)\s*=')
+SINK_SETATTR = re.compile(r"""\.setAttribute\(\s*(['"])(?:title|aria-label|placeholder|alt)\1\s*,""")
+# every contiguous non-ASCII run: THE GLYPH CHANNEL'S span everywhere, and the stable ratchet
+# key for a mark. See glyph_runs().
 NON_ASCII = re.compile(r'[^\x00-\x7f]+')
+# THE BARE LITERAL (R11): a literal with no markup in it at all, which therefore reaches no
+# tag-bounded channel. Bounded deliberately -- see bare_prose().
+_WORD = re.compile(r'[A-Za-z][A-Za-z0-9&;]*')
 
 
 def unescape_js(s):
@@ -399,14 +483,130 @@ def blank_comments(src):
     return ''.join(out)
 
 
-def copy_spans(path, text):
-    """(line, span, glyph_only) for every run of RENDERED copy in one source file.
+def sink_bodies(src):
+    """The raw bodies of every string literal that sits in a TEXT-SINK statement.
 
-    GLYPH_ONLY marks a span that carries a printed mark but is not a whole thought: a markdown
-    line (whose typeset forms are the compiler's job, not the author's) and a concatenated tail
-    run (which has no closing tag to bound it and routinely stops mid-sentence). Font ownership
-    is a fact about a codepoint and needs no such bound; the four typeset rules are claims about
-    prose and would fire on fragments.
+    R10 WIDENED THIS FROM "THE FIRST TOKEN" TO "THE WHOLE STATEMENT", and the three sites it was
+    blind to are the reason. The pattern used to be `.textContent\\s*=\\s*<string>` -- an opener
+    followed IMMEDIATELY by a literal -- so the commonest shape this app actually writes,
+
+        playBtn.textContent = running ? '\\u2759\\u2759' : '\\u25B6';
+        el.setAttribute('aria-label', on ? 'Pause focus timer' : 'Start focus timer');
+
+    matched NOTHING, because the token after `=` is an identifier. Three live sites printed five
+    unowned marks through that hole. The shape is matched against blank_comments(src) -- a sink
+    is a STATEMENT, and js_literals() has thrown the statement away by the time it yields a
+    string -- and every literal from the opener to the terminating ';' at depth 0 is yielded, not
+    just the first. Depth is tracked over (), [] and {} so a `;` inside a nested call or an object
+    literal cannot end the statement early, and comments are already blanked so a `;` in prose
+    about the code cannot either.
+    """
+    out = set()
+    n = len(src)
+    starts = [m.end() for rx in (SINK_ASSIGN, SINK_SETATTR) for m in rx.finditer(src)]
+    for i0 in starts:
+        i, depth = i0, 0
+        while i < n:
+            c = src[i]
+            if c in '([{':
+                depth += 1
+            elif c in ')]}':
+                if depth == 0:
+                    break                 # the enclosing call closed: the argument list is over
+                depth -= 1
+            elif c == ';' and depth == 0:
+                break
+            elif c == '\n' and depth == 0:
+                # a bare newline at depth 0 with no ';' -- ASI territory; stop rather than run on
+                nxt = src[i + 1:i + 400].lstrip()
+                if not nxt.startswith((':', '?', '+', '.', ',', '&', '|')):
+                    break
+            elif c in ('"', "'", '`'):
+                q, buf = c, []
+                i += 1
+                while i < n:
+                    if src[i] == '\\' and i + 1 < n:
+                        buf.append(src[i:i + 2])
+                        i += 2
+                        continue
+                    if src[i] == q:
+                        break
+                    if src[i] == '\n' and q != '`':
+                        break
+                    buf.append(src[i])
+                    i += 1
+                out.add(''.join(buf))
+            i += 1
+    return out
+
+
+def glyph_runs(decoded):
+    """Every contiguous non-ASCII run in one decoded carrier -- THE GLYPH CHANNEL'S span.
+
+    R10: THE GLYPH RULE IS CHANNEL-FREE, and the span is the MARK. Two separate arguments meet
+    here and they point the same way.
+
+    WHY EVERY CARRIER. Font ownership is a fact about a codepoint and a font stack; it is not a
+    fact about whether the string around it sits between two tags. Cycle 3 had it on four bounded
+    channels and the holes were exactly where the bounds were: `running ? '\\u2759\\u2759' :
+    '\\u25B6'` is a sink whose literal is not the first token, and `hintEl.textContent = dir ===
+    'prev' ? '\\u2039' : '\\u203a'` is the same shape. Every string literal is a carrier now --
+    the R1 principle ("the class cannot grow silently") finishing its arc.
+
+    WHY THE MARK AND NOT THE LITERAL. The ratchet key is the whole stripped span, so keying a
+    glyph on its enclosing literal makes the entry STALE -- a gate FAILURE -- the first time
+    anyone edits an unrelated word of that sentence. R8 already met this in markdown and settled
+    it: the mark is the stable carrier and `count` carries site multiplicity. Generalising that
+    to every channel also RETIRES the tail channel, which existed only to carry glyphs past the
+    `>text<` bound and is now subsumed: a codepoint after the last tag is a codepoint in the
+    literal. The arithmetic is unchanged -- the same marks, at the same sites, in the same files.
+    """
+    return [m.group(0) for m in NON_ASCII.finditer(decoded)]
+
+
+def bare_prose(decoded):
+    """True if a TAGLESS literal is a whole thought worth holding to the four typeset rules (R11).
+
+    THE RESIDUAL CLASS, and it is not hypothetical: `drill/logic.js:1189` is
+    `note = 'Below bar &mdash; the happy path isn\\'t enough. Work Walkthrough + See-the-code,
+    then run the round again.'` -- rendered copy, a straight apostrophe in it, and NO markup at
+    all, so `>text<`, the head run and the tail run all miss it by construction. It reaches the
+    screen through `innerHTML` a few lines later.
+
+    BOUNDED, because "every literal" is how a prose check starts demanding that identifiers be
+    punctuated. FOUR conditions, each one load-bearing: no markup characters at all (a literal
+    with a tag belongs to a tag-bounded channel and would double-count), no newline (a template
+    literal spanning lines is a document, not a sentence), FOUR OR MORE WORDS (`hm-chip`, `9/21`
+    and `Copy` are not sentences), and a TERMINAL PUNCTUATION MARK -- which is the discriminator
+    that matters, because a fragment that ends mid-thought is exactly what the tail channel
+    refused to judge, and for the same reason. `judge()`'s prose and CODE gates still apply on
+    top of all four.
+    """
+    if any(c in decoded for c in '<>{}\n'):
+        return False
+    s = decoded.strip()
+    if not s.endswith(('.', '!', '?', '."', ".'", '.)', '?"', '!"')):
+        return False
+    return len(_WORD.findall(s)) >= 4
+
+
+def copy_spans(path, text):
+    """(line, span, mode) for every run of RENDERED copy in one source file.
+
+    MODE names WHICH RULES the span is held to, and after R10 it is a two-channel split rather
+    than a per-span exception:
+
+        'glyph'  -- a contiguous non-ASCII run, from ANY carrier. Font ownership is a fact about
+                    a codepoint, so this channel is unbounded: every string literal, every CSS
+                    `content:` string, every markdown line, every HTML text and attribute run.
+        'prose'  -- a bounded run of copy that is a whole thought, held to the FOUR TYPESET
+                    RULES ONLY. Bounded because each of those rules is a claim about prose:
+                    markup between two tags, the HEAD run before a literal's first tag, an
+                    attribute value, a text sink's literals, a tagless whole sentence, and a CSS
+                    `content:` string.
+
+    THE TWO CHANNELS DO NOT OVERLAP, which is what keeps the ratchet's `count` arithmetic honest:
+    a mark inside a `>text<` span is judged ONCE, by the glyph channel, keyed at the mark.
 
     EVERY SPAN COMES OUT FULLY DECODED, here and nowhere else. main() used to entity-decode
     everything except .css, which was correct for two channels and a latent double-decode for
@@ -416,36 +616,46 @@ def copy_spans(path, text):
     out = []
     dec = html.unescape
     if path.endswith('.css'):
-        return [(ln, s, False) for ln, s in css_marks(text)]
+        for ln, s in css_marks(text):
+            for g in glyph_runs(s):
+                out.append((ln, g, 'glyph'))
+            out.append((ln, s, 'prose'))
+        return out
     if path.endswith('.md'):
         # GLYPH RULE ONLY, and the span is the MARK. tools/compiler/prose.mjs runs markdown-it
         # with typographer:true, so the apostrophes and dashes in this corpus are typeset on the
         # way to the screen and are not defects here. The font is the part no compiler chooses.
         for i, ln in enumerate(text.split('\n'), 1):
-            for m in NON_ASCII.finditer(dec(ln)):
-                out.append((i, m.group(0), True))
+            for g in glyph_runs(dec(ln)):
+                out.append((i, g, 'glyph'))
         return out
     if path.endswith('.html'):
         body = re.sub(r'(?is)<(script|style)\b.*?</\1>', '', text)
         for i, ln in enumerate(body.split('\n'), 1):
-            for m in HTML_TEXT.finditer(ln):
-                out.append((i, dec(m.group(1)), False))
-            for m in ATTR.finditer(ln):
-                out.append((i, dec(m.group(2)), False))
+            for rx, gi in ((HTML_TEXT, 1), (ATTR, 2)):
+                for m in rx.finditer(ln):
+                    s = dec(m.group(gi))
+                    for g in glyph_runs(s):
+                        out.append((i, g, 'glyph'))
+                    out.append((i, s, 'prose'))
         return out
-    for line, lit in js_literals(text):
-        lit = unescape_js(lit)
-        for m in HTML_TEXT.finditer(lit):
-            out.append((line, dec(m.group(1)), False))
-        for m in ATTR.finditer(lit):
-            out.append((line, dec(m.group(2)), False))
-        m = TAIL_TEXT.search(lit)
-        if m and m.group(1):
-            out.append((line, dec(m.group(1)), True))
-    body = blank_comments(text)
-    for rx, gi in ((SINK_ASSIGN, 2), (SINK_SETATTR, 3)):
-        for m in rx.finditer(body):
-            out.append((body.count('\n', 0, m.start()) + 1, dec(unescape_js(m.group(gi))), False))
+    sinks = sink_bodies(blank_comments(text))
+    for line, raw in js_literals(text):
+        lit = unescape_js(raw)
+        whole = dec(lit)
+        # THE GLYPH CHANNEL: the literal itself, whole and undivided. No bound, no gate.
+        for g in glyph_runs(whole):
+            out.append((line, g, 'glyph'))
+        # THE PROSE CHANNELS: bounded, and deduplicated WITHIN the literal so a sink whose copy
+        # is also a bare sentence is one site rather than two.
+        prose = []
+        for rx, gi in ((HTML_TEXT, 1), (ATTR, 2), (HEAD_TEXT, 1)):
+            for m in rx.finditer(lit):
+                prose.append(dec(m.group(gi)))
+        if (raw in sinks or bare_prose(whole)) and whole not in prose:
+            prose.append(whole)
+        for s in prose:
+            out.append((line, s, 'prose'))
     return out
 
 
@@ -498,35 +708,31 @@ OWNED = set(
 )
 
 
-def judge(span, glyph_only=False):
+def judge(span, mode='glyph'):
     """[(rule, matched text)] for one decoded span.
 
-    THE ORDER IS THE POINT. Font ownership is a fact about the codepoint and the font stack,
-    not about whether the string around it reads as a sentence -- so the glyph rule runs FIRST
-    and runs on EVERY span. The four typeset rules keep the prose gate under them, because
-    each of those IS a claim about prose and would otherwise demand that the corpus's SQL be
-    retypeset. Cycle 1 had all five behind the gate; a bare `<span>&#9733;</span>` therefore
-    carried no letter and no space and was never judged at all.
+    TWO CHANNELS, TWO RULE SETS, NO OVERLAP (R10). Cycle 3 ran the glyph rule FIRST and on every
+    span, with a `glyph_only` flag suppressing the four typeset rules on fragments -- correct as
+    far as it went, but the glyph rule's reach was still whatever the SPAN CHANNELS happened to
+    cover, and three live sites printed five unowned marks outside them. The glyph rule now has
+    its own channel (every contiguous non-ASCII run of every carrier -- see glyph_runs) and the
+    four typeset rules keep theirs (bounded runs of copy that are whole thoughts). A span is
+    therefore judged by one set or the other and never by both, which is what stops a mark
+    inside a `>text<` run from being counted twice by a ratchet that counts sites.
 
-    GLYPH_ONLY is the third channel's gate, and it is a claim about the SPAN rather than about
-    the rules: a markdown line and a concatenated tail run are not whole thoughts, so the four
-    typeset rules have nothing well-formed to be true of. Markdown's typeset forms belong to
-    the compiler's typographer, and a tail run stops wherever its literal does.
+    The prose gate and the CODE gate stay under the four typeset rules, because each of those IS
+    a claim about prose and would otherwise demand that the corpus's SQL be retypeset. Font
+    ownership needs neither gate: a codepoint is unowned whether or not the string around it
+    reads as a sentence, which is why cycle 1's `<span>&#9733;</span>` went unjudged.
     """
-    hits = []
-    for ch in span:
-        if ord(ch) > 127 and ch not in OWNED:
-            hits.append(('glyph', 'U+%04X %s' % (ord(ch), ch)))
-    if glyph_only:
-        return hits
+    if mode == 'glyph':
+        return [('glyph', 'U+%04X %s' % (ord(ch), ch))
+                for ch in span if ord(ch) > 127 and ch not in OWNED]
     if not PROSE.search(span) or ' ' not in span.strip():
-        return hits
+        return []
     if CODE.search(span):
-        return hits
-    for name, rx, _why in RULES:
-        for m in rx.finditer(span):
-            hits.append((name, m.group(0)))
-    return hits
+        return []
+    return [(name, m.group(0)) for name, rx, _why in RULES for m in rx.finditer(span)]
 
 
 def key_of(path, span):
@@ -564,13 +770,13 @@ def key_of(path, span):
 # THIS function -- the one main() calls -- over synthetic file+allowlist pairs.
 
 
-def decide(path, line, span, glyph_only, ruled, used):
+def decide(path, line, span, mode, ruled, used):
     """The per-span decision: judge -> key -> allow lookup -> rule intersection -> count tally.
 
     Mutates `used` (key -> {'rules': set that fired, 'n': sites, 'lines': [line]}), which is
     what audit() then reads. Returns this span's findings, which may be empty.
     """
-    hits = judge(span, glyph_only)
+    hits = judge(span, mode)
     if not hits:
         return []
     key = key_of(path, span)
@@ -589,9 +795,9 @@ def sweep(files, ruled):
     """files: iterable of (path, text). -> (findings, used, scanned)."""
     findings, used, scanned = [], {}, 0
     for path, text in files:
-        for line, span, glyph_only in copy_spans(path, text):
+        for line, span, mode in copy_spans(path, text):
             scanned += 1
-            findings += decide(path, line, span, glyph_only, ruled, used)
+            findings += decide(path, line, span, mode, ruled, used)
     return findings, used, scanned
 
 
@@ -663,12 +869,62 @@ PLANTS_PRESSED = {
     # CYCLE 3. THE TEXT SINK -- copy that never passes through markup at all
     'glyph-sink': ("icon.textContent = '\\u2318';", 'fixture.js'),
     'glyph-attr': ("el.setAttribute('aria-label', 'Reset \\u21bb this topic');", 'fixture.js'),
+    # CYCLE 4 (R10). THE SINK WHOSE LITERAL IS NOT THE FIRST TOKEN, in the EXACT shipped shapes.
+    # `.textContent\s*=\s*<string>` matched neither of these, so pomodoro.js:70 printed U+2759 x2
+    # and U+25B6, touch-swipe.js:47 printed U+2039/U+203A, and session-progress.js:855 printed
+    # U+2318 -- five marks, three files, through a channel whose ledger said it read text sinks.
+    # BOTH FIXTURES CARRY THE MARK IN THE SECOND BRANCH, which is the half "the first token"
+    # could never reach; a check that stopped at the first literal would go green on both.
+    'glyph-ternary-sink': ("playBtn.textContent = running ? 'PAUSE' : '\\u25B6';", 'fixture.js'),
+    'glyph-ternary-attr': ("el.setAttribute('aria-label', on ? 'Pause' : 'Start \\u21bb');",
+                           'fixture.js'),
     # CYCLE 3. THE MARKDOWN DOOR -- 38 authored files that tracked_sources() did not take
     # NOTE THE FORM: markdown carries ENTITIES, not JS escapes, and ascii_guard forbids a raw
     # non-ASCII byte in src/topics-md -- so this is how an unowned mark actually reaches the
     # corpus, in both the shapes it takes there (inside an inline-HTML span, and in bare prose).
     'glyph-md':   ("A diagram chevron: <span class=\"dgm-v\">&#9660;</span> and a mark &#10148; "
                    "in plain prose.", 'fixture.md'),
+}
+# CYCLE 4 (R11). THE HEAD RUN, PRESSED ONCE PER TYPESET RULE. A head run is bounded on the right
+# by its own tag, so unlike a tail it routinely ends a complete sentence and all four rules are
+# well-founded on it -- which means all four have to be shown to fire there, not just one. These
+# are the shape of the four live debrief sites (drill/logic.js:1016/:1018/:1186), where a whole
+# verdict sentence sits before the literal's first <b>, and `>text<` saw only the two words
+# INSIDE the bold tag. Each entry names the rule that must come back.
+PLANTS_HEAD = {
+    # escaped, exactly as the live site writes it -- an unescaped ' would close the literal, and
+    # the scanner has to read through the escape to see the defect at all
+    'head-apostrophe': ("var v = 'You\\'re carrying the signals a senior loop grades on "
+                        "<b>unprompted</b>.';", 'apostrophe'),
+    'head-ellipsis':   ("var v = 'Loading the bank ... one moment <b>now</b>.';", 'ellipsis'),
+    'head-quote':      ('var v = \'She said "walk me through it" and <b>waited</b>.\';', 'quote'),
+    'head-dash':       ("var v = 'Staff is the thin rail - the level you <b>rehearsed</b> "
+                        "least.';", 'dash'),
+}
+# CYCLE 4 (R11). THE TAGLESS LITERAL. drill/logic.js:1189 is rendered copy with no markup in it
+# at all, so every tag-bounded channel misses it by construction; it reaches the screen through
+# an innerHTML a few lines later. The negative control beside it is the whole argument for the
+# bound: a three-word fragment and an unpunctuated one must NOT be judged.
+PLANT_BARE = ("var n = 'Below bar - the happy path isn\\'t enough. Work Walkthrough + "
+              "See-the-code, then run the round again.';", 'apostrophe')
+CLEAN_BARE = ("var a = 'Copy'; var b = 'don\\'t'; var c = 'Filter topics by name or tag';\n"
+              "var d = 'ddr.v1.progress.caching'; var e = 'no-store, max-age=0';\n"
+              # THE WORD BOUND'S OWN CONTROL, and it needs a literal that clears every OTHER
+              # condition -- tagless, punctuated, prose-shaped -- so that only the four-word
+              # bound is standing between it and a false failure. A range label is the honest
+              # case: the hyphen in `p50 - p99.` separates two endpoints and is not a hyphen
+              # doing an em dash's job, and a two-word label is not a sentence.
+              "var lbl = 'p50 - p99.'; var v = 'Rev. 3 - draft.';\n")
+# CYCLE 4 (R10). THE WIDENED SINK, PRESSED FOR THE THING ONLY IT CAN DO. The two ternary GLYPH
+# fixtures above are satisfied by the channel-free glyph rule whether the sink walks the whole
+# statement or stops at its first literal -- so they do NOT press the widening. What only the
+# widened sink can reach is a TYPESET defect in a far-branch literal that is too short for the
+# bare-literal channel and carries no tag: three words, no terminal mark, in the far branch.
+PLANTS_SINK = {
+    'sink-ternary-prose': ("el.placeholder = compact ? 'Filter' : 'the interviewer\\'s list';",
+                           'apostrophe'),
+    'attr-ternary-prose': ("el.setAttribute('title', on ? 'Pause' : 'the interviewer\\'s cue');",
+                           'apostrophe'),
 }
 # THE MARKDOWN NEGATIVE CONTROL. markdown-it runs with typographer:true, so these ARE typeset on
 # the way to the screen; reporting them would demand that a solved problem be solved again by
@@ -683,6 +939,11 @@ CLEAN_MD = (
 def rules_of(path, src):
     """[rule names] over one synthetic source, through the real scanner and the real judge."""
     return [h[0] for _l, s, g in copy_spans(path, src) for h in judge(s, g)]
+
+
+def hits_of(path, src):
+    """[(rule, matched text)] over one synthetic source -- rules_of with the evidence kept."""
+    return [h for _l, s, g in copy_spans(path, src) for h in judge(s, g)]
 
 
 def self_test():
@@ -719,6 +980,26 @@ def self_test():
         if 'glyph' not in got:
             problems.append('PRESSED PLANT "%s" UNDETECTED: %r produced %s -- this is a defect '
                             'the shipped check passed, and it is back' % (name, src, got or 'nothing'))
+    # ---- R11: THE HEAD RUN, ONCE PER TYPESET RULE, AND THE TAGLESS LITERAL ------------------
+    # A head run carries the four typeset rules (it ends at a tag the author wrote), so all four
+    # have to be shown to fire on it. An undetected one ABORTS: shipping a channel that carries
+    # four rules while only one of them can fire there is the "check that cannot fail" class
+    # this whole wave exists to close.
+    for name, (src, rule) in (list(PLANTS_HEAD.items()) + list(PLANTS_SINK.items())
+                              + [('bare-literal', PLANT_BARE)]):
+        got = rules_of('fixture.js', src)
+        if rule not in got:
+            problems.append('CHANNEL PLANT "%s" UNDETECTED: %r produced %s -- the rule %r is '
+                            'declared to run on this channel and does not fire there, so the '
+                            'channel carries fewer rules than its PASS line claims'
+                            % (name, src, got or 'nothing', rule))
+    clean_bare = hits_of('fixture.js', CLEAN_BARE)
+    if clean_bare:
+        problems.append('THE BARE-LITERAL CHANNEL IS UNBOUNDED: %s. A one-word label, an '
+                        'unpunctuated placeholder, a storage key and a two-word RANGE label '
+                        '(`p50 - p99.`, where the hyphen separates two endpoints) are not '
+                        'sentences. The bound is four words AND a terminal mark, and without '
+                        'it this channel starts demanding that labels be typeset.' % clean_bare)
     code = "var h = '<pre>-- badge: SELECT count(*) ... WHERE user_id=$1; -- seek</pre>';"
     if rules_of('fixture.js', code):
         problems.append('a CODE SAMPLE was judged as prose -- the rules would demand that the '
@@ -866,6 +1147,21 @@ def main():
         print('  (--report) refreshed the `lines` index of %d live entries in %s'
               % (len(used), os.path.relpath(ALLOW_FILE, ROOT)))
 
+    def say(s):
+        """print, on a console that cannot encode the marks this check is ABOUT.
+
+        The win32 gate console is cp1252, so `print` of a U+21BB raises UnicodeEncodeError --
+        which took the FAILURE branch down with a traceback instead of a report. The findings
+        loop already had a guard; the stale/grew/shrank loops did not, so the one path that
+        prints a ratcheted mark's own text was the one path that could crash. A check whose
+        failure output cannot be printed has no failure output.
+        """
+        try:
+            print(s)
+        except UnicodeEncodeError:
+            enc = getattr(sys.stdout, 'encoding', None) or 'ascii'
+            print(s.encode(enc, 'backslashreplace').decode(enc))
+
     by_rule = {}
     for f, line, rule, what, key in findings:
         by_rule.setdefault(rule, []).append((f, line, what, key))
@@ -873,11 +1169,17 @@ def main():
     print('=== CRAFT HYGIENE -- the typography the app prints ===')
     print('  copy spans scanned : %d, over %d authored source files (js/mjs/html/css/md)'
           % (scanned, len(sources)))
-    print('  four channels      : markup between two tags, the run after the LAST tag (glyph '
-          'only),\n                       text sinks (.textContent/.innerText/.placeholder/'
-          '.value,\n                       setAttribute title|aria-label|placeholder|alt), CSS '
-          'content:,\n                       and markdown marks (glyph only -- the typographer '
-          'owns the rest)')
+    print('  the GLYPH channel  : CHANNEL-FREE -- every contiguous non-ASCII run of every string')
+    print('                       literal, every CSS content: string, every markdown line and')
+    print('                       every HTML text/attribute run. Keyed at the MARK, bound to the')
+    print('                       FILE, counted per site.')
+    print('  the PROSE channels : markup between two tags, the HEAD run before a literal\'s first')
+    print('                       tag, title|aria-label|placeholder|alt values, a text sink\'s')
+    print('                       literals (.textContent/.innerText/.placeholder/.value and')
+    print('                       setAttribute -- the WHOLE statement, not its first token), a')
+    print('                       tagless whole sentence, and CSS content:. Four typeset rules,')
+    print('                       behind the prose gate and the CODE gate. Markdown is OUT: the')
+    print('                       compiler\'s typographer owns its apostrophes and dashes.')
     print('  ruled exceptions   : %d (all matched, at their declared sites and counts)' % len(ruled)
           if not (stale or over or grew or shrank)
           else '  ruled exceptions   : %d, %d STALE, %d over-declared, %d GREW, %d shrank'
@@ -886,50 +1188,56 @@ def main():
         rows = by_rule.get(rule, [])
         print('  %-11s %4d   %s' % (rule, len(rows), why))
         for f, line, what, key in rows[:8 if REPORT else 3]:
-            try:
-                print('       %s:%d  %r  in  %r' % (f, line, what, key[:70]))
-            except UnicodeEncodeError:
-                print('       %s:%d  (unprintable)  in  %r' % (f, line, key[:70].encode('ascii', 'replace').decode()))
+            say('       %s:%d  %r  in  %r' % (f, line, what, key[:70]))
 
     if stale:
         print('\n  STALE EXCEPTIONS -- these match nothing any more and must be deleted:')
         for k in stale[:10]:
             t = (ruled[k].get('text') or '')[:80]
-            print('       %s  %r' % (k, t))
+            say('       %s  %s  %r' % (k, ruled[k].get('file', '?'), t))
     if over:
         print('\n  OVER-DECLARED RULES -- the span is still here, this rule is not:')
         for k, r in over[:10]:
-            print('       %s  declares %r, which no longer fires' % (k, r))
+            say('       %s  declares %r, which no longer fires' % (k, r))
     if grew:
         print('\n  THE CLASS GREW -- more sites than the entry excuses. Fix them, or argue for'
               '\n  the higher count in `why`; a ratchet that silently absorbs new sites is not one:')
         for k, ent, want, got in grew[:10]:
-            print('       %s  %s  excuses %d, found %d' % (k, ent.get('file', '?'), want, got))
+            say('       %s  %s  excuses %d, found %d  %r'
+                % (k, ent.get('file', '?'), want, got, (ent.get('text') or '')[:40]))
     if shrank:
         print('\n  THE DEBT SHRANK -- fewer sites than declared, which is good news the file'
               '\n  has not been told. Lower the count (the list shortens without ceremony):')
         for k, ent, want, got in shrank[:10]:
-            print('       %s  %s  excuses %d, found %d' % (k, ent.get('file', '?'), want, got))
+            say('       %s  %s  excuses %d, found %d  %r'
+                % (k, ent.get('file', '?'), want, got, (ent.get('text') or '')[:40]))
 
     bad = len(findings) + len(stale) + len(over) + len(grew) + len(shrank)
     if bad:
         print('\nCRAFT HYGIENE: FAIL (%d violation(s), %d stale, %d over-declared, %d grew, %d shrank)'
               % (len(findings), len(stale), len(over), len(grew), len(shrank)))
         return 1
-    print('\n  12 planted defects detected in the self-test (three periods, a straight '
+    print('\n  %d planted defects detected in the self-test (three periods, a straight '
           'apostrophe, straight quotes, a hyphen doing a dash\u2019s job, a codepoint outside '
           'the app\u2019s own stack, a BARE glyph span with no prose around it, an unowned '
           'codepoint the app has never shipped, a glyph printed from CSS content:, a glyph at '
           'the TAIL of a concatenated literal, a glyph assigned through .textContent, one '
-          'through setAttribute, and one in a markdown file), plus five negative controls -- a '
-          'design comment, a CSS comment and a COMMENTED-OUT SINK that must NOT be judged, a '
-          'markdown fixture whose ellipses and apostrophes must NOT be judged (the compiler\u2019s '
-          'typographer owns those), and the ratchet\u2019s own machinery driven through decide() '
-          'and audit(): rules intersected, count enforced in BOTH directions, stale and '
-          'over-declared entries caught, and the key whole-span and site-bound')
-    print('CRAFT HYGIENE: PASS  (%d rendered-copy spans over four channels, %d ruled exceptions, '
-          'every one still matching something, each excused only from the rules it declares, '
-          'only in the file it names, and only as many times as it declares)'
+          'through setAttribute, one in a markdown file, a glyph in the FAR BRANCH of a ternary '
+          'sink and one in the far branch of a ternary setAttribute -- the exact two shipped '
+          'shapes cycle 3\u2019s first-token sink could not reach -- all FOUR typeset rules '
+          'pressed on a HEAD run, and a straight apostrophe in a TAGLESS sentence), plus six '
+          'negative controls -- a design comment, a CSS comment and a COMMENTED-OUT SINK that '
+          'must NOT be judged, a markdown fixture whose ellipses and apostrophes must NOT be '
+          'judged (the compiler\u2019s typographer owns those), a one-word label and an '
+          'unpunctuated placeholder that the bare-literal channel must NOT judge, and the '
+          'ratchet\u2019s own machinery driven through decide() and audit(): rules intersected, '
+          'count enforced in BOTH directions, stale and over-declared entries caught, and the '
+          'key whole-span and site-bound'
+          % (len(PLANTS) + len(PLANTS_PRESSED) + len(PLANTS_HEAD) + 1))
+    print('CRAFT HYGIENE: PASS  (%d rendered-copy spans; the glyph rule CHANNEL-FREE over every '
+          'string literal and the four typeset rules on six bounded prose channels; %d ruled '
+          'exceptions, every one still matching something, each excused only from the rules it '
+          'declares, only in the file it names, and only as many times as it declares)'
           % (scanned, len(ruled)))
     return 0
 

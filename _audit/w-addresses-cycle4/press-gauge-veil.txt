@@ -1,0 +1,55 @@
+P1 cycle-3 code + veil (the defect, live)      exit=0  want=0  OK
+      390px  light fill strip      5  --lv 0:0.2168 (n43)  0.3:0.1504 (n12)  0.55:0.1104 (n9)  0.78:0.0770 (n6)  1:0.0502 (n23)
+      tightest adjacent pair 0.3/0.55 = 1.249:1, floor 1.15, monotone
+P2 shipped fade wait + veil                    exit=1  want=1  OK
+      390px  light fill strip      5  --lv 0:0.2168 (n43)  0.3:0.1504 (n12)  0.55:0.1104 (n9)  0.78:0.0770 (n6)  1:0.0502 (n23)
+      tightest adjacent pair 0.3/0.55 = 1.249:1, floor 1.15, monotone
+      - [light/gauge@390] THE SHOT IS VEILED, so nothing below is a measurement of this design: the trough band reads Y 0.85683 (min 0.85683, max 0.85683) where the track itself declares rgb(241, 237, 228) = Y 0.84871, a gap of 0.00813 
+      - [light/gauge@390] THE SHOT IS VEILED, so nothing below is a measurement of this design: the trough band reads Y 0.85683 (min 0.85683, max 0.85683) where the track itself declares rgb(241, 237, 228) = Y 0.84871, a gap of 0.00813 
+      - [light/gauge@390] THE SHOT IS VEILED, so nothing below is a measurement of this design: the trough band reads Y 0.85683 (min 0.85683, max 0.85683) where the track itself declares rgb(241, 237, 228) = Y 0.84871, a gap of 0.00813 
+      - [light/gauge@390] THE SHOT IS VEILED, so nothing below is a measurement of this design: the trough band reads Y 0.85683 (min 0.85683, max 0.85683) where the track itself declares rgb(241, 237, 228) = Y 0.84871, a gap of 0.00813 
+      - [light/gauge@390] THE SHOT IS VEILED, so nothing below is a measurement of this design: the trough band reads Y 0.85683 (min 0.85683, max 0.85683) where the track itself declares rgb(241, 237, 228) = Y 0.84871, a gap of 0.00813 
+      - [light/gauge@390] THE SHOT IS VEILED, so nothing below is a measurement of this design: the trough band reads Y 0.85683 (min 0.85683, max 0.85683) where the track itself declares rgb(241, 237, 228) = Y 0.84871, a gap of 0.00813 
+P3 ground invariant vs a veil past the wait    exit=1  want=1  OK
+      390px  light fill strip      5  --lv 0:0.2168 (n43)  0.3:0.1504 (n12)  0.55:0.1104 (n9)  0.78:0.0770 (n6)  1:0.0502 (n23)
+      tightest adjacent pair 0.3/0.55 = 1.249:1, floor 1.15, monotone
+      - [light/gauge@390] THE SHOT IS VEILED, so nothing below is a measurement of this design: the trough band reads Y 0.85683 (min 0.85683, max 0.85683) where the track itself declares rgb(241, 237, 228) = Y 0.84871, a gap of 0.00813 
+      - [light/gauge@390] THE SHOT IS VEILED, so nothing below is a measurement of this design: the trough band reads Y 0.85683 (min 0.85683, max 0.85683) where the track itself declares rgb(241, 237, 228) = Y 0.84871, a gap of 0.00813 
+      - [light/gauge@390] THE SHOT IS VEILED, so nothing below is a measurement of this design: the trough band reads Y 0.85683 (min 0.85683, max 0.85683) where the track itself declares rgb(241, 237, 228) = Y 0.84871, a gap of 0.00813 
+      - [light/gauge@390] THE SHOT IS VEILED, so nothing below is a measurement of this design: the trough band reads Y 0.85683 (min 0.85683, max 0.85683) where the track itself declares rgb(241, 237, 228) = Y 0.84871, a gap of 0.00813 
+      - [light/gauge@390] THE SHOT IS VEILED, so nothing below is a measurement of this design: the trough band reads Y 0.85683 (min 0.85683, max 0.85683) where the track itself declares rgb(241, 237, 228) = Y 0.84871, a gap of 0.00813 
+      - [light/gauge@390] THE SHOT IS VEILED, so nothing below is a measurement of this design: the trough band reads Y 0.85683 (min 0.85683, max 0.85683) where the track itself declares rgb(241, 237, 228) = Y 0.84871, a gap of 0.00813 
+P4 ground invariant REVERTED, same veil        exit=0  want=0  OK
+      390px  light fill strip      5  --lv 0:0.2168 (n43)  0.3:0.1504 (n12)  0.55:0.1104 (n9)  0.78:0.0770 (n6)  1:0.0502 (n23)
+      tightest adjacent pair 0.3/0.55 = 1.249:1, floor 1.15, monotone
+P5 layout shift between geo and shot A         exit=1  want=1  OK
+      390px  light fill strip      5  --lv 0:0.7012 (n43)  0.3:0.6839 (n12)  0.55:0.6747 (n9)  0.78:0.6652 (n6)  1:0.6564 (n23)
+      tightest adjacent pair 0.78/1 = 1.013:1, floor 1.15, monotone
+      - [light/gauge@390] THE PANEL MOVED: the track was at (81.000, 1159.188) when the geometry was measured and is at (81.000, 1162.188) now. Every box below was computed against the first, so the removal diff is comparing misaligned 
+      - [light/gauge@390] THE SHOT IS VEILED, so nothing below is a measurement of this design: the trough band reads Y 0.92603 (min 0.77810, max 1.00000) where the track itself declares rgb(241, 237, 228) = Y 0.84871, a gap of 0.07733 
+      - [light/gauge@390] SEVERITY INVERTED AGAINST THE GROUND THE MARK ABUTS: the quietest MISSED keel is 1.13:1 against the band immediately above it while the loudest SHAKY keel is 3.10:1. The trough reading is not wrong, it is just 
+      - [light/gauge@390] MISSED keel measures 1.13:1 against the band immediately above it at its quietest, under the 3:1 non-text floor -- the mark clears the floor against the trough and disappears into the fill it is actually drawn 
+      - [light/gauge@390] SHAKY keel measures 1.27:1 against the band immediately above it at its quietest, under the 3:1 non-text floor -- the mark clears the floor against the trough and disappears into the fill it is actually drawn b
+      - [light/gauge@390] ADJACENT GRADES ARE NOT DISCRIMINABLE FROM THE FILL STRIP: --lv 0.78 and 1 differ by only 1.013:1 on a strip 4.00 CSS px tall (floor 1.15). The channel reserves 4px of a 8px capsule here, and the grade has nowh
+      - [light/gauge@390] THE SHOT IS VEILED, so nothing below is a measurement of this design: the trough band reads Y 0.92603 (min 0.77810, max 1.00000) where the track itself declares rgb(241, 237, 228) = Y 0.84871, a gap of 0.07733 
+      - [light/gauge@390] THE SHOT IS VEILED, so nothing below is a measurement of this design: the trough band reads Y 0.92603 (min 0.77810, max 1.00000) where the track itself declares rgb(241, 237, 228) = Y 0.84871, a gap of 0.07733 
+      - [light/gauge@390] THE SHOT IS VEILED, so nothing below is a measurement of this design: the trough band reads Y 0.92603 (min 0.77810, max 1.00000) where the track itself declares rgb(241, 237, 228) = Y 0.84871, a gap of 0.07733 
+      - [light/gauge@390] THE SHOT IS VEILED, so nothing below is a measurement of this design: the trough band reads Y 0.92603 (min 0.77810, max 1.00000) where the track itself declares rgb(241, 237, 228) = Y 0.84871, a gap of 0.07733 
+      - [light/gauge@390] THE SHOT IS VEILED, so nothing below is a measurement of this design: the trough band reads Y 0.92603 (min 0.77810, max 1.00000) where the track itself declares rgb(241, 237, 228) = Y 0.84871, a gap of 0.07733 
+P6 warm re-read forced to differ               exit=1  want=1  OK
+      390px  light fill strip      5  --lv 0:0.1765 (n43)  0.3:0.1136 (n12)  0.55:0.0772 (n9)  0.78:0.0496 (n6)  1:0.0275 (n23)
+      tightest adjacent pair 0.55/0.78 = 1.276:1, floor 1.15, monotone
+      - [light/gauge@390] THE COLD READING DOES NOT REPRODUCE THE WARM ONE: --lv 0 read 0.17646 cold and 0.18933 warm (0.01287); --lv 0.3 read 0.11361 cold and 0.12597 warm (0.01236); --lv 0.55 read 0.07715 cold and 0.08675 warm (0.0096
+
+RESTORED -- re-running the shipped file to confirm the tree is clean
+AFTER THE PRESS: exit=0  SCOREBOARD SALIENCE: PASS  (48 room x theme x score; Solid is the loudest tile whenever it is non-em
+
+6 presses, 0 unpressed
+P7 veil BEFORE the fade wait (the wait itself) exit=1  want=1  OK
+      throw new Error('timed out after ' + (ms || ACT_MS) + 'ms waiting for: ' + (label || fn.toString().slice(0, 120)));
+      Error: timed out after 30000ms waiting for: the ENTRANCE FADE to be over: every element from the gauge to the document root at opacity 1 with no animation still running on it (bodyIn was measured live at shot time in 4 of 8 cold p
+
+RESTORED -- re-running the shipped file to confirm the tree is clean
+AFTER THE PRESS: exit=0  SCOREBOARD SALIENCE: PASS  (48 room x theme x score; Solid is the loudest tile whenever it is non-em
+
+1 presses, 0 unpressed

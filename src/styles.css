@@ -3022,10 +3022,19 @@ html[data-theme="dark"][data-view="home"] #home{--mut:#A7A29A}
      R24). THE KEY IS ONE ROW OF 15px OR TWO ROWS OF 40px, never anything else, and with its 6px
      margin-top the hide is worth 21px or 46px -- 2.8% or 6.2% of the 742px live band at 390x844.
      Only the WRAP WIDTH moves, and the label text is what moves it. Swept 320..419 (and past the
-     band, to find each form's flip):
+     band, to find each form's flip), ON WIN32 -- the certification platform:
          four swatches, "Flagged"                     one row from 364  (21px at 364-419)
          five swatches, "Missed flagged"/"Shaky ..."  two rows to 510   (46px at EVERY width here)
          five swatches, "Missed"/"Shaky"  <- shipped  one row from 415  (21px at 415-419 only)
+     THESE WIDTHS ARE PLATFORM FIGURES, AND THAT IS MEASURED RATHER THAN HEDGED. The key wraps on
+     TEXT ADVANCE WIDTHS, which come from the OS font stack: the same shipped labels flip at 415
+     on win32 and at 426 on ubuntu-latest (dispatched to a runner and read back --
+     _audit/w-addresses-cycle10/press-legend-band.txt and the run cited beside it). So on Linux
+     the key is TWO rows across the whole of this block's band, with no one-row half at all. The
+     costs above -- 21px and 46px -- are unaffected either way; only WHERE the band changes over
+     moves. test/home_claims.cjs pins the row counts and the flip width on win32 only, and asserts
+     the platform-free half (the derived height, the two-row ceiling, narrow-wraps-no-less-than-
+     wide) everywhere.
      SO THE FIFTH SWATCH COSTS +25px ACROSS EFFECTIVELY THE WHOLE BAND, AND THAT IS ACCEPTED IN
      WRITING RATHER THAN ROUNDED AWAY. Cycle 9 added the swatch and the two long labels together
      and left the 364/21px arithmetic standing, which was false the moment it shipped: the key was
@@ -3039,9 +3048,10 @@ html[data-theme="dark"][data-view="home"] #home{--mut:#A7A29A}
      sits ABOVE the gauge in home-view.js html(), so nothing the gauge does to its own height can
      push the act out of the band. test/home_fold.cjs drives 360x844 and 390x844 every gate, and
      since cycle 10 the ROW COUNT AND HEIGHT ARE ASSERTED AT THIS BLOCK'S TWO ENDS -- 320 and 419
-     -- by test/home_claims.cjs, pressed by MUTANT 10d, which restores cycle 9's own long labels
-     and requires the cell to red. Change a label and that cell reds; re-sweep and rewrite this
-     paragraph rather than editing the number. */
+     -- by test/home_claims.cjs, which also finds the flip width by bisection on the live page and
+     prints it. MUTANT 10d presses all of it: it restores cycle 9's own long labels AT THE MEASURED
+     FLIP WIDTH and requires the key to wrap. Change a label and that cell moves; re-sweep and
+     rewrite this paragraph rather than editing the number. */
 }
 
 /* ---- the paired row ------------------------------------------------------------------------

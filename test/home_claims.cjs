@@ -1588,11 +1588,24 @@ const GEN_N = 24;
            MEASURED AT THE ENDS OF THE BAND THE BLOCK GOVERNS, 320 and 419, because the block's own
            sentence is about both halves and every "flipped no fold outcome" measurement before
            this was taken at 390 alone.
-           THE HEIGHT IS DERIVED, THE ROW COUNT IS PINNED. `wantH` is computed from the page's own
-           swatch height and row-gap, so the 15px/40px in the comment is re-derivable rather than
-           typed; only the row count -- the thing the label text moves and the thing the pixel
-           arithmetic turns on -- is asserted against the swept figure. A future label change reds
-           this cell and sends its author to the block that has to be re-derived. */
+           NOTHING HERE IS TYPED THAT COULD BE MEASURED. `wantH` is computed from the page's own
+           swatch height and row-gap, so the 15px/40px in the comment is re-derivable; and the
+           WRAP WIDTH is found by bisection on the live page rather than compared against a
+           constant, so a label change moves a reported number instead of tripping a literal.
+           AND THE PINNED ROW COUNTS ARE WIN32-ONLY, WHICH THIS CHECK LEARNED THE EXPENSIVE WAY
+           (cycle 10). The first version asserted `rows === 1` at 419 on every platform. The free
+           advisory lane reddened it within the hour, and the sweep dispatched to ubuntu-latest
+           says why: the shipped labels flip at 415 on win32 and at 426 on ubuntu -- the key wraps
+           on TEXT ADVANCE WIDTHS, which are a property of the OS font stack, and 419 falls between
+           the two. That is this repository's oldest cross-platform scar (a build that measured
+           text with OS fonts) arriving in a test. So the arm is split:
+             ALWAYS, on every platform -- the derived height identity, at most TWO rows (the
+             block's 21px/46px arithmetic assumes no more), and the narrow end wrapping no LESS
+             than the wide end. These are properties of the layout, not of a font.
+             WIN32 ONLY -- the row counts and the flip width the styles.css block records, because
+             the certification gate is the local win32 serial run and that block's pixel figures
+             are win32 figures. Off win32 the cell PRINTS what it measured and says it is not
+             pinned there, which is a scope statement rather than a silence. */
         const KEYGEO = () => {
           const k = document.querySelector('.hm-alt .hm-key');
           if (!k) return null;
@@ -1613,62 +1626,118 @@ const GEN_N = 24;
             labels: ks.map((x) => (x.textContent || '').trim()),
           };
         };
-        const ENDS = [[320, 2], [419, 1]];
-        const geo = [];
-        for (const [bw, wantRows] of ENDS) {
+        const WIN = process.platform === 'win32';
+        const PIN = { 320: 2, 419: 1, flip: 415 };     /* the win32 figures styles.css records */
+        const geoAt = async (bw) => {
           await page.setViewportSize({ width: bw, height: 844 });
           await page.evaluate(() => new Promise((res) => requestAnimationFrame(
             () => requestAnimationFrame(res))));
-          const g = await page.evaluate(KEYGEO);
-          geo.push([bw, wantRows, g]);
-          out.push(['[' + bw + '/' + name + '] the gauge key wraps to ' + wantRows + ' row(s) at '
-            + bw + 'px -- one end of the band the <=419px home block governs, whose recorded '
-            + 'pixel cost is a function of exactly this number -- and its height is what that '
-            + 'many rows of its own swatches and its own row-gap come to',
-            !!g && g.rows === wantRows && g.h === g.wantH,
+          return page.evaluate(KEYGEO);
+        };
+        const ends = {};
+        for (const bw of [320, 419]) {
+          const g = await geoAt(bw);
+          ends[bw] = g;
+          const derived = !!g && g.h === g.wantH && g.rows >= 1 && g.rows <= 2;
+          const pinned = !WIN || (!!g && g.rows === PIN[bw]);
+          out.push(['[' + bw + '/' + name + '] the gauge key\'s height at ' + bw + 'px -- one end '
+            + 'of the band the <=419px home block governs -- is exactly what its own swatches and '
+            + 'its own row-gap come to at the number of rows it actually wrapped to, and that '
+            + 'number is at most TWO, which is what the block\'s recorded pixel cost assumes'
+            + (WIN ? ' (and on win32, the certification platform, it is the swept figure: '
+              + PIN[bw] + ')' : ' (the row COUNT is not pinned off win32 -- see below)'),
+            derived && pinned,
             g ? (g.n + ' swatches ' + JSON.stringify(g.labels) + ' in ' + g.rows + ' row(s), '
               + 'height ' + g.h + 'px vs ' + g.wantH + 'px derived (' + g.rows + ' x '
               + g.swatch + 'px swatch + ' + (g.rows - 1) + ' x ' + g.gap + 'px row-gap), '
               + 'margin-top ' + g.mt + 'px, so hiding it would be worth '
-              + (Math.round((g.h + g.mt) * 100) / 100) + 'px here -- if this moved, '
-              + 'src/styles.css\'s @media(max-width:419px) key block has to be re-swept')
+              + (Math.round((g.h + g.mt) * 100) / 100) + 'px here'
+              + (WIN ? '; win32 expects ' + PIN[bw] + ' row(s), so if this moved, '
+                + 'src/styles.css\'s @media(max-width:419px) key block has to be re-swept'
+                : '; platform is ' + process.platform + ', where the wrap width differs because '
+                + 'text advance widths do -- measured 415 on win32 and 426 on ubuntu-latest for '
+                + 'these labels'))
               : 'no .hm-alt .hm-key at ' + bw + 'px']);
         }
+        out.push(['[' + name + '] and the NARROW end of the band wraps no less than the wide end '
+          + '-- a property of the layout rather than of a font, so it holds on every platform and '
+          + 'is what makes the two readings above one measurement instead of two',
+          !!ends[320] && !!ends[419] && ends[320].rows >= ends[419].rows,
+          '320px -> ' + (ends[320] ? ends[320].rows : '?') + ' row(s), 419px -> '
+          + (ends[419] ? ends[419].rows : '?') + ' row(s)']);
+
+        /* THE WRAP WIDTH IS FOUND, NOT COMPARED. Bisection over the widths where the key can go
+           from two rows to one, on the live page: it reports a number every run, on every
+           platform, and MUTANT 10d below lands AT that number rather than at a constant -- which
+           is the only way the plant works on a box whose fonts are not this one's. */
+        let flip = null;
+        {
+          let lo = 320, hi = 900;
+          const rowsAt = async (x) => ((await geoAt(x)) || {}).rows;
+          if (await rowsAt(hi) === 1 && await rowsAt(lo) === 2) {
+            while (hi - lo > 1) {
+              const mid = Math.floor((lo + hi) / 2);
+              if (await rowsAt(mid) === 1) hi = mid; else lo = mid;
+            }
+            flip = hi;
+          }
+        }
+        out.push(['[' + name + '] the key\'s WRAP WIDTH is found by bisection on the live page '
+          + 'and reported, so a label change moves a measured number instead of tripping a typed '
+          + 'one' + (WIN ? ' -- and on win32 it is the figure src/styles.css records' : ''),
+          flip !== null && (!WIN || flip === PIN.flip),
+          flip === null
+            ? 'no width between 320 and 900 flips the key from two rows to one, so the block\'s '
+              + 'whole one-row/two-row arithmetic describes a layout this build does not have'
+            : 'the key is ONE row from ' + flip + 'px up and TWO rows below it on '
+              + process.platform + (WIN ? ' (styles.css records ' + PIN.flip + ')'
+                : ' (not pinned off win32; ubuntu-latest measured 426 for these labels)')]);
 
         /* MUTANT 10d: THE DELIBERATELY WRAPPED KEY. The plant is not invented -- it restores the
            labels cycle 9 shipped ("Missed flagged" / "Shaky flagged"), which is the state whose
-           silent wrap this cell exists to catch, at the one end of the band where the shipped
-           build fits on one row. */
-        const wrapped = await page.evaluate(() => {
-          const m = document.querySelector('.hm-alt .hm-key .hm-k.flag .hm-lbl');
-          const s = document.querySelector('.hm-alt .hm-key .hm-k.flag-s .hm-lbl');
-          if (!m || !s) return null;
-          const was = [m.textContent, s.textContent];
-          m.textContent = 'Missed flagged';
-          s.textContent = 'Shaky flagged';
-          return was;
-        });
-        if (!wrapped) {
-          aborted = aborted || 'MUTANT 10d CANNOT LAND: the key renders no .hm-k.flag/.hm-k.flag-s '
-            + 'label to lengthen, so the row-count cell above was asserted about a legend whose '
-            + 'text nothing can move and it cannot fail.';
+           silent wrap this cell exists to catch. It is installed AT THE MEASURED FLIP WIDTH, the
+           narrowest width where this platform's own fonts fit the key on one row, so the plant
+           lands wherever the check runs instead of only where it was written. */
+        if (flip === null) {
+          aborted = aborted || 'MUTANT 10d CANNOT LAND: no width in 320..900 puts the key on one '
+            + 'row, so there is nowhere a longer label could be shown to WRAP it and the row-count '
+            + 'cells above have no plant.';
         } else {
-          await page.evaluate(() => new Promise((res) => requestAnimationFrame(
-            () => requestAnimationFrame(res))));
-          const bad10d = await page.evaluate(KEYGEO);
-          if (!bad10d || bad10d.rows === 1) {
-            aborted = aborted || 'MUTANT 10d UNDETECTED: with cycle 9\'s own labels restored the '
-              + 'key still measured ' + (bad10d ? bad10d.rows : '(unreadable)') + ' row(s) at '
-              + '419px, so the row-count cell cannot see a wrap and the pixel cost recorded in '
-              + 'src/styles.css is guarded by nothing.';
-          }
-          land('10d');
-          await page.evaluate((was) => {
+          const before = await geoAt(flip);
+          const wrapped = await page.evaluate(() => {
             const m = document.querySelector('.hm-alt .hm-key .hm-k.flag .hm-lbl');
             const s = document.querySelector('.hm-alt .hm-key .hm-k.flag-s .hm-lbl');
-            if (m) m.textContent = was[0];
-            if (s) s.textContent = was[1];
-          }, wrapped);
+            if (!m || !s) return null;
+            const was = [m.textContent, s.textContent];
+            m.textContent = 'Missed flagged';
+            s.textContent = 'Shaky flagged';
+            return was;
+          });
+          if (!wrapped || !before || before.rows !== 1) {
+            aborted = aborted || 'MUTANT 10d CANNOT LAND: at the measured flip width ' + flip
+              + 'px the key '
+              + (before ? 'renders ' + before.rows + ' row(s) rather than one' : 'did not render')
+              + (wrapped ? '' : ' and carries no .hm-k.flag/.hm-k.flag-s label to lengthen')
+              + ', so the row-count cells above were asserted about a legend nothing can move.';
+          } else {
+            await page.evaluate(() => new Promise((res) => requestAnimationFrame(
+              () => requestAnimationFrame(res))));
+            const bad10d = await page.evaluate(KEYGEO);
+            if (!bad10d || bad10d.rows <= before.rows) {
+              aborted = aborted || 'MUTANT 10d UNDETECTED: with cycle 9\'s own labels restored at '
+                + flip + 'px -- the width where this platform fits the key on one row -- it still '
+                + 'measured ' + (bad10d ? bad10d.rows : '(unreadable)') + ' row(s), so the '
+                + 'row-count cells cannot see a wrap and the pixel cost recorded in '
+                + 'src/styles.css is guarded by nothing.';
+            }
+            land('10d');
+            await page.evaluate((was) => {
+              const m = document.querySelector('.hm-alt .hm-key .hm-k.flag .hm-lbl');
+              const s = document.querySelector('.hm-alt .hm-key .hm-k.flag-s .hm-lbl');
+              if (m) m.textContent = was[0];
+              if (s) s.textContent = was[1];
+            }, wrapped);
+          }
         }
         await page.setViewportSize({ width: w, height: h });
       }

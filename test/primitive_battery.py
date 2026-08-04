@@ -207,7 +207,7 @@ def do_focus(n):
 
     The cold verify measured 1/7 under --fast against 0/52 serial and recommended the 30-run
     treatment touch_floor got. This is that battery. It does NOT run 30 full gates (~5 hours): the
-    variable under test is CONCURRENCY, not the other 72 checks, so each trial runs focus_ring
+    variable under test is CONCURRENCY, not the rest of the registry, so each trial runs focus_ring
     alongside three heavyweight browser siblings it competes with in the real gate.
 
     ===== WHY THIS NO LONGER GOES THROUGH `--fast`, AND WHY THAT IS THE POINT =====

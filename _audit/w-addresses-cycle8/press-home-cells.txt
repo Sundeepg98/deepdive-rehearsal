@@ -1,0 +1,29 @@
+=== W-ADDRESSES cycle 8 -- the new route x record cells, against the cycle-7 line ===
+
+SHIPPED build (dist/index.html): home_claims exit 0
+    #walk                  PASS
+    #drill                 PASS
+    #Walk                  PASS
+    #Nonsense              PASS
+    #HOME                  PASS
+    #<topic>/home          PASS
+    #/home  (NEW)          PASS
+    #<TOPIC>/home (NEW)    PASS
+
+MIRROR with the CYCLE-7 line restored verbatim: home_claims exit 1
+    #walk                  PASS
+    #drill                 PASS
+    #Walk                  PASS
+    #Nonsense              PASS
+    #HOME                  PASS
+    #<topic>/home          PASS
+    #/home  (NEW)          FAIL   <-- MOVED
+    #<TOPIC>/home (NEW)    FAIL   <-- MOVED
+
+  FAIL  [boot] a home-looking SECOND SEGMENT behind a prefix that is NOT a registered topic (#/home) is lit in the room of the topic the app actually shows -- the BOOT topic's -- and not in the resume target's: an EMPTY prefix on a home-looking second segment -- the shape boot.js's own comment enumerates beside #/walk, which parseHash resolves to a bare view because segment 0 is not a registered top
+     FAIL  [boot] a home-looking SECOND SEGMENT behind a prefix that is NOT a registered topic (#/home) is lit in the room of the topic the app actually shows -- the BOOT topic's -- and not in the resume target's: an EMPTY prefix on a home-looking second segment -- the shape boot.js's own comment enumera
+  FAIL  [boot] a home-looking SECOND SEGMENT behind a prefix that is NOT a registered topic (#AUTHZ/home) is lit in the room of the topic the app actually shows -- the BOOT topic's -- and not in the resume target's: the SAME topic slug in the WRONG CASE -- the registry lookup is case-sensitive (R16), so this is not a topic prefix and the app shows a bare view of the boot topic  -- the app shows arch
+     FAIL  [boot] a home-looking SECOND SEGMENT behind a prefix that is NOT a registered topic (#AUTHZ/home) is lit in the room of the topic the app actually shows -- the BOOT topic's -- and not in the resume target's: the SAME topic slug in the WRONG CASE -- the registry lookup is case-sensitive (R16), 
+
+VERDICT: both new cells RED under the pre-fix line: True; the six pre-existing cells unmoved: True; shipped build exit 0: True
+THE WORKTREE WAS NOT WRITTEN: dist/index.html unchanged: True

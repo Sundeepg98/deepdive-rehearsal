@@ -754,9 +754,16 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
     /* ---- IS THIS SHOT VEILED? ASKED OF THE PAGE, AT THE SHOT (cycle 5, judge item 1) ---------
        R12's fade condition is a `B.until` before the cell begins, and a wait proves a state
        BEFORE the shot, which is a different claim from the state AT it. The judges' run 3 walked
-       through it: a veil at alpha 0.9101 sitting across a whole 390/dark cell, exit 0, because
-       the only thing looking for a veil afterwards was the ground invariant and in dark the
-       ground invariant cannot see one at any alpha (see GROUND_EPS).
+       through it: a whole 390/dark cell whose absolute reading MOVED between runs, at exit 0,
+       because the only arm looking after the shot was the ground invariant and in dark the ground
+       invariant is INERT at every alpha above 0.474 (see GROUND_EPS) -- it was not reporting a
+       clean shot, it was reporting nothing.
+       THE CAUSE OF THAT MOVE IS NOT ATTRIBUTED HERE, and this sentence used to attribute it (to
+       "a veil at alpha 0.9101"). That clause is R17's, withdrawn in the GROUND_EPS block above
+       and left standing in this one for a cycle -- a FIFTH site of a retraction the ledger
+       declared complete at four, 350 lines below the paragraph that retracts it (cycle 8, judge
+       item 2). What the observation carries is that the reading moved and nothing could say why;
+       what closes the class is the read below, which needs no attribution to be a guard.
        THIS IS THE DIRECT QUESTION AND IT HAS NO EPSILON: every element from .hm-alt to the
        document root must compute opacity exactly '1', and no animation may be `running` on that
        chain. It is read in the SAME evaluate that reads the track's box immediately before
@@ -1140,7 +1147,7 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
           + ' against a canvas at Y ' + cDecl.toFixed(5) + '), so NO alpha can move ANY of them '
           + 'past the ' + GROUND_EPS + ' epsilon and this whole family of guards cannot fail. It '
           + 'is not reporting a clean shot, it is reporting nothing -- which is exactly how a '
-          + 'veil at alpha 0.91 crossed a whole dark cell at exit 0.');
+          + 'veil at alpha 0.91 COULD cross a whole dark cell at exit 0 without being seen.');
       }
       const tDecl = Y_OF_CSS(geo.trackBg);
       if (tDecl === null) {
@@ -1886,27 +1893,54 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
        background-color -- judge item 2's shape -- which the sweep's `painted()` gate could not
        see until this cycle. Same box, same position, same pointer-events; the only difference is
        which property carries the paint, so a narrowing of `painted()` back to backgroundColor
-       reds here and nowhere else. */
+       reds here and nowhere else.
+       THREE TIMES, AND THE THIRD IS `painted()`'s LAST UNPRESSED BRANCH (cycle 8, judge item 3).
+       `painted()` installed three reasons and cycle 7 planted two: I presses background-color, Ib
+       presses background-image, and NOTHING pressed backdrop-filter -- deleting that branch alone
+       left this check exit 0 with every mutant still caught, measured. MUTANT L2 is not a press of
+       it: L2 plants backdrop-filter on `#home`, an ANCESTOR, which the CHAIN read catches before
+       the sweep is consulted. The unpressed shape is the one that is invisible to everything else
+       -- a fixed `pointer-events:none` SIBLING (so neither the chain nor the hit stack can see it)
+       painted ONLY by a backdrop-filter over a transparent background-color -- and with the branch
+       gone it is invisible to the sweep as well. MUTANT Ic is that box, and P4g is its control. */
     const I_BOX = 'position:fixed;inset:0;pointer-events:none;z-index:2147483646;';
     const I_LIVE = (i) => {
       const d = document.getElementById(i);
       if (!d) return null;
       const cs = getComputedStyle(d), r = d.getBoundingClientRect();
       return { position: cs.position, opacity: cs.opacity, pointerEvents: cs.pointerEvents,
-        bg: cs.backgroundColor, bi: cs.backgroundImage, w: r.width, h: r.height };
+        bg: cs.backgroundColor, bi: cs.backgroundImage,
+        bf: cs.backdropFilter || cs.webkitBackdropFilter, w: r.width, h: r.height };
+    };
+    /* EACH FORM DECLARES WHICH COMPUTED PROPERTY IS CARRYING ITS PAINT, and the CANNOT-LAND
+       branch reads that property off the DOM rather than trusting the declaration. The three
+       forms exist to press three DIFFERENT branches of `painted()`, so a form whose paint did not
+       apply is not "the sweep failed to see it" -- it is a plant that painted nothing, and the
+       two readings must not be reported as the same thing. This is the same shape as the chain
+       plants' liveness fix in cycle 7: a plant that cannot land must SAY so, or a broken guard
+       gets to accuse it. */
+    const I_CARRY = {
+      I: (l) => !!l.bg && l.bg !== 'transparent' && !/rgba\([^)]*,\s*0\s*\)$/.test(l.bg),
+      Ib: (l) => !!l.bi && l.bi !== 'none',
+      Ic: (l) => !!l.bf && l.bf !== 'none',
     };
     const iForms = [
-      ['I', 'background:var(--bg);opacity:.10',
+      ['I', 'background:var(--bg);opacity:.10', 'background-color',
         'a full-viewport overlay at 10% with pointer-events off -- the literal shape of this '
         + 'app\'s own faded boot splash'],
       ['Ib', 'background-color:transparent;background-image:linear-gradient('
-        + 'rgba(0,0,0,.10),rgba(0,0,0,.10))',
+        + 'rgba(0,0,0,.10),rgba(0,0,0,.10))', 'background-image',
         'the same overlay painted by a GRADIENT over a transparent background-color, which the '
-        + 'sweep\'s paint test could not see until this cycle'],
+        + 'sweep\'s paint test could not see until cycle 7'],
+      ['Ic', 'background-color:transparent;backdrop-filter:blur(2px);'
+        + '-webkit-backdrop-filter:blur(2px)', 'backdrop-filter',
+        'the same overlay painted ONLY by a BACKDROP-FILTER over a transparent background-color '
+        + '-- the third of `painted()`\'s three reasons, and the one no plant pressed until cycle '
+        + '8 (MUTANT L2 puts backdrop-filter on an ANCESTOR, which the chain read catches first)'],
     ];
     const iOut = {};
     let mOut;
-    for (const [tag, paint, prose] of iForms) {
+    for (const [tag, paint, carrier, prose] of iForms) {
       const id = '_gauge_veil_' + tag;
       const [apply, revert] = domPlant(id, I_BOX + paint);
       await apply();
@@ -1919,18 +1953,25 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
       veilOut = fails; veiled = held;
       await revert();
       await B.settle(page);
+      const carries = !!live && I_CARRY[tag](live);
       const landed = !!live && live.position === 'fixed' && live.pointerEvents === 'none'
-        && live.w >= 100 && live.h >= 100;
+        && live.w >= 100 && live.h >= 100 && carries;
       const cov = namesVeil(sink, 'COVERING the track');
       iOut[tag] = !live ? 'CANNOT LAND (no node)'
-        : (!landed ? 'CANNOT LAND (' + live.position + '/' + live.pointerEvents + ')'
+        : (!landed ? 'CANNOT LAND (' + live.position + '/' + live.pointerEvents
+            + (carries ? '' : ', no ' + carrier) + ')'
           : (cov.length ? 'caught, named as a covering box'
             : (sink.length ? 'caught but NOT as a covering box' : 'NOT CAUGHT')));
       if (!landed) {
         fails.push(where + 'MUTANT ' + tag + ' CANNOT LAND: the planted overlay computes '
           + (live ? 'position ' + live.position + ', pointer-events ' + live.pointerEvents
-            + ', ' + live.w.toFixed(0) + 'x' + live.h.toFixed(0) : 'no element at all')
-          + ', so nothing was drawn over the panel and a green below would mean nothing.');
+            + ', ' + live.w.toFixed(0) + 'x' + live.h.toFixed(0)
+            + ', background-color ' + live.bg + ', background-image ' + live.bi.slice(0, 32)
+            + ', backdrop-filter ' + live.bf : 'no element at all')
+          + ', so ' + (live && !carries
+            ? 'the ' + carrier + ' this plant exists to press is not on the box and a green '
+              + 'below would press a different branch than the one it names'
+            : 'nothing was drawn over the panel and a green below would mean nothing') + '.');
       } else if (!sink.length) {
         fails.push(where + 'MUTANT ' + tag + ' UNDETECTED: ' + prose + ' -- covering the track\'s '
           + 'centre at ' + live.w.toFixed(0) + 'x' + live.h.toFixed(0) + ' -- was read as a clean '
@@ -2195,7 +2236,7 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
           : 'but NOT as a backdrop') : 'NOT CAUGHT')
         : 'inert by construction (light) -- and the cell reported '
           + (gSink.length ? 'VEILED' : 'clean'),
-      I: iOut.I, Ib: iOut.Ib, J: jOut, M: mOut, chain: chainOut,
+      I: iOut.I, Ib: iOut.Ib, Ic: iOut.Ic, J: jOut, M: mOut, chain: chainOut,
       H: mH && kH ? mH.min.toFixed(2) + ' vs ' + kH.max.toFixed(2)
         + ' = ' + (mH.min / kH.max).toFixed(3) : 'n/a',
       veiled: veiled,
@@ -2364,7 +2405,8 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
       console.log(L('', 7) + L('', 6) + L('', 12) + '  the SAME backdrop with pointer-events:none '
         + '(a pseudo of an ancestor, invisible to BOTH other reads) -> ' + g.mut.J);
       console.log(L('', 7) + L('', 6) + L('', 12) + '  a pointer-events:none SIBLING overlay -> '
-        + g.mut.I + ' | painted by a GRADIENT instead -> ' + g.mut.Ib);
+        + g.mut.I + ' | painted by a GRADIENT instead -> ' + g.mut.Ib
+        + ' | painted only by a BACKDROP-FILTER -> ' + g.mut.Ic);
       console.log(L('', 7) + L('', 6) + L('', 12) + '  a box painted only by its BORDER, which the sweep cannot see -> ' + g.mut.M);
       console.log(L('', 7) + L('', 6) + L('', 12) + '  the ancestor chain, one property at a time '
         + '-> ' + Object.keys(g.mut.chain || {}).map((k) => k + ' ' + g.mut.chain[k]).join(' | '));
@@ -2441,10 +2483,12 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
     + ' SWEEP does not reach paint arriving from a border or a box-shadow spread (only the hit'
     + ' stack does, which is what MUTANT M presses and why that limit is measured rather than'
     + ' asserted), and neither read reaches `.hm-alt`\'s own subtree, whose ::after IS the fill.'
-    + ' NINE PLANTED LANDINGS press it -- G a pseudo backdrop, J the same with pointer-events off,'
-    + ' I a pointer-events:none sibling, Ib the same painted by a gradient, M a box painted only'
+    + ' TEN PLANTED LANDINGS press it -- G a pseudo backdrop, J the same with pointer-events off,'
+    + ' I a pointer-events:none sibling, Ib the same painted by a gradient, Ic the same painted'
+    + ' only by a backdrop-filter, M a box painted only'
     + ' by its border, K an ancestor at opacity .91, and L the chain widening one property at a'
-    + ' time. Beside it, as a backstop, a declared-colour ground'
+    + ' time -- so each of `painted()`\'s three reasons has a plant of its own, which cycle 7\'s'
+    + ' nine did not. Beside it, as a backstop, a declared-colour ground'
     + ' invariant: the trough must equal the colour the track itself declares within '
     + GROUND_EPS + ' in the SAME shot -- and that arm now PRICES ITSELF per cell on the LARGEST'
     + ' lever the panel offers rather than on the trough\'s, failing where no alpha could move any'

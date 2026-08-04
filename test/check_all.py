@@ -86,8 +86,8 @@ def report(r):
 def fail_dump(name, r, status):
     """Keep the WHOLE output of a failing check; return a pointer to it.
 
-    report() above deliberately prints one line, because a summary of 58 rows is
-    only readable if each row is one line. But when a check CRASHES, its last
+    report() above deliberately prints one line, because a summary with a row per
+    registered check is only readable if each row is one line. But when a check CRASHES, its last
     line is the tail of a runtime's death notice -- `overlay_deadzone` once
     failed with a summary consisting entirely of `Node.js v25.2.1`. That is the
     last line of a stack dump whose actual exception, and the assertion that
@@ -792,17 +792,26 @@ BROWSER_CHECKS = [('render', 'test/render.cjs'), ('entity_leak', 'test/entity_le
                      # colour whatever its height"); for one cycle it was published and asserted
                      # by nothing, and a drift would have passed both cells while printing four
                      # different numbers.
-                     # THIRTEEN planted mutants, each a shipped or reachable defect put back: the
-                     # old keel wiring, the rule back to --bd, the waterline removed, two fill
-                     # steps flattened, the panel painted at its ground, --gauge-rule painted at
-                     # the panel, --keel-shaky collapsed onto --st-warn, and SEVEN VEILS -- a 10%
+                     # SEVENTEEN planted mutants, each a shipped or reachable defect put back and
+                     # each installed, read and reverted on its own -- SEVEN on the marks (the old
+                     # keel wiring, the rule back to --bd, the waterline removed, two fill steps
+                     # flattened, the panel painted at its ground, --gauge-rule painted at the
+                     # panel, --keel-shaky collapsed onto --st-warn) and TEN VEIL LANDINGS: a 10%
                      # full-viewport pseudo backdrop (dark only, where the arithmetic guards are
                      # weakest, with light as the negative control), the same backdrop with
                      # pointer-events:none, a pointer-events:none sibling overlay, the same
-                     # overlay painted by a gradient, a box painted only by its border, an
-                     # ancestor at opacity .91, and the chain widening pressed one property at a
-                     # time. Before cycle 7 the four-part veil guard had ONE plant that could fail
+                     # overlay painted by a gradient, the same overlay painted ONLY by a
+                     # backdrop-filter, a box painted only by its border, an ancestor at opacity
+                     # .91, and the chain widening pressed one property at a time (three
+                     # landings). This line said THIRTEEN and SEVEN VEILS through cycle 7, which
+                     # reproduces under neither convention -- 14 counting the chain widening once,
+                     # 16 counting it three times as the check's own "NINE PLANTED LANDINGS" does
+                     # -- so it is re-derived here from the mutant rows the run prints (cycle 8).
+                     # Before cycle 7 the four-part veil guard had ONE plant that could fail
                      # it: three of its four arms could be deleted with the gate still green.
+                     # Cycle 8 adds the tenth landing: painted() declares three reasons and only
+                     # two had a plant, so its backdrop-filter branch could be deleted alone with
+                     # this check still exit 0.
                      # THE FILL STRIP IS SAMPLED ON A BOX THAT IS THE SAME BOX AT EVERY SUB-PIXEL
                      # PHASE -- ceil/floor of the device edge rather than a rounded fraction, and
                      # inset past the capsule's corner arc -- with a same-shot control that
@@ -837,14 +846,18 @@ BROWSER_CHECKS = [('render', 'test/render.cjs'), ('entity_leak', 'test/entity_le
                      # move any of them past the epsilon; (3) the COLD first reading -- the only
                      # one a CI runner ever takes -- must reproduce a warm re-read later in the
                      # same run.
-                     # COST: 111.2s standalone on win32 (max of two warm `node
-                     # test/scoreboard_salience.cjs` runs), against cycle 6's 102.7s and cycle 5's
-                     # 90.5s -- the six added veil landings and the cross-width block are what the
-                     # 8.5s buys.
+                     # COST: 119.2s standalone on win32 (max of two warm `node
+                     # test/scoreboard_salience.cjs` runs -- 117.1s and 119.2s), against cycle 7's
+                     # 111.2s, cycle 6's 102.7s and cycle 5's 90.5s. The tenth veil landing
+                     # (MUTANT Ic) is one more plant-settle-read-revert cycle in each of the four
+                     # cells, which is what the 8s buys.
                      # THE IN-GATE FIGURE IS test/gate_cost.json, which is a committed per-check
                      # cost table derived from a --profile run and is what run_fast packs its lanes
-                     # from: 106.984s there, regenerated in cycle 7 as max(two warm --profile runs)
-                     # of this tree (763.6s and 773.4s wall, both GATE: PASS). It had stood at
+                     # from: 110.691s there, regenerated in cycle 8 as max(two warm --profile runs)
+                     # of this tree (878.4s and 867.2s wall, both GATE: PASS -- the whole table
+                     # moved up ~14% against cycle 7's 763.6/773.4s pair on a busier box, so the
+                     # RATIOS pack the lanes and the absolute figures are this box's). It had
+                     # stood at
                      # 44.775 -- less than half the check's cost after cycles 4 and 5 doubled it --
                      # and craft_hygiene and home_fold were MISSING from it entirely. Cycle 5's
                      # entry said "the gate prints no per-check timing, so no in-gate figure is
@@ -1250,7 +1263,7 @@ BROWSER_CHECKS = [('render', 'test/render.cjs'), ('entity_leak', 'test/entity_le
                      # watched from document_start by a MutationObserver AND by a per-frame
                      # sampler, and judged on the UNION -- a WRONG stamp is a value in the log, a
                      # MISSING one is a gap in the paint, and each recorder is blind to the other.
-                     # The route x record matrix drives SIX route shapes on a seeded record, not
+                     # The route x record matrix drives EIGHT route shapes on a seeded record, not
                      # one: a bare view (#walk, #drill), a MIXED-CASE view (#Walk) and a MALFORMED
                      # hash (#Nonsense) must all be lit in the room of the topic the app actually
                      # shows, while #home and #HOME take the resume target's room -- because the
@@ -1262,8 +1275,17 @@ BROWSER_CHECKS = [('render', 'test/render.cjs'), ('entity_leak', 'test/entity_le
                      # shape, router.js's own setTopic() comment records that a topic switch on
                      # the home used to rewrite the hash that way via replaceState and
                      # copy-link.js copies location.href verbatim, so those URLs are in the wild
-                     # (cycle 7, R19). Its three rooms -- resume, boot, prefix -- are asserted
-                     # DISTINCT before the cell runs, or it aborts. Plus the rail descriptions: every
+                     # (cycle 7, R19). The seventh and eighth pin the OTHER side of that
+                     # precedence and exist because the first six could not (cycle 8, R21): an
+                     # EMPTY prefix (#/home) and the same topic slug in the WRONG CASE
+                     # (#<TOPIC>/home) are NOT stripped by parseHash, so they are bare views of
+                     # the BOOT topic -- and a home test that reads segment 1 without asking
+                     # whether segment 0 is a registered topic lights the RESUME room on both,
+                     # which is what cycle 7's own fix shipped, on nine measured shapes, with all
+                     # six existing cells green. All three rooms -- resume, boot, prefix -- are
+                     # asserted DISTINCT before the block runs, in all THREE pairs (the
+                     # resume-vs-boot pair was claimed and unchecked for a cycle), or it aborts
+                     # naming which two collided. Plus the rail descriptions: every
                      # rail the gauge renders, selected by POSITION rather than by the
                      # aria-describedby tie, its description EQUAL character for character to an
                      # oracle formatted from the registry, one clause per rendered segment.
@@ -1332,6 +1354,12 @@ BROWSER_SET = set(n for n, _ in BROWSER_CHECKS)
 # file, so the assertion belongs where the edit lands and must fire before any of the 78 run --
 # on --dry-run, --only, --changed and the serial capture alike. It also keeps the gate's own count
 # at 78: this is the gate auditing its own table, not a 79th check.
+# ONE EXEMPTION, AND IT IS THE PRODUCER (cycle 8, R20). --profile REPORTS the mismatch and does
+# not exit on it, because --profile is the mode that writes test/_profile.json -- the file the
+# remedy below tells you to rebuild the table from. Fatal in every mode, this arm blocked its own
+# printed repair path: the remedy's first command exited 1 before a check ran. Every other mode,
+# --only included, stays strict; the closed loop (mismatch -> --profile twice -> write max(run2,
+# run3) -> --dry-run exit 0) is walked end to end in the cycle-8 receipt rather than asserted.
 COST = {}
 if os.path.exists(COST_FILE):
     try:
@@ -1359,8 +1387,27 @@ if _cost_missing or _cost_extra:
     print('  of a fresh profile is cold and is not the packing cost), then write, per check,')
     print('  max(run2, run3) from test/_profile.json into %s.' % COST_FILE)
     print('  That rule is _profile_report.py\'s, not this line\'s -- see its ranked table.')
+    print('  --profile IS EXEMPT FROM THIS ABORT (it is the producer of the very file this')
+    print('  block demands), so the instruction above is executable exactly as written: the')
+    print('  mismatch is reported in every mode and only --profile is allowed past it.')
     print('=' * 64)
-    sys.exit(1)
+    # THE PRODUCER IS EXEMPT (cycle 8, R20). Cycle 7 installed this arm and made it fatal in
+    # every mode -- including the ONE mode whose entire job is to write test/_profile.json, the
+    # file the remedy four lines above tells you to regenerate the table from. So the printed
+    # instruction could not be followed: the first command in it exited 1 before a single check
+    # ran, and the only way out was to hand-edit the table the arm exists to stop being
+    # hand-edited. A remedy that does not walk is not a remedy, and a guard that blocks its own
+    # repair path is a deadlock rather than a gate.
+    # THE REPORT IS UNCONDITIONAL AND ONLY THE EXIT IS GATED -- under --profile the mismatch is
+    # still printed in full, with every missing and stale name, so a profile run that regenerates
+    # the table still says loudly that the table was wrong when it started.
+    # --only STAYS STRICT DELIBERATELY. A new check arrives with six red shards until its row is
+    # in the table, and that is the discipline that forces the table update into the same commit
+    # as the check. The deadlock was never the strictness; it was the producer strangled by its
+    # own guard.
+    if not PROFILE:
+        sys.exit(1)
+    print('  cost table mismatch -- proceeding so this run can regenerate the table')
 results = {}
 timings = {}
 _lock = threading.Lock()
@@ -1476,7 +1523,8 @@ def run_fast(jobs, sel):
 # the inner loop, and it is the one part of this file that can tell you a lie of omission: a green
 # --changed run means "the checks I selected passed", and the checks it did not select are the
 # ones nobody looked at. It therefore says so in a banner, prints ONLY the checks it ran (a table
-# of 77 rows with 60 of them blank is exactly how a partial run gets read as a full one), and
+# with a row per REGISTERED check and most of them blank is exactly how a partial run gets read as
+# a full one), and
 # stamps full_coverage:false (and capture_of_record:false) into any --verdicts file it writes.
 #
 # THE MAP IS DELIBERATELY COARSE AND FAILS TOWARDS RUNNING MORE. Each entry is a path prefix and

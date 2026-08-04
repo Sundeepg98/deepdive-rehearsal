@@ -1340,7 +1340,8 @@ const GEN_N = 24;
   /* ================== THE STEPPER IS PRESSED, AND NOTHING ELSE IN THE GATE PRESSES IT ==========
    * THE GAP THIS CLOSES, stated plainly because it is the root cause of the defect it guards:
    * `grep -rn "data-goal" test/` returned TWO files before this section -- touch_floor.cjs
-   * (getBoundingClientRect only) and focus_ring.cjs (programmatic .focus() only). Across 77 checks
+   * (getBoundingClientRect only) and focus_ring.cjs (programmatic .focus() only). Across the whole
+   * gate (77 checks on the day this was measured, cycle 1)
    * NOTHING PRESSED THIS CONTROL. So the whole [data-goal] interaction path -- clamp, re-render,
    * focus, announcement -- was unguarded, on a control this wave rebuilt to 44px and, by hoisting
    * goalStrip() out of the engaged() gate, put on the first-run home of every new user.
@@ -2002,7 +2003,28 @@ const GEN_N = 24;
          fell through to the boot topic" and "the door followed the prefix" cannot be told apart
          and a pass would mean nothing. `authz` is the topic R19 names; if the registry ever puts
          it in the resume or boot room, any topic outside both is used instead and the arm says
-         which. */
+         which.
+         THE ABORT COVERS ALL THREE PAIRS, NOT TWO OF THEM (cycle 8, judge item 4). `ok(id)` asked
+         prefix-vs-resume and prefix-vs-boot; nothing asked RESUME-vs-BOOT, and `pick` upstream
+         only guarantees `pick.group !== cold`. If the registry ever put the resume topic and the
+         boot topic in one room, "the door followed the record" and "the door fell through to the
+         boot topic" would be the same string and every cell in this block -- the prefixed one and
+         the two below it, which assert OPPOSITE answers -- would pass either way, silently. It
+         holds today and is measured rather than assumed; the sentence claiming three pairs is now
+         true of the code.
+         AND TWO CELLS PRESS THE OTHER DIRECTION (cycle 8, R21). R19's expression tested segment 1
+         for `home` with NO condition on segment 0, which took the door's answer on every
+         `#<anything>/home` -- and `parseHash` only strips segment 0 when it is a REGISTERED TOPIC,
+         so on `#/home` and `#AUTHZ/home` the app shows a bare view of the BOOT topic while the
+         document wore the RESUME room, permanently. The six shapes this arm drove could not see
+         it: every one of them either has no second segment or carries a registered topic in the
+         first, so none could tell "the home test reads segment 1" from "the home test reads
+         segment 1 only behind a topic". These two are the shapes that can: an EMPTY prefix (the
+         boot comment's own enumerated sibling) and the SAME topic slug in the WRONG CASE (the
+         registry lookup is case-sensitive, which is R16's axis). Both are bare views of the boot
+         topic, so the oracle is the same one the bare-view cells use -- the room of the topic the
+         app is actually showing -- and together with the cell above they pin BOTH directions of
+         the precedence. */
       {
         const px = await (async () => {
           const pp = await ctx.newPage();
@@ -2015,20 +2037,32 @@ const GEN_N = 24;
               const g = roomOf(id);
               return !!g && g !== p.group && g !== boot;
             };
-            if (ok('authz')) return { id: 'authz', group: roomOf('authz'), boot };
+            const base = { id: null, group: null, boot, clash: p.group === boot ? 'the resume '
+              + 'room and the boot room are both ' + boot : null };
+            if (base.clash) return base;
+            if (ok('authz')) return { id: 'authz', group: roomOf('authz'), boot, clash: null };
             for (const id of TopicRegistry.ids()) {
-              if (ok(id)) return { id, group: roomOf(id), boot };
+              if (ok(id)) return { id, group: roomOf(id), boot, clash: null };
             }
-            return { id: null, group: null, boot };
+            return base;
           }, pick);
           await pp.close();
           return v;
         })();
-        if (!px.id) {
+        const upper = px.id ? px.id.toUpperCase() : '';
+        if (px.clash) {
+          aborted = aborted || 'THE TOPIC-PREFIXED HOME CELLS CANNOT LAND: ' + px.clash + ', so '
+            + '"the door followed the record" and "the door fell through to the boot topic" are '
+            + 'the same string and all three cells in this block would pass either way.';
+        } else if (!px.id) {
           aborted = aborted || 'THE TOPIC-PREFIXED HOME CELL CANNOT LAND: no registered topic sits '
             + 'outside both the resume room (' + pick.group + ') and the boot room (' + px.boot
             + '), so a door that followed the prefix and a door that followed the record are the '
             + 'same string and the cell would prove nothing.';
+        } else if (upper === px.id) {
+          aborted = aborted || 'THE WRONG-CASE PREFIX CELL CANNOT LAND: the topic slug ' + px.id
+            + ' is unchanged by toUpperCase(), so the case trap is not a trap and the cell would '
+            + 'be a second copy of the topic-prefixed cell above it.';
         } else {
           const pf = await frames(pick.id, null, { hash: '#' + px.id + '/home' });
           const wore = pf.seen.concat(pf.frames);
@@ -2039,6 +2073,31 @@ const GEN_N = 24;
             'the record resumes ' + pick.id + ' (' + pick.group + '), the prefix names ' + px.id
             + ' (' + px.group + '), the boot topic is in ' + px.boot + '; stamps ['
             + pf.seen.join(',') + '] / frames ' + rle(pf.frames)]);
+
+          /* THE OTHER SIDE OF THE PRECEDENCE, AND THE CELL R19 SHIPPED A REGRESSION THROUGH.
+             `#/home` has an EMPTY first segment, `#<TOPIC>/home` has one the case-sensitive
+             registry lookup refuses -- so parseHash strips neither, the view is segment 0, and
+             both are bare views of the BOOT topic with `home` as a sub-state. A door that reads
+             segment 1 unconditionally lights the RESUME room on both. */
+          for (const [h, why] of [
+            ['#/home', 'an EMPTY prefix on a home-looking second segment -- the shape boot.js\'s '
+              + 'own comment enumerates beside #/walk, which parseHash resolves to a bare view '
+              + 'because segment 0 is not a registered topic'],
+            ['#' + upper + '/home', 'the SAME topic slug in the WRONG CASE -- the registry lookup '
+              + 'is case-sensitive (R16), so this is not a topic prefix and the app shows a bare '
+              + 'view of the boot topic'],
+          ]) {
+            const uf = await frames(pick.id, null, { hash: h });
+            const uwore = uf.seen.concat(uf.frames);
+            out.push(['[boot] a home-looking SECOND SEGMENT behind a prefix that is NOT a '
+              + 'registered topic (' + h + ') is lit in the room of the topic the app actually '
+              + 'shows -- the BOOT topic\'s -- and not in the resume target\'s: ' + why,
+              !!uf.shown && uf.shown !== pick.group && uwore.length > 0
+                && uwore.every((v) => v === uf.shown),
+              'the app shows ' + uf.shown + ' while the record resumes ' + pick.id + ' ('
+              + pick.group + ') and the boot topic is in ' + px.boot + '; stamps ['
+              + uf.seen.join(',') + '] / frames ' + rle(uf.frames)]);
+          }
         }
       }
       const mD = await frames(pick.id, 'record', { hash: '#walk' });
@@ -2148,11 +2207,17 @@ const GEN_N = 24;
     + 'four route x record cells, because every load was #home and the one bare-view load ran on '
     + 'an EMPTY record -- the ONE record class in which the bare-view defect cannot appear, '
     + 'since with nothing to resume the record branch falls through to the route branch '
-    + 'anyway. SIX ROUTE SHAPES now -- a bare view (#walk, #drill), a MIXED-CASE view '
-    + '(#Walk), a MALFORMED hash (#Nonsense), the home in the wrong case (#HOME) and a '
+    + 'anyway. EIGHT ROUTE SHAPES now -- a bare view (#walk, #drill), a MIXED-CASE view '
+    + '(#Walk), a MALFORMED hash (#Nonsense), the home in the wrong case (#HOME), a '
     + 'TOPIC-PREFIXED HOME (#<topic>/home, the shape router.js\'s own replaceState used to '
     + 'write and copy-link.js still copies verbatim, whose room is the RESUME target\'s and '
-    + 'not the prefix\'s) -- and the precedence between nav.last and the newest graded '
+    + 'not the prefix\'s) and the two shapes that pin the OTHER side of that precedence -- an '
+    + 'EMPTY prefix (#/home) and the same slug in the WRONG CASE (#<TOPIC>/home), which '
+    + 'parseHash does not strip and which are therefore bare views of the BOOT topic. The six '
+    + 'shapes before those two all either had no second segment or carried a registered topic '
+    + 'in the first, so none of them could tell "the home test reads segment 1" from "the home '
+    + 'test reads segment 1 ONLY BEHIND A TOPIC" -- and a widened predicate shipped green '
+    + 'through that gap for a cycle. And the precedence between nav.last and the newest graded '
     + 'record is driven in both directions against Panels.resumeTarget() read from the page '
     + 'rather than against a constant)'
     + ' -- every one of them a defect a judge or a battery found on a shipped build');

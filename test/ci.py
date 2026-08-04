@@ -9,7 +9,7 @@ them here. Requires: gh CLI authenticated (it is, on this box).
                         [--shards 5] [--ref <branch>] [--install chromium|none|...]
                         [--timeout 30] [--push] [--nowait]
   python test/ci.py gate [--shards 6] [--ref <branch>] [--nowait]
-      -> the fast advisory gate: all 76 checks sharded, verdict in ~6-8 min.
+      -> the fast advisory gate: all {N} checks sharded, verdict in ~6-8 min.
          ADVISORY (each shard stamps full_coverage:false by construction);
          the certification stays the local win32 serial gate.
   python test/ci.py status [<run-id>]
@@ -26,7 +26,14 @@ them here. Requires: gh CLI authenticated (it is, on this box).
 
 Lanes, honestly labeled: local --changed = instant, partial, non-certifying.
 warm run = seconds, targeted, non-certifying. gate (sharded cold) = minutes,
-all 76, advisory. The local win32 serial gate = the certification.
+all {N}, advisory. The local win32 serial gate = the certification.
+
+Both counts above are FORMATTED FROM THE REGISTRY at print time, not typed:
+this file said 76 for two cycles after the gate reached 78 -- in the file that
+dispatches the lanes -- because three prose strings held a digit and nothing
+could tell them they were stale. The count comes from ci_shard_gate.py's own
+AST extraction of check_all.py's ORDER, which is the same source the shards
+are cut from, so the number here and the number that runs cannot disagree.
 
 Discipline: dispatch EARLY (before you need the answer), keep building, consume
 at your next natural boundary -- pipelined CI has effectively zero latency.
@@ -43,6 +50,28 @@ from typing import NoReturn
 
 REPO = Path(__file__).resolve().parent.parent
 WORKFLOW = 'ci-exec.yml'
+
+
+def registered_checks():
+    """How many checks the gate registers, read from check_all.py itself.
+
+    Reuses ci_shard_gate.extract_order() -- the AST walk the shard cutter already
+    owns and the one the shards are actually cut from -- rather than a second
+    copy of it here. Returns None (never a guess) if the registry cannot be read,
+    and the callers then print the sentence without a number rather than a wrong
+    one."""
+    try:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import ci_shard_gate
+        return len(ci_shard_gate.extract_order())
+    except Exception:
+        return None
+
+
+def counted(text):
+    """Substitute {N} in help text with the registry's count, once, at print time."""
+    n = registered_checks()
+    return text.replace('{N}', str(n) if n else 'the registered')
 
 
 def sh(args, **kw):
@@ -199,7 +228,7 @@ def warm(a):
 
 
 def main():
-    p = argparse.ArgumentParser(description=__doc__,
+    p = argparse.ArgumentParser(description=counted(__doc__),
                                 formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = p.add_subparsers(dest='op', required=True)
 
@@ -218,7 +247,7 @@ def main():
     sp.add_argument('--cmd', required=True)
     add_common(sp)
 
-    sp = sub.add_parser('gate', help='fast advisory gate: 76 checks sharded')
+    sp = sub.add_parser('gate', help=counted('fast advisory gate: {N} checks sharded'))
     sp.add_argument('--except', dest='except_', default=None,
                     help='comma list of checks to drop (windows auto-drops '
                          'visual_regression; pass --except "" to override)')

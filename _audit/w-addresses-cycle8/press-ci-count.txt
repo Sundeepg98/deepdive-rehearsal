@@ -1,0 +1,16 @@
+=== W-ADDRESSES cycle 8 -- judge item 6: can ci.py print a wrong check count? ===
+
+THE REGISTRY: check_all.py registers 78 checks (AST extraction, ci_shard_gate.extract_order)
+ci.py prints, at its three sites: ['78', '78', '78']
+
+THE PLANT: one check added to the registry (a scratch mirror, 79 checks)
+ci.py now prints, at its three sites:  ['79', '79', '79']
+  -> the DERIVED count moved with the registry: True
+
+THE CONTROL -- the SAME registry change against cycle 7's ci.py (git HEAD):
+  its three sites are literals and read ['76', '76', '76'] under BOTH registries -- they could not move, which is the defect
+  (the gate registered 78 at that commit, so all three were stale by 2)
+
+VERDICT: derived count tracks the registry: True | the typed form was inert: True | old file: ['76', '76', '76'] -- new file: ['79', '79', '79']
+
+RESTORED: ci_shard_gate.CHECK_ALL -> check_all.py; ci.py prints ['78', '78', '78']; the worktree was not written.

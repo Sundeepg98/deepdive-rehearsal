@@ -81,14 +81,30 @@ try{var _dk=matchMedia('(prefers-color-scheme:dark)').matches;document.documentE
    segment as well as the first. The deeper repair -- the router not writing that URL in the first
    place, by stripping a topic prefix off a topicless view at replaceState -- is a W2 candidate
    and is deliberately NOT done here: this file's job is to light the door correctly on the URLs
-   that exist, and a stale link in someone's notes will outlive any router fix. */
+   that exist, and a stale link in someone's notes will outlive any router fix.
+
+   AND THE SECOND-SEGMENT TEST IS GATED ON THE PREFIX BEING A TOPIC (cycle 8, R21 -- which AMENDS
+   R19). R19's line asked `(_raw.split('/')[1]||'').toLowerCase()==='home'` with no condition on
+   the FIRST segment, and that shipped this wave's own defect class one door over: `#walk/home`,
+   `#drill/home`, `#viz/home`, `#wb/home`, `#/home`, `#Walk/home`, `#walk/HOME`, `#nonsense/home`
+   and `#AUTHZ/home` all took the DOOR's answer, so on a seeded record the whole document wore the
+   RESUME room while the app was showing a bare view of the BOOT topic -- permanently, since a
+   bare-view boot never switches and never re-stamps. Measured on the built page: nine shapes, the
+   wrong room as the ONLY value in the document_start mutation log and across 90 painted frames.
+   parseHash strips segment 0 ONLY when `TopicRegistry.get(parts[0]) && !ROUTES[parts[0]]`
+   (router.js:41), so a second segment is a VIEW only when the first is a registered topic; on
+   every other shape segment 0 IS the view and `home` in segment 1 is a sub-state, not a route.
+   `_hr` is precisely that predicate -- the id->room lookup is case-sensitive over the registry's
+   lower-case slugs and router.js's own comment records that a topic slug can never equal one of
+   the view ids -- so the test is `_hr && segment-1 is home`, which is the router's condition and
+   not a second guess at it. */
 window.__doorRooms={'messaging-events':'cdc event-driven kafka-internals notifications real-time-delivery saga stream-batch-processing','data-storage':'caching consistency-models consistent-hashing eav probabilistic-structures replication sharding-strategies shared-definition soft-delete storage-engines','reliability-observability':'backpressure circuit-breaker debugging error-propagation idempotency observability retries-timeouts slos','platform-infra':'autoscaling aws-hardening desired-state developer-platform devices-dispatch distributed-locks iac lambda-organization leader-election load-balancing multi-region','architecture-apis':'api-design content-pipeline feature-flags microfrontend rate-limiting rules-engine state-machine','security-tenancy':'authz multi-tenant signing'};
 window.__doorBoot='content-pipeline';window.__doorCold='event-driven';
 try{
   var _rm=function(i){if(!i)return '';for(var g in window.__doorRooms){if((' '+window.__doorRooms[g]+' ').indexOf(' '+i+' ')>-1)return g;}return '';},_raw=(location.hash||'').replace(/^#/,''),_seg=_raw.split('/')[0]||'',_nl=null,_bt=0,_bi='',_k,_p,_i;
   try{_nl=JSON.parse(localStorage.getItem('ddr.v1.nav.last')||'null');for(_i=0;_i<localStorage.length;_i++){_k=localStorage.key(_i);if(_k&&_k.indexOf('ddr.v1.progress.')===0){_p=JSON.parse(localStorage.getItem(_k)||'null');if(_p&&_p.ts>_bt){_bt=_p.ts;_bi=_k.slice(16);}}}}catch(e2){}
   var _hr=_rm(_seg),_door=_rm(_nl&&_nl.id)||_rm(_bi)||_rm(window.__doorCold);
-  var _dg=(!_raw||_seg.toLowerCase()==='home'||(_raw.split('/')[1]||'').toLowerCase()==='home')?_door:(_hr||_rm(window.__doorBoot));
+  var _dg=(!_raw||_seg.toLowerCase()==='home'||(_hr&&(_raw.split('/')[1]||'').toLowerCase()==='home'))?_door:(_hr||_rm(window.__doorBoot));
   if(_dg)document.documentElement.setAttribute('data-group',_dg);
 }catch(e){}
 /* v147: Loading splash -- removed by app.js when ready */

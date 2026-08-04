@@ -1,0 +1,69 @@
+=== W-ADDRESSES cycle 8 -- R21 acceptance: 22 hash shapes, on a seeded record ===
+
+ORACLE: the room the app says it is showing -- TopicRegistry.current() on a topic
+view, Panels.resumeTarget() on the home -- read from the page, per shape.
+"wore" is the UNION of a document_start MutationObserver and 90 rAF frames.
+
+--- SHIPPED (R21: the home test gated on _hr) ---
+SEED: nav.last = caching (data-storage); boot room architecture-apis; cold-door room messaging-events
+ok  #home           app shows THE HOME  ought data-storage            wore data-storage   (the home)
+ok  #HOME           app shows THE HOME  ought data-storage            wore data-storage   (the home, wrong case)
+ok  #walk           app shows a TOPIC   ought architecture-apis       wore architecture-apis   (a bare view)
+ok  #drill          app shows a TOPIC   ought architecture-apis       wore architecture-apis   (a bare view)
+ok  #Walk           app shows a TOPIC   ought architecture-apis       wore architecture-apis   (a bare view, mixed case)
+ok  #Nonsense       app shows a TOPIC   ought architecture-apis       wore architecture-apis   (a malformed hash -> bare view)
+ok  #authz/home     app shows THE HOME  ought data-storage            wore data-storage   (a TOPIC prefix on the home)
+ok  #saga/home      app shows THE HOME  ought data-storage            wore data-storage   (a TOPIC prefix on the home)
+ok  #/home          app shows a TOPIC   ought architecture-apis       wore architecture-apis   (empty prefix -> bare view)
+ok  #walk/home      app shows a TOPIC   ought architecture-apis       wore architecture-apis   (a VIEW id in segment 0 -> bare view)
+ok  #drill/home     app shows a TOPIC   ought architecture-apis       wore architecture-apis   (a VIEW id in segment 0 -> bare view)
+ok  #viz/home       app shows a TOPIC   ought architecture-apis       wore architecture-apis   (a VIEW id in segment 0 -> bare view)
+ok  #wb/home        app shows a TOPIC   ought architecture-apis       wore architecture-apis   (a VIEW id in segment 0 -> bare view)
+ok  #Walk/home      app shows a TOPIC   ought architecture-apis       wore architecture-apis   (a mixed-case VIEW id -> bare view)
+ok  #walk/HOME      app shows a TOPIC   ought architecture-apis       wore architecture-apis   (a VIEW id + wrong-case home sub-state)
+ok  #nonsense/home  app shows a TOPIC   ought architecture-apis       wore architecture-apis   (an unknown segment 0 -> bare view)
+ok  #AUTHZ/home     app shows a TOPIC   ought architecture-apis       wore architecture-apis   (a TOPIC slug in the WRONG CASE -> bare view)
+ok  #authz/walk     app shows a TOPIC   ought security-tenancy        wore security-tenancy   (a TOPIC prefix on a real view)
+ok  #authz/HOME     app shows THE HOME  ought data-storage            wore data-storage   (a TOPIC prefix on the home, wrong case)
+ok  #Authz/home     app shows a TOPIC   ought architecture-apis       wore architecture-apis   (a TOPIC slug title-cased -> bare view)
+ok  #saga/nonsense  app shows a TOPIC   ought messaging-events        wore messaging-events   (a TOPIC prefix on an unknown view)
+ok  #walk/authz     app shows a TOPIC   ought architecture-apis       wore architecture-apis   (a VIEW then a topic slug -> bare view)
+
+--- PLANT: the CYCLE-7 line restored verbatim ---
+SEED: nav.last = caching (data-storage); boot room architecture-apis; cold-door room messaging-events
+ok  #home           app shows THE HOME  ought data-storage            wore data-storage   (the home)
+ok  #HOME           app shows THE HOME  ought data-storage            wore data-storage   (the home, wrong case)
+ok  #walk           app shows a TOPIC   ought architecture-apis       wore architecture-apis   (a bare view)
+ok  #drill          app shows a TOPIC   ought architecture-apis       wore architecture-apis   (a bare view)
+ok  #Walk           app shows a TOPIC   ought architecture-apis       wore architecture-apis   (a bare view, mixed case)
+ok  #Nonsense       app shows a TOPIC   ought architecture-apis       wore architecture-apis   (a malformed hash -> bare view)
+ok  #authz/home     app shows THE HOME  ought data-storage            wore data-storage   (a TOPIC prefix on the home)
+ok  #saga/home      app shows THE HOME  ought data-storage            wore data-storage   (a TOPIC prefix on the home)
+MIS #/home          app shows a TOPIC   ought architecture-apis       wore data-storage   (empty prefix -> bare view)
+MIS #walk/home      app shows a TOPIC   ought architecture-apis       wore data-storage   (a VIEW id in segment 0 -> bare view)
+MIS #drill/home     app shows a TOPIC   ought architecture-apis       wore data-storage   (a VIEW id in segment 0 -> bare view)
+MIS #viz/home       app shows a TOPIC   ought architecture-apis       wore data-storage   (a VIEW id in segment 0 -> bare view)
+MIS #wb/home        app shows a TOPIC   ought architecture-apis       wore data-storage   (a VIEW id in segment 0 -> bare view)
+MIS #Walk/home      app shows a TOPIC   ought architecture-apis       wore data-storage   (a mixed-case VIEW id -> bare view)
+MIS #walk/HOME      app shows a TOPIC   ought architecture-apis       wore data-storage   (a VIEW id + wrong-case home sub-state)
+MIS #nonsense/home  app shows a TOPIC   ought architecture-apis       wore data-storage   (an unknown segment 0 -> bare view)
+MIS #AUTHZ/home     app shows a TOPIC   ought architecture-apis       wore data-storage   (a TOPIC slug in the WRONG CASE -> bare view)
+ok  #authz/walk     app shows a TOPIC   ought security-tenancy        wore security-tenancy   (a TOPIC prefix on a real view)
+ok  #authz/HOME     app shows THE HOME  ought data-storage            wore data-storage   (a TOPIC prefix on the home, wrong case)
+MIS #Authz/home     app shows a TOPIC   ought architecture-apis       wore data-storage   (a TOPIC slug title-cased -> bare view)
+ok  #saga/nonsense  app shows a TOPIC   ought messaging-events        wore messaging-events   (a TOPIC prefix on an unknown view)
+ok  #walk/authz     app shows a TOPIC   ought architecture-apis       wore architecture-apis   (a VIEW then a topic slug -> bare view)
+
+RESTORED: deliverable identical to snapshot true
+
+THE DELTA: 10 of 22 shapes are MIS-LIT under the cycle-7 line and 0 under the shipped one.
+  #/home
+  #walk/home
+  #drill/home
+  #viz/home
+  #wb/home
+  #Walk/home
+  #walk/HOME
+  #nonsense/home
+  #AUTHZ/home
+  #Authz/home

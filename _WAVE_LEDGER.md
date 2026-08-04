@@ -3160,10 +3160,24 @@ _dg=(!_raw||_seg.toLowerCase()==='home'||(_raw.split('/')[1]||'').toLowerCase()=
     ?_door:(_hr||_rm(window.__doorBoot));
 ```
 
+> **AMENDED BY R21 (cycle 8), AND THIS EXPRESSION IS NOT THE FINAL ONE.** The line above is
+> UNDER-GATED: it tests segment 1 for `home` with no condition on segment 0, and `parseHash`
+> strips segment 0 only when it is a REGISTERED TOPIC (`router.js:41`). So this adopted ruling
+> shipped the wave's own defect class -- the document wearing a room the app is not showing -- on
+> TEN measured shapes (`#/home`, `#walk/home`, `#drill/home`, `#viz/home`, `#wb/home`,
+> `#Walk/home`, `#walk/HOME`, `#nonsense/home`, `#AUTHZ/home`, `#Authz/home`), permanently rather
+> than as a flash, with all six route cells green. The shipped expression gates the
+> second-segment test on `_hr`. See CYCLE 8 / R21; the correction is left beside the ruling
+> rather than replacing it.
+
 **The matrix's FIFTH cell is `#authz/home`**, seeded so the resume room (`data-storage`), the boot
 room (`architecture-apis`) and the prefixed topic's room (`security-tenancy`) are three distinct
 strings -- asserted before the cell runs, with an ABORT naming the collision if the registry ever
 makes two of them equal, and a fallback that picks any topic outside both rather than skipping.
+
+> **NARROWED IN CYCLE 8 (judge item 4).** "Three distinct strings" was true of the sentence and
+> not of the code: `ok(id)` asked prefix-vs-resume and prefix-vs-boot, and NOTHING asked
+> resume-vs-boot. The abort now covers all three pairs and names which two collided.
 
 **One thing changed that the ruling did not name, and it is a deliberate refusal.** The readiness
 predicate branched on `hash === '#home'`; teaching it to recognise a topic-prefixed home would have
@@ -3331,7 +3345,7 @@ six added veil landings and the cross-width block are what the 8.5s buys.
 | receipt | presses | landed |
 |---|---|---|
 | `press-veil-parts.txt` (R18, judge items 1-3) | 6 deletions x 4 cells | every part of the veil guard deleted ALONE goes **exit 1**, each with the plant that isolates it |
-| `press-prefixed-home.txt` (R19) | 6 cells x 2 builds | `#authz/home` PASS -> **FAIL**; the other five unchanged |
+| `press-prefixed-home.txt` (R19) | 6 cells x 2 builds | `#authz/home` PASS -> **FAIL**; the other five unchanged **-- AMENDED CYCLE 8: "the other five unchanged" is TRUE AND IS THE FINDING. None of the six could press the half of the predicate R19 had just widened, so the regression that widening introduced was invisible to every cell in the matrix. A press whose controls cannot move is reporting the shape of its own matrix.** |
 | the cost-table gate (judge item 5) | 2 plants | missing entry -> **exit 1**; stale entry -> **exit 1** |
 
 **ONE PRESS CAME BACK OTHER THAN EXPECTED, AND IT CHANGED A PLANT.** P4c was written expecting
@@ -3481,6 +3495,13 @@ Plus, unchanged: **the two severities are separated by a 1.15 MARGIN, not by an 
   app actually shows; `#home`, `#HOME` and a **TOPIC-PREFIXED HOME** (`#<topic>/home`) take the
   resume target's room. The prefixed cell asserts its three rooms DISTINCT before it runs, and its
   readiness predicate is deliberately NOT a second copy of the classifier under test.
+  > **AMENDED IN CYCLE 8: EIGHT SHAPES, and the six were the reason the seventh was needed.**
+  > Every one of those six either has no second segment or carries a REGISTERED TOPIC in the
+  > first, so none of them could tell "the home test reads segment 1" from "the home test reads
+  > segment 1 only behind a topic" -- and R19's widened predicate shipped green through that gap
+  > for a cycle. `#/home` (an EMPTY prefix) and `#<TOPIC>/home` (the same slug in the WRONG case)
+  > are the shapes that can, both asserted in the BOOT topic's room. The distinctness abort now
+  > covers all THREE pairs, not the two it claimed. See CYCLE 8 / R21.
 
 ### What is now part of the GATE's own contract
 
@@ -3493,7 +3514,7 @@ Plus, unchanged: **the two severities are separated by a 1.15 MARGIN, not by an 
 
 | where | retracted | restated |
 |---|---|---|
-| `scoreboard_salience.cjs` GROUND_EPS block (:388-395) | the 390/dark drift is "a pure compositing veil at alpha ~0.91 over a near-black ground" -- the FOURTH site of cycle 6's three-site retraction, which is why that cycle's completeness claim was false | **The reading moved; the CAUSE IS NOT ESTABLISHED in dark.** The ground invariant is inert there above alpha 0.474 by the file's own arithmetic four lines below, so nothing in that cell could confirm or deny a veil; and the box that produced the baseline is the one cycle 6 proved phase-dependent and corner-contaminated. What closes the class is the SHOT-TIME READ, not the attribution. |
+| `scoreboard_salience.cjs` GROUND_EPS block (:388-395) **-- AND THIS ROW'S OWN COUNT IS AMENDED IN CYCLE 8: THERE WERE FIVE SITES, NOT FOUR.** `scoreboard_salience.cjs:757` carried the same attribution as a statement of fact ("the judges' run 3 walked through it: a veil at alpha 0.9101 sitting across a whole 390/dark cell"), 350 lines below the paragraph that retracts it, in the same file -- so cycle 7's completeness claim failed in exactly the way cycle 6's did, one cycle later. A sixth site was found while pressing it (the INERT-HERE finding string, ":1143", which asserted the veil "crossed" a dark cell as the justification for its own arm). See CYCLE 8 / judge item 2. | the 390/dark drift is "a pure compositing veil at alpha ~0.91 over a near-black ground" -- the FOURTH site of cycle 6's three-site retraction, which is why that cycle's completeness claim was false | **The reading moved; the CAUSE IS NOT ESTABLISHED in dark.** The ground invariant is inert there above alpha 0.474 by the file's own arithmetic four lines below, so nothing in that cell could confirm or deny a veil; and the box that produced the baseline is the one cycle 6 proved phase-dependent and corner-contaminated. What closes the class is the SHOT-TIME READ, not the attribution. |
 | cycle-6 ledger, the retraction table's first row | its enumeration of where the veil attribution lived ("ledger cycle-4 R12 + `scoreboard_salience.cjs` head + `styles.css`") | **Incomplete by one site**, in the same file as two of the three listed. The row is amended in place rather than silently corrected, and the fourth site is named. |
 | `scoreboard_salience.cjs` PASS line + the per-cell ground line + `check_all.py`'s registry entry | "the shot-time read ... catches every alpha, in both schemes" | **What the union covers, stated, and what it does not.** Any compositing property on the ancestor chain at any alpha in either scheme, plus any painted out-of-flow box -- element or pseudo, hit-testing or not, background-color / background-image / backdrop-filter -- covering the ONE point it samples, plus whatever the hit test finds in front however painted. NOT the other pixels this check measures; NOT border or box-shadow paint in the SWEEP (only the hit stack); NOT `.hm-alt`'s own subtree. |
 | cycle-6 R15's second finding, as an argument | "the two are complementary and neither covers the class alone -- the hit stack reaches PSEUDO-elements ... and the sweep reaches `pointer-events:none`" | True of each exemption SEPARATELY and false of their INTERSECTION, which is a real shape and is the app's own: a pseudo of an ancestor that does not hit-test crossed both reads at 10% over the gauge. The sweep reads pseudos now, and MUTANT J is the plant. |
@@ -3548,3 +3569,316 @@ the only thing that keeps one true is a control that fails when it stops being t
     than alternated: the capture lives OUTSIDE the repository and its load-bearing lines are quoted
     in the ledger on the certified tree, with the push-triggered platform runs as the durable half.
     Cycles 1-5 committed it; 6 and 7 did not; that is the convention.
+
+---
+
+## CYCLE 8 -- 2026-08-04
+
+Two team-lead rulings on the cycle-7 escalation and six non-escalated judge items. The shape of
+this cycle is two sentences. **The wave's own defect class came back through the fix for it** --
+R19's adopted expression lit the document in a room the app was not showing, on ten measured URL
+shapes, permanently rather than as a flash, and every cell in the matrix that should have caught it
+was structurally incapable of pressing the half of the predicate R19 had just widened. And **a
+guard installed to stop a record drifting made that record impossible to regenerate**: cycle 7's
+cost-table abort was fatal in the one mode whose job is to write the file its own printed remedy
+tells you to rebuild from.
+
+---
+
+### R20. THE PRODUCER IS EXEMPT -- ADOPTED AS NAMED
+
+`check_all.py`'s cost-table reconciliation (cycle 7, judge item 5) fires at LOAD, right after
+`ORDER` is built, and it exited 1 in every mode. Its own remedy, printed four lines above that
+exit, is *"run `python3 test/check_all.py --profile` TWICE warm, then write max(run2, run3) into
+gate_cost.json"* -- and that first command could not run. **The instruction was unexecutable as
+written, and the only way out was to hand-edit the table the arm exists to stop being
+hand-edited.**
+
+**The exit is now gated on `not PROFILE`** (`PROFILE` is computed at `:131`, above the block, so
+the arm needs no new state); under `--profile` the block prints
+`cost table mismatch -- proceeding so this run can regenerate the table`. **The mismatch REPORT is
+unconditional in every mode** -- a profile run that regenerates the table still says loudly, with
+every missing and stale name, that the table was wrong when it started. And the escape hatch is
+added to the printed remedy, so the four lines are executable exactly as they read.
+
+**`--only` STAYS STRICT, deliberately.** Six red shards are the discipline that forces a new
+check's cost row into the same commit as the check. The deadlock was never the strictness; it was
+the producer strangled by its own guard.
+
+**THE CONTROL, ALL THREE BRANCHES, ON THE TABLE WITH `craft_hygiene` REMOVED** (receipt
+`_audit/w-addresses-cycle8/press-cost-producer.txt`). The hole is applied to the real
+`test/gate_cost.json` -- `COST_FILE` is a fixed path with no override, and branch (c) has to close
+on the real tree -- with the committed bytes snapshotted and restored on any failure.
+
+| branch | verdict |
+|---|---|
+| (a) `--dry-run` and `--only ascii_guard` | **exit 1** both -- *"test/gate_cost.json holds 77 entries against 78 registered checks"*, MISSING: craft_hygiene. The guard still guards. |
+| (b) `--profile`, twice | **exit 0** both, each WROTE `test/_profile.json`, each printed the full mismatch above `cost table mismatch -- proceeding so this run can regenerate the table`, and each ended `GATE: PASS` |
+| (c) the closed loop | `--profile` twice warm (878.4s and 867.2s wall) -> `max(run2, run3)` per check written into `test/gate_cost.json` -> `--dry-run` **exit 0**. The printed instructions walk end to end. |
+
+**One branch, pressed twice, and that is deliberate rather than thin.** There is a single
+`if not PROFILE: sys.exit(1)`; `--changed`, `--fast` and the bare serial capture take the same
+line as `--dry-run` and `--only`. Two presses establish the branch; four would establish the same
+branch four times.
+
+**The control and this cycle's real regeneration are ONE measurement.** The table's own rule is
+max of two warm `--profile` runs of the tree being committed, and cycle 8 changed two of the checks
+in it, so branch (c)'s two runs ARE the regeneration.
+
+---
+
+### R21. THE GATE R19 WAS MISSING -- ADOPTED AS NAMED; R21 AMENDS R19
+
+**The escalation's measurement stands, and it is the wave's own defect class arriving through the
+wave's own fix.** R19's adopted expression asked whether segment 1 reads `home` with no condition
+on segment 0. `parseHash` strips segment 0 only when
+`TopicRegistry.get(parts[0]) && !ROUTES[parts[0]]` (`router.js:41`), so a second segment is a VIEW
+only when the first is a REGISTERED TOPIC; on every other shape segment 0 IS the view and `home` in
+segment 1 is a sub-state. The door therefore answered the HOME's question on shapes the app
+resolves to a bare view of the BOOT topic -- and on a seeded record the whole document wore the
+RESUME room, **permanently**, because a bare-view boot never switches and `applyIdentity()` never
+re-stamps. The defect R19 fixed was a transient flash; the one it introduced was the only value the
+document ever held.
+
+**The fix, as ruled** -- gate the second-segment test on `_hr`, which the line already computes:
+
+```js
+var _dg=(!_raw||_seg.toLowerCase()==='home'||(_hr&&(_raw.split('/')[1]||'').toLowerCase()==='home'))
+        ?_door:(_hr||_rm(window.__doorBoot));
+```
+
+`_hr` is `_rm(_seg)` over boot.js's id->room table, which `home_claims` already compares against
+`TopicRegistry` entry by entry in both directions; the lookup is case-SENSITIVE over the registry's
+lower-case slugs, and router.js's own comment records that a topic slug can never equal a view id.
+So `_hr` truthy IS `TopicRegistry.get(parts[0]) && !ROUTES[parts[0]]` -- the router's condition,
+not a second guess at it. Applied to `src/scripts/boot.js` and rebuilt into the deliverable; the
+comment above it carries the amendment, and so does R19's own section in this ledger.
+
+**ACCEPTANCE: THE SAME 22-SHAPE PRESS, BOTH BUILDS** (receipt
+`_audit/w-addresses-cycle8/press-prefixed-home-22.txt`; the plant is the cycle-7 line restored
+verbatim in the BUILT page, and the deliverable is compared byte-for-byte after restore). The
+oracle is read from the page per shape -- `TopicRegistry.current()`'s room when the app is showing
+a topic view, `Panels.resumeTarget()`'s when it is showing the home, with `data-view` deciding
+which -- never from a table inside the press. Seed: nav.last `caching` (data-storage); boot room
+`architecture-apis`; cold-door room `messaging-events`.
+
+| shapes | shipped | the cycle-7 line |
+|---|---|---|
+| the nine named over-fires: `#/home` `#walk/home` `#drill/home` `#viz/home` `#wb/home` `#Walk/home` `#walk/HOME` `#nonsense/home` `#AUTHZ/home` | **architecture-apis** -- the BOOT topic's room | data-storage -- the RESUME room |
+| `#authz/home`, `#saga/home`, `#authz/HOME` | data-storage -- the door's answer | the same, unchanged |
+| `#home` `#HOME` `#walk` `#drill` `#Walk` `#Nonsense` `#authz/walk` `#saga/nonsense` `#walk/authz` | correct | the same, unchanged |
+| **`#Authz/home`** | **architecture-apis** | data-storage |
+
+**THE PRESS FOUND A TENTH OVER-FIRE THE ESCALATION DID NOT ENUMERATE.** `#Authz/home` -- the same
+topic slug title-cased -- is the `#AUTHZ/home` class at a different capitalisation, and it is in
+the receipt because the press drove the NEIGHBOURHOOD of the class rather than only its two named
+sides. **10 of 22 shapes mis-lit under the cycle-7 line, 0 under the shipped one**, and the twelve
+that were already correct stayed correct, which is the half a re-ordered classifier can break.
+
+**HARVEST: TWO STANDING MATRIX CELLS, AND THE PRESS SCRIPT IS DISPOSABLE.** `#/home` (the boot
+comment's own enumerated sibling) and `#<TOPIC>/home` (the case trap, R16's axis) join
+`#authz/home` in `home_claims`' route x record matrix -- three-distinct-rooms seeded, the same
+`frames()` helper, the same oracle, the same union of a `document_start` MutationObserver and 90
+painted frames. Both are asserted in the BOOT topic's room, so the pair pins BOTH directions of the
+precedence where the prefixed cell alone pinned one. **PRESSED RED against the pre-fix expression
+in a scratch mirror** (receipt `_audit/w-addresses-cycle8/press-home-cells.txt`): the plant is
+applied to a COPY of `dist/index.html` outside the repository and `home_claims` is pointed at it
+through its own `argv[2]`, so the worktree is never written and there is no restore step to get
+wrong.
+
+| cell | shipped build | mirror carrying the cycle-7 line |
+|---|---|---|
+| `#/home` (NEW) | PASS | **FAIL** |
+| `#AUTHZ/home` (NEW) | PASS | **FAIL** |
+| `#walk` `#drill` `#Walk` `#Nonsense` `#HOME` `#authz/home` | PASS | PASS -- all six unmoved |
+
+**The 22-shape press is DECLARED DISPOSABLE**, per the ruling: the two cells stand in the gate and
+the class is armed there. The script stays in `_audit/w-addresses-cycle8/` as the receipt's own
+method, not as an instrument -- nothing calls it again, and it is not entered in the register.
+
+**`#walk/home` IS NOT A THIRD STANDING CELL, and that is a choice with a reason.** Judge item 5
+named it; the ruling named `#/home` and `#AUTHZ/home`. All three take the identical branch --
+`_hr` falsy, so `_dg = _rm(__doorBoot)` -- and differ only in what `parseHash` does downstream,
+which the oracle reads off the page anyway. Two cells press that branch; a third would press it a
+third time. Its evidence is in the 22-shape receipt, where it belongs.
+
+---
+
+### JUDGE ITEM 1 -- THE CYCLE-7 REGRESSION: CLOSED BY R21
+
+The escalated item and this one are the same defect, the same measurement and the same fix, and
+the seventh cell judge item 1 asked for (an UNKNOWN-prefixed home asserted in the boot topic's
+room) is `#AUTHZ/home`. The one thing worth adding is HOW it shipped green: **the gate could not
+see it because the matrix could not press it**, which is judge item 5 -- a fix with no cell that
+can fail on it, and a press whose "the other five unmoved" was true because none of the five was
+able to move.
+
+---
+
+### JUDGE ITEM 2 -- THE FIFTH SITE, AND A SIXTH FOUND WHILE FIXING IT: CLOSED
+
+R17 withdrew the "compositing veil at alpha ~0.91" attribution and cycle 7's retraction ledger
+declared the enumeration complete at four sites. **It was five.** `scoreboard_salience.cjs:757`
+carried the identical attribution as a statement of FACT -- *"The judges' run 3 walked through it:
+a veil at alpha 0.9101 sitting across a whole 390/dark cell, exit 0"* -- 350 lines below the
+paragraph that retracts it, in the same file, so the two contradicted each other inside one file.
+That is cycle 6's failure repeated one cycle later BY THE RULING THAT CORRECTED IT.
+
+**Restated as the observation it can carry**: a whole 390/dark cell whose absolute reading MOVED
+between runs, at exit 0, because the only arm looking after the shot was a ground invariant that is
+INERT in dark at every alpha above 0.474 -- *it was not reporting a clean shot, it was reporting
+nothing*. No alpha, no "veil"; the paragraph now names where the attribution went and why the
+shot-time read below needs none to be a guard.
+
+**A SIXTH SITE, FOUND WHILE FIXING THE FIFTH, and it is a RUNTIME finding rather than a comment.**
+The INERT-HERE finding string (`:1150`) ended *"which is exactly how a veil at alpha 0.91 crossed a
+whole dark cell at exit 0"* -- the withdrawn attribution, printed by the check, as the
+justification for its own arm. It now reads *"COULD cross a whole dark cell at exit 0 without being
+seen"*, which is the DETECTABILITY claim the `GROUND_EPS` arithmetic does carry and is the
+surviving form its neighbour at the MUTANT G comment already uses. The judges named `:757` as the
+only survivor and checked two neighbours; the sixth site was one line beyond where that check
+reached, which is the same shape as the finding itself.
+
+`styles.css:2804` (the falsification argument) and the MUTANT G comment (the COULD form) were
+re-read and stand.
+
+---
+
+### JUDGE ITEM 3 -- `painted()`'s THIRD BRANCH HAD NO PLANT: CLOSED BY MUTANT Ic
+
+Cycle 7's commit headline was *"every part of the veil guard now has a plant that can fail it"*. It
+was one branch short. `painted()` returns three reasons and cycle 7 planted two: MUTANT I presses
+background-color, Ib presses background-image, and **nothing pressed backdrop-filter** -- the
+judges deleted that branch alone and this check came back exit 0, no mutant undetected, all four
+cells green. MUTANT L2 is not a press of it: L2 puts backdrop-filter on `#home`, an ANCESTOR, which
+the CHAIN read catches before the sweep is consulted.
+
+**MUTANT Ic is the shape only the sweep can see**: the same `I_BOX` -- a fixed
+`pointer-events:none` full-viewport SIBLING, invisible to the hit stack by construction and to the
+chain because it is not an ancestor -- painted ONLY by
+`background-color:transparent;backdrop-filter:blur(2px)`. Required to be caught AND named through
+the `covers` branch in all four cells, exactly as I and Ib are. Measured: caught, named as a
+covering box, 4/4 cells, both schemes.
+
+**AND EACH FORM NOW DECLARES WHICH PROPERTY CARRIES ITS PAINT.** The CANNOT-LAND branch reads that
+property off the DOM (`background-color` / `background-image` / `backdrop-filter`), so a plant
+whose paint did not apply reports *"the branch this plant exists to press is not on the box"*
+rather than *"the sweep failed to see it"*. Same shape as cycle 7's chain-plant liveness fix: a
+plant that cannot land must SAY so, or a broken guard gets to accuse the plant.
+
+**P4g IS ITS CONTROL, AND ALL SEVEN PRESSES WERE RE-RUN** -- adding a plant can change which
+deletion a press reds on, and cycle 7's own P4c is the receipt for exactly that. Receipt
+`_audit/w-addresses-cycle8/press-veil-parts.txt`; shipped baseline exit 0 with all ten landings
+caught in all four cells; restored byte-identical, working-tree diff unchanged, check green.
+
+| press | deleted | result |
+|---|---|---|
+| P4a | the chain composite read | **exit 1** -- K x4, L1 x4, L2 x4, L3 x4 UNDETECTED |
+| P4b | cycle 6's filter / backdrop-filter / blend widening | **exit 1** -- L1 x4, L2 x4, L3 x4 (K still caught) |
+| P4c | the hit stack | **exit 1** -- M x4 |
+| P4d | the ELEMENT half of the sweep | **exit 1** -- I x4, Ib x4, **Ic x4** |
+| P4e | the PSEUDO half of the sweep | **exit 1** -- J x2 |
+| P4f | `painted()`'s background-image branch | **exit 1** -- Ib x4 (I and Ic still caught) |
+| **P4g** | **`painted()`'s backdrop-filter branch** | **exit 1** -- **Ic x4** (I and Ib still caught) |
+
+---
+
+### JUDGE ITEM 4 -- THE DISTINCTNESS ABORT COVERED TWO OF THE THREE PAIRS IT CLAIMED: CLOSED
+
+The ledger said the prefixed-home cell is *"seeded so the resume room, the boot room and the
+prefixed topic's room are three distinct strings"*. In code, `ok(id)` required `g !== p.group`
+(prefix vs resume) and `g !== boot` (prefix vs boot), and **nothing asserted resume vs boot**;
+`pick` upstream only guarantees `pick.group !== cold`. If the registry ever put the resume topic
+and the boot topic in one room, "the door followed the record" and "the door fell through to the
+boot topic" would be the same string and the cell would pass either way, silently -- and cycle 8's
+two new cells assert the OPPOSITE answer through that very pair, so the hole widened as the block
+grew.
+
+**`pick.group !== px.boot` is now the block's own precondition**, routed to the same `aborted`
+channel and naming which two collided. It holds today and is measured rather than assumed
+(`data-storage` / `architecture-apis` / `security-tenancy`). The claim is now true of the code
+rather than of its author's intent, and cycle 7's row is amended in place.
+
+A second CANNOT-LAND branch arrives with the case-trap cell: if `toUpperCase()` ever leaves the
+chosen slug unchanged, the cell would be a second copy of the prefixed cell rather than a case
+trap, and it aborts saying so.
+
+---
+
+### JUDGE ITEM 5 -- THE MATRIX COULD NOT PRESS THE PREDICATE IT HAD JUST WIDENED: CLOSED
+
+Verified exactly as reported. The six route shapes were `#walk`, `#drill`, `#Walk`, `#Nonsense`,
+`#HOME` and `#<topic>/home`; every one either has no second segment or carries a REGISTERED topic
+in the first, so none can distinguish *"the home test reads segment 1"* from *"the home test reads
+segment 1 only behind a topic"*. `GEN_N = 24` generates RECORDS, not hashes -- every generated cell
+loads `hash:'#home'` -- so the generator cannot reach the gap either. **The regression shipped
+green, and the cycle-7 press receipt's "the other five unmoved" was true precisely because no cell
+pressed the widened half.**
+
+Closed by R21's two cells, which are judge item 1's ask (an unknown-prefixed home in the BOOT
+topic's room) and this item's ask (a second cell pinning the other direction of the precedence) in
+one pair. The summary moves from SIX shapes to EIGHT in `home_claims`'s PASS text and in
+`check_all.py`'s registry entry, and both now say WHY the six could not see it -- because "eight
+shapes" without that sentence is the same claim the six carried.
+
+---
+
+### JUDGE ITEM 6 -- THE SIBLING CITED RECORD: CLOSED, BY DERIVING THE NUMBER
+
+Cycle 7 armed `gate_cost.json` against `ORDER` under the thesis *"a cited record has to be able to
+fail"* -- and `test/ci.py`, the file that DISPATCHES the CI lanes, still said **76** in three
+places: the docstring's gate line, the lanes paragraph in the same docstring (argparse prints both
+as its description), and the `gate` subparser's help. Stale by two, in the same wave, one file
+over. `ci_shard_gate.py` was clean because it never types the number: it extracts `ORDER` by AST
+and prints `len(order)`.
+
+**The three strings now carry `{N}` and are formatted at print time from
+`ci_shard_gate.extract_order()`** -- the same extraction the shards are actually cut from -- so the
+number `ci.py` advertises and the number that runs cannot disagree. It returns None rather than a
+guess if the registry cannot be read, and the text then says "the registered" instead of a wrong
+figure.
+
+**PRESSED** (receipt `_audit/w-addresses-cycle8/press-ci-count.txt`): one check added to the
+registry in a SCRATCH MIRROR, with `ci_shard_gate.CHECK_ALL` redirected at it so the whole wiring
+runs -- `ci.counted` -> `ci.registered_checks` -> `extract_order` -> the registry text -- and the
+worktree is never written.
+
+| | real registry (78) | mirror (79) |
+|---|---|---|
+| shipped `ci.py`, three sites | 78 / 78 / 78 | **79 / 79 / 79** -- it moves |
+| cycle 7's `ci.py` (`git show HEAD:test/ci.py`), three sites | 76 / 76 / 76 | 76 / 76 / 76 -- **it cannot move, which is the defect** |
+
+---
+
+### FOUND WHILE PRESSING -- A COUNT THAT REPRODUCES UNDER NEITHER OF ITS OWN CONVENTIONS
+
+`check_all.py`'s `scoreboard_salience` entry said **"THIRTEEN planted mutants ... and SEVEN
+VEILS"**. Count its own list: seven on the marks plus seven veils is FOURTEEN, and the check's own
+PASS line counts the chain widening as THREE landings ("NINE PLANTED LANDINGS"), which makes
+SIXTEEN. Thirteen is neither. **Re-derived from the mutant rows the run actually prints**: SEVEN on
+the marks (A the old keel wiring, B the rule back to `--bd`, C the waterline removed, D two fill
+steps flattened, E the panel painted at its ground, F `--gauge-rule` painted at the panel, H
+`--keel-shaky` collapsed) and **TEN veil landings** (G, J, I, Ib, Ic, M, K, L1, L2, L3) =
+**SEVENTEEN**, each installed, read and reverted on its own. The entry now says seventeen and says
+where the old number came from, rather than being quietly corrected.
+
+---
+
+## CYCLE 8 -- PRESS SUMMARY
+
+| receipt | presses | landed |
+|---|---|---|
+| `press-veil-parts.txt` (judge item 3) | 7 deletions x 4 cells | every part of the veil guard deleted ALONE goes **exit 1**; **P4g** is new and isolates `painted()`'s backdrop-filter branch on MUTANT Ic |
+| `press-prefixed-home-22.txt` (R21) | 22 shapes x 2 builds | **10 mis-lit** under the cycle-7 line, **0** under the shipped one; the 12 correct shapes stayed correct |
+| `press-home-cells.txt` (R21 harvest) | 8 cells x 2 builds | both NEW cells PASS -> **FAIL** on the pre-fix line; the six pre-existing cells unmoved |
+| `press-ci-count.txt` (judge item 6) | 1 registry change x 2 file versions | the derived count moves 78 -> 79; cycle 7's literals read 76 under both, which is the defect |
+| `press-cost-producer.txt` (R20) | 3 branches on a holed table | guard still guards, producer produces, and the printed remedy walks end to end |
+
+**ONE PRESS CAME BACK OTHER THAN EXPECTED, AND IT WIDENED THE FINDING.** The 22-shape press was
+built from the escalation's nine named over-fires and came back with **ten** -- `#Authz/home`, the
+title-cased slug, which nobody had enumerated. It is the same class as `#AUTHZ/home` and it is in
+the receipt because the press drove the neighbourhood of the class rather than its two named sides.
+Nothing changed as a result: the fix already covered it, and `#AUTHZ/home` is the standing cell.
+What changed is that the enumeration is now known to have been incomplete, which is this cycle's
+subject twice over.
+

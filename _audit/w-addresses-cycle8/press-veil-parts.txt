@@ -1,0 +1,45 @@
+=== W-ADDRESSES cycle 8 -- each part of the veil guard, deleted alone ===
+
+SHIPPED (nothing deleted): scoreboard_salience exit 0
+   1280px/dark  {'J': 'caught, named as a covering box', 'I/Ib/Ic': 'caught, named as a covering box | painted by a GRADIENT instead -> caught, named as a covering box | painted only by a BACKDROP-FILTER -> caught, named as a covering box', 'M': 'caught, named in front of the gauge', 'chain': 'K caught, named opacity | L1 caught, named filter | L2 caught, named backdrop-filter | L3 caught, named mix-blend-mode'}
+   1280px/light {'J': 'inert by construction (light) -- and the cell reported clean', 'I/Ib/Ic': 'caught, named as a covering box | painted by a GRADIENT instead -> caught, named as a covering box | painted only by a BACKDROP-FILTER -> caught, named as a covering box', 'M': 'caught, named in front of the gauge', 'chain': 'K caught, named opacity | L1 caught, named filter | L2 caught, named backdrop-filter | L3 caught, named mix-blend-mode'}
+   390px/dark   {'J': 'caught, named as a covering box', 'I/Ib/Ic': 'caught, named as a covering box | painted by a GRADIENT instead -> caught, named as a covering box | painted only by a BACKDROP-FILTER -> caught, named as a covering box', 'M': 'caught, named in front of the gauge', 'chain': 'K caught, named opacity | L1 caught, named filter | L2 caught, named backdrop-filter | L3 caught, named mix-blend-mode'}
+   390px/light  {'J': 'inert by construction (light) -- and the cell reported clean', 'I/Ib/Ic': 'caught, named as a covering box | painted by a GRADIENT instead -> caught, named as a covering box | painted only by a BACKDROP-FILTER -> caught, named as a covering box', 'M': 'caught, named in front of the gauge', 'chain': 'K caught, named opacity | L1 caught, named filter | L2 caught, named backdrop-filter | L3 caught, named mix-blend-mode'}
+
+P4a  the chain composite read neutered (composits() -> []) exit 1   RED as required   MUTANT K x4, MUTANT L1 x4, MUTANT L2 x4, MUTANT L3 x4
+     - [light/gauge@1280] MUTANT K UNDETECTED: an ancestor at opacity .91 -- the alpha cycle 5 read into a dark drift composites the gauge's whole subtree 
+     - [light/gauge@1280] MUTANT L1 UNDETECTED: an ancestor carrying filter:opacity(.9) composites the gauge's whole subtree over the canvas, and the shot 
+     - [light/gauge@1280] MUTANT L2 UNDETECTED: an ancestor carrying backdrop-filter:blur(2px) composites the gauge's whole subtree over the canvas, and th
+     - [light/gauge@1280] MUTANT L3 UNDETECTED: an ancestor carrying mix-blend-mode:multiply composites the gauge's whole subtree over the canvas, and the 
+
+P4b  cycle 6 widening dropped (filter/backdrop-filter/blend) exit 1   RED as required   MUTANT L1 x4, MUTANT L2 x4, MUTANT L3 x4
+     - [light/gauge@1280] MUTANT L1 UNDETECTED: an ancestor carrying filter:opacity(.9) composites the gauge's whole subtree over the canvas, and the shot 
+     - [light/gauge@1280] MUTANT L2 UNDETECTED: an ancestor carrying backdrop-filter:blur(2px) composites the gauge's whole subtree over the canvas, and th
+     - [light/gauge@1280] MUTANT L3 UNDETECTED: an ancestor carrying mix-blend-mode:multiply composites the gauge's whole subtree over the canvas, and the 
+
+P4c  the hit stack neutered                                exit 1   RED as required   MUTANT M x4
+     - [light/gauge@1280] MUTANT M UNDETECTED: a full-viewport fixed box painted entirely by its BORDER, drawn over the gauge, was read as a clean shot. It
+
+P4d  the ELEMENT half of the geometric sweep neutered      exit 1   RED as required   MUTANT I x4, MUTANT Ib x4, MUTANT Ic x4
+     - [light/gauge@1280] MUTANT I UNDETECTED: a full-viewport overlay at 10% with pointer-events off -- the literal shape of this app's own faded boot spl
+     - [light/gauge@1280] MUTANT Ib UNDETECTED: the same overlay painted by a GRADIENT over a transparent background-color, which the sweep's paint test co
+     - [light/gauge@1280] MUTANT Ic UNDETECTED: the same overlay painted ONLY by a BACKDROP-FILTER over a transparent background-color -- the third of `pai
+
+P4e  the PSEUDO half of the geometric sweep neutered       exit 1   RED as required   MUTANT J x2
+     - [dark/gauge@1280] MUTANT J UNDETECTED: a full-viewport pseudo-element backdrop at 10% with pointer-events:none -- MUTANT G plus the one property the
+
+P4f  painted()'s background-image branch dropped           exit 1   RED as required   MUTANT Ib x4
+     - [light/gauge@1280] MUTANT Ib UNDETECTED: the same overlay painted by a GRADIENT over a transparent background-color, which the sweep's paint test co
+
+P4g  painted()'s backdrop-filter branch dropped [NEW]      exit 1   RED as required   MUTANT Ic x4
+     - [light/gauge@1280] MUTANT Ic UNDETECTED: the same overlay painted ONLY by a BACKDROP-FILTER over a transparent background-color -- the third of `pai
+
+RESTORED: source identical to snapshot True; working-tree diff unchanged True; scoreboard_salience exit 0
+
+P4a  the chain composite read neutered (composits() -> []) exit 1   RED as required   MUTANT K x4, MUTANT L1 x4, MUTANT L2 x4, MUTANT L3 x4
+P4b  cycle 6 widening dropped (filter/backdrop-filter/blend) exit 1   RED as required   MUTANT L1 x4, MUTANT L2 x4, MUTANT L3 x4
+P4c  the hit stack neutered                                exit 1   RED as required   MUTANT M x4
+P4d  the ELEMENT half of the geometric sweep neutered      exit 1   RED as required   MUTANT I x4, MUTANT Ib x4, MUTANT Ic x4
+P4e  the PSEUDO half of the geometric sweep neutered       exit 1   RED as required   MUTANT J x2
+P4f  painted()'s background-image branch dropped           exit 1   RED as required   MUTANT Ib x4
+P4g  painted()'s backdrop-filter branch dropped [NEW]      exit 1   RED as required   MUTANT Ic x4

@@ -1,0 +1,56 @@
+=== W-ADDRESSES cycle 8 -- R20: the producer is exempt, pressed in three branches ===
+
+BASELINE (the committed table, 78 entries):
+  $ python test/check_all.py --dry-run [committed table] -> exit 0  (0.5s)
+    the shipped table reconciles: exit 0 (expected 0)
+
+THE HOLE: craft_hygiene removed from test/gate_cost.json (77 entries against 78 checks)
+
+(a) THE GUARD STILL GUARDS -- every mode except the producer:
+  $ python test/check_all.py --dry-run [must be 1] -> exit 1  (0.1s)
+      | THE GATE COST TABLE DOES NOT DESCRIBE THE GATE.
+      | test\gate_cost.json holds 77 entries against 78 registered checks.
+      | - craft_hygiene
+  $ python test/check_all.py --only ascii_guard [must be 1] -> exit 1  (0.1s)
+      | test\gate_cost.json holds 77 entries against 78 registered checks.
+    --dry-run exit 1, --only exit 1  -> the guard still guards: True
+
+(b) + (c) THE PRODUCER PRODUCES, AND THE LOOP CLOSES.
+    Two warm --profile runs of this tree, the table still holed for both, each writing
+    its own dump so max(run2, run3) is a real maximum and not a re-read of one file.
+  $ python test/check_all.py --profile [run 2, must be 0] -> exit 0  (879.9s)
+      | THE GATE COST TABLE DOES NOT DESCRIBE THE GATE.
+      | cost table mismatch -- proceeding so this run can regenerate the table
+      | profile: test/_profile.json
+      | GATE: PASS
+      exit 0; wrote test/_profile.json: True
+  $ python test/check_all.py --profile [run 3, must be 0] -> exit 0  (868.9s)
+      | THE GATE COST TABLE DOES NOT DESCRIBE THE GATE.
+      | cost table mismatch -- proceeding so this run can regenerate the table
+      | profile: test/_profile.json
+      | GATE: PASS
+      exit 0; wrote test/_profile.json: True
+
+    the mismatch was REPORTED in the profile runs (not silently skipped): True
+    both profile runs exit 0: True
+    both profile runs GATE: PASS: True
+    run 2 total wall 878.4s, 78 checks profiled
+    run 3 total wall 867.2s, 78 checks profiled
+
+    wrote max(run2, run3) per check into test/gate_cost.json: 78 entries, total 901.8s
+      home_claims              63.585 -> 86.070
+      syntax_check             36.050 -> 50.336
+      overlay_deadzone         49.686 -> 58.988
+      visual_regression        25.150 -> 33.296
+      render                   18.630 -> 24.722
+      numbers_lattice          6.373 -> 11.489
+      rail_integrity           12.832 -> 17.372
+      build_integrity          10.373 -> 14.715
+      click_drift              50.345 -> 54.128
+      scoreboard_salience      106.984 -> 110.691
+      flow_handoff             13.832 -> 17.306
+      home_reflow              13.078 -> 15.670
+  $ python test/check_all.py --dry-run [the loop closes, must be 0] -> exit 0  (1.8s)
+    --dry-run after the regeneration: exit 0
+
+VERDICT: guard still guards (a): True | producer produces (b): True | the printed remedy walks end to end (c): True

@@ -3679,8 +3679,18 @@ that were already correct stayed correct, which is the half a re-ordered classif
 comment's own enumerated sibling) and `#<TOPIC>/home` (the case trap, R16's axis) join
 `#authz/home` in `home_claims`' route x record matrix -- three-distinct-rooms seeded, the same
 `frames()` helper, the same oracle, the same union of a `document_start` MutationObserver and 90
-painted frames. Both are asserted in the BOOT topic's room, so the pair pins BOTH directions of the
-precedence where the prefixed cell alone pinned one. **PRESSED RED against the pre-fix expression
+painted frames.
+
+**AMENDED BY R22 (cycle 9), AND THE AMENDMENT IS THE POINT: "the same oracle" WAS NOT TRUE.** The
+press switched on `data-view` -- `Panels.resumeTarget()`'s room when the app reports it is showing
+the HOME, `TopicRegistry.current()`'s otherwise -- and the harvest kept only the second branch, so
+the sentence this replaces ("Both are asserted in the BOOT topic's room") described a cell that
+pins TODAY'S ROUTER rather than the claim it prints. What the pair asserts now, and what this
+should have said all along: **every value the document wears is the room of the SURFACE THE APP
+SAYS IT IS SHOWING -- and, while it is showing a bare view, that room is the BOOT topic's.** On the
+shipped build the second clause is the operative one and R21's pinning is unchanged; on a
+case-INSENSITIVE `parseHash` it is the first, and the hard-coded form would have reddened on a
+build with no defect in it (measured: `_audit/w-addresses-cycle9/press-home-oracle.txt`). **PRESSED RED against the pre-fix expression
 in a scratch mirror** (receipt `_audit/w-addresses-cycle8/press-home-cells.txt`): the plant is
 applied to a COPY of `dist/index.html` outside the repository and `home_claims` is pointed at it
 through its own `argv[2]`, so the worktree is never written and there is no restore step to get
@@ -4026,6 +4036,10 @@ Plus, unchanged: **the two severities are separated by a 1.15 MARGIN, not by an 
   (an EMPTY prefix) and `#<TOPIC>/home` (the same slug in the WRONG case)** take the BOOT topic's,
   because `parseHash` strips segment 0 only for a registered topic. The pair pins BOTH directions
   of the precedence; six shapes pinned one.
+  **AMENDED, cycle 9 (R22).** The last two cells do not assert "the BOOT topic's room" outright --
+  they read `data-view` and assert the room of the SURFACE THE APP REPORTS, plus, on the bare-view
+  branch, that that room is the boot topic's. The bullet as written above was true of the code and
+  false as a contract: it would have failed a correct case-insensitive router.
 * **THE THREE ROOMS ARE ASSERTED DISTINCT IN ALL THREE PAIRS**, not two, with the abort naming
   which two collided -- and the wrong-case cell aborts if `toUpperCase()` ever leaves the slug
   unchanged.
@@ -4122,3 +4136,527 @@ at what the repair CHANGED, not at what it fixed.
     different denominator this cycle did not measure and therefore did not touch. The owed form is
     an enumeration of every check-count claim WITH its denominator, each resolved against a
     measurement. **Owed by whichever wave next touches the gate's own paperwork.**
+
+---
+
+## CYCLE 9 -- 2026-08-04
+
+One team-lead ruling on the cycle-8 escalation and five non-escalated judge items, and the shape
+of the cycle is one sentence in three places. **A repair kept half of the thing that proved it.**
+R21's two standing cells were harvested out of a press whose oracle READ THE PAGE and the harvest
+kept one branch of it. R21's `_hr` gate is parseHash's condition only under a premise the registry
+stopped satisfying, and only the other half of that condition was ever measured. The veil union
+stated two limits honestly and left the point where they MEET unguarded. Two plant censuses were
+correct on the day they were typed and had no way to stay correct. And the gauge painted two
+severities into a legend that named one -- recorded in `styles.css` as a fact, for three cycles,
+as the argument for why a collapse would be invisible to a reader.
+
+---
+
+### R22. THE HARVESTED CELLS GET THE PRESS'S OWN ORACLE -- ADOPTED AS NAMED
+
+**The escalation's measurement stands, and what it found is a FALSE ALARM rather than a miss --
+which is the harder half to see, because a false alarm is invisible until someone writes the build
+that trips it.** The 22-shape press that accepted R21 read its oracle off the page and SWITCHED on
+`data-view`: `Panels.resumeTarget()`'s room when ViewManager says the app is showing the HOME,
+`TopicRegistry.current()`'s room otherwise. The two cells harvested out of that press kept only the
+second branch. So they assert the shape of TODAY'S ROUTER, not the claim they print -- and the
+router-side repair this wave has carried since cycle 7 (item 12) is exactly the change that breaks
+them.
+
+**The fix, as ruled.** `data-view` is read INSIDE the same `p.evaluate` the `frames()` helper
+already runs -- the room, the resume target, the shown topic and now the view, in one round trip --
+and the two cells switch on it. On the bare-view branch the free comparison is added:
+`uf.shown === px.boot`. `px.boot` was already read, already asserted distinct from the resume room
+by cycle 8's three-pair abort, and already printed in the failure detail; the cell simply had not
+been asserting the room its own ledger sentence said it asserted. Zero product-code changes: the
+case-insensitive build below is a MIRROR, and shipping it is still W2's call.
+
+**THE DIFFERENTIAL IS THE CONTROL, AND IT IS ONE BUILD READ BY TWO VERSIONS OF ONE CELL** (receipt
+`_audit/w-addresses-cycle9/press-home-oracle.txt`). The future-W2 mirror is SELF-CONSISTENT --
+`parseHash`'s topic lookup lower-cased AND boot.js's `_rm` lower-cased, both, so the door and the
+router agree -- because a mirror that changed only one of them would be pressing a defect rather
+than a repair.
+
+| arm | build | cells | result |
+|---|---|---|---|
+| A | shipped | R22 cells | exit 0, all eight route cells PASS |
+| **B1** | **future-W2 (case-insensitive parseHash + boot)** | **R22 cells** | **exit 0, all eight PASS -- the false alarm is dead** |
+| **B2** | **the same mirror** | **cycle-8 cells** | **exit 1, `#<TOPIC>/home` FAIL -- the false alarm, shown** |
+| C | the cycle-7 classifier line | R22 cells | exit 1, BOTH new cells FAIL -- R21's own differential survives R22 |
+
+**C IS THERE BECAUSE A FIX THAT MAKES A CELL UNFALSIFIABLE IS NOT A FIX.** Widening an oracle is
+the cheapest possible way to turn a red cell green forever, and this wave has already shipped one
+repair that quietly removed its own control (cycle 7's R18, which cost the hit stack its only
+plant). So the cells were re-pressed against the line R21 replaced, and both still go red on it.
+
+**AND THE SENTENCES WERE AMENDED WHERE THEY LIVE.** R21's harvest paragraph said *"the same
+oracle"* and *"Both are asserted in the BOOT topic's room"*; the cycle-8 freeze bullet said the
+same. Both now say what the code asserts -- the room of the SURFACE THE APP REPORTS, plus, while
+it is showing a bare view, that that room is the boot topic's -- and both name the amendment rather
+than being quietly rewritten.
+
+---
+
+### JUDGE ITEM 2 -- HALF OF THE PREDICATE R21 RESTS ON WAS NEVER MEASURED: CLOSED
+
+Verified exactly as reported. R21 argues that `_hr = _rm(_seg)` truthy IS
+`TopicRegistry.get(p0) && !ROUTES[p0]` -- parseHash's own condition. `home_claims` measured the
+FIRST conjunct entry by entry in both directions and **nothing measured `!ROUTES[p0]`**. That half
+was inherited from router.js:41's own comment -- *"A hyphenated topic slug can NEVER equal one of
+the 9 short view ids"* -- and **the registry stopped satisfying that premise long ago: 16 of the 46
+shipped slugs are single-token** (authz, cdc, eav, iac, slos, saga, caching, signing, debugging,
+replication, observability, idempotency, backpressure, autoscaling, microfrontend, notifications).
+The property holds by the COINCIDENCE of today's names -- measured, 0 collisions against 11 route
+ids -- and a coincidence is not a guard.
+
+**The boot-table cell gains a THIRD direction**: `TopicRegistry.ids()` and the keys of
+`Router.ROUTES` -- the router's own exported table, not a copy -- must be disjoint, naming any
+collision and saying what a collision does.
+
+**PRESSED WITH THE COINCIDENCE'S FAILURE INSTALLED** (receipt
+`_audit/w-addresses-cycle9/press-routes-disjoint.txt`): a scratch mirror adds `eav`, a registered
+topic slug, to `Router.ROUTES` -- the shape a future topic named `open`, `num`, `model`, `sys`,
+`rf`, `wb` or `viz` takes on the day it is written.
+
+| arm | result |
+|---|---|
+| the SHIPPED build, cycle-9 cell | PASS -- 46/46 table, **11 route ids, 0 collisions**, measured rather than inherited (the mirror's 12 is that table plus the planted one) |
+| the COLLISION mirror, cycle-9 cell | **FAIL**, naming `eav` and what it does to `_hr` |
+| the SAME mirror, the cell as it stood before cycle 9 | **exit 0** -- and all EIGHT route cells green |
+
+**THE THIRD ROW IS THE FINDING.** And the press drove the defect itself rather than arguing it:
+on that build, with the oracle read off the page, **`#eav/home` AND bare `#eav` both wear
+`data-storage` -- the RESUME room -- while the app shows a topic view whose room is
+`architecture-apis`.** That is R21's defect and R16's defect, live, simultaneously, with every
+route cell in the matrix green. The same shape cycle 8 closed one door over: the fix's own
+assumption had no arm.
+
+---
+
+### JUDGE ITEM 3 -- THE VEIL UNION'S TWO LIMITS MET AT AN UNGUARDED POINT: CLOSED
+
+The PASS line stated both limits honestly and then rounded up at the one place they intersect.
+`painted()` returned '' unless background-color / background-image / backdrop-filter was set, so
+the geometric sweep could not see a box painted only by a BORDER or a BOX-SHADOW -- and the
+sentence said so, then said *"only the hit stack does"*. The hit stack is
+`document.elementsFromPoint`, which **skips `pointer-events:none`** -- and `pointer-events:none` is
+not an exotic combination here, it is the literal shape of `#_bootsplash._bs-done` and the reason
+the sweep exists. **A pointer-events:none, out-of-flow box painted only by a border or an inset
+box-shadow over the track's centre was invisible to the whole guard.** MUTANT M pressed the border
+case with hit-testing ON only.
+
+**`painted()` NOW READS FIVE REASONS, AND EACH HAS A LANDING.** The border test reads the four
+sides' style, width AND COLOUR: a 2000px border at `border-color:transparent` paints nothing, and a
+branch that reported it would manufacture false veils on every bordered overlay in the app.
+
+* **MUTANT M2** -- the border box with `pointer-events:none`. Caught and named through `covers`,
+  4/4 cells, both schemes.
+* **MUTANT M3** -- the same shape painted only by an INSET box-shadow. **Inset on purpose, and the
+  reason is stated rather than glossed**: an outward spread is drawn OUTSIDE the border box, and
+  the sweep places every candidate by `getBoundingClientRect()`, so an outward-spread veil is out
+  of this read's reach whatever `painted()` says. Planting one would have been a plant that cannot
+  land dressed as a branch that cannot see. The PASS line now names that limit instead.
+* **MUTANT M is RESTATED, not retired.** It lands in both reads now, and what it asserts is the
+  ATTRIBUTION -- the finding must name it through the HIT-STACK branch. Its old CANNOT-LAND text
+  (*"which the geometric sweep CAN see, so it is not a control for the hit stack"*) and its old
+  MIS-ATTRIBUTED text (*"if the sweep caught this, `painted()` has grown a branch that sees border
+  paint"*) both described a world this cycle deliberately ended, and both are rewritten.
+
+**ALL NINE PRESSES WERE RE-RUN, AND ONE CAME BACK DIFFERENT** (receipt
+`_audit/w-addresses-cycle9/press-veil-parts.txt`; shipped baseline exit 0, restored byte-identical,
+working-tree diff unchanged).
+
+| press | deleted | result |
+|---|---|---|
+| P4a | the chain composite read | **exit 1** -- K, L1, L2, L3 x4 UNDETECTED |
+| P4b | cycle 6's filter / backdrop-filter / blend widening | **exit 1** -- L1, L2, L3 x4 |
+| **P4c** | **the hit stack** | **exit 1** -- **M x4 MIS-ATTRIBUTED**, not UNDETECTED |
+| P4d | the ELEMENT half of the sweep | **exit 1** -- I, Ib, Ic, **M2**, **M3** x4 |
+| P4e | the PSEUDO half of the sweep | **exit 1** -- J x2 |
+| P4f | `painted()`'s background-image branch | **exit 1** -- Ib x4 |
+| P4g | `painted()`'s backdrop-filter branch | **exit 1** -- Ic x4 |
+| **P4h** | **`painted()`'s BORDER branch** | **exit 1** -- **M2 x4** (M and M3 still caught) |
+| **P4i** | **`painted()`'s BOX-SHADOW branch** | **exit 1** -- **M3 x4** (M and M2 still caught) |
+
+**P4c IS THE ENTRY WORTH KEEPING.** Cycle 8's own note said adding a plant can change which
+deletion a press reds on; it did, on the press that note was written under. Deleting the hit stack
+now leaves MUTANT M caught by the sweep and MIS-ATTRIBUTED rather than UNDETECTED -- still red,
+still the hit stack's only landing, because the arm requires the box in front of the panel to be
+NAMED as being in front of it. That is exactly the shape R18 gave MUTANT G in cycle 7, arriving on
+schedule at the next widening.
+
+---
+
+### JUDGE ITEM 4 -- TWO PLANT CENSUSES THAT COULD NOT MOVE: CLOSED, BY DERIVING BOTH
+
+A durability finding, not a stale-number one, and the judges verified the arithmetic before
+reporting it: both figures were CORRECT when they were typed. `craft_hygiene.py` has printed
+`len(PLANTS) + len(PLANTS_PRESSED) + len(CHANNEL_PLANTS)` since cycle 5 and its number moved
+23 -> 22 -> 21 -> 14 under a press. The other two printed literals directly above rows the run was
+already producing one by one out of the same variables.
+
+* **`home_claims`** now carries a `landedPlants` Set. `land(tag)` is called at the point a plant is
+  confirmed installed and handed to its judge -- inside the block, so deleting the block deletes the
+  call. A Set, because the width x seed loops replant several of them and the census counts
+  DISTINCT plants. **It is deliberately not asserted against an expected count**: that is the
+  hand-typed number again, wearing a test.
+* **`scoreboard_salience`** builds a veil-landing roster from the same outcome strings the mutant
+  rows print (`G, J, I, Ib, Ic, M, M2, M3` plus `chainOut`'s `K, L1, L2, L3`), drops any entry the
+  run left `undefined`, and formats `N PLANTED LANDINGS (...)` from its keys -- the tag list beside
+  the number, so a reader can see what was counted. Its `LEGEND'S N SWATCHES` is derived the same
+  way, from the swatches the key actually rendered.
+
+**PRESSED, ONE DELETION IN EACH OF THE THREE** (receipt
+`_audit/w-addresses-cycle9/press-censuses.txt`; all three restored, working-tree diff unchanged):
+
+| file | deletion | shipped | after | moved |
+|---|---|---|---|---|
+| `home_claims.cjs` | `goalMutant(13, 'aria', ...)` | **22** | 21 | yes |
+| `scoreboard_salience.cjs` | MUTANT M3's entry in `m2Forms` | **12** | 11 | yes |
+| `craft_hygiene.py` | the `dash` entry in `PLANTS` | **23** | 22 | yes (the control -- it already derived) |
+
+**AND THE CYCLE-8 LITERALS WERE ALREADY WRONG BEFORE THE DELETION.** On this tree `home_claims`
+lands 22 plants under a line that said 21, and `scoreboard_salience` presses 12 landings under a
+line that said TEN. Each stopped being true the moment this cycle added a plant -- silently, which
+is the whole property a derived line has and a literal does not.
+
+---
+
+### JUDGE ITEM 5 -- THE GAUGE PAINTS TWO SEVERITIES AND THE KEY NAMED ONE: CLOSED
+
+`--keel-shaky` and `--keel-missed` are distinct colours on the same mark, solved for a 1.15x
+discriminability margin and asserted from the pixels (4.638/3.671 light, 8.211/3.625 dark). The
+legend rendered four swatches and `.hm-k.flag` was wired to `--keel-missed` alone. **`styles.css`
+recorded that as a FACT** -- as the argument for why a severity collapse would be invisible to a
+reader -- **and it sat there for three cycles as an observation instead of an item.** A reader saw
+two foot colours on the rails and a key that explained one, on the panel whose entire job is which
+topics to re-drill.
+
+**The product fix:** `.hm-k.flag` -> "Missed flagged" (`--keel-missed`) and a new `.hm-k.flag-s` ->
+"Shaky flagged" (`--keel-shaky`). This is the VISIBLE channel catching up with the one a screen
+reader already had: `segLabel()` has emitted *", missed probes flagged"* vs *", shaky probes
+flagged"* into both the capsule `title` and the rail's `hm-vh` description all along, and
+`home_claims` checks those character for character.
+
+**The arm, and it is the half that keeps the fix true.** `judgeKey` was PRESENCE ONLY -- a keel is
+painted, is the key visible -- so it could not see a key that renders and omits a severity, which
+is the state that shipped. It now compares RESOLVED COLOURS in both directions: the mark's colour
+off `.hm-seg.keel::before`'s computed background, the swatch's off the computed `box-shadow`, with
+a keel swatch identified by its shadow sitting at the FOOT (a negative vertical offset), because
+`.hm-k.none i` also carries a box-shadow and counting it would let "Untouched" stand in for a
+missing severity. Colours and not class names, so a swatch whose token was repointed is still
+judged -- and swatches are counted only while RENDERED, because a legend explains what a reader can
+see.
+
+**MUTANT 10b** is the plant: the key stays visible, at full width, and the swatch carrying the
+colour THIS RECORD paints is removed. On `weakTopics` that is the shaky swatch -- the one this
+cycle added -- so the mutant IS the shipped state. It reads both sides the way the arm does, and
+aborts rather than passing if the record paints no keel or if no swatch carries the painted colour.
+`scoreboard_salience`'s KEY arm needed no change: it enumerates `.hm-k` rather than counting to
+four, so the fifth swatch arrived in the floor check, the ground cross-check and the binding-cell
+check without being told. Measured on the shipped build: **five swatches, `full 12.31 / part 7.39 /
+flag 6.77 / flag-s 3.49 / none 3.49` against the panel's own measured ground in dark**, all over
+the 3:1 non-text floor -- and `--keel-shaky` is measured on `--home-surface` here for the first
+time, a ground its own token block does not solve it against.
+
+---
+
+### JUDGE ITEM 1 -- THE SIBLING SITE LEFT UNDATED: CLOSED
+
+`craft_hygiene.py:218` said *"20 of 77 entries were longer than that"* while the allowlist holds
+**237** today. The cycle-8 ledger's reason for leaving it -- that its 77 is the allowlist's entry
+count, a different denominator that happens to collide with the gate's old size -- was correct
+about the denominator and silent about the staleness, and the identically-shaped
+`home_claims.cjs:1343` was DATED in the same sweep. Dated the same way: *"20 of 77 entries at the
+time (cycle 1; the allowlist holds 237 today)"*.
+
+---
+
+## CYCLE 9 -- PRESS SUMMARY
+
+| receipt | presses | landed |
+|---|---|---|
+| `press-home-oracle.txt` (R22) | 4 arms x 8 route cells | the FUTURE-W2 build passes the fixed cells and **fails the cycle-8 cells**; the cycle-7 line still reds both, so R21's differential survives the fix |
+| `press-routes-disjoint.txt` (judge item 2) | 3 arms + the defect driven on 3 hashes | a colliding route id reds the new direction and names it; the pre-cycle-9 cell **exits 0 on the same build**, with `#eav/home` AND `#eav` mis-lit |
+| `press-veil-parts.txt` (judge item 3) | 9 deletions x 4 cells | every part AND every paint branch deleted alone goes **exit 1**; **P4h/P4i** isolate the two new branches and **P4c came back MIS-ATTRIBUTED** |
+| `press-censuses.txt` (judge item 4) | 1 deletion in each of 3 files | all three derived numbers move by one; the two cycle-8 literals were already wrong before the deletion |
+| `press-legend-vr.txt` (judge item 5 / the VR contract) | 2 builds x 4 home baselines | 0 changed pixels -- **and the control moves 0 too**, so the green is about the camera |
+
+**TWO PRESSES CAME BACK OTHER THAN EXPECTED, AND BOTH WIDENED THE FINDING.** P4c was written
+expecting `MUTANT M UNDETECTED` and returned `MIS-ATTRIBUTED` -- the consequence of this cycle's own
+widening, arriving in the press written to check it, which is what cycle 8's note predicted would
+happen the next time a plant was added. And the routes press was built for `#<t>/home` and found
+bare `#<t>` mis-lit on the same mirror: R16's defect and R21's, live together, behind eight green
+cells.
+
+---
+
+## CYCLE 9 -- VR CONTRACT
+
+**No baseline regenerated; the manifest is unchanged at 18, and `git diff --stat HEAD~1 --
+test/baselines/` lists nothing.** `visual_regression` ran on the built tree and reported
+`18 baselines compared; worst = 0 px (home-light), budget 32 px`.
+
+**AND THAT GREEN WAS NOT ACCEPTED ON ITS FACE**, because this cycle changed a VISIBLE SURFACE --
+it renames one legend label and adds a whole swatch -- and "the change moved no pixel" and "the
+camera cannot see this surface" produce the identical zero. **A CONTROL SETTLES IT** (receipt
+`_audit/w-addresses-cycle9/press-legend-vr.txt`): a scratch mirror renames the swatch to
+`ZZZZZZZZZZZZZZZZZZ` and the same capture of both builds, diffed with the gate's own decoder at the
+gate's own tolerance, moves **0 pixels on all four home baselines**. The green is about the camera.
+
+**WHY, MEASURED AT BOTH VIEWPORTS FROM THE PAGE:**
+
+| baseline | the key's box | verdict |
+|---|---|---|
+| `home-light` / `home-dark` (1280x800) | x=333 y=780 590x15, inside the frame | `elementsFromPoint` at its centre returns `span#st-2.hm-st-i > footer#homestatus.hm-status > span.hm-k.full` -- **the fixed status footer is in front of it** |
+| `m-home-light` / `m-home-dark` (390x844) | x=29 y=973 332x40 | **169px BELOW the captured frame** |
+
+So no baseline photographs the gauge legend, nothing needs regenerating, and **a legend regression
+is invisible to the pixel gate by construction.** The only instruments that can see one are
+`home_claims`' legend arm (one swatch per keel token, pressed by MUTANT 10b) and
+`scoreboard_salience`'s KEY arm (every swatch the key renders, against the panel's own measured
+ground). That is now a stated property of the VR contract rather than an accident nobody had
+checked.
+
+---
+
+---
+
+## CYCLE 9 -- GATE
+
+Full serial run (`python test/check_all.py`, no `--fast`, no `--shared-browser`) on the
+**COMMITTED** tree, exit 0, **zero FAIL lines**.
+
+**IT CERTIFIES A TREE (R13), NOT A COMMIT.** Certified tree:
+**`d129d30b682d3a7c9e0e9fa7a2fc018b849388a6`** -- the tree of commit `e64fe07`, with
+`git status --porcelain` empty when the run started.
+
+```
+  78 checks in 1120.9s (18.7 min)
+GATE: PASS
+```
+
+**THE CAPTURE IS KEPT OUTSIDE THE REPOSITORY** (cycle 7's settled convention, carried item 14).
+Path on this box:
+`%TEMP%\claude\D--claude-workspace-deepdive-rehearsal\bfc4e186-9eb0-4148-a383-84020244f407\scratchpad\w9\cycle9-gate.txt`
+(20,916 bytes). The load-bearing lines are quoted below, in the repository, on the certified tree.
+
+**THE COUNT IS STILL 78. Cycle 9 registered no new check** -- MUTANT M2, M3 and 10b extend checks
+the gate already ran, the third boot-table direction extends an existing cell, and the two censuses
+changed how an existing line is formatted.
+
+The lines that carry this cycle's work, and every count in them is one the run derived:
+
+```
+build_integrity     PASS  (12357147 bytes, 0 unresolved, 9 panes + 7 overlays, build SYNCED
+                          the deliverable, COMMITTED deliverable == fresh build of HEAD)
+scoreboard_salience PASS  ... the LEGEND'S 5 SWATCHES -- every one the key renders, enumerated
+                          rather than counted to -- clear it too against the panel's own measured
+                          ground ... the SWEEP places every box by its BORDER BOX, so paint drawn
+                          OUTSIDE that box -- an outward box-shadow spread, an outline -- is out
+                          of its reach whatever `painted()` reads, and for a box that does not
+                          hit-test neither arm covers it (cycle 9 closed the border and
+                          INSET-shadow half of that class, which is where the two reads' stated
+                          limits used to meet unguarded) ... 12 PLANTED LANDINGS press it
+                          (G, J, I, Ib, Ic, M, M2, M3, K, L1, L2, L3) ... so each of `painted()`'s
+                          five reasons has a plant of its own, and this count is FORMATTED FROM
+                          THE ROSTER THE RUN POPULATED rather than typed
+home_claims         PASS  22 planted mutants detected (... the key hidden while the rails still
+                          paint keel marks, AND the key left visible with the SHAKY swatch
+                          removed while the rails still paint a shaky keel -- the state that
+                          shipped, which a presence-only legend arm could not see ...)
+room_static         PASS  (codemod=0, styles.css infinite=0, 6 room blocks + rebind, boot
+                          derives the door room first and no constant is hard-coded)
+craft_hygiene       PASS  (23732 rendered-copy spans ... 237 ruled exceptions)
+visual_regression   PASS  (18 baselines, win32-chromium149; every capture reached a proven rest
+                          state across all 18 roots, cleared the blank-page floor, and matched
+                          its committed pixels)
+ascii_guard         PASS  (843 files strict 7-bit ASCII: src 688, src/topics-md 38, test 91,
+                          tools 26)
+```
+
+**THE FREE LANES, ALL THREE GREEN, ON THE SHA THE CERTIFIED TREE BELONGS TO.**
+
+* **The PUSH-triggered Branch gate, run `30896189370`, `head_sha`
+  `e64fe07207223fd60175ad460ad2fcf21a2e1ce4`** -- `success`. This is the citation R13 prefers: the
+  run records the sha it actually checked out, and it is the sha the certified tree belongs to.
+* **Branch previews on the same sha, run `30896189440`** -- `success`.
+* **The dispatched `python test/ci.py gate --nowait`, run `30896228770`**, 6 shards on
+  ubuntu-latest, **all six exit 0** (77 / 63 / 78 / 115 / 147 / 210 s). Cited as "6/6 shards green
+  on the ref supplied at dispatch time", per R13's ledger note -- a `workflow_dispatch` run records
+  the DEFAULT branch's sha in `head_sha`, so it cannot name the tree it tested.
+
+**AND THE RUN GOT SLOWER, BY A MEASURED AMOUNT, FOR A NAMED REASON.** 928.6s (cycle 8) -> 1120.9s,
+**+192.3s / +20.7%**, on the same box. Three veil landings x 4 cells were added to
+`scoreboard_salience` and one mutant plus a colour-reading legend arm to `home_claims`. That makes
+**two rows of `test/gate_cost.json` understated** -- `scoreboard_salience` 110.691 and `home_claims`
+86.07, both written by cycle 8's regeneration -- and this cycle did NOT re-run the two warm
+`--profile` passes the table's own rule calls for. Recorded rather than done, with the figure, and
+carried below.
+
+---
+
+## CYCLE 9 -- THE FREEZE
+
+```
+CERTIFIED TREE        d129d30b682d3a7c9e0e9fa7a2fc018b849388a6   (the tree of e64fe07)
+BRANCH TIP AT FREEZE  the commit that carries THIS section, in arrears -- see R13
+THE DIFF BETWEEN THEM: docs only -- _WAVE_LEDGER.md, this section and the two amendments
+                       R22 orders into cycle 7's and cycle 8's text
+```
+
+No source file, no test file, no committed data file and no deliverable byte differs between the
+certified tree and the tip. **No gate is retaken for that**, and the push-triggered Branch gate on
+`e64fe07` covers the code tree on a second platform independently.
+
+### What is now part of `home_claims`'s CONTRACT
+
+* **THE LAST TWO ROUTE CELLS SWITCH THEIR ORACLE ON `data-view`, AS THE PRESS THAT BOUGHT THEM
+  DID.** The room the document wears is the room of the SURFACE THE APP REPORTS -- the resume
+  target's when it says HOME, the shown topic's otherwise -- and, on the bare-view branch, that
+  room must be the BOOT topic's. The cells pin R21's precedence on today's build and stay silent,
+  correctly, on a case-insensitive router. Cycle 8's "both are asserted in the BOOT topic's room"
+  is retracted.
+* **THE BOOT-TABLE CELL HAS THREE DIRECTIONS, AND THE THIRD IS THE ONE R21 RESTS ON.** The table
+  agrees with the registry entry by entry both ways, AND no registered topic id is also a
+  `Router.ROUTES` key. Without it, `_hr` truthy is parseHash's condition only by the coincidence of
+  today's 46 names -- and 16 of them are single-token, so the router comment that premise came from
+  is already false of the registry.
+* **THE LEGEND IS JUDGED AGAINST THE MARKS IT LABELS, NOT AGAINST ITS OWN EXISTENCE.** One swatch
+  per keel colour the rails actually paint, compared as RESOLVED COLOURS in both directions, with
+  keel swatches identified by a shadow at the foot and counted only while rendered. Presence alone
+  could not see a key that renders and omits a severity, which is the state that shipped.
+* **THE PLANT CENSUS IS FORMATTED FROM THE ROSTER THE RUN POPULATED**, not typed, and deliberately
+  not checked against an expected count.
+
+### What is now part of `scoreboard_salience`'s CONTRACT
+
+Cycle 8 froze six conditions plus the margin. All stand; the first is widened again and one of its
+sentences is retracted.
+
+1. **THE SHOT IS MEASURED FOR A VEIL, AT THE SHOT -- AND `painted()` NOW DECLARES FIVE REASONS,
+   EACH WITH A LANDING OF ITS OWN.** background-color, background-image, backdrop-filter, a
+   COLOURED BORDER and a BOX-SHADOW. **TWELVE PLANTED LANDINGS** -- G, J, I, Ib, Ic, M, **M2**,
+   **M3**, K, L1, L2, L3 -- against presses **P4a-P4i**. Cycle 8's *"the SWEEP does not reach paint
+   arriving from a border or a box-shadow spread (only the hit stack does)"* is retracted: the hit
+   stack does not reach `pointer-events:none`, so that class was covered by NEITHER read, and the
+   sentence rounded up at the one point its two limits meet.
+   **AND THE LIMIT THAT REPLACES IT IS GEOMETRIC, NOT A PAINT LIST.** The sweep places every
+   candidate by its BORDER BOX, so paint drawn outside that box -- an outward shadow spread, an
+   outline -- is out of reach whatever `painted()` reads, and for a box that does not hit-test
+   neither arm covers it. That is why M3's shadow is INSET.
+2. **MUTANT M IS THE HIT STACK'S LANDING, AND IT ASSERTS AN ATTRIBUTION.** It is caught by both
+   reads now; deleting the stack leaves it MIS-ATTRIBUTED, which is red. Same shape as MUTANT G
+   since R18.
+3. **THE LEGEND'S SWATCHES ARE ENUMERATED, NOT COUNTED TO FOUR.** Every `.hm-k` the key renders --
+   five since this cycle -- against the panel's own measured ground, `.hm-k.none` still the binding
+   cell. The count in the PASS line is formatted from what was read.
+4. Conditions 2-6 of cycle 7/8 (the ground invariant priced per cell, cold-reproduces-warm, the
+   sampler reporting itself, the two widths returning one ramp) and the 1.15 severity MARGIN:
+   unchanged.
+
+### What is now part of the VR contract
+
+* **A ZERO-PIXEL GREEN ON A VISIBLE CHANGE IS NOT ACCEPTED WITHOUT A CONTROL.** When a cycle
+  changes a rendered surface and `visual_regression` moves nothing, the cycle owes a plant loud
+  enough that no reader could miss it and a measurement of what the camera actually sees. The
+  gauge legend is in NO baseline: behind the fixed status footer at 1280x800, 169px below the
+  frame at 390x844.
+
+### THE RETRACTION LEDGER -- every sentence this cycle took back, and what replaced it
+
+| where | retracted | restated |
+|---|---|---|
+| cycle-8 R21's harvest paragraph, and the cycle-8 freeze bullet | "the same `frames()` helper, THE SAME ORACLE" and "Both are asserted in the BOOT topic's room" | **The harvest kept ONE BRANCH of the press's oracle.** The press switched on `data-view`; the cells did not. They now assert the room of the surface the app reports, plus the boot topic's room on the bare-view branch. Measured: the cycle-8 form reds on a correct case-insensitive build. |
+| `test/home_claims.cjs`, the boot-table cell's label | "boot.js's id->room table agrees with the registry entry by entry, both directions" offered as the guard behind R21's `_hr` gate | **It measured one conjunct of two.** `!ROUTES[p0]` was inherited from a router comment whose premise 16 single-token slugs falsify. Third direction added and pressed; a colliding id mis-lights `#<t>/home` and `#<t>` with all eight route cells green. |
+| `scoreboard_salience.cjs`'s PASS line (cycle 7, kept through 8) | "the SWEEP does not reach paint arriving from a border or a box-shadow spread (ONLY THE HIT STACK DOES, which is what MUTANT M presses and why that limit is measured rather than asserted)" | **The hit stack skips `pointer-events:none`, so that class was covered by neither read** -- the intersection of two limits each half had declared. `painted()` reads five reasons; M2 and M3 land at the intersection; the surviving limit is the BORDER BOX, which is geometric. |
+| `scoreboard_salience.cjs`, MUTANT M's CANNOT-LAND and MIS-ATTRIBUTED text | "which the geometric sweep CAN see, so it is not a control for the hit stack" / "if the sweep caught this, `painted()` has grown a branch that sees border paint and the control is no longer a control" | **`painted()` HAS grown that branch, on purpose.** M now lands in both reads and asserts the hit-stack ATTRIBUTION; P4c reds MIS-ATTRIBUTED. Both strings describe a world this cycle ended. |
+| `test/home_claims.cjs`'s PASS line | "21 planted mutants detected", a literal | **Formatted from the roster the run populated.** It read 21 while 22 plants landed -- wrong on this tree before any press, because this cycle added one. |
+| `test/scoreboard_salience.cjs`'s PASS line | "TEN PLANTED LANDINGS press it", a literal, printed above rows the run formats one by one from the same variables | **Formatted from the landing roster, with the tag list beside the number.** It read TEN while 12 landings pressed it. |
+| `test/scoreboard_salience.cjs`'s PASS line and two comments | "the LEGEND'S FOUR SWATCHES" | **Every swatch the key renders, enumerated** -- five since this cycle. The arm never counted to four; only the prose did. |
+| `src/styles.css`, the `--keel-shaky` block | "the legend cannot report it either (it carries a single keel swatch, `.hm-k.flag`, wired to `--keel-missed` alone)" -- a FACT, used as an argument for why a collapse would be invisible | **Fixed rather than recorded.** One swatch per keel token, asserted by `home_claims` from resolved colours. The MUTANT H argument is unchanged: a legend that names two marks does not measure the distance between them. |
+| `test/craft_hygiene.py:218` | "20 of 77 entries were longer than that", undated, while its twin one file over was dated in the same sweep | **"20 of 77 entries at the time (cycle 1; the allowlist holds 237 today)."** |
+| `test/check_all.py`, the `scoreboard_salience` entry | "SEVENTEEN planted mutants ... and TEN VEIL LANDINGS" | **NINETEEN, twelve of them veil landings** -- and this paragraph is now the ONLY hand-typed copy of the figure, with the run's own derived census beside it to contradict it if it drifts. |
+
+Nine sentences. **Their shape is the same one, and it is not the shape of the last three cycles.**
+Cycle 6's ten were "the instrument authored the number"; cycle 7's nine were "true when written and
+nothing was watching"; cycle 8's eleven were "written by the fix, and the fix was not pressed
+against what it changed". **These are: THE PROOF WAS WIDER THAN THE THING IT LEFT BEHIND.** A
+22-shape press with a switching oracle left two cells with half of it. A predicate with two
+conjuncts left one measured. A union that declared two limits left their intersection open. A run
+that prints every plant one by one left a literal above them. And a stylesheet that had already
+WRITTEN DOWN the legend's collapse left it as an argument. In every one of them the knowledge was
+present, in the same file, and the artifact that survived was narrower than the work that produced
+it -- which is the failure mode a harvest has and a press does not.
+
+---
+
+## CARRIED OUT OF CYCLE 9 -- each with the reason and the wave that owns it
+
+1. **The app-wide GLYPH pass** -- unchanged from cycle 5 (77 entries / 163 sites / 36 marks).
+2. **The corpus prose pass** -- unchanged (111 apostrophes, 49 quotes, 2 dashes over 20 files).
+3. **A per-room WASH token.** Unchanged since cycle 2.
+4. **The three dark text nodes under AA** (`.hm-room-n` 2.35:1, `.hm-room-weak` 3.48:1). Still a
+   PALETTE decision, still `room_contrast`'s territory.
+5. **GAP-2, the landing drill's flagged set.** Still owned by **W2 room**.
+6. **THE VEIL CLASS OUTSIDE THESE TWO CHECKS, AND THE PORTABLE FORM IS THREE READS.** Unchanged
+   from cycle 7, and the thing to lift is bigger: `painted()` now has FIVE branches, all five
+   planted, and the union's surviving limit is its own border-box geometry.
+7. **ABSOLUTE THRESHOLDS TAKEN ON ONE PLATFORM.** Unchanged.
+8. **THE FIRST-RUN-OF-A-FRESH-PROFILE QUESTION.** Unchanged.
+9. **THE OTHER `.hm-k`-SHAPED HOLES** -- a scan of every `test/...` reference inside a
+   `src/styles.css` comment, resolved against the file it names. **Sharper now, and re-scoped:**
+   this cycle found the OTHER half of that class in the same file -- a `styles.css` comment that
+   records a real product defect (the single keel swatch) as a FACT and reasons from it, which no
+   scan for stale file references would catch. The owed sweep is BOTH: references that no longer
+   resolve, and observations parked as arguments.
+10. **THE 138 MARKS' OWN COPY IS GATE-COUPLED.** Unchanged from cycle 5.
+11. **NO OTHER SAMPLING BOX IN THE GATE HAS A PHASE CONTROL.** Unchanged from cycle 6. **Owed by
+    whichever wave next touches the depth arm.**
+12. **THE ROUTER WRITES A URL SHAPE IT THEN HAS TO SPECIAL-CASE.** Unchanged from cycle 7, and R22
+    changed its cost: the two standing cells no longer break when it lands, so the W2 repair is
+    now cheap to make and the gate will not false-alarm on it. A worked, self-consistent version of
+    that repair (parseHash and boot.js lower-cased together) exists as a mirror in
+    `press_home_oracle_c9.py` and passes every route cell.
+13. **THE VEIL READ SAMPLES ONE POINT.** Unchanged from cycle 7 -- every plant covers the track's
+    centre because that is where the read looks. The cheap form (read the state at each sampled box
+    rather than at one) is owed by whichever wave next widens this arm.
+14. **THE GATE CAPTURE CONVENTION IS SETTLED.** Unchanged from cycle 7.
+15. **THE ROUTE x RECORD MATRIX IS NOT A CROSS-PRODUCT.** Unchanged from cycle 8: `GEN_N = 24`
+    generates RECORDS and every generated cell loads `hash:'#home'`. **Owed by whichever wave next
+    touches the boot arm.**
+16. **`--changed`, `--fast` AND THE BARE SERIAL CAPTURE ARE NOT INDIVIDUALLY PRESSED ON THE
+    COST-TABLE ABORT.** Unchanged from cycle 8.
+17. **THE COUNT SWEEP WAS ONE REGEX, AND IT HAS A KNOWN BLIND SPOT.** Unchanged from cycle 8:
+    `build_integrity.py:130` and `tools/sync-deliverable.mjs:6` both say "18 checks" on a different
+    denominator this wave has not measured. **Owed by whichever wave next touches the gate's own
+    paperwork.**
+18. **NEW: NO PIXEL GATE SEES THE GAUGE LEGEND, AND NOTHING SAYS WHAT ELSE IT CANNOT SEE.** Proved
+    this cycle for the key (behind the status footer at 1280x800, 169px below the frame at 390x844)
+    with a loud-label control. The general form is owed: an enumeration of which named surfaces
+    fall inside the 18 captured frames, so "VR is green" carries its own scope. Cheap version -- one
+    pass that reports, per baseline, which of a named list of selectors is inside the captured
+    rect and unoccluded at capture time. **Owed by whichever wave next touches `visual_regression`.**
+19. **NEW: `--keel-shaky` IS NOW READ ON A GROUND ITS OWN BLOCK DOES NOT SOLVE IT AGAINST.** The
+    new `.hm-k.flag-s` swatch sits on `--home-surface`, and the token's `styles.css` block solves
+    the pair against `--side` (the trough) only. It measures 3.49:1 in dark on the panel -- over the
+    3:1 floor, and only 16% clear of it, which is the same headroom the `--gauge-rule` block calls
+    its BINDING cell. The arithmetic is not written down anywhere; only the rasterised reading is.
+    **Owed by whichever wave next touches the keel palette.**
+20. **NEW: THE STATUS FOOTER COVERS THE END OF THE ALTITUDE PANEL AT 1280x800 ON A COLD RECORD.**
+    Found while proving the VR blindness, measured through `elementsFromPoint` rather than by eye.
+    It is a fixed footer and the content scrolls out from under it, so it is not a dead-end -- but
+    the last row of the app's most argued panel is under furniture at the fold on the default
+    desktop viewport, and nothing in the gate has an opinion about that. **Owed by W2 home.**
+21. **NEW: `test/gate_cost.json` IS UNDERSTATED FOR THE TWO CHECKS THIS CYCLE GREW.** The rule
+    cycle 8 settled is max of two warm `--profile` runs of the tree being committed, and cycle 8
+    could honour it for free because branch (c) of R20's own control WAS that regeneration. This
+    cycle has no such press and did not spend the two extra 19-minute passes; the serial gate moved
+    **928.6s -> 1120.9s (+192.3s, +20.7%)** on the same box, and the two rows that grew are
+    `scoreboard_salience` (110.691, three new veil landings x 4 cells) and `home_claims` (86.07, one
+    new mutant plus a colour-reading legend arm). Nothing is WRONG today -- the table's load-time
+    abort is on the NAME SET, which still reconciles 78/78, and the six CI shards came back
+    63-210s, still balanced -- so this is a record drifting rather than a guard failing. Recorded
+    with the figure so the next wave inherits a dated statement instead of a silence. **Owed by
+    whichever wave next runs `--profile`.**

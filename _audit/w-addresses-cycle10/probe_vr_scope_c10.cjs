@@ -3,8 +3,9 @@
    moves the key's box, so the answer is re-measured rather than cited. */
 const { chromium } = require('playwright');
 const path = require('path');
-const B = require(path.join('D:\\claude-workspace\\_worktrees\\deepdive-rehearsal\\w-addresses',
-  'test', '_boot.cjs'));
+/* RESOLVED RELATIVE TO THIS FILE -- see probe_key_sweep_c10.cjs's note; a probe in the
+   repository with an absolute D:\ path only runs on one box. */
+const B = require(path.join(__dirname, '..', '..', 'test', '_boot.cjs'));
 const HTML = process.argv[2];
 const COLD = process.argv.indexOf('--cold') > 0;
 

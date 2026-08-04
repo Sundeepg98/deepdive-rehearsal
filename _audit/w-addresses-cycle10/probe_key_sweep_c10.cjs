@@ -4,8 +4,10 @@
    on whatever deliverable it is handed. Nothing in the worktree is written. */
 const { chromium } = require('playwright');
 const path = require('path');
-const B = require(path.join('D:\\claude-workspace\\_worktrees\\deepdive-rehearsal\\w-addresses',
-  'test', '_boot.cjs'));
+/* RESOLVED RELATIVE TO THIS FILE, because this probe lives in the repository and is meant to be
+   re-runnable -- including on a CI runner, which is where the wrap point turned out to differ.
+   It carried an absolute D:\ path for exactly one dispatch before that mattered. */
+const B = require(path.join(__dirname, '..', '..', 'test', '_boot.cjs'));
 
 const HTML = process.argv[2];
 const LO = Number(process.argv[3] || 320);

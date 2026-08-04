@@ -28,13 +28,31 @@ pair you COMMITTED matches, and the committed pair is what ships.
 package.json, dist/ and the deliverable silently diverge again and every browser check in THE
 GATE goes back to measuring a stale artifact. This check goes red instead.
 
+THE BUILD RUNS IN A SCRATCH MIRROR, NEVER IN THE TREE BEING CERTIFIED (W-ADDRESSES cycle 10,
+R23a). This check was the serial gate's own WRITER: `npm run build` rewrites dist/index.html,
+the deliverable, src/tokens.generated.css, src/scripts/visuals/kit.js and every compiled file
+under src/topics/ -- so a 19-minute certification run had a check inside it mutating, at minute
+one, the exact bytes the other 47 browser checks spend the next 18 minutes measuring. Nothing was
+WRONG about the bytes (the rebuild of an unchanged HEAD is byte-identical to the committed blob,
+which is this check's whole point), but "nothing was wrong" is a property of the input, not of
+the arrangement: it made dist/index.html's mtime move mid-run, it made the R13 capture
+impossible to seal against a concurrent writer, and it meant a judge auditing the run could not
+distinguish this check's own write from an outside process building in the same tree. So the
+tree is READ-ONLY for the whole run now: the inputs are copied to a temp mirror, node_modules is
+linked (never copied), `npm run build` runs THERE, and the mirror's output is compared against
+the COMMITTED BLOB and against the two files on disk. The comparison is unchanged; only the
+place the bytes are produced moved. check_all.py seals the other half by hashing
+dist/index.html at run start and run end and refusing to certify a run whose deliverable moved.
+
 Exits non-zero on any failure. Safe to run in CI.
 """
 import os
 import re
 import sys
+import shutil
 import hashlib
 import subprocess
+import tempfile
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 NAME = 'deepdive_content_pipeline_rehearsal.html'
@@ -42,6 +60,18 @@ DELIVERABLE = os.path.join(ROOT, NAME)
 DIST = os.path.join(ROOT, 'dist', 'index.html')
 PANES = [b'walk', b'drill', b'wb', b'sys', b'trade', b'model', b'num', b'rf', b'open']
 OVERLAYS = [b'mockov', b'mixov', b'cramov', b'sessov', b'keyov', b'scopeov', b'planov']
+
+# Everything `npm run build` READS, and nothing else. src/ carries the mermaid-cache's sibling
+# inputs and tools/compiler/mermaid-cache carries the rasterised SVGs themselves -- both are
+# committed, so the mirror builds from the same cache the tree does and the determinism the
+# cache buys is not spent by moving directories. node_modules is LINKED, not copied.
+BUILD_INPUTS = ['src', 'tools', 'design-tokens', 'visual-trainer', 'vite.config.mjs',
+                'package.json', 'package-lock.json']
+# visual-trainer IS a build input and the mirror learned it the hard way: tools/build-visual-kit
+# .mjs bundles `visual-trainer/src/kit.js` into `src/scripts/visuals/kit.js` on every build, so a
+# mirror without it does not fail SUBTLY -- esbuild refuses to resolve the entry point and the
+# build exits 1. That is the right failure shape for a missing input, and it is why this list is
+# a list rather than a copy-everything: a build input that stops being one shows up as a red.
 
 
 def git(*args):
@@ -100,16 +130,90 @@ status_ok, porcelain = git('status', '--porcelain')
 dirty_paths = [ln[3:] for ln in porcelain.decode('ascii', 'backslashreplace').splitlines() if ln.strip()]
 tree_clean = in_git and status_ok and not dirty_paths
 
-# On Windows npm is npm.cmd, which CreateProcess cannot launch by bare name; shell=True routes
-# it through cmd.exe. On POSIX a list + shell=True would drop the args, so it stays off there.
-r = subprocess.run(['npm', 'run', 'build'], cwd=ROOT,
-                   capture_output=True, text=True,
-                   shell=(os.name == 'nt'))
-if r.returncode != 0:
-    print('FAIL: build returned %d\n%s' % (r.returncode, r.stderr), file=sys.stderr)
+# ---------------------------------------------------------------------------------------
+# THE SCRATCH MIRROR (R23a). Built, used and removed inside this check; the tree it certifies
+# is never written to. `link_node_modules` uses a DIRECTORY JUNCTION on Windows (no privilege
+# required, and the same primitive the worktree fleet already uses) and a symlink elsewhere; the
+# link is removed non-recursively at teardown, which is the one way to remove it that does not
+# recurse into the shared install and delete it.
+# ---------------------------------------------------------------------------------------
+def link_node_modules(mirror):
+    src = os.path.join(ROOT, 'node_modules')
+    dst = os.path.join(mirror, 'node_modules')
+    if not os.path.isdir(src):
+        return False, 'no node_modules to link at ' + src
+    if os.name == 'nt':
+        # `mklink` is a cmd BUILTIN, so it needs cmd -- but it does not need a shell STRING:
+        # the argument list form keeps both paths out of the metacharacter grammar entirely.
+        p = subprocess.run(['cmd', '/c', 'mklink', '/J', dst, src],
+                           capture_output=True, text=True)
+        if p.returncode != 0:
+            return False, 'mklink /J failed: ' + (p.stderr or p.stdout or '').strip()
+        return True, ''
+    try:
+        os.symlink(src, dst, target_is_directory=True)
+    except OSError as e:
+        return False, 'symlink failed: %s' % e
+    return True, ''
+
+
+mirror = tempfile.mkdtemp(prefix='ddr-build-mirror-')
+build_err = None
+fresh = None
+try:
+    for rel in BUILD_INPUTS:
+        s = os.path.join(ROOT, rel)
+        d = os.path.join(mirror, rel)
+        if os.path.isdir(s):
+            shutil.copytree(s, d)
+        elif os.path.isfile(s):
+            shutil.copy2(s, d)
+        else:
+            build_err = 'build input missing from the tree: %s' % rel
+            break
+    if build_err is None:
+        linked, why = link_node_modules(mirror)
+        if not linked:
+            build_err = ('the scratch mirror could not reach the dependency tree, so this check '
+                         'cannot build anything: %s' % why)
+    if build_err is None:
+        # On Windows npm is npm.cmd, which CreateProcess cannot launch by bare name; shell=True
+        # routes it through cmd.exe. On POSIX a list + shell=True would drop the args, so it
+        # stays off there.
+        r = subprocess.run(['npm', 'run', 'build'], cwd=mirror,
+                           capture_output=True, text=True,
+                           shell=(os.name == 'nt'))
+        if r.returncode != 0:
+            build_err = 'build returned %d\n%s' % (r.returncode, r.stderr)
+        else:
+            fresh = open(os.path.join(mirror, 'dist', 'index.html'), 'rb').read()
+            mirror_deliverable = os.path.join(mirror, NAME)
+            if not os.path.exists(mirror_deliverable):
+                build_err = ('`npm run build` produced no %s in the mirror at all -- '
+                             'tools/sync-deliverable.mjs did not run' % NAME)
+            elif sha(open(mirror_deliverable, 'rb').read()) != sha(fresh):
+                build_err = ('`npm run build` did NOT sync the deliverable: in a clean mirror of '
+                             'this tree, dist/index.html and %s came out different. The sync step '
+                             '(node tools/sync-deliverable.mjs, last in package.json "build") is '
+                             'broken or has been removed.' % NAME)
+finally:
+    # UNLINK THE JUNCTION FIRST, NON-RECURSIVELY. `rmtree` over a junction recurses THROUGH it:
+    # that is how one teardown in this project deleted all 29 @-scopes of a shared node_modules.
+    nm = os.path.join(mirror, 'node_modules')
+    if os.path.isdir(nm):
+        try:
+            os.rmdir(nm) if os.name == 'nt' else os.unlink(nm)
+        except OSError:
+            try:
+                os.unlink(nm)
+            except OSError:
+                pass
+    shutil.rmtree(mirror, ignore_errors=True)
+
+if build_err is not None:
+    print('FAIL: %s' % build_err, file=sys.stderr)
     sys.exit(1)
 
-fresh = open(DIST, 'rb').read()
 problems = []
 tail = []          # diagnostics that must print LAST: THE GATE reports only a check's final line
 
@@ -118,18 +222,32 @@ leftover = re.findall(rb'<!--@build:include', fresh)
 if leftover:
     problems.append('%d unresolved include marker(s) remain in the output' % len(leftover))
 
-# --- (2) the build synced the deliverable -------------------------------------------------
+# --- (2) the sync step ran; and the TREE is touched ONLY IF IT IS ALREADY WRONG -------------
+# THE SYNC ASSERTION MOVED INTO THE MIRROR (R23a) and is above: the mirror's dist/index.html and
+# the mirror's deliverable are compared there, which is now the only place a build happens.
+#
+# WHAT IS LEFT HERE IS THE BARRIER'S OTHER JOB, and it cannot simply be dropped. check_all.py
+# calls this check THE BARRIER because the rest of the gate reads what it used to write: the 47
+# browser checks are handed the deliverable, and visual_pane_smoke and shadow_css_guard read
+# dist/index.html, which is gitignored and therefore ABSENT on a fresh CI checkout. So the tree
+# is refreshed from the mirror EXACTLY WHEN IT DOES NOT ALREADY CARRY THESE BYTES, and never
+# otherwise. The consequence is the property R23 asked for, stated as a rule rather than a hope:
+#     on a clean tree whose deliverable is a build of its own source -- the ONLY tree R13
+#     certifies -- this check writes nothing at all, and dist/index.html's mtime does not move.
+# On any other tree (a developer mid-edit, a fresh CI checkout with no dist/) it writes, and the
+# PASS line SAYS SO, so a run that touched the tree can never be read as one that did not.
 on_disk = open(DELIVERABLE, 'rb').read() if os.path.exists(DELIVERABLE) else None
-if on_disk is None:
-    problems.append('the build produced no %s at all -- tools/sync-deliverable.mjs did not run' % NAME)
-elif sha(on_disk) != sha(fresh):
-    problems.append(
-        '`npm run build` did NOT sync the deliverable: dist/index.html and %s differ. The sync '
-        'step (node tools/sync-deliverable.mjs, last in package.json "build") is broken or has '
-        'been removed. Restore it -- without it, `npm run build` leaves a STALE deliverable, and '
-        'the deliverable is what ships, what CI deploys, and what 18 checks in THE GATE measure '
-        '(all 16 browser checks, plus layout_static and unit_tests).' % NAME)
-    tail.append(diff_line('DELIVERABLE', on_disk, 'FRESH', fresh))
+dist_on_disk = open(DIST, 'rb').read() if os.path.exists(DIST) else None
+wrote = []
+if on_disk is None or sha(on_disk) != sha(fresh):
+    open(DELIVERABLE, 'wb').write(fresh)
+    wrote.append(NAME)
+if dist_on_disk is None or sha(dist_on_disk) != sha(fresh):
+    os.makedirs(os.path.dirname(DIST), exist_ok=True)
+    open(DIST, 'wb').write(fresh)
+    wrote.append('dist/index.html')
+tree_state = ('tree UNTOUCHED (both artifacts already were this build)' if not wrote
+              else 'REFRESHED ' + ' + '.join(wrote) + ' -- this run WROTE the tree')
 
 # --- (3) the COMMITTED pair is consistent -------------------------------------------------
 # Asserted whenever the tree was clean, which is ALWAYS the case in CI (actions/checkout gives a
@@ -178,5 +296,6 @@ if problems or tail:
         print('  - ' + p, file=sys.stderr)
     sys.exit(1)
 
-print('BUILD INTEGRITY: PASS  (%d bytes, 0 unresolved, 9 panes + 7 overlays, build SYNCED the '
-      'deliverable, %s)' % (len(fresh), head_state))
+print('BUILD INTEGRITY: PASS  (%d bytes, 0 unresolved, 9 panes + 7 overlays, built in a SCRATCH '
+      'MIRROR and the mirror\'s build SYNCED the deliverable, %s, %s)'
+      % (len(fresh), head_state, tree_state))

@@ -690,8 +690,8 @@ function main() {
    * BACKGROUND. Under the reader's default (`print-color-adjust:economy`, Background graphics
    * unticked, which is what `printBackground:false` reproduces) the browser is free to drop
    * background paint, and it does: 138 capsule fills, 70 keel marks, the `.open` bases, the inset
-   * rules and the four legend swatches all vanish, leaving "41 flagged" beside a blank strip and
-   * a legend keying four marks that are not on the page. The grade lives in the fill and nowhere
+   * rules and every swatch the key renders all vanish, leaving "41 flagged" beside a blank strip
+   * and a legend keying marks that are not on the page. The grade lives in the fill and nowhere
    * else, so there is no channel to degrade to.
    *
    * THE MEASUREMENT IS BYTES, NOT PIXELS, and that is the point: a PDF's content stream carries
@@ -794,8 +794,10 @@ function main() {
      * .ix-goal-bar,.ix-goal-bar span` gone from the override the delta moves 21 bytes of 125,089
      * against a 100,000-byte floor with 25% headroom, so two thirds of the sentence was
      * unfalsifiable by the number printed under it. The bytes are sensitive to the 138 capsule
-     * fills, the keel marks and the four legend swatches, and that is now all they claim. The six
-     * grade-bearing selectors are asserted by ARM F2 instead, on a property of the document. */
+     * fills, the keel marks and EVERY SWATCH THE KEY RENDERS -- five since cycle 9, and this arm
+     * names the selector rather than the count because it never counted to one -- and that is now
+     * all they claim. The six grade-bearing selectors are asserted by ARM F2 instead, on a
+     * property of the document. */
     ok(delta >= LATTICE_MIN && ratio >= LATTICE_RATIO,
       '[lattice] the altitude gauge and its legend SURVIVE the reader default: forcing '
       + 'print-color-adjust:exact adds real paint to the PDF, where economy drops it and prints '

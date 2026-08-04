@@ -1017,6 +1017,51 @@ def hits_of(path, src):
     return [h for _l, s, g in copy_spans(path, src) for h in judge(s, g)]
 
 
+# ===== THE CROSS-REFERENCE RESOLVER (W-ADDRESSES cycle 10, carried item 9 -- half one) ========
+# THE DEFECT CLASS, stated from the three times it has now been found by hand. src/styles.css
+# argues for its own solves by NAMING the instrument that measures them -- "test/
+# scoreboard_salience.cjs's KEY arm reads all four of these off the pixels" -- and those names
+# are prose: nothing resolves them. Cycle 5 found one pointing at a file that contained no
+# `.hm-k` selector at all; cycle 9 found the sentence beside it still saying FOUR while the key
+# rendered five; cycle 10 found six more copies of the same number in four files. A citation
+# nobody can follow is worse than no citation, because it is read as evidence.
+# THIS HALF IS THE CHEAP ONE AND IT IS EXACT: every `test/<file>` any stylesheet comment names
+# must EXIST. It cannot judge whether the named arm still asserts what the sentence claims -- no
+# regex can -- but it makes the file the sentence points at a checked fact instead of a memory.
+XREF_RE = re.compile(r'\btest/[A-Za-z0-9_][A-Za-z0-9_./-]*\.(?:cjs|mjs|py|json|md)\b')
+
+
+def comment_bodies(src):
+    """[(line, text)] for every /* ... */ block in a CSS source. CSS has no line comment."""
+    out, i, n, line = [], 0, len(src), 1
+    while i < n:
+        if src[i] == '/' and i + 1 < n and src[i + 1] == '*':
+            start, at = i + 2, line
+            i += 2
+            while i + 1 < n and not (src[i] == '*' and src[i + 1] == '/'):
+                if src[i] == '\n':
+                    line += 1
+                i += 1
+            out.append((at, src[start:i]))
+            i += 2
+        else:
+            if src[i] == '\n':
+                line += 1
+            i += 1
+    return out
+
+
+def dead_xrefs(name, src, exists):
+    """[(name, line, path)] for every test/... path a comment names that `exists` denies."""
+    bad = []
+    for at, body in comment_bodies(src):
+        for m in XREF_RE.finditer(body):
+            p = m.group(0)
+            if not exists(p):
+                bad.append((name, at + body[:m.start()].count('\n'), p))
+    return bad
+
+
 def self_test(controls=None):
     """[problems]. `controls` (a list, if given) collects the NAME of every negative control that
     actually ran, so the PASS line's figure is derived from the assertions rather than typed --
@@ -1174,6 +1219,28 @@ def self_test(controls=None):
         problems.append('THE OVER-DECLARED DETECTOR DOES NOT FIRE: a live entry declaring a rule '
                         'that no longer hits anything is dead debt on a live line, and it is how '
                         'an entry quietly widens to cover rules it was never argued for.')
+    # ---- (v) THE CROSS-REFERENCE RESOLVER, BOTH WAYS (cycle 10, carried item 9) -------------
+    # Two fixtures rather than one, because a resolver that flags EVERYTHING is as useless as a
+    # resolver that flags nothing -- and this one runs over a 300KB stylesheet whose comments are
+    # its argument, so a false positive would be paid for in deleted prose.
+    ctl.append('a stylesheet comment citing a test file that DOES exist')
+    live = ('/* the KEY arm in test/scoreboard_salience.cjs reads it, and test/home_claims.cjs\n'
+            '   presses it; neither of these is a dead pointer. */\n.a{color:red}')
+    if dead_xrefs('fixture.css', live, lambda p: True):
+        problems.append('THE CROSS-REFERENCE RESOLVER FLAGGED A LIVE CITATION: it would red the '
+                        'gate for naming a file that exists, so it gets turned off within the '
+                        'hour and carried item 9 comes back.')
+    dead = '/* measured by test/no_such_check.cjs, which is where the 4.79:1 comes from */\n.a{}'
+    got = dead_xrefs('fixture.css', dead, lambda p: p != 'test/no_such_check.cjs')
+    if not got:
+        problems.append('THE CROSS-REFERENCE RESOLVER DOES NOT FIRE: a stylesheet comment citing '
+                        'a test file that is not in the tree resolved clean, so the "references '
+                        'that no longer resolve" half of carried item 9 is asserted by nothing.')
+    # AND IT MUST READ COMMENTS ONLY. A CSS content: string or a url() naming a path is not a
+    # citation, and flagging one would be the alt-text confusion this file already fixed once.
+    if dead_xrefs('fixture.css', '.a::after{content:"test/nope.cjs"}', lambda p: False):
+        problems.append('THE CROSS-REFERENCE RESOLVER READ OUTSIDE A COMMENT: it matched a path '
+                        'inside a declaration, so it is scanning CSS rather than prose.')
     return problems
 
 
@@ -1229,6 +1296,16 @@ def main():
     # ONE sweep, ONE audit, and both are the functions the self-test presses -- see decide().
     findings, used, scanned = sweep(files, ruled)
     stale, over, grew, shrank = audit(ruled, used)
+
+    # ---- THE CROSS-REFERENCE PASS, over every stylesheet in the tree (cycle 10, item 9) -----
+    # Every CSS file, not just src/styles.css: the defect is "a comment cites an instrument", and
+    # nothing makes that a property of one file. `exists` is asked of the real tree.
+    def _resolves(rel):
+        return os.path.exists(os.path.join(ROOT, rel.replace('/', os.sep)))
+    xrefs = []
+    for f, text in files:
+        if f.endswith('.css'):
+            xrefs.extend(dead_xrefs(f, text, _resolves))
 
     if REPORT:
         # THE INFORMATIONAL INDEX, REFRESHED BY THE THING THAT READS IT. `lines` is a pointer and
@@ -1311,10 +1388,17 @@ def main():
             say('       %s  %s  excuses %d, found %d  %r'
                 % (k, ent.get('file', '?'), want, got, (ent.get('text') or '')[:40]))
 
-    bad = len(findings) + len(stale) + len(over) + len(grew) + len(shrank)
+    if xrefs:
+        print('\n  DEAD CROSS-REFERENCES -- a stylesheet comment cites an instrument that is not'
+              '\n  in the tree. A citation nobody can follow reads as evidence and is not:')
+        for f, line, p in xrefs[:10]:
+            say('       %s:%d  cites %s' % (f, line, p))
+
+    bad = len(findings) + len(stale) + len(over) + len(grew) + len(shrank) + len(xrefs)
     if bad:
-        print('\nCRAFT HYGIENE: FAIL (%d violation(s), %d stale, %d over-declared, %d grew, %d shrank)'
-              % (len(findings), len(stale), len(over), len(grew), len(shrank)))
+        print('\nCRAFT HYGIENE: FAIL (%d violation(s), %d stale, %d over-declared, %d grew, '
+              '%d shrank, %d dead cross-reference(s))'
+              % (len(findings), len(stale), len(over), len(grew), len(shrank), len(xrefs)))
         return 1
     # BOTH FIGURES ARE DERIVED, NOT TYPED (cycle 5, judge item 6). The plant count reads the same
     # lists the self-test loops iterate -- so deleting a plant CHANGES THIS LINE, which is the one
@@ -1342,8 +1426,13 @@ def main():
     print('CRAFT HYGIENE: PASS  (%d rendered-copy spans; the glyph rule CHANNEL-FREE over every '
           'string literal and the four typeset rules on six bounded prose channels; %d ruled '
           'exceptions, every one still matching something, each excused only from the rules it '
-          'declares, only in the file it names, and only as many times as it declares)'
-          % (scanned, len(ruled)))
+          'declares, only in the file it names, and only as many times as it declares; and every '
+          '`test/...` instrument a stylesheet comment CITES resolves on disk -- %d citation(s) '
+          'across %d stylesheet(s), pressed both ways so it can neither miss a dead pointer nor '
+          'red a live one)'
+          % (scanned, len(ruled), sum(len(list(XREF_RE.finditer(b))) for f, t in files
+                                      if f.endswith('.css') for _l, b in comment_bodies(t)),
+             len([1 for f, _t in files if f.endswith('.css')])))
     return 0
 
 

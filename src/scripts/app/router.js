@@ -10,8 +10,28 @@
 (function () {
   'use strict';
 
-  /* ----- route configuration: the 9 surfaces, in tab order ----- */
-  var ROUTES = {
+  /* ----- route configuration: the 9 surfaces, in tab order -----
+     THE TABLE HAS A NULL PROTOTYPE, AND THAT IS THE WHOLE GUARD (W-ADDRESSES cycle 10, R26).
+     Every read of this table below is a bare `ROUTES[x]` truth test on a string that came off the
+     URL -- `!ROUTES[parts[0]]` in parseHash's topic strip, `!ROUTES[viewId]` in three unknown-view
+     guards -- and on an ordinary object literal `Object.prototype` answers for names nobody
+     registered: `ROUTES['constructor']` is a FUNCTION (truthy), `ROUTES['toString']` is a
+     function, `ROUTES['__proto__']` is the prototype object. So `#constructor` was a "known" view
+     that then indexed to a non-route, and a topic slug named `constructor` or `valueOf` would have
+     had its prefix refused by `!ROUTES[p0]` -- the second conjunct of the predicate R21 rests on,
+     the one cycle 9 added the collision cell for. Creating the table with a null prototype closes
+     BOTH in one move, and it closes them for the three consumers outside this file that index the
+     exported table with a stored or reconstructed view id as well: home-view.js:57 (the resume
+     CTA's title), last-visit.js:53 (the resume pointer's view, read out of localStorage, which is
+     user-writable) and view-manager.js:98 (the document title on a topic switch).
+     Object.assign copies the literal's own enumerable keys onto the null-prototype target, so the
+     11 REAL ids are untouched and every `ROUTES[id]` on a registered view answers exactly as
+     before -- pressed at test/home_claims.cjs's route-shape drive list, which now drives
+     `#constructor` and `#__proto__` beside `#Nonsense` and requires all three to take the
+     unknown-view guard. NOT A NEW ENGINE FLOOR: Object.assign and Object.create are ES2015/ES5
+     built-ins, and these modules already use ES2015 SYNTAX (template literals and const/let are
+     both live in this directory), so nothing that can parse the app can miss them. */
+  var ROUTES = Object.assign(Object.create(null), {
     walk:  { id: 'walk',  title: 'Walkthrough' },
     drill: { id: 'drill', title: 'Probe Drill' },
     wb:    { id: 'wb',    title: 'Whiteboard' },
@@ -23,7 +43,7 @@
     open:  { id: 'open',  title: '30-Second' },
     viz:   { id: 'viz',   title: 'Visualize' },
     home:  { id: 'home',  title: 'Home' }
-  };
+  });
   /* DEFAULT_ROUTE MUST STAY 'walk'. It is the fallback for an UNKNOWN view id -- and a bare
      `#<topic>` deep link parses as topic + NO view, so it takes this fallback too. Setting it to
      'home' would silently land EVERY bare `#saga` deep link on the home instead of on saga.

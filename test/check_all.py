@@ -781,7 +781,10 @@ BROWSER_CHECKS = [('render', 'test/render.cjs'), ('entity_leak', 'test/entity_le
                      # TWO grounds (the stable trough and the band each mark abuts), the FILL STRIP
                      # alone carrying an ordered ramp with every adjacent pair over 1.15, the
                      # untouched capsule's rule, EVERY LEGEND SWATCH the key renders (five since
-                     # cycle 9, one per keel token) against the panel's own
+                     # cycle 9, one per keel token, and since cycle 10 the run also SWEEPS every
+                     # hand-typed copy of that number across seven source files and reds any that
+                     # disagrees with what it just enumerated -- the copies are what went stale,
+                     # not the count) against the panel's own
                      # measured ground (the binding cell of the --gauge-rule solve), and the panel
                      # standing off the home's ground. The two keel marks are separated by a
                      # 1.15 MARGIN and not by a bare ordering, because a bare `>=` can only fail
@@ -1263,7 +1266,18 @@ BROWSER_CHECKS = [('render', 'test/render.cjs'), ('entity_leak', 'test/entity_le
                      # third, both directions / level / perfect / absent-field / mixed-position /
                      # no-record) at two viewports and asserts each rendered claim against the
                      # NUMERALS RENDERED BESIDE IT. Four planted mutants, each a defect a judge
-                     # found on a shipped build; aborts if any goes undetected.
+                     # found on a shipped build; aborts if any goes undetected. THE LEGEND ARM IS
+                     # A BIJECTION AND BOTH DIRECTIONS ARE PLANTED (cycle 10, R25): every keel
+                     # colour the rails paint must have a swatch (MUTANT 10b removes one) AND
+                     # every keel swatch must carry a colour the gauge can draw (MUTANT 10c adds
+                     # one at a perturbed colour). The denominator of the second is the DECLARED
+                     # keel tokens, not this record's rails: a key that names a severity the
+                     # record has not earned is a legend, not a defect, and the ruled form of the
+                     # converse was measured false-alarming on exactly that. AND THE KEY'S
+                     # GEOMETRY is asserted at the ends of the <=419px band -- one row at 419, two
+                     # at 320, each height derived from the page's own swatch and row-gap -- which
+                     # is what makes styles.css's pixel arithmetic for that block a checked
+                     # figure; MUTANT 10d restores cycle 9's long labels and requires it to red.
                      # AND SINCE W-ADDRESSES, THE DOOR ROOM AND THE RAIL DESCRIPTIONS, which this
                      # line described by nothing for four cycles -- the same defect judge item 4
                      # found in the scoreboard_salience entry, one line apart. scripts/boot.js
@@ -1308,7 +1322,17 @@ BROWSER_CHECKS = [('render', 'test/render.cjs'), ('entity_leak', 'test/entity_le
                      # only parseHash's condition while that holds, and it was inherited from a
                      # router comment ("a hyphenated topic slug can NEVER equal one of the 9 short
                      # view ids") whose premise 16 single-token slugs have already falsified --
-                     # so the disjointness is measured against Router.ROUTES rather than assumed. Plus the rail descriptions: every
+                     # so the disjointness is measured against Router.ROUTES rather than assumed.
+                     # THAT DIRECTION IS DRIVEN THROUGH THE ROUTER'S OWN EXPRESSION SINCE CYCLE 10
+                     # (R26): `!!Router.ROUTES[id]`, not `Object.keys(ROUTES).indexOf(id)`. The two
+                     # are different questions on any object with a prototype -- `ROUTES` was an
+                     # object literal, so `ROUTES['constructor']` was a truthy inherited FUNCTION
+                     # while the key set said no collision, and both parseHash's topic strip and
+                     # its unknown-view guard read that answer. The table is now created with a
+                     # NULL PROTOTYPE, the cell asserts that it answers for no unregistered name,
+                     # and #constructor and #__proto__ join the drive list and must take the same
+                     # fallback as #Nonsense, character for character, rather than titling the
+                     # document "undefined". Plus the rail descriptions: every
                      # rail the gauge renders, selected by POSITION rather than by the
                      # aria-describedby tie, its description EQUAL character for character to an
                      # oracle formatted from the registry, one clause per rendered segment.
@@ -1435,6 +1459,41 @@ results = {}
 timings = {}
 _lock = threading.Lock()
 
+# ===== THE WALL-CLOCK SEAL ON THE CAPTURE (W-ADDRESSES cycle 10, R23b) =========================
+# R13 says a gate run certifies A TREE, not a commit -- and a tree is a claim about BYTES, made
+# over a 19-minute wall-clock window during which 47 browser checks read the deliverable one after
+# another. Nothing checked that the bytes stayed still for that window. They had no reason to move
+# (build_integrity, the only writer, now builds in a scratch mirror and leaves a correct tree
+# untouched -- see its header), but "no reason to move" is an argument, and R13's whole point is
+# that a certification names what it measured. So the run measures it.
+#
+# THE BASELINE IS TAKEN AFTER THE BARRIER, NOT AT PROCESS START, and that is the honest place for
+# it: build_integrity is ALLOWED to write when the tree does not already carry its own build (a
+# developer mid-edit, a fresh CI checkout with no gitignored dist/), and sealing across its own
+# legitimate refresh would make the seal fire on the one write the gate asks for. Both hashes are
+# printed either way, so a run that refreshed the tree says so twice.
+#
+# A DIFFERENCE ABORTS THE CAPTURE rather than failing a check: no individual check is wrong, the
+# RUN is -- some checks read the old bytes and some the new, and which is which is unrecoverable
+# after the fact. The exit is non-zero and the summary refuses the word PASS.
+SEAL_PATHS = [('dist/index.html', os.path.join(ROOT, 'dist', 'index.html')),
+              ('deepdive_content_pipeline_rehearsal.html',
+               os.path.join(ROOT, 'deepdive_content_pipeline_rehearsal.html'))]
+
+def seal_read():
+    """{label: md5-or-ABSENT} for every artifact the run's own checks read."""
+    import hashlib
+    out = {}
+    for label, p in SEAL_PATHS:
+        try:
+            with open(p, 'rb') as fh:
+                out[label] = hashlib.md5(fh.read()).hexdigest()
+        except OSError:
+            out[label] = 'ABSENT'
+    return out
+
+SEAL = {'start': seal_read(), 'base': None, 'end': None}
+
 def dispatch(name, cmd, env=None, browser_check=False):
     """Run one check, time it, and record its row. The ONLY place a check is executed.
 
@@ -1478,16 +1537,27 @@ def job(name):
         if not chrome:
             return skip(name, 'no Playwright/Chrome (npm install && npx playwright install chromium)')
         script = dict(BROWSER_CHECKS)[name]
-        return dispatch(name, ['node', script, deliverable],
-                        env=dict(trace_env(name), CHROME=chrome), browser_check=True)
-    return dispatch(name, dict(NATIVE_CHECKS)[name], env=trace_env(name))
+        st = dispatch(name, ['node', script, deliverable],
+                      env=dict(trace_env(name), CHROME=chrome), browser_check=True)
+    else:
+        st = dispatch(name, dict(NATIVE_CHECKS)[name], env=trace_env(name))
+    # THE SEAL'S BASELINE IS THE MOMENT THE BARRIER FINISHED (R23b). Taken here rather than at
+    # process start so build_integrity's own permitted refresh of a not-yet-built tree is inside
+    # the pre-seal window; everything after this point must hold still.
+    if name in BARRIER:
+        SEAL['base'] = seal_read()
+    return st
 
 # ===== LANES (--fast only) ====================================================================
-# THE BARRIER. build_integrity runs `npm run build`, which REWRITES dist/index.html, the
-# deliverable at the repo root, and src/topics/_generated/. Every other check in this file reads
-# at least one of those. Run it beside anything and that check is reading a tree being rewritten
-# underneath it -- so it does not merely go first, it goes ALONE. This is not a performance
-# choice and it is not tunable.
+# THE BARRIER. build_integrity is the only check that runs `npm run build`, and until cycle 10 it
+# ran that build IN THIS TREE -- rewriting dist/index.html, the deliverable at the repo root,
+# src/tokens.generated.css, src/scripts/visuals/kit.js and every compiled file under src/topics/,
+# all of which the rest of this file reads. It now builds in a SCRATCH MIRROR and writes the tree
+# only when the tree does not already carry that build (a developer mid-edit; a fresh CI checkout
+# with no gitignored dist/). It still goes FIRST and ALONE, for both halves of the same reason:
+# on the runs where it does write, anything beside it is reading a tree being rewritten
+# underneath it, and on the runs where it does not, it is what establishes the bytes the seal
+# above holds everything else to. This is not a performance choice and it is not tunable.
 BARRIER = ['build_integrity']
 
 # THE SERIAL TAIL. Checks whose verdict depends on TIMING -- animation frames, transition
@@ -1711,6 +1781,26 @@ elif FAST:
 print('  %d checks in %.1fs (%.1f min)%s' % (len(rows), gate_wall, gate_wall / 60.0, tag))
 failed = [n for n, st, _ in rows if st == 'FAIL']
 
+# ---- THE WALL-CLOCK SEAL, REPORTED IN THE CAPTURE ITSELF (R23b) -----------------------------
+# Printed on EVERY run, green or red: the hashes are what makes "this run certifies tree X" a
+# measured statement rather than an assumption, so they belong in the capture next to the count.
+SEAL['end'] = seal_read()
+seal_base = SEAL['base'] or SEAL['start']
+seal_moved = sorted(k for k in seal_base if seal_base.get(k) != SEAL['end'].get(k))
+for label, _ in SEAL_PATHS:
+    refreshed = ('' if SEAL['start'].get(label) == seal_base.get(label)
+                 else '   [the barrier refreshed it from %s]' % SEAL['start'].get(label)[:12])
+    print('  SEAL %-40s %s -> %s%s'
+          % (label, seal_base.get(label, '?')[:12], SEAL['end'].get(label, '?')[:12], refreshed))
+if seal_moved:
+    print('  CAPTURE ABORTED -- %s changed while the gate was running.' % ', '.join(seal_moved))
+    print('    A gate run certifies a TREE (R13), and this run did not read one tree: the checks')
+    print('    before the change measured different bytes from the checks after it, and which is')
+    print('    which is not recoverable from this transcript. Find the other writer (an editor, a')
+    print('    second agent, a stray `npm run build`), then re-run on a quiet tree. No individual')
+    print('    check is being called wrong; the RUN is not a capture.')
+    failed = failed + ['CAPTURE-SEAL']
+
 # --verdicts PATH: the run's per-check verdicts as JSON. The acceptance work compares a fast run
 # against a serial one check by check, and scraping that out of the aligned summary text would
 # make the comparison depend on column widths -- so the runner states it outright. Observational:
@@ -1730,10 +1820,17 @@ for i, a in enumerate(sys.argv):
             #   full_coverage      -- every registered check ran (false only under --changed/--only)
             #   capture_of_record  -- this run may stand as THE gate result: full coverage, serial,
             #                         no shared browser. Only a no-flag run can set it.
+            #   capture_sealed     -- the artifacts the checks read were byte-identical from the
+            #                         barrier's finish to the last check's (R23b). A run that is
+            #                         not sealed is not a capture, whatever its verdicts say, so
+            #                         capture_of_record carries it as a conjunct.
             json.dump({'mode': 'fast' if FAST else 'serial', 'jobs': JOBS if FAST else 1,
                        'shared_browser': bool(srv),
                        'full_coverage': not CHANGED,
-                       'capture_of_record': (not CHANGED) and (not FAST) and (not srv),
+                       'capture_sealed': not seal_moved,
+                       'seal': {'base': seal_base, 'end': SEAL['end'], 'start': SEAL['start']},
+                       'capture_of_record': ((not CHANGED) and (not FAST) and (not srv)
+                                             and not seal_moved),
                        'selected': len(rows), 'registry': len(ORDER),
                        'wall_s': round(gate_wall, 2),
                        'verdicts': dict((n, st) for n, st, _ in rows)}, fh, indent=1)

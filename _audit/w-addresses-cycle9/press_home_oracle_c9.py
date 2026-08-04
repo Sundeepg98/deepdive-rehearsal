@@ -37,11 +37,45 @@ SCRATCH = (r'C:\Users\Dell\AppData\Local\Temp\claude'
            r'\bfc4e186-9eb0-4148-a383-84020244f407\scratchpad\w9')
 DIST = os.path.join(ROOT, 'dist', 'index.html')
 CHECK = os.path.join(ROOT, 'test', 'home_claims.cjs')
-OUT = os.path.join(ROOT, '_audit', 'w-addresses-cycle9', 'press-home-oracle.txt')
+# THE RECEIPT MOVED WHEN THE SCRIPT GREW (cycle 10, judge item 1). This script now runs SIX arms,
+# not four: cycle 10 added E1/E2, the press of R22's second conjunct. The four-arm run this file
+# produced as cycle 9 is left byte-intact beside it at `../w-addresses-cycle9/press-home-oracle
+# .txt`, and it is the receipt the cycle-9 ledger section quotes; re-generating it here would
+# make that section and its own evidence disagree, which is the class of defect this wave keeps
+# finding. This run writes the cycle-10 path.
+OUT = os.path.join(ROOT, '_audit', 'w-addresses-cycle10', 'press-home-oracle-armE.txt')
 
 M_FUTURE = os.path.join(SCRATCH, '_w9_mirror_caseinsensitive.html')
 M_CYCLE7 = os.path.join(SCRATCH, '_w9_mirror_cycle7line.html')
+M_RESTORE = os.path.join(SCRATCH, '_w9_mirror_restore_last_topic.html')
 C_PREFIX = os.path.join(SCRATCH, '_w9_home_claims_prefix.cjs')
+C_FIRST = os.path.join(SCRATCH, '_w9_home_claims_first_conjunct.cjs')
+
+# ---- the RESTORE-LAST-TOPIC build: the one shape that reds R22's SECOND conjunct --------------
+# TWO substitutions, and they have to be made TOGETHER or the build is a defect rather than a
+# product change: view-manager adopts the record's last-visited topic on a route with no topic
+# axis, and boot's bare-view branch stamps the DOOR room so the stamp agrees with what the app
+# then shows. On that build a bare view shows a NON-boot topic and the document wears that same
+# room, so the first conjunct holds and only the second can fail.
+VM_ON = """    if (route.topic && typeof TopicRegistry !== 'undefined') {
+      var curT = TopicRegistry.current();
+      if (curT && route.topic !== curT.id) TopicRegistry.setTopic(route.topic);
+    }"""
+VM_RESTORE = """    if (route.topic && typeof TopicRegistry !== 'undefined') {
+      var curT = TopicRegistry.current();
+      if (curT && route.topic !== curT.id) TopicRegistry.setTopic(route.topic);
+    }
+    if (!route.topic && typeof TopicRegistry !== 'undefined'
+        && window.LastVisit && LastVisit.topicId) {
+      var _lv = LastVisit.topicId();
+      var _cv = TopicRegistry.current();
+      if (_lv && TopicRegistry.get(_lv) && _cv && _cv.id !== _lv) TopicRegistry.setTopic(_lv);
+    }"""
+BOOT_DOOR = ("var _dg=(!_raw||_seg.toLowerCase()==='home'||(_hr&&(_raw.split('/')[1]||'')"
+             ".toLowerCase()==='home'))?_door:(_hr||_door||_rm(window.__doorBoot));")
+
+# ---- the FIRST-CONJUNCT-ONLY cell: the control for arm E --------------------------------------
+PRED_FIRST = "              !!want && uwore.length > 0 && uwore.every((v) => v === want),"
 
 # ---- the FUTURE-W2 build: parseHash and boot.js made case-insensitive TOGETHER ----------------
 ROUTER_OLD = ("    if (typeof TopicRegistry !== 'undefined' && TopicRegistry.get(parts[0])"
@@ -130,6 +164,18 @@ open(C_PREFIX, 'w', encoding='utf-8', newline='').write(
        .replace("require('./_boot.cjs')",
                 'require(' + repr(os.path.join(ROOT, 'test', '_boot.cjs')) + ')'))
 
+for name, needle in [('view-manager\'s topic adoption', VM_ON), ('boot\'s classifier line',
+                                                                 SHIPPED)]:
+    if src.count(needle) != 1:
+        sys.exit('%s appears %d times in dist/index.html, expected 1'
+                 % (name, src.count(needle)))
+open(M_RESTORE, 'w', encoding='utf-8', newline='').write(
+    src.replace(VM_ON, VM_RESTORE).replace(SHIPPED, BOOT_DOOR))
+open(C_FIRST, 'w', encoding='utf-8', newline='').write(
+    chk.replace(PRED_FIXED, PRED_FIRST)
+       .replace("require('./_boot.cjs')",
+                'require(' + repr(os.path.join(ROOT, 'test', '_boot.cjs')) + ')'))
+
 lines = ['=== W-ADDRESSES cycle 9 -- R22: the harvested cells get the press\'s own oracle ===', '']
 
 cA, oA = run(CHECK, DIST)
@@ -158,17 +204,61 @@ vC = verdicts(oC)
 table(lines, 'C. CYCLE-7-line mirror, FIXED cells -- R21\'s differential must survive R22 '
              '-- exit %d' % cC, vC, vA)
 
+# ---- ARM E: THE SECOND CONJUNCT'S OWN PRESS (cycle 10, judge item 1) --------------------------
+# R22's predicate is a conjunction, and cycle 9 pressed ONE half of it. `uf.shown === px.boot`
+# was added because it was free -- px.boot was already read, already asserted distinct -- and
+# "free" was taken as "sound". A judge then MEASURED it inert: replacing the whole predicate with
+# `(isHome || uf.shown === px.boot)` alone left both cells GREEN on the cycle-7-line build that
+# carries R21's defect, so nothing any arm above drives is discriminated by it. That is the
+# wave's own second law arriving inside the fix that quotes it: an instrument enters only if it
+# has been SHOWN FAILING.
+#
+# THE SHAPE THAT REDS IT is a RESTORE-LAST-TOPIC build -- a plausible product change, not a
+# contrivance: view-manager adopts LastVisit.topicId() on a topicless route, and boot's bare-view
+# branch stamps the door room to match, so the door and the app AGREE on a room that is not the
+# boot topic's. The first conjunct (every value the document wore is the room of the surface the
+# app reports) therefore HOLDS, and only the second can fail.
+#
+# E2 IS THE CONTROL AND IT IS NOT OPTIONAL: a red that both conjuncts could produce proves
+# neither. It runs the SAME build against a cell carrying the FIRST conjunct alone, which must
+# come back green.
+lines.append('')
+cE1, oE1 = run(CHECK, M_RESTORE)
+vE1 = verdicts(oE1)
+table(lines, 'E1. RESTORE-LAST-TOPIC mirror, BOTH conjuncts -- exit %d' % cE1, vE1, vA)
+d = detail(oE1, 'NOT a registered topic (#/home)')
+if d:
+    lines.append('    the red, verbatim:')
+    lines.append('      ' + d)
+
+cE2, oE2 = run(C_FIRST, M_RESTORE)
+vE2 = verdicts(oE2)
+lines.append('')
+table(lines, 'E2. THE SAME MIRROR, the FIRST CONJUNCT ALONE (the control) -- exit %d' % cE2,
+      vE2, vE1)
+lines.append('    E2\'s EXIT is not the reading -- the two cells above are. A restore-last-topic')
+lines.append('    build moves other boot cells too, which is what makes it a product change')
+lines.append('    rather than a one-line poke; the verdict below is taken per CELL.')
+
 ok_a = cA == 0 and vA['#/home'] == 'PASS' and vA['#<TOPIC>/home'] == 'PASS'
 ok_b1 = vB['#/home'] == 'PASS' and vB['#<TOPIC>/home'] == 'PASS'
 ok_b2 = vB2['#<TOPIC>/home'] == 'FAIL'
 ok_c = vC['#/home'] == 'FAIL' and vC['#<TOPIC>/home'] == 'FAIL'
+ok_e1 = vE1['#/home'] == 'FAIL' or vE1['#<TOPIC>/home'] == 'FAIL'
+ok_e2 = vE2['#/home'] == 'PASS' and vE2['#<TOPIC>/home'] == 'PASS'
 lines += ['', 'VERDICT',
           '  A  shipped build, fixed cells green ............................ %s' % ok_a,
           '  B1 future-W2 build, fixed cells green (the false alarm is dead) %s' % ok_b1,
           '  B2 future-W2 build, PRE-FIX cells RED (the false alarm, shown) . %s' % ok_b2,
           '  C  cycle-7 line, fixed cells RED (R21 differential survives) ... %s' % ok_c,
+          '  E1 restore-last-topic build, BOTH conjuncts: RED ............... %s' % ok_e1,
+          '  E2 the same build, FIRST conjunct alone: GREEN (the control) ... %s' % ok_e2,
           '',
           '  THE DIFFERENTIAL B1 vs B2 IS THE CONTROL: one build, two versions of the same cell.',
+          '  E1 vs E2 IS THE SAME MOVE FOR THE SECOND CONJUNCT: one build, two versions of one',
+          '  predicate. E1 alone would not distinguish "the second conjunct fired" from "the first',
+          '  one did"; together they say the clause is FALSIFIABLE, on a build somebody could',
+          '  plausibly write, which is what "free" did not say.',
           '  THE WORKTREE WAS NOT WRITTEN: dist/index.html unchanged: %s; test/home_claims.cjs '
           'unchanged: %s'
           % (open(DIST, encoding='utf-8', newline='').read() == src,

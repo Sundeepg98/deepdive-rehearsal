@@ -1,0 +1,34 @@
+=== W-ADDRESSES cycle 10 -- R23: the certification tree is sealed for the run ===
+
+A. build_integrity ALONE, on this tree -- exit 0, 12.6s
+   BUILD INTEGRITY: PASS  (12361818 bytes, 0 unresolved, 9 panes + 7 overlays, built in a SCRATCH MIRROR and the mirror's build SYNCED the deliverable, HEAD-match DEFERRED -- 13 uncommitted path(s) [deepdive_content_pipeline_rehearsal.html, src/scripts/app/home-view.js, src/scripts/app/router.js]: comm
+   dist         UNCHANGED   12361818 bytes, mtime 1785847368.572728 -> 12361818 bytes, mtime 1785847368.572728
+   deliverable  UNCHANGED   12361818 bytes, mtime 1785846442.843899 -> 12361818 bytes, mtime 1785846442.843899
+   READ-ONLY (bytes AND mtime, both artifacts): True
+
+A2. THE CONTROL -- the same check with dist/index.html REMOVED (a fresh CI checkout) -- exit 0
+    BUILD INTEGRITY: PASS  (12361818 bytes, 0 unresolved, 9 panes + 7 overlays, built in a SCRATCH MIRROR and the mirror's build SYNCED the deliverable, HEAD-match DEFERRED -- 13 uncommitted path(s) [deepdive_content_pipeline_rehearsal.html, src/scripts/app/home-view.js, src/scripts/app/router.js]: comm
+    it WROTE dist/index.html back: True (md5 16002dc1cb4a, and the deliverable is untouched)
+    both artifacts are byte-identical to the start of this press: True
+
+B. a SEALED run (--only ascii_guard,syntax_check) -- exit 0
+   SEAL dist/index.html                          16002dc1cb4a -> 16002dc1cb4a
+   SEAL deepdive_content_pipeline_rehearsal.html 16002dc1cb4a -> 16002dc1cb4a
+   capture_sealed=True
+
+C. THE PRESS -- one byte appended to dist/index.html mid-run by a second writer -- exit 1
+   SEAL dist/index.html                          16002dc1cb4a -> 001452719bdd
+   SEAL deepdive_content_pipeline_rehearsal.html 16002dc1cb4a -> 16002dc1cb4a
+   CAPTURE ABORTED -- dist/index.html changed while the gate was running.
+   A gate run certifies a TREE (R13), and this run did not read one tree: the checks
+   capture_sealed=False   capture_of_record=False
+   dist/index.html restored byte-identical: True
+
+VERDICT
+  A  a clean, already-built tree is READ-ONLY to build_integrity ......... True
+  A2 the control: with dist/ gone it DOES write, so A is a measurement ... True
+  B  a quiet run comes back SEALED ....................................... True
+  C  a mid-run writer ABORTS THE CAPTURE and the exit is non-zero ........ True
+
+  C IS THE ENTRY THAT MATTERS. A seal that has never fired certifies nothing, and this one
+  fired on the one shape it exists for: bytes that moved while the run was reading them.

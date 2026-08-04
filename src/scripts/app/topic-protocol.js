@@ -202,7 +202,20 @@ function afterTopicSwap(t) {
 }
 
 var TopicRegistry = (function () {
-  var byId = {}, order = [], cur = null, bootId = null;
+  /* NULL PROTOTYPE, FOR THE SAME REASON ROUTER.ROUTES HAS ONE (W-ADDRESSES cycle 10, R26).
+     `byId` is keyed by TOPIC ID and every id it is asked about can come straight off the URL:
+     parseHash tests `TopicRegistry.get(parts[0])` on segment 0 of the hash, and setTopic's own
+     unknown-id guard is `if (!byId[id] ...) return false`. On an object literal, Object.prototype
+     answers for names nobody registered -- so `#constructor` made `get()` return the Object
+     CONSTRUCTOR FUNCTION (truthy), parseHash accepted it as a topic prefix, setTopic's guard let
+     it through, and `t.identity` was undefined on the other side. MEASURED, on the build that had
+     just closed the same hole in the router: the app came up with `TopicRegistry.current()`
+     returning a function, no room on the document, and the title taken from somewhere else
+     entirely. Closing it in one table exposed it in the next, which is what a hole in a SHAPE
+     rather than in a table does. Both are closed; test/home_claims.cjs drives `#constructor` and
+     `#__proto__` live and requires them to land the unknown-view fallback exactly as `#Nonsense`
+     does. */
+  var byId = Object.create(null), order = [], cur = null, bootId = null;
   function register(t) {
     byId[t.id] = t; order.push(t.id);
     /* bootId = THE TOPIC A BARE HASH DECODES TO. The registry boots on the FIRST-REGISTERED topic

@@ -1580,8 +1580,11 @@ button,summary{-webkit-user-select:none;user-select:none}
    `.sub` went with them, and it was dead TWICE: its only light-DOM instance is `.hdr .sub` inside
    .side-id, which is display:none -- and even if it rendered, `.hdr .sub` (0,2,0) at :228 outranks
    a bare `.sub` (0,1,0) here. The three .sub nodes that actually render are all in shadow roots.
-   test/shadow_css_guard.py now FAILS THE BUILD if a selector here targets a shadow-only class, so
-   this cannot silently regrow. Everything below is verified to have light-DOM matches. */
+   test/shadow_css_guard.mjs now FAILS THE BUILD if a selector here targets a shadow-only class,
+   so this cannot silently regrow. Everything below is verified to have light-DOM matches.
+   (The extension was wrong here -- `.py` -- for as long as this paragraph has existed: the guard
+   is a node script and always was. Found by craft_hygiene's cross-reference resolver on its
+   first run, W-ADDRESSES cycle 10, which is the whole argument for having one.) */
 @media(prefers-contrast:more){.seg button.on{outline:2px solid var(--acc);outline-offset:2px}.mockbtn,.crambtn,.tools-fab,.inttog{border:1px solid var(--acc)}.mb-d,.cmp-note,.cmp-thesis,.locator{color:var(--ink)}}
 @media(prefers-reduced-transparency:reduce){.mock-panel,.cram-panel,.sidebar{backdrop-filter:none!important}}
 /* .ix-star-ic IS IN THIS BLOCK BECAUSE IT IS A DRAWN GLYPH, NOT A DECORATION. It replaced a
@@ -2852,7 +2855,7 @@ html[data-theme="dark"][data-view="home"] #home{--mut:#A7A29A}
    BACKGROUND. Under the reader's default (`print-color-adjust: economy`, and the Background
    graphics box unticked) the browser is free to drop background paint to save ink, and it does:
    the capsule fill, the `.open` base, the inset rule and the keel all vanish, leaving the track's
-   outline, the figures beside it, and a LEGEND keying four marks that are not on the page.
+   outline, the figures beside it, and a LEGEND keying marks that are not on the page.
    That is worse than printing nothing: "41 flagged" beside a blank strip is a claim the surface
    cannot show, and a key for absent marks is a key for something else. The grade lives in the
    fill and nowhere else -- the SIGNAL RULE two blocks up puts it in lightness, never in size or
@@ -2921,12 +2924,14 @@ html[data-theme="dark"][data-view="home"] #home{--mut:#A7A29A}
 .hm-key{display:flex;align-items:center;flex-wrap:wrap;gap:var(--space-14);margin-top:var(--space-10)}
 .hm-k{display:flex;align-items:center;gap:var(--space-6)}
 /* the key states the three marks the gauge actually paints: filled, part-filled, hollow -- plus
-   the keel. Fill, not hue, exactly as the segments do it. */
+   the keel, once per severity the rails can paint. Fill, not hue, exactly as the segments do it. */
 /* THE SWATCHES TAKE THE MARKS' OWN VALUES, or the legend stops labelling the thing it names.
-   These four sit on the PANEL (--home-surface) while the marks sit on --side, so --gauge-rule is
+   They sit on the PANEL (--home-surface) while the marks sit on --side, so --gauge-rule is
    solved against BOTH grounds (see its block): light 4.10:1 on the trough / 4.79:1 on the panel,
    dark 4.23 / 3.49. The dark-on-panel cell is the binding one, and test/scoreboard_salience.cjs's
-   KEY arm reads all four of these off the pixels against the panel's own measured ground. */
+   KEY arm reads EVERY swatch the key renders off the pixels against the panel's own measured
+   ground -- it enumerates `.hm-k` rather than counting to a number, so a swatch added or removed
+   moves its table instead of falling outside it. */
 /* the swatches carry the WATERLINE too -- a legend that draws the mark differently from the mark
    is a legend for something else. Same --keel-h AND --keel-gap, so the two cannot drift. */
 .hm-k i{position:relative;width:9px;height:15px;border-radius:2px;--keel-h:2px;--keel-gap:2px;
@@ -3008,23 +3013,35 @@ html[data-theme="dark"][data-view="home"] #home{--mut:#A7A29A}
      it cannot afford; it only needed the row gap to stop being a whole space token. */
   html[data-view="home"] .hm-alt .hm-gr{row-gap:2px}
   /* THE KEY DOES NOT LEAVE. A `html[data-view="home"] .hm-alt .hm-key{display:none}` lived here
-     for one cycle and is RULED OUT (W1.5 cycle 2). The gauge paints four marks (filled,
-     part-filled, hollow, keel) and this is their only legend at any width; aria-hidden makes it
-     decoration for a SCREEN READER, which is not an argument for deleting it from the screen where
-     the marks are. If a future record class ever needs those pixels, they come out of the two-row
-     rail block above, not out of the key.
-     WHAT THE HIDE COST, MEASURED ACROSS THE WHOLE BAND THIS BLOCK GOVERNS -- not at one width.
-     Cycle 2 recorded "21px of a 742px band, 2.8%" from a 390-only measurement and let it stand for
-     everything at or below 419; it is 2.2x that at the narrow end. Swept width by width: the key
-     is ONE row of 15px from 364px up, and TWO rows of 40px at 363 and below, where "Untouched"
-     orphans onto a second line. With its 6px margin-top the hide was therefore worth 21px at
-     364-419 and 46px at 320-363 -- 2.8% and 6.2% of the 742px band that percentage is quoted
-     against (390x844). It still flipped no fold outcome at either end, and that is structural
-     rather than lucky: the practice act sits ABOVE the gauge in home-view.js html(), so nothing
-     the gauge does to its own height can push the act out of the band. Driven at
-     320/360/375/390/412 to confirm it, and test/home_fold.cjs now drives 360x844 alongside
-     390x844 so the narrow half of this block's band is measured every gate rather than
-     extrapolated from the wide half. */
+     for one cycle and is RULED OUT (W1.5 cycle 2). The gauge paints four mark shapes (filled,
+     part-filled, hollow, keel) in five colours, and this key is their only legend at any width;
+     aria-hidden makes it decoration for a SCREEN READER, which is not an argument for deleting it
+     from the screen where the marks are. If a future record class ever needs those pixels, they
+     come out of the two-row rail block above, not out of the key.
+     WHAT THE HIDE COSTS, RE-SWEPT WIDTH BY WIDTH AFTER THE FIFTH SWATCH (W-ADDRESSES cycle 10,
+     R24). THE KEY IS ONE ROW OF 15px OR TWO ROWS OF 40px, never anything else, and with its 6px
+     margin-top the hide is worth 21px or 46px -- 2.8% or 6.2% of the 742px live band at 390x844.
+     Only the WRAP WIDTH moves, and the label text is what moves it. Swept 320..419 (and past the
+     band, to find each form's flip):
+         four swatches, "Flagged"                     one row from 364  (21px at 364-419)
+         five swatches, "Missed flagged"/"Shaky ..."  two rows to 510   (46px at EVERY width here)
+         five swatches, "Missed"/"Shaky"  <- shipped  one row from 415  (21px at 415-419 only)
+     SO THE FIFTH SWATCH COSTS +25px ACROSS EFFECTIVELY THE WHOLE BAND, AND THAT IS ACCEPTED IN
+     WRITING RATHER THAN ROUNDED AWAY. Cycle 9 added the swatch and the two long labels together
+     and left the 364/21px arithmetic standing, which was false the moment it shipped: the key was
+     two rows at every width this block governs. Shortening the labels to "Missed" and "Shaky" --
+     the smallest change that keeps both severities named -- buys back 415-419 and nothing a real
+     phone reports, so at 360 and 390 the key is two rows and the hide would be worth 46px. The
+     swatch is worth more than the 25px: it is the only place the second keel colour is named on a
+     screen, and a legend that explains one of two foot colours is the collapse the block three
+     screens up used to record as a fact.
+     IT STILL FLIPS NO FOLD OUTCOME, and that is structural rather than lucky: the practice act
+     sits ABOVE the gauge in home-view.js html(), so nothing the gauge does to its own height can
+     push the act out of the band. test/home_fold.cjs drives 360x844 and 390x844 every gate, and
+     since cycle 10 the ROW COUNT AND HEIGHT ARE ASSERTED AT THIS BLOCK'S TWO ENDS -- 320 and 419
+     -- by test/home_claims.cjs, pressed by MUTANT 10d, which restores cycle 9's own long labels
+     and requires the cell to red. Change a label and that cell reds; re-sweep and rewrite this
+     paragraph rather than editing the number. */
 }
 
 /* ---- the paired row ------------------------------------------------------------------------

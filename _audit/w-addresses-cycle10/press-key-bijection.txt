@@ -1,0 +1,30 @@
+=== W-ADDRESSES cycle 10 -- R25: the bijection the legend arm already claimed ===
+
+A. the SHIPPED build, the CYCLE-10 arm -- exit 0, census 24
+   legend cells red: 0
+
+B. THE RULED FORM (the denominator is THIS RECORD'S rails, not the declared keel tokens) -- exit 1
+   FAIL  [1280/absentField] the gauge key agrees with the numbers beside it  -- the key carries 2 keel swatch(es) and the gauge declares 1 keel colour(s), so the key explains a foot colour rgb(154, 91, 11) (hm-k.flag) that no rail paints -- a legend entry for a mark the gauge cannot draw, which is a ke
+   FAIL  [1280/oneShort] the gauge key agrees with the numbers beside it  -- the key carries 2 keel swatch(es) and the gauge declares 1 keel colour(s), so the key explains a foot colour rgb(154, 91, 11) (hm-k.flag) that no rail paints -- a legend entry for a mark the gauge cannot draw, which is a key f
+   FAIL  [1280/weakTopics] the gauge key agrees with the numbers beside it  -- the key carries 2 keel swatch(es) and the gauge declares 1 keel colour(s), so the key explains a foot colour rgb(154, 91, 11) (hm-k.flag) that no rail paints -- a legend entry for a mark the gauge cannot draw, which is a key
+   THE FALSE ALARM, and it is why the shipped form widened the denominator: a record
+   that earns one severity is not a record whose legend is wrong.
+
+C. MUTANT 10c DELETED (its install and its land() go together) -- exit 0, census 23
+   the shipped census is 24; deleting one plant moves it to 23
+
+D. THE CONVERSE BRANCH DELETED, 10c still planted -- exit 1
+   MUTANT 10c UNDETECTED: a sixth keel swatch at rgb(18, 0, 213) -- a colour neither declared keel token resolves to (rgb(154, 91, 11), rgb(177, 105, 14)) and no rail paints (rgb(177, 105, 14)) -- was added to a visible key and the legend arm accepted it. The arm is an INJECTION advertised as a bijecti
+
+VERDICT
+  A  shipped build, the bijection arm green, census 24 ............. True
+  B  the RULED denominator FALSE-ALARMS on the shipped build ....... True
+  C  deleting 10c moves the derived census by exactly one .......... True
+  D  deleting the converse leaves 10c UNDETECTED (it aborts) ....... True
+
+  B IS A CORRECTION TO A RULING, MADE BY MEASUREMENT. The converse is right; its
+  denominator was not. `keelPaint` is what THIS record painted, and a key that names a
+  severity the record has not earned is a legend rather than a defect. The shipped form
+  asks the honest question -- can the gauge draw this colour at all -- against the two
+  keel tokens resolved off the page.
+  THE WORKTREE WAS NOT WRITTEN: test/home_claims.cjs unchanged: True

@@ -1641,8 +1641,15 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
     const keyPasses = (list) => !!list && list.length > 0
       && list.every((k) => k.px > 0 && k.cr !== null && k.cr >= NONTEXT_FLOOR);
     if (!keys0 || !keys0.length) {
-      fails.push(where + 'the legend was not rendered, so the four key swatches -- the BINDING '
-        + 'cell of the --gauge-rule solve at 3.49:1 -- were measured on nothing.');
+      /* THE COUNT IN A RUNTIME FAIL STRING IS DERIVED TOO (cycle 10, judge item 3). This line
+         PRINTS when the legend is missing, and cycle 9 -- the cycle that made the PASS line
+         beside it derive `swatchN` -- left it naming FOUR of them while the key had
+         rendered five since that same cycle. `keys0` is empty in this branch by construction, so
+         the number is taken from the SELECTOR the reader can go and count, not from a literal:
+         the arm enumerates `.hm-k`, so the honest sentence names what it enumerates. */
+      fails.push(where + 'the legend was not rendered, so EVERY swatch the key renders '
+        + '(`.hm-alt .hm-key .hm-k`) -- among them the BINDING cell of the --gauge-rule solve at '
+        + '3.49:1 -- was measured on nothing.');
     } else {
       const panelDecl = Y_OF_CSS(geo.panelBg);
       for (const k of keys0) {
@@ -2589,11 +2596,6 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
     }
   }
 
-  if (fails.length) {
-    console.log('\nSCOREBOARD SALIENCE: FAIL ' + fails.length);
-    fails.forEach((f) => console.log('  - ' + f));
-    return B.finish(1, 'SCOREBOARD SALIENCE: FAIL');
-  }
   /* THE CENSUS IS COUNTED FROM THE ROSTER THE RUN POPULATED, never typed (cycle 9, judge item 4).
      The union across cells, because every cell plants the same set and a landing missing from ONE
      cell is a defect this line must not average away. */
@@ -2602,6 +2604,125 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
     for (const g of gaugeRows) n = Math.max(n, ((g.keys || []).length));
     return n;
   })();
+
+  /* ===== THE COPIES OF THIS NUMBER, SWEPT (cycle 10, carried item 9 -- half two) =============
+     THE DEFECT THIS CLOSES IS THIS FILE'S OWN. Cycle 9 added the fifth swatch, made the PASS line
+     below derive `swatchN`, updated two prose copies -- and left SIX more saying FOUR, in four
+     files, one of them a runtime FAIL string in this very block. Deriving one copy does nothing
+     for the others: the number is a claim about a rendered thing, so the run that RENDERS it is
+     the only place that can police the copies. This arm is that police, and it is deliberately
+     narrow: it reads a count only where the prose asserts THE key's swatches -- a definite
+     article in front of the number, or the noun phrase naming the key or the legend outright, or
+     the possessive form the PASS line below uses. It does NOT read a distributive rule (a count
+     followed by `per`), a historical singular ("this key carried ONE swatch"), or a comparative
+     table (styles.css's wrap sweep lists the FOUR-swatch legend beside the five-swatch one, and
+     both rows are true). A scanner over prose that flags true sentences gets turned off, which is
+     the failure mode of every doc-lint this repo has refused to add.
+     THE SHAPES ARE NOT SPELT OUT IN THIS COMMENT, and that is deliberate -- this file is in the
+     swept set, so a comment quoting the pattern would be read as a copy of the number. The
+     fixtures below carry the shapes instead, assembled from parts, where the run can press them.
+     WHAT A ZERO MEANS HERE. After cycle 10's pass the tree carries NO hand-typed count in any of
+     these forms: every copy was replaced by the SELECTOR it counts (`.hm-alt .hm-key .hm-k`) or
+     by the derived expression. So this sweep reads zero and reports zero, and it is a RATCHET
+     rather than a reconciliation: it reds the day somebody types the number back in. */
+  const COPY_FILES = ['src/styles.css', 'src/scripts/app/home-view.js',
+    'test/scoreboard_salience.cjs', 'test/home_claims.cjs', 'test/print_truth.cjs',
+    'test/home_fold.cjs', 'test/check_all.py'];
+  const WORDS = { one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8,
+    nine: 9, ten: 10 };
+  const numOf = (s) => (WORDS[s.toLowerCase()] !== undefined
+    ? WORDS[s.toLowerCase()] : parseInt(s, 10));
+  const NUM = '(one|two|three|four|five|six|seven|eight|nine|ten|\\d+)';
+  const COPY_RX = [
+    /* a definite article, then the count, then the noun -- with or without key/legend/keel */
+    new RegExp('\\bthe\\s+' + NUM + '\\s+(?:key|legend|keel)?\\s*swatch(?:es)?\\b(?!\\s+per\\b)', 'gi'),
+    /* the count, then the key or the legend named outright, then the noun */
+    new RegExp('\\b' + NUM + '\\s+(?:key|legend)\\s+swatch(?:es)?\\b(?!\\s+per\\b)', 'gi'),
+    /* the possessive form the PASS line uses, so this file cannot exempt itself */
+    new RegExp("legend'?s\\s+" + NUM + '\\s+swatch', 'gi'),
+  ];
+  /* THE SWEEP IS PRESSED BEFORE IT IS TRUSTED, on fixtures, every run. Three controls, because
+     the two ways this arm can be worthless are opposite: a pattern set that catches nothing
+     certifies the copies it never read, and one that catches everything gets deleted. */
+  {
+    const scan = (text) => {
+      const hits = [];
+      for (const rx of COPY_RX) {
+        rx.lastIndex = 0;
+        let m;
+        while ((m = rx.exec(text)) !== null) hits.push(numOf(m[1]));
+      }
+      return hits;
+    };
+    /* THE FIXTURES ARE ASSEMBLED FROM PARTS, and that is not a style choice. This file is
+       ITSELF in COPY_FILES -- it must be, since the PASS line below prints the number -- so a
+       fixture written out as a literal would be read by the very sweep it is testing and the
+       arm would red on its own test data. Measured, on the run that added it: three fixture
+       hits, in the block that exists to prove the sweep works. Interpolating the count keeps
+       the SOURCE free of any string the sweep can match while the RUNTIME string is exactly
+       the shape being pressed. */
+    const fix = (n) => 'and the ' + n + ' swatches sit on the panel, where the LEGEND\'S ' + n
+      + ' SWATCHES clear the floor and ' + n + ' legend swatches were measured';
+    const caught = scan(fix('four'));
+    const clean = scan('ONE SWATCH PER KEEL TOKEN is the rule, and this key carried ONE swatch, '
+      + '"Flagged", wired to --keel-missed alone');
+    const right = scan(fix(String(swatchN)));
+    if (!caught.length || caught.some((n) => n !== 4)) {
+      fails.push('THE SWATCH-COUNT SWEEP CANNOT SEE A WRONG COUNT: its fixture, which says FOUR '
+        + 'three different ways, produced ' + JSON.stringify(caught) + '. The sweep below is '
+        + 'certifying copies it is not reading.');
+    }
+    if (clean.length) {
+      fails.push('THE SWATCH-COUNT SWEEP FLAGS LEGITIMATE PROSE: "one swatch per keel token" and '
+        + '"this key carried ONE swatch" are a distributive rule and a historical statement, and '
+        + 'it read ' + JSON.stringify(clean) + ' counts out of them. An arm that reds true '
+        + 'sentences is an arm somebody turns off.');
+    }
+    if (!right.length || right.some((n) => n !== swatchN)) {
+      fails.push('THE SWATCH-COUNT SWEEP DOES NOT READ THE FORM IT DEMANDS: the same fixture '
+        + 'carrying the RENDERED count (' + swatchN + ') produced ' + JSON.stringify(right)
+        + ', so a correct copy is not even in its grammar.');
+    }
+  }
+
+  const fs = require('fs');
+  const copySites = [];
+  let copyScanned = 0;
+  for (const rel of COPY_FILES) {
+    let text = null;
+    try {
+      text = fs.readFileSync(path.join(__dirname, '..', rel), 'utf8');
+    } catch (e) {
+      fails.push('the swatch-count sweep could not read ' + rel + ' (' + e.code + '), so the '
+        + 'copies of this number in it are unpoliced -- a sweep that silently skips a file is '
+        + 'the silence carried item 9 is about');
+      continue;
+    }
+    for (const rx of COPY_RX) {
+      rx.lastIndex = 0;
+      let m;
+      while ((m = rx.exec(text)) !== null) {
+        copyScanned++;
+        const n = numOf(m[1]);
+        if (n !== swatchN) {
+          copySites.push(rel + ':' + (text.slice(0, m.index).split('\n').length)
+            + '  "' + m[0].replace(/\s+/g, ' ') + '"  says ' + n);
+        }
+      }
+    }
+  }
+  if (copySites.length) {
+    fails.push('THE KEY RENDERS ' + swatchN + ' SWATCHES AND ' + copySites.length
+      + ' HAND-TYPED COPY(S) OF THAT NUMBER DISAGREE: ' + copySites.join(' | ')
+      + ' -- each of these is read as evidence for a solve. Update them in the same pass that '
+      + 'changed the legend, and prefer the derived form where the file already has one.');
+  }
+
+  if (fails.length) {
+    console.log('\nSCOREBOARD SALIENCE: FAIL ' + fails.length);
+    fails.forEach((f) => console.log('  - ' + f));
+    return B.finish(1, 'SCOREBOARD SALIENCE: FAIL');
+  }
   const landingTags = (() => {
     const seen = [];
     for (const g of gaugeRows) {
@@ -2627,7 +2748,12 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
     + PHASE_EPS_CR + ' -- which is the identity styles.css publishes as the design\'s own'
     + ' prediction and which, until this cycle, nothing asserted; the untouched capsule\'s rule clears'
     + ' the same floor; the LEGEND\'S ' + swatchN + ' SWATCHES -- every one the key renders,'
-    + ' enumerated rather than counted to --'
+    + ' enumerated rather than counted to, and the ' + COPY_FILES.length + ' files that discuss'
+    + ' this number carry ' + copyScanned + ' HAND-TYPED copy(s) of it, none of which disagrees'
+    + ' with what was rendered -- a RATCHET rather than a reconciliation while that number is'
+    + ' zero, since cycle 10 replaced every copy with the selector it counts; the grammar is'
+    + ' pressed on fixtures both ways every run, so it can neither miss a wrong count nor red a'
+    + ' distributive or historical sentence --'
     + ' clear it too against the panel\'s own measured ground -- the binding cell of the'
     + ' --gauge-rule solve, pressed by repainting that token at the panel\'s own colour -- and the'
     + ' panels stand off their ground, pressed by painting the panel at that ground\'s own colour.'

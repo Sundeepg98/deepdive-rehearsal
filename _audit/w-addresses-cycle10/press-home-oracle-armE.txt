@@ -1,0 +1,83 @@
+=== W-ADDRESSES cycle 9 -- R22: the harvested cells get the press's own oracle ===
+
+A. SHIPPED build, FIXED cells -- home_claims exit 0
+    #walk            PASS
+    #drill           PASS
+    #Walk            PASS
+    #Nonsense        PASS
+    #HOME            PASS
+    #<topic>/home    PASS
+    #/home           PASS
+    #<TOPIC>/home    PASS
+
+B1. FUTURE-W2 mirror (parseHash AND boot.js both case-insensitive), FIXED cells -- exit 0
+    #walk            PASS
+    #drill           PASS
+    #Walk            PASS
+    #Nonsense        PASS
+    #HOME            PASS
+    #<topic>/home    PASS
+    #/home           PASS
+    #<TOPIC>/home    PASS
+
+B2. THE SAME MIRROR, PRE-FIX cells (the cycle-8 predicate) -- exit 1
+    #walk            PASS
+    #drill           PASS
+    #Walk            PASS
+    #Nonsense        PASS
+    #HOME            PASS
+    #<topic>/home    PASS
+    #/home           PASS
+    #<TOPIC>/home    FAIL   <-- MOVED
+    the false alarm, verbatim:
+      FAIL  [boot] a home-looking SECOND SEGMENT behind a prefix that is NOT a registered topic (#AUTHZ/home) is lit in the room of the surface the app says it is showing -- read from data-view, so this cell survives the router-side repair instead of false-alarming on it -- and while the app shows a bare view, that room is the BOOT topic's and not the resume target's: the SAME topic slug in the WRONG CASE -- the registry l
+
+C. CYCLE-7-line mirror, FIXED cells -- R21's differential must survive R22 -- exit 1
+    #walk            PASS
+    #drill           PASS
+    #Walk            PASS
+    #Nonsense        PASS
+    #HOME            PASS
+    #<topic>/home    PASS
+    #/home           FAIL   <-- MOVED
+    #<TOPIC>/home    FAIL   <-- MOVED
+
+E1. RESTORE-LAST-TOPIC mirror, BOTH conjuncts -- exit 1
+    #walk            PASS
+    #drill           PASS
+    #Walk            PASS
+    #Nonsense        PASS
+    #HOME            PASS
+    #<topic>/home    PASS
+    #/home           FAIL   <-- MOVED
+    #<TOPIC>/home    FAIL   <-- MOVED
+    the red, verbatim:
+      FAIL  [boot] a home-looking SECOND SEGMENT behind a prefix that is NOT a registered topic (#/home) is lit in the room of the surface the app says it is showing -- read from data-view, so this cell survives the router-side repair instead of false-alarming on it -- and while the app shows a bare view, that room is the BOOT topic's and not the resume target's: an EMPTY prefix on a home-looking second segment -- the shap
+
+E2. THE SAME MIRROR, the FIRST CONJUNCT ALONE (the control) -- exit 1
+    #walk            PASS
+    #drill           PASS
+    #Walk            PASS
+    #Nonsense        PASS
+    #HOME            PASS
+    #<topic>/home    PASS
+    #/home           PASS   <-- MOVED
+    #<TOPIC>/home    PASS   <-- MOVED
+    E2's EXIT is not the reading -- the two cells above are. A restore-last-topic
+    build moves other boot cells too, which is what makes it a product change
+    rather than a one-line poke; the verdict below is taken per CELL.
+
+VERDICT
+  A  shipped build, fixed cells green ............................ True
+  B1 future-W2 build, fixed cells green (the false alarm is dead) True
+  B2 future-W2 build, PRE-FIX cells RED (the false alarm, shown) . True
+  C  cycle-7 line, fixed cells RED (R21 differential survives) ... True
+  E1 restore-last-topic build, BOTH conjuncts: RED ............... True
+  E2 the same build, FIRST conjunct alone: GREEN (the control) ... True
+
+  THE DIFFERENTIAL B1 vs B2 IS THE CONTROL: one build, two versions of the same cell.
+  E1 vs E2 IS THE SAME MOVE FOR THE SECOND CONJUNCT: one build, two versions of one
+  predicate. E1 alone would not distinguish "the second conjunct fired" from "the first
+  one did"; together they say the clause is FALSIFIABLE, on a build somebody could
+  plausibly write, which is what "free" did not say.
+  THE WORKTREE WAS NOT WRITTEN: dist/index.html unchanged: True; test/home_claims.cjs unchanged: True

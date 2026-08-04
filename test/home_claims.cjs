@@ -511,6 +511,28 @@ const READ = () => {
       }
       return out;
     })(),
+    /* THE COLOURS THE GAUGE IS CAPABLE OF PAINTING AT THE FOOT (cycle 10, R25). The converse half
+       of the legend arm needs a denominator that is not THIS RECORD's rails: a key that names a
+       severity the record happens not to have earned is a LEGEND, not a defect, and `keelPaint`
+       alone would red on every record that paints one severity. So the two declared keel tokens
+       are RESOLVED THE WAY THE PAGE RESOLVES THEM -- assigned to a real element and read back as
+       a computed colour, in the same rgb() form the swatch's box-shadow and the mark's ::before
+       background come back in -- rather than string-compared against the token text, which would
+       be a different comparison in a different space. Both tokens are declared at `html` scope
+       (styles.css:359-360, with only the dark override beside them), so an off-screen probe on
+       body resolves exactly what the marks resolve. */
+    keelTokens: (() => {
+      const el = document.createElement('span');
+      el.style.cssText = 'position:absolute;left:-9999px;top:0;width:0;height:0';
+      document.body.appendChild(el);
+      const out = {};
+      for (const t of ['--keel-missed', '--keel-shaky']) {
+        el.style.color = 'var(' + t + ')';
+        out[t] = getComputedStyle(el).color;
+      }
+      el.remove();
+      return out;
+    })(),
     h1s: [...document.querySelectorAll('h1')].filter((h) => h.getClientRects().length).map(txt),
     /* IDENTITY: the visible h1 must BE the hero question, not merely be unique */
     h1IsHero: !!q && q.tagName === 'H1' && q.getClientRects().length > 0
@@ -868,7 +890,8 @@ function judgeActOrder(r) {
 }
 
 /* THE GAUGE KEEPS ITS LEGEND WHEREVER IT PAINTS THE MARK THE LEGEND EXPLAINS.
-   The key is the only place the four marks are named (filled / part-filled / hollow / keel), and
+   The key is the only place the marks are named -- filled, part-filled, hollow, and the keel in
+   each severity the rails paint, which is five swatches for four mark shapes since cycle 9 -- and
    a `display:none` at <=419px deleted it on the phone for one cycle -- measured worth 21px of a
    742px band, and it flipped no fold outcome, so it was instrument sold for nothing. The keel is
    the mark with no other explanation on the panel, so it is what this arm keys on: a rail that
@@ -896,6 +919,41 @@ function judgeKey(r) {
       + 'the key does not explain, on the panel whose whole job is which topics to re-drill '
       + '(swatches read: ' + ((r.keySwatch || []).map((s) => s.cls + ' ' + s.color).join(', ')
         || 'none') + ')';
+  }
+  /* ---- AND THE CONVERSE, WHICH IS THE BIJECTION THIS ARM ALREADY CLAIMED (cycle 10, R25) -----
+     Three sites say "ONE SWATCH PER KEEL TOKEN" -- styles.css's key block, home-view.js's legend
+     markup and this file's own contract line -- and one swatch per token is a BIJECTION, while
+     cycle 9 shipped one INJECTION: every colour the rails paint must appear in the key, and
+     nothing said the key may not explain a foot colour the gauge cannot paint. A sixth keel
+     swatch at a colour no keel token carries -- the residue a retired or mis-pointed token
+     leaves -- passed. So the claim was made true rather than deleted.
+     THE DENOMINATOR IS THE DECLARED TOKENS, NOT THIS RECORD'S RAILS, AND THAT IS A CORRECTION TO
+     THE RULED FORM, MEASURED (receipt `_audit/w-addresses-cycle10/press-key-bijection.txt`, arm
+     B). "Every swatch colour must appear in `keelPaint`" was driven against the shipped build and
+     FALSE-ALARMED on three records of the pinned battery -- `absentField`, `oneShort` and
+     `weakTopics`, each of which paints exactly ONE severity. `weakTopics` grades one probe in
+     seven Shaky and never Missed, so its rails paint only --keel-shaky at rgb(177,105,14) while
+     the key correctly renders both swatches, and the ruled converse reported the MISSED swatch at
+     rgb(154,91,11) as a foot colour no rail paints -- a red on a build with no defect in it. A
+     key that names a severity THIS record has not earned is a legend, not a defect. `keelTokens`
+     is the honest denominator: the colours the gauge is CAPABLE of painting at the foot, resolved
+     off the page.
+     GUARDED EXACTLY LIKE THE HALF ABOVE, and for the same reasons. It is skipped when the record
+     paints no keel (`r.keel` is 0 -- the early return above), because a record with no keel is
+     owed no legend at all. `.hm-k.none i` stays out of scope through the same `nums[1] < 0` foot
+     test that keeps it out of `keySwatch` at the read: its shadow is an INSET outline at offset
+     0, not a mark at the foot, so "Untouched" is not a keel swatch in either direction. */
+  const tokens = Object.keys(r.keelTokens || {}).map((t) => r.keelTokens[t]);
+  const spare = (r.keySwatch || []).filter((s) => tokens.indexOf(s.color) < 0);
+  if (spare.length) {
+    return 'the key carries ' + have.length + ' keel swatch(es) and the gauge declares '
+      + tokens.length + ' keel colour(s), so '
+      + spare.map((s) => 'the key explains a foot colour ' + s.color + ' (' + s.cls
+        + ') that no rail paints').join(' and ')
+      + ' -- a legend entry for a mark the gauge cannot draw, which is a key for something else '
+      + '(the declared keel tokens resolve to ' + (tokens.join(', ') || 'nothing')
+      + '; this record\'s rails paint ' + ((r.keelPaint || []).map((p) => p.kind + ' ' + p.color)
+        .join(', ') || 'none') + ')';
   }
   return null;
 }
@@ -1451,6 +1509,168 @@ const GEN_N = 24;
             if (d) { d.style.display = ''; d.removeAttribute('data-w9-hold'); }
           });
         }
+
+        /* ---- MUTANT 10c: THE OTHER DIRECTION OF THE BIJECTION (cycle 10, R25) ---------------
+           10b's mirror. 10b removes a swatch the rails need; this one ADDS a swatch the gauge
+           cannot draw -- one extra `.hm-k` whose `i` carries a keel-shaped shadow (an INSET at a
+           NEGATIVE vertical offset, so the read's own foot test admits it) at a PERTURBED colour,
+           one no keel token resolves to. That is the residue a retired or mis-pointed token
+           leaves in a legend, and cycle 9's presence-plus-injection arm passed it: every colour
+           the rails painted was still named, and nothing asked the converse.
+           THE COLOUR IS DERIVED FROM THE PAGE AND CHECKED FOR COLLISION, not typed: it is the
+           painted keel colour with one channel walked far enough to be a different colour, and
+           the plant ABORTS if the result matches a declared token or a painted rail, because a
+           mutant that plants a LEGITIMATE colour is not a mutant. */
+        const spare = await page.evaluate(() => {
+          const key = document.querySelector('.hm-alt .hm-key');
+          const seg = document.querySelector('.hm-alt .hm-seg.keel');
+          if (!key || !seg) return { ok: false, why: 'no key or no keel on this record' };
+          const el = document.createElement('span');
+          el.style.cssText = 'position:absolute;left:-9999px;top:0;width:0;height:0';
+          document.body.appendChild(el);
+          const tok = [];
+          for (const t of ['--keel-missed', '--keel-shaky']) {
+            el.style.color = 'var(' + t + ')';
+            tok.push(getComputedStyle(el).color);
+          }
+          el.remove();
+          const paint = [...document.querySelectorAll('.hm-alt .hm-seg.keel')]
+            .map((s) => getComputedStyle(s, '::before').backgroundColor);
+          const base = (getComputedStyle(seg, '::before').backgroundColor.match(/\d+/g) || [])
+            .map(Number);
+          if (base.length < 3) return { ok: false, why: 'the keel mark resolved no rgb colour' };
+          const hue = 'rgb(' + ((base[0] + 97) % 256) + ', ' + ((base[1] + 151) % 256) + ', '
+            + ((base[2] + 199) % 256) + ')';
+          if (tok.indexOf(hue) >= 0 || paint.indexOf(hue) >= 0) {
+            return { ok: false, why: 'the perturbed colour ' + hue + ' collides with a declared '
+              + 'token or a painted rail, so it is not a colour "no rail paints"' };
+          }
+          const k = document.createElement('span');
+          k.className = 'hm-k';
+          k.setAttribute('data-w10-spare', '1');
+          const i = document.createElement('i');
+          i.style.boxShadow = 'inset 0 -2px 0 0 ' + hue;
+          k.appendChild(i);
+          const lbl = document.createElement('span');
+          lbl.className = 'hm-lbl';
+          lbl.textContent = 'Retired';
+          k.appendChild(lbl);
+          key.appendChild(k);
+          return { ok: true, hue, tok, paint: [...new Set(paint)] };
+        });
+        if (!spare.ok) {
+          aborted = aborted || 'MUTANT 10c CANNOT LAND: ' + spare.why + ', so the CONVERSE half '
+            + 'of the legend arm -- the key may not explain a foot colour the gauge cannot draw '
+            + '-- is untested and "one swatch per keel token" is asserted in one direction only.';
+        } else {
+          const bad10c = await page.evaluate(READ);
+          if (!judgeKey(bad10c)) {
+            aborted = aborted || 'MUTANT 10c UNDETECTED: a sixth keel swatch at ' + spare.hue
+              + ' -- a colour neither declared keel token resolves to (' + spare.tok.join(', ')
+              + ') and no rail paints (' + spare.paint.join(', ') + ') -- was added to a visible '
+              + 'key and the legend arm accepted it. The arm is an INJECTION advertised as a '
+              + 'bijection: it sees a mark with no swatch and not a swatch with no mark.';
+          }
+          land('10c');
+          await page.evaluate(() => {
+            const d = document.querySelector('.hm-alt .hm-key [data-w10-spare]');
+            if (d) d.remove();
+          });
+        }
+
+        /* ---- THE KEY'S ROW GEOMETRY AT THE BAND'S TWO ENDS (cycle 10, R24) ------------------
+           THE CLAIM THIS GUARDS LIVES IN A STYLESHEET COMMENT AND HAD NO INSTRUMENT. styles.css's
+           `@media(max-width:419px)` block argues that hiding the key is worth a measured number of
+           pixels -- and that number is a function of how many ROWS the key wraps to, which is a
+           function of the label TEXT. Cycle 9 added a fifth swatch and two long labels, the key
+           went from one row to two across the whole band, and the recorded arithmetic (one row
+           from 364px up, 21px) silently became false: nothing in the gate reads the key's height.
+           MEASURED AT THE ENDS OF THE BAND THE BLOCK GOVERNS, 320 and 419, because the block's own
+           sentence is about both halves and every "flipped no fold outcome" measurement before
+           this was taken at 390 alone.
+           THE HEIGHT IS DERIVED, THE ROW COUNT IS PINNED. `wantH` is computed from the page's own
+           swatch height and row-gap, so the 15px/40px in the comment is re-derivable rather than
+           typed; only the row count -- the thing the label text moves and the thing the pixel
+           arithmetic turns on -- is asserted against the swept figure. A future label change reds
+           this cell and sends its author to the block that has to be re-derived. */
+        const KEYGEO = () => {
+          const k = document.querySelector('.hm-alt .hm-key');
+          if (!k) return null;
+          const ks = [...k.querySelectorAll('.hm-k')].filter((x) => x.getClientRects().length);
+          const tops = [...new Set(ks.map((x) => Math.round(x.getBoundingClientRect().top)))];
+          const cs = getComputedStyle(k);
+          const swatch = ks.length
+            ? Math.round(ks[0].querySelector('i').getBoundingClientRect().height * 100) / 100 : 0;
+          const gap = parseFloat(cs.rowGap) || 0;
+          return {
+            n: ks.length,
+            rows: tops.length,
+            h: Math.round(k.getBoundingClientRect().height * 100) / 100,
+            mt: Math.round(parseFloat(cs.marginTop) * 100) / 100,
+            swatch,
+            gap,
+            wantH: Math.round((tops.length * swatch + (tops.length - 1) * gap) * 100) / 100,
+            labels: ks.map((x) => (x.textContent || '').trim()),
+          };
+        };
+        const ENDS = [[320, 2], [419, 1]];
+        const geo = [];
+        for (const [bw, wantRows] of ENDS) {
+          await page.setViewportSize({ width: bw, height: 844 });
+          await page.evaluate(() => new Promise((res) => requestAnimationFrame(
+            () => requestAnimationFrame(res))));
+          const g = await page.evaluate(KEYGEO);
+          geo.push([bw, wantRows, g]);
+          out.push(['[' + bw + '/' + name + '] the gauge key wraps to ' + wantRows + ' row(s) at '
+            + bw + 'px -- one end of the band the <=419px home block governs, whose recorded '
+            + 'pixel cost is a function of exactly this number -- and its height is what that '
+            + 'many rows of its own swatches and its own row-gap come to',
+            !!g && g.rows === wantRows && g.h === g.wantH,
+            g ? (g.n + ' swatches ' + JSON.stringify(g.labels) + ' in ' + g.rows + ' row(s), '
+              + 'height ' + g.h + 'px vs ' + g.wantH + 'px derived (' + g.rows + ' x '
+              + g.swatch + 'px swatch + ' + (g.rows - 1) + ' x ' + g.gap + 'px row-gap), '
+              + 'margin-top ' + g.mt + 'px, so hiding it would be worth '
+              + (Math.round((g.h + g.mt) * 100) / 100) + 'px here -- if this moved, '
+              + 'src/styles.css\'s @media(max-width:419px) key block has to be re-swept')
+              : 'no .hm-alt .hm-key at ' + bw + 'px']);
+        }
+
+        /* MUTANT 10d: THE DELIBERATELY WRAPPED KEY. The plant is not invented -- it restores the
+           labels cycle 9 shipped ("Missed flagged" / "Shaky flagged"), which is the state whose
+           silent wrap this cell exists to catch, at the one end of the band where the shipped
+           build fits on one row. */
+        const wrapped = await page.evaluate(() => {
+          const m = document.querySelector('.hm-alt .hm-key .hm-k.flag .hm-lbl');
+          const s = document.querySelector('.hm-alt .hm-key .hm-k.flag-s .hm-lbl');
+          if (!m || !s) return null;
+          const was = [m.textContent, s.textContent];
+          m.textContent = 'Missed flagged';
+          s.textContent = 'Shaky flagged';
+          return was;
+        });
+        if (!wrapped) {
+          aborted = aborted || 'MUTANT 10d CANNOT LAND: the key renders no .hm-k.flag/.hm-k.flag-s '
+            + 'label to lengthen, so the row-count cell above was asserted about a legend whose '
+            + 'text nothing can move and it cannot fail.';
+        } else {
+          await page.evaluate(() => new Promise((res) => requestAnimationFrame(
+            () => requestAnimationFrame(res))));
+          const bad10d = await page.evaluate(KEYGEO);
+          if (!bad10d || bad10d.rows === 1) {
+            aborted = aborted || 'MUTANT 10d UNDETECTED: with cycle 9\'s own labels restored the '
+              + 'key still measured ' + (bad10d ? bad10d.rows : '(unreadable)') + ' row(s) at '
+              + '419px, so the row-count cell cannot see a wrap and the pixel cost recorded in '
+              + 'src/styles.css is guarded by nothing.';
+          }
+          land('10d');
+          await page.evaluate((was) => {
+            const m = document.querySelector('.hm-alt .hm-key .hm-k.flag .hm-lbl');
+            const s = document.querySelector('.hm-alt .hm-key .hm-k.flag-s .hm-lbl');
+            if (m) m.textContent = was[0];
+            if (s) s.textContent = was[1];
+          }, wrapped);
+        }
+        await page.setViewportSize({ width: w, height: h });
       }
       if (r.keel > 0 && r.keyVisible) keelChecked++;
       await page.close();
@@ -1924,13 +2144,21 @@ const GEN_N = 24;
     const tab = await probe.evaluate(() => {
       const m = window.__doorRooms;
       if (!m) return null;
-      const flat = {}, dupes = [];
+      /* THE INSTRUMENT'S OWN SCRATCH MAPS HAVE NULL PROTOTYPES, AND THAT IS NOT DECORATION
+         (cycle 10, R26). These two are keyed by TOPIC ID, and the whole point of the cell below
+         is what happens when a topic id collides with an inherited property name. Measured on
+         the collision mirror while they were object literals: `if (flat[id])` was truthy for
+         `constructor` through Object.prototype, so the run reported `duplicated ["constructor"]`
+         and the cell reddened on its ENTRY-BY-ENTRY direction -- a phantom, on the one build
+         built to press the OTHER direction. A check that carries the defect it is measuring
+         cannot separate the two, and it would have reported a hit for the wrong reason. */
+      const flat = Object.create(null), dupes = [];
       for (const g in m) for (const id of String(m[g]).split(' ')) {
         if (!id) continue;
         if (flat[id]) dupes.push(id);
         flat[id] = g;
       }
-      const missing = [], wrong = [], extra = [], reg = {};
+      const missing = [], wrong = [], extra = [], reg = Object.create(null);
       for (const id of TopicRegistry.ids()) {
         const g = ((TopicRegistry.get(id) || {}).identity || {}).group || '';
         reg[id] = g;
@@ -1941,26 +2169,52 @@ const GEN_N = 24;
       const ids = TopicRegistry.ids();
       const routes = (typeof Router !== 'undefined' && Router.ROUTES)
         ? Object.keys(Router.ROUTES) : null;
-      const collide = routes ? ids.filter((id) => routes.indexOf(id) >= 0) : null;
+      /* THE PREDICATE, NOT THE KEY SET (cycle 10, R26). This cell exists to measure
+         `!ROUTES[p0]` -- parseHash's own second conjunct -- and cycle 9 measured it as
+         `Object.keys(ROUTES).indexOf(id) >= 0`, which is a DIFFERENT question on any object
+         with a prototype. `Object.keys` enumerates own properties; `ROUTES[id]` walks the
+         prototype chain, so on the pre-R26 table a topic slug named `constructor`, `toString`,
+         `valueOf` or `hasOwnProperty` indexed to a truthy inherited value while the key set said
+         no collision -- the cell would have certified the very premise it was added to stop
+         inheriting. Driving the router's actual expression closes that gap whatever the table's
+         prototype is, and R26's null-prototype table then makes the answer honest for the 11
+         real ids as well. Pressed both ways in
+         `_audit/w-addresses-cycle10/press-prototype-hole.txt`. */
+      const collide = routes
+        ? ids.filter((id) => !!Router.ROUTES[id])
+        : null;
+      /* AND THE INHERITED NAMES ARE NAMED, so the failure detail can say WHY a slug collided:
+         a real route id, or Object.prototype answering for a name nobody registered. */
+      const inherited = routes
+        ? ['constructor', 'toString', 'valueOf', 'hasOwnProperty', '__proto__', 'isPrototypeOf']
+          .filter((k) => !!Router.ROUTES[k])
+        : null;
       return { n: Object.keys(flat).length, regN: Object.keys(reg).length, dupes, missing, wrong, extra,
-        routes, collide, cold: window.__doorCold || null, coldWant: ids[0] || null };
+        routes, collide, inherited, cold: window.__doorCold || null, coldWant: ids[0] || null };
     });
     out.push(['[boot] boot.js\'s id->room table agrees with the registry entry by entry, both '
       + 'directions -- it is a duplicate of a fact boot cannot import, so it is checked rather '
-      + 'than trusted -- AND no registered topic id is also a router view id, which is the half '
-      + 'of parseHash\'s condition (`!ROUTES[p0]`) that R21\'s `_hr` gate inherits from a comment '
-      + 'whose stated premise the registry stopped satisfying 16 single-token slugs ago',
+      + 'than trusted -- AND `Router.ROUTES` answers for no registered topic id and for no name '
+      + 'nobody registered, which is the half of parseHash\'s condition (`!ROUTES[p0]`) that '
+      + 'R21\'s `_hr` gate inherits from a comment whose stated premise the registry stopped '
+      + 'satisfying 16 single-token slugs ago',
       !!tab && !tab.dupes.length && !tab.missing.length && !tab.wrong.length && !tab.extra.length
         && tab.n === tab.regN && !!tab.routes && tab.routes.length > 0
-        && !!tab.collide && tab.collide.length === 0,
+        && !!tab.collide && tab.collide.length === 0
+        && !!tab.inherited && tab.inherited.length === 0,
       tab ? (tab.n + ' in the table vs ' + tab.regN + ' registered; missing ' + JSON.stringify(tab.missing)
         + ' wrong ' + JSON.stringify(tab.wrong) + ' extra ' + JSON.stringify(tab.extra)
         + ' duplicated ' + JSON.stringify(tab.dupes)
         + (tab.routes
-          ? '; ' + tab.routes.length + ' route ids, colliding with a topic id: '
+          ? '; ' + tab.routes.length + ' route ids, answering for a topic id: '
             + JSON.stringify(tab.collide)
             + (tab.collide.length ? ' -- each of those makes `_hr` truthy on a segment parseHash '
               + 'does NOT strip, so the door answers the HOME\'s question on a bare view' : '')
+            + '; answering for an UNREGISTERED name: ' + JSON.stringify(tab.inherited)
+            + ((tab.inherited || []).length
+              ? ' -- the table has a prototype, so `ROUTES[x]` is truthy for names nobody wrote '
+                + 'and both parseHash\'s topic strip and its unknown-view guard read the wrong '
+                + 'answer on them (R26)' : '')
           : '; Router.ROUTES could not be read, so the `!ROUTES[p0]` half of R21\'s predicate is '
             + 'unmeasured and this cell cannot certify it'))
         : 'window.__doorRooms is not defined -- boot.js is not deriving the door room at all']);
@@ -2078,6 +2332,12 @@ const GEN_N = 24;
         resume: (typeof Panels !== 'undefined' && Panels.resumeTarget && Panels.resumeTarget()) || null,
         shown: ((((typeof TopicRegistry !== 'undefined' && TopicRegistry.current
           && TopicRegistry.current()) || {}).identity) || {}).group || null,
+        /* THE DOCUMENT TITLE IS THE UNKNOWN-VIEW GUARD'S ONLY VISIBLE OUTPUT (cycle 10, R26).
+           view-manager.js:98 builds it from `Router.ROUTES[lastView].title`, so a hash whose
+           first segment resolves to a NON-ROUTE object -- which is what an ordinary object
+           literal returns for `constructor`, `toString` or `__proto__` -- prints
+           "undefined <em-dash> Deep Rehearsal" on a page the router itself thinks it routed. */
+        title: document.title,
       }));
       await p.close();
       /* the document_start reading is ALWAYS null -- nothing has run yet -- and asserting on it
@@ -2085,7 +2345,7 @@ const GEN_N = 24;
       return { frames: f.frames, seen: f.seen.slice(1), first: f.seen[0],
         resumeGroup: ((f.resume || {}).topic || {}).identity
           ? f.resume.topic.identity.group : null,
-        resumeId: (f.resume || {}).id || null, shown: f.shown, view: f.view };
+        resumeId: (f.resume || {}).id || null, shown: f.shown, view: f.view, title: f.title };
     };
     const rle = (f) => {
       const o = [];
@@ -2156,9 +2416,23 @@ const GEN_N = 24;
          and falls back to `walk` for an unknown one (router.js:50-51), so both of these ARE bare
          views of the boot topic and the oracle is the same one the other two cells use -- the
          room of the topic the app is actually showing, read from TopicRegistry.current(). */
-      for (const h of ['#walk', '#drill', '#Walk', '#Nonsense']) {
+      /* ---- AND TWO SHAPES THE PROTOTYPE CHAIN ANSWERED FOR (cycle 10, R26) ------------------
+         `#constructor` and `#__proto__` are not decoration on this list. Every read of the route
+         table is a bare truth test on a string off the URL, and on an ordinary object literal
+         `ROUTES['constructor']` is Object's own constructor FUNCTION and `ROUTES['__proto__']` is
+         the prototype object -- both truthy. So `#constructor` passed router.js's unknown-view
+         guard as a KNOWN view, `parseHash` returned `route: ROUTES['constructor']`, and
+         view-manager.js:98 built the document title from that object's absent `.title`:
+         "undefined -- Deep Rehearsal", on a hash the router believed it had routed. They are
+         driven here, not argued, and they join this list because the room oracle is the same one
+         the other four use -- the room of the topic the app is actually showing. The TITLE is
+         asserted separately below, against `#Nonsense`'s own outcome rather than against a typed
+         string, because the fallback title is whatever DEFAULT_ROUTE happens to name. */
+      const bareTitles = {};
+      for (const h of ['#walk', '#drill', '#Walk', '#Nonsense', '#constructor', '#__proto__']) {
         const bv = await frames(pick.id, null, { hash: h });
         const wore = bv.seen.concat(bv.frames);
+        bareTitles[h] = bv.title;
         out.push(['[boot] a BARE-VIEW route (' + h + ') on a SEEDED record is lit in the room of '
           + 'the topic the app actually shows, not the room of the record -- every value '
           + '<html data-group> ever holds, watched from document_start',
@@ -2166,6 +2440,19 @@ const GEN_N = 24;
           'the app shows ' + bv.shown + ' while the record resumes ' + pick.id + ' ('
           + pick.group + '); stamps [' + bv.seen.join(',') + '] / frames ' + rle(bv.frames)]);
       }
+      out.push(['[boot] a hash naming an INHERITED property (#constructor, #__proto__) takes the '
+        + 'same unknown-view fallback as #Nonsense, character for character -- the guard is '
+        + '`!ROUTES[viewId]` and a table with a prototype answers truthily for names nobody '
+        + 'registered, so the view id resolved to a non-route and the document titled itself off '
+        + 'its missing `.title`',
+        !!bareTitles['#Nonsense']
+          && bareTitles['#constructor'] === bareTitles['#Nonsense']
+          && bareTitles['#__proto__'] === bareTitles['#Nonsense']
+          && !/undefined/.test(bareTitles['#constructor'] || '')
+          && !/undefined/.test(bareTitles['#__proto__'] || ''),
+        '#Nonsense titles ' + JSON.stringify(bareTitles['#Nonsense']) + ', #constructor titles '
+        + JSON.stringify(bareTitles['#constructor']) + ', #__proto__ titles '
+        + JSON.stringify(bareTitles['#__proto__'])]);
       /* AND THE HOME'S OWN SHAPE IS CASE-INSENSITIVE TOO, because the router's view lookup is:
          `#HOME` must take the DOOR's answer, not the boot topic's. Without this cell the fix for
          the two above could be written as "anything that is not exactly '#home' is a bare view",
@@ -2290,8 +2577,21 @@ const GEN_N = 24;
              portability: whichever surface the app reports, every value the document ever wore is
              the room that surface is about -- AND, on the bare-view branch, the room the app shows
              is the BOOT topic's, which is the fact R21 measured and the reason these two shapes
-             are in the matrix at all. That second half is free: `px.boot` is already read, already
-             asserted distinct from the resume room, and already printed in the failure detail. */
+             are in the matrix at all. That second half costs nothing to compute -- `px.boot` is
+             already read, already asserted distinct from the resume room, already printed in the
+             failure detail -- and cycle 9 stopped there, calling it "free". IT WAS FREE OF COST
+             AND FREE OF PROOF (cycle 10, judge item 1). Measured: replace the whole predicate
+             with `(isHome || uf.shown === px.boot)` alone and run it against the cycle-7-classifier
+             mirror -- the build carrying R21's defect live -- and BOTH cells pass. No arm cycle 9
+             drove is discriminated by this conjunct; arm C reds through `uwore.every`, not through
+             it. It is NOT unfalsifiable, and the shape that reds it is now an arm of the press:
+             a RESTORE-LAST-TOPIC build (view-manager adopts `LastVisit.topicId()` on a topicless
+             route, and boot's bare-view branch stamps the door room to agree) shows a NON-boot
+             topic on a bare view with the document wearing that same room, so the first conjunct
+             HOLDS and only the second can fail. E1 reds these two cells; E2, the same build read
+             by a first-conjunct-only cell, is green -- because a red both conjuncts could produce
+             proves neither. Receipt
+             `_audit/w-addresses-cycle10/press-home-oracle-armE.txt`, arms E1/E2. */
           for (const [h, why] of [
             ['#/home', 'an EMPTY prefix on a home-looking second segment -- the shape boot.js\'s '
               + 'own comment enumerates beside #/walk, which parseHash resolves to a bare view '
@@ -2407,7 +2707,12 @@ const GEN_N = 24;
     + 'Weak-spot in the phone practice block; the key hidden while the rails still paint '
     + 'keel marks, AND the key left visible with the SHAKY swatch removed while the rails still '
     + 'paint a shaky keel -- the state that shipped, which a presence-only legend arm could not '
-    + 'see; the pre-cycle-3 goal concatenation, which named the met state three times in one '
+    + 'see -- AND the converse, a SIXTH keel swatch added at a colour no keel token resolves to, '
+    + 'which is the residue a retired token leaves and which an injection-only arm passed; the '
+    + 'gauge key WRAPPED at the wide end of the <=419px band by restoring cycle 9\u2019s own long '
+    + 'labels, which is the change that silently turned that block\u2019s recorded pixel cost from '
+    + '21px into 46px with nothing in the gate reading the key\u2019s height; '
+    + 'the pre-cycle-3 goal concatenation, which named the met state three times in one '
     + 'sentence; "1 topics drilled this week" on a week of one; the goal bar given an '
     + 'accessible name of its own again, so the fact is announced off the bar and again off the '
     + 'line beneath it; THE HOME LIT IN THE BOOT CONSTANT\'S ROOM while its resume act is in '

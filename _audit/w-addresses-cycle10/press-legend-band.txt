@@ -1,0 +1,48 @@
+=== W-ADDRESSES cycle 10 -- R24: the legend pays for its fifth swatch ===
+
+A. THE WRAP SWEEP, width by width. Rows are printed only where the geometry CHANGES.
+
+   FOUR swatches, "Flagged" (pre-cycle-9) -- the CONTROL   (sweep exit 0)
+     swatches: 4  labels: ["All solid","Part solid","Flagged","Untouched"]  keel segments: 34
+     w=320  rows=2  keyH=40  marginTop=6  cost=46  ["All solid|Part solid|Flagged","Untouched"]
+     w=364  rows=1  keyH=15  marginTop=6  cost=21  ["All solid|Part solid|Flagged|Untouched"]
+
+   FIVE, "Missed flagged"/"Shaky flagged" (cycle 9)   (sweep exit 0)
+     swatches: 5  labels: ["All solid","Part solid","Missed flagged","Shaky flagged","Untouched"]  keel segments: 34
+     w=320  rows=2  keyH=40  marginTop=6  cost=46  ["All solid|Part solid|Missed flagged","Shaky flagged|Untouched"]
+     w=511  rows=1  keyH=15  marginTop=6  cost=21  ["All solid|Part solid|Missed flagged|Shaky flagged|Untouched"]
+
+   FIVE, "Missed"/"Shaky" (SHIPPED, cycle 10)   (sweep exit 0)
+     swatches: 5  labels: ["All solid","Part solid","Missed","Shaky","Untouched"]  keel segments: 34
+     w=320  rows=2  keyH=40  marginTop=6  cost=46  ["All solid|Part solid|Missed","Shaky|Untouched"]
+     w=415  rows=1  keyH=15  marginTop=6  cost=21  ["All solid|Part solid|Missed|Shaky|Untouched"]
+
+B. the SHIPPED build, the cycle-10 geometry cells -- home_claims exit 0, census 24
+   {320: 'PASS', 419: 'PASS'}
+
+C. the LONG-LABEL mirror (cycle 9's own product), the SAME cells -- exit 1
+   {320: 'PASS', 419: 'FAIL'}
+   the red, verbatim:
+     d flagged","Shaky flagged","Untouched"] in 2 row(s), height 40px vs 40px derived (2 x 15px swatch + 1 x 10px row-gap), margin-top 6px, so hiding it would be worth 46px here -- if this moved, src/styles.css's @media(max-width:419px) key block has to be re-swept
+
+D. MUTANT 10d DELETED -- exit 0, census 23 (shipped: 24)
+
+E. scoreboard_salience on this tree -- exit 0
+   SCOREBOARD SALIENCE: PASS  (48 room x theme x score; Solid is the loudest tile whenever it is non-empty, in every room, both themes, and never fills at zero -- plus the altitude gauge at 1280px and 390px in both schemes: the worst grade is drawn at least 1.15x louder than the middle one -- a MARGIN 
+
+F. a "the four swatches" copy PLANTED in src/styles.css -- exit 1
+   SCOREBOARD SALIENCE: FAIL 1
+   - THE KEY RENDERS 5 SWATCHES AND 1 HAND-TYPED COPY(S) OF THAT NUMBER DISAGREE: src/styles.css:2924  "the four swatches"  says 4 -- each of these is read as evidence for a solve. Update them in the same pass that changed the legend, and prefer the derived form where the file already has one.
+   SCOREBOARD SALIENCE: FAIL
+   src/styles.css restored byte-identical: True
+
+VERDICT
+  B  the shipped build passes both band-end geometry cells .......... True
+  C  cycle 9's OWN labels red the 419 cell (two rows, not one) ...... True
+  D  deleting MUTANT 10d moves the derived census by one ............ True
+  E  the swatch-count sweep is clean on this tree ................... True
+  F  a planted "four swatches" copy REDS it, named and located ...... True
+
+  A IS THE ARITHMETIC OF RECORD, and its control is its own first row: the four-swatch
+  legend still flips at 364 and still costs 21px/46px, which is what cycle 2 measured and
+  cycle 9 re-derived. The sweep is therefore reading the same thing they read.

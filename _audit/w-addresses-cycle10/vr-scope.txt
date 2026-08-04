@@ -1,0 +1,34 @@
+=== W-ADDRESSES cycle 10 -- VR SCOPE: is the gauge legend in any captured frame? ===
+
+Cycle 9 measured this for the FIVE-swatch key with its long labels and made it a stated
+property of the VR contract. Cycle 10 shortens both keel labels, which changes the key's
+content and could have moved its box -- so the answer is RE-MEASURED on this build rather
+than cited. Driven on the COLD record, because that is what the VR recipe captures (the
+four home baselines set a theme and nothing else; there is no progress record).
+
+--- COLD (the VR condition) ---
+1280x800  (home-light / home-dark)  COLD -- no progress record, which is what the VR recipe captures
+   key box {"x":333,"y":780,"w":590,"h":15}  viewport height 800
+   inside the captured frame: true
+   elementsFromPoint at its centre: footer#homestatus.hm-status > i > span.hm-k.none
+390x844  (m-home-light / m-home-dark)  COLD -- no progress record, which is what the VR recipe captures
+   key box {"x":29,"y":973,"w":332,"h":40}  viewport height 844
+   inside the captured frame: false  -- 129px BELOW it
+   elementsFromPoint at its centre: (centre outside the viewport)
+
+--- the seeded weakTopics record, for contrast (NOT a VR condition) ---
+1280x800  (home-light / home-dark)  seeded weakTopics
+   key box {"x":333,"y":1057,"w":590,"h":15}  viewport height 800
+   inside the captured frame: false  -- 257px BELOW it
+   elementsFromPoint at its centre: (centre outside the viewport)
+390x844  (m-home-light / m-home-dark)  seeded weakTopics
+   key box {"x":29,"y":1321,"w":332,"h":40}  viewport height 844
+   inside the captured frame: false  -- 477px BELOW it
+   elementsFromPoint at its centre: (centre outside the viewport)
+
+READING. The key's box on the cold record is byte-for-byte the box cycle 9 recorded --
+x=333 y=780 590x15 at 1280x800 and x=29 y=973 332x40 at 390x844 -- so shortening the labels
+moved NOTHING the camera could have seen even if it were looking. At 1280x800 the box is
+inside the frame and the fixed status footer is in front of it; at 390x844 its top is 129px
+below the frame (cycle 9 quoted 169px, which is the same box measured from its BOTTOM edge:
+973 + 40 - 844 = 169). No baseline photographs the gauge legend, on either cycle's build.

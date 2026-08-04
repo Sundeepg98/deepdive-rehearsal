@@ -1,0 +1,41 @@
+=== W-ADDRESSES cycle 10 -- R26: the prototype hole ===
+
+A. the SHIPPED build, the CYCLE-10 cell -- home_claims exit 0
+    boot-table     PASS
+    #constructor   PASS
+    #__proto__     PASS
+    title          PASS
+
+B. a topic slug renamed `constructor`, the PRE-FIX cell (cycle 9's key-set comparison) -- exit 1
+    boot-table     PASS
+    #constructor   FAIL   <-- MOVED
+    #__proto__     PASS
+    title          FAIL   <-- MOVED
+   THE MISS: `Object.keys(ROUTES).indexOf("constructor")` is -1, so the cell that exists to
+   measure `!ROUTES[p0]` certified a registry whose slug makes that predicate FALSE.
+
+C. THE SAME MIRROR, the CYCLE-10 cell -- exit 1
+    boot-table     FAIL   <-- MOVED
+    #constructor   FAIL
+    #__proto__     PASS
+    title          FAIL
+    named, verbatim:
+      FAIL  [boot] boot.js's id->room table agrees with the registry entry by entry, both directions -- it is a duplicate of a fact boot cannot import, so it is checked rather than trusted -- AND `Router.ROUTES` answers for no registered topic id and for no name nobody registered, which is the half of parseHash's condition (`!ROUTES[p0]`) that R21's `_hr` gate inherits from a comment whose stated premise the registry stopped satisfying 16 single-token slugs ago 
+
+D. the PRE-FIX PRODUCT (both tables back to object literals), the CYCLE-10 cell -- exit 1
+    boot-table     FAIL   <-- MOVED
+    #constructor   PASS
+    #__proto__     PASS
+    title          FAIL   <-- MOVED
+      FAIL  [boot] a hash naming an INHERITED property (#constructor, #__proto__) takes the same unknown-view fallback as #Nonsense, character for character -- the guard is `!ROUTES[viewId]` and a table with a prototype answers truthily for names nobody registered, so the view id resolved to a non-route and the document titled itself off its missing `.title`  -- #Nonsense titles "Walkthrough — Deep Rehearsal", #constructor titles "undefined — Deep Rehearsal", #_
+
+VERDICT
+  A  shipped build, every cycle-10 cell green ...................... True
+  B  the collision is INVISIBLE to the pre-fix cell (boot-table green)  True
+  C  the same build REDS the cycle-10 cell, naming the slug ........ True
+  D  the pre-fix PRODUCT alone reds through the live drives ........ True
+
+  B vs C IS ONE BUILD READ BY TWO VERSIONS OF ONE CELL. A vs D is one cell reading two
+  versions of the product. Neither alone would separate "the check grew" from "the
+  product changed".
+  THE WORKTREE WAS NOT WRITTEN: dist/index.html unchanged: True; test/home_claims.cjs unchanged: True

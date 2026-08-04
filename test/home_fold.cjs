@@ -307,12 +307,21 @@ const SHAPES = [
   ['cold (nothing graded anywhere)', null, 'cold', 1, 'cold'],
 ];
 
-/* BOTH ENDS OF THE BAND THE <=419px HOME BLOCK GOVERNS. 390 was the only width this file drove,
-   the only mobile home baseline in the VR manifest, and the width every "flipped no fold outcome"
-   sentence was measured at -- while the stylesheet block those sentences justify runs to 320. The
-   gauge key alone is one 15px row from 364px up and TWO rows (40px) below it, so the narrow half
-   is a different layout, not a narrower one. 360 is inside the two-row half; 390 is inside the
-   one-row half. */
+/* TWO WIDTHS INSIDE THE BAND THE <=419px HOME BLOCK GOVERNS. 390 was the only width this file
+   drove, the only mobile home baseline in the VR manifest, and the width every "flipped no fold
+   outcome" sentence was measured at -- while the stylesheet block those sentences justify runs to
+   320.
+   THE REASON FOR THE SECOND WIDTH IS RESTATED TO THE MEASURED GEOMETRY (cycle 10, R24). It used
+   to be "360 is in the key's two-row half, 390 is in its one-row half" -- true of the FOUR-swatch
+   legend, whose key wrapped at 363/364. Re-swept width by width after the fifth swatch: with the
+   shipped "Missed"/"Shaky" labels the key is TWO rows from 320 to 414 and one row only at 415-419,
+   so both of these widths are now in the same half and that sentence stopped being a reason.
+   What they still are is a NARROW-vs-WIDE COLUMN pair: 30px of measure moves the hero wrap, the
+   since-sentence and the verdict line, which is what this file's band arithmetic is made of, and
+   the measured spread it prints (chips top 769-1006 at 390, 856-1087 at 360) is that difference.
+   THE KEY'S OWN GEOMETRY IS ASSERTED WHERE IT BELONGS, at the band's two ENDS (320 and 419) by
+   test/home_claims.cjs, pressed by MUTANT 10d. That is the check that samples both halves, and it
+   samples them at the ends rather than at two device widths that happen to fall in one half. */
 const VIEWPORTS = [[390, 844], [360, 844]];
 
 /* the shape the self-test is planted on: the practice block moved back to the end of the column

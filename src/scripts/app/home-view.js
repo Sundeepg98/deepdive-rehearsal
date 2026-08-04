@@ -615,8 +615,8 @@
       '<div class="hm-key" aria-hidden="true">' +
       '<span class="hm-k full"><i></i><span class="hm-lbl">All solid</span></span>' +
       '<span class="hm-k part"><i></i><span class="hm-lbl">Part solid</span></span>' +
-      '<span class="hm-k flag"><i></i><span class="hm-lbl">Missed flagged</span></span>' +
-      '<span class="hm-k flag-s"><i></i><span class="hm-lbl">Shaky flagged</span></span>' +
+      '<span class="hm-k flag"><i></i><span class="hm-lbl">Missed</span></span>' +
+      '<span class="hm-k flag-s"><i></i><span class="hm-lbl">Shaky</span></span>' +
       '<span class="hm-k none"><i></i><span class="hm-lbl">Untouched</span></span>' +
       '</div>' +
       /* OUTSIDE .hm-key, which is aria-hidden. This note is what reconciles the panel's 971 with

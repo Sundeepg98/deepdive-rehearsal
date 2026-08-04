@@ -3848,6 +3848,22 @@ worktree is never written.
 | shipped `ci.py`, three sites | 78 / 78 / 78 | **79 / 79 / 79** -- it moves |
 | cycle 7's `ci.py` (`git show HEAD:test/ci.py`), three sites | 76 / 76 / 76 | 76 / 76 / 76 -- **it cannot move, which is the defect** |
 
+**AND THE CLASS WAS SWEPT, NOT THE INSTANCE.** The judges named one file; the same grep across
+`test/`, `src/`, `tools/` and `.github/`
+(`grep -rnE "[^0-9]([0-9]{2})[ -](checks|rows|registered)"`) found **three more gate-size figures
+frozen at the day they were typed**, none of them printed and all of them read by whoever opens
+the file next:
+
+| site | said | now |
+|---|---|---|
+| `check_all.py:89` | "a summary of **58** rows" | "a summary with a row per REGISTERED check" |
+| `check_all.py:1525` | "a table of **77** rows with 60 of them blank" | "a table with a row per REGISTERED check and most of them blank" |
+| `primitive_battery.py:210` | "not the other **72** checks" | "not the rest of the registry" |
+| `home_claims.cjs:1343` | "Across **77** checks NOTHING PRESSED THIS CONTROL" | "Across the whole gate (77 checks on the day this was measured, cycle 1)" -- the number is a MEASUREMENT with a date here, so it is dated rather than deleted |
+
+`craft_hygiene.py:218` ("20 of 77 entries") was read and LEFT: its 77 is the allowlist's entry
+count, a different denominator that happens to collide with the gate's old size.
+
 ---
 
 ### FOUND WHILE PRESSING -- A COUNT THAT REPRODUCES UNDER NEITHER OF ITS OWN CONVENTIONS
@@ -3882,3 +3898,227 @@ Nothing changed as a result: the fix already covered it, and `#AUTHZ/home` is th
 What changed is that the enumeration is now known to have been incomplete, which is this cycle's
 subject twice over.
 
+---
+
+## CYCLE 8 -- VR CONTRACT
+
+No baseline regenerated; the manifest is unchanged at **18**, and `git diff --stat HEAD~1 --
+test/baselines/` lists nothing. **Every source change this cycle is invisible by construction and
+the comparison was run rather than assumed.** The only source edit is `boot.js`'s classifier, which
+changes the room lit on hashes whose FIRST segment is not a registered topic; all four home
+baselines boot at `#home` on a cold record, where the cycle-7 and cycle-8 branches take the same
+path and return the same string. Everything else this cycle is test code, a committed cost table
+and comments. All 18 matched their committed pixels in the certification run:
+`18 baselines, win32-chromium149; every capture reached a proven rest state across all 18 roots,
+cleared the blank-page floor, and matched its committed pixels`.
+
+## CYCLE 8 -- GATE
+
+Full serial run (`python3 test/check_all.py`, no `--fast`, no `--shared-browser`) on the
+**COMMITTED** tree, exit 0, **zero FAIL lines**.
+
+**IT CERTIFIES A TREE (R13), NOT A COMMIT.** Certified tree:
+**`702018666ecd29ff335a5eb70a4c9d7fc032bd4d`** -- the tree of commit `e11182c`, with
+`git status --porcelain` empty when the run started.
+
+```
+  78 checks in 928.6s (15.5 min)
+GATE: PASS
+```
+
+**THE CAPTURE IS KEPT OUTSIDE THE REPOSITORY** (cycle 7's settled convention, carried item 14).
+Path on this box:
+`%TEMP%\claude\D--claude-workspace-deepdive-rehearsal\bfc4e186-9eb0-4148-a383-84020244f407\scratchpad\w8\cycle8-gate.txt`
+(20,172 bytes). The
+load-bearing lines are quoted below, in the repository, on the certified tree.
+
+**THE COUNT IS STILL 78. Cycle 8 registered no new check** -- MUTANT Ic and the two route cells
+extend checks the gate already ran, R20 edits an existing load-time abort, and judge item 6 touches
+the CI dispatcher rather than the registry.
+
+The lines that carry this cycle's work:
+
+```
+build_integrity     PASS  (12354669 bytes, 0 unresolved, 9 panes + 7 overlays, build SYNCED
+                          the deliverable, COMMITTED deliverable == fresh build of HEAD)
+scoreboard_salience PASS  ... TEN PLANTED LANDINGS press it -- G a pseudo backdrop, J the same
+                          with pointer-events off, I a pointer-events:none sibling, Ib the same
+                          painted by a gradient, Ic the same painted only by a backdrop-filter,
+                          M a box painted only by its border, K an ancestor at opacity .91, and
+                          L the chain widening one property at a time -- so each of `painted()`'s
+                          three reasons has a plant of its own, which cycle 7's nine did not
+home_claims         PASS  21 planted mutants detected ... EIGHT ROUTE SHAPES now ... and the two
+                          shapes that pin the OTHER side of that precedence -- an EMPTY prefix
+                          (#/home) and the same slug in the WRONG CASE (#<TOPIC>/home), which
+                          parseHash does not strip and which are therefore bare views of the BOOT
+                          topic. The six shapes before those two all either had no second segment
+                          or carried a registered topic in the first, so none of them could tell
+                          "the home test reads segment 1" from "the home test reads segment 1
+                          ONLY BEHIND A TOPIC" -- and a widened predicate shipped green through
+                          that gap for a cycle
+room_static         PASS  (codemod=0, styles.css infinite=0, 6 room blocks + rebind, boot
+                          derives the door room first and no constant is hard-coded)
+craft_hygiene       PASS  (23731 rendered-copy spans ... 237 ruled exceptions)
+visual_regression   PASS  (18 baselines, win32-chromium149; every capture reached a proven rest
+                          state across all 18 roots, cleared the blank-page floor, and matched
+                          its committed pixels)
+ascii_guard         PASS  (843 files strict 7-bit ASCII: src 688, src/topics-md 38, test 91,
+                          tools 26)
+```
+
+**THE FREE LANES, ALL THREE GREEN, ON THE SHA THE CERTIFIED TREE BELONGS TO.**
+
+* **The PUSH-triggered Branch gate, run `30882171141`, `head_sha`
+  `e11182c3513fca5a98207cc72ccba15db6942cbc`** -- `success`. This is the citation R13 prefers: the
+  run records the sha it actually checked out, and it is the sha the certified tree belongs to.
+* **Branch previews on the same sha, run `30882171133`** -- `success`.
+* **The dispatched `python test/ci.py gate --nowait`, run `30882196337`**, 6 shards on
+  ubuntu-latest, **all six exit 0** (76 / 72 / 77 / 136 / 172 / 206 s). Cited as "6/6 shards green
+  on the ref supplied at dispatch time", per R13's ledger note -- a `workflow_dispatch` run records
+  the DEFAULT branch's sha in `head_sha`, so it cannot name the tree it tested.
+
+---
+
+## CYCLE 8 -- THE FREEZE
+
+```
+CERTIFIED TREE        702018666ecd29ff335a5eb70a4c9d7fc032bd4d   (the tree of e11182c)
+BRANCH TIP AT FREEZE  the commit that carries THIS section, in arrears -- see R13
+THE DIFF BETWEEN THEM: docs only -- _WAVE_LEDGER.md, this section
+```
+
+No source file, no test file, no committed data file and no deliverable byte differs between the
+certified tree and the tip. **No gate is retaken for that**, and the push-triggered Branch gate on
+`e11182c` covers the code tree on a second platform independently.
+
+### What is now part of `scoreboard_salience`'s CONTRACT
+
+Cycle 7 froze six conditions. All six stand; the first is widened once more and its completeness
+claim is retracted.
+
+1. **THE SHOT IS MEASURED FOR A VEIL, AT THE SHOT -- AND EVERY BRANCH OF EVERY PART OF IT HAS A
+   PLANT THAT CAN FAIL IT.** Unchanged in the chain and in the two pixel reads. What is new is the
+   third branch of `painted()`: "painted" is background-color, background-image OR backdrop-filter,
+   and until this cycle only two of those three had a plant -- the third could be deleted alone
+   with this check exit 0 and every mutant still caught. **TEN PLANTED LANDINGS** -- G, J, I, Ib,
+   **Ic**, M, K, L1, L2, L3 -- against presses **P4a-P4g**, each part AND each paint branch deleted
+   alone going red. Cycle 7's "every part of the veil guard now has a plant that can fail it" is
+   retracted and replaced by the enumeration, because "every part" was a claim about a list nobody
+   had counted.
+   **AND EVERY OVERLAY PLANT DECLARES ITS CARRIER.** The CANNOT-LAND branch reads the specific
+   property that is supposed to be carrying the paint off the DOM, so a plant that painted nothing
+   cannot be reported as an arm that failed to see it.
+2. **THE GROUND INVARIANT, AS A BACKSTOP PRICED ON THE PANEL'S BIGGEST LEVER.** Unchanged -- and
+   its INERT-HERE finding no longer asserts, at runtime, the attribution the file withdrew.
+3. **THE COLD READING MUST REPRODUCE THE WARM ONE.** Unchanged.
+4. **THE LEGEND'S SWATCHES ARE READ.** Unchanged.
+5. **THE SAMPLER MUST BE ABLE TO REPORT ITSELF.** Unchanged.
+6. **THE TWO WIDTHS RETURN THE SAME RAMP.** Unchanged from cycle 7.
+
+Plus, unchanged: **the two severities are separated by a 1.15 MARGIN, not by an ordering.**
+
+### What is now part of `home_claims`'s CONTRACT
+
+* **THE ROUTE x RECORD MATRIX HAS EIGHT ROUTE SHAPES, AND THE LAST TWO EXIST BECAUSE THE FIRST SIX
+  COULD NOT PRESS THE PREDICATE.** A bare view (`#walk`, `#drill`), a MIXED-CASE view (`#Walk`) and
+  a MALFORMED hash (`#Nonsense`) are lit in the room of the topic the app actually shows; `#home`,
+  `#HOME` and a TOPIC-PREFIXED HOME (`#<topic>/home`) take the resume target's room; and **`#/home`
+  (an EMPTY prefix) and `#<TOPIC>/home` (the same slug in the WRONG case)** take the BOOT topic's,
+  because `parseHash` strips segment 0 only for a registered topic. The pair pins BOTH directions
+  of the precedence; six shapes pinned one.
+* **THE THREE ROOMS ARE ASSERTED DISTINCT IN ALL THREE PAIRS**, not two, with the abort naming
+  which two collided -- and the wrong-case cell aborts if `toUpperCase()` ever leaves the slug
+  unchanged.
+
+### What is now part of the GATE's own contract
+
+* **`test/gate_cost.json` DESCRIBES THE REGISTRY, AND SAYS SO AT LOAD -- BUT THE PRODUCER MAY
+  PASS.** The reconciliation REPORTS in every mode and EXITS in every mode except `--profile`,
+  which is the mode that writes the file the printed remedy names. The remedy names that exemption,
+  and the loop from mismatch to green is walked in the receipt rather than argued.
+* **NEW -- `test/ci.py` DOES NOT TYPE THE CHECK COUNT.** Its three advertised figures are formatted
+  from `ci_shard_gate.extract_order()` at print time, so the count the CI interface advertises and
+  the count its shards run cannot disagree.
+
+### THE RETRACTION LEDGER -- every sentence this cycle took back, and what replaced it
+
+| where | retracted | restated |
+|---|---|---|
+| `src/scripts/boot.js`, the deliverable, and R19's own section in this ledger | R19's adopted expression -- `(_raw.split('/')[1]||'').toLowerCase()==='home'` with no condition on segment 0 -- and, with it, "R19 fixes the topic-prefixed home" as a complete statement | **UNDER-GATED, AND IT SHIPPED THIS WAVE'S OWN DEFECT CLASS.** `parseHash` strips segment 0 only when it is a REGISTERED topic, so on ten measured shapes the app showed a bare view of the BOOT topic while the document wore the RESUME room -- permanently, not as a flash. The test is gated on `_hr`, which IS the router's condition. R19 is amended in place, beside its own text. |
+| cycle-7 freeze, `home_claims`'s contract | "THE ROUTE x RECORD MATRIX HAS SIX ROUTE SHAPES" as the coverage of the route axis | **EIGHT, and the six are the reason the seventh was needed.** Each of the six either has no second segment or carries a registered topic in the first, so none of them could tell "reads segment 1" from "reads segment 1 only behind a topic". |
+| cycle-7 press summary, the R19 row | "`#authz/home` PASS -> FAIL; **the other five unchanged**", offered as evidence the re-ordering broke nothing | **True, and it was the finding rather than the reassurance.** No cell in the matrix was able to move on the half of the predicate that cycle had just widened. A press whose controls cannot move is reporting the shape of its own matrix. |
+| cycle-7 R19, the prefixed cell's precondition | "the resume room, the boot room and the prefixed topic's room are three distinct strings ... with an ABORT naming the collision" | **The abort covered two of the three pairs.** `ok(id)` asked prefix-vs-resume and prefix-vs-boot; nothing asked resume-vs-boot, and `pick` upstream only guarantees prefix != cold. All three pairs now, naming which two collided. |
+| cycle-7 retraction ledger, first row | its enumeration of where the withdrawn veil attribution lived, closed at FOUR sites | **FIVE, and a SIXTH found while fixing the fifth.** `scoreboard_salience.cjs:757` carried it as fact 350 lines below the paragraph that retracts it; the INERT-HERE finding string printed it at RUNTIME. Cycle 6's failure, repeated by the ruling that corrected it. |
+| `scoreboard_salience.cjs:757` | "The judges' run 3 walked through it: a veil at alpha 0.9101 sitting across a whole 390/dark cell, exit 0" | **A dark cell whose absolute reading MOVED between runs at exit 0, because the only arm looking after the shot was a ground invariant that is inert there above alpha 0.474.** No alpha and no veil; the cause is not attributed, and the read below needs no attribution to be a guard. |
+| `scoreboard_salience.cjs:1150`, a RUNTIME finding | "which is exactly how a veil at alpha 0.91 CROSSED a whole dark cell at exit 0" -- the withdrawn attribution, printed by the check, as the justification for its own arm | **"COULD cross a whole dark cell at exit 0 without being seen."** The DETECTABILITY claim the GROUND_EPS arithmetic does carry, which is the surviving form its neighbour at the MUTANT G comment already used. |
+| cycle-7 commit headline + freeze condition 1 | "every part of the veil guard now has a plant that can fail it", on NINE landings | **`painted()` declares three reasons and two had plants.** Deleting the backdrop-filter branch alone left the check exit 0 with every mutant caught and all four cells green. TEN landings now, and P4g is the control. "Every part" was a claim about a list nobody had counted. |
+| `check_all.py`, the `scoreboard_salience` entry | "THIRTEEN planted mutants ... and SEVEN VEILS" | **SEVENTEEN** -- seven on the marks, ten veil landings -- re-derived from the mutant rows the run prints. Thirteen reproduces under NEITHER of the file's own conventions: fourteen counting the chain widening once, sixteen counting it three times as the PASS line does. |
+| `test/ci.py`, three sites | "all 76 checks sharded" / "all 76, advisory" / "fast advisory gate: 76 checks sharded" -- in the file that dispatches the CI lanes, two cycles after the gate reached 78 | **Formatted from the registry at print time** via `ci_shard_gate.extract_order()`, the same extraction the shards are cut from. Pressed: it moves to 79 under a mirrored registry where the literals could not move at all. |
+| `check_all.py`, the cost-table abort | fatal in EVERY mode, with a printed remedy whose first command it blocked -- so the instruction could not be followed and the only exit was to hand-edit the table the arm exists to protect | **The REPORT is unconditional; the EXIT is gated on `not PROFILE`.** The remedy names the exemption, and the loop from mismatch to green is walked end to end in the receipt rather than argued. `--only` stays strict on purpose. |
+
+Eleven sentences, and their shape is the sharpest this wave has produced: **six of the
+eleven were written BY THE CYCLE-7 RULINGS THAT CORRECTED THE PREVIOUS SIX.** R19's expression, its
+"three distinct strings", its press summary's reassurance, the retraction ledger's own completeness
+claim, "every part of the veil guard now has a plant", and the count in the entry that documents
+the plants -- every one of them is a correction that shipped its own defect. Cycle 6's ten were
+"the instrument authored the number"; cycle 7's nine were "true when written, and nothing was
+watching"; **these are "written by the fix, and the fix was not pressed against the thing it
+changed"**. The rule that survives all three is one line: a repair is a claim about the future too,
+and the only thing that keeps one true is a control that fails when it stops being true -- pointed
+at what the repair CHANGED, not at what it fixed.
+
+---
+
+## CARRIED OUT OF CYCLE 8 -- each with the reason and the wave that owns it
+
+1. **The app-wide GLYPH pass** -- unchanged from cycle 5 (77 entries / 163 sites / 36 marks).
+2. **The corpus prose pass** -- unchanged (111 apostrophes, 49 quotes, 2 dashes over 20 files).
+3. **A per-room WASH token.** Unchanged since cycle 2.
+4. **The three dark text nodes under AA** (`.hm-room-n` 2.35:1, `.hm-room-weak` 3.48:1). Still a
+   PALETTE decision, still `room_contrast`'s territory.
+5. **GAP-2, the landing drill's flagged set.** Still owned by **W2 room**.
+6. **THE VEIL CLASS OUTSIDE THESE TWO CHECKS, AND THE PORTABLE FORM IS THREE READS.** Unchanged
+   from cycle 7: `test/_boot.cjs` is owed a chain read plus a hit-stack-and-covering-box read whose
+   covering-box half enumerates PSEUDO-elements including ancestors'. There is a worked
+   implementation in `scoreboard_salience.cjs` to lift -- and as of this cycle its `painted()` has
+   three branches, all three planted, so the thing to lift is complete.
+7. **ABSOLUTE THRESHOLDS TAKEN ON ONE PLATFORM.** Unchanged.
+8. **THE FIRST-RUN-OF-A-FRESH-PROFILE QUESTION.** Unchanged.
+9. **THE OTHER `.hm-k`-SHAPED HOLES** -- a scan of every `test/...` reference inside a
+   `src/styles.css` comment, resolved against the file it names. Unchanged.
+10. **THE 138 MARKS' OWN COPY IS GATE-COUPLED.** Unchanged from cycle 5.
+11. **NO OTHER SAMPLING BOX IN THE GATE HAS A PHASE CONTROL.** Unchanged from cycle 6: the
+    neighbour band is strictly interior, the depth pair is still `S(x-2)`, `S(inside-2)`, 4x4 CSS
+    px, with a mutant and no control. **Owed by whichever wave next touches the depth arm.**
+12. **THE ROUTER WRITES A URL SHAPE IT THEN HAS TO SPECIAL-CASE.** Unchanged from cycle 7 and
+    stronger for R21: the door now answers correctly on twenty-two shapes, and the router still
+    writes `#<topic>/home` at `replaceState`. Stripping a topic prefix off a TOPICLESS view,
+    router-side, is a **W2 candidate**; it would retire no cell either way, because those URLs are
+    already copied and a link in someone's notes outlives any router fix.
+13. **THE VEIL READ SAMPLES ONE POINT.** Unchanged from cycle 7 -- every plant covers the track's
+    centre because that is where the read looks, and a veil confined to the legend swatches, the
+    depth pair or the neighbour bands is outside the union's reach by construction. The cheap form
+    (read the state at each sampled box rather than at one) is owed by whichever wave next widens
+    this arm.
+14. **THE GATE CAPTURE CONVENTION IS SETTLED.** Unchanged from cycle 7: the capture lives OUTSIDE
+    the repository, its load-bearing lines are quoted in the ledger on the certified tree, and the
+    push-triggered platform runs are the durable half.
+15. **NEW: THE ROUTE x RECORD MATRIX IS NOT A CROSS-PRODUCT.** `home_claims` generates RECORDS from
+    a fixed PRNG (`GEN_N = 24`) and every generated cell loads `hash:'#home'`; the ROUTE axis is
+    eight hand-written cells on ONE seeded record. So "route x record" is two lists, not a matrix,
+    and the generator cannot reach a route defect -- which is exactly how cycle 7's regression got
+    past twenty-four generated cells. Driving even two routes across the generated records is the
+    cheap form. **Owed by whichever wave next touches the boot arm.**
+16. **NEW: `--changed`, `--fast` AND THE BARE SERIAL CAPTURE ARE NOT INDIVIDUALLY PRESSED ON THE
+    COST-TABLE ABORT.** They share the single `if not PROFILE: sys.exit(1)` with `--dry-run` and
+    `--only`, which are pressed -- so the BRANCH is pressed and the modes are not. Recorded rather
+    than done, because four presses of one branch is not four presses.
+17. **NEW: THE COUNT SWEEP WAS ONE REGEX, AND IT HAS A KNOWN BLIND SPOT.** Judge item 6's class --
+    a figure about the gate frozen at the day it was typed -- was swept with
+    `grep -rnE "[^0-9]([0-9]{2})[ -](checks|rows|registered)"`, which catches only TWO-DIGIT
+    figures directly adjacent to three nouns. It does not reach "eighteen checks", a count split
+    across a line break, or any other denominator: `build_integrity.py:130` and
+    `tools/sync-deliverable.mjs:6` both say **"18 checks"** read the deliverable, which is a
+    different denominator this cycle did not measure and therefore did not touch. The owed form is
+    an enumeration of every check-count claim WITH its denominator, each resolved against a
+    measurement. **Owed by whichever wave next touches the gate's own paperwork.**

@@ -160,6 +160,8 @@ def link_node_modules(mirror):
 mirror = tempfile.mkdtemp(prefix='ddr-build-mirror-')
 build_err = None
 fresh = None
+wrote = []              # generated paths this run had to materialise in the tree
+differs_tracked = []    # TRACKED paths the mirror build disagreed with -- reported, never written
 try:
     for rel in BUILD_INPUTS:
         s = os.path.join(ROOT, rel)
@@ -196,6 +198,52 @@ try:
                              'this tree, dist/index.html and %s came out different. The sync step '
                              '(node tools/sync-deliverable.mjs, last in package.json "build") is '
                              'broken or has been removed.' % NAME)
+            else:
+                # ---------------------------------------------------------------------------
+                # THE BARRIER'S OTHER JOB, AND IT IS BIGGER THAN TWO FILES. `npm run build` does
+                # not only write dist/ and the deliverable: it GENERATES SOURCES that other
+                # checks read -- src/tokens.generated.css, src/scripts/visuals/*,
+                # src/topics/_generated/** and src/topics/_generated-registry.js -- every one of
+                # them gitignored, and therefore ABSENT on a fresh checkout. Moving the build
+                # into a mirror stopped producing them in the tree, and the free ubuntu lane
+                # reddened `numbers_lattice`, `bank_pushback` and `bank_novelty` within the hour
+                # with "0 compiled num slices for 38 authored topics -- run npm run build".
+                # That is the correct failure and the wrong cause, and it is what makes this a
+                # SYNC rather than a two-file copy.
+                #
+                # THE RULE IS THE SAME ONE, WIDENED TO EVERY GENERATED PATH: write a file only
+                # when the tree does not already carry exactly these bytes. On a clean tree that
+                # already built itself -- the tree R13 certifies -- nothing is written at all.
+                #
+                # AND IT REFUSES TO TOUCH A TRACKED FILE. The tracked set comes from `git
+                # ls-files`, and anything in it is SOURCE: if a mirror build produced different
+                # bytes for a tracked path, that is a finding to report, never a file to
+                # overwrite. Untracked output is the only thing this syncs.
+                ok_tracked, tracked_out = git('ls-files')
+                tracked = set(
+                    tracked_out.decode('utf-8', 'replace').replace('\\', '/').split('\n'))
+                for scan in ('src', 'dist'):
+                    base = os.path.join(mirror, scan)
+                    for dirpath, _dirs, files in os.walk(base):
+                        for fn in files:
+                            src_p = os.path.join(dirpath, fn)
+                            rel = os.path.relpath(src_p, mirror).replace(os.sep, '/')
+                            b = open(src_p, 'rb').read()
+                            dst_p = os.path.join(ROOT, rel.replace('/', os.sep))
+                            same = (os.path.exists(dst_p)
+                                    and sha(open(dst_p, 'rb').read()) == sha(b))
+                            if same:
+                                continue
+                            if ok_tracked and rel in tracked:
+                                differs_tracked.append(rel)
+                                continue
+                            os.makedirs(os.path.dirname(dst_p), exist_ok=True)
+                            open(dst_p, 'wb').write(b)
+                            wrote.append(rel)
+                # the deliverable lives at the repo root, outside both scanned trees
+                if not os.path.exists(DELIVERABLE) or sha(open(DELIVERABLE, 'rb').read()) != sha(fresh):
+                    open(DELIVERABLE, 'wb').write(fresh)
+                    wrote.append(NAME)
 finally:
     # UNLINK THE JUNCTION FIRST, NON-RECURSIVELY. `rmtree` over a junction recurses THROUGH it:
     # that is how one teardown in this project deleted all 29 @-scopes of a shared node_modules.
@@ -222,32 +270,25 @@ leftover = re.findall(rb'<!--@build:include', fresh)
 if leftover:
     problems.append('%d unresolved include marker(s) remain in the output' % len(leftover))
 
-# --- (2) the sync step ran; and the TREE is touched ONLY IF IT IS ALREADY WRONG -------------
+# --- (2) the sync step ran; and the TREE was touched ONLY WHERE IT WAS NOT ALREADY THIS BUILD
 # THE SYNC ASSERTION MOVED INTO THE MIRROR (R23a) and is above: the mirror's dist/index.html and
-# the mirror's deliverable are compared there, which is now the only place a build happens.
-#
-# WHAT IS LEFT HERE IS THE BARRIER'S OTHER JOB, and it cannot simply be dropped. check_all.py
-# calls this check THE BARRIER because the rest of the gate reads what it used to write: the 47
-# browser checks are handed the deliverable, and visual_pane_smoke and shadow_css_guard read
-# dist/index.html, which is gitignored and therefore ABSENT on a fresh CI checkout. So the tree
-# is refreshed from the mirror EXACTLY WHEN IT DOES NOT ALREADY CARRY THESE BYTES, and never
-# otherwise. The consequence is the property R23 asked for, stated as a rule rather than a hope:
-#     on a clean tree whose deliverable is a build of its own source -- the ONLY tree R13
-#     certifies -- this check writes nothing at all, and dist/index.html's mtime does not move.
-# On any other tree (a developer mid-edit, a fresh CI checkout with no dist/) it writes, and the
-# PASS line SAYS SO, so a run that touched the tree can never be read as one that did not.
-on_disk = open(DELIVERABLE, 'rb').read() if os.path.exists(DELIVERABLE) else None
-dist_on_disk = open(DIST, 'rb').read() if os.path.exists(DIST) else None
-wrote = []
-if on_disk is None or sha(on_disk) != sha(fresh):
-    open(DELIVERABLE, 'wb').write(fresh)
-    wrote.append(NAME)
-if dist_on_disk is None or sha(dist_on_disk) != sha(fresh):
-    os.makedirs(os.path.dirname(DIST), exist_ok=True)
-    open(DIST, 'wb').write(fresh)
-    wrote.append('dist/index.html')
-tree_state = ('tree UNTOUCHED (both artifacts already were this build)' if not wrote
-              else 'REFRESHED ' + ' + '.join(wrote) + ' -- this run WROTE the tree')
+# the mirror's deliverable are compared there, which is now the only place a build happens, and
+# the generated-path sync runs there too, while the mirror still exists. What is left here is the
+# REPORT -- and a report is the point, because a run that touched the tree must never be readable
+# as one that did not.
+#     on a clean tree that already carries its own build -- the ONLY tree R13 certifies -- this
+#     check writes nothing at all, and dist/index.html's mtime does not move.
+if differs_tracked:
+    problems.append(
+        'the mirror build produced DIFFERENT bytes for %d TRACKED path(s) [%s]. A tracked file is '
+        'source, so this check refuses to overwrite it: either the tree carries an edit its own '
+        'build does not reproduce, or a generated file has been committed by mistake. Neither is '
+        'a thing to silently repair.'
+        % (len(differs_tracked), ', '.join(sorted(differs_tracked)[:5])))
+tree_state = ('tree UNTOUCHED (every generated path already carried this build)' if not wrote
+              else 'MATERIALISED %d generated path(s) absent-or-stale in the tree [%s] -- this run '
+                   'WROTE the tree' % (len(wrote), ', '.join(sorted(wrote)[:4])
+                                       + (', ...' if len(wrote) > 4 else '')))
 
 # --- (3) the COMMITTED pair is consistent -------------------------------------------------
 # Asserted whenever the tree was clean, which is ALWAYS the case in CI (actions/checkout gives a

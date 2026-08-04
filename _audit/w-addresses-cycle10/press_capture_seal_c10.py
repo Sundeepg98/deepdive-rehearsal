@@ -11,6 +11,12 @@ R23 has two halves and each needs its own control:
       dist/ is missing, where it MUST write (the fresh-CI-checkout case), so "it did not write"
       is a measurement and not an inability.
 
+  (a2) AND THE BARRIER STILL MATERIALISES WHAT THE REST OF THE GATE READS. `npm run build`
+      generates five gitignored things -- dist/index.html, src/tokens.generated.css,
+      src/scripts/visuals/*, src/topics/_generated/** and src/topics/_generated-registry.js --
+      and a fresh checkout has none of them. R23a's first draft synced two files and the free
+      ubuntu lane reddened numbers_lattice, bank_pushback and bank_novelty within the hour.
+
   (b) THE CAPTURE IS WALL-CLOCK SEALED. check_all.py hashes dist/index.html and the deliverable
       after the barrier and again at the end, and ABORTS THE CAPTURE on a difference. Arm B runs
       a tiny selection and must come back sealed; arm C runs the same selection with a writer
@@ -94,30 +100,49 @@ a_readonly = before == after
 say('   READ-ONLY (bytes AND mtime, both artifacts): %s' % a_readonly)
 
 # ---------------------------------------------------------------------------------------------
-# ARM A2 -- THE CONTROL. Remove dist/ (the fresh-CI-checkout shape) and it MUST write.
+# ARM A2 -- THE CONTROL, AND IT IS THE WHOLE GENERATED SET RATHER THAN ONE FILE.
+# `npm run build` produces five gitignored things the rest of the gate reads: dist/index.html,
+# src/tokens.generated.css, src/scripts/visuals/*, src/topics/_generated/** and
+# src/topics/_generated-registry.js. Removing all of them reproduces a FRESH CI CHECKOUT, which is
+# the shape that caught R23a's first draft: with the build moved to a mirror and only two files
+# synced back, the ubuntu lane reddened numbers_lattice, bank_pushback and bank_novelty with "0
+# compiled num slices for 38 authored topics". So the control removes what a checkout lacks, and
+# the check has to put every one of them back.
 # ---------------------------------------------------------------------------------------------
+GENERATED = ['dist', 'src/tokens.generated.css', 'src/scripts/visuals',
+             'src/topics/_generated', 'src/topics/_generated-registry.js']
 say('')
-held = None
-if os.path.exists(DIST):
-    held = tempfile.mkdtemp(prefix='ddr-seal-hold-')
-    shutil.move(DIST, os.path.join(held, 'index.html'))
+held = tempfile.mkdtemp(prefix='ddr-seal-hold-')
+moved = []
+for rel in GENERATED:
+    p = os.path.join(ROOT, rel.replace('/', os.sep))
+    if os.path.exists(p):
+        dst = os.path.join(held, rel.replace('/', '__'))
+        shutil.move(p, dst)
+        moved.append((rel, p, dst))
 try:
     r2 = subprocess.run([sys.executable, os.path.join(ROOT, 'test', 'build_integrity.py')],
                         cwd=ROOT, capture_output=True, text=True, encoding='utf-8',
                         errors='replace')
     a2 = {'dist': (md5(DIST), stat(DIST)), 'deliverable': (md5(DELIVERABLE), stat(DELIVERABLE))}
-    say('A2. THE CONTROL -- the same check with dist/index.html REMOVED (a fresh CI checkout) '
-        '-- exit %d' % r2.returncode)
-    say('    ' + (r2.stdout or r2.stderr or '').strip().splitlines()[-1][:300])
-    a2_wrote = a2['dist'][0] != 'ABSENT'
-    say('    it WROTE dist/index.html back: %s (md5 %s, and the deliverable is %s)'
-        % (a2_wrote, a2['dist'][0][:12],
-           'untouched' if a2['deliverable'] == after['deliverable'] else 'MOVED'))
+    say('A2. THE CONTROL -- the same check with all %d generated path(s) REMOVED (a fresh CI '
+        'checkout) -- exit %d' % (len(moved), r2.returncode))
+    say('    removed: ' + ', '.join(rel for rel, _p, _d in moved))
+    say('    ' + (r2.stdout or r2.stderr or '').strip().splitlines()[-1][:400])
+    back = [rel for rel, p, _d in moved if os.path.exists(p)]
+    a2_wrote = len(back) == len(moved)
+    say('    it PUT BACK %d of %d: %s' % (len(back), len(moved), ', '.join(back)))
+    say('    the deliverable is %s'
+        % ('untouched' if a2['deliverable'] == after['deliverable'] else 'MOVED'))
 finally:
-    if held:
-        shutil.rmtree(held, ignore_errors=True)
+    for rel, p, dst in moved:
+        if os.path.exists(p):
+            (shutil.rmtree(p) if os.path.isdir(p) else os.remove(p))
+        shutil.move(dst, p)
+    shutil.rmtree(held, ignore_errors=True)
 restored = md5(DIST) == before['dist'][0] and md5(DELIVERABLE) == before['deliverable'][0]
-say('    both artifacts are byte-identical to the start of this press: %s' % restored)
+say('    every generated path restored from the held copy; dist and the deliverable are '
+    'byte-identical to the start of this press: %s' % restored)
 
 # ---------------------------------------------------------------------------------------------
 # ARM B -- a SEALED run. A tiny selection, so this press costs seconds rather than 19 minutes;
@@ -173,7 +198,7 @@ ok_c = cc != 0 and jc.get('capture_sealed') is False and 'CAPTURE ABORTED' in oc
 say('')
 say('VERDICT')
 say('  A  a clean, already-built tree is READ-ONLY to build_integrity ......... %s' % ok_a)
-say('  A2 the control: with dist/ gone it DOES write, so A is a measurement ... %s' % ok_a2)
+say('  A2 the control: on a fresh-checkout shape it materialises all 5 ......... %s' % ok_a2)
 say('  B  a quiet run comes back SEALED ....................................... %s' % ok_b)
 say('  C  a mid-run writer ABORTS THE CAPTURE and the exit is non-zero ........ %s' % ok_c)
 say('')

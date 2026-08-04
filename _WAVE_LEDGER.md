@@ -3339,3 +3339,212 @@ MUTANT G to go undetected, which is what it did through cycle 6. It did not: R18
 catches G, so deleting the hit stack now leaves G MIS-ATTRIBUTED. The press was correct and the
 FILE was short a plant -- the hit stack had lost its isolation to this cycle's own fix. MUTANT M
 was written for that gap, and P4c is now its control.
+
+---
+
+## CYCLE 7 -- VR CONTRACT
+
+No baseline regenerated; the manifest is unchanged at **18**, and `git diff --stat HEAD~1 --
+test/baselines/` lists nothing. **Every source change this cycle is invisible by construction and
+the comparison was run rather than assumed**, which is cycle 5's rule and cycle 6's practice:
+`boot.js`'s classifier changes which room a TOPIC-PREFIXED hash lights, and all four home baselines
+boot at `#home` on a cold record where the old and new branches agree; the `styles.css` edit is a
+comment; the rest is test code and a committed data file. All 18 matched their committed pixels in
+all three full gate runs this cycle.
+
+## CYCLE 7 -- GATE: 78/78 PASS
+
+Full serial run (`python3 test/check_all.py`, no `--fast`, no `--shared-browser`) on the
+**COMMITTED** tree, exit 0, **zero FAIL lines**.
+
+**IT CERTIFIES A TREE (R13), NOT A COMMIT.** Certified tree:
+**`58eea4bad1443ce4119b3c1be614278b25ad7891`** -- the tree of commit `c2680bf`, with
+`git status --porcelain` empty when the run started.
+
+```
+  78 checks in 972.7s (16.2 min)
+GATE: PASS
+```
+
+**THE CAPTURE IS KEPT OUTSIDE THE REPOSITORY, and cycle 6's closing question is answered rather
+than alternated**: that is the convention now, for the reason cycle 6 gave -- a committed capture is
+a docs tail, a docs tail moves the tip, and the tip it moves to can never be named by the document
+that moved it. Path on this box:
+`%TEMP%\claude\D--claude-workspace-deepdive-rehearsal\bfc4e186-9eb0-4148-a383-84020244f407\
+scratchpad\w7\cycle7-gate.txt` (19,511 bytes). The load-bearing lines are quoted below, in the
+repository, on the certified tree; the two free push-triggered platform runs record their own sha
+and are the durable half.
+
+**A WALL-CLOCK NOTE, BECAUSE IT WOULD OTHERWISE READ AS A REGRESSION.** This run took 972.7s while
+the two `--profile` runs of the same tree took 763.6s and 773.4s an hour earlier. Nothing about the
+gate changed between them, and the per-check figures the cost table was rebuilt from are the
+PROFILE pair's -- a single wall time on a box that was also servicing three CI fetches is not a
+measurement of the gate, and it is not offered as one. What this run certifies is the VERDICT.
+
+**THE COUNT IS STILL 78. Cycle 7 registered no new check** -- every arm extends a check the gate
+already ran, and judge item 5's cost-table reconciliation is deliberately a LOAD-TIME ABORT in
+`check_all.py` rather than a 79th check, because a new check is added by editing that file and the
+arm belongs where the edit lands.
+
+The lines that carry this cycle's work:
+
+```
+build_integrity     PASS  (12353277 bytes, 0 unresolved, 9 panes + 7 overlays, build SYNCED
+                          the deliverable, COMMITTED deliverable == fresh build of HEAD)
+scoreboard_salience PASS  ... the pixel at the track's centre is read twice over -- the hit
+                          stack ... and a geometric sweep for painted out-of-flow boxes
+                          covering that point, which is the half that reaches a
+                          pointer-events:none overlay and, since cycle 7, a PSEUDO-element of
+                          an ancestor -- the one shape that crossed both other reads ... WHAT
+                          THAT UNION COVERS IS STATED RATHER THAN ROUNDED UP TO "every alpha,
+                          in both schemes" ... NINE PLANTED LANDINGS press it ... THE TWO
+                          WIDTHS MUST RETURN THE SAME RAMP -- every step mean within 0.002 and
+                          the tightest pair within 0.01
+home_claims         PASS  21 planted mutants detected ... SIX ROUTE SHAPES now ... and a
+                          TOPIC-PREFIXED HOME (#<topic>/home, the shape router.js's own
+                          replaceState used to write and copy-link.js still copies verbatim,
+                          whose room is the RESUME target's and not the prefix's)
+room_static         PASS  (codemod=0, styles.css infinite=0, 6 room blocks + rebind, boot
+                          derives the door room first and no constant is hard-coded)
+craft_hygiene       PASS  (23731 rendered-copy spans ... 237 ruled exceptions)
+home_fold           PASS  (88 assertions across 11 records x 390x844 + 360x844)
+visual_regression   PASS  (18 baselines, win32-chromium149; every capture reached a proven rest
+                          state across all 18 roots, cleared the blank-page floor, and matched
+                          its committed pixels)
+ascii_guard         PASS  (843 files strict 7-bit ASCII: src 688, src/topics-md 38, test 91,
+                          tools 26)
+```
+
+**THE FREE LANES, BOTH GREEN, ON THE SHA THE CERTIFIED TREE BELONGS TO.**
+
+* **The PUSH-triggered Branch gate, run `30871606670`, `head_sha`
+  `c2680bfe9ad95dbdaab28b5e24ee3ae84f91e348`** -- `success`. This is the citation R13 prefers: the
+  run records the sha it actually checked out, and it is the sha the certified tree belongs to.
+* **Branch previews on the same sha, run `30871606663`** -- `success`.
+* **The dispatched `python test/ci.py gate --nowait`, run `30871683108`**, 6 shards on
+  ubuntu-latest, **all six exit 0** (75 / 67 / 78 / 136 / 144 / 208 s). Cited as "6/6 shards green
+  on the ref supplied at dispatch time", per R13's ledger note.
+
+---
+
+## CYCLE 7 -- THE FREEZE
+
+```
+CERTIFIED TREE        58eea4bad1443ce4119b3c1be614278b25ad7891   (the tree of c2680bf)
+BRANCH TIP AT FREEZE  the commit that carries THIS section, in arrears -- see R13
+THE DIFF BETWEEN THEM: docs only -- _WAVE_LEDGER.md, this section
+```
+
+No source file, no test file, no committed data file and no deliverable byte differs between the
+certified tree and the tip. **No gate is retaken for that**, and the push-triggered Branch gate on
+`c2680bf` covers the code tree on a second platform independently.
+
+### What is now part of `scoreboard_salience`'s CONTRACT
+
+Cycle 6 froze five conditions. All five stand; the first is widened and given the plants it never
+had, and a sixth is added.
+
+1. **THE SHOT IS MEASURED FOR A VEIL, AT THE SHOT -- IN THE CHAIN AND IN THE PIXELS, AND EVERY
+   PART OF IT HAS A PLANT THAT CAN FAIL IT.** Unchanged in the chain: every element from `.hm-alt`
+   to the document root at computed opacity exactly `'1'`, with `filter`, `backdrop-filter` and
+   `mix-blend-mode` all `none`/`normal` and nothing `running`. Widened in the pixels: at the
+   track's centre, nothing in front of `.hm-alt` that is not `.hm-alt`'s own, read BOTH as a hit
+   stack (authoritative about paint ORDER however a box is painted) and as a geometric sweep for
+   painted out-of-flow boxes **ELEMENT AND PSEUDO** -- the ancestor skip lifted for the pseudo
+   read, `.hm-alt`'s own subtree skipped in both -- where "painted" is background-color,
+   background-image or backdrop-filter. All of it in the same `page.evaluate()` as the screenshot
+   and again immediately after.
+   **WHAT THE UNION COVERS IS PART OF THE CONTRACT AND SO IS WHAT IT DOES NOT.** It does not read
+   the other pixels this check measures (the legend swatches, the depth pair, the neighbour bands);
+   the SWEEP does not reach paint arriving from a border or a box-shadow spread, only the hit stack
+   does; and neither read judges `.hm-alt`'s own subtree, whose `::after` IS the fill.
+   **NINE PLANTED LANDINGS, and each part deleted ALONE goes red** -- G, J, I, Ib, M, K, L1, L2, L3
+   against presses P4a-P4f. "Catches every alpha, in both schemes" is retracted.
+2. **THE GROUND INVARIANT, AS A BACKSTOP PRICED ON THE PANEL'S BIGGEST LEVER.** Unchanged from
+   cycle 6 -- and the paragraph that justifies it no longer attributes the dark drift it was
+   written for. The guard is priced, printed and inert-checked; the CAUSE of that drift is not
+   claimed.
+3. **THE COLD READING MUST REPRODUCE THE WARM ONE.** Unchanged.
+4. **THE LEGEND'S SWATCHES ARE READ.** Unchanged from cycle 5.
+5. **THE SAMPLER MUST BE ABLE TO REPORT ITSELF.** Unchanged from cycle 6.
+6. **NEW -- THE TWO WIDTHS RETURN THE SAME RAMP.** Per scheme, after the width loop: every
+   fill-step mean within `GROUND_EPS` and the tightest adjacent pair within `PHASE_EPS_CR`, with
+   the failure naming which `--lv` step diverged. This is the identity `styles.css` publishes as
+   the design's own prediction, and for one cycle it was published and asserted by nothing.
+
+Plus, unchanged: **the two severities are separated by a 1.15 MARGIN, not by an ordering.**
+
+### What is now part of `home_claims`'s CONTRACT
+
+* **THE ROUTE x RECORD MATRIX HAS SIX ROUTE SHAPES.** A bare view (`#walk`, `#drill`), a
+  MIXED-CASE view (`#Walk`) and a MALFORMED hash (`#Nonsense`) are lit in the room of the topic the
+  app actually shows; `#home`, `#HOME` and a **TOPIC-PREFIXED HOME** (`#<topic>/home`) take the
+  resume target's room. The prefixed cell asserts its three rooms DISTINCT before it runs, and its
+  readiness predicate is deliberately NOT a second copy of the classifier under test.
+
+### What is now part of the GATE's own contract
+
+* **`test/gate_cost.json` DESCRIBES THE REGISTRY, AND SAYS SO AT LOAD.** Every registered check has
+  an entry and every entry is a registered check, reconciled in `check_all.py` right after `ORDER`
+  is built, failing loud with the missing and stale names and the regeneration rule. Pressed both
+  ways. This is the gate auditing its own table, and it does not move the count.
+
+### THE RETRACTION LEDGER -- every sentence this cycle took back, and what replaced it
+
+| where | retracted | restated |
+|---|---|---|
+| `scoreboard_salience.cjs` GROUND_EPS block (:388-395) | the 390/dark drift is "a pure compositing veil at alpha ~0.91 over a near-black ground" -- the FOURTH site of cycle 6's three-site retraction, which is why that cycle's completeness claim was false | **The reading moved; the CAUSE IS NOT ESTABLISHED in dark.** The ground invariant is inert there above alpha 0.474 by the file's own arithmetic four lines below, so nothing in that cell could confirm or deny a veil; and the box that produced the baseline is the one cycle 6 proved phase-dependent and corner-contaminated. What closes the class is the SHOT-TIME READ, not the attribution. |
+| cycle-6 ledger, the retraction table's first row | its enumeration of where the veil attribution lived ("ledger cycle-4 R12 + `scoreboard_salience.cjs` head + `styles.css`") | **Incomplete by one site**, in the same file as two of the three listed. The row is amended in place rather than silently corrected, and the fourth site is named. |
+| `scoreboard_salience.cjs` PASS line + the per-cell ground line + `check_all.py`'s registry entry | "the shot-time read ... catches every alpha, in both schemes" | **What the union covers, stated, and what it does not.** Any compositing property on the ancestor chain at any alpha in either scheme, plus any painted out-of-flow box -- element or pseudo, hit-testing or not, background-color / background-image / backdrop-filter -- covering the ONE point it samples, plus whatever the hit test finds in front however painted. NOT the other pixels this check measures; NOT border or box-shadow paint in the SWEEP (only the hit stack); NOT `.hm-alt`'s own subtree. |
+| cycle-6 R15's second finding, as an argument | "the two are complementary and neither covers the class alone -- the hit stack reaches PSEUDO-elements ... and the sweep reaches `pointer-events:none`" | True of each exemption SEPARATELY and false of their INTERSECTION, which is a real shape and is the app's own: a pseudo of an ancestor that does not hit-test crossed both reads at 10% over the gauge. The sweep reads pseudos now, and MUTANT J is the plant. |
+| cycle-6 press P1, as the argument freeze condition 1 rests on | "deleting the pixel half leaves MUTANT G undetected, and nothing else in the file can see it" | **True until this cycle's own fix, and no longer.** The pseudo read catches G too, so deleting the hit stack leaves G MIS-ATTRIBUTED -- still red, but no longer proof the stack reaches anything the sweep does not. MUTANT M, a box painted only by its BORDER, is what isolates the stack read now. |
+| `scoreboard_salience.cjs` R6 note + `styles.css` gauge-channel block | "AT BOTH WIDTHS to four decimals" and "the two widths return the SAME PAIR ... That identity is the prediction" -- published in two shipped files with no assertion behind them | **Kept, and given the arm.** Same step means to 0.002, same tightest pair to 0.010, per scheme, after the width loop. Measured 0.00000 on both. A prediction with an arm is worth more than an observation with a date. |
+| `scoreboard_salience.cjs` `painted()` | a covering box is detected by `cs.backgroundColor` alone | **Colour, image OR backdrop-filter, and the finding prints which.** A fixed box at `background-color:transparent` with a `linear-gradient` over the track returned CLEAN while the same box with a solid rgba background was caught. |
+| `check_all.py` scoreboard_salience entry | "COST: 102.7s standalone ... 101.873s in the table" | **111.2s standalone / 106.984s in the table**, both re-measured on this tree under the rules they cite (max of two warm runs). |
+| `check_all.py`, by omission | `test/gate_cost.json` named as "the in-gate record" with nothing checking that it describes the gate | Reconciled against `ORDER` at load, both directions, pressed both ways. Cycle 6 regenerated the data and installed no arm, so the exact defect was one new check away from recurring. |
+
+Nine sentences, and the shape they share is narrower than cycle 6's. Cycle 6's ten were "the
+subject was real, the writing was careful, and the INSTRUMENT was the author of the number". These
+are **claims that were TRUE WHEN WRITTEN and that nothing was watching** -- two of them (P1's
+argument, R15's complementarity) were made false by this cycle's own repair, which is the strongest
+possible case for the rule the wave keeps rediscovering: a guard is a claim about the future, and
+the only thing that keeps one true is a control that fails when it stops being true.
+
+---
+
+## CARRIED OUT OF CYCLE 7 -- each with the reason and the wave that owns it
+
+1. **The app-wide GLYPH pass** -- unchanged from cycle 5 (77 entries / 163 sites / 36 marks).
+2. **The corpus prose pass** -- unchanged (111 apostrophes, 49 quotes, 2 dashes over 20 files).
+3. **A per-room WASH token.** Unchanged since cycle 2.
+4. **The three dark text nodes under AA** (`.hm-room-n` 2.35:1, `.hm-room-weak` 3.48:1). Still a
+   PALETTE decision, still `room_contrast`'s territory.
+5. **GAP-2, the landing drill's flagged set.** Still owned by **W2 room**.
+6. **THE VEIL CLASS OUTSIDE THESE TWO CHECKS, AND THE PORTABLE FORM IS NOW THREE READS.** Cycle 6
+   left `test/_boot.cjs` owed a chain read plus a hit-stack-and-covering-box read. This cycle adds
+   the third: the covering-box read must enumerate PSEUDO-elements, including those of ancestors,
+   or it is blind to the app's own `#_bootsplash._bs-done` shape. There is a worked implementation
+   in `scoreboard_salience.cjs` to lift, including the per-axis inset derivation Chromium forces.
+7. **ABSOLUTE THRESHOLDS TAKEN ON ONE PLATFORM.** Unchanged.
+8. **THE FIRST-RUN-OF-A-FRESH-PROFILE QUESTION.** Unchanged.
+9. **THE OTHER `.hm-k`-SHAPED HOLES** -- a scan of every `test/...` reference inside a
+   `src/styles.css` comment, resolved against the file it names. Unchanged.
+10. **THE 138 MARKS' OWN COPY IS GATE-COUPLED.** Unchanged from cycle 5.
+11. **NO OTHER SAMPLING BOX IN THE GATE HAS A PHASE CONTROL.** Unchanged from cycle 6: the
+    neighbour band is strictly interior, the depth pair is still `S(x-2)`, `S(inside-2)`, 4x4 CSS
+    px, with a mutant and no control. **Owed by whichever wave next touches the depth arm.**
+12. **NEW: THE ROUTER WRITES A URL SHAPE IT THEN HAS TO SPECIAL-CASE.** R19 fixes the DOOR's
+    reading of `#<topic>/home`; the router-side normalisation -- stripping a topic prefix off a
+    TOPICLESS view at `replaceState` -- is a **W2 candidate**, ruled out of this wave's remit. It
+    would not retire the cell either way: those URLs are already copied and pasted, and a link in
+    someone's notes outlives any router fix.
+13. **NEW: THE VEIL READ SAMPLES ONE POINT.** Every plant this cycle covers the track's centre,
+    because that is where the read looks. The check also measures the legend swatches, the depth
+    pair and the neighbour bands, and a veil confined to any of those regions is outside the
+    union's reach by construction. It is now written into the contract rather than left as an
+    unstated assumption -- but it is not closed, and the cheap form (read the state at each
+    sampled box rather than at one) is owed by whichever wave next widens this arm.
+14. **NEW: THE GATE CAPTURE CONVENTION IS SETTLED.** Cycle 6 asked for it to be stated once rather
+    than alternated: the capture lives OUTSIDE the repository and its load-bearing lines are quoted
+    in the ledger on the certified tree, with the push-triggered platform runs as the durable half.
+    Cycles 1-5 committed it; 6 and 7 did not; that is the convention.

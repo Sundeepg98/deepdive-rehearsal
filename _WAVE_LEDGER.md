@@ -4660,3 +4660,514 @@ it -- which is the failure mode a harvest has and a press does not.
     63-210s, still balanced -- so this is a record drifting rather than a guard failing. Recorded
     with the figure so the next wave inherits a dated statement instead of a silence. **Owed by
     whichever wave next runs `--profile`.**
+
+---
+
+## CYCLE 10 -- 2026-08-04
+
+Four team-lead rulings and three non-escalated judge items, and the shape of the cycle is one
+sentence in five places. **A FIX'S OWN INSTRUMENT WENT FURTHER THAN THE FIX.** R26 closed the
+prototype hole in `Router.ROUTES`; the drive list it ordered then found the same hole in
+`TopicRegistry`, and after that in the check's own scratch map. R23a moved the build out of the
+certification tree; the free ubuntu lane found four generated sources it had stopped producing.
+R24's new geometry cell pinned a row count; the same lane found that the number is an OS-font
+figure. R25's ruled converse was driven and false-alarmed on three records of the pinned battery.
+In every one of them the thing that found the gap was the arm the ruling itself ordered -- which
+is the opposite of cycle 9's shape, where the knowledge was present and the artifact was narrower.
+
+---
+
+### R23. THE CERTIFICATION TREE IS SEALED FOR THE RUN -- ADOPTED, AND THE SEAL HAS FIRED
+
+**(a) NO CHECK REBUILDS IN THE TREE IT CERTIFIES.** `build_integrity` was the serial gate's own
+writer: `npm run build` rewrites dist/index.html, the deliverable, `src/tokens.generated.css`,
+`src/scripts/visuals/*` and every compiled file under `src/topics/_generated/` -- so a 19-minute
+run had a check inside it mutating, at minute one, the exact bytes the other 47 browser checks
+spend the next 18 minutes reading. Nothing was wrong about the bytes; the ARRANGEMENT was. It now
+copies the build inputs to a temp mirror, junctions `node_modules` (unlinked non-recursively at
+teardown -- `rmtree` over a junction is how this project once deleted 29 @-scopes of a shared
+install), builds THERE, and compares the mirror's output against the committed blob.
+
+**AND THE TREE IS WRITTEN ONLY WHERE IT IS NOT ALREADY THIS BUILD.** That rule, not a promise, is
+what delivers R23's property: *on a clean tree that already carries its own build -- the only tree
+R13 certifies -- this check writes nothing at all and dist/index.html's mtime does not move.*
+It also **refuses to write a TRACKED path**: the tracked set comes from `git ls-files`, and a
+mirror build that disagrees with a tracked file is a finding to report, never a file to repair.
+
+**THE FIRST DRAFT SYNCED TWO FILES AND THE FREE LANE REDDENED IT IN ONE PUSH** (branch gate
+`30922596896`, ubuntu-latest): `numbers_lattice`, `bank_pushback` and `bank_novelty` came back
+with *"0 compiled num slices for 38 authored topics -- run `npm run build`"*. The right failure
+from the wrong cause, on the one platform that starts from a clean checkout. Four generated
+sources had quietly stopped being produced. The sync is now the whole generated set -- **500 paths
+on the fresh-checkout shape** -- and the CONTROL widened with it.
+
+**(b) THE CAPTURE IS WALL-CLOCK SEALED.** `check_all.py` hashes dist/index.html and the
+deliverable after the BARRIER and again at the end, prints both on every run, and **ABORTS THE
+CAPTURE** on a difference: non-zero exit, the word PASS refused, `capture_sealed:false` and
+`capture_of_record:false` in `--verdicts`. The baseline is taken after the barrier and not at
+process start, because build_integrity is ALLOWED to write when the tree does not carry its own
+build, and sealing across its own permitted refresh would fire on the one write the gate asks for.
+
+**FOUR ARMS, IN A SCRATCH REHEARSAL** (receipt `_audit/w-addresses-cycle10/press-capture-seal.txt`):
+
+| arm | what | result |
+|---|---|---|
+| A | build_integrity alone on this tree | **READ-ONLY -- bytes AND mtime unchanged on both artifacts** |
+| A2 | the same check with all FIVE generated paths removed (a fresh checkout) | writes, **5 of 5 back, 500 paths materialised**, deliverable untouched |
+| B | a quiet `--only` run | `capture_sealed=true`, both hashes identical end to end |
+| **C** | **a second writer appends one byte to dist/index.html MID-RUN** | **CAPTURE ABORTED, exit 1, `capture_of_record:false`** |
+
+**C IS THE ENTRY THAT MATTERS AND A2 IS WHAT MAKES A A MEASUREMENT.** A seal that has never fired
+certifies nothing; a read-only claim with no arm that writes is an inability dressed as a
+property.
+
+---
+
+### R24. THE LEGEND PAYS FOR ITS FIFTH SWATCH -- ADOPTED, AND THE FALLBACK IS THE OUTCOME
+
+Labels shortened to the judge's named forms -- **"Missed" / "Shaky"**, retiring the wrapping
+"Missed flagged" / "Shaky flagged" -- and the wrap point **re-swept width by width** on three
+legend forms (receipt `press-legend-band.txt`, arm A; the sweep itself is in the repository at
+`_audit/w-addresses-cycle10/probe_key_sweep_c10.cjs`, not in a scratchpad).
+
+| legend | one row from | cost below | cost above |
+|---|---|---|---|
+| four swatches, "Flagged" (pre-cycle-9) -- **the control** | **364** | 46px | 21px |
+| five, "Missed flagged"/"Shaky flagged" (cycle 9) | **511** | 46px at EVERY width this block governs | 21px |
+| five, "Missed"/"Shaky" (**shipped**) | **415** | 46px | 21px at 415-419 only |
+
+**THE CONTROL IS THE FIRST ROW.** The four-swatch legend still flips at 364 and still costs
+21px/46px -- exactly what cycle 2 measured and cycle 9 re-derived -- so the sweep is reading the
+same thing they read.
+
+**SO THE RULING'S FALLBACK IS THE OUTCOME: ACCEPT-IN-WRITING, AT THE MEASURED +25px.** Cycle 9's
+long labels made the key TWO rows across the entire band and 92px past it; shortening buys back
+**415-419 and nothing a real phone reports**. At 360 and 390 -- home_fold's two widths and the
+mobile VR baseline -- it is still two rows and the hide would still be worth 46px. The swatch is
+worth more than the 25px: it is the only place the second keel colour is named on a screen. The
+21px/2.8% arithmetic is retired and `src/styles.css`'s block is rewritten from the new sweep.
+
+**AND THE FLIP WIDTH IS A PLATFORM FIGURE, WHICH THE FREE LANE TAUGHT THIS CYCLE THE HARD WAY.**
+The first version of the new cell asserted `rows === 1` at 419px everywhere. The advisory ubuntu
+lane reddened `home_claims` within the hour; the sweep, dispatched to a runner to MEASURE rather
+than guess, says why: **the same labels flip at 415 on win32 and at 426 on ubuntu-latest**, and
+419 falls between them. The key wraps on TEXT ADVANCE WIDTHS, which come from the OS font stack --
+this repository's oldest cross-platform scar, arriving in a test. The arm is split along what is
+actually platform-free:
+
+* **ALWAYS** -- the derived height identity (`h === rows x swatch + (rows-1) x row-gap`, read off
+  the page), at most TWO rows (which is what the 21/46 arithmetic assumes), and the narrow end
+  wrapping no LESS than the wide end.
+* **WIN32 ONLY** -- the two row counts and the flip width, because the certification gate is the
+  local win32 serial run and that block's pixel figures are win32 figures. Off win32 the cell
+  PRINTS what it measured and says it is not pinned there: a scope statement, not a silence.
+* **THE FLIP WIDTH IS FOUND, NOT COMPARED** -- bisection on the live page, reported every run on
+  every platform. **MUTANT 10d installs cycle 9's own long labels AT THE MEASURED FLIP WIDTH**, so
+  the plant lands wherever the check runs rather than only where it was written.
+
+`test/home_fold.cjs`'s two-viewport rationale is restated to the new geometry: 360 and 390 are no
+longer "the two-row half and the one-row half" -- they are both in the two-row half, and they are
+kept as a NARROW-vs-WIDE COLUMN pair, which is what the spread it prints actually measures.
+
+| arm | result |
+|---|---|
+| B -- shipped build, the cycle-10 geometry cells | both band ends PASS, census 24 |
+| **C -- the LONG-LABEL mirror (cycle 9's own product)** | **the 419 cell REDS: two rows, 40px, 46px of cost** |
+| D -- MUTANT 10d deleted | the derived census moves 24 -> 23 |
+
+---
+
+### R25. THE BIJECTION IT CLAIMS -- ADOPTED, WITH ITS DENOMINATOR CORRECTED ON MEASUREMENT
+
+Three sites say **ONE SWATCH PER KEEL TOKEN**, and one swatch per token is a BIJECTION while
+cycle 9 shipped an INJECTION. `judgeKey` gains the converse, reported in the ruled shape
+(*"the key explains a foot colour <c> that no rail paints"*), skipped when `r.keel === 0`, with
+`.hm-k.none` out of scope through the same `nums[1] < 0` foot test.
+
+**THE RULED DENOMINATOR WAS DRIVEN AND IT FALSE-ALARMED** (receipt `press-key-bijection.txt`, arm
+B). *"Every swatch colour must appear in `r.keelPaint`"* reddens the SHIPPED build on three
+records of the pinned battery -- `absentField`, `oneShort` and `weakTopics` -- each of which paints
+exactly one severity. `weakTopics` grades one probe in seven Shaky and never Missed, so its rails
+paint only `--keel-shaky` at `rgb(177,105,14)` while the key correctly renders both swatches, and
+the converse reports the MISSED swatch as a foot colour no rail paints. **A key that names a
+severity THIS record has not earned is a legend, not a defect.** The shipped form asks the honest
+question -- can the gauge draw this colour AT ALL -- against the two declared keel tokens resolved
+off the page the way the page resolves them.
+
+**MUTANT 10c IS 10b's MIRROR** and the census moves: one extra `.hm-k` whose `i` carries a
+keel-shaped shadow (inset, negative vertical offset, so the read's own foot test admits it) at a
+PERTURBED colour derived from the page and checked for collision against every declared token and
+every painted rail, so a mutant that planted a legitimate colour aborts rather than passing.
+
+| arm | result |
+|---|---|
+| A | shipped build, the bijection arm green, **census 24** |
+| **B** | **the RULED denominator reds a build with no defect in it** |
+| C | MUTANT 10c deleted -> census 24 -> **23** |
+| D | the converse branch deleted, 10c still planted -> **MUTANT 10c UNDETECTED, abort** |
+
+C and D are the pair: C says the count is derived from the plant, D says the plant is judged by
+the new branch. Either alone is satisfiable by an arm that does nothing.
+
+---
+
+### R26. THE PROTOTYPE HOLE -- ADOPTED, AND CLOSING IT IN ONE TABLE EXPOSED IT IN THE NEXT
+
+`Router.ROUTES` is created with a **null prototype**, which fixes `router.js:46` and `:50` and the
+three consumers outside the file (`home-view.js:57`, `last-visit.js:53`, `view-manager.js:98`) in
+one move. The real ids drive identically before and after.
+
+**THEN THE ORDERED DRIVE LIST FOUND THE SAME HOLE ONE LAYER DOWN, LIVE.** With the router fixed,
+`#constructor` came back with `TopicRegistry.current()` returning a FUNCTION and no room on the
+document: `TopicRegistry`'s own `byId` was an object literal, so `get('constructor')` returned
+`Object.prototype.constructor`, `parseHash` accepted it as a topic prefix, and `setTopic`'s
+unknown-id guard (`if (!byId[id])`) let it through to `t.identity === undefined`. Closed the same
+way. **And then a third time, inside the instrument**: the boot-table cell's own scratch `flat`
+map reported `duplicated ["constructor"]` on the collision mirror -- a phantom, on the one build
+built to press the other direction. All three now have null prototypes. *A hole in a SHAPE is not
+a hole in a table.*
+
+**THE CHECK HALF.** `collide` evaluates the router's own expression, `ids.filter(id =>
+!!Router.ROUTES[id])`, instead of `Object.keys(ROUTES).indexOf(id) >= 0` -- different questions on
+any object with a prototype. A fourth direction asserts the table answers for NO unregistered
+name. `#constructor` and `#__proto__` join the route-shape drive list and must take the same
+unknown-view fallback as `#Nonsense`, **character for character**.
+
+**PRESSED AS JUDGE ITEM 2 WAS PRESSED** (receipt `press-prototype-hole.txt`):
+
+| arm | result |
+|---|---|
+| A | the shipped build, every cycle-10 cell green |
+| **B** | the collision mirror (pre-fix product, a topic slug renamed `constructor`) read by the **PRE-FIX cell** -- the boot-table cell is **GREEN**: the miss |
+| **C** | the SAME build, the cycle-10 cell -- **REDS, naming the slug** |
+| D | the pre-fix PRODUCT alone -- **`#constructor` titles the document "undefined -- Deep Rehearsal"**, on a hash the router believed it had routed |
+
+**TWO THINGS MEASURING FOUND THAT ARGUING WOULD NOT.** The mirror must rename the slug on BOTH
+sides (the registry AND boot.js's `__doorRooms`) or the cell reds on its entry-by-entry direction
+-- a hit for the wrong reason, cycle 9's P4c shape. And the collision mirror must be built on the
+PRE-FIX product: on the fixed one a topic named `constructor` is simply harmless and both versions
+of the cell come back green. **The collision is a property of a table with a prototype, not of a
+name.**
+
+---
+
+### JUDGE ITEM 1 -- R22'S SECOND CONJUNCT WAS FREE OF COST AND FREE OF PROOF: CLOSED, BY PRESSING IT
+
+Verified exactly as reported, including the judge's own measurement: replace the whole predicate
+with `(isHome || uf.shown === px.boot)` alone and BOTH cells pass on the cycle-7-classifier mirror
+-- the build carrying R21's defect live. No arm cycle 9 drove is discriminated by that conjunct.
+
+**ARM E OF `press_home_oracle_c9.py`, AS NAMED.** The restore-last-topic mirror is a plausible
+product change and not a contrivance: view-manager adopts `LastVisit.topicId()` on a topicless
+route, and boot's bare-view branch stamps the door room to agree. On that build a bare view shows
+a NON-boot topic and the document wears that same room, so the FIRST conjunct holds and only the
+second can fail.
+
+| arm | build | result |
+|---|---|---|
+| **E1** | restore-last-topic mirror, BOTH conjuncts | **`#/home` and `#<TOPIC>/home` RED** |
+| **E2** | the SAME build, the FIRST conjunct alone (the control) | **both GREEN** |
+
+E1 alone would not separate "the second conjunct fired" from "the first one did". Together they
+say the clause is FALSIFIABLE, which is what "free" did not say. The sentence where the clause
+lives is amended to say so and to cite the arms.
+
+**THE RECEIPT MOVED AND THE SCRIPT SAYS SO.** `press_home_oracle_c9.py` now runs SIX arms; the
+four-arm run it produced as cycle 9 is left byte-intact at
+`w-addresses-cycle9/press-home-oracle.txt` (the file the cycle-9 section quotes), and the six-arm
+run writes `w-addresses-cycle10/press-home-oracle-armE.txt`. Regenerating the old one would have
+made the cycle-9 section disagree with its own evidence, which is the class this wave keeps
+finding.
+
+---
+
+### JUDGE ITEM 3 -- SIX STALE "FOUR"-SWATCH COPIES: CLOSED, AND THE SWEEP IT OWED IS TWO INSTRUMENTS
+
+All six updated in one pass, and **to the SELECTOR rather than to a new number** -- because a
+number typed correctly today is the defect, not the number four:
+`scoreboard_salience.cjs:1644` (the runtime FAIL string) now names `.hm-alt .hm-key .hm-k`;
+`styles.css:2855`, `:2926` and `:3011` name what the key renders; `home_claims.cjs:871`'s docstring
+says five swatches for four mark shapes; `print_truth.cjs:693-694` and `:797` name the selector,
+and `:797` -- a SCOPE statement for a byte-sensitive arm -- says so explicitly.
+
+**AND THE OWED SWEEP LANDED AS TWO CHEAP ARMS, EACH IN THE FILE THAT ALREADY OWNS THE QUESTION.**
+
+* **`craft_hygiene` resolves every `test/...` path a stylesheet comment cites.** Pressed both ways
+  every run (a live citation must not red; a dead one must; and it must read COMMENTS, not
+  declarations). **It found a real dead pointer on its first run**: `src/styles.css:1583` cited
+  `test/shadow_css_guard.py`, which has always been `.mjs`. 41 citations across 3 stylesheets.
+* **`scoreboard_salience` sweeps every hand-typed copy of the swatch count** across seven files
+  against the number it just enumerated off the page. Deliberately narrow -- it will not read a
+  distributive rule, a historical singular, or the comparative table styles.css now carries. Its
+  fixtures are **assembled from parts**, because this file is in its own swept set and a literal
+  fixture would be read as a copy. **It reads ZERO today and says so**: every copy was replaced by
+  the selector, so it is a RATCHET rather than a reconciliation -- and arm F of
+  `press-legend-band.txt` plants one and watches it red, named, filed and located.
+
+---
+
+## CYCLE 10 -- PRESS SUMMARY
+
+| receipt | presses | landed |
+|---|---|---|
+| `press-capture-seal.txt` (R23) | 4 arms | read-only measured on bytes AND mtime; the fresh-checkout control materialises 500 paths; **a mid-run writer ABORTS the capture** |
+| `press-legend-band.txt` (R24) | 3 sweeps + 5 arms | the four-swatch control reproduces cycle 2's figures; cycle 9's own labels red the 419 cell; 10d moves the census; a planted "four swatches" copy reds the new sweep |
+| `press-key-bijection.txt` (R25) | 4 arms | **the RULED denominator false-alarms on the shipped build**; 10c moves the census; deleting the converse leaves 10c undetected |
+| `press-prototype-hole.txt` (R26) | 4 arms | the pre-fix cell is blind to the collision; the cycle-10 cell names it; the pre-fix product titles `#constructor` "undefined" |
+| `press-home-oracle-armE.txt` (judge item 1) | 6 arms (2 new) | **E1 red / E2 green on one build** -- the second conjunct is falsifiable |
+| `vr-scope.txt` (the VR contract) | 2 records x 2 viewports | the key's box is byte-identical to cycle 9's; no baseline photographs it |
+
+**THREE PRESSES CAME BACK OTHER THAN EXPECTED AND ALL THREE WIDENED THE FIX.** R25's ruled
+denominator false-alarmed. R26's collision mirror had to be rebuilt twice -- once because it
+renamed one side of the table, once because the collision does not exist on the fixed product.
+And R24's cell had to be split by platform after a lane the wave gets for free measured 426 where
+this box measures 415.
+
+---
+
+## CYCLE 10 -- VR CONTRACT
+
+**No baseline regenerated; the manifest is unchanged at 18.** `visual_regression` reported
+`18 baselines compared, matched its committed pixels`.
+
+**AND THE ZERO WAS NOT ACCEPTED ON ITS FACE**, because this cycle changed a rendered surface again
+-- it rewrites both keel labels. Cycle 9's contract says a zero-pixel green on a visible change
+owes a measurement of what the camera actually sees. **RE-MEASURED ON THIS BUILD RATHER THAN
+CITED** (receipt `vr-scope.txt`), on the COLD record, because that is what the VR recipe captures:
+
+| baseline | the key's box | verdict |
+|---|---|---|
+| `home-light` / `home-dark` (1280x800) | **x=333 y=780 590x15** | inside the frame, and `elementsFromPoint` at its centre returns `footer#homestatus.hm-status` -- the fixed status footer is in front of it |
+| `m-home-light` / `m-home-dark` (390x844) | **x=29 y=973 332x40** | its top is **129px below** the captured frame |
+
+**THE BOX IS BYTE-FOR-BYTE THE ONE CYCLE 9 RECORDED.** Shortening the labels moved nothing the
+camera could have seen even if it were looking. (Cycle 9 quoted "169px below"; that is the same
+box measured from its BOTTOM edge -- 973 + 40 - 844 = 169. Both are right; this cycle states which
+edge.) So the loud-label control cycle 9 built still stands as the control for the camera, and no
+baseline photographs the gauge legend on either cycle's build.
+
+---
+
+## CYCLE 10 -- GATE
+
+Full serial run (`python test/check_all.py`, no `--fast`, no `--shared-browser`) on the
+**COMMITTED** tree, exit 0, **zero FAIL lines**.
+
+**IT CERTIFIES A TREE (R13), AND THIS ONE IS WALL-CLOCK SEALED (R23b).** Certified tree:
+**`d1ade98da2bed05ea6ad69487e5ee44e0aa9f28d`** -- the tree of commit `c6439ef`, with
+`git status --porcelain` empty when the run started.
+
+```
+  78 checks in 906.0s (15.1 min)
+  SEAL dist/index.html                          bc6749232b72 -> bc6749232b72
+  SEAL deepdive_content_pipeline_rehearsal.html bc6749232b72 -> bc6749232b72
+GATE: PASS
+```
+
+**THE SEAL LINES ARE PART OF THE CAPTURE NOW.** They are what makes "this run certifies tree X" a
+measured statement rather than an assumption, and they print green or red.
+
+**THE CAPTURE IS KEPT OUTSIDE THE REPOSITORY** (cycle 7's settled convention, carried item 14).
+Path on this box:
+`%TEMP%\claude\D--claude-workspace-deepdive-rehearsal\bfc4e186-9eb0-4148-a383-84020244f407\scratchpad\w10\cycle10-gate.txt`
+(22,196 bytes).
+
+**THE COUNT IS STILL 78. Cycle 10 registered no new check** -- MUTANT 10c and 10d extend a check
+the gate already ran, the geometry and wrap-width cells extend an existing arm, the two sweeps are
+arms inside `craft_hygiene` and `scoreboard_salience`, and the seal is the runner's own.
+
+The lines that carry this cycle's work:
+
+```
+build_integrity     PASS  (12362759 bytes, 0 unresolved, 9 panes + 7 overlays, built in a
+                          SCRATCH MIRROR and the mirror's build SYNCED the deliverable,
+                          COMMITTED deliverable == fresh build of HEAD, tree UNTOUCHED (every
+                          generated path already carried this build))
+craft_hygiene       PASS  (23732 rendered-copy spans ... 237 ruled exceptions ... and every
+                          `test/...` instrument a stylesheet comment CITES resolves on disk --
+                          41 citation(s) across 3 stylesheet(s), pressed both ways so it can
+                          neither miss a dead pointer nor red a live one)
+home_claims         PASS  24 planted mutants detected (... AND the converse, a SIXTH keel swatch
+                          added at a colour no keel token resolves to ...; the gauge key WRAPPED
+                          at the wide end of the <=419px band by restoring cycle 9's own long
+                          labels ...)
+home_fold           PASS  (88 assertions across 11 records x 390x844 + 360x844)
+ascii_guard         PASS  (843 files strict 7-bit ASCII: src 688, src/topics-md 38, test 91,
+                          tools 26)
+visual_regression   PASS  (18 baselines, win32-chromium149)
+```
+
+**THE FREE LANES, BOTH GREEN, ON THE SHA THE CERTIFIED TREE BELONGS TO -- AND THEY EARNED THEIR
+KEEP THIS CYCLE.**
+
+* **The PUSH-triggered Branch gate, run `30925305789`, `head_sha`
+  `c6439ef7b717f54a13c1bccbdec59387ebb58c09`** -- `success` on **BOTH** `ubuntu-latest` and
+  `windows-latest`.
+* **The dispatched `python test/ci.py gate --nowait`, run `30925298454`** -- 6 shards on
+  ubuntu-latest, **all six exit 0** (63-212s). Cited as "6/6 shards green on the ref supplied at
+  dispatch time", per R13's ledger note.
+* **AND THE TWO RUNS THAT FAILED ARE THE POINT.** Run `30918612876` (`9fc34b3`) reddened
+  `home_claims` on an OS-font-dependent row count; run `30922596896` (`4ba22c8`) reddened
+  `numbers_lattice`, `bank_pushback` and `bank_novelty` on four generated sources the mirror had
+  stopped producing. **Both were defects this cycle introduced, in the fixes the rulings ordered,
+  and neither was reachable from this box.** A lane that costs nothing found two in one afternoon.
+
+**THE RUN GOT FASTER, AND THE SPREAD IS THE FINDING RATHER THAN THE NUMBER.** 1120.9s (cycle 9)
+-> **906.0s**, but the same tree measured **1368.7s** two hours earlier while a CI fetch and a
+`gh run view` were competing for the box. That is a **51% spread on one tree**, which says the
+wall-clock figure is a measurement of the BOX as much as of the gate -- and carried item 21's
+`gate_cost.json` drift cannot be settled by a number taken on a busy machine. Recorded with both
+figures.
+
+---
+
+## CYCLE 10 -- THE FREEZE
+
+```
+CERTIFIED TREE        d1ade98da2bed05ea6ad69487e5ee44e0aa9f28d   (the tree of c6439ef)
+BRANCH TIP AT FREEZE  the commit that carries THIS section, in arrears -- see R13
+THE DIFF BETWEEN THEM: docs only -- _WAVE_LEDGER.md, this section
+CAPTURE SEAL          bc6749232b72 -> bc6749232b72 on both artifacts (R23b)
+```
+
+No source file, no test file, no committed data file and no deliverable byte differs between the
+certified tree and the tip.
+
+### What is now part of `build_integrity`'s CONTRACT
+
+* **THE BUILD HAPPENS IN A SCRATCH MIRROR AND THE TREE IS READ-ONLY WHEN IT IS ALREADY CORRECT.**
+  Inputs copied, `node_modules` junctioned, `npm run build` run there, the mirror's output
+  compared against the committed blob. On a clean, already-built tree nothing is written and no
+  mtime moves -- measured, with a control that removes the generated set and requires it back.
+* **THE SYNC IS THE WHOLE GENERATED SET, AND IT NEVER TOUCHES A TRACKED PATH.** dist/index.html,
+  the deliverable, `src/tokens.generated.css`, `src/scripts/visuals/*`,
+  `src/topics/_generated/**` and `src/topics/_generated-registry.js`, each written only when the
+  tree does not already carry those bytes. A tracked path the mirror disagrees with is REPORTED,
+  never repaired.
+
+### What is now part of the RUNNER's contract
+
+* **A GATE RUN THAT DID NOT READ ONE TREE IS NOT A CAPTURE.** Both artifacts are hashed after the
+  barrier and at the end; a difference aborts the capture, exits non-zero, and stamps
+  `capture_sealed:false` / `capture_of_record:false`. The hashes print on every run.
+
+### What is now part of `home_claims`'s CONTRACT
+
+* **THE LEGEND ARM IS A BIJECTION AND BOTH DIRECTIONS ARE PLANTED.** Every keel colour the rails
+  paint has a swatch (10b removes one); every keel swatch carries a colour the gauge CAN draw
+  (10c adds one at a perturbed colour). The converse's denominator is the DECLARED keel tokens,
+  because a key that names a severity this record has not earned is a legend, not a defect.
+* **THE KEY'S GEOMETRY IS ASSERTED AT THE BAND'S ENDS, SPLIT BY WHAT IS PLATFORM-FREE.** The
+  derived height, the two-row ceiling and narrow-wraps-no-less-than-wide hold everywhere; the row
+  counts and the flip width are pinned on win32 only and PRINTED elsewhere. The flip width is
+  found by bisection, and MUTANT 10d lands at the measured value.
+* **THE ROUTE TABLE IS READ THROUGH THE ROUTER'S OWN EXPRESSION**, must answer for no
+  unregistered name, and `#constructor` / `#__proto__` are driven live and must take `#Nonsense`'s
+  fallback character for character.
+* **THE CHECK'S OWN SCRATCH MAPS HAVE NULL PROTOTYPES**, because an instrument that carries the
+  defect it is measuring cannot separate the two.
+
+### What is now part of `scoreboard_salience`'s and `craft_hygiene`'s CONTRACT
+
+* **THE COPIES OF THE SWATCH COUNT ARE SWEPT AGAINST WHAT WAS RENDERED**, in seven files, with the
+  grammar pressed on fixtures both ways every run and the fixtures assembled from parts. Zero
+  today, and that zero is a ratchet.
+* **EVERY `test/...` INSTRUMENT A STYLESHEET COMMENT CITES MUST RESOLVE ON DISK.** Pressed both
+  ways; it found a dead pointer on its first run.
+
+### THE RETRACTION LEDGER -- every sentence this cycle took back, and what replaced it
+
+| where | retracted | restated |
+|---|---|---|
+| `src/styles.css`, the `@media(max-width:419px)` key block | "the key is ONE row of 15px from 364px up ... the hide was therefore worth 21px at 364-419 and 46px at 320-363" | **False the moment cycle 9 shipped.** Five swatches with long labels are TWO rows across the whole band and to 510. Re-swept on three forms with the four-swatch legend as the control; shipped labels flip at 415 (win32) / 426 (ubuntu), so the +25px is ACCEPTED IN WRITING. |
+| `test/home_fold.cjs:309-315` | "360 is inside the two-row half; 390 is inside the one-row half" | **Both are in the two-row half now.** They are kept as a NARROW-vs-WIDE COLUMN pair, which is what the 769-1006 / 856-1087 spread it prints actually measures; the row geometry is asserted at the band's ENDS by `home_claims`. |
+| `test/home_claims.cjs`, the R22 predicate's note | "That second half is FREE" | **Free of cost and free of proof.** Measured inert on every build cycle 9 drove; pressed by arms E1/E2 on a restore-last-topic build, with the first-conjunct-only control beside it. |
+| `test/home_claims.cjs`, the boot-table cell | `Object.keys(Router.ROUTES).indexOf(id) >= 0` offered as the measurement of `!ROUTES[p0]` | **A different question on any object with a prototype.** The router's own expression is driven instead, plus a fourth direction on unregistered names -- and the product's two tables, and this cell's own scratch map, all got null prototypes. |
+| `test/scoreboard_salience.cjs:1644` | "the four key swatches -- the BINDING cell of the --gauge-rule solve at 3.49:1 -- were measured on nothing", a runtime FAIL string | **Names the SELECTOR it enumerates.** Updating it to "five" would have been the same defect with a fresher number. |
+| `src/styles.css:2855`, `:2926`, `:3011`; `test/home_claims.cjs:871`; `test/print_truth.cjs:693-694`, `:797` | "four" marks / "these four" / "all four of these" / "the four legend swatches" | **Every swatch the key renders**, named by selector. `:797` is a SCOPE statement for a byte-sensitive arm and says so. |
+| `src/styles.css:1583` | "test/shadow_css_guard.py now FAILS THE BUILD" -- a file that has never existed | **`.mjs`.** Found by the cross-reference resolver on its first run, which is the whole argument for having one. |
+| this cycle's own first draft of `test/build_integrity.py` | a mirror build plus a two-file sync | **Four generated sources stopped being produced**, and three checks reddened on ubuntu. The sync is the whole generated set. |
+| this cycle's own first draft of the geometry cell | `rows === 1` at 419px, asserted on every platform | **An OS-font figure.** 415 on win32, 426 on ubuntu; the arm is split into a platform-free half and a win32-pinned half. |
+
+Nine sentences. **Their shape is one shape, and it is not cycle 9's.** Cycle 9's were "the proof
+was wider than the thing it left behind". **These are: THE INSTRUMENT THE FIX ORDERED WENT FURTHER
+THAN THE FIX.** A drive list found a second table, then a third. A mirror build found four missing
+sources -- on a platform this box cannot be. A converse found three records its own ruling had not
+considered. A row count found an OS font. In every one of them the ruling was RIGHT and its scope
+was short, and the thing that measured the shortfall was the arm the ruling itself ordered. **Two
+of the nine were caught by a lane that costs nothing and that this wave had been treating as a
+formality.**
+
+---
+
+## CARRIED OUT OF CYCLE 10 -- each with the reason and the wave that owns it
+
+1. **The app-wide GLYPH pass** -- unchanged from cycle 5 (77 entries / 163 sites / 36 marks).
+2. **The corpus prose pass** -- unchanged (111 apostrophes, 49 quotes, 2 dashes over 20 files).
+3. **A per-room WASH token.** Unchanged since cycle 2.
+4. **The three dark text nodes under AA** (`.hm-room-n` 2.35:1, `.hm-room-weak` 3.48:1). Still a
+   PALETTE decision, still `room_contrast`'s territory.
+5. **GAP-2, the landing drill's flagged set.** Still owned by **W2 room**.
+6. **THE VEIL CLASS OUTSIDE THESE TWO CHECKS.** Unchanged from cycle 7/9: `painted()` has five
+   branches, all planted, and the union's surviving limit is its own border-box geometry.
+7. **ABSOLUTE THRESHOLDS TAKEN ON ONE PLATFORM. SHARPER NOW, WITH A MEASURED INSTANCE.** The gauge
+   key's wrap width is 415 on win32 and 426 on ubuntu-latest -- the first time this wave has
+   MEASURED a threshold differing by platform rather than noting that it might. The pattern to
+   look for is any figure derived from TEXT LAYOUT. **Owed by whichever wave next writes a
+   geometry threshold.**
+8. **THE FIRST-RUN-OF-A-FRESH-PROFILE QUESTION.** Unchanged.
+9. **THE OTHER `.hm-k`-SHAPED HOLES: HALF CLOSED, AND THE REMAINING HALF IS NAMED.** The two
+   mechanical halves now have instruments -- dead `test/...` citations in stylesheet comments
+   (craft_hygiene) and hand-typed swatch counts (scoreboard_salience). **What no scan reaches is
+   the half cycle 9 found: an observation PARKED AS AN ARGUMENT** -- a comment that records a real
+   product defect as a fact and reasons from it. That is a reading task, not a regex, and it is
+   still owed.
+10. **THE 138 MARKS' OWN COPY IS GATE-COUPLED.** Unchanged from cycle 5.
+11. **NO OTHER SAMPLING BOX IN THE GATE HAS A PHASE CONTROL.** Unchanged from cycle 6.
+12. **THE ROUTER WRITES A URL SHAPE IT THEN HAS TO SPECIAL-CASE.** Unchanged from cycle 7; R22
+    made the repair cheap and R26 made the table it reads honest.
+13. **THE VEIL READ SAMPLES ONE POINT.** Unchanged from cycle 7.
+14. **THE GATE CAPTURE CONVENTION IS SETTLED.** Unchanged from cycle 7, and R23b now seals it.
+15. **THE ROUTE x RECORD MATRIX IS NOT A CROSS-PRODUCT.** Unchanged from cycle 8: `GEN_N = 24`
+    generates RECORDS and every generated cell loads `hash:'#home'`.
+16. **`--changed`, `--fast` AND THE BARE SERIAL CAPTURE ARE NOT INDIVIDUALLY PRESSED ON THE
+    COST-TABLE ABORT.** Unchanged from cycle 8.
+17. **THE COUNT SWEEP WAS ONE REGEX, AND IT HAS A KNOWN BLIND SPOT.** Unchanged from cycle 8:
+    `build_integrity.py` and `tools/sync-deliverable.mjs:6` both say "18 checks" on a denominator
+    this wave has not measured.
+18. **NO PIXEL GATE SEES THE GAUGE LEGEND.** Re-measured this cycle rather than cited, on the cold
+    record the VR recipe captures. The general form -- an enumeration of which named surfaces fall
+    inside the 18 captured frames -- is still owed by whichever wave next touches
+    `visual_regression`.
+19. **`--keel-shaky` IS READ ON A GROUND ITS OWN BLOCK DOES NOT SOLVE IT AGAINST.** Unchanged from
+    cycle 9. **Owed by whichever wave next touches the keel palette.**
+20. **THE STATUS FOOTER COVERS THE END OF THE ALTITUDE PANEL AT 1280x800 ON A COLD RECORD.**
+    Unchanged from cycle 9, and re-confirmed by this cycle's VR-scope probe, which found the
+    footer in front of the key's centre again. **Owed by W2 home.**
+21. **`test/gate_cost.json` IS UNDERSTATED, AND THE WALL-CLOCK FIGURE IS A MEASUREMENT OF THE BOX.**
+    Sharper than cycle 9's version: the SAME tree measured 1368.7s and 906.0s two hours apart, a
+    51% spread, because the first run shared the box with a CI fetch. So the drift cycle 9
+    recorded cannot be resolved by another single timing -- the two warm `--profile` passes the
+    table's rule calls for must be taken on a QUIESCENT box, and this cycle did not have one.
+    **Owed by whichever wave next runs `--profile`, with the quiescence precondition stated.**
+22. **NEW: THE PROTOTYPE HOLE IS A SHAPE, AND ONLY THREE INSTANCES OF IT HAVE BEEN CLOSED.**
+    `Router.ROUTES`, `TopicRegistry`'s `byId` and one scratch map in `home_claims` are now
+    null-prototype. **Nothing has swept the app for the rest of the class**: any object literal
+    indexed by a string that can come off a URL, out of `localStorage`, or out of a topic id. The
+    cheap form is a grep for `= {}` on a table later indexed by a variable, read by eye once. Two
+    of the three found this cycle were found by DRIVING, not by reading. **Owed by whichever wave
+    next touches the router or the registry.**
+23. **NEW: THE FREE CI LANE FOUND TWO DEFECTS THIS BOX COULD NOT, AND THE WAVE HAD BEEN TREATING
+    IT AS A FORMALITY.** The advisory `--nowait` verdict was previously read after the fact and
+    once cited with a caveat. This cycle it reddened twice on real defects -- an OS-font row count
+    and four unbuilt generated sources -- both structurally unreachable from win32 with a warm
+    tree. **The standing consequence: a cycle that changes the BUILD or any TEXT-LAYOUT figure
+    should wait for the free lane BEFORE running the local capture, not after.** It costs ~3
+    minutes and it bought two red-to-green cycles here.
+24. **NEW: THE TWO HARVESTED PROBES ARE IN THE REPOSITORY, AND ONE OTHER THING IS NOT.**
+    `_audit/w-addresses-cycle10/probe_key_sweep_c10.cjs` (the width-by-width wrap sweep) and
+    `probe_vr_scope_c10.cjs` (which baseline frame a named element falls in) are filed beside
+    their receipts and resolve `_boot.cjs` relative to themselves -- both carried an absolute
+    `D:\` path until the first one was dispatched to a runner. **DECLARED DISPOSABLE:** the
+    standalone copy-scan harness used while the swatch-count grammar was being settled; its logic
+    is now the arm inside `scoreboard_salience` and the scratch copy has no second use.

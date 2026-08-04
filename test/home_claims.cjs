@@ -1867,13 +1867,18 @@ const GEN_N = 24;
          session (measured: `#walk` gives data-view=null, data-group=architecture-apis). So
          waiting for "data-view is not home" there waits forever. The topic routes announce
          themselves by mounting their pane instead. */
-      /* THE HOME TEST IS CASE-INSENSITIVE BECAUSE THE ROUTER'S IS (router.js:50 lower-cases the
-         view id). `#HOME` renders the home, which never mounts a `.stage .pane.on`, so an
-         exact-match predicate would wait the full ACT_MS and then report the route as unrendered
-         -- a timeout dressed as a finding. */
-      await B.until(p, (h) => (String(h).toLowerCase() === '#home'
-        ? document.documentElement.getAttribute('data-view') === 'home'
-        : !!document.querySelector('.stage .pane.on')),
+      /* THE READINESS PREDICATE IS NOT A SECOND COPY OF THE CLASSIFIER UNDER TEST (cycle 7).
+         It used to branch on `hash === '#home'` (case-insensitively, because router.js:50
+         lower-cases the view id -- `#HOME` renders the home, which never mounts a
+         `.stage .pane.on`, so an exact-match predicate would wait the full ACT_MS and then
+         report the route as unrendered, a timeout dressed as a finding). The cycle-7 cell
+         `#authz/home` is a THIRD shape -- a topic prefix on a topicless view -- and teaching this
+         branch to recognise it would have put boot.js's own derivation inside the test that
+         judges boot.js. So it waits for EITHER signal instead: the home stamps `data-view`, a
+         topic route mounts a pane, and no route produces both. Which one arrived is not the
+         question this arm asks -- the ORACLE below is the room the app says it is showing. */
+      await B.until(p, () => document.documentElement.getAttribute('data-view') === 'home'
+        || !!document.querySelector('.stage .pane.on'),
       hash, B.ACT_MS, 'the route rendered (' + hash + ')');
       await B.settle(p);
       const f = await p.evaluate(() => ({
@@ -1948,7 +1953,7 @@ const GEN_N = 24;
          applyIdentity() runs on switches and a bare-view boot never switches. The room the
          document wears is compared against the room of the topic the app IS SHOWING, read from
          TopicRegistry.current() rather than from a constant, so this cannot drift. */
-      /* ---- FOUR ROUTE SHAPES, NOT TWO (cycle 6, R16) ---------------------------------------
+      /* ---- FOUR ROUTE SHAPES, NOT TWO (cycle 6, R16; a fifth and a sixth in cycle 7) -------
          The two cells below drove only hashes the classifier's `/^#([a-z0-9-]+)/` could PARSE.
          Everything it could not parse fell to the empty string and took the `!_h` branch -- the
          DOOR's answer -- so a MIXED-CASE view (#Walk) and a MALFORMED hash (#Nonsense) were both
@@ -1980,6 +1985,61 @@ const GEN_N = 24;
           wore.length > 0 && wore.every((v) => v === pick.group),
           'the record resumes ' + pick.id + ' (' + pick.group + '); stamps [' + up.seen.join(',')
           + '] / frames ' + rle(up.frames)]);
+      }
+      /* ---- THE FIFTH ROUTE SHAPE: A TOPIC PREFIX ON A TOPICLESS VIEW (cycle 7, R19) ---------
+         `#authz/home` is not hypothetical and it is not the test's invention. router.js's own
+         setTopic() comment records that a topic switch on the home "turned the hash into
+         `#saga/home` via replaceState", and copy-link.js copies location.href verbatim -- so
+         URLs of this shape were WRITTEN by the app, were copied, and outlive the guard that
+         stopped the app writing new ones. The app RESOLVES them to the home (parseHash strips a
+         known topic prefix and takes the view from what is left), so the door must answer the
+         HOME's question on them.
+         Before this cycle the classifier's topic lookup ran FIRST and won, so the whole document
+         was lit in the PREFIXED topic's room -- a room the app is not showing, on the one surface
+         whose entire question is which room you are returning to.
+         THREE ROOMS, THREE STRINGS, OR THE CELL ABORTS. The resume room, the boot topic's room
+         and the prefix topic's room have to differ, or "the door followed the record", "the door
+         fell through to the boot topic" and "the door followed the prefix" cannot be told apart
+         and a pass would mean nothing. `authz` is the topic R19 names; if the registry ever puts
+         it in the resume or boot room, any topic outside both is used instead and the arm says
+         which. */
+      {
+        const px = await (async () => {
+          const pp = await ctx.newPage();
+          await B.gotoApp(pp, HTML, { hash: '#home' });
+          const v = await pp.evaluate((p) => {
+            const boot = ((((TopicRegistry.current && TopicRegistry.current()) || {}).identity)
+              || {}).group || '';
+            const roomOf = (id) => ((TopicRegistry.get(id) || {}).identity || {}).group || '';
+            const ok = (id) => {
+              const g = roomOf(id);
+              return !!g && g !== p.group && g !== boot;
+            };
+            if (ok('authz')) return { id: 'authz', group: roomOf('authz'), boot };
+            for (const id of TopicRegistry.ids()) {
+              if (ok(id)) return { id, group: roomOf(id), boot };
+            }
+            return { id: null, group: null, boot };
+          }, pick);
+          await pp.close();
+          return v;
+        })();
+        if (!px.id) {
+          aborted = aborted || 'THE TOPIC-PREFIXED HOME CELL CANNOT LAND: no registered topic sits '
+            + 'outside both the resume room (' + pick.group + ') and the boot room (' + px.boot
+            + '), so a door that followed the prefix and a door that followed the record are the '
+            + 'same string and the cell would prove nothing.';
+        } else {
+          const pf = await frames(pick.id, null, { hash: '#' + px.id + '/home' });
+          const wore = pf.seen.concat(pf.frames);
+          out.push(['[boot] a TOPIC-PREFIXED HOME (#' + px.id + '/home -- the shape router.js\'s '
+            + 'own replaceState used to write, still live in copied links) is lit in the RESUME '
+            + 'target\'s room, not in the prefixed topic\'s and not in the boot topic\'s',
+            wore.length > 0 && wore.every((v) => v === pick.group),
+            'the record resumes ' + pick.id + ' (' + pick.group + '), the prefix names ' + px.id
+            + ' (' + px.group + '), the boot topic is in ' + px.boot + '; stamps ['
+            + pf.seen.join(',') + '] / frames ' + rle(pf.frames)]);
+        }
       }
       const mD = await frames(pick.id, 'record', { hash: '#walk' });
       out.push(['[boot][mutant] THE RECORD CONSULTED BEFORE THE ROUTE -- cycle 2\'s shipped '
@@ -2088,7 +2148,11 @@ const GEN_N = 24;
     + 'four route x record cells, because every load was #home and the one bare-view load ran on '
     + 'an EMPTY record -- the ONE record class in which the bare-view defect cannot appear, '
     + 'since with nothing to resume the record branch falls through to the route branch '
-    + 'anyway. Four cells now, and the precedence between nav.last and the newest graded '
+    + 'anyway. SIX ROUTE SHAPES now -- a bare view (#walk, #drill), a MIXED-CASE view '
+    + '(#Walk), a MALFORMED hash (#Nonsense), the home in the wrong case (#HOME) and a '
+    + 'TOPIC-PREFIXED HOME (#<topic>/home, the shape router.js\'s own replaceState used to '
+    + 'write and copy-link.js still copies verbatim, whose room is the RESUME target\'s and '
+    + 'not the prefix\'s) -- and the precedence between nav.last and the newest graded '
     + 'record is driven in both directions against Panels.resumeTarget() read from the page '
     + 'rather than against a constant)'
     + ' -- every one of them a defect a judge or a battery found on a shipped build');

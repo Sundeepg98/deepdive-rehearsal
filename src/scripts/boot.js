@@ -68,14 +68,27 @@ try{var _dk=matchMedia('(prefers-color-scheme:dark)').matches;document.documentE
    `#Saga/walk` `#Walk` `#/walk` `#!walk` `#Nonsense` -> the BOOT topic's room; `#HOME` `#home` and
    an empty hash -> the DOOR's; `#saga/walk` -> saga's room; `#walk` `#drill` `#nonsense`
    unchanged. test/home_claims.cjs drives the mixed-case and malformed cells against the room the
-   app actually shows. */
+   app actually shows.
+
+   AND A TOPIC-PREFIXED HOME IS A HOME (cycle 7, R19). `#authz/home` is a real shape: router.js's
+   own comment records a replaceState that leaves a topic prefix on a TOPICLESS view, and
+   copy-link.js copies location.href verbatim, so URLs of that shape exist in the wild and get
+   pasted back. The app RESOLVES them to the home -- the view segment decides the view -- and
+   until this line the door lit `authz`'s room on one, because the topic lookup ran FIRST and won.
+   That is the wave's own defect with the operands swapped: the document wearing the room of a
+   topic the app is not showing, on the one surface whose whole question is "which room am I
+   RETURNING to". So the HOME test is asked BEFORE the topic lookup, and it reads the second
+   segment as well as the first. The deeper repair -- the router not writing that URL in the first
+   place, by stripping a topic prefix off a topicless view at replaceState -- is a W2 candidate
+   and is deliberately NOT done here: this file's job is to light the door correctly on the URLs
+   that exist, and a stale link in someone's notes will outlive any router fix. */
 window.__doorRooms={'messaging-events':'cdc event-driven kafka-internals notifications real-time-delivery saga stream-batch-processing','data-storage':'caching consistency-models consistent-hashing eav probabilistic-structures replication sharding-strategies shared-definition soft-delete storage-engines','reliability-observability':'backpressure circuit-breaker debugging error-propagation idempotency observability retries-timeouts slos','platform-infra':'autoscaling aws-hardening desired-state developer-platform devices-dispatch distributed-locks iac lambda-organization leader-election load-balancing multi-region','architecture-apis':'api-design content-pipeline feature-flags microfrontend rate-limiting rules-engine state-machine','security-tenancy':'authz multi-tenant signing'};
 window.__doorBoot='content-pipeline';window.__doorCold='event-driven';
 try{
   var _rm=function(i){if(!i)return '';for(var g in window.__doorRooms){if((' '+window.__doorRooms[g]+' ').indexOf(' '+i+' ')>-1)return g;}return '';},_raw=(location.hash||'').replace(/^#/,''),_seg=_raw.split('/')[0]||'',_nl=null,_bt=0,_bi='',_k,_p,_i;
   try{_nl=JSON.parse(localStorage.getItem('ddr.v1.nav.last')||'null');for(_i=0;_i<localStorage.length;_i++){_k=localStorage.key(_i);if(_k&&_k.indexOf('ddr.v1.progress.')===0){_p=JSON.parse(localStorage.getItem(_k)||'null');if(_p&&_p.ts>_bt){_bt=_p.ts;_bi=_k.slice(16);}}}}catch(e2){}
   var _hr=_rm(_seg),_door=_rm(_nl&&_nl.id)||_rm(_bi)||_rm(window.__doorCold);
-  var _dg=_hr||((!_raw||_seg.toLowerCase()==='home')?_door:_rm(window.__doorBoot));
+  var _dg=(!_raw||_seg.toLowerCase()==='home'||(_raw.split('/')[1]||'').toLowerCase()==='home')?_door:(_hr||_rm(window.__doorBoot));
   if(_dg)document.documentElement.setAttribute('data-group',_dg);
 }catch(e){}
 /* v147: Loading splash -- removed by app.js when ready */

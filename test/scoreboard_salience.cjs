@@ -195,6 +195,12 @@ const NB_MIN_DEV = 3;
    shipped build over 93 open capsules per scheme, the ramp's tightest adjacent pair is 1.260:1
    (light) and 1.266:1 (dark), both at --lv .78 -> 1.00, AT BOTH WIDTHS to four decimals; a
    flattened pair measures ~1.00:1.
+   "AT BOTH WIDTHS" IS AN ASSERTION AS OF CYCLE 7 AND WAS A PUBLISHED PREDICTION BEFORE IT (judge
+   item 4). It was written here and in styles.css, both cells were measured, both rows were
+   printed -- and nothing compared them: `gaugeRows` was pushed, decorated and read only by the
+   print loop, and each cell asserted its own 1.15 floor and nothing else. The cross-width block
+   after the width loop is what makes the sentence carry: same step means to GROUND_EPS, same
+   tightest pair to PHASE_EPS_CR, per scheme.
    EXACT VALUES COMPARED, ROUNDED VALUES DISPLAYED. Cycle 5 had to correct this file to its own
    rule -- the light figure was printed here and twice below as 1.277, which is what you get by
    recomputing the ratio from a DISPLAYED four-decimal row rather than from the precision the arm
@@ -389,10 +395,26 @@ const GROUND_EPS = 0.002;
    R12 closed the veil class IN LIGHT ONLY, and the freeze said "in both schemes". The judges
    proved otherwise on the clean tree: three consecutive runs, and run 3's 390/dark fill strip
    came back 0.1759/0.2964/0.4202/0.5688/0.7360 against runs 1-2's 0.1941/0.3270/0.4633/0.6260/
-   0.8097 -- a least-squares fit of b = 0.9101*a with max residual 0.0004, which is a pure
-   compositing veil at alpha ~0.91 over a near-black ground. Exit 0. Every removal-diff reading in
-   the same cell was byte-identical, and condition 3 printed "cold vs warm re-read: identical"
-   because the veil sat across BOTH reads. The one ABSOLUTE reading moved and nothing caught it.
+   0.8097 -- a least-squares fit of b = 0.9101*a with max residual 0.0004. Exit 0. Every
+   removal-diff reading in the same cell was byte-identical, and condition 3 printed "cold vs warm
+   re-read: identical". The one ABSOLUTE reading moved and nothing caught it.
+
+   AND THE CAUSE OF THAT MOVE IS NOT ESTABLISHED (cycle 7, R17). This paragraph used to end the
+   sentence above with "-- which is a pure compositing veil at alpha ~0.91 over a near-black
+   ground", and that clause is WITHDRAWN. It cannot be carried by the fit: a linear map of five
+   numbers cannot tell "composited at alpha" from "averaged with one more row of its own edge",
+   which is exactly the ambiguity that took a whole cycle to settle in LIGHT (judge item 1, cycle
+   6 -- the same shape, same fit quality, and the answer there was the SAMPLER). Two facts stand
+   against the veil reading and neither existed when it was written: the arithmetic four lines
+   below shows the ground invariant is INERT in dark at every alpha above 0.474, so nothing in
+   this cell could have confirmed or denied a veil either way; and the box that produced the dark
+   baseline is the SAME fill box cycle 6 proved phase-dependent and corner-contaminated, whose
+   readings moved 0.0515 with the panel's fractional y under no veil at all.
+   WHAT IS TRUE: the reading moved between runs, in dark, and cycle 5's coverage could not tell
+   why. WHAT CLOSES THE CLASS IS THE SHOT-TIME READ, not the attribution -- it has no epsilon, no
+   scheme dependence, and no dependence on any box; MUTANT G, MUTANT I and MUTANT J are what make
+   it a guard rather than a claim. The paragraph is kept, rather than deleted with its number,
+   because the OBSERVATION is the reason the shot-time read exists.
 
    THE MECHANISM IS ARITHMETIC AND IT IS THE INVARIANT'S OWN. A veil at alpha composites the
    trough over whatever is behind the faded subtree, so it moves the trough by
@@ -812,23 +834,130 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
            complementary rather than redundant -- the hit test is the authority on paint ORDER and
            reaches PSEUDO-elements (a `body::after` backdrop is reported as `body`); this second,
            geometric read reaches anything with a box whatever its pointer-events, and neither one
-           alone covers the class. */
-        const painted = (c) => !!c && c !== 'transparent' && !/rgba\([^)]*,\s*0\s*\)$/.test(c);
+           alone covers the class.
+
+           ---- AND THE SWEEP READS PSEUDO-ELEMENTS TOO (cycle 7, R18) ------------------------
+           THE UNION HAD A HOLE EXACTLY WHERE ITS TWO HALVES WERE SUPPOSED TO OVERLAP, and it is
+           the intersection of the two exemptions each half already declared. The hit stack
+           reaches a pseudo but not `pointer-events:none`; this sweep reached
+           `pointer-events:none` but not a pseudo, because `querySelectorAll('*')` returns no
+           pseudo-element and the loop skipped `n.contains(el)` -- and `body::after`, the shipped
+           shape of MUTANT G, is a pseudo OF AN ANCESTOR. So the ONE plant that carries both
+           properties -- MUTANT G plus the `pointer-events:none` the app's own
+           `#_bootsplash._bs-done` carries -- crossed BOTH reads. Measured before the fix: stack
+           empty, covers empty, the shot reported clean at 10% over the gauge.
+           So every candidate's `::before` and `::after` are read as well, and the ancestor skip
+           is lifted FOR THE PSEUDO READ ONLY: an ancestor's own box behind the panel is not a
+           veil, and an ancestor's fixed full-viewport pseudo in front of it is the whole class.
+           `.hm-alt`'s own subtree stays skipped in both reads, because the fill and the keel ARE
+           `::after`/`::before` on its capsules -- a read that judged them would report the gauge
+           as a veil over itself. */
+        const painted = (cs) => {
+          const c = cs.backgroundColor;
+          if (c && c !== 'transparent' && !/rgba\([^)]*,\s*0\s*\)$/.test(c)) return 'background ' + c;
+          /* AN OVERLAY PAINTED BY A GRADIENT WAS INVISIBLE HERE (cycle 7, judge item 2). The gate
+             was `backgroundColor` alone, so a fixed box at `background-color:transparent;
+             background-image:linear-gradient(rgba(0,0,0,.10),rgba(0,0,0,.10))` over the track
+             returned CLEAN while the identical box with a solid rgba background was caught. The
+             app carries three rules combining an out-of-flow position, a gradient and
+             pointer-events:none, so the shape is not invented. MUTANT I's second landing is
+             exactly that box. */
+          const bi = cs.backgroundImage;
+          if (bi && bi !== 'none') return 'background-image ' + bi.slice(0, 44);
+          const bf = cs.backdropFilter || cs.webkitBackdropFilter;
+          if (bf && bf !== 'none') return 'backdrop-filter ' + bf;
+          return '';
+        };
+        /* A PSEUDO-ELEMENT HAS NO getBoundingClientRect, so its box is DERIVED -- and Chromium
+           resolves a pseudo's `width`/`height` to the COMPUTED value (`auto`), not the used one,
+           so the insets are the only reliable source. Percentages resolve against the containing
+           block, which is the viewport for `fixed` and the padding box of the nearest
+           positioned/transformed ancestor-or-self for `absolute` (the initial containing block
+           when there is none). */
+        const num = (v, base) => {
+          if (!v || v === 'auto') return null;
+          if (/%$/.test(v)) {
+            const p = parseFloat(v);
+            return (isFinite(p) && base !== null) ? p * base / 100 : null;
+          }
+          const n = parseFloat(v);
+          return isFinite(n) ? n : null;
+        };
+        const cbOf = (n, pos) => {
+          if (pos === 'fixed') return { left: 0, top: 0, right: innerWidth, bottom: innerHeight };
+          for (let a = n; a; a = a.parentElement) {
+            const s = getComputedStyle(a);
+            if (s.position !== 'static'
+              || (s.transform && s.transform !== 'none')
+              || (s.filter && s.filter !== 'none')
+              || (s.perspective && s.perspective !== 'none')
+              || (s.contain && /paint|layout|strict|content/.test(s.contain))
+              || (s.willChange && /transform|filter|perspective/.test(s.willChange))) {
+              const r = a.getBoundingClientRect();
+              return { left: r.left + (parseFloat(s.borderLeftWidth) || 0),
+                top: r.top + (parseFloat(s.borderTopWidth) || 0),
+                right: r.right - (parseFloat(s.borderRightWidth) || 0),
+                bottom: r.bottom - (parseFloat(s.borderBottomWidth) || 0) };
+            }
+          }
+          return { left: -scrollX, top: -scrollY,
+            right: -scrollX + document.documentElement.clientWidth,
+            bottom: -scrollY + document.documentElement.clientHeight };
+        };
+        /* EACH AXIS IS RESOLVED INDEPENDENTLY, AND AN AXIS THE INSETS CANNOT PLACE FALLS BACK TO
+           THE ORIGINATING ELEMENT'S OWN BOX rather than being dropped. Dropping it is the hole
+           this whole section exists to close: on the shipped tree exactly one pseudo has both
+           inline insets `auto` (`.hm-tab::before`, placed at its static position) and a
+           SKIPPED candidate is a candidate that cannot fail. The fallback is the static-position
+           approximation -- start where the element's border box starts, extend by the pseudo's
+           declared size or the element's own -- which errs toward REPORTING and never toward
+           silence: anything large enough to veil the panel is placed by its insets. */
+        const axis = (a0, a1, sz, cb0, cb1, e0, e1) => {
+          if (a0 !== null && a1 !== null) return [cb0 + a0, cb1 - a1];
+          if (a0 !== null && sz !== null) return [cb0 + a0, cb0 + a0 + sz];
+          if (a1 !== null && sz !== null) return [cb1 - a1 - sz, cb1 - a1];
+          return [e0, e0 + (sz !== null ? sz : (e1 - e0))];
+        };
         const all = document.querySelectorAll('*');
         for (let i = 0; i < all.length; i++) {
           const n = all[i];
-          if (n === el || el.contains(n) || n.contains(el)) continue;
-          const cs = getComputedStyle(n);
-          if (cs.position === 'static' || cs.position === 'relative') continue;
-          if (cs.visibility === 'hidden' || parseFloat(cs.opacity) === 0) continue;
-          const bf2 = cs.backdropFilter || cs.webkitBackdropFilter;
-          if (!painted(cs.backgroundColor) && !(bf2 && bf2 !== 'none')) continue;
-          const r = n.getBoundingClientRect();
-          if (r.width < 1 || r.height < 1) continue;
-          if (cx < r.left || cx > r.right || cy < r.top || cy > r.bottom) continue;
-          covers.push(name(n) + ' (' + cs.position + ', opacity ' + cs.opacity
-            + ', background ' + cs.backgroundColor + ')');
-          if (covers.length >= 3) break;
+          const own = el.contains(n);
+          if (!own && !n.contains(el)) {
+            const cs = getComputedStyle(n);
+            const why = (cs.position === 'static' || cs.position === 'relative'
+              || cs.visibility === 'hidden' || parseFloat(cs.opacity) === 0) ? '' : painted(cs);
+            if (why) {
+              const r = n.getBoundingClientRect();
+              if (r.width >= 1 && r.height >= 1
+                && cx >= r.left && cx <= r.right && cy >= r.top && cy <= r.bottom) {
+                covers.push(name(n) + ' (' + cs.position + ', opacity ' + cs.opacity
+                  + ', ' + why + ')');
+              }
+            }
+          }
+          if (own) continue;                 /* the gauge's own marks are ::after and ::before */
+          for (let k = 0; k < 2; k++) {
+            const pe = k ? '::after' : '::before';
+            const cs = getComputedStyle(n, pe);
+            if (!cs || cs.content === 'none' || cs.content === 'normal') continue;
+            if (cs.display === 'none' || cs.visibility === 'hidden'
+              || parseFloat(cs.opacity) === 0) continue;
+            if (cs.position === 'static' || cs.position === 'relative') continue;
+            const why = painted(cs);
+            if (!why) continue;
+            const cb = cbOf(n, cs.position);
+            const er = n.getBoundingClientRect();
+            const cw = cb.right - cb.left, ch = cb.bottom - cb.top;
+            const bx = axis(num(cs.left, cw), num(cs.right, cw), num(cs.width, cw),
+              cb.left, cb.right, er.left, er.right);
+            const byy = axis(num(cs.top, ch), num(cs.bottom, ch), num(cs.height, ch),
+              cb.top, cb.bottom, er.top, er.bottom);
+            if (!(bx[1] - bx[0] >= 1 && byy[1] - byy[0] >= 1)) continue;
+            if (cx < bx[0] || cx > bx[1] || cy < byy[0] || cy > byy[1]) continue;
+            covers.push(name(n) + pe + ' (' + cs.position + ', opacity ' + cs.opacity
+              + ', ' + why + ')');
+          }
+          if (covers.length >= 4) break;
         }
       }
       return { x: b.x, y: b.y, found: !!t && !!el, opa, anim, stack, covers,
@@ -858,7 +987,9 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
         + (s.stack.length ? '; IN FRONT OF THE GAUGE at the track\'s centre, and not the gauge\'s '
           + 'own: ' + s.stack.join(', ') : '')
         + (s.covers.length ? '; and COVERING the track\'s centre with a painted out-of-flow box '
-          + '(the read that reaches pointer-events:none): ' + s.covers.join(', ') : '')
+          + '(the read that reaches pointer-events:none, and -- since cycle 7 -- a PSEUDO-element '
+          + 'of an ancestor, which is the one shape that crossed both other reads): '
+          + s.covers.join(', ') : '')
         + '. An element at opacity < 1 -- or carrying a filter, a backdrop-filter or a blend mode '
         + '-- composites its whole subtree over the canvas, and an element drawn IN FRONT of the '
         + 'panel composites over it directly; every pixel this cell samples is under both, so '
@@ -1666,25 +1797,48 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
        IN LIGHT IT IS A NEGATIVE CONTROL, not an abstention: the same stylesheet is installed, the
        selector does not match, and the cell must report NO veil. A detector that fires on a plant
        that did not land is not a detector. */
+    /* ONE SHAPE FOR EVERY VEIL PLANT (cycle 7). Install, settle, read the LIVENESS FACT the plant
+       is supposed to have created off the DOM, read SHOT_STATE into a SINK so a caught plant does
+       not fail the run, restore, settle. Every branch below then says CANNOT LAND / UNDETECTED /
+       MIS-ATTRIBUTED from a measurement rather than from the absence of a finding, which is the
+       distinction MUTANT F's first draft got wrong and MUTANT G's declaration got wrong. */
+    const veilPress = async (apply, revert, liveFn, liveArg, when) => {
+      await apply();
+      await B.settle(page);
+      const live = liveFn ? await page.evaluate(liveFn, liveArg) : null;
+      const sink = [];
+      const held = veiled;
+      veilOut = sink; veiled = 0;
+      const state = await page.evaluate(SHOT_STATE);
+      veilCheck(state, when);
+      veilOut = fails; veiled = held;
+      await revert();
+      await B.settle(page);
+      return { sink, state, live };
+    };
+    const cssPlant = (css) => [() => style('_gmut', css), () => style('_gmut', '')];
+    const domPlant = (id, cssText) => [
+      () => page.evaluate(({ i, c }) => {
+        const d = document.createElement('div');
+        d.id = i; d.style.cssText = c;
+        document.body.appendChild(d);
+      }, { i: id, c: cssText }),
+      () => page.evaluate((i) => { const d = document.getElementById(i); if (d) d.remove(); }, id),
+    ];
+    const namesVeil = (sink, clause) => sink.filter(
+      (f) => f.indexOf('THE SHOT WAS TAKEN THROUGH A VEIL') >= 0 && f.indexOf(clause) >= 0);
+
     const PLANT_G = 'html[data-theme="dark"] body::after{content:"";position:fixed;inset:0;'
       + 'background:var(--bg);opacity:.10;z-index:2147483647}';
-    await style('_gmut', PLANT_G);
-    await B.settle(page);
-    const gLive = await page.evaluate(() => {
+    const PSEUDO_LIVE = () => {
       const cs = getComputedStyle(document.body, '::after');
-      return { opacity: cs.opacity, position: cs.position, content: cs.content };
-    });
-    const gSink = [];
-    const veilBefore = veiled;
-    veilOut = gSink; veiled = 0;
-    const gState = await page.evaluate(SHOT_STATE);
-    veilCheck(gState, 'under MUTANT G');
-    veilOut = fails; veiled = veilBefore;
-    await style('_gmut', '');
-    await B.settle(page);
+      return { opacity: cs.opacity, position: cs.position, content: cs.content,
+        pointerEvents: cs.pointerEvents };
+    };
+    const gPress = await veilPress(...cssPlant(PLANT_G), PSEUDO_LIVE, null, 'under MUTANT G');
+    const gSink = gPress.sink, gLive = gPress.live;
     const gLanded = gLive.opacity === '0.1' && gLive.position === 'fixed';
-    const named = gSink.filter((f) => f.indexOf('THE SHOT WAS TAKEN THROUGH A VEIL') >= 0
-      && f.indexOf('IN FRONT OF THE GAUGE') >= 0);
+    const named = namesVeil(gSink, 'IN FRONT OF THE GAUGE');
     if (theme === 'dark') {
       if (!gLanded) {
         fails.push(where + 'MUTANT G CANNOT LAND: the planted body::after computes position '
@@ -1707,6 +1861,258 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
         + 'html[data-theme="dark"] and this cell is light (the pseudo computes opacity '
         + gLive.opacity + ', position ' + gLive.position + '), yet the shot was reported veiled: '
         + gSink[0].slice(0, 180) + '. A detector that fires on nothing is not a detector.');
+    }
+
+    /* ---- MUTANT I: THE POINTER-EVENTS:NONE OVERLAY (cycle 7, judge items 1 and 3) -----------
+       FREEZE CONDITION 1 DECLARED A FOUR-PART GUARD AND ONE PART HAD A MUTANT. MUTANT G is a
+       `body::after` with default pointer-events, so it is caught by the HIT STACK -- and press P1,
+       the argument the freeze rests on, deletes the stack read and watches G go undetected, which
+       proves the STACK and says nothing about the sweep. The sweep was added for the
+       `pointer-events:none` class specifically (the app's own `#_bootsplash._bs-done`) and no
+       plant anywhere in this file was in it: if that half broke or narrowed, every cell would
+       still have reported clean. That is this wave's own scar shape -- a check arm with no
+       control that can fail -- sitting inside the guard cycle 6 added to close exactly that class.
+       So MUTANT I is a REAL ELEMENT, not a pseudo: a full-viewport fixed sibling div at 10% with
+       pointer-events off, which is the literal shape of the boot splash's faded state. The hit
+       stack cannot see it (that is what pointer-events:none means) and the chain cannot (it is a
+       SIBLING, not an ancestor), so the geometric sweep is the only arm that can, and the finding
+       must name it through the `covers` branch specifically.
+       IT LANDS IN BOTH SCHEMES, so it needs no scheme-scoped negative control -- only the
+       CANNOT-LAND branch, which is read off the DOM before any finding is looked at. (Judge item
+       3 proposed mirroring G's dark-only scoping with light as the control; judge item 1, which
+       planted and measured it, found it caught in all four cells. A plant that lands everywhere
+       is pressed everywhere, and G already carries the did-not-land control for this file.)
+       AND IT LANDS TWICE. The second landing is painted by a GRADIENT with a transparent
+       background-color -- judge item 2's shape -- which the sweep's `painted()` gate could not
+       see until this cycle. Same box, same position, same pointer-events; the only difference is
+       which property carries the paint, so a narrowing of `painted()` back to backgroundColor
+       reds here and nowhere else. */
+    const I_BOX = 'position:fixed;inset:0;pointer-events:none;z-index:2147483646;';
+    const I_LIVE = (i) => {
+      const d = document.getElementById(i);
+      if (!d) return null;
+      const cs = getComputedStyle(d), r = d.getBoundingClientRect();
+      return { position: cs.position, opacity: cs.opacity, pointerEvents: cs.pointerEvents,
+        bg: cs.backgroundColor, bi: cs.backgroundImage, w: r.width, h: r.height };
+    };
+    const iForms = [
+      ['I', 'background:var(--bg);opacity:.10',
+        'a full-viewport overlay at 10% with pointer-events off -- the literal shape of this '
+        + 'app\'s own faded boot splash'],
+      ['Ib', 'background-color:transparent;background-image:linear-gradient('
+        + 'rgba(0,0,0,.10),rgba(0,0,0,.10))',
+        'the same overlay painted by a GRADIENT over a transparent background-color, which the '
+        + 'sweep\'s paint test could not see until this cycle'],
+    ];
+    const iOut = {};
+    let mOut;
+    for (const [tag, paint, prose] of iForms) {
+      const id = '_gauge_veil_' + tag;
+      const [apply, revert] = domPlant(id, I_BOX + paint);
+      await apply();
+      await B.settle(page);
+      const live = await page.evaluate(I_LIVE, id);
+      const sink = [];
+      const held = veiled;
+      veilOut = sink; veiled = 0;
+      veilCheck(await page.evaluate(SHOT_STATE), 'under MUTANT ' + tag);
+      veilOut = fails; veiled = held;
+      await revert();
+      await B.settle(page);
+      const landed = !!live && live.position === 'fixed' && live.pointerEvents === 'none'
+        && live.w >= 100 && live.h >= 100;
+      const cov = namesVeil(sink, 'COVERING the track');
+      iOut[tag] = !live ? 'CANNOT LAND (no node)'
+        : (!landed ? 'CANNOT LAND (' + live.position + '/' + live.pointerEvents + ')'
+          : (cov.length ? 'caught, named as a covering box'
+            : (sink.length ? 'caught but NOT as a covering box' : 'NOT CAUGHT')));
+      if (!landed) {
+        fails.push(where + 'MUTANT ' + tag + ' CANNOT LAND: the planted overlay computes '
+          + (live ? 'position ' + live.position + ', pointer-events ' + live.pointerEvents
+            + ', ' + live.w.toFixed(0) + 'x' + live.h.toFixed(0) : 'no element at all')
+          + ', so nothing was drawn over the panel and a green below would mean nothing.');
+      } else if (!sink.length) {
+        fails.push(where + 'MUTANT ' + tag + ' UNDETECTED: ' + prose + ' -- covering the track\'s '
+          + 'centre at ' + live.w.toFixed(0) + 'x' + live.h.toFixed(0) + ' -- was read as a clean '
+          + 'shot. It carries pointer-events:none so the hit stack cannot see it, and it is a '
+          + 'SIBLING so the ancestor chain cannot; the geometric sweep is the only arm that can, '
+          + 'and it did not. That is the arm freeze condition 1 declares and no plant pressed.');
+      } else if (!cov.length) {
+        fails.push(where + 'MUTANT ' + tag + ' MIS-ATTRIBUTED: the overlay was caught, but not '
+          + 'through the covering-box branch -- the finding reads "' + sink[0].slice(0, 180)
+          + '". The half of the union under test is the geometric sweep, and a finding that names '
+          + 'a different half does not press it.');
+      }
+    }
+
+    /* ---- MUTANT J: THE PSEUDO VEIL THAT CROSSED BOTH READS (cycle 7, R18) -------------------
+       MUTANT G plus `pointer-events:none`, which is what the app's own `#_bootsplash._bs-done`
+       carries. It is the INTERSECTION of the two exemptions the union had already declared -- a
+       PSEUDO (invisible to querySelectorAll, and on an ANCESTOR the sweep skipped) that does not
+       hit-test (invisible to elementsFromPoint) -- and it went straight through both reads on the
+       cycle-6 tree: measured, stack empty and covers empty at 10% over the gauge. The pseudo arm
+       of the sweep is what sees it, and it is the only arm that can. */
+    const PLANT_J = 'html[data-theme="dark"] body::after{content:"";position:fixed;inset:0;'
+      + 'background:var(--bg);opacity:.10;pointer-events:none;z-index:2147483647}';
+    const jPress = await veilPress(...cssPlant(PLANT_J), PSEUDO_LIVE, null, 'under MUTANT J');
+    const jSink = jPress.sink, jLive = jPress.live;
+    const jLanded = jLive.opacity === '0.1' && jLive.position === 'fixed'
+      && jLive.pointerEvents === 'none';
+    const jCov = namesVeil(jSink, 'COVERING the track');
+    let jOut;
+    if (theme === 'dark') {
+      if (!jLanded) {
+        jOut = 'CANNOT LAND';
+        fails.push(where + 'MUTANT J CANNOT LAND: the planted body::after computes position '
+          + jLive.position + ' at opacity ' + jLive.opacity + ', pointer-events '
+          + jLive.pointerEvents + ' (content ' + jLive.content + '), so no backdrop was drawn and '
+          + 'a green below would mean nothing.');
+      } else if (!jSink.length) {
+        jOut = 'NOT CAUGHT';
+        fails.push(where + 'MUTANT J UNDETECTED: a full-viewport pseudo-element backdrop at 10% '
+          + 'with pointer-events:none -- MUTANT G plus the one property the boot splash carries '
+          + '-- was read as a clean shot. The chain is opaque (the alpha is on a pseudo), the hit '
+          + 'stack skips it (pointer-events:none) and the element sweep cannot enumerate it '
+          + '(querySelectorAll returns no pseudo, and body is an ANCESTOR). The pseudo arm of the '
+          + 'sweep is the only arm that can see this, and it did not.');
+      } else if (!jCov.length) {
+        jOut = 'caught but NOT as a covering box';
+        fails.push(where + 'MUTANT J MIS-ATTRIBUTED: the pseudo backdrop was caught, but not '
+          + 'through the covering-box branch -- the finding reads "' + jSink[0].slice(0, 180)
+          + '". If the hit stack caught this one, the plant is not carrying pointer-events:none '
+          + 'and the arm under test is unpressed.');
+      } else {
+        jOut = 'caught, named as a covering box';
+      }
+    } else {
+      jOut = 'inert by construction (light) -- and the cell reported '
+        + (jSink.length ? 'VEILED' : 'clean');
+      if (jSink.length) {
+        fails.push(where + 'MUTANT J FIRED ON A PLANT THAT CANNOT APPLY: the backdrop is scoped '
+          + 'to html[data-theme="dark"] and this cell is light (the pseudo computes opacity '
+          + jLive.opacity + ', position ' + jLive.position + '), yet the shot was reported '
+          + 'veiled: ' + jSink[0].slice(0, 180) + '.');
+      }
+    }
+
+    /* ---- MUTANT M: PAINT THE SWEEP CANNOT SEE, IN FRONT OF THE GAUGE (cycle 7) --------------
+       R18 COST THE HIT STACK ITS ONLY CONTROL, and saying so is cheaper than discovering it in
+       cycle 8. Through cycle 6, deleting the hit-stack read left MUTANT G undetected, and that
+       press is the whole argument freeze condition 1 rests on. Now the sweep reads pseudos, so it
+       catches G too: the same deletion leaves G MIS-ATTRIBUTED rather than UNDETECTED, which is
+       still red but is no longer evidence that the stack read reaches anything the sweep does not.
+       IT DOES, AND THIS IS THE SHAPE. `painted()` tests background-color, background-image and
+       backdrop-filter -- a deliberate, declared list -- so paint that arrives any other way is
+       invisible to the sweep by construction. A full-viewport fixed box whose colour is entirely
+       in its BORDER carries no background at all: the sweep skips it, and the hit test, which
+       knows nothing about how a box is painted and only about what is in front, catches it.
+       So this is simultaneously the stack read's negative control and the honest statement of the
+       sweep's own limit -- the limit is now measured rather than asserted in a PASS line. */
+    const M_ID = '_gauge_veil_M';
+    const M_BOX = 'position:fixed;inset:0;box-sizing:border-box;background:none;'
+      + 'border:2000px solid rgba(0,0,0,.10);z-index:2147483645';
+    {
+      const [apply, revert] = domPlant(M_ID, M_BOX);
+      await apply();
+      await B.settle(page);
+      const live = await page.evaluate(I_LIVE, M_ID);
+      const sink = [];
+      const held = veiled;
+      veilOut = sink; veiled = 0;
+      veilCheck(await page.evaluate(SHOT_STATE), 'under MUTANT M');
+      veilOut = fails; veiled = held;
+      await revert();
+      await B.settle(page);
+      /* it has to be BOTH: in front of the panel, and carrying none of the three paints the
+         sweep tests -- otherwise it is a second copy of MUTANT I rather than a control for the
+         read MUTANT I cannot press */
+      const unpainted = !!live && live.bi === 'none'
+        && /rgba\([^)]*,\s*0\s*\)$/.test(String(live.bg));
+      const landed = !!live && live.position === 'fixed' && live.w >= 100 && live.h >= 100
+        && unpainted;
+      const front = namesVeil(sink, 'IN FRONT OF THE GAUGE');
+      mOut = !landed ? 'CANNOT LAND'
+        : (front.length ? 'caught, named in front of the gauge'
+          : (sink.length ? 'caught but NOT through the hit stack' : 'NOT CAUGHT'));
+      if (!landed) {
+        fails.push(where + 'MUTANT M CANNOT LAND: the border-painted overlay computes '
+          + (live ? 'position ' + live.position + ', ' + live.w.toFixed(0) + 'x'
+            + live.h.toFixed(0) + ', background ' + live.bg + ' / ' + live.bi
+            + (unpainted ? '' : ' -- which the geometric sweep CAN see, so it is not a control '
+              + 'for the hit stack') : 'no element at all')
+          + ', so a green below would mean nothing.');
+      } else if (!sink.length) {
+        fails.push(where + 'MUTANT M UNDETECTED: a full-viewport fixed box painted entirely by '
+          + 'its BORDER, drawn over the gauge, was read as a clean shot. It carries no '
+          + 'background-color, no background-image and no backdrop-filter, so the geometric '
+          + 'sweep skips it by construction -- the hit stack is the only arm that can see this, '
+          + 'and after cycle 7 it is the only plant that presses the hit stack alone.');
+      } else if (!front.length) {
+        fails.push(where + 'MUTANT M MIS-ATTRIBUTED: the border overlay was caught, but not '
+          + 'through the hit-stack branch -- the finding reads "' + sink[0].slice(0, 180)
+          + '". If the sweep caught this, `painted()` has grown a branch that sees border paint '
+          + 'and the control is no longer a control.');
+      }
+    }
+
+    /* ---- MUTANTS K AND L: THE CHAIN READ, WHICH ALSO HAD NO PLANT (cycle 7, judge item 1) ---
+       Freeze condition 1's other two parts. (a) is the chain composite read itself -- the arm
+       cycle 5 added and the only one of the four that had been RUNNING since cycle 5 -- and (b)
+       is cycle 6's widening of it from opacity alone to filter, backdrop-filter and blend mode.
+       Neither had a plant: the judges neutered `composits()` to return [] and dropped the
+       widening, and BOTH deletions exited 0 with every planted mutant still caught.
+       K is an ancestor at opacity .91, which is the exact alpha cycle 5's withdrawn attribution
+       named. L is the widening, pressed one property at a time -- three landings, so dropping any
+       ONE of the three lines reds rather than only dropping all three. `#home` is an ancestor of
+       `.hm-alt` on every route this cell drives, and the CANNOT-LAND branch reads the computed
+       value off the chain rather than trusting the stylesheet. */
+    /* THE LIVENESS READ MUST NOT BE THE ARM UNDER TEST. The first draft of this block read the
+       plant's landing out of the chain read's own report -- so neutering the chain read (which is
+       the deletion press this mutant exists to answer) made every plant report CANNOT LAND
+       instead of UNDETECTED: a broken guard would have accused the plant. It reads the computed
+       style off `#home` directly, and confirms `#home` really is an ancestor of the gauge, which
+       is the other half of "did this land where it was aimed". */
+    const CHAIN_LIVE = (prop) => {
+      const g = document.querySelector('.hm-alt');
+      const h = document.querySelector('#home');
+      if (!g || !h || !h.contains(g)) return { v: '', chain: false };
+      return { v: String(getComputedStyle(h)[prop] || ''), chain: true };
+    };
+    const chainForms = [
+      ['K', '#home{opacity:.91!important}', 'opacity', '0.91', 'opacity 0.91', 'opacity',
+        'an ancestor at opacity .91 -- the alpha cycle 5 read into a dark drift'],
+      ['L1', '#home{filter:opacity(.9)!important}', 'filter', 'opacity(', 'filter opacity(',
+        'filter', 'an ancestor carrying filter:opacity(.9)'],
+      ['L2', '#home{backdrop-filter:blur(2px)!important}', 'backdropFilter', 'blur(',
+        'backdrop-filter blur(', 'backdrop-filter',
+        'an ancestor carrying backdrop-filter:blur(2px)'],
+      ['L3', '#home{mix-blend-mode:multiply!important}', 'mixBlendMode', 'multiply',
+        'mix-blend-mode multiply', 'mix-blend-mode',
+        'an ancestor carrying mix-blend-mode:multiply'],
+    ];
+    const chainOut = {};
+    for (const [tag, css, prop, want, clause, label, prose] of chainForms) {
+      const p = await veilPress(...cssPlant(css), CHAIN_LIVE, prop, 'under MUTANT ' + tag);
+      const onChain = !!p.live && p.live.chain && p.live.v.indexOf(want) === 0;
+      const hit = namesVeil(p.sink, clause);
+      chainOut[tag] = !p.sink.length ? 'NOT CAUGHT'
+        : (hit.length ? 'caught, named ' + label : 'caught but NOT as ' + label);
+      if (!onChain) {
+        chainOut[tag] = 'CANNOT LAND';
+        fails.push(where + 'MUTANT ' + tag + ' CANNOT LAND: with ' + css + ' installed, #home '
+          + (p.live && p.live.chain ? 'computes ' + prop + ' "' + p.live.v + '" rather than "'
+            + want + '..."' : 'is not an ancestor of .hm-alt at all')
+          + ', so the plant never reached the chain and a green below would mean nothing.');
+      } else if (!p.sink.length) {
+        fails.push(where + 'MUTANT ' + tag + ' UNDETECTED: ' + prose + ' composites the gauge\'s '
+          + 'whole subtree over the canvas, and the shot was read as clean. This is freeze '
+          + 'condition 1\'s chain half, which until this cycle was asserted and never pressed -- '
+          + 'the judges neutered it and every other planted mutant still passed.');
+      } else if (!hit.length) {
+        fails.push(where + 'MUTANT ' + tag + ' MIS-ATTRIBUTED: the plant was caught but the '
+          + 'finding does not name "' + clause + '" -- it reads "' + p.sink[0].slice(0, 180)
+          + '". Another arm caught it, so the property under test is still unpressed.');
+      }
     }
 
     /* ---- MUTANT H: THE TWO SEVERITIES COLLAPSED INTO ONE MARK (cycle 6) ---------------------
@@ -1789,6 +2195,7 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
           : 'but NOT as a backdrop') : 'NOT CAUGHT')
         : 'inert by construction (light) -- and the cell reported '
           + (gSink.length ? 'VEILED' : 'clean'),
+      I: iOut.I, Ib: iOut.Ib, J: jOut, M: mOut, chain: chainOut,
       H: mH && kH ? mH.min.toFixed(2) + ' vs ' + kH.max.toFixed(2)
         + ' = ' + (mH.min / kH.max).toFixed(3) : 'n/a',
       veiled: veiled,
@@ -1798,6 +2205,82 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
   }
 
   await browser.close();
+
+  /* ---- THE CROSS-WIDTH IDENTITY, ASSERTED (cycle 7, judge item 4) --------------------------
+     CYCLE 6 PROMOTED THIS FROM AN OBSERVATION TO A PREDICTION AND GAVE IT NO ARM. styles.css
+     says the two widths "return the SAME PAIR TO FOUR DECIMALS ... That identity is the
+     prediction, and it is why the table now has two identical rows", and this file's own R6 note
+     says "AT BOTH WIDTHS to four decimals". Nothing asserted it: `gaugeRows` was pushed, decorated
+     and then read ONLY by the print loop, and each cell asserted only its own 1.15 floor. If the
+     390 ramp drifted from the 1280 one tomorrow, both cells would pass, the table would print four
+     different numbers, and nothing would fail -- which is the same "an instrument artefact nobody
+     could catch" shape this wave has now spent two cycles retracting.
+     THE CLAIM IS A PROPERTY OF THE DESIGN, not of the sampler: a strip presents the same colour
+     whatever its height, so shrinking it spends AREA and not VALUE. That is why the identity is
+     assertable at all -- and it is asserted per SCHEME, because the ramp's direction inverts
+     between them and only same-scheme cells are comparable.
+     TWO TOLERANCES, BOTH THE FILE'S OWN, AND NEITHER PICKED FOR THIS ARM. The step means are
+     means over large flat areas of a declared colour, so they take GROUND_EPS (0.002), this
+     file's epsilon for exactly that. The tightest PAIR is a ratio DERIVED from two such means, so
+     it takes PHASE_EPS_CR (0.010) -- the phase control's floor, for the same reason it was set
+     there: at the darkest steps a 0.002 move in either mean moves the ratio by about 0.008.
+     Measured on this tree the agreement is 0.00000 on both, in both schemes. */
+  {
+    const byTheme = {};
+    for (const g of gaugeRows) {
+      if (!g.gr || !g.gr.steps.length) continue;
+      (byTheme[g.theme] = byTheme[g.theme] || []).push(g);
+    }
+    for (const theme of Object.keys(byTheme)) {
+      const cells = byTheme[theme];
+      if (cells.length < 2) {
+        fails.push('[' + theme + '/cross-width] the fill strip was read at '
+          + cells.length + ' of ' + GAUGE_WIDTHS.length + ' widths ('
+          + cells.map((c) => c.w + 'px').join(', ') + '), so the identity styles.css publishes -- '
+          + 'the SAME pair at both widths -- is asserted by nothing in this scheme.');
+        continue;
+      }
+      const base = cells[0];
+      for (const c of cells.slice(1)) {
+        const diverged = [];
+        for (const s of base.gr.steps) {
+          const o = c.gr.steps.find((x) => x.lv === s.lv);
+          if (!o) { diverged.push('--lv ' + s.lv + ' is absent at ' + c.w + 'px'); continue; }
+          if (Math.abs(o.y - s.y) > GROUND_EPS) {
+            diverged.push('--lv ' + s.lv + ' reads ' + s.y.toFixed(5) + ' at ' + base.w
+              + 'px and ' + o.y.toFixed(5) + ' at ' + c.w + 'px (delta '
+              + Math.abs(o.y - s.y).toFixed(5) + ', floor ' + GROUND_EPS + ')');
+          }
+        }
+        for (const s of c.gr.steps) {
+          if (!base.gr.steps.find((x) => x.lv === s.lv)) {
+            diverged.push('--lv ' + s.lv + ' is present at ' + c.w + 'px and absent at '
+              + base.w + 'px');
+          }
+        }
+        const p0 = base.gr.worst, p1 = c.gr.worst;
+        const dPair = (p0 && p1) ? Math.abs(p0.cr - p1.cr) : null;
+        if (dPair === null) {
+          diverged.push('one of the two widths reported no adjacent pair at all');
+        } else if (dPair > PHASE_EPS_CR) {
+          diverged.push('the tightest adjacent pair is ' + p0.cr.toFixed(3) + ':1 (--lv ' + p0.a
+            + '/' + p0.b + ') at ' + base.w + 'px and ' + p1.cr.toFixed(3) + ':1 (--lv ' + p1.a
+            + '/' + p1.b + ') at ' + c.w + 'px (delta ' + dPair.toFixed(4) + ', floor '
+            + PHASE_EPS_CR + ')');
+        }
+        if (diverged.length) {
+          fails.push('[' + theme + '/cross-width] THE TWO WIDTHS DO NOT RETURN THE SAME RAMP: '
+            + diverged.join('; ') + '. styles.css publishes that identity as the DESIGN\'S OWN '
+            + 'PREDICTION -- the grade is carried in the fill\'s opacity, so a strip presents the '
+            + 'same colour whatever its height and shrinking it spends AREA and not VALUE -- and '
+            + 'prints two identical rows on the strength of it. Either the phone\'s ramp is no '
+            + 'longer the desktop\'s, or the sampler has started reading something other than the '
+            + 'strip; both were the finding once, and the last time this pair disagreed the cause '
+            + 'was the box and not the design.');
+        }
+      }
+    }
+  }
 
   console.log('=== SCOREBOARD SALIENCE -- painted ink per tile (mean |Y - Y(--card)|, hue-blind) ===');
   console.log(L('theme', 6) + L('room', 27) + L('state', 13) + R('SOLID', 9) + R('revisit', 9) + R('left', 9) + R('S:R', 9));
@@ -1841,8 +2324,10 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
         + (g.groundGapP === null || g.groundGapP === undefined ? '-' : g.groundGapP.toFixed(5))
         + ' -> PRICED ON ' + g.lever + ', catching a veil down to alpha '
         + (g.veilAlpha === null ? 'NONE' : g.veilAlpha.toFixed(3))
-        + '; the shot-time read (chain opacity/filter/backdrop-filter/blend, plus what is in '
-        + 'front of the gauge) catches every alpha, in both schemes');
+        + '; the shot-time read is scheme-independent and has no alpha threshold, and what it '
+        + 'covers is: any compositing property (opacity/filter/backdrop-filter/blend) on the '
+        + 'chain from the gauge to the root, and any painted out-of-flow box -- element or '
+        + 'PSEUDO, hit-testing or not -- covering the ONE point it samples');
     }
     if (g.gr && g.gr.steps.length) {
       console.log(W + L(g.theme, 6) + L('fill strip', 12) + R(g.gr.steps.length, 5)
@@ -1876,8 +2361,39 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
         + ' | shots taken through a veil: ' + g.mut.veiled);
       console.log(L('', 7) + L('', 6) + L('', 12) + '  a 10% full-viewport backdrop over the '
         + 'gauge -> ' + g.mut.G);
+      console.log(L('', 7) + L('', 6) + L('', 12) + '  the SAME backdrop with pointer-events:none '
+        + '(a pseudo of an ancestor, invisible to BOTH other reads) -> ' + g.mut.J);
+      console.log(L('', 7) + L('', 6) + L('', 12) + '  a pointer-events:none SIBLING overlay -> '
+        + g.mut.I + ' | painted by a GRADIENT instead -> ' + g.mut.Ib);
+      console.log(L('', 7) + L('', 6) + L('', 12) + '  a box painted only by its BORDER, which the sweep cannot see -> ' + g.mut.M);
+      console.log(L('', 7) + L('', 6) + L('', 12) + '  the ancestor chain, one property at a time '
+        + '-> ' + Object.keys(g.mut.chain || {}).map((k) => k + ' ' + g.mut.chain[k]).join(' | '));
       console.log(L('', 7) + L('', 6) + L('', 12) + '  --keel-shaky collapsed onto --st-warn -> '
         + 'missed vs shaky ' + g.mut.H + ', floor ' + KEEL_MARGIN + ' (caught)');
+    }
+  }
+
+  /* THE PUBLISHED IDENTITY, PRINTED AS A DELTA rather than as two rows a reader has to diff.
+     styles.css prints two identical rows on the strength of this number; it should be legible
+     without recomputing it from the table above. */
+  {
+    const byTheme = {};
+    for (const g of gaugeRows) {
+      if (g.gr && g.gr.worst) (byTheme[g.theme] = byTheme[g.theme] || []).push(g);
+    }
+    for (const theme of Object.keys(byTheme)) {
+      const cells = byTheme[theme];
+      if (cells.length < 2) continue;
+      const a = cells[0], b = cells[1];
+      const dY = Math.max(...a.gr.steps.map((s) => {
+        const o = b.gr.steps.find((x) => x.lv === s.lv);
+        return o ? Math.abs(o.y - s.y) : Infinity;
+      }));
+      console.log(L('', 7) + L(theme, 6) + L('cross-width', 12) + '  the ' + a.w + 'px and '
+        + b.w + 'px ramps: tightest pair ' + a.gr.worst.cr.toFixed(3) + ':1 vs '
+        + b.gr.worst.cr.toFixed(3) + ':1 (delta '
+        + Math.abs(a.gr.worst.cr - b.gr.worst.cr).toFixed(4) + ', floor ' + PHASE_EPS_CR
+        + '); worst step-mean delta ' + dY.toFixed(5) + ' (floor ' + GROUND_EPS + ')');
     }
   }
 
@@ -1899,7 +2415,10 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
     + ' capsule, AND that strip is sampled on a box built strictly interior at every sub-pixel'
     + ' phase (ceil/floor of the device edge, never a rounded fraction) with a same-shot control'
     + ' that re-reads it one device row further in, because the previous box was phase-dependent'
-    + ' and its drift was billed to a veil for a whole cycle; the untouched capsule\'s rule clears'
+    + ' and its drift was billed to a veil for a whole cycle; THE TWO WIDTHS MUST RETURN THE SAME'
+    + ' RAMP -- every step mean within ' + GROUND_EPS + ' and the tightest pair within '
+    + PHASE_EPS_CR + ' -- which is the identity styles.css publishes as the design\'s own'
+    + ' prediction and which, until this cycle, nothing asserted; the untouched capsule\'s rule clears'
     + ' the same floor; the LEGEND\'S FOUR SWATCHES'
     + ' clear it too against the panel\'s own measured ground -- the binding cell of the'
     + ' --gauge-rule solve, pressed by repainting that token at the panel\'s own colour -- and the'
@@ -1910,8 +2429,22 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
     + ' no backdrop-filter, no blend mode and nothing animating on that chain, AND the pixel at'
     + ' the track\'s centre is read twice over -- the hit stack, so nothing that is not the'
     + ' gauge\'s own may be in front of it, and a geometric sweep for painted out-of-flow boxes'
-    + ' covering that point, which is the half that reaches a pointer-events:none overlay. None of'
-    + ' that has an epsilon or a scheme. Beside it, as a backstop, a declared-colour ground'
+    + ' covering that point, which is the half that reaches a pointer-events:none overlay and,'
+    + ' since cycle 7, a PSEUDO-element of an ancestor -- the one shape that crossed both other'
+    + ' reads, and the shape the app\'s own faded boot splash has. WHAT THAT UNION COVERS IS'
+    + ' STATED RATHER THAN ROUNDED UP TO "every alpha, in both schemes": any compositing property'
+    + ' on the gauge\'s own ancestor chain at any alpha in either scheme, and any painted'
+    + ' out-of-flow box -- element or pseudo, hit-testing or not, background-color or'
+    + ' background-image or backdrop-filter -- that covers the ONE point it samples, plus anything'
+    + ' the hit test finds in front of the panel however it is painted. It does NOT read the other'
+    + ' pixels this check measures (the legend swatches, the depth pair, the neighbour bands), the'
+    + ' SWEEP does not reach paint arriving from a border or a box-shadow spread (only the hit'
+    + ' stack does, which is what MUTANT M presses and why that limit is measured rather than'
+    + ' asserted), and neither read reaches `.hm-alt`\'s own subtree, whose ::after IS the fill.'
+    + ' NINE PLANTED LANDINGS press it -- G a pseudo backdrop, J the same with pointer-events off,'
+    + ' I a pointer-events:none sibling, Ib the same painted by a gradient, M a box painted only'
+    + ' by its border, K an ancestor at opacity .91, and L the chain widening one property at a'
+    + ' time. Beside it, as a backstop, a declared-colour ground'
     + ' invariant: the trough must equal the colour the track itself declares within '
     + GROUND_EPS + ' in the SAME shot -- and that arm now PRICES ITSELF per cell on the LARGEST'
     + ' lever the panel offers rather than on the trough\'s, failing where no alpha could move any'

@@ -2783,6 +2783,15 @@ html[data-theme="dark"][data-view="home"] #home{--mut:#A7A29A}
    phone, and at 4px the ramp still clears the discriminability floor by 9.6% (light) and 10.1%
    (dark).
 
+   AND THAT PREDICTION IS NOW AN ASSERTION, WHICH FOR ONE CYCLE IT WAS NOT (cycle 7, judge item
+   4). Cycle 6 promoted the identity from a loose observation to a published claim and gave it no
+   arm: scoreboard_salience read the fill strip at both widths, printed both rows, and asserted
+   only each cell's own 1.15 floor. A drift between them would have passed both cells, printed
+   four different numbers under this paragraph, and failed nothing -- the same shape as the four
+   figures retracted below. The check now compares the two widths per scheme after its width loop:
+   every fill-step mean within 0.002 and the tightest adjacent pair within 0.010, both of them
+   epsilons the file already had reasons for. Measured, the two agree to 0.00000 on both.
+
    THE FOUR FIGURES THAT USED TO SIT HERE -- 1.261/1.266 at 1280 and 1.276/1.272 at 390 -- ARE
    RETRACTED, AND THE DIFFERENCE BETWEEN THEM WAS THE INSTRUMENT (cycle 6). That is not an
    inference: reverting the sampling box alone, with every other line of the check and every byte

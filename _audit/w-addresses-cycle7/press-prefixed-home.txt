@@ -1,0 +1,29 @@
+=== W-ADDRESSES cycle 7 / R19 -- the topic-prefixed home, pressed ===
+
+SHIPPED (the home test first):        home_claims exit 0
+   (#walk)                PASS
+   (#drill)               PASS
+   (#Walk)                PASS
+   (#Nonsense)            PASS
+   #HOME --               PASS
+   TOPIC-PREFIXED HOME    PASS
+
+PLANTED (the topic lookup first):     home_claims exit 1
+   (#walk)                PASS
+   (#drill)               PASS
+   (#Walk)                PASS
+   (#Nonsense)            PASS
+   #HOME --               PASS
+   TOPIC-PREFIXED HOME    FAIL
+     FAIL  [boot] a TOPIC-PREFIXED HOME (#authz/home -- the shape router.js's own replaceState used to write, still live in copied links) is lit in the RESUME target's room, not in the prefixed topic's and not in the boot topic's  -- the record resumes caching (data-storage), the prefix names authz (secu
+
+RESTORED: source identical to snapshot True; working-tree diff unchanged True ('15\t2\tsrc/scripts/boot.js' before, '15\t2\tsrc/scripts/boot.js' after); build exit 0; home_claims exit 0
+     21 planted mutants detected (a full claim over empty rails; a level claim over unequal rails; a thin rail named on the highest tier; a step position beside a 
+
+shipped -> planted, per cell:
+  (#walk)                PASS -> PASS
+  (#drill)               PASS -> PASS
+  (#Walk)                PASS -> PASS
+  (#Nonsense)            PASS -> PASS
+  #HOME --               PASS -> PASS
+  TOPIC-PREFIXED HOME    PASS -> FAIL

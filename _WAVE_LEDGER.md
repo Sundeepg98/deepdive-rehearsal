@@ -2975,7 +2975,7 @@ COLLAPSE planted beside the inversion.
 
 | where | retracted | restated |
 |---|---|---|
-| ledger cycle-4 R12 + `scoreboard_salience.cjs` head + `styles.css` | the 390 fill-strip drift is "a VEIL, not a design property" -- a least-squares fit of b = 0.9101*a with residual 0.0004, "which is a pure compositing veil" | **A SAMPLER ARTEFACT.** The box was built on FRACTIONAL device coordinates and resolved with `Math.round()`, so the strip's top edge landed on a different device row with the panel's fractional y -- 9 of 9 instrumented runs follow trackY. A blend toward the near-black trough fits the same five numbers identically, and the light twin falsifies the veil reading: its trough reads its declared colour to 0.00000 in the same shot, where alpha 0.910 would have moved it 0.0088 = 4.4x the epsilon. |
+| ledger cycle-4 R12 + `scoreboard_salience.cjs` head + `styles.css` **(and, cycle 7 found, NOT the `GROUND_EPS` block in the same file -- so this row's own enumeration was incomplete when written; see cycle 7 / R17)** | the 390 fill-strip drift is "a VEIL, not a design property" -- a least-squares fit of b = 0.9101*a with residual 0.0004, "which is a pure compositing veil" | **A SAMPLER ARTEFACT.** The box was built on FRACTIONAL device coordinates and resolved with `Math.round()`, so the strip's top edge landed on a different device row with the panel's fractional y -- 9 of 9 instrumented runs follow trackY. A blend toward the near-black trough fits the same five numbers identically, and the light twin falsifies the veil reading: its trough reads its declared colour to 0.00000 in the same shot, where alpha 0.910 would have moved it 0.0088 = 4.4x the epsilon. |
 | ledger cycle-4/5 + `scoreboard_salience.cjs` x2 | "GIVEN those, the worst adjacent pair is 1.272:1 and the floor leaves 10.6% of headroom on it" | On the committed tree the pair was BIMODAL -- 1.276:1 and 1.179:1, the second 2.5% over the floor. On the corrected sampler it is **1.260:1 light / 1.266:1 dark, 9.6% and 10.1% clear, at BOTH widths**. |
 | `styles.css` gauge-channel block + `scoreboard_salience.cjs` header | the four-cell table "1.261/1.266 at 1280 and 1.276/1.272 at 390 ... the four cells sit within 0.015 of each other" | **The four figures were the BOX's, not the design's**: reverting the sampling box alone, with the stylesheet untouched, reproduces all four to three decimals (press P3). Corrected the table reads the SAME PAIR at both widths -- 1.260 light, 1.266 dark, identical to four decimals -- which is what "the grade is carried in the opacity" actually predicts. |
 | `scoreboard_salience.cjs` fill-box comment | the capsule's rounded top corners are "a handful of pixels of a constant trough ... so they cannot manufacture or hide an ORDER" | True of the ORDER and false of the MARGIN, which is what the arm reports: at 390/light those pixels moved the tightest pair 0.0406 under a one-row inset. Found by this cycle's own new control, on this cycle's own first fix. |
@@ -3039,3 +3039,303 @@ one this cycle added failed on its own first build.
     two free push-triggered platform runs are what make that affordable -- they record their own
     sha and are durable. **Whichever convention the next cycle wants, it should be stated once
     rather than alternated.**
+
+---
+
+## CYCLE 7 -- 2026-08-04
+
+Three team-lead rulings on the cycle-6 escalation and five non-escalated judge items. The shape of
+this cycle is one sentence: **every finding is a guard that was DECLARED in a freeze and could not
+fail.** Freeze condition 1 names four parts; one of them had a plant. The cost table cited as "the
+in-gate record" could drift without a word. The cross-width identity was promoted from an
+observation to a published prediction and given no arm. And one retracted attribution was still
+standing, in the same file, in a paragraph the retraction ledger's own enumeration had missed.
+
+---
+
+### R17. THE DARK ATTRIBUTION RESTATED -- CLOSED, AND THE RETRACTION LEDGER'S COMPLETENESS CLAIM IS NOW TRUE
+
+Cycle 6 withdrew the "pure compositing veil at alpha ~0.91" reading of the 390/dark drift in three
+places. It did not withdraw it from a FOURTH, `scoreboard_salience.cjs`'s `GROUND_EPS` block
+(:388-395), which carried the identical clause in the identical words -- so the ledger's "every
+sentence this cycle took back" was false by one line, in the same file as two of the three it
+listed.
+
+**Adopted as ruled (option a): the observation and the arithmetic stay; the attribution goes.** The
+five figures moved between runs and that is a measurement. The CAUSE is not established in dark,
+and two things say so, neither of which existed when the sentence was written:
+
+* the arithmetic four lines below it shows the ground invariant is **INERT in dark at every alpha
+  above 0.474** -- so nothing in that cell could have confirmed or denied a veil either way;
+* the box that produced the dark baseline is the SAME fill box cycle 6 proved phase-dependent and
+  corner-contaminated, whose readings moved 0.0515 with the panel's fractional y **under no veil at
+  all**.
+
+A linear fit of five numbers cannot separate "composited at alpha" from "averaged with one more row
+of its own edge" -- which is exactly the ambiguity that took a cycle to settle in LIGHT, where the
+answer turned out to be the sampler. **What closes the class is the SHOT-TIME READ, not the
+attribution**, and the paragraph now says so and names the mutants that make that read a guard
+rather than a claim. The observation is kept, because it is the reason the shot-time read exists.
+
+The optional trackY discriminator was not built: the ruling made it optional and the apparatus
+stands on MUTANT G regardless -- and this cycle adds five more landings beside it.
+
+**The site is added to the retraction ledger's enumeration**, and cycle 6's own row is amended in
+place rather than silently corrected, so the incompleteness stays legible.
+
+---
+
+### R18. THE PSEUDO-ELEMENT VEIL -- CLOSED, AND IT IS THE INTERSECTION OF TWO DECLARED EXEMPTIONS
+
+**The hole was exactly where the two halves were supposed to overlap.** Cycle 6's own argument for
+carrying both reads names each half's exemption: the hit stack reaches a PSEUDO but skips
+`pointer-events:none`; the geometric sweep reaches `pointer-events:none` but enumerates only
+ELEMENTS -- and it skipped `n.contains(el)`, so an ancestor's pseudo was doubly invisible. The one
+shape carrying both properties therefore crossed both reads: **MUTANT G plus the
+`pointer-events:none` the app's own `#_bootsplash._bs-done` carries.** Measured on the cycle-6
+tree, at 10% over the gauge: `stack []`, `covers []`, shot reported clean.
+
+**The fix, as ruled.** The sweep reads `getComputedStyle(n, '::before')` and `'::after'` for every
+candidate, and the ancestor skip is lifted FOR THE PSEUDO READ ONLY. `.hm-alt`'s own subtree stays
+skipped in both reads -- the fill and the keel ARE `::after`/`::before` on its capsules, and a read
+that judged them would report the gauge as a veil over itself.
+
+**A pseudo-element has no `getBoundingClientRect`, so the box is DERIVED, and that derivation is
+the only interesting engineering in the item.** Chromium resolves a pseudo's `width`/`height` to
+the COMPUTED value (`auto`), not the used one, so the insets are the only reliable source: the
+containing block is the viewport for `fixed` and the padding box of the nearest
+positioned/transformed ancestor-or-self for `absolute` (the initial containing block when there is
+none), percentages resolve against it, and **each axis is resolved independently**. An axis the
+insets cannot place falls back to the originating element's own box rather than being dropped --
+because a dropped candidate is a candidate that cannot fail, which is this wave's entire subject.
+Measured on the shipped tree: exactly one pseudo has both inline insets `auto` (`.hm-tab::before`,
+at its static position, 22x2 at the tab), 34 painted out-of-flow pseudos in total, and **zero false
+positives in all four cells**. Cost: ~15-25ms per read, 3,222 pseudo styles over 1,611 elements.
+
+**MUTANT J is that plant, standing beside the others**, dark-scoped with light as its negative
+control exactly as G is. It is caught, and caught THROUGH THE COVERING-BOX BRANCH specifically --
+if the hit stack caught it, the plant would not be carrying `pointer-events:none` and the arm would
+be unpressed, so that is asserted rather than assumed.
+
+**AND R18 COST THE HIT STACK ITS ONLY CONTROL, WHICH IS SAID HERE RATHER THAN DISCOVERED IN CYCLE
+8.** Through cycle 6, press P1 -- delete the hit stack, watch G go undetected -- was the whole
+argument freeze condition 1 rested on. Now the sweep catches G too, so that deletion leaves G
+MIS-ATTRIBUTED rather than UNDETECTED: still red, but no longer evidence that the stack read
+reaches anything the sweep does not. **MUTANT M is the plant that restores the isolation**: a
+full-viewport fixed box painted ENTIRELY BY ITS BORDER. `painted()` tests background-color,
+background-image and backdrop-filter -- a declared list -- so the sweep cannot see it by
+construction, and the hit test, which knows nothing about how a box is painted, catches it. It is
+simultaneously the stack read's negative control and the honest measurement of the sweep's own
+limit.
+
+**THE "CATCHES EVERY ALPHA, IN BOTH SCHEMES" CONTRACT IS RETRACTED IN ALL THREE SITES** -- the
+check's PASS line, the printed per-cell ground line, and `check_all.py`'s registry entry -- and
+replaced with what the union actually covers:
+
+> any compositing property on the gauge's own ancestor chain at any alpha in either scheme, plus
+> any painted out-of-flow box -- element or pseudo, hit-testing or not, background-color or
+> background-image or backdrop-filter -- covering the ONE point it samples, plus whatever the hit
+> test finds in front of the panel however painted. It does NOT read the other pixels this check
+> measures (the legend swatches, the depth pair, the neighbour bands); the SWEEP does not reach
+> paint arriving from a border or a box-shadow spread (only the hit stack does); and neither read
+> judges `.hm-alt`'s own subtree.
+
+---
+
+### R19. TOPIC-PREFIXED HOME -- CLOSED, AND THE ROUTER-SIDE REPAIR IS LOGGED AS A W2 CANDIDATE
+
+**The shape is the app's own.** `router.js`'s `setTopic()` comment records that a topic switch on
+the home "turned the hash into `#saga/home` via replaceState"; `copy-link.js` copies
+`location.href` verbatim. Those URLs were written by the app, were copied, and outlive the
+`TOPICLESS[cur.view]` guard that stopped new ones being written. The app RESOLVES them to the home
+-- `parseHash()` strips a known topic prefix and takes the view from what is left -- so the door
+must answer the HOME's question on them, and until this cycle it answered the prefix's: the whole
+document lit in the room of a topic the app is not showing, on the one surface whose entire
+question is which room you are returning to.
+
+**Adopted verbatim:**
+
+```js
+_dg=(!_raw||_seg.toLowerCase()==='home'||(_raw.split('/')[1]||'').toLowerCase()==='home')
+    ?_door:(_hr||_rm(window.__doorBoot));
+```
+
+**The matrix's FIFTH cell is `#authz/home`**, seeded so the resume room (`data-storage`), the boot
+room (`architecture-apis`) and the prefixed topic's room (`security-tenancy`) are three distinct
+strings -- asserted before the cell runs, with an ABORT naming the collision if the registry ever
+makes two of them equal, and a fallback that picks any topic outside both rather than skipping.
+
+**One thing changed that the ruling did not name, and it is a deliberate refusal.** The readiness
+predicate branched on `hash === '#home'`; teaching it to recognise a topic-prefixed home would have
+put boot.js's own derivation inside the test that judges boot.js. It waits for EITHER signal
+instead -- the home stamps `data-view`, a topic route mounts a pane, no route produces both -- and
+the ORACLE stays what it was: the room the app says it is showing.
+
+**PRESSED against the pre-fix classifier** (receipt
+`_audit/w-addresses-cycle7/press-prefixed-home.txt`; the plant is the cycle-6 line restored
+verbatim, built, and run through the real check):
+
+| cell | shipped | pre-fix classifier |
+|---|---|---|
+| `#walk` `#drill` `#Walk` `#Nonsense` `#HOME` | PASS | PASS -- unchanged, which is half the point |
+| **`#authz/home`** | PASS | **FAIL** -- the record resumes caching (data-storage); the document wore security-tenancy |
+
+Re-ordering a classifier can break the cells it is not aimed at, so every cell in the matrix is
+driven under the plant, not only the new one.
+
+**The deeper repair is NOTED AND NOT DONE**: stripping a topic prefix off a TOPICLESS view at
+`replaceState`, router-side, is a **W2 candidate**. It is out of this wave's remit, and it would
+not retire this cell in any case -- a stale link in someone's notes outlives any router fix.
+
+---
+
+### JUDGE ITEM 1 -- A FOUR-PART GUARD WITH ONE PLANT: CLOSED, AND IT IS NOW FIVE PARTS WITH NINE LANDINGS
+
+**The judges' measurement stands and it is the wave's own defect class.** Freeze condition 1
+declares a four-part veil guard. Three of the four could be deleted alone with the gate GREEN and
+every planted mutant still caught, because MUTANT G is a `body::after` with default pointer-events
+and is therefore caught by the HIT STACK -- so press P1, the argument the freeze rests on, proves
+the STACK and says nothing about the other three. The sweep, which the ledger argued hardest for
+("a second finding rather than a refinement", "neither covers the class alone"), was asserted and
+never pressed.
+
+**Five plants added, on MUTANT G's own block shape** -- liveness read off the DOM first with a
+CANNOT-LAND branch, then `SHOT_STATE` into a sink, then the finding required to name the RIGHT
+branch:
+
+| plant | what it presses | lands |
+|---|---|---|
+| **I** a `pointer-events:none` fixed sibling at 10% | the sweep's ELEMENT half | both schemes, four cells |
+| **Ib** the same box painted by a GRADIENT over `background-color:transparent` | `painted()`'s background-image branch (judge item 2) | both schemes, four cells |
+| **J** MUTANT G plus `pointer-events:none` | the sweep's PSEUDO half (R18) | dark, light as control |
+| **M** a fixed box painted only by its BORDER | the HIT STACK alone | both schemes, four cells |
+| **K** an ancestor at `opacity:.91` | the chain composite read | both schemes, four cells |
+| **L1/L2/L3** an ancestor at `filter` / `backdrop-filter` / `mix-blend-mode` | cycle 6's widening, ONE PROPERTY AT A TIME | both schemes, four cells |
+
+I lands in both schemes, so it needs no scheme-scoped negative control -- only the CANNOT-LAND
+branch. (Judge item 3 proposed mirroring G's dark-only scoping; judge item 1, which planted and
+measured it, found it caught in all four cells. The later, measured form is what shipped, and G
+still carries a did-not-land control for this file.) L is pressed one property at a time so that
+dropping ANY ONE line of the widening reds, not only dropping all three.
+
+**A defect found while building it, and it is the same defect one level up.** The first draft read
+each chain plant's liveness out of the chain read's own report -- so neutering the chain read,
+which is the very deletion the mutant exists to answer, made every plant report CANNOT LAND instead
+of UNDETECTED: **a broken guard would have accused the plant.** It reads the computed style off
+`#home` directly now, and confirms `#home` really is an ancestor of the gauge.
+
+**THE ACCEPTANCE TEST: EACH PART DELETED ALONE MUST GO RED.** Receipt
+`_audit/w-addresses-cycle7/press-veil-parts.txt`.
+
+| press | deleted | result |
+|---|---|---|
+| P4a | the chain composite read (`opa` always empty) | **exit 1** -- K x4, L1 x4, L2 x4, L3 x4 UNDETECTED |
+| P4b | cycle 6's filter / backdrop-filter / blend widening | **exit 1** -- L1 x4, L2 x4, L3 x4 UNDETECTED (K still caught) |
+| P4c | the hit stack | **exit 1** -- M x4 UNDETECTED |
+| P4d | the ELEMENT half of the sweep | **exit 1** -- I x4, Ib x4 UNDETECTED |
+| P4e | the PSEUDO half of the sweep | **exit 1** -- J x2 UNDETECTED |
+| P4f | `painted()`'s background-image branch | **exit 1** -- Ib x4 UNDETECTED (I still caught) |
+
+Restored byte-identical, working-tree diff unchanged, check green.
+
+---
+
+### JUDGE ITEM 2 -- A GRADIENT OVERLAY WAS INVISIBLE TO THE PAINT TEST: CLOSED
+
+`painted()` was `cs.backgroundColor` alone, so a fixed box at `background-color:transparent;
+background-image:linear-gradient(rgba(0,0,0,.10),rgba(0,0,0,.10))` over the track returned CLEAN
+while the identical box with a solid rgba background was VEILED. The app carries three rules
+combining an out-of-flow position, a gradient and `pointer-events:none`, so the shape is not
+invented. `painted()` now returns the REASON rather than a boolean -- background-color, else
+background-image, else backdrop-filter -- and the finding prints which one, so a red says what
+painted the intruder. MUTANT Ib is the plant and P4f is its control.
+
+---
+
+### JUDGE ITEM 3 -- NO PLANT IN THE POINTER-EVENTS:NONE CLASS: CLOSED BY MUTANT I
+
+The named fix and judge item 1's are the same instrument, and the deviation is recorded above: I is
+NOT dark-scoped, because unlike G it lands in both schemes and a plant that lands everywhere is
+pressed everywhere. It is required to be caught AND to be named through the `covers` branch,
+mirroring the `named` attribution guard G already uses for the stack branch.
+
+---
+
+### JUDGE ITEM 4 -- A PUBLISHED PREDICTION WITH NO ARM: CLOSED
+
+Cycle 6 promoted the cross-width identity from a loose observation to a claim in two shipped files
+-- `styles.css` ("the two widths return the SAME PAIR TO FOUR DECIMALS ... That identity is the
+prediction, and it is why the table now has two identical rows") and `scoreboard_salience.cjs`
+("AT BOTH WIDTHS to four decimals"). Verified as the judges reported it: `gaugeRows` was pushed at
+:1315, decorated at :1779-1780 and read ONLY by the print loop; there is no `fails.push` after the
+print loop begins, and each cell asserted only its own 1.15 floor. A 390 ramp that drifted from the
+1280 one would have passed both cells, printed four different numbers under that paragraph, and
+failed nothing.
+
+**The arm, after the width loop, per SCHEME** (the ramp's direction inverts between schemes, so
+only same-scheme cells are comparable): every fill-step mean within `GROUND_EPS` (0.002) and the
+tightest adjacent pair within `PHASE_EPS_CR` (0.010), with the failure text naming which `--lv`
+step diverged and by how much. **Neither tolerance is chosen for this arm**: the step means are
+means over large flat areas of a declared colour, which is what GROUND_EPS is for; the pair is a
+ratio DERIVED from two such means, and at the darkest steps a 0.002 move in either mean moves the
+ratio by about 0.008, which is why the phase control's floor is the right one here too.
+
+Measured, and printed as a delta rather than left for a reader to diff two rows:
+
+```
+light cross-width   the 1280px and 390px ramps: tightest pair 1.260:1 vs 1.260:1 (delta 0.0000,
+                    floor 0.01); worst step-mean delta 0.00000 (floor 0.002)
+dark  cross-width   the 1280px and 390px ramps: tightest pair 1.266:1 vs 1.266:1 (delta 0.0000,
+                    floor 0.01); worst step-mean delta 0.00000 (floor 0.002)
+```
+
+The sentences in `styles.css` and in the docstring are KEPT rather than downgraded -- the
+alternative the judges offered -- because a prediction with an arm is worth more than an
+observation with a date, and both now name the arm that carries them.
+
+---
+
+### JUDGE ITEM 5 -- THE COST TABLE COULD DRIFT WITHOUT A WORD: CLOSED, AND THE GATE IS THE GATE
+
+`test/gate_cost.json` was correct on the day cycle 6 regenerated it and guarded by nothing, so the
+exact defect -- `craft_hygiene` and `home_fold` absent from it for six cycles -- was one new check
+away from recurring. The impact is lane packing and never a verdict (a missing check sorts FIRST,
+the safe direction), which is precisely why it stayed invisible, and it is not a reason to leave a
+CITED record unable to fail.
+
+**The assertion is at LOAD in `check_all.py`, right after `ORDER` is built**, and it fails BOTH
+ways: a registered check missing from the table, and a table entry no check registers. It is not a
+79th check -- a new check is added by editing that file, so the arm belongs where the edit lands,
+it fires before any of the 78 run, and the gate's own count is unchanged.
+
+**PRESSED, both directions, on the real tree:**
+
+| plant | verdict |
+|---|---|
+| `craft_hygiene` removed from the table | **exit 1** -- "holds 77 entries against 78 registered checks", MISSING: craft_hygiene |
+| a `ghost_check` entry nothing registers | **exit 1** -- "holds 79 entries against 78 registered checks", STALE: ghost_check |
+
+Restored byte-identical; `--dry-run` exit 0.
+
+**AND THE TABLE ITSELF IS REGENERATED UNDER ITS OWN STATED RULE**, because this cycle changed two
+of the checks in it: max of **two warm `--profile` runs of this tree**, 763.6s and 773.4s wall,
+both `GATE: PASS`. `scoreboard_salience` 101.873 -> **106.984**, `home_claims` 62.096 -> **63.585**,
+table total 777.0 -> 782.7, entry count unchanged at 78. The registry entry's quoted standalone
+figure moves with it: **111.2s**, max of two warm standalone runs, against cycle 6's 102.7s -- the
+six added veil landings and the cross-width block are what the 8.5s buys.
+
+---
+
+## CYCLE 7 -- PRESS SUMMARY
+
+| receipt | presses | landed |
+|---|---|---|
+| `press-veil-parts.txt` (R18, judge items 1-3) | 6 deletions x 4 cells | every part of the veil guard deleted ALONE goes **exit 1**, each with the plant that isolates it |
+| `press-prefixed-home.txt` (R19) | 6 cells x 2 builds | `#authz/home` PASS -> **FAIL**; the other five unchanged |
+| the cost-table gate (judge item 5) | 2 plants | missing entry -> **exit 1**; stale entry -> **exit 1** |
+
+**ONE PRESS CAME BACK OTHER THAN EXPECTED, AND IT CHANGED A PLANT.** P4c was written expecting
+MUTANT G to go undetected, which is what it did through cycle 6. It did not: R18's pseudo read
+catches G, so deleting the hit stack now leaves G MIS-ATTRIBUTED. The press was correct and the
+FILE was short a plant -- the hit stack had lost its isolation to this cycle's own fix. MUTANT M
+was written for that gap, and P4c is now its control.

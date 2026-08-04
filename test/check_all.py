@@ -785,13 +785,24 @@ BROWSER_CHECKS = [('render', 'test/render.cjs'), ('entity_leak', 'test/entity_le
                      # standing off the home's ground. The two keel marks are separated by a
                      # 1.15 MARGIN and not by a bare ordering, because a bare `>=` can only fail
                      # on an inversion and a COLLAPSE of the two severities onto one mark passed a
-                     # whole cell clean. EIGHT planted mutants, each a shipped or reachable defect
-                     # put back: the old keel wiring, the rule back to --bd, the waterline removed,
-                     # two fill steps flattened, the panel painted at its ground, --gauge-rule
-                     # painted at the panel, a 10% full-viewport backdrop over the gauge (dark
-                     # only, where the arithmetic guards are weakest -- and a negative control in
-                     # light, where the plant cannot apply and the cell must report clean), and
-                     # --keel-shaky collapsed onto --st-warn.
+                     # whole cell clean. AND THE TWO WIDTHS MUST RETURN THE SAME RAMP -- every
+                     # fill-step mean within 0.002, the tightest adjacent pair within 0.010, per
+                     # scheme. That identity is what styles.css publishes as the design's own
+                     # prediction ("the grade is in the OPACITY, so a strip presents the same
+                     # colour whatever its height"); for one cycle it was published and asserted
+                     # by nothing, and a drift would have passed both cells while printing four
+                     # different numbers.
+                     # THIRTEEN planted mutants, each a shipped or reachable defect put back: the
+                     # old keel wiring, the rule back to --bd, the waterline removed, two fill
+                     # steps flattened, the panel painted at its ground, --gauge-rule painted at
+                     # the panel, --keel-shaky collapsed onto --st-warn, and SEVEN VEILS -- a 10%
+                     # full-viewport pseudo backdrop (dark only, where the arithmetic guards are
+                     # weakest, with light as the negative control), the same backdrop with
+                     # pointer-events:none, a pointer-events:none sibling overlay, the same
+                     # overlay painted by a gradient, a box painted only by its border, an
+                     # ancestor at opacity .91, and the chain widening pressed one property at a
+                     # time. Before cycle 7 the four-part veil guard had ONE plant that could fail
+                     # it: three of its four arms could be deleted with the gate still green.
                      # THE FILL STRIP IS SAMPLED ON A BOX THAT IS THE SAME BOX AT EVERY SUB-PIXEL
                      # PHASE -- ceil/floor of the device edge rather than a rounded fraction, and
                      # inset past the capsule's corner arc -- with a same-shot control that
@@ -800,31 +811,48 @@ BROWSER_CHECKS = [('render', 'test/render.cjs'), ('entity_leak', 'test/entity_le
                      # compositing veil, and reverting the box alone reproduces the whole
                      # published four-cell table.
                      # EVERY READING IS GATED ON THE SHOT BEING UNVEILED, which is a CONTRACT and
-                     # not current behaviour -- a veil at alpha 0.91 once crossed a whole dark cell
-                     # at exit 0: (1) every element from the gauge to the document root at computed
-                     # opacity 1 with no filter, backdrop-filter or blend mode and nothing running
-                     # on that chain, AND nothing that is not the gauge's own in front of it at
-                     # the track's centre -- read as a hit stack (which reaches a pseudo-element
-                     # backdrop) and as a geometric sweep for painted out-of-flow boxes (which
-                     # reaches a pointer-events:none overlay) -- all in the same evaluate as the
-                     # shot and again after it, with no epsilon and no scheme; (2) the trough must
+                     # not current behaviour -- a reading in a dark cell once moved between runs
+                     # and cycle 5's coverage could not say why: (1) every element from the gauge
+                     # to the document root at computed opacity 1 with no filter, backdrop-filter
+                     # or blend mode and nothing running on that chain, AND nothing that is not
+                     # the gauge's own in front of it at the track's centre -- read as a hit stack
+                     # (authoritative about paint ORDER however a box is painted) and as a
+                     # geometric sweep for painted out-of-flow boxes, ELEMENT AND PSEUDO, which
+                     # reaches a pointer-events:none overlay the hit test skips -- all in the same
+                     # evaluate as the shot and again after it, with no epsilon and no scheme.
+                     # WHAT THAT UNION COVERS IS NOW STATED RATHER THAN ROUNDED UP TO "every
+                     # alpha, in both schemes": any compositing property on the gauge's own
+                     # ancestor chain at any alpha in either scheme, plus any painted out-of-flow
+                     # box -- element or pseudo, hit-testing or not, background-color or
+                     # background-image or backdrop-filter -- covering the ONE point it samples,
+                     # plus whatever the hit test finds in front of the panel however painted. It
+                     # does NOT read the other pixels this check measures (the legend swatches,
+                     # the depth pair, the neighbour bands), the SWEEP does not reach paint from a
+                     # border or a box-shadow spread (only the hit stack does, which is what the
+                     # border mutant presses), and neither read judges .hm-alt's own subtree,
+                     # whose ::after IS the fill; (2) the trough must
                      # equal the colour the track declares within 0.002 in the SAME shot, and that
                      # arm PRICES ITSELF on the LARGEST declared-colour lever the panel offers
                      # (--home-surface, 4.3x the trough's in dark), failing where no alpha could
                      # move any of them past the epsilon; (3) the COLD first reading -- the only
                      # one a CI runner ever takes -- must reproduce a warm re-read later in the
                      # same run.
-                     # COST: 102.7s standalone on win32 (`time node
-                     # test/scoreboard_salience.cjs`), against cycle 5's 90.5s -- the backdrop
-                     # mutant, the collapse mutant and the phase control are what the 12s buys.
+                     # COST: 111.2s standalone on win32 (max of two warm `node
+                     # test/scoreboard_salience.cjs` runs), against cycle 6's 102.7s and cycle 5's
+                     # 90.5s -- the six added veil landings and the cross-width block are what the
+                     # 8.5s buys.
                      # THE IN-GATE FIGURE IS test/gate_cost.json, which is a committed per-check
                      # cost table derived from a --profile run and is what run_fast packs its lanes
-                     # from: 101.873s there, regenerated in cycle 6 as max(two warm --profile runs)
-                     # of this tree. It had stood at 44.775 -- less than half the check's cost
-                     # after cycles 4 and 5 doubled it -- and craft_hygiene and home_fold were
-                     # MISSING from it entirely. Cycle 5's entry said "the gate prints no per-check
-                     # timing, so no in-gate figure is quoted here", which is true of stdout and
-                     # was not true of the repository.
+                     # from: 106.984s there, regenerated in cycle 7 as max(two warm --profile runs)
+                     # of this tree (763.6s and 773.4s wall, both GATE: PASS). It had stood at
+                     # 44.775 -- less than half the check's cost after cycles 4 and 5 doubled it --
+                     # and craft_hygiene and home_fold were MISSING from it entirely. Cycle 5's
+                     # entry said "the gate prints no per-check timing, so no in-gate figure is
+                     # quoted here", which is true of stdout and was not true of the repository.
+                     # THAT TABLE NOW GATES ITSELF against the registry at load (see COST, above
+                     # ORDER): cycle 6 regenerated the data and installed no arm, so the exact
+                     # defect -- a registered check absent from the record that claims to describe
+                     # every registered check -- was one new check away from recurring.
                      ('scoreboard_salience', 'test/scoreboard_salience.cjs'),
                      # scoreboard_resume: the tiles (Solid/Revisit/Left) are THIS-RUN counters -- the
                      # debrief's own pct (got / results.length) and the round-end announcement both read
@@ -1222,13 +1250,20 @@ BROWSER_CHECKS = [('render', 'test/render.cjs'), ('entity_leak', 'test/entity_le
                      # watched from document_start by a MutationObserver AND by a per-frame
                      # sampler, and judged on the UNION -- a WRONG stamp is a value in the log, a
                      # MISSING one is a gap in the paint, and each recorder is blind to the other.
-                     # The route x record matrix drives FOUR route shapes on a seeded record, not
+                     # The route x record matrix drives SIX route shapes on a seeded record, not
                      # one: a bare view (#walk, #drill), a MIXED-CASE view (#Walk) and a MALFORMED
                      # hash (#Nonsense) must all be lit in the room of the topic the app actually
                      # shows, while #home and #HOME take the resume target's room -- because the
                      # router's topic lookup is case-SENSITIVE and its view lookup is not, and a
                      # classifier that reads a parsed topic id instead of the hash's emptiness
-                     # gets the last three wrong (cycle 6, R16). Plus the rail descriptions: every
+                     # gets the last three wrong (cycle 6, R16). The sixth is a TOPIC-PREFIXED
+                     # HOME (#<topic>/home): the app resolves it to the home, so it takes the
+                     # RESUME target's room and not the prefix's -- and it is not a hypothetical
+                     # shape, router.js's own setTopic() comment records that a topic switch on
+                     # the home used to rewrite the hash that way via replaceState and
+                     # copy-link.js copies location.href verbatim, so those URLs are in the wild
+                     # (cycle 7, R19). Its three rooms -- resume, boot, prefix -- are asserted
+                     # DISTINCT before the cell runs, or it aborts. Plus the rail descriptions: every
                      # rail the gauge renders, selected by POSITION rather than by the
                      # aria-describedby tie, its description EQUAL character for character to an
                      # oracle formatted from the registry, one clause per rendered segment.
@@ -1279,6 +1314,53 @@ BROWSER_CHECKS = [('render', 'test/render.cjs'), ('entity_leak', 'test/entity_le
 
 ORDER = [n for n, _ in NATIVE_CHECKS] + [n for n, _ in BROWSER_CHECKS]
 BROWSER_SET = set(n for n, _ in BROWSER_CHECKS)
+
+# ===== THE COST TABLE IS A REGISTRY, AND IT GATES ITSELF =======================================
+# gate_cost.json is a COMMITTED record of every registered check's measured cost, and until cycle 7
+# nothing compared it against the registry it claims to describe. It drifted exactly as an
+# unguarded record does: craft_hygiene and home_fold were absent from it FROM THE CYCLE THEY WERE
+# ADDED, for six cycles, and scoreboard_salience sat at 44.775 for a check that measures 101.9.
+# Cycle 6 regenerated the data and installed no arm, so the same defect was one new check away
+# from recurring -- which is the shape this wave exists to stop.
+# WHY IT WAS INVISIBLE, AND WHY THAT IS NOT A REASON TO LEAVE IT: the only consumer is run_fast's
+# `cost.get(n, 1e9)`, and a missing check therefore sorts FIRST, which is the SAFE direction. The
+# cost of the defect is lane packing and never a verdict -- so nothing could ever go red over it,
+# and a record whose errors are all silent is a record that will be wrong the next time somebody
+# reads it for a number. The registry entry for scoreboard_salience now cites this file as "the
+# in-gate record"; a cited record has to be able to fail.
+# IT IS A LOAD-TIME ABORT RATHER THAN A CHECK. A new registered check is added by editing THIS
+# file, so the assertion belongs where the edit lands and must fire before any of the 78 run --
+# on --dry-run, --only, --changed and the serial capture alike. It also keeps the gate's own count
+# at 78: this is the gate auditing its own table, not a 79th check.
+COST = {}
+if os.path.exists(COST_FILE):
+    try:
+        with open(COST_FILE, encoding='utf-8') as _fh:
+            COST = json.load(_fh)
+    except Exception as _e:            # a corrupt table is a missing table, and it must say so
+        print('  gate_cost.json could not be parsed (%s) -- treating it as empty.' % _e)
+        COST = {}
+_cost_missing = [n for n in ORDER if n not in COST]
+_cost_extra = [n for n in COST if n not in set(ORDER)]
+if _cost_missing or _cost_extra:
+    print('=' * 64)
+    print('  THE GATE COST TABLE DOES NOT DESCRIBE THE GATE.')
+    print('  %s holds %d entries against %d registered checks.'
+          % (COST_FILE, len(COST), len(ORDER)))
+    if _cost_missing:
+        print('  MISSING (these sort FIRST under --fast, so the packing is a guess):')
+        for _n in _cost_missing:
+            print('    - %s' % _n)
+    if _cost_extra:
+        print('  STALE (no such check is registered):')
+        for _n in _cost_extra:
+            print('    - %s' % _n)
+    print('  Regenerate it: run `python3 test/check_all.py --profile` TWICE warm (the first run')
+    print('  of a fresh profile is cold and is not the packing cost), then write, per check,')
+    print('  max(run2, run3) from test/_profile.json into %s.' % COST_FILE)
+    print('  That rule is _profile_report.py\'s, not this line\'s -- see its ranked table.')
+    print('=' * 64)
+    sys.exit(1)
 results = {}
 timings = {}
 _lock = threading.Lock()
@@ -1380,14 +1462,10 @@ def run_fast(jobs, sel):
     # pool ends up with one straggler and three idle workers. Order comes from the profile, and a
     # check the profile has never seen sorts first rather than last -- a new check is more likely
     # to be expensive than free, and guessing "free" is the guess that costs a whole lane.
-    cost = {}
-    if os.path.exists(COST_FILE):
-        try:
-            with open(COST_FILE, encoding='utf-8') as fh:
-                cost = json.load(fh)
-        except Exception:
-            cost = {}
-    pool.sort(key=lambda n: -cost.get(n, 1e9))
+    # The table is loaded and RECONCILED AGAINST THE REGISTRY at import (see COST): by the time a
+    # lane is packed, "missing" is not a state this file can be in. The 1e9 default is kept as the
+    # belt for a --only/--changed selection that somehow outruns that reconciliation.
+    pool.sort(key=lambda n: -COST.get(n, 1e9))
     with ThreadPoolExecutor(max_workers=jobs) as ex:
         list(ex.map(job, pool))
     for n in tail:                         # one at a time, on a quiet box

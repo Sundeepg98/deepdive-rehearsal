@@ -215,7 +215,8 @@ has not yet fixed -- each with a REASON, the FILE it is excused in, HOW MANY sit
 there are, and the list of RULES it is excused from. Three defects in how that was
 keyed and read, all three pressed and all three fixed here:
 
-  * THE KEY WAS A 120-CHARACTER PREFIX. 20 of 77 entries were longer than that, so
+  * THE KEY WAS A 120-CHARACTER PREFIX. 20 of 77 entries at the time (cycle 1; the
+    allowlist holds 237 today) were longer than that, so
     1,668 characters of corpus prose sat past the guarded key and were outside the
     ratchet entirely: a NEW `ellipsis` defect planted 251 characters into an
     allowlisted span left the check PASS, and the staleness detector did not fire

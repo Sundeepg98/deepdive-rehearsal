@@ -248,8 +248,14 @@ const GRADE_STEP_MIN = 1.15;
    cells reddened only through rasterisation noise on the neighbour ground. A build in which the
    worst grade and the middle grade are the same mark passed a whole cell clean, and none of the
    six planted mutants could see it: every one of them restores the INVERTED wiring, which is the
-   other failure. Nor could a reader: the legend carries a single keel swatch (`.hm-k.flag`, wired
-   to `--keel-missed` alone).
+   other failure. Nor could a reader, and THAT half is no longer true of the shipped build: through
+   cycle 8 the legend carried a single keel swatch (`.hm-k.flag`, wired to `--keel-missed` alone),
+   so a collapse was invisible to the eye AND the two severities the gauge painted had one name
+   between them. Cycle 9 split it into `.hm-k.flag` / `.hm-k.flag-s`, one per keel token, and
+   test/home_claims.cjs asserts the pairing from the resolved colours -- so a reader now sees both
+   marks named, and a collapse is two swatches printing the same colour. The argument this
+   paragraph makes for MUTANT H is unchanged: the ARM is still the only thing that can fail on a
+   collapse, because a legend that names two things does not measure the distance between them.
    The fill strip one arm below carries a 1.15 discriminability floor on every ADJACENT fill step.
    These two marks are adjacent GRADES and carried none. It is the same floor for the same reason
    -- two marks a reader cannot tell apart do not encode an ordering, whatever their absolute
@@ -685,10 +691,14 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
       const htmlBg = getComputedStyle(document.documentElement).backgroundColor;
       const bodyBg = getComputedStyle(document.body).backgroundColor;
       const opaque = (c) => c && !/rgba\(0, 0, 0, 0\)|transparent/.test(c);
-      /* THE LEGEND'S FOUR SWATCHES (cycle 5, judge item 8). styles.css solves --gauge-rule
-         against TWO grounds and calls dark-on-panel (3.49:1, 16% clear of the floor) the BINDING
-         cell -- and attributed the rasterised assertion to this file, which contained no `.hm-k`
-         selector at all. These are the boxes that make that attribution true. */
+      /* THE LEGEND'S SWATCHES, ENUMERATED RATHER THAN COUNTED (cycle 5, judge item 8; widened
+         cycle 9). styles.css solves --gauge-rule against TWO grounds and calls dark-on-panel
+         (3.49:1, 16% clear of the floor) the BINDING cell -- and attributed the rasterised
+         assertion to this file, which contained no `.hm-k` selector at all. These are the boxes
+         that make that attribution true. `querySelectorAll` and not a fixed list of four: the key
+         grew a fifth swatch in cycle 9 (one per keel token) and every arm below -- the floor, the
+         ground cross-check, the binding cell -- picked it up without being told, which is the
+         property a hand-listed set would not have had. */
       const keys = [...document.querySelectorAll('.hm-alt .hm-key .hm-k')].map((k) => {
         const i = k.querySelector('i');
         return i ? { cls: (k.className || '').replace(/\s+/g, '.'), ...rel(i) } : null;
@@ -873,6 +883,32 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
           if (bi && bi !== 'none') return 'background-image ' + bi.slice(0, 44);
           const bf = cs.backdropFilter || cs.webkitBackdropFilter;
           if (bf && bf !== 'none') return 'backdrop-filter ' + bf;
+          /* THE TWO REASONS THE PASS LINE USED TO EXEMPT, AND THE HOLE AT THEIR INTERSECTION
+             (cycle 9, judge item 3). Until this cycle `painted()` stopped at those three, and the
+             PASS line said so honestly -- "the SWEEP does not reach paint arriving from a border
+             or a box-shadow spread (only the hit stack does)". The second half of that sentence is
+             the defect: the hit stack is `document.elementsFromPoint`, which SKIPS
+             `pointer-events:none`, and `pointer-events:none` is the exact class this sweep was
+             added for (the app's own `#_bootsplash._bs-done`). So a pointer-events:none
+             out-of-flow box painted ONLY by a border or an inset box-shadow over the track's
+             centre was invisible to BOTH reads -- the two individually-stated limits met at a
+             point the union's own sentence rounded up over. MUTANT M pressed the border case with
+             hit-testing ON only; M2 and M3 are the landings at the intersection.
+             THE COLOUR IS READ, NOT JUST THE GEOMETRY: a 2000px border at
+             `border-color:transparent` paints nothing, and reporting it would make this branch a
+             generator of false veils on every bordered overlay in the app. */
+          const clear = (c) => !c || c === 'transparent' || /rgba\([^)]*,\s*0\s*\)$/.test(c);
+          const sides = [['Top', cs.borderTopStyle, cs.borderTopWidth, cs.borderTopColor],
+            ['Right', cs.borderRightStyle, cs.borderRightWidth, cs.borderRightColor],
+            ['Bottom', cs.borderBottomStyle, cs.borderBottomWidth, cs.borderBottomColor],
+            ['Left', cs.borderLeftStyle, cs.borderLeftWidth, cs.borderLeftColor]];
+          for (const [side, st, wd, col] of sides) {
+            if (st && st !== 'none' && st !== 'hidden' && parseFloat(wd) > 0 && !clear(col)) {
+              return 'border-' + side.toLowerCase() + ' ' + wd + ' ' + st + ' ' + col;
+            }
+          }
+          const sh = cs.boxShadow;
+          if (sh && sh !== 'none') return 'box-shadow ' + sh.slice(0, 44);
           return '';
         };
         /* A PSEUDO-ELEMENT HAS NO getBoundingClientRect, so its box is DERIVED -- and Chromium
@@ -1309,8 +1345,10 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
     };
     const by = await readMarks(null);
 
-    /* ---- THE LEGEND'S FOUR SWATCHES, AGAINST THE PANEL THEY ACTUALLY SIT ON ------------------
-       (cycle 5, judge item 8.) styles.css's --gauge-rule block solves the token against TWO
+    /* ---- THE LEGEND'S SWATCHES, AGAINST THE PANEL THEY ACTUALLY SIT ON -----------------------
+       (cycle 5, judge item 8; five of them since cycle 9, when the key gained one swatch per keel
+       token -- and --keel-shaky is measured on --home-surface here for the first time, a ground
+       the token's own block does not solve it against.) styles.css's --gauge-rule block solves the token against TWO
        grounds and names the KEY's dark cell -- 3.49:1, 16% clear of the 3:1 floor -- as THE
        BINDING ONE, then wrote that "the rasterised minimum, which is what
        test/scoreboard_salience.cjs actually asserts, is read off the pixels". This file contained
@@ -1904,13 +1942,19 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
        painted ONLY by a backdrop-filter over a transparent background-color -- and with the branch
        gone it is invisible to the sweep as well. MUTANT Ic is that box, and P4g is its control. */
     const I_BOX = 'position:fixed;inset:0;pointer-events:none;z-index:2147483646;';
+    /* EVERY PROPERTY `painted()` READS IS REPORTED HERE, so a CANNOT-LAND branch can say which
+       reason a plant is actually carrying rather than which one it meant to. Cycle 9 added the
+       border and the box-shadow to both lists at once, deliberately: a liveness read that lags
+       the paint test is how "the plant painted nothing" gets reported as "the sweep failed". */
     const I_LIVE = (i) => {
       const d = document.getElementById(i);
       if (!d) return null;
       const cs = getComputedStyle(d), r = d.getBoundingClientRect();
       return { position: cs.position, opacity: cs.opacity, pointerEvents: cs.pointerEvents,
         bg: cs.backgroundColor, bi: cs.backgroundImage,
-        bf: cs.backdropFilter || cs.webkitBackdropFilter, w: r.width, h: r.height };
+        bf: cs.backdropFilter || cs.webkitBackdropFilter,
+        bw: cs.borderTopWidth, bs: cs.borderTopStyle, bc: cs.borderTopColor, sh: cs.boxShadow,
+        w: r.width, h: r.height };
     };
     /* EACH FORM DECLARES WHICH COMPUTED PROPERTY IS CARRYING ITS PAINT, and the CANNOT-LAND
        branch reads that property off the DOM rather than trusting the declaration. The three
@@ -2036,22 +2080,25 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
       }
     }
 
-    /* ---- MUTANT M: PAINT THE SWEEP CANNOT SEE, IN FRONT OF THE GAUGE (cycle 7) --------------
+    /* ---- MUTANT M: THE HIT STACK'S OWN LANDING (cycle 7; RESTATED cycle 9) ------------------
        R18 COST THE HIT STACK ITS ONLY CONTROL, and saying so is cheaper than discovering it in
        cycle 8. Through cycle 6, deleting the hit-stack read left MUTANT G undetected, and that
        press is the whole argument freeze condition 1 rests on. Now the sweep reads pseudos, so it
        catches G too: the same deletion leaves G MIS-ATTRIBUTED rather than UNDETECTED, which is
        still red but is no longer evidence that the stack read reaches anything the sweep does not.
-       IT DOES, AND THIS IS THE SHAPE. `painted()` tests background-color, background-image and
-       backdrop-filter -- a deliberate, declared list -- so paint that arrives any other way is
-       invisible to the sweep by construction. A full-viewport fixed box whose colour is entirely
-       in its BORDER carries no background at all: the sweep skips it, and the hit test, which
-       knows nothing about how a box is painted and only about what is in front, catches it.
-       So this is simultaneously the stack read's negative control and the honest statement of the
-       sweep's own limit -- the limit is now measured rather than asserted in a PASS line. */
+       CYCLE 7 ANSWERED THAT WITH A BOX THE SWEEP COULD NOT SEE -- a full-viewport fixed box whose
+       colour is entirely in its BORDER, which carried none of `painted()`'s three reasons -- and
+       CYCLE 9 CLOSED THAT HOLE, so this is no longer the sweep's blind spot: `painted()` now reads
+       a border and a box-shadow too (judge item 3), because a box painted that way AND carrying
+       `pointer-events:none` was invisible to both reads at once. M therefore lands in BOTH now,
+       and what it asserts is the ATTRIBUTION: the finding must name it through the HIT-STACK
+       branch. That is the same shape MUTANT G has worn since R18, and it is still a red when the
+       stack read is deleted -- MIS-ATTRIBUTED rather than UNDETECTED. M2 below is the same box
+       with hit-testing OFF, which presses the border branch of the sweep ALONE. */
     const M_ID = '_gauge_veil_M';
-    const M_BOX = 'position:fixed;inset:0;box-sizing:border-box;background:none;'
-      + 'border:2000px solid rgba(0,0,0,.10);z-index:2147483645';
+    const M_BORDER = 'box-sizing:border-box;background:none;'
+      + 'border:2000px solid rgba(0,0,0,.10)';
+    const M_BOX = 'position:fixed;inset:0;' + M_BORDER + ';z-index:2147483645';
     {
       const [apply, revert] = domPlant(M_ID, M_BOX);
       await apply();
@@ -2064,13 +2111,12 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
       veilOut = fails; veiled = held;
       await revert();
       await B.settle(page);
-      /* it has to be BOTH: in front of the panel, and carrying none of the three paints the
-         sweep tests -- otherwise it is a second copy of MUTANT I rather than a control for the
-         read MUTANT I cannot press */
-      const unpainted = !!live && live.bi === 'none'
+      /* it has to be BOTH: in front of the panel, and painted by its BORDER and nothing else --
+         otherwise it is a second copy of MUTANT I rather than the hit stack's own landing */
+      const unpainted = !!live && live.bi === 'none' && live.bf === 'none'
         && /rgba\([^)]*,\s*0\s*\)$/.test(String(live.bg));
       const landed = !!live && live.position === 'fixed' && live.w >= 100 && live.h >= 100
-        && unpainted;
+        && unpainted && parseFloat(live.bw) > 0;
       const front = namesVeil(sink, 'IN FRONT OF THE GAUGE');
       mOut = !landed ? 'CANNOT LAND'
         : (front.length ? 'caught, named in front of the gauge'
@@ -2079,20 +2125,106 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
         fails.push(where + 'MUTANT M CANNOT LAND: the border-painted overlay computes '
           + (live ? 'position ' + live.position + ', ' + live.w.toFixed(0) + 'x'
             + live.h.toFixed(0) + ', background ' + live.bg + ' / ' + live.bi
-            + (unpainted ? '' : ' -- which the geometric sweep CAN see, so it is not a control '
-              + 'for the hit stack') : 'no element at all')
+            + ', border ' + live.bw + ' ' + live.bs
+            + (unpainted ? '' : ' -- it carries a BACKGROUND, so it is a second copy of MUTANT I '
+              + 'rather than the border landing') : 'no element at all')
           + ', so a green below would mean nothing.');
       } else if (!sink.length) {
         fails.push(where + 'MUTANT M UNDETECTED: a full-viewport fixed box painted entirely by '
-          + 'its BORDER, drawn over the gauge, was read as a clean shot. It carries no '
-          + 'background-color, no background-image and no backdrop-filter, so the geometric '
-          + 'sweep skips it by construction -- the hit stack is the only arm that can see this, '
-          + 'and after cycle 7 it is the only plant that presses the hit stack alone.');
+          + 'its BORDER, drawn over the gauge, was read as a clean shot. Both reads should see '
+          + 'this one -- the hit stack because it is in front and hit-tests, and (since cycle 9) '
+          + 'the sweep because `painted()` reads a border.');
       } else if (!front.length) {
         fails.push(where + 'MUTANT M MIS-ATTRIBUTED: the border overlay was caught, but not '
           + 'through the hit-stack branch -- the finding reads "' + sink[0].slice(0, 180)
-          + '". If the sweep caught this, `painted()` has grown a branch that sees border paint '
-          + 'and the control is no longer a control.');
+          + '". This is the landing that presses the hit stack: a box in front of the panel must '
+          + 'be named as being in front of it, whatever else also sees it.');
+      }
+    }
+
+    /* ---- MUTANTS M2 AND M3: THE INTERSECTION OF THE UNION'S TWO STATED LIMITS ---------------
+       (cycle 9, judge item 3.) Each read declared a limit and the PASS line stated both, then
+       rounded up over the point where they meet. The sweep could not see paint arriving from a
+       BORDER or a BOX-SHADOW; the hit stack cannot see `pointer-events:none`. A box carrying both
+       properties was therefore invisible to the whole guard -- and `pointer-events:none` is not an
+       exotic combination here, it is the literal shape of this app's own faded boot splash, which
+       is why the sweep exists at all.
+       `painted()` now reads both properties, and these two are the plants that can fail if either
+       branch is narrowed back. They are pressed exactly like I/Ib/Ic -- a fixed
+       `pointer-events:none` SIBLING (invisible to the hit stack by construction and to the chain
+       because it is not an ancestor) -- so the `covers` branch is the only arm that can catch
+       them, and the finding must name them through it.
+       M3's shadow is INSET on purpose. An outward spread is drawn OUTSIDE the element's border
+       box, and the sweep's geometric test is `getBoundingClientRect()` containing the sampled
+       point -- so an outward-spread veil is out of this read's reach whatever `painted()` says,
+       and planting one would be a plant that cannot land dressed as a branch that cannot see. An
+       inset shadow paints INSIDE the box, which is the shape a full-viewport scrim actually
+       takes. That limit is stated in the PASS line rather than rounded over, which is the whole
+       subject of this judge item. */
+    const M2_BOX = 'position:fixed;inset:0;pointer-events:none;z-index:2147483645;' + M_BORDER;
+    const M3_BOX = 'position:fixed;inset:0;pointer-events:none;z-index:2147483645;'
+      + 'background:none;box-shadow:inset 0 0 0 2000px rgba(0,0,0,.10)';
+    const m2Forms = [
+      ['M2', M2_BOX, 'border',
+        (l) => parseFloat(l.bw) > 0 && l.bs !== 'none' && l.bs !== 'hidden',
+        'a full-viewport overlay with pointer-events OFF painted entirely by its BORDER -- '
+        + 'invisible to the hit stack because it does not hit-test, invisible to the chain '
+        + 'because it is a sibling, and invisible to the sweep until `painted()` learned to read '
+        + 'a border in cycle 9'],
+      ['M3', M3_BOX, 'box-shadow',
+        (l) => !!l.sh && l.sh !== 'none',
+        'the same overlay painted entirely by an INSET BOX-SHADOW -- the other half of the pair '
+        + 'the PASS line used to exempt, and the same intersection: no hit test, not an ancestor, '
+        + 'and no background of any kind'],
+    ];
+    const m2Out = {};
+    for (const [tag, css, carrier, carries, prose] of m2Forms) {
+      const id = '_gauge_veil_' + tag;
+      const [apply, revert] = domPlant(id, css);
+      await apply();
+      await B.settle(page);
+      const live = await page.evaluate(I_LIVE, id);
+      const sink = [];
+      const held = veiled;
+      veilOut = sink; veiled = 0;
+      veilCheck(await page.evaluate(SHOT_STATE), 'under MUTANT ' + tag);
+      veilOut = fails; veiled = held;
+      await revert();
+      await B.settle(page);
+      /* NO BACKGROUND OF ANY KIND, or the plant presses a branch it does not name -- the same
+         CANNOT-LAND discipline the three I forms carry since cycle 8. */
+      const bare = !!live && live.bi === 'none' && live.bf === 'none'
+        && /rgba\([^)]*,\s*0\s*\)$/.test(String(live.bg));
+      const landed = !!live && live.position === 'fixed' && live.pointerEvents === 'none'
+        && live.w >= 100 && live.h >= 100 && bare && carries(live);
+      const cov = namesVeil(sink, 'COVERING the track');
+      m2Out[tag] = !live ? 'CANNOT LAND (no node)'
+        : (!landed ? 'CANNOT LAND (' + live.position + '/' + live.pointerEvents
+            + (bare ? '' : ', carries a background') + (carries(live) ? '' : ', no ' + carrier) + ')'
+          : (cov.length ? 'caught, named as a covering box'
+            : (sink.length ? 'caught but NOT as a covering box' : 'NOT CAUGHT')));
+      if (!landed) {
+        fails.push(where + 'MUTANT ' + tag + ' CANNOT LAND: the planted overlay computes '
+          + (live ? 'position ' + live.position + ', pointer-events ' + live.pointerEvents
+            + ', ' + live.w.toFixed(0) + 'x' + live.h.toFixed(0)
+            + ', background-color ' + live.bg + ', background-image ' + live.bi.slice(0, 32)
+            + ', border ' + live.bw + ' ' + live.bs + ', box-shadow ' + String(live.sh).slice(0, 40)
+            : 'no element at all')
+          + ', so ' + (live && !carries(live)
+            ? 'the ' + carrier + ' this plant exists to press is not on the box and a green '
+              + 'below would press a different branch than the one it names'
+            : 'nothing was drawn over the panel and a green below would mean nothing') + '.');
+      } else if (!sink.length) {
+        fails.push(where + 'MUTANT ' + tag + ' UNDETECTED: ' + prose + ' -- covering the track\'s '
+          + 'centre at ' + live.w.toFixed(0) + 'x' + live.h.toFixed(0) + ' -- was read as a clean '
+          + 'shot. This is the INTERSECTION of the two limits the union states separately: the '
+          + 'stack read cannot see a box that does not hit-test, and until `painted()` read this '
+          + 'property the sweep could not see how it was painted. Neither arm covers it alone.');
+      } else if (!cov.length) {
+        fails.push(where + 'MUTANT ' + tag + ' MIS-ATTRIBUTED: the overlay was caught, but not '
+          + 'through the covering-box branch -- the finding reads "' + sink[0].slice(0, 180)
+          + '". The half of the union under test is the geometric sweep, and a finding that names '
+          + 'a different half does not press it.');
       }
     }
 
@@ -2236,7 +2368,23 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
           : 'but NOT as a backdrop') : 'NOT CAUGHT')
         : 'inert by construction (light) -- and the cell reported '
           + (gSink.length ? 'VEILED' : 'clean'),
-      I: iOut.I, Ib: iOut.Ib, Ic: iOut.Ic, J: jOut, M: mOut, chain: chainOut,
+      I: iOut.I, Ib: iOut.Ib, Ic: iOut.Ic, J: jOut, M: mOut, M2: m2Out.M2, M3: m2Out.M3,
+      chain: chainOut,
+      /* THE VEIL-LANDING ROSTER, AND THE PASS LINE'S CENSUS IS FORMATTED FROM IT (cycle 9, judge
+         item 4). The census used to be the literal string "TEN PLANTED LANDINGS" printed directly
+         above rows that were already being printed one by one out of these same variables -- so
+         deleting a landing left the sentence advertising the old figure, which is precisely the
+         defect cycle 5 fixed in craft_hygiene.py and cycle 8 spent a judge item RE-TYPING here
+         (THIRTEEN -> seventeen) rather than deriving. Every entry is the outcome string the run
+         actually produced; a form removed from `iForms` / `m2Forms` / `chainForms` leaves its key
+         `undefined` and is filtered out, so the printed N moves with the code. */
+      landings: (() => {
+        const all = Object.assign(
+          { G: typeof gSink === 'undefined' ? undefined : 'landed',
+            J: jOut, I: iOut.I, Ib: iOut.Ib, Ic: iOut.Ic,
+            M: mOut, M2: m2Out.M2, M3: m2Out.M3 }, chainOut);
+        return Object.keys(all).filter((k) => all[k] !== undefined);
+      })(),
       H: mH && kH ? mH.min.toFixed(2) + ' vs ' + kH.max.toFixed(2)
         + ' = ' + (mH.min / kH.max).toFixed(3) : 'n/a',
       veiled: veiled,
@@ -2407,7 +2555,9 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
       console.log(L('', 7) + L('', 6) + L('', 12) + '  a pointer-events:none SIBLING overlay -> '
         + g.mut.I + ' | painted by a GRADIENT instead -> ' + g.mut.Ib
         + ' | painted only by a BACKDROP-FILTER -> ' + g.mut.Ic);
-      console.log(L('', 7) + L('', 6) + L('', 12) + '  a box painted only by its BORDER, which the sweep cannot see -> ' + g.mut.M);
+      console.log(L('', 7) + L('', 6) + L('', 12) + '  a box painted only by its BORDER, '
+        + 'hit-testing -> ' + g.mut.M + ' | the same with pointer-events OFF -> ' + g.mut.M2
+        + ' | painted only by an INSET BOX-SHADOW, pointer-events off -> ' + g.mut.M3);
       console.log(L('', 7) + L('', 6) + L('', 12) + '  the ancestor chain, one property at a time '
         + '-> ' + Object.keys(g.mut.chain || {}).map((k) => k + ' ' + g.mut.chain[k]).join(' | '));
       console.log(L('', 7) + L('', 6) + L('', 12) + '  --keel-shaky collapsed onto --st-warn -> '
@@ -2444,6 +2594,21 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
     fails.forEach((f) => console.log('  - ' + f));
     return B.finish(1, 'SCOREBOARD SALIENCE: FAIL');
   }
+  /* THE CENSUS IS COUNTED FROM THE ROSTER THE RUN POPULATED, never typed (cycle 9, judge item 4).
+     The union across cells, because every cell plants the same set and a landing missing from ONE
+     cell is a defect this line must not average away. */
+  const swatchN = (() => {
+    let n = 0;
+    for (const g of gaugeRows) n = Math.max(n, ((g.keys || []).length));
+    return n;
+  })();
+  const landingTags = (() => {
+    const seen = [];
+    for (const g of gaugeRows) {
+      for (const t of ((g.mut || {}).landings || [])) if (seen.indexOf(t) < 0) seen.push(t);
+    }
+    return seen;
+  })();
   console.log('\nSCOREBOARD SALIENCE: PASS  (' + rows.length + ' room x theme x score;'
     + ' Solid is the loudest tile whenever it is non-empty, in every room, both themes, and never fills at zero'
     + ' -- plus the altitude gauge at ' + GAUGE_WIDTHS.map((g) => g.w + 'px').join(' and ')
@@ -2461,7 +2626,8 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
     + ' RAMP -- every step mean within ' + GROUND_EPS + ' and the tightest pair within '
     + PHASE_EPS_CR + ' -- which is the identity styles.css publishes as the design\'s own'
     + ' prediction and which, until this cycle, nothing asserted; the untouched capsule\'s rule clears'
-    + ' the same floor; the LEGEND\'S FOUR SWATCHES'
+    + ' the same floor; the LEGEND\'S ' + swatchN + ' SWATCHES -- every one the key renders,'
+    + ' enumerated rather than counted to --'
     + ' clear it too against the panel\'s own measured ground -- the binding cell of the'
     + ' --gauge-rule solve, pressed by repainting that token at the panel\'s own colour -- and the'
     + ' panels stand off their ground, pressed by painting the panel at that ground\'s own colour.'
@@ -2477,18 +2643,25 @@ const MARK_Y = async ({ shotA, shotB, boxes }) => {
     + ' STATED RATHER THAN ROUNDED UP TO "every alpha, in both schemes": any compositing property'
     + ' on the gauge\'s own ancestor chain at any alpha in either scheme, and any painted'
     + ' out-of-flow box -- element or pseudo, hit-testing or not, background-color or'
-    + ' background-image or backdrop-filter -- that covers the ONE point it samples, plus anything'
+    + ' background-image or backdrop-filter or a coloured border or a box-shadow -- that covers the'
+    + ' ONE point it samples, plus anything'
     + ' the hit test finds in front of the panel however it is painted. It does NOT read the other'
-    + ' pixels this check measures (the legend swatches, the depth pair, the neighbour bands), the'
-    + ' SWEEP does not reach paint arriving from a border or a box-shadow spread (only the hit'
-    + ' stack does, which is what MUTANT M presses and why that limit is measured rather than'
-    + ' asserted), and neither read reaches `.hm-alt`\'s own subtree, whose ::after IS the fill.'
-    + ' TEN PLANTED LANDINGS press it -- G a pseudo backdrop, J the same with pointer-events off,'
+    + ' pixels this check measures (the legend swatches, the depth pair, the neighbour bands); the'
+    + ' SWEEP places every box by its BORDER BOX, so paint drawn OUTSIDE that box -- an'
+    + ' outward box-shadow spread, an outline -- is out of its reach whatever `painted()` reads,'
+    + ' and for a box that does not hit-test neither arm covers it (cycle 9 closed the border and'
+    + ' INSET-shadow half of that class, which is where the two reads\' stated limits used to meet'
+    + ' unguarded); and neither read reaches `.hm-alt`\'s own subtree, whose ::after IS the fill.'
+    + ' ' + landingTags.length + ' PLANTED LANDINGS press it ('
+    + landingTags.join(', ') + ') -- G a pseudo backdrop, J the same with pointer-events off,'
     + ' I a pointer-events:none sibling, Ib the same painted by a gradient, Ic the same painted'
     + ' only by a backdrop-filter, M a box painted only'
-    + ' by its border, K an ancestor at opacity .91, and L the chain widening one property at a'
-    + ' time -- so each of `painted()`\'s three reasons has a plant of its own, which cycle 7\'s'
-    + ' nine did not. Beside it, as a backstop, a declared-colour ground'
+    + ' by its border with hit-testing ON, M2 the same with pointer-events OFF and M3 the same'
+    + ' painted by an inset box-shadow -- the two that sit at the INTERSECTION of the two reads\''
+    + ' declared limits -- K an ancestor at opacity .91, and L the chain widening one property at a'
+    + ' time -- so each of `painted()`\'s five reasons has a plant of its own, and this count is'
+    + ' FORMATTED FROM THE ROSTER THE RUN POPULATED rather than typed, so deleting a landing moves'
+    + ' it. Beside it, as a backstop, a declared-colour ground'
     + ' invariant: the trough must equal the colour the track itself declares within '
     + GROUND_EPS + ' in the SAME shot -- and that arm now PRICES ITSELF per cell on the LARGEST'
     + ' lever the panel offers rather than on the trough\'s, failing where no alpha could move any'

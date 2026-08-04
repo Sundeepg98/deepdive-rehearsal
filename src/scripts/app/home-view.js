@@ -600,10 +600,23 @@
       ' on the rails</span></div>' +
       '<div class="hm-pbody"><div class="hm-gauge">' + rails + '</div>' +
       '<p class="hm-verdict">' + verdict + '</p>' +
+      /* ONE SWATCH PER MARK THE GAUGE ACTUALLY PAINTS. The keel is drawn in TWO colours --
+         --keel-missed for a missed probe and --keel-shaky for a shaky one, a pair styles.css
+         solves for a 1.15x discriminability margin and scoreboard_salience asserts from the
+         pixels -- and this key carried ONE swatch, "Flagged", wired to --keel-missed alone. So a
+         reader saw two distinct foot colours on the rails and a legend that explained one of
+         them, on the panel whose whole job is to say which topics to re-drill. styles.css:325
+         had recorded the collapse as a FACT (an argument for why a severity collapse would be
+         invisible to a reader) rather than as a thing to fix.
+         The two severities are already named in the accessible channel -- segLabel() emits
+         ", missed probes flagged" vs ", shaky probes flagged" into both the capsule title and the
+         rail's hm-vh description, and home_claims checks those character for character -- so this
+         is the VISIBLE channel catching up with the one a screen reader already had. */
       '<div class="hm-key" aria-hidden="true">' +
       '<span class="hm-k full"><i></i><span class="hm-lbl">All solid</span></span>' +
       '<span class="hm-k part"><i></i><span class="hm-lbl">Part solid</span></span>' +
-      '<span class="hm-k flag"><i></i><span class="hm-lbl">Flagged</span></span>' +
+      '<span class="hm-k flag"><i></i><span class="hm-lbl">Missed flagged</span></span>' +
+      '<span class="hm-k flag-s"><i></i><span class="hm-lbl">Shaky flagged</span></span>' +
       '<span class="hm-k none"><i></i><span class="hm-lbl">Untouched</span></span>' +
       '</div>' +
       /* OUTSIDE .hm-key, which is aria-hidden. This note is what reconciles the panel's 971 with

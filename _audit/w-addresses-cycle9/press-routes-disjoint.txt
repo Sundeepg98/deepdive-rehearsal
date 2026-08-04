@@ -1,0 +1,34 @@
+=== W-ADDRESSES cycle 9 -- judge item 2: topic ids and route ids must be DISJOINT ===
+
+the collision installed in the mirror: a route id `eav`, which is also a registered topic slug
+
+A. SHIPPED build, cycle-9 cell -- home_claims exit 0, the boot-table cell PASS
+
+B. COLLISION mirror, cycle-9 cell -- home_claims exit 1, the boot-table cell FAIL
+     FAIL  [boot] boot.js's id->room table agrees with the registry entry by entry, both directions -- it is a duplicate of a fact boot cannot import, so it is checked rather than trusted -- AND no registered topic id is also a router view id, which is the half of parseHash's condition (`!ROUTES[p0]`) that R21's `_hr` gate inherits from a comment whose stated premise the registry stopped satisfying 16 single-token slugs ago  -- 46 in the table vs 46 registered; missing [] wrong [] extra [] duplicated []; 12 route ids, c
+
+C. THE SAME MIRROR, the cell as it stood BEFORE cycle 9 -- home_claims exit 0, the boot-table cell PASS
+
+   and every route cell in the matrix, on that same defective build:
+     a BARE-VIEW route (#walk)                  PASS
+     a BARE-VIEW route (#drill)                 PASS
+     a BARE-VIEW route (#Walk)                  PASS
+     a BARE-VIEW route (#Nonsense)              PASS
+     [boot] #HOME --                            PASS
+     a TOPIC-PREFIXED HOME (#                   PASS
+     NOT a registered topic (#/home)            PASS
+     NOT a registered topic (#AUTHZ/home)       PASS
+
+D. THE DEFECT ITSELF, driven on the collision mirror (seed: a topic in a third room; the oracle is read off the page)
+     #eav/home      app shows a TOPIC view ought architecture-apis          wore data-storage               MIS-LIT
+     #eav           app shows a TOPIC view ought architecture-apis          wore data-storage               MIS-LIT
+     #authz/home    app shows THE HOME     ought data-storage               wore data-storage               ok
+
+VERDICT
+  A shipped: 0 collisions, measured rather than inherited ....... True
+  B a colliding id reds the cell and names it ................... True
+  C the pre-cycle-9 cell passes the SAME build ................. True
+    -- which is the finding: the defect is live and nothing saw it
+  overall True
+
+  THE WORKTREE WAS NOT WRITTEN: dist/index.html unchanged: True; test/home_claims.cjs unchanged: True

@@ -1,0 +1,41 @@
+=== W-ADDRESSES cycle 9 -- is the gauge legend in ANY visual baseline? ===
+
+the label plant: ">Missed flagged<" -> ">ZZZZZZZZZZZZZZZZZZ<" (1 site in the built page)
+the diff tolerance: the gate's own, a channel delta > 2/255
+
+home-light  (1280x800)
+   shipped build renders 5 swatches: "All solidPart solidMissed flaggedShaky flaggedUntouched"
+   mirror  build renders 5 swatches: "All solidPart solidZZZZZZZZZZZZZZZZZZShaky flaggedUntouched"
+   the key box: x=333 y=780 590x15  viewport height 800, scrollY 0  -- inside the captured frame
+   what is in front of its centre: span#st-2.hm-st-i > footer#homestatus.hm-status > span.hm-k.full > div.hm-key
+   CHANGED PIXELS between the two captures: 0   <-- the camera cannot see this surface
+
+home-dark  (1280x800)
+   shipped build renders 5 swatches: "All solidPart solidMissed flaggedShaky flaggedUntouched"
+   mirror  build renders 5 swatches: "All solidPart solidZZZZZZZZZZZZZZZZZZShaky flaggedUntouched"
+   the key box: x=333 y=780 590x15  viewport height 800, scrollY 0  -- inside the captured frame
+   what is in front of its centre: span#st-2.hm-st-i > footer#homestatus.hm-status > span.hm-k.full > div.hm-key
+   CHANGED PIXELS between the two captures: 0   <-- the camera cannot see this surface
+
+m-home-light  (390x844)
+   shipped build renders 5 swatches: "All solidPart solidMissed flaggedShaky flaggedUntouched"
+   mirror  build renders 5 swatches: "All solidPart solidZZZZZZZZZZZZZZZZZZShaky flaggedUntouched"
+   the key box: x=29 y=973 332x40  viewport height 844, scrollY 0  -- BELOW THE CAPTURED FRAME by 169px
+   what is in front of its centre: 
+   CHANGED PIXELS between the two captures: 0   <-- the camera cannot see this surface
+
+m-home-dark  (390x844)
+   shipped build renders 5 swatches: "All solidPart solidMissed flaggedShaky flaggedUntouched"
+   mirror  build renders 5 swatches: "All solidPart solidZZZZZZZZZZZZZZZZZZShaky flaggedUntouched"
+   the key box: x=29 y=973 332x40  viewport height 844, scrollY 0  -- BELOW THE CAPTURED FRAME by 169px
+   what is in front of its centre: 
+   CHANGED PIXELS between the two captures: 0   <-- the camera cannot see this surface
+
+WHAT THIS MEANS FOR THE VR CONTRACT
+  visual_regression reporting 0 changed pixels on this cycle is TRUE and says nothing
+  about the legend: a control that renames a swatch to eighteen Zs moves the same zero
+  pixels. No baseline photographs the gauge legend, so no baseline needs regenerating --
+  and a legend regression is invisible to the pixel gate by construction. The only
+  instruments that can see one are home_claims' legend arm (one swatch per keel token,
+  pressed by MUTANT 10b) and scoreboard_salience's KEY arm (every swatch against the
+  panel's own measured ground).

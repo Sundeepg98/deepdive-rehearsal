@@ -38,9 +38,11 @@
  * THREE ARMS THAT ARE NOT ABOUT A NUMERAL (W1.5 cycle 2). Same class -- one fact, two answers --
  * where the fact is a RENDERER: exactly one visible weekly-goal surface per viewport in EVERY
  * record class (cold included); the record-addressed practice act above the generic one in all
- * three surfaces that render the pair; and the gauge's four-state key present wherever the rails
- * paint the keel mark it is the legend for. All three shipped in cycle 1 with nothing in test/
- * that so much as mentioned them.
+ * three surfaces that render the pair; and the gauge's key present wherever the rails
+ * paint the keel mark it is the legend for, carrying ONE SWATCH PER KEEL TOKEN -- presence alone
+ * was the whole of that third arm until cycle 9, so the key could stay visible while the gauge
+ * painted a second severity the legend never named, which is the state that shipped. All three
+ * shipped in cycle 1 with nothing in test/ that so much as mentioned them.
  *
  * ROUND 4: THE RETROSPECTIVE SEED LIST WAS THE GAP, AND IT IS NOW THE SMALLER HALF.
  * A judge copied this file, added ONE record -- one probe of 971 graded Shaky -- changed nothing
@@ -248,7 +250,8 @@ const SEEDS = {
      (in-progress) or finishes it clean (solid), so `Panels.actionsHtml()` rendered ONE bar on all
      fourteen and the ordering rule below had nothing to order. Twelve topics drilled to the end,
      one probe in seven graded Shaky -- which also puts keel marks on the rails, so the gauge's
-     four-state key has something to label. */
+     key has something to label, in BOTH severities: this is the record MUTANT 10b needs, because
+     a record that paints one severity cannot tell a complete legend from a legend missing one. */
   weakTopics: () => {
     TopicRegistry.ids().slice(0, 12).forEach((id) => {
       const cards = TopicRegistry.get(id).data.bank.cards;
@@ -466,6 +469,47 @@ const READ = () => {
     keyVisible: (() => {
       const k = document.querySelector('.hm-alt .hm-key');
       return !!k && k.getClientRects().length > 0;
+    })(),
+    /* ---- ONE SWATCH PER KEEL TOKEN, AND BOTH SIDES READ AS COLOURS (cycle 9, judge item 5) ----
+       The rails paint TWO severities -- `.hm-seg.keel-m::before` at --keel-missed and a plain
+       `.hm-seg.keel::before` at --keel-shaky, a pair styles.css solves for a 1.15x margin -- and
+       the key carried ONE swatch wired to --keel-missed alone. styles.css recorded that collapse
+       as a FACT (its argument for why a severity collapse would be invisible to a reader) rather
+       than as a defect, so the panel painted two foot colours and explained one.
+       BOTH SIDES ARE READ AS RESOLVED COLOURS, not as class names or token names: the mark's
+       colour off `::before`'s computed background, the swatch's off the computed box-shadow. A
+       legend judged by CLASS would pass a swatch whose token was repointed, which is exactly
+       MUTANT F's shape one file over.
+       A SWATCH IS A KEEL SWATCH IFF ITS SHADOW SITS AT THE FOOT -- a negative vertical offset.
+       `.hm-k.none i` also carries a box-shadow (`inset 0 0 0 1px var(--gauge-rule)`, the hollow
+       outline) and counting it would let the "Untouched" swatch stand in for a missing severity. */
+    keelPaint: (() => {
+      const seen = [];
+      for (const s of document.querySelectorAll('.hm-alt .hm-seg.keel')) {
+        const c = getComputedStyle(s, '::before').backgroundColor;
+        const kind = s.classList.contains('keel-m') ? 'missed' : 'shaky';
+        if (c && !seen.some((x) => x.color === c)) seen.push({ kind, color: c });
+      }
+      return seen;
+    })(),
+    keySwatch: (() => {
+      const out = [];
+      for (const k of document.querySelectorAll('.hm-alt .hm-key .hm-k')) {
+        const i = k.querySelector('i');
+        /* RENDERED, not merely present. A legend explains what a reader can SEE, and a swatch
+           behind `display:none` is exactly the shape the <=419px cut took -- computed styles are
+           still readable on it, so a presence-only read would report a legend that is not there. */
+        if (!i || !i.getClientRects().length) continue;
+        const sh = getComputedStyle(i).boxShadow || '';
+        if (sh === 'none') continue;
+        const col = (sh.match(/rgba?\([^)]*\)/) || [null])[0];
+        /* the offsets, in the order Chromium serialises them after the colour */
+        const nums = (sh.replace(/rgba?\([^)]*\)/, '').match(/-?[\d.]+px/g) || [])
+          .map((v) => parseFloat(v));
+        if (!col || nums.length < 2 || !(nums[1] < 0)) continue;
+        out.push({ cls: (k.className || '').replace(/\s+/g, '.'), color: col });
+      }
+      return out;
     })(),
     h1s: [...document.querySelectorAll('h1')].filter((h) => h.getClientRects().length).map(txt),
     /* IDENTITY: the visible h1 must BE the hero question, not merely be unique */
@@ -831,9 +875,29 @@ function judgeActOrder(r) {
    paints a keel must render the legend that says what a keel is. */
 function judgeKey(r) {
   if (!r.keel) return null;                        /* no keel painted -- the legend is not owed */
-  if (r.keyVisible) return null;
-  return 'the gauge paints ' + r.keel + ' keel segment(s) and renders no visible four-state key '
-    + 'at this width -- the only legend those marks have';
+  if (!r.keyVisible) {
+    return 'the gauge paints ' + r.keel + ' keel segment(s) and renders no visible key '
+      + 'at this width -- the only legend those marks have';
+  }
+  /* AND THE KEY MUST CARRY ONE SWATCH PER SEVERITY THE RAILS ACTUALLY PAINT (cycle 9, judge
+     item 5). Presence was the whole of this arm, so the key could stay visible while the gauge
+     grew a second keel colour the legend never mentioned -- which is the state that shipped:
+     --keel-missed and --keel-shaky on the rails, `.hm-k.flag` wired to --keel-missed alone. The
+     comparison is between COLOURS the page resolved, so it holds whichever token a swatch names,
+     and it is silent on a record that paints only one severity because there is nothing to
+     distinguish there. */
+  const have = (r.keySwatch || []).map((s) => s.color);
+  const miss = (r.keelPaint || []).filter((p) => have.indexOf(p.color) < 0);
+  if (miss.length) {
+    return 'the rails paint ' + (r.keelPaint || []).length + ' distinct keel colour(s) and the '
+      + 'key carries ' + have.length + ' keel swatch(es), so '
+      + miss.map((p) => 'the ' + p.kind + ' keel (' + p.color + ')').join(' and ')
+      + ' is painted on the rails and named nowhere in the legend -- a reader sees a foot colour '
+      + 'the key does not explain, on the panel whose whole job is which topics to re-drill '
+      + '(swatches read: ' + ((r.keySwatch || []).map((s) => s.cls + ' ' + s.color).join(', ')
+        || 'none') + ')';
+  }
+  return null;
 }
 
 /* THE DOOR LIGHTS IN THE ROOM YOU ARE RETURNING TO.
@@ -935,6 +999,18 @@ const GEN_N = 24;
      battery whose records never paint one would report it green forever without ever running it.
      Counted, and asserted non-zero below. */
   let keelChecked = 0;
+  /* THE PLANT CENSUS IS DERIVED, NOT TYPED (cycle 9, judge item 4). The PASS line used to print a
+     literal "21 planted mutants detected" with no computed component, so deleting a mutant block
+     left the census advertising the old figure -- the exact defect cycle 5 fixed in
+     craft_hygiene.py (which prints `len(PLANTS) + len(PLANTS_PRESSED) + len(CHANNEL_PLANTS)` and
+     moved 23 -> 22 -> 21 -> 14 as its lists emptied) and the one cycle 8 spent a judge item
+     RE-TYPING one file over. `land(tag)` is called at the point a plant is confirmed installed and
+     handed to its judge; a Set, because the width x seed loops replant several of these and the
+     census counts DISTINCT plants. Deleting a mutant block deletes its `land()` call with it and
+     the printed number moves. It is not asserted against a constant on purpose: an expected-count
+     assertion is the hand-typed number again, wearing a test. */
+  const landedPlants = new Set();
+  const land = (tag) => { landedPlants.add(tag); };
 
   for (const [w, h] of [[1280, 800], [390, 844]]) {
     const ctx = await browser.newContext({ viewport: { width: w, height: h } });
@@ -964,17 +1040,20 @@ const GEN_N = 24;
           aborted = 'MUTANT 1 UNDETECTED: "Every rail is full" over rails rendering ' +
             bad.rails.map((x) => x.pct + '%').join('/') + ' was accepted. This is round 2 verbatim.';
         }
+        land('1');
         await page.evaluate(() => {
           document.querySelector('.hm-verdict').innerHTML = '<b>The rails are level.</b> All three tiers sit at 0% solid.';
         });
         const bad2 = await page.evaluate(READ);
         if (!judgeVerdict(bad2)) aborted = aborted || 'MUTANT 2 UNDETECTED: a "level" claim over unequal rails was accepted.';
+        land('2');
         await page.evaluate(() => {
           const r2 = document.querySelectorAll('.hm-gr-l');
           document.querySelector('.hm-verdict').innerHTML = '<b>' + (r2[0] ? r2[0].textContent : 'Staff') + ' is the thin rail.</b> x';
         });
         const bad3 = await page.evaluate(READ);
         if (!judgeVerdict(bad3)) aborted = aborted || 'MUTANT 3 UNDETECTED: a thin rail named on the HIGHEST tier was accepted.';
+        land('3');
       }
       if (w === 1280 && name === 'staffOnly') {
         /* MUTANT 5: the two-thin sentence quotes the NON-thin rail's figures */
@@ -984,6 +1063,7 @@ const GEN_N = 24;
         });
         const bad5 = await page.evaluate(READ);
         if (!judgeVerdict(bad5)) aborted = aborted || 'MUTANT 5 UNDETECTED: a verdict quoting one rail\u2019s figures for another was accepted.';
+        land('5');
         /* MUTANT 6: the panel header inflated */
         await page.evaluate(() => {
           const h = document.querySelector('.hm-alt .hm-fig');
@@ -991,6 +1071,7 @@ const GEN_N = 24;
         });
         const bad6 = await page.evaluate(READ);
         if (!judgeHeader(bad6)) aborted = aborted || 'MUTANT 6 UNDETECTED: an inflated panel header was accepted.';
+        land('6');
       }
       /* ---- MUTANT 7: THE SENTENCE THIS ARM COULD NOT SEE ------------------------------------
          `oneThin` is the record that renders the SINGLE-thin-rail verdict -- "Staff is the thin
@@ -1039,6 +1120,7 @@ const GEN_N = 24;
             aborted = aborted || 'MUTANT 7 LEAKED: judgeQuotedFigures caught it but judgeVerdict '
               + 'returned clean, so the battery would never see it.';
           }
+          land('7');
         }
       }
       if (w === 1280 && name === 'absentField') {
@@ -1049,6 +1131,7 @@ const GEN_N = 24;
         if (!judgePosition(bad4)) {
           aborted = aborted || 'MUTANT 4 UNDETECTED: a step position beside a bare probe remainder was accepted -- round 2 verbatim.';
         }
+        land('4');
       }
 
       /* ---- MUTANT 8: A SECOND GOAL RENDERER, ON THE COLD RECORD ----------------------------
@@ -1072,6 +1155,7 @@ const GEN_N = 24;
           if (!judgeGoal(bad8)) {
             aborted = aborted || 'MUTANT 8 UNDETECTED: two visible weekly-goal surfaces were accepted.';
           }
+          land('8');
           await page.evaluate(() => {
             const all = [...document.querySelectorAll('.ix-goal')];
             if (all.length > 1) all[all.length - 1].remove();
@@ -1103,6 +1187,7 @@ const GEN_N = 24;
               + '(architecture-apis) while its resume act is in ' + bad14.doorWant + ' was '
               + 'accepted. That is the shipped defect verbatim.';
           }
+          land('14');
           await page.evaluate((g) => document.documentElement.setAttribute('data-group', g), clean14.door);
         }
       }
@@ -1135,6 +1220,8 @@ const GEN_N = 24;
           } else if (!judgeArrival(bad15)) {
             aborted = aborted || 'MUTANT 15 UNDETECTED: the gauge restored above the paired row -- '
               + 'the shipped arrival -- was accepted: ' + bad15.arrival.join(' then ');
+          } else {
+            land('15');
           }
           /* and the second half, on its own, so one rule cannot cover for the other */
           await page.evaluate(() => {
@@ -1148,6 +1235,7 @@ const GEN_N = 24;
             aborted = aborted || 'MUTANT 15b UNDETECTED: the paired row with the deficit panel '
               + 'first was accepted: ' + bad15b.duoOrder.join(' then ');
           }
+          land('15b');
         }
       }
 
@@ -1202,6 +1290,7 @@ const GEN_N = 24;
           aborted = aborted || 'MUTANT ' + n + ' UNDETECTED: ' + undetected + ' -- visible "'
             + planted.after + '" / accessible "' + planted.spoken + '"';
         }
+        land(String(n));
         /* RESTORE BY ATTRIBUTE STATE, not by re-setting a value. `setAttribute('aria-label', null)`
            writes the literal string "null" onto a bar that had no label, which would leave every
            judge after this mutant reading a name the app never rendered -- the plant's own defect,
@@ -1276,6 +1365,7 @@ const GEN_N = 24;
             aborted = aborted || 'MUTANT 9 UNDETECTED: Cross-topic rendered above Weak-spot in the '
               + 'phone practice block and the ordering arm accepted it.';
           }
+          land('9');
           await page.evaluate(() => {
             const host = document.querySelector('#home .hm-practicem');
             const weak = host.querySelector('[data-cross="weak"]');
@@ -1295,11 +1385,71 @@ const GEN_N = 24;
         } else {
           const bad10 = await page.evaluate(READ);
           if (!judgeKey(bad10)) {
-            aborted = aborted || 'MUTANT 10 UNDETECTED: the four-state key was hidden while the '
+            aborted = aborted || 'MUTANT 10 UNDETECTED: the key was hidden while the '
               + 'rails still painted keel marks, and the legend arm accepted it -- the <=419px '
               + 'display:none is back.';
           }
+          land('10');
           await page.evaluate(() => { document.querySelector('.hm-alt .hm-key').style.display = ''; });
+        }
+
+        /* ---- MUTANT 10b: THE KEY VISIBLE AND A SEVERITY UNNAMED (cycle 9, judge item 5) ------
+           The state that actually SHIPPED, and MUTANT 10 could not see it: the key renders, at
+           full width, with every swatch in place -- and one of the keel colours the rails paint
+           appears in none of them. The plant removes the swatch that carries the colour THIS
+           RECORD actually paints, read off the page, so it presses the pairing rather than a
+           class name: on `weakTopics` that is the shaky swatch, which is the swatch this cycle
+           added and whose absence IS the shipped defect. It reads both sides the same way the arm
+           does -- resolved colours, and a keel swatch is one whose shadow sits at the foot -- so a
+           plant that removed the wrong swatch would report CANNOT LAND rather than a false green.
+           A record that paints no keel at all cannot press this, and says so. */
+        const shaky = await page.evaluate(() => {
+          const keelOf = (el) => {
+            const sh = getComputedStyle(el).boxShadow || '';
+            if (sh === 'none') return null;
+            const col = (sh.match(/rgba?\([^)]*\)/) || [null])[0];
+            const nums = (sh.replace(/rgba?\([^)]*\)/, '').match(/-?[\d.]+px/g) || [])
+              .map((v) => parseFloat(v));
+            return (col && nums.length >= 2 && nums[1] < 0) ? col : null;
+          };
+          const segs = [...document.querySelectorAll('.hm-alt .hm-seg.keel')];
+          if (!segs.length) return { ok: false, kinds: [] };
+          const kinds = [...new Set(segs.map((s) => (s.classList.contains('keel-m')
+            ? 'missed' : 'shaky')))];
+          const want = getComputedStyle(segs[0], '::before').backgroundColor;
+          const ks = [...document.querySelectorAll('.hm-alt .hm-key .hm-k')];
+          const drop = ks.find((k) => {
+            const i = k.querySelector('i');
+            return i && keelOf(i) === want;
+          });
+          if (!drop) {
+            return { ok: false, kinds, want,
+              have: ks.map((k) => k.querySelector('i') ? keelOf(k.querySelector('i')) : null) };
+          }
+          drop.setAttribute('data-w9-hold', '1');
+          drop.style.display = 'none';
+          return { ok: true, kinds, want, cls: (drop.className || '').replace(/\s+/g, '.') };
+        });
+        if (!shaky.ok) {
+          aborted = aborted || 'MUTANT 10b CANNOT LAND: ' + (shaky.kinds.length
+            ? 'the rails paint a ' + shaky.kinds.join('/') + ' keel at ' + shaky.want
+              + ' and NO swatch in the key carries that colour (keel swatches read: '
+              + JSON.stringify(shaky.have) + '), so there is nothing to remove -- which is the '
+              + 'defect this mutant exists to press, standing on the shipped build'
+            : 'this record paints no keel at all, so the legend is not owed one and the '
+              + 'one-swatch-per-token half of the arm is untested here');
+        } else {
+          const bad10b = await page.evaluate(READ);
+          if (!judgeKey(bad10b)) {
+            aborted = aborted || 'MUTANT 10b UNDETECTED: the shaky swatch was removed while the '
+              + 'rails still painted a shaky keel, the key stayed visible, and the legend arm '
+              + 'accepted it -- which is the state that shipped for the whole of this wave.';
+          }
+          land('10b');
+          await page.evaluate(() => {
+            const d = document.querySelector('.hm-alt .hm-key [data-w9-hold]');
+            if (d) { d.style.display = ''; d.removeAttribute('data-w9-hold'); }
+          });
         }
       }
       if (r.keel > 0 && r.keyVisible) keelChecked++;
@@ -1512,6 +1662,7 @@ const GEN_N = 24;
           + model.rails[i].tier + ' rail (' + JSON.stringify(d2.slice(0, 80))
           + '). The arm above is reading something other than the tie it claims to guard.';
       }
+      land('16');
     }
     /* MUTANT 16b (R14): THE TIE REMOVED FROM EXACTLY ONE RAIL -- the partial revert, and the
        mutant MUTANT 16 cannot see. Stripping EVERY tie is a mutation the old one-rail arm also
@@ -1550,6 +1701,7 @@ const GEN_N = 24;
           + seen.join('/') + '), so the plant did not isolate a single rail and a red would not be '
           + 'about the partial revert.';
       }
+      land('16b');
     }
     await ctx.close();
   }
@@ -1752,6 +1904,23 @@ const GEN_N = 24;
         && bootTopic.stamped === bootTopic.curGroup && !!bootTopic.curGroup,
       JSON.stringify(bootTopic)]);
 
+    /* AND A THIRD DIRECTION, WHICH IS THE ONE R21'S PREDICATE ACTUALLY RESTS ON (cycle 9).
+       R21 gates the second-segment home test on `_hr = _rm(_seg)`, and argues that `_hr` truthy IS
+       `TopicRegistry.get(parts[0]) && !ROUTES[parts[0]]` -- parseHash's own condition. The two
+       directions above measure the FIRST conjunct: the table agrees with the registry entry by
+       entry, so `_rm(id)` is truthy exactly when the registry knows `id`. NOTHING measured the
+       SECOND. `!ROUTES[p0]` is inherited from router.js:41's comment -- "a hyphenated topic slug
+       can NEVER equal one of the 9 short view ids" -- and the registry no longer satisfies that
+       premise: 16 of the 46 shipped slugs are single-token (authz, cdc, eav, iac, slos, saga,
+       caching, signing, debugging, replication, observability, idempotency, backpressure,
+       autoscaling, microfrontend, notifications). The property holds today by the COINCIDENCE of
+       today's names, measured at zero collisions against the 11 route ids -- so it is measured
+       here instead of inherited. A topic named `open`, `num`, `model`, `sys`, `rf`, `wb` or `viz`
+       would make `_hr` truthy where parseHash does NOT strip, which re-enters R21's defect
+       verbatim on `#<t>/home` (the door lights the RESUME room while the app shows a bare view)
+       and R16's on a bare `#<t>` -- with every route cell in this matrix green, because none of
+       them drives a hash whose first segment is in both sets. ROUTES is read from
+       `Router.ROUTES`, the router's own exported table, not from a copy. */
     const tab = await probe.evaluate(() => {
       const m = window.__doorRooms;
       if (!m) return null;
@@ -1770,17 +1939,30 @@ const GEN_N = 24;
       }
       for (const id in flat) if (!(id in reg)) extra.push(id);
       const ids = TopicRegistry.ids();
+      const routes = (typeof Router !== 'undefined' && Router.ROUTES)
+        ? Object.keys(Router.ROUTES) : null;
+      const collide = routes ? ids.filter((id) => routes.indexOf(id) >= 0) : null;
       return { n: Object.keys(flat).length, regN: Object.keys(reg).length, dupes, missing, wrong, extra,
-        cold: window.__doorCold || null, coldWant: ids[0] || null };
+        routes, collide, cold: window.__doorCold || null, coldWant: ids[0] || null };
     });
     out.push(['[boot] boot.js\'s id->room table agrees with the registry entry by entry, both '
       + 'directions -- it is a duplicate of a fact boot cannot import, so it is checked rather '
-      + 'than trusted',
+      + 'than trusted -- AND no registered topic id is also a router view id, which is the half '
+      + 'of parseHash\'s condition (`!ROUTES[p0]`) that R21\'s `_hr` gate inherits from a comment '
+      + 'whose stated premise the registry stopped satisfying 16 single-token slugs ago',
       !!tab && !tab.dupes.length && !tab.missing.length && !tab.wrong.length && !tab.extra.length
-        && tab.n === tab.regN,
+        && tab.n === tab.regN && !!tab.routes && tab.routes.length > 0
+        && !!tab.collide && tab.collide.length === 0,
       tab ? (tab.n + ' in the table vs ' + tab.regN + ' registered; missing ' + JSON.stringify(tab.missing)
         + ' wrong ' + JSON.stringify(tab.wrong) + ' extra ' + JSON.stringify(tab.extra)
-        + ' duplicated ' + JSON.stringify(tab.dupes))
+        + ' duplicated ' + JSON.stringify(tab.dupes)
+        + (tab.routes
+          ? '; ' + tab.routes.length + ' route ids, colliding with a topic id: '
+            + JSON.stringify(tab.collide)
+            + (tab.collide.length ? ' -- each of those makes `_hr` truthy on a segment parseHash '
+              + 'does NOT strip, so the door answers the HOME\'s question on a bare view' : '')
+          : '; Router.ROUTES could not be read, so the `!ROUTES[p0]` half of R21\'s predicate is '
+            + 'unmeasured and this cell cannot certify it'))
         : 'window.__doorRooms is not defined -- boot.js is not deriving the door room at all']);
     out.push(['[boot] and its declared COLD DOOR is the registry\'s first topic -- the one the '
       + 'cold home\'s START card points at, which is a different topic from the boot topic and so '
@@ -1882,8 +2064,17 @@ const GEN_N = 24;
         || !!document.querySelector('.stage .pane.on'),
       hash, B.ACT_MS, 'the route rendered (' + hash + ')');
       await B.settle(p);
+      /* WHICH SURFACE THE APP IS SHOWING IS READ HERE, IN THE SAME EVALUATE (cycle 9, R22).
+         `data-view` is stamped by ViewManager for the HOME only, so it is the page's own answer to
+         "home or topic view" -- and it is what decides WHICH oracle a route cell may use. The
+         22-shape press that accepted R21 switched on exactly this; the two cells harvested out of
+         that press did not, and a cell that hard-codes one of the two oracles is asserting the
+         SHAPE OF TODAY'S ROUTER rather than the claim it prints. It is read from the page and
+         never derived from the hash, because deriving it would put boot.js's own classifier inside
+         the test that judges boot.js. */
       const f = await p.evaluate(() => ({
         frames: window.__doorFrames.slice(), seen: window.__doorSeen.slice(),
+        view: document.documentElement.getAttribute('data-view'),
         resume: (typeof Panels !== 'undefined' && Panels.resumeTarget && Panels.resumeTarget()) || null,
         shown: ((((typeof TopicRegistry !== 'undefined' && TopicRegistry.current
           && TopicRegistry.current()) || {}).identity) || {}).group || null,
@@ -1894,7 +2085,7 @@ const GEN_N = 24;
       return { frames: f.frames, seen: f.seen.slice(1), first: f.seen[0],
         resumeGroup: ((f.resume || {}).topic || {}).identity
           ? f.resume.topic.identity.group : null,
-        resumeId: (f.resume || {}).id || null, shown: f.shown };
+        resumeId: (f.resume || {}).id || null, shown: f.shown, view: f.view };
     };
     const rle = (f) => {
       const o = [];
@@ -1936,12 +2127,14 @@ const GEN_N = 24;
         + 'while the resume act is in ' + pick.group + ' is caught',
         everWore(mA).some((v) => v !== pick.group),
         'stamps [' + mA.seen.join(',') + '] / frames ' + rle(mA.frames)]);
+      land('boot:const');
 
       const mB = await frames(pick.id, 'none');
       out.push(['[boot][mutant] THE STAMP DELETED: a seeded record booting with no room on <html> '
         + 'is caught -- with index.html\'s constant gone, an unstamped boot is roomless, not safe',
         everWore(mB).some((v) => v !== pick.group),
         'stamps [' + mB.seen.join(',') + '] / frames ' + rle(mB.frames)]);
+      land('boot:none');
 
       /* ---- 1b. THE BARE-VIEW ROUTE, ON A RECORD -- the cell this arm did not have -----------
          Until cycle 3 the arm drove FOUR route x record cells and certified two: every boot-ring
@@ -2078,7 +2271,27 @@ const GEN_N = 24;
              `#/home` has an EMPTY first segment, `#<TOPIC>/home` has one the case-sensitive
              registry lookup refuses -- so parseHash strips neither, the view is segment 0, and
              both are bare views of the BOOT topic with `home` as a sub-state. A door that reads
-             segment 1 unconditionally lights the RESUME room on both. */
+             segment 1 unconditionally lights the RESUME room on both.
+
+             THE ORACLE IS SWITCHED ON `data-view`, EXACTLY AS THE PRESS THAT ACCEPTED R21 DID
+             (cycle 9, R22). These two cells were harvested out of a 22-shape press whose oracle
+             read the page: `Panels.resumeTarget()`'s room when `data-view` says the app is showing
+             the HOME, `TopicRegistry.current()`'s room otherwise. The harvest dropped the switch
+             and kept only the second branch, which pins the ROUTER'S CURRENT SHAPE rather than the
+             claim these cells print. The consequence is measurable and it is a FALSE ALARM, not a
+             miss: make `parseHash`'s topic lookup case-INSENSITIVE and teach boot.js's `_rm` the
+             same lower-casing -- a self-consistent build, the router-side repair carried out of
+             cycle 7 as a W2 candidate -- and `#<TOPIC>/home` becomes a HOME. The door would light
+             the RESUME room, correctly, and the hard-coded oracle would red on a build with no
+             defect in it. So the switch is restored here, and it is read from the page rather than
+             re-derived from the hash, because re-deriving it would put boot.js's own classifier
+             inside the test that judges boot.js.
+             WHAT EACH BRANCH ASSERTS, so the pinning power R21 bought is not traded away for the
+             portability: whichever surface the app reports, every value the document ever wore is
+             the room that surface is about -- AND, on the bare-view branch, the room the app shows
+             is the BOOT topic's, which is the fact R21 measured and the reason these two shapes
+             are in the matrix at all. That second half is free: `px.boot` is already read, already
+             asserted distinct from the resume room, and already printed in the failure detail. */
           for (const [h, why] of [
             ['#/home', 'an EMPTY prefix on a home-looking second segment -- the shape boot.js\'s '
               + 'own comment enumerates beside #/walk, which parseHash resolves to a bare view '
@@ -2089,13 +2302,19 @@ const GEN_N = 24;
           ]) {
             const uf = await frames(pick.id, null, { hash: h });
             const uwore = uf.seen.concat(uf.frames);
+            const isHome = uf.view === 'home';
+            const want = isHome ? uf.resumeGroup : uf.shown;
             out.push(['[boot] a home-looking SECOND SEGMENT behind a prefix that is NOT a '
-              + 'registered topic (' + h + ') is lit in the room of the topic the app actually '
-              + 'shows -- the BOOT topic\'s -- and not in the resume target\'s: ' + why,
-              !!uf.shown && uf.shown !== pick.group && uwore.length > 0
-                && uwore.every((v) => v === uf.shown),
-              'the app shows ' + uf.shown + ' while the record resumes ' + pick.id + ' ('
-              + pick.group + ') and the boot topic is in ' + px.boot + '; stamps ['
+              + 'registered topic (' + h + ') is lit in the room of the surface the app says it '
+              + 'is showing -- read from data-view, so this cell survives the router-side repair '
+              + 'instead of false-alarming on it -- and while the app shows a bare view, that room '
+              + 'is the BOOT topic\'s and not the resume target\'s: ' + why,
+              !!want && uwore.length > 0 && uwore.every((v) => v === want)
+                && (isHome || uf.shown === px.boot),
+              'the app reports data-view=' + JSON.stringify(uf.view) + ' and shows '
+              + (isHome ? 'the HOME, resuming ' + uf.resumeGroup : uf.shown)
+              + ' while the record resumes ' + pick.id + ' (' + pick.group
+              + ') and the boot topic is in ' + px.boot + '; stamps ['
               + uf.seen.join(',') + '] / frames ' + rle(uf.frames)]);
           }
         }
@@ -2106,6 +2325,7 @@ const GEN_N = 24;
         !!mD.shown && mD.seen.concat(mD.frames).some((v) => v !== mD.shown),
         'the app shows ' + mD.shown + '; stamps [' + mD.seen.join(',') + '] / frames '
         + rle(mD.frames)]);
+      land('boot:record');
 
       /* ---- 1c. nav.last vs THE NEWEST GRADED RECORD, IN DIFFERENT ROOMS ---------------------
          frames() used to write both keys with the SAME id, so the ORDER between them -- which
@@ -2179,13 +2399,15 @@ const GEN_N = 24;
   const bad = out.filter((o) => !o[1]);
   for (const [label, pass, detail] of out) console.log((pass ? '  PASS  ' : '  FAIL  ') + label + (pass ? '' : '  -- ' + detail));
   console.log('\n  the legend arm was exercised on ' + keelChecked + ' record(s) that actually paint a keel');
-  console.log('  21 planted mutants detected (a full claim over empty rails; a level claim over '
+  console.log('  ' + landedPlants.size + ' planted mutants detected (a full claim over empty rails; a level claim over '
     + 'unequal rails; a thin rail named on the highest tier; a step position beside a bare probe '
     + 'remainder; a verdict quoting one rail\u2019s figures for another; an inflated panel header; '
     + 'an inflated figure inside the single-thin-rail sentence, checked against its own negative '
     + 'control; a SECOND weekly-goal surface on the cold record; Cross-topic rendered above '
-    + 'Weak-spot in the phone practice block; the four-state key hidden while the rails still paint '
-    + 'keel marks; the pre-cycle-3 goal concatenation, which named the met state three times in one '
+    + 'Weak-spot in the phone practice block; the key hidden while the rails still paint '
+    + 'keel marks, AND the key left visible with the SHAKY swatch removed while the rails still '
+    + 'paint a shaky keel -- the state that shipped, which a presence-only legend arm could not '
+    + 'see; the pre-cycle-3 goal concatenation, which named the met state three times in one '
     + 'sentence; "1 topics drilled this week" on a week of one; the goal bar given an '
     + 'accessible name of its own again, so the fact is announced off the bar and again off the '
     + 'line beneath it; THE HOME LIT IN THE BOOT CONSTANT\'S ROOM while its resume act is in '

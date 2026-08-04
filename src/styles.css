@@ -322,8 +322,11 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
    ORDERING (missed >= shaky), which a COLLAPSE satisfies -- set --keel-shaky to --st-warn, the
    value --keel-missed already carries, and the two severities paint the identical mark while the
    `1280 dark` cell reports zero failures. Two grades drawn as one mark encode no ordering at all,
-   and the legend cannot report it either (it carries a single keel swatch, .hm-k.flag, wired to
-   --keel-missed alone). 1.15 is the same discriminability floor the fill strip applies to two
+   and until cycle 9 the legend could not report it either: it carried a single keel swatch,
+   .hm-k.flag, wired to --keel-missed alone, so the panel painted two severities and named one.
+   That is now fixed rather than recorded -- .hm-k.flag / .hm-k.flag-s carry one swatch per keel
+   token, and test/home_claims.cjs asserts the pairing, so a severity the gauge paints cannot
+   again be a severity the key omits. 1.15 is the same discriminability floor the fill strip applies to two
    adjacent fill steps, for the same reason. The shipped pair measures 4.638/3.671 = 1.264 in
    light and 8.211/3.625 = 2.265 in dark; the collapse measures 1.000, and is now a planted
    mutant (MUTANT H).
@@ -389,9 +392,12 @@ button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;box-shadow:
      test/scoreboard_salience.cjs's KEY arm -- added in cycle 5 -- that reads it. Until then this
      clause pointed at "what scoreboard_salience actually asserts" and that file contained no
      `.hm-k` selector at all: its denominator arm measures .hm-seg's inset rule against --side,
-     which is the 4.10 / 4.23 pair and not this binding one. The key arm reads all four swatches
-     by removal diff against the panel's own measured ground, in both schemes, with .hm-k.none i
-     declared the binding cell and a plant that repaints --gauge-rule at that ground's own colour. */
+     which is the 4.10 / 4.23 pair and not this binding one. The key arm reads EVERY swatch the
+     key renders -- five since cycle 9, when the single "Flagged" swatch became one per keel token
+     -- by removal diff against the panel's own measured ground, in both schemes, with .hm-k.none i
+     declared the binding cell and a plant that repaints --gauge-rule at that ground's own colour.
+     It enumerates `.hm-k` rather than counting to a number, so a swatch added or removed moves the
+     table instead of falling outside it. */
   html{--gauge-rule:#76726A}
   html[data-theme="dark"]{--gauge-rule:#7D7985}
 
@@ -2930,9 +2936,17 @@ html[data-theme="dark"][data-view="home"] #home{--mut:#A7A29A}
 .hm-k.part i::after{opacity:.55}
 .hm-k.none i{background:transparent;box-shadow:inset 0 0 0 1px var(--gauge-rule)}
 .hm-k.none i::after{opacity:0}
-.hm-k.flag i::after{opacity:0}
-/* the loud form of the mark, so the legend shows the keel at the strength the worst grade wears */
+.hm-k.flag i::after,.hm-k.flag-s i::after{opacity:0}
+/* ONE SWATCH PER KEEL TOKEN. The rails paint TWO severities -- .hm-seg.keel-m::before at
+   --keel-missed and .hm-seg.keel::before at --keel-shaky, a pair solved for a 1.15x
+   discriminability margin (see the --keel-shaky block above) -- and this key carried a single
+   "Flagged" swatch wired to --keel-missed alone, so the panel showed two foot colours and
+   explained one. That collapse was RECORDED here as a fact, as the argument for why a severity
+   collapse would be invisible to a reader; it is now fixed rather than only noted. Each swatch
+   draws the keel at the strength its own grade wears, and test/home_claims.cjs asserts one swatch
+   per keel token so the legend cannot fall behind a severity the gauge paints. */
 .hm-k.flag i{box-shadow:inset 0 calc(-1 * var(--keel-h)) 0 var(--keel-missed)}
+.hm-k.flag-s i{box-shadow:inset 0 calc(-1 * var(--keel-h)) 0 var(--keel-shaky)}
 /* the probes that are on no rail, named rather than folded into a total the rails contradict.
    A SIBLING of .hm-key, not a child: the key is aria-hidden and this is content. */
 .hm-offladder{display:block;margin-top:var(--space-8);color:var(--mut2)}

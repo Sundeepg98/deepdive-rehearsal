@@ -1,0 +1,20 @@
+=== W-ADDRESSES cycle 9 -- judge item 4: the plant censuses are DERIVED, and here is the deletion that moves them ===
+
+home_claims            shipped: 22 (exit 0)   with one plant deleted: 21 (exit 0)   MOVED by one
+   cycle 8's literal: '  21 planted mutants detected'
+scoreboard_salience    shipped: 12 (exit 0)   with one plant deleted: 11 (exit 0)   MOVED by one
+   cycle 8's literal: ' TEN PLANTED LANDINGS press it'
+craft_hygiene          shipped: 23 (exit 0)   with one plant deleted: 22 (exit 0)   MOVED by one
+   already derived since cycle 5 -- the control for the method
+
+RESTORED: all three identical to their snapshots True; working-tree diff unchanged True
+
+VERDICT
+  home_claims            22 -> 21   moves with the code: True   shipped exit 0: True
+  scoreboard_salience    12 -> 11   moves with the code: True   shipped exit 0: True
+  craft_hygiene          23 -> 22   moves with the code: True   shipped exit 0: True
+
+  AND THE CYCLE-8 LITERALS WERE ALREADY WRONG ON THIS TREE BEFORE THE DELETION: home_claims
+  printed 21 while 22 plants land, scoreboard printed TEN while 12 landings press it. That
+  is the finding: both numbers were correct the day they were typed, and each stopped being
+  correct the moment a plant was added -- silently, which a derived line cannot do.

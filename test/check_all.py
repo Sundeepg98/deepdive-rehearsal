@@ -780,7 +780,8 @@ BROWSER_CHECKS = [('render', 'test/render.cjs'), ('entity_leak', 'test/entity_le
                      # miss): the two keel marks ordered and over the 3:1 non-text floor against
                      # TWO grounds (the stable trough and the band each mark abuts), the FILL STRIP
                      # alone carrying an ordered ramp with every adjacent pair over 1.15, the
-                     # untouched capsule's rule, the four LEGEND SWATCHES against the panel's own
+                     # untouched capsule's rule, EVERY LEGEND SWATCH the key renders (five since
+                     # cycle 9, one per keel token) against the panel's own
                      # measured ground (the binding cell of the --gauge-rule solve), and the panel
                      # standing off the home's ground. The two keel marks are separated by a
                      # 1.15 MARGIN and not by a bare ordering, because a bare `>=` can only fail
@@ -792,26 +793,36 @@ BROWSER_CHECKS = [('render', 'test/render.cjs'), ('entity_leak', 'test/entity_le
                      # colour whatever its height"); for one cycle it was published and asserted
                      # by nothing, and a drift would have passed both cells while printing four
                      # different numbers.
-                     # SEVENTEEN planted mutants, each a shipped or reachable defect put back and
+                     # NINETEEN planted mutants, each a shipped or reachable defect put back and
                      # each installed, read and reverted on its own -- SEVEN on the marks (the old
                      # keel wiring, the rule back to --bd, the waterline removed, two fill steps
                      # flattened, the panel painted at its ground, --gauge-rule painted at the
-                     # panel, --keel-shaky collapsed onto --st-warn) and TEN VEIL LANDINGS: a 10%
-                     # full-viewport pseudo backdrop (dark only, where the arithmetic guards are
-                     # weakest, with light as the negative control), the same backdrop with
+                     # panel, --keel-shaky collapsed onto --st-warn) and TWELVE VEIL LANDINGS: a
+                     # 10% full-viewport pseudo backdrop (dark only, where the arithmetic guards
+                     # are weakest, with light as the negative control), the same backdrop with
                      # pointer-events:none, a pointer-events:none sibling overlay, the same
                      # overlay painted by a gradient, the same overlay painted ONLY by a
-                     # backdrop-filter, a box painted only by its border, an ancestor at opacity
+                     # backdrop-filter, a box painted only by its border WITH hit-testing, the
+                     # same box with pointer-events OFF, the same painted only by an INSET
+                     # box-shadow, an ancestor at opacity
                      # .91, and the chain widening pressed one property at a time (three
                      # landings). This line said THIRTEEN and SEVEN VEILS through cycle 7, which
                      # reproduces under neither convention -- 14 counting the chain widening once,
                      # 16 counting it three times as the check's own "NINE PLANTED LANDINGS" does
-                     # -- so it is re-derived here from the mutant rows the run prints (cycle 8).
+                     # -- so it was re-derived from the mutant rows the run prints (cycle 8), and
+                     # since cycle 9 the check's own PASS line FORMATS its landing census from the
+                     # roster the run populated rather than printing a literal, so this paragraph
+                     # is the only hand-typed copy of the figure left and the run will contradict
+                     # it out loud if it drifts.
                      # Before cycle 7 the four-part veil guard had ONE plant that could fail
                      # it: three of its four arms could be deleted with the gate still green.
-                     # Cycle 8 adds the tenth landing: painted() declares three reasons and only
+                     # Cycle 8 added the tenth landing: painted() declared three reasons and only
                      # two had a plant, so its backdrop-filter branch could be deleted alone with
-                     # this check still exit 0.
+                     # this check still exit 0. Cycle 9 adds the eleventh and twelfth, at the
+                     # INTERSECTION of the two reads' individually-stated limits: the sweep could
+                     # not see paint arriving from a border or a box-shadow and the hit stack
+                     # cannot see pointer-events:none, so a box carrying both was invisible to the
+                     # whole guard -- and pointer-events:none is the class the sweep exists for.
                      # THE FILL STRIP IS SAMPLED ON A BOX THAT IS THE SAME BOX AT EVERY SUB-PIXEL
                      # PHASE -- ceil/floor of the device edge rather than a rounded fraction, and
                      # inset past the capsule's corner arc -- with a same-shot control that
@@ -1282,10 +1293,22 @@ BROWSER_CHECKS = [('render', 'test/render.cjs'), ('entity_leak', 'test/entity_le
                      # the BOOT topic -- and a home test that reads segment 1 without asking
                      # whether segment 0 is a registered topic lights the RESUME room on both,
                      # which is what cycle 7's own fix shipped, on nine measured shapes, with all
-                     # six existing cells green. All three rooms -- resume, boot, prefix -- are
+                     # six existing cells green. THOSE TWO CELLS SWITCH THEIR ORACLE ON `data-view`
+                     # (cycle 9, R22), exactly as the 22-shape press that accepted the fix did:
+                     # the resume target's room when the app reports it is showing the HOME, the
+                     # room of the topic it shows otherwise -- and, while it shows a bare view,
+                     # that room must be the BOOT topic's. Hard-coding the second branch pinned
+                     # the router's CURRENT shape rather than the claim, and would have reddened
+                     # on a case-INSENSITIVE parseHash with no defect in it. All three rooms --
+                     # resume, boot, prefix -- are
                      # asserted DISTINCT before the block runs, in all THREE pairs (the
                      # resume-vs-boot pair was claimed and unchecked for a cycle), or it aborts
-                     # naming which two collided. Plus the rail descriptions: every
+                     # naming which two collided. AND the boot-table cell has a THIRD direction:
+                     # no registered topic id may also be a router VIEW id. R21's `_hr` gate is
+                     # only parseHash's condition while that holds, and it was inherited from a
+                     # router comment ("a hyphenated topic slug can NEVER equal one of the 9 short
+                     # view ids") whose premise 16 single-token slugs have already falsified --
+                     # so the disjointness is measured against Router.ROUTES rather than assumed. Plus the rail descriptions: every
                      # rail the gauge renders, selected by POSITION rather than by the
                      # aria-describedby tie, its description EQUAL character for character to an
                      # oracle formatted from the registry, one clause per rendered segment.
